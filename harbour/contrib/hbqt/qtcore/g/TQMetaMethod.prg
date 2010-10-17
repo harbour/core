@@ -98,6 +98,12 @@
 FUNCTION QMetaMethod( ... )
    RETURN HB_QMetaMethod():new( ... )
 
+FUNCTION QMetaMethodFrom( ... )
+   RETURN HB_QMetaMethod():from( ... )
+
+FUNCTION QMetaMethodFromPointer( ... )
+   RETURN HB_QMetaMethod():fromPointer( ... )
+
 
 CREATE CLASS QMetaMethod INHERIT HbQtObjectHandler FUNCTION HB_QMetaMethod
 
@@ -117,7 +123,7 @@ CREATE CLASS QMetaMethod INHERIT HbQtObjectHandler FUNCTION HB_QMetaMethod
 METHOD QMetaMethod:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaMethod( ... )
    RETURN Self
@@ -128,7 +134,7 @@ METHOD QMetaMethod:access( ... )
    CASE 0
       RETURN Qt_QMetaMethod_access( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:methodType( ... )
@@ -136,23 +142,23 @@ METHOD QMetaMethod:methodType( ... )
    CASE 0
       RETURN Qt_QMetaMethod_methodType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:parameterNames( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QMetaMethod_parameterNames( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QMetaMethod_parameterNames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:parameterTypes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QMetaMethod_parameterTypes( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QMetaMethod_parameterTypes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:signature( ... )
@@ -160,7 +166,7 @@ METHOD QMetaMethod:signature( ... )
    CASE 0
       RETURN Qt_QMetaMethod_signature( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:tag( ... )
@@ -168,7 +174,7 @@ METHOD QMetaMethod:tag( ... )
    CASE 0
       RETURN Qt_QMetaMethod_tag( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaMethod:typeName( ... )
@@ -176,5 +182,5 @@ METHOD QMetaMethod:typeName( ... )
    CASE 0
       RETURN Qt_QMetaMethod_typeName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

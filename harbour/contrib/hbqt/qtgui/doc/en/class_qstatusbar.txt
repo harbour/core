@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QStatusBar( ... )
- *     QStatusBar():from( pPtr_OR_oObj_of_type_QStatusBar )
  * 
  *  $ARGUMENTS$
  * 

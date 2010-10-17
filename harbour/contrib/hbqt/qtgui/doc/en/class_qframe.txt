@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QFrame( ... )
- *     QFrame():from( pPtr_OR_oObj_of_type_QFrame )
  * 
  *  $ARGUMENTS$
  * 

@@ -98,12 +98,17 @@
 FUNCTION QGenericArgument( ... )
    RETURN HB_QGenericArgument():new( ... )
 
+FUNCTION QGenericArgumentFrom( ... )
+   RETURN HB_QGenericArgument():from( ... )
+
+FUNCTION QGenericArgumentFromPointer( ... )
+   RETURN HB_QGenericArgument():fromPointer( ... )
+
 
 CREATE CLASS QGenericArgument INHERIT HbQtObjectHandler FUNCTION HB_QGenericArgument
 
    METHOD  new( ... )
 
-   METHOD  QGenericArgument              // ( cName, ovoid )                                   -> oQGenericArgument
    METHOD  data                          // (  )                                               -> NIL
    METHOD  name                          // (  )                                               -> cChar
 
@@ -113,30 +118,10 @@ CREATE CLASS QGenericArgument INHERIT HbQtObjectHandler FUNCTION HB_QGenericArgu
 METHOD QGenericArgument:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGenericArgument( ... )
    RETURN Self
-
-
-METHOD QGenericArgument:QGenericArgument( ... )
-   SWITCH PCount()
-   CASE 2
-      DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QGenericArgument():from( Qt_QGenericArgument_QGenericArgument( ::pPtr, ... ) )
-      ENDCASE
-      EXIT
-   CASE 1
-      DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QGenericArgument():from( Qt_QGenericArgument_QGenericArgument( ::pPtr, ... ) )
-      ENDCASE
-      EXIT
-   CASE 0
-      RETURN HB_QGenericArgument():from( Qt_QGenericArgument_QGenericArgument( ::pPtr, ... ) )
-   ENDSWITCH
-   RETURN hbqt_error()
 
 
 METHOD QGenericArgument:data( ... )
@@ -144,7 +129,7 @@ METHOD QGenericArgument:data( ... )
    CASE 0
       RETURN Qt_QGenericArgument_data( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGenericArgument:name( ... )
@@ -152,5 +137,5 @@ METHOD QGenericArgument:name( ... )
    CASE 0
       RETURN Qt_QGenericArgument_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

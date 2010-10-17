@@ -19,15 +19,11 @@
  *     QEvent
  *  $SYNTAX$
  *     QHideEvent( ... )
- *     QHideEvent():from( pPtr_OR_oObj_of_type_QHideEvent )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QHideEvent
- *  $METHODS$
- *     :QHideEvent()                                       -> oQHideEvent
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

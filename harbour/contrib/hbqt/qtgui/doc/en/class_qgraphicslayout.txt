@@ -19,7 +19,6 @@
  *     QGraphicsLayoutItem
  *  $SYNTAX$
  *     QGraphicsLayout( ... )
- *     QGraphicsLayout():from( pPtr_OR_oObj_of_type_QGraphicsLayout )
  * 
  *  $ARGUMENTS$
  * 

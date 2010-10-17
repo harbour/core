@@ -19,7 +19,6 @@
  *     QTextBlockGroup
  *  $SYNTAX$
  *     QTextList( ... )
- *     QTextList():from( pPtr_OR_oObj_of_type_QTextList )
  * 
  *  $ARGUMENTS$
  * 

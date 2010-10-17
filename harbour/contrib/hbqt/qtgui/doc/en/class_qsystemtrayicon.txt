@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QSystemTrayIcon( ... )
- *     QSystemTrayIcon():from( pPtr_OR_oObj_of_type_QSystemTrayIcon )
  * 
  *  $ARGUMENTS$
  * 

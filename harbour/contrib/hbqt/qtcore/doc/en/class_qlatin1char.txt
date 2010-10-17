@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QLatin1Char( ... )
- *     QLatin1Char():from( pPtr_OR_oObj_of_type_QLatin1Char )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QDesignerObjectInspectorInterface( ... )
- *     QDesignerObjectInspectorInterface():from( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
  * 
  *  $ARGUMENTS$
  * 

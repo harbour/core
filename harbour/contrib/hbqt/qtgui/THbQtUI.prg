@@ -602,7 +602,6 @@ METHOD HbQtUI:formatCommand( cCmd, lText )
          n1   := at( ".", cCmd )
          cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), ::widgets )
          cCmd1 := strtran( cCmd1, "->", ":" )
-         // aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
          aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + substr( cCmd, n1 + 1 )
 

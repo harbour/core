@@ -19,7 +19,6 @@
  *     QAbstractGraphicsShapeItem
  *  $SYNTAX$
  *     QGraphicsEllipseItem( ... )
- *     QGraphicsEllipseItem():from( pPtr_OR_oObj_of_type_QGraphicsEllipseItem )
  * 
  *  $ARGUMENTS$
  * 

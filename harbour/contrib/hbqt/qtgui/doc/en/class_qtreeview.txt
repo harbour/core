@@ -19,7 +19,6 @@
  *     QAbstractItemView
  *  $SYNTAX$
  *     QTreeView( ... )
- *     QTreeView():from( pPtr_OR_oObj_of_type_QTreeView )
  * 
  *  $ARGUMENTS$
  * 

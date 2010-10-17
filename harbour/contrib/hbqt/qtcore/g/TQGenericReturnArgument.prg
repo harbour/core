@@ -98,6 +98,12 @@
 FUNCTION QGenericReturnArgument( ... )
    RETURN HB_QGenericReturnArgument():new( ... )
 
+FUNCTION QGenericReturnArgumentFrom( ... )
+   RETURN HB_QGenericReturnArgument():from( ... )
+
+FUNCTION QGenericReturnArgumentFromPointer( ... )
+   RETURN HB_QGenericReturnArgument():fromPointer( ... )
+
 
 CREATE CLASS QGenericReturnArgument INHERIT HbQtObjectHandler, HB_QGenericArgument FUNCTION HB_QGenericReturnArgument
 
@@ -110,7 +116,7 @@ CREATE CLASS QGenericReturnArgument INHERIT HbQtObjectHandler, HB_QGenericArgume
 METHOD QGenericReturnArgument:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGenericReturnArgument( ... )
    RETURN Self

@@ -19,7 +19,6 @@
  *     QDialog
  *  $SYNTAX$
  *     QColorDialog( ... )
- *     QColorDialog():from( pPtr_OR_oObj_of_type_QColorDialog )
  * 
  *  $ARGUMENTS$
  * 

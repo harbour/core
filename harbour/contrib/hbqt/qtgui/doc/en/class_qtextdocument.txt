@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QTextDocument( ... )
- *     QTextDocument():from( pPtr_OR_oObj_of_type_QTextDocument )
  * 
  *  $ARGUMENTS$
  * 

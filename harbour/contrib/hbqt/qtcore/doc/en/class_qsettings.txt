@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QSettings( ... )
- *     QSettings():from( pPtr_OR_oObj_of_type_QSettings )
  * 
  *  $ARGUMENTS$
  * 

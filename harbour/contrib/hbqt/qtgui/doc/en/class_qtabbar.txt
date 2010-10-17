@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QTabBar( ... )
- *     QTabBar():from( pPtr_OR_oObj_of_type_QTabBar )
  * 
  *  $ARGUMENTS$
  * 

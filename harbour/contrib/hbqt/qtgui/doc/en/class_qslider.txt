@@ -19,7 +19,6 @@
  *     QAbstractSlider
  *  $SYNTAX$
  *     QSlider( ... )
- *     QSlider():from( pPtr_OR_oObj_of_type_QSlider )
  * 
  *  $ARGUMENTS$
  * 

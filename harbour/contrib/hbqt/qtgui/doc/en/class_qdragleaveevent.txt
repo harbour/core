@@ -19,15 +19,11 @@
  *     QEvent
  *  $SYNTAX$
  *     QDragLeaveEvent( ... )
- *     QDragLeaveEvent():from( pPtr_OR_oObj_of_type_QDragLeaveEvent )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QDragLeaveEvent
- *  $METHODS$
- *     :QDragLeaveEvent()                                  -> oQDragLeaveEvent
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

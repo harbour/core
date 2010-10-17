@@ -19,16 +19,11 @@
  *     QBoxLayout
  *  $SYNTAX$
  *     QHBoxLayout( ... )
- *     QHBoxLayout():from( pPtr_OR_oObj_of_type_QHBoxLayout )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QHBoxLayout
- *  $METHODS$
- *     :QHBoxLayout()                                      -> oQHBoxLayout
- *     :QHBoxLayout( oQWidget )                            -> oQHBoxLayout
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

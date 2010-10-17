@@ -28,6 +28,8 @@ QEvent.cpp
 QEventLoop.cpp
 QFile.cpp
 QFileInfo.cpp
+QGenericArgument.cpp
+QGenericReturnArgument.cpp
 QIODevice.cpp
 QLatin1Char.cpp
 QLatin1String.cpp
@@ -35,6 +37,12 @@ QLine.cpp
 QLineF.cpp
 QList.cpp
 QLocale.cpp
+QMetaClassInfo.cpp
+QMetaEnum.cpp
+QMetaMethod.cpp
+QMetaObject.cpp
+QMetaProperty.cpp
+QMetaType.cpp
 QMimeData.cpp
 QModelIndex.cpp
 QObject.cpp
@@ -83,6 +91,8 @@ TQEvent.prg
 TQEventLoop.prg
 TQFile.prg
 TQFileInfo.prg
+TQGenericArgument.prg
+TQGenericReturnArgument.prg
 TQIODevice.prg
 TQLatin1Char.prg
 TQLatin1String.prg
@@ -90,6 +100,12 @@ TQLine.prg
 TQLineF.prg
 TQList.prg
 TQLocale.prg
+TQMetaClassInfo.prg
+TQMetaEnum.prg
+TQMetaMethod.prg
+TQMetaObject.prg
+TQMetaProperty.prg
+TQMetaType.prg
 TQMimeData.prg
 TQModelIndex.prg
 TQObject.prg

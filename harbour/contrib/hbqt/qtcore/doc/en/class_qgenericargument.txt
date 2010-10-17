@@ -19,14 +19,12 @@
  *     
  *  $SYNTAX$
  *     QGenericArgument( ... )
- *     QGenericArgument():from( pPtr_OR_oObj_of_type_QGenericArgument )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QGenericArgument
  *  $METHODS$
- *     :QGenericArgument( cName, ovoid )                   -> oQGenericArgument
  *     :data()                                             -> NIL
  *     :name()                                             -> cChar
  * 

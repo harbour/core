@@ -19,7 +19,6 @@
  *     QLayout
  *  $SYNTAX$
  *     QGridLayout( ... )
- *     QGridLayout():from( pPtr_OR_oObj_of_type_QGridLayout )
  * 
  *  $ARGUMENTS$
  * 

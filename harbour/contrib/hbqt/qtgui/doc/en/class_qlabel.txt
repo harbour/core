@@ -19,7 +19,6 @@
  *     QFrame
  *  $SYNTAX$
  *     QLabel( ... )
- *     QLabel():from( pPtr_OR_oObj_of_type_QLabel )
  * 
  *  $ARGUMENTS$
  * 

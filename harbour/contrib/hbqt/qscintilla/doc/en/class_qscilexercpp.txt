@@ -19,7 +19,6 @@
  *     QsciLexer
  *  $SYNTAX$
  *     QsciLexerCPP( ... )
- *     QsciLexerCPP():from( pPtr_OR_oObj_of_type_QsciLexerCPP )
  * 
  *  $ARGUMENTS$
  * 

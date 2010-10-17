@@ -19,7 +19,6 @@
  *     QAbstractItemView
  *  $SYNTAX$
  *     QHeaderView( ... )
- *     QHeaderView():from( pPtr_OR_oObj_of_type_QHeaderView )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QStyleOptionComplex
  *  $SYNTAX$
  *     QStyleOptionGroupBox( ... )
- *     QStyleOptionGroupBox():from( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
  * 
  *  $ARGUMENTS$
  * 

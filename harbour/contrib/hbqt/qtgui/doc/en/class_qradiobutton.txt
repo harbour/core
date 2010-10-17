@@ -19,16 +19,11 @@
  *     QAbstractButton
  *  $SYNTAX$
  *     QRadioButton( ... )
- *     QRadioButton():from( pPtr_OR_oObj_of_type_QRadioButton )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QRadioButton
- *  $METHODS$
- *     :QRadioButton( oQWidget )                           -> oQRadioButton
- *     :QRadioButton( cText, oQWidget )                    -> oQRadioButton
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

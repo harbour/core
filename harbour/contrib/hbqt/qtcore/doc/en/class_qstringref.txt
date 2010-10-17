@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QStringRef( ... )
- *     QStringRef():from( pPtr_OR_oObj_of_type_QStringRef )
  * 
  *  $ARGUMENTS$
  * 

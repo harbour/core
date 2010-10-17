@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QRegExp( ... )
- *     QRegExp():from( pPtr_OR_oObj_of_type_QRegExp )
  * 
  *  $ARGUMENTS$
  * 

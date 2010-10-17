@@ -19,7 +19,6 @@
  *     QFrame
  *  $SYNTAX$
  *     QSplitter( ... )
- *     QSplitter():from( pPtr_OR_oObj_of_type_QSplitter )
  * 
  *  $ARGUMENTS$
  * 

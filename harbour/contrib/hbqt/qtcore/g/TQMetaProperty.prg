@@ -98,6 +98,12 @@
 FUNCTION QMetaProperty( ... )
    RETURN HB_QMetaProperty():new( ... )
 
+FUNCTION QMetaPropertyFrom( ... )
+   RETURN HB_QMetaProperty():from( ... )
+
+FUNCTION QMetaPropertyFromPointer( ... )
+   RETURN HB_QMetaProperty():fromPointer( ... )
+
 
 CREATE CLASS QMetaProperty INHERIT HbQtObjectHandler FUNCTION HB_QMetaProperty
 
@@ -131,7 +137,7 @@ CREATE CLASS QMetaProperty INHERIT HbQtObjectHandler FUNCTION HB_QMetaProperty
 METHOD QMetaProperty:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaProperty( ... )
    RETURN Self
@@ -140,9 +146,9 @@ METHOD QMetaProperty:new( ... )
 METHOD QMetaProperty:enumerator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMetaEnum():from( Qt_QMetaProperty_enumerator( ::pPtr, ... ) )
+      RETURN QMetaEnumFromPointer( Qt_QMetaProperty_enumerator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:hasNotifySignal( ... )
@@ -150,7 +156,7 @@ METHOD QMetaProperty:hasNotifySignal( ... )
    CASE 0
       RETURN Qt_QMetaProperty_hasNotifySignal( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isDesignable( ... )
@@ -164,7 +170,7 @@ METHOD QMetaProperty:isDesignable( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isDesignable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isEnumType( ... )
@@ -172,7 +178,7 @@ METHOD QMetaProperty:isEnumType( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isEnumType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isFlagType( ... )
@@ -180,7 +186,7 @@ METHOD QMetaProperty:isFlagType( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isFlagType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isReadable( ... )
@@ -188,7 +194,7 @@ METHOD QMetaProperty:isReadable( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isReadable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isResettable( ... )
@@ -196,7 +202,7 @@ METHOD QMetaProperty:isResettable( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isResettable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isScriptable( ... )
@@ -210,7 +216,7 @@ METHOD QMetaProperty:isScriptable( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isScriptable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isStored( ... )
@@ -224,7 +230,7 @@ METHOD QMetaProperty:isStored( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isStored( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isUser( ... )
@@ -238,7 +244,7 @@ METHOD QMetaProperty:isUser( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isUser( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isValid( ... )
@@ -246,7 +252,7 @@ METHOD QMetaProperty:isValid( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:isWritable( ... )
@@ -254,7 +260,7 @@ METHOD QMetaProperty:isWritable( ... )
    CASE 0
       RETURN Qt_QMetaProperty_isWritable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:name( ... )
@@ -262,15 +268,15 @@ METHOD QMetaProperty:name( ... )
    CASE 0
       RETURN Qt_QMetaProperty_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:notifySignal( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMetaMethod():from( Qt_QMetaProperty_notifySignal( ::pPtr, ... ) )
+      RETURN QMetaMethodFromPointer( Qt_QMetaProperty_notifySignal( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:notifySignalIndex( ... )
@@ -278,7 +284,7 @@ METHOD QMetaProperty:notifySignalIndex( ... )
    CASE 0
       RETURN Qt_QMetaProperty_notifySignalIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:read( ... )
@@ -286,11 +292,11 @@ METHOD QMetaProperty:read( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QMetaProperty_read( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QMetaProperty_read( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:reset( ... )
@@ -302,7 +308,7 @@ METHOD QMetaProperty:reset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:type( ... )
@@ -310,7 +316,7 @@ METHOD QMetaProperty:type( ... )
    CASE 0
       RETURN Qt_QMetaProperty_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:typeName( ... )
@@ -318,7 +324,7 @@ METHOD QMetaProperty:typeName( ... )
    CASE 0
       RETURN Qt_QMetaProperty_typeName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:userType( ... )
@@ -326,7 +332,7 @@ METHOD QMetaProperty:userType( ... )
    CASE 0
       RETURN Qt_QMetaProperty_userType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaProperty:write( ... )
@@ -338,5 +344,5 @@ METHOD QMetaProperty:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

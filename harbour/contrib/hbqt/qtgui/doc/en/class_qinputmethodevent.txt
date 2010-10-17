@@ -19,7 +19,6 @@
  *     QEvent
  *  $SYNTAX$
  *     QInputMethodEvent( ... )
- *     QInputMethodEvent():from( pPtr_OR_oObj_of_type_QInputMethodEvent )
  * 
  *  $ARGUMENTS$
  * 

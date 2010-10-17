@@ -904,9 +904,7 @@ METHOD HbQtSource:build()
    BuildFooter( @::cpp_ )
 
    /* Build Document File */
-   IF !empty( ::doc_ )
-      ::buildDocument()
-   ENDIF
+   ::buildDocument()
 
    /* Distribute in specific lib subfolder */
    cFileCpp := GetSourcePathByLib( ::cWidget, ::cPathOut, ".cpp", "" )
@@ -1056,11 +1054,6 @@ METHOD HbQtSource:buildClass()
    aadd( txt_, "FUNCTION " + ::cWidget + "( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():new( ... )" )
    aadd( txt_, "" )
-   #if 1
-   aadd( txt_, "FUNCTION " + ::cWidget + "From( ... )" )
-   aadd( txt_, "   RETURN HB_" + ::cWidget + "():from( ... )" )
-   aadd( txt_, "" )
-   #endif
    aadd( txt_, "FUNCTION " + ::cWidget + "FromPointer( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():fromPointer( ... )" )
    aadd( txt_, "" )
@@ -1286,11 +1279,9 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
          ! ( cRetCast $ "QString,QRgb" ) .AND. ;
          ( left( cRetCast, 1 ) == "Q" .OR. left( cRetCast, 3 ) == "HBQ" )
 
-      //cFun := "HB_" + cRetCast + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
       cFun := cRetCast + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
    ELSEIF ( "<" $ cRetCast )
-      //cFun := "HB_" + "QList" + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
       cFun := "QList" + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
    ELSE
@@ -1463,31 +1454,31 @@ METHOD HbQtSource:buildDocument()
    hEntry[ "EXTERNALLINK" ] := "    " + QT_WEB + QT_VER + "/" + lower( ::cWidget ) + ".html"
    hEntry[ "ONELINER"     ] := "    " + "Creates a new " + ::cWidget + " object."
    hEntry[ "INHERITS"     ] := "    " + cInherits
-   hEntry[ "SYNTAX"       ] := ""
-   hEntry[ "SYNTAX"       ] += "    " + ::cWidget + "( ... )" + hb_eol()
-   hEntry[ "SYNTAX"       ] += "    " + ::cWidget + "():from( pPtr_OR_oObj_of_type_" + ::cWidget +" )" + hb_eol()
+   hEntry[ "SYNTAX"       ] := "    " + ::cWidget + "( ... )" + hb_eol()
    hEntry[ "ARGUMENTS"    ] := ""
    hEntry[ "RETURNS"      ] := "    " + "An instance of the object of type " + ::cWidget
-   hEntry[ "METHODS"      ] := ""
-   nLen    := len( ::cWidget )
-   n       := at( ::cWidget, ::doc_[ 1 ] )
-   pWidget := "p" + ::cWidget
-   FOR i := 1 TO len( ::doc_ )
-      IF !empty( cText := ::doc_[ i ] )
-         cText := substr( cText, n+nLen+1 )
-         cText := strtran( cText, pWidget + ", ", "" )
-         cText := strtran( cText, pWidget, "" )
-         cText := strtran( cText, "(  )", "()" )
-         n1    := at( "->", cText )
-         cRet  := prgRetNormalize( alltrim( substr( cText, n1+2 ) ) )
-         cText := substr( cText, 1, n1-1 )
-         n2    := max( 50, len( cText ) )
-         cText := padR( cText, n2 )
-         IF !empty( cRet )
-            hEntry[ "METHODS" ] += "    :" + cText + " -> " + cRet + hb_eol()
+   IF ! Empty( ::doc_ )
+      hEntry[ "METHODS"      ] := ""
+      nLen    := len( ::cWidget )
+      n       := at( ::cWidget, ::doc_[ 1 ] )
+      pWidget := "p" + ::cWidget
+      FOR i := 1 TO len( ::doc_ )
+         IF !empty( cText := ::doc_[ i ] )
+            cText := substr( cText, n+nLen+1 )
+            cText := strtran( cText, pWidget + ", ", "" )
+            cText := strtran( cText, pWidget, "" )
+            cText := strtran( cText, "(  )", "()" )
+            n1    := at( "->", cText )
+            cRet  := prgRetNormalize( alltrim( substr( cText, n1+2 ) ) )
+            cText := substr( cText, 1, n1-1 )
+            n2    := max( 50, len( cText ) )
+            cText := padR( cText, n2 )
+            IF !empty( cRet )
+               hEntry[ "METHODS" ] += "    :" + cText + " -> " + cRet + hb_eol()
+            ENDIF
          ENDIF
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
    hEntry[ "DESCRIPTION" ] := ""
    hEntry[ "EXAMPLES"    ] := ""
    FOR EACH cText IN ::docum_

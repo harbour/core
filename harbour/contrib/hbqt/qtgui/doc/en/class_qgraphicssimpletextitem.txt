@@ -19,7 +19,6 @@
  *     QAbstractGraphicsShapeItem
  *  $SYNTAX$
  *     QGraphicsSimpleTextItem( ... )
- *     QGraphicsSimpleTextItem():from( pPtr_OR_oObj_of_type_QGraphicsSimpleTextItem )
  * 
  *  $ARGUMENTS$
  * 

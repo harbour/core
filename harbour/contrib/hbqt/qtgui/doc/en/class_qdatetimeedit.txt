@@ -19,7 +19,6 @@
  *     QAbstractSpinBox
  *  $SYNTAX$
  *     QDateTimeEdit( ... )
- *     QDateTimeEdit():from( pPtr_OR_oObj_of_type_QDateTimeEdit )
  * 
  *  $ARGUMENTS$
  * 

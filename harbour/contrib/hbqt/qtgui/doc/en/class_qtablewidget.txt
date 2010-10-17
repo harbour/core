@@ -19,7 +19,6 @@
  *     QTableView
  *  $SYNTAX$
  *     QTableWidget( ... )
- *     QTableWidget():from( pPtr_OR_oObj_of_type_QTableWidget )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QDialog
  *  $SYNTAX$
  *     QMessageBox( ... )
- *     QMessageBox():from( pPtr_OR_oObj_of_type_QMessageBox )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,16 +19,11 @@
  *     QBoxLayout
  *  $SYNTAX$
  *     QVBoxLayout( ... )
- *     QVBoxLayout():from( pPtr_OR_oObj_of_type_QVBoxLayout )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QVBoxLayout
- *  $METHODS$
- *     :QVBoxLayout()                                      -> oQVBoxLayout
- *     :QVBoxLayout( oQWidget )                            -> oQVBoxLayout
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

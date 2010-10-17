@@ -19,7 +19,6 @@
  *     QStyleOption
  *  $SYNTAX$
  *     QStyleOptionHeader( ... )
- *     QStyleOptionHeader():from( pPtr_OR_oObj_of_type_QStyleOptionHeader )
  * 
  *  $ARGUMENTS$
  * 

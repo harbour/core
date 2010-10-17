@@ -19,7 +19,6 @@
  *     QAbstractItemModel
  *  $SYNTAX$
  *     QDirModel( ... )
- *     QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
  * 
  *  $ARGUMENTS$
  * 

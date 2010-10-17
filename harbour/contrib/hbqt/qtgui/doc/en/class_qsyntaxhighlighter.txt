@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QSyntaxHighlighter( ... )
- *     QSyntaxHighlighter():from( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
  * 
  *  $ARGUMENTS$
  * 

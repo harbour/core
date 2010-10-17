@@ -19,15 +19,11 @@
  *     QStyleHintReturn
  *  $SYNTAX$
  *     QStyleHintReturnVariant( ... )
- *     QStyleHintReturnVariant():from( pPtr_OR_oObj_of_type_QStyleHintReturnVariant )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QStyleHintReturnVariant
- *  $METHODS$
- *     :QStyleHintReturnVariant()                          -> oQStyleHintReturnVariant
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

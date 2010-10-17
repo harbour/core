@@ -108,7 +108,7 @@
 
 
 /*
- *
+ * QMetaClassInfo ()
  *
  */
 
@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QMetaClassInfo( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMETACLASSINFO )
 {
-   // hb_retptr( new QMetaClassInfo() );
+   // __HB_RETPTRGC__( new QMetaClassInfo() );
 }
 
 /*

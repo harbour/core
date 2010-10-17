@@ -19,7 +19,6 @@
  *     QDialog
  *  $SYNTAX$
  *     QInputDialog( ... )
- *     QInputDialog():from( pPtr_OR_oObj_of_type_QInputDialog )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QPointF( ... )
- *     QPointF():from( pPtr_OR_oObj_of_type_QPointF )
  * 
  *  $ARGUMENTS$
  * 

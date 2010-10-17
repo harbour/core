@@ -19,7 +19,6 @@
  *     QEvent
  *  $SYNTAX$
  *     QFocusEvent( ... )
- *     QFocusEvent():from( pPtr_OR_oObj_of_type_QFocusEvent )
  * 
  *  $ARGUMENTS$
  * 

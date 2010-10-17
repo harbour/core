@@ -108,7 +108,7 @@
 
 
 /*
- *
+ * QMetaEnum ()
  *
  */
 
@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QMetaEnum( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMETAENUM )
 {
-   // hb_retptr( new QMetaEnum() );
+   // __HB_RETPTRGC__( new QMetaEnum() );
 }
 
 /*

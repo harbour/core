@@ -119,7 +119,7 @@
 
 
 /*
- *
+ * QMetaType ()
  *
  */
 
@@ -164,7 +164,7 @@ void * hbqt_gcAllocate_QMetaType( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMETATYPE )
 {
-   // hb_retptr( new QMetaType() );
+   // __HB_RETPTRGC__( new QMetaType() );
 }
 
 /*

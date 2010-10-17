@@ -19,7 +19,6 @@
  *     QDropEvent
  *  $SYNTAX$
  *     QDragMoveEvent( ... )
- *     QDragMoveEvent():from( pPtr_OR_oObj_of_type_QDragMoveEvent )
  * 
  *  $ARGUMENTS$
  * 

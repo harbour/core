@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QTextEncoder( ... )
- *     QTextEncoder():from( pPtr_OR_oObj_of_type_QTextEncoder )
  * 
  *  $ARGUMENTS$
  * 

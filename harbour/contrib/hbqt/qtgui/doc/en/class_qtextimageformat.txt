@@ -19,7 +19,6 @@
  *     QTextCharFormat
  *  $SYNTAX$
  *     QTextImageFormat( ... )
- *     QTextImageFormat():from( pPtr_OR_oObj_of_type_QTextImageFormat )
  * 
  *  $ARGUMENTS$
  * 

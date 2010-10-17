@@ -19,7 +19,6 @@
  *     QStyleOptionComplex
  *  $SYNTAX$
  *     QStyleOptionSlider( ... )
- *     QStyleOptionSlider():from( pPtr_OR_oObj_of_type_QStyleOptionSlider )
  * 
  *  $ARGUMENTS$
  * 

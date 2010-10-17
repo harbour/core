@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QDesktopWidget( ... )
- *     QDesktopWidget():from( pPtr_OR_oObj_of_type_QDesktopWidget )
  * 
  *  $ARGUMENTS$
  * 

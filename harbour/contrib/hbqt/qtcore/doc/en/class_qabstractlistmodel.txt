@@ -19,7 +19,6 @@
  *     QAbstractItemModel
  *  $SYNTAX$
  *     QAbstractListModel( ... )
- *     QAbstractListModel():from( pPtr_OR_oObj_of_type_QAbstractListModel )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,15 +19,11 @@
  *     QTextObject
  *  $SYNTAX$
  *     QTextBlockGroup( ... )
- *     QTextBlockGroup():from( pPtr_OR_oObj_of_type_QTextBlockGroup )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QTextBlockGroup
- *  $METHODS$
- *     :QTextBlockGroup( oQTextDocument )                  -> oQTextBlockGroup
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

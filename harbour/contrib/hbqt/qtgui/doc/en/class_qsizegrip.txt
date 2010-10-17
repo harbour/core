@@ -19,15 +19,11 @@
  *     QWidget
  *  $SYNTAX$
  *     QSizeGrip( ... )
- *     QSizeGrip():from( pPtr_OR_oObj_of_type_QSizeGrip )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QSizeGrip
- *  $METHODS$
- *     :QSizeGrip( oQWidget )                              -> oQSizeGrip
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

@@ -19,7 +19,6 @@
  *     QAbstractItemDelegate
  *  $SYNTAX$
  *     QItemDelegate( ... )
- *     QItemDelegate():from( pPtr_OR_oObj_of_type_QItemDelegate )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,16 +19,11 @@
  *     QDateTimeEdit
  *  $SYNTAX$
  *     QTimeEdit( ... )
- *     QTimeEdit():from( pPtr_OR_oObj_of_type_QTimeEdit )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QTimeEdit
- *  $METHODS$
- *     :QTimeEdit( oQWidget )                              -> oQTimeEdit
- *     :QTimeEdit( oQTime, oQWidget )                      -> oQTimeEdit
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

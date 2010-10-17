@@ -19,7 +19,6 @@
  *     QList
  *  $SYNTAX$
  *     QStringList( ... )
- *     QStringList():from( pPtr_OR_oObj_of_type_QStringList )
  * 
  *  $ARGUMENTS$
  * 

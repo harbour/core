@@ -108,7 +108,7 @@
 
 
 /*
- *
+ * QMetaProperty ()
  *
  */
 
@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QMetaProperty( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMETAPROPERTY )
 {
-   // hb_retptr( new QMetaProperty() );
+   // __HB_RETPTRGC__( new QMetaProperty() );
 }
 
 /*

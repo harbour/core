@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QItemSelectionModel( ... )
- *     QItemSelectionModel():from( pPtr_OR_oObj_of_type_QItemSelectionModel )
  * 
  *  $ARGUMENTS$
  * 

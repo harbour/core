@@ -19,16 +19,11 @@
  *     QAbstractSlider
  *  $SYNTAX$
  *     QScrollBar( ... )
- *     QScrollBar():from( pPtr_OR_oObj_of_type_QScrollBar )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QScrollBar
- *  $METHODS$
- *     :QScrollBar( oQWidget )                             -> oQScrollBar
- *     :QScrollBar( nOrientation, oQWidget )               -> oQScrollBar
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

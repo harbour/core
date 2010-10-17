@@ -98,7 +98,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 3/3 [ 100.00% ] ]
+ *  Constructed[ 2/2 [ 100.00% ] ]
  *
  */
 
@@ -184,14 +184,6 @@ HB_FUNC( QT_QGENERICARGUMENT )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QGenericArgument( ( void * ) pObj, true ) );
-}
-
-/*
- * QGenericArgument ( const char * name = 0, const void * data = 0 )
- */
-HB_FUNC( QT_QGENERICARGUMENT_QGENERICARGUMENT )
-{
-   hb_retptrGC( hbqt_gcAllocate_QGenericArgument( new QGenericArgument( ( const char * ) hb_parc( 2 ), hbqt_par_void( 3 ) ), true ) );
 }
 
 /*

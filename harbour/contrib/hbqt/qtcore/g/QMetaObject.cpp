@@ -116,7 +116,7 @@
 #include <QtCore/QMetaClassInfo>
 
 /*
- *
+ * QMetaObject ()
  *
  */
 
@@ -161,7 +161,7 @@ void * hbqt_gcAllocate_QMetaObject( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMETAOBJECT )
 {
-   // hb_retptr( new QMetaObject() );
+   // __HB_RETPTRGC__( new QMetaObject() );
 }
 
 /*

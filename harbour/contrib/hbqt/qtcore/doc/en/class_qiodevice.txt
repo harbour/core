@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QIODevice( ... )
- *     QIODevice():from( pPtr_OR_oObj_of_type_QIODevice )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,15 +19,11 @@
  *     QDragMoveEvent
  *  $SYNTAX$
  *     QDragEnterEvent( ... )
- *     QDragEnterEvent():from( pPtr_OR_oObj_of_type_QDragEnterEvent )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QDragEnterEvent
- *  $METHODS$
- *     :QDragEnterEvent( oQPoint, nActions, oQMimeData, nButtons, nModifiers )  -> oQDragEnterEvent
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

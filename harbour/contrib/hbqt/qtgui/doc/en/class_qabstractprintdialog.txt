@@ -19,7 +19,6 @@
  *     QDialog
  *  $SYNTAX$
  *     QAbstractPrintDialog( ... )
- *     QAbstractPrintDialog():from( pPtr_OR_oObj_of_type_QAbstractPrintDialog )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QAbstractButton
  *  $SYNTAX$
  *     QPushButton( ... )
- *     QPushButton():from( pPtr_OR_oObj_of_type_QPushButton )
  * 
  *  $ARGUMENTS$
  * 

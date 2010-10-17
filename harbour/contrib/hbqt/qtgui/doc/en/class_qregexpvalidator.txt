@@ -19,7 +19,6 @@
  *     QValidator
  *  $SYNTAX$
  *     QRegExpValidator( ... )
- *     QRegExpValidator():from( pPtr_OR_oObj_of_type_QRegExpValidator )
  * 
  *  $ARGUMENTS$
  * 

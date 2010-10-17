@@ -737,7 +737,6 @@ STATIC FUNCTION hbq_formatCommand( cCmd, lText, widgets )
          n1   := At( ".", cCmd )
          cCmd1 := hbq_setObjects( SubStr( cCmd, n + 1, n1 - n - 1 ), widgets )
          cCmd1 := StrTran( cCmd1, "->", ":" )
-//         AAdd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
          AAdd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + SubStr( cCmd, n1 + 1 )
       ELSE

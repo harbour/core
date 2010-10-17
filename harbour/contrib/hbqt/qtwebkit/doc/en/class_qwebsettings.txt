@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QWebSettings( ... )
- *     QWebSettings():from( pPtr_OR_oObj_of_type_QWebSettings )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QCoreApplication
  *  $SYNTAX$
  *     QApplication( ... )
- *     QApplication():from( pPtr_OR_oObj_of_type_QApplication )
  * 
  *  $ARGUMENTS$
  * 

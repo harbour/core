@@ -19,7 +19,6 @@
  *     QTextFormat
  *  $SYNTAX$
  *     QTextListFormat( ... )
- *     QTextListFormat():from( pPtr_OR_oObj_of_type_QTextListFormat )
  * 
  *  $ARGUMENTS$
  * 

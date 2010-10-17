@@ -27,8 +27,8 @@ QEvent.qth
 QEventLoop.qth
 QFile.qth
 QFileInfo.qth
-; QGenericArgument.qth
-; QGenericReturnArgument.qth
+QGenericArgument.qth
+QGenericReturnArgument.qth
 QIODevice.qth
 QLatin1Char.qth
 QLatin1String.qth
@@ -36,12 +36,12 @@ QLine.qth
 QLineF.qth
 QList.qth
 QLocale.qth
-; QMetaClassInfo.qth
-; QMetaEnum.qth
-; QMetaMethod.qth
-; QMetaObject.qth
-; QMetaProperty.qth
-; QMetaType.qth
+QMetaClassInfo.qth
+QMetaEnum.qth
+QMetaMethod.qth
+QMetaObject.qth
+QMetaProperty.qth
+QMetaType.qth
 QMimeData.qth
 QModelIndex.qth
 QObject.qth
@@ -70,5 +70,3 @@ QTimer.qth
 QTranslator.qth
 QUrl.qth
 QVariant.qth
-
-

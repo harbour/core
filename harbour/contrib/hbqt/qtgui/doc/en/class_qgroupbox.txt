@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QGroupBox( ... )
- *     QGroupBox():from( pPtr_OR_oObj_of_type_QGroupBox )
  * 
  *  $ARGUMENTS$
  * 

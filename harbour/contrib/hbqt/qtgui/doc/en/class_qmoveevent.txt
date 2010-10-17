@@ -19,7 +19,6 @@
  *     QEvent
  *  $SYNTAX$
  *     QMoveEvent( ... )
- *     QMoveEvent():from( pPtr_OR_oObj_of_type_QMoveEvent )
  * 
  *  $ARGUMENTS$
  * 

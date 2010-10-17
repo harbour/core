@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QStyle( ... )
- *     QStyle():from( pPtr_OR_oObj_of_type_QStyle )
  * 
  *  $ARGUMENTS$
  * 

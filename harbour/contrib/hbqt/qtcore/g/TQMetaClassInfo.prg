@@ -98,6 +98,12 @@
 FUNCTION QMetaClassInfo( ... )
    RETURN HB_QMetaClassInfo():new( ... )
 
+FUNCTION QMetaClassInfoFrom( ... )
+   RETURN HB_QMetaClassInfo():from( ... )
+
+FUNCTION QMetaClassInfoFromPointer( ... )
+   RETURN HB_QMetaClassInfo():fromPointer( ... )
+
 
 CREATE CLASS QMetaClassInfo INHERIT HbQtObjectHandler FUNCTION HB_QMetaClassInfo
 
@@ -112,7 +118,7 @@ CREATE CLASS QMetaClassInfo INHERIT HbQtObjectHandler FUNCTION HB_QMetaClassInfo
 METHOD QMetaClassInfo:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaClassInfo( ... )
    RETURN Self
@@ -123,7 +129,7 @@ METHOD QMetaClassInfo:name( ... )
    CASE 0
       RETURN Qt_QMetaClassInfo_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaClassInfo:value( ... )
@@ -131,5 +137,5 @@ METHOD QMetaClassInfo:value( ... )
    CASE 0
       RETURN Qt_QMetaClassInfo_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

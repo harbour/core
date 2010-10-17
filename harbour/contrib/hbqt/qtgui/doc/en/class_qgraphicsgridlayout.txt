@@ -19,7 +19,6 @@
  *     QGraphicsLayout
  *  $SYNTAX$
  *     QGraphicsGridLayout( ... )
- *     QGraphicsGridLayout():from( pPtr_OR_oObj_of_type_QGraphicsGridLayout )
  * 
  *  $ARGUMENTS$
  * 

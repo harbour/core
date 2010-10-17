@@ -62,7 +62,6 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pSlots   PROTECTED
    VAR    __pEvents  PROTECTED
 
-   METHOD from( oObject )
    METHOD fromPointer( pPtr )
    METHOD hasValidPointer()
 
@@ -72,22 +71,6 @@ CREATE CLASS HbQtObjectHandler
    ERROR HANDLER onError()
 
 ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-/* TODO: Move thid to class implementation level so that proper object
-         type checking can be done. */
-METHOD HbQtObjectHandler:from( oObject )
-   LOCAL pPtr
-   IF hbqt_isObject( oObject )
-      /* TOFIX: Here we should only accept GC collected pointers */
-      IF hb_isPointer( pPtr := oObject:pPtr )
-         ::pPtr := pPtr
-      ENDIF
-   ELSE
-      __hbqt_Error()
-   ENDIF
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

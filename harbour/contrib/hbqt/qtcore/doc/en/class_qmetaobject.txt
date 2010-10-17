@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QMetaObject( ... )
- *     QMetaObject():from( pPtr_OR_oObj_of_type_QMetaObject )
  * 
  *  $ARGUMENTS$
  * 

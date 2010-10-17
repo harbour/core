@@ -19,7 +19,6 @@
  *     QAbstractScrollArea
  *  $SYNTAX$
  *     QGraphicsView( ... )
- *     QGraphicsView():from( pPtr_OR_oObj_of_type_QGraphicsView )
  * 
  *  $ARGUMENTS$
  * 

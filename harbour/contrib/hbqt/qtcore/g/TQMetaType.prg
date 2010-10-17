@@ -98,6 +98,12 @@
 FUNCTION QMetaType( ... )
    RETURN HB_QMetaType():new( ... )
 
+FUNCTION QMetaTypeFrom( ... )
+   RETURN HB_QMetaType():from( ... )
+
+FUNCTION QMetaTypeFromPointer( ... )
+   RETURN HB_QMetaType():fromPointer( ... )
+
 
 CREATE CLASS QMetaType INHERIT HbQtObjectHandler FUNCTION HB_QMetaType
 
@@ -114,7 +120,7 @@ CREATE CLASS QMetaType INHERIT HbQtObjectHandler FUNCTION HB_QMetaType
 METHOD QMetaType:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaType( ... )
    RETURN Self
@@ -129,7 +135,7 @@ METHOD QMetaType:isRegistered( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaType:type( ... )
@@ -141,7 +147,7 @@ METHOD QMetaType:type( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaType:typeName( ... )
@@ -153,7 +159,7 @@ METHOD QMetaType:typeName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaType:unregisterType( ... )
@@ -165,5 +171,5 @@ METHOD QMetaType:unregisterType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

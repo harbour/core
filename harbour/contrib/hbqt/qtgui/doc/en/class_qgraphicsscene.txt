@@ -19,7 +19,6 @@
  *     QObject
  *  $SYNTAX$
  *     QGraphicsScene( ... )
- *     QGraphicsScene():from( pPtr_OR_oObj_of_type_QGraphicsScene )
  * 
  *  $ARGUMENTS$
  * 

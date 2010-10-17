@@ -19,7 +19,6 @@
  *     QPaintDevice
  *  $SYNTAX$
  *     QPrinter( ... )
- *     QPrinter():from( pPtr_OR_oObj_of_type_QPrinter )
  * 
  *  $ARGUMENTS$
  * 

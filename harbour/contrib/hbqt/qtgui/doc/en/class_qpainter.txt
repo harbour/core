@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QPainter( ... )
- *     QPainter():from( pPtr_OR_oObj_of_type_QPainter )
  * 
  *  $ARGUMENTS$
  * 

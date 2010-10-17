@@ -98,6 +98,12 @@
 FUNCTION QMetaObject( ... )
    RETURN HB_QMetaObject():new( ... )
 
+FUNCTION QMetaObjectFrom( ... )
+   RETURN HB_QMetaObject():from( ... )
+
+FUNCTION QMetaObjectFromPointer( ... )
+   RETURN HB_QMetaObject():fromPointer( ... )
+
 
 CREATE CLASS QMetaObject INHERIT HbQtObjectHandler FUNCTION HB_QMetaObject
 
@@ -138,7 +144,7 @@ CREATE CLASS QMetaObject INHERIT HbQtObjectHandler FUNCTION HB_QMetaObject
 METHOD QMetaObject:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaObject( ... )
    RETURN Self
@@ -149,11 +155,11 @@ METHOD QMetaObject:classInfo( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMetaClassInfo():from( Qt_QMetaObject_classInfo( ::pPtr, ... ) )
+         RETURN QMetaClassInfoFromPointer( Qt_QMetaObject_classInfo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:classInfoCount( ... )
@@ -161,7 +167,7 @@ METHOD QMetaObject:classInfoCount( ... )
    CASE 0
       RETURN Qt_QMetaObject_classInfoCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:classInfoOffset( ... )
@@ -169,7 +175,7 @@ METHOD QMetaObject:classInfoOffset( ... )
    CASE 0
       RETURN Qt_QMetaObject_classInfoOffset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:className( ... )
@@ -177,7 +183,7 @@ METHOD QMetaObject:className( ... )
    CASE 0
       RETURN Qt_QMetaObject_className( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:constructor( ... )
@@ -185,11 +191,11 @@ METHOD QMetaObject:constructor( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMetaMethod():from( Qt_QMetaObject_constructor( ::pPtr, ... ) )
+         RETURN QMetaMethodFromPointer( Qt_QMetaObject_constructor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:constructorCount( ... )
@@ -197,7 +203,7 @@ METHOD QMetaObject:constructorCount( ... )
    CASE 0
       RETURN Qt_QMetaObject_constructorCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:enumerator( ... )
@@ -205,11 +211,11 @@ METHOD QMetaObject:enumerator( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMetaEnum():from( Qt_QMetaObject_enumerator( ::pPtr, ... ) )
+         RETURN QMetaEnumFromPointer( Qt_QMetaObject_enumerator( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:enumeratorCount( ... )
@@ -217,7 +223,7 @@ METHOD QMetaObject:enumeratorCount( ... )
    CASE 0
       RETURN Qt_QMetaObject_enumeratorCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:enumeratorOffset( ... )
@@ -225,7 +231,7 @@ METHOD QMetaObject:enumeratorOffset( ... )
    CASE 0
       RETURN Qt_QMetaObject_enumeratorOffset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfClassInfo( ... )
@@ -237,7 +243,7 @@ METHOD QMetaObject:indexOfClassInfo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfConstructor( ... )
@@ -249,7 +255,7 @@ METHOD QMetaObject:indexOfConstructor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfEnumerator( ... )
@@ -261,7 +267,7 @@ METHOD QMetaObject:indexOfEnumerator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfMethod( ... )
@@ -273,7 +279,7 @@ METHOD QMetaObject:indexOfMethod( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfProperty( ... )
@@ -285,7 +291,7 @@ METHOD QMetaObject:indexOfProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfSignal( ... )
@@ -297,7 +303,7 @@ METHOD QMetaObject:indexOfSignal( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:indexOfSlot( ... )
@@ -309,7 +315,7 @@ METHOD QMetaObject:indexOfSlot( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:method( ... )
@@ -317,11 +323,11 @@ METHOD QMetaObject:method( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMetaMethod():from( Qt_QMetaObject_method( ::pPtr, ... ) )
+         RETURN QMetaMethodFromPointer( Qt_QMetaObject_method( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:methodCount( ... )
@@ -329,7 +335,7 @@ METHOD QMetaObject:methodCount( ... )
    CASE 0
       RETURN Qt_QMetaObject_methodCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:methodOffset( ... )
@@ -337,7 +343,7 @@ METHOD QMetaObject:methodOffset( ... )
    CASE 0
       RETURN Qt_QMetaObject_methodOffset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:property( ... )
@@ -345,11 +351,11 @@ METHOD QMetaObject:property( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMetaProperty():from( Qt_QMetaObject_property( ::pPtr, ... ) )
+         RETURN QMetaPropertyFromPointer( Qt_QMetaObject_property( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:propertyCount( ... )
@@ -357,7 +363,7 @@ METHOD QMetaObject:propertyCount( ... )
    CASE 0
       RETURN Qt_QMetaObject_propertyCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:propertyOffset( ... )
@@ -365,23 +371,23 @@ METHOD QMetaObject:propertyOffset( ... )
    CASE 0
       RETURN Qt_QMetaObject_propertyOffset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:superClass( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMetaObject():from( Qt_QMetaObject_superClass( ::pPtr, ... ) )
+      RETURN QMetaObjectFromPointer( Qt_QMetaObject_superClass( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:userProperty( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMetaProperty():from( Qt_QMetaObject_userProperty( ::pPtr, ... ) )
+      RETURN QMetaPropertyFromPointer( Qt_QMetaObject_userProperty( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:checkConnectArgs( ... )
@@ -393,7 +399,7 @@ METHOD QMetaObject:checkConnectArgs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:connectSlotsByName( ... )
@@ -405,7 +411,7 @@ METHOD QMetaObject:connectSlotsByName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:normalizedSignature( ... )
@@ -413,11 +419,11 @@ METHOD QMetaObject:normalizedSignature( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QMetaObject_normalizedSignature( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QMetaObject_normalizedSignature( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaObject:normalizedType( ... )
@@ -425,9 +431,9 @@ METHOD QMetaObject:normalizedType( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QMetaObject_normalizedType( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QMetaObject_normalizedType( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

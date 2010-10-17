@@ -19,7 +19,6 @@
  *     QFrame
  *  $SYNTAX$
  *     QToolBox( ... )
- *     QToolBox():from( pPtr_OR_oObj_of_type_QToolBox )
  * 
  *  $ARGUMENTS$
  * 

@@ -98,6 +98,12 @@
 FUNCTION QMetaEnum( ... )
    RETURN HB_QMetaEnum():new( ... )
 
+FUNCTION QMetaEnumFrom( ... )
+   RETURN HB_QMetaEnum():from( ... )
+
+FUNCTION QMetaEnumFromPointer( ... )
+   RETURN HB_QMetaEnum():fromPointer( ... )
+
 
 CREATE CLASS QMetaEnum INHERIT HbQtObjectHandler FUNCTION HB_QMetaEnum
 
@@ -121,7 +127,7 @@ CREATE CLASS QMetaEnum INHERIT HbQtObjectHandler FUNCTION HB_QMetaEnum
 METHOD QMetaEnum:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMetaEnum( ... )
    RETURN Self
@@ -132,7 +138,7 @@ METHOD QMetaEnum:isFlag( ... )
    CASE 0
       RETURN Qt_QMetaEnum_isFlag( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:isValid( ... )
@@ -140,7 +146,7 @@ METHOD QMetaEnum:isValid( ... )
    CASE 0
       RETURN Qt_QMetaEnum_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:key( ... )
@@ -152,7 +158,7 @@ METHOD QMetaEnum:key( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:keyCount( ... )
@@ -160,7 +166,7 @@ METHOD QMetaEnum:keyCount( ... )
    CASE 0
       RETURN Qt_QMetaEnum_keyCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:keyToValue( ... )
@@ -172,7 +178,7 @@ METHOD QMetaEnum:keyToValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:keysToValue( ... )
@@ -184,7 +190,7 @@ METHOD QMetaEnum:keysToValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:name( ... )
@@ -192,7 +198,7 @@ METHOD QMetaEnum:name( ... )
    CASE 0
       RETURN Qt_QMetaEnum_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:scope( ... )
@@ -200,7 +206,7 @@ METHOD QMetaEnum:scope( ... )
    CASE 0
       RETURN Qt_QMetaEnum_scope( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:value( ... )
@@ -212,7 +218,7 @@ METHOD QMetaEnum:value( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:valueToKey( ... )
@@ -224,7 +230,7 @@ METHOD QMetaEnum:valueToKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMetaEnum:valueToKeys( ... )
@@ -232,9 +238,9 @@ METHOD QMetaEnum:valueToKeys( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QMetaEnum_valueToKeys( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QMetaEnum_valueToKeys( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

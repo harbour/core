@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QsciCommandSet( ... )
- *     QsciCommandSet():from( pPtr_OR_oObj_of_type_QsciCommandSet )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QCalendarWidget( ... )
- *     QCalendarWidget():from( pPtr_OR_oObj_of_type_QCalendarWidget )
  * 
  *  $ARGUMENTS$
  * 

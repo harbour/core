@@ -19,7 +19,6 @@
  *     QComboBox
  *  $SYNTAX$
  *     QFontComboBox( ... )
- *     QFontComboBox():from( pPtr_OR_oObj_of_type_QFontComboBox )
  * 
  *  $ARGUMENTS$
  * 

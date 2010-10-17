@@ -19,7 +19,6 @@
  *     QDialog
  *  $SYNTAX$
  *     QPageSetupDialog( ... )
- *     QPageSetupDialog():from( pPtr_OR_oObj_of_type_QPageSetupDialog )
  * 
  *  $ARGUMENTS$
  * 

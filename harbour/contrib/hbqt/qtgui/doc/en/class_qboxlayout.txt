@@ -19,7 +19,6 @@
  *     QLayout
  *  $SYNTAX$
  *     QBoxLayout( ... )
- *     QBoxLayout():from( pPtr_OR_oObj_of_type_QBoxLayout )
  * 
  *  $ARGUMENTS$
  * 

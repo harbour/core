@@ -19,7 +19,6 @@
  *     QWidget
  *  $SYNTAX$
  *     QAbstractSpinBox( ... )
- *     QAbstractSpinBox():from( pPtr_OR_oObj_of_type_QAbstractSpinBox )
  * 
  *  $ARGUMENTS$
  * 

@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QTextBoundaryFinder( ... )
- *     QTextBoundaryFinder():from( pPtr_OR_oObj_of_type_QTextBoundaryFinder )
  * 
  *  $ARGUMENTS$
  * 

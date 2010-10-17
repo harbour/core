@@ -19,7 +19,6 @@
  *     
  *  $SYNTAX$
  *     QImageWriter( ... )
- *     QImageWriter():from( pPtr_OR_oObj_of_type_QImageWriter )
  * 
  *  $ARGUMENTS$
  * 

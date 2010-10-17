@@ -19,15 +19,11 @@
  *     QStyleHintReturn
  *  $SYNTAX$
  *     QStyleHintReturnMask( ... )
- *     QStyleHintReturnMask():from( pPtr_OR_oObj_of_type_QStyleHintReturnMask )
  * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
  *     An instance of the object of type QStyleHintReturnMask
- *  $METHODS$
- *     :QStyleHintReturnMask()                             -> oQStyleHintReturnMask
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
