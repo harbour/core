@@ -57,11 +57,12 @@
 
 CREATE CLASS HbQtObjectHandler
 
-   VAR    pPtr
-   VAR    pSlots
-   VAR    pEvents
+   VAR    pPtr     /* TODO: Rename to __pPtr */
 
-   METHOD from( xObject )
+   VAR    __pSlots   PROTECTED
+   VAR    __pEvents  PROTECTED
+
+   METHOD from( oObject )
    METHOD fromPointer( pPtr )
    METHOD hasValidPointer()
 
@@ -74,14 +75,17 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-/* NOTE: Deprecated: passing raw pointers to this function
-   TODO: Generate RTE when non QT object is passed.
-   TODO: Move thid to class implementation level so that proper object
+/* TODO: Move thid to class implementation level so that proper object
          type checking can be done. */
-METHOD HbQtObjectHandler:from( xObject )
+METHOD HbQtObjectHandler:from( oObject )
    LOCAL pPtr
-   IF hb_isPointer( pPtr := __hbqt_ptr( xObject ) )
-      ::pPtr := pPtr
+   IF hbqt_isObject( oObject )
+      /* TOFIX: Here we should only accept GC collected pointers */
+      IF hb_isPointer( pPtr := oObject:pPtr )
+         ::pPtr := pPtr
+      ENDIF
+   ELSE
+      __hbqt_Error()
    ENDIF
    RETURN Self
 
@@ -103,7 +107,7 @@ METHOD HbQtObjectHandler:fromPointer( pPtr )
          into valid .prg level QT objects.
          Currently it will return .F. for objects created using :fromPointer() */
 METHOD HbQtObjectHandler:hasValidPointer()
-   RETURN __hbqt_IsValidPointer( ::pPtr )
+   RETURN __hbqt_isPointer( ::pPtr )
 
 /*----------------------------------------------------------------------*/
 
@@ -139,18 +143,18 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    SWITCH ValType( cnEvent )
    CASE "C"
 
-      IF Empty( ::pSlots )
-         ::pSlots := __hbqt_slots_New()
+      IF Empty( ::__pSlots )
+         ::__pSlots := __hbqt_slots_New()
       ENDIF
-      RETURN __hbqt_slots_Connect( ::pSlots, ::pPtr, cnEvent, bBlock )
+      RETURN __hbqt_slots_Connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
 
    CASE "N"
 
-      IF Empty( ::pEvents )
-         ::pEvents := __hbqt_events_New()
-         ::installEventFilter( HBQEventsFromPointer( ::pEvents ) )
+      IF Empty( ::__pEvents )
+         ::__pEvents := __hbqt_events_New()
+         ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
       ENDIF
-      RETURN __hbqt_events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
+      RETURN __hbqt_events_Connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
 
    ENDSWITCH
 
@@ -163,15 +167,15 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    SWITCH ValType( cnEvent )
    CASE "C"
 
-      IF ! Empty( ::pSlots )
-         RETURN __hbqt_slots_Disconnect( ::pSlots, ::pPtr, cnEvent )
+      IF ! Empty( ::__pSlots )
+         RETURN __hbqt_slots_Disconnect( ::__pSlots, ::pPtr, cnEvent )
       ENDIF
       EXIT
 
    CASE "N"
 
-      IF ! Empty( ::pEvents )
-         RETURN __hbqt_events_Disconnect( ::pEvents, ::pPtr, cnEvent )
+      IF ! Empty( ::__pEvents )
+         RETURN __hbqt_events_Disconnect( ::__pEvents, ::pPtr, cnEvent )
       ENDIF
       EXIT
 

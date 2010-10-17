@@ -251,7 +251,7 @@ void * hbqt_detachgcpointer( int iParam )
    }
 }
 
-HB_FUNC( __HBQT_ISVALIDPOINTER )
+HB_FUNC( __HBQT_ISPOINTER )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
 

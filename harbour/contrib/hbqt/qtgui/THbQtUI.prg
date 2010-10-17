@@ -188,7 +188,7 @@ METHOD HbQtUI:loadWidgets()
             bBlock := &( cBlock )
 
             x := eval( bBlock )
-            IF hb_isObject( x )
+            IF hbqt_isObject( x )
                x:pPtr := pPtr
                ::qObj[ a_[ 2 ] ] := x
             ENDIF
