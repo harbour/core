@@ -21,6 +21,7 @@
 
 ../hbxbp/hbxbp.hbc
 ../hbqt/hbqtnetwork.hbc
+../hbqt/hbqtuitools.hbc
 
 idemain.prg
 ideobject.prg

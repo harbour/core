@@ -8,4 +8,3 @@ libs=${hb_name}${__HB_DYN__}
 
 libs=../hbqt/hbqtcore.hbc
 libs=../hbqt/hbqtgui.hbc
-libs=../hbqt/hbqtuitools.hbc
