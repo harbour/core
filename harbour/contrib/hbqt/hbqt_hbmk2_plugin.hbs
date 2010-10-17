@@ -125,7 +125,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
             ENDIF
          ENDIF
          IF ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] )
-            hbmk2[ "vars" ][ "cMOC_BIN" ] := qt_tool_detect( hbmk2, "moc", "MOC_BIN", "HB_QT_MOC_BIN" )
+            hbmk2[ "vars" ][ "cMOC_BIN" ] := qt_tool_detect( hbmk2, "moc", "MOC_BIN" )
             IF Empty( hbmk2[ "vars" ][ "cMOC_BIN" ] )
                cRetVal := I_( "Required QT tool not found" )
             ENDIF
@@ -325,63 +325,52 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
    RETURN cRetVal
 
-STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
+STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT )
    LOCAL cBIN
    LOCAL aEnvList
 
    aEnvList := { "HB_QTPATH", "HB_QTPOSTFIX" }
-   IF ! Empty( cEnvHB )
-      AAdd( aEnvList, cEnvHB )
-   ENDIF
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
-      IF Empty( cEnvHB ) .OR. Empty( GetEnv( cEnvHB ) )
-         cName += GetEnv( "HB_QTPOSTFIX" )
-         IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
-            ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
+      cName += GetEnv( "HB_QTPOSTFIX" )
+      IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
+         ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
 
-            cBIN := ""
-            IF hbmk2[ "cPLAT" ] $ "win|os2"
+         cBIN := ""
+         IF hbmk2[ "cPLAT" ] $ "win|os2"
 
-               hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
+            hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
 
-               IF ! Empty( GetEnv( "HB_WITH_QT" ) )
+            IF ! Empty( GetEnv( "HB_WITH_QT" ) )
 
-                  IF GetEnv( "HB_WITH_QT" ) == "no"
-                     /* Return silently. It shall fail at dependency detection inside hbmk2 */
-                     RETURN NIL
-                  ELSE
-                     IF ! hb_FileExists( cBIN := hbmk2_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
-                        hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
-                        cBIN := ""
-                     ENDIF
+               IF GetEnv( "HB_W_ITH_QT" ) == "no"
+                  /* Return silently. It shall fail at dependency detection inside hbmk2 */
+                  RETURN NIL
+               ELSE
+                  IF ! hb_FileExists( cBIN := hbmk2_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
+                     hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
+                     cBIN := ""
                   ENDIF
                ENDIF
-            ENDIF
-
-            IF Empty( cBIN )
-               cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
-               IF Empty( cBIN )
-                  hbmk2_OutErr( hbmk2, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk2_ArrayToList( aEnvList, ", " ), cName ) )
-                  RETURN NIL
+            ELSE
+               cBIN := hbmk2_DirAddPathSep( hb_DirBase() ) + cName + ".exe"
+               IF ! hb_FileExists( cBIN )
+                  cBIN := ""
                ENDIF
             ENDIF
          ENDIF
-         IF hbmk2[ "lINFO" ]
-            hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s (autodetected)", cName, cBIN ) )
-         ENDIF
-      ELSE
-         /* kept for compatibility */
-         IF hb_FileExists( GetEnv( cEnvHB ) )
-            cBIN := GetEnv( cEnvHB )
-            IF hbmk2[ "lINFO" ]
-               hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s", cName, cBIN ) )
+
+         IF Empty( cBIN )
+            cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
+            IF Empty( cBIN )
+               hbmk2_OutErr( hbmk2, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk2_ArrayToList( aEnvList, ", " ), cName ) )
+               RETURN NIL
             ENDIF
-         ELSE
-            hbmk2_OutErr( hbmk2, hb_StrFormat( "%1$s points to non-existent file. Make sure to set it to full path and filename of '%2$s' executable.", cEnvHB, cName ) )
-            RETURN NIL
          ENDIF
+      ENDIF
+      IF hbmk2[ "lINFO" ]
+         hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s (autodetected)", cName, cBIN ) )
       ENDIF
    ENDIF
 

@@ -302,7 +302,7 @@ CLASS HbIde
    DATA   lClosing                                INIT   .f.
    DATA   lStatusBarVisible                       INIT   .t.
 
-   DATA   nModeUI                                 INIT   UI_MODE_UIC
+   DATA   nModeUI                                 INIT   UI_MODE_DEFAULT
 
    DATA   oSys
    DATA   oSysMenu
@@ -361,16 +361,6 @@ METHOD HbIde:new( aParams )
 
 METHOD HbIde:create( aParams )
    LOCAL qPixmap, qSplash, cView
-
-   #ifdef __VIA_UIC__
-   ::nModeUI := 0
-   #endif
-   #ifdef __VIA_FUNC__
-   ::nModeUI := UI_MODE_FUNC
-   #endif
-   #ifdef __VIA_UI__
-   ::nModeUI := UI_MODE_UI
-   #endif
 
    qPixmap := QPixmap( ":/resources" + hb_ps() + "hbidesplash.png" )
    qSplash := QSplashScreen()

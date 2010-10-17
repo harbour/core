@@ -150,8 +150,8 @@ Section /o "IDE" hb_ide
   File "$%HB_ABSROOT%bin\QtCore4.dll"
   File "$%HB_ABSROOT%bin\QtGui4.dll"
   File "$%HB_ABSROOT%bin\QtNetwork4.dll"
-  File "$%HB_ABSROOT%bin\Qt_LICENSE.txt"
-  File "$%HB_ABSROOT%bin\Qt_LICENSE_EXCEPTION.txt"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt"
 SectionEnd
 !endif
 

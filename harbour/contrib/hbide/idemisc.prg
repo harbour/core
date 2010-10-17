@@ -2124,92 +2124,36 @@ FUNCTION hbide_SetWrkFolderLast( cPathFile )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_getUI( cUI, qParent )
-   LOCAL nModeUI := hbide_setIde():nModeUI
-   LOCAL oUI
 
-   cUI := lower( cUI )
-
-   SWITCH cUI
-   CASE "findinfilesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Findinfilesex( qParent ), NIL )
-      EXIT
-   CASE "updown"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_UpDown( qParent ), NIL )
-      EXIT
-   CASE "updown_v"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_UpDown_v( qParent ), NIL )
-      EXIT
-   CASE "searchreplace"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_SearchReplace( qParent ), NIL )
-      EXIT
-   CASE "finddialog"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_FindDialog( qParent ), NIL )
-      EXIT
-   CASE "environments"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Environments( qParent ), NIL )
-      EXIT
-   CASE "environ"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Environ( qParent ), NIL )
-      EXIT
-   CASE "shortcuts"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Shortcuts( qParent ), NIL )
-      EXIT
-   CASE "docwriter"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Docwriter( qParent ), NIL )
-      EXIT
-   CASE "toolsutilities"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Toolsutilities( qParent ), NIL )
-      EXIT
-   CASE "funclist"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Funclist( qParent ), NIL )
-      EXIT
-   CASE "docviewgenerator"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Docviewgenerator( qParent ), NIL )
-      EXIT
-   CASE "selectproject"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Selectproject( qParent ), NIL )
-      EXIT
-   CASE "projectpropertiesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Projectpropertiesex( qParent ), NIL )
-      EXIT
-   CASE "selectionlist"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Selectionlist( qParent ), NIL )
-      EXIT
-   CASE "themesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Themesex( qParent ), NIL )
-      EXIT
-   CASE "setup"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Setup( qParent ), NIL )
-      EXIT
-   CASE "mainwindow"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Mainwindow( qParent ), NIL )
-      EXIT
-   CASE "skeletons"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Skeletons( qParent ), NIL )
-      EXIT
-   CASE "editor"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Editor( qParent ), NIL )
-      EXIT
-   CASE "dbstruct"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_DbStruct( qParent ), NIL )
-      EXIT
-   CASE "fetchdate"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_FetchDate( qParent ), NIL )
-      EXIT
-   CASE "tables"
-      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Tables( qParent ), NIL )
-      EXIT
-   ENDSWITCH
-
-   IF empty( oUI )
-      IF nModeUI == UI_MODE_UI
-         oUI := HbQtUI():new( hbide_ui( cUI ), qParent ):create()
-      ELSE
-         oUI := HbQtUI():new( hbide_uic( cUI ), qParent ):create()
-      ENDIF
+   IF hbide_setIde():nModeUI == UI_MODE_FUNC
+      SWITCH Lower( cUI )
+      CASE "findinfilesex"       ; RETURN hbqtui_Findinfilesex( qParent )
+      CASE "updown"              ; RETURN hbqtui_UpDown( qParent )
+      CASE "updown_v"            ; RETURN hbqtui_UpDown_v( qParent )
+      CASE "searchreplace"       ; RETURN hbqtui_SearchReplace( qParent )
+      CASE "finddialog"          ; RETURN hbqtui_FindDialog( qParent )
+      CASE "environments"        ; RETURN hbqtui_Environments( qParent )
+      CASE "environ"             ; RETURN hbqtui_Environ( qParent )
+      CASE "shortcuts"           ; RETURN hbqtui_Shortcuts( qParent )
+      CASE "docwriter"           ; RETURN hbqtui_Docwriter( qParent )
+      CASE "toolsutilities"      ; RETURN hbqtui_Toolsutilities( qParent )
+      CASE "funclist"            ; RETURN hbqtui_Funclist( qParent )
+      CASE "docviewgenerator"    ; RETURN hbqtui_Docviewgenerator( qParent )
+      CASE "selectproject"       ; RETURN hbqtui_Selectproject( qParent )
+      CASE "projectpropertiesex" ; RETURN hbqtui_Projectpropertiesex( qParent )
+      CASE "selectionlist"       ; RETURN hbqtui_Selectionlist( qParent )
+      CASE "themesex"            ; RETURN hbqtui_Themesex( qParent )
+      CASE "setup"               ; RETURN hbqtui_Setup( qParent )
+      CASE "mainwindow"          ; RETURN hbqtui_Mainwindow( qParent )
+      CASE "skeletons"           ; RETURN hbqtui_Skeletons( qParent )
+      CASE "editor"              ; RETURN hbqtui_Editor( qParent )
+      CASE "dbstruct"            ; RETURN hbqtui_DbStruct( qParent )
+      CASE "fetchdate"           ; RETURN hbqtui_FetchDate( qParent )
+      CASE "tables"              ; RETURN hbqtui_Tables( qParent )
+      ENDSWITCH
    ENDIF
 
-   RETURN oUI
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
