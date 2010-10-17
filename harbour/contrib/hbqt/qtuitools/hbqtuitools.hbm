@@ -1,0 +1,12 @@
+#
+# $Id: hbqtnetwork.hbm 15310 2010-08-04 20:04:53Z vszakats $
+#
+
+-i.
+-ig
+
+g/filelist.hbm
+
+THbQtUI.prg
+
+../qtgui/hbqtgui.hbc

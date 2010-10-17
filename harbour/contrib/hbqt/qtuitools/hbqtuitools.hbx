@@ -1,0 +1,42 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: Following comments are control commands for the generator.     */
+/*       Do not edit them unless you know what you are doing.           */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+// HB_FUNC_EXCLUDE QT_*
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBQTUITOOLS__
+#define __HBEXTERN_CH__HBQTUITOOLS__
+
+#ifdef __HBEXTERN__HBQTUITOOLS__ANNOUNCE
+   ANNOUNCE __HBEXTERN__HBQTUITOOLS__
+#endif
+
+#ifdef __HBEXTERN__HBQTUITOOLS__REQUEST
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HBQTUI
+DYNAMIC HB_QUILOADER
+DYNAMIC QUILOADER
+DYNAMIC QUILOADERFROM
+DYNAMIC QUILOADERFROMPOINTER
+DYNAMIC Q__TR
+
+#ifdef __HBEXTERN__HBQTUITOOLS__REQUEST
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

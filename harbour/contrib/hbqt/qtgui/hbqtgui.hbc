@@ -15,11 +15,9 @@ libs=../qtcore/hbqtcore.hbc
 {!HB_STATIC_QT&(allwin|os2)}libs=QtGui4
 {!HB_STATIC_QT&(linux|symbian)}libs=QtGui
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
-{!HB_STATIC_QT}libs=QtUiTools
 {HB_STATIC_QT&allwin}libs=hbqtguis${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqtgui
 {HB_STATIC_QT&(allwin|linux)}libs=QtGui
-{HB_STATIC_QT&(allwin|linux)}libs=QtUiTools
 
 gui=yes
 gt=gtnul

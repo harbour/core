@@ -276,7 +276,6 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWindowsStyle );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWindowStateChangeEvent );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWizard );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWizardPage );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QUiLoader );
 
 extern HB_EXPORT void * hbqt_gcAllocate_HBQAbstractItemModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBQGraphicsItem( void * pObj, bool bNew );
@@ -539,7 +538,6 @@ extern HB_EXPORT void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWizard( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew );
 
 HB_EXTERN_END
 
@@ -804,7 +802,6 @@ HB_EXTERN_END
 #define hbqt_par_QWindowStateChangeEvent( n )                   ( ( QWindowStateChangeEvent                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWizard( n )                                   ( ( QWizard                                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWizardPage( n )                               ( ( QWizardPage                                 * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QUiLoader( n )                                 ( ( QUiLoader                                   * ) hbqt_gcpointer( n ) )
 
 #define HBQT_TYPE_HBQAbstractItemModel                          0x4C8E7C31
 #define HBQT_TYPE_HBQGraphicsItem                               0x02AA8AE5
@@ -1067,6 +1064,5 @@ HB_EXTERN_END
 #define HBQT_TYPE_QWindowStateChangeEvent                       0xFB5C127E
 #define HBQT_TYPE_QWizard                                       0xE0EDF151
 #define HBQT_TYPE_QWizardPage                                   0x385507E7
-#define HBQT_TYPE_QUiLoader                                     0xE3D876A2
 
 #endif /* __HBQTGUI_H */

@@ -270,9 +270,3 @@ QWindowsStyle.qth
 QWindowStateChangeEvent.qth
 QWizard.qth
 QWizardPage.qth
-
-QUiLoader.qth
-
-
-
-

@@ -270,7 +270,6 @@ QWindowsStyle.cpp
 QWindowStateChangeEvent.cpp
 QWizard.cpp
 QWizardPage.cpp
-QUiLoader.cpp
 
 THBQAbstractItemModel.prg
 THBQGraphicsItem.prg
@@ -533,4 +532,3 @@ TQWindowsStyle.prg
 TQWindowStateChangeEvent.prg
 TQWizard.prg
 TQWizardPage.prg
-TQUiLoader.prg

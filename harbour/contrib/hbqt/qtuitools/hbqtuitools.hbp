@@ -1,0 +1,9 @@
+#
+# $Id: hbqtnetwork.hbp 15310 2010-08-04 20:04:53Z vszakats $
+#
+
+../hbqt_common.hbm
+
+hbqtuitools.hbm
+
+-instfile=inc:hbqtuitools.hbx

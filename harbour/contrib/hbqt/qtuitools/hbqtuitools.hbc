@@ -1,0 +1,15 @@
+#
+# $Id: hbqtnetwork.hbc 15328 2010-08-06 12:35:40Z vszakats $
+#
+
+# ---------------------------------------------------------------
+# Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
+incpaths=g
+
+libs=../qtgui/hbqtgui.hbc
+
+{!HB_STATIC_QT}libs=QtUiTools
+{HB_STATIC_QT&(allwin|linux)}libs=QtUiTools

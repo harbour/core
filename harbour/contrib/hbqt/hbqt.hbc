@@ -11,4 +11,5 @@ libs=hbqtcore.hbc
 # libs=hbqtdesigner.hbc
 libs=hbqtgui.hbc
 libs=hbqtnetwork.hbc
+libs=hbqtuitools.hbc
 # libs=hbqtwebkit.hbc
