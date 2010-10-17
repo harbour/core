@@ -83,7 +83,7 @@
 REQUEST __HB_EXTERN__
 REQUEST __HBEXTERN__HBXBP__
 REQUEST __HBEXTERN__HBQTCORE__
-REQUEST __HBEXTERN__HBQTGUI__
+//REQUEST __HBEXTERN__HBQTGUI__
 REQUEST __HBEXTERN__HBQTNETWORK__
 
 /*----------------------------------------------------------------------*/
