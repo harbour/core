@@ -595,32 +595,32 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "FUNCTION " + cFuncName + "( qParent )" )
    AAdd( aLinesPRG, "   LOCAL oUI" )
-   AAdd( aLinesPRG, "   LOCAL oWidget" )
-   AAdd( aLinesPRG, "   LOCAL qObj := { => }" )
+   AAdd( aLinesPRG, "   LOCAL oRootWidget" )
+   AAdd( aLinesPRG, "   LOCAL hWidget := { => }" )
    AAdd( aLinesPRG, "" )
-   AAdd( aLinesPRG, "   hb_hCaseMatch( qObj, .F. )" )
+   AAdd( aLinesPRG, "   hb_hCaseMatch( hWidget, .F. )" )
    AAdd( aLinesPRG, "" )
 
    SWITCH cMCls
    CASE "QDialog"
-      AAdd( aLinesPRG, "   oWidget := QDialog( qParent )" )
+      AAdd( aLinesPRG, "   oRootWidget := QDialog( qParent )" )
       EXIT
    CASE "QWidget"
-      AAdd( aLinesPRG, "   oWidget := QWidget( qParent )" )
+      AAdd( aLinesPRG, "   oRootWidget := QWidget( qParent )" )
       EXIT
    CASE "QMainWindow"
-      AAdd( aLinesPRG, "   oWidget := QMainWindow( qParent )" )
+      AAdd( aLinesPRG, "   oRootWidget := QMainWindow( qParent )" )
       EXIT
    ENDSWITCH
    AAdd( aLinesPRG, "  " )
-   AAdd( aLinesPRG, "   oWidget:setObjectName( " + STRINGIFY( cMNam ) + " )" )
+   AAdd( aLinesPRG, "   oRootWidget:setObjectName( " + STRINGIFY( cMNam ) + " )" )
    AAdd( aLinesPRG, "  " )
-   AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cMNam ) ) + " ] := oWidget" )
+   AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cMNam ) ) + " ] := oRootWidget" )
    AAdd( aLinesPRG, "  " )
 
    FOR EACH item IN aWidgets
       IF item:__enumIndex() > 1
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( item[ 2 ] ) ) + " ] := " + StrTran( item[ 4 ], "o[", "qObj[" ) )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( item[ 2 ] ) ) + " ] := " + StrTran( item[ 4 ], "o[", "hWidget[" ) )
       ENDIF
    NEXT
    AAdd( aLinesPRG, "" )
@@ -645,27 +645,27 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
       IF "setToolTip(" $ cCmd
          s := hbq_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setToolTip( [" + STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setToolTip( [" + STRIP_SQ( s ) + "] )" )
 
       ELSEIF "setPlainText(" $ cCmd
          s := hbq_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setPlainText( [" + STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setPlainText( [" + STRIP_SQ( s ) + "] )" )
 
       ELSEIF "setStyleSheet(" $ cCmd
          s := hbq_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setStyleSheet( [" + STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setStyleSheet( [" + STRIP_SQ( s ) + "] )" )
 
       ELSEIF "setText(" $ cCmd
          s := hbq_pullToolTip( cCmd )
          IF hbq_pullColumn( cCmd, @n )
-            AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( " + hb_ntos( n ) + ", [" + STRIP_SQ( s ) + "] )" )
+            AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( " + hb_ntos( n ) + ", [" + STRIP_SQ( s ) + "] )" )
          ELSE
-            AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( [" + STRIP_SQ( s ) + "] )" )
+            AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( [" + STRIP_SQ( s ) + "] )" )
          ENDIF
 
       ELSEIF "setWhatsThis(" $ cCmd
          s := hbq_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setWhatsThis( [" + STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setWhatsThis( [" + STRIP_SQ( s ) + "] )" )
 
       ELSEIF "header()->" $ cCmd
          // TODO: how to handle : __qtreeviewitem->header()->setVisible( .F. )
@@ -674,15 +674,19 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
          // Nothing TO DO
 
       ELSE
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:" + StrTran( cCmd, "o[", "qObj[" ) )
+         AAdd( aLinesPRG, "   hWidget[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:" + StrTran( cCmd, "o[", "hWidget[" ) )
 
       ENDIF
    NEXT
    AAdd( aLinesPRG, "" )
+   #if 0
+   AAdd( aLinesPRG, "   oUI := HbQtUI2():new( oRootWidget, hWidget )" )
+   #else
    AAdd( aLinesPRG, "   oUI         := HbQtUI():new()" )
-   AAdd( aLinesPRG, "   oUI:qObj    := qObj" )
-   AAdd( aLinesPRG, "   oUI:oWidget := oWidget" )
-   AAdd( aLinesPRG, "   oUI:pPtr    := oWidget:pPtr" )
+   AAdd( aLinesPRG, "   oUI:qObj    := hWidget" )
+   AAdd( aLinesPRG, "   oUI:oWidget := oRootWidget" )
+   AAdd( aLinesPRG, "   oUI:pPtr    := oRootWidget:pPtr" )
+   #endif
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   RETURN oUI" )
    AAdd( aLinesPRG, "" )
