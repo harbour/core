@@ -124,7 +124,7 @@ CREATE CLASS QStringListModel INHERIT HbQtObjectHandler, HB_QAbstractListModel F
 METHOD QStringListModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStringListModel( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QStringListModel:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:flags( ... )
@@ -151,7 +151,7 @@ METHOD QStringListModel:flags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:insertRows( ... )
@@ -169,7 +169,7 @@ METHOD QStringListModel:insertRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:removeRows( ... )
@@ -187,7 +187,7 @@ METHOD QStringListModel:removeRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:rowCount( ... )
@@ -201,7 +201,7 @@ METHOD QStringListModel:rowCount( ... )
    CASE 0
       RETURN Qt_QStringListModel_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:setData( ... )
@@ -219,7 +219,7 @@ METHOD QStringListModel:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:setStringList( ... )
@@ -231,7 +231,7 @@ METHOD QStringListModel:setStringList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringListModel:stringList( ... )
@@ -239,5 +239,5 @@ METHOD QStringListModel:stringList( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QStringListModel_stringList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

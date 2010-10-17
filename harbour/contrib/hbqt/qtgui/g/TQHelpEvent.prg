@@ -122,7 +122,7 @@ CREATE CLASS QHelpEvent INHERIT HbQtObjectHandler FUNCTION HB_QHelpEvent
 METHOD QHelpEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHelpEvent( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QHelpEvent:globalPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QHelpEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHelpEvent:globalX( ... )
@@ -141,7 +141,7 @@ METHOD QHelpEvent:globalX( ... )
    CASE 0
       RETURN Qt_QHelpEvent_globalX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHelpEvent:globalY( ... )
@@ -149,7 +149,7 @@ METHOD QHelpEvent:globalY( ... )
    CASE 0
       RETURN Qt_QHelpEvent_globalY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHelpEvent:pos( ... )
@@ -157,7 +157,7 @@ METHOD QHelpEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QHelpEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHelpEvent:x( ... )
@@ -165,7 +165,7 @@ METHOD QHelpEvent:x( ... )
    CASE 0
       RETURN Qt_QHelpEvent_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHelpEvent:y( ... )
@@ -173,5 +173,5 @@ METHOD QHelpEvent:y( ... )
    CASE 0
       RETURN Qt_QHelpEvent_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -120,7 +120,7 @@ CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, HB_QStyleOption F
 METHOD QStyleOptionDockWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionDockWidget( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QStyleOptionDockWidget:closable( ... )
    CASE 0
       RETURN Qt_QStyleOptionDockWidget_closable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionDockWidget:floatable( ... )
@@ -139,7 +139,7 @@ METHOD QStyleOptionDockWidget:floatable( ... )
    CASE 0
       RETURN Qt_QStyleOptionDockWidget_floatable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionDockWidget:movable( ... )
@@ -147,7 +147,7 @@ METHOD QStyleOptionDockWidget:movable( ... )
    CASE 0
       RETURN Qt_QStyleOptionDockWidget_movable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionDockWidget:title( ... )
@@ -155,5 +155,5 @@ METHOD QStyleOptionDockWidget:title( ... )
    CASE 0
       RETURN Qt_QStyleOptionDockWidget_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

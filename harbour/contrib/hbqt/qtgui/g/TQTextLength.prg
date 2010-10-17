@@ -119,7 +119,7 @@ CREATE CLASS QTextLength INHERIT HbQtObjectHandler FUNCTION HB_QTextLength
 METHOD QTextLength:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextLength( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QTextLength:rawValue( ... )
    CASE 0
       RETURN Qt_QTextLength_rawValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLength:type( ... )
@@ -138,7 +138,7 @@ METHOD QTextLength:type( ... )
    CASE 0
       RETURN Qt_QTextLength_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLength:value( ... )
@@ -150,5 +150,5 @@ METHOD QTextLength:value( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

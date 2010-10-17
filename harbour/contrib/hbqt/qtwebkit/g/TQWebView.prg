@@ -142,7 +142,7 @@ CREATE CLASS QWebView INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWebView
 METHOD QWebView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebView( ... )
    RETURN Self
@@ -163,7 +163,7 @@ METHOD QWebView:findText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:history( ... )
@@ -171,7 +171,7 @@ METHOD QWebView:history( ... )
    CASE 0
       RETURN QWebHistoryFromPointer( Qt_QWebView_history( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:icon( ... )
@@ -179,7 +179,7 @@ METHOD QWebView:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QWebView_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:isModified( ... )
@@ -187,7 +187,7 @@ METHOD QWebView:isModified( ... )
    CASE 0
       RETURN Qt_QWebView_isModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:load( ... )
@@ -216,7 +216,7 @@ METHOD QWebView:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:page( ... )
@@ -224,7 +224,7 @@ METHOD QWebView:page( ... )
    CASE 0
       RETURN QWebPageFromPointer( Qt_QWebView_page( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:pageAction( ... )
@@ -236,7 +236,7 @@ METHOD QWebView:pageAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:selectedText( ... )
@@ -244,7 +244,7 @@ METHOD QWebView:selectedText( ... )
    CASE 0
       RETURN Qt_QWebView_selectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setContent( ... )
@@ -268,7 +268,7 @@ METHOD QWebView:setContent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setHtml( ... )
@@ -286,7 +286,7 @@ METHOD QWebView:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setPage( ... )
@@ -298,7 +298,7 @@ METHOD QWebView:setPage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setTextSizeMultiplier( ... )
@@ -310,7 +310,7 @@ METHOD QWebView:setTextSizeMultiplier( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setUrl( ... )
@@ -322,7 +322,7 @@ METHOD QWebView:setUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:setZoomFactor( ... )
@@ -334,7 +334,7 @@ METHOD QWebView:setZoomFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:settings( ... )
@@ -342,7 +342,7 @@ METHOD QWebView:settings( ... )
    CASE 0
       RETURN QWebSettingsFromPointer( Qt_QWebView_settings( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:textSizeMultiplier( ... )
@@ -350,7 +350,7 @@ METHOD QWebView:textSizeMultiplier( ... )
    CASE 0
       RETURN Qt_QWebView_textSizeMultiplier( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:title( ... )
@@ -358,7 +358,7 @@ METHOD QWebView:title( ... )
    CASE 0
       RETURN Qt_QWebView_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:triggerPageAction( ... )
@@ -376,7 +376,7 @@ METHOD QWebView:triggerPageAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:url( ... )
@@ -384,7 +384,7 @@ METHOD QWebView:url( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QWebView_url( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:zoomFactor( ... )
@@ -392,7 +392,7 @@ METHOD QWebView:zoomFactor( ... )
    CASE 0
       RETURN Qt_QWebView_zoomFactor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:back( ... )
@@ -400,7 +400,7 @@ METHOD QWebView:back( ... )
    CASE 0
       RETURN Qt_QWebView_back( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:forward( ... )
@@ -408,7 +408,7 @@ METHOD QWebView:forward( ... )
    CASE 0
       RETURN Qt_QWebView_forward( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:print( ... )
@@ -420,7 +420,7 @@ METHOD QWebView:print( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:reload( ... )
@@ -428,7 +428,7 @@ METHOD QWebView:reload( ... )
    CASE 0
       RETURN Qt_QWebView_reload( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebView:stop( ... )
@@ -436,5 +436,5 @@ METHOD QWebView:stop( ... )
    CASE 0
       RETURN Qt_QWebView_stop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

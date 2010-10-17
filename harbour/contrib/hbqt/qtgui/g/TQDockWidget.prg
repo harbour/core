@@ -128,7 +128,7 @@ CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDock
 METHOD QDockWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDockWidget( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QDockWidget:allowedAreas( ... )
    CASE 0
       RETURN Qt_QDockWidget_allowedAreas( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:features( ... )
@@ -147,7 +147,7 @@ METHOD QDockWidget:features( ... )
    CASE 0
       RETURN Qt_QDockWidget_features( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:isAreaAllowed( ... )
@@ -159,7 +159,7 @@ METHOD QDockWidget:isAreaAllowed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:isFloating( ... )
@@ -167,7 +167,7 @@ METHOD QDockWidget:isFloating( ... )
    CASE 0
       RETURN Qt_QDockWidget_isFloating( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:setAllowedAreas( ... )
@@ -179,7 +179,7 @@ METHOD QDockWidget:setAllowedAreas( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:setFeatures( ... )
@@ -191,7 +191,7 @@ METHOD QDockWidget:setFeatures( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:setFloating( ... )
@@ -203,7 +203,7 @@ METHOD QDockWidget:setFloating( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:setTitleBarWidget( ... )
@@ -215,7 +215,7 @@ METHOD QDockWidget:setTitleBarWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:setWidget( ... )
@@ -227,7 +227,7 @@ METHOD QDockWidget:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:titleBarWidget( ... )
@@ -235,7 +235,7 @@ METHOD QDockWidget:titleBarWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDockWidget_titleBarWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:toggleViewAction( ... )
@@ -243,7 +243,7 @@ METHOD QDockWidget:toggleViewAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QDockWidget_toggleViewAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDockWidget:widget( ... )
@@ -251,5 +251,5 @@ METHOD QDockWidget:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDockWidget_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

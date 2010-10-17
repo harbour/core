@@ -123,7 +123,7 @@ CREATE CLASS QDesignerPropertyEditorInterface INHERIT HbQtObjectHandler, HB_QWid
 METHOD QDesignerPropertyEditorInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerPropertyEditorInterface( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QDesignerPropertyEditorInterface:core( ... )
    CASE 0
       RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerPropertyEditorInterface_core( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:currentPropertyName( ... )
@@ -142,7 +142,7 @@ METHOD QDesignerPropertyEditorInterface:currentPropertyName( ... )
    CASE 0
       RETURN Qt_QDesignerPropertyEditorInterface_currentPropertyName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:isReadOnly( ... )
@@ -150,7 +150,7 @@ METHOD QDesignerPropertyEditorInterface:isReadOnly( ... )
    CASE 0
       RETURN Qt_QDesignerPropertyEditorInterface_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:object( ... )
@@ -158,7 +158,7 @@ METHOD QDesignerPropertyEditorInterface:object( ... )
    CASE 0
       RETURN QObjectFromPointer( Qt_QDesignerPropertyEditorInterface_object( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:setObject( ... )
@@ -170,7 +170,7 @@ METHOD QDesignerPropertyEditorInterface:setObject( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:setPropertyValue( ... )
@@ -188,7 +188,7 @@ METHOD QDesignerPropertyEditorInterface:setPropertyValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerPropertyEditorInterface:setReadOnly( ... )
@@ -200,5 +200,5 @@ METHOD QDesignerPropertyEditorInterface:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

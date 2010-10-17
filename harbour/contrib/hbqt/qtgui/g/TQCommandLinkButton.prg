@@ -118,7 +118,7 @@ CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, HB_QPushButton FUNCTI
 METHOD QCommandLinkButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCommandLinkButton( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QCommandLinkButton:description( ... )
    CASE 0
       RETURN Qt_QCommandLinkButton_description( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCommandLinkButton:setDescription( ... )
@@ -141,5 +141,5 @@ METHOD QCommandLinkButton:setDescription( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

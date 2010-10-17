@@ -125,7 +125,7 @@ CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSi
 METHOD QSignalMapper:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSignalMapper( ... )
    RETURN Self
@@ -144,7 +144,7 @@ METHOD QSignalMapper:mapping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSignalMapper:removeMappings( ... )
@@ -156,7 +156,7 @@ METHOD QSignalMapper:removeMappings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSignalMapper:setMapping( ... )
@@ -172,7 +172,7 @@ METHOD QSignalMapper:setMapping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSignalMapper:map( ... )
@@ -186,5 +186,5 @@ METHOD QSignalMapper:map( ... )
    CASE 0
       RETURN Qt_QSignalMapper_map( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

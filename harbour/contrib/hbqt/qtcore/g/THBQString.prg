@@ -283,7 +283,7 @@ CREATE CLASS HBQString INHERIT HbQtObjectHandler FUNCTION HB_HBQString
 METHOD HBQString:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQString( ... )
    RETURN Self

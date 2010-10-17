@@ -119,7 +119,7 @@ CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_Q
 METHOD QSpacerItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSpacerItem( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QSpacerItem:changeSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpacerItem:isEmpty( ... )
@@ -154,7 +154,7 @@ METHOD QSpacerItem:isEmpty( ... )
    CASE 0
       RETURN Qt_QSpacerItem_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpacerItem:spacerItem( ... )
@@ -162,5 +162,5 @@ METHOD QSpacerItem:spacerItem( ... )
    CASE 0
       RETURN QSpacerItemFromPointer( Qt_QSpacerItem_spacerItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

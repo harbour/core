@@ -155,7 +155,7 @@ CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMess
 METHOD QMessageBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMessageBox( ... )
    RETURN Self
@@ -178,7 +178,7 @@ METHOD QMessageBox:addButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:button( ... )
@@ -190,7 +190,7 @@ METHOD QMessageBox:button( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:buttonRole( ... )
@@ -202,7 +202,7 @@ METHOD QMessageBox:buttonRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:buttons( ... )
@@ -210,7 +210,7 @@ METHOD QMessageBox:buttons( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QMessageBox_buttons( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:clickedButton( ... )
@@ -218,7 +218,7 @@ METHOD QMessageBox:clickedButton( ... )
    CASE 0
       RETURN QAbstractButtonFromPointer( Qt_QMessageBox_clickedButton( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:defaultButton( ... )
@@ -226,7 +226,7 @@ METHOD QMessageBox:defaultButton( ... )
    CASE 0
       RETURN QPushButtonFromPointer( Qt_QMessageBox_defaultButton( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:detailedText( ... )
@@ -234,7 +234,7 @@ METHOD QMessageBox:detailedText( ... )
    CASE 0
       RETURN Qt_QMessageBox_detailedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:escapeButton( ... )
@@ -242,7 +242,7 @@ METHOD QMessageBox:escapeButton( ... )
    CASE 0
       RETURN QAbstractButtonFromPointer( Qt_QMessageBox_escapeButton( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:icon( ... )
@@ -250,7 +250,7 @@ METHOD QMessageBox:icon( ... )
    CASE 0
       RETURN Qt_QMessageBox_icon( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:iconPixmap( ... )
@@ -258,7 +258,7 @@ METHOD QMessageBox:iconPixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QMessageBox_iconPixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:informativeText( ... )
@@ -266,7 +266,7 @@ METHOD QMessageBox:informativeText( ... )
    CASE 0
       RETURN Qt_QMessageBox_informativeText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:open( ... )
@@ -278,7 +278,7 @@ METHOD QMessageBox:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:removeButton( ... )
@@ -290,7 +290,7 @@ METHOD QMessageBox:removeButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setDefaultButton( ... )
@@ -304,7 +304,7 @@ METHOD QMessageBox:setDefaultButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setDetailedText( ... )
@@ -316,7 +316,7 @@ METHOD QMessageBox:setDetailedText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setEscapeButton( ... )
@@ -330,7 +330,7 @@ METHOD QMessageBox:setEscapeButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setIcon( ... )
@@ -342,7 +342,7 @@ METHOD QMessageBox:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setIconPixmap( ... )
@@ -354,7 +354,7 @@ METHOD QMessageBox:setIconPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setInformativeText( ... )
@@ -366,7 +366,7 @@ METHOD QMessageBox:setInformativeText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setStandardButtons( ... )
@@ -378,7 +378,7 @@ METHOD QMessageBox:setStandardButtons( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setText( ... )
@@ -390,7 +390,7 @@ METHOD QMessageBox:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setTextFormat( ... )
@@ -402,7 +402,7 @@ METHOD QMessageBox:setTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setWindowModality( ... )
@@ -414,7 +414,7 @@ METHOD QMessageBox:setWindowModality( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:setWindowTitle( ... )
@@ -426,7 +426,7 @@ METHOD QMessageBox:setWindowTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:standardButton( ... )
@@ -438,7 +438,7 @@ METHOD QMessageBox:standardButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:standardButtons( ... )
@@ -446,7 +446,7 @@ METHOD QMessageBox:standardButtons( ... )
    CASE 0
       RETURN Qt_QMessageBox_standardButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:text( ... )
@@ -454,7 +454,7 @@ METHOD QMessageBox:text( ... )
    CASE 0
       RETURN Qt_QMessageBox_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:textFormat( ... )
@@ -462,7 +462,7 @@ METHOD QMessageBox:textFormat( ... )
    CASE 0
       RETURN Qt_QMessageBox_textFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:about( ... )
@@ -474,7 +474,7 @@ METHOD QMessageBox:about( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:aboutQt( ... )
@@ -492,7 +492,7 @@ METHOD QMessageBox:aboutQt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:critical( ... )
@@ -516,7 +516,7 @@ METHOD QMessageBox:critical( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:information( ... )
@@ -540,7 +540,7 @@ METHOD QMessageBox:information( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:question( ... )
@@ -564,7 +564,7 @@ METHOD QMessageBox:question( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:warning( ... )
@@ -588,7 +588,7 @@ METHOD QMessageBox:warning( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMessageBox:exec( ... )
@@ -596,5 +596,5 @@ METHOD QMessageBox:exec( ... )
    CASE 0
       RETURN Qt_QMessageBox_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

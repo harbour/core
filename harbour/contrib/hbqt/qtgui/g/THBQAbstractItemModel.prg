@@ -118,7 +118,7 @@ CREATE CLASS HBQAbstractItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemMod
 METHOD HBQAbstractItemModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQAbstractItemModel( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD HBQAbstractItemModel:reset( ... )
    CASE 0
       RETURN Qt_HBQAbstractItemModel_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQAbstractItemModel:index( ... )
@@ -147,5 +147,5 @@ METHOD HBQAbstractItemModel:index( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

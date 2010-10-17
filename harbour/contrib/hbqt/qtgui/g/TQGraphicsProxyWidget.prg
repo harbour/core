@@ -120,7 +120,7 @@ CREATE CLASS QGraphicsProxyWidget INHERIT HbQtObjectHandler, HB_QGraphicsWidget 
 METHOD QGraphicsProxyWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsProxyWidget( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QGraphicsProxyWidget:createProxyForChildWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsProxyWidget:setWidget( ... )
@@ -147,7 +147,7 @@ METHOD QGraphicsProxyWidget:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsProxyWidget:subWidgetRect( ... )
@@ -159,7 +159,7 @@ METHOD QGraphicsProxyWidget:subWidgetRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsProxyWidget:widget( ... )
@@ -167,5 +167,5 @@ METHOD QGraphicsProxyWidget:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QGraphicsProxyWidget_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

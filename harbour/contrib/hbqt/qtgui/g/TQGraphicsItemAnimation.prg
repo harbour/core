@@ -136,7 +136,7 @@ CREATE CLASS QGraphicsItemAnimation INHERIT HbQtObjectHandler, HB_QObject FUNCTI
 METHOD QGraphicsItemAnimation:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsItemAnimation( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QGraphicsItemAnimation:clear( ... )
    CASE 0
       RETURN Qt_QGraphicsItemAnimation_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:horizontalScaleAt( ... )
@@ -159,7 +159,7 @@ METHOD QGraphicsItemAnimation:horizontalScaleAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:horizontalShearAt( ... )
@@ -171,7 +171,7 @@ METHOD QGraphicsItemAnimation:horizontalShearAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:item( ... )
@@ -179,7 +179,7 @@ METHOD QGraphicsItemAnimation:item( ... )
    CASE 0
       RETURN QGraphicsItemFromPointer( Qt_QGraphicsItemAnimation_item( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:matrixAt( ... )
@@ -191,7 +191,7 @@ METHOD QGraphicsItemAnimation:matrixAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:posAt( ... )
@@ -203,7 +203,7 @@ METHOD QGraphicsItemAnimation:posAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:rotationAt( ... )
@@ -215,7 +215,7 @@ METHOD QGraphicsItemAnimation:rotationAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setItem( ... )
@@ -227,7 +227,7 @@ METHOD QGraphicsItemAnimation:setItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setPosAt( ... )
@@ -239,7 +239,7 @@ METHOD QGraphicsItemAnimation:setPosAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setRotationAt( ... )
@@ -251,7 +251,7 @@ METHOD QGraphicsItemAnimation:setRotationAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setScaleAt( ... )
@@ -263,7 +263,7 @@ METHOD QGraphicsItemAnimation:setScaleAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setShearAt( ... )
@@ -275,7 +275,7 @@ METHOD QGraphicsItemAnimation:setShearAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setTimeLine( ... )
@@ -287,7 +287,7 @@ METHOD QGraphicsItemAnimation:setTimeLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setTranslationAt( ... )
@@ -299,7 +299,7 @@ METHOD QGraphicsItemAnimation:setTranslationAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:timeLine( ... )
@@ -307,7 +307,7 @@ METHOD QGraphicsItemAnimation:timeLine( ... )
    CASE 0
       RETURN QTimeLineFromPointer( Qt_QGraphicsItemAnimation_timeLine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:verticalScaleAt( ... )
@@ -319,7 +319,7 @@ METHOD QGraphicsItemAnimation:verticalScaleAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:verticalShearAt( ... )
@@ -331,7 +331,7 @@ METHOD QGraphicsItemAnimation:verticalShearAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:xTranslationAt( ... )
@@ -343,7 +343,7 @@ METHOD QGraphicsItemAnimation:xTranslationAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:yTranslationAt( ... )
@@ -355,7 +355,7 @@ METHOD QGraphicsItemAnimation:yTranslationAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItemAnimation:setStep( ... )
@@ -367,5 +367,5 @@ METHOD QGraphicsItemAnimation:setStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

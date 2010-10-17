@@ -126,7 +126,7 @@ CREATE CLASS QDialog INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDialog
 METHOD QDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDialog( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QDialog:isSizeGripEnabled( ... )
    CASE 0
       RETURN Qt_QDialog_isSizeGripEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:result( ... )
@@ -145,7 +145,7 @@ METHOD QDialog:result( ... )
    CASE 0
       RETURN Qt_QDialog_result( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:setModal( ... )
@@ -157,7 +157,7 @@ METHOD QDialog:setModal( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:setResult( ... )
@@ -169,7 +169,7 @@ METHOD QDialog:setResult( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:setSizeGripEnabled( ... )
@@ -181,7 +181,7 @@ METHOD QDialog:setSizeGripEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:accept( ... )
@@ -189,7 +189,7 @@ METHOD QDialog:accept( ... )
    CASE 0
       RETURN Qt_QDialog_accept( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:done( ... )
@@ -201,7 +201,7 @@ METHOD QDialog:done( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:exec( ... )
@@ -209,7 +209,7 @@ METHOD QDialog:exec( ... )
    CASE 0
       RETURN Qt_QDialog_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:open( ... )
@@ -217,7 +217,7 @@ METHOD QDialog:open( ... )
    CASE 0
       RETURN Qt_QDialog_open( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDialog:reject( ... )
@@ -225,5 +225,5 @@ METHOD QDialog:reject( ... )
    CASE 0
       RETURN Qt_QDialog_reject( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -128,7 +128,7 @@ CREATE CLASS QGraphicsSceneDragDropEvent INHERIT HbQtObjectHandler, HB_QGraphics
 METHOD QGraphicsSceneDragDropEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneDragDropEvent( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QGraphicsSceneDragDropEvent:acceptProposedAction( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_acceptProposedAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:buttons( ... )
@@ -147,7 +147,7 @@ METHOD QGraphicsSceneDragDropEvent:buttons( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_buttons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:dropAction( ... )
@@ -155,7 +155,7 @@ METHOD QGraphicsSceneDragDropEvent:dropAction( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_dropAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:mimeData( ... )
@@ -163,7 +163,7 @@ METHOD QGraphicsSceneDragDropEvent:mimeData( ... )
    CASE 0
       RETURN QMimeDataFromPointer( Qt_QGraphicsSceneDragDropEvent_mimeData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:modifiers( ... )
@@ -171,7 +171,7 @@ METHOD QGraphicsSceneDragDropEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:pos( ... )
@@ -179,7 +179,7 @@ METHOD QGraphicsSceneDragDropEvent:pos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneDragDropEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:possibleActions( ... )
@@ -187,7 +187,7 @@ METHOD QGraphicsSceneDragDropEvent:possibleActions( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_possibleActions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:proposedAction( ... )
@@ -195,7 +195,7 @@ METHOD QGraphicsSceneDragDropEvent:proposedAction( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneDragDropEvent_proposedAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:scenePos( ... )
@@ -203,7 +203,7 @@ METHOD QGraphicsSceneDragDropEvent:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneDragDropEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:screenPos( ... )
@@ -211,7 +211,7 @@ METHOD QGraphicsSceneDragDropEvent:screenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneDragDropEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:setDropAction( ... )
@@ -223,7 +223,7 @@ METHOD QGraphicsSceneDragDropEvent:setDropAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneDragDropEvent:source( ... )
@@ -231,5 +231,5 @@ METHOD QGraphicsSceneDragDropEvent:source( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QGraphicsSceneDragDropEvent_source( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

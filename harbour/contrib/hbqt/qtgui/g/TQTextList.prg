@@ -125,7 +125,7 @@ CREATE CLASS QTextList INHERIT HbQtObjectHandler, HB_QTextBlockGroup FUNCTION HB
 METHOD QTextList:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextList( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QTextList:add( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:count( ... )
@@ -148,7 +148,7 @@ METHOD QTextList:count( ... )
    CASE 0
       RETURN Qt_QTextList_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:format( ... )
@@ -156,7 +156,7 @@ METHOD QTextList:format( ... )
    CASE 0
       RETURN QTextListFormatFromPointer( Qt_QTextList_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:item( ... )
@@ -168,7 +168,7 @@ METHOD QTextList:item( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:itemNumber( ... )
@@ -180,7 +180,7 @@ METHOD QTextList:itemNumber( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:itemText( ... )
@@ -192,7 +192,7 @@ METHOD QTextList:itemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:remove( ... )
@@ -204,7 +204,7 @@ METHOD QTextList:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:removeItem( ... )
@@ -216,7 +216,7 @@ METHOD QTextList:removeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextList:setFormat( ... )
@@ -228,5 +228,5 @@ METHOD QTextList:setFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

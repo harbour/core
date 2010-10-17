@@ -118,7 +118,7 @@ CREATE CLASS QStyleOptionComplex INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 METHOD QStyleOptionComplex:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionComplex( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QStyleOptionComplex:activeSubControls( ... )
    CASE 0
       RETURN Qt_QStyleOptionComplex_activeSubControls( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComplex:subControls( ... )
@@ -137,5 +137,5 @@ METHOD QStyleOptionComplex:subControls( ... )
    CASE 0
       RETURN Qt_QStyleOptionComplex_subControls( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

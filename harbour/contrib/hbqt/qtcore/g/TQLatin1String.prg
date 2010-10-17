@@ -117,7 +117,7 @@ CREATE CLASS QLatin1String INHERIT HbQtObjectHandler FUNCTION HB_QLatin1String
 METHOD QLatin1String:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLatin1String( ... )
    RETURN Self
@@ -128,5 +128,5 @@ METHOD QLatin1String:latin1( ... )
    CASE 0
       RETURN Qt_QLatin1String_latin1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

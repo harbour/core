@@ -118,7 +118,7 @@ CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler FUNCTION HB_HBQTextB
 METHOD HBQTextBlockUserData:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQTextBlockUserData( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD HBQTextBlockUserData:hbSetState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQTextBlockUserData:hbState( ... )
@@ -141,5 +141,5 @@ METHOD HBQTextBlockUserData:hbState( ... )
    CASE 0
       RETURN Qt_HBQTextBlockUserData_hbState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

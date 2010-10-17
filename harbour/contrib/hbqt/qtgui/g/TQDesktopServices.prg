@@ -121,7 +121,7 @@ CREATE CLASS QDesktopServices INHERIT HbQtObjectHandler FUNCTION HB_QDesktopServ
 METHOD QDesktopServices:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesktopServices( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QDesktopServices:displayName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopServices:openUrl( ... )
@@ -148,7 +148,7 @@ METHOD QDesktopServices:openUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopServices:setUrlHandler( ... )
@@ -160,7 +160,7 @@ METHOD QDesktopServices:setUrlHandler( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopServices:storageLocation( ... )
@@ -172,7 +172,7 @@ METHOD QDesktopServices:storageLocation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopServices:unsetUrlHandler( ... )
@@ -184,5 +184,5 @@ METHOD QDesktopServices:unsetUrlHandler( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

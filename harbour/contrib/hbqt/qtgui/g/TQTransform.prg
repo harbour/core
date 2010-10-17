@@ -165,7 +165,7 @@ CREATE CLASS QTransform INHERIT HbQtObjectHandler FUNCTION HB_QTransform
 METHOD QTransform:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTransform( ... )
    RETURN Self
@@ -176,7 +176,7 @@ METHOD QTransform:m11( ... )
    CASE 0
       RETURN Qt_QTransform_m11( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m12( ... )
@@ -184,7 +184,7 @@ METHOD QTransform:m12( ... )
    CASE 0
       RETURN Qt_QTransform_m12( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m13( ... )
@@ -192,7 +192,7 @@ METHOD QTransform:m13( ... )
    CASE 0
       RETURN Qt_QTransform_m13( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m21( ... )
@@ -200,7 +200,7 @@ METHOD QTransform:m21( ... )
    CASE 0
       RETURN Qt_QTransform_m21( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m22( ... )
@@ -208,7 +208,7 @@ METHOD QTransform:m22( ... )
    CASE 0
       RETURN Qt_QTransform_m22( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m23( ... )
@@ -216,7 +216,7 @@ METHOD QTransform:m23( ... )
    CASE 0
       RETURN Qt_QTransform_m23( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m31( ... )
@@ -224,7 +224,7 @@ METHOD QTransform:m31( ... )
    CASE 0
       RETURN Qt_QTransform_m31( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m32( ... )
@@ -232,7 +232,7 @@ METHOD QTransform:m32( ... )
    CASE 0
       RETURN Qt_QTransform_m32( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:m33( ... )
@@ -240,7 +240,7 @@ METHOD QTransform:m33( ... )
    CASE 0
       RETURN Qt_QTransform_m33( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:adjoint( ... )
@@ -248,7 +248,7 @@ METHOD QTransform:adjoint( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QTransform_adjoint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:det( ... )
@@ -256,7 +256,7 @@ METHOD QTransform:det( ... )
    CASE 0
       RETURN Qt_QTransform_det( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:determinant( ... )
@@ -264,7 +264,7 @@ METHOD QTransform:determinant( ... )
    CASE 0
       RETURN Qt_QTransform_determinant( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:dx( ... )
@@ -272,7 +272,7 @@ METHOD QTransform:dx( ... )
    CASE 0
       RETURN Qt_QTransform_dx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:dy( ... )
@@ -280,7 +280,7 @@ METHOD QTransform:dy( ... )
    CASE 0
       RETURN Qt_QTransform_dy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:inverted( ... )
@@ -294,7 +294,7 @@ METHOD QTransform:inverted( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QTransform_inverted( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isAffine( ... )
@@ -302,7 +302,7 @@ METHOD QTransform:isAffine( ... )
    CASE 0
       RETURN Qt_QTransform_isAffine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isIdentity( ... )
@@ -310,7 +310,7 @@ METHOD QTransform:isIdentity( ... )
    CASE 0
       RETURN Qt_QTransform_isIdentity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isInvertible( ... )
@@ -318,7 +318,7 @@ METHOD QTransform:isInvertible( ... )
    CASE 0
       RETURN Qt_QTransform_isInvertible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isRotating( ... )
@@ -326,7 +326,7 @@ METHOD QTransform:isRotating( ... )
    CASE 0
       RETURN Qt_QTransform_isRotating( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isScaling( ... )
@@ -334,7 +334,7 @@ METHOD QTransform:isScaling( ... )
    CASE 0
       RETURN Qt_QTransform_isScaling( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:isTranslating( ... )
@@ -342,7 +342,7 @@ METHOD QTransform:isTranslating( ... )
    CASE 0
       RETURN Qt_QTransform_isTranslating( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:map( ... )
@@ -378,7 +378,7 @@ METHOD QTransform:map( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:mapRect( ... )
@@ -395,7 +395,7 @@ METHOD QTransform:mapRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:mapToPolygon( ... )
@@ -407,7 +407,7 @@ METHOD QTransform:mapToPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:reset( ... )
@@ -415,7 +415,7 @@ METHOD QTransform:reset( ... )
    CASE 0
       RETURN Qt_QTransform_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:rotate( ... )
@@ -433,7 +433,7 @@ METHOD QTransform:rotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:rotateRadians( ... )
@@ -451,7 +451,7 @@ METHOD QTransform:rotateRadians( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:scale( ... )
@@ -463,7 +463,7 @@ METHOD QTransform:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:setMatrix( ... )
@@ -475,7 +475,7 @@ METHOD QTransform:setMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:shear( ... )
@@ -487,7 +487,7 @@ METHOD QTransform:shear( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:toAffine( ... )
@@ -495,7 +495,7 @@ METHOD QTransform:toAffine( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QTransform_toAffine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:translate( ... )
@@ -507,7 +507,7 @@ METHOD QTransform:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:transposed( ... )
@@ -515,7 +515,7 @@ METHOD QTransform:transposed( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QTransform_transposed( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:type( ... )
@@ -523,7 +523,7 @@ METHOD QTransform:type( ... )
    CASE 0
       RETURN Qt_QTransform_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:fromScale( ... )
@@ -535,7 +535,7 @@ METHOD QTransform:fromScale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:fromTranslate( ... )
@@ -547,7 +547,7 @@ METHOD QTransform:fromTranslate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:quadToQuad( ... )
@@ -559,7 +559,7 @@ METHOD QTransform:quadToQuad( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:quadToSquare( ... )
@@ -571,7 +571,7 @@ METHOD QTransform:quadToSquare( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTransform:squareToQuad( ... )
@@ -583,5 +583,5 @@ METHOD QTransform:squareToQuad( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

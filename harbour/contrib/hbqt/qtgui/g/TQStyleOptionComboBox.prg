@@ -122,7 +122,7 @@ CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, HB_QStyleOption FUN
 METHOD QStyleOptionComboBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionComboBox( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QStyleOptionComboBox:currentIcon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionComboBox_currentIcon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComboBox:currentText( ... )
@@ -141,7 +141,7 @@ METHOD QStyleOptionComboBox:currentText( ... )
    CASE 0
       RETURN Qt_QStyleOptionComboBox_currentText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComboBox:editable( ... )
@@ -149,7 +149,7 @@ METHOD QStyleOptionComboBox:editable( ... )
    CASE 0
       RETURN Qt_QStyleOptionComboBox_editable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComboBox:frame( ... )
@@ -157,7 +157,7 @@ METHOD QStyleOptionComboBox:frame( ... )
    CASE 0
       RETURN Qt_QStyleOptionComboBox_frame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComboBox:iconSize( ... )
@@ -165,7 +165,7 @@ METHOD QStyleOptionComboBox:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionComboBox_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionComboBox:popupRect( ... )
@@ -173,5 +173,5 @@ METHOD QStyleOptionComboBox:popupRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QStyleOptionComboBox_popupRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

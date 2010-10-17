@@ -121,7 +121,7 @@ CREATE CLASS QGraphicsLineItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCT
 METHOD QGraphicsLineItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsLineItem( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QGraphicsLineItem:line( ... )
    CASE 0
       RETURN QLineFFromPointer( Qt_QGraphicsLineItem_line( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLineItem:pen( ... )
@@ -140,7 +140,7 @@ METHOD QGraphicsLineItem:pen( ... )
    CASE 0
       RETURN QPenFromPointer( Qt_QGraphicsLineItem_pen( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLineItem:setLine( ... )
@@ -158,7 +158,7 @@ METHOD QGraphicsLineItem:setLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLineItem:setPen( ... )
@@ -170,5 +170,5 @@ METHOD QGraphicsLineItem:setPen( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

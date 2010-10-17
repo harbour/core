@@ -125,7 +125,7 @@ CREATE CLASS QGraphicsPixmapItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUN
 METHOD QGraphicsPixmapItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsPixmapItem( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QGraphicsPixmapItem:offset( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsPixmapItem_offset( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:pixmap( ... )
@@ -144,7 +144,7 @@ METHOD QGraphicsPixmapItem:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QGraphicsPixmapItem_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:setOffset( ... )
@@ -162,7 +162,7 @@ METHOD QGraphicsPixmapItem:setOffset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:setPixmap( ... )
@@ -174,7 +174,7 @@ METHOD QGraphicsPixmapItem:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:setShapeMode( ... )
@@ -186,7 +186,7 @@ METHOD QGraphicsPixmapItem:setShapeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:setTransformationMode( ... )
@@ -198,7 +198,7 @@ METHOD QGraphicsPixmapItem:setTransformationMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:shapeMode( ... )
@@ -206,7 +206,7 @@ METHOD QGraphicsPixmapItem:shapeMode( ... )
    CASE 0
       RETURN Qt_QGraphicsPixmapItem_shapeMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:transformationMode( ... )
@@ -214,5 +214,5 @@ METHOD QGraphicsPixmapItem:transformationMode( ... )
    CASE 0
       RETURN Qt_QGraphicsPixmapItem_transformationMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

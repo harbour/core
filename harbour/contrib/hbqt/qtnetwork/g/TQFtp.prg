@@ -142,7 +142,7 @@ CREATE CLASS QFtp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QFtp
 METHOD QFtp:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFtp( ... )
    RETURN Self
@@ -153,7 +153,7 @@ METHOD QFtp:bytesAvailable( ... )
    CASE 0
       RETURN Qt_QFtp_bytesAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:cd( ... )
@@ -165,7 +165,7 @@ METHOD QFtp:cd( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:clearPendingCommands( ... )
@@ -173,7 +173,7 @@ METHOD QFtp:clearPendingCommands( ... )
    CASE 0
       RETURN Qt_QFtp_clearPendingCommands( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:close( ... )
@@ -181,7 +181,7 @@ METHOD QFtp:close( ... )
    CASE 0
       RETURN Qt_QFtp_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:connectToHost( ... )
@@ -199,7 +199,7 @@ METHOD QFtp:connectToHost( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:currentCommand( ... )
@@ -207,7 +207,7 @@ METHOD QFtp:currentCommand( ... )
    CASE 0
       RETURN Qt_QFtp_currentCommand( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:currentDevice( ... )
@@ -215,7 +215,7 @@ METHOD QFtp:currentDevice( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QFtp_currentDevice( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:currentId( ... )
@@ -223,7 +223,7 @@ METHOD QFtp:currentId( ... )
    CASE 0
       RETURN Qt_QFtp_currentId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:error( ... )
@@ -231,7 +231,7 @@ METHOD QFtp:error( ... )
    CASE 0
       RETURN Qt_QFtp_error( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:errorString( ... )
@@ -239,7 +239,7 @@ METHOD QFtp:errorString( ... )
    CASE 0
       RETURN Qt_QFtp_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:get( ... )
@@ -263,7 +263,7 @@ METHOD QFtp:get( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:hasPendingCommands( ... )
@@ -271,7 +271,7 @@ METHOD QFtp:hasPendingCommands( ... )
    CASE 0
       RETURN Qt_QFtp_hasPendingCommands( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:list( ... )
@@ -285,7 +285,7 @@ METHOD QFtp:list( ... )
    CASE 0
       RETURN Qt_QFtp_list( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:login( ... )
@@ -305,7 +305,7 @@ METHOD QFtp:login( ... )
    CASE 0
       RETURN Qt_QFtp_login( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:mkdir( ... )
@@ -317,7 +317,7 @@ METHOD QFtp:mkdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:put( ... )
@@ -345,7 +345,7 @@ METHOD QFtp:put( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:rawCommand( ... )
@@ -357,7 +357,7 @@ METHOD QFtp:rawCommand( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:readAll( ... )
@@ -365,7 +365,7 @@ METHOD QFtp:readAll( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QFtp_readAll( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:remove( ... )
@@ -377,7 +377,7 @@ METHOD QFtp:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:rename( ... )
@@ -389,7 +389,7 @@ METHOD QFtp:rename( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:rmdir( ... )
@@ -401,7 +401,7 @@ METHOD QFtp:rmdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:setProxy( ... )
@@ -413,7 +413,7 @@ METHOD QFtp:setProxy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:setTransferMode( ... )
@@ -425,7 +425,7 @@ METHOD QFtp:setTransferMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:state( ... )
@@ -433,7 +433,7 @@ METHOD QFtp:state( ... )
    CASE 0
       RETURN Qt_QFtp_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFtp:abort( ... )
@@ -441,5 +441,5 @@ METHOD QFtp:abort( ... )
    CASE 0
       RETURN Qt_QFtp_abort( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

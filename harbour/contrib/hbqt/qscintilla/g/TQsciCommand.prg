@@ -122,7 +122,7 @@ CREATE CLASS QsciCommand INHERIT HbQtObjectHandler FUNCTION HB_QsciCommand
 METHOD QsciCommand:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciCommand( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QsciCommand:setKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommand:setAlternateKey( ... )
@@ -149,7 +149,7 @@ METHOD QsciCommand:setAlternateKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommand:key( ... )
@@ -157,7 +157,7 @@ METHOD QsciCommand:key( ... )
    CASE 0
       RETURN Qt_QsciCommand_key( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommand:alternateKey( ... )
@@ -165,7 +165,7 @@ METHOD QsciCommand:alternateKey( ... )
    CASE 0
       RETURN Qt_QsciCommand_alternateKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommand:description( ... )
@@ -173,7 +173,7 @@ METHOD QsciCommand:description( ... )
    CASE 0
       RETURN Qt_QsciCommand_description( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommand:validKey( ... )
@@ -185,5 +185,5 @@ METHOD QsciCommand:validKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

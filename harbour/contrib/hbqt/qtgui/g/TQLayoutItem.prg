@@ -133,7 +133,7 @@ CREATE CLASS QLayoutItem INHERIT HbQtObjectHandler FUNCTION HB_QLayoutItem
 METHOD QLayoutItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLayoutItem( ... )
    RETURN Self
@@ -144,7 +144,7 @@ METHOD QLayoutItem:alignment( ... )
    CASE 0
       RETURN Qt_QLayoutItem_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:controlTypes( ... )
@@ -152,7 +152,7 @@ METHOD QLayoutItem:controlTypes( ... )
    CASE 0
       RETURN Qt_QLayoutItem_controlTypes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:expandingDirections( ... )
@@ -160,7 +160,7 @@ METHOD QLayoutItem:expandingDirections( ... )
    CASE 0
       RETURN Qt_QLayoutItem_expandingDirections( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:geometry( ... )
@@ -168,7 +168,7 @@ METHOD QLayoutItem:geometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QLayoutItem_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:hasHeightForWidth( ... )
@@ -176,7 +176,7 @@ METHOD QLayoutItem:hasHeightForWidth( ... )
    CASE 0
       RETURN Qt_QLayoutItem_hasHeightForWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:heightForWidth( ... )
@@ -188,7 +188,7 @@ METHOD QLayoutItem:heightForWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:invalidate( ... )
@@ -196,7 +196,7 @@ METHOD QLayoutItem:invalidate( ... )
    CASE 0
       RETURN Qt_QLayoutItem_invalidate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:isEmpty( ... )
@@ -204,7 +204,7 @@ METHOD QLayoutItem:isEmpty( ... )
    CASE 0
       RETURN Qt_QLayoutItem_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:layout( ... )
@@ -212,7 +212,7 @@ METHOD QLayoutItem:layout( ... )
    CASE 0
       RETURN QLayoutFromPointer( Qt_QLayoutItem_layout( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:maximumSize( ... )
@@ -220,7 +220,7 @@ METHOD QLayoutItem:maximumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLayoutItem_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:minimumHeightForWidth( ... )
@@ -232,7 +232,7 @@ METHOD QLayoutItem:minimumHeightForWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:minimumSize( ... )
@@ -240,7 +240,7 @@ METHOD QLayoutItem:minimumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLayoutItem_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:setAlignment( ... )
@@ -252,7 +252,7 @@ METHOD QLayoutItem:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:setGeometry( ... )
@@ -264,7 +264,7 @@ METHOD QLayoutItem:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:sizeHint( ... )
@@ -272,7 +272,7 @@ METHOD QLayoutItem:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLayoutItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:spacerItem( ... )
@@ -280,7 +280,7 @@ METHOD QLayoutItem:spacerItem( ... )
    CASE 0
       RETURN QSpacerItemFromPointer( Qt_QLayoutItem_spacerItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayoutItem:widget( ... )
@@ -288,5 +288,5 @@ METHOD QLayoutItem:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QLayoutItem_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

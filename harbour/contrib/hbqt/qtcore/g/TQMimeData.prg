@@ -137,7 +137,7 @@ CREATE CLASS QMimeData INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMimeDa
 METHOD QMimeData:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMimeData( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QMimeData:clear( ... )
    CASE 0
       RETURN Qt_QMimeData_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:colorData( ... )
@@ -156,7 +156,7 @@ METHOD QMimeData:colorData( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QMimeData_colorData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:data( ... )
@@ -168,7 +168,7 @@ METHOD QMimeData:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:formats( ... )
@@ -176,7 +176,7 @@ METHOD QMimeData:formats( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QMimeData_formats( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasColor( ... )
@@ -184,7 +184,7 @@ METHOD QMimeData:hasColor( ... )
    CASE 0
       RETURN Qt_QMimeData_hasColor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasFormat( ... )
@@ -196,7 +196,7 @@ METHOD QMimeData:hasFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasHtml( ... )
@@ -204,7 +204,7 @@ METHOD QMimeData:hasHtml( ... )
    CASE 0
       RETURN Qt_QMimeData_hasHtml( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasImage( ... )
@@ -212,7 +212,7 @@ METHOD QMimeData:hasImage( ... )
    CASE 0
       RETURN Qt_QMimeData_hasImage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasText( ... )
@@ -220,7 +220,7 @@ METHOD QMimeData:hasText( ... )
    CASE 0
       RETURN Qt_QMimeData_hasText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hasUrls( ... )
@@ -228,7 +228,7 @@ METHOD QMimeData:hasUrls( ... )
    CASE 0
       RETURN Qt_QMimeData_hasUrls( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:html( ... )
@@ -236,7 +236,7 @@ METHOD QMimeData:html( ... )
    CASE 0
       RETURN Qt_QMimeData_html( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:imageData( ... )
@@ -244,7 +244,7 @@ METHOD QMimeData:imageData( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QMimeData_imageData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:removeFormat( ... )
@@ -256,7 +256,7 @@ METHOD QMimeData:removeFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:setColorData( ... )
@@ -268,7 +268,7 @@ METHOD QMimeData:setColorData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:setData( ... )
@@ -280,7 +280,7 @@ METHOD QMimeData:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:setHtml( ... )
@@ -292,7 +292,7 @@ METHOD QMimeData:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:setImageData( ... )
@@ -304,7 +304,7 @@ METHOD QMimeData:setImageData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:setText( ... )
@@ -316,7 +316,7 @@ METHOD QMimeData:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:text( ... )
@@ -324,7 +324,7 @@ METHOD QMimeData:text( ... )
    CASE 0
       RETURN Qt_QMimeData_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:urls( ... )
@@ -332,7 +332,7 @@ METHOD QMimeData:urls( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QMimeData_urls( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMimeData:hbUrlList( ... )
@@ -340,5 +340,5 @@ METHOD QMimeData:hbUrlList( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QMimeData_hbUrlList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

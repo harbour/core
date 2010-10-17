@@ -125,7 +125,7 @@ CREATE CLASS QBitmap INHERIT HbQtObjectHandler, HB_QPixmap FUNCTION HB_QBitmap
 METHOD QBitmap:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QBitmap( ... )
    RETURN Self
@@ -157,7 +157,7 @@ METHOD QBitmap:QBitmap( ... )
    CASE 0
       RETURN QBitmapFromPointer( Qt_QBitmap_QBitmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitmap:clear( ... )
@@ -165,7 +165,7 @@ METHOD QBitmap:clear( ... )
    CASE 0
       RETURN Qt_QBitmap_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitmap:transformed( ... )
@@ -182,7 +182,7 @@ METHOD QBitmap:transformed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitmap:fromImage( ... )
@@ -200,5 +200,5 @@ METHOD QBitmap:fromImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

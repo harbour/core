@@ -165,7 +165,7 @@ CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_Q
 METHOD QTableWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTableWidget( ... )
    RETURN Self
@@ -180,7 +180,7 @@ METHOD QTableWidget:cellWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:closePersistentEditor( ... )
@@ -192,7 +192,7 @@ METHOD QTableWidget:closePersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:column( ... )
@@ -204,7 +204,7 @@ METHOD QTableWidget:column( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:columnCount( ... )
@@ -212,7 +212,7 @@ METHOD QTableWidget:columnCount( ... )
    CASE 0
       RETURN Qt_QTableWidget_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:currentColumn( ... )
@@ -220,7 +220,7 @@ METHOD QTableWidget:currentColumn( ... )
    CASE 0
       RETURN Qt_QTableWidget_currentColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:currentItem( ... )
@@ -228,7 +228,7 @@ METHOD QTableWidget:currentItem( ... )
    CASE 0
       RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:currentRow( ... )
@@ -236,7 +236,7 @@ METHOD QTableWidget:currentRow( ... )
    CASE 0
       RETURN Qt_QTableWidget_currentRow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:editItem( ... )
@@ -248,7 +248,7 @@ METHOD QTableWidget:editItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:findItems( ... )
@@ -260,7 +260,7 @@ METHOD QTableWidget:findItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:horizontalHeaderItem( ... )
@@ -272,7 +272,7 @@ METHOD QTableWidget:horizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:item( ... )
@@ -284,7 +284,7 @@ METHOD QTableWidget:item( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:itemAt( ... )
@@ -302,7 +302,7 @@ METHOD QTableWidget:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:itemPrototype( ... )
@@ -310,7 +310,7 @@ METHOD QTableWidget:itemPrototype( ... )
    CASE 0
       RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_itemPrototype( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:openPersistentEditor( ... )
@@ -322,7 +322,7 @@ METHOD QTableWidget:openPersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:removeCellWidget( ... )
@@ -334,7 +334,7 @@ METHOD QTableWidget:removeCellWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:row( ... )
@@ -346,7 +346,7 @@ METHOD QTableWidget:row( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:rowCount( ... )
@@ -354,7 +354,7 @@ METHOD QTableWidget:rowCount( ... )
    CASE 0
       RETURN Qt_QTableWidget_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:selectedItems( ... )
@@ -362,7 +362,7 @@ METHOD QTableWidget:selectedItems( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QTableWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:selectedRanges( ... )
@@ -370,7 +370,7 @@ METHOD QTableWidget:selectedRanges( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QTableWidget_selectedRanges( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setCellWidget( ... )
@@ -382,7 +382,7 @@ METHOD QTableWidget:setCellWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setColumnCount( ... )
@@ -394,7 +394,7 @@ METHOD QTableWidget:setColumnCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setCurrentCell( ... )
@@ -412,7 +412,7 @@ METHOD QTableWidget:setCurrentCell( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setCurrentItem( ... )
@@ -430,7 +430,7 @@ METHOD QTableWidget:setCurrentItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setHorizontalHeaderItem( ... )
@@ -442,7 +442,7 @@ METHOD QTableWidget:setHorizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setHorizontalHeaderLabels( ... )
@@ -454,7 +454,7 @@ METHOD QTableWidget:setHorizontalHeaderLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setItem( ... )
@@ -466,7 +466,7 @@ METHOD QTableWidget:setItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setItemPrototype( ... )
@@ -478,7 +478,7 @@ METHOD QTableWidget:setItemPrototype( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setRangeSelected( ... )
@@ -490,7 +490,7 @@ METHOD QTableWidget:setRangeSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setRowCount( ... )
@@ -502,7 +502,7 @@ METHOD QTableWidget:setRowCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setVerticalHeaderItem( ... )
@@ -514,7 +514,7 @@ METHOD QTableWidget:setVerticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:setVerticalHeaderLabels( ... )
@@ -526,7 +526,7 @@ METHOD QTableWidget:setVerticalHeaderLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:sortItems( ... )
@@ -544,7 +544,7 @@ METHOD QTableWidget:sortItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:takeHorizontalHeaderItem( ... )
@@ -556,7 +556,7 @@ METHOD QTableWidget:takeHorizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:takeItem( ... )
@@ -568,7 +568,7 @@ METHOD QTableWidget:takeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:takeVerticalHeaderItem( ... )
@@ -580,7 +580,7 @@ METHOD QTableWidget:takeVerticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:verticalHeaderItem( ... )
@@ -592,7 +592,7 @@ METHOD QTableWidget:verticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:visualColumn( ... )
@@ -604,7 +604,7 @@ METHOD QTableWidget:visualColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:visualItemRect( ... )
@@ -616,7 +616,7 @@ METHOD QTableWidget:visualItemRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:visualRow( ... )
@@ -628,7 +628,7 @@ METHOD QTableWidget:visualRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:clear( ... )
@@ -636,7 +636,7 @@ METHOD QTableWidget:clear( ... )
    CASE 0
       RETURN Qt_QTableWidget_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:clearContents( ... )
@@ -644,7 +644,7 @@ METHOD QTableWidget:clearContents( ... )
    CASE 0
       RETURN Qt_QTableWidget_clearContents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:insertColumn( ... )
@@ -656,7 +656,7 @@ METHOD QTableWidget:insertColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:insertRow( ... )
@@ -668,7 +668,7 @@ METHOD QTableWidget:insertRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:removeColumn( ... )
@@ -680,7 +680,7 @@ METHOD QTableWidget:removeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:removeRow( ... )
@@ -692,7 +692,7 @@ METHOD QTableWidget:removeRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidget:scrollToItem( ... )
@@ -710,5 +710,5 @@ METHOD QTableWidget:scrollToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

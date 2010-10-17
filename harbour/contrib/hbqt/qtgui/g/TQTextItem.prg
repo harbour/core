@@ -122,7 +122,7 @@ CREATE CLASS QTextItem INHERIT HbQtObjectHandler FUNCTION HB_QTextItem
 METHOD QTextItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextItem( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QTextItem:ascent( ... )
    CASE 0
       RETURN Qt_QTextItem_ascent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextItem:descent( ... )
@@ -141,7 +141,7 @@ METHOD QTextItem:descent( ... )
    CASE 0
       RETURN Qt_QTextItem_descent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextItem:font( ... )
@@ -149,7 +149,7 @@ METHOD QTextItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextItem:renderFlags( ... )
@@ -157,7 +157,7 @@ METHOD QTextItem:renderFlags( ... )
    CASE 0
       RETURN Qt_QTextItem_renderFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextItem:text( ... )
@@ -165,7 +165,7 @@ METHOD QTextItem:text( ... )
    CASE 0
       RETURN Qt_QTextItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextItem:width( ... )
@@ -173,5 +173,5 @@ METHOD QTextItem:width( ... )
    CASE 0
       RETURN Qt_QTextItem_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

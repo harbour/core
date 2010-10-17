@@ -124,7 +124,7 @@ CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, HB_QAbstractPrintDialog FUN
 METHOD QPrintDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPrintDialog( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QPrintDialog:done( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:open( ... )
@@ -151,7 +151,7 @@ METHOD QPrintDialog:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:options( ... )
@@ -159,7 +159,7 @@ METHOD QPrintDialog:options( ... )
    CASE 0
       RETURN Qt_QPrintDialog_options( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:printer( ... )
@@ -167,7 +167,7 @@ METHOD QPrintDialog:printer( ... )
    CASE 0
       RETURN QPrinterFromPointer( Qt_QPrintDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:setOption( ... )
@@ -185,7 +185,7 @@ METHOD QPrintDialog:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:setOptions( ... )
@@ -197,7 +197,7 @@ METHOD QPrintDialog:setOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:setVisible( ... )
@@ -209,7 +209,7 @@ METHOD QPrintDialog:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintDialog:testOption( ... )
@@ -221,5 +221,5 @@ METHOD QPrintDialog:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

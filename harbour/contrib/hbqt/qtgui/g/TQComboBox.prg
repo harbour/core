@@ -176,7 +176,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
 METHOD QComboBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QComboBox( ... )
    RETURN Self
@@ -193,7 +193,7 @@ METHOD QComboBox:QComboBox( ... )
    CASE 0
       RETURN QComboBoxFromPointer( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:addItem( ... )
@@ -219,7 +219,7 @@ METHOD QComboBox:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:addItems( ... )
@@ -231,7 +231,7 @@ METHOD QComboBox:addItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:completer( ... )
@@ -239,7 +239,7 @@ METHOD QComboBox:completer( ... )
    CASE 0
       RETURN QCompleterFromPointer( Qt_QComboBox_completer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:count( ... )
@@ -247,7 +247,7 @@ METHOD QComboBox:count( ... )
    CASE 0
       RETURN Qt_QComboBox_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:currentIndex( ... )
@@ -255,7 +255,7 @@ METHOD QComboBox:currentIndex( ... )
    CASE 0
       RETURN Qt_QComboBox_currentIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:currentText( ... )
@@ -263,7 +263,7 @@ METHOD QComboBox:currentText( ... )
    CASE 0
       RETURN Qt_QComboBox_currentText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:duplicatesEnabled( ... )
@@ -271,7 +271,7 @@ METHOD QComboBox:duplicatesEnabled( ... )
    CASE 0
       RETURN Qt_QComboBox_duplicatesEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:findData( ... )
@@ -295,7 +295,7 @@ METHOD QComboBox:findData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:findText( ... )
@@ -313,7 +313,7 @@ METHOD QComboBox:findText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:hasFrame( ... )
@@ -321,7 +321,7 @@ METHOD QComboBox:hasFrame( ... )
    CASE 0
       RETURN Qt_QComboBox_hasFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:hidePopup( ... )
@@ -329,7 +329,7 @@ METHOD QComboBox:hidePopup( ... )
    CASE 0
       RETURN Qt_QComboBox_hidePopup( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:iconSize( ... )
@@ -337,7 +337,7 @@ METHOD QComboBox:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QComboBox_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:insertItem( ... )
@@ -363,7 +363,7 @@ METHOD QComboBox:insertItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:insertItems( ... )
@@ -375,7 +375,7 @@ METHOD QComboBox:insertItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:insertPolicy( ... )
@@ -383,7 +383,7 @@ METHOD QComboBox:insertPolicy( ... )
    CASE 0
       RETURN Qt_QComboBox_insertPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:insertSeparator( ... )
@@ -395,7 +395,7 @@ METHOD QComboBox:insertSeparator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:isEditable( ... )
@@ -403,7 +403,7 @@ METHOD QComboBox:isEditable( ... )
    CASE 0
       RETURN Qt_QComboBox_isEditable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:itemData( ... )
@@ -421,7 +421,7 @@ METHOD QComboBox:itemData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:itemDelegate( ... )
@@ -429,7 +429,7 @@ METHOD QComboBox:itemDelegate( ... )
    CASE 0
       RETURN QAbstractItemDelegateFromPointer( Qt_QComboBox_itemDelegate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:itemIcon( ... )
@@ -441,7 +441,7 @@ METHOD QComboBox:itemIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:itemText( ... )
@@ -453,7 +453,7 @@ METHOD QComboBox:itemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:lineEdit( ... )
@@ -461,7 +461,7 @@ METHOD QComboBox:lineEdit( ... )
    CASE 0
       RETURN QLineEditFromPointer( Qt_QComboBox_lineEdit( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:maxCount( ... )
@@ -469,7 +469,7 @@ METHOD QComboBox:maxCount( ... )
    CASE 0
       RETURN Qt_QComboBox_maxCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:maxVisibleItems( ... )
@@ -477,7 +477,7 @@ METHOD QComboBox:maxVisibleItems( ... )
    CASE 0
       RETURN Qt_QComboBox_maxVisibleItems( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:minimumContentsLength( ... )
@@ -485,7 +485,7 @@ METHOD QComboBox:minimumContentsLength( ... )
    CASE 0
       RETURN Qt_QComboBox_minimumContentsLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:model( ... )
@@ -493,7 +493,7 @@ METHOD QComboBox:model( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QComboBox_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:modelColumn( ... )
@@ -501,7 +501,7 @@ METHOD QComboBox:modelColumn( ... )
    CASE 0
       RETURN Qt_QComboBox_modelColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:removeItem( ... )
@@ -513,7 +513,7 @@ METHOD QComboBox:removeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:rootModelIndex( ... )
@@ -521,7 +521,7 @@ METHOD QComboBox:rootModelIndex( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QComboBox_rootModelIndex( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setCompleter( ... )
@@ -533,7 +533,7 @@ METHOD QComboBox:setCompleter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setDuplicatesEnabled( ... )
@@ -545,7 +545,7 @@ METHOD QComboBox:setDuplicatesEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setEditable( ... )
@@ -557,7 +557,7 @@ METHOD QComboBox:setEditable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setFrame( ... )
@@ -569,7 +569,7 @@ METHOD QComboBox:setFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setIconSize( ... )
@@ -581,7 +581,7 @@ METHOD QComboBox:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setInsertPolicy( ... )
@@ -593,7 +593,7 @@ METHOD QComboBox:setInsertPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setItemData( ... )
@@ -611,7 +611,7 @@ METHOD QComboBox:setItemData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setItemDelegate( ... )
@@ -623,7 +623,7 @@ METHOD QComboBox:setItemDelegate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setItemIcon( ... )
@@ -635,7 +635,7 @@ METHOD QComboBox:setItemIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setItemText( ... )
@@ -647,7 +647,7 @@ METHOD QComboBox:setItemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setLineEdit( ... )
@@ -659,7 +659,7 @@ METHOD QComboBox:setLineEdit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setMaxCount( ... )
@@ -671,7 +671,7 @@ METHOD QComboBox:setMaxCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setMaxVisibleItems( ... )
@@ -683,7 +683,7 @@ METHOD QComboBox:setMaxVisibleItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setMinimumContentsLength( ... )
@@ -695,7 +695,7 @@ METHOD QComboBox:setMinimumContentsLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setModel( ... )
@@ -707,7 +707,7 @@ METHOD QComboBox:setModel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setModelColumn( ... )
@@ -719,7 +719,7 @@ METHOD QComboBox:setModelColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setRootModelIndex( ... )
@@ -731,7 +731,7 @@ METHOD QComboBox:setRootModelIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setSizeAdjustPolicy( ... )
@@ -743,7 +743,7 @@ METHOD QComboBox:setSizeAdjustPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setValidator( ... )
@@ -755,7 +755,7 @@ METHOD QComboBox:setValidator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setView( ... )
@@ -767,7 +767,7 @@ METHOD QComboBox:setView( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:showPopup( ... )
@@ -775,7 +775,7 @@ METHOD QComboBox:showPopup( ... )
    CASE 0
       RETURN Qt_QComboBox_showPopup( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:sizeAdjustPolicy( ... )
@@ -783,7 +783,7 @@ METHOD QComboBox:sizeAdjustPolicy( ... )
    CASE 0
       RETURN Qt_QComboBox_sizeAdjustPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:validator( ... )
@@ -791,7 +791,7 @@ METHOD QComboBox:validator( ... )
    CASE 0
       RETURN QValidatorFromPointer( Qt_QComboBox_validator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:view( ... )
@@ -799,7 +799,7 @@ METHOD QComboBox:view( ... )
    CASE 0
       RETURN QAbstractItemViewFromPointer( Qt_QComboBox_view( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:clear( ... )
@@ -807,7 +807,7 @@ METHOD QComboBox:clear( ... )
    CASE 0
       RETURN Qt_QComboBox_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:clearEditText( ... )
@@ -815,7 +815,7 @@ METHOD QComboBox:clearEditText( ... )
    CASE 0
       RETURN Qt_QComboBox_clearEditText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setCurrentIndex( ... )
@@ -827,7 +827,7 @@ METHOD QComboBox:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QComboBox:setEditText( ... )
@@ -839,5 +839,5 @@ METHOD QComboBox:setEditText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

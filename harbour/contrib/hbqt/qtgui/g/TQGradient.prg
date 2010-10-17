@@ -122,7 +122,7 @@ CREATE CLASS QGradient INHERIT HbQtObjectHandler FUNCTION HB_QGradient
 METHOD QGradient:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGradient( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QGradient:coordinateMode( ... )
    CASE 0
       RETURN Qt_QGradient_coordinateMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGradient:setColorAt( ... )
@@ -145,7 +145,7 @@ METHOD QGradient:setColorAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGradient:setCoordinateMode( ... )
@@ -157,7 +157,7 @@ METHOD QGradient:setCoordinateMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGradient:setSpread( ... )
@@ -169,7 +169,7 @@ METHOD QGradient:setSpread( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGradient:spread( ... )
@@ -177,7 +177,7 @@ METHOD QGradient:spread( ... )
    CASE 0
       RETURN Qt_QGradient_spread( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGradient:type( ... )
@@ -185,5 +185,5 @@ METHOD QGradient:type( ... )
    CASE 0
       RETURN Qt_QGradient_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

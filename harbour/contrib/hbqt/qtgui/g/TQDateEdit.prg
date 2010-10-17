@@ -116,7 +116,7 @@ CREATE CLASS QDateEdit INHERIT HbQtObjectHandler, HB_QDateTimeEdit FUNCTION HB_Q
 METHOD QDateEdit:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDateEdit( ... )
    RETURN Self

@@ -123,7 +123,7 @@ CREATE CLASS QStyleOptionViewItem INHERIT HbQtObjectHandler, HB_QStyleOption FUN
 METHOD QStyleOptionViewItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionViewItem( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QStyleOptionViewItem:decorationAlignment( ... )
    CASE 0
       RETURN Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:decorationPosition( ... )
@@ -142,7 +142,7 @@ METHOD QStyleOptionViewItem:decorationPosition( ... )
    CASE 0
       RETURN Qt_QStyleOptionViewItem_decorationPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:decorationSize( ... )
@@ -150,7 +150,7 @@ METHOD QStyleOptionViewItem:decorationSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionViewItem_decorationSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:displayAlignment( ... )
@@ -158,7 +158,7 @@ METHOD QStyleOptionViewItem:displayAlignment( ... )
    CASE 0
       RETURN Qt_QStyleOptionViewItem_displayAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:font( ... )
@@ -166,7 +166,7 @@ METHOD QStyleOptionViewItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QStyleOptionViewItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:showDecorationSelected( ... )
@@ -174,7 +174,7 @@ METHOD QStyleOptionViewItem:showDecorationSelected( ... )
    CASE 0
       RETURN Qt_QStyleOptionViewItem_showDecorationSelected( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionViewItem:textElideMode( ... )
@@ -182,5 +182,5 @@ METHOD QStyleOptionViewItem:textElideMode( ... )
    CASE 0
       RETURN Qt_QStyleOptionViewItem_textElideMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

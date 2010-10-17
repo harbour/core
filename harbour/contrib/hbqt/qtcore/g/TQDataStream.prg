@@ -129,7 +129,7 @@ CREATE CLASS QDataStream INHERIT HbQtObjectHandler FUNCTION HB_QDataStream
 METHOD QDataStream:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDataStream( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QDataStream:atEnd( ... )
    CASE 0
       RETURN Qt_QDataStream_atEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:byteOrder( ... )
@@ -148,7 +148,7 @@ METHOD QDataStream:byteOrder( ... )
    CASE 0
       RETURN Qt_QDataStream_byteOrder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:device( ... )
@@ -156,7 +156,7 @@ METHOD QDataStream:device( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QDataStream_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:readRawData( ... )
@@ -168,7 +168,7 @@ METHOD QDataStream:readRawData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:resetStatus( ... )
@@ -176,7 +176,7 @@ METHOD QDataStream:resetStatus( ... )
    CASE 0
       RETURN Qt_QDataStream_resetStatus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:setByteOrder( ... )
@@ -188,7 +188,7 @@ METHOD QDataStream:setByteOrder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:setDevice( ... )
@@ -200,7 +200,7 @@ METHOD QDataStream:setDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:setStatus( ... )
@@ -212,7 +212,7 @@ METHOD QDataStream:setStatus( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:setVersion( ... )
@@ -224,7 +224,7 @@ METHOD QDataStream:setVersion( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:skipRawData( ... )
@@ -236,7 +236,7 @@ METHOD QDataStream:skipRawData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:status( ... )
@@ -244,7 +244,7 @@ METHOD QDataStream:status( ... )
    CASE 0
       RETURN Qt_QDataStream_status( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:version( ... )
@@ -252,7 +252,7 @@ METHOD QDataStream:version( ... )
    CASE 0
       RETURN Qt_QDataStream_version( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDataStream:writeRawData( ... )
@@ -264,5 +264,5 @@ METHOD QDataStream:writeRawData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

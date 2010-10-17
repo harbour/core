@@ -125,7 +125,7 @@ CREATE CLASS QCursor INHERIT HbQtObjectHandler FUNCTION HB_QCursor
 METHOD QCursor:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCursor( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QCursor:bitmap( ... )
    CASE 0
       RETURN QBitmapFromPointer( Qt_QCursor_bitmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:hotSpot( ... )
@@ -144,7 +144,7 @@ METHOD QCursor:hotSpot( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QCursor_hotSpot( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:mask( ... )
@@ -152,7 +152,7 @@ METHOD QCursor:mask( ... )
    CASE 0
       RETURN QBitmapFromPointer( Qt_QCursor_mask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:pixmap( ... )
@@ -160,7 +160,7 @@ METHOD QCursor:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QCursor_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:setShape( ... )
@@ -172,7 +172,7 @@ METHOD QCursor:setShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:shape( ... )
@@ -180,7 +180,7 @@ METHOD QCursor:shape( ... )
    CASE 0
       RETURN Qt_QCursor_shape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:pos( ... )
@@ -188,7 +188,7 @@ METHOD QCursor:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QCursor_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCursor:setPos( ... )
@@ -206,5 +206,5 @@ METHOD QCursor:setPos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -118,7 +118,7 @@ CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QPaint
 METHOD QPaintEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPaintEvent( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QPaintEvent:rect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPaintEvent_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEvent:region( ... )
@@ -137,5 +137,5 @@ METHOD QPaintEvent:region( ... )
    CASE 0
       RETURN QRegionFromPointer( Qt_QPaintEvent_region( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

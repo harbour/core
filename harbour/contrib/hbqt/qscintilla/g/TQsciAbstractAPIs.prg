@@ -119,7 +119,7 @@ CREATE CLASS QsciAbstractAPIs INHERIT HbQtObjectHandler FUNCTION HB_QsciAbstract
 METHOD QsciAbstractAPIs:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciAbstractAPIs( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QsciAbstractAPIs:lexer( ... )
    CASE 0
       RETURN QsciLexerFromPointer( Qt_QsciAbstractAPIs_lexer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAbstractAPIs:updateAutoCompletionList( ... )
@@ -142,7 +142,7 @@ METHOD QsciAbstractAPIs:updateAutoCompletionList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAbstractAPIs:autoCompletionSelected( ... )
@@ -154,5 +154,5 @@ METHOD QsciAbstractAPIs:autoCompletionSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

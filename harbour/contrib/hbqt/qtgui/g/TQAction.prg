@@ -166,7 +166,7 @@ CREATE CLASS QAction INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAction
 METHOD QAction:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAction( ... )
    RETURN Self
@@ -177,7 +177,7 @@ METHOD QAction:actionGroup( ... )
    CASE 0
       RETURN QActionGroupFromPointer( Qt_QAction_actionGroup( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:activate( ... )
@@ -189,7 +189,7 @@ METHOD QAction:activate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:associatedWidgets( ... )
@@ -197,7 +197,7 @@ METHOD QAction:associatedWidgets( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QAction_associatedWidgets( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:autoRepeat( ... )
@@ -205,7 +205,7 @@ METHOD QAction:autoRepeat( ... )
    CASE 0
       RETURN Qt_QAction_autoRepeat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:data( ... )
@@ -213,7 +213,7 @@ METHOD QAction:data( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QAction_data( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:font( ... )
@@ -221,7 +221,7 @@ METHOD QAction:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QAction_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:icon( ... )
@@ -229,7 +229,7 @@ METHOD QAction:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QAction_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:iconText( ... )
@@ -237,7 +237,7 @@ METHOD QAction:iconText( ... )
    CASE 0
       RETURN Qt_QAction_iconText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isCheckable( ... )
@@ -245,7 +245,7 @@ METHOD QAction:isCheckable( ... )
    CASE 0
       RETURN Qt_QAction_isCheckable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isChecked( ... )
@@ -253,7 +253,7 @@ METHOD QAction:isChecked( ... )
    CASE 0
       RETURN Qt_QAction_isChecked( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isEnabled( ... )
@@ -261,7 +261,7 @@ METHOD QAction:isEnabled( ... )
    CASE 0
       RETURN Qt_QAction_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isIconVisibleInMenu( ... )
@@ -269,7 +269,7 @@ METHOD QAction:isIconVisibleInMenu( ... )
    CASE 0
       RETURN Qt_QAction_isIconVisibleInMenu( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isSeparator( ... )
@@ -277,7 +277,7 @@ METHOD QAction:isSeparator( ... )
    CASE 0
       RETURN Qt_QAction_isSeparator( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:isVisible( ... )
@@ -285,7 +285,7 @@ METHOD QAction:isVisible( ... )
    CASE 0
       RETURN Qt_QAction_isVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:menu( ... )
@@ -293,7 +293,7 @@ METHOD QAction:menu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QAction_menu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:menuRole( ... )
@@ -301,7 +301,7 @@ METHOD QAction:menuRole( ... )
    CASE 0
       RETURN Qt_QAction_menuRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:parentWidget( ... )
@@ -309,7 +309,7 @@ METHOD QAction:parentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QAction_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setActionGroup( ... )
@@ -321,7 +321,7 @@ METHOD QAction:setActionGroup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setAutoRepeat( ... )
@@ -333,7 +333,7 @@ METHOD QAction:setAutoRepeat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setCheckable( ... )
@@ -345,7 +345,7 @@ METHOD QAction:setCheckable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setData( ... )
@@ -357,7 +357,7 @@ METHOD QAction:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setFont( ... )
@@ -369,7 +369,7 @@ METHOD QAction:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setIcon( ... )
@@ -381,7 +381,7 @@ METHOD QAction:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setIconText( ... )
@@ -393,7 +393,7 @@ METHOD QAction:setIconText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setIconVisibleInMenu( ... )
@@ -405,7 +405,7 @@ METHOD QAction:setIconVisibleInMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setMenu( ... )
@@ -417,7 +417,7 @@ METHOD QAction:setMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setMenuRole( ... )
@@ -429,7 +429,7 @@ METHOD QAction:setMenuRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setSeparator( ... )
@@ -441,7 +441,7 @@ METHOD QAction:setSeparator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setShortcut( ... )
@@ -453,7 +453,7 @@ METHOD QAction:setShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setShortcutContext( ... )
@@ -465,7 +465,7 @@ METHOD QAction:setShortcutContext( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setShortcuts( ... )
@@ -477,7 +477,7 @@ METHOD QAction:setShortcuts( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setStatusTip( ... )
@@ -489,7 +489,7 @@ METHOD QAction:setStatusTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setText( ... )
@@ -501,7 +501,7 @@ METHOD QAction:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setToolTip( ... )
@@ -513,7 +513,7 @@ METHOD QAction:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setWhatsThis( ... )
@@ -525,7 +525,7 @@ METHOD QAction:setWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:shortcut( ... )
@@ -533,7 +533,7 @@ METHOD QAction:shortcut( ... )
    CASE 0
       RETURN QKeySequenceFromPointer( Qt_QAction_shortcut( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:shortcutContext( ... )
@@ -541,7 +541,7 @@ METHOD QAction:shortcutContext( ... )
    CASE 0
       RETURN Qt_QAction_shortcutContext( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:shortcuts( ... )
@@ -549,7 +549,7 @@ METHOD QAction:shortcuts( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QAction_shortcuts( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:showStatusText( ... )
@@ -563,7 +563,7 @@ METHOD QAction:showStatusText( ... )
    CASE 0
       RETURN Qt_QAction_showStatusText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:statusTip( ... )
@@ -571,7 +571,7 @@ METHOD QAction:statusTip( ... )
    CASE 0
       RETURN Qt_QAction_statusTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:text( ... )
@@ -579,7 +579,7 @@ METHOD QAction:text( ... )
    CASE 0
       RETURN Qt_QAction_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:toolTip( ... )
@@ -587,7 +587,7 @@ METHOD QAction:toolTip( ... )
    CASE 0
       RETURN Qt_QAction_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:whatsThis( ... )
@@ -595,7 +595,7 @@ METHOD QAction:whatsThis( ... )
    CASE 0
       RETURN Qt_QAction_whatsThis( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:hover( ... )
@@ -603,7 +603,7 @@ METHOD QAction:hover( ... )
    CASE 0
       RETURN Qt_QAction_hover( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setChecked( ... )
@@ -615,7 +615,7 @@ METHOD QAction:setChecked( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setDisabled( ... )
@@ -627,7 +627,7 @@ METHOD QAction:setDisabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setEnabled( ... )
@@ -639,7 +639,7 @@ METHOD QAction:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:setVisible( ... )
@@ -651,7 +651,7 @@ METHOD QAction:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:toggle( ... )
@@ -659,7 +659,7 @@ METHOD QAction:toggle( ... )
    CASE 0
       RETURN Qt_QAction_toggle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAction:trigger( ... )
@@ -667,5 +667,5 @@ METHOD QAction:trigger( ... )
    CASE 0
       RETURN Qt_QAction_trigger( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

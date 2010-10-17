@@ -127,7 +127,7 @@ CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QBut
 METHOD QButtonGroup:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QButtonGroup( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QButtonGroup:addButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:button( ... )
@@ -160,7 +160,7 @@ METHOD QButtonGroup:button( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:buttons( ... )
@@ -168,7 +168,7 @@ METHOD QButtonGroup:buttons( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QButtonGroup_buttons( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:checkedButton( ... )
@@ -176,7 +176,7 @@ METHOD QButtonGroup:checkedButton( ... )
    CASE 0
       RETURN QAbstractButtonFromPointer( Qt_QButtonGroup_checkedButton( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:checkedId( ... )
@@ -184,7 +184,7 @@ METHOD QButtonGroup:checkedId( ... )
    CASE 0
       RETURN Qt_QButtonGroup_checkedId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:exclusive( ... )
@@ -192,7 +192,7 @@ METHOD QButtonGroup:exclusive( ... )
    CASE 0
       RETURN Qt_QButtonGroup_exclusive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:id( ... )
@@ -204,7 +204,7 @@ METHOD QButtonGroup:id( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:removeButton( ... )
@@ -216,7 +216,7 @@ METHOD QButtonGroup:removeButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:setExclusive( ... )
@@ -228,7 +228,7 @@ METHOD QButtonGroup:setExclusive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QButtonGroup:setId( ... )
@@ -240,5 +240,5 @@ METHOD QButtonGroup:setId( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

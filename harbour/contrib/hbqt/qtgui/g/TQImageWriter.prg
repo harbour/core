@@ -135,7 +135,7 @@ CREATE CLASS QImageWriter INHERIT HbQtObjectHandler FUNCTION HB_QImageWriter
 METHOD QImageWriter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QImageWriter( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QImageWriter:canWrite( ... )
    CASE 0
       RETURN Qt_QImageWriter_canWrite( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:compression( ... )
@@ -154,7 +154,7 @@ METHOD QImageWriter:compression( ... )
    CASE 0
       RETURN Qt_QImageWriter_compression( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:device( ... )
@@ -162,7 +162,7 @@ METHOD QImageWriter:device( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QImageWriter_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:error( ... )
@@ -170,7 +170,7 @@ METHOD QImageWriter:error( ... )
    CASE 0
       RETURN Qt_QImageWriter_error( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:errorString( ... )
@@ -178,7 +178,7 @@ METHOD QImageWriter:errorString( ... )
    CASE 0
       RETURN Qt_QImageWriter_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:fileName( ... )
@@ -186,7 +186,7 @@ METHOD QImageWriter:fileName( ... )
    CASE 0
       RETURN Qt_QImageWriter_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:format( ... )
@@ -194,7 +194,7 @@ METHOD QImageWriter:format( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QImageWriter_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:gamma( ... )
@@ -202,7 +202,7 @@ METHOD QImageWriter:gamma( ... )
    CASE 0
       RETURN Qt_QImageWriter_gamma( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:quality( ... )
@@ -210,7 +210,7 @@ METHOD QImageWriter:quality( ... )
    CASE 0
       RETURN Qt_QImageWriter_quality( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setCompression( ... )
@@ -222,7 +222,7 @@ METHOD QImageWriter:setCompression( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setDevice( ... )
@@ -234,7 +234,7 @@ METHOD QImageWriter:setDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setFileName( ... )
@@ -246,7 +246,7 @@ METHOD QImageWriter:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setFormat( ... )
@@ -258,7 +258,7 @@ METHOD QImageWriter:setFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setGamma( ... )
@@ -270,7 +270,7 @@ METHOD QImageWriter:setGamma( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setQuality( ... )
@@ -282,7 +282,7 @@ METHOD QImageWriter:setQuality( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:setText( ... )
@@ -294,7 +294,7 @@ METHOD QImageWriter:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:supportsOption( ... )
@@ -306,7 +306,7 @@ METHOD QImageWriter:supportsOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:write( ... )
@@ -318,7 +318,7 @@ METHOD QImageWriter:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImageWriter:supportedImageFormats( ... )
@@ -326,5 +326,5 @@ METHOD QImageWriter:supportedImageFormats( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QImageWriter_supportedImageFormats( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -125,7 +125,7 @@ CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCT
 METHOD QScrollArea:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QScrollArea( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QScrollArea:alignment( ... )
    CASE 0
       RETURN Qt_QScrollArea_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:ensureVisible( ... )
@@ -160,7 +160,7 @@ METHOD QScrollArea:ensureVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:ensureWidgetVisible( ... )
@@ -184,7 +184,7 @@ METHOD QScrollArea:ensureWidgetVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:setAlignment( ... )
@@ -196,7 +196,7 @@ METHOD QScrollArea:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:setWidget( ... )
@@ -208,7 +208,7 @@ METHOD QScrollArea:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:setWidgetResizable( ... )
@@ -220,7 +220,7 @@ METHOD QScrollArea:setWidgetResizable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:takeWidget( ... )
@@ -228,7 +228,7 @@ METHOD QScrollArea:takeWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QScrollArea_takeWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:widget( ... )
@@ -236,7 +236,7 @@ METHOD QScrollArea:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QScrollArea_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QScrollArea:widgetResizable( ... )
@@ -244,5 +244,5 @@ METHOD QScrollArea:widgetResizable( ... )
    CASE 0
       RETURN Qt_QScrollArea_widgetResizable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

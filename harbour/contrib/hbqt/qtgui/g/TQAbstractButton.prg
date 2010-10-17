@@ -142,7 +142,7 @@ CREATE CLASS QAbstractButton INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 METHOD QAbstractButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractButton( ... )
    RETURN Self
@@ -153,7 +153,7 @@ METHOD QAbstractButton:autoExclusive( ... )
    CASE 0
       RETURN Qt_QAbstractButton_autoExclusive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:autoRepeat( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractButton:autoRepeat( ... )
    CASE 0
       RETURN Qt_QAbstractButton_autoRepeat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:autoRepeatDelay( ... )
@@ -169,7 +169,7 @@ METHOD QAbstractButton:autoRepeatDelay( ... )
    CASE 0
       RETURN Qt_QAbstractButton_autoRepeatDelay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:autoRepeatInterval( ... )
@@ -177,7 +177,7 @@ METHOD QAbstractButton:autoRepeatInterval( ... )
    CASE 0
       RETURN Qt_QAbstractButton_autoRepeatInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:group( ... )
@@ -185,7 +185,7 @@ METHOD QAbstractButton:group( ... )
    CASE 0
       RETURN QButtonGroupFromPointer( Qt_QAbstractButton_group( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:icon( ... )
@@ -193,7 +193,7 @@ METHOD QAbstractButton:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QAbstractButton_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:iconSize( ... )
@@ -201,7 +201,7 @@ METHOD QAbstractButton:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QAbstractButton_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:isCheckable( ... )
@@ -209,7 +209,7 @@ METHOD QAbstractButton:isCheckable( ... )
    CASE 0
       RETURN Qt_QAbstractButton_isCheckable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:isChecked( ... )
@@ -217,7 +217,7 @@ METHOD QAbstractButton:isChecked( ... )
    CASE 0
       RETURN Qt_QAbstractButton_isChecked( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:isDown( ... )
@@ -225,7 +225,7 @@ METHOD QAbstractButton:isDown( ... )
    CASE 0
       RETURN Qt_QAbstractButton_isDown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setAutoExclusive( ... )
@@ -237,7 +237,7 @@ METHOD QAbstractButton:setAutoExclusive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setAutoRepeat( ... )
@@ -249,7 +249,7 @@ METHOD QAbstractButton:setAutoRepeat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setAutoRepeatDelay( ... )
@@ -261,7 +261,7 @@ METHOD QAbstractButton:setAutoRepeatDelay( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setAutoRepeatInterval( ... )
@@ -273,7 +273,7 @@ METHOD QAbstractButton:setAutoRepeatInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setCheckable( ... )
@@ -285,7 +285,7 @@ METHOD QAbstractButton:setCheckable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setDown( ... )
@@ -297,7 +297,7 @@ METHOD QAbstractButton:setDown( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setIcon( ... )
@@ -309,7 +309,7 @@ METHOD QAbstractButton:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setShortcut( ... )
@@ -321,7 +321,7 @@ METHOD QAbstractButton:setShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setText( ... )
@@ -333,7 +333,7 @@ METHOD QAbstractButton:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:shortcut( ... )
@@ -341,7 +341,7 @@ METHOD QAbstractButton:shortcut( ... )
    CASE 0
       RETURN QKeySequenceFromPointer( Qt_QAbstractButton_shortcut( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:text( ... )
@@ -349,7 +349,7 @@ METHOD QAbstractButton:text( ... )
    CASE 0
       RETURN Qt_QAbstractButton_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:animateClick( ... )
@@ -363,7 +363,7 @@ METHOD QAbstractButton:animateClick( ... )
    CASE 0
       RETURN Qt_QAbstractButton_animateClick( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:click( ... )
@@ -371,7 +371,7 @@ METHOD QAbstractButton:click( ... )
    CASE 0
       RETURN Qt_QAbstractButton_click( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setChecked( ... )
@@ -383,7 +383,7 @@ METHOD QAbstractButton:setChecked( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:setIconSize( ... )
@@ -395,7 +395,7 @@ METHOD QAbstractButton:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractButton:toggle( ... )
@@ -403,5 +403,5 @@ METHOD QAbstractButton:toggle( ... )
    CASE 0
       RETURN Qt_QAbstractButton_toggle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

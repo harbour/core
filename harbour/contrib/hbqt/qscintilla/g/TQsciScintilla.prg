@@ -311,7 +311,7 @@ CREATE CLASS QsciScintilla INHERIT HbQtObjectHandler FUNCTION HB_QsciScintilla
 METHOD QsciScintilla:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciScintilla( ... )
    RETURN Self
@@ -334,7 +334,7 @@ METHOD QsciScintilla:annotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:annotation( ... )
@@ -346,7 +346,7 @@ METHOD QsciScintilla:annotation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:annotationDisplay( ... )
@@ -354,7 +354,7 @@ METHOD QsciScintilla:annotationDisplay( ... )
    CASE 0
       RETURN Qt_QsciScintilla_annotationDisplay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:clearAnnotations( ... )
@@ -368,7 +368,7 @@ METHOD QsciScintilla:clearAnnotations( ... )
    CASE 0
       RETURN Qt_QsciScintilla_clearAnnotations( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionCaseSensitivity( ... )
@@ -376,7 +376,7 @@ METHOD QsciScintilla:autoCompletionCaseSensitivity( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionCaseSensitivity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionFillupsEnabled( ... )
@@ -384,7 +384,7 @@ METHOD QsciScintilla:autoCompletionFillupsEnabled( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionFillupsEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionReplaceWord( ... )
@@ -392,7 +392,7 @@ METHOD QsciScintilla:autoCompletionReplaceWord( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionReplaceWord( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionShowSingle( ... )
@@ -400,7 +400,7 @@ METHOD QsciScintilla:autoCompletionShowSingle( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionShowSingle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionSource( ... )
@@ -408,7 +408,7 @@ METHOD QsciScintilla:autoCompletionSource( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionSource( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompletionThreshold( ... )
@@ -416,7 +416,7 @@ METHOD QsciScintilla:autoCompletionThreshold( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompletionThreshold( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoIndent( ... )
@@ -424,7 +424,7 @@ METHOD QsciScintilla:autoIndent( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoIndent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:backspaceUnindents( ... )
@@ -432,7 +432,7 @@ METHOD QsciScintilla:backspaceUnindents( ... )
    CASE 0
       RETURN Qt_QsciScintilla_backspaceUnindents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:beginUndoAction( ... )
@@ -440,7 +440,7 @@ METHOD QsciScintilla:beginUndoAction( ... )
    CASE 0
       RETURN Qt_QsciScintilla_beginUndoAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:braceMatching( ... )
@@ -448,7 +448,7 @@ METHOD QsciScintilla:braceMatching( ... )
    CASE 0
       RETURN Qt_QsciScintilla_braceMatching( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:callTipsStyle( ... )
@@ -456,7 +456,7 @@ METHOD QsciScintilla:callTipsStyle( ... )
    CASE 0
       RETURN Qt_QsciScintilla_callTipsStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:callTipsVisible( ... )
@@ -464,7 +464,7 @@ METHOD QsciScintilla:callTipsVisible( ... )
    CASE 0
       RETURN Qt_QsciScintilla_callTipsVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:cancelList( ... )
@@ -472,7 +472,7 @@ METHOD QsciScintilla:cancelList( ... )
    CASE 0
       RETURN Qt_QsciScintilla_cancelList( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:caseSensitive( ... )
@@ -480,7 +480,7 @@ METHOD QsciScintilla:caseSensitive( ... )
    CASE 0
       RETURN Qt_QsciScintilla_caseSensitive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:clearFolds( ... )
@@ -488,7 +488,7 @@ METHOD QsciScintilla:clearFolds( ... )
    CASE 0
       RETURN Qt_QsciScintilla_clearFolds( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:clearRegisteredImages( ... )
@@ -496,7 +496,7 @@ METHOD QsciScintilla:clearRegisteredImages( ... )
    CASE 0
       RETURN Qt_QsciScintilla_clearRegisteredImages( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:color( ... )
@@ -504,7 +504,7 @@ METHOD QsciScintilla:color( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciScintilla_color( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:convertEols( ... )
@@ -516,7 +516,7 @@ METHOD QsciScintilla:convertEols( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:document( ... )
@@ -524,7 +524,7 @@ METHOD QsciScintilla:document( ... )
    CASE 0
       RETURN QsciDocumentFromPointer( Qt_QsciScintilla_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:endUndoAction( ... )
@@ -532,7 +532,7 @@ METHOD QsciScintilla:endUndoAction( ... )
    CASE 0
       RETURN Qt_QsciScintilla_endUndoAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:edgeColor( ... )
@@ -540,7 +540,7 @@ METHOD QsciScintilla:edgeColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciScintilla_edgeColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:edgeColumn( ... )
@@ -548,7 +548,7 @@ METHOD QsciScintilla:edgeColumn( ... )
    CASE 0
       RETURN Qt_QsciScintilla_edgeColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:edgeMode( ... )
@@ -556,7 +556,7 @@ METHOD QsciScintilla:edgeMode( ... )
    CASE 0
       RETURN Qt_QsciScintilla_edgeMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setFont( ... )
@@ -568,7 +568,7 @@ METHOD QsciScintilla:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:eolMode( ... )
@@ -576,7 +576,7 @@ METHOD QsciScintilla:eolMode( ... )
    CASE 0
       RETURN Qt_QsciScintilla_eolMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:eolVisibility( ... )
@@ -584,7 +584,7 @@ METHOD QsciScintilla:eolVisibility( ... )
    CASE 0
       RETURN Qt_QsciScintilla_eolVisibility( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:findFirst( ... )
@@ -620,7 +620,7 @@ METHOD QsciScintilla:findFirst( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:findNext( ... )
@@ -628,7 +628,7 @@ METHOD QsciScintilla:findNext( ... )
    CASE 0
       RETURN Qt_QsciScintilla_findNext( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:firstVisibleLine( ... )
@@ -636,7 +636,7 @@ METHOD QsciScintilla:firstVisibleLine( ... )
    CASE 0
       RETURN Qt_QsciScintilla_firstVisibleLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:folding( ... )
@@ -644,7 +644,7 @@ METHOD QsciScintilla:folding( ... )
    CASE 0
       RETURN Qt_QsciScintilla_folding( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:getCursorPosition( ... )
@@ -656,7 +656,7 @@ METHOD QsciScintilla:getCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:getSelection( ... )
@@ -668,7 +668,7 @@ METHOD QsciScintilla:getSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:hasSelectedText( ... )
@@ -676,7 +676,7 @@ METHOD QsciScintilla:hasSelectedText( ... )
    CASE 0
       RETURN Qt_QsciScintilla_hasSelectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:indentation( ... )
@@ -688,7 +688,7 @@ METHOD QsciScintilla:indentation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:indentationGuides( ... )
@@ -696,7 +696,7 @@ METHOD QsciScintilla:indentationGuides( ... )
    CASE 0
       RETURN Qt_QsciScintilla_indentationGuides( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:indentationsUseTabs( ... )
@@ -704,7 +704,7 @@ METHOD QsciScintilla:indentationsUseTabs( ... )
    CASE 0
       RETURN Qt_QsciScintilla_indentationsUseTabs( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:indentationWidth( ... )
@@ -712,7 +712,7 @@ METHOD QsciScintilla:indentationWidth( ... )
    CASE 0
       RETURN Qt_QsciScintilla_indentationWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isCallTipActive( ... )
@@ -720,7 +720,7 @@ METHOD QsciScintilla:isCallTipActive( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isCallTipActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isListActive( ... )
@@ -728,7 +728,7 @@ METHOD QsciScintilla:isListActive( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isListActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isModified( ... )
@@ -736,7 +736,7 @@ METHOD QsciScintilla:isModified( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isReadOnly( ... )
@@ -744,7 +744,7 @@ METHOD QsciScintilla:isReadOnly( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isRedoAvailable( ... )
@@ -752,7 +752,7 @@ METHOD QsciScintilla:isRedoAvailable( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isRedoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isUndoAvailable( ... )
@@ -760,7 +760,7 @@ METHOD QsciScintilla:isUndoAvailable( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isUndoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isUtf8( ... )
@@ -768,7 +768,7 @@ METHOD QsciScintilla:isUtf8( ... )
    CASE 0
       RETURN Qt_QsciScintilla_isUtf8( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:isWordCharacter( ... )
@@ -780,7 +780,7 @@ METHOD QsciScintilla:isWordCharacter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:lineAt( ... )
@@ -792,7 +792,7 @@ METHOD QsciScintilla:lineAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:lineIndexFromPosition( ... )
@@ -804,7 +804,7 @@ METHOD QsciScintilla:lineIndexFromPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:lineLength( ... )
@@ -816,7 +816,7 @@ METHOD QsciScintilla:lineLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:lines( ... )
@@ -824,7 +824,7 @@ METHOD QsciScintilla:lines( ... )
    CASE 0
       RETURN Qt_QsciScintilla_lines( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:length( ... )
@@ -832,7 +832,7 @@ METHOD QsciScintilla:length( ... )
    CASE 0
       RETURN Qt_QsciScintilla_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:lexer( ... )
@@ -840,7 +840,7 @@ METHOD QsciScintilla:lexer( ... )
    CASE 0
       RETURN QsciLexerFromPointer( Qt_QsciScintilla_lexer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:marginLineNumbers( ... )
@@ -852,7 +852,7 @@ METHOD QsciScintilla:marginLineNumbers( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:marginMarkerMask( ... )
@@ -864,7 +864,7 @@ METHOD QsciScintilla:marginMarkerMask( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:marginSensitivity( ... )
@@ -876,7 +876,7 @@ METHOD QsciScintilla:marginSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:marginType( ... )
@@ -888,7 +888,7 @@ METHOD QsciScintilla:marginType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:marginWidth( ... )
@@ -900,7 +900,7 @@ METHOD QsciScintilla:marginWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerDefine( ... )
@@ -924,7 +924,7 @@ METHOD QsciScintilla:markerDefine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerAdd( ... )
@@ -936,7 +936,7 @@ METHOD QsciScintilla:markerAdd( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markersAtLine( ... )
@@ -948,7 +948,7 @@ METHOD QsciScintilla:markersAtLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerDelete( ... )
@@ -966,7 +966,7 @@ METHOD QsciScintilla:markerDelete( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerDeleteAll( ... )
@@ -980,7 +980,7 @@ METHOD QsciScintilla:markerDeleteAll( ... )
    CASE 0
       RETURN Qt_QsciScintilla_markerDeleteAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerDeleteHandle( ... )
@@ -992,7 +992,7 @@ METHOD QsciScintilla:markerDeleteHandle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerLine( ... )
@@ -1004,7 +1004,7 @@ METHOD QsciScintilla:markerLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerFindNext( ... )
@@ -1016,7 +1016,7 @@ METHOD QsciScintilla:markerFindNext( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:markerFindPrevious( ... )
@@ -1028,7 +1028,7 @@ METHOD QsciScintilla:markerFindPrevious( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:paper( ... )
@@ -1036,7 +1036,7 @@ METHOD QsciScintilla:paper( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciScintilla_paper( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:positionFromLineIndex( ... )
@@ -1048,7 +1048,7 @@ METHOD QsciScintilla:positionFromLineIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:read( ... )
@@ -1060,7 +1060,7 @@ METHOD QsciScintilla:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:recolor( ... )
@@ -1080,7 +1080,7 @@ METHOD QsciScintilla:recolor( ... )
    CASE 0
       RETURN Qt_QsciScintilla_recolor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:registerImage( ... )
@@ -1092,7 +1092,7 @@ METHOD QsciScintilla:registerImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:replace( ... )
@@ -1104,7 +1104,7 @@ METHOD QsciScintilla:replace( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:resetFoldMarginColors( ... )
@@ -1112,7 +1112,7 @@ METHOD QsciScintilla:resetFoldMarginColors( ... )
    CASE 0
       RETURN Qt_QsciScintilla_resetFoldMarginColors( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setFoldMarginColors( ... )
@@ -1124,7 +1124,7 @@ METHOD QsciScintilla:setFoldMarginColors( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAnnotationDisplay( ... )
@@ -1136,7 +1136,7 @@ METHOD QsciScintilla:setAnnotationDisplay( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionFillupsEnabled( ... )
@@ -1148,7 +1148,7 @@ METHOD QsciScintilla:setAutoCompletionFillupsEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionFillups( ... )
@@ -1160,7 +1160,7 @@ METHOD QsciScintilla:setAutoCompletionFillups( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionWordSeparators( ... )
@@ -1172,7 +1172,7 @@ METHOD QsciScintilla:setAutoCompletionWordSeparators( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCallTipsBackgroundColor( ... )
@@ -1184,7 +1184,7 @@ METHOD QsciScintilla:setCallTipsBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCallTipsForegroundColor( ... )
@@ -1196,7 +1196,7 @@ METHOD QsciScintilla:setCallTipsForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCallTipsHighlightColor( ... )
@@ -1208,7 +1208,7 @@ METHOD QsciScintilla:setCallTipsHighlightColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCallTipsStyle( ... )
@@ -1220,7 +1220,7 @@ METHOD QsciScintilla:setCallTipsStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCallTipsVisible( ... )
@@ -1232,7 +1232,7 @@ METHOD QsciScintilla:setCallTipsVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setDocument( ... )
@@ -1244,7 +1244,7 @@ METHOD QsciScintilla:setDocument( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setEdgeColor( ... )
@@ -1256,7 +1256,7 @@ METHOD QsciScintilla:setEdgeColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setEdgeColumn( ... )
@@ -1268,7 +1268,7 @@ METHOD QsciScintilla:setEdgeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setEdgeMode( ... )
@@ -1280,7 +1280,7 @@ METHOD QsciScintilla:setEdgeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginText( ... )
@@ -1300,7 +1300,7 @@ METHOD QsciScintilla:setMarginText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginType( ... )
@@ -1312,7 +1312,7 @@ METHOD QsciScintilla:setMarginType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:clearMarginText( ... )
@@ -1326,7 +1326,7 @@ METHOD QsciScintilla:clearMarginText( ... )
    CASE 0
       RETURN Qt_QsciScintilla_clearMarginText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarkerBackgroundColor( ... )
@@ -1344,7 +1344,7 @@ METHOD QsciScintilla:setMarkerBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarkerForegroundColor( ... )
@@ -1362,7 +1362,7 @@ METHOD QsciScintilla:setMarkerForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMatchedBraceBackgroundColor( ... )
@@ -1374,7 +1374,7 @@ METHOD QsciScintilla:setMatchedBraceBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMatchedBraceForegroundColor( ... )
@@ -1386,7 +1386,7 @@ METHOD QsciScintilla:setMatchedBraceForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setUnmatchedBraceBackgroundColor( ... )
@@ -1398,7 +1398,7 @@ METHOD QsciScintilla:setUnmatchedBraceBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setUnmatchedBraceForegroundColor( ... )
@@ -1410,7 +1410,7 @@ METHOD QsciScintilla:setUnmatchedBraceForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setWrapVisualFlags( ... )
@@ -1434,7 +1434,7 @@ METHOD QsciScintilla:setWrapVisualFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:selectedText( ... )
@@ -1442,7 +1442,7 @@ METHOD QsciScintilla:selectedText( ... )
    CASE 0
       RETURN Qt_QsciScintilla_selectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:selectionToEol( ... )
@@ -1450,7 +1450,7 @@ METHOD QsciScintilla:selectionToEol( ... )
    CASE 0
       RETURN Qt_QsciScintilla_selectionToEol( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setSelectionToEol( ... )
@@ -1462,7 +1462,7 @@ METHOD QsciScintilla:setSelectionToEol( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:showUserList( ... )
@@ -1474,7 +1474,7 @@ METHOD QsciScintilla:showUserList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:standardCommands( ... )
@@ -1482,7 +1482,7 @@ METHOD QsciScintilla:standardCommands( ... )
    CASE 0
       RETURN QsciCommandSetFromPointer( Qt_QsciScintilla_standardCommands( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:tabIndents( ... )
@@ -1490,7 +1490,7 @@ METHOD QsciScintilla:tabIndents( ... )
    CASE 0
       RETURN Qt_QsciScintilla_tabIndents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:tabWidth( ... )
@@ -1498,7 +1498,7 @@ METHOD QsciScintilla:tabWidth( ... )
    CASE 0
       RETURN Qt_QsciScintilla_tabWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:text( ... )
@@ -1512,7 +1512,7 @@ METHOD QsciScintilla:text( ... )
    CASE 0
       RETURN Qt_QsciScintilla_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:textHeight( ... )
@@ -1524,7 +1524,7 @@ METHOD QsciScintilla:textHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:whitespaceVisibility( ... )
@@ -1532,7 +1532,7 @@ METHOD QsciScintilla:whitespaceVisibility( ... )
    CASE 0
       RETURN Qt_QsciScintilla_whitespaceVisibility( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:wordAtPoint( ... )
@@ -1544,7 +1544,7 @@ METHOD QsciScintilla:wordAtPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:wordCharacters( ... )
@@ -1552,7 +1552,7 @@ METHOD QsciScintilla:wordCharacters( ... )
    CASE 0
       RETURN Qt_QsciScintilla_wordCharacters( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:wrapMode( ... )
@@ -1560,7 +1560,7 @@ METHOD QsciScintilla:wrapMode( ... )
    CASE 0
       RETURN Qt_QsciScintilla_wrapMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:write( ... )
@@ -1572,7 +1572,7 @@ METHOD QsciScintilla:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:append( ... )
@@ -1584,7 +1584,7 @@ METHOD QsciScintilla:append( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompleteFromAll( ... )
@@ -1592,7 +1592,7 @@ METHOD QsciScintilla:autoCompleteFromAll( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompleteFromAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompleteFromAPIs( ... )
@@ -1600,7 +1600,7 @@ METHOD QsciScintilla:autoCompleteFromAPIs( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompleteFromAPIs( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:autoCompleteFromDocument( ... )
@@ -1608,7 +1608,7 @@ METHOD QsciScintilla:autoCompleteFromDocument( ... )
    CASE 0
       RETURN Qt_QsciScintilla_autoCompleteFromDocument( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:callTip( ... )
@@ -1616,7 +1616,7 @@ METHOD QsciScintilla:callTip( ... )
    CASE 0
       RETURN Qt_QsciScintilla_callTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:clear( ... )
@@ -1624,7 +1624,7 @@ METHOD QsciScintilla:clear( ... )
    CASE 0
       RETURN Qt_QsciScintilla_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:copy( ... )
@@ -1632,7 +1632,7 @@ METHOD QsciScintilla:copy( ... )
    CASE 0
       RETURN Qt_QsciScintilla_copy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:cut( ... )
@@ -1640,7 +1640,7 @@ METHOD QsciScintilla:cut( ... )
    CASE 0
       RETURN Qt_QsciScintilla_cut( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:ensureCursorVisible( ... )
@@ -1648,7 +1648,7 @@ METHOD QsciScintilla:ensureCursorVisible( ... )
    CASE 0
       RETURN Qt_QsciScintilla_ensureCursorVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:ensureLineVisible( ... )
@@ -1660,7 +1660,7 @@ METHOD QsciScintilla:ensureLineVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:foldAll( ... )
@@ -1674,7 +1674,7 @@ METHOD QsciScintilla:foldAll( ... )
    CASE 0
       RETURN Qt_QsciScintilla_foldAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:foldLine( ... )
@@ -1686,7 +1686,7 @@ METHOD QsciScintilla:foldLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:indent( ... )
@@ -1698,7 +1698,7 @@ METHOD QsciScintilla:indent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:insert( ... )
@@ -1710,7 +1710,7 @@ METHOD QsciScintilla:insert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:insertAt( ... )
@@ -1722,7 +1722,7 @@ METHOD QsciScintilla:insertAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:moveToMatchingBrace( ... )
@@ -1730,7 +1730,7 @@ METHOD QsciScintilla:moveToMatchingBrace( ... )
    CASE 0
       RETURN Qt_QsciScintilla_moveToMatchingBrace( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:paste( ... )
@@ -1738,7 +1738,7 @@ METHOD QsciScintilla:paste( ... )
    CASE 0
       RETURN Qt_QsciScintilla_paste( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:redo( ... )
@@ -1746,7 +1746,7 @@ METHOD QsciScintilla:redo( ... )
    CASE 0
       RETURN Qt_QsciScintilla_redo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:removeSelectedText( ... )
@@ -1754,7 +1754,7 @@ METHOD QsciScintilla:removeSelectedText( ... )
    CASE 0
       RETURN Qt_QsciScintilla_removeSelectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:resetSelectionBackgroundColor( ... )
@@ -1762,7 +1762,7 @@ METHOD QsciScintilla:resetSelectionBackgroundColor( ... )
    CASE 0
       RETURN Qt_QsciScintilla_resetSelectionBackgroundColor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:resetSelectionForegroundColor( ... )
@@ -1770,7 +1770,7 @@ METHOD QsciScintilla:resetSelectionForegroundColor( ... )
    CASE 0
       RETURN Qt_QsciScintilla_resetSelectionForegroundColor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:selectAll( ... )
@@ -1784,7 +1784,7 @@ METHOD QsciScintilla:selectAll( ... )
    CASE 0
       RETURN Qt_QsciScintilla_selectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:selectToMatchingBrace( ... )
@@ -1792,7 +1792,7 @@ METHOD QsciScintilla:selectToMatchingBrace( ... )
    CASE 0
       RETURN Qt_QsciScintilla_selectToMatchingBrace( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionCaseSensitivity( ... )
@@ -1804,7 +1804,7 @@ METHOD QsciScintilla:setAutoCompletionCaseSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionReplaceWord( ... )
@@ -1816,7 +1816,7 @@ METHOD QsciScintilla:setAutoCompletionReplaceWord( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionShowSingle( ... )
@@ -1828,7 +1828,7 @@ METHOD QsciScintilla:setAutoCompletionShowSingle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionSource( ... )
@@ -1840,7 +1840,7 @@ METHOD QsciScintilla:setAutoCompletionSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoCompletionThreshold( ... )
@@ -1852,7 +1852,7 @@ METHOD QsciScintilla:setAutoCompletionThreshold( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setAutoIndent( ... )
@@ -1864,7 +1864,7 @@ METHOD QsciScintilla:setAutoIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setBraceMatching( ... )
@@ -1876,7 +1876,7 @@ METHOD QsciScintilla:setBraceMatching( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setBackspaceUnindents( ... )
@@ -1888,7 +1888,7 @@ METHOD QsciScintilla:setBackspaceUnindents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCaretForegroundColor( ... )
@@ -1900,7 +1900,7 @@ METHOD QsciScintilla:setCaretForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCaretLineBackgroundColor( ... )
@@ -1912,7 +1912,7 @@ METHOD QsciScintilla:setCaretLineBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCaretLineVisible( ... )
@@ -1924,7 +1924,7 @@ METHOD QsciScintilla:setCaretLineVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCaretWidth( ... )
@@ -1936,7 +1936,7 @@ METHOD QsciScintilla:setCaretWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setColor( ... )
@@ -1948,7 +1948,7 @@ METHOD QsciScintilla:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setCursorPosition( ... )
@@ -1960,7 +1960,7 @@ METHOD QsciScintilla:setCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setEolMode( ... )
@@ -1972,7 +1972,7 @@ METHOD QsciScintilla:setEolMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setEolVisibility( ... )
@@ -1984,7 +1984,7 @@ METHOD QsciScintilla:setEolVisibility( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setFolding( ... )
@@ -2002,7 +2002,7 @@ METHOD QsciScintilla:setFolding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentation( ... )
@@ -2014,7 +2014,7 @@ METHOD QsciScintilla:setIndentation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentationGuides( ... )
@@ -2026,7 +2026,7 @@ METHOD QsciScintilla:setIndentationGuides( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentationGuidesBackgroundColor( ... )
@@ -2038,7 +2038,7 @@ METHOD QsciScintilla:setIndentationGuidesBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentationGuidesForegroundColor( ... )
@@ -2050,7 +2050,7 @@ METHOD QsciScintilla:setIndentationGuidesForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentationsUseTabs( ... )
@@ -2062,7 +2062,7 @@ METHOD QsciScintilla:setIndentationsUseTabs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setIndentationWidth( ... )
@@ -2074,7 +2074,7 @@ METHOD QsciScintilla:setIndentationWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setLexer( ... )
@@ -2088,7 +2088,7 @@ METHOD QsciScintilla:setLexer( ... )
    CASE 0
       RETURN Qt_QsciScintilla_setLexer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginsBackgroundColor( ... )
@@ -2100,7 +2100,7 @@ METHOD QsciScintilla:setMarginsBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginsFont( ... )
@@ -2112,7 +2112,7 @@ METHOD QsciScintilla:setMarginsFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginsForegroundColor( ... )
@@ -2124,7 +2124,7 @@ METHOD QsciScintilla:setMarginsForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginLineNumbers( ... )
@@ -2136,7 +2136,7 @@ METHOD QsciScintilla:setMarginLineNumbers( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginMarkerMask( ... )
@@ -2148,7 +2148,7 @@ METHOD QsciScintilla:setMarginMarkerMask( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginSensitivity( ... )
@@ -2160,7 +2160,7 @@ METHOD QsciScintilla:setMarginSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setMarginWidth( ... )
@@ -2174,7 +2174,7 @@ METHOD QsciScintilla:setMarginWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setModified( ... )
@@ -2186,7 +2186,7 @@ METHOD QsciScintilla:setModified( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setPaper( ... )
@@ -2198,7 +2198,7 @@ METHOD QsciScintilla:setPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setReadOnly( ... )
@@ -2210,7 +2210,7 @@ METHOD QsciScintilla:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setSelection( ... )
@@ -2222,7 +2222,7 @@ METHOD QsciScintilla:setSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setSelectionBackgroundColor( ... )
@@ -2234,7 +2234,7 @@ METHOD QsciScintilla:setSelectionBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setSelectionForegroundColor( ... )
@@ -2246,7 +2246,7 @@ METHOD QsciScintilla:setSelectionForegroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setTabIndents( ... )
@@ -2258,7 +2258,7 @@ METHOD QsciScintilla:setTabIndents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setTabWidth( ... )
@@ -2270,7 +2270,7 @@ METHOD QsciScintilla:setTabWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setText( ... )
@@ -2282,7 +2282,7 @@ METHOD QsciScintilla:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setUtf8( ... )
@@ -2294,7 +2294,7 @@ METHOD QsciScintilla:setUtf8( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setWhitespaceVisibility( ... )
@@ -2306,7 +2306,7 @@ METHOD QsciScintilla:setWhitespaceVisibility( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:setWrapMode( ... )
@@ -2318,7 +2318,7 @@ METHOD QsciScintilla:setWrapMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:undo( ... )
@@ -2326,7 +2326,7 @@ METHOD QsciScintilla:undo( ... )
    CASE 0
       RETURN Qt_QsciScintilla_undo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:unindent( ... )
@@ -2338,7 +2338,7 @@ METHOD QsciScintilla:unindent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:zoomIn( ... )
@@ -2352,7 +2352,7 @@ METHOD QsciScintilla:zoomIn( ... )
    CASE 0
       RETURN Qt_QsciScintilla_zoomIn_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:zoomOut( ... )
@@ -2366,7 +2366,7 @@ METHOD QsciScintilla:zoomOut( ... )
    CASE 0
       RETURN Qt_QsciScintilla_zoomOut_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciScintilla:zoomTo( ... )
@@ -2378,5 +2378,5 @@ METHOD QsciScintilla:zoomTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

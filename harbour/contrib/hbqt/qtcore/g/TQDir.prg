@@ -169,7 +169,7 @@ CREATE CLASS QDir INHERIT HbQtObjectHandler FUNCTION HB_QDir
 METHOD QDir:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDir( ... )
    RETURN Self
@@ -184,7 +184,7 @@ METHOD QDir:absoluteFilePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:absolutePath( ... )
@@ -192,7 +192,7 @@ METHOD QDir:absolutePath( ... )
    CASE 0
       RETURN Qt_QDir_absolutePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:canonicalPath( ... )
@@ -200,7 +200,7 @@ METHOD QDir:canonicalPath( ... )
    CASE 0
       RETURN Qt_QDir_canonicalPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:cd( ... )
@@ -212,7 +212,7 @@ METHOD QDir:cd( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:cdUp( ... )
@@ -220,7 +220,7 @@ METHOD QDir:cdUp( ... )
    CASE 0
       RETURN Qt_QDir_cdUp( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:count( ... )
@@ -228,7 +228,7 @@ METHOD QDir:count( ... )
    CASE 0
       RETURN Qt_QDir_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:dirName( ... )
@@ -236,7 +236,7 @@ METHOD QDir:dirName( ... )
    CASE 0
       RETURN Qt_QDir_dirName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:entryList( ... )
@@ -266,7 +266,7 @@ METHOD QDir:entryList( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDir_entryList_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:exists( ... )
@@ -280,7 +280,7 @@ METHOD QDir:exists( ... )
    CASE 0
       RETURN Qt_QDir_exists_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:filePath( ... )
@@ -292,7 +292,7 @@ METHOD QDir:filePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:filter( ... )
@@ -300,7 +300,7 @@ METHOD QDir:filter( ... )
    CASE 0
       RETURN Qt_QDir_filter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isAbsolute( ... )
@@ -308,7 +308,7 @@ METHOD QDir:isAbsolute( ... )
    CASE 0
       RETURN Qt_QDir_isAbsolute( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isReadable( ... )
@@ -316,7 +316,7 @@ METHOD QDir:isReadable( ... )
    CASE 0
       RETURN Qt_QDir_isReadable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isRelative( ... )
@@ -324,7 +324,7 @@ METHOD QDir:isRelative( ... )
    CASE 0
       RETURN Qt_QDir_isRelative( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isRoot( ... )
@@ -332,7 +332,7 @@ METHOD QDir:isRoot( ... )
    CASE 0
       RETURN Qt_QDir_isRoot( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:makeAbsolute( ... )
@@ -340,7 +340,7 @@ METHOD QDir:makeAbsolute( ... )
    CASE 0
       RETURN Qt_QDir_makeAbsolute( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:mkdir( ... )
@@ -352,7 +352,7 @@ METHOD QDir:mkdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:mkpath( ... )
@@ -364,7 +364,7 @@ METHOD QDir:mkpath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:nameFilters( ... )
@@ -372,7 +372,7 @@ METHOD QDir:nameFilters( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDir_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:path( ... )
@@ -380,7 +380,7 @@ METHOD QDir:path( ... )
    CASE 0
       RETURN Qt_QDir_path( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:refresh( ... )
@@ -388,7 +388,7 @@ METHOD QDir:refresh( ... )
    CASE 0
       RETURN Qt_QDir_refresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:relativeFilePath( ... )
@@ -400,7 +400,7 @@ METHOD QDir:relativeFilePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:remove( ... )
@@ -412,7 +412,7 @@ METHOD QDir:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:rename( ... )
@@ -424,7 +424,7 @@ METHOD QDir:rename( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:rmdir( ... )
@@ -436,7 +436,7 @@ METHOD QDir:rmdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:rmpath( ... )
@@ -448,7 +448,7 @@ METHOD QDir:rmpath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setFilter( ... )
@@ -460,7 +460,7 @@ METHOD QDir:setFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setNameFilters( ... )
@@ -472,7 +472,7 @@ METHOD QDir:setNameFilters( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setPath( ... )
@@ -484,7 +484,7 @@ METHOD QDir:setPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setSorting( ... )
@@ -496,7 +496,7 @@ METHOD QDir:setSorting( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:sorting( ... )
@@ -504,7 +504,7 @@ METHOD QDir:sorting( ... )
    CASE 0
       RETURN Qt_QDir_sorting( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:addSearchPath( ... )
@@ -516,7 +516,7 @@ METHOD QDir:addSearchPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:cleanPath( ... )
@@ -528,7 +528,7 @@ METHOD QDir:cleanPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:current( ... )
@@ -536,7 +536,7 @@ METHOD QDir:current( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QDir_current( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:currentPath( ... )
@@ -544,7 +544,7 @@ METHOD QDir:currentPath( ... )
    CASE 0
       RETURN Qt_QDir_currentPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:fromNativeSeparators( ... )
@@ -556,7 +556,7 @@ METHOD QDir:fromNativeSeparators( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:home( ... )
@@ -564,7 +564,7 @@ METHOD QDir:home( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QDir_home( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:homePath( ... )
@@ -572,7 +572,7 @@ METHOD QDir:homePath( ... )
    CASE 0
       RETURN Qt_QDir_homePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isAbsolutePath( ... )
@@ -584,7 +584,7 @@ METHOD QDir:isAbsolutePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:isRelativePath( ... )
@@ -596,7 +596,7 @@ METHOD QDir:isRelativePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:match( ... )
@@ -610,7 +610,7 @@ METHOD QDir:match( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:root( ... )
@@ -618,7 +618,7 @@ METHOD QDir:root( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QDir_root( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:rootPath( ... )
@@ -626,7 +626,7 @@ METHOD QDir:rootPath( ... )
    CASE 0
       RETURN Qt_QDir_rootPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:searchPaths( ... )
@@ -638,7 +638,7 @@ METHOD QDir:searchPaths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:separator( ... )
@@ -646,7 +646,7 @@ METHOD QDir:separator( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QDir_separator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setCurrent( ... )
@@ -658,7 +658,7 @@ METHOD QDir:setCurrent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:setSearchPaths( ... )
@@ -670,7 +670,7 @@ METHOD QDir:setSearchPaths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:temp( ... )
@@ -678,7 +678,7 @@ METHOD QDir:temp( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QDir_temp( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:tempPath( ... )
@@ -686,7 +686,7 @@ METHOD QDir:tempPath( ... )
    CASE 0
       RETURN Qt_QDir_tempPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDir:toNativeSeparators( ... )
@@ -698,5 +698,5 @@ METHOD QDir:toNativeSeparators( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -124,7 +124,7 @@ CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, HB_QPainter FUNCTION HB_QS
 METHOD QStylePainter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStylePainter( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QStylePainter:begin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:drawComplexControl( ... )
@@ -157,7 +157,7 @@ METHOD QStylePainter:drawComplexControl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:drawControl( ... )
@@ -169,7 +169,7 @@ METHOD QStylePainter:drawControl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:drawItemPixmap( ... )
@@ -181,7 +181,7 @@ METHOD QStylePainter:drawItemPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:drawItemText( ... )
@@ -199,7 +199,7 @@ METHOD QStylePainter:drawItemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:drawPrimitive( ... )
@@ -211,7 +211,7 @@ METHOD QStylePainter:drawPrimitive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStylePainter:style( ... )
@@ -219,5 +219,5 @@ METHOD QStylePainter:style( ... )
    CASE 0
       RETURN QStyleFromPointer( Qt_QStylePainter_style( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

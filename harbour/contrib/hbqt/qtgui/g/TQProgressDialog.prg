@@ -140,7 +140,7 @@ CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_Q
 METHOD QProgressDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QProgressDialog( ... )
    RETURN Self
@@ -151,7 +151,7 @@ METHOD QProgressDialog:autoClose( ... )
    CASE 0
       RETURN Qt_QProgressDialog_autoClose( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:autoReset( ... )
@@ -159,7 +159,7 @@ METHOD QProgressDialog:autoReset( ... )
    CASE 0
       RETURN Qt_QProgressDialog_autoReset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:labelText( ... )
@@ -167,7 +167,7 @@ METHOD QProgressDialog:labelText( ... )
    CASE 0
       RETURN Qt_QProgressDialog_labelText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:maximum( ... )
@@ -175,7 +175,7 @@ METHOD QProgressDialog:maximum( ... )
    CASE 0
       RETURN Qt_QProgressDialog_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:minimum( ... )
@@ -183,7 +183,7 @@ METHOD QProgressDialog:minimum( ... )
    CASE 0
       RETURN Qt_QProgressDialog_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:minimumDuration( ... )
@@ -191,7 +191,7 @@ METHOD QProgressDialog:minimumDuration( ... )
    CASE 0
       RETURN Qt_QProgressDialog_minimumDuration( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:open( ... )
@@ -203,7 +203,7 @@ METHOD QProgressDialog:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setAutoClose( ... )
@@ -215,7 +215,7 @@ METHOD QProgressDialog:setAutoClose( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setAutoReset( ... )
@@ -227,7 +227,7 @@ METHOD QProgressDialog:setAutoReset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setBar( ... )
@@ -239,7 +239,7 @@ METHOD QProgressDialog:setBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setCancelButton( ... )
@@ -251,7 +251,7 @@ METHOD QProgressDialog:setCancelButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setLabel( ... )
@@ -263,7 +263,7 @@ METHOD QProgressDialog:setLabel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:sizeHint( ... )
@@ -271,7 +271,7 @@ METHOD QProgressDialog:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QProgressDialog_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:value( ... )
@@ -279,7 +279,7 @@ METHOD QProgressDialog:value( ... )
    CASE 0
       RETURN Qt_QProgressDialog_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:wasCanceled( ... )
@@ -287,7 +287,7 @@ METHOD QProgressDialog:wasCanceled( ... )
    CASE 0
       RETURN Qt_QProgressDialog_wasCanceled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:cancel( ... )
@@ -295,7 +295,7 @@ METHOD QProgressDialog:cancel( ... )
    CASE 0
       RETURN Qt_QProgressDialog_cancel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:reset( ... )
@@ -303,7 +303,7 @@ METHOD QProgressDialog:reset( ... )
    CASE 0
       RETURN Qt_QProgressDialog_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setCancelButtonText( ... )
@@ -315,7 +315,7 @@ METHOD QProgressDialog:setCancelButtonText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setLabelText( ... )
@@ -327,7 +327,7 @@ METHOD QProgressDialog:setLabelText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setMaximum( ... )
@@ -339,7 +339,7 @@ METHOD QProgressDialog:setMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setMinimum( ... )
@@ -351,7 +351,7 @@ METHOD QProgressDialog:setMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setMinimumDuration( ... )
@@ -363,7 +363,7 @@ METHOD QProgressDialog:setMinimumDuration( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setRange( ... )
@@ -375,7 +375,7 @@ METHOD QProgressDialog:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressDialog:setValue( ... )
@@ -387,5 +387,5 @@ METHOD QProgressDialog:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

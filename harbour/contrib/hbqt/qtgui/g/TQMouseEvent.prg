@@ -125,7 +125,7 @@ CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_Q
 METHOD QMouseEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMouseEvent( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QMouseEvent:button( ... )
    CASE 0
       RETURN Qt_QMouseEvent_button( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:buttons( ... )
@@ -144,7 +144,7 @@ METHOD QMouseEvent:buttons( ... )
    CASE 0
       RETURN Qt_QMouseEvent_buttons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:globalPos( ... )
@@ -152,7 +152,7 @@ METHOD QMouseEvent:globalPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QMouseEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:globalX( ... )
@@ -160,7 +160,7 @@ METHOD QMouseEvent:globalX( ... )
    CASE 0
       RETURN Qt_QMouseEvent_globalX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:globalY( ... )
@@ -168,7 +168,7 @@ METHOD QMouseEvent:globalY( ... )
    CASE 0
       RETURN Qt_QMouseEvent_globalY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:pos( ... )
@@ -176,7 +176,7 @@ METHOD QMouseEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QMouseEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:posF( ... )
@@ -184,7 +184,7 @@ METHOD QMouseEvent:posF( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QMouseEvent_posF( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:x( ... )
@@ -192,7 +192,7 @@ METHOD QMouseEvent:x( ... )
    CASE 0
       RETURN Qt_QMouseEvent_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMouseEvent:y( ... )
@@ -200,5 +200,5 @@ METHOD QMouseEvent:y( ... )
    CASE 0
       RETURN Qt_QMouseEvent_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

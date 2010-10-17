@@ -80,7 +80,7 @@ ENDCLASS
          type checking can be done. */
 METHOD HbQtObjectHandler:from( xObject )
    LOCAL pPtr
-   IF hb_isPointer( pPtr := hbqt_ptr( xObject ) )
+   IF hb_isPointer( pPtr := __hbqt_ptr( xObject ) )
       ::pPtr := pPtr
    ENDIF
    RETURN Self

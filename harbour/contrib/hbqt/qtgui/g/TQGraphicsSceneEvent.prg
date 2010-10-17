@@ -117,7 +117,7 @@ CREATE CLASS QGraphicsSceneEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION H
 METHOD QGraphicsSceneEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneEvent( ... )
    RETURN Self
@@ -128,5 +128,5 @@ METHOD QGraphicsSceneEvent:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QGraphicsSceneEvent_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

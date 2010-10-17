@@ -123,7 +123,7 @@ CREATE CLASS QStyledItemDelegate INHERIT HbQtObjectHandler FUNCTION HB_QStyledIt
 METHOD QStyledItemDelegate:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyledItemDelegate( ... )
    RETURN Self
@@ -138,7 +138,7 @@ METHOD QStyledItemDelegate:createEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:displayText( ... )
@@ -150,7 +150,7 @@ METHOD QStyledItemDelegate:displayText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:paint( ... )
@@ -162,7 +162,7 @@ METHOD QStyledItemDelegate:paint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:setEditorData( ... )
@@ -174,7 +174,7 @@ METHOD QStyledItemDelegate:setEditorData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:setModelData( ... )
@@ -186,7 +186,7 @@ METHOD QStyledItemDelegate:setModelData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:sizeHint( ... )
@@ -198,7 +198,7 @@ METHOD QStyledItemDelegate:sizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyledItemDelegate:updateEditorGeometry( ... )
@@ -210,5 +210,5 @@ METHOD QStyledItemDelegate:updateEditorGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

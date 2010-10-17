@@ -128,7 +128,7 @@ CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QD
 METHOD QDesktopWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesktopWidget( ... )
    RETURN Self
@@ -152,7 +152,7 @@ METHOD QDesktopWidget:availableGeometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:isVirtualDesktop( ... )
@@ -160,7 +160,7 @@ METHOD QDesktopWidget:isVirtualDesktop( ... )
    CASE 0
       RETURN Qt_QDesktopWidget_isVirtualDesktop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:numScreens( ... )
@@ -168,7 +168,7 @@ METHOD QDesktopWidget:numScreens( ... )
    CASE 0
       RETURN Qt_QDesktopWidget_numScreens( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:primaryScreen( ... )
@@ -176,7 +176,7 @@ METHOD QDesktopWidget:primaryScreen( ... )
    CASE 0
       RETURN Qt_QDesktopWidget_primaryScreen( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:screen( ... )
@@ -190,7 +190,7 @@ METHOD QDesktopWidget:screen( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:screenGeometry( ... )
@@ -211,7 +211,7 @@ METHOD QDesktopWidget:screenGeometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesktopWidget:screenNumber( ... )
@@ -230,5 +230,5 @@ METHOD QDesktopWidget:screenNumber( ... )
    CASE 0
       RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

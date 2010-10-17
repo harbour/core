@@ -122,7 +122,7 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT HbQtObjectHandler, HB_QStyleOpti
 METHOD QStyleOptionTabWidgetFrame:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionTabWidgetFrame( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QStyleOptionTabWidgetFrame:leftCornerWidgetSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabWidgetFrame:lineWidth( ... )
@@ -141,7 +141,7 @@ METHOD QStyleOptionTabWidgetFrame:lineWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionTabWidgetFrame_lineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabWidgetFrame:midLineWidth( ... )
@@ -149,7 +149,7 @@ METHOD QStyleOptionTabWidgetFrame:midLineWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionTabWidgetFrame_midLineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabWidgetFrame:rightCornerWidgetSize( ... )
@@ -157,7 +157,7 @@ METHOD QStyleOptionTabWidgetFrame:rightCornerWidgetSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_rightCornerWidgetSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabWidgetFrame:shape( ... )
@@ -165,7 +165,7 @@ METHOD QStyleOptionTabWidgetFrame:shape( ... )
    CASE 0
       RETURN Qt_QStyleOptionTabWidgetFrame_shape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabWidgetFrame:tabBarSize( ... )
@@ -173,5 +173,5 @@ METHOD QStyleOptionTabWidgetFrame:tabBarSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_tabBarSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

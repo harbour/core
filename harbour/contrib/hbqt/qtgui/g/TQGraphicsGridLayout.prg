@@ -158,7 +158,7 @@ CREATE CLASS QGraphicsGridLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout F
 METHOD QGraphicsGridLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsGridLayout( ... )
    RETURN Self
@@ -191,7 +191,7 @@ METHOD QGraphicsGridLayout:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:alignment( ... )
@@ -203,7 +203,7 @@ METHOD QGraphicsGridLayout:alignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnAlignment( ... )
@@ -215,7 +215,7 @@ METHOD QGraphicsGridLayout:columnAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnCount( ... )
@@ -223,7 +223,7 @@ METHOD QGraphicsGridLayout:columnCount( ... )
    CASE 0
       RETURN Qt_QGraphicsGridLayout_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnMaximumWidth( ... )
@@ -235,7 +235,7 @@ METHOD QGraphicsGridLayout:columnMaximumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnMinimumWidth( ... )
@@ -247,7 +247,7 @@ METHOD QGraphicsGridLayout:columnMinimumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnPreferredWidth( ... )
@@ -259,7 +259,7 @@ METHOD QGraphicsGridLayout:columnPreferredWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnSpacing( ... )
@@ -271,7 +271,7 @@ METHOD QGraphicsGridLayout:columnSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:columnStretchFactor( ... )
@@ -283,7 +283,7 @@ METHOD QGraphicsGridLayout:columnStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:count( ... )
@@ -291,7 +291,7 @@ METHOD QGraphicsGridLayout:count( ... )
    CASE 0
       RETURN Qt_QGraphicsGridLayout_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:horizontalSpacing( ... )
@@ -299,7 +299,7 @@ METHOD QGraphicsGridLayout:horizontalSpacing( ... )
    CASE 0
       RETURN Qt_QGraphicsGridLayout_horizontalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:itemAt( ... )
@@ -317,7 +317,7 @@ METHOD QGraphicsGridLayout:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:removeAt( ... )
@@ -329,7 +329,7 @@ METHOD QGraphicsGridLayout:removeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowAlignment( ... )
@@ -341,7 +341,7 @@ METHOD QGraphicsGridLayout:rowAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowCount( ... )
@@ -349,7 +349,7 @@ METHOD QGraphicsGridLayout:rowCount( ... )
    CASE 0
       RETURN Qt_QGraphicsGridLayout_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowMaximumHeight( ... )
@@ -361,7 +361,7 @@ METHOD QGraphicsGridLayout:rowMaximumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowMinimumHeight( ... )
@@ -373,7 +373,7 @@ METHOD QGraphicsGridLayout:rowMinimumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowPreferredHeight( ... )
@@ -385,7 +385,7 @@ METHOD QGraphicsGridLayout:rowPreferredHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowSpacing( ... )
@@ -397,7 +397,7 @@ METHOD QGraphicsGridLayout:rowSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:rowStretchFactor( ... )
@@ -409,7 +409,7 @@ METHOD QGraphicsGridLayout:rowStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setAlignment( ... )
@@ -421,7 +421,7 @@ METHOD QGraphicsGridLayout:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnAlignment( ... )
@@ -433,7 +433,7 @@ METHOD QGraphicsGridLayout:setColumnAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnFixedWidth( ... )
@@ -445,7 +445,7 @@ METHOD QGraphicsGridLayout:setColumnFixedWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnMaximumWidth( ... )
@@ -457,7 +457,7 @@ METHOD QGraphicsGridLayout:setColumnMaximumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnMinimumWidth( ... )
@@ -469,7 +469,7 @@ METHOD QGraphicsGridLayout:setColumnMinimumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnPreferredWidth( ... )
@@ -481,7 +481,7 @@ METHOD QGraphicsGridLayout:setColumnPreferredWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnSpacing( ... )
@@ -493,7 +493,7 @@ METHOD QGraphicsGridLayout:setColumnSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setColumnStretchFactor( ... )
@@ -505,7 +505,7 @@ METHOD QGraphicsGridLayout:setColumnStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setGeometry( ... )
@@ -517,7 +517,7 @@ METHOD QGraphicsGridLayout:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setHorizontalSpacing( ... )
@@ -529,7 +529,7 @@ METHOD QGraphicsGridLayout:setHorizontalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowAlignment( ... )
@@ -541,7 +541,7 @@ METHOD QGraphicsGridLayout:setRowAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowFixedHeight( ... )
@@ -553,7 +553,7 @@ METHOD QGraphicsGridLayout:setRowFixedHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowMaximumHeight( ... )
@@ -565,7 +565,7 @@ METHOD QGraphicsGridLayout:setRowMaximumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowMinimumHeight( ... )
@@ -577,7 +577,7 @@ METHOD QGraphicsGridLayout:setRowMinimumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowPreferredHeight( ... )
@@ -589,7 +589,7 @@ METHOD QGraphicsGridLayout:setRowPreferredHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowSpacing( ... )
@@ -601,7 +601,7 @@ METHOD QGraphicsGridLayout:setRowSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setRowStretchFactor( ... )
@@ -613,7 +613,7 @@ METHOD QGraphicsGridLayout:setRowStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setSpacing( ... )
@@ -625,7 +625,7 @@ METHOD QGraphicsGridLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:setVerticalSpacing( ... )
@@ -637,7 +637,7 @@ METHOD QGraphicsGridLayout:setVerticalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsGridLayout:verticalSpacing( ... )
@@ -645,5 +645,5 @@ METHOD QGraphicsGridLayout:verticalSpacing( ... )
    CASE 0
       RETURN Qt_QGraphicsGridLayout_verticalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

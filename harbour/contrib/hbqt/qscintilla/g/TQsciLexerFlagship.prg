@@ -143,7 +143,7 @@ CREATE CLASS QsciLexerFlagship INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION 
 METHOD QsciLexerFlagship:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciLexerFlagship( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QsciLexerFlagship:language( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_language( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:lexer( ... )
@@ -162,7 +162,7 @@ METHOD QsciLexerFlagship:lexer( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_lexer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:autoCompletionWordSeparators( ... )
@@ -170,7 +170,7 @@ METHOD QsciLexerFlagship:autoCompletionWordSeparators( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QsciLexerFlagship_autoCompletionWordSeparators( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:blockEnd( ... )
@@ -184,7 +184,7 @@ METHOD QsciLexerFlagship:blockEnd( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_blockEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:blockStart( ... )
@@ -198,7 +198,7 @@ METHOD QsciLexerFlagship:blockStart( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_blockStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:blockStartKeyword( ... )
@@ -212,7 +212,7 @@ METHOD QsciLexerFlagship:blockStartKeyword( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_blockStartKeyword( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:braceStyle( ... )
@@ -220,7 +220,7 @@ METHOD QsciLexerFlagship:braceStyle( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_braceStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:wordCharacters( ... )
@@ -228,7 +228,7 @@ METHOD QsciLexerFlagship:wordCharacters( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_wordCharacters( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:defaultColor( ... )
@@ -240,7 +240,7 @@ METHOD QsciLexerFlagship:defaultColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:defaultEolFill( ... )
@@ -252,7 +252,7 @@ METHOD QsciLexerFlagship:defaultEolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:defaultFont( ... )
@@ -264,7 +264,7 @@ METHOD QsciLexerFlagship:defaultFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:defaultPaper( ... )
@@ -276,7 +276,7 @@ METHOD QsciLexerFlagship:defaultPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:keywords( ... )
@@ -288,7 +288,7 @@ METHOD QsciLexerFlagship:keywords( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:description( ... )
@@ -300,7 +300,7 @@ METHOD QsciLexerFlagship:description( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:refreshProperties( ... )
@@ -308,7 +308,7 @@ METHOD QsciLexerFlagship:refreshProperties( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_refreshProperties( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:foldAtElse( ... )
@@ -316,7 +316,7 @@ METHOD QsciLexerFlagship:foldAtElse( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_foldAtElse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:foldComments( ... )
@@ -324,7 +324,7 @@ METHOD QsciLexerFlagship:foldComments( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_foldComments( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:foldCompact( ... )
@@ -332,7 +332,7 @@ METHOD QsciLexerFlagship:foldCompact( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_foldCompact( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:foldPreprocessor( ... )
@@ -340,7 +340,7 @@ METHOD QsciLexerFlagship:foldPreprocessor( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_foldPreprocessor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:stylePreprocessor( ... )
@@ -348,7 +348,7 @@ METHOD QsciLexerFlagship:stylePreprocessor( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_stylePreprocessor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setDollarsAllowed( ... )
@@ -360,7 +360,7 @@ METHOD QsciLexerFlagship:setDollarsAllowed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:dollarsAllowed( ... )
@@ -368,7 +368,7 @@ METHOD QsciLexerFlagship:dollarsAllowed( ... )
    CASE 0
       RETURN Qt_QsciLexerFlagship_dollarsAllowed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setFoldAtElse( ... )
@@ -380,7 +380,7 @@ METHOD QsciLexerFlagship:setFoldAtElse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setFoldComments( ... )
@@ -392,7 +392,7 @@ METHOD QsciLexerFlagship:setFoldComments( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setFoldCompact( ... )
@@ -404,7 +404,7 @@ METHOD QsciLexerFlagship:setFoldCompact( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setFoldPreprocessor( ... )
@@ -416,7 +416,7 @@ METHOD QsciLexerFlagship:setFoldPreprocessor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerFlagship:setStylePreprocessor( ... )
@@ -428,5 +428,5 @@ METHOD QsciLexerFlagship:setStylePreprocessor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

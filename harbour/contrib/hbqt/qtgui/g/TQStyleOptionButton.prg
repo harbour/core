@@ -120,7 +120,7 @@ CREATE CLASS QStyleOptionButton INHERIT HbQtObjectHandler, HB_QStyleOption FUNCT
 METHOD QStyleOptionButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionButton( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QStyleOptionButton:features( ... )
    CASE 0
       RETURN Qt_QStyleOptionButton_features( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionButton:icon( ... )
@@ -139,7 +139,7 @@ METHOD QStyleOptionButton:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionButton_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionButton:iconSize( ... )
@@ -147,7 +147,7 @@ METHOD QStyleOptionButton:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionButton_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionButton:text( ... )
@@ -155,5 +155,5 @@ METHOD QStyleOptionButton:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionButton_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

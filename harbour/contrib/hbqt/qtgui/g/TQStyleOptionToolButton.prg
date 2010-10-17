@@ -124,7 +124,7 @@ CREATE CLASS QStyleOptionToolButton INHERIT HbQtObjectHandler, HB_QStyleOptionCo
 METHOD QStyleOptionToolButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionToolButton( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QStyleOptionToolButton:arrowType( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolButton_arrowType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:features( ... )
@@ -143,7 +143,7 @@ METHOD QStyleOptionToolButton:features( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolButton_features( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:font( ... )
@@ -151,7 +151,7 @@ METHOD QStyleOptionToolButton:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QStyleOptionToolButton_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:icon( ... )
@@ -159,7 +159,7 @@ METHOD QStyleOptionToolButton:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionToolButton_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:iconSize( ... )
@@ -167,7 +167,7 @@ METHOD QStyleOptionToolButton:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStyleOptionToolButton_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:pos( ... )
@@ -175,7 +175,7 @@ METHOD QStyleOptionToolButton:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QStyleOptionToolButton_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:text( ... )
@@ -183,7 +183,7 @@ METHOD QStyleOptionToolButton:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolButton_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolButton:toolButtonStyle( ... )
@@ -191,5 +191,5 @@ METHOD QStyleOptionToolButton:toolButtonStyle( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolButton_toolButtonStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

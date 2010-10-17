@@ -165,7 +165,7 @@ CREATE CLASS QTreeView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION 
 METHOD QTreeView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTreeView( ... )
    RETURN Self
@@ -176,7 +176,7 @@ METHOD QTreeView:allColumnsShowFocus( ... )
    CASE 0
       RETURN Qt_QTreeView_allColumnsShowFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:autoExpandDelay( ... )
@@ -184,7 +184,7 @@ METHOD QTreeView:autoExpandDelay( ... )
    CASE 0
       RETURN Qt_QTreeView_autoExpandDelay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:columnAt( ... )
@@ -196,7 +196,7 @@ METHOD QTreeView:columnAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:columnViewportPosition( ... )
@@ -208,7 +208,7 @@ METHOD QTreeView:columnViewportPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:columnWidth( ... )
@@ -220,7 +220,7 @@ METHOD QTreeView:columnWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:expandsOnDoubleClick( ... )
@@ -228,7 +228,7 @@ METHOD QTreeView:expandsOnDoubleClick( ... )
    CASE 0
       RETURN Qt_QTreeView_expandsOnDoubleClick( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:header( ... )
@@ -236,7 +236,7 @@ METHOD QTreeView:header( ... )
    CASE 0
       RETURN QHeaderViewFromPointer( Qt_QTreeView_header( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:indentation( ... )
@@ -244,7 +244,7 @@ METHOD QTreeView:indentation( ... )
    CASE 0
       RETURN Qt_QTreeView_indentation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:indexAbove( ... )
@@ -256,7 +256,7 @@ METHOD QTreeView:indexAbove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:indexBelow( ... )
@@ -268,7 +268,7 @@ METHOD QTreeView:indexBelow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isAnimated( ... )
@@ -276,7 +276,7 @@ METHOD QTreeView:isAnimated( ... )
    CASE 0
       RETURN Qt_QTreeView_isAnimated( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isColumnHidden( ... )
@@ -288,7 +288,7 @@ METHOD QTreeView:isColumnHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isExpanded( ... )
@@ -300,7 +300,7 @@ METHOD QTreeView:isExpanded( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isFirstColumnSpanned( ... )
@@ -312,7 +312,7 @@ METHOD QTreeView:isFirstColumnSpanned( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isHeaderHidden( ... )
@@ -320,7 +320,7 @@ METHOD QTreeView:isHeaderHidden( ... )
    CASE 0
       RETURN Qt_QTreeView_isHeaderHidden( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isRowHidden( ... )
@@ -332,7 +332,7 @@ METHOD QTreeView:isRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:isSortingEnabled( ... )
@@ -340,7 +340,7 @@ METHOD QTreeView:isSortingEnabled( ... )
    CASE 0
       RETURN Qt_QTreeView_isSortingEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:itemsExpandable( ... )
@@ -348,7 +348,7 @@ METHOD QTreeView:itemsExpandable( ... )
    CASE 0
       RETURN Qt_QTreeView_itemsExpandable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:rootIsDecorated( ... )
@@ -356,7 +356,7 @@ METHOD QTreeView:rootIsDecorated( ... )
    CASE 0
       RETURN Qt_QTreeView_rootIsDecorated( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:scrollTo( ... )
@@ -374,7 +374,7 @@ METHOD QTreeView:scrollTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setAllColumnsShowFocus( ... )
@@ -386,7 +386,7 @@ METHOD QTreeView:setAllColumnsShowFocus( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setAnimated( ... )
@@ -398,7 +398,7 @@ METHOD QTreeView:setAnimated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setAutoExpandDelay( ... )
@@ -410,7 +410,7 @@ METHOD QTreeView:setAutoExpandDelay( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setColumnHidden( ... )
@@ -422,7 +422,7 @@ METHOD QTreeView:setColumnHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setColumnWidth( ... )
@@ -434,7 +434,7 @@ METHOD QTreeView:setColumnWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setExpanded( ... )
@@ -446,7 +446,7 @@ METHOD QTreeView:setExpanded( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setExpandsOnDoubleClick( ... )
@@ -458,7 +458,7 @@ METHOD QTreeView:setExpandsOnDoubleClick( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setFirstColumnSpanned( ... )
@@ -470,7 +470,7 @@ METHOD QTreeView:setFirstColumnSpanned( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setHeader( ... )
@@ -482,7 +482,7 @@ METHOD QTreeView:setHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setHeaderHidden( ... )
@@ -494,7 +494,7 @@ METHOD QTreeView:setHeaderHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setIndentation( ... )
@@ -506,7 +506,7 @@ METHOD QTreeView:setIndentation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setItemsExpandable( ... )
@@ -518,7 +518,7 @@ METHOD QTreeView:setItemsExpandable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setRootIsDecorated( ... )
@@ -530,7 +530,7 @@ METHOD QTreeView:setRootIsDecorated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setRowHidden( ... )
@@ -542,7 +542,7 @@ METHOD QTreeView:setRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setSortingEnabled( ... )
@@ -554,7 +554,7 @@ METHOD QTreeView:setSortingEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setUniformRowHeights( ... )
@@ -566,7 +566,7 @@ METHOD QTreeView:setUniformRowHeights( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:setWordWrap( ... )
@@ -578,7 +578,7 @@ METHOD QTreeView:setWordWrap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:sortByColumn( ... )
@@ -590,7 +590,7 @@ METHOD QTreeView:sortByColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:uniformRowHeights( ... )
@@ -598,7 +598,7 @@ METHOD QTreeView:uniformRowHeights( ... )
    CASE 0
       RETURN Qt_QTreeView_uniformRowHeights( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:visualRect( ... )
@@ -610,7 +610,7 @@ METHOD QTreeView:visualRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:wordWrap( ... )
@@ -618,7 +618,7 @@ METHOD QTreeView:wordWrap( ... )
    CASE 0
       RETURN Qt_QTreeView_wordWrap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:collapse( ... )
@@ -630,7 +630,7 @@ METHOD QTreeView:collapse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:collapseAll( ... )
@@ -638,7 +638,7 @@ METHOD QTreeView:collapseAll( ... )
    CASE 0
       RETURN Qt_QTreeView_collapseAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:expand( ... )
@@ -650,7 +650,7 @@ METHOD QTreeView:expand( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:expandAll( ... )
@@ -658,7 +658,7 @@ METHOD QTreeView:expandAll( ... )
    CASE 0
       RETURN Qt_QTreeView_expandAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:expandToDepth( ... )
@@ -670,7 +670,7 @@ METHOD QTreeView:expandToDepth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:hideColumn( ... )
@@ -682,7 +682,7 @@ METHOD QTreeView:hideColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:resizeColumnToContents( ... )
@@ -694,7 +694,7 @@ METHOD QTreeView:resizeColumnToContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeView:showColumn( ... )
@@ -706,5 +706,5 @@ METHOD QTreeView:showColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

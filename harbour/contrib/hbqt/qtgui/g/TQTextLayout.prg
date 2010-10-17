@@ -145,7 +145,7 @@ CREATE CLASS QTextLayout INHERIT HbQtObjectHandler FUNCTION HB_QTextLayout
 METHOD QTextLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextLayout( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QTextLayout:beginLayout( ... )
    CASE 0
       RETURN Qt_QTextLayout_beginLayout( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:boundingRect( ... )
@@ -164,7 +164,7 @@ METHOD QTextLayout:boundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QTextLayout_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:cacheEnabled( ... )
@@ -172,7 +172,7 @@ METHOD QTextLayout:cacheEnabled( ... )
    CASE 0
       RETURN Qt_QTextLayout_cacheEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:clearAdditionalFormats( ... )
@@ -180,7 +180,7 @@ METHOD QTextLayout:clearAdditionalFormats( ... )
    CASE 0
       RETURN Qt_QTextLayout_clearAdditionalFormats( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:clearLayout( ... )
@@ -188,7 +188,7 @@ METHOD QTextLayout:clearLayout( ... )
    CASE 0
       RETURN Qt_QTextLayout_clearLayout( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:createLine( ... )
@@ -196,7 +196,7 @@ METHOD QTextLayout:createLine( ... )
    CASE 0
       RETURN QTextLineFromPointer( Qt_QTextLayout_createLine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:drawCursor( ... )
@@ -214,7 +214,7 @@ METHOD QTextLayout:drawCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:endLayout( ... )
@@ -222,7 +222,7 @@ METHOD QTextLayout:endLayout( ... )
    CASE 0
       RETURN Qt_QTextLayout_endLayout( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:font( ... )
@@ -230,7 +230,7 @@ METHOD QTextLayout:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTextLayout_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:isValidCursorPosition( ... )
@@ -242,7 +242,7 @@ METHOD QTextLayout:isValidCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:lineAt( ... )
@@ -254,7 +254,7 @@ METHOD QTextLayout:lineAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:lineCount( ... )
@@ -262,7 +262,7 @@ METHOD QTextLayout:lineCount( ... )
    CASE 0
       RETURN Qt_QTextLayout_lineCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:lineForTextPosition( ... )
@@ -274,7 +274,7 @@ METHOD QTextLayout:lineForTextPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:maximumWidth( ... )
@@ -282,7 +282,7 @@ METHOD QTextLayout:maximumWidth( ... )
    CASE 0
       RETURN Qt_QTextLayout_maximumWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:minimumWidth( ... )
@@ -290,7 +290,7 @@ METHOD QTextLayout:minimumWidth( ... )
    CASE 0
       RETURN Qt_QTextLayout_minimumWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:nextCursorPosition( ... )
@@ -308,7 +308,7 @@ METHOD QTextLayout:nextCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:position( ... )
@@ -316,7 +316,7 @@ METHOD QTextLayout:position( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QTextLayout_position( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:preeditAreaPosition( ... )
@@ -324,7 +324,7 @@ METHOD QTextLayout:preeditAreaPosition( ... )
    CASE 0
       RETURN Qt_QTextLayout_preeditAreaPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:preeditAreaText( ... )
@@ -332,7 +332,7 @@ METHOD QTextLayout:preeditAreaText( ... )
    CASE 0
       RETURN Qt_QTextLayout_preeditAreaText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:previousCursorPosition( ... )
@@ -350,7 +350,7 @@ METHOD QTextLayout:previousCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setCacheEnabled( ... )
@@ -362,7 +362,7 @@ METHOD QTextLayout:setCacheEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setFont( ... )
@@ -374,7 +374,7 @@ METHOD QTextLayout:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setPosition( ... )
@@ -386,7 +386,7 @@ METHOD QTextLayout:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setPreeditArea( ... )
@@ -398,7 +398,7 @@ METHOD QTextLayout:setPreeditArea( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setText( ... )
@@ -410,7 +410,7 @@ METHOD QTextLayout:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:setTextOption( ... )
@@ -422,7 +422,7 @@ METHOD QTextLayout:setTextOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:text( ... )
@@ -430,7 +430,7 @@ METHOD QTextLayout:text( ... )
    CASE 0
       RETURN Qt_QTextLayout_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLayout:textOption( ... )
@@ -438,5 +438,5 @@ METHOD QTextLayout:textOption( ... )
    CASE 0
       RETURN QTextOptionFromPointer( Qt_QTextLayout_textOption( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

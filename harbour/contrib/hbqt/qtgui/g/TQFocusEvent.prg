@@ -119,7 +119,7 @@ CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QFocus
 METHOD QFocusEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFocusEvent( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QFocusEvent:gotFocus( ... )
    CASE 0
       RETURN Qt_QFocusEvent_gotFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFocusEvent:lostFocus( ... )
@@ -138,7 +138,7 @@ METHOD QFocusEvent:lostFocus( ... )
    CASE 0
       RETURN Qt_QFocusEvent_lostFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFocusEvent:reason( ... )
@@ -146,5 +146,5 @@ METHOD QFocusEvent:reason( ... )
    CASE 0
       RETURN Qt_QFocusEvent_reason( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

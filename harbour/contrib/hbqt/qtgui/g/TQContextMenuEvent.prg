@@ -123,7 +123,7 @@ CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTIO
 METHOD QContextMenuEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QContextMenuEvent( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QContextMenuEvent:globalPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QContextMenuEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:globalX( ... )
@@ -142,7 +142,7 @@ METHOD QContextMenuEvent:globalX( ... )
    CASE 0
       RETURN Qt_QContextMenuEvent_globalX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:globalY( ... )
@@ -150,7 +150,7 @@ METHOD QContextMenuEvent:globalY( ... )
    CASE 0
       RETURN Qt_QContextMenuEvent_globalY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:pos( ... )
@@ -158,7 +158,7 @@ METHOD QContextMenuEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QContextMenuEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:reason( ... )
@@ -166,7 +166,7 @@ METHOD QContextMenuEvent:reason( ... )
    CASE 0
       RETURN Qt_QContextMenuEvent_reason( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:x( ... )
@@ -174,7 +174,7 @@ METHOD QContextMenuEvent:x( ... )
    CASE 0
       RETURN Qt_QContextMenuEvent_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QContextMenuEvent:y( ... )
@@ -182,5 +182,5 @@ METHOD QContextMenuEvent:y( ... )
    CASE 0
       RETURN Qt_QContextMenuEvent_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

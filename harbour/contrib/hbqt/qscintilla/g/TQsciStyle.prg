@@ -136,7 +136,7 @@ CREATE CLASS QsciStyle INHERIT HbQtObjectHandler FUNCTION HB_QsciStyle
 METHOD QsciStyle:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciStyle( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QsciStyle:style( ... )
    CASE 0
       RETURN Qt_QsciStyle_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setDescription( ... )
@@ -159,7 +159,7 @@ METHOD QsciStyle:setDescription( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:description( ... )
@@ -167,7 +167,7 @@ METHOD QsciStyle:description( ... )
    CASE 0
       RETURN Qt_QsciStyle_description( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setColor( ... )
@@ -179,7 +179,7 @@ METHOD QsciStyle:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:color( ... )
@@ -187,7 +187,7 @@ METHOD QsciStyle:color( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciStyle_color( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setPaper( ... )
@@ -199,7 +199,7 @@ METHOD QsciStyle:setPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:paper( ... )
@@ -207,7 +207,7 @@ METHOD QsciStyle:paper( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciStyle_paper( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setFont( ... )
@@ -219,7 +219,7 @@ METHOD QsciStyle:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:font( ... )
@@ -227,7 +227,7 @@ METHOD QsciStyle:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QsciStyle_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setEolFill( ... )
@@ -239,7 +239,7 @@ METHOD QsciStyle:setEolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:eolFill( ... )
@@ -247,7 +247,7 @@ METHOD QsciStyle:eolFill( ... )
    CASE 0
       RETURN Qt_QsciStyle_eolFill( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setTextCase( ... )
@@ -259,7 +259,7 @@ METHOD QsciStyle:setTextCase( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:textCase( ... )
@@ -267,7 +267,7 @@ METHOD QsciStyle:textCase( ... )
    CASE 0
       RETURN Qt_QsciStyle_textCase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setVisible( ... )
@@ -279,7 +279,7 @@ METHOD QsciStyle:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:visible( ... )
@@ -287,7 +287,7 @@ METHOD QsciStyle:visible( ... )
    CASE 0
       RETURN Qt_QsciStyle_visible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setChangeable( ... )
@@ -299,7 +299,7 @@ METHOD QsciStyle:setChangeable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:changeable( ... )
@@ -307,7 +307,7 @@ METHOD QsciStyle:changeable( ... )
    CASE 0
       RETURN Qt_QsciStyle_changeable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:setHotspot( ... )
@@ -319,7 +319,7 @@ METHOD QsciStyle:setHotspot( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:hotspot( ... )
@@ -327,7 +327,7 @@ METHOD QsciStyle:hotspot( ... )
    CASE 0
       RETURN Qt_QsciStyle_hotspot( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyle:refresh( ... )
@@ -335,5 +335,5 @@ METHOD QsciStyle:refresh( ... )
    CASE 0
       RETURN Qt_QsciStyle_refresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -156,7 +156,7 @@ CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPix
 METHOD QPixmap:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPixmap( ... )
    RETURN Self
@@ -167,7 +167,7 @@ METHOD QPixmap:alphaChannel( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QPixmap_alphaChannel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:cacheKey( ... )
@@ -175,7 +175,7 @@ METHOD QPixmap:cacheKey( ... )
    CASE 0
       RETURN Qt_QPixmap_cacheKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:copy( ... )
@@ -195,7 +195,7 @@ METHOD QPixmap:copy( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QPixmap_copy( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:createHeuristicMask( ... )
@@ -209,7 +209,7 @@ METHOD QPixmap:createHeuristicMask( ... )
    CASE 0
       RETURN QBitmapFromPointer( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:createMaskFromColor( ... )
@@ -227,7 +227,7 @@ METHOD QPixmap:createMaskFromColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:depth( ... )
@@ -235,7 +235,7 @@ METHOD QPixmap:depth( ... )
    CASE 0
       RETURN Qt_QPixmap_depth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:detach( ... )
@@ -243,7 +243,7 @@ METHOD QPixmap:detach( ... )
    CASE 0
       RETURN Qt_QPixmap_detach( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:fill( ... )
@@ -269,7 +269,7 @@ METHOD QPixmap:fill( ... )
    CASE 0
       RETURN Qt_QPixmap_fill( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:hasAlpha( ... )
@@ -277,7 +277,7 @@ METHOD QPixmap:hasAlpha( ... )
    CASE 0
       RETURN Qt_QPixmap_hasAlpha( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:hasAlphaChannel( ... )
@@ -285,7 +285,7 @@ METHOD QPixmap:hasAlphaChannel( ... )
    CASE 0
       RETURN Qt_QPixmap_hasAlphaChannel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:height( ... )
@@ -293,7 +293,7 @@ METHOD QPixmap:height( ... )
    CASE 0
       RETURN Qt_QPixmap_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:isNull( ... )
@@ -301,7 +301,7 @@ METHOD QPixmap:isNull( ... )
    CASE 0
       RETURN Qt_QPixmap_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:isQBitmap( ... )
@@ -309,7 +309,7 @@ METHOD QPixmap:isQBitmap( ... )
    CASE 0
       RETURN Qt_QPixmap_isQBitmap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:load( ... )
@@ -333,7 +333,7 @@ METHOD QPixmap:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:loadFromData( ... )
@@ -357,7 +357,7 @@ METHOD QPixmap:loadFromData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:mask( ... )
@@ -365,7 +365,7 @@ METHOD QPixmap:mask( ... )
    CASE 0
       RETURN QBitmapFromPointer( Qt_QPixmap_mask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:rect( ... )
@@ -373,7 +373,7 @@ METHOD QPixmap:rect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPixmap_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:save( ... )
@@ -403,7 +403,7 @@ METHOD QPixmap:save( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:scaled( ... )
@@ -437,7 +437,7 @@ METHOD QPixmap:scaled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:scaledToHeight( ... )
@@ -455,7 +455,7 @@ METHOD QPixmap:scaledToHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:scaledToWidth( ... )
@@ -473,7 +473,7 @@ METHOD QPixmap:scaledToWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:setAlphaChannel( ... )
@@ -485,7 +485,7 @@ METHOD QPixmap:setAlphaChannel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:setMask( ... )
@@ -497,7 +497,7 @@ METHOD QPixmap:setMask( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:size( ... )
@@ -505,7 +505,7 @@ METHOD QPixmap:size( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QPixmap_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:toImage( ... )
@@ -513,7 +513,7 @@ METHOD QPixmap:toImage( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QPixmap_toImage( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:transformed( ... )
@@ -541,7 +541,7 @@ METHOD QPixmap:transformed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:width( ... )
@@ -549,7 +549,7 @@ METHOD QPixmap:width( ... )
    CASE 0
       RETURN Qt_QPixmap_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:defaultDepth( ... )
@@ -557,7 +557,7 @@ METHOD QPixmap:defaultDepth( ... )
    CASE 0
       RETURN Qt_QPixmap_defaultDepth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:fromImage( ... )
@@ -575,7 +575,7 @@ METHOD QPixmap:fromImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:grabWidget( ... )
@@ -613,7 +613,7 @@ METHOD QPixmap:grabWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPixmap:trueMatrix( ... )
@@ -630,5 +630,5 @@ METHOD QPixmap:trueMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

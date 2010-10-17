@@ -157,7 +157,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
 METHOD QTabWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTabWidget( ... )
    RETURN Self
@@ -178,7 +178,7 @@ METHOD QTabWidget:addTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:clear( ... )
@@ -186,7 +186,7 @@ METHOD QTabWidget:clear( ... )
    CASE 0
       RETURN Qt_QTabWidget_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:cornerWidget( ... )
@@ -200,7 +200,7 @@ METHOD QTabWidget:cornerWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:count( ... )
@@ -208,7 +208,7 @@ METHOD QTabWidget:count( ... )
    CASE 0
       RETURN Qt_QTabWidget_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:currentIndex( ... )
@@ -216,7 +216,7 @@ METHOD QTabWidget:currentIndex( ... )
    CASE 0
       RETURN Qt_QTabWidget_currentIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:currentWidget( ... )
@@ -224,7 +224,7 @@ METHOD QTabWidget:currentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QTabWidget_currentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:documentMode( ... )
@@ -232,7 +232,7 @@ METHOD QTabWidget:documentMode( ... )
    CASE 0
       RETURN Qt_QTabWidget_documentMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:elideMode( ... )
@@ -240,7 +240,7 @@ METHOD QTabWidget:elideMode( ... )
    CASE 0
       RETURN Qt_QTabWidget_elideMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:iconSize( ... )
@@ -248,7 +248,7 @@ METHOD QTabWidget:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QTabWidget_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:indexOf( ... )
@@ -260,7 +260,7 @@ METHOD QTabWidget:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:insertTab( ... )
@@ -278,7 +278,7 @@ METHOD QTabWidget:insertTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:isMovable( ... )
@@ -286,7 +286,7 @@ METHOD QTabWidget:isMovable( ... )
    CASE 0
       RETURN Qt_QTabWidget_isMovable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:isTabEnabled( ... )
@@ -298,7 +298,7 @@ METHOD QTabWidget:isTabEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:removeTab( ... )
@@ -310,7 +310,7 @@ METHOD QTabWidget:removeTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setCornerWidget( ... )
@@ -328,7 +328,7 @@ METHOD QTabWidget:setCornerWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setDocumentMode( ... )
@@ -340,7 +340,7 @@ METHOD QTabWidget:setDocumentMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setElideMode( ... )
@@ -352,7 +352,7 @@ METHOD QTabWidget:setElideMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setIconSize( ... )
@@ -364,7 +364,7 @@ METHOD QTabWidget:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setMovable( ... )
@@ -376,7 +376,7 @@ METHOD QTabWidget:setMovable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabEnabled( ... )
@@ -388,7 +388,7 @@ METHOD QTabWidget:setTabEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabIcon( ... )
@@ -400,7 +400,7 @@ METHOD QTabWidget:setTabIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabPosition( ... )
@@ -412,7 +412,7 @@ METHOD QTabWidget:setTabPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabShape( ... )
@@ -424,7 +424,7 @@ METHOD QTabWidget:setTabShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabText( ... )
@@ -436,7 +436,7 @@ METHOD QTabWidget:setTabText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabToolTip( ... )
@@ -448,7 +448,7 @@ METHOD QTabWidget:setTabToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabWhatsThis( ... )
@@ -460,7 +460,7 @@ METHOD QTabWidget:setTabWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setTabsClosable( ... )
@@ -472,7 +472,7 @@ METHOD QTabWidget:setTabsClosable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setUsesScrollButtons( ... )
@@ -484,7 +484,7 @@ METHOD QTabWidget:setUsesScrollButtons( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabIcon( ... )
@@ -496,7 +496,7 @@ METHOD QTabWidget:tabIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabPosition( ... )
@@ -504,7 +504,7 @@ METHOD QTabWidget:tabPosition( ... )
    CASE 0
       RETURN Qt_QTabWidget_tabPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabShape( ... )
@@ -512,7 +512,7 @@ METHOD QTabWidget:tabShape( ... )
    CASE 0
       RETURN Qt_QTabWidget_tabShape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabText( ... )
@@ -524,7 +524,7 @@ METHOD QTabWidget:tabText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabToolTip( ... )
@@ -536,7 +536,7 @@ METHOD QTabWidget:tabToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabWhatsThis( ... )
@@ -548,7 +548,7 @@ METHOD QTabWidget:tabWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:tabsClosable( ... )
@@ -556,7 +556,7 @@ METHOD QTabWidget:tabsClosable( ... )
    CASE 0
       RETURN Qt_QTabWidget_tabsClosable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:usesScrollButtons( ... )
@@ -564,7 +564,7 @@ METHOD QTabWidget:usesScrollButtons( ... )
    CASE 0
       RETURN Qt_QTabWidget_usesScrollButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:widget( ... )
@@ -576,7 +576,7 @@ METHOD QTabWidget:widget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setCurrentIndex( ... )
@@ -588,7 +588,7 @@ METHOD QTabWidget:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabWidget:setCurrentWidget( ... )
@@ -600,5 +600,5 @@ METHOD QTabWidget:setCurrentWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

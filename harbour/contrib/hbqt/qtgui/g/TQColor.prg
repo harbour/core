@@ -187,7 +187,7 @@ CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
 METHOD QColor:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QColor( ... )
    RETURN Self
@@ -221,7 +221,7 @@ METHOD QColor:QColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_QColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:alpha( ... )
@@ -229,7 +229,7 @@ METHOD QColor:alpha( ... )
    CASE 0
       RETURN Qt_QColor_alpha( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:alphaF( ... )
@@ -237,7 +237,7 @@ METHOD QColor:alphaF( ... )
    CASE 0
       RETURN Qt_QColor_alphaF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:black( ... )
@@ -245,7 +245,7 @@ METHOD QColor:black( ... )
    CASE 0
       RETURN Qt_QColor_black( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:blackF( ... )
@@ -253,7 +253,7 @@ METHOD QColor:blackF( ... )
    CASE 0
       RETURN Qt_QColor_blackF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:blue( ... )
@@ -261,7 +261,7 @@ METHOD QColor:blue( ... )
    CASE 0
       RETURN Qt_QColor_blue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:blueF( ... )
@@ -269,7 +269,7 @@ METHOD QColor:blueF( ... )
    CASE 0
       RETURN Qt_QColor_blueF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:convertTo( ... )
@@ -281,7 +281,7 @@ METHOD QColor:convertTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:cyan( ... )
@@ -289,7 +289,7 @@ METHOD QColor:cyan( ... )
    CASE 0
       RETURN Qt_QColor_cyan( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:cyanF( ... )
@@ -297,7 +297,7 @@ METHOD QColor:cyanF( ... )
    CASE 0
       RETURN Qt_QColor_cyanF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:darker( ... )
@@ -311,7 +311,7 @@ METHOD QColor:darker( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_darker( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getCmyk( ... )
@@ -329,7 +329,7 @@ METHOD QColor:getCmyk( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getCmykF( ... )
@@ -347,7 +347,7 @@ METHOD QColor:getCmykF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getHsv( ... )
@@ -365,7 +365,7 @@ METHOD QColor:getHsv( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getHsvF( ... )
@@ -383,7 +383,7 @@ METHOD QColor:getHsvF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getRgb( ... )
@@ -401,7 +401,7 @@ METHOD QColor:getRgb( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:getRgbF( ... )
@@ -419,7 +419,7 @@ METHOD QColor:getRgbF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:green( ... )
@@ -427,7 +427,7 @@ METHOD QColor:green( ... )
    CASE 0
       RETURN Qt_QColor_green( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:greenF( ... )
@@ -435,7 +435,7 @@ METHOD QColor:greenF( ... )
    CASE 0
       RETURN Qt_QColor_greenF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:hue( ... )
@@ -443,7 +443,7 @@ METHOD QColor:hue( ... )
    CASE 0
       RETURN Qt_QColor_hue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:hueF( ... )
@@ -451,7 +451,7 @@ METHOD QColor:hueF( ... )
    CASE 0
       RETURN Qt_QColor_hueF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:isValid( ... )
@@ -459,7 +459,7 @@ METHOD QColor:isValid( ... )
    CASE 0
       RETURN Qt_QColor_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:lighter( ... )
@@ -473,7 +473,7 @@ METHOD QColor:lighter( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_lighter( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:magenta( ... )
@@ -481,7 +481,7 @@ METHOD QColor:magenta( ... )
    CASE 0
       RETURN Qt_QColor_magenta( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:magentaF( ... )
@@ -489,7 +489,7 @@ METHOD QColor:magentaF( ... )
    CASE 0
       RETURN Qt_QColor_magentaF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:name( ... )
@@ -497,7 +497,7 @@ METHOD QColor:name( ... )
    CASE 0
       RETURN Qt_QColor_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:red( ... )
@@ -505,7 +505,7 @@ METHOD QColor:red( ... )
    CASE 0
       RETURN Qt_QColor_red( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:redF( ... )
@@ -513,7 +513,7 @@ METHOD QColor:redF( ... )
    CASE 0
       RETURN Qt_QColor_redF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:rgb( ... )
@@ -521,7 +521,7 @@ METHOD QColor:rgb( ... )
    CASE 0
       RETURN Qt_QColor_rgb( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:rgba( ... )
@@ -529,7 +529,7 @@ METHOD QColor:rgba( ... )
    CASE 0
       RETURN Qt_QColor_rgba( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:saturation( ... )
@@ -537,7 +537,7 @@ METHOD QColor:saturation( ... )
    CASE 0
       RETURN Qt_QColor_saturation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:saturationF( ... )
@@ -545,7 +545,7 @@ METHOD QColor:saturationF( ... )
    CASE 0
       RETURN Qt_QColor_saturationF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setAlpha( ... )
@@ -557,7 +557,7 @@ METHOD QColor:setAlpha( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setAlphaF( ... )
@@ -569,7 +569,7 @@ METHOD QColor:setAlphaF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setBlue( ... )
@@ -581,7 +581,7 @@ METHOD QColor:setBlue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setBlueF( ... )
@@ -593,7 +593,7 @@ METHOD QColor:setBlueF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setCmyk( ... )
@@ -611,7 +611,7 @@ METHOD QColor:setCmyk( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setCmykF( ... )
@@ -629,7 +629,7 @@ METHOD QColor:setCmykF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setGreen( ... )
@@ -641,7 +641,7 @@ METHOD QColor:setGreen( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setGreenF( ... )
@@ -653,7 +653,7 @@ METHOD QColor:setGreenF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setHsv( ... )
@@ -671,7 +671,7 @@ METHOD QColor:setHsv( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setHsvF( ... )
@@ -689,7 +689,7 @@ METHOD QColor:setHsvF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setNamedColor( ... )
@@ -701,7 +701,7 @@ METHOD QColor:setNamedColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setRed( ... )
@@ -713,7 +713,7 @@ METHOD QColor:setRed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setRedF( ... )
@@ -725,7 +725,7 @@ METHOD QColor:setRedF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setRgb( ... )
@@ -749,7 +749,7 @@ METHOD QColor:setRgb( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setRgba( ... )
@@ -761,7 +761,7 @@ METHOD QColor:setRgba( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:setRgbF( ... )
@@ -779,7 +779,7 @@ METHOD QColor:setRgbF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:spec( ... )
@@ -787,7 +787,7 @@ METHOD QColor:spec( ... )
    CASE 0
       RETURN Qt_QColor_spec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:toCmyk( ... )
@@ -795,7 +795,7 @@ METHOD QColor:toCmyk( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_toCmyk( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:toHsv( ... )
@@ -803,7 +803,7 @@ METHOD QColor:toHsv( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_toHsv( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:toRgb( ... )
@@ -811,7 +811,7 @@ METHOD QColor:toRgb( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColor_toRgb( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:value( ... )
@@ -819,7 +819,7 @@ METHOD QColor:value( ... )
    CASE 0
       RETURN Qt_QColor_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:valueF( ... )
@@ -827,7 +827,7 @@ METHOD QColor:valueF( ... )
    CASE 0
       RETURN Qt_QColor_valueF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:yellow( ... )
@@ -835,7 +835,7 @@ METHOD QColor:yellow( ... )
    CASE 0
       RETURN Qt_QColor_yellow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:yellowF( ... )
@@ -843,7 +843,7 @@ METHOD QColor:yellowF( ... )
    CASE 0
       RETURN Qt_QColor_yellowF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:colorNames( ... )
@@ -851,7 +851,7 @@ METHOD QColor:colorNames( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QColor_colorNames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromCmyk( ... )
@@ -869,7 +869,7 @@ METHOD QColor:fromCmyk( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromCmykF( ... )
@@ -887,7 +887,7 @@ METHOD QColor:fromCmykF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromHsv( ... )
@@ -905,7 +905,7 @@ METHOD QColor:fromHsv( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromHsvF( ... )
@@ -923,7 +923,7 @@ METHOD QColor:fromHsvF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromRgb( ... )
@@ -947,7 +947,7 @@ METHOD QColor:fromRgb( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromRgbF( ... )
@@ -965,7 +965,7 @@ METHOD QColor:fromRgbF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColor:fromRgba( ... )
@@ -977,5 +977,5 @@ METHOD QColor:fromRgba( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

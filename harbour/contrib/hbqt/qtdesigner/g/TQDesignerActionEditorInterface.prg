@@ -120,7 +120,7 @@ CREATE CLASS QDesignerActionEditorInterface INHERIT HbQtObjectHandler, HB_QWidge
 METHOD QDesignerActionEditorInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerActionEditorInterface( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QDesignerActionEditorInterface:core( ... )
    CASE 0
       RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerActionEditorInterface_core( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerActionEditorInterface:manageAction( ... )
@@ -143,7 +143,7 @@ METHOD QDesignerActionEditorInterface:manageAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerActionEditorInterface:unmanageAction( ... )
@@ -155,7 +155,7 @@ METHOD QDesignerActionEditorInterface:unmanageAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerActionEditorInterface:setFormWindow( ... )
@@ -167,5 +167,5 @@ METHOD QDesignerActionEditorInterface:setFormWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

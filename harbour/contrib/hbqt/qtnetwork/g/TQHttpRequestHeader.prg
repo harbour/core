@@ -121,7 +121,7 @@ CREATE CLASS QHttpRequestHeader INHERIT HbQtObjectHandler, HB_QHttpHeader FUNCTI
 METHOD QHttpRequestHeader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttpRequestHeader( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QHttpRequestHeader:majorVersion( ... )
    CASE 0
       RETURN Qt_QHttpRequestHeader_majorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpRequestHeader:method( ... )
@@ -140,7 +140,7 @@ METHOD QHttpRequestHeader:method( ... )
    CASE 0
       RETURN Qt_QHttpRequestHeader_method( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpRequestHeader:minorVersion( ... )
@@ -148,7 +148,7 @@ METHOD QHttpRequestHeader:minorVersion( ... )
    CASE 0
       RETURN Qt_QHttpRequestHeader_minorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpRequestHeader:path( ... )
@@ -156,7 +156,7 @@ METHOD QHttpRequestHeader:path( ... )
    CASE 0
       RETURN Qt_QHttpRequestHeader_path( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpRequestHeader:setRequest( ... )
@@ -180,5 +180,5 @@ METHOD QHttpRequestHeader:setRequest( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

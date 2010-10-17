@@ -129,7 +129,7 @@ CREATE CLASS QFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFrame
 METHOD QFrame:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFrame( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QFrame:frameRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QFrame_frameRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:frameShadow( ... )
@@ -148,7 +148,7 @@ METHOD QFrame:frameShadow( ... )
    CASE 0
       RETURN Qt_QFrame_frameShadow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:frameShape( ... )
@@ -156,7 +156,7 @@ METHOD QFrame:frameShape( ... )
    CASE 0
       RETURN Qt_QFrame_frameShape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:frameStyle( ... )
@@ -164,7 +164,7 @@ METHOD QFrame:frameStyle( ... )
    CASE 0
       RETURN Qt_QFrame_frameStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:frameWidth( ... )
@@ -172,7 +172,7 @@ METHOD QFrame:frameWidth( ... )
    CASE 0
       RETURN Qt_QFrame_frameWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:lineWidth( ... )
@@ -180,7 +180,7 @@ METHOD QFrame:lineWidth( ... )
    CASE 0
       RETURN Qt_QFrame_lineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:midLineWidth( ... )
@@ -188,7 +188,7 @@ METHOD QFrame:midLineWidth( ... )
    CASE 0
       RETURN Qt_QFrame_midLineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setFrameRect( ... )
@@ -200,7 +200,7 @@ METHOD QFrame:setFrameRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setFrameShadow( ... )
@@ -212,7 +212,7 @@ METHOD QFrame:setFrameShadow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setFrameShape( ... )
@@ -224,7 +224,7 @@ METHOD QFrame:setFrameShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setFrameStyle( ... )
@@ -236,7 +236,7 @@ METHOD QFrame:setFrameStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setLineWidth( ... )
@@ -248,7 +248,7 @@ METHOD QFrame:setLineWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFrame:setMidLineWidth( ... )
@@ -260,5 +260,5 @@ METHOD QFrame:setMidLineWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

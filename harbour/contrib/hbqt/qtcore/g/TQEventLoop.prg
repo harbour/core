@@ -122,7 +122,7 @@ CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QEvent
 METHOD QEventLoop:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QEventLoop( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QEventLoop:exec( ... )
    CASE 0
       RETURN Qt_QEventLoop_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEventLoop:exit( ... )
@@ -153,7 +153,7 @@ METHOD QEventLoop:exit( ... )
    CASE 0
       RETURN Qt_QEventLoop_exit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEventLoop:isRunning( ... )
@@ -161,7 +161,7 @@ METHOD QEventLoop:isRunning( ... )
    CASE 0
       RETURN Qt_QEventLoop_isRunning( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEventLoop:processEvents( ... )
@@ -181,7 +181,7 @@ METHOD QEventLoop:processEvents( ... )
    CASE 0
       RETURN Qt_QEventLoop_processEvents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEventLoop:wakeUp( ... )
@@ -189,5 +189,5 @@ METHOD QEventLoop:wakeUp( ... )
    CASE 0
       RETURN Qt_QEventLoop_wakeUp( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -126,7 +126,7 @@ CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler FUNCTION HB_QNetworkReque
 METHOD QNetworkRequest:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QNetworkRequest( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QNetworkRequest:attribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:hasRawHeader( ... )
@@ -159,7 +159,7 @@ METHOD QNetworkRequest:hasRawHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:header( ... )
@@ -171,7 +171,7 @@ METHOD QNetworkRequest:header( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:rawHeader( ... )
@@ -183,7 +183,7 @@ METHOD QNetworkRequest:rawHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:rawHeaderList( ... )
@@ -191,7 +191,7 @@ METHOD QNetworkRequest:rawHeaderList( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QNetworkRequest_rawHeaderList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:setAttribute( ... )
@@ -203,7 +203,7 @@ METHOD QNetworkRequest:setAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:setHeader( ... )
@@ -215,7 +215,7 @@ METHOD QNetworkRequest:setHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:setRawHeader( ... )
@@ -227,7 +227,7 @@ METHOD QNetworkRequest:setRawHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:setUrl( ... )
@@ -239,7 +239,7 @@ METHOD QNetworkRequest:setUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QNetworkRequest:url( ... )
@@ -247,5 +247,5 @@ METHOD QNetworkRequest:url( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QNetworkRequest_url( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -189,7 +189,7 @@ CREATE CLASS QStandardItem INHERIT HbQtObjectHandler FUNCTION HB_QStandardItem
 METHOD QStandardItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStandardItem( ... )
    RETURN Self
@@ -200,7 +200,7 @@ METHOD QStandardItem:accessibleDescription( ... )
    CASE 0
       RETURN Qt_QStandardItem_accessibleDescription( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:accessibleText( ... )
@@ -208,7 +208,7 @@ METHOD QStandardItem:accessibleText( ... )
    CASE 0
       RETURN Qt_QStandardItem_accessibleText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:appendRow( ... )
@@ -220,7 +220,7 @@ METHOD QStandardItem:appendRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:background( ... )
@@ -228,7 +228,7 @@ METHOD QStandardItem:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QStandardItem_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:checkState( ... )
@@ -236,7 +236,7 @@ METHOD QStandardItem:checkState( ... )
    CASE 0
       RETURN Qt_QStandardItem_checkState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:child( ... )
@@ -254,7 +254,7 @@ METHOD QStandardItem:child( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:clone( ... )
@@ -262,7 +262,7 @@ METHOD QStandardItem:clone( ... )
    CASE 0
       RETURN QStandardItemFromPointer( Qt_QStandardItem_clone( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:column( ... )
@@ -270,7 +270,7 @@ METHOD QStandardItem:column( ... )
    CASE 0
       RETURN Qt_QStandardItem_column( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:columnCount( ... )
@@ -278,7 +278,7 @@ METHOD QStandardItem:columnCount( ... )
    CASE 0
       RETURN Qt_QStandardItem_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:data( ... )
@@ -292,7 +292,7 @@ METHOD QStandardItem:data( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QStandardItem_data( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:flags( ... )
@@ -300,7 +300,7 @@ METHOD QStandardItem:flags( ... )
    CASE 0
       RETURN Qt_QStandardItem_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:font( ... )
@@ -308,7 +308,7 @@ METHOD QStandardItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QStandardItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:foreground( ... )
@@ -316,7 +316,7 @@ METHOD QStandardItem:foreground( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QStandardItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:hasChildren( ... )
@@ -324,7 +324,7 @@ METHOD QStandardItem:hasChildren( ... )
    CASE 0
       RETURN Qt_QStandardItem_hasChildren( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:icon( ... )
@@ -332,7 +332,7 @@ METHOD QStandardItem:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStandardItem_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:index( ... )
@@ -340,7 +340,7 @@ METHOD QStandardItem:index( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QStandardItem_index( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:insertColumns( ... )
@@ -352,7 +352,7 @@ METHOD QStandardItem:insertColumns( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:insertRow( ... )
@@ -364,7 +364,7 @@ METHOD QStandardItem:insertRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:insertRows( ... )
@@ -376,7 +376,7 @@ METHOD QStandardItem:insertRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isCheckable( ... )
@@ -384,7 +384,7 @@ METHOD QStandardItem:isCheckable( ... )
    CASE 0
       RETURN Qt_QStandardItem_isCheckable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isDragEnabled( ... )
@@ -392,7 +392,7 @@ METHOD QStandardItem:isDragEnabled( ... )
    CASE 0
       RETURN Qt_QStandardItem_isDragEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isDropEnabled( ... )
@@ -400,7 +400,7 @@ METHOD QStandardItem:isDropEnabled( ... )
    CASE 0
       RETURN Qt_QStandardItem_isDropEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isEditable( ... )
@@ -408,7 +408,7 @@ METHOD QStandardItem:isEditable( ... )
    CASE 0
       RETURN Qt_QStandardItem_isEditable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isEnabled( ... )
@@ -416,7 +416,7 @@ METHOD QStandardItem:isEnabled( ... )
    CASE 0
       RETURN Qt_QStandardItem_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isSelectable( ... )
@@ -424,7 +424,7 @@ METHOD QStandardItem:isSelectable( ... )
    CASE 0
       RETURN Qt_QStandardItem_isSelectable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:isTristate( ... )
@@ -432,7 +432,7 @@ METHOD QStandardItem:isTristate( ... )
    CASE 0
       RETURN Qt_QStandardItem_isTristate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:model( ... )
@@ -440,7 +440,7 @@ METHOD QStandardItem:model( ... )
    CASE 0
       RETURN QStandardItemModelFromPointer( Qt_QStandardItem_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:parent( ... )
@@ -448,7 +448,7 @@ METHOD QStandardItem:parent( ... )
    CASE 0
       RETURN QStandardItemFromPointer( Qt_QStandardItem_parent( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:read( ... )
@@ -460,7 +460,7 @@ METHOD QStandardItem:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:removeColumn( ... )
@@ -472,7 +472,7 @@ METHOD QStandardItem:removeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:removeColumns( ... )
@@ -484,7 +484,7 @@ METHOD QStandardItem:removeColumns( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:removeRow( ... )
@@ -496,7 +496,7 @@ METHOD QStandardItem:removeRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:removeRows( ... )
@@ -508,7 +508,7 @@ METHOD QStandardItem:removeRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:row( ... )
@@ -516,7 +516,7 @@ METHOD QStandardItem:row( ... )
    CASE 0
       RETURN Qt_QStandardItem_row( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:rowCount( ... )
@@ -524,7 +524,7 @@ METHOD QStandardItem:rowCount( ... )
    CASE 0
       RETURN Qt_QStandardItem_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setAccessibleDescription( ... )
@@ -536,7 +536,7 @@ METHOD QStandardItem:setAccessibleDescription( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setAccessibleText( ... )
@@ -548,7 +548,7 @@ METHOD QStandardItem:setAccessibleText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setBackground( ... )
@@ -560,7 +560,7 @@ METHOD QStandardItem:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setCheckState( ... )
@@ -572,7 +572,7 @@ METHOD QStandardItem:setCheckState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setCheckable( ... )
@@ -584,7 +584,7 @@ METHOD QStandardItem:setCheckable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setChild( ... )
@@ -602,7 +602,7 @@ METHOD QStandardItem:setChild( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setColumnCount( ... )
@@ -614,7 +614,7 @@ METHOD QStandardItem:setColumnCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setData( ... )
@@ -632,7 +632,7 @@ METHOD QStandardItem:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setDragEnabled( ... )
@@ -644,7 +644,7 @@ METHOD QStandardItem:setDragEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setDropEnabled( ... )
@@ -656,7 +656,7 @@ METHOD QStandardItem:setDropEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setEditable( ... )
@@ -668,7 +668,7 @@ METHOD QStandardItem:setEditable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setEnabled( ... )
@@ -680,7 +680,7 @@ METHOD QStandardItem:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setFlags( ... )
@@ -692,7 +692,7 @@ METHOD QStandardItem:setFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setFont( ... )
@@ -704,7 +704,7 @@ METHOD QStandardItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setForeground( ... )
@@ -716,7 +716,7 @@ METHOD QStandardItem:setForeground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setIcon( ... )
@@ -728,7 +728,7 @@ METHOD QStandardItem:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setRowCount( ... )
@@ -740,7 +740,7 @@ METHOD QStandardItem:setRowCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setSelectable( ... )
@@ -752,7 +752,7 @@ METHOD QStandardItem:setSelectable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setSizeHint( ... )
@@ -764,7 +764,7 @@ METHOD QStandardItem:setSizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setStatusTip( ... )
@@ -776,7 +776,7 @@ METHOD QStandardItem:setStatusTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setText( ... )
@@ -788,7 +788,7 @@ METHOD QStandardItem:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setTextAlignment( ... )
@@ -800,7 +800,7 @@ METHOD QStandardItem:setTextAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setToolTip( ... )
@@ -812,7 +812,7 @@ METHOD QStandardItem:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setTristate( ... )
@@ -824,7 +824,7 @@ METHOD QStandardItem:setTristate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:setWhatsThis( ... )
@@ -836,7 +836,7 @@ METHOD QStandardItem:setWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:sizeHint( ... )
@@ -844,7 +844,7 @@ METHOD QStandardItem:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QStandardItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:sortChildren( ... )
@@ -862,7 +862,7 @@ METHOD QStandardItem:sortChildren( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:statusTip( ... )
@@ -870,7 +870,7 @@ METHOD QStandardItem:statusTip( ... )
    CASE 0
       RETURN Qt_QStandardItem_statusTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:takeChild( ... )
@@ -888,7 +888,7 @@ METHOD QStandardItem:takeChild( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:takeColumn( ... )
@@ -900,7 +900,7 @@ METHOD QStandardItem:takeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:takeRow( ... )
@@ -912,7 +912,7 @@ METHOD QStandardItem:takeRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:text( ... )
@@ -920,7 +920,7 @@ METHOD QStandardItem:text( ... )
    CASE 0
       RETURN Qt_QStandardItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:textAlignment( ... )
@@ -928,7 +928,7 @@ METHOD QStandardItem:textAlignment( ... )
    CASE 0
       RETURN Qt_QStandardItem_textAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:toolTip( ... )
@@ -936,7 +936,7 @@ METHOD QStandardItem:toolTip( ... )
    CASE 0
       RETURN Qt_QStandardItem_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:type( ... )
@@ -944,7 +944,7 @@ METHOD QStandardItem:type( ... )
    CASE 0
       RETURN Qt_QStandardItem_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:whatsThis( ... )
@@ -952,7 +952,7 @@ METHOD QStandardItem:whatsThis( ... )
    CASE 0
       RETURN Qt_QStandardItem_whatsThis( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItem:write( ... )
@@ -964,5 +964,5 @@ METHOD QStandardItem:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

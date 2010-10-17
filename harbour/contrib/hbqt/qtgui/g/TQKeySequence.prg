@@ -123,7 +123,7 @@ CREATE CLASS QKeySequence INHERIT HbQtObjectHandler FUNCTION HB_QKeySequence
 METHOD QKeySequence:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QKeySequence( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QKeySequence:count( ... )
    CASE 0
       RETURN Qt_QKeySequence_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:isEmpty( ... )
@@ -142,7 +142,7 @@ METHOD QKeySequence:isEmpty( ... )
    CASE 0
       RETURN Qt_QKeySequence_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:matches( ... )
@@ -154,7 +154,7 @@ METHOD QKeySequence:matches( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:toString( ... )
@@ -168,7 +168,7 @@ METHOD QKeySequence:toString( ... )
    CASE 0
       RETURN Qt_QKeySequence_toString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:fromString( ... )
@@ -186,7 +186,7 @@ METHOD QKeySequence:fromString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:keyBindings( ... )
@@ -198,7 +198,7 @@ METHOD QKeySequence:keyBindings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeySequence:mnemonic( ... )
@@ -210,5 +210,5 @@ METHOD QKeySequence:mnemonic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

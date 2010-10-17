@@ -131,7 +131,7 @@ CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QCol
 METHOD QColorDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QColorDialog( ... )
    RETURN Self
@@ -142,7 +142,7 @@ METHOD QColorDialog:currentColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColorDialog_currentColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:open( ... )
@@ -150,7 +150,7 @@ METHOD QColorDialog:open( ... )
    CASE 0
       RETURN Qt_QColorDialog_open( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:options( ... )
@@ -158,7 +158,7 @@ METHOD QColorDialog:options( ... )
    CASE 0
       RETURN Qt_QColorDialog_options( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:selectedColor( ... )
@@ -166,7 +166,7 @@ METHOD QColorDialog:selectedColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColorDialog_selectedColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setCurrentColor( ... )
@@ -178,7 +178,7 @@ METHOD QColorDialog:setCurrentColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setOption( ... )
@@ -196,7 +196,7 @@ METHOD QColorDialog:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setOptions( ... )
@@ -208,7 +208,7 @@ METHOD QColorDialog:setOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setVisible( ... )
@@ -220,7 +220,7 @@ METHOD QColorDialog:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:testOption( ... )
@@ -232,7 +232,7 @@ METHOD QColorDialog:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:customColor( ... )
@@ -244,7 +244,7 @@ METHOD QColorDialog:customColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:customCount( ... )
@@ -252,7 +252,7 @@ METHOD QColorDialog:customCount( ... )
    CASE 0
       RETURN Qt_QColorDialog_customCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:getColor( ... )
@@ -284,7 +284,7 @@ METHOD QColorDialog:getColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setCustomColor( ... )
@@ -296,7 +296,7 @@ METHOD QColorDialog:setCustomColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QColorDialog:setStandardColor( ... )
@@ -308,5 +308,5 @@ METHOD QColorDialog:setStandardColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

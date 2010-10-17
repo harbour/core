@@ -129,7 +129,7 @@ CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAct
 METHOD QActionGroup:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QActionGroup( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QActionGroup:actions( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QActionGroup_actions( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:addAction( ... )
@@ -160,7 +160,7 @@ METHOD QActionGroup:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:checkedAction( ... )
@@ -168,7 +168,7 @@ METHOD QActionGroup:checkedAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QActionGroup_checkedAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:isEnabled( ... )
@@ -176,7 +176,7 @@ METHOD QActionGroup:isEnabled( ... )
    CASE 0
       RETURN Qt_QActionGroup_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:isExclusive( ... )
@@ -184,7 +184,7 @@ METHOD QActionGroup:isExclusive( ... )
    CASE 0
       RETURN Qt_QActionGroup_isExclusive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:isVisible( ... )
@@ -192,7 +192,7 @@ METHOD QActionGroup:isVisible( ... )
    CASE 0
       RETURN Qt_QActionGroup_isVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:removeAction( ... )
@@ -204,7 +204,7 @@ METHOD QActionGroup:removeAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:setDisabled( ... )
@@ -216,7 +216,7 @@ METHOD QActionGroup:setDisabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:setEnabled( ... )
@@ -228,7 +228,7 @@ METHOD QActionGroup:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:setExclusive( ... )
@@ -240,7 +240,7 @@ METHOD QActionGroup:setExclusive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QActionGroup:setVisible( ... )
@@ -252,5 +252,5 @@ METHOD QActionGroup:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

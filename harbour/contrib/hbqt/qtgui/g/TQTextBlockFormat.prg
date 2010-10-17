@@ -135,7 +135,7 @@ CREATE CLASS QTextBlockFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
 METHOD QTextBlockFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextBlockFormat( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QTextBlockFormat:alignment( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:bottomMargin( ... )
@@ -154,7 +154,7 @@ METHOD QTextBlockFormat:bottomMargin( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_bottomMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:indent( ... )
@@ -162,7 +162,7 @@ METHOD QTextBlockFormat:indent( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_indent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:isValid( ... )
@@ -170,7 +170,7 @@ METHOD QTextBlockFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:leftMargin( ... )
@@ -178,7 +178,7 @@ METHOD QTextBlockFormat:leftMargin( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_leftMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:nonBreakableLines( ... )
@@ -186,7 +186,7 @@ METHOD QTextBlockFormat:nonBreakableLines( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_nonBreakableLines( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:pageBreakPolicy( ... )
@@ -194,7 +194,7 @@ METHOD QTextBlockFormat:pageBreakPolicy( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_pageBreakPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:rightMargin( ... )
@@ -202,7 +202,7 @@ METHOD QTextBlockFormat:rightMargin( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_rightMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setAlignment( ... )
@@ -214,7 +214,7 @@ METHOD QTextBlockFormat:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setBottomMargin( ... )
@@ -226,7 +226,7 @@ METHOD QTextBlockFormat:setBottomMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setIndent( ... )
@@ -238,7 +238,7 @@ METHOD QTextBlockFormat:setIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setLeftMargin( ... )
@@ -250,7 +250,7 @@ METHOD QTextBlockFormat:setLeftMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setNonBreakableLines( ... )
@@ -262,7 +262,7 @@ METHOD QTextBlockFormat:setNonBreakableLines( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setPageBreakPolicy( ... )
@@ -274,7 +274,7 @@ METHOD QTextBlockFormat:setPageBreakPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setRightMargin( ... )
@@ -286,7 +286,7 @@ METHOD QTextBlockFormat:setRightMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setTextIndent( ... )
@@ -298,7 +298,7 @@ METHOD QTextBlockFormat:setTextIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:setTopMargin( ... )
@@ -310,7 +310,7 @@ METHOD QTextBlockFormat:setTopMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:textIndent( ... )
@@ -318,7 +318,7 @@ METHOD QTextBlockFormat:textIndent( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_textIndent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBlockFormat:topMargin( ... )
@@ -326,5 +326,5 @@ METHOD QTextBlockFormat:topMargin( ... )
    CASE 0
       RETURN Qt_QTextBlockFormat_topMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -192,7 +192,7 @@ CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUN
 METHOD QGraphicsView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsView( ... )
    RETURN Self
@@ -203,7 +203,7 @@ METHOD QGraphicsView:alignment( ... )
    CASE 0
       RETURN Qt_QGraphicsView_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:backgroundBrush( ... )
@@ -211,7 +211,7 @@ METHOD QGraphicsView:backgroundBrush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QGraphicsView_backgroundBrush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:cacheMode( ... )
@@ -219,7 +219,7 @@ METHOD QGraphicsView:cacheMode( ... )
    CASE 0
       RETURN Qt_QGraphicsView_cacheMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:centerOn( ... )
@@ -242,7 +242,7 @@ METHOD QGraphicsView:centerOn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:dragMode( ... )
@@ -250,7 +250,7 @@ METHOD QGraphicsView:dragMode( ... )
    CASE 0
       RETURN Qt_QGraphicsView_dragMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:ensureVisible( ... )
@@ -307,7 +307,7 @@ METHOD QGraphicsView:ensureVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:fitInView( ... )
@@ -347,7 +347,7 @@ METHOD QGraphicsView:fitInView( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:foregroundBrush( ... )
@@ -355,7 +355,7 @@ METHOD QGraphicsView:foregroundBrush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QGraphicsView_foregroundBrush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:isInteractive( ... )
@@ -363,7 +363,7 @@ METHOD QGraphicsView:isInteractive( ... )
    CASE 0
       RETURN Qt_QGraphicsView_isInteractive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:itemAt( ... )
@@ -381,7 +381,7 @@ METHOD QGraphicsView:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:items( ... )
@@ -431,7 +431,7 @@ METHOD QGraphicsView:items( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QGraphicsView_items( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:mapFromScene( ... )
@@ -464,7 +464,7 @@ METHOD QGraphicsView:mapFromScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:mapToScene( ... )
@@ -497,7 +497,7 @@ METHOD QGraphicsView:mapToScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:matrix( ... )
@@ -505,7 +505,7 @@ METHOD QGraphicsView:matrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QGraphicsView_matrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:optimizationFlags( ... )
@@ -513,7 +513,7 @@ METHOD QGraphicsView:optimizationFlags( ... )
    CASE 0
       RETURN Qt_QGraphicsView_optimizationFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:render( ... )
@@ -543,7 +543,7 @@ METHOD QGraphicsView:render( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:renderHints( ... )
@@ -551,7 +551,7 @@ METHOD QGraphicsView:renderHints( ... )
    CASE 0
       RETURN Qt_QGraphicsView_renderHints( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:resetCachedContent( ... )
@@ -559,7 +559,7 @@ METHOD QGraphicsView:resetCachedContent( ... )
    CASE 0
       RETURN Qt_QGraphicsView_resetCachedContent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:resetMatrix( ... )
@@ -567,7 +567,7 @@ METHOD QGraphicsView:resetMatrix( ... )
    CASE 0
       RETURN Qt_QGraphicsView_resetMatrix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:resetTransform( ... )
@@ -575,7 +575,7 @@ METHOD QGraphicsView:resetTransform( ... )
    CASE 0
       RETURN Qt_QGraphicsView_resetTransform( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:resizeAnchor( ... )
@@ -583,7 +583,7 @@ METHOD QGraphicsView:resizeAnchor( ... )
    CASE 0
       RETURN Qt_QGraphicsView_resizeAnchor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:rotate( ... )
@@ -595,7 +595,7 @@ METHOD QGraphicsView:rotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:rubberBandSelectionMode( ... )
@@ -603,7 +603,7 @@ METHOD QGraphicsView:rubberBandSelectionMode( ... )
    CASE 0
       RETURN Qt_QGraphicsView_rubberBandSelectionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:scale( ... )
@@ -615,7 +615,7 @@ METHOD QGraphicsView:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:scene( ... )
@@ -623,7 +623,7 @@ METHOD QGraphicsView:scene( ... )
    CASE 0
       RETURN QGraphicsSceneFromPointer( Qt_QGraphicsView_scene( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:sceneRect( ... )
@@ -631,7 +631,7 @@ METHOD QGraphicsView:sceneRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsView_sceneRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setAlignment( ... )
@@ -643,7 +643,7 @@ METHOD QGraphicsView:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setBackgroundBrush( ... )
@@ -655,7 +655,7 @@ METHOD QGraphicsView:setBackgroundBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setCacheMode( ... )
@@ -667,7 +667,7 @@ METHOD QGraphicsView:setCacheMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setDragMode( ... )
@@ -679,7 +679,7 @@ METHOD QGraphicsView:setDragMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setForegroundBrush( ... )
@@ -691,7 +691,7 @@ METHOD QGraphicsView:setForegroundBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setInteractive( ... )
@@ -703,7 +703,7 @@ METHOD QGraphicsView:setInteractive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setMatrix( ... )
@@ -721,7 +721,7 @@ METHOD QGraphicsView:setMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setOptimizationFlag( ... )
@@ -739,7 +739,7 @@ METHOD QGraphicsView:setOptimizationFlag( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setOptimizationFlags( ... )
@@ -751,7 +751,7 @@ METHOD QGraphicsView:setOptimizationFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setRenderHint( ... )
@@ -769,7 +769,7 @@ METHOD QGraphicsView:setRenderHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setRenderHints( ... )
@@ -781,7 +781,7 @@ METHOD QGraphicsView:setRenderHints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setResizeAnchor( ... )
@@ -793,7 +793,7 @@ METHOD QGraphicsView:setResizeAnchor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setRubberBandSelectionMode( ... )
@@ -805,7 +805,7 @@ METHOD QGraphicsView:setRubberBandSelectionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setScene( ... )
@@ -817,7 +817,7 @@ METHOD QGraphicsView:setScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setSceneRect( ... )
@@ -835,7 +835,7 @@ METHOD QGraphicsView:setSceneRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setTransform( ... )
@@ -853,7 +853,7 @@ METHOD QGraphicsView:setTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setTransformationAnchor( ... )
@@ -865,7 +865,7 @@ METHOD QGraphicsView:setTransformationAnchor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:setViewportUpdateMode( ... )
@@ -877,7 +877,7 @@ METHOD QGraphicsView:setViewportUpdateMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:shear( ... )
@@ -889,7 +889,7 @@ METHOD QGraphicsView:shear( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:transform( ... )
@@ -897,7 +897,7 @@ METHOD QGraphicsView:transform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QGraphicsView_transform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:transformationAnchor( ... )
@@ -905,7 +905,7 @@ METHOD QGraphicsView:transformationAnchor( ... )
    CASE 0
       RETURN Qt_QGraphicsView_transformationAnchor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:translate( ... )
@@ -917,7 +917,7 @@ METHOD QGraphicsView:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:viewportTransform( ... )
@@ -925,7 +925,7 @@ METHOD QGraphicsView:viewportTransform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QGraphicsView_viewportTransform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:viewportUpdateMode( ... )
@@ -933,7 +933,7 @@ METHOD QGraphicsView:viewportUpdateMode( ... )
    CASE 0
       RETURN Qt_QGraphicsView_viewportUpdateMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:invalidateScene( ... )
@@ -953,7 +953,7 @@ METHOD QGraphicsView:invalidateScene( ... )
    CASE 0
       RETURN Qt_QGraphicsView_invalidateScene( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsView:updateSceneRect( ... )
@@ -965,5 +965,5 @@ METHOD QGraphicsView:updateSceneRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

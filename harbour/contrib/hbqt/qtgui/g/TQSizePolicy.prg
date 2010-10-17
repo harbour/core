@@ -130,7 +130,7 @@ CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler FUNCTION HB_QSizePolicy
 METHOD QSizePolicy:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSizePolicy( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QSizePolicy:controlType( ... )
    CASE 0
       RETURN Qt_QSizePolicy_controlType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:expandingDirections( ... )
@@ -149,7 +149,7 @@ METHOD QSizePolicy:expandingDirections( ... )
    CASE 0
       RETURN Qt_QSizePolicy_expandingDirections( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:hasHeightForWidth( ... )
@@ -157,7 +157,7 @@ METHOD QSizePolicy:hasHeightForWidth( ... )
    CASE 0
       RETURN Qt_QSizePolicy_hasHeightForWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:horizontalPolicy( ... )
@@ -165,7 +165,7 @@ METHOD QSizePolicy:horizontalPolicy( ... )
    CASE 0
       RETURN Qt_QSizePolicy_horizontalPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:horizontalStretch( ... )
@@ -173,7 +173,7 @@ METHOD QSizePolicy:horizontalStretch( ... )
    CASE 0
       RETURN Qt_QSizePolicy_horizontalStretch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setControlType( ... )
@@ -185,7 +185,7 @@ METHOD QSizePolicy:setControlType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setHeightForWidth( ... )
@@ -197,7 +197,7 @@ METHOD QSizePolicy:setHeightForWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setHorizontalPolicy( ... )
@@ -209,7 +209,7 @@ METHOD QSizePolicy:setHorizontalPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setHorizontalStretch( ... )
@@ -221,7 +221,7 @@ METHOD QSizePolicy:setHorizontalStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setVerticalPolicy( ... )
@@ -233,7 +233,7 @@ METHOD QSizePolicy:setVerticalPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:setVerticalStretch( ... )
@@ -245,7 +245,7 @@ METHOD QSizePolicy:setVerticalStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:transpose( ... )
@@ -253,7 +253,7 @@ METHOD QSizePolicy:transpose( ... )
    CASE 0
       RETURN Qt_QSizePolicy_transpose( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:verticalPolicy( ... )
@@ -261,7 +261,7 @@ METHOD QSizePolicy:verticalPolicy( ... )
    CASE 0
       RETURN Qt_QSizePolicy_verticalPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizePolicy:verticalStretch( ... )
@@ -269,5 +269,5 @@ METHOD QSizePolicy:verticalStretch( ... )
    CASE 0
       RETURN Qt_QSizePolicy_verticalStretch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -155,7 +155,7 @@ CREATE CLASS QDesignerFormWindowInterface INHERIT HbQtObjectHandler, HB_QWidget 
 METHOD QDesignerFormWindowInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerFormWindowInterface( ... )
    RETURN Self
@@ -170,7 +170,7 @@ METHOD QDesignerFormWindowInterface:addResourceFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:author( ... )
@@ -178,7 +178,7 @@ METHOD QDesignerFormWindowInterface:author( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_author( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:comment( ... )
@@ -186,7 +186,7 @@ METHOD QDesignerFormWindowInterface:comment( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_comment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:contents( ... )
@@ -194,7 +194,7 @@ METHOD QDesignerFormWindowInterface:contents( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_contents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:core( ... )
@@ -202,7 +202,7 @@ METHOD QDesignerFormWindowInterface:core( ... )
    CASE 0
       RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerFormWindowInterface_core( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:cursor( ... )
@@ -210,7 +210,7 @@ METHOD QDesignerFormWindowInterface:cursor( ... )
    CASE 0
       RETURN QDesignerFormWindowCursorInterfaceFromPointer( Qt_QDesignerFormWindowInterface_cursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:emitSelectionChanged( ... )
@@ -218,7 +218,7 @@ METHOD QDesignerFormWindowInterface:emitSelectionChanged( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_emitSelectionChanged( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:exportMacro( ... )
@@ -226,7 +226,7 @@ METHOD QDesignerFormWindowInterface:exportMacro( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_exportMacro( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:features( ... )
@@ -234,7 +234,7 @@ METHOD QDesignerFormWindowInterface:features( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_features( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:fileName( ... )
@@ -242,7 +242,7 @@ METHOD QDesignerFormWindowInterface:fileName( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:grid( ... )
@@ -250,7 +250,7 @@ METHOD QDesignerFormWindowInterface:grid( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QDesignerFormWindowInterface_grid( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:hasFeature( ... )
@@ -262,7 +262,7 @@ METHOD QDesignerFormWindowInterface:hasFeature( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:includeHints( ... )
@@ -270,7 +270,7 @@ METHOD QDesignerFormWindowInterface:includeHints( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDesignerFormWindowInterface_includeHints( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:isDirty( ... )
@@ -278,7 +278,7 @@ METHOD QDesignerFormWindowInterface:isDirty( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_isDirty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:isManaged( ... )
@@ -290,7 +290,7 @@ METHOD QDesignerFormWindowInterface:isManaged( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:layoutDefault( ... )
@@ -302,7 +302,7 @@ METHOD QDesignerFormWindowInterface:layoutDefault( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:mainContainer( ... )
@@ -310,7 +310,7 @@ METHOD QDesignerFormWindowInterface:mainContainer( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDesignerFormWindowInterface_mainContainer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:pixmapFunction( ... )
@@ -318,7 +318,7 @@ METHOD QDesignerFormWindowInterface:pixmapFunction( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_pixmapFunction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:removeResourceFile( ... )
@@ -330,7 +330,7 @@ METHOD QDesignerFormWindowInterface:removeResourceFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:resourceFiles( ... )
@@ -338,7 +338,7 @@ METHOD QDesignerFormWindowInterface:resourceFiles( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDesignerFormWindowInterface_resourceFiles( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setAuthor( ... )
@@ -350,7 +350,7 @@ METHOD QDesignerFormWindowInterface:setAuthor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setComment( ... )
@@ -362,7 +362,7 @@ METHOD QDesignerFormWindowInterface:setComment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setContents( ... )
@@ -376,7 +376,7 @@ METHOD QDesignerFormWindowInterface:setContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setExportMacro( ... )
@@ -388,7 +388,7 @@ METHOD QDesignerFormWindowInterface:setExportMacro( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setIncludeHints( ... )
@@ -400,7 +400,7 @@ METHOD QDesignerFormWindowInterface:setIncludeHints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setLayoutDefault( ... )
@@ -412,7 +412,7 @@ METHOD QDesignerFormWindowInterface:setLayoutDefault( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setMainContainer( ... )
@@ -424,7 +424,7 @@ METHOD QDesignerFormWindowInterface:setMainContainer( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setPixmapFunction( ... )
@@ -436,7 +436,7 @@ METHOD QDesignerFormWindowInterface:setPixmapFunction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:findFormWindow( ... )
@@ -453,7 +453,7 @@ METHOD QDesignerFormWindowInterface:findFormWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:clearSelection( ... )
@@ -467,7 +467,7 @@ METHOD QDesignerFormWindowInterface:clearSelection( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowInterface_clearSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:manageWidget( ... )
@@ -479,7 +479,7 @@ METHOD QDesignerFormWindowInterface:manageWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:selectWidget( ... )
@@ -497,7 +497,7 @@ METHOD QDesignerFormWindowInterface:selectWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setDirty( ... )
@@ -509,7 +509,7 @@ METHOD QDesignerFormWindowInterface:setDirty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setFeatures( ... )
@@ -521,7 +521,7 @@ METHOD QDesignerFormWindowInterface:setFeatures( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setFileName( ... )
@@ -533,7 +533,7 @@ METHOD QDesignerFormWindowInterface:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setGrid( ... )
@@ -545,7 +545,7 @@ METHOD QDesignerFormWindowInterface:setGrid( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:unmanageWidget( ... )
@@ -557,5 +557,5 @@ METHOD QDesignerFormWindowInterface:unmanageWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

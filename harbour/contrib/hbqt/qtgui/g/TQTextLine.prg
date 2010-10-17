@@ -137,7 +137,7 @@ CREATE CLASS QTextLine INHERIT HbQtObjectHandler FUNCTION HB_QTextLine
 METHOD QTextLine:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextLine( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QTextLine:ascent( ... )
    CASE 0
       RETURN Qt_QTextLine_ascent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:cursorToX( ... )
@@ -168,7 +168,7 @@ METHOD QTextLine:cursorToX( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:descent( ... )
@@ -176,7 +176,7 @@ METHOD QTextLine:descent( ... )
    CASE 0
       RETURN Qt_QTextLine_descent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:height( ... )
@@ -184,7 +184,7 @@ METHOD QTextLine:height( ... )
    CASE 0
       RETURN Qt_QTextLine_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:isValid( ... )
@@ -192,7 +192,7 @@ METHOD QTextLine:isValid( ... )
    CASE 0
       RETURN Qt_QTextLine_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:lineNumber( ... )
@@ -200,7 +200,7 @@ METHOD QTextLine:lineNumber( ... )
    CASE 0
       RETURN Qt_QTextLine_lineNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:naturalTextRect( ... )
@@ -208,7 +208,7 @@ METHOD QTextLine:naturalTextRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QTextLine_naturalTextRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:naturalTextWidth( ... )
@@ -216,7 +216,7 @@ METHOD QTextLine:naturalTextWidth( ... )
    CASE 0
       RETURN Qt_QTextLine_naturalTextWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:position( ... )
@@ -224,7 +224,7 @@ METHOD QTextLine:position( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QTextLine_position( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:rect( ... )
@@ -232,7 +232,7 @@ METHOD QTextLine:rect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QTextLine_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:setLineWidth( ... )
@@ -244,7 +244,7 @@ METHOD QTextLine:setLineWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:setNumColumns( ... )
@@ -262,7 +262,7 @@ METHOD QTextLine:setNumColumns( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:setPosition( ... )
@@ -274,7 +274,7 @@ METHOD QTextLine:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:textLength( ... )
@@ -282,7 +282,7 @@ METHOD QTextLine:textLength( ... )
    CASE 0
       RETURN Qt_QTextLine_textLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:textStart( ... )
@@ -290,7 +290,7 @@ METHOD QTextLine:textStart( ... )
    CASE 0
       RETURN Qt_QTextLine_textStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:width( ... )
@@ -298,7 +298,7 @@ METHOD QTextLine:width( ... )
    CASE 0
       RETURN Qt_QTextLine_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:x( ... )
@@ -306,7 +306,7 @@ METHOD QTextLine:x( ... )
    CASE 0
       RETURN Qt_QTextLine_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:xToCursor( ... )
@@ -324,7 +324,7 @@ METHOD QTextLine:xToCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextLine:y( ... )
@@ -332,5 +332,5 @@ METHOD QTextLine:y( ... )
    CASE 0
       RETURN Qt_QTextLine_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

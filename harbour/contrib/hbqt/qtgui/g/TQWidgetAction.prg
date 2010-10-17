@@ -120,7 +120,7 @@ CREATE CLASS QWidgetAction INHERIT HbQtObjectHandler, HB_QAction FUNCTION HB_QWi
 METHOD QWidgetAction:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWidgetAction( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QWidgetAction:defaultWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidgetAction_defaultWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidgetAction:releaseWidget( ... )
@@ -143,7 +143,7 @@ METHOD QWidgetAction:releaseWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidgetAction:requestWidget( ... )
@@ -155,7 +155,7 @@ METHOD QWidgetAction:requestWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidgetAction:setDefaultWidget( ... )
@@ -167,5 +167,5 @@ METHOD QWidgetAction:setDefaultWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

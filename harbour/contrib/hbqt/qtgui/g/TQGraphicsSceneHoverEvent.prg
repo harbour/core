@@ -123,7 +123,7 @@ CREATE CLASS QGraphicsSceneHoverEvent INHERIT HbQtObjectHandler, HB_QGraphicsSce
 METHOD QGraphicsSceneHoverEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneHoverEvent( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QGraphicsSceneHoverEvent:lastPos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneHoverEvent_lastPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:lastScenePos( ... )
@@ -142,7 +142,7 @@ METHOD QGraphicsSceneHoverEvent:lastScenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneHoverEvent_lastScenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:lastScreenPos( ... )
@@ -150,7 +150,7 @@ METHOD QGraphicsSceneHoverEvent:lastScreenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneHoverEvent_lastScreenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:modifiers( ... )
@@ -158,7 +158,7 @@ METHOD QGraphicsSceneHoverEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneHoverEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:pos( ... )
@@ -166,7 +166,7 @@ METHOD QGraphicsSceneHoverEvent:pos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneHoverEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:scenePos( ... )
@@ -174,7 +174,7 @@ METHOD QGraphicsSceneHoverEvent:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneHoverEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHoverEvent:screenPos( ... )
@@ -182,5 +182,5 @@ METHOD QGraphicsSceneHoverEvent:screenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneHoverEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

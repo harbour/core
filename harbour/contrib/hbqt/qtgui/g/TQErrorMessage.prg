@@ -118,7 +118,7 @@ CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QEr
 METHOD QErrorMessage:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QErrorMessage( ... )
    RETURN Self
@@ -139,5 +139,5 @@ METHOD QErrorMessage:showMessage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

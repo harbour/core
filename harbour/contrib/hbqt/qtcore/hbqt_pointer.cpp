@@ -223,26 +223,6 @@ HB_FUNC( __HBQT_PTR )
    hb_itemReturn( pParam );
 }
 
-/* TODO: Delete this, once code has been converted to use __HBQT_PTR() */
-HB_FUNC( HBQT_PTR )
-{
-   PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
-
-   if( hb_itemType( pParam ) & HB_IT_OBJECT )
-   {
-      PHB_ITEM pRetVal;
-
-      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
-      hb_vmPush( pParam );
-      hb_vmSend( 0 );
-
-      if( ( pRetVal = hb_param( -1, HB_IT_POINTER ) ) != NULL )
-         return;
-   }
-
-   hb_itemReturn( pParam );
-}
-
 void * hbqt_detachgcpointer( int iParam )
 {
    HBQT_GC_T * p;

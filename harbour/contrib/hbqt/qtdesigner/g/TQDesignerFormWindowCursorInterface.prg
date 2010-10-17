@@ -130,7 +130,7 @@ CREATE CLASS QDesignerFormWindowCursorInterface INHERIT HbQtObjectHandler FUNCTI
 METHOD QDesignerFormWindowCursorInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerFormWindowCursorInterface( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QDesignerFormWindowCursorInterface:current( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDesignerFormWindowCursorInterface_current( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:formWindow( ... )
@@ -149,7 +149,7 @@ METHOD QDesignerFormWindowCursorInterface:formWindow( ... )
    CASE 0
       RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowCursorInterface_formWindow( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:hasSelection( ... )
@@ -157,7 +157,7 @@ METHOD QDesignerFormWindowCursorInterface:hasSelection( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowCursorInterface_hasSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:isWidgetSelected( ... )
@@ -169,7 +169,7 @@ METHOD QDesignerFormWindowCursorInterface:isWidgetSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:movePosition( ... )
@@ -187,7 +187,7 @@ METHOD QDesignerFormWindowCursorInterface:movePosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:position( ... )
@@ -195,7 +195,7 @@ METHOD QDesignerFormWindowCursorInterface:position( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowCursorInterface_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:resetWidgetProperty( ... )
@@ -207,7 +207,7 @@ METHOD QDesignerFormWindowCursorInterface:resetWidgetProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:selectedWidget( ... )
@@ -219,7 +219,7 @@ METHOD QDesignerFormWindowCursorInterface:selectedWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:selectedWidgetCount( ... )
@@ -227,7 +227,7 @@ METHOD QDesignerFormWindowCursorInterface:selectedWidgetCount( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowCursorInterface_selectedWidgetCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:setPosition( ... )
@@ -245,7 +245,7 @@ METHOD QDesignerFormWindowCursorInterface:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:setProperty( ... )
@@ -257,7 +257,7 @@ METHOD QDesignerFormWindowCursorInterface:setProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:setWidgetProperty( ... )
@@ -269,7 +269,7 @@ METHOD QDesignerFormWindowCursorInterface:setWidgetProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:widget( ... )
@@ -281,7 +281,7 @@ METHOD QDesignerFormWindowCursorInterface:widget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormWindowCursorInterface:widgetCount( ... )
@@ -289,5 +289,5 @@ METHOD QDesignerFormWindowCursorInterface:widgetCount( ... )
    CASE 0
       RETURN Qt_QDesignerFormWindowCursorInterface_widgetCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

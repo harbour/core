@@ -119,7 +119,7 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, HB_QStyleOption F
 METHOD QStyleOptionTabBarBase:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionTabBarBase( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QStyleOptionTabBarBase:selectedTabRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabBarBase:shape( ... )
@@ -138,7 +138,7 @@ METHOD QStyleOptionTabBarBase:shape( ... )
    CASE 0
       RETURN Qt_QStyleOptionTabBarBase_shape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTabBarBase:tabBarRect( ... )
@@ -146,5 +146,5 @@ METHOD QStyleOptionTabBarBase:tabBarRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

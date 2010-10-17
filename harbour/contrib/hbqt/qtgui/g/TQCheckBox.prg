@@ -120,7 +120,7 @@ CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB
 METHOD QCheckBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCheckBox( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QCheckBox:checkState( ... )
    CASE 0
       RETURN Qt_QCheckBox_checkState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCheckBox:isTristate( ... )
@@ -139,7 +139,7 @@ METHOD QCheckBox:isTristate( ... )
    CASE 0
       RETURN Qt_QCheckBox_isTristate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCheckBox:setCheckState( ... )
@@ -151,7 +151,7 @@ METHOD QCheckBox:setCheckState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCheckBox:setTristate( ... )
@@ -165,5 +165,5 @@ METHOD QCheckBox:setTristate( ... )
    CASE 0
       RETURN Qt_QCheckBox_setTristate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

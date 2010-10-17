@@ -172,7 +172,7 @@ CREATE CLASS QPrinter INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPr
 METHOD QPrinter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPrinter( ... )
    RETURN Self
@@ -183,7 +183,7 @@ METHOD QPrinter:abort( ... )
    CASE 0
       RETURN Qt_QPrinter_abort( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:collateCopies( ... )
@@ -191,7 +191,7 @@ METHOD QPrinter:collateCopies( ... )
    CASE 0
       RETURN Qt_QPrinter_collateCopies( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:colorMode( ... )
@@ -199,7 +199,7 @@ METHOD QPrinter:colorMode( ... )
    CASE 0
       RETURN Qt_QPrinter_colorMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:creator( ... )
@@ -207,7 +207,7 @@ METHOD QPrinter:creator( ... )
    CASE 0
       RETURN Qt_QPrinter_creator( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:docName( ... )
@@ -215,7 +215,7 @@ METHOD QPrinter:docName( ... )
    CASE 0
       RETURN Qt_QPrinter_docName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:doubleSidedPrinting( ... )
@@ -223,7 +223,7 @@ METHOD QPrinter:doubleSidedPrinting( ... )
    CASE 0
       RETURN Qt_QPrinter_doubleSidedPrinting( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:duplex( ... )
@@ -231,7 +231,7 @@ METHOD QPrinter:duplex( ... )
    CASE 0
       RETURN Qt_QPrinter_duplex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:fontEmbeddingEnabled( ... )
@@ -239,7 +239,7 @@ METHOD QPrinter:fontEmbeddingEnabled( ... )
    CASE 0
       RETURN Qt_QPrinter_fontEmbeddingEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:fromPage( ... )
@@ -247,7 +247,7 @@ METHOD QPrinter:fromPage( ... )
    CASE 0
       RETURN Qt_QPrinter_fromPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:fullPage( ... )
@@ -255,7 +255,7 @@ METHOD QPrinter:fullPage( ... )
    CASE 0
       RETURN Qt_QPrinter_fullPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:getPageMargins( ... )
@@ -267,7 +267,7 @@ METHOD QPrinter:getPageMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:isValid( ... )
@@ -275,7 +275,7 @@ METHOD QPrinter:isValid( ... )
    CASE 0
       RETURN Qt_QPrinter_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:newPage( ... )
@@ -283,7 +283,7 @@ METHOD QPrinter:newPage( ... )
    CASE 0
       RETURN Qt_QPrinter_newPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:numCopies( ... )
@@ -291,7 +291,7 @@ METHOD QPrinter:numCopies( ... )
    CASE 0
       RETURN Qt_QPrinter_numCopies( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:orientation( ... )
@@ -299,7 +299,7 @@ METHOD QPrinter:orientation( ... )
    CASE 0
       RETURN Qt_QPrinter_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:outputFileName( ... )
@@ -307,7 +307,7 @@ METHOD QPrinter:outputFileName( ... )
    CASE 0
       RETURN Qt_QPrinter_outputFileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:outputFormat( ... )
@@ -315,7 +315,7 @@ METHOD QPrinter:outputFormat( ... )
    CASE 0
       RETURN Qt_QPrinter_outputFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:pageOrder( ... )
@@ -323,7 +323,7 @@ METHOD QPrinter:pageOrder( ... )
    CASE 0
       RETURN Qt_QPrinter_pageOrder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:pageRect( ... )
@@ -337,7 +337,7 @@ METHOD QPrinter:pageRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPrinter_pageRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:paintEngine( ... )
@@ -345,7 +345,7 @@ METHOD QPrinter:paintEngine( ... )
    CASE 0
       RETURN QPaintEngineFromPointer( Qt_QPrinter_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:paperRect( ... )
@@ -359,7 +359,7 @@ METHOD QPrinter:paperRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPrinter_paperRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:paperSize( ... )
@@ -373,7 +373,7 @@ METHOD QPrinter:paperSize( ... )
    CASE 0
       RETURN Qt_QPrinter_paperSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:paperSource( ... )
@@ -381,7 +381,7 @@ METHOD QPrinter:paperSource( ... )
    CASE 0
       RETURN Qt_QPrinter_paperSource( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:printEngine( ... )
@@ -389,7 +389,7 @@ METHOD QPrinter:printEngine( ... )
    CASE 0
       RETURN QPrintEngineFromPointer( Qt_QPrinter_printEngine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:printProgram( ... )
@@ -397,7 +397,7 @@ METHOD QPrinter:printProgram( ... )
    CASE 0
       RETURN Qt_QPrinter_printProgram( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:printRange( ... )
@@ -405,7 +405,7 @@ METHOD QPrinter:printRange( ... )
    CASE 0
       RETURN Qt_QPrinter_printRange( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:printerName( ... )
@@ -413,7 +413,7 @@ METHOD QPrinter:printerName( ... )
    CASE 0
       RETURN Qt_QPrinter_printerName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:printerState( ... )
@@ -421,7 +421,7 @@ METHOD QPrinter:printerState( ... )
    CASE 0
       RETURN Qt_QPrinter_printerState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:resolution( ... )
@@ -429,7 +429,7 @@ METHOD QPrinter:resolution( ... )
    CASE 0
       RETURN Qt_QPrinter_resolution( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setCollateCopies( ... )
@@ -441,7 +441,7 @@ METHOD QPrinter:setCollateCopies( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setColorMode( ... )
@@ -453,7 +453,7 @@ METHOD QPrinter:setColorMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setCreator( ... )
@@ -465,7 +465,7 @@ METHOD QPrinter:setCreator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setDocName( ... )
@@ -477,7 +477,7 @@ METHOD QPrinter:setDocName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setDoubleSidedPrinting( ... )
@@ -489,7 +489,7 @@ METHOD QPrinter:setDoubleSidedPrinting( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setDuplex( ... )
@@ -501,7 +501,7 @@ METHOD QPrinter:setDuplex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setFontEmbeddingEnabled( ... )
@@ -513,7 +513,7 @@ METHOD QPrinter:setFontEmbeddingEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setFromTo( ... )
@@ -525,7 +525,7 @@ METHOD QPrinter:setFromTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setFullPage( ... )
@@ -537,7 +537,7 @@ METHOD QPrinter:setFullPage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setNumCopies( ... )
@@ -549,7 +549,7 @@ METHOD QPrinter:setNumCopies( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setOrientation( ... )
@@ -561,7 +561,7 @@ METHOD QPrinter:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setOutputFileName( ... )
@@ -573,7 +573,7 @@ METHOD QPrinter:setOutputFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setOutputFormat( ... )
@@ -585,7 +585,7 @@ METHOD QPrinter:setOutputFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPageMargins( ... )
@@ -597,7 +597,7 @@ METHOD QPrinter:setPageMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPageOrder( ... )
@@ -609,7 +609,7 @@ METHOD QPrinter:setPageOrder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPaperSize( ... )
@@ -627,7 +627,7 @@ METHOD QPrinter:setPaperSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPaperSource( ... )
@@ -639,7 +639,7 @@ METHOD QPrinter:setPaperSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPrintProgram( ... )
@@ -651,7 +651,7 @@ METHOD QPrinter:setPrintProgram( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPrintRange( ... )
@@ -663,7 +663,7 @@ METHOD QPrinter:setPrintRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setPrinterName( ... )
@@ -675,7 +675,7 @@ METHOD QPrinter:setPrinterName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:setResolution( ... )
@@ -687,7 +687,7 @@ METHOD QPrinter:setResolution( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:supportedResolutions( ... )
@@ -695,7 +695,7 @@ METHOD QPrinter:supportedResolutions( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QPrinter_supportedResolutions( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinter:toPage( ... )
@@ -703,5 +703,5 @@ METHOD QPrinter:toPage( ... )
    CASE 0
       RETURN Qt_QPrinter_toPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

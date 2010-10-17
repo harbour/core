@@ -130,7 +130,7 @@ CREATE CLASS QMdiSubWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMd
 METHOD QMdiSubWindow:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMdiSubWindow( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QMdiSubWindow:isShaded( ... )
    CASE 0
       RETURN Qt_QMdiSubWindow_isShaded( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:keyboardPageStep( ... )
@@ -149,7 +149,7 @@ METHOD QMdiSubWindow:keyboardPageStep( ... )
    CASE 0
       RETURN Qt_QMdiSubWindow_keyboardPageStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:keyboardSingleStep( ... )
@@ -157,7 +157,7 @@ METHOD QMdiSubWindow:keyboardSingleStep( ... )
    CASE 0
       RETURN Qt_QMdiSubWindow_keyboardSingleStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:mdiArea( ... )
@@ -165,7 +165,7 @@ METHOD QMdiSubWindow:mdiArea( ... )
    CASE 0
       RETURN QMdiAreaFromPointer( Qt_QMdiSubWindow_mdiArea( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:setKeyboardPageStep( ... )
@@ -177,7 +177,7 @@ METHOD QMdiSubWindow:setKeyboardPageStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:setKeyboardSingleStep( ... )
@@ -189,7 +189,7 @@ METHOD QMdiSubWindow:setKeyboardSingleStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:setOption( ... )
@@ -207,7 +207,7 @@ METHOD QMdiSubWindow:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:setSystemMenu( ... )
@@ -219,7 +219,7 @@ METHOD QMdiSubWindow:setSystemMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:setWidget( ... )
@@ -231,7 +231,7 @@ METHOD QMdiSubWindow:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:systemMenu( ... )
@@ -239,7 +239,7 @@ METHOD QMdiSubWindow:systemMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QMdiSubWindow_systemMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:testOption( ... )
@@ -251,7 +251,7 @@ METHOD QMdiSubWindow:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:widget( ... )
@@ -259,7 +259,7 @@ METHOD QMdiSubWindow:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QMdiSubWindow_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:showShaded( ... )
@@ -267,7 +267,7 @@ METHOD QMdiSubWindow:showShaded( ... )
    CASE 0
       RETURN Qt_QMdiSubWindow_showShaded( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiSubWindow:showSystemMenu( ... )
@@ -275,5 +275,5 @@ METHOD QMdiSubWindow:showSystemMenu( ... )
    CASE 0
       RETURN Qt_QMdiSubWindow_showSystemMenu( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -119,7 +119,7 @@ CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB
 METHOD QWebPluginFactory:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebPluginFactory( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QWebPluginFactory:create( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPluginFactory:refreshPlugins( ... )
@@ -142,7 +142,7 @@ METHOD QWebPluginFactory:refreshPlugins( ... )
    CASE 0
       RETURN Qt_QWebPluginFactory_refreshPlugins( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPluginFactory:supportsExtension( ... )
@@ -154,5 +154,5 @@ METHOD QWebPluginFactory:supportsExtension( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

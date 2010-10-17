@@ -124,7 +124,7 @@ CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_
 METHOD QPageSetupDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPageSetupDialog( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QPageSetupDialog:exec( ... )
    CASE 0
       RETURN Qt_QPageSetupDialog_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:open( ... )
@@ -147,7 +147,7 @@ METHOD QPageSetupDialog:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:options( ... )
@@ -155,7 +155,7 @@ METHOD QPageSetupDialog:options( ... )
    CASE 0
       RETURN Qt_QPageSetupDialog_options( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:printer( ... )
@@ -163,7 +163,7 @@ METHOD QPageSetupDialog:printer( ... )
    CASE 0
       RETURN QPrinterFromPointer( Qt_QPageSetupDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:setOption( ... )
@@ -181,7 +181,7 @@ METHOD QPageSetupDialog:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:setOptions( ... )
@@ -193,7 +193,7 @@ METHOD QPageSetupDialog:setOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:setVisible( ... )
@@ -205,7 +205,7 @@ METHOD QPageSetupDialog:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPageSetupDialog:testOption( ... )
@@ -217,5 +217,5 @@ METHOD QPageSetupDialog:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

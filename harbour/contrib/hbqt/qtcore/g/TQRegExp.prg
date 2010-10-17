@@ -135,7 +135,7 @@ CREATE CLASS QRegExp INHERIT HbQtObjectHandler FUNCTION HB_QRegExp
 METHOD QRegExp:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QRegExp( ... )
    RETURN Self
@@ -152,7 +152,7 @@ METHOD QRegExp:cap( ... )
    CASE 0
       RETURN Qt_QRegExp_cap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:capturedTexts( ... )
@@ -160,7 +160,7 @@ METHOD QRegExp:capturedTexts( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QRegExp_capturedTexts( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:caseSensitivity( ... )
@@ -168,7 +168,7 @@ METHOD QRegExp:caseSensitivity( ... )
    CASE 0
       RETURN Qt_QRegExp_caseSensitivity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:errorString( ... )
@@ -176,7 +176,7 @@ METHOD QRegExp:errorString( ... )
    CASE 0
       RETURN Qt_QRegExp_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:exactMatch( ... )
@@ -188,7 +188,7 @@ METHOD QRegExp:exactMatch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:indexIn( ... )
@@ -212,7 +212,7 @@ METHOD QRegExp:indexIn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:isEmpty( ... )
@@ -220,7 +220,7 @@ METHOD QRegExp:isEmpty( ... )
    CASE 0
       RETURN Qt_QRegExp_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:isMinimal( ... )
@@ -228,7 +228,7 @@ METHOD QRegExp:isMinimal( ... )
    CASE 0
       RETURN Qt_QRegExp_isMinimal( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:isValid( ... )
@@ -236,7 +236,7 @@ METHOD QRegExp:isValid( ... )
    CASE 0
       RETURN Qt_QRegExp_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:lastIndexIn( ... )
@@ -260,7 +260,7 @@ METHOD QRegExp:lastIndexIn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:matchedLength( ... )
@@ -268,7 +268,7 @@ METHOD QRegExp:matchedLength( ... )
    CASE 0
       RETURN Qt_QRegExp_matchedLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:numCaptures( ... )
@@ -276,7 +276,7 @@ METHOD QRegExp:numCaptures( ... )
    CASE 0
       RETURN Qt_QRegExp_numCaptures( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:pattern( ... )
@@ -284,7 +284,7 @@ METHOD QRegExp:pattern( ... )
    CASE 0
       RETURN Qt_QRegExp_pattern( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:patternSyntax( ... )
@@ -292,7 +292,7 @@ METHOD QRegExp:patternSyntax( ... )
    CASE 0
       RETURN Qt_QRegExp_patternSyntax( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:pos( ... )
@@ -306,7 +306,7 @@ METHOD QRegExp:pos( ... )
    CASE 0
       RETURN Qt_QRegExp_pos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:setCaseSensitivity( ... )
@@ -318,7 +318,7 @@ METHOD QRegExp:setCaseSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:setMinimal( ... )
@@ -330,7 +330,7 @@ METHOD QRegExp:setMinimal( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:setPattern( ... )
@@ -342,7 +342,7 @@ METHOD QRegExp:setPattern( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegExp:setPatternSyntax( ... )
@@ -354,5 +354,5 @@ METHOD QRegExp:setPatternSyntax( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

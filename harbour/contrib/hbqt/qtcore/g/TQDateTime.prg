@@ -142,7 +142,7 @@ CREATE CLASS QDateTime INHERIT HbQtObjectHandler FUNCTION HB_QDateTime
 METHOD QDateTime:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDateTime( ... )
    RETURN Self
@@ -157,7 +157,7 @@ METHOD QDateTime:addDays( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:addMSecs( ... )
@@ -169,7 +169,7 @@ METHOD QDateTime:addMSecs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:addMonths( ... )
@@ -181,7 +181,7 @@ METHOD QDateTime:addMonths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:addSecs( ... )
@@ -193,7 +193,7 @@ METHOD QDateTime:addSecs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:addYears( ... )
@@ -205,7 +205,7 @@ METHOD QDateTime:addYears( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:date( ... )
@@ -213,7 +213,7 @@ METHOD QDateTime:date( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QDateTime_date( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:daysTo( ... )
@@ -225,7 +225,7 @@ METHOD QDateTime:daysTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:isNull( ... )
@@ -233,7 +233,7 @@ METHOD QDateTime:isNull( ... )
    CASE 0
       RETURN Qt_QDateTime_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:isValid( ... )
@@ -241,7 +241,7 @@ METHOD QDateTime:isValid( ... )
    CASE 0
       RETURN Qt_QDateTime_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:secsTo( ... )
@@ -253,7 +253,7 @@ METHOD QDateTime:secsTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:setDate( ... )
@@ -265,7 +265,7 @@ METHOD QDateTime:setDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:setTime( ... )
@@ -277,7 +277,7 @@ METHOD QDateTime:setTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:setTimeSpec( ... )
@@ -289,7 +289,7 @@ METHOD QDateTime:setTimeSpec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:setTime_t( ... )
@@ -301,7 +301,7 @@ METHOD QDateTime:setTime_t( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:time( ... )
@@ -309,7 +309,7 @@ METHOD QDateTime:time( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QDateTime_time( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:timeSpec( ... )
@@ -317,7 +317,7 @@ METHOD QDateTime:timeSpec( ... )
    CASE 0
       RETURN Qt_QDateTime_timeSpec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:toLocalTime( ... )
@@ -325,7 +325,7 @@ METHOD QDateTime:toLocalTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTime_toLocalTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:toString( ... )
@@ -341,7 +341,7 @@ METHOD QDateTime:toString( ... )
    CASE 0
       RETURN Qt_QDateTime_toString_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:toTimeSpec( ... )
@@ -353,7 +353,7 @@ METHOD QDateTime:toTimeSpec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:toTime_t( ... )
@@ -361,7 +361,7 @@ METHOD QDateTime:toTime_t( ... )
    CASE 0
       RETURN Qt_QDateTime_toTime_t( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:toUTC( ... )
@@ -369,7 +369,7 @@ METHOD QDateTime:toUTC( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTime_toUTC( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:currentDateTime( ... )
@@ -377,7 +377,7 @@ METHOD QDateTime:currentDateTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTime_currentDateTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:fromString( ... )
@@ -397,7 +397,7 @@ METHOD QDateTime:fromString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTime:fromTime_t( ... )
@@ -409,5 +409,5 @@ METHOD QDateTime:fromTime_t( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

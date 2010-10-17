@@ -322,7 +322,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
 METHOD QWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWidget( ... )
    RETURN Self
@@ -333,7 +333,7 @@ METHOD QWidget:acceptDrops( ... )
    CASE 0
       RETURN Qt_QWidget_acceptDrops( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:actions( ... )
@@ -341,7 +341,7 @@ METHOD QWidget:actions( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QWidget_actions( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:activateWindow( ... )
@@ -349,7 +349,7 @@ METHOD QWidget:activateWindow( ... )
    CASE 0
       RETURN Qt_QWidget_activateWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:addAction( ... )
@@ -361,7 +361,7 @@ METHOD QWidget:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:adjustSize( ... )
@@ -369,7 +369,7 @@ METHOD QWidget:adjustSize( ... )
    CASE 0
       RETURN Qt_QWidget_adjustSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:autoFillBackground( ... )
@@ -377,7 +377,7 @@ METHOD QWidget:autoFillBackground( ... )
    CASE 0
       RETURN Qt_QWidget_autoFillBackground( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:backgroundRole( ... )
@@ -385,7 +385,7 @@ METHOD QWidget:backgroundRole( ... )
    CASE 0
       RETURN Qt_QWidget_backgroundRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:baseSize( ... )
@@ -393,7 +393,7 @@ METHOD QWidget:baseSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_baseSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:childAt( ... )
@@ -411,7 +411,7 @@ METHOD QWidget:childAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:childrenRect( ... )
@@ -419,7 +419,7 @@ METHOD QWidget:childrenRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_childrenRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:childrenRegion( ... )
@@ -427,7 +427,7 @@ METHOD QWidget:childrenRegion( ... )
    CASE 0
       RETURN QRegionFromPointer( Qt_QWidget_childrenRegion( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:clearFocus( ... )
@@ -435,7 +435,7 @@ METHOD QWidget:clearFocus( ... )
    CASE 0
       RETURN Qt_QWidget_clearFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:clearMask( ... )
@@ -443,7 +443,7 @@ METHOD QWidget:clearMask( ... )
    CASE 0
       RETURN Qt_QWidget_clearMask( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:contentsRect( ... )
@@ -451,7 +451,7 @@ METHOD QWidget:contentsRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_contentsRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:contextMenuPolicy( ... )
@@ -459,7 +459,7 @@ METHOD QWidget:contextMenuPolicy( ... )
    CASE 0
       RETURN Qt_QWidget_contextMenuPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:cursor( ... )
@@ -467,7 +467,7 @@ METHOD QWidget:cursor( ... )
    CASE 0
       RETURN QCursorFromPointer( Qt_QWidget_cursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:ensurePolished( ... )
@@ -475,7 +475,7 @@ METHOD QWidget:ensurePolished( ... )
    CASE 0
       RETURN Qt_QWidget_ensurePolished( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:focusPolicy( ... )
@@ -483,7 +483,7 @@ METHOD QWidget:focusPolicy( ... )
    CASE 0
       RETURN Qt_QWidget_focusPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:focusProxy( ... )
@@ -491,7 +491,7 @@ METHOD QWidget:focusProxy( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_focusProxy( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:focusWidget( ... )
@@ -499,7 +499,7 @@ METHOD QWidget:focusWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:font( ... )
@@ -507,7 +507,7 @@ METHOD QWidget:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QWidget_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:fontInfo( ... )
@@ -515,7 +515,7 @@ METHOD QWidget:fontInfo( ... )
    CASE 0
       RETURN QFontInfoFromPointer( Qt_QWidget_fontInfo( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:fontMetrics( ... )
@@ -523,7 +523,7 @@ METHOD QWidget:fontMetrics( ... )
    CASE 0
       RETURN QFontMetricsFromPointer( Qt_QWidget_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:foregroundRole( ... )
@@ -531,7 +531,7 @@ METHOD QWidget:foregroundRole( ... )
    CASE 0
       RETURN Qt_QWidget_foregroundRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:frameGeometry( ... )
@@ -539,7 +539,7 @@ METHOD QWidget:frameGeometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_frameGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:frameSize( ... )
@@ -547,7 +547,7 @@ METHOD QWidget:frameSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_frameSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:geometry( ... )
@@ -555,7 +555,7 @@ METHOD QWidget:geometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:getContentsMargins( ... )
@@ -567,7 +567,7 @@ METHOD QWidget:getContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:grabKeyboard( ... )
@@ -575,7 +575,7 @@ METHOD QWidget:grabKeyboard( ... )
    CASE 0
       RETURN Qt_QWidget_grabKeyboard( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:grabMouse( ... )
@@ -589,7 +589,7 @@ METHOD QWidget:grabMouse( ... )
    CASE 0
       RETURN Qt_QWidget_grabMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:grabShortcut( ... )
@@ -607,7 +607,7 @@ METHOD QWidget:grabShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:hasFocus( ... )
@@ -615,7 +615,7 @@ METHOD QWidget:hasFocus( ... )
    CASE 0
       RETURN Qt_QWidget_hasFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:hasMouseTracking( ... )
@@ -623,7 +623,7 @@ METHOD QWidget:hasMouseTracking( ... )
    CASE 0
       RETURN Qt_QWidget_hasMouseTracking( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:height( ... )
@@ -631,7 +631,7 @@ METHOD QWidget:height( ... )
    CASE 0
       RETURN Qt_QWidget_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:heightForWidth( ... )
@@ -643,7 +643,7 @@ METHOD QWidget:heightForWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:inputMethodQuery( ... )
@@ -655,7 +655,7 @@ METHOD QWidget:inputMethodQuery( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:insertAction( ... )
@@ -667,7 +667,7 @@ METHOD QWidget:insertAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isActiveWindow( ... )
@@ -675,7 +675,7 @@ METHOD QWidget:isActiveWindow( ... )
    CASE 0
       RETURN Qt_QWidget_isActiveWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isAncestorOf( ... )
@@ -687,7 +687,7 @@ METHOD QWidget:isAncestorOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isEnabled( ... )
@@ -695,7 +695,7 @@ METHOD QWidget:isEnabled( ... )
    CASE 0
       RETURN Qt_QWidget_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isEnabledTo( ... )
@@ -707,7 +707,7 @@ METHOD QWidget:isEnabledTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isFullScreen( ... )
@@ -715,7 +715,7 @@ METHOD QWidget:isFullScreen( ... )
    CASE 0
       RETURN Qt_QWidget_isFullScreen( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isHidden( ... )
@@ -723,7 +723,7 @@ METHOD QWidget:isHidden( ... )
    CASE 0
       RETURN Qt_QWidget_isHidden( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isMaximized( ... )
@@ -731,7 +731,7 @@ METHOD QWidget:isMaximized( ... )
    CASE 0
       RETURN Qt_QWidget_isMaximized( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isMinimized( ... )
@@ -739,7 +739,7 @@ METHOD QWidget:isMinimized( ... )
    CASE 0
       RETURN Qt_QWidget_isMinimized( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isModal( ... )
@@ -747,7 +747,7 @@ METHOD QWidget:isModal( ... )
    CASE 0
       RETURN Qt_QWidget_isModal( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isVisible( ... )
@@ -755,7 +755,7 @@ METHOD QWidget:isVisible( ... )
    CASE 0
       RETURN Qt_QWidget_isVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isVisibleTo( ... )
@@ -767,7 +767,7 @@ METHOD QWidget:isVisibleTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isWindow( ... )
@@ -775,7 +775,7 @@ METHOD QWidget:isWindow( ... )
    CASE 0
       RETURN Qt_QWidget_isWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:isWindowModified( ... )
@@ -783,7 +783,7 @@ METHOD QWidget:isWindowModified( ... )
    CASE 0
       RETURN Qt_QWidget_isWindowModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:layout( ... )
@@ -791,7 +791,7 @@ METHOD QWidget:layout( ... )
    CASE 0
       RETURN QLayoutFromPointer( Qt_QWidget_layout( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:layoutDirection( ... )
@@ -799,7 +799,7 @@ METHOD QWidget:layoutDirection( ... )
    CASE 0
       RETURN Qt_QWidget_layoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:locale( ... )
@@ -807,7 +807,7 @@ METHOD QWidget:locale( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QWidget_locale( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapFrom( ... )
@@ -819,7 +819,7 @@ METHOD QWidget:mapFrom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapFromGlobal( ... )
@@ -831,7 +831,7 @@ METHOD QWidget:mapFromGlobal( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapFromParent( ... )
@@ -843,7 +843,7 @@ METHOD QWidget:mapFromParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapTo( ... )
@@ -855,7 +855,7 @@ METHOD QWidget:mapTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapToGlobal( ... )
@@ -867,7 +867,7 @@ METHOD QWidget:mapToGlobal( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mapToParent( ... )
@@ -879,7 +879,7 @@ METHOD QWidget:mapToParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mask( ... )
@@ -887,7 +887,7 @@ METHOD QWidget:mask( ... )
    CASE 0
       RETURN QRegionFromPointer( Qt_QWidget_mask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:maximumHeight( ... )
@@ -895,7 +895,7 @@ METHOD QWidget:maximumHeight( ... )
    CASE 0
       RETURN Qt_QWidget_maximumHeight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:maximumSize( ... )
@@ -903,7 +903,7 @@ METHOD QWidget:maximumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:maximumWidth( ... )
@@ -911,7 +911,7 @@ METHOD QWidget:maximumWidth( ... )
    CASE 0
       RETURN Qt_QWidget_maximumWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:minimumHeight( ... )
@@ -919,7 +919,7 @@ METHOD QWidget:minimumHeight( ... )
    CASE 0
       RETURN Qt_QWidget_minimumHeight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:minimumSize( ... )
@@ -927,7 +927,7 @@ METHOD QWidget:minimumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:minimumSizeHint( ... )
@@ -935,7 +935,7 @@ METHOD QWidget:minimumSizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_minimumSizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:minimumWidth( ... )
@@ -943,7 +943,7 @@ METHOD QWidget:minimumWidth( ... )
    CASE 0
       RETURN Qt_QWidget_minimumWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:move( ... )
@@ -961,7 +961,7 @@ METHOD QWidget:move( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:nativeParentWidget( ... )
@@ -969,7 +969,7 @@ METHOD QWidget:nativeParentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_nativeParentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:nextInFocusChain( ... )
@@ -977,7 +977,7 @@ METHOD QWidget:nextInFocusChain( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_nextInFocusChain( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:normalGeometry( ... )
@@ -985,7 +985,7 @@ METHOD QWidget:normalGeometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_normalGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:overrideWindowFlags( ... )
@@ -997,7 +997,7 @@ METHOD QWidget:overrideWindowFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:paintEngine( ... )
@@ -1005,7 +1005,7 @@ METHOD QWidget:paintEngine( ... )
    CASE 0
       RETURN QPaintEngineFromPointer( Qt_QWidget_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:palette( ... )
@@ -1013,7 +1013,7 @@ METHOD QWidget:palette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QWidget_palette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:parentWidget( ... )
@@ -1021,7 +1021,7 @@ METHOD QWidget:parentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:pos( ... )
@@ -1029,7 +1029,7 @@ METHOD QWidget:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QWidget_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:rect( ... )
@@ -1037,7 +1037,7 @@ METHOD QWidget:rect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWidget_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:releaseKeyboard( ... )
@@ -1045,7 +1045,7 @@ METHOD QWidget:releaseKeyboard( ... )
    CASE 0
       RETURN Qt_QWidget_releaseKeyboard( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:releaseMouse( ... )
@@ -1053,7 +1053,7 @@ METHOD QWidget:releaseMouse( ... )
    CASE 0
       RETURN Qt_QWidget_releaseMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:releaseShortcut( ... )
@@ -1065,7 +1065,7 @@ METHOD QWidget:releaseShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:removeAction( ... )
@@ -1077,7 +1077,7 @@ METHOD QWidget:removeAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:repaint( ... )
@@ -1102,7 +1102,7 @@ METHOD QWidget:repaint( ... )
    CASE 0
       RETURN Qt_QWidget_repaint_3( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:resize( ... )
@@ -1120,7 +1120,7 @@ METHOD QWidget:resize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:restoreGeometry( ... )
@@ -1132,7 +1132,7 @@ METHOD QWidget:restoreGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:saveGeometry( ... )
@@ -1140,7 +1140,7 @@ METHOD QWidget:saveGeometry( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QWidget_saveGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:scroll( ... )
@@ -1158,7 +1158,7 @@ METHOD QWidget:scroll( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setAcceptDrops( ... )
@@ -1170,7 +1170,7 @@ METHOD QWidget:setAcceptDrops( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setAttribute( ... )
@@ -1188,7 +1188,7 @@ METHOD QWidget:setAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setAutoFillBackground( ... )
@@ -1200,7 +1200,7 @@ METHOD QWidget:setAutoFillBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setBackgroundRole( ... )
@@ -1212,7 +1212,7 @@ METHOD QWidget:setBackgroundRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setBaseSize( ... )
@@ -1230,7 +1230,7 @@ METHOD QWidget:setBaseSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setContentsMargins( ... )
@@ -1242,7 +1242,7 @@ METHOD QWidget:setContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setContextMenuPolicy( ... )
@@ -1254,7 +1254,7 @@ METHOD QWidget:setContextMenuPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setCursor( ... )
@@ -1266,7 +1266,7 @@ METHOD QWidget:setCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFixedHeight( ... )
@@ -1278,7 +1278,7 @@ METHOD QWidget:setFixedHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFixedSize( ... )
@@ -1296,7 +1296,7 @@ METHOD QWidget:setFixedSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFixedWidth( ... )
@@ -1308,7 +1308,7 @@ METHOD QWidget:setFixedWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFocus( ... )
@@ -1322,7 +1322,7 @@ METHOD QWidget:setFocus( ... )
    CASE 0
       RETURN Qt_QWidget_setFocus_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFocusPolicy( ... )
@@ -1334,7 +1334,7 @@ METHOD QWidget:setFocusPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFocusProxy( ... )
@@ -1346,7 +1346,7 @@ METHOD QWidget:setFocusProxy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setFont( ... )
@@ -1358,7 +1358,7 @@ METHOD QWidget:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setForegroundRole( ... )
@@ -1370,7 +1370,7 @@ METHOD QWidget:setForegroundRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setGeometry( ... )
@@ -1388,7 +1388,7 @@ METHOD QWidget:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setLayout( ... )
@@ -1400,7 +1400,7 @@ METHOD QWidget:setLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setLayoutDirection( ... )
@@ -1412,7 +1412,7 @@ METHOD QWidget:setLayoutDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setLocale( ... )
@@ -1424,7 +1424,7 @@ METHOD QWidget:setLocale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMask( ... )
@@ -1441,7 +1441,7 @@ METHOD QWidget:setMask( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMaximumHeight( ... )
@@ -1453,7 +1453,7 @@ METHOD QWidget:setMaximumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMaximumSize( ... )
@@ -1471,7 +1471,7 @@ METHOD QWidget:setMaximumSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMaximumWidth( ... )
@@ -1483,7 +1483,7 @@ METHOD QWidget:setMaximumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMinimumHeight( ... )
@@ -1495,7 +1495,7 @@ METHOD QWidget:setMinimumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMinimumSize( ... )
@@ -1513,7 +1513,7 @@ METHOD QWidget:setMinimumSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMinimumWidth( ... )
@@ -1525,7 +1525,7 @@ METHOD QWidget:setMinimumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setMouseTracking( ... )
@@ -1537,7 +1537,7 @@ METHOD QWidget:setMouseTracking( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setPalette( ... )
@@ -1549,7 +1549,7 @@ METHOD QWidget:setPalette( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setParent( ... )
@@ -1567,7 +1567,7 @@ METHOD QWidget:setParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setShortcutAutoRepeat( ... )
@@ -1585,7 +1585,7 @@ METHOD QWidget:setShortcutAutoRepeat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setShortcutEnabled( ... )
@@ -1603,7 +1603,7 @@ METHOD QWidget:setShortcutEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setSizeIncrement( ... )
@@ -1621,7 +1621,7 @@ METHOD QWidget:setSizeIncrement( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setSizePolicy( ... )
@@ -1639,7 +1639,7 @@ METHOD QWidget:setSizePolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setStatusTip( ... )
@@ -1651,7 +1651,7 @@ METHOD QWidget:setStatusTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setStyle( ... )
@@ -1663,7 +1663,7 @@ METHOD QWidget:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setToolTip( ... )
@@ -1675,7 +1675,7 @@ METHOD QWidget:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setUpdatesEnabled( ... )
@@ -1687,7 +1687,7 @@ METHOD QWidget:setUpdatesEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWhatsThis( ... )
@@ -1699,7 +1699,7 @@ METHOD QWidget:setWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowFilePath( ... )
@@ -1711,7 +1711,7 @@ METHOD QWidget:setWindowFilePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowFlags( ... )
@@ -1723,7 +1723,7 @@ METHOD QWidget:setWindowFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowIcon( ... )
@@ -1735,7 +1735,7 @@ METHOD QWidget:setWindowIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowIconText( ... )
@@ -1747,7 +1747,7 @@ METHOD QWidget:setWindowIconText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowModality( ... )
@@ -1759,7 +1759,7 @@ METHOD QWidget:setWindowModality( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowOpacity( ... )
@@ -1771,7 +1771,7 @@ METHOD QWidget:setWindowOpacity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowRole( ... )
@@ -1783,7 +1783,7 @@ METHOD QWidget:setWindowRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowState( ... )
@@ -1795,7 +1795,7 @@ METHOD QWidget:setWindowState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:size( ... )
@@ -1803,7 +1803,7 @@ METHOD QWidget:size( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:sizeHint( ... )
@@ -1811,7 +1811,7 @@ METHOD QWidget:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:sizeIncrement( ... )
@@ -1819,7 +1819,7 @@ METHOD QWidget:sizeIncrement( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWidget_sizeIncrement( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:sizePolicy( ... )
@@ -1827,7 +1827,7 @@ METHOD QWidget:sizePolicy( ... )
    CASE 0
       RETURN QSizePolicyFromPointer( Qt_QWidget_sizePolicy( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:stackUnder( ... )
@@ -1839,7 +1839,7 @@ METHOD QWidget:stackUnder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:statusTip( ... )
@@ -1847,7 +1847,7 @@ METHOD QWidget:statusTip( ... )
    CASE 0
       RETURN Qt_QWidget_statusTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:style( ... )
@@ -1855,7 +1855,7 @@ METHOD QWidget:style( ... )
    CASE 0
       RETURN QStyleFromPointer( Qt_QWidget_style( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:styleSheet( ... )
@@ -1863,7 +1863,7 @@ METHOD QWidget:styleSheet( ... )
    CASE 0
       RETURN Qt_QWidget_styleSheet( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:testAttribute( ... )
@@ -1875,7 +1875,7 @@ METHOD QWidget:testAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:toolTip( ... )
@@ -1883,7 +1883,7 @@ METHOD QWidget:toolTip( ... )
    CASE 0
       RETURN Qt_QWidget_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:underMouse( ... )
@@ -1891,7 +1891,7 @@ METHOD QWidget:underMouse( ... )
    CASE 0
       RETURN Qt_QWidget_underMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:unsetCursor( ... )
@@ -1899,7 +1899,7 @@ METHOD QWidget:unsetCursor( ... )
    CASE 0
       RETURN Qt_QWidget_unsetCursor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:unsetLayoutDirection( ... )
@@ -1907,7 +1907,7 @@ METHOD QWidget:unsetLayoutDirection( ... )
    CASE 0
       RETURN Qt_QWidget_unsetLayoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:unsetLocale( ... )
@@ -1915,7 +1915,7 @@ METHOD QWidget:unsetLocale( ... )
    CASE 0
       RETURN Qt_QWidget_unsetLocale( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:update( ... )
@@ -1940,7 +1940,7 @@ METHOD QWidget:update( ... )
    CASE 0
       RETURN Qt_QWidget_update_3( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:updateGeometry( ... )
@@ -1948,7 +1948,7 @@ METHOD QWidget:updateGeometry( ... )
    CASE 0
       RETURN Qt_QWidget_updateGeometry( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:updatesEnabled( ... )
@@ -1956,7 +1956,7 @@ METHOD QWidget:updatesEnabled( ... )
    CASE 0
       RETURN Qt_QWidget_updatesEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:visibleRegion( ... )
@@ -1964,7 +1964,7 @@ METHOD QWidget:visibleRegion( ... )
    CASE 0
       RETURN QRegionFromPointer( Qt_QWidget_visibleRegion( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:whatsThis( ... )
@@ -1972,7 +1972,7 @@ METHOD QWidget:whatsThis( ... )
    CASE 0
       RETURN Qt_QWidget_whatsThis( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:width( ... )
@@ -1980,7 +1980,7 @@ METHOD QWidget:width( ... )
    CASE 0
       RETURN Qt_QWidget_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:window( ... )
@@ -1988,7 +1988,7 @@ METHOD QWidget:window( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_window( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowFilePath( ... )
@@ -1996,7 +1996,7 @@ METHOD QWidget:windowFilePath( ... )
    CASE 0
       RETURN Qt_QWidget_windowFilePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowFlags( ... )
@@ -2004,7 +2004,7 @@ METHOD QWidget:windowFlags( ... )
    CASE 0
       RETURN Qt_QWidget_windowFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowIcon( ... )
@@ -2012,7 +2012,7 @@ METHOD QWidget:windowIcon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QWidget_windowIcon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowIconText( ... )
@@ -2020,7 +2020,7 @@ METHOD QWidget:windowIconText( ... )
    CASE 0
       RETURN Qt_QWidget_windowIconText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowModality( ... )
@@ -2028,7 +2028,7 @@ METHOD QWidget:windowModality( ... )
    CASE 0
       RETURN Qt_QWidget_windowModality( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowOpacity( ... )
@@ -2036,7 +2036,7 @@ METHOD QWidget:windowOpacity( ... )
    CASE 0
       RETURN Qt_QWidget_windowOpacity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowRole( ... )
@@ -2044,7 +2044,7 @@ METHOD QWidget:windowRole( ... )
    CASE 0
       RETURN Qt_QWidget_windowRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowState( ... )
@@ -2052,7 +2052,7 @@ METHOD QWidget:windowState( ... )
    CASE 0
       RETURN Qt_QWidget_windowState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowTitle( ... )
@@ -2060,7 +2060,7 @@ METHOD QWidget:windowTitle( ... )
    CASE 0
       RETURN Qt_QWidget_windowTitle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:windowType( ... )
@@ -2068,7 +2068,7 @@ METHOD QWidget:windowType( ... )
    CASE 0
       RETURN Qt_QWidget_windowType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:x( ... )
@@ -2076,7 +2076,7 @@ METHOD QWidget:x( ... )
    CASE 0
       RETURN Qt_QWidget_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:y( ... )
@@ -2084,7 +2084,7 @@ METHOD QWidget:y( ... )
    CASE 0
       RETURN Qt_QWidget_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:keyboardGrabber( ... )
@@ -2092,7 +2092,7 @@ METHOD QWidget:keyboardGrabber( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_keyboardGrabber( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:mouseGrabber( ... )
@@ -2100,7 +2100,7 @@ METHOD QWidget:mouseGrabber( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWidget_mouseGrabber( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setTabOrder( ... )
@@ -2112,7 +2112,7 @@ METHOD QWidget:setTabOrder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:close( ... )
@@ -2120,7 +2120,7 @@ METHOD QWidget:close( ... )
    CASE 0
       RETURN Qt_QWidget_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:hide( ... )
@@ -2128,7 +2128,7 @@ METHOD QWidget:hide( ... )
    CASE 0
       RETURN Qt_QWidget_hide( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:lower( ... )
@@ -2136,7 +2136,7 @@ METHOD QWidget:lower( ... )
    CASE 0
       RETURN Qt_QWidget_lower( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:raise( ... )
@@ -2144,7 +2144,7 @@ METHOD QWidget:raise( ... )
    CASE 0
       RETURN Qt_QWidget_raise( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setDisabled( ... )
@@ -2156,7 +2156,7 @@ METHOD QWidget:setDisabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setEnabled( ... )
@@ -2168,7 +2168,7 @@ METHOD QWidget:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setHidden( ... )
@@ -2180,7 +2180,7 @@ METHOD QWidget:setHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setStyleSheet( ... )
@@ -2192,7 +2192,7 @@ METHOD QWidget:setStyleSheet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setVisible( ... )
@@ -2204,7 +2204,7 @@ METHOD QWidget:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowModified( ... )
@@ -2216,7 +2216,7 @@ METHOD QWidget:setWindowModified( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:setWindowTitle( ... )
@@ -2228,7 +2228,7 @@ METHOD QWidget:setWindowTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:show( ... )
@@ -2236,7 +2236,7 @@ METHOD QWidget:show( ... )
    CASE 0
       RETURN Qt_QWidget_show( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:showFullScreen( ... )
@@ -2244,7 +2244,7 @@ METHOD QWidget:showFullScreen( ... )
    CASE 0
       RETURN Qt_QWidget_showFullScreen( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:showMaximized( ... )
@@ -2252,7 +2252,7 @@ METHOD QWidget:showMaximized( ... )
    CASE 0
       RETURN Qt_QWidget_showMaximized( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:showMinimized( ... )
@@ -2260,7 +2260,7 @@ METHOD QWidget:showMinimized( ... )
    CASE 0
       RETURN Qt_QWidget_showMinimized( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWidget:showNormal( ... )
@@ -2268,5 +2268,5 @@ METHOD QWidget:showNormal( ... )
    CASE 0
       RETURN Qt_QWidget_showNormal( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

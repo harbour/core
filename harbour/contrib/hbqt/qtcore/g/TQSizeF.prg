@@ -131,7 +131,7 @@ CREATE CLASS QSizeF INHERIT HbQtObjectHandler FUNCTION HB_QSizeF
 METHOD QSizeF:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSizeF( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QSizeF:boundedTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:expandedTo( ... )
@@ -158,7 +158,7 @@ METHOD QSizeF:expandedTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:height( ... )
@@ -166,7 +166,7 @@ METHOD QSizeF:height( ... )
    CASE 0
       RETURN Qt_QSizeF_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:isEmpty( ... )
@@ -174,7 +174,7 @@ METHOD QSizeF:isEmpty( ... )
    CASE 0
       RETURN Qt_QSizeF_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:isNull( ... )
@@ -182,7 +182,7 @@ METHOD QSizeF:isNull( ... )
    CASE 0
       RETURN Qt_QSizeF_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:isValid( ... )
@@ -190,7 +190,7 @@ METHOD QSizeF:isValid( ... )
    CASE 0
       RETURN Qt_QSizeF_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:rheight( ... )
@@ -198,7 +198,7 @@ METHOD QSizeF:rheight( ... )
    CASE 0
       RETURN Qt_QSizeF_rheight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:rwidth( ... )
@@ -206,7 +206,7 @@ METHOD QSizeF:rwidth( ... )
    CASE 0
       RETURN Qt_QSizeF_rwidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:scale( ... )
@@ -224,7 +224,7 @@ METHOD QSizeF:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:setHeight( ... )
@@ -236,7 +236,7 @@ METHOD QSizeF:setHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:setWidth( ... )
@@ -248,7 +248,7 @@ METHOD QSizeF:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:toSize( ... )
@@ -256,7 +256,7 @@ METHOD QSizeF:toSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QSizeF_toSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:transpose( ... )
@@ -264,7 +264,7 @@ METHOD QSizeF:transpose( ... )
    CASE 0
       RETURN Qt_QSizeF_transpose( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSizeF:width( ... )
@@ -272,5 +272,5 @@ METHOD QSizeF:width( ... )
    CASE 0
       RETURN Qt_QSizeF_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

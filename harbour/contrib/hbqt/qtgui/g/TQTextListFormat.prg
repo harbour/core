@@ -121,7 +121,7 @@ CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION 
 METHOD QTextListFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextListFormat( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QTextListFormat:indent( ... )
    CASE 0
       RETURN Qt_QTextListFormat_indent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextListFormat:isValid( ... )
@@ -140,7 +140,7 @@ METHOD QTextListFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextListFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextListFormat:setIndent( ... )
@@ -152,7 +152,7 @@ METHOD QTextListFormat:setIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextListFormat:setStyle( ... )
@@ -164,7 +164,7 @@ METHOD QTextListFormat:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextListFormat:style( ... )
@@ -172,5 +172,5 @@ METHOD QTextListFormat:style( ... )
    CASE 0
       RETURN Qt_QTextListFormat_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

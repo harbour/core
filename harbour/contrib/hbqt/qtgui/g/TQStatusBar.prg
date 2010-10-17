@@ -126,7 +126,7 @@ CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QStatu
 METHOD QStatusBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStatusBar( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QStatusBar:addPermanentWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:addWidget( ... )
@@ -165,7 +165,7 @@ METHOD QStatusBar:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:currentMessage( ... )
@@ -173,7 +173,7 @@ METHOD QStatusBar:currentMessage( ... )
    CASE 0
       RETURN Qt_QStatusBar_currentMessage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:insertPermanentWidget( ... )
@@ -191,7 +191,7 @@ METHOD QStatusBar:insertPermanentWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:insertWidget( ... )
@@ -209,7 +209,7 @@ METHOD QStatusBar:insertWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:isSizeGripEnabled( ... )
@@ -217,7 +217,7 @@ METHOD QStatusBar:isSizeGripEnabled( ... )
    CASE 0
       RETURN Qt_QStatusBar_isSizeGripEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:removeWidget( ... )
@@ -229,7 +229,7 @@ METHOD QStatusBar:removeWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:setSizeGripEnabled( ... )
@@ -241,7 +241,7 @@ METHOD QStatusBar:setSizeGripEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:clearMessage( ... )
@@ -249,7 +249,7 @@ METHOD QStatusBar:clearMessage( ... )
    CASE 0
       RETURN Qt_QStatusBar_clearMessage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStatusBar:showMessage( ... )
@@ -267,5 +267,5 @@ METHOD QStatusBar:showMessage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

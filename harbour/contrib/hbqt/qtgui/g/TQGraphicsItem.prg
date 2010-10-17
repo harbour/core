@@ -266,7 +266,7 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
 METHOD QGraphicsItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsItem( ... )
    RETURN Self
@@ -277,7 +277,7 @@ METHOD QGraphicsItem:acceptDrops( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_acceptDrops( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:acceptHoverEvents( ... )
@@ -285,7 +285,7 @@ METHOD QGraphicsItem:acceptHoverEvents( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_acceptHoverEvents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:acceptedMouseButtons( ... )
@@ -293,7 +293,7 @@ METHOD QGraphicsItem:acceptedMouseButtons( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_acceptedMouseButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:advance( ... )
@@ -305,7 +305,7 @@ METHOD QGraphicsItem:advance( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:boundingRect( ... )
@@ -313,7 +313,7 @@ METHOD QGraphicsItem:boundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsItem_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:boundingRegion( ... )
@@ -325,7 +325,7 @@ METHOD QGraphicsItem:boundingRegion( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:boundingRegionGranularity( ... )
@@ -333,7 +333,7 @@ METHOD QGraphicsItem:boundingRegionGranularity( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_boundingRegionGranularity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:cacheMode( ... )
@@ -341,7 +341,7 @@ METHOD QGraphicsItem:cacheMode( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_cacheMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:childItems( ... )
@@ -349,7 +349,7 @@ METHOD QGraphicsItem:childItems( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QGraphicsItem_childItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:childrenBoundingRect( ... )
@@ -357,7 +357,7 @@ METHOD QGraphicsItem:childrenBoundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsItem_childrenBoundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:clearFocus( ... )
@@ -365,7 +365,7 @@ METHOD QGraphicsItem:clearFocus( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_clearFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:clipPath( ... )
@@ -373,7 +373,7 @@ METHOD QGraphicsItem:clipPath( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QGraphicsItem_clipPath( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:collidesWithItem( ... )
@@ -391,7 +391,7 @@ METHOD QGraphicsItem:collidesWithItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:collidesWithPath( ... )
@@ -409,7 +409,7 @@ METHOD QGraphicsItem:collidesWithPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:collidingItems( ... )
@@ -423,7 +423,7 @@ METHOD QGraphicsItem:collidingItems( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QGraphicsItem_collidingItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:commonAncestorItem( ... )
@@ -435,7 +435,7 @@ METHOD QGraphicsItem:commonAncestorItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:contains( ... )
@@ -447,7 +447,7 @@ METHOD QGraphicsItem:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:cursor( ... )
@@ -455,7 +455,7 @@ METHOD QGraphicsItem:cursor( ... )
    CASE 0
       RETURN QCursorFromPointer( Qt_QGraphicsItem_cursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:data( ... )
@@ -467,7 +467,7 @@ METHOD QGraphicsItem:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:deviceTransform( ... )
@@ -479,7 +479,7 @@ METHOD QGraphicsItem:deviceTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:effectiveOpacity( ... )
@@ -487,7 +487,7 @@ METHOD QGraphicsItem:effectiveOpacity( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_effectiveOpacity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:ensureVisible( ... )
@@ -531,7 +531,7 @@ METHOD QGraphicsItem:ensureVisible( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_ensureVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:flags( ... )
@@ -539,7 +539,7 @@ METHOD QGraphicsItem:flags( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:grabKeyboard( ... )
@@ -547,7 +547,7 @@ METHOD QGraphicsItem:grabKeyboard( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_grabKeyboard( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:grabMouse( ... )
@@ -555,7 +555,7 @@ METHOD QGraphicsItem:grabMouse( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_grabMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:group( ... )
@@ -563,7 +563,7 @@ METHOD QGraphicsItem:group( ... )
    CASE 0
       RETURN QGraphicsItemGroupFromPointer( Qt_QGraphicsItem_group( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:handlesChildEvents( ... )
@@ -571,7 +571,7 @@ METHOD QGraphicsItem:handlesChildEvents( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_handlesChildEvents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:hasCursor( ... )
@@ -579,7 +579,7 @@ METHOD QGraphicsItem:hasCursor( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_hasCursor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:hasFocus( ... )
@@ -587,7 +587,7 @@ METHOD QGraphicsItem:hasFocus( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_hasFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:hide( ... )
@@ -595,7 +595,7 @@ METHOD QGraphicsItem:hide( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_hide( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:installSceneEventFilter( ... )
@@ -607,7 +607,7 @@ METHOD QGraphicsItem:installSceneEventFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isAncestorOf( ... )
@@ -619,7 +619,7 @@ METHOD QGraphicsItem:isAncestorOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isClipped( ... )
@@ -627,7 +627,7 @@ METHOD QGraphicsItem:isClipped( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isClipped( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isEnabled( ... )
@@ -635,7 +635,7 @@ METHOD QGraphicsItem:isEnabled( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isObscured( ... )
@@ -655,7 +655,7 @@ METHOD QGraphicsItem:isObscured( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isObscured( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isObscuredBy( ... )
@@ -667,7 +667,7 @@ METHOD QGraphicsItem:isObscuredBy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isSelected( ... )
@@ -675,7 +675,7 @@ METHOD QGraphicsItem:isSelected( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isSelected( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isUnderMouse( ... )
@@ -683,7 +683,7 @@ METHOD QGraphicsItem:isUnderMouse( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isUnderMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isVisible( ... )
@@ -691,7 +691,7 @@ METHOD QGraphicsItem:isVisible( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isVisibleTo( ... )
@@ -703,7 +703,7 @@ METHOD QGraphicsItem:isVisibleTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isWidget( ... )
@@ -711,7 +711,7 @@ METHOD QGraphicsItem:isWidget( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isWidget( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:isWindow( ... )
@@ -719,7 +719,7 @@ METHOD QGraphicsItem:isWindow( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_isWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:itemTransform( ... )
@@ -737,7 +737,7 @@ METHOD QGraphicsItem:itemTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapFromItem( ... )
@@ -770,7 +770,7 @@ METHOD QGraphicsItem:mapFromItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapFromParent( ... )
@@ -803,7 +803,7 @@ METHOD QGraphicsItem:mapFromParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapFromScene( ... )
@@ -836,7 +836,7 @@ METHOD QGraphicsItem:mapFromScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectFromItem( ... )
@@ -854,7 +854,7 @@ METHOD QGraphicsItem:mapRectFromItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectFromParent( ... )
@@ -872,7 +872,7 @@ METHOD QGraphicsItem:mapRectFromParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectFromScene( ... )
@@ -890,7 +890,7 @@ METHOD QGraphicsItem:mapRectFromScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectToItem( ... )
@@ -908,7 +908,7 @@ METHOD QGraphicsItem:mapRectToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectToParent( ... )
@@ -926,7 +926,7 @@ METHOD QGraphicsItem:mapRectToParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapRectToScene( ... )
@@ -944,7 +944,7 @@ METHOD QGraphicsItem:mapRectToScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapToItem( ... )
@@ -977,7 +977,7 @@ METHOD QGraphicsItem:mapToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapToParent( ... )
@@ -1010,7 +1010,7 @@ METHOD QGraphicsItem:mapToParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:mapToScene( ... )
@@ -1043,7 +1043,7 @@ METHOD QGraphicsItem:mapToScene( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:moveBy( ... )
@@ -1055,7 +1055,7 @@ METHOD QGraphicsItem:moveBy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:opacity( ... )
@@ -1063,7 +1063,7 @@ METHOD QGraphicsItem:opacity( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_opacity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:opaqueArea( ... )
@@ -1071,7 +1071,7 @@ METHOD QGraphicsItem:opaqueArea( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QGraphicsItem_opaqueArea( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:paint( ... )
@@ -1089,7 +1089,7 @@ METHOD QGraphicsItem:paint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:parentItem( ... )
@@ -1097,7 +1097,7 @@ METHOD QGraphicsItem:parentItem( ... )
    CASE 0
       RETURN QGraphicsItemFromPointer( Qt_QGraphicsItem_parentItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:parentWidget( ... )
@@ -1105,7 +1105,7 @@ METHOD QGraphicsItem:parentWidget( ... )
    CASE 0
       RETURN QGraphicsWidgetFromPointer( Qt_QGraphicsItem_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:pos( ... )
@@ -1113,7 +1113,7 @@ METHOD QGraphicsItem:pos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsItem_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:removeSceneEventFilter( ... )
@@ -1125,7 +1125,7 @@ METHOD QGraphicsItem:removeSceneEventFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:resetTransform( ... )
@@ -1133,7 +1133,7 @@ METHOD QGraphicsItem:resetTransform( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_resetTransform( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:rotate( ... )
@@ -1145,7 +1145,7 @@ METHOD QGraphicsItem:rotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:scale( ... )
@@ -1157,7 +1157,7 @@ METHOD QGraphicsItem:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:scene( ... )
@@ -1165,7 +1165,7 @@ METHOD QGraphicsItem:scene( ... )
    CASE 0
       RETURN QGraphicsSceneFromPointer( Qt_QGraphicsItem_scene( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:sceneBoundingRect( ... )
@@ -1173,7 +1173,7 @@ METHOD QGraphicsItem:sceneBoundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsItem_sceneBoundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:scenePos( ... )
@@ -1181,7 +1181,7 @@ METHOD QGraphicsItem:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsItem_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:sceneTransform( ... )
@@ -1189,7 +1189,7 @@ METHOD QGraphicsItem:sceneTransform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QGraphicsItem_sceneTransform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:scroll( ... )
@@ -1207,7 +1207,7 @@ METHOD QGraphicsItem:scroll( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setAcceptDrops( ... )
@@ -1219,7 +1219,7 @@ METHOD QGraphicsItem:setAcceptDrops( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setAcceptHoverEvents( ... )
@@ -1231,7 +1231,7 @@ METHOD QGraphicsItem:setAcceptHoverEvents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setAcceptedMouseButtons( ... )
@@ -1243,7 +1243,7 @@ METHOD QGraphicsItem:setAcceptedMouseButtons( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setBoundingRegionGranularity( ... )
@@ -1255,7 +1255,7 @@ METHOD QGraphicsItem:setBoundingRegionGranularity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setCacheMode( ... )
@@ -1273,7 +1273,7 @@ METHOD QGraphicsItem:setCacheMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setCursor( ... )
@@ -1285,7 +1285,7 @@ METHOD QGraphicsItem:setCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setData( ... )
@@ -1297,7 +1297,7 @@ METHOD QGraphicsItem:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setEnabled( ... )
@@ -1309,7 +1309,7 @@ METHOD QGraphicsItem:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setFlag( ... )
@@ -1327,7 +1327,7 @@ METHOD QGraphicsItem:setFlag( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setFlags( ... )
@@ -1339,7 +1339,7 @@ METHOD QGraphicsItem:setFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setFocus( ... )
@@ -1353,7 +1353,7 @@ METHOD QGraphicsItem:setFocus( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_setFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setGroup( ... )
@@ -1365,7 +1365,7 @@ METHOD QGraphicsItem:setGroup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setHandlesChildEvents( ... )
@@ -1377,7 +1377,7 @@ METHOD QGraphicsItem:setHandlesChildEvents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setOpacity( ... )
@@ -1389,7 +1389,7 @@ METHOD QGraphicsItem:setOpacity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setParentItem( ... )
@@ -1401,7 +1401,7 @@ METHOD QGraphicsItem:setParentItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setPos( ... )
@@ -1419,7 +1419,7 @@ METHOD QGraphicsItem:setPos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setSelected( ... )
@@ -1431,7 +1431,7 @@ METHOD QGraphicsItem:setSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setToolTip( ... )
@@ -1443,7 +1443,7 @@ METHOD QGraphicsItem:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setTransform( ... )
@@ -1461,7 +1461,7 @@ METHOD QGraphicsItem:setTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setVisible( ... )
@@ -1473,7 +1473,7 @@ METHOD QGraphicsItem:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:setZValue( ... )
@@ -1485,7 +1485,7 @@ METHOD QGraphicsItem:setZValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:shape( ... )
@@ -1493,7 +1493,7 @@ METHOD QGraphicsItem:shape( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QGraphicsItem_shape( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:shear( ... )
@@ -1505,7 +1505,7 @@ METHOD QGraphicsItem:shear( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:show( ... )
@@ -1513,7 +1513,7 @@ METHOD QGraphicsItem:show( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_show( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:toolTip( ... )
@@ -1521,7 +1521,7 @@ METHOD QGraphicsItem:toolTip( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:topLevelItem( ... )
@@ -1529,7 +1529,7 @@ METHOD QGraphicsItem:topLevelItem( ... )
    CASE 0
       RETURN QGraphicsItemFromPointer( Qt_QGraphicsItem_topLevelItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:topLevelWidget( ... )
@@ -1537,7 +1537,7 @@ METHOD QGraphicsItem:topLevelWidget( ... )
    CASE 0
       RETURN QGraphicsWidgetFromPointer( Qt_QGraphicsItem_topLevelWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:transform( ... )
@@ -1545,7 +1545,7 @@ METHOD QGraphicsItem:transform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QGraphicsItem_transform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:translate( ... )
@@ -1557,7 +1557,7 @@ METHOD QGraphicsItem:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:type( ... )
@@ -1565,7 +1565,7 @@ METHOD QGraphicsItem:type( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:ungrabKeyboard( ... )
@@ -1573,7 +1573,7 @@ METHOD QGraphicsItem:ungrabKeyboard( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_ungrabKeyboard( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:ungrabMouse( ... )
@@ -1581,7 +1581,7 @@ METHOD QGraphicsItem:ungrabMouse( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_ungrabMouse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:unsetCursor( ... )
@@ -1589,7 +1589,7 @@ METHOD QGraphicsItem:unsetCursor( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_unsetCursor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:update( ... )
@@ -1609,7 +1609,7 @@ METHOD QGraphicsItem:update( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_update( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:window( ... )
@@ -1617,7 +1617,7 @@ METHOD QGraphicsItem:window( ... )
    CASE 0
       RETURN QGraphicsWidgetFromPointer( Qt_QGraphicsItem_window( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:x( ... )
@@ -1625,7 +1625,7 @@ METHOD QGraphicsItem:x( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:y( ... )
@@ -1633,7 +1633,7 @@ METHOD QGraphicsItem:y( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsItem:zValue( ... )
@@ -1641,5 +1641,5 @@ METHOD QGraphicsItem:zValue( ... )
    CASE 0
       RETURN Qt_QGraphicsItem_zValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

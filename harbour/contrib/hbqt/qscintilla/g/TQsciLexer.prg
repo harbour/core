@@ -160,7 +160,7 @@ CREATE CLASS QsciLexer INHERIT HbQtObjectHandler FUNCTION HB_QsciLexer
 METHOD QsciLexer:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciLexer( ... )
    RETURN Self
@@ -171,7 +171,7 @@ METHOD QsciLexer:language( ... )
    CASE 0
       RETURN Qt_QsciLexer_language( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:lexer( ... )
@@ -179,7 +179,7 @@ METHOD QsciLexer:lexer( ... )
    CASE 0
       RETURN Qt_QsciLexer_lexer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:lexerId( ... )
@@ -187,7 +187,7 @@ METHOD QsciLexer:lexerId( ... )
    CASE 0
       RETURN Qt_QsciLexer_lexerId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:apis( ... )
@@ -195,7 +195,7 @@ METHOD QsciLexer:apis( ... )
    CASE 0
       RETURN QsciAbstractAPIsFromPointer( Qt_QsciLexer_apis( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:autoCompletionFillups( ... )
@@ -203,7 +203,7 @@ METHOD QsciLexer:autoCompletionFillups( ... )
    CASE 0
       RETURN Qt_QsciLexer_autoCompletionFillups( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:autoCompletionWordSeparators( ... )
@@ -211,7 +211,7 @@ METHOD QsciLexer:autoCompletionWordSeparators( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:autoIndentStyle( ... )
@@ -219,7 +219,7 @@ METHOD QsciLexer:autoIndentStyle( ... )
    CASE 0
       RETURN Qt_QsciLexer_autoIndentStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:blockEnd( ... )
@@ -233,7 +233,7 @@ METHOD QsciLexer:blockEnd( ... )
    CASE 0
       RETURN Qt_QsciLexer_blockEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:blockLookback( ... )
@@ -241,7 +241,7 @@ METHOD QsciLexer:blockLookback( ... )
    CASE 0
       RETURN Qt_QsciLexer_blockLookback( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:blockStart( ... )
@@ -255,7 +255,7 @@ METHOD QsciLexer:blockStart( ... )
    CASE 0
       RETURN Qt_QsciLexer_blockStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:blockStartKeyword( ... )
@@ -269,7 +269,7 @@ METHOD QsciLexer:blockStartKeyword( ... )
    CASE 0
       RETURN Qt_QsciLexer_blockStartKeyword( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:braceStyle( ... )
@@ -277,7 +277,7 @@ METHOD QsciLexer:braceStyle( ... )
    CASE 0
       RETURN Qt_QsciLexer_braceStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:caseSensitive( ... )
@@ -285,7 +285,7 @@ METHOD QsciLexer:caseSensitive( ... )
    CASE 0
       RETURN Qt_QsciLexer_caseSensitive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:color( ... )
@@ -297,7 +297,7 @@ METHOD QsciLexer:color( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:eolFill( ... )
@@ -309,7 +309,7 @@ METHOD QsciLexer:eolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:font( ... )
@@ -321,7 +321,7 @@ METHOD QsciLexer:font( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:indentationGuideView( ... )
@@ -329,7 +329,7 @@ METHOD QsciLexer:indentationGuideView( ... )
    CASE 0
       RETURN Qt_QsciLexer_indentationGuideView( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:keywords( ... )
@@ -341,7 +341,7 @@ METHOD QsciLexer:keywords( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:defaultStyle( ... )
@@ -349,7 +349,7 @@ METHOD QsciLexer:defaultStyle( ... )
    CASE 0
       RETURN Qt_QsciLexer_defaultStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:description( ... )
@@ -361,7 +361,7 @@ METHOD QsciLexer:description( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:paper( ... )
@@ -373,7 +373,7 @@ METHOD QsciLexer:paper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:defaultColor( ... )
@@ -387,7 +387,7 @@ METHOD QsciLexer:defaultColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:defaultEolFill( ... )
@@ -399,7 +399,7 @@ METHOD QsciLexer:defaultEolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:defaultFont( ... )
@@ -413,7 +413,7 @@ METHOD QsciLexer:defaultFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:defaultPaper( ... )
@@ -427,7 +427,7 @@ METHOD QsciLexer:defaultPaper( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:editor( ... )
@@ -435,7 +435,7 @@ METHOD QsciLexer:editor( ... )
    CASE 0
       RETURN QsciScintillaFromPointer( Qt_QsciLexer_editor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setEditor( ... )
@@ -447,7 +447,7 @@ METHOD QsciLexer:setEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:readSettings( ... )
@@ -465,7 +465,7 @@ METHOD QsciLexer:readSettings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:refreshProperties( ... )
@@ -473,7 +473,7 @@ METHOD QsciLexer:refreshProperties( ... )
    CASE 0
       RETURN Qt_QsciLexer_refreshProperties( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:styleBitsNeeded( ... )
@@ -481,7 +481,7 @@ METHOD QsciLexer:styleBitsNeeded( ... )
    CASE 0
       RETURN Qt_QsciLexer_styleBitsNeeded( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:wordCharacters( ... )
@@ -489,7 +489,7 @@ METHOD QsciLexer:wordCharacters( ... )
    CASE 0
       RETURN Qt_QsciLexer_wordCharacters( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:writeSettings( ... )
@@ -507,7 +507,7 @@ METHOD QsciLexer:writeSettings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setAPIs( ... )
@@ -519,7 +519,7 @@ METHOD QsciLexer:setAPIs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setDefaultColor( ... )
@@ -531,7 +531,7 @@ METHOD QsciLexer:setDefaultColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setDefaultFont( ... )
@@ -543,7 +543,7 @@ METHOD QsciLexer:setDefaultFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setDefaultPaper( ... )
@@ -555,7 +555,7 @@ METHOD QsciLexer:setDefaultPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setAutoIndentStyle( ... )
@@ -567,7 +567,7 @@ METHOD QsciLexer:setAutoIndentStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setColor( ... )
@@ -585,7 +585,7 @@ METHOD QsciLexer:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setEolFill( ... )
@@ -603,7 +603,7 @@ METHOD QsciLexer:setEolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setFont( ... )
@@ -621,7 +621,7 @@ METHOD QsciLexer:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexer:setPaper( ... )
@@ -639,5 +639,5 @@ METHOD QsciLexer:setPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

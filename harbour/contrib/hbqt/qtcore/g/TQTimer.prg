@@ -126,7 +126,7 @@ CREATE CLASS QTimer INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimer
 METHOD QTimer:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTimer( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QTimer:interval( ... )
    CASE 0
       RETURN Qt_QTimer_interval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:isActive( ... )
@@ -145,7 +145,7 @@ METHOD QTimer:isActive( ... )
    CASE 0
       RETURN Qt_QTimer_isActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:isSingleShot( ... )
@@ -153,7 +153,7 @@ METHOD QTimer:isSingleShot( ... )
    CASE 0
       RETURN Qt_QTimer_isSingleShot( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:setInterval( ... )
@@ -165,7 +165,7 @@ METHOD QTimer:setInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:setSingleShot( ... )
@@ -177,7 +177,7 @@ METHOD QTimer:setSingleShot( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:timerId( ... )
@@ -185,7 +185,7 @@ METHOD QTimer:timerId( ... )
    CASE 0
       RETURN Qt_QTimer_timerId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:singleShot( ... )
@@ -197,7 +197,7 @@ METHOD QTimer:singleShot( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:start( ... )
@@ -211,7 +211,7 @@ METHOD QTimer:start( ... )
    CASE 0
       RETURN Qt_QTimer_start( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimer:stop( ... )
@@ -219,5 +219,5 @@ METHOD QTimer:stop( ... )
    CASE 0
       RETURN Qt_QTimer_stop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

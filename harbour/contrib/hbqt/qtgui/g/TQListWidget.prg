@@ -148,7 +148,7 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QLi
 METHOD QListWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QListWidget( ... )
    RETURN Self
@@ -165,7 +165,7 @@ METHOD QListWidget:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:addItems( ... )
@@ -177,7 +177,7 @@ METHOD QListWidget:addItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:closePersistentEditor( ... )
@@ -189,7 +189,7 @@ METHOD QListWidget:closePersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:count( ... )
@@ -197,7 +197,7 @@ METHOD QListWidget:count( ... )
    CASE 0
       RETURN Qt_QListWidget_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:currentItem( ... )
@@ -205,7 +205,7 @@ METHOD QListWidget:currentItem( ... )
    CASE 0
       RETURN QListWidgetItemFromPointer( Qt_QListWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:currentRow( ... )
@@ -213,7 +213,7 @@ METHOD QListWidget:currentRow( ... )
    CASE 0
       RETURN Qt_QListWidget_currentRow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:editItem( ... )
@@ -225,7 +225,7 @@ METHOD QListWidget:editItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:findItems( ... )
@@ -237,7 +237,7 @@ METHOD QListWidget:findItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:insertItem( ... )
@@ -251,7 +251,7 @@ METHOD QListWidget:insertItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:insertItems( ... )
@@ -263,7 +263,7 @@ METHOD QListWidget:insertItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:isSortingEnabled( ... )
@@ -271,7 +271,7 @@ METHOD QListWidget:isSortingEnabled( ... )
    CASE 0
       RETURN Qt_QListWidget_isSortingEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:item( ... )
@@ -283,7 +283,7 @@ METHOD QListWidget:item( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:itemAt( ... )
@@ -301,7 +301,7 @@ METHOD QListWidget:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:itemWidget( ... )
@@ -313,7 +313,7 @@ METHOD QListWidget:itemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:openPersistentEditor( ... )
@@ -325,7 +325,7 @@ METHOD QListWidget:openPersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:removeItemWidget( ... )
@@ -337,7 +337,7 @@ METHOD QListWidget:removeItemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:row( ... )
@@ -349,7 +349,7 @@ METHOD QListWidget:row( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:selectedItems( ... )
@@ -357,7 +357,7 @@ METHOD QListWidget:selectedItems( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QListWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:setCurrentItem( ... )
@@ -375,7 +375,7 @@ METHOD QListWidget:setCurrentItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:setCurrentRow( ... )
@@ -393,7 +393,7 @@ METHOD QListWidget:setCurrentRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:setItemWidget( ... )
@@ -405,7 +405,7 @@ METHOD QListWidget:setItemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:setSortingEnabled( ... )
@@ -417,7 +417,7 @@ METHOD QListWidget:setSortingEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:sortItems( ... )
@@ -431,7 +431,7 @@ METHOD QListWidget:sortItems( ... )
    CASE 0
       RETURN Qt_QListWidget_sortItems( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:takeItem( ... )
@@ -443,7 +443,7 @@ METHOD QListWidget:takeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:visualItemRect( ... )
@@ -455,7 +455,7 @@ METHOD QListWidget:visualItemRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:clear( ... )
@@ -463,7 +463,7 @@ METHOD QListWidget:clear( ... )
    CASE 0
       RETURN Qt_QListWidget_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidget:scrollToItem( ... )
@@ -481,5 +481,5 @@ METHOD QListWidget:scrollToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

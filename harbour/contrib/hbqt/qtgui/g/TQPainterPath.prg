@@ -171,7 +171,7 @@ CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
 METHOD QPainterPath:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPainterPath( ... )
    RETURN Self
@@ -198,7 +198,7 @@ METHOD QPainterPath:addEllipse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addPath( ... )
@@ -210,7 +210,7 @@ METHOD QPainterPath:addPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addPolygon( ... )
@@ -222,7 +222,7 @@ METHOD QPainterPath:addPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addRect( ... )
@@ -240,7 +240,7 @@ METHOD QPainterPath:addRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addRegion( ... )
@@ -252,7 +252,7 @@ METHOD QPainterPath:addRegion( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addRoundedRect( ... )
@@ -282,7 +282,7 @@ METHOD QPainterPath:addRoundedRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:addText( ... )
@@ -300,7 +300,7 @@ METHOD QPainterPath:addText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:angleAtPercent( ... )
@@ -312,7 +312,7 @@ METHOD QPainterPath:angleAtPercent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:arcMoveTo( ... )
@@ -330,7 +330,7 @@ METHOD QPainterPath:arcMoveTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:arcTo( ... )
@@ -348,7 +348,7 @@ METHOD QPainterPath:arcTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:boundingRect( ... )
@@ -356,7 +356,7 @@ METHOD QPainterPath:boundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QPainterPath_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:closeSubpath( ... )
@@ -364,7 +364,7 @@ METHOD QPainterPath:closeSubpath( ... )
    CASE 0
       RETURN Qt_QPainterPath_closeSubpath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:connectPath( ... )
@@ -376,7 +376,7 @@ METHOD QPainterPath:connectPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:contains( ... )
@@ -395,7 +395,7 @@ METHOD QPainterPath:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:controlPointRect( ... )
@@ -403,7 +403,7 @@ METHOD QPainterPath:controlPointRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QPainterPath_controlPointRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:cubicTo( ... )
@@ -421,7 +421,7 @@ METHOD QPainterPath:cubicTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:currentPosition( ... )
@@ -429,7 +429,7 @@ METHOD QPainterPath:currentPosition( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QPainterPath_currentPosition( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:elementCount( ... )
@@ -437,7 +437,7 @@ METHOD QPainterPath:elementCount( ... )
    CASE 0
       RETURN Qt_QPainterPath_elementCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:fillRule( ... )
@@ -445,7 +445,7 @@ METHOD QPainterPath:fillRule( ... )
    CASE 0
       RETURN Qt_QPainterPath_fillRule( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:intersected( ... )
@@ -457,7 +457,7 @@ METHOD QPainterPath:intersected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:intersects( ... )
@@ -474,7 +474,7 @@ METHOD QPainterPath:intersects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:isEmpty( ... )
@@ -482,7 +482,7 @@ METHOD QPainterPath:isEmpty( ... )
    CASE 0
       RETURN Qt_QPainterPath_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:length( ... )
@@ -490,7 +490,7 @@ METHOD QPainterPath:length( ... )
    CASE 0
       RETURN Qt_QPainterPath_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:lineTo( ... )
@@ -508,7 +508,7 @@ METHOD QPainterPath:lineTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:moveTo( ... )
@@ -526,7 +526,7 @@ METHOD QPainterPath:moveTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:percentAtLength( ... )
@@ -538,7 +538,7 @@ METHOD QPainterPath:percentAtLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:pointAtPercent( ... )
@@ -550,7 +550,7 @@ METHOD QPainterPath:pointAtPercent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:quadTo( ... )
@@ -568,7 +568,7 @@ METHOD QPainterPath:quadTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:setElementPositionAt( ... )
@@ -580,7 +580,7 @@ METHOD QPainterPath:setElementPositionAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:setFillRule( ... )
@@ -592,7 +592,7 @@ METHOD QPainterPath:setFillRule( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:simplified( ... )
@@ -600,7 +600,7 @@ METHOD QPainterPath:simplified( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QPainterPath_simplified( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:slopeAtPercent( ... )
@@ -612,7 +612,7 @@ METHOD QPainterPath:slopeAtPercent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:subtracted( ... )
@@ -624,7 +624,7 @@ METHOD QPainterPath:subtracted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:toFillPolygon( ... )
@@ -643,7 +643,7 @@ METHOD QPainterPath:toFillPolygon( ... )
    CASE 0
       RETURN QPolygonFFromPointer( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:toFillPolygons( ... )
@@ -662,7 +662,7 @@ METHOD QPainterPath:toFillPolygons( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:toReversed( ... )
@@ -670,7 +670,7 @@ METHOD QPainterPath:toReversed( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QPainterPath_toReversed( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:toSubpathPolygons( ... )
@@ -689,7 +689,7 @@ METHOD QPainterPath:toSubpathPolygons( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainterPath:united( ... )
@@ -701,5 +701,5 @@ METHOD QPainterPath:united( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

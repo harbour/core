@@ -127,7 +127,7 @@ CREATE CLASS QDrag INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDrag
 METHOD QDrag:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDrag( ... )
    RETURN Self
@@ -150,7 +150,7 @@ METHOD QDrag:exec( ... )
    CASE 0
       RETURN Qt_QDrag_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:hotSpot( ... )
@@ -158,7 +158,7 @@ METHOD QDrag:hotSpot( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QDrag_hotSpot( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:mimeData( ... )
@@ -166,7 +166,7 @@ METHOD QDrag:mimeData( ... )
    CASE 0
       RETURN QMimeDataFromPointer( Qt_QDrag_mimeData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:pixmap( ... )
@@ -174,7 +174,7 @@ METHOD QDrag:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QDrag_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:setDragCursor( ... )
@@ -186,7 +186,7 @@ METHOD QDrag:setDragCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:setHotSpot( ... )
@@ -198,7 +198,7 @@ METHOD QDrag:setHotSpot( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:setMimeData( ... )
@@ -210,7 +210,7 @@ METHOD QDrag:setMimeData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:setPixmap( ... )
@@ -222,7 +222,7 @@ METHOD QDrag:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:source( ... )
@@ -230,7 +230,7 @@ METHOD QDrag:source( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDrag_source( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDrag:target( ... )
@@ -238,5 +238,5 @@ METHOD QDrag:target( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDrag_target( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

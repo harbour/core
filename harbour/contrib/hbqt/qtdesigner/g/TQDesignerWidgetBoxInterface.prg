@@ -120,7 +120,7 @@ CREATE CLASS QDesignerWidgetBoxInterface INHERIT HbQtObjectHandler, HB_QWidget F
 METHOD QDesignerWidgetBoxInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerWidgetBoxInterface( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QDesignerWidgetBoxInterface:fileName( ... )
    CASE 0
       RETURN Qt_QDesignerWidgetBoxInterface_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerWidgetBoxInterface:load( ... )
@@ -139,7 +139,7 @@ METHOD QDesignerWidgetBoxInterface:load( ... )
    CASE 0
       RETURN Qt_QDesignerWidgetBoxInterface_load( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerWidgetBoxInterface:save( ... )
@@ -147,7 +147,7 @@ METHOD QDesignerWidgetBoxInterface:save( ... )
    CASE 0
       RETURN Qt_QDesignerWidgetBoxInterface_save( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerWidgetBoxInterface:setFileName( ... )
@@ -159,5 +159,5 @@ METHOD QDesignerWidgetBoxInterface:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

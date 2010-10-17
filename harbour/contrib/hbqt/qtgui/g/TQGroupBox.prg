@@ -126,7 +126,7 @@ CREATE CLASS QGroupBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QGroupB
 METHOD QGroupBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGroupBox( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QGroupBox:alignment( ... )
    CASE 0
       RETURN Qt_QGroupBox_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:isCheckable( ... )
@@ -145,7 +145,7 @@ METHOD QGroupBox:isCheckable( ... )
    CASE 0
       RETURN Qt_QGroupBox_isCheckable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:isChecked( ... )
@@ -153,7 +153,7 @@ METHOD QGroupBox:isChecked( ... )
    CASE 0
       RETURN Qt_QGroupBox_isChecked( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:isFlat( ... )
@@ -161,7 +161,7 @@ METHOD QGroupBox:isFlat( ... )
    CASE 0
       RETURN Qt_QGroupBox_isFlat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:setAlignment( ... )
@@ -173,7 +173,7 @@ METHOD QGroupBox:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:setCheckable( ... )
@@ -185,7 +185,7 @@ METHOD QGroupBox:setCheckable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:setFlat( ... )
@@ -197,7 +197,7 @@ METHOD QGroupBox:setFlat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:setTitle( ... )
@@ -209,7 +209,7 @@ METHOD QGroupBox:setTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:title( ... )
@@ -217,7 +217,7 @@ METHOD QGroupBox:title( ... )
    CASE 0
       RETURN Qt_QGroupBox_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGroupBox:setChecked( ... )
@@ -229,5 +229,5 @@ METHOD QGroupBox:setChecked( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

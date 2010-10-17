@@ -139,7 +139,7 @@ CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPaintEngine
 METHOD QPaintEngine:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPaintEngine( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QPaintEngine:begin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawEllipse( ... )
@@ -171,7 +171,7 @@ METHOD QPaintEngine:drawEllipse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawImage( ... )
@@ -189,7 +189,7 @@ METHOD QPaintEngine:drawImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawLines( ... )
@@ -206,7 +206,7 @@ METHOD QPaintEngine:drawLines( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawPath( ... )
@@ -218,7 +218,7 @@ METHOD QPaintEngine:drawPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawPixmap( ... )
@@ -230,7 +230,7 @@ METHOD QPaintEngine:drawPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawPoints( ... )
@@ -247,7 +247,7 @@ METHOD QPaintEngine:drawPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawPolygon( ... )
@@ -264,7 +264,7 @@ METHOD QPaintEngine:drawPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawRects( ... )
@@ -281,7 +281,7 @@ METHOD QPaintEngine:drawRects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawTextItem( ... )
@@ -293,7 +293,7 @@ METHOD QPaintEngine:drawTextItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:drawTiledPixmap( ... )
@@ -305,7 +305,7 @@ METHOD QPaintEngine:drawTiledPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:end( ... )
@@ -313,7 +313,7 @@ METHOD QPaintEngine:end( ... )
    CASE 0
       RETURN Qt_QPaintEngine_end( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:hasFeature( ... )
@@ -325,7 +325,7 @@ METHOD QPaintEngine:hasFeature( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:isActive( ... )
@@ -333,7 +333,7 @@ METHOD QPaintEngine:isActive( ... )
    CASE 0
       RETURN Qt_QPaintEngine_isActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:paintDevice( ... )
@@ -341,7 +341,7 @@ METHOD QPaintEngine:paintDevice( ... )
    CASE 0
       RETURN QPaintDeviceFromPointer( Qt_QPaintEngine_paintDevice( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:painter( ... )
@@ -349,7 +349,7 @@ METHOD QPaintEngine:painter( ... )
    CASE 0
       RETURN QPainterFromPointer( Qt_QPaintEngine_painter( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:setActive( ... )
@@ -361,7 +361,7 @@ METHOD QPaintEngine:setActive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintEngine:type( ... )
@@ -369,5 +369,5 @@ METHOD QPaintEngine:type( ... )
    CASE 0
       RETURN Qt_QPaintEngine_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

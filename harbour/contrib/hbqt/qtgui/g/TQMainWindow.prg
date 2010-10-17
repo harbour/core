@@ -165,7 +165,7 @@ CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMain
 METHOD QMainWindow:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMainWindow( ... )
    RETURN Self
@@ -186,7 +186,7 @@ METHOD QMainWindow:addDockWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:addToolBar( ... )
@@ -206,7 +206,7 @@ METHOD QMainWindow:addToolBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:addToolBarBreak( ... )
@@ -220,7 +220,7 @@ METHOD QMainWindow:addToolBarBreak( ... )
    CASE 0
       RETURN Qt_QMainWindow_addToolBarBreak( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:centralWidget( ... )
@@ -228,7 +228,7 @@ METHOD QMainWindow:centralWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QMainWindow_centralWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:corner( ... )
@@ -240,7 +240,7 @@ METHOD QMainWindow:corner( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:createPopupMenu( ... )
@@ -248,7 +248,7 @@ METHOD QMainWindow:createPopupMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QMainWindow_createPopupMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:dockOptions( ... )
@@ -256,7 +256,7 @@ METHOD QMainWindow:dockOptions( ... )
    CASE 0
       RETURN Qt_QMainWindow_dockOptions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:dockWidgetArea( ... )
@@ -268,7 +268,7 @@ METHOD QMainWindow:dockWidgetArea( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:documentMode( ... )
@@ -276,7 +276,7 @@ METHOD QMainWindow:documentMode( ... )
    CASE 0
       RETURN Qt_QMainWindow_documentMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:iconSize( ... )
@@ -284,7 +284,7 @@ METHOD QMainWindow:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QMainWindow_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:insertToolBar( ... )
@@ -296,7 +296,7 @@ METHOD QMainWindow:insertToolBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:insertToolBarBreak( ... )
@@ -308,7 +308,7 @@ METHOD QMainWindow:insertToolBarBreak( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:isAnimated( ... )
@@ -316,7 +316,7 @@ METHOD QMainWindow:isAnimated( ... )
    CASE 0
       RETURN Qt_QMainWindow_isAnimated( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:isDockNestingEnabled( ... )
@@ -324,7 +324,7 @@ METHOD QMainWindow:isDockNestingEnabled( ... )
    CASE 0
       RETURN Qt_QMainWindow_isDockNestingEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:menuBar( ... )
@@ -332,7 +332,7 @@ METHOD QMainWindow:menuBar( ... )
    CASE 0
       RETURN QMenuBarFromPointer( Qt_QMainWindow_menuBar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:menuWidget( ... )
@@ -340,7 +340,7 @@ METHOD QMainWindow:menuWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QMainWindow_menuWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:removeDockWidget( ... )
@@ -352,7 +352,7 @@ METHOD QMainWindow:removeDockWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:removeToolBar( ... )
@@ -364,7 +364,7 @@ METHOD QMainWindow:removeToolBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:removeToolBarBreak( ... )
@@ -376,7 +376,7 @@ METHOD QMainWindow:removeToolBarBreak( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:restoreDockWidget( ... )
@@ -388,7 +388,7 @@ METHOD QMainWindow:restoreDockWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:restoreState( ... )
@@ -406,7 +406,7 @@ METHOD QMainWindow:restoreState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:saveState( ... )
@@ -420,7 +420,7 @@ METHOD QMainWindow:saveState( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QMainWindow_saveState( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setCentralWidget( ... )
@@ -432,7 +432,7 @@ METHOD QMainWindow:setCentralWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setCorner( ... )
@@ -444,7 +444,7 @@ METHOD QMainWindow:setCorner( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setDockOptions( ... )
@@ -456,7 +456,7 @@ METHOD QMainWindow:setDockOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setDocumentMode( ... )
@@ -468,7 +468,7 @@ METHOD QMainWindow:setDocumentMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setIconSize( ... )
@@ -480,7 +480,7 @@ METHOD QMainWindow:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setMenuBar( ... )
@@ -492,7 +492,7 @@ METHOD QMainWindow:setMenuBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setMenuWidget( ... )
@@ -504,7 +504,7 @@ METHOD QMainWindow:setMenuWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setStatusBar( ... )
@@ -516,7 +516,7 @@ METHOD QMainWindow:setStatusBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setTabPosition( ... )
@@ -528,7 +528,7 @@ METHOD QMainWindow:setTabPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setTabShape( ... )
@@ -540,7 +540,7 @@ METHOD QMainWindow:setTabShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setToolButtonStyle( ... )
@@ -552,7 +552,7 @@ METHOD QMainWindow:setToolButtonStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setUnifiedTitleAndToolBarOnMac( ... )
@@ -564,7 +564,7 @@ METHOD QMainWindow:setUnifiedTitleAndToolBarOnMac( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:splitDockWidget( ... )
@@ -576,7 +576,7 @@ METHOD QMainWindow:splitDockWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:statusBar( ... )
@@ -584,7 +584,7 @@ METHOD QMainWindow:statusBar( ... )
    CASE 0
       RETURN QStatusBarFromPointer( Qt_QMainWindow_statusBar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:tabPosition( ... )
@@ -596,7 +596,7 @@ METHOD QMainWindow:tabPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:tabShape( ... )
@@ -604,7 +604,7 @@ METHOD QMainWindow:tabShape( ... )
    CASE 0
       RETURN Qt_QMainWindow_tabShape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:tabifiedDockWidgets( ... )
@@ -616,7 +616,7 @@ METHOD QMainWindow:tabifiedDockWidgets( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:tabifyDockWidget( ... )
@@ -628,7 +628,7 @@ METHOD QMainWindow:tabifyDockWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:toolBarArea( ... )
@@ -640,7 +640,7 @@ METHOD QMainWindow:toolBarArea( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:toolBarBreak( ... )
@@ -652,7 +652,7 @@ METHOD QMainWindow:toolBarBreak( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:toolButtonStyle( ... )
@@ -660,7 +660,7 @@ METHOD QMainWindow:toolButtonStyle( ... )
    CASE 0
       RETURN Qt_QMainWindow_toolButtonStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:unifiedTitleAndToolBarOnMac( ... )
@@ -668,7 +668,7 @@ METHOD QMainWindow:unifiedTitleAndToolBarOnMac( ... )
    CASE 0
       RETURN Qt_QMainWindow_unifiedTitleAndToolBarOnMac( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setAnimated( ... )
@@ -680,7 +680,7 @@ METHOD QMainWindow:setAnimated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMainWindow:setDockNestingEnabled( ... )
@@ -692,5 +692,5 @@ METHOD QMainWindow:setDockNestingEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

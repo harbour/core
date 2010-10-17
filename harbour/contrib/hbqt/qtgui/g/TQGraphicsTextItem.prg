@@ -137,7 +137,7 @@ CREATE CLASS QGraphicsTextItem INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphi
 METHOD QGraphicsTextItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsTextItem( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QGraphicsTextItem:adjustSize( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_adjustSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:defaultTextColor( ... )
@@ -156,7 +156,7 @@ METHOD QGraphicsTextItem:defaultTextColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QGraphicsTextItem_defaultTextColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:document( ... )
@@ -164,7 +164,7 @@ METHOD QGraphicsTextItem:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QGraphicsTextItem_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:font( ... )
@@ -172,7 +172,7 @@ METHOD QGraphicsTextItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QGraphicsTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:openExternalLinks( ... )
@@ -180,7 +180,7 @@ METHOD QGraphicsTextItem:openExternalLinks( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_openExternalLinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setDefaultTextColor( ... )
@@ -192,7 +192,7 @@ METHOD QGraphicsTextItem:setDefaultTextColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setDocument( ... )
@@ -204,7 +204,7 @@ METHOD QGraphicsTextItem:setDocument( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setFont( ... )
@@ -216,7 +216,7 @@ METHOD QGraphicsTextItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setHtml( ... )
@@ -228,7 +228,7 @@ METHOD QGraphicsTextItem:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setOpenExternalLinks( ... )
@@ -240,7 +240,7 @@ METHOD QGraphicsTextItem:setOpenExternalLinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setPlainText( ... )
@@ -252,7 +252,7 @@ METHOD QGraphicsTextItem:setPlainText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setTabChangesFocus( ... )
@@ -264,7 +264,7 @@ METHOD QGraphicsTextItem:setTabChangesFocus( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setTextCursor( ... )
@@ -276,7 +276,7 @@ METHOD QGraphicsTextItem:setTextCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setTextInteractionFlags( ... )
@@ -288,7 +288,7 @@ METHOD QGraphicsTextItem:setTextInteractionFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:setTextWidth( ... )
@@ -300,7 +300,7 @@ METHOD QGraphicsTextItem:setTextWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:tabChangesFocus( ... )
@@ -308,7 +308,7 @@ METHOD QGraphicsTextItem:tabChangesFocus( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_tabChangesFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:textCursor( ... )
@@ -316,7 +316,7 @@ METHOD QGraphicsTextItem:textCursor( ... )
    CASE 0
       RETURN QTextCursorFromPointer( Qt_QGraphicsTextItem_textCursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:textInteractionFlags( ... )
@@ -324,7 +324,7 @@ METHOD QGraphicsTextItem:textInteractionFlags( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_textInteractionFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:textWidth( ... )
@@ -332,7 +332,7 @@ METHOD QGraphicsTextItem:textWidth( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_textWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:toHtml( ... )
@@ -340,7 +340,7 @@ METHOD QGraphicsTextItem:toHtml( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_toHtml( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsTextItem:toPlainText( ... )
@@ -348,5 +348,5 @@ METHOD QGraphicsTextItem:toPlainText( ... )
    CASE 0
       RETURN Qt_QGraphicsTextItem_toPlainText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

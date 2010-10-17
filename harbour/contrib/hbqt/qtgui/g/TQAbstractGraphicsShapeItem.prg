@@ -120,7 +120,7 @@ CREATE CLASS QAbstractGraphicsShapeItem INHERIT HbQtObjectHandler, HB_QGraphicsI
 METHOD QAbstractGraphicsShapeItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractGraphicsShapeItem( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QAbstractGraphicsShapeItem:brush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QAbstractGraphicsShapeItem_brush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractGraphicsShapeItem:pen( ... )
@@ -139,7 +139,7 @@ METHOD QAbstractGraphicsShapeItem:pen( ... )
    CASE 0
       RETURN QPenFromPointer( Qt_QAbstractGraphicsShapeItem_pen( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractGraphicsShapeItem:setBrush( ... )
@@ -151,7 +151,7 @@ METHOD QAbstractGraphicsShapeItem:setBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractGraphicsShapeItem:setPen( ... )
@@ -163,5 +163,5 @@ METHOD QAbstractGraphicsShapeItem:setPen( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

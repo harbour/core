@@ -118,7 +118,7 @@ CREATE CLASS QsciStyledText INHERIT HbQtObjectHandler FUNCTION HB_QsciStyledText
 METHOD QsciStyledText:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciStyledText( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QsciStyledText:text( ... )
    CASE 0
       RETURN Qt_QsciStyledText_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciStyledText:style( ... )
@@ -137,5 +137,5 @@ METHOD QsciStyledText:style( ... )
    CASE 0
       RETURN Qt_QsciStyledText_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

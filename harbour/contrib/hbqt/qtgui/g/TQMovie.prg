@@ -144,7 +144,7 @@ CREATE CLASS QMovie INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMovie
 METHOD QMovie:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMovie( ... )
    RETURN Self
@@ -155,7 +155,7 @@ METHOD QMovie:backgroundColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QMovie_backgroundColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:cacheMode( ... )
@@ -163,7 +163,7 @@ METHOD QMovie:cacheMode( ... )
    CASE 0
       RETURN Qt_QMovie_cacheMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:currentFrameNumber( ... )
@@ -171,7 +171,7 @@ METHOD QMovie:currentFrameNumber( ... )
    CASE 0
       RETURN Qt_QMovie_currentFrameNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:currentImage( ... )
@@ -179,7 +179,7 @@ METHOD QMovie:currentImage( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QMovie_currentImage( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:currentPixmap( ... )
@@ -187,7 +187,7 @@ METHOD QMovie:currentPixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QMovie_currentPixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:device( ... )
@@ -195,7 +195,7 @@ METHOD QMovie:device( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QMovie_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:fileName( ... )
@@ -203,7 +203,7 @@ METHOD QMovie:fileName( ... )
    CASE 0
       RETURN Qt_QMovie_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:format( ... )
@@ -211,7 +211,7 @@ METHOD QMovie:format( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QMovie_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:frameCount( ... )
@@ -219,7 +219,7 @@ METHOD QMovie:frameCount( ... )
    CASE 0
       RETURN Qt_QMovie_frameCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:frameRect( ... )
@@ -227,7 +227,7 @@ METHOD QMovie:frameRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QMovie_frameRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:isValid( ... )
@@ -235,7 +235,7 @@ METHOD QMovie:isValid( ... )
    CASE 0
       RETURN Qt_QMovie_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:jumpToFrame( ... )
@@ -247,7 +247,7 @@ METHOD QMovie:jumpToFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:loopCount( ... )
@@ -255,7 +255,7 @@ METHOD QMovie:loopCount( ... )
    CASE 0
       RETURN Qt_QMovie_loopCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:nextFrameDelay( ... )
@@ -263,7 +263,7 @@ METHOD QMovie:nextFrameDelay( ... )
    CASE 0
       RETURN Qt_QMovie_nextFrameDelay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:scaledSize( ... )
@@ -271,7 +271,7 @@ METHOD QMovie:scaledSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QMovie_scaledSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setBackgroundColor( ... )
@@ -283,7 +283,7 @@ METHOD QMovie:setBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setCacheMode( ... )
@@ -295,7 +295,7 @@ METHOD QMovie:setCacheMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setDevice( ... )
@@ -307,7 +307,7 @@ METHOD QMovie:setDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setFileName( ... )
@@ -319,7 +319,7 @@ METHOD QMovie:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setFormat( ... )
@@ -331,7 +331,7 @@ METHOD QMovie:setFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setScaledSize( ... )
@@ -343,7 +343,7 @@ METHOD QMovie:setScaledSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:speed( ... )
@@ -351,7 +351,7 @@ METHOD QMovie:speed( ... )
    CASE 0
       RETURN Qt_QMovie_speed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:state( ... )
@@ -359,7 +359,7 @@ METHOD QMovie:state( ... )
    CASE 0
       RETURN Qt_QMovie_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:jumpToNextFrame( ... )
@@ -367,7 +367,7 @@ METHOD QMovie:jumpToNextFrame( ... )
    CASE 0
       RETURN Qt_QMovie_jumpToNextFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setPaused( ... )
@@ -379,7 +379,7 @@ METHOD QMovie:setPaused( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:setSpeed( ... )
@@ -391,7 +391,7 @@ METHOD QMovie:setSpeed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:start( ... )
@@ -399,7 +399,7 @@ METHOD QMovie:start( ... )
    CASE 0
       RETURN Qt_QMovie_start( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMovie:stop( ... )
@@ -407,5 +407,5 @@ METHOD QMovie:stop( ... )
    CASE 0
       RETURN Qt_QMovie_stop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

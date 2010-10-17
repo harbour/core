@@ -172,7 +172,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, HB_QPlainTextEdit FUNCT
 METHOD HBQPlainTextEdit:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQPlainTextEdit( ... )
    RETURN Self
@@ -187,7 +187,7 @@ METHOD HBQPlainTextEdit:hbGetIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGetLine( ... )
@@ -199,7 +199,7 @@ METHOD HBQPlainTextEdit:hbGetLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbLineNumberAreaWidth( ... )
@@ -207,7 +207,7 @@ METHOD HBQPlainTextEdit:hbLineNumberAreaWidth( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbLineNumberAreaWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGetSpaces( ... )
@@ -215,7 +215,7 @@ METHOD HBQPlainTextEdit:hbGetSpaces( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbGetSpaces( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetSpaces( ... )
@@ -227,7 +227,7 @@ METHOD HBQPlainTextEdit:hbSetSpaces( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbBookmarks( ... )
@@ -239,7 +239,7 @@ METHOD HBQPlainTextEdit:hbBookmarks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbNextBookmark( ... )
@@ -251,7 +251,7 @@ METHOD HBQPlainTextEdit:hbNextBookmark( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbPrevBookmark( ... )
@@ -263,7 +263,7 @@ METHOD HBQPlainTextEdit:hbPrevBookmark( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGotoBookmark( ... )
@@ -275,7 +275,7 @@ METHOD HBQPlainTextEdit:hbGotoBookmark( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbNumberBlockVisible( ... )
@@ -289,7 +289,7 @@ METHOD HBQPlainTextEdit:hbNumberBlockVisible( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbHighlightCurrentLine( ... )
@@ -303,7 +303,7 @@ METHOD HBQPlainTextEdit:hbHighlightCurrentLine( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetEventBlock( ... )
@@ -315,7 +315,7 @@ METHOD HBQPlainTextEdit:hbSetEventBlock( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbUpdateLineNumberAreaWidth( ... )
@@ -327,7 +327,7 @@ METHOD HBQPlainTextEdit:hbUpdateLineNumberAreaWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbCaseUpper( ... )
@@ -335,7 +335,7 @@ METHOD HBQPlainTextEdit:hbCaseUpper( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbCaseUpper( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbCaseLower( ... )
@@ -343,7 +343,7 @@ METHOD HBQPlainTextEdit:hbCaseLower( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbCaseLower( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbEscapeQuotes( ... )
@@ -351,7 +351,7 @@ METHOD HBQPlainTextEdit:hbEscapeQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbEscapeQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbEscapeDQuotes( ... )
@@ -359,7 +359,7 @@ METHOD HBQPlainTextEdit:hbEscapeDQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbEscapeDQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbUnescapeQuotes( ... )
@@ -367,7 +367,7 @@ METHOD HBQPlainTextEdit:hbUnescapeQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbUnescapeQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbUnescapeDQuotes( ... )
@@ -375,7 +375,7 @@ METHOD HBQPlainTextEdit:hbUnescapeDQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbUnescapeDQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbConvertQuotes( ... )
@@ -383,7 +383,7 @@ METHOD HBQPlainTextEdit:hbConvertQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbConvertQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbConvertDQuotes( ... )
@@ -391,7 +391,7 @@ METHOD HBQPlainTextEdit:hbConvertDQuotes( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbConvertDQuotes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbBlockComment( ... )
@@ -399,7 +399,7 @@ METHOD HBQPlainTextEdit:hbBlockComment( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbBlockComment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbStreamComment( ... )
@@ -407,7 +407,7 @@ METHOD HBQPlainTextEdit:hbStreamComment( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbStreamComment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbDuplicateLine( ... )
@@ -415,7 +415,7 @@ METHOD HBQPlainTextEdit:hbDuplicateLine( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbDuplicateLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbReplaceSelection( ... )
@@ -427,7 +427,7 @@ METHOD HBQPlainTextEdit:hbReplaceSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbBlockIndent( ... )
@@ -439,7 +439,7 @@ METHOD HBQPlainTextEdit:hbBlockIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbDeleteLine( ... )
@@ -447,7 +447,7 @@ METHOD HBQPlainTextEdit:hbDeleteLine( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbDeleteLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbMoveLine( ... )
@@ -459,7 +459,7 @@ METHOD HBQPlainTextEdit:hbMoveLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGetSelectedText( ... )
@@ -467,7 +467,7 @@ METHOD HBQPlainTextEdit:hbGetSelectedText( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbGetSelectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbTextUnderCursor( ... )
@@ -479,7 +479,7 @@ METHOD HBQPlainTextEdit:hbTextUnderCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbShowPrototype( ... )
@@ -491,7 +491,7 @@ METHOD HBQPlainTextEdit:hbShowPrototype( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetCompleter( ... )
@@ -503,7 +503,7 @@ METHOD HBQPlainTextEdit:hbSetCompleter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetFldsCompleter( ... )
@@ -515,7 +515,7 @@ METHOD HBQPlainTextEdit:hbSetFldsCompleter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetCurrentLineColor( ... )
@@ -527,7 +527,7 @@ METHOD HBQPlainTextEdit:hbSetCurrentLineColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetLineAreaBkColor( ... )
@@ -539,7 +539,7 @@ METHOD HBQPlainTextEdit:hbSetLineAreaBkColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbRefresh( ... )
@@ -547,7 +547,7 @@ METHOD HBQPlainTextEdit:hbRefresh( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbRefresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbCut( ... )
@@ -559,7 +559,7 @@ METHOD HBQPlainTextEdit:hbCut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbCopy( ... )
@@ -567,7 +567,7 @@ METHOD HBQPlainTextEdit:hbCopy( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbCopy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbPaste( ... )
@@ -575,7 +575,7 @@ METHOD HBQPlainTextEdit:hbPaste( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbPaste( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetSelectionMode( ... )
@@ -587,7 +587,7 @@ METHOD HBQPlainTextEdit:hbSetSelectionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGetSelectionInfo( ... )
@@ -595,7 +595,7 @@ METHOD HBQPlainTextEdit:hbGetSelectionInfo( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbGetSelectionInfo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetSelectionInfo( ... )
@@ -607,7 +607,7 @@ METHOD HBQPlainTextEdit:hbSetSelectionInfo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetSelectionColor( ... )
@@ -619,7 +619,7 @@ METHOD HBQPlainTextEdit:hbSetSelectionColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetMatchBraces( ... )
@@ -631,7 +631,7 @@ METHOD HBQPlainTextEdit:hbSetMatchBraces( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbGetViewportInfo( ... )
@@ -639,7 +639,7 @@ METHOD HBQPlainTextEdit:hbGetViewportInfo( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbGetViewportInfo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbApplyKey( ... )
@@ -657,7 +657,7 @@ METHOD HBQPlainTextEdit:hbApplyKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbHighlightArea( ... )
@@ -669,7 +669,7 @@ METHOD HBQPlainTextEdit:hbHighlightArea( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbTogglePersistentSelection( ... )
@@ -677,7 +677,7 @@ METHOD HBQPlainTextEdit:hbTogglePersistentSelection( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbTogglePersistentSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbHorzRulerVisible( ... )
@@ -689,7 +689,7 @@ METHOD HBQPlainTextEdit:hbHorzRulerVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetProtoStyle( ... )
@@ -701,7 +701,7 @@ METHOD HBQPlainTextEdit:hbSetProtoStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSelectAll( ... )
@@ -709,7 +709,7 @@ METHOD HBQPlainTextEdit:hbSelectAll( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbSelectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbSetFieldsListActive( ... )
@@ -721,7 +721,7 @@ METHOD HBQPlainTextEdit:hbSetFieldsListActive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbToggleCodeCompetion( ... )
@@ -729,7 +729,7 @@ METHOD HBQPlainTextEdit:hbToggleCodeCompetion( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbToggleCodeCompetion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbToggleCompetionTips( ... )
@@ -737,5 +737,5 @@ METHOD HBQPlainTextEdit:hbToggleCompetionTips( ... )
    CASE 0
       RETURN Qt_HBQPlainTextEdit_hbToggleCompetionTips( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

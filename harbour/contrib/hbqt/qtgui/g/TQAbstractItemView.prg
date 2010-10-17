@@ -179,7 +179,7 @@ CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea
 METHOD QAbstractItemView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractItemView( ... )
    RETURN Self
@@ -190,7 +190,7 @@ METHOD QAbstractItemView:alternatingRowColors( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_alternatingRowColors( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:autoScrollMargin( ... )
@@ -198,7 +198,7 @@ METHOD QAbstractItemView:autoScrollMargin( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_autoScrollMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:closePersistentEditor( ... )
@@ -210,7 +210,7 @@ METHOD QAbstractItemView:closePersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:currentIndex( ... )
@@ -218,7 +218,7 @@ METHOD QAbstractItemView:currentIndex( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QAbstractItemView_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:dragDropMode( ... )
@@ -226,7 +226,7 @@ METHOD QAbstractItemView:dragDropMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_dragDropMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:dragDropOverwriteMode( ... )
@@ -234,7 +234,7 @@ METHOD QAbstractItemView:dragDropOverwriteMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_dragDropOverwriteMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:dragEnabled( ... )
@@ -242,7 +242,7 @@ METHOD QAbstractItemView:dragEnabled( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_dragEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:editTriggers( ... )
@@ -250,7 +250,7 @@ METHOD QAbstractItemView:editTriggers( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_editTriggers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:hasAutoScroll( ... )
@@ -258,7 +258,7 @@ METHOD QAbstractItemView:hasAutoScroll( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_hasAutoScroll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:horizontalScrollMode( ... )
@@ -266,7 +266,7 @@ METHOD QAbstractItemView:horizontalScrollMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_horizontalScrollMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:iconSize( ... )
@@ -274,7 +274,7 @@ METHOD QAbstractItemView:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QAbstractItemView_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:indexAt( ... )
@@ -286,7 +286,7 @@ METHOD QAbstractItemView:indexAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:indexWidget( ... )
@@ -298,7 +298,7 @@ METHOD QAbstractItemView:indexWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:itemDelegate( ... )
@@ -312,7 +312,7 @@ METHOD QAbstractItemView:itemDelegate( ... )
    CASE 0
       RETURN QAbstractItemDelegateFromPointer( Qt_QAbstractItemView_itemDelegate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:itemDelegateForColumn( ... )
@@ -324,7 +324,7 @@ METHOD QAbstractItemView:itemDelegateForColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:itemDelegateForRow( ... )
@@ -336,7 +336,7 @@ METHOD QAbstractItemView:itemDelegateForRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:keyboardSearch( ... )
@@ -348,7 +348,7 @@ METHOD QAbstractItemView:keyboardSearch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:model( ... )
@@ -356,7 +356,7 @@ METHOD QAbstractItemView:model( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QAbstractItemView_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:openPersistentEditor( ... )
@@ -368,7 +368,7 @@ METHOD QAbstractItemView:openPersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:rootIndex( ... )
@@ -376,7 +376,7 @@ METHOD QAbstractItemView:rootIndex( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QAbstractItemView_rootIndex( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:scrollTo( ... )
@@ -394,7 +394,7 @@ METHOD QAbstractItemView:scrollTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:selectionBehavior( ... )
@@ -402,7 +402,7 @@ METHOD QAbstractItemView:selectionBehavior( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_selectionBehavior( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:selectionMode( ... )
@@ -410,7 +410,7 @@ METHOD QAbstractItemView:selectionMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_selectionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:selectionModel( ... )
@@ -418,7 +418,7 @@ METHOD QAbstractItemView:selectionModel( ... )
    CASE 0
       RETURN QItemSelectionModelFromPointer( Qt_QAbstractItemView_selectionModel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setAlternatingRowColors( ... )
@@ -430,7 +430,7 @@ METHOD QAbstractItemView:setAlternatingRowColors( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setAutoScroll( ... )
@@ -442,7 +442,7 @@ METHOD QAbstractItemView:setAutoScroll( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setAutoScrollMargin( ... )
@@ -454,7 +454,7 @@ METHOD QAbstractItemView:setAutoScrollMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setDragDropMode( ... )
@@ -466,7 +466,7 @@ METHOD QAbstractItemView:setDragDropMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setDragDropOverwriteMode( ... )
@@ -478,7 +478,7 @@ METHOD QAbstractItemView:setDragDropOverwriteMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setDragEnabled( ... )
@@ -490,7 +490,7 @@ METHOD QAbstractItemView:setDragEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setDropIndicatorShown( ... )
@@ -502,7 +502,7 @@ METHOD QAbstractItemView:setDropIndicatorShown( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setEditTriggers( ... )
@@ -514,7 +514,7 @@ METHOD QAbstractItemView:setEditTriggers( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setHorizontalScrollMode( ... )
@@ -526,7 +526,7 @@ METHOD QAbstractItemView:setHorizontalScrollMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setIconSize( ... )
@@ -538,7 +538,7 @@ METHOD QAbstractItemView:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setIndexWidget( ... )
@@ -550,7 +550,7 @@ METHOD QAbstractItemView:setIndexWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setItemDelegate( ... )
@@ -562,7 +562,7 @@ METHOD QAbstractItemView:setItemDelegate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setItemDelegateForColumn( ... )
@@ -574,7 +574,7 @@ METHOD QAbstractItemView:setItemDelegateForColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setItemDelegateForRow( ... )
@@ -586,7 +586,7 @@ METHOD QAbstractItemView:setItemDelegateForRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setModel( ... )
@@ -598,7 +598,7 @@ METHOD QAbstractItemView:setModel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setSelectionBehavior( ... )
@@ -610,7 +610,7 @@ METHOD QAbstractItemView:setSelectionBehavior( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setSelectionMode( ... )
@@ -622,7 +622,7 @@ METHOD QAbstractItemView:setSelectionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setSelectionModel( ... )
@@ -634,7 +634,7 @@ METHOD QAbstractItemView:setSelectionModel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setTabKeyNavigation( ... )
@@ -646,7 +646,7 @@ METHOD QAbstractItemView:setTabKeyNavigation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setTextElideMode( ... )
@@ -658,7 +658,7 @@ METHOD QAbstractItemView:setTextElideMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setVerticalScrollMode( ... )
@@ -670,7 +670,7 @@ METHOD QAbstractItemView:setVerticalScrollMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:showDropIndicator( ... )
@@ -678,7 +678,7 @@ METHOD QAbstractItemView:showDropIndicator( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_showDropIndicator( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:sizeHintForColumn( ... )
@@ -690,7 +690,7 @@ METHOD QAbstractItemView:sizeHintForColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:sizeHintForIndex( ... )
@@ -702,7 +702,7 @@ METHOD QAbstractItemView:sizeHintForIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:sizeHintForRow( ... )
@@ -714,7 +714,7 @@ METHOD QAbstractItemView:sizeHintForRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:tabKeyNavigation( ... )
@@ -722,7 +722,7 @@ METHOD QAbstractItemView:tabKeyNavigation( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_tabKeyNavigation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:textElideMode( ... )
@@ -730,7 +730,7 @@ METHOD QAbstractItemView:textElideMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_textElideMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:verticalScrollMode( ... )
@@ -738,7 +738,7 @@ METHOD QAbstractItemView:verticalScrollMode( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_verticalScrollMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:visualRect( ... )
@@ -750,7 +750,7 @@ METHOD QAbstractItemView:visualRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:clearSelection( ... )
@@ -758,7 +758,7 @@ METHOD QAbstractItemView:clearSelection( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_clearSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:edit( ... )
@@ -770,7 +770,7 @@ METHOD QAbstractItemView:edit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:reset( ... )
@@ -778,7 +778,7 @@ METHOD QAbstractItemView:reset( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:scrollToBottom( ... )
@@ -786,7 +786,7 @@ METHOD QAbstractItemView:scrollToBottom( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_scrollToBottom( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:scrollToTop( ... )
@@ -794,7 +794,7 @@ METHOD QAbstractItemView:scrollToTop( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_scrollToTop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:selectAll( ... )
@@ -802,7 +802,7 @@ METHOD QAbstractItemView:selectAll( ... )
    CASE 0
       RETURN Qt_QAbstractItemView_selectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setCurrentIndex( ... )
@@ -814,7 +814,7 @@ METHOD QAbstractItemView:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:setRootIndex( ... )
@@ -826,7 +826,7 @@ METHOD QAbstractItemView:setRootIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemView:update( ... )
@@ -838,5 +838,5 @@ METHOD QAbstractItemView:update( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

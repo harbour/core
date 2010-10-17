@@ -121,7 +121,7 @@ CREATE CLASS QHttpResponseHeader INHERIT HbQtObjectHandler, HB_QHttpHeader FUNCT
 METHOD QHttpResponseHeader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttpResponseHeader( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QHttpResponseHeader:majorVersion( ... )
    CASE 0
       RETURN Qt_QHttpResponseHeader_majorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpResponseHeader:minorVersion( ... )
@@ -140,7 +140,7 @@ METHOD QHttpResponseHeader:minorVersion( ... )
    CASE 0
       RETURN Qt_QHttpResponseHeader_minorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpResponseHeader:reasonPhrase( ... )
@@ -148,7 +148,7 @@ METHOD QHttpResponseHeader:reasonPhrase( ... )
    CASE 0
       RETURN Qt_QHttpResponseHeader_reasonPhrase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpResponseHeader:setStatusLine( ... )
@@ -178,7 +178,7 @@ METHOD QHttpResponseHeader:setStatusLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpResponseHeader:statusCode( ... )
@@ -186,5 +186,5 @@ METHOD QHttpResponseHeader:statusCode( ... )
    CASE 0
       RETURN Qt_QHttpResponseHeader_statusCode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -130,7 +130,7 @@ CREATE CLASS QSpinBox INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB
 METHOD QSpinBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSpinBox( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QSpinBox:cleanText( ... )
    CASE 0
       RETURN Qt_QSpinBox_cleanText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:maximum( ... )
@@ -149,7 +149,7 @@ METHOD QSpinBox:maximum( ... )
    CASE 0
       RETURN Qt_QSpinBox_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:minimum( ... )
@@ -157,7 +157,7 @@ METHOD QSpinBox:minimum( ... )
    CASE 0
       RETURN Qt_QSpinBox_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:prefix( ... )
@@ -165,7 +165,7 @@ METHOD QSpinBox:prefix( ... )
    CASE 0
       RETURN Qt_QSpinBox_prefix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setMaximum( ... )
@@ -177,7 +177,7 @@ METHOD QSpinBox:setMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setMinimum( ... )
@@ -189,7 +189,7 @@ METHOD QSpinBox:setMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setPrefix( ... )
@@ -201,7 +201,7 @@ METHOD QSpinBox:setPrefix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setRange( ... )
@@ -213,7 +213,7 @@ METHOD QSpinBox:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setSingleStep( ... )
@@ -225,7 +225,7 @@ METHOD QSpinBox:setSingleStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setSuffix( ... )
@@ -237,7 +237,7 @@ METHOD QSpinBox:setSuffix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:singleStep( ... )
@@ -245,7 +245,7 @@ METHOD QSpinBox:singleStep( ... )
    CASE 0
       RETURN Qt_QSpinBox_singleStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:suffix( ... )
@@ -253,7 +253,7 @@ METHOD QSpinBox:suffix( ... )
    CASE 0
       RETURN Qt_QSpinBox_suffix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:value( ... )
@@ -261,7 +261,7 @@ METHOD QSpinBox:value( ... )
    CASE 0
       RETURN Qt_QSpinBox_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSpinBox:setValue( ... )
@@ -273,5 +273,5 @@ METHOD QSpinBox:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

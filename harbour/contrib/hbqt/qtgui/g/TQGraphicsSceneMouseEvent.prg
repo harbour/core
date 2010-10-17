@@ -128,7 +128,7 @@ CREATE CLASS QGraphicsSceneMouseEvent INHERIT HbQtObjectHandler, HB_QGraphicsSce
 METHOD QGraphicsSceneMouseEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneMouseEvent( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QGraphicsSceneMouseEvent:button( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneMouseEvent_button( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownPos( ... )
@@ -151,7 +151,7 @@ METHOD QGraphicsSceneMouseEvent:buttonDownPos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownScenePos( ... )
@@ -163,7 +163,7 @@ METHOD QGraphicsSceneMouseEvent:buttonDownScenePos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownScreenPos( ... )
@@ -175,7 +175,7 @@ METHOD QGraphicsSceneMouseEvent:buttonDownScreenPos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:buttons( ... )
@@ -183,7 +183,7 @@ METHOD QGraphicsSceneMouseEvent:buttons( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneMouseEvent_buttons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:lastPos( ... )
@@ -191,7 +191,7 @@ METHOD QGraphicsSceneMouseEvent:lastPos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMouseEvent_lastPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:lastScenePos( ... )
@@ -199,7 +199,7 @@ METHOD QGraphicsSceneMouseEvent:lastScenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMouseEvent_lastScenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:lastScreenPos( ... )
@@ -207,7 +207,7 @@ METHOD QGraphicsSceneMouseEvent:lastScreenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneMouseEvent_lastScreenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:modifiers( ... )
@@ -215,7 +215,7 @@ METHOD QGraphicsSceneMouseEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneMouseEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:pos( ... )
@@ -223,7 +223,7 @@ METHOD QGraphicsSceneMouseEvent:pos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMouseEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:scenePos( ... )
@@ -231,7 +231,7 @@ METHOD QGraphicsSceneMouseEvent:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMouseEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMouseEvent:screenPos( ... )
@@ -239,5 +239,5 @@ METHOD QGraphicsSceneMouseEvent:screenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneMouseEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

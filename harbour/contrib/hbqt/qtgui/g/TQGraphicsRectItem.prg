@@ -119,7 +119,7 @@ CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsSh
 METHOD QGraphicsRectItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsRectItem( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QGraphicsRectItem:rect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsRectItem_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsRectItem:setRect( ... )
@@ -148,5 +148,5 @@ METHOD QGraphicsRectItem:setRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

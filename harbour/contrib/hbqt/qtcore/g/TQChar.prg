@@ -148,7 +148,7 @@ CREATE CLASS QChar INHERIT HbQtObjectHandler FUNCTION HB_QChar
 METHOD QChar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QChar( ... )
    RETURN Self
@@ -159,7 +159,7 @@ METHOD QChar:category( ... )
    CASE 0
       RETURN Qt_QChar_category( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:combiningClass( ... )
@@ -167,7 +167,7 @@ METHOD QChar:combiningClass( ... )
    CASE 0
       RETURN Qt_QChar_combiningClass( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:decomposition( ... )
@@ -175,7 +175,7 @@ METHOD QChar:decomposition( ... )
    CASE 0
       RETURN Qt_QChar_decomposition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:decompositionTag( ... )
@@ -183,7 +183,7 @@ METHOD QChar:decompositionTag( ... )
    CASE 0
       RETURN Qt_QChar_decompositionTag( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:digitValue( ... )
@@ -191,7 +191,7 @@ METHOD QChar:digitValue( ... )
    CASE 0
       RETURN Qt_QChar_digitValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:direction( ... )
@@ -199,7 +199,7 @@ METHOD QChar:direction( ... )
    CASE 0
       RETURN Qt_QChar_direction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:hasMirrored( ... )
@@ -207,7 +207,7 @@ METHOD QChar:hasMirrored( ... )
    CASE 0
       RETURN Qt_QChar_hasMirrored( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isDigit( ... )
@@ -215,7 +215,7 @@ METHOD QChar:isDigit( ... )
    CASE 0
       RETURN Qt_QChar_isDigit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isHighSurrogate( ... )
@@ -223,7 +223,7 @@ METHOD QChar:isHighSurrogate( ... )
    CASE 0
       RETURN Qt_QChar_isHighSurrogate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isLetter( ... )
@@ -231,7 +231,7 @@ METHOD QChar:isLetter( ... )
    CASE 0
       RETURN Qt_QChar_isLetter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isLetterOrNumber( ... )
@@ -239,7 +239,7 @@ METHOD QChar:isLetterOrNumber( ... )
    CASE 0
       RETURN Qt_QChar_isLetterOrNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isLowSurrogate( ... )
@@ -247,7 +247,7 @@ METHOD QChar:isLowSurrogate( ... )
    CASE 0
       RETURN Qt_QChar_isLowSurrogate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isLower( ... )
@@ -255,7 +255,7 @@ METHOD QChar:isLower( ... )
    CASE 0
       RETURN Qt_QChar_isLower( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isMark( ... )
@@ -263,7 +263,7 @@ METHOD QChar:isMark( ... )
    CASE 0
       RETURN Qt_QChar_isMark( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isNull( ... )
@@ -271,7 +271,7 @@ METHOD QChar:isNull( ... )
    CASE 0
       RETURN Qt_QChar_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isNumber( ... )
@@ -279,7 +279,7 @@ METHOD QChar:isNumber( ... )
    CASE 0
       RETURN Qt_QChar_isNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isPrint( ... )
@@ -287,7 +287,7 @@ METHOD QChar:isPrint( ... )
    CASE 0
       RETURN Qt_QChar_isPrint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isPunct( ... )
@@ -295,7 +295,7 @@ METHOD QChar:isPunct( ... )
    CASE 0
       RETURN Qt_QChar_isPunct( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isSpace( ... )
@@ -303,7 +303,7 @@ METHOD QChar:isSpace( ... )
    CASE 0
       RETURN Qt_QChar_isSpace( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isSymbol( ... )
@@ -311,7 +311,7 @@ METHOD QChar:isSymbol( ... )
    CASE 0
       RETURN Qt_QChar_isSymbol( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isTitleCase( ... )
@@ -319,7 +319,7 @@ METHOD QChar:isTitleCase( ... )
    CASE 0
       RETURN Qt_QChar_isTitleCase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:isUpper( ... )
@@ -327,7 +327,7 @@ METHOD QChar:isUpper( ... )
    CASE 0
       RETURN Qt_QChar_isUpper( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:joining( ... )
@@ -335,7 +335,7 @@ METHOD QChar:joining( ... )
    CASE 0
       RETURN Qt_QChar_joining( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:mirroredChar( ... )
@@ -343,7 +343,7 @@ METHOD QChar:mirroredChar( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QChar_mirroredChar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toAscii( ... )
@@ -351,7 +351,7 @@ METHOD QChar:toAscii( ... )
    CASE 0
       RETURN Qt_QChar_toAscii( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toCaseFolded( ... )
@@ -359,7 +359,7 @@ METHOD QChar:toCaseFolded( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QChar_toCaseFolded( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toLatin1( ... )
@@ -367,7 +367,7 @@ METHOD QChar:toLatin1( ... )
    CASE 0
       RETURN Qt_QChar_toLatin1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toLower( ... )
@@ -375,7 +375,7 @@ METHOD QChar:toLower( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QChar_toLower( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toTitleCase( ... )
@@ -383,7 +383,7 @@ METHOD QChar:toTitleCase( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QChar_toTitleCase( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:toUpper( ... )
@@ -391,7 +391,7 @@ METHOD QChar:toUpper( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QChar_toUpper( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:unicode( ... )
@@ -399,7 +399,7 @@ METHOD QChar:unicode( ... )
    CASE 0
       RETURN Qt_QChar_unicode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QChar:unicodeVersion( ... )
@@ -407,5 +407,5 @@ METHOD QChar:unicodeVersion( ... )
    CASE 0
       RETURN Qt_QChar_unicodeVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

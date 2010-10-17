@@ -117,7 +117,7 @@ CREATE CLASS QWindowStateChangeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTI
 METHOD QWindowStateChangeEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWindowStateChangeEvent( ... )
    RETURN Self
@@ -128,5 +128,5 @@ METHOD QWindowStateChangeEvent:oldState( ... )
    CASE 0
       RETURN Qt_QWindowStateChangeEvent_oldState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

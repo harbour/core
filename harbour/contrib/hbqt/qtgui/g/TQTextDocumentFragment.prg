@@ -123,7 +123,7 @@ CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextDo
 METHOD QTextDocumentFragment:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextDocumentFragment( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QTextDocumentFragment:isEmpty( ... )
    CASE 0
       RETURN Qt_QTextDocumentFragment_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentFragment:toHtml( ... )
@@ -148,7 +148,7 @@ METHOD QTextDocumentFragment:toHtml( ... )
    CASE 0
       RETURN Qt_QTextDocumentFragment_toHtml_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentFragment:toPlainText( ... )
@@ -156,7 +156,7 @@ METHOD QTextDocumentFragment:toPlainText( ... )
    CASE 0
       RETURN Qt_QTextDocumentFragment_toPlainText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentFragment:fromHtml( ... )
@@ -174,7 +174,7 @@ METHOD QTextDocumentFragment:fromHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentFragment:fromPlainText( ... )
@@ -186,5 +186,5 @@ METHOD QTextDocumentFragment:fromPlainText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

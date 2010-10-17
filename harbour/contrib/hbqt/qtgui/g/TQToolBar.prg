@@ -144,7 +144,7 @@ CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
 METHOD QToolBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QToolBar( ... )
    RETURN Self
@@ -165,7 +165,7 @@ METHOD QToolBar:actionAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:addAction( ... )
@@ -197,7 +197,7 @@ METHOD QToolBar:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:addSeparator( ... )
@@ -205,7 +205,7 @@ METHOD QToolBar:addSeparator( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QToolBar_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:addWidget( ... )
@@ -217,7 +217,7 @@ METHOD QToolBar:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:allowedAreas( ... )
@@ -225,7 +225,7 @@ METHOD QToolBar:allowedAreas( ... )
    CASE 0
       RETURN Qt_QToolBar_allowedAreas( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:clear( ... )
@@ -233,7 +233,7 @@ METHOD QToolBar:clear( ... )
    CASE 0
       RETURN Qt_QToolBar_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:iconSize( ... )
@@ -241,7 +241,7 @@ METHOD QToolBar:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QToolBar_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:insertSeparator( ... )
@@ -253,7 +253,7 @@ METHOD QToolBar:insertSeparator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:insertWidget( ... )
@@ -265,7 +265,7 @@ METHOD QToolBar:insertWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:isAreaAllowed( ... )
@@ -277,7 +277,7 @@ METHOD QToolBar:isAreaAllowed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:isFloatable( ... )
@@ -285,7 +285,7 @@ METHOD QToolBar:isFloatable( ... )
    CASE 0
       RETURN Qt_QToolBar_isFloatable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:isFloating( ... )
@@ -293,7 +293,7 @@ METHOD QToolBar:isFloating( ... )
    CASE 0
       RETURN Qt_QToolBar_isFloating( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:isMovable( ... )
@@ -301,7 +301,7 @@ METHOD QToolBar:isMovable( ... )
    CASE 0
       RETURN Qt_QToolBar_isMovable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:orientation( ... )
@@ -309,7 +309,7 @@ METHOD QToolBar:orientation( ... )
    CASE 0
       RETURN Qt_QToolBar_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setAllowedAreas( ... )
@@ -321,7 +321,7 @@ METHOD QToolBar:setAllowedAreas( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setFloatable( ... )
@@ -333,7 +333,7 @@ METHOD QToolBar:setFloatable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setMovable( ... )
@@ -345,7 +345,7 @@ METHOD QToolBar:setMovable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setOrientation( ... )
@@ -357,7 +357,7 @@ METHOD QToolBar:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:toggleViewAction( ... )
@@ -365,7 +365,7 @@ METHOD QToolBar:toggleViewAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QToolBar_toggleViewAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:toolButtonStyle( ... )
@@ -373,7 +373,7 @@ METHOD QToolBar:toolButtonStyle( ... )
    CASE 0
       RETURN Qt_QToolBar_toolButtonStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:widgetForAction( ... )
@@ -385,7 +385,7 @@ METHOD QToolBar:widgetForAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setIconSize( ... )
@@ -397,7 +397,7 @@ METHOD QToolBar:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBar:setToolButtonStyle( ... )
@@ -409,5 +409,5 @@ METHOD QToolBar:setToolButtonStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

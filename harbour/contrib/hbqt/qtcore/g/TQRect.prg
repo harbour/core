@@ -175,7 +175,7 @@ CREATE CLASS QRect INHERIT HbQtObjectHandler FUNCTION HB_QRect
 METHOD QRect:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QRect( ... )
    RETURN Self
@@ -190,7 +190,7 @@ METHOD QRect:adjust( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:adjusted( ... )
@@ -202,7 +202,7 @@ METHOD QRect:adjusted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:bottom( ... )
@@ -210,7 +210,7 @@ METHOD QRect:bottom( ... )
    CASE 0
       RETURN Qt_QRect_bottom( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:bottomLeft( ... )
@@ -218,7 +218,7 @@ METHOD QRect:bottomLeft( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QRect_bottomLeft( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:bottomRight( ... )
@@ -226,7 +226,7 @@ METHOD QRect:bottomRight( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QRect_bottomRight( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:center( ... )
@@ -234,7 +234,7 @@ METHOD QRect:center( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QRect_center( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:contains( ... )
@@ -270,7 +270,7 @@ METHOD QRect:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:getCoords( ... )
@@ -282,7 +282,7 @@ METHOD QRect:getCoords( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:getRect( ... )
@@ -294,7 +294,7 @@ METHOD QRect:getRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:height( ... )
@@ -302,7 +302,7 @@ METHOD QRect:height( ... )
    CASE 0
       RETURN Qt_QRect_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:intersected( ... )
@@ -314,7 +314,7 @@ METHOD QRect:intersected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:intersects( ... )
@@ -326,7 +326,7 @@ METHOD QRect:intersects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:isEmpty( ... )
@@ -334,7 +334,7 @@ METHOD QRect:isEmpty( ... )
    CASE 0
       RETURN Qt_QRect_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:isNull( ... )
@@ -342,7 +342,7 @@ METHOD QRect:isNull( ... )
    CASE 0
       RETURN Qt_QRect_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:isValid( ... )
@@ -350,7 +350,7 @@ METHOD QRect:isValid( ... )
    CASE 0
       RETURN Qt_QRect_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:left( ... )
@@ -358,7 +358,7 @@ METHOD QRect:left( ... )
    CASE 0
       RETURN Qt_QRect_left( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveBottom( ... )
@@ -370,7 +370,7 @@ METHOD QRect:moveBottom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveBottomLeft( ... )
@@ -382,7 +382,7 @@ METHOD QRect:moveBottomLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveBottomRight( ... )
@@ -394,7 +394,7 @@ METHOD QRect:moveBottomRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveCenter( ... )
@@ -406,7 +406,7 @@ METHOD QRect:moveCenter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveLeft( ... )
@@ -418,7 +418,7 @@ METHOD QRect:moveLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveRight( ... )
@@ -430,7 +430,7 @@ METHOD QRect:moveRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveTo( ... )
@@ -448,7 +448,7 @@ METHOD QRect:moveTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveTop( ... )
@@ -460,7 +460,7 @@ METHOD QRect:moveTop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveTopLeft( ... )
@@ -472,7 +472,7 @@ METHOD QRect:moveTopLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:moveTopRight( ... )
@@ -484,7 +484,7 @@ METHOD QRect:moveTopRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:normalized( ... )
@@ -492,7 +492,7 @@ METHOD QRect:normalized( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QRect_normalized( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:right( ... )
@@ -500,7 +500,7 @@ METHOD QRect:right( ... )
    CASE 0
       RETURN Qt_QRect_right( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setBottom( ... )
@@ -512,7 +512,7 @@ METHOD QRect:setBottom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setBottomLeft( ... )
@@ -524,7 +524,7 @@ METHOD QRect:setBottomLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setBottomRight( ... )
@@ -536,7 +536,7 @@ METHOD QRect:setBottomRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setCoords( ... )
@@ -548,7 +548,7 @@ METHOD QRect:setCoords( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setHeight( ... )
@@ -560,7 +560,7 @@ METHOD QRect:setHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setLeft( ... )
@@ -572,7 +572,7 @@ METHOD QRect:setLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setRect( ... )
@@ -584,7 +584,7 @@ METHOD QRect:setRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setRight( ... )
@@ -596,7 +596,7 @@ METHOD QRect:setRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setSize( ... )
@@ -608,7 +608,7 @@ METHOD QRect:setSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setTop( ... )
@@ -620,7 +620,7 @@ METHOD QRect:setTop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setTopLeft( ... )
@@ -632,7 +632,7 @@ METHOD QRect:setTopLeft( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setTopRight( ... )
@@ -644,7 +644,7 @@ METHOD QRect:setTopRight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setWidth( ... )
@@ -656,7 +656,7 @@ METHOD QRect:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setX( ... )
@@ -668,7 +668,7 @@ METHOD QRect:setX( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:setY( ... )
@@ -680,7 +680,7 @@ METHOD QRect:setY( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:size( ... )
@@ -688,7 +688,7 @@ METHOD QRect:size( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QRect_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:top( ... )
@@ -696,7 +696,7 @@ METHOD QRect:top( ... )
    CASE 0
       RETURN Qt_QRect_top( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:topLeft( ... )
@@ -704,7 +704,7 @@ METHOD QRect:topLeft( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QRect_topLeft( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:topRight( ... )
@@ -712,7 +712,7 @@ METHOD QRect:topRight( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QRect_topRight( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:translate( ... )
@@ -730,7 +730,7 @@ METHOD QRect:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:translated( ... )
@@ -748,7 +748,7 @@ METHOD QRect:translated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:united( ... )
@@ -760,7 +760,7 @@ METHOD QRect:united( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:width( ... )
@@ -768,7 +768,7 @@ METHOD QRect:width( ... )
    CASE 0
       RETURN Qt_QRect_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:x( ... )
@@ -776,7 +776,7 @@ METHOD QRect:x( ... )
    CASE 0
       RETURN Qt_QRect_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRect:y( ... )
@@ -784,5 +784,5 @@ METHOD QRect:y( ... )
    CASE 0
       RETURN Qt_QRect_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

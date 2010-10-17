@@ -131,7 +131,7 @@ CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION 
 METHOD QItemSelectionModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemSelectionModel( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QItemSelectionModel:columnIntersectsSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:currentIndex( ... )
@@ -154,7 +154,7 @@ METHOD QItemSelectionModel:currentIndex( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QItemSelectionModel_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:hasSelection( ... )
@@ -162,7 +162,7 @@ METHOD QItemSelectionModel:hasSelection( ... )
    CASE 0
       RETURN Qt_QItemSelectionModel_hasSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:isColumnSelected( ... )
@@ -174,7 +174,7 @@ METHOD QItemSelectionModel:isColumnSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:isRowSelected( ... )
@@ -186,7 +186,7 @@ METHOD QItemSelectionModel:isRowSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:isSelected( ... )
@@ -198,7 +198,7 @@ METHOD QItemSelectionModel:isSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:model( ... )
@@ -206,7 +206,7 @@ METHOD QItemSelectionModel:model( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QItemSelectionModel_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:rowIntersectsSelection( ... )
@@ -218,7 +218,7 @@ METHOD QItemSelectionModel:rowIntersectsSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:selection( ... )
@@ -226,7 +226,7 @@ METHOD QItemSelectionModel:selection( ... )
    CASE 0
       RETURN QItemSelectionFromPointer( Qt_QItemSelectionModel_selection( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:clear( ... )
@@ -234,7 +234,7 @@ METHOD QItemSelectionModel:clear( ... )
    CASE 0
       RETURN Qt_QItemSelectionModel_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:clearSelection( ... )
@@ -242,7 +242,7 @@ METHOD QItemSelectionModel:clearSelection( ... )
    CASE 0
       RETURN Qt_QItemSelectionModel_clearSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:reset( ... )
@@ -250,7 +250,7 @@ METHOD QItemSelectionModel:reset( ... )
    CASE 0
       RETURN Qt_QItemSelectionModel_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:select( ... )
@@ -267,7 +267,7 @@ METHOD QItemSelectionModel:select( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelectionModel:setCurrentIndex( ... )
@@ -279,5 +279,5 @@ METHOD QItemSelectionModel:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

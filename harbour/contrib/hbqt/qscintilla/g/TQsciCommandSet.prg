@@ -121,7 +121,7 @@ CREATE CLASS QsciCommandSet INHERIT HbQtObjectHandler FUNCTION HB_QsciCommandSet
 METHOD QsciCommandSet:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciCommandSet( ... )
    RETURN Self
@@ -142,7 +142,7 @@ METHOD QsciCommandSet:readSettings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommandSet:writeSettings( ... )
@@ -160,7 +160,7 @@ METHOD QsciCommandSet:writeSettings( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommandSet:commands( ... )
@@ -168,7 +168,7 @@ METHOD QsciCommandSet:commands( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QsciCommandSet_commands( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommandSet:clearKeys( ... )
@@ -176,7 +176,7 @@ METHOD QsciCommandSet:clearKeys( ... )
    CASE 0
       RETURN Qt_QsciCommandSet_clearKeys( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciCommandSet:clearAlternateKeys( ... )
@@ -184,5 +184,5 @@ METHOD QsciCommandSet:clearAlternateKeys( ... )
    CASE 0
       RETURN Qt_QsciCommandSet_clearAlternateKeys( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

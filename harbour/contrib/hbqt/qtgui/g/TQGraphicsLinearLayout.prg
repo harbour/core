@@ -132,7 +132,7 @@ CREATE CLASS QGraphicsLinearLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout
 METHOD QGraphicsLinearLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsLinearLayout( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QGraphicsLinearLayout:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:addStretch( ... )
@@ -161,7 +161,7 @@ METHOD QGraphicsLinearLayout:addStretch( ... )
    CASE 0
       RETURN Qt_QGraphicsLinearLayout_addStretch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:alignment( ... )
@@ -173,7 +173,7 @@ METHOD QGraphicsLinearLayout:alignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:insertItem( ... )
@@ -185,7 +185,7 @@ METHOD QGraphicsLinearLayout:insertItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:insertStretch( ... )
@@ -203,7 +203,7 @@ METHOD QGraphicsLinearLayout:insertStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:itemSpacing( ... )
@@ -215,7 +215,7 @@ METHOD QGraphicsLinearLayout:itemSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:orientation( ... )
@@ -223,7 +223,7 @@ METHOD QGraphicsLinearLayout:orientation( ... )
    CASE 0
       RETURN Qt_QGraphicsLinearLayout_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:removeAt( ... )
@@ -235,7 +235,7 @@ METHOD QGraphicsLinearLayout:removeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:removeItem( ... )
@@ -247,7 +247,7 @@ METHOD QGraphicsLinearLayout:removeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:setAlignment( ... )
@@ -259,7 +259,7 @@ METHOD QGraphicsLinearLayout:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:setItemSpacing( ... )
@@ -271,7 +271,7 @@ METHOD QGraphicsLinearLayout:setItemSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:setOrientation( ... )
@@ -283,7 +283,7 @@ METHOD QGraphicsLinearLayout:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:setSpacing( ... )
@@ -295,7 +295,7 @@ METHOD QGraphicsLinearLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:setStretchFactor( ... )
@@ -307,7 +307,7 @@ METHOD QGraphicsLinearLayout:setStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:spacing( ... )
@@ -315,7 +315,7 @@ METHOD QGraphicsLinearLayout:spacing( ... )
    CASE 0
       RETURN Qt_QGraphicsLinearLayout_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLinearLayout:stretchFactor( ... )
@@ -327,5 +327,5 @@ METHOD QGraphicsLinearLayout:stretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

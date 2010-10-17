@@ -120,7 +120,7 @@ CREATE CLASS QTextObject INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QText
 METHOD QTextObject:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextObject( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QTextObject:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QTextObject_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextObject:format( ... )
@@ -139,7 +139,7 @@ METHOD QTextObject:format( ... )
    CASE 0
       RETURN QTextFormatFromPointer( Qt_QTextObject_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextObject:formatIndex( ... )
@@ -147,7 +147,7 @@ METHOD QTextObject:formatIndex( ... )
    CASE 0
       RETURN Qt_QTextObject_formatIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextObject:objectIndex( ... )
@@ -155,5 +155,5 @@ METHOD QTextObject:objectIndex( ... )
    CASE 0
       RETURN Qt_QTextObject_objectIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -119,7 +119,7 @@ CREATE CLASS QItemSelection INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QIte
 METHOD QItemSelection:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemSelection( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QItemSelection:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelection:merge( ... )
@@ -146,7 +146,7 @@ METHOD QItemSelection:merge( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemSelection:select( ... )
@@ -158,5 +158,5 @@ METHOD QItemSelection:select( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

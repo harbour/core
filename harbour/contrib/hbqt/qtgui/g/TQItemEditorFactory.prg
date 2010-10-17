@@ -120,7 +120,7 @@ CREATE CLASS QItemEditorFactory INHERIT HbQtObjectHandler FUNCTION HB_QItemEdito
 METHOD QItemEditorFactory:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemEditorFactory( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QItemEditorFactory:createEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemEditorFactory:registerEditor( ... )
@@ -147,7 +147,7 @@ METHOD QItemEditorFactory:registerEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemEditorFactory:valuePropertyName( ... )
@@ -159,7 +159,7 @@ METHOD QItemEditorFactory:valuePropertyName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemEditorFactory:setDefaultFactory( ... )
@@ -171,5 +171,5 @@ METHOD QItemEditorFactory:setDefaultFactory( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

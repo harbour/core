@@ -122,7 +122,7 @@ CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
 METHOD QLinearGradient:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLinearGradient( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QLinearGradient:finalStop( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QLinearGradient_finalStop( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLinearGradient:setFinalStop( ... )
@@ -151,7 +151,7 @@ METHOD QLinearGradient:setFinalStop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLinearGradient:setStart( ... )
@@ -169,7 +169,7 @@ METHOD QLinearGradient:setStart( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLinearGradient:start( ... )
@@ -177,5 +177,5 @@ METHOD QLinearGradient:start( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QLinearGradient_start( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

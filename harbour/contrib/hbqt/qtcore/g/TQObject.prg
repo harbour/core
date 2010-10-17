@@ -140,7 +140,7 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler FUNCTION HB_QObject
 METHOD QObject:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QObject( ... )
    RETURN Self
@@ -155,7 +155,7 @@ METHOD QObject:blockSignals( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:dumpObjectInfo( ... )
@@ -163,7 +163,7 @@ METHOD QObject:dumpObjectInfo( ... )
    CASE 0
       RETURN Qt_QObject_dumpObjectInfo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:dumpObjectTree( ... )
@@ -171,7 +171,7 @@ METHOD QObject:dumpObjectTree( ... )
    CASE 0
       RETURN Qt_QObject_dumpObjectTree( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:dynamicPropertyNames( ... )
@@ -179,7 +179,7 @@ METHOD QObject:dynamicPropertyNames( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QObject_dynamicPropertyNames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:event( ... )
@@ -191,7 +191,7 @@ METHOD QObject:event( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:eventFilter( ... )
@@ -203,7 +203,7 @@ METHOD QObject:eventFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:inherits( ... )
@@ -215,7 +215,7 @@ METHOD QObject:inherits( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:installEventFilter( ... )
@@ -227,7 +227,7 @@ METHOD QObject:installEventFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:isWidgetType( ... )
@@ -235,7 +235,7 @@ METHOD QObject:isWidgetType( ... )
    CASE 0
       RETURN Qt_QObject_isWidgetType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:killTimer( ... )
@@ -247,7 +247,7 @@ METHOD QObject:killTimer( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:moveToThread( ... )
@@ -259,7 +259,7 @@ METHOD QObject:moveToThread( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:objectName( ... )
@@ -267,7 +267,7 @@ METHOD QObject:objectName( ... )
    CASE 0
       RETURN Qt_QObject_objectName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:parent( ... )
@@ -275,7 +275,7 @@ METHOD QObject:parent( ... )
    CASE 0
       RETURN QObjectFromPointer( Qt_QObject_parent( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:property( ... )
@@ -287,7 +287,7 @@ METHOD QObject:property( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:removeEventFilter( ... )
@@ -299,7 +299,7 @@ METHOD QObject:removeEventFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:setObjectName( ... )
@@ -311,7 +311,7 @@ METHOD QObject:setObjectName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:setParent( ... )
@@ -323,7 +323,7 @@ METHOD QObject:setParent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:setProperty( ... )
@@ -335,7 +335,7 @@ METHOD QObject:setProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:signalsBlocked( ... )
@@ -343,7 +343,7 @@ METHOD QObject:signalsBlocked( ... )
    CASE 0
       RETURN Qt_QObject_signalsBlocked( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:startTimer( ... )
@@ -355,7 +355,7 @@ METHOD QObject:startTimer( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:thread( ... )
@@ -363,7 +363,7 @@ METHOD QObject:thread( ... )
    CASE 0
       RETURN QThreadFromPointer( Qt_QObject_thread( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:tr( ... )
@@ -387,7 +387,7 @@ METHOD QObject:tr( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:trUtf8( ... )
@@ -411,7 +411,7 @@ METHOD QObject:trUtf8( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QObject:deleteLater( ... )
@@ -419,5 +419,5 @@ METHOD QObject:deleteLater( ... )
    CASE 0
       RETURN Qt_QObject_deleteLater( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

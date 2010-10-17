@@ -163,7 +163,7 @@ CREATE CLASS QTextCharFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION 
 METHOD QTextCharFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextCharFormat( ... )
    RETURN Self
@@ -174,7 +174,7 @@ METHOD QTextCharFormat:anchorHref( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_anchorHref( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:anchorNames( ... )
@@ -182,7 +182,7 @@ METHOD QTextCharFormat:anchorNames( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QTextCharFormat_anchorNames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:font( ... )
@@ -190,7 +190,7 @@ METHOD QTextCharFormat:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTextCharFormat_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontCapitalization( ... )
@@ -198,7 +198,7 @@ METHOD QTextCharFormat:fontCapitalization( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontCapitalization( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontFamily( ... )
@@ -206,7 +206,7 @@ METHOD QTextCharFormat:fontFamily( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontFamily( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontFixedPitch( ... )
@@ -214,7 +214,7 @@ METHOD QTextCharFormat:fontFixedPitch( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontFixedPitch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontItalic( ... )
@@ -222,7 +222,7 @@ METHOD QTextCharFormat:fontItalic( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontItalic( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontKerning( ... )
@@ -230,7 +230,7 @@ METHOD QTextCharFormat:fontKerning( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontKerning( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontLetterSpacing( ... )
@@ -238,7 +238,7 @@ METHOD QTextCharFormat:fontLetterSpacing( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontLetterSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontOverline( ... )
@@ -246,7 +246,7 @@ METHOD QTextCharFormat:fontOverline( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontOverline( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontPointSize( ... )
@@ -254,7 +254,7 @@ METHOD QTextCharFormat:fontPointSize( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontPointSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontStrikeOut( ... )
@@ -262,7 +262,7 @@ METHOD QTextCharFormat:fontStrikeOut( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontStrikeOut( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontStyleHint( ... )
@@ -270,7 +270,7 @@ METHOD QTextCharFormat:fontStyleHint( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontStyleHint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontStyleStrategy( ... )
@@ -278,7 +278,7 @@ METHOD QTextCharFormat:fontStyleStrategy( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontStyleStrategy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontUnderline( ... )
@@ -286,7 +286,7 @@ METHOD QTextCharFormat:fontUnderline( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontUnderline( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontWeight( ... )
@@ -294,7 +294,7 @@ METHOD QTextCharFormat:fontWeight( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontWeight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:fontWordSpacing( ... )
@@ -302,7 +302,7 @@ METHOD QTextCharFormat:fontWordSpacing( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_fontWordSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:isAnchor( ... )
@@ -310,7 +310,7 @@ METHOD QTextCharFormat:isAnchor( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_isAnchor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:isValid( ... )
@@ -318,7 +318,7 @@ METHOD QTextCharFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setAnchor( ... )
@@ -330,7 +330,7 @@ METHOD QTextCharFormat:setAnchor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setAnchorHref( ... )
@@ -342,7 +342,7 @@ METHOD QTextCharFormat:setAnchorHref( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setAnchorNames( ... )
@@ -354,7 +354,7 @@ METHOD QTextCharFormat:setAnchorNames( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFont( ... )
@@ -366,7 +366,7 @@ METHOD QTextCharFormat:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontCapitalization( ... )
@@ -378,7 +378,7 @@ METHOD QTextCharFormat:setFontCapitalization( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontFamily( ... )
@@ -390,7 +390,7 @@ METHOD QTextCharFormat:setFontFamily( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontFixedPitch( ... )
@@ -402,7 +402,7 @@ METHOD QTextCharFormat:setFontFixedPitch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontItalic( ... )
@@ -414,7 +414,7 @@ METHOD QTextCharFormat:setFontItalic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontKerning( ... )
@@ -426,7 +426,7 @@ METHOD QTextCharFormat:setFontKerning( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontLetterSpacing( ... )
@@ -438,7 +438,7 @@ METHOD QTextCharFormat:setFontLetterSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontOverline( ... )
@@ -450,7 +450,7 @@ METHOD QTextCharFormat:setFontOverline( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontPointSize( ... )
@@ -462,7 +462,7 @@ METHOD QTextCharFormat:setFontPointSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontStrikeOut( ... )
@@ -474,7 +474,7 @@ METHOD QTextCharFormat:setFontStrikeOut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontStyleHint( ... )
@@ -492,7 +492,7 @@ METHOD QTextCharFormat:setFontStyleHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontStyleStrategy( ... )
@@ -504,7 +504,7 @@ METHOD QTextCharFormat:setFontStyleStrategy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontUnderline( ... )
@@ -516,7 +516,7 @@ METHOD QTextCharFormat:setFontUnderline( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontWeight( ... )
@@ -528,7 +528,7 @@ METHOD QTextCharFormat:setFontWeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setFontWordSpacing( ... )
@@ -540,7 +540,7 @@ METHOD QTextCharFormat:setFontWordSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setTextOutline( ... )
@@ -552,7 +552,7 @@ METHOD QTextCharFormat:setTextOutline( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setToolTip( ... )
@@ -564,7 +564,7 @@ METHOD QTextCharFormat:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setUnderlineColor( ... )
@@ -576,7 +576,7 @@ METHOD QTextCharFormat:setUnderlineColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setUnderlineStyle( ... )
@@ -588,7 +588,7 @@ METHOD QTextCharFormat:setUnderlineStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:setVerticalAlignment( ... )
@@ -600,7 +600,7 @@ METHOD QTextCharFormat:setVerticalAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:textOutline( ... )
@@ -608,7 +608,7 @@ METHOD QTextCharFormat:textOutline( ... )
    CASE 0
       RETURN QPenFromPointer( Qt_QTextCharFormat_textOutline( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:toolTip( ... )
@@ -616,7 +616,7 @@ METHOD QTextCharFormat:toolTip( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:underlineColor( ... )
@@ -624,7 +624,7 @@ METHOD QTextCharFormat:underlineColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QTextCharFormat_underlineColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:underlineStyle( ... )
@@ -632,7 +632,7 @@ METHOD QTextCharFormat:underlineStyle( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_underlineStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCharFormat:verticalAlignment( ... )
@@ -640,5 +640,5 @@ METHOD QTextCharFormat:verticalAlignment( ... )
    CASE 0
       RETURN Qt_QTextCharFormat_verticalAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

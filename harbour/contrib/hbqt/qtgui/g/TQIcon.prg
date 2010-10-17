@@ -126,7 +126,7 @@ CREATE CLASS QIcon INHERIT HbQtObjectHandler FUNCTION HB_QIcon
 METHOD QIcon:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QIcon( ... )
    RETURN Self
@@ -153,7 +153,7 @@ METHOD QIcon:actualSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:addFile( ... )
@@ -183,7 +183,7 @@ METHOD QIcon:addFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:addPixmap( ... )
@@ -207,7 +207,7 @@ METHOD QIcon:addPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:availableSizes( ... )
@@ -227,7 +227,7 @@ METHOD QIcon:availableSizes( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QIcon_availableSizes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:cacheKey( ... )
@@ -235,7 +235,7 @@ METHOD QIcon:cacheKey( ... )
    CASE 0
       RETURN Qt_QIcon_cacheKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:isNull( ... )
@@ -243,7 +243,7 @@ METHOD QIcon:isNull( ... )
    CASE 0
       RETURN Qt_QIcon_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:paint( ... )
@@ -293,7 +293,7 @@ METHOD QIcon:paint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIcon:pixmap( ... )
@@ -327,5 +327,5 @@ METHOD QIcon:pixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -295,7 +295,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
 METHOD QPainter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPainter( ... )
    RETURN Self
@@ -306,7 +306,7 @@ METHOD QPainter:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QPainter_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:backgroundMode( ... )
@@ -314,7 +314,7 @@ METHOD QPainter:backgroundMode( ... )
    CASE 0
       RETURN Qt_QPainter_backgroundMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:begin( ... )
@@ -326,7 +326,7 @@ METHOD QPainter:begin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:boundingRect( ... )
@@ -357,7 +357,7 @@ METHOD QPainter:boundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:brush( ... )
@@ -365,7 +365,7 @@ METHOD QPainter:brush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QPainter_brush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:brushOrigin( ... )
@@ -373,7 +373,7 @@ METHOD QPainter:brushOrigin( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QPainter_brushOrigin( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:clipPath( ... )
@@ -381,7 +381,7 @@ METHOD QPainter:clipPath( ... )
    CASE 0
       RETURN QPainterPathFromPointer( Qt_QPainter_clipPath( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:clipRegion( ... )
@@ -389,7 +389,7 @@ METHOD QPainter:clipRegion( ... )
    CASE 0
       RETURN QRegionFromPointer( Qt_QPainter_clipRegion( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:combinedMatrix( ... )
@@ -397,7 +397,7 @@ METHOD QPainter:combinedMatrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QPainter_combinedMatrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:combinedTransform( ... )
@@ -405,7 +405,7 @@ METHOD QPainter:combinedTransform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QPainter_combinedTransform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:compositionMode( ... )
@@ -413,7 +413,7 @@ METHOD QPainter:compositionMode( ... )
    CASE 0
       RETURN Qt_QPainter_compositionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:device( ... )
@@ -421,7 +421,7 @@ METHOD QPainter:device( ... )
    CASE 0
       RETURN QPaintDeviceFromPointer( Qt_QPainter_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:deviceMatrix( ... )
@@ -429,7 +429,7 @@ METHOD QPainter:deviceMatrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QPainter_deviceMatrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:deviceTransform( ... )
@@ -437,7 +437,7 @@ METHOD QPainter:deviceTransform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QPainter_deviceTransform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawArc( ... )
@@ -460,7 +460,7 @@ METHOD QPainter:drawArc( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawChord( ... )
@@ -483,7 +483,7 @@ METHOD QPainter:drawChord( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawConvexPolygon( ... )
@@ -511,7 +511,7 @@ METHOD QPainter:drawConvexPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawEllipse( ... )
@@ -545,7 +545,7 @@ METHOD QPainter:drawEllipse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawImage( ... )
@@ -624,7 +624,7 @@ METHOD QPainter:drawImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawLine( ... )
@@ -658,7 +658,7 @@ METHOD QPainter:drawLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawLines( ... )
@@ -679,7 +679,7 @@ METHOD QPainter:drawLines( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPath( ... )
@@ -691,7 +691,7 @@ METHOD QPainter:drawPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPicture( ... )
@@ -714,7 +714,7 @@ METHOD QPainter:drawPicture( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPie( ... )
@@ -737,7 +737,7 @@ METHOD QPainter:drawPie( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPixmap( ... )
@@ -791,7 +791,7 @@ METHOD QPainter:drawPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPoint( ... )
@@ -814,7 +814,7 @@ METHOD QPainter:drawPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPoints( ... )
@@ -842,7 +842,7 @@ METHOD QPainter:drawPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPolygon( ... )
@@ -885,7 +885,7 @@ METHOD QPainter:drawPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawPolyline( ... )
@@ -913,7 +913,7 @@ METHOD QPainter:drawPolyline( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawRect( ... )
@@ -936,7 +936,7 @@ METHOD QPainter:drawRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawRects( ... )
@@ -953,7 +953,7 @@ METHOD QPainter:drawRects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawRoundedRect( ... )
@@ -993,7 +993,7 @@ METHOD QPainter:drawRoundedRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawText( ... )
@@ -1050,7 +1050,7 @@ METHOD QPainter:drawText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:drawTiledPixmap( ... )
@@ -1096,7 +1096,7 @@ METHOD QPainter:drawTiledPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:end( ... )
@@ -1104,7 +1104,7 @@ METHOD QPainter:end( ... )
    CASE 0
       RETURN Qt_QPainter_end( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:eraseRect( ... )
@@ -1127,7 +1127,7 @@ METHOD QPainter:eraseRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:fillPath( ... )
@@ -1139,7 +1139,7 @@ METHOD QPainter:fillPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:fillRect( ... )
@@ -1180,7 +1180,7 @@ METHOD QPainter:fillRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:font( ... )
@@ -1188,7 +1188,7 @@ METHOD QPainter:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QPainter_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:fontInfo( ... )
@@ -1196,7 +1196,7 @@ METHOD QPainter:fontInfo( ... )
    CASE 0
       RETURN QFontInfoFromPointer( Qt_QPainter_fontInfo( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:fontMetrics( ... )
@@ -1204,7 +1204,7 @@ METHOD QPainter:fontMetrics( ... )
    CASE 0
       RETURN QFontMetricsFromPointer( Qt_QPainter_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:hasClipping( ... )
@@ -1212,7 +1212,7 @@ METHOD QPainter:hasClipping( ... )
    CASE 0
       RETURN Qt_QPainter_hasClipping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:initFrom( ... )
@@ -1224,7 +1224,7 @@ METHOD QPainter:initFrom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:isActive( ... )
@@ -1232,7 +1232,7 @@ METHOD QPainter:isActive( ... )
    CASE 0
       RETURN Qt_QPainter_isActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:layoutDirection( ... )
@@ -1240,7 +1240,7 @@ METHOD QPainter:layoutDirection( ... )
    CASE 0
       RETURN Qt_QPainter_layoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:opacity( ... )
@@ -1248,7 +1248,7 @@ METHOD QPainter:opacity( ... )
    CASE 0
       RETURN Qt_QPainter_opacity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:paintEngine( ... )
@@ -1256,7 +1256,7 @@ METHOD QPainter:paintEngine( ... )
    CASE 0
       RETURN QPaintEngineFromPointer( Qt_QPainter_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:pen( ... )
@@ -1264,7 +1264,7 @@ METHOD QPainter:pen( ... )
    CASE 0
       RETURN QPenFromPointer( Qt_QPainter_pen( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:renderHints( ... )
@@ -1272,7 +1272,7 @@ METHOD QPainter:renderHints( ... )
    CASE 0
       RETURN Qt_QPainter_renderHints( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:resetMatrix( ... )
@@ -1280,7 +1280,7 @@ METHOD QPainter:resetMatrix( ... )
    CASE 0
       RETURN Qt_QPainter_resetMatrix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:resetTransform( ... )
@@ -1288,7 +1288,7 @@ METHOD QPainter:resetTransform( ... )
    CASE 0
       RETURN Qt_QPainter_resetTransform( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:restore( ... )
@@ -1296,7 +1296,7 @@ METHOD QPainter:restore( ... )
    CASE 0
       RETURN Qt_QPainter_restore( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:rotate( ... )
@@ -1308,7 +1308,7 @@ METHOD QPainter:rotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:save( ... )
@@ -1316,7 +1316,7 @@ METHOD QPainter:save( ... )
    CASE 0
       RETURN Qt_QPainter_save( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:scale( ... )
@@ -1328,7 +1328,7 @@ METHOD QPainter:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setBackground( ... )
@@ -1340,7 +1340,7 @@ METHOD QPainter:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setBackgroundMode( ... )
@@ -1352,7 +1352,7 @@ METHOD QPainter:setBackgroundMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setBrush( ... )
@@ -1366,7 +1366,7 @@ METHOD QPainter:setBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setBrushOrigin( ... )
@@ -1389,7 +1389,7 @@ METHOD QPainter:setBrushOrigin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setClipPath( ... )
@@ -1407,7 +1407,7 @@ METHOD QPainter:setClipPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setClipRect( ... )
@@ -1447,7 +1447,7 @@ METHOD QPainter:setClipRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setClipRegion( ... )
@@ -1465,7 +1465,7 @@ METHOD QPainter:setClipRegion( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setClipping( ... )
@@ -1477,7 +1477,7 @@ METHOD QPainter:setClipping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setCompositionMode( ... )
@@ -1489,7 +1489,7 @@ METHOD QPainter:setCompositionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setFont( ... )
@@ -1501,7 +1501,7 @@ METHOD QPainter:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setLayoutDirection( ... )
@@ -1513,7 +1513,7 @@ METHOD QPainter:setLayoutDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setOpacity( ... )
@@ -1525,7 +1525,7 @@ METHOD QPainter:setOpacity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setPen( ... )
@@ -1544,7 +1544,7 @@ METHOD QPainter:setPen( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setRenderHint( ... )
@@ -1562,7 +1562,7 @@ METHOD QPainter:setRenderHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setRenderHints( ... )
@@ -1580,7 +1580,7 @@ METHOD QPainter:setRenderHints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setTransform( ... )
@@ -1598,7 +1598,7 @@ METHOD QPainter:setTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setViewTransformEnabled( ... )
@@ -1610,7 +1610,7 @@ METHOD QPainter:setViewTransformEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setViewport( ... )
@@ -1628,7 +1628,7 @@ METHOD QPainter:setViewport( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setWindow( ... )
@@ -1646,7 +1646,7 @@ METHOD QPainter:setWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setWorldMatrix( ... )
@@ -1664,7 +1664,7 @@ METHOD QPainter:setWorldMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setWorldMatrixEnabled( ... )
@@ -1676,7 +1676,7 @@ METHOD QPainter:setWorldMatrixEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setWorldTransform( ... )
@@ -1694,7 +1694,7 @@ METHOD QPainter:setWorldTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:shear( ... )
@@ -1706,7 +1706,7 @@ METHOD QPainter:shear( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:strokePath( ... )
@@ -1718,7 +1718,7 @@ METHOD QPainter:strokePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:testRenderHint( ... )
@@ -1730,7 +1730,7 @@ METHOD QPainter:testRenderHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:transform( ... )
@@ -1738,7 +1738,7 @@ METHOD QPainter:transform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QPainter_transform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:translate( ... )
@@ -1761,7 +1761,7 @@ METHOD QPainter:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:viewTransformEnabled( ... )
@@ -1769,7 +1769,7 @@ METHOD QPainter:viewTransformEnabled( ... )
    CASE 0
       RETURN Qt_QPainter_viewTransformEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:viewport( ... )
@@ -1777,7 +1777,7 @@ METHOD QPainter:viewport( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPainter_viewport( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:window( ... )
@@ -1785,7 +1785,7 @@ METHOD QPainter:window( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPainter_window( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:worldMatrix( ... )
@@ -1793,7 +1793,7 @@ METHOD QPainter:worldMatrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QPainter_worldMatrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:worldMatrixEnabled( ... )
@@ -1801,7 +1801,7 @@ METHOD QPainter:worldMatrixEnabled( ... )
    CASE 0
       RETURN Qt_QPainter_worldMatrixEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:worldTransform( ... )
@@ -1809,7 +1809,7 @@ METHOD QPainter:worldTransform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QPainter_worldTransform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:redirected( ... )
@@ -1827,7 +1827,7 @@ METHOD QPainter:redirected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:restoreRedirected( ... )
@@ -1839,7 +1839,7 @@ METHOD QPainter:restoreRedirected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPainter:setRedirected( ... )
@@ -1857,5 +1857,5 @@ METHOD QPainter:setRedirected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

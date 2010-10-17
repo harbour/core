@@ -152,7 +152,7 @@ CREATE CLASS QList INHERIT HbQtObjectHandler FUNCTION HB_QList
 METHOD QList:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QList( ... )
    RETURN Self
@@ -167,7 +167,7 @@ METHOD QList:append( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:at( ... )
@@ -179,7 +179,7 @@ METHOD QList:at( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:back( ... )
@@ -187,7 +187,7 @@ METHOD QList:back( ... )
    CASE 0
       RETURN Qt_QList_back( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:clear( ... )
@@ -195,7 +195,7 @@ METHOD QList:clear( ... )
    CASE 0
       RETURN Qt_QList_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:count( ... )
@@ -209,7 +209,7 @@ METHOD QList:count( ... )
    CASE 0
       RETURN Qt_QList_count_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:empty( ... )
@@ -217,7 +217,7 @@ METHOD QList:empty( ... )
    CASE 0
       RETURN Qt_QList_empty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:endsWith( ... )
@@ -229,7 +229,7 @@ METHOD QList:endsWith( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:first( ... )
@@ -237,7 +237,7 @@ METHOD QList:first( ... )
    CASE 0
       RETURN Qt_QList_first( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:front( ... )
@@ -245,7 +245,7 @@ METHOD QList:front( ... )
    CASE 0
       RETURN Qt_QList_front( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:indexOf( ... )
@@ -263,7 +263,7 @@ METHOD QList:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:insert( ... )
@@ -275,7 +275,7 @@ METHOD QList:insert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:isEmpty( ... )
@@ -283,7 +283,7 @@ METHOD QList:isEmpty( ... )
    CASE 0
       RETURN Qt_QList_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:last( ... )
@@ -291,7 +291,7 @@ METHOD QList:last( ... )
    CASE 0
       RETURN Qt_QList_last( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:lastIndexOf( ... )
@@ -309,7 +309,7 @@ METHOD QList:lastIndexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:length( ... )
@@ -317,7 +317,7 @@ METHOD QList:length( ... )
    CASE 0
       RETURN Qt_QList_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:move( ... )
@@ -329,7 +329,7 @@ METHOD QList:move( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:pop_back( ... )
@@ -337,7 +337,7 @@ METHOD QList:pop_back( ... )
    CASE 0
       RETURN Qt_QList_pop_back( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:pop_front( ... )
@@ -345,7 +345,7 @@ METHOD QList:pop_front( ... )
    CASE 0
       RETURN Qt_QList_pop_front( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:prepend( ... )
@@ -357,7 +357,7 @@ METHOD QList:prepend( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:push_back( ... )
@@ -369,7 +369,7 @@ METHOD QList:push_back( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:push_front( ... )
@@ -381,7 +381,7 @@ METHOD QList:push_front( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:removeAll( ... )
@@ -393,7 +393,7 @@ METHOD QList:removeAll( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:removeAt( ... )
@@ -405,7 +405,7 @@ METHOD QList:removeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:removeFirst( ... )
@@ -413,7 +413,7 @@ METHOD QList:removeFirst( ... )
    CASE 0
       RETURN Qt_QList_removeFirst( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:removeLast( ... )
@@ -421,7 +421,7 @@ METHOD QList:removeLast( ... )
    CASE 0
       RETURN Qt_QList_removeLast( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:removeOne( ... )
@@ -433,7 +433,7 @@ METHOD QList:removeOne( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:replace( ... )
@@ -445,7 +445,7 @@ METHOD QList:replace( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:size( ... )
@@ -453,7 +453,7 @@ METHOD QList:size( ... )
    CASE 0
       RETURN Qt_QList_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:startsWith( ... )
@@ -465,7 +465,7 @@ METHOD QList:startsWith( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:swap( ... )
@@ -477,7 +477,7 @@ METHOD QList:swap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:takeAt( ... )
@@ -489,7 +489,7 @@ METHOD QList:takeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:takeFirst( ... )
@@ -497,7 +497,7 @@ METHOD QList:takeFirst( ... )
    CASE 0
       RETURN Qt_QList_takeFirst( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:takeLast( ... )
@@ -505,7 +505,7 @@ METHOD QList:takeLast( ... )
    CASE 0
       RETURN Qt_QList_takeLast( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QList:value( ... )
@@ -523,5 +523,5 @@ METHOD QList:value( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

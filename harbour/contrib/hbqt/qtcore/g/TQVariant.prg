@@ -154,7 +154,7 @@ CREATE CLASS QVariant INHERIT HbQtObjectHandler FUNCTION HB_QVariant
 METHOD QVariant:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QVariant( ... )
    RETURN Self
@@ -170,7 +170,7 @@ METHOD QVariant:canConvert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:clear( ... )
@@ -178,7 +178,7 @@ METHOD QVariant:clear( ... )
    CASE 0
       RETURN Qt_QVariant_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:convert( ... )
@@ -190,7 +190,7 @@ METHOD QVariant:convert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:isNull( ... )
@@ -198,7 +198,7 @@ METHOD QVariant:isNull( ... )
    CASE 0
       RETURN Qt_QVariant_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:isValid( ... )
@@ -206,7 +206,7 @@ METHOD QVariant:isValid( ... )
    CASE 0
       RETURN Qt_QVariant_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:setValue( ... )
@@ -218,7 +218,7 @@ METHOD QVariant:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toBitArray( ... )
@@ -226,7 +226,7 @@ METHOD QVariant:toBitArray( ... )
    CASE 0
       RETURN QBitArrayFromPointer( Qt_QVariant_toBitArray( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toBool( ... )
@@ -234,7 +234,7 @@ METHOD QVariant:toBool( ... )
    CASE 0
       RETURN Qt_QVariant_toBool( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toByteArray( ... )
@@ -242,7 +242,7 @@ METHOD QVariant:toByteArray( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QVariant_toByteArray( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toChar( ... )
@@ -250,7 +250,7 @@ METHOD QVariant:toChar( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QVariant_toChar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toDate( ... )
@@ -258,7 +258,7 @@ METHOD QVariant:toDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QVariant_toDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toDateTime( ... )
@@ -266,7 +266,7 @@ METHOD QVariant:toDateTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QVariant_toDateTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toDouble( ... )
@@ -280,7 +280,7 @@ METHOD QVariant:toDouble( ... )
    CASE 0
       RETURN Qt_QVariant_toDouble( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toInt( ... )
@@ -294,7 +294,7 @@ METHOD QVariant:toInt( ... )
    CASE 0
       RETURN Qt_QVariant_toInt( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toLine( ... )
@@ -302,7 +302,7 @@ METHOD QVariant:toLine( ... )
    CASE 0
       RETURN QLineFromPointer( Qt_QVariant_toLine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toLineF( ... )
@@ -310,7 +310,7 @@ METHOD QVariant:toLineF( ... )
    CASE 0
       RETURN QLineFFromPointer( Qt_QVariant_toLineF( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toList( ... )
@@ -318,7 +318,7 @@ METHOD QVariant:toList( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QVariant_toList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toLocale( ... )
@@ -326,7 +326,7 @@ METHOD QVariant:toLocale( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QVariant_toLocale( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toLongLong( ... )
@@ -340,7 +340,7 @@ METHOD QVariant:toLongLong( ... )
    CASE 0
       RETURN Qt_QVariant_toLongLong( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toPoint( ... )
@@ -348,7 +348,7 @@ METHOD QVariant:toPoint( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QVariant_toPoint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toPointF( ... )
@@ -356,7 +356,7 @@ METHOD QVariant:toPointF( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QVariant_toPointF( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toRect( ... )
@@ -364,7 +364,7 @@ METHOD QVariant:toRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QVariant_toRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toRectF( ... )
@@ -372,7 +372,7 @@ METHOD QVariant:toRectF( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QVariant_toRectF( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toRegExp( ... )
@@ -380,7 +380,7 @@ METHOD QVariant:toRegExp( ... )
    CASE 0
       RETURN QRegExpFromPointer( Qt_QVariant_toRegExp( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toSize( ... )
@@ -388,7 +388,7 @@ METHOD QVariant:toSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QVariant_toSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toSizeF( ... )
@@ -396,7 +396,7 @@ METHOD QVariant:toSizeF( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QVariant_toSizeF( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toString( ... )
@@ -404,7 +404,7 @@ METHOD QVariant:toString( ... )
    CASE 0
       RETURN Qt_QVariant_toString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toStringList( ... )
@@ -412,7 +412,7 @@ METHOD QVariant:toStringList( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QVariant_toStringList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toTime( ... )
@@ -420,7 +420,7 @@ METHOD QVariant:toTime( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QVariant_toTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toUInt( ... )
@@ -434,7 +434,7 @@ METHOD QVariant:toUInt( ... )
    CASE 0
       RETURN Qt_QVariant_toUInt( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toULongLong( ... )
@@ -448,7 +448,7 @@ METHOD QVariant:toULongLong( ... )
    CASE 0
       RETURN Qt_QVariant_toULongLong( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:toUrl( ... )
@@ -456,7 +456,7 @@ METHOD QVariant:toUrl( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QVariant_toUrl( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:type( ... )
@@ -464,7 +464,7 @@ METHOD QVariant:type( ... )
    CASE 0
       RETURN Qt_QVariant_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:userType( ... )
@@ -472,7 +472,7 @@ METHOD QVariant:userType( ... )
    CASE 0
       RETURN Qt_QVariant_userType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:fromValue( ... )
@@ -484,7 +484,7 @@ METHOD QVariant:fromValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:nameToType( ... )
@@ -496,7 +496,7 @@ METHOD QVariant:nameToType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QVariant:typeToName( ... )
@@ -508,5 +508,5 @@ METHOD QVariant:typeToName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

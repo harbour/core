@@ -137,7 +137,7 @@ CREATE CLASS QPen INHERIT HbQtObjectHandler FUNCTION HB_QPen
 METHOD QPen:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPen( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QPen:brush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QPen_brush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:capStyle( ... )
@@ -156,7 +156,7 @@ METHOD QPen:capStyle( ... )
    CASE 0
       RETURN Qt_QPen_capStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:color( ... )
@@ -164,7 +164,7 @@ METHOD QPen:color( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QPen_color( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:dashOffset( ... )
@@ -172,7 +172,7 @@ METHOD QPen:dashOffset( ... )
    CASE 0
       RETURN Qt_QPen_dashOffset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:isCosmetic( ... )
@@ -180,7 +180,7 @@ METHOD QPen:isCosmetic( ... )
    CASE 0
       RETURN Qt_QPen_isCosmetic( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:isSolid( ... )
@@ -188,7 +188,7 @@ METHOD QPen:isSolid( ... )
    CASE 0
       RETURN Qt_QPen_isSolid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:joinStyle( ... )
@@ -196,7 +196,7 @@ METHOD QPen:joinStyle( ... )
    CASE 0
       RETURN Qt_QPen_joinStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:miterLimit( ... )
@@ -204,7 +204,7 @@ METHOD QPen:miterLimit( ... )
    CASE 0
       RETURN Qt_QPen_miterLimit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setBrush( ... )
@@ -216,7 +216,7 @@ METHOD QPen:setBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setCapStyle( ... )
@@ -228,7 +228,7 @@ METHOD QPen:setCapStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setColor( ... )
@@ -240,7 +240,7 @@ METHOD QPen:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setCosmetic( ... )
@@ -252,7 +252,7 @@ METHOD QPen:setCosmetic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setDashOffset( ... )
@@ -264,7 +264,7 @@ METHOD QPen:setDashOffset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setJoinStyle( ... )
@@ -276,7 +276,7 @@ METHOD QPen:setJoinStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setMiterLimit( ... )
@@ -288,7 +288,7 @@ METHOD QPen:setMiterLimit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setStyle( ... )
@@ -300,7 +300,7 @@ METHOD QPen:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setWidth( ... )
@@ -312,7 +312,7 @@ METHOD QPen:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:setWidthF( ... )
@@ -324,7 +324,7 @@ METHOD QPen:setWidthF( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:style( ... )
@@ -332,7 +332,7 @@ METHOD QPen:style( ... )
    CASE 0
       RETURN Qt_QPen_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:width( ... )
@@ -340,7 +340,7 @@ METHOD QPen:width( ... )
    CASE 0
       RETURN Qt_QPen_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPen:widthF( ... )
@@ -348,5 +348,5 @@ METHOD QPen:widthF( ... )
    CASE 0
       RETURN Qt_QPen_widthF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

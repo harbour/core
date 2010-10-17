@@ -127,7 +127,7 @@ CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler FUNCTION HB_QTextBoun
 METHOD QTextBoundaryFinder:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextBoundaryFinder( ... )
    RETURN Self
@@ -138,7 +138,7 @@ METHOD QTextBoundaryFinder:boundaryReasons( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_boundaryReasons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:isAtBoundary( ... )
@@ -146,7 +146,7 @@ METHOD QTextBoundaryFinder:isAtBoundary( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_isAtBoundary( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:isValid( ... )
@@ -154,7 +154,7 @@ METHOD QTextBoundaryFinder:isValid( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:position( ... )
@@ -162,7 +162,7 @@ METHOD QTextBoundaryFinder:position( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:setPosition( ... )
@@ -174,7 +174,7 @@ METHOD QTextBoundaryFinder:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:string( ... )
@@ -182,7 +182,7 @@ METHOD QTextBoundaryFinder:string( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_string( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:toEnd( ... )
@@ -190,7 +190,7 @@ METHOD QTextBoundaryFinder:toEnd( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_toEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:toNextBoundary( ... )
@@ -198,7 +198,7 @@ METHOD QTextBoundaryFinder:toNextBoundary( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_toNextBoundary( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:toPreviousBoundary( ... )
@@ -206,7 +206,7 @@ METHOD QTextBoundaryFinder:toPreviousBoundary( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_toPreviousBoundary( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:toStart( ... )
@@ -214,7 +214,7 @@ METHOD QTextBoundaryFinder:toStart( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_toStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBoundaryFinder:type( ... )
@@ -222,5 +222,5 @@ METHOD QTextBoundaryFinder:type( ... )
    CASE 0
       RETURN Qt_QTextBoundaryFinder_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

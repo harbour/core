@@ -145,7 +145,7 @@ CREATE CLASS QCompleter INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCompl
 METHOD QCompleter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCompleter( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QCompleter:caseSensitivity( ... )
    CASE 0
       RETURN Qt_QCompleter_caseSensitivity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionColumn( ... )
@@ -164,7 +164,7 @@ METHOD QCompleter:completionColumn( ... )
    CASE 0
       RETURN Qt_QCompleter_completionColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionCount( ... )
@@ -172,7 +172,7 @@ METHOD QCompleter:completionCount( ... )
    CASE 0
       RETURN Qt_QCompleter_completionCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionMode( ... )
@@ -180,7 +180,7 @@ METHOD QCompleter:completionMode( ... )
    CASE 0
       RETURN Qt_QCompleter_completionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionModel( ... )
@@ -188,7 +188,7 @@ METHOD QCompleter:completionModel( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QCompleter_completionModel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionPrefix( ... )
@@ -196,7 +196,7 @@ METHOD QCompleter:completionPrefix( ... )
    CASE 0
       RETURN Qt_QCompleter_completionPrefix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:completionRole( ... )
@@ -204,7 +204,7 @@ METHOD QCompleter:completionRole( ... )
    CASE 0
       RETURN Qt_QCompleter_completionRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:currentCompletion( ... )
@@ -212,7 +212,7 @@ METHOD QCompleter:currentCompletion( ... )
    CASE 0
       RETURN Qt_QCompleter_currentCompletion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:currentIndex( ... )
@@ -220,7 +220,7 @@ METHOD QCompleter:currentIndex( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QCompleter_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:currentRow( ... )
@@ -228,7 +228,7 @@ METHOD QCompleter:currentRow( ... )
    CASE 0
       RETURN Qt_QCompleter_currentRow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:model( ... )
@@ -236,7 +236,7 @@ METHOD QCompleter:model( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QCompleter_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:modelSorting( ... )
@@ -244,7 +244,7 @@ METHOD QCompleter:modelSorting( ... )
    CASE 0
       RETURN Qt_QCompleter_modelSorting( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:pathFromIndex( ... )
@@ -256,7 +256,7 @@ METHOD QCompleter:pathFromIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:popup( ... )
@@ -264,7 +264,7 @@ METHOD QCompleter:popup( ... )
    CASE 0
       RETURN QAbstractItemViewFromPointer( Qt_QCompleter_popup( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCaseSensitivity( ... )
@@ -276,7 +276,7 @@ METHOD QCompleter:setCaseSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCompletionColumn( ... )
@@ -288,7 +288,7 @@ METHOD QCompleter:setCompletionColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCompletionMode( ... )
@@ -300,7 +300,7 @@ METHOD QCompleter:setCompletionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCompletionRole( ... )
@@ -312,7 +312,7 @@ METHOD QCompleter:setCompletionRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCurrentRow( ... )
@@ -324,7 +324,7 @@ METHOD QCompleter:setCurrentRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setModel( ... )
@@ -336,7 +336,7 @@ METHOD QCompleter:setModel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setModelSorting( ... )
@@ -348,7 +348,7 @@ METHOD QCompleter:setModelSorting( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setPopup( ... )
@@ -360,7 +360,7 @@ METHOD QCompleter:setPopup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setWidget( ... )
@@ -372,7 +372,7 @@ METHOD QCompleter:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:splitPath( ... )
@@ -384,7 +384,7 @@ METHOD QCompleter:splitPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:widget( ... )
@@ -392,7 +392,7 @@ METHOD QCompleter:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QCompleter_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:wrapAround( ... )
@@ -400,7 +400,7 @@ METHOD QCompleter:wrapAround( ... )
    CASE 0
       RETURN Qt_QCompleter_wrapAround( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:complete( ... )
@@ -414,7 +414,7 @@ METHOD QCompleter:complete( ... )
    CASE 0
       RETURN Qt_QCompleter_complete( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setCompletionPrefix( ... )
@@ -426,7 +426,7 @@ METHOD QCompleter:setCompletionPrefix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCompleter:setWrapAround( ... )
@@ -438,5 +438,5 @@ METHOD QCompleter:setWrapAround( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

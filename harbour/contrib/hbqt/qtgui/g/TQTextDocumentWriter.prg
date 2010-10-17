@@ -126,7 +126,7 @@ CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler FUNCTION HB_QTextDocu
 METHOD QTextDocumentWriter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextDocumentWriter( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QTextDocumentWriter:codec( ... )
    CASE 0
       RETURN QTextCodecFromPointer( Qt_QTextDocumentWriter_codec( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:device( ... )
@@ -145,7 +145,7 @@ METHOD QTextDocumentWriter:device( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QTextDocumentWriter_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:fileName( ... )
@@ -153,7 +153,7 @@ METHOD QTextDocumentWriter:fileName( ... )
    CASE 0
       RETURN Qt_QTextDocumentWriter_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:format( ... )
@@ -161,7 +161,7 @@ METHOD QTextDocumentWriter:format( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QTextDocumentWriter_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:setCodec( ... )
@@ -173,7 +173,7 @@ METHOD QTextDocumentWriter:setCodec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:setDevice( ... )
@@ -185,7 +185,7 @@ METHOD QTextDocumentWriter:setDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:setFileName( ... )
@@ -197,7 +197,7 @@ METHOD QTextDocumentWriter:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:setFormat( ... )
@@ -209,7 +209,7 @@ METHOD QTextDocumentWriter:setFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocumentWriter:write( ... )
@@ -226,5 +226,5 @@ METHOD QTextDocumentWriter:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

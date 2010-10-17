@@ -127,7 +127,7 @@ CREATE CLASS QModelIndex INHERIT HbQtObjectHandler FUNCTION HB_QModelIndex
 METHOD QModelIndex:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QModelIndex( ... )
    RETURN Self
@@ -142,7 +142,7 @@ METHOD QModelIndex:child( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:column( ... )
@@ -150,7 +150,7 @@ METHOD QModelIndex:column( ... )
    CASE 0
       RETURN Qt_QModelIndex_column( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:data( ... )
@@ -164,7 +164,7 @@ METHOD QModelIndex:data( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QModelIndex_data( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:flags( ... )
@@ -172,7 +172,7 @@ METHOD QModelIndex:flags( ... )
    CASE 0
       RETURN Qt_QModelIndex_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:internalId( ... )
@@ -180,7 +180,7 @@ METHOD QModelIndex:internalId( ... )
    CASE 0
       RETURN Qt_QModelIndex_internalId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:internalPointer( ... )
@@ -188,7 +188,7 @@ METHOD QModelIndex:internalPointer( ... )
    CASE 0
       RETURN Qt_QModelIndex_internalPointer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:isValid( ... )
@@ -196,7 +196,7 @@ METHOD QModelIndex:isValid( ... )
    CASE 0
       RETURN Qt_QModelIndex_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:model( ... )
@@ -204,7 +204,7 @@ METHOD QModelIndex:model( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QModelIndex_model( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:parent( ... )
@@ -212,7 +212,7 @@ METHOD QModelIndex:parent( ... )
    CASE 0
       RETURN QModelIndexFromPointer( Qt_QModelIndex_parent( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:row( ... )
@@ -220,7 +220,7 @@ METHOD QModelIndex:row( ... )
    CASE 0
       RETURN Qt_QModelIndex_row( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QModelIndex:sibling( ... )
@@ -232,5 +232,5 @@ METHOD QModelIndex:sibling( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -147,7 +147,7 @@ CREATE CLASS QWebPage INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPage
 METHOD QWebPage:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebPage( ... )
    RETURN Self
@@ -162,7 +162,7 @@ METHOD QWebPage:action( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:bytesReceived( ... )
@@ -170,7 +170,7 @@ METHOD QWebPage:bytesReceived( ... )
    CASE 0
       RETURN Qt_QWebPage_bytesReceived( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:createStandardContextMenu( ... )
@@ -178,7 +178,7 @@ METHOD QWebPage:createStandardContextMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QWebPage_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:currentFrame( ... )
@@ -186,7 +186,7 @@ METHOD QWebPage:currentFrame( ... )
    CASE 0
       RETURN QWebFrameFromPointer( Qt_QWebPage_currentFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:findText( ... )
@@ -204,7 +204,7 @@ METHOD QWebPage:findText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:focusNextPrevChild( ... )
@@ -216,7 +216,7 @@ METHOD QWebPage:focusNextPrevChild( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:forwardUnsupportedContent( ... )
@@ -224,7 +224,7 @@ METHOD QWebPage:forwardUnsupportedContent( ... )
    CASE 0
       RETURN Qt_QWebPage_forwardUnsupportedContent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:history( ... )
@@ -232,7 +232,7 @@ METHOD QWebPage:history( ... )
    CASE 0
       RETURN QWebHistoryFromPointer( Qt_QWebPage_history( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:inputMethodQuery( ... )
@@ -244,7 +244,7 @@ METHOD QWebPage:inputMethodQuery( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:isContentEditable( ... )
@@ -252,7 +252,7 @@ METHOD QWebPage:isContentEditable( ... )
    CASE 0
       RETURN Qt_QWebPage_isContentEditable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:isModified( ... )
@@ -260,7 +260,7 @@ METHOD QWebPage:isModified( ... )
    CASE 0
       RETURN Qt_QWebPage_isModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:linkDelegationPolicy( ... )
@@ -268,7 +268,7 @@ METHOD QWebPage:linkDelegationPolicy( ... )
    CASE 0
       RETURN Qt_QWebPage_linkDelegationPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:mainFrame( ... )
@@ -276,7 +276,7 @@ METHOD QWebPage:mainFrame( ... )
    CASE 0
       RETURN QWebFrameFromPointer( Qt_QWebPage_mainFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:palette( ... )
@@ -284,7 +284,7 @@ METHOD QWebPage:palette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QWebPage_palette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:pluginFactory( ... )
@@ -292,7 +292,7 @@ METHOD QWebPage:pluginFactory( ... )
    CASE 0
       RETURN QWebPluginFactoryFromPointer( Qt_QWebPage_pluginFactory( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:selectedText( ... )
@@ -300,7 +300,7 @@ METHOD QWebPage:selectedText( ... )
    CASE 0
       RETURN Qt_QWebPage_selectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setContentEditable( ... )
@@ -312,7 +312,7 @@ METHOD QWebPage:setContentEditable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setForwardUnsupportedContent( ... )
@@ -324,7 +324,7 @@ METHOD QWebPage:setForwardUnsupportedContent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setLinkDelegationPolicy( ... )
@@ -336,7 +336,7 @@ METHOD QWebPage:setLinkDelegationPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setPalette( ... )
@@ -348,7 +348,7 @@ METHOD QWebPage:setPalette( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setPluginFactory( ... )
@@ -360,7 +360,7 @@ METHOD QWebPage:setPluginFactory( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setView( ... )
@@ -372,7 +372,7 @@ METHOD QWebPage:setView( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:setViewportSize( ... )
@@ -384,7 +384,7 @@ METHOD QWebPage:setViewportSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:settings( ... )
@@ -392,7 +392,7 @@ METHOD QWebPage:settings( ... )
    CASE 0
       RETURN QWebSettingsFromPointer( Qt_QWebPage_settings( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:supportsExtension( ... )
@@ -404,7 +404,7 @@ METHOD QWebPage:supportsExtension( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:swallowContextMenuEvent( ... )
@@ -416,7 +416,7 @@ METHOD QWebPage:swallowContextMenuEvent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:totalBytes( ... )
@@ -424,7 +424,7 @@ METHOD QWebPage:totalBytes( ... )
    CASE 0
       RETURN Qt_QWebPage_totalBytes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:triggerAction( ... )
@@ -442,7 +442,7 @@ METHOD QWebPage:triggerAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:updatePositionDependentActions( ... )
@@ -454,7 +454,7 @@ METHOD QWebPage:updatePositionDependentActions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:view( ... )
@@ -462,7 +462,7 @@ METHOD QWebPage:view( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QWebPage_view( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebPage:viewportSize( ... )
@@ -470,5 +470,5 @@ METHOD QWebPage:viewportSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWebPage_viewportSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

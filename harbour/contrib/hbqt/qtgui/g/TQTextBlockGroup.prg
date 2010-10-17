@@ -116,7 +116,7 @@ CREATE CLASS QTextBlockGroup INHERIT HbQtObjectHandler, HB_QTextObject FUNCTION 
 METHOD QTextBlockGroup:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextBlockGroup( ... )
    RETURN Self

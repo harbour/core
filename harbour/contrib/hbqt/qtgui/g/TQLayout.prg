@@ -145,7 +145,7 @@ CREATE CLASS QLayout INHERIT HbQtObjectHandler, HB_QObject, HB_QLayoutItem FUNCT
 METHOD QLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLayout( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QLayout:activate( ... )
    CASE 0
       RETURN Qt_QLayout_activate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:addItem( ... )
@@ -168,7 +168,7 @@ METHOD QLayout:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:addWidget( ... )
@@ -180,7 +180,7 @@ METHOD QLayout:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:contentsRect( ... )
@@ -188,7 +188,7 @@ METHOD QLayout:contentsRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QLayout_contentsRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:count( ... )
@@ -196,7 +196,7 @@ METHOD QLayout:count( ... )
    CASE 0
       RETURN Qt_QLayout_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:expandingDirections( ... )
@@ -204,7 +204,7 @@ METHOD QLayout:expandingDirections( ... )
    CASE 0
       RETURN Qt_QLayout_expandingDirections( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:getContentsMargins( ... )
@@ -216,7 +216,7 @@ METHOD QLayout:getContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:indexOf( ... )
@@ -228,7 +228,7 @@ METHOD QLayout:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:isEnabled( ... )
@@ -236,7 +236,7 @@ METHOD QLayout:isEnabled( ... )
    CASE 0
       RETURN Qt_QLayout_isEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:itemAt( ... )
@@ -248,7 +248,7 @@ METHOD QLayout:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:maximumSize( ... )
@@ -256,7 +256,7 @@ METHOD QLayout:maximumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLayout_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:menuBar( ... )
@@ -264,7 +264,7 @@ METHOD QLayout:menuBar( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QLayout_menuBar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:minimumSize( ... )
@@ -272,7 +272,7 @@ METHOD QLayout:minimumSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLayout_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:parentWidget( ... )
@@ -280,7 +280,7 @@ METHOD QLayout:parentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QLayout_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:removeItem( ... )
@@ -292,7 +292,7 @@ METHOD QLayout:removeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:removeWidget( ... )
@@ -304,7 +304,7 @@ METHOD QLayout:removeWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setAlignment( ... )
@@ -327,7 +327,7 @@ METHOD QLayout:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setContentsMargins( ... )
@@ -339,7 +339,7 @@ METHOD QLayout:setContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setEnabled( ... )
@@ -351,7 +351,7 @@ METHOD QLayout:setEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setMenuBar( ... )
@@ -363,7 +363,7 @@ METHOD QLayout:setMenuBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setSizeConstraint( ... )
@@ -375,7 +375,7 @@ METHOD QLayout:setSizeConstraint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:setSpacing( ... )
@@ -387,7 +387,7 @@ METHOD QLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:sizeConstraint( ... )
@@ -395,7 +395,7 @@ METHOD QLayout:sizeConstraint( ... )
    CASE 0
       RETURN Qt_QLayout_sizeConstraint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:spacing( ... )
@@ -403,7 +403,7 @@ METHOD QLayout:spacing( ... )
    CASE 0
       RETURN Qt_QLayout_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:takeAt( ... )
@@ -415,7 +415,7 @@ METHOD QLayout:takeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:update( ... )
@@ -423,7 +423,7 @@ METHOD QLayout:update( ... )
    CASE 0
       RETURN Qt_QLayout_update( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLayout:closestAcceptableSize( ... )
@@ -435,5 +435,5 @@ METHOD QLayout:closestAcceptableSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

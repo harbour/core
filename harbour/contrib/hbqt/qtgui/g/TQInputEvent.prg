@@ -117,7 +117,7 @@ CREATE CLASS QInputEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QInput
 METHOD QInputEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QInputEvent( ... )
    RETURN Self
@@ -128,5 +128,5 @@ METHOD QInputEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QInputEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

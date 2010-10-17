@@ -171,7 +171,7 @@ CREATE CLASS QLocale INHERIT HbQtObjectHandler FUNCTION HB_QLocale
 METHOD QLocale:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLocale( ... )
    RETURN Self
@@ -182,7 +182,7 @@ METHOD QLocale:amText( ... )
    CASE 0
       RETURN Qt_QLocale_amText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:country( ... )
@@ -190,7 +190,7 @@ METHOD QLocale:country( ... )
    CASE 0
       RETURN Qt_QLocale_country( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:dateFormat( ... )
@@ -204,7 +204,7 @@ METHOD QLocale:dateFormat( ... )
    CASE 0
       RETURN Qt_QLocale_dateFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:dateTimeFormat( ... )
@@ -218,7 +218,7 @@ METHOD QLocale:dateTimeFormat( ... )
    CASE 0
       RETURN Qt_QLocale_dateTimeFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:dayName( ... )
@@ -236,7 +236,7 @@ METHOD QLocale:dayName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:decimalPoint( ... )
@@ -244,7 +244,7 @@ METHOD QLocale:decimalPoint( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_decimalPoint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:exponential( ... )
@@ -252,7 +252,7 @@ METHOD QLocale:exponential( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_exponential( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:groupSeparator( ... )
@@ -260,7 +260,7 @@ METHOD QLocale:groupSeparator( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_groupSeparator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:language( ... )
@@ -268,7 +268,7 @@ METHOD QLocale:language( ... )
    CASE 0
       RETURN Qt_QLocale_language( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:measurementSystem( ... )
@@ -276,7 +276,7 @@ METHOD QLocale:measurementSystem( ... )
    CASE 0
       RETURN Qt_QLocale_measurementSystem( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:monthName( ... )
@@ -294,7 +294,7 @@ METHOD QLocale:monthName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:name( ... )
@@ -302,7 +302,7 @@ METHOD QLocale:name( ... )
    CASE 0
       RETURN Qt_QLocale_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:negativeSign( ... )
@@ -310,7 +310,7 @@ METHOD QLocale:negativeSign( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_negativeSign( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:numberOptions( ... )
@@ -318,7 +318,7 @@ METHOD QLocale:numberOptions( ... )
    CASE 0
       RETURN Qt_QLocale_numberOptions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:percent( ... )
@@ -326,7 +326,7 @@ METHOD QLocale:percent( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_percent( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:pmText( ... )
@@ -334,7 +334,7 @@ METHOD QLocale:pmText( ... )
    CASE 0
       RETURN Qt_QLocale_pmText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:positiveSign( ... )
@@ -342,7 +342,7 @@ METHOD QLocale:positiveSign( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_positiveSign( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:setNumberOptions( ... )
@@ -354,7 +354,7 @@ METHOD QLocale:setNumberOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:standaloneDayName( ... )
@@ -372,7 +372,7 @@ METHOD QLocale:standaloneDayName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:standaloneMonthName( ... )
@@ -390,7 +390,7 @@ METHOD QLocale:standaloneMonthName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:timeFormat( ... )
@@ -404,7 +404,7 @@ METHOD QLocale:timeFormat( ... )
    CASE 0
       RETURN Qt_QLocale_timeFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toDate( ... )
@@ -424,7 +424,7 @@ METHOD QLocale:toDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toDateTime( ... )
@@ -444,7 +444,7 @@ METHOD QLocale:toDateTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toDouble( ... )
@@ -462,7 +462,7 @@ METHOD QLocale:toDouble( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toFloat( ... )
@@ -480,7 +480,7 @@ METHOD QLocale:toFloat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toInt( ... )
@@ -504,7 +504,7 @@ METHOD QLocale:toInt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toLongLong( ... )
@@ -528,7 +528,7 @@ METHOD QLocale:toLongLong( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toShort( ... )
@@ -552,7 +552,7 @@ METHOD QLocale:toShort( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toString( ... )
@@ -612,7 +612,7 @@ METHOD QLocale:toString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toTime( ... )
@@ -632,7 +632,7 @@ METHOD QLocale:toTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toUInt( ... )
@@ -656,7 +656,7 @@ METHOD QLocale:toUInt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toULongLong( ... )
@@ -680,7 +680,7 @@ METHOD QLocale:toULongLong( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:toUShort( ... )
@@ -704,7 +704,7 @@ METHOD QLocale:toUShort( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:zeroDigit( ... )
@@ -712,7 +712,7 @@ METHOD QLocale:zeroDigit( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QLocale_zeroDigit( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:c( ... )
@@ -720,7 +720,7 @@ METHOD QLocale:c( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QLocale_c( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:countryToString( ... )
@@ -732,7 +732,7 @@ METHOD QLocale:countryToString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:languageToString( ... )
@@ -744,7 +744,7 @@ METHOD QLocale:languageToString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:setDefault( ... )
@@ -756,7 +756,7 @@ METHOD QLocale:setDefault( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLocale:system( ... )
@@ -764,5 +764,5 @@ METHOD QLocale:system( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QLocale_system( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

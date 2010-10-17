@@ -124,7 +124,7 @@ CREATE CLASS QPoint INHERIT HbQtObjectHandler FUNCTION HB_QPoint
 METHOD QPoint:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPoint( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QPoint:isNull( ... )
    CASE 0
       RETURN Qt_QPoint_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:manhattanLength( ... )
@@ -143,7 +143,7 @@ METHOD QPoint:manhattanLength( ... )
    CASE 0
       RETURN Qt_QPoint_manhattanLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:rx( ... )
@@ -151,7 +151,7 @@ METHOD QPoint:rx( ... )
    CASE 0
       RETURN Qt_QPoint_rx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:ry( ... )
@@ -159,7 +159,7 @@ METHOD QPoint:ry( ... )
    CASE 0
       RETURN Qt_QPoint_ry( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:setX( ... )
@@ -171,7 +171,7 @@ METHOD QPoint:setX( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:setY( ... )
@@ -183,7 +183,7 @@ METHOD QPoint:setY( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:x( ... )
@@ -191,7 +191,7 @@ METHOD QPoint:x( ... )
    CASE 0
       RETURN Qt_QPoint_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPoint:y( ... )
@@ -199,5 +199,5 @@ METHOD QPoint:y( ... )
    CASE 0
       RETURN Qt_QPoint_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

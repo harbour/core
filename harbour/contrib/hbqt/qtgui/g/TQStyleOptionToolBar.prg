@@ -122,7 +122,7 @@ CREATE CLASS QStyleOptionToolBar INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 METHOD QStyleOptionToolBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionToolBar( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QStyleOptionToolBar:features( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_features( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBar:lineWidth( ... )
@@ -141,7 +141,7 @@ METHOD QStyleOptionToolBar:lineWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_lineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBar:midLineWidth( ... )
@@ -149,7 +149,7 @@ METHOD QStyleOptionToolBar:midLineWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_midLineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBar:positionOfLine( ... )
@@ -157,7 +157,7 @@ METHOD QStyleOptionToolBar:positionOfLine( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_positionOfLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBar:positionWithinLine( ... )
@@ -165,7 +165,7 @@ METHOD QStyleOptionToolBar:positionWithinLine( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_positionWithinLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBar:toolBarArea( ... )
@@ -173,5 +173,5 @@ METHOD QStyleOptionToolBar:toolBarArea( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBar_toolBarArea( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

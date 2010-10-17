@@ -133,7 +133,7 @@ CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWiza
 METHOD QWizardPage:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWizardPage( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QWizardPage:buttonText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:cleanupPage( ... )
@@ -156,7 +156,7 @@ METHOD QWizardPage:cleanupPage( ... )
    CASE 0
       RETURN Qt_QWizardPage_cleanupPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:initializePage( ... )
@@ -164,7 +164,7 @@ METHOD QWizardPage:initializePage( ... )
    CASE 0
       RETURN Qt_QWizardPage_initializePage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:isCommitPage( ... )
@@ -172,7 +172,7 @@ METHOD QWizardPage:isCommitPage( ... )
    CASE 0
       RETURN Qt_QWizardPage_isCommitPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:isComplete( ... )
@@ -180,7 +180,7 @@ METHOD QWizardPage:isComplete( ... )
    CASE 0
       RETURN Qt_QWizardPage_isComplete( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:isFinalPage( ... )
@@ -188,7 +188,7 @@ METHOD QWizardPage:isFinalPage( ... )
    CASE 0
       RETURN Qt_QWizardPage_isFinalPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:nextId( ... )
@@ -196,7 +196,7 @@ METHOD QWizardPage:nextId( ... )
    CASE 0
       RETURN Qt_QWizardPage_nextId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:pixmap( ... )
@@ -208,7 +208,7 @@ METHOD QWizardPage:pixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setButtonText( ... )
@@ -220,7 +220,7 @@ METHOD QWizardPage:setButtonText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setCommitPage( ... )
@@ -232,7 +232,7 @@ METHOD QWizardPage:setCommitPage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setFinalPage( ... )
@@ -244,7 +244,7 @@ METHOD QWizardPage:setFinalPage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setPixmap( ... )
@@ -256,7 +256,7 @@ METHOD QWizardPage:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setSubTitle( ... )
@@ -268,7 +268,7 @@ METHOD QWizardPage:setSubTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:setTitle( ... )
@@ -280,7 +280,7 @@ METHOD QWizardPage:setTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:subTitle( ... )
@@ -288,7 +288,7 @@ METHOD QWizardPage:subTitle( ... )
    CASE 0
       RETURN Qt_QWizardPage_subTitle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:title( ... )
@@ -296,7 +296,7 @@ METHOD QWizardPage:title( ... )
    CASE 0
       RETURN Qt_QWizardPage_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWizardPage:validatePage( ... )
@@ -304,5 +304,5 @@ METHOD QWizardPage:validatePage( ... )
    CASE 0
       RETURN Qt_QWizardPage_validatePage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

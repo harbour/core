@@ -153,7 +153,7 @@ CREATE CLASS QTextStream INHERIT HbQtObjectHandler FUNCTION HB_QTextStream
 METHOD QTextStream:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextStream( ... )
    RETURN Self
@@ -164,7 +164,7 @@ METHOD QTextStream:padChar( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QTextStream_padChar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:atEnd( ... )
@@ -172,7 +172,7 @@ METHOD QTextStream:atEnd( ... )
    CASE 0
       RETURN Qt_QTextStream_atEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:autoDetectUnicode( ... )
@@ -180,7 +180,7 @@ METHOD QTextStream:autoDetectUnicode( ... )
    CASE 0
       RETURN Qt_QTextStream_autoDetectUnicode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:codec( ... )
@@ -188,7 +188,7 @@ METHOD QTextStream:codec( ... )
    CASE 0
       RETURN QTextCodecFromPointer( Qt_QTextStream_codec( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:device( ... )
@@ -196,7 +196,7 @@ METHOD QTextStream:device( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QTextStream_device( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:fieldAlignment( ... )
@@ -204,7 +204,7 @@ METHOD QTextStream:fieldAlignment( ... )
    CASE 0
       RETURN Qt_QTextStream_fieldAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:fieldWidth( ... )
@@ -212,7 +212,7 @@ METHOD QTextStream:fieldWidth( ... )
    CASE 0
       RETURN Qt_QTextStream_fieldWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:flush( ... )
@@ -220,7 +220,7 @@ METHOD QTextStream:flush( ... )
    CASE 0
       RETURN Qt_QTextStream_flush( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:generateByteOrderMark( ... )
@@ -228,7 +228,7 @@ METHOD QTextStream:generateByteOrderMark( ... )
    CASE 0
       RETURN Qt_QTextStream_generateByteOrderMark( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:integerBase( ... )
@@ -236,7 +236,7 @@ METHOD QTextStream:integerBase( ... )
    CASE 0
       RETURN Qt_QTextStream_integerBase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:locale( ... )
@@ -244,7 +244,7 @@ METHOD QTextStream:locale( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QTextStream_locale( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:numberFlags( ... )
@@ -252,7 +252,7 @@ METHOD QTextStream:numberFlags( ... )
    CASE 0
       RETURN Qt_QTextStream_numberFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:pos( ... )
@@ -260,7 +260,7 @@ METHOD QTextStream:pos( ... )
    CASE 0
       RETURN Qt_QTextStream_pos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:read( ... )
@@ -272,7 +272,7 @@ METHOD QTextStream:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:readAll( ... )
@@ -280,7 +280,7 @@ METHOD QTextStream:readAll( ... )
    CASE 0
       RETURN Qt_QTextStream_readAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:readLine( ... )
@@ -294,7 +294,7 @@ METHOD QTextStream:readLine( ... )
    CASE 0
       RETURN Qt_QTextStream_readLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:realNumberNotation( ... )
@@ -302,7 +302,7 @@ METHOD QTextStream:realNumberNotation( ... )
    CASE 0
       RETURN Qt_QTextStream_realNumberNotation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:realNumberPrecision( ... )
@@ -310,7 +310,7 @@ METHOD QTextStream:realNumberPrecision( ... )
    CASE 0
       RETURN Qt_QTextStream_realNumberPrecision( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:reset( ... )
@@ -318,7 +318,7 @@ METHOD QTextStream:reset( ... )
    CASE 0
       RETURN Qt_QTextStream_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:resetStatus( ... )
@@ -326,7 +326,7 @@ METHOD QTextStream:resetStatus( ... )
    CASE 0
       RETURN Qt_QTextStream_resetStatus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:seek( ... )
@@ -338,7 +338,7 @@ METHOD QTextStream:seek( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setAutoDetectUnicode( ... )
@@ -350,7 +350,7 @@ METHOD QTextStream:setAutoDetectUnicode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setCodec( ... )
@@ -364,7 +364,7 @@ METHOD QTextStream:setCodec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setDevice( ... )
@@ -376,7 +376,7 @@ METHOD QTextStream:setDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setFieldAlignment( ... )
@@ -388,7 +388,7 @@ METHOD QTextStream:setFieldAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setFieldWidth( ... )
@@ -400,7 +400,7 @@ METHOD QTextStream:setFieldWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setGenerateByteOrderMark( ... )
@@ -412,7 +412,7 @@ METHOD QTextStream:setGenerateByteOrderMark( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setIntegerBase( ... )
@@ -424,7 +424,7 @@ METHOD QTextStream:setIntegerBase( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setLocale( ... )
@@ -436,7 +436,7 @@ METHOD QTextStream:setLocale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setNumberFlags( ... )
@@ -448,7 +448,7 @@ METHOD QTextStream:setNumberFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setPadChar( ... )
@@ -460,7 +460,7 @@ METHOD QTextStream:setPadChar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setRealNumberNotation( ... )
@@ -472,7 +472,7 @@ METHOD QTextStream:setRealNumberNotation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setRealNumberPrecision( ... )
@@ -484,7 +484,7 @@ METHOD QTextStream:setRealNumberPrecision( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:setStatus( ... )
@@ -496,7 +496,7 @@ METHOD QTextStream:setStatus( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:skipWhiteSpace( ... )
@@ -504,7 +504,7 @@ METHOD QTextStream:skipWhiteSpace( ... )
    CASE 0
       RETURN Qt_QTextStream_skipWhiteSpace( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextStream:status( ... )
@@ -512,5 +512,5 @@ METHOD QTextStream:status( ... )
    CASE 0
       RETURN Qt_QTextStream_status( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

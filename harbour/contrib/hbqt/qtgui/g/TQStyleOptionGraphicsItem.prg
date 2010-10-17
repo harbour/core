@@ -119,7 +119,7 @@ CREATE CLASS QStyleOptionGraphicsItem INHERIT HbQtObjectHandler, HB_QStyleOption
 METHOD QStyleOptionGraphicsItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionGraphicsItem( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QStyleOptionGraphicsItem:exposedRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QStyleOptionGraphicsItem_exposedRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionGraphicsItem:levelOfDetail( ... )
@@ -138,7 +138,7 @@ METHOD QStyleOptionGraphicsItem:levelOfDetail( ... )
    CASE 0
       RETURN Qt_QStyleOptionGraphicsItem_levelOfDetail( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionGraphicsItem:matrix( ... )
@@ -146,5 +146,5 @@ METHOD QStyleOptionGraphicsItem:matrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QStyleOptionGraphicsItem_matrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

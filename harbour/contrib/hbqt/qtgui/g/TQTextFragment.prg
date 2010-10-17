@@ -123,7 +123,7 @@ CREATE CLASS QTextFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextFragment
 METHOD QTextFragment:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextFragment( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QTextFragment:charFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QTextFragment_charFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:charFormatIndex( ... )
@@ -142,7 +142,7 @@ METHOD QTextFragment:charFormatIndex( ... )
    CASE 0
       RETURN Qt_QTextFragment_charFormatIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:contains( ... )
@@ -154,7 +154,7 @@ METHOD QTextFragment:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:isValid( ... )
@@ -162,7 +162,7 @@ METHOD QTextFragment:isValid( ... )
    CASE 0
       RETURN Qt_QTextFragment_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:length( ... )
@@ -170,7 +170,7 @@ METHOD QTextFragment:length( ... )
    CASE 0
       RETURN Qt_QTextFragment_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:position( ... )
@@ -178,7 +178,7 @@ METHOD QTextFragment:position( ... )
    CASE 0
       RETURN Qt_QTextFragment_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFragment:text( ... )
@@ -186,5 +186,5 @@ METHOD QTextFragment:text( ... )
    CASE 0
       RETURN Qt_QTextFragment_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

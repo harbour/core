@@ -126,7 +126,7 @@ CREATE CLASS QAbstractPrintDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION
 METHOD QAbstractPrintDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractPrintDialog( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QAbstractPrintDialog:exec( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:fromPage( ... )
@@ -145,7 +145,7 @@ METHOD QAbstractPrintDialog:fromPage( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_fromPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:maxPage( ... )
@@ -153,7 +153,7 @@ METHOD QAbstractPrintDialog:maxPage( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_maxPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:minPage( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractPrintDialog:minPage( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_minPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:printRange( ... )
@@ -169,7 +169,7 @@ METHOD QAbstractPrintDialog:printRange( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_printRange( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:printer( ... )
@@ -177,7 +177,7 @@ METHOD QAbstractPrintDialog:printer( ... )
    CASE 0
       RETURN QPrinterFromPointer( Qt_QAbstractPrintDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:setFromTo( ... )
@@ -189,7 +189,7 @@ METHOD QAbstractPrintDialog:setFromTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:setMinMax( ... )
@@ -201,7 +201,7 @@ METHOD QAbstractPrintDialog:setMinMax( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:setPrintRange( ... )
@@ -213,7 +213,7 @@ METHOD QAbstractPrintDialog:setPrintRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractPrintDialog:toPage( ... )
@@ -221,5 +221,5 @@ METHOD QAbstractPrintDialog:toPage( ... )
    CASE 0
       RETURN Qt_QAbstractPrintDialog_toPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

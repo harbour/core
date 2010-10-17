@@ -184,7 +184,7 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTIO
 METHOD HBQGraphicsItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQGraphicsItem( ... )
    RETURN Self
@@ -199,7 +199,7 @@ METHOD HBQGraphicsItem:hbSetBlock( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:boundingRect( ... )
@@ -207,7 +207,7 @@ METHOD HBQGraphicsItem:boundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_HBQGraphicsItem_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:paint( ... )
@@ -225,7 +225,7 @@ METHOD HBQGraphicsItem:paint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:determineResizeMode( ... )
@@ -237,7 +237,7 @@ METHOD HBQGraphicsItem:determineResizeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:adjustRect( ... )
@@ -249,7 +249,7 @@ METHOD HBQGraphicsItem:adjustRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:prepare( ... )
@@ -261,7 +261,7 @@ METHOD HBQGraphicsItem:prepare( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:pen( ... )
@@ -269,7 +269,7 @@ METHOD HBQGraphicsItem:pen( ... )
    CASE 0
       RETURN QPenFromPointer( Qt_HBQGraphicsItem_pen( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setPen( ... )
@@ -281,7 +281,7 @@ METHOD HBQGraphicsItem:setPen( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:brush( ... )
@@ -289,7 +289,7 @@ METHOD HBQGraphicsItem:brush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_HBQGraphicsItem_brush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBrush( ... )
@@ -301,7 +301,7 @@ METHOD HBQGraphicsItem:setBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:backgroundBrush( ... )
@@ -309,7 +309,7 @@ METHOD HBQGraphicsItem:backgroundBrush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBackgroundBrush( ... )
@@ -321,7 +321,7 @@ METHOD HBQGraphicsItem:setBackgroundBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:font( ... )
@@ -329,7 +329,7 @@ METHOD HBQGraphicsItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_HBQGraphicsItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setFont( ... )
@@ -341,7 +341,7 @@ METHOD HBQGraphicsItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:lineStyle( ... )
@@ -349,7 +349,7 @@ METHOD HBQGraphicsItem:lineStyle( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_lineStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setLineStyle( ... )
@@ -361,7 +361,7 @@ METHOD HBQGraphicsItem:setLineStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:startAngle( ... )
@@ -369,7 +369,7 @@ METHOD HBQGraphicsItem:startAngle( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_startAngle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setStartAngle( ... )
@@ -381,7 +381,7 @@ METHOD HBQGraphicsItem:setStartAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:spanAngle( ... )
@@ -389,7 +389,7 @@ METHOD HBQGraphicsItem:spanAngle( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_spanAngle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setSpanAngle( ... )
@@ -401,7 +401,7 @@ METHOD HBQGraphicsItem:setSpanAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:width( ... )
@@ -409,7 +409,7 @@ METHOD HBQGraphicsItem:width( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setWidth( ... )
@@ -421,7 +421,7 @@ METHOD HBQGraphicsItem:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:height( ... )
@@ -429,7 +429,7 @@ METHOD HBQGraphicsItem:height( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setHeight( ... )
@@ -441,7 +441,7 @@ METHOD HBQGraphicsItem:setHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:opacity( ... )
@@ -449,7 +449,7 @@ METHOD HBQGraphicsItem:opacity( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_opacity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setOpacity( ... )
@@ -461,7 +461,7 @@ METHOD HBQGraphicsItem:setOpacity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:geometry( ... )
@@ -469,7 +469,7 @@ METHOD HBQGraphicsItem:geometry( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_HBQGraphicsItem_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setGeometry( ... )
@@ -481,7 +481,7 @@ METHOD HBQGraphicsItem:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:objectType( ... )
@@ -489,7 +489,7 @@ METHOD HBQGraphicsItem:objectType( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_objectType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setObjectType( ... )
@@ -501,7 +501,7 @@ METHOD HBQGraphicsItem:setObjectType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:objectName( ... )
@@ -509,7 +509,7 @@ METHOD HBQGraphicsItem:objectName( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_objectName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setObjectName( ... )
@@ -521,7 +521,7 @@ METHOD HBQGraphicsItem:setObjectName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:text( ... )
@@ -529,7 +529,7 @@ METHOD HBQGraphicsItem:text( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setText( ... )
@@ -541,7 +541,7 @@ METHOD HBQGraphicsItem:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:paintType( ... )
@@ -549,7 +549,7 @@ METHOD HBQGraphicsItem:paintType( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_paintType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setPaintType( ... )
@@ -561,7 +561,7 @@ METHOD HBQGraphicsItem:setPaintType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:frameType( ... )
@@ -569,7 +569,7 @@ METHOD HBQGraphicsItem:frameType( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_frameType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setFrameType( ... )
@@ -581,7 +581,7 @@ METHOD HBQGraphicsItem:setFrameType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:drawTextType( ... )
@@ -589,7 +589,7 @@ METHOD HBQGraphicsItem:drawTextType( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_drawTextType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setDrawTextType( ... )
@@ -601,7 +601,7 @@ METHOD HBQGraphicsItem:setDrawTextType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:pixmap( ... )
@@ -609,7 +609,7 @@ METHOD HBQGraphicsItem:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_HBQGraphicsItem_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setPixmap( ... )
@@ -621,7 +621,7 @@ METHOD HBQGraphicsItem:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:textColor( ... )
@@ -629,7 +629,7 @@ METHOD HBQGraphicsItem:textColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_HBQGraphicsItem_textColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setTextColor( ... )
@@ -641,7 +641,7 @@ METHOD HBQGraphicsItem:setTextColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:borderWidth( ... )
@@ -649,7 +649,7 @@ METHOD HBQGraphicsItem:borderWidth( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_borderWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBorderWidth( ... )
@@ -661,7 +661,7 @@ METHOD HBQGraphicsItem:setBorderWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:borderColor( ... )
@@ -669,7 +669,7 @@ METHOD HBQGraphicsItem:borderColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_HBQGraphicsItem_borderColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBorderColor( ... )
@@ -681,7 +681,7 @@ METHOD HBQGraphicsItem:setBorderColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:sizePolicy( ... )
@@ -689,7 +689,7 @@ METHOD HBQGraphicsItem:sizePolicy( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_sizePolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setSizePolicy( ... )
@@ -701,7 +701,7 @@ METHOD HBQGraphicsItem:setSizePolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:textFlags( ... )
@@ -709,7 +709,7 @@ METHOD HBQGraphicsItem:textFlags( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_textFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setTextFlags( ... )
@@ -721,7 +721,7 @@ METHOD HBQGraphicsItem:setTextFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:resizeFlags( ... )
@@ -729,7 +729,7 @@ METHOD HBQGraphicsItem:resizeFlags( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_resizeFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setResizeFlags( ... )
@@ -741,7 +741,7 @@ METHOD HBQGraphicsItem:setResizeFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:resizeHandle( ... )
@@ -749,7 +749,7 @@ METHOD HBQGraphicsItem:resizeHandle( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_resizeHandle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setResizeHandle( ... )
@@ -761,7 +761,7 @@ METHOD HBQGraphicsItem:setResizeHandle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:barsIdentation( ... )
@@ -769,7 +769,7 @@ METHOD HBQGraphicsItem:barsIdentation( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_barsIdentation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBarsIdentation( ... )
@@ -781,7 +781,7 @@ METHOD HBQGraphicsItem:setBarsIdentation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:drawBorder( ... )
@@ -789,7 +789,7 @@ METHOD HBQGraphicsItem:drawBorder( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_drawBorder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setDrawBorder( ... )
@@ -801,7 +801,7 @@ METHOD HBQGraphicsItem:setDrawBorder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:showGrid( ... )
@@ -809,7 +809,7 @@ METHOD HBQGraphicsItem:showGrid( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_showGrid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setShowGrid( ... )
@@ -821,7 +821,7 @@ METHOD HBQGraphicsItem:setShowGrid( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:showLabels( ... )
@@ -829,7 +829,7 @@ METHOD HBQGraphicsItem:showLabels( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_showLabels( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setShowLabels( ... )
@@ -841,7 +841,7 @@ METHOD HBQGraphicsItem:setShowLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:toColorFactor( ... )
@@ -849,7 +849,7 @@ METHOD HBQGraphicsItem:toColorFactor( ... )
    CASE 0
       RETURN Qt_HBQGraphicsItem_toColorFactor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setToColorFactor( ... )
@@ -861,7 +861,7 @@ METHOD HBQGraphicsItem:setToColorFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setBarValues( ... )
@@ -873,7 +873,7 @@ METHOD HBQGraphicsItem:setBarValues( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsItem:setLegendColorRectWidth( ... )
@@ -885,5 +885,5 @@ METHOD HBQGraphicsItem:setLegendColorRectWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

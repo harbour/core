@@ -129,7 +129,7 @@ CREATE CLASS QToolButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION 
 METHOD QToolButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QToolButton( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QToolButton:arrowType( ... )
    CASE 0
       RETURN Qt_QToolButton_arrowType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:autoRaise( ... )
@@ -148,7 +148,7 @@ METHOD QToolButton:autoRaise( ... )
    CASE 0
       RETURN Qt_QToolButton_autoRaise( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:defaultAction( ... )
@@ -156,7 +156,7 @@ METHOD QToolButton:defaultAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QToolButton_defaultAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:menu( ... )
@@ -164,7 +164,7 @@ METHOD QToolButton:menu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QToolButton_menu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:popupMode( ... )
@@ -172,7 +172,7 @@ METHOD QToolButton:popupMode( ... )
    CASE 0
       RETURN Qt_QToolButton_popupMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setArrowType( ... )
@@ -184,7 +184,7 @@ METHOD QToolButton:setArrowType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setAutoRaise( ... )
@@ -196,7 +196,7 @@ METHOD QToolButton:setAutoRaise( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setMenu( ... )
@@ -208,7 +208,7 @@ METHOD QToolButton:setMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setPopupMode( ... )
@@ -220,7 +220,7 @@ METHOD QToolButton:setPopupMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:toolButtonStyle( ... )
@@ -228,7 +228,7 @@ METHOD QToolButton:toolButtonStyle( ... )
    CASE 0
       RETURN Qt_QToolButton_toolButtonStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setDefaultAction( ... )
@@ -240,7 +240,7 @@ METHOD QToolButton:setDefaultAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:setToolButtonStyle( ... )
@@ -252,7 +252,7 @@ METHOD QToolButton:setToolButtonStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolButton:showMenu( ... )
@@ -260,5 +260,5 @@ METHOD QToolButton:showMenu( ... )
    CASE 0
       RETURN Qt_QToolButton_showMenu( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

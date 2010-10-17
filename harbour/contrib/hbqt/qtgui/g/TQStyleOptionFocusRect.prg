@@ -117,7 +117,7 @@ CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, HB_QStyleOption FU
 METHOD QStyleOptionFocusRect:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionFocusRect( ... )
    RETURN Self
@@ -128,5 +128,5 @@ METHOD QStyleOptionFocusRect:backgroundColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

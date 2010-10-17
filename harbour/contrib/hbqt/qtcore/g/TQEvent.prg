@@ -123,7 +123,7 @@ CREATE CLASS QEvent INHERIT HbQtObjectHandler FUNCTION HB_QEvent
 METHOD QEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QEvent( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QEvent:accept( ... )
    CASE 0
       RETURN Qt_QEvent_accept( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:ignore( ... )
@@ -142,7 +142,7 @@ METHOD QEvent:ignore( ... )
    CASE 0
       RETURN Qt_QEvent_ignore( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:isAccepted( ... )
@@ -150,7 +150,7 @@ METHOD QEvent:isAccepted( ... )
    CASE 0
       RETURN Qt_QEvent_isAccepted( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:setAccepted( ... )
@@ -162,7 +162,7 @@ METHOD QEvent:setAccepted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:spontaneous( ... )
@@ -170,7 +170,7 @@ METHOD QEvent:spontaneous( ... )
    CASE 0
       RETURN Qt_QEvent_spontaneous( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:type( ... )
@@ -178,7 +178,7 @@ METHOD QEvent:type( ... )
    CASE 0
       RETURN Qt_QEvent_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QEvent:registerEventType( ... )
@@ -192,5 +192,5 @@ METHOD QEvent:registerEventType( ... )
    CASE 0
       RETURN Qt_QEvent_registerEventType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

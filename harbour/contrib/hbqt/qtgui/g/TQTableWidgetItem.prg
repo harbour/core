@@ -151,7 +151,7 @@ CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTableWidget
 METHOD QTableWidgetItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTableWidgetItem( ... )
    RETURN Self
@@ -162,7 +162,7 @@ METHOD QTableWidgetItem:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QTableWidgetItem_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:checkState( ... )
@@ -170,7 +170,7 @@ METHOD QTableWidgetItem:checkState( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_checkState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:clone( ... )
@@ -178,7 +178,7 @@ METHOD QTableWidgetItem:clone( ... )
    CASE 0
       RETURN QTableWidgetItemFromPointer( Qt_QTableWidgetItem_clone( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:column( ... )
@@ -186,7 +186,7 @@ METHOD QTableWidgetItem:column( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_column( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:data( ... )
@@ -198,7 +198,7 @@ METHOD QTableWidgetItem:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:flags( ... )
@@ -206,7 +206,7 @@ METHOD QTableWidgetItem:flags( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:font( ... )
@@ -214,7 +214,7 @@ METHOD QTableWidgetItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTableWidgetItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:foreground( ... )
@@ -222,7 +222,7 @@ METHOD QTableWidgetItem:foreground( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QTableWidgetItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:icon( ... )
@@ -230,7 +230,7 @@ METHOD QTableWidgetItem:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QTableWidgetItem_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:isSelected( ... )
@@ -238,7 +238,7 @@ METHOD QTableWidgetItem:isSelected( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_isSelected( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:read( ... )
@@ -250,7 +250,7 @@ METHOD QTableWidgetItem:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:row( ... )
@@ -258,7 +258,7 @@ METHOD QTableWidgetItem:row( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_row( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setBackground( ... )
@@ -270,7 +270,7 @@ METHOD QTableWidgetItem:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setCheckState( ... )
@@ -282,7 +282,7 @@ METHOD QTableWidgetItem:setCheckState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setData( ... )
@@ -294,7 +294,7 @@ METHOD QTableWidgetItem:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setFlags( ... )
@@ -306,7 +306,7 @@ METHOD QTableWidgetItem:setFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setFont( ... )
@@ -318,7 +318,7 @@ METHOD QTableWidgetItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setForeground( ... )
@@ -330,7 +330,7 @@ METHOD QTableWidgetItem:setForeground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setIcon( ... )
@@ -342,7 +342,7 @@ METHOD QTableWidgetItem:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setSelected( ... )
@@ -354,7 +354,7 @@ METHOD QTableWidgetItem:setSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setSizeHint( ... )
@@ -366,7 +366,7 @@ METHOD QTableWidgetItem:setSizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setStatusTip( ... )
@@ -378,7 +378,7 @@ METHOD QTableWidgetItem:setStatusTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setText( ... )
@@ -390,7 +390,7 @@ METHOD QTableWidgetItem:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setTextAlignment( ... )
@@ -402,7 +402,7 @@ METHOD QTableWidgetItem:setTextAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setToolTip( ... )
@@ -414,7 +414,7 @@ METHOD QTableWidgetItem:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:setWhatsThis( ... )
@@ -426,7 +426,7 @@ METHOD QTableWidgetItem:setWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:sizeHint( ... )
@@ -434,7 +434,7 @@ METHOD QTableWidgetItem:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QTableWidgetItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:statusTip( ... )
@@ -442,7 +442,7 @@ METHOD QTableWidgetItem:statusTip( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_statusTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:tableWidget( ... )
@@ -450,7 +450,7 @@ METHOD QTableWidgetItem:tableWidget( ... )
    CASE 0
       RETURN QTableWidgetFromPointer( Qt_QTableWidgetItem_tableWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:text( ... )
@@ -458,7 +458,7 @@ METHOD QTableWidgetItem:text( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:textAlignment( ... )
@@ -466,7 +466,7 @@ METHOD QTableWidgetItem:textAlignment( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_textAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:toolTip( ... )
@@ -474,7 +474,7 @@ METHOD QTableWidgetItem:toolTip( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:type( ... )
@@ -482,7 +482,7 @@ METHOD QTableWidgetItem:type( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:whatsThis( ... )
@@ -490,7 +490,7 @@ METHOD QTableWidgetItem:whatsThis( ... )
    CASE 0
       RETURN Qt_QTableWidgetItem_whatsThis( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetItem:write( ... )
@@ -502,5 +502,5 @@ METHOD QTableWidgetItem:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

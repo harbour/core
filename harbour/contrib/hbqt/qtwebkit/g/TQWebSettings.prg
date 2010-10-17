@@ -141,7 +141,7 @@ CREATE CLASS QWebSettings INHERIT HbQtObjectHandler FUNCTION HB_QWebSettings
 METHOD QWebSettings:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebSettings( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QWebSettings:fontFamily( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:fontSize( ... )
@@ -168,7 +168,7 @@ METHOD QWebSettings:fontSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:resetAttribute( ... )
@@ -180,7 +180,7 @@ METHOD QWebSettings:resetAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:resetFontFamily( ... )
@@ -192,7 +192,7 @@ METHOD QWebSettings:resetFontFamily( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:resetFontSize( ... )
@@ -204,7 +204,7 @@ METHOD QWebSettings:resetFontSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setAttribute( ... )
@@ -216,7 +216,7 @@ METHOD QWebSettings:setAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setFontFamily( ... )
@@ -228,7 +228,7 @@ METHOD QWebSettings:setFontFamily( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setFontSize( ... )
@@ -240,7 +240,7 @@ METHOD QWebSettings:setFontSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setUserStyleSheetUrl( ... )
@@ -252,7 +252,7 @@ METHOD QWebSettings:setUserStyleSheetUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:testAttribute( ... )
@@ -264,7 +264,7 @@ METHOD QWebSettings:testAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:userStyleSheetUrl( ... )
@@ -272,7 +272,7 @@ METHOD QWebSettings:userStyleSheetUrl( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QWebSettings_userStyleSheetUrl( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:clearIconDatabase( ... )
@@ -280,7 +280,7 @@ METHOD QWebSettings:clearIconDatabase( ... )
    CASE 0
       RETURN Qt_QWebSettings_clearIconDatabase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:globalSettings( ... )
@@ -288,7 +288,7 @@ METHOD QWebSettings:globalSettings( ... )
    CASE 0
       RETURN QWebSettingsFromPointer( Qt_QWebSettings_globalSettings( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:iconDatabasePath( ... )
@@ -296,7 +296,7 @@ METHOD QWebSettings:iconDatabasePath( ... )
    CASE 0
       RETURN Qt_QWebSettings_iconDatabasePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:iconForUrl( ... )
@@ -308,7 +308,7 @@ METHOD QWebSettings:iconForUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:maximumPagesInCache( ... )
@@ -316,7 +316,7 @@ METHOD QWebSettings:maximumPagesInCache( ... )
    CASE 0
       RETURN Qt_QWebSettings_maximumPagesInCache( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:offlineStorageDefaultQuota( ... )
@@ -324,7 +324,7 @@ METHOD QWebSettings:offlineStorageDefaultQuota( ... )
    CASE 0
       RETURN Qt_QWebSettings_offlineStorageDefaultQuota( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:offlineStoragePath( ... )
@@ -332,7 +332,7 @@ METHOD QWebSettings:offlineStoragePath( ... )
    CASE 0
       RETURN Qt_QWebSettings_offlineStoragePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setIconDatabasePath( ... )
@@ -344,7 +344,7 @@ METHOD QWebSettings:setIconDatabasePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setMaximumPagesInCache( ... )
@@ -356,7 +356,7 @@ METHOD QWebSettings:setMaximumPagesInCache( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setObjectCacheCapacities( ... )
@@ -368,7 +368,7 @@ METHOD QWebSettings:setObjectCacheCapacities( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setOfflineStorageDefaultQuota( ... )
@@ -380,7 +380,7 @@ METHOD QWebSettings:setOfflineStorageDefaultQuota( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setOfflineStoragePath( ... )
@@ -392,7 +392,7 @@ METHOD QWebSettings:setOfflineStoragePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:setWebGraphic( ... )
@@ -404,7 +404,7 @@ METHOD QWebSettings:setWebGraphic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSettings:webGraphic( ... )
@@ -416,5 +416,5 @@ METHOD QWebSettings:webGraphic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

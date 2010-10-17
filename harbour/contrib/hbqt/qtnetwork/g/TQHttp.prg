@@ -140,7 +140,7 @@ CREATE CLASS QHttp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QHttp
 METHOD QHttp:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttp( ... )
    RETURN Self
@@ -151,7 +151,7 @@ METHOD QHttp:bytesAvailable( ... )
    CASE 0
       RETURN Qt_QHttp_bytesAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:clearPendingRequests( ... )
@@ -159,7 +159,7 @@ METHOD QHttp:clearPendingRequests( ... )
    CASE 0
       RETURN Qt_QHttp_clearPendingRequests( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:close( ... )
@@ -167,7 +167,7 @@ METHOD QHttp:close( ... )
    CASE 0
       RETURN Qt_QHttp_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:currentDestinationDevice( ... )
@@ -175,7 +175,7 @@ METHOD QHttp:currentDestinationDevice( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QHttp_currentDestinationDevice( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:currentId( ... )
@@ -183,7 +183,7 @@ METHOD QHttp:currentId( ... )
    CASE 0
       RETURN Qt_QHttp_currentId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:currentRequest( ... )
@@ -191,7 +191,7 @@ METHOD QHttp:currentRequest( ... )
    CASE 0
       RETURN QHttpRequestHeaderFromPointer( Qt_QHttp_currentRequest( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:currentSourceDevice( ... )
@@ -199,7 +199,7 @@ METHOD QHttp:currentSourceDevice( ... )
    CASE 0
       RETURN QIODeviceFromPointer( Qt_QHttp_currentSourceDevice( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:error( ... )
@@ -207,7 +207,7 @@ METHOD QHttp:error( ... )
    CASE 0
       RETURN Qt_QHttp_error( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:errorString( ... )
@@ -215,7 +215,7 @@ METHOD QHttp:errorString( ... )
    CASE 0
       RETURN Qt_QHttp_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:get( ... )
@@ -233,7 +233,7 @@ METHOD QHttp:get( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:hasPendingRequests( ... )
@@ -241,7 +241,7 @@ METHOD QHttp:hasPendingRequests( ... )
    CASE 0
       RETURN Qt_QHttp_hasPendingRequests( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:head( ... )
@@ -253,7 +253,7 @@ METHOD QHttp:head( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:lastResponse( ... )
@@ -261,7 +261,7 @@ METHOD QHttp:lastResponse( ... )
    CASE 0
       RETURN QHttpResponseHeaderFromPointer( Qt_QHttp_lastResponse( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:post( ... )
@@ -289,7 +289,7 @@ METHOD QHttp:post( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:readAll( ... )
@@ -297,7 +297,7 @@ METHOD QHttp:readAll( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QHttp_readAll( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:request( ... )
@@ -331,7 +331,7 @@ METHOD QHttp:request( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:setHost( ... )
@@ -356,7 +356,7 @@ METHOD QHttp:setHost( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:setProxy( ... )
@@ -380,7 +380,7 @@ METHOD QHttp:setProxy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:setUser( ... )
@@ -398,7 +398,7 @@ METHOD QHttp:setUser( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:state( ... )
@@ -406,7 +406,7 @@ METHOD QHttp:state( ... )
    CASE 0
       RETURN Qt_QHttp_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttp:abort( ... )
@@ -414,5 +414,5 @@ METHOD QHttp:abort( ... )
    CASE 0
       RETURN Qt_QHttp_abort( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -121,7 +121,7 @@ CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, HB_QDropEvent FUNCTION HB
 METHOD QDragMoveEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDragMoveEvent( ... )
    RETURN Self
@@ -138,7 +138,7 @@ METHOD QDragMoveEvent:accept( ... )
    CASE 0
       RETURN Qt_QDragMoveEvent_accept_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDragMoveEvent:answerRect( ... )
@@ -146,7 +146,7 @@ METHOD QDragMoveEvent:answerRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QDragMoveEvent_answerRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDragMoveEvent:ignore( ... )
@@ -160,5 +160,5 @@ METHOD QDragMoveEvent:ignore( ... )
    CASE 0
       RETURN Qt_QDragMoveEvent_ignore_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

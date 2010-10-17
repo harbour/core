@@ -126,7 +126,7 @@ CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSt
 METHOD QStackedWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStackedWidget( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QStackedWidget:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:count( ... )
@@ -149,7 +149,7 @@ METHOD QStackedWidget:count( ... )
    CASE 0
       RETURN Qt_QStackedWidget_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:currentIndex( ... )
@@ -157,7 +157,7 @@ METHOD QStackedWidget:currentIndex( ... )
    CASE 0
       RETURN Qt_QStackedWidget_currentIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:currentWidget( ... )
@@ -165,7 +165,7 @@ METHOD QStackedWidget:currentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QStackedWidget_currentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:indexOf( ... )
@@ -177,7 +177,7 @@ METHOD QStackedWidget:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:insertWidget( ... )
@@ -189,7 +189,7 @@ METHOD QStackedWidget:insertWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:removeWidget( ... )
@@ -201,7 +201,7 @@ METHOD QStackedWidget:removeWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:widget( ... )
@@ -213,7 +213,7 @@ METHOD QStackedWidget:widget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:setCurrentIndex( ... )
@@ -225,7 +225,7 @@ METHOD QStackedWidget:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStackedWidget:setCurrentWidget( ... )
@@ -237,5 +237,5 @@ METHOD QStackedWidget:setCurrentWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

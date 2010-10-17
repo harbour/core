@@ -141,7 +141,7 @@ CREATE CLASS QFontMetricsF INHERIT HbQtObjectHandler FUNCTION HB_QFontMetricsF
 METHOD QFontMetricsF:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontMetricsF( ... )
    RETURN Self
@@ -152,7 +152,7 @@ METHOD QFontMetricsF:ascent( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_ascent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:averageCharWidth( ... )
@@ -160,7 +160,7 @@ METHOD QFontMetricsF:averageCharWidth( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_averageCharWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:boundingRect( ... )
@@ -192,7 +192,7 @@ METHOD QFontMetricsF:boundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:descent( ... )
@@ -200,7 +200,7 @@ METHOD QFontMetricsF:descent( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_descent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:elidedText( ... )
@@ -218,7 +218,7 @@ METHOD QFontMetricsF:elidedText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:height( ... )
@@ -226,7 +226,7 @@ METHOD QFontMetricsF:height( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:inFont( ... )
@@ -238,7 +238,7 @@ METHOD QFontMetricsF:inFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:leading( ... )
@@ -246,7 +246,7 @@ METHOD QFontMetricsF:leading( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_leading( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:leftBearing( ... )
@@ -258,7 +258,7 @@ METHOD QFontMetricsF:leftBearing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:lineSpacing( ... )
@@ -266,7 +266,7 @@ METHOD QFontMetricsF:lineSpacing( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_lineSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:lineWidth( ... )
@@ -274,7 +274,7 @@ METHOD QFontMetricsF:lineWidth( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_lineWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:maxWidth( ... )
@@ -282,7 +282,7 @@ METHOD QFontMetricsF:maxWidth( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_maxWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:minLeftBearing( ... )
@@ -290,7 +290,7 @@ METHOD QFontMetricsF:minLeftBearing( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_minLeftBearing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:minRightBearing( ... )
@@ -298,7 +298,7 @@ METHOD QFontMetricsF:minRightBearing( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_minRightBearing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:overlinePos( ... )
@@ -306,7 +306,7 @@ METHOD QFontMetricsF:overlinePos( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_overlinePos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:rightBearing( ... )
@@ -318,7 +318,7 @@ METHOD QFontMetricsF:rightBearing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:size( ... )
@@ -342,7 +342,7 @@ METHOD QFontMetricsF:size( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:strikeOutPos( ... )
@@ -350,7 +350,7 @@ METHOD QFontMetricsF:strikeOutPos( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_strikeOutPos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:tightBoundingRect( ... )
@@ -362,7 +362,7 @@ METHOD QFontMetricsF:tightBoundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:underlinePos( ... )
@@ -370,7 +370,7 @@ METHOD QFontMetricsF:underlinePos( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_underlinePos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:width( ... )
@@ -384,7 +384,7 @@ METHOD QFontMetricsF:width( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontMetricsF:xHeight( ... )
@@ -392,5 +392,5 @@ METHOD QFontMetricsF:xHeight( ... )
    CASE 0
       RETURN Qt_QFontMetricsF_xHeight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

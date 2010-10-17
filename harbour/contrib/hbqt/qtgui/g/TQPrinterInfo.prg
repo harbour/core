@@ -121,7 +121,7 @@ CREATE CLASS QPrinterInfo INHERIT HbQtObjectHandler FUNCTION HB_QPrinterInfo
 METHOD QPrinterInfo:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPrinterInfo( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QPrinterInfo:isDefault( ... )
    CASE 0
       RETURN Qt_QPrinterInfo_isDefault( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinterInfo:isNull( ... )
@@ -140,7 +140,7 @@ METHOD QPrinterInfo:isNull( ... )
    CASE 0
       RETURN Qt_QPrinterInfo_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinterInfo:printerName( ... )
@@ -148,7 +148,7 @@ METHOD QPrinterInfo:printerName( ... )
    CASE 0
       RETURN Qt_QPrinterInfo_printerName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinterInfo:availablePrinters( ... )
@@ -156,7 +156,7 @@ METHOD QPrinterInfo:availablePrinters( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QPrinterInfo_availablePrinters( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrinterInfo:defaultPrinter( ... )
@@ -164,5 +164,5 @@ METHOD QPrinterInfo:defaultPrinter( ... )
    CASE 0
       RETURN QPrinterInfoFromPointer( Qt_QPrinterInfo_defaultPrinter( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

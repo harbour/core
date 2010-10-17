@@ -124,7 +124,7 @@ CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, HB_QTextObject FUNCTION HB_QT
 METHOD QTextFrame:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextFrame( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QTextFrame:childFrames( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QTextFrame_childFrames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:firstCursorPosition( ... )
@@ -143,7 +143,7 @@ METHOD QTextFrame:firstCursorPosition( ... )
    CASE 0
       RETURN QTextCursorFromPointer( Qt_QTextFrame_firstCursorPosition( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:firstPosition( ... )
@@ -151,7 +151,7 @@ METHOD QTextFrame:firstPosition( ... )
    CASE 0
       RETURN Qt_QTextFrame_firstPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:frameFormat( ... )
@@ -159,7 +159,7 @@ METHOD QTextFrame:frameFormat( ... )
    CASE 0
       RETURN QTextFrameFormatFromPointer( Qt_QTextFrame_frameFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:lastCursorPosition( ... )
@@ -167,7 +167,7 @@ METHOD QTextFrame:lastCursorPosition( ... )
    CASE 0
       RETURN QTextCursorFromPointer( Qt_QTextFrame_lastCursorPosition( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:lastPosition( ... )
@@ -175,7 +175,7 @@ METHOD QTextFrame:lastPosition( ... )
    CASE 0
       RETURN Qt_QTextFrame_lastPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:parentFrame( ... )
@@ -183,7 +183,7 @@ METHOD QTextFrame:parentFrame( ... )
    CASE 0
       RETURN QTextFrameFromPointer( Qt_QTextFrame_parentFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrame:setFrameFormat( ... )
@@ -195,5 +195,5 @@ METHOD QTextFrame:setFrameFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

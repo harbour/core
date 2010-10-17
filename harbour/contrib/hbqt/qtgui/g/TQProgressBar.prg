@@ -137,7 +137,7 @@ CREATE CLASS QProgressBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QPro
 METHOD QProgressBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QProgressBar( ... )
    RETURN Self
@@ -148,7 +148,7 @@ METHOD QProgressBar:alignment( ... )
    CASE 0
       RETURN Qt_QProgressBar_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:format( ... )
@@ -156,7 +156,7 @@ METHOD QProgressBar:format( ... )
    CASE 0
       RETURN Qt_QProgressBar_format( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:invertedAppearance( ... )
@@ -164,7 +164,7 @@ METHOD QProgressBar:invertedAppearance( ... )
    CASE 0
       RETURN Qt_QProgressBar_invertedAppearance( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:isTextVisible( ... )
@@ -172,7 +172,7 @@ METHOD QProgressBar:isTextVisible( ... )
    CASE 0
       RETURN Qt_QProgressBar_isTextVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:maximum( ... )
@@ -180,7 +180,7 @@ METHOD QProgressBar:maximum( ... )
    CASE 0
       RETURN Qt_QProgressBar_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:minimum( ... )
@@ -188,7 +188,7 @@ METHOD QProgressBar:minimum( ... )
    CASE 0
       RETURN Qt_QProgressBar_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:orientation( ... )
@@ -196,7 +196,7 @@ METHOD QProgressBar:orientation( ... )
    CASE 0
       RETURN Qt_QProgressBar_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setAlignment( ... )
@@ -208,7 +208,7 @@ METHOD QProgressBar:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setFormat( ... )
@@ -220,7 +220,7 @@ METHOD QProgressBar:setFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setInvertedAppearance( ... )
@@ -232,7 +232,7 @@ METHOD QProgressBar:setInvertedAppearance( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setTextDirection( ... )
@@ -244,7 +244,7 @@ METHOD QProgressBar:setTextDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setTextVisible( ... )
@@ -256,7 +256,7 @@ METHOD QProgressBar:setTextVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:text( ... )
@@ -264,7 +264,7 @@ METHOD QProgressBar:text( ... )
    CASE 0
       RETURN Qt_QProgressBar_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:textDirection( ... )
@@ -272,7 +272,7 @@ METHOD QProgressBar:textDirection( ... )
    CASE 0
       RETURN Qt_QProgressBar_textDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:value( ... )
@@ -280,7 +280,7 @@ METHOD QProgressBar:value( ... )
    CASE 0
       RETURN Qt_QProgressBar_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:reset( ... )
@@ -288,7 +288,7 @@ METHOD QProgressBar:reset( ... )
    CASE 0
       RETURN Qt_QProgressBar_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setMaximum( ... )
@@ -300,7 +300,7 @@ METHOD QProgressBar:setMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setMinimum( ... )
@@ -312,7 +312,7 @@ METHOD QProgressBar:setMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setOrientation( ... )
@@ -324,7 +324,7 @@ METHOD QProgressBar:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setRange( ... )
@@ -336,7 +336,7 @@ METHOD QProgressBar:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProgressBar:setValue( ... )
@@ -348,5 +348,5 @@ METHOD QProgressBar:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

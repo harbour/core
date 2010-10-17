@@ -132,7 +132,7 @@ CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_Q
 METHOD QSessionManager:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSessionManager( ... )
    RETURN Self
@@ -143,7 +143,7 @@ METHOD QSessionManager:allowsErrorInteraction( ... )
    CASE 0
       RETURN Qt_QSessionManager_allowsErrorInteraction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:allowsInteraction( ... )
@@ -151,7 +151,7 @@ METHOD QSessionManager:allowsInteraction( ... )
    CASE 0
       RETURN Qt_QSessionManager_allowsInteraction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:cancel( ... )
@@ -159,7 +159,7 @@ METHOD QSessionManager:cancel( ... )
    CASE 0
       RETURN Qt_QSessionManager_cancel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:discardCommand( ... )
@@ -167,7 +167,7 @@ METHOD QSessionManager:discardCommand( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QSessionManager_discardCommand( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:isPhase2( ... )
@@ -175,7 +175,7 @@ METHOD QSessionManager:isPhase2( ... )
    CASE 0
       RETURN Qt_QSessionManager_isPhase2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:release( ... )
@@ -183,7 +183,7 @@ METHOD QSessionManager:release( ... )
    CASE 0
       RETURN Qt_QSessionManager_release( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:requestPhase2( ... )
@@ -191,7 +191,7 @@ METHOD QSessionManager:requestPhase2( ... )
    CASE 0
       RETURN Qt_QSessionManager_requestPhase2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:restartCommand( ... )
@@ -199,7 +199,7 @@ METHOD QSessionManager:restartCommand( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QSessionManager_restartCommand( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:restartHint( ... )
@@ -207,7 +207,7 @@ METHOD QSessionManager:restartHint( ... )
    CASE 0
       RETURN Qt_QSessionManager_restartHint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:sessionId( ... )
@@ -215,7 +215,7 @@ METHOD QSessionManager:sessionId( ... )
    CASE 0
       RETURN Qt_QSessionManager_sessionId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:sessionKey( ... )
@@ -223,7 +223,7 @@ METHOD QSessionManager:sessionKey( ... )
    CASE 0
       RETURN Qt_QSessionManager_sessionKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:setDiscardCommand( ... )
@@ -235,7 +235,7 @@ METHOD QSessionManager:setDiscardCommand( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:setManagerProperty( ... )
@@ -249,7 +249,7 @@ METHOD QSessionManager:setManagerProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:setRestartCommand( ... )
@@ -261,7 +261,7 @@ METHOD QSessionManager:setRestartCommand( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSessionManager:setRestartHint( ... )
@@ -273,5 +273,5 @@ METHOD QSessionManager:setRestartHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

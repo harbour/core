@@ -118,7 +118,7 @@ CREATE CLASS QGraphicsSceneResizeEvent INHERIT HbQtObjectHandler, HB_QGraphicsSc
 METHOD QGraphicsSceneResizeEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneResizeEvent( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QGraphicsSceneResizeEvent:newSize( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QGraphicsSceneResizeEvent_newSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneResizeEvent:oldSize( ... )
@@ -137,5 +137,5 @@ METHOD QGraphicsSceneResizeEvent:oldSize( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QGraphicsSceneResizeEvent_oldSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

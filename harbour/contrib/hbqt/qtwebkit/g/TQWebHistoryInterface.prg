@@ -120,7 +120,7 @@ CREATE CLASS QWebHistoryInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION
 METHOD QWebHistoryInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebHistoryInterface( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QWebHistoryInterface:addHistoryEntry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryInterface:historyContains( ... )
@@ -147,7 +147,7 @@ METHOD QWebHistoryInterface:historyContains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryInterface:defaultInterface( ... )
@@ -155,7 +155,7 @@ METHOD QWebHistoryInterface:defaultInterface( ... )
    CASE 0
       RETURN QWebHistoryInterfaceFromPointer( Qt_QWebHistoryInterface_defaultInterface( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryInterface:setDefaultInterface( ... )
@@ -167,5 +167,5 @@ METHOD QWebHistoryInterface:setDefaultInterface( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

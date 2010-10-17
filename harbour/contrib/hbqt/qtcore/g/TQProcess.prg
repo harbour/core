@@ -149,7 +149,7 @@ CREATE CLASS QProcess INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QProce
 METHOD QProcess:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QProcess( ... )
    RETURN Self
@@ -160,7 +160,7 @@ METHOD QProcess:close( ... )
    CASE 0
       RETURN Qt_QProcess_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:closeReadChannel( ... )
@@ -172,7 +172,7 @@ METHOD QProcess:closeReadChannel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:closeWriteChannel( ... )
@@ -180,7 +180,7 @@ METHOD QProcess:closeWriteChannel( ... )
    CASE 0
       RETURN Qt_QProcess_closeWriteChannel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:environment( ... )
@@ -188,7 +188,7 @@ METHOD QProcess:environment( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QProcess_environment( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:error( ... )
@@ -196,7 +196,7 @@ METHOD QProcess:error( ... )
    CASE 0
       RETURN Qt_QProcess_error( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:exitCode( ... )
@@ -204,7 +204,7 @@ METHOD QProcess:exitCode( ... )
    CASE 0
       RETURN Qt_QProcess_exitCode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:exitStatus( ... )
@@ -212,7 +212,7 @@ METHOD QProcess:exitStatus( ... )
    CASE 0
       RETURN Qt_QProcess_exitStatus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:processChannelMode( ... )
@@ -220,7 +220,7 @@ METHOD QProcess:processChannelMode( ... )
    CASE 0
       RETURN Qt_QProcess_processChannelMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:readAllStandardError( ... )
@@ -228,7 +228,7 @@ METHOD QProcess:readAllStandardError( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QProcess_readAllStandardError( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:readAllStandardOutput( ... )
@@ -236,7 +236,7 @@ METHOD QProcess:readAllStandardOutput( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QProcess_readAllStandardOutput( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:readChannel( ... )
@@ -244,7 +244,7 @@ METHOD QProcess:readChannel( ... )
    CASE 0
       RETURN Qt_QProcess_readChannel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setEnvironment( ... )
@@ -256,7 +256,7 @@ METHOD QProcess:setEnvironment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setProcessChannelMode( ... )
@@ -268,7 +268,7 @@ METHOD QProcess:setProcessChannelMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setReadChannel( ... )
@@ -280,7 +280,7 @@ METHOD QProcess:setReadChannel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setStandardErrorFile( ... )
@@ -298,7 +298,7 @@ METHOD QProcess:setStandardErrorFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setStandardInputFile( ... )
@@ -310,7 +310,7 @@ METHOD QProcess:setStandardInputFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setStandardOutputFile( ... )
@@ -328,7 +328,7 @@ METHOD QProcess:setStandardOutputFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setStandardOutputProcess( ... )
@@ -340,7 +340,7 @@ METHOD QProcess:setStandardOutputProcess( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:setWorkingDirectory( ... )
@@ -352,7 +352,7 @@ METHOD QProcess:setWorkingDirectory( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:start( ... )
@@ -378,7 +378,7 @@ METHOD QProcess:start( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:state( ... )
@@ -386,7 +386,7 @@ METHOD QProcess:state( ... )
    CASE 0
       RETURN Qt_QProcess_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:waitForFinished( ... )
@@ -400,7 +400,7 @@ METHOD QProcess:waitForFinished( ... )
    CASE 0
       RETURN Qt_QProcess_waitForFinished( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:waitForStarted( ... )
@@ -414,7 +414,7 @@ METHOD QProcess:waitForStarted( ... )
    CASE 0
       RETURN Qt_QProcess_waitForStarted( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:workingDirectory( ... )
@@ -422,7 +422,7 @@ METHOD QProcess:workingDirectory( ... )
    CASE 0
       RETURN Qt_QProcess_workingDirectory( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:execute( ... )
@@ -440,7 +440,7 @@ METHOD QProcess:execute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:startDetached( ... )
@@ -470,7 +470,7 @@ METHOD QProcess:startDetached( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:systemEnvironment( ... )
@@ -478,7 +478,7 @@ METHOD QProcess:systemEnvironment( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QProcess_systemEnvironment( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:kill( ... )
@@ -486,7 +486,7 @@ METHOD QProcess:kill( ... )
    CASE 0
       RETURN Qt_QProcess_kill( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QProcess:terminate( ... )
@@ -494,5 +494,5 @@ METHOD QProcess:terminate( ... )
    CASE 0
       RETURN Qt_QProcess_terminate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

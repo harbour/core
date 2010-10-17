@@ -118,7 +118,7 @@ CREATE CLASS QGraphicsSceneHelpEvent INHERIT HbQtObjectHandler, HB_QGraphicsScen
 METHOD QGraphicsSceneHelpEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneHelpEvent( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QGraphicsSceneHelpEvent:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneHelpEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneHelpEvent:screenPos( ... )
@@ -137,5 +137,5 @@ METHOD QGraphicsSceneHelpEvent:screenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneHelpEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

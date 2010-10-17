@@ -131,7 +131,7 @@ CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
 METHOD QBrush:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QBrush( ... )
    RETURN Self
@@ -142,7 +142,7 @@ METHOD QBrush:color( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QBrush_color( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:gradient( ... )
@@ -150,7 +150,7 @@ METHOD QBrush:gradient( ... )
    CASE 0
       RETURN QGradientFromPointer( Qt_QBrush_gradient( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:isOpaque( ... )
@@ -158,7 +158,7 @@ METHOD QBrush:isOpaque( ... )
    CASE 0
       RETURN Qt_QBrush_isOpaque( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:matrix( ... )
@@ -166,7 +166,7 @@ METHOD QBrush:matrix( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QBrush_matrix( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setColor( ... )
@@ -180,7 +180,7 @@ METHOD QBrush:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setMatrix( ... )
@@ -192,7 +192,7 @@ METHOD QBrush:setMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setStyle( ... )
@@ -204,7 +204,7 @@ METHOD QBrush:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setTexture( ... )
@@ -216,7 +216,7 @@ METHOD QBrush:setTexture( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setTextureImage( ... )
@@ -228,7 +228,7 @@ METHOD QBrush:setTextureImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:setTransform( ... )
@@ -240,7 +240,7 @@ METHOD QBrush:setTransform( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:style( ... )
@@ -248,7 +248,7 @@ METHOD QBrush:style( ... )
    CASE 0
       RETURN Qt_QBrush_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:texture( ... )
@@ -256,7 +256,7 @@ METHOD QBrush:texture( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QBrush_texture( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:textureImage( ... )
@@ -264,7 +264,7 @@ METHOD QBrush:textureImage( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QBrush_textureImage( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBrush:transform( ... )
@@ -272,5 +272,5 @@ METHOD QBrush:transform( ... )
    CASE 0
       RETURN QTransformFromPointer( Qt_QBrush_transform( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

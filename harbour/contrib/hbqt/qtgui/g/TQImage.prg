@@ -174,7 +174,7 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
 METHOD QImage:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QImage( ... )
    RETURN Self
@@ -185,7 +185,7 @@ METHOD QImage:allGray( ... )
    CASE 0
       RETURN Qt_QImage_allGray( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:alphaChannel( ... )
@@ -193,7 +193,7 @@ METHOD QImage:alphaChannel( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_alphaChannel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:bits( ... )
@@ -201,7 +201,7 @@ METHOD QImage:bits( ... )
    CASE 0
       RETURN Qt_QImage_bits( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:bytesPerLine( ... )
@@ -209,7 +209,7 @@ METHOD QImage:bytesPerLine( ... )
    CASE 0
       RETURN Qt_QImage_bytesPerLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:cacheKey( ... )
@@ -217,7 +217,7 @@ METHOD QImage:cacheKey( ... )
    CASE 0
       RETURN Qt_QImage_cacheKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:color( ... )
@@ -229,7 +229,7 @@ METHOD QImage:color( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:convertToFormat( ... )
@@ -247,7 +247,7 @@ METHOD QImage:convertToFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:copy( ... )
@@ -267,7 +267,7 @@ METHOD QImage:copy( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_copy( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:createAlphaMask( ... )
@@ -281,7 +281,7 @@ METHOD QImage:createAlphaMask( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:createHeuristicMask( ... )
@@ -295,7 +295,7 @@ METHOD QImage:createHeuristicMask( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:createMaskFromColor( ... )
@@ -313,7 +313,7 @@ METHOD QImage:createMaskFromColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:depth( ... )
@@ -321,7 +321,7 @@ METHOD QImage:depth( ... )
    CASE 0
       RETURN Qt_QImage_depth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:dotsPerMeterX( ... )
@@ -329,7 +329,7 @@ METHOD QImage:dotsPerMeterX( ... )
    CASE 0
       RETURN Qt_QImage_dotsPerMeterX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:dotsPerMeterY( ... )
@@ -337,7 +337,7 @@ METHOD QImage:dotsPerMeterY( ... )
    CASE 0
       RETURN Qt_QImage_dotsPerMeterY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:fill( ... )
@@ -349,7 +349,7 @@ METHOD QImage:fill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:format( ... )
@@ -357,7 +357,7 @@ METHOD QImage:format( ... )
    CASE 0
       RETURN Qt_QImage_format( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:hasAlphaChannel( ... )
@@ -365,7 +365,7 @@ METHOD QImage:hasAlphaChannel( ... )
    CASE 0
       RETURN Qt_QImage_hasAlphaChannel( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:height( ... )
@@ -373,7 +373,7 @@ METHOD QImage:height( ... )
    CASE 0
       RETURN Qt_QImage_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:invertPixels( ... )
@@ -387,7 +387,7 @@ METHOD QImage:invertPixels( ... )
    CASE 0
       RETURN Qt_QImage_invertPixels( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:isGrayscale( ... )
@@ -395,7 +395,7 @@ METHOD QImage:isGrayscale( ... )
    CASE 0
       RETURN Qt_QImage_isGrayscale( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:isNull( ... )
@@ -403,7 +403,7 @@ METHOD QImage:isNull( ... )
    CASE 0
       RETURN Qt_QImage_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:load( ... )
@@ -423,7 +423,7 @@ METHOD QImage:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:loadFromData( ... )
@@ -441,7 +441,7 @@ METHOD QImage:loadFromData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:mirrored( ... )
@@ -461,7 +461,7 @@ METHOD QImage:mirrored( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_mirrored( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:numBytes( ... )
@@ -469,7 +469,7 @@ METHOD QImage:numBytes( ... )
    CASE 0
       RETURN Qt_QImage_numBytes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:numColors( ... )
@@ -477,7 +477,7 @@ METHOD QImage:numColors( ... )
    CASE 0
       RETURN Qt_QImage_numColors( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:offset( ... )
@@ -485,7 +485,7 @@ METHOD QImage:offset( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QImage_offset( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:pixel( ... )
@@ -503,7 +503,7 @@ METHOD QImage:pixel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:pixelIndex( ... )
@@ -521,7 +521,7 @@ METHOD QImage:pixelIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:rect( ... )
@@ -529,7 +529,7 @@ METHOD QImage:rect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QImage_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:rgbSwapped( ... )
@@ -537,7 +537,7 @@ METHOD QImage:rgbSwapped( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QImage_rgbSwapped( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:save( ... )
@@ -567,7 +567,7 @@ METHOD QImage:save( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:scaled( ... )
@@ -601,7 +601,7 @@ METHOD QImage:scaled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:scaledToHeight( ... )
@@ -619,7 +619,7 @@ METHOD QImage:scaledToHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:scaledToWidth( ... )
@@ -637,7 +637,7 @@ METHOD QImage:scaledToWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:scanLine( ... )
@@ -649,7 +649,7 @@ METHOD QImage:scanLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setColor( ... )
@@ -661,7 +661,7 @@ METHOD QImage:setColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setDotsPerMeterX( ... )
@@ -673,7 +673,7 @@ METHOD QImage:setDotsPerMeterX( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setDotsPerMeterY( ... )
@@ -685,7 +685,7 @@ METHOD QImage:setDotsPerMeterY( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setNumColors( ... )
@@ -697,7 +697,7 @@ METHOD QImage:setNumColors( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setOffset( ... )
@@ -709,7 +709,7 @@ METHOD QImage:setOffset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setPixel( ... )
@@ -727,7 +727,7 @@ METHOD QImage:setPixel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:setText( ... )
@@ -739,7 +739,7 @@ METHOD QImage:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:size( ... )
@@ -747,7 +747,7 @@ METHOD QImage:size( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QImage_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:text( ... )
@@ -761,7 +761,7 @@ METHOD QImage:text( ... )
    CASE 0
       RETURN Qt_QImage_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:textKeys( ... )
@@ -769,7 +769,7 @@ METHOD QImage:textKeys( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QImage_textKeys( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:transformed( ... )
@@ -797,7 +797,7 @@ METHOD QImage:transformed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:valid( ... )
@@ -815,7 +815,7 @@ METHOD QImage:valid( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QImage:width( ... )
@@ -823,5 +823,5 @@ METHOD QImage:width( ... )
    CASE 0
       RETURN Qt_QImage_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

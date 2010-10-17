@@ -135,7 +135,7 @@ CREATE CLASS QDate INHERIT HbQtObjectHandler FUNCTION HB_QDate
 METHOD QDate:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDate( ... )
    RETURN Self
@@ -150,7 +150,7 @@ METHOD QDate:addDays( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:addMonths( ... )
@@ -162,7 +162,7 @@ METHOD QDate:addMonths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:addYears( ... )
@@ -174,7 +174,7 @@ METHOD QDate:addYears( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:day( ... )
@@ -182,7 +182,7 @@ METHOD QDate:day( ... )
    CASE 0
       RETURN Qt_QDate_day( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:dayOfWeek( ... )
@@ -190,7 +190,7 @@ METHOD QDate:dayOfWeek( ... )
    CASE 0
       RETURN Qt_QDate_dayOfWeek( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:dayOfYear( ... )
@@ -198,7 +198,7 @@ METHOD QDate:dayOfYear( ... )
    CASE 0
       RETURN Qt_QDate_dayOfYear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:daysInMonth( ... )
@@ -206,7 +206,7 @@ METHOD QDate:daysInMonth( ... )
    CASE 0
       RETURN Qt_QDate_daysInMonth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:daysInYear( ... )
@@ -214,7 +214,7 @@ METHOD QDate:daysInYear( ... )
    CASE 0
       RETURN Qt_QDate_daysInYear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:daysTo( ... )
@@ -226,7 +226,7 @@ METHOD QDate:daysTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:getDate( ... )
@@ -238,7 +238,7 @@ METHOD QDate:getDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:isNull( ... )
@@ -246,7 +246,7 @@ METHOD QDate:isNull( ... )
    CASE 0
       RETURN Qt_QDate_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:isValid( ... )
@@ -254,7 +254,7 @@ METHOD QDate:isValid( ... )
    CASE 0
       RETURN Qt_QDate_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:month( ... )
@@ -262,7 +262,7 @@ METHOD QDate:month( ... )
    CASE 0
       RETURN Qt_QDate_month( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:setDate( ... )
@@ -274,7 +274,7 @@ METHOD QDate:setDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:toJulianDay( ... )
@@ -282,7 +282,7 @@ METHOD QDate:toJulianDay( ... )
    CASE 0
       RETURN Qt_QDate_toJulianDay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:toString( ... )
@@ -298,7 +298,7 @@ METHOD QDate:toString( ... )
    CASE 0
       RETURN Qt_QDate_toString_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:weekNumber( ... )
@@ -312,7 +312,7 @@ METHOD QDate:weekNumber( ... )
    CASE 0
       RETURN Qt_QDate_weekNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDate:year( ... )
@@ -320,5 +320,5 @@ METHOD QDate:year( ... )
    CASE 0
       RETURN Qt_QDate_year( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

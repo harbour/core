@@ -125,7 +125,7 @@ CREATE CLASS QPolygonF INHERIT HbQtObjectHandler FUNCTION HB_QPolygonF
 METHOD QPolygonF:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPolygonF( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QPolygonF:boundingRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QPolygonF_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:containsPoint( ... )
@@ -148,7 +148,7 @@ METHOD QPolygonF:containsPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:intersected( ... )
@@ -160,7 +160,7 @@ METHOD QPolygonF:intersected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:isClosed( ... )
@@ -168,7 +168,7 @@ METHOD QPolygonF:isClosed( ... )
    CASE 0
       RETURN Qt_QPolygonF_isClosed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:subtracted( ... )
@@ -180,7 +180,7 @@ METHOD QPolygonF:subtracted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:toPolygon( ... )
@@ -188,7 +188,7 @@ METHOD QPolygonF:toPolygon( ... )
    CASE 0
       RETURN QPolygonFromPointer( Qt_QPolygonF_toPolygon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:translate( ... )
@@ -206,7 +206,7 @@ METHOD QPolygonF:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygonF:united( ... )
@@ -218,5 +218,5 @@ METHOD QPolygonF:united( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

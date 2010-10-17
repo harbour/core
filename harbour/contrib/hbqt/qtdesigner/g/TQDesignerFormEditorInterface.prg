@@ -126,7 +126,7 @@ CREATE CLASS QDesignerFormEditorInterface INHERIT HbQtObjectHandler, HB_QObject 
 METHOD QDesignerFormEditorInterface:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDesignerFormEditorInterface( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QDesignerFormEditorInterface:actionEditor( ... )
    CASE 0
       RETURN QDesignerActionEditorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_actionEditor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:formWindowManager( ... )
@@ -145,7 +145,7 @@ METHOD QDesignerFormEditorInterface:formWindowManager( ... )
    CASE 0
       RETURN QDesignerFormWindowManagerInterfaceFromPointer( Qt_QDesignerFormEditorInterface_formWindowManager( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:objectInspector( ... )
@@ -153,7 +153,7 @@ METHOD QDesignerFormEditorInterface:objectInspector( ... )
    CASE 0
       RETURN QDesignerObjectInspectorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_objectInspector( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:propertyEditor( ... )
@@ -161,7 +161,7 @@ METHOD QDesignerFormEditorInterface:propertyEditor( ... )
    CASE 0
       RETURN QDesignerPropertyEditorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_propertyEditor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:setActionEditor( ... )
@@ -173,7 +173,7 @@ METHOD QDesignerFormEditorInterface:setActionEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:setObjectInspector( ... )
@@ -185,7 +185,7 @@ METHOD QDesignerFormEditorInterface:setObjectInspector( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:setPropertyEditor( ... )
@@ -197,7 +197,7 @@ METHOD QDesignerFormEditorInterface:setPropertyEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:setWidgetBox( ... )
@@ -209,7 +209,7 @@ METHOD QDesignerFormEditorInterface:setWidgetBox( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:topLevel( ... )
@@ -217,7 +217,7 @@ METHOD QDesignerFormEditorInterface:topLevel( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDesignerFormEditorInterface_topLevel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDesignerFormEditorInterface:widgetBox( ... )
@@ -225,5 +225,5 @@ METHOD QDesignerFormEditorInterface:widgetBox( ... )
    CASE 0
       RETURN QDesignerWidgetBoxInterfaceFromPointer( Qt_QDesignerFormEditorInterface_widgetBox( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

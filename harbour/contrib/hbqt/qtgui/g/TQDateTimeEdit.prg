@@ -160,7 +160,7 @@ CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTI
 METHOD QDateTimeEdit:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDateTimeEdit( ... )
    RETURN Self
@@ -171,7 +171,7 @@ METHOD QDateTimeEdit:calendarPopup( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_calendarPopup( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:calendarWidget( ... )
@@ -179,7 +179,7 @@ METHOD QDateTimeEdit:calendarWidget( ... )
    CASE 0
       RETURN QCalendarWidgetFromPointer( Qt_QDateTimeEdit_calendarWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMaximumDate( ... )
@@ -187,7 +187,7 @@ METHOD QDateTimeEdit:clearMaximumDate( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMaximumDate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMaximumDateTime( ... )
@@ -195,7 +195,7 @@ METHOD QDateTimeEdit:clearMaximumDateTime( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMaximumDateTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMaximumTime( ... )
@@ -203,7 +203,7 @@ METHOD QDateTimeEdit:clearMaximumTime( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMaximumTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMinimumDate( ... )
@@ -211,7 +211,7 @@ METHOD QDateTimeEdit:clearMinimumDate( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMinimumDate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMinimumDateTime( ... )
@@ -219,7 +219,7 @@ METHOD QDateTimeEdit:clearMinimumDateTime( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMinimumDateTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:clearMinimumTime( ... )
@@ -227,7 +227,7 @@ METHOD QDateTimeEdit:clearMinimumTime( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_clearMinimumTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:currentSection( ... )
@@ -235,7 +235,7 @@ METHOD QDateTimeEdit:currentSection( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_currentSection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:currentSectionIndex( ... )
@@ -243,7 +243,7 @@ METHOD QDateTimeEdit:currentSectionIndex( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_currentSectionIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:date( ... )
@@ -251,7 +251,7 @@ METHOD QDateTimeEdit:date( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QDateTimeEdit_date( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:dateTime( ... )
@@ -259,7 +259,7 @@ METHOD QDateTimeEdit:dateTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_dateTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:displayFormat( ... )
@@ -267,7 +267,7 @@ METHOD QDateTimeEdit:displayFormat( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_displayFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:displayedSections( ... )
@@ -275,7 +275,7 @@ METHOD QDateTimeEdit:displayedSections( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_displayedSections( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:maximumDate( ... )
@@ -283,7 +283,7 @@ METHOD QDateTimeEdit:maximumDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QDateTimeEdit_maximumDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:maximumDateTime( ... )
@@ -291,7 +291,7 @@ METHOD QDateTimeEdit:maximumDateTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_maximumDateTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:maximumTime( ... )
@@ -299,7 +299,7 @@ METHOD QDateTimeEdit:maximumTime( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QDateTimeEdit_maximumTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:minimumDate( ... )
@@ -307,7 +307,7 @@ METHOD QDateTimeEdit:minimumDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QDateTimeEdit_minimumDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:minimumDateTime( ... )
@@ -315,7 +315,7 @@ METHOD QDateTimeEdit:minimumDateTime( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_minimumDateTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:minimumTime( ... )
@@ -323,7 +323,7 @@ METHOD QDateTimeEdit:minimumTime( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QDateTimeEdit_minimumTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:sectionAt( ... )
@@ -335,7 +335,7 @@ METHOD QDateTimeEdit:sectionAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:sectionCount( ... )
@@ -343,7 +343,7 @@ METHOD QDateTimeEdit:sectionCount( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_sectionCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:sectionText( ... )
@@ -355,7 +355,7 @@ METHOD QDateTimeEdit:sectionText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setCalendarPopup( ... )
@@ -367,7 +367,7 @@ METHOD QDateTimeEdit:setCalendarPopup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setCalendarWidget( ... )
@@ -379,7 +379,7 @@ METHOD QDateTimeEdit:setCalendarWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setCurrentSection( ... )
@@ -391,7 +391,7 @@ METHOD QDateTimeEdit:setCurrentSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setCurrentSectionIndex( ... )
@@ -403,7 +403,7 @@ METHOD QDateTimeEdit:setCurrentSectionIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setDateRange( ... )
@@ -415,7 +415,7 @@ METHOD QDateTimeEdit:setDateRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setDateTimeRange( ... )
@@ -427,7 +427,7 @@ METHOD QDateTimeEdit:setDateTimeRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setDisplayFormat( ... )
@@ -439,7 +439,7 @@ METHOD QDateTimeEdit:setDisplayFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMaximumDate( ... )
@@ -451,7 +451,7 @@ METHOD QDateTimeEdit:setMaximumDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMaximumDateTime( ... )
@@ -463,7 +463,7 @@ METHOD QDateTimeEdit:setMaximumDateTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMaximumTime( ... )
@@ -475,7 +475,7 @@ METHOD QDateTimeEdit:setMaximumTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMinimumDate( ... )
@@ -487,7 +487,7 @@ METHOD QDateTimeEdit:setMinimumDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMinimumDateTime( ... )
@@ -499,7 +499,7 @@ METHOD QDateTimeEdit:setMinimumDateTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setMinimumTime( ... )
@@ -511,7 +511,7 @@ METHOD QDateTimeEdit:setMinimumTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setSelectedSection( ... )
@@ -523,7 +523,7 @@ METHOD QDateTimeEdit:setSelectedSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setTimeRange( ... )
@@ -535,7 +535,7 @@ METHOD QDateTimeEdit:setTimeRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setTimeSpec( ... )
@@ -547,7 +547,7 @@ METHOD QDateTimeEdit:setTimeSpec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:time( ... )
@@ -555,7 +555,7 @@ METHOD QDateTimeEdit:time( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QDateTimeEdit_time( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:timeSpec( ... )
@@ -563,7 +563,7 @@ METHOD QDateTimeEdit:timeSpec( ... )
    CASE 0
       RETURN Qt_QDateTimeEdit_timeSpec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setDate( ... )
@@ -575,7 +575,7 @@ METHOD QDateTimeEdit:setDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setDateTime( ... )
@@ -587,7 +587,7 @@ METHOD QDateTimeEdit:setDateTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDateTimeEdit:setTime( ... )
@@ -599,5 +599,5 @@ METHOD QDateTimeEdit:setTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

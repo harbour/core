@@ -128,7 +128,7 @@ CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFont
 METHOD QFontDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontDialog( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QFontDialog:currentFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QFontDialog_currentFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:options( ... )
@@ -147,7 +147,7 @@ METHOD QFontDialog:options( ... )
    CASE 0
       RETURN Qt_QFontDialog_options( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:selectedFont( ... )
@@ -155,7 +155,7 @@ METHOD QFontDialog:selectedFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QFontDialog_selectedFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:setCurrentFont( ... )
@@ -167,7 +167,7 @@ METHOD QFontDialog:setCurrentFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:setOption( ... )
@@ -185,7 +185,7 @@ METHOD QFontDialog:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:setOptions( ... )
@@ -197,7 +197,7 @@ METHOD QFontDialog:setOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:testOption( ... )
@@ -209,7 +209,7 @@ METHOD QFontDialog:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDialog:getFont( ... )
@@ -255,5 +255,5 @@ METHOD QFontDialog:getFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

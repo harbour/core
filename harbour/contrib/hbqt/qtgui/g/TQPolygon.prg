@@ -129,7 +129,7 @@ CREATE CLASS QPolygon INHERIT HbQtObjectHandler FUNCTION HB_QPolygon
 METHOD QPolygon:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPolygon( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QPolygon:boundingRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPolygon_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:containsPoint( ... )
@@ -152,7 +152,7 @@ METHOD QPolygon:containsPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:intersected( ... )
@@ -164,7 +164,7 @@ METHOD QPolygon:intersected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:point( ... )
@@ -182,7 +182,7 @@ METHOD QPolygon:point( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:putPoints( ... )
@@ -200,7 +200,7 @@ METHOD QPolygon:putPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:setPoint( ... )
@@ -218,7 +218,7 @@ METHOD QPolygon:setPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:setPoints( ... )
@@ -230,7 +230,7 @@ METHOD QPolygon:setPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:subtracted( ... )
@@ -242,7 +242,7 @@ METHOD QPolygon:subtracted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:translate( ... )
@@ -260,7 +260,7 @@ METHOD QPolygon:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPolygon:united( ... )
@@ -272,5 +272,5 @@ METHOD QPolygon:united( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

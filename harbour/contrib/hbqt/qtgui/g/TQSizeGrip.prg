@@ -116,7 +116,7 @@ CREATE CLASS QSizeGrip INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSizeGr
 METHOD QSizeGrip:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSizeGrip( ... )
    RETURN Self

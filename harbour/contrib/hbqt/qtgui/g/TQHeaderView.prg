@@ -173,7 +173,7 @@ CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTIO
 METHOD QHeaderView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHeaderView( ... )
    RETURN Self
@@ -184,7 +184,7 @@ METHOD QHeaderView:cascadingSectionResizes( ... )
    CASE 0
       RETURN Qt_QHeaderView_cascadingSectionResizes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:count( ... )
@@ -192,7 +192,7 @@ METHOD QHeaderView:count( ... )
    CASE 0
       RETURN Qt_QHeaderView_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:defaultAlignment( ... )
@@ -200,7 +200,7 @@ METHOD QHeaderView:defaultAlignment( ... )
    CASE 0
       RETURN Qt_QHeaderView_defaultAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:defaultSectionSize( ... )
@@ -208,7 +208,7 @@ METHOD QHeaderView:defaultSectionSize( ... )
    CASE 0
       RETURN Qt_QHeaderView_defaultSectionSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:hiddenSectionCount( ... )
@@ -216,7 +216,7 @@ METHOD QHeaderView:hiddenSectionCount( ... )
    CASE 0
       RETURN Qt_QHeaderView_hiddenSectionCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:hideSection( ... )
@@ -228,7 +228,7 @@ METHOD QHeaderView:hideSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:highlightSections( ... )
@@ -236,7 +236,7 @@ METHOD QHeaderView:highlightSections( ... )
    CASE 0
       RETURN Qt_QHeaderView_highlightSections( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:isClickable( ... )
@@ -244,7 +244,7 @@ METHOD QHeaderView:isClickable( ... )
    CASE 0
       RETURN Qt_QHeaderView_isClickable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:isMovable( ... )
@@ -252,7 +252,7 @@ METHOD QHeaderView:isMovable( ... )
    CASE 0
       RETURN Qt_QHeaderView_isMovable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:isSectionHidden( ... )
@@ -264,7 +264,7 @@ METHOD QHeaderView:isSectionHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:isSortIndicatorShown( ... )
@@ -272,7 +272,7 @@ METHOD QHeaderView:isSortIndicatorShown( ... )
    CASE 0
       RETURN Qt_QHeaderView_isSortIndicatorShown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:length( ... )
@@ -280,7 +280,7 @@ METHOD QHeaderView:length( ... )
    CASE 0
       RETURN Qt_QHeaderView_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:logicalIndex( ... )
@@ -292,7 +292,7 @@ METHOD QHeaderView:logicalIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:logicalIndexAt( ... )
@@ -312,7 +312,7 @@ METHOD QHeaderView:logicalIndexAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:minimumSectionSize( ... )
@@ -320,7 +320,7 @@ METHOD QHeaderView:minimumSectionSize( ... )
    CASE 0
       RETURN Qt_QHeaderView_minimumSectionSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:moveSection( ... )
@@ -332,7 +332,7 @@ METHOD QHeaderView:moveSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:offset( ... )
@@ -340,7 +340,7 @@ METHOD QHeaderView:offset( ... )
    CASE 0
       RETURN Qt_QHeaderView_offset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:orientation( ... )
@@ -348,7 +348,7 @@ METHOD QHeaderView:orientation( ... )
    CASE 0
       RETURN Qt_QHeaderView_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:resizeMode( ... )
@@ -360,7 +360,7 @@ METHOD QHeaderView:resizeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:resizeSection( ... )
@@ -372,7 +372,7 @@ METHOD QHeaderView:resizeSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:resizeSections( ... )
@@ -384,7 +384,7 @@ METHOD QHeaderView:resizeSections( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:restoreState( ... )
@@ -396,7 +396,7 @@ METHOD QHeaderView:restoreState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:saveState( ... )
@@ -404,7 +404,7 @@ METHOD QHeaderView:saveState( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QHeaderView_saveState( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionPosition( ... )
@@ -416,7 +416,7 @@ METHOD QHeaderView:sectionPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionSize( ... )
@@ -428,7 +428,7 @@ METHOD QHeaderView:sectionSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionSizeHint( ... )
@@ -440,7 +440,7 @@ METHOD QHeaderView:sectionSizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionViewportPosition( ... )
@@ -452,7 +452,7 @@ METHOD QHeaderView:sectionViewportPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionsHidden( ... )
@@ -460,7 +460,7 @@ METHOD QHeaderView:sectionsHidden( ... )
    CASE 0
       RETURN Qt_QHeaderView_sectionsHidden( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sectionsMoved( ... )
@@ -468,7 +468,7 @@ METHOD QHeaderView:sectionsMoved( ... )
    CASE 0
       RETURN Qt_QHeaderView_sectionsMoved( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setCascadingSectionResizes( ... )
@@ -480,7 +480,7 @@ METHOD QHeaderView:setCascadingSectionResizes( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setClickable( ... )
@@ -492,7 +492,7 @@ METHOD QHeaderView:setClickable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setDefaultAlignment( ... )
@@ -504,7 +504,7 @@ METHOD QHeaderView:setDefaultAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setDefaultSectionSize( ... )
@@ -516,7 +516,7 @@ METHOD QHeaderView:setDefaultSectionSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setHighlightSections( ... )
@@ -528,7 +528,7 @@ METHOD QHeaderView:setHighlightSections( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setMinimumSectionSize( ... )
@@ -540,7 +540,7 @@ METHOD QHeaderView:setMinimumSectionSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setMovable( ... )
@@ -552,7 +552,7 @@ METHOD QHeaderView:setMovable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setResizeMode( ... )
@@ -570,7 +570,7 @@ METHOD QHeaderView:setResizeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setSectionHidden( ... )
@@ -582,7 +582,7 @@ METHOD QHeaderView:setSectionHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setSortIndicator( ... )
@@ -594,7 +594,7 @@ METHOD QHeaderView:setSortIndicator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setSortIndicatorShown( ... )
@@ -606,7 +606,7 @@ METHOD QHeaderView:setSortIndicatorShown( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setStretchLastSection( ... )
@@ -618,7 +618,7 @@ METHOD QHeaderView:setStretchLastSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:showSection( ... )
@@ -630,7 +630,7 @@ METHOD QHeaderView:showSection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sizeHint( ... )
@@ -638,7 +638,7 @@ METHOD QHeaderView:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QHeaderView_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sortIndicatorOrder( ... )
@@ -646,7 +646,7 @@ METHOD QHeaderView:sortIndicatorOrder( ... )
    CASE 0
       RETURN Qt_QHeaderView_sortIndicatorOrder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:sortIndicatorSection( ... )
@@ -654,7 +654,7 @@ METHOD QHeaderView:sortIndicatorSection( ... )
    CASE 0
       RETURN Qt_QHeaderView_sortIndicatorSection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:stretchLastSection( ... )
@@ -662,7 +662,7 @@ METHOD QHeaderView:stretchLastSection( ... )
    CASE 0
       RETURN Qt_QHeaderView_stretchLastSection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:stretchSectionCount( ... )
@@ -670,7 +670,7 @@ METHOD QHeaderView:stretchSectionCount( ... )
    CASE 0
       RETURN Qt_QHeaderView_stretchSectionCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:swapSections( ... )
@@ -682,7 +682,7 @@ METHOD QHeaderView:swapSections( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:visualIndex( ... )
@@ -694,7 +694,7 @@ METHOD QHeaderView:visualIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:visualIndexAt( ... )
@@ -706,7 +706,7 @@ METHOD QHeaderView:visualIndexAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:headerDataChanged( ... )
@@ -718,7 +718,7 @@ METHOD QHeaderView:headerDataChanged( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setOffset( ... )
@@ -730,7 +730,7 @@ METHOD QHeaderView:setOffset( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setOffsetToLastSection( ... )
@@ -738,7 +738,7 @@ METHOD QHeaderView:setOffsetToLastSection( ... )
    CASE 0
       RETURN Qt_QHeaderView_setOffsetToLastSection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHeaderView:setOffsetToSectionPosition( ... )
@@ -750,5 +750,5 @@ METHOD QHeaderView:setOffsetToSectionPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

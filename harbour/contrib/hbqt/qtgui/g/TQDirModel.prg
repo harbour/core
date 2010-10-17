@@ -153,7 +153,7 @@ CREATE CLASS QDirModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION
 METHOD QDirModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDirModel( ... )
    RETURN Self
@@ -170,7 +170,7 @@ METHOD QDirModel:columnCount( ... )
    CASE 0
       RETURN Qt_QDirModel_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:data( ... )
@@ -188,7 +188,7 @@ METHOD QDirModel:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:dropMimeData( ... )
@@ -200,7 +200,7 @@ METHOD QDirModel:dropMimeData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:fileIcon( ... )
@@ -212,7 +212,7 @@ METHOD QDirModel:fileIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:fileInfo( ... )
@@ -224,7 +224,7 @@ METHOD QDirModel:fileInfo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:fileName( ... )
@@ -236,7 +236,7 @@ METHOD QDirModel:fileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:filePath( ... )
@@ -248,7 +248,7 @@ METHOD QDirModel:filePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:filter( ... )
@@ -256,7 +256,7 @@ METHOD QDirModel:filter( ... )
    CASE 0
       RETURN Qt_QDirModel_filter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:flags( ... )
@@ -268,7 +268,7 @@ METHOD QDirModel:flags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:hasChildren( ... )
@@ -282,7 +282,7 @@ METHOD QDirModel:hasChildren( ... )
    CASE 0
       RETURN Qt_QDirModel_hasChildren( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:headerData( ... )
@@ -300,7 +300,7 @@ METHOD QDirModel:headerData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:iconProvider( ... )
@@ -308,7 +308,7 @@ METHOD QDirModel:iconProvider( ... )
    CASE 0
       RETURN QFileIconProviderFromPointer( Qt_QDirModel_iconProvider( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:index( ... )
@@ -334,7 +334,7 @@ METHOD QDirModel:index( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:isDir( ... )
@@ -346,7 +346,7 @@ METHOD QDirModel:isDir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:isReadOnly( ... )
@@ -354,7 +354,7 @@ METHOD QDirModel:isReadOnly( ... )
    CASE 0
       RETURN Qt_QDirModel_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:lazyChildCount( ... )
@@ -362,7 +362,7 @@ METHOD QDirModel:lazyChildCount( ... )
    CASE 0
       RETURN Qt_QDirModel_lazyChildCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:mimeTypes( ... )
@@ -370,7 +370,7 @@ METHOD QDirModel:mimeTypes( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDirModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:mkdir( ... )
@@ -382,7 +382,7 @@ METHOD QDirModel:mkdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:nameFilters( ... )
@@ -390,7 +390,7 @@ METHOD QDirModel:nameFilters( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QDirModel_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:parent( ... )
@@ -402,7 +402,7 @@ METHOD QDirModel:parent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:remove( ... )
@@ -414,7 +414,7 @@ METHOD QDirModel:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:resolveSymlinks( ... )
@@ -422,7 +422,7 @@ METHOD QDirModel:resolveSymlinks( ... )
    CASE 0
       RETURN Qt_QDirModel_resolveSymlinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:rmdir( ... )
@@ -434,7 +434,7 @@ METHOD QDirModel:rmdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:rowCount( ... )
@@ -448,7 +448,7 @@ METHOD QDirModel:rowCount( ... )
    CASE 0
       RETURN Qt_QDirModel_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setData( ... )
@@ -466,7 +466,7 @@ METHOD QDirModel:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setFilter( ... )
@@ -478,7 +478,7 @@ METHOD QDirModel:setFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setIconProvider( ... )
@@ -490,7 +490,7 @@ METHOD QDirModel:setIconProvider( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setLazyChildCount( ... )
@@ -502,7 +502,7 @@ METHOD QDirModel:setLazyChildCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setNameFilters( ... )
@@ -514,7 +514,7 @@ METHOD QDirModel:setNameFilters( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setReadOnly( ... )
@@ -526,7 +526,7 @@ METHOD QDirModel:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setResolveSymlinks( ... )
@@ -538,7 +538,7 @@ METHOD QDirModel:setResolveSymlinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:setSorting( ... )
@@ -550,7 +550,7 @@ METHOD QDirModel:setSorting( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:sort( ... )
@@ -568,7 +568,7 @@ METHOD QDirModel:sort( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:sorting( ... )
@@ -576,7 +576,7 @@ METHOD QDirModel:sorting( ... )
    CASE 0
       RETURN Qt_QDirModel_sorting( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:supportedDropActions( ... )
@@ -584,7 +584,7 @@ METHOD QDirModel:supportedDropActions( ... )
    CASE 0
       RETURN Qt_QDirModel_supportedDropActions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDirModel:refresh( ... )
@@ -598,5 +598,5 @@ METHOD QDirModel:refresh( ... )
    CASE 0
       RETURN Qt_QDirModel_refresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

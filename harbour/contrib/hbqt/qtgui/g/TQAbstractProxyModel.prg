@@ -122,7 +122,7 @@ CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, HB_QAbstractItemMode
 METHOD QAbstractProxyModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractProxyModel( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QAbstractProxyModel:mapFromSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractProxyModel:mapSelectionFromSource( ... )
@@ -149,7 +149,7 @@ METHOD QAbstractProxyModel:mapSelectionFromSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractProxyModel:mapSelectionToSource( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractProxyModel:mapSelectionToSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractProxyModel:mapToSource( ... )
@@ -173,7 +173,7 @@ METHOD QAbstractProxyModel:mapToSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractProxyModel:setSourceModel( ... )
@@ -185,7 +185,7 @@ METHOD QAbstractProxyModel:setSourceModel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractProxyModel:sourceModel( ... )
@@ -193,5 +193,5 @@ METHOD QAbstractProxyModel:sourceModel( ... )
    CASE 0
       RETURN QAbstractItemModelFromPointer( Qt_QAbstractProxyModel_sourceModel( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -135,7 +135,7 @@ CREATE CLASS HBQGraphicsScene INHERIT HbQtObjectHandler, HB_QGraphicsScene FUNCT
 METHOD HBQGraphicsScene:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQGraphicsScene( ... )
    RETURN Self
@@ -150,7 +150,7 @@ METHOD HBQGraphicsScene:hbSetBlock( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:pageSize( ... )
@@ -158,7 +158,7 @@ METHOD HBQGraphicsScene:pageSize( ... )
    CASE 0
       RETURN Qt_HBQGraphicsScene_pageSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setPageSize( ... )
@@ -170,7 +170,7 @@ METHOD HBQGraphicsScene:setPageSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:paperRect( ... )
@@ -178,7 +178,7 @@ METHOD HBQGraphicsScene:paperRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_HBQGraphicsScene_paperRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setPaperRect( ... )
@@ -190,7 +190,7 @@ METHOD HBQGraphicsScene:setPaperRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:orientation( ... )
@@ -198,7 +198,7 @@ METHOD HBQGraphicsScene:orientation( ... )
    CASE 0
       RETURN Qt_HBQGraphicsScene_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setOrientation( ... )
@@ -210,7 +210,7 @@ METHOD HBQGraphicsScene:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:geometry( ... )
@@ -218,7 +218,7 @@ METHOD HBQGraphicsScene:geometry( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_HBQGraphicsScene_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setGeometry( ... )
@@ -230,7 +230,7 @@ METHOD HBQGraphicsScene:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:magnetArea( ... )
@@ -238,7 +238,7 @@ METHOD HBQGraphicsScene:magnetArea( ... )
    CASE 0
       RETURN Qt_HBQGraphicsScene_magnetArea( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setMagnetArea( ... )
@@ -250,7 +250,7 @@ METHOD HBQGraphicsScene:setMagnetArea( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:showGrid( ... )
@@ -258,7 +258,7 @@ METHOD HBQGraphicsScene:showGrid( ... )
    CASE 0
       RETURN Qt_HBQGraphicsScene_showGrid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setShowGrid( ... )
@@ -270,7 +270,7 @@ METHOD HBQGraphicsScene:setShowGrid( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setLeftMagnet( ... )
@@ -282,7 +282,7 @@ METHOD HBQGraphicsScene:setLeftMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setRightMagnet( ... )
@@ -294,7 +294,7 @@ METHOD HBQGraphicsScene:setRightMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setTopMagnet( ... )
@@ -306,7 +306,7 @@ METHOD HBQGraphicsScene:setTopMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setBottomMagnet( ... )
@@ -318,7 +318,7 @@ METHOD HBQGraphicsScene:setBottomMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setHorizontalMagnet( ... )
@@ -330,7 +330,7 @@ METHOD HBQGraphicsScene:setHorizontalMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQGraphicsScene:setVerticalMagnet( ... )
@@ -342,5 +342,5 @@ METHOD HBQGraphicsScene:setVerticalMagnet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

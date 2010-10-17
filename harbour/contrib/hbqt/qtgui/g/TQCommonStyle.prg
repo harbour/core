@@ -116,7 +116,7 @@ CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, HB_QStyle FUNCTION HB_QComm
 METHOD QCommonStyle:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCommonStyle( ... )
    RETURN Self

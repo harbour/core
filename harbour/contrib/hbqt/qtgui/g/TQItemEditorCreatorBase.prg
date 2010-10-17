@@ -118,7 +118,7 @@ CREATE CLASS QItemEditorCreatorBase INHERIT HbQtObjectHandler FUNCTION HB_QItemE
 METHOD QItemEditorCreatorBase:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemEditorCreatorBase( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QItemEditorCreatorBase:createWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemEditorCreatorBase:valuePropertyName( ... )
@@ -141,5 +141,5 @@ METHOD QItemEditorCreatorBase:valuePropertyName( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QItemEditorCreatorBase_valuePropertyName( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -145,7 +145,7 @@ CREATE CLASS QStyle INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QStyle
 METHOD QStyle:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyle( ... )
    RETURN Self
@@ -172,7 +172,7 @@ METHOD QStyle:combinedLayoutSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:drawComplexControl( ... )
@@ -190,7 +190,7 @@ METHOD QStyle:drawComplexControl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:drawControl( ... )
@@ -208,7 +208,7 @@ METHOD QStyle:drawControl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:drawItemPixmap( ... )
@@ -220,7 +220,7 @@ METHOD QStyle:drawItemPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:drawItemText( ... )
@@ -238,7 +238,7 @@ METHOD QStyle:drawItemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:drawPrimitive( ... )
@@ -256,7 +256,7 @@ METHOD QStyle:drawPrimitive( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:generatedIconPixmap( ... )
@@ -268,7 +268,7 @@ METHOD QStyle:generatedIconPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:hitTestComplexControl( ... )
@@ -286,7 +286,7 @@ METHOD QStyle:hitTestComplexControl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:itemPixmapRect( ... )
@@ -298,7 +298,7 @@ METHOD QStyle:itemPixmapRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:itemTextRect( ... )
@@ -310,7 +310,7 @@ METHOD QStyle:itemTextRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:layoutSpacing( ... )
@@ -334,7 +334,7 @@ METHOD QStyle:layoutSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:pixelMetric( ... )
@@ -358,7 +358,7 @@ METHOD QStyle:pixelMetric( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:polish( ... )
@@ -377,7 +377,7 @@ METHOD QStyle:polish( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:sizeFromContents( ... )
@@ -395,7 +395,7 @@ METHOD QStyle:sizeFromContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:standardIcon( ... )
@@ -419,7 +419,7 @@ METHOD QStyle:standardIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:standardPalette( ... )
@@ -427,7 +427,7 @@ METHOD QStyle:standardPalette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QStyle_standardPalette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:styleHint( ... )
@@ -457,7 +457,7 @@ METHOD QStyle:styleHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:subControlRect( ... )
@@ -475,7 +475,7 @@ METHOD QStyle:subControlRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:subElementRect( ... )
@@ -493,7 +493,7 @@ METHOD QStyle:subElementRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:unpolish( ... )
@@ -510,7 +510,7 @@ METHOD QStyle:unpolish( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:alignedRect( ... )
@@ -522,7 +522,7 @@ METHOD QStyle:alignedRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:sliderPositionFromValue( ... )
@@ -540,7 +540,7 @@ METHOD QStyle:sliderPositionFromValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:sliderValueFromPosition( ... )
@@ -558,7 +558,7 @@ METHOD QStyle:sliderValueFromPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:visualAlignment( ... )
@@ -570,7 +570,7 @@ METHOD QStyle:visualAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:visualPos( ... )
@@ -582,7 +582,7 @@ METHOD QStyle:visualPos( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyle:visualRect( ... )
@@ -594,5 +594,5 @@ METHOD QStyle:visualRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

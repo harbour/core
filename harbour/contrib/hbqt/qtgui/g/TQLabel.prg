@@ -145,7 +145,7 @@ CREATE CLASS QLabel INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLabel
 METHOD QLabel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLabel( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QLabel:alignment( ... )
    CASE 0
       RETURN Qt_QLabel_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:buddy( ... )
@@ -164,7 +164,7 @@ METHOD QLabel:buddy( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QLabel_buddy( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:hasScaledContents( ... )
@@ -172,7 +172,7 @@ METHOD QLabel:hasScaledContents( ... )
    CASE 0
       RETURN Qt_QLabel_hasScaledContents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:indent( ... )
@@ -180,7 +180,7 @@ METHOD QLabel:indent( ... )
    CASE 0
       RETURN Qt_QLabel_indent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:margin( ... )
@@ -188,7 +188,7 @@ METHOD QLabel:margin( ... )
    CASE 0
       RETURN Qt_QLabel_margin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:movie( ... )
@@ -196,7 +196,7 @@ METHOD QLabel:movie( ... )
    CASE 0
       RETURN QMovieFromPointer( Qt_QLabel_movie( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:openExternalLinks( ... )
@@ -204,7 +204,7 @@ METHOD QLabel:openExternalLinks( ... )
    CASE 0
       RETURN Qt_QLabel_openExternalLinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:picture( ... )
@@ -212,7 +212,7 @@ METHOD QLabel:picture( ... )
    CASE 0
       RETURN QPictureFromPointer( Qt_QLabel_picture( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:pixmap( ... )
@@ -220,7 +220,7 @@ METHOD QLabel:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QLabel_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setAlignment( ... )
@@ -232,7 +232,7 @@ METHOD QLabel:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setBuddy( ... )
@@ -244,7 +244,7 @@ METHOD QLabel:setBuddy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setIndent( ... )
@@ -256,7 +256,7 @@ METHOD QLabel:setIndent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setMargin( ... )
@@ -268,7 +268,7 @@ METHOD QLabel:setMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setOpenExternalLinks( ... )
@@ -280,7 +280,7 @@ METHOD QLabel:setOpenExternalLinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setScaledContents( ... )
@@ -292,7 +292,7 @@ METHOD QLabel:setScaledContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setTextFormat( ... )
@@ -304,7 +304,7 @@ METHOD QLabel:setTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setTextInteractionFlags( ... )
@@ -316,7 +316,7 @@ METHOD QLabel:setTextInteractionFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setWordWrap( ... )
@@ -328,7 +328,7 @@ METHOD QLabel:setWordWrap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:text( ... )
@@ -336,7 +336,7 @@ METHOD QLabel:text( ... )
    CASE 0
       RETURN Qt_QLabel_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:textFormat( ... )
@@ -344,7 +344,7 @@ METHOD QLabel:textFormat( ... )
    CASE 0
       RETURN Qt_QLabel_textFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:textInteractionFlags( ... )
@@ -352,7 +352,7 @@ METHOD QLabel:textInteractionFlags( ... )
    CASE 0
       RETURN Qt_QLabel_textInteractionFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:wordWrap( ... )
@@ -360,7 +360,7 @@ METHOD QLabel:wordWrap( ... )
    CASE 0
       RETURN Qt_QLabel_wordWrap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:clear( ... )
@@ -368,7 +368,7 @@ METHOD QLabel:clear( ... )
    CASE 0
       RETURN Qt_QLabel_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setMovie( ... )
@@ -380,7 +380,7 @@ METHOD QLabel:setMovie( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setNum( ... )
@@ -393,7 +393,7 @@ METHOD QLabel:setNum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setPicture( ... )
@@ -405,7 +405,7 @@ METHOD QLabel:setPicture( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setPixmap( ... )
@@ -417,7 +417,7 @@ METHOD QLabel:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLabel:setText( ... )
@@ -429,5 +429,5 @@ METHOD QLabel:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

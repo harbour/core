@@ -125,7 +125,7 @@ CREATE CLASS QDoubleValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION 
 METHOD QDoubleValidator:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDoubleValidator( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QDoubleValidator:bottom( ... )
    CASE 0
       RETURN Qt_QDoubleValidator_bottom( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:decimals( ... )
@@ -144,7 +144,7 @@ METHOD QDoubleValidator:decimals( ... )
    CASE 0
       RETURN Qt_QDoubleValidator_decimals( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:notation( ... )
@@ -152,7 +152,7 @@ METHOD QDoubleValidator:notation( ... )
    CASE 0
       RETURN Qt_QDoubleValidator_notation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:setBottom( ... )
@@ -164,7 +164,7 @@ METHOD QDoubleValidator:setBottom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:setDecimals( ... )
@@ -176,7 +176,7 @@ METHOD QDoubleValidator:setDecimals( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:setNotation( ... )
@@ -188,7 +188,7 @@ METHOD QDoubleValidator:setNotation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:setRange( ... )
@@ -206,7 +206,7 @@ METHOD QDoubleValidator:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:setTop( ... )
@@ -218,7 +218,7 @@ METHOD QDoubleValidator:setTop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleValidator:top( ... )
@@ -226,5 +226,5 @@ METHOD QDoubleValidator:top( ... )
    CASE 0
       RETURN Qt_QDoubleValidator_top( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

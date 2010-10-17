@@ -149,7 +149,7 @@ CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
 METHOD QMenu:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMenu( ... )
    RETURN Self
@@ -164,7 +164,7 @@ METHOD QMenu:actionAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:actionGeometry( ... )
@@ -176,7 +176,7 @@ METHOD QMenu:actionGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:activeAction( ... )
@@ -184,7 +184,7 @@ METHOD QMenu:activeAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenu_activeAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:addAction( ... )
@@ -224,7 +224,7 @@ METHOD QMenu:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:addMenu( ... )
@@ -244,7 +244,7 @@ METHOD QMenu:addMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:addSeparator( ... )
@@ -252,7 +252,7 @@ METHOD QMenu:addSeparator( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenu_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:clear( ... )
@@ -260,7 +260,7 @@ METHOD QMenu:clear( ... )
    CASE 0
       RETURN Qt_QMenu_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:defaultAction( ... )
@@ -268,7 +268,7 @@ METHOD QMenu:defaultAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenu_defaultAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:exec( ... )
@@ -288,7 +288,7 @@ METHOD QMenu:exec( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenu_exec( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:hideTearOffMenu( ... )
@@ -296,7 +296,7 @@ METHOD QMenu:hideTearOffMenu( ... )
    CASE 0
       RETURN Qt_QMenu_hideTearOffMenu( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:icon( ... )
@@ -304,7 +304,7 @@ METHOD QMenu:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QMenu_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:insertMenu( ... )
@@ -316,7 +316,7 @@ METHOD QMenu:insertMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:insertSeparator( ... )
@@ -328,7 +328,7 @@ METHOD QMenu:insertSeparator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:isEmpty( ... )
@@ -336,7 +336,7 @@ METHOD QMenu:isEmpty( ... )
    CASE 0
       RETURN Qt_QMenu_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:isTearOffEnabled( ... )
@@ -344,7 +344,7 @@ METHOD QMenu:isTearOffEnabled( ... )
    CASE 0
       RETURN Qt_QMenu_isTearOffEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:isTearOffMenuVisible( ... )
@@ -352,7 +352,7 @@ METHOD QMenu:isTearOffMenuVisible( ... )
    CASE 0
       RETURN Qt_QMenu_isTearOffMenuVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:menuAction( ... )
@@ -360,7 +360,7 @@ METHOD QMenu:menuAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenu_menuAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:popup( ... )
@@ -378,7 +378,7 @@ METHOD QMenu:popup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:separatorsCollapsible( ... )
@@ -386,7 +386,7 @@ METHOD QMenu:separatorsCollapsible( ... )
    CASE 0
       RETURN Qt_QMenu_separatorsCollapsible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setActiveAction( ... )
@@ -398,7 +398,7 @@ METHOD QMenu:setActiveAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setDefaultAction( ... )
@@ -410,7 +410,7 @@ METHOD QMenu:setDefaultAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setIcon( ... )
@@ -422,7 +422,7 @@ METHOD QMenu:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setSeparatorsCollapsible( ... )
@@ -434,7 +434,7 @@ METHOD QMenu:setSeparatorsCollapsible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setTearOffEnabled( ... )
@@ -446,7 +446,7 @@ METHOD QMenu:setTearOffEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:setTitle( ... )
@@ -458,7 +458,7 @@ METHOD QMenu:setTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenu:title( ... )
@@ -466,5 +466,5 @@ METHOD QMenu:title( ... )
    CASE 0
       RETURN Qt_QMenu_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

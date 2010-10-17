@@ -190,7 +190,7 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
 METHOD QApplication:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QApplication( ... )
    RETURN Self
@@ -205,7 +205,7 @@ METHOD QApplication:commitData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:isSessionRestored( ... )
@@ -213,7 +213,7 @@ METHOD QApplication:isSessionRestored( ... )
    CASE 0
       RETURN Qt_QApplication_isSessionRestored( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:saveState( ... )
@@ -225,7 +225,7 @@ METHOD QApplication:saveState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:sessionId( ... )
@@ -233,7 +233,7 @@ METHOD QApplication:sessionId( ... )
    CASE 0
       RETURN Qt_QApplication_sessionId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:sessionKey( ... )
@@ -241,7 +241,7 @@ METHOD QApplication:sessionKey( ... )
    CASE 0
       RETURN Qt_QApplication_sessionKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:styleSheet( ... )
@@ -249,7 +249,7 @@ METHOD QApplication:styleSheet( ... )
    CASE 0
       RETURN Qt_QApplication_styleSheet( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:activeModalWidget( ... )
@@ -257,7 +257,7 @@ METHOD QApplication:activeModalWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QApplication_activeModalWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:activePopupWidget( ... )
@@ -265,7 +265,7 @@ METHOD QApplication:activePopupWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QApplication_activePopupWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:activeWindow( ... )
@@ -273,7 +273,7 @@ METHOD QApplication:activeWindow( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QApplication_activeWindow( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:alert( ... )
@@ -291,7 +291,7 @@ METHOD QApplication:alert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:beep( ... )
@@ -299,7 +299,7 @@ METHOD QApplication:beep( ... )
    CASE 0
       RETURN Qt_QApplication_beep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:changeOverrideCursor( ... )
@@ -311,7 +311,7 @@ METHOD QApplication:changeOverrideCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:clipboard( ... )
@@ -319,7 +319,7 @@ METHOD QApplication:clipboard( ... )
    CASE 0
       RETURN QClipboardFromPointer( Qt_QApplication_clipboard( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:colorSpec( ... )
@@ -327,7 +327,7 @@ METHOD QApplication:colorSpec( ... )
    CASE 0
       RETURN Qt_QApplication_colorSpec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:cursorFlashTime( ... )
@@ -335,7 +335,7 @@ METHOD QApplication:cursorFlashTime( ... )
    CASE 0
       RETURN Qt_QApplication_cursorFlashTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:desktop( ... )
@@ -343,7 +343,7 @@ METHOD QApplication:desktop( ... )
    CASE 0
       RETURN QDesktopWidgetFromPointer( Qt_QApplication_desktop( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:desktopSettingsAware( ... )
@@ -351,7 +351,7 @@ METHOD QApplication:desktopSettingsAware( ... )
    CASE 0
       RETURN Qt_QApplication_desktopSettingsAware( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:doubleClickInterval( ... )
@@ -359,7 +359,7 @@ METHOD QApplication:doubleClickInterval( ... )
    CASE 0
       RETURN Qt_QApplication_doubleClickInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:exec( ... )
@@ -367,7 +367,7 @@ METHOD QApplication:exec( ... )
    CASE 0
       RETURN Qt_QApplication_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:focusWidget( ... )
@@ -375,7 +375,7 @@ METHOD QApplication:focusWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QApplication_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:font( ... )
@@ -391,7 +391,7 @@ METHOD QApplication:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QApplication_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:fontMetrics( ... )
@@ -399,7 +399,7 @@ METHOD QApplication:fontMetrics( ... )
    CASE 0
       RETURN QFontMetricsFromPointer( Qt_QApplication_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:globalStrut( ... )
@@ -407,7 +407,7 @@ METHOD QApplication:globalStrut( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QApplication_globalStrut( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:isEffectEnabled( ... )
@@ -419,7 +419,7 @@ METHOD QApplication:isEffectEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:isLeftToRight( ... )
@@ -427,7 +427,7 @@ METHOD QApplication:isLeftToRight( ... )
    CASE 0
       RETURN Qt_QApplication_isLeftToRight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:isRightToLeft( ... )
@@ -435,7 +435,7 @@ METHOD QApplication:isRightToLeft( ... )
    CASE 0
       RETURN Qt_QApplication_isRightToLeft( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:keyboardInputDirection( ... )
@@ -443,7 +443,7 @@ METHOD QApplication:keyboardInputDirection( ... )
    CASE 0
       RETURN Qt_QApplication_keyboardInputDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:keyboardInputInterval( ... )
@@ -451,7 +451,7 @@ METHOD QApplication:keyboardInputInterval( ... )
    CASE 0
       RETURN Qt_QApplication_keyboardInputInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:keyboardInputLocale( ... )
@@ -459,7 +459,7 @@ METHOD QApplication:keyboardInputLocale( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QApplication_keyboardInputLocale( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:keyboardModifiers( ... )
@@ -467,7 +467,7 @@ METHOD QApplication:keyboardModifiers( ... )
    CASE 0
       RETURN Qt_QApplication_keyboardModifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:layoutDirection( ... )
@@ -475,7 +475,7 @@ METHOD QApplication:layoutDirection( ... )
    CASE 0
       RETURN Qt_QApplication_layoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:mouseButtons( ... )
@@ -483,7 +483,7 @@ METHOD QApplication:mouseButtons( ... )
    CASE 0
       RETURN Qt_QApplication_mouseButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:overrideCursor( ... )
@@ -491,7 +491,7 @@ METHOD QApplication:overrideCursor( ... )
    CASE 0
       RETURN QCursorFromPointer( Qt_QApplication_overrideCursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:palette( ... )
@@ -507,7 +507,7 @@ METHOD QApplication:palette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QApplication_palette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:quitOnLastWindowClosed( ... )
@@ -515,7 +515,7 @@ METHOD QApplication:quitOnLastWindowClosed( ... )
    CASE 0
       RETURN Qt_QApplication_quitOnLastWindowClosed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:restoreOverrideCursor( ... )
@@ -523,7 +523,7 @@ METHOD QApplication:restoreOverrideCursor( ... )
    CASE 0
       RETURN Qt_QApplication_restoreOverrideCursor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setActiveWindow( ... )
@@ -535,7 +535,7 @@ METHOD QApplication:setActiveWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setColorSpec( ... )
@@ -547,7 +547,7 @@ METHOD QApplication:setColorSpec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setCursorFlashTime( ... )
@@ -559,7 +559,7 @@ METHOD QApplication:setCursorFlashTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setDesktopSettingsAware( ... )
@@ -571,7 +571,7 @@ METHOD QApplication:setDesktopSettingsAware( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setDoubleClickInterval( ... )
@@ -583,7 +583,7 @@ METHOD QApplication:setDoubleClickInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setEffectEnabled( ... )
@@ -601,7 +601,7 @@ METHOD QApplication:setEffectEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setFont( ... )
@@ -619,7 +619,7 @@ METHOD QApplication:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setGlobalStrut( ... )
@@ -631,7 +631,7 @@ METHOD QApplication:setGlobalStrut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setGraphicsSystem( ... )
@@ -643,7 +643,7 @@ METHOD QApplication:setGraphicsSystem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setKeyboardInputInterval( ... )
@@ -655,7 +655,7 @@ METHOD QApplication:setKeyboardInputInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setLayoutDirection( ... )
@@ -667,7 +667,7 @@ METHOD QApplication:setLayoutDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setOverrideCursor( ... )
@@ -679,7 +679,7 @@ METHOD QApplication:setOverrideCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setPalette( ... )
@@ -697,7 +697,7 @@ METHOD QApplication:setPalette( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setQuitOnLastWindowClosed( ... )
@@ -709,7 +709,7 @@ METHOD QApplication:setQuitOnLastWindowClosed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setStartDragDistance( ... )
@@ -721,7 +721,7 @@ METHOD QApplication:setStartDragDistance( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setStartDragTime( ... )
@@ -733,7 +733,7 @@ METHOD QApplication:setStartDragTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setStyle( ... )
@@ -747,7 +747,7 @@ METHOD QApplication:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setWheelScrollLines( ... )
@@ -759,7 +759,7 @@ METHOD QApplication:setWheelScrollLines( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setWindowIcon( ... )
@@ -771,7 +771,7 @@ METHOD QApplication:setWindowIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:startDragDistance( ... )
@@ -779,7 +779,7 @@ METHOD QApplication:startDragDistance( ... )
    CASE 0
       RETURN Qt_QApplication_startDragDistance( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:startDragTime( ... )
@@ -787,7 +787,7 @@ METHOD QApplication:startDragTime( ... )
    CASE 0
       RETURN Qt_QApplication_startDragTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:style( ... )
@@ -795,7 +795,7 @@ METHOD QApplication:style( ... )
    CASE 0
       RETURN QStyleFromPointer( Qt_QApplication_style( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:syncX( ... )
@@ -803,7 +803,7 @@ METHOD QApplication:syncX( ... )
    CASE 0
       RETURN Qt_QApplication_syncX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:topLevelAt( ... )
@@ -821,7 +821,7 @@ METHOD QApplication:topLevelAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:type( ... )
@@ -829,7 +829,7 @@ METHOD QApplication:type( ... )
    CASE 0
       RETURN Qt_QApplication_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:wheelScrollLines( ... )
@@ -837,7 +837,7 @@ METHOD QApplication:wheelScrollLines( ... )
    CASE 0
       RETURN Qt_QApplication_wheelScrollLines( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:widgetAt( ... )
@@ -855,7 +855,7 @@ METHOD QApplication:widgetAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:windowIcon( ... )
@@ -863,7 +863,7 @@ METHOD QApplication:windowIcon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QApplication_windowIcon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:aboutQt( ... )
@@ -871,7 +871,7 @@ METHOD QApplication:aboutQt( ... )
    CASE 0
       RETURN Qt_QApplication_aboutQt( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:closeAllWindows( ... )
@@ -879,7 +879,7 @@ METHOD QApplication:closeAllWindows( ... )
    CASE 0
       RETURN Qt_QApplication_closeAllWindows( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QApplication:setStyleSheet( ... )
@@ -891,5 +891,5 @@ METHOD QApplication:setStyleSheet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

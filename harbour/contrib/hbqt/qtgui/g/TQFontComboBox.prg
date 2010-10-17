@@ -122,7 +122,7 @@ CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, HB_QComboBox FUNCTION HB_Q
 METHOD QFontComboBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontComboBox( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QFontComboBox:currentFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QFontComboBox_currentFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontComboBox:fontFilters( ... )
@@ -141,7 +141,7 @@ METHOD QFontComboBox:fontFilters( ... )
    CASE 0
       RETURN Qt_QFontComboBox_fontFilters( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontComboBox:setFontFilters( ... )
@@ -153,7 +153,7 @@ METHOD QFontComboBox:setFontFilters( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontComboBox:setWritingSystem( ... )
@@ -165,7 +165,7 @@ METHOD QFontComboBox:setWritingSystem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontComboBox:writingSystem( ... )
@@ -173,7 +173,7 @@ METHOD QFontComboBox:writingSystem( ... )
    CASE 0
       RETURN Qt_QFontComboBox_writingSystem( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontComboBox:setCurrentFont( ... )
@@ -185,5 +185,5 @@ METHOD QFontComboBox:setCurrentFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

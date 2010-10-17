@@ -120,7 +120,7 @@ CREATE CLASS QPlainTextDocumentLayout INHERIT HbQtObjectHandler, HB_QAbstractTex
 METHOD QPlainTextDocumentLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPlainTextDocumentLayout( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QPlainTextDocumentLayout:cursorWidth( ... )
    CASE 0
       RETURN Qt_QPlainTextDocumentLayout_cursorWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPlainTextDocumentLayout:ensureBlockLayout( ... )
@@ -143,7 +143,7 @@ METHOD QPlainTextDocumentLayout:ensureBlockLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPlainTextDocumentLayout:requestUpdate( ... )
@@ -151,7 +151,7 @@ METHOD QPlainTextDocumentLayout:requestUpdate( ... )
    CASE 0
       RETURN Qt_QPlainTextDocumentLayout_requestUpdate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPlainTextDocumentLayout:setCursorWidth( ... )
@@ -163,5 +163,5 @@ METHOD QPlainTextDocumentLayout:setCursorWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

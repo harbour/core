@@ -125,7 +125,7 @@ CREATE CLASS QKeyEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QKe
 METHOD QKeyEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QKeyEvent( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QKeyEvent:count( ... )
    CASE 0
       RETURN Qt_QKeyEvent_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:isAutoRepeat( ... )
@@ -144,7 +144,7 @@ METHOD QKeyEvent:isAutoRepeat( ... )
    CASE 0
       RETURN Qt_QKeyEvent_isAutoRepeat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:key( ... )
@@ -152,7 +152,7 @@ METHOD QKeyEvent:key( ... )
    CASE 0
       RETURN Qt_QKeyEvent_key( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:matches( ... )
@@ -164,7 +164,7 @@ METHOD QKeyEvent:matches( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:modifiers( ... )
@@ -172,7 +172,7 @@ METHOD QKeyEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QKeyEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:nativeModifiers( ... )
@@ -180,7 +180,7 @@ METHOD QKeyEvent:nativeModifiers( ... )
    CASE 0
       RETURN Qt_QKeyEvent_nativeModifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:nativeScanCode( ... )
@@ -188,7 +188,7 @@ METHOD QKeyEvent:nativeScanCode( ... )
    CASE 0
       RETURN Qt_QKeyEvent_nativeScanCode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:nativeVirtualKey( ... )
@@ -196,7 +196,7 @@ METHOD QKeyEvent:nativeVirtualKey( ... )
    CASE 0
       RETURN Qt_QKeyEvent_nativeVirtualKey( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QKeyEvent:text( ... )
@@ -204,5 +204,5 @@ METHOD QKeyEvent:text( ... )
    CASE 0
       RETURN Qt_QKeyEvent_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -142,7 +142,7 @@ CREATE CLASS QAbstractSpinBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_
 METHOD QAbstractSpinBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractSpinBox( ... )
    RETURN Self
@@ -153,7 +153,7 @@ METHOD QAbstractSpinBox:alignment( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:buttonSymbols( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractSpinBox:buttonSymbols( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_buttonSymbols( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:correctionMode( ... )
@@ -169,7 +169,7 @@ METHOD QAbstractSpinBox:correctionMode( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_correctionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:hasAcceptableInput( ... )
@@ -177,7 +177,7 @@ METHOD QAbstractSpinBox:hasAcceptableInput( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_hasAcceptableInput( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:hasFrame( ... )
@@ -185,7 +185,7 @@ METHOD QAbstractSpinBox:hasFrame( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_hasFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:interpretText( ... )
@@ -193,7 +193,7 @@ METHOD QAbstractSpinBox:interpretText( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_interpretText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:isAccelerated( ... )
@@ -201,7 +201,7 @@ METHOD QAbstractSpinBox:isAccelerated( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_isAccelerated( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:isReadOnly( ... )
@@ -209,7 +209,7 @@ METHOD QAbstractSpinBox:isReadOnly( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:keyboardTracking( ... )
@@ -217,7 +217,7 @@ METHOD QAbstractSpinBox:keyboardTracking( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_keyboardTracking( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setAccelerated( ... )
@@ -229,7 +229,7 @@ METHOD QAbstractSpinBox:setAccelerated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setAlignment( ... )
@@ -241,7 +241,7 @@ METHOD QAbstractSpinBox:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setButtonSymbols( ... )
@@ -253,7 +253,7 @@ METHOD QAbstractSpinBox:setButtonSymbols( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setCorrectionMode( ... )
@@ -265,7 +265,7 @@ METHOD QAbstractSpinBox:setCorrectionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setFrame( ... )
@@ -277,7 +277,7 @@ METHOD QAbstractSpinBox:setFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setKeyboardTracking( ... )
@@ -289,7 +289,7 @@ METHOD QAbstractSpinBox:setKeyboardTracking( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setReadOnly( ... )
@@ -301,7 +301,7 @@ METHOD QAbstractSpinBox:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setSpecialValueText( ... )
@@ -313,7 +313,7 @@ METHOD QAbstractSpinBox:setSpecialValueText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:setWrapping( ... )
@@ -325,7 +325,7 @@ METHOD QAbstractSpinBox:setWrapping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:specialValueText( ... )
@@ -333,7 +333,7 @@ METHOD QAbstractSpinBox:specialValueText( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_specialValueText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:stepBy( ... )
@@ -345,7 +345,7 @@ METHOD QAbstractSpinBox:stepBy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:text( ... )
@@ -353,7 +353,7 @@ METHOD QAbstractSpinBox:text( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:wrapping( ... )
@@ -361,7 +361,7 @@ METHOD QAbstractSpinBox:wrapping( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_wrapping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:clear( ... )
@@ -369,7 +369,7 @@ METHOD QAbstractSpinBox:clear( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:selectAll( ... )
@@ -377,7 +377,7 @@ METHOD QAbstractSpinBox:selectAll( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_selectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:stepDown( ... )
@@ -385,7 +385,7 @@ METHOD QAbstractSpinBox:stepDown( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_stepDown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSpinBox:stepUp( ... )
@@ -393,5 +393,5 @@ METHOD QAbstractSpinBox:stepUp( ... )
    CASE 0
       RETURN Qt_QAbstractSpinBox_stepUp( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

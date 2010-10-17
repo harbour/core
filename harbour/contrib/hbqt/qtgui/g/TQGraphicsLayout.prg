@@ -124,7 +124,7 @@ CREATE CLASS QGraphicsLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayoutItem F
 METHOD QGraphicsLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsLayout( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QGraphicsLayout:activate( ... )
    CASE 0
       RETURN Qt_QGraphicsLayout_activate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:count( ... )
@@ -143,7 +143,7 @@ METHOD QGraphicsLayout:count( ... )
    CASE 0
       RETURN Qt_QGraphicsLayout_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:invalidate( ... )
@@ -151,7 +151,7 @@ METHOD QGraphicsLayout:invalidate( ... )
    CASE 0
       RETURN Qt_QGraphicsLayout_invalidate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:isActivated( ... )
@@ -159,7 +159,7 @@ METHOD QGraphicsLayout:isActivated( ... )
    CASE 0
       RETURN Qt_QGraphicsLayout_isActivated( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:itemAt( ... )
@@ -171,7 +171,7 @@ METHOD QGraphicsLayout:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:removeAt( ... )
@@ -183,7 +183,7 @@ METHOD QGraphicsLayout:removeAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:setContentsMargins( ... )
@@ -195,7 +195,7 @@ METHOD QGraphicsLayout:setContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsLayout:widgetEvent( ... )
@@ -207,5 +207,5 @@ METHOD QGraphicsLayout:widgetEvent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

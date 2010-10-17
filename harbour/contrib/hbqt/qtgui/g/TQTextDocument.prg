@@ -183,7 +183,7 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTe
 METHOD QTextDocument:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextDocument( ... )
    RETURN Self
@@ -198,7 +198,7 @@ METHOD QTextDocument:addResource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:adjustSize( ... )
@@ -206,7 +206,7 @@ METHOD QTextDocument:adjustSize( ... )
    CASE 0
       RETURN Qt_QTextDocument_adjustSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:begin( ... )
@@ -214,7 +214,7 @@ METHOD QTextDocument:begin( ... )
    CASE 0
       RETURN QTextBlockFromPointer( Qt_QTextDocument_begin( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:blockCount( ... )
@@ -222,7 +222,7 @@ METHOD QTextDocument:blockCount( ... )
    CASE 0
       RETURN Qt_QTextDocument_blockCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:characterAt( ... )
@@ -234,7 +234,7 @@ METHOD QTextDocument:characterAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:characterCount( ... )
@@ -242,7 +242,7 @@ METHOD QTextDocument:characterCount( ... )
    CASE 0
       RETURN Qt_QTextDocument_characterCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:clear( ... )
@@ -250,7 +250,7 @@ METHOD QTextDocument:clear( ... )
    CASE 0
       RETURN Qt_QTextDocument_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:clone( ... )
@@ -264,7 +264,7 @@ METHOD QTextDocument:clone( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QTextDocument_clone( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:defaultFont( ... )
@@ -272,7 +272,7 @@ METHOD QTextDocument:defaultFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTextDocument_defaultFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:defaultStyleSheet( ... )
@@ -280,7 +280,7 @@ METHOD QTextDocument:defaultStyleSheet( ... )
    CASE 0
       RETURN Qt_QTextDocument_defaultStyleSheet( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:defaultTextOption( ... )
@@ -288,7 +288,7 @@ METHOD QTextDocument:defaultTextOption( ... )
    CASE 0
       RETURN QTextOptionFromPointer( Qt_QTextDocument_defaultTextOption( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:documentLayout( ... )
@@ -296,7 +296,7 @@ METHOD QTextDocument:documentLayout( ... )
    CASE 0
       RETURN QAbstractTextDocumentLayoutFromPointer( Qt_QTextDocument_documentLayout( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:documentMargin( ... )
@@ -304,7 +304,7 @@ METHOD QTextDocument:documentMargin( ... )
    CASE 0
       RETURN Qt_QTextDocument_documentMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:drawContents( ... )
@@ -322,7 +322,7 @@ METHOD QTextDocument:drawContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:end( ... )
@@ -330,7 +330,7 @@ METHOD QTextDocument:end( ... )
    CASE 0
       RETURN QTextBlockFromPointer( Qt_QTextDocument_end( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:find( ... )
@@ -368,7 +368,7 @@ METHOD QTextDocument:find( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:findBlock( ... )
@@ -380,7 +380,7 @@ METHOD QTextDocument:findBlock( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:findBlockByLineNumber( ... )
@@ -392,7 +392,7 @@ METHOD QTextDocument:findBlockByLineNumber( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:findBlockByNumber( ... )
@@ -404,7 +404,7 @@ METHOD QTextDocument:findBlockByNumber( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:firstBlock( ... )
@@ -412,7 +412,7 @@ METHOD QTextDocument:firstBlock( ... )
    CASE 0
       RETURN QTextBlockFromPointer( Qt_QTextDocument_firstBlock( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:idealWidth( ... )
@@ -420,7 +420,7 @@ METHOD QTextDocument:idealWidth( ... )
    CASE 0
       RETURN Qt_QTextDocument_idealWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:indentWidth( ... )
@@ -428,7 +428,7 @@ METHOD QTextDocument:indentWidth( ... )
    CASE 0
       RETURN Qt_QTextDocument_indentWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:isEmpty( ... )
@@ -436,7 +436,7 @@ METHOD QTextDocument:isEmpty( ... )
    CASE 0
       RETURN Qt_QTextDocument_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:isModified( ... )
@@ -444,7 +444,7 @@ METHOD QTextDocument:isModified( ... )
    CASE 0
       RETURN Qt_QTextDocument_isModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:isRedoAvailable( ... )
@@ -452,7 +452,7 @@ METHOD QTextDocument:isRedoAvailable( ... )
    CASE 0
       RETURN Qt_QTextDocument_isRedoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:isUndoAvailable( ... )
@@ -460,7 +460,7 @@ METHOD QTextDocument:isUndoAvailable( ... )
    CASE 0
       RETURN Qt_QTextDocument_isUndoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:isUndoRedoEnabled( ... )
@@ -468,7 +468,7 @@ METHOD QTextDocument:isUndoRedoEnabled( ... )
    CASE 0
       RETURN Qt_QTextDocument_isUndoRedoEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:lastBlock( ... )
@@ -476,7 +476,7 @@ METHOD QTextDocument:lastBlock( ... )
    CASE 0
       RETURN QTextBlockFromPointer( Qt_QTextDocument_lastBlock( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:lineCount( ... )
@@ -484,7 +484,7 @@ METHOD QTextDocument:lineCount( ... )
    CASE 0
       RETURN Qt_QTextDocument_lineCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:markContentsDirty( ... )
@@ -496,7 +496,7 @@ METHOD QTextDocument:markContentsDirty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:maximumBlockCount( ... )
@@ -504,7 +504,7 @@ METHOD QTextDocument:maximumBlockCount( ... )
    CASE 0
       RETURN Qt_QTextDocument_maximumBlockCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:metaInformation( ... )
@@ -516,7 +516,7 @@ METHOD QTextDocument:metaInformation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:object( ... )
@@ -528,7 +528,7 @@ METHOD QTextDocument:object( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:objectForFormat( ... )
@@ -540,7 +540,7 @@ METHOD QTextDocument:objectForFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:pageCount( ... )
@@ -548,7 +548,7 @@ METHOD QTextDocument:pageCount( ... )
    CASE 0
       RETURN Qt_QTextDocument_pageCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:pageSize( ... )
@@ -556,7 +556,7 @@ METHOD QTextDocument:pageSize( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QTextDocument_pageSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:print( ... )
@@ -568,7 +568,7 @@ METHOD QTextDocument:print( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:redo( ... )
@@ -582,7 +582,7 @@ METHOD QTextDocument:redo( ... )
    CASE 0
       RETURN Qt_QTextDocument_redo_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:resource( ... )
@@ -594,7 +594,7 @@ METHOD QTextDocument:resource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:revision( ... )
@@ -602,7 +602,7 @@ METHOD QTextDocument:revision( ... )
    CASE 0
       RETURN Qt_QTextDocument_revision( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:rootFrame( ... )
@@ -610,7 +610,7 @@ METHOD QTextDocument:rootFrame( ... )
    CASE 0
       RETURN QTextFrameFromPointer( Qt_QTextDocument_rootFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setDefaultFont( ... )
@@ -622,7 +622,7 @@ METHOD QTextDocument:setDefaultFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setDefaultStyleSheet( ... )
@@ -634,7 +634,7 @@ METHOD QTextDocument:setDefaultStyleSheet( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setDefaultTextOption( ... )
@@ -646,7 +646,7 @@ METHOD QTextDocument:setDefaultTextOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setDocumentLayout( ... )
@@ -658,7 +658,7 @@ METHOD QTextDocument:setDocumentLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setDocumentMargin( ... )
@@ -670,7 +670,7 @@ METHOD QTextDocument:setDocumentMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setHtml( ... )
@@ -682,7 +682,7 @@ METHOD QTextDocument:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setIndentWidth( ... )
@@ -694,7 +694,7 @@ METHOD QTextDocument:setIndentWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setMaximumBlockCount( ... )
@@ -706,7 +706,7 @@ METHOD QTextDocument:setMaximumBlockCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setMetaInformation( ... )
@@ -718,7 +718,7 @@ METHOD QTextDocument:setMetaInformation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setPageSize( ... )
@@ -730,7 +730,7 @@ METHOD QTextDocument:setPageSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setPlainText( ... )
@@ -742,7 +742,7 @@ METHOD QTextDocument:setPlainText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setTextWidth( ... )
@@ -754,7 +754,7 @@ METHOD QTextDocument:setTextWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setUndoRedoEnabled( ... )
@@ -766,7 +766,7 @@ METHOD QTextDocument:setUndoRedoEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setUseDesignMetrics( ... )
@@ -778,7 +778,7 @@ METHOD QTextDocument:setUseDesignMetrics( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:size( ... )
@@ -786,7 +786,7 @@ METHOD QTextDocument:size( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QTextDocument_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:textWidth( ... )
@@ -794,7 +794,7 @@ METHOD QTextDocument:textWidth( ... )
    CASE 0
       RETURN Qt_QTextDocument_textWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:toHtml( ... )
@@ -808,7 +808,7 @@ METHOD QTextDocument:toHtml( ... )
    CASE 0
       RETURN Qt_QTextDocument_toHtml( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:toPlainText( ... )
@@ -816,7 +816,7 @@ METHOD QTextDocument:toPlainText( ... )
    CASE 0
       RETURN Qt_QTextDocument_toPlainText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:undo( ... )
@@ -830,7 +830,7 @@ METHOD QTextDocument:undo( ... )
    CASE 0
       RETURN Qt_QTextDocument_undo_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:useDesignMetrics( ... )
@@ -838,7 +838,7 @@ METHOD QTextDocument:useDesignMetrics( ... )
    CASE 0
       RETURN Qt_QTextDocument_useDesignMetrics( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextDocument:setModified( ... )
@@ -852,5 +852,5 @@ METHOD QTextDocument:setModified( ... )
    CASE 0
       RETURN Qt_QTextDocument_setModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

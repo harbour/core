@@ -125,7 +125,7 @@ CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_Q
 METHOD QWheelEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWheelEvent( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QWheelEvent:buttons( ... )
    CASE 0
       RETURN Qt_QWheelEvent_buttons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:delta( ... )
@@ -144,7 +144,7 @@ METHOD QWheelEvent:delta( ... )
    CASE 0
       RETURN Qt_QWheelEvent_delta( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:globalPos( ... )
@@ -152,7 +152,7 @@ METHOD QWheelEvent:globalPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QWheelEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:globalX( ... )
@@ -160,7 +160,7 @@ METHOD QWheelEvent:globalX( ... )
    CASE 0
       RETURN Qt_QWheelEvent_globalX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:globalY( ... )
@@ -168,7 +168,7 @@ METHOD QWheelEvent:globalY( ... )
    CASE 0
       RETURN Qt_QWheelEvent_globalY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:orientation( ... )
@@ -176,7 +176,7 @@ METHOD QWheelEvent:orientation( ... )
    CASE 0
       RETURN Qt_QWheelEvent_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:pos( ... )
@@ -184,7 +184,7 @@ METHOD QWheelEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QWheelEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:x( ... )
@@ -192,7 +192,7 @@ METHOD QWheelEvent:x( ... )
    CASE 0
       RETURN Qt_QWheelEvent_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWheelEvent:y( ... )
@@ -200,5 +200,5 @@ METHOD QWheelEvent:y( ... )
    CASE 0
       RETURN Qt_QWheelEvent_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

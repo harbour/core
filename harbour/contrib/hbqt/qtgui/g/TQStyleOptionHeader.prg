@@ -125,7 +125,7 @@ CREATE CLASS QStyleOptionHeader INHERIT HbQtObjectHandler, HB_QStyleOption FUNCT
 METHOD QStyleOptionHeader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionHeader( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QStyleOptionHeader:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionHeader_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:iconAlignment( ... )
@@ -144,7 +144,7 @@ METHOD QStyleOptionHeader:iconAlignment( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_iconAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:orientation( ... )
@@ -152,7 +152,7 @@ METHOD QStyleOptionHeader:orientation( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:position( ... )
@@ -160,7 +160,7 @@ METHOD QStyleOptionHeader:position( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:section( ... )
@@ -168,7 +168,7 @@ METHOD QStyleOptionHeader:section( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_section( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:selectedPosition( ... )
@@ -176,7 +176,7 @@ METHOD QStyleOptionHeader:selectedPosition( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_selectedPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:sortIndicator( ... )
@@ -184,7 +184,7 @@ METHOD QStyleOptionHeader:sortIndicator( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_sortIndicator( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:text( ... )
@@ -192,7 +192,7 @@ METHOD QStyleOptionHeader:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionHeader:textAlignment( ... )
@@ -200,5 +200,5 @@ METHOD QStyleOptionHeader:textAlignment( ... )
    CASE 0
       RETURN Qt_QStyleOptionHeader_textAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

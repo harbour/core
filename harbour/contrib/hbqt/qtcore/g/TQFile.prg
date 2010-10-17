@@ -149,7 +149,7 @@ CREATE CLASS QFile INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QFile
 METHOD QFile:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFile( ... )
    RETURN Self
@@ -160,7 +160,7 @@ METHOD QFile:atEnd( ... )
    CASE 0
       RETURN Qt_QFile_atEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:close( ... )
@@ -168,7 +168,7 @@ METHOD QFile:close( ... )
    CASE 0
       RETURN Qt_QFile_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:copy( ... )
@@ -186,7 +186,7 @@ METHOD QFile:copy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:error( ... )
@@ -194,7 +194,7 @@ METHOD QFile:error( ... )
    CASE 0
       RETURN Qt_QFile_error( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:exists( ... )
@@ -208,7 +208,7 @@ METHOD QFile:exists( ... )
    CASE 0
       RETURN Qt_QFile_exists( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:fileName( ... )
@@ -216,7 +216,7 @@ METHOD QFile:fileName( ... )
    CASE 0
       RETURN Qt_QFile_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:flush( ... )
@@ -224,7 +224,7 @@ METHOD QFile:flush( ... )
    CASE 0
       RETURN Qt_QFile_flush( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:handle( ... )
@@ -232,7 +232,7 @@ METHOD QFile:handle( ... )
    CASE 0
       RETURN Qt_QFile_handle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:isSequential( ... )
@@ -240,7 +240,7 @@ METHOD QFile:isSequential( ... )
    CASE 0
       RETURN Qt_QFile_isSequential( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:link( ... )
@@ -258,7 +258,7 @@ METHOD QFile:link( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:map( ... )
@@ -276,7 +276,7 @@ METHOD QFile:map( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:open( ... )
@@ -294,7 +294,7 @@ METHOD QFile:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:permissions( ... )
@@ -308,7 +308,7 @@ METHOD QFile:permissions( ... )
    CASE 0
       RETURN Qt_QFile_permissions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:remove( ... )
@@ -322,7 +322,7 @@ METHOD QFile:remove( ... )
    CASE 0
       RETURN Qt_QFile_remove( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:rename( ... )
@@ -340,7 +340,7 @@ METHOD QFile:rename( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:resize( ... )
@@ -358,7 +358,7 @@ METHOD QFile:resize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:setFileName( ... )
@@ -370,7 +370,7 @@ METHOD QFile:setFileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:setPermissions( ... )
@@ -388,7 +388,7 @@ METHOD QFile:setPermissions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:size( ... )
@@ -396,7 +396,7 @@ METHOD QFile:size( ... )
    CASE 0
       RETURN Qt_QFile_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:symLinkTarget( ... )
@@ -410,7 +410,7 @@ METHOD QFile:symLinkTarget( ... )
    CASE 0
       RETURN Qt_QFile_symLinkTarget( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:unsetError( ... )
@@ -418,7 +418,7 @@ METHOD QFile:unsetError( ... )
    CASE 0
       RETURN Qt_QFile_unsetError( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:decodeName( ... )
@@ -430,7 +430,7 @@ METHOD QFile:decodeName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFile:encodeName( ... )
@@ -442,5 +442,5 @@ METHOD QFile:encodeName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

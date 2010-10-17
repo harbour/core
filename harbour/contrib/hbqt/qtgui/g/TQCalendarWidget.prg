@@ -154,7 +154,7 @@ CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 METHOD QCalendarWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCalendarWidget( ... )
    RETURN Self
@@ -165,7 +165,7 @@ METHOD QCalendarWidget:dateEditAcceptDelay( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:dateTextFormat( ... )
@@ -177,7 +177,7 @@ METHOD QCalendarWidget:dateTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:firstDayOfWeek( ... )
@@ -185,7 +185,7 @@ METHOD QCalendarWidget:firstDayOfWeek( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_firstDayOfWeek( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:headerTextFormat( ... )
@@ -193,7 +193,7 @@ METHOD QCalendarWidget:headerTextFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QCalendarWidget_headerTextFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:horizontalHeaderFormat( ... )
@@ -201,7 +201,7 @@ METHOD QCalendarWidget:horizontalHeaderFormat( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_horizontalHeaderFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:isDateEditEnabled( ... )
@@ -209,7 +209,7 @@ METHOD QCalendarWidget:isDateEditEnabled( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_isDateEditEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:isGridVisible( ... )
@@ -217,7 +217,7 @@ METHOD QCalendarWidget:isGridVisible( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_isGridVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:isNavigationBarVisible( ... )
@@ -225,7 +225,7 @@ METHOD QCalendarWidget:isNavigationBarVisible( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_isNavigationBarVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:maximumDate( ... )
@@ -233,7 +233,7 @@ METHOD QCalendarWidget:maximumDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QCalendarWidget_maximumDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:minimumDate( ... )
@@ -241,7 +241,7 @@ METHOD QCalendarWidget:minimumDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QCalendarWidget_minimumDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:monthShown( ... )
@@ -249,7 +249,7 @@ METHOD QCalendarWidget:monthShown( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_monthShown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:selectedDate( ... )
@@ -257,7 +257,7 @@ METHOD QCalendarWidget:selectedDate( ... )
    CASE 0
       RETURN QDateFromPointer( Qt_QCalendarWidget_selectedDate( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:selectionMode( ... )
@@ -265,7 +265,7 @@ METHOD QCalendarWidget:selectionMode( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_selectionMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setDateEditAcceptDelay( ... )
@@ -277,7 +277,7 @@ METHOD QCalendarWidget:setDateEditAcceptDelay( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setDateEditEnabled( ... )
@@ -289,7 +289,7 @@ METHOD QCalendarWidget:setDateEditEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setDateTextFormat( ... )
@@ -301,7 +301,7 @@ METHOD QCalendarWidget:setDateTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setFirstDayOfWeek( ... )
@@ -313,7 +313,7 @@ METHOD QCalendarWidget:setFirstDayOfWeek( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setHeaderTextFormat( ... )
@@ -325,7 +325,7 @@ METHOD QCalendarWidget:setHeaderTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setHorizontalHeaderFormat( ... )
@@ -337,7 +337,7 @@ METHOD QCalendarWidget:setHorizontalHeaderFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setMaximumDate( ... )
@@ -349,7 +349,7 @@ METHOD QCalendarWidget:setMaximumDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setMinimumDate( ... )
@@ -361,7 +361,7 @@ METHOD QCalendarWidget:setMinimumDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setSelectionMode( ... )
@@ -373,7 +373,7 @@ METHOD QCalendarWidget:setSelectionMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setVerticalHeaderFormat( ... )
@@ -385,7 +385,7 @@ METHOD QCalendarWidget:setVerticalHeaderFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setWeekdayTextFormat( ... )
@@ -397,7 +397,7 @@ METHOD QCalendarWidget:setWeekdayTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:verticalHeaderFormat( ... )
@@ -405,7 +405,7 @@ METHOD QCalendarWidget:verticalHeaderFormat( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_verticalHeaderFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:weekdayTextFormat( ... )
@@ -417,7 +417,7 @@ METHOD QCalendarWidget:weekdayTextFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:yearShown( ... )
@@ -425,7 +425,7 @@ METHOD QCalendarWidget:yearShown( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_yearShown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setCurrentPage( ... )
@@ -437,7 +437,7 @@ METHOD QCalendarWidget:setCurrentPage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setDateRange( ... )
@@ -449,7 +449,7 @@ METHOD QCalendarWidget:setDateRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setGridVisible( ... )
@@ -461,7 +461,7 @@ METHOD QCalendarWidget:setGridVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setNavigationBarVisible( ... )
@@ -473,7 +473,7 @@ METHOD QCalendarWidget:setNavigationBarVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:setSelectedDate( ... )
@@ -485,7 +485,7 @@ METHOD QCalendarWidget:setSelectedDate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showNextMonth( ... )
@@ -493,7 +493,7 @@ METHOD QCalendarWidget:showNextMonth( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showNextMonth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showNextYear( ... )
@@ -501,7 +501,7 @@ METHOD QCalendarWidget:showNextYear( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showNextYear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showPreviousMonth( ... )
@@ -509,7 +509,7 @@ METHOD QCalendarWidget:showPreviousMonth( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showPreviousMonth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showPreviousYear( ... )
@@ -517,7 +517,7 @@ METHOD QCalendarWidget:showPreviousYear( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showPreviousYear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showSelectedDate( ... )
@@ -525,7 +525,7 @@ METHOD QCalendarWidget:showSelectedDate( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showSelectedDate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCalendarWidget:showToday( ... )
@@ -533,5 +533,5 @@ METHOD QCalendarWidget:showToday( ... )
    CASE 0
       RETURN Qt_QCalendarWidget_showToday( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

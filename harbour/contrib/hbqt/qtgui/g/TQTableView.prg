@@ -158,7 +158,7 @@ CREATE CLASS QTableView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION
 METHOD QTableView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTableView( ... )
    RETURN Self
@@ -169,7 +169,7 @@ METHOD QTableView:clearSpans( ... )
    CASE 0
       RETURN Qt_QTableView_clearSpans( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:columnAt( ... )
@@ -181,7 +181,7 @@ METHOD QTableView:columnAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:columnSpan( ... )
@@ -193,7 +193,7 @@ METHOD QTableView:columnSpan( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:columnViewportPosition( ... )
@@ -205,7 +205,7 @@ METHOD QTableView:columnViewportPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:columnWidth( ... )
@@ -217,7 +217,7 @@ METHOD QTableView:columnWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:gridStyle( ... )
@@ -225,7 +225,7 @@ METHOD QTableView:gridStyle( ... )
    CASE 0
       RETURN Qt_QTableView_gridStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:horizontalHeader( ... )
@@ -233,7 +233,7 @@ METHOD QTableView:horizontalHeader( ... )
    CASE 0
       RETURN QHeaderViewFromPointer( Qt_QTableView_horizontalHeader( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:indexAt( ... )
@@ -245,7 +245,7 @@ METHOD QTableView:indexAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:isColumnHidden( ... )
@@ -257,7 +257,7 @@ METHOD QTableView:isColumnHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:isCornerButtonEnabled( ... )
@@ -265,7 +265,7 @@ METHOD QTableView:isCornerButtonEnabled( ... )
    CASE 0
       RETURN Qt_QTableView_isCornerButtonEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:isRowHidden( ... )
@@ -277,7 +277,7 @@ METHOD QTableView:isRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:isSortingEnabled( ... )
@@ -285,7 +285,7 @@ METHOD QTableView:isSortingEnabled( ... )
    CASE 0
       RETURN Qt_QTableView_isSortingEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:rowAt( ... )
@@ -297,7 +297,7 @@ METHOD QTableView:rowAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:rowHeight( ... )
@@ -309,7 +309,7 @@ METHOD QTableView:rowHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:rowSpan( ... )
@@ -321,7 +321,7 @@ METHOD QTableView:rowSpan( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:rowViewportPosition( ... )
@@ -333,7 +333,7 @@ METHOD QTableView:rowViewportPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setColumnHidden( ... )
@@ -345,7 +345,7 @@ METHOD QTableView:setColumnHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setColumnWidth( ... )
@@ -357,7 +357,7 @@ METHOD QTableView:setColumnWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setCornerButtonEnabled( ... )
@@ -369,7 +369,7 @@ METHOD QTableView:setCornerButtonEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setGridStyle( ... )
@@ -381,7 +381,7 @@ METHOD QTableView:setGridStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setHorizontalHeader( ... )
@@ -393,7 +393,7 @@ METHOD QTableView:setHorizontalHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setRowHeight( ... )
@@ -405,7 +405,7 @@ METHOD QTableView:setRowHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setRowHidden( ... )
@@ -417,7 +417,7 @@ METHOD QTableView:setRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setSortingEnabled( ... )
@@ -429,7 +429,7 @@ METHOD QTableView:setSortingEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setSpan( ... )
@@ -441,7 +441,7 @@ METHOD QTableView:setSpan( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setVerticalHeader( ... )
@@ -453,7 +453,7 @@ METHOD QTableView:setVerticalHeader( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setWordWrap( ... )
@@ -465,7 +465,7 @@ METHOD QTableView:setWordWrap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:showGrid( ... )
@@ -473,7 +473,7 @@ METHOD QTableView:showGrid( ... )
    CASE 0
       RETURN Qt_QTableView_showGrid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:sortByColumn( ... )
@@ -485,7 +485,7 @@ METHOD QTableView:sortByColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:verticalHeader( ... )
@@ -493,7 +493,7 @@ METHOD QTableView:verticalHeader( ... )
    CASE 0
       RETURN QHeaderViewFromPointer( Qt_QTableView_verticalHeader( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:wordWrap( ... )
@@ -501,7 +501,7 @@ METHOD QTableView:wordWrap( ... )
    CASE 0
       RETURN Qt_QTableView_wordWrap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:hideColumn( ... )
@@ -513,7 +513,7 @@ METHOD QTableView:hideColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:hideRow( ... )
@@ -525,7 +525,7 @@ METHOD QTableView:hideRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:resizeColumnToContents( ... )
@@ -537,7 +537,7 @@ METHOD QTableView:resizeColumnToContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:resizeColumnsToContents( ... )
@@ -545,7 +545,7 @@ METHOD QTableView:resizeColumnsToContents( ... )
    CASE 0
       RETURN Qt_QTableView_resizeColumnsToContents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:resizeRowToContents( ... )
@@ -557,7 +557,7 @@ METHOD QTableView:resizeRowToContents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:resizeRowsToContents( ... )
@@ -565,7 +565,7 @@ METHOD QTableView:resizeRowsToContents( ... )
    CASE 0
       RETURN Qt_QTableView_resizeRowsToContents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:selectColumn( ... )
@@ -577,7 +577,7 @@ METHOD QTableView:selectColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:selectRow( ... )
@@ -589,7 +589,7 @@ METHOD QTableView:selectRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:setShowGrid( ... )
@@ -601,7 +601,7 @@ METHOD QTableView:setShowGrid( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:showColumn( ... )
@@ -613,7 +613,7 @@ METHOD QTableView:showColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableView:showRow( ... )
@@ -625,5 +625,5 @@ METHOD QTableView:showRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

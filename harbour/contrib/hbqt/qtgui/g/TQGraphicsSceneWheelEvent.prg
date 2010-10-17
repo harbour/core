@@ -123,7 +123,7 @@ CREATE CLASS QGraphicsSceneWheelEvent INHERIT HbQtObjectHandler, HB_QGraphicsSce
 METHOD QGraphicsSceneWheelEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneWheelEvent( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QGraphicsSceneWheelEvent:buttons( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneWheelEvent_buttons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:delta( ... )
@@ -142,7 +142,7 @@ METHOD QGraphicsSceneWheelEvent:delta( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneWheelEvent_delta( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:modifiers( ... )
@@ -150,7 +150,7 @@ METHOD QGraphicsSceneWheelEvent:modifiers( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneWheelEvent_modifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:orientation( ... )
@@ -158,7 +158,7 @@ METHOD QGraphicsSceneWheelEvent:orientation( ... )
    CASE 0
       RETURN Qt_QGraphicsSceneWheelEvent_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:pos( ... )
@@ -166,7 +166,7 @@ METHOD QGraphicsSceneWheelEvent:pos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneWheelEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:scenePos( ... )
@@ -174,7 +174,7 @@ METHOD QGraphicsSceneWheelEvent:scenePos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneWheelEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneWheelEvent:screenPos( ... )
@@ -182,5 +182,5 @@ METHOD QGraphicsSceneWheelEvent:screenPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QGraphicsSceneWheelEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

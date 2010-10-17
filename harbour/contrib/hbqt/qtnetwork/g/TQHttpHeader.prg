@@ -134,7 +134,7 @@ CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler FUNCTION HB_QHttpHeader
 METHOD QHttpHeader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QHttpHeader( ... )
    RETURN Self
@@ -149,7 +149,7 @@ METHOD QHttpHeader:addValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:allValues( ... )
@@ -161,7 +161,7 @@ METHOD QHttpHeader:allValues( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:contentLength( ... )
@@ -169,7 +169,7 @@ METHOD QHttpHeader:contentLength( ... )
    CASE 0
       RETURN Qt_QHttpHeader_contentLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:contentType( ... )
@@ -177,7 +177,7 @@ METHOD QHttpHeader:contentType( ... )
    CASE 0
       RETURN Qt_QHttpHeader_contentType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:hasContentLength( ... )
@@ -185,7 +185,7 @@ METHOD QHttpHeader:hasContentLength( ... )
    CASE 0
       RETURN Qt_QHttpHeader_hasContentLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:hasContentType( ... )
@@ -193,7 +193,7 @@ METHOD QHttpHeader:hasContentType( ... )
    CASE 0
       RETURN Qt_QHttpHeader_hasContentType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:hasKey( ... )
@@ -205,7 +205,7 @@ METHOD QHttpHeader:hasKey( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:isValid( ... )
@@ -213,7 +213,7 @@ METHOD QHttpHeader:isValid( ... )
    CASE 0
       RETURN Qt_QHttpHeader_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:keys( ... )
@@ -221,7 +221,7 @@ METHOD QHttpHeader:keys( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QHttpHeader_keys( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:majorVersion( ... )
@@ -229,7 +229,7 @@ METHOD QHttpHeader:majorVersion( ... )
    CASE 0
       RETURN Qt_QHttpHeader_majorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:minorVersion( ... )
@@ -237,7 +237,7 @@ METHOD QHttpHeader:minorVersion( ... )
    CASE 0
       RETURN Qt_QHttpHeader_minorVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:removeAllValues( ... )
@@ -249,7 +249,7 @@ METHOD QHttpHeader:removeAllValues( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:removeValue( ... )
@@ -261,7 +261,7 @@ METHOD QHttpHeader:removeValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:setContentLength( ... )
@@ -273,7 +273,7 @@ METHOD QHttpHeader:setContentLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:setContentType( ... )
@@ -285,7 +285,7 @@ METHOD QHttpHeader:setContentType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:setValue( ... )
@@ -297,7 +297,7 @@ METHOD QHttpHeader:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:toString( ... )
@@ -305,7 +305,7 @@ METHOD QHttpHeader:toString( ... )
    CASE 0
       RETURN Qt_QHttpHeader_toString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QHttpHeader:value( ... )
@@ -317,5 +317,5 @@ METHOD QHttpHeader:value( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

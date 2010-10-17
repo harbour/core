@@ -139,7 +139,7 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler FUNCTION HB_QFontDatabase
 METHOD QFontDatabase:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontDatabase( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QFontDatabase:bold( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:families( ... )
@@ -168,7 +168,7 @@ METHOD QFontDatabase:families( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QFontDatabase_families( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:font( ... )
@@ -180,7 +180,7 @@ METHOD QFontDatabase:font( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:isBitmapScalable( ... )
@@ -198,7 +198,7 @@ METHOD QFontDatabase:isBitmapScalable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:isFixedPitch( ... )
@@ -216,7 +216,7 @@ METHOD QFontDatabase:isFixedPitch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:isScalable( ... )
@@ -234,7 +234,7 @@ METHOD QFontDatabase:isScalable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:isSmoothlyScalable( ... )
@@ -252,7 +252,7 @@ METHOD QFontDatabase:isSmoothlyScalable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:italic( ... )
@@ -264,7 +264,7 @@ METHOD QFontDatabase:italic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:pointSizes( ... )
@@ -282,7 +282,7 @@ METHOD QFontDatabase:pointSizes( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:smoothSizes( ... )
@@ -294,7 +294,7 @@ METHOD QFontDatabase:smoothSizes( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:styleString( ... )
@@ -311,7 +311,7 @@ METHOD QFontDatabase:styleString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:styles( ... )
@@ -323,7 +323,7 @@ METHOD QFontDatabase:styles( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:weight( ... )
@@ -335,7 +335,7 @@ METHOD QFontDatabase:weight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:addApplicationFont( ... )
@@ -347,7 +347,7 @@ METHOD QFontDatabase:addApplicationFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:addApplicationFontFromData( ... )
@@ -359,7 +359,7 @@ METHOD QFontDatabase:addApplicationFontFromData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:applicationFontFamilies( ... )
@@ -371,7 +371,7 @@ METHOD QFontDatabase:applicationFontFamilies( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:removeAllApplicationFonts( ... )
@@ -379,7 +379,7 @@ METHOD QFontDatabase:removeAllApplicationFonts( ... )
    CASE 0
       RETURN Qt_QFontDatabase_removeAllApplicationFonts( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:removeApplicationFont( ... )
@@ -391,7 +391,7 @@ METHOD QFontDatabase:removeApplicationFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:standardSizes( ... )
@@ -399,7 +399,7 @@ METHOD QFontDatabase:standardSizes( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QFontDatabase_standardSizes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:supportsThreadedFontRendering( ... )
@@ -407,7 +407,7 @@ METHOD QFontDatabase:supportsThreadedFontRendering( ... )
    CASE 0
       RETURN Qt_QFontDatabase_supportsThreadedFontRendering( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:writingSystemName( ... )
@@ -419,7 +419,7 @@ METHOD QFontDatabase:writingSystemName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontDatabase:writingSystemSample( ... )
@@ -431,5 +431,5 @@ METHOD QFontDatabase:writingSystemSample( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

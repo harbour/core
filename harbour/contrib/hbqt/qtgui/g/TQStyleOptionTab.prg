@@ -123,7 +123,7 @@ CREATE CLASS QStyleOptionTab INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION
 METHOD QStyleOptionTab:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionTab( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QStyleOptionTab:cornerWidgets( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_cornerWidgets( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:icon( ... )
@@ -142,7 +142,7 @@ METHOD QStyleOptionTab:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionTab_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:position( ... )
@@ -150,7 +150,7 @@ METHOD QStyleOptionTab:position( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:row( ... )
@@ -158,7 +158,7 @@ METHOD QStyleOptionTab:row( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_row( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:selectedPosition( ... )
@@ -166,7 +166,7 @@ METHOD QStyleOptionTab:selectedPosition( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_selectedPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:shape( ... )
@@ -174,7 +174,7 @@ METHOD QStyleOptionTab:shape( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_shape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTab:text( ... )
@@ -182,5 +182,5 @@ METHOD QStyleOptionTab:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionTab_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

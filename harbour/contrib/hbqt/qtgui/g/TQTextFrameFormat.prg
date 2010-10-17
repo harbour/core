@@ -145,7 +145,7 @@ CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
 METHOD QTextFrameFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextFrameFormat( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QTextFrameFormat:border( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_border( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:borderBrush( ... )
@@ -164,7 +164,7 @@ METHOD QTextFrameFormat:borderBrush( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QTextFrameFormat_borderBrush( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:borderStyle( ... )
@@ -172,7 +172,7 @@ METHOD QTextFrameFormat:borderStyle( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_borderStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:bottomMargin( ... )
@@ -180,7 +180,7 @@ METHOD QTextFrameFormat:bottomMargin( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_bottomMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:height( ... )
@@ -188,7 +188,7 @@ METHOD QTextFrameFormat:height( ... )
    CASE 0
       RETURN QTextLengthFromPointer( Qt_QTextFrameFormat_height( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:isValid( ... )
@@ -196,7 +196,7 @@ METHOD QTextFrameFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:leftMargin( ... )
@@ -204,7 +204,7 @@ METHOD QTextFrameFormat:leftMargin( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_leftMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:margin( ... )
@@ -212,7 +212,7 @@ METHOD QTextFrameFormat:margin( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_margin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:padding( ... )
@@ -220,7 +220,7 @@ METHOD QTextFrameFormat:padding( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_padding( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:pageBreakPolicy( ... )
@@ -228,7 +228,7 @@ METHOD QTextFrameFormat:pageBreakPolicy( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_pageBreakPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:position( ... )
@@ -236,7 +236,7 @@ METHOD QTextFrameFormat:position( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:rightMargin( ... )
@@ -244,7 +244,7 @@ METHOD QTextFrameFormat:rightMargin( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_rightMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setBorder( ... )
@@ -256,7 +256,7 @@ METHOD QTextFrameFormat:setBorder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setBorderBrush( ... )
@@ -268,7 +268,7 @@ METHOD QTextFrameFormat:setBorderBrush( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setBorderStyle( ... )
@@ -280,7 +280,7 @@ METHOD QTextFrameFormat:setBorderStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setBottomMargin( ... )
@@ -292,7 +292,7 @@ METHOD QTextFrameFormat:setBottomMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setHeight( ... )
@@ -306,7 +306,7 @@ METHOD QTextFrameFormat:setHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setLeftMargin( ... )
@@ -318,7 +318,7 @@ METHOD QTextFrameFormat:setLeftMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setMargin( ... )
@@ -330,7 +330,7 @@ METHOD QTextFrameFormat:setMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setPadding( ... )
@@ -342,7 +342,7 @@ METHOD QTextFrameFormat:setPadding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setPageBreakPolicy( ... )
@@ -354,7 +354,7 @@ METHOD QTextFrameFormat:setPageBreakPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setPosition( ... )
@@ -366,7 +366,7 @@ METHOD QTextFrameFormat:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setRightMargin( ... )
@@ -378,7 +378,7 @@ METHOD QTextFrameFormat:setRightMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setTopMargin( ... )
@@ -390,7 +390,7 @@ METHOD QTextFrameFormat:setTopMargin( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:setWidth( ... )
@@ -404,7 +404,7 @@ METHOD QTextFrameFormat:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:topMargin( ... )
@@ -412,7 +412,7 @@ METHOD QTextFrameFormat:topMargin( ... )
    CASE 0
       RETURN Qt_QTextFrameFormat_topMargin( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFrameFormat:width( ... )
@@ -420,5 +420,5 @@ METHOD QTextFrameFormat:width( ... )
    CASE 0
       RETURN QTextLengthFromPointer( Qt_QTextFrameFormat_width( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -160,7 +160,7 @@ CREATE CLASS QInputDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QInp
 METHOD QInputDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QInputDialog( ... )
    RETURN Self
@@ -171,7 +171,7 @@ METHOD QInputDialog:cancelButtonText( ... )
    CASE 0
       RETURN Qt_QInputDialog_cancelButtonText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:comboBoxItems( ... )
@@ -179,7 +179,7 @@ METHOD QInputDialog:comboBoxItems( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QInputDialog_comboBoxItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:done( ... )
@@ -191,7 +191,7 @@ METHOD QInputDialog:done( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:doubleDecimals( ... )
@@ -199,7 +199,7 @@ METHOD QInputDialog:doubleDecimals( ... )
    CASE 0
       RETURN Qt_QInputDialog_doubleDecimals( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:doubleMaximum( ... )
@@ -207,7 +207,7 @@ METHOD QInputDialog:doubleMaximum( ... )
    CASE 0
       RETURN Qt_QInputDialog_doubleMaximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:doubleMinimum( ... )
@@ -215,7 +215,7 @@ METHOD QInputDialog:doubleMinimum( ... )
    CASE 0
       RETURN Qt_QInputDialog_doubleMinimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:doubleValue( ... )
@@ -223,7 +223,7 @@ METHOD QInputDialog:doubleValue( ... )
    CASE 0
       RETURN Qt_QInputDialog_doubleValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:inputMode( ... )
@@ -231,7 +231,7 @@ METHOD QInputDialog:inputMode( ... )
    CASE 0
       RETURN Qt_QInputDialog_inputMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:intMaximum( ... )
@@ -239,7 +239,7 @@ METHOD QInputDialog:intMaximum( ... )
    CASE 0
       RETURN Qt_QInputDialog_intMaximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:intMinimum( ... )
@@ -247,7 +247,7 @@ METHOD QInputDialog:intMinimum( ... )
    CASE 0
       RETURN Qt_QInputDialog_intMinimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:intStep( ... )
@@ -255,7 +255,7 @@ METHOD QInputDialog:intStep( ... )
    CASE 0
       RETURN Qt_QInputDialog_intStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:intValue( ... )
@@ -263,7 +263,7 @@ METHOD QInputDialog:intValue( ... )
    CASE 0
       RETURN Qt_QInputDialog_intValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:isComboBoxEditable( ... )
@@ -271,7 +271,7 @@ METHOD QInputDialog:isComboBoxEditable( ... )
    CASE 0
       RETURN Qt_QInputDialog_isComboBoxEditable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:labelText( ... )
@@ -279,7 +279,7 @@ METHOD QInputDialog:labelText( ... )
    CASE 0
       RETURN Qt_QInputDialog_labelText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:okButtonText( ... )
@@ -287,7 +287,7 @@ METHOD QInputDialog:okButtonText( ... )
    CASE 0
       RETURN Qt_QInputDialog_okButtonText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:open( ... )
@@ -299,7 +299,7 @@ METHOD QInputDialog:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:options( ... )
@@ -307,7 +307,7 @@ METHOD QInputDialog:options( ... )
    CASE 0
       RETURN Qt_QInputDialog_options( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setCancelButtonText( ... )
@@ -319,7 +319,7 @@ METHOD QInputDialog:setCancelButtonText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setComboBoxEditable( ... )
@@ -331,7 +331,7 @@ METHOD QInputDialog:setComboBoxEditable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setComboBoxItems( ... )
@@ -343,7 +343,7 @@ METHOD QInputDialog:setComboBoxItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setDoubleDecimals( ... )
@@ -355,7 +355,7 @@ METHOD QInputDialog:setDoubleDecimals( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setDoubleMaximum( ... )
@@ -367,7 +367,7 @@ METHOD QInputDialog:setDoubleMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setDoubleMinimum( ... )
@@ -379,7 +379,7 @@ METHOD QInputDialog:setDoubleMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setDoubleRange( ... )
@@ -391,7 +391,7 @@ METHOD QInputDialog:setDoubleRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setDoubleValue( ... )
@@ -403,7 +403,7 @@ METHOD QInputDialog:setDoubleValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setInputMode( ... )
@@ -415,7 +415,7 @@ METHOD QInputDialog:setInputMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setIntMaximum( ... )
@@ -427,7 +427,7 @@ METHOD QInputDialog:setIntMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setIntMinimum( ... )
@@ -439,7 +439,7 @@ METHOD QInputDialog:setIntMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setIntRange( ... )
@@ -451,7 +451,7 @@ METHOD QInputDialog:setIntRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setIntStep( ... )
@@ -463,7 +463,7 @@ METHOD QInputDialog:setIntStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setIntValue( ... )
@@ -475,7 +475,7 @@ METHOD QInputDialog:setIntValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setLabelText( ... )
@@ -487,7 +487,7 @@ METHOD QInputDialog:setLabelText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setOkButtonText( ... )
@@ -499,7 +499,7 @@ METHOD QInputDialog:setOkButtonText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setOption( ... )
@@ -517,7 +517,7 @@ METHOD QInputDialog:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setOptions( ... )
@@ -529,7 +529,7 @@ METHOD QInputDialog:setOptions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setTextEchoMode( ... )
@@ -541,7 +541,7 @@ METHOD QInputDialog:setTextEchoMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:setTextValue( ... )
@@ -553,7 +553,7 @@ METHOD QInputDialog:setTextValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:testOption( ... )
@@ -565,7 +565,7 @@ METHOD QInputDialog:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:textEchoMode( ... )
@@ -573,7 +573,7 @@ METHOD QInputDialog:textEchoMode( ... )
    CASE 0
       RETURN Qt_QInputDialog_textEchoMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:textValue( ... )
@@ -581,7 +581,7 @@ METHOD QInputDialog:textValue( ... )
    CASE 0
       RETURN Qt_QInputDialog_textValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:getDouble( ... )
@@ -629,7 +629,7 @@ METHOD QInputDialog:getDouble( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:getInt( ... )
@@ -677,7 +677,7 @@ METHOD QInputDialog:getInt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:getItem( ... )
@@ -713,7 +713,7 @@ METHOD QInputDialog:getItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputDialog:getText( ... )
@@ -749,5 +749,5 @@ METHOD QInputDialog:getText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

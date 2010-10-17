@@ -149,7 +149,7 @@ CREATE CLASS QIODevice INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QIODevi
 METHOD QIODevice:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QIODevice( ... )
    RETURN Self
@@ -160,7 +160,7 @@ METHOD QIODevice:atEnd( ... )
    CASE 0
       RETURN Qt_QIODevice_atEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:bytesAvailable( ... )
@@ -168,7 +168,7 @@ METHOD QIODevice:bytesAvailable( ... )
    CASE 0
       RETURN Qt_QIODevice_bytesAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:bytesToWrite( ... )
@@ -176,7 +176,7 @@ METHOD QIODevice:bytesToWrite( ... )
    CASE 0
       RETURN Qt_QIODevice_bytesToWrite( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:canReadLine( ... )
@@ -184,7 +184,7 @@ METHOD QIODevice:canReadLine( ... )
    CASE 0
       RETURN Qt_QIODevice_canReadLine( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:close( ... )
@@ -192,7 +192,7 @@ METHOD QIODevice:close( ... )
    CASE 0
       RETURN Qt_QIODevice_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:errorString( ... )
@@ -200,7 +200,7 @@ METHOD QIODevice:errorString( ... )
    CASE 0
       RETURN Qt_QIODevice_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:getChar( ... )
@@ -212,7 +212,7 @@ METHOD QIODevice:getChar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:isOpen( ... )
@@ -220,7 +220,7 @@ METHOD QIODevice:isOpen( ... )
    CASE 0
       RETURN Qt_QIODevice_isOpen( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:isReadable( ... )
@@ -228,7 +228,7 @@ METHOD QIODevice:isReadable( ... )
    CASE 0
       RETURN Qt_QIODevice_isReadable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:isSequential( ... )
@@ -236,7 +236,7 @@ METHOD QIODevice:isSequential( ... )
    CASE 0
       RETURN Qt_QIODevice_isSequential( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:isTextModeEnabled( ... )
@@ -244,7 +244,7 @@ METHOD QIODevice:isTextModeEnabled( ... )
    CASE 0
       RETURN Qt_QIODevice_isTextModeEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:isWritable( ... )
@@ -252,7 +252,7 @@ METHOD QIODevice:isWritable( ... )
    CASE 0
       RETURN Qt_QIODevice_isWritable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:open( ... )
@@ -264,7 +264,7 @@ METHOD QIODevice:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:openMode( ... )
@@ -272,7 +272,7 @@ METHOD QIODevice:openMode( ... )
    CASE 0
       RETURN Qt_QIODevice_openMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:peek( ... )
@@ -290,7 +290,7 @@ METHOD QIODevice:peek( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:pos( ... )
@@ -298,7 +298,7 @@ METHOD QIODevice:pos( ... )
    CASE 0
       RETURN Qt_QIODevice_pos( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:putChar( ... )
@@ -310,7 +310,7 @@ METHOD QIODevice:putChar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:read( ... )
@@ -328,7 +328,7 @@ METHOD QIODevice:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:readAll( ... )
@@ -336,7 +336,7 @@ METHOD QIODevice:readAll( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QIODevice_readAll( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:readLine( ... )
@@ -356,7 +356,7 @@ METHOD QIODevice:readLine( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:reset( ... )
@@ -364,7 +364,7 @@ METHOD QIODevice:reset( ... )
    CASE 0
       RETURN Qt_QIODevice_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:seek( ... )
@@ -376,7 +376,7 @@ METHOD QIODevice:seek( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:setTextModeEnabled( ... )
@@ -388,7 +388,7 @@ METHOD QIODevice:setTextModeEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:size( ... )
@@ -396,7 +396,7 @@ METHOD QIODevice:size( ... )
    CASE 0
       RETURN Qt_QIODevice_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:ungetChar( ... )
@@ -408,7 +408,7 @@ METHOD QIODevice:ungetChar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:waitForBytesWritten( ... )
@@ -420,7 +420,7 @@ METHOD QIODevice:waitForBytesWritten( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:waitForReadyRead( ... )
@@ -432,7 +432,7 @@ METHOD QIODevice:waitForReadyRead( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIODevice:write( ... )
@@ -452,5 +452,5 @@ METHOD QIODevice:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

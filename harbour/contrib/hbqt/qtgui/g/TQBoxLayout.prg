@@ -136,7 +136,7 @@ CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QBoxLa
 METHOD QBoxLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QBoxLayout( ... )
    RETURN Self
@@ -157,7 +157,7 @@ METHOD QBoxLayout:addLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:addSpacerItem( ... )
@@ -169,7 +169,7 @@ METHOD QBoxLayout:addSpacerItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:addSpacing( ... )
@@ -181,7 +181,7 @@ METHOD QBoxLayout:addSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:addStretch( ... )
@@ -195,7 +195,7 @@ METHOD QBoxLayout:addStretch( ... )
    CASE 0
       RETURN Qt_QBoxLayout_addStretch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:addStrut( ... )
@@ -207,7 +207,7 @@ METHOD QBoxLayout:addStrut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:addWidget( ... )
@@ -231,7 +231,7 @@ METHOD QBoxLayout:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:direction( ... )
@@ -239,7 +239,7 @@ METHOD QBoxLayout:direction( ... )
    CASE 0
       RETURN Qt_QBoxLayout_direction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:insertLayout( ... )
@@ -257,7 +257,7 @@ METHOD QBoxLayout:insertLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:insertSpacerItem( ... )
@@ -269,7 +269,7 @@ METHOD QBoxLayout:insertSpacerItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:insertSpacing( ... )
@@ -281,7 +281,7 @@ METHOD QBoxLayout:insertSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:insertStretch( ... )
@@ -299,7 +299,7 @@ METHOD QBoxLayout:insertStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:insertWidget( ... )
@@ -323,7 +323,7 @@ METHOD QBoxLayout:insertWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:invalidate( ... )
@@ -331,7 +331,7 @@ METHOD QBoxLayout:invalidate( ... )
    CASE 0
       RETURN Qt_QBoxLayout_invalidate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:setDirection( ... )
@@ -343,7 +343,7 @@ METHOD QBoxLayout:setDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:setSpacing( ... )
@@ -355,7 +355,7 @@ METHOD QBoxLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:setStretch( ... )
@@ -367,7 +367,7 @@ METHOD QBoxLayout:setStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:setStretchFactor( ... )
@@ -384,7 +384,7 @@ METHOD QBoxLayout:setStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:spacing( ... )
@@ -392,7 +392,7 @@ METHOD QBoxLayout:spacing( ... )
    CASE 0
       RETURN Qt_QBoxLayout_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBoxLayout:stretch( ... )
@@ -404,5 +404,5 @@ METHOD QBoxLayout:stretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

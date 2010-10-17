@@ -117,7 +117,7 @@ CREATE CLASS HBQTableView INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_H
 METHOD HBQTableView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQTableView( ... )
    RETURN Self
@@ -132,5 +132,5 @@ METHOD HBQTableView:hbSetBlock( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

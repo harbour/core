@@ -126,7 +126,7 @@ CREATE CLASS QStyleOptionMenuItem INHERIT HbQtObjectHandler, HB_QStyleOption FUN
 METHOD QStyleOptionMenuItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionMenuItem( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QStyleOptionMenuItem:checkType( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_checkType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:checked( ... )
@@ -145,7 +145,7 @@ METHOD QStyleOptionMenuItem:checked( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_checked( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:font( ... )
@@ -153,7 +153,7 @@ METHOD QStyleOptionMenuItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QStyleOptionMenuItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:icon( ... )
@@ -161,7 +161,7 @@ METHOD QStyleOptionMenuItem:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionMenuItem_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:maxIconWidth( ... )
@@ -169,7 +169,7 @@ METHOD QStyleOptionMenuItem:maxIconWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_maxIconWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:menuHasCheckableItems( ... )
@@ -177,7 +177,7 @@ METHOD QStyleOptionMenuItem:menuHasCheckableItems( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_menuHasCheckableItems( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:menuItemType( ... )
@@ -185,7 +185,7 @@ METHOD QStyleOptionMenuItem:menuItemType( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_menuItemType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:menuRect( ... )
@@ -193,7 +193,7 @@ METHOD QStyleOptionMenuItem:menuRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QStyleOptionMenuItem_menuRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:tabWidth( ... )
@@ -201,7 +201,7 @@ METHOD QStyleOptionMenuItem:tabWidth( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_tabWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionMenuItem:text( ... )
@@ -209,5 +209,5 @@ METHOD QStyleOptionMenuItem:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionMenuItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

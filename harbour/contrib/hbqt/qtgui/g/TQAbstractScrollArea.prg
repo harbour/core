@@ -130,7 +130,7 @@ CREATE CLASS QAbstractScrollArea INHERIT HbQtObjectHandler, HB_QFrame FUNCTION H
 METHOD QAbstractScrollArea:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractScrollArea( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QAbstractScrollArea:addScrollBarWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:cornerWidget( ... )
@@ -153,7 +153,7 @@ METHOD QAbstractScrollArea:cornerWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QAbstractScrollArea_cornerWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:horizontalScrollBar( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractScrollArea:horizontalScrollBar( ... )
    CASE 0
       RETURN QScrollBarFromPointer( Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:horizontalScrollBarPolicy( ... )
@@ -169,7 +169,7 @@ METHOD QAbstractScrollArea:horizontalScrollBarPolicy( ... )
    CASE 0
       RETURN Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:maximumViewportSize( ... )
@@ -177,7 +177,7 @@ METHOD QAbstractScrollArea:maximumViewportSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setCornerWidget( ... )
@@ -189,7 +189,7 @@ METHOD QAbstractScrollArea:setCornerWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setHorizontalScrollBar( ... )
@@ -201,7 +201,7 @@ METHOD QAbstractScrollArea:setHorizontalScrollBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setHorizontalScrollBarPolicy( ... )
@@ -213,7 +213,7 @@ METHOD QAbstractScrollArea:setHorizontalScrollBarPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setVerticalScrollBar( ... )
@@ -225,7 +225,7 @@ METHOD QAbstractScrollArea:setVerticalScrollBar( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setVerticalScrollBarPolicy( ... )
@@ -237,7 +237,7 @@ METHOD QAbstractScrollArea:setVerticalScrollBarPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:setViewport( ... )
@@ -249,7 +249,7 @@ METHOD QAbstractScrollArea:setViewport( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:verticalScrollBar( ... )
@@ -257,7 +257,7 @@ METHOD QAbstractScrollArea:verticalScrollBar( ... )
    CASE 0
       RETURN QScrollBarFromPointer( Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:verticalScrollBarPolicy( ... )
@@ -265,7 +265,7 @@ METHOD QAbstractScrollArea:verticalScrollBarPolicy( ... )
    CASE 0
       RETURN Qt_QAbstractScrollArea_verticalScrollBarPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractScrollArea:viewport( ... )
@@ -273,5 +273,5 @@ METHOD QAbstractScrollArea:viewport( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QAbstractScrollArea_viewport( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

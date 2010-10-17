@@ -123,7 +123,7 @@ CREATE CLASS QTextImageFormat INHERIT HbQtObjectHandler, HB_QTextCharFormat FUNC
 METHOD QTextImageFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextImageFormat( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QTextImageFormat:height( ... )
    CASE 0
       RETURN Qt_QTextImageFormat_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:isValid( ... )
@@ -142,7 +142,7 @@ METHOD QTextImageFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextImageFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:name( ... )
@@ -150,7 +150,7 @@ METHOD QTextImageFormat:name( ... )
    CASE 0
       RETURN Qt_QTextImageFormat_name( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:setHeight( ... )
@@ -162,7 +162,7 @@ METHOD QTextImageFormat:setHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:setName( ... )
@@ -174,7 +174,7 @@ METHOD QTextImageFormat:setName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:setWidth( ... )
@@ -186,7 +186,7 @@ METHOD QTextImageFormat:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextImageFormat:width( ... )
@@ -194,5 +194,5 @@ METHOD QTextImageFormat:width( ... )
    CASE 0
       RETURN Qt_QTextImageFormat_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

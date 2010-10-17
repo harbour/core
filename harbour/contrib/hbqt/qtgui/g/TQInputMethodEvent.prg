@@ -121,7 +121,7 @@ CREATE CLASS QInputMethodEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_
 METHOD QInputMethodEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QInputMethodEvent( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QInputMethodEvent:commitString( ... )
    CASE 0
       RETURN Qt_QInputMethodEvent_commitString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputMethodEvent:preeditString( ... )
@@ -140,7 +140,7 @@ METHOD QInputMethodEvent:preeditString( ... )
    CASE 0
       RETURN Qt_QInputMethodEvent_preeditString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputMethodEvent:replacementLength( ... )
@@ -148,7 +148,7 @@ METHOD QInputMethodEvent:replacementLength( ... )
    CASE 0
       RETURN Qt_QInputMethodEvent_replacementLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputMethodEvent:replacementStart( ... )
@@ -156,7 +156,7 @@ METHOD QInputMethodEvent:replacementStart( ... )
    CASE 0
       RETURN Qt_QInputMethodEvent_replacementStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QInputMethodEvent:setCommitString( ... )
@@ -180,5 +180,5 @@ METHOD QInputMethodEvent:setCommitString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

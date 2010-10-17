@@ -129,7 +129,7 @@ CREATE CLASS QClipboard INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QClipb
 METHOD QClipboard:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QClipboard( ... )
    RETURN Self
@@ -146,7 +146,7 @@ METHOD QClipboard:clear( ... )
    CASE 0
       RETURN Qt_QClipboard_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:image( ... )
@@ -160,7 +160,7 @@ METHOD QClipboard:image( ... )
    CASE 0
       RETURN QImageFromPointer( Qt_QClipboard_image( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:ownsClipboard( ... )
@@ -168,7 +168,7 @@ METHOD QClipboard:ownsClipboard( ... )
    CASE 0
       RETURN Qt_QClipboard_ownsClipboard( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:ownsFindBuffer( ... )
@@ -176,7 +176,7 @@ METHOD QClipboard:ownsFindBuffer( ... )
    CASE 0
       RETURN Qt_QClipboard_ownsFindBuffer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:ownsSelection( ... )
@@ -184,7 +184,7 @@ METHOD QClipboard:ownsSelection( ... )
    CASE 0
       RETURN Qt_QClipboard_ownsSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:pixmap( ... )
@@ -198,7 +198,7 @@ METHOD QClipboard:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QClipboard_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:setImage( ... )
@@ -216,7 +216,7 @@ METHOD QClipboard:setImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:setMimeData( ... )
@@ -234,7 +234,7 @@ METHOD QClipboard:setMimeData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:setPixmap( ... )
@@ -252,7 +252,7 @@ METHOD QClipboard:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:setText( ... )
@@ -270,7 +270,7 @@ METHOD QClipboard:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:supportsFindBuffer( ... )
@@ -278,7 +278,7 @@ METHOD QClipboard:supportsFindBuffer( ... )
    CASE 0
       RETURN Qt_QClipboard_supportsFindBuffer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:supportsSelection( ... )
@@ -286,7 +286,7 @@ METHOD QClipboard:supportsSelection( ... )
    CASE 0
       RETURN Qt_QClipboard_supportsSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QClipboard:text( ... )
@@ -300,5 +300,5 @@ METHOD QClipboard:text( ... )
    CASE 0
       RETURN Qt_QClipboard_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

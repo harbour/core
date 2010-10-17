@@ -120,7 +120,7 @@ CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, HB_QStyleOptionComp
 METHOD QStyleOptionTitleBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionTitleBar( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QStyleOptionTitleBar:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionTitleBar_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTitleBar:text( ... )
@@ -139,7 +139,7 @@ METHOD QStyleOptionTitleBar:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionTitleBar_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTitleBar:titleBarFlags( ... )
@@ -147,7 +147,7 @@ METHOD QStyleOptionTitleBar:titleBarFlags( ... )
    CASE 0
       RETURN Qt_QStyleOptionTitleBar_titleBarFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionTitleBar:titleBarState( ... )
@@ -155,5 +155,5 @@ METHOD QStyleOptionTitleBar:titleBarState( ... )
    CASE 0
       RETURN Qt_QStyleOptionTitleBar_titleBarState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

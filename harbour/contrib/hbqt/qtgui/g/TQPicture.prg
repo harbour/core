@@ -127,7 +127,7 @@ CREATE CLASS QPicture INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPi
 METHOD QPicture:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPicture( ... )
    RETURN Self
@@ -138,7 +138,7 @@ METHOD QPicture:boundingRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QPicture_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:data( ... )
@@ -146,7 +146,7 @@ METHOD QPicture:data( ... )
    CASE 0
       RETURN Qt_QPicture_data( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:isNull( ... )
@@ -154,7 +154,7 @@ METHOD QPicture:isNull( ... )
    CASE 0
       RETURN Qt_QPicture_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:load( ... )
@@ -176,7 +176,7 @@ METHOD QPicture:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:play( ... )
@@ -188,7 +188,7 @@ METHOD QPicture:play( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:save( ... )
@@ -210,7 +210,7 @@ METHOD QPicture:save( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:setBoundingRect( ... )
@@ -222,7 +222,7 @@ METHOD QPicture:setBoundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:setData( ... )
@@ -234,7 +234,7 @@ METHOD QPicture:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPicture:size( ... )
@@ -242,5 +242,5 @@ METHOD QPicture:size( ... )
    CASE 0
       RETURN Qt_QPicture_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

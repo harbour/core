@@ -160,7 +160,7 @@ CREATE CLASS QTabBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabBar
 METHOD QTabBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTabBar( ... )
    RETURN Self
@@ -175,7 +175,7 @@ METHOD QTabBar:addTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:count( ... )
@@ -183,7 +183,7 @@ METHOD QTabBar:count( ... )
    CASE 0
       RETURN Qt_QTabBar_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:currentIndex( ... )
@@ -191,7 +191,7 @@ METHOD QTabBar:currentIndex( ... )
    CASE 0
       RETURN Qt_QTabBar_currentIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:documentMode( ... )
@@ -199,7 +199,7 @@ METHOD QTabBar:documentMode( ... )
    CASE 0
       RETURN Qt_QTabBar_documentMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:drawBase( ... )
@@ -207,7 +207,7 @@ METHOD QTabBar:drawBase( ... )
    CASE 0
       RETURN Qt_QTabBar_drawBase( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:elideMode( ... )
@@ -215,7 +215,7 @@ METHOD QTabBar:elideMode( ... )
    CASE 0
       RETURN Qt_QTabBar_elideMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:expanding( ... )
@@ -223,7 +223,7 @@ METHOD QTabBar:expanding( ... )
    CASE 0
       RETURN Qt_QTabBar_expanding( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:iconSize( ... )
@@ -231,7 +231,7 @@ METHOD QTabBar:iconSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QTabBar_iconSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:insertTab( ... )
@@ -243,7 +243,7 @@ METHOD QTabBar:insertTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:isMovable( ... )
@@ -251,7 +251,7 @@ METHOD QTabBar:isMovable( ... )
    CASE 0
       RETURN Qt_QTabBar_isMovable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:isTabEnabled( ... )
@@ -263,7 +263,7 @@ METHOD QTabBar:isTabEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:moveTab( ... )
@@ -275,7 +275,7 @@ METHOD QTabBar:moveTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:removeTab( ... )
@@ -287,7 +287,7 @@ METHOD QTabBar:removeTab( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:selectionBehaviorOnRemove( ... )
@@ -295,7 +295,7 @@ METHOD QTabBar:selectionBehaviorOnRemove( ... )
    CASE 0
       RETURN Qt_QTabBar_selectionBehaviorOnRemove( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setDocumentMode( ... )
@@ -307,7 +307,7 @@ METHOD QTabBar:setDocumentMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setDrawBase( ... )
@@ -319,7 +319,7 @@ METHOD QTabBar:setDrawBase( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setElideMode( ... )
@@ -331,7 +331,7 @@ METHOD QTabBar:setElideMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setExpanding( ... )
@@ -343,7 +343,7 @@ METHOD QTabBar:setExpanding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setIconSize( ... )
@@ -355,7 +355,7 @@ METHOD QTabBar:setIconSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setMovable( ... )
@@ -367,7 +367,7 @@ METHOD QTabBar:setMovable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setSelectionBehaviorOnRemove( ... )
@@ -379,7 +379,7 @@ METHOD QTabBar:setSelectionBehaviorOnRemove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setShape( ... )
@@ -391,7 +391,7 @@ METHOD QTabBar:setShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabButton( ... )
@@ -403,7 +403,7 @@ METHOD QTabBar:setTabButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabData( ... )
@@ -415,7 +415,7 @@ METHOD QTabBar:setTabData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabEnabled( ... )
@@ -427,7 +427,7 @@ METHOD QTabBar:setTabEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabText( ... )
@@ -439,7 +439,7 @@ METHOD QTabBar:setTabText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabTextColor( ... )
@@ -451,7 +451,7 @@ METHOD QTabBar:setTabTextColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabToolTip( ... )
@@ -463,7 +463,7 @@ METHOD QTabBar:setTabToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabWhatsThis( ... )
@@ -475,7 +475,7 @@ METHOD QTabBar:setTabWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setTabsClosable( ... )
@@ -487,7 +487,7 @@ METHOD QTabBar:setTabsClosable( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setUsesScrollButtons( ... )
@@ -499,7 +499,7 @@ METHOD QTabBar:setUsesScrollButtons( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:shape( ... )
@@ -507,7 +507,7 @@ METHOD QTabBar:shape( ... )
    CASE 0
       RETURN Qt_QTabBar_shape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabAt( ... )
@@ -519,7 +519,7 @@ METHOD QTabBar:tabAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabButton( ... )
@@ -531,7 +531,7 @@ METHOD QTabBar:tabButton( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabData( ... )
@@ -543,7 +543,7 @@ METHOD QTabBar:tabData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabIcon( ... )
@@ -555,7 +555,7 @@ METHOD QTabBar:tabIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabRect( ... )
@@ -567,7 +567,7 @@ METHOD QTabBar:tabRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabText( ... )
@@ -579,7 +579,7 @@ METHOD QTabBar:tabText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabTextColor( ... )
@@ -591,7 +591,7 @@ METHOD QTabBar:tabTextColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabToolTip( ... )
@@ -603,7 +603,7 @@ METHOD QTabBar:tabToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabWhatsThis( ... )
@@ -615,7 +615,7 @@ METHOD QTabBar:tabWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:tabsClosable( ... )
@@ -623,7 +623,7 @@ METHOD QTabBar:tabsClosable( ... )
    CASE 0
       RETURN Qt_QTabBar_tabsClosable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:usesScrollButtons( ... )
@@ -631,7 +631,7 @@ METHOD QTabBar:usesScrollButtons( ... )
    CASE 0
       RETURN Qt_QTabBar_usesScrollButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTabBar:setCurrentIndex( ... )
@@ -643,5 +643,5 @@ METHOD QTabBar:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

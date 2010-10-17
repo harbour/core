@@ -123,7 +123,7 @@ CREATE CLASS QSound INHERIT HbQtObjectHandler FUNCTION HB_QSound
 METHOD QSound:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSound( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QSound:fileName( ... )
    CASE 0
       RETURN Qt_QSound_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:isFinished( ... )
@@ -142,7 +142,7 @@ METHOD QSound:isFinished( ... )
    CASE 0
       RETURN Qt_QSound_isFinished( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:loops( ... )
@@ -150,7 +150,7 @@ METHOD QSound:loops( ... )
    CASE 0
       RETURN Qt_QSound_loops( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:loopsRemaining( ... )
@@ -158,7 +158,7 @@ METHOD QSound:loopsRemaining( ... )
    CASE 0
       RETURN Qt_QSound_loopsRemaining( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:setLoops( ... )
@@ -170,7 +170,7 @@ METHOD QSound:setLoops( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:isAvailable( ... )
@@ -178,7 +178,7 @@ METHOD QSound:isAvailable( ... )
    CASE 0
       RETURN Qt_QSound_isAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSound:play( ... )
@@ -190,5 +190,5 @@ METHOD QSound:play( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

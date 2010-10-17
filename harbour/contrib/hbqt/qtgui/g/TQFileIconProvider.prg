@@ -119,7 +119,7 @@ CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler FUNCTION HB_QFileIconPr
 METHOD QFileIconProvider:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFileIconProvider( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QFileIconProvider:icon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileIconProvider:type( ... )
@@ -148,5 +148,5 @@ METHOD QFileIconProvider:type( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

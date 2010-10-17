@@ -147,7 +147,7 @@ CREATE CLASS QSettings INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSettin
 METHOD QSettings:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSettings( ... )
    RETURN Self
@@ -158,7 +158,7 @@ METHOD QSettings:allKeys( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QSettings_allKeys( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:applicationName( ... )
@@ -166,7 +166,7 @@ METHOD QSettings:applicationName( ... )
    CASE 0
       RETURN Qt_QSettings_applicationName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:beginGroup( ... )
@@ -178,7 +178,7 @@ METHOD QSettings:beginGroup( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:beginReadArray( ... )
@@ -190,7 +190,7 @@ METHOD QSettings:beginReadArray( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:beginWriteArray( ... )
@@ -208,7 +208,7 @@ METHOD QSettings:beginWriteArray( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:childGroups( ... )
@@ -216,7 +216,7 @@ METHOD QSettings:childGroups( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QSettings_childGroups( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:childKeys( ... )
@@ -224,7 +224,7 @@ METHOD QSettings:childKeys( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QSettings_childKeys( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:clear( ... )
@@ -232,7 +232,7 @@ METHOD QSettings:clear( ... )
    CASE 0
       RETURN Qt_QSettings_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:contains( ... )
@@ -244,7 +244,7 @@ METHOD QSettings:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:endArray( ... )
@@ -252,7 +252,7 @@ METHOD QSettings:endArray( ... )
    CASE 0
       RETURN Qt_QSettings_endArray( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:endGroup( ... )
@@ -260,7 +260,7 @@ METHOD QSettings:endGroup( ... )
    CASE 0
       RETURN Qt_QSettings_endGroup( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:fallbacksEnabled( ... )
@@ -268,7 +268,7 @@ METHOD QSettings:fallbacksEnabled( ... )
    CASE 0
       RETURN Qt_QSettings_fallbacksEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:fileName( ... )
@@ -276,7 +276,7 @@ METHOD QSettings:fileName( ... )
    CASE 0
       RETURN Qt_QSettings_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:format( ... )
@@ -284,7 +284,7 @@ METHOD QSettings:format( ... )
    CASE 0
       RETURN Qt_QSettings_format( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:group( ... )
@@ -292,7 +292,7 @@ METHOD QSettings:group( ... )
    CASE 0
       RETURN Qt_QSettings_group( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:iniCodec( ... )
@@ -300,7 +300,7 @@ METHOD QSettings:iniCodec( ... )
    CASE 0
       RETURN QTextCodecFromPointer( Qt_QSettings_iniCodec( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:isWritable( ... )
@@ -308,7 +308,7 @@ METHOD QSettings:isWritable( ... )
    CASE 0
       RETURN Qt_QSettings_isWritable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:organizationName( ... )
@@ -316,7 +316,7 @@ METHOD QSettings:organizationName( ... )
    CASE 0
       RETURN Qt_QSettings_organizationName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:remove( ... )
@@ -328,7 +328,7 @@ METHOD QSettings:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:scope( ... )
@@ -336,7 +336,7 @@ METHOD QSettings:scope( ... )
    CASE 0
       RETURN Qt_QSettings_scope( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setArrayIndex( ... )
@@ -348,7 +348,7 @@ METHOD QSettings:setArrayIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setFallbacksEnabled( ... )
@@ -360,7 +360,7 @@ METHOD QSettings:setFallbacksEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setIniCodec( ... )
@@ -374,7 +374,7 @@ METHOD QSettings:setIniCodec( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setValue( ... )
@@ -386,7 +386,7 @@ METHOD QSettings:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:status( ... )
@@ -394,7 +394,7 @@ METHOD QSettings:status( ... )
    CASE 0
       RETURN Qt_QSettings_status( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:sync( ... )
@@ -402,7 +402,7 @@ METHOD QSettings:sync( ... )
    CASE 0
       RETURN Qt_QSettings_sync( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:value( ... )
@@ -420,7 +420,7 @@ METHOD QSettings:value( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:defaultFormat( ... )
@@ -428,7 +428,7 @@ METHOD QSettings:defaultFormat( ... )
    CASE 0
       RETURN Qt_QSettings_defaultFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setDefaultFormat( ... )
@@ -440,7 +440,7 @@ METHOD QSettings:setDefaultFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSettings:setPath( ... )
@@ -452,5 +452,5 @@ METHOD QSettings:setPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

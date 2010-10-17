@@ -128,7 +128,7 @@ CREATE CLASS QFontInfo INHERIT HbQtObjectHandler FUNCTION HB_QFontInfo
 METHOD QFontInfo:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFontInfo( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QFontInfo:bold( ... )
    CASE 0
       RETURN Qt_QFontInfo_bold( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:exactMatch( ... )
@@ -147,7 +147,7 @@ METHOD QFontInfo:exactMatch( ... )
    CASE 0
       RETURN Qt_QFontInfo_exactMatch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:family( ... )
@@ -155,7 +155,7 @@ METHOD QFontInfo:family( ... )
    CASE 0
       RETURN Qt_QFontInfo_family( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:fixedPitch( ... )
@@ -163,7 +163,7 @@ METHOD QFontInfo:fixedPitch( ... )
    CASE 0
       RETURN Qt_QFontInfo_fixedPitch( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:italic( ... )
@@ -171,7 +171,7 @@ METHOD QFontInfo:italic( ... )
    CASE 0
       RETURN Qt_QFontInfo_italic( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:pixelSize( ... )
@@ -179,7 +179,7 @@ METHOD QFontInfo:pixelSize( ... )
    CASE 0
       RETURN Qt_QFontInfo_pixelSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:pointSize( ... )
@@ -187,7 +187,7 @@ METHOD QFontInfo:pointSize( ... )
    CASE 0
       RETURN Qt_QFontInfo_pointSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:pointSizeF( ... )
@@ -195,7 +195,7 @@ METHOD QFontInfo:pointSizeF( ... )
    CASE 0
       RETURN Qt_QFontInfo_pointSizeF( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:rawMode( ... )
@@ -203,7 +203,7 @@ METHOD QFontInfo:rawMode( ... )
    CASE 0
       RETURN Qt_QFontInfo_rawMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:style( ... )
@@ -211,7 +211,7 @@ METHOD QFontInfo:style( ... )
    CASE 0
       RETURN Qt_QFontInfo_style( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:styleHint( ... )
@@ -219,7 +219,7 @@ METHOD QFontInfo:styleHint( ... )
    CASE 0
       RETURN Qt_QFontInfo_styleHint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFontInfo:weight( ... )
@@ -227,5 +227,5 @@ METHOD QFontInfo:weight( ... )
    CASE 0
       RETURN Qt_QFontInfo_weight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

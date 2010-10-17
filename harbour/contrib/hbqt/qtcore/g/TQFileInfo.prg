@@ -160,7 +160,7 @@ CREATE CLASS QFileInfo INHERIT HbQtObjectHandler FUNCTION HB_QFileInfo
 METHOD QFileInfo:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFileInfo( ... )
    RETURN Self
@@ -171,7 +171,7 @@ METHOD QFileInfo:absoluteDir( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QFileInfo_absoluteDir( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:absoluteFilePath( ... )
@@ -179,7 +179,7 @@ METHOD QFileInfo:absoluteFilePath( ... )
    CASE 0
       RETURN Qt_QFileInfo_absoluteFilePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:absolutePath( ... )
@@ -187,7 +187,7 @@ METHOD QFileInfo:absolutePath( ... )
    CASE 0
       RETURN Qt_QFileInfo_absolutePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:baseName( ... )
@@ -195,7 +195,7 @@ METHOD QFileInfo:baseName( ... )
    CASE 0
       RETURN Qt_QFileInfo_baseName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:bundleName( ... )
@@ -203,7 +203,7 @@ METHOD QFileInfo:bundleName( ... )
    CASE 0
       RETURN Qt_QFileInfo_bundleName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:caching( ... )
@@ -211,7 +211,7 @@ METHOD QFileInfo:caching( ... )
    CASE 0
       RETURN Qt_QFileInfo_caching( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:canonicalFilePath( ... )
@@ -219,7 +219,7 @@ METHOD QFileInfo:canonicalFilePath( ... )
    CASE 0
       RETURN Qt_QFileInfo_canonicalFilePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:canonicalPath( ... )
@@ -227,7 +227,7 @@ METHOD QFileInfo:canonicalPath( ... )
    CASE 0
       RETURN Qt_QFileInfo_canonicalPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:completeBaseName( ... )
@@ -235,7 +235,7 @@ METHOD QFileInfo:completeBaseName( ... )
    CASE 0
       RETURN Qt_QFileInfo_completeBaseName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:completeSuffix( ... )
@@ -243,7 +243,7 @@ METHOD QFileInfo:completeSuffix( ... )
    CASE 0
       RETURN Qt_QFileInfo_completeSuffix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:created( ... )
@@ -251,7 +251,7 @@ METHOD QFileInfo:created( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QFileInfo_created( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:dir( ... )
@@ -259,7 +259,7 @@ METHOD QFileInfo:dir( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QFileInfo_dir( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:exists( ... )
@@ -267,7 +267,7 @@ METHOD QFileInfo:exists( ... )
    CASE 0
       RETURN Qt_QFileInfo_exists( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:fileName( ... )
@@ -275,7 +275,7 @@ METHOD QFileInfo:fileName( ... )
    CASE 0
       RETURN Qt_QFileInfo_fileName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:filePath( ... )
@@ -283,7 +283,7 @@ METHOD QFileInfo:filePath( ... )
    CASE 0
       RETURN Qt_QFileInfo_filePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:group( ... )
@@ -291,7 +291,7 @@ METHOD QFileInfo:group( ... )
    CASE 0
       RETURN Qt_QFileInfo_group( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:groupId( ... )
@@ -299,7 +299,7 @@ METHOD QFileInfo:groupId( ... )
    CASE 0
       RETURN Qt_QFileInfo_groupId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isAbsolute( ... )
@@ -307,7 +307,7 @@ METHOD QFileInfo:isAbsolute( ... )
    CASE 0
       RETURN Qt_QFileInfo_isAbsolute( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isBundle( ... )
@@ -315,7 +315,7 @@ METHOD QFileInfo:isBundle( ... )
    CASE 0
       RETURN Qt_QFileInfo_isBundle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isDir( ... )
@@ -323,7 +323,7 @@ METHOD QFileInfo:isDir( ... )
    CASE 0
       RETURN Qt_QFileInfo_isDir( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isExecutable( ... )
@@ -331,7 +331,7 @@ METHOD QFileInfo:isExecutable( ... )
    CASE 0
       RETURN Qt_QFileInfo_isExecutable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isFile( ... )
@@ -339,7 +339,7 @@ METHOD QFileInfo:isFile( ... )
    CASE 0
       RETURN Qt_QFileInfo_isFile( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isHidden( ... )
@@ -347,7 +347,7 @@ METHOD QFileInfo:isHidden( ... )
    CASE 0
       RETURN Qt_QFileInfo_isHidden( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isReadable( ... )
@@ -355,7 +355,7 @@ METHOD QFileInfo:isReadable( ... )
    CASE 0
       RETURN Qt_QFileInfo_isReadable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isRelative( ... )
@@ -363,7 +363,7 @@ METHOD QFileInfo:isRelative( ... )
    CASE 0
       RETURN Qt_QFileInfo_isRelative( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isRoot( ... )
@@ -371,7 +371,7 @@ METHOD QFileInfo:isRoot( ... )
    CASE 0
       RETURN Qt_QFileInfo_isRoot( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isSymLink( ... )
@@ -379,7 +379,7 @@ METHOD QFileInfo:isSymLink( ... )
    CASE 0
       RETURN Qt_QFileInfo_isSymLink( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:isWritable( ... )
@@ -387,7 +387,7 @@ METHOD QFileInfo:isWritable( ... )
    CASE 0
       RETURN Qt_QFileInfo_isWritable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:lastModified( ... )
@@ -395,7 +395,7 @@ METHOD QFileInfo:lastModified( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QFileInfo_lastModified( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:lastRead( ... )
@@ -403,7 +403,7 @@ METHOD QFileInfo:lastRead( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QFileInfo_lastRead( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:makeAbsolute( ... )
@@ -411,7 +411,7 @@ METHOD QFileInfo:makeAbsolute( ... )
    CASE 0
       RETURN Qt_QFileInfo_makeAbsolute( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:owner( ... )
@@ -419,7 +419,7 @@ METHOD QFileInfo:owner( ... )
    CASE 0
       RETURN Qt_QFileInfo_owner( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:ownerId( ... )
@@ -427,7 +427,7 @@ METHOD QFileInfo:ownerId( ... )
    CASE 0
       RETURN Qt_QFileInfo_ownerId( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:path( ... )
@@ -435,7 +435,7 @@ METHOD QFileInfo:path( ... )
    CASE 0
       RETURN Qt_QFileInfo_path( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:permission( ... )
@@ -447,7 +447,7 @@ METHOD QFileInfo:permission( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:permissions( ... )
@@ -455,7 +455,7 @@ METHOD QFileInfo:permissions( ... )
    CASE 0
       RETURN Qt_QFileInfo_permissions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:refresh( ... )
@@ -463,7 +463,7 @@ METHOD QFileInfo:refresh( ... )
    CASE 0
       RETURN Qt_QFileInfo_refresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:setCaching( ... )
@@ -475,7 +475,7 @@ METHOD QFileInfo:setCaching( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:setFile( ... )
@@ -495,7 +495,7 @@ METHOD QFileInfo:setFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:size( ... )
@@ -503,7 +503,7 @@ METHOD QFileInfo:size( ... )
    CASE 0
       RETURN Qt_QFileInfo_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:suffix( ... )
@@ -511,7 +511,7 @@ METHOD QFileInfo:suffix( ... )
    CASE 0
       RETURN Qt_QFileInfo_suffix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileInfo:symLinkTarget( ... )
@@ -519,5 +519,5 @@ METHOD QFileInfo:symLinkTarget( ... )
    CASE 0
       RETURN Qt_QFileInfo_symLinkTarget( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -151,7 +151,7 @@ CREATE CLASS QListWidgetItem INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 METHOD QListWidgetItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QListWidgetItem( ... )
    RETURN Self
@@ -162,7 +162,7 @@ METHOD QListWidgetItem:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QListWidgetItem_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:checkState( ... )
@@ -170,7 +170,7 @@ METHOD QListWidgetItem:checkState( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_checkState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:clone( ... )
@@ -178,7 +178,7 @@ METHOD QListWidgetItem:clone( ... )
    CASE 0
       RETURN QListWidgetItemFromPointer( Qt_QListWidgetItem_clone( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:data( ... )
@@ -190,7 +190,7 @@ METHOD QListWidgetItem:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:flags( ... )
@@ -198,7 +198,7 @@ METHOD QListWidgetItem:flags( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:font( ... )
@@ -206,7 +206,7 @@ METHOD QListWidgetItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QListWidgetItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:foreground( ... )
@@ -214,7 +214,7 @@ METHOD QListWidgetItem:foreground( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QListWidgetItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:icon( ... )
@@ -222,7 +222,7 @@ METHOD QListWidgetItem:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QListWidgetItem_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:isHidden( ... )
@@ -230,7 +230,7 @@ METHOD QListWidgetItem:isHidden( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_isHidden( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:isSelected( ... )
@@ -238,7 +238,7 @@ METHOD QListWidgetItem:isSelected( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_isSelected( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:listWidget( ... )
@@ -246,7 +246,7 @@ METHOD QListWidgetItem:listWidget( ... )
    CASE 0
       RETURN QListWidgetFromPointer( Qt_QListWidgetItem_listWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:read( ... )
@@ -258,7 +258,7 @@ METHOD QListWidgetItem:read( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setBackground( ... )
@@ -270,7 +270,7 @@ METHOD QListWidgetItem:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setCheckState( ... )
@@ -282,7 +282,7 @@ METHOD QListWidgetItem:setCheckState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setData( ... )
@@ -294,7 +294,7 @@ METHOD QListWidgetItem:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setFlags( ... )
@@ -306,7 +306,7 @@ METHOD QListWidgetItem:setFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setFont( ... )
@@ -318,7 +318,7 @@ METHOD QListWidgetItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setForeground( ... )
@@ -330,7 +330,7 @@ METHOD QListWidgetItem:setForeground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setHidden( ... )
@@ -342,7 +342,7 @@ METHOD QListWidgetItem:setHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setIcon( ... )
@@ -354,7 +354,7 @@ METHOD QListWidgetItem:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setSelected( ... )
@@ -366,7 +366,7 @@ METHOD QListWidgetItem:setSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setSizeHint( ... )
@@ -378,7 +378,7 @@ METHOD QListWidgetItem:setSizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setStatusTip( ... )
@@ -390,7 +390,7 @@ METHOD QListWidgetItem:setStatusTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setText( ... )
@@ -402,7 +402,7 @@ METHOD QListWidgetItem:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setTextAlignment( ... )
@@ -414,7 +414,7 @@ METHOD QListWidgetItem:setTextAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setToolTip( ... )
@@ -426,7 +426,7 @@ METHOD QListWidgetItem:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:setWhatsThis( ... )
@@ -438,7 +438,7 @@ METHOD QListWidgetItem:setWhatsThis( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:sizeHint( ... )
@@ -446,7 +446,7 @@ METHOD QListWidgetItem:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QListWidgetItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:statusTip( ... )
@@ -454,7 +454,7 @@ METHOD QListWidgetItem:statusTip( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_statusTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:text( ... )
@@ -462,7 +462,7 @@ METHOD QListWidgetItem:text( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:textAlignment( ... )
@@ -470,7 +470,7 @@ METHOD QListWidgetItem:textAlignment( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_textAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:toolTip( ... )
@@ -478,7 +478,7 @@ METHOD QListWidgetItem:toolTip( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:type( ... )
@@ -486,7 +486,7 @@ METHOD QListWidgetItem:type( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:whatsThis( ... )
@@ -494,7 +494,7 @@ METHOD QListWidgetItem:whatsThis( ... )
    CASE 0
       RETURN Qt_QListWidgetItem_whatsThis( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListWidgetItem:write( ... )
@@ -506,5 +506,5 @@ METHOD QListWidgetItem:write( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

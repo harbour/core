@@ -136,7 +136,7 @@ CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
 METHOD QTime:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTime( ... )
    RETURN Self
@@ -151,7 +151,7 @@ METHOD QTime:addMSecs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:addSecs( ... )
@@ -163,7 +163,7 @@ METHOD QTime:addSecs( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:elapsed( ... )
@@ -171,7 +171,7 @@ METHOD QTime:elapsed( ... )
    CASE 0
       RETURN Qt_QTime_elapsed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:hour( ... )
@@ -179,7 +179,7 @@ METHOD QTime:hour( ... )
    CASE 0
       RETURN Qt_QTime_hour( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:isNull( ... )
@@ -187,7 +187,7 @@ METHOD QTime:isNull( ... )
    CASE 0
       RETURN Qt_QTime_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:isValid( ... )
@@ -207,7 +207,7 @@ METHOD QTime:isValid( ... )
    CASE 0
       RETURN Qt_QTime_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:minute( ... )
@@ -215,7 +215,7 @@ METHOD QTime:minute( ... )
    CASE 0
       RETURN Qt_QTime_minute( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:msec( ... )
@@ -223,7 +223,7 @@ METHOD QTime:msec( ... )
    CASE 0
       RETURN Qt_QTime_msec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:msecsTo( ... )
@@ -235,7 +235,7 @@ METHOD QTime:msecsTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:restart( ... )
@@ -243,7 +243,7 @@ METHOD QTime:restart( ... )
    CASE 0
       RETURN Qt_QTime_restart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:second( ... )
@@ -251,7 +251,7 @@ METHOD QTime:second( ... )
    CASE 0
       RETURN Qt_QTime_second( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:secsTo( ... )
@@ -263,7 +263,7 @@ METHOD QTime:secsTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:setHMS( ... )
@@ -281,7 +281,7 @@ METHOD QTime:setHMS( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:start( ... )
@@ -289,7 +289,7 @@ METHOD QTime:start( ... )
    CASE 0
       RETURN Qt_QTime_start( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:toString( ... )
@@ -305,7 +305,7 @@ METHOD QTime:toString( ... )
    CASE 0
       RETURN Qt_QTime_toString_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:currentTime( ... )
@@ -313,7 +313,7 @@ METHOD QTime:currentTime( ... )
    CASE 0
       RETURN QTimeFromPointer( Qt_QTime_currentTime( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTime:fromString( ... )
@@ -333,5 +333,5 @@ METHOD QTime:fromString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

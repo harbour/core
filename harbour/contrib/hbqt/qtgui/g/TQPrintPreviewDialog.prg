@@ -118,7 +118,7 @@ CREATE CLASS QPrintPreviewDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION 
 METHOD QPrintPreviewDialog:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPrintPreviewDialog( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QPrintPreviewDialog:open( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintPreviewDialog:printer( ... )
@@ -141,5 +141,5 @@ METHOD QPrintPreviewDialog:printer( ... )
    CASE 0
       RETURN QPrinterFromPointer( Qt_QPrintPreviewDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

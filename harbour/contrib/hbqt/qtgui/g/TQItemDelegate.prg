@@ -126,7 +126,7 @@ CREATE CLASS QItemDelegate INHERIT HbQtObjectHandler, HB_QAbstractItemDelegate F
 METHOD QItemDelegate:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QItemDelegate( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QItemDelegate:hasClipping( ... )
    CASE 0
       RETURN Qt_QItemDelegate_hasClipping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:itemEditorFactory( ... )
@@ -145,7 +145,7 @@ METHOD QItemDelegate:itemEditorFactory( ... )
    CASE 0
       RETURN QItemEditorFactoryFromPointer( Qt_QItemDelegate_itemEditorFactory( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:setClipping( ... )
@@ -157,7 +157,7 @@ METHOD QItemDelegate:setClipping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:setItemEditorFactory( ... )
@@ -169,7 +169,7 @@ METHOD QItemDelegate:setItemEditorFactory( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:createEditor( ... )
@@ -181,7 +181,7 @@ METHOD QItemDelegate:createEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:paint( ... )
@@ -193,7 +193,7 @@ METHOD QItemDelegate:paint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:setEditorData( ... )
@@ -205,7 +205,7 @@ METHOD QItemDelegate:setEditorData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:setModelData( ... )
@@ -217,7 +217,7 @@ METHOD QItemDelegate:setModelData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:sizeHint( ... )
@@ -229,7 +229,7 @@ METHOD QItemDelegate:sizeHint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QItemDelegate:updateEditorGeometry( ... )
@@ -241,5 +241,5 @@ METHOD QItemDelegate:updateEditorGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

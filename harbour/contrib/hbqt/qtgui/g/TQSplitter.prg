@@ -137,7 +137,7 @@ CREATE CLASS QSplitter INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSplitte
 METHOD QSplitter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSplitter( ... )
    RETURN Self
@@ -152,7 +152,7 @@ METHOD QSplitter:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:childrenCollapsible( ... )
@@ -160,7 +160,7 @@ METHOD QSplitter:childrenCollapsible( ... )
    CASE 0
       RETURN Qt_QSplitter_childrenCollapsible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:count( ... )
@@ -168,7 +168,7 @@ METHOD QSplitter:count( ... )
    CASE 0
       RETURN Qt_QSplitter_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:getRange( ... )
@@ -180,7 +180,7 @@ METHOD QSplitter:getRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:handleWidth( ... )
@@ -188,7 +188,7 @@ METHOD QSplitter:handleWidth( ... )
    CASE 0
       RETURN Qt_QSplitter_handleWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:indexOf( ... )
@@ -200,7 +200,7 @@ METHOD QSplitter:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:insertWidget( ... )
@@ -212,7 +212,7 @@ METHOD QSplitter:insertWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:isCollapsible( ... )
@@ -224,7 +224,7 @@ METHOD QSplitter:isCollapsible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:opaqueResize( ... )
@@ -232,7 +232,7 @@ METHOD QSplitter:opaqueResize( ... )
    CASE 0
       RETURN Qt_QSplitter_opaqueResize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:orientation( ... )
@@ -240,7 +240,7 @@ METHOD QSplitter:orientation( ... )
    CASE 0
       RETURN Qt_QSplitter_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:refresh( ... )
@@ -248,7 +248,7 @@ METHOD QSplitter:refresh( ... )
    CASE 0
       RETURN Qt_QSplitter_refresh( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:restoreState( ... )
@@ -260,7 +260,7 @@ METHOD QSplitter:restoreState( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:saveState( ... )
@@ -268,7 +268,7 @@ METHOD QSplitter:saveState( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QSplitter_saveState( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setChildrenCollapsible( ... )
@@ -280,7 +280,7 @@ METHOD QSplitter:setChildrenCollapsible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setCollapsible( ... )
@@ -292,7 +292,7 @@ METHOD QSplitter:setCollapsible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setHandleWidth( ... )
@@ -304,7 +304,7 @@ METHOD QSplitter:setHandleWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setOpaqueResize( ... )
@@ -318,7 +318,7 @@ METHOD QSplitter:setOpaqueResize( ... )
    CASE 0
       RETURN Qt_QSplitter_setOpaqueResize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setOrientation( ... )
@@ -330,7 +330,7 @@ METHOD QSplitter:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:setStretchFactor( ... )
@@ -342,7 +342,7 @@ METHOD QSplitter:setStretchFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:sizes( ... )
@@ -350,7 +350,7 @@ METHOD QSplitter:sizes( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QSplitter_sizes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplitter:widget( ... )
@@ -362,5 +362,5 @@ METHOD QSplitter:widget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

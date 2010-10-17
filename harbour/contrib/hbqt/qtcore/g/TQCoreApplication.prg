@@ -156,7 +156,7 @@ CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_
 METHOD QCoreApplication:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QCoreApplication( ... )
    RETURN Self
@@ -171,7 +171,7 @@ METHOD QCoreApplication:notify( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:addLibraryPath( ... )
@@ -183,7 +183,7 @@ METHOD QCoreApplication:addLibraryPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:applicationDirPath( ... )
@@ -191,7 +191,7 @@ METHOD QCoreApplication:applicationDirPath( ... )
    CASE 0
       RETURN Qt_QCoreApplication_applicationDirPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:applicationFilePath( ... )
@@ -199,7 +199,7 @@ METHOD QCoreApplication:applicationFilePath( ... )
    CASE 0
       RETURN Qt_QCoreApplication_applicationFilePath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:applicationName( ... )
@@ -207,7 +207,7 @@ METHOD QCoreApplication:applicationName( ... )
    CASE 0
       RETURN Qt_QCoreApplication_applicationName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:applicationPid( ... )
@@ -215,7 +215,7 @@ METHOD QCoreApplication:applicationPid( ... )
    CASE 0
       RETURN Qt_QCoreApplication_applicationPid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:applicationVersion( ... )
@@ -223,7 +223,7 @@ METHOD QCoreApplication:applicationVersion( ... )
    CASE 0
       RETURN Qt_QCoreApplication_applicationVersion( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:arguments( ... )
@@ -231,7 +231,7 @@ METHOD QCoreApplication:arguments( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QCoreApplication_arguments( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:closingDown( ... )
@@ -239,7 +239,7 @@ METHOD QCoreApplication:closingDown( ... )
    CASE 0
       RETURN Qt_QCoreApplication_closingDown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:exec( ... )
@@ -247,7 +247,7 @@ METHOD QCoreApplication:exec( ... )
    CASE 0
       RETURN Qt_QCoreApplication_exec( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:exit( ... )
@@ -261,7 +261,7 @@ METHOD QCoreApplication:exit( ... )
    CASE 0
       RETURN Qt_QCoreApplication_exit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:flush( ... )
@@ -269,7 +269,7 @@ METHOD QCoreApplication:flush( ... )
    CASE 0
       RETURN Qt_QCoreApplication_flush( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:hasPendingEvents( ... )
@@ -277,7 +277,7 @@ METHOD QCoreApplication:hasPendingEvents( ... )
    CASE 0
       RETURN Qt_QCoreApplication_hasPendingEvents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:installTranslator( ... )
@@ -289,7 +289,7 @@ METHOD QCoreApplication:installTranslator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:instance( ... )
@@ -297,7 +297,7 @@ METHOD QCoreApplication:instance( ... )
    CASE 0
       RETURN QCoreApplicationFromPointer( Qt_QCoreApplication_instance( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:libraryPaths( ... )
@@ -305,7 +305,7 @@ METHOD QCoreApplication:libraryPaths( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QCoreApplication_libraryPaths( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:organizationDomain( ... )
@@ -313,7 +313,7 @@ METHOD QCoreApplication:organizationDomain( ... )
    CASE 0
       RETURN Qt_QCoreApplication_organizationDomain( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:organizationName( ... )
@@ -321,7 +321,7 @@ METHOD QCoreApplication:organizationName( ... )
    CASE 0
       RETURN Qt_QCoreApplication_organizationName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:postEvent( ... )
@@ -339,7 +339,7 @@ METHOD QCoreApplication:postEvent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:processEvents( ... )
@@ -359,7 +359,7 @@ METHOD QCoreApplication:processEvents( ... )
    CASE 0
       RETURN Qt_QCoreApplication_processEvents( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:removeLibraryPath( ... )
@@ -371,7 +371,7 @@ METHOD QCoreApplication:removeLibraryPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:removePostedEvents( ... )
@@ -389,7 +389,7 @@ METHOD QCoreApplication:removePostedEvents( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:removeTranslator( ... )
@@ -401,7 +401,7 @@ METHOD QCoreApplication:removeTranslator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:sendEvent( ... )
@@ -413,7 +413,7 @@ METHOD QCoreApplication:sendEvent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:sendPostedEvents( ... )
@@ -427,7 +427,7 @@ METHOD QCoreApplication:sendPostedEvents( ... )
    CASE 0
       RETURN Qt_QCoreApplication_sendPostedEvents_1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setApplicationName( ... )
@@ -439,7 +439,7 @@ METHOD QCoreApplication:setApplicationName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setApplicationVersion( ... )
@@ -451,7 +451,7 @@ METHOD QCoreApplication:setApplicationVersion( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setAttribute( ... )
@@ -469,7 +469,7 @@ METHOD QCoreApplication:setAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setLibraryPaths( ... )
@@ -481,7 +481,7 @@ METHOD QCoreApplication:setLibraryPaths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setOrganizationDomain( ... )
@@ -493,7 +493,7 @@ METHOD QCoreApplication:setOrganizationDomain( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:setOrganizationName( ... )
@@ -505,7 +505,7 @@ METHOD QCoreApplication:setOrganizationName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:startingUp( ... )
@@ -513,7 +513,7 @@ METHOD QCoreApplication:startingUp( ... )
    CASE 0
       RETURN Qt_QCoreApplication_startingUp( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:testAttribute( ... )
@@ -525,7 +525,7 @@ METHOD QCoreApplication:testAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:translate( ... )
@@ -555,7 +555,7 @@ METHOD QCoreApplication:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QCoreApplication:quit( ... )
@@ -563,5 +563,5 @@ METHOD QCoreApplication:quit( ... )
    CASE 0
       RETURN Qt_QCoreApplication_quit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

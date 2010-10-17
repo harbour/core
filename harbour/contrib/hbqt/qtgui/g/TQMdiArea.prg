@@ -142,7 +142,7 @@ CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION
 METHOD QMdiArea:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMdiArea( ... )
    RETURN Self
@@ -153,7 +153,7 @@ METHOD QMdiArea:activationOrder( ... )
    CASE 0
       RETURN Qt_QMdiArea_activationOrder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:activeSubWindow( ... )
@@ -161,7 +161,7 @@ METHOD QMdiArea:activeSubWindow( ... )
    CASE 0
       RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_activeSubWindow( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:addSubWindow( ... )
@@ -179,7 +179,7 @@ METHOD QMdiArea:addSubWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:background( ... )
@@ -187,7 +187,7 @@ METHOD QMdiArea:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QMdiArea_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:currentSubWindow( ... )
@@ -195,7 +195,7 @@ METHOD QMdiArea:currentSubWindow( ... )
    CASE 0
       RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_currentSubWindow( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:documentMode( ... )
@@ -203,7 +203,7 @@ METHOD QMdiArea:documentMode( ... )
    CASE 0
       RETURN Qt_QMdiArea_documentMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:removeSubWindow( ... )
@@ -215,7 +215,7 @@ METHOD QMdiArea:removeSubWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setActivationOrder( ... )
@@ -227,7 +227,7 @@ METHOD QMdiArea:setActivationOrder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setBackground( ... )
@@ -239,7 +239,7 @@ METHOD QMdiArea:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setDocumentMode( ... )
@@ -251,7 +251,7 @@ METHOD QMdiArea:setDocumentMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setOption( ... )
@@ -269,7 +269,7 @@ METHOD QMdiArea:setOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setTabPosition( ... )
@@ -281,7 +281,7 @@ METHOD QMdiArea:setTabPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setTabShape( ... )
@@ -293,7 +293,7 @@ METHOD QMdiArea:setTabShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setViewMode( ... )
@@ -305,7 +305,7 @@ METHOD QMdiArea:setViewMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:subWindowList( ... )
@@ -319,7 +319,7 @@ METHOD QMdiArea:subWindowList( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:tabPosition( ... )
@@ -327,7 +327,7 @@ METHOD QMdiArea:tabPosition( ... )
    CASE 0
       RETURN Qt_QMdiArea_tabPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:tabShape( ... )
@@ -335,7 +335,7 @@ METHOD QMdiArea:tabShape( ... )
    CASE 0
       RETURN Qt_QMdiArea_tabShape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:testOption( ... )
@@ -347,7 +347,7 @@ METHOD QMdiArea:testOption( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:viewMode( ... )
@@ -355,7 +355,7 @@ METHOD QMdiArea:viewMode( ... )
    CASE 0
       RETURN Qt_QMdiArea_viewMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:activateNextSubWindow( ... )
@@ -363,7 +363,7 @@ METHOD QMdiArea:activateNextSubWindow( ... )
    CASE 0
       RETURN Qt_QMdiArea_activateNextSubWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:activatePreviousSubWindow( ... )
@@ -371,7 +371,7 @@ METHOD QMdiArea:activatePreviousSubWindow( ... )
    CASE 0
       RETURN Qt_QMdiArea_activatePreviousSubWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:cascadeSubWindows( ... )
@@ -379,7 +379,7 @@ METHOD QMdiArea:cascadeSubWindows( ... )
    CASE 0
       RETURN Qt_QMdiArea_cascadeSubWindows( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:closeActiveSubWindow( ... )
@@ -387,7 +387,7 @@ METHOD QMdiArea:closeActiveSubWindow( ... )
    CASE 0
       RETURN Qt_QMdiArea_closeActiveSubWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:closeAllSubWindows( ... )
@@ -395,7 +395,7 @@ METHOD QMdiArea:closeAllSubWindows( ... )
    CASE 0
       RETURN Qt_QMdiArea_closeAllSubWindows( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:setActiveSubWindow( ... )
@@ -407,7 +407,7 @@ METHOD QMdiArea:setActiveSubWindow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMdiArea:tileSubWindows( ... )
@@ -415,5 +415,5 @@ METHOD QMdiArea:tileSubWindows( ... )
    CASE 0
       RETURN Qt_QMdiArea_tileSubWindows( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

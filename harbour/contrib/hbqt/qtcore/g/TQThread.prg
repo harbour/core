@@ -130,7 +130,7 @@ CREATE CLASS QThread INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QThread
 METHOD QThread:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QThread( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QThread:exit( ... )
    CASE 0
       RETURN Qt_QThread_exit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:isFinished( ... )
@@ -155,7 +155,7 @@ METHOD QThread:isFinished( ... )
    CASE 0
       RETURN Qt_QThread_isFinished( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:isRunning( ... )
@@ -163,7 +163,7 @@ METHOD QThread:isRunning( ... )
    CASE 0
       RETURN Qt_QThread_isRunning( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:priority( ... )
@@ -171,7 +171,7 @@ METHOD QThread:priority( ... )
    CASE 0
       RETURN Qt_QThread_priority( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:setPriority( ... )
@@ -183,7 +183,7 @@ METHOD QThread:setPriority( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:setStackSize( ... )
@@ -195,7 +195,7 @@ METHOD QThread:setStackSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:stackSize( ... )
@@ -203,7 +203,7 @@ METHOD QThread:stackSize( ... )
    CASE 0
       RETURN Qt_QThread_stackSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:wait( ... )
@@ -217,7 +217,7 @@ METHOD QThread:wait( ... )
    CASE 0
       RETURN Qt_QThread_wait( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:currentThread( ... )
@@ -225,7 +225,7 @@ METHOD QThread:currentThread( ... )
    CASE 0
       RETURN QThreadFromPointer( Qt_QThread_currentThread( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:idealThreadCount( ... )
@@ -233,7 +233,7 @@ METHOD QThread:idealThreadCount( ... )
    CASE 0
       RETURN Qt_QThread_idealThreadCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:yieldCurrentThread( ... )
@@ -241,7 +241,7 @@ METHOD QThread:yieldCurrentThread( ... )
    CASE 0
       RETURN Qt_QThread_yieldCurrentThread( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:quit( ... )
@@ -249,7 +249,7 @@ METHOD QThread:quit( ... )
    CASE 0
       RETURN Qt_QThread_quit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:start( ... )
@@ -263,7 +263,7 @@ METHOD QThread:start( ... )
    CASE 0
       RETURN Qt_QThread_start( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QThread:terminate( ... )
@@ -271,5 +271,5 @@ METHOD QThread:terminate( ... )
    CASE 0
       RETURN Qt_QThread_terminate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

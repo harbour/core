@@ -130,7 +130,7 @@ CREATE CLASS QsciAPIs INHERIT HbQtObjectHandler, HB_QsciAbstractAPIs FUNCTION HB
 METHOD QsciAPIs:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciAPIs( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QsciAPIs:add( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:clear( ... )
@@ -153,7 +153,7 @@ METHOD QsciAPIs:clear( ... )
    CASE 0
       RETURN Qt_QsciAPIs_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:load( ... )
@@ -165,7 +165,7 @@ METHOD QsciAPIs:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:remove( ... )
@@ -177,7 +177,7 @@ METHOD QsciAPIs:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:prepare( ... )
@@ -185,7 +185,7 @@ METHOD QsciAPIs:prepare( ... )
    CASE 0
       RETURN Qt_QsciAPIs_prepare( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:cancelPreparation( ... )
@@ -193,7 +193,7 @@ METHOD QsciAPIs:cancelPreparation( ... )
    CASE 0
       RETURN Qt_QsciAPIs_cancelPreparation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:defaultPreparedName( ... )
@@ -201,7 +201,7 @@ METHOD QsciAPIs:defaultPreparedName( ... )
    CASE 0
       RETURN Qt_QsciAPIs_defaultPreparedName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:isPrepared( ... )
@@ -215,7 +215,7 @@ METHOD QsciAPIs:isPrepared( ... )
    CASE 0
       RETURN Qt_QsciAPIs_isPrepared( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:loadPrepared( ... )
@@ -229,7 +229,7 @@ METHOD QsciAPIs:loadPrepared( ... )
    CASE 0
       RETURN Qt_QsciAPIs_loadPrepared( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:savePrepared( ... )
@@ -243,7 +243,7 @@ METHOD QsciAPIs:savePrepared( ... )
    CASE 0
       RETURN Qt_QsciAPIs_savePrepared( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:updateAutoCompletionList( ... )
@@ -255,7 +255,7 @@ METHOD QsciAPIs:updateAutoCompletionList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:autoCompletionSelected( ... )
@@ -267,7 +267,7 @@ METHOD QsciAPIs:autoCompletionSelected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:event( ... )
@@ -279,7 +279,7 @@ METHOD QsciAPIs:event( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciAPIs:installedAPIFiles( ... )
@@ -287,5 +287,5 @@ METHOD QsciAPIs:installedAPIFiles( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QsciAPIs_installedAPIFiles( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -145,7 +145,7 @@ CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel F
 METHOD QFileSystemModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFileSystemModel( ... )
    RETURN Self
@@ -160,7 +160,7 @@ METHOD QFileSystemModel:dropMimeData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:fileIcon( ... )
@@ -172,7 +172,7 @@ METHOD QFileSystemModel:fileIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:fileInfo( ... )
@@ -184,7 +184,7 @@ METHOD QFileSystemModel:fileInfo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:fileName( ... )
@@ -196,7 +196,7 @@ METHOD QFileSystemModel:fileName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:filePath( ... )
@@ -208,7 +208,7 @@ METHOD QFileSystemModel:filePath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:filter( ... )
@@ -216,7 +216,7 @@ METHOD QFileSystemModel:filter( ... )
    CASE 0
       RETURN Qt_QFileSystemModel_filter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:index( ... )
@@ -234,7 +234,7 @@ METHOD QFileSystemModel:index( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:isDir( ... )
@@ -246,7 +246,7 @@ METHOD QFileSystemModel:isDir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:isReadOnly( ... )
@@ -254,7 +254,7 @@ METHOD QFileSystemModel:isReadOnly( ... )
    CASE 0
       RETURN Qt_QFileSystemModel_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:lastModified( ... )
@@ -266,7 +266,7 @@ METHOD QFileSystemModel:lastModified( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:mimeTypes( ... )
@@ -274,7 +274,7 @@ METHOD QFileSystemModel:mimeTypes( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QFileSystemModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:mkdir( ... )
@@ -286,7 +286,7 @@ METHOD QFileSystemModel:mkdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:myComputer( ... )
@@ -300,7 +300,7 @@ METHOD QFileSystemModel:myComputer( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:nameFilterDisables( ... )
@@ -308,7 +308,7 @@ METHOD QFileSystemModel:nameFilterDisables( ... )
    CASE 0
       RETURN Qt_QFileSystemModel_nameFilterDisables( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:nameFilters( ... )
@@ -316,7 +316,7 @@ METHOD QFileSystemModel:nameFilters( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QFileSystemModel_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:permissions( ... )
@@ -328,7 +328,7 @@ METHOD QFileSystemModel:permissions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:remove( ... )
@@ -340,7 +340,7 @@ METHOD QFileSystemModel:remove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:resolveSymlinks( ... )
@@ -348,7 +348,7 @@ METHOD QFileSystemModel:resolveSymlinks( ... )
    CASE 0
       RETURN Qt_QFileSystemModel_resolveSymlinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:rmdir( ... )
@@ -360,7 +360,7 @@ METHOD QFileSystemModel:rmdir( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:rootDirectory( ... )
@@ -368,7 +368,7 @@ METHOD QFileSystemModel:rootDirectory( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QFileSystemModel_rootDirectory( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:rootPath( ... )
@@ -376,7 +376,7 @@ METHOD QFileSystemModel:rootPath( ... )
    CASE 0
       RETURN Qt_QFileSystemModel_rootPath( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setFilter( ... )
@@ -388,7 +388,7 @@ METHOD QFileSystemModel:setFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setNameFilterDisables( ... )
@@ -400,7 +400,7 @@ METHOD QFileSystemModel:setNameFilterDisables( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setNameFilters( ... )
@@ -412,7 +412,7 @@ METHOD QFileSystemModel:setNameFilters( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setReadOnly( ... )
@@ -424,7 +424,7 @@ METHOD QFileSystemModel:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setResolveSymlinks( ... )
@@ -436,7 +436,7 @@ METHOD QFileSystemModel:setResolveSymlinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:setRootPath( ... )
@@ -448,7 +448,7 @@ METHOD QFileSystemModel:setRootPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:size( ... )
@@ -460,7 +460,7 @@ METHOD QFileSystemModel:size( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFileSystemModel:type( ... )
@@ -472,5 +472,5 @@ METHOD QFileSystemModel:type( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

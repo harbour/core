@@ -135,7 +135,7 @@ CREATE CLASS QStringRef INHERIT HbQtObjectHandler FUNCTION HB_QStringRef
 METHOD QStringRef:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStringRef( ... )
    RETURN Self
@@ -150,7 +150,7 @@ METHOD QStringRef:at( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:clear( ... )
@@ -158,7 +158,7 @@ METHOD QStringRef:clear( ... )
    CASE 0
       RETURN Qt_QStringRef_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:compare( ... )
@@ -192,7 +192,7 @@ METHOD QStringRef:compare( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:constData( ... )
@@ -200,7 +200,7 @@ METHOD QStringRef:constData( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QStringRef_constData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:count( ... )
@@ -208,7 +208,7 @@ METHOD QStringRef:count( ... )
    CASE 0
       RETURN Qt_QStringRef_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:data( ... )
@@ -216,7 +216,7 @@ METHOD QStringRef:data( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QStringRef_data( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:isEmpty( ... )
@@ -224,7 +224,7 @@ METHOD QStringRef:isEmpty( ... )
    CASE 0
       RETURN Qt_QStringRef_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:isNull( ... )
@@ -232,7 +232,7 @@ METHOD QStringRef:isNull( ... )
    CASE 0
       RETURN Qt_QStringRef_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:length( ... )
@@ -240,7 +240,7 @@ METHOD QStringRef:length( ... )
    CASE 0
       RETURN Qt_QStringRef_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:localeAwareCompare( ... )
@@ -262,7 +262,7 @@ METHOD QStringRef:localeAwareCompare( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:position( ... )
@@ -270,7 +270,7 @@ METHOD QStringRef:position( ... )
    CASE 0
       RETURN Qt_QStringRef_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:size( ... )
@@ -278,7 +278,7 @@ METHOD QStringRef:size( ... )
    CASE 0
       RETURN Qt_QStringRef_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStringRef:unicode( ... )
@@ -286,5 +286,5 @@ METHOD QStringRef:unicode( ... )
    CASE 0
       RETURN QCharFromPointer( Qt_QStringRef_unicode( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -171,7 +171,7 @@ CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QLineEd
 METHOD QLineEdit:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLineEdit( ... )
    RETURN Self
@@ -182,7 +182,7 @@ METHOD QLineEdit:alignment( ... )
    CASE 0
       RETURN Qt_QLineEdit_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:backspace( ... )
@@ -190,7 +190,7 @@ METHOD QLineEdit:backspace( ... )
    CASE 0
       RETURN Qt_QLineEdit_backspace( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:completer( ... )
@@ -198,7 +198,7 @@ METHOD QLineEdit:completer( ... )
    CASE 0
       RETURN QCompleterFromPointer( Qt_QLineEdit_completer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:createStandardContextMenu( ... )
@@ -206,7 +206,7 @@ METHOD QLineEdit:createStandardContextMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QLineEdit_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorBackward( ... )
@@ -224,7 +224,7 @@ METHOD QLineEdit:cursorBackward( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorForward( ... )
@@ -242,7 +242,7 @@ METHOD QLineEdit:cursorForward( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorPosition( ... )
@@ -250,7 +250,7 @@ METHOD QLineEdit:cursorPosition( ... )
    CASE 0
       RETURN Qt_QLineEdit_cursorPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorPositionAt( ... )
@@ -262,7 +262,7 @@ METHOD QLineEdit:cursorPositionAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorWordBackward( ... )
@@ -274,7 +274,7 @@ METHOD QLineEdit:cursorWordBackward( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cursorWordForward( ... )
@@ -286,7 +286,7 @@ METHOD QLineEdit:cursorWordForward( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:del( ... )
@@ -294,7 +294,7 @@ METHOD QLineEdit:del( ... )
    CASE 0
       RETURN Qt_QLineEdit_del( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:deselect( ... )
@@ -302,7 +302,7 @@ METHOD QLineEdit:deselect( ... )
    CASE 0
       RETURN Qt_QLineEdit_deselect( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:displayText( ... )
@@ -310,7 +310,7 @@ METHOD QLineEdit:displayText( ... )
    CASE 0
       RETURN Qt_QLineEdit_displayText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:dragEnabled( ... )
@@ -318,7 +318,7 @@ METHOD QLineEdit:dragEnabled( ... )
    CASE 0
       RETURN Qt_QLineEdit_dragEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:echoMode( ... )
@@ -326,7 +326,7 @@ METHOD QLineEdit:echoMode( ... )
    CASE 0
       RETURN Qt_QLineEdit_echoMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:end( ... )
@@ -338,7 +338,7 @@ METHOD QLineEdit:end( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:getTextMargins( ... )
@@ -350,7 +350,7 @@ METHOD QLineEdit:getTextMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:hasAcceptableInput( ... )
@@ -358,7 +358,7 @@ METHOD QLineEdit:hasAcceptableInput( ... )
    CASE 0
       RETURN Qt_QLineEdit_hasAcceptableInput( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:hasFrame( ... )
@@ -366,7 +366,7 @@ METHOD QLineEdit:hasFrame( ... )
    CASE 0
       RETURN Qt_QLineEdit_hasFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:hasSelectedText( ... )
@@ -374,7 +374,7 @@ METHOD QLineEdit:hasSelectedText( ... )
    CASE 0
       RETURN Qt_QLineEdit_hasSelectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:home( ... )
@@ -386,7 +386,7 @@ METHOD QLineEdit:home( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:inputMask( ... )
@@ -394,7 +394,7 @@ METHOD QLineEdit:inputMask( ... )
    CASE 0
       RETURN Qt_QLineEdit_inputMask( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:insert( ... )
@@ -406,7 +406,7 @@ METHOD QLineEdit:insert( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:isModified( ... )
@@ -414,7 +414,7 @@ METHOD QLineEdit:isModified( ... )
    CASE 0
       RETURN Qt_QLineEdit_isModified( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:isReadOnly( ... )
@@ -422,7 +422,7 @@ METHOD QLineEdit:isReadOnly( ... )
    CASE 0
       RETURN Qt_QLineEdit_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:isRedoAvailable( ... )
@@ -430,7 +430,7 @@ METHOD QLineEdit:isRedoAvailable( ... )
    CASE 0
       RETURN Qt_QLineEdit_isRedoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:isUndoAvailable( ... )
@@ -438,7 +438,7 @@ METHOD QLineEdit:isUndoAvailable( ... )
    CASE 0
       RETURN Qt_QLineEdit_isUndoAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:maxLength( ... )
@@ -446,7 +446,7 @@ METHOD QLineEdit:maxLength( ... )
    CASE 0
       RETURN Qt_QLineEdit_maxLength( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:minimumSizeHint( ... )
@@ -454,7 +454,7 @@ METHOD QLineEdit:minimumSizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLineEdit_minimumSizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:selectedText( ... )
@@ -462,7 +462,7 @@ METHOD QLineEdit:selectedText( ... )
    CASE 0
       RETURN Qt_QLineEdit_selectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:selectionStart( ... )
@@ -470,7 +470,7 @@ METHOD QLineEdit:selectionStart( ... )
    CASE 0
       RETURN Qt_QLineEdit_selectionStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setAlignment( ... )
@@ -482,7 +482,7 @@ METHOD QLineEdit:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setCompleter( ... )
@@ -494,7 +494,7 @@ METHOD QLineEdit:setCompleter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setCursorPosition( ... )
@@ -506,7 +506,7 @@ METHOD QLineEdit:setCursorPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setDragEnabled( ... )
@@ -518,7 +518,7 @@ METHOD QLineEdit:setDragEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setEchoMode( ... )
@@ -530,7 +530,7 @@ METHOD QLineEdit:setEchoMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setFrame( ... )
@@ -542,7 +542,7 @@ METHOD QLineEdit:setFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setInputMask( ... )
@@ -554,7 +554,7 @@ METHOD QLineEdit:setInputMask( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setMaxLength( ... )
@@ -566,7 +566,7 @@ METHOD QLineEdit:setMaxLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setModified( ... )
@@ -578,7 +578,7 @@ METHOD QLineEdit:setModified( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setReadOnly( ... )
@@ -590,7 +590,7 @@ METHOD QLineEdit:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setSelection( ... )
@@ -602,7 +602,7 @@ METHOD QLineEdit:setSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setTextMargins( ... )
@@ -614,7 +614,7 @@ METHOD QLineEdit:setTextMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setValidator( ... )
@@ -626,7 +626,7 @@ METHOD QLineEdit:setValidator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:sizeHint( ... )
@@ -634,7 +634,7 @@ METHOD QLineEdit:sizeHint( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QLineEdit_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:text( ... )
@@ -642,7 +642,7 @@ METHOD QLineEdit:text( ... )
    CASE 0
       RETURN Qt_QLineEdit_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:validator( ... )
@@ -650,7 +650,7 @@ METHOD QLineEdit:validator( ... )
    CASE 0
       RETURN QValidatorFromPointer( Qt_QLineEdit_validator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:clear( ... )
@@ -658,7 +658,7 @@ METHOD QLineEdit:clear( ... )
    CASE 0
       RETURN Qt_QLineEdit_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:copy( ... )
@@ -666,7 +666,7 @@ METHOD QLineEdit:copy( ... )
    CASE 0
       RETURN Qt_QLineEdit_copy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:cut( ... )
@@ -674,7 +674,7 @@ METHOD QLineEdit:cut( ... )
    CASE 0
       RETURN Qt_QLineEdit_cut( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:paste( ... )
@@ -682,7 +682,7 @@ METHOD QLineEdit:paste( ... )
    CASE 0
       RETURN Qt_QLineEdit_paste( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:redo( ... )
@@ -690,7 +690,7 @@ METHOD QLineEdit:redo( ... )
    CASE 0
       RETURN Qt_QLineEdit_redo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:selectAll( ... )
@@ -698,7 +698,7 @@ METHOD QLineEdit:selectAll( ... )
    CASE 0
       RETURN Qt_QLineEdit_selectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:setText( ... )
@@ -710,7 +710,7 @@ METHOD QLineEdit:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineEdit:undo( ... )
@@ -718,5 +718,5 @@ METHOD QLineEdit:undo( ... )
    CASE 0
       RETURN Qt_QLineEdit_undo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

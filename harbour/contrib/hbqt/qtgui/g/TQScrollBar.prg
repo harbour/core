@@ -116,7 +116,7 @@ CREATE CLASS QScrollBar INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION H
 METHOD QScrollBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QScrollBar( ... )
    RETURN Self

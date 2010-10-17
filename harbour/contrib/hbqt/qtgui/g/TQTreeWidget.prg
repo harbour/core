@@ -155,7 +155,7 @@ CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, HB_QTreeView FUNCTION HB_QTr
 METHOD QTreeWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTreeWidget( ... )
    RETURN Self
@@ -170,7 +170,7 @@ METHOD QTreeWidget:addTopLevelItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:closePersistentEditor( ... )
@@ -188,7 +188,7 @@ METHOD QTreeWidget:closePersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:columnCount( ... )
@@ -196,7 +196,7 @@ METHOD QTreeWidget:columnCount( ... )
    CASE 0
       RETURN Qt_QTreeWidget_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:currentColumn( ... )
@@ -204,7 +204,7 @@ METHOD QTreeWidget:currentColumn( ... )
    CASE 0
       RETURN Qt_QTreeWidget_currentColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:currentItem( ... )
@@ -212,7 +212,7 @@ METHOD QTreeWidget:currentItem( ... )
    CASE 0
       RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:editItem( ... )
@@ -230,7 +230,7 @@ METHOD QTreeWidget:editItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:findItems( ... )
@@ -248,7 +248,7 @@ METHOD QTreeWidget:findItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:headerItem( ... )
@@ -256,7 +256,7 @@ METHOD QTreeWidget:headerItem( ... )
    CASE 0
       RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_headerItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:indexOfTopLevelItem( ... )
@@ -268,7 +268,7 @@ METHOD QTreeWidget:indexOfTopLevelItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:insertTopLevelItem( ... )
@@ -280,7 +280,7 @@ METHOD QTreeWidget:insertTopLevelItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:invisibleRootItem( ... )
@@ -288,7 +288,7 @@ METHOD QTreeWidget:invisibleRootItem( ... )
    CASE 0
       RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_invisibleRootItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:isFirstItemColumnSpanned( ... )
@@ -300,7 +300,7 @@ METHOD QTreeWidget:isFirstItemColumnSpanned( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:itemAbove( ... )
@@ -312,7 +312,7 @@ METHOD QTreeWidget:itemAbove( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:itemAt( ... )
@@ -330,7 +330,7 @@ METHOD QTreeWidget:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:itemBelow( ... )
@@ -342,7 +342,7 @@ METHOD QTreeWidget:itemBelow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:itemWidget( ... )
@@ -354,7 +354,7 @@ METHOD QTreeWidget:itemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:openPersistentEditor( ... )
@@ -372,7 +372,7 @@ METHOD QTreeWidget:openPersistentEditor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:removeItemWidget( ... )
@@ -384,7 +384,7 @@ METHOD QTreeWidget:removeItemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:selectedItems( ... )
@@ -392,7 +392,7 @@ METHOD QTreeWidget:selectedItems( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QTreeWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setColumnCount( ... )
@@ -404,7 +404,7 @@ METHOD QTreeWidget:setColumnCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setCurrentItem( ... )
@@ -428,7 +428,7 @@ METHOD QTreeWidget:setCurrentItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setFirstItemColumnSpanned( ... )
@@ -440,7 +440,7 @@ METHOD QTreeWidget:setFirstItemColumnSpanned( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setHeaderItem( ... )
@@ -452,7 +452,7 @@ METHOD QTreeWidget:setHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setHeaderLabel( ... )
@@ -464,7 +464,7 @@ METHOD QTreeWidget:setHeaderLabel( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setHeaderLabels( ... )
@@ -476,7 +476,7 @@ METHOD QTreeWidget:setHeaderLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:setItemWidget( ... )
@@ -488,7 +488,7 @@ METHOD QTreeWidget:setItemWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:sortColumn( ... )
@@ -496,7 +496,7 @@ METHOD QTreeWidget:sortColumn( ... )
    CASE 0
       RETURN Qt_QTreeWidget_sortColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:sortItems( ... )
@@ -508,7 +508,7 @@ METHOD QTreeWidget:sortItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:takeTopLevelItem( ... )
@@ -520,7 +520,7 @@ METHOD QTreeWidget:takeTopLevelItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:topLevelItem( ... )
@@ -532,7 +532,7 @@ METHOD QTreeWidget:topLevelItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:topLevelItemCount( ... )
@@ -540,7 +540,7 @@ METHOD QTreeWidget:topLevelItemCount( ... )
    CASE 0
       RETURN Qt_QTreeWidget_topLevelItemCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:visualItemRect( ... )
@@ -552,7 +552,7 @@ METHOD QTreeWidget:visualItemRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:clear( ... )
@@ -560,7 +560,7 @@ METHOD QTreeWidget:clear( ... )
    CASE 0
       RETURN Qt_QTreeWidget_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:collapseItem( ... )
@@ -572,7 +572,7 @@ METHOD QTreeWidget:collapseItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:expandItem( ... )
@@ -584,7 +584,7 @@ METHOD QTreeWidget:expandItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTreeWidget:scrollToItem( ... )
@@ -602,5 +602,5 @@ METHOD QTreeWidget:scrollToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -126,7 +126,7 @@ CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QDropEv
 METHOD QDropEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDropEvent( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QDropEvent:acceptProposedAction( ... )
    CASE 0
       RETURN Qt_QDropEvent_acceptProposedAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:dropAction( ... )
@@ -145,7 +145,7 @@ METHOD QDropEvent:dropAction( ... )
    CASE 0
       RETURN Qt_QDropEvent_dropAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:keyboardModifiers( ... )
@@ -153,7 +153,7 @@ METHOD QDropEvent:keyboardModifiers( ... )
    CASE 0
       RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:mimeData( ... )
@@ -161,7 +161,7 @@ METHOD QDropEvent:mimeData( ... )
    CASE 0
       RETURN QMimeDataFromPointer( Qt_QDropEvent_mimeData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:mouseButtons( ... )
@@ -169,7 +169,7 @@ METHOD QDropEvent:mouseButtons( ... )
    CASE 0
       RETURN Qt_QDropEvent_mouseButtons( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:pos( ... )
@@ -177,7 +177,7 @@ METHOD QDropEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QDropEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:possibleActions( ... )
@@ -185,7 +185,7 @@ METHOD QDropEvent:possibleActions( ... )
    CASE 0
       RETURN Qt_QDropEvent_possibleActions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:proposedAction( ... )
@@ -193,7 +193,7 @@ METHOD QDropEvent:proposedAction( ... )
    CASE 0
       RETURN Qt_QDropEvent_proposedAction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:setDropAction( ... )
@@ -205,7 +205,7 @@ METHOD QDropEvent:setDropAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDropEvent:source( ... )
@@ -213,5 +213,5 @@ METHOD QDropEvent:source( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QDropEvent_source( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

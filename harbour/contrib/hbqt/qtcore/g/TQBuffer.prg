@@ -121,7 +121,7 @@ CREATE CLASS QBuffer INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QBuffer
 METHOD QBuffer:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QBuffer( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QBuffer:buffer( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QBuffer_buffer( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBuffer:data( ... )
@@ -140,7 +140,7 @@ METHOD QBuffer:data( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QBuffer_data( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBuffer:setBuffer( ... )
@@ -152,7 +152,7 @@ METHOD QBuffer:setBuffer( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBuffer:setData( ... )
@@ -170,5 +170,5 @@ METHOD QBuffer:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

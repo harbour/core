@@ -128,7 +128,7 @@ CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler FUNCTION HB_QPaintDevice
 METHOD QPaintDevice:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPaintDevice( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QPaintDevice:depth( ... )
    CASE 0
       RETURN Qt_QPaintDevice_depth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:height( ... )
@@ -147,7 +147,7 @@ METHOD QPaintDevice:height( ... )
    CASE 0
       RETURN Qt_QPaintDevice_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:heightMM( ... )
@@ -155,7 +155,7 @@ METHOD QPaintDevice:heightMM( ... )
    CASE 0
       RETURN Qt_QPaintDevice_heightMM( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:logicalDpiX( ... )
@@ -163,7 +163,7 @@ METHOD QPaintDevice:logicalDpiX( ... )
    CASE 0
       RETURN Qt_QPaintDevice_logicalDpiX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:logicalDpiY( ... )
@@ -171,7 +171,7 @@ METHOD QPaintDevice:logicalDpiY( ... )
    CASE 0
       RETURN Qt_QPaintDevice_logicalDpiY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:numColors( ... )
@@ -179,7 +179,7 @@ METHOD QPaintDevice:numColors( ... )
    CASE 0
       RETURN Qt_QPaintDevice_numColors( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:paintEngine( ... )
@@ -187,7 +187,7 @@ METHOD QPaintDevice:paintEngine( ... )
    CASE 0
       RETURN QPaintEngineFromPointer( Qt_QPaintDevice_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:paintingActive( ... )
@@ -195,7 +195,7 @@ METHOD QPaintDevice:paintingActive( ... )
    CASE 0
       RETURN Qt_QPaintDevice_paintingActive( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:physicalDpiX( ... )
@@ -203,7 +203,7 @@ METHOD QPaintDevice:physicalDpiX( ... )
    CASE 0
       RETURN Qt_QPaintDevice_physicalDpiX( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:physicalDpiY( ... )
@@ -211,7 +211,7 @@ METHOD QPaintDevice:physicalDpiY( ... )
    CASE 0
       RETURN Qt_QPaintDevice_physicalDpiY( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:width( ... )
@@ -219,7 +219,7 @@ METHOD QPaintDevice:width( ... )
    CASE 0
       RETURN Qt_QPaintDevice_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPaintDevice:widthMM( ... )
@@ -227,5 +227,5 @@ METHOD QPaintDevice:widthMM( ... )
    CASE 0
       RETURN Qt_QPaintDevice_widthMM( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

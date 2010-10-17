@@ -122,7 +122,7 @@ CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QSyntaxHighlight
 METHOD HBQSyntaxHighlighter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQSyntaxHighlighter( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD HBQSyntaxHighlighter:hbSetMultiLineCommentFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( ... )
@@ -149,7 +149,7 @@ METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQSyntaxHighlighter:hbSetRule( ... )
@@ -161,7 +161,7 @@ METHOD HBQSyntaxHighlighter:hbSetRule( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQSyntaxHighlighter:hbSetFormat( ... )
@@ -173,7 +173,7 @@ METHOD HBQSyntaxHighlighter:hbSetFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( ... )
@@ -185,7 +185,7 @@ METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQSyntaxHighlighter:hbSetRuleWithRegExp( ... )
@@ -197,5 +197,5 @@ METHOD HBQSyntaxHighlighter:hbSetRuleWithRegExp( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

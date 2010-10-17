@@ -134,7 +134,7 @@ CREATE CLASS QRegion INHERIT HbQtObjectHandler FUNCTION HB_QRegion
 METHOD QRegion:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QRegion( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QRegion:boundingRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QRegion_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:contains( ... )
@@ -162,7 +162,7 @@ METHOD QRegion:contains( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:intersected( ... )
@@ -179,7 +179,7 @@ METHOD QRegion:intersected( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:intersects( ... )
@@ -196,7 +196,7 @@ METHOD QRegion:intersects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:isEmpty( ... )
@@ -204,7 +204,7 @@ METHOD QRegion:isEmpty( ... )
    CASE 0
       RETURN Qt_QRegion_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:numRects( ... )
@@ -212,7 +212,7 @@ METHOD QRegion:numRects( ... )
    CASE 0
       RETURN Qt_QRegion_numRects( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:setRects( ... )
@@ -224,7 +224,7 @@ METHOD QRegion:setRects( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:subtracted( ... )
@@ -236,7 +236,7 @@ METHOD QRegion:subtracted( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:translate( ... )
@@ -254,7 +254,7 @@ METHOD QRegion:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:translated( ... )
@@ -272,7 +272,7 @@ METHOD QRegion:translated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:united( ... )
@@ -289,7 +289,7 @@ METHOD QRegion:united( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRegion:xored( ... )
@@ -301,5 +301,5 @@ METHOD QRegion:xored( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

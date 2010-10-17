@@ -140,7 +140,7 @@ CREATE CLASS QSortFilterProxyModel INHERIT HbQtObjectHandler, HB_QAbstractProxyM
 METHOD QSortFilterProxyModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSortFilterProxyModel( ... )
    RETURN Self
@@ -151,7 +151,7 @@ METHOD QSortFilterProxyModel:dynamicSortFilter( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_dynamicSortFilter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:filterCaseSensitivity( ... )
@@ -159,7 +159,7 @@ METHOD QSortFilterProxyModel:filterCaseSensitivity( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_filterCaseSensitivity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:filterKeyColumn( ... )
@@ -167,7 +167,7 @@ METHOD QSortFilterProxyModel:filterKeyColumn( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_filterKeyColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:filterRegExp( ... )
@@ -175,7 +175,7 @@ METHOD QSortFilterProxyModel:filterRegExp( ... )
    CASE 0
       RETURN QRegExpFromPointer( Qt_QSortFilterProxyModel_filterRegExp( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:filterRole( ... )
@@ -183,7 +183,7 @@ METHOD QSortFilterProxyModel:filterRole( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_filterRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:isSortLocaleAware( ... )
@@ -191,7 +191,7 @@ METHOD QSortFilterProxyModel:isSortLocaleAware( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_isSortLocaleAware( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:mapFromSource( ... )
@@ -203,7 +203,7 @@ METHOD QSortFilterProxyModel:mapFromSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:mapToSource( ... )
@@ -215,7 +215,7 @@ METHOD QSortFilterProxyModel:mapToSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setDynamicSortFilter( ... )
@@ -227,7 +227,7 @@ METHOD QSortFilterProxyModel:setDynamicSortFilter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterCaseSensitivity( ... )
@@ -239,7 +239,7 @@ METHOD QSortFilterProxyModel:setFilterCaseSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterKeyColumn( ... )
@@ -251,7 +251,7 @@ METHOD QSortFilterProxyModel:setFilterKeyColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterRegExp( ... )
@@ -265,7 +265,7 @@ METHOD QSortFilterProxyModel:setFilterRegExp( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterRole( ... )
@@ -277,7 +277,7 @@ METHOD QSortFilterProxyModel:setFilterRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setSortCaseSensitivity( ... )
@@ -289,7 +289,7 @@ METHOD QSortFilterProxyModel:setSortCaseSensitivity( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setSortLocaleAware( ... )
@@ -301,7 +301,7 @@ METHOD QSortFilterProxyModel:setSortLocaleAware( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setSortRole( ... )
@@ -313,7 +313,7 @@ METHOD QSortFilterProxyModel:setSortRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:sortCaseSensitivity( ... )
@@ -321,7 +321,7 @@ METHOD QSortFilterProxyModel:sortCaseSensitivity( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_sortCaseSensitivity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:sortColumn( ... )
@@ -329,7 +329,7 @@ METHOD QSortFilterProxyModel:sortColumn( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_sortColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:sortOrder( ... )
@@ -337,7 +337,7 @@ METHOD QSortFilterProxyModel:sortOrder( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_sortOrder( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:sortRole( ... )
@@ -345,7 +345,7 @@ METHOD QSortFilterProxyModel:sortRole( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_sortRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:invalidate( ... )
@@ -353,7 +353,7 @@ METHOD QSortFilterProxyModel:invalidate( ... )
    CASE 0
       RETURN Qt_QSortFilterProxyModel_invalidate( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterFixedString( ... )
@@ -365,7 +365,7 @@ METHOD QSortFilterProxyModel:setFilterFixedString( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSortFilterProxyModel:setFilterWildcard( ... )
@@ -377,5 +377,5 @@ METHOD QSortFilterProxyModel:setFilterWildcard( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -118,7 +118,7 @@ CREATE CLASS QValidator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QValid
 METHOD QValidator:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QValidator( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QValidator:locale( ... )
    CASE 0
       RETURN QLocaleFromPointer( Qt_QValidator_locale( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QValidator:setLocale( ... )
@@ -141,5 +141,5 @@ METHOD QValidator:setLocale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

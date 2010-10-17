@@ -125,7 +125,7 @@ CREATE CLASS QPushButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION 
 METHOD QPushButton:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPushButton( ... )
    RETURN Self
@@ -136,7 +136,7 @@ METHOD QPushButton:autoDefault( ... )
    CASE 0
       RETURN Qt_QPushButton_autoDefault( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:isDefault( ... )
@@ -144,7 +144,7 @@ METHOD QPushButton:isDefault( ... )
    CASE 0
       RETURN Qt_QPushButton_isDefault( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:isFlat( ... )
@@ -152,7 +152,7 @@ METHOD QPushButton:isFlat( ... )
    CASE 0
       RETURN Qt_QPushButton_isFlat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:menu( ... )
@@ -160,7 +160,7 @@ METHOD QPushButton:menu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QPushButton_menu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:setAutoDefault( ... )
@@ -172,7 +172,7 @@ METHOD QPushButton:setAutoDefault( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:setDefault( ... )
@@ -184,7 +184,7 @@ METHOD QPushButton:setDefault( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:setFlat( ... )
@@ -196,7 +196,7 @@ METHOD QPushButton:setFlat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:setMenu( ... )
@@ -208,7 +208,7 @@ METHOD QPushButton:setMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPushButton:showMenu( ... )
@@ -216,5 +216,5 @@ METHOD QPushButton:showMenu( ... )
    CASE 0
       RETURN Qt_QPushButton_showMenu( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

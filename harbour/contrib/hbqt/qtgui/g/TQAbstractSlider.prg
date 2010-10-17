@@ -140,7 +140,7 @@ CREATE CLASS QAbstractSlider INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 METHOD QAbstractSlider:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractSlider( ... )
    RETURN Self
@@ -151,7 +151,7 @@ METHOD QAbstractSlider:hasTracking( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_hasTracking( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:invertedAppearance( ... )
@@ -159,7 +159,7 @@ METHOD QAbstractSlider:invertedAppearance( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_invertedAppearance( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:invertedControls( ... )
@@ -167,7 +167,7 @@ METHOD QAbstractSlider:invertedControls( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_invertedControls( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:isSliderDown( ... )
@@ -175,7 +175,7 @@ METHOD QAbstractSlider:isSliderDown( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_isSliderDown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:maximum( ... )
@@ -183,7 +183,7 @@ METHOD QAbstractSlider:maximum( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:minimum( ... )
@@ -191,7 +191,7 @@ METHOD QAbstractSlider:minimum( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:orientation( ... )
@@ -199,7 +199,7 @@ METHOD QAbstractSlider:orientation( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:pageStep( ... )
@@ -207,7 +207,7 @@ METHOD QAbstractSlider:pageStep( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_pageStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setInvertedAppearance( ... )
@@ -219,7 +219,7 @@ METHOD QAbstractSlider:setInvertedAppearance( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setInvertedControls( ... )
@@ -231,7 +231,7 @@ METHOD QAbstractSlider:setInvertedControls( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setMaximum( ... )
@@ -243,7 +243,7 @@ METHOD QAbstractSlider:setMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setMinimum( ... )
@@ -255,7 +255,7 @@ METHOD QAbstractSlider:setMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setPageStep( ... )
@@ -267,7 +267,7 @@ METHOD QAbstractSlider:setPageStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setRange( ... )
@@ -279,7 +279,7 @@ METHOD QAbstractSlider:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setSingleStep( ... )
@@ -291,7 +291,7 @@ METHOD QAbstractSlider:setSingleStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setSliderDown( ... )
@@ -303,7 +303,7 @@ METHOD QAbstractSlider:setSliderDown( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setSliderPosition( ... )
@@ -315,7 +315,7 @@ METHOD QAbstractSlider:setSliderPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setTracking( ... )
@@ -327,7 +327,7 @@ METHOD QAbstractSlider:setTracking( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:singleStep( ... )
@@ -335,7 +335,7 @@ METHOD QAbstractSlider:singleStep( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_singleStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:sliderPosition( ... )
@@ -343,7 +343,7 @@ METHOD QAbstractSlider:sliderPosition( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_sliderPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:triggerAction( ... )
@@ -355,7 +355,7 @@ METHOD QAbstractSlider:triggerAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:value( ... )
@@ -363,7 +363,7 @@ METHOD QAbstractSlider:value( ... )
    CASE 0
       RETURN Qt_QAbstractSlider_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setOrientation( ... )
@@ -375,7 +375,7 @@ METHOD QAbstractSlider:setOrientation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractSlider:setValue( ... )
@@ -387,5 +387,5 @@ METHOD QAbstractSlider:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

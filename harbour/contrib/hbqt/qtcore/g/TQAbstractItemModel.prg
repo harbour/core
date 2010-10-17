@@ -148,7 +148,7 @@ CREATE CLASS QAbstractItemModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION H
 METHOD QAbstractItemModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractItemModel( ... )
    RETURN Self
@@ -163,7 +163,7 @@ METHOD QAbstractItemModel:buddy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:canFetchMore( ... )
@@ -175,7 +175,7 @@ METHOD QAbstractItemModel:canFetchMore( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:columnCount( ... )
@@ -189,7 +189,7 @@ METHOD QAbstractItemModel:columnCount( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:data( ... )
@@ -207,7 +207,7 @@ METHOD QAbstractItemModel:data( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:dropMimeData( ... )
@@ -219,7 +219,7 @@ METHOD QAbstractItemModel:dropMimeData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:fetchMore( ... )
@@ -231,7 +231,7 @@ METHOD QAbstractItemModel:fetchMore( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:flags( ... )
@@ -243,7 +243,7 @@ METHOD QAbstractItemModel:flags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:hasChildren( ... )
@@ -257,7 +257,7 @@ METHOD QAbstractItemModel:hasChildren( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:hasIndex( ... )
@@ -275,7 +275,7 @@ METHOD QAbstractItemModel:hasIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:headerData( ... )
@@ -293,7 +293,7 @@ METHOD QAbstractItemModel:headerData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:index( ... )
@@ -311,7 +311,7 @@ METHOD QAbstractItemModel:index( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:insertColumn( ... )
@@ -329,7 +329,7 @@ METHOD QAbstractItemModel:insertColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:insertColumns( ... )
@@ -347,7 +347,7 @@ METHOD QAbstractItemModel:insertColumns( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:insertRow( ... )
@@ -365,7 +365,7 @@ METHOD QAbstractItemModel:insertRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:insertRows( ... )
@@ -383,7 +383,7 @@ METHOD QAbstractItemModel:insertRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:mimeTypes( ... )
@@ -391,7 +391,7 @@ METHOD QAbstractItemModel:mimeTypes( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QAbstractItemModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:parent( ... )
@@ -403,7 +403,7 @@ METHOD QAbstractItemModel:parent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:removeColumn( ... )
@@ -421,7 +421,7 @@ METHOD QAbstractItemModel:removeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:removeColumns( ... )
@@ -439,7 +439,7 @@ METHOD QAbstractItemModel:removeColumns( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:removeRow( ... )
@@ -457,7 +457,7 @@ METHOD QAbstractItemModel:removeRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:removeRows( ... )
@@ -475,7 +475,7 @@ METHOD QAbstractItemModel:removeRows( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:rowCount( ... )
@@ -489,7 +489,7 @@ METHOD QAbstractItemModel:rowCount( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:setData( ... )
@@ -507,7 +507,7 @@ METHOD QAbstractItemModel:setData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:setHeaderData( ... )
@@ -525,7 +525,7 @@ METHOD QAbstractItemModel:setHeaderData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:setSupportedDragActions( ... )
@@ -537,7 +537,7 @@ METHOD QAbstractItemModel:setSupportedDragActions( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:sibling( ... )
@@ -549,7 +549,7 @@ METHOD QAbstractItemModel:sibling( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:sort( ... )
@@ -567,7 +567,7 @@ METHOD QAbstractItemModel:sort( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:span( ... )
@@ -579,7 +579,7 @@ METHOD QAbstractItemModel:span( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:supportedDragActions( ... )
@@ -587,7 +587,7 @@ METHOD QAbstractItemModel:supportedDragActions( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_supportedDragActions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:supportedDropActions( ... )
@@ -595,7 +595,7 @@ METHOD QAbstractItemModel:supportedDropActions( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_supportedDropActions( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:revert( ... )
@@ -603,7 +603,7 @@ METHOD QAbstractItemModel:revert( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_revert( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractItemModel:submit( ... )
@@ -611,5 +611,5 @@ METHOD QAbstractItemModel:submit( ... )
    CASE 0
       RETURN Qt_QAbstractItemModel_submit( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

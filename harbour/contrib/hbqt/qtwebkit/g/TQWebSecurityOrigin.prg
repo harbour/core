@@ -123,7 +123,7 @@ CREATE CLASS QWebSecurityOrigin INHERIT HbQtObjectHandler FUNCTION HB_QWebSecuri
 METHOD QWebSecurityOrigin:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebSecurityOrigin( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QWebSecurityOrigin:databaseQuota( ... )
    CASE 0
       RETURN Qt_QWebSecurityOrigin_databaseQuota( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:databaseUsage( ... )
@@ -142,7 +142,7 @@ METHOD QWebSecurityOrigin:databaseUsage( ... )
    CASE 0
       RETURN Qt_QWebSecurityOrigin_databaseUsage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:host( ... )
@@ -150,7 +150,7 @@ METHOD QWebSecurityOrigin:host( ... )
    CASE 0
       RETURN Qt_QWebSecurityOrigin_host( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:port( ... )
@@ -158,7 +158,7 @@ METHOD QWebSecurityOrigin:port( ... )
    CASE 0
       RETURN Qt_QWebSecurityOrigin_port( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:scheme( ... )
@@ -166,7 +166,7 @@ METHOD QWebSecurityOrigin:scheme( ... )
    CASE 0
       RETURN Qt_QWebSecurityOrigin_scheme( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:setDatabaseQuota( ... )
@@ -178,7 +178,7 @@ METHOD QWebSecurityOrigin:setDatabaseQuota( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebSecurityOrigin:allOrigins( ... )
@@ -186,5 +186,5 @@ METHOD QWebSecurityOrigin:allOrigins( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QWebSecurityOrigin_allOrigins( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

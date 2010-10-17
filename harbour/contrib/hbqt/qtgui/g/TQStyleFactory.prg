@@ -118,7 +118,7 @@ CREATE CLASS QStyleFactory INHERIT HbQtObjectHandler FUNCTION HB_QStyleFactory
 METHOD QStyleFactory:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleFactory( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QStyleFactory:create( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleFactory:keys( ... )
@@ -141,5 +141,5 @@ METHOD QStyleFactory:keys( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QStyleFactory_keys( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

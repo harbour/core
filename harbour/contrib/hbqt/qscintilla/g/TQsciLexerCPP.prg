@@ -143,7 +143,7 @@ CREATE CLASS QsciLexerCPP INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION HB_Qs
 METHOD QsciLexerCPP:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QsciLexerCPP( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QsciLexerCPP:language( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_language( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:lexer( ... )
@@ -162,7 +162,7 @@ METHOD QsciLexerCPP:lexer( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_lexer( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:autoCompletionWordSeparators( ... )
@@ -170,7 +170,7 @@ METHOD QsciLexerCPP:autoCompletionWordSeparators( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QsciLexerCPP_autoCompletionWordSeparators( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:blockEnd( ... )
@@ -184,7 +184,7 @@ METHOD QsciLexerCPP:blockEnd( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_blockEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:blockStart( ... )
@@ -198,7 +198,7 @@ METHOD QsciLexerCPP:blockStart( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_blockStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:blockStartKeyword( ... )
@@ -212,7 +212,7 @@ METHOD QsciLexerCPP:blockStartKeyword( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_blockStartKeyword( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:braceStyle( ... )
@@ -220,7 +220,7 @@ METHOD QsciLexerCPP:braceStyle( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_braceStyle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:wordCharacters( ... )
@@ -228,7 +228,7 @@ METHOD QsciLexerCPP:wordCharacters( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_wordCharacters( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:defaultColor( ... )
@@ -240,7 +240,7 @@ METHOD QsciLexerCPP:defaultColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:defaultEolFill( ... )
@@ -252,7 +252,7 @@ METHOD QsciLexerCPP:defaultEolFill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:defaultFont( ... )
@@ -264,7 +264,7 @@ METHOD QsciLexerCPP:defaultFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:defaultPaper( ... )
@@ -276,7 +276,7 @@ METHOD QsciLexerCPP:defaultPaper( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:keywords( ... )
@@ -288,7 +288,7 @@ METHOD QsciLexerCPP:keywords( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:description( ... )
@@ -300,7 +300,7 @@ METHOD QsciLexerCPP:description( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:refreshProperties( ... )
@@ -308,7 +308,7 @@ METHOD QsciLexerCPP:refreshProperties( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_refreshProperties( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:foldAtElse( ... )
@@ -316,7 +316,7 @@ METHOD QsciLexerCPP:foldAtElse( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_foldAtElse( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:foldComments( ... )
@@ -324,7 +324,7 @@ METHOD QsciLexerCPP:foldComments( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_foldComments( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:foldCompact( ... )
@@ -332,7 +332,7 @@ METHOD QsciLexerCPP:foldCompact( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_foldCompact( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:foldPreprocessor( ... )
@@ -340,7 +340,7 @@ METHOD QsciLexerCPP:foldPreprocessor( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_foldPreprocessor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:stylePreprocessor( ... )
@@ -348,7 +348,7 @@ METHOD QsciLexerCPP:stylePreprocessor( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_stylePreprocessor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setDollarsAllowed( ... )
@@ -360,7 +360,7 @@ METHOD QsciLexerCPP:setDollarsAllowed( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:dollarsAllowed( ... )
@@ -368,7 +368,7 @@ METHOD QsciLexerCPP:dollarsAllowed( ... )
    CASE 0
       RETURN Qt_QsciLexerCPP_dollarsAllowed( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setFoldAtElse( ... )
@@ -380,7 +380,7 @@ METHOD QsciLexerCPP:setFoldAtElse( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setFoldComments( ... )
@@ -392,7 +392,7 @@ METHOD QsciLexerCPP:setFoldComments( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setFoldCompact( ... )
@@ -404,7 +404,7 @@ METHOD QsciLexerCPP:setFoldCompact( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setFoldPreprocessor( ... )
@@ -416,7 +416,7 @@ METHOD QsciLexerCPP:setFoldPreprocessor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QsciLexerCPP:setStylePreprocessor( ... )
@@ -428,5 +428,5 @@ METHOD QsciLexerCPP:setStylePreprocessor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

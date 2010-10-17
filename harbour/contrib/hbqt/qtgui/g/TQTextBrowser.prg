@@ -136,7 +136,7 @@ CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, HB_QTextEdit FUNCTION HB_QT
 METHOD QTextBrowser:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextBrowser( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QTextBrowser:backwardHistoryCount( ... )
    CASE 0
       RETURN Qt_QTextBrowser_backwardHistoryCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:clearHistory( ... )
@@ -155,7 +155,7 @@ METHOD QTextBrowser:clearHistory( ... )
    CASE 0
       RETURN Qt_QTextBrowser_clearHistory( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:forwardHistoryCount( ... )
@@ -163,7 +163,7 @@ METHOD QTextBrowser:forwardHistoryCount( ... )
    CASE 0
       RETURN Qt_QTextBrowser_forwardHistoryCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:historyTitle( ... )
@@ -175,7 +175,7 @@ METHOD QTextBrowser:historyTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:historyUrl( ... )
@@ -187,7 +187,7 @@ METHOD QTextBrowser:historyUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:isBackwardAvailable( ... )
@@ -195,7 +195,7 @@ METHOD QTextBrowser:isBackwardAvailable( ... )
    CASE 0
       RETURN Qt_QTextBrowser_isBackwardAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:isForwardAvailable( ... )
@@ -203,7 +203,7 @@ METHOD QTextBrowser:isForwardAvailable( ... )
    CASE 0
       RETURN Qt_QTextBrowser_isForwardAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:loadResource( ... )
@@ -215,7 +215,7 @@ METHOD QTextBrowser:loadResource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:openExternalLinks( ... )
@@ -223,7 +223,7 @@ METHOD QTextBrowser:openExternalLinks( ... )
    CASE 0
       RETURN Qt_QTextBrowser_openExternalLinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:openLinks( ... )
@@ -231,7 +231,7 @@ METHOD QTextBrowser:openLinks( ... )
    CASE 0
       RETURN Qt_QTextBrowser_openLinks( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:searchPaths( ... )
@@ -239,7 +239,7 @@ METHOD QTextBrowser:searchPaths( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QTextBrowser_searchPaths( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:setOpenExternalLinks( ... )
@@ -251,7 +251,7 @@ METHOD QTextBrowser:setOpenExternalLinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:setOpenLinks( ... )
@@ -263,7 +263,7 @@ METHOD QTextBrowser:setOpenLinks( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:setSearchPaths( ... )
@@ -275,7 +275,7 @@ METHOD QTextBrowser:setSearchPaths( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:source( ... )
@@ -283,7 +283,7 @@ METHOD QTextBrowser:source( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QTextBrowser_source( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:backward( ... )
@@ -291,7 +291,7 @@ METHOD QTextBrowser:backward( ... )
    CASE 0
       RETURN Qt_QTextBrowser_backward( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:forward( ... )
@@ -299,7 +299,7 @@ METHOD QTextBrowser:forward( ... )
    CASE 0
       RETURN Qt_QTextBrowser_forward( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:home( ... )
@@ -307,7 +307,7 @@ METHOD QTextBrowser:home( ... )
    CASE 0
       RETURN Qt_QTextBrowser_home( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:reload( ... )
@@ -315,7 +315,7 @@ METHOD QTextBrowser:reload( ... )
    CASE 0
       RETURN Qt_QTextBrowser_reload( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextBrowser:setSource( ... )
@@ -327,5 +327,5 @@ METHOD QTextBrowser:setSource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

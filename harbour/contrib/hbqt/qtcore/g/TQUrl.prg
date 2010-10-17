@@ -186,7 +186,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
 METHOD QUrl:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QUrl( ... )
    RETURN Self
@@ -201,7 +201,7 @@ METHOD QUrl:addEncodedQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:addQueryItem( ... )
@@ -213,7 +213,7 @@ METHOD QUrl:addQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:allEncodedQueryItemValues( ... )
@@ -225,7 +225,7 @@ METHOD QUrl:allEncodedQueryItemValues( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:allQueryItemValues( ... )
@@ -237,7 +237,7 @@ METHOD QUrl:allQueryItemValues( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:authority( ... )
@@ -245,7 +245,7 @@ METHOD QUrl:authority( ... )
    CASE 0
       RETURN Qt_QUrl_authority( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:clear( ... )
@@ -253,7 +253,7 @@ METHOD QUrl:clear( ... )
    CASE 0
       RETURN Qt_QUrl_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedFragment( ... )
@@ -261,7 +261,7 @@ METHOD QUrl:encodedFragment( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedFragment( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedHost( ... )
@@ -269,7 +269,7 @@ METHOD QUrl:encodedHost( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedHost( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedPassword( ... )
@@ -277,7 +277,7 @@ METHOD QUrl:encodedPassword( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedPassword( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedPath( ... )
@@ -285,7 +285,7 @@ METHOD QUrl:encodedPath( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedPath( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedQuery( ... )
@@ -293,7 +293,7 @@ METHOD QUrl:encodedQuery( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedQuery( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedQueryItemValue( ... )
@@ -305,7 +305,7 @@ METHOD QUrl:encodedQueryItemValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:encodedUserName( ... )
@@ -313,7 +313,7 @@ METHOD QUrl:encodedUserName( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_encodedUserName( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:errorString( ... )
@@ -321,7 +321,7 @@ METHOD QUrl:errorString( ... )
    CASE 0
       RETURN Qt_QUrl_errorString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:fragment( ... )
@@ -329,7 +329,7 @@ METHOD QUrl:fragment( ... )
    CASE 0
       RETURN Qt_QUrl_fragment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:hasEncodedQueryItem( ... )
@@ -341,7 +341,7 @@ METHOD QUrl:hasEncodedQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:hasFragment( ... )
@@ -349,7 +349,7 @@ METHOD QUrl:hasFragment( ... )
    CASE 0
       RETURN Qt_QUrl_hasFragment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:hasQuery( ... )
@@ -357,7 +357,7 @@ METHOD QUrl:hasQuery( ... )
    CASE 0
       RETURN Qt_QUrl_hasQuery( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:hasQueryItem( ... )
@@ -369,7 +369,7 @@ METHOD QUrl:hasQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:host( ... )
@@ -377,7 +377,7 @@ METHOD QUrl:host( ... )
    CASE 0
       RETURN Qt_QUrl_host( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:isEmpty( ... )
@@ -385,7 +385,7 @@ METHOD QUrl:isEmpty( ... )
    CASE 0
       RETURN Qt_QUrl_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:isParentOf( ... )
@@ -397,7 +397,7 @@ METHOD QUrl:isParentOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:isRelative( ... )
@@ -405,7 +405,7 @@ METHOD QUrl:isRelative( ... )
    CASE 0
       RETURN Qt_QUrl_isRelative( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:isValid( ... )
@@ -413,7 +413,7 @@ METHOD QUrl:isValid( ... )
    CASE 0
       RETURN Qt_QUrl_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:password( ... )
@@ -421,7 +421,7 @@ METHOD QUrl:password( ... )
    CASE 0
       RETURN Qt_QUrl_password( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:path( ... )
@@ -429,7 +429,7 @@ METHOD QUrl:path( ... )
    CASE 0
       RETURN Qt_QUrl_path( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:port( ... )
@@ -443,7 +443,7 @@ METHOD QUrl:port( ... )
    CASE 0
       RETURN Qt_QUrl_port( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:queryItemValue( ... )
@@ -455,7 +455,7 @@ METHOD QUrl:queryItemValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:queryPairDelimiter( ... )
@@ -463,7 +463,7 @@ METHOD QUrl:queryPairDelimiter( ... )
    CASE 0
       RETURN Qt_QUrl_queryPairDelimiter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:queryValueDelimiter( ... )
@@ -471,7 +471,7 @@ METHOD QUrl:queryValueDelimiter( ... )
    CASE 0
       RETURN Qt_QUrl_queryValueDelimiter( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:removeAllEncodedQueryItems( ... )
@@ -483,7 +483,7 @@ METHOD QUrl:removeAllEncodedQueryItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:removeAllQueryItems( ... )
@@ -495,7 +495,7 @@ METHOD QUrl:removeAllQueryItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:removeEncodedQueryItem( ... )
@@ -507,7 +507,7 @@ METHOD QUrl:removeEncodedQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:removeQueryItem( ... )
@@ -519,7 +519,7 @@ METHOD QUrl:removeQueryItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:resolved( ... )
@@ -531,7 +531,7 @@ METHOD QUrl:resolved( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:scheme( ... )
@@ -539,7 +539,7 @@ METHOD QUrl:scheme( ... )
    CASE 0
       RETURN Qt_QUrl_scheme( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setAuthority( ... )
@@ -551,7 +551,7 @@ METHOD QUrl:setAuthority( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedFragment( ... )
@@ -563,7 +563,7 @@ METHOD QUrl:setEncodedFragment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedHost( ... )
@@ -575,7 +575,7 @@ METHOD QUrl:setEncodedHost( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedPassword( ... )
@@ -587,7 +587,7 @@ METHOD QUrl:setEncodedPassword( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedPath( ... )
@@ -599,7 +599,7 @@ METHOD QUrl:setEncodedPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedQuery( ... )
@@ -611,7 +611,7 @@ METHOD QUrl:setEncodedQuery( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedUrl( ... )
@@ -629,7 +629,7 @@ METHOD QUrl:setEncodedUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setEncodedUserName( ... )
@@ -641,7 +641,7 @@ METHOD QUrl:setEncodedUserName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setFragment( ... )
@@ -653,7 +653,7 @@ METHOD QUrl:setFragment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setHost( ... )
@@ -665,7 +665,7 @@ METHOD QUrl:setHost( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setPassword( ... )
@@ -677,7 +677,7 @@ METHOD QUrl:setPassword( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setPath( ... )
@@ -689,7 +689,7 @@ METHOD QUrl:setPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setPort( ... )
@@ -701,7 +701,7 @@ METHOD QUrl:setPort( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setScheme( ... )
@@ -713,7 +713,7 @@ METHOD QUrl:setScheme( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setUrl( ... )
@@ -731,7 +731,7 @@ METHOD QUrl:setUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setUserInfo( ... )
@@ -743,7 +743,7 @@ METHOD QUrl:setUserInfo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setUserName( ... )
@@ -755,7 +755,7 @@ METHOD QUrl:setUserName( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:toEncoded( ... )
@@ -769,7 +769,7 @@ METHOD QUrl:toEncoded( ... )
    CASE 0
       RETURN QByteArrayFromPointer( Qt_QUrl_toEncoded( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:toLocalFile( ... )
@@ -777,7 +777,7 @@ METHOD QUrl:toLocalFile( ... )
    CASE 0
       RETURN Qt_QUrl_toLocalFile( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:toString( ... )
@@ -791,7 +791,7 @@ METHOD QUrl:toString( ... )
    CASE 0
       RETURN Qt_QUrl_toString( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:userInfo( ... )
@@ -799,7 +799,7 @@ METHOD QUrl:userInfo( ... )
    CASE 0
       RETURN Qt_QUrl_userInfo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:userName( ... )
@@ -807,7 +807,7 @@ METHOD QUrl:userName( ... )
    CASE 0
       RETURN Qt_QUrl_userName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:fromAce( ... )
@@ -819,7 +819,7 @@ METHOD QUrl:fromAce( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:fromEncoded( ... )
@@ -837,7 +837,7 @@ METHOD QUrl:fromEncoded( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:fromLocalFile( ... )
@@ -849,7 +849,7 @@ METHOD QUrl:fromLocalFile( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:fromPercentEncoding( ... )
@@ -861,7 +861,7 @@ METHOD QUrl:fromPercentEncoding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:idnWhitelist( ... )
@@ -869,7 +869,7 @@ METHOD QUrl:idnWhitelist( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QUrl_idnWhitelist( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:setIdnWhitelist( ... )
@@ -881,7 +881,7 @@ METHOD QUrl:setIdnWhitelist( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:toAce( ... )
@@ -893,7 +893,7 @@ METHOD QUrl:toAce( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUrl:toPercentEncoding( ... )
@@ -917,5 +917,5 @@ METHOD QUrl:toPercentEncoding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

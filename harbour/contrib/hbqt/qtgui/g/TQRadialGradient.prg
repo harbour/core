@@ -124,7 +124,7 @@ CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
 METHOD QRadialGradient:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QRadialGradient( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QRadialGradient:center( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QRadialGradient_center( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRadialGradient:focalPoint( ... )
@@ -143,7 +143,7 @@ METHOD QRadialGradient:focalPoint( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QRadialGradient_focalPoint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRadialGradient:radius( ... )
@@ -151,7 +151,7 @@ METHOD QRadialGradient:radius( ... )
    CASE 0
       RETURN Qt_QRadialGradient_radius( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRadialGradient:setCenter( ... )
@@ -169,7 +169,7 @@ METHOD QRadialGradient:setCenter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRadialGradient:setFocalPoint( ... )
@@ -187,7 +187,7 @@ METHOD QRadialGradient:setFocalPoint( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QRadialGradient:setRadius( ... )
@@ -199,5 +199,5 @@ METHOD QRadialGradient:setRadius( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

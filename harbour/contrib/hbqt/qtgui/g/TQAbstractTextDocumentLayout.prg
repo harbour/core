@@ -126,7 +126,7 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, HB_QObject F
 METHOD QAbstractTextDocumentLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QAbstractTextDocumentLayout( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QAbstractTextDocumentLayout:anchorAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:blockBoundingRect( ... )
@@ -153,7 +153,7 @@ METHOD QAbstractTextDocumentLayout:blockBoundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:document( ... )
@@ -161,7 +161,7 @@ METHOD QAbstractTextDocumentLayout:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QAbstractTextDocumentLayout_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:documentSize( ... )
@@ -169,7 +169,7 @@ METHOD QAbstractTextDocumentLayout:documentSize( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:frameBoundingRect( ... )
@@ -181,7 +181,7 @@ METHOD QAbstractTextDocumentLayout:frameBoundingRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:hitTest( ... )
@@ -193,7 +193,7 @@ METHOD QAbstractTextDocumentLayout:hitTest( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:pageCount( ... )
@@ -201,7 +201,7 @@ METHOD QAbstractTextDocumentLayout:pageCount( ... )
    CASE 0
       RETURN Qt_QAbstractTextDocumentLayout_pageCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:paintDevice( ... )
@@ -209,7 +209,7 @@ METHOD QAbstractTextDocumentLayout:paintDevice( ... )
    CASE 0
       RETURN QPaintDeviceFromPointer( Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:registerHandler( ... )
@@ -221,7 +221,7 @@ METHOD QAbstractTextDocumentLayout:registerHandler( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QAbstractTextDocumentLayout:setPaintDevice( ... )
@@ -233,5 +233,5 @@ METHOD QAbstractTextDocumentLayout:setPaintDevice( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

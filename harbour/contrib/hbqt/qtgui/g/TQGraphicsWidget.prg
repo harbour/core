@@ -162,7 +162,7 @@ CREATE CLASS QGraphicsWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphics
 METHOD QGraphicsWidget:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsWidget( ... )
    RETURN Self
@@ -173,7 +173,7 @@ METHOD QGraphicsWidget:actions( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QGraphicsWidget_actions( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:addAction( ... )
@@ -185,7 +185,7 @@ METHOD QGraphicsWidget:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:adjustSize( ... )
@@ -193,7 +193,7 @@ METHOD QGraphicsWidget:adjustSize( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_adjustSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:focusPolicy( ... )
@@ -201,7 +201,7 @@ METHOD QGraphicsWidget:focusPolicy( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_focusPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:focusWidget( ... )
@@ -209,7 +209,7 @@ METHOD QGraphicsWidget:focusWidget( ... )
    CASE 0
       RETURN QGraphicsWidgetFromPointer( Qt_QGraphicsWidget_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:font( ... )
@@ -217,7 +217,7 @@ METHOD QGraphicsWidget:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QGraphicsWidget_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:getContentsMargins( ... )
@@ -229,7 +229,7 @@ METHOD QGraphicsWidget:getContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:getWindowFrameMargins( ... )
@@ -241,7 +241,7 @@ METHOD QGraphicsWidget:getWindowFrameMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:grabShortcut( ... )
@@ -259,7 +259,7 @@ METHOD QGraphicsWidget:grabShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:insertAction( ... )
@@ -271,7 +271,7 @@ METHOD QGraphicsWidget:insertAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:isActiveWindow( ... )
@@ -279,7 +279,7 @@ METHOD QGraphicsWidget:isActiveWindow( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_isActiveWindow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:layout( ... )
@@ -287,7 +287,7 @@ METHOD QGraphicsWidget:layout( ... )
    CASE 0
       RETURN QGraphicsLayoutFromPointer( Qt_QGraphicsWidget_layout( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:layoutDirection( ... )
@@ -295,7 +295,7 @@ METHOD QGraphicsWidget:layoutDirection( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_layoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:palette( ... )
@@ -303,7 +303,7 @@ METHOD QGraphicsWidget:palette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QGraphicsWidget_palette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:rect( ... )
@@ -311,7 +311,7 @@ METHOD QGraphicsWidget:rect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsWidget_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:releaseShortcut( ... )
@@ -323,7 +323,7 @@ METHOD QGraphicsWidget:releaseShortcut( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:removeAction( ... )
@@ -335,7 +335,7 @@ METHOD QGraphicsWidget:removeAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:resize( ... )
@@ -353,7 +353,7 @@ METHOD QGraphicsWidget:resize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setAttribute( ... )
@@ -371,7 +371,7 @@ METHOD QGraphicsWidget:setAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setContentsMargins( ... )
@@ -383,7 +383,7 @@ METHOD QGraphicsWidget:setContentsMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setFocusPolicy( ... )
@@ -395,7 +395,7 @@ METHOD QGraphicsWidget:setFocusPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setFont( ... )
@@ -407,7 +407,7 @@ METHOD QGraphicsWidget:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setGeometry( ... )
@@ -425,7 +425,7 @@ METHOD QGraphicsWidget:setGeometry( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setLayout( ... )
@@ -437,7 +437,7 @@ METHOD QGraphicsWidget:setLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setLayoutDirection( ... )
@@ -449,7 +449,7 @@ METHOD QGraphicsWidget:setLayoutDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setPalette( ... )
@@ -461,7 +461,7 @@ METHOD QGraphicsWidget:setPalette( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setShortcutAutoRepeat( ... )
@@ -479,7 +479,7 @@ METHOD QGraphicsWidget:setShortcutAutoRepeat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setShortcutEnabled( ... )
@@ -497,7 +497,7 @@ METHOD QGraphicsWidget:setShortcutEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setStyle( ... )
@@ -509,7 +509,7 @@ METHOD QGraphicsWidget:setStyle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setWindowFlags( ... )
@@ -521,7 +521,7 @@ METHOD QGraphicsWidget:setWindowFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setWindowFrameMargins( ... )
@@ -533,7 +533,7 @@ METHOD QGraphicsWidget:setWindowFrameMargins( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setWindowTitle( ... )
@@ -545,7 +545,7 @@ METHOD QGraphicsWidget:setWindowTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:size( ... )
@@ -553,7 +553,7 @@ METHOD QGraphicsWidget:size( ... )
    CASE 0
       RETURN QSizeFFromPointer( Qt_QGraphicsWidget_size( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:style( ... )
@@ -561,7 +561,7 @@ METHOD QGraphicsWidget:style( ... )
    CASE 0
       RETURN QStyleFromPointer( Qt_QGraphicsWidget_style( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:testAttribute( ... )
@@ -573,7 +573,7 @@ METHOD QGraphicsWidget:testAttribute( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:unsetLayoutDirection( ... )
@@ -581,7 +581,7 @@ METHOD QGraphicsWidget:unsetLayoutDirection( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_unsetLayoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:unsetWindowFrameMargins( ... )
@@ -589,7 +589,7 @@ METHOD QGraphicsWidget:unsetWindowFrameMargins( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_unsetWindowFrameMargins( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:windowFlags( ... )
@@ -597,7 +597,7 @@ METHOD QGraphicsWidget:windowFlags( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_windowFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:windowFrameGeometry( ... )
@@ -605,7 +605,7 @@ METHOD QGraphicsWidget:windowFrameGeometry( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:windowFrameRect( ... )
@@ -613,7 +613,7 @@ METHOD QGraphicsWidget:windowFrameRect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsWidget_windowFrameRect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:windowTitle( ... )
@@ -621,7 +621,7 @@ METHOD QGraphicsWidget:windowTitle( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_windowTitle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:windowType( ... )
@@ -629,7 +629,7 @@ METHOD QGraphicsWidget:windowType( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_windowType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:setTabOrder( ... )
@@ -641,7 +641,7 @@ METHOD QGraphicsWidget:setTabOrder( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsWidget:close( ... )
@@ -649,5 +649,5 @@ METHOD QGraphicsWidget:close( ... )
    CASE 0
       RETURN Qt_QGraphicsWidget_close( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

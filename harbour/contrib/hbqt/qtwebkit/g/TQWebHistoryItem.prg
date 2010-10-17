@@ -124,7 +124,7 @@ CREATE CLASS QWebHistoryItem INHERIT HbQtObjectHandler FUNCTION HB_QWebHistoryIt
 METHOD QWebHistoryItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebHistoryItem( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QWebHistoryItem:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QWebHistoryItem_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:isValid( ... )
@@ -143,7 +143,7 @@ METHOD QWebHistoryItem:isValid( ... )
    CASE 0
       RETURN Qt_QWebHistoryItem_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:lastVisited( ... )
@@ -151,7 +151,7 @@ METHOD QWebHistoryItem:lastVisited( ... )
    CASE 0
       RETURN QDateTimeFromPointer( Qt_QWebHistoryItem_lastVisited( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:originalUrl( ... )
@@ -159,7 +159,7 @@ METHOD QWebHistoryItem:originalUrl( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QWebHistoryItem_originalUrl( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:setUserData( ... )
@@ -171,7 +171,7 @@ METHOD QWebHistoryItem:setUserData( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:title( ... )
@@ -179,7 +179,7 @@ METHOD QWebHistoryItem:title( ... )
    CASE 0
       RETURN Qt_QWebHistoryItem_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:url( ... )
@@ -187,7 +187,7 @@ METHOD QWebHistoryItem:url( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QWebHistoryItem_url( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistoryItem:userData( ... )
@@ -195,5 +195,5 @@ METHOD QWebHistoryItem:userData( ... )
    CASE 0
       RETURN QVariantFromPointer( Qt_QWebHistoryItem_userData( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

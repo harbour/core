@@ -136,7 +136,7 @@ CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
 METHOD QToolBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QToolBox( ... )
    RETURN Self
@@ -157,7 +157,7 @@ METHOD QToolBox:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:count( ... )
@@ -165,7 +165,7 @@ METHOD QToolBox:count( ... )
    CASE 0
       RETURN Qt_QToolBox_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:currentIndex( ... )
@@ -173,7 +173,7 @@ METHOD QToolBox:currentIndex( ... )
    CASE 0
       RETURN Qt_QToolBox_currentIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:currentWidget( ... )
@@ -181,7 +181,7 @@ METHOD QToolBox:currentWidget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QToolBox_currentWidget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:indexOf( ... )
@@ -193,7 +193,7 @@ METHOD QToolBox:indexOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:insertItem( ... )
@@ -211,7 +211,7 @@ METHOD QToolBox:insertItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:isItemEnabled( ... )
@@ -223,7 +223,7 @@ METHOD QToolBox:isItemEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:itemIcon( ... )
@@ -235,7 +235,7 @@ METHOD QToolBox:itemIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:itemText( ... )
@@ -247,7 +247,7 @@ METHOD QToolBox:itemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:itemToolTip( ... )
@@ -259,7 +259,7 @@ METHOD QToolBox:itemToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:removeItem( ... )
@@ -271,7 +271,7 @@ METHOD QToolBox:removeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setItemEnabled( ... )
@@ -283,7 +283,7 @@ METHOD QToolBox:setItemEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setItemIcon( ... )
@@ -295,7 +295,7 @@ METHOD QToolBox:setItemIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setItemText( ... )
@@ -307,7 +307,7 @@ METHOD QToolBox:setItemText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setItemToolTip( ... )
@@ -319,7 +319,7 @@ METHOD QToolBox:setItemToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:widget( ... )
@@ -331,7 +331,7 @@ METHOD QToolBox:widget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setCurrentIndex( ... )
@@ -343,7 +343,7 @@ METHOD QToolBox:setCurrentIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QToolBox:setCurrentWidget( ... )
@@ -355,5 +355,5 @@ METHOD QToolBox:setCurrentWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

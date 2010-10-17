@@ -127,7 +127,7 @@ CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, HB_QTextFrameFormat FUN
 METHOD QTextTableFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextTableFormat( ... )
    RETURN Self
@@ -138,7 +138,7 @@ METHOD QTextTableFormat:alignment( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:cellPadding( ... )
@@ -146,7 +146,7 @@ METHOD QTextTableFormat:cellPadding( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_cellPadding( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:cellSpacing( ... )
@@ -154,7 +154,7 @@ METHOD QTextTableFormat:cellSpacing( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_cellSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:clearColumnWidthConstraints( ... )
@@ -162,7 +162,7 @@ METHOD QTextTableFormat:clearColumnWidthConstraints( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_clearColumnWidthConstraints( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:columns( ... )
@@ -170,7 +170,7 @@ METHOD QTextTableFormat:columns( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_columns( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:headerRowCount( ... )
@@ -178,7 +178,7 @@ METHOD QTextTableFormat:headerRowCount( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_headerRowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:isValid( ... )
@@ -186,7 +186,7 @@ METHOD QTextTableFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextTableFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:setAlignment( ... )
@@ -198,7 +198,7 @@ METHOD QTextTableFormat:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:setCellPadding( ... )
@@ -210,7 +210,7 @@ METHOD QTextTableFormat:setCellPadding( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:setCellSpacing( ... )
@@ -222,7 +222,7 @@ METHOD QTextTableFormat:setCellSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextTableFormat:setHeaderRowCount( ... )
@@ -234,5 +234,5 @@ METHOD QTextTableFormat:setHeaderRowCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

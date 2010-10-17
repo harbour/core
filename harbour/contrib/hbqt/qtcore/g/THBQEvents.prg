@@ -119,7 +119,7 @@ CREATE CLASS HBQEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQEven
 METHOD HBQEvents:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_HBQEvents( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD HBQEvents:hbConnect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQEvents:hbDisconnect( ... )
@@ -146,7 +146,7 @@ METHOD HBQEvents:hbDisconnect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD HBQEvents:hbClear( ... )
@@ -154,5 +154,5 @@ METHOD HBQEvents:hbClear( ... )
    CASE 0
       RETURN Qt_HBQEvents_hbClear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -143,7 +143,7 @@ CREATE CLASS QLineF INHERIT HbQtObjectHandler FUNCTION HB_QLineF
 METHOD QLineF:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLineF( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QLineF:p1( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QLineF_p1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:p2( ... )
@@ -162,7 +162,7 @@ METHOD QLineF:p2( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QLineF_p2( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:x1( ... )
@@ -170,7 +170,7 @@ METHOD QLineF:x1( ... )
    CASE 0
       RETURN Qt_QLineF_x1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:x2( ... )
@@ -178,7 +178,7 @@ METHOD QLineF:x2( ... )
    CASE 0
       RETURN Qt_QLineF_x2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:y1( ... )
@@ -186,7 +186,7 @@ METHOD QLineF:y1( ... )
    CASE 0
       RETURN Qt_QLineF_y1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:y2( ... )
@@ -194,7 +194,7 @@ METHOD QLineF:y2( ... )
    CASE 0
       RETURN Qt_QLineF_y2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:angle( ... )
@@ -202,7 +202,7 @@ METHOD QLineF:angle( ... )
    CASE 0
       RETURN Qt_QLineF_angle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:angleTo( ... )
@@ -214,7 +214,7 @@ METHOD QLineF:angleTo( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:dx( ... )
@@ -222,7 +222,7 @@ METHOD QLineF:dx( ... )
    CASE 0
       RETURN Qt_QLineF_dx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:dy( ... )
@@ -230,7 +230,7 @@ METHOD QLineF:dy( ... )
    CASE 0
       RETURN Qt_QLineF_dy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:intersect( ... )
@@ -242,7 +242,7 @@ METHOD QLineF:intersect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:isNull( ... )
@@ -250,7 +250,7 @@ METHOD QLineF:isNull( ... )
    CASE 0
       RETURN Qt_QLineF_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:length( ... )
@@ -258,7 +258,7 @@ METHOD QLineF:length( ... )
    CASE 0
       RETURN Qt_QLineF_length( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:normalVector( ... )
@@ -266,7 +266,7 @@ METHOD QLineF:normalVector( ... )
    CASE 0
       RETURN QLineFFromPointer( Qt_QLineF_normalVector( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:pointAt( ... )
@@ -278,7 +278,7 @@ METHOD QLineF:pointAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setP1( ... )
@@ -290,7 +290,7 @@ METHOD QLineF:setP1( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setP2( ... )
@@ -302,7 +302,7 @@ METHOD QLineF:setP2( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setAngle( ... )
@@ -314,7 +314,7 @@ METHOD QLineF:setAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setLength( ... )
@@ -326,7 +326,7 @@ METHOD QLineF:setLength( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setLine( ... )
@@ -338,7 +338,7 @@ METHOD QLineF:setLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:setPoints( ... )
@@ -350,7 +350,7 @@ METHOD QLineF:setPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:toLine( ... )
@@ -358,7 +358,7 @@ METHOD QLineF:toLine( ... )
    CASE 0
       RETURN QLineFromPointer( Qt_QLineF_toLine( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:translate( ... )
@@ -376,7 +376,7 @@ METHOD QLineF:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:translated( ... )
@@ -394,7 +394,7 @@ METHOD QLineF:translated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLineF:unitVector( ... )
@@ -402,5 +402,5 @@ METHOD QLineF:unitVector( ... )
    CASE 0
       RETURN QLineFFromPointer( Qt_QLineF_unitVector( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

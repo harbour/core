@@ -123,7 +123,7 @@ CREATE CLASS QDial INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_QDi
 METHOD QDial:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDial( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QDial:notchSize( ... )
    CASE 0
       RETURN Qt_QDial_notchSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:notchTarget( ... )
@@ -142,7 +142,7 @@ METHOD QDial:notchTarget( ... )
    CASE 0
       RETURN Qt_QDial_notchTarget( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:notchesVisible( ... )
@@ -150,7 +150,7 @@ METHOD QDial:notchesVisible( ... )
    CASE 0
       RETURN Qt_QDial_notchesVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:setNotchTarget( ... )
@@ -162,7 +162,7 @@ METHOD QDial:setNotchTarget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:wrapping( ... )
@@ -170,7 +170,7 @@ METHOD QDial:wrapping( ... )
    CASE 0
       RETURN Qt_QDial_wrapping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:setNotchesVisible( ... )
@@ -182,7 +182,7 @@ METHOD QDial:setNotchesVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDial:setWrapping( ... )
@@ -194,5 +194,5 @@ METHOD QDial:setWrapping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

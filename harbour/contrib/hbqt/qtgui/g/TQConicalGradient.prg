@@ -121,7 +121,7 @@ CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION H
 METHOD QConicalGradient:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QConicalGradient( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QConicalGradient:angle( ... )
    CASE 0
       RETURN Qt_QConicalGradient_angle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QConicalGradient:center( ... )
@@ -140,7 +140,7 @@ METHOD QConicalGradient:center( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QConicalGradient_center( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QConicalGradient:setAngle( ... )
@@ -152,7 +152,7 @@ METHOD QConicalGradient:setAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QConicalGradient:setCenter( ... )
@@ -170,5 +170,5 @@ METHOD QConicalGradient:setCenter( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

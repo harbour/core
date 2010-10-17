@@ -119,7 +119,7 @@ CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QObject FUNCTION H
 METHOD QSyntaxHighlighter:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSyntaxHighlighter( ... )
    RETURN Self
@@ -130,7 +130,7 @@ METHOD QSyntaxHighlighter:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QSyntaxHighlighter_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSyntaxHighlighter:setDocument( ... )
@@ -142,7 +142,7 @@ METHOD QSyntaxHighlighter:setDocument( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSyntaxHighlighter:rehighlight( ... )
@@ -150,5 +150,5 @@ METHOD QSyntaxHighlighter:rehighlight( ... )
    CASE 0
       RETURN Qt_QSyntaxHighlighter_rehighlight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

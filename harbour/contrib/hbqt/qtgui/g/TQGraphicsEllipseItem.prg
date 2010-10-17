@@ -123,7 +123,7 @@ CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, HB_QAbstractGraphic
 METHOD QGraphicsEllipseItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsEllipseItem( ... )
    RETURN Self
@@ -134,7 +134,7 @@ METHOD QGraphicsEllipseItem:rect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QGraphicsEllipseItem_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:setRect( ... )
@@ -152,7 +152,7 @@ METHOD QGraphicsEllipseItem:setRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:setSpanAngle( ... )
@@ -164,7 +164,7 @@ METHOD QGraphicsEllipseItem:setSpanAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:setStartAngle( ... )
@@ -176,7 +176,7 @@ METHOD QGraphicsEllipseItem:setStartAngle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:spanAngle( ... )
@@ -184,7 +184,7 @@ METHOD QGraphicsEllipseItem:spanAngle( ... )
    CASE 0
       RETURN Qt_QGraphicsEllipseItem_spanAngle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:startAngle( ... )
@@ -192,5 +192,5 @@ METHOD QGraphicsEllipseItem:startAngle( ... )
    CASE 0
       RETURN Qt_QGraphicsEllipseItem_startAngle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -120,7 +120,7 @@ CREATE CLASS QGraphicsSimpleTextItem INHERIT HbQtObjectHandler, HB_QAbstractGrap
 METHOD QGraphicsSimpleTextItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSimpleTextItem( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QGraphicsSimpleTextItem:font( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QGraphicsSimpleTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSimpleTextItem:setFont( ... )
@@ -143,7 +143,7 @@ METHOD QGraphicsSimpleTextItem:setFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSimpleTextItem:setText( ... )
@@ -155,7 +155,7 @@ METHOD QGraphicsSimpleTextItem:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSimpleTextItem:text( ... )
@@ -163,5 +163,5 @@ METHOD QGraphicsSimpleTextItem:text( ... )
    CASE 0
       RETURN Qt_QGraphicsSimpleTextItem_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

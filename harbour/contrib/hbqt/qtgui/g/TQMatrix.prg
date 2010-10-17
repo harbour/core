@@ -145,7 +145,7 @@ CREATE CLASS QMatrix INHERIT HbQtObjectHandler FUNCTION HB_QMatrix
 METHOD QMatrix:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMatrix( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QMatrix:m11( ... )
    CASE 0
       RETURN Qt_QMatrix_m11( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:m12( ... )
@@ -164,7 +164,7 @@ METHOD QMatrix:m12( ... )
    CASE 0
       RETURN Qt_QMatrix_m12( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:m21( ... )
@@ -172,7 +172,7 @@ METHOD QMatrix:m21( ... )
    CASE 0
       RETURN Qt_QMatrix_m21( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:m22( ... )
@@ -180,7 +180,7 @@ METHOD QMatrix:m22( ... )
    CASE 0
       RETURN Qt_QMatrix_m22( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:det( ... )
@@ -188,7 +188,7 @@ METHOD QMatrix:det( ... )
    CASE 0
       RETURN Qt_QMatrix_det( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:dx( ... )
@@ -196,7 +196,7 @@ METHOD QMatrix:dx( ... )
    CASE 0
       RETURN Qt_QMatrix_dx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:dy( ... )
@@ -204,7 +204,7 @@ METHOD QMatrix:dy( ... )
    CASE 0
       RETURN Qt_QMatrix_dy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:inverted( ... )
@@ -218,7 +218,7 @@ METHOD QMatrix:inverted( ... )
    CASE 0
       RETURN QMatrixFromPointer( Qt_QMatrix_inverted( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:isIdentity( ... )
@@ -226,7 +226,7 @@ METHOD QMatrix:isIdentity( ... )
    CASE 0
       RETURN Qt_QMatrix_isIdentity( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:isInvertible( ... )
@@ -234,7 +234,7 @@ METHOD QMatrix:isInvertible( ... )
    CASE 0
       RETURN Qt_QMatrix_isInvertible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:map( ... )
@@ -270,7 +270,7 @@ METHOD QMatrix:map( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:mapRect( ... )
@@ -287,7 +287,7 @@ METHOD QMatrix:mapRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:mapToPolygon( ... )
@@ -299,7 +299,7 @@ METHOD QMatrix:mapToPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:reset( ... )
@@ -307,7 +307,7 @@ METHOD QMatrix:reset( ... )
    CASE 0
       RETURN Qt_QMatrix_reset( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:rotate( ... )
@@ -319,7 +319,7 @@ METHOD QMatrix:rotate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:scale( ... )
@@ -331,7 +331,7 @@ METHOD QMatrix:scale( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:setMatrix( ... )
@@ -343,7 +343,7 @@ METHOD QMatrix:setMatrix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:shear( ... )
@@ -355,7 +355,7 @@ METHOD QMatrix:shear( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMatrix:translate( ... )
@@ -367,5 +367,5 @@ METHOD QMatrix:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

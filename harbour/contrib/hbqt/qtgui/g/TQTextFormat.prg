@@ -157,7 +157,7 @@ CREATE CLASS QTextFormat INHERIT HbQtObjectHandler FUNCTION HB_QTextFormat
 METHOD QTextFormat:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextFormat( ... )
    RETURN Self
@@ -168,7 +168,7 @@ METHOD QTextFormat:background( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QTextFormat_background( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:boolProperty( ... )
@@ -180,7 +180,7 @@ METHOD QTextFormat:boolProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:brushProperty( ... )
@@ -192,7 +192,7 @@ METHOD QTextFormat:brushProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:clearBackground( ... )
@@ -200,7 +200,7 @@ METHOD QTextFormat:clearBackground( ... )
    CASE 0
       RETURN Qt_QTextFormat_clearBackground( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:clearForeground( ... )
@@ -208,7 +208,7 @@ METHOD QTextFormat:clearForeground( ... )
    CASE 0
       RETURN Qt_QTextFormat_clearForeground( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:clearProperty( ... )
@@ -220,7 +220,7 @@ METHOD QTextFormat:clearProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:colorProperty( ... )
@@ -232,7 +232,7 @@ METHOD QTextFormat:colorProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:doubleProperty( ... )
@@ -244,7 +244,7 @@ METHOD QTextFormat:doubleProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:foreground( ... )
@@ -252,7 +252,7 @@ METHOD QTextFormat:foreground( ... )
    CASE 0
       RETURN QBrushFromPointer( Qt_QTextFormat_foreground( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:hasProperty( ... )
@@ -264,7 +264,7 @@ METHOD QTextFormat:hasProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:intProperty( ... )
@@ -276,7 +276,7 @@ METHOD QTextFormat:intProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isBlockFormat( ... )
@@ -284,7 +284,7 @@ METHOD QTextFormat:isBlockFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isBlockFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isCharFormat( ... )
@@ -292,7 +292,7 @@ METHOD QTextFormat:isCharFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isCharFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isFrameFormat( ... )
@@ -300,7 +300,7 @@ METHOD QTextFormat:isFrameFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isFrameFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isImageFormat( ... )
@@ -308,7 +308,7 @@ METHOD QTextFormat:isImageFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isImageFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isListFormat( ... )
@@ -316,7 +316,7 @@ METHOD QTextFormat:isListFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isListFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isTableCellFormat( ... )
@@ -324,7 +324,7 @@ METHOD QTextFormat:isTableCellFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isTableCellFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isTableFormat( ... )
@@ -332,7 +332,7 @@ METHOD QTextFormat:isTableFormat( ... )
    CASE 0
       RETURN Qt_QTextFormat_isTableFormat( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:isValid( ... )
@@ -340,7 +340,7 @@ METHOD QTextFormat:isValid( ... )
    CASE 0
       RETURN Qt_QTextFormat_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:layoutDirection( ... )
@@ -348,7 +348,7 @@ METHOD QTextFormat:layoutDirection( ... )
    CASE 0
       RETURN Qt_QTextFormat_layoutDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:lengthProperty( ... )
@@ -360,7 +360,7 @@ METHOD QTextFormat:lengthProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:merge( ... )
@@ -372,7 +372,7 @@ METHOD QTextFormat:merge( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:objectIndex( ... )
@@ -380,7 +380,7 @@ METHOD QTextFormat:objectIndex( ... )
    CASE 0
       RETURN Qt_QTextFormat_objectIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:objectType( ... )
@@ -388,7 +388,7 @@ METHOD QTextFormat:objectType( ... )
    CASE 0
       RETURN Qt_QTextFormat_objectType( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:penProperty( ... )
@@ -400,7 +400,7 @@ METHOD QTextFormat:penProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:property( ... )
@@ -412,7 +412,7 @@ METHOD QTextFormat:property( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:propertyCount( ... )
@@ -420,7 +420,7 @@ METHOD QTextFormat:propertyCount( ... )
    CASE 0
       RETURN Qt_QTextFormat_propertyCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setBackground( ... )
@@ -432,7 +432,7 @@ METHOD QTextFormat:setBackground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setForeground( ... )
@@ -444,7 +444,7 @@ METHOD QTextFormat:setForeground( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setLayoutDirection( ... )
@@ -456,7 +456,7 @@ METHOD QTextFormat:setLayoutDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setObjectIndex( ... )
@@ -468,7 +468,7 @@ METHOD QTextFormat:setObjectIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setObjectType( ... )
@@ -480,7 +480,7 @@ METHOD QTextFormat:setObjectType( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:setProperty( ... )
@@ -492,7 +492,7 @@ METHOD QTextFormat:setProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:stringProperty( ... )
@@ -504,7 +504,7 @@ METHOD QTextFormat:stringProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toBlockFormat( ... )
@@ -512,7 +512,7 @@ METHOD QTextFormat:toBlockFormat( ... )
    CASE 0
       RETURN QTextBlockFormatFromPointer( Qt_QTextFormat_toBlockFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toCharFormat( ... )
@@ -520,7 +520,7 @@ METHOD QTextFormat:toCharFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QTextFormat_toCharFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toFrameFormat( ... )
@@ -528,7 +528,7 @@ METHOD QTextFormat:toFrameFormat( ... )
    CASE 0
       RETURN QTextFrameFormatFromPointer( Qt_QTextFormat_toFrameFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toImageFormat( ... )
@@ -536,7 +536,7 @@ METHOD QTextFormat:toImageFormat( ... )
    CASE 0
       RETURN QTextImageFormatFromPointer( Qt_QTextFormat_toImageFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toListFormat( ... )
@@ -544,7 +544,7 @@ METHOD QTextFormat:toListFormat( ... )
    CASE 0
       RETURN QTextListFormatFromPointer( Qt_QTextFormat_toListFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:toTableFormat( ... )
@@ -552,7 +552,7 @@ METHOD QTextFormat:toTableFormat( ... )
    CASE 0
       RETURN QTextTableFormatFromPointer( Qt_QTextFormat_toTableFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextFormat:type( ... )
@@ -560,5 +560,5 @@ METHOD QTextFormat:type( ... )
    CASE 0
       RETURN Qt_QTextFormat_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

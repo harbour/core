@@ -154,7 +154,7 @@ CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFra
 METHOD QWebFrame:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebFrame( ... )
    RETURN Self
@@ -175,7 +175,7 @@ METHOD QWebFrame:addToJavaScriptWindowObject( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:childFrames( ... )
@@ -183,7 +183,7 @@ METHOD QWebFrame:childFrames( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QWebFrame_childFrames( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:contentsSize( ... )
@@ -191,7 +191,7 @@ METHOD QWebFrame:contentsSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QWebFrame_contentsSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:frameName( ... )
@@ -199,7 +199,7 @@ METHOD QWebFrame:frameName( ... )
    CASE 0
       RETURN Qt_QWebFrame_frameName( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:geometry( ... )
@@ -207,7 +207,7 @@ METHOD QWebFrame:geometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QWebFrame_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:hitTestContent( ... )
@@ -219,7 +219,7 @@ METHOD QWebFrame:hitTestContent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:icon( ... )
@@ -227,7 +227,7 @@ METHOD QWebFrame:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QWebFrame_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:load( ... )
@@ -239,7 +239,7 @@ METHOD QWebFrame:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:page( ... )
@@ -247,7 +247,7 @@ METHOD QWebFrame:page( ... )
    CASE 0
       RETURN QWebPageFromPointer( Qt_QWebFrame_page( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:parentFrame( ... )
@@ -255,7 +255,7 @@ METHOD QWebFrame:parentFrame( ... )
    CASE 0
       RETURN QWebFrameFromPointer( Qt_QWebFrame_parentFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:pos( ... )
@@ -263,7 +263,7 @@ METHOD QWebFrame:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QWebFrame_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:render( ... )
@@ -281,7 +281,7 @@ METHOD QWebFrame:render( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:renderTreeDump( ... )
@@ -289,7 +289,7 @@ METHOD QWebFrame:renderTreeDump( ... )
    CASE 0
       RETURN Qt_QWebFrame_renderTreeDump( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scroll( ... )
@@ -301,7 +301,7 @@ METHOD QWebFrame:scroll( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scrollBarMaximum( ... )
@@ -313,7 +313,7 @@ METHOD QWebFrame:scrollBarMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scrollBarMinimum( ... )
@@ -325,7 +325,7 @@ METHOD QWebFrame:scrollBarMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scrollBarPolicy( ... )
@@ -337,7 +337,7 @@ METHOD QWebFrame:scrollBarPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scrollBarValue( ... )
@@ -349,7 +349,7 @@ METHOD QWebFrame:scrollBarValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:scrollPosition( ... )
@@ -357,7 +357,7 @@ METHOD QWebFrame:scrollPosition( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QWebFrame_scrollPosition( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:securityOrigin( ... )
@@ -365,7 +365,7 @@ METHOD QWebFrame:securityOrigin( ... )
    CASE 0
       RETURN QWebSecurityOriginFromPointer( Qt_QWebFrame_securityOrigin( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setContent( ... )
@@ -389,7 +389,7 @@ METHOD QWebFrame:setContent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setHtml( ... )
@@ -407,7 +407,7 @@ METHOD QWebFrame:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setScrollBarPolicy( ... )
@@ -419,7 +419,7 @@ METHOD QWebFrame:setScrollBarPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setScrollBarValue( ... )
@@ -431,7 +431,7 @@ METHOD QWebFrame:setScrollBarValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setScrollPosition( ... )
@@ -443,7 +443,7 @@ METHOD QWebFrame:setScrollPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setTextSizeMultiplier( ... )
@@ -455,7 +455,7 @@ METHOD QWebFrame:setTextSizeMultiplier( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setUrl( ... )
@@ -467,7 +467,7 @@ METHOD QWebFrame:setUrl( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:setZoomFactor( ... )
@@ -479,7 +479,7 @@ METHOD QWebFrame:setZoomFactor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:textSizeMultiplier( ... )
@@ -487,7 +487,7 @@ METHOD QWebFrame:textSizeMultiplier( ... )
    CASE 0
       RETURN Qt_QWebFrame_textSizeMultiplier( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:title( ... )
@@ -495,7 +495,7 @@ METHOD QWebFrame:title( ... )
    CASE 0
       RETURN Qt_QWebFrame_title( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:toHtml( ... )
@@ -503,7 +503,7 @@ METHOD QWebFrame:toHtml( ... )
    CASE 0
       RETURN Qt_QWebFrame_toHtml( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:toPlainText( ... )
@@ -511,7 +511,7 @@ METHOD QWebFrame:toPlainText( ... )
    CASE 0
       RETURN Qt_QWebFrame_toPlainText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:url( ... )
@@ -519,7 +519,7 @@ METHOD QWebFrame:url( ... )
    CASE 0
       RETURN QUrlFromPointer( Qt_QWebFrame_url( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:zoomFactor( ... )
@@ -527,7 +527,7 @@ METHOD QWebFrame:zoomFactor( ... )
    CASE 0
       RETURN Qt_QWebFrame_zoomFactor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:evaluateJavaScript( ... )
@@ -539,7 +539,7 @@ METHOD QWebFrame:evaluateJavaScript( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebFrame:print( ... )
@@ -551,5 +551,5 @@ METHOD QWebFrame:print( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

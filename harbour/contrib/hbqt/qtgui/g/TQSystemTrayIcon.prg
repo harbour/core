@@ -130,7 +130,7 @@ CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_Q
 METHOD QSystemTrayIcon:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSystemTrayIcon( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QSystemTrayIcon:contextMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QSystemTrayIcon_contextMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:geometry( ... )
@@ -149,7 +149,7 @@ METHOD QSystemTrayIcon:geometry( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QSystemTrayIcon_geometry( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:icon( ... )
@@ -157,7 +157,7 @@ METHOD QSystemTrayIcon:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QSystemTrayIcon_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:isVisible( ... )
@@ -165,7 +165,7 @@ METHOD QSystemTrayIcon:isVisible( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_isVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:setContextMenu( ... )
@@ -177,7 +177,7 @@ METHOD QSystemTrayIcon:setContextMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:setIcon( ... )
@@ -189,7 +189,7 @@ METHOD QSystemTrayIcon:setIcon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:setToolTip( ... )
@@ -201,7 +201,7 @@ METHOD QSystemTrayIcon:setToolTip( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:showMessage( ... )
@@ -225,7 +225,7 @@ METHOD QSystemTrayIcon:showMessage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:toolTip( ... )
@@ -233,7 +233,7 @@ METHOD QSystemTrayIcon:toolTip( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_toolTip( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:isSystemTrayAvailable( ... )
@@ -241,7 +241,7 @@ METHOD QSystemTrayIcon:isSystemTrayAvailable( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_isSystemTrayAvailable( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:supportsMessages( ... )
@@ -249,7 +249,7 @@ METHOD QSystemTrayIcon:supportsMessages( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_supportsMessages( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:hide( ... )
@@ -257,7 +257,7 @@ METHOD QSystemTrayIcon:hide( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_hide( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:setVisible( ... )
@@ -269,7 +269,7 @@ METHOD QSystemTrayIcon:setVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSystemTrayIcon:show( ... )
@@ -277,5 +277,5 @@ METHOD QSystemTrayIcon:show( ... )
    CASE 0
       RETURN Qt_QSystemTrayIcon_show( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

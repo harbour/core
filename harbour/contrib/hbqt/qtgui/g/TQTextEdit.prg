@@ -197,7 +197,7 @@ CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTIO
 METHOD QTextEdit:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextEdit( ... )
    RETURN Self
@@ -208,7 +208,7 @@ METHOD QTextEdit:acceptRichText( ... )
    CASE 0
       RETURN Qt_QTextEdit_acceptRichText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:alignment( ... )
@@ -216,7 +216,7 @@ METHOD QTextEdit:alignment( ... )
    CASE 0
       RETURN Qt_QTextEdit_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:anchorAt( ... )
@@ -228,7 +228,7 @@ METHOD QTextEdit:anchorAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:autoFormatting( ... )
@@ -236,7 +236,7 @@ METHOD QTextEdit:autoFormatting( ... )
    CASE 0
       RETURN Qt_QTextEdit_autoFormatting( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:canPaste( ... )
@@ -244,7 +244,7 @@ METHOD QTextEdit:canPaste( ... )
    CASE 0
       RETURN Qt_QTextEdit_canPaste( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:createStandardContextMenu( ... )
@@ -258,7 +258,7 @@ METHOD QTextEdit:createStandardContextMenu( ... )
    CASE 0
       RETURN QMenuFromPointer( Qt_QTextEdit_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:currentCharFormat( ... )
@@ -266,7 +266,7 @@ METHOD QTextEdit:currentCharFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QTextEdit_currentCharFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:currentFont( ... )
@@ -274,7 +274,7 @@ METHOD QTextEdit:currentFont( ... )
    CASE 0
       RETURN QFontFromPointer( Qt_QTextEdit_currentFont( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:cursorForPosition( ... )
@@ -286,7 +286,7 @@ METHOD QTextEdit:cursorForPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:cursorRect( ... )
@@ -300,7 +300,7 @@ METHOD QTextEdit:cursorRect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QTextEdit_cursorRect_1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:cursorWidth( ... )
@@ -308,7 +308,7 @@ METHOD QTextEdit:cursorWidth( ... )
    CASE 0
       RETURN Qt_QTextEdit_cursorWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:document( ... )
@@ -316,7 +316,7 @@ METHOD QTextEdit:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QTextEdit_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:documentTitle( ... )
@@ -324,7 +324,7 @@ METHOD QTextEdit:documentTitle( ... )
    CASE 0
       RETURN Qt_QTextEdit_documentTitle( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:ensureCursorVisible( ... )
@@ -332,7 +332,7 @@ METHOD QTextEdit:ensureCursorVisible( ... )
    CASE 0
       RETURN Qt_QTextEdit_ensureCursorVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:find( ... )
@@ -350,7 +350,7 @@ METHOD QTextEdit:find( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:fontFamily( ... )
@@ -358,7 +358,7 @@ METHOD QTextEdit:fontFamily( ... )
    CASE 0
       RETURN Qt_QTextEdit_fontFamily( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:fontItalic( ... )
@@ -366,7 +366,7 @@ METHOD QTextEdit:fontItalic( ... )
    CASE 0
       RETURN Qt_QTextEdit_fontItalic( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:fontPointSize( ... )
@@ -374,7 +374,7 @@ METHOD QTextEdit:fontPointSize( ... )
    CASE 0
       RETURN Qt_QTextEdit_fontPointSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:fontUnderline( ... )
@@ -382,7 +382,7 @@ METHOD QTextEdit:fontUnderline( ... )
    CASE 0
       RETURN Qt_QTextEdit_fontUnderline( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:fontWeight( ... )
@@ -390,7 +390,7 @@ METHOD QTextEdit:fontWeight( ... )
    CASE 0
       RETURN Qt_QTextEdit_fontWeight( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:isReadOnly( ... )
@@ -398,7 +398,7 @@ METHOD QTextEdit:isReadOnly( ... )
    CASE 0
       RETURN Qt_QTextEdit_isReadOnly( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:isUndoRedoEnabled( ... )
@@ -406,7 +406,7 @@ METHOD QTextEdit:isUndoRedoEnabled( ... )
    CASE 0
       RETURN Qt_QTextEdit_isUndoRedoEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:lineWrapColumnOrWidth( ... )
@@ -414,7 +414,7 @@ METHOD QTextEdit:lineWrapColumnOrWidth( ... )
    CASE 0
       RETURN Qt_QTextEdit_lineWrapColumnOrWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:lineWrapMode( ... )
@@ -422,7 +422,7 @@ METHOD QTextEdit:lineWrapMode( ... )
    CASE 0
       RETURN Qt_QTextEdit_lineWrapMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:loadResource( ... )
@@ -434,7 +434,7 @@ METHOD QTextEdit:loadResource( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:mergeCurrentCharFormat( ... )
@@ -446,7 +446,7 @@ METHOD QTextEdit:mergeCurrentCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:moveCursor( ... )
@@ -464,7 +464,7 @@ METHOD QTextEdit:moveCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:overwriteMode( ... )
@@ -472,7 +472,7 @@ METHOD QTextEdit:overwriteMode( ... )
    CASE 0
       RETURN Qt_QTextEdit_overwriteMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:print( ... )
@@ -484,7 +484,7 @@ METHOD QTextEdit:print( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setAcceptRichText( ... )
@@ -496,7 +496,7 @@ METHOD QTextEdit:setAcceptRichText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setAutoFormatting( ... )
@@ -508,7 +508,7 @@ METHOD QTextEdit:setAutoFormatting( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setCurrentCharFormat( ... )
@@ -520,7 +520,7 @@ METHOD QTextEdit:setCurrentCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setCursorWidth( ... )
@@ -532,7 +532,7 @@ METHOD QTextEdit:setCursorWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setDocument( ... )
@@ -544,7 +544,7 @@ METHOD QTextEdit:setDocument( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setDocumentTitle( ... )
@@ -556,7 +556,7 @@ METHOD QTextEdit:setDocumentTitle( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setLineWrapColumnOrWidth( ... )
@@ -568,7 +568,7 @@ METHOD QTextEdit:setLineWrapColumnOrWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setLineWrapMode( ... )
@@ -580,7 +580,7 @@ METHOD QTextEdit:setLineWrapMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setOverwriteMode( ... )
@@ -592,7 +592,7 @@ METHOD QTextEdit:setOverwriteMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setReadOnly( ... )
@@ -604,7 +604,7 @@ METHOD QTextEdit:setReadOnly( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTabChangesFocus( ... )
@@ -616,7 +616,7 @@ METHOD QTextEdit:setTabChangesFocus( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTabStopWidth( ... )
@@ -628,7 +628,7 @@ METHOD QTextEdit:setTabStopWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTextCursor( ... )
@@ -640,7 +640,7 @@ METHOD QTextEdit:setTextCursor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTextInteractionFlags( ... )
@@ -652,7 +652,7 @@ METHOD QTextEdit:setTextInteractionFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setUndoRedoEnabled( ... )
@@ -664,7 +664,7 @@ METHOD QTextEdit:setUndoRedoEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setWordWrapMode( ... )
@@ -676,7 +676,7 @@ METHOD QTextEdit:setWordWrapMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:tabChangesFocus( ... )
@@ -684,7 +684,7 @@ METHOD QTextEdit:tabChangesFocus( ... )
    CASE 0
       RETURN Qt_QTextEdit_tabChangesFocus( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:tabStopWidth( ... )
@@ -692,7 +692,7 @@ METHOD QTextEdit:tabStopWidth( ... )
    CASE 0
       RETURN Qt_QTextEdit_tabStopWidth( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:textBackgroundColor( ... )
@@ -700,7 +700,7 @@ METHOD QTextEdit:textBackgroundColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QTextEdit_textBackgroundColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:textColor( ... )
@@ -708,7 +708,7 @@ METHOD QTextEdit:textColor( ... )
    CASE 0
       RETURN QColorFromPointer( Qt_QTextEdit_textColor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:textCursor( ... )
@@ -716,7 +716,7 @@ METHOD QTextEdit:textCursor( ... )
    CASE 0
       RETURN QTextCursorFromPointer( Qt_QTextEdit_textCursor( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:textInteractionFlags( ... )
@@ -724,7 +724,7 @@ METHOD QTextEdit:textInteractionFlags( ... )
    CASE 0
       RETURN Qt_QTextEdit_textInteractionFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:toHtml( ... )
@@ -732,7 +732,7 @@ METHOD QTextEdit:toHtml( ... )
    CASE 0
       RETURN Qt_QTextEdit_toHtml( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:toPlainText( ... )
@@ -740,7 +740,7 @@ METHOD QTextEdit:toPlainText( ... )
    CASE 0
       RETURN Qt_QTextEdit_toPlainText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:wordWrapMode( ... )
@@ -748,7 +748,7 @@ METHOD QTextEdit:wordWrapMode( ... )
    CASE 0
       RETURN Qt_QTextEdit_wordWrapMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:append( ... )
@@ -760,7 +760,7 @@ METHOD QTextEdit:append( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:clear( ... )
@@ -768,7 +768,7 @@ METHOD QTextEdit:clear( ... )
    CASE 0
       RETURN Qt_QTextEdit_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:copy( ... )
@@ -776,7 +776,7 @@ METHOD QTextEdit:copy( ... )
    CASE 0
       RETURN Qt_QTextEdit_copy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:cut( ... )
@@ -784,7 +784,7 @@ METHOD QTextEdit:cut( ... )
    CASE 0
       RETURN Qt_QTextEdit_cut( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:insertHtml( ... )
@@ -796,7 +796,7 @@ METHOD QTextEdit:insertHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:insertPlainText( ... )
@@ -808,7 +808,7 @@ METHOD QTextEdit:insertPlainText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:paste( ... )
@@ -816,7 +816,7 @@ METHOD QTextEdit:paste( ... )
    CASE 0
       RETURN Qt_QTextEdit_paste( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:redo( ... )
@@ -824,7 +824,7 @@ METHOD QTextEdit:redo( ... )
    CASE 0
       RETURN Qt_QTextEdit_redo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:scrollToAnchor( ... )
@@ -836,7 +836,7 @@ METHOD QTextEdit:scrollToAnchor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:selectAll( ... )
@@ -844,7 +844,7 @@ METHOD QTextEdit:selectAll( ... )
    CASE 0
       RETURN Qt_QTextEdit_selectAll( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setAlignment( ... )
@@ -856,7 +856,7 @@ METHOD QTextEdit:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setCurrentFont( ... )
@@ -868,7 +868,7 @@ METHOD QTextEdit:setCurrentFont( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setFontFamily( ... )
@@ -880,7 +880,7 @@ METHOD QTextEdit:setFontFamily( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setFontItalic( ... )
@@ -892,7 +892,7 @@ METHOD QTextEdit:setFontItalic( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setFontPointSize( ... )
@@ -904,7 +904,7 @@ METHOD QTextEdit:setFontPointSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setFontUnderline( ... )
@@ -916,7 +916,7 @@ METHOD QTextEdit:setFontUnderline( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setFontWeight( ... )
@@ -928,7 +928,7 @@ METHOD QTextEdit:setFontWeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setHtml( ... )
@@ -940,7 +940,7 @@ METHOD QTextEdit:setHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setPlainText( ... )
@@ -952,7 +952,7 @@ METHOD QTextEdit:setPlainText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setText( ... )
@@ -964,7 +964,7 @@ METHOD QTextEdit:setText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTextBackgroundColor( ... )
@@ -976,7 +976,7 @@ METHOD QTextEdit:setTextBackgroundColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:setTextColor( ... )
@@ -988,7 +988,7 @@ METHOD QTextEdit:setTextColor( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:undo( ... )
@@ -996,7 +996,7 @@ METHOD QTextEdit:undo( ... )
    CASE 0
       RETURN Qt_QTextEdit_undo( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:zoomIn( ... )
@@ -1010,7 +1010,7 @@ METHOD QTextEdit:zoomIn( ... )
    CASE 0
       RETURN Qt_QTextEdit_zoomIn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextEdit:zoomOut( ... )
@@ -1024,5 +1024,5 @@ METHOD QTextEdit:zoomOut( ... )
    CASE 0
       RETURN Qt_QTextEdit_zoomOut( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

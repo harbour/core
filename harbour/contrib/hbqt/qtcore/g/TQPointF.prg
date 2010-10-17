@@ -124,7 +124,7 @@ CREATE CLASS QPointF INHERIT HbQtObjectHandler FUNCTION HB_QPointF
 METHOD QPointF:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPointF( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QPointF:isNull( ... )
    CASE 0
       RETURN Qt_QPointF_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:rx( ... )
@@ -143,7 +143,7 @@ METHOD QPointF:rx( ... )
    CASE 0
       RETURN Qt_QPointF_rx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:ry( ... )
@@ -151,7 +151,7 @@ METHOD QPointF:ry( ... )
    CASE 0
       RETURN Qt_QPointF_ry( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:setX( ... )
@@ -163,7 +163,7 @@ METHOD QPointF:setX( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:setY( ... )
@@ -175,7 +175,7 @@ METHOD QPointF:setY( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:toPoint( ... )
@@ -183,7 +183,7 @@ METHOD QPointF:toPoint( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QPointF_toPoint( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:x( ... )
@@ -191,7 +191,7 @@ METHOD QPointF:x( ... )
    CASE 0
       RETURN Qt_QPointF_x( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPointF:y( ... )
@@ -199,5 +199,5 @@ METHOD QPointF:y( ... )
    CASE 0
       RETURN Qt_QPointF_y( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

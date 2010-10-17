@@ -122,7 +122,7 @@ CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPrintEngine
 METHOD QPrintEngine:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QPrintEngine( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QPrintEngine:abort( ... )
    CASE 0
       RETURN Qt_QPrintEngine_abort( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintEngine:metric( ... )
@@ -145,7 +145,7 @@ METHOD QPrintEngine:metric( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintEngine:newPage( ... )
@@ -153,7 +153,7 @@ METHOD QPrintEngine:newPage( ... )
    CASE 0
       RETURN Qt_QPrintEngine_newPage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintEngine:printerState( ... )
@@ -161,7 +161,7 @@ METHOD QPrintEngine:printerState( ... )
    CASE 0
       RETURN Qt_QPrintEngine_printerState( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintEngine:property( ... )
@@ -173,7 +173,7 @@ METHOD QPrintEngine:property( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QPrintEngine:setProperty( ... )
@@ -185,5 +185,5 @@ METHOD QPrintEngine:setProperty( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

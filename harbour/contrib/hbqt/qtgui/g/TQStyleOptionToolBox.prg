@@ -118,7 +118,7 @@ CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 METHOD QStyleOptionToolBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionToolBox( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QStyleOptionToolBox:icon( ... )
    CASE 0
       RETURN QIconFromPointer( Qt_QStyleOptionToolBox_icon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionToolBox:text( ... )
@@ -137,5 +137,5 @@ METHOD QStyleOptionToolBox:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionToolBox_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

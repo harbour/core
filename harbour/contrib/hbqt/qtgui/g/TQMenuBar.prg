@@ -130,7 +130,7 @@ CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenuBar
 METHOD QMenuBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMenuBar( ... )
    RETURN Self
@@ -141,7 +141,7 @@ METHOD QMenuBar:activeAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenuBar_activeAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:addAction( ... )
@@ -161,7 +161,7 @@ METHOD QMenuBar:addAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:addMenu( ... )
@@ -181,7 +181,7 @@ METHOD QMenuBar:addMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:addSeparator( ... )
@@ -189,7 +189,7 @@ METHOD QMenuBar:addSeparator( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QMenuBar_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:clear( ... )
@@ -197,7 +197,7 @@ METHOD QMenuBar:clear( ... )
    CASE 0
       RETURN Qt_QMenuBar_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:insertMenu( ... )
@@ -209,7 +209,7 @@ METHOD QMenuBar:insertMenu( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:insertSeparator( ... )
@@ -221,7 +221,7 @@ METHOD QMenuBar:insertSeparator( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:isDefaultUp( ... )
@@ -229,7 +229,7 @@ METHOD QMenuBar:isDefaultUp( ... )
    CASE 0
       RETURN Qt_QMenuBar_isDefaultUp( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:setActiveAction( ... )
@@ -241,7 +241,7 @@ METHOD QMenuBar:setActiveAction( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMenuBar:setDefaultUp( ... )
@@ -253,5 +253,5 @@ METHOD QMenuBar:setDefaultUp( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

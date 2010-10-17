@@ -120,7 +120,7 @@ CREATE CLASS QGraphicsPolygonItem INHERIT HbQtObjectHandler, HB_QAbstractGraphic
 METHOD QGraphicsPolygonItem:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsPolygonItem( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QGraphicsPolygonItem:fillRule( ... )
    CASE 0
       RETURN Qt_QGraphicsPolygonItem_fillRule( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPolygonItem:polygon( ... )
@@ -139,7 +139,7 @@ METHOD QGraphicsPolygonItem:polygon( ... )
    CASE 0
       RETURN QPolygonFFromPointer( Qt_QGraphicsPolygonItem_polygon( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPolygonItem:setFillRule( ... )
@@ -151,7 +151,7 @@ METHOD QGraphicsPolygonItem:setFillRule( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsPolygonItem:setPolygon( ... )
@@ -163,5 +163,5 @@ METHOD QGraphicsPolygonItem:setPolygon( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -143,7 +143,7 @@ CREATE CLASS QTimeLine INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimeLi
 METHOD QTimeLine:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTimeLine( ... )
    RETURN Self
@@ -154,7 +154,7 @@ METHOD QTimeLine:currentFrame( ... )
    CASE 0
       RETURN Qt_QTimeLine_currentFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:currentTime( ... )
@@ -162,7 +162,7 @@ METHOD QTimeLine:currentTime( ... )
    CASE 0
       RETURN Qt_QTimeLine_currentTime( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:currentValue( ... )
@@ -170,7 +170,7 @@ METHOD QTimeLine:currentValue( ... )
    CASE 0
       RETURN Qt_QTimeLine_currentValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:curveShape( ... )
@@ -178,7 +178,7 @@ METHOD QTimeLine:curveShape( ... )
    CASE 0
       RETURN Qt_QTimeLine_curveShape( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:direction( ... )
@@ -186,7 +186,7 @@ METHOD QTimeLine:direction( ... )
    CASE 0
       RETURN Qt_QTimeLine_direction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:duration( ... )
@@ -194,7 +194,7 @@ METHOD QTimeLine:duration( ... )
    CASE 0
       RETURN Qt_QTimeLine_duration( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:endFrame( ... )
@@ -202,7 +202,7 @@ METHOD QTimeLine:endFrame( ... )
    CASE 0
       RETURN Qt_QTimeLine_endFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:frameForTime( ... )
@@ -214,7 +214,7 @@ METHOD QTimeLine:frameForTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:loopCount( ... )
@@ -222,7 +222,7 @@ METHOD QTimeLine:loopCount( ... )
    CASE 0
       RETURN Qt_QTimeLine_loopCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setCurveShape( ... )
@@ -234,7 +234,7 @@ METHOD QTimeLine:setCurveShape( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setDirection( ... )
@@ -246,7 +246,7 @@ METHOD QTimeLine:setDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setDuration( ... )
@@ -258,7 +258,7 @@ METHOD QTimeLine:setDuration( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setEndFrame( ... )
@@ -270,7 +270,7 @@ METHOD QTimeLine:setEndFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setFrameRange( ... )
@@ -282,7 +282,7 @@ METHOD QTimeLine:setFrameRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setLoopCount( ... )
@@ -294,7 +294,7 @@ METHOD QTimeLine:setLoopCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setStartFrame( ... )
@@ -306,7 +306,7 @@ METHOD QTimeLine:setStartFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setUpdateInterval( ... )
@@ -318,7 +318,7 @@ METHOD QTimeLine:setUpdateInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:startFrame( ... )
@@ -326,7 +326,7 @@ METHOD QTimeLine:startFrame( ... )
    CASE 0
       RETURN Qt_QTimeLine_startFrame( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:state( ... )
@@ -334,7 +334,7 @@ METHOD QTimeLine:state( ... )
    CASE 0
       RETURN Qt_QTimeLine_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:updateInterval( ... )
@@ -342,7 +342,7 @@ METHOD QTimeLine:updateInterval( ... )
    CASE 0
       RETURN Qt_QTimeLine_updateInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:valueForTime( ... )
@@ -354,7 +354,7 @@ METHOD QTimeLine:valueForTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:resume( ... )
@@ -362,7 +362,7 @@ METHOD QTimeLine:resume( ... )
    CASE 0
       RETURN Qt_QTimeLine_resume( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setCurrentTime( ... )
@@ -374,7 +374,7 @@ METHOD QTimeLine:setCurrentTime( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:setPaused( ... )
@@ -386,7 +386,7 @@ METHOD QTimeLine:setPaused( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:start( ... )
@@ -394,7 +394,7 @@ METHOD QTimeLine:start( ... )
    CASE 0
       RETURN Qt_QTimeLine_start( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:stop( ... )
@@ -402,7 +402,7 @@ METHOD QTimeLine:stop( ... )
    CASE 0
       RETURN Qt_QTimeLine_stop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTimeLine:toggleDirection( ... )
@@ -410,5 +410,5 @@ METHOD QTimeLine:toggleDirection( ... )
    CASE 0
       RETURN Qt_QTimeLine_toggleDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

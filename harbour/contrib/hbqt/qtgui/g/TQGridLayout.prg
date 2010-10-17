@@ -142,7 +142,7 @@ CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QGrid
 METHOD QGridLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGridLayout( ... )
    RETURN Self
@@ -175,7 +175,7 @@ METHOD QGridLayout:addItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:addLayout( ... )
@@ -205,7 +205,7 @@ METHOD QGridLayout:addLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:addWidget( ... )
@@ -235,7 +235,7 @@ METHOD QGridLayout:addWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:cellRect( ... )
@@ -247,7 +247,7 @@ METHOD QGridLayout:cellRect( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:columnCount( ... )
@@ -255,7 +255,7 @@ METHOD QGridLayout:columnCount( ... )
    CASE 0
       RETURN Qt_QGridLayout_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:columnMinimumWidth( ... )
@@ -267,7 +267,7 @@ METHOD QGridLayout:columnMinimumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:columnStretch( ... )
@@ -279,7 +279,7 @@ METHOD QGridLayout:columnStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:getItemPosition( ... )
@@ -291,7 +291,7 @@ METHOD QGridLayout:getItemPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:horizontalSpacing( ... )
@@ -299,7 +299,7 @@ METHOD QGridLayout:horizontalSpacing( ... )
    CASE 0
       RETURN Qt_QGridLayout_horizontalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:itemAtPosition( ... )
@@ -311,7 +311,7 @@ METHOD QGridLayout:itemAtPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:originCorner( ... )
@@ -319,7 +319,7 @@ METHOD QGridLayout:originCorner( ... )
    CASE 0
       RETURN Qt_QGridLayout_originCorner( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:rowCount( ... )
@@ -327,7 +327,7 @@ METHOD QGridLayout:rowCount( ... )
    CASE 0
       RETURN Qt_QGridLayout_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:rowMinimumHeight( ... )
@@ -339,7 +339,7 @@ METHOD QGridLayout:rowMinimumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:rowStretch( ... )
@@ -351,7 +351,7 @@ METHOD QGridLayout:rowStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setColumnMinimumWidth( ... )
@@ -363,7 +363,7 @@ METHOD QGridLayout:setColumnMinimumWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setColumnStretch( ... )
@@ -375,7 +375,7 @@ METHOD QGridLayout:setColumnStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setHorizontalSpacing( ... )
@@ -387,7 +387,7 @@ METHOD QGridLayout:setHorizontalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setOriginCorner( ... )
@@ -399,7 +399,7 @@ METHOD QGridLayout:setOriginCorner( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setRowMinimumHeight( ... )
@@ -411,7 +411,7 @@ METHOD QGridLayout:setRowMinimumHeight( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setRowStretch( ... )
@@ -423,7 +423,7 @@ METHOD QGridLayout:setRowStretch( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setSpacing( ... )
@@ -435,7 +435,7 @@ METHOD QGridLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:setVerticalSpacing( ... )
@@ -447,7 +447,7 @@ METHOD QGridLayout:setVerticalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:spacing( ... )
@@ -455,7 +455,7 @@ METHOD QGridLayout:spacing( ... )
    CASE 0
       RETURN Qt_QGridLayout_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGridLayout:verticalSpacing( ... )
@@ -463,5 +463,5 @@ METHOD QGridLayout:verticalSpacing( ... )
    CASE 0
       RETURN Qt_QGridLayout_verticalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

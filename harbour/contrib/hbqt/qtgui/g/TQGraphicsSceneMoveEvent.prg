@@ -118,7 +118,7 @@ CREATE CLASS QGraphicsSceneMoveEvent INHERIT HbQtObjectHandler, HB_QGraphicsScen
 METHOD QGraphicsSceneMoveEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QGraphicsSceneMoveEvent( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QGraphicsSceneMoveEvent:newPos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMoveEvent_newPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QGraphicsSceneMoveEvent:oldPos( ... )
@@ -137,5 +137,5 @@ METHOD QGraphicsSceneMoveEvent:oldPos( ... )
    CASE 0
       RETURN QPointFFromPointer( Qt_QGraphicsSceneMoveEvent_oldPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

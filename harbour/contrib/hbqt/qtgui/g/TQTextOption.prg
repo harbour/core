@@ -129,7 +129,7 @@ CREATE CLASS QTextOption INHERIT HbQtObjectHandler FUNCTION HB_QTextOption
 METHOD QTextOption:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextOption( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QTextOption:alignment( ... )
    CASE 0
       RETURN Qt_QTextOption_alignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:flags( ... )
@@ -148,7 +148,7 @@ METHOD QTextOption:flags( ... )
    CASE 0
       RETURN Qt_QTextOption_flags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setAlignment( ... )
@@ -160,7 +160,7 @@ METHOD QTextOption:setAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setFlags( ... )
@@ -172,7 +172,7 @@ METHOD QTextOption:setFlags( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setTabStop( ... )
@@ -184,7 +184,7 @@ METHOD QTextOption:setTabStop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setTextDirection( ... )
@@ -196,7 +196,7 @@ METHOD QTextOption:setTextDirection( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setUseDesignMetrics( ... )
@@ -208,7 +208,7 @@ METHOD QTextOption:setUseDesignMetrics( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:setWrapMode( ... )
@@ -220,7 +220,7 @@ METHOD QTextOption:setWrapMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:tabArray( ... )
@@ -228,7 +228,7 @@ METHOD QTextOption:tabArray( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QTextOption_tabArray( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:tabStop( ... )
@@ -236,7 +236,7 @@ METHOD QTextOption:tabStop( ... )
    CASE 0
       RETURN Qt_QTextOption_tabStop( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:textDirection( ... )
@@ -244,7 +244,7 @@ METHOD QTextOption:textDirection( ... )
    CASE 0
       RETURN Qt_QTextOption_textDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:useDesignMetrics( ... )
@@ -252,7 +252,7 @@ METHOD QTextOption:useDesignMetrics( ... )
    CASE 0
       RETURN Qt_QTextOption_useDesignMetrics( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextOption:wrapMode( ... )
@@ -260,5 +260,5 @@ METHOD QTextOption:wrapMode( ... )
    CASE 0
       RETURN Qt_QTextOption_wrapMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

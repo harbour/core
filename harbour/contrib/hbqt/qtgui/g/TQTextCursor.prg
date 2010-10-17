@@ -174,7 +174,7 @@ CREATE CLASS QTextCursor INHERIT HbQtObjectHandler FUNCTION HB_QTextCursor
 METHOD QTextCursor:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextCursor( ... )
    RETURN Self
@@ -185,7 +185,7 @@ METHOD QTextCursor:anchor( ... )
    CASE 0
       RETURN Qt_QTextCursor_anchor( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:atBlockEnd( ... )
@@ -193,7 +193,7 @@ METHOD QTextCursor:atBlockEnd( ... )
    CASE 0
       RETURN Qt_QTextCursor_atBlockEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:atBlockStart( ... )
@@ -201,7 +201,7 @@ METHOD QTextCursor:atBlockStart( ... )
    CASE 0
       RETURN Qt_QTextCursor_atBlockStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:atEnd( ... )
@@ -209,7 +209,7 @@ METHOD QTextCursor:atEnd( ... )
    CASE 0
       RETURN Qt_QTextCursor_atEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:atStart( ... )
@@ -217,7 +217,7 @@ METHOD QTextCursor:atStart( ... )
    CASE 0
       RETURN Qt_QTextCursor_atStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:beginEditBlock( ... )
@@ -225,7 +225,7 @@ METHOD QTextCursor:beginEditBlock( ... )
    CASE 0
       RETURN Qt_QTextCursor_beginEditBlock( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:block( ... )
@@ -233,7 +233,7 @@ METHOD QTextCursor:block( ... )
    CASE 0
       RETURN QTextBlockFromPointer( Qt_QTextCursor_block( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:blockCharFormat( ... )
@@ -241,7 +241,7 @@ METHOD QTextCursor:blockCharFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QTextCursor_blockCharFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:blockFormat( ... )
@@ -249,7 +249,7 @@ METHOD QTextCursor:blockFormat( ... )
    CASE 0
       RETURN QTextBlockFormatFromPointer( Qt_QTextCursor_blockFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:blockNumber( ... )
@@ -257,7 +257,7 @@ METHOD QTextCursor:blockNumber( ... )
    CASE 0
       RETURN Qt_QTextCursor_blockNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:charFormat( ... )
@@ -265,7 +265,7 @@ METHOD QTextCursor:charFormat( ... )
    CASE 0
       RETURN QTextCharFormatFromPointer( Qt_QTextCursor_charFormat( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:clearSelection( ... )
@@ -273,7 +273,7 @@ METHOD QTextCursor:clearSelection( ... )
    CASE 0
       RETURN Qt_QTextCursor_clearSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:columnNumber( ... )
@@ -281,7 +281,7 @@ METHOD QTextCursor:columnNumber( ... )
    CASE 0
       RETURN Qt_QTextCursor_columnNumber( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:createList( ... )
@@ -295,7 +295,7 @@ METHOD QTextCursor:createList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:currentFrame( ... )
@@ -303,7 +303,7 @@ METHOD QTextCursor:currentFrame( ... )
    CASE 0
       RETURN QTextFrameFromPointer( Qt_QTextCursor_currentFrame( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:currentList( ... )
@@ -311,7 +311,7 @@ METHOD QTextCursor:currentList( ... )
    CASE 0
       RETURN QTextListFromPointer( Qt_QTextCursor_currentList( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:deleteChar( ... )
@@ -319,7 +319,7 @@ METHOD QTextCursor:deleteChar( ... )
    CASE 0
       RETURN Qt_QTextCursor_deleteChar( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:deletePreviousChar( ... )
@@ -327,7 +327,7 @@ METHOD QTextCursor:deletePreviousChar( ... )
    CASE 0
       RETURN Qt_QTextCursor_deletePreviousChar( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:document( ... )
@@ -335,7 +335,7 @@ METHOD QTextCursor:document( ... )
    CASE 0
       RETURN QTextDocumentFromPointer( Qt_QTextCursor_document( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:endEditBlock( ... )
@@ -343,7 +343,7 @@ METHOD QTextCursor:endEditBlock( ... )
    CASE 0
       RETURN Qt_QTextCursor_endEditBlock( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:hasComplexSelection( ... )
@@ -351,7 +351,7 @@ METHOD QTextCursor:hasComplexSelection( ... )
    CASE 0
       RETURN Qt_QTextCursor_hasComplexSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:hasSelection( ... )
@@ -359,7 +359,7 @@ METHOD QTextCursor:hasSelection( ... )
    CASE 0
       RETURN Qt_QTextCursor_hasSelection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertBlock( ... )
@@ -379,7 +379,7 @@ METHOD QTextCursor:insertBlock( ... )
    CASE 0
       RETURN Qt_QTextCursor_insertBlock( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertFragment( ... )
@@ -391,7 +391,7 @@ METHOD QTextCursor:insertFragment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertFrame( ... )
@@ -403,7 +403,7 @@ METHOD QTextCursor:insertFrame( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertHtml( ... )
@@ -415,7 +415,7 @@ METHOD QTextCursor:insertHtml( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertImage( ... )
@@ -442,7 +442,7 @@ METHOD QTextCursor:insertImage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertList( ... )
@@ -456,7 +456,7 @@ METHOD QTextCursor:insertList( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:insertText( ... )
@@ -474,7 +474,7 @@ METHOD QTextCursor:insertText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:isCopyOf( ... )
@@ -486,7 +486,7 @@ METHOD QTextCursor:isCopyOf( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:isNull( ... )
@@ -494,7 +494,7 @@ METHOD QTextCursor:isNull( ... )
    CASE 0
       RETURN Qt_QTextCursor_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:joinPreviousEditBlock( ... )
@@ -502,7 +502,7 @@ METHOD QTextCursor:joinPreviousEditBlock( ... )
    CASE 0
       RETURN Qt_QTextCursor_joinPreviousEditBlock( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:mergeBlockCharFormat( ... )
@@ -514,7 +514,7 @@ METHOD QTextCursor:mergeBlockCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:mergeBlockFormat( ... )
@@ -526,7 +526,7 @@ METHOD QTextCursor:mergeBlockFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:mergeCharFormat( ... )
@@ -538,7 +538,7 @@ METHOD QTextCursor:mergeCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:movePosition( ... )
@@ -562,7 +562,7 @@ METHOD QTextCursor:movePosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:position( ... )
@@ -570,7 +570,7 @@ METHOD QTextCursor:position( ... )
    CASE 0
       RETURN Qt_QTextCursor_position( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:removeSelectedText( ... )
@@ -578,7 +578,7 @@ METHOD QTextCursor:removeSelectedText( ... )
    CASE 0
       RETURN Qt_QTextCursor_removeSelectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:select( ... )
@@ -590,7 +590,7 @@ METHOD QTextCursor:select( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:selectedTableCells( ... )
@@ -602,7 +602,7 @@ METHOD QTextCursor:selectedTableCells( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:selectedText( ... )
@@ -610,7 +610,7 @@ METHOD QTextCursor:selectedText( ... )
    CASE 0
       RETURN Qt_QTextCursor_selectedText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:selection( ... )
@@ -618,7 +618,7 @@ METHOD QTextCursor:selection( ... )
    CASE 0
       RETURN QTextDocumentFragmentFromPointer( Qt_QTextCursor_selection( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:selectionEnd( ... )
@@ -626,7 +626,7 @@ METHOD QTextCursor:selectionEnd( ... )
    CASE 0
       RETURN Qt_QTextCursor_selectionEnd( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:selectionStart( ... )
@@ -634,7 +634,7 @@ METHOD QTextCursor:selectionStart( ... )
    CASE 0
       RETURN Qt_QTextCursor_selectionStart( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:setBlockCharFormat( ... )
@@ -646,7 +646,7 @@ METHOD QTextCursor:setBlockCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:setBlockFormat( ... )
@@ -658,7 +658,7 @@ METHOD QTextCursor:setBlockFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:setCharFormat( ... )
@@ -670,7 +670,7 @@ METHOD QTextCursor:setCharFormat( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:setPosition( ... )
@@ -688,7 +688,7 @@ METHOD QTextCursor:setPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:setVisualNavigation( ... )
@@ -700,7 +700,7 @@ METHOD QTextCursor:setVisualNavigation( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextCursor:visualNavigation( ... )
@@ -708,5 +708,5 @@ METHOD QTextCursor:visualNavigation( ... )
    CASE 0
       RETURN Qt_QTextCursor_visualNavigation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

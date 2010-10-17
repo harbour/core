@@ -120,7 +120,7 @@ CREATE CLASS QSlider INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_Q
 METHOD QSlider:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSlider( ... )
    RETURN Self
@@ -135,7 +135,7 @@ METHOD QSlider:setTickInterval( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSlider:setTickPosition( ... )
@@ -147,7 +147,7 @@ METHOD QSlider:setTickPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSlider:tickInterval( ... )
@@ -155,7 +155,7 @@ METHOD QSlider:tickInterval( ... )
    CASE 0
       RETURN Qt_QSlider_tickInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSlider:tickPosition( ... )
@@ -163,5 +163,5 @@ METHOD QSlider:tickPosition( ... )
    CASE 0
       RETURN Qt_QSlider_tickPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

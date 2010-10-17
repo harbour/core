@@ -149,7 +149,7 @@ CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QForm
 METHOD QFormLayout:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFormLayout( ... )
    RETURN Self
@@ -172,7 +172,7 @@ METHOD QFormLayout:addRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:fieldGrowthPolicy( ... )
@@ -180,7 +180,7 @@ METHOD QFormLayout:fieldGrowthPolicy( ... )
    CASE 0
       RETURN Qt_QFormLayout_fieldGrowthPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:formAlignment( ... )
@@ -188,7 +188,7 @@ METHOD QFormLayout:formAlignment( ... )
    CASE 0
       RETURN Qt_QFormLayout_formAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:getItemPosition( ... )
@@ -200,7 +200,7 @@ METHOD QFormLayout:getItemPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:getLayoutPosition( ... )
@@ -212,7 +212,7 @@ METHOD QFormLayout:getLayoutPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:getWidgetPosition( ... )
@@ -224,7 +224,7 @@ METHOD QFormLayout:getWidgetPosition( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:horizontalSpacing( ... )
@@ -232,7 +232,7 @@ METHOD QFormLayout:horizontalSpacing( ... )
    CASE 0
       RETURN Qt_QFormLayout_horizontalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:insertRow( ... )
@@ -267,7 +267,7 @@ METHOD QFormLayout:insertRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:itemAt( ... )
@@ -279,7 +279,7 @@ METHOD QFormLayout:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:labelAlignment( ... )
@@ -287,7 +287,7 @@ METHOD QFormLayout:labelAlignment( ... )
    CASE 0
       RETURN Qt_QFormLayout_labelAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:labelForField( ... )
@@ -304,7 +304,7 @@ METHOD QFormLayout:labelForField( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:rowCount( ... )
@@ -312,7 +312,7 @@ METHOD QFormLayout:rowCount( ... )
    CASE 0
       RETURN Qt_QFormLayout_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:rowWrapPolicy( ... )
@@ -320,7 +320,7 @@ METHOD QFormLayout:rowWrapPolicy( ... )
    CASE 0
       RETURN Qt_QFormLayout_rowWrapPolicy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setFieldGrowthPolicy( ... )
@@ -332,7 +332,7 @@ METHOD QFormLayout:setFieldGrowthPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setFormAlignment( ... )
@@ -344,7 +344,7 @@ METHOD QFormLayout:setFormAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setHorizontalSpacing( ... )
@@ -356,7 +356,7 @@ METHOD QFormLayout:setHorizontalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setItem( ... )
@@ -368,7 +368,7 @@ METHOD QFormLayout:setItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setLabelAlignment( ... )
@@ -380,7 +380,7 @@ METHOD QFormLayout:setLabelAlignment( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setLayout( ... )
@@ -392,7 +392,7 @@ METHOD QFormLayout:setLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setRowWrapPolicy( ... )
@@ -404,7 +404,7 @@ METHOD QFormLayout:setRowWrapPolicy( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setSpacing( ... )
@@ -416,7 +416,7 @@ METHOD QFormLayout:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setVerticalSpacing( ... )
@@ -428,7 +428,7 @@ METHOD QFormLayout:setVerticalSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:setWidget( ... )
@@ -440,7 +440,7 @@ METHOD QFormLayout:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:spacing( ... )
@@ -448,7 +448,7 @@ METHOD QFormLayout:spacing( ... )
    CASE 0
       RETURN Qt_QFormLayout_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFormLayout:verticalSpacing( ... )
@@ -456,5 +456,5 @@ METHOD QFormLayout:verticalSpacing( ... )
    CASE 0
       RETURN Qt_QFormLayout_verticalSpacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

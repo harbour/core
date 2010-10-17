@@ -145,7 +145,7 @@ CREATE CLASS QListView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION 
 METHOD QListView:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QListView( ... )
    RETURN Self
@@ -156,7 +156,7 @@ METHOD QListView:batchSize( ... )
    CASE 0
       RETURN Qt_QListView_batchSize( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:clearPropertyFlags( ... )
@@ -164,7 +164,7 @@ METHOD QListView:clearPropertyFlags( ... )
    CASE 0
       RETURN Qt_QListView_clearPropertyFlags( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:flow( ... )
@@ -172,7 +172,7 @@ METHOD QListView:flow( ... )
    CASE 0
       RETURN Qt_QListView_flow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:gridSize( ... )
@@ -180,7 +180,7 @@ METHOD QListView:gridSize( ... )
    CASE 0
       RETURN QSizeFromPointer( Qt_QListView_gridSize( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:isRowHidden( ... )
@@ -192,7 +192,7 @@ METHOD QListView:isRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:isSelectionRectVisible( ... )
@@ -200,7 +200,7 @@ METHOD QListView:isSelectionRectVisible( ... )
    CASE 0
       RETURN Qt_QListView_isSelectionRectVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:isWrapping( ... )
@@ -208,7 +208,7 @@ METHOD QListView:isWrapping( ... )
    CASE 0
       RETURN Qt_QListView_isWrapping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:layoutMode( ... )
@@ -216,7 +216,7 @@ METHOD QListView:layoutMode( ... )
    CASE 0
       RETURN Qt_QListView_layoutMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:modelColumn( ... )
@@ -224,7 +224,7 @@ METHOD QListView:modelColumn( ... )
    CASE 0
       RETURN Qt_QListView_modelColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:movement( ... )
@@ -232,7 +232,7 @@ METHOD QListView:movement( ... )
    CASE 0
       RETURN Qt_QListView_movement( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:resizeMode( ... )
@@ -240,7 +240,7 @@ METHOD QListView:resizeMode( ... )
    CASE 0
       RETURN Qt_QListView_resizeMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setBatchSize( ... )
@@ -252,7 +252,7 @@ METHOD QListView:setBatchSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setFlow( ... )
@@ -264,7 +264,7 @@ METHOD QListView:setFlow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setGridSize( ... )
@@ -276,7 +276,7 @@ METHOD QListView:setGridSize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setLayoutMode( ... )
@@ -288,7 +288,7 @@ METHOD QListView:setLayoutMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setModelColumn( ... )
@@ -300,7 +300,7 @@ METHOD QListView:setModelColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setMovement( ... )
@@ -312,7 +312,7 @@ METHOD QListView:setMovement( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setResizeMode( ... )
@@ -324,7 +324,7 @@ METHOD QListView:setResizeMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setRowHidden( ... )
@@ -336,7 +336,7 @@ METHOD QListView:setRowHidden( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setSelectionRectVisible( ... )
@@ -348,7 +348,7 @@ METHOD QListView:setSelectionRectVisible( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setSpacing( ... )
@@ -360,7 +360,7 @@ METHOD QListView:setSpacing( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setUniformItemSizes( ... )
@@ -372,7 +372,7 @@ METHOD QListView:setUniformItemSizes( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setViewMode( ... )
@@ -384,7 +384,7 @@ METHOD QListView:setViewMode( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setWordWrap( ... )
@@ -396,7 +396,7 @@ METHOD QListView:setWordWrap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:setWrapping( ... )
@@ -408,7 +408,7 @@ METHOD QListView:setWrapping( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:spacing( ... )
@@ -416,7 +416,7 @@ METHOD QListView:spacing( ... )
    CASE 0
       RETURN Qt_QListView_spacing( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:uniformItemSizes( ... )
@@ -424,7 +424,7 @@ METHOD QListView:uniformItemSizes( ... )
    CASE 0
       RETURN Qt_QListView_uniformItemSizes( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:viewMode( ... )
@@ -432,7 +432,7 @@ METHOD QListView:viewMode( ... )
    CASE 0
       RETURN Qt_QListView_viewMode( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QListView:wordWrap( ... )
@@ -440,5 +440,5 @@ METHOD QListView:wordWrap( ... )
    CASE 0
       RETURN Qt_QListView_wordWrap( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

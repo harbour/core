@@ -134,7 +134,7 @@ CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCT
 METHOD QDoubleSpinBox:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QDoubleSpinBox( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QDoubleSpinBox:cleanText( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_cleanText( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:decimals( ... )
@@ -153,7 +153,7 @@ METHOD QDoubleSpinBox:decimals( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_decimals( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:maximum( ... )
@@ -161,7 +161,7 @@ METHOD QDoubleSpinBox:maximum( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:minimum( ... )
@@ -169,7 +169,7 @@ METHOD QDoubleSpinBox:minimum( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:prefix( ... )
@@ -177,7 +177,7 @@ METHOD QDoubleSpinBox:prefix( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_prefix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setDecimals( ... )
@@ -189,7 +189,7 @@ METHOD QDoubleSpinBox:setDecimals( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setMaximum( ... )
@@ -201,7 +201,7 @@ METHOD QDoubleSpinBox:setMaximum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setMinimum( ... )
@@ -213,7 +213,7 @@ METHOD QDoubleSpinBox:setMinimum( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setPrefix( ... )
@@ -225,7 +225,7 @@ METHOD QDoubleSpinBox:setPrefix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setRange( ... )
@@ -237,7 +237,7 @@ METHOD QDoubleSpinBox:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setSingleStep( ... )
@@ -249,7 +249,7 @@ METHOD QDoubleSpinBox:setSingleStep( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setSuffix( ... )
@@ -261,7 +261,7 @@ METHOD QDoubleSpinBox:setSuffix( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:singleStep( ... )
@@ -269,7 +269,7 @@ METHOD QDoubleSpinBox:singleStep( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_singleStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:suffix( ... )
@@ -277,7 +277,7 @@ METHOD QDoubleSpinBox:suffix( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_suffix( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:textFromValue( ... )
@@ -289,7 +289,7 @@ METHOD QDoubleSpinBox:textFromValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:value( ... )
@@ -297,7 +297,7 @@ METHOD QDoubleSpinBox:value( ... )
    CASE 0
       RETURN Qt_QDoubleSpinBox_value( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:valueFromText( ... )
@@ -309,7 +309,7 @@ METHOD QDoubleSpinBox:valueFromText( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QDoubleSpinBox:setValue( ... )
@@ -321,5 +321,5 @@ METHOD QDoubleSpinBox:setValue( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

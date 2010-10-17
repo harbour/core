@@ -128,7 +128,7 @@ CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, HB_QStyleOptionComple
 METHOD QStyleOptionSlider:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionSlider( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QStyleOptionSlider:dialWrapping( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_dialWrapping( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:maximum( ... )
@@ -147,7 +147,7 @@ METHOD QStyleOptionSlider:maximum( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:minimum( ... )
@@ -155,7 +155,7 @@ METHOD QStyleOptionSlider:minimum( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:notchTarget( ... )
@@ -163,7 +163,7 @@ METHOD QStyleOptionSlider:notchTarget( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_notchTarget( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:orientation( ... )
@@ -171,7 +171,7 @@ METHOD QStyleOptionSlider:orientation( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_orientation( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:pageStep( ... )
@@ -179,7 +179,7 @@ METHOD QStyleOptionSlider:pageStep( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_pageStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:singleStep( ... )
@@ -187,7 +187,7 @@ METHOD QStyleOptionSlider:singleStep( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_singleStep( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:sliderPosition( ... )
@@ -195,7 +195,7 @@ METHOD QStyleOptionSlider:sliderPosition( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_sliderPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:sliderValue( ... )
@@ -203,7 +203,7 @@ METHOD QStyleOptionSlider:sliderValue( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_sliderValue( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:tickInterval( ... )
@@ -211,7 +211,7 @@ METHOD QStyleOptionSlider:tickInterval( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_tickInterval( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:tickPosition( ... )
@@ -219,7 +219,7 @@ METHOD QStyleOptionSlider:tickPosition( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_tickPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionSlider:upsideDown( ... )
@@ -227,5 +227,5 @@ METHOD QStyleOptionSlider:upsideDown( ... )
    CASE 0
       RETURN Qt_QStyleOptionSlider_upsideDown( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

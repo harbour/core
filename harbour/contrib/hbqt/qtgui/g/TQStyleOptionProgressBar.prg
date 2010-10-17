@@ -122,7 +122,7 @@ CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, HB_QStyleOption 
 METHOD QStyleOptionProgressBar:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOptionProgressBar( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QStyleOptionProgressBar:maximum( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_maximum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionProgressBar:minimum( ... )
@@ -141,7 +141,7 @@ METHOD QStyleOptionProgressBar:minimum( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_minimum( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionProgressBar:progress( ... )
@@ -149,7 +149,7 @@ METHOD QStyleOptionProgressBar:progress( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_progress( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionProgressBar:text( ... )
@@ -157,7 +157,7 @@ METHOD QStyleOptionProgressBar:text( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_text( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionProgressBar:textAlignment( ... )
@@ -165,7 +165,7 @@ METHOD QStyleOptionProgressBar:textAlignment( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_textAlignment( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOptionProgressBar:textVisible( ... )
@@ -173,5 +173,5 @@ METHOD QStyleOptionProgressBar:textVisible( ... )
    CASE 0
       RETURN Qt_QStyleOptionProgressBar_textVisible( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

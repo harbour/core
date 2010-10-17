@@ -120,7 +120,7 @@ CREATE CLASS QTranslator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTran
 METHOD QTranslator:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTranslator( ... )
    RETURN Self
@@ -131,7 +131,7 @@ METHOD QTranslator:isEmpty( ... )
    CASE 0
       RETURN Qt_QTranslator_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTranslator:load( ... )
@@ -161,7 +161,7 @@ METHOD QTranslator:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTranslator:translate( ... )
@@ -185,5 +185,5 @@ METHOD QTranslator:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -122,7 +122,7 @@ CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler FUNCTION HB_QT
 METHOD QTableWidgetSelectionRange:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTableWidgetSelectionRange( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QTableWidgetSelectionRange:bottomRow( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_bottomRow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetSelectionRange:columnCount( ... )
@@ -141,7 +141,7 @@ METHOD QTableWidgetSelectionRange:columnCount( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_columnCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetSelectionRange:leftColumn( ... )
@@ -149,7 +149,7 @@ METHOD QTableWidgetSelectionRange:leftColumn( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_leftColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetSelectionRange:rightColumn( ... )
@@ -157,7 +157,7 @@ METHOD QTableWidgetSelectionRange:rightColumn( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_rightColumn( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetSelectionRange:rowCount( ... )
@@ -165,7 +165,7 @@ METHOD QTableWidgetSelectionRange:rowCount( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_rowCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTableWidgetSelectionRange:topRow( ... )
@@ -173,5 +173,5 @@ METHOD QTableWidgetSelectionRange:topRow( ... )
    CASE 0
       RETURN Qt_QTableWidgetSelectionRange_topRow( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

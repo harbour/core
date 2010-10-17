@@ -129,7 +129,7 @@ CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler FUNCTION HB_QTextInline
 METHOD QTextInlineObject:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QTextInlineObject( ... )
    RETURN Self
@@ -140,7 +140,7 @@ METHOD QTextInlineObject:ascent( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_ascent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:descent( ... )
@@ -148,7 +148,7 @@ METHOD QTextInlineObject:descent( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_descent( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:format( ... )
@@ -156,7 +156,7 @@ METHOD QTextInlineObject:format( ... )
    CASE 0
       RETURN QTextFormatFromPointer( Qt_QTextInlineObject_format( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:formatIndex( ... )
@@ -164,7 +164,7 @@ METHOD QTextInlineObject:formatIndex( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_formatIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:height( ... )
@@ -172,7 +172,7 @@ METHOD QTextInlineObject:height( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_height( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:isValid( ... )
@@ -180,7 +180,7 @@ METHOD QTextInlineObject:isValid( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_isValid( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:rect( ... )
@@ -188,7 +188,7 @@ METHOD QTextInlineObject:rect( ... )
    CASE 0
       RETURN QRectFFromPointer( Qt_QTextInlineObject_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:setAscent( ... )
@@ -200,7 +200,7 @@ METHOD QTextInlineObject:setAscent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:setDescent( ... )
@@ -212,7 +212,7 @@ METHOD QTextInlineObject:setDescent( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:setWidth( ... )
@@ -224,7 +224,7 @@ METHOD QTextInlineObject:setWidth( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:textDirection( ... )
@@ -232,7 +232,7 @@ METHOD QTextInlineObject:textDirection( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_textDirection( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:textPosition( ... )
@@ -240,7 +240,7 @@ METHOD QTextInlineObject:textPosition( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_textPosition( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QTextInlineObject:width( ... )
@@ -248,5 +248,5 @@ METHOD QTextInlineObject:width( ... )
    CASE 0
       RETURN Qt_QTextInlineObject_width( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

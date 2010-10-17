@@ -144,7 +144,7 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModeL
 METHOD QStandardItemModel:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStandardItemModel( ... )
    RETURN Self
@@ -159,7 +159,7 @@ METHOD QStandardItemModel:appendRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:clear( ... )
@@ -167,7 +167,7 @@ METHOD QStandardItemModel:clear( ... )
    CASE 0
       RETURN Qt_QStandardItemModel_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:findItems( ... )
@@ -191,7 +191,7 @@ METHOD QStandardItemModel:findItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:horizontalHeaderItem( ... )
@@ -203,7 +203,7 @@ METHOD QStandardItemModel:horizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:indexFromItem( ... )
@@ -215,7 +215,7 @@ METHOD QStandardItemModel:indexFromItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:insertColumn( ... )
@@ -233,7 +233,7 @@ METHOD QStandardItemModel:insertColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:insertRow( ... )
@@ -256,7 +256,7 @@ METHOD QStandardItemModel:insertRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:invisibleRootItem( ... )
@@ -264,7 +264,7 @@ METHOD QStandardItemModel:invisibleRootItem( ... )
    CASE 0
       RETURN QStandardItemFromPointer( Qt_QStandardItemModel_invisibleRootItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:item( ... )
@@ -282,7 +282,7 @@ METHOD QStandardItemModel:item( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:itemFromIndex( ... )
@@ -294,7 +294,7 @@ METHOD QStandardItemModel:itemFromIndex( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setColumnCount( ... )
@@ -306,7 +306,7 @@ METHOD QStandardItemModel:setColumnCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setHorizontalHeaderItem( ... )
@@ -318,7 +318,7 @@ METHOD QStandardItemModel:setHorizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setHorizontalHeaderLabels( ... )
@@ -330,7 +330,7 @@ METHOD QStandardItemModel:setHorizontalHeaderLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setItem( ... )
@@ -348,7 +348,7 @@ METHOD QStandardItemModel:setItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setItemPrototype( ... )
@@ -360,7 +360,7 @@ METHOD QStandardItemModel:setItemPrototype( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setRowCount( ... )
@@ -372,7 +372,7 @@ METHOD QStandardItemModel:setRowCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setSortRole( ... )
@@ -384,7 +384,7 @@ METHOD QStandardItemModel:setSortRole( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setVerticalHeaderItem( ... )
@@ -396,7 +396,7 @@ METHOD QStandardItemModel:setVerticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:setVerticalHeaderLabels( ... )
@@ -408,7 +408,7 @@ METHOD QStandardItemModel:setVerticalHeaderLabels( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:sortRole( ... )
@@ -416,7 +416,7 @@ METHOD QStandardItemModel:sortRole( ... )
    CASE 0
       RETURN Qt_QStandardItemModel_sortRole( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:takeColumn( ... )
@@ -428,7 +428,7 @@ METHOD QStandardItemModel:takeColumn( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:takeHorizontalHeaderItem( ... )
@@ -440,7 +440,7 @@ METHOD QStandardItemModel:takeHorizontalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:takeItem( ... )
@@ -458,7 +458,7 @@ METHOD QStandardItemModel:takeItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:takeRow( ... )
@@ -470,7 +470,7 @@ METHOD QStandardItemModel:takeRow( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:takeVerticalHeaderItem( ... )
@@ -482,7 +482,7 @@ METHOD QStandardItemModel:takeVerticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStandardItemModel:verticalHeaderItem( ... )
@@ -494,5 +494,5 @@ METHOD QStandardItemModel:verticalHeaderItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -133,7 +133,7 @@ CREATE CLASS QLine INHERIT HbQtObjectHandler FUNCTION HB_QLine
 METHOD QLine:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QLine( ... )
    RETURN Self
@@ -144,7 +144,7 @@ METHOD QLine:p1( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QLine_p1( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:p2( ... )
@@ -152,7 +152,7 @@ METHOD QLine:p2( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QLine_p2( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:x1( ... )
@@ -160,7 +160,7 @@ METHOD QLine:x1( ... )
    CASE 0
       RETURN Qt_QLine_x1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:x2( ... )
@@ -168,7 +168,7 @@ METHOD QLine:x2( ... )
    CASE 0
       RETURN Qt_QLine_x2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:y1( ... )
@@ -176,7 +176,7 @@ METHOD QLine:y1( ... )
    CASE 0
       RETURN Qt_QLine_y1( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:y2( ... )
@@ -184,7 +184,7 @@ METHOD QLine:y2( ... )
    CASE 0
       RETURN Qt_QLine_y2( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:dx( ... )
@@ -192,7 +192,7 @@ METHOD QLine:dx( ... )
    CASE 0
       RETURN Qt_QLine_dx( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:dy( ... )
@@ -200,7 +200,7 @@ METHOD QLine:dy( ... )
    CASE 0
       RETURN Qt_QLine_dy( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:isNull( ... )
@@ -208,7 +208,7 @@ METHOD QLine:isNull( ... )
    CASE 0
       RETURN Qt_QLine_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:setP1( ... )
@@ -220,7 +220,7 @@ METHOD QLine:setP1( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:setP2( ... )
@@ -232,7 +232,7 @@ METHOD QLine:setP2( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:setLine( ... )
@@ -244,7 +244,7 @@ METHOD QLine:setLine( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:setPoints( ... )
@@ -256,7 +256,7 @@ METHOD QLine:setPoints( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:translate( ... )
@@ -274,7 +274,7 @@ METHOD QLine:translate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QLine:translated( ... )
@@ -292,5 +292,5 @@ METHOD QLine:translated( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

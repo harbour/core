@@ -133,7 +133,7 @@ CREATE CLASS QWebHistory INHERIT HbQtObjectHandler FUNCTION HB_QWebHistory
 METHOD QWebHistory:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QWebHistory( ... )
    RETURN Self
@@ -144,7 +144,7 @@ METHOD QWebHistory:back( ... )
    CASE 0
       RETURN Qt_QWebHistory_back( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:backItem( ... )
@@ -152,7 +152,7 @@ METHOD QWebHistory:backItem( ... )
    CASE 0
       RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_backItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:backItems( ... )
@@ -164,7 +164,7 @@ METHOD QWebHistory:backItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:canGoBack( ... )
@@ -172,7 +172,7 @@ METHOD QWebHistory:canGoBack( ... )
    CASE 0
       RETURN Qt_QWebHistory_canGoBack( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:canGoForward( ... )
@@ -180,7 +180,7 @@ METHOD QWebHistory:canGoForward( ... )
    CASE 0
       RETURN Qt_QWebHistory_canGoForward( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:clear( ... )
@@ -188,7 +188,7 @@ METHOD QWebHistory:clear( ... )
    CASE 0
       RETURN Qt_QWebHistory_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:count( ... )
@@ -196,7 +196,7 @@ METHOD QWebHistory:count( ... )
    CASE 0
       RETURN Qt_QWebHistory_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:currentItem( ... )
@@ -204,7 +204,7 @@ METHOD QWebHistory:currentItem( ... )
    CASE 0
       RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_currentItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:currentItemIndex( ... )
@@ -212,7 +212,7 @@ METHOD QWebHistory:currentItemIndex( ... )
    CASE 0
       RETURN Qt_QWebHistory_currentItemIndex( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:forward( ... )
@@ -220,7 +220,7 @@ METHOD QWebHistory:forward( ... )
    CASE 0
       RETURN Qt_QWebHistory_forward( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:forwardItem( ... )
@@ -228,7 +228,7 @@ METHOD QWebHistory:forwardItem( ... )
    CASE 0
       RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_forwardItem( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:forwardItems( ... )
@@ -240,7 +240,7 @@ METHOD QWebHistory:forwardItems( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:goToItem( ... )
@@ -252,7 +252,7 @@ METHOD QWebHistory:goToItem( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:itemAt( ... )
@@ -264,7 +264,7 @@ METHOD QWebHistory:itemAt( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:items( ... )
@@ -272,7 +272,7 @@ METHOD QWebHistory:items( ... )
    CASE 0
       RETURN QListFromPointer( Qt_QWebHistory_items( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:maximumItemCount( ... )
@@ -280,7 +280,7 @@ METHOD QWebHistory:maximumItemCount( ... )
    CASE 0
       RETURN Qt_QWebHistory_maximumItemCount( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QWebHistory:setMaximumItemCount( ... )
@@ -292,5 +292,5 @@ METHOD QWebHistory:setMaximumItemCount( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

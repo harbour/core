@@ -122,7 +122,7 @@ CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSp
 METHOD QSplashScreen:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QSplashScreen( ... )
    RETURN Self
@@ -137,7 +137,7 @@ METHOD QSplashScreen:finish( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplashScreen:pixmap( ... )
@@ -145,7 +145,7 @@ METHOD QSplashScreen:pixmap( ... )
    CASE 0
       RETURN QPixmapFromPointer( Qt_QSplashScreen_pixmap( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplashScreen:repaint( ... )
@@ -153,7 +153,7 @@ METHOD QSplashScreen:repaint( ... )
    CASE 0
       RETURN Qt_QSplashScreen_repaint( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplashScreen:setPixmap( ... )
@@ -165,7 +165,7 @@ METHOD QSplashScreen:setPixmap( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplashScreen:clearMessage( ... )
@@ -173,7 +173,7 @@ METHOD QSplashScreen:clearMessage( ... )
    CASE 0
       RETURN Qt_QSplashScreen_clearMessage( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QSplashScreen:showMessage( ... )
@@ -197,5 +197,5 @@ METHOD QSplashScreen:showMessage( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

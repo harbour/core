@@ -130,7 +130,7 @@ CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUiLoad
 METHOD QUiLoader:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QUiLoader( ... )
    RETURN Self
@@ -145,7 +145,7 @@ METHOD QUiLoader:addPluginPath( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:availableLayouts( ... )
@@ -153,7 +153,7 @@ METHOD QUiLoader:availableLayouts( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QUiLoader_availableLayouts( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:availableWidgets( ... )
@@ -161,7 +161,7 @@ METHOD QUiLoader:availableWidgets( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QUiLoader_availableWidgets( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:clearPluginPaths( ... )
@@ -169,7 +169,7 @@ METHOD QUiLoader:clearPluginPaths( ... )
    CASE 0
       RETURN Qt_QUiLoader_clearPluginPaths( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:createAction( ... )
@@ -189,7 +189,7 @@ METHOD QUiLoader:createAction( ... )
    CASE 0
       RETURN QActionFromPointer( Qt_QUiLoader_createAction( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:createActionGroup( ... )
@@ -209,7 +209,7 @@ METHOD QUiLoader:createActionGroup( ... )
    CASE 0
       RETURN QActionGroupFromPointer( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:createLayout( ... )
@@ -233,7 +233,7 @@ METHOD QUiLoader:createLayout( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:createWidget( ... )
@@ -257,7 +257,7 @@ METHOD QUiLoader:createWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:isLanguageChangeEnabled( ... )
@@ -265,7 +265,7 @@ METHOD QUiLoader:isLanguageChangeEnabled( ... )
    CASE 0
       RETURN Qt_QUiLoader_isLanguageChangeEnabled( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:load( ... )
@@ -283,7 +283,7 @@ METHOD QUiLoader:load( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:pluginPaths( ... )
@@ -291,7 +291,7 @@ METHOD QUiLoader:pluginPaths( ... )
    CASE 0
       RETURN QStringListFromPointer( Qt_QUiLoader_pluginPaths( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:setLanguageChangeEnabled( ... )
@@ -303,7 +303,7 @@ METHOD QUiLoader:setLanguageChangeEnabled( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:setWorkingDirectory( ... )
@@ -315,7 +315,7 @@ METHOD QUiLoader:setWorkingDirectory( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QUiLoader:workingDirectory( ... )
@@ -323,5 +323,5 @@ METHOD QUiLoader:workingDirectory( ... )
    CASE 0
       RETURN QDirFromPointer( Qt_QUiLoader_workingDirectory( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

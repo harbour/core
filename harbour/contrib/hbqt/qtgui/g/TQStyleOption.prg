@@ -124,7 +124,7 @@ CREATE CLASS QStyleOption INHERIT HbQtObjectHandler FUNCTION HB_QStyleOption
 METHOD QStyleOption:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QStyleOption( ... )
    RETURN Self
@@ -139,7 +139,7 @@ METHOD QStyleOption:initFrom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:direction( ... )
@@ -147,7 +147,7 @@ METHOD QStyleOption:direction( ... )
    CASE 0
       RETURN Qt_QStyleOption_direction( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:fontMetrics( ... )
@@ -155,7 +155,7 @@ METHOD QStyleOption:fontMetrics( ... )
    CASE 0
       RETURN QFontMetricsFromPointer( Qt_QStyleOption_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:palette( ... )
@@ -163,7 +163,7 @@ METHOD QStyleOption:palette( ... )
    CASE 0
       RETURN QPaletteFromPointer( Qt_QStyleOption_palette( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:rect( ... )
@@ -171,7 +171,7 @@ METHOD QStyleOption:rect( ... )
    CASE 0
       RETURN QRectFromPointer( Qt_QStyleOption_rect( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:state( ... )
@@ -179,7 +179,7 @@ METHOD QStyleOption:state( ... )
    CASE 0
       RETURN Qt_QStyleOption_state( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:type( ... )
@@ -187,7 +187,7 @@ METHOD QStyleOption:type( ... )
    CASE 0
       RETURN Qt_QStyleOption_type( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QStyleOption:version( ... )
@@ -195,5 +195,5 @@ METHOD QStyleOption:version( ... )
    CASE 0
       RETURN Qt_QStyleOption_version( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

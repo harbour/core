@@ -118,7 +118,7 @@ CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFocu
 METHOD QFocusFrame:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QFocusFrame( ... )
    RETURN Self
@@ -133,7 +133,7 @@ METHOD QFocusFrame:setWidget( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QFocusFrame:widget( ... )
@@ -141,5 +141,5 @@ METHOD QFocusFrame:widget( ... )
    CASE 0
       RETURN QWidgetFromPointer( Qt_QFocusFrame_widget( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -118,7 +118,7 @@ CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QMoveEv
 METHOD QMoveEvent:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QMoveEvent( ... )
    RETURN Self
@@ -129,7 +129,7 @@ METHOD QMoveEvent:oldPos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QMoveEvent_oldPos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QMoveEvent:pos( ... )
@@ -137,5 +137,5 @@ METHOD QMoveEvent:pos( ... )
    CASE 0
       RETURN QPointFromPointer( Qt_QMoveEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

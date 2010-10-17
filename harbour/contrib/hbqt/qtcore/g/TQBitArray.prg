@@ -132,7 +132,7 @@ CREATE CLASS QBitArray INHERIT HbQtObjectHandler FUNCTION HB_QBitArray
 METHOD QBitArray:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QBitArray( ... )
    RETURN Self
@@ -147,7 +147,7 @@ METHOD QBitArray:at( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:clear( ... )
@@ -155,7 +155,7 @@ METHOD QBitArray:clear( ... )
    CASE 0
       RETURN Qt_QBitArray_clear( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:clearBit( ... )
@@ -167,7 +167,7 @@ METHOD QBitArray:clearBit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:count( ... )
@@ -181,7 +181,7 @@ METHOD QBitArray:count( ... )
    CASE 0
       RETURN Qt_QBitArray_count( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:fill( ... )
@@ -205,7 +205,7 @@ METHOD QBitArray:fill( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:isEmpty( ... )
@@ -213,7 +213,7 @@ METHOD QBitArray:isEmpty( ... )
    CASE 0
       RETURN Qt_QBitArray_isEmpty( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:isNull( ... )
@@ -221,7 +221,7 @@ METHOD QBitArray:isNull( ... )
    CASE 0
       RETURN Qt_QBitArray_isNull( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:resize( ... )
@@ -233,7 +233,7 @@ METHOD QBitArray:resize( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:setBit( ... )
@@ -251,7 +251,7 @@ METHOD QBitArray:setBit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:size( ... )
@@ -259,7 +259,7 @@ METHOD QBitArray:size( ... )
    CASE 0
       RETURN Qt_QBitArray_size( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:testBit( ... )
@@ -271,7 +271,7 @@ METHOD QBitArray:testBit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:toggleBit( ... )
@@ -283,7 +283,7 @@ METHOD QBitArray:toggleBit( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QBitArray:truncate( ... )
@@ -295,5 +295,5 @@ METHOD QBitArray:truncate( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 

@@ -121,7 +121,7 @@ CREATE CLASS QIntValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_
 METHOD QIntValidator:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
    NEXT
    ::pPtr := Qt_QIntValidator( ... )
    RETURN Self
@@ -132,7 +132,7 @@ METHOD QIntValidator:bottom( ... )
    CASE 0
       RETURN Qt_QIntValidator_bottom( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIntValidator:setBottom( ... )
@@ -144,7 +144,7 @@ METHOD QIntValidator:setBottom( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIntValidator:setRange( ... )
@@ -156,7 +156,7 @@ METHOD QIntValidator:setRange( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIntValidator:setTop( ... )
@@ -168,7 +168,7 @@ METHOD QIntValidator:setTop( ... )
       ENDCASE
       EXIT
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
 
 METHOD QIntValidator:top( ... )
@@ -176,5 +176,5 @@ METHOD QIntValidator:top( ... )
    CASE 0
       RETURN Qt_QIntValidator_top( ::pPtr, ... )
    ENDSWITCH
-   RETURN hbqt_error()
+   RETURN __hbqt_error()
 
