@@ -168,4 +168,17 @@
 /* Status Parameters for database connections */
 #define SQLITE_DBSTATUS_LOOKASIDE_USED     0
 
+/* Run-Time Limit Categories */
+#define SQLITE_LIMIT_LENGTH                0
+#define SQLITE_LIMIT_SQL_LENGTH            1
+#define SQLITE_LIMIT_COLUMN                2
+#define SQLITE_LIMIT_EXPR_DEPTH            3
+#define SQLITE_LIMIT_COMPOUND_SELECT       4
+#define SQLITE_LIMIT_VDBE_OP               5
+#define SQLITE_LIMIT_FUNCTION_ARG          6
+#define SQLITE_LIMIT_ATTACHED              7
+#define SQLITE_LIMIT_LIKE_PATTERN_LENGTH   8
+#define SQLITE_LIMIT_VARIABLE_NUMBER       9
+#define SQLITE_LIMIT_TRIGGER_DEPTH         10
+
 #endif

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * SQLite3 library low level (client api) interface code
  *
- * Copyright 2007-2009 P.Chornyj <myorg63@mail.ru>
+ * Copyright 2007-2010 P.Chornyj <myorg63@mail.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2315,7 +2315,7 @@ HB_FUNC( SQLITE3_THREADSAFE )
 /**
    SQLite Runtime Status
 
-   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag);
+   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag) -> nResult
 */
 
 HB_FUNC( SQLITE3_STATUS )
@@ -2340,7 +2340,7 @@ HB_FUNC( SQLITE3_STATUS )
 /**
    Database Connection Status
 
-   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag);
+   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag) -> nResult
 */
 
 HB_FUNC( SQLITE3_DB_STATUS )
@@ -2361,4 +2361,51 @@ HB_FUNC( SQLITE3_DB_STATUS )
    {
       hb_retni( -1 );
    }
+}
+
+/**
+   Run-time Limits
+   
+   sqlite3_limit( pDb, nId, nNewVal ) -> nOldVal
+*/
+
+HB_FUNC( SQLITE3_LIMIT )
+{
+#if SQLITE_VERSION_NUMBER >= 3005008
+   HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
+
+   if( pHbSqlite3 && pHbSqlite3->db && (hb_pcount() > 2) && HB_ISNUM(2) && HB_ISNUM(3) ) 
+   {
+      hb_retni( sqlite3_limit(pHbSqlite3->db, hb_parni(2), hb_parni(3)) );
+   }
+   else
+#endif /* SQLITE_VERSION_NUMBER >= 3005008 */
+   {
+      hb_retni( -1 );
+   }
+}
+
+/**
+   Run-Time Library Compilation Options Diagnostics
+
+   sqlite3_compileoption_used( cOptName ) -> nResult
+   sqlite3_compileoption_get( nOptNum )   -> cResult
+*/
+
+HB_FUNC( SQLITE3_COMPILEOPTION_USED )
+{
+#if SQLITE_VERSION_NUMBER >= 3006023
+   hb_retl( (HB_BOOL) sqlite3_compileoption_used(hb_parc(1)) );
+#else 
+   hb_retl( HB_FALSE );
+#endif /* SQLITE_VERSION_NUMBER >= 3006023 */
+}
+
+HB_FUNC( SQLITE3_COMPILEOPTION_GET )
+{
+#if SQLITE_VERSION_NUMBER >= 3006023
+   hb_retc( sqlite3_compileoption_get(hb_parni(1)) );
+#else 
+   hb_retc_null();
+#endif /* SQLITE_VERSION_NUMBER >= 3006023 */
 }
