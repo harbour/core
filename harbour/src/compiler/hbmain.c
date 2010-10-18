@@ -950,6 +950,40 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen
  * DECLARATIONS
  */
 
+static void hb_compDeclaredReset( HB_COMP_DECL )
+{
+   while( HB_COMP_PARAM->pFirstDeclared )
+   {
+      PCOMDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
+      HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
+      if( pDeclared->cParamTypes )
+         hb_xfree( pDeclared->cParamTypes );
+      if( pDeclared->pParamClasses )
+         hb_xfree( pDeclared->pParamClasses );
+      hb_xfree( pDeclared );
+   }
+   HB_COMP_PARAM->pLastDeclared = NULL;
+
+   while( HB_COMP_PARAM->pFirstClass )
+   {
+      PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
+      HB_COMP_PARAM->pFirstClass = pClass->pNext;
+      while( pClass->pMethod )
+      {
+         PCOMDECLARED pDeclared = pClass->pMethod;
+         pClass->pMethod = pDeclared->pNext;
+         if( pDeclared->cParamTypes )
+            hb_xfree( pDeclared->cParamTypes );
+         if( pDeclared->pParamClasses )
+            hb_xfree( pDeclared->pParamClasses );
+         hb_xfree( pDeclared );
+      }
+      hb_xfree( pClass );
+   }
+   HB_COMP_PARAM->pLastClass = NULL;
+   HB_COMP_PARAM->pLastMethod = NULL;
+}
+
 PCOMCLASS hb_compClassFind( HB_COMP_DECL, const char * szClassName )
 {
    PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
@@ -3876,42 +3910,14 @@ void hb_compCompileEnd( HB_COMP_DECL )
       hb_xfree( pInline );
    }
 
-   while( HB_COMP_PARAM->pFirstDeclared )
-   {
-      PCOMDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
-      HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
-      if( pDeclared->cParamTypes )
-         hb_xfree( pDeclared->cParamTypes );
-      if( pDeclared->pParamClasses )
-         hb_xfree( pDeclared->pParamClasses );
-      hb_xfree( pDeclared );
-   }
-   HB_COMP_PARAM->pLastDeclared = NULL;
-
-   while( HB_COMP_PARAM->pFirstClass )
-   {
-      PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
-      HB_COMP_PARAM->pFirstClass = pClass->pNext;
-      while( pClass->pMethod )
-      {
-         PCOMDECLARED pDeclared = pClass->pMethod;
-         pClass->pMethod = pDeclared->pNext;
-         if( pDeclared->cParamTypes )
-            hb_xfree( pDeclared->cParamTypes );
-         if( pDeclared->pParamClasses )
-            hb_xfree( pDeclared->pParamClasses );
-         hb_xfree( pDeclared );
-      }
-      hb_xfree( pClass );
-   }
-   HB_COMP_PARAM->pLastClass = NULL;
-
    while( HB_COMP_PARAM->symbols.pFirst )
    {
       PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
       HB_COMP_PARAM->symbols.pFirst = pSym->pNext;
       hb_xfree( pSym );
    }
+
+   hb_compDeclaredReset( HB_COMP_PARAM );
 }
 
 static void hb_compGenIncluded( HB_COMP_DECL )
@@ -4066,6 +4072,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       /* Clear and reinitialize preprocessor state */
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );
+      hb_compDeclaredReset( HB_COMP_PARAM );
 
       if( !szBuffer )
          szPrg = pModule->szName;
