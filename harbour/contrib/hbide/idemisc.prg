@@ -1457,6 +1457,7 @@ STATIC PROCEDURE hbide_HBPLoad( aParams, cFileName )
             FOR EACH cParam IN hb_ATokens( cLine,, .T. )
                cParamNQ := hbide_HBPStrStripQuote( cParam )
                IF ! Empty( cParamNQ )
+                  #if 0
                   DO CASE
                   CASE !( Left( cParamNQ, 1 ) == "-" ) .AND. Len( cParamNQ ) >= 1 .AND. Left( cParamNQ, 1 ) == "@" .AND. ;
                        !( Lower( hbide_HBPExtGet( cParamNQ ) ) == ".clp" )
@@ -1468,6 +1469,8 @@ STATIC PROCEDURE hbide_HBPLoad( aParams, cFileName )
                   OTHERWISE
                      AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
                   ENDCASE
+                  #endif
+                  AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
                ENDIF
             NEXT
          ENDIF
