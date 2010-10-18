@@ -78,6 +78,8 @@ xcopy /y       "%HB_WITH_QT%\..\bin\mingwm10.dll"                               
 xcopy /y       "%HB_WITH_QT%\..\bin\QtCore4.dll"                                          %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\QtGui4.dll"                                           %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\QtNetwork4.dll"                                       %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\uic.exe"                                              %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\rcc.exe"                                              %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtCore4.a"                                         %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtGui4.a"                                          %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtUiTools.a"                                       %HB_ABSROOT%lib\win\mingw\

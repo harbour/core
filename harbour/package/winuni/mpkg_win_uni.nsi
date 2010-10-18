@@ -105,6 +105,17 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%bin\hbmk.hbc"
   File "$%HB_ABSROOT%bin\upx*.*"
 
+  ; QT
+  File "$%HB_ABSROOT%bin\libgcc_s_dw2-1.dll"
+  File "$%HB_ABSROOT%bin\mingwm10.dll"
+  File "$%HB_ABSROOT%bin\QtCore4.dll"
+  File "$%HB_ABSROOT%bin\QtGui4.dll"
+  File "$%HB_ABSROOT%bin\QtNetwork4.dll"
+  File "$%HB_ABSROOT%bin\uic.exe"
+  File "$%HB_ABSROOT%bin\rcc.exe"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt"
+
   SetOutPath $INSTDIR\include
   File "$%HB_ABSROOT%include\*.*"
 
@@ -145,13 +156,6 @@ SectionEnd
 Section /o "IDE" hb_ide
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\hbide.exe"
-  File "$%HB_ABSROOT%bin\libgcc_s_dw2-1.dll"
-  File "$%HB_ABSROOT%bin\mingwm10.dll"
-  File "$%HB_ABSROOT%bin\QtCore4.dll"
-  File "$%HB_ABSROOT%bin\QtGui4.dll"
-  File "$%HB_ABSROOT%bin\QtNetwork4.dll"
-  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt"
-  File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt"
 SectionEnd
 !endif
 
