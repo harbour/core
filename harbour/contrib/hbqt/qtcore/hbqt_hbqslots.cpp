@@ -6,9 +6,10 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009 Marcos Antonio Gambeta (marcosgambeta at gmail dot com)
+ * Copyright 2009 Pritpal Bedi (pritpal@vouchcac.com)
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Francesco Perillo ()
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -71,7 +72,9 @@
 
 static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots )
 {
-
+   #if 0
+   void stateChanged( QProcess::ProcessState newState );
+   #endif
    if( signal == ( QString ) "customContextMenuRequested(QPoint)"             ) return object->connect( object, SIGNAL( customContextMenuRequested( const QPoint & )                      ), t_slots, SLOT( customContextMenuRequested( const QPoint & )                       ), Qt::AutoConnection );
    if( signal == ( QString ) "clicked()"                                      ) return object->connect( object, SIGNAL( clicked()                                                         ), t_slots, SLOT( clicked()                                                          ), Qt::AutoConnection );
    if( signal == ( QString ) "returnPressed()"                                ) return object->connect( object, SIGNAL( returnPressed()                                                   ), t_slots, SLOT( returnPressed()                                                    ), Qt::AutoConnection );
@@ -159,7 +162,7 @@ static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots
    if( signal == ( QString ) "timeout()"                                      ) return object->connect( object, SIGNAL( timeout()                                                         ), t_slots, SLOT( timeout()                                                          ), Qt::AutoConnection );
    /* Generic purpose mechanism to receive key and mouse events off subclasses */
    if( signal == ( QString ) "geometriesChanged()"                            ) return object->connect( object, SIGNAL( geometriesChanged()                                               ), t_slots, SLOT( geometriesChanged()                                                ), Qt::AutoConnection );
-   if( signal == ( QString ) "sectionAutoResize(int,int)"                     ) return object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode )                 ), t_slots, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode )                  ), Qt::AutoConnection );
+   if( signal == ( QString ) "sectionAutoResize(int,QHeaderView::ResizeMode)" ) return object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode )                 ), t_slots, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode )                  ), Qt::AutoConnection );
    if( signal == ( QString ) "sectionClicked(int)"                            ) return object->connect( object, SIGNAL( sectionClicked( int )                                             ), t_slots, SLOT( sectionClicked( int )                                              ), Qt::AutoConnection );
    if( signal == ( QString ) "sectionCountChanged(int,int)"                   ) return object->connect( object, SIGNAL( sectionCountChanged( int, int )                                   ), t_slots, SLOT( sectionCountChanged( int, int )                                    ), Qt::AutoConnection );
    if( signal == ( QString ) "sectionDoubleClicked(int)"                      ) return object->connect( object, SIGNAL( sectionDoubleClicked( int )                                       ), t_slots, SLOT( sectionDoubleClicked( int )                                        ), Qt::AutoConnection );
@@ -168,7 +171,7 @@ static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots
    if( signal == ( QString ) "sectionMoved(int,int,int)"                      ) return object->connect( object, SIGNAL( sectionMoved( int, int, int )                                     ), t_slots, SLOT( sectionMoved( int, int, int )                                      ), Qt::AutoConnection );
    if( signal == ( QString ) "sectionPressed(int)"                            ) return object->connect( object, SIGNAL( sectionPressed( int )                                             ), t_slots, SLOT( sectionPressed( int )                                              ), Qt::AutoConnection );
    if( signal == ( QString ) "sectionResized(int,int,int)"                    ) return object->connect( object, SIGNAL( sectionResized( int, int, int )                                   ), t_slots, SLOT( sectionResized( int, int, int )                                    ), Qt::AutoConnection );
-   if( signal == ( QString ) "sortIndicatorChanged(int,int)"                  ) return object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder )                        ), t_slots, SLOT( sortIndicatorChanged( int, Qt::SortOrder )                         ), Qt::AutoConnection );
+   if( signal == ( QString ) "sortIndicatorChanged(int,Qt::SortOrder)"        ) return object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder )                        ), t_slots, SLOT( sortIndicatorChanged( int, Qt::SortOrder )                         ), Qt::AutoConnection );
    if( signal == ( QString ) "buttonClicked(int)"                             ) return object->connect( object, SIGNAL( buttonClicked( int )                                              ), t_slots, SLOT( buttonClicked( int )                                               ), Qt::AutoConnection );
    if( signal == ( QString ) "buttonPressed(int)"                             ) return object->connect( object, SIGNAL( buttonPressed( int )                                              ), t_slots, SLOT( buttonPressed( int )                                               ), Qt::AutoConnection );
    if( signal == ( QString ) "buttonReleased(int)"                            ) return object->connect( object, SIGNAL( buttonReleased( int )                                             ), t_slots, SLOT( buttonReleased( int )                                              ), Qt::AutoConnection );
@@ -178,11 +181,11 @@ static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots
    if( signal == ( QString ) "paintRequested(QPrinter)"                       ) return object->connect( object, SIGNAL( paintRequested( QPrinter * )                                      ), t_slots, SLOT( paintRequested( QPrinter * )                                       ), Qt::AutoConnection );
    /* QIODevice & QProcess */
    if( signal == ( QString ) "aboutToClose()"                                 ) return object->connect( object, SIGNAL( aboutToClose()                                                    ), t_slots, SLOT( aboutToClose()                                                     ), Qt::AutoConnection );
-   if( signal == ( QString ) "bytesWritten(int)"                              ) return object->connect( object, SIGNAL( bytesWritten( qint64 )                                            ), t_slots, SLOT( bytesWritten( qint64 )                                             ), Qt::AutoConnection );
+   if( signal == ( QString ) "bytesWritten(qint64)"                           ) return object->connect( object, SIGNAL( bytesWritten( qint64 )                                            ), t_slots, SLOT( bytesWritten( qint64 )                                             ), Qt::AutoConnection );
    if( signal == ( QString ) "readChannelFinished()"                          ) return object->connect( object, SIGNAL( readChannelFinished()                                             ), t_slots, SLOT( readChannelFinished()                                              ), Qt::AutoConnection );
    if( signal == ( QString ) "readyRead()"                                    ) return object->connect( object, SIGNAL( readyRead()                                                       ), t_slots, SLOT( readyRead()                                                        ), Qt::AutoConnection );
    if( signal == ( QString ) "error(int)"                                     ) return object->connect( object, SIGNAL( error( int )                                                      ), t_slots, SLOT( error( int )                                                       ), Qt::AutoConnection );
-   if( signal == ( QString ) "finished(int,int)"                              ) return object->connect( object, SIGNAL( finished( int, QProcess::ExitStatus )                             ), t_slots, SLOT( finished( int, QProcess::ExitStatus )                              ), Qt::AutoConnection );
+   if( signal == ( QString ) "finished(int,QProcess::ExitStatus)"             ) return object->connect( object, SIGNAL( finished( int, QProcess::ExitStatus )                             ), t_slots, SLOT( finished( int, QProcess::ExitStatus )                              ), Qt::AutoConnection );
    if( signal == ( QString ) "readyReadStandardError()"                       ) return object->connect( object, SIGNAL( readyReadStandardError()                                          ), t_slots, SLOT( readyReadStandardError()                                           ), Qt::AutoConnection );
    if( signal == ( QString ) "readyReadStandardOutput()"                      ) return object->connect( object, SIGNAL( readyReadStandardOutput()                                         ), t_slots, SLOT( readyReadStandardOutput()                                          ), Qt::AutoConnection );
    if( signal == ( QString ) "started()"                                      ) return object->connect( object, SIGNAL( started()                                                         ), t_slots, SLOT( started()                                                          ), Qt::AutoConnection );
@@ -215,9 +218,9 @@ static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots
    if( signal == ( QString ) "historyChanged()"                               ) return object->connect( object, SIGNAL( historyChanged()                                                  ), t_slots, SLOT( historyChanged()                                                   ), Qt::AutoConnection );
    if( signal == ( QString ) "sourceChanged(QUrl)"                            ) return object->connect( object, SIGNAL( sourceChanged( const QUrl & )                                     ), t_slots, SLOT( sourceChanged( const QUrl & )                                      ), Qt::AutoConnection );
    /* QDockWidget */
-   if( signal == ( QString ) "allowedAreasChanged(int)"                       ) return object->connect( object, SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ), t_slots, SLOT( allowedAreasChanged( Qt::DockWidgetAreas )                         ), Qt::AutoConnection );
-   if( signal == ( QString ) "dockLocationChanged(int)"                       ) return object->connect( object, SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ), t_slots, SLOT( dockLocationChanged( Qt::DockWidgetArea )                          ), Qt::AutoConnection );
-   if( signal == ( QString ) "featuresChanged(int)"                           ) return object->connect( object, SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ), t_slots, SLOT( featuresChanged( QDockWidget::DockWidgetFeatures )                 ), Qt::AutoConnection );
+   if( signal == ( QString ) "allowedAreasChanged(Qt::DockWidgetAreas)"       ) return object->connect( object, SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ), t_slots, SLOT( allowedAreasChanged( Qt::DockWidgetAreas )                         ), Qt::AutoConnection );
+   if( signal == ( QString ) "dockLocationChanged(Qt::DockWidgetArea)"        ) return object->connect( object, SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ), t_slots, SLOT( dockLocationChanged( Qt::DockWidgetArea )                          ), Qt::AutoConnection );
+   if( signal == ( QString ) "featuresChanged(QDockWidget::DockWidgetFeatures)" ) return object->connect( object, SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )              ), t_slots, SLOT( featuresChanged( QDockWidget::DockWidgetFeatures )                 ), Qt::AutoConnection );
    if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->connect( object, SIGNAL( topLevelChanged( bool )                                           ), t_slots, SLOT( topLevelChanged( bool )                                            ), Qt::AutoConnection );
    if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->connect( object, SIGNAL( visibilityChanged( bool )                                         ), t_slots, SLOT( visibilityChanged( bool )                                          ), Qt::AutoConnection );
    /* QCompleter */
@@ -233,7 +236,7 @@ static bool connect_signal( QString signal, QObject * object, HBQSlots * t_slots
    if( signal == ( QString ) "aboutToActivate()"                              ) return object->connect( object, SIGNAL( aboutToActivate()                                                 ), t_slots, SLOT( aboutToActivate()                                                  ), Qt::AutoConnection );
    if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->connect( object, SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ), t_slots, SLOT( windowStateChanged( Qt::WindowStates, Qt::WindowStates )           ), Qt::AutoConnection );
    /* QAbstractItemDelegate */
-   if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->connect( object, SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ), t_slots, SLOT( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )       ), Qt::AutoConnection );
+   if( signal == ( QString ) "closeEditor(QWidget,QAbstractItemDelegate::EndEditHint)" ) return object->connect( object, SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ), t_slots, SLOT( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint ) ), Qt::AutoConnection );
    if( signal == ( QString ) "commitData(QWidget)"                            ) return object->connect( object, SIGNAL( commitData( QWidget * )                                           ), t_slots, SLOT( commitData( QWidget * )                                            ), Qt::AutoConnection );
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->connect( object, SIGNAL( sizeHintChanged( const QModelIndex & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                             ), Qt::AutoConnection );
    /* QGraphicsScene */
@@ -333,7 +336,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "undoAvailable(bool)"                            ) return object->disconnect( SIGNAL( undoAvailable( bool )                                             ) );
    if( signal == ( QString ) "timeout()"                                      ) return object->disconnect( SIGNAL( timeout()                                                         ) );
    if( signal == ( QString ) "geometriesChanged()"                            ) return object->disconnect( SIGNAL( geometriesChanged()                                               ) );
-   if( signal == ( QString ) "sectionAutoResize(int,int)"                     ) return object->disconnect( SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode )                 ) );
+   if( signal == ( QString ) "sectionAutoResize(int,QHeaderView::ResizeMode)" ) return object->disconnect( SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode )                 ) );
    if( signal == ( QString ) "sectionClicked(int)"                            ) return object->disconnect( SIGNAL( sectionClicked( int )                                             ) );
    if( signal == ( QString ) "sectionCountChanged(int,int)"                   ) return object->disconnect( SIGNAL( sectionCountChanged( int, int )                                   ) );
    if( signal == ( QString ) "sectionDoubleClicked(int)"                      ) return object->disconnect( SIGNAL( sectionDoubleClicked( int )                                       ) );
@@ -342,7 +345,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "sectionMoved(int,int,int)"                      ) return object->disconnect( SIGNAL( sectionMoved( int, int, int )                                     ) );
    if( signal == ( QString ) "sectionPressed(int)"                            ) return object->disconnect( SIGNAL( sectionPressed( int )                                             ) );
    if( signal == ( QString ) "sectionResized(int,int,int)"                    ) return object->disconnect( SIGNAL( sectionResized( int, int, int )                                   ) );
-   if( signal == ( QString ) "sortIndicatorChanged(int,int)"                  ) return object->disconnect( SIGNAL( sortIndicatorChanged( int, Qt::SortOrder )                        ) );
+   if( signal == ( QString ) "sortIndicatorChanged(int,Qt::SortOrder)"        ) return object->disconnect( SIGNAL( sortIndicatorChanged( int, Qt::SortOrder )                        ) );
    if( signal == ( QString ) "buttonClicked(int)"                             ) return object->disconnect( SIGNAL( buttonClicked( int )                                              ) );
    if( signal == ( QString ) "buttonPressed(int)"                             ) return object->disconnect( SIGNAL( buttonPressed( int )                                              ) );
    if( signal == ( QString ) "buttonReleased(int)"                            ) return object->disconnect( SIGNAL( buttonReleased( int )                                             ) );
@@ -352,11 +355,11 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "paintRequested(QPrinter)"                       ) return object->disconnect( SIGNAL( paintRequested( QPrinter * )                                      ) );
    /* QIODevice & QProcess */
    if( signal == ( QString ) "aboutToClose()"                                 ) return object->disconnect( SIGNAL( aboutToClose()                                                    ) );
-   if( signal == ( QString ) "bytesWritten(int)"                              ) return object->disconnect( SIGNAL( bytesWritten( qint64 )                                            ) );
+   if( signal == ( QString ) "bytesWritten(qint64)"                           ) return object->disconnect( SIGNAL( bytesWritten( qint64 )                                            ) );
    if( signal == ( QString ) "readChannelFinished()"                          ) return object->disconnect( SIGNAL( readChannelFinished()                                             ) );
    if( signal == ( QString ) "readyRead()"                                    ) return object->disconnect( SIGNAL( readyRead()                                                       ) );
    if( signal == ( QString ) "error(int)"                                     ) return object->disconnect( SIGNAL( error( int )                                                      ) );
-   if( signal == ( QString ) "finished(int,int)"                              ) return object->disconnect( SIGNAL( finished( int, QProcess::ExitStatus )                             ) );
+   if( signal == ( QString ) "finished(int,QProcess::ExitStatus)"             ) return object->disconnect( SIGNAL( finished( int, QProcess::ExitStatus )                             ) );
    if( signal == ( QString ) "readyReadStandardError()"                       ) return object->disconnect( SIGNAL( readyReadStandardError()                                          ) );
    if( signal == ( QString ) "readyReadStandardOutput()"                      ) return object->disconnect( SIGNAL( readyReadStandardOutput()                                         ) );
    if( signal == ( QString ) "started()"                                      ) return object->disconnect( SIGNAL( started()                                                         ) );
@@ -398,9 +401,9 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "historyChanged()"                               ) return object->disconnect( SIGNAL( historyChanged()                                                  ) );
    if( signal == ( QString ) "sourceChanged(QUrl)"                            ) return object->disconnect( SIGNAL( sourceChanged( const QUrl & )                                     ) );
    /* QDockWidget */
-   if( signal == ( QString ) "allowedAreasChanged(int)"                       ) return object->disconnect( SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ) );
-   if( signal == ( QString ) "dockLocationChanged(int)"                       ) return object->disconnect( SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ) );
-   if( signal == ( QString ) "featuresChanged(int)"                           ) return object->disconnect( SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )                ) );
+   if( signal == ( QString ) "allowedAreasChanged(Qt::DockWidgetAreas)"       ) return object->disconnect( SIGNAL( allowedAreasChanged( Qt::DockWidgetAreas )                        ) );
+   if( signal == ( QString ) "dockLocationChanged(Qt::DockWidgetArea)"        ) return object->disconnect( SIGNAL( dockLocationChanged( Qt::DockWidgetArea )                         ) );
+   if( signal == ( QString ) "featuresChanged(QDockWidget::DockWidgetFeatures)" ) return object->disconnect( SIGNAL( featuresChanged( QDockWidget::DockWidgetFeatures )              ) );
    if( signal == ( QString ) "topLevelChanged(bool)"                          ) return object->disconnect( SIGNAL( topLevelChanged( bool )                                           ) );
    if( signal == ( QString ) "visibilityChanged(bool)"                        ) return object->disconnect( SIGNAL( visibilityChanged( bool )                                         ) );
    /* QCompleter */
@@ -416,7 +419,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "aboutToActivate()"                              ) return object->disconnect( SIGNAL( aboutToActivate()                                                 ) );
    if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->disconnect( SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ) );
    /* QAbstractItemDelegate */
-   if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->disconnect( SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ) );
+   if( signal == ( QString ) "closeEditor(QWidget,QAbstractItemDelegate::EndEditHint)" ) return object->disconnect( SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint ) ) );
    if( signal == ( QString ) "commitData(QWidget)"                            ) return object->disconnect( SIGNAL( commitData( QWidget * )                                           ) );
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->disconnect( SIGNAL( sizeHintChanged( const QModelIndex & )                            ) );
    /* QGraphicsScene */
@@ -458,9 +461,16 @@ static void hbqt_SlotsExecBool( HBQSlots * t_slots, QObject * object, const char
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pBool = hb_itemPutL( NULL, bBool );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pBool );
          hb_itemRelease( pBool );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushLogical( bBool );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -473,9 +483,16 @@ static void hbqt_SlotsExecInt( HBQSlots * t_slots, QObject * object, const char 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutNI( NULL, iValue );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushInteger( iValue );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -488,11 +505,19 @@ static void hbqt_SlotsExecIntInt( HBQSlots * t_slots, QObject * object, const ch
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pValue1, pValue2 );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushInteger( iValue1 );
+         hb_vmPushInteger( iValue2 );
+         hb_vmSend( 2 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -505,6 +530,7 @@ static void hbqt_SlotsExecIntIntInt( HBQSlots * t_slots, QObject * object, const
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
@@ -512,6 +538,14 @@ static void hbqt_SlotsExecIntIntInt( HBQSlots * t_slots, QObject * object, const
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
          hb_itemRelease( pValue3 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushInteger( iValue1 );
+         hb_vmPushInteger( iValue2 );
+         hb_vmPushInteger( iValue3 );
+         hb_vmSend( 3 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -524,6 +558,7 @@ static void hbqt_SlotsExecIntIntIntInt( HBQSlots * t_slots, QObject * object, co
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
@@ -533,6 +568,15 @@ static void hbqt_SlotsExecIntIntIntInt( HBQSlots * t_slots, QObject * object, co
          hb_itemRelease( pValue2 );
          hb_itemRelease( pValue3 );
          hb_itemRelease( pValue4 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushInteger( iValue1 );
+         hb_vmPushInteger( iValue2 );
+         hb_vmPushInteger( iValue3 );
+         hb_vmPushInteger( iValue4 );
+         hb_vmSend( 4 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -545,9 +589,16 @@ static void hbqt_SlotsExecString( HBQSlots * t_slots, QObject * object, const ch
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 1
          PHB_ITEM pString = hb_itemPutC( NULL, string.toAscii().data() );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pString );
          hb_itemRelease( pString );
+         #else    /* What to do with HB_SIZE */
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushString( string.toAscii().data() );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -560,10 +611,26 @@ static void hbqt_SlotsExecModel( HBQSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pState );
          delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
          hb_itemRelease( pState );
+         #else
+            #if 0
+         QModelIndex * pArg = new QModelIndex( index );
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( pArg ); //new QModelIndex( index ) );
+         hb_vmSend( 1 );
+         delete pArg;
+            #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QModelIndex( index ) );
+         hb_vmSend( 1 );
+            #endif
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -576,6 +643,7 @@ static void hbqt_SlotsExecModelModel( HBQSlots * t_slots, QObject * object, cons
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pState1 = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index1 ) );
          PHB_ITEM pState2 = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index2 ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pState1, pState2 );
@@ -583,6 +651,13 @@ static void hbqt_SlotsExecModelModel( HBQSlots * t_slots, QObject * object, cons
          delete ( ( QModelIndex * ) hb_itemGetPtr( pState2 ) );
          hb_itemRelease( pState1 );
          hb_itemRelease( pState2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QModelIndex( index1 ) );
+         hb_vmPushPointer( new QModelIndex( index2 ) );
+         hb_vmSend( 2 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -595,6 +670,7 @@ static void hbqt_SlotsExecItemSelItemSel( HBQSlots * t_slots, QObject * object, 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM pState1 = hb_itemPutPtr( NULL, ( QItemSelection * ) new QItemSelection( index1 ) );
          PHB_ITEM pState2 = hb_itemPutPtr( NULL, ( QItemSelection * ) new QItemSelection( index2 ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pState1, pState2 );
@@ -602,6 +678,13 @@ static void hbqt_SlotsExecItemSelItemSel( HBQSlots * t_slots, QObject * object, 
          delete ( ( QItemSelection * ) hb_itemGetPtr( pState2 ) );
          hb_itemRelease( pState1 );
          hb_itemRelease( pState2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QItemSelection( index1 ) );
+         hb_vmPushPointer( new QItemSelection( index2 ) );
+         hb_vmSend( 2 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -614,10 +697,17 @@ static void hbqt_SlotsExecTextCharFormat( HBQSlots * t_slots, QObject * object, 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( f ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QTextCharFormat * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QTextCharFormat( f ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -630,10 +720,17 @@ static void hbqt_SlotsExecFont( HBQSlots * t_slots, QObject * object, const char
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( font ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QFont * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QFont( font ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -646,10 +743,17 @@ static void hbqt_SlotsExecQTextCursor( HBQSlots * t_slots, QObject * object, con
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCursor( cursor ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QTextCursor * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QTextCursor( cursor ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -662,10 +766,17 @@ static void hbqt_SlotsExecStringList( HBQSlots * t_slots, QObject * object, cons
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( stringList ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QStringList * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QStringList( stringList ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -678,26 +789,10 @@ static void hbqt_SlotsExecPointer( HBQSlots * t_slots, QObject * object, const c
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
-         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pP1 );
-         hb_itemRelease( pP1 );
-         hb_vmRequestRestore();
-      }
-   }
-}
-
-static void hbqt_SlotsExecPointerInt( HBQSlots * t_slots, QObject * object, const char * pszEvent, void * pP1, int iInt )
-{
-   if( object )
-   {
-      int i = object->property( pszEvent ).toInt();
-      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
-      {
-         PHB_ITEM p1 = hb_itemPutPtr( NULL, pP1 );
-         PHB_ITEM p2 = hb_itemPutNI( NULL, iInt );
-         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
-         hb_itemRelease( p1 );
-         hb_itemRelease( p2 );
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( p1 );
+         hb_vmSend( 1 );
          hb_vmRequestRestore();
       }
    }
@@ -710,11 +805,44 @@ static void hbqt_SlotsExecPointerPointer( HBQSlots * t_slots, QObject * object, 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, pP1 );
          PHB_ITEM p2 = hb_itemPutPtr( NULL, pP2 );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
          hb_itemRelease( p1 );
          hb_itemRelease( p2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( pP1 );
+         hb_vmPushPointer( pP2 );
+         hb_vmSend( 2 );
+         #endif
+         hb_vmRequestRestore();
+      }
+   }
+}
+
+static void hbqt_SlotsExecPointerInt( HBQSlots * t_slots, QObject * object, const char * pszEvent, void * pP1, int iInt )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         #if 0
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, pP1 );
+         PHB_ITEM p2 = hb_itemPutNI( NULL, iInt );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( pP1 );
+         hb_vmPushInteger( iInt );
+         hb_vmSend( 2 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -727,12 +855,20 @@ static void hbqt_SlotsExecQRectInt( HBQSlots * t_slots, QObject * object, const 
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( r ) );
          PHB_ITEM p2 = hb_itemPutNI( NULL, dy );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, p1, p2 );
          delete ( ( QRect * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
          hb_itemRelease( p2 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QRect( r ) );
+         hb_vmPushInteger( dy );
+         hb_vmSend( 2 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -745,10 +881,17 @@ static void hbqt_SlotsExecQPoint( HBQSlots * t_slots, QObject * object, const ch
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QPoint( pos ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QPoint * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QPoint( pos ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -761,10 +904,17 @@ static void hbqt_SlotsExecQRectF( HBQSlots * t_slots, QObject * object, const ch
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRectF( rect ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QRectF * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QRectF( rect ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -777,10 +927,17 @@ static void hbqt_SlotsExecQUrl( HBQSlots * t_slots, QObject * object, const char
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QUrl * ) new QUrl( link ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QUrl * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QUrl( link ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -793,10 +950,17 @@ static void hbqt_SlotsExecQDate( HBQSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QDate * ) new QDate( date ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QDate * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QDate( date ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -809,10 +973,17 @@ static void hbqt_SlotsExecQDateTime( HBQSlots * t_slots, QObject * object, const
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QDateTime * ) new QDateTime( datetime ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QDateTime * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QDateTime( datetime ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -825,10 +996,17 @@ static void hbqt_SlotsExecQTime( HBQSlots * t_slots, QObject * object, const cha
       int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
+         #if 0
          PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QTime * ) new QTime( time ) );
          hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
          delete ( ( QTime * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+         #else
+         hb_vmPushEvalSym();
+         hb_vmPush( t_slots->listBlock.at( i - 1 ) );
+         hb_vmPushPointer( new QTime( time ) );
+         hb_vmSend( 1 );
+         #endif
          hb_vmRequestRestore();
       }
    }
@@ -1017,7 +1195,7 @@ void HBQSlots::textChanged()                                                    
 void HBQSlots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "undoAvailable(bool)", available                                  ); }
 void HBQSlots::timeout()                                                                                    { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "timeout()"                                                       ); }
 void HBQSlots::geometriesChanged()                                                                          { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "geometriesChanged()"                                             ); }
-void HBQSlots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )                          { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,int)", logicalIndex, mode                  ); }
+void HBQSlots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )                          { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,QHeaderView::ResizeMode)", logicalIndex, mode ); }
 void HBQSlots::sectionClicked( int logicalIndex )                                                           { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "sectionClicked(int)", logicalIndex                               ); }
 void HBQSlots::sectionCountChanged( int oldCount, int newCount )                                            { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "sectionCountChanged(int,int)", oldCount, newCount                ); }
 void HBQSlots::sectionDoubleClicked( int logicalIndex )                                                     { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "sectionDoubleClicked(int)", logicalIndex                         ); }
@@ -1026,7 +1204,7 @@ void HBQSlots::sectionHandleDoubleClicked( int logicalIndex )                   
 void HBQSlots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )                     { hbqt_SlotsExecIntIntInt(      this, qobject_cast<QObject *>( sender() ), "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex ); }
 void HBQSlots::sectionPressed( int logicalIndex )                                                           { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "sectionPressed(int)", logicalIndex                               ); }
 void HBQSlots::sectionResized( int logicalIndex, int oldSize, int newSize )                                 { hbqt_SlotsExecIntIntInt(      this, qobject_cast<QObject *>( sender() ), "sectionResized(int,int,int)", logicalIndex, oldSize, newSize     ); }
-void HBQSlots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )                                { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,int)", logicalIndex, order              ); }
+void HBQSlots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )                                { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,Qt::SortOrder)", logicalIndex, order    ); }
 void HBQSlots::buttonClicked( int id )                                                                      { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "buttonClicked(int)", id                                          ); }
 void HBQSlots::buttonPressed( int id )                                                                      { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "buttonPressed(int)", id                                          ); }
 void HBQSlots::buttonReleased( int id )                                                                     { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "buttonReleased(int)", id                                         ); }
@@ -1036,12 +1214,12 @@ void HBQSlots::tabCloseRequested( int index )                                   
 void HBQSlots::paintRequested( QPrinter * printer )                                                         { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer                               ); }
 /* QIODevice */
 void HBQSlots::aboutToClose()                                                                               { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "aboutToClose()"                                                  ); }
-void HBQSlots::bytesWritten( qint64 bytes )                                                                 { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "bytesWritten(int)", bytes                                        ); }
+void HBQSlots::bytesWritten( qint64 bytes )                                                                 { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "bytesWritten(qint64)", bytes                                     ); }
 void HBQSlots::readChannelFinished()                                                                        { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "readChannelFinished()"                                           ); }
 void HBQSlots::readyRead()                                                                                  { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "readyRead()"                                                     ); }
 /* QProcess */
 void HBQSlots::error( QProcess::ProcessError error )                                                        { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "error(error)", error                                             ); }
-void HBQSlots::finished( int exitCode, QProcess::ExitStatus exitStatus )                                    { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "finished(int,int)", exitCode, exitStatus                         ); }
+void HBQSlots::finished( int exitCode, QProcess::ExitStatus exitStatus )                                    { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "finished(int,QProcess::ExitStatus)", exitCode, exitStatus        ); }
 void HBQSlots::readyReadStandardError()                                                                     { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "readyReadStandardError()"                                        ); }
 void HBQSlots::readyReadStandardOutput()                                                                    { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "readyReadStandardOutput()"                                       ); }
 void HBQSlots::started()                                                                                    { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "started()"                                                       ); }
@@ -1099,9 +1277,9 @@ void HBQSlots::highlighted( const QUrl & link )                                 
 void HBQSlots::historyChanged()                                                                             { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "historyChanged()"                                                ); }
 void HBQSlots::sourceChanged( const QUrl & src )                                                            { hbqt_SlotsExecQUrl(           this, qobject_cast<QObject *>( sender() ), "sourceChanged(QUrl)", src                                        ); }
 /* QDockWidget */
-void HBQSlots::allowedAreasChanged( Qt::DockWidgetAreas allowedAreas )                                      { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "allowedAreasChanged(int)", allowedAreas                          ); }
-void HBQSlots::dockLocationChanged( Qt::DockWidgetArea area )                                               { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "dockLocationChanged(int)", area                                  ); }
-void HBQSlots::featuresChanged( QDockWidget::DockWidgetFeatures features )                                  { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "featuresChanged(int)", features                                  ); }
+void HBQSlots::allowedAreasChanged( Qt::DockWidgetAreas allowedAreas )                                      { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "allowedAreasChanged(Qt::DockWidgetAreas)", allowedAreas          ); }
+void HBQSlots::dockLocationChanged( Qt::DockWidgetArea area )                                               { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "dockLocationChanged(Qt::DockWidgetArea)", area                   ); }
+void HBQSlots::featuresChanged( QDockWidget::DockWidgetFeatures features )                                  { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "featuresChanged(QDockWidget::DockWidgetFeatures)", features      ); }
 void HBQSlots::topLevelChanged( bool topLevel )                                                             { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "topLevelChanged(bool)", topLevel                                 ); }
 void HBQSlots::visibilityChanged( bool visible )                                                            { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "visibilityChanged(bool)", visible                                ); }
 /* QCompleter */
@@ -1117,7 +1295,7 @@ void HBQSlots::subWindowActivated( QMdiSubWindow * window )                     
 void HBQSlots::aboutToActivate()                                                                            { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "aboutToActivate()"                                               ); }
 void HBQSlots::windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates newState )                   { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", oldState, newState ); }
 /* QAbstractItemDelegate */
-void HBQSlots::closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )                     { hbqt_SlotsExecPointerInt(     this, qobject_cast<QObject *>( sender() ), "closeEditor(QWidget,int)", editor, hint                          ); }
+void HBQSlots::closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )                     { hbqt_SlotsExecPointerInt(     this, qobject_cast<QObject *>( sender() ), "closeEditor(QWidget,QAbstractItemDelegate::EndEditHint)", editor, hint ); }
 void HBQSlots::commitData( QWidget * editor )                                                               { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "commitData(QWidget)", editor                                     ); }
 void HBQSlots::sizeHintChanged( const QModelIndex & index )                                                 { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "sizeHintChanged(QModelIndex)", index                             ); }
 /* QGraphicsScene */
@@ -1178,7 +1356,7 @@ HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 
    if( t_slots )
    {
-HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s )", hb_parcx( 3 ) ) );
+HB_TRACE( HB_TR_DEBUG, ( "__HBQT_SLOTS_DISCONNECT( %s )", hb_parcx( 3 ) ) );
       QObject * object = ( QObject* ) hbqt_pPtrFromObj( 2 );
       if( object )
       {
@@ -1195,9 +1373,9 @@ HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s )", hb_parcx( 3 ) ) );
             hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
             t_slots->listBlock[ i - 1 ] = NULL;
 
-            HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", slot ) );
+            HB_TRACE( HB_TR_DEBUG, ( "      __HBQT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", slot ) );
          }
-HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "disConnected" : "not-disConnected" ) );
+HB_TRACE( HB_TR_DEBUG, ( "__HBQT_SLOTS_DISCONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "disConnected" : "not-disConnected" ) );
       }
    }
    hb_retl( bRet );
@@ -1221,32 +1399,106 @@ HB_FUNC( __HBQT_SLOTS_NEW )
 #include <QtCore/QPointer>
 #include <QtCore/QByteArray>
 #include <QtCore/QObject>
+#include <QtCore/QModelIndex>
+#include <QtGui/QItemSelection>
+#include <QtGui/QTextCharFormat>
+
+static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
+{
+   #ifdef __hb_vmEvalBlockV__
+   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ) );
+   hb_vmEvalBlockV( codeBlock, 1, p1 );
+   hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+   hb_vmSend( 1 );
+   #endif
+}
+
+static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments )
+{
+   #ifdef __hb_vmEvalBlockV__
+   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ) );
+   PHB_ITEM p2 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) ) );
+   hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
+   hb_itemRelease( p1 );
+   hb_itemRelease( p2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
+   hb_vmSend( 2 );
+   #endif
+}
+
+static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
+{
+   #ifdef __hb_vmEvalBlockV__
+   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ) );
+   PHB_ITEM p2 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ) );
+   hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
+   hb_itemRelease( p1 );
+   hb_itemRelease( p2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmSend( 2 );
+   #endif
+}
 
 static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutL( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushLogical( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecInt( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecIntInt( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
    PHB_ITEM p2 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ) );
    hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
    hb_itemRelease( p1 );
    hb_itemRelease( p2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmSend( 2 );
+   #endif
 }
 
 static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
    PHB_ITEM p2 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ) );
    PHB_ITEM p3 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) ) );
@@ -1254,10 +1506,19 @@ static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
    hb_itemRelease( p1 );
    hb_itemRelease( p2 );
    hb_itemRelease( p3 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+   hb_vmSend( 3 );
+   #endif
 }
 
 static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
    PHB_ITEM p2 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ) );
    PHB_ITEM p3 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) ) );
@@ -1267,37 +1528,68 @@ static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments 
    hb_itemRelease( p2 );
    hb_itemRelease( p3 );
    hb_itemRelease( p4 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 4 ] ) );
+   hb_vmSend( 4 );
+   #endif
 }
 
 static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL,  new QRect( (*reinterpret_cast< QRect(*)>(arguments[1])) ) );
    PHB_ITEM p2 = hb_itemPutNI( NULL, (*reinterpret_cast< int(*)>(arguments[2])) );
    hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
    delete ( ( QRect * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
    hb_itemRelease( p2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QRect( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmSend( 2 );
+   #endif
 }
 
 static void hbqt_SlotsExecString( PHB_ITEM * codeBlock, void ** arguments )
 {
-   PHB_ITEM pString = hb_itemPutC( NULL, ( *reinterpret_cast< QString(*)>(arguments[1])).toAscii().data() );
+   #ifdef __hb_vmEvalBlockV__  // TODO: how to convert to this type with size
+   PHB_ITEM pString = hb_itemPutC( NULL, ( *reinterpret_cast< QString( * ) >( arguments[ 1 ] ) ).toAscii().data() );
    hb_vmEvalBlockV( codeBlock, 1, pString );
    hb_itemRelease( pString );
+   #else
+   QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+   hb_vmSend( 1 );
+   #endif
 }
-
-#include <QtCore/QModelIndex>
 
 static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM pState = hb_itemPutPtr( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, pState );
    delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
    hb_itemRelease( pState );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM pState1 = hb_itemPutPtr( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
    PHB_ITEM pState2 = hb_itemPutPtr( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 2, pState1, pState2 );
@@ -1305,12 +1597,18 @@ static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments )
    delete ( ( QModelIndex * ) hb_itemGetPtr( pState2 ) );
    hb_itemRelease( pState1 );
    hb_itemRelease( pState2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
+   hb_vmSend( 2 );
+   #endif
 }
-
-#include <QtGui/QItemSelection>
 
 static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** arguments)
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM pState1 = hb_itemPutPtr( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) );
    PHB_ITEM pState2 = hb_itemPutPtr( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 2, pState1, pState2 );
@@ -1318,114 +1616,163 @@ static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** argument
    delete ( ( QItemSelection * ) hb_itemGetPtr( pState2 ) );
    hb_itemRelease( pState1 );
    hb_itemRelease( pState2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) );
+   hb_vmSend( 2 );
+   #endif
 }
-
-#include <QtGui/QTextCharFormat>
 
 static void hbqt_SlotsExecTextCharFormat( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QTextCharFormat * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecFont( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QFont * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QTextCursor * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QStringList * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
-}
-
-static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
-{
-   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ) );
-   hb_vmEvalBlockV( codeBlock, 1, p1 );
-   hb_itemRelease( p1 );
-}
-
-static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ) );
-   PHB_ITEM p2 = hb_itemPutNI( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ) );
-   hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
-   hb_itemRelease( p1 );
-   hb_itemRelease( p2 );
-}
-
-static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments )
-{
-   PHB_ITEM p1 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ) );
-   PHB_ITEM p2 = hb_itemPutPtr( NULL, ( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) ) );
-   hb_vmEvalBlockV( codeBlock, 2, p1, p2 );
-   hb_itemRelease( p1 );
-   hb_itemRelease( p2 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQPoint( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QPoint( ( * reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QPoint * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QPoint( ( * reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
-
 
 static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QRectF * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QUrl * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QDate * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QDateTime * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
 {
+   #ifdef __hb_vmEvalBlockV__
    PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    delete ( ( QTime * ) hb_itemGetPtr( p1 ) );
    hb_itemRelease( p1 );
+   #else
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmSend( 1 );
+   #endif
 }
 
 /*----------------------------------------------------------------------*/
@@ -1435,12 +1782,12 @@ static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots 
    HB_TRACE( HB_TR_DEBUG, ( "connect_signal: %s", ( char * ) signal.toAscii().data() ) );
 
    QByteArray theSignal = signal.toAscii()
-                              .replace( "QWidget"      , "QWidget *" )
-                              .replace( "QPrinter"     , "QPrinter *" )
-                              .replace( "QLWItem"      , "QListWidgetItem *" )
-                              .replace( "QTWItem"      , "QTreeWidgetItem *" )
+                              .replace( "QWidget"      , "QWidget *"          )
+                              .replace( "QPrinter"     , "QPrinter *"         )
+                              .replace( "QLWItem"      , "QListWidgetItem *"  )
+                              .replace( "QTWItem"      , "QTreeWidgetItem *"  )
                               .replace( "QTblWItem"    , "QTableWidgetItem *" )
-                              .replace( "QMdiSubWindow", "QMdiSubWindow *" );
+                              .replace( "QMdiSubWindow", "QMdiSubWindow *"    );
 
    theSignal = QMetaObject::normalizedSignature( theSignal );
 
@@ -1448,25 +1795,27 @@ static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots 
 
    if( ! QMetaObject::checkConnectArgs( theSignal, theSignal ) )
    {
+      HB_TRACE( HB_TR_ALWAYS, ( "NOT    checkConnectArgs: %s", ( char * ) theSignal.data() ) );
       return -1;
    }
 
    int signalId = object->metaObject()->indexOfSignal( theSignal );
    if( signalId == -1 )
    {
+      HB_TRACE( HB_TR_ALWAYS, ( "NOT    indexOfSignal: %s", ( char * ) theSignal.data() ) );
       return -1;
    }
-   //  HB_TRACE( HB_TR_DEBUG, ( "   signalId %d", signalId ) );
 
    int slotId = object->metaObject()->indexOfMethod( theSignal );
    if( slotId == -1 )
    {
+      HB_TRACE( HB_TR_ALWAYS, ( "NOT    indexOfMethod: %s", ( char * ) theSignal.data() ) );
       return -1;
    }
-   //  HB_TRACE( HB_TR_DEBUG, ( "   slotId %d", slotId ) );
+
    if( QMetaObject::connect( object, signalId, t_slots, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "    normalized: %i %i %s", signalId, slotId, ( char * ) theSignal.data() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "YES    connected: %i %i %s", signalId, slotId, ( char * ) theSignal.data() ) );
       return slotId;
    }
    return -1;
@@ -1477,12 +1826,12 @@ static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots 
 static bool disconnect_signal( QObject * object, QString signal )
 {
    QByteArray theSignal = signal.toAscii()
-                              .replace( "QWidget"      , "QWidget *" )
-                              .replace( "QPrinter"     , "QPrinter *" )
-                              .replace( "QLWItem"      , "QListWidgetItem *" )
-                              .replace( "QTWItem"      , "QTreeWidgetItem *" )
+                              .replace( "QWidget"      , "QWidget *"          )
+                              .replace( "QPrinter"     , "QPrinter *"         )
+                              .replace( "QLWItem"      , "QListWidgetItem *"  )
+                              .replace( "QTWItem"      , "QTreeWidgetItem *"  )
                               .replace( "QTblWItem"    , "QTableWidgetItem *" )
-                              .replace( "QMdiSubWindow", "QMdiSubWindow *" );
+                              .replace( "QMdiSubWindow", "QMdiSubWindow *"    );
 
    theSignal = QMetaObject::normalizedSignature( theSignal ) ;
 
@@ -1505,11 +1854,11 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
    #if 0
    static void * ( arrayFunc[ 23 ] )
    {
-      hbqt_SlotsExecInt,
-      hbqt_SlotsExecIntInt,
-      hbqt_SlotsExecIntIntInt,
-      hbqt_SlotsExecIntIntIntInt,
-      hbqt_SlotsExecBool,
+      hbqt_SlotsExecInt ,
+      hbqt_SlotsExecIntInt ,
+      hbqt_SlotsExecIntIntInt ,
+      hbqt_SlotsExecIntIntIntInt ,
+      hbqt_SlotsExecBool ,
       hbqt_SlotsExecQRectInt ,
       hbqt_SlotsExecString ,
       hbqt_SlotsExecModel ,
@@ -1522,11 +1871,11 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
       hbqt_SlotsExecPointer ,
       hbqt_SlotsExecPointerPointer ,
       hbqt_SlotsExecPointerInt ,
-      hbqt_SlotsExecQDate,
-      hbqt_SlotsExecQDateTime,
-      hbqt_SlotsExecQPoint,
-      hbqt_SlotsExecQRectF,
-      hbqt_SlotsExecQTime,
+      hbqt_SlotsExecQDate ,
+      hbqt_SlotsExecQDateTime ,
+      hbqt_SlotsExecQPoint ,
+      hbqt_SlotsExecQRectF ,
+      hbqt_SlotsExecQTime ,
       hbqt_SlotsExecQUrl
    }
    #endif
@@ -1820,7 +2169,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
     hbqt_SlotsProxy( this, id, sender(), arguments );
     return -1;
 }
-
 
 /*----------------------------------------------------------------------*/
 /*

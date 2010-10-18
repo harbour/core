@@ -361,6 +361,7 @@ METHOD HbIde:new( aParams )
 
 METHOD HbIde:create( aParams )
    LOCAL qPixmap, qSplash, cView
+   LOCAL mp1, mp2, oXbp, nEvent
 
    qPixmap := QPixmap( ":/resources" + hb_ps() + "hbidesplash.png" )
    qSplash := QSplashScreen()
@@ -556,22 +557,22 @@ METHOD HbIde:create( aParams )
    ::oEM:updateCompleter()
 
    DO WHILE .t.
-      ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
+      nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
-      IF ::nEvent == xbeP_Quit
+      IF nEvent == xbeP_Quit
          ::oINI:save()
          EXIT
       ENDIF
 
-      IF ::nEvent == xbeP_Close
+      IF nEvent == xbeP_Close
          ::oINI:save()
          ::oSM:closeAllSources( .f. /* can not cancel */ )
          EXIT
 
-      ELSEIF ::nEvent == xbeP_Keyboard
+      ELSEIF nEvent == xbeP_Keyboard
          DO CASE
 
-         CASE ::mp1 == xbeK_INS
+         CASE mp1 == xbeK_INS
             IF !empty( ::qCurEdit )
                ::qCurEdit:setOverwriteMode( !::qCurEdit:overwriteMode() )
                ::oCurEditor:dispEditInfo( ::qCurEdit )
@@ -580,7 +581,7 @@ METHOD HbIde:create( aParams )
          ENDCASE
       ENDIF
 
-      ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
+      oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
 
    DbCloseAll()

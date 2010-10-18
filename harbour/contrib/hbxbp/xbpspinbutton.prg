@@ -236,7 +236,7 @@ METHOD XbpSpinButton:disconnect()
    ::oWidget:connect( QEvent_KeyPress )
    #endif
 
-   ::oWidget:connect( "valueChanged(int)" )
+   ::oWidget:disconnect( "valueChanged(int)" )
 
    RETURN Self
 

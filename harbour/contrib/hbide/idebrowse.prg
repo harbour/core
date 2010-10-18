@@ -1957,7 +1957,7 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
    setActiveSubWindow( QMdiSubWindow )
    #endif
 
-   RETURN Self
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -2030,14 +2030,21 @@ STATIC FUNCTION hbide_indexArray( obj, cIndex, nOrder )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:dispInfo()
+   LOCAL cTitle
 
    IF !empty( ::qMdi )
       ::qMdi:setTooltip( ::cTable )
-
-      ::qMdi:setWindowTitle( "[ " + ::cDriver + "  " + ;
+#if 1
+      cTitle := "[ " + ::cDriver + "  " + ;
                              hb_ntos( ::indexOrd() ) + "/" + hb_ntos( ::numIndexes() ) + iif( ::indexOrd() > 0, ":" + ::ordName(), "" ) + ;
-                             "  " + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + " ]  " + ;
-                             ::cTableOnly )
+                             "  " + hb_ntos( ::recNo() ) + "/" + hb_ntos( ::lastRec() ) + " ]  " + ;
+                             ::cTableOnly
+#else
+      //cTitle := HBQString( hb_ntos( ::recNo() ) )
+      cTitle := hb_ntos( ::recNo() )
+#endif
+
+      ::qMdi:setWindowTitle( cTitle )
    ENDIF
    RETURN Self
 
@@ -2073,11 +2080,12 @@ METHOD IdeBrowse:populateForm()
    LOCAL a_, oCol
 
    IF ::nType == BRW_TYPE_DBF
-
-      FOR EACH a_ IN ::aForm
-         oCol := ::oBrw:getColumn( a_:__enumIndex() )
-         ::aForm[ a_:__enumIndex(), 2 ]:setText( hbide_xtosForForm( eval( oCol:block ) ) )
-      NEXT
+      IF ::qForm:isVisible()
+         FOR EACH a_ IN ::aForm
+            oCol := ::oBrw:getColumn( a_:__enumIndex() )
+            ::aForm[ a_:__enumIndex(), 2 ]:setText( hbide_xtosForForm( eval( oCol:block ) ) )
+         NEXT
+      ENDIF
    ELSE
 
    ENDIF
@@ -2424,7 +2432,7 @@ METHOD IdeBrowse:recNo()
       RETURN ::nIndex
    ENDIF
 
-   RETURN NIL
+   RETURN 0
 
 /*----------------------------------------------------------------------*/
 
@@ -2436,7 +2444,7 @@ METHOD IdeBrowse:lastRec()
       RETURN len( ::aData )
    ENDIF
 
-   RETURN NIL
+   RETURN 0
 
 /*----------------------------------------------------------------------*/
 
