@@ -57,6 +57,8 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
+REQUEST FieldGet
+
 PROCEDURE __dbgShowWorkAreas()
 
    LOCAL oDlg
@@ -325,14 +327,36 @@ STATIC FUNCTION DbfInfo( aInfo )
       xValue := __Dbg():GetExprValue( "FieldGet(" + hb_NToS( nFor ) + ")" )
       xType  := ValType( xValue )
 
-      DO CASE
-      CASE xType $ "CM" ; cValue := xValue
-      CASE xType == "N" ; cValue := hb_NToS( xValue )
-      CASE xType == "D" ; cValue := DToC( xValue )
-      CASE xType == "L" ; cValue := iif( xValue, ".T.", ".F." )
-      CASE xType == "A" ; cValue := "Array"
-      OTHERWISE         ; cValue := "Error"
-      ENDCASE
+      SWITCH xType
+         CASE "C"
+         CASE "M"
+            cValue := xValue
+            EXIT
+         CASE "N"
+            cValue := hb_NToS( xValue )
+             EXIT
+         CASE "D"
+            cValue := DToC( xValue )
+            EXIT
+         CASE "T"
+            cValue := hb_TsToStr( xValue )
+            EXIT
+         CASE "L"
+            cValue := iif( xValue, ".T.", ".F." )
+            EXIT
+         CASE "A"
+            cValue := "Array"
+            EXIT
+         CASE "H"
+            cValue := "Hash"
+            EXIT
+         CASE "U"
+            cValue := "NIL"
+            EXIT
+         OTHERWISE
+            cValue := "Error"
+            EXIT
+      ENDSWITCH
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10) + " = " + PadR( cValue, 17 ) )
 
