@@ -7475,7 +7475,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
    DO CASE
    CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
-               So, '<prefix>xxx.dll' format libs won't be found by hbmk. */
+               So, '<prefix>xxx.dll' format libs won't be found by hbmk2. */
       DO CASE
       CASE                                       hb_FileExists( tmp := cDir + "lib" + FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
