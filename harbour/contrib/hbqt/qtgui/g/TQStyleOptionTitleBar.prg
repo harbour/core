@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionTitleBar( ... )
    RETURN HB_QStyleOptionTitleBar():new( ... )
 
-FUNCTION QStyleOptionTitleBarFrom( ... )
-   RETURN HB_QStyleOptionTitleBar():from( ... )
-
 FUNCTION QStyleOptionTitleBarFromPointer( ... )
    RETURN HB_QStyleOptionTitleBar():fromPointer( ... )
 

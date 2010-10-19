@@ -98,9 +98,6 @@
 FUNCTION QsciStyle( ... )
    RETURN HB_QsciStyle():new( ... )
 
-FUNCTION QsciStyleFrom( ... )
-   RETURN HB_QsciStyle():from( ... )
-
 FUNCTION QsciStyleFromPointer( ... )
    RETURN HB_QsciStyle():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QIcon( ... )
    RETURN HB_QIcon():new( ... )
 
-FUNCTION QIconFrom( ... )
-   RETURN HB_QIcon():from( ... )
-
 FUNCTION QIconFromPointer( ... )
    RETURN HB_QIcon():fromPointer( ... )
 

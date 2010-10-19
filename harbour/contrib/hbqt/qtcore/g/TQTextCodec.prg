@@ -98,9 +98,6 @@
 FUNCTION QTextCodec( ... )
    RETURN HB_QTextCodec():new( ... )
 
-FUNCTION QTextCodecFrom( ... )
-   RETURN HB_QTextCodec():from( ... )
-
 FUNCTION QTextCodecFromPointer( ... )
    RETURN HB_QTextCodec():fromPointer( ... )
 

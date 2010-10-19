@@ -98,9 +98,6 @@
 FUNCTION QDate( ... )
    RETURN HB_QDate():new( ... )
 
-FUNCTION QDateFrom( ... )
-   RETURN HB_QDate():from( ... )
-
 FUNCTION QDateFromPointer( ... )
    RETURN HB_QDate():fromPointer( ... )
 

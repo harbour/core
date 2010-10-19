@@ -98,9 +98,6 @@
 FUNCTION QScrollArea( ... )
    RETURN HB_QScrollArea():new( ... )
 
-FUNCTION QScrollAreaFrom( ... )
-   RETURN HB_QScrollArea():from( ... )
-
 FUNCTION QScrollAreaFromPointer( ... )
    RETURN HB_QScrollArea():fromPointer( ... )
 

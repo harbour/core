@@ -98,9 +98,6 @@
 FUNCTION QPrintDialog( ... )
    RETURN HB_QPrintDialog():new( ... )
 
-FUNCTION QPrintDialogFrom( ... )
-   RETURN HB_QPrintDialog():from( ... )
-
 FUNCTION QPrintDialogFromPointer( ... )
    RETURN HB_QPrintDialog():fromPointer( ... )
 

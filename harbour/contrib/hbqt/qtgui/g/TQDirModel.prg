@@ -98,9 +98,6 @@
 FUNCTION QDirModel( ... )
    RETURN HB_QDirModel():new( ... )
 
-FUNCTION QDirModelFrom( ... )
-   RETURN HB_QDirModel():from( ... )
-
 FUNCTION QDirModelFromPointer( ... )
    RETURN HB_QDirModel():fromPointer( ... )
 

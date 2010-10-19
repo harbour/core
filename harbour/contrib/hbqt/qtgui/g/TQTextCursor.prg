@@ -98,9 +98,6 @@
 FUNCTION QTextCursor( ... )
    RETURN HB_QTextCursor():new( ... )
 
-FUNCTION QTextCursorFrom( ... )
-   RETURN HB_QTextCursor():from( ... )
-
 FUNCTION QTextCursorFromPointer( ... )
    RETURN HB_QTextCursor():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QMetaClassInfo( ... )
    RETURN HB_QMetaClassInfo():new( ... )
 
-FUNCTION QMetaClassInfoFrom( ... )
-   RETURN HB_QMetaClassInfo():from( ... )
-
 FUNCTION QMetaClassInfoFromPointer( ... )
    RETURN HB_QMetaClassInfo():fromPointer( ... )
 

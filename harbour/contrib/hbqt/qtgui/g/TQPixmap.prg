@@ -98,9 +98,6 @@
 FUNCTION QPixmap( ... )
    RETURN HB_QPixmap():new( ... )
 
-FUNCTION QPixmapFrom( ... )
-   RETURN HB_QPixmap():from( ... )
-
 FUNCTION QPixmapFromPointer( ... )
    RETURN HB_QPixmap():fromPointer( ... )
 

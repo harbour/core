@@ -98,9 +98,6 @@
 FUNCTION QsciDocument( ... )
    RETURN HB_QsciDocument():new( ... )
 
-FUNCTION QsciDocumentFrom( ... )
-   RETURN HB_QsciDocument():from( ... )
-
 FUNCTION QsciDocumentFromPointer( ... )
    RETURN HB_QsciDocument():fromPointer( ... )
 

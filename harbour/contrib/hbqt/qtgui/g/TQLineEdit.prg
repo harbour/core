@@ -98,9 +98,6 @@
 FUNCTION QLineEdit( ... )
    RETURN HB_QLineEdit():new( ... )
 
-FUNCTION QLineEditFrom( ... )
-   RETURN HB_QLineEdit():from( ... )
-
 FUNCTION QLineEditFromPointer( ... )
    RETURN HB_QLineEdit():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QMouseEvent( ... )
    RETURN HB_QMouseEvent():new( ... )
 
-FUNCTION QMouseEventFrom( ... )
-   RETURN HB_QMouseEvent():from( ... )
-
 FUNCTION QMouseEventFromPointer( ... )
    RETURN HB_QMouseEvent():fromPointer( ... )
 

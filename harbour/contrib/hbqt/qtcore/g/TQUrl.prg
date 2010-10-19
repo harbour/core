@@ -98,9 +98,6 @@
 FUNCTION QUrl( ... )
    RETURN HB_QUrl():new( ... )
 
-FUNCTION QUrlFrom( ... )
-   RETURN HB_QUrl():from( ... )
-
 FUNCTION QUrlFromPointer( ... )
    RETURN HB_QUrl():fromPointer( ... )
 

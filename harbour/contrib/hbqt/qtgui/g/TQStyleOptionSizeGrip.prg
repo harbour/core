@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionSizeGrip( ... )
    RETURN HB_QStyleOptionSizeGrip():new( ... )
 
-FUNCTION QStyleOptionSizeGripFrom( ... )
-   RETURN HB_QStyleOptionSizeGrip():from( ... )
-
 FUNCTION QStyleOptionSizeGripFromPointer( ... )
    RETURN HB_QStyleOptionSizeGrip():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionTab( ... )
    RETURN HB_QStyleOptionTab():new( ... )
 
-FUNCTION QStyleOptionTabFrom( ... )
-   RETURN HB_QStyleOptionTab():from( ... )
-
 FUNCTION QStyleOptionTabFromPointer( ... )
    RETURN HB_QStyleOptionTab():fromPointer( ... )
 

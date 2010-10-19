@@ -98,9 +98,6 @@
 FUNCTION QSlider( ... )
    RETURN HB_QSlider():new( ... )
 
-FUNCTION QSliderFrom( ... )
-   RETURN HB_QSlider():from( ... )
-
 FUNCTION QSliderFromPointer( ... )
    RETURN HB_QSlider():fromPointer( ... )
 

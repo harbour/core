@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionViewItem( ... )
    RETURN HB_QStyleOptionViewItem():new( ... )
 
-FUNCTION QStyleOptionViewItemFrom( ... )
-   RETURN HB_QStyleOptionViewItem():from( ... )
-
 FUNCTION QStyleOptionViewItemFromPointer( ... )
    RETURN HB_QStyleOptionViewItem():fromPointer( ... )
 

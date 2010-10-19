@@ -98,9 +98,6 @@
 FUNCTION QList( ... )
    RETURN HB_QList():new( ... )
 
-FUNCTION QListFrom( ... )
-   RETURN HB_QList():from( ... )
-
 FUNCTION QListFromPointer( ... )
    RETURN HB_QList():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QItemEditorCreatorBase( ... )
    RETURN HB_QItemEditorCreatorBase():new( ... )
 
-FUNCTION QItemEditorCreatorBaseFrom( ... )
-   RETURN HB_QItemEditorCreatorBase():from( ... )
-
 FUNCTION QItemEditorCreatorBaseFromPointer( ... )
    RETURN HB_QItemEditorCreatorBase():fromPointer( ... )
 

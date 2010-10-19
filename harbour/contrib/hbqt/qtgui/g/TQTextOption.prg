@@ -98,9 +98,6 @@
 FUNCTION QTextOption( ... )
    RETURN HB_QTextOption():new( ... )
 
-FUNCTION QTextOptionFrom( ... )
-   RETURN HB_QTextOption():from( ... )
-
 FUNCTION QTextOptionFromPointer( ... )
    RETURN HB_QTextOption():fromPointer( ... )
 

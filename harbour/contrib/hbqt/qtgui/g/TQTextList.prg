@@ -98,9 +98,6 @@
 FUNCTION QTextList( ... )
    RETURN HB_QTextList():new( ... )
 
-FUNCTION QTextListFrom( ... )
-   RETURN HB_QTextList():from( ... )
-
 FUNCTION QTextListFromPointer( ... )
    RETURN HB_QTextList():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QDropEvent( ... )
    RETURN HB_QDropEvent():new( ... )
 
-FUNCTION QDropEventFrom( ... )
-   RETURN HB_QDropEvent():from( ... )
-
 FUNCTION QDropEventFromPointer( ... )
    RETURN HB_QDropEvent():fromPointer( ... )
 

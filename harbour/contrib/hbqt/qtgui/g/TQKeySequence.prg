@@ -98,9 +98,6 @@
 FUNCTION QKeySequence( ... )
    RETURN HB_QKeySequence():new( ... )
 
-FUNCTION QKeySequenceFrom( ... )
-   RETURN HB_QKeySequence():from( ... )
-
 FUNCTION QKeySequenceFromPointer( ... )
    RETURN HB_QKeySequence():fromPointer( ... )
 

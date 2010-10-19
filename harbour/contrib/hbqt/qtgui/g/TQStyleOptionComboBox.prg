@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionComboBox( ... )
    RETURN HB_QStyleOptionComboBox():new( ... )
 
-FUNCTION QStyleOptionComboBoxFrom( ... )
-   RETURN HB_QStyleOptionComboBox():from( ... )
-
 FUNCTION QStyleOptionComboBoxFromPointer( ... )
    RETURN HB_QStyleOptionComboBox():fromPointer( ... )
 

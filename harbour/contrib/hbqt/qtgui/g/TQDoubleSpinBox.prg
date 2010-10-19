@@ -98,9 +98,6 @@
 FUNCTION QDoubleSpinBox( ... )
    RETURN HB_QDoubleSpinBox():new( ... )
 
-FUNCTION QDoubleSpinBoxFrom( ... )
-   RETURN HB_QDoubleSpinBox():from( ... )
-
 FUNCTION QDoubleSpinBoxFromPointer( ... )
    RETURN HB_QDoubleSpinBox():fromPointer( ... )
 

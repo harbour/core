@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionHeader( ... )
    RETURN HB_QStyleOptionHeader():new( ... )
 
-FUNCTION QStyleOptionHeaderFrom( ... )
-   RETURN HB_QStyleOptionHeader():from( ... )
-
 FUNCTION QStyleOptionHeaderFromPointer( ... )
    RETURN HB_QStyleOptionHeader():fromPointer( ... )
 

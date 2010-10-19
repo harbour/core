@@ -98,9 +98,6 @@
 FUNCTION QMetaMethod( ... )
    RETURN HB_QMetaMethod():new( ... )
 
-FUNCTION QMetaMethodFrom( ... )
-   RETURN HB_QMetaMethod():from( ... )
-
 FUNCTION QMetaMethodFromPointer( ... )
    RETURN HB_QMetaMethod():fromPointer( ... )
 

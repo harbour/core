@@ -98,9 +98,6 @@
 FUNCTION HBQGraphicsItem( ... )
    RETURN HB_HBQGraphicsItem():new( ... )
 
-FUNCTION HBQGraphicsItemFrom( ... )
-   RETURN HB_HBQGraphicsItem():from( ... )
-
 FUNCTION HBQGraphicsItemFromPointer( ... )
    RETURN HB_HBQGraphicsItem():fromPointer( ... )
 

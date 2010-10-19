@@ -98,9 +98,6 @@
 FUNCTION QConicalGradient( ... )
    RETURN HB_QConicalGradient():new( ... )
 
-FUNCTION QConicalGradientFrom( ... )
-   RETURN HB_QConicalGradient():from( ... )
-
 FUNCTION QConicalGradientFromPointer( ... )
    RETURN HB_QConicalGradient():fromPointer( ... )
 

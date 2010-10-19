@@ -98,9 +98,6 @@
 FUNCTION QTimeLine( ... )
    RETURN HB_QTimeLine():new( ... )
 
-FUNCTION QTimeLineFrom( ... )
-   RETURN HB_QTimeLine():from( ... )
-
 FUNCTION QTimeLineFromPointer( ... )
    RETURN HB_QTimeLine():fromPointer( ... )
 

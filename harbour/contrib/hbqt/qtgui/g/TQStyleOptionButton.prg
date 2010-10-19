@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionButton( ... )
    RETURN HB_QStyleOptionButton():new( ... )
 
-FUNCTION QStyleOptionButtonFrom( ... )
-   RETURN HB_QStyleOptionButton():from( ... )
-
 FUNCTION QStyleOptionButtonFromPointer( ... )
    RETURN HB_QStyleOptionButton():fromPointer( ... )
 

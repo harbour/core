@@ -98,9 +98,6 @@
 FUNCTION QAbstractButton( ... )
    RETURN HB_QAbstractButton():new( ... )
 
-FUNCTION QAbstractButtonFrom( ... )
-   RETURN HB_QAbstractButton():from( ... )
-
 FUNCTION QAbstractButtonFromPointer( ... )
    RETURN HB_QAbstractButton():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QBrush( ... )
    RETURN HB_QBrush():new( ... )
 
-FUNCTION QBrushFrom( ... )
-   RETURN HB_QBrush():from( ... )
-
 FUNCTION QBrushFromPointer( ... )
    RETURN HB_QBrush():fromPointer( ... )
 

@@ -120,14 +120,14 @@ void removeToolBarBreak ( QToolBar * before )
 bool restoreDockWidget ( QDockWidget * dockwidget )
 bool restoreState ( const QByteArray & state, int version = 0 )
 QByteArray saveState ( int version = 0 ) const
-void setCentralWidget ( QWidget * widget )
+void setCentralWidget ( QWidget * widget )                        [*D=1*]
 void setCorner ( Qt::Corner corner, Qt::DockWidgetArea area )
 void setDockOptions ( DockOptions options )
 void setDocumentMode ( bool enabled )
 void setIconSize ( const QSize & iconSize )
-void setMenuBar ( QMenuBar * menuBar )
-void setMenuWidget ( QWidget * menuBar )
-void setStatusBar ( QStatusBar * statusbar )
+void setMenuBar ( QMenuBar * menuBar )                            [*D=1*]
+void setMenuWidget ( QWidget * menuBar )                          [*D=1*]
+void setStatusBar ( QStatusBar * statusbar )                      [*D=1*]
 void setTabPosition ( Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition )
 void setTabShape ( QTabWidget::TabShape tabShape )
 void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )

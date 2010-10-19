@@ -98,9 +98,6 @@
 FUNCTION QWebView( ... )
    RETURN HB_QWebView():new( ... )
 
-FUNCTION QWebViewFrom( ... )
-   RETURN HB_QWebView():from( ... )
-
 FUNCTION QWebViewFromPointer( ... )
    RETURN HB_QWebView():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QFont( ... )
    RETURN HB_QFont():new( ... )
 
-FUNCTION QFontFrom( ... )
-   RETURN HB_QFont():from( ... )
-
 FUNCTION QFontFromPointer( ... )
    RETURN HB_QFont():fromPointer( ... )
 

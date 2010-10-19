@@ -98,9 +98,6 @@
 FUNCTION QColor( ... )
    RETURN HB_QColor():new( ... )
 
-FUNCTION QColorFrom( ... )
-   RETURN HB_QColor():from( ... )
-
 FUNCTION QColorFromPointer( ... )
    RETURN HB_QColor():fromPointer( ... )
 

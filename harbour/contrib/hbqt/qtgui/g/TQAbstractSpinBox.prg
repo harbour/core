@@ -98,9 +98,6 @@
 FUNCTION QAbstractSpinBox( ... )
    RETURN HB_QAbstractSpinBox():new( ... )
 
-FUNCTION QAbstractSpinBoxFrom( ... )
-   RETURN HB_QAbstractSpinBox():from( ... )
-
 FUNCTION QAbstractSpinBoxFromPointer( ... )
    RETURN HB_QAbstractSpinBox():fromPointer( ... )
 

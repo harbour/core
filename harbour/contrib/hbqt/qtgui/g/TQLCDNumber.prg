@@ -98,9 +98,6 @@
 FUNCTION QLCDNumber( ... )
    RETURN HB_QLCDNumber():new( ... )
 
-FUNCTION QLCDNumberFrom( ... )
-   RETURN HB_QLCDNumber():from( ... )
-
 FUNCTION QLCDNumberFromPointer( ... )
    RETURN HB_QLCDNumber():fromPointer( ... )
 

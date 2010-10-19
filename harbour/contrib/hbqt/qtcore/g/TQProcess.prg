@@ -98,9 +98,6 @@
 FUNCTION QProcess( ... )
    RETURN HB_QProcess():new( ... )
 
-FUNCTION QProcessFrom( ... )
-   RETURN HB_QProcess():from( ... )
-
 FUNCTION QProcessFromPointer( ... )
    RETURN HB_QProcess():fromPointer( ... )
 

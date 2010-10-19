@@ -98,9 +98,6 @@
 FUNCTION QGraphicsScene( ... )
    RETURN HB_QGraphicsScene():new( ... )
 
-FUNCTION QGraphicsSceneFrom( ... )
-   RETURN HB_QGraphicsScene():from( ... )
-
 FUNCTION QGraphicsSceneFromPointer( ... )
    RETURN HB_QGraphicsScene():fromPointer( ... )
 

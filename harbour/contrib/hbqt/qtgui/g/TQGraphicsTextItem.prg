@@ -98,9 +98,6 @@
 FUNCTION QGraphicsTextItem( ... )
    RETURN HB_QGraphicsTextItem():new( ... )
 
-FUNCTION QGraphicsTextItemFrom( ... )
-   RETURN HB_QGraphicsTextItem():from( ... )
-
 FUNCTION QGraphicsTextItemFromPointer( ... )
    RETURN HB_QGraphicsTextItem():fromPointer( ... )
 

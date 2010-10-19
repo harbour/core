@@ -98,9 +98,6 @@
 FUNCTION QFocusEvent( ... )
    RETURN HB_QFocusEvent():new( ... )
 
-FUNCTION QFocusEventFrom( ... )
-   RETURN HB_QFocusEvent():from( ... )
-
 FUNCTION QFocusEventFromPointer( ... )
    RETURN HB_QFocusEvent():fromPointer( ... )
 

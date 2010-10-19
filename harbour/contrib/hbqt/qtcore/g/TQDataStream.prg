@@ -98,9 +98,6 @@
 FUNCTION QDataStream( ... )
    RETURN HB_QDataStream():new( ... )
 
-FUNCTION QDataStreamFrom( ... )
-   RETURN HB_QDataStream():from( ... )
-
 FUNCTION QDataStreamFromPointer( ... )
    RETURN HB_QDataStream():fromPointer( ... )
 

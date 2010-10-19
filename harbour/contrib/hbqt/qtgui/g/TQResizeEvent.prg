@@ -98,9 +98,6 @@
 FUNCTION QResizeEvent( ... )
    RETURN HB_QResizeEvent():new( ... )
 
-FUNCTION QResizeEventFrom( ... )
-   RETURN HB_QResizeEvent():from( ... )
-
 FUNCTION QResizeEventFromPointer( ... )
    RETURN HB_QResizeEvent():fromPointer( ... )
 

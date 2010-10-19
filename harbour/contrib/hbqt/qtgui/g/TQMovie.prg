@@ -98,9 +98,6 @@
 FUNCTION QMovie( ... )
    RETURN HB_QMovie():new( ... )
 
-FUNCTION QMovieFrom( ... )
-   RETURN HB_QMovie():from( ... )
-
 FUNCTION QMovieFromPointer( ... )
    RETURN HB_QMovie():fromPointer( ... )
 

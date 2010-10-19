@@ -98,9 +98,6 @@
 FUNCTION QGraphicsItem( ... )
    RETURN HB_QGraphicsItem():new( ... )
 
-FUNCTION QGraphicsItemFrom( ... )
-   RETURN HB_QGraphicsItem():from( ... )
-
 FUNCTION QGraphicsItemFromPointer( ... )
    RETURN HB_QGraphicsItem():fromPointer( ... )
 

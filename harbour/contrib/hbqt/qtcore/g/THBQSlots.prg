@@ -98,9 +98,6 @@
 FUNCTION HBQSlots( ... )
    RETURN HB_HBQSlots():new( ... )
 
-FUNCTION HBQSlotsFrom( ... )
-   RETURN HB_HBQSlots():from( ... )
-
 FUNCTION HBQSlotsFromPointer( ... )
    RETURN HB_HBQSlots():fromPointer( ... )
 

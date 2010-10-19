@@ -98,9 +98,6 @@
 FUNCTION QMessageBox( ... )
    RETURN HB_QMessageBox():new( ... )
 
-FUNCTION QMessageBoxFrom( ... )
-   RETURN HB_QMessageBox():from( ... )
-
 FUNCTION QMessageBoxFromPointer( ... )
    RETURN HB_QMessageBox():fromPointer( ... )
 

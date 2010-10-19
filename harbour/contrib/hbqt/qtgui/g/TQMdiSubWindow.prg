@@ -98,9 +98,6 @@
 FUNCTION QMdiSubWindow( ... )
    RETURN HB_QMdiSubWindow():new( ... )
 
-FUNCTION QMdiSubWindowFrom( ... )
-   RETURN HB_QMdiSubWindow():from( ... )
-
 FUNCTION QMdiSubWindowFromPointer( ... )
    RETURN HB_QMdiSubWindow():fromPointer( ... )
 

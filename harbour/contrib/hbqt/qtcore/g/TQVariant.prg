@@ -98,9 +98,6 @@
 FUNCTION QVariant( ... )
    RETURN HB_QVariant():new( ... )
 
-FUNCTION QVariantFrom( ... )
-   RETURN HB_QVariant():from( ... )
-
 FUNCTION QVariantFromPointer( ... )
    RETURN HB_QVariant():fromPointer( ... )
 

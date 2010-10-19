@@ -98,9 +98,6 @@
 FUNCTION QTextEdit( ... )
    RETURN HB_QTextEdit():new( ... )
 
-FUNCTION QTextEditFrom( ... )
-   RETURN HB_QTextEdit():from( ... )
-
 FUNCTION QTextEditFromPointer( ... )
    RETURN HB_QTextEdit():fromPointer( ... )
 

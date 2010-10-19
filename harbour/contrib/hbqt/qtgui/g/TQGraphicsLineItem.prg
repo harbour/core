@@ -98,9 +98,6 @@
 FUNCTION QGraphicsLineItem( ... )
    RETURN HB_QGraphicsLineItem():new( ... )
 
-FUNCTION QGraphicsLineItemFrom( ... )
-   RETURN HB_QGraphicsLineItem():from( ... )
-
 FUNCTION QGraphicsLineItemFromPointer( ... )
    RETURN HB_QGraphicsLineItem():fromPointer( ... )
 

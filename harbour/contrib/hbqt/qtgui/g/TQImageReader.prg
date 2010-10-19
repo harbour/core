@@ -98,9 +98,6 @@
 FUNCTION QImageReader( ... )
    RETURN HB_QImageReader():new( ... )
 
-FUNCTION QImageReaderFrom( ... )
-   RETURN HB_QImageReader():from( ... )
-
 FUNCTION QImageReaderFromPointer( ... )
    RETURN HB_QImageReader():fromPointer( ... )
 

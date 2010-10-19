@@ -98,9 +98,6 @@
 FUNCTION QTreeWidgetItem( ... )
    RETURN HB_QTreeWidgetItem():new( ... )
 
-FUNCTION QTreeWidgetItemFrom( ... )
-   RETURN HB_QTreeWidgetItem():from( ... )
-
 FUNCTION QTreeWidgetItemFromPointer( ... )
    RETURN HB_QTreeWidgetItem():fromPointer( ... )
 

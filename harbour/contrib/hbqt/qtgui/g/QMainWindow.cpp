@@ -510,13 +510,14 @@ HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 }
 
 /*
- * void setCentralWidget ( QWidget * widget )
+ * void setCentralWidget ( QWidget * widget )                        [*D=1*]
  */
 HB_FUNC( QT_QMAINWINDOW_SETCENTRALWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
+      hbqt_detachgcpointer( 2 );
       ( p )->setCentralWidget( hbqt_par_QWidget( 2 ) );
    }
 }
@@ -570,37 +571,40 @@ HB_FUNC( QT_QMAINWINDOW_SETICONSIZE )
 }
 
 /*
- * void setMenuBar ( QMenuBar * menuBar )
+ * void setMenuBar ( QMenuBar * menuBar )                            [*D=1*]
  */
 HB_FUNC( QT_QMAINWINDOW_SETMENUBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
+      hbqt_detachgcpointer( 2 );
       ( p )->setMenuBar( hbqt_par_QMenuBar( 2 ) );
    }
 }
 
 /*
- * void setMenuWidget ( QWidget * menuBar )
+ * void setMenuWidget ( QWidget * menuBar )                          [*D=1*]
  */
 HB_FUNC( QT_QMAINWINDOW_SETMENUWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
+      hbqt_detachgcpointer( 2 );
       ( p )->setMenuWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
 /*
- * void setStatusBar ( QStatusBar * statusbar )
+ * void setStatusBar ( QStatusBar * statusbar )                      [*D=1*]
  */
 HB_FUNC( QT_QMAINWINDOW_SETSTATUSBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
+      hbqt_detachgcpointer( 2 );
       ( p )->setStatusBar( hbqt_par_QStatusBar( 2 ) );
    }
 }

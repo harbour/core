@@ -98,9 +98,6 @@
 FUNCTION QAction( ... )
    RETURN HB_QAction():new( ... )
 
-FUNCTION QActionFrom( ... )
-   RETURN HB_QAction():from( ... )
-
 FUNCTION QActionFromPointer( ... )
    RETURN HB_QAction():fromPointer( ... )
 

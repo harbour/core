@@ -98,9 +98,6 @@
 FUNCTION QFormLayout( ... )
    RETURN HB_QFormLayout():new( ... )
 
-FUNCTION QFormLayoutFrom( ... )
-   RETURN HB_QFormLayout():from( ... )
-
 FUNCTION QFormLayoutFromPointer( ... )
    RETURN HB_QFormLayout():fromPointer( ... )
 

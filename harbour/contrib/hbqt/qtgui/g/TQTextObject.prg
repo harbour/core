@@ -98,9 +98,6 @@
 FUNCTION QTextObject( ... )
    RETURN HB_QTextObject():new( ... )
 
-FUNCTION QTextObjectFrom( ... )
-   RETURN HB_QTextObject():from( ... )
-
 FUNCTION QTextObjectFromPointer( ... )
    RETURN HB_QTextObject():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QDialog( ... )
    RETURN HB_QDialog():new( ... )
 
-FUNCTION QDialogFrom( ... )
-   RETURN HB_QDialog():from( ... )
-
 FUNCTION QDialogFromPointer( ... )
    RETURN HB_QDialog():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QLayoutItem( ... )
    RETURN HB_QLayoutItem():new( ... )
 
-FUNCTION QLayoutItemFrom( ... )
-   RETURN HB_QLayoutItem():from( ... )
-
 FUNCTION QLayoutItemFromPointer( ... )
    RETURN HB_QLayoutItem():fromPointer( ... )
 

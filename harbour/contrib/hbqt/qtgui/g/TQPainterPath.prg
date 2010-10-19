@@ -98,9 +98,6 @@
 FUNCTION QPainterPath( ... )
    RETURN HB_QPainterPath():new( ... )
 
-FUNCTION QPainterPathFrom( ... )
-   RETURN HB_QPainterPath():from( ... )
-
 FUNCTION QPainterPathFromPointer( ... )
    RETURN HB_QPainterPath():fromPointer( ... )
 

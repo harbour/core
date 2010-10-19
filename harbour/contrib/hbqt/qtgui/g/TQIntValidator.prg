@@ -98,9 +98,6 @@
 FUNCTION QIntValidator( ... )
    RETURN HB_QIntValidator():new( ... )
 
-FUNCTION QIntValidatorFrom( ... )
-   RETURN HB_QIntValidator():from( ... )
-
 FUNCTION QIntValidatorFromPointer( ... )
    RETURN HB_QIntValidator():fromPointer( ... )
 

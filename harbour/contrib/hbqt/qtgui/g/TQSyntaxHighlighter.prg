@@ -98,9 +98,6 @@
 FUNCTION QSyntaxHighlighter( ... )
    RETURN HB_QSyntaxHighlighter():new( ... )
 
-FUNCTION QSyntaxHighlighterFrom( ... )
-   RETURN HB_QSyntaxHighlighter():from( ... )
-
 FUNCTION QSyntaxHighlighterFromPointer( ... )
    RETURN HB_QSyntaxHighlighter():fromPointer( ... )
 

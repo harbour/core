@@ -98,9 +98,6 @@
 FUNCTION QToolBar( ... )
    RETURN HB_QToolBar():new( ... )
 
-FUNCTION QToolBarFrom( ... )
-   RETURN HB_QToolBar():from( ... )
-
 FUNCTION QToolBarFromPointer( ... )
    RETURN HB_QToolBar():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QGraphicsPolygonItem( ... )
    RETURN HB_QGraphicsPolygonItem():new( ... )
 
-FUNCTION QGraphicsPolygonItemFrom( ... )
-   RETURN HB_QGraphicsPolygonItem():from( ... )
-
 FUNCTION QGraphicsPolygonItemFromPointer( ... )
    RETURN HB_QGraphicsPolygonItem():fromPointer( ... )
 

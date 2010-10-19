@@ -98,9 +98,6 @@
 FUNCTION QItemSelectionModel( ... )
    RETURN HB_QItemSelectionModel():new( ... )
 
-FUNCTION QItemSelectionModelFrom( ... )
-   RETURN HB_QItemSelectionModel():from( ... )
-
 FUNCTION QItemSelectionModelFromPointer( ... )
    RETURN HB_QItemSelectionModel():fromPointer( ... )
 

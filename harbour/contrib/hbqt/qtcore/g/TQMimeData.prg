@@ -98,9 +98,6 @@
 FUNCTION QMimeData( ... )
    RETURN HB_QMimeData():new( ... )
 
-FUNCTION QMimeDataFrom( ... )
-   RETURN HB_QMimeData():from( ... )
-
 FUNCTION QMimeDataFromPointer( ... )
    RETURN HB_QMimeData():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QCursor( ... )
    RETURN HB_QCursor():new( ... )
 
-FUNCTION QCursorFrom( ... )
-   RETURN HB_QCursor():from( ... )
-
 FUNCTION QCursorFromPointer( ... )
    RETURN HB_QCursor():fromPointer( ... )
 

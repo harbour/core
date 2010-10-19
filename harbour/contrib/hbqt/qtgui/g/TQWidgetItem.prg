@@ -98,9 +98,6 @@
 FUNCTION QWidgetItem( ... )
    RETURN HB_QWidgetItem():new( ... )
 
-FUNCTION QWidgetItemFrom( ... )
-   RETURN HB_QWidgetItem():from( ... )
-
 FUNCTION QWidgetItemFromPointer( ... )
    RETURN HB_QWidgetItem():fromPointer( ... )
 

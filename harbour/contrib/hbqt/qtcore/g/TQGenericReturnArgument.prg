@@ -98,9 +98,6 @@
 FUNCTION QGenericReturnArgument( ... )
    RETURN HB_QGenericReturnArgument():new( ... )
 
-FUNCTION QGenericReturnArgumentFrom( ... )
-   RETURN HB_QGenericReturnArgument():from( ... )
-
 FUNCTION QGenericReturnArgumentFromPointer( ... )
    RETURN HB_QGenericReturnArgument():fromPointer( ... )
 

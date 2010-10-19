@@ -98,9 +98,6 @@
 FUNCTION QWindowsStyle( ... )
    RETURN HB_QWindowsStyle():new( ... )
 
-FUNCTION QWindowsStyleFrom( ... )
-   RETURN HB_QWindowsStyle():from( ... )
-
 FUNCTION QWindowsStyleFromPointer( ... )
    RETURN HB_QWindowsStyle():fromPointer( ... )
 

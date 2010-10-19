@@ -98,9 +98,6 @@
 FUNCTION QWebPage( ... )
    RETURN HB_QWebPage():new( ... )
 
-FUNCTION QWebPageFrom( ... )
-   RETURN HB_QWebPage():from( ... )
-
 FUNCTION QWebPageFromPointer( ... )
    RETURN HB_QWebPage():fromPointer( ... )
 

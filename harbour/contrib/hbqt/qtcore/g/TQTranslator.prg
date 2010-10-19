@@ -98,9 +98,6 @@
 FUNCTION QTranslator( ... )
    RETURN HB_QTranslator():new( ... )
 
-FUNCTION QTranslatorFrom( ... )
-   RETURN HB_QTranslator():from( ... )
-
 FUNCTION QTranslatorFromPointer( ... )
    RETURN HB_QTranslator():fromPointer( ... )
 

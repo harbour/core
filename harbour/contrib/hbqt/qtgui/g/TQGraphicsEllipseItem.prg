@@ -98,9 +98,6 @@
 FUNCTION QGraphicsEllipseItem( ... )
    RETURN HB_QGraphicsEllipseItem():new( ... )
 
-FUNCTION QGraphicsEllipseItemFrom( ... )
-   RETURN HB_QGraphicsEllipseItem():from( ... )
-
 FUNCTION QGraphicsEllipseItemFromPointer( ... )
    RETURN HB_QGraphicsEllipseItem():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QFontMetrics( ... )
    RETURN HB_QFontMetrics():new( ... )
 
-FUNCTION QFontMetricsFrom( ... )
-   RETURN HB_QFontMetrics():from( ... )
-
 FUNCTION QFontMetricsFromPointer( ... )
    RETURN HB_QFontMetrics():fromPointer( ... )
 

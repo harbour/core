@@ -98,9 +98,6 @@
 FUNCTION QStylePainter( ... )
    RETURN HB_QStylePainter():new( ... )
 
-FUNCTION QStylePainterFrom( ... )
-   RETURN HB_QStylePainter():from( ... )
-
 FUNCTION QStylePainterFromPointer( ... )
    RETURN HB_QStylePainter():fromPointer( ... )
 

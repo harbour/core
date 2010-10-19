@@ -98,9 +98,6 @@
 FUNCTION QActionGroup( ... )
    RETURN HB_QActionGroup():new( ... )
 
-FUNCTION QActionGroupFrom( ... )
-   RETURN HB_QActionGroup():from( ... )
-
 FUNCTION QActionGroupFromPointer( ... )
    RETURN HB_QActionGroup():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QSortFilterProxyModel( ... )
    RETURN HB_QSortFilterProxyModel():new( ... )
 
-FUNCTION QSortFilterProxyModelFrom( ... )
-   RETURN HB_QSortFilterProxyModel():from( ... )
-
 FUNCTION QSortFilterProxyModelFromPointer( ... )
    RETURN HB_QSortFilterProxyModel():fromPointer( ... )
 

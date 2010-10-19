@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionFocusRect( ... )
    RETURN HB_QStyleOptionFocusRect():new( ... )
 
-FUNCTION QStyleOptionFocusRectFrom( ... )
-   RETURN HB_QStyleOptionFocusRect():from( ... )
-
 FUNCTION QStyleOptionFocusRectFromPointer( ... )
    RETURN HB_QStyleOptionFocusRect():fromPointer( ... )
 

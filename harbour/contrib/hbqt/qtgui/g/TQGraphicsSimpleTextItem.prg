@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSimpleTextItem( ... )
    RETURN HB_QGraphicsSimpleTextItem():new( ... )
 
-FUNCTION QGraphicsSimpleTextItemFrom( ... )
-   RETURN HB_QGraphicsSimpleTextItem():from( ... )
-
 FUNCTION QGraphicsSimpleTextItemFromPointer( ... )
    RETURN HB_QGraphicsSimpleTextItem():fromPointer( ... )
 

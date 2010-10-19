@@ -98,9 +98,6 @@
 FUNCTION QTableView( ... )
    RETURN HB_QTableView():new( ... )
 
-FUNCTION QTableViewFrom( ... )
-   RETURN HB_QTableView():from( ... )
-
 FUNCTION QTableViewFromPointer( ... )
    RETURN HB_QTableView():fromPointer( ... )
 

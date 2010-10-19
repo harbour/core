@@ -98,9 +98,6 @@
 FUNCTION QStandardItemModel( ... )
    RETURN HB_QStandardItemModel():new( ... )
 
-FUNCTION QStandardItemModelFrom( ... )
-   RETURN HB_QStandardItemModel():from( ... )
-
 FUNCTION QStandardItemModelFromPointer( ... )
    RETURN HB_QStandardItemModel():fromPointer( ... )
 

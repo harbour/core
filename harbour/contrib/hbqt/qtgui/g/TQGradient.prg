@@ -98,9 +98,6 @@
 FUNCTION QGradient( ... )
    RETURN HB_QGradient():new( ... )
 
-FUNCTION QGradientFrom( ... )
-   RETURN HB_QGradient():from( ... )
-
 FUNCTION QGradientFromPointer( ... )
    RETURN HB_QGradient():fromPointer( ... )
 

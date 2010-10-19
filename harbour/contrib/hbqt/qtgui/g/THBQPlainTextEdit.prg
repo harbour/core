@@ -98,9 +98,6 @@
 FUNCTION HBQPlainTextEdit( ... )
    RETURN HB_HBQPlainTextEdit():new( ... )
 
-FUNCTION HBQPlainTextEditFrom( ... )
-   RETURN HB_HBQPlainTextEdit():from( ... )
-
 FUNCTION HBQPlainTextEditFromPointer( ... )
    RETURN HB_HBQPlainTextEdit():fromPointer( ... )
 

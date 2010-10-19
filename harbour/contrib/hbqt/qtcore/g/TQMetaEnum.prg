@@ -98,9 +98,6 @@
 FUNCTION QMetaEnum( ... )
    RETURN HB_QMetaEnum():new( ... )
 
-FUNCTION QMetaEnumFrom( ... )
-   RETURN HB_QMetaEnum():from( ... )
-
 FUNCTION QMetaEnumFromPointer( ... )
    RETURN HB_QMetaEnum():fromPointer( ... )
 

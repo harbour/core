@@ -98,9 +98,6 @@
 FUNCTION QMdiArea( ... )
    RETURN HB_QMdiArea():new( ... )
 
-FUNCTION QMdiAreaFrom( ... )
-   RETURN HB_QMdiArea():from( ... )
-
 FUNCTION QMdiAreaFromPointer( ... )
    RETURN HB_QMdiArea():fromPointer( ... )
 

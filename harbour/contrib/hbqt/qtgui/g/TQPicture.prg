@@ -98,9 +98,6 @@
 FUNCTION QPicture( ... )
    RETURN HB_QPicture():new( ... )
 
-FUNCTION QPictureFrom( ... )
-   RETURN HB_QPicture():from( ... )
-
 FUNCTION QPictureFromPointer( ... )
    RETURN HB_QPicture():fromPointer( ... )
 

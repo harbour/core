@@ -98,9 +98,6 @@
 FUNCTION QTextInlineObject( ... )
    RETURN HB_QTextInlineObject():new( ... )
 
-FUNCTION QTextInlineObjectFrom( ... )
-   RETURN HB_QTextInlineObject():from( ... )
-
 FUNCTION QTextInlineObjectFromPointer( ... )
    RETURN HB_QTextInlineObject():fromPointer( ... )
 

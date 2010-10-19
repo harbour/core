@@ -98,9 +98,6 @@
 FUNCTION QsciLexerCPP( ... )
    RETURN HB_QsciLexerCPP():new( ... )
 
-FUNCTION QsciLexerCPPFrom( ... )
-   RETURN HB_QsciLexerCPP():from( ... )
-
 FUNCTION QsciLexerCPPFromPointer( ... )
    RETURN HB_QsciLexerCPP():fromPointer( ... )
 

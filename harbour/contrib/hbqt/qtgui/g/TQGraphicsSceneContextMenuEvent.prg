@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSceneContextMenuEvent( ... )
    RETURN HB_QGraphicsSceneContextMenuEvent():new( ... )
 
-FUNCTION QGraphicsSceneContextMenuEventFrom( ... )
-   RETURN HB_QGraphicsSceneContextMenuEvent():from( ... )
-
 FUNCTION QGraphicsSceneContextMenuEventFromPointer( ... )
    RETURN HB_QGraphicsSceneContextMenuEvent():fromPointer( ... )
 

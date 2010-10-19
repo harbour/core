@@ -98,9 +98,6 @@
 FUNCTION HBQString( ... )
    RETURN HB_HBQString():new( ... )
 
-FUNCTION HBQStringFrom( ... )
-   RETURN HB_HBQString():from( ... )
-
 FUNCTION HBQStringFromPointer( ... )
    RETURN HB_HBQString():fromPointer( ... )
 

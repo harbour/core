@@ -98,9 +98,6 @@
 FUNCTION QTextFragment( ... )
    RETURN HB_QTextFragment():new( ... )
 
-FUNCTION QTextFragmentFrom( ... )
-   RETURN HB_QTextFragment():from( ... )
-
 FUNCTION QTextFragmentFromPointer( ... )
    RETURN HB_QTextFragment():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QTextBrowser( ... )
    RETURN HB_QTextBrowser():new( ... )
 
-FUNCTION QTextBrowserFrom( ... )
-   RETURN HB_QTextBrowser():from( ... )
-
 FUNCTION QTextBrowserFromPointer( ... )
    RETURN HB_QTextBrowser():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QPlainTextEdit( ... )
    RETURN HB_QPlainTextEdit():new( ... )
 
-FUNCTION QPlainTextEditFrom( ... )
-   RETURN HB_QPlainTextEdit():from( ... )
-
 FUNCTION QPlainTextEditFromPointer( ... )
    RETURN HB_QPlainTextEdit():fromPointer( ... )
 

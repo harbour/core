@@ -98,9 +98,6 @@
 FUNCTION QDrag( ... )
    RETURN HB_QDrag():new( ... )
 
-FUNCTION QDragFrom( ... )
-   RETURN HB_QDrag():from( ... )
-
 FUNCTION QDragFromPointer( ... )
    RETURN HB_QDrag():fromPointer( ... )
 

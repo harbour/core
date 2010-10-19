@@ -98,9 +98,6 @@
 FUNCTION QPaintEvent( ... )
    RETURN HB_QPaintEvent():new( ... )
 
-FUNCTION QPaintEventFrom( ... )
-   RETURN HB_QPaintEvent():from( ... )
-
 FUNCTION QPaintEventFromPointer( ... )
    RETURN HB_QPaintEvent():fromPointer( ... )
 

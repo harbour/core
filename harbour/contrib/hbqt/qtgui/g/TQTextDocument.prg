@@ -98,9 +98,6 @@
 FUNCTION QTextDocument( ... )
    RETURN HB_QTextDocument():new( ... )
 
-FUNCTION QTextDocumentFrom( ... )
-   RETURN HB_QTextDocument():from( ... )
-
 FUNCTION QTextDocumentFromPointer( ... )
    RETURN HB_QTextDocument():fromPointer( ... )
 

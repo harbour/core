@@ -98,9 +98,6 @@
 FUNCTION QPolygon( ... )
    RETURN HB_QPolygon():new( ... )
 
-FUNCTION QPolygonFrom( ... )
-   RETURN HB_QPolygon():from( ... )
-
 FUNCTION QPolygonFromPointer( ... )
    RETURN HB_QPolygon():fromPointer( ... )
 

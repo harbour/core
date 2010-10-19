@@ -98,9 +98,6 @@
 FUNCTION QWebHistoryItem( ... )
    RETURN HB_QWebHistoryItem():new( ... )
 
-FUNCTION QWebHistoryItemFrom( ... )
-   RETURN HB_QWebHistoryItem():from( ... )
-
 FUNCTION QWebHistoryItemFromPointer( ... )
    RETURN HB_QWebHistoryItem():fromPointer( ... )
 

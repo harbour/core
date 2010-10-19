@@ -98,9 +98,6 @@
 FUNCTION QWidget( ... )
    RETURN HB_QWidget():new( ... )
 
-FUNCTION QWidgetFrom( ... )
-   RETURN HB_QWidget():from( ... )
-
 FUNCTION QWidgetFromPointer( ... )
    RETURN HB_QWidget():fromPointer( ... )
 

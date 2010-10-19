@@ -98,9 +98,6 @@
 FUNCTION QFileInfo( ... )
    RETURN HB_QFileInfo():new( ... )
 
-FUNCTION QFileInfoFrom( ... )
-   RETURN HB_QFileInfo():from( ... )
-
 FUNCTION QFileInfoFromPointer( ... )
    RETURN HB_QFileInfo():fromPointer( ... )
 

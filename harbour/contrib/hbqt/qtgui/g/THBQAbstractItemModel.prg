@@ -98,9 +98,6 @@
 FUNCTION HBQAbstractItemModel( ... )
    RETURN HB_HBQAbstractItemModel():new( ... )
 
-FUNCTION HBQAbstractItemModelFrom( ... )
-   RETURN HB_HBQAbstractItemModel():from( ... )
-
 FUNCTION HBQAbstractItemModelFromPointer( ... )
    RETURN HB_HBQAbstractItemModel():fromPointer( ... )
 

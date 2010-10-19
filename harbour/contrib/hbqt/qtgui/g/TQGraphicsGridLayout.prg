@@ -98,9 +98,6 @@
 FUNCTION QGraphicsGridLayout( ... )
    RETURN HB_QGraphicsGridLayout():new( ... )
 
-FUNCTION QGraphicsGridLayoutFrom( ... )
-   RETURN HB_QGraphicsGridLayout():from( ... )
-
 FUNCTION QGraphicsGridLayoutFromPointer( ... )
    RETURN HB_QGraphicsGridLayout():fromPointer( ... )
 

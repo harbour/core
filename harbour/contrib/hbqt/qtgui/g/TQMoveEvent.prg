@@ -98,9 +98,6 @@
 FUNCTION QMoveEvent( ... )
    RETURN HB_QMoveEvent():new( ... )
 
-FUNCTION QMoveEventFrom( ... )
-   RETURN HB_QMoveEvent():from( ... )
-
 FUNCTION QMoveEventFromPointer( ... )
    RETURN HB_QMoveEvent():fromPointer( ... )
 

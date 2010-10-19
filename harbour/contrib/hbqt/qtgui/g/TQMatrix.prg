@@ -98,9 +98,6 @@
 FUNCTION QMatrix( ... )
    RETURN HB_QMatrix():new( ... )
 
-FUNCTION QMatrixFrom( ... )
-   RETURN HB_QMatrix():from( ... )
-
 FUNCTION QMatrixFromPointer( ... )
    RETURN HB_QMatrix():fromPointer( ... )
 

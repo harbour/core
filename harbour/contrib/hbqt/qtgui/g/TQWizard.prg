@@ -98,9 +98,6 @@
 FUNCTION QWizard( ... )
    RETURN HB_QWizard():new( ... )
 
-FUNCTION QWizardFrom( ... )
-   RETURN HB_QWizard():from( ... )
-
 FUNCTION QWizardFromPointer( ... )
    RETURN HB_QWizard():fromPointer( ... )
 

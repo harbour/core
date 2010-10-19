@@ -98,9 +98,6 @@
 FUNCTION QPageSetupDialog( ... )
    RETURN HB_QPageSetupDialog():new( ... )
 
-FUNCTION QPageSetupDialogFrom( ... )
-   RETURN HB_QPageSetupDialog():from( ... )
-
 FUNCTION QPageSetupDialogFromPointer( ... )
    RETURN HB_QPageSetupDialog():fromPointer( ... )
 

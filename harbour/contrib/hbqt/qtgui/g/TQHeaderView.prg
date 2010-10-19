@@ -98,9 +98,6 @@
 FUNCTION QHeaderView( ... )
    RETURN HB_QHeaderView():new( ... )
 
-FUNCTION QHeaderViewFrom( ... )
-   RETURN HB_QHeaderView():from( ... )
-
 FUNCTION QHeaderViewFromPointer( ... )
    RETURN HB_QHeaderView():fromPointer( ... )
 

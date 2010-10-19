@@ -98,9 +98,6 @@
 FUNCTION QStackedWidget( ... )
    RETURN HB_QStackedWidget():new( ... )
 
-FUNCTION QStackedWidgetFrom( ... )
-   RETURN HB_QStackedWidget():from( ... )
-
 FUNCTION QStackedWidgetFromPointer( ... )
    RETURN HB_QStackedWidget():fromPointer( ... )
 

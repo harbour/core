@@ -98,9 +98,6 @@
 FUNCTION QTreeView( ... )
    RETURN HB_QTreeView():new( ... )
 
-FUNCTION QTreeViewFrom( ... )
-   RETURN HB_QTreeView():from( ... )
-
 FUNCTION QTreeViewFromPointer( ... )
    RETURN HB_QTreeView():fromPointer( ... )
 

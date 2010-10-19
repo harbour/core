@@ -98,9 +98,6 @@
 FUNCTION QDial( ... )
    RETURN HB_QDial():new( ... )
 
-FUNCTION QDialFrom( ... )
-   RETURN HB_QDial():from( ... )
-
 FUNCTION QDialFromPointer( ... )
    RETURN HB_QDial():fromPointer( ... )
 

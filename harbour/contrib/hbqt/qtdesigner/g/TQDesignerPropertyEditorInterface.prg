@@ -98,9 +98,6 @@
 FUNCTION QDesignerPropertyEditorInterface( ... )
    RETURN HB_QDesignerPropertyEditorInterface():new( ... )
 
-FUNCTION QDesignerPropertyEditorInterfaceFrom( ... )
-   RETURN HB_QDesignerPropertyEditorInterface():from( ... )
-
 FUNCTION QDesignerPropertyEditorInterfaceFromPointer( ... )
    RETURN HB_QDesignerPropertyEditorInterface():fromPointer( ... )
 

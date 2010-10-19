@@ -98,9 +98,6 @@
 FUNCTION QTabBar( ... )
    RETURN HB_QTabBar():new( ... )
 
-FUNCTION QTabBarFrom( ... )
-   RETURN HB_QTabBar():from( ... )
-
 FUNCTION QTabBarFromPointer( ... )
    RETURN HB_QTabBar():fromPointer( ... )
 

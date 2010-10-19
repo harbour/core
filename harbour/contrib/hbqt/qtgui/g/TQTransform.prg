@@ -98,9 +98,6 @@
 FUNCTION QTransform( ... )
    RETURN HB_QTransform():new( ... )
 
-FUNCTION QTransformFrom( ... )
-   RETURN HB_QTransform():from( ... )
-
 FUNCTION QTransformFromPointer( ... )
    RETURN HB_QTransform():fromPointer( ... )
 

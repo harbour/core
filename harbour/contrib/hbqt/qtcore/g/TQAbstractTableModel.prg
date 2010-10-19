@@ -98,9 +98,6 @@
 FUNCTION QAbstractTableModel( ... )
    RETURN HB_QAbstractTableModel():new( ... )
 
-FUNCTION QAbstractTableModelFrom( ... )
-   RETURN HB_QAbstractTableModel():from( ... )
-
 FUNCTION QAbstractTableModelFromPointer( ... )
    RETURN HB_QAbstractTableModel():fromPointer( ... )
 

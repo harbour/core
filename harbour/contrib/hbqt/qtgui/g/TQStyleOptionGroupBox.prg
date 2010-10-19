@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionGroupBox( ... )
    RETURN HB_QStyleOptionGroupBox():new( ... )
 
-FUNCTION QStyleOptionGroupBoxFrom( ... )
-   RETURN HB_QStyleOptionGroupBox():from( ... )
-
 FUNCTION QStyleOptionGroupBoxFromPointer( ... )
    RETURN HB_QStyleOptionGroupBox():fromPointer( ... )
 

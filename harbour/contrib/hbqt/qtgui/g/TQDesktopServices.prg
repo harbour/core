@@ -98,9 +98,6 @@
 FUNCTION QDesktopServices( ... )
    RETURN HB_QDesktopServices():new( ... )
 
-FUNCTION QDesktopServicesFrom( ... )
-   RETURN HB_QDesktopServices():from( ... )
-
 FUNCTION QDesktopServicesFromPointer( ... )
    RETURN HB_QDesktopServices():fromPointer( ... )
 

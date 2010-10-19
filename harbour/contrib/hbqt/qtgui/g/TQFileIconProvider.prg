@@ -98,9 +98,6 @@
 FUNCTION QFileIconProvider( ... )
    RETURN HB_QFileIconProvider():new( ... )
 
-FUNCTION QFileIconProviderFrom( ... )
-   RETURN HB_QFileIconProvider():from( ... )
-
 FUNCTION QFileIconProviderFromPointer( ... )
    RETURN HB_QFileIconProvider():fromPointer( ... )
 

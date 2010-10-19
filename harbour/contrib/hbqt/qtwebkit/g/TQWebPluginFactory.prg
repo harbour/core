@@ -98,9 +98,6 @@
 FUNCTION QWebPluginFactory( ... )
    RETURN HB_QWebPluginFactory():new( ... )
 
-FUNCTION QWebPluginFactoryFrom( ... )
-   RETURN HB_QWebPluginFactory():from( ... )
-
 FUNCTION QWebPluginFactoryFromPointer( ... )
    RETURN HB_QWebPluginFactory():fromPointer( ... )
 

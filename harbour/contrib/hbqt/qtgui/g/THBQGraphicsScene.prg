@@ -98,9 +98,6 @@
 FUNCTION HBQGraphicsScene( ... )
    RETURN HB_HBQGraphicsScene():new( ... )
 
-FUNCTION HBQGraphicsSceneFrom( ... )
-   RETURN HB_HBQGraphicsScene():from( ... )
-
 FUNCTION HBQGraphicsSceneFromPointer( ... )
    RETURN HB_HBQGraphicsScene():fromPointer( ... )
 

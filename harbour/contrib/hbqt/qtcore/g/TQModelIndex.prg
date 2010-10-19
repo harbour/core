@@ -98,9 +98,6 @@
 FUNCTION QModelIndex( ... )
    RETURN HB_QModelIndex():new( ... )
 
-FUNCTION QModelIndexFrom( ... )
-   RETURN HB_QModelIndex():from( ... )
-
 FUNCTION QModelIndexFromPointer( ... )
    RETURN HB_QModelIndex():fromPointer( ... )
 

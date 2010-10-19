@@ -98,9 +98,6 @@
 FUNCTION QContextMenuEvent( ... )
    RETURN HB_QContextMenuEvent():new( ... )
 
-FUNCTION QContextMenuEventFrom( ... )
-   RETURN HB_QContextMenuEvent():from( ... )
-
 FUNCTION QContextMenuEventFromPointer( ... )
    RETURN HB_QContextMenuEvent():fromPointer( ... )
 

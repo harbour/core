@@ -98,9 +98,6 @@
 FUNCTION QsciCommand( ... )
    RETURN HB_QsciCommand():new( ... )
 
-FUNCTION QsciCommandFrom( ... )
-   RETURN HB_QsciCommand():from( ... )
-
 FUNCTION QsciCommandFromPointer( ... )
    RETURN HB_QsciCommand():fromPointer( ... )
 

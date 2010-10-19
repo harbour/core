@@ -98,9 +98,6 @@
 FUNCTION QPainter( ... )
    RETURN HB_QPainter():new( ... )
 
-FUNCTION QPainterFrom( ... )
-   RETURN HB_QPainter():from( ... )
-
 FUNCTION QPainterFromPointer( ... )
    RETURN HB_QPainter():fromPointer( ... )
 

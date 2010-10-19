@@ -98,9 +98,6 @@
 FUNCTION QSystemTrayIcon( ... )
    RETURN HB_QSystemTrayIcon():new( ... )
 
-FUNCTION QSystemTrayIconFrom( ... )
-   RETURN HB_QSystemTrayIcon():from( ... )
-
 FUNCTION QSystemTrayIconFromPointer( ... )
    RETURN HB_QSystemTrayIcon():fromPointer( ... )
 

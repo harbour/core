@@ -98,9 +98,6 @@
 FUNCTION QCompleter( ... )
    RETURN HB_QCompleter():new( ... )
 
-FUNCTION QCompleterFrom( ... )
-   RETURN HB_QCompleter():from( ... )
-
 FUNCTION QCompleterFromPointer( ... )
    RETURN HB_QCompleter():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QObject( ... )
    RETURN HB_QObject():new( ... )
 
-FUNCTION QObjectFrom( ... )
-   RETURN HB_QObject():from( ... )
-
 FUNCTION QObjectFromPointer( ... )
    RETURN HB_QObject():fromPointer( ... )
 

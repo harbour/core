@@ -98,9 +98,6 @@
 FUNCTION QPrintPreviewDialog( ... )
    RETURN HB_QPrintPreviewDialog():new( ... )
 
-FUNCTION QPrintPreviewDialogFrom( ... )
-   RETURN HB_QPrintPreviewDialog():from( ... )
-
 FUNCTION QPrintPreviewDialogFromPointer( ... )
    RETURN HB_QPrintPreviewDialog():fromPointer( ... )
 

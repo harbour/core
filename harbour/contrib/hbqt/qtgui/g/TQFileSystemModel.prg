@@ -98,9 +98,6 @@
 FUNCTION QFileSystemModel( ... )
    RETURN HB_QFileSystemModel():new( ... )
 
-FUNCTION QFileSystemModelFrom( ... )
-   RETURN HB_QFileSystemModel():from( ... )
-
 FUNCTION QFileSystemModelFromPointer( ... )
    RETURN HB_QFileSystemModel():fromPointer( ... )
 

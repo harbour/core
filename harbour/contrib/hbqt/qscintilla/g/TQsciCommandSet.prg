@@ -98,9 +98,6 @@
 FUNCTION QsciCommandSet( ... )
    RETURN HB_QsciCommandSet():new( ... )
 
-FUNCTION QsciCommandSetFrom( ... )
-   RETURN HB_QsciCommandSet():from( ... )
-
 FUNCTION QsciCommandSetFromPointer( ... )
    RETURN HB_QsciCommandSet():fromPointer( ... )
 

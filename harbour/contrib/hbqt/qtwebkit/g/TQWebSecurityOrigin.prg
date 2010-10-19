@@ -98,9 +98,6 @@
 FUNCTION QWebSecurityOrigin( ... )
    RETURN HB_QWebSecurityOrigin():new( ... )
 
-FUNCTION QWebSecurityOriginFrom( ... )
-   RETURN HB_QWebSecurityOrigin():from( ... )
-
 FUNCTION QWebSecurityOriginFromPointer( ... )
    RETURN HB_QWebSecurityOrigin():fromPointer( ... )
 

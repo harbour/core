@@ -98,9 +98,6 @@
 FUNCTION QToolButton( ... )
    RETURN HB_QToolButton():new( ... )
 
-FUNCTION QToolButtonFrom( ... )
-   RETURN HB_QToolButton():from( ... )
-
 FUNCTION QToolButtonFromPointer( ... )
    RETURN HB_QToolButton():fromPointer( ... )
 

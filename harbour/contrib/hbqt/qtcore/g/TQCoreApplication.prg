@@ -98,9 +98,6 @@
 FUNCTION QCoreApplication( ... )
    RETURN HB_QCoreApplication():new( ... )
 
-FUNCTION QCoreApplicationFrom( ... )
-   RETURN HB_QCoreApplication():from( ... )
-
 FUNCTION QCoreApplicationFromPointer( ... )
    RETURN HB_QCoreApplication():fromPointer( ... )
 

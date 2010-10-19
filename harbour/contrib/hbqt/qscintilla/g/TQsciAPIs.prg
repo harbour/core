@@ -98,9 +98,6 @@
 FUNCTION QsciAPIs( ... )
    RETURN HB_QsciAPIs():new( ... )
 
-FUNCTION QsciAPIsFrom( ... )
-   RETURN HB_QsciAPIs():from( ... )
-
 FUNCTION QsciAPIsFromPointer( ... )
    RETURN HB_QsciAPIs():fromPointer( ... )
 

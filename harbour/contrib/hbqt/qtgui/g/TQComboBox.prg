@@ -98,9 +98,6 @@
 FUNCTION QComboBox( ... )
    RETURN HB_QComboBox():new( ... )
 
-FUNCTION QComboBoxFrom( ... )
-   RETURN HB_QComboBox():from( ... )
-
 FUNCTION QComboBoxFromPointer( ... )
    RETURN HB_QComboBox():fromPointer( ... )
 

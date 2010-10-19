@@ -98,9 +98,6 @@
 FUNCTION QDockWidget( ... )
    RETURN HB_QDockWidget():new( ... )
 
-FUNCTION QDockWidgetFrom( ... )
-   RETURN HB_QDockWidget():from( ... )
-
 FUNCTION QDockWidgetFromPointer( ... )
    RETURN HB_QDockWidget():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QUiLoader( ... )
    RETURN HB_QUiLoader():new( ... )
 
-FUNCTION QUiLoaderFrom( ... )
-   RETURN HB_QUiLoader():from( ... )
-
 FUNCTION QUiLoaderFromPointer( ... )
    RETURN HB_QUiLoader():fromPointer( ... )
 

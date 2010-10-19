@@ -98,9 +98,6 @@
 FUNCTION QFontComboBox( ... )
    RETURN HB_QFontComboBox():new( ... )
 
-FUNCTION QFontComboBoxFrom( ... )
-   RETURN HB_QFontComboBox():from( ... )
-
 FUNCTION QFontComboBoxFromPointer( ... )
    RETURN HB_QFontComboBox():fromPointer( ... )
 

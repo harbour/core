@@ -98,9 +98,6 @@
 FUNCTION QsciAbstractAPIs( ... )
    RETURN HB_QsciAbstractAPIs():new( ... )
 
-FUNCTION QsciAbstractAPIsFrom( ... )
-   RETURN HB_QsciAbstractAPIs():from( ... )
-
 FUNCTION QsciAbstractAPIsFromPointer( ... )
    RETURN HB_QsciAbstractAPIs():fromPointer( ... )
 

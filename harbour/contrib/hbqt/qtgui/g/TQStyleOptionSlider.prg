@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionSlider( ... )
    RETURN HB_QStyleOptionSlider():new( ... )
 
-FUNCTION QStyleOptionSliderFrom( ... )
-   RETURN HB_QStyleOptionSlider():from( ... )
-
 FUNCTION QStyleOptionSliderFromPointer( ... )
    RETURN HB_QStyleOptionSlider():fromPointer( ... )
 

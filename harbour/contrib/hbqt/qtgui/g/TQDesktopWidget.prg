@@ -98,9 +98,6 @@
 FUNCTION QDesktopWidget( ... )
    RETURN HB_QDesktopWidget():new( ... )
 
-FUNCTION QDesktopWidgetFrom( ... )
-   RETURN HB_QDesktopWidget():from( ... )
-
 FUNCTION QDesktopWidgetFromPointer( ... )
    RETURN HB_QDesktopWidget():fromPointer( ... )
 

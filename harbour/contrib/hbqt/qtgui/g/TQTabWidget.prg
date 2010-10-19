@@ -98,9 +98,6 @@
 FUNCTION QTabWidget( ... )
    RETURN HB_QTabWidget():new( ... )
 
-FUNCTION QTabWidgetFrom( ... )
-   RETURN HB_QTabWidget():from( ... )
-
 FUNCTION QTabWidgetFromPointer( ... )
    RETURN HB_QTabWidget():fromPointer( ... )
 

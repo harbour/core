@@ -98,9 +98,6 @@
 FUNCTION QSizeGrip( ... )
    RETURN HB_QSizeGrip():new( ... )
 
-FUNCTION QSizeGripFrom( ... )
-   RETURN HB_QSizeGrip():from( ... )
-
 FUNCTION QSizeGripFromPointer( ... )
    RETURN HB_QSizeGrip():fromPointer( ... )
 

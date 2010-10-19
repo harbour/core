@@ -98,9 +98,6 @@
 FUNCTION QPaintEngine( ... )
    RETURN HB_QPaintEngine():new( ... )
 
-FUNCTION QPaintEngineFrom( ... )
-   RETURN HB_QPaintEngine():from( ... )
-
 FUNCTION QPaintEngineFromPointer( ... )
    RETURN HB_QPaintEngine():fromPointer( ... )
 

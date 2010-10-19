@@ -98,9 +98,6 @@
 FUNCTION QAbstractPrintDialog( ... )
    RETURN HB_QAbstractPrintDialog():new( ... )
 
-FUNCTION QAbstractPrintDialogFrom( ... )
-   RETURN HB_QAbstractPrintDialog():from( ... )
-
 FUNCTION QAbstractPrintDialogFromPointer( ... )
    RETURN HB_QAbstractPrintDialog():fromPointer( ... )
 

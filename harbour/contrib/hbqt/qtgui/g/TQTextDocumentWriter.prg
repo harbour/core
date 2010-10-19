@@ -98,9 +98,6 @@
 FUNCTION QTextDocumentWriter( ... )
    RETURN HB_QTextDocumentWriter():new( ... )
 
-FUNCTION QTextDocumentWriterFrom( ... )
-   RETURN HB_QTextDocumentWriter():from( ... )
-
 FUNCTION QTextDocumentWriterFromPointer( ... )
    RETURN HB_QTextDocumentWriter():fromPointer( ... )
 

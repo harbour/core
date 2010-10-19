@@ -98,9 +98,6 @@
 FUNCTION QKeyEvent( ... )
    RETURN HB_QKeyEvent():new( ... )
 
-FUNCTION QKeyEventFrom( ... )
-   RETURN HB_QKeyEvent():from( ... )
-
 FUNCTION QKeyEventFromPointer( ... )
    RETURN HB_QKeyEvent():fromPointer( ... )
 

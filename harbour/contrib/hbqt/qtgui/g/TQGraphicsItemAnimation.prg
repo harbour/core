@@ -98,9 +98,6 @@
 FUNCTION QGraphicsItemAnimation( ... )
    RETURN HB_QGraphicsItemAnimation():new( ... )
 
-FUNCTION QGraphicsItemAnimationFrom( ... )
-   RETURN HB_QGraphicsItemAnimation():from( ... )
-
 FUNCTION QGraphicsItemAnimationFromPointer( ... )
    RETURN HB_QGraphicsItemAnimation():fromPointer( ... )
 

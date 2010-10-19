@@ -98,9 +98,6 @@
 FUNCTION QsciLexerFlagship( ... )
    RETURN HB_QsciLexerFlagship():new( ... )
 
-FUNCTION QsciLexerFlagshipFrom( ... )
-   RETURN HB_QsciLexerFlagship():from( ... )
-
 FUNCTION QsciLexerFlagshipFromPointer( ... )
    RETURN HB_QsciLexerFlagship():fromPointer( ... )
 

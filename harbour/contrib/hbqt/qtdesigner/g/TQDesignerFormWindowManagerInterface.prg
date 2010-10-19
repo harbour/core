@@ -98,9 +98,6 @@
 FUNCTION QDesignerFormWindowManagerInterface( ... )
    RETURN HB_QDesignerFormWindowManagerInterface():new( ... )
 
-FUNCTION QDesignerFormWindowManagerInterfaceFrom( ... )
-   RETURN HB_QDesignerFormWindowManagerInterface():from( ... )
-
 FUNCTION QDesignerFormWindowManagerInterfaceFromPointer( ... )
    RETURN HB_QDesignerFormWindowManagerInterface():fromPointer( ... )
 

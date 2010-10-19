@@ -98,9 +98,6 @@
 FUNCTION QFocusFrame( ... )
    RETURN HB_QFocusFrame():new( ... )
 
-FUNCTION QFocusFrameFrom( ... )
-   RETURN HB_QFocusFrame():from( ... )
-
 FUNCTION QFocusFrameFromPointer( ... )
    RETURN HB_QFocusFrame():fromPointer( ... )
 

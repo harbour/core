@@ -98,9 +98,6 @@
 FUNCTION QTextLayout( ... )
    RETURN HB_QTextLayout():new( ... )
 
-FUNCTION QTextLayoutFrom( ... )
-   RETURN HB_QTextLayout():from( ... )
-
 FUNCTION QTextLayoutFromPointer( ... )
    RETURN HB_QTextLayout():fromPointer( ... )
 

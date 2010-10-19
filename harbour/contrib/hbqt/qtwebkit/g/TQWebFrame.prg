@@ -98,9 +98,6 @@
 FUNCTION QWebFrame( ... )
    RETURN HB_QWebFrame():new( ... )
 
-FUNCTION QWebFrameFrom( ... )
-   RETURN HB_QWebFrame():from( ... )
-
 FUNCTION QWebFrameFromPointer( ... )
    RETURN HB_QWebFrame():fromPointer( ... )
 

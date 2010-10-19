@@ -98,9 +98,6 @@
 FUNCTION QLabel( ... )
    RETURN HB_QLabel():new( ... )
 
-FUNCTION QLabelFrom( ... )
-   RETURN HB_QLabel():from( ... )
-
 FUNCTION QLabelFromPointer( ... )
    RETURN HB_QLabel():fromPointer( ... )
 

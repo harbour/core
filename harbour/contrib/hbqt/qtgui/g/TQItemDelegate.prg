@@ -98,9 +98,6 @@
 FUNCTION QItemDelegate( ... )
    RETURN HB_QItemDelegate():new( ... )
 
-FUNCTION QItemDelegateFrom( ... )
-   RETURN HB_QItemDelegate():from( ... )
-
 FUNCTION QItemDelegateFromPointer( ... )
    RETURN HB_QItemDelegate():fromPointer( ... )
 

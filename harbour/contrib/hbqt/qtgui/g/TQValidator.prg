@@ -98,9 +98,6 @@
 FUNCTION QValidator( ... )
    RETURN HB_QValidator():new( ... )
 
-FUNCTION QValidatorFrom( ... )
-   RETURN HB_QValidator():from( ... )
-
 FUNCTION QValidatorFromPointer( ... )
    RETURN HB_QValidator():fromPointer( ... )
 

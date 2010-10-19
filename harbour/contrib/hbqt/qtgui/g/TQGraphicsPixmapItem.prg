@@ -98,9 +98,6 @@
 FUNCTION QGraphicsPixmapItem( ... )
    RETURN HB_QGraphicsPixmapItem():new( ... )
 
-FUNCTION QGraphicsPixmapItemFrom( ... )
-   RETURN HB_QGraphicsPixmapItem():from( ... )
-
 FUNCTION QGraphicsPixmapItemFromPointer( ... )
    RETURN HB_QGraphicsPixmapItem():fromPointer( ... )
 

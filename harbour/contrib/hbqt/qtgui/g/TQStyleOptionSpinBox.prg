@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionSpinBox( ... )
    RETURN HB_QStyleOptionSpinBox():new( ... )
 
-FUNCTION QStyleOptionSpinBoxFrom( ... )
-   RETURN HB_QStyleOptionSpinBox():from( ... )
-
 FUNCTION QStyleOptionSpinBoxFromPointer( ... )
    RETURN HB_QStyleOptionSpinBox():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QMenuBar( ... )
    RETURN HB_QMenuBar():new( ... )
 
-FUNCTION QMenuBarFrom( ... )
-   RETURN HB_QMenuBar():from( ... )
-
 FUNCTION QMenuBarFromPointer( ... )
    RETURN HB_QMenuBar():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QColorDialog( ... )
    RETURN HB_QColorDialog():new( ... )
 
-FUNCTION QColorDialogFrom( ... )
-   RETURN HB_QColorDialog():from( ... )
-
 FUNCTION QColorDialogFromPointer( ... )
    RETURN HB_QColorDialog():fromPointer( ... )
 

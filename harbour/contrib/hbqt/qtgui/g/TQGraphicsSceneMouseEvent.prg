@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSceneMouseEvent( ... )
    RETURN HB_QGraphicsSceneMouseEvent():new( ... )
 
-FUNCTION QGraphicsSceneMouseEventFrom( ... )
-   RETURN HB_QGraphicsSceneMouseEvent():from( ... )
-
 FUNCTION QGraphicsSceneMouseEventFromPointer( ... )
    RETURN HB_QGraphicsSceneMouseEvent():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QMainWindow( ... )
    RETURN HB_QMainWindow():new( ... )
 
-FUNCTION QMainWindowFrom( ... )
-   RETURN HB_QMainWindow():from( ... )
-
 FUNCTION QMainWindowFromPointer( ... )
    RETURN HB_QMainWindow():fromPointer( ... )
 

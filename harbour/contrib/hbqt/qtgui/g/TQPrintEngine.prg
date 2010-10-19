@@ -98,9 +98,6 @@
 FUNCTION QPrintEngine( ... )
    RETURN HB_QPrintEngine():new( ... )
 
-FUNCTION QPrintEngineFrom( ... )
-   RETURN HB_QPrintEngine():from( ... )
-
 FUNCTION QPrintEngineFromPointer( ... )
    RETURN HB_QPrintEngine():fromPointer( ... )
 

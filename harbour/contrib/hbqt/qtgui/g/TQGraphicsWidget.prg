@@ -98,9 +98,6 @@
 FUNCTION QGraphicsWidget( ... )
    RETURN HB_QGraphicsWidget():new( ... )
 
-FUNCTION QGraphicsWidgetFrom( ... )
-   RETURN HB_QGraphicsWidget():from( ... )
-
 FUNCTION QGraphicsWidgetFromPointer( ... )
    RETURN HB_QGraphicsWidget():fromPointer( ... )
 

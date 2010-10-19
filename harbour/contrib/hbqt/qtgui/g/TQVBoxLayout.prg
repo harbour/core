@@ -98,9 +98,6 @@
 FUNCTION QVBoxLayout( ... )
    RETURN HB_QVBoxLayout():new( ... )
 
-FUNCTION QVBoxLayoutFrom( ... )
-   RETURN HB_QVBoxLayout():from( ... )
-
 FUNCTION QVBoxLayoutFromPointer( ... )
    RETURN HB_QVBoxLayout():fromPointer( ... )
 

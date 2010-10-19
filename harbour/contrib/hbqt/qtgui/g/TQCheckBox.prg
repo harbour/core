@@ -98,9 +98,6 @@
 FUNCTION QCheckBox( ... )
    RETURN HB_QCheckBox():new( ... )
 
-FUNCTION QCheckBoxFrom( ... )
-   RETURN HB_QCheckBox():from( ... )
-
 FUNCTION QCheckBoxFromPointer( ... )
    RETURN HB_QCheckBox():fromPointer( ... )
 

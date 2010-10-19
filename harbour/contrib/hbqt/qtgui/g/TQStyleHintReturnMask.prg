@@ -98,9 +98,6 @@
 FUNCTION QStyleHintReturnMask( ... )
    RETURN HB_QStyleHintReturnMask():new( ... )
 
-FUNCTION QStyleHintReturnMaskFrom( ... )
-   RETURN HB_QStyleHintReturnMask():from( ... )
-
 FUNCTION QStyleHintReturnMaskFromPointer( ... )
    RETURN HB_QStyleHintReturnMask():fromPointer( ... )
 

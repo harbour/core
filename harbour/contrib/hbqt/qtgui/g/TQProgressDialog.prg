@@ -98,9 +98,6 @@
 FUNCTION QProgressDialog( ... )
    RETURN HB_QProgressDialog():new( ... )
 
-FUNCTION QProgressDialogFrom( ... )
-   RETURN HB_QProgressDialog():from( ... )
-
 FUNCTION QProgressDialogFromPointer( ... )
    RETURN HB_QProgressDialog():fromPointer( ... )
 

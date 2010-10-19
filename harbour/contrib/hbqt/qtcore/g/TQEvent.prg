@@ -98,9 +98,6 @@
 FUNCTION QEvent( ... )
    RETURN HB_QEvent():new( ... )
 
-FUNCTION QEventFrom( ... )
-   RETURN HB_QEvent():from( ... )
-
 FUNCTION QEventFromPointer( ... )
    RETURN HB_QEvent():fromPointer( ... )
 

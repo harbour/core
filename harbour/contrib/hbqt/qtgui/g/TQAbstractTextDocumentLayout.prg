@@ -98,9 +98,6 @@
 FUNCTION QAbstractTextDocumentLayout( ... )
    RETURN HB_QAbstractTextDocumentLayout():new( ... )
 
-FUNCTION QAbstractTextDocumentLayoutFrom( ... )
-   RETURN HB_QAbstractTextDocumentLayout():from( ... )
-
 FUNCTION QAbstractTextDocumentLayoutFromPointer( ... )
    RETURN HB_QAbstractTextDocumentLayout():fromPointer( ... )
 

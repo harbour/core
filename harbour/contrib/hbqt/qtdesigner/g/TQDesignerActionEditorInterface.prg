@@ -98,9 +98,6 @@
 FUNCTION QDesignerActionEditorInterface( ... )
    RETURN HB_QDesignerActionEditorInterface():new( ... )
 
-FUNCTION QDesignerActionEditorInterfaceFrom( ... )
-   RETURN HB_QDesignerActionEditorInterface():from( ... )
-
 FUNCTION QDesignerActionEditorInterfaceFromPointer( ... )
    RETURN HB_QDesignerActionEditorInterface():fromPointer( ... )
 

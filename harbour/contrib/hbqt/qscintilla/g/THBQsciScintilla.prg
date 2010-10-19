@@ -98,9 +98,6 @@
 FUNCTION HBQsciScintilla( ... )
    RETURN HB_HBQsciScintilla():new( ... )
 
-FUNCTION HBQsciScintillaFrom( ... )
-   RETURN HB_HBQsciScintilla():from( ... )
-
 FUNCTION HBQsciScintillaFromPointer( ... )
    RETURN HB_HBQsciScintilla():fromPointer( ... )
 

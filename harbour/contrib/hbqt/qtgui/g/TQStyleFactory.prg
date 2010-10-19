@@ -98,9 +98,6 @@
 FUNCTION QStyleFactory( ... )
    RETURN HB_QStyleFactory():new( ... )
 
-FUNCTION QStyleFactoryFrom( ... )
-   RETURN HB_QStyleFactory():from( ... )
-
 FUNCTION QStyleFactoryFromPointer( ... )
    RETURN HB_QStyleFactory():fromPointer( ... )
 

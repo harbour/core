@@ -98,9 +98,6 @@
 FUNCTION QCalendarWidget( ... )
    RETURN HB_QCalendarWidget():new( ... )
 
-FUNCTION QCalendarWidgetFrom( ... )
-   RETURN HB_QCalendarWidget():from( ... )
-
 FUNCTION QCalendarWidgetFromPointer( ... )
    RETURN HB_QCalendarWidget():fromPointer( ... )
 

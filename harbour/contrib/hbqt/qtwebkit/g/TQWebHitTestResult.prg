@@ -98,9 +98,6 @@
 FUNCTION QWebHitTestResult( ... )
    RETURN HB_QWebHitTestResult():new( ... )
 
-FUNCTION QWebHitTestResultFrom( ... )
-   RETURN HB_QWebHitTestResult():from( ... )
-
 FUNCTION QWebHitTestResultFromPointer( ... )
    RETURN HB_QWebHitTestResult():fromPointer( ... )
 

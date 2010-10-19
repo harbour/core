@@ -98,9 +98,6 @@
 FUNCTION QItemEditorFactory( ... )
    RETURN HB_QItemEditorFactory():new( ... )
 
-FUNCTION QItemEditorFactoryFrom( ... )
-   RETURN HB_QItemEditorFactory():from( ... )
-
 FUNCTION QItemEditorFactoryFromPointer( ... )
    RETURN HB_QItemEditorFactory():fromPointer( ... )
 

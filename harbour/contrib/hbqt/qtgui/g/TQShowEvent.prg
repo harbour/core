@@ -98,9 +98,6 @@
 FUNCTION QShowEvent( ... )
    RETURN HB_QShowEvent():new( ... )
 
-FUNCTION QShowEventFrom( ... )
-   RETURN HB_QShowEvent():from( ... )
-
 FUNCTION QShowEventFromPointer( ... )
    RETURN HB_QShowEvent():fromPointer( ... )
 

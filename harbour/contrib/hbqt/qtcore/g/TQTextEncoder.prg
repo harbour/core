@@ -98,9 +98,6 @@
 FUNCTION QTextEncoder( ... )
    RETURN HB_QTextEncoder():new( ... )
 
-FUNCTION QTextEncoderFrom( ... )
-   RETURN HB_QTextEncoder():from( ... )
-
 FUNCTION QTextEncoderFromPointer( ... )
    RETURN HB_QTextEncoder():fromPointer( ... )
 

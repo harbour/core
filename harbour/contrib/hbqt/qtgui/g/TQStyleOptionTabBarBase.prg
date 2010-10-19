@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionTabBarBase( ... )
    RETURN HB_QStyleOptionTabBarBase():new( ... )
 
-FUNCTION QStyleOptionTabBarBaseFrom( ... )
-   RETURN HB_QStyleOptionTabBarBase():from( ... )
-
 FUNCTION QStyleOptionTabBarBaseFromPointer( ... )
    RETURN HB_QStyleOptionTabBarBase():fromPointer( ... )
 

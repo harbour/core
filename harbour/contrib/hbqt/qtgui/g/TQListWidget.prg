@@ -98,9 +98,6 @@
 FUNCTION QListWidget( ... )
    RETURN HB_QListWidget():new( ... )
 
-FUNCTION QListWidgetFrom( ... )
-   RETURN HB_QListWidget():from( ... )
-
 FUNCTION QListWidgetFromPointer( ... )
    RETURN HB_QListWidget():fromPointer( ... )
 

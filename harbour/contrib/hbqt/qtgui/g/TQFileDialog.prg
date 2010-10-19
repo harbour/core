@@ -98,9 +98,6 @@
 FUNCTION QFileDialog( ... )
    RETURN HB_QFileDialog():new( ... )
 
-FUNCTION QFileDialogFrom( ... )
-   RETURN HB_QFileDialog():from( ... )
-
 FUNCTION QFileDialogFromPointer( ... )
    RETURN HB_QFileDialog():fromPointer( ... )
 

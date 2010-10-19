@@ -98,9 +98,6 @@
 FUNCTION QSignalMapper( ... )
    RETURN HB_QSignalMapper():new( ... )
 
-FUNCTION QSignalMapperFrom( ... )
-   RETURN HB_QSignalMapper():from( ... )
-
 FUNCTION QSignalMapperFromPointer( ... )
    RETURN HB_QSignalMapper():fromPointer( ... )
 

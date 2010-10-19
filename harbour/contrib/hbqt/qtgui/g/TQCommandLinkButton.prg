@@ -98,9 +98,6 @@
 FUNCTION QCommandLinkButton( ... )
    RETURN HB_QCommandLinkButton():new( ... )
 
-FUNCTION QCommandLinkButtonFrom( ... )
-   RETURN HB_QCommandLinkButton():from( ... )
-
 FUNCTION QCommandLinkButtonFromPointer( ... )
    RETURN HB_QCommandLinkButton():fromPointer( ... )
 

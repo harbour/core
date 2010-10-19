@@ -98,9 +98,6 @@
 FUNCTION QBitmap( ... )
    RETURN HB_QBitmap():new( ... )
 
-FUNCTION QBitmapFrom( ... )
-   RETURN HB_QBitmap():from( ... )
-
 FUNCTION QBitmapFromPointer( ... )
    RETURN HB_QBitmap():fromPointer( ... )
 

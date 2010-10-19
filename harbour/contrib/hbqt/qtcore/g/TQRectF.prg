@@ -98,9 +98,6 @@
 FUNCTION QRectF( ... )
    RETURN HB_QRectF():new( ... )
 
-FUNCTION QRectFFrom( ... )
-   RETURN HB_QRectF():from( ... )
-
 FUNCTION QRectFFromPointer( ... )
    RETURN HB_QRectF():fromPointer( ... )
 

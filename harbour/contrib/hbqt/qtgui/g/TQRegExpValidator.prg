@@ -98,9 +98,6 @@
 FUNCTION QRegExpValidator( ... )
    RETURN HB_QRegExpValidator():new( ... )
 
-FUNCTION QRegExpValidatorFrom( ... )
-   RETURN HB_QRegExpValidator():from( ... )
-
 FUNCTION QRegExpValidatorFromPointer( ... )
    RETURN HB_QRegExpValidator():fromPointer( ... )
 

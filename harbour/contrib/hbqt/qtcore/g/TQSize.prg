@@ -98,9 +98,6 @@
 FUNCTION QSize( ... )
    RETURN HB_QSize():new( ... )
 
-FUNCTION QSizeFrom( ... )
-   RETURN HB_QSize():from( ... )
-
 FUNCTION QSizeFromPointer( ... )
    RETURN HB_QSize():fromPointer( ... )
 

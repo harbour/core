@@ -98,9 +98,6 @@
 FUNCTION QHelpEvent( ... )
    RETURN HB_QHelpEvent():new( ... )
 
-FUNCTION QHelpEventFrom( ... )
-   RETURN HB_QHelpEvent():from( ... )
-
 FUNCTION QHelpEventFromPointer( ... )
    RETURN HB_QHelpEvent():fromPointer( ... )
 

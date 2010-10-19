@@ -98,9 +98,6 @@
 FUNCTION QsciLexer( ... )
    RETURN HB_QsciLexer():new( ... )
 
-FUNCTION QsciLexerFrom( ... )
-   RETURN HB_QsciLexer():from( ... )
-
 FUNCTION QsciLexerFromPointer( ... )
    RETURN HB_QsciLexer():fromPointer( ... )
 

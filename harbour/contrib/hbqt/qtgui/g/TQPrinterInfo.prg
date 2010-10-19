@@ -98,9 +98,6 @@
 FUNCTION QPrinterInfo( ... )
    RETURN HB_QPrinterInfo():new( ... )
 
-FUNCTION QPrinterInfoFrom( ... )
-   RETURN HB_QPrinterInfo():from( ... )
-
 FUNCTION QPrinterInfoFromPointer( ... )
    RETURN HB_QPrinterInfo():fromPointer( ... )
 

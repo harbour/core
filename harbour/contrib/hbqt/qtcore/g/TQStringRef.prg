@@ -98,9 +98,6 @@
 FUNCTION QStringRef( ... )
    RETURN HB_QStringRef():new( ... )
 
-FUNCTION QStringRefFrom( ... )
-   RETURN HB_QStringRef():from( ... )
-
 FUNCTION QStringRefFromPointer( ... )
    RETURN HB_QStringRef():fromPointer( ... )
 

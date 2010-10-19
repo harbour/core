@@ -98,9 +98,6 @@
 FUNCTION QWheelEvent( ... )
    RETURN HB_QWheelEvent():new( ... )
 
-FUNCTION QWheelEventFrom( ... )
-   RETURN HB_QWheelEvent():from( ... )
-
 FUNCTION QWheelEventFromPointer( ... )
    RETURN HB_QWheelEvent():fromPointer( ... )
 

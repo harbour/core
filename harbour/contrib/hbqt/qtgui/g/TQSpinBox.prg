@@ -98,9 +98,6 @@
 FUNCTION QSpinBox( ... )
    RETURN HB_QSpinBox():new( ... )
 
-FUNCTION QSpinBoxFrom( ... )
-   RETURN HB_QSpinBox():from( ... )
-
 FUNCTION QSpinBoxFromPointer( ... )
    RETURN HB_QSpinBox():fromPointer( ... )
 

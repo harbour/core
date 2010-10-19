@@ -98,9 +98,6 @@
 FUNCTION QAbstractItemModel( ... )
    RETURN HB_QAbstractItemModel():new( ... )
 
-FUNCTION QAbstractItemModelFrom( ... )
-   RETURN HB_QAbstractItemModel():from( ... )
-
 FUNCTION QAbstractItemModelFromPointer( ... )
    RETURN HB_QAbstractItemModel():fromPointer( ... )
 

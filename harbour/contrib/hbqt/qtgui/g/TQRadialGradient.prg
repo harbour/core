@@ -98,9 +98,6 @@
 FUNCTION QRadialGradient( ... )
    RETURN HB_QRadialGradient():new( ... )
 
-FUNCTION QRadialGradientFrom( ... )
-   RETURN HB_QRadialGradient():from( ... )
-
 FUNCTION QRadialGradientFromPointer( ... )
    RETURN HB_QRadialGradient():fromPointer( ... )
 

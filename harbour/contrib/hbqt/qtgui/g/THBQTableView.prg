@@ -98,9 +98,6 @@
 FUNCTION HBQTableView( ... )
    RETURN HB_HBQTableView():new( ... )
 
-FUNCTION HBQTableViewFrom( ... )
-   RETURN HB_HBQTableView():from( ... )
-
 FUNCTION HBQTableViewFromPointer( ... )
    RETURN HB_HBQTableView():fromPointer( ... )
 

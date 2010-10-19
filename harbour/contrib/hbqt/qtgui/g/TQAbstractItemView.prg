@@ -98,9 +98,6 @@
 FUNCTION QAbstractItemView( ... )
    RETURN HB_QAbstractItemView():new( ... )
 
-FUNCTION QAbstractItemViewFrom( ... )
-   RETURN HB_QAbstractItemView():from( ... )
-
 FUNCTION QAbstractItemViewFromPointer( ... )
    RETURN HB_QAbstractItemView():fromPointer( ... )
 

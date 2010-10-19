@@ -98,9 +98,6 @@
 FUNCTION QWindowStateChangeEvent( ... )
    RETURN HB_QWindowStateChangeEvent():new( ... )
 
-FUNCTION QWindowStateChangeEventFrom( ... )
-   RETURN HB_QWindowStateChangeEvent():from( ... )
-
 FUNCTION QWindowStateChangeEventFromPointer( ... )
    RETURN HB_QWindowStateChangeEvent():fromPointer( ... )
 

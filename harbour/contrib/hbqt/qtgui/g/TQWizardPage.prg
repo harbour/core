@@ -98,9 +98,6 @@
 FUNCTION QWizardPage( ... )
    RETURN HB_QWizardPage():new( ... )
 
-FUNCTION QWizardPageFrom( ... )
-   RETURN HB_QWizardPage():from( ... )
-
 FUNCTION QWizardPageFromPointer( ... )
    RETURN HB_QWizardPage():fromPointer( ... )
 

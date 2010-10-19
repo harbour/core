@@ -98,9 +98,6 @@
 FUNCTION QImageWriter( ... )
    RETURN HB_QImageWriter():new( ... )
 
-FUNCTION QImageWriterFrom( ... )
-   RETURN HB_QImageWriter():from( ... )
-
 FUNCTION QImageWriterFromPointer( ... )
    RETURN HB_QImageWriter():fromPointer( ... )
 

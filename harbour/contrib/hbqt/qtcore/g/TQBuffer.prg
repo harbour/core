@@ -98,9 +98,6 @@
 FUNCTION QBuffer( ... )
    RETURN HB_QBuffer():new( ... )
 
-FUNCTION QBufferFrom( ... )
-   RETURN HB_QBuffer():from( ... )
-
 FUNCTION QBufferFromPointer( ... )
    RETURN HB_QBuffer():fromPointer( ... )
 

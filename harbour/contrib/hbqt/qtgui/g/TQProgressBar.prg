@@ -98,9 +98,6 @@
 FUNCTION QProgressBar( ... )
    RETURN HB_QProgressBar():new( ... )
 
-FUNCTION QProgressBarFrom( ... )
-   RETURN HB_QProgressBar():from( ... )
-
 FUNCTION QProgressBarFromPointer( ... )
    RETURN HB_QProgressBar():fromPointer( ... )
 

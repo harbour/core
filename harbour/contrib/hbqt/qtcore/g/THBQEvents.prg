@@ -98,9 +98,6 @@
 FUNCTION HBQEvents( ... )
    RETURN HB_HBQEvents():new( ... )
 
-FUNCTION HBQEventsFrom( ... )
-   RETURN HB_HBQEvents():from( ... )
-
 FUNCTION HBQEventsFromPointer( ... )
    RETURN HB_HBQEvents():fromPointer( ... )
 

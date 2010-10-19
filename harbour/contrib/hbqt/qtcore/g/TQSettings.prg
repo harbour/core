@@ -98,9 +98,6 @@
 FUNCTION QSettings( ... )
    RETURN HB_QSettings():new( ... )
 
-FUNCTION QSettingsFrom( ... )
-   RETURN HB_QSettings():from( ... )
-
 FUNCTION QSettingsFromPointer( ... )
    RETURN HB_QSettings():fromPointer( ... )
 

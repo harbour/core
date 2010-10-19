@@ -98,9 +98,6 @@
 FUNCTION QLocale( ... )
    RETURN HB_QLocale():new( ... )
 
-FUNCTION QLocaleFrom( ... )
-   RETURN HB_QLocale():from( ... )
-
 FUNCTION QLocaleFromPointer( ... )
    RETURN HB_QLocale():fromPointer( ... )
 

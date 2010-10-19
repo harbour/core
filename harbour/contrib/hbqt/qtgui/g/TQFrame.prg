@@ -98,9 +98,6 @@
 FUNCTION QFrame( ... )
    RETURN HB_QFrame():new( ... )
 
-FUNCTION QFrameFrom( ... )
-   RETURN HB_QFrame():from( ... )
-
 FUNCTION QFrameFromPointer( ... )
    RETURN HB_QFrame():fromPointer( ... )
 

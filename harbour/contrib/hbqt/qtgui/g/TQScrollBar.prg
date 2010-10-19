@@ -98,9 +98,6 @@
 FUNCTION QScrollBar( ... )
    RETURN HB_QScrollBar():new( ... )
 
-FUNCTION QScrollBarFrom( ... )
-   RETURN HB_QScrollBar():from( ... )
-
 FUNCTION QScrollBarFromPointer( ... )
    RETURN HB_QScrollBar():fromPointer( ... )
 

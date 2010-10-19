@@ -98,9 +98,6 @@
 FUNCTION QGridLayout( ... )
    RETURN HB_QGridLayout():new( ... )
 
-FUNCTION QGridLayoutFrom( ... )
-   RETURN HB_QGridLayout():from( ... )
-
 FUNCTION QGridLayoutFromPointer( ... )
    RETURN HB_QGridLayout():fromPointer( ... )
 

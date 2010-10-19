@@ -98,9 +98,6 @@
 FUNCTION QBoxLayout( ... )
    RETURN HB_QBoxLayout():new( ... )
 
-FUNCTION QBoxLayoutFrom( ... )
-   RETURN HB_QBoxLayout():from( ... )
-
 FUNCTION QBoxLayoutFromPointer( ... )
    RETURN HB_QBoxLayout():fromPointer( ... )
 

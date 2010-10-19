@@ -98,9 +98,6 @@
 FUNCTION QChar( ... )
    RETURN HB_QChar():new( ... )
 
-FUNCTION QCharFrom( ... )
-   RETURN HB_QChar():from( ... )
-
 FUNCTION QCharFromPointer( ... )
    RETURN HB_QChar():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QPalette( ... )
    RETURN HB_QPalette():new( ... )
 
-FUNCTION QPaletteFrom( ... )
-   RETURN HB_QPalette():from( ... )
-
 FUNCTION QPaletteFromPointer( ... )
    RETURN HB_QPalette():fromPointer( ... )
 

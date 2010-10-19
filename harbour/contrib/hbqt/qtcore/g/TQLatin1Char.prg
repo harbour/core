@@ -98,9 +98,6 @@
 FUNCTION QLatin1Char( ... )
    RETURN HB_QLatin1Char():new( ... )
 
-FUNCTION QLatin1CharFrom( ... )
-   RETURN HB_QLatin1Char():from( ... )
-
 FUNCTION QLatin1CharFromPointer( ... )
    RETURN HB_QLatin1Char():fromPointer( ... )
 

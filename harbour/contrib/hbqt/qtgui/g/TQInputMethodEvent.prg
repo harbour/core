@@ -98,9 +98,6 @@
 FUNCTION QInputMethodEvent( ... )
    RETURN HB_QInputMethodEvent():new( ... )
 
-FUNCTION QInputMethodEventFrom( ... )
-   RETURN HB_QInputMethodEvent():from( ... )
-
 FUNCTION QInputMethodEventFromPointer( ... )
    RETURN HB_QInputMethodEvent():fromPointer( ... )
 

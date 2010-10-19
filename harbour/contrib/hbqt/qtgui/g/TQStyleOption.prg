@@ -98,9 +98,6 @@
 FUNCTION QStyleOption( ... )
    RETURN HB_QStyleOption():new( ... )
 
-FUNCTION QStyleOptionFrom( ... )
-   RETURN HB_QStyleOption():from( ... )
-
 FUNCTION QStyleOptionFromPointer( ... )
    RETURN HB_QStyleOption():fromPointer( ... )
 

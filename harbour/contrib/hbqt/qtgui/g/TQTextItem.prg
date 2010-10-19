@@ -98,9 +98,6 @@
 FUNCTION QTextItem( ... )
    RETURN HB_QTextItem():new( ... )
 
-FUNCTION QTextItemFrom( ... )
-   RETURN HB_QTextItem():from( ... )
-
 FUNCTION QTextItemFromPointer( ... )
    RETURN HB_QTextItem():fromPointer( ... )
 

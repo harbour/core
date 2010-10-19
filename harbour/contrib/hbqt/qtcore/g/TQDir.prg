@@ -98,9 +98,6 @@
 FUNCTION QDir( ... )
    RETURN HB_QDir():new( ... )
 
-FUNCTION QDirFrom( ... )
-   RETURN HB_QDir():from( ... )
-
 FUNCTION QDirFromPointer( ... )
    RETURN HB_QDir():fromPointer( ... )
 

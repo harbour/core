@@ -98,9 +98,6 @@
 FUNCTION QMetaObject( ... )
    RETURN HB_QMetaObject():new( ... )
 
-FUNCTION QMetaObjectFrom( ... )
-   RETURN HB_QMetaObject():from( ... )
-
 FUNCTION QMetaObjectFromPointer( ... )
    RETURN HB_QMetaObject():fromPointer( ... )
 

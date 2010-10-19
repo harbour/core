@@ -98,9 +98,6 @@
 FUNCTION QRect( ... )
    RETURN HB_QRect():new( ... )
 
-FUNCTION QRectFrom( ... )
-   RETURN HB_QRect():from( ... )
-
 FUNCTION QRectFromPointer( ... )
    RETURN HB_QRect():fromPointer( ... )
 

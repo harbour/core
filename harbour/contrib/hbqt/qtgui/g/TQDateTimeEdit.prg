@@ -98,9 +98,6 @@
 FUNCTION QDateTimeEdit( ... )
    RETURN HB_QDateTimeEdit():new( ... )
 
-FUNCTION QDateTimeEditFrom( ... )
-   RETURN HB_QDateTimeEdit():from( ... )
-
 FUNCTION QDateTimeEditFromPointer( ... )
    RETURN HB_QDateTimeEdit():fromPointer( ... )
 

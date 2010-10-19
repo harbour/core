@@ -98,9 +98,6 @@
 FUNCTION QTextCharFormat( ... )
    RETURN HB_QTextCharFormat():new( ... )
 
-FUNCTION QTextCharFormatFrom( ... )
-   RETURN HB_QTextCharFormat():from( ... )
-
 FUNCTION QTextCharFormatFromPointer( ... )
    RETURN HB_QTextCharFormat():fromPointer( ... )
 

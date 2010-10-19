@@ -98,9 +98,6 @@
 FUNCTION QSplitter( ... )
    RETURN HB_QSplitter():new( ... )
 
-FUNCTION QSplitterFrom( ... )
-   RETURN HB_QSplitter():from( ... )
-
 FUNCTION QSplitterFromPointer( ... )
    RETURN HB_QSplitter():fromPointer( ... )
 

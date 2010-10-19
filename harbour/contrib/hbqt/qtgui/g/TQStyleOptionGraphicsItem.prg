@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionGraphicsItem( ... )
    RETURN HB_QStyleOptionGraphicsItem():new( ... )
 
-FUNCTION QStyleOptionGraphicsItemFrom( ... )
-   RETURN HB_QStyleOptionGraphicsItem():from( ... )
-
 FUNCTION QStyleOptionGraphicsItemFromPointer( ... )
    RETURN HB_QStyleOptionGraphicsItem():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSceneResizeEvent( ... )
    RETURN HB_QGraphicsSceneResizeEvent():new( ... )
 
-FUNCTION QGraphicsSceneResizeEventFrom( ... )
-   RETURN HB_QGraphicsSceneResizeEvent():from( ... )
-
 FUNCTION QGraphicsSceneResizeEventFromPointer( ... )
    RETURN HB_QGraphicsSceneResizeEvent():fromPointer( ... )
 

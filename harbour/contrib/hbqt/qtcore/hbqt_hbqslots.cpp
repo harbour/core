@@ -1775,6 +1775,7 @@ static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
    #endif
 }
 
+
 /*----------------------------------------------------------------------*/
 
 static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots )

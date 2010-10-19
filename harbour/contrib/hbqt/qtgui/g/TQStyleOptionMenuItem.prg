@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionMenuItem( ... )
    RETURN HB_QStyleOptionMenuItem():new( ... )
 
-FUNCTION QStyleOptionMenuItemFrom( ... )
-   RETURN HB_QStyleOptionMenuItem():from( ... )
-
 FUNCTION QStyleOptionMenuItemFromPointer( ... )
    RETURN HB_QStyleOptionMenuItem():fromPointer( ... )
 

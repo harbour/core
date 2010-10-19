@@ -98,9 +98,6 @@
 FUNCTION QSessionManager( ... )
    RETURN HB_QSessionManager():new( ... )
 
-FUNCTION QSessionManagerFrom( ... )
-   RETURN HB_QSessionManager():from( ... )
-
 FUNCTION QSessionManagerFromPointer( ... )
    RETURN HB_QSessionManager():fromPointer( ... )
 

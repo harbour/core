@@ -98,9 +98,6 @@
 FUNCTION QGraphicsItemGroup( ... )
    RETURN HB_QGraphicsItemGroup():new( ... )
 
-FUNCTION QGraphicsItemGroupFrom( ... )
-   RETURN HB_QGraphicsItemGroup():from( ... )
-
 FUNCTION QGraphicsItemGroupFromPointer( ... )
    RETURN HB_QGraphicsItemGroup():fromPointer( ... )
 

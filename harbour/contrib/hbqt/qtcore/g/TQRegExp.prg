@@ -98,9 +98,6 @@
 FUNCTION QRegExp( ... )
    RETURN HB_QRegExp():new( ... )
 
-FUNCTION QRegExpFrom( ... )
-   RETURN HB_QRegExp():from( ... )
-
 FUNCTION QRegExpFromPointer( ... )
    RETURN HB_QRegExp():fromPointer( ... )
 

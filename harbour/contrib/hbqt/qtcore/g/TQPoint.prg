@@ -98,9 +98,6 @@
 FUNCTION QPoint( ... )
    RETURN HB_QPoint():new( ... )
 
-FUNCTION QPointFrom( ... )
-   RETURN HB_QPoint():from( ... )
-
 FUNCTION QPointFromPointer( ... )
    RETURN HB_QPoint():fromPointer( ... )
 

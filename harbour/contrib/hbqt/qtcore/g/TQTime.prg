@@ -98,9 +98,6 @@
 FUNCTION QTime( ... )
    RETURN HB_QTime():new( ... )
 
-FUNCTION QTimeFrom( ... )
-   RETURN HB_QTime():from( ... )
-
 FUNCTION QTimeFromPointer( ... )
    RETURN HB_QTime():fromPointer( ... )
 

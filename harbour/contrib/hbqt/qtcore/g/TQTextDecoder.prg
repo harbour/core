@@ -98,9 +98,6 @@
 FUNCTION QTextDecoder( ... )
    RETURN HB_QTextDecoder():new( ... )
 
-FUNCTION QTextDecoderFrom( ... )
-   RETURN HB_QTextDecoder():from( ... )
-
 FUNCTION QTextDecoderFromPointer( ... )
    RETURN HB_QTextDecoder():fromPointer( ... )
 

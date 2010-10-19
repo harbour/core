@@ -98,9 +98,6 @@
 FUNCTION QPlainTextDocumentLayout( ... )
    RETURN HB_QPlainTextDocumentLayout():new( ... )
 
-FUNCTION QPlainTextDocumentLayoutFrom( ... )
-   RETURN HB_QPlainTextDocumentLayout():from( ... )
-
 FUNCTION QPlainTextDocumentLayoutFromPointer( ... )
    RETURN HB_QPlainTextDocumentLayout():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QTextFrameFormat( ... )
    RETURN HB_QTextFrameFormat():new( ... )
 
-FUNCTION QTextFrameFormatFrom( ... )
-   RETURN HB_QTextFrameFormat():from( ... )
-
 FUNCTION QTextFrameFormatFromPointer( ... )
    RETURN HB_QTextFrameFormat():fromPointer( ... )
 

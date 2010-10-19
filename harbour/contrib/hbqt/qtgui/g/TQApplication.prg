@@ -98,9 +98,6 @@
 FUNCTION QApplication( ... )
    RETURN HB_QApplication():new( ... )
 
-FUNCTION QApplicationFrom( ... )
-   RETURN HB_QApplication():from( ... )
-
 FUNCTION QApplicationFromPointer( ... )
    RETURN HB_QApplication():fromPointer( ... )
 

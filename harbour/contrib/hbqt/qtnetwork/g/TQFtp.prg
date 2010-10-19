@@ -98,9 +98,6 @@
 FUNCTION QFtp( ... )
    RETURN HB_QFtp():new( ... )
 
-FUNCTION QFtpFrom( ... )
-   RETURN HB_QFtp():from( ... )
-
 FUNCTION QFtpFromPointer( ... )
    RETURN HB_QFtp():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QListView( ... )
    RETURN HB_QListView():new( ... )
 
-FUNCTION QListViewFrom( ... )
-   RETURN HB_QListView():from( ... )
-
 FUNCTION QListViewFromPointer( ... )
    RETURN HB_QListView():fromPointer( ... )
 

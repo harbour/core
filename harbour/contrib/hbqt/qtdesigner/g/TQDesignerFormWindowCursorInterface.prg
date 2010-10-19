@@ -98,9 +98,6 @@
 FUNCTION QDesignerFormWindowCursorInterface( ... )
    RETURN HB_QDesignerFormWindowCursorInterface():new( ... )
 
-FUNCTION QDesignerFormWindowCursorInterfaceFrom( ... )
-   RETURN HB_QDesignerFormWindowCursorInterface():from( ... )
-
 FUNCTION QDesignerFormWindowCursorInterfaceFromPointer( ... )
    RETURN HB_QDesignerFormWindowCursorInterface():fromPointer( ... )
 

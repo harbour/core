@@ -98,9 +98,6 @@
 FUNCTION QMetaProperty( ... )
    RETURN HB_QMetaProperty():new( ... )
 
-FUNCTION QMetaPropertyFrom( ... )
-   RETURN HB_QMetaProperty():from( ... )
-
 FUNCTION QMetaPropertyFromPointer( ... )
    RETURN HB_QMetaProperty():fromPointer( ... )
 

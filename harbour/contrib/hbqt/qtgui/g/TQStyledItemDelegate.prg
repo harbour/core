@@ -98,9 +98,6 @@
 FUNCTION QStyledItemDelegate( ... )
    RETURN HB_QStyledItemDelegate():new( ... )
 
-FUNCTION QStyledItemDelegateFrom( ... )
-   RETURN HB_QStyledItemDelegate():from( ... )
-
 FUNCTION QStyledItemDelegateFromPointer( ... )
    RETURN HB_QStyledItemDelegate():fromPointer( ... )
 

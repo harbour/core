@@ -98,9 +98,6 @@
 FUNCTION QGenericArgument( ... )
    RETURN HB_QGenericArgument():new( ... )
 
-FUNCTION QGenericArgumentFrom( ... )
-   RETURN HB_QGenericArgument():from( ... )
-
 FUNCTION QGenericArgumentFromPointer( ... )
    RETURN HB_QGenericArgument():fromPointer( ... )
 

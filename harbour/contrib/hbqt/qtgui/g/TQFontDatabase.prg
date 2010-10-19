@@ -98,9 +98,6 @@
 FUNCTION QFontDatabase( ... )
    RETURN HB_QFontDatabase():new( ... )
 
-FUNCTION QFontDatabaseFrom( ... )
-   RETURN HB_QFontDatabase():from( ... )
-
 FUNCTION QFontDatabaseFromPointer( ... )
    RETURN HB_QFontDatabase():fromPointer( ... )
 

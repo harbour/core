@@ -98,9 +98,6 @@
 FUNCTION QAbstractScrollArea( ... )
    RETURN HB_QAbstractScrollArea():new( ... )
 
-FUNCTION QAbstractScrollAreaFrom( ... )
-   RETURN HB_QAbstractScrollArea():from( ... )
-
 FUNCTION QAbstractScrollAreaFromPointer( ... )
    RETURN HB_QAbstractScrollArea():fromPointer( ... )
 

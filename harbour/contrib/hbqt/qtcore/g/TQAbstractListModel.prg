@@ -98,9 +98,6 @@
 FUNCTION QAbstractListModel( ... )
    RETURN HB_QAbstractListModel():new( ... )
 
-FUNCTION QAbstractListModelFrom( ... )
-   RETURN HB_QAbstractListModel():from( ... )
-
 FUNCTION QAbstractListModelFromPointer( ... )
    RETURN HB_QAbstractListModel():fromPointer( ... )
 

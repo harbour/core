@@ -98,9 +98,6 @@
 FUNCTION QStringListModel( ... )
    RETURN HB_QStringListModel():new( ... )
 
-FUNCTION QStringListModelFrom( ... )
-   RETURN HB_QStringListModel():from( ... )
-
 FUNCTION QStringListModelFromPointer( ... )
    RETURN HB_QStringListModel():fromPointer( ... )
 

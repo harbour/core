@@ -98,9 +98,6 @@
 FUNCTION QThread( ... )
    RETURN HB_QThread():new( ... )
 
-FUNCTION QThreadFrom( ... )
-   RETURN HB_QThread():from( ... )
-
 FUNCTION QThreadFromPointer( ... )
    RETURN HB_QThread():fromPointer( ... )
 

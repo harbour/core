@@ -98,9 +98,6 @@
 FUNCTION QsciStyledText( ... )
    RETURN HB_QsciStyledText():new( ... )
 
-FUNCTION QsciStyledTextFrom( ... )
-   RETURN HB_QsciStyledText():from( ... )
-
 FUNCTION QsciStyledTextFromPointer( ... )
    RETURN HB_QsciStyledText():fromPointer( ... )
 

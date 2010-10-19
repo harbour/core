@@ -98,9 +98,6 @@
 FUNCTION QNetworkRequest( ... )
    RETURN HB_QNetworkRequest():new( ... )
 
-FUNCTION QNetworkRequestFrom( ... )
-   RETURN HB_QNetworkRequest():from( ... )
-
 FUNCTION QNetworkRequestFromPointer( ... )
    RETURN HB_QNetworkRequest():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QDesignerFormEditorInterface( ... )
    RETURN HB_QDesignerFormEditorInterface():new( ... )
 
-FUNCTION QDesignerFormEditorInterfaceFrom( ... )
-   RETURN HB_QDesignerFormEditorInterface():from( ... )
-
 FUNCTION QDesignerFormEditorInterfaceFromPointer( ... )
    RETURN HB_QDesignerFormEditorInterface():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QEventLoop( ... )
    RETURN HB_QEventLoop():new( ... )
 
-FUNCTION QEventLoopFrom( ... )
-   RETURN HB_QEventLoop():from( ... )
-
 FUNCTION QEventLoopFromPointer( ... )
    RETURN HB_QEventLoop():fromPointer( ... )
 

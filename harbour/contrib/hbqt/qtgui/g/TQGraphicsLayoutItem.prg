@@ -98,9 +98,6 @@
 FUNCTION QGraphicsLayoutItem( ... )
    RETURN HB_QGraphicsLayoutItem():new( ... )
 
-FUNCTION QGraphicsLayoutItemFrom( ... )
-   RETURN HB_QGraphicsLayoutItem():from( ... )
-
 FUNCTION QGraphicsLayoutItemFromPointer( ... )
    RETURN HB_QGraphicsLayoutItem():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QDoubleValidator( ... )
    RETURN HB_QDoubleValidator():new( ... )
 
-FUNCTION QDoubleValidatorFrom( ... )
-   RETURN HB_QDoubleValidator():from( ... )
-
 FUNCTION QDoubleValidatorFromPointer( ... )
    RETURN HB_QDoubleValidator():fromPointer( ... )
 

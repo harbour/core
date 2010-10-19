@@ -98,9 +98,6 @@
 FUNCTION QPrinter( ... )
    RETURN HB_QPrinter():new( ... )
 
-FUNCTION QPrinterFrom( ... )
-   RETURN HB_QPrinter():from( ... )
-
 FUNCTION QPrinterFromPointer( ... )
    RETURN HB_QPrinter():fromPointer( ... )
 

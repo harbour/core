@@ -98,9 +98,6 @@
 FUNCTION QTextBlock( ... )
    RETURN HB_QTextBlock():new( ... )
 
-FUNCTION QTextBlockFrom( ... )
-   RETURN HB_QTextBlock():from( ... )
-
 FUNCTION QTextBlockFromPointer( ... )
    RETURN HB_QTextBlock():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QTextStream( ... )
    RETURN HB_QTextStream():new( ... )
 
-FUNCTION QTextStreamFrom( ... )
-   RETURN HB_QTextStream():from( ... )
-
 FUNCTION QTextStreamFromPointer( ... )
    RETURN HB_QTextStream():fromPointer( ... )
 

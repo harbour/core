@@ -98,9 +98,6 @@
 FUNCTION QIODevice( ... )
    RETURN HB_QIODevice():new( ... )
 
-FUNCTION QIODeviceFrom( ... )
-   RETURN HB_QIODevice():from( ... )
-
 FUNCTION QIODeviceFromPointer( ... )
    RETURN HB_QIODevice():fromPointer( ... )
 

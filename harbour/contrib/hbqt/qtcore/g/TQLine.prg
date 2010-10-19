@@ -98,9 +98,6 @@
 FUNCTION QLine( ... )
    RETURN HB_QLine():new( ... )
 
-FUNCTION QLineFrom( ... )
-   RETURN HB_QLine():from( ... )
-
 FUNCTION QLineFromPointer( ... )
    RETURN HB_QLine():fromPointer( ... )
 

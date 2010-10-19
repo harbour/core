@@ -98,9 +98,6 @@
 FUNCTION QAbstractGraphicsShapeItem( ... )
    RETURN HB_QAbstractGraphicsShapeItem():new( ... )
 
-FUNCTION QAbstractGraphicsShapeItemFrom( ... )
-   RETURN HB_QAbstractGraphicsShapeItem():from( ... )
-
 FUNCTION QAbstractGraphicsShapeItemFromPointer( ... )
    RETURN HB_QAbstractGraphicsShapeItem():fromPointer( ... )
 

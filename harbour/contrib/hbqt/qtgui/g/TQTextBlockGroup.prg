@@ -98,9 +98,6 @@
 FUNCTION QTextBlockGroup( ... )
    RETURN HB_QTextBlockGroup():new( ... )
 
-FUNCTION QTextBlockGroupFrom( ... )
-   RETURN HB_QTextBlockGroup():from( ... )
-
 FUNCTION QTextBlockGroupFromPointer( ... )
    RETURN HB_QTextBlockGroup():fromPointer( ... )
 

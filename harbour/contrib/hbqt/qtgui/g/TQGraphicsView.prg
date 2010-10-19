@@ -98,9 +98,6 @@
 FUNCTION QGraphicsView( ... )
    RETURN HB_QGraphicsView():new( ... )
 
-FUNCTION QGraphicsViewFrom( ... )
-   RETURN HB_QGraphicsView():from( ... )
-
 FUNCTION QGraphicsViewFromPointer( ... )
    RETURN HB_QGraphicsView():fromPointer( ... )
 

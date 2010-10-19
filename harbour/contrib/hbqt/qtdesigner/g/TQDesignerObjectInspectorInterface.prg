@@ -98,9 +98,6 @@
 FUNCTION QDesignerObjectInspectorInterface( ... )
    RETURN HB_QDesignerObjectInspectorInterface():new( ... )
 
-FUNCTION QDesignerObjectInspectorInterfaceFrom( ... )
-   RETURN HB_QDesignerObjectInspectorInterface():from( ... )
-
 FUNCTION QDesignerObjectInspectorInterfaceFromPointer( ... )
    RETURN HB_QDesignerObjectInspectorInterface():fromPointer( ... )
 

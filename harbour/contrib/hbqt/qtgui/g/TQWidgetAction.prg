@@ -98,9 +98,6 @@
 FUNCTION QWidgetAction( ... )
    RETURN HB_QWidgetAction():new( ... )
 
-FUNCTION QWidgetActionFrom( ... )
-   RETURN HB_QWidgetAction():from( ... )
-
 FUNCTION QWidgetActionFromPointer( ... )
    RETURN HB_QWidgetAction():fromPointer( ... )
 

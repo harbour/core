@@ -98,9 +98,6 @@
 FUNCTION QTextFrame( ... )
    RETURN HB_QTextFrame():new( ... )
 
-FUNCTION QTextFrameFrom( ... )
-   RETURN HB_QTextFrame():from( ... )
-
 FUNCTION QTextFrameFromPointer( ... )
    RETURN HB_QTextFrame():fromPointer( ... )
 

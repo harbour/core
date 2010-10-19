@@ -98,9 +98,6 @@
 FUNCTION QTimeEdit( ... )
    RETURN HB_QTimeEdit():new( ... )
 
-FUNCTION QTimeEditFrom( ... )
-   RETURN HB_QTimeEdit():from( ... )
-
 FUNCTION QTimeEditFromPointer( ... )
    RETURN HB_QTimeEdit():fromPointer( ... )
 

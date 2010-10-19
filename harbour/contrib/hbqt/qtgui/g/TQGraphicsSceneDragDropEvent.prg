@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSceneDragDropEvent( ... )
    RETURN HB_QGraphicsSceneDragDropEvent():new( ... )
 
-FUNCTION QGraphicsSceneDragDropEventFrom( ... )
-   RETURN HB_QGraphicsSceneDragDropEvent():from( ... )
-
 FUNCTION QGraphicsSceneDragDropEventFromPointer( ... )
    RETURN HB_QGraphicsSceneDragDropEvent():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QHttp( ... )
    RETURN HB_QHttp():new( ... )
 
-FUNCTION QHttpFrom( ... )
-   RETURN HB_QHttp():from( ... )
-
 FUNCTION QHttpFromPointer( ... )
    RETURN HB_QHttp():fromPointer( ... )
 

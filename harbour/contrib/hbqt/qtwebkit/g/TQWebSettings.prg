@@ -98,9 +98,6 @@
 FUNCTION QWebSettings( ... )
    RETURN HB_QWebSettings():new( ... )
 
-FUNCTION QWebSettingsFrom( ... )
-   RETURN HB_QWebSettings():from( ... )
-
 FUNCTION QWebSettingsFromPointer( ... )
    RETURN HB_QWebSettings():fromPointer( ... )
 

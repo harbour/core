@@ -98,9 +98,6 @@
 FUNCTION QTableWidget( ... )
    RETURN HB_QTableWidget():new( ... )
 
-FUNCTION QTableWidgetFrom( ... )
-   RETURN HB_QTableWidget():from( ... )
-
 FUNCTION QTableWidgetFromPointer( ... )
    RETURN HB_QTableWidget():fromPointer( ... )
 

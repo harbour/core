@@ -98,9 +98,6 @@
 FUNCTION QTextLine( ... )
    RETURN HB_QTextLine():new( ... )
 
-FUNCTION QTextLineFrom( ... )
-   RETURN HB_QTextLine():from( ... )
-
 FUNCTION QTextLineFromPointer( ... )
    RETURN HB_QTextLine():fromPointer( ... )
 

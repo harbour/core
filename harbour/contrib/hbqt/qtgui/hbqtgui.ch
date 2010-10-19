@@ -2265,6 +2265,18 @@
 #define QComboBox_AdjustToMinimumContentsLength              2    // Use AdjustToContents or AdjustToContentsOnFirstShow instead.
 #define QComboBox_AdjustToMinimumContentsLengthWithIcon      3    // The combobox will adjust to minimumContentsLength plus space for an icon. For performance reasons use this policy on large models.
 
+#define QDesktopServices_DesktopLocation                     0    // Returns the user's desktop directory.
+#define QDesktopServices_DocumentsLocation                   1    // Returns the user's document.
+#define QDesktopServices_FontsLocation                       2    // Returns the user's fonts.
+#define QDesktopServices_ApplicationsLocation                3    // Returns the user's applications.
+#define QDesktopServices_MusicLocation                       4    // Returns the users music.
+#define QDesktopServices_MoviesLocation                      5    // Returns the user's movies.
+#define QDesktopServices_PicturesLocation                    6    // Returns the user's pictures.
+#define QDesktopServices_TempLocation                        7    // Returns the system's temporary directory.
+#define QDesktopServices_HomeLocation                        8    // Returns the user's home directory.
+#define QDesktopServices_DataLocation                        9    // Returns a directory location where persistent application data can be stored. QCoreApplication::applicationName and QCoreApplication::organizationName should work on all platforms.
+#define QDesktopServices_CacheLocation                       10   // Returns a directory location where user-specific non-essential (cached) data should be written.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/

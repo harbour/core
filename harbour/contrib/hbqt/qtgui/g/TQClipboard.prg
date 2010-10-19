@@ -98,9 +98,6 @@
 FUNCTION QClipboard( ... )
    RETURN HB_QClipboard():new( ... )
 
-FUNCTION QClipboardFrom( ... )
-   RETURN HB_QClipboard():from( ... )
-
 FUNCTION QClipboardFromPointer( ... )
    RETURN HB_QClipboard():fromPointer( ... )
 

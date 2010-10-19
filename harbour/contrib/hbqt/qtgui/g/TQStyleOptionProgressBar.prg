@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionProgressBar( ... )
    RETURN HB_QStyleOptionProgressBar():new( ... )
 
-FUNCTION QStyleOptionProgressBarFrom( ... )
-   RETURN HB_QStyleOptionProgressBar():from( ... )
-
 FUNCTION QStyleOptionProgressBarFromPointer( ... )
    RETURN HB_QStyleOptionProgressBar():fromPointer( ... )
 

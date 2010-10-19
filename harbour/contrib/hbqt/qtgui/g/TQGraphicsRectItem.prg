@@ -98,9 +98,6 @@
 FUNCTION QGraphicsRectItem( ... )
    RETURN HB_QGraphicsRectItem():new( ... )
 
-FUNCTION QGraphicsRectItemFrom( ... )
-   RETURN HB_QGraphicsRectItem():from( ... )
-
 FUNCTION QGraphicsRectItemFromPointer( ... )
    RETURN HB_QGraphicsRectItem():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QSpacerItem( ... )
    RETURN HB_QSpacerItem():new( ... )
 
-FUNCTION QSpacerItemFrom( ... )
-   RETURN HB_QSpacerItem():from( ... )
-
 FUNCTION QSpacerItemFromPointer( ... )
    RETURN HB_QSpacerItem():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QGraphicsProxyWidget( ... )
    RETURN HB_QGraphicsProxyWidget():new( ... )
 
-FUNCTION QGraphicsProxyWidgetFrom( ... )
-   RETURN HB_QGraphicsProxyWidget():from( ... )
-
 FUNCTION QGraphicsProxyWidgetFromPointer( ... )
    RETURN HB_QGraphicsProxyWidget():fromPointer( ... )
 

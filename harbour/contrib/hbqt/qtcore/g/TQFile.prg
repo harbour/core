@@ -98,9 +98,6 @@
 FUNCTION QFile( ... )
    RETURN HB_QFile():new( ... )
 
-FUNCTION QFileFrom( ... )
-   RETURN HB_QFile():from( ... )
-
 FUNCTION QFileFromPointer( ... )
    RETURN HB_QFile():fromPointer( ... )
 

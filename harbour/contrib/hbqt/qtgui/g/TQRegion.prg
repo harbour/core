@@ -98,9 +98,6 @@
 FUNCTION QRegion( ... )
    RETURN HB_QRegion():new( ... )
 
-FUNCTION QRegionFrom( ... )
-   RETURN HB_QRegion():from( ... )
-
 FUNCTION QRegionFromPointer( ... )
    RETURN HB_QRegion():fromPointer( ... )
 

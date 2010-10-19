@@ -98,9 +98,6 @@
 FUNCTION QGraphicsSceneEvent( ... )
    RETURN HB_QGraphicsSceneEvent():new( ... )
 
-FUNCTION QGraphicsSceneEventFrom( ... )
-   RETURN HB_QGraphicsSceneEvent():from( ... )
-
 FUNCTION QGraphicsSceneEventFromPointer( ... )
    RETURN HB_QGraphicsSceneEvent():fromPointer( ... )
 

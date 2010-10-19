@@ -98,9 +98,6 @@
 FUNCTION QAbstractItemDelegate( ... )
    RETURN HB_QAbstractItemDelegate():new( ... )
 
-FUNCTION QAbstractItemDelegateFrom( ... )
-   RETURN HB_QAbstractItemDelegate():from( ... )
-
 FUNCTION QAbstractItemDelegateFromPointer( ... )
    RETURN HB_QAbstractItemDelegate():fromPointer( ... )
 

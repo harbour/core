@@ -98,9 +98,6 @@
 FUNCTION QMetaType( ... )
    RETURN HB_QMetaType():new( ... )
 
-FUNCTION QMetaTypeFrom( ... )
-   RETURN HB_QMetaType():from( ... )
-
 FUNCTION QMetaTypeFromPointer( ... )
    RETURN HB_QMetaType():fromPointer( ... )
 

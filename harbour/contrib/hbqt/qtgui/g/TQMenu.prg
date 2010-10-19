@@ -98,9 +98,6 @@
 FUNCTION QMenu( ... )
    RETURN HB_QMenu():new( ... )
 
-FUNCTION QMenuFrom( ... )
-   RETURN HB_QMenu():from( ... )
-
 FUNCTION QMenuFromPointer( ... )
    RETURN HB_QMenu():fromPointer( ... )
 

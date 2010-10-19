@@ -98,9 +98,6 @@
 FUNCTION QPaintDevice( ... )
    RETURN HB_QPaintDevice():new( ... )
 
-FUNCTION QPaintDeviceFrom( ... )
-   RETURN HB_QPaintDevice():from( ... )
-
 FUNCTION QPaintDeviceFromPointer( ... )
    RETURN HB_QPaintDevice():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QDragMoveEvent( ... )
    RETURN HB_QDragMoveEvent():new( ... )
 
-FUNCTION QDragMoveEventFrom( ... )
-   RETURN HB_QDragMoveEvent():from( ... )
-
 FUNCTION QDragMoveEventFromPointer( ... )
    RETURN HB_QDragMoveEvent():fromPointer( ... )
 

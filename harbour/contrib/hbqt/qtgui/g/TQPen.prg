@@ -98,9 +98,6 @@
 FUNCTION QPen( ... )
    RETURN HB_QPen():new( ... )
 
-FUNCTION QPenFrom( ... )
-   RETURN HB_QPen():from( ... )
-
 FUNCTION QPenFromPointer( ... )
    RETURN HB_QPen():fromPointer( ... )
 

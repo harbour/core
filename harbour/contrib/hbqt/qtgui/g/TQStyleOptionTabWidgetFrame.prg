@@ -98,9 +98,6 @@
 FUNCTION QStyleOptionTabWidgetFrame( ... )
    RETURN HB_QStyleOptionTabWidgetFrame():new( ... )
 
-FUNCTION QStyleOptionTabWidgetFrameFrom( ... )
-   RETURN HB_QStyleOptionTabWidgetFrame():from( ... )
-
 FUNCTION QStyleOptionTabWidgetFrameFromPointer( ... )
    RETURN HB_QStyleOptionTabWidgetFrame():fromPointer( ... )
 

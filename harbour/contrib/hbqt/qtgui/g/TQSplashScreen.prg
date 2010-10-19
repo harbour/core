@@ -98,9 +98,6 @@
 FUNCTION QSplashScreen( ... )
    RETURN HB_QSplashScreen():new( ... )
 
-FUNCTION QSplashScreenFrom( ... )
-   RETURN HB_QSplashScreen():from( ... )
-
 FUNCTION QSplashScreenFromPointer( ... )
    RETURN HB_QSplashScreen():fromPointer( ... )
 

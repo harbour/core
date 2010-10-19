@@ -98,9 +98,6 @@
 FUNCTION HBQSyntaxHighlighter( ... )
    RETURN HB_HBQSyntaxHighlighter():new( ... )
 
-FUNCTION HBQSyntaxHighlighterFrom( ... )
-   RETURN HB_HBQSyntaxHighlighter():from( ... )
-
 FUNCTION HBQSyntaxHighlighterFromPointer( ... )
    RETURN HB_HBQSyntaxHighlighter():fromPointer( ... )
 

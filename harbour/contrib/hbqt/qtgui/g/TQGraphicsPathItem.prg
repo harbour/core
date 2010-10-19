@@ -98,9 +98,6 @@
 FUNCTION QGraphicsPathItem( ... )
    RETURN HB_QGraphicsPathItem():new( ... )
 
-FUNCTION QGraphicsPathItemFrom( ... )
-   RETURN HB_QGraphicsPathItem():from( ... )
-
 FUNCTION QGraphicsPathItemFromPointer( ... )
    RETURN HB_QGraphicsPathItem():fromPointer( ... )
 

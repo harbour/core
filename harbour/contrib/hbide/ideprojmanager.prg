@@ -1614,6 +1614,9 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ELSE
       cTargetFN := cExe
    ENDIF
+   IF empty( cTargetFN )
+      cTargetFN := ""
+   ENDIF
    cTargetFN := hbide_pathToOSPath( cTargetFN )
 
    IF ! hb_FileExists( cTargetFN )

@@ -98,9 +98,6 @@
 FUNCTION QPushButton( ... )
    RETURN HB_QPushButton():new( ... )
 
-FUNCTION QPushButtonFrom( ... )
-   RETURN HB_QPushButton():from( ... )
-
 FUNCTION QPushButtonFromPointer( ... )
    RETURN HB_QPushButton():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QInputDialog( ... )
    RETURN HB_QInputDialog():new( ... )
 
-FUNCTION QInputDialogFrom( ... )
-   RETURN HB_QInputDialog():from( ... )
-
 FUNCTION QInputDialogFromPointer( ... )
    RETURN HB_QInputDialog():fromPointer( ... )
 

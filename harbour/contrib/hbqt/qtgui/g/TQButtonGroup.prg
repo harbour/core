@@ -98,9 +98,6 @@
 FUNCTION QButtonGroup( ... )
    RETURN HB_QButtonGroup():new( ... )
 
-FUNCTION QButtonGroupFrom( ... )
-   RETURN HB_QButtonGroup():from( ... )
-
 FUNCTION QButtonGroupFromPointer( ... )
    RETURN HB_QButtonGroup():fromPointer( ... )
 

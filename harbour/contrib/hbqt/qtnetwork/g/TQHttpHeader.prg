@@ -98,9 +98,6 @@
 FUNCTION QHttpHeader( ... )
    RETURN HB_QHttpHeader():new( ... )
 
-FUNCTION QHttpHeaderFrom( ... )
-   RETURN HB_QHttpHeader():from( ... )
-
 FUNCTION QHttpHeaderFromPointer( ... )
    RETURN HB_QHttpHeader():fromPointer( ... )
 

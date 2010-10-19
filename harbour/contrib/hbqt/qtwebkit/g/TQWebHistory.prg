@@ -98,9 +98,6 @@
 FUNCTION QWebHistory( ... )
    RETURN HB_QWebHistory():new( ... )
 
-FUNCTION QWebHistoryFrom( ... )
-   RETURN HB_QWebHistory():from( ... )
-
 FUNCTION QWebHistoryFromPointer( ... )
    RETURN HB_QWebHistory():fromPointer( ... )
 

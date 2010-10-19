@@ -98,9 +98,6 @@
 FUNCTION QDragEnterEvent( ... )
    RETURN HB_QDragEnterEvent():new( ... )
 
-FUNCTION QDragEnterEventFrom( ... )
-   RETURN HB_QDragEnterEvent():from( ... )
-
 FUNCTION QDragEnterEventFromPointer( ... )
    RETURN HB_QDragEnterEvent():fromPointer( ... )
 

@@ -98,9 +98,6 @@
 FUNCTION QByteArray( ... )
    RETURN HB_QByteArray():new( ... )
 
-FUNCTION QByteArrayFrom( ... )
-   RETURN HB_QByteArray():from( ... )
-
 FUNCTION QByteArrayFromPointer( ... )
    RETURN HB_QByteArray():fromPointer( ... )
 

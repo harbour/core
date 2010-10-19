@@ -98,9 +98,6 @@
 FUNCTION QResource( ... )
    RETURN HB_QResource():new( ... )
 
-FUNCTION QResourceFrom( ... )
-   RETURN HB_QResource():from( ... )
-
 FUNCTION QResourceFromPointer( ... )
    RETURN HB_QResource():fromPointer( ... )
 

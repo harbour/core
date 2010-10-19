@@ -98,9 +98,6 @@
 FUNCTION QAbstractProxyModel( ... )
    RETURN HB_QAbstractProxyModel():new( ... )
 
-FUNCTION QAbstractProxyModelFrom( ... )
-   RETURN HB_QAbstractProxyModel():from( ... )
-
 FUNCTION QAbstractProxyModelFromPointer( ... )
    RETURN HB_QAbstractProxyModel():fromPointer( ... )
 

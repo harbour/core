@@ -98,9 +98,6 @@
 FUNCTION QFontDialog( ... )
    RETURN HB_QFontDialog():new( ... )
 
-FUNCTION QFontDialogFrom( ... )
-   RETURN HB_QFontDialog():from( ... )
-
 FUNCTION QFontDialogFromPointer( ... )
    RETURN HB_QFontDialog():fromPointer( ... )
 
