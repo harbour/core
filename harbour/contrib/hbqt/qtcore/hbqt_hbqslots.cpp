@@ -1454,13 +1454,13 @@ static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
 static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments )
 {
    #ifdef __hb_vmEvalBlockV__
-   PHB_ITEM p1 = hb_itemPutL( NULL, ( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) ) );
+   PHB_ITEM p1 = hb_itemPutL( NULL, ( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) ) );
    hb_vmEvalBlockV( codeBlock, 1, p1 );
    hb_itemRelease( p1 );
    #else
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushLogical( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+   hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) );
    hb_vmSend( 1 );
    #endif
 }

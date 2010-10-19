@@ -443,11 +443,7 @@ METHOD IdeDocks:buildSystemTray()
 
 METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
-#if 0
-IF "visibility" $ cEvent
-HB_TRACE( HB_TR_ALWAYS, cEvent, p, p1:isVisible() )
-ENDIF
-#endif
+
    SWITCH cEvent
    CASE "dockReportsManager_visibilityChanged"
       IF ! p .AND. ! p1:isVisible()
