@@ -281,6 +281,7 @@ FUNCTION hb_ZipFile( cFileName,;
    LOCAL nRead
    LOCAL cName, cExt, cDrive, cPath
    LOCAL nSize
+   LOCAL tTime
 
    LOCAL aExclFile
    LOCAL aProcFile
@@ -368,9 +369,11 @@ FUNCTION hb_ZipFile( cFileName,;
             nRead := 0
             nSize := hb_FSize( cFileToZip )
 
+            hb_FGetDateTime( cFileToZip, @tTime )
+
             hb_FNameSplit( cFileToZip, @cPath, @cName, @cExt, @cDrive )
             hb_ZipFileCreate( hZip, hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt, iif( lWithDrive, cDrive, NIL ) ),;
-                NIL, NIL, NIL, NIL, NIL, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_ZipFileCRC32( cFileToZip ) ), NIL )
+                tTime, NIL, NIL, NIL, NIL, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_ZipFileCRC32( cFileToZip ) ), NIL )
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, Len( cBuffer ) ) ) > 0
 

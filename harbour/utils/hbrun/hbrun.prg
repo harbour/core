@@ -565,7 +565,7 @@ STATIC FUNCTION win_reg( lRegister, lAllUser )
    LOCAL cFileName
    LOCAL fhnd := hb_FTempCreateEx( @cFileName )
 
-   IF fhnd != -1 /* F_ERROR */
+   IF fhnd != F_ERROR
       FWrite( fhnd, win_reg_file( lRegister, lAllUser ) )
       FClose( fhnd )
       /* The regedit version I tested (win7) didn't return an errorlevel on error. [vszakats] */
