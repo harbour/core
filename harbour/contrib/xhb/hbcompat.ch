@@ -99,6 +99,7 @@
    #xtranslate hb_UserName()               => NetName(1)
    #xtranslate hb_FSize(<x>)               => FileSize(<x>)
    #xtranslate hb_WildMatch([<x,...>])     => WildMatch(<x>)
+   #xtranslate hb_bitTest([<x,...>])       => hb_bitIsSet(<x>)
    #xtranslate hb_Deserialize(<x>)         => hb_DeserialNext(<x>)
 
    #xtranslate hb_HexToNum([<c,...>])      => HexToNum(<c>)
@@ -361,6 +362,7 @@
    #xtranslate ValToPrgExp([<x,...>])          => hb_valToExp(<x>)
    #xtranslate SecondsSleep([<x,...>])         => hb_idleSleep(<x>)
    #xtranslate WildMatch([<x,...>])            => hb_WildMatch(<x>)
+   #xtranslate hb_bitIsSet([<x,...>])          => hb_bitTest(<x>)
    #xtranslate hb_DeserialNext(<x>)            => hb_Deserialize(<x>)
    #xtranslate hb_funcptr(<x>)                 => __dynsn2sym(<x>)
 
