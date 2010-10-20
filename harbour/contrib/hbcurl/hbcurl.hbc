@@ -8,8 +8,7 @@ incpaths=.
 {HB_STATIC_CURL}libs=${hb_name}s${__HB_DYN__}
 
 {!allwin}libs=curl
-{ allwin&!HB_STATIC_CURL&!allmingw}libs=libcurl
-{ allwin&!HB_STATIC_CURL& allmingw}libs=curldll
+{ allwin&!HB_STATIC_CURL}libs=libcurl
 { allwin& HB_STATIC_CURL&!allmingw}libs=libcurl libssh2
 { allwin& HB_STATIC_CURL& allmingw}libs=curl ssh2
 

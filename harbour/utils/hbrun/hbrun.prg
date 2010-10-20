@@ -119,7 +119,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             IF win_reg( .T., Right( Lower( cFile ), 1 ) == "a" )
                OutStd( "hbrun: Harbour Script File registered" + hb_eol() )
             ELSE
-               OutErr( "hbrun: Error registering Harbour Script File" + hb_eol() )
+               OutErr( "hbrun: Error: Registering Harbour Script File" + hb_eol() )
             ENDIF
             EXIT
          CASE "-u"
@@ -129,7 +129,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             IF win_reg( .F., Right( Lower( cFile ), 1 ) == "a" )
                OutStd( "hbrun: Harbour Script File unregistered" + hb_eol() )
             ELSE
-               OutErr( "hbrun: Error unregistering Harbour Script File" + hb_eol() )
+               OutErr( "hbrun: Error: Unregistering Harbour Script File" + hb_eol() )
             ENDIF
             EXIT
 #endif
