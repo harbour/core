@@ -605,7 +605,7 @@ STATIC FUNCTION win_reg_file( lRegister, lAllUser, cAppPath )
       '@="Harbour Script File"' + hb_eol() +;
       hb_eol() +;
       '[' + cHive + '\HBSFile\DefaultIcon]' + hb_eol() +;
-      '@="' + StrTran( cAppPath, "\", "\\" ) + ',1"' + hb_eol() +;
+      '@="' + StrTran( cAppPath, "\", "\\" ) + ',-1"' + hb_eol() +;
       hb_eol() +;
       '[' + cHive + '\HBSFile\Shell]' + hb_eol() +;
       '@="Run"' + hb_eol() +;
