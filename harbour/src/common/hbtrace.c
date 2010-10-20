@@ -80,8 +80,8 @@
 
 static int s_enabled = 1;
 static int s_level   = -1;
-static int s_flush   = 0;
-static int s_sysout  = 0;
+static int s_flush   = -1;
+static int s_sysout  = -1;
 
 static FILE * s_fp = NULL;
 
@@ -137,7 +137,7 @@ HB_BOOL hb_tracefile( const char * szFile )
 
 int hb_traceflush( int new_flush )
 {
-   int old_flush = s_flush;
+   int old_flush = HB_MAX( s_flush, 0 );
 
    if( new_flush == 0 ||
        new_flush == 1 )
@@ -148,7 +148,7 @@ int hb_traceflush( int new_flush )
 
 int hb_tracesysout( int new_sysout )
 {
-   int old_sysout = s_sysout;
+   int old_sysout = HB_MAX( s_sysout, 0 );
 
    if( new_sysout == 0 ||
        new_sysout == 1 )
@@ -167,19 +167,22 @@ int hb_tr_level( void )
 
       /* ; */
 
-      env = hb_getenv( "HB_TR_OUTPUT" );
-      if( env != NULL && env[ 0 ] != '\0' )
+      if( s_fp == NULL )
       {
-         s_fp = hb_fopen( env, "w" );
+         env = hb_getenv( "HB_TR_OUTPUT" );
+         if( env != NULL && env[ 0 ] != '\0' )
+         {
+            s_fp = hb_fopen( env, "w" );
 
-         if( s_fp == NULL )
+            if( s_fp == NULL )
+               s_fp = stderr;
+         }
+         else
             s_fp = stderr;
-      }
-      else
-         s_fp = stderr;
 
-      if( env )
-         hb_xfree( env );
+         if( env )
+            hb_xfree( env );
+      }
 
       /* ; */
 
@@ -204,25 +207,31 @@ int hb_tr_level( void )
 
       /* ; */
 
-      env = hb_getenv( "HB_TR_SYSOUT" );
-      if( env != NULL && env[ 0 ] != '\0' )
-         s_sysout = 1;
-      else
-         s_sysout = 0;
+      if( s_sysout < 0 )
+      {
+         env = hb_getenv( "HB_TR_SYSOUT" );
+         if( env != NULL && env[ 0 ] != '\0' )
+            s_sysout = 1;
+         else
+            s_sysout = 0;
 
-      if( env )
-         hb_xfree( env );
+         if( env )
+            hb_xfree( env );
+      }
 
       /* ; */
 
-      env = hb_getenv( "HB_TR_FLUSH" );
-      if( env != NULL && env[ 0 ] != '\0' )
-         s_flush = 1;
-      else
-         s_flush = 0;
+      if( s_flush < 0 )
+      {
+         env = hb_getenv( "HB_TR_FLUSH" );
+         if( env != NULL && env[ 0 ] != '\0' )
+            s_flush = 1;
+         else
+            s_flush = 0;
 
-      if( env )
-         hb_xfree( env );
+         if( env )
+            hb_xfree( env );
+      }
    }
 
    return s_level;
@@ -253,7 +262,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    pszLevel = ( level >= HB_TR_ALWAYS && level <= HB_TR_LAST ) ?
               s_slevel[ level ] : "(\?\?\?)";
 
-   if( s_sysout )
+   if( s_sysout > 0 )
    {
 #if ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) || \
     ( defined( HB_OS_UNIX ) && \
@@ -342,7 +351,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
     */
    fprintf( s_fp, "\n" );
 
-   if( s_flush )
+   if( s_flush > 0 )
       fflush( s_fp );
 }
 
