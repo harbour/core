@@ -15,6 +15,7 @@
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/opt/local/include/mysql5/mysql
 -depimplibs=mysql:../lib/opt/libmySQL.dll
+-depimplibs=mysql:../lib/libmySQL.dll
 
 -instfile=inc:mysql.ch
 
