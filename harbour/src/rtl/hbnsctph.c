@@ -220,7 +220,7 @@ HB_FUNC( HB_NSCTPDESTROY )
 {
    PHB_NSCTP_GC pGC;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -237,7 +237,7 @@ HB_FUNC( HB_NSCTPERROR )
 {
    PHB_NSCTP_GC pGC;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -251,7 +251,7 @@ HB_FUNC( HB_NSCTPSETLIMIT )
 {
    PHB_NSCTP_GC pGC;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -266,7 +266,7 @@ HB_FUNC( HB_NSCTPSEND )
    PHB_NSCTP_GC pGC;
    PHB_ITEM pData;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket || hb_socketItemGet( pGC->pItemSocket ) == HB_NO_SOCKET )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -286,7 +286,7 @@ HB_FUNC( HB_NSCTPRECV )
    void * data;
    HB_SIZE len;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket || hb_socketItemGet( pGC->pItemSocket ) == HB_NO_SOCKET )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -294,9 +294,11 @@ HB_FUNC( HB_NSCTPRECV )
    }
 
    bRet = hb_nsctpRecv( pGC->pSocket, &data, &len, hb_parnintdef( 3, -1 ) );
-   if( bRet && HB_ISBYREF( 2 ) )
+   if( bRet )
    {
-      hb_storclen_buffer( data, len, 2 );
+      if( HB_ISBYREF( 2 ) )
+         hb_storclen( ( char * ) data, len, 2 );
+      hb_xfree( data );
    }
    hb_retl( bRet );
 }
@@ -306,7 +308,7 @@ HB_FUNC( HB_NSCTPSENDLEN )
 {
    PHB_NSCTP_GC pGC;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -321,7 +323,7 @@ HB_FUNC( HB_NSCTPRECVLEN )
 {
    PHB_NSCTP_GC pGC;
 
-   pGC = hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
