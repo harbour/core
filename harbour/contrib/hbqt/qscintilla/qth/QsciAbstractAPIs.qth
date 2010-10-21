@@ -60,6 +60,7 @@ Inherits =
 Type     =
 New      =
 Folder   = hbqscintilla
+Constructor = no
 </CLASS>
 
 <SUBCLASS>

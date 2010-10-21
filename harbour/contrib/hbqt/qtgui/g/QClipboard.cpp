@@ -169,7 +169,7 @@ HB_FUNC( QT_QCLIPBOARD )
 
    pObj = QApplication::clipboard() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QClipboard( ( void * ) pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QClipboard( ( void * ) pObj, false ) );
 }
 
 /*

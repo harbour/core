@@ -56,6 +56,7 @@
 <CLASS>
 Inherit  = QCoreApplication
 New      =
+Constructor = no
 </CLASS>
 
 

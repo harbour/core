@@ -60,6 +60,7 @@ Inherits = QObject
 Type     =
 New      =
 folder   = hbqtdesigner
+Constructor = no
 </CLASS>
 
 <SUBCLASS>

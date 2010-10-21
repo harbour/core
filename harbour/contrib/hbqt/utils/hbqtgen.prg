@@ -473,6 +473,7 @@ CLASS HbQtSource
    DATA   isDestructor                            INIT .t.
    DATA   isConstructor                           INIT .f.
    DATA   isObject                                INIT .t.
+   DATA   isDetached                              INIT .f.
    DATA   areMethodsClubbed                       INIT .t.
 
    DATA   class_                                  INIT {}
@@ -620,18 +621,22 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
    aeval( ::slots_, {|e| aadd( ::protos_, e ) } )
 
    ::isList            := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "list"        .AND. lower( e_[ 2 ] ) == "yes" } ) > 0
+   ::isDetached        := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "detached"    .AND. lower( e_[ 2 ] ) == "yes" } ) > 0
+   ::isConstructor     := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "constructor" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
    ::isDestructor      := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "destructor"  .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
    ::isObject          := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "qobject"     .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
    ::areMethodsClubbed := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "clubmethods" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
-   FOR i := 3 TO len( ::new_ ) - 1
-      IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
-         IF "__HB_RETPTRGC__(" $ ::new_[ i ]
-            ::isConstructor := .t.
-            EXIT
+   IF ! ::isConstructor
+      FOR i := 3 TO len( ::new_ ) - 1
+         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+            IF "__HB_RETPTRGC__(" $ ::new_[ i ]
+               ::isConstructor := .t.
+               EXIT
+            ENDIF
          ENDIF
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 
    FOR EACH s IN ::protos_
       cOrg := s
@@ -888,7 +893,7 @@ METHOD HbQtSource:build()
          ENDIF
       NEXT
       aadd( ::cpp_, " " )
-      aadd( ::cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + ::cWidget + "( ( void * ) pObj, true ) );" )
+      aadd( ::cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + ::cWidget + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ) );" )
    ELSE
       FOR i := 3 TO len( ::new_ ) - 1
           aadd( ::cpp_, ::new_[ i ] )

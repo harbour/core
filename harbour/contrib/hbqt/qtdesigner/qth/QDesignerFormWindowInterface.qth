@@ -60,6 +60,7 @@ Inherits = QWidget
 Type     =
 New      =
 folder   = hbqtdesigner
+Constructor = no
 </CLASS>
 
 <SUBCLASS>

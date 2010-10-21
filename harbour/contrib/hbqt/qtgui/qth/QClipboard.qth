@@ -59,6 +59,7 @@ Inherits = QObject
 Type     = Core
 New      =
 Destructor = no
+Detached = yes
 </CLASS>
 
 <CODE>
@@ -73,7 +74,8 @@ Destructor = no
  */
 HB_FUNC( QT_QCLIPBOARD )
 {
-   __HB_RETPTRGC__( QApplication::clipboard() );
+   //__HB_RETPTRGC__( QApplication::clipboard() );
+   pObj = QApplication::clipboard() ;
 }
 </CODE>
 
