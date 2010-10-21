@@ -95,12 +95,12 @@ int hb_nsctpError( PHB_NSCTP pSocket )
 
 HB_BOOL hb_nsctpSend( PHB_NSCTP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout )
 {
-   HB_MAXINT  nTime;
+   HB_MAXINT  nTime = 0;
    long       lSend;
 
    if( ! pSocket->pSendBuffer )
    {
-      pSocket->pSendBuffer = hb_xgrab( len + 4 );
+      pSocket->pSendBuffer = ( char * ) hb_xgrab( len + 4 );
       HB_PUT_LE_UINT32( pSocket->pSendBuffer, len );
       hb_xmemcpy( pSocket->pSendBuffer + 4, data, len );
       pSocket->nSendLen = len + 4;
@@ -143,12 +143,12 @@ HB_BOOL hb_nsctpSend( PHB_NSCTP pSocket, const void * data, HB_SIZE len, HB_MAXI
 
 HB_BOOL hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout )
 {
-   HB_MAXINT  nTime;
+   HB_MAXINT  nTime = 0;
    long       lRecv;
 
    if( ! pSocket->pRecvBuffer )
    {
-      pSocket->pRecvBuffer = hb_xgrab( 4 );
+      pSocket->pRecvBuffer = ( char * ) hb_xgrab( 4 );
       pSocket->nRecvLen = 0;
       pSocket->fRecvHasSize = HB_FALSE;
    }
@@ -195,7 +195,7 @@ HB_BOOL hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT 
          pSocket->nRecvLen = 0;
          pSocket->fRecvHasSize = HB_TRUE;
          if( pSocket->nRecvSize != 4 )
-            pSocket->pRecvBuffer = hb_xrealloc( pSocket->pRecvBuffer, pSocket->nRecvSize );
+            pSocket->pRecvBuffer = ( char * ) hb_xrealloc( pSocket->pRecvBuffer, pSocket->nRecvSize );
       }
       
       if( pSocket->nRecvSize - pSocket->nRecvLen < ( HB_SIZE ) LONG_MAX )
