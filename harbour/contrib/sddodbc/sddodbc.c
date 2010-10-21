@@ -446,6 +446,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
            break;
 
          case SQL_DECIMAL:
+         case SQL_NUMERIC:
            pFieldInfo.uiType = HB_FT_LONG;
            break;
 
