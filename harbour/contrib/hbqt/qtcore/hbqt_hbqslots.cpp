@@ -1907,7 +1907,8 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
                          "QPoint" <<
                          "QRectF" <<
                          "QTime" <<
-                         "QUrl" ;
+                         "QUrl" <<
+                         "QModelIndex$QModelIndex" ;
    }
 
    const QMetaMethod meta = object->metaObject()->method( id );
@@ -2031,6 +2032,9 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
                break;
             case 22:   // if( paramString == "QUrl" )
                hbqt_SlotsExecQUrl( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
+               break;
+            case 23:   // if( paramString == "QModel$QModel" )
+               hbqt_SlotsExecModelModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
                break;
             }
          }

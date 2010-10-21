@@ -11,9 +11,7 @@
  */
 
 #include "hbqtgui.ch"
-
 #include "hbtrace.ch"
-
 #include "common.ch"
 
 STATIC qApp
@@ -108,16 +106,16 @@ STATIC PROCEDURE my_save( pWidget, nArea, aStru, nCX, nCY )
    SWITCH aStru[ nCX + 1, 2 ]
    CASE "C"
       FieldPut( nCX + 1, AllTrim( cData ) )
-      BREAK
+      EXIT
    CASE "N"
       FieldPut( nCX + 1, Val( cData ) )
-      BREAK
+      EXIT
    CASE "L"
       FieldPut( nCX + 1, Left( cData, 1 ) $ "YyTt" )
-      BREAK
+      EXIT
    CASE "D"
       FieldPut( nCX + 1, CToD( cData ) )
-      BREAK
+      EXIT
    ENDSWITCH
    RETURN
 
