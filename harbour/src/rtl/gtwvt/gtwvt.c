@@ -148,7 +148,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 
    if( ! RegisterClass( &wndclass ) )
    {
-      if( GetLastError() != 1410 )
+      if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
          hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
    }
 }
@@ -1882,7 +1882,10 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
-      hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
+   {
+      hInstance = GetModuleHandle( NULL );
+      iCmdShow = 1;
+   }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
    if( !pWVT )
