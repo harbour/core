@@ -773,7 +773,7 @@ HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON_1 )
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->toFillPolygon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->toFillPolygon( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
    }
 }
 
@@ -797,7 +797,7 @@ HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGONS_1 )
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
    }
 }
 
@@ -833,7 +833,7 @@ HB_FUNC( QT_QPAINTERPATH_TOSUBPATHPOLYGONS_1 )
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
    }
 }
 

@@ -195,7 +195,7 @@ HB_FUNC( QT_QNETWORKREQUEST_ATTRIBUTE )
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
    }
 }
 

@@ -326,7 +326,7 @@ HB_FUNC( QT_QIMAGE_COPY )
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
    }
 }
 

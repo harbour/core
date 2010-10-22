@@ -241,7 +241,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDELLIPSE )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsEllipseItem( ( p )->addEllipse( *hbqt_par_QRectF( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsEllipseItem( ( p )->addEllipse( *hbqt_par_QRectF( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -253,7 +253,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDELLIPSE_1 )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsEllipseItem( ( p )->addEllipse( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISPOINTER( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ), ( HB_ISPOINTER( 7 ) ? *hbqt_par_QBrush( 7 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsEllipseItem( ( p )->addEllipse( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISOBJECT( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ), ( HB_ISOBJECT( 7 ) ? *hbqt_par_QBrush( 7 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -278,7 +278,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDLINE )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsLineItem( ( p )->addLine( *hbqt_par_QLineF( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsLineItem( ( p )->addLine( *hbqt_par_QLineF( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ) ), false ) );
    }
 }
 
@@ -290,7 +290,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDLINE_1 )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsLineItem( ( p )->addLine( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISPOINTER( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsLineItem( ( p )->addLine( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISOBJECT( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ) ), false ) );
    }
 }
 
@@ -302,7 +302,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDPATH )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsPathItem( ( p )->addPath( *hbqt_par_QPainterPath( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsPathItem( ( p )->addPath( *hbqt_par_QPainterPath( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -326,7 +326,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDPOLYGON )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsPolygonItem( ( p )->addPolygon( *hbqt_par_QPolygonF( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsPolygonItem( ( p )->addPolygon( *hbqt_par_QPolygonF( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -338,7 +338,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDRECT )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsRectItem( ( p )->addRect( *hbqt_par_QRectF( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsRectItem( ( p )->addRect( *hbqt_par_QRectF( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QPen( 3 ) : QPen() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QBrush( 4 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -350,7 +350,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDRECT_1 )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsRectItem( ( p )->addRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISPOINTER( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ), ( HB_ISPOINTER( 7 ) ? *hbqt_par_QBrush( 7 ) : QBrush() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsRectItem( ( p )->addRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISOBJECT( 6 ) ? *hbqt_par_QPen( 6 ) : QPen() ), ( HB_ISOBJECT( 7 ) ? *hbqt_par_QBrush( 7 ) : QBrush() ) ), false ) );
    }
 }
 
@@ -363,7 +363,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDSIMPLETEXT )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsSimpleTextItem( ( p )->addSimpleText( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QFont( 3 ) : QFont() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsSimpleTextItem( ( p )->addSimpleText( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QFont( 3 ) : QFont() ) ), false ) );
       hb_strfree( pText );
    }
 }
@@ -377,7 +377,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDTEXT )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsTextItem( ( p )->addText( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QFont( 3 ) : QFont() ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsTextItem( ( p )->addText( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QFont( 3 ) : QFont() ) ), false ) );
       hb_strfree( pText );
    }
 }
@@ -702,7 +702,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_RENDER )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRectF( 4 ) : QRectF() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
+      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QRectF( 4 ) : QRectF() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
    }
 }
 
@@ -1038,7 +1038,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_INVALIDATE_1 )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      ( p )->invalidate( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
+      ( p )->invalidate( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
    }
 }
 
@@ -1050,7 +1050,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_UPDATE_1 )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      ( p )->update( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ) );
+      ( p )->update( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ) );
    }
 }
 

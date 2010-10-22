@@ -200,7 +200,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_COLUMNCOUNT )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retni( ( p )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+      hb_retni( ( p )->columnCount( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
    }
 }
 
@@ -260,7 +260,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASCHILDREN )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->hasChildren( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
    }
 }
 
@@ -272,7 +272,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASINDEX )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->hasIndex( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->hasIndex( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -296,7 +296,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
    }
 }
 
@@ -308,7 +308,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMN )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 
@@ -320,7 +320,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMNS )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -332,7 +332,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROW )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 
@@ -344,7 +344,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROWS )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -380,7 +380,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMN )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->removeColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->removeColumn( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 
@@ -392,7 +392,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMNS )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->removeColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->removeColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -404,7 +404,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROW )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->removeRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->removeRow( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 
@@ -416,7 +416,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROWS )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -428,7 +428,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_ROWCOUNT )
    QAbstractItemModel * p = hbqt_par_QAbstractItemModel( 1 );
    if( p )
    {
-      hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+      hb_retni( ( p )->rowCount( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
    }
 }
 

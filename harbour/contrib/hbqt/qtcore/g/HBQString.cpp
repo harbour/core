@@ -320,7 +320,7 @@ HB_FUNC( QT_HBQSTRING_ARG )
    if( p )
    {
       void * pText;
-      hb_retstr_utf8( ( p )->arg( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
       hb_strfree( pText );
    }
 }
@@ -445,7 +445,7 @@ HB_FUNC( QT_HBQSTRING_ARG_9 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -457,7 +457,7 @@ HB_FUNC( QT_HBQSTRING_ARG_10 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -469,7 +469,7 @@ HB_FUNC( QT_HBQSTRING_ARG_11 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( ( long ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( ( long ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -481,7 +481,7 @@ HB_FUNC( QT_HBQSTRING_ARG_12 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( ( ulong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( ( ulong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -493,7 +493,7 @@ HB_FUNC( QT_HBQSTRING_ARG_13 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( ( qlonglong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( ( qlonglong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -505,7 +505,7 @@ HB_FUNC( QT_HBQSTRING_ARG_14 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( ( qulonglong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( ( qulonglong ) hb_parnint( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -517,7 +517,7 @@ HB_FUNC( QT_HBQSTRING_ARG_15 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -529,7 +529,7 @@ HB_FUNC( QT_HBQSTRING_ARG_16 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 10 ), ( HB_ISOBJECT( 5 ) ? *hbqt_par_QChar( 5 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -541,7 +541,7 @@ HB_FUNC( QT_HBQSTRING_ARG_17 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( *hbqt_par_QChar( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( *hbqt_par_QChar( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -553,7 +553,7 @@ HB_FUNC( QT_HBQSTRING_ARG_18 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( ( char ) hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( ( char ) hb_parni( 2 ), hb_parni( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QChar( 4 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 
@@ -565,7 +565,7 @@ HB_FUNC( QT_HBQSTRING_ARG_19 )
    HBQString * p = hbqt_par_HBQString( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->arg( hb_parnd( 2 ), hb_parni( 3 ), ( char ) hb_parni( 4 ), hb_parnidef( 5, -1 ), ( HB_ISPOINTER( 6 ) ? *hbqt_par_QChar( 6 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->arg( hb_parnd( 2 ), hb_parni( 3 ), ( char ) hb_parni( 4 ), hb_parnidef( 5, -1 ), ( HB_ISOBJECT( 6 ) ? *hbqt_par_QChar( 6 ) : QLatin1Char( ' ' ) ) ).toUtf8().data() );
    }
 }
 

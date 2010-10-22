@@ -364,7 +364,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
    QTextDocument * p = hbqt_par_QTextDocument( 1 );
    if( p )
    {
-      ( p )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) );
+      ( p )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) );
    }
 }
 
@@ -940,7 +940,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
    QTextDocument * p = hbqt_par_QTextDocument( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->toHtml( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toUtf8().data() );
    }
 }
 

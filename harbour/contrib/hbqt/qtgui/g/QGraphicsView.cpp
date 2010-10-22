@@ -683,7 +683,7 @@ HB_FUNC( QT_QGRAPHICSVIEW_RENDER )
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
    {
-      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRect( 4 ) : QRect() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
+      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QRect( 4 ) : QRect() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
    }
 }
 
@@ -1115,7 +1115,7 @@ HB_FUNC( QT_QGRAPHICSVIEW_INVALIDATESCENE )
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
    {
-      ( p )->invalidateScene( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
+      ( p )->invalidateScene( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
    }
 }
 

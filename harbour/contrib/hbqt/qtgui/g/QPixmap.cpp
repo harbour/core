@@ -263,7 +263,7 @@ HB_FUNC( QT_QPIXMAP_COPY )
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
    }
 }
 

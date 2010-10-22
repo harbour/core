@@ -425,7 +425,7 @@ HB_FUNC( QT_QGRAPHICSITEM_ENSUREVISIBLE )
    QGraphicsItem * p = hbqt_par_QGraphicsItem( 1 );
    if( p )
    {
-      ( p )->ensureVisible( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
+      ( p )->ensureVisible( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
    }
 }
 
@@ -1485,7 +1485,7 @@ HB_FUNC( QT_QGRAPHICSITEM_SCROLL )
    QGraphicsItem * p = hbqt_par_QGraphicsItem( 1 );
    if( p )
    {
-      ( p )->scroll( hb_parnd( 2 ), hb_parnd( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRectF( 4 ) : QRectF() ) );
+      ( p )->scroll( hb_parnd( 2 ), hb_parnd( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QRectF( 4 ) : QRectF() ) );
    }
 }
 
@@ -1545,7 +1545,7 @@ HB_FUNC( QT_QGRAPHICSITEM_SETCACHEMODE )
    QGraphicsItem * p = hbqt_par_QGraphicsItem( 1 );
    if( p )
    {
-      ( p )->setCacheMode( ( QGraphicsItem::CacheMode ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QSize( 3 ) : QSize() ) );
+      ( p )->setCacheMode( ( QGraphicsItem::CacheMode ) hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QSize( 3 ) : QSize() ) );
    }
 }
 
@@ -1907,7 +1907,7 @@ HB_FUNC( QT_QGRAPHICSITEM_UPDATE )
    QGraphicsItem * p = hbqt_par_QGraphicsItem( 1 );
    if( p )
    {
-      ( p )->update( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ) );
+      ( p )->update( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ) );
    }
 }
 

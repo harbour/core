@@ -1301,7 +1301,7 @@ HB_FUNC( QT_QBYTEARRAY_TOPERCENTENCODING )
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toPercentEncoding( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ), true ) );
    }
 }
 

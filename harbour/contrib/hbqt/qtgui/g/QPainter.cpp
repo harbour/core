@@ -290,7 +290,7 @@ HB_FUNC( QT_QPAINTER_BOUNDINGRECT_3 )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) ) ), true ) );
       hb_strfree( pText );
    }
 }
@@ -1396,7 +1396,7 @@ HB_FUNC( QT_QPAINTER_DRAWTEXT_6 )
    if( p )
    {
       void * pText;
-      ( p )->drawText( *hbqt_par_QRectF( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) );
+      ( p )->drawText( *hbqt_par_QRectF( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) );
       hb_strfree( pText );
    }
 }
@@ -1409,7 +1409,7 @@ HB_FUNC( QT_QPAINTER_DRAWTILEDPIXMAP )
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->drawTiledPixmap( *hbqt_par_QRectF( 2 ), *hbqt_par_QPixmap( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QPointF( 4 ) : QPointF() ) );
+      ( p )->drawTiledPixmap( *hbqt_par_QRectF( 2 ), *hbqt_par_QPixmap( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QPointF( 4 ) : QPointF() ) );
    }
 }
 
@@ -1421,7 +1421,7 @@ HB_FUNC( QT_QPAINTER_DRAWTILEDPIXMAP_1 )
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->drawTiledPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QPoint( 4 ) : QPoint() ) );
+      ( p )->drawTiledPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QPoint( 4 ) : QPoint() ) );
    }
 }
 
@@ -2369,7 +2369,7 @@ HB_FUNC( QT_QPAINTER_SETREDIRECTED )
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->setRedirected( hbqt_par_QPaintDevice( 2 ), hbqt_par_QPaintDevice( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QPoint( 4 ) : QPoint() ) );
+      ( p )->setRedirected( hbqt_par_QPaintDevice( 2 ), hbqt_par_QPaintDevice( 3 ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QPoint( 4 ) : QPoint() ) );
    }
 }
 

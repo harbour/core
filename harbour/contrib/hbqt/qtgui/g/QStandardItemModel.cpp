@@ -268,7 +268,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 
@@ -280,7 +280,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW )
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
    {
-      hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+      hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
    }
 }
 

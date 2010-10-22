@@ -260,7 +260,7 @@ HB_FUNC( QT_QWEBVIEW_LOAD_1 )
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
    {
-      ( p )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) );
+      ( p )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) );
    }
 }
 
@@ -309,7 +309,7 @@ HB_FUNC( QT_QWEBVIEW_SETCONTENT )
    if( p )
    {
       void * pText;
-      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
+      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
       hb_strfree( pText );
    }
 }
@@ -323,7 +323,7 @@ HB_FUNC( QT_QWEBVIEW_SETHTML )
    if( p )
    {
       void * pText;
-      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
       hb_strfree( pText );
    }
 }

@@ -442,7 +442,7 @@ HB_FUNC( QT_QWEBFRAME_SETCONTENT )
    if( p )
    {
       void * pText;
-      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
+      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISOBJECT( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
       hb_strfree( pText );
    }
 }
@@ -456,7 +456,7 @@ HB_FUNC( QT_QWEBFRAME_SETHTML )
    if( p )
    {
       void * pText;
-      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
       hb_strfree( pText );
    }
 }

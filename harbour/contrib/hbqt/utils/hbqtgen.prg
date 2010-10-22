@@ -1787,7 +1787,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:lAnd .AND. oArg:lConst
             s := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
             IF !empty( oArg:cDefault ) .and. ( "(" $ oArg:cDefault )
-               oArg:cBody := "( HB_ISPOINTER( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
+               oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := s
             ENDIF

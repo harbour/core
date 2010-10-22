@@ -556,7 +556,7 @@ HB_FUNC( QT_QSETTINGS_VALUE )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
       hb_strfree( pText );
    }
 }

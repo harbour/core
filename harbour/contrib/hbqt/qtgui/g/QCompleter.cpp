@@ -515,7 +515,7 @@ HB_FUNC( QT_QCOMPLETER_COMPLETE )
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
    {
-      ( p )->complete( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) );
+      ( p )->complete( ( HB_ISOBJECT( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) );
    }
 }
 

@@ -180,7 +180,7 @@ HB_FUNC( QT_QGRAPHICSLAYOUTITEM_EFFECTIVESIZEHINT )
    QGraphicsLayoutItem * p = hbqt_par_QGraphicsLayoutItem( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->effectiveSizeHint( ( Qt::SizeHint ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QSizeF( 3 ) : QSizeF() ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->effectiveSizeHint( ( Qt::SizeHint ) hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QSizeF( 3 ) : QSizeF() ) ) ), true ) );
    }
 }
 
