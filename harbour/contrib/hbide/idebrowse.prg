@@ -835,7 +835,7 @@ METHOD IdeBrowseManager:buildUiStruct()
 
    oTbl := ::qStruct:q_tableFields
    oTbl:verticalHeader():hide()
-   oTbl:horizontalHeader():stretchLastSection( .t. )
+   oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )
