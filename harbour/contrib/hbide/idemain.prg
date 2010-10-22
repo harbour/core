@@ -1099,7 +1099,7 @@ METHOD HbIde:removeProjectTree( aPrj )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateProjectTree( aPrj )
-   LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent
+   LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent, a_:={}, b_
 
    oProject := IdeProject():new( Self, aPrj )
 
@@ -1143,12 +1143,18 @@ METHOD HbIde:updateProjectTree( aPrj )
       aadd( ::aProjData, { oP, "Project Name", oParent, oProject:title, aPrj, oProject } )
    ENDIF
    FOR EACH oSource IN oProject:hSources
+      aadd( a_, { oSource:ext, oSource:file, oSource } )
+   NEXT
+   IF !empty( a_ )
+      asort( a_, , , {|e_,f_| lower( e_[ 1 ] + e_[ 2 ] ) < lower( f_[ 1 ] + f_[ 2 ] ) } )
+   ENDIF
+   FOR EACH b_ IN a_
+      oSource := b_[ 3 ]
       oItem := oP:addItem( oSource:file + oSource:ext )
       oItem:tooltipText := oSource:original
       oItem:oWidget:setIcon( 0, hbide_image( hbide_imageForFileType( oSource:ext ) ) )
       aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
    NEXT
-   oP:oWidget:sortChildren( 0, Qt_AscendingOrder )
 
    RETURN Self
 

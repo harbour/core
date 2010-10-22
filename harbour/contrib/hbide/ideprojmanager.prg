@@ -270,6 +270,9 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD synchronizeAlienProject( cProjFileName )
    METHOD outputText( cText )
    METHOD runAsScript()
+   METHOD insertHeader( aHdr, aHbp )
+   METHOD stripHeader( aHbp )
+   METHOD moveLine( nDirection )
 
    ENDCLASS
 
@@ -488,7 +491,6 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_FLAGS */
    FOR EACH s IN aOptns
-//HB_TRACE( HB_TR_DEBUG, "FLAGS   ", s )
       IF !empty( s )
          aadd( a2_0, s )
       ENDIF
@@ -496,8 +498,14 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_SOURCES */
    FOR EACH s IN aFiles
-//HB_TRACE( HB_TR_DEBUG, "SOURCE  ", s )
       aadd( a3_0, s )
+   NEXT
+
+   /* Check sources which are not compilable but make-up source list */
+   FOR EACH s IN a3rd
+      IF "file=" == lower( left( s, 5 ) )
+         aadd( a3_0, hbide_stripRoot( cHome, alltrim( substr( s, 6 ) ) ) )
+      ENDIF
    NEXT
 
    /* Properties */
@@ -521,13 +529,14 @@ METHOD IdeProjManager:pullHbpData( cHbp )
       NEXT
    ENDIF
 
-   RETURN { { a1_0, a1_1 }, { a2_0, a2_1 }, { a3_0, a3_1 }, { a4_0, a4_1 } }
+   RETURN { { a1_0, a1_1 }, { a2_0, a2_1 }, { a3_0, a3_1 }, { a4_0, a4_1 }, hbide_readSource( cHbp ) }
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:save( lCanClose )
    LOCAL a_, lOk, txt_, nAlready
    LOCAL c3rd := "-3rd="
+   LOCAL hdr_:= {}
 
    * Validate certain parameters before continuing ... (vailtom)
 
@@ -549,44 +558,45 @@ METHOD IdeProjManager:save( lCanClose )
 
    txt_:= {}
    //
-   aadd( txt_, c3rd + "hbide_version="           + "1.0" )
+   aadd( hdr_, c3rd + "hbide_version="              + "1.0" )
+   //
    IF ::oUI:q_comboPrjType:currentIndex() != 0
-      aadd( txt_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex() + 1 ] )
+      aadd( hdr_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex() + 1 ] )
    ENDIF
    IF ! Empty( ::oUI:q_editPrjTitle    :text() )
-      aadd( txt_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:q_editPrjTitle    :text() ) )
+      aadd( hdr_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:q_editPrjTitle    :text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editWrkFolder   :text() )
-      aadd( txt_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:q_editWrkFolder   :text() ) )
+      aadd( hdr_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:q_editWrkFolder   :text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editDstFolder   :text() )
-      aadd( txt_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:q_editDstFolder   :text() ) )
+      aadd( hdr_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:q_editDstFolder   :text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editOutName     :text() )
-      aadd( txt_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:q_editOutName     :text() ) )
+      aadd( hdr_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:q_editOutName     :text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editLaunchParams:text() )
-      aadd( txt_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
+      aadd( hdr_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editLaunchExe   :text() )
-      aadd( txt_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
+      aadd( hdr_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
    ENDIF
    IF ! Empty( ::oUI:q_editBackup      :text() )
-      aadd( txt_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
+      aadd( hdr_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
    ENDIF
    IF ::oUI:q_checkXhb:isChecked()
-      aadd( txt_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
+      aadd( hdr_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
    ENDIF
    IF ::oUI:q_checkXpp:isChecked()
-      aadd( txt_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
+      aadd( hdr_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
    ENDIF
    IF ::oUI:q_checkClp:isChecked()
-      aadd( txt_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
+      aadd( hdr_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
    ENDIF
-   aadd( txt_, " " )
-   a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } )
-   aadd( txt_, " " )
-   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) ; aeval( a_, {|e| aadd( txt_, e ) } )
+
+   a_:= hbide_synchronizeForHbp( hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) )
+   a_:= ::insertHeader( hdr_, a_ )
+   aeval( a_, {|e| aadd( txt_, e ) } )
    aadd( txt_, " " )
 
    ::cSaveTo := ::oUI:q_editPrjLoctn:text() + ::pathSep + ::oUI:q_editOutName:text() + ".hbp"
@@ -626,37 +636,66 @@ METHOD IdeProjManager:save( lCanClose )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjManager:updateHbp( iIndex )
-   LOCAL a_, txt_, s, cExt
+METHOD IdeProjManager:insertHeader( aHdr, aHbp )
+   LOCAL txt_:={}
 
-   IF iIndex != 3
-      RETURN nil
+   aadd( txt_, "#" )
+   aadd( txt_, "# $Id$" )
+   aadd( txt_, "#" )
+   aadd( txt_, "" )
+   aeval( aHdr, {|e| aadd( txt_, e ) } )
+   aadd( txt_, "" )
+   aeval( aHbp, {|e| aadd( txt_, e ) } )
+   aadd( txt_, "" )
+
+   RETURN txt_
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:stripHeader( aHbp )
+   LOCAL nStart, n, s
+   LOCAL a_:= {}
+
+   FOR EACH s IN aHbp
+      n := s:__enumIndex()
+      s := alltrim( s )
+      IF left( s, 1 ) == "#" .AND. n <= 3
+         nStart := n
+         LOOP
+      ENDIF
+      IF empty( s )
+         LOOP
+      ENDIF
+      IF ! ( "-3rd=hbide_" $ s )
+         nStart := n
+         EXIT
+      ENDIF
+   NEXT
+
+   IF ! empty( nStart )
+      FOR EACH s IN aHbp
+         IF s:__enumIndex() < nStart
+            LOOP
+         ENDIF
+         aadd( a_, s )
+      NEXT
+   ELSE
+      RETURN aHbp
    ENDIF
 
-   txt_:= {}
+   RETURN a_
 
-   /* Flags */
-   a_:= hb_atokens( ::oUI:q_editFlags:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         aadd( txt_, s )
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:updateHbp( iIndex )
+   LOCAL txt_
+
+   IF iIndex != 3
+      RETURN NIL
+   ENDIF
 
    /* Sources */
-   a_:= hb_atokens( ::oUI:q_editSources:toPlainText(), _EOL )
-   FOR EACH s IN a_
-      s := alltrim( s )
-      IF !( "#" == left( s,1 ) ) .and. !empty( s )
-         hb_FNameSplit( s, , , @cExt )
-         IF lower( cExt ) $ ".c,.cpp,.prg,.rc,.res"
-            aadd( txt_, s )
-         ENDIF
-      ENDIF
-   NEXT
-   aadd( txt_, " " )
+   txt_:= hbide_synchronizeForHbp( hb_atokens( ::oUI:q_editSources:toPlainText(), _EOL ) )
 
    /* Final assault */
    ::oUI:q_editHbp:setPlainText( hbide_arrayToMemo( txt_ ) )
@@ -717,7 +756,7 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_checkClp     :setChecked( ::oProject:isClp )
 
       ::oUI:q_editFlags    :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-      ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
+      ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::stripHeader( ::aPrjProps[ 5 ] ) ) )
 
       ::oUI:q_editLaunchParams:setText( ::oProject:launchParams )
       ::oUI:q_editLaunchExe:setText( ::oProject:launchProgram )
@@ -751,17 +790,26 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_buttonBackup      :setIcon( cLukupPng )
 
    ::oUI:q_buttonSelect :setIcon( hbide_image( "open"        ) )
+   ::oUI:q_buttonUp     :setIcon( hbide_image( "dc_up"       ) )
+   ::oUI:q_buttonDown   :setIcon( hbide_image( "dc_down"     ) )
+
    ::oUI:q_buttonSort   :setIcon( hbide_image( "sort"        ) )
    ::oUI:q_buttonSortZA :setIcon( hbide_image( "sortdescend" ) )
    ::oUI:q_buttonSortOrg:setIcon( hbide_image( "invertcase"  ) )
+
+   ::oUI:q_buttonSort   :hide()
+   ::oUI:q_buttonSortZA :hide()
+   ::oUI:q_buttonSortOrg:hide()
 
    ::oUI:q_buttonCn          :connect( "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } )
    ::oUI:q_buttonSave        :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
    ::oUI:q_buttonSaveExit    :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
    ::oUI:q_buttonSelect      :connect( "clicked()", {|| ::addSources()         } )
-   ::oUI:q_buttonSort        :connect( "clicked()", {|| ::sortSources( "az"  ) } )
-   ::oUI:q_buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
-   ::oUI:q_buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
+   ::oUI:q_buttonUp          :connect( "clicked()", {|| ::moveLine( -1 )       } )
+   ::oUI:q_buttonDown        :connect( "clicked()", {|| ::moveLine( +1 )       } )
+// ::oUI:q_buttonSort        :connect( "clicked()", {|| ::sortSources( "az"  ) } )
+// ::oUI:q_buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
+// ::oUI:q_buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
    ::oUI:q_tabWidget         :connect( "currentChanged(int)", {|p| ::updateHbp( p ) } )
    ::oUI:q_buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
    ::oUI:q_buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
@@ -809,6 +857,9 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:setTabOrder( ::oUI:q_editHbp         , ::oUI:q_buttonSaveExit   )
    ::oUI:setTabOrder( ::oUI:q_buttonSaveExit  , ::oUI:q_buttonSave       )
    ::oUI:setTabOrder( ::oUI:q_buttonSave      , ::oUI:q_buttonCn         )
+
+   ::oUI:q_tabHbp:hide()
+   ::oUI:q_tabFlags:hide()
 
    RETURN Self
 
@@ -859,7 +910,7 @@ METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
 METHOD IdeProjManager:sortSources( cMode )
    LOCAL a_, cTyp, s, d_, n
    LOCAL aSrc := { ".prg", ".ch", ".c", ".cpp", ".h", ".obj", ".o", ".lib", ".a", ".rc", ".res" }
-   LOCAL aTxt := { {}   , {}    , {}  , {}    , {}  , {}    , {}  , {}   , {} , {}, {}    }
+   LOCAL aTxt := { {}    , {}   , {}  , {}    , {}  , {}    , {}  , {}    , {}  , {}   , {}     }
    LOCAL aRst := {}
 
    a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
@@ -948,8 +999,20 @@ METHOD IdeProjManager:isValidProjectLocation( lTell )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:moveLine( nDirection )
+
+   IF nDirection == -1
+
+   ELSE
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:addSources()
-   LOCAL aFiles, a_, b_, s
+   LOCAL aFiles, a_, b_, s, cHome
 
    IF ::isValidProjectLocation( .t. )
       IF !empty( aFiles := ::oSM:selectSource( "openmany", , , ::oUI:q_editPrjLoctn:text() ) )
@@ -958,9 +1021,11 @@ METHOD IdeProjManager:addSources()
          b_:={}
          aeval( aFiles, {|e| aadd( b_, e ) } )
 
+         cHome := ::oUI:q_editPrjLoctn:text()
          FOR EACH s IN b_
+            s := hbide_prepareSourceForHbp( hbide_stripRoot( cHome, s ) )
             IF ascan( a_, s ) == 0
-               aadd( a_, hbide_stripRoot( ::oUI:q_editPrjLoctn:text(), s ) )
+               aadd( a_, s )
             ENDIF
          NEXT
 

@@ -4,6 +4,7 @@
 
 -3rd=hbide_version=1.0
 -3rd=hbide_title=hbide
+-3rd=hbide_output=hbide
 
 -inc
 -o${hb_name}
@@ -82,3 +83,7 @@ tables.ui
 updown_v.ui
 
 hbide.qrc
+
+-3rd=file=hbide.ch
+
+ 

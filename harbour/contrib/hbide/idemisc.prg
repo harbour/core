@@ -2195,3 +2195,40 @@ FUNCTION app_image( cName )
    RETURN hbide_image( cName )
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isCompilerSource( cSource, cIncList )
+   LOCAL cExt
+
+   DEFAULT cIncList TO ".c,.cpp,.prg,.hbs,.rc,.res,.hbm,.hbc,.qrc,.ui"
+
+   cIncList := lower( cIncList )
+
+   hb_FNameSplit( cSource, , , @cExt )
+
+   RETURN lower( cExt ) $ cIncList
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_prepareSourceForHbp( cSource )
+
+   IF ! empty( cSource ) .AND. !( left( cSource,1 ) $ "-#" ) .AND. ! lower( left( cSource, 5 ) ) == "-3rd="
+      IF ! hbide_isCompilerSource( cSource )
+         RETURN "-3rd=file=" + cSource
+      ENDIF
+   ENDIF
+
+   RETURN cSource
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_synchronizeForHbp( aHbp )
+   LOCAL s
+   LOCAL txt_:={}
+
+   FOR EACH s IN aHbp
+      aadd( txt_, hbide_prepareSourceForHbp( s ) )
+   NEXT
+
+   RETURN txt_
+
+/*----------------------------------------------------------------------*/
