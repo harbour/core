@@ -503,7 +503,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* Check sources which are not compilable but make-up source list */
    FOR EACH s IN a3rd
-      IF "file=" == lower( left( s, 5 ) )
+      IF "hbide_file=" == lower( left( s, 5 ) )
          aadd( a3_0, hbide_stripRoot( cHome, alltrim( substr( s, 6 ) ) ) )
       ENDIF
    NEXT

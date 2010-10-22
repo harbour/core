@@ -2215,7 +2215,7 @@ FUNCTION hbide_prepareSourceForHbp( cSource )
 
    IF ! empty( cSource ) .AND. !( left( cSource,1 ) $ "-#" ) .AND. ! lower( left( cSource, 5 ) ) == "-3rd="
       IF ! hbide_isCompilerSource( cSource )
-         RETURN "-3rd=file=" + cSource
+         RETURN "-3rd=hbide_file=" + cSource
       ENDIF
    ENDIF
 
