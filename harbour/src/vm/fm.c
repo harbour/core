@@ -139,6 +139,7 @@
 /* #  define NO_MALLINFO 1 */
 /* #  define INSECURE */
 /* #  define USE_DL_PREFIX */
+#  undef FORCEINLINE
 #  if !defined( FORCEINLINE )
 #     define FORCEINLINE HB_FORCEINLINE
 #  endif
