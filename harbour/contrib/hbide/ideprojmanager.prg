@@ -503,8 +503,8 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* Check sources which are not compilable but make-up source list */
    FOR EACH s IN a3rd
-      IF "hbide_file=" == lower( left( s, 5 ) )
-         aadd( a3_0, hbide_stripRoot( cHome, alltrim( substr( s, 6 ) ) ) )
+      IF "hbide_file=" == lower( left( s, 11 ) )
+         aadd( a3_0, hbide_stripRoot( cHome, alltrim( substr( s, 12 ) ) ) )
       ENDIF
    NEXT
 
@@ -665,6 +665,10 @@ METHOD IdeProjManager:stripHeader( aHbp )
       ENDIF
       IF empty( s )
          LOOP
+      ENDIF
+      IF "-3rd=hbide_file" $ s
+         nStart := n
+         EXIT
       ENDIF
       IF ! ( "-3rd=hbide_" $ s )
          nStart := n
