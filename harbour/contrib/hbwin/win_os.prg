@@ -110,6 +110,12 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
+      IF hb_osIsWinVista()
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "FileInfoCacheLifetime", 0, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "FileNotFoundCacheLifetime", 0, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "DirectoryCacheLifetime", 0, lSetIt )
+      ENDIF
+
       IF hb_osIsWin2K()
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF

@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_NSCTP_CH_
 #define HB_NSCTP_CH_
 
