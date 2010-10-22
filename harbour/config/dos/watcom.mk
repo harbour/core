@@ -69,6 +69,7 @@ ifneq ($(HB_LINKING_RTL),)
    ifneq ($(HB_HAS_WATT),)
       LDLIBS += $(HB_LIB_WATT)/wattcpwf
    endif
+   LDLIBS += $(LIB_DIR)/hbpmcom
 endif
 
 ifeq ($(HB_BUILD_DYN),dostest)

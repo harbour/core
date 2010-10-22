@@ -8,6 +8,7 @@ DIRS := \
    sqlite3 \
    bzip2 \
    libhpdf \
+   hbpmcom \
    png \
    jpeg \
    pcre \

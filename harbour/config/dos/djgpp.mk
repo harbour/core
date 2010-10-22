@@ -59,6 +59,7 @@ ifneq ($(HB_LINKING_RTL),)
       SYSLIBPATHS += $(HB_LIB_WATT)
       SYSLIBS += watt
    endif
+   SYSLIBS += hbpmcom
 endif
 
 SYSLIBS += m
