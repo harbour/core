@@ -88,9 +88,9 @@ C_SOURCES := \
    hbinet.c \
    hbinetz.c \
    hbjson.c \
+   hblpp.c \
+   hblpphb.c \
    hbmd5.c \
-   hbnsctp.c \
-   hbnsctph.c \
    hbntos.c \
    hbproces.c \
    hbprocfn.c \

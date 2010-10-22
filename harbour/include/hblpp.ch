@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Not SCTP (Stream Control Transmission Protocol)
+ * Length Prefix Protocol
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  * www - http://harbour-project.org
@@ -50,38 +50,11 @@
  *
  */
 
-#ifndef HB_NSCTP_H_
-#define HB_NSCTP_H_
+/* NOTE: This file is also used by C code. */
 
-#include "hbapi.h"
-#include "hbsocket.h"
-#include "hbnsctp.ch"
+#ifndef HB_LPP_CH_
+#define HB_LPP_CH_
 
-HB_EXTERN_BEGIN
+#define HB_LPP_ERR_TOOLARGE   1001
 
-typedef struct
-{
-   HB_SOCKET    sd;
-   char *       pSendBuffer;
-   HB_SIZE      nSendLen;
-   HB_SIZE      nSendPos;
-   char *       pRecvBuffer;
-   HB_SIZE      nRecvLen;
-   HB_SIZE      nRecvSize;
-   HB_SIZE      nLimit;
-   HB_BOOL      fRecvHasSize;
-   int          iError;
-} HB_NSCTP, * PHB_NSCTP;
-
-extern HB_EXPORT PHB_NSCTP hb_nsctpCreate( HB_SOCKET sd );
-extern HB_EXPORT void      hb_nsctpDestroy( PHB_NSCTP pSocket );
-extern HB_EXPORT int       hb_nsctpError( PHB_NSCTP pSocket );
-extern HB_EXPORT void      hb_nsctpSetLimit( PHB_NSCTP pSocket, HB_SIZE nLimit );
-extern HB_EXPORT HB_BOOL   hb_nsctpSend( PHB_NSCTP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout );
-extern HB_EXPORT HB_BOOL   hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout );
-extern HB_EXPORT HB_SIZE   hb_nsctpSendLen( PHB_NSCTP pSocket );
-extern HB_EXPORT HB_SIZE   hb_nsctpRecvLen( PHB_NSCTP pSocket );
-
-HB_EXTERN_END
-
-#endif /* HB_NSCTP_H_ */
+#endif /* HB_LPP_CH_ */

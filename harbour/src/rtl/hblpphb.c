@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Not SCTP (Stream Control Transmission Protocol)
+ * Length Prefix Protocol
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  * www - http://harbour-project.org
@@ -55,93 +55,71 @@
 
   Idea and protocol
   =================
-  Very often it is required to accept the whole data structure/packet
-  from TCP connection. Because of stream nature of TCP, this requires 
+  Very often it is required to accept the whole data message from 
+  TCP connection. Because of stream nature of TCP, this requires 
   additional steps from application like start/end marker, or sending 
   length of structure before the structure. The latter simple approach 
-  was used in NSCTP. Protocol can easily be described by simple Clipper 
-  expression:
+  was used in Length Prefix Protocol (LPP). Protocol can easily be 
+  described by simple Clipper expression:
      BIN2L(LEN(cData)) + cData
 
-  Future extensions: Protocol is limitted to 4GB size for a single NSCTP 
-  "packet". This can be extended in future to use highest bit of length 
+  Future extensions: Protocol is limitted to 4GB size for a single LPP 
+  message. This can be extended in future to use highest bit of length 
   (or some highest length values 2^32-1, etc) as a special marker for 
   64-bit or similar length encoding. 
 
-  Name
-  ====
-  Name is abbreviature for Not SCTP. SCTP is abbreviature for Stream 
-  Contol Transfer Protocol. Wikipedia writes:
-     Stream Control Transmission Protocol (SCTP) is a Transport Layer 
-  protocol, serving in a similar role to the popular protocols 
-  Transmission Control Protocol (TCP) and User Datagram Protocol (UDP). 
-  It provides some of the same service features of both: it is 
-  message-oriented like UDP and ensures reliable, in-sequence transport 
-  of messages with congestion control like TCP.
-     All above is true for NSCTP, it helps to communicate in messages
-  (up to 4GB size), and ensures reliability, in-sequence transport, etc
-  (because it is based on TCP). But NSCTP is Not SCTP, so, it's NSCTP :)
-     I find NSCTP name a good for API like this. It does not occupy 
-  some more general names like hb_psocket*, it is shorter. I can write
-  hbnsctph.c file without additional need to delete some letters to fit 
-  into 8.3 format. Yes, NSCTP looks a little like a random set of 
-  letters after you see it for the first time, but it should for such 
-  not widely accepted protocol. After you write a first app using NSCTP, 
-  you'll be able to type and pronounce it just easily as TCP, UDP, or 
-  HTTP.
-
   Public functions and procedures
   ===============================
-  hb_nsctpCreate( hSocket ) --> hNSCTP
-  hb_nsctpDestroy( hNSTP )
-     Destroys only NSCTP related structures. Socket remains open and
+  hb_lppCreate( hSocket ) --> hLPP
+  hb_lppDestroy( hNSTP )
+     Destroys only LPP related structures. Socket remains open and
      it is possible to continue data transfers using hb_socket*()
      functions.
-  hb_nsctpError( hNSCTP ) --> nError
+  hb_lppError( hLPP ) --> nError
      nError value is compatible with Harbour socket error API,
-     the only new error code (until now) is hb_nsctp_ERROR_TOOLARGE
-  hb_nsctpSetLimit( hNSCTP, nLimit )
+     the only new error code (until now) is HB_LPP_ERROR_TOOLARGE
+  hb_lppSetLimit( hLPP, nLimit )
      Sets size limit for receiving data. Sending 4 bytes containing 
      large 32-bit value makes receiving application to alllocate a 
      large memory block for storage of data to be received. It is very 
      easy to crash  application (or system) using such protocol and 
-     logic. hb_nsctpSetLimit() helps to protect against such attacks.
-     On hb_nsctpCreate() limit is set to 1024 bytes. This is enough 
+     logic. hb_lppSetLimit() helps to protect against such attacks.
+     On hb_lppCreate() limit is set to 1024 bytes. This is enough 
      for server/client authentification. After successful 
-     authentification server can increase size limit and large NSCTP 
+     authentification server can increase size limit and large LPP 
      packets can be used.
-  hb_nsctpSend( hNSCTP, cBuf [, nTimeout = FOREVER ] ) --> lSuccess
-  hb_nsctpRecv( hNSCTP, @cBuf [, nTimeout = FOREVER ] ) --> lSuccess
-  hb_nsctpSendLen( hNSCTP ) --> nBytesSent
+  hb_lppSend( hLPP, cBuf [, nTimeout = FOREVER ] ) --> lSuccess
+  hb_lppRecv( hLPP, @cBuf [, nTimeout = FOREVER ] ) --> lSuccess
+  hb_lppSendLen( hLPP ) --> nBytesSent
      Useful for drawing progress bars, etc.
-  hb_nsctpRecvLen( hNSCTP ) --> nBytesReceived
+  hb_lppRecvLen( hLPP ) --> nBytesReceived
      Useful for drawing progress bars, etc.
 
   Sample code
   ===========
   // send sample
-  hNSCTP := hb_nsctpCreate( hSocket )
-  DO WHILE ! ( lI := hb_nsctpSend( hNSCTP, cData, nTimeout ) ) .AND. ;
-           hb_nsctpError( hNSCTP ) == HB_SOCKET_ERR_TIMEOUT )
-    // draw progressbar using hb_nsctpSendLen( hNSCTP )
+  hLPP := hb_lppCreate( hSocket )
+  DO WHILE ! ( lI := hb_lppSend( hLPP, cData, nTimeout ) ) .AND. ;
+           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
+    // draw progressbar using hb_lppSendLen( hLPP )
   ENDDO
-  IF lI   // or hb_nsctpError( hNSCTP ) == 0
+  IF lI   // or hb_lppError( hLPP ) == 0
     // Sent OK
   ELSE
     // error
   ENDIF
-  hb_hsctpDestroy( hNSCTP )
+  hb_hsctpDestroy( hLPP )
   
 
   // recv sample
-  DO WHILE ! ( lI := hb_nsctpRecv( hNSCTP, @cData, nTimeout ) ) .AND. ;
-           hb_nsctpError( hNSCTP ) == HB_SOCKET_ERR_TIMEOUT )
-    // draw progressbar using hb_nsctpRecvLen( hNSCTP )
+  DO WHILE ! ( lI := hb_lppRecv( hLPP, @cData, nTimeout ) ) .AND. ;
+           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
+    // draw progressbar using hb_lppRecvLen( hLPP )
   ENDDO
   IF lI
     // Rcvd OK, data in cData
   ELSE
-    IF hb_nsctpError( hNSCTP ) == 0
+    IF hb_lppError( hLPP ) == 0
       // remote side shutdown connection
     ELSE
       // error
@@ -153,22 +131,22 @@
 
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbnsctp.h"
+#include "hblpp.h"
 
 typedef struct
 {
-   PHB_NSCTP    pSocket;
-   PHB_ITEM     pItemSocket;
-} HB_NSCTP_GC, * PHB_NSCTP_GC;
+   PHB_LPP   pSocket;
+   PHB_ITEM  pItemSocket;
+} HB_LPP_GC, * PHB_LPP_GC;
 
 
-static HB_GARBAGE_FUNC( hb_nsctp_destructor )
+static HB_GARBAGE_FUNC( hb_lpp_destructor )
 {
-   PHB_NSCTP_GC pGC = ( PHB_NSCTP_GC ) Cargo;
+   PHB_LPP_GC pGC = ( PHB_LPP_GC ) Cargo;
 
    if( pGC->pSocket )
    {
-      hb_nsctpDestroy( pGC->pSocket );
+      hb_lppDestroy( pGC->pSocket );
       pGC->pSocket = NULL;
    }
    if( pGC->pItemSocket )
@@ -179,9 +157,9 @@ static HB_GARBAGE_FUNC( hb_nsctp_destructor )
 }
 
 
-static HB_GARBAGE_FUNC( hb_nsctp_mark )
+static HB_GARBAGE_FUNC( hb_lpp_mark )
 {
-   PHB_NSCTP_GC pGC = ( PHB_NSCTP_GC ) Cargo;
+   PHB_LPP_GC pGC = ( PHB_LPP_GC ) Cargo;
 
    if( pGC->pItemSocket )
       hb_gcMark( pGC->pItemSocket );
@@ -190,15 +168,15 @@ static HB_GARBAGE_FUNC( hb_nsctp_mark )
 
 static const HB_GC_FUNCS s_gcPSocketFuncs =
 {
-   hb_nsctp_destructor,
-   hb_nsctp_mark
+   hb_lpp_destructor,
+   hb_lpp_mark
 };
 
 
-HB_FUNC( HB_NSCTPCREATE )
+HB_FUNC( HB_LPPCREATE )
 {
    HB_SOCKET sd;
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
    PHB_ITEM pItem;
 
    pItem = hb_param( 1, HB_IT_POINTER );
@@ -208,65 +186,65 @@ HB_FUNC( HB_NSCTPCREATE )
       return;
    }
 
-   pGC = ( PHB_NSCTP_GC ) hb_gcAllocate( sizeof( HB_NSCTP_GC ), &s_gcPSocketFuncs );
-   pGC->pSocket = hb_nsctpCreate( sd );
+   pGC = ( PHB_LPP_GC ) hb_gcAllocate( sizeof( HB_LPP_GC ), &s_gcPSocketFuncs );
+   pGC->pSocket = hb_lppCreate( sd );
    pGC->pItemSocket = hb_itemNew( pItem );
    hb_gcUnlock( pGC->pItemSocket );
    hb_retptrGC( pGC );
 }
 
 
-HB_FUNC( HB_NSCTPDESTROY )
+HB_FUNC( HB_LPPDESTROY )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   hb_nsctpDestroy( pGC->pSocket );
+   hb_lppDestroy( pGC->pSocket );
    pGC->pSocket = NULL;
    hb_itemRelease( pGC->pItemSocket );
    pGC->pItemSocket = NULL;
 }
 
 
-HB_FUNC( HB_NSCTPERROR )
+HB_FUNC( HB_LPPERROR )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   hb_retni( hb_nsctpError( pGC->pSocket ) );
+   hb_retni( hb_lppError( pGC->pSocket ) );
 }
 
 
-HB_FUNC( HB_NSCTPSETLIMIT )
+HB_FUNC( HB_LPPSETLIMIT )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   hb_nsctpSetLimit( pGC->pSocket, hb_parns( 2 ) );
+   hb_lppSetLimit( pGC->pSocket, hb_parns( 2 ) );
 }
 
 
-HB_FUNC( HB_NSCTPSEND )
+HB_FUNC( HB_LPPSEND )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
    PHB_ITEM pData;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket || hb_socketItemGet( pGC->pItemSocket ) == HB_NO_SOCKET )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -274,26 +252,26 @@ HB_FUNC( HB_NSCTPSEND )
    }
 
    pData = hb_param( 2, HB_IT_STRING );
-   hb_retl( hb_nsctpSend( pGC->pSocket, pData ? hb_itemGetCPtr( pData ) : "", 
-                          hb_itemGetCLen( pData ), hb_parnintdef( 3, -1 ) ) );
+   hb_retl( hb_lppSend( pGC->pSocket, pData ? hb_itemGetCPtr( pData ) : "", 
+                        hb_itemGetCLen( pData ), hb_parnintdef( 3, -1 ) ) );
 }
 
 
-HB_FUNC( HB_NSCTPRECV )
+HB_FUNC( HB_LPPRECV )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
    HB_BOOL bRet;
    void * data;
    HB_SIZE len;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket || hb_socketItemGet( pGC->pItemSocket ) == HB_NO_SOCKET )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
-   bRet = hb_nsctpRecv( pGC->pSocket, &data, &len, hb_parnintdef( 3, -1 ) );
+   bRet = hb_lppRecv( pGC->pSocket, &data, &len, hb_parnintdef( 3, -1 ) );
    if( bRet )
    {
       if( HB_ISBYREF( 2 ) )
@@ -304,30 +282,30 @@ HB_FUNC( HB_NSCTPRECV )
 }
 
 
-HB_FUNC( HB_NSCTPSENDLEN )
+HB_FUNC( HB_LPPSENDLEN )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   hb_retns( hb_nsctpSendLen( pGC->pSocket ) );
+   hb_retns( hb_lppSendLen( pGC->pSocket ) );
 }
 
 
 
-HB_FUNC( HB_NSCTPRECVLEN )
+HB_FUNC( HB_LPPRECVLEN )
 {
-   PHB_NSCTP_GC pGC;
+   PHB_LPP_GC pGC;
 
-   pGC = ( PHB_NSCTP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
+   pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   hb_retns( hb_nsctpRecvLen( pGC->pSocket ) );
+   hb_retns( hb_lppRecvLen( pGC->pSocket ) );
 }

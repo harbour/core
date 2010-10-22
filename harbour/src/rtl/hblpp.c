@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Not SCTP (Stream Control Transmission Protocol)
+ * Length Prefix Protocol
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  * www - http://harbour-project.org
@@ -54,22 +54,22 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdate.h"
-#include "hbnsctp.h"
+#include "hblpp.h"
 
 
-PHB_NSCTP hb_nsctpCreate( HB_SOCKET sd )
+PHB_LPP hb_lppCreate( HB_SOCKET sd )
 {
-   PHB_NSCTP pSocket;
+   PHB_LPP pSocket;
 
-   pSocket = ( PHB_NSCTP ) hb_xgrab( sizeof( HB_NSCTP ) );
-   memset( pSocket, 0, sizeof( HB_NSCTP ) );
+   pSocket = ( PHB_LPP ) hb_xgrab( sizeof( HB_LPP ) );
+   memset( pSocket, 0, sizeof( HB_LPP ) );
    pSocket->sd = sd;
    pSocket->nLimit = 1024;
    return pSocket;
 }
 
 
-void hb_nsctpDestroy( PHB_NSCTP pSocket )
+void hb_lppDestroy( PHB_LPP pSocket )
 {
    if( pSocket->pSendBuffer )
       hb_xfree( pSocket->pSendBuffer );
@@ -81,19 +81,19 @@ void hb_nsctpDestroy( PHB_NSCTP pSocket )
 }
 
 
-void hb_nsctpSetLimit( PHB_NSCTP pSocket, HB_SIZE nLimit )
+void hb_lppSetLimit( PHB_LPP pSocket, HB_SIZE nLimit )
 {
    pSocket->nLimit = nLimit;
 }
 
 
-int hb_nsctpError( PHB_NSCTP pSocket )
+int hb_lppError( PHB_LPP pSocket )
 {
    return pSocket->iError;
 }
 
 
-HB_BOOL hb_nsctpSend( PHB_NSCTP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout )
+HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout )
 {
    HB_MAXINT  nTime = 0;
    long       lSend;
@@ -141,7 +141,7 @@ HB_BOOL hb_nsctpSend( PHB_NSCTP pSocket, const void * data, HB_SIZE len, HB_MAXI
 }
 
 
-HB_BOOL hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout )
+HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout )
 {
    HB_MAXINT  nTime = 0;
    long       lRecv;
@@ -186,7 +186,7 @@ HB_BOOL hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT 
          if( pSocket->nLimit && pSocket->nRecvSize > pSocket->nLimit )
          {
             /* protection against remote memory exhaust attack */
-            pSocket->iError = HB_NSCTP_ERR_TOOLARGE;
+            pSocket->iError = HB_LPP_ERR_TOOLARGE;
             hb_xfree( pSocket->pRecvBuffer );
             pSocket->pRecvBuffer = NULL;
             return HB_FALSE;
@@ -235,13 +235,13 @@ HB_BOOL hb_nsctpRecv( PHB_NSCTP pSocket, void ** data, HB_SIZE * len, HB_MAXINT 
 }
 
 
-HB_SIZE hb_nsctpSendLen( PHB_NSCTP pSocket )
+HB_SIZE hb_lppSendLen( PHB_LPP pSocket )
 {
    return pSocket->nSendLen - pSocket->nSendPos;
 }
 
 
-HB_SIZE hb_nsctpRecvLen( PHB_NSCTP pSocket )
+HB_SIZE hb_lppRecvLen( PHB_LPP pSocket )
 {
    return pSocket->nRecvLen;
 }
