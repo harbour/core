@@ -195,7 +195,10 @@ extern const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #  ifdef MSDOS
      /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),
         but for now we just assume it doesn't. */
-#    define NO_vsnprintf
+#    if defined(__DJGPP__) && \
+        (__DJGPP__ < 2 || (__DJGPP__ == 2 && __DJGPP_MINOR__ <= 3))
+#      define NO_vsnprintf
+#    endif
 #  endif
 #  ifdef __TURBOC__
 #    define NO_vsnprintf

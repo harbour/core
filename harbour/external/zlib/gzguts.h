@@ -31,15 +31,15 @@
 #  define NO_GZCOMPRESS
 #endif
 
-#if defined(MSDOS)
-   /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),
-      but for now we just assume it doesn't. */
-#     define NO_vsnprintf
-#elif defined(OS2) || defined(WINDOWS) || defined(WIN32)
+#if defined(MSDOS) || defined(OS2) || defined(WINDOWS) || defined(WIN32)
 #  ifndef _WINCE
 #     include <io.h>
 #     if defined(_MSC_VER) && !defined(__XCC__)
 #        define vsnprintf _vsnprintf
+#     endif
+#     if defined(__DJGPP__) && \
+         (__DJGPP__ < 2 || (__DJGPP__ == 2 && __DJGPP_MINOR__ <= 3))
+#       define NO_vsnprintf
 #     endif
 #  endif
 #else

@@ -2,9 +2,9 @@
 # $Id$
 #
 
-skip={dos}
-
 incpaths=.
+
+skip={dos}
 
 {!HB_STATIC_OPENSSL}libs=${hb_name}${__HB_DYN__}
 {HB_STATIC_OPENSSL}libs=${hb_name}s${__HB_DYN__}
