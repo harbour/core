@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -15,17 +15,19 @@
  *
  */
 
+#ifndef UNDER_CE
 #include <errno.h>
-
-#ifndef HPDF_NOZLIB
-#include <zlib.h>
-#include <zconf.h>
-#endif /* HPDF_NOZLIB */
+#endif
 
 #include "hpdfconf.h"
 #include "hpdfcons.h"
 #include "hpdfutil.h"
 #include "hpdfstre.h"
+
+#ifndef LIBHPDF_HAVE_NOZLIB
+#include <zlib.h>
+#include <zconf.h>
+#endif /* LIBHPDF_HAVE_NOZLIB */
 
 HPDF_STATUS
 HPDF_MemStream_WriteFunc  (HPDF_Stream      stream,
@@ -421,8 +423,14 @@ HPDF_Stream_WriteEscapeText2  (HPDF_Stream    stream,
 
     HPDF_PTRACE((" HPDF_Stream_WriteEscapeText2\n"));
 
+   /* The following block is commented out because it violates "PDF Spec 7.3.4.2 Literal Strings". 
+	* It states that the two matching parentheses must still be present to represent an empty 
+	* string of zero length. 
+	*/
+   /*
     if (!len)
         return HPDF_OK;
+   */
 
     buf[idx++] = '(';
 
@@ -545,7 +553,7 @@ HPDF_Stream_WriteToStreamWithDeflate  (HPDF_Stream  src,
                                        HPDF_Stream  dst,
                                        HPDF_Encrypt  e)
 {
-#ifndef HPDF_NOZLIB
+#ifndef LIBHPDF_HAVE_NOZLIB
 
 #define DEFLATE_BUF_SIZ  ((HPDF_INT)(HPDF_STREAM_BUF_SIZ * 1.1) + 13)
 
@@ -659,9 +667,9 @@ HPDF_Stream_WriteToStreamWithDeflate  (HPDF_Stream  src,
 
     deflateEnd(&strm);
     return HPDF_OK;
-#else /* HPDF_NOZLIB */
+#else /* LIBHPDF_HAVE_NOZLIB */
     return HPDF_UNSUPPORTED_FUNC;
-#endif /* HPDF_NOZLIB */
+#endif /* LIBHPDF_HAVE_NOZLIB */
 }
 
 HPDF_STATUS
@@ -686,14 +694,14 @@ HPDF_Stream_WriteToStream  (HPDF_Stream  src,
             HPDF_Error_GetCode (dst->error) != HPDF_NOERROR)
         return HPDF_THIS_FUNC_WAS_SKIPPED;
 
-#ifndef HPDF_NOZLIB
-    if (filter & HPDF_STREAM_FILTER_FLATE_DECODE)
-        return HPDF_Stream_WriteToStreamWithDeflate (src, dst, e);
-#endif /* HPDF_NOZLIB */
-
     /* initialize input stream */
     if (HPDF_Stream_Size (src) == 0)
         return HPDF_OK;
+
+#ifndef LIBHPDF_HAVE_NOZLIB
+    if (filter & HPDF_STREAM_FILTER_FLATE_DECODE)
+        return HPDF_Stream_WriteToStreamWithDeflate (src, dst, e);
+#endif /* LIBHPDF_HAVE_NOZLIB */
 
     ret = HPDF_Stream_Seek (src, 0, HPDF_SEEK_SET);
     if (ret != HPDF_OK)
@@ -742,7 +750,11 @@ HPDF_FileReader_New  (HPDF_MMgr   mmgr,
     HPDF_PTRACE((" HPDF_FileReader_New\n"));
 
     if (!fp) {
+#ifdef UNDER_CE
+        HPDF_SetError (mmgr->error, HPDF_FILE_OPEN_ERROR, GetLastError());
+#else
         HPDF_SetError (mmgr->error, HPDF_FILE_OPEN_ERROR, errno);
+#endif
         return NULL;
     }
 
@@ -914,7 +926,11 @@ HPDF_FileWriter_New  (HPDF_MMgr        mmgr,
     HPDF_PTRACE((" HPDF_FileWriter_New\n"));
 
     if (!fp) {
+#ifdef UNDER_CE
+        HPDF_SetError (mmgr->error, HPDF_FILE_OPEN_ERROR, GetLastError());
+#else
         HPDF_SetError (mmgr->error, HPDF_FILE_OPEN_ERROR, errno);
+#endif
         return NULL;
     }
 
@@ -1072,8 +1088,13 @@ HPDF_MemStream_SeekFunc  (HPDF_Stream      stream,
     } else if (mode == HPDF_SEEK_END)
         pos = stream->size - pos;
 
-    if (pos > stream->size || stream->size == 0)
+    if (pos > stream->size) {
         return HPDF_SetError (stream->error, HPDF_STREAM_EOF, 0);
+    }
+
+    if (stream->size == 0) {
+        return HPDF_OK;
+    }
 
     attr->r_ptr_idx = pos / attr->buf_siz;
     attr->r_pos = pos % attr->buf_siz;
@@ -1164,11 +1185,11 @@ HPDF_MemStream_New  (HPDF_MMgr  mmgr,
 
     HPDF_PTRACE((" HPDF_MemStream_New\n"));
 
-    // Create new HPDF_Stream object.
+    /* Create new HPDF_Stream object. */
     stream = (HPDF_Stream)HPDF_GetMem (mmgr, sizeof(HPDF_Stream_Rec));
 
     if (stream) {
-        // Create attribute struct.
+        /* Create attribute struct. */
         HPDF_MemStreamAttr attr = (HPDF_MemStreamAttr)HPDF_GetMem (mmgr,
                 sizeof(HPDF_MemStreamAttr_Rec));
 

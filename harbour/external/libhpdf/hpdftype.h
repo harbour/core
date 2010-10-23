@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -137,8 +137,18 @@ typedef enum _HPDF_InfoType {
     HPDF_INFO_TITLE,
     HPDF_INFO_SUBJECT,
     HPDF_INFO_KEYWORDS,
+    HPDF_INFO_TRAPPED,
+    HPDF_INFO_GTS_PDFX,
     HPDF_INFO_EOF
 } HPDF_InfoType;
+
+/* PDF-A Types */
+
+typedef enum _HPDF_PDFA_TYPE 
+{
+    HPDF_PDFA_1A = 0,
+    HPDF_PDFA_1B = 1
+} HPDF_PDFAType;
 
 
 typedef enum _HPDF_PdfVer {
@@ -345,7 +355,9 @@ typedef enum _HPDF_AnnotType {
     HPDF_ANNOT_INK,
     HPDF_ANNOT_FILE_ATTACHMENT,
     HPDF_ANNOT_POPUP,
-    HPDF_ANNOT_3D
+    HPDF_ANNOT_3D,
+    HPDF_ANNOT_SQUIGGLY,
+    HPDF_ANNOT_LINE
 } HPDF_AnnotType;
 
 
@@ -380,7 +392,50 @@ typedef enum _HPDF_AnnotIcon {
     HPDF_ANNOT_ICON_EOF
 } HPDF_AnnotIcon;
 
+typedef enum _HPDF_AnnotIntent {
+    HPDF_ANNOT_INTENT_FREETEXTCALLOUT = 0,
+    HPDF_ANNOT_INTENT_FREETEXTTYPEWRITER,
+    HPDF_ANNOT_INTENT_LINEARROW,
+    HPDF_ANNOT_INTENT_LINEDIMENSION,
+    HPDF_ANNOT_INTENT_POLYGONCLOUD,
+    HPDF_ANNOT_INTENT_POLYLINEDIMENSION,
+    HPDF_ANNOT_INTENT_POLYGONDIMENSION
+} HPDF_AnnotIntent;
 
+typedef enum _HPDF_LineAnnotEndingStyle {
+    HPDF_LINE_ANNOT_NONE = 0,
+    HPDF_LINE_ANNOT_SQUARE,
+    HPDF_LINE_ANNOT_CIRCLE,
+    HPDF_LINE_ANNOT_DIAMOND,
+    HPDF_LINE_ANNOT_OPENARROW,
+    HPDF_LINE_ANNOT_CLOSEDARROW,
+    HPDF_LINE_ANNOT_BUTT,
+    HPDF_LINE_ANNOT_ROPENARROW,
+    HPDF_LINE_ANNOT_RCLOSEDARROW,
+    HPDF_LINE_ANNOT_SLASH
+} HPDF_LineAnnotEndingStyle;
+
+typedef enum _HPDF_LineAnnotCapPosition{
+    HPDF_LINE_ANNOT_CAP_INLINE = 0,
+    HPDF_LINE_ANNOT_CAP_TOP
+} HPDF_LineAnnotCapPosition;
+
+typedef enum _HPDF_StampAnnotName{
+    HPDF_STAMP_ANNOT_APPROVED = 0,
+    HPDF_STAMP_ANNOT_EXPERIMENTAL,
+    HPDF_STAMP_ANNOT_NOTAPPROVED,
+    HPDF_STAMP_ANNOT_ASIS,
+    HPDF_STAMP_ANNOT_EXPIRED,
+    HPDF_STAMP_ANNOT_NOTFORPUBLICRELEASE,
+    HPDF_STAMP_ANNOT_CONFIDENTIAL,
+    HPDF_STAMP_ANNOT_FINAL,
+    HPDF_STAMP_ANNOT_SOLD,
+    HPDF_STAMP_ANNOT_DEPARTMENTAL,
+    HPDF_STAMP_ANNOT_FORCOMMENT,
+    HPDF_STAMP_ANNOT_TOPSECRET,
+    HPDF_STAMP_ANNOT_DRAFT,
+    HPDF_STAMP_ANNOT_FORPUBLICRELEASE
+} HPDF_StampAnnotName;
 
 /*----------------------------------------------------------------------------*/
 /*------ border stype --------------------------------------------------------*/
@@ -482,6 +537,14 @@ typedef enum _HPDF_TextAlignment {
     HPDF_TALIGN_CENTER,
     HPDF_TALIGN_JUSTIFY
 } HPDF_TextAlignment;
+
+/*----------------------------------------------------------------------------*/
+
+/* Name Dictionary values -- see PDF reference section 7.7.4 */
+typedef enum _HPDF_NameDictKey {
+    HPDF_NAME_EMBEDDED_FILES = 0,    /* TODO the rest */
+    HPDF_NAME_EOF
+} HPDF_NameDictKey;
 
 #ifdef __cplusplus
 }

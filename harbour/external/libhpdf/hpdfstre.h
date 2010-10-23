@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -34,7 +34,7 @@ typedef enum _HPDF_StreamType {
     HPDF_STREAM_UNKNOWN = 0,
     HPDF_STREAM_CALLBACK,
     HPDF_STREAM_FILE,
-    HPDF_STREAM_MEMORY,
+    HPDF_STREAM_MEMORY
 } HPDF_StreamType;
 
 #define HPDF_STREAM_FILTER_NONE          0x0000

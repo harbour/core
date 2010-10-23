@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -35,6 +35,11 @@ HPDF_EXPORT(HPDF_STATUS) HPDF_3DView_SetPerspectiveProjection(HPDF_Dict view, HP
 HPDF_EXPORT(HPDF_STATUS) HPDF_3DView_SetOrthogonalProjection(HPDF_Dict view, HPDF_REAL mag);
 HPDF_EXPORT(HPDF_STATUS) HPDF_3DView_SetCamera(HPDF_Dict view, HPDF_REAL coox, HPDF_REAL cooy, HPDF_REAL cooz, HPDF_REAL c2cx, HPDF_REAL c2cy, HPDF_REAL c2cz, HPDF_REAL roo, HPDF_REAL roll);
 
+HPDF_Dict
+HPDF_3DView_New    ( HPDF_MMgr  mmgr,
+					 HPDF_Xref  xref,
+					 HPDF_U3D	u3d,
+					 const char *name);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

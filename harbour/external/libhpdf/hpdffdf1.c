@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -72,15 +72,12 @@ HPDF_Type1FontDef_New  (HPDF_MMgr  mmgr)
     if (!fontdef)
         return NULL;
 
+    HPDF_MemSet (fontdef, 0, sizeof (HPDF_FontDef_Rec));
     fontdef->sig_bytes = HPDF_FONTDEF_SIG_BYTES;
-    fontdef->base_font[0] = 0;
     fontdef->mmgr = mmgr;
     fontdef->error = mmgr->error;
     fontdef->type = HPDF_FONTDEF_TYPE_TYPE1;
-    fontdef->clean_fn = NULL;
     fontdef->free_fn = FreeFunc;
-    fontdef->descriptor = NULL;
-    fontdef->valid = HPDF_FALSE;
 
     fontdef_attr = HPDF_GetMem (mmgr, sizeof(HPDF_Type1FontDefAttr_Rec));
     if (!fontdef_attr) {
@@ -109,7 +106,7 @@ GetKeyword  (const char  *src,
 
     *keyword = 0;
 
-    while (len > 0) {
+    while (len > 1) {
         if (HPDF_IS_WHITE_SPACE(*src)) {
             *keyword = 0;
 
@@ -427,8 +424,8 @@ HPDF_Type1FontDef_Duplicate  (HPDF_MMgr     mmgr,
     fontdef->type = src->type;
     fontdef->valid = src->valid;
 
-    // copy data of attr,widths
-    // attention to charset
+    /* copy data of attr,widths
+     attention to charset */
     return NULL;
 }
 

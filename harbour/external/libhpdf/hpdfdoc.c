@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -19,6 +19,7 @@
 #include "hpdfconf.h"
 #include "hpdfutil.h"
 #include "hpdfency.h"
+#include "hpdfndic.h"
 #include "hpdfdest.h"
 #include "hpdfinfo.h"
 #include "hpdfpage.h"
@@ -651,6 +652,39 @@ HPDF_SaveToStream  (HPDF_Doc   pdf)
     return HPDF_OK;
 }
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_GetContents   (HPDF_Doc   pdf,
+                   HPDF_BYTE  *buf,
+                 HPDF_UINT32  *size)
+{
+    HPDF_Stream stream;
+    HPDF_UINT isize;
+    HPDF_STATUS ret;
+
+    HPDF_PTRACE ((" HPDF_GetContents\n"));
+
+    if (!HPDF_HasDoc (pdf)) {
+        return HPDF_INVALID_DOCUMENT;
+    }
+
+    stream = HPDF_MemStream_New (pdf->mmgr, HPDF_STREAM_BUF_SIZ);
+
+    if (!stream) {
+        return HPDF_CheckError (&pdf->error);
+    }
+
+    if (InternalSaveToStream (pdf, stream) != HPDF_OK) {
+        HPDF_Stream_Free (stream);
+        return HPDF_CheckError (&pdf->error);
+    }
+
+    ret = HPDF_Stream_Read (stream, buf, &isize);
+
+    *size = isize;
+    HPDF_Stream_Free (stream);
+
+    return ret;
+}
 
 HPDF_EXPORT(HPDF_UINT32)
 HPDF_GetStreamSize  (HPDF_Doc   pdf)
@@ -1190,10 +1224,11 @@ HPDF_SetCurrentEncoder  (HPDF_Doc    pdf,
         return HPDF_GetError (pdf);
 
     encoder = HPDF_GetEncoder (pdf, encoding_name);
-    pdf->cur_encoder = encoder;
 
-    if (!pdf)
+    if (!encoder)
         return HPDF_GetError (pdf);
+
+	pdf->cur_encoder = encoder;
 
     return HPDF_OK;
 }
@@ -1281,6 +1316,11 @@ HPDF_GetFont  (HPDF_Doc          pdf,
             else
                 encoder = HPDF_GetEncoder (pdf, HPDF_ENCODING_STANDARD);
         } else {
+            HPDF_CheckError (&pdf->error);
+            return NULL;
+        }
+
+        if (!encoder) {
             HPDF_CheckError (&pdf->error);
             return NULL;
         }
@@ -1628,7 +1668,7 @@ HPDF_LoadRawImageFromFile  (HPDF_Doc          pdf,
     if (!image)
         HPDF_CheckError (&pdf->error);
 
-    if (pdf->compression_mode & HPDF_COMP_IMAGE)
+    if (image && pdf->compression_mode & HPDF_COMP_IMAGE)
         image->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
 
     return image;
@@ -1656,7 +1696,7 @@ HPDF_LoadRawImageFromMem  (HPDF_Doc           pdf,
     if (!image)
         HPDF_CheckError (&pdf->error);
 
-    if (pdf->compression_mode & HPDF_COMP_IMAGE)
+    if (image && pdf->compression_mode & HPDF_COMP_IMAGE)
         image->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
 
     return image;
@@ -1692,6 +1732,27 @@ HPDF_LoadJpegImageFromFile  (HPDF_Doc     pdf,
     return image;
 }
 
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadJpegImageFromMem  (HPDF_Doc    pdf,
+                     const HPDF_BYTE   *buffer,
+                           HPDF_UINT    size)
+{
+	HPDF_Image image;
+
+	HPDF_PTRACE ((" HPDF_LoadJpegImageFromMem\n"));
+
+	if (!HPDF_HasDoc (pdf)) {
+		return NULL;
+	}
+
+	image = HPDF_Image_LoadJpegImageFromMem (pdf->mmgr, buffer, size , pdf->xref);
+
+	if (!image) {
+		HPDF_CheckError (&pdf->error);
+	}
+
+	return image;
+}
 
 /*----- Catalog ------------------------------------------------------------*/
 
@@ -1849,6 +1910,58 @@ HPDF_AddPageLabel  (HPDF_Doc             pdf,
 }
 
 
+HPDF_EXPORT(HPDF_EmbeddedFile)
+HPDF_AttachFile  (HPDF_Doc    pdf,
+                  const char *file)
+{
+    HPDF_NameDict names;
+    HPDF_NameTree ntree;
+    HPDF_EmbeddedFile efile;
+    HPDF_String name;
+    HPDF_STATUS ret = HPDF_OK;
+
+    HPDF_PTRACE ((" HPDF_AttachFile\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    names = HPDF_Catalog_GetNames (pdf->catalog);
+    if (!names) {
+        names = HPDF_NameDict_New (pdf->mmgr, pdf->xref);
+        if (!names)
+            return NULL;
+
+        ret = HPDF_Catalog_SetNames (pdf->catalog, names);
+        if (ret != HPDF_OK)
+            return NULL;
+    }
+
+    ntree = HPDF_NameDict_GetNameTree (names, HPDF_NAME_EMBEDDED_FILES);
+    if (!ntree) {
+        ntree = HPDF_NameTree_New (pdf->mmgr, pdf->xref);
+        if (!ntree)
+            return NULL;
+
+        ret = HPDF_NameDict_SetNameTree (names, HPDF_NAME_EMBEDDED_FILES, ntree);
+        if (ret != HPDF_OK)
+            return NULL;
+    }
+
+    efile = HPDF_EmbeddedFile_New (pdf->mmgr, pdf->xref, file);
+    if (!efile)
+        return NULL;
+
+    name = HPDF_String_New (pdf->mmgr, file, NULL);
+    if (!name)
+        return NULL;
+
+    ret += HPDF_NameTree_Add (ntree, name, efile);
+    if (ret != HPDF_OK)
+        return NULL;
+
+    return efile;
+}
+
 /*----- Info ---------------------------------------------------------------*/
 
 static HPDF_Dict
@@ -2003,16 +2116,16 @@ HPDF_SetCompressionMode  (HPDF_Doc    pdf,
     if (mode != (mode & HPDF_COMP_MASK))
         return HPDF_RaiseError (&pdf->error, HPDF_INVALID_COMPRESSION_MODE, 0);
 
-#ifndef HPDF_NOZLIB
+#ifndef LIBHPDF_HAVE_NOZLIB
     pdf->compression_mode = mode;
 
     return HPDF_OK;
 
-#else /* HPDF_NOZLIB */
+#else /* LIBHPDF_HAVE_NOZLIB */
 
     return HPDF_INVALID_COMPRESSION_MODE;
 
-#endif /* HPDF_NOZLIB */
+#endif /* LIBHPDF_HAVE_NOZLIB */
 }
 
 
@@ -2043,5 +2156,203 @@ HPDF_ResetError  (HPDF_Doc   pdf)
         return;
 
     HPDF_Error_Reset (&pdf->error);
+}
+
+/*
+ * create an intententry
+ */
+HPDF_EXPORT(HPDF_OutputIntent)
+HPDF_OutputIntent_New  (HPDF_Doc  pdf,
+                      const char* identifier,
+                      const char* condition,
+                      const char* registry,
+                      const char* info,
+                      HPDF_Array  outputprofile)
+{
+    HPDF_OutputIntent intent;
+    HPDF_STATUS ret = HPDF_OK;
+
+    HPDF_PTRACE((" HPDF_OutputIntent_New\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    intent = HPDF_Dict_New (pdf->mmgr);
+    if (!intent)
+        return NULL;
+
+    if (HPDF_Xref_Add (pdf->xref, intent) != HPDF_OK) {
+        HPDF_Dict_Free(intent);
+        return NULL;
+    }
+
+    ret += HPDF_Dict_AddName (intent, "Type", "OutputIntent");
+    ret += HPDF_Dict_AddName (intent, "S", "GTS_PDFX");
+    ret += HPDF_Dict_Add (intent, "OutputConditionIdentifier", HPDF_String_New (pdf->mmgr, identifier, NULL));
+    ret += HPDF_Dict_Add (intent, "OutputCondition", HPDF_String_New (pdf->mmgr, condition,NULL));
+    ret += HPDF_Dict_Add (intent, "RegistryName", HPDF_String_New (pdf->mmgr, registry, NULL));
+
+    if (info != NULL) {
+        ret += HPDF_Dict_Add (intent, "Info", HPDF_String_New (pdf->mmgr, info, NULL));
+    }
+
+    /* add ICC base stream */
+    if (outputprofile != NULL) {
+        ret += HPDF_Dict_Add (intent, "DestOutputProfile ", outputprofile);
+    }
+
+    if (ret != HPDF_OK) {
+        HPDF_Dict_Free(intent);
+        return NULL;
+    }
+
+    return intent;
+}
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_AddIntent(HPDF_Doc  pdf,
+      HPDF_OutputIntent  intent)
+{
+    HPDF_Array intents;
+    if (!HPDF_HasDoc (pdf))
+        return HPDF_INVALID_DOCUMENT;
+
+    intents = HPDF_Dict_GetItem (pdf->catalog, "OutputIntents", HPDF_OCLASS_ARRAY);
+    if (intents == NULL) {
+        intents = HPDF_Array_New (pdf->mmgr);
+        if (intents) {
+            HPDF_STATUS ret = HPDF_Dict_Add (pdf->catalog, "OutputIntents", intents);
+            if (ret != HPDF_OK) {
+                HPDF_CheckError (&pdf->error);
+                return HPDF_Error_GetDetailCode (&pdf->error);
+            }
+        }
+    }
+    HPDF_Array_Add(intents,intent);
+    return HPDF_Error_GetDetailCode (&pdf->error);
+}
+
+/* "Perceptual", "RelativeColorimetric", "Saturation", "AbsoluteColorimetric" */
+HPDF_EXPORT(HPDF_OutputIntent)
+HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
+		                HPDF_MMgr   mmgr,
+                        HPDF_Stream iccdata,
+                        HPDF_Xref   xref,
+						int         numcomponent)
+{
+   HPDF_OutputIntent icc;
+   HPDF_STATUS ret;
+
+   HPDF_PTRACE ((" HPDF_ICC_LoadIccFromMem\n"));
+
+   icc = HPDF_DictStream_New (mmgr, xref);
+   if (!icc)
+        return NULL;
+
+   HPDF_Dict_AddNumber (icc, "N", numcomponent);
+   switch (numcomponent) {
+   case 1 :
+	   HPDF_Dict_AddName (icc, "Alternate", "DeviceGray");
+	   break;
+   case 3 :
+	   HPDF_Dict_AddName (icc, "Alternate", "DeviceRGB");
+	   break;
+   case 4 :
+	   HPDF_Dict_AddName (icc, "Alternate", "DeviceCMYK");
+	   break;
+   default : /* unsupported */
+       HPDF_RaiseError (&pdf->error, HPDF_INVALID_ICC_COMPONENT_NUM, 0);
+       HPDF_Dict_Free(icc);
+       return NULL;
+   }
+
+   for (;;) {
+        HPDF_BYTE buf[HPDF_STREAM_BUF_SIZ];
+        HPDF_UINT len = HPDF_STREAM_BUF_SIZ;
+        ret = HPDF_Stream_Read (iccdata, buf, &len);
+
+        if (ret != HPDF_OK) {
+            if (ret == HPDF_STREAM_EOF) {
+               if (len > 0) {
+                    ret = HPDF_Stream_Write (icc->stream, buf, len);
+                    if (ret != HPDF_OK) {
+                        HPDF_Dict_Free(icc);
+                        return NULL;
+                    }
+                }
+                break;
+            } else {
+                HPDF_Dict_Free(icc);
+                return NULL;
+            }
+        }
+
+        if (HPDF_Stream_Write (icc->stream, buf, len) != HPDF_OK) {
+            HPDF_Dict_Free(icc);
+            return NULL;
+        }
+    }
+
+    return icc;
+}
+
+HPDF_EXPORT(HPDF_Array)
+HPDF_AddColorspaceFromProfile  (HPDF_Doc pdf,
+                               HPDF_Dict icc)
+{
+    HPDF_STATUS ret = HPDF_OK;
+    HPDF_Array iccentry;
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    iccentry = HPDF_Array_New(pdf->mmgr);
+	if (!iccentry)
+        return NULL;
+
+    ret = HPDF_Array_AddName (iccentry, "ICCBased" );
+    if (ret != HPDF_OK) {
+		HPDF_Array_Free(iccentry);
+        HPDF_CheckError (&pdf->error);
+        return NULL;
+    }
+
+    ret = HPDF_Array_Add (iccentry, icc );
+    if (ret != HPDF_OK) {
+		HPDF_Array_Free(iccentry);
+        return NULL;
+    }
+    return iccentry;
+}
+
+HPDF_EXPORT(HPDF_OutputIntent)
+HPDF_LoadIccProfileFromFile  (HPDF_Doc pdf,
+                           const char* icc_file_name,
+						           int numcomponent)
+{
+    HPDF_Stream iccdata;
+    HPDF_OutputIntent iccentry;
+
+    HPDF_PTRACE ((" HPDF_LoadIccProfileFromFile\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+      /* create file stream */
+    iccdata = HPDF_FileReader_New (pdf->mmgr, icc_file_name);
+
+    if (HPDF_Stream_Validate (iccdata)) {
+        iccentry = HPDF_ICC_LoadIccFromMem(pdf, pdf->mmgr, iccdata, pdf->xref, numcomponent);
+    } else
+        iccentry = NULL;
+
+    /* destroy file stream */
+    if (iccdata)
+        HPDF_Stream_Free (iccdata);
+
+    if (!iccentry)
+        HPDF_CheckError (&pdf->error);
+
+    return iccentry;
 }
 

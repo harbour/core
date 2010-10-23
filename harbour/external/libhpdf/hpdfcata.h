@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -29,6 +29,15 @@ typedef HPDF_Dict HPDF_Catalog;
 HPDF_Catalog
 HPDF_Catalog_New  (HPDF_MMgr  mmgr,
                    HPDF_Xref  xref);
+
+
+HPDF_NameDict
+HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
+
+
+HPDF_STATUS
+HPDF_Catalog_SetNames  (HPDF_Catalog  catalog,
+                        HPDF_NameDict dict);
 
 
 HPDF_Pages

@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -28,6 +28,8 @@ static const char  *HPDF_INFO_ATTR_NAMES[] = {
     "Title",
     "Subject",
     "Keywords",
+    "Trapped",
+    "GTS_PDFXVersion",
     NULL
 };
 
@@ -59,6 +61,9 @@ HPDF_Info_SetInfoAttr (HPDF_Dict        info,
 
     if (type <= HPDF_INFO_MOD_DATE)
         return HPDF_SetError (info->error, HPDF_INVALID_PARAMETER, 0);
+
+    if (type == HPDF_INFO_TRAPPED)
+        return HPDF_Dict_AddName(info, name, value);
 
     return HPDF_Dict_Add (info, name, HPDF_String_New (info->mmgr, value,
             encoder));

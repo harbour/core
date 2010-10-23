@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -19,7 +19,7 @@
 #include "hpdfutil.h"
 #include "hpdfimag.h"
 
-#ifndef HPDF_NOPNGLIB
+#ifndef LIBHPDF_HAVE_NOPNGLIB
 #include <png.h>
 
 static void
@@ -572,7 +572,11 @@ no_transparent_color_in_palette:
 		}
 		HPDF_FreeMem(image->mmgr, smask_data);
 
-		ret += HPDF_Dict_AddName (image, "ColorSpace", "DeviceRGB");
+		if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
+			ret += HPDF_Dict_AddName (image, "ColorSpace", "DeviceGray");
+		} else {
+			ret += HPDF_Dict_AddName (image, "ColorSpace", "DeviceRGB");
+		}
 		ret += HPDF_Dict_AddNumber (image, "Width", (HPDF_UINT)info_ptr->width);
 		ret += HPDF_Dict_AddNumber (image, "Height", (HPDF_UINT)info_ptr->height);
 		ret += HPDF_Dict_AddNumber (image, "BitsPerComponent",	(HPDF_UINT)info_ptr->bit_depth);
@@ -691,5 +695,5 @@ PngAfterWrite  (HPDF_Dict obj)
 }
 
 
-#endif /* HPDF_NOPNGLIB */
+#endif /* LIBHPDF_HAVE_NOPNGLIB */
 

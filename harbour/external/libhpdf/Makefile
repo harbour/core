@@ -51,6 +51,7 @@ C_SOURCES := \
    hpdflist.c \
    hpdfmmgr.c \
    hpdfname.c \
+   hpdfndic.c \
    hpdfnull.c \
    hpdfnumb.c \
    hpdfobje.c \
@@ -58,6 +59,7 @@ C_SOURCES := \
    hpdfpage.c \
    hpdfpago.c \
    hpdfpags.c \
+   hpdfpdfa.c \
    hpdfreal.c \
    hpdfstre.c \
    hpdfstri.c \
@@ -138,8 +140,8 @@ else
 endif
 
 # ORIGIN http://libharu.org/
-# VER    2.1.0
-# URL    http://libharu.org/files/libharu-2.1.0.tar.gz
+# VER    2.2.0
+# URL    http://libharu.org/files/libharu-2.2.0.tar.gz
 # DIFF   libhpdf.dif
 #
 # MAP    README
@@ -181,10 +183,12 @@ endif
 # MAP    src/hpdf_list.c                hpdflist.c
 # MAP    src/hpdf_mmgr.c                hpdfmmgr.c
 # MAP    src/hpdf_name.c                hpdfname.c
+# MAP    src/hpdf_namedict.c            hpdfndic.c
 # MAP    src/hpdf_null.c                hpdfnull.c
 # MAP    src/hpdf_number.c              hpdfnumb.c
 # MAP    src/hpdf_objects.c             hpdfobje.c
 # MAP    src/hpdf_outline.c             hpdfoutl.c
+# MAP    src/hpdf_pdfa.c                hpdfpdfa.c
 # MAP    src/hpdf_page_label.c          hpdfpage.c
 # MAP    src/hpdf_page_operator.c       hpdfpago.c
 # MAP    src/hpdf_pages.c               hpdfpags.c
@@ -213,8 +217,10 @@ endif
 # MAP    include/hpdf_info.h            hpdfinfo.h
 # MAP    include/hpdf_list.h            hpdflist.h
 # MAP    include/hpdf_mmgr.h            hpdfmmgr.h
+# MAP    include/hpdf_namedict.h        hpdfndic.h
 # MAP    include/hpdf_objects.h         hpdfobje.h
 # MAP    include/hpdf_outline.h         hpdfoutl.h
+# MAP    include/hpdf_pdfa.h            hpdfpdfa.h
 # MAP    include/hpdf_page_label.h      hpdfpage.h
 # MAP    include/hpdf_pages.h           hpdfpags.h
 # MAP    include/hpdf_streams.h         hpdfstre.h

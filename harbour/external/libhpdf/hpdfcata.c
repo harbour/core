@@ -4,7 +4,7 @@
  * URL: http://libharu.org
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2008 Antony Dovgal <tony@daylessday.org>
+ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -81,6 +81,23 @@ HPDF_Catalog_GetRoot  (HPDF_Catalog  catalog)
         HPDF_SetError (catalog->error, HPDF_PAGE_CANNOT_GET_ROOT_PAGES, 0);
 
     return pages;
+}
+
+
+HPDF_NameDict
+HPDF_Catalog_GetNames  (HPDF_Catalog catalog)
+{
+    if (!catalog)
+        return NULL;
+    return HPDF_Dict_GetItem (catalog, "Names", HPDF_OCLASS_DICT);
+}
+
+
+HPDF_STATUS
+HPDF_Catalog_SetNames  (HPDF_Catalog catalog,
+                        HPDF_NameDict dict)
+{
+    return HPDF_Dict_Add (catalog, "Names", dict);
 }
 
 

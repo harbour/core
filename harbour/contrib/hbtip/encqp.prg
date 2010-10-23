@@ -97,6 +97,7 @@ METHOD Decode( cData ) CLASS TIPEncoderQP
 
    /* delete soft line break. */
    cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
+   cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
 
    nLen := Len( cData )
    FOR tmp := 1 TO nLen
