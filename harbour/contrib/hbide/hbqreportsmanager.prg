@@ -362,7 +362,7 @@ METHOD HbqReportsManager:buildDesignReport()
    ::qTreeObjects:setObjectName( "ObjectsTree" )
    ::qTreeObjects:setIconSize( QSize( 12,12 ) )
    ::qTreeObjects:setIndentation( 12 )
-   ::qTreeObjects:connect( "itemClicked(QTWItem,int)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
+   ::qTreeObjects:connect( "itemClicked(QTreeWidgetItem *,int)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
 
    ::qTabL1 := QTabWidget()
    ::qSplL:addWidget( ::qTabL1 )
@@ -1518,7 +1518,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
 
    qDlg := QPrintPreviewDialog( qPrinter, ::qView )
 
-   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter *)", {|p| ::paintRequested( p ) } )
 
    qDlg:setWindowTitle( "HBReportGenerator : " + iif( !empty( ::cSaved ), ::cSaved, "Untitled" ) )
    qDlg:move( 20, 20 )

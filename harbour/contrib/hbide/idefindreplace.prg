@@ -1397,9 +1397,9 @@ METHOD IdeFindInFiles:print()
 
    qDlg := QPrintPreviewDialog( ::oUI )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter *)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
-   qDlg:disconnect( "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter *)" )
 
    RETURN self
 

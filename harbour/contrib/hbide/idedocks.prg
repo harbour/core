@@ -1078,7 +1078,7 @@ METHOD IdeDocks:buildStackedWidget()
 
       ::oDa:addChild( ::oStackedWidget )
 
-      ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+      ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow *)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
    ELSE
       /* Its parent will be drawing area and pages will be XbpTabWidgets() */
@@ -1098,7 +1098,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
    IF ::oIde:lCurEditsMdi
 
-      qMdi := QMdiSubWindow( ::oStackedWidget:oWidget )
+      qMdi := QMdiSubWindow *( ::oStackedWidget:oWidget )
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
       IF cView == "Stats"

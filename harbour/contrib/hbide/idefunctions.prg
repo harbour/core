@@ -142,7 +142,7 @@ METHOD IdeFunctions:create( oIde )
    ::oUI:q_buttonTag    :connect( "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
    ::oUI:q_buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
    ::oUI:q_tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
-   ::oUI:q_tableFuncList:connect( "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
+   ::oUI:q_tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem *)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
 
    RETURN Self
 

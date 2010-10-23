@@ -1845,10 +1845,10 @@ METHOD IdeEdit:printPreview()
    LOCAL qDlg := QPrintPreviewDialog( ::oDlg:oWidget )
 
    qDlg:setWindowTitle( "hbIDE Preview Dialog" )
-   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter *)", {|p| ::paintRequested( p ) } )
  * qDlg:setWindowState( Qt_WindowMaximized )
    qDlg:exec()
-   qDlg:disconnect( "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter *)" )
 
    RETURN self
 

@@ -400,7 +400,7 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:q_editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
    ::oUI:q_editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
    ::oUI:q_editIndex        :connect( "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
-   ::oUI:q_listIndex        :connect( "itemDoubleClicked(QLWItem)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
+   ::oUI:q_listIndex        :connect( "itemDoubleClicked(QListWidgetItem *)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
 
    ::oUI:q_treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
    ::oUI:q_treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
@@ -1304,9 +1304,9 @@ METHOD IdeHarbourHelp:print()
 
    qDlg := QPrintPreviewDialog( ::oUI )
    qDlg:setWindowTitle( "Harbour Help Document" )
-   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter *)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
-   qDlg:disconnect( "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter *)" )
 
    RETURN self
 

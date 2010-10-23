@@ -600,10 +600,10 @@ METHOD IdeShortcuts:buildSignals()
    ::oUI:q_buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
    ::oUI:q_buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
    ::oUI:q_buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
-   ::oUI:q_listMethods :connect( "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
+   ::oUI:q_listMethods :connect( "itemDoubleClicked(QListWidgetItem *)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
    ::oUI:q_listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
    ::oUI:q_tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
-   ::oUI:q_tableMacros :connect( "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
+   ::oUI:q_tableMacros :connect( "itemDoubleClicked(QTableWidgetItem *)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
 
    RETURN Self
 

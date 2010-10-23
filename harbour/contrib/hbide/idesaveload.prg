@@ -1042,7 +1042,7 @@ METHOD IdeSetup:disConnectSlots()
    ::oUI:q_buttonKeyUp         :disconnect( "clicked()"                )
    ::oUI:q_buttonKeyDown       :disconnect( "clicked()"                )
 
-   ::oUI:q_tableVar            :disconnect( "itemActivated(QTblWItem)" )
+   ::oUI:q_tableVar            :disconnect( "itemActivated(QTableWidgetItem *)" )
 
    ::oUI:q_buttonSelFont       :disconnect( "clicked()"                )
    ::oUI:q_buttonClose         :disConnect( "clicked()"                )
@@ -1105,7 +1105,7 @@ METHOD IdeSetup:connectSlots()
    ::oUI:q_buttonKeyUp         :connect( "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
    ::oUI:q_buttonKeyDown       :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
 
-   ::oUI:q_tableVar            :connect( "itemActivated(QTblWItem)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+   ::oUI:q_tableVar            :connect( "itemActivated(QTableWidgetItem *)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
 
    ::oUI:q_buttonSelFont       :connect( "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
    ::oUI:q_buttonClose         :connect( "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )

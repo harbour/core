@@ -286,13 +286,7 @@ static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots 
 {
    HB_TRACE( HB_TR_DEBUG, ( "connect_signal: %s", ( char * ) signal.toAscii().data() ) );
 
-   QByteArray theSignal = signal.toAscii()
-                              .replace( "QWidget"      , "QWidget *"          )
-                              .replace( "QPrinter"     , "QPrinter *"         )
-                              .replace( "QLWItem"      , "QListWidgetItem *"  )
-                              .replace( "QTWItem"      , "QTreeWidgetItem *"  )
-                              .replace( "QTblWItem"    , "QTableWidgetItem *" )
-                              .replace( "QMdiSubWindow", "QMdiSubWindow *"    );
+   QByteArray theSignal = signal.toAscii();
 
    theSignal = QMetaObject::normalizedSignature( theSignal );
 
@@ -330,13 +324,7 @@ static int connect_signal( QString signal, QObject * object, HBQSlots * t_slots 
 
 static bool disconnect_signal( QObject * object, QString signal )
 {
-   QByteArray theSignal = signal.toAscii()
-                              .replace( "QWidget"      , "QWidget *"          )
-                              .replace( "QPrinter"     , "QPrinter *"         )
-                              .replace( "QLWItem"      , "QListWidgetItem *"  )
-                              .replace( "QTWItem"      , "QTreeWidgetItem *"  )
-                              .replace( "QTblWItem"    , "QTableWidgetItem *" )
-                              .replace( "QMdiSubWindow", "QMdiSubWindow *"    );
+   QByteArray theSignal = signal.toAscii();
 
    theSignal = QMetaObject::normalizedSignature( theSignal ) ;
 
