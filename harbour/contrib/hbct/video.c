@@ -192,6 +192,9 @@ HB_FUNC( SETFONT )
       height = len / count;
 
 #if defined( __DJGPP__ )
+#  ifndef __tb_size
+#     define __tb_size _go32_info_block.size_of_transfer_buffer
+#  endif
    {
       __dpmi_regs r;
 
