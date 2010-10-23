@@ -76,12 +76,6 @@ public:
    QList<QObject *> listObj;
 
    int qt_metacall( QMetaObject::Call call, int id, void **arguments );
-
-   bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock );
-   bool hbDisconnect( PHB_ITEM pObj, const char * slot );
-   bool hbIsConnected( PHB_ITEM pObj, const char * slot );
-   bool isConnected( QObject * object, const char * slot );
-   bool hbClear();
 };
 
 /*----------------------------------------------------------------------*/

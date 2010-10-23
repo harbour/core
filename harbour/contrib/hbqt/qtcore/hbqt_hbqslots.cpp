@@ -341,38 +341,6 @@ static bool disconnect_signal( QObject * object, QString signal )
 
 static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void ** arguments )
 {
-   // array of function calls
-   // static void *( arrayFunc[23])(PHB_ITEM *, void ** ) {
-   //
-   #if 0
-   static void * ( arrayFunc[ 23 ] )
-   {
-      hbqt_SlotsExecInt ,
-      hbqt_SlotsExecIntInt ,
-      hbqt_SlotsExecIntIntInt ,
-      hbqt_SlotsExecIntIntIntInt ,
-      hbqt_SlotsExecBool ,
-      hbqt_SlotsExecQRectInt ,
-      hbqt_SlotsExecString ,
-      hbqt_SlotsExecModel ,
-      hbqt_SlotsExecModelModel ,
-      hbqt_SlotsExecItemSelItemSel ,
-      hbqt_SlotsExecTextCharFormat ,
-      hbqt_SlotsExecFont ,
-      hbqt_SlotsExecQTextCursor ,
-      hbqt_SlotsExecStringList ,
-      hbqt_SlotsExecPointer ,
-      hbqt_SlotsExecPointerPointer ,
-      hbqt_SlotsExecPointerInt ,
-      hbqt_SlotsExecQDate ,
-      hbqt_SlotsExecQDateTime ,
-      hbqt_SlotsExecQPoint ,
-      hbqt_SlotsExecQRectF ,
-      hbqt_SlotsExecQTime ,
-      hbqt_SlotsExecQUrl
-   }
-   #endif
-
    static QList< QByteArray > argCombinations;
 
    if( argCombinations.size() == 0 )
@@ -384,8 +352,8 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
                          "bool" <<
                          "QRect$int" <<
                          "QString" <<
-                         "QModel" <<
-                         "QModel$QModel" <<
+                         "QModelIndex" <<
+                         "QModelIndex$QModelIndex" <<
                          "QItemSelection$QItemSelection" <<
                          "QTextCharFormat" <<
                          "QFont" <<
@@ -399,8 +367,7 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
                          "QPoint" <<
                          "QRectF" <<
                          "QTime" <<
-                         "QUrl" <<
-                         "QModelIndex$QModelIndex" ;
+                         "QUrl" ;
    }
 
    const QMetaMethod meta = object->metaObject()->method( id );
@@ -409,8 +376,6 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
 
    QList<QByteArray> arrayOfTypes = meta.parameterTypes();
 
-   // HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy objectName %s ", qPrintable( object->objectName() ) ) );
-   // HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy className %s ", (char * ) object->metaObject()->className() ) );
    int parameterCount = arrayOfTypes.size();
    QStringList parList;
 
@@ -441,7 +406,6 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
       char cSlotName[ 20 ];
       sprintf( cSlotName, "SLOT_%d", id );
       int i = object->property( cSlotName ).toInt();
-      // HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy %s=%d", cSlotName, i ) );
 
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
@@ -477,10 +441,10 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
             case 6:   // if( paramString == "QString" )
                hbqt_SlotsExecString( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
                break;
-            case 7:   // if( paramString == "QModel" )
+            case 7:   // if( paramString == "QModelIndex" )
                hbqt_SlotsExecModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
                break;
-            case 8:   // if( paramString == "QModel$QModel" )
+            case 8:   // if( paramString == "QModelIndex$QModelIndex" )
                hbqt_SlotsExecModelModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
                break;
             case 9:   // if( paramString == "QItemSelection$QItemSelection" )
@@ -525,9 +489,6 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
             case 22:   // if( paramString == "QUrl" )
                hbqt_SlotsExecQUrl( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
                break;
-            case 23:   // if( paramString == "QModel$QModel" )
-               hbqt_SlotsExecModelModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
             }
          }
          hb_vmRequestRestore();
@@ -555,103 +516,6 @@ HBQSlots::~HBQSlots()
 
    /*           Should be disconnected, but this is a responsibility of programmer as object is only known to the application */
    listBlock.clear();
-}
-
-bool HBQSlots::hbIsConnected( PHB_ITEM pObj, const char * slot )
-{
-   HB_SYMBOL_UNUSED( pObj );
-
-   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
-   return isConnected( object, slot );
-}
-
-bool HBQSlots::isConnected( QObject * object, const char * slot )
-{
-   int i;
-
-   for( i = 0; i < listBlock.size(); i++ )
-   {
-      if( listBlock[ i ] != NULL && listObj[ i ] == object )
-      {
-         if( object->property( slot ).toInt() == i + 1 )
-         {
-            return true;
-         }
-      }
-   }
-   return false;
-}
-
-bool HBQSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
-{
-   HB_SYMBOL_UNUSED( pObj   );
-   HB_SYMBOL_UNUSED( bBlock );
-
-   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );                   /* get sender    */
-
-   if( object )
-   {
-      if( !isConnected( object, slot ) )
-      {
-HB_TRACE( HB_TR_DEBUG, ( "AAA 3 %s  %p", slot, object ) );
-         bool bConnected = connect_signal( ( QString ) slot, object, this );
-HB_TRACE( HB_TR_DEBUG, ( "AAA 4" ) );
-         if( bConnected )
-         {
-            PHB_ITEM pBlock = hb_itemNew( bBlock );                        /* get codeblock */
-HB_TRACE( HB_TR_DEBUG, ( "AAA 5" ) );
-            listBlock << pBlock;
-            listObj   << object;
-
-            object->setProperty( slot, ( int ) listBlock.size() );
-
-            return true;
-         }
-      }
-   }
-   return false;
-}
-
-bool HBQSlots::hbDisconnect( PHB_ITEM pObj, const char * signal )
-{
-   HB_SYMBOL_UNUSED( pObj );
-
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
-
-   if( object )
-   {
-      int i = object->property( signal ).toInt();
-
-      if( i > 0 && i <= listBlock.size() )
-      {
-         hb_itemRelease( listBlock.at( i - 1 ) );
-         listBlock[ i - 1 ] = NULL;
-         listObj[ i - 1 ] = NULL;
-
-         bool bRet = disconnect_signal( object, ( QString ) signal );
-
-         HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", signal ) );
-
-         return bRet;
-      }
-   }
-   return false;
-}
-
-bool HBQSlots::hbClear()
-{
-   int i;
-
-   for( i = 0; i < listBlock.size(); i++ )
-   {
-      if( listBlock[ i ] != NULL )
-      {
-         hb_itemRelease( listBlock.at( i ) );
-         listBlock[ i ] = NULL;
-      }
-   }
-   listBlock.clear();
-   return true;
 }
 
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )

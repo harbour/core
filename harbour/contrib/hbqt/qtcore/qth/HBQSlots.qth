@@ -86,10 +86,6 @@ HB_FUNC( QT_HBQSLOTS )
 </ENUMS>
 
 <PROTOS>
-bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
-bool hbDisconnect( PHB_ITEM obj, const char * slot )
-bool hbIsConnected( PHB_ITEM obj, const char * slot )
-bool hbClear()
 </PROTOS>
 
 <SLOTS>

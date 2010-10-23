@@ -24,12 +24,6 @@
  * 
  *  $RETURNS$
  *     An instance of the object of type HBQSlots
- *  $METHODS$
- *     :hbConnect( xPObj, cSlot, xBBlock )                 -> lBool
- *     :hbDisconnect( xObj, cSlot )                        -> lBool
- *     :hbIsConnected( xObj, cSlot )                       -> lBool
- *     :hbClear()                                          -> lBool
- * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$

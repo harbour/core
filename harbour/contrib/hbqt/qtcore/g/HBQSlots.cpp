@@ -98,7 +98,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 4/4 [ 100.00% ] ]
+ *  Constructed[ 0/0 [ 0% ] ]
  *
  */
 
@@ -185,54 +185,6 @@ HB_FUNC( QT_HBQSLOTS )
    pObj = new HBQSlots() ;
 
    hb_retptrGC( hbqt_gcAllocate_HBQSlots( ( void * ) pObj, true ) );
-}
-
-/*
- * bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
- */
-HB_FUNC( QT_HBQSLOTS_HBCONNECT )
-{
-   HBQSlots * p = hbqt_par_HBQSlots( 1 );
-   if( p )
-   {
-      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ), hb_param( 4, HB_IT_ANY ) ) );
-   }
-}
-
-/*
- * bool hbDisconnect( PHB_ITEM obj, const char * slot )
- */
-HB_FUNC( QT_HBQSLOTS_HBDISCONNECT )
-{
-   HBQSlots * p = hbqt_par_HBQSlots( 1 );
-   if( p )
-   {
-      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ) ) );
-   }
-}
-
-/*
- * bool hbIsConnected( PHB_ITEM obj, const char * slot )
- */
-HB_FUNC( QT_HBQSLOTS_HBISCONNECTED )
-{
-   HBQSlots * p = hbqt_par_HBQSlots( 1 );
-   if( p )
-   {
-      hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ) ) );
-   }
-}
-
-/*
- * bool hbClear()
- */
-HB_FUNC( QT_HBQSLOTS_HBCLEAR )
-{
-   HBQSlots * p = hbqt_par_HBQSlots( 1 );
-   if( p )
-   {
-      hb_retl( ( p )->hbClear() );
-   }
 }
 
 
