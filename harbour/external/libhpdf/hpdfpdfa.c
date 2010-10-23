@@ -116,12 +116,12 @@ HPDF_PDFA_GenerateID(HPDF_Doc pdf)
     HPDF_BYTE *currentTime;
     HPDF_BYTE idkey[HPDF_MD5_KEY_LEN];
     HPDF_MD5_CTX md5_ctx;
+    HPDF_Array id;
     time_t ltime; 
 
     ltime = time(NULL); 
     currentTime = (HPDF_BYTE *)ctime(&ltime);
     
-    HPDF_Array id;
     id = HPDF_Dict_GetItem(pdf->trailer, "ID", HPDF_OCLASS_ARRAY);
     if (!id) {
        id = HPDF_Array_New(pdf->mmgr);
