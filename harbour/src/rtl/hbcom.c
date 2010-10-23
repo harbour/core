@@ -95,7 +95,7 @@
 #elif defined( HB_HAS_SIOLIB )
 #  include <sioLib.h>
 #elif defined( HB_HAS_PMCOM )
-#  include "../../external/pmcom/com.h"
+#  include "../../external/hbpmcom/com.h"
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
 #elif defined( HB_OS_OS2 )
