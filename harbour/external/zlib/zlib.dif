@@ -1,6 +1,6 @@
 diff -urN zlib.orig/crc32.c zlib/crc32.c
---- zlib.orig/crc32.c	2010-07-15 17:16:00.380244239 +0200
-+++ zlib/crc32.c	2010-07-15 17:16:00.390235257 +0200
+--- zlib.orig/crc32.c	2010-10-23 10:11:33.702052554 +0200
++++ zlib/crc32.c	2010-10-23 10:11:33.702052554 +0200
 @@ -19,6 +19,8 @@
    one thread to use crc32().
   */
@@ -11,8 +11,8 @@ diff -urN zlib.orig/crc32.c zlib/crc32.c
  #  include <stdio.h>
  #  ifndef DYNAMIC_CRC_TABLE
 diff -urN zlib.orig/deflate.c zlib/deflate.c
---- zlib.orig/deflate.c	2010-07-15 17:16:00.580233893 +0200
-+++ zlib/deflate.c	2010-07-15 17:16:00.600241073 +0200
+--- zlib.orig/deflate.c	2010-10-23 10:11:33.768052438 +0200
++++ zlib/deflate.c	2010-10-23 10:11:33.769051566 +0200
 @@ -51,6 +51,10 @@
  
  #include "deflate.h"
@@ -59,8 +59,8 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
  
      for (;;) {
 diff -urN zlib.orig/gzguts.h zlib/gzguts.h
---- zlib.orig/gzguts.h	2010-07-15 17:16:00.630234244 +0200
-+++ zlib/gzguts.h	2010-07-15 17:16:00.630234244 +0200
+--- zlib.orig/gzguts.h	2010-10-23 10:11:33.781052358 +0200
++++ zlib/gzguts.h	2010-10-23 10:11:33.781052358 +0200
 @@ -31,9 +31,19 @@
  #  define NO_GZCOMPRESS
  #endif
@@ -68,15 +68,15 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
 -#ifdef _MSC_VER
 -#  include <io.h>
 -#  define vsnprintf _vsnprintf
-+#if defined(MSDOS)
-+   /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),
-+      but for now we just assume it doesn't. */
-+#     define NO_vsnprintf
-+#elif defined(OS2) || defined(WINDOWS) || defined(WIN32)
++#if defined(MSDOS) || defined(OS2) || defined(WINDOWS) || defined(WIN32)
 +#  ifndef _WINCE
 +#     include <io.h>
 +#     if defined(_MSC_VER) && !defined(__XCC__)
 +#        define vsnprintf _vsnprintf
++#     endif
++#     if defined(__DJGPP__) && \
++         (__DJGPP__ < 2 || (__DJGPP__ == 2 && __DJGPP_MINOR__ <= 3))
++#       define NO_vsnprintf
 +#     endif
 +#  endif
 +#else
@@ -85,8 +85,8 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
  
  #ifndef local
 diff -urN zlib.orig/gzread.c zlib/gzread.c
---- zlib.orig/gzread.c	2010-07-15 17:16:00.670240781 +0200
-+++ zlib/gzread.c	2010-07-15 17:16:00.670240781 +0200
+--- zlib.orig/gzread.c	2010-10-23 10:11:33.805051962 +0200
++++ zlib/gzread.c	2010-10-23 10:11:33.805051962 +0200
 @@ -167,12 +167,12 @@
                  gz_error(state, Z_DATA_ERROR, "unknown header flags set");
                  return -1;
@@ -118,8 +118,8 @@ diff -urN zlib.orig/gzread.c zlib/gzread.c
              /* an unexpected end of file is not checked for here -- it will be
                 noticed on the first request for uncompressed data */
 diff -urN zlib.orig/inflate.c zlib/inflate.c
---- zlib.orig/inflate.c	2010-07-15 17:16:00.890234828 +0200
-+++ zlib/inflate.c	2010-07-15 17:16:00.900240372 +0200
+--- zlib.orig/inflate.c	2010-10-23 10:11:33.880052478 +0200
++++ zlib/inflate.c	2010-10-23 10:11:33.881051665 +0200
 @@ -408,6 +408,7 @@
  /* Macros for inflate(): */
  
@@ -129,8 +129,8 @@ diff -urN zlib.orig/inflate.c zlib/inflate.c
  #  define UPDATE(check, buf, len) \
      (state->flags ? crc32(check, buf, len) : adler32(check, buf, len))
 diff -urN zlib.orig/zconf.h zlib/zconf.h
---- zlib.orig/zconf.h	2010-07-15 17:16:01.130237445 +0200
-+++ zlib/zconf.h	2010-07-15 17:16:01.150234568 +0200
+--- zlib.orig/zconf.h	2010-10-23 10:11:33.944051635 +0200
++++ zlib/zconf.h	2010-10-23 10:11:33.944051635 +0200
 @@ -140,7 +140,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
@@ -152,8 +152,8 @@ diff -urN zlib.orig/zconf.h zlib/zconf.h
  #    define WIN32
  #  endif
 diff -urN zlib.orig/zutil.c zlib/zutil.c
---- zlib.orig/zutil.c	2010-07-15 17:16:01.300235057 +0200
-+++ zlib/zutil.c	2010-07-15 17:16:01.310242277 +0200
+--- zlib.orig/zutil.c	2010-10-23 10:11:34.002051390 +0200
++++ zlib/zutil.c	2010-10-23 10:11:34.002051390 +0200
 @@ -136,7 +136,7 @@
      return ERR_MSG(err);
  }
@@ -164,8 +164,8 @@ diff -urN zlib.orig/zutil.c zlib/zutil.c
       * errno.  We define it as a global variable to simplify porting.
       * Its value is always 0 and should not be used.
 diff -urN zlib.orig/zutil.h zlib/zutil.h
---- zlib.orig/zutil.h	2010-07-15 17:16:01.330241914 +0200
-+++ zlib/zutil.h	2010-07-15 17:16:01.350234287 +0200
+--- zlib.orig/zutil.h	2010-10-23 10:11:34.007051664 +0200
++++ zlib/zutil.h	2010-10-23 10:11:34.007051664 +0200
 @@ -22,7 +22,7 @@
  #include "zlib.h"
  
@@ -196,7 +196,19 @@ diff -urN zlib.orig/zutil.h zlib/zutil.h
  #  endif
  #endif
  
-@@ -199,7 +203,8 @@
+@@ -191,7 +195,10 @@
+ #  ifdef MSDOS
+      /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),
+         but for now we just assume it doesn't. */
+-#    define NO_vsnprintf
++#    if defined(__DJGPP__) && \
++        (__DJGPP__ < 2 || (__DJGPP__ == 2 && __DJGPP_MINOR__ <= 3))
++#      define NO_vsnprintf
++#    endif
+ #  endif
+ #  ifdef __TURBOC__
+ #    define NO_vsnprintf
+@@ -199,7 +206,8 @@
  #  ifdef WIN32
       /* In Win32, vsnprintf is available as the "non-ANSI" _vsnprintf. */
  #    if !defined(vsnprintf) && !defined(NO_vsnprintf)
