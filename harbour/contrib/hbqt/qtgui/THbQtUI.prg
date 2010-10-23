@@ -70,9 +70,7 @@
 
 /*----------------------------------------------------------------------*/
 
-/* TODO: Rename HbQtUI2 to final name after finalizing the code. [vszakats] */
-
-CREATE CLASS HbQtUI2 INHERIT HbQtObjectHandler
+CREATE CLASS HbQtUI INHERIT HbQtObjectHandler
 
    VAR oWidget          /* TOFIX: User code uses this directly. Then rename this to __oRootWidget and make it PROTECTED. */
    VAR qObj INIT { => } /* TOFIX: User code uses this directly. Then rename this to __hWidget and make it PROTECTED. */
@@ -86,7 +84,7 @@ CREATE CLASS HbQtUI2 INHERIT HbQtObjectHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI2:new( oRootWidget, hWidget )
+METHOD HbQtUI:new( oRootWidget, hWidget )
 
    ::oWidget := oRootWidget
    ::qObj := hWidget
@@ -99,7 +97,7 @@ METHOD HbQtUI2:new( oRootWidget, hWidget )
 /*----------------------------------------------------------------------*/
 
 /* QUESTION: Is this needed? */
-METHOD HbQtUI2:destroy()
+METHOD HbQtUI:destroy()
 
    ::oWidget:close()
    ::oWidget := NIL
@@ -108,7 +106,7 @@ METHOD HbQtUI2:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI2:__OnError( ... )
+METHOD HbQtUI:__OnError( ... )
    LOCAL cMsg := __GetMessage()
 
    LOCAL oError

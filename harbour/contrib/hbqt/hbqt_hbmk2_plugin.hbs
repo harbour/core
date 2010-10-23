@@ -594,7 +594,6 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "FUNCTION " + cFuncName + "( qParent )" )
-   AAdd( aLinesPRG, "   LOCAL oUI" )
    AAdd( aLinesPRG, "   LOCAL oRootWidget" )
    AAdd( aLinesPRG, "   LOCAL hWidget := { => }" )
    AAdd( aLinesPRG, "" )
@@ -679,16 +678,7 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
       ENDIF
    NEXT
    AAdd( aLinesPRG, "" )
-   #if 0
-   AAdd( aLinesPRG, "   oUI := HbQtUI2():new( oRootWidget, hWidget )" )
-   #else
-   AAdd( aLinesPRG, "   oUI         := HbQtUI():new()" )
-   AAdd( aLinesPRG, "   oUI:qObj    := hWidget" )
-   AAdd( aLinesPRG, "   oUI:oWidget := oRootWidget" )
-   AAdd( aLinesPRG, "   oUI:pPtr    := oRootWidget:pPtr" )
-   #endif
-   AAdd( aLinesPRG, "" )
-   AAdd( aLinesPRG, "   RETURN oUI" )
+   AAdd( aLinesPRG, "   RETURN HbQtUI():new( oRootWidget, hWidget )" )
    AAdd( aLinesPRG, "" )
 
    RETURN aLinesPRG

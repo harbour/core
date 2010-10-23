@@ -74,7 +74,9 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbQtUI
+/* TOFIX: Change this to inherit from HbQtUI class */
+
+CLASS HbQtUILoader
 
    DATA     pPtr
    DATA     cFile
@@ -110,7 +112,7 @@ CLASS HbQtUI
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:new( cFile, qParent )
+METHOD HbQtUILoader:new( cFile, qParent )
 
    ::cFile   := cFile
    ::qParent := qParent
@@ -119,7 +121,7 @@ METHOD HbQtUI:new( cFile, qParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:create( cFile, qParent )
+METHOD HbQtUILoader:create( cFile, qParent )
    LOCAL cExt
 
    DEFAULT cFile   TO ::cFile
@@ -154,7 +156,7 @@ METHOD HbQtUI:create( cFile, qParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:destroy()
+METHOD HbQtUILoader:destroy()
    LOCAL a_, i
 
    ::pSlots := NIL
@@ -176,7 +178,7 @@ METHOD HbQtUI:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:loadWidgets()
+METHOD HbQtUILoader:loadWidgets()
    LOCAL a_, pPtr, bBlock, x, cBlock
 
    FOR EACH a_ IN ::widgets
@@ -200,7 +202,7 @@ METHOD HbQtUI:loadWidgets()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:loadContents( cUiFull )
+METHOD HbQtUILoader:loadContents( cUiFull )
    LOCAL cBuffer := memoread( cUiFull )
    LOCAL n, cClass, cWidget
 
@@ -225,7 +227,7 @@ METHOD HbQtUI:loadContents( cUiFull )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:loadUI( cUiFull, qParent )
+METHOD HbQtUILoader:loadUI( cUiFull, qParent )
    LOCAL oWidget, qUiLoader, qFile //, pWidget
    #if 1
    LOCAL cBuffer
@@ -267,7 +269,7 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:OnError( ... )
+METHOD HbQtUILoader:OnError( ... )
    LOCAL cMsg, xReturn
    LOCAL oError
 
@@ -304,7 +306,7 @@ METHOD HbQtUI:OnError( ... )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:build( cFileOrBuffer, qParent )
+METHOD HbQtUILoader:build( cFileOrBuffer, qParent )
    LOCAL s, n, n1, cCls, cNam, lCreateFinished, cMCls, cMNam, cText
    LOCAL cCmd, aReg, aCommands, aConst, cBlock, bBlock, x, a_
    LOCAL regEx := hb_regexComp( "\bQ[A-Za-z_]+ \b" )
@@ -572,7 +574,7 @@ STATIC FUNCTION hbq_pullColumn( cCmd, nCol )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtUI:formatCommand( cCmd, lText )
+METHOD HbQtUILoader:formatCommand( cCmd, lText )
    LOCAL regDefine, aDefine, n, n1, cNam, cCmd1
 
    STATIC nn := 100
