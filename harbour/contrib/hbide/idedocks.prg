@@ -1097,8 +1097,7 @@ METHOD IdeDocks:buildViewWidget( cView )
    LOCAL oFrame, qTBtnClose, qDrop, qMdi, n
 
    IF ::oIde:lCurEditsMdi
-
-      qMdi := QMdiSubWindow *( ::oStackedWidget:oWidget )
+      qMdi := QMdiSubWindow( ::oStackedWidget:oWidget )
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
       IF cView == "Stats"
