@@ -1078,7 +1078,7 @@ METHOD IdeDocks:buildStackedWidget()
 
       ::oDa:addChild( ::oStackedWidget )
 
-      ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow *)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+      ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
    ELSE
       /* Its parent will be drawing area and pages will be XbpTabWidgets() */

@@ -156,7 +156,7 @@ METHOD IdeHome:create( oIde )
 METHOD IdeHome:destroy()
 
    IF !empty( ::qPrnDlg )
-      ::qPrnDlg:disconnect( "paintRequested(QPrinter *)" )
+      ::qPrnDlg:disconnect( "paintRequested(QPrinter*)" )
       ::qPrnDlg := NIL
    ENDIF
 
@@ -240,7 +240,7 @@ METHOD IdeHome:print()
       ::qPrnDlg := QPrintPreviewDialog()
       ::qPrnDlg:setWindowTitle( "Welcome::Projects" )
       ::qPrnDlg:setWindowIcon( hbide_image( "hbide" ) )
-      ::qPrnDlg:connect( "paintRequested(QPrinter *)", {|p| ::paintRequested( p ) } )
+      ::qPrnDlg:connect( "paintRequested(QPrinter*)", {|p| ::paintRequested( p ) } )
    ENDIF
 
    ::qPrnDlg:exec()

@@ -566,8 +566,8 @@ METHOD XbpBrowse:connect()
 
    ::oWidget          : connect( QEvent_Resize                       , {|       | ::execSlot( __ev_frame_resized__                   ) } )
 
-   ::qDelegate        : connect( "closeEditor(QWidget *,QAbstractItemDelegate::EndEditHint)", {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } )
-   ::qDelegate        : connect( "commitData(QWidget *)"             , {|p      | ::execSlot( __editor_commitData__ , p              ) } )
+   ::qDelegate        : connect( "closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)", {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } )
+   ::qDelegate        : connect( "commitData(QWidget*)"             , {|p      | ::execSlot( __editor_commitData__ , p              ) } )
 
    RETURN Self
 
@@ -595,8 +595,8 @@ METHOD XbpBrowse:disconnect()
 
    ::oWidget          : disconnect( QEvent_Resize                        )
 
-   ::qDelegate        : disconnect( "closeEditor(QWidget *,QAbstractItemDelegate::EndEditHint)" )
-   ::qDelegate        : disconnect( "commitData(QWidget *)"              )
+   ::qDelegate        : disconnect( "closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)" )
+   ::qDelegate        : disconnect( "commitData(QWidget*)"              )
 
    RETURN Self
 

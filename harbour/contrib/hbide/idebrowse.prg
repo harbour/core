@@ -1187,7 +1187,7 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::qWidget:setTabShape( QTabWidget_Triangular )
    ::qWidget:setViewMode( QMdiArea_TabbedView )
 
-   ::qWidget:connect( "subWindowActivated(QMdiSubWindow *)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+   ::qWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
    RETURN Self
 
@@ -1822,7 +1822,6 @@ METHOD IdeBrowse:buildMdiWindow()
 
    ::nID := ++nID
 
-//   ::qMdi := QMdiSubWindow *( ::oDlg:oWidget )
    ::qMdi := QMdiSubWindow( ::oDlg:oWidget )
    //
    ::qMdi:setWidget( ::oWnd:oWidget )

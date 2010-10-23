@@ -194,15 +194,15 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    ENDIF
 
    DO CASE
-   CASE cSlot == "itemCollapsed(QTreeWidgetItem *)"
+   CASE cSlot == "itemCollapsed(QTreeWidgetItem*)"
       ::itemCollapsed( oItem, {0,0,0,0} )
-   CASE cSlot == "itemExpanded(QTreeWidgetItem *)"
+   CASE cSlot == "itemExpanded(QTreeWidgetItem*)"
       ::itemExpanded( oItem, {0,0,0,0} )
-   CASE cSlot == "itemClicked(QTreeWidgetItem *,int)"
+   CASE cSlot == "itemClicked(QTreeWidgetItem*,int)"
       ::itemMarked( oItem, {0,0,0,0} )
-   CASE cSlot == "itemDoubleClicked(QTreeWidgetItem *,int)"
+   CASE cSlot == "itemDoubleClicked(QTreeWidgetItem*,int)"
       ::itemSelected( oItem, {0,0,0,0} )
-   CASE cSlot == "itemEntered(QTreeWidgetItem *,int)"
+   CASE cSlot == "itemEntered(QTreeWidgetItem*,int)"
       ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
    CASE cSlot == "customContextMenuRequested(QPoint)"
       IF hb_isBlock( ::hb_contextMenu )
@@ -215,10 +215,10 @@ METHOD XbpTreeView:execSlot( cSlot, p )
          ENDIF
       ENDIF
    #if 0
-   CASE cSlot == "currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"
-   CASE cSlot == "itemPressed(QTreeWidgetItem *,int)"
-   CASE cSlot == "itemActivated(QTreeWidgetItem *,int)"
-   CASE cSlot == "itemChanged(QTreeWidgetItem *,int)"
+   CASE cSlot == "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)"
+   CASE cSlot == "itemPressed(QTreeWidgetItem*,int)"
+   CASE cSlot == "itemActivated(QTreeWidgetItem*,int)"
+   CASE cSlot == "itemChanged(QTreeWidgetItem*,int)"
    CASE cSlot == "itemSelectionChanged()"
    #endif
    ENDCASE
@@ -265,17 +265,17 @@ METHOD XbpTreeView:destroy()
 
 METHOD XbpTreeView:connect()
 
-   ::oWidget:connect( "itemCollapsed(QTreeWidgetItem *)"                , {|p1  | ::execSlot( "itemCollapsed(QTreeWidgetItem *)"         , p1    ) } )
-   ::oWidget:connect( "itemExpanded(QTreeWidgetItem *)"                 , {|p1  | ::execSlot( "itemExpanded(QTreeWidgetItem *)"          , p1    ) } )
-*  ::oWidget:connect( "currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"   , {|p,p1| ::execSlot( "currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)", p, p1 ) } )
-*  ::oWidget:connect( "itemActivated(QTreeWidgetItem *,int)"            , {|p,p1| ::execSlot( "itemActivated(QTreeWidgetItem *,int)"     , p, p1 ) } )
-*  ::oWidget:connect( "itemChanged(QTreeWidgetItem *,int)"              , {|p,p1| ::execSlot( "itemChanged(QTreeWidgetItem *,int)"       , p, p1 ) } )
-   ::oWidget:connect( "itemClicked(QTreeWidgetItem *,int)"              , {|p,p1| ::execSlot( "itemClicked(QTreeWidgetItem *,int)"       , p, p1 ) } )
-   ::oWidget:connect( "itemDoubleClicked(QTreeWidgetItem *,int)"        , {|p,p1| ::execSlot( "itemDoubleClicked(QTreeWidgetItem *,int)" , p, p1 ) } )
-   ::oWidget:connect( "itemEntered(QTreeWidgetItem *,int)"              , {|p,p1| ::execSlot( "itemEntered(QTreeWidgetItem *,int)"       , p, p1 ) } )
-*  ::oWidget:connect( "itemPressed(QTreeWidgetItem *,int)"              , {|p,p1| ::execSlot( "itemPressed(QTreeWidgetItem *,int)"       , p, p1 ) } )
-*  ::oWidget:connect( "itemSelectionChanged()"                , {|p1  | ::execSlot( "itemSelectionChanged()"         , p1    ) } )
-   ::oWidget:connect( "customContextMenuRequested(QPoint)"    , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)", p1 ) } )
+   ::oWidget:connect( "itemCollapsed(QTreeWidgetItem*)"                , {|p1  | ::execSlot( "itemCollapsed(QTreeWidgetItem*)"         , p1    ) } )
+   ::oWidget:connect( "itemExpanded(QTreeWidgetItem*)"                 , {|p1  | ::execSlot( "itemExpanded(QTreeWidgetItem*)"          , p1    ) } )
+*  ::oWidget:connect( "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)", {|p,p1| ::execSlot( "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)", p, p1 ) } )
+*  ::oWidget:connect( "itemActivated(QTreeWidgetItem*,int)"            , {|p,p1| ::execSlot( "itemActivated(QTreeWidgetItem*,int)"     , p, p1 ) } )
+*  ::oWidget:connect( "itemChanged(QTreeWidgetItem*,int)"              , {|p,p1| ::execSlot( "itemChanged(QTreeWidgetItem*,int)"       , p, p1 ) } )
+   ::oWidget:connect( "itemClicked(QTreeWidgetItem*,int)"              , {|p,p1| ::execSlot( "itemClicked(QTreeWidgetItem*,int)"       , p, p1 ) } )
+   ::oWidget:connect( "itemDoubleClicked(QTreeWidgetItem*,int)"        , {|p,p1| ::execSlot( "itemDoubleClicked(QTreeWidgetItem*,int)" , p, p1 ) } )
+   ::oWidget:connect( "itemEntered(QTreeWidgetItem*,int)"              , {|p,p1| ::execSlot( "itemEntered(QTreeWidgetItem*,int)"       , p, p1 ) } )
+*  ::oWidget:connect( "itemPressed(QTreeWidgetItem*,int)"              , {|p,p1| ::execSlot( "itemPressed(QTreeWidgetItem*,int)"       , p, p1 ) } )
+*  ::oWidget:connect( "itemSelectionChanged()"                         , {|p1  | ::execSlot( "itemSelectionChanged()"                  , p1    ) } )
+   ::oWidget:connect( "customContextMenuRequested(QPoint)"             , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)"      , p1    ) } )
 
    RETURN Self
 
@@ -283,15 +283,15 @@ METHOD XbpTreeView:connect()
 
 METHOD XbpTreeView:disconnect()
 
-   ::oWidget:disconnect( "itemCollapsed(QTreeWidgetItem *)"                )
-   ::oWidget:disconnect( "itemExpanded(QTreeWidgetItem *)"                 )
-*  ::oWidget:disconnect( "currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"   )
-*  ::oWidget:disconnect( "itemActivated(QTreeWidgetItem *,int)"            )
-*  ::oWidget:disconnect( "itemChanged(QTreeWidgetItem *,int)"              )
-   ::oWidget:disconnect( "itemClicked(QTreeWidgetItem *,int)"              )
-   ::oWidget:disconnect( "itemDoubleClicked(QTreeWidgetItem *,int)"        )
-   ::oWidget:disconnect( "itemEntered(QTreeWidgetItem *,int)"              )
-*  ::oWidget:disconnect( "itemPressed(QTreeWidgetItem *,int)"              )
+   ::oWidget:disconnect( "itemCollapsed(QTreeWidgetItem*)"                )
+   ::oWidget:disconnect( "itemExpanded(QTreeWidgetItem*)"                 )
+*  ::oWidget:disconnect( "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)"   )
+*  ::oWidget:disconnect( "itemActivated(QTreeWidgetItem*,int)"            )
+*  ::oWidget:disconnect( "itemChanged(QTreeWidgetItem*,int)"              )
+   ::oWidget:disconnect( "itemClicked(QTreeWidgetItem*,int)"              )
+   ::oWidget:disconnect( "itemDoubleClicked(QTreeWidgetItem*,int)"        )
+   ::oWidget:disconnect( "itemEntered(QTreeWidgetItem*,int)"              )
+*  ::oWidget:disconnect( "itemPressed(QTreeWidgetItem*,int)"              )
 *  ::oWidget:disconnect( "itemSelectionChanged()"                )
    ::oWidget:disconnect( "customContextMenuRequested(QPoint)"    )
 
