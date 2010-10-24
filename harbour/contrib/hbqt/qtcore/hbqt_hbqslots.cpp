@@ -85,11 +85,12 @@
 #include <QtGui/QTextBlock>
 #include <QtGui/QSessionManager>
 
-/* TOFIX: QtNetwork components should not be accessed from this component */
+#if 0    /* Disabled until dynamic registration protocol is not implemented */
 #include <QtNetwork/QUrlInfo>
 #include <QtNetwork/QNetworkProxy>
 #include <QtNetwork/QHttpResponseHeader>
 #include <QtNetwork/QNetworkRequest>
+#endif
 
 /*----------------------------------------------------------------------*/
 
@@ -125,16 +126,16 @@
 #define SIG_double                                "double"                           // 29
 #define SIG_QModelIndexList                       "QModelIndexList"                  // 30
 #define SIG_QRect                                 "QRect"                            // 31
-#define SIG_QUrlInfo                              "QUrlInfo"                         // 32
-#define SIG_int_QString                           "int$QString"                      // 33
-#define SIG_QString_quint16_pointer               "QString$quint16$pointer"          // 34
-#define SIG_QNetworkProxy_pointer                 "QNetworkProxy$pointer"            // 35
-#define SIG_QHttpResponseHeader                   "QHttpResponseHeader"              // 36
-#define SIG_int_bool                              "int$bool"                         // 37
-#define SIG_QNetworkRequest                       "QNetworkRequest"                  // 48
-#define SIG_pointer_QString                       "pointer$QString"                  // 39
-#define SIG_QString_QString_QString               "QString$QString$QString"          // 40
-#define SIG_int_int_QRect                         "int$int$QRect"                    // 41
+#define SIG_int_QString                           "int$QString"                      // 32
+#define SIG_QString_quint16_pointer               "QString$quint16$pointer"          // 33
+#define SIG_int_bool                              "int$bool"                         // 34
+#define SIG_pointer_QString                       "pointer$QString"                  // 35
+#define SIG_QString_QString_QString               "QString$QString$QString"          // 36
+#define SIG_int_int_QRect                         "int$int$QRect"                    // 37
+#define SIG_QUrlInfo                              "QUrlInfo"                         // 38
+#define SIG_QNetworkRequest                       "QNetworkRequest"                  // 39
+#define SIG_QNetworkProxy_pointer                 "QNetworkProxy$pointer"            // 40
+#define SIG_QHttpResponseHeader                   "QHttpResponseHeader"              // 41
 
 #define S_G_int                                    0
 #define S_G_int_int                                1
@@ -168,16 +169,16 @@
 #define S_G_double                                29
 #define S_G_QModelIndexList                       30
 #define S_G_QRect                                 31
-#define S_G_QUrlInfo                              32
-#define S_G_int_QString                           33
-#define S_G_QString_quint16_pointer               34
-#define S_G_QNetworkProxy_pointer                 35
-#define S_G_QHttpResponseHeader                   36
-#define S_G_int_bool                              37
-#define S_G_QNetworkRequest                       38
-#define S_G_pointer_QString                       39
-#define S_G_QString_QString_QString               40
-#define S_G_int_int_QRect                         41
+#define S_G_int_QString                           32
+#define S_G_QString_quint16_pointer               33
+#define S_G_int_bool                              34
+#define S_G_pointer_QString                       35
+#define S_G_QString_QString_QString               36
+#define S_G_int_int_QRect                         37
+#define S_G_QUrlInfo                              38
+#define S_G_QNetworkRequest                       39
+#define S_G_QNetworkProxy_pointer                 40
+#define S_G_QHttpResponseHeader                   41
 
 /*----------------------------------------------------------------------*/
 
@@ -336,10 +337,6 @@ static void hbqt_fireSignal( int paramId, PHB_ITEM * codeBlock, void ** argument
       iArgs = 1;
       hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ) );
       break;
-   case S_G_QUrlInfo:
-      iArgs = 1;
-      hb_vmPushPointer( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ) );
-      break;
    case S_G_int_QString:
       {
          iArgs = 2;
@@ -357,23 +354,10 @@ static void hbqt_fireSignal( int paramId, PHB_ITEM * codeBlock, void ** argument
          hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 3 ] ) );
       }
       break;
-   case S_G_QNetworkProxy_pointer:
-      iArgs = 2;
-      hb_vmPushPointer( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * ) >( arguments[ 1 ] ) ) ) );
-      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
-      break;
-   case S_G_QHttpResponseHeader:
-      iArgs = 1;
-      hb_vmPushPointer( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ) );
-      break;
    case S_G_int_bool:
       iArgs = 2;
       hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
       hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 2 ] ) );
-      break;
-   case S_G_QNetworkRequest:
-      iArgs = 1;
-      hb_vmPushPointer( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ) );
       break;
    case S_G_pointer_QString:
       {
@@ -401,6 +385,25 @@ static void hbqt_fireSignal( int paramId, PHB_ITEM * codeBlock, void ** argument
       hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
       hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ) );
       break;
+   #if 0   /* Disabled until dynamic registration is implemented */
+   case S_G_QUrlInfo:
+      iArgs = 1;
+      hb_vmPushPointer( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QNetworkRequest:
+      iArgs = 1;
+      hb_vmPushPointer( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QNetworkProxy_pointer:
+      iArgs = 2;
+      hb_vmPushPointer( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * ) >( arguments[ 1 ] ) ) ) );
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
+      break;
+   case S_G_QHttpResponseHeader:
+      iArgs = 1;
+      hb_vmPushPointer( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   #endif
    }
 
    hb_vmSend( iArgs );
@@ -505,16 +508,16 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
            SIG_QModelIndexList                  <<
            SIG_QRect                            <<
            SIG_QRect_int                        <<
-           SIG_QUrlInfo                         <<
            SIG_int_QString                      <<
            SIG_QString_quint16_pointer          <<
-           SIG_QNetworkProxy_pointer            <<
-           SIG_QHttpResponseHeader              <<
            SIG_int_bool                         <<
-           SIG_QNetworkRequest                  <<
            SIG_pointer_QString                  <<
            SIG_QString_QString_QString          <<
            SIG_int_int_QRect                    <<
+           SIG_QUrlInfo                         <<
+           SIG_QNetworkRequest                  <<
+           SIG_QNetworkProxy_pointer            <<
+           SIG_QHttpResponseHeader              <<
                            "xxxyyyzzz"           ;            /* Just for line break */
    }
 
