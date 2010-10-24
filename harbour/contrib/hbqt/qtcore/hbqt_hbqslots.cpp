@@ -77,208 +77,334 @@
 #include <QtCore/QPointer>
 #include <QtCore/QByteArray>
 #include <QtCore/QModelIndex>
+
 /* TOFIX: QtGui components should not be accessed from this component */
 #include <QtGui/QItemSelection>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
+#include <QtGui/QTextBlock>
+#include <QtGui/QSessionManager>
 
-static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
+/* TOFIX: QtNetwork components should not be accessed from this component */
+#include <QtNetwork/QUrlInfo>
+#include <QtNetwork/QNetworkProxy>
+#include <QtNetwork/QHttpResponseHeader>
+#include <QtNetwork/QNetworkRequest>
+
+/*----------------------------------------------------------------------*/
+
+#define SIG_int                                   "int"                              //  0
+#define SIG_int_int                               "int$int"                          //  1
+#define SIG_int_int_int                           "int$int$int"                      //  2
+#define SIG_int_int_int_int                       "int$int$int$int"                  //  3
+#define SIG_bool                                  "bool"                             //  4
+#define SIG_QRect_int                             "QRect$int"                        //  5
+#define SIG_QString                               "QString"                          //  6
+#define SIG_QModelIndex                           "QModelIndex"                      //  7
+#define SIG_QModelIndex_QModelIndex               "QModelIndex$QModelIndex"          //  8
+#define SIG_QItemSelection_QItemSelection         "QItemSelection$QItemSelection"    //  9
+#define SIG_QTextCharFormat                       "QTextCharFormat"                  // 10
+#define SIG_QFont                                 "QFont"                            // 11
+#define SIG_QTextCursor                           "QTextCursor"                      // 12
+#define SIG_QStringList                           "QStringList"                      // 13
+#define SIG_pointer                               "pointer"                          // 14
+#define SIG_pointer_pointer                       "pointer$pointer"                  // 15
+#define SIG_pointer_int                           "pointer$int"                      // 16
+#define SIG_QDate                                 "QDate"                            // 17
+#define SIG_QDateTime                             "QDateTime"                        // 18
+#define SIG_QPoint                                "QPoint"                           // 19
+#define SIG_QRectF                                "QRectF"                           // 20
+#define SIG_QTime                                 "QTime"                            // 21
+#define SIG_QUrl                                  "QUrl"                             // 22
+#define SIG_QModelIndex_int_int                   "QModelIndex$int$int"              // 23
+#define SIG_qint64                                "qint64"                           // 24
+#define SIG_qint64_qint64                         "qint64$qint64"                    // 25
+#define SIG_QTextBlock                            "QTextBlock"                       // 26
+#define SIG_QSizeF                                "QSizeF"                           // 27
+#define SIG_QColor                                "QColor"                           // 28
+#define SIG_double                                "double"                           // 29
+#define SIG_QModelIndexList                       "QModelIndexList"                  // 30
+#define SIG_QRect                                 "QRect"                            // 31
+#define SIG_QUrlInfo                              "QUrlInfo"                         // 32
+#define SIG_int_QString                           "int$QString"                      // 33
+#define SIG_QString_quint16_pointer               "QString$quint16$pointer"          // 34
+#define SIG_QNetworkProxy_pointer                 "QNetworkProxy$pointer"            // 35
+#define SIG_QHttpResponseHeader                   "QHttpResponseHeader"              // 36
+#define SIG_int_bool                              "int$bool"                         // 37
+#define SIG_QNetworkRequest                       "QNetworkRequest"                  // 48
+#define SIG_pointer_QString                       "pointer$QString"                  // 39
+#define SIG_QString_QString_QString               "QString$QString$QString"          // 40
+#define SIG_int_int_QRect                         "int$int$QRect"                    // 41
+
+#define S_G_int                                    0
+#define S_G_int_int                                1
+#define S_G_int_int_int                            2
+#define S_G_int_int_int_int                        3
+#define S_G_bool                                   4
+#define S_G_QRect_int                              5
+#define S_G_QString                                6
+#define S_G_QModelIndex                            7
+#define S_G_QModelIndex_QModelIndex                8
+#define S_G_QItemSelection_QItemSelection          9
+#define S_G_QTextCharFormat                       10
+#define S_G_QFont                                 11
+#define S_G_QTextCursor                           12
+#define S_G_QStringList                           13
+#define S_G_pointer                               14
+#define S_G_pointer_pointer                       15
+#define S_G_pointer_int                           16
+#define S_G_QDate                                 17
+#define S_G_QDateTime                             18
+#define S_G_QPoint                                19
+#define S_G_QRectF                                20
+#define S_G_QTime                                 21
+#define S_G_QUrl                                  22
+#define S_G_QModelIndex_int_int                   23
+#define S_G_qint64                                24
+#define S_G_qint64_qint64                         25
+#define S_G_QTextBlock                            26
+#define S_G_QSizeF                                27
+#define S_G_QColor                                28
+#define S_G_double                                29
+#define S_G_QModelIndexList                       30
+#define S_G_QRect                                 31
+#define S_G_QUrlInfo                              32
+#define S_G_int_QString                           33
+#define S_G_QString_quint16_pointer               34
+#define S_G_QNetworkProxy_pointer                 35
+#define S_G_QHttpResponseHeader                   36
+#define S_G_int_bool                              37
+#define S_G_QNetworkRequest                       38
+#define S_G_pointer_QString                       39
+#define S_G_QString_QString_QString               40
+#define S_G_int_int_QRect                         41
+
+/*----------------------------------------------------------------------*/
+
+static void hbqt_fireSignal( int paramId, PHB_ITEM * codeBlock, void ** arguments )
 {
+   int iArgs;
+
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
-}
 
-static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
+   switch( paramId )
+   {
+   case S_G_int:
+      iArgs = 1;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      break;
+   case S_G_int_int:
+      iArgs = 2;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      break;
+   case S_G_int_int_int:
+      iArgs = 3;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+      break;
+   case S_G_int_int_int_int:
+      iArgs = 4;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 4 ] ) );
+      break;
+   case S_G_bool:
+      iArgs = 1;
+      hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) );
+      break;
+   case S_G_QRect_int:
+      iArgs = 2;
+      hb_vmPushPointer( new QRect( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      break;
+   case S_G_QString:
+      {
+         iArgs = 1;
+         QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+      }
+      break;
+   case S_G_QModelIndex:
+      iArgs = 1;
+      hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QModelIndex_QModelIndex:
+      iArgs = 2;
+      hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+      hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
+      break;
+   case S_G_QItemSelection_QItemSelection:
+      iArgs = 2;
+      hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) );
+      hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) );
+      break;
+   case S_G_QTextCharFormat:
+      iArgs = 1;
+      hb_vmPushPointer( new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QFont:
+      iArgs = 1;
+      hb_vmPushPointer( new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QTextCursor:
+      iArgs = 1;
+      hb_vmPushPointer( new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QStringList:
+      iArgs = 1;
+      hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_pointer:
+      iArgs = 1;
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+      break;
+   case S_G_pointer_pointer:
+      iArgs = 2;
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
+      break;
+   case S_G_pointer_int:
+      iArgs = 2;
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      break;
+   case S_G_QDate:
+      iArgs = 1;
+      hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QDateTime:
+      iArgs = 1;
+      hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QPoint:
+      iArgs = 1;
+      hb_vmPushPointer( new QPoint( ( * reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QRectF:
+      iArgs = 1;
+      hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QTime:
+      iArgs = 1;
+      hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QUrl:
+      iArgs = 1;
+      hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
+      break;
 
-static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
+   case S_G_QModelIndex_int_int:
+      iArgs = 3;
+      hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+      break;
+   case S_G_qint64:
+      iArgs = 1;
+      hb_vmPushInteger( *reinterpret_cast< qint64( * ) >( arguments[ 1 ] ) );
+      break;
+   case S_G_qint64_qint64:
+      iArgs = 2;
+      hb_vmPushInteger( *reinterpret_cast< qint64( * ) >( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< qint64( * ) >( arguments[ 2 ] ) );
+      break;
+   case S_G_QTextBlock:
+      iArgs = 1;
+      hb_vmPushPointer( new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QSizeF:
+      iArgs = 1;
+      hb_vmPushPointer( new QSizeF( ( *reinterpret_cast< QSizeF( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QColor:
+      iArgs = 1;
+      hb_vmPushPointer( new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_double:
+      iArgs = 1;
+      hb_vmPushDouble( *reinterpret_cast< double( * ) >( arguments[ 1 ] ), 4 );
+      break;
+   case S_G_QModelIndexList:
+      iArgs = 1;
+      hb_vmPushPointer( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QRect:
+      iArgs = 1;
+      hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_QUrlInfo:
+      iArgs = 1;
+      hb_vmPushPointer( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_int_QString:
+      {
+         iArgs = 2;
+         hb_vmPushInteger( *reinterpret_cast< qint64( * ) >( arguments[ 1 ] ) );
+         QString text = *reinterpret_cast< QString( * ) >( arguments[ 2 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+      }
+      break;
+   case S_G_QString_quint16_pointer:
+      {
+         iArgs = 3;
+         QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+         hb_vmPushInteger( *reinterpret_cast< quint64( * ) >( arguments[ 2 ] ) );
+         hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 3 ] ) );
+      }
+      break;
+   case S_G_QNetworkProxy_pointer:
+      iArgs = 2;
+      hb_vmPushPointer( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * ) >( arguments[ 1 ] ) ) ) );
+      hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
+      break;
+   case S_G_QHttpResponseHeader:
+      iArgs = 1;
+      hb_vmPushPointer( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_int_bool:
+      iArgs = 2;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 2 ] ) );
+      break;
+   case S_G_QNetworkRequest:
+      iArgs = 1;
+      hb_vmPushPointer( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   case S_G_pointer_QString:
+      {
+         iArgs = 2;
+         hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+         QString text = *reinterpret_cast< QString( * ) >( arguments[ 2 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+      }
+      break;
+   case S_G_QString_QString_QString:
+      {
+         iArgs = 3;
+         QString text;
+         text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+         text = *reinterpret_cast< QString( * ) >( arguments[ 2 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+         text = *reinterpret_cast< QString( * ) >( arguments[ 3 ] );
+         hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
+      }
+      break;
+   case S_G_int_int_QRect:
+      iArgs = 3;
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ) );
+      break;
+   }
 
-static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
+   hb_vmSend( iArgs );
 }
-
-static void hbqt_SlotsExecInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
-   hb_vmSend( 3 );
-}
-
-static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 4 ] ) );
-   hb_vmSend( 4 );
-}
-
-static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRect( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecString( PHB_ITEM * codeBlock, void ** arguments )
-{
-   /* TODO: how to convert to this type with size */
-   QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** arguments)
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecTextCharFormat( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecFont( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQPoint( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QPoint( ( * reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
 
 /*----------------------------------------------------------------------*/
 
@@ -345,29 +471,51 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
 
    if( argCombinations.size() == 0 )
    {
-      argCombinations << "int" <<
-                         "int$int" <<
-                         "int$int$int" <<
-                         "int$int$int$int" <<
-                         "bool" <<
-                         "QRect$int" <<
-                         "QString" <<
-                         "QModelIndex" <<
-                         "QModelIndex$QModelIndex" <<
-                         "QItemSelection$QItemSelection" <<
-                         "QTextCharFormat" <<
-                         "QFont" <<
-                         "QTextCursor" <<
-                         "QStringList" <<
-                         "pointer" <<
-                         "pointer$pointer" <<
-                         "pointer$int"<<
-                         "QDate" <<
-                         "QDateTime" <<
-                         "QPoint" <<
-                         "QRectF" <<
-                         "QTime" <<
-                         "QUrl" ;
+      argCombinations      <<
+           SIG_int                              <<
+           SIG_int_int                          <<
+           SIG_int_int_int                      <<
+           SIG_int_int_int_int                  <<
+           SIG_bool                             <<
+           SIG_QRect_int                        <<
+           SIG_QString                          <<
+           SIG_QModelIndex                      <<
+           SIG_QModelIndex_QModelIndex          <<
+           SIG_QItemSelection_QItemSelection    <<
+           SIG_QTextCharFormat                  <<
+           SIG_QFont                            <<
+           SIG_QTextCursor                      <<
+           SIG_QStringList                      <<
+           SIG_pointer                          <<
+           SIG_pointer_pointer                  <<
+           SIG_pointer_int                      <<
+           SIG_QDate                            <<
+           SIG_QDateTime                        <<
+           SIG_QPoint                           <<
+           SIG_QRectF                           <<
+           SIG_QTime                            <<
+           SIG_QUrl                             <<
+           SIG_QModelIndex_int_int              <<
+           SIG_qint64                           <<
+           SIG_qint64_qint64                    <<
+           SIG_QTextBlock                       <<
+           SIG_QSizeF                           <<
+           SIG_QColor                           <<
+           SIG_double                           <<
+           SIG_QModelIndexList                  <<
+           SIG_QRect                            <<
+           SIG_QRect_int                        <<
+           SIG_QUrlInfo                         <<
+           SIG_int_QString                      <<
+           SIG_QString_quint16_pointer          <<
+           SIG_QNetworkProxy_pointer            <<
+           SIG_QHttpResponseHeader              <<
+           SIG_int_bool                         <<
+           SIG_QNetworkRequest                  <<
+           SIG_pointer_QString                  <<
+           SIG_QString_QString_QString          <<
+           SIG_int_int_QRect                    <<
+                           "xxxyyyzzz"           ;            /* Just for line break */
    }
 
    const QMetaMethod meta = object->metaObject()->method( id );
@@ -393,12 +541,12 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
          }
          else
          {
-            parList += arrayOfTypes.at( i ); //
+            parList += arrayOfTypes.at( i );
          }
       }
    }
 
-   QByteArray paramString = parList.join("$").toAscii();
+   QByteArray paramString = parList.join( "$" ).toAscii();
    HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", (char * ) paramString.data() ) );
 
    if( object )
@@ -416,80 +564,10 @@ static void hbqt_SlotsProxy( HBQSlots * t_slots, int id, QObject * object, void 
          else
          {
             int paramId = argCombinations.indexOf( paramString );
-            HB_TRACE( HB_TR_DEBUG, ( "  params=%s,  paramId=%d", ( char *) paramString.data(), paramId ) );
 
-            switch( paramId )
-            {
-            case 0:   // if( paramString == "int" )
-                hbqt_SlotsExecInt( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-                break;
-            case 1:   // if( paramString == "int$int" )
-                hbqt_SlotsExecIntInt( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-                break;
-            case 2:   // if( paramString == "int$int$int" )
-                hbqt_SlotsExecIntIntInt( (PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-                break;
-            case 3:   // if( paramString == "int$int$int$int" )
-               hbqt_SlotsExecIntIntIntInt( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 4:  //  if( paramString == "bool" )
-               hbqt_SlotsExecBool( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 5:   // if( paramString == "QRect$int" )
-               hbqt_SlotsExecQRectInt( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 6:   // if( paramString == "QString" )
-               hbqt_SlotsExecString( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 7:   // if( paramString == "QModelIndex" )
-               hbqt_SlotsExecModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 8:   // if( paramString == "QModelIndex$QModelIndex" )
-               hbqt_SlotsExecModelModel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 9:   // if( paramString == "QItemSelection$QItemSelection" )
-               hbqt_SlotsExecItemSelItemSel( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 10:   // if( paramString == "QTextCharFormat" )
-               hbqt_SlotsExecTextCharFormat( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 11:   // if( paramString == "QFont" )
-               hbqt_SlotsExecFont( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 12:   // if( paramString == "QTextCursor" )
-               hbqt_SlotsExecQTextCursor( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 13:   // if( paramString == "QStringList" )
-               hbqt_SlotsExecStringList( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 14:   // if( paramString == "pointer" )
-               hbqt_SlotsExecPointer( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 15:   // if( paramString == "pointer$pointer" )
-               hbqt_SlotsExecPointerPointer( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 16:   // if( paramString == "pointer$int" )
-               hbqt_SlotsExecPointerInt( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 17:   // if( paramString == "QDate" )
-               hbqt_SlotsExecQDate( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 18:   // if( paramString == "QDateTime" )
-               hbqt_SlotsExecQDateTime( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 19:   // if( paramString == "QPoint" )
-               hbqt_SlotsExecQPoint( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 20:   // if( paramString == "QRectF" )
-               hbqt_SlotsExecQRectF( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 21:   // if( paramString == "QTime" )
-               hbqt_SlotsExecQTime( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            case 22:   // if( paramString == "QUrl" )
-               hbqt_SlotsExecQUrl( ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments ) ;
-               break;
-            }
+            HB_TRACE( HB_TR_DEBUG, ( "  params=%s,  paramId=%d", ( char * ) paramString.data(), paramId ) );
+
+            hbqt_fireSignal( paramId, ( PHB_ITEM * ) t_slots->listBlock.at( i - 1 ), arguments );
          }
          hb_vmRequestRestore();
       }
