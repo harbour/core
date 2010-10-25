@@ -286,12 +286,12 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
       if( nLen )
       {
          HB_SIZE nIndex;
-    
+
          if( pCtx->fHuman )
             _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
 
          _hb_jsonCtxAdd( pCtx, "[", 1 );
-    
+
          for( nIndex = 1; nIndex <= nLen; nIndex++ )
          {
             PHB_ITEM pItem = hb_arrayGetItemPtr( pValue, nIndex );
@@ -302,8 +302,9 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
             if( pCtx->fHuman )
               _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
 
-            if( pCtx->fHuman && ( ! HB_IS_ARRAY( pItem ) && ! HB_IS_HASH( pItem ) || 
-                                  hb_itemSize( pItem ) == 0 ) ) 
+            if( pCtx->fHuman &&
+                !( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) &&
+                   hb_itemSize( pItem ) > 0 ) )
                _hb_jsonCtxAddIndent( pCtx, ( nLevel + 1 ) * INDENT_SIZE );
 
             _hb_jsonEncode( pItem, pCtx, nLevel + 1 );
@@ -334,13 +335,13 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
          for( nIndex = 1; nIndex <= nLen; nIndex++ )
          {
             PHB_ITEM pKey = hb_hashGetKeyAt( pValue, nIndex );
-    
+
             if( HB_IS_STRING( pKey ) )
             {
                PHB_ITEM pItem = hb_hashGetValueAt( pValue, nIndex );
                if( nIndex > 1 )
                   _hb_jsonCtxAdd( pCtx, ",", 1 );
-    
+
                if( pCtx->fHuman )
                {
                   _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
@@ -351,7 +352,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
                if( pCtx->fHuman )
                {
                   _hb_jsonCtxAdd( pCtx, " : ", 3 );
-                  if( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0 ) 
+                  if( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0 )
                      _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
                }
                else
