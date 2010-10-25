@@ -76,7 +76,7 @@ static void hbqt_SlotsExecQColor( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QColor( ( *reinterpret_cast< QColor( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QColor( ( *reinterpret_cast< QColor( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -84,8 +84,8 @@ static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** argument
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) );
+   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+   hb_vmPushPointer( new QItemSelection( ( *reinterpret_cast< QItemSelection( * )>( arguments[ 2 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 2 );
 }
 
@@ -93,7 +93,7 @@ static void hbqt_SlotsExecQTextCharFormat( PHB_ITEM * codeBlock, void ** argumen
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QTextCharFormat( ( *reinterpret_cast<QTextCharFormat( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -101,7 +101,7 @@ static void hbqt_SlotsExecQFont( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QFont( ( *reinterpret_cast< QFont( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -109,7 +109,7 @@ static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QTextCursor( ( *reinterpret_cast< QTextCursor( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -117,7 +117,7 @@ static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTextBlock( ( *reinterpret_cast< QTextBlock( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QTextBlock( ( *reinterpret_cast< QTextBlock( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 

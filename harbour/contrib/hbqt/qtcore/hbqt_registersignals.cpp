@@ -79,7 +79,7 @@ static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -87,8 +87,8 @@ static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** argument
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ); /* TOFIX: Pass .prg level object to callback */
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 2 );
 }
 
@@ -96,8 +96,8 @@ static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ); /* TOFIX: Pass .prg level object to callback */
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 2 );
 }
 
@@ -168,7 +168,7 @@ static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -176,8 +176,8 @@ static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 2 );
 }
 
@@ -185,7 +185,7 @@ static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -193,7 +193,7 @@ static void hbqt_SlotsExecQPoint( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QPoint( ( *reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QPoint( ( *reinterpret_cast< QPoint( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -201,7 +201,7 @@ static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -209,7 +209,7 @@ static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -217,7 +217,7 @@ static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -225,7 +225,7 @@ static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -233,7 +233,7 @@ static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -241,7 +241,7 @@ static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }
@@ -250,7 +250,7 @@ static void hbqt_SlotsExecQRect( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QRect( ( *reinterpret_cast< QRect( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -258,7 +258,7 @@ static void hbqt_SlotsExecQSizeF( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QSizeF( ( *reinterpret_cast< QSizeF( * )>( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QSizeF( ( *reinterpret_cast< QSizeF( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
@@ -266,7 +266,7 @@ static void hbqt_SlotsExecModelIndexIntInt( PHB_ITEM * codeBlock, void ** argume
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
    hb_vmSend( 3 );
@@ -276,7 +276,7 @@ static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** argument
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ) );
+   hb_vmPushPointer( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
 
