@@ -72,6 +72,32 @@ static void bufadd( BUFFERTYPE * pBuf, const char * pAdd, HB_SIZE nLen )
    pBuf->pData[ pBuf->nLen ] = '\0';
 }
 
+static void hb_itemHexStr( PHB_ITEM pItem, char * pStr, HB_BOOL fUpper )
+{
+   HB_MAXUINT nValue, nTmp;
+   int iLen;
+
+   nValue = nTmp = hb_itemGetNInt( pItem );
+
+   iLen = 0;
+   do
+   {
+      ++iLen;
+      nTmp >>= 4;
+   }
+   while( nTmp );
+
+   pStr[ iLen ] = '\0';
+   do
+   {
+      int iDigit = ( int ) ( nValue & 0x0F );
+      pStr[ --iLen ] = ( char ) ( iDigit + ( iDigit < 10 ? '0' :
+                                             ( fUpper ? 'A' : 'a' ) - 10 ) );
+      nValue >>= 4;
+   }
+   while( iLen );
+}
+
 PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray )
 {
    BUFFERTYPE  buffer;
@@ -170,7 +196,8 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
       }
 
       /* Parse specifier */
-      if( *pFmt == 'c' || *pFmt == 'd' || *pFmt == 'f' || *pFmt == 's' )
+      if( *pFmt == 'c' || *pFmt == 'd' || *pFmt == 'x' || *pFmt == 'X' ||
+          *pFmt == 'f' || *pFmt == 's' )
       {
          if( iParamNo == -1 )
             iParamNo = ++iParam;
@@ -211,6 +238,8 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          }
 
          case 'd':
+         case 'x':
+         case 'X':
          {
             char  * pStr = NULL;
             const char * pStr2;
@@ -221,7 +250,11 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
             {
                iSize = sizeof( HB_MAXINT ) * 3 + 1;
                pStr2 = pStr = ( char * ) hb_xgrab( iSize + 1 );
-               hb_itemStrBuf( pStr, pItem, iSize, 0 );
+               if( *pFmt == 'd' )
+                  hb_itemStrBuf( pStr, pItem, iSize, 0 );
+               else
+                  hb_itemHexStr( pItem, pStr, *pFmt == 'X' );
+
                while( *pStr2 == ' ' )
                   pStr2++;
                iSize = ( int ) strlen( pStr2 );
