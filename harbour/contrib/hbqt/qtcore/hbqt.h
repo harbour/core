@@ -83,8 +83,12 @@ typedef struct
    unsigned int type;
 } HBQT_GC_T;
 
+typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments );
+
 HB_EXTERN_BEGIN
 
+extern HB_EXPORT void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback );
+extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
 extern HB_EXPORT void * hbqt_gcpointer( int iParam );
 extern HB_EXPORT void * hbqt_detachgcpointer( int iParam );
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );

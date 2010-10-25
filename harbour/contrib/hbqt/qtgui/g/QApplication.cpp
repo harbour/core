@@ -178,7 +178,7 @@ static void hbqtgui_Exit( void * cargo )
 static void hbqtgui_Init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
+HB_TRACE( HB_TR_ALWAYS, ( "static void hbqtgui_Init( void * cargo )" ) );
    s_argc = hb_cmdargARGC();
    s_argv = hb_cmdargARGV();
 
