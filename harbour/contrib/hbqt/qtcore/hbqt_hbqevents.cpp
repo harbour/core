@@ -103,7 +103,6 @@ bool HBQEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );  /* Make it a unique identifier */
 
       listBlock << codeblock;
-//      listObj   << object;            /* TOFIX: Reference to GC collected pointer is stored. */
 
       object->setProperty( prop, ( int ) listBlock.size() );
 

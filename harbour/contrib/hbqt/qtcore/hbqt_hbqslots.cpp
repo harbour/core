@@ -69,164 +69,6 @@
 
 #include <QtCore/QStringList>
 
-#if 0
-
-#include <QtCore/QProcess>
-#include <QtCore/QUrl>
-#include <QtCore/QDate>
-#include <QtCore/QDateTime>
-#include <QtCore/QTime>
-#include <QtCore/QPointer>
-#include <QtCore/QByteArray>
-#include <QtCore/QModelIndex>
-#include <QtCore/QRectF>
-
-static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
-   hb_vmSend( 3 );
-}
-
-static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 4 ] ) );
-   hb_vmSend( 4 );
-}
-
-static void hbqt_SlotsExecString( PHB_ITEM * codeBlock, void ** arguments )
-{
-   QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushString( text.toAscii().data(), text.toAscii().length() );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmPushPointer( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ) );
-   hb_vmSend( 2 );
-}
-
-static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QStringList( ( *reinterpret_cast<QStringList( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QUrl( ( *reinterpret_cast< QUrl( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-
-static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments )
-{
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPushPointer( new QRectF( ( *reinterpret_cast< QRectF( * )>( arguments[ 1 ] ) ) ) );
-   hb_vmSend( 1 );
-}
-#endif
 /*----------------------------------------------------------------------*/
 
 static QList<QByteArray> s_argCombinations;
@@ -246,9 +88,7 @@ void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback )
          s_pCallback << pCallback;
       }
       else
-      {
          s_pCallback[ iIndex ] = pCallback;
-      }
    }
 }
 
@@ -259,9 +99,7 @@ void hbqt_slots_unregister_callback( QByteArray sig )
       int iIndex = s_argCombinations.indexOf( sig );
 
       if( iIndex > -1 )
-      {
          s_pCallback.removeAt( iIndex );
-      }
    }
 }
 
@@ -352,30 +190,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
 
    // Q_ASSERT(id < slotList.size());
 
-   /* Register core slot handlers */
-   if( s_argCombinations.size() == 0 )
-   {
-      #if 0
-      hbqt_slots_register_callback( "int"                      , hbqt_SlotsExecInt            );
-      hbqt_slots_register_callback( "int$int"                  , hbqt_SlotsExecIntInt         );
-      hbqt_slots_register_callback( "int$int$int"              , hbqt_SlotsExecIntIntInt      );
-      hbqt_slots_register_callback( "int$int$int$int"          , hbqt_SlotsExecIntIntIntInt   );
-      hbqt_slots_register_callback( "bool"                     , hbqt_SlotsExecBool           );
-      hbqt_slots_register_callback( "pointer"                  , hbqt_SlotsExecPointer        );
-      hbqt_slots_register_callback( "pointer$pointer"          , hbqt_SlotsExecPointerPointer );
-      hbqt_slots_register_callback( "pointer$int"              , hbqt_SlotsExecPointerInt     );
-      hbqt_slots_register_callback( "QDate"                    , hbqt_SlotsExecQDate          );
-      hbqt_slots_register_callback( "QDateTime"                , hbqt_SlotsExecQDateTime      );
-      hbqt_slots_register_callback( "QModelIndex"              , hbqt_SlotsExecModel          );
-      hbqt_slots_register_callback( "QModelIndex$QModelIndex"  , hbqt_SlotsExecModelModel     );
-      hbqt_slots_register_callback( "QRectF"                   , hbqt_SlotsExecQRectF         );
-      hbqt_slots_register_callback( "QString"                  , hbqt_SlotsExecString         );
-      hbqt_slots_register_callback( "QStringList"              , hbqt_SlotsExecStringList     );
-      hbqt_slots_register_callback( "QTime"                    , hbqt_SlotsExecQTime          );
-      hbqt_slots_register_callback( "QUrl"                     , hbqt_SlotsExecQUrl           );
-      #endif
-   }
-
    QObject * object = sender();
    const QMetaMethod meta = object->metaObject()->method( id );
    QList<QByteArray> arrayOfTypes = meta.parameterTypes();
@@ -387,19 +201,13 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
    for( int i = 0; i < parameterCount; i++ )
    {
       if( arrayOfTypes.at( i ).contains( "::" ) ) // if includes :: is a enum -> int
-      {
          parList += "int";
-      }
       else
       {
          if( arrayOfTypes.at( i ).contains( "*" ) )  // if includes * is a pointer -> pointer
-         {
             parList += "pointer";
-         }
          else
-         {
             parList += arrayOfTypes.at( i ); //
-         }
       }
    }
 
@@ -408,16 +216,14 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
 
    if( object )
    {
-      char cSlotName[ 20 ];
-      sprintf( cSlotName, "SLOT_%d", id );
-      int i = object->property( cSlotName ).toInt();
+      char szSlotName[ 20 ];
+      hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", id );
+      int i = object->property( szSlotName ).toInt();
 
       if( i > 0 && i <= this->listBlock.size() && hb_vmRequestReenter() )
       {
          if( parameterCount == 0 )
-         {
             hb_vmEvalBlockV( this->listBlock.at( i - 1 ), 0 );
-         }
          else
          {
             int paramId = s_argCombinations.indexOf( paramString );
@@ -427,9 +233,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
 
             pCallback = s_pCallback.at( paramId );
             if( pCallback )
-            {
                pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments );
-            }
          }
          hb_vmRequestRestore();
       }
@@ -452,30 +256,31 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
       if( object )
       {
          int i = object->property( hb_parcx( 3 ) ).toInt();
-         if ( i == 0 )
+         if( i == 0 )
          {
             QString signal = hb_parcx( 3 );                                 /* get signal    */
             int idSignal = connect_signal( signal, object, t_slots ) ;
             if( idSignal >= 0 )
             {
                PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
-               t_slots->listBlock << pBlock;
+               if( pBlock )
+               {
+                  t_slots->listBlock << pBlock;
 
-               char cSlotName[ 20 ];
-               sprintf( cSlotName, "SLOT_%d", idSignal );
+                  char szSlotName[ 20 ];
+                  hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", idSignal );
 
-               object->setProperty( cSlotName, ( int ) t_slots->listBlock.size() );
-               object->setProperty( hb_parcx(3), ( int ) t_slots->listBlock.size() );
-               bRet = HB_TRUE;
+                  object->setProperty( szSlotName, ( int ) t_slots->listBlock.size() );
+                  object->setProperty( hb_parcx( 3 ), ( int ) t_slots->listBlock.size() );
+                  bRet = HB_TRUE;
+               }
             }
          }
       }
    }
 
    if( ! bRet )
-   {
-      hb_errRT_BASE( EG_ARG, 1100, NULL, "CONNECT", HB_ERR_ARGS_BASEPARAMS );
-   }
+      hb_errRT_BASE( EG_ARG, 1100, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
    hb_retl( bRet );
 }
@@ -485,7 +290,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
  */
 HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 {
-   HB_BOOL   bRet    = HB_FALSE;
+   HB_BOOL bRet = HB_FALSE;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
 
    if( t_slots )
