@@ -48,7 +48,7 @@ PROCEDURE Main()
    oAlphaColor:setAlpha( 128 )
    oBackBrush := QBrush( QColor( 255, 255, 100 ), Qt_BDiagPattern ) // Yellow Diagonal lines
    oSize := QSize( 80, 30 )                                        // Default header sizes
-   oPixmap := QPixMap( "harbour-icon.png" )                        // Image
+   oPixmap := QPixMap( hb_dirBase() + "harbour-icon.png" )         // Image
    oIcon := QIcon( oPixMap )                                       // Icon (reusing the image)
    oFont := QFont()                                                // Bold Italic font
    oFont:setBold( .T. )

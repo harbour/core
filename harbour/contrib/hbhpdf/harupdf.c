@@ -2084,7 +2084,7 @@ HB_FUNC( HPDF_Page_CreateStampAnnot )
    rc.right  = ( HPDF_REAL ) hb_parvnd( 2, 3 );
    rc.bottom = ( HPDF_REAL ) hb_parvnd( 2, 4 );
 
-   hb_retptr( HPDF_Page_CreateStampAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, ( HPDF_StampAnnotName ) hb_parc( 3 ), hb_parc( 4 ), ( HPDF_Encoder ) hb_parptr( 5 ) ) );
+   hb_retptr( HPDF_Page_CreateStampAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, ( HPDF_StampAnnotName ) hb_parni( 3 ), hb_parc( 4 ), ( HPDF_Encoder ) hb_parptr( 5 ) ) );
 #else
    hb_retptr( NULL );
 #endif

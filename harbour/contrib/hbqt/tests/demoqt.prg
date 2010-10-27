@@ -236,16 +236,16 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oActNew := QAction( oMenu1 )
    oActNew:setText( "&New" )
-   oActNew:setIcon( "new.png" )
+   oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
    oMenu1:addAction( oActNew )
 
-   oActOpen := oMenu1:addAction( "open.png", "&Open" )
+   oActOpen := oMenu1:addAction( hb_dirBase() + "open.png", "&Open" )
    oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
 
    oMenu1:addSeparator()
 
-   oActSave := oMenu1:addAction(  "save.png", "&Save" )
+   oActSave := oMenu1:addAction( hb_dirBase() + "save.png", "&Save" )
    oActSave:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
 
    oMenu1:addSeparator()
@@ -303,7 +303,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create an action */
    oActNew := QAction( oWnd )
    oActNew:setText( "&New" )
-   oActNew:setIcon( "new.png" )
+   oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:setToolTip( "A New File" )
    oActNew:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
 
@@ -313,7 +313,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActOpen := QAction( oWnd )
    oActOpen:setText( "&Open" )
-   oActOpen:setIcon( "open.png" )
+   oActOpen:setIcon( hb_dirBase() + "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
    oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
@@ -324,7 +324,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActSave := QAction( oWnd )
    oActSave:setText( "&Save" )
-   oActSave:setIcon( "save.png" )
+   oActSave:setIcon( hb_dirBase() + "save.png" )
    oActSave:setToolTip( "Save this file!" )
    oActSave:connect( oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
@@ -611,7 +611,7 @@ STATIC FUNCTION Dialogs( cType )
    ENDCASE
 
    oDlg := NIL
-   HB_GCALL( .T.)
+   HB_GCALL( .T. )
 
    RETURN nil
 
@@ -630,16 +630,16 @@ FUNCTION ShowInSystemTray( oWnd )
    oMenuSys := QMenu( oWnd )
    oMenuSys:setTitle( "&File" )
 
-   oActShow := oMenuSys:addAction( "new.png" , "&Show" )
+   oActShow := oMenuSys:addAction( hb_dirBase() + "new.png" , "&Show" )
    oActShow:connect( QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
 
    oMenuSys:addSeparator()
 
-   oActHide := oMenuSys:addAction( "new.png" , "&Show" )
+   oActHide := oMenuSys:addAction( hb_dirBase() + "new.png" , "&Show" )
    oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )
-   oSys:setIcon( 'new.png' )
+   oSys:setIcon( hb_dirBase() + "new.png" )
    oSys:setContextMenu( oMenuSys )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
    oSys:show()

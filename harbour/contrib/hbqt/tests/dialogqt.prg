@@ -149,10 +149,10 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oMenu1 := QMenu()
    oMenu1:setTitle( "&File" )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
    oMenu1:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
    oMenu1:addSeparator()
    __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
    oMenuBar:addMenu( oMenu1 )
@@ -186,7 +186,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create an action */
    oActNew := QAction( oWnd )
    oActNew:setText( "&New" )
-   oActNew:setIcon( "new.png" )
+   oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:setToolTip( "A New File" )
    /* Attach codeblock to be triggered */
    __HBQT_SLOTS_CONNECT( s_slots, oActNew, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
@@ -196,7 +196,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActOpen := QAction( oWnd )
    oActOpen:setText( "&Open" )
-   oActOpen:setIcon( "open.png" )
+   oActOpen:setIcon( hb_dirBase() + "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
    /* Attach codeblock to be triggered */
    __HBQT_SLOTS_CONNECT( s_slots, oActOpen, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
@@ -208,7 +208,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActSave := QAction( oWnd )
    oActSave:setText( "&Save" )
-   oActSave:setIcon( "save.png" )
+   oActSave:setIcon( hb_dirBase() + "save.png" )
    oActSave:setToolTip( "Save this file!" )
    /* Attach codeblock to be triggered */
    __HBQT_SLOTS_CONNECT( s_slots, oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
@@ -551,7 +551,7 @@ STATIC FUNCTION Dialogs( cType )
    ENDCASE
 
    oDlg := NIL
-   HB_GCALL( .T.)
+   HB_GCALL( .T. )
 
    RETURN nil
 
@@ -573,12 +573,12 @@ FUNCTION ShowInSystemTray( oWnd )
 
    oMenu := QMenu( oWnd )
    oMenu:setTitle( "&File" )
-   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
+   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
    oMenu:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
+   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )
-   oSys:setIcon( 'new.png' )
+   oSys:setIcon( hb_dirBase() + "new.png" )
    oSys:setContextMenu( oMenu )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
    oSys:show()

@@ -55,9 +55,9 @@ PROCEDURE Main( ... )
    LOCAL cMT_Versioned
    LOCAL cMT_Versionless
 
-   IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
-      Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
+      Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
+      Empty( GetEnvC( "HB_HOST_BIN_DIR" ) )
 
       OutStd( "! Error: This program has to be called from the GNU Make process." + hb_eol() )
       ErrorLevel( 1 )
@@ -69,10 +69,10 @@ PROCEDURE Main( ... )
    IF AScan( hb_AParams(), {| tmp | Lower( tmp ) == "install" } ) > 0
 
       /* Installing some misc files */
-      tmp := GetEnv( "HB_INSTALL_DOC" )
+      tmp := GetEnvC( "HB_INSTALL_DOC" )
       IF ! tmp == "no"
-         IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
-            tmp := GetEnv( "HB_INSTALL_PREFIX" )
+         IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
+            tmp := GetEnvC( "HB_INSTALL_PREFIX" )
          ENDIF
          IF ! Empty( tmp )
 
@@ -80,7 +80,7 @@ PROCEDURE Main( ... )
 
             IF DirBuild( tmp )
                FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
+                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
                NEXT
 
                mk_hb_FCopy( "COPYING", tmp + hb_ps() )
@@ -93,37 +93,37 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) ) .AND. ;
-         ! GetEnv( "HB_BUILD_PARTS" ) == "lib"
+      IF ! Empty( GetEnvC( "HB_INSTALL_BIN" ) ) .AND. ;
+         ! GetEnvC( "HB_BUILD_PARTS" ) == "lib"
 
          OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
 
          /* public Harbour scripts */
          FOR EACH tmp IN { "bin/hbmk2l2d.hbs" ,;
                            "bin/hbxpatch.hbs" }
-            mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_BIN" ) + hb_ps() )
+            mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
          NEXT
       ENDIF
 
-      IF ! Empty( GetEnv( "HB_INSTALL_ETC" ) )
+      IF ! Empty( GetEnvC( "HB_INSTALL_ETC" ) )
 
          OutStd( "! Copying *nix config files..." + hb_eol() )
 
-         IF DirBuild( GetEnv( "HB_INSTALL_ETC" ) )
-            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
+         IF DirBuild( GetEnvC( "HB_INSTALL_ETC" ) )
+            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
          ELSE
-            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_ETC" ) ) + hb_eol() )
+            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
 
-         IF ! Empty( GetEnv( "HB_INSTALL_DYN" ) )
+         IF ! Empty( GetEnvC( "HB_INSTALL_DYN" ) )
 
             OutStd( "! Creating *nix ld config file..." + hb_eol() )
 
-            tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+            tmp := GetEnvC( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
             IF DirBuild( tmp )
-               tmp1 := GetEnv( "HB_INSTALL_DYN" )
-               IF Left( tmp1, Len( GetEnv( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnv( "HB_INSTALL_PKG_ROOT" )
-                  tmp1 := SubStr( tmp1, Len( GetEnv( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
+               tmp1 := GetEnvC( "HB_INSTALL_DYN" )
+               IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
+                  tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
                hb_MemoWrit( tmp + hb_ps() + "harbour.conf", tmp1 + hb_eol() )
             ELSE
@@ -132,48 +132,48 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF ! Empty( GetEnv( "HB_INSTALL_MAN" ) )
+      IF ! Empty( GetEnvC( "HB_INSTALL_MAN" ) )
 
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
-         IF DirBuild( GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
+         IF DirBuild( GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
             FOR EACH tmp IN { "src/main/harbour.1"    ,;
                               "src/pp/hbpp.1"         ,;
                               "utils/hbmk2/hbmk2.1"   ,;
                               "utils/hbrun/hbrun.1"   ,;
                               "utils/hbtest/hbtest.1" }
-               mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
+               mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
             NEXT
          ELSE
-            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_MAN" ) ) + hb_eol() )
+            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_MAN" ) ) + hb_eol() )
          ENDIF
       ENDIF
 
-      IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
-         ! Empty( GetEnv( "HB_INSTALL_DYN" ) )
+      IF !( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
+         ! Empty( GetEnvC( "HB_INSTALL_DYN" ) )
 
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
-         cST_Versioned   := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_ST" )      + GetEnv( "HB_DYNLIB_EXT" )
-         cST_Versionless := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_BASE_ST" ) + GetEnv( "HB_DYNLIB_EXT" )
-         cMT_Versioned   := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_MT" )      + GetEnv( "HB_DYNLIB_EXT" )
-         cMT_Versionless := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_BASE_MT" ) + GetEnv( "HB_DYNLIB_EXT" )
+         cST_Versioned   := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_ST" )      + GetEnvC( "HB_DYNLIB_EXT" )
+         cST_Versionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE_ST" ) + GetEnvC( "HB_DYNLIB_EXT" )
+         cMT_Versioned   := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_MT" )      + GetEnvC( "HB_DYNLIB_EXT" )
+         cMT_Versionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE_MT" ) + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_FLinkSym( cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + cST_Versionless )
-         mk_hb_FLinkSym( cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + cMT_Versionless )
+         mk_hb_FLinkSym( cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cST_Versionless )
+         mk_hb_FLinkSym( cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cMT_Versionless )
 
          DO CASE
-         CASE EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
-              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
-              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
-              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
+         CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
+              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
+              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
+              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versioned )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versioned )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versioned )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versioned )
 
-         CASE GetEnv( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
+         CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg */
             #if 0
                ld="/usr/lib"
@@ -189,8 +189,8 @@ PROCEDURE Main( ... )
 
       /* Creating language files */
 
-      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) ) .AND. ;
-         ! GetEnv( "HB_BUILD_PARTS" ) == "lib"
+      IF ! Empty( GetEnvC( "HB_INSTALL_BIN" ) ) .AND. ;
+         ! GetEnvC( "HB_BUILD_PARTS" ) == "lib"
 
          OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
 
@@ -198,7 +198,7 @@ PROCEDURE Main( ... )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
                FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
                   mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                          PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                          PathSepToSelf( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF
          NEXT
@@ -206,7 +206,7 @@ PROCEDURE Main( ... )
 
       /* Creating docs for core */
 
-      IF ! Empty( tmp := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! tmp == "no"
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ! tmp == "no"
 
          OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
 
@@ -215,12 +215,12 @@ PROCEDURE Main( ... )
 
       /* Creating install packages */
 
-      IF GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
-         ! Empty( GetEnv( "HB_TOP" ) )
+      IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
+         ! Empty( GetEnvC( "HB_TOP" ) )
 
-         IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
+         IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
-            tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".zip"
+            tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
 
             OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
 
@@ -233,23 +233,23 @@ PROCEDURE Main( ... )
                      first to avoid mixing in an existing .zip file. [vszakats] */
 
             cOldDir := hb_ps() + CurDir()
-            DirChange( GetEnv( "HB_INSTALL_PKG_ROOT" ) )
+            DirChange( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
-            mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
+            mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" +;
                               " -q -9 -X -r -o" +;
                               " " + FNameEscape( tmp ) +;
-                              " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
+                              " . -i " + FNameEscape( GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
                               " -x *.tds -x *.exp" )
 
             DirChange( cOldDir )
 
-            IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
+            IF GetEnvC( "HB_PLATFORM" ) $ "win|wce"
 
-               tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".exe"
+               tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
 
                OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
 
-               mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
+               mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
                                  " -V2" +;
                                  " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
             ENDIF
@@ -267,23 +267,23 @@ PROCEDURE Main( ... )
 
             IF ! Empty( cBin_Tar )
 
-               cTar_Name := GetEnv( "HB_PKGNAME" )
+               cTar_Name := GetEnvC( "HB_PKGNAME" )
                IF ! Empty( tmp := unix_name() )
                   cTar_Name += "-" + tmp
                ENDIF
-               cTar_NameExt := cTar_Name + iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
-               cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_NameExt
+               cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
+               cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
                OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
 
                FErase( cTar_Path )
 
                cOwner := "root"
-               cGroup := iif( GetEnv( "HB_PLATFORM" ) == "darwin" .OR. ;
-                              GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
+               cGroup := iif( GetEnvC( "HB_PLATFORM" ) == "darwin" .OR. ;
+                              GetEnvC( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
 
                cOldDir := hb_ps() + CurDir()
-               DirChange( GetEnv( "HB_INSTALL_PKG_ROOT" ) )
+               DirChange( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
                /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
 
@@ -295,9 +295,9 @@ PROCEDURE Main( ... )
 
                DirChange( cOldDir )
 
-               IF !( GetEnv( "HB_PLATFORM" ) == "dos" )
+               IF !( GetEnvC( "HB_PLATFORM" ) == "dos" )
 
-                  tmp := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
+                  tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
                   OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
 
@@ -317,7 +317,7 @@ PROCEDURE Main( ... )
                   cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 )
                   cSH_Script += '   exit 1' + Chr( 10 )
                   cSH_Script += 'fi' + Chr( 10 )
-                  cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
+                  cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
                   cSH_Script += 'exit \$?' + Chr( 10 )
                   cSH_Script += 'HB_INST_EOF' + Chr( 10 )
 
@@ -334,7 +334,7 @@ PROCEDURE Main( ... )
 
       /* Executing user postinst configuration script */
 
-      IF ! Empty( tmp := GetEnv( "HB_INSTALL_SCRIPT" ) )
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_SCRIPT" ) )
 
          mk_hb_processRun( tmp )
       ENDIF
@@ -564,8 +564,8 @@ STATIC FUNCTION unix_name()
    LOCAL tmp
 
    DO CASE
-   CASE GetEnv( "HB_PLATFORM" ) == "dos" ; RETURN "djgpp"
-   CASE GetEnv( "HB_PLATFORM" ) == "win" ; RETURN GetEnv( "HB_COMPILER" )
+   CASE GetEnvC( "HB_PLATFORM" ) == "dos" ; RETURN "djgpp"
+   CASE GetEnvC( "HB_PLATFORM" ) == "win" ; RETURN GetEnvC( "HB_COMPILER" )
    CASE ! Empty( tmp := query_rpm( "mandriva-release-One", "mdv" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "mandriva-release"    , "mdv" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "redhat-release"      , "rh"  ) ) ; RETURN tmp
@@ -582,11 +582,11 @@ STATIC FUNCTION unix_name()
 STATIC FUNCTION mk_extern_core()
    LOCAL aExtern
 
-   IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
-      ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
+   IF GetEnvC( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
+      ! Empty( GetEnvC( "HB_DYNLIB_ST" ) )
 
       /* TOFIX: Use list of libs instead of dynamic lib */
-      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnv( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
+      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_ST" ) + GetEnvC( "HB_DYNLIB_EXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
 
@@ -601,5 +601,14 @@ STATIC FUNCTION mk_extern_core()
    ENDIF
 
    RETURN .F.
+
+STATIC FUNCTION GetEnvC( cEnvVar )
+   STATIC s_hEnvCache := { => }
+
+   IF cEnvVar $ s_hEnvCache
+      RETURN s_hEnvCache[ cEnvVar ]
+   ENDIF
+
+   RETURN s_hEnvCache[ cEnvVar ] := GetEnv( cEnvVar )
 
 #include "hbextern.hbs"
