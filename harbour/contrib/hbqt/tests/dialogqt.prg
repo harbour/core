@@ -54,20 +54,6 @@
 
 #include "hbtrace.ch"
 
-#define QT_EVE_TRIGGERED             "triggered()"
-#define QT_EVE_TRIGGERED_B           "triggered(bool)"
-#define QT_EVE_HOVERED               "hovered()"
-#define QT_EVE_CLICKED               "clicked()"
-#define QT_EVE_STATECHANGED_I        "stateChanged(int)"
-#define QT_EVE_PRESSED               "pressed()"
-#define QT_EVE_RELEASED              "released()"
-#define QT_EVE_ACTIVATED_I           "activated(int)"
-#define QT_EVE_CURRENTINDEXCHANGED_I "currentIndexChanged(int)"
-#define QT_EVE_HIGHLIGHTED_I         "highlighted(int)"
-#define QT_EVE_RETURNPRESSED         "returnPressed()"
-#define QT_EVE_CLICKED_M             "clicked(QModelIndex)"
-#define QT_EVE_VIEWPORTENTERED       "viewportEntered()"
-
 /*----------------------------------------------------------------------*/
 
 #include "common.ch"
@@ -149,26 +135,26 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oMenu1 := QMenu()
    oMenu1:setTitle( "&File" )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "new.png" , "&New"  ), "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "open.png", "&Open" ), "triggered(bool)", {|w,l| FileDialog( "Open", w, l ) } )
    oMenu1:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( hb_dirBase() + "save.png", "&Save" ), "triggered(bool)", {|w,l| FileDialog( "Save", w, l ) } )
    oMenu1:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), "triggered(bool)", {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
    oMenuBar:addMenu( oMenu1 )
 
    oMenu2 := QMenu()
    oMenu2:setTitle( "&Dialogs" )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Colors"    ), "triggered(bool)", {|w,l| Dialogs( "Colors"   , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Fonts"     ), "triggered(bool)", {|w,l| Dialogs( "Fonts"    , w, l ) } )
    oMenu2:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&PageSetup" ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "P&review"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview"  , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&PageSetup" ), "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "P&review"   ), "triggered(bool)", {|w,l| Dialogs( "Preview"  , w, l ) } )
    oMenu2:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Wizard"    ), "triggered(bool)", {|w,l| Dialogs( "Wizard"   , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "W&ebPage"   ), "triggered(bool)", {|w,l| Dialogs( "WebPage"  , w, l ) } )
    oMenu2:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, hb_threadStart( {|| ExecOneMore() } ) } )
+   __HBQT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Another Dialog" ), "triggered(bool)", {|w,l| w := w, l := l, hb_threadStart( {|| ExecOneMore() } ) } )
    oMenuBar:addMenu( oMenu2 )
 
    oWnd:setMenuBar( oMenuBar )
@@ -189,7 +175,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:setToolTip( "A New File" )
    /* Attach codeblock to be triggered */
-   __HBQT_SLOTS_CONNECT( s_slots, oActNew, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oActNew, "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActNew )
 
@@ -199,7 +185,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActOpen:setIcon( hb_dirBase() + "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
    /* Attach codeblock to be triggered */
-   __HBQT_SLOTS_CONNECT( s_slots, oActOpen, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oActOpen, "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
@@ -211,7 +197,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActSave:setIcon( hb_dirBase() + "save.png" )
    oActSave:setToolTip( "Save this file!" )
    /* Attach codeblock to be triggered */
-   __HBQT_SLOTS_CONNECT( s_slots, oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oActSave, "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActSave )
 
@@ -226,13 +212,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction( oWnd )
    oAct:setText( "&Colors" )
    oAct:setToolTip( "Colors Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "Colors", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction( oWnd )
    oAct:setText( "&Fonts" )
    oAct:setToolTip( "Fonts Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "Fonts", w, l ) } )
    oTB:addAction( oAct )
 
    oTB:addSeparator()
@@ -240,13 +226,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction( oWnd )
    oAct:setText( "&PgSetup" )
    oAct:setToolTip( "Page Setup Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction( oWnd )
    oAct:setText( "&Preview" )
    oAct:setToolTip( "Page Preview Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "Preview", w, l ) } )
    oTB:addAction( oAct )
 
    oTB:addSeparator()
@@ -254,19 +240,19 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction( oWnd )
    oAct:setText( "&Webpage" )
    oAct:setToolTip( "Web Browser Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "WebPage", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction( oWnd )
    oAct:setText( "&Wizard" )
    oAct:setToolTip( "Generic Wizard Dialog" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| Dialogs( "Wizard", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction( oWnd )
    oAct:setText( "&SystemTray" )
    oAct:setToolTip( "Show in System Tray!" )
-   __HBQT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oAct, "triggered(bool)", {|w,l| ShowInSystemTray( oWnd, w, l ) } )
    oTB:addAction( oAct )
 
    /* Add this toolbar with main window */
@@ -288,9 +274,9 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
    IF hb_isLogical( lExit )
-      __HBQT_SLOTS_CONNECT( s_slots, oBtn, QT_EVE_CLICKED, {|| lExit := .t. } )
+      __HBQT_SLOTS_CONNECT( s_slots, oBtn, "clicked()", {|| lExit := .t. } )
    ELSE
-      __HBQT_SLOTS_CONNECT( s_slots, oBtn, QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+      __HBQT_SLOTS_CONNECT( s_slots, oBtn, "clicked()", {|| MsgInfo( cMsg ), lExit := .t. } )
    ENDIF
 
    RETURN oBtn
@@ -360,7 +346,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
-*  __HBQT_SLOTS_CONNECT( s_slots, oTV, QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
+*  __HBQT_SLOTS_CONNECT( s_slots, oTV, "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
    oDirModel := QDirModel()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
@@ -376,7 +362,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView( oWnd )
    oListBox:setMouseTracking( .t. )
-*  __HBQT_SLOTS_CONNECT( s_slots, oListBox, QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
+*  __HBQT_SLOTS_CONNECT( s_slots, oListBox, "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList()
 
@@ -419,7 +405,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit( oWnd )
-   __HBQT_SLOTS_CONNECT( s_slots, oEdit, QT_EVE_RETURNPRESSED, {|i| i := i, MsgInfo( oEdit:text() ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oEdit, "returnPressed()", {|i| i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -431,13 +417,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   __HBQT_SLOTS_CONNECT( s_slots, oComboBox, QT_EVE_CURRENTINDEXCHANGED_I, {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oComboBox, "currentIndexChanged(int)", {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox( oWnd )
-   __HBQT_SLOTS_CONNECT( s_slots, oCheckBox, QT_EVE_STATECHANGED_I, {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oCheckBox, "stateChanged(int)", {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -449,7 +435,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton( oWnd )
-   __HBQT_SLOTS_CONNECT( s_slots, oRadioButton, QT_EVE_CLICKED, {|i| i := i, MsgInfo( "Checked" ) } )
+   __HBQT_SLOTS_CONNECT( s_slots, oRadioButton, "clicked()", {|i| i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -573,9 +559,9 @@ FUNCTION ShowInSystemTray( oWnd )
 
    oMenu := QMenu( oWnd )
    oMenu:setTitle( "&File" )
-   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
+   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "new.png" , "&Show" ), "triggered(bool)", {|| oWnd:show() } )
    oMenu:addSeparator()
-   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
+   __HBQT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( hb_dirBase() + "save.png", "&Hide" ), "triggered(bool)", {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )
    oSys:setIcon( hb_dirBase() + "new.png" )

@@ -56,20 +56,6 @@
 
 #include "hbtrace.ch"
 
-#define QT_EVE_TRIGGERED             "triggered()"
-#define QT_EVE_TRIGGERED_B           "triggered(bool)"
-#define QT_EVE_HOVERED               "hovered()"
-#define QT_EVE_CLICKED               "clicked()"
-#define QT_EVE_STATECHANGED_I        "stateChanged(int)"
-#define QT_EVE_PRESSED               "pressed()"
-#define QT_EVE_RELEASED              "released()"
-#define QT_EVE_ACTIVATED_I           "activated(int)"
-#define QT_EVE_CURRENTINDEXCHANGED_I "currentIndexChanged(int)"
-#define QT_EVE_HIGHLIGHTED_I         "highlighted(int)"
-#define QT_EVE_RETURNPRESSED         "returnPressed()"
-#define QT_EVE_CLICKED_M             "clicked(QModelIndex)"
-#define QT_EVE_VIEWPORTENTERED       "viewportEntered()"
-
 /*----------------------------------------------------------------------*/
 /*
  *                               A NOTE
@@ -241,17 +227,17 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu1:addAction( oActNew )
 
    oActOpen := oMenu1:addAction( hb_dirBase() + "open.png", "&Open" )
-   oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
 
    oMenu1:addSeparator()
 
    oActSave := oMenu1:addAction( hb_dirBase() + "save.png", "&Save" )
-   oActSave:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
 
    oMenu1:addSeparator()
 
    oActExit := oMenu1:addAction( "E&xit" )
-   oActExit:connect( QT_EVE_TRIGGERED_B, {|| s_qApp:quit() } )
+   oActExit:connect( "triggered(bool)", {|| s_qApp:quit() } )
 
    oMenuBar:addMenu( oMenu1 )
 
@@ -259,31 +245,31 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu2:setTitle( "&Dialogs" )
 
    oActColors := oMenu2:addAction( "&Colors" )
-   oActColors:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
+   oActColors:connect( "triggered(bool)", {|w,l| Dialogs( "Colors", w, l ) } )
 
    oActFonts := oMenu2:addAction( "&Fonts" )
-   oActFonts:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
+   oActFonts:connect( "triggered(bool)", {|w,l| Dialogs( "Fonts", w, l ) } )
 
    oMenu2:addSeparator()
 
    oActPgSetup := oMenu2:addAction( "&PageSetup" )
-   oActPgSetup:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+   oActPgSetup:connect( "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
 
    oActPreview := oMenu2:addAction( "P&review" )
-   oActPreview:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
+   oActPreview:connect( "triggered(bool)", {|w,l| Dialogs( "Preview", w, l ) } )
 
    oMenu2:addSeparator()
 
    oActWiz := oMenu2:addAction( "&Wizard" )
-   oActWiz:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+   oActWiz:connect( "triggered(bool)", {|w,l| Dialogs( "Wizard", w, l ) } )
 
    oActWeb := oMenu2:addAction( "W&ebPage" )
-   oActWeb:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
+   oActWeb:connect( "triggered(bool)", {|w,l| Dialogs( "WebPage", w, l ) } )
 
    oMenu2:addSeparator()
 
    oActOther := oMenu2:addAction( "&Another Dialog" )
-   oActOther:connect( QT_EVE_TRIGGERED_B, {|| ExecOneMore() } )
+   oActOther:connect( "triggered(bool)", {|| ExecOneMore() } )
 
    oMenuBar:addMenu( oMenu2 )
 
@@ -305,7 +291,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActNew:setText( "&New" )
    oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:setToolTip( "A New File" )
-   oActNew:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
 
    /* Attach Action with Toolbar */
    oTB:addAction( oActNew )
@@ -315,7 +301,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActOpen:setText( "&Open" )
    oActOpen:setIcon( hb_dirBase() + "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
-   oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
@@ -326,7 +312,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActSave:setText( "&Save" )
    oActSave:setIcon( hb_dirBase() + "save.png" )
    oActSave:setToolTip( "Save this file!" )
-   oActSave:connect( oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   oActSave:connect( oActSave, "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActSave )
 
@@ -349,9 +335,9 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
    IF hb_isLogical( lExit )
-      oBtn:connect( QT_EVE_CLICKED, {|| lExit := .t. } )
+      oBtn:connect( "clicked()", {|| lExit := .t. } )
    ELSE
-      oBtn:connect( QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+      oBtn:connect( "clicked()", {|| MsgInfo( cMsg ), lExit := .t. } )
    ENDIF
 
    RETURN oBtn
@@ -421,7 +407,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
-*  oTV:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
+*  oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
    oDirModel := QDirModel()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
@@ -437,7 +423,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView( oWnd )
    oListBox:setMouseTracking( .t. )
-*  oListBox:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
+*  oListBox:connect( "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList()
 
@@ -480,7 +466,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit( oWnd )
-   oEdit:connect( QT_EVE_RETURNPRESSED, {|i| i := i, MsgInfo( oEdit:text() ) } )
+   oEdit:connect( "returnPressed()", {|i| i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -492,13 +478,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   oComboBox:connect( QT_EVE_CURRENTINDEXCHANGED_I, {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
+   oComboBox:connect( "currentIndexChanged(int)", {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox( oWnd )
-   oCheckBox:connect( QT_EVE_STATECHANGED_I, {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   oCheckBox:connect( "stateChanged(int)", {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -510,7 +496,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton( oWnd )
-   oRadioButton:connect( QT_EVE_CLICKED, {|i| i := i, MsgInfo( "Checked" ) } )
+   oRadioButton:connect( "clicked()", {|i| i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -631,12 +617,12 @@ FUNCTION ShowInSystemTray( oWnd )
    oMenuSys:setTitle( "&File" )
 
    oActShow := oMenuSys:addAction( hb_dirBase() + "new.png" , "&Show" )
-   oActShow:connect( QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
+   oActShow:connect( "triggered(bool)", {|| oWnd:show() } )
 
    oMenuSys:addSeparator()
 
    oActHide := oMenuSys:addAction( hb_dirBase() + "new.png" , "&Show" )
-   oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
+   oActHide:connect( "triggered(bool)", {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )
    oSys:setIcon( hb_dirBase() + "new.png" )

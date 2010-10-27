@@ -57,8 +57,6 @@
 #include "gra.ch"
 #include "set.ch"
 
-#define UNU( x ) HB_SYMBOL_UNUSED( x )
-
 /*----------------------------------------------------------------------*/
 
 REQUEST HB_QTGUI
@@ -556,7 +554,7 @@ FUNCTION Build_CheckBox( oWnd )
 
    // Determine state using mp1
    oXbp:selected := ;
-      {| mp1, mp2, oChk| UNU( mp2 ), UNU( oChk ), ;
+      {| mp1, mp2, oChk| HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( oChk ), ;
                    MsgBox( "Checkbox A", IIf( mp1, "selected", "not selected" ) ) }
 
    // Create second checkbox, specify position using :new()
@@ -566,7 +564,7 @@ FUNCTION Build_CheckBox( oWnd )
 
    // Determine state using :getData()
    oXbp:selected := ;
-      {| mp1, mp2, oChk| UNU( mp1 ), UNU( mp2 ), ;
+      {| mp1, mp2, oChk| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), ;
              MsgBox( "Checkbox B", ;
                       IIf( oChk:getData(), "selected", ;
                                  "not selected" ) ) }
@@ -584,7 +582,7 @@ FUNCTION Build_3State( oWnd )
    oXbp:caption := "3State A"
    oXbp:create( oWnd, , {130,30}, {100,30} )
    // Determine current state using mp1
-   oXbp:selected := {| mp1, mp2, oBtn| UNU( mp2 ), UNU( oBtn ), MsgBox( "3State A", aState[ mp1+1 ] ) }
+   oXbp:selected := {| mp1, mp2, oBtn| HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( oBtn ), MsgBox( "3State A", aState[ mp1+1 ] ) }
 
    // Create second 3State Button, passing the position to :new()
    //
@@ -592,7 +590,7 @@ FUNCTION Build_3State( oWnd )
    oXbp:caption := "3State B"
    oXbp:create()
    // Determine current state using :getData()
-   oXbp:selected := {| mp1, mp2, oBtn|  UNU( mp1 ), UNU( mp2 ), MsgBox( "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| mp1, mp2, oBtn|  HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), MsgBox( "3State B", aState[ oBtn:getData()+1 ] ) }
 
    RETURN nil
 
@@ -602,7 +600,7 @@ FUNCTION Build_RadioButton( oStatic )
    LOCAL bSelected, oRadio
 
    // Display which radiobutton is selected
-   bSelected := {|mp1,mp2,obj| UNU( mp1 ), UNU( mp2 ), MsgBox( obj:caption ) }
+   bSelected := {|mp1,mp2,obj| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), MsgBox( obj:caption ) }
 
    // Create four radiobuttons
    oRadio := XbpRadioButton():new( oStatic,, {30,110}, {80,30} )
@@ -650,7 +648,7 @@ STATIC FUNCTION Build_ListBox( oWnd )
    aeval( aItems, {|e| oListBox:addItem( e ) } )
 
    // Code block for list box selection:
-   oListBox:ItemSelected := {|mp1, mp2, obj| UNU( obj ), mp1 := oListBox:getData(), ;
+   oListBox:ItemSelected := {|mp1, mp2, obj| HB_SYMBOL_UNUSED( obj ), mp1 := oListBox:getData(), ;
                                iif( !empty( mp1 ), mp2 := oListBox:getItem( mp1[ 1 ] ), mp2 := "Nothing" ), ;
                                    MsgBox( "itemSelected: " + mp2 ) }
    oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
@@ -682,13 +680,13 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Code block for selection:
    //  - assign to LOCAL variable using :getData()
    //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData() }
+   bAction := {|mp1, mp2, obj| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), obj:XbpSLE:getData() }
 
    // Assign code block for selection with Up and Down keys
    oCombo:ItemMarked := bAction
 
    // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData() }
+   oCombo:ItemSelected := {|mp1, mp2, obj| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), obj:XbpSLE:getData() }
 
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
@@ -751,7 +749,7 @@ STATIC FUNCTION Build_SLEs( oWnd )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable
    // when the input focus is lost
-   oXbp:killInputFocus := { |mp1,mp2,oSLE| UNU( mp1 ), UNU( mp2 ),  oSLE:getData() }
+   oXbp:killInputFocus := { |mp1,mp2,oSLE| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ),  oSLE:getData() }
 
    oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
@@ -810,7 +808,7 @@ STATIC FUNCTION Build_SpinButtons( oWnd )
    LOCAL nX := 230, nY := 190
 
    // Callback code block
-   bCallback := {|mp1, mp2, oXbp| UNU( mp1 ), UNU( mp2 ), nRed := oXbp:getData(), ;
+   bCallback := {|mp1, mp2, oXbp| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), nRed := oXbp:getData(), ;
                                                         RGB( nRed, nGreen, nBlue ) }
 
    // Create spinbutton for red (without using :dataLink)
@@ -826,7 +824,7 @@ STATIC FUNCTION Build_SpinButtons( oWnd )
    oSpinRed:setData( 121 )
 
    // Callback code block
-   bCallback := {|mp1, mp2, oXbp| UNU( mp1 ), UNU( mp2 ), oXbp:getData(), ;
+   bCallback := {|mp1, mp2, oXbp| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), oXbp:getData(), ;
                                                RGB( nRed, nGreen, nBlue ) }
 
    // Create spinbutton for green (using :dataLink)
@@ -868,7 +866,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:create()
-   oTree:itemCollapsed := {|oItem,aRect,oSelf| UNU( aRect ), UNU( oSelf ), MsgBox( oItem:caption ) }
+   oTree:itemCollapsed := {|oItem,aRect,oSelf| HB_SYMBOL_UNUSED( aRect ), HB_SYMBOL_UNUSED( oSelf ), MsgBox( oItem:caption ) }
    #ifdef __HARBOUR__
    oTree:setStyleSheet( GetTreeStyleSheet() )
    #endif
@@ -936,7 +934,7 @@ STATIC PROCEDURE WAStruct( oItem, iIndex )
    aadd( aStr, { "Salary", 'N', 10, 2 } )
 
    AEval( aStr, ;
-     {|a,i,oSub| UNU( i ), oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
+     {|a,i,oSub| HB_SYMBOL_UNUSED( i ), oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
 
    RETURN
 
@@ -1232,7 +1230,7 @@ STATIC FUNCTION Build_HTMLViewer( oWnd )
    oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
    oHtm:navigate( "http://harbour-project.org" )
-   oHtm:titleChange := {|e| UNU( e ) }
+   oHtm:titleChange := {|e| HB_SYMBOL_UNUSED( e ) }
 
    RETURN oHtm
 
@@ -1249,7 +1247,7 @@ STATIC FUNCTION Build_FileDialog( oWnd, cMode )
       //oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
-         aeval( aFiles, {|e| UNU( e ) } )
+         aeval( aFiles, {|e| HB_SYMBOL_UNUSED( e ) } )
       ENDIF
    ELSE
       oDlg:title       := "Save this Database"
