@@ -448,7 +448,7 @@ FUNCTION Sx_File2BLOB( cFileName, cFldName, nActionCode )
    IF hb_bitAnd( nActionCode, BLOB_FILEENCRYPT ) != 0
       nAction := hb_bitOr( nAction, FILEPUT_ENCRYPT )
    ENDIF
-   RETURN dbFileGet( cFldName, cFileName, nAction )
+   RETURN dbFilePut( cFldName, cFileName, nAction )
 
 FUNCTION Sx_dbCreate( cFileName, aStruct, cRDD )
    LOCAL aField, aDbStruct
