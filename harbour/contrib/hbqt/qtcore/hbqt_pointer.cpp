@@ -273,7 +273,7 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 
 HB_FUNC( __HBQT_ERROR )
 {
-   PHB_ITEM pError = hb_errRT_New( ES_ERROR, "HBQT", EG_ARG, 1001, NULL, NULL, 0, EF_NONE );
+   PHB_ITEM pError = hb_errRT_New( ES_ERROR, "HBQT", EG_ARG, hb_parnidef( 1, 1001 ), NULL, NULL, 0, EF_NONE );
    hb_errLaunch( pError );
    hb_itemRelease( pError );
 }

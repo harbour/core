@@ -184,7 +184,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
 HB_FUNC( __HBQT_EVENTS_CONNECT )
 {
-   HB_BOOL  bRet       = HB_FALSE;
+   int nResult;
    HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
 
    if( t_events )
@@ -207,16 +207,23 @@ HB_FUNC( __HBQT_EVENTS_CONNECT )
 
             object->setProperty( prop, ( int ) t_events->listBlock.size() );
 
-            bRet = HB_TRUE;
+            nResult = 0;
          }
+         else
+            nResult = -3;
       }
+      else
+         nResult = -2;
    }
-   hb_retl( bRet );
+   else
+      nResult = -1;
+
+   hb_retni( nResult );
 }
 
 HB_FUNC( __HBQT_EVENTS_DISCONNECT )
 {
-   HB_BOOL  bRet       = HB_FALSE;
+   int nResult;
    HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
 
    if( t_events )
@@ -238,22 +245,25 @@ HB_FUNC( __HBQT_EVENTS_DISCONNECT )
             hb_itemRelease( t_events->listBlock.at( i - 1 ) );
             t_events->listBlock[ i - 1 ] = NULL;
 
-            bRet = HB_TRUE;
+            nResult = 0;
 
             HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", type ) );
          }
+         else
+            nResult = -3;
       }
+      else
+         nResult = -2;
    }
-   hb_retl( bRet );
+   else
+      nResult = -1;
+
+   hb_retni( nResult );
 }
 
 HB_FUNC( __HBQT_EVENTS_NEW )
 {
-   void * pObj = NULL;
-
-   pObj = ( HBQEvents * ) new HBQEvents();
-
-   hb_retptrGC( hbqt_gcAllocate_HBQEvents( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQEvents( ( HBQEvents * ) new HBQEvents(), true ) );
 }
 
 #endif

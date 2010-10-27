@@ -2,6 +2,8 @@
  * $Id$
  */
 
+ #pragma linenumber=on
+
 /*
  * Harbour Project source code:
  *
@@ -122,6 +124,7 @@ METHOD HbQtObjectHandler:onError()
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
+   LOCAL nResult
 
    SWITCH ValType( cnEvent )
    CASE "C"
@@ -129,7 +132,12 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       IF Empty( ::__pSlots )
          ::__pSlots := __hbqt_slots_New()
       ENDIF
-      RETURN __hbqt_slots_Connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
+      nResult := __hbqt_slots_Connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
+      IF nResult == 0
+         RETURN .T.
+      ENDIF
+      __HBQT_ERROR( 1300 + nResult )
+      EXIT
 
    CASE "N"
 
@@ -137,7 +145,16 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::__pEvents := __hbqt_events_New()
          ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
       ENDIF
-      RETURN __hbqt_events_Connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
+      nResult := __hbqt_events_Connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
+      IF nResult == 0
+         RETURN .T.
+      ENDIF
+      __HBQT_ERROR( 1200 + nResult )
+      EXIT
+
+   OTHERWISE
+
+      __HBQT_ERROR( 1203 )
 
    ENDSWITCH
 
@@ -146,21 +163,38 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
+   LOCAL nResult
 
    SWITCH ValType( cnEvent )
    CASE "C"
 
-      IF ! Empty( ::__pSlots )
-         RETURN __hbqt_slots_Disconnect( ::__pSlots, ::pPtr, cnEvent )
+      IF Empty( ::__pSlots )
+         __HBQT_ERROR( 1301 )
+      ELSE
+         nResult := __hbqt_slots_Disconnect( ::__pSlots, ::pPtr, cnEvent )
+         IF nResult == 0
+            RETURN .T.
+         ENDIF
+         __HBQT_ERROR( 1350 + nResult )
       ENDIF
       EXIT
 
    CASE "N"
 
-      IF ! Empty( ::__pEvents )
-         RETURN __hbqt_events_Disconnect( ::__pEvents, ::pPtr, cnEvent )
+      IF Empty( ::__pEvents )
+         __HBQT_ERROR( 1201 )
+      ELSE
+         nResult := __hbqt_events_Disconnect( ::__pEvents, ::pPtr, cnEvent )
+         IF nResult == 0
+            RETURN .T.
+         ENDIF
+         __HBQT_ERROR( 1250 + nResult )
       ENDIF
       EXIT
+
+   OTHERWISE
+
+      __HBQT_ERROR( 1202 )
 
    ENDSWITCH
 
