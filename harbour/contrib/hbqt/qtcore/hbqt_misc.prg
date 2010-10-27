@@ -2,8 +2,6 @@
  * $Id$
  */
 
- #pragma linenumber=on
-
 /*
  * Harbour Project source code:
  *
@@ -82,7 +80,7 @@ METHOD HbQtObjectHandler:fromPointer( pPtr )
    IF hb_isPointer( pPtr )
       ::pPtr := pPtr
    ELSE
-      __hbqt_Error()
+      __hbqt_error()
    ENDIF
    RETURN Self
 
@@ -130,31 +128,31 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    CASE "C"
 
       IF Empty( ::__pSlots )
-         ::__pSlots := __hbqt_slots_New()
+         ::__pSlots := __hbqt_slots_new()
       ENDIF
-      nResult := __hbqt_slots_Connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
+      nResult := __hbqt_slots_connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
       IF nResult == 0
          RETURN .T.
       ENDIF
-      __HBQT_ERROR( 1300 + nResult )
+      __hbqt_error( 1300 + nResult )
       EXIT
 
    CASE "N"
 
       IF Empty( ::__pEvents )
-         ::__pEvents := __hbqt_events_New()
+         ::__pEvents := __hbqt_events_new()
          ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
       ENDIF
-      nResult := __hbqt_events_Connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
+      nResult := __hbqt_events_connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
       IF nResult == 0
          RETURN .T.
       ENDIF
-      __HBQT_ERROR( 1200 + nResult )
+      __hbqt_error( 1200 + nResult )
       EXIT
 
    OTHERWISE
 
-      __HBQT_ERROR( 1203 )
+      __hbqt_error( 1203 )
 
    ENDSWITCH
 
@@ -169,32 +167,32 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    CASE "C"
 
       IF Empty( ::__pSlots )
-         __HBQT_ERROR( 1301 )
+         __hbqt_error( 1301 )
       ELSE
-         nResult := __hbqt_slots_Disconnect( ::__pSlots, ::pPtr, cnEvent )
+         nResult := __hbqt_slots_disconnect( ::__pSlots, ::pPtr, cnEvent )
          IF nResult == 0
             RETURN .T.
          ENDIF
-         __HBQT_ERROR( 1350 + nResult )
+         __hbqt_error( 1350 + nResult )
       ENDIF
       EXIT
 
    CASE "N"
 
       IF Empty( ::__pEvents )
-         __HBQT_ERROR( 1201 )
+         __hbqt_error( 1201 )
       ELSE
-         nResult := __hbqt_events_Disconnect( ::__pEvents, ::pPtr, cnEvent )
+         nResult := __hbqt_events_disconnect( ::__pEvents, ::pPtr, cnEvent )
          IF nResult == 0
             RETURN .T.
          ENDIF
-         __HBQT_ERROR( 1250 + nResult )
+         __hbqt_error( 1250 + nResult )
       ENDIF
       EXIT
 
    OTHERWISE
 
-      __HBQT_ERROR( 1202 )
+      __hbqt_error( 1202 )
 
    ENDSWITCH
 
