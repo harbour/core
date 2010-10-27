@@ -995,15 +995,14 @@ HB_FUNC( FIELDPUT )
    if( pArea )
    {
       HB_USHORT uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
+
       if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
          if( pItem && !HB_IS_NIL( pItem ) )
          {
             if( SELF_PUTVALUE( pArea, uiIndex, pItem ) == HB_SUCCESS )
-            {
                hb_itemReturn( pItem );
-            }
          }
       }
    }
@@ -2170,8 +2169,14 @@ HB_FUNC( HB_FIELDLEN )
    if( pArea )
    {
       HB_USHORT uiIndex;
+      const char * szField = hb_parc( 1 );
 
-      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
+      if( szField )
+         uiIndex = hb_rddFieldIndex( pArea, szField );
+      else
+         uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
+
+      if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
@@ -2194,8 +2199,14 @@ HB_FUNC( HB_FIELDDEC )
    if( pArea )
    {
       HB_USHORT uiIndex;
+      const char * szField = hb_parc( 1 );
 
-      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
+      if( szField )
+         uiIndex = hb_rddFieldIndex( pArea, szField );
+      else
+         uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
+
+      if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
@@ -2218,8 +2229,14 @@ HB_FUNC( HB_FIELDTYPE )
    if( pArea )
    {
       HB_USHORT uiIndex;
+      const char * szField = hb_parc( 1 );
 
-      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
+      if( szField )
+         uiIndex = hb_rddFieldIndex( pArea, szField );
+      else
+         uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
+
+      if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 

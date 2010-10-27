@@ -408,14 +408,14 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       /* Method 1: using IProvideClassInfo2 */
 
       hr = HB_VTBL( iDisp )->QueryInterface( HB_THIS_( iDisp ) HB_ID_REF( IID_IProvideClassInfo2 ), ( void** ) ( void* ) &iPCI2 );
-      if( hr == 0 )
+      if( hr == S_OK )
       {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo2 OK") );
          hr = HB_VTBL( iPCI2 )->GetGUID( HB_THIS_( iPCI2 ) GUIDKIND_DEFAULT_SOURCE_DISP_IID, piid );
          HB_VTBL( iPCI2 )->Release( HB_THIS( iPCI2 ) );
 
-         if( hr == 0 )
-            return 0;
+         if( hr == S_OK )
+            return S_OK;
       }
       else
       {
@@ -426,20 +426,20 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       /* Method 2: using IProvideClassInfo and searching for default source in ITypeInfo */
 
       hr = HB_VTBL( iDisp )->QueryInterface( HB_THIS_( iDisp ) HB_ID_REF( IID_IProvideClassInfo ), ( void** ) ( void* ) &iPCI );
-      if( hr == 0 )
+      if( hr == S_OK )
       {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo OK") );
 
          hr = HB_VTBL( iPCI )->GetClassInfo( HB_THIS_( iPCI ) &iTI );
-         if( hr == 0 )
+         if( hr == S_OK )
          {
             hr = HB_VTBL( iTI )->GetTypeAttr( HB_THIS_( iTI ) &pTypeAttr );
-            if( hr == 0 )
+            if( hr == S_OK )
             {
                for( i = 0; i < pTypeAttr->cImplTypes; i++ )
                {
                   hr = HB_VTBL( iTI )->GetImplTypeFlags( HB_THIS_( iTI ) i, &iFlags );
-                  if( hr == 0 && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
+                  if( hr == S_OK && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
                   {
                      if( HB_VTBL( iTI )->GetRefTypeOfImplType( HB_THIS_( iTI ) i, &hRefType ) == S_OK &&
                          HB_VTBL( iTI )->GetRefTypeInfo( HB_THIS_( iTI ) hRefType, &iTISink ) == S_OK )
@@ -447,14 +447,14 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink Method 2: default source is found") );
 
                         hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) &pTypeAttr );
-                        if( hr == 0 )
+                        if( hr == S_OK )
                         {
                            * piid = pTypeAttr->guid;
                            HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr );
 
                            HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
                            HB_VTBL( iPCI )->Release( HB_THIS( iPCI ) );
-                           return 0;
+                           return S_OK;
                         }
                      }
                   }
@@ -474,7 +474,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    /* Method 3: using CoClass */
 
    hr = HB_VTBL( iDisp )->GetTypeInfo( HB_THIS_( iDisp ) 0, LOCALE_SYSTEM_DEFAULT, &iTI );
-   if( hr == 0 )
+   if( hr == S_OK )
    {
       ITypeLib *   iTL;
       TYPEATTR *   pTypeAttr2;
@@ -482,7 +482,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       hr = HB_VTBL( iTI )->GetContainingTypeLib( HB_THIS_( iTI ) &iTL, NULL );
       HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
 
-      if( hr == 0 )
+      if( hr == S_OK )
       {
          int iCount = HB_VTBL( iTL )->GetTypeInfoCount( HB_THIS( iTL ) );
          for( i = 0; i < iCount; i++ )
@@ -524,7 +524,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                        HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
                                        HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
                                        HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
-                                       return 0;
+                                       return S_OK;
                                     }
                                  }
 
@@ -560,7 +560,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                     HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
                                     HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
                                     HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
-                                    return 0;
+                                    return S_OK;
                                  }
                               }
                            }

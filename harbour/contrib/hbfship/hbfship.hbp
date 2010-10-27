@@ -9,5 +9,11 @@
 
 -w3 -es2
 
+fldarr.prg
+isdb.prg
+
+flddeci.c
+isbegseq.c
+isfunc.c
 secondfs.c
 strpeek.c
