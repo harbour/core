@@ -310,7 +310,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActSave:setText( "&Save" )
    oActSave:setIcon( hb_dirBase() + "save.png" )
    oActSave:setToolTip( "Save this file!" )
-   oActSave:connect( oActSave, "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
+   oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActSave )
 
