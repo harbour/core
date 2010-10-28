@@ -7,13 +7,13 @@
 
 g/filelist.hbm
 
-hbqt_registersignals.cpp
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqgraphicsitem.cpp
 hbqt_hbqgraphicsscene.cpp
 hbqt_hbqplaintextedit.cpp
 hbqt_hbqsyntaxhighlighter.cpp
 hbqt_hbqtableview.cpp
+hbqt_init.cpp
 hbqt_utils.cpp
 
 hbqt_hbqabstractitemmodel.h

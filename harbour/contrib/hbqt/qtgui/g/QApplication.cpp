@@ -131,9 +131,6 @@
 #include <QtCore/QPointer>
 
 #include "hbapi.h"
-#include "hbapierr.h"
-#include "hbvm.h"
-#include "hbinit.h"
 
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
@@ -143,22 +140,7 @@
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
 
-static QApplication * s_app = NULL;
-
-static int s_argc;
-static char ** s_argv;
-
-HB_FUNC_EXTERN( HB_QTCORE );
-
-HB_FUNC( HB_QTGUI )
-{
-   HB_FUNC_EXEC( HB_QTCORE );
-}
-
-HB_FUNC( HB_QT ) /* For compatibility */
-{
-   HB_FUNC_EXEC( HB_QTCORE );
-}
+extern HB_EXPORT QApplication * __hbqtgui_app( void );
 
 /*
  * QApplication ( int & argc, char ** argv )
@@ -170,46 +152,14 @@ HB_FUNC( HB_QT ) /* For compatibility */
 */
 
 
-static void hbqtgui_Exit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-}
-
-static void hbqtgui_Init( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   s_argc = hb_cmdargARGC();
-   s_argv = hb_cmdargARGV();
-
-   s_app = new QApplication( s_argc, s_argv );
-
-   if( ! s_app )
-      hb_errInternal( 11001, "hbqtgui_Init(): QT Initilization Error.", NULL, NULL );
-
-   hb_cmdargInit( s_argc, s_argv );
-}
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_hbqtgui_init_ )
-   hb_vmAtInit( hbqtgui_Init, NULL );
-   hb_vmAtExit( hbqtgui_Exit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_hbqtgui_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_hbqtgui_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_hbqtgui_init_ )
-   #include "hbiniseg.h"
-#endif
-
 HB_FUNC( QT_QAPPLICATION_EXECUTE )
 {
-   hb_retni( s_app->exec() );
+   hb_retni( __hbqtgui_app()->exec() );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )
 {
-   s_app->quit();
+   __hbqtgui_app()->quit();
 }
 
 typedef struct
@@ -253,8 +203,8 @@ void * hbqt_gcAllocate_QApplication( void * pObj, bool bNew )
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   //__HB_RETPTRGC__( ( QApplication * ) s_app );
-   hb_retptr ( s_app );
+   //__HB_RETPTRGC__( ( QApplication * ) __hbqtgui_app() );
+   hb_retptr( __hbqtgui_app() );
 }
 
 /*

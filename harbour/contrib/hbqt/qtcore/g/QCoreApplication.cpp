@@ -114,41 +114,9 @@
 
 #include <QtCore/QPointer>
 
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbinit.h"
-
 #include <QtCore/QStringList>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTextCodec>
-
-HB_FUNC( HB_QTCORE ) {;}
-
-static void hbqtcore_Exit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-}
-
-static void hbqtcore_Init( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   QTextCodec * codec = QTextCodec::codecForName( "UTF8" );
-   QTextCodec::setCodecForTr( codec );
-   QTextCodec::setCodecForCStrings( codec );
-}
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_hbqtcore_init_ )
-   hb_vmAtInit( hbqtcore_Init, NULL );
-   hb_vmAtExit( hbqtcore_Exit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_hbqtcore_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_hbqtcore_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_hbqtcore_init_ )
-   #include "hbiniseg.h"
-#endif
 
 /*
  * QCoreApplication ( int & argc, char ** argv )

@@ -7,7 +7,6 @@
 
 g/filelist.hbm
 
-hbqt_registersignals.cpp
+hbqt_init.cpp
 
 ../qtcore/hbqtcore.hbc
-

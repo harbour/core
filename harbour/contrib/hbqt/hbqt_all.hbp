@@ -11,8 +11,8 @@
 
 # Do not change this to hbqt.hbc reference.
 hbqtcore.hbc
-# hbqtdesigner.hbc
+hbqtdesigner.hbc
 hbqtgui.hbc
 hbqtnetwork.hbc
 hbqtuitools.hbc
-# hbqtwebkit.hbc
+hbqtwebkit.hbc

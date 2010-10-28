@@ -7,6 +7,8 @@
 
 g/filelist.hbm
 
+hbqt_init.cpp
+
 ../qtcore/hbqtcore.hbc
 ../qtgui/hbqtgui.hbc
 ../qtnetwork/hbqtnetwork.hbc
