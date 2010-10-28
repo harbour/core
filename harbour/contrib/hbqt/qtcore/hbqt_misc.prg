@@ -131,10 +131,6 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::__pSlots := __hbqt_slots_new()
       ENDIF
       nResult := __hbqt_slots_connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
-      IF nResult == 0
-         RETURN .T.
-      ENDIF
-      __hbqt_error( 1300 + nResult )
       EXIT
 
    CASE "N"
@@ -144,17 +140,20 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
       ENDIF
       nResult := __hbqt_events_connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
-      IF nResult == 0
-         RETURN .T.
-      ENDIF
-      __hbqt_error( 1200 + nResult )
       EXIT
 
    OTHERWISE
-
-      __hbqt_error( 1203 )
-
+      nResult := 99
    ENDSWITCH
+
+   SWITCH nResult
+   CASE 0
+      RETURN .T.
+   CASE 8 /* QT connect call failure */
+      RETURN .F.
+   ENDSWITCH
+
+   __hbqt_error( 1200 + nResult )
 
    RETURN .F.
 
@@ -165,36 +164,26 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    SWITCH ValType( cnEvent )
    CASE "C"
-
-      IF Empty( ::__pSlots )
-         __hbqt_error( 1301 )
-      ELSE
-         nResult := __hbqt_slots_disconnect( ::__pSlots, ::pPtr, cnEvent )
-         IF nResult == 0
-            RETURN .T.
-         ENDIF
-         __hbqt_error( 1350 + nResult )
-      ENDIF
+      nResult := __hbqt_slots_disconnect( ::__pSlots, ::pPtr, cnEvent )
       EXIT
-
    CASE "N"
-
-      IF Empty( ::__pEvents )
-         __hbqt_error( 1201 )
-      ELSE
-         nResult := __hbqt_events_disconnect( ::__pEvents, ::pPtr, cnEvent )
-         IF nResult == 0
-            RETURN .T.
-         ENDIF
-         __hbqt_error( 1250 + nResult )
-      ENDIF
+      nResult := __hbqt_events_disconnect( ::__pEvents, ::pPtr, cnEvent )
       EXIT
-
    OTHERWISE
-
-      __hbqt_error( 1202 )
-
+      nResult := 99
    ENDSWITCH
+
+   SWITCH nResult
+   CASE 0
+   CASE 4 /* signal not found in object */
+   CASE 5 /* disconnect failure */
+      RETURN .T.
+   CASE 1 /* wrong slot container, no connect was called yet */
+   CASE 3 /* event not found */
+      RETURN .F.
+   ENDSWITCH
+
+   __hbqt_error( 1300 + nResult )
 
    RETURN .F.
 

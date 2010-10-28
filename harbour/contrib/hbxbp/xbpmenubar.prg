@@ -232,8 +232,8 @@ METHOD xbpMenuBar:delItem( aItem )
 
    IF hb_isObject( aItem[ 5 ] ) .AND. __ObjGetClsName( aItem[ 5 ] ) == "QACTION"
       IF !( aItem[ 5 ]:isSeparator() )
-         ::disConnect( aItem[ 5 ], "triggered(bool)" )
-         ::disConnect( aItem[ 5 ], "hovered()"       )
+         aItem[ 5 ]:disConnect( "triggered(bool)" )
+         aItem[ 5 ]:disConnect( "hovered()"       )
       ENDIF
       ::oWidget:removeAction( aItem[ 5 ] )
       aItem[ 5 ] := NIL

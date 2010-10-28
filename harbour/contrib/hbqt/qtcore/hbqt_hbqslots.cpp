@@ -204,24 +204,24 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
       QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );               /* get sender */
       if( object )
       {
-         int i = object->property( hb_parcx( 3 ) ).toInt();
-         if( i == 0 )
+         PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
+         if( pBlock )
          {
-            QString signal = hb_parcx( 3 );
-            QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
-
-            if( QMetaObject::checkConnectArgs( theSignal, theSignal ) )
+            int i = object->property( hb_parcx( 3 ) ).toInt();
+            if( i == 0 )
             {
-               int signalId = object->metaObject()->indexOfSignal( theSignal );
-               if( signalId != -1 )
+               QString signal = hb_parcx( 3 );
+               QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
+
+               if( QMetaObject::checkConnectArgs( theSignal, theSignal ) )
                {
-                  int slotId = object->metaObject()->indexOfMethod( theSignal );
-                  if( slotId != -1 )
+                  int signalId = object->metaObject()->indexOfSignal( theSignal );
+                  if( signalId != -1 )
                   {
-                     if( QMetaObject::connect( object, signalId, t_slots, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
+                     int slotId = object->metaObject()->indexOfMethod( theSignal );
+                     if( slotId != -1 )
                      {
-                        PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
-                        if( pBlock )
+                        if( QMetaObject::connect( object, signalId, t_slots, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
                         {
                            t_slots->listBlock << pBlock;
 
