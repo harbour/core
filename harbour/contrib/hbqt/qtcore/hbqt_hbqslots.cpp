@@ -201,7 +201,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
 
    if( t_slots )
    {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );               /* get sender */
+      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 ); /* get sender */
       if( object )
       {
          PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */

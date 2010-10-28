@@ -189,14 +189,14 @@ HB_FUNC( __HBQT_EVENTS_CONNECT )
 
    if( t_events )
    {
-      QObject * object = ( QObject* ) hbqt_pPtrFromObj( 2 );          /* get sender    */
+      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 ); /* get sender    */
 
       if( object )
       {
          int type = hb_parni( 3 );
 
          char prop[ 20 ];
-         hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+         hb_snprintf( prop, sizeof( prop ), "P%iP", type ); /* Make it a unique identifier */
 
          int i = object->property( prop ).toInt();
          if( i == 0 )  /* No Duplicates of same event with same object - it is a design decision - never alter */
@@ -228,14 +228,14 @@ HB_FUNC( __HBQT_EVENTS_DISCONNECT )
 
    if( t_events )
    {
-      QObject * object = ( QObject* ) hbqt_pPtrFromObj( 2 );
+      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );
 
       if( object )
       {
          int type = hb_parni( 3 );
 
          char prop[ 20 ];
-         hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+         hb_snprintf( prop, sizeof( prop ), "P%iP", type );    /* Make it a unique identifier */
 
          int i = object->property( prop ).toInt();
          if( i > 0 && i <= t_events->listBlock.size() )

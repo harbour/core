@@ -112,9 +112,9 @@ const char * hb_verCPU( void )
 #elif defined( HB_CPU_PPC_64 )
    return "PPC64";
 #elif defined( HB_CPU_SPARC )
-   return "Sparc/32";
+   return "SPARC";
 #elif defined( HB_CPU_SPARC_64 )
-   return "Sparc/64";
+   return "SPARC64";
 #elif defined( HB_CPU_ARM )
    return "ARM";
 #elif defined( HB_CPU_MIPS )

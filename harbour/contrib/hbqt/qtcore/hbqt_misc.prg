@@ -131,6 +131,13 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::__pSlots := __hbqt_slots_new()
       ENDIF
       nResult := __hbqt_slots_connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
+
+      SWITCH nResult
+      CASE 0
+         RETURN .T.
+      CASE 8 /* QT connect call failure */
+         RETURN .F.
+      ENDSWITCH
       EXIT
 
    CASE "N"
@@ -140,17 +147,15 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
       ENDIF
       nResult := __hbqt_events_connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
+
+      SWITCH nResult
+      CASE 0
+         RETURN .T.
+      ENDSWITCH
       EXIT
 
    OTHERWISE
       nResult := 99
-   ENDSWITCH
-
-   SWITCH nResult
-   CASE 0
-      RETURN .T.
-   CASE 8 /* QT connect call failure */
-      RETURN .F.
    ENDSWITCH
 
    __hbqt_error( 1200 + nResult )
@@ -164,23 +169,34 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    SWITCH ValType( cnEvent )
    CASE "C"
+
       nResult := __hbqt_slots_disconnect( ::__pSlots, ::pPtr, cnEvent )
+
+      SWITCH nResult
+      CASE 0
+      CASE 4 /* signal not found in object */
+      CASE 5 /* disconnect failure */
+         RETURN .T.
+      CASE 1 /* wrong slot container, no connect was called yet */
+      CASE 3 /* event not found */
+         RETURN .F.
+      ENDSWITCH
       EXIT
+
    CASE "N"
+
       nResult := __hbqt_events_disconnect( ::__pEvents, ::pPtr, cnEvent )
+
+      SWITCH nResult
+      CASE 0
+         RETURN .T.
+      CASE -3 /* event not found */
+         RETURN .F.
+      ENDSWITCH
       EXIT
+
    OTHERWISE
       nResult := 99
-   ENDSWITCH
-
-   SWITCH nResult
-   CASE 0
-   CASE 4 /* signal not found in object */
-   CASE 5 /* disconnect failure */
-      RETURN .T.
-   CASE 1 /* wrong slot container, no connect was called yet */
-   CASE 3 /* event not found */
-      RETURN .F.
    ENDSWITCH
 
    __hbqt_error( 1300 + nResult )
