@@ -177,6 +177,6 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    AEval( aFieldList, {| cFieldName, nIndex | ;
          cName := RTrim( Upper( cFieldName ) ),;
          nIndex := AScan( aStruct, bFindName ),;
-         iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
+         iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
 
    RETURN aStructFiltered
