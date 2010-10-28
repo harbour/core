@@ -57,8 +57,6 @@
 #include "hbqt.h"
 
 #include "hbapierr.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbvm.h"
 #include "hbinit.h"
 

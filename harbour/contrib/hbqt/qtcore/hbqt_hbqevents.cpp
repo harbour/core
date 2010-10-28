@@ -56,7 +56,6 @@
 #include "hbqt.h"
 
 #include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbvm.h"
 
 #if QT_VERSION >= 0x040500
