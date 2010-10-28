@@ -207,10 +207,12 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
          PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
          if( pBlock )
          {
-            int i = object->property( hb_parcx( 3 ) ).toInt();
+            const char * pszSignal = hb_parcx( 3 );
+
+            int i = object->property( pszSignal ).toInt();
             if( i == 0 )
             {
-               QString signal = hb_parcx( 3 );
+               QString signal = pszSignal;
                QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
 
                if( QMetaObject::checkConnectArgs( theSignal, theSignal ) )
@@ -273,15 +275,14 @@ HB_FUNC( __HBQT_SLOTS_DISCONNECT )
       QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );
       if( object )
       {
-         const char * slot = hb_parcx( 3 );
+         const char * pszSignal = hb_parcx( 3 );
 
-         int i = object->property( slot ).toInt();
-
+         int i = object->property( pszSignal ).toInt();
          if( i > 0 && i <= t_slots->listBlock.size() )
          {
-            object->setProperty( slot, QVariant() );
+            object->setProperty( pszSignal, QVariant() );
 
-            QString signal = ( QString ) slot;
+            QString signal = pszSignal;
             QByteArray theSignal = signal.toAscii();
 
             int signalId = object->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( theSignal ) );
