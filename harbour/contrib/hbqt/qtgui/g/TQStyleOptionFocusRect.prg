@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionFocusRect( ... )
    RETURN HB_QStyleOptionFocusRect():new( ... )
 

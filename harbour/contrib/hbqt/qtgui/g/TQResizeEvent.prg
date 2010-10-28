@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QResizeEvent( ... )
    RETURN HB_QResizeEvent():new( ... )
 

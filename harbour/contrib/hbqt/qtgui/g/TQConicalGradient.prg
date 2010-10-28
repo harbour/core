@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QConicalGradient( ... )
    RETURN HB_QConicalGradient():new( ... )
 

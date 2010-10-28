@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QWindowsStyle( ... )
    RETURN HB_QWindowsStyle():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextEdit( ... )
    RETURN HB_QTextEdit():new( ... )
 

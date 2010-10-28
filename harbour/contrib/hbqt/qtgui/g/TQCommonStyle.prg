@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QCommonStyle( ... )
    RETURN HB_QCommonStyle():new( ... )
 

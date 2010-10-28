@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QByteArray( ... )
    RETURN HB_QByteArray():new( ... )
 

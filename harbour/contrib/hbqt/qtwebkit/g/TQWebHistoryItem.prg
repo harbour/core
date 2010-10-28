@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebHistoryItem( ... )
    RETURN HB_QWebHistoryItem():new( ... )
 

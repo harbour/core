@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQSCINTILLA
+
+
 FUNCTION QsciStyledText( ... )
    RETURN HB_QsciStyledText():new( ... )
 

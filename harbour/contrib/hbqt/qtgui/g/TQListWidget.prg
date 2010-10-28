@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QListWidget( ... )
    RETURN HB_QListWidget():new( ... )
 

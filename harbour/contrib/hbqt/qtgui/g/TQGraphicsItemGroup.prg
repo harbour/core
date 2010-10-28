@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsItemGroup( ... )
    RETURN HB_QGraphicsItemGroup():new( ... )
 

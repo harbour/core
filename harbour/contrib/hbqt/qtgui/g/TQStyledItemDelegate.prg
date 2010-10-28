@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyledItemDelegate( ... )
    RETURN HB_QStyledItemDelegate():new( ... )
 

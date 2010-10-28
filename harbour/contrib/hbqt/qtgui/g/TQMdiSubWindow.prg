@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMdiSubWindow( ... )
    RETURN HB_QMdiSubWindow():new( ... )
 

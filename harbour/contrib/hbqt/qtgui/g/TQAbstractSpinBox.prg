@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractSpinBox( ... )
    RETURN HB_QAbstractSpinBox():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSlider( ... )
    RETURN HB_QSlider():new( ... )
 

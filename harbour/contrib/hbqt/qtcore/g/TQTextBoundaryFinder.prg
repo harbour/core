@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QTextBoundaryFinder( ... )
    RETURN HB_QTextBoundaryFinder():new( ... )
 

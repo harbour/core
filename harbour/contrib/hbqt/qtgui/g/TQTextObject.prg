@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextObject( ... )
    RETURN HB_QTextObject():new( ... )
 

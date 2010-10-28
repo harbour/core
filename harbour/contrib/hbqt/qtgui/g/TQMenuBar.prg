@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMenuBar( ... )
    RETURN HB_QMenuBar():new( ... )
 

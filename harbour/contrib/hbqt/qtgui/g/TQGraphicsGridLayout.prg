@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsGridLayout( ... )
    RETURN HB_QGraphicsGridLayout():new( ... )
 

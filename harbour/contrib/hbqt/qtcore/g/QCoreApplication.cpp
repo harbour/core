@@ -116,7 +116,6 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QTextCodec>
 
 /*
  * QCoreApplication ( int & argc, char ** argv )

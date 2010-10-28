@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionDockWidget( ... )
    RETURN HB_QStyleOptionDockWidget():new( ... )
 

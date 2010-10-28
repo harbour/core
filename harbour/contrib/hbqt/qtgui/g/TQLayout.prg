@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QLayout( ... )
    RETURN HB_QLayout():new( ... )
 

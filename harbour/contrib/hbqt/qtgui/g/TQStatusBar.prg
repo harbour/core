@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStatusBar( ... )
    RETURN HB_QStatusBar():new( ... )
 

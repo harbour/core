@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QProgressDialog( ... )
    RETURN HB_QProgressDialog():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextOption( ... )
    RETURN HB_QTextOption():new( ... )
 

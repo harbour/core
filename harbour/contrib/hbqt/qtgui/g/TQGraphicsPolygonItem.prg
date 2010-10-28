@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsPolygonItem( ... )
    RETURN HB_QGraphicsPolygonItem():new( ... )
 

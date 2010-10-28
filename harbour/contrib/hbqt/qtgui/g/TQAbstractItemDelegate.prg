@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractItemDelegate( ... )
    RETURN HB_QAbstractItemDelegate():new( ... )
 

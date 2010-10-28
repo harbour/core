@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebView( ... )
    RETURN HB_QWebView():new( ... )
 

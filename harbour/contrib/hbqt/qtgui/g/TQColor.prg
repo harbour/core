@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QColor( ... )
    RETURN HB_QColor():new( ... )
 

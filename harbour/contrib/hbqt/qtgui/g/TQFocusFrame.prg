@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFocusFrame( ... )
    RETURN HB_QFocusFrame():new( ... )
 

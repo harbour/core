@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSpacerItem( ... )
    RETURN HB_QSpacerItem():new( ... )
 

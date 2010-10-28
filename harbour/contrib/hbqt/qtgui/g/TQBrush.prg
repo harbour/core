@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QBrush( ... )
    RETURN HB_QBrush():new( ... )
 

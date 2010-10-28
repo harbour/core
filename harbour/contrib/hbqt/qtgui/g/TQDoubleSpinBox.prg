@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDoubleSpinBox( ... )
    RETURN HB_QDoubleSpinBox():new( ... )
 

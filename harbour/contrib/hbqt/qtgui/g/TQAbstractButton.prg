@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractButton( ... )
    RETURN HB_QAbstractButton():new( ... )
 

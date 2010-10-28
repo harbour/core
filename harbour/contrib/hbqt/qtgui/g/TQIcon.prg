@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QIcon( ... )
    RETURN HB_QIcon():new( ... )
 

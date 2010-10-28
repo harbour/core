@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebPluginFactory( ... )
    RETURN HB_QWebPluginFactory():new( ... )
 

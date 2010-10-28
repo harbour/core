@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTDESIGNER
+
+
 FUNCTION QDesignerPropertyEditorInterface( ... )
    RETURN HB_QDesignerPropertyEditorInterface():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QWheelEvent( ... )
    RETURN HB_QWheelEvent():new( ... )
 

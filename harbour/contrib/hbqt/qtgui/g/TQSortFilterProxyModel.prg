@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSortFilterProxyModel( ... )
    RETURN HB_QSortFilterProxyModel():new( ... )
 

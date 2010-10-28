@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDesktopWidget( ... )
    RETURN HB_QDesktopWidget():new( ... )
 

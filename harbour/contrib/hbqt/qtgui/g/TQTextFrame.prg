@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextFrame( ... )
    RETURN HB_QTextFrame():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QWizardPage( ... )
    RETURN HB_QWizardPage():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QProgressBar( ... )
    RETURN HB_QProgressBar():new( ... )
 

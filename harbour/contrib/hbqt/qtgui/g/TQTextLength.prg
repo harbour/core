@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextLength( ... )
    RETURN HB_QTextLength():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION HBQSlots( ... )
    RETURN HB_HBQSlots():new( ... )
 

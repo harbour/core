@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTableWidgetSelectionRange( ... )
    RETURN HB_QTableWidgetSelectionRange():new( ... )
 

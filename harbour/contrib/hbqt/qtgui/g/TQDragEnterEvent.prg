@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDragEnterEvent( ... )
    RETURN HB_QDragEnterEvent():new( ... )
 

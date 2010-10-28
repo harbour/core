@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QCommandLinkButton( ... )
    RETURN HB_QCommandLinkButton():new( ... )
 

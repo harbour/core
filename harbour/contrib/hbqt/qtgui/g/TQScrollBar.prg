@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QScrollBar( ... )
    RETURN HB_QScrollBar():new( ... )
 

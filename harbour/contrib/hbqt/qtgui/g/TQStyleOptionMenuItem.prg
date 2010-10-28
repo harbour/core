@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionMenuItem( ... )
    RETURN HB_QStyleOptionMenuItem():new( ... )
 

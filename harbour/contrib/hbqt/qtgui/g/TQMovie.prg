@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMovie( ... )
    RETURN HB_QMovie():new( ... )
 

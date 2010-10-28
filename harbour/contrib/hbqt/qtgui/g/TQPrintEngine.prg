@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPrintEngine( ... )
    RETURN HB_QPrintEngine():new( ... )
 

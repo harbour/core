@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QWidgetAction( ... )
    RETURN HB_QWidgetAction():new( ... )
 

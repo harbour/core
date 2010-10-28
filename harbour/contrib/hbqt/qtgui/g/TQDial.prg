@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDial( ... )
    RETURN HB_QDial():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTNETWORK
+
+
 FUNCTION QNetworkRequest( ... )
    RETURN HB_QNetworkRequest():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPaintEngine( ... )
    RETURN HB_QPaintEngine():new( ... )
 

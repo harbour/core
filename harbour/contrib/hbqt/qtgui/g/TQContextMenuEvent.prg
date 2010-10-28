@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QContextMenuEvent( ... )
    RETURN HB_QContextMenuEvent():new( ... )
 

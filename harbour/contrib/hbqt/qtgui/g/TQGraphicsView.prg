@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsView( ... )
    RETURN HB_QGraphicsView():new( ... )
 

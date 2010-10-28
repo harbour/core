@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QAbstractListModel( ... )
    RETURN HB_QAbstractListModel():new( ... )
 

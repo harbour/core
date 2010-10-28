@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QKeyEvent( ... )
    RETURN HB_QKeyEvent():new( ... )
 

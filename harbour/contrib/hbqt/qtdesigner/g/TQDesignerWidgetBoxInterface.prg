@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTDESIGNER
+
+
 FUNCTION QDesignerWidgetBoxInterface( ... )
    RETURN HB_QDesignerWidgetBoxInterface():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTNETWORK
+
+
 FUNCTION QHttpResponseHeader( ... )
    RETURN HB_QHttpResponseHeader():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDirModel( ... )
    RETURN HB_QDirModel():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QResource( ... )
    RETURN HB_QResource():new( ... )
 

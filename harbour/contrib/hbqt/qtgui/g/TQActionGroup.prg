@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QActionGroup( ... )
    RETURN HB_QActionGroup():new( ... )
 

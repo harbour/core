@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QWindowStateChangeEvent( ... )
    RETURN HB_QWindowStateChangeEvent():new( ... )
 

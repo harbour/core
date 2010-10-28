@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractTextDocumentLayout( ... )
    RETURN HB_QAbstractTextDocumentLayout():new( ... )
 

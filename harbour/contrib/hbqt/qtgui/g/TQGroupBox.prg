@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGroupBox( ... )
    RETURN HB_QGroupBox():new( ... )
 

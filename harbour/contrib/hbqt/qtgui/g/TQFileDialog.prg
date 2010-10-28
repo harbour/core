@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFileDialog( ... )
    RETURN HB_QFileDialog():new( ... )
 

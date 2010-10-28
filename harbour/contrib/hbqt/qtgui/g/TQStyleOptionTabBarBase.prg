@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionTabBarBase( ... )
    RETURN HB_QStyleOptionTabBarBase():new( ... )
 

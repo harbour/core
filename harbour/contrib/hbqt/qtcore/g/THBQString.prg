@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION HBQString( ... )
    RETURN HB_HBQString():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextBlock( ... )
    RETURN HB_QTextBlock():new( ... )
 

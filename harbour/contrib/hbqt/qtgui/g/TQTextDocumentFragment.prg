@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextDocumentFragment( ... )
    RETURN HB_QTextDocumentFragment():new( ... )
 

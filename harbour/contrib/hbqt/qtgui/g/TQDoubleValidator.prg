@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDoubleValidator( ... )
    RETURN HB_QDoubleValidator():new( ... )
 

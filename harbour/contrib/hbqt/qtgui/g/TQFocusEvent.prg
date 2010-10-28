@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFocusEvent( ... )
    RETURN HB_QFocusEvent():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPaintEvent( ... )
    RETURN HB_QPaintEvent():new( ... )
 

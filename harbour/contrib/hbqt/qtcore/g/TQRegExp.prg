@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QRegExp( ... )
    RETURN HB_QRegExp():new( ... )
 

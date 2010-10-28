@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QInputMethodEvent( ... )
    RETURN HB_QInputMethodEvent():new( ... )
 

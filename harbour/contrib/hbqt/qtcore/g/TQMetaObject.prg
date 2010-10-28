@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QMetaObject( ... )
    RETURN HB_QMetaObject():new( ... )
 

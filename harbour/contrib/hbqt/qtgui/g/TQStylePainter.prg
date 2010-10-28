@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStylePainter( ... )
    RETURN HB_QStylePainter():new( ... )
 

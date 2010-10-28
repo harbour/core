@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPrintPreviewDialog( ... )
    RETURN HB_QPrintPreviewDialog():new( ... )
 

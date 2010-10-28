@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSplitter( ... )
    RETURN HB_QSplitter():new( ... )
 

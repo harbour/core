@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractSlider( ... )
    RETURN HB_QAbstractSlider():new( ... )
 

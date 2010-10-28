@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSizeGrip( ... )
    RETURN HB_QSizeGrip():new( ... )
 

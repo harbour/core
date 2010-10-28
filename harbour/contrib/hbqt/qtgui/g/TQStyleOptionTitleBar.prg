@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionTitleBar( ... )
    RETURN HB_QStyleOptionTitleBar():new( ... )
 

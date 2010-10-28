@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionComplex( ... )
    RETURN HB_QStyleOptionComplex():new( ... )
 

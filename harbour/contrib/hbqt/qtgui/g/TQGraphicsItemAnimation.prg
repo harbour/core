@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsItemAnimation( ... )
    RETURN HB_QGraphicsItemAnimation():new( ... )
 

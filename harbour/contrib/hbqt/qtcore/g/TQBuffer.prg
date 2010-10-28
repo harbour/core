@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QBuffer( ... )
    RETURN HB_QBuffer():new( ... )
 

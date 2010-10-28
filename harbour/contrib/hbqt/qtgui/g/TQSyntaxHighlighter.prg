@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSyntaxHighlighter( ... )
    RETURN HB_QSyntaxHighlighter():new( ... )
 

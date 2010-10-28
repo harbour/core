@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QMimeData( ... )
    RETURN HB_QMimeData():new( ... )
 

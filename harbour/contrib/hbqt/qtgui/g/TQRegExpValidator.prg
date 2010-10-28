@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QRegExpValidator( ... )
    RETURN HB_QRegExpValidator():new( ... )
 

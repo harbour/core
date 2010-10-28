@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractProxyModel( ... )
    RETURN HB_QAbstractProxyModel():new( ... )
 

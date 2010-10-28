@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPolygon( ... )
    RETURN HB_QPolygon():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebSettings( ... )
    RETURN HB_QWebSettings():new( ... )
 

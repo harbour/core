@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionTabWidgetFrame( ... )
    RETURN HB_QStyleOptionTabWidgetFrame():new( ... )
 

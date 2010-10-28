@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsSceneResizeEvent( ... )
    RETURN HB_QGraphicsSceneResizeEvent():new( ... )
 

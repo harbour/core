@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStandardItem( ... )
    RETURN HB_QStandardItem():new( ... )
 

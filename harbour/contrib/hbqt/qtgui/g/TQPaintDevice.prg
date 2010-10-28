@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPaintDevice( ... )
    RETURN HB_QPaintDevice():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFontComboBox( ... )
    RETURN HB_QFontComboBox():new( ... )
 

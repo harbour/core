@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQSCINTILLA
+
+
 FUNCTION QsciAbstractAPIs( ... )
    RETURN HB_QsciAbstractAPIs():new( ... )
 

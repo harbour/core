@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QObject( ... )
    RETURN HB_QObject():new( ... )
 

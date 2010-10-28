@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionProgressBar( ... )
    RETURN HB_QStyleOptionProgressBar():new( ... )
 

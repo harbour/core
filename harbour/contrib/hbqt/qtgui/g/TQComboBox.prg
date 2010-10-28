@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QComboBox( ... )
    RETURN HB_QComboBox():new( ... )
 

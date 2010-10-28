@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QTimeLine( ... )
    RETURN HB_QTimeLine():new( ... )
 

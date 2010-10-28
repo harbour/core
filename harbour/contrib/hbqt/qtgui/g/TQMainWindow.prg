@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMainWindow( ... )
    RETURN HB_QMainWindow():new( ... )
 

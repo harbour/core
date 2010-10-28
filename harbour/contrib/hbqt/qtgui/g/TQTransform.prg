@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTransform( ... )
    RETURN HB_QTransform():new( ... )
 

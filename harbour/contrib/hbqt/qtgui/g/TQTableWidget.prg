@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTableWidget( ... )
    RETURN HB_QTableWidget():new( ... )
 

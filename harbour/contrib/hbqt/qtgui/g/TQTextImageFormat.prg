@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextImageFormat( ... )
    RETURN HB_QTextImageFormat():new( ... )
 

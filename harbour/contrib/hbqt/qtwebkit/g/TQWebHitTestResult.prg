@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebHitTestResult( ... )
    RETURN HB_QWebHitTestResult():new( ... )
 

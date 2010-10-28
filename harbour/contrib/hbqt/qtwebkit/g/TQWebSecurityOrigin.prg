@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebSecurityOrigin( ... )
    RETURN HB_QWebSecurityOrigin():new( ... )
 

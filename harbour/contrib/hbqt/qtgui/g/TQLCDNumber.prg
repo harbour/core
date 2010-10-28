@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QLCDNumber( ... )
    RETURN HB_QLCDNumber():new( ... )
 

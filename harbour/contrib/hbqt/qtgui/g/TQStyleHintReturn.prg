@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleHintReturn( ... )
    RETURN HB_QStyleHintReturn():new( ... )
 

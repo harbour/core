@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsSceneEvent( ... )
    RETURN HB_QGraphicsSceneEvent():new( ... )
 

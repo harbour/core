@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QRadialGradient( ... )
    RETURN HB_QRadialGradient():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionSizeGrip( ... )
    RETURN HB_QStyleOptionSizeGrip():new( ... )
 

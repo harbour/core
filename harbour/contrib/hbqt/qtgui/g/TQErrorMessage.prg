@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QErrorMessage( ... )
    RETURN HB_QErrorMessage():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTreeWidgetItem( ... )
    RETURN HB_QTreeWidgetItem():new( ... )
 

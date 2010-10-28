@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMouseEvent( ... )
    RETURN HB_QMouseEvent():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSizePolicy( ... )
    RETURN HB_QSizePolicy():new( ... )
 

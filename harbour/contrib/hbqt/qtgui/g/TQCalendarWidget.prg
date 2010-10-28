@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QCalendarWidget( ... )
    RETURN HB_QCalendarWidget():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QBitmap( ... )
    RETURN HB_QBitmap():new( ... )
 

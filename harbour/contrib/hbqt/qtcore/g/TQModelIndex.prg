@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QModelIndex( ... )
    RETURN HB_QModelIndex():new( ... )
 

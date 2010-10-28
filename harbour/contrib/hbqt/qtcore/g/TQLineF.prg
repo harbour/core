@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QLineF( ... )
    RETURN HB_QLineF():new( ... )
 

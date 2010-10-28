@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QItemSelection( ... )
    RETURN HB_QItemSelection():new( ... )
 

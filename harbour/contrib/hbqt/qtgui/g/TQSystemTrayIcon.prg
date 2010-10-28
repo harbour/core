@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSystemTrayIcon( ... )
    RETURN HB_QSystemTrayIcon():new( ... )
 

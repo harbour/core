@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFontMetrics( ... )
    RETURN HB_QFontMetrics():new( ... )
 

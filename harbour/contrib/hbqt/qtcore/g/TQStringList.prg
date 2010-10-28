@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QStringList( ... )
    RETURN HB_QStringList():new( ... )
 

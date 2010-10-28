@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTreeView( ... )
    RETURN HB_QTreeView():new( ... )
 

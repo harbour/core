@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionGraphicsItem( ... )
    RETURN HB_QStyleOptionGraphicsItem():new( ... )
 

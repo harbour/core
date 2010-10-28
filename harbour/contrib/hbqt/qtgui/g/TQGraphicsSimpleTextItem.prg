@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsSimpleTextItem( ... )
    RETURN HB_QGraphicsSimpleTextItem():new( ... )
 

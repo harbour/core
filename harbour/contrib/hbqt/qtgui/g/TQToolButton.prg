@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QToolButton( ... )
    RETURN HB_QToolButton():new( ... )
 

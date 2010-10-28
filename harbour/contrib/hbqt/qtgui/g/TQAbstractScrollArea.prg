@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractScrollArea( ... )
    RETURN HB_QAbstractScrollArea():new( ... )
 

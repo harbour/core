@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFontDialog( ... )
    RETURN HB_QFontDialog():new( ... )
 

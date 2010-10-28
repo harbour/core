@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsSceneDragDropEvent( ... )
    RETURN HB_QGraphicsSceneDragDropEvent():new( ... )
 

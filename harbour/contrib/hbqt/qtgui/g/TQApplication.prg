@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QApplication( ... )
    RETURN HB_QApplication():new( ... )
 

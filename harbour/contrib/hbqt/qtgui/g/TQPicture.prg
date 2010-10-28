@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPicture( ... )
    RETURN HB_QPicture():new( ... )
 

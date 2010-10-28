@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QMetaEnum( ... )
    RETURN HB_QMetaEnum():new( ... )
 

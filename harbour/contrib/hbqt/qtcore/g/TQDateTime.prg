@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QDateTime( ... )
    RETURN HB_QDateTime():new( ... )
 

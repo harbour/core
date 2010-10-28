@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMdiArea( ... )
    RETURN HB_QMdiArea():new( ... )
 

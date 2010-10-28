@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QAbstractTableModel( ... )
    RETURN HB_QAbstractTableModel():new( ... )
 

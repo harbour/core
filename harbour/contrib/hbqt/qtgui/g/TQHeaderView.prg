@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QHeaderView( ... )
    RETURN HB_QHeaderView():new( ... )
 

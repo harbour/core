@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextInlineObject( ... )
    RETURN HB_QTextInlineObject():new( ... )
 

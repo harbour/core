@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextTableFormat( ... )
    RETURN HB_QTextTableFormat():new( ... )
 

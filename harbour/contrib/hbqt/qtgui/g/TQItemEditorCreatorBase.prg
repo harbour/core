@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QItemEditorCreatorBase( ... )
    RETURN HB_QItemEditorCreatorBase():new( ... )
 

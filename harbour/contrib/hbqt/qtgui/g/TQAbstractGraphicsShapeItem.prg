@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractGraphicsShapeItem( ... )
    RETURN HB_QAbstractGraphicsShapeItem():new( ... )
 

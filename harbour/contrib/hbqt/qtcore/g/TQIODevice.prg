@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QIODevice( ... )
    RETURN HB_QIODevice():new( ... )
 

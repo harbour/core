@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QPoint( ... )
    RETURN HB_QPoint():new( ... )
 

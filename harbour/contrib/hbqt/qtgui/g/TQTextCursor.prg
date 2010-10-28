@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextCursor( ... )
    RETURN HB_QTextCursor():new( ... )
 

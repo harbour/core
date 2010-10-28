@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPageSetupDialog( ... )
    RETURN HB_QPageSetupDialog():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTNETWORK
+
+
 FUNCTION QFtp( ... )
    RETURN HB_QFtp():new( ... )
 

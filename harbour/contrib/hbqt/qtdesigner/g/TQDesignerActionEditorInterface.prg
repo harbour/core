@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTDESIGNER
+
+
 FUNCTION QDesignerActionEditorInterface( ... )
    RETURN HB_QDesignerActionEditorInterface():new( ... )
 

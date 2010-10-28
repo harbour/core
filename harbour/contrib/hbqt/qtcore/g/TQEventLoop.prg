@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QEventLoop( ... )
    RETURN HB_QEventLoop():new( ... )
 

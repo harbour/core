@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextLine( ... )
    RETURN HB_QTextLine():new( ... )
 

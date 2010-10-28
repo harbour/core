@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTableView( ... )
    RETURN HB_QTableView():new( ... )
 

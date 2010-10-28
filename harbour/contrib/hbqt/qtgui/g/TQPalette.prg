@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPalette( ... )
    RETURN HB_QPalette():new( ... )
 

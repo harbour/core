@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTUITOOLS
+
+
 FUNCTION QUiLoader( ... )
    RETURN HB_QUiLoader():new( ... )
 

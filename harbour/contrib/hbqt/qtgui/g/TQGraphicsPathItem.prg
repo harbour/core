@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsPathItem( ... )
    RETURN HB_QGraphicsPathItem():new( ... )
 

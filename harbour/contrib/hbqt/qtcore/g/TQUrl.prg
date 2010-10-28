@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QUrl( ... )
    RETURN HB_QUrl():new( ... )
 

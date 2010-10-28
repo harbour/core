@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QFile( ... )
    RETURN HB_QFile():new( ... )
 

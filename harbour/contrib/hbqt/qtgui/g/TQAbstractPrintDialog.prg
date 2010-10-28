@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QAbstractPrintDialog( ... )
    RETURN HB_QAbstractPrintDialog():new( ... )
 

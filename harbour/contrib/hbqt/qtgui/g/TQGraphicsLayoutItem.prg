@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsLayoutItem( ... )
    RETURN HB_QGraphicsLayoutItem():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQSCINTILLA
+
+
 FUNCTION QsciLexerFlagship( ... )
    RETURN HB_QsciLexerFlagship():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionToolButton( ... )
    RETURN HB_QStyleOptionToolButton():new( ... )
 

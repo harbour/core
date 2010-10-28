@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionSlider( ... )
    RETURN HB_QStyleOptionSlider():new( ... )
 

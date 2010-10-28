@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QChar( ... )
    RETURN HB_QChar():new( ... )
 

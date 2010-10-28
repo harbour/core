@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStyleOptionSpinBox( ... )
    RETURN HB_QStyleOptionSpinBox():new( ... )
 

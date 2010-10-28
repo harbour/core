@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QListView( ... )
    RETURN HB_QListView():new( ... )
 

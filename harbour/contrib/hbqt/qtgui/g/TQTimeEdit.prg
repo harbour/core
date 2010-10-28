@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTimeEdit( ... )
    RETURN HB_QTimeEdit():new( ... )
 

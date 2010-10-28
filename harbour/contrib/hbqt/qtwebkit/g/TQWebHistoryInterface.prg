@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebHistoryInterface( ... )
    RETURN HB_QWebHistoryInterface():new( ... )
 

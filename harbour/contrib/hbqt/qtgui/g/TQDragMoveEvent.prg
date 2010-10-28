@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDragMoveEvent( ... )
    RETURN HB_QDragMoveEvent():new( ... )
 

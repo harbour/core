@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QRegion( ... )
    RETURN HB_QRegion():new( ... )
 

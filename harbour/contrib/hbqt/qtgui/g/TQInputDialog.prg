@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QInputDialog( ... )
    RETURN HB_QInputDialog():new( ... )
 

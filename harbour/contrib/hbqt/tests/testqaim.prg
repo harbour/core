@@ -22,8 +22,6 @@ STATIC oWnd
 STATIC oDA, oForeColor, oAlphaColor, oBackBrush, oSize, oPixmap, oIcon, oFont
 
 
-REQUEST HB_QTGUI
-
 INIT PROCEDURE Qt_Start()
    qApp := QApplication()
    RETURN

@@ -31,8 +31,6 @@ STATIC oColorD
 STATIC oColorLY
 STATIC oColorLN
 
-REQUEST HB_QTGUI
-
 INIT PROCEDURE Qt_Start()
    qApp := QApplication()
    RETURN

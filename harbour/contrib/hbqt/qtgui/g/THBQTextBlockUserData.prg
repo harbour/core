@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION HBQTextBlockUserData( ... )
    RETURN HB_HBQTextBlockUserData():new( ... )
 

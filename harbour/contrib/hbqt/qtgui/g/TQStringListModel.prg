@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStringListModel( ... )
    RETURN HB_QStringListModel():new( ... )
 

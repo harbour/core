@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QTextStream( ... )
    RETURN HB_QTextStream():new( ... )
 

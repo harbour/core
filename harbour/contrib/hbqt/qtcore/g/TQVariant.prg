@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QVariant( ... )
    RETURN HB_QVariant():new( ... )
 

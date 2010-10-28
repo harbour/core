@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDrag( ... )
    RETURN HB_QDrag():new( ... )
 

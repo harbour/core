@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QKeySequence( ... )
    RETURN HB_QKeySequence():new( ... )
 

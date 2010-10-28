@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QSplashScreen( ... )
    RETURN HB_QSplashScreen():new( ... )
 

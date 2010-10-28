@@ -94,7 +94,7 @@ FUNCTION Main( ... )
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbQtGenerator
+CREATE CLASS HbQtGenerator
 
    DATA   lValid                                  INIT .f.
    DATA   lCheckArgs                              INIT .f.
@@ -216,9 +216,9 @@ METHOD HbQtGenerator:process()
       ::ManageProject( cProFile )
    NEXT
 
-   /* Indivisual File - Directly Generate .cpp Sources */
+   /* Individual file - Directly Generate .cpp Sources */
    FOR EACH cProFile IN ::aProFiles
-      ::GenSource( cProFile, ::cPathIn, ::cPathOut, ::cPathDoc, {}, cProFile )
+      ::GenSource( cProFile, ::cPathIn, ::cPathOut, ::cPathDoc, cProFile )
    NEXT
 
    RETURN Self
@@ -457,7 +457,7 @@ METHOD HbQtGenerator:buildMakeFile( cPathOut, cProFile )
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbQtSource
+CREATE CLASS HbQtSource
 
    DATA   oGen
    DATA   cFileQth
@@ -917,7 +917,7 @@ METHOD HbQtSource:build()
 
    /* Build CLASS */
    IF !empty( ::cls_ )
-      ::buildClass( ::cWidget, ::cls_, ::doc_, ::cPathOut, ::subCls_ )
+      ::buildClass()
       ::cPRG := ::cWidget
    ELSE
       ::cPRG := ""
@@ -1055,6 +1055,9 @@ METHOD HbQtSource:buildClass()
 
    BuildCopyrightText( @txt_, 1 )
 
+   aadd( txt_, "" )
+   aadd( txt_, "REQUEST __HB" + Upper( FNameGetName( ::cProfile ) ) )
+   aadd( txt_, "" )
    aadd( txt_, "" )
    aadd( txt_, "FUNCTION " + ::cWidget + "( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():new( ... )" )

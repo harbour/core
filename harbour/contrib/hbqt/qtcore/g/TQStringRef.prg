@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QStringRef( ... )
    RETURN HB_QStringRef():new( ... )
 

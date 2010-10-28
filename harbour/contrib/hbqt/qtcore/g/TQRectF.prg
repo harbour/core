@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QRectF( ... )
    RETURN HB_QRectF():new( ... )
 

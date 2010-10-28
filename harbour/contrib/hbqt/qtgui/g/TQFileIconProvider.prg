@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QFileIconProvider( ... )
    RETURN HB_QFileIconProvider():new( ... )
 

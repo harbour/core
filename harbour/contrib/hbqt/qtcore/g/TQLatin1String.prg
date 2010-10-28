@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QLatin1String( ... )
    RETURN HB_QLatin1String():new( ... )
 

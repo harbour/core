@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextFrameFormat( ... )
    RETURN HB_QTextFrameFormat():new( ... )
 

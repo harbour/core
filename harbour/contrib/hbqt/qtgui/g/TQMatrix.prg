@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMatrix( ... )
    RETURN HB_QMatrix():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QSize( ... )
    RETURN HB_QSize():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION HBQPlainTextEdit( ... )
    RETURN HB_HBQPlainTextEdit():new( ... )
 

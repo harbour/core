@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QButtonGroup( ... )
    RETURN HB_QButtonGroup():new( ... )
 

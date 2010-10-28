@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDesktopServices( ... )
    RETURN HB_QDesktopServices():new( ... )
 

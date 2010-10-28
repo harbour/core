@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextList( ... )
    RETURN HB_QTextList():new( ... )
 

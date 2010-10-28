@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QGenericArgument( ... )
    RETURN HB_QGenericArgument():new( ... )
 

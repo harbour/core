@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDockWidget( ... )
    RETURN HB_QDockWidget():new( ... )
 

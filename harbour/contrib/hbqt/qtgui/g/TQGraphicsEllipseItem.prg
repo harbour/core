@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsEllipseItem( ... )
    RETURN HB_QGraphicsEllipseItem():new( ... )
 

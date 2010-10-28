@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTDESIGNER
+
+
 FUNCTION QDesignerObjectInspectorInterface( ... )
    RETURN HB_QDesignerObjectInspectorInterface():new( ... )
 

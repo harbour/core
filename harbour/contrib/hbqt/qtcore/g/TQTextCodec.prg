@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QTextCodec( ... )
    RETURN HB_QTextCodec():new( ... )
 

@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QMetaClassInfo( ... )
    RETURN HB_QMetaClassInfo():new( ... )
 

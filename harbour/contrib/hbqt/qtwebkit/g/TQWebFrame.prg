@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTWEBKIT
+
+
 FUNCTION QWebFrame( ... )
    RETURN HB_QWebFrame():new( ... )
 

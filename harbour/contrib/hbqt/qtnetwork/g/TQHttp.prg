@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTNETWORK
+
+
 FUNCTION QHttp( ... )
    RETURN HB_QHttp():new( ... )
 

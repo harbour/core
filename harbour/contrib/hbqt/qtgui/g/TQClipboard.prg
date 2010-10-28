@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QClipboard( ... )
    RETURN HB_QClipboard():new( ... )
 

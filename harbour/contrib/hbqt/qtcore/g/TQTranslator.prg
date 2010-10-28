@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QTranslator( ... )
    RETURN HB_QTranslator():new( ... )
 

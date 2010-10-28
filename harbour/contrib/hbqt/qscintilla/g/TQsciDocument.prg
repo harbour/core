@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQSCINTILLA
+
+
 FUNCTION QsciDocument( ... )
    RETURN HB_QsciDocument():new( ... )
 

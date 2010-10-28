@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QTextBrowser( ... )
    RETURN HB_QTextBrowser():new( ... )
 

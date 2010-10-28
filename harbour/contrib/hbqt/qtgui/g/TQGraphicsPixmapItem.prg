@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QGraphicsPixmapItem( ... )
    RETURN HB_QGraphicsPixmapItem():new( ... )
 

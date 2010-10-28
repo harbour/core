@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTCORE
+
+
 FUNCTION QSettings( ... )
    RETURN HB_QSettings():new( ... )
 

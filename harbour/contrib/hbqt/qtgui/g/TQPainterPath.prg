@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QPainterPath( ... )
    RETURN HB_QPainterPath():new( ... )
 

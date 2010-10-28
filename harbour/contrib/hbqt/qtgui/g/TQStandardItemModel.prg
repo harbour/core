@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QStandardItemModel( ... )
    RETURN HB_QStandardItemModel():new( ... )
 

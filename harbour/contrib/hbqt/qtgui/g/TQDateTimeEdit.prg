@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QDateTimeEdit( ... )
    RETURN HB_QDateTimeEdit():new( ... )
 

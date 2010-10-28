@@ -95,6 +95,9 @@
 #include "hbclass.ch"
 
 
+REQUEST __HBQTGUI
+
+
 FUNCTION QMoveEvent( ... )
    RETURN HB_QMoveEvent():new( ... )
 
