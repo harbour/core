@@ -79,7 +79,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       lDoVista := .T.
    ENDIF
 
-   IF ! lDoVista .AND. win_osIsVistaOrUpper()
+   IF ! lDoVista .AND. hb_osIsWinVista()
       /* do nothing */
    ELSEIF hb_osIsWin9x()
       bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
@@ -98,7 +98,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
 
-      IF win_osIsVistaOrUpper()
+      IF hb_osIsWinVista()
          /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
       ENDIF
@@ -110,7 +110,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
-      IF win_osIsVistaOrUpper()
+      IF hb_osIsWinVista()
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "FileInfoCacheLifetime", 0, lSetIt )
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "FileNotFoundCacheLifetime", 0, lSetIt )
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "DirectoryCacheLifetime", 0, lSetIt )
