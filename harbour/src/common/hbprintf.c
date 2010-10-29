@@ -163,7 +163,7 @@ optimized.
 #     define _MODFD( x, p )   modf( x, p )
 #  else
 #     define _x_long_dbl      long double
-#     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( __CYGWIN__ ) || \
+#     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( HB_OS_CYGWIN ) || \
          defined( HB_OS_BEOS ) || defined( HB_OS_IPHONE ) || defined( HB_OS_SYMBIAN ) || \
          defined( __OpenBSD__ ) || defined( __NetBSD__ ) || defined( __DragonFly__ ) || \
          ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) )

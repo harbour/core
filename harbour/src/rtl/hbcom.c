@@ -189,7 +189,7 @@ static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
       hb_snprintf( buffer, size, "/dev/tty%02d", pCom->port );
 #  elif defined( HB_OS_DARWIN )
       hb_snprintf( buffer, size, "/dev/cuaa%d", pCom->port - 1 );
-#  else /* defined( HB_OS_LINUX ) || ... */
+#  else /* defined( HB_OS_LINUX ) || defined( HB_OS_CYGWIN ) || ... */
       hb_snprintf( buffer, size, "/dev/ttyS%d", pCom->port - 1 );
 #  endif
       /* other OS-es:

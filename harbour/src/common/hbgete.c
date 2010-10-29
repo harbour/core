@@ -216,7 +216,8 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
       defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS )
+      defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
+      defined( HB_OS_CYGWIN )
 
    if( szValue )
       return setenv( szName, szValue, 1 ) == 0;

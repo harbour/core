@@ -155,9 +155,7 @@
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
-   #if defined( __CYGWIN__ )
-      #include <io.h>
-   #elif defined( __DJGPP__ )
+   #if defined( __DJGPP__ )
       #include <dir.h>
       #include <utime.h>
       #include <time.h>
@@ -899,7 +897,7 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %d)", ( void * ) ( HB_PTRDIFF ) hFileHandle, iDevMode));
 
 #if defined( __BORLANDC__ ) || defined( __IBMCPP__ ) || defined( __DJGPP__ ) || \
-    defined( __CYGWIN__ ) || defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
+    defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
 {
    int iRet = -1;
 

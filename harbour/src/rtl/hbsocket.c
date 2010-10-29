@@ -114,7 +114,7 @@
 #  define _XOPEN_SOURCE_EXTENDED
 #endif
 
-#if defined( HB_OS_UNIX ) && ! defined( __CYGWIN__ )
+#if defined( HB_OS_UNIX )
 #  define HB_HAS_UNIX
 #  if !defined( __WATCOMC__ )
 #     define HB_HAS_INET_ATON
@@ -186,7 +186,7 @@
 #endif
 
 
-#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
+#if defined( HB_OS_WIN )
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
 #else
@@ -234,10 +234,6 @@
 #  if defined( HB_OS_DOS )
 #     define select       select_s
 #  endif
-#endif
-
-#if defined( __CYGWIN__ )
-   #undef HB_OS_WIN
 #endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS ) || \

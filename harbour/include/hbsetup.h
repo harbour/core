@@ -328,7 +328,7 @@
 #endif
 
 #ifndef HB_OS_WIN
-   #if defined( WINNT ) || defined( _Windows ) || defined( __NT__ ) || defined( _WIN32 ) || defined( _WINDOWS_ ) || defined( __WINDOWS_386__ ) || defined( __WIN32__ ) || defined( __CYGWIN__ )
+   #if defined( WINNT ) || defined( _Windows ) || defined( __NT__ ) || defined( _WIN32 ) || defined( _WINDOWS_ ) || defined( __WINDOWS_386__ ) || defined( __WIN32__ )
       #define HB_OS_WIN
    #endif
 #endif
@@ -410,6 +410,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_CYGWIN
+   #if defined( __CYGWIN__ )
+      #define HB_OS_CYGWIN
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
    #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
@@ -419,7 +425,8 @@
        defined( HB_OS_QNX ) || \
        defined( HB_OS_VXWORKS ) || \
        defined( HB_OS_BEOS ) || \
-       defined( HB_OS_SYMBIAN )
+       defined( HB_OS_SYMBIAN ) || \
+       defined( HB_OS_CYGWIN )
       #define HB_OS_UNIX
    #endif
 #endif
@@ -455,7 +462,7 @@
    #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
    #define HB_OS_ALLFILE_MASK           "*.*"
    #define HB_OS_DRIVE_DELIM_CHR        ':'
-   #if defined( HB_OS_WIN_CE ) || defined( __CYGWIN__ )
+   #if defined( HB_OS_WIN_CE )
       #undef  HB_OS_HAS_DRIVE_LETTER
    #else
       #define HB_OS_HAS_DRIVE_LETTER

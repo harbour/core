@@ -65,7 +65,7 @@
       defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
-      defined( HB_OS_SYMBIAN )
+      defined( HB_OS_SYMBIAN ) || defined( HB_OS_CYGWIN )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #  if defined( HB_OS_VXWORKS )
@@ -185,11 +185,10 @@ HB_EXTERN_BEGIN
    typedef CRITICAL_SECTION   HB_RAWCRITICAL_T;
    typedef HANDLE             HB_OSCOND_T;
 
-#  if ( defined( HB_OS_WIN_CE ) && \
-        ( ( defined( __MINGW32CE__ ) && !defined( __MSVCRT__ ) ) || \
-            defined( __POCC__ ) ) || \
-          ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) ) || \
-      defined( __CYGWIN__ )
+#  if defined( HB_OS_WIN_CE ) && \
+      ( ( defined( __MINGW32CE__ ) && !defined( __MSVCRT__ ) ) || \
+          defined( __POCC__ ) ) || \
+        ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) )
 #     define HB_THREAD_RAWWINAPI
 #  endif
 

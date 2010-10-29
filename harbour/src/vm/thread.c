@@ -252,7 +252,7 @@ void hb_threadReleaseCPU( void )
 
    hb_taskSleep( 20 );
 
-#elif defined( HB_OS_WIN ) || defined( __CYGWIN__ )
+#elif defined( HB_OS_WIN )
 
    /* Forfeit the remainder of the current time slice. */
    Sleep( 20 );

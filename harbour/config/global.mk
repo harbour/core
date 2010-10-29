@@ -774,7 +774,8 @@ ifeq ($(HB_COMPILER),)
                      endif
                   endif
                   ifneq ($(HB_COMP_PATH),)
-                     HB_COMPILER := cygwin
+                     HB_COMPILER := gcc
+                     HB_PLATFORM := cygwin
                      ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-pc-cygwin-gcc-3.4*),)
                         HB_COMPILER_VER := 34
                      endif
@@ -993,7 +994,7 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       else
-      ifneq ($(filter $(HB_PLATFORM),hpux bsd beos qnx),)
+      ifneq ($(filter $(HB_PLATFORM),hpux bsd beos qnx cygwin),)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := gcc
@@ -1131,17 +1132,22 @@ ifeq ($(HB_PLATFORM_UNIX),)
    DYN_DIR := $(BIN_DIR)
    IMP_DIR := $(LIB_DIR)
 else
-   DYN_DIR := $(LIB_DIR)
-   IMP_DIR :=
-   ifeq ($(HB_LD_PATH_SET),)
-      ifneq ($(HB_SRC_ROOTPATH),)
-         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
-      else
-         export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
-      endif
-      export HB_LD_PATH_SET := yes
-      ifneq ($(LD_LIBRARY_PATH),)
-         $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
+   ifeq ($(HB_PLATFORM),cygwin)
+      DYN_DIR := $(BIN_DIR)
+      IMP_DIR := $(LIB_DIR)
+   else
+      DYN_DIR := $(LIB_DIR)
+      IMP_DIR :=
+      ifeq ($(HB_LD_PATH_SET),)
+         ifneq ($(HB_SRC_ROOTPATH),)
+            export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
+         else
+            export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
+         endif
+         export HB_LD_PATH_SET := yes
+         ifneq ($(LD_LIBRARY_PATH),)
+            $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
+         endif
       endif
    endif
 endif
@@ -1650,7 +1656,11 @@ ifneq ($(HB_INSTALL_PREFIX),)
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_INSTALL_DYN := $(HB_INSTALL_BIN)
       else
-         export HB_INSTALL_DYN := $(HB_INSTALL_LIB)
+         ifeq ($(HB_PLATFORM),cygwin)
+            export HB_INSTALL_DYN := $(HB_INSTALL_BIN)
+         else
+            export HB_INSTALL_DYN := $(HB_INSTALL_LIB)
+         endif
       endif
    endif
    # Standard name: INCLUDEDIR
