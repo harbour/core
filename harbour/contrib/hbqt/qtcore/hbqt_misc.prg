@@ -151,6 +151,8 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       SWITCH nResult
       CASE 0
          RETURN .T.
+      CASE -3 /* event already connected */
+         RETURN .F.
       ENDSWITCH
       EXIT
 
