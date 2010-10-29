@@ -558,6 +558,10 @@ HARBOUR
    -------
    gcc      - GNU C
 
+   cygwin
+   ------
+   gcc      - GNU C
+
    sunos
    -----
    gcc      - GNU C
@@ -580,7 +584,6 @@ HARBOUR
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C x86-64 5.0 and above
    xcc      - Pelles C for xhb
-   cygwin   - Cygwin GNU C
 
    wce
    ---
@@ -692,8 +695,8 @@ HARBOUR
                                  libraries. Build all if left empty (default).
    - HB_BUILD_ADDONS=<l>         Build space separated <l> list of additional .hbp
                                  projects.
-   - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
-                                 and mingw/cygwin targets currently.
+   - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with win/msvc,
+                                 win/mingw and cygwin/gcc targets currently.
                                  <ver> format:
                                      <15><0>[<0>] = <major><minor>[.<revision>]
                                  Default: filled by compiler autodetection or empty
@@ -1319,7 +1322,6 @@ HARBOUR
      plat      plat/comp     cpu
    - ------    ------------- ----------------------------------------------------
      win    -> win/bcc       x86
-     win    -> win/cygwin    x86
      win    -> win/gcc       x86
      win    -> win/global    x86
      win    -> win/icc       x86
@@ -1348,6 +1350,7 @@ HARBOUR
    x win    -> vxworks/gcc   (CPU cross-builds possible: x86, arm, mips, ppc)
    x win    -> vxworks/diab  (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
    x win    -> symbian/gcc   arm
+   x win    -> cygwin/gcc    x86
      dos    -> dos/djgpp     x86
      dos    -> dos/watcom    x86
    x dos    -> win/watcom    x86
