@@ -77,7 +77,7 @@
 #        define BSD_COMP
 #     endif
 #  endif
-#elif defined( HB_OS_DOS ) && 1
+#elif defined( HB_OS_DOS )
 #  define HB_HAS_PMCOM
 #endif
 
@@ -183,19 +183,17 @@ static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
       hb_snprintf( buffer, size, "/dev/tty%c", pCom->port + 'a' - 1 );
 #  elif defined( HB_OS_HPUX )
       hb_snprintf( buffer, size, "/dev/tty%dp0", pCom->port );
+#  elif defined( HB_OS_AIX )
+      hb_snprintf( buffer, size, "/dev/tty%d", pCom->port );
 #  elif defined( HB_OS_IRIX )
       hb_snprintf( buffer, size, "/dev/ttyf%d", pCom->port );
 #  elif defined( HB_OS_DIGITAL_UNIX )
-      hb_snprintf( buffer, size, "/dev/tty%02d", pCom->port );
+      hb_snprintf( buffer, size, "/dev/ttyf%02d", pCom->port );
 #  elif defined( HB_OS_DARWIN )
       hb_snprintf( buffer, size, "/dev/cuaa%d", pCom->port - 1 );
 #  else /* defined( HB_OS_LINUX ) || defined( HB_OS_CYGWIN ) || ... */
       hb_snprintf( buffer, size, "/dev/ttyS%d", pCom->port - 1 );
 #  endif
-      /* other OS-es:
-       *    IRIX:             "/dev/ttyf%d"   (1-based)
-       *    Digital UNIX:     "/dev/ttyf%02d" (1-based)
-       */
 #else
       if( hb_iswinnt() )
          hb_snprintf( buffer, size, "\\\\.\\COM%d", pCom->port );
@@ -455,6 +453,11 @@ int hb_comOutputCount( int iPort )
    {
 #if defined( TIOCOUTQ )
       int iResult = ioctl( pCom->fd, TIOCOUTQ, &iCount );
+      if( iResult == -1 )
+         iCount = 0;
+      hb_comSetOsError( pCom, iResult == -1 );
+#elif defined( FIONWRITE )
+      int iResult = ioctl( pCom->fd, FIONWRITE, &iCount );
       if( iResult == -1 )
          iCount = 0;
       hb_comSetOsError( pCom, iResult == -1 );
