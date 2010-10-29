@@ -1249,7 +1249,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_cCCPOSTFIX ] := GetEnv( "HB_CCPOSTFIX" )
 
    #if defined( __PLATFORM__UNIX )
-      hbmk[ _HBMK_cCCEXT ] := ""
+      #if ! defined( __PLATFORM__CYGWIN )
+         hbmk[ _HBMK_cCCEXT ] := ""
+      #else
+         hbmk[ _HBMK_cCCEXT ] := ".exe"
+      #endif
    #else
       hbmk[ _HBMK_cCCEXT ] := ".exe"
    #endif
@@ -1259,7 +1263,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux" )
+   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|cygwin" )
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
@@ -1276,7 +1280,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
-      IF hbmk[ _HBMK_cPLAT ] == "symbian"
+      IF HBMK_ISPLAT( "symbian|cygwin" )
          hbmk[ _HBMK_cDynLibPrefix ] := ""
       ELSE
          hbmk[ _HBMK_cDynLibPrefix ] := "lib"
@@ -1300,6 +1304,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE "darwin"  ; hbmk[ _HBMK_cDynLibExt ] := ".dylib" ; EXIT
       CASE "hpux"    ; hbmk[ _HBMK_cDynLibExt ] := ".sl" ; EXIT
       CASE "symbian" ; hbmk[ _HBMK_cDynLibExt ] := ".dll" ; EXIT
+      CASE "cygwin"  ; hbmk[ _HBMK_cDynLibExt ] := ".dll" ; EXIT
       OTHERWISE      ; hbmk[ _HBMK_cDynLibExt ] := ".so"
       ENDSWITCH
    CASE hbmk[ _HBMK_cPLAT ] == "dos"
@@ -1330,7 +1335,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "cygwin" },;
+      aCOMPDET := { { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "cygwin" },; /* TOFIX: cygwin is now a platform */
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64" },; /* Equation Solution build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
@@ -1353,7 +1358,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| FindInPath( "i686-w64-mingw32-gcc" ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
                     { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" }} /* mingw-w64 build */
 #endif
-      aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       l_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
@@ -1558,7 +1563,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
          IF Len( aCOMPSUP ) == 1
             hbmk[ _HBMK_cCOMP ] := aCOMPSUP[ 1 ]
-         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux" ) .OR. ;
+         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin" ) .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
             IF AScan( aCOMPSUP, { |tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
@@ -1703,7 +1708,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF hbmk[ _HBMK_nCOMPVer ] == 0 .AND. ! Empty( cPath_CompC )
 
       DO CASE
-      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
+      CASE ( hbmk[ _HBMK_cPLAT ] == "cygwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
          IF File( FNameDirGet( cPath_CompC ) + "i686-pc-cygwin-gcc-3.4" + hb_osFileMask() )
             hbmk[ _HBMK_nCOMPVer ] := 34
@@ -1785,7 +1790,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    IF l_cHB_INSTALL_DYN == NIL
-      IF HBMK_ISPLAT( "win|wce|os2|dos" )
+      IF HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
          l_cHB_INSTALL_DYN := l_cHB_INSTALL_BIN
       ELSE
          l_cHB_INSTALL_DYN := l_cHB_INSTALL_LIB
@@ -1829,7 +1834,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
-   IF lSysLoc .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux" )
+   IF lSysLoc .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin" )
       hbmk[ _HBMK_lSHARED ] := .T.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ELSE
@@ -2918,7 +2923,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 #endif
 
       DO CASE
-      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos" )
+      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|cygwin" )
          IF Empty( cPrefix )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
@@ -3011,6 +3016,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "symbian" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "cygwin"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
          #if defined( __PLATFORM__UNIX )
@@ -3132,6 +3138,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "qnx" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "vxworks" .OR. ;
+              hbmk[ _HBMK_cPLAT ] == "cygwin" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "bsd" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
@@ -3230,7 +3237,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             ENDIF
             DO CASE
-            CASE hbmk[ _HBMK_cPLAT ] == "linux"
+            CASE HBMK_ISPLAT( "linux|cygwin" )
                AAdd( l_aLIBSYS, "dl" )
                AAdd( l_aLIBSYS, "rt" )
             CASE hbmk[ _HBMK_cPLAT ] == "sunos"
@@ -3297,14 +3304,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
+           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" )
 
-         IF hbmk[ _HBMK_cCOMP ] == "cygwin"
-            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASHCYGWIN
-         ELSE
-            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASH
-         ENDIF
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASH
 
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
@@ -4280,7 +4282,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                AAdd( l_aLIBSYS, "pthread" )
             ENDIF
             DO CASE
-            CASE hbmk[ _HBMK_cPLAT ] == "linux"
+            CASE HBMK_ISPLAT( "linux|cygwin" )
                AAdd( l_aLIBSYS, "rt" )
                AAdd( l_aLIBSYS, "dl" )
             CASE hbmk[ _HBMK_cPLAT ] == "sunos"
@@ -4874,7 +4876,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            "LNK4217: locally defined symbol ... imported in function ..."
                            if using 'dllimport'. [vszakats] */
                   tmp := ""
-               CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" )
+               CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) /* TOFIX: cygwin is now a platform */
                   tmp := "__attribute__ (( dllimport ))"
                CASE HBMK_ISCOMP( "bcc|watcom" )
                   tmp := "__declspec( dllimport )"
@@ -6545,7 +6547,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    cExt := Lower( FNameExtGet( cFileName ) )
 
    /* Filter out non-source format inputs for MinGW / windres */
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) .AND. HBMK_ISPLAT( "win|wce" ) .AND. cExt == ".res"
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) .AND. HBMK_ISPLAT( "win|wce" ) .AND. cExt == ".res" /* TOFIX: cygwin is now a platform */
       RETURN .F.
    ENDIF
 
@@ -6603,7 +6605,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          ENDIF
       NEXT
 
-   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" )
+   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" ) /* TOFIX: cygwin is now a platform */
 
       IF hbmk[ _HBMK_lDEBUGINC ]
          hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: Calling C/C++ compiler to detect dependencies of %1$s", cFileName ) )
@@ -7477,14 +7479,14 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
    cDir := DirAddPathSep( PathSepToSelf( cDir ) )
 
    DO CASE
-   CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) .AND. HBMK_ISPLAT( "win|wce" )
+   CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm" ) .AND. HBMK_ISPLAT( "win|wce|cygwin" )
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
                So, '<prefix>xxx.dll' format libs won't be found by hbmk2. */
       DO CASE
       CASE                                       hb_FileExists( tmp := cDir + "lib" + FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir + "lib" + FNameExtSet( cLib, ".a" )     ) ; RETURN tmp
-      CASE hbmk[ _HBMK_cCOMP ] == "cygwin" .AND. hb_FileExists( tmp := cDir + "cyg" + FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      CASE hbmk[ _HBMK_cPLAT ] == "cygwin" .AND. hb_FileExists( tmp := cDir + "cyg" + FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir + "lib" + FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
       ENDCASE
@@ -8069,7 +8071,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cLibNameCooked
    LOCAL cName, cExt
 
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64" )
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64" ) /* TOFIX: cygwin is now a platform */
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -8357,7 +8359,7 @@ STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
       nStart := 1
    ENDIF
 
-   IF HBMK_ISPLAT( "win|wce|dos|os2" ) .AND. ! HBMK_ISCOMP( "mingw|mingw64|mingwarm|cygwin" )
+   IF HBMK_ISPLAT( "win|wce|dos|os2" ) .AND. ! HBMK_ISCOMP( "mingw|mingw64|mingwarm|cygwin" ) /* TOFIX: cygwin is now a platform */
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 
@@ -9562,7 +9564,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|gccomf" )
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|gccomf" ) /* TOFIX: cygwin is now a platform */
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -9649,6 +9651,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       #elif defined( __PLATFORM__HPUX )
          AAdd( aUn, "__PLATFORM__HPUX" )
          AAdd( aUn, "__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__CYGWIN )
+         AAdd( aUn, "__PLATFORM__CYGWIN" )
+         AAdd( aUn, "__PLATFORM__UNIX" )
       #endif
 
       #if   defined( __ARCH16BIT__ )
@@ -9713,6 +9718,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "symbian"
          AAdd( aDf, "__PLATFORM__SYMBIAN" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "cygwin"
+         AAdd( aDf, "__PLATFORM__CYGWIN" )
          AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
@@ -10674,7 +10682,7 @@ STATIC FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE HBMK_ISPLAT( "dos|os2" ) .OR. ;
-        HBMK_ISCOMP( "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" ) .OR. ;
+        HBMK_ISCOMP( "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" ) .OR. ; /* TOFIX: cygwin is now a platform */
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
    CASE HBMK_ISCOMP( "gcc|icc|clang|sunpro|diab|pcc" )
@@ -10741,9 +10749,9 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
    CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
    CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
-   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin" )
+   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
-   CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" )
+   CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
    CASE "allmingw" ; RETURN HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
    CASE "allmsvc"  ; RETURN HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
    CASE "allpocc"  ; RETURN HBMK_ISCOMP( "pocc|pocc64|poccarm" )
@@ -10765,7 +10773,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
                               "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin" + ;
                               "|msvc|msvc64|msvcia64|msvcarm" + ;
                               "|pocc|pocc64|poccarm|xcc" + ;
-                              "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
+                              "|mingw|mingw64|mingwarm|bcc|watcom" + ;
                               "|gcc|gccomf|djgpp" + ;
                               "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" + ;
                               "|icc|iccia64|clang|open64|sunpro|diab|pcc" + ;
