@@ -1302,26 +1302,29 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_CPU),$(HB_PLATFORM)-x86_64-x86)
          # 'Windows x86 host, MS-DOS target'
          ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_PLATFORM)-$(HB_CPU),win-x86-dos-x86)
-            HB_CROSS_BUILD := yes
-            # Try to autosetup
-            ifneq ($(HB_SRC_ROOTPATH),)
-               _HB_ROOT_BIN := $(HB_SRC_ROOTPATH)
-            else
-               _HB_ROOT_BIN := $(TOP)$(ROOT)
-            endif
-            HB_HOST_BIN := $(dir $(firstword $(wildcard $(_HB_ROOT_BIN)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
-            ifneq ($(HB_HOST_BIN),)
-               ifeq ($(HB_SRC_ROOTPATH),)
-                  HB_HOST_BIN := $(realpath $(HB_HOST_BIN))
+            # 'Windows host, Cygwin target'
+            ifneq ($(HB_HOST_PLAT)-$(HB_PLATFORM),win-cygwin)
+               HB_CROSS_BUILD := yes
+               # Try to autosetup
+               ifneq ($(HB_SRC_ROOTPATH),)
+                  _HB_ROOT_BIN := $(HB_SRC_ROOTPATH)
+               else
+                  _HB_ROOT_BIN := $(TOP)$(ROOT)
                endif
-            else
-               # Look in PATH
-               HB_HOST_BIN := $(dir $(call find_in_path,harbour))
-            endif
-            ifeq ($(HB_HOST_BIN),)
-               $(warning ! Warning: HB_HOST_BIN not specified. Could not find host native build.)
-            else
-               $(info ! HB_HOST_BIN not specified. Automatically set to: $(HB_HOST_BIN))
+               HB_HOST_BIN := $(dir $(firstword $(wildcard $(_HB_ROOT_BIN)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
+               ifneq ($(HB_HOST_BIN),)
+                  ifeq ($(HB_SRC_ROOTPATH),)
+                     HB_HOST_BIN := $(realpath $(HB_HOST_BIN))
+                  endif
+               else
+                  # Look in PATH
+                  HB_HOST_BIN := $(dir $(call find_in_path,harbour))
+               endif
+               ifeq ($(HB_HOST_BIN),)
+                  $(warning ! Warning: HB_HOST_BIN not specified. Could not find host native build.)
+               else
+                  $(info ! HB_HOST_BIN not specified. Automatically set to: $(HB_HOST_BIN))
+               endif
             endif
          endif
       endif
