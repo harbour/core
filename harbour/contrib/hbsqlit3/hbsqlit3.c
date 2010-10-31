@@ -55,6 +55,7 @@
 
 #include "hbvm.h"
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
@@ -89,11 +90,6 @@ static int  busy_handler( void *, int );
 static int  progress_handler( void * );
 static int  hook_commit( void * );
 static void hook_rollback( void * );
-
-static int  callback( void *, int, char **, char ** );
-static int  hook_commit( void * );
-static void hook_rollback( void * );
-static int  authorizer( void *, int, const char *, const char *, const char *, const char * );
 
 typedef struct
 {
@@ -671,7 +667,8 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 /**
    One-Step Query Execution Interface
 
-   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc] ) -> nResultCode
+   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc], 
+                 [lConvertSQLTextToUTF8], "cCDP" ) -> nResultCode
 */
 
 HB_FUNC( SQLITE3_EXEC )
@@ -680,9 +677,32 @@ HB_FUNC( SQLITE3_EXEC )
 
    if( pHbSqlite3 && pHbSqlite3->db )
    {
-      char     *pszErrMsg = NULL;
       PHB_DYNS pDynSym;
+      HB_BOOL  bUseCallBack = HB_FALSE;
+      HB_BOOL  bTextToUTF8  = hb_parldef( 4, HB_FALSE );
+      const char * pszSQLText;
+      char       * pszSQLTextAsUTF8 = NULL;
+      char       * pszErrMsg = NULL;
       int      rc;
+
+      if( bTextToUTF8 )
+      {
+         HB_SIZE  nLen = hb_parclen( 2 ), nDest = 0;
+
+         if( nLen )
+         {
+            PHB_CODEPAGE cdp = HB_ISCHAR( 5 ) ? hb_cdpFindExt( hb_parc( 5 ) ) : hb_vmCDP();
+
+            if( cdp )
+            {
+               nDest            = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, hb_parc(2), nLen, 0 );
+               pszSQLTextAsUTF8 = ( char * ) hb_xgrab( nDest + 1 );
+
+               hb_cdpStrToUTF8( cdp, HB_FALSE, hb_parc(2), nLen, pszSQLTextAsUTF8, nDest + 1 );
+            }
+         }
+      }
+      pszSQLText = (pszSQLTextAsUTF8) ? (const char *) pszSQLTextAsUTF8 : hb_parc(2);
 
       if( HB_ISCHAR(3) || HB_ISSYMBOL(3) )
       {
@@ -697,22 +717,28 @@ HB_FUNC( SQLITE3_EXEC )
 
          if( pDynSym && hb_dynsymIsFunction(pDynSym) )
          {
-            rc = sqlite3_exec( pHbSqlite3->db, hb_parc(2), callback, ( void * ) pDynSym, &pszErrMsg );
+            bUseCallBack = HB_TRUE;
          }
-         else
-         {
-            rc = sqlite3_exec( pHbSqlite3->db, hb_parc(2), NULL, 0, &pszErrMsg );
-         }
+      }
+
+      if( bUseCallBack )
+      {
+         rc = sqlite3_exec( pHbSqlite3->db, pszSQLText, callback, ( void * ) pDynSym, &pszErrMsg );
       }
       else
       {
-         rc = sqlite3_exec( pHbSqlite3->db, hb_parc(2), NULL, 0, &pszErrMsg );
+         rc = sqlite3_exec( pHbSqlite3->db, pszSQLText, NULL, 0, &pszErrMsg );
       }
 
       if( rc != SQLITE_OK )
       {
          HB_TRACE( HB_TR_DEBUG, ("sqlite3_exec(): Returned error: %s", pszErrMsg) );
          sqlite3_free( pszErrMsg );
+      }
+
+      if( pszSQLTextAsUTF8 )
+      {
+         hb_xfree( (void *) pszSQLTextAsUTF8 );
       }
 
       hb_retni( rc );
@@ -1036,7 +1062,37 @@ HB_FUNC( SQLITE3_BIND_TEXT )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), ( int ) hb_parclen(3), SQLITE_TRANSIENT) );
+      HB_BOOL  bTextToUTF8  = hb_parldef( 4, HB_FALSE );
+      HB_SIZE  nLen         = hb_parclen( 3 );
+      HB_SIZE  nDest        = 0;
+      char     * pszSQLTextAsUTF8 = NULL;
+
+      if( bTextToUTF8 && nLen )
+      {
+         PHB_CODEPAGE cdp = HB_ISCHAR( 5 ) ? hb_cdpFindExt( hb_parc( 5 ) ) : hb_vmCDP();
+
+         if( cdp )
+         {
+            nDest            = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, hb_parc( 3 ), nLen, 0 );
+            pszSQLTextAsUTF8 = ( char * ) hb_xgrab( nDest + 1 );
+
+            hb_cdpStrToUTF8( cdp, HB_FALSE, hb_parc( 3 ), nLen, pszSQLTextAsUTF8, nDest + 1 );
+         }
+      }
+            
+      if( pszSQLTextAsUTF8 )
+      {
+         hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), (const char *) pszSQLTextAsUTF8, (int) nDest, SQLITE_TRANSIENT) );
+      }
+      else
+      {
+         hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), (int) nLen, SQLITE_TRANSIENT) );
+      }
+
+      if( pszSQLTextAsUTF8 )
+      {
+         hb_xfree( pszSQLTextAsUTF8 );
+      }
    }
    else
    {
@@ -1251,7 +1307,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
    sqlite3_column_double( pStmt, columnIndex ) -> value as double
    sqlite3_column_int( pStmt, columnIndex )    -> value as integer
    sqlite3_column_int64( pStmt, columnIndex )  -> value as long long
-   sqlite3_column_text( pStmt, columnIndex )   -> value as text
+   sqlite3_column_text( pStmt, columnIndex, [lConvertValueFromUTF8] ) -> value as text
 */
 
 HB_FUNC( SQLITE3_COLUMN_BYTES )
@@ -1274,9 +1330,21 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
 
    if( pStmt )
    {
-      int   index = hb_parni( 2 ) - 1;
+      const unsigned char * pszString;
+      int    index = hb_parni( 2 ) - 1;
+      HB_SIZE nLen = 0;
 
-      hb_retclen( ( const char * ) sqlite3_column_blob(pStmt, index), sqlite3_column_bytes(pStmt, index) );
+      pszString = sqlite3_column_blob( pStmt, index );
+      nLen = ( HB_SIZE ) sqlite3_column_bytes( pStmt, index );
+
+      if ( nLen )
+      {
+         hb_retclen( ( const char * ) pszString, nLen );
+      }
+      else
+      {   
+         hb_retc_null();
+      }
    }
    else
    {
@@ -1332,8 +1400,40 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
 
    if( pStmt )
    {
-      int   index = hb_parni( 2 ) - 1;
-      hb_retclen( ( char * ) sqlite3_column_text(pStmt, index), sqlite3_column_bytes(pStmt, index) );
+      HB_SIZE nLen, nDest = 0;
+      int     index       = hb_parni( 2 ) - 1;
+      const unsigned char * pszString;
+      HB_BOOL bTextFromUTF8 = hb_parldef( 3, HB_FALSE );
+
+      pszString = sqlite3_column_text( pStmt, index );
+      nLen = ( HB_SIZE ) sqlite3_column_bytes( pStmt, index );
+
+      if( bTextFromUTF8 && nLen )
+      {
+         PHB_CODEPAGE cdp = HB_ISCHAR( 4 ) ? hb_cdpFindExt( hb_parc( 4 ) ) : hb_vmCDP();
+         char * pszDest   = NULL;
+
+         if( cdp )
+         {
+            nDest  = hb_cdpUTF8AsStrLen( cdp, HB_FALSE, (const char *) pszString, nLen, 0 );
+            pszDest = ( char * ) hb_xgrab( nDest + 1 );
+
+            hb_cdpUTF8ToStr( cdp, HB_FALSE, (const char *) pszString, nLen, pszDest, nDest + 1 );
+         }
+
+         if( pszDest )
+         {
+            hb_retclen_buffer( pszDest, nDest );
+         }
+         else
+         {
+            hb_retc_null();
+         }
+      }
+      else
+      {
+         hb_retclen( ( const char * ) pszString, nLen );
+      }
    }
    else
    {
