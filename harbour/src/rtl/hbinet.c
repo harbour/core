@@ -1124,8 +1124,8 @@ HB_FUNC( HB_INETSERVER )
    else
    {
       int iPort = hb_parni( 1 );
-      const char * szAddress = hb_parc( 2 );
-      int iListen = hb_parnidef( 3, 10 );
+      const char * szAddress = hb_parc( 3 );
+      int iListen = hb_parnidef( 4, 10 );
 
       if( socket->remote )
          hb_xfree( socket->remote );
