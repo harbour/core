@@ -1869,7 +1869,7 @@ HB_FUNC( HPDF_GETCONTENTS )
    if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
       hb_xfree( buffer );
 #else
-   hb_storc( NULL, 2 )
+   hb_storc( NULL, 2 );
    hb_retnl( -1 );
 #endif
 }
