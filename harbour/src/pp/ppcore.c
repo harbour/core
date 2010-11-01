@@ -5533,40 +5533,24 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
 {
    char szDefine[ 65 ];
    char szResult[ 65 ];
-   char * pSrc, * pDst, * szPlatform;
    int iYear, iMonth, iDay, i;
    long lDate, lTime;
 
    if( fArchDefs )
    {
-      /* __PLATFORM__* */
-      pSrc = szPlatform = hb_verPlatform();
-      pDst = hb_strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) - 1 );
-      i = 12;
-      while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
+      static const char * szPlatform = "__PLATFORM__%s";
+
+      if( hb_verPlatformMacro() )
       {
-         if( HB_PP_ISNEXTIDCHAR( pSrc[ 0 ] ) )
-            pDst[ i++ ] = HB_PP_UPPER( pSrc[ 0 ] );
-         pSrc++;
+         hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, hb_verPlatformMacro() );
+         hb_pp_addDefine( pState, szDefine, szResult );
       }
-      pDst[ i ] = '\0';
-
-      i = 0;
-      pDst = szResult;
-      pDst[ i++ ] = '"';
-      if( pSrc[ 0 ] == ' ' )
-      {
-         while( *( ++pSrc ) && i < ( int ) sizeof( szResult ) - 2 )
-            pDst[ i++ ] = pSrc[ 0 ];
-      }
-      pDst[ i++ ] = '"';
-      pDst[ i ] = '\0';
-
-      hb_xfree( szPlatform );
-
-      hb_pp_addDefine( pState, szDefine, szResult );
 #if defined( HB_OS_UNIX )
-      hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
+      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "UNIX" );
+      hb_pp_addDefine( pState, szDefine, szResult );
+#endif
+#if defined( HB_OS_WIN_CE )
+      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "WINDOWS" );
       hb_pp_addDefine( pState, szDefine, szResult );
 #endif
 

@@ -1139,6 +1139,7 @@ extern HB_EXPORT void         hb_dynCall( int iFuncFlags, void * pFunction, int 
 
 /* misc */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
+extern HB_EXPORT const char * hb_verPlatformMacro( void );   /* retrieves a constant string with OS platform (as it appears in __PLATFORM__* macro) */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
 extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
 extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */

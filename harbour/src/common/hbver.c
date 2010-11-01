@@ -161,6 +161,42 @@ const char * hb_verHostCPU( void )
          will in fact be formed from the string returned
          by this function. [vszakats] */
 
+/* NOTE: As it appears in __PLATFORM__* macro */
+const char * hb_verPlatformMacro( void )
+{
+#if   defined( HB_OS_WIN_CE ) /* Must precede HB_OS_WIN */
+    return "WINCE"; /* TODO: Change this to WCE for consistency? */
+#elif defined( HB_OS_WIN )
+    return "WINDOWS"; /* TODO: Change this to WIN for consistency? */
+#elif defined( HB_OS_DOS )
+    return "DOS";
+#elif defined( HB_OS_OS2 )
+    return "OS2";
+#elif defined( HB_OS_LINUX )
+    return "LINUX";
+#elif defined( HB_OS_DARWIN )
+    return "DARWIN";
+#elif defined( HB_OS_BSD )
+    return "BSD";
+#elif defined( HB_OS_SUNOS )
+    return "SUNOS";
+#elif defined( HB_OS_HPUX )
+    return "HPUX";
+#elif defined( HB_OS_BEOS )
+    return "BEOS";
+#elif defined( HB_OS_QNX )
+    return "QNX";
+#elif defined( HB_OS_VXWORKS )
+    return "VXWORKS";
+#elif defined( HB_OS_SYMBIAN )
+    return "SYMBIAN";
+#elif defined( HB_OS_CYGWIN )
+    return "CYGWIN";
+#else
+    return NULL;
+#endif
+}
+
 /* NOTE: Must be larger than 128, which is the maximum size of
          osVer.szCSDVersion (Windows). [vszakats] */
 #define PLATFORM_BUF_SIZE 255
