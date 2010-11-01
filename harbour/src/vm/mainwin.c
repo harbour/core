@@ -57,8 +57,6 @@
 
 #if defined( HB_OS_WIN ) || defined( HB_OS_CYGWIN )
 
-#include <windows.h>
-
 #define HB_VM_STARTUP
 #include "hbwmain.c"
 

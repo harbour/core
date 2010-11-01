@@ -5543,15 +5543,15 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
       if( hb_verPlatformMacro() )
       {
          hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, hb_verPlatformMacro() );
-         hb_pp_addDefine( pState, szDefine, szResult );
+         hb_pp_addDefine( pState, szDefine, NULL );
       }
 #if defined( HB_OS_UNIX )
       hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "UNIX" );
-      hb_pp_addDefine( pState, szDefine, szResult );
+      hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 #if defined( HB_OS_WIN_CE )
       hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "WINDOWS" );
-      hb_pp_addDefine( pState, szDefine, szResult );
+      hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 
       hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );

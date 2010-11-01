@@ -178,8 +178,6 @@ void hb_cmdargUpdate( void )
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
          HB_BOOL fInPath = HB_FALSE;
 
-         HB_SYMBOL_UNUSED( s_lpAppName );
-
          if( ! pFName->szPath )
          {
             char * pszPATH = hb_getenv( "PATH" );

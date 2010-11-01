@@ -897,11 +897,6 @@ HARBOUR
       win-make
       ---
 
-      --- Cygwin GCC using Cygwin shell
-      set PATH=C:\cygwin\bin
-      sh -c make
-      ---
-
       --- Intel(R) C++
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.014\IA32\Bin\iclvars.bat"
       win-make
@@ -1004,6 +999,11 @@ HARBOUR
       set HB_CCPREFIX=arm-none-symbianelf-
       set HB_USER_CFLAGS=-IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include\stdapis -IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include -D__GCC32__ -D__SYMBIAN32__
       win-make
+      ---
+
+      --- Cygwin GCC using Cygwin shell
+      set PATH=C:\cygwin\bin
+      sh -c make
       ---
 
       --8<--
