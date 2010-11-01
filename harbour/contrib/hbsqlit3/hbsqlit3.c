@@ -55,13 +55,11 @@
 
 #include "hbvm.h"
 #include "hbapi.h"
-#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapistr.h"
 #include "hbstack.h"
-
-/* TOFIX: Convert strings to/from UTF8 in SQLITE3 interface. */
 
 /* TOFIX: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER <= 3004001
@@ -398,7 +396,7 @@ static void hook_rollback( void *Cargo )
 
 HB_FUNC( SQLITE3_LIBVERSION )
 {
-   hb_retc( sqlite3_libversion() );
+   hb_retstr_utf8( sqlite3_libversion() );
 }
 
 HB_FUNC( SQLITE3_LIBVERSION_NUMBER )
@@ -500,7 +498,7 @@ HB_FUNC( SQLITE3_ERRMSG )
 
    if( pHbSqlite3 && pHbSqlite3->db )
    {
-      hb_retc( sqlite3_errmsg(pHbSqlite3->db) );
+      hb_retstr_utf8( sqlite3_errmsg(pHbSqlite3->db) );
    }
    else
    {
@@ -667,8 +665,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 /**
    One-Step Query Execution Interface
 
-   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc], 
-                 [lConvertSQLTextToUTF8], "cCDP" ) -> nResultCode
+   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc] ) -> nResultCode
 */
 
 HB_FUNC( SQLITE3_EXEC )
@@ -677,32 +674,10 @@ HB_FUNC( SQLITE3_EXEC )
 
    if( pHbSqlite3 && pHbSqlite3->db )
    {
+      void * hSQLText;
+      char * pszErrMsg = NULL;
       PHB_DYNS pDynSym;
-      HB_BOOL  bUseCallBack = HB_FALSE;
-      HB_BOOL  bTextToUTF8  = hb_parldef( 4, HB_FALSE );
-      const char * pszSQLText;
-      char       * pszSQLTextAsUTF8 = NULL;
-      char       * pszErrMsg = NULL;
-      int      rc;
-
-      if( bTextToUTF8 )
-      {
-         HB_SIZE  nLen = hb_parclen( 2 ), nDest = 0;
-
-         if( nLen )
-         {
-            PHB_CODEPAGE cdp = HB_ISCHAR( 5 ) ? hb_cdpFindExt( hb_parc( 5 ) ) : hb_vmCDP();
-
-            if( cdp )
-            {
-               nDest            = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, hb_parc(2), nLen, 0 );
-               pszSQLTextAsUTF8 = ( char * ) hb_xgrab( nDest + 1 );
-
-               hb_cdpStrToUTF8( cdp, HB_FALSE, hb_parc(2), nLen, pszSQLTextAsUTF8, nDest + 1 );
-            }
-         }
-      }
-      pszSQLText = (pszSQLTextAsUTF8) ? (const char *) pszSQLTextAsUTF8 : hb_parc(2);
+      int rc;
 
       if( HB_ISCHAR(3) || HB_ISSYMBOL(3) )
       {
@@ -717,17 +692,16 @@ HB_FUNC( SQLITE3_EXEC )
 
          if( pDynSym && hb_dynsymIsFunction(pDynSym) )
          {
-            bUseCallBack = HB_TRUE;
+            rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText, NULL ), callback, ( void * ) pDynSym, &pszErrMsg );
          }
-      }
-
-      if( bUseCallBack )
-      {
-         rc = sqlite3_exec( pHbSqlite3->db, pszSQLText, callback, ( void * ) pDynSym, &pszErrMsg );
+         else
+         {
+            rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText, NULL ), NULL, 0, &pszErrMsg );
+         }
       }
       else
       {
-         rc = sqlite3_exec( pHbSqlite3->db, pszSQLText, NULL, 0, &pszErrMsg );
+         rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText, NULL ), NULL, 0, &pszErrMsg );
       }
 
       if( rc != SQLITE_OK )
@@ -736,10 +710,7 @@ HB_FUNC( SQLITE3_EXEC )
          sqlite3_free( pszErrMsg );
       }
 
-      if( pszSQLTextAsUTF8 )
-      {
-         hb_xfree( (void *) pszSQLTextAsUTF8 );
-      }
+      hb_strfree( hSQLText );
 
       hb_retni( rc );
    }
@@ -803,7 +774,11 @@ HB_FUNC( SQLITE3_PREPARE )
 
 HB_FUNC( SQLITE3_COMPLETE )
 {
-   hb_retl( sqlite3_complete(hb_parc(1)) );
+   void * hSQLText;
+
+   hb_retl( sqlite3_complete( hb_parstr_utf8( 1, &hSQLText, NULL ) ) );
+
+   hb_strfree( hSQLText );
 }
 
 /**
@@ -822,7 +797,7 @@ HB_FUNC( SQLITE3_SQL )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_sql(pStmt) );
+      hb_retstr_utf8( sqlite3_sql(pStmt) );
    }
    else
    {
@@ -1062,37 +1037,14 @@ HB_FUNC( SQLITE3_BIND_TEXT )
 
    if( pStmt )
    {
-      HB_BOOL  bTextToUTF8  = hb_parldef( 4, HB_FALSE );
-      HB_SIZE  nLen         = hb_parclen( 3 );
-      HB_SIZE  nDest        = 0;
-      char     * pszSQLTextAsUTF8 = NULL;
+      void * hSQLText;
+      HB_SIZE nSQLText;
 
-      if( bTextToUTF8 && nLen )
-      {
-         PHB_CODEPAGE cdp = HB_ISCHAR( 5 ) ? hb_cdpFindExt( hb_parc( 5 ) ) : hb_vmCDP();
+      const char * pszSQLText = hb_parstr_utf8( 3, &hSQLText, &nSQLText );
 
-         if( cdp )
-         {
-            nDest            = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, hb_parc( 3 ), nLen, 0 );
-            pszSQLTextAsUTF8 = ( char * ) hb_xgrab( nDest + 1 );
+      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), pszSQLText, ( int ) nSQLText, SQLITE_TRANSIENT) );
 
-            hb_cdpStrToUTF8( cdp, HB_FALSE, hb_parc( 3 ), nLen, pszSQLTextAsUTF8, nDest + 1 );
-         }
-      }
-            
-      if( pszSQLTextAsUTF8 )
-      {
-         hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), (const char *) pszSQLTextAsUTF8, (int) nDest, SQLITE_TRANSIENT) );
-      }
-      else
-      {
-         hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), (int) nLen, SQLITE_TRANSIENT) );
-      }
-
-      if( pszSQLTextAsUTF8 )
-      {
-         hb_xfree( pszSQLTextAsUTF8 );
-      }
+      hb_strfree( hSQLText );
    }
    else
    {
@@ -1146,7 +1098,11 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_INDEX )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_parameter_index(pStmt, hb_parc(2)) );
+      void * hParameterName;
+
+      hb_retni( sqlite3_bind_parameter_index(pStmt, hb_parstr_utf8( 2, &hParameterName, NULL )) );
+
+      hb_strfree( hParameterName );
    }
    else
    {
@@ -1166,7 +1122,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_NAME )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_bind_parameter_name(pStmt, hb_parni(2)) );
+      hb_retstr_utf8( sqlite3_bind_parameter_name(pStmt, hb_parni(2)) );
    }
    else
    {
@@ -1269,7 +1225,7 @@ HB_FUNC( SQLITE3_COLUMN_DECLTYPE )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_column_decltype(pStmt, hb_parni(2) - 1) );
+      hb_retstr_utf8( sqlite3_column_decltype(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1289,7 +1245,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_column_name(pStmt, hb_parni(2) - 1) );
+      hb_retstr_utf8( sqlite3_column_name(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1307,7 +1263,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
    sqlite3_column_double( pStmt, columnIndex ) -> value as double
    sqlite3_column_int( pStmt, columnIndex )    -> value as integer
    sqlite3_column_int64( pStmt, columnIndex )  -> value as long long
-   sqlite3_column_text( pStmt, columnIndex, [lConvertValueFromUTF8] ) -> value as text
+   sqlite3_column_text( pStmt, columnIndex )   -> value as text
 */
 
 HB_FUNC( SQLITE3_COLUMN_BYTES )
@@ -1330,21 +1286,8 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
 
    if( pStmt )
    {
-      const unsigned char * pszString;
-      int    index = hb_parni( 2 ) - 1;
-      HB_SIZE nLen = 0;
-
-      pszString = sqlite3_column_blob( pStmt, index );
-      nLen = ( HB_SIZE ) sqlite3_column_bytes( pStmt, index );
-
-      if ( nLen )
-      {
-         hb_retclen( ( const char * ) pszString, nLen );
-      }
-      else
-      {   
-         hb_retc_null();
-      }
+      int   index = hb_parni( 2 ) - 1;
+      hb_retclen( ( const char * ) sqlite3_column_blob(pStmt, index), sqlite3_column_bytes(pStmt, index) );
    }
    else
    {
@@ -1400,40 +1343,8 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
 
    if( pStmt )
    {
-      HB_SIZE nLen, nDest = 0;
-      int     index       = hb_parni( 2 ) - 1;
-      const unsigned char * pszString;
-      HB_BOOL bTextFromUTF8 = hb_parldef( 3, HB_FALSE );
-
-      pszString = sqlite3_column_text( pStmt, index );
-      nLen = ( HB_SIZE ) sqlite3_column_bytes( pStmt, index );
-
-      if( bTextFromUTF8 && nLen )
-      {
-         PHB_CODEPAGE cdp = HB_ISCHAR( 4 ) ? hb_cdpFindExt( hb_parc( 4 ) ) : hb_vmCDP();
-         char * pszDest   = NULL;
-
-         if( cdp )
-         {
-            nDest  = hb_cdpUTF8AsStrLen( cdp, HB_FALSE, (const char *) pszString, nLen, 0 );
-            pszDest = ( char * ) hb_xgrab( nDest + 1 );
-
-            hb_cdpUTF8ToStr( cdp, HB_FALSE, (const char *) pszString, nLen, pszDest, nDest + 1 );
-         }
-
-         if( pszDest )
-         {
-            hb_retclen_buffer( pszDest, nDest );
-         }
-         else
-         {
-            hb_retc_null();
-         }
-      }
-      else
-      {
-         hb_retclen( ( const char * ) pszString, nLen );
-      }
+      int index = hb_parni( 2 ) - 1;
+      hb_retstrlen_utf8( ( char * ) sqlite3_column_text(pStmt, index), sqlite3_column_bytes(pStmt, index) );
    }
    else
    {
@@ -1504,12 +1415,13 @@ HB_FUNC( SQLITE3_GET_TABLE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
    {
+      void * hSQLText;
       PHB_ITEM pResultList = hb_itemArrayNew( 0 );
       int      iRow, iCol;
       char     *pszErrMsg = NULL;
       char     **pResult;
 
-      if( sqlite3_get_table(pHbSqlite3->db, hb_parc(2), &pResult, &iRow, &iCol, &pszErrMsg) == SQLITE_OK )
+      if( sqlite3_get_table(pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText, NULL ), &pResult, &iRow, &iCol, &pszErrMsg) == SQLITE_OK )
       {
          int   i, j, k = 0;
 
@@ -1533,6 +1445,8 @@ HB_FUNC( SQLITE3_GET_TABLE )
       }
 
       sqlite3_free_table( pResult );
+
+      hb_strfree( hSQLText );
 
       hb_itemReturnRelease( pResultList );
    }
@@ -1571,14 +1485,18 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
       int         iPrimaryKey = 0;
       int         iAutoinc = 0;
 
+      void * hDbName;
+      void * hTableName;
+      void * hColumnName;
+
       if
       (
          sqlite3_table_column_metadata
             (
                pHbSqlite3->db,
-               hb_parc(2) /* zDbName */,
-               hb_parc(3) /* zTableName */,
-               hb_parc(4) /* zColumnName */,
+               hb_parstr_utf8( 2, &hDbName, NULL ),
+               hb_parstr_utf8( 3, &hTableName, NULL ),
+               hb_parstr_utf8( 4, &hColumnName, NULL ),
                &pzDataType /* pzDataDtype */,
                &pzCollSeq /* pzCollSeq */,
                &iNotNull,
@@ -1589,14 +1507,18 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
       {
          PHB_ITEM pArray = hb_itemArrayNew( 5 );
 
-         hb_arraySetC( pArray, 1, ( char * ) pzDataType );
-         hb_arraySetC( pArray, 2, ( char * ) pzCollSeq );
+         hb_arraySetStrUTF8( pArray, 1, pzDataType );
+         hb_arraySetStrUTF8( pArray, 2, pzCollSeq );
          hb_arraySetL( pArray, 3, ( HB_BOOL ) ( iNotNull != 0 ) );
          hb_arraySetL( pArray, 4, ( HB_BOOL ) ( iPrimaryKey != 0 ) );
          hb_arraySetL( pArray, 5, ( HB_BOOL ) ( iAutoinc != 0 ) );
 
          hb_itemReturnRelease( pArray );
       }
+
+      hb_strfree( hDbName );
+      hb_strfree( hTableName );
+      hb_strfree( hColumnName );
    }
    else
    {
@@ -1618,7 +1540,7 @@ HB_FUNC( SQLITE3_COLUMN_DATABASE_NAME )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_column_database_name(pStmt, hb_parni(2) - 1) );
+      hb_retstr_utf8( sqlite3_column_database_name(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1632,7 +1554,7 @@ HB_FUNC( SQLITE3_COLUMN_TABLE_NAME )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_column_table_name(pStmt, hb_parni(2) - 1) );
+      hb_retstr_utf8( sqlite3_column_table_name(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1646,7 +1568,7 @@ HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
 
    if( pStmt )
    {
-      hb_retc( sqlite3_column_origin_name(pStmt, hb_parni(2) - 1) );
+      hb_retstr_utf8( sqlite3_column_origin_name(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1676,14 +1598,18 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
    {
       sqlite3_blob   *ppBlob = NULL;
 
+      void * hDbName;
+      void * hTableName;
+      void * hColumnName;
+
       if
       (
          sqlite3_blob_open
             (
                pHbSqlite3->db,
-               hb_parc(2) /* zDb */,
-               hb_parc(3) /* zTable */,
-               hb_parc(4) /* zColumn */,
+               hb_parstr_utf8( 2, &hDbName, NULL ),
+               hb_parstr_utf8( 3, &hTableName, NULL ),
+               hb_parstr_utf8( 4, &hColumnName, NULL ),
                (sqlite3_int64) hb_parnint(5) /* iRow */,
                hb_parni(6) /* flags */,
                &ppBlob
@@ -1696,6 +1622,10 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
       {
          hb_retptr( NULL );
       }
+
+      hb_strfree( hDbName );
+      hb_strfree( hTableName );
+      hb_strfree( hColumnName );
    }
    else
    {
@@ -2291,6 +2221,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
 
       if( pBackup )
       {
+         /* TOFIX: Create GC collected pointer */
          hb_retptr( pBackup );
       }
       else
@@ -2308,6 +2239,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
 HB_FUNC( SQLITE3_BACKUP_STEP )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
+   /* TOFIX: Use GC collected pointer */
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2324,6 +2256,7 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
 HB_FUNC( SQLITE3_BACKUP_FINISH )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
+   /* TOFIX: Use and free GC collected pointer */
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2340,6 +2273,7 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
 HB_FUNC( SQLITE3_BACKUP_REMAINING )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
+   /* TOFIX: Use GC collected pointer */
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2356,6 +2290,7 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
 HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
+   /* TOFIX: Use GC collected pointer */
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2465,7 +2400,7 @@ HB_FUNC( SQLITE3_DB_STATUS )
 
 /**
    Run-time Limits
-   
+
    sqlite3_limit( pDb, nId, nNewVal ) -> nOldVal
 */
 
@@ -2474,7 +2409,7 @@ HB_FUNC( SQLITE3_LIMIT )
 #if SQLITE_VERSION_NUMBER >= 3005008
    HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
-   if( pHbSqlite3 && pHbSqlite3->db && (hb_pcount() > 2) && HB_ISNUM(2) && HB_ISNUM(3) ) 
+   if( pHbSqlite3 && pHbSqlite3->db && (hb_pcount() > 2) && HB_ISNUM(2) && HB_ISNUM(3) )
    {
       hb_retni( sqlite3_limit(pHbSqlite3->db, hb_parni(2), hb_parni(3)) );
    }
@@ -2496,7 +2431,7 @@ HB_FUNC( SQLITE3_COMPILEOPTION_USED )
 {
 #if SQLITE_VERSION_NUMBER >= 3006023
    hb_retl( (HB_BOOL) sqlite3_compileoption_used(hb_parc(1)) );
-#else 
+#else
    hb_retl( HB_FALSE );
 #endif /* SQLITE_VERSION_NUMBER >= 3006023 */
 }
@@ -2504,8 +2439,8 @@ HB_FUNC( SQLITE3_COMPILEOPTION_USED )
 HB_FUNC( SQLITE3_COMPILEOPTION_GET )
 {
 #if SQLITE_VERSION_NUMBER >= 3006023
-   hb_retc( sqlite3_compileoption_get(hb_parni(1)) );
-#else 
+   hb_retstr_utf8( sqlite3_compileoption_get(hb_parni(1)) );
+#else
    hb_retc_null();
 #endif /* SQLITE_VERSION_NUMBER >= 3006023 */
 }

@@ -16,13 +16,17 @@ ifeq ($(HB_PLATFORM),win)
       C_MAIN := mainstd.c mainwin.c
    endif
 else
-   ifeq ($(HB_PLATFORM),wce)
+   ifeq ($(HB_PLATFORM),cygwin)
       C_MAIN := mainwin.c
    else
-      ifeq ($(HB_PLATFORM),os2)
-         C_MAIN := mainstd.c
+      ifeq ($(HB_PLATFORM),wce)
+         C_MAIN := mainwin.c
       else
-         C_MAIN := main.c
+         ifeq ($(HB_PLATFORM),os2)
+            C_MAIN := mainstd.c
+         else
+            C_MAIN := main.c
+         endif
       endif
    endif
 endif

@@ -1280,8 +1280,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
-      IF HBMK_ISPLAT( "symbian|cygwin" )
+      IF hbmk[ _HBMK_cPLAT ] == "symbian"
          hbmk[ _HBMK_cDynLibPrefix ] := ""
+      ELSEIF hbmk[ _HBMK_cPLAT ] == "cygwin"
+         hbmk[ _HBMK_cDynLibPrefix ] := "cyg"
       ELSE
          hbmk[ _HBMK_cDynLibPrefix ] := "lib"
       ENDIF

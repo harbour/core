@@ -6,6 +6,7 @@ all : first
 
 BIN_EXT := .exe
 DYN_EXT := .dll
+DYN_PREF := cyg
 
 HB_GT_LIBS += gttrm
 

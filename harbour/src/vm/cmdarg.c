@@ -72,7 +72,7 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-#if !defined( HB_OS_WIN )
+#if !( defined( HB_OS_WIN ) || defined( HB_OS_CYGWIN ) )
 static char    s_szAppName[ HB_PATH_MAX ];
 #else
 
@@ -177,6 +177,8 @@ void hb_cmdargUpdate( void )
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
          HB_BOOL fInPath = HB_FALSE;
+
+         HB_SYMBOL_UNUSED( s_lpAppName );
 
          if( ! pFName->szPath )
          {

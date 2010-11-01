@@ -223,10 +223,21 @@ HB_FUNC( DOW )
 
 HB_FUNC( HB_DATETIME )
 {
-   long lDate, lTime;
-
-   hb_timeStampGet( &lDate, &lTime );
-   hb_rettdt( lDate, lTime );
+   if( hb_pcount() == 0 )
+   {
+      long lDate, lTime;
+      hb_timeStampGet( &lDate, &lTime );
+      hb_rettdt( lDate, lTime );
+   }
+   else if( HB_ISNUM( 4 ) || HB_ISNUM( 5 ) || HB_ISNUM( 6 ) || HB_ISNUM( 7 ) )
+   {
+      hb_rettdt( hb_dateEncode( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ),
+                 hb_timeEncode( hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ) ) );
+   }
+   else if( HB_ISNUM( 1 ) || HB_ISNUM( 2 ) || HB_ISNUM( 3 ) )
+      hb_retd( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_DTOT )

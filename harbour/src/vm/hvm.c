@@ -11915,8 +11915,9 @@ HB_LANG_REQUEST( HB_LANG_DEFAULT )
 
 #undef HB_FORCE_LINK_MAIN
 
-#if !defined( HB_DYNLIB ) && defined( HB_OS_WIN ) && \
-    ( defined( __DMC__ ) || defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
+#if ( !defined( HB_DYNLIB ) && defined( HB_OS_WIN ) && \
+      ( defined( __DMC__ ) || defined( __WATCOMC__ ) || defined( __MINGW32__ ) ) ) || \
+    defined( HB_OS_CYGWIN )
 
 #  define HB_FORCE_LINK_MAIN  hb_forceLinkMainWin
 

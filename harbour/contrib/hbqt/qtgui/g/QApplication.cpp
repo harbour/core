@@ -140,7 +140,9 @@
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
 
+HB_EXTERN_BEGIN
 extern HB_EXPORT QApplication * __hbqtgui_app( void );
+HB_EXTERN_END
 
 /*
  * QApplication ( int & argc, char ** argv )
