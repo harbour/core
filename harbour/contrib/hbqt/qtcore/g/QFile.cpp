@@ -67,25 +67,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFile )
 {
    HBQT_GC_T_QFile * p = ( HBQT_GC_T_QFile * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFile * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFile * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )

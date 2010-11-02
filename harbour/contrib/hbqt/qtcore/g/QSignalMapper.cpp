@@ -54,25 +54,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSignalMapper )
 {
    HBQT_GC_T_QSignalMapper * p = ( HBQT_GC_T_QSignalMapper * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSignalMapper * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSignalMapper * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )

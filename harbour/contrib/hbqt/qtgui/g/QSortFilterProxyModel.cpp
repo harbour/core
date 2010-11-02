@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSortFilterProxyModel )
 {
    HBQT_GC_T_QSortFilterProxyModel * p = ( HBQT_GC_T_QSortFilterProxyModel * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSortFilterProxyModel * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSortFilterProxyModel * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSortFilterProxyModel( void * pObj, bool bNew )

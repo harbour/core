@@ -58,25 +58,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QRegExpValidator )
 {
    HBQT_GC_T_QRegExpValidator * p = ( HBQT_GC_T_QRegExpValidator * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QRegExpValidator * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QRegExpValidator * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QRegExpValidator( void * pObj, bool bNew )

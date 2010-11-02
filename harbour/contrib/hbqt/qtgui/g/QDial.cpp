@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QDial )
 {
    HBQT_GC_T_QDial * p = ( HBQT_GC_T_QDial * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QDial * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QDial * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QDial( void * pObj, bool bNew )

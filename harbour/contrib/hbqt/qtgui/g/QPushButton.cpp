@@ -52,25 +52,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPushButton )
 {
    HBQT_GC_T_QPushButton * p = ( HBQT_GC_T_QPushButton * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QPushButton * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QPushButton * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QPushButton( void * pObj, bool bNew )

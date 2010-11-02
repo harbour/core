@@ -54,25 +54,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QToolButton )
 {
    HBQT_GC_T_QToolButton * p = ( HBQT_GC_T_QToolButton * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QToolButton * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QToolButton * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QToolButton( void * pObj, bool bNew )

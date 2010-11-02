@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QGraphicsProxyWidget )
 {
    HBQT_GC_T_QGraphicsProxyWidget * p = ( HBQT_GC_T_QGraphicsProxyWidget * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QGraphicsProxyWidget * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QGraphicsProxyWidget * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QGraphicsProxyWidget( void * pObj, bool bNew )

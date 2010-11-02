@@ -54,25 +54,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QBoxLayout )
 {
    HBQT_GC_T_QBoxLayout * p = ( HBQT_GC_T_QBoxLayout * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QBoxLayout * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QBoxLayout * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QBoxLayout( void * pObj, bool bNew )

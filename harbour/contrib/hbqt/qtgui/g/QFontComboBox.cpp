@@ -55,25 +55,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFontComboBox )
 {
    HBQT_GC_T_QFontComboBox * p = ( HBQT_GC_T_QFontComboBox * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFontComboBox * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFontComboBox * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )

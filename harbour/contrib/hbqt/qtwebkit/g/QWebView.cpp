@@ -53,25 +53,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWebView )
 {
    HBQT_GC_T_QWebView * p = ( HBQT_GC_T_QWebView * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QWebView * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QWebView * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QWebView( void * pObj, bool bNew )

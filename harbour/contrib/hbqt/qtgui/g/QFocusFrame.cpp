@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFocusFrame )
 {
    HBQT_GC_T_QFocusFrame * p = ( HBQT_GC_T_QFocusFrame * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFocusFrame * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFocusFrame * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )

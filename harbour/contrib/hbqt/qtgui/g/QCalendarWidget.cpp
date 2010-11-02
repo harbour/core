@@ -59,25 +59,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QCalendarWidget )
 {
    HBQT_GC_T_QCalendarWidget * p = ( HBQT_GC_T_QCalendarWidget * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QCalendarWidget * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QCalendarWidget * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )

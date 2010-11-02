@@ -53,18 +53,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWebHitTestResult )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QWebHitTestResult * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QWebHitTestResult( void * pObj, bool bNew )

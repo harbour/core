@@ -54,25 +54,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QTreeWidget )
 {
    HBQT_GC_T_QTreeWidget * p = ( HBQT_GC_T_QTreeWidget * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QTreeWidget * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QTreeWidget * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QTreeWidget( void * pObj, bool bNew )

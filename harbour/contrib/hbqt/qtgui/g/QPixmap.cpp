@@ -75,18 +75,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPixmap )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QPixmap * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QPixmap( void * pObj, bool bNew )

@@ -57,18 +57,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QStyleOptionGraphicsItem )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QStyleOptionGraphicsItem * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QStyleOptionGraphicsItem( void * pObj, bool bNew )

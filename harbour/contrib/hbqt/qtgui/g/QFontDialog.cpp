@@ -60,25 +60,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFontDialog )
 {
    HBQT_GC_T_QFontDialog * p = ( HBQT_GC_T_QFontDialog * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFontDialog * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFontDialog * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFontDialog( void * pObj, bool bNew )

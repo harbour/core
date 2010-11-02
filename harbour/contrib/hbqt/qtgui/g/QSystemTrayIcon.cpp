@@ -56,25 +56,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 {
    HBQT_GC_T_QSystemTrayIcon * p = ( HBQT_GC_T_QSystemTrayIcon * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSystemTrayIcon * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSystemTrayIcon * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )

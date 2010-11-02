@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QErrorMessage )
 {
    HBQT_GC_T_QErrorMessage * p = ( HBQT_GC_T_QErrorMessage * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QErrorMessage * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QErrorMessage * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )

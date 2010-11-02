@@ -52,25 +52,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QLabel )
 {
    HBQT_GC_T_QLabel * p = ( HBQT_GC_T_QLabel * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QLabel * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QLabel * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )

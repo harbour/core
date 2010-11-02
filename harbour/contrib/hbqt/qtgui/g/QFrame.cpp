@@ -56,25 +56,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFrame )
 {
    HBQT_GC_T_QFrame * p = ( HBQT_GC_T_QFrame * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFrame * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFrame * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFrame( void * pObj, bool bNew )

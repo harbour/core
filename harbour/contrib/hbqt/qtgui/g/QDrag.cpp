@@ -52,25 +52,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QDrag )
 {
    HBQT_GC_T_QDrag * p = ( HBQT_GC_T_QDrag * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QDrag * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QDrag * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QDrag( void * pObj, bool bNew )

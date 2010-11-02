@@ -55,25 +55,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QTabWidget )
 {
    HBQT_GC_T_QTabWidget * p = ( HBQT_GC_T_QTabWidget * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QTabWidget * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QTabWidget * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QTabWidget( void * pObj, bool bNew )

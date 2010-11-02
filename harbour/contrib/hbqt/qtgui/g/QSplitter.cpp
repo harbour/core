@@ -58,25 +58,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSplitter )
 {
    HBQT_GC_T_QSplitter * p = ( HBQT_GC_T_QSplitter * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSplitter * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSplitter * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSplitter( void * pObj, bool bNew )

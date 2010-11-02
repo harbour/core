@@ -60,25 +60,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFileSystemModel )
 {
    HBQT_GC_T_QFileSystemModel * p = ( HBQT_GC_T_QFileSystemModel * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QFileSystemModel * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QFileSystemModel * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )

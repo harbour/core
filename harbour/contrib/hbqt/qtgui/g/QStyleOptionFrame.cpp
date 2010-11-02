@@ -55,18 +55,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QStyleOptionFrame )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QStyleOptionFrame * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )

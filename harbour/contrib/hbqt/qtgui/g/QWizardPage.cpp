@@ -48,25 +48,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWizardPage )
 {
    HBQT_GC_T_QWizardPage * p = ( HBQT_GC_T_QWizardPage * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QWizardPage * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QWizardPage * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )

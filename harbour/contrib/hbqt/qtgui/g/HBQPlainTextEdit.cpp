@@ -52,25 +52,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_HBQPlainTextEdit )
 {
    HBQT_GC_T_HBQPlainTextEdit * p = ( HBQT_GC_T_HBQPlainTextEdit * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      HBQPlainTextEdit * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         HBQPlainTextEdit * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_HBQPlainTextEdit( void * pObj, bool bNew )

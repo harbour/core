@@ -55,25 +55,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_HBQGraphicsScene )
 {
    HBQT_GC_T_HBQGraphicsScene * p = ( HBQT_GC_T_HBQGraphicsScene * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      HBQGraphicsScene * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         HBQGraphicsScene * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_HBQGraphicsScene( void * pObj, bool bNew )

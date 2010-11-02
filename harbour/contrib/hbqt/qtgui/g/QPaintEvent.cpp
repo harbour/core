@@ -50,18 +50,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPaintEvent )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QPaintEvent * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew )

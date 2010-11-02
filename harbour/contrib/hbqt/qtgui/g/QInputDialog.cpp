@@ -56,25 +56,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QInputDialog )
 {
    HBQT_GC_T_QInputDialog * p = ( HBQT_GC_T_QInputDialog * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QInputDialog * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QInputDialog * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QInputDialog( void * pObj, bool bNew )

@@ -53,25 +53,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QUiLoader )
 {
    HBQT_GC_T_QUiLoader * p = ( HBQT_GC_T_QUiLoader * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QUiLoader * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QUiLoader * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew )

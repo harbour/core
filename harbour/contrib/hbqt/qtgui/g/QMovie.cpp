@@ -58,25 +58,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QMovie )
 {
    HBQT_GC_T_QMovie * p = ( HBQT_GC_T_QMovie * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QMovie * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QMovie * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QMovie( void * pObj, bool bNew )

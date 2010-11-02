@@ -62,25 +62,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPrintDialog )
 {
    HBQT_GC_T_QPrintDialog * p = ( HBQT_GC_T_QPrintDialog * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QPrintDialog * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QPrintDialog * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QPrintDialog( void * pObj, bool bNew )

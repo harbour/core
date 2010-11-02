@@ -51,25 +51,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QToolBar )
 {
    HBQT_GC_T_QToolBar * p = ( HBQT_GC_T_QToolBar * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QToolBar * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QToolBar * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QToolBar( void * pObj, bool bNew )

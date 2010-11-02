@@ -55,18 +55,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QStyleOptionToolBox )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QStyleOptionToolBox * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QStyleOptionToolBox( void * pObj, bool bNew )

@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QButtonGroup )
 {
    HBQT_GC_T_QButtonGroup * p = ( HBQT_GC_T_QButtonGroup * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QButtonGroup * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QButtonGroup * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QButtonGroup( void * pObj, bool bNew )

@@ -51,25 +51,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWindowsStyle )
 {
    HBQT_GC_T_QWindowsStyle * p = ( HBQT_GC_T_QWindowsStyle * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QWindowsStyle * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QWindowsStyle * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew )

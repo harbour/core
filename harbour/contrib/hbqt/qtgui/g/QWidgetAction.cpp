@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWidgetAction )
 {
    HBQT_GC_T_QWidgetAction * p = ( HBQT_GC_T_QWidgetAction * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QWidgetAction * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QWidgetAction * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QWidgetAction( void * pObj, bool bNew )

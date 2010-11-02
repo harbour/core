@@ -65,25 +65,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QObject )
 {
    HBQT_GC_T_QObject * p = ( HBQT_GC_T_QObject * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QObject * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QObject * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )

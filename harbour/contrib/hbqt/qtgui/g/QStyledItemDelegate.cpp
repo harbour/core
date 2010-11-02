@@ -55,25 +55,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QStyledItemDelegate )
 {
    HBQT_GC_T_QStyledItemDelegate * p = ( HBQT_GC_T_QStyledItemDelegate * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QStyledItemDelegate * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QStyledItemDelegate * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj, bool bNew )

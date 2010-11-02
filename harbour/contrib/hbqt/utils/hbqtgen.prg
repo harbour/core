@@ -773,85 +773,66 @@ METHOD HbQtSource:build()
       IF ::isObject
          aadd( ::cpp_, "   HBQT_GC_T_" + ::cWidget + " * p = ( HBQT_GC_T_" + ::cWidget + " * ) Cargo; " )
          aadd( ::cpp_, "   " )
-         aadd( ::cpp_, "   if( p && p->bNew && p->ph )" )
+         aadd( ::cpp_, "   if( p )" )
          aadd( ::cpp_, "   {" )
-         aadd( ::cpp_, "      " + ::cWidget + " " + iif( ::isList, "< void * >", "" ) + "* ph = p->ph;" )
-         aadd( ::cpp_, "      if( ph )" )
+         aadd( ::cpp_, "      if( p->bNew && p->ph )" )
          aadd( ::cpp_, "      {" )
+         aadd( ::cpp_, "         " + ::cWidget + " " + iif( ::isList, "< void * >", "" ) + "* ph = p->ph;" )
          aadd( ::cpp_, "         const QMetaObject * m = ( ph )->metaObject();" )
          aadd( ::cpp_, '         if( ( QString ) m->className() != ( QString ) "QObject" )' )
-         aadd( ::cpp_, "         {" )
          #ifdef _GEN_TRACE_
+         aadd( ::cpp_, "         {" )
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cWidget + '   /.\\   ", (void*) ph, (void*) p->ph ) );' )
          #endif
          aadd( ::cpp_, "            delete ( p->ph ); " )
          #ifdef _GEN_TRACE_
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cWidget + '   \\./   ", (void*) ph, (void*) p->ph ) );' )
-         #endif
-         aadd( ::cpp_, "            p->ph = NULL;" )
          aadd( ::cpp_, "         }" )
          aadd( ::cpp_, "         else" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "         {" )
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NO__rel_' + ::cWidget + '          ", ph ) );')
-         #endif
-         aadd( ::cpp_, "            p->ph = NULL;" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "         }" )
          #endif
          aadd( ::cpp_, "      }" )
-         aadd( ::cpp_, "      else" )
          #ifdef _GEN_TRACE_
+         aadd( ::cpp_, "      else" )
          aadd( ::cpp_, "      {" )
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cWidget + '    :     Object already deleted!", ph ) );' )
-         #endif
-         aadd( ::cpp_, "         p->ph = NULL;" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      }" )
          #endif
+         aadd( ::cpp_, "      p->ph = NULL;" )
          aadd( ::cpp_, "   }" )
-         aadd( ::cpp_, "   else" )
          #ifdef _GEN_TRACE_
+         aadd( ::cpp_, "   else" )
          aadd( ::cpp_, "   {" )
          aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cWidget + '    :    Object not created with new=true", ph ) );' )
-         #endif
-         aadd( ::cpp_, "      p->ph = NULL;" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   }" )
          #endif
       ELSE
          aadd( ::cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
          aadd( ::cpp_, "   " )
-         aadd( ::cpp_, "   if( p && p->bNew )" )
+         aadd( ::cpp_, "   if( p )" )
          aadd( ::cpp_, "   {" )
-         aadd( ::cpp_, "      if( p->ph )" )
-         aadd( ::cpp_, "      {" )
+         aadd( ::cpp_, "      if( p->bNew && p->ph )" )
          #ifdef _GEN_TRACE_
+         aadd( ::cpp_, "      {" )
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cWidget + '   /.\\", p->ph ) );' )
          #endif
          aadd( ::cpp_, "         delete ( ( " + ::cWidget + IF( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
          #ifdef _GEN_TRACE_
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cWidget + '   \\./", p->ph ) );' )
-         #endif
-         aadd( ::cpp_, "         p->ph = NULL;" )
          aadd( ::cpp_, "      }" )
          aadd( ::cpp_, "      else" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      {" )
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cWidget + '    :     Object already deleted!", p->ph ) );' )
-         #endif
-         aadd( ::cpp_, "         p->ph = NULL;" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      }" )
          #endif
+         aadd( ::cpp_, "      p->ph = NULL;" )
          aadd( ::cpp_, "   }" )
-         aadd( ::cpp_, "   else" )
          #ifdef _GEN_TRACE_
+         aadd( ::cpp_, "   else" )
          aadd( ::cpp_, "   {" )
          aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cWidget + '    :    Object not created with new=true", p->ph ) );' )
-         #endif
-         aadd( ::cpp_, "      p->ph = NULL;" )
-         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   }" )
          #endif
       ENDIF

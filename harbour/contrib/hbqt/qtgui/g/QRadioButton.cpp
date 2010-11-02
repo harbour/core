@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QRadioButton )
 {
    HBQT_GC_T_QRadioButton * p = ( HBQT_GC_T_QRadioButton * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QRadioButton * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QRadioButton * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QRadioButton( void * pObj, bool bNew )

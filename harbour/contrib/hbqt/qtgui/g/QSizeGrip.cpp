@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSizeGrip )
 {
    HBQT_GC_T_QSizeGrip * p = ( HBQT_GC_T_QSizeGrip * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSizeGrip * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSizeGrip * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew )

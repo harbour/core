@@ -50,25 +50,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
 {
    HBQT_GC_T_QPlainTextDocumentLayout * p = ( HBQT_GC_T_QPlainTextDocumentLayout * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QPlainTextDocumentLayout * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QPlainTextDocumentLayout * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )

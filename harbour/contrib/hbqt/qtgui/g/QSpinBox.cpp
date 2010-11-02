@@ -49,25 +49,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QSpinBox )
 {
    HBQT_GC_T_QSpinBox * p = ( HBQT_GC_T_QSpinBox * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QSpinBox * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QSpinBox * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QSpinBox( void * pObj, bool bNew )

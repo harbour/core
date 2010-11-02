@@ -56,25 +56,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QMdiSubWindow )
 {
    HBQT_GC_T_QMdiSubWindow * p = ( HBQT_GC_T_QMdiSubWindow * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QMdiSubWindow * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QMdiSubWindow * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QMdiSubWindow( void * pObj, bool bNew )

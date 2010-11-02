@@ -58,25 +58,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QListView )
 {
    HBQT_GC_T_QListView * p = ( HBQT_GC_T_QListView * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QListView * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QListView * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QListView( void * pObj, bool bNew )

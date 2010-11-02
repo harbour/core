@@ -54,25 +54,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QsciAPIs )
 {
    HBQT_GC_T_QsciAPIs * p = ( HBQT_GC_T_QsciAPIs * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p )
    {
-      QsciAPIs * ph = p->ph;
-      if( ph )
+      if( p->bNew && p->ph )
       {
+         QsciAPIs * ph = p->ph;
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
-         {
             delete ( p->ph );
-            p->ph = NULL;
-         }
-         else
-            p->ph = NULL;
       }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QsciAPIs( void * pObj, bool bNew )

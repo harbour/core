@@ -57,18 +57,12 @@ HBQT_GC_FUNC( hbqt_gcRelease_QTableWidgetItem )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
-   if( p && p->bNew )
+   if( p )
    {
-      if( p->ph )
-      {
+      if( p->bNew && p->ph )
          delete ( ( QTableWidgetItem * ) p->ph );
-         p->ph = NULL;
-      }
-      else
-         p->ph = NULL;
-   }
-   else
       p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew )
