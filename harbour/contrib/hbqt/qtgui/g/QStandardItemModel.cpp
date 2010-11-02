@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  Constructed[ 28/32 [ 87.50% ] ]
@@ -134,7 +59,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
-   QStandardItemModel  * ph = NULL ;
+   QStandardItemModel  * ph = NULL;
    HBQT_GC_T_QStandardItemModel * p = ( HBQT_GC_T_QStandardItemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -145,28 +70,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QStandardItemModel )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStandardItemModel   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStandardItemModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStandardItemModel          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStandardItemModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStandardItemModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
@@ -178,14 +92,6 @@ void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QStandardItemModel;
    p->type = HBQT_TYPE_QStandardItemModel;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStandardItemModel  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStandardItemModel", pObj ) );
-   }
    return p;
 }
 
@@ -198,33 +104,23 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
    hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( ( void * ) pObj, true ) );
 }
 
-/*
- * void appendRow ( QStandardItem * item )
- */
+/* void appendRow ( QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_APPENDROW )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->appendRow( hbqt_par_QStandardItem( 2 ) );
-   }
 }
 
-/*
- * void clear ()
- */
+/* void clear () */
 HB_FUNC( QT_QSTANDARDITEMMODEL_CLEAR )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->clear();
-   }
 }
 
-/*
- * QList<QStandardItem *> findItems ( const QString & text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const
- */
+/* QList<QStandardItem *> findItems ( const QString & text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_FINDITEMS )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
@@ -236,307 +132,205 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_FINDITEMS )
    }
 }
 
-/*
- * QStandardItem * horizontalHeaderItem ( int column ) const
- */
+/* QStandardItem * horizontalHeaderItem ( int column ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
-   }
 }
 
-/*
- * QModelIndex indexFromItem ( const QStandardItem * item ) const
- */
+/* QModelIndex indexFromItem ( const QStandardItem * item ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * bool insertColumn ( int column, const QModelIndex & parent = QModelIndex() )
- */
+/* bool insertColumn ( int column, const QModelIndex & parent = QModelIndex() ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
-   }
 }
 
-/*
- * bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )
- */
+/* bool insertRow ( int row, const QModelIndex & parent = QModelIndex() ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
-   }
 }
 
-/*
- * void insertRow ( int row, QStandardItem * item )
- */
+/* void insertRow ( int row, QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW_1 )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
-   }
 }
 
-/*
- * QStandardItem * invisibleRootItem () const
- */
+/* QStandardItem * invisibleRootItem () const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->invisibleRootItem(), false ) );
-   }
 }
 
-/*
- * QStandardItem * item ( int row, int column = 0 ) const
- */
+/* QStandardItem * item ( int row, int column = 0 ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   }
 }
 
-/*
- * QStandardItem * itemFromIndex ( const QModelIndex & index ) const
- */
+/* QStandardItem * itemFromIndex ( const QModelIndex & index ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEMFROMINDEX )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ), false ) );
-   }
 }
 
-/*
- * void setColumnCount ( int columns )
- */
+/* void setColumnCount ( int columns ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETCOLUMNCOUNT )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setColumnCount( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setHorizontalHeaderItem ( int column, QStandardItem * item )
- */
+/* void setHorizontalHeaderItem ( int column, QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
-   }
 }
 
-/*
- * void setHorizontalHeaderLabels ( const QStringList & labels )
- */
+/* void setHorizontalHeaderLabels ( const QStringList & labels ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERLABELS )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
-   }
 }
 
-/*
- * void setItem ( int row, int column, QStandardItem * item )
- */
+/* void setItem ( int row, int column, QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) );
-   }
 }
 
-/*
- * void setItem ( int row, QStandardItem * item )
- */
+/* void setItem ( int row, QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM_1 )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
-   }
 }
 
-/*
- * void setItemPrototype ( const QStandardItem * item )
- */
+/* void setItemPrototype ( const QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEMPROTOTYPE )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setItemPrototype( hbqt_par_QStandardItem( 2 ) );
-   }
 }
 
-/*
- * void setRowCount ( int rows )
- */
+/* void setRowCount ( int rows ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETROWCOUNT )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setRowCount( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setSortRole ( int role )
- */
+/* void setSortRole ( int role ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETSORTROLE )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setSortRole( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setVerticalHeaderItem ( int row, QStandardItem * item )
- */
+/* void setVerticalHeaderItem ( int row, QStandardItem * item ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
-   }
 }
 
-/*
- * void setVerticalHeaderLabels ( const QStringList & labels )
- */
+/* void setVerticalHeaderLabels ( const QStringList & labels ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERLABELS )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       ( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
-   }
 }
 
-/*
- * int sortRole () const
- */
+/* int sortRole () const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SORTROLE )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retni( ( p )->sortRole() );
-   }
 }
 
-/*
- * QList<QStandardItem *> takeColumn ( int column )
- */
+/* QList<QStandardItem *> takeColumn ( int column ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKECOLUMN )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeColumn( hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * QStandardItem * takeHorizontalHeaderItem ( int column )
- */
+/* QStandardItem * takeHorizontalHeaderItem ( int column ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
-   }
 }
 
-/*
- * QStandardItem * takeItem ( int row, int column = 0 )
- */
+/* QStandardItem * takeItem ( int row, int column = 0 ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   }
 }
 
-/*
- * QList<QStandardItem *> takeRow ( int row )
- */
+/* QList<QStandardItem *> takeRow ( int row ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEROW )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeRow( hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * QStandardItem * takeVerticalHeaderItem ( int row )
- */
+/* QStandardItem * takeVerticalHeaderItem ( int row ) */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
-   }
 }
 
-/*
- * QStandardItem * verticalHeaderItem ( int row ) const
- */
+/* QStandardItem * verticalHeaderItem ( int row ) const */
 HB_FUNC( QT_QSTANDARDITEMMODEL_VERTICALHEADERITEM )
 {
    QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

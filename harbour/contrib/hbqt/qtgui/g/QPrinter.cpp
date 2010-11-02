@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  enum ColorMode { Color, GrayScale }
@@ -152,22 +77,14 @@ HBQT_GC_FUNC( hbqt_gcRelease_QPrinter )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QPrinter   /.\\", p->ph ) );
          delete ( ( QPrinter * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPrinter   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPrinter    :     Object already deleted!", p->ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPrinter    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew )
@@ -179,14 +96,6 @@ void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QPrinter;
    p->type = HBQT_TYPE_QPrinter;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPrinter", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QPrinter", pObj ) );
-   }
    return p;
 }
 
@@ -206,129 +115,87 @@ HB_FUNC( QT_QPRINTER )
    hb_retptrGC( hbqt_gcAllocate_QPrinter( ( void * ) pObj, true ) );
 }
 
-/*
- * bool abort ()
- */
+/* bool abort () */
 HB_FUNC( QT_QPRINTER_ABORT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->abort() );
-   }
 }
 
-/*
- * bool collateCopies () const
- */
+/* bool collateCopies () const */
 HB_FUNC( QT_QPRINTER_COLLATECOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->collateCopies() );
-   }
 }
 
-/*
- * ColorMode colorMode () const
- */
+/* ColorMode colorMode () const */
 HB_FUNC( QT_QPRINTER_COLORMODE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::ColorMode ) ( p )->colorMode() );
-   }
 }
 
-/*
- * QString creator () const
- */
+/* QString creator () const */
 HB_FUNC( QT_QPRINTER_CREATOR )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->creator().toUtf8().data() );
-   }
 }
 
-/*
- * QString docName () const
- */
+/* QString docName () const */
 HB_FUNC( QT_QPRINTER_DOCNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->docName().toUtf8().data() );
-   }
 }
 
-/*
- * bool doubleSidedPrinting () const
- */
+/* bool doubleSidedPrinting () const */
 HB_FUNC( QT_QPRINTER_DOUBLESIDEDPRINTING )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->doubleSidedPrinting() );
-   }
 }
 
-/*
- * DuplexMode duplex () const
- */
+/* DuplexMode duplex () const */
 HB_FUNC( QT_QPRINTER_DUPLEX )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::DuplexMode ) ( p )->duplex() );
-   }
 }
 
-/*
- * bool fontEmbeddingEnabled () const
- */
+/* bool fontEmbeddingEnabled () const */
 HB_FUNC( QT_QPRINTER_FONTEMBEDDINGENABLED )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->fontEmbeddingEnabled() );
-   }
 }
 
-/*
- * int fromPage () const
- */
+/* int fromPage () const */
 HB_FUNC( QT_QPRINTER_FROMPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( p )->fromPage() );
-   }
 }
 
-/*
- * bool fullPage () const
- */
+/* bool fullPage () const */
 HB_FUNC( QT_QPRINTER_FULLPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->fullPage() );
-   }
 }
 
-/*
- * void getPageMargins ( qreal * left, qreal * top, qreal * right, qreal * bottom, Unit unit ) const
- */
+/* void getPageMargins ( qreal * left, qreal * top, qreal * right, qreal * bottom, Unit unit ) const */
 HB_FUNC( QT_QPRINTER_GETPAGEMARGINS )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -338,9 +205,7 @@ HB_FUNC( QT_QPRINTER_GETPAGEMARGINS )
    qreal qrBottom = 0;
 
    if( p )
-   {
       ( p )->getPageMargins( &qrLeft, &qrTop, &qrRight, &qrBottom, ( QPrinter::Unit ) hb_parni( 6 ) );
-   }
 
    hb_stornd( qrLeft, 2 );
    hb_stornd( qrTop, 3 );
@@ -348,285 +213,191 @@ HB_FUNC( QT_QPRINTER_GETPAGEMARGINS )
    hb_stornd( qrBottom, 5 );
 }
 
-/*
- * bool isValid () const
- */
+/* bool isValid () const */
 HB_FUNC( QT_QPRINTER_ISVALID )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->isValid() );
-   }
 }
 
-/*
- * bool newPage ()
- */
+/* bool newPage () */
 HB_FUNC( QT_QPRINTER_NEWPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retl( ( p )->newPage() );
-   }
 }
 
-/*
- * int numCopies () const
- */
+/* int numCopies () const */
 HB_FUNC( QT_QPRINTER_NUMCOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( p )->numCopies() );
-   }
 }
 
-/*
- * Orientation orientation () const
- */
+/* Orientation orientation () const */
 HB_FUNC( QT_QPRINTER_ORIENTATION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::Orientation ) ( p )->orientation() );
-   }
 }
 
-/*
- * QString outputFileName () const
- */
+/* QString outputFileName () const */
 HB_FUNC( QT_QPRINTER_OUTPUTFILENAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->outputFileName().toUtf8().data() );
-   }
 }
 
-/*
- * OutputFormat outputFormat () const
- */
+/* OutputFormat outputFormat () const */
 HB_FUNC( QT_QPRINTER_OUTPUTFORMAT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::OutputFormat ) ( p )->outputFormat() );
-   }
 }
 
-/*
- * PageOrder pageOrder () const
- */
+/* PageOrder pageOrder () const */
 HB_FUNC( QT_QPRINTER_PAGEORDER )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::PageOrder ) ( p )->pageOrder() );
-   }
 }
 
-/*
- * QRect pageRect () const
- */
+/* QRect pageRect () const */
 HB_FUNC( QT_QPRINTER_PAGERECT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->pageRect() ), true ) );
-   }
 }
 
-/*
- * QRectF pageRect ( Unit unit ) const
- */
+/* QRectF pageRect ( Unit unit ) const */
 HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * virtual QPaintEngine * paintEngine () const
- */
+/* virtual QPaintEngine * paintEngine () const */
 HB_FUNC( QT_QPRINTER_PAINTENGINE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
-   }
 }
 
-/*
- * QRect paperRect () const
- */
+/* QRect paperRect () const */
 HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->paperRect() ), true ) );
-   }
 }
 
-/*
- * QRectF paperRect ( Unit unit ) const
- */
+/* QRectF paperRect ( Unit unit ) const */
 HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * PaperSize paperSize () const
- */
+/* PaperSize paperSize () const */
 HB_FUNC( QT_QPRINTER_PAPERSIZE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::PaperSize ) ( p )->paperSize() );
-   }
 }
 
-/*
- * QSizeF paperSize ( Unit unit ) const
- */
+/* QSizeF paperSize ( Unit unit ) const */
 HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * PaperSource paperSource () const
- */
+/* PaperSource paperSource () const */
 HB_FUNC( QT_QPRINTER_PAPERSOURCE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::PaperSource ) ( p )->paperSource() );
-   }
 }
 
-/*
- * QPrintEngine * printEngine () const
- */
+/* QPrintEngine * printEngine () const */
 HB_FUNC( QT_QPRINTER_PRINTENGINE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPrintEngine( ( p )->printEngine(), false ) );
-   }
 }
 
-/*
- * QString printProgram () const
- */
+/* QString printProgram () const */
 HB_FUNC( QT_QPRINTER_PRINTPROGRAM )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->printProgram().toUtf8().data() );
-   }
 }
 
-/*
- * PrintRange printRange () const
- */
+/* PrintRange printRange () const */
 HB_FUNC( QT_QPRINTER_PRINTRANGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::PrintRange ) ( p )->printRange() );
-   }
 }
 
-/*
- * QString printerName () const
- */
+/* QString printerName () const */
 HB_FUNC( QT_QPRINTER_PRINTERNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->printerName().toUtf8().data() );
-   }
 }
 
-/*
- * PrinterState printerState () const
- */
+/* PrinterState printerState () const */
 HB_FUNC( QT_QPRINTER_PRINTERSTATE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() );
-   }
 }
 
-/*
- * int resolution () const
- */
+/* int resolution () const */
 HB_FUNC( QT_QPRINTER_RESOLUTION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( p )->resolution() );
-   }
 }
 
-/*
- * void setCollateCopies ( bool collate )
- */
+/* void setCollateCopies ( bool collate ) */
 HB_FUNC( QT_QPRINTER_SETCOLLATECOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setCollateCopies( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setColorMode ( ColorMode newColorMode )
- */
+/* void setColorMode ( ColorMode newColorMode ) */
 HB_FUNC( QT_QPRINTER_SETCOLORMODE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setColorMode( ( QPrinter::ColorMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setCreator ( const QString & creator )
- */
+/* void setCreator ( const QString & creator ) */
 HB_FUNC( QT_QPRINTER_SETCREATOR )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -638,9 +409,7 @@ HB_FUNC( QT_QPRINTER_SETCREATOR )
    }
 }
 
-/*
- * void setDocName ( const QString & name )
- */
+/* void setDocName ( const QString & name ) */
 HB_FUNC( QT_QPRINTER_SETDOCNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -652,93 +421,63 @@ HB_FUNC( QT_QPRINTER_SETDOCNAME )
    }
 }
 
-/*
- * void setDoubleSidedPrinting ( bool doubleSided )
- */
+/* void setDoubleSidedPrinting ( bool doubleSided ) */
 HB_FUNC( QT_QPRINTER_SETDOUBLESIDEDPRINTING )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setDoubleSidedPrinting( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setDuplex ( DuplexMode duplex )
- */
+/* void setDuplex ( DuplexMode duplex ) */
 HB_FUNC( QT_QPRINTER_SETDUPLEX )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setDuplex( ( QPrinter::DuplexMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setFontEmbeddingEnabled ( bool enable )
- */
+/* void setFontEmbeddingEnabled ( bool enable ) */
 HB_FUNC( QT_QPRINTER_SETFONTEMBEDDINGENABLED )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setFontEmbeddingEnabled( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setFromTo ( int from, int to )
- */
+/* void setFromTo ( int from, int to ) */
 HB_FUNC( QT_QPRINTER_SETFROMTO )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * void setFullPage ( bool fp )
- */
+/* void setFullPage ( bool fp ) */
 HB_FUNC( QT_QPRINTER_SETFULLPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setFullPage( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setNumCopies ( int numCopies )
- */
+/* void setNumCopies ( int numCopies ) */
 HB_FUNC( QT_QPRINTER_SETNUMCOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setNumCopies( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setOrientation ( Orientation orientation )
- */
+/* void setOrientation ( Orientation orientation ) */
 HB_FUNC( QT_QPRINTER_SETORIENTATION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setOrientation( ( QPrinter::Orientation ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setOutputFileName ( const QString & fileName )
- */
+/* void setOutputFileName ( const QString & fileName ) */
 HB_FUNC( QT_QPRINTER_SETOUTPUTFILENAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -750,81 +489,55 @@ HB_FUNC( QT_QPRINTER_SETOUTPUTFILENAME )
    }
 }
 
-/*
- * void setOutputFormat ( OutputFormat format )
- */
+/* void setOutputFormat ( OutputFormat format ) */
 HB_FUNC( QT_QPRINTER_SETOUTPUTFORMAT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setOutputFormat( ( QPrinter::OutputFormat ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPageMargins ( qreal left, qreal top, qreal right, qreal bottom, Unit unit )
- */
+/* void setPageMargins ( qreal left, qreal top, qreal right, qreal bottom, Unit unit ) */
 HB_FUNC( QT_QPRINTER_SETPAGEMARGINS )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPageMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( QPrinter::Unit ) hb_parni( 6 ) );
-   }
 }
 
-/*
- * void setPageOrder ( PageOrder pageOrder )
- */
+/* void setPageOrder ( PageOrder pageOrder ) */
 HB_FUNC( QT_QPRINTER_SETPAGEORDER )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPageOrder( ( QPrinter::PageOrder ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPaperSize ( PaperSize newPaperSize )
- */
+/* void setPaperSize ( PaperSize newPaperSize ) */
 HB_FUNC( QT_QPRINTER_SETPAPERSIZE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPaperSize( ( QPrinter::PaperSize ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPaperSize ( const QSizeF & paperSize, Unit unit )
- */
+/* void setPaperSize ( const QSizeF & paperSize, Unit unit ) */
 HB_FUNC( QT_QPRINTER_SETPAPERSIZE_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPaperSize( *hbqt_par_QSizeF( 2 ), ( QPrinter::Unit ) hb_parni( 3 ) );
-   }
 }
 
-/*
- * void setPaperSource ( PaperSource source )
- */
+/* void setPaperSource ( PaperSource source ) */
 HB_FUNC( QT_QPRINTER_SETPAPERSOURCE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPaperSource( ( QPrinter::PaperSource ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPrintProgram ( const QString & printProg )
- */
+/* void setPrintProgram ( const QString & printProg ) */
 HB_FUNC( QT_QPRINTER_SETPRINTPROGRAM )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -836,21 +549,15 @@ HB_FUNC( QT_QPRINTER_SETPRINTPROGRAM )
    }
 }
 
-/*
- * void setPrintRange ( PrintRange range )
- */
+/* void setPrintRange ( PrintRange range ) */
 HB_FUNC( QT_QPRINTER_SETPRINTRANGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setPrintRange( ( QPrinter::PrintRange ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPrinterName ( const QString & name )
- */
+/* void setPrinterName ( const QString & name ) */
 HB_FUNC( QT_QPRINTER_SETPRINTERNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
@@ -862,43 +569,29 @@ HB_FUNC( QT_QPRINTER_SETPRINTERNAME )
    }
 }
 
-/*
- * void setResolution ( int dpi )
- */
+/* void setResolution ( int dpi ) */
 HB_FUNC( QT_QPRINTER_SETRESOLUTION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       ( p )->setResolution( hb_parni( 2 ) );
-   }
 }
 
-/*
- * QList<int> supportedResolutions () const
- */
+/* QList<int> supportedResolutions () const */
 HB_FUNC( QT_QPRINTER_SUPPORTEDRESOLUTIONS )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) );
-   }
 }
 
-/*
- * int toPage () const
- */
+/* int toPage () const */
 HB_FUNC( QT_QPRINTER_TOPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-   {
       hb_retni( ( p )->toPage() );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

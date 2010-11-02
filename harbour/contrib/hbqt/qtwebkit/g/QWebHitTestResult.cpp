@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtwebkit.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  Constructed[ 14/14 [ 100.00% ] ]
@@ -132,22 +57,14 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWebHitTestResult )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QWebHitTestResult   /.\\", p->ph ) );
          delete ( ( QWebHitTestResult * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWebHitTestResult   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWebHitTestResult    :     Object already deleted!", p->ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWebHitTestResult    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QWebHitTestResult( void * pObj, bool bNew )
@@ -159,14 +76,6 @@ void * hbqt_gcAllocate_QWebHitTestResult( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QWebHitTestResult;
    p->type = HBQT_TYPE_QWebHitTestResult;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWebHitTestResult", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QWebHitTestResult", pObj ) );
-   }
    return p;
 }
 
@@ -179,175 +88,117 @@ HB_FUNC( QT_QWEBHITTESTRESULT )
    hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( ( void * ) pObj, true ) );
 }
 
-/*
- * QString alternateText () const
- */
+/* QString alternateText () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_ALTERNATETEXT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->alternateText().toUtf8().data() );
-   }
 }
 
-/*
- * QRect boundingRect () const
- */
+/* QRect boundingRect () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_BOUNDINGRECT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
-   }
 }
 
-/*
- * QWebFrame * frame () const
- */
+/* QWebFrame * frame () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_FRAME )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->frame(), false ) );
-   }
 }
 
-/*
- * QUrl imageUrl () const
- */
+/* QUrl imageUrl () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_IMAGEURL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->imageUrl() ), true ) );
-   }
 }
 
-/*
- * bool isContentEditable () const
- */
+/* bool isContentEditable () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_ISCONTENTEDITABLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retl( ( p )->isContentEditable() );
-   }
 }
 
-/*
- * bool isContentSelected () const
- */
+/* bool isContentSelected () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_ISCONTENTSELECTED )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retl( ( p )->isContentSelected() );
-   }
 }
 
-/*
- * bool isNull () const
- */
+/* bool isNull () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_ISNULL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retl( ( p )->isNull() );
-   }
 }
 
-/*
- * QWebFrame * linkTargetFrame () const
- */
+/* QWebFrame * linkTargetFrame () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKTARGETFRAME )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->linkTargetFrame(), false ) );
-   }
 }
 
-/*
- * QString linkText () const
- */
+/* QString linkText () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKTEXT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->linkText().toUtf8().data() );
-   }
 }
 
-/*
- * QUrl linkTitle () const
- */
+/* QUrl linkTitle () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkTitle() ), true ) );
-   }
 }
 
-/*
- * QUrl linkUrl () const
- */
+/* QUrl linkUrl () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkUrl() ), true ) );
-   }
 }
 
-/*
- * QPixmap pixmap () const
- */
+/* QPixmap pixmap () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   }
 }
 
-/*
- * QPoint pos () const
- */
+/* QPoint pos () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_POS )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   }
 }
 
-/*
- * QString title () const
- */
+/* QString title () const */
 HB_FUNC( QT_QWEBHITTESTRESULT_TITLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->title().toUtf8().data() );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

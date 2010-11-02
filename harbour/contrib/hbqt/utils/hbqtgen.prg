@@ -771,7 +771,7 @@ METHOD HbQtSource:build()
    aadd( ::cpp_, "{"                                     )
    IF ( ::isDestructor ) .AND. ( ::isConstructor )
       IF ::isObject
-         aadd( ::cpp_, "   " + ::cWidget + " " + iif( ::isList, "< void * >", "" )+" * ph = NULL ;" )
+         aadd( ::cpp_, "   " + ::cWidget + " " + iif( ::isList, "< void * >", "" )+" * ph = NULL;" )
          aadd( ::cpp_, "   HBQT_GC_T_" + ::cWidget + " * p = ( HBQT_GC_T_" + ::cWidget + " * ) Cargo; " )
          aadd( ::cpp_, "   " )
          aadd( ::cpp_, "   if( p && p->bNew && p->ph )" )
@@ -782,28 +782,44 @@ METHOD HbQtSource:build()
          aadd( ::cpp_, "         const QMetaObject * m = ( ph )->metaObject();" )
          aadd( ::cpp_, '         if( ( QString ) m->className() != ( QString ) "QObject" )' )
          aadd( ::cpp_, "         {" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cWidget + '   /.\\   ", (void*) ph, (void*) p->ph ) );' )
+         #endif
          aadd( ::cpp_, "            delete ( p->ph ); " )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cWidget + '   \\./   ", (void*) ph, (void*) p->ph ) );' )
+         #endif
          aadd( ::cpp_, "            p->ph = NULL;" )
          aadd( ::cpp_, "         }" )
          aadd( ::cpp_, "         else" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "         {" )
          aadd( ::cpp_, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NO__rel_' + ::cWidget + '          ", ph ) );')
+         #endif
          aadd( ::cpp_, "            p->ph = NULL;" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "         }" )
+         #endif
          aadd( ::cpp_, "      }" )
          aadd( ::cpp_, "      else" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      {" )
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cWidget + '    :     Object already deleted!", ph ) );' )
+         #endif
          aadd( ::cpp_, "         p->ph = NULL;" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      }" )
+         #endif
          aadd( ::cpp_, "   }" )
          aadd( ::cpp_, "   else" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   {" )
          aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cWidget + '    :    Object not created with new=true", ph ) );' )
+         #endif
          aadd( ::cpp_, "      p->ph = NULL;" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   }" )
+         #endif
       ELSE
          aadd( ::cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
          aadd( ::cpp_, "   " )
@@ -811,31 +827,41 @@ METHOD HbQtSource:build()
          aadd( ::cpp_, "   {" )
          aadd( ::cpp_, "      if( p->ph )" )
          aadd( ::cpp_, "      {" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cWidget + '   /.\\", p->ph ) );' )
+         #endif
          aadd( ::cpp_, "         delete ( ( " + ::cWidget + IF( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cWidget + '   \\./", p->ph ) );' )
+         #endif
          aadd( ::cpp_, "         p->ph = NULL;" )
          aadd( ::cpp_, "      }" )
          aadd( ::cpp_, "      else" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      {" )
          aadd( ::cpp_, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cWidget + '    :     Object already deleted!", p->ph ) );' )
+         #endif
          aadd( ::cpp_, "         p->ph = NULL;" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "      }" )
+         #endif
          aadd( ::cpp_, "   }" )
          aadd( ::cpp_, "   else" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   {" )
          aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cWidget + '    :    Object not created with new=true", p->ph ) );' )
+         #endif
          aadd( ::cpp_, "      p->ph = NULL;" )
+         #ifdef _GEN_TRACE_
          aadd( ::cpp_, "   }" )
+         #endif
       ENDIF
    ELSE
       aadd( ::cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
       aadd( ::cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
       aadd( ::cpp_, "   " )
       aadd( ::cpp_, "   if( p && p->bNew )" )
-      aadd( ::cpp_, "   {" )
       aadd( ::cpp_, "      p->ph = NULL;" )
-      aadd( ::cpp_, "   }" )
    ENDIF
    aadd( ::cpp_, "}" )
    aadd( ::cpp_, "" )
@@ -858,6 +884,7 @@ METHOD HbQtSource:build()
    aadd( ::cpp_, "   p->func = hbqt_gcRelease_" + ::cWidget + ";" )
    aadd( ::cpp_, "   p->type = HBQT_TYPE_" + ::cWidget + ";" )
    aadd( ::cpp_, "" )
+   #ifdef _GEN_TRACE_
    aadd( ::cpp_, "   if( bNew )" )
    aadd( ::cpp_, "   {" )
    aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _new_' + ::cWidget + iif( ::isObject, '  under p->pq', '' ) + '", pObj ) );' )
@@ -866,6 +893,7 @@ METHOD HbQtSource:build()
    aadd( ::cpp_, "   {" )
    aadd( ::cpp_, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NOT_new_' + ::cWidget + '", pObj ) );' )
    aadd( ::cpp_, "   }" )
+   #endif
    aadd( ::cpp_, "   return p;" )
    aadd( ::cpp_, "}" )
    aadd( ::cpp_, "" )
@@ -873,7 +901,7 @@ METHOD HbQtSource:build()
    aadd( ::cpp_, ::new_[ 1 ] )           // Func definition
    aadd( ::cpp_, ::new_[ 2 ] )           // {
    IF ::isConstructor
-      if ( ::isList )
+      if ::isList
           aadd( ::cpp_, "   " + ::cWidget + "< void * > * pObj = NULL;" )
       else
           aadd( ::cpp_, "   " + ::cWidget + " * pObj = NULL;" )
@@ -945,14 +973,11 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       aadd( ::func_, { oMtd:cFun, 0, "" } )
    ENDIF
 
-   aadd( ::txt_, "/*" )
-   aadd( ::txt_, " * " + strtran( oMtd:cProto, chr(13), "" ) )
-   aadd( ::txt_, " */" )
+   aadd( ::txt_, "/* " + strtran( oMtd:cProto, chr(13), "" ) + " */" )
    aadd( ::txt_, "HB_FUNC( QT_" + upper( ::cWidget ) + "_" + upper( oMtd:cHBFunc ) + " )" )
    aadd( ::txt_, "{" )
    IF !empty( oMtd:fBody_ )
       aeval( oMtd:fBody_, {|e| aadd( ::txt_, e ) } )
-
    ELSE
       IF ! oMtd:isConstructor
          aadd( ::txt_, "   " + ::cWidget + iif( ::isList, "< void *>", "" ) + " * p = hbqt_par_" + ::cWidget + "( 1 );" )
@@ -970,7 +995,9 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       IF ! oMtd:isConstructor
          FP = strtran( oMtd:cCmd, "hbqt_par_" + ::cWidget + "( 1 )", "( p )" )
          aadd( ::txt_, "   if( p )" )
-         aadd( ::txt_, "   {" )
+         IF oMtd:nDetach > 0 .OR. "hb_parstr_utf8(" $ oMtd:cCmd
+            aadd( ::txt_, "   {" )
+         ENDIF
       ELSE
          FP := oMtd:cCmd
       ENDIF
@@ -980,9 +1007,7 @@ METHOD HbQtSource:buildMethodBody( oMtd )
          #if 0
          aadd( ::txt_, "      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), " + hb_ntos( oMtd:nDetach + 1 ) + " );" )
          aadd( ::txt_, "      if( q && q->ph )" )
-         aadd( ::txt_, "      {" )
          aadd( ::txt_, "         q->bNew = false;" )
-         aadd( ::txt_, "      }" )
          #endif
          aadd( ::txt_, "      hbqt_detachgcpointer( " + hb_ntos( oMtd:nDetach + 1 ) + " );" )
       ENDIF
@@ -1002,7 +1027,9 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       ENDIF
       //
       IF ! oMtd:isConstructor
-         aadd( ::txt_, "   }" )
+         IF oMtd:nDetach > 0 .OR. "hb_parstr_utf8(" $ oMtd:cCmd
+            aadd( ::txt_, "   }" )
+         ENDIF
       ENDIF
 
       /* Return values back to PRG */
@@ -2315,88 +2342,15 @@ STATIC FUNCTION BuildCopyrightText( txt_, nMode, cProFile )
    aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
    aadd( txt_, "/* -------------------------------------------------------------------- */"    )
    aadd( txt_, ""                                                                              )
-   aadd( txt_, "/* "                                                                           )
-   aadd( txt_, " * Harbour Project source code:"                                               )
-   aadd( txt_, " * QT wrapper main header"                                                     )
+   aadd( txt_, "/*"                                                                            )
+   aadd( txt_, " * Harbour Project QT wrapper"                                                 )
    aadd( txt_, " * "                                                                           )
    aadd( txt_, " * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
    aadd( txt_, " * www - http://harbour-project.org"                                           )
    aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * This program is free software; you can redistribute it and/or modify"       )
-   aadd( txt_, " * it under the terms of the GNU General Public License as published by"       )
-   aadd( txt_, " * the Free Software Foundation; either version 2, or (at your option)"        )
-   aadd( txt_, " * any later version."                                                         )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * This program is distributed in the hope that it will be useful,"            )
-   aadd( txt_, " * but WITHOUT ANY WARRANTY; without even the implied warranty of"             )
-   aadd( txt_, " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"              )
-   aadd( txt_, " * GNU General Public License for more details."                               )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * You should have received a copy of the GNU General Public License"          )
-   aadd( txt_, " * along with this software; see the file COPYING.  If not, write to"          )
-   aadd( txt_, " * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,"            )
-   aadd( txt_, " * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/)."     )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * As a special exception, the Harbour Project gives permission for"           )
-   aadd( txt_, " * additional uses of the text contained in its release of Harbour."           )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * The exception is that, if you link the Harbour libraries with other"        )
-   aadd( txt_, " * files to produce an executable, this does not by itself cause the"          )
-   aadd( txt_, " * resulting executable to be covered by the GNU General Public License."      )
-   aadd( txt_, " * Your use of that executable is in no way restricted on account of"          )
-   aadd( txt_, " * linking the Harbour library code into it."                                  )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * This exception does not however invalidate any other reasons why"           )
-   aadd( txt_, " * the executable file might be covered by the GNU General Public License."    )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * This exception applies only to the code released by the Harbour"            )
-   aadd( txt_, " * Project under the name Harbour.  If you copy code from other"               )
-   aadd( txt_, " * Harbour Project or Free Software Foundation releases into a copy of"        )
-   aadd( txt_, " * Harbour, as the General Public License permits, the exception does"         )
-   aadd( txt_, " * not apply to the code that you add in this way.  To avoid misleading"       )
-   aadd( txt_, " * anyone as to the status of such modified files, you must delete"            )
-   aadd( txt_, " * this exception notice from them."                                           )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * If you write modifications of your own for Harbour, it is your choice"      )
-   aadd( txt_, " * whether to permit this exception to apply to your modifications."           )
-   aadd( txt_, " * If you do not wish that, delete this exception notice."                     )
+   aadd( txt_, " * For full copyright message and credits, see: CREDITS.txt"                   )
    aadd( txt_, " *"                                                                            )
    aadd( txt_, " */"                                                                           )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"    )
-   aadd( txt_, "/*                            C R E D I T S                             */"    )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"    )
-   aadd( txt_, "/* "                                                                           )
-   aadd( txt_, " * Marcos Antonio Gambeta"                                                     )
-   aadd( txt_, " *    for providing first ever prototype parsing methods. Though the current"  )
-   aadd( txt_, " *    implementation is diametrically different then what he proposed, still"  )
-   aadd( txt_, " *    current code shaped on those footsteps."                                 )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Viktor Szakats"                                                             )
-   aadd( txt_, " *    for directing the project with futuristic vision; "                      )
-   aadd( txt_, " *    for designing and maintaining a complex build system for hbQT, hbIDE;"   )
-   aadd( txt_, " *    for introducing many constructs on PRG and C++ levels;"                  )
-   aadd( txt_, " *    for streamlining signal/slots and events management classes;"            )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Istvan Bisz"                                                                )
-   aadd( txt_, " *    for introducing QPointer<> concept in the generator;"                    )
-   aadd( txt_, " *    for testing the library on numerous accounts;"                           )
-   aadd( txt_, " *    for showing a way how a GC pointer can be detached;"                     )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Francesco Perillo"                                                          )
-   aadd( txt_, " *    for taking keen interest in hbQT development and peeking the code;"      )
-   aadd( txt_, " *    for providing tips here and there to improve the code quality;"          )
-   aadd( txt_, " *    for hitting bulls eye to describe why few objects need GC detachment;"   )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Carlos Bacco"                                                               )
-   aadd( txt_, " *    for implementing HBQT_TYPE_Q*Class enums;"                               )
-   aadd( txt_, " *    for peeking into the code and suggesting optimization points;"           )
-   aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Przemyslaw Czerpak"                                                         )
-   aadd( txt_, " *    for providing tips and trick to manipulate HVM internals to the best"    )
-   aadd( txt_, " *    of its use and always showing a path when we get stuck;"                 )
-   aadd( txt_, " *    A true tradition of a MASTER..."                                         )
-   aadd( txt_, "*/ "                                                                           )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
       IF !( FNameGetName( cProFile ) == "qtcore" )
@@ -2404,9 +2358,7 @@ STATIC FUNCTION BuildCopyrightText( txt_, nMode, cProFile )
       ENDIF
    aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '.h"'                               )
    aadd( txt_, ""                                                                              )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, ""                                                                              )
    ELSEIF nMode == 1
    aadd( txt_, ""                                                                              )
@@ -2423,9 +2375,7 @@ STATIC FUNCTION BuildCopyrightText( txt_, nMode, cProFile )
 STATIC FUNCTION BuildFooter( txt_ )
 
    aadd( txt_, ""                                                                             )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"   )
-   aadd( txt_, "#endif             /* #if QT_VERSION >= 0x040500 */"                          )
-   aadd( txt_, "/*----------------------------------------------------------------------*/"   )
+   aadd( txt_, "#endif /* #if QT_VERSION >= 0x040500 */"                                      )
 
    RETURN nil
 

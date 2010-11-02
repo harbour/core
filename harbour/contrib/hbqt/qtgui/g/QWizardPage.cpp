@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  Constructed[ 17/17 [ 100.00% ] ]
@@ -121,7 +46,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QWizardPage )
 {
-   QWizardPage  * ph = NULL ;
+   QWizardPage  * ph = NULL;
    HBQT_GC_T_QWizardPage * p = ( HBQT_GC_T_QWizardPage * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -132,28 +57,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWizardPage )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWizardPage   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWizardPage   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWizardPage          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWizardPage    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWizardPage    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
@@ -165,14 +79,6 @@ void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QWizardPage;
    p->type = HBQT_TYPE_QWizardPage;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWizardPage  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QWizardPage", pObj ) );
-   }
    return p;
 }
 
@@ -185,105 +91,71 @@ HB_FUNC( QT_QWIZARDPAGE )
    hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( void * ) pObj, true ) );
 }
 
-/*
- * QString buttonText ( QWizard::WizardButton which ) const
- */
+/* QString buttonText ( QWizard::WizardButton which ) const */
 HB_FUNC( QT_QWIZARDPAGE_BUTTONTEXT )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * virtual void cleanupPage ()
- */
+/* virtual void cleanupPage () */
 HB_FUNC( QT_QWIZARDPAGE_CLEANUPPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       ( p )->cleanupPage();
-   }
 }
 
-/*
- * virtual void initializePage ()
- */
+/* virtual void initializePage () */
 HB_FUNC( QT_QWIZARDPAGE_INITIALIZEPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       ( p )->initializePage();
-   }
 }
 
-/*
- * bool isCommitPage () const
- */
+/* bool isCommitPage () const */
 HB_FUNC( QT_QWIZARDPAGE_ISCOMMITPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retl( ( p )->isCommitPage() );
-   }
 }
 
-/*
- * virtual bool isComplete () const
- */
+/* virtual bool isComplete () const */
 HB_FUNC( QT_QWIZARDPAGE_ISCOMPLETE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retl( ( p )->isComplete() );
-   }
 }
 
-/*
- * bool isFinalPage () const
- */
+/* bool isFinalPage () const */
 HB_FUNC( QT_QWIZARDPAGE_ISFINALPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retl( ( p )->isFinalPage() );
-   }
 }
 
-/*
- * virtual int nextId () const
- */
+/* virtual int nextId () const */
 HB_FUNC( QT_QWIZARDPAGE_NEXTID )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retni( ( p )->nextId() );
-   }
 }
 
-/*
- * QPixmap pixmap ( QWizard::WizardPixmap which ) const
- */
+/* QPixmap pixmap ( QWizard::WizardPixmap which ) const */
 HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * void setButtonText ( QWizard::WizardButton which, const QString & text )
- */
+/* void setButtonText ( QWizard::WizardButton which, const QString & text ) */
 HB_FUNC( QT_QWIZARDPAGE_SETBUTTONTEXT )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
@@ -295,45 +167,31 @@ HB_FUNC( QT_QWIZARDPAGE_SETBUTTONTEXT )
    }
 }
 
-/*
- * void setCommitPage ( bool commitPage )
- */
+/* void setCommitPage ( bool commitPage ) */
 HB_FUNC( QT_QWIZARDPAGE_SETCOMMITPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       ( p )->setCommitPage( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setFinalPage ( bool finalPage )
- */
+/* void setFinalPage ( bool finalPage ) */
 HB_FUNC( QT_QWIZARDPAGE_SETFINALPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       ( p )->setFinalPage( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setPixmap ( QWizard::WizardPixmap which, const QPixmap & pixmap )
- */
+/* void setPixmap ( QWizard::WizardPixmap which, const QPixmap & pixmap ) */
 HB_FUNC( QT_QWIZARDPAGE_SETPIXMAP )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       ( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
-   }
 }
 
-/*
- * void setSubTitle ( const QString & subTitle )
- */
+/* void setSubTitle ( const QString & subTitle ) */
 HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
@@ -345,9 +203,7 @@ HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
    }
 }
 
-/*
- * void setTitle ( const QString & title )
- */
+/* void setTitle ( const QString & title ) */
 HB_FUNC( QT_QWIZARDPAGE_SETTITLE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
@@ -359,43 +215,29 @@ HB_FUNC( QT_QWIZARDPAGE_SETTITLE )
    }
 }
 
-/*
- * QString subTitle () const
- */
+/* QString subTitle () const */
 HB_FUNC( QT_QWIZARDPAGE_SUBTITLE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->subTitle().toUtf8().data() );
-   }
 }
 
-/*
- * QString title () const
- */
+/* QString title () const */
 HB_FUNC( QT_QWIZARDPAGE_TITLE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->title().toUtf8().data() );
-   }
 }
 
-/*
- * virtual bool validatePage ()
- */
+/* virtual bool validatePage () */
 HB_FUNC( QT_QWIZARDPAGE_VALIDATEPAGE )
 {
    QWizardPage * p = hbqt_par_QWizardPage( 1 );
    if( p )
-   {
       hb_retl( ( p )->validatePage() );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqscintilla.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  enum { AiMaintain = 0x01, AiOpening = 0x02, AiClosing = 0x04 }
@@ -164,7 +89,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QsciScintilla )
 {
-   QsciScintilla  * ph = NULL ;
+   QsciScintilla  * ph = NULL;
    HBQT_GC_T_QsciScintilla * p = ( HBQT_GC_T_QsciScintilla * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -175,28 +100,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QsciScintilla )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QsciScintilla   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QsciScintilla   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QsciScintilla          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QsciScintilla    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QsciScintilla    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QsciScintilla( void * pObj, bool bNew )
@@ -208,14 +122,6 @@ void * hbqt_gcAllocate_QsciScintilla( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QsciScintilla;
    p->type = HBQT_TYPE_QsciScintilla;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QsciScintilla  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QsciScintilla", pObj ) );
-   }
    return p;
 }
 
@@ -235,9 +141,7 @@ HB_FUNC( QT_QSCISCINTILLA )
    hb_retptrGC( hbqt_gcAllocate_QsciScintilla( ( void * ) pObj, true ) );
 }
 
-/*
- * void annotate (int line, const QString &text, int style)
- */
+/* void annotate (int line, const QString &text, int style) */
 HB_FUNC( QT_QSCISCINTILLA_ANNOTATE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -249,9 +153,7 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATE )
    }
 }
 
-/*
- * void annotate (int line, const QString &text, const QsciStyle &style)
- */
+/* void annotate (int line, const QString &text, const QsciStyle &style) */
 HB_FUNC( QT_QSCISCINTILLA_ANNOTATE_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -263,369 +165,247 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATE_1 )
    }
 }
 
-/*
- * void annotate (int line, const QsciStyledText &text)
- */
+/* void annotate (int line, const QsciStyledText &text) */
 HB_FUNC( QT_QSCISCINTILLA_ANNOTATE_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->annotate( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
-   }
 }
 
-/*
- * QString annotation (int line) const
- */
+/* QString annotation (int line) const */
 HB_FUNC( QT_QSCISCINTILLA_ANNOTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->annotation( hb_parni( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * AnnotationDisplay annotationDisplay () const
- */
+/* AnnotationDisplay annotationDisplay () const */
 HB_FUNC( QT_QSCISCINTILLA_ANNOTATIONDISPLAY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::AnnotationDisplay ) ( p )->annotationDisplay() );
-   }
 }
 
-/*
- * void clearAnnotations (int line=-1)
- */
+/* void clearAnnotations (int line=-1) */
 HB_FUNC( QT_QSCISCINTILLA_CLEARANNOTATIONS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->clearAnnotations( hb_parnidef( 2, -1 ) );
-   }
 }
 
-/*
- * bool autoCompletionCaseSensitivity () const
- */
+/* bool autoCompletionCaseSensitivity () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONCASESENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoCompletionCaseSensitivity() );
-   }
 }
 
-/*
- * bool autoCompletionFillupsEnabled () const
- */
+/* bool autoCompletionFillupsEnabled () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONFILLUPSENABLED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoCompletionFillupsEnabled() );
-   }
 }
 
-/*
- * bool autoCompletionReplaceWord () const
- */
+/* bool autoCompletionReplaceWord () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONREPLACEWORD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoCompletionReplaceWord() );
-   }
 }
 
-/*
- * bool autoCompletionShowSingle () const
- */
+/* bool autoCompletionShowSingle () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONSHOWSINGLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoCompletionShowSingle() );
-   }
 }
 
-/*
- * AutoCompletionSource autoCompletionSource () const
- */
+/* AutoCompletionSource autoCompletionSource () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONSOURCE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::AutoCompletionSource ) ( p )->autoCompletionSource() );
-   }
 }
 
-/*
- * int autoCompletionThreshold () const
- */
+/* int autoCompletionThreshold () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONTHRESHOLD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->autoCompletionThreshold() );
-   }
 }
 
-/*
- * bool autoIndent () const
- */
+/* bool autoIndent () const */
 HB_FUNC( QT_QSCISCINTILLA_AUTOINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoIndent() );
-   }
 }
 
-/*
- * bool backspaceUnindents () const
- */
+/* bool backspaceUnindents () const */
 HB_FUNC( QT_QSCISCINTILLA_BACKSPACEUNINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->backspaceUnindents() );
-   }
 }
 
-/*
- * void beginUndoAction ()
- */
+/* void beginUndoAction () */
 HB_FUNC( QT_QSCISCINTILLA_BEGINUNDOACTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->beginUndoAction();
-   }
 }
 
-/*
- * BraceMatch braceMatching () const
- */
+/* BraceMatch braceMatching () const */
 HB_FUNC( QT_QSCISCINTILLA_BRACEMATCHING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::BraceMatch ) ( p )->braceMatching() );
-   }
 }
 
-/*
- * CallTipsStyle callTipsStyle () const
- */
+/* CallTipsStyle callTipsStyle () const */
 HB_FUNC( QT_QSCISCINTILLA_CALLTIPSSTYLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::CallTipsStyle ) ( p )->callTipsStyle() );
-   }
 }
 
-/*
- * int callTipsVisible () const
- */
+/* int callTipsVisible () const */
 HB_FUNC( QT_QSCISCINTILLA_CALLTIPSVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->callTipsVisible() );
-   }
 }
 
-/*
- * void cancelList ()
- */
+/* void cancelList () */
 HB_FUNC( QT_QSCISCINTILLA_CANCELLIST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->cancelList();
-   }
 }
 
-/*
- * bool caseSensitive () const
- */
+/* bool caseSensitive () const */
 HB_FUNC( QT_QSCISCINTILLA_CASESENSITIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->caseSensitive() );
-   }
 }
 
-/*
- * void clearFolds ()
- */
+/* void clearFolds () */
 HB_FUNC( QT_QSCISCINTILLA_CLEARFOLDS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->clearFolds();
-   }
 }
 
-/*
- * void clearRegisteredImages ()
- */
+/* void clearRegisteredImages () */
 HB_FUNC( QT_QSCISCINTILLA_CLEARREGISTEREDIMAGES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->clearRegisteredImages();
-   }
 }
 
-/*
- * QColor color () const
- */
+/* QColor color () const */
 HB_FUNC( QT_QSCISCINTILLA_COLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
-   }
 }
 
-/*
- * void convertEols (EolMode mode)
- */
+/* void convertEols (EolMode mode) */
 HB_FUNC( QT_QSCISCINTILLA_CONVERTEOLS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->convertEols( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * QsciDocument document () const
- */
+/* QsciDocument document () const */
 HB_FUNC( QT_QSCISCINTILLA_DOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QsciDocument( new QsciDocument( ( p )->document() ), true ) );
-   }
 }
 
-/*
- * void endUndoAction ()
- */
+/* void endUndoAction () */
 HB_FUNC( QT_QSCISCINTILLA_ENDUNDOACTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->endUndoAction();
-   }
 }
 
-/*
- * QColor edgeColor () const
- */
+/* QColor edgeColor () const */
 HB_FUNC( QT_QSCISCINTILLA_EDGECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->edgeColor() ), true ) );
-   }
 }
 
-/*
- * int edgeColumn () const
- */
+/* int edgeColumn () const */
 HB_FUNC( QT_QSCISCINTILLA_EDGECOLUMN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->edgeColumn() );
-   }
 }
 
-/*
- * EdgeMode edgeMode () const
- */
+/* EdgeMode edgeMode () const */
 HB_FUNC( QT_QSCISCINTILLA_EDGEMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::EdgeMode ) ( p )->edgeMode() );
-   }
 }
 
-/*
- * void setFont (const QFont &f)
- */
+/* void setFont (const QFont &f) */
 HB_FUNC( QT_QSCISCINTILLA_SETFONT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   }
 }
 
-/*
- * EolMode eolMode () const
- */
+/* EolMode eolMode () const */
 HB_FUNC( QT_QSCISCINTILLA_EOLMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::EolMode ) ( p )->eolMode() );
-   }
 }
 
-/*
- * bool eolVisibility () const
- */
+/* bool eolVisibility () const */
 HB_FUNC( QT_QSCISCINTILLA_EOLVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->eolVisibility() );
-   }
 }
 
-/*
- * virtual bool findFirst (const QString &expr, bool re, bool cs, bool wo, bool wrap, bool forward=true, int line=-1, int index=-1, bool show=true)
- */
+/* virtual bool findFirst (const QString &expr, bool re, bool cs, bool wo, bool wrap, bool forward=true, int line=-1, int index=-1, bool show=true) */
 HB_FUNC( QT_QSCISCINTILLA_FINDFIRST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -637,45 +417,31 @@ HB_FUNC( QT_QSCISCINTILLA_FINDFIRST )
    }
 }
 
-/*
- * virtual bool findNext ()
- */
+/* virtual bool findNext () */
 HB_FUNC( QT_QSCISCINTILLA_FINDNEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->findNext() );
-   }
 }
 
-/*
- * int firstVisibleLine () const
- */
+/* int firstVisibleLine () const */
 HB_FUNC( QT_QSCISCINTILLA_FIRSTVISIBLELINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->firstVisibleLine() );
-   }
 }
 
-/*
- * FoldStyle folding () const
- */
+/* FoldStyle folding () const */
 HB_FUNC( QT_QSCISCINTILLA_FOLDING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::FoldStyle ) ( p )->folding() );
-   }
 }
 
-/*
- * void getCursorPosition (int *line, int *index) const
- */
+/* void getCursorPosition (int *line, int *index) const */
 HB_FUNC( QT_QSCISCINTILLA_GETCURSORPOSITION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -683,17 +449,13 @@ HB_FUNC( QT_QSCISCINTILLA_GETCURSORPOSITION )
    int iIndex = 0;
 
    if( p )
-   {
       ( p )->getCursorPosition( &iLine, &iIndex );
-   }
 
    hb_storni( iLine, 2 );
    hb_storni( iIndex, 3 );
 }
 
-/*
- * void getSelection (int *lineFrom, int *indexFrom, int *lineTo, int *indexTo) const
- */
+/* void getSelection (int *lineFrom, int *indexFrom, int *lineTo, int *indexTo) const */
 HB_FUNC( QT_QSCISCINTILLA_GETSELECTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -703,9 +465,7 @@ HB_FUNC( QT_QSCISCINTILLA_GETSELECTION )
    int iIndexTo = 0;
 
    if( p )
-   {
       ( p )->getSelection( &iLineFrom, &iIndexFrom, &iLineTo, &iIndexTo );
-   }
 
    hb_storni( iLineFrom, 2 );
    hb_storni( iIndexFrom, 3 );
@@ -713,177 +473,119 @@ HB_FUNC( QT_QSCISCINTILLA_GETSELECTION )
    hb_storni( iIndexTo, 5 );
 }
 
-/*
- * bool hasSelectedText () const
- */
+/* bool hasSelectedText () const */
 HB_FUNC( QT_QSCISCINTILLA_HASSELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->hasSelectedText() );
-   }
 }
 
-/*
- * int indentation (int line) const
- */
+/* int indentation (int line) const */
 HB_FUNC( QT_QSCISCINTILLA_INDENTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->indentation( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * bool indentationGuides () const
- */
+/* bool indentationGuides () const */
 HB_FUNC( QT_QSCISCINTILLA_INDENTATIONGUIDES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->indentationGuides() );
-   }
 }
 
-/*
- * bool indentationsUseTabs () const
- */
+/* bool indentationsUseTabs () const */
 HB_FUNC( QT_QSCISCINTILLA_INDENTATIONSUSETABS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->indentationsUseTabs() );
-   }
 }
 
-/*
- * int indentationWidth () const
- */
+/* int indentationWidth () const */
 HB_FUNC( QT_QSCISCINTILLA_INDENTATIONWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->indentationWidth() );
-   }
 }
 
-/*
- * bool isCallTipActive () const
- */
+/* bool isCallTipActive () const */
 HB_FUNC( QT_QSCISCINTILLA_ISCALLTIPACTIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isCallTipActive() );
-   }
 }
 
-/*
- * bool isListActive () const
- */
+/* bool isListActive () const */
 HB_FUNC( QT_QSCISCINTILLA_ISLISTACTIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isListActive() );
-   }
 }
 
-/*
- * bool isModified () const
- */
+/* bool isModified () const */
 HB_FUNC( QT_QSCISCINTILLA_ISMODIFIED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isModified() );
-   }
 }
 
-/*
- * bool isReadOnly () const
- */
+/* bool isReadOnly () const */
 HB_FUNC( QT_QSCISCINTILLA_ISREADONLY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isReadOnly() );
-   }
 }
 
-/*
- * bool isRedoAvailable () const
- */
+/* bool isRedoAvailable () const */
 HB_FUNC( QT_QSCISCINTILLA_ISREDOAVAILABLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isRedoAvailable() );
-   }
 }
 
-/*
- * bool isUndoAvailable () const
- */
+/* bool isUndoAvailable () const */
 HB_FUNC( QT_QSCISCINTILLA_ISUNDOAVAILABLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isUndoAvailable() );
-   }
 }
 
-/*
- * bool isUtf8 () const
- */
+/* bool isUtf8 () const */
 HB_FUNC( QT_QSCISCINTILLA_ISUTF8 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isUtf8() );
-   }
 }
 
-/*
- * bool isWordCharacter (char ch) const
- */
+/* bool isWordCharacter (char ch) const */
 HB_FUNC( QT_QSCISCINTILLA_ISWORDCHARACTER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->isWordCharacter( ( char ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int lineAt (const QPoint &pos) const
- */
+/* int lineAt (const QPoint &pos) const */
 HB_FUNC( QT_QSCISCINTILLA_LINEAT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->lineAt( *hbqt_par_QPoint( 2 ) ) );
-   }
 }
 
-/*
- * void lineIndexFromPosition (int position, int *line, int *index) const
- */
+/* void lineIndexFromPosition (int position, int *line, int *index) const */
 HB_FUNC( QT_QSCISCINTILLA_LINEINDEXFROMPOSITION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -891,317 +593,213 @@ HB_FUNC( QT_QSCISCINTILLA_LINEINDEXFROMPOSITION )
    int iIndex = 0;
 
    if( p )
-   {
       ( p )->lineIndexFromPosition( hb_parni( 2 ), &iLine, &iIndex );
-   }
 
    hb_storni( iLine, 3 );
    hb_storni( iIndex, 4 );
 }
 
-/*
- * int lineLength (int line) const
- */
+/* int lineLength (int line) const */
 HB_FUNC( QT_QSCISCINTILLA_LINELENGTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->lineLength( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int lines () const
- */
+/* int lines () const */
 HB_FUNC( QT_QSCISCINTILLA_LINES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->lines() );
-   }
 }
 
-/*
- * int length () const
- */
+/* int length () const */
 HB_FUNC( QT_QSCISCINTILLA_LENGTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->length() );
-   }
 }
 
-/*
- * QsciLexer * lexer () const
- */
+/* QsciLexer * lexer () const */
 HB_FUNC( QT_QSCISCINTILLA_LEXER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) );
-   }
 }
 
-/*
- * bool marginLineNumbers (int margin) const
- */
+/* bool marginLineNumbers (int margin) const */
 HB_FUNC( QT_QSCISCINTILLA_MARGINLINENUMBERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->marginLineNumbers( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int marginMarkerMask (int margin) const
- */
+/* int marginMarkerMask (int margin) const */
 HB_FUNC( QT_QSCISCINTILLA_MARGINMARKERMASK )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->marginMarkerMask( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * bool marginSensitivity (int margin) const
- */
+/* bool marginSensitivity (int margin) const */
 HB_FUNC( QT_QSCISCINTILLA_MARGINSENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->marginSensitivity( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * MarginType marginType (int margin) const
- */
+/* MarginType marginType (int margin) const */
 HB_FUNC( QT_QSCISCINTILLA_MARGINTYPE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::MarginType ) ( p )->marginType( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int marginWidth (int margin) const
- */
+/* int marginWidth (int margin) const */
 HB_FUNC( QT_QSCISCINTILLA_MARGINWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->marginWidth( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int markerDefine (MarkerSymbol sym, int mnr=-1)
- */
+/* int markerDefine (MarkerSymbol sym, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerDefine( ( QsciScintilla::MarkerSymbol ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
-   }
 }
 
-/*
- * int markerDefine (char ch, int mnr=-1)
- */
+/* int markerDefine (char ch, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerDefine( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
-   }
 }
 
-/*
- * int markerDefine (const QPixmap &pm, int mnr=-1)
- */
+/* int markerDefine (const QPixmap &pm, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerDefine( *hbqt_par_QPixmap( 2 ), hb_parnidef( 3, -1 ) ) );
-   }
 }
 
-/*
- * int markerAdd (int linenr, int mnr)
- */
+/* int markerAdd (int linenr, int mnr) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERADD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerAdd( hb_parni( 2 ), hb_parni( 3 ) ) );
-   }
 }
 
-/*
- * unsigned markersAtLine (int linenr) const
- */
+/* unsigned markersAtLine (int linenr) const */
 HB_FUNC( QT_QSCISCINTILLA_MARKERSATLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markersAtLine( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * void markerDelete (int linenr, int mnr=-1)
- */
+/* void markerDelete (int linenr, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDELETE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->markerDelete( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
-   }
 }
 
-/*
- * void markerDeleteAll (int mnr=-1)
- */
+/* void markerDeleteAll (int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDELETEALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->markerDeleteAll( hb_parnidef( 2, -1 ) );
-   }
 }
 
-/*
- * void markerDeleteHandle (int mhandle)
- */
+/* void markerDeleteHandle (int mhandle) */
 HB_FUNC( QT_QSCISCINTILLA_MARKERDELETEHANDLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->markerDeleteHandle( hb_parni( 2 ) );
-   }
 }
 
-/*
- * int markerLine (int mhandle) const
- */
+/* int markerLine (int mhandle) const */
 HB_FUNC( QT_QSCISCINTILLA_MARKERLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerLine( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int markerFindNext (int linenr, unsigned mask) const
- */
+/* int markerFindNext (int linenr, unsigned mask) const */
 HB_FUNC( QT_QSCISCINTILLA_MARKERFINDNEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerFindNext( hb_parni( 2 ), hb_parni( 3 ) ) );
-   }
 }
 
-/*
- * int markerFindPrevious (int linenr, unsigned mask) const
- */
+/* int markerFindPrevious (int linenr, unsigned mask) const */
 HB_FUNC( QT_QSCISCINTILLA_MARKERFINDPREVIOUS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->markerFindPrevious( hb_parni( 2 ), hb_parni( 3 ) ) );
-   }
 }
 
-/*
- * QColor paper () const
- */
+/* QColor paper () const */
 HB_FUNC( QT_QSCISCINTILLA_PAPER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) );
-   }
 }
 
-/*
- * int positionFromLineIndex (int line, int index) const
- */
+/* int positionFromLineIndex (int line, int index) const */
 HB_FUNC( QT_QSCISCINTILLA_POSITIONFROMLINEINDEX )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->positionFromLineIndex( hb_parni( 2 ), hb_parni( 3 ) ) );
-   }
 }
 
-/*
- * bool read (QIODevice *io)
- */
+/* bool read (QIODevice *io) */
 HB_FUNC( QT_QSCISCINTILLA_READ )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->read( hbqt_par_QIODevice( 2 ) ) );
-   }
 }
 
-/*
- * virtual void recolor (int start=0, int end=-1)
- */
+/* virtual void recolor (int start=0, int end=-1) */
 HB_FUNC( QT_QSCISCINTILLA_RECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->recolor( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
-   }
 }
 
-/*
- * void registerImage (int id, const QPixmap &pm)
- */
+/* void registerImage (int id, const QPixmap &pm) */
 HB_FUNC( QT_QSCISCINTILLA_REGISTERIMAGE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->registerImage( hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
-   }
 }
 
-/*
- * virtual void replace (const QString &replaceStr)
- */
+/* virtual void replace (const QString &replaceStr) */
 HB_FUNC( QT_QSCISCINTILLA_REPLACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1213,189 +811,127 @@ HB_FUNC( QT_QSCISCINTILLA_REPLACE )
    }
 }
 
-/*
- * void resetFoldMarginColors ()
- */
+/* void resetFoldMarginColors () */
 HB_FUNC( QT_QSCISCINTILLA_RESETFOLDMARGINCOLORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->resetFoldMarginColors();
-   }
 }
 
-/*
- * void setFoldMarginColors (const QColor &fore, const QColor &back)
- */
+/* void setFoldMarginColors (const QColor &fore, const QColor &back) */
 HB_FUNC( QT_QSCISCINTILLA_SETFOLDMARGINCOLORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setFoldMarginColors( *hbqt_par_QColor( 2 ), *hbqt_par_QColor( 3 ) );
-   }
 }
 
-/*
- * void setAnnotationDisplay (AnnotationDisplay display)
- */
+/* void setAnnotationDisplay (AnnotationDisplay display) */
 HB_FUNC( QT_QSCISCINTILLA_SETANNOTATIONDISPLAY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAnnotationDisplay( ( QsciScintilla::AnnotationDisplay ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setAutoCompletionFillupsEnabled (bool enabled)
- */
+/* void setAutoCompletionFillupsEnabled (bool enabled) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPSENABLED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionFillupsEnabled( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setAutoCompletionFillups (const char *fillups)
- */
+/* void setAutoCompletionFillups (const char *fillups) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionFillups( ( const char * ) hb_parc( 2 ) );
-   }
 }
 
-/*
- * void setAutoCompletionWordSeparators (const QStringList &separators)
- */
+/* void setAutoCompletionWordSeparators (const QStringList &separators) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONWORDSEPARATORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionWordSeparators( *hbqt_par_QStringList( 2 ) );
-   }
 }
 
-/*
- * void setCallTipsBackgroundColor (const QColor &col)
- */
+/* void setCallTipsBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCallTipsBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setCallTipsForegroundColor (const QColor &col)
- */
+/* void setCallTipsForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCallTipsForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setCallTipsHighlightColor (const QColor &col)
- */
+/* void setCallTipsHighlightColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSHIGHLIGHTCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCallTipsHighlightColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setCallTipsStyle (CallTipsStyle style)
- */
+/* void setCallTipsStyle (CallTipsStyle style) */
 HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSSTYLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCallTipsStyle( ( QsciScintilla::CallTipsStyle ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setCallTipsVisible (int nr)
- */
+/* void setCallTipsVisible (int nr) */
 HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCallTipsVisible( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setDocument (const QsciDocument &document)
- */
+/* void setDocument (const QsciDocument &document) */
 HB_FUNC( QT_QSCISCINTILLA_SETDOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setDocument( *hbqt_par_QsciDocument( 2 ) );
-   }
 }
 
-/*
- * void setEdgeColor (const QColor &col)
- */
+/* void setEdgeColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETEDGECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setEdgeColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setEdgeColumn (int colnr)
- */
+/* void setEdgeColumn (int colnr) */
 HB_FUNC( QT_QSCISCINTILLA_SETEDGECOLUMN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setEdgeColumn( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setEdgeMode (EdgeMode mode)
- */
+/* void setEdgeMode (EdgeMode mode) */
 HB_FUNC( QT_QSCISCINTILLA_SETEDGEMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setEdgeMode( ( QsciScintilla::EdgeMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setMarginText (int line, const QString &text, int style)
- */
+/* void setMarginText (int line, const QString &text, int style) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1407,9 +943,7 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT )
    }
 }
 
-/*
- * void setMarginText (int line, const QString &text, const QsciStyle &style)
- */
+/* void setMarginText (int line, const QString &text, const QsciStyle &style) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1421,309 +955,207 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT_1 )
    }
 }
 
-/*
- * void setMarginText (int line, const QsciStyledText &text)
- */
+/* void setMarginText (int line, const QsciStyledText &text) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginText( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
-   }
 }
 
-/*
- * void setMarginType (int margin, MarginType type)
- */
+/* void setMarginType (int margin, MarginType type) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINTYPE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginType( hb_parni( 2 ), ( QsciScintilla::MarginType ) hb_parni( 3 ) );
-   }
 }
 
-/*
- * void clearMarginText (int line=-1)
- */
+/* void clearMarginText (int line=-1) */
 HB_FUNC( QT_QSCISCINTILLA_CLEARMARGINTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->clearMarginText( hb_parnidef( 2, -1 ) );
-   }
 }
 
-/*
- * void setMarkerBackgroundColor (const QColor &col, int mnr=-1)
- */
+/* void setMarkerBackgroundColor (const QColor &col, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARKERBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarkerBackgroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
-   }
 }
 
-/*
- * void setMarkerForegroundColor (const QColor &col, int mnr=-1)
- */
+/* void setMarkerForegroundColor (const QColor &col, int mnr=-1) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARKERFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarkerForegroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
-   }
 }
 
-/*
- * void setMatchedBraceBackgroundColor (const QColor &col)
- */
+/* void setMatchedBraceBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETMATCHEDBRACEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setMatchedBraceForegroundColor (const QColor &col)
- */
+/* void setMatchedBraceForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETMATCHEDBRACEFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setUnmatchedBraceBackgroundColor (const QColor &col)
- */
+/* void setUnmatchedBraceBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETUNMATCHEDBRACEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setUnmatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setUnmatchedBraceForegroundColor (const QColor &col)
- */
+/* void setUnmatchedBraceForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETUNMATCHEDBRACEFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setUnmatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * void setWrapVisualFlags (WrapVisualFlag eflag, WrapVisualFlag sflag=WrapFlagNone, int sindent=0)
- */
+/* void setWrapVisualFlags (WrapVisualFlag eflag, WrapVisualFlag sflag=WrapFlagNone, int sindent=0) */
 HB_FUNC( QT_QSCISCINTILLA_SETWRAPVISUALFLAGS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setWrapVisualFlags( ( QsciScintilla::WrapVisualFlag ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QsciScintilla::WrapVisualFlag ) hb_parni( 3 ) : ( QsciScintilla::WrapVisualFlag ) QsciScintilla::WrapFlagNone ), hb_parni( 4 ) );
-   }
 }
 
-/*
- * QString selectedText () const
- */
+/* QString selectedText () const */
 HB_FUNC( QT_QSCISCINTILLA_SELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->selectedText().toUtf8().data() );
-   }
 }
 
-/*
- * bool selectionToEol () const
- */
+/* bool selectionToEol () const */
 HB_FUNC( QT_QSCISCINTILLA_SELECTIONTOEOL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->selectionToEol() );
-   }
 }
 
-/*
- * void setSelectionToEol (bool filled)
- */
+/* void setSelectionToEol (bool filled) */
 HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONTOEOL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setSelectionToEol( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void showUserList (int id, const QStringList &list)
- */
+/* void showUserList (int id, const QStringList &list) */
 HB_FUNC( QT_QSCISCINTILLA_SHOWUSERLIST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->showUserList( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) );
-   }
 }
 
-/*
- * QsciCommandSet * standardCommands () const
- */
+/* QsciCommandSet * standardCommands () const */
 HB_FUNC( QT_QSCISCINTILLA_STANDARDCOMMANDS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QsciCommandSet( ( p )->standardCommands(), false ) );
-   }
 }
 
-/*
- * bool tabIndents () const
- */
+/* bool tabIndents () const */
 HB_FUNC( QT_QSCISCINTILLA_TABINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->tabIndents() );
-   }
 }
 
-/*
- * int tabWidth () const
- */
+/* int tabWidth () const */
 HB_FUNC( QT_QSCISCINTILLA_TABWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->tabWidth() );
-   }
 }
 
-/*
- * QString text () const
- */
+/* QString text () const */
 HB_FUNC( QT_QSCISCINTILLA_TEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->text().toUtf8().data() );
-   }
 }
 
-/*
- * QString text (int line) const
- */
+/* QString text (int line) const */
 HB_FUNC( QT_QSCISCINTILLA_TEXT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->text( hb_parni( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * int textHeight (int linenr) const
- */
+/* int textHeight (int linenr) const */
 HB_FUNC( QT_QSCISCINTILLA_TEXTHEIGHT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( p )->textHeight( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * WhitespaceVisibility whitespaceVisibility () const
- */
+/* WhitespaceVisibility whitespaceVisibility () const */
 HB_FUNC( QT_QSCISCINTILLA_WHITESPACEVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::WhitespaceVisibility ) ( p )->whitespaceVisibility() );
-   }
 }
 
-/*
- * QString wordAtPoint (const QPoint &point) const
- */
+/* QString wordAtPoint (const QPoint &point) const */
 HB_FUNC( QT_QSCISCINTILLA_WORDATPOINT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->wordAtPoint( *hbqt_par_QPoint( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * const char * wordCharacters () const
- */
+/* const char * wordCharacters () const */
 HB_FUNC( QT_QSCISCINTILLA_WORDCHARACTERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retc( ( p )->wordCharacters() );
-   }
 }
 
-/*
- * WrapMode wrapMode () const
- */
+/* WrapMode wrapMode () const */
 HB_FUNC( QT_QSCISCINTILLA_WRAPMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retni( ( QsciScintilla::WrapMode ) ( p )->wrapMode() );
-   }
 }
 
-/*
- * bool write (QIODevice *io) const
- */
+/* bool write (QIODevice *io) const */
 HB_FUNC( QT_QSCISCINTILLA_WRITE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       hb_retl( ( p )->write( hbqt_par_QIODevice( 2 ) ) );
-   }
 }
 
-/*
- * virtual void append (const QString &text)
- */
+/* virtual void append (const QString &text) */
 HB_FUNC( QT_QSCISCINTILLA_APPEND )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1735,153 +1167,103 @@ HB_FUNC( QT_QSCISCINTILLA_APPEND )
    }
 }
 
-/*
- * virtual void autoCompleteFromAll ()
- */
+/* virtual void autoCompleteFromAll () */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->autoCompleteFromAll();
-   }
 }
 
-/*
- * virtual void autoCompleteFromAPIs ()
- */
+/* virtual void autoCompleteFromAPIs () */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMAPIS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->autoCompleteFromAPIs();
-   }
 }
 
-/*
- * virtual void autoCompleteFromDocument ()
- */
+/* virtual void autoCompleteFromDocument () */
 HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMDOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->autoCompleteFromDocument();
-   }
 }
 
-/*
- * virtual void callTip ()
- */
+/* virtual void callTip () */
 HB_FUNC( QT_QSCISCINTILLA_CALLTIP )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->callTip();
-   }
 }
 
-/*
- * virtual void clear ()
- */
+/* virtual void clear () */
 HB_FUNC( QT_QSCISCINTILLA_CLEAR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->clear();
-   }
 }
 
-/*
- * virtual void copy ()
- */
+/* virtual void copy () */
 HB_FUNC( QT_QSCISCINTILLA_COPY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->copy();
-   }
 }
 
-/*
- * virtual void cut ()
- */
+/* virtual void cut () */
 HB_FUNC( QT_QSCISCINTILLA_CUT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->cut();
-   }
 }
 
-/*
- * virtual void ensureCursorVisible ()
- */
+/* virtual void ensureCursorVisible () */
 HB_FUNC( QT_QSCISCINTILLA_ENSURECURSORVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->ensureCursorVisible();
-   }
 }
 
-/*
- * virtual void ensureLineVisible (int line)
- */
+/* virtual void ensureLineVisible (int line) */
 HB_FUNC( QT_QSCISCINTILLA_ENSURELINEVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->ensureLineVisible( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void foldAll (bool children=false)
- */
+/* virtual void foldAll (bool children=false) */
 HB_FUNC( QT_QSCISCINTILLA_FOLDALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->foldAll( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void foldLine (int line)
- */
+/* virtual void foldLine (int line) */
 HB_FUNC( QT_QSCISCINTILLA_FOLDLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->foldLine( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void indent (int line)
- */
+/* virtual void indent (int line) */
 HB_FUNC( QT_QSCISCINTILLA_INDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->indent( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void insert (const QString &text)
- */
+/* virtual void insert (const QString &text) */
 HB_FUNC( QT_QSCISCINTILLA_INSERT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1893,9 +1275,7 @@ HB_FUNC( QT_QSCISCINTILLA_INSERT )
    }
 }
 
-/*
- * virtual void insertAt (const QString &text, int line, int index)
- */
+/* virtual void insertAt (const QString &text, int line, int index) */
 HB_FUNC( QT_QSCISCINTILLA_INSERTAT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -1907,477 +1287,319 @@ HB_FUNC( QT_QSCISCINTILLA_INSERTAT )
    }
 }
 
-/*
- * virtual void moveToMatchingBrace ()
- */
+/* virtual void moveToMatchingBrace () */
 HB_FUNC( QT_QSCISCINTILLA_MOVETOMATCHINGBRACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->moveToMatchingBrace();
-   }
 }
 
-/*
- * virtual void paste ()
- */
+/* virtual void paste () */
 HB_FUNC( QT_QSCISCINTILLA_PASTE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->paste();
-   }
 }
 
-/*
- * virtual void redo ()
- */
+/* virtual void redo () */
 HB_FUNC( QT_QSCISCINTILLA_REDO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->redo();
-   }
 }
 
-/*
- * virtual void removeSelectedText ()
- */
+/* virtual void removeSelectedText () */
 HB_FUNC( QT_QSCISCINTILLA_REMOVESELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->removeSelectedText();
-   }
 }
 
-/*
- * virtual void resetSelectionBackgroundColor ()
- */
+/* virtual void resetSelectionBackgroundColor () */
 HB_FUNC( QT_QSCISCINTILLA_RESETSELECTIONBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->resetSelectionBackgroundColor();
-   }
 }
 
-/*
- * virtual void resetSelectionForegroundColor ()
- */
+/* virtual void resetSelectionForegroundColor () */
 HB_FUNC( QT_QSCISCINTILLA_RESETSELECTIONFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->resetSelectionForegroundColor();
-   }
 }
 
-/*
- * virtual void selectAll (bool select=true)
- */
+/* virtual void selectAll (bool select=true) */
 HB_FUNC( QT_QSCISCINTILLA_SELECTALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->selectAll( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void selectToMatchingBrace ()
- */
+/* virtual void selectToMatchingBrace () */
 HB_FUNC( QT_QSCISCINTILLA_SELECTTOMATCHINGBRACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->selectToMatchingBrace();
-   }
 }
 
-/*
- * virtual void setAutoCompletionCaseSensitivity (bool cs)
- */
+/* virtual void setAutoCompletionCaseSensitivity (bool cs) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONCASESENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionCaseSensitivity( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setAutoCompletionReplaceWord (bool replace)
- */
+/* virtual void setAutoCompletionReplaceWord (bool replace) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONREPLACEWORD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionReplaceWord( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setAutoCompletionShowSingle (bool single)
- */
+/* virtual void setAutoCompletionShowSingle (bool single) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONSHOWSINGLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionShowSingle( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setAutoCompletionSource (AutoCompletionSource source)
- */
+/* virtual void setAutoCompletionSource (AutoCompletionSource source) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONSOURCE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionSource( ( QsciScintilla::AutoCompletionSource ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setAutoCompletionThreshold (int thresh)
- */
+/* virtual void setAutoCompletionThreshold (int thresh) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONTHRESHOLD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoCompletionThreshold( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setAutoIndent (bool autoindent)
- */
+/* virtual void setAutoIndent (bool autoindent) */
 HB_FUNC( QT_QSCISCINTILLA_SETAUTOINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setAutoIndent( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setBraceMatching (BraceMatch bm)
- */
+/* virtual void setBraceMatching (BraceMatch bm) */
 HB_FUNC( QT_QSCISCINTILLA_SETBRACEMATCHING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setBraceMatching( ( QsciScintilla::BraceMatch ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setBackspaceUnindents (bool unindent)
- */
+/* virtual void setBackspaceUnindents (bool unindent) */
 HB_FUNC( QT_QSCISCINTILLA_SETBACKSPACEUNINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setBackspaceUnindents( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setCaretForegroundColor (const QColor &col)
- */
+/* virtual void setCaretForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETCARETFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCaretForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setCaretLineBackgroundColor (const QColor &col)
- */
+/* virtual void setCaretLineBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETCARETLINEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCaretLineBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setCaretLineVisible (bool enable)
- */
+/* virtual void setCaretLineVisible (bool enable) */
 HB_FUNC( QT_QSCISCINTILLA_SETCARETLINEVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCaretLineVisible( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setCaretWidth (int width)
- */
+/* virtual void setCaretWidth (int width) */
 HB_FUNC( QT_QSCISCINTILLA_SETCARETWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCaretWidth( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setColor (const QColor &c)
- */
+/* virtual void setColor (const QColor &c) */
 HB_FUNC( QT_QSCISCINTILLA_SETCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setCursorPosition (int line, int index)
- */
+/* virtual void setCursorPosition (int line, int index) */
 HB_FUNC( QT_QSCISCINTILLA_SETCURSORPOSITION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setCursorPosition( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * virtual void setEolMode (EolMode mode)
- */
+/* virtual void setEolMode (EolMode mode) */
 HB_FUNC( QT_QSCISCINTILLA_SETEOLMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setEolMode( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setEolVisibility (bool visible)
- */
+/* virtual void setEolVisibility (bool visible) */
 HB_FUNC( QT_QSCISCINTILLA_SETEOLVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setEolVisibility( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setFolding (FoldStyle fold, int margin=2)
- */
+/* virtual void setFolding (FoldStyle fold, int margin=2) */
 HB_FUNC( QT_QSCISCINTILLA_SETFOLDING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setFolding( ( QsciScintilla::FoldStyle ) hb_parni( 2 ), hb_parnidef( 3, 2 ) );
-   }
 }
 
-/*
- * virtual void setIndentation (int line, int indentation)
- */
+/* virtual void setIndentation (int line, int indentation) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentation( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * virtual void setIndentationGuides (bool enable)
- */
+/* virtual void setIndentationGuides (bool enable) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentationGuides( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setIndentationGuidesBackgroundColor (const QColor &col)
- */
+/* virtual void setIndentationGuidesBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDESBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentationGuidesBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setIndentationGuidesForegroundColor (const QColor &col)
- */
+/* virtual void setIndentationGuidesForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDESFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentationGuidesForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setIndentationsUseTabs (bool tabs)
- */
+/* virtual void setIndentationsUseTabs (bool tabs) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONSUSETABS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentationsUseTabs( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setIndentationWidth (int width)
- */
+/* virtual void setIndentationWidth (int width) */
 HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setIndentationWidth( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setLexer (QsciLexer *lexer=0)
- */
+/* virtual void setLexer (QsciLexer *lexer=0) */
 HB_FUNC( QT_QSCISCINTILLA_SETLEXER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setLexer( hbqt_par_QsciLexer( 2 ) );
-   }
 }
 
-/*
- * virtual void setMarginsBackgroundColor (const QColor &col)
- */
+/* virtual void setMarginsBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINSBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginsBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setMarginsFont (const QFont &f)
- */
+/* virtual void setMarginsFont (const QFont &f) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINSFONT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginsFont( *hbqt_par_QFont( 2 ) );
-   }
 }
 
-/*
- * virtual void setMarginsForegroundColor (const QColor &col)
- */
+/* virtual void setMarginsForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINSFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginsForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setMarginLineNumbers (int margin, bool lnrs)
- */
+/* virtual void setMarginLineNumbers (int margin, bool lnrs) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINLINENUMBERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginLineNumbers( hb_parni( 2 ), hb_parl( 3 ) );
-   }
 }
 
-/*
- * virtual void setMarginMarkerMask (int margin, int mask)
- */
+/* virtual void setMarginMarkerMask (int margin, int mask) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINMARKERMASK )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginMarkerMask( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * virtual void setMarginSensitivity (int margin, bool sens)
- */
+/* virtual void setMarginSensitivity (int margin, bool sens) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINSENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginSensitivity( hb_parni( 2 ), hb_parl( 3 ) );
-   }
 }
 
-/*
- * virtual void setMarginWidth (int margin, int width)
- */
+/* virtual void setMarginWidth (int margin, int width) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setMarginWidth( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * virtual void setMarginWidth (int margin, const QString &s)
- */
+/* virtual void setMarginWidth (int margin, const QString &s) */
 HB_FUNC( QT_QSCISCINTILLA_SETMARGINWIDTH_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -2389,105 +1611,71 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINWIDTH_1 )
    }
 }
 
-/*
- * virtual void setModified (bool m)
- */
+/* virtual void setModified (bool m) */
 HB_FUNC( QT_QSCISCINTILLA_SETMODIFIED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setModified( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setPaper (const QColor &c)
- */
+/* virtual void setPaper (const QColor &c) */
 HB_FUNC( QT_QSCISCINTILLA_SETPAPER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setPaper( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setReadOnly (bool ro)
- */
+/* virtual void setReadOnly (bool ro) */
 HB_FUNC( QT_QSCISCINTILLA_SETREADONLY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setReadOnly( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setSelection (int lineFrom, int indexFrom, int lineTo, int indexTo)
- */
+/* virtual void setSelection (int lineFrom, int indexFrom, int lineTo, int indexTo) */
 HB_FUNC( QT_QSCISCINTILLA_SETSELECTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   }
 }
 
-/*
- * virtual void setSelectionBackgroundColor (const QColor &col)
- */
+/* virtual void setSelectionBackgroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setSelectionBackgroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setSelectionForegroundColor (const QColor &col)
- */
+/* virtual void setSelectionForegroundColor (const QColor &col) */
 HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setSelectionForegroundColor( *hbqt_par_QColor( 2 ) );
-   }
 }
 
-/*
- * virtual void setTabIndents (bool indent)
- */
+/* virtual void setTabIndents (bool indent) */
 HB_FUNC( QT_QSCISCINTILLA_SETTABINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setTabIndents( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setTabWidth (int width)
- */
+/* virtual void setTabWidth (int width) */
 HB_FUNC( QT_QSCISCINTILLA_SETTABWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setTabWidth( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setText (const QString &text)
- */
+/* virtual void setText (const QString &text) */
 HB_FUNC( QT_QSCISCINTILLA_SETTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
@@ -2499,127 +1687,85 @@ HB_FUNC( QT_QSCISCINTILLA_SETTEXT )
    }
 }
 
-/*
- * virtual void setUtf8 (bool cp)
- */
+/* virtual void setUtf8 (bool cp) */
 HB_FUNC( QT_QSCISCINTILLA_SETUTF8 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setUtf8( hb_parl( 2 ) );
-   }
 }
 
-/*
- * virtual void setWhitespaceVisibility (WhitespaceVisibility mode)
- */
+/* virtual void setWhitespaceVisibility (WhitespaceVisibility mode) */
 HB_FUNC( QT_QSCISCINTILLA_SETWHITESPACEVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setWhitespaceVisibility( ( QsciScintilla::WhitespaceVisibility ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void setWrapMode (WrapMode mode)
- */
+/* virtual void setWrapMode (WrapMode mode) */
 HB_FUNC( QT_QSCISCINTILLA_SETWRAPMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->setWrapMode( ( QsciScintilla::WrapMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void undo ()
- */
+/* virtual void undo () */
 HB_FUNC( QT_QSCISCINTILLA_UNDO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->undo();
-   }
 }
 
-/*
- * virtual void unindent (int line)
- */
+/* virtual void unindent (int line) */
 HB_FUNC( QT_QSCISCINTILLA_UNINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->unindent( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void zoomIn (int range)
- */
+/* virtual void zoomIn (int range) */
 HB_FUNC( QT_QSCISCINTILLA_ZOOMIN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->zoomIn( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void zoomIn ()
- */
+/* virtual void zoomIn () */
 HB_FUNC( QT_QSCISCINTILLA_ZOOMIN_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->zoomIn();
-   }
 }
 
-/*
- * virtual void zoomOut (int range)
- */
+/* virtual void zoomOut (int range) */
 HB_FUNC( QT_QSCISCINTILLA_ZOOMOUT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->zoomOut( hb_parni( 2 ) );
-   }
 }
 
-/*
- * virtual void zoomOut ()
- */
+/* virtual void zoomOut () */
 HB_FUNC( QT_QSCISCINTILLA_ZOOMOUT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->zoomOut();
-   }
 }
 
-/*
- * virtual void zoomTo (int size)
- */
+/* virtual void zoomTo (int size) */
 HB_FUNC( QT_QSCISCINTILLA_ZOOMTO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-   {
       ( p )->zoomTo( hb_parni( 2 ) );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

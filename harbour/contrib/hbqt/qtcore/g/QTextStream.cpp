@@ -9,93 +9,18 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  flags NumberFlags
@@ -146,22 +71,14 @@ HBQT_GC_FUNC( hbqt_gcRelease_QTextStream )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QTextStream   /.\\", p->ph ) );
          delete ( ( QTextStream * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextStream   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextStream    :     Object already deleted!", p->ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextStream    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
@@ -173,14 +90,6 @@ void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QTextStream;
    p->type = HBQT_TYPE_QTextStream;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextStream", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QTextStream", pObj ) );
-   }
    return p;
 }
 
@@ -193,451 +102,301 @@ HB_FUNC( QT_QTEXTSTREAM )
    hb_retptrGC( hbqt_gcAllocate_QTextStream( ( void * ) pObj, true ) );
 }
 
-/*
- * QChar padChar () const
- */
+/* QChar padChar () const */
 HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->padChar() ), true ) );
-   }
 }
 
-/*
- * bool atEnd () const
- */
+/* bool atEnd () const */
 HB_FUNC( QT_QTEXTSTREAM_ATEND )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retl( ( p )->atEnd() );
-   }
 }
 
-/*
- * bool autoDetectUnicode () const
- */
+/* bool autoDetectUnicode () const */
 HB_FUNC( QT_QTEXTSTREAM_AUTODETECTUNICODE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retl( ( p )->autoDetectUnicode() );
-   }
 }
 
-/*
- * QTextCodec * codec () const
- */
+/* QTextCodec * codec () const */
 HB_FUNC( QT_QTEXTSTREAM_CODEC )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) );
-   }
 }
 
-/*
- * QIODevice * device () const
- */
+/* QIODevice * device () const */
 HB_FUNC( QT_QTEXTSTREAM_DEVICE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
-   }
 }
 
-/*
- * FieldAlignment fieldAlignment () const
- */
+/* FieldAlignment fieldAlignment () const */
 HB_FUNC( QT_QTEXTSTREAM_FIELDALIGNMENT )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( QTextStream::FieldAlignment ) ( p )->fieldAlignment() );
-   }
 }
 
-/*
- * int fieldWidth () const
- */
+/* int fieldWidth () const */
 HB_FUNC( QT_QTEXTSTREAM_FIELDWIDTH )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( p )->fieldWidth() );
-   }
 }
 
-/*
- * void flush ()
- */
+/* void flush () */
 HB_FUNC( QT_QTEXTSTREAM_FLUSH )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->flush();
-   }
 }
 
-/*
- * bool generateByteOrderMark () const
- */
+/* bool generateByteOrderMark () const */
 HB_FUNC( QT_QTEXTSTREAM_GENERATEBYTEORDERMARK )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retl( ( p )->generateByteOrderMark() );
-   }
 }
 
-/*
- * int integerBase () const
- */
+/* int integerBase () const */
 HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( p )->integerBase() );
-   }
 }
 
-/*
- * QLocale locale () const
- */
+/* QLocale locale () const */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
-   }
 }
 
-/*
- * NumberFlags numberFlags () const
- */
+/* NumberFlags numberFlags () const */
 HB_FUNC( QT_QTEXTSTREAM_NUMBERFLAGS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( QTextStream::NumberFlags ) ( p )->numberFlags() );
-   }
 }
 
-/*
- * qint64 pos () const
- */
+/* qint64 pos () const */
 HB_FUNC( QT_QTEXTSTREAM_POS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retnint( ( p )->pos() );
-   }
 }
 
-/*
- * QString read ( qint64 maxlen )
- */
+/* QString read ( qint64 maxlen ) */
 HB_FUNC( QT_QTEXTSTREAM_READ )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->read( hb_parnint( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * QString readAll ()
- */
+/* QString readAll () */
 HB_FUNC( QT_QTEXTSTREAM_READALL )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->readAll().toUtf8().data() );
-   }
 }
 
-/*
- * QString readLine ( qint64 maxlen = 0 )
- */
+/* QString readLine ( qint64 maxlen = 0 ) */
 HB_FUNC( QT_QTEXTSTREAM_READLINE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->readLine( hb_parnint( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * RealNumberNotation realNumberNotation () const
- */
+/* RealNumberNotation realNumberNotation () const */
 HB_FUNC( QT_QTEXTSTREAM_REALNUMBERNOTATION )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( QTextStream::RealNumberNotation ) ( p )->realNumberNotation() );
-   }
 }
 
-/*
- * int realNumberPrecision () const
- */
+/* int realNumberPrecision () const */
 HB_FUNC( QT_QTEXTSTREAM_REALNUMBERPRECISION )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( p )->realNumberPrecision() );
-   }
 }
 
-/*
- * void reset ()
- */
+/* void reset () */
 HB_FUNC( QT_QTEXTSTREAM_RESET )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->reset();
-   }
 }
 
-/*
- * void resetStatus ()
- */
+/* void resetStatus () */
 HB_FUNC( QT_QTEXTSTREAM_RESETSTATUS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->resetStatus();
-   }
 }
 
-/*
- * bool seek ( qint64 pos )
- */
+/* bool seek ( qint64 pos ) */
 HB_FUNC( QT_QTEXTSTREAM_SEEK )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retl( ( p )->seek( hb_parnint( 2 ) ) );
-   }
 }
 
-/*
- * void setAutoDetectUnicode ( bool enabled )
- */
+/* void setAutoDetectUnicode ( bool enabled ) */
 HB_FUNC( QT_QTEXTSTREAM_SETAUTODETECTUNICODE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setAutoDetectUnicode( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setCodec ( QTextCodec * codec )
- */
+/* void setCodec ( QTextCodec * codec ) */
 HB_FUNC( QT_QTEXTSTREAM_SETCODEC )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setCodec( hbqt_par_QTextCodec( 2 ) );
-   }
 }
 
-/*
- * void setCodec ( const char * codecName )
- */
+/* void setCodec ( const char * codecName ) */
 HB_FUNC( QT_QTEXTSTREAM_SETCODEC_1 )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setCodec( ( const char * ) hb_parc( 2 ) );
-   }
 }
 
-/*
- * void setDevice ( QIODevice * device )
- */
+/* void setDevice ( QIODevice * device ) */
 HB_FUNC( QT_QTEXTSTREAM_SETDEVICE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
-   }
 }
 
-/*
- * void setFieldAlignment ( FieldAlignment mode )
- */
+/* void setFieldAlignment ( FieldAlignment mode ) */
 HB_FUNC( QT_QTEXTSTREAM_SETFIELDALIGNMENT )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setFieldAlignment( ( QTextStream::FieldAlignment ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setFieldWidth ( int width )
- */
+/* void setFieldWidth ( int width ) */
 HB_FUNC( QT_QTEXTSTREAM_SETFIELDWIDTH )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setFieldWidth( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setGenerateByteOrderMark ( bool generate )
- */
+/* void setGenerateByteOrderMark ( bool generate ) */
 HB_FUNC( QT_QTEXTSTREAM_SETGENERATEBYTEORDERMARK )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setGenerateByteOrderMark( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void setIntegerBase ( int base )
- */
+/* void setIntegerBase ( int base ) */
 HB_FUNC( QT_QTEXTSTREAM_SETINTEGERBASE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setIntegerBase( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setLocale ( const QLocale & locale )
- */
+/* void setLocale ( const QLocale & locale ) */
 HB_FUNC( QT_QTEXTSTREAM_SETLOCALE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
-   }
 }
 
-/*
- * void setNumberFlags ( NumberFlags flags )
- */
+/* void setNumberFlags ( NumberFlags flags ) */
 HB_FUNC( QT_QTEXTSTREAM_SETNUMBERFLAGS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setNumberFlags( ( QTextStream::NumberFlags ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPadChar ( QChar ch )
- */
+/* void setPadChar ( QChar ch ) */
 HB_FUNC( QT_QTEXTSTREAM_SETPADCHAR )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setPadChar( *hbqt_par_QChar( 2 ) );
-   }
 }
 
-/*
- * void setRealNumberNotation ( RealNumberNotation notation )
- */
+/* void setRealNumberNotation ( RealNumberNotation notation ) */
 HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERNOTATION )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setRealNumberNotation( ( QTextStream::RealNumberNotation ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setRealNumberPrecision ( int precision )
- */
+/* void setRealNumberPrecision ( int precision ) */
 HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERPRECISION )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setRealNumberPrecision( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setStatus ( Status status )
- */
+/* void setStatus ( Status status ) */
 HB_FUNC( QT_QTEXTSTREAM_SETSTATUS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->setStatus( ( QTextStream::Status ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void skipWhiteSpace ()
- */
+/* void skipWhiteSpace () */
 HB_FUNC( QT_QTEXTSTREAM_SKIPWHITESPACE )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       ( p )->skipWhiteSpace();
-   }
 }
 
-/*
- * Status status () const
- */
+/* Status status () const */
 HB_FUNC( QT_QTEXTSTREAM_STATUS )
 {
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
-   {
       hb_retni( ( QTextStream::Status ) ( p )->status() );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

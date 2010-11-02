@@ -9,93 +9,18 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  enum CurveShape { EaseInCurve, EaseOutCurve, EaseInOutCurve, LinearCurve, SineCurve, CosineCurve }
@@ -128,7 +53,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTimeLine )
 {
-   QTimeLine  * ph = NULL ;
+   QTimeLine  * ph = NULL;
    HBQT_GC_T_QTimeLine * p = ( HBQT_GC_T_QTimeLine * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -139,28 +64,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QTimeLine )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTimeLine   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTimeLine   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTimeLine          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTimeLine    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTimeLine    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QTimeLine( void * pObj, bool bNew )
@@ -172,14 +86,6 @@ void * hbqt_gcAllocate_QTimeLine( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QTimeLine;
    p->type = HBQT_TYPE_QTimeLine;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTimeLine  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QTimeLine", pObj ) );
-   }
    return p;
 }
 
@@ -192,331 +98,221 @@ HB_FUNC( QT_QTIMELINE )
    hb_retptrGC( hbqt_gcAllocate_QTimeLine( ( void * ) pObj, true ) );
 }
 
-/*
- * int currentFrame () const
- */
+/* int currentFrame () const */
 HB_FUNC( QT_QTIMELINE_CURRENTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->currentFrame() );
-   }
 }
 
-/*
- * int currentTime () const
- */
+/* int currentTime () const */
 HB_FUNC( QT_QTIMELINE_CURRENTTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->currentTime() );
-   }
 }
 
-/*
- * qreal currentValue () const
- */
+/* qreal currentValue () const */
 HB_FUNC( QT_QTIMELINE_CURRENTVALUE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retnd( ( p )->currentValue() );
-   }
 }
 
-/*
- * CurveShape curveShape () const
- */
+/* CurveShape curveShape () const */
 HB_FUNC( QT_QTIMELINE_CURVESHAPE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( QTimeLine::CurveShape ) ( p )->curveShape() );
-   }
 }
 
-/*
- * Direction direction () const
- */
+/* Direction direction () const */
 HB_FUNC( QT_QTIMELINE_DIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( QTimeLine::Direction ) ( p )->direction() );
-   }
 }
 
-/*
- * int duration () const
- */
+/* int duration () const */
 HB_FUNC( QT_QTIMELINE_DURATION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->duration() );
-   }
 }
 
-/*
- * int endFrame () const
- */
+/* int endFrame () const */
 HB_FUNC( QT_QTIMELINE_ENDFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->endFrame() );
-   }
 }
 
-/*
- * int frameForTime ( int msec ) const
- */
+/* int frameForTime ( int msec ) const */
 HB_FUNC( QT_QTIMELINE_FRAMEFORTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->frameForTime( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int loopCount () const
- */
+/* int loopCount () const */
 HB_FUNC( QT_QTIMELINE_LOOPCOUNT )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->loopCount() );
-   }
 }
 
-/*
- * void setCurveShape ( CurveShape shape )
- */
+/* void setCurveShape ( CurveShape shape ) */
 HB_FUNC( QT_QTIMELINE_SETCURVESHAPE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setCurveShape( ( QTimeLine::CurveShape ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setDirection ( Direction direction )
- */
+/* void setDirection ( Direction direction ) */
 HB_FUNC( QT_QTIMELINE_SETDIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setDirection( ( QTimeLine::Direction ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setDuration ( int duration )
- */
+/* void setDuration ( int duration ) */
 HB_FUNC( QT_QTIMELINE_SETDURATION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setDuration( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setEndFrame ( int frame )
- */
+/* void setEndFrame ( int frame ) */
 HB_FUNC( QT_QTIMELINE_SETENDFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setEndFrame( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setFrameRange ( int startFrame, int endFrame )
- */
+/* void setFrameRange ( int startFrame, int endFrame ) */
 HB_FUNC( QT_QTIMELINE_SETFRAMERANGE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setFrameRange( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * void setLoopCount ( int count )
- */
+/* void setLoopCount ( int count ) */
 HB_FUNC( QT_QTIMELINE_SETLOOPCOUNT )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setLoopCount( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setStartFrame ( int frame )
- */
+/* void setStartFrame ( int frame ) */
 HB_FUNC( QT_QTIMELINE_SETSTARTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setStartFrame( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setUpdateInterval ( int interval )
- */
+/* void setUpdateInterval ( int interval ) */
 HB_FUNC( QT_QTIMELINE_SETUPDATEINTERVAL )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setUpdateInterval( hb_parni( 2 ) );
-   }
 }
 
-/*
- * int startFrame () const
- */
+/* int startFrame () const */
 HB_FUNC( QT_QTIMELINE_STARTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->startFrame() );
-   }
 }
 
-/*
- * State state () const
- */
+/* State state () const */
 HB_FUNC( QT_QTIMELINE_STATE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( QTimeLine::State ) ( p )->state() );
-   }
 }
 
-/*
- * int updateInterval () const
- */
+/* int updateInterval () const */
 HB_FUNC( QT_QTIMELINE_UPDATEINTERVAL )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retni( ( p )->updateInterval() );
-   }
 }
 
-/*
- * virtual qreal valueForTime ( int msec ) const
- */
+/* virtual qreal valueForTime ( int msec ) const */
 HB_FUNC( QT_QTIMELINE_VALUEFORTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       hb_retnd( ( p )->valueForTime( hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * void resume ()
- */
+/* void resume () */
 HB_FUNC( QT_QTIMELINE_RESUME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->resume();
-   }
 }
 
-/*
- * void setCurrentTime ( int msec )
- */
+/* void setCurrentTime ( int msec ) */
 HB_FUNC( QT_QTIMELINE_SETCURRENTTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setCurrentTime( hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setPaused ( bool paused )
- */
+/* void setPaused ( bool paused ) */
 HB_FUNC( QT_QTIMELINE_SETPAUSED )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->setPaused( hb_parl( 2 ) );
-   }
 }
 
-/*
- * void start ()
- */
+/* void start () */
 HB_FUNC( QT_QTIMELINE_START )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->start();
-   }
 }
 
-/*
- * void stop ()
- */
+/* void stop () */
 HB_FUNC( QT_QTIMELINE_STOP )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->stop();
-   }
 }
 
-/*
- * void toggleDirection ()
- */
+/* void toggleDirection () */
 HB_FUNC( QT_QTIMELINE_TOGGLEDIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-   {
       ( p )->toggleDirection();
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

@@ -9,93 +9,18 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  # FROM QIODevice
@@ -137,7 +62,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QProcess )
 {
-   QProcess  * ph = NULL ;
+   QProcess  * ph = NULL;
    HBQT_GC_T_QProcess * p = ( HBQT_GC_T_QProcess * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -148,28 +73,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QProcess )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QProcess   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QProcess   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QProcess          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QProcess    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QProcess    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QProcess( void * pObj, bool bNew )
@@ -181,14 +95,6 @@ void * hbqt_gcAllocate_QProcess( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QProcess;
    p->type = HBQT_TYPE_QProcess;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QProcess  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QProcess", pObj ) );
-   }
    return p;
 }
 
@@ -208,177 +114,119 @@ HB_FUNC( QT_QPROCESS )
    hb_retptrGC( hbqt_gcAllocate_QProcess( ( void * ) pObj, true ) );
 }
 
-/*
- * virtual void close ()
- */
+/* virtual void close () */
 HB_FUNC( QT_QPROCESS_CLOSE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->close();
-   }
 }
 
-/*
- * void closeReadChannel ( ProcessChannel channel )
- */
+/* void closeReadChannel ( ProcessChannel channel ) */
 HB_FUNC( QT_QPROCESS_CLOSEREADCHANNEL )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->closeReadChannel( ( QProcess::ProcessChannel ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void closeWriteChannel ()
- */
+/* void closeWriteChannel () */
 HB_FUNC( QT_QPROCESS_CLOSEWRITECHANNEL )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->closeWriteChannel();
-   }
 }
 
-/*
- * QStringList environment () const
- */
+/* QStringList environment () const */
 HB_FUNC( QT_QPROCESS_ENVIRONMENT )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->environment() ), true ) );
-   }
 }
 
-/*
- * QProcess::ProcessError error () const
- */
+/* QProcess::ProcessError error () const */
 HB_FUNC( QT_QPROCESS_ERROR )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( QProcess::ProcessError ) ( p )->error() );
-   }
 }
 
-/*
- * int exitCode () const
- */
+/* int exitCode () const */
 HB_FUNC( QT_QPROCESS_EXITCODE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( p )->exitCode() );
-   }
 }
 
-/*
- * QProcess::ExitStatus exitStatus () const
- */
+/* QProcess::ExitStatus exitStatus () const */
 HB_FUNC( QT_QPROCESS_EXITSTATUS )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( QProcess::ExitStatus ) ( p )->exitStatus() );
-   }
 }
 
-/*
- * ProcessChannelMode processChannelMode () const
- */
+/* ProcessChannelMode processChannelMode () const */
 HB_FUNC( QT_QPROCESS_PROCESSCHANNELMODE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( QProcess::ProcessChannelMode ) ( p )->processChannelMode() );
-   }
 }
 
-/*
- * QByteArray readAllStandardError ()
- */
+/* QByteArray readAllStandardError () */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readAllStandardError() ), true ) );
-   }
 }
 
-/*
- * QByteArray readAllStandardOutput ()
- */
+/* QByteArray readAllStandardOutput () */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDOUTPUT )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readAllStandardOutput() ), true ) );
-   }
 }
 
-/*
- * ProcessChannel readChannel () const
- */
+/* ProcessChannel readChannel () const */
 HB_FUNC( QT_QPROCESS_READCHANNEL )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( QProcess::ProcessChannel ) ( p )->readChannel() );
-   }
 }
 
-/*
- * void setEnvironment ( const QStringList & environment )
- */
+/* void setEnvironment ( const QStringList & environment ) */
 HB_FUNC( QT_QPROCESS_SETENVIRONMENT )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->setEnvironment( *hbqt_par_QStringList( 2 ) );
-   }
 }
 
-/*
- * void setProcessChannelMode ( ProcessChannelMode mode )
- */
+/* void setProcessChannelMode ( ProcessChannelMode mode ) */
 HB_FUNC( QT_QPROCESS_SETPROCESSCHANNELMODE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->setProcessChannelMode( ( QProcess::ProcessChannelMode ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setReadChannel ( ProcessChannel channel )
- */
+/* void setReadChannel ( ProcessChannel channel ) */
 HB_FUNC( QT_QPROCESS_SETREADCHANNEL )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->setReadChannel( ( QProcess::ProcessChannel ) hb_parni( 2 ) );
-   }
 }
 
-/*
- * void setStandardErrorFile ( const QString & fileName, OpenMode mode = Truncate )
- */
+/* void setStandardErrorFile ( const QString & fileName, OpenMode mode = Truncate ) */
 HB_FUNC( QT_QPROCESS_SETSTANDARDERRORFILE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -390,9 +238,7 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDERRORFILE )
    }
 }
 
-/*
- * void setStandardInputFile ( const QString & fileName )
- */
+/* void setStandardInputFile ( const QString & fileName ) */
 HB_FUNC( QT_QPROCESS_SETSTANDARDINPUTFILE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -404,9 +250,7 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDINPUTFILE )
    }
 }
 
-/*
- * void setStandardOutputFile ( const QString & fileName, OpenMode mode = Truncate )
- */
+/* void setStandardOutputFile ( const QString & fileName, OpenMode mode = Truncate ) */
 HB_FUNC( QT_QPROCESS_SETSTANDARDOUTPUTFILE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -418,21 +262,15 @@ HB_FUNC( QT_QPROCESS_SETSTANDARDOUTPUTFILE )
    }
 }
 
-/*
- * void setStandardOutputProcess ( QProcess * destination )
- */
+/* void setStandardOutputProcess ( QProcess * destination ) */
 HB_FUNC( QT_QPROCESS_SETSTANDARDOUTPUTPROCESS )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->setStandardOutputProcess( hbqt_par_QProcess( 2 ) );
-   }
 }
 
-/*
- * void setWorkingDirectory ( const QString & dir )
- */
+/* void setWorkingDirectory ( const QString & dir ) */
 HB_FUNC( QT_QPROCESS_SETWORKINGDIRECTORY )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -444,9 +282,7 @@ HB_FUNC( QT_QPROCESS_SETWORKINGDIRECTORY )
    }
 }
 
-/*
- * void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite )
- */
+/* void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite ) */
 HB_FUNC( QT_QPROCESS_START )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -458,9 +294,7 @@ HB_FUNC( QT_QPROCESS_START )
    }
 }
 
-/*
- * void start ( const QString & program, OpenMode mode = ReadWrite )
- */
+/* void start ( const QString & program, OpenMode mode = ReadWrite ) */
 HB_FUNC( QT_QPROCESS_START_1 )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -472,57 +306,39 @@ HB_FUNC( QT_QPROCESS_START_1 )
    }
 }
 
-/*
- * QProcess::ProcessState state () const
- */
+/* QProcess::ProcessState state () const */
 HB_FUNC( QT_QPROCESS_STATE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retni( ( QProcess::ProcessState ) ( p )->state() );
-   }
 }
 
-/*
- * bool waitForFinished ( int msecs = 30000 )
- */
+/* bool waitForFinished ( int msecs = 30000 ) */
 HB_FUNC( QT_QPROCESS_WAITFORFINISHED )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retl( ( p )->waitForFinished( hb_parnidef( 2, 30000 ) ) );
-   }
 }
 
-/*
- * bool waitForStarted ( int msecs = 30000 )
- */
+/* bool waitForStarted ( int msecs = 30000 ) */
 HB_FUNC( QT_QPROCESS_WAITFORSTARTED )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retl( ( p )->waitForStarted( hb_parnidef( 2, 30000 ) ) );
-   }
 }
 
-/*
- * QString workingDirectory () const
- */
+/* QString workingDirectory () const */
 HB_FUNC( QT_QPROCESS_WORKINGDIRECTORY )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->workingDirectory().toUtf8().data() );
-   }
 }
 
-/*
- * int execute ( const QString & program, const QStringList & arguments )
- */
+/* int execute ( const QString & program, const QStringList & arguments ) */
 HB_FUNC( QT_QPROCESS_EXECUTE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -534,9 +350,7 @@ HB_FUNC( QT_QPROCESS_EXECUTE )
    }
 }
 
-/*
- * int execute ( const QString & program )
- */
+/* int execute ( const QString & program ) */
 HB_FUNC( QT_QPROCESS_EXECUTE_1 )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -548,9 +362,7 @@ HB_FUNC( QT_QPROCESS_EXECUTE_1 )
    }
 }
 
-/*
- * bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 )
- */
+/* bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 ) */
 HB_FUNC( QT_QPROCESS_STARTDETACHED )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -566,9 +378,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED )
    hb_stornint( iPid, 5 );
 }
 
-/*
- * bool startDetached ( const QString & program, const QStringList & arguments )
- */
+/* bool startDetached ( const QString & program, const QStringList & arguments ) */
 HB_FUNC( QT_QPROCESS_STARTDETACHED_1 )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -580,9 +390,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_1 )
    }
 }
 
-/*
- * bool startDetached ( const QString & program )
- */
+/* bool startDetached ( const QString & program ) */
 HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
@@ -594,43 +402,29 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
    }
 }
 
-/*
- * QStringList systemEnvironment ()
- */
+/* QStringList systemEnvironment () */
 HB_FUNC( QT_QPROCESS_SYSTEMENVIRONMENT )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->systemEnvironment() ), true ) );
-   }
 }
 
-/*
- * void kill ()
- */
+/* void kill () */
 HB_FUNC( QT_QPROCESS_KILL )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->kill();
-   }
 }
 
-/*
- * void terminate ()
- */
+/* void terminate () */
 HB_FUNC( QT_QPROCESS_TERMINATE )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-   {
       ( p )->terminate();
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

@@ -9,93 +9,18 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  enum FileError { NoError, ReadError, WriteError, FatalError, ..., CopyError }
@@ -140,7 +65,7 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFile )
 {
-   QFile  * ph = NULL ;
+   QFile  * ph = NULL;
    HBQT_GC_T_QFile * p = ( HBQT_GC_T_QFile * ) Cargo;
 
    if( p && p->bNew && p->ph )
@@ -151,28 +76,17 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFile )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFile   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFile   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFile          ", ph ) );
             p->ph = NULL;
-         }
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFile    :     Object already deleted!", ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFile    :    Object not created with new=true", ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )
@@ -184,14 +98,6 @@ void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QFile;
    p->type = HBQT_TYPE_QFile;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFile  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QFile", pObj ) );
-   }
    return p;
 }
 
@@ -207,33 +113,23 @@ HB_FUNC( QT_QFILE )
    hb_retptrGC( hbqt_gcAllocate_QFile( ( void * ) pObj, true ) );
 }
 
-/*
- * virtual bool atEnd () const
- */
+/* virtual bool atEnd () const */
 HB_FUNC( QT_QFILE_ATEND )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->atEnd() );
-   }
 }
 
-/*
- * virtual void close ()
- */
+/* virtual void close () */
 HB_FUNC( QT_QFILE_CLOSE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       ( p )->close();
-   }
 }
 
-/*
- * bool copy ( const QString & newName )
- */
+/* bool copy ( const QString & newName ) */
 HB_FUNC( QT_QFILE_COPY )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -245,81 +141,55 @@ HB_FUNC( QT_QFILE_COPY )
    }
 }
 
-/*
- * FileError error () const
- */
+/* FileError error () const */
 HB_FUNC( QT_QFILE_ERROR )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retni( ( QFile::FileError ) ( p )->error() );
-   }
 }
 
-/*
- * bool exists () const
- */
+/* bool exists () const */
 HB_FUNC( QT_QFILE_EXISTS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->exists() );
-   }
 }
 
-/*
- * QString fileName () const
- */
+/* QString fileName () const */
 HB_FUNC( QT_QFILE_FILENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
-   }
 }
 
-/*
- * bool flush ()
- */
+/* bool flush () */
 HB_FUNC( QT_QFILE_FLUSH )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->flush() );
-   }
 }
 
-/*
- * int handle () const
- */
+/* int handle () const */
 HB_FUNC( QT_QFILE_HANDLE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retni( ( p )->handle() );
-   }
 }
 
-/*
- * virtual bool isSequential () const
- */
+/* virtual bool isSequential () const */
 HB_FUNC( QT_QFILE_ISSEQUENTIAL )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->isSequential() );
-   }
 }
 
-/*
- * bool link ( const QString & linkName )
- */
+/* bool link ( const QString & linkName ) */
 HB_FUNC( QT_QFILE_LINK )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -331,69 +201,47 @@ HB_FUNC( QT_QFILE_LINK )
    }
 }
 
-/*
- * uchar * map ( qint64 offset, qint64 size, MemoryMapFlags flags = NoOptions )
- */
+/* uchar * map ( qint64 offset, qint64 size, MemoryMapFlags flags = NoOptions ) */
 HB_FUNC( QT_QFILE_MAP )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retc( ( const char * ) ( p )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) );
-   }
 }
 
-/*
- * virtual bool open ( OpenMode mode )
- */
+/* virtual bool open ( OpenMode mode ) */
 HB_FUNC( QT_QFILE_OPEN )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->open( ( QFile::OpenMode ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * bool open ( int fd, OpenMode mode )
- */
+/* bool open ( int fd, OpenMode mode ) */
 HB_FUNC( QT_QFILE_OPEN_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->open( hb_parni( 2 ), ( QFile::OpenMode ) hb_parni( 3 ) ) );
-   }
 }
 
-/*
- * Permissions permissions () const
- */
+/* Permissions permissions () const */
 HB_FUNC( QT_QFILE_PERMISSIONS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retni( ( QFile::Permissions ) ( p )->permissions() );
-   }
 }
 
-/*
- * bool remove ()
- */
+/* bool remove () */
 HB_FUNC( QT_QFILE_REMOVE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->remove() );
-   }
 }
 
-/*
- * bool rename ( const QString & newName )
- */
+/* bool rename ( const QString & newName ) */
 HB_FUNC( QT_QFILE_RENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -405,21 +253,15 @@ HB_FUNC( QT_QFILE_RENAME )
    }
 }
 
-/*
- * bool resize ( qint64 sz )
- */
+/* bool resize ( qint64 sz ) */
 HB_FUNC( QT_QFILE_RESIZE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->resize( hb_parnint( 2 ) ) );
-   }
 }
 
-/*
- * void setFileName ( const QString & name )
- */
+/* void setFileName ( const QString & name ) */
 HB_FUNC( QT_QFILE_SETFILENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -431,57 +273,39 @@ HB_FUNC( QT_QFILE_SETFILENAME )
    }
 }
 
-/*
- * bool setPermissions ( Permissions permissions )
- */
+/* bool setPermissions ( Permissions permissions ) */
 HB_FUNC( QT_QFILE_SETPERMISSIONS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retl( ( p )->setPermissions( ( QFile::Permissions ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * virtual qint64 size () const
- */
+/* virtual qint64 size () const */
 HB_FUNC( QT_QFILE_SIZE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retnint( ( p )->size() );
-   }
 }
 
-/*
- * QString symLinkTarget () const
- */
+/* QString symLinkTarget () const */
 HB_FUNC( QT_QFILE_SYMLINKTARGET )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->symLinkTarget().toUtf8().data() );
-   }
 }
 
-/*
- * void unsetError ()
- */
+/* void unsetError () */
 HB_FUNC( QT_QFILE_UNSETERROR )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       ( p )->unsetError();
-   }
 }
 
-/*
- * bool copy ( const QString & fileName, const QString & newName )
- */
+/* bool copy ( const QString & fileName, const QString & newName ) */
 HB_FUNC( QT_QFILE_COPY_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -493,21 +317,15 @@ HB_FUNC( QT_QFILE_COPY_1 )
    }
 }
 
-/*
- * QString decodeName ( const char * localFileName )
- */
+/* QString decodeName ( const char * localFileName ) */
 HB_FUNC( QT_QFILE_DECODENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->decodeName( ( const char * ) hb_parc( 2 ) ).toUtf8().data() );
-   }
 }
 
-/*
- * QByteArray encodeName ( const QString & fileName )
- */
+/* QByteArray encodeName ( const QString & fileName ) */
 HB_FUNC( QT_QFILE_ENCODENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -519,9 +337,7 @@ HB_FUNC( QT_QFILE_ENCODENAME )
    }
 }
 
-/*
- * bool exists ( const QString & fileName )
- */
+/* bool exists ( const QString & fileName ) */
 HB_FUNC( QT_QFILE_EXISTS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -533,9 +349,7 @@ HB_FUNC( QT_QFILE_EXISTS_1 )
    }
 }
 
-/*
- * bool link ( const QString & fileName, const QString & linkName )
- */
+/* bool link ( const QString & fileName, const QString & linkName ) */
 HB_FUNC( QT_QFILE_LINK_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -547,9 +361,7 @@ HB_FUNC( QT_QFILE_LINK_1 )
    }
 }
 
-/*
- * Permissions permissions ( const QString & fileName )
- */
+/* Permissions permissions ( const QString & fileName ) */
 HB_FUNC( QT_QFILE_PERMISSIONS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -561,9 +373,7 @@ HB_FUNC( QT_QFILE_PERMISSIONS_1 )
    }
 }
 
-/*
- * bool remove ( const QString & fileName )
- */
+/* bool remove ( const QString & fileName ) */
 HB_FUNC( QT_QFILE_REMOVE_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -575,9 +385,7 @@ HB_FUNC( QT_QFILE_REMOVE_1 )
    }
 }
 
-/*
- * bool rename ( const QString & oldName, const QString & newName )
- */
+/* bool rename ( const QString & oldName, const QString & newName ) */
 HB_FUNC( QT_QFILE_RENAME_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -589,9 +397,7 @@ HB_FUNC( QT_QFILE_RENAME_1 )
    }
 }
 
-/*
- * bool resize ( const QString & fileName, qint64 sz )
- */
+/* bool resize ( const QString & fileName, qint64 sz ) */
 HB_FUNC( QT_QFILE_RESIZE_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -603,9 +409,7 @@ HB_FUNC( QT_QFILE_RESIZE_1 )
    }
 }
 
-/*
- * bool setPermissions ( const QString & fileName, Permissions permissions )
- */
+/* bool setPermissions ( const QString & fileName, Permissions permissions ) */
 HB_FUNC( QT_QFILE_SETPERMISSIONS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -617,9 +421,7 @@ HB_FUNC( QT_QFILE_SETPERMISSIONS_1 )
    }
 }
 
-/*
- * QString symLinkTarget ( const QString & fileName )
- */
+/* QString symLinkTarget ( const QString & fileName ) */
 HB_FUNC( QT_QFILE_SYMLINKTARGET_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
@@ -632,6 +434,4 @@ HB_FUNC( QT_QFILE_SYMLINKTARGET_1 )
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtwebkit.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  Constructed[ 38/39 [ 97.44% ] ]
@@ -135,9 +60,7 @@ HBQT_GC_FUNC( hbqt_gcRelease_QWebFrame )
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
-   {
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QWebFrame( void * pObj, bool bNew )
@@ -149,14 +72,6 @@ void * hbqt_gcAllocate_QWebFrame( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QWebFrame;
    p->type = HBQT_TYPE_QWebFrame;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWebFrame  under p->pq", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QWebFrame", pObj ) );
-   }
    return p;
 }
 
@@ -165,9 +80,7 @@ HB_FUNC( QT_QWEBFRAME )
    // __HB_RETPTRGC__( new QWebFrame() );
 }
 
-/*
- * void addToJavaScriptWindowObject ( const QString & name, QObject * object )
- */
+/* void addToJavaScriptWindowObject ( const QString & name, QObject * object ) */
 HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
@@ -179,9 +92,7 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT )
    }
 }
 
-/*
- * void addToJavaScriptWindowObject ( const QString & name, QObject * object, QScriptEngine::ValueOwnership own )
- */
+/* void addToJavaScriptWindowObject ( const QString & name, QObject * object, QScriptEngine::ValueOwnership own ) */
 HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
@@ -193,249 +104,167 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 )
    }
 }
 
-/*
- * QList<QWebFrame *> childFrames () const
- */
+/* QList<QWebFrame *> childFrames () const */
 HB_FUNC( QT_QWEBFRAME_CHILDFRAMES )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebFrame *>( ( p )->childFrames() ), true ) );
-   }
 }
 
-/*
- * QSize contentsSize () const
- */
+/* QSize contentsSize () const */
 HB_FUNC( QT_QWEBFRAME_CONTENTSSIZE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->contentsSize() ), true ) );
-   }
 }
 
-/*
- * QString frameName () const
- */
+/* QString frameName () const */
 HB_FUNC( QT_QWEBFRAME_FRAMENAME )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->frameName().toUtf8().data() );
-   }
 }
 
-/*
- * QRect geometry () const
- */
+/* QRect geometry () const */
 HB_FUNC( QT_QWEBFRAME_GEOMETRY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
-   }
 }
 
-/*
- * QWebHitTestResult hitTestContent ( const QPoint & pos ) const
- */
+/* QWebHitTestResult hitTestContent ( const QPoint & pos ) const */
 HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( new QWebHitTestResult( ( p )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * QIcon icon () const
- */
+/* QIcon icon () const */
 HB_FUNC( QT_QWEBFRAME_ICON )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
-   }
 }
 
-/*
- * void load ( const QUrl & url )
- */
+/* void load ( const QUrl & url ) */
 HB_FUNC( QT_QWEBFRAME_LOAD )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->load( *hbqt_par_QUrl( 2 ) );
-   }
 }
 
-/*
- * QWebPage * page () const
- */
+/* QWebPage * page () const */
 HB_FUNC( QT_QWEBFRAME_PAGE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) );
-   }
 }
 
-/*
- * QWebFrame * parentFrame () const
- */
+/* QWebFrame * parentFrame () const */
 HB_FUNC( QT_QWEBFRAME_PARENTFRAME )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->parentFrame(), false ) );
-   }
 }
 
-/*
- * QPoint pos () const
- */
+/* QPoint pos () const */
 HB_FUNC( QT_QWEBFRAME_POS )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   }
 }
 
-/*
- * void render ( QPainter * painter, const QRegion & clip )
- */
+/* void render ( QPainter * painter, const QRegion & clip ) */
 HB_FUNC( QT_QWEBFRAME_RENDER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->render( hbqt_par_QPainter( 2 ), *hbqt_par_QRegion( 3 ) );
-   }
 }
 
-/*
- * void render ( QPainter * painter )
- */
+/* void render ( QPainter * painter ) */
 HB_FUNC( QT_QWEBFRAME_RENDER_1 )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->render( hbqt_par_QPainter( 2 ) );
-   }
 }
 
-/*
- * QString renderTreeDump () const
- */
+/* QString renderTreeDump () const */
 HB_FUNC( QT_QWEBFRAME_RENDERTREEDUMP )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->renderTreeDump().toUtf8().data() );
-   }
 }
 
-/*
- * void scroll ( int dx, int dy )
- */
+/* void scroll ( int dx, int dy ) */
 HB_FUNC( QT_QWEBFRAME_SCROLL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * int scrollBarMaximum ( Qt::Orientation orientation ) const
- */
+/* int scrollBarMaximum ( Qt::Orientation orientation ) const */
 HB_FUNC( QT_QWEBFRAME_SCROLLBARMAXIMUM )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retni( ( p )->scrollBarMaximum( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int scrollBarMinimum ( Qt::Orientation orientation ) const
- */
+/* int scrollBarMinimum ( Qt::Orientation orientation ) const */
 HB_FUNC( QT_QWEBFRAME_SCROLLBARMINIMUM )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retni( ( p )->scrollBarMinimum( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * Qt::ScrollBarPolicy scrollBarPolicy ( Qt::Orientation orientation ) const
- */
+/* Qt::ScrollBarPolicy scrollBarPolicy ( Qt::Orientation orientation ) const */
 HB_FUNC( QT_QWEBFRAME_SCROLLBARPOLICY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retni( ( Qt::ScrollBarPolicy ) ( p )->scrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * int scrollBarValue ( Qt::Orientation orientation ) const
- */
+/* int scrollBarValue ( Qt::Orientation orientation ) const */
 HB_FUNC( QT_QWEBFRAME_SCROLLBARVALUE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retni( ( p )->scrollBarValue( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   }
 }
 
-/*
- * QPoint scrollPosition () const
- */
+/* QPoint scrollPosition () const */
 HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->scrollPosition() ), true ) );
-   }
 }
 
-/*
- * QWebSecurityOrigin securityOrigin () const
- */
+/* QWebSecurityOrigin securityOrigin () const */
 HB_FUNC( QT_QWEBFRAME_SECURITYORIGIN )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QWebSecurityOrigin( new QWebSecurityOrigin( ( p )->securityOrigin() ), true ) );
-   }
 }
 
-/*
- * void setContent ( const QByteArray & data, const QString & mimeType = QString(), const QUrl & baseUrl = QUrl() )
- */
+/* void setContent ( const QByteArray & data, const QString & mimeType = QString(), const QUrl & baseUrl = QUrl() ) */
 HB_FUNC( QT_QWEBFRAME_SETCONTENT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
@@ -447,9 +276,7 @@ HB_FUNC( QT_QWEBFRAME_SETCONTENT )
    }
 }
 
-/*
- * void setHtml ( const QString & html, const QUrl & baseUrl = QUrl() )
- */
+/* void setHtml ( const QString & html, const QUrl & baseUrl = QUrl() ) */
 HB_FUNC( QT_QWEBFRAME_SETHTML )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
@@ -461,153 +288,103 @@ HB_FUNC( QT_QWEBFRAME_SETHTML )
    }
 }
 
-/*
- * void setScrollBarPolicy ( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
- */
+/* void setScrollBarPolicy ( Qt::Orientation orientation, Qt::ScrollBarPolicy policy ) */
 HB_FUNC( QT_QWEBFRAME_SETSCROLLBARPOLICY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setScrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ), ( Qt::ScrollBarPolicy ) hb_parni( 3 ) );
-   }
 }
 
-/*
- * void setScrollBarValue ( Qt::Orientation orientation, int value )
- */
+/* void setScrollBarValue ( Qt::Orientation orientation, int value ) */
 HB_FUNC( QT_QWEBFRAME_SETSCROLLBARVALUE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setScrollBarValue( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ) );
-   }
 }
 
-/*
- * void setScrollPosition ( const QPoint & pos )
- */
+/* void setScrollPosition ( const QPoint & pos ) */
 HB_FUNC( QT_QWEBFRAME_SETSCROLLPOSITION )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setScrollPosition( *hbqt_par_QPoint( 2 ) );
-   }
 }
 
-/*
- * void setTextSizeMultiplier ( qreal factor )
- */
+/* void setTextSizeMultiplier ( qreal factor ) */
 HB_FUNC( QT_QWEBFRAME_SETTEXTSIZEMULTIPLIER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setTextSizeMultiplier( hb_parnd( 2 ) );
-   }
 }
 
-/*
- * void setUrl ( const QUrl & url )
- */
+/* void setUrl ( const QUrl & url ) */
 HB_FUNC( QT_QWEBFRAME_SETURL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
-   }
 }
 
-/*
- * void setZoomFactor ( qreal factor )
- */
+/* void setZoomFactor ( qreal factor ) */
 HB_FUNC( QT_QWEBFRAME_SETZOOMFACTOR )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->setZoomFactor( hb_parnd( 2 ) );
-   }
 }
 
-/*
- * qreal textSizeMultiplier () const
- */
+/* qreal textSizeMultiplier () const */
 HB_FUNC( QT_QWEBFRAME_TEXTSIZEMULTIPLIER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retnd( ( p )->textSizeMultiplier() );
-   }
 }
 
-/*
- * QString title () const
- */
+/* QString title () const */
 HB_FUNC( QT_QWEBFRAME_TITLE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->title().toUtf8().data() );
-   }
 }
 
-/*
- * QString toHtml () const
- */
+/* QString toHtml () const */
 HB_FUNC( QT_QWEBFRAME_TOHTML )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->toHtml().toUtf8().data() );
-   }
 }
 
-/*
- * QString toPlainText () const
- */
+/* QString toPlainText () const */
 HB_FUNC( QT_QWEBFRAME_TOPLAINTEXT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retstr_utf8( ( p )->toPlainText().toUtf8().data() );
-   }
 }
 
-/*
- * QUrl url () const
- */
+/* QUrl url () const */
 HB_FUNC( QT_QWEBFRAME_URL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
-   }
 }
 
-/*
- * qreal zoomFactor () const
- */
+/* qreal zoomFactor () const */
 HB_FUNC( QT_QWEBFRAME_ZOOMFACTOR )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       hb_retnd( ( p )->zoomFactor() );
-   }
 }
 
-/*
- * QVariant evaluateJavaScript ( const QString & scriptSource )
- */
+/* QVariant evaluateJavaScript ( const QString & scriptSource ) */
 HB_FUNC( QT_QWEBFRAME_EVALUATEJAVASCRIPT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
@@ -619,19 +396,13 @@ HB_FUNC( QT_QWEBFRAME_EVALUATEJAVASCRIPT )
    }
 }
 
-/*
- * void print ( QPrinter * printer ) const
- */
+/* void print ( QPrinter * printer ) const */
 HB_FUNC( QT_QWEBFRAME_PRINT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-   {
       ( p )->print( hbqt_par_QPrinter( 2 ) );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

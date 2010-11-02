@@ -9,94 +9,19 @@
 /* -------------------------------------------------------------------- */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * Harbour Project QT wrapper
  *
  * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * For full copyright message and credits, see: CREDITS.txt
  *
  */
-/*----------------------------------------------------------------------*/
-/*                            C R E D I T S                             */
-/*----------------------------------------------------------------------*/
-/*
- * Marcos Antonio Gambeta
- *    for providing first ever prototype parsing methods. Though the current
- *    implementation is diametrically different then what he proposed, still
- *    current code shaped on those footsteps.
- *
- * Viktor Szakats
- *    for directing the project with futuristic vision;
- *    for designing and maintaining a complex build system for hbQT, hbIDE;
- *    for introducing many constructs on PRG and C++ levels;
- *    for streamlining signal/slots and events management classes;
- *
- * Istvan Bisz
- *    for introducing QPointer<> concept in the generator;
- *    for testing the library on numerous accounts;
- *    for showing a way how a GC pointer can be detached;
- *
- * Francesco Perillo
- *    for taking keen interest in hbQT development and peeking the code;
- *    for providing tips here and there to improve the code quality;
- *    for hitting bulls eye to describe why few objects need GC detachment;
- *
- * Carlos Bacco
- *    for implementing HBQT_TYPE_Q*Class enums;
- *    for peeking into the code and suggesting optimization points;
- *
- * Przemyslaw Czerpak
- *    for providing tips and trick to manipulate HVM internals to the best
- *    of its use and always showing a path when we get stuck;
- *    A true tradition of a MASTER...
-*/
-/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
 
-/*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
-/*----------------------------------------------------------------------*/
 
 /*
  *  Constructed[ 26/26 [ 100.00% ] ]
@@ -131,22 +56,14 @@ HBQT_GC_FUNC( hbqt_gcRelease_QFontMetrics )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QFontMetrics   /.\\", p->ph ) );
          delete ( ( QFontMetrics * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFontMetrics   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFontMetrics    :     Object already deleted!", p->ph ) );
          p->ph = NULL;
-      }
    }
    else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFontMetrics    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
-   }
 }
 
 void * hbqt_gcAllocate_QFontMetrics( void * pObj, bool bNew )
@@ -158,14 +75,6 @@ void * hbqt_gcAllocate_QFontMetrics( void * pObj, bool bNew )
    p->func = hbqt_gcRelease_QFontMetrics;
    p->type = HBQT_TYPE_QFontMetrics;
 
-   if( bNew )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFontMetrics", pObj ) );
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QFontMetrics", pObj ) );
-   }
    return p;
 }
 
@@ -192,45 +101,31 @@ HB_FUNC( QT_QFONTMETRICS )
    hb_retptrGC( hbqt_gcAllocate_QFontMetrics( ( void * ) pObj, true ) );
 }
 
-/*
- * int ascent () const
- */
+/* int ascent () const */
 HB_FUNC( QT_QFONTMETRICS_ASCENT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->ascent() );
-   }
 }
 
-/*
- * int averageCharWidth () const
- */
+/* int averageCharWidth () const */
 HB_FUNC( QT_QFONTMETRICS_AVERAGECHARWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->averageCharWidth() );
-   }
 }
 
-/*
- * QRect boundingRect ( QChar ch ) const
- */
+/* QRect boundingRect ( QChar ch ) const */
 HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QChar( 2 ) ) ), true ) );
-   }
 }
 
-/*
- * QRect boundingRect ( const QString & text ) const
- */
+/* QRect boundingRect ( const QString & text ) const */
 HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_1 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -242,9 +137,7 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_1 )
    }
 }
 
-/*
- * QRect boundingRect ( int x, int y, int width, int height, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
- */
+/* QRect boundingRect ( int x, int y, int width, int height, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const */
 HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_2 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -260,9 +153,7 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_2 )
    hb_storni( iTabArray, 9 );
 }
 
-/*
- * QRect boundingRect ( const QRect & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
- */
+/* QRect boundingRect ( const QRect & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const */
 HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_3 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -278,21 +169,15 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_3 )
    hb_storni( iTabArray, 6 );
 }
 
-/*
- * int descent () const
- */
+/* int descent () const */
 HB_FUNC( QT_QFONTMETRICS_DESCENT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->descent() );
-   }
 }
 
-/*
- * QString elidedText ( const QString & text, Qt::TextElideMode mode, int width, int flags = 0 ) const
- */
+/* QString elidedText ( const QString & text, Qt::TextElideMode mode, int width, int flags = 0 ) const */
 HB_FUNC( QT_QFONTMETRICS_ELIDEDTEXT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -304,141 +189,95 @@ HB_FUNC( QT_QFONTMETRICS_ELIDEDTEXT )
    }
 }
 
-/*
- * int height () const
- */
+/* int height () const */
 HB_FUNC( QT_QFONTMETRICS_HEIGHT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->height() );
-   }
 }
 
-/*
- * bool inFont ( QChar ch ) const
- */
+/* bool inFont ( QChar ch ) const */
 HB_FUNC( QT_QFONTMETRICS_INFONT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retl( ( p )->inFont( *hbqt_par_QChar( 2 ) ) );
-   }
 }
 
-/*
- * int leading () const
- */
+/* int leading () const */
 HB_FUNC( QT_QFONTMETRICS_LEADING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->leading() );
-   }
 }
 
-/*
- * int leftBearing ( QChar ch ) const
- */
+/* int leftBearing ( QChar ch ) const */
 HB_FUNC( QT_QFONTMETRICS_LEFTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->leftBearing( *hbqt_par_QChar( 2 ) ) );
-   }
 }
 
-/*
- * int lineSpacing () const
- */
+/* int lineSpacing () const */
 HB_FUNC( QT_QFONTMETRICS_LINESPACING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->lineSpacing() );
-   }
 }
 
-/*
- * int lineWidth () const
- */
+/* int lineWidth () const */
 HB_FUNC( QT_QFONTMETRICS_LINEWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->lineWidth() );
-   }
 }
 
-/*
- * int maxWidth () const
- */
+/* int maxWidth () const */
 HB_FUNC( QT_QFONTMETRICS_MAXWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->maxWidth() );
-   }
 }
 
-/*
- * int minLeftBearing () const
- */
+/* int minLeftBearing () const */
 HB_FUNC( QT_QFONTMETRICS_MINLEFTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->minLeftBearing() );
-   }
 }
 
-/*
- * int minRightBearing () const
- */
+/* int minRightBearing () const */
 HB_FUNC( QT_QFONTMETRICS_MINRIGHTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->minRightBearing() );
-   }
 }
 
-/*
- * int overlinePos () const
- */
+/* int overlinePos () const */
 HB_FUNC( QT_QFONTMETRICS_OVERLINEPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->overlinePos() );
-   }
 }
 
-/*
- * int rightBearing ( QChar ch ) const
- */
+/* int rightBearing ( QChar ch ) const */
 HB_FUNC( QT_QFONTMETRICS_RIGHTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->rightBearing( *hbqt_par_QChar( 2 ) ) );
-   }
 }
 
-/*
- * QSize size ( int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
- */
+/* QSize size ( int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const */
 HB_FUNC( QT_QFONTMETRICS_SIZE )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -454,21 +293,15 @@ HB_FUNC( QT_QFONTMETRICS_SIZE )
    hb_storni( iTabArray, 5 );
 }
 
-/*
- * int strikeOutPos () const
- */
+/* int strikeOutPos () const */
 HB_FUNC( QT_QFONTMETRICS_STRIKEOUTPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->strikeOutPos() );
-   }
 }
 
-/*
- * QRect tightBoundingRect ( const QString & text ) const
- */
+/* QRect tightBoundingRect ( const QString & text ) const */
 HB_FUNC( QT_QFONTMETRICS_TIGHTBOUNDINGRECT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -480,21 +313,15 @@ HB_FUNC( QT_QFONTMETRICS_TIGHTBOUNDINGRECT )
    }
 }
 
-/*
- * int underlinePos () const
- */
+/* int underlinePos () const */
 HB_FUNC( QT_QFONTMETRICS_UNDERLINEPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->underlinePos() );
-   }
 }
 
-/*
- * int width ( const QString & text, int len = -1 ) const
- */
+/* int width ( const QString & text, int len = -1 ) const */
 HB_FUNC( QT_QFONTMETRICS_WIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
@@ -506,31 +333,21 @@ HB_FUNC( QT_QFONTMETRICS_WIDTH )
    }
 }
 
-/*
- * int width ( QChar ch ) const
- */
+/* int width ( QChar ch ) const */
 HB_FUNC( QT_QFONTMETRICS_WIDTH_1 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->width( *hbqt_par_QChar( 2 ) ) );
-   }
 }
 
-/*
- * int xHeight () const
- */
+/* int xHeight () const */
 HB_FUNC( QT_QFONTMETRICS_XHEIGHT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-   {
       hb_retni( ( p )->xHeight() );
-   }
 }
 
 
-/*----------------------------------------------------------------------*/
-#endif             /* #if QT_VERSION >= 0x040500 */
-/*----------------------------------------------------------------------*/
+#endif /* #if QT_VERSION >= 0x040500 */

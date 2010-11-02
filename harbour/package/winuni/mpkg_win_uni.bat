@@ -96,6 +96,7 @@ for /F %%a in ( 'dir /b /ad' ) do (
    xcopy /y /s %%a\*.hbc     %HB_ABSROOT%contrib\%%a\
    xcopy /y /s %%a\*.def     %HB_ABSROOT%contrib\%%a\
    xcopy /y /s %%a\*.hbs     %HB_ABSROOT%contrib\%%a\
+   xcopy /y /s %%a\*.txt     %HB_ABSROOT%contrib\%%a\
    xcopy /y /s %%a\tests\*.* %HB_ABSROOT%contrib\%%a\tests\
 )
 
