@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDialog )
 {
-   QDialog  * ph = NULL;
    HBQT_GC_T_QDialog * p = ( HBQT_GC_T_QDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

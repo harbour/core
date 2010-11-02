@@ -59,12 +59,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QItemSelectionModel )
 {
-   QItemSelectionModel  * ph = NULL;
    HBQT_GC_T_QItemSelectionModel * p = ( HBQT_GC_T_QItemSelectionModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QItemSelectionModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

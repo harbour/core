@@ -60,12 +60,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFormLayout )
 {
-   QFormLayout  * ph = NULL;
    HBQT_GC_T_QFormLayout * p = ( HBQT_GC_T_QFormLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFormLayout * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

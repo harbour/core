@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTableView )
 {
-   QTableView  * ph = NULL;
    HBQT_GC_T_QTableView * p = ( HBQT_GC_T_QTableView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTableView * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

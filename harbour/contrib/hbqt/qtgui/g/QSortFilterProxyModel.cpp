@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSortFilterProxyModel )
 {
-   QSortFilterProxyModel  * ph = NULL;
    HBQT_GC_T_QSortFilterProxyModel * p = ( HBQT_GC_T_QSortFilterProxyModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSortFilterProxyModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

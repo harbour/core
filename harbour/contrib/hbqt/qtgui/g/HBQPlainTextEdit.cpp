@@ -50,12 +50,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_HBQPlainTextEdit )
 {
-   HBQPlainTextEdit  * ph = NULL;
    HBQT_GC_T_HBQPlainTextEdit * p = ( HBQT_GC_T_HBQPlainTextEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      HBQPlainTextEdit * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

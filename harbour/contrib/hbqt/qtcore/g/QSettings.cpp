@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSettings )
 {
-   QSettings  * ph = NULL;
    HBQT_GC_T_QSettings * p = ( HBQT_GC_T_QSettings * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSettings * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

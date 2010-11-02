@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QStringListModel )
 {
-   QStringListModel  * ph = NULL;
    HBQT_GC_T_QStringListModel * p = ( HBQT_GC_T_QStringListModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QStringListModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

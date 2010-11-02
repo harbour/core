@@ -2621,7 +2621,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF nHarbourPPO >= 2
                hbmk[ _HBMK_lCreatePPO ] := .T.
             ENDIF
-            AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], PathSepToSelf( cParam, 2 ) )
+            AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ), 2 ) )
          ENDCASE
 
       CASE hbmk[ _HBMK_lCreateImpLib ]

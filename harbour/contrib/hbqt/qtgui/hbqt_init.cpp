@@ -148,7 +148,9 @@ HB_FUNC( __HBQTGUI )
    HB_FUNC_EXEC( __HBQTCORE );
 }
 
+HB_EXTERN_BEGIN
 extern HB_EXPORT QApplication * __hbqtgui_app( void );
+HB_EXTERN_END
 
 QApplication * __hbqtgui_app( void )
 {

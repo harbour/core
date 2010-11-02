@@ -53,12 +53,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSlider )
 {
-   QSlider  * ph = NULL;
    HBQT_GC_T_QSlider * p = ( HBQT_GC_T_QSlider * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSlider * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

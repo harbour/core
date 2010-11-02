@@ -50,12 +50,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QLabel )
 {
-   QLabel  * ph = NULL;
    HBQT_GC_T_QLabel * p = ( HBQT_GC_T_QLabel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QLabel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

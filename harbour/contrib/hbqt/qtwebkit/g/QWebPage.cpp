@@ -68,12 +68,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QWebPage )
 {
-   QWebPage  * ph = NULL;
    HBQT_GC_T_QWebPage * p = ( HBQT_GC_T_QWebPage * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QWebPage * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -58,12 +58,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFileSystemModel )
 {
-   QFileSystemModel  * ph = NULL;
    HBQT_GC_T_QFileSystemModel * p = ( HBQT_GC_T_QFileSystemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFileSystemModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

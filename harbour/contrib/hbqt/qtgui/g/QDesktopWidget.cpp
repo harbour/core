@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDesktopWidget )
 {
-   QDesktopWidget  * ph = NULL;
    HBQT_GC_T_QDesktopWidget * p = ( HBQT_GC_T_QDesktopWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QDesktopWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

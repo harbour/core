@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QInputDialog )
 {
-   QInputDialog  * ph = NULL;
    HBQT_GC_T_QInputDialog * p = ( HBQT_GC_T_QInputDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QInputDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

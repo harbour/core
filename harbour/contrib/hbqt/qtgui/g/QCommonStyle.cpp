@@ -47,12 +47,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QCommonStyle )
 {
-   QCommonStyle  * ph = NULL;
    HBQT_GC_T_QCommonStyle * p = ( HBQT_GC_T_QCommonStyle * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QCommonStyle * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

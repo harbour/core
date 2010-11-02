@@ -53,12 +53,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QComboBox )
 {
-   QComboBox  * ph = NULL;
    HBQT_GC_T_QComboBox * p = ( HBQT_GC_T_QComboBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QComboBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

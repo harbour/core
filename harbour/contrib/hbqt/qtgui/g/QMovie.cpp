@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMovie )
 {
-   QMovie  * ph = NULL;
    HBQT_GC_T_QMovie * p = ( HBQT_GC_T_QMovie * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMovie * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

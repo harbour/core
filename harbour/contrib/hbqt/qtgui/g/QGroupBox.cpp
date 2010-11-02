@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGroupBox )
 {
-   QGroupBox  * ph = NULL;
    HBQT_GC_T_QGroupBox * p = ( HBQT_GC_T_QGroupBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGroupBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

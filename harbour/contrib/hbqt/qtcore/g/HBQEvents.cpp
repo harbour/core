@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_HBQEvents )
 {
-   HBQEvents  * ph = NULL;
    HBQT_GC_T_HBQEvents * p = ( HBQT_GC_T_HBQEvents * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      HBQEvents * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

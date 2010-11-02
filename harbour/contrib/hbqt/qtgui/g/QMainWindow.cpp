@@ -68,12 +68,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMainWindow )
 {
-   QMainWindow  * ph = NULL;
    HBQT_GC_T_QMainWindow * p = ( HBQT_GC_T_QMainWindow * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMainWindow * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

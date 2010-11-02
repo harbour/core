@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
 {
-   HBQSyntaxHighlighter  * ph = NULL;
    HBQT_GC_T_HBQSyntaxHighlighter * p = ( HBQT_GC_T_HBQSyntaxHighlighter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      HBQSyntaxHighlighter * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

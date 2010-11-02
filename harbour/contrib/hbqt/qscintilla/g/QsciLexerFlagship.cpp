@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QsciLexerFlagship )
 {
-   QsciLexerFlagship  * ph = NULL;
    HBQT_GC_T_QsciLexerFlagship * p = ( HBQT_GC_T_QsciLexerFlagship * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QsciLexerFlagship * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

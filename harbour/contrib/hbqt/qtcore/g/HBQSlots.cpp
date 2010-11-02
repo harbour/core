@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_HBQSlots )
 {
-   HBQSlots  * ph = NULL;
    HBQT_GC_T_HBQSlots * p = ( HBQT_GC_T_HBQSlots * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      HBQSlots * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QPrintPreviewDialog )
 {
-   QPrintPreviewDialog  * ph = NULL;
    HBQT_GC_T_QPrintPreviewDialog * p = ( HBQT_GC_T_QPrintPreviewDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QPrintPreviewDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -47,12 +47,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTextBrowser )
 {
-   QTextBrowser  * ph = NULL;
    HBQT_GC_T_QTextBrowser * p = ( HBQT_GC_T_QTextBrowser * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTextBrowser * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

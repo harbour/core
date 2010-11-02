@@ -51,12 +51,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QWebView )
 {
-   QWebView  * ph = NULL;
    HBQT_GC_T_QWebView * p = ( HBQT_GC_T_QWebView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QWebView * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

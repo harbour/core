@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFocusFrame )
 {
-   QFocusFrame  * ph = NULL;
    HBQT_GC_T_QFocusFrame * p = ( HBQT_GC_T_QFocusFrame * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFocusFrame * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

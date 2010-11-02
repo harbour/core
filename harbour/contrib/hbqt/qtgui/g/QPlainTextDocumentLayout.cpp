@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
 {
-   QPlainTextDocumentLayout  * ph = NULL;
    HBQT_GC_T_QPlainTextDocumentLayout * p = ( HBQT_GC_T_QPlainTextDocumentLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QPlainTextDocumentLayout * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

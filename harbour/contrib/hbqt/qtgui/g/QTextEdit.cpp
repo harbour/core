@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTextEdit )
 {
-   QTextEdit  * ph = NULL;
    HBQT_GC_T_QTextEdit * p = ( HBQT_GC_T_QTextEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTextEdit * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

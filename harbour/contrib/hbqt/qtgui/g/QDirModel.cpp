@@ -57,12 +57,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDirModel )
 {
-   QDirModel  * ph = NULL;
    HBQT_GC_T_QDirModel * p = ( HBQT_GC_T_QDirModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QDirModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

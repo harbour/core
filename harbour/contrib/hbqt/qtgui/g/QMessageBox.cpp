@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMessageBox )
 {
-   QMessageBox  * ph = NULL;
    HBQT_GC_T_QMessageBox * p = ( HBQT_GC_T_QMessageBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMessageBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QHeaderView )
 {
-   QHeaderView  * ph = NULL;
    HBQT_GC_T_QHeaderView * p = ( HBQT_GC_T_QHeaderView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QHeaderView * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

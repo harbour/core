@@ -57,12 +57,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QCalendarWidget )
 {
-   QCalendarWidget  * ph = NULL;
    HBQT_GC_T_QCalendarWidget * p = ( HBQT_GC_T_QCalendarWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QCalendarWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

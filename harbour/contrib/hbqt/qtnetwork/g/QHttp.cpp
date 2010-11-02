@@ -78,12 +78,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QHttp )
 {
-   QHttp  * ph = NULL;
    HBQT_GC_T_QHttp * p = ( HBQT_GC_T_QHttp * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QHttp * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

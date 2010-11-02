@@ -50,12 +50,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMimeData )
 {
-   QMimeData  * ph = NULL;
    HBQT_GC_T_QMimeData * p = ( HBQT_GC_T_QMimeData * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMimeData * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

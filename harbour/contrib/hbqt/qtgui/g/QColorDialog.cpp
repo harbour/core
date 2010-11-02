@@ -57,12 +57,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QColorDialog )
 {
-   QColorDialog  * ph = NULL;
    HBQT_GC_T_QColorDialog * p = ( HBQT_GC_T_QColorDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QColorDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

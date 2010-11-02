@@ -53,12 +53,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QStyledItemDelegate )
 {
-   QStyledItemDelegate  * ph = NULL;
    HBQT_GC_T_QStyledItemDelegate * p = ( HBQT_GC_T_QStyledItemDelegate * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QStyledItemDelegate * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

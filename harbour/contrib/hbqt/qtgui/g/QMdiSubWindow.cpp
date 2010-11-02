@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMdiSubWindow )
 {
-   QMdiSubWindow  * ph = NULL;
    HBQT_GC_T_QMdiSubWindow * p = ( HBQT_GC_T_QMdiSubWindow * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMdiSubWindow * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QCompleter )
 {
-   QCompleter  * ph = NULL;
    HBQT_GC_T_QCompleter * p = ( HBQT_GC_T_QCompleter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QCompleter * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

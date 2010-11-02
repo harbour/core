@@ -50,12 +50,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTranslator )
 {
-   QTranslator  * ph = NULL;
    HBQT_GC_T_QTranslator * p = ( HBQT_GC_T_QTranslator * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTranslator * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

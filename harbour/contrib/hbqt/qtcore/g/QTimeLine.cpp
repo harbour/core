@@ -53,12 +53,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTimeLine )
 {
-   QTimeLine  * ph = NULL;
    HBQT_GC_T_QTimeLine * p = ( HBQT_GC_T_QTimeLine * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTimeLine * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QRadioButton )
 {
-   QRadioButton  * ph = NULL;
    HBQT_GC_T_QRadioButton * p = ( HBQT_GC_T_QRadioButton * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QRadioButton * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

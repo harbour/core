@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDial )
 {
-   QDial  * ph = NULL;
    HBQT_GC_T_QDial * p = ( HBQT_GC_T_QDial * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QDial * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

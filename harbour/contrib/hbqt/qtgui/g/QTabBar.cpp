@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTabBar )
 {
-   QTabBar  * ph = NULL;
    HBQT_GC_T_QTabBar * p = ( HBQT_GC_T_QTabBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTabBar * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

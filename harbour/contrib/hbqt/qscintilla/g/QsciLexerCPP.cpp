@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QsciLexerCPP )
 {
-   QsciLexerCPP  * ph = NULL;
    HBQT_GC_T_QsciLexerCPP * p = ( HBQT_GC_T_QsciLexerCPP * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QsciLexerCPP * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

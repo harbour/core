@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QVBoxLayout )
 {
-   QVBoxLayout  * ph = NULL;
    HBQT_GC_T_QVBoxLayout * p = ( HBQT_GC_T_QVBoxLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QVBoxLayout * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

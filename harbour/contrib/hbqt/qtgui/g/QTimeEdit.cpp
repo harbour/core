@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTimeEdit )
 {
-   QTimeEdit  * ph = NULL;
    HBQT_GC_T_QTimeEdit * p = ( HBQT_GC_T_QTimeEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTimeEdit * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

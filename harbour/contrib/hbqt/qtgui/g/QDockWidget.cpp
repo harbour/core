@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDockWidget )
 {
-   QDockWidget  * ph = NULL;
    HBQT_GC_T_QDockWidget * p = ( HBQT_GC_T_QDockWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QDockWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QWindowsStyle )
 {
-   QWindowsStyle  * ph = NULL;
    HBQT_GC_T_QWindowsStyle * p = ( HBQT_GC_T_QWindowsStyle * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QWindowsStyle * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

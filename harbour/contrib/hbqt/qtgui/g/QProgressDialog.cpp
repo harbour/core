@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QProgressDialog )
 {
-   QProgressDialog  * ph = NULL;
    HBQT_GC_T_QProgressDialog * p = ( HBQT_GC_T_QProgressDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QProgressDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

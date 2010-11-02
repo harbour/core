@@ -59,12 +59,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
-   QStandardItemModel  * ph = NULL;
    HBQT_GC_T_QStandardItemModel * p = ( HBQT_GC_T_QStandardItemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QStandardItemModel * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

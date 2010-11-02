@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QStackedWidget )
 {
-   QStackedWidget  * ph = NULL;
    HBQT_GC_T_QStackedWidget * p = ( HBQT_GC_T_QStackedWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QStackedWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

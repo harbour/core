@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSplitter )
 {
-   QSplitter  * ph = NULL;
    HBQT_GC_T_QSplitter * p = ( HBQT_GC_T_QSplitter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSplitter * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

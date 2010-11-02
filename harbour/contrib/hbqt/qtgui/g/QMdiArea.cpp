@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMdiArea )
 {
-   QMdiArea  * ph = NULL;
    HBQT_GC_T_QMdiArea * p = ( HBQT_GC_T_QMdiArea * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMdiArea * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

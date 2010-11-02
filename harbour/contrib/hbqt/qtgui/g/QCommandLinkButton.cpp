@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QCommandLinkButton )
 {
-   QCommandLinkButton  * ph = NULL;
    HBQT_GC_T_QCommandLinkButton * p = ( HBQT_GC_T_QCommandLinkButton * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QCommandLinkButton * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

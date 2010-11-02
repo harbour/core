@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSplashScreen )
 {
-   QSplashScreen  * ph = NULL;
    HBQT_GC_T_QSplashScreen * p = ( HBQT_GC_T_QSplashScreen * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSplashScreen * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QErrorMessage )
 {
-   QErrorMessage  * ph = NULL;
    HBQT_GC_T_QErrorMessage * p = ( HBQT_GC_T_QErrorMessage * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QErrorMessage * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

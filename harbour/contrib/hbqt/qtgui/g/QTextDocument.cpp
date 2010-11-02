@@ -61,12 +61,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTextDocument )
 {
-   QTextDocument  * ph = NULL;
    HBQT_GC_T_QTextDocument * p = ( HBQT_GC_T_QTextDocument * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTextDocument * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

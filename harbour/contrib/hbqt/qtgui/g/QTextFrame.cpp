@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTextFrame )
 {
-   QTextFrame  * ph = NULL;
    HBQT_GC_T_QTextFrame * p = ( HBQT_GC_T_QTextFrame * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTextFrame * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

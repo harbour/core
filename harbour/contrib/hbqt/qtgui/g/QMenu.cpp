@@ -54,12 +54,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QMenu )
 {
-   QMenu  * ph = NULL;
    HBQT_GC_T_QMenu * p = ( HBQT_GC_T_QMenu * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QMenu * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

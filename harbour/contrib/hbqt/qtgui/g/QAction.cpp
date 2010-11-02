@@ -62,12 +62,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QAction )
 {
-   QAction  * ph = NULL;
    HBQT_GC_T_QAction * p = ( HBQT_GC_T_QAction * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QAction * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QToolBox )
 {
-   QToolBox  * ph = NULL;
    HBQT_GC_T_QToolBox * p = ( HBQT_GC_T_QToolBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QToolBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

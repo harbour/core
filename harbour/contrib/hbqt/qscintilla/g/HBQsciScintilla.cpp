@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_HBQsciScintilla )
 {
-   HBQsciScintilla  * ph = NULL;
    HBQT_GC_T_HBQsciScintilla * p = ( HBQT_GC_T_HBQsciScintilla * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      HBQsciScintilla * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

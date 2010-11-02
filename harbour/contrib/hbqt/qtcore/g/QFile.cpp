@@ -65,12 +65,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFile )
 {
-   QFile  * ph = NULL;
    HBQT_GC_T_QFile * p = ( HBQT_GC_T_QFile * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFile * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

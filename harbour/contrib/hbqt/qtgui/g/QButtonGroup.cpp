@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QButtonGroup )
 {
-   QButtonGroup  * ph = NULL;
    HBQT_GC_T_QButtonGroup * p = ( HBQT_GC_T_QButtonGroup * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QButtonGroup * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

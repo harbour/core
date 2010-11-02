@@ -599,7 +599,7 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
    ::enums_:= PullOutSection( @cQth, "ENUMS"  )
    ::enum_:= {}
    FOR EACH s IN ::enums_
-      IF ( "enum " $ s .or. "flags " $ s )
+      IF "enum " $ s .or. "flags " $ s
          b_:= hb_ATokens( alltrim( s ), " " )
          aadd( ::enum_, b_[ 2 ] )
       ENDIF
@@ -769,14 +769,13 @@ METHOD HbQtSource:build()
 
    aadd( ::cpp_, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cWidget + " )"  )
    aadd( ::cpp_, "{"                                     )
-   IF ( ::isDestructor ) .AND. ( ::isConstructor )
+   IF ::isDestructor .AND. ::isConstructor
       IF ::isObject
-         aadd( ::cpp_, "   " + ::cWidget + " " + iif( ::isList, "< void * >", "" )+" * ph = NULL;" )
          aadd( ::cpp_, "   HBQT_GC_T_" + ::cWidget + " * p = ( HBQT_GC_T_" + ::cWidget + " * ) Cargo; " )
          aadd( ::cpp_, "   " )
          aadd( ::cpp_, "   if( p && p->bNew && p->ph )" )
          aadd( ::cpp_, "   {" )
-         aadd( ::cpp_, "      ph = p->ph; " )
+         aadd( ::cpp_, "      " + ::cWidget + " " + iif( ::isList, "< void * >", "" ) + "* ph = p->ph;" )
          aadd( ::cpp_, "      if( ph )" )
          aadd( ::cpp_, "      {" )
          aadd( ::cpp_, "         const QMetaObject * m = ( ph )->metaObject();" )
@@ -857,7 +856,6 @@ METHOD HbQtSource:build()
          #endif
       ENDIF
    ELSE
-      aadd( ::cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
       aadd( ::cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
       aadd( ::cpp_, "   " )
       aadd( ::cpp_, "   if( p && p->bNew )" )
@@ -1316,7 +1314,7 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
 
       cFun := cRetCast + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
-   ELSEIF ( "<" $ cRetCast )
+   ELSEIF "<" $ cRetCast
       cFun := "QList" + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
    ELSE
@@ -1325,11 +1323,11 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
    ENDIF
 
    IF nTySame > 0 .AND. lInIf
-      HB_TRACE( HB_TR_ALWAYS, oM:nArgQCast, oM:nArgs )
+      HB_TRACE( HB_TR_DEBUG, oM:nArgQCast, oM:nArgs )
 
       IF oM:nArgQCast == 0
          aadd( txt_, sp + "// " + "RETURN " + cFun + cPostFix )
-         HB_TRACE( HB_TR_ALWAYS, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
+         HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
          IF nTySame > 1 .AND. nCount == nTySame
             aadd( txt_, sp + "ENDSWITCH" )
          ENDIF
@@ -1353,7 +1351,7 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
    ELSE
       IF nCount > 1
          aadd( txt_, sp + "// " + "RETURN " + cFun + cPostFix )
-         HB_TRACE( HB_TR_ALWAYS, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
+         HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
       ELSE
          IF "..." $ cFun
             aadd( txt_, sp + cPrefix + "RETURN " + cFun + cPostFix )
@@ -1732,18 +1730,18 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "uchar" .and. oArg:lFar .and. !( oArg:lConst )
+         CASE oArg:cCast == "uchar" .and. oArg:lFar .and. ! oArg:lConst
             /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
             oArg:cBody   := "( uchar * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "uchar" .and. !( oArg:lFar ) .and. !( oArg:lConst )
+         CASE oArg:cCast == "uchar" .and. ! oArg:lFar .and. ! oArg:lConst
             oArg:cBody   := "( uchar ) hb_parni( " + cHBIdx + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "char" .and. oArg:lFar .and. !( oArg:lConst )
+         CASE oArg:cCast == "char" .and. oArg:lFar .and. ! oArg:lConst
             /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
             oArg:cBody   := "( char * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
@@ -1754,7 +1752,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "char" .and. !( oArg:lFar ) .and. !( oArg:lConst )
+         CASE oArg:cCast == "char" .and. ! oArg:lFar .and. ! oArg:lConst
             oArg:cBody   := "( char ) hb_parni( " + cHBIdx + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
@@ -1960,8 +1958,8 @@ METHOD HbQtSource:buildCppCode( oMtd )
       oMtd:cCmd := "hb_retc( ( const char * ) " + oMtd:cCmn + " )"
       oMtd:cPrgRet := "c" + oMtd:cDocNMRet //p
 
-   CASE oRet:lFar .AND. !( oRet:lConst )
-      IF ( isAqtObject( oRet:cCast ) )
+   CASE oRet:lFar .AND. ! oRet:lConst
+      IF isAqtObject( oRet:cCast )
          oMtd:cCmd := Get_Command( oRet:cCast, oMtd:cCmn, .F. )
       ELSE
          /* TOFIX: Such code is not valid and should never be generated [vszakats] */
@@ -2004,7 +2002,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    OTHERWISE
       /* No attribute is attached to return value */
-      IF ( isAqtObject( oRet:cCast ) )
+      IF isAqtObject( oRet:cCast )
          oMtd:cCmd := Get_Command( oRet:cCast, oMtd:cCmn )
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 

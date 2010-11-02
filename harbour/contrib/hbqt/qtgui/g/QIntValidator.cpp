@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QIntValidator )
 {
-   QIntValidator  * ph = NULL;
    HBQT_GC_T_QIntValidator * p = ( HBQT_GC_T_QIntValidator * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QIntValidator * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

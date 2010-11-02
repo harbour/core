@@ -53,12 +53,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFontComboBox )
 {
-   QFontComboBox  * ph = NULL;
    HBQT_GC_T_QFontComboBox * p = ( HBQT_GC_T_QFontComboBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFontComboBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

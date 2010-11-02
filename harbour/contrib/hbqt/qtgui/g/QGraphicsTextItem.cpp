@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGraphicsTextItem )
 {
-   QGraphicsTextItem  * ph = NULL;
    HBQT_GC_T_QGraphicsTextItem * p = ( HBQT_GC_T_QGraphicsTextItem * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGraphicsTextItem * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

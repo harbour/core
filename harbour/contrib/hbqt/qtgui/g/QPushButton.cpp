@@ -50,12 +50,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QPushButton )
 {
-   QPushButton  * ph = NULL;
    HBQT_GC_T_QPushButton * p = ( HBQT_GC_T_QPushButton * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QPushButton * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSizeGrip )
 {
-   QSizeGrip  * ph = NULL;
    HBQT_GC_T_QSizeGrip * p = ( HBQT_GC_T_QSizeGrip * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSizeGrip * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

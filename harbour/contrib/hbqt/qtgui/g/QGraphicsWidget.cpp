@@ -57,12 +57,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGraphicsWidget )
 {
-   QGraphicsWidget  * ph = NULL;
    HBQT_GC_T_QGraphicsWidget * p = ( HBQT_GC_T_QGraphicsWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGraphicsWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

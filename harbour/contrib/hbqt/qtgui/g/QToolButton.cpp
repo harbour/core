@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QToolButton )
 {
-   QToolButton  * ph = NULL;
    HBQT_GC_T_QToolButton * p = ( HBQT_GC_T_QToolButton * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QToolButton * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

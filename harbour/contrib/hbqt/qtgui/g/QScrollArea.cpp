@@ -48,12 +48,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QScrollArea )
 {
-   QScrollArea  * ph = NULL;
    HBQT_GC_T_QScrollArea * p = ( HBQT_GC_T_QScrollArea * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QScrollArea * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

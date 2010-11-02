@@ -63,12 +63,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGraphicsScene )
 {
-   QGraphicsScene  * ph = NULL;
    HBQT_GC_T_QGraphicsScene * p = ( HBQT_GC_T_QGraphicsScene * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGraphicsScene * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

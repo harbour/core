@@ -58,12 +58,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QFontDialog )
 {
-   QFontDialog  * ph = NULL;
    HBQT_GC_T_QFontDialog * p = ( HBQT_GC_T_QFontDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QFontDialog * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

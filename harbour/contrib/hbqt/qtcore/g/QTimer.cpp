@@ -47,12 +47,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTimer )
 {
-   QTimer  * ph = NULL;
    HBQT_GC_T_QTimer * p = ( HBQT_GC_T_QTimer * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTimer * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

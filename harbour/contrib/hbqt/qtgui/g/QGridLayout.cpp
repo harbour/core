@@ -49,12 +49,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGridLayout )
 {
-   QGridLayout  * ph = NULL;
    HBQT_GC_T_QGridLayout * p = ( HBQT_GC_T_QGridLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGridLayout * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

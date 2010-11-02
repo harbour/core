@@ -47,12 +47,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QSpinBox )
 {
-   QSpinBox  * ph = NULL;
    HBQT_GC_T_QSpinBox * p = ( HBQT_GC_T_QSpinBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QSpinBox * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

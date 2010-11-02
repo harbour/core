@@ -56,12 +56,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QListView )
 {
-   QListView  * ph = NULL;
    HBQT_GC_T_QListView * p = ( HBQT_GC_T_QListView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QListView * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

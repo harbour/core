@@ -62,7 +62,6 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormWindowInterface )
 {
-   HB_SYMBOL_UNUSED( Cargo );
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )

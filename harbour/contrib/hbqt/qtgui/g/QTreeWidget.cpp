@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QTreeWidget )
 {
-   QTreeWidget  * ph = NULL;
    HBQT_GC_T_QTreeWidget * p = ( HBQT_GC_T_QTreeWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QTreeWidget * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

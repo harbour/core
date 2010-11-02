@@ -52,12 +52,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QProgressBar )
 {
-   QProgressBar  * ph = NULL;
    HBQT_GC_T_QProgressBar * p = ( HBQT_GC_T_QProgressBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QProgressBar * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

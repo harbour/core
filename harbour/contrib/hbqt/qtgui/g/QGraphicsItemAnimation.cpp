@@ -57,12 +57,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QGraphicsItemAnimation )
 {
-   QGraphicsItemAnimation  * ph = NULL;
    HBQT_GC_T_QGraphicsItemAnimation * p = ( HBQT_GC_T_QGraphicsItemAnimation * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QGraphicsItemAnimation * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();

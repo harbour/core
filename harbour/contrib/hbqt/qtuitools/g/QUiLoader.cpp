@@ -51,12 +51,11 @@ typedef struct
 
 HBQT_GC_FUNC( hbqt_gcRelease_QUiLoader )
 {
-   QUiLoader  * ph = NULL;
    HBQT_GC_T_QUiLoader * p = ( HBQT_GC_T_QUiLoader * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
-      ph = p->ph;
+      QUiLoader * ph = p->ph;
       if( ph )
       {
          const QMetaObject * m = ( ph )->metaObject();
