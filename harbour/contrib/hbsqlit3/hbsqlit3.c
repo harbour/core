@@ -245,9 +245,9 @@ static int callback( void *Cargo, int argc, char **argv, char **azColName )
 
       for( i = 0; i < argc; i++ )
       {
-         hb_arraySetC( pArrayValue, i + 1, argv[i] ? argv[i] : "NULL" );
-         hb_arraySetC( pArrayColName, i + 1, azColName[i] );
-      }
+         hb_arraySetStrUTF8( pArrayValue, i + 1, (const char*) (argv[i] ? argv[i] : "NULL") );
+         hb_arraySetStrUTF8( pArrayColName, i + 1, (const char*) azColName[i] );
+      }                    
 
       hb_vmPushDynSym( pSym );
       hb_vmPushNil();
@@ -276,10 +276,10 @@ static int authorizer( void *Cargo, int iAction, const char *sName1, const char 
    if( pSym && hb_vmRequestReenter() )
    {
       int      iRes;
-      PHB_ITEM pItem1 = hb_itemPutCConst( NULL, sName1 );
-      PHB_ITEM pItem2 = hb_itemPutCConst( NULL, sName2 );
-      PHB_ITEM pItem3 = hb_itemPutCConst( NULL, sName3 );
-      PHB_ITEM pItem4 = hb_itemPutCConst( NULL, sName4 );
+      PHB_ITEM pItem1 = hb_itemPutStrUTF8( NULL, sName1 );
+      PHB_ITEM pItem2 = hb_itemPutStrUTF8( NULL, sName2 );
+      PHB_ITEM pItem3 = hb_itemPutStrUTF8( NULL, sName3 );
+      PHB_ITEM pItem4 = hb_itemPutStrUTF8( NULL, sName4 );
 
       hb_vmPushDynSym( pSym );
       hb_vmPushNil();
@@ -389,19 +389,25 @@ static void hook_rollback( void *Cargo )
 /**
    sqlite3_libversion()         -> cVersion
    sqlite3_libversion_number()  -> nVersionNumber
+   sqlite3_sourceid()           -> cSourceID
 
    Returns values equivalent to the header constants
-   SQLITE_VERSION and SQLITE_VERSION_NUMBER.
+   SQLITE_VERSION, SQLITE_VERSION_NUMBER, SQLITE_SOURCE_ID.
 */
 
 HB_FUNC( SQLITE3_LIBVERSION )
 {
-   hb_retstr_utf8( sqlite3_libversion() );
+   hb_retc( sqlite3_libversion() );
 }
 
 HB_FUNC( SQLITE3_LIBVERSION_NUMBER )
 {
    hb_retni( sqlite3_libversion_number() );
+}
+
+HB_FUNC( SQLITE3_SOURCEID )
+{
+   hb_retc( sqlite3_sourceid() );
 }
 
 /**
@@ -1344,7 +1350,7 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
    if( pStmt )
    {
       int index = hb_parni( 2 ) - 1;
-      hb_retstrlen_utf8( ( char * ) sqlite3_column_text(pStmt, index), sqlite3_column_bytes(pStmt, index) );
+      hb_retstrlen_utf8( ( const char * ) sqlite3_column_text(pStmt, index), sqlite3_column_bytes(pStmt, index) );
    }
    else
    {
@@ -1431,7 +1437,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
 
             for( j = 1; j <= iCol; j++, k++ )
             {
-               hb_arraySetC( pArray, j, pResult[k] );
+               hb_arraySetStrUTF8( pArray, j, (const char*) pResult[k] );
             }
 
             hb_arrayAddForward( pResultList, pArray );
@@ -2439,7 +2445,7 @@ HB_FUNC( SQLITE3_COMPILEOPTION_USED )
 HB_FUNC( SQLITE3_COMPILEOPTION_GET )
 {
 #if SQLITE_VERSION_NUMBER >= 3006023
-   hb_retstr_utf8( sqlite3_compileoption_get(hb_parni(1)) );
+   hb_retc( sqlite3_compileoption_get(hb_parni(1)) );
 #else
    hb_retc_null();
 #endif /* SQLITE_VERSION_NUMBER >= 3006023 */
