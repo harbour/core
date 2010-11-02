@@ -3205,7 +3205,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
       hb_xfree( buf );
       hb_socketClose( sd );
    }
-#elif defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN ) && !defined( __DMC__ )
    HB_SOCKET sd;
 
    /* TODO: add support for IP6 */

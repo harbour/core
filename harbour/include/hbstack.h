@@ -62,7 +62,7 @@
 
 HB_EXTERN_BEGIN
 
-#if defined( HB_MT_VM )
+#if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
 #  include "hbthread.h"
 #endif
 

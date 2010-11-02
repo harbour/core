@@ -50,6 +50,9 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
          ifeq ($(HB_COMPILER),djgpp)
             HB_CFLAGS += -DPNG_NO_SNPRINTF
          endif
+         ifeq ($(HB_COMPILER),dmc)
+            HB_CFLAGS += -DPNG_NO_SNPRINTF
+         endif
          ifeq ($(HB_COMPILER),watcom)
             HB_CFLAGS += -DPNG_NO_SETJMP
          endif

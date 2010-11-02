@@ -60,6 +60,7 @@
 #if defined( __BORLANDC__ ) || \
     defined( __WATCOMC__ ) || \
     defined( __MINGW32CE__ ) || \
+    defined( __DMC__ ) || \
     defined( HB_OS_VXWORKS ) || \
     defined( HB_OS_BSD ) || \
     defined( HB_OS_DARWIN ) || \
