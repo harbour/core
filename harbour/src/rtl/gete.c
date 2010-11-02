@@ -71,13 +71,6 @@ HB_FUNC( GETENV )
    if( pName && hb_pcount() == 1 )
    {
       char * pszName = hb_itemGetC( pName );
-      char * ptr;
-
-      /* strip the '=' or else some C RTLs (f.e. Borland C++
-         and watcom) will clear the variable! */
-      ptr = strchr( pszName, '=' );
-      if( ptr )
-         *ptr = '\0';
 
       if( pszName[ 0 ] != '\0' )
       {
@@ -134,13 +127,6 @@ HB_FUNC( HB_GETENV )
    if( pName )
    {
       char * pszName = hb_itemGetC( pName );
-      char * ptr;
-
-      /* strip the '=' or else some C RTLs (f.e. Borland C++
-         and watcom) will clear the variable! */
-      ptr = strchr( pszName, '=' );
-      if( ptr )
-         *ptr = '\0';
 
       if( pszName[ 0 ] != '\0' )
       {

@@ -1357,6 +1357,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl.exe"  ) }, "icc"    },;
                     { {|| FindInPath( "xCC.exe"  ) }, "xcc"    },;
+                    { {|| FindInPath( "dmc.exe"  ) }, "dmc"    },;
                     { {|| FindInPath( "i686-w64-mingw32-gcc" ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
                     { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" }} /* mingw-w64 build */
 #endif
@@ -6855,29 +6856,29 @@ STATIC PROCEDURE s_getFilesDep( hbmk, cFile, hFiles, cParentDir, lSystemHeader, 
 
    RETURN
 
-static function s_getNewestTime( cFile, hFiles, lFileReq )
-   local aFile, tTime, aDep, tDep, lReq
+STATIC FUNCTION s_getNewestTime( cFile, hFiles, lFileReq )
+   LOCAL aFile, tTime, aDep, tDep, lReq
 
    tTime := t"00:00"
-   if cFile $ hFiles
+   IF cFile $ hFiles
       aFile := hFiles[ cFile ]
-      if aFile[ _HBMK_FILEDEF_tNEWESTTIME ] != NIL
+      IF aFile[ _HBMK_FILEDEF_tNEWESTTIME ] != NIL
          /* this file does not have any cross references other then to self
           * and the time of the newest included file is already calculated
           * so we can simply use it
           */
          tTime := aFile[ _HBMK_FILEDEF_tNEWESTTIME ]
-      elseif aFile[ _HBMK_FILEDEF_lCANSCAN ]
-         lReq := .f.
-         aFile[ _HBMK_FILEDEF_lCANSCAN ] := .f.
+      ELSEIF aFile[ _HBMK_FILEDEF_lCANSCAN ]
+         lReq := .F.
+         aFile[ _HBMK_FILEDEF_lCANSCAN ] := .F.
          tTime := aFile[ _HBMK_FILEDEF_tFILETIME ]
-         for each aDep in aFile[ _HBMK_FILEDEF_aINCFILES ]
+         FOR EACH aDep IN aFile[ _HBMK_FILEDEF_aINCFILES ]
             tDep := s_getNewestTime( aDep[ _HBMK_HEADER_cHeader ], hFiles, @lReq )
-            if tDep > tTime
+            IF tDep > tTime
                tTime := tDep
-            endif
-         next
-         if lReq
+            ENDIF
+         NEXT
+         IF lReq
             /* This file has references to some other files already
              * scanned. It's possible that these are circular references
              * and the time of files with such references is not fully
@@ -6885,30 +6886,30 @@ static function s_getNewestTime( cFile, hFiles, lFileReq )
              * levels) so we cannot store calculated time as the final
              * newest time of this file
              */
-            lFileReq := .t.
-         else
+            lFileReq := .T.
+         ELSE
             /* we do not have any circular references to files with
              * undefined yet time so we can safely set the time of the
              * newest included file to not repeat the scan when this
              * file is reused
              */
-            aFile[ _HBMK_FILEDEF_lCANSCAN ] := .t.
+            aFile[ _HBMK_FILEDEF_lCANSCAN ] := .T.
             aFile[ _HBMK_FILEDEF_tNEWESTTIME ] := tTime
-         endif
-      else
-         lFileReq := .t.
-      endif
-   endif
-   return tTime
+         ENDIF
+      ELSE
+         lFileReq := .T.
+      ENDIF
+   ENDIF
+   RETURN tTime
 
-static function getNewestTime( hbmk, cFile, hFiles, lCMode )
-   local aFile, tTime
+STATIC FUNCTION getNewestTime( hbmk, cFile, hFiles, lCMode )
+   LOCAL aFile, tTime
 
-   if hFiles == NIL
+   IF hFiles == NIL
       hFiles := { => }
       /* for easier visualization the scan steps in debug mode */
-      /* hb_hKeepOrder( hFiles, .t. ) */
-   endif
+      /* hb_hKeepOrder( hFiles, .T. ) */
+   ENDIF
    s_getFilesDep( hbmk, cFile, hFiles, FNameDirGet( cFile ), .F., lCMode )
    tTime := s_getNewestTime( cFile, hFiles )
    /* we calculated the newest time of this file and all included files
@@ -6919,11 +6920,11 @@ static function getNewestTime( hbmk, cFile, hFiles, lCMode )
    /* mark all files with cross references as scanable so we can
     * repeat the scan process for other files
     */
-   for each aFile in hFiles
-      aFile[ _HBMK_FILEDEF_lCANSCAN ] := .t.
-   next
+   FOR EACH aFile IN hFiles
+      aFile[ _HBMK_FILEDEF_lCANSCAN ] := .T.
+   NEXT
 
-   return tTime
+   RETURN tTime
 
 STATIC FUNCTION clpfile_read( cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
