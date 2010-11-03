@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qtgui/qth
 -O=../qtgui/g
@@ -112,13 +112,13 @@ QIcon.qth
 QImage.qth
 QImageReader.qth
 QImageWriter.qth
-; QInputContext.qth      # Disabled because of OS/2
+# QInputContext.qth      # Disabled because of OS/2
 QInputDialog.qth
 QInputEvent.qth
 QInputMethodEvent.qth
 QIntValidator.qth
 QItemDelegate.qth
-; QItemEditorCreator.qth
+# QItemEditorCreator.qth
 QItemEditorCreatorBase.qth
 QItemEditorFactory.qth
 QItemSelection.qth

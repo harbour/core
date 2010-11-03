@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qscintilla/qth
 -O=../qscintilla/g

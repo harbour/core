@@ -52,9 +52,6 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbclass.ch"
-#include "common.ch"
-#include "fileio.ch"
-#include "hbtrace.ch"
 
 #define _EOL   chr( 10 )
 
@@ -116,7 +113,7 @@ CREATE CLASS HbQtGenerator
    METHOD process()
    METHOD manageProject( cProFile )
    METHOD genSource( cProFile, cPathIn, cPathOut, cPathDoc, cProject )
-   METHOD buildMakeFile( cPathOut, cProFile )
+   METHOD buildMakeFile( cPathOut )
    METHOD buildHeaderFile( cpp_, cPathOut, cProFile )
 
    ENDCLASS
@@ -302,7 +299,7 @@ METHOD HbQtGenerator:manageProject( cProFile )
    NEXT
 
    IF !empty( ::cpp_ )
-      ::buildMakefile( cPOut, cProFile )
+      ::buildMakefile( cPOut )
       ::buildHeaderFile( ::cpp_, cPOut, cProFile )
    ENDIF
 
@@ -405,7 +402,7 @@ METHOD HbQtGenerator:buildHeaderFile( cpp_, cPathOut, cProFile )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtGenerator:buildMakeFile( cPathOut, cProFile )
+METHOD HbQtGenerator:buildMakeFile( cPathOut )
    LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
    LOCAL s
    LOCAL hdr_:= {}
@@ -1264,9 +1261,15 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
 
    HB_SYMBOL_UNUSED( lClubbed )
 
-   DEFAULT lInIf       TO .f.
-   DEFAULT nTySame     TO 0
-   DEFAULT nArgToCheck TO oM:nArgs
+   IF lInIf == NIL
+      lInIf := .F.
+   ENDIF
+   IF nTySame == NIL
+      nTySame := 0
+   ENDIF
+   IF nArgToCheck == NIL
+      nArgToCheck := oM:nArgs
+   ENDIF
 
    cPreFix := ""
 
@@ -1286,11 +1289,11 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
    ENDIF
 
    IF nTySame > 0 .AND. lInIf
-      HB_TRACE( HB_TR_DEBUG, oM:nArgQCast, oM:nArgs )
+      // HB_TRACE( HB_TR_DEBUG, oM:nArgQCast, oM:nArgs )
 
       IF oM:nArgQCast == 0
          aadd( txt_, sp + "// " + "RETURN " + cFun + cPostFix )
-         HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
+         // HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
          IF nTySame > 1 .AND. nCount == nTySame
             aadd( txt_, sp + "ENDSWITCH" )
          ENDIF
@@ -1314,7 +1317,7 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
    ELSE
       IF nCount > 1
          aadd( txt_, sp + "// " + "RETURN " + cFun + cPostFix )
-         HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
+         // HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
       ELSE
          IF "..." $ cFun
             aadd( txt_, sp + cPrefix + "RETURN " + cFun + cPostFix )
@@ -2156,7 +2159,10 @@ STATIC FUNCTION Get_Command_1( cWgt, cCmn )
 
 STATIC FUNCTION Get_Command( cWgt, cCmn, lNew )
 
-   DEFAULT lNew TO .T.
+   IF lNew == NIL
+      lNew := .T.
+   ENDIF
+
    IF lNew
       RETURN "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) )"
    ELSE

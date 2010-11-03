@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qtcore/qth
 -O=../qtcore/g
@@ -10,7 +10,7 @@ HBQEvents.qth
 HBQSlots.qth
 HBQString.qth
 
-; QAbstractEventDispatcher.qth
+# QAbstractEventDispatcher.qth
 QAbstractItemModel.qth
 QAbstractListModel.qth
 QAbstractTableModel.qth

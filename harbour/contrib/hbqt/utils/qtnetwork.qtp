@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qtnetwork/qth
 -O=../qtnetwork/g

@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qtuitools/qth
 -O=../qtuitools/g

@@ -1,6 +1,6 @@
-;
-; $Id$
-;
+#
+# $Id$
+#
 
 -I=../qtdesigner/qth
 -O=../qtdesigner/g
