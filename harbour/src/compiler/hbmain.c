@@ -4117,7 +4117,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          }
          fSkip = HB_TRUE;
       }
-      else
+
+      if( !fSkip )
       {
          if( HB_COMP_PARAM->fPPT )
          {
@@ -4138,10 +4139,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
                break;
             }
          }
-      }
 
-      if( !fSkip )
-      {
 #if !defined( HB_MODULES_MERGE )
          /* TODO: HRB format does not support yet multiple static functions
           *       with the same name. Such functionality needs extended .HRB

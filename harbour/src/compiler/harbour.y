@@ -298,7 +298,10 @@ Source     : Crlf
            | Source error Crlf  { yyclearin; yyerrok; }
            ;
 
-Line       : LINE NUM_LONG LITERAL Crlf
+Line       : LINE NUM_LONG Crlf
+                  { HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
+                    HB_COMP_PARAM->pLex->fEol = HB_FALSE; }
+           | LINE NUM_LONG LITERAL Crlf
                   { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, $3.string, $3.dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
                     HB_COMP_PARAM->pLex->fEol = HB_FALSE;
