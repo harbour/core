@@ -8,7 +8,6 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-hbqtgui_extern.prg
 HBQAbstractItemModel.cpp
 HBQGraphicsItem.cpp
 HBQGraphicsScene.cpp

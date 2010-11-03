@@ -8,7 +8,6 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-hbqtuitools_extern.prg
 QUiLoader.cpp
 
 TQUiLoader.prg

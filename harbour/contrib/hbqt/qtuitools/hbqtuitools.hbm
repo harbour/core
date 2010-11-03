@@ -9,6 +9,8 @@ g/filelist.hbm
 
 hbqt_init.cpp
 
+hbqt_extern.prg
+
 THbQtUILoader.prg
 
 ../qtgui/hbqtgui.hbc

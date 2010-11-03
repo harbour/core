@@ -401,23 +401,6 @@ METHOD HbQtGenerator:buildHeaderFile( cpp_, cPathOut, cProFile )
 
    CreateTarget( cFile + "hb" + cName + ".h", txt_ )
 
-   /* Create extern puller file */
-
-   txt_ := {}
-   AEval( hdr_, {| tmp | AAdd( txt_, tmp ) } )
-
-   aadd( txt_, "#ifndef __HB" + Upper( cName ) + "_EXTERN_CH" )
-   aadd( txt_, "#define __HB" + Upper( cName ) + "_EXTERN_CH" )
-   aadd( txt_, "" )
-   aadd( txt_, "#define __HBEXTERN__HB" + Upper( cName ) + "__ANNOUNCE" )
-   aadd( txt_, "#define __HBEXTERN__HB" + Upper( cName ) + "__REQUEST" )
-   aadd( txt_, '#include "hb' + cName + '.hbx"' )
-   aadd( txt_, "" )
-
-   aadd( txt_, "#endif /* __HB" + Upper( cName ) + "_EXTERN_CH */" )
-
-   CreateTarget( cFile + "hb" + cName + "_extern.prg", txt_ )
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -442,7 +425,6 @@ METHOD HbQtGenerator:buildMakeFile( cPathOut, cProFile )
    hbm_ := {}
    aeval( hdr_, {|e| aadd( hbm_, e ) } )
    //
-   aadd( hbm_, "hb" + FNameGetName( cProFile ) + "_extern.prg" )
    FOR EACH s IN ::aWidgetList
       aadd( hbm_, + s + ".cpp" )
    NEXT
@@ -1948,21 +1930,21 @@ METHOD HbQtSource:buildCppCode( oMtd )
       ENDIF
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
-   CASE ( isAqtObject( oRet:cCast ) )      .AND. ;
+   CASE isAqtObject( oRet:cCast )          .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
-                             ( "Abstract" $ oRet:cCast )
+                             "Abstract" $ oRet:cCast
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
-   CASE ( isAqtObject( oRet:cCast ) )      .AND. ;
+   CASE isAqtObject( oRet:cCast )          .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lVirt
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
-   CASE ( isAqtObject( oRet:cCast ) )      .AND. ;
+   CASE isAqtObject( oRet:cCast )          .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lConstL

@@ -15,6 +15,7 @@ hbqt_hbqevents.cpp
 hbqt_hbqslots.cpp
 hbqt_hbqstring.cpp
 
+hbqt_extern.prg
 hbqt_misc.prg
 
 hbqt_hbqevents.h

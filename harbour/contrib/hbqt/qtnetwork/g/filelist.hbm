@@ -8,7 +8,6 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-hbqtnetwork_extern.prg
 QFtp.cpp
 QHttp.cpp
 QHttpHeader.cpp

@@ -8,7 +8,6 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-hbqscintilla_extern.prg
 HBQsciScintilla.cpp
 QsciAbstractAPIs.cpp
 QsciAPIs.cpp

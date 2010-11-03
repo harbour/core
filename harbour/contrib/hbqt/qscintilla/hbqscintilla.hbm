@@ -12,5 +12,7 @@ hbqt_init.cpp
 hbqt_hbqsciscintilla.cpp
 hbqt_hbqsciscintilla.h
 
+hbqt_extern.prg
+
 ../qtcore/hbqtcore.hbc
 ../qtgui/hbqtgui.hbc

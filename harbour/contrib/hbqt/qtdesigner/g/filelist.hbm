@@ -8,7 +8,6 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-hbqtdesigner_extern.prg
 QDesignerActionEditorInterface.cpp
 QDesignerFormEditorInterface.cpp
 QDesignerFormWindowCursorInterface.cpp

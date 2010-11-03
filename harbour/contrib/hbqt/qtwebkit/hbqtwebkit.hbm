@@ -9,6 +9,8 @@ g/filelist.hbm
 
 hbqt_init.cpp
 
+hbqt_extern.prg
+
 ../qtcore/hbqtcore.hbc
 ../qtgui/hbqtgui.hbc
 ../qtnetwork/hbqtnetwork.hbc
