@@ -1928,7 +1928,9 @@ static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    if( pFunc->pJumps )
       hb_xfree( pFunc->pJumps );
 
-   hb_xfree( pFunc->pCode );
+   if( pFunc->pCode )
+      hb_xfree( pFunc->pCode );
+
    hb_xfree( pFunc );
 
    return pNext;
