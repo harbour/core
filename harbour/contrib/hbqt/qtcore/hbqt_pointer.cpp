@@ -118,9 +118,7 @@ void * hbqt_par_obj( int iParam )
       HBQT_GC_T * p;
       p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
       if( p && p->ph )
-      {
          return p->ph;
-      }
    }
 
    return NULL;
@@ -246,9 +244,7 @@ void * hbqt_detachgcpointer( int iParam )
       return hbqt_detachgcpointer( -1 );
    }
    else
-   {
       return NULL;
-   }
 }
 
 HB_FUNC( __HBQT_ISPOINTER )

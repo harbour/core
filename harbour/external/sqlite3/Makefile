@@ -29,10 +29,13 @@ endif
 ifeq ($(HB_HOST_PLAT)-$(HB_COMPILER),dos-watcom)
    HB_SUPPORTED := no
 endif
-# NOTE: disable *nix builds on non-*nix platforms. [vszakats]
-ifeq ($(HB_HOST_PLAT_UNIX),)
-   ifneq ($(HB_PLATFORM_UNIX),)
-      HB_SUPPORTED := no
+# NOTE: disable *nix builds on non-*nix platforms; [vszakats]
+#       except for cygwin-on-win
+ifneq ($(HB_HOST_PLAT)-$(HB_PLATFORM),win-cygwin)
+   ifeq ($(HB_HOST_PLAT_UNIX),)
+      ifneq ($(HB_PLATFORM_UNIX),)
+         HB_SUPPORTED := no
+      endif
    endif
 endif
 
