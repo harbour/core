@@ -118,6 +118,7 @@ PRG_HEADERS := \
    hbhrb.ch \
    hbinkey.ch \
    hblang.ch \
+   hblpp.ch \
    hbmacro.ch \
    hbmath.ch \
    hbmemory.ch \

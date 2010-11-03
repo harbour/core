@@ -2140,10 +2140,11 @@ static HB_BOOL hb_pp_pragmaStream( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
 #define MAX_STREAM_SIZE       0x1000000
 
-static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fBinary )
+static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName )
 {
    PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, HB_FALSE, NULL, NULL,
-                                      HB_TRUE, pState->pOpenFunc, fBinary );
+                                      HB_TRUE, pState->pOpenFunc,
+                                      pState->iStreamDump == HB_PP_STREAM_BINARY );
    if( pFile )
    {
       HB_SIZE nSize;
@@ -2502,7 +2503,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_PRG;
-               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
                pState->iStreamDump = HB_PP_STREAM_OFF;
             }
          }
@@ -2517,7 +2518,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_C;
-               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
                pState->iStreamDump = HB_PP_STREAM_OFF;
             }
          }
@@ -2532,7 +2533,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_BINARY;
-               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_TRUE );
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
                pState->iStreamDump = HB_PP_STREAM_OFF;
             }
          }
