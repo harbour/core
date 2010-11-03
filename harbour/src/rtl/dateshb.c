@@ -197,6 +197,16 @@ HB_FUNC( DAY )
       hb_errRT_BASE_SubstR( EG_ARG, 1114, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( DOW )
+{
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
+
+   if( pDate )
+      hb_retnilen( hb_dateJulianDOW( hb_itemGetDL( pDate ) ), 3 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( TIME )
 {
    char szResult[ 9 ];
@@ -211,14 +221,16 @@ HB_FUNC( DATE )
    hb_retd( iYear, iMonth, iDay );
 }
 
-HB_FUNC( DOW )
+HB_FUNC( HB_DATE )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-      hb_retnilen( hb_dateJulianDOW( hb_itemGetDL( pDate ) ), 3 );
+   if( hb_pcount() == 0 )
+   {
+      int iYear, iMonth, iDay;
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      hb_retd( iYear, iMonth, iDay );
+   }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_retd( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 HB_FUNC( HB_DATETIME )
@@ -229,15 +241,9 @@ HB_FUNC( HB_DATETIME )
       hb_timeStampGet( &lDate, &lTime );
       hb_rettdt( lDate, lTime );
    }
-   else if( HB_ISNUM( 4 ) || HB_ISNUM( 5 ) || HB_ISNUM( 6 ) || HB_ISNUM( 7 ) )
-   {
+   else
       hb_rettdt( hb_dateEncode( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ),
                  hb_timeEncode( hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ) ) );
-   }
-   else if( HB_ISNUM( 1 ) || HB_ISNUM( 2 ) || HB_ISNUM( 3 ) )
-      hb_retd( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_DTOT )

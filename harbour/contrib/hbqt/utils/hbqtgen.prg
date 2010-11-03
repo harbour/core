@@ -322,11 +322,6 @@ METHOD HbQtGenerator:genSource( cProFile, cPathIn, cPathOut, cPathDoc, cProject 
       RETURN { nil }
    ENDIF
 
-   IF empty( memoread( cFile ) )
-      OutStd( "Cannot read: " + cFile + hb_eol() )
-      RETURN { nil }
-   ENDIF
-
    OutStd( "Processing: " + cFile + hb_eol() )
 
    /* Mark to which sub library class belongs to */

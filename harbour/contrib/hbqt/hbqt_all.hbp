@@ -7,8 +7,6 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-"-stop={dos}'hbqt' doesn't support this platform/compiler (${hb_plat}/${hb_comp})."
-
 -hbcontainer
 
 # Do not change this to hbqt.hbc reference.
