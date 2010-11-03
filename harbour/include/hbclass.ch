@@ -123,18 +123,6 @@
 #endif
 
 
-#ifndef __HARBOUR__
-   #ifndef HB_CLS_NO_DECORATION
-      #define HB_CLS_NO_DECORATION
-   #endif
-   #ifndef HB_CLS_NO_DECLARATIONS
-      #define HB_CLS_NO_DECLARATIONS
-   #endif
-   #ifndef HB_CLS_PARAM_LIST
-      #define HB_CLS_PARAM_LIST
-   #endif
-#endif
-
 /* Disable method decoration when Harbour compiled strict compatibility mode.
    In strict mode, PP doesn't support identifier concatenation, which
    would be needed for method decoration. */

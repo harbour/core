@@ -498,7 +498,7 @@ REQUEST HB_REGEX
          internal structures referenced from context variable */
 STATIC s_cSecToken := NIL
 
-PROCEDURE Main( ... )
+PROCEDURE _APPMAIN( ... )
    LOCAL aArgsProc
    LOCAL nResult
    LOCAL tmp, tmp1
@@ -511,10 +511,7 @@ PROCEDURE Main( ... )
    LOCAL nTargetPos
    LOCAL lHadTarget
 
-   LOCAL lOldExact := Set( _SET_EXACT, .F. )
-
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
+   LOCAL lOldExact
 
    /* Expand wildcard project specs */
 
@@ -529,6 +526,19 @@ PROCEDURE Main( ... )
          FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
             AAdd( aArgsProc, "-target=" + tmp1 )
          NEXT
+#if 0
+      CASE Lower( FNameExtGet( tmp ) ) == ".hbs"
+         hbrun_main( tmp )
+         QUIT
+      CASE Lower( tmp ) == "-ui"
+         #if defined( __PLATFORM__WINCE )
+            hb_gtSelect( hb_gtCreate( "GTWVT" ) )
+         #elif defined( __PLATFORM__WINDOWS )
+            hb_gtSelect( hb_gtCreate( "GTWIN" ) )
+         #endif
+         hbrun_main()
+         QUIT
+#endif
       OTHERWISE
          AAdd( aArgsProc, tmp )
       ENDCASE
@@ -574,6 +584,11 @@ PROCEDURE Main( ... )
    ENDIF
 
    /* Handle multitarget command lines */
+
+   hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
+   hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
+
+   lOldExact := Set( _SET_EXACT, .F. )
 
    nTargetTODO := 1
    DO WHILE .T.
@@ -622,14 +637,14 @@ PROCEDURE Main( ... )
       ++nTargetTODO
    ENDDO
 
+   Set( _SET_EXACT, lOldExact )
+
    IF nResult != 0 .AND. lPause
       OutStd( I_( "Press any key to continue..." ) )
       Inkey( 0 )
    ENDIF
 
    ErrorLevel( nResult )
-
-   Set( _SET_EXACT, lOldExact )
 
    RETURN
 
@@ -1695,10 +1710,24 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
    ENDIF
 
-   IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+   DO CASE
+   CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
       AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h" ) )
       AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h/wrn/coreip" ) )
-   ENDIF
+   CASE hbmk[ _HBMK_cPLAT ] == "bsd"
+      IF hb_DirExists( "/usr/local/lib" ) /* For ports */
+         AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
+      ENDIF
+      IF hb_DirExists( "/usr/local/include" )
+         AAdd( hbmk[ _HBMK_aINCPATH ], "/usr/local/include" )
+      ENDIF
+      IF hb_DirExists( "/usr/pkg/lib" ) /* For pkgsrc */
+         AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" )
+      ENDIF
+      IF hb_DirExists( "/usr/pkg/include" )
+         AAdd( hbmk[ _HBMK_aINCPATH ], "/usr/pkg/include" )
+      ENDIF
+   ENDCASE
 
    /* Tweaks to compiler setup */
 
@@ -3251,7 +3280,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             CASE hbmk[ _HBMK_cPLAT ] == "hpux"
                AAdd( l_aLIBSYS, "rt" )
             CASE hbmk[ _HBMK_cPLAT ] == "beos"
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/system/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/system/lib" )
                AAdd( l_aLIBSYS, "root" )
                AAdd( l_aLIBSYS, "network" )
             CASE hbmk[ _HBMK_cPLAT ] == "qnx"
@@ -3274,7 +3303,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF IsGTRequested( hbmk, "gtsln" )
             IF hbmk[ _HBMK_cPLAT ] == "bsd" .AND. ;
-               hb_FileExists( "/usr/pkg/lib/libslang2.so" ) /* For DragonFly BSD */
+               hb_FileExists( "/usr/pkg/lib/libslang2.so" ) /* For pkgsrc */
                AAdd( l_aLIBSYS, "slang2" )
             ELSE
                AAdd( l_aLIBSYS, "slang" )
@@ -3282,18 +3311,18 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             /* Add paths, where this isn't a system component */
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" ) /* For Fink */
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" ) /* For MacPorts (formerly DarwinPorts) */
             CASE hbmk[ _HBMK_cPLAT ] == "bsd"
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" ) /* For DragonFly BSD */
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" ) /* For ports */
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" ) /* For pkgsrc */
             ENDCASE
          ENDIF
          IF IsGTRequested( hbmk, "gtxwc" )
             IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
             ENDIF
-            AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
+            AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
             AAdd( l_aLIBSYS, "X11" )
          ENDIF
 
@@ -4314,9 +4343,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF IsGTRequested( hbmk, "gtxwc" )
             IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
             ENDIF
-            AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
+            AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
             AAdd( l_aLIBSYS, "X11" )
          ENDIF
 
@@ -7568,7 +7597,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
-            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_SCRIPT )
             IF ! Empty( cFile )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             ENDIF

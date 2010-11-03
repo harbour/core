@@ -32,7 +32,7 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
-#if ! defined( __HBSCRIPT__HBRUN )
+#if defined( __HBSCRIPT__HBMK )
 
 FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL cRetVal := ""
@@ -56,6 +56,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       hbmk2_Register_Input_File_Extension( hbmk2, ".ui" )
       hbmk2_Register_Input_File_Extension( hbmk2, ".hpp" )
       hbmk2_Register_Input_File_Extension( hbmk2, ".h" )
+      hbmk2_Register_Input_File_Extension( hbmk2, ".qth" )
 
       EXIT
 
@@ -66,6 +67,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       hbmk2[ "vars" ][ "aQRC_Src" ] := {}
       hbmk2[ "vars" ][ "aUIC_Src" ] := {}
       hbmk2[ "vars" ][ "aMOC_Src" ] := {}
+      hbmk2[ "vars" ][ "aQTH_Src" ] := {}
 
       FOR EACH cSrc IN hbmk2[ "params" ]
          SWITCH Lower( hbmk2_FNameExtGet( cSrc ) )
@@ -79,6 +81,9 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          CASE ".h"
             AAdd( hbmk2[ "vars" ][ "aMOC_Src" ], cSrc )
             EXIT
+         CASE ".qth"
+            AAdd( hbmk2[ "vars" ][ "aQTH_Src" ], cSrc )
+            EXIT
          ENDSWITCH
       NEXT
 
@@ -86,9 +91,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
       hbmk2[ "vars" ][ "aQRC_Dst" ] := {}
       hbmk2[ "vars" ][ "aQRC_PRG" ] := {}
-      hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
-      hbmk2[ "vars" ][ "aMOC_Dst" ] := {}
-
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".qrb" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
@@ -97,16 +99,29 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
+      hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aUIC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "uic_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aUIC_Dst" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
+      hbmk2[ "vars" ][ "aMOC_Dst" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
+      NEXT
+
+      hbmk2[ "vars" ][ "aQTH_CPP" ] := {}
+      hbmk2[ "vars" ][ "aQTH_PRG" ] := {}
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aQTH_Src" ]
+         cDst := hbmk2_FNameDirExtSet( "qth_cpp_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
+         AAdd( hbmk2[ "vars" ][ "aQTH_CPP" ], cDst )
+         hbmk2_AddInput_CPP( hbmk2, cDst )
+         cDst := hbmk2_FNameDirExtSet( "qth_prg_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
+         AAdd( hbmk2[ "vars" ][ "aQTH_PRG" ], cDst )
+         hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
       /* Detect tool locations */
@@ -317,6 +332,8 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          AEval( hbmk2[ "vars" ][ "aQRC_PRG" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aUIC_Dst" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk2[ "vars" ][ "aQTH_CPP" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk2[ "vars" ][ "aQTH_PRG" ], {| tmp | FErase( tmp ) } )
       ENDIF
 
       EXIT
@@ -384,30 +401,30 @@ PROCEDURE Main( cSrc, cDst )
    LOCAL nError
    LOCAL cExt
 
-   LOCAL cName
-
    IF cSrc != NIL .AND. ;
       cDst != NIL
-
-      FClose( hb_FTempCreateEx( @cTmp ) )
-
-      cName := "TEST"
 
       hb_FNameSplit( cSrc,,, @cExt )
 
       SWITCH Lower( cExt )
       CASE ".ui"
+
+         FClose( hb_FTempCreateEx( @cTmp ) )
+
          IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
-            IF ! uic_to_prg( NIL, cTmp, cDst, cName )
+            IF ! uic_to_prg( NIL, cTmp, cDst, "TEST" )
                nError := 9
             ENDIF
          ELSE
             OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_eol() )
          ENDIF
-         EXIT
-      ENDSWITCH
 
-      FErase( cTmp )
+         FErase( cTmp )
+
+         EXIT
+      CASE ".qth"
+         qth_to_src( cSrc, cDst )
+      ENDSWITCH
    ELSE
       OutErr( "Missing parameter. Call with: <input> <output>" + hb_eol() )
       nError := 8
@@ -426,6 +443,17 @@ STATIC FUNCTION hbmk2_OutErr( hbmk2, ... )
    RETURN OutErr( ... )
 
 #endif
+
+/* ----------------------------------------------------------------------- */
+
+STATIC FUNCTION qth_to_src( cSrc, cDst )
+
+   HB_SYMBOL_UNUSED( cSrc )
+   HB_SYMBOL_UNUSED( cDst )
+
+   RETURN .F.
+
+/* ----------------------------------------------------------------------- */
 
 STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL aLinesPRG
@@ -518,7 +546,7 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
             lCreateFinished := .T.
 
          ELSEIF Left( s, 1 ) == "Q" .AND. ! lCreateFinished .AND. ( n := At( "*", s ) ) > 0
-            // We eill deal later - just skip
+            // We will deal later - just skip
 
          ELSEIF hbq_notAString( s ) .AND. ! Empty( aReg := hb_regex( regEx, s ) )
             cCls := RTrim( aReg[ 1 ] )
@@ -632,12 +660,10 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
       IF "addWidget" $ cCmd
          IF hbq_occurs( cCmd, "," ) >= 4
-//            cCmd := StrTran( cCmd, "addWidget", "addWidget_1" )
             cCmd := StrTran( cCmd, "addWidget", "addWidget" )
          ENDIF
       ELSEIF "addLayout" $ cCmd
          IF hbq_occurs( cCmd, "," ) >= 4
-//            cCmd := StrTran( cCmd, "addLayout", "addLayout_1" )
             cCmd := StrTran( cCmd, "addLayout", "addLayout" )
          ENDIF
       ENDIF

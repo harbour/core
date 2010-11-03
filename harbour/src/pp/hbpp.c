@@ -191,7 +191,7 @@ static void hb_pp_generateInitFunc( FILE * fout, int iRules,
       fprintf( fout, "NULL, 0 );\n" );
 }
 
-static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState )
+static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * szPPRuleFuncName )
 {
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
@@ -213,7 +213,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState )
    if( pState->pCommands )
       iCmds = hb_pp_writeRules( fout, pState->pCommands, "cmd" );
 
-   fprintf( fout, "\nvoid hb_pp_setStdRules( PHB_PP_STATE pState )\n{\n" );
+   fprintf( fout, "\nvoid %s( PHB_PP_STATE pState )\n{\n", szPPRuleFuncName ? szPPRuleFuncName : "hb_pp_setStdRules" );
    hb_pp_generateInitFunc( fout, iDefs,  "Definitions",  "def" );
    hb_pp_generateInitFunc( fout, iTrans, "Translations", "trs" );
    hb_pp_generateInitFunc( fout, iCmds,  "Commands",     "cmd" );
@@ -257,7 +257,7 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
    }
 }
 
-static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
+static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile, const char * szPPRuleFuncName )
 {
    int iResult = 0;
    HB_SIZE nLen;
@@ -279,7 +279,7 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
       else
       {
          hb_pp_undefCompilerRules( pState );
-         hb_pp_generateRules( foutr, pState );
+         hb_pp_generateRules( foutr, pState, szPPRuleFuncName );
          fclose( foutr );
       }
    }
@@ -636,6 +636,7 @@ static void hb_pp_usage( char * szName )
    printf( "\n" );
    printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
    printf( "Options:  -d<id>[=<val>]\t#define <id>\n"
+           "          -e[<func>]    \tuse <func> as entry function in generated .c PP rules\n"
            "          -i<path>      \tadd #include file search path\n"
            "          -u[<file>]    \tuse command def set in <file> (or none)\n"
            "          -c[<file>]    \tlook for ChangeLog file\n"
@@ -654,6 +655,7 @@ int main( int argc, char * argv[] )
    HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE;
    char * szChangeLogID = NULL, * szLastEntry = NULL;
    int iSVNID = 0, iResult = 0, iQuiet = 0, i;
+   char * szPPRuleFuncName = NULL;
    PHB_PP_STATE pState;
 
    pState = hb_pp_new();
@@ -695,6 +697,14 @@ int main( int argc, char * argv[] )
                      hb_pp_addDefine( pState, szDefText, szAssign );
                      hb_xfree( szDefText );
                   }
+                  break;
+
+               case 'e':
+               case 'E':
+                  if( argv[i][2] )
+                     szPPRuleFuncName = argv[i] + 2;
+                  else
+                     szPPRuleFuncName = NULL;
                   break;
 
                case 'w':
@@ -797,7 +807,7 @@ int main( int argc, char * argv[] )
                                             &iSVNID, &szChangeLogID, &szLastEntry );
 
          if( iResult == 0 )
-            iResult = hb_pp_preprocesfile( pState, szRuleFile );
+            iResult = hb_pp_preprocesfile( pState, szRuleFile, szPPRuleFuncName );
 
          if( iResult == 0 && szVerFile )
             iResult = hb_pp_generateVerInfo( szVerFile, iSVNID,
