@@ -81,10 +81,13 @@ static int     s_argc = 0;
 static char ** s_argv = NULL;
 
 #if !defined( HB_OS_WIN )
-static char    s_szAppName[ HB_PATH_MAX ];
+
+   static char    s_szAppName[ HB_PATH_MAX ];
+
    #if defined( HB_OS_CYGWIN )
       static char s_lpAppName[ MAX_PATH ];
    #endif
+
 #else
 
 static char    s_szAppName[ MAX_PATH ];

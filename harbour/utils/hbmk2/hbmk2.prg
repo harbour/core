@@ -7604,15 +7604,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       hb_FNameSplit( cFileName, NIL, NIL, @cExt )
 
-#if defined( __PLATFORM__DOS )
-      IF hbmk_dos_FileExists( cFileName )
-#else
-      IF .T.
-#endif
-         cFile := hb_MemoRead( cFileName )
-      ELSE
-         cFile := ""
-      ENDIF
+      cFile := hb_MemoRead( cFileName )
 
       IF ! Empty( cFile )
          lOK := .F.

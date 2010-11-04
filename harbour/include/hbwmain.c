@@ -131,6 +131,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #endif
 
 #if defined( HB_VM_STARTUP )
+
    #if !defined( HB_OS_CYGWIN )
       hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    #else
@@ -138,6 +139,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       HB_SYMBOL_UNUSED( hPrevInstance );
       HB_SYMBOL_UNUSED( iCmdShow );
    #endif
+
    hb_cmdargInit( s_argc, s_argv );
 
    hb_vmInit( HB_TRUE );

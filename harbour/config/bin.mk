@@ -21,6 +21,9 @@ ifeq ($(BUILD_SHARED),yes)
       hbcplr \
       hbdebug \
 
+   ifeq ($(HB_PLATFORM),cygwin)
+      HB_LIBS_TPL += hbmainstd
+   else
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm),)
          HB_LIBS_TPL += hbmainstd
@@ -38,6 +41,7 @@ ifeq ($(BUILD_SHARED),yes)
       else
          HB_LIBS_TPL += hbmainstd
       endif
+   endif
    endif
    endif
 
