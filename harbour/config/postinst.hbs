@@ -15,23 +15,8 @@
 #pragma -km+
 #pragma -ko+
 
-/* TOFIX: Ugly hack to avoid #include "directry.ch" */
-#define F_NAME                1              /* File name */
-#define F_ATTR                5              /* File attribute */
-
-/* POSIX file permission */
-#define HB_FA_SUID            0x08000000     /* 4000 set user ID on execution */
-#define HB_FA_SGID            0x04000000     /* 2000 set group ID on execution */
-#define HB_FA_SVTX            0x02000000     /* 1000 sticky bit */
-#define HB_FA_RUSR            0x01000000     /* 0400 read by owner */
-#define HB_FA_WUSR            0x00800000     /* 0200 write by owner */
-#define HB_FA_XUSR            0x00400000     /* 0100 execute/search by owner */
-#define HB_FA_RGRP            0x00200000     /* 0040 read by group */
-#define HB_FA_WGRP            0x00100000     /* 0020 write by group */
-#define HB_FA_XGRP            0x00080000     /* 0010 execute/search by group */
-#define HB_FA_ROTH            0x00040000     /* 0004 read by others */
-#define HB_FA_WOTH            0x00020000     /* 0002 write by others */
-#define HB_FA_XOTH            0x00010000     /* 0001 execute/search by others */
+#include "directry.ch"
+#include "fileio.ch"
 
 PROCEDURE Main( ... )
    LOCAL nErrorLevel := 0

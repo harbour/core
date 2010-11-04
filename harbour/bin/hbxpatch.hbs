@@ -206,12 +206,7 @@
 #pragma -km+
 #pragma -ko+
 
-#if 0
-   #include "directry.ch"
-#else
-   #define F_NAME      1  /* directry.ch */
-   #define F_ATTR      5  /* directry.ch */
-#endif
+#include "directry.ch"
 
 #if defined( _TRACE )
    #define TRACE( str )    OutStd( "T: " + str + hb_eol() )

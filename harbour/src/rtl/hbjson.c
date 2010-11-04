@@ -498,7 +498,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
       {
          double mult = 1;
 
-         dblValue = nValue;
+         dblValue = ( double ) nValue;
          fDbl = HB_TRUE;
          szSource++;
          while( *szSource >= '0' && *szSource <= '9' )
@@ -526,7 +526,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
          }
          if( ! fDbl )
          {
-            dblValue = nValue;
+            dblValue = ( double ) nValue;
             fDbl = HB_TRUE;
          }
          dblValue *= pow( 10.0, ( double ) ( fNegExp ? -iExp : iExp ) );
