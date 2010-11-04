@@ -59,8 +59,10 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
 
 /* ************************************************************************* */
 
-int hb_compMain( int argc, const char * const argv[],
-                 HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource )
+int hb_compMainExt( int argc, const char * const argv[],
+                    HB_BYTE ** pBufPtr, HB_SIZE * pnSize,
+                    const char * szSource,
+                    void * cargo, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
@@ -70,6 +72,7 @@ int hb_compMain( int argc, const char * const argv[],
    HB_TRACE(HB_TR_DEBUG, ("hb_compMain()"));
 
    HB_COMP_PARAM = hb_comp_new();
+   HB_COMP_PARAM->cargo = cargo;
 
    HB_COMP_PARAM->pOutPath = NULL;
 
@@ -117,7 +120,7 @@ int hb_compMain( int argc, const char * const argv[],
          hb_compChkPaths( HB_COMP_PARAM );
 
       /* Set standard rules */
-      hb_compInitPP( HB_COMP_PARAM, argc, argv );
+      hb_compInitPP( HB_COMP_PARAM, argc, argv, pOpenFunc );
 
       /* Prepare the table of identifiers */
       hb_compIdentifierOpen( HB_COMP_PARAM );
@@ -175,6 +178,11 @@ int hb_compMain( int argc, const char * const argv[],
    hb_comp_free( HB_COMP_PARAM );
 
    return iStatus;
+}
+
+int hb_compMain( int argc, const char * const argv[] )
+{
+   return hb_compMainExt( argc, argv, NULL, NULL, NULL, NULL, NULL );
 }
 
 static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )

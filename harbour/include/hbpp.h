@@ -83,8 +83,13 @@ HB_EXTERN_BEGIN
 #define HB_PP_INLINE_QUOTE1   5
 #define HB_PP_INLINE_QUOTE2   6
 
+/* actions returned by function to open included files */
+#define HB_PP_OPEN_OK         0
+#define HB_PP_OPEN_FILE       1
+#define HB_PP_OPEN_ERROR      2
+
 /* function to open included files */
-#define HB_PP_OPEN_FUNC_( func ) FILE * func( void *, const char *, HB_BOOL, HB_BOOL *, char * )
+#define HB_PP_OPEN_FUNC_( func ) int func( void *, char *, HB_BOOL, HB_BOOL, HB_BOOL, HB_PATHNAMES *, HB_BOOL *, FILE **, const char **, HB_SIZE *, HB_BOOL * )
 typedef HB_PP_OPEN_FUNC_( HB_PP_OPEN_FUNC );
 typedef HB_PP_OPEN_FUNC * PHB_PP_OPEN_FUNC;
 
@@ -549,8 +554,9 @@ typedef struct _HB_PP_FILE
    HB_BOOL  fGenLineInfo;          /* #line information should be generated */
    HB_BOOL  fEof;                  /* the end of file reached */
 
+   HB_BOOL  fFree;                 /* free external buffer */
    const char * pLineBuf;          /* buffer for parsing external lines */
-   HB_SIZE  nLineBufLen;          /* size of external line buffer */
+   HB_SIZE  nLineBufLen;           /* size of external line buffer */
 
    struct _HB_PP_FILE * pPrev;     /* previous file, the one which included this file */
 }

@@ -130,7 +130,8 @@ int main( int argc, char * argv[] )
 
    hb_compChkFileSwitches( argc, argv );
 
-   iResult = hb_compMain( argc, ( const char * const* ) argv, NULL, NULL, NULL );
+   iResult = hb_compMain( argc, ( const char * const* ) argv );
+
    hb_xexit();
 
    return iResult;

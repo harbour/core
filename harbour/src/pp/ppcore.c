@@ -1875,22 +1875,33 @@ static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
-                                  HB_BOOL fSysFile, HB_BOOL * pfNested, FILE * file_in,
-                                  HB_BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc,
-                                  HB_BOOL fBinary )
+                                  HB_BOOL fSysFile, HB_BOOL * pfNested,
+                                  FILE * file_in, HB_BOOL fSearchPath,
+                                  PHB_PP_OPEN_FUNC pOpenFunc, HB_BOOL fBinary )
 {
    char szFileNameBuf[ HB_PATH_MAX ];
+   const char * pLineBuf = NULL;
+   HB_SIZE nLineBufLen = 0;
+   HB_BOOL fFree = HB_FALSE;
    PHB_PP_FILE pFile;
 
    if( ! file_in )
    {
+      int iAction = HB_PP_OPEN_FILE;
+
       if( pOpenFunc )
       {
-         file_in = ( pOpenFunc )( pState->cargo, szFileName, fSysFile,
-                                  pfNested, szFileNameBuf );
-         szFileName = szFileNameBuf;
+         hb_strncpy( szFileNameBuf, szFileName, sizeof( szFileNameBuf ) - 1 );
+         iAction = ( pOpenFunc )( pState->cargo, szFileNameBuf,
+                                  HB_TRUE, fSysFile, fBinary,
+                                  fSearchPath ? pState->pIncludePath : NULL,
+                                  pfNested, &file_in,
+                                  &pLineBuf, &nLineBufLen, &fFree );
+         if( iAction == HB_PP_OPEN_OK )
+            szFileName = szFileNameBuf;
       }
-      else
+
+      if( iAction == HB_PP_OPEN_FILE )
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
          HB_BOOL fNested = HB_FALSE;
@@ -1920,10 +1931,13 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
             }
 
             file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
-            fNested = file_in == NULL && hb_fsMaxFilesError();
+            if( file_in )
+               iAction = HB_PP_OPEN_OK;
+            else
+               fNested = hb_fsMaxFilesError();
          }
 
-         if( !file_in )
+         if( iAction != HB_PP_OPEN_OK )
          {
             if( fNested )
             {
@@ -1933,20 +1947,38 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
             else if( pState->pIncludePath && fSearchPath )
             {
                HB_PATHNAMES * pPath = pState->pIncludePath;
-
-               while( pPath && !file_in )
+               do
                {
                   pFileName->szPath = pPath->szPath;
                   hb_fsFNameMerge( szFileNameBuf, pFileName );
                   file_in = hb_fopen( szFileNameBuf, fBinary ? "rb" : "r" );
+                  if( file_in != NULL )
+                  {
+                     iAction = HB_PP_OPEN_OK;
+                     szFileName = pFileName->szName;
+                     break;
+                  }
                   pPath = pPath->pNext;
                }
+               while( pPath );
+            }
+
+            if( iAction != HB_PP_OPEN_OK && pOpenFunc && !fNested )
+            {
+               hb_strncpy( szFileNameBuf, pFileName->szName, sizeof( szFileNameBuf ) - 1 );
+               iAction = ( pOpenFunc )( pState->cargo, szFileNameBuf,
+                                        HB_FALSE, fSysFile, fBinary,
+                                        fSearchPath ? pState->pIncludePath : NULL,
+                                        pfNested, &file_in,
+                                        &pLineBuf, &nLineBufLen, &fFree );
+               if( iAction == HB_PP_OPEN_OK )
+                  szFileName = szFileNameBuf;
             }
          }
          hb_xfree( pFileName );
       }
 
-      if( ! file_in )
+      if( iAction != HB_PP_OPEN_OK )
          return NULL;
 
       if( pState->pIncFunc )
@@ -1958,6 +1990,9 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
 
    pFile->szFileName = hb_strdup( szFileName );
    pFile->file_in = file_in;
+   pFile->fFree = fFree;
+   pFile->pLineBuf = pLineBuf;
+   pFile->nLineBufLen = nLineBufLen;
    pFile->iLastLine = 1;
 
    return pFile;
@@ -1970,6 +2005,7 @@ static PHB_PP_FILE hb_pp_FileBufNew( const char * pLineBuf, HB_SIZE nLineBufLen 
    pFile = ( PHB_PP_FILE ) hb_xgrab( sizeof( HB_PP_FILE ) );
    memset( pFile, '\0', sizeof( HB_PP_FILE ) );
 
+   pFile->fFree = HB_FALSE;
    pFile->pLineBuf = pLineBuf;
    pFile->nLineBufLen = nLineBufLen;
    pFile->iLastLine = 1;
@@ -1990,6 +2026,9 @@ static void hb_pp_FileFree( PHB_PP_STATE pState, PHB_PP_FILE pFile,
 
    if( pFile->szFileName )
       hb_xfree( pFile->szFileName );
+
+   if( pFile->fFree && pFile->pLineBuf )
+      hb_xfree( ( void * ) pFile->pLineBuf );
 
    hb_pp_tokenListFree( &pFile->pTokenList );
    hb_xfree( pFile );
@@ -5068,8 +5107,10 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
 
          if( !pState->pFile->pTokenList )
          {
+#if 0 /* disabled for files included from buffer */
             if( pState->pFile->pLineBuf )
                break;
+#endif
             /* this condition is only for compiler core code compatibility */
             if( !pState->pFile->pPrev )
                break;

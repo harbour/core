@@ -84,7 +84,7 @@ extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
 extern void hb_compChkFileSwitches( int argc, char * argv[] );
 
-extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] );
+extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[], PHB_PP_OPEN_FUNC pOpenFunc );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 
 extern int  hb_comp_yyparse( HB_COMP_DECL );
@@ -266,7 +266,8 @@ extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
 #define HB_GEN_FUNC3( func, p1,p2,p3 )    hb_compGen##func( p1, p2, p3, HB_COMP_PARAM )
 #define HB_GEN_FUNC4( func, p1,p2,p3,p4 ) hb_compGen##func( p1, p2, p3, p4, HB_COMP_PARAM )
 
-extern int  hb_compMain( int argc, const char * const argv[], HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource );
+extern int  hb_compMain( int argc, const char * const argv[] );
+extern int  hb_compMainExt( int argc, const char * const argv[], HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource, void * cargo, PHB_PP_OPEN_FUNC pOpenFunc );
 extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
 extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 

@@ -382,7 +382,8 @@ static void hb_pp_fileIncluded( void * cargo, const char * szFileName )
    *pIncFilePtr = pIncFile;
 }
 
-void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] )
+void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
+                    PHB_PP_OPEN_FUNC pOpenFunc )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 
@@ -390,7 +391,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] )
    {
       hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
                   HB_COMP_PARAM->iMaxTransCycles,
-                  HB_COMP_PARAM, NULL, NULL,
+                  HB_COMP_PARAM, pOpenFunc, NULL,
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,
                   HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );

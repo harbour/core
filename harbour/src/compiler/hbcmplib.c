@@ -53,13 +53,67 @@
 #include "hbapi.h"
 #include "hbcomp.h"
 
+static int s_pp_openFile( void * cargo, char * szFileName,
+                          HB_BOOL fBefore, HB_BOOL fSysFile, HB_BOOL fBinary,
+                          HB_PATHNAMES * pIncludePaths,
+                          HB_BOOL * pfNested, FILE ** file_ptr,
+                          const char ** pBufPtr, HB_SIZE *pnLen, HB_BOOL *pfFree )
+{
+   HB_SYMBOL_UNUSED( fSysFile );
+   HB_SYMBOL_UNUSED( fBinary );
+   HB_SYMBOL_UNUSED( pIncludePaths );
+   HB_SYMBOL_UNUSED( pfNested );
+   HB_SYMBOL_UNUSED( file_ptr );
+
+   if( !fBefore )
+   {
+      HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
+      PHB_ITEM pIncItem = ( PHB_ITEM ) HB_COMP_PARAM->cargo;
+
+      if( pIncItem )
+      {
+         if( HB_IS_HASH( pIncItem ) )
+         {
+            PHB_ITEM pFileItem = hb_hashGetCItemPtr( pIncItem, szFileName );
+
+            if( pFileItem )
+            {
+               HB_SIZE nLen = hb_itemGetCLen( pFileItem );
+               if( nLen )
+               {
+                  *pBufPtr = hb_itemGetCPtr( pFileItem );
+                  *pnLen   = nLen;
+                  *pfFree  = HB_FALSE;
+                  return HB_PP_OPEN_OK;
+               }
+            }
+         }
+      }
+   }
+
+   return HB_PP_OPEN_FILE;
+}
+
 static void hb_compGenArgList( int iFirst, int iLast,
-                               int * pArgC, const char *** pArgV )
+                               int * pArgC, const char *** pArgV,
+                               PHB_ITEM * pIncItem,
+                               PHB_PP_OPEN_FUNC * pOpenFunc )
 {
    PHB_ITEM pParam;
    HB_SIZE ul, nLen;
    int argc = 1, i;
    const char ** argv;
+
+   if( pIncItem && pOpenFunc )
+   {
+      *pOpenFunc = NULL;
+      *pIncItem = hb_param( iFirst, HB_IT_HASH );
+      if( *pIncItem )
+      {
+         ++iFirst;
+         *pOpenFunc = s_pp_openFile;
+      }
+   }
 
    for( i = iFirst; i <= iLast; ++i )
    {
@@ -111,10 +165,12 @@ HB_FUNC( HB_COMPILE )
 {
    int argc;
    const char ** argv;
+   PHB_ITEM pIncItem;
+   PHB_PP_OPEN_FUNC pOpenFunc;
 
-   hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
 
-   hb_retni( hb_compMain( argc, argv, NULL, NULL, NULL ) );
+   hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, pIncItem, pOpenFunc ) );
    hb_xfree( argv );
 }
 
@@ -122,11 +178,13 @@ HB_FUNC( HB_COMPILEBUF )
 {
    int iResult, argc;
    const char ** argv;
+   PHB_ITEM pIncItem;
+   PHB_PP_OPEN_FUNC pOpenFunc;
    HB_BYTE * pBuffer;
    HB_SIZE nLen;
 
-   hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
-   iResult = hb_compMain( argc, argv, &pBuffer, &nLen, NULL );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
+   iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, pIncItem, pOpenFunc );
    hb_xfree( argv );
    if( iResult == EXIT_SUCCESS && pBuffer )
       hb_retclen_buffer( ( char * ) pBuffer, nLen );
@@ -137,14 +195,16 @@ HB_FUNC( HB_COMPILEFROMBUF )
    int iResult, argc;
    const char ** argv;
    const char * szSource;
+   PHB_ITEM pIncItem;
+   PHB_PP_OPEN_FUNC pOpenFunc;
    HB_BYTE * pBuffer;
    HB_SIZE nLen;
 
    szSource = hb_parc( 1 );
    if( szSource )
    {
-      hb_compGenArgList( 2, hb_pcount(), &argc, &argv );
-      iResult = hb_compMain( argc, argv, &pBuffer, &nLen, szSource );
+      hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
+      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, pIncItem, pOpenFunc );
       hb_xfree( argv );
       if( iResult == EXIT_SUCCESS && pBuffer )
          hb_retclen_buffer( ( char * ) pBuffer, nLen );

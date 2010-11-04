@@ -399,7 +399,7 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
 
    if( pSym && hb_vmRequestReenter() )
    {
-      PHB_ITEM pItem[ argc ], pResult;
+      PHB_ITEM pResult;
       int      i;
 
       hb_vmPushDynSym( pSym );
@@ -414,56 +414,49 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
             {
                case SQLITE_NULL:
                   {
-                     pItem[ i ] = hb_itemNew( NULL );
+                     hb_vmPushNil();
                      break;
                   }
 
                case SQLITE_TEXT:
                   {
-                     pItem[ i ] = hb_itemNew( NULL );
-                     hb_itemPutStrUTF8( pItem[ i ], 
+                     hb_itemPutStrUTF8( hb_stackAllocItem(), 
                                        ( const char* ) sqlite3_value_text( argv[i] ) );
                      break;
                   }
 
                case SQLITE_FLOAT:
                   {
-                     pItem[ i ] = hb_itemPutND( NULL, sqlite3_value_double( argv[i] ) );
+                     hb_vmPushDouble( sqlite3_value_double( argv[i] ), HB_DEFAULT_DECIMALS );
                      break;
                   }
 
                case SQLITE_INTEGER:
                   {
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-                     pItem[ i ] = hb_itemPutNI( NULL, sqlite3_value_int( argv[i] ) );
+                     hb_vmPushInteger( sqlite3_value_int( argv[i] ) );
 #else
-                     pItem[ i ] = hb_itemPutNInt( NULL, sqlite3_value_int64( argv[i] ) );
+                     hb_vmPushNumInt( sqlite3_value_int64( argv[i] ) );
 #endif
                      break;
                   }
 
                case SQLITE_BLOB:
                   {
-                     pItem[ i ] = hb_itemPutCL( NULL, ( const char* ) sqlite3_value_blob( argv[i] ),
-                                                sqlite3_value_bytes( argv[i] ) );
+                     hb_vmPushString( ( const char* ) sqlite3_value_blob( argv[i] ),
+                                      sqlite3_value_bytes( argv[i] ) );
                      break;
                   }
 
                default:
                   {
-                     pItem[ i ] = hb_itemPutCConst( NULL, ":default:" );
+                     hb_itemPutCConst( hb_stackAllocItem(), ":default:" );
                      break;
                   }
             }
-            hb_vmPush( pItem[ i ] );
-         }                    
+         }
       }
       hb_vmDo( (HB_USHORT) argc + 1 );
-
-      for( i = 0; i < argc; i++ )
-      {
-         hb_itemRelease( pItem[ i ] );
-      }
 
       pResult = hb_param( -1, HB_IT_ANY );
 
