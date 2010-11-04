@@ -68,15 +68,24 @@
    #include <os2.h>
 #endif
 
+#if defined( HB_OS_CYGWIN )
+   #include <sys/cygwin.h>
+#endif
+
+#if defined( HB_OS_WIN ) || defined( HB_OS_CYGWIN )
+   #include <windows.h>
+#endif
+
 /* Command line argument management */
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-#if !( defined( HB_OS_WIN ) || defined( HB_OS_CYGWIN ) )
+#if !defined( HB_OS_WIN )
 static char    s_szAppName[ HB_PATH_MAX ];
+   #if defined( HB_OS_CYGWIN )
+      static char s_lpAppName[ MAX_PATH ];
+   #endif
 #else
-
-#include <windows.h>
 
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
@@ -145,16 +154,30 @@ void hb_cmdargUpdate( void )
 
    if( s_argc > 0 )
    {
-#if defined( HB_OS_WIN )
-
+#if defined( HB_OS_WIN ) || defined( HB_OS_CYGWIN )
       /* NOTE: Manually setup the executable name in Windows,
                because in console apps the name may be truncated
                in some cases, and in GUI apps it's not filled
                at all. [vszakats] */
       if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
       {
+   #if defined( HB_OS_WIN )
+
          HB_TCHAR_COPYFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_szAppName ) - 1 );
+
          s_argv[ 0 ] = s_szAppName;
+
+   #else /* HB_OS_CYGWIN */
+
+         ssize_t pathlen;
+
+         pathlen = cygwin_conv_path( CCP_WIN_A_TO_POSIX|CCP_ABSOLUTE, s_lpAppName, NULL, 0 );
+         if( pathlen > 0 &&
+            pathlen <= HB_SIZEOFARRAY( s_szAppName ) &&
+            cygwin_conv_path( CCP_WIN_A_TO_POSIX|CCP_ABSOLUTE, s_lpAppName, s_szAppName,
+                              HB_SIZEOFARRAY( s_szAppName ) ) != -1 )
+               s_argv[ 0 ] = s_szAppName;
+   #endif
       }
 
 #elif defined( HB_OS_OS2 )

@@ -428,7 +428,11 @@ int hb_comInputCount( int iPort )
       if( iResult == -1 )
          iCount = 0;
       hb_comSetOsError( pCom, iResult == -1 );
-#elif defined( FIONREAD )
+#elif defined( FIONREAD ) && !defined( HB_OS_CYGWIN )
+      /* Cygwin sys/termios.h explicitly says that "TIOCINQ is
+       * utilized instead of FIONREAD which has been accupied for
+       * other purposes under CYGWIN", so don't give Cygwin
+       * even a chance to hit this code path. */
       int iResult = ioctl( pCom->fd, FIONREAD, &iCount );
       if( iResult == -1 )
          iCount = 0;
