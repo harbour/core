@@ -540,7 +540,7 @@ HB_FUNC( SQLITE3_SOURCEID )
    hb_retc( sqlite3_sourceid() );
 #else
    hb_retc_null();
-#endif SQLITE_VERSION_NUMBER >= 3006018
+#endif /* SQLITE_VERSION_NUMBER >= 3006018 */
 }
 
 /**
