@@ -53,7 +53,7 @@
 #ifndef HBQT_HBQGRAPHICSITEM_H
 #define HBQT_HBQGRAPHICSITEM_H
 
-#include "hbqtgui.h"
+#include "hbqt.h"
 
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QStyleOptionGraphicsItem>

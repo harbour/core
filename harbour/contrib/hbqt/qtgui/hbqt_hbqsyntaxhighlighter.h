@@ -53,7 +53,7 @@
 #ifndef HBQSYNTAXHIGHLIGHTER_H
 #define HBQSYNTAXHIGHLIGHTER_H
 
-#include "hbqtgui.h"
+#include "hbqt.h"
 
 /*----------------------------------------------------------------------*/
 

@@ -53,7 +53,7 @@
 #ifndef HBQT_HBQTABLEVIEW_H
 #define HBQT_HBQTABLEVIEW_H
 
-#include "hbqtgui.h"
+#include "hbqt.h"
 
 #include <QtGui/QTableView>
 #include <QtGui/QMouseEvent>

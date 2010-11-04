@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-pflag=-qtver=0x040500
+-pflag=-qtmodule=qtdesigner
+-pflag=-qthdocdir=../doc/
+
+QDesignerActionEditorInterface.qth
+QDesignerFormEditorInterface.qth
+QDesignerFormWindowCursorInterface.qth
+QDesignerFormWindowInterface.qth
+QDesignerFormWindowManagerInterface.qth
+QDesignerObjectInspectorInterface.qth
+QDesignerPropertyEditorInterface.qth
+QDesignerWidgetBoxInterface.qth

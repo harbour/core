@@ -71,7 +71,7 @@ ClubMethods = no
 #include <QtCore/QStringList>
 #include <QtCore/QStringRef>
 
-#include "../hbqt_hbqstring.h"
+#include "hbqt_hbqstring.h"
 
 /*
  * HBQString ()
@@ -312,6 +312,3 @@ QString number ( qulonglong n, int base = 10 )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

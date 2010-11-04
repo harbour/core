@@ -62,7 +62,6 @@ folder   = qtwebkit
 
 <CODE>
 #include "hbqtgui.h"
-#include "hbqtnetwork.h"
 
 #include <QtWebKit/QWebView>
 

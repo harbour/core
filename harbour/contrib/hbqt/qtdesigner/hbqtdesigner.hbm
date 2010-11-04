@@ -5,9 +5,8 @@
 -stop{symbian}
 
 -i.
--ig
 
-g/filelist.hbm
+qth/filelist.hbm
 
 hbqt_init.cpp
 

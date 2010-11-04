@@ -309,8 +309,8 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
             FOR EACH cSrc, cDstCPP, cDstPRG, cDstDOC IN hbmk2[ "vars" ][ "aQTH_Src" ], hbmk2[ "vars" ][ "aQTH_CPP" ], hbmk2[ "vars" ][ "aQTH_PRG" ], hbmk2[ "vars" ][ "aQTH_DOC" ]
 
                IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDstCPP ) .OR. ;
-                              ! hb_FGetDateTime( cDst, @tDstPRG ) .OR. ;
+                  lBuildIt := ! hb_FGetDateTime( cDstCPP, @tDstCPP ) .OR. ;
+                              ! hb_FGetDateTime( cDstPRG, @tDstPRG ) .OR. ;
                               ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
                               tSrc > tDstCPP .OR. ;
                               tSrc > tDstPRG
@@ -320,6 +320,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
+OUTSTD( "GEN", cSrc, hb_eol() )
                      IF ! qth_to_src( cSrc, cDstCPP, cDstPRG, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"
@@ -1250,7 +1251,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtSource:build()
-   LOCAL i, s, oMtd, tmp
+   LOCAL i, s, oMtd, tmp, tmp1
    LOCAL aLine
 
    ::hRef[ ::cQtObject ] := NIL
@@ -1291,6 +1292,21 @@ METHOD HbQtSource:build()
    aadd( aLine, "" )
 #endif
 
+   IF ::isConstructor
+      FOR i := 3 TO len( ::new_ ) - 1
+         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+            IF "__HB_RETPTRGC__(" $ ::new_[ i ]
+               tmp1 := ::new_[ i ]
+               DO WHILE ( tmp := At( "hbqt_par_", tmp1 ) ) > 0
+                  tmp1 := SubStr( tmp1, tmp + Len( "hbqt_par_" ) )
+                  hbqtgen_AddRef( ::hRef, Left( tmp1, At( "(", tmp1 ) - 1 ) )
+                  tmp1 := SubStr( tmp1, At( "(", tmp1 ) + 1 )
+               ENDDO
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
    /*----------------------------------------------------------------------*/
    /* Generate necessary declarations */
    aadd( aLine, "HB_EXTERN_BEGIN" )
@@ -1316,7 +1332,7 @@ METHOD HbQtSource:build()
    NEXT
    aadd( aLine, "" )
    FOR EACH s IN ::hRef
-      aadd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + s:__enumKey() ), 8 ) )
+      aadd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + hb_asciiUpper( ::cQtModule ) + s:__enumKey() ), 8 ) )
    NEXT
    aadd( aLine, "" )
    /*----------------------------------------------------------------------*/
@@ -1464,13 +1480,13 @@ METHOD HbQtSource:build()
       endif
       aadd( aLine, " " )
       FOR i := 3 TO len( ::new_ ) - 1
-          IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
-             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
-                s := ::new_[ i ]
-                s := trim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
-                s := strtran( s, ");", ";" )
-                s := strtran( s, "( "+ ::cQtObject + "* )", "" )
-                aadd( aLine, s )
+         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+            IF "__HB_RETPTRGC__(" $ ::new_[ i ]
+               s := ::new_[ i ]
+               s := trim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
+               s := strtran( s, ");", ";" )
+               s := strtran( s, "( "+ ::cQtObject + "* )", "" )
+               aadd( aLine, s )
             ELSE
                aadd( aLine, ::new_[ i ] )
             ENDIF
@@ -2108,6 +2124,7 @@ METHOD HbQtSource:parseVariables( cProto )
 METHOD HbQtSource:parseProto( cProto, fBody_ )
    LOCAL aArg, n, nn, cHBIdx, nIndex, s, ss, cFirstParamCast, cArg
    LOCAL oMtd, oRet, oArg, k, cKey, cVal
+   LOCAL cRef
 
    IF ( n := at( "(", cProto ) ) == 0
       RETURN .f.
@@ -2184,6 +2201,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                cFirstParamCast := substr( cFirstParamCast, at( "::", cFirstParamCast ) + 2 )
             ENDIF
          ENDIF
+
+         cRef := NIL
 
          DO CASE
          CASE oArg:cCast == "..."
@@ -2338,20 +2357,20 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "C"
 
          CASE oArg:cCast == "QIcon"
-            ::hRef[ "QIcon" ] := NIL
+            cRef := "QIcon"
             s := "*hbqt_par_QIcon( " + cHBIdx + " )"
             oArg:cBody   := "( HB_ISCHAR( " + cHBIdx + " ) ? " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) )" + " : " + s + ")"
             oArg:cDoc    := "co" + oArg:cCast //oMtd:cDocNM  // "p"
             oArg:cTypeHB := "CO" // "PCO"
 
          CASE oArg:lFar
-            ::hRef[ oArg:cCast ] := NIL
+            cRef := oArg:cCast
             oArg:cBody   := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
             oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM
             oArg:cTypeHB := "O" // "PO"
 
          CASE oArg:lAnd .AND. oArg:lConst
-            ::hRef[ oArg:cCast ] := NIL
+            cRef := oArg:cCast
             s := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
             IF !empty( oArg:cDefault ) .and. ( "(" $ oArg:cDefault )
                oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
@@ -2362,13 +2381,13 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "O" //"PO"
 
          CASE oArg:lAnd
-            ::hRef[ oArg:cCast ] := NIL
+            cRef := oArg:cCast
             oArg:cBody   := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
             oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM //p
             oArg:cTypeHB := "O" //"PO"
 
          CASE oArg:cCast == "QChar"
-            ::hRef[ oArg:cCast ] := NIL
+            cRef := oArg:cCast
             oArg:cBody   := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
             oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM
             oArg:cTypeHB := "O" //"PO"
@@ -2379,6 +2398,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := ""
 
          ENDCASE
+
+         hbqtgen_AddRef( ::hRef, cRef )
 
          oMtd:cParas += oArg:cBody + ", "
          oMtd:cDocs  += oArg:cDoc + ", "
@@ -2411,11 +2432,20 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
 
    RETURN oMtd:lValid
 
+STATIC PROCEDURE hbqtgen_AddRef( hRef, cRef )
+
+   IF ! Empty( cRef ) .AND. !( ">" $ cRef ) .AND. !( cRef $ "uchar|QString|QRgb|Bool|char" )
+      hRef[ cRef ] := NIL
+   ENDIF
+
+   RETURN
+
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtSource:buildCppCode( oMtd )
    LOCAL oRet := oMtd:oRet
    LOCAL cPara := oMtd:cParas
+   LOCAL cRef
 
    oMtd:cWdg      := "hbqt_par_" + ::cQtObject + "( 1 )->"
    oMtd:cParas    := iif( oMtd:isVariable(), "", "( " + oMtd:cParas + " )" )
@@ -2442,7 +2472,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
          oMtd:cCmd := ""
          oMtd:cPrgRet := ""
       OTHERWISE
-         ::hRef[ "QList" ] := NIL
+         cRef := "QList"
          oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) )"
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ENDCASE
@@ -2502,7 +2532,8 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    CASE oRet:lFar .AND. ! oRet:lConst
       IF hbqtgen_isAqtObject( oRet:cCast )
-         oMtd:cCmd := hbqtgen_Get_Command( ::hRef, oRet:cCast, oMtd:cCmn, .F. )
+         cRef := oRet:cCast
+         oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
       ELSE
          /* TOFIX: Such code is not valid and should never be generated [vszakats] */
          oMtd:cCmd := "hb_retptr( ( " + oRet:cCast + "* ) " + oMtd:cCmn + " )"
@@ -2513,7 +2544,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              "Abstract" $ oRet:cCast
-      ::hRef[ oRet:cCast ] := NIL
+      cRef := oRet:cCast
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
@@ -2521,7 +2552,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lVirt
-      ::hRef[ oRet:cCast ] := NIL
+      cRef := oRet:cCast
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
@@ -2529,25 +2560,30 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lConstL
-      oMtd:cCmd := hbqtgen_Get_Command_1( ::hRef, oRet:cCast, oMtd:cCmn )
+      cRef := oRet:cCast
+      oMtd:cCmd := hbqtgen_Get_Command_1( oRet:cCast, oMtd:cCmn )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 
    CASE oRet:lAnd .AND. oRet:lConst
-      oMtd:cCmd := hbqtgen_Get_Command( ::hRef, oRet:cCast, oMtd:cCmn )
+      cRef := oRet:cCast
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 
    CASE oRet:lConst
-      oMtd:cCmd := hbqtgen_Get_Command( ::hRef, oRet:cCast, oMtd:cCmn )
+      cRef := oRet:cCast
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 
    CASE oRet:lAnd
-      oMtd:cCmd := hbqtgen_Get_Command( ::hRef, oRet:cCast, oMtd:cCmn )
+      cRef := oRet:cCast
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 
    OTHERWISE
       /* No attribute is attached to return value */
       IF hbqtgen_isAqtObject( oRet:cCast )
-         oMtd:cCmd := hbqtgen_Get_Command( ::hRef, oRet:cCast, oMtd:cCmn )
+         cRef := oRet:cCast
+         oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
 
       ELSE
@@ -2566,6 +2602,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    IF ( oMtd:lValid := ! Empty( oMtd:cCmd ) )
       aadd( ::aMethods, oMtd )
+      hbqtgen_AddRef( ::hRef, cRef )
    ENDIF
 
    RETURN Self
@@ -2727,21 +2764,16 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 //                        Helper Functions
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_Get_Command_1( hRef, cWgt, cCmn )
-
-   hRef[ cWgt ] := NIL
-
+STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
    RETURN "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ) )"
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_Get_Command( hRef, cWgt, cCmn, lNew )
+STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew )
 
    IF lNew == NIL
       lNew := .T.
    ENDIF
-
-   hRef[ cWgt ] := NIL
 
    IF lNew
       RETURN "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) )"

@@ -53,7 +53,7 @@
 #ifndef HBQT_HBQPLAINTEXTEDIT_H
 #define HBQT_HBQPLAINTEXTEDIT_H
 
-#include "hbqtgui.h"
+#include "hbqt.h"
 
 #include <QtCore/QPointer>
 

@@ -3,9 +3,8 @@
 #
 
 -i.
--ig
 
-g/filelist.hbm
+qth/filelist.hbm
 
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqgraphicsitem.cpp

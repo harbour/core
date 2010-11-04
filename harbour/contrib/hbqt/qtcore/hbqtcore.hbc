@@ -7,7 +7,7 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-incpaths=. g
+incpaths=.
 
 libs=../hbqt_common.hbc
 

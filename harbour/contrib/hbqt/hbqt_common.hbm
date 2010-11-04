@@ -18,7 +18,6 @@
 -w3 -es2
 
 -i.
--iqtcore/g
 
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
 

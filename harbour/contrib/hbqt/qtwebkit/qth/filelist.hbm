@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+-pflag=-qtver=0x040500
+-pflag=-qtmodule=qtwebkit
+-pflag=-qthdocdir=../doc/
+
+QWebFrame.qth
+QWebHistory.qth
+QWebHistoryInterface.qth
+QWebHistoryItem.qth
+QWebHitTestResult.qth
+QWebPage.qth
+QWebPluginFactory.qth
+QWebSecurityOrigin.qth
+QWebSettings.qth
+QWebView.qth
