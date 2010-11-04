@@ -6209,6 +6209,23 @@ STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
 
    RETURN
 
+#if defined( __PLATFORM__DOS )
+STATIC FUNCTION hbmk_dos_FileExists( cFileName )
+   LOCAL cName
+   LOCAL cExt
+
+   hb_FNameSplit( cFileName,, @cName, @cExt )
+
+   IF Len( cName ) > 8 .OR. ;
+      Len( cExt ) > ( 1 + 3 )
+      /* Return failure instead of loading wrong file or
+         do other unpredictable operation */
+      RETURN .F.
+   ENDIF
+
+   RETURN hb_FileExists( cFileName )
+#endif
+
 /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
          platforms - they're always built using different compilation options
          than normal targets. [vszakats] */
@@ -7587,7 +7604,15 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       hb_FNameSplit( cFileName, NIL, NIL, @cExt )
 
-      cFile := hb_MemoRead( cFileName )
+#if defined( __PLATFORM__DOS )
+      IF hbmk_dos_FileExists( cFileName )
+#else
+      IF .T.
+#endif
+         cFile := hb_MemoRead( cFileName )
+      ELSE
+         cFile := ""
+      ENDIF
 
       IF ! Empty( cFile )
          lOK := .F.
@@ -8707,7 +8732,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cName
    LOCAL tmp
 
+#if defined( __PLATFORM__DOS )
+   IF ! hbmk_dos_FileExists( cFileName )
+#else
    IF ! hb_FileExists( cFileName )
+#endif
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Opening: %1$s" ), cFileName ) )
       RETURN .F.
    ENDIF
@@ -9253,7 +9282,11 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
    LOCAL nResult
    LOCAL cHBP
 
+#if defined( __PLATFORM__DOS )
+   IF hbmk_dos_FileExists( cFileName )
+#else
    IF hb_FileExists( cFileName )
+#endif
 
       cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
