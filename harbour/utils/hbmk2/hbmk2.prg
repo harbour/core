@@ -493,6 +493,11 @@ REQUEST hbmk_KEYW
 
 /* Request some functions for plugins */
 REQUEST HB_REGEX
+REQUEST HBCLASS
+REQUEST __CLSLOCKDEF
+REQUEST HB_HKEEPORDER
+REQUEST HB_CRC32
+REQUEST __HBDOC_TOSOURCE
 
 /* NOTE: Security token to protect against plugins accessing our
          internal structures referenced from context variable */
