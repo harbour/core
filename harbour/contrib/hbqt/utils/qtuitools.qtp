@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--I=../qtuitools/qth
--O=../qtuitools/g
--D=../qtuitools/doc
-
-QUiLoader.qth

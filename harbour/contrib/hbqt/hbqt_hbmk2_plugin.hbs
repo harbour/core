@@ -320,7 +320,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
-OUTSTD( "GEN", cSrc, hb_eol() )
+// OUTSTD( "GEN:", cSrc, hb_eol() )
                      IF ! qth_to_src( cSrc, cDstCPP, cDstPRG, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"
