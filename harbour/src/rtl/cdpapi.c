@@ -1898,7 +1898,13 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
       fError = HB_TRUE;
 
    if( fError || nACSort > HB_CDP_ACSORT_INTERLEAVED )
+   {
+#ifdef __HB_IGNORE_CP_ERRORS
+      return NULL;
+#else
       hb_errInternal( 9994, "Harbour CP (%s) initialization failure", id, NULL );
+#endif
+   }
 
    if( iAcc == 0 )
       nACSort = HB_CDP_ACSORT_NONE;
@@ -2084,7 +2090,14 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
       if( iMulti > 0 )
       {
          if( iMulti > ucUp2 || iMulti > ucLo2 )
+         {
+#ifdef __HB_IGNORE_CP_ERRORS
+            hb_xfree( buffer );
+            return NULL;
+#else
             hb_errInternal( 9994, "Harbour CP (%s) initialization failure", id, NULL );
+#endif
+         }
 
          if( iMulti <= 32 )
             iMulti = 33;
