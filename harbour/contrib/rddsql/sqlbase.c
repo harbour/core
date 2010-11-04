@@ -538,6 +538,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 
    if ( ( ( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) ) && pField->uiType == HB_FT_STRING ) ||
         ( HB_IS_DATE( pItem ) && pField->uiType == HB_FT_DATE ) ||
+        ( HB_IS_TIMESTAMP( pItem ) && pField->uiType == HB_FT_TIMESTAMP ) ||
         ( HB_IS_NUMBER( pItem ) && ( pField->uiType == HB_FT_INTEGER || pField->uiType == HB_FT_LONG ||
                                      pField->uiType == HB_FT_FLOAT || pField->uiType == HB_FT_DOUBLE ) ) ||
         ( HB_IS_LOGICAL( pItem ) && pField->uiType == HB_FT_LOGICAL ) ||

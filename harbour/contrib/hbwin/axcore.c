@@ -631,7 +631,9 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
          if( lOleError == S_OK )
          {
+#if 0
             HB_TRACE( HB_TR_DEBUG, ("__AXREGISTERHANDLER using sink %s", GUID2String( &rriid )) );
+#endif
             lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
 
             if( lOleError == S_OK )
