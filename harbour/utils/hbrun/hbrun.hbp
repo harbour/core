@@ -4,6 +4,8 @@
 
 -q0 -w3 -es2 -kmo -l
 
+-DHBRUN_WITH_HEADERS
+
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase
 -ldflag={allmsvc}-fixed:no

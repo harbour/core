@@ -46,21 +46,21 @@ ifeq ($(HB_PLATFORM),win)
    DIRS := mainstd mainwin maindllh maindllp
 else
    ifeq ($(HB_PLATFORM),cygwin)
+      C_MAIN := mainstd.c
+      DIRS := mainstd maindllh maindllp
+   else
+   ifeq ($(HB_PLATFORM),wce)
       C_MAIN := mainwin.c
       DIRS := mainstd mainwin maindllh maindllp
    else
-      ifeq ($(HB_PLATFORM),wce)
-         C_MAIN := mainwin.c
-         DIRS := mainstd mainwin maindllh maindllp
+      ifeq ($(HB_PLATFORM),os2)
+         C_MAIN := mainstd.c
+         DIRS := mainstd maindllh
       else
-         ifeq ($(HB_PLATFORM),os2)
-            C_MAIN := mainstd.c
-            DIRS := mainstd maindllh
-         else
-            C_MAIN := main.c
-         endif
+         C_MAIN := main.c
       endif
    endif
+endif
 endif
 
 ifeq ($(HB_HVM_ALL),yes)

@@ -3337,6 +3337,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
          ENDIF
 
+         IF hbmk[ _HBMK_cPLAT ] == "cygwin"
+            l_aLIBSHAREDPOST := { "hbmainstd" }
+         ENDIF
+
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;

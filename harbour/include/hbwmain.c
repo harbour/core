@@ -63,7 +63,7 @@ static char * s_argv[ HB_MAX_ARGS ];
 #  define HB_LPSTR      LPSTR
 #endif
 
-#if defined( HB_VM_STARTUP ) && !defined( HB_OS_CYGWIN )
+#if defined( HB_VM_STARTUP )
 extern void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 #endif
 
@@ -131,15 +131,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #endif
 
 #if defined( HB_VM_STARTUP )
-
-   #if !defined( HB_OS_CYGWIN )
-      hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
-   #else
-      HB_SYMBOL_UNUSED( hInstance );
-      HB_SYMBOL_UNUSED( hPrevInstance );
-      HB_SYMBOL_UNUSED( iCmdShow );
-   #endif
-
+   hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    hb_cmdargInit( s_argc, s_argv );
 
    hb_vmInit( HB_TRUE );

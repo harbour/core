@@ -51,6 +51,13 @@ LD_OUT := -o
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
+# Add the standard C entry
+ifneq ($(HB_LINKING_RTL),)
+   ifeq ($(HB_MAIN),)
+      LDLIBS += -lhbmainstd
+   endif
+endif
+
 LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
