@@ -73,9 +73,9 @@
 #define HB_ERR_MEMSTRU_WRONG_MEMSTRU_BLOCK   4002
 #define HB_ERR_MEMSTRU_DESTROYED             4003
 
-#ifdef SQLITE3_LIB
+#ifdef SQLITE3_DYNLIB
 extern char *sqlite3_temp_directory;
-#endif /* SQLITE3_LIB */
+#endif /* SQLITE3_DYNLIB */
 
 static PHB_ITEM hb_sqlite3_itemPut( PHB_ITEM pItem, void *pMemAddr, int iType );
 static void *   hb_sqlite3_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError );
@@ -88,6 +88,7 @@ static int  busy_handler( void *, int );
 static int  progress_handler( void * );
 static int  hook_commit( void * );
 static void hook_rollback( void * );
+static void func( sqlite3_context*, int, sqlite3_value** );
 
 typedef struct
 {
@@ -97,6 +98,7 @@ typedef struct
    PHB_DYNS cbProgressHandler;
    PHB_DYNS cbHookCommit;
    PHB_DYNS cbHookRollback;
+   PHB_DYNS cbFunc;
 } HB_SQLITE3, *PHB_SQLITE3;
 
 typedef struct
@@ -146,6 +148,11 @@ static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
       if( pStructHolder->hbsqlite3->cbHookRollback )
       {
          pStructHolder->hbsqlite3->cbHookRollback = NULL;
+      }
+
+      if( pStructHolder->hbsqlite3->cbFunc )
+      {
+         pStructHolder->hbsqlite3->cbFunc = NULL;
       }
 
       hb_xfree( pStructHolder->hbsqlite3 );
@@ -386,6 +393,128 @@ static void hook_rollback( void *Cargo )
    }
 }
 
+static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
+{
+   PHB_DYNS pSym = ( PHB_DYNS ) sqlite3_user_data( ctx );
+
+   if( pSym && hb_vmRequestReenter() )
+   {
+      PHB_ITEM pItem[ argc ], pResult;
+      int      i;
+
+      hb_vmPushDynSym( pSym );
+      hb_vmPushNil();
+      hb_vmPushInteger( argc );
+
+      if( argc > 0 )
+      {
+         for( i = 0; i < argc; i++ )
+         {
+            switch( sqlite3_value_type(argv[i]) )
+            {
+               case SQLITE_NULL:
+                  {
+                     pItem[ i ] = hb_itemNew( NULL );
+                     break;
+                  }
+
+               case SQLITE_TEXT:
+                  {
+                     pItem[ i ] = hb_itemNew( NULL );
+                     hb_itemPutStrUTF8( pItem[ i ], 
+                                       ( const char* ) sqlite3_value_text( argv[i] ) );
+                     break;
+                  }
+
+               case SQLITE_FLOAT:
+                  {
+                     pItem[ i ] = hb_itemPutND( NULL, sqlite3_value_double( argv[i] ) );
+                     break;
+                  }
+
+               case SQLITE_INTEGER:
+                  {
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+                     pItem[ i ] = hb_itemPutNI( NULL, sqlite3_value_int( argv[i] ) );
+#else
+                     pItem[ i ] = hb_itemPutNInt( NULL, sqlite3_value_int64( argv[i] ) );
+#endif
+                     break;
+                  }
+
+               case SQLITE_BLOB:
+                  {
+                     pItem[ i ] = hb_itemPutCL( NULL, ( const char* ) sqlite3_value_blob( argv[i] ),
+                                                sqlite3_value_bytes( argv[i] ) );
+                     break;
+                  }
+
+               default:
+                  {
+                     pItem[ i ] = hb_itemPutCConst( NULL, ":default:" );
+                     break;
+                  }
+            }
+            hb_vmPush( pItem[ i ] );
+         }                    
+      }
+      hb_vmDo( (HB_USHORT) argc + 1 );
+
+      for( i = 0; i < argc; i++ )
+      {
+         hb_itemRelease( pItem[ i ] );
+      }
+
+      pResult = hb_param( -1, HB_IT_ANY );
+
+      switch ( hb_itemType( pResult ) )
+      {
+         case HB_IT_NIL:
+         {
+            sqlite3_result_null( ctx );
+            break;
+         }
+
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         {
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+            sqlite3_result_int( ctx, hb_itemGetNI( pResult ) );
+#else
+            sqlite3_result_int64( ctx, hb_itemGetNInt( pResult ) );
+#endif
+            break;
+         }
+
+         case HB_IT_DOUBLE:
+         {
+            sqlite3_result_double( ctx, hb_itemGetND( pResult ) );
+            break;
+         }
+
+         case HB_IT_STRING:
+         {
+            void  * hText;
+            HB_SIZE nText;
+            const char * pszText = hb_itemGetStrUTF8( pResult, &hText, &nText );
+
+            sqlite3_result_text( ctx, pszText, (int) nText, SQLITE_TRANSIENT );
+
+            hb_strfree( hText );
+            break;
+         }
+
+         default:
+         {
+            sqlite3_result_error_code( ctx, -1 );
+            break;
+         }
+      }
+
+      hb_vmRequestRestore();
+   }
+}
+
 /**
    sqlite3_libversion()         -> cVersion
    sqlite3_libversion_number()  -> nVersionNumber
@@ -407,7 +536,11 @@ HB_FUNC( SQLITE3_LIBVERSION_NUMBER )
 
 HB_FUNC( SQLITE3_SOURCEID )
 {
+#if SQLITE_VERSION_NUMBER >= 3006018
    hb_retc( sqlite3_sourceid() );
+#else
+   hb_retc_null();
+#endif SQLITE_VERSION_NUMBER >= 3006018
 }
 
 /**
@@ -553,7 +686,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 {
    HB_BOOL  bResult = HB_FALSE;
 
-   #ifdef SQLITE3_LIB
+   #ifdef SQLITE3_DYNLIB
    {
       char *pszFree;
       const char *pszDirName = hb_fsNameConv( hb_parcx( 1 ), &pszFree );
@@ -591,7 +724,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
          hb_xfree( pszFree );
       }
    }
-   #endif /* SQLITE3_LIB */
+   #endif /* SQLITE3_DYNLIB */
    hb_retl( bResult );
 }
 
@@ -2449,4 +2582,99 @@ HB_FUNC( SQLITE3_COMPILEOPTION_GET )
 #else
    hb_retc_null();
 #endif /* SQLITE_VERSION_NUMBER >= 3006023 */
+}
+
+
+/**
+   Create Or Redefine SQL Functions
+
+   sqlite3_create_function( db, cFuncName, nArg, [Nil]|[cFunc]|[sFunc] )
+
+   Only scalar function creation now supported.
+*/
+
+/*
+int sqlite3_create_function(
+  sqlite3 *db,
+  const char *zFunctionName,
+  int nArg,
+  int eTextRep,
+  void *pApp,
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
+  void (*xStep)(sqlite3_context*,int,sqlite3_value**),
+  void (*xFinal)(sqlite3_context*)
+);
+*/
+HB_FUNC( SQLITE3_CREATE_FUNCTION )
+{
+   HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
+
+   if( pHbSqlite3 && pHbSqlite3->db && HB_ISCHAR( 2 ) )
+   {
+      void * hFuncName = NULL;
+
+      if( HB_ISNIL( 4 ) )
+      {
+         if( pHbSqlite3->cbFunc )
+         {
+            pHbSqlite3->cbFunc = NULL;
+         }
+
+         hb_retni( 
+            sqlite3_create_function( pHbSqlite3->db, 
+                                     hb_parstr_utf8( 2, &hFuncName, NULL ),
+                                     -1, 
+                                     SQLITE_UTF8, 
+                                     NULL, 
+                                     NULL, NULL, NULL ) );
+      }
+      else if( HB_ISCHAR( 4 ) || HB_ISSYMBOL( 4 ) )
+      {
+         PHB_DYNS pDynSym;
+
+         if( HB_ISCHAR( 4 ) )
+         {
+            pDynSym = hb_dynsymFindName( hb_parc( 4 ) );
+         }
+         else
+         {
+            pDynSym = hb_dynsymNew( hb_itemGetSymbol(hb_param( 4, HB_IT_SYMBOL )) );
+         }
+
+         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+         {
+            if( pHbSqlite3->cbFunc )
+            {
+               pHbSqlite3->cbFunc = NULL;
+            }
+
+            pHbSqlite3->cbFunc = pDynSym;
+
+            hb_retni( 
+               sqlite3_create_function( pHbSqlite3->db, 
+                                        hb_parstr_utf8( 2, &hFuncName, NULL ), 
+                                        hb_parnidef( 4, -1 ), 
+                                        SQLITE_UTF8, 
+                                        pHbSqlite3->cbFunc, 
+                                        func, NULL, NULL ) );
+         }
+         else
+         {
+            hb_retni( SQLITE_ERROR );
+         }
+      }
+      else
+      {
+         hb_retni( SQLITE_ERROR );
+      }
+
+      if ( hFuncName )
+      {
+         hb_strfree( hFuncName );
+      }
+   }
+   else
+   {
+      hb_retni( SQLITE_ERROR );
+   }
 }
