@@ -8660,7 +8660,6 @@ STATIC FUNCTION FNameDirExtSet( cFileName, cDirNew, cExtNew )
 STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
-   LOCAL aDir
 
    IF Empty( cFileName )
       RETURN {}
@@ -8681,8 +8680,7 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
 
    aFileList := {}
 
-   aDir := Directory( cFileName )
-   FOR EACH aFile IN aDir
+   FOR EACH aFile IN Directory( cFileName )
       AAdd( aFilelist, hb_FNameMerge( FNameDirGet( cFileName ), aFile[ F_NAME ] ) )
    NEXT
 

@@ -30,6 +30,7 @@
 #pragma -km+
 #pragma -ko+
 
+#include "directry.ch"
 #include "hbclass.ch"
 
 #define I_( x )                 hb_i18n_gettext( x )
@@ -463,6 +464,8 @@ PROCEDURE Main( cSrc )
    LOCAL cTmp
    LOCAL nError
    LOCAL cExt
+   LOCAL aFile
+   LOCAL cFN
 
    IF cSrc != NIL
 
@@ -486,7 +489,11 @@ PROCEDURE Main( cSrc )
 
       CASE ".qth"
 
-         qth_to_src( cSrc, cSrc + ".cpp", cSrc + ".prg", cSrc + ".txt", "QtModule", "0x040500" )
+         FOR EACH aFile IN Directory( cSrc )
+            cFN := hb_FNameMerge( FNameDirGet( cSrc ), aFile[ F_NAME ] )
+            qth_to_src( cFN, cFN + ".cpp", cFN + ".prg", cFN + ".txt", "QtModule", "0x040500" )
+         NEXT
+
          EXIT
 
       ENDSWITCH
@@ -498,6 +505,13 @@ PROCEDURE Main( cSrc )
    ErrorLevel( nError )
 
    RETURN
+
+STATIC FUNCTION FNameDirGet( cFileName )
+   LOCAL cDir
+
+   hb_FNameSplit( cFileName, @cDir )
+
+   RETURN cDir
 
 STATIC FUNCTION hbmk2_OutStd( hbmk2, ... )
    HB_SYMBOL_UNUSED( hbmk2 )
