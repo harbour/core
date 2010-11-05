@@ -13,13 +13,14 @@
 -depcontrol=expat:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}
 -depincpath=expat:/usr/include
--depincpathlocal=expat:expat
-#-depincpathlocal=expat:../../external/expat
+-depincpathlocal=expat:3rd/expat
 
 -instfile=inc:hbexpat.ch
+-instfile=inc:hbexpatx.ch
 
 hbexpat.c
 hbexpatc.c
 hbexpatp.prg
+hbexpatx.prg
 
-expat/expat.hbc
+3rd/expat/expat.hbc

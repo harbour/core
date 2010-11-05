@@ -5,4 +5,4 @@
 incpaths=.
 
 libs=${hb_name}
-libs=expat/expat.hbc
+libs=3rd/expat/expat.hbc
