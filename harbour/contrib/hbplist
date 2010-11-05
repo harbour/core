@@ -20,7 +20,7 @@ hbfoxpro/hbfoxpro.hbp
 hbfship/hbfship.hbp
 hbgd/hbgd.hbp
 hbgt/hbgt.hbp
-hbhpdf/hbhpdf.hbp
+hbhpdf/hbhpdf.hbp                # uses: libhpdf (external)
 hbide/hbide.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp

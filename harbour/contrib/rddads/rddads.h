@@ -65,7 +65,7 @@
 #if !defined( x64 ) && defined( HB_ARCH_64BIT )
    #define x64
 #endif
-#if defined( __WATCOMC__ ) || defined( __LCC__ ) || defined( __MINGW32__ )
+#if defined( __WATCOMC__ ) || defined( __LCC__ ) || ( defined( __MINGW32__ ) && ! defined( _declspec ) )
    #define _declspec( dllexport ) __declspec( dllexport )
 #endif
 

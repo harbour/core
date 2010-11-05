@@ -496,6 +496,12 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree", .T. ), Chr( 10 ) )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
+            #ifdef __PLATFORM__DOS
+                /* Ignore long filenames on MS-DOS hosts */
+                IF Len( cName ) > 8
+                   LOOP
+                ENDIF
+            #endif
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
                                          "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
          ENDIF

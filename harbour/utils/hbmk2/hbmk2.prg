@@ -8862,7 +8862,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYS ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
          NEXT
 
-      CASE Lower( Left( cLine, Len( "hbcs="        ) ) ) == "hbcs="          ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
+      CASE Lower( Left( cLine, Len( "hbcs="         ) ) ) == "hbcs="         ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             IF nNestingLevel < _HBMK_NEST_MAX
 
