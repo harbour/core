@@ -1,0 +1,89 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://harbour-project.org
+ *
+ */
+
+#include "hbexpat.ch"
+
+PROCEDURE Main( cFileName )
+   LOCAL p := XML_ParserCreate()
+   LOCAL xData
+   LOCAL v1, v2, v3
+
+   IF cFileName == NIL
+      cFileName := "setup.ui"
+   ENDIF
+
+   OutStd( XML_ExpatVersion(), hb_osNewLine() )
+   XML_ExpatVersionInfo( @v1, @v2, @v3 )
+   OutStd( v1, v2, v3, hb_osNewLine() )
+   hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
+   OutStd( v1, v2, v3, hb_osNewLine() )
+
+   IF Empty( p )
+      OutErr( "Couldn't allocate memory for parser", hb_osNewLine() )
+      ErrorLevel( -1 )
+      RETURN
+   ENDIF
+
+   xData := Array( 1 )
+   xData[ 1 ] := 1
+
+   OutStd( XML_GetUserData( p ), hb_osNewLine() )
+   XML_SetUserData( p, xData )
+   OutStd( ValType( XML_GetUserData( p ) ), hb_osNewLine() )
+   XML_SetElementHandler( p, {| x, e, a | start( x, e, a ) }, {| x, e | end( x, e ) } )
+   XML_SetCharacterDataHandler( p, {| x, d | data( x, d ) } )
+
+   IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
+      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n",;
+                 hb_ntos( XML_GetCurrentLineNumber( p ) ),;
+                 XML_ErrorString( XML_GetErrorCode( p ) ) ) )
+      ErrorLevel( -1 )
+      RETURN
+   ENDIF
+
+   RETURN
+
+PROCEDURE start( xData, cElement, aAttr )
+   LOCAL aItem
+
+   OutStd( Replicate( "  ", xData[ 1 ] ), cElement )
+
+   IF ! Empty( aAttr )
+      FOR EACH aItem IN aAttr
+         OutStd( " " + aItem[ 1 ] + "='" + aItem[ 2 ] + "'" )
+      NEXT
+   ENDIF
+
+   OutStd( hb_osNewLine() )
+
+   ++xData[ 1 ]
+
+   RETURN
+
+PROCEDURE end( xData, cElement )
+
+   HB_SYMBOL_UNUSED( xData )
+   HB_SYMBOL_UNUSED( cElement )
+
+   --xData[ 1 ]
+
+   RETURN
+
+PROCEDURE data( xData, cData )
+
+   HB_SYMBOL_UNUSED( xData )
+
+   IF ! Empty( cData )
+      OutStd( ">" + cData + "<" )
+   ENDIF
+
+   RETURN

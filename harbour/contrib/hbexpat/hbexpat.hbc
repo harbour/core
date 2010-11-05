@@ -1,0 +1,9 @@
+#
+# $Id: hbexpat.hbc 1965 2010-08-28 13:19:42Z vszakats $
+#
+
+incpaths=.
+libpaths=lib/${hb_plat}/${hb_comp}${hb_build}/
+
+libs=${hb_name}
+libs=expat/expat.hbc

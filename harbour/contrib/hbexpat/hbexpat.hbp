@@ -1,0 +1,26 @@
+#
+# $Id: hbexpat.hbp 1965 2010-08-28 13:19:42Z vszakats $
+#
+
+-hblib
+-inc
+
+-o${hb_targetname}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_targetname}
+
+-w3 -es2
+
+-depkeyhead=expat:expat.h
+-depcontrol=curl:no{HB_BUILD_EXTDEF='no'}
+-depcontrol=expat:${HB_WITH_EXPAT}
+-depincpath=expat:/usr/include
+-depincpathlocal=expat:expat
+#-depincpathlocal=expat:../../external/expat
+
+-instfile=inc:hbexpat.ch
+
+hbexpat.c
+hbexpatc.c
+hbexpatp.prg
+
+expat/expat.hbc

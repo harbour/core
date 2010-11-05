@@ -808,7 +808,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cLibExt
    LOCAL cObjPrefix
    LOCAL cObjExt
-   LOCAL cLibLibExt
+   LOCAL cLibLibExt := ""
    LOCAL cLibLibPrefix := ""
    LOCAL cLibObjPrefix
    LOCAL cDynObjPrefix := NIL
