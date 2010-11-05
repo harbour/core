@@ -6,7 +6,6 @@
 -inc
 
 -o${hb_targetname}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_targetname}
 
 -w3 -es2
 

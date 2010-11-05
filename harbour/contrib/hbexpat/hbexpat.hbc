@@ -3,7 +3,6 @@
 #
 
 incpaths=.
-libpaths=lib/${hb_plat}/${hb_comp}${hb_build}/
 
 libs=${hb_name}
 libs=expat/expat.hbc

@@ -1,0 +1,27 @@
+#
+# $Id$
+#
+
+-stop{poccarm}
+# NOTE: old msvcarm can't cope with some PP directives. [vszakats]
+-stop{msvcarm&HB_COMP_VER!='1200'&HB_COMP_VER!='1300'&HB_COMP_VER!='1310')}
+
+# TODO: Some restrictions were not migrated from Makefile
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=no
+-cpp=no
+
+sqlite3.c
+
+# ORIGIN http://www.sqlite.org/
+# VER    3.7.3
+# URL    http://www.sqlite.org/sqlite-amalgamation-3_7_3.zip
+# DIFF   sqlite3.dif
+#
+# MAP    sqlite3.c
+# MAP    sqlite3.h

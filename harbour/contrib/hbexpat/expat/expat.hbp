@@ -8,7 +8,6 @@
 -inc
 
 -o${hb_targetname}
--workdir=lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
 -warn=no
 

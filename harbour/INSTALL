@@ -705,10 +705,6 @@ HARBOUR
                                  Lib names should be without extension and path.
                                  You only need this in special cases, like CodeGuard
                                  build with bcc.
-   - HB_EXTERNALLIBS=no <l>      Don't build space separated <l> list of
-                                 external libraries.
-   - HB_EXTERNALLIBS=[<l>]       Build space separated <l> list of external
-                                 libraries. Build all if left empty (default).
    - HB_INSTALL_IMPLIB=yes       Copy import libraries created for external .dll
                                  dependencies to the library install directory in
                                  'install' build phase. Default: no

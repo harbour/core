@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=no
+-cpp=no
+
+ioapi.c
+zip.c
+unzip.c
+
+-depkeyhead=zlib:zlib.h
+-depcontrol=zlib:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=zlib:${HB_WITH_ZLIB}
+-depincpath=zlib:/usr/include
+-depincpath=zlib:/usr/local/include
+-depincpath=zlib:/boot/develop/headers/3rdparty
+-depincpathlocal=zlib:../../external/zlib
+
+# ORIGIN http://www.winimage.com/zLibDll/minizip.html
+# VER    1.1
+# URL    http://www.winimage.com/zLibDll/unzip11.zip
+# DIFF   minizip.dif
+#
+# MAP    crypt.h
+# MAP    ioapi.c
+# MAP    ioapi.h
+# MAP    unzip.c
+# MAP    unzip.h
+# MAP    zip.c
+# MAP    zip.h
