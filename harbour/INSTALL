@@ -496,7 +496,7 @@ HARBOUR
 5. SUPPORTED PLATFORMS AND C COMPILERS
 ======================================
 
-   You can use HB_PLATFORM values to select platforms:
+   You can override target platform autodetection with these HB_PLATFORM values:
 
    linux    - Linux
    darwin   - Mac OS X
@@ -514,7 +514,7 @@ HARBOUR
               (MS-DOS compatible systems also work, like dosemu)
    os2      - OS/2 Warp 4 / eComStation
 
-   You can use HB_COMPILER values to manually select compilers:
+   You can override C compiler autodetection with these HB_COMPILER values:
 
    linux
    -----
@@ -615,19 +615,6 @@ HARBOUR
 
    General
    -------
-   - HB_PLATFORM                 Override platform autodetection
-   - HB_COMPILER                 Override C compiler autodetection
-                                 See this section for possible values:
-                                 SUPPORTED PLATFORMS AND C COMPILERS
-                                 See also: HB_CC* settings.
-
-   - HB_USER_PRGFLAGS            User Harbour compiler options
-   - HB_USER_CFLAGS              User C compiler options
-   - HB_USER_RESFLAGS            User resource compiler options (on win, wce, os2)
-   - HB_USER_LDFLAGS             User linker options for executables
-   - HB_USER_AFLAGS              User linker options for libraries
-   - HB_USER_DFLAGS              User linker options for dynamic libraries
-
    - HB_INSTALL_PREFIX           Target root directory to install Harbour files.
                                  On *nix systems the default is set to /usr/local/
                                  or $(PREFIX) if specified, and
@@ -645,15 +632,19 @@ HARBOUR
                                     {hb_comp} - Target compiler
                                     {hb_cpu}  - Target CPU
 
-   - HB_INSTALL_BIN              Override directory to install executables
-   - HB_INSTALL_LIB              Override directory to install libraries
-   - HB_INSTALL_DYN              Override directory to install dynamic libraries
-   - HB_INSTALL_INC              Override directory to install language headers
-   - HB_INSTALL_DOC              Override directory to install documentation
-   - HB_INSTALL_MAN              Override directory to install *nix man files
-   - HB_INSTALL_ETC              Override directory to install *nix config files
-                                 NOTE: These setting are deprecated. Please use
-                                       HB_INSTALL_PREFIX to set install destination.
+   - HB_USER_PRGFLAGS            User Harbour compiler options
+   - HB_USER_CFLAGS              User C compiler options
+   - HB_USER_RESFLAGS            User resource compiler options (on win, wce, os2)
+   - HB_USER_LDFLAGS             User linker options for executables
+   - HB_USER_AFLAGS              User linker options for libraries
+   - HB_USER_DFLAGS              User linker options for dynamic libraries
+
+   (* Only set these if autodetection doesn't suite your purpose:)
+   - HB_PLATFORM                 Override platform autodetection
+   - HB_COMPILER                 Override C compiler autodetection
+                                 See this section for possible values:
+                                 SUPPORTED PLATFORMS AND C COMPILERS
+                                 See also: HB_CC* settings.
 
    Special
    -------
