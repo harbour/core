@@ -6777,6 +6777,21 @@ void hb_vmPushPointer( void * pPointer )
    pItem->item.asPointer.single = HB_FALSE;
 }
 
+void hb_vmPushPointerGC( void * pPointer )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pItem = hb_stackAllocItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushPointerGC(%p)", pPointer));
+
+   pItem->type = HB_IT_POINTER;
+   pItem->item.asPointer.value = pPointer;
+   pItem->item.asPointer.collect = HB_TRUE;
+   pItem->item.asPointer.single = HB_FALSE;
+
+   hb_gcAttach( pPointer );
+}
+
 void hb_vmPushString( const char * szText, HB_SIZE nLength )
 {
    HB_STACK_TLS_PRELOAD

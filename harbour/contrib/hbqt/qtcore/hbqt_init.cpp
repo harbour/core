@@ -73,6 +73,14 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QRectF>
 
+//#define _RET_GC_PTR_
+
+#ifdef _RET_GC_PTR_
+HB_EXTERN_BEGIN
+extern void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
+HB_EXTERN_END
+#endif
+
 /*----------------------------------------------------------------------*/
 
 static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments )
@@ -225,7 +233,11 @@ static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef _RET_GC_PTR_
+   hb_vmPushPointerGC( hbqt_gcAllocate_QTime( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ), true ) ); /* TOFIX: Pass .prg level object to callback */
+#else
    hb_vmPushPointer( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+#endif
    hb_vmSend( 1 );
 }
 
