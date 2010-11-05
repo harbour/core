@@ -1076,7 +1076,7 @@ HB_FUNC( XML_SETPARAMENTITYPARSING )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_retni( XML_SetParamEntityParsing( hb_expat->parser, hb_parni( 2 ) ) );
+      hb_retni( XML_SetParamEntityParsing( hb_expat->parser, ( XML_ParamEntityParsing ) hb_parni( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

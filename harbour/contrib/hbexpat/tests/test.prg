@@ -21,14 +21,14 @@ PROCEDURE Main( cFileName )
       cFileName := "setup.ui"
    ENDIF
 
-   OutStd( XML_ExpatVersion(), hb_osNewLine() )
+   OutStd( XML_ExpatVersion(), hb_eol() )
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( v1, v2, v3, hb_osNewLine() )
+   OutStd( v1, v2, v3, hb_eol() )
    hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( v1, v2, v3, hb_osNewLine() )
+   OutStd( v1, v2, v3, hb_eol() )
 
    IF Empty( p )
-      OutErr( "Couldn't allocate memory for parser", hb_osNewLine() )
+      OutErr( "Couldn't allocate memory for parser", hb_eol() )
       ErrorLevel( -1 )
       RETURN
    ENDIF
@@ -36,9 +36,9 @@ PROCEDURE Main( cFileName )
    xData := Array( 1 )
    xData[ 1 ] := 1
 
-   OutStd( XML_GetUserData( p ), hb_osNewLine() )
+   OutStd( XML_GetUserData( p ), hb_eol() )
    XML_SetUserData( p, xData )
-   OutStd( ValType( XML_GetUserData( p ) ), hb_osNewLine() )
+   OutStd( ValType( XML_GetUserData( p ) ), hb_eol() )
    XML_SetElementHandler( p, {| x, e, a | start( x, e, a ) }, {| x, e | end( x, e ) } )
    XML_SetCharacterDataHandler( p, {| x, d | data( x, d ) } )
 
@@ -63,7 +63,7 @@ PROCEDURE start( xData, cElement, aAttr )
       NEXT
    ENDIF
 
-   OutStd( hb_osNewLine() )
+   OutStd( hb_eol() )
 
    ++xData[ 1 ]
 

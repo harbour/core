@@ -36,14 +36,14 @@ PROCEDURE Main( cFileName )
       cFileName := "setup.ui"
    ENDIF
 
-   OutStd( XML_ExpatVersion() + hb_osNewLine() )
+   OutStd( XML_ExpatVersion() + hb_eol() )
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_osNewLine() )
+   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
    hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_osNewLine() )
+   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
 
    IF Empty( p )
-      OutErr( "Couldn't allocate memory for parser" + hb_osNewLine() )
+      OutErr( "Couldn't allocate memory for parser" + hb_eol() )
       ErrorLevel( -1 )
       RETURN
    ENDIF
@@ -61,9 +61,9 @@ PROCEDURE Main( cFileName )
 
    aNode[ _N_aParent ] := aUserData[ _D_aTree ]
 
-   OutStd( XML_GetUserData( p ) ) ; OutStd( hb_osNewLine() )
+   OutStd( XML_GetUserData( p ) ) ; OutStd( hb_eol() )
    XML_SetUserData( p, aUserData )
-   OutStd( ValType( XML_GetUserData( p ) ) + hb_osNewLine() )
+   OutStd( ValType( XML_GetUserData( p ) ) + hb_eol() )
    XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x | cb_end( x ) } )
    XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
@@ -86,7 +86,7 @@ PROCEDURE DUMP( hTree, n )
 
    FOR EACH aEl IN hTree[ _N_hChild ]
       FOR EACH aNode IN aEl
-         OutStd( Replicate( "  ", n ) + aEl:__enumKey() + ": '" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] ) + hb_osNewLine() )
+         OutStd( Replicate( "  ", n ) + aEl:__enumKey() + ": '" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] ) + hb_eol() )
          DUMP( aNode, n + 1 )
       NEXT
    NEXT
