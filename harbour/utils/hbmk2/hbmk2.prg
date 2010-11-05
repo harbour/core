@@ -1619,6 +1619,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            CASE FindInPath( "dirent.h", GetEnv( "INCLUDE" ) ) != NIL
                               hbmk[ _HBMK_cPLAT ] := "linux"
                            CASE FindInPath( "windows.h", GetEnv( "INCLUDE" ) ) != NIL
+                              hbmk[ _HBMK_cPLAT ] := "win"
+                           OTHERWISE
                               hbmk[ _HBMK_cPLAT ] := "dos"
                            ENDCASE
                         ENDIF
@@ -7125,6 +7127,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
 STATIC PROCEDURE dep_postprocess( hbmk )
    LOCAL dep
    LOCAL tmp
+   LOCAL cControlL
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
 
@@ -7139,9 +7142,11 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          dep[ _HBMKDEP_cControl ] := GetEnv( _HBMK_WITH_PREF + StrToDefine( dep:__enumKey() ) )
       ENDIF
 
-      SWITCH Lower( dep[ _HBMKDEP_cControl ] )
-      CASE "no"
-         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+      cControlL := Lower( dep[ _HBMKDEP_cControl ] )
+
+      DO CASE
+      CASE cControlL == "no"
+         dep[ _HBMKDEP_cControl ] := cControlL
          dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aINCPATH ] := {}
@@ -7149,18 +7154,19 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          dep[ _HBMKDEP_aIMPLIBSRC ] := {}
          dep[ _HBMKDEP_cIMPLIBDST ] := NIL
          dep[ _HBMKDEP_lForced ] := .T.
-         EXIT
-      CASE "local"
-         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+      CASE cControlL == "local"
+         dep[ _HBMKDEP_cControl ] := cControlL
          dep[ _HBMKDEP_aINCPATH ] := {}
-         EXIT
-      CASE "nolocal"
-         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+      CASE cControlL == "nolocal"
+         dep[ _HBMKDEP_cControl ] := cControlL
          dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
-         EXIT
-      CASE "yes" /* do nothing */
-         EXIT
-      CASE "force"
+      CASE Left( cControlL, Len( "strict:" ) ) == "strict:"
+         dep[ _HBMKDEP_cControl ] := cControlL
+         dep[ _HBMKDEP_aINCPATH ] := { SubStr( dep[ _HBMKDEP_cControl ], Len( "strict:" ) + 1 ) }
+         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+      CASE cControlL == "yes"
+         /* do nothing */
+      CASE cControlL == "force"
          dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aINCPATH ] := {}
@@ -7170,7 +7176,6 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          dep[ _HBMKDEP_lFoundLOCAL ] := .F.
          dep[ _HBMKDEP_lForced ] := .T.
          AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
-         EXIT
       OTHERWISE
          /* If control is not a recognized control keyword, interpret it
             as a header search path and add it to the search path list
@@ -7181,7 +7186,7 @@ STATIC PROCEDURE dep_postprocess( hbmk )
                EXIT
             ENDIF
          NEXT
-      ENDSWITCH
+      ENDCASE
    NEXT
 
    RETURN
