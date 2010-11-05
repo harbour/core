@@ -72,7 +72,7 @@ REQUEST HB_GT_STD
 
 
 /* command to store header files in hash array */
-#command ADD HEADER FILE <(cFile)> TO <hash> => ;
+#command ADD HEADER TO <hash> FILE <(cFile)> => ;
          #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
 
 
@@ -100,11 +100,6 @@ PROCEDURE _APPMAIN( cFile, ... )
    IF !EMPTY( cPath )
       AADD( s_aIncDir, "-I" + cPath )
    ENDIF
-
-#ifdef __PLATFORM__UNIX
-//   AADD( s_aIncDir, "-I/usr/include/harbour" )
-//   AADD( s_aIncDir, "-I/usr/local/include/harbour" )
-#endif
 
    IF PCount() > 0
       SWITCH Lower( cFile )
@@ -204,66 +199,66 @@ STATIC FUNCTION hbrun_CoreHeaderFiles()
 
    hHeaders := { => }
 
-   ADD HEADER FILE "achoice.ch" TO hHeaders
-   ADD HEADER FILE "assert.ch" TO hHeaders
-   ADD HEADER FILE "blob.ch" TO hHeaders
-   ADD HEADER FILE "box.ch" TO hHeaders
-   ADD HEADER FILE "button.ch" TO hHeaders
-   ADD HEADER FILE "color.ch" TO hHeaders
-   ADD HEADER FILE "common.ch" TO hHeaders
-   ADD HEADER FILE "dbedit.ch" TO hHeaders
-   ADD HEADER FILE "dbinfo.ch" TO hHeaders
-   ADD HEADER FILE "dbstruct.ch" TO hHeaders
-   ADD HEADER FILE "directry.ch" TO hHeaders
-   ADD HEADER FILE "error.ch" TO hHeaders
-   ADD HEADER FILE "fileio.ch" TO hHeaders
-   ADD HEADER FILE "getexit.ch" TO hHeaders
-   ADD HEADER FILE "hb.ch" TO hHeaders
-   ADD HEADER FILE "hbclass.ch" TO hHeaders
-   ADD HEADER FILE "hbcom.ch" TO hHeaders
-   ADD HEADER FILE "hbdebug.ch" TO hHeaders
-   ADD HEADER FILE "hbdyn.ch" TO hHeaders
-   ADD HEADER FILE "hbextcdp.ch" TO hHeaders
-   ADD HEADER FILE "hbextern.ch" TO hHeaders
-   ADD HEADER FILE "hbextlng.ch" TO hHeaders
-   ADD HEADER FILE "hbgfx.ch" TO hHeaders
-   ADD HEADER FILE "hbgfxdef.ch" TO hHeaders
-   ADD HEADER FILE "hbgtinfo.ch" TO hHeaders
-   ADD HEADER FILE "hbhrb.ch" TO hHeaders
-   ADD HEADER FILE "hbinkey.ch" TO hHeaders
-   ADD HEADER FILE "hblang.ch" TO hHeaders
-   ADD HEADER FILE "hblpp.ch" TO hHeaders
-   ADD HEADER FILE "hbmacro.ch" TO hHeaders
-   ADD HEADER FILE "hbmath.ch" TO hHeaders
-   ADD HEADER FILE "hbmemory.ch" TO hHeaders
-   ADD HEADER FILE "hbmemvar.ch" TO hHeaders
-   ADD HEADER FILE "hboo.ch" TO hHeaders
-   ADD HEADER FILE "hbpers.ch" TO hHeaders
-   ADD HEADER FILE "hbsetup.ch" TO hHeaders
-   ADD HEADER FILE "hbsix.ch" TO hHeaders
-   ADD HEADER FILE "hbsocket.ch" TO hHeaders
-   ADD HEADER FILE "hbstdgen.ch" TO hHeaders
-   ADD HEADER FILE "hbsxdef.ch" TO hHeaders
-   ADD HEADER FILE "hbthread.ch" TO hHeaders
-   ADD HEADER FILE "hbtrace.ch" TO hHeaders
-   ADD HEADER FILE "hbusrrdd.ch" TO hHeaders
-   ADD HEADER FILE "hbver.ch" TO hHeaders
-   ADD HEADER FILE "hbzlib.ch" TO hHeaders
-   ADD HEADER FILE "inkey.ch" TO hHeaders
-   ADD HEADER FILE "memoedit.ch" TO hHeaders
-   ADD HEADER FILE "ord.ch" TO hHeaders
-   ADD HEADER FILE "rddsys.ch" TO hHeaders
-   ADD HEADER FILE "reserved.ch" TO hHeaders
-   ADD HEADER FILE "set.ch" TO hHeaders
-   ADD HEADER FILE "setcurs.ch" TO hHeaders
-   ADD HEADER FILE "simpleio.ch" TO hHeaders
-   ADD HEADER FILE "std.ch" TO hHeaders
-   ADD HEADER FILE "tbrowse.ch" TO hHeaders
-   ADD HEADER FILE "harbour.hbx" TO hHeaders
-   ADD HEADER FILE "hbcpage.hbx" TO hHeaders
-   ADD HEADER FILE "hblang.hbx" TO hHeaders
-   ADD HEADER FILE "hbscalar.hbx" TO hHeaders
-   ADD HEADER FILE "hbusrrdd.hbx" TO hHeaders
+   ADD HEADER TO hHeaders FILE "achoice.ch"
+   ADD HEADER TO hHeaders FILE "assert.ch"
+   ADD HEADER TO hHeaders FILE "blob.ch"
+   ADD HEADER TO hHeaders FILE "box.ch"
+   ADD HEADER TO hHeaders FILE "button.ch"
+   ADD HEADER TO hHeaders FILE "color.ch"
+   ADD HEADER TO hHeaders FILE "common.ch"
+   ADD HEADER TO hHeaders FILE "dbedit.ch"
+   ADD HEADER TO hHeaders FILE "dbinfo.ch"
+   ADD HEADER TO hHeaders FILE "dbstruct.ch"
+   ADD HEADER TO hHeaders FILE "directry.ch"
+   ADD HEADER TO hHeaders FILE "error.ch"
+   ADD HEADER TO hHeaders FILE "fileio.ch"
+   ADD HEADER TO hHeaders FILE "getexit.ch"
+   ADD HEADER TO hHeaders FILE "hb.ch"
+   ADD HEADER TO hHeaders FILE "hbclass.ch"
+   ADD HEADER TO hHeaders FILE "hbcom.ch"
+   ADD HEADER TO hHeaders FILE "hbdebug.ch"
+   ADD HEADER TO hHeaders FILE "hbdyn.ch"
+   ADD HEADER TO hHeaders FILE "hbextcdp.ch"
+   ADD HEADER TO hHeaders FILE "hbextern.ch"
+   ADD HEADER TO hHeaders FILE "hbextlng.ch"
+   ADD HEADER TO hHeaders FILE "hbgfx.ch"
+   ADD HEADER TO hHeaders FILE "hbgfxdef.ch"
+   ADD HEADER TO hHeaders FILE "hbgtinfo.ch"
+   ADD HEADER TO hHeaders FILE "hbhrb.ch"
+   ADD HEADER TO hHeaders FILE "hbinkey.ch"
+   ADD HEADER TO hHeaders FILE "hblang.ch"
+   ADD HEADER TO hHeaders FILE "hblpp.ch"
+   ADD HEADER TO hHeaders FILE "hbmacro.ch"
+   ADD HEADER TO hHeaders FILE "hbmath.ch"
+   ADD HEADER TO hHeaders FILE "hbmemory.ch"
+   ADD HEADER TO hHeaders FILE "hbmemvar.ch"
+   ADD HEADER TO hHeaders FILE "hboo.ch"
+   ADD HEADER TO hHeaders FILE "hbpers.ch"
+   ADD HEADER TO hHeaders FILE "hbsetup.ch"
+   ADD HEADER TO hHeaders FILE "hbsix.ch"
+   ADD HEADER TO hHeaders FILE "hbsocket.ch"
+   ADD HEADER TO hHeaders FILE "hbstdgen.ch"
+   ADD HEADER TO hHeaders FILE "hbsxdef.ch"
+   ADD HEADER TO hHeaders FILE "hbthread.ch"
+   ADD HEADER TO hHeaders FILE "hbtrace.ch"
+   ADD HEADER TO hHeaders FILE "hbusrrdd.ch"
+   ADD HEADER TO hHeaders FILE "hbver.ch"
+   ADD HEADER TO hHeaders FILE "hbzlib.ch"
+   ADD HEADER TO hHeaders FILE "inkey.ch"
+   ADD HEADER TO hHeaders FILE "memoedit.ch"
+   ADD HEADER TO hHeaders FILE "ord.ch"
+   ADD HEADER TO hHeaders FILE "rddsys.ch"
+   ADD HEADER TO hHeaders FILE "reserved.ch"
+   ADD HEADER TO hHeaders FILE "set.ch"
+   ADD HEADER TO hHeaders FILE "setcurs.ch"
+   ADD HEADER TO hHeaders FILE "simpleio.ch"
+   ADD HEADER TO hHeaders FILE "std.ch"
+   ADD HEADER TO hHeaders FILE "tbrowse.ch"
+   ADD HEADER TO hHeaders FILE "harbour.hbx"
+   ADD HEADER TO hHeaders FILE "hbcpage.hbx"
+   ADD HEADER TO hHeaders FILE "hblang.hbx"
+   ADD HEADER TO hHeaders FILE "hbscalar.hbx"
+   ADD HEADER TO hHeaders FILE "hbusrrdd.hbx"
 
 #else
 

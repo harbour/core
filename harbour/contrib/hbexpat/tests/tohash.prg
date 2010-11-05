@@ -77,7 +77,6 @@ PROCEDURE Main( cFileName )
    ENDIF
 
    DUMP( aUserData[ _D_aTree ], 0 )
-   hb_MemoWrit( "json.txt", hb_jsonEncode( aUserData[ _D_aTree ] ) )
 
    RETURN
 
