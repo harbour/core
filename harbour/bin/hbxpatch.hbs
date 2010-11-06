@@ -532,6 +532,7 @@ STATIC PROCEDURE SetupTools()
 #endif
    LOCAL cPathComp
    LOCAL cTool
+   LOCAL lError
 
    /* Look for g$tool first, only attempt raw name if it isn't found
     * Helps non-GNU userland systems with GNU tools installed.
@@ -552,13 +553,18 @@ STATIC PROCEDURE SetupTools()
       NEXT
    NEXT
 
+   lError := .F.
    FOR EACH cTool in hb_HKeys( s_aTools )
       IF s_aTools[ cTool ] == NIL
+         lError := .T.
          OutStd( "E: Can not find " + cTool + hb_eol() )
-         ErrorLevel( 1 )
-         QUIT
       ENDIF
    NEXT
+
+   IF lError
+      ErrorLevel( 1 )
+      QUIT
+   ENDIF
 
    RETURN
 
