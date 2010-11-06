@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-HB_DYN_COPT := -DHB_DYNLIB -fpic
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CMP)
 CC_IN := -c

@@ -18,7 +18,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-HB_DYN_COPT := -DHB_DYNLIB -fpic
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)

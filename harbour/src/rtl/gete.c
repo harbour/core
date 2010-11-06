@@ -64,21 +64,29 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+/* NOTE: Convert the envvar name to uppercase. This is required for
+         DOS and OS/2 systems. [vszakats] */
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#  define _HB_GETENV_REQUIRES_UPPERCASE
+#endif
+
 HB_FUNC( GETENV )
 {
    PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
 
    if( pName && hb_pcount() == 1 )
    {
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
       char * pszName = hb_itemGetC( pName );
+#else
+      const char * pszName = hb_itemGetCPtr( pName );
+#endif
 
       if( pszName[ 0 ] != '\0' )
       {
          char * szValue;
 
-         /* NOTE: Convert the envvar name to uppercase. This is required for
-                  DOS and OS/2 systems. [vszakats] */
-#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
          hb_strupr( pszName );
 #endif
          szValue = hb_getenv( pszName );
@@ -98,7 +106,9 @@ HB_FUNC( GETENV )
       else
          hb_retc_null();
 
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
       hb_itemFreeC( pszName );
+#endif
    }
    else
       hb_retc_null();
@@ -126,15 +136,17 @@ HB_FUNC( HB_GETENV )
 
    if( pName )
    {
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
       char * pszName = hb_itemGetC( pName );
+#else
+      const char * pszName = hb_itemGetCPtr( pName );
+#endif
 
       if( pszName[ 0 ] != '\0' )
       {
          char * szValue;
 
-         /* NOTE: Convert the envvar name to uppercase. This is required for
-                  DOS and OS/2 systems. [vszakats] */
-#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
          hb_strupr( pszName );
 #endif
          szValue = hb_getenv( pszName );
@@ -154,7 +166,9 @@ HB_FUNC( HB_GETENV )
       else
          hb_retc_null();
 
+#ifdef _HB_GETENV_REQUIRES_UPPERCASE
       hb_itemFreeC( pszName );
+#endif
    }
    else
       hb_retc_null();

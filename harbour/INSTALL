@@ -328,6 +328,7 @@ HARBOUR
    HB_WITH_CUPS= (on *nix only)
    HB_WITH_CURL=C:\curl\include
    HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
+   HB_WITH_EXPAT=C:\expat\lib (defaults to locally hosted version)
    HB_WITH_FIREBIRD=C:\Firebird\include
    HB_WITH_FREEIMAGE=C:\FreeImage\Dist
    HB_WITH_GD=C:\gd\include
@@ -417,6 +418,7 @@ HARBOUR
       for contrib/hbcups lib:    $ sudo apt-get install libcups2-dev
       for contrib/hbcurl lib:    $ sudo apt-get install libcurl4-openssl-dev OR
                                  $ sudo apt-get install libcurl4-gnutls-dev
+      for contrib/hbexpat lib:   $ sudo apt-get install libexpat1-dev
       for contrib/hbfbird lib:   $ sudo apt-get install firebird2.1-dev OR
                                  $ sudo apt-get install libfirebird2.0-dev
       for contrib/hbfimage lib:  $ sudo apt-get install libfreeimage-dev
@@ -453,6 +455,7 @@ HARBOUR
       for contrib/hbcairo lib:   cairo-devel
       for contrib/hbcups lib:    libcups2-devel
       for contrib/hbcurl lib:    curl-devel
+      for contrib/hbexpat lib:   libexpat-devel
       for contrib/hbfbird lib:   firebird-devel
       for contrib/hbfimage lib:  freeimage-devel
       for contrib/hbgd lib:      gd-devel
@@ -981,11 +984,11 @@ HARBOUR
       ---
 
       --- Symbian OS (requires preceding build for Windows target)
-      set PATH=F:\Symbian\CSL Arm Toolchain\bin;%PATH%
+      set PATH=C:\Symbian\CSL Arm Toolchain\bin;%PATH%
       set HB_PLATFORM=symbian
       set HB_COMPILER=gcc
       set HB_CCPREFIX=arm-none-symbianelf-
-      set HB_USER_CFLAGS=-IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include\stdapis -IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include -D__GCC32__ -D__SYMBIAN32__
+      set HB_USER_CFLAGS=-IC:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include\stdapis -IC:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include -D__GCC32__ -D__SYMBIAN32__
       win-make
       ---
 
@@ -1222,6 +1225,7 @@ HARBOUR
          set LIB=<Harbour lib dir>
          set HB_GT_LIB=
          set HB_*_INSTALL=
+         set HB_INSTALL_???=
          set HB_INC_*=
          set HB_DIR_*=
          set HB_LEX=
@@ -1473,6 +1477,8 @@ HARBOUR
          http://www.cups.org/
       HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
          http://curl.haxx.se/
+      HB_WITH_EXPAT - Expat (XML parser) [multiplatform, free, open-source]
+         http://expat.sourceforge.net/
       HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
          http://www.firebirdsql.org/
       HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]

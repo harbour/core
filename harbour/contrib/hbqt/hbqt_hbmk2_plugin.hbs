@@ -869,7 +869,7 @@ STATIC FUNCTION hbqtui_pullToolTip( cCmd )
       IF ( n := At( '", 0', cString ) ) > 0
          cString := AllTrim( SubStr( cString, 1, n ) )
          cString := StrTran( cString, '\"', '"' )
-         cString := StrTran( cString, '""', "" )
+         cString := StrTran( cString, '""' )
          cString := SubStr( cString, 2, Len( cString ) - 2 )
       ENDIF
    ENDIF
@@ -1110,7 +1110,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
    IF !empty( ::class_:= hbqtgen_PullOutSection( @cQth, "CLASS" ) )
       FOR EACH s IN ::class_
          IF ( n := at( "=", s ) ) > 0
-            aadd( ::cls_, { alltrim( substr( s, 1, n-1 ) ), alltrim( substr( s, n+1 ) ) } )
+            aadd( ::cls_, { alltrim( substr( s, 1, n - 1 ) ), alltrim( substr( s, n + 1 ) ) } )
          ENDIF
       NEXT
    ENDIF
@@ -1354,7 +1354,7 @@ METHOD HbQtSource:build()
    /* Insert user defined code - INCLUDEs */
    aadd( aLine, "#include <QtCore/QPointer>" )
    IF !empty( ::code_ )
-      aeval( ::code_, {|e| aadd( aLine, strtran( e, chr( 13 ), "" ) ) } )
+      aeval( ::code_, {|e| aadd( aLine, strtran( e, chr( 13 ) ) ) } )
       aadd( aLine, "" )
    ENDIF
 
@@ -1499,7 +1499,7 @@ METHOD HbQtSource:build()
                s := ::new_[ i ]
                s := trim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
                s := strtran( s, ");", ";" )
-               s := strtran( s, "( "+ ::cQtObject + "* )", "" )
+               s := strtran( s, "( "+ ::cQtObject + "* )" )
                aadd( aLine, s )
             ELSE
                aadd( aLine, ::new_[ i ] )
@@ -1517,7 +1517,7 @@ METHOD HbQtSource:build()
    aadd( aLine, "" )
 
    /* Insert Functions */
-   aeval( ::txt_, {|e| aadd( aLine, strtran( e, chr( 13 ), "" ) ) } )
+   aeval( ::txt_, {|e| aadd( aLine, strtran( e, chr( 13 ) ) ) } )
 
    /* Footer */
    hbqtgen_BuildFooter( @aLine, ::cQtVer )
@@ -1552,7 +1552,7 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       aadd( ::func_, { oMtd:cFun, 0, "" } )
    ENDIF
 
-   aadd( ::txt_, "/* " + strtran( oMtd:cProto, chr(13), "" ) + " */" )
+   aadd( ::txt_, "/* " + strtran( oMtd:cProto, chr(13) ) + " */" )
    aadd( ::txt_, "HB_FUNC( QT_" + upper( ::cQtObject ) + "_" + upper( oMtd:cHBFunc ) + " )" )
    aadd( ::txt_, "{" )
    IF !empty( oMtd:fBody_ )
@@ -1643,7 +1643,7 @@ METHOD HbQtSource:buildClass()
       cM := "" ; cC := "::pPtr, "
       IF oMtd:nArgs > 0
          FOR EACH oArg IN oMtd:hArgs
-            cP := strtran( strtran( oArg:cDoc, "@", "" ), "::", "_" )
+            cP := strtran( strtran( oArg:cDoc, "@" ), "::", "_" )
             cM += cP + ", "
             cC += iif( left( cP, 1 ) == "p", "__hbqt_ptr( " + cP + " )", cP ) + ", "
          NEXT
@@ -2068,13 +2068,13 @@ METHOD HbQtSource:buildDOC()
       pWidget := "p" + ::cQtObject
       FOR i := 1 TO len( ::doc_ )
          IF !empty( cText := ::doc_[ i ] )
-            cText := substr( cText, n+nLen+1 )
-            cText := strtran( cText, pWidget + ", ", "" )
-            cText := strtran( cText, pWidget, "" )
+            cText := substr( cText, n + nLen + 1 )
+            cText := strtran( cText, pWidget + ", " )
+            cText := strtran( cText, pWidget )
             cText := strtran( cText, "(  )", "()" )
             n1    := at( "->", cText )
-            cRet  := hbqtgen_prgRetNormalize( alltrim( substr( cText, n1+2 ) ) )
-            cText := substr( cText, 1, n1-1 )
+            cRet  := hbqtgen_prgRetNormalize( alltrim( substr( cText, n1 + 2 ) ) )
+            cText := substr( cText, 1, n1 - 1 )
             n2    := max( 50, len( cText ) )
             cText := padR( cText, n2 )
             IF !empty( cRet )
@@ -2152,18 +2152,18 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    oMtd:cProto := cProto
    oMtd:fBody_ := fBody_
 
-   oMtd:cPre := alltrim( substr( cProto,   1, n-1    ) )
-   oMtd:cPar := alltrim( substr( cProto, n+1, nn-1-n ) )
-   oMtd:cPas := alltrim( substr( cProto, nn+1        ) )
+   oMtd:cPre := alltrim( substr( cProto,     1, n - 1      ) )
+   oMtd:cPar := alltrim( substr( cProto, n + 1, nn - 1 - n ) )
+   oMtd:cPas := alltrim( substr( cProto, nn + 1            ) )
 
    IF ( n := at( "[*", oMtd:cPas ) ) > 0
       IF ( nn := at( "*]", oMtd:cPas ) ) > 0
          oMtd:cMrk := alltrim( substr( oMtd:cPas, n + 2, nn - n - 2 ) )
-         oMtd:cPas := alltrim( substr( oMtd:cPas, 1, n-1 ) )
+         oMtd:cPas := alltrim( substr( oMtd:cPas, 1, n - 1 ) )
          FOR EACH k IN hb_aTokens( oMtd:cMrk, ";" )
             IF ( n := at( "=", k ) ) > 0
-               cKey := alltrim( substr( k, 1, n-1 ) )
-               cVal := alltrim( substr( k, n+1 ) )
+               cKey := alltrim( substr( k, 1, n - 1 ) )
+               cVal := alltrim( substr( k, n + 1 ) )
                SWITCH upper( cKey )
                CASE "D"
                   oMtd:nDetach := val( cVal )
@@ -2516,7 +2516,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       oMtd:cCmd := "hb_retnd( " + oMtd:cCmn + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
-   CASE ( "::" $ oRet:cCast )
+   CASE "::" $ oRet:cCast
       oMtd:cCmd := "hb_retni( ( " + oRet:cCast + " ) " + oMtd:cCmn + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
@@ -2554,7 +2554,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       ENDIF
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
-   CASE hbqtgen_isAqtObject( oRet:cCast )          .AND. ;
+   CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              "Abstract" $ oRet:cCast
@@ -2562,7 +2562,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
-   CASE hbqtgen_isAqtObject( oRet:cCast )          .AND. ;
+   CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lVirt
@@ -2570,7 +2570,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       oMtd:cCmd := "hb_retptrGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
 
-   CASE hbqtgen_isAqtObject( oRet:cCast )          .AND. ;
+   CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
                              oRet:lFar     .AND. ;
                              oRet:lConst   .AND. ;
                              oRet:lConstL
@@ -2738,9 +2738,9 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
    ::lConstL := lConstL
 
    IF ( n := at( "=", cTxt ) ) > 0
-      ::cDefault  := alltrim( substr( cTxt, n+1 ) )
+      ::cDefault  := alltrim( substr( cTxt, n + 1 ) )
       ::lOptional := .t.
-      cTxt := substr( cTxt, 1, n-1 )
+      cTxt := substr( cTxt, 1, n - 1 )
    ENDIF
 
    cTxt := strtran( cTxt, "virtual " )
@@ -2760,8 +2760,8 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
       ::cName := ::cCast
    ELSE
       IF ( n := at( " ", cTxt ) ) > 0
-         ::cCast := substr( cTxt, 1, n-1 )
-         ::cName := substr( cTxt, n+1 )
+         ::cCast := substr( cTxt, 1, n - 1 )
+         ::cName := substr( cTxt, n + 1 )
       ELSE
          ::cCast := cTxt
          ::cName := cTxt
@@ -2807,7 +2807,7 @@ STATIC FUNCTION hbqtgen_PullOutSection( cQth, cSec )
 
    IF ( n := at( cTknB, cQth ) ) > 0
       IF( nn := at( cTknE, cQth ) ) > 0
-         cTxt := substr( cQth, n+len( cTknB ), nn-1-( n+len( cTknB ) ) )
+         cTxt := substr( cQth, n + len( cTknB ), nn - 1 - ( n + len( cTknB ) ) )
       ENDIF
       IF !empty( cTxt )
          a_:= hb_ATokens( cTxt, Chr( 10 ) )
@@ -2891,7 +2891,7 @@ STATIC PROCEDURE hbqtgen_BuildFooter( txt_, cQtVer )
 STATIC FUNCTION hbqtgen_stripLastFrom( cStr, cDlm )
    LOCAL n
    IF ( n := rAt( cDlm, cStr ) ) > 0
-      RETURN substr( cStr, 1, n-1 )
+      RETURN substr( cStr, 1, n - 1 )
    ENDIF
    RETURN cStr
 

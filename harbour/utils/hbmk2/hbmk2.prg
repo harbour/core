@@ -3248,7 +3248,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
          IF hbmk[ _HBMK_lCreateDyn ] .AND. ! HBMK_ISPLAT( "darwin|cygwin" )
-            IF HBMK_ISPLAT( "hpux|sunos" )
+            IF HBMK_ISPLAT( "hpux|sunos|linux" )
                AAdd( hbmk[ _HBMK_aOPTC ], "-fPIC" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fpic" )
