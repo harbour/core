@@ -18,7 +18,7 @@
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
 -depincpath=png:/opt/local/include
--depincpathlocal=png:../../external/png
+-depincpathlocal=png:../../src/3rd/png
 
 -instfile=inc:hbwapi.h
 -instfile=inc:hbwin.h

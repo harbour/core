@@ -17,7 +17,7 @@
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
 -depincpath=png:/opt/local/include
--depincpathlocal=png:../../../../external/png
+-depincpathlocal=png:../../../../src/3rd/png
 
 # This is a dependency of png
 -depkeyhead=zlib:zlib.h
@@ -26,7 +26,7 @@
 -depincpath=zlib:/usr/include
 -depincpath=zlib:/usr/local/include
 -depincpath=zlib:/boot/develop/headers/3rdparty
--depincpathlocal=zlib:../../../../external/zlib
+-depincpathlocal=zlib:../../../../src/3rd/zlib
 
 # Suppress deprecated warnings until libharu gets updated for latest libpng
 -cflag=-DPNG_NO_PEDANTIC_WARNINGS

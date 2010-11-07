@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ROOT := ../../
+ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
@@ -84,7 +84,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
    _DET_FLT_PLAT :=
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include
-   _DET_INC_LOCL := external/jpeg
+   _DET_INC_LOCL := src/3rd/jpeg
    _DET_INC_HEAD := /jpeglib.h
    include $(TOP)$(ROOT)config/detfun.mk
 

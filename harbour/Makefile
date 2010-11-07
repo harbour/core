@@ -26,8 +26,7 @@ else
    DIRS := \
       doc \
       include \
-      external \
-      src{external}
+      src \
 
    ifeq ($(_CONTRIB_FIRST),yes)
 

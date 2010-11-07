@@ -65,10 +65,10 @@ else
       endif
 
       ifneq ($(HB_HAS_PCRE_LOCAL),)
-         DYNDIRLIST_BASE += external/pcre
+         DYNDIRLIST_BASE += src/3rd/pcre
       endif
       ifneq ($(HB_HAS_ZLIB_LOCAL),)
-         DYNDIRLIST_BASE += external/zlib
+         DYNDIRLIST_BASE += src/3rd/zlib
       endif
 
       export DYNDIRLIST_BASE
@@ -76,13 +76,14 @@ else
 
    ifeq ($(HB_BUILD_PARTS),lib)
       HB_COMP_DIR :=
-      HB_COMP_REF :=
+      HB_COMP_REF := {3rd}
    else
       HB_COMP_DIR := main{compiler}
-      HB_COMP_REF := {main}
+      HB_COMP_REF := {3rd,main}
    endif
 
    DIRS := \
+      3rd \
       common \
       nortl \
       pp{common,nortl} \
@@ -98,7 +99,7 @@ else
       debug$(HB_COMP_REF)
 
       ifneq ($(HB_BUILD_DYN),no)
-         DIRS += dynlib{codepage,common,hbextern,lang,macro,pp,rdd,rtl,vm}
+         DIRS += dynlib{3rd,codepage,common,hbextern,lang,macro,pp,rdd,rtl,vm}
       endif
 
 endif

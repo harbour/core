@@ -600,7 +600,7 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_TextMarkupAnnot_SetQuadPoints ( HPDF_Annotation annot, HPDF_Point lb, HPDF_Point rb, HPDF_Point rt, HPDF_Point lt); /* l-left, r-right, b-bottom, t-top positions */
 
 HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_Set3DView  ( HPDF_MMgr mmgr,
+HPDF_Annot_Set3DView  ( HPDF_MMgr mmgr, 
 					 	HPDF_Annotation	annot,
 					 	HPDF_Annotation	annot3d,
 					 	HPDF_Dict			view);
@@ -622,8 +622,8 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_FreeTextAnnot_SetDefaultStyle (HPDF_Annotation  annot, const char* style);
 
 HPDF_EXPORT(HPDF_STATUS)
-HPDF_LineAnnot_SetPosition (HPDF_Annotation annot,
-							HPDF_Point startPoint, HPDF_LineAnnotEndingStyle startStyle,
+HPDF_LineAnnot_SetPosition (HPDF_Annotation annot, 
+							HPDF_Point startPoint, HPDF_LineAnnotEndingStyle startStyle, 
 							HPDF_Point endPoint, HPDF_LineAnnotEndingStyle endStyle);
 
 HPDF_EXPORT(HPDF_STATUS)
@@ -1440,16 +1440,17 @@ HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
                         HPDF_MMgr   mmgr,
                         HPDF_Stream iccdata,
-                        HPDF_Xref   xref,
+                        HPDF_Xref   xref, 
                         int         numcomponent);
 
 HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_LoadIccProfileFromFile  (HPDF_Doc  pdf,
                             const char* icc_file_name,
                                    int  numcomponent);
-
+                                   
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* _HPDF_H */
+

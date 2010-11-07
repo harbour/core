@@ -20,7 +20,7 @@ unzip.c
 -depincpath=zlib:/usr/include
 -depincpath=zlib:/usr/local/include
 -depincpath=zlib:/boot/develop/headers/3rdparty
--depincpathlocal=zlib:../../../../external/zlib
+-depincpathlocal=zlib:../../../../src/3rd/zlib
 
 # ORIGIN http://www.winimage.com/zLibDll/minizip.html
 # VER    1.1

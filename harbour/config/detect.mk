@@ -48,7 +48,7 @@ _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include /boot/develop/headers/3rdparty
-_DET_INC_LOCL := external/zlib
+_DET_INC_LOCL := src/3rd/zlib
 _DET_INC_HEAD := /zlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
@@ -61,7 +61,7 @@ _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/local/include /opt/csw/include
-_DET_INC_LOCL := external/pcre
+_DET_INC_LOCL := src/3rd/pcre
 _DET_INC_HEAD := /pcre.h
 
 include $(TOP)$(ROOT)config/detfun.mk

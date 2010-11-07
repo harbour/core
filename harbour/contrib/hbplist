@@ -6,7 +6,7 @@ gtalleg/gtalleg.hbp
 gtwvg/gtwvg.hbp
 hbblat/hbblat.hbp
 hbblink/hbblink.hbp
-hbbz2/hbbz2.hbp                  # uses: bz2 (external)
+hbbz2/hbbz2.hbp                  # uses: bz2 (locally hosted)
 hbcairo/hbcairo.hbp
 hbclipsm/hbclipsm.hbp
 hbcomm/hbcomm.hbp
@@ -20,7 +20,7 @@ hbfoxpro/hbfoxpro.hbp
 hbfship/hbfship.hbp
 hbgd/hbgd.hbp
 hbgt/hbgt.hbp
-hbhpdf/hbhpdf.hbp                # uses: libhpdf (external)
+hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbide/hbide.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp
@@ -33,7 +33,7 @@ hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp
 hbqt/hbqt_all.hbp
 hbsms/hbsms.hbp
-hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (external)
+hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
 hbssl/hbssl.hbp
 hbtip/hbtip.hbp
 hbtip/hbtipssl.hbp
@@ -50,5 +50,5 @@ sddmy/sddmy.hbp
 sddoci/sddoci.hbp
 sddodbc/sddodbc.hbp
 sddpg/sddpg.hbp
-sddsqlt3/sddsqlt3.hbp            # uses: sqlite3 (external)
+sddsqlt3/sddsqlt3.hbp            # uses: sqlite3 (locally hosted)
 xhb/xhb.hbp

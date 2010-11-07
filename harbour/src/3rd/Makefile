@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ROOT := ../
+ROOT := ../../
 
 DIRS := \
    hbpmcom \
