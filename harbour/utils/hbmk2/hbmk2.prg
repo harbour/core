@@ -188,6 +188,7 @@ REQUEST hbmk_KEYW
 #define _COMPDET_cCOMP          2
 #define _COMPDET_cCCPREFIX      3 /* optional */
 #define _COMPDET_cCCPOSTFIX     4 /* optional */
+#define _COMPDET_cPLAT          5 /* optional */
 
 #define _COMPDETE_bBlock        1
 #define _COMPDETE_cPLAT         2
@@ -1358,7 +1359,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "cygwin" },; /* TOFIX: cygwin is now a platform */
+      aCOMPDET := { { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "gcc",,, "cygwin" },;
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64" },; /* Equation Solution build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
@@ -1606,11 +1607,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                                      hb_ps() + aCOMPDET[ tmp ][ _COMPDET_cCOMP ] +;
                                                      PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
                         hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
-                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
+                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX .AND. aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ] != NIL
                            hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
                         ENDIF
-                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPOSTFIX
+                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPOSTFIX .AND. aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ] != NIL
                            hbmk[ _HBMK_cCCPOSTFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ]
+                        ENDIF
+                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cPLAT .AND. aCOMPDET[ tmp ][ _COMPDET_cPLAT ] != NIL
+                           hbmk[ _HBMK_cPLAT ] := aCOMPDET[ tmp ][ _COMPDET_cPLAT ]
                         ENDIF
                         /* Hack autodetect watcom platform by looking at the header path config. TODO: Do it properly */
                         IF hbmk[ _HBMK_cCOMP ] == "watcom"
@@ -8171,7 +8175,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cLibNameCooked
    LOCAL cName, cExt
 
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64" ) /* TOFIX: cygwin is now a platform */
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -9568,7 +9572,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_TARGETTYPE"
       cMacro := hbmk_TARGETTYPE( hbmk ) ; EXIT
    CASE "HB_PLAT"
-   CASE "HB_PLATFORM"
+   CASE "HB_PLATFORM" /* Compatibility */
    CASE "HB_ARCH" /* Compatibility */
       cMacro := hbmk[ _HBMK_cPLAT ] ; EXIT
    CASE "HB_COMP"
@@ -9600,6 +9604,10 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hb_Version( HB_VERSION_STATUS ) ; EXIT
    CASE "HB_REVISION"
       cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
+   CASE "HB_HOST_PLAT"
+      cMacro := hb_Version( HB_VERSION_PLATFORM ) ; EXIT
+   CASE "HB_HOST_PLAT_UNIX"
+      cMacro := iif( hb_Version( HB_VERSION_UNIX_COMPAT ), "1", "" ) ; EXIT
    CASE "HB_BIN"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_BIN ] ; EXIT
    CASE "HB_LIB"
@@ -10787,8 +10795,8 @@ STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 STATIC FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
-   CASE HBMK_ISPLAT( "dos|os2" ) .OR. ;
-        HBMK_ISCOMP( "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" ) .OR. ; /* TOFIX: cygwin is now a platform */
+   CASE HBMK_ISPLAT( "dos|os2|cygwin" ) .OR. ;
+        HBMK_ISCOMP( "mingw|msvc|pocc|watcom|bcc|xcc" ) .OR. ;
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
    CASE HBMK_ISCOMP( "gcc|icc|clang|sunpro|diab|pcc" )

@@ -1,0 +1,12 @@
+diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
+--- sqlite3.orig/sqlite3.c	2010-10-07 22:36:26.000000000 +0300
++++ sqlite3/sqlite3.c	2010-10-17 13:33:22.796875000 +0300
+@@ -27730,7 +27730,7 @@
+ ** error message.
+ */
+ static void unixDlError(sqlite3_vfs *NotUsed, int nBuf, char *zBufOut){
+-  char *zErr;
++  const char *zErr;
+   UNUSED_PARAMETER(NotUsed);
+   unixEnterMutex();
+   zErr = dlerror();

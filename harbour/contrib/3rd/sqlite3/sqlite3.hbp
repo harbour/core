@@ -1,0 +1,39 @@
+#
+# $Id$
+#
+
+-stop{poccarm}
+# NOTE: old msvcarm can't cope with some PP directives. [vszakats]
+-stop{msvcarm&HB_COMP_VER!='1200'&HB_COMP_VER!='1300'&HB_COMP_VER!='1310')}
+# NOTE: dos based watcom runs out of memory. [vszakats]
+-stop{HB_HOST_PLAT='dos'&watcom}
+# NOTE: disable *nix builds on non-*nix platforms; [vszakats]
+#       except for cygwin-on-win
+-stop{!(HB_HOST_PLAT='win'&cygwin)&HB_HOST_PLAT_UNIX=''&unix}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=no
+-cpp=no
+
+-cflag=-DSQLITE_OMIT_DEPRECATED
+-cflag=-D_WIN32_WCE{wce}
+# DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
+# so we're forcing the next best available option. This will cause missing
+# externals though. [vszakats]
+-cflag=-DSQLITE_OS_OTHER{dos}
+# Watcom Linux builds cannot use system header files
+-cflag=-DSQLITE_OS_OTHER{linux&watcom}
+
+sqlite3.c
+
+# ORIGIN http://www.sqlite.org/
+# VER    3.7.3
+# URL    http://www.sqlite.org/sqlite-amalgamation-3_7_3.zip
+# DIFF   sqlite3.dif
+#
+# MAP    sqlite3.c
+# MAP    sqlite3.h

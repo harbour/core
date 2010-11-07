@@ -14,8 +14,10 @@
 -depcontrol=sqlite3:${HB_WITH_SQLITE3}
 -depincpath=sqlite3:/usr/include
 -depincpath=sqlite3:/boot/common/include
--depincpathlocal=sqlite3:../../external/sqlite3
+-depincpathlocal=sqlite3:../3rd/sqlite3
 
 -instfile=inc:hbsqlit3.ch
 
 hbsqlit3.c
+
+../3rd/sqlite3/sqlite3.hbc

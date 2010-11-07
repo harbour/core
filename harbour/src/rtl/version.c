@@ -147,24 +147,12 @@ HB_FUNC( HB_VERSION )
       break;
 
    case HB_VERSION_PLATFORM:
-      #if defined( HB_OS_DOS )
-         hb_retc_const( "DOS" );
-      #elif defined( HB_OS_OS2 )
-         hb_retc_const( "OS2" );
+      #if defined( HB_OS_WIN_CE ) /* NOTE: Must precede HB_OS_WIN */
+         hb_retc_const( "WCE" );
       #elif defined( HB_OS_WIN )
-         hb_retc_const( "WINDOWS" );
-      #elif defined( HB_OS_LINUX )
-         hb_retc_const( "LINUX" );
-      #elif defined( HB_OS_SUNOS )
-         hb_retc_const( "SUNOS" );
-      #elif defined( HB_OS_HPUX )
-         hb_retc_const( "HPUX" );
-      #elif defined( HB_OS_DARWIN )
-         hb_retc_const( "DARWIN" );
-      #elif defined( HB_OS_BSD )
-         hb_retc_const( "BSD" );
+         hb_retc_const( "WIN" );
       #else
-         hb_retc_null();
+         hb_retc_const( hb_verPlatformMacro() );
       #endif
       break;
 
