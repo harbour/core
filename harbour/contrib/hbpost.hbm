@@ -38,7 +38,6 @@
 {(hbdyn|hbexe)&HB_BUILD_SHARED='yes'&HB_SYSLOC='yes'}-fullshared
 
 # dynamic lib creation settings
-{_HB_BUILD_LIBDYN}-hbdyn
 {_HB_BUILD_LIBDYN}-shared
 {_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
 {_HB_BUILD_LIBDYN&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}

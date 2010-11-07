@@ -13,7 +13,7 @@ hbcomm/hbcomm.hbp
 hbct/hbct.hbp
 hbcups/hbcups.hbp
 hbcurl/hbcurl.hbp
-hbexpat/hbexpat.hbp              # uses: expat
+hbexpat/hbexpat.hbp              # uses: expat (locally hosted)
 hbfbird/hbfbird.hbp
 hbfimage/hbfimage.hbp
 hbfoxpro/hbfoxpro.hbp
@@ -25,7 +25,7 @@ hbide/hbide.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp
 hbmysql/hbmysql.hbp
-hbmzip/hbmzip.hbp                # uses: minizip (external)
+hbmzip/hbmzip.hbp                # uses: minizip (locally hosted)
 hbnetio/hbnetio.hbp
 hbnetio/utils/hbnetio.hbp
 hbnf/hbnf.hbp

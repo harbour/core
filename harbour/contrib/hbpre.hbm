@@ -15,4 +15,6 @@
 {(HB_BUILD_MODE='cpp')|(!HB_BUILD_MODE&allmsvc)}-cpp=yes
 {HB_BUILD_MODE='c'}-cpp=no
 
+{_HB_BUILD_LIBDYN}-hbdyn
+
 -warn=yes

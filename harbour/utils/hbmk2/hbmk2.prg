@@ -788,6 +788,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_lNOHBLIB := .F.
    LOCAL l_lLIBSYSMISC := .T.
    LOCAL l_cCMAIN := NIL
+   LOCAL l_lTargetSelected := .F.
 
    /* hbmk2 lib ordering tries to satisfy linkers which require this
       (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this won't solve
@@ -2029,12 +2030,48 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
-      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
-      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
-      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
-      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
-      CASE cParamL == "-hbcontainer"     ; hbmk[ _HBMK_lContainer ] := .T. ; hbmk[ _HBMK_lStopAfterInit ] := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
-      CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
+      CASE cParamL == "-hbexe"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+         ENDIF
+
+      CASE cParamL == "-hblib"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+         ENDIF
+
+      CASE cParamL == "-hbdyn"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
+         ENDIF
+
+      CASE cParamL == "-hbdynvm"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
+         ENDIF
+
+      CASE cParamL == "-hbcontainer"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lContainer ] := .T. ; hbmk[ _HBMK_lStopAfterInit ] := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+         ENDIF
+
+      CASE cParamL == "-hbimplib"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
+         ENDIF
+
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;

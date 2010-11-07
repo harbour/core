@@ -30,7 +30,6 @@
 
 # Suppress deprecated warnings until libharu gets updated for latest libpng
 -cflag=-DPNG_NO_PEDANTIC_WARNINGS
-# TOFIX: This will never kick in as -hblib is fixed in this file
 -cflag=-DHPDF_DLL_MAKE{hbdyn}
 -cflag=-U__COREDLL__{mingwarm}
 
