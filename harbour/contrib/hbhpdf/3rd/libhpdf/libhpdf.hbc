@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+libs=${hb_name}${__HB_DYN__}
+libs=png

@@ -9,7 +9,7 @@
 
 -o${hb_targetname}
 
--warn=no
+-warn=low
 
 xmlparse.c
 xmlrole.c

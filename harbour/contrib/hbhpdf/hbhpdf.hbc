@@ -5,5 +5,4 @@
 incpaths=.
 
 libs=${hb_name}${__HB_DYN__}
-libs=libhpdf
-libs=png
+libs=3rd/libhpdf/libhpdf.hbc

@@ -21,3 +21,5 @@
 -instfile=inc:harupdf.ch
 
 harupdf.c
+
+3rd/libhpdf/libhpdf.hbc

@@ -16,7 +16,7 @@
 
 -o${hb_targetname}
 
--warn=no
+-warn=low
 -cpp=no
 
 -cflag=-DSQLITE_OMIT_DEPRECATED

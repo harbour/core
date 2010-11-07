@@ -7,7 +7,7 @@
 
 -o${hb_targetname}
 
--warn=no
+-warn=low
 -cpp=no
 
 ioapi.c

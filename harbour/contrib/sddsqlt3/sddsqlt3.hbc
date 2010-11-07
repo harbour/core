@@ -3,6 +3,6 @@
 #
 
 libs=${hb_name}${__HB_DYN__}
-libs=sqlite3
+libs=../3rd/sqlite3/sqlite3.hbc
 
 libs=../rddsql/rddsql.hbc

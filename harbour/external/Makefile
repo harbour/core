@@ -6,7 +6,6 @@ ROOT := ../
 
 DIRS := \
    bzip2 \
-   libhpdf \
    hbpmcom \
    png \
    jpeg \
