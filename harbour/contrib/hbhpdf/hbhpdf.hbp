@@ -14,7 +14,7 @@
 -depcontrol=libharu:${HB_WITH_LIBHARU}
 -depincpath=libharu:/usr/include
 -depincpath=libharu:/usr/local/include
--depincpathlocal=libharu:../../src/3rd/libhpdf
+-depincpathlocal=libharu:3rd/libhpdf
 -depimplibs=libharu:../libhpdf.dll
 -depimplibs=libharu:../lib_dll/libhpdf.dll
 
