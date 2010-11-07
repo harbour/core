@@ -44,7 +44,7 @@ PROCEDURE Main()
    ? "SQL: SELECT FROM test"
    SQLExecDirect( hStmt, "SELECT FROM test" )
 
-   ? SQLError( hStmt,,, @cError1, @nError, @cError2 )
+   ? SQLError( ,,hStmt, @cError1, @nError, @cError2 )
    ? "SQLERROR", cError1, nError, cError2
    ? SQLGetDiagRec( SQL_HANDLE_STMT, hStmt, 1, @cError1, @nError, @cError2 )
    ? "SQLGETDIAGREC", cError1, nError, cError2

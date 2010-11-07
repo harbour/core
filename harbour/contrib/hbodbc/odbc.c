@@ -404,7 +404,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 
    hb_retni( SQLError( ( SQLHENV ) hb_parptr( 1 ),
                        ( SQLHDBC ) hb_parptr( 2 ),
-                       ( SQLHSTMT ) ( HB_PTRUINT ) hb_parptr( 3 ),
+                       ( SQLHSTMT ) hb_parptr( 3 ),
                        ( SQLTCHAR * ) buffer,
                        ( SQLINTEGER * ) &lError,
                        ( SQLTCHAR * ) szErrorMsg,
