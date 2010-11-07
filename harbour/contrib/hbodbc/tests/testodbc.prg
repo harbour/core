@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "simpleio.ch"
+
 #include "sql.ch"
 
 #xcommand GET ROW <nRow> INTO <cVar> => ;
@@ -17,6 +19,7 @@ PROCEDURE Main()
    LOCAL cConstrout := SPACE(1024)
    LOCAL nRows      := 0
    LOCAL cCode, cFunc, cState, cComm
+   LOCAL cError1, nError, cError2
 
    ? "Version: " + hb_NumToHex( hb_odbcVer() )
 
@@ -33,9 +36,22 @@ PROCEDURE Main()
    ? "Allocating statement... "
    SQLAllocStmt( hDbc, @hStmt )
 
+   ? SQLError( hEnv,,, @cError1, @nError, @cError2 )
+   ? "SQLERROR", cError1, nError, cError2
+   ? SQLGetDiagRec( SQL_HANDLE_ENV, hEnv, 1, @cError1, @nError, @cError2 )
+   ? "SQLGETDIAGREC", cError1, nError, cError2
+
+   ? "SQL: SELECT FROM test"
+   SQLExecDirect( hStmt, "SELECT FROM test" )
+
+   ? SQLError( hStmt,,, @cError1, @nError, @cError2 )
+   ? "SQLERROR", cError1, nError, cError2
+   ? SQLGetDiagRec( SQL_HANDLE_STMT, hStmt, 1, @cError1, @nError, @cError2 )
+   ? "SQLGETDIAGREC", cError1, nError, cError2
+
    ?
-   ? "SQL: SELECT * FROM TEST"
-   SQLExecDirect( hStmt, "select * from test" )
+   ? "SQL: SELECT * FROM test"
+   SQLExecDirect( hStmt, "SELECT * FROM test" )
 
    ?
 
@@ -45,11 +61,11 @@ PROCEDURE Main()
       GET ROW 2 INTO cFunc
       GET ROW 3 INTO cState
       GET ROW 4 INTO cComm
-      ? cCode, padr( cFunc, 20 ), cState, cComm
+      ? cCode, PadR( cFunc, 20 ), cState, cComm
    ENDDO
 
    ? "------------------------------------------------------------------------------"
-   ? str( nRows, 4 ), " row(s) affected."
+   ? Str( nRows, 4 ), " row(s) affected."
 
    SQLFreeStmt( hStmt, SQL_DROP )
    SQLDisConnect( hDbc )

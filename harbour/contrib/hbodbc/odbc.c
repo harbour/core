@@ -397,9 +397,14 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
    SQLSMALLINT wLen;
    SQLTCHAR buffer[ 256 ];
    SQLTCHAR szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
+
+   buffer[ 0 ] = '\0';
+   szErrorMsg[ 0 ] = '\0';
+   wLen = 0;
+
    hb_retni( SQLError( ( SQLHENV ) hb_parptr( 1 ),
                        ( SQLHDBC ) hb_parptr( 2 ),
-                       ( SQLHSTMT ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                       ( SQLHSTMT ) ( HB_PTRUINT ) hb_parptr( 3 ),
                        ( SQLTCHAR * ) buffer,
                        ( SQLINTEGER * ) &lError,
                        ( SQLTCHAR * ) szErrorMsg,
@@ -408,7 +413,32 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 
    O_HB_STORSTR( ( O_HB_CHAR * ) buffer, 4 );
    hb_stornl( ( long ) lError, 5 );
-   O_HB_STORSTR( ( O_HB_CHAR * ) szErrorMsg, 6 );
+   O_HB_STORSTRLEN( ( O_HB_CHAR * ) szErrorMsg, wLen, 6 );
+}
+
+HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nError, @cErrorMsg */
+{
+   SQLTCHAR szSQLState[ 5 + 1 ];
+   SQLINTEGER lError;
+   SQLTCHAR szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
+   SQLSMALLINT wLen;
+
+   szSQLState[ 0 ] = '\0';
+   szErrorMsg[ 0 ] = '\0';
+   wLen = 0;
+
+   hb_retni( SQLGetDiagRec( ( SQLSMALLINT ) hb_parni( 1 ),
+                            ( SQLHANDLE ) ( HB_PTRUINT ) hb_parptr( 2 ),
+                            ( SQLSMALLINT) hb_parni( 3 ),
+                            ( SQLTCHAR * ) szSQLState,
+                            ( SQLINTEGER * ) &lError,
+                            ( SQLTCHAR * ) szErrorMsg,
+                            ( SQLSMALLINT ) sizeof( szErrorMsg ),
+                            ( SQLSMALLINT * ) &wLen ) );
+
+   O_HB_STORSTR( ( O_HB_CHAR * ) szSQLState, 4 );
+   hb_stornl( ( long ) lError, 5 );
+   O_HB_STORSTRLEN( ( O_HB_CHAR * ) szErrorMsg, wLen, 6 );
 }
 
 HB_FUNC( SQLROWCOUNT )

@@ -50,9 +50,12 @@
  *
  */
 
+#ifndef HBODBC_CH_
+#define HBODBC_CH_
+
 /* RETCODEs */
-#define SQL_INVALID_HANDLE              -2
-#define SQL_ERROR                       -1
+#define SQL_INVALID_HANDLE              ( -2 )
+#define SQL_ERROR                       ( -1 )
 #define SQL_SUCCESS                     0
 #define SQL_SUCCESS_WITH_INFO           1
 #define SQL_NO_DATA_FOUND               100
@@ -71,13 +74,13 @@
 #define SQL_TIME                        10
 #define SQL_TIMESTAMP                   11
 #define SQL_VARCHAR                     12
-#define SQL_BIT                         -7
-#define SQL_LONGVARCHAR                 -1
-#define SQL_LONGVARBINARY               -4
-#define SQL_BIGINT                      -5
-#define SQL_TINYINT                     -6
+#define SQL_BIT                         ( -7 )
+#define SQL_LONGVARCHAR                 ( -1 )
+#define SQL_LONGVARBINARY               ( -4 )
+#define SQL_BIGINT                      ( -5 )
+#define SQL_TINYINT                     ( -6 )
 
-#define SQL_NVARCHAR                    -9
+#define SQL_NVARCHAR                    ( -9 )
 
 #define SQL_TYPE_NULL                   0
 #define SQL_TYPE_MIN                    SQL_BIT
@@ -92,9 +95,9 @@ nullablity of a column in a table. */
 #define SQL_NULLABLE_UNKNOWN            2
 
 /* Special length values */
-#define SQL_NULL_DATA                   -1
-#define SQL_DATA_AT_EXEC                -2
-#define SQL_NTS                         -3
+#define SQL_NULL_DATA                   ( -1 )
+#define SQL_DATA_AT_EXEC                ( -2 )
+#define SQL_NTS                         ( -3 )
 
 /* SQLFreeStmt defines */
 #define SQL_CLOSE                       0
@@ -249,3 +252,10 @@ nullablity of a column in a table. */
 #define SQL_MAX_LENGTH                  3
 #define SQL_ASYNC_ENABLE                4
 #define SQL_BIND_TYPE                   5
+
+#define SQL_HANDLE_ENV                  1
+#define SQL_HANDLE_DBC                  2
+#define SQL_HANDLE_STMT                 3
+#define SQL_HANDLE_DESC                 4
+
+#endif
