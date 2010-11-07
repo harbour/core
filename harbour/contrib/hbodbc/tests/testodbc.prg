@@ -7,8 +7,8 @@
 #include "sql.ch"
 
 #xcommand GET ROW <nRow> INTO <cVar> => ;
-  <cVar> := space( 128 ) ;;
-  SQLGetData( hStmt, <nRow>, SQL_CHAR, len( <cVar> ), @<cVar> )
+  <cVar> := Space( 128 ) ;;
+  SQLGetData( hStmt, <nRow>, SQL_CHAR, Len( <cVar> ), @<cVar> )
 
 PROCEDURE Main()
 
@@ -16,7 +16,7 @@ PROCEDURE Main()
    LOCAL hDbc       := 0
    LOCAL hStmt      := 0
    LOCAL cConstrin
-   LOCAL cConstrout := SPACE(1024)
+   LOCAL cConstrout := Space( 1024 )
    LOCAL nRows      := 0
    LOCAL cCode, cFunc, cState, cComm
    LOCAL cError1, nError, cError2
@@ -25,7 +25,7 @@ PROCEDURE Main()
 
    cConstrin := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
-   ? padc( "*** ODBC ACCESS TEST ***", 80 )
+   ? PadC( "*** ODBC ACCESS TEST ***", 80 )
    ?
    ? "Allocating environment... "
    SQLAllocEnv( @hEnv )

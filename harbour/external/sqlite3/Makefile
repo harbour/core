@@ -53,6 +53,7 @@ ifeq ($(HB_SUPPORTED),yes)
 
    ifneq ($(HB_HAS_SQLITE3_LOCAL),)
 
+      HB_CFLAGS += -DSQLITE_OMIT_DEPRECATED
       ifeq ($(HB_PLATFORM),wce)
          HB_CFLAGS += -D_WIN32_WCE
       endif

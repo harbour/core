@@ -34,7 +34,7 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
-#if ! defined( __HBSCRIPT__HBRUN )
+#if defined( __HBSCRIPT__HBMK )
 
 FUNCTION hbmk2_plugin_lib2dyn( hbmk2 )
    LOCAL cRetVal := ""
@@ -165,3 +165,5 @@ FUNCTION hbmk2_plugin_lib2dyn( hbmk2 )
    ENDSWITCH
 
    RETURN cRetVal
+
+#endif

@@ -1266,13 +1266,11 @@ HARBOUR
        'hbmk2 myapp.hbp'
    - To build an application using incremental mode:
        'hbmk2 myapp.hbp -inc'
-   - To build an application which uses a contrib library:
-       'hbmk2 myapp.prg -lhbct'
-   - To build an application which uses a 3rd party library:
-       'hbmk2 myapp.prg -lsuplib -L<path_to_lib>'
-   - To build an application which uses a 3rd party library,
-     and the 3rd party lib has an .hbc file:
-       'hbmk2 myapp.prg rddleto.hbc -L<path_to_letodb>'
+   - To build an application which uses a library:
+       'hbmk2 myapp.prg -lmylib -L<path_to_mylib>'
+   - To build an application which uses a contrib package or
+     3rd party package that provides an .hbc file:
+       'hbmk2 myapp.prg hbct.hbc'
    - To build an application which uses Windows resources:
        'hbmk2 mymain.prg client.prg myres.rc'
    - To build an application which links against Harbour dynamic libraries:
