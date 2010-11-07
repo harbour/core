@@ -15,8 +15,10 @@
 -depcontrol=bzip2:local{HB_BUILD_EXTDEF='no'}
 -depcontrol=bzip2:${HB_WITH_BZIP2}
 -depincpath=bzip2:/usr/include
--depincpathlocal=bzip2:../../external/bzip2
+-depincpathlocal=bzip2:3rd/bz2
 
 -instfile=inc:hbbz2.ch
 
 hbbz2.c
+
+3rd/bz2/bz2.hbc

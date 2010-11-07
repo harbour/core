@@ -5,7 +5,6 @@
 ROOT := ../
 
 DIRS := \
-   bzip2 \
    hbpmcom \
    png \
    jpeg \
