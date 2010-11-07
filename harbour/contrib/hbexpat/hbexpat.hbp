@@ -14,6 +14,7 @@
 -depcontrol=expat:${HB_WITH_EXPAT}
 -depincpath=expat:/usr/include
 -depincpathlocal=expat:3rd/expat
+-depfinish=expat
 
 -instfile=inc:hbexpat.ch
 -instfile=inc:hbexpatx.ch
@@ -23,4 +24,4 @@ hbexpatc.c
 hbexpatp.prg
 hbexpatx.prg
 
-3rd/expat/expat.hbc
+3rd/expat/expat.hbc{HBMK_HAS_EXPAT_LOCAL}

@@ -239,8 +239,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_AUTOHBC_NAME      "hbmk.hbc"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
-#define _HBMK_WITH_PREF         "HBMK_WITH_"
-#define _HBMK_HAS_PREF          "HBMK_HAS_"
+#define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
+#define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
+#define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
 #define _HBMK_SCRIPT            "__HBSCRIPT__HBMK"
 
 #define _HBMK_IMPLIB_EXE_POST   "_exe"
@@ -438,13 +439,14 @@ REQUEST hbmk_KEYW
 #define _HBMK_cDynLibPrefix     124 /* Dynamic lib filename prefix */
 #define _HBMK_cDynLibExt        125 /* Dynamic lib filename extension */
 #define _HBMK_aLINK             126 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        127 /* Links to be created and pointing to the target */
 
-#define _HBMK_aArgs             127
-#define _HBMK_nArgTarget        128
-#define _HBMK_lPause            129
-#define _HBMK_nLevel            130
+#define _HBMK_aArgs             128
+#define _HBMK_nArgTarget        129
+#define _HBMK_lPause            130
+#define _HBMK_nLevel            131
 
-#define _HBMK_MAX_              130
+#define _HBMK_MAX_              131
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -462,7 +464,8 @@ REQUEST hbmk_KEYW
 #define _HBMKDEP_lFoundLOCAL    12
 #define _HBMKDEP_cVersion       13
 #define _HBMKDEP_lForced        14
-#define _HBMKDEP_MAX_           14
+#define _HBMKDEP_lDetected      15
+#define _HBMKDEP_MAX_           15
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -986,6 +989,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_nCmd_FNF ] := NIL
 
    hbmk[ _HBMK_hDEPTSDIR ] := { => }
+   hbmk[ _HBMK_hDEPTMACRO ] := { => }
 
    hbmk[ _HBMK_lInstForce ] := .F.
    hbmk[ _HBMK_lAutoHBM ] := .T.
@@ -2663,6 +2667,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cIMPLIBDST ] := FNameNameExtGet( PathSepToSelf( tmp ) )
          ENDIF
 
+      CASE Left( cParam, Len( "-depfinish=" ) ) == "-depfinish="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depfinish=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam ) .AND. cParam $ hbmk[ _HBMK_hDEP ]
+            dep_try_detection( hbmk, hbmk[ _HBMK_hDEP ][ cParam ] )
+         ENDIF
+
       CASE Left( cParam, 1 ) $ cOptPrefix
 
          DO CASE
@@ -2860,8 +2871,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       NEXT
    ENDIF
 
-   dep_postprocess( hbmk )
-
    IF ! l_lLIBSYSMISC
       l_aLIBSYSMISC := {}
    ENDIF
@@ -2972,9 +2981,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       /* Process any package requirements */
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
-         IF ! dep_try_pkg_detection( hbmk, tmp )
-            dep_try_header_detection( hbmk, tmp )
-         ENDIF
+         dep_try_detection( hbmk, tmp )
       NEXT
    ENDIF
 
@@ -7158,6 +7165,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
          dep[ _HBMKDEP_lFoundLOCAL ] := .F.
          dep[ _HBMKDEP_cVersion ] := ""
          dep[ _HBMKDEP_lForced ] := .F.
+         dep[ _HBMKDEP_lDetected ] := .F.
          hbmk[ _HBMK_hDEP ][ cName ] := dep
       ENDIF
       RETURN .T.
@@ -7165,70 +7173,67 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
 
    RETURN .F.
 
-STATIC PROCEDURE dep_postprocess( hbmk )
-   LOCAL dep
+STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
    LOCAL tmp
    LOCAL cControlL
 
-   FOR EACH dep IN hbmk[ _HBMK_hDEP ]
+   /* Add our given name of the dependency to the list of
+      package names to check. Little convenience also
+      encouraging usage of standard package names. [vszakats] */
+   AAddNew( dep[ _HBMKDEP_aPKG ], Lower( dep[ _HBMKDEP_cName ] ) )
 
-      /* Add our given name of the dependency to the list of
-         package names to check. Little convenience also
-         encouraging usage of standard package names. [vszakats] */
-      AAddNew( dep[ _HBMKDEP_aPKG ], Lower( dep:__enumKey() ) )
+   /* Process "control" value. It can be a control keyword,
+      or a custom header include path. */
+   IF dep[ _HBMKDEP_cControl ] == NIL
+      dep[ _HBMKDEP_cControl ] := GetEnv( hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
+   ENDIF
 
-      /* Process "control" value. It can be a control keyword,
-         or a custom header include path. */
-      IF dep[ _HBMKDEP_cControl ] == NIL
-         dep[ _HBMKDEP_cControl ] := GetEnv( _HBMK_WITH_PREF + StrToDefine( dep:__enumKey() ) )
-      ENDIF
+   cControlL := Lower( dep[ _HBMKDEP_cControl ] )
 
-      cControlL := Lower( dep[ _HBMKDEP_cControl ] )
-
-      DO CASE
-      CASE cControlL == "no"
-         dep[ _HBMKDEP_cControl ] := cControlL
-         dep[ _HBMKDEP_aKeyHeader ] := {}
-         dep[ _HBMKDEP_aPKG ] := {}
-         dep[ _HBMKDEP_aINCPATH ] := {}
-         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
-         dep[ _HBMKDEP_aIMPLIBSRC ] := {}
-         dep[ _HBMKDEP_cIMPLIBDST ] := NIL
-         dep[ _HBMKDEP_lForced ] := .T.
-      CASE cControlL == "local"
-         dep[ _HBMKDEP_cControl ] := cControlL
-         dep[ _HBMKDEP_aINCPATH ] := {}
-      CASE cControlL == "nolocal"
-         dep[ _HBMKDEP_cControl ] := cControlL
-         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
-      CASE Left( cControlL, Len( "strict:" ) ) == "strict:"
-         dep[ _HBMKDEP_cControl ] := cControlL
-         dep[ _HBMKDEP_aINCPATH ] := { SubStr( dep[ _HBMKDEP_cControl ], Len( "strict:" ) + 1 ) }
-         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
-      CASE cControlL == "yes"
-         /* do nothing */
-      CASE cControlL == "force"
-         dep[ _HBMKDEP_aKeyHeader ] := {}
-         dep[ _HBMKDEP_aPKG ] := {}
-         dep[ _HBMKDEP_aINCPATH ] := {}
-         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
-         dep[ _HBMKDEP_cFound ] := "."
-         dep[ _HBMKDEP_lFound ] := .T.
-         dep[ _HBMKDEP_lFoundLOCAL ] := .F.
-         dep[ _HBMKDEP_lForced ] := .T.
-         AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
-      OTHERWISE
-         /* If control is not a recognized control keyword, interpret it
-            as a header search path and add it to the search path list
-            by keeping the position where it was specified. [vszakats] */
-         FOR EACH tmp IN dep[ _HBMKDEP_aINCPATH ]
-            IF tmp == _HBMK_DEP_CTRL_MARKER
-               tmp := dep[ _HBMKDEP_cControl ]
-               EXIT
-            ENDIF
-         NEXT
-      ENDCASE
-   NEXT
+   DO CASE
+   CASE cControlL == "no"
+      dep[ _HBMKDEP_cControl ] := cControlL
+      dep[ _HBMKDEP_aKeyHeader ] := {}
+      dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_aINCPATH ] := {}
+      dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+      dep[ _HBMKDEP_aIMPLIBSRC ] := {}
+      dep[ _HBMKDEP_cIMPLIBDST ] := NIL
+      dep[ _HBMKDEP_lForced ] := .T.
+   CASE cControlL == "local"
+      dep[ _HBMKDEP_cControl ] := cControlL
+      dep[ _HBMKDEP_aINCPATH ] := {}
+   CASE cControlL == "nolocal"
+      dep[ _HBMKDEP_cControl ] := cControlL
+      dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+   CASE Left( cControlL, Len( "strict:" ) ) == "strict:"
+      dep[ _HBMKDEP_cControl ] := cControlL
+      dep[ _HBMKDEP_aINCPATH ] := { SubStr( dep[ _HBMKDEP_cControl ], Len( "strict:" ) + 1 ) }
+      dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+   CASE cControlL == "yes"
+      /* do nothing */
+   CASE cControlL == "force"
+      dep[ _HBMKDEP_aKeyHeader ] := {}
+      dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_aINCPATH ] := {}
+      dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+      dep[ _HBMKDEP_cFound ] := "."
+      dep[ _HBMKDEP_lFound ] := .T.
+      dep[ _HBMKDEP_lFoundLOCAL ] := .F.
+      dep[ _HBMKDEP_lForced ] := .T.
+      AAdd( hbmk[ _HBMK_aOPTC ], "-D" + hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
+      hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
+   OTHERWISE
+      /* If control is not a recognized control keyword, interpret it
+         as a header search path and add it to the search path list
+         by keeping the position where it was specified. [vszakats] */
+      FOR EACH tmp IN dep[ _HBMKDEP_aINCPATH ]
+         IF tmp == _HBMK_DEP_CTRL_MARKER
+            tmp := dep[ _HBMKDEP_cControl ]
+            EXIT
+         ENDIF
+      NEXT
+   ENDCASE
 
    RETURN
 
@@ -7306,6 +7311,16 @@ STATIC FUNCTION dep_evaluate( hbmk )
    ENDIF
 
    RETURN Empty( aREQ ) .AND. Empty( aWRN ) .AND. ! lAnyForcedOut
+
+STATIC PROCEDURE dep_try_detection( hbmk, dep )
+   IF ! dep[ _HBMKDEP_lDetected ]
+      dep_postprocess_one( hbmk, dep )
+      IF ! dep_try_pkg_detection( hbmk, dep )
+         dep_try_header_detection( hbmk, dep )
+      ENDIF
+      dep[ _HBMKDEP_lDetected ] := .T.
+   ENDIF
+   RETURN
 
 /* Try '*-config' and 'pkg-config *' detection */
 STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
@@ -7398,7 +7413,8 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                   IF hbmk[ _HBMK_lDEBUGDEPD ]
                      hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as pkg at %2$s (%3$s)", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], dep[ _HBMKDEP_cVersion ] ) )
                   ENDIF
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( cName ) )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( cName ) ) )
+                  hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( cName ) ) ] := NIL
                   RETURN .T.
                ENDIF
             ENDIF
@@ -7436,7 +7452,11 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
                      hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found by %2$s header at %3$s %4$s", dep[ _HBMKDEP_cName ], PathSepToSelf( cFileName ), dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
                   ENDIF
                   AAddNew( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
+                  hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
+                  IF dep[ _HBMKDEP_lFoundLOCAL ]
+                     hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL_LOCAL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
+                  ENDIF
                   RETURN .T.
                ENDIF
             NEXT
@@ -9625,10 +9645,14 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_LEVEL"
       cMacro := hb_ntos( hbmk[ _HBMK_nLevel ] ) ; EXIT
    OTHERWISE
-      /* NOTE: If macro not found, try to interpret as
-               envvar. If it doesn't exist, empty string
-               will be returned (without warning) [vszakats] */
-      cMacro := GetEnv( cMacro )
+      IF cMacro $ hbmk[ _HBMK_hDEPTMACRO ] /* Check for dependency detection macros */
+         cMacro := "1"
+      ELSE
+         /* NOTE: If macro not found, try to interpret as
+                  envvar. If it doesn't exist, empty string
+                  will be returned (without warning) [vszakats] */
+         cMacro := GetEnv( cMacro )
+      ENDIF
    ENDSWITCH
 
    IF ! ISCHARACTER( cMacro )

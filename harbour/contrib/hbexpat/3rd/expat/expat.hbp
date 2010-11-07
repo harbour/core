@@ -2,8 +2,6 @@
 # $Id$
 #
 
--stop{unix}
-
 -hblib
 -inc
 

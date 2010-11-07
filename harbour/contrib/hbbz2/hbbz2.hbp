@@ -16,9 +16,10 @@
 -depcontrol=bzip2:${HB_WITH_BZIP2}
 -depincpath=bzip2:/usr/include
 -depincpathlocal=bzip2:3rd/bz2
+-depfinish=bzip2
 
 -instfile=inc:hbbz2.ch
 
 hbbz2.c
 
-3rd/bz2/bz2.hbc
+3rd/bz2/bz2.hbc{HBMK_HAS_BZIP2_LOCAL}

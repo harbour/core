@@ -17,9 +17,10 @@
 -depincpathlocal=libharu:3rd/libhpdf
 -depimplibs=libharu:../libhpdf.dll
 -depimplibs=libharu:../lib_dll/libhpdf.dll
+-depfinish=libharu
 
 -instfile=inc:harupdf.ch
 
 harupdf.c
 
-3rd/libhpdf/libhpdf.hbc
+3rd/libhpdf/libhpdf.hbc{HBMK_HAS_LIBHARU_LOCAL}
