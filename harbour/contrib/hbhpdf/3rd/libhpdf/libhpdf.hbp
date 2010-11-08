@@ -13,7 +13,7 @@
 -cpp=no
 
 -depkeyhead=png:png.h
--depcontrol=png:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=png:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
 -depincpath=png:/opt/local/include
@@ -21,7 +21,7 @@
 
 # This is a dependency of png
 -depkeyhead=zlib:zlib.h
--depcontrol=zlib:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
 -depincpath=zlib:/usr/include
 -depincpath=zlib:/usr/local/include

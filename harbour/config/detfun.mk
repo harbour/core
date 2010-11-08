@@ -17,7 +17,7 @@
 #       _DET_VAR_HAS_ - variable name receiving detection result (typically "HB_HAS_*").
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
-#       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
+#       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_3RDEXT=no' mode.
 #                       (you must use absolute paths only.)
 #       _DET_INC_LOCL - embedded location to look at.
 #                       (you must use paths relative to Harbour source tree root.)
@@ -82,13 +82,13 @@ ifeq ($($(_DET_VAR_HAS_)),)
                      endif
                   endif
                   ifeq ($($(_DET_VAR_HAS_)),)
-                     ifneq ($(HB_BUILD_EXTDEF),no)
+                     ifneq ($(HB_BUILD_3RDEXT),no)
                         $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
                      endif
                      $(_DET_VAR_HAS_) += $(_DET_INC_LOCL)
                   else
                      ifeq ($($(_DET_VAR_HAS_)),nolocal)
-                        ifneq ($(HB_BUILD_EXTDEF),no)
+                        ifneq ($(HB_BUILD_3RDEXT),no)
                            $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
                         endif
                      endif

@@ -13,7 +13,7 @@
 
 -deppkgname=gd:gd-devel
 -depkeyhead=gd:gd.h
--depcontrol=gd:no{HB_BUILD_EXTDEF='no'}
+-depcontrol=gd:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=gd:${HB_WITH_GD}
 -depincpath=gd:/usr/include
 -depincpath=gd:/opt/local/include

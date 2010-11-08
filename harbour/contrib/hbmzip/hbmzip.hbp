@@ -10,7 +10,7 @@
 -w3 -es2
 
 -depkeyhead=minizip:zip.h
--depcontrol=minizip:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=minizip:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=minizip:${HB_WITH_MINIZIP}
 -depincpath=minizip:/usr/include
 -depincpath=minizip:/usr/local/include
@@ -19,7 +19,7 @@
 
 # This is a dependency of minizip
 -depkeyhead=zlib:zlib.h
--depcontrol=zlib:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
 -depincpath=zlib:/usr/include
 -depincpath=zlib:/usr/local/include

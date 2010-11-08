@@ -14,7 +14,7 @@
 -cflag=-DWIN32_LEAN_AND_MEAN
 
 -depkeyhead=png:png.h
--depcontrol=png:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=png:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
 -depincpath=png:/opt/local/include

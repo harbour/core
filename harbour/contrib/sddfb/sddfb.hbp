@@ -14,7 +14,7 @@
 -stop{pocc64|poccarm}
 
 -depkeyhead=firebird:ibase.h
--depcontrol=firebird:no{HB_BUILD_EXTDEF='no'}
+-depcontrol=firebird:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=firebird:${HB_WITH_FIREBIRD}
 -depincpath=firebird:/usr/include
 -depincpath=firebird:/opt/firebird/include

@@ -14,7 +14,7 @@
 -stop{dos|os2|rsxnt}
 
 -depkeyhead=odbc:sql.h
-{!allwin&&HB_BUILD_EXTDEF='no'}-depcontrol=odbc:no
+{!allwin&&HB_BUILD_3RDEXT='no'}-depcontrol=odbc:no
 {!allwin}-depcontrol=odbc:${HB_WITH_ODBC}
 {allwin&!msvcarm}-depcontrol=odbc:force
 -depincpath=odbc:/usr/include

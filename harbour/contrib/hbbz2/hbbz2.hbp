@@ -12,7 +12,7 @@
 -stop{wce}
 
 -depkeyhead=bzip2:bzlib.h
--depcontrol=bzip2:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=bzip2:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=bzip2:${HB_WITH_BZIP2}
 -depincpath=bzip2:/usr/include
 -depincpathlocal=bzip2:3rd/bz2

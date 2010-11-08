@@ -15,7 +15,7 @@ zip.c
 unzip.c
 
 -depkeyhead=zlib:zlib.h
--depcontrol=zlib:local{HB_BUILD_EXTDEF='no'}
+-depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
 -depincpath=zlib:/usr/include
 -depincpath=zlib:/usr/local/include

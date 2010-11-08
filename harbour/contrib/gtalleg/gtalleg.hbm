@@ -13,7 +13,7 @@
 -stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
 
 -depkeyhead=allegro:allegro.h
--depcontrol=allegro:no{HB_BUILD_EXTDEF='no'}
+-depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=allegro:${HB_WITH_ALLEGRO}
 -depincpath=allegro:/usr/include
 -depincpath=allegro:/opt/local/include
