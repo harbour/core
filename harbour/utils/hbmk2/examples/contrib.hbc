@@ -2,9 +2,9 @@
 # $Id$
 #
 
-# Don't add here any contribs which have external dependencies
+# Don't add here any contribs which have 3rd party dependencies
 # or aren't equally available for all supported Harbour platforms.
 # Thank you. [vszakats]
 
 # Some popular and portable Harbour contribs
-libs=hbct hbmzip minizip
+hbcs=hbct hbmzip

@@ -3,19 +3,19 @@
 #
 
 # Full listing of Harbour contrib libs with availability.
-# [ This should be kept in sync with local Makefile information. ]
+# [ This should be kept in sync with local make file information. ]
 
 # contribs portable, with no external dependencies:
-libs=hbblink hbclipsm hbcomm hbct hbfoxpro hbfship hbgt hbmisc hbmzip minizip hbnf hbsms hbtpathy hbxpp hbziparc rddbmcdx rddsql xhb
+hbcs=hbblink hbclipsm hbcomm hbct hbfoxpro hbfship hbgt hbmisc hbmzip hbnf hbsms hbtpathy hbxpp hbziparc rddbmcdx rddsql xhb
 
 # contribs portable, with external dependencies:
-libs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt hbtip sddfb sddmy sddpg
+hbcs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt hbtip sddfb sddmy sddpg
 
 # contribs with limited availability (some with external dependencies):
-{!pocc&!xcc&!dmc&!watcom}libs=gtalleg
-{!dos}libs=hbfimage hbssl
-{linux|win}libs=rddads
-{win}libs=gtwvg hbblat hbwin
-{!rsxnt}libs=hbodbc
-{!bsd&!hpux&!pocc}libs=hbsqlit3 sqlite3
-{!wce}libs=hbbz2 bz2
+{!pocc&!xcc&!dmc&!watcom}hbcs=gtalleg
+{!dos}hbcs=hbfimage hbssl
+{linux|win}hbcs=rddads
+{win}hbcs=gtwvg hbblat hbwin
+hbcs=hbodbc
+{!bsd&!hpux&!pocc}hbcs=hbsqlit3
+{!wce}hbcs=hbbz2

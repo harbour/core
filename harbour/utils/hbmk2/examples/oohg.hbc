@@ -15,7 +15,7 @@
 {win}libs=oohg hbprinter miniprint
 
 # core (binary only)
-{bcc}libs=hbcomm
+{bcc}hbcs=hbcomm
 
 # Harbour contribs
-{win}libs=hbwin
+{win}hbcs=hbwin

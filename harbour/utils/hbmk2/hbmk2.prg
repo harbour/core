@@ -172,7 +172,7 @@ REQUEST hbmk_KEYW
 #define _WARN_DEF               0 /* Don't set any explicit warning level */
 #define _WARN_MAX               1
 #define _WARN_YES               2 /* Default level in Harbour build */
-#define _WARN_LOW               3 /* Low level, used for external code in Harbour build */
+#define _WARN_LOW               3 /* Low level, used for 3rd party code in Harbour build */
 #define _WARN_NO                4 /* Explicitly disable warnings */
 
 #define _COMPR_OFF              0

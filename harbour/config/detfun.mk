@@ -6,13 +6,13 @@
 # Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 # See COPYING for licensing terms.
 #
-# This make file will detect optional external components
+# This make file will detect optional 3rd party components
 # used in Harbour core code. Generic function.
 # ---------------------------------------------------------------
 
 # USAGE:
 #    ON CALL:
-#       _DET_DSP_NAME - human readable name of external component.
+#       _DET_DSP_NAME - human readable name of 3rd party component.
 #       _DET_VAR_INC_ - variable name containing user component control (typically "HB_WITH_*").
 #       _DET_VAR_HAS_ - variable name receiving detection result (typically "HB_HAS_*").
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
@@ -23,14 +23,14 @@
 #                       (you must use paths relative to Harbour source tree root.)
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
 #       - variable name specified by _DET_VAR_INC_ (typically "HB_WITH_*") containing:
-#          (empty) or yes - will enable external component if found on default locations.
-#          no             - will disable external component.
-#          force          - will forcibly enable external component, bypassing location checks,
+#          (empty) or yes - will enable 3rd party component if found on default locations.
+#          no             - will disable 3rd party component.
+#          force          - will forcibly enable 3rd party component, bypassing location checks,
 #                           HB_HAS_* will have the content '.' (as local dir). In this case user
 #                           is responsible to pass -I C compiler option manually.
-#          local          - will choose locally hosted version of external component.
-#          nolocal        - will disable using locally hosted version of external component.
-#          <dirlist>      - will specify locations to check for the external component.
+#          local          - will choose locally hosted version of 3rd party component.
+#          nolocal        - will disable using locally hosted version of 3rd party component.
+#          <dirlist>      - will specify locations to check for the 3rd party component.
 #    ON RETURN:
 #       - above variables cleared.
 #       - _DET_RES_TEXT with human readable detection result.

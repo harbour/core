@@ -927,20 +927,22 @@ HB_FUNC( SSL_GET_SHUTDOWN )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if 0 /* TOFIX: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
 HB_FUNC( SSL_GET_READ_AHEAD )
 {
    if( hb_SSL_is( 1 ) )
    {
+#if defined( __BORLANDC__ ) /* TOFIX: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
+      hb_retni( 0 );
+#else
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
          hb_retni( SSL_get_read_ahead( ssl ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-#endif
 
 HB_FUNC( SSL_GET_STATE )
 {
