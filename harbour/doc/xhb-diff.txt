@@ -622,7 +622,7 @@ i.e.:
 Note for Clipper users: 'hb_adel( aParams, n, .t. )' in above example
 works like 'adel( aParams, n ); asize( aParams, len( aParams ) - 1 )'.
 
-This functionality is unique to Harbour and xHarbour does not supports
+This functionality is unique to Harbour and xHarbour does not support
 hb_arrayToParams() or similar function.
 
 
@@ -3147,4 +3147,3 @@ expect speed improvement executing MT parallel programs on multi CPU
 machines. For some programs like MT servers it may be critical - programs
 compiled by Harbour can be quite well improved by simple hardware
 upgrade to 4, 8, 16 or more CPU machines.
-
