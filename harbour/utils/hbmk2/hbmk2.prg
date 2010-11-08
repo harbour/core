@@ -4606,6 +4606,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lIMPLIB ] .AND. HBMK_ISPLAT( "win|os2|dos" )
             l_cLIBSELF := l_cIMPLIBNAME
          ENDIF
+         /* TOFIX: ? Add l_cLIBSELF for *nix dynamic builds to exclude self name. */
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          l_cLIBSELF := cName
@@ -6343,6 +6344,7 @@ STATIC PROCEDURE DoLinkCalc( hbmk )
    LOCAL tmp, tmp1
 
    FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      /* TOFIX: This calculation will result in incorrect links on *nix systems. */
       tmp1 := DirAddPathSep( PathMakeRelative( FNameDirGet( tmp ), FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), .T. ) ) + FNameNameExtGet( hbmk[ _HBMK_cPROGNAME ] )
 
       hb_FNameSplit( tmp1, @cDir, @cName, @cExt )

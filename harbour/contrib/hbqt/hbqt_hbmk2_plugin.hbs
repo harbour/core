@@ -155,7 +155,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
       IF ! hbmk2[ "lCLEAN" ]
          IF ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
-            hbmk2[ "vars" ][ "cRCC_BIN" ] := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
+            hbmk2[ "vars" ][ "cRCC_BIN" ] := qt_tool_detect( hbmk2, "rcc", "RCC_BIN", .F. )
             IF Empty( hbmk2[ "vars" ][ "cRCC_BIN" ] )
                cRetVal := I_( "Required QT tool not found" )
             ENDIF
@@ -406,15 +406,25 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
    RETURN cRetVal
 
-STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT )
+STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, lPostfix )
    LOCAL cBIN
    LOCAL aEnvList
 
-   aEnvList := { "HB_QTPATH", "HB_QTPOSTFIX" }
+   IF ! hb_isLogical( lPostfix )
+      lPostfix := .T.
+   ENDIF
+
+   IF lPostfix
+      aEnvList := { "HB_QTPATH", "HB_QTPOSTFIX" }
+   ELSE
+      aEnvList := { "HB_QTPATH" }
+   ENDIF
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
-      cName += GetEnv( "HB_QTPOSTFIX" )
+      IF lPostfix
+         cName += GetEnv( "HB_QTPOSTFIX" )
+      ENDIF
       IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
          ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
 
