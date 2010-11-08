@@ -4,7 +4,9 @@
 
 #include <stddef.h>
 
-#ifdef COMPILED_FROM_DSP
+#ifdef HARBOUR_CONF
+#include "_hbconf.h"
+#elif defined(COMPILED_FROM_DSP)
 #include "winconfi.h"
 #elif defined(MACOS_CLASSIC)
 #include "macconfi.h"

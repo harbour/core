@@ -2086,11 +2086,12 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
-            if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid ==
-                HB_F_ARRAYTOPARAMS )
+            if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
             {
                usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
-               if( usCount == 1 && pSelf->value.asFunCall.pParms->ExprType != HB_ET_MACROARGLIST )
+               if( usCount == 1 &&
+                   ( pSelf->value.asFunCall.pFunName->value.asSymbol.flags & HB_FN_MULTIARG ) != 0 &&
+                   pSelf->value.asFunCall.pParms->ExprType != HB_ET_MACROARGLIST )
                {
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                   HB_GEN_FUNC1( PCode1, HB_P_PUSHAPARAMS );

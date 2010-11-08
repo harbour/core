@@ -341,6 +341,7 @@ typedef enum
 
 #define HB_FN_UDF       0
 #define HB_FN_RESERVED  1
+#define HB_FN_MULTIARG  2
 
 typedef HB_USHORT HB_EXPRTYPE;
 

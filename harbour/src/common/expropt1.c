@@ -1348,6 +1348,8 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
                - handle it differently then in a normal statement */
             if( pElem->ExprType == HB_ET_MACRO )
                pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+            else if( pElem->ExprType == HB_ET_FUNCALL )
+               pElem->value.asFunCall.pFunName->value.asSymbol.flags |= HB_FN_MULTIARG;
             if( nItems )
             {
                nItems = 0;
