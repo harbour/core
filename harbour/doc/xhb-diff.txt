@@ -314,7 +314,7 @@ In xHarbour the behavior of references stored in array is reverted in
 comparison to Clipper or Harbour.
 In Clipper and Harbour VM executing code like:
          aVal[ 1 ] := 100
-clears unconditionally 1-st item in aVal array and assign to it value 100.
+clears unconditionally 1-st item in aVal array and assigns to it value 100.
 xHarbour checks if aVal[ 1 ] is an reference and in such case it resolves
 the reference and then assign 100 to the destination item.
 On access Clipper and Harbour VM executing code like:
@@ -337,12 +337,12 @@ It can be seen in code like:
          x3 := aParams[ 3 ]
 
          x1 := lower( x1 ) + "1"
-         x2 := lower( x1 ) + "2"
-         x3 := lower( x1 ) + "3"
+         x2 := lower( x2 ) + "2"
+         x3 := lower( x3 ) + "3"
 
 Harbour and Clipper shows:
       A B C
-      a1 B a13
+      a1 B c3
 but xHarbour:
       A B C
       A B C
@@ -391,7 +391,7 @@ Compiled by Harbour above code shows:
       abc klm xyz 123 456 789
       abc [1] xyz 123 [2] 789
 
-In xHarbour only passing array items by reference work but do not work
+In xHarbour only passing array items by reference works but does not work
 passing hash items by reference though it does not generate either
 compile time or run time errors so the above code can be compiled and
 executed but it shows:
@@ -595,6 +595,35 @@ In xHarbour due to reverted behavior of references stored in array items
 assign operation to items in array returned by hb_aParams() changes
 corresponding parameters passed by reference. It does not happen in
 Harbour where item references stored in arrays work like in Clipper.
+
+
+
+###    HB_ARRAYTOPARAMS() FUNCTION    ###
+=========================================
+Harbour has special function which allows to convert array into
+list of items which can be used as function parameters, array
+values or array indexes in the same way as '...' operator:
+   hb_arrayToParams( <aValue> ) -> <aValue>[ 1 ] [, <aValue>[ N ] ]
+i.e.:
+      proc main( ... )
+         local aParams := hb_aParams(), n
+         /* remove parameters starting with "--" */
+         n := 1
+         while n < len( aParams )
+            if left( aParams[ n ], 2 ) == "--"
+               hb_adel( aParams, n, .t. )
+            else
+               ++n
+            endif
+         enddo
+         ? "Public parameters:", hb_arrayToParams( aParams )
+      return
+
+Note for Clipper users: 'hb_adel( aParams, n, .t. )' in above example
+works like 'adel( aParams, n ); asize( aParams, len( aParams ) - 1 )'.
+
+This functionality is unique to Harbour and xHarbour does not supports
+hb_arrayToParams() or similar function.
 
 
 

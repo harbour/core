@@ -36,6 +36,7 @@ hbsyslog.c
 hbxml.c
 txtline.c
 xhbarr.c
+xhbarrex.c
 xhbat.c
 xhbcopyf.c
 xhbdate.c
