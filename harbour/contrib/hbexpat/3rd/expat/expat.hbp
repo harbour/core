@@ -15,7 +15,7 @@ xmltok.c
 
 {hblib}-cflag=-DXML_STATIC
 {allwin}-cflag=-DCOMPILED_FROM_DSP
-{os2}-cflag=-DHAVE_MEMMOVE
+{unix|os2}-cflag=-DHAVE_MEMMOVE
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
 {bcc}-cflag=-w-8066

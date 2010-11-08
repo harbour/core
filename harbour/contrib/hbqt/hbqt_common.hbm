@@ -29,5 +29,6 @@
 {!darwin}-depincpath=qt:/usr/include/qt4
 {!darwin}-depincpath=qt:/usr/lib/qt4/include
 {!darwin}-depincpath=qt:/usr/include
+{bsd}-depincpath=qt:/usr/local/include/qt4
 {darwin}-depincpath=qt:/Developer/qt/include
 {darwin}-depincpath=qt:/Library/Frameworks

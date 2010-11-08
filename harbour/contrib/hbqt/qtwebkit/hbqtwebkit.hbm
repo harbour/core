@@ -19,5 +19,6 @@ hbqt_extern.prg
 {!darwin}-depincpath=qtwebkit:/usr/include/qt4
 {!darwin}-depincpath=qtwebkit:/usr/lib/qt4/include
 {!darwin}-depincpath=qtwebkit:/usr/include
+{bsd}-depincpath=qt:/usr/local/include/qt4
 {darwin}-depincpath=qtwebkit:/Developer/qt/include
 {darwin}-depincpath=qtwebkit:/Library/Frameworks
