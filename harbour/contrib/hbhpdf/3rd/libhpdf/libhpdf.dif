@@ -1,6 +1,6 @@
-diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
---- libhpdf.orig/hpdf.h	2010-10-23 14:01:35.000000000 +0200
-+++ libhpdf/hpdf.h	2010-10-23 14:01:35.000000000 +0200
+diff -urN libhpdf.orig\hpdf.h libhpdf\hpdf.h
+--- libhpdf.orig\hpdf.h	Tue Nov 09 01:34:54 2010
++++ libhpdf\hpdf.h	Tue Nov 09 01:34:54 2010
 @@ -17,7 +17,7 @@
  #ifndef _HPDF_H
  #define _HPDF_H
@@ -10,9 +10,18 @@ diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
  #include "hpdfvers.h"
  
  #ifdef HPDF_DLL_MAKE
-diff -urN libhpdf.orig/hpdfpdfa.c libhpdf/hpdfpdfa.c
---- libhpdf.orig/hpdfpdfa.c	2010-10-23 14:01:34.000000000 +0200
-+++ libhpdf/hpdfpdfa.c	2010-10-23 14:01:34.000000000 +0200
+@@ -472,7 +472,7 @@
+                                const char   *uri);
+ 
+ 
+-HPDF_Annotation
++HPDF_EXPORT(HPDF_Annotation)
+ HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
+ 								HPDF_Rect      rect,
+ 								const char     *text,
+diff -urN libhpdf.orig\hpdfpdfa.c libhpdf\hpdfpdfa.c
+--- libhpdf.orig\hpdfpdfa.c	Tue Nov 09 01:34:53 2010
++++ libhpdf\hpdfpdfa.c	Tue Nov 09 01:34:53 2010
 @@ -116,12 +116,12 @@
      HPDF_BYTE *currentTime;
      HPDF_BYTE idkey[HPDF_MD5_KEY_LEN];
@@ -27,9 +36,9 @@ diff -urN libhpdf.orig/hpdfpdfa.c libhpdf/hpdfpdfa.c
      id = HPDF_Dict_GetItem(pdf->trailer, "ID", HPDF_OCLASS_ARRAY);
      if (!id) {
         id = HPDF_Array_New(pdf->mmgr);
-diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
---- libhpdf.orig/hpdfutil.h	2010-10-23 14:01:36.000000000 +0200
-+++ libhpdf/hpdfutil.h	2010-10-23 14:01:36.000000000 +0200
+diff -urN libhpdf.orig\hpdfutil.h libhpdf\hpdfutil.h
+--- libhpdf.orig\hpdfutil.h	Tue Nov 09 01:34:55 2010
++++ libhpdf\hpdfutil.h	Tue Nov 09 01:34:55 2010
 @@ -18,7 +18,7 @@
  #ifndef _HPDF_UTILS_H
  #define _HPDF_UTILS_H
