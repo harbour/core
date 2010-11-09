@@ -912,7 +912,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT* pVariant, HB_USHORT uiClass
                   long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
 
                   hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex,
-                           ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ),
+                           ( VARTYPE ) ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ),
                            uiClass );
                   hb_xfree( plIndex );
                }

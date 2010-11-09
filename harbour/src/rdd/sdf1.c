@@ -121,11 +121,12 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
       pArea->area.fEof = HB_FALSE;
       pArea->fPositioned = HB_TRUE;
       uiEolPos = ( HB_USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
-                                      ( char * ) pArea->pRecord, uiRead );
+                                         ( const char * ) pArea->pRecord,
+                                         uiRead );
       if( uiEolPos )
       {
          --uiEolPos;
-         if( uiRead == pArea->uiRecordLen + pArea->uiEolLen )
+         if( uiRead < uiToRead && uiRead == uiEolPos + pArea->uiEolLen )
             pArea->nNextOffset = ( HB_FOFFSET ) -1;
          else
             pArea->nNextOffset = pArea->nRecordOffset + uiEolPos + pArea->uiEolLen;
@@ -176,11 +177,12 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
                --uiRead;
 
             uiEolPos = ( HB_USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
-                                            ( char * ) pArea->pRecord, uiRead );
+                                               ( const char * ) pArea->pRecord,
+                                               uiRead );
             if( uiEolPos )
             {
                --uiEolPos;
-               if( uiRead == pArea->uiRecordLen + pArea->uiEolLen )
+               if( uiRead < uiToRead && uiRead == uiEolPos + pArea->uiEolLen )
                   pArea->nNextOffset = ( HB_FOFFSET ) -1;
                else
                   pArea->nNextOffset = ulOffset + uiEolPos + pArea->uiEolLen;

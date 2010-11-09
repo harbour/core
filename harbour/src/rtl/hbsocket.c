@@ -1436,7 +1436,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
       if( timeout >= 0 )
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( timeout % 1000 ) * 1000;
+         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
@@ -1484,7 +1484,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
       if( timeout >= 0 )
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( timeout % 1000 ) * 1000;
+         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
@@ -1541,7 +1541,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       if( timeout >= 0 )
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( timeout % 1000 ) * 1000;
+         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
@@ -2628,7 +2628,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    if( timeout >= 0 )
    {
       tv.tv_sec = ( long ) ( timeout / 1000 );
-      tv.tv_usec = ( timeout % 1000 ) * 1000;
+      tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
       ptv = &tv;
    }
    else

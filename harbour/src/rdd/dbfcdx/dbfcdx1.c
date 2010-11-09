@@ -388,8 +388,8 @@ static LPCDXKEY hb_cdxKeyPutC( LPCDXKEY pKey, const char * szText, HB_USHORT uiR
 /*
  * compare two values using Tag conditions (len & type)
  */
-static int hb_cdxValCompare( LPCDXTAG pTag, HB_BYTE * val1, HB_BYTE len1,
-                             HB_BYTE * val2, HB_BYTE len2, int iMode )
+static int hb_cdxValCompare( LPCDXTAG pTag, HB_BYTE * val1, int len1,
+                             HB_BYTE * val2, int len2, int iMode )
 {
    int iLimit, iResult = 0;
 
@@ -851,7 +851,7 @@ static void hb_cdxTagSetScope( LPCDXTAG pTag, HB_USHORT nScope, PHB_ITEM pItem )
    pScopeVal = ( hb_itemType( pItem ) == HB_IT_BLOCK ) ?
                            hb_vmEvalBlock( pItem ) : pItem;
 
-   if( hb_cdxItemTypeCmp( pTag->uiType ) == hb_cdxItemTypeCmp( hb_cdxItemType( pScopeVal ) ) )
+   if( hb_cdxItemTypeCmp( ( HB_BYTE ) pTag->uiType ) == hb_cdxItemTypeCmp( hb_cdxItemType( pScopeVal ) ) )
    {
       PHB_ITEM *pScope;
       LPCDXKEY *pScopeKey;
@@ -1570,7 +1570,7 @@ static HB_ULONG hb_cdxPageGetKeyPage( LPCDXPAGE pPage, int iKey )
 /*
  * get number of duplicated keys from key in leaf index page
  */
-static HB_SHORT hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
+static HB_BYTE hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
 {
 #ifdef HB_CDX_DBGCODE_EXT
    if( iKey < 0 || iKey >= pPage->iKeys )
@@ -1583,7 +1583,7 @@ static HB_SHORT hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
    else
    {
       HB_BYTE * ptr = &pPage->node.extNode.keyPool[ ( iKey + 1 ) * pPage->ReqByte - 2 ];
-      return ( HB_GET_LE_UINT16( ptr ) >> ( 16 - pPage->TCBits ) ) & pPage->TCMask;
+      return ( HB_BYTE ) ( HB_GET_LE_UINT16( ptr ) >> ( 16 - pPage->TCBits ) ) & pPage->TCMask;
    }
 }
 
@@ -3792,7 +3792,7 @@ static int hb_cdxPageSeekKey( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec 
       n = (l + r ) >> 1;
       k = hb_cdxValCompare( pPage->TagParent, pKey->val, pKey->len,
                             hb_cdxPageGetKeyVal( pPage, n ),
-                            ( HB_BYTE ) pPage->TagParent->uiLen, pKey->mode );
+                            pPage->TagParent->uiLen, pKey->mode );
       if( k == 0 )
       {
          if( ulKeyRec == CDX_MAX_REC_NUM )
@@ -3840,7 +3840,7 @@ static int hb_cdxPageSeekKey( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec 
    {
       k = hb_cdxValCompare( pPage->TagParent, pKey->val, pKey->len,
                             hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ),
-                            ( HB_BYTE ) pPage->TagParent->uiLen, pKey->mode );
+                            pPage->TagParent->uiLen, pKey->mode );
       if( k == 0 && ulKeyRec != CDX_MAX_REC_NUM &&
                     ulKeyRec != CDX_IGNORE_REC_NUM )
       {
@@ -3864,7 +3864,7 @@ static int hb_cdxPageSeekKey( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec 
          else
             k = hb_cdxValCompare( pPage->TagParent, pKey->val, pKey->len,
                                   hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ),
-                                  ( HB_BYTE ) pPage->TagParent->uiLen, pKey->mode );
+                                  pPage->TagParent->uiLen, pKey->mode );
       }
    }
    else if( k > 0 && fLeaf )

@@ -179,7 +179,7 @@ HB_FUNC( NUMROL )
    {
       if( hb_parl( 3 ) )
       {
-         HB_USHORT us = ( HB_USHORT ) ( lValue & 0xff ) << ( lShift & 0x07 );
+         HB_USHORT us = ( HB_USHORT ) ( ( lValue & 0xff ) << ( lShift & 0x07 ) );
 
          lValue = ( lValue & 0xff00 ) | ( us & 0xff ) | ( us >> 8 );
       }

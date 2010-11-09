@@ -251,7 +251,7 @@ static HB_USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT u
    ucSize = ptr[ uiOffset++ ];
    if( ucSize != ucRecLen + 1 ) /* key value is not fully duplicated */
    {
-      HB_UCHAR len = pTag->KeyLength;
+      HB_UCHAR len = ( HB_UCHAR ) pTag->KeyLength;
 
       /* ucSize = 0 is a special case when RecLen is 4 and KeySize is 250
        * in such case ucSize - ( ucRecLen + 2 ) gives 250 = NSX_MAXKEYLEN
@@ -4191,7 +4191,7 @@ static HB_BOOL hb_nsxOrdKeyGoto( LPTAGINFO pTag, HB_ULONG ulKeyNo )
                }
                else
                {
-                  pTag->stack[ iLevel ].ikey -= ulKeyNo;
+                  pTag->stack[ iLevel ].ikey -= ( HB_SHORT ) ulKeyNo;
                   ulKeyNo = 0;
                }
             }
@@ -4247,7 +4247,7 @@ static HB_BOOL hb_nsxOrdKeyGoto( LPTAGINFO pTag, HB_ULONG ulKeyNo )
                }
                else
                {
-                  pTag->stack[ iLevel ].ikey += ulKeyNo;
+                  pTag->stack[ iLevel ].ikey += ( HB_SHORT ) ulKeyNo;
                   ulKeyNo = 0;
                }
             }

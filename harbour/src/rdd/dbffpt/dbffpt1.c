@@ -3730,7 +3730,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
                   if( hb_fptCountSMTDataLength( pArea, &fOffset ) != HB_SUCCESS )
                      ulOldSize = 0;
                   else
-                     ulOldSize = fOffset - FPT_BLOCK_OFFSET( ulOldBlock );
+                     ulOldSize = ( HB_ULONG ) ( fOffset - FPT_BLOCK_OFFSET( ulOldBlock ) );
                }
             }
          }
@@ -4494,7 +4494,7 @@ static HB_ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
    HB_ERRCODE errCode = HB_SUCCESS;
    HB_ULONG ulBlock, ulSize, ulType;
    HB_USHORT uiField;
-   HB_FOFFSET pos, from;
+   HB_FOFFSET pos, from, size;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptDoPackRec(%p)", pArea));
 
@@ -4558,7 +4558,7 @@ static HB_ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
 
          ulBlock = HB_GET_LE_UINT32( pFieldBuf + pField->uiLen - 6 );
          ulType = HB_GET_LE_UINT16( pFieldBuf + pField->uiLen - 2 );
-         ulSize = 0;
+         size = 0;
 
          switch( ulType )
          {
@@ -4569,23 +4569,23 @@ static HB_ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
                                   FPT_BLOCK_OFFSET( ulBlock ) ) != 4 )
                   errCode = EDBF_READ;
                else
-                  ulSize = HB_GET_LE_UINT32( buffer ) + 4;
+                  size = HB_GET_LE_UINT32( buffer ) + 4;
                break;
             case HB_VF_ARRAY:
                from = FPT_BLOCK_OFFSET( ulBlock );
                errCode = hb_fptCountSMTDataLength( pArea, &from );
-               ulSize = from - FPT_BLOCK_OFFSET( ulBlock );
+               size = from - FPT_BLOCK_OFFSET( ulBlock );
                break;
             case HB_VF_DNUM:
                if( pField->uiLen <= 12 )
-                  ulSize = 11;
+                  size = 11;
                break;
             default:
                if( ulType <= HB_VF_CHAR && ( pField->uiLen - 2 ) < ( int ) ulType )
-                  ulSize = ulType - ( pField->uiLen - 6 );
+                  size = ulType - ( pField->uiLen - 6 );
                break;
          }
-         if( errCode == HB_SUCCESS && ulSize )
+         if( errCode == HB_SUCCESS && size )
          {
             /* Buffer is hot? */
             if( !pArea->fRecordChanged )
@@ -4599,7 +4599,7 @@ static HB_ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
                pos = ( HB_FOFFSET ) ulBlock *
                      ( HB_FOFFSET ) pArea->ulNewBlockSize;
                errCode = hb_fptCopyToFile( pArea->pMemoFile, from,
-                                           pArea->pMemoTmpFile, pos, ulSize );
+                                           pArea->pMemoTmpFile, pos, size );
                if( errCode == HB_SUCCESS )
                   HB_PUT_LE_UINT32( pFieldBuf + pField->uiLen - 6, ulBlock );
             }
@@ -4640,7 +4640,7 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, HB_USHORT uiBlockSize,
          pArea->pMemoTmpFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szFile );
          if( pArea->pMemoTmpFile )
          {
-            HB_USHORT ulMemoBlockSize = pArea->ulMemoBlockSize;
+            HB_ULONG ulMemoBlockSize = pArea->ulMemoBlockSize;
             PHB_FILE pFile = pArea->pMemoFile;
 
             pArea->ulMemoBlockSize = pArea->ulNewBlockSize;
