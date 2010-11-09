@@ -312,7 +312,7 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
             iCodeLen = 2;
             break;
          }
-         else if( j - i >= 4 && ( i == 1 || j == iCodeLen || pCode[ j ] == SELECT_A || pCode[ j ] == SELECT_B ) ||
+         else if( ( j - i >= 4 && ( i == 1 || j == iCodeLen || pCode[ j ] == SELECT_A || pCode[ j ] == SELECT_B ) ) ||
                   j - i >= 6 )
          {
             if( i == 1 )
