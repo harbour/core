@@ -36,5 +36,5 @@ msi.c
 -depimplibd=cairo:cairo
 -depfinish=cairo
 
-cairo.c{HBMK_HAS_CAIRO}
-../hbcairo/hbcairo.hbc{HBMK_HAS_CAIRO}
+{HBMK_HAS_CAIRO}cairo.c
+{HBMK_HAS_CAIRO}../hbcairo/hbcairo.hbc

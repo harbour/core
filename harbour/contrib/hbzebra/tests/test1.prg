@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "hbzebra.ch"
 #include "hbcairo.ch"
 
@@ -45,27 +49,27 @@ RETURN
 PROC DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 LOCAL hZebra
    IF cType == "EAN13"
-      hZebra := hb_zebra_create_ean13( cCode, nFlags ) 
+      hZebra := hb_zebra_create_ean13( cCode, nFlags )
    ELSEIF cType == "EAN8"
-      hZebra := hb_zebra_create_ean8( cCode, nFlags ) 
+      hZebra := hb_zebra_create_ean8( cCode, nFlags )
    ELSEIF cType == "UPCA"
-      hZebra := hb_zebra_create_upca( cCode, nFlags ) 
+      hZebra := hb_zebra_create_upca( cCode, nFlags )
    ELSEIF cType == "UPCE"
-      hZebra := hb_zebra_create_upce( cCode, nFlags ) 
+      hZebra := hb_zebra_create_upce( cCode, nFlags )
    ELSEIF cType == "CODE39"
-      hZebra := hb_zebra_create_code39( cCode, nFlags ) 
+      hZebra := hb_zebra_create_code39( cCode, nFlags )
    ELSEIF cType == "ITF"
-      hZebra := hb_zebra_create_itf( cCode, nFlags ) 
+      hZebra := hb_zebra_create_itf( cCode, nFlags )
    ELSEIF cType == "MSI"
-      hZebra := hb_zebra_create_msi( cCode, nFlags ) 
+      hZebra := hb_zebra_create_msi( cCode, nFlags )
    ELSEIF cType == "CODABAR"
-      hZebra := hb_zebra_create_codabar( cCode, nFlags ) 
+      hZebra := hb_zebra_create_codabar( cCode, nFlags )
    ELSEIF cType == "CODE93"
-      hZebra := hb_zebra_create_code93( cCode, nFlags ) 
+      hZebra := hb_zebra_create_code93( cCode, nFlags )
    ELSEIF cType == "CODE11"
-      hZebra := hb_zebra_create_code11( cCode, nFlags ) 
+      hZebra := hb_zebra_create_code11( cCode, nFlags )
    ELSEIF cType == "CODE128"
-      hZebra := hb_zebra_create_code128( cCode, nFlags ) 
+      hZebra := hb_zebra_create_code128( cCode, nFlags )
    ENDIF
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
