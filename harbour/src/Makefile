@@ -12,8 +12,8 @@ ifeq ($(HB_BUILD_PARTS),compiler)
       common \
       nortl \
       pp{common,nortl} \
-      compiler{pp} \
-      main{compiler} \
+      compiler \
+      main{pp,compiler} \
 
 else
 
@@ -76,10 +76,12 @@ else
 
    ifeq ($(HB_BUILD_PARTS),lib)
       HB_COMP_DIR :=
-      HB_COMP_REF := {3rd}
+      HB_COMP_REF :=
+      HB_COMP_RF2 := {pp}
    else
-      HB_COMP_DIR := main{compiler}
-      HB_COMP_REF := {3rd,main}
+      HB_COMP_DIR := main{pp,compiler}
+      HB_COMP_REF := {main}
+      HB_COMP_RF2 := {main}
    endif
 
    DIRS := \
@@ -87,9 +89,9 @@ else
       common \
       nortl \
       pp{common,nortl} \
-      compiler{pp} \
+      compiler \
       $(HB_COMP_DIR) \
-      vm$(HB_COMP_REF) \
+      vm$(HB_COMP_RF2) \
       rtl$(HB_COMP_REF) \
       macro \
       codepage \
