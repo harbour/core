@@ -1,5 +1,5 @@
 /*
- * $Id: hbexpat.ch 1965 2010-08-28 13:19:42Z vszakats $
+ * $Id$
  */
 
 /*
