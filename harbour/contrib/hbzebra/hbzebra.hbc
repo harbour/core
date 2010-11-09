@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=${hb_name}
+
+..\hbcairo\hbcairo.hbc

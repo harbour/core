@@ -1,0 +1,30 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-instfile=inc:hbzebra.ch
+
+# Core
+core.c
+
+# Barcodes
+codabar.c
+code11.c
+code128.c
+code39.c
+code93.c
+eanupc.c
+itf.c
+msi.c
+
+# Drawing backends
+-Ic:\devel\cairo-1.8.10\include\cairo
+cairo.c
+hbcairo.hbc
