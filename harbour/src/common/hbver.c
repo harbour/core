@@ -819,7 +819,7 @@ char * hb_verCompiler( void )
 
 #elif defined( __llvm__ ) && defined( __GNUC__ )
 
-   pszName = "LLVM/GNU C"
+   pszName = "LLVM/GNU C";
 
    #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );

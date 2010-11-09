@@ -1472,7 +1472,7 @@ const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p,%s)", pObject, szName));
 
    uiClass = hb_objGetClassH( pObject );
-   if( uiClass && uiClass <= uiClass )
+   if( uiClass && uiClass <= s_uiClasses )
    {
       PHB_DYNS pMsg = hb_dynsymFindName( szName );
 
