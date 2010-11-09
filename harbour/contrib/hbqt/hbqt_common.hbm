@@ -23,6 +23,7 @@
 
 -plugin=hbqt_hbmk2_plugin.hbs
 
+-deppkgname=qt:QtCore
 -depkeyhead=qt:QtCore/qglobal.h
 -depcontrol=qt:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=qt:${HB_WITH_QT}

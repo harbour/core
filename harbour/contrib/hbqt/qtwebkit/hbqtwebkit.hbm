@@ -14,6 +14,7 @@ hbqt_extern.prg
 ../qtgui/hbqtgui.hbc
 ../qtnetwork/hbqtnetwork.hbc
 
+-deppkgname=qtwebkit:QtWebKit
 -depkeyhead=qtwebkit:QtWebKit/QWebView
 -depcontrol=qtwebkit:${HB_WITH_QT}
 {!darwin}-depincpath=qtwebkit:/usr/include/qt4

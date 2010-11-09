@@ -146,10 +146,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          hbmk2_AddInput_PRG( hbmk2, cDst )
          cDst := hbmk2_FNameDirExtSet( "class_" + Lower( hbmk2_FNameNameGet( cSrc ) ), hbmk2_FNameDirGet( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" )
          AAdd( hbmk2[ "vars" ][ "aQTH_DOC" ], cDst )
-// OUTSTD( "DOC: ", cDst, hb_eol() )
       NEXT
-
-// OUTSTD( "SET: ", hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ], hbmk2[ "vars" ][ "qthdocdir" ], hb_eol() )
 
       /* Detect tool locations */
 
@@ -321,7 +318,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
-// OUTSTD( "GEN:", cSrc, hb_eol() )
                      IF ! qth_to_src( cSrc, cDstCPP, cDstPRG, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"

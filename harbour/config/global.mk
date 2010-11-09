@@ -1137,16 +1137,16 @@ else
    else
       DYN_DIR := $(LIB_DIR)
       IMP_DIR :=
-      ifeq ($(HB_LD_PATH_SET),)
-         ifneq ($(HB_SRC_ROOTPATH),)
-            export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
-         else
-            export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
-         endif
-         export HB_LD_PATH_SET := yes
-         ifneq ($(LD_LIBRARY_PATH),)
-            $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
-         endif
+   endif
+   ifeq ($(HB_LD_PATH_SET),)
+      ifneq ($(HB_SRC_ROOTPATH),)
+         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
+      else
+         export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
+      endif
+      export HB_LD_PATH_SET := yes
+      ifneq ($(LD_LIBRARY_PATH),)
+         $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
       endif
    endif
 endif
