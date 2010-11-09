@@ -88,7 +88,7 @@ static char _codabar_charno( char ch )
       char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
          return ptr - s_symbols + 10;
-   } 
+   }
    return -1;
 }
 
@@ -153,8 +153,8 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
 
    pZebra->pBits = hb_bitbuffer_create();
 
-   if( iLen == 0 || _codabar_charno( szCode[ 0 ] ) < 16 )
-      _codabar_add( pZebra->pBits, s_code[ _codabar_charno( 'A' ) ], iFlags, HB_FALSE );  /* Default start A */
+   if( iLen == 0 || _codabar_charno( ( int ) szCode[ 0 ] ) < 16 )
+      _codabar_add( pZebra->pBits, s_code[ ( int ) _codabar_charno( 'A' ) ], iFlags, HB_FALSE );  /* Default start A */
 
    for( i = 0; i < iLen; i++ )
    {
@@ -163,7 +163,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
    }
 
    if( iLen == 0 || _codabar_charno( szCode[ i - 1 ] ) < 16 )
-      _codabar_add( pZebra->pBits, s_code[ _codabar_charno( 'B' ) ], iFlags, HB_TRUE );  /* Default stop B */
+      _codabar_add( pZebra->pBits, s_code[ ( int ) _codabar_charno( 'B' ) ], iFlags, HB_TRUE );  /* Default stop B */
 
    return pZebra;
 }

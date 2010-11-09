@@ -98,13 +98,13 @@ int hb_zebra_draw_cairo( PHB_ZEBRA pZebra, cairo_t * pCairo, double dX, double d
 
 HB_FUNC( HB_ZEBRA_DRAW_CAIRO )
 {
-  PHB_ZEBRA pZebra = hb_zebra_param( 1 );
-  if( pZebra )
-  {
-     cairo_t * pCairo = hb_cairo_param( 2 );
-     if( pCairo )
-     {
-        hb_retni( hb_zebra_draw_cairo( pZebra, pCairo, hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parni( 7 ) ) );
-     }
-  }
+   PHB_ZEBRA pZebra = hb_zebra_param( 1 );
+   if( pZebra )
+   {
+      cairo_t * pCairo = hb_cairo_param( 2 );
+      if( pCairo )
+      {
+         hb_retni( hb_zebra_draw_cairo( pZebra, pCairo, hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parni( 7 ) ) );
+      }
+   }
 }

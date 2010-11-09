@@ -60,8 +60,8 @@ static char s_code[] = { 0x0C, 0x11, 0x12, 0x03, 0x14, 0x05, 0x06, 0x18, 0x09, 0
 static char _itf_checksum( const char * szCode )
 {
    int   i, sum = 0;
-   
-   for ( i = 0; szCode[ i ]; i++ )  
+
+   for ( i = 0; szCode[ i ]; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
    return '0' + ( 100000 - sum ) % 10;
 }
@@ -100,6 +100,8 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
    szCode = pZebra->szCode;
    if( iFlags & HB_ZEBRA_FLAG_CHECKSUM )
       csum = _itf_checksum( pZebra->szCode );
+   else
+      csum = 0;
 
    if( iFlags & HB_ZEBRA_FLAG_WIDE2_5 )
    {
@@ -125,7 +127,7 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
    hb_bitbuffer_cat_int( pZebra->pBits, 3, iN );
    hb_bitbuffer_cat_int( pZebra->pBits, 0, iN );
 
-   for( i = 0; szCode[ i ]; i += 2 )  
+   for( i = 0; szCode[ i ]; i += 2 )
    {
       char c1 = s_code[ szCode[ i ] - '0' ], c2 = szCode[ i + 1 ] ? s_code[ szCode[ i + 1 ] - '0' ] : csum;
       hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;

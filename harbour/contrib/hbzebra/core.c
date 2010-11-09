@@ -53,7 +53,7 @@
 #include "hbzebra.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbcairo.h"
+#include "hbstack.h"
 
 
 /* ================ Bit buffer ================ */
@@ -118,7 +118,7 @@ HB_SIZE hb_bitbuffer_len( PHB_BITBUFFER pBitBuffer )
 
 HB_BOOL hb_bitbuffer_get( PHB_BITBUFFER pBitBuffer, HB_SIZE nPos )
 {
-   return nPos > pBitBuffer->nLen ? HB_FALSE : 
+   return nPos > pBitBuffer->nLen ? HB_FALSE :
           ( ( pBitBuffer->pBuffer[ nPos >> 3 ] >> ( nPos & 7 ) ) & 1 );
 }
 
