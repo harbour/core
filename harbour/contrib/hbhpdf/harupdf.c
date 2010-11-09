@@ -964,14 +964,14 @@ HB_FUNC( HPDF_PAGE_GETGRAYSTROKE )
 */
 HB_FUNC( HPDF_PAGE_GETSTROKINGCOLORSPACE )
 {
-   hb_retnd( ( double ) HPDF_Page_GetStrokingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
+   hb_retni( ( int ) HPDF_Page_GetStrokingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_GetFillingColorSpace( hPage ) -> nFillingColorSpace
 */
 HB_FUNC( HPDF_PAGE_GETFILLINGCOLORSPACE )
 {
-   hb_retnd( ( double ) HPDF_Page_GetFillingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
+   hb_retni( ( int ) HPDF_Page_GetFillingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_GetTextMatrix( hPage ) -> aMatrix[ ]
@@ -2630,7 +2630,7 @@ HPDF_Image_AddSMask  (HPDF_Image    image,
 HB_FUNC( HPDF_IMAGE_ADDSMASK )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retnl( ( long ) HPDF_Image_AddSMask( ( HPDF_Image ) hb_parptr( 1 ), ( HPDF_Image ) hb_parptr( 1 ) ) );
+   hb_retnl( ( long ) HPDF_Image_AddSMask( ( HPDF_Image ) hb_parptr( 1 ), ( HPDF_Image ) hb_parptr( 2 ) ) );
 #else
    hb_retnl( -1 );
 #endif

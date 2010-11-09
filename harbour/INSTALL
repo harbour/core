@@ -1418,9 +1418,9 @@ HARBOUR
    C/C++ Compilers/Shells:
 
       MinGW/MinGW-64 [win, *nix, free, open-soource]
-         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home)
+         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended, but only up to 4.5.0)
+         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home, broken as of 4.5.0-1)
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
-         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, not recommended for now)
          http://nuwen.net/mingw.html (unofficial)
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
@@ -1517,7 +1517,7 @@ HARBOUR
             - QT 4.5.x for Windows requires MinGW builds with SJLJ stack frame unwinding.
               (mingw official 3.4.x, or mingw tdm)
             - QT 4.6.x (and upper) for Windows requires MinGW builds with DWARF-2 stack frame unwinding.
-              (mingw official 4.4.0 or upper, or mingw tdm with dwarf update)
+              (mingw official 4.4.0 or upper, or mingw tdm with dwarf2 update)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]

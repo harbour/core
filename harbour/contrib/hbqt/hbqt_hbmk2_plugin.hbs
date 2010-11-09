@@ -144,7 +144,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          cDst := hbmk2_FNameDirExtSet( "T" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aQTH_PRG" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
-         cDst := hbmk2_FNameDirExtSet( "class_" + Lower( hbmk2_FNameNameGet( cSrc ) ), hbmk2_FNameDirGet( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" )
+         cDst := hbmk2_PathNormalize( hbmk2_FNameDirExtSet( "class_" + Lower( hbmk2_FNameNameGet( cSrc ) ), hbmk2_FNameDirGet( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" ) )
          AAdd( hbmk2[ "vars" ][ "aQTH_DOC" ], cDst )
       NEXT
 

@@ -44,7 +44,7 @@ Tool/lib versions used to create this package:
    Compiler tools
    --------------
 
-   MinGW GNU C 4.5.0 (included)
+   MinGW GNU C 4.5.0 (TDM-DW2) (included)
    MinGW w64 GNU C 4.4.4-20100129 (prerelease)
    MinGW CEGCC 4.4.0
    MSVC 2010 (version bundled with MS Windows SDK 7.1)
