@@ -531,8 +531,8 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
             *r1 = ( HB_U32 ) &pArg->value.t.n64;
          else
          {
-            *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
-            *r2 = ( pArg->value.t.n64 >> 32 );
+            *r1 = ( HB_U32 ) ( pArg->value.t.n64 & 0xFFFFFFFF );
+            *r2 = ( HB_U32 ) ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
 #endif
@@ -550,8 +550,8 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
             *r1 = ( HB_U32 ) &pArg->value.t.n64;
          else
          {
-            *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
-            *r2 = ( pArg->value.t.n64 >> 32 );
+            *r1 = ( HB_U32 ) ( pArg->value.t.n64 & 0xFFFFFFFF );
+            *r2 = ( HB_U32 ) ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
 #endif
@@ -569,8 +569,8 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
          else
          {
 #if !defined( HB_LONG_LONG_OFF )
-            *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
-            *r2 = ( pArg->value.t.n64 >> 32 );
+            *r1 = ( HB_U32 ) ( pArg->value.t.n64 & 0xFFFFFFFF );
+            *r2 = ( HB_U32 ) ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
 #endif
          }
