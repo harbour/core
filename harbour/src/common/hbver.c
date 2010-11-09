@@ -464,6 +464,7 @@ char * hb_verPlatform( void )
 }
 
 #if defined( HB_OS_WIN )
+
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
@@ -485,11 +486,55 @@ static void s_hb_winVerInit( void )
    }
    s_fWinVerInit = HB_TRUE;
 }
+
+#elif defined( HB_OS_DOS )
+
+static HB_BOOL s_fWinVerInit = HB_FALSE;
+
+static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K = HB_FALSE;
+static HB_BOOL s_fWinNT = HB_FALSE;
+static HB_BOOL s_fWin9x = HB_FALSE;
+
+static void s_hb_winVerInit( void )
+{
+   union REGS regs;
+
+   /* TODO */
+   s_fWinVista = HB_FALSE;
+   s_fWin2K = HB_FALSE;
+
+   /* Host OS detection: Windows NT family */
+
+   {
+      regs.HB_XREGS.ax = 0x3306;
+      HB_DOS_INT86( 0x21, &regs, &regs );
+
+      s_fWinNT = ( regs.HB_XREGS.bx == 0x3205 );
+   }
+
+   /* Host OS detection: 95/98 */
+
+   if( ! s_fWinNT )
+   {
+      regs.HB_XREGS.ax = 0x1600;
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+
+      s_fWin9x = ( regs.h.al != 0x80 &&
+                   regs.h.al != 0xFF &&
+                   regs.h.al >= 4 );
+   }
+   else
+      s_fWin9x = HB_FALSE;
+
+   s_fWinVerInit = HB_TRUE;
+}
+
 #endif
 
 HB_BOOL hb_iswinvista( void )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWinVista;
@@ -500,7 +545,7 @@ HB_BOOL hb_iswinvista( void )
 
 HB_BOOL hb_iswin2k( void )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWin2K;
@@ -511,7 +556,7 @@ HB_BOOL hb_iswin2k( void )
 
 HB_BOOL hb_iswinnt( void )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWinNT;
@@ -522,7 +567,7 @@ HB_BOOL hb_iswinnt( void )
 
 HB_BOOL hb_iswin9x( void )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWin9x;
