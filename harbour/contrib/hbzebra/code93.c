@@ -147,7 +147,7 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
       k += _code93_charno( szCode[ i ] ) >= 0 ? 1 : 2;
    }
 
-   pZebra->szCode = hb_xgrab( j + 1 );
+   pZebra->szCode = ( char * ) hb_xgrab( j + 1 );
    j = 0;
    for( i = 0; i < iLen; i++ )
    {

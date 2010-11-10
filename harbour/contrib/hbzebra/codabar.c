@@ -77,7 +77,7 @@ static char s_code[] = {
    0x68,   /* C */
    0x38};  /* D */
 
-static char _codabar_charno( char ch )
+static int _codabar_charno( char ch )
 {
    static char * s_symbols = "-$:/.+ABCD";
 
@@ -146,7 +146,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
       }
    }
 
-   pZebra->szCode = hb_xgrab( iLen + 1 );
+   pZebra->szCode = ( char * ) hb_xgrab( iLen + 1 );
    hb_xmemcpy( pZebra->szCode, szCode, iLen );
    pZebra->szCode[ iLen ] = '\0';
    szCode = pZebra->szCode;

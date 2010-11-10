@@ -223,7 +223,7 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
    }
 
    /* make print string */
-   pZebra->szCode = hb_xgrab( j + 1 );
+   pZebra->szCode = ( char * ) hb_xgrab( j + 1 );
    j = 0;
    for( i = 0; i < iLen; i++ )
    {

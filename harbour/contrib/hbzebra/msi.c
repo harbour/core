@@ -69,7 +69,7 @@ static char _msi_checksum( const char * szCode )
       j = 1 - j;
    }
    sum %= 10;
-   return '0' + (sum ? 10 - sum : 0);
+   return ( char ) ( '0' + ( sum ? 10 - sum : 0 ) );
 }
 
 PHB_ZEBRA hb_zebra_create_msi( const char * szCode, HB_SIZE nLen, int iFlags )
@@ -89,7 +89,7 @@ PHB_ZEBRA hb_zebra_create_msi( const char * szCode, HB_SIZE nLen, int iFlags )
       }
    }
 
-   pZebra->szCode = hb_xgrab( iLen + 1 );
+   pZebra->szCode = ( char * ) hb_xgrab( iLen + 1 );
    hb_xmemcpy( pZebra->szCode, szCode, iLen );
    pZebra->szCode[ iLen ] = '\0';
    szCode = pZebra->szCode;

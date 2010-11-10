@@ -92,7 +92,7 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
    }
    else
    {
-      pZebra->szCode = hb_xgrab( iLen + 1 );
+      pZebra->szCode = ( char * ) hb_xgrab( iLen + 1 );
       hb_xmemcpy( pZebra->szCode, szCode, iLen );
       pZebra->szCode[ iLen ] = '\0';
    }
