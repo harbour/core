@@ -55,52 +55,53 @@
 #include "hbapierr.h"
 
 
-/* Usually one character bitmap does not fit into 1 byte, but if we use enough 
+/* Usually one character bitmap does not fit into 1 byte, but if we use enough
    good encoding, we can manage to fit :) [Mindaugas] */
-static char s_code[] = {
-            0x58,  /* 0 */
-            0x09,  /* 1 */
-            0x0C,  /* 2 */
-            0x0D,  /* 3 */
-            0x18,  /* 4 */
-            0x19,  /* 5 */
-            0x1C,  /* 6 */
-            0x48,  /* 7 */
-            0x49,  /* 8 */
-            0x4C,  /* 9 */
-            0x21,  /* A */
-            0x24,  /* B */
-            0x25,  /* C */
-            0x30,  /* D */
-            0x31,  /* E */
-            0x34,  /* F */
-            0x60,  /* G */
-            0x61,  /* H */
-            0x64,  /* I */
-            0x70,  /* J */
-   ( char ) 0x81,  /* K */
-   ( char ) 0x84,  /* L */
-   ( char ) 0x85,  /* M */
-   ( char ) 0x90,  /* N */
-   ( char ) 0x91,  /* O */
-   ( char ) 0x94,  /* P */
-   ( char ) 0xC0,  /* Q */
-   ( char ) 0xC1,  /* R */
-   ( char ) 0xC4,  /* S */
-   ( char ) 0xD0,  /* T */
-            0x03,  /* U */
-            0x06,  /* V */
-            0x07,  /* W */
-            0x12,  /* X */
-            0x13,  /* Y */
-            0x16,  /* Z */
-            0x42,  /* - */
-            0x43,  /* . */
-            0x46,  /*   */
-            0x2A,  /* $ */
-   ( char ) 0x8A,  /* / */
-   ( char ) 0xA2,  /* + */
-   ( char ) 0xA8}; /* % */
+static HB_UCHAR s_code[] =
+{
+   0x58,   /* 0 */
+   0x09,   /* 1 */
+   0x0C,   /* 2 */
+   0x0D,   /* 3 */
+   0x18,   /* 4 */
+   0x19,   /* 5 */
+   0x1C,   /* 6 */
+   0x48,   /* 7 */
+   0x49,   /* 8 */
+   0x4C,   /* 9 */
+   0x21,   /* A */
+   0x24,   /* B */
+   0x25,   /* C */
+   0x30,   /* D */
+   0x31,   /* E */
+   0x34,   /* F */
+   0x60,   /* G */
+   0x61,   /* H */
+   0x64,   /* I */
+   0x70,   /* J */
+   0x81,   /* K */
+   0x84,   /* L */
+   0x85,   /* M */
+   0x90,   /* N */
+   0x91,   /* O */
+   0x94,   /* P */
+   0xC0,   /* Q */
+   0xC1,   /* R */
+   0xC4,   /* S */
+   0xD0,   /* T */
+   0x03,   /* U */
+   0x06,   /* V */
+   0x07,   /* W */
+   0x12,   /* X */
+   0x13,   /* Y */
+   0x16,   /* Z */
+   0x42,   /* - */
+   0x43,   /* . */
+   0x46,   /*   */
+   0x2A,   /* $ */
+   0x8A,   /* / */
+   0xA2,   /* + */
+   0xA8 }; /* % */
 
 static int _code39_charno( char ch )
 {
@@ -115,7 +116,7 @@ static int _code39_charno( char ch )
       char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
          return ptr - s_symbols + 36;
-   } 
+   }
    return -1;
 }
 
@@ -175,7 +176,7 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
       }
    }
 
-   pZebra->szCode = hb_xgrab( iLen + 1 );
+   pZebra->szCode = ( char * ) hb_xgrab( iLen + 1 );
    hb_xmemcpy( pZebra->szCode, szCode, iLen );
    pZebra->szCode[ iLen ] = '\0';
    szCode = pZebra->szCode;
@@ -185,15 +186,15 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
    _code39_add( pZebra->pBits, 0x52, iFlags );    /* start */
 
    csum = 0;
-   for( i = 0; i < iLen; i++ )  
+   for( i = 0; i < iLen; i++ )
    {
       int no = _code39_charno( szCode[ i ] );
-      _code39_add( pZebra->pBits, s_code[ no ], iFlags );
+      _code39_add( pZebra->pBits, ( char ) s_code[ no ], iFlags );
       csum += no;
    }
 
-   if( iFlags & HB_ZEBRA_FLAG_CHECKSUM )  
-      _code39_add( pZebra->pBits, s_code[ csum % 43 ], iFlags );
+   if( iFlags & HB_ZEBRA_FLAG_CHECKSUM )
+      _code39_add( pZebra->pBits, ( char ) s_code[ csum % 43 ], iFlags );
 
    _code39_add( pZebra->pBits, 0x52, iFlags );    /* stop */
    hb_bitbuffer_cat_int( pZebra->pBits, 3, iFlags & HB_ZEBRA_FLAG_WIDE2_5 ? 2 : 1 );
