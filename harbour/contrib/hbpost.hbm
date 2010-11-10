@@ -58,14 +58,14 @@
 # output dir (in sync with GNU Make)
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
-{hbdyn&unix}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
-{hbdyn&!unix}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
+{hbdyn&unix&!cygwin}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
+{hbdyn&(cygwin|!unix)}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 
 # workdir (in sync with GNU Make)
 {hblib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbexe}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
-{hbdyn&unix}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
-{hbdyn&!unix}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
+{hbdyn&unix&!cygwin}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
+{hbdyn&(cygwin|!unix)}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
 # install
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/

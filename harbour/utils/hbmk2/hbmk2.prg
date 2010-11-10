@@ -6341,22 +6341,20 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
 STATIC PROCEDURE DoLinkCalc( hbmk )
    LOCAL cDir, cName, cExt
-   LOCAL tmp, tmp1
+   LOCAL tmp
 
    FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
-      /* TOFIX: This calculation will result in incorrect links on *nix systems. */
-      tmp1 := DirAddPathSep( PathMakeRelative( FNameDirGet( tmp ), FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), .T. ) ) + FNameNameExtGet( hbmk[ _HBMK_cPROGNAME ] )
 
-      hb_FNameSplit( tmp1, @cDir, @cName, @cExt )
+      cDir := PathMakeRelative( FNameDirGet( PathMakeAbsolute( tmp, FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) ) ), FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), .T. )
       /* Cheap hack */
       IF cDir == "." + hb_ps() .OR. ;
          cDir == hb_ps()
          cDir := ""
       ENDIF
-      tmp1 := hb_FNameMerge( cDir, cName, cExt )
+      hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ],, @cName, @cExt )
 
-      tmp := { PathNormalize( PathMakeAbsolute( tmp, hbmk[ _HBMK_cPROGNAME ] ) ),;
-               tmp1 }
+      tmp := { /* <cNewFileName>    */ PathMakeAbsolute( tmp, FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) ),;
+               /* <cTargetFileName> */ hb_FNameMerge( cDir, cName, cExt ) }
    NEXT
 
    RETURN
