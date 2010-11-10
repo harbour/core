@@ -1617,6 +1617,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPOSTFIX .AND. aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ] != NIL
                            hbmk[ _HBMK_cCCPOSTFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ]
                         ENDIF
+                        tmp1 := hbmk[ _HBMK_cPLAT ]
                         IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cPLAT .AND. aCOMPDET[ tmp ][ _COMPDET_cPLAT ] != NIL
                            hbmk[ _HBMK_cPLAT ] := aCOMPDET[ tmp ][ _COMPDET_cPLAT ]
                         ENDIF
@@ -1632,6 +1633,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            OTHERWISE
                               hbmk[ _HBMK_cPLAT ] := "dos"
                            ENDCASE
+                        ENDIF
+                        IF !( hbmk[ _HBMK_cPLAT ] == tmp1 ) .AND. hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s (adjusted)" ), hbmk[ _HBMK_cPLAT ] ) )
                         ENDIF
                         EXIT
                      ELSE
@@ -3010,7 +3014,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 #endif
 
       DO CASE
-      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|cygwin" )
+      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos" )
          IF Empty( cPrefix )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
@@ -3389,6 +3393,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF hbmk[ _HBMK_cPLAT ] == "cygwin"
             l_aLIBSHAREDPOST := { "hbmainstd" }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ),;
+                                                      "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) ) }
          ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
