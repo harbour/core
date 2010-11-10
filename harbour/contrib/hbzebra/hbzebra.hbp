@@ -36,23 +36,7 @@ msi.c
 -depimplibd=cairo:cairo
 -depfinish=cairo
 
-d_gen.c
+coredraw.c
 
 {HBMK_HAS_CAIRO}d_cairo.c
 {HBMK_HAS_CAIRO}../hbcairo/hbcairo.hbc
-
-{allwin}d_win.c
-{allwin}../hbwin/hbwin.hbc
-
--depoptional=libharu:yes
--depkeyhead=libharu:hpdf.h
--depcontrol=libharu:local{HB_BUILD_3RDEXT='no'}
--depcontrol=libharu:${HB_WITH_LIBHARU}
--depincpath=libharu:/usr/include
--depincpath=libharu:/usr/local/include
--depincpathlocal=libharu:../hbhpdf/3rd/libhpdf
--depimplibs=libharu:../libhpdf.dll
--depimplibs=libharu:../lib_dll/libhpdf.dll
--depfinish=libharu
-
-{HBMK_HAS_LIBHARU}d_hpdf.c
