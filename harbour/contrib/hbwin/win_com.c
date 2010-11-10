@@ -714,15 +714,32 @@ HB_FUNC( WIN_COMSETQUEUESIZE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WIN_COMERROR )
+HB_FUNC( WIN_COMISVALID )
+{
+   int iPort = hb_parni( 1 );
+
+   hb_retl( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) );
+}
+
+HB_FUNC( WIN_COMERRORCLEAR )
 {
    int iPort = hb_parni( 1 );
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
    {
-      hb_retnl( s_PortData[ iPort ].dwError );
-      s_PortData[ iPort ].dwError = 0; /* NOTE: reset */
+      s_PortData[ iPort ].dwError = 0;
+      s_PortData[ iPort ].iFunction = 0;
    }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WIN_COMERROR )
+{
+   int iPort = hb_parni( 1 );
+
+   if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
+      hb_retnl( s_PortData[ iPort ].dwError );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

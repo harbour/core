@@ -59,14 +59,14 @@ PROCEDURE Main( cPortName )
    LOCAL nResult
 
    IF ! oWinPort:Open()
-      ? "Open() failed :", oWinPort:Error()
+      ? "Open() failed"
    ELSE
       ? "Open() succeeded"
       ?
       IF oWinPort:SetDTR( .T. )
           ? "SetDTR( .T. ) succeeded"
       ELSE
-          ? "SetDTR( .T. ) failed :", oWinPort:Error()
+          ? "SetDTR( .T. ) failed :", oWinPort:ErrorText()
       ENDIF
       IF ( nResult := oWinPort:Write( cString ) ) == Len( cString )
           ? "Write() succeeded"
@@ -76,7 +76,7 @@ PROCEDURE Main( cPortName )
       ? "Scan something... we'll not read it but purge it, press enter"
       Inkey( 0 )
       ? "Read() ", oWinPort:Read( @cString, 32 ), Len( cString ), cString
-      ? oWinPort:Error()
+      ? oWinPort:ErrorText()
       ? "Close", oWinPort:Close()
    ENDIF
 

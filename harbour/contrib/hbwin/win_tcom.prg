@@ -99,6 +99,7 @@ CREATE CLASS win_Com
    METHOD Close( nDrain )
    METHOD DebugDCB( nDebug )
    METHOD ErrorText()
+   METHOD Error()
 
 ENDCLASS
 
@@ -231,3 +232,6 @@ METHOD ErrorText() CLASS win_Com
    wapi_FormatMessage( NIL, NIL, nError := win_ComError( ::nPort ), NIL, @cMsg )
 
    RETURN cString + "error (" + hb_ntos( nError ) + ") : " + cMsg
+
+METHOD Error() CLASS win_Com
+   RETURN win_ComError( ::nPort )

@@ -71,14 +71,14 @@ PROCEDURE Main( cPortName )
 
    oWinPort := win_Com():Init( cPortName, WIN_CBR_9600, WIN_ODDPARITY, 7, WIN_ONESTOPBIT )
    IF ! oWinPort:Open()
-      ? "Open() failed :", oWinPort:Error()
+      ? "Open() failed"
    ELSE
       ? "Open() succeeded"
       ?
       IF oWinPort:Status( @lCTS, @lDSR, @lRing, @lDCD )
          ? "Status() succeeded : CTS ", lCTS, ", DSR ", lDSR, ", Ring ", lRing, ", DCD ", lDCD
       ELSE
-         ? "Status() failed :", oWinPort:Error()
+         ? "Status() failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? "Testing DTR, configure a scanner to require DTR"
@@ -89,7 +89,7 @@ PROCEDURE Main( cPortName )
       IF oWinPort:SetDTR( .T. )
          ? "SetDTR( .T. ) succeeded"
       ELSE
-         ? "SetDTR( .T. ) failed :", oWinPort:Error()
+         ? "SetDTR( .T. ) failed :", oWinPort:ErrorText()
       ENDIF
       ? "Scan something... and press enter (read should work)"
       Inkey( 0 )
@@ -98,7 +98,7 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? "Read() ", oWinPort:Read( @cString, 32 ), Len( cString ), cString
@@ -107,31 +107,31 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
       ?
       IF oWinPort:RTSFlow( WIN_RTS_CONTROL_HANDSHAKE )
          ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:ErrorText()
       ENDIF
       ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it shouldn't according to docs!)"
       ELSE
-         ? "SetRTS( .F. ) failed (it should) :", oWinPort:Error()
+         ? "SetRTS( .F. ) failed (it should) :", oWinPort:ErrorText()
       ENDIF
       ?
       IF oWinPort:RTSFlow( WIN_RTS_CONTROL_DISABLE )
          ? "RTSFlow( WIN_RTS_CONTROL_DISABLE ) succeeded"
       ELSE
-         ? "RTSFlow( WIN_RTS_CONTROL_DISABLE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_DISABLE ) failed :", oWinPort:ErrorText()
       ENDIF
       ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it should)"
       ELSE
-         ? "SetRTS( .F. ) failed :", oWinPort:Error()
+         ? "SetRTS( .F. ) failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? "Scan something... we'll not read it but purge it, press enter"
@@ -140,19 +140,19 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
       IF oWinPort:Purge( .T., .T. )
          ? "Purge() succeeded"
       ELSE
-         ? "Purge() failed :", oWinPort:Error()
+         ? "Purge() failed :", oWinPort:ErrorText()
       ENDIF
       ? "InQueue should be zero"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? "Read ", oWinPort:Read( @cString, 32 ), Len( cString ), cString
@@ -166,7 +166,7 @@ PROCEDURE Main( cPortName )
 
    oWinPort := Win_Com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 99, WIN_ONESTOPBIT )
    IF !oWinPort:Open
-      ? "Open() failed :", oWinPort:Error()
+      ? "Open() failed :", oWinPort:ErrorText()
    ELSE
       ? "Open succeeded"
       ? "Close", oWinPort:Close()
@@ -178,7 +178,7 @@ PROCEDURE Main( cPortName )
 
    oWinPort := Win_Com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
    IF ! oWinPort:Open
-      ? "Open() failed :", oWinPort:Error()
+      ? "Open() failed :", oWinPort:ErrorText()
    ELSE
       ? "Open succeeded"
       ?
@@ -187,7 +187,7 @@ PROCEDURE Main( cPortName )
       IF oWinPort:Status( @lCTS, @lDSR, @lRing, @lDCD )
          ? "Status() succeeded : CTS ", lCTS, ", DSR ", lDSR, ", Ring ", lRing, ", DCD ", lDCD
       ELSE
-         ? "Status() failed :", oWinPort:Error()
+         ? "Status() failed :", oWinPort:ErrorText()
       ENDIF
       ?
 
@@ -202,7 +202,7 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
 
       ?
@@ -210,17 +210,17 @@ PROCEDURE Main( cPortName )
       IF oWinPort:RTSFlow( WIN_DTR_CONTROL_HANDSHAKE )
          ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "RTSFlow( WIN_RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:ErrorText()
       ENDIF
       IF oWinPort:DTRFlow( WIN_DTR_CONTROL_HANDSHAKE )
          ? "DTRFlow( WIN_DTR_CONTROL_HANDSHAKE ) succeeded"
       ELSE
-         ? "DTRFlow( WIN_DTR_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
+         ? "DTRFlow( WIN_DTR_CONTROL_HANDSHAKE ) failed :", oWinPort:ErrorText()
       ENDIF
       IF oWinPort:XonXoffFlow( .T. )
          ? "XonXoffFlow( .T. ) ", oWinPort:XonXoffFlow( .T. )
       ELSE
-         ? "XonXoffFlow( .T. ) failed :", oWinPort:Error()
+         ? "XonXoffFlow( .T. ) failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
@@ -230,7 +230,7 @@ PROCEDURE Main( cPortName )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
                  ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
-         ? "QueueStatus() failed :", oWinPort:Error()
+         ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
       ?
       ? Seconds()
