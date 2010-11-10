@@ -6353,7 +6353,7 @@ STATIC PROCEDURE DoLinkCalc( hbmk )
       ENDIF
       hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ],, @cName, @cExt )
 
-      tmp := { /* <cNewFileName>    */ PathMakeAbsolute( tmp, FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) ),;
+      tmp := { /* <cNewFileName>    */ PathNormalize( PathMakeAbsolute( tmp, FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) ) ),;
                /* <cTargetFileName> */ hb_FNameMerge( cDir, cName, cExt ) }
    NEXT
 
