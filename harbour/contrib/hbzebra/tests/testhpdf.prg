@@ -82,3 +82,15 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION hb_zebra_draw_hpdf( hZebra, page, ... )
+
+   IF hb_zebra_GetError( hZebra ) != 0
+      RETURN HB_ZEBRA_ERROR_INVALIDZEBRA
+   ENDIF
+
+   HPDF_Page_SetLineWidth( page, 0.1 ) /* Standard line width */
+   hb_zebra_draw( hZebra, {| x, y, w, h | HPDF_Page_Rectangle( page, x, y, w, h ) }, ... )
+   HPDF_Page_FillStroke( page )
+
+   RETURN 0

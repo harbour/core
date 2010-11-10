@@ -8,7 +8,7 @@
 PROCEDURE main()
    LOCAL hCairo, hSurface
 
-   hSurface := cairo_pdf_surface_create( "test1.pdf", 567, 794 )  // A4
+   hSurface := cairo_pdf_surface_create( "testcair.pdf", 567, 794 )  // A4
 
    hCairo := cairo_create( hSurface )
    cairo_set_source_rgb( hCairo, 1.0, 1.0, 1.0 )
@@ -41,7 +41,7 @@ PROCEDURE main()
    DrawBarcode( hCairo, 440,   1, "CODE128", "Wikipedia")
 
    cairo_destroy( hCairo )
-   cairo_surface_write_to_png( hSurface, "test1.png" )
+   cairo_surface_write_to_png( hSurface, "testcair.png" )
    cairo_surface_destroy( hSurface )
    RETURN
 
@@ -86,3 +86,15 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
       ? "Invalid barcode type", cType
    ENDIF
    RETURN
+
+STATIC FUNCTION hb_zebra_draw_cairo( hZebra, hCairo, ... )
+
+   IF hb_zebra_GetError( hZebra ) != 0
+      RETURN HB_ZEBRA_ERROR_INVALIDZEBRA
+   ENDIF
+
+   cairo_save( hCairo )
+   hb_zebra_draw( hZebra, {| x, y, w, h | cairo_rectangle( hCairo, x, y, w, h ), cairo_fill( hCairo ) }, ... )
+   cairo_restore( hCairo )
+
+   RETURN 0

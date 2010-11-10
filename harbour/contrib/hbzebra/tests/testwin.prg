@@ -107,7 +107,7 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
       IF hb_zebra_geterror( hZebra ) == 0
          wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )
          wapi_TextOut( hDC, 150 * _SCALE_, nY, hb_zebra_getcode( hZebra ) )
-         hb_zebra_draw_wapi( hZebra, hDC, 300 * _SCALE_, nY, nLineWidth, 16 * _SCALE_,, wapi_CreateSolidBrush( 0 ) )
+         hb_zebra_draw_wapi( hZebra, hDC, wapi_CreateSolidBrush( 0 ), 300 * _SCALE_, nY, nLineWidth, 16 * _SCALE_ )
       ELSE
         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF
@@ -117,3 +117,11 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION hb_zebra_draw_wapi( hZebra, hDC, hBrush, ... )
+
+   IF hb_zebra_GetError( hZebra ) != 0
+      RETURN HB_ZEBRA_ERROR_INVALIDZEBRA
+   ENDIF
+
+   RETURN hb_zebra_draw( hZebra, {| x, y, w, h | wapi_FillRect( hDC, { x, y, x + w, y + h }, hBrush ) }, ... )

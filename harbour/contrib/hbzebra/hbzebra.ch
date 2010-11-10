@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_ZEBRA_CH_
 #define HB_ZEBRA_CH_
 
@@ -72,6 +74,7 @@
 
 /* Draw errors */
 #define HB_ZEBRA_ERROR_INVALIDZEBRA     101
+#define HB_ZEBRA_ERROR_ARGUMENT         102
 
 /* Generate flags */
 #define HB_ZEBRA_FLAG_CHECKSUM            1
@@ -83,4 +86,4 @@
 
 /* Barcode dependent options >= 0x100 */
 
-#endif /* HB_ZEBRA_CH_ */ 
+#endif /* HB_ZEBRA_CH_ */
