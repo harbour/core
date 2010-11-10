@@ -5,8 +5,8 @@
 #include "hbzebra.ch"
 #include "hbcairo.ch"
 
-PROC main()
-LOCAL hCairo, hSurface
+PROCEDURE main()
+   LOCAL hCairo, hSurface
 
    hSurface := cairo_pdf_surface_create( "test1.pdf", 567, 794 )  // A4
 
@@ -43,11 +43,11 @@ LOCAL hCairo, hSurface
    cairo_destroy( hCairo )
    cairo_surface_write_to_png( hSurface, "test1.png" )
    cairo_surface_destroy( hSurface )
-RETURN
+   RETURN
 
 
-PROC DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
-LOCAL hZebra
+PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
+   LOCAL hZebra
    IF cType == "EAN13"
       hZebra := hb_zebra_create_ean13( cCode, nFlags )
    ELSEIF cType == "EAN8"
@@ -85,4 +85,4 @@ LOCAL hZebra
    ELSE
       ? "Invalid barcode type", cType
    ENDIF
-RETURN
+   RETURN
