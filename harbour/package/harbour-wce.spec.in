@@ -28,7 +28,7 @@
 ######################################################################
 
 Summary:        Free software Clipper compatible compiler
-Summary(pl):    Darmowy kompilator kompatybilny z jêzykiem Clipper.
+Summary(pl):    Darmowy kompilator kompatybilny z jÄ™zykiem Clipper.
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}
@@ -50,10 +50,10 @@ and libraries for creating WinCE application in Linux box using MinGW-CE
 GCC port.
 
 %description -l pl
-Harbour to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
-wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn+ maszynê oraz biblioteki pozwalaj+ce na
-tworzenie aplikacji dla WinCE-PocketPC przy u¿yciu MinGW-CE GCC.
+Harbour to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator rozwijany na
+wielu rÃ³Å¼nych platformach. Ten pakiet zawiera kompilator, preprocesor,
+zbiory nagÅ‚Ã³wkowe, wirtualn+ maszynÄ™ oraz biblioteki pozwalaj+ce na
+tworzenie aplikacji dla WinCE-PocketPC przy uÅ¼yciu MinGW-CE GCC.
 
 
 ######################################################################

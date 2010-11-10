@@ -84,10 +84,10 @@
 ## Preamble.
 ######################################################################
 Summary:        Free software Clipper compatible compiler
-Summary(pl):    Darmowy kompilator kompatybilny z jêzykiem Clipper.
+Summary(pl):    Darmowy kompilator kompatybilny z jÄ™zykiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
-Summary(ru):    ó×ÏÂÏÄÎÙÊ ËÏÍĞÉÌÑÔÏÒ, ÓÏ×ÍÅÓÔÉÍÙÊ Ó ÑÚÙËÏÍ Clipper.
-Summary(hu):    Szabad szoftver Clipper kompatibilis fordító
+Summary(ru):    Ğ¡Ğ²Ğ¾Ğ±Ğ¾Ğ´Ğ½Ñ‹Ğ¹ ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€, ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ñ‹Ğ¹ Ñ ÑĞ·Ñ‹ĞºĞ¾Ğ¼ Clipper.
+Summary(hu):    Szabad szoftver Clipper kompatibilis fordÃ­tÃ³
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{platform}
@@ -108,24 +108,24 @@ package includes a compiler, pre-processor, header files, virtual machine
 and documentation.
 
 %description -l pl
-%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
-wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn+ maszynê oraz dokumentacjê.
+%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator rozwijany na
+wielu rÃ³Å¼nych platformach. Ten pakiet zawiera kompilator, preprocesor,
+zbiory nagÅ‚Ã³wkowe, wirtualn+ maszynÄ™ oraz dokumentacjÄ™.
 
 %description -l pt_BR
-%{dname} é um compilador Clipper compativel para multiplas plataformas.
-Esse pacote contem um compilador, um pré-processador, arquivos de cabeçalho
-uma maquina virtual e documentação.
+%{dname} Ã© um compilador Clipper compativel para multiplas plataformas.
+Esse pacote contem um compilador, um prÃ©-processador, arquivos de cabeÃ§alho
+uma maquina virtual e documentaÃ§Äƒo.
 
 %description -l ru
-%{dname} - ÍÎÏÇÏĞÌÁÔÆÏÒÍÅÎÎÙÊ ËÏÍĞÉÌÑÔÏÒ, ÓÏ×ÍÅÓÔÉÍÙÊ Ó ÑÚÙËÏÍ CA-Cl*pper.
-üÔÏÔ ĞÁËÅÔ ÓÏÄÅÒÖÉÔ ËÏÍĞÉÌÑÔÏÒ, ĞÒÅĞÒÏÃÅÓÓÏÒ, ÆÁÊÌÙ ÚÁÇÏÌÏ×ËÏ×, ×ÉÒÔÕÁÌØÎÕÀ
-ÍÁÛÉÎÕ É ÄÏËÕÍÅÎÔÁÃÉÀ.
+%{dname} - Ğ¼Ğ½Ğ¾Ğ³Ğ¾Ğ¿Ğ»Ğ°Ñ‚Ñ„Ğ¾Ñ€Ğ¼ĞµĞ½Ğ½Ñ‹Ğ¹ ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€, ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ñ‹Ğ¹ Ñ ÑĞ·Ñ‹ĞºĞ¾Ğ¼ CA-Cl*pper.
+Ğ­Ñ‚Ğ¾Ñ‚ Ğ¿Ğ°ĞºĞµÑ‚ ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ¸Ñ‚ ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€, Ğ¿Ñ€ĞµĞ¿Ñ€Ğ¾Ñ†ĞµÑÑĞ¾Ñ€, Ñ„Ğ°Ğ¹Ğ»Ñ‹ Ğ·Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ¾Ğ², Ğ²Ğ¸Ñ€Ñ‚ÑƒĞ°Ğ»ÑŒĞ½ÑƒÑ
+Ğ¼Ğ°ÑˆĞ¸Ğ½Ñƒ Ğ¸ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ.
 
 %description -l hu
-%{dname} egy több platformon is mûködõ CA-Cl*pper kompatibilis
-fordítóprogram. A csomag része a fordító maga, az elõfordító, fejléc
-állományok, a virtuális gép és függvénykönyvtárak, valamint a dokumentáció.
+%{dname} egy tÃ¶bb platformon is mÅ±kÃ¶dÅ‘ CA-Cl*pper kompatibilis
+fordÃ­tÃ³program. A csomag rÃ©sze a fordÃ­tÃ³ maga, az elÅ‘fordÃ­tÃ³, fejlÃ©c
+Ã¡llomÃ¡nyok, a virtuÃ¡lis gÃ©p Ã©s fÃ¼ggvÃ©nykÃ¶nyvtÃ¡rak, valamint a dokumentÃ¡ciÃ³.
 
 ######################################################################
 ## main shared lib
@@ -134,8 +134,8 @@ fordítóprogram. A csomag része a fordító maga, az elõfordító, fejléc
 %package lib
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
-Summary(ru):    óÏ×ÍÅÓÔÎÏ ÉÓĞÏÌØÚÕÅÍÙÅ ÂÉÂÌÉÏÔÅËÉ ÄÌÑ ËÏÍĞÉÌÑÔÏÒÁ %{dname}
-Summary(hu):    Megosztott könyvtárak a(z) %{dname} fordítóhoz
+Summary(ru):    Ğ¡Ğ¾Ğ²Ğ¼ĞµÑÑ‚Ğ½Ğ¾ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµĞ¼Ñ‹Ğµ Ğ±Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ¸ Ğ´Ğ»Ñ ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€Ğ° %{dname}
+Summary(hu):    Megosztott kÃ¶nyvtÃ¡rak a(z) %{dname} fordÃ­tÃ³hoz
 Group:          Development/Languages
 Provides:       lib%{name}.so lib%{name}mt.so
 
@@ -145,24 +145,24 @@ This package provides %{dname} runtime shared libraries for programs
 linked dynamically.
 
 %description -l pl lib
-%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.
-Ten pakiet udostêpnia dzielone bilioteki kompilatora %{dname}
-dla programów konsolidowanych dynamicznie.
+%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.
+Ten pakiet udostÄ™pnia dzielone bilioteki kompilatora %{dname}
+dla programÃ³w konsolidowanych dynamicznie.
 
 %description -l pt_BR lib
-%{dname} é um compilador compativel com o Clipper.
+%{dname} Ã© um compilador compativel com o Clipper.
 Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
 linkados dinamicamente.
 
 %description -l ru lib
-%{dname} - ËÏÍĞÉÌÑÔÏÒ, ÓÏ×ÍÅÓÔÉÍÙÊ Ó ÑÚÙËÏÍ CA-Cl*pper.
-üÔÏÔ ĞÁËÅÔ ÓÏÄÅÒÖÉÔ ÓÏ×ÍÅÓÔÎÏ ÉÓĞÏÌØÚÕÅÍÙÅ ÂÉÂÌÉÏÔÅËÉ %{dname},
-ÎÅÏÂÈÏÄÉÍÙÅ ÄÌÑ ÒÁÂÏÔÙ ÄÉÎÁÍÉŞÅÓËÉ ÓËÏÍĞÏÎÏ×ÁÎÎÙÈ ĞÒÏÇÒÁÍÍ.
+%{dname} - ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€, ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ñ‹Ğ¹ Ñ ÑĞ·Ñ‹ĞºĞ¾Ğ¼ CA-Cl*pper.
+Ğ­Ñ‚Ğ¾Ñ‚ Ğ¿Ğ°ĞºĞµÑ‚ ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ¸Ñ‚ ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ½Ğ¾ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµĞ¼Ñ‹Ğµ Ğ±Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ¸ %{dname},
+Ğ½ĞµĞ¾Ğ±Ñ…Ğ¾Ğ´Ğ¸Ğ¼Ñ‹Ğµ Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ğ´Ğ¸Ğ½Ğ°Ğ¼Ğ¸Ñ‡ĞµÑĞºĞ¸ ÑĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½Ğ¾Ğ²Ğ°Ğ½Ğ½Ñ‹Ñ… Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¼.
 
 %description -l hu lib
-A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
-Ez a csomag biztosítja a dinamikusan szerkesztett %{dname}
-programokhoz szükséges megosztott (dinamikus) futtatókönyvtárakat.
+A(z) %{dname} egy Clipper kompatibilis fordÃ­tÃ³program.
+Ez a csomag biztosÃ­tja a dinamikusan szerkesztett %{dname}
+programokhoz szÃ¼ksÃ©ges megosztott (dinamikus) futtatÃ³kÃ¶nyvtÃ¡rakat.
 
 ######################################################################
 ## contrib libs (without package requirements)
@@ -172,8 +172,8 @@ programokhoz szükséges megosztott (dinamikus) futtatókönyvtárakat.
 Summary:        Contrib runtime libaries for %{dname} compiler
 Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
-Summary(ru):    âÉÂÌÉÏÔÅËÉ ÉÚ ÄÅÒÅ×Á contrib ÄÌÑ ËÏÍĞÉÌÑÔÏÒÁ %{dname}
-Summary(hu):    Kiegészítõ könyvtárak a(z) %{dname} fordítóhoz
+Summary(ru):    Ğ‘Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ¸ Ğ¸Ğ· Ğ´ĞµÑ€ĞµĞ²Ğ° contrib Ğ´Ğ»Ñ ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€Ğ° %{dname}
+Summary(hu):    KiegÃ©szÃ­tÅ‘ kÃ¶nyvtÃ¡rak a(z) %{dname} fordÃ­tÃ³hoz
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -182,23 +182,23 @@ Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 This package provides %{dname} contrib libraries for program linking.
 
 %description -l pl contrib
-%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.
-Ten pakiet udostêpnia statyczne bilioteki z drzewa contrib dla
+%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.
+Ten pakiet udostÄ™pnia statyczne bilioteki z drzewa contrib dla
 kompilatora %{dname}.
 
 %description -l pt_BR contrib
-%{dname} é um compilador compativel com o clippe.
+%{dname} Ã© um compilador compativel com o clippe.
 Esse pacote %{dname} provem as bibliotecas contrib para linkagem
 dos programas.
 
 %description -l ru contrib
-%{dname} - ËÏÍĞÉÌÑÔÏÒ, ÓÏ×ÍÅÓÔÉÍÙÊ Ó ÑÚÙËÏÍ CA-Cl*pper.
-üÔÏÔ ĞÁËÅÔ ÓÏÄÅÒÖÉÔ ÓÔÁÔÉŞÅÓËÉÅ ÂÉÂÌÉÏÔÅËÉ %{dname} ÉÚ ÄÅÒÅ×Á contrib.
+%{dname} - ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ‚Ğ¾Ñ€, ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ñ‹Ğ¹ Ñ ÑĞ·Ñ‹ĞºĞ¾Ğ¼ CA-Cl*pper.
+Ğ­Ñ‚Ğ¾Ñ‚ Ğ¿Ğ°ĞºĞµÑ‚ ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ¸Ñ‚ ÑÑ‚Ğ°Ñ‚Ğ¸Ñ‡ĞµÑĞºĞ¸Ğµ Ğ±Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ¸ %{dname} Ğ¸Ğ· Ğ´ĞµÑ€ĞµĞ²Ğ° contrib.
 
 %description -l hu contrib
-A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
-Ez a csomag kiegészítõ (contrib) könyvtárakat biztosít
-statikus szerkesztéshez.
+A(z) %{dname} egy Clipper kompatibilis fordÃ­tÃ³program.
+Ez a csomag kiegÃ©szÃ­tÅ‘ (contrib) kÃ¶nyvtÃ¡rakat biztosÃ­t
+statikus szerkesztÃ©shez.
 
 ######################################################################
 ## contrib libs (with package requirements)
@@ -207,7 +207,7 @@ statikus szerkesztéshez.
 ## ADS RDD
 %{?_with_ads:%package ads}
 %{?_with_ads:Summary:        ADS RDDs for %{dname} compiler}
-%{?_with_ads:Summary(pl):    Bilioteka sterowników (RDDs) ADS dla kompilatora %{dname}}
+%{?_with_ads:Summary(pl):    Bilioteka sterownikÃ³w (RDDs) ADS dla kompilatora %{dname}}
 %{?_with_ads:Group:          Development/Languages}
 %{?_with_ads:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
@@ -216,8 +216,8 @@ statikus szerkesztéshez.
 %{?_with_ads:This package provides %{dname} ADS RDDs for program linking.}
 
 %{?_with_ads:%description -l pl ads}
-%{?_with_ads:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_ads:Ten pakiet udostêpnia sterowniki (RDD) ADS dla kompilatora %{dname}.}
+%{?_with_ads:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_ads:Ten pakiet udostÄ™pnia sterowniki (RDD) ADS dla kompilatora %{dname}.}
 
 ## allegro library
 %{?_with_allegro:%package allegro}
@@ -231,8 +231,8 @@ statikus szerkesztéshez.
 %{?_with_allegro:This package provides %{dname} Allegro GT library for program linking.}
 
 %{?_with_allegro:%description -l pl allegro}
-%{?_with_allegro:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_allegro:Ten pakiet udostêpnia statyczn+ biliotekê Allegro GT dla kompilatora %{dname}.}
+%{?_with_allegro:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_allegro:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ Allegro GT dla kompilatora %{dname}.}
 
 ## cairo library
 %{?_with_cairo:%package cairo}
@@ -246,8 +246,8 @@ statikus szerkesztéshez.
 %{?_with_cairo:This package provides %{dname} Cairo library for program linking.}
 
 %{?_with_cairo:%description -l pl cairo}
-%{?_with_cairo:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_cairo:Ten pakiet udostêpnia statyczn+ biliotekê Cairo dla kompilatora %{dname}.}
+%{?_with_cairo:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_cairo:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ Cairo dla kompilatora %{dname}.}
 
 ## cups library
 %{?_with_cups:%package cups}
@@ -261,8 +261,8 @@ statikus szerkesztéshez.
 %{?_with_cups:This package provides %{dname} CUPS library for program linking.}
 
 %{?_with_cups:%description -l pl cups}
-%{?_with_cups:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_cups:Ten pakiet udostêpnia statyczn+ biliotekê CUPS dla kompilatora %{dname}.}
+%{?_with_cups:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_cups:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ CUPS dla kompilatora %{dname}.}
 
 ## curl library
 %{?_with_curl:%package curl}
@@ -276,8 +276,8 @@ statikus szerkesztéshez.
 %{?_with_curl:This package provides %{dname} CURL library for program linking.}
 
 %{?_with_curl:%description -l pl curl}
-%{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_curl:Ten pakiet udostêpnia statyczn+ biliotekê CURL dla kompilatora %{dname}.}
+%{?_with_curl:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_curl:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ CURL dla kompilatora %{dname}.}
 
 ## firebird library
 %{?_with_firebird:%package firebird}
@@ -291,8 +291,8 @@ statikus szerkesztéshez.
 %{?_with_firebird:This package provides %{dname} FireBird library for program linking.}
 
 %{?_with_firebird:%description -l pl firebird}
-%{?_with_firebird:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_firebird:Ten pakiet udostêpnia statyczn+ biliotekê FireBird dla kompilatora %{dname}.}
+%{?_with_firebird:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_firebird:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ FireBird dla kompilatora %{dname}.}
 
 ## freeimage library
 #%{?_with_freeimage:%package freeimage}
@@ -306,8 +306,8 @@ statikus szerkesztéshez.
 #%{?_with_freeimage:This package provides %{dname} FreeImage library for program linking.}
 
 #%{?_with_freeimage:%description -l pl freeimage}
-#%{?_with_freeimage:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-#%{?_with_freeimage:Ten pakiet udostêpnia statyczn+ biliotekê FreeImage dla kompilatora %{dname}.}
+#%{?_with_freeimage:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+#%{?_with_freeimage:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ FreeImage dla kompilatora %{dname}.}
 
 ## gd library
 %{?_with_gd:%package gd}
@@ -321,8 +321,8 @@ statikus szerkesztéshez.
 %{?_with_gd:This package provides %{dname} GD library for program linking.}
 
 %{?_with_gd:%description -l pl gd}
-%{?_with_gd:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_gd:Ten pakiet udostêpnia statyczn+ biliotekê GD dla kompilatora %{dname}.}
+%{?_with_gd:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_gd:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ GD dla kompilatora %{dname}.}
 
 ## mysql library
 %{?_with_mysql:%package mysql}
@@ -336,8 +336,8 @@ statikus szerkesztéshez.
 %{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
 
 %{?_with_mysql:%description -l pl mysql}
-%{?_with_mysql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_mysql:Ten pakiet udostêpnia statyczn+ biliotekê MYSQL dla kompilatora %{dname}.}
+%{?_with_mysql:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_mysql:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ MYSQL dla kompilatora %{dname}.}
 
 ## odbc library
 %{?_with_odbc:%package odbc}
@@ -351,8 +351,8 @@ statikus szerkesztéshez.
 %{?_with_odbc:This package provides %{dname} ODBC library for program linking.}
 
 %{?_with_odbc:%description -l pl odbc}
-%{?_with_odbc:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_odbc:Ten pakiet udostêpnia statyczn+ biliotekê ODBC dla kompilatora %{dname}.}
+%{?_with_odbc:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_odbc:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ ODBC dla kompilatora %{dname}.}
 
 ## pgsql library
 %{?_with_pgsql:%package pgsql}
@@ -366,8 +366,8 @@ statikus szerkesztéshez.
 %{?_with_pgsql:This package provides %{dname} PGSQL library for program linking.}
 
 %{?_with_pgsql:%description -l pl pgsql}
-%{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_pgsql:Ten pakiet udostêpnia statyczn+ biliotekê PGSQL dla kompilatora %{dname}.}
+%{?_with_pgsql:%{dname} to kompatybilny z jÄ™zykiem CA-Cl*pper kompilator.}
+%{?_with_pgsql:Ten pakiet udostÄ™pnia statyczn+ biliotekÄ™ PGSQL dla kompilatora %{dname}.}
 
 ## qt library
 %{?_with_qt:%package qt}
