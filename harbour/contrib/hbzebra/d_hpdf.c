@@ -65,7 +65,7 @@ int hb_zebra_draw_hpdf( PHB_ZEBRA pZebra, HPDF_Page hPage, double dX, double dY,
    if( pZebra->iError != 0 )
       return HB_ZEBRA_ERROR_INVALIDZEBRA;
 
-   HPDF_Page_SetLineWidth( hPage, 0.1 ); /* Standard line width */
+   HPDF_Page_SetLineWidth( hPage, ( HPDF_REAL ) 0.1 );
 
    nLen = hb_bitbuffer_len( pZebra->pBits );
    fLastBit = hb_bitbuffer_get( pZebra->pBits, 0 );
