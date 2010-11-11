@@ -114,7 +114,7 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
          wapi_TextOut( hDC, 150 * _SCALE_, nY, hb_zebra_getcode( hZebra ) )
          hb_zebra_draw_wapi( hZebra, hDC, wapi_CreateSolidBrush( 0 ), 300 * _SCALE_, nY, nLineWidth, nLineHeight * _SCALE_ )
       ELSE
-        ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
+         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF
       hb_zebra_destroy( hZebra )
    ELSE

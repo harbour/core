@@ -79,7 +79,7 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
          HPDF_Page_EndText( page )
          hb_zebra_draw_hpdf( hZebra, page, 300, nY, nLineWidth, nLineHeight )
       ELSE
-        ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
+         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF
       hb_zebra_destroy( hZebra )
    ELSE

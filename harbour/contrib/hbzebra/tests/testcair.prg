@@ -87,7 +87,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
          cairo_show_text( hCairo, hb_zebra_getcode( hZebra ) )
          hb_zebra_draw_cairo( hZebra, hCairo, 220, nY, nLineWidth, nLineHeight )
       ELSE
-        ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
+         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF
       hb_zebra_destroy( hZebra )
    ELSE

@@ -13,6 +13,7 @@
 
 # Core
 core.c
+coredraw.c
 
 # Barcodes
 codabar.c
@@ -24,20 +25,3 @@ eanupc.c
 itf.c
 msi.c
 pdf417.c
-
-# Drawing backends
-
--depoptional=cairo:yes
--depkeyhead=cairo:cairo.h
--depcontrol=cairo:no{HB_BUILD_3RDEXT='no'}
--depcontrol=cairo:${HB_WITH_CAIRO}
--depincpath=cairo:/usr/include/cairo
--depincpath=cairo:/opt/local/include/cairo
--depimplibs=cairo:../../bin/libcairo-2.dll
--depimplibd=cairo:cairo
--depfinish=cairo
-
-coredraw.c
-
-{HBMK_HAS_CAIRO}d_cairo.c
-{HBMK_HAS_CAIRO}../hbcairo/hbcairo.hbc

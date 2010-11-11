@@ -79,7 +79,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
       fBit = hb_bitbuffer_get( pZebra->pBits, n );
       if( fBit != fLastBit )
       {
-         if( fLastBit )
+         if( fLastBit && pCallback )
             pCallback( cargo, dLast, dY, dWidth * nCount, dHeight );
 
          dLast += dWidth * nCount;
@@ -91,7 +91,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
       {
          if( nCount )
          {
-            if( fBit )
+            if( fBit && pCallback )
                pCallback( cargo, dLast, dY, dWidth * nCount, dHeight );
             nCount = 0;
          }
@@ -102,7 +102,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
             fLastBit = hb_bitbuffer_get( pZebra->pBits, n + 1 );
       }
    }
-   if( fLastBit && nCount )
+   if( fLastBit && nCount && pCallback )
       pCallback( cargo, dLast, dY, dWidth * nCount, dHeight );
 
    return 0;
