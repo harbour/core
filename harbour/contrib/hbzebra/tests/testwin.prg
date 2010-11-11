@@ -129,4 +129,4 @@ STATIC FUNCTION hb_zebra_draw_wapi( hZebra, hDC, hBrush, ... )
       RETURN HB_ZEBRA_ERROR_INVALIDZEBRA
    ENDIF
 
-   RETURN hb_zebra_draw( hZebra, {| x, y, w, h | wapi_FillRect( hDC, { x, y, x + w, y + h }, hBrush ) }, ... )
+   RETURN hb_zebra_draw( hZebra, {| x, y, w, h | wapi_FillRect( hDC, { Int( x + .5 ), Int( y + .5 ), Int( x + .5 ) + Int( w ), Int( y + .5 ) + Int( h ) + 1 }, hBrush ) }, ... )
