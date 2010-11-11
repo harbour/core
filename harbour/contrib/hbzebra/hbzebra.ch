@@ -68,13 +68,16 @@
 #define HB_ZEBRA_TYPE_ITF                10
 #define HB_ZEBRA_TYPE_MSI                11
 
+#define HB_ZEBRA_TYPE_PDF417            257
+
 /* Generate errors */
 #define HB_ZEBRA_ERROR_INVALIDCODE        1
 #define HB_ZEBRA_ERROR_BADCHECKSUM        2
+#define HB_ZEBRA_ERROR_TOOLARGE           3
+#define HB_ZEBRA_ERROR_ARGUMENT           4
 
 /* Draw errors */
 #define HB_ZEBRA_ERROR_INVALIDZEBRA     101
-#define HB_ZEBRA_ERROR_ARGUMENT         102
 
 /* Generate flags */
 #define HB_ZEBRA_FLAG_CHECKSUM            1
@@ -84,6 +87,17 @@
 
 /* Draw flags */
 
-/* Barcode dependent options >= 0x100 */
+/* Barcode dependent flags */
+#define HB_ZEBRA_FLAG_PDF417_TRUNCATED    0x0100
+#define HB_ZEBRA_FLAG_PDF417_LEVEL_MASK   0xF000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL0       0x1000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL1       0x2000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL2       0x3000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL3       0x4000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL4       0x5000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL5       0x6000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL6       0x7000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL7       0x8000
+#define HB_ZEBRA_FLAG_PDF417_LEVEL8       0x9000
 
 #endif /* HB_ZEBRA_CH_ */

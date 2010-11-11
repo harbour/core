@@ -68,6 +68,7 @@ typedef struct
 {
    int             iType;
    int             iError;
+   int             iCol;
    char *          szCode;
    PHB_BITBUFFER   pBits;
 } HB_ZEBRA, * PHB_ZEBRA;

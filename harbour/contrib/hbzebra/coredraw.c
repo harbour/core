@@ -61,20 +61,19 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
    double   dLast;
    HB_SIZE  n, nLen, nCount;
    HB_BOOL  fBit, fLastBit;
+   int      i, iCol = pZebra->iCol;
 
    HB_SYMBOL_UNUSED( iFlags );
 
    if( pZebra->iError != 0 )
       return HB_ZEBRA_ERROR_INVALIDZEBRA;
 
-   if( ! pCallback )
-      return HB_ZEBRA_ERROR_ARGUMENT;
-
    nLen = hb_bitbuffer_len( pZebra->pBits );
    fLastBit = hb_bitbuffer_get( pZebra->pBits, 0 );
    dLast = dX;
-   nCount = 1;
-   for( n = 1; n < nLen; n++ )
+   nCount = 0;
+   i = 0;
+   for( n = 0; n < nLen; n++ )
    {
       fBit = hb_bitbuffer_get( pZebra->pBits, n );
       if( fBit != fLastBit )
@@ -87,8 +86,22 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
          fLastBit = fBit;
       }
       nCount++;
+      if( ++i == iCol )
+      {
+         if( nCount )
+         {
+            if( fBit )
+               pCallback( cargo, dLast, dY, dWidth * nCount, dHeight );
+            nCount = 0;
+         }
+         i = 0;
+         dY += dHeight;
+         dLast = dX;
+         if( n + 1 < nLen )
+            fLastBit = hb_bitbuffer_get( pZebra->pBits, n + 1 );
+      }
    }
-   if( fLastBit )
+   if( fLastBit && nCount )
       pCallback( cargo, dLast, dY, dWidth * nCount, dHeight );
 
    return 0;
@@ -111,9 +124,6 @@ static void hb_zebra_draw_codeblock_callback( void * pDrawBlock, double dX, doub
 
 int hb_zebra_draw_codeblock( PHB_ZEBRA pZebra, PHB_ITEM pDrawBlock, double dX, double dY, double dWidth, double dHeight, int iFlags )
 {
-   if( ! pDrawBlock || ! HB_IS_BLOCK( pDrawBlock ) )
-      return HB_ZEBRA_ERROR_ARGUMENT;
-
    return hb_zebra_draw( pZebra, hb_zebra_draw_codeblock_callback, pDrawBlock, dX, dY, dWidth, dHeight, iFlags );
 }
 
@@ -125,5 +135,7 @@ HB_FUNC( HB_ZEBRA_DRAW )
       PHB_ITEM pDrawBlock = hb_param( 2, HB_IT_BLOCK );
       if( pDrawBlock )
          hb_retni( hb_zebra_draw_codeblock( pZebra, pDrawBlock, hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parni( 7 ) ) );
+      else
+         hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }

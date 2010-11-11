@@ -39,6 +39,7 @@ PROCEDURE main()
    DrawBarcode( hCairo, 400,   1, "CODE128", "Code 128")
    DrawBarcode( hCairo, 420,   1, "CODE128", "1234567890")
    DrawBarcode( hCairo, 440,   1, "CODE128", "Wikipedia")
+   DrawBarcode( hCairo, 460,   1, "PDF417",  "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
 
    cairo_destroy( hCairo )
    cairo_surface_write_to_png( hSurface, "testcair.png" )
@@ -47,7 +48,8 @@ PROCEDURE main()
 
 
 PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
-   LOCAL hZebra
+   LOCAL hZebra, nLineHeight
+
    IF cType == "EAN13"
       hZebra := hb_zebra_create_ean13( cCode, nFlags )
    ELSEIF cType == "EAN8"
@@ -70,14 +72,20 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
       hZebra := hb_zebra_create_code11( cCode, nFlags )
    ELSEIF cType == "CODE128"
       hZebra := hb_zebra_create_code128( cCode, nFlags )
+   ELSEIF cType == "PDF417"
+      hZebra := hb_zebra_create_pdf417( cCode, nFlags )
+      nLineHeight := nLineWidth * 3
    ENDIF
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
+         IF EMPTY( nLineHeight )
+            nLineHeight := 16
+         ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )
          cairo_show_text( hCairo, cType )
          cairo_move_to( hCairo, 100, nY + 13 )
          cairo_show_text( hCairo, hb_zebra_getcode( hZebra ) )
-         hb_zebra_draw_cairo( hZebra, hCairo, 220, nY, nLineWidth, 16 )
+         hb_zebra_draw_cairo( hZebra, hCairo, 220, nY, nLineWidth, nLineHeight )
       ELSE
         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF

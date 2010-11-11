@@ -44,13 +44,14 @@ PROCEDURE Main()
    DrawBarcode( page, 400,   1, "CODE128", "Code 128")
    DrawBarcode( page, 420,   1, "CODE128", "1234567890")
    DrawBarcode( page, 440,   1, "CODE128", "Wikipedia")
+   DrawBarcode( page, 460,   1, "PDF417",  "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
 
    ? HPDF_SaveToFile( pdf, "testhpdf.pdf" )
 
    RETURN
 
 PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
-   LOCAL hZebra
+   LOCAL hZebra, nLineHeight
 
    SWITCH cType
    CASE "EAN13"   ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
@@ -64,15 +65,19 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
    CASE "CODE93"  ; hZebra := hb_zebra_create_code93( cCode, nFlags )  ; EXIT
    CASE "CODE11"  ; hZebra := hb_zebra_create_code11( cCode, nFlags )  ; EXIT
    CASE "CODE128" ; hZebra := hb_zebra_create_code128( cCode, nFlags ) ; EXIT
+   CASE "PDF417"  ; hZebra := hb_zebra_create_pdf417( cCode, nFlags ); nLineHeight := nLineWidth * 3; EXIT
    ENDSWITCH
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
+         IF EMPTY( nLineHeight )
+            nLineHeight := 16
+         ENDIF
          HPDF_Page_BeginText( page )
          HPDF_Page_TextOut( page,  40, nY, cType )
          HPDF_Page_TextOut( page, 150, nY, hb_zebra_getcode( hZebra ) )
          HPDF_Page_EndText( page )
-         hb_zebra_draw_hpdf( hZebra, page, 300, nY, nLineWidth, 16 )
+         hb_zebra_draw_hpdf( hZebra, page, 300, nY, nLineWidth, nLineHeight )
       ELSE
         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF

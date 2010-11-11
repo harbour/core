@@ -23,6 +23,7 @@ code93.c
 eanupc.c
 itf.c
 msi.c
+pdf417.c
 
 # Drawing backends
 

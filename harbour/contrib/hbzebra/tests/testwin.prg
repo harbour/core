@@ -72,6 +72,7 @@ PROCEDURE Main()
             DrawBarcode( hDC, 400,   1, "CODE128", "Code 128")
             DrawBarcode( hDC, 420,   1, "CODE128", "1234567890")
             DrawBarcode( hDC, 440,   1, "CODE128", "Wikipedia")
+            DrawBarcode( hDC, 460,   1, "PDF417",  "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
 
             wapi_EndPage( hDC )
          ENDIF
@@ -84,10 +85,7 @@ PROCEDURE Main()
 #define _SCALE_ 7.2
 
 PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
-   LOCAL hZebra
-
-   nY *= _SCALE_
-   nLineWidth *= _SCALE_
+   LOCAL hZebra, nLineHeight
 
    SWITCH cType
    CASE "EAN13"   ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
@@ -101,13 +99,20 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
    CASE "CODE93"  ; hZebra := hb_zebra_create_code93( cCode, nFlags )  ; EXIT
    CASE "CODE11"  ; hZebra := hb_zebra_create_code11( cCode, nFlags )  ; EXIT
    CASE "CODE128" ; hZebra := hb_zebra_create_code128( cCode, nFlags ) ; EXIT
+   CASE "PDF417"  ; hZebra := hb_zebra_create_pdf417( cCode, nFlags ); nLineHeight := nLineWidth * 3; EXIT
    ENDSWITCH
+
+   nY *= _SCALE_
+   nLineWidth *= _SCALE_
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
+         IF EMPTY( nLineHeight )
+            nLineHeight := 16
+         ENDIF
          wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )
          wapi_TextOut( hDC, 150 * _SCALE_, nY, hb_zebra_getcode( hZebra ) )
-         hb_zebra_draw_wapi( hZebra, hDC, wapi_CreateSolidBrush( 0 ), 300 * _SCALE_, nY, nLineWidth, 16 * _SCALE_ )
+         hb_zebra_draw_wapi( hZebra, hDC, wapi_CreateSolidBrush( 0 ), 300 * _SCALE_, nY, nLineWidth, nLineHeight * _SCALE_ )
       ELSE
         ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF
