@@ -52,6 +52,7 @@
  */
 
 #include "hbzebra.h"
+#include "hbapierr.h"
 #include "hbvm.h"
 
 typedef void ( * HB_ZEBRA_CALLBACK )( void * cargo, double dX, double dY, double dWidth, double dHeight );
