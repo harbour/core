@@ -373,10 +373,10 @@ PHB_ZEBRA hb_zebra_create_upce( const char * szCode, HB_SIZE nLen, int iFlags )
 
    for( i = 0; i < 6; i++ )
    {
-      if( sumcode & ( 1 << ( i - 1 ) ) )
-         hb_bitbuffer_cat_int( pZebra->pBits, s_gcode[ szCode[ i ] - '0' ], 7 );
-      else
+      if( sumcode & ( 1 << i ) )
          hb_bitbuffer_cat_int( pZebra->pBits, s_rcode[ szCode[ i ] - '0' ] ^ 0x7F, 7 );
+      else
+         hb_bitbuffer_cat_int( pZebra->pBits, s_gcode[ szCode[ i ] - '0' ], 7 );
    }
    hb_bitbuffer_cat_int( pZebra->pBits, 42, 6 );   /* stop */
    return pZebra;

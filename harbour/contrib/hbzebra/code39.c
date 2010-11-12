@@ -120,7 +120,7 @@ static int _code39_charno( char ch )
    return -1;
 }
 
-static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags )
+static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLast )
 {
    int i, cnt = 0;
 
@@ -133,7 +133,8 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags )
          code >>= 1;
       }
       hb_bitbuffer_cat_int( pBits, 31, cnt < 3 ? 5 : 2 );
-      hb_bitbuffer_cat_int( pBits, 0, 2 );
+      if( ! fLast )
+         hb_bitbuffer_cat_int( pBits, 0, 2 );
    }
    else if( iFlags & HB_ZEBRA_FLAG_WIDE3 )
    {
@@ -144,7 +145,8 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags )
          code >>= 1;
       }
       hb_bitbuffer_cat_int( pBits, 31, cnt < 3 ? 3 : 1 );
-      hb_bitbuffer_cat_int( pBits, 0, 1 );
+      if( ! fLast )
+         hb_bitbuffer_cat_int( pBits, 0, 1 );
    }
    else
    {
@@ -155,7 +157,8 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags )
          code >>= 1;
       }
       hb_bitbuffer_cat_int( pBits, 31, cnt < 3 ? 2 : 1 );
-      hb_bitbuffer_cat_int( pBits, 0, 1 );
+      if( ! fLast )
+         hb_bitbuffer_cat_int( pBits, 0, 1 );
    }
 }
 
@@ -183,21 +186,21 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
 
    pZebra->pBits = hb_bitbuffer_create();
 
-   _code39_add( pZebra->pBits, 0x52, iFlags );    /* start */
+   _code39_add( pZebra->pBits, 0x52, iFlags, HB_FALSE );    /* start */
 
    csum = 0;
    for( i = 0; i < iLen; i++ )
    {
       int no = _code39_charno( szCode[ i ] );
-      _code39_add( pZebra->pBits, ( char ) s_code[ no ], iFlags );
+      _code39_add( pZebra->pBits, ( char ) s_code[ no ], iFlags, HB_FALSE );
       csum += no;
    }
 
    if( iFlags & HB_ZEBRA_FLAG_CHECKSUM )
-      _code39_add( pZebra->pBits, ( char ) s_code[ csum % 43 ], iFlags );
+      _code39_add( pZebra->pBits, ( char ) s_code[ csum % 43 ], iFlags, HB_FALSE );
 
-   _code39_add( pZebra->pBits, 0x52, iFlags );    /* stop */
-   hb_bitbuffer_cat_int( pZebra->pBits, 3, iFlags & HB_ZEBRA_FLAG_WIDE2_5 ? 2 : 1 );
+   _code39_add( pZebra->pBits, 0x52, iFlags, HB_TRUE );    /* stop */
+//   hb_bitbuffer_cat_int( pZebra->pBits, 3, iFlags & HB_ZEBRA_FLAG_WIDE2_5 ? 2 : 1 );
 
    return pZebra;
 }
