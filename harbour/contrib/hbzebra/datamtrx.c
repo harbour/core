@@ -92,20 +92,20 @@ typedef struct
 } DATAMATRIX_SIZE, * PDATAMATRIX_SIZE;
 
 
-static DATAMATRIX_SIZE s_size[ SIZE_COUNT ] = { 
-   { 10,  10,  10,  10,    3,    3,    5 }, 
-   { 12,  12,  12,  12,    5,    5,    7 }, 
+static DATAMATRIX_SIZE s_size[ SIZE_COUNT ] = {
+   { 10,  10,  10,  10,    3,    3,    5 },
+   { 12,  12,  12,  12,    5,    5,    7 },
    {  8,  18,   8,  18,    5,    5,    7 },
-   { 14,  14,  14,  14,    8,    8,   10 }, 
+   { 14,  14,  14,  14,    8,    8,   10 },
    {  8,  32,   8,  16,   10,   10,   11 },
-   { 16,  16,  16,  16,   12,   12,   12 }, 
+   { 16,  16,  16,  16,   12,   12,   12 },
    { 12,  26,  12,  26,   16,   16,   14 },
-   { 18,  18,  18,  18,   18,   18,   14 }, 
-   { 20,  20,  20,  20,   22,   22,   18 }, 
+   { 18,  18,  18,  18,   18,   18,   14 },
+   { 20,  20,  20,  20,   22,   22,   18 },
    { 12,  36,  12,  18,   22,   22,   18 },
-   { 22,  22,  22,  22,   30,   30,   20 }, 
+   { 22,  22,  22,  22,   30,   30,   20 },
    { 16,  36,  16,  18,   32,   32,   24 },
-   { 24,  24,  24,  24,   36,   36,   24 }, 
+   { 24,  24,  24,  24,   36,   36,   24 },
    { 26,  26,  26,  26,   44,   44,   28 },
    { 16,  48,  16,  24,   49,   49,   28 },
    { 32,  32,  16,  16,   62,   62,   36 },
@@ -162,12 +162,12 @@ static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned 
       for( j = iECLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )
-            pEC[ j ] = pEC[ j - 1 ] ^ pExp[ ( pLog[ iM ] + pLog[ pPoly[ j ] ] ) % iMod ];
+            pEC[ j ] = ( unsigned char ) ( pEC[ j - 1 ] ^ pExp[ ( pLog[ iM ] + pLog[ pPoly[ j ] ] ) % iMod ] );
          else
             pEC[ j ] = pEC[ j - 1 ];
       }
       if( iM && pPoly[ 0 ] )
-         pEC[ 0 ] = pExp[ ( pLog[ iM ] + pLog[ pPoly[ 0 ] ] ) % iMod ];
+         pEC[ 0 ] = ( unsigned char ) ( pExp[ ( pLog[ iM ] + pLog[ pPoly[ 0 ] ] ) % iMod ] );
       else
          pEC[ 0 ] = 0;
    }
@@ -182,7 +182,7 @@ static void _datamatrix_reed_solomon( char * pData, PDATAMATRIX_SIZE pSize )
    iPoly = 0x12D;
 
    j = iPoly;
-   for( iBits = 0; j > 1; iBits++ ) 
+   for( iBits = 0; j > 1; iBits++ )
       j >>= 1;
 
    iMod = ( 1 << iBits ) - 1;
@@ -228,7 +228,7 @@ static void _datamatrix_reed_solomon( char * pData, PDATAMATRIX_SIZE pSize )
 
       /* Copy to temporary buffer */
       for( j = i; j < pSize->iDataSize; j += iBlocks )
-         data[ k++ ] = ( unsigned char ) pData[ j ]; 
+         data[ k++ ] = ( unsigned char ) pData[ j ];
 
       /* Calculate Reed-Solomon ECC for one block */
       _reed_solomon_encode( data, k, ecc, pSize->iBlockErrorSize, pPoly, pExp, pLog, iMod );
@@ -236,7 +236,7 @@ static void _datamatrix_reed_solomon( char * pData, PDATAMATRIX_SIZE pSize )
       /* Copy ECC to codeword array */
       k = pSize->iBlockErrorSize;
       for( j = i; j < pSize->iBlockErrorSize * iBlocks; j += iBlocks )
-         pData[ pSize->iDataSize + j ] = ( char ) ecc[ --k ]; 
+         pData[ pSize->iDataSize + j ] = ( char ) ecc[ --k ];
    }
 
    hb_xfree( pExp );
@@ -325,7 +325,7 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, PDATAMATR
    int * pArr;
    int i, iR, iC, iPRow, iPCol;
 
-   
+
    /* Calculate placement size without L-patterns and clock tracks */
    iPRow = pSize->iRow - 2 * ( pSize->iRow / pSize->iRegionRow );
    iPCol = pSize->iCol - 2 * ( pSize->iCol / pSize->iRegionCol );
@@ -386,8 +386,8 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, PDATAMATR
          if( i == 1 ||
              ( i > 7 && ( pCW[ ( i >> 3 ) - 1 ] & ( 1 << ( i & 7 ) ) ) ) )
          {
-            hb_bitbuffer_set( pBits, 
-                              ( 1 + iR + 2 * ( iR / ( pSize->iRegionRow - 2 ) ) ) * pSize->iCol + 
+            hb_bitbuffer_set( pBits,
+                              ( 1 + iR + 2 * ( iR / ( pSize->iRegionRow - 2 ) ) ) * pSize->iCol +
                               ( 1 + iC + 2 * ( iC / ( pSize->iRegionCol - 2 ) ) ), 1 );
          }
       }
@@ -428,8 +428,8 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
    {
       if( s_size[ i ].iDataSize >= iDataCount )
       {
-         if( ( ( iFlags & HB_ZEBRA_FLAG_DATAMATRIX_SQUARE )    && s_size[ i ].iRow == s_size[ i ].iCol ) || 
-             ( ( iFlags & HB_ZEBRA_FLAG_DATAMATRIX_RECTANGLE ) && s_size[ i ].iRow != s_size[ i ].iCol ) || 
+         if( ( ( iFlags & HB_ZEBRA_FLAG_DATAMATRIX_SQUARE )    && s_size[ i ].iRow == s_size[ i ].iCol ) ||
+             ( ( iFlags & HB_ZEBRA_FLAG_DATAMATRIX_RECTANGLE ) && s_size[ i ].iRow != s_size[ i ].iCol ) ||
              ( iFlags & ( HB_ZEBRA_FLAG_DATAMATRIX_SQUARE | HB_ZEBRA_FLAG_DATAMATRIX_RECTANGLE ) ) == 0 )
          {
             pSize = s_size + i;

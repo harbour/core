@@ -51,35 +51,21 @@ PROCEDURE main()
 PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    LOCAL hZebra, nLineHeight
 
-   IF cType == "EAN13"
-      hZebra := hb_zebra_create_ean13( cCode, nFlags )
-   ELSEIF cType == "EAN8"
-      hZebra := hb_zebra_create_ean8( cCode, nFlags )
-   ELSEIF cType == "UPCA"
-      hZebra := hb_zebra_create_upca( cCode, nFlags )
-   ELSEIF cType == "UPCE"
-      hZebra := hb_zebra_create_upce( cCode, nFlags )
-   ELSEIF cType == "CODE39"
-      hZebra := hb_zebra_create_code39( cCode, nFlags )
-   ELSEIF cType == "ITF"
-      hZebra := hb_zebra_create_itf( cCode, nFlags )
-   ELSEIF cType == "MSI"
-      hZebra := hb_zebra_create_msi( cCode, nFlags )
-   ELSEIF cType == "CODABAR"
-      hZebra := hb_zebra_create_codabar( cCode, nFlags )
-   ELSEIF cType == "CODE93"
-      hZebra := hb_zebra_create_code93( cCode, nFlags )
-   ELSEIF cType == "CODE11"
-      hZebra := hb_zebra_create_code11( cCode, nFlags )
-   ELSEIF cType == "CODE128"
-      hZebra := hb_zebra_create_code128( cCode, nFlags )
-   ELSEIF cType == "PDF417"
-      hZebra := hb_zebra_create_pdf417( cCode, nFlags )
-      nLineHeight := nLineWidth * 3
-   ELSEIF cType == "DATAMATRIX"
-      hZebra := hb_zebra_create_datamatrix( cCode, nFlags )
-      nLineHeight := nLineWidth
-   ENDIF
+   SWITCH cType
+   CASE "EAN13"      ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
+   CASE "EAN8"       ; hZebra := hb_zebra_create_ean8( cCode, nFlags )    ; EXIT
+   CASE "UPCA"       ; hZebra := hb_zebra_create_upca( cCode, nFlags )    ; EXIT
+   CASE "UPCE"       ; hZebra := hb_zebra_create_upce( cCode, nFlags )    ; EXIT
+   CASE "CODE39"     ; hZebra := hb_zebra_create_code39( cCode, nFlags )  ; EXIT
+   CASE "ITF"        ; hZebra := hb_zebra_create_itf( cCode, nFlags )     ; EXIT
+   CASE "MSI"        ; hZebra := hb_zebra_create_msi( cCode, nFlags )     ; EXIT
+   CASE "CODABAR"    ; hZebra := hb_zebra_create_codabar( cCode, nFlags ) ; EXIT
+   CASE "CODE93"     ; hZebra := hb_zebra_create_code93( cCode, nFlags )  ; EXIT
+   CASE "CODE11"     ; hZebra := hb_zebra_create_code11( cCode, nFlags )  ; EXIT
+   CASE "CODE128"    ; hZebra := hb_zebra_create_code128( cCode, nFlags ) ; EXIT
+   CASE "PDF417"     ; hZebra := hb_zebra_create_pdf417( cCode, nFlags ); nLineHeight := nLineWidth * 3 ; EXIT
+   CASE "DATAMATRIX" ; hZebra := hb_zebra_create_datamatrix( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
+   ENDSWITCH
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
          IF EMPTY( nLineHeight )
