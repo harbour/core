@@ -86,6 +86,9 @@ void hb_bitbuffer_set( PHB_BITBUFFER pBitBuffer, HB_SIZE nPos, HB_BOOL fValue )
       * ( pBitBuffer->pBuffer + ( nPos >> 3 ) ) |= 1 << ( nPos & 0x7 );
    else
       * ( pBitBuffer->pBuffer + ( nPos >> 3 ) ) &= ~ ( 1 << ( nPos & 0x7 ) );
+
+   if( pBitBuffer->nLen <= nPos )
+      pBitBuffer->nLen = nPos + 1;
 }
 
 void hb_bitbuffer_cat_int( PHB_BITBUFFER pBitBuffer, int iValue, int iLen )
@@ -105,10 +108,7 @@ void hb_bitbuffer_cat_int( PHB_BITBUFFER pBitBuffer, int iValue, int iLen )
 
    /* TODO: optimize */
    for( i = 0; i < iLen; i++ )
-   {
       hb_bitbuffer_set( pBitBuffer, pBitBuffer->nLen, iValue & ( 1 << i ) );
-      pBitBuffer->nLen++;
-   }
 }
 
 HB_SIZE hb_bitbuffer_len( PHB_BITBUFFER pBitBuffer )

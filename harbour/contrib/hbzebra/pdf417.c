@@ -51,6 +51,8 @@
  */
 
 /*
+   PDF417 is ISO/IEC 15438:2006
+
    Good short PDF417 description:
      http://grandzebu.net/index.php?page=/informatique/codbar-en/pdf417.htm
 
@@ -1248,8 +1250,6 @@ PHB_ZEBRA hb_zebra_create_pdf417( const char * szCode, HB_SIZE nLen, int iFlags,
    PHB_ZEBRA  pZebra;
    int *      pCW;
    int        i, j, iLevel, iRowCount, iDataCount, iCount, iLen = ( int ) nLen;
-
-   HB_SYMBOL_UNUSED( iFlags );
 
    pZebra = hb_zebra_create();
    pZebra->iType = HB_ZEBRA_TYPE_PDF417;

@@ -25,3 +25,4 @@ eanupc.c
 itf.c
 msi.c
 pdf417.c
+datamtrx.c
