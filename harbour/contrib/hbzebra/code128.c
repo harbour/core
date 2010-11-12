@@ -234,6 +234,7 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
 
    /* generate code set switch characters */
    pCode = ( int * ) hb_xgrab( sizeof( int ) * iLen * 2 );
+   iCodeSet = CODESET_B; /* to pacify MSVC warning only. It will be assigned later */
    iCodeLen = 0;
    /* determine the first optimal codeset */
    for( i = 0; i < iLen; i++ )

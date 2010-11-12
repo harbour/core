@@ -449,7 +449,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
    pCW = ( char * ) hb_xrealloc( pCW, pSize->iDataSize + iErrorSize );
    for( i = iDataCount; i < pSize->iDataSize; i++ )
    {
-      pCW[ i ] = PADDING;
+      pCW[ i ] = ( char ) ( unsigned char ) PADDING;
    }
 
    /* Reed-Solomon error correction */

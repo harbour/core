@@ -1189,9 +1189,6 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 
    switch( iLevel )
    {
-      case 0:
-        coef = s_rs0;
-        break;
       case 1:
         coef = s_rs1;
         break;
@@ -1215,6 +1212,9 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
         break;
       case 8:
         coef = s_rs8;
+        break;
+      default:
+        coef = s_rs0;
         break;
    }
 
