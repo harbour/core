@@ -16,35 +16,39 @@
 PROCEDURE Main()
    LOCAL pdf
    LOCAL page
+   LOCAL nY, nInc
 
    pdf := HPDF_New()
    page := HPDF_AddPage( pdf )
    HPDF_Page_SetSize( page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT )
    HPDF_Page_SetFontAndSize( page, HPDF_GetFont( pdf, "Helvetica", NIL ), 12 )
 
-   DrawBarcode( page,  20,   1, "EAN13",   "477012345678" )
-   DrawBarcode( page,  40,   1, "EAN8",    "1234567" )
-   DrawBarcode( page,  60,   1, "UPCA",    "01234567891" )
-   DrawBarcode( page,  80,   1, "UPCE",    "123456" )
-   DrawBarcode( page, 100,   1, "CODE39",  "ABC123" )
-   DrawBarcode( page, 120,   1, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM )
-   DrawBarcode( page, 140, 0.5, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE2_5 )
-   DrawBarcode( page, 160,   1, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 180,   1, "ITF",     "1234", HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 200,   1, "ITF",     "12345678901", HB_ZEBRA_FLAG_CHECKSUM )
-   DrawBarcode( page, 220,   1, "MSI",     "1234" )
-   DrawBarcode( page, 240,   1, "MSI",     "1234", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 260,   1, "MSI",     "1234567", HB_ZEBRA_FLAG_CHECKSUM )
-   DrawBarcode( page, 280,   1, "CODABAR", "40156", HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 300,   1, "CODABAR", "-1234", HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 320,   1, "CODE93",  "ABC-123" )
-   DrawBarcode( page, 340,   1, "CODE93",  "TEST93" )
-   DrawBarcode( page, 360,   1, "CODE11",  "12", HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 380,   1, "CODE11",  "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 400,   1, "CODE128", "Code 128")
-   DrawBarcode( page, 420,   1, "CODE128", "1234567890")
-   DrawBarcode( page, 440,   1, "CODE128", "Wikipedia")
-   DrawBarcode( page, 460,   1, "PDF417",  "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
+   nY := 40
+   nInc := 30
+
+   DrawBarcode( page, nY,               1, "EAN13",   "477012345678" )
+   DrawBarcode( page, nY += nInc,       1, "EAN8",    "1234567" )
+   DrawBarcode( page, nY += nInc,       1, "UPCA",    "01234567891" )
+   DrawBarcode( page, nY += nInc,       1, "UPCE",    "123456" )
+   DrawBarcode( page, nY += nInc,       1, "CODE39",  "ABC123" )
+   DrawBarcode( page, nY += nInc,       1, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM )
+   DrawBarcode( page, nY += nInc,     0.5, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE2_5 )
+   DrawBarcode( page, nY += nInc,       1, "CODE39",  "ABC123", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "ITF",     "1234", HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "ITF",     "12345678901", HB_ZEBRA_FLAG_CHECKSUM )
+   DrawBarcode( page, nY += nInc,       1, "MSI",     "1234" )
+   DrawBarcode( page, nY += nInc,       1, "MSI",     "1234", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "MSI",     "1234567", HB_ZEBRA_FLAG_CHECKSUM )
+   DrawBarcode( page, nY += nInc,       1, "CODABAR", "40156", HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "CODABAR", "-1234", HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "CODE93",  "ABC-123" )
+   DrawBarcode( page, nY += nInc,       1, "CODE93",  "TEST93" )
+   DrawBarcode( page, nY += nInc,       1, "CODE11",  "12", HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "CODE11",  "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
+   DrawBarcode( page, nY += nInc,       1, "CODE128", "Code 128")
+   DrawBarcode( page, nY += nInc,       1, "CODE128", "1234567890")
+   DrawBarcode( page, nY += nInc,       1, "CODE128", "Wikipedia")
+   DrawBarcode( page, nY += 2.5 * nInc, 1, "PDF417",  "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
 
    ? HPDF_SaveToFile( pdf, "testhpdf.pdf" )
 
@@ -52,6 +56,8 @@ PROCEDURE Main()
 
 PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
    LOCAL hZebra, nLineHeight
+
+   nY := 841 - nY
 
    SWITCH cType
    CASE "EAN13"   ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
