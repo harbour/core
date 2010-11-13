@@ -346,7 +346,7 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, PDATAMATR
          _datamatrix_place_b( pArr, iPRow, iPCol, i++ );
       if( iR == iPRow - 2 && iC == 0 && ( iPCol % 8 ) == 4 )
          _datamatrix_place_c( pArr, iPRow, iPCol, i++ );
-      if( iR == iPRow - 4 && iC == 2 && ( iPCol % 8 ) == 0  )
+      if( iR == iPRow + 4 && iC == 2 && ( iPCol % 8 ) == 0  )
          _datamatrix_place_d( pArr, iPRow, iPCol, i++ );
 
       do
@@ -473,7 +473,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
    for( j = 0; j < pSize->iRow; j += pSize->iRegionRow )
    {
       for( i = 0; i < pSize->iCol; i++ )
-         hb_bitbuffer_set( pZebra->pBits, ( j + pSize->iRegionCol - 1 ) * pSize->iCol + i, 1 );
+         hb_bitbuffer_set( pZebra->pBits, ( j + pSize->iRegionRow - 1 ) * pSize->iCol + i, 1 );
       for( i = 0; i < pSize->iCol; i += 2 )
          hb_bitbuffer_set( pZebra->pBits, j * pSize->iCol + i, 1 );
    }
