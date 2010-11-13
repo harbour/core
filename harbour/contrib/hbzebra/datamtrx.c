@@ -140,13 +140,18 @@ static int _datamatrix_encode( const char * szCode, int iLen, char * pCW )
          pCW[ iPos++ ] = ( szCode[ i ] - '0' ) * 10 + szCode[ i + 1 ] - '0' + 130;
          i++;
       }
-      else
+      else if( ( unsigned char ) szCode[ i ] <= 127 )
+      {
          pCW[ iPos++ ] = szCode[ i ] + 1;
+      }
+      else
+      {
+         pCW[ iPos++ ] = ( char ) 235; /* Shift to extended ASCII for 1 character */
+         pCW[ iPos++ ] = szCode[ i ] - 127;
+      }
    }
    return iPos;
 }
-
-
 
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pEC, int iECLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
@@ -411,17 +416,14 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
       return pZebra;
    }
 
-   for( i = 0; i < iLen; i++ )
-   {
-      if( ( unsigned char ) szCode[ i ] >= 128 )
-      {
-         pZebra->iError = HB_ZEBRA_ERROR_INVALIDCODE;
-         return pZebra;
-      }
-   }
-
-   pCW = ( char * ) hb_xgrab( sizeof( char ) * iLen );
+   pCW = ( char * ) hb_xgrab( sizeof( char ) * iLen * 2 );
    iDataCount = _datamatrix_encode( szCode, iLen, pCW );
+
+   if( iDataCount > 3116 )
+   {
+      pZebra->iError = HB_ZEBRA_ERROR_TOOLARGE;
+      return pZebra;
+   }
 
    pSize = NULL;
    for( i = 0; i < SIZE_COUNT; i++ )
