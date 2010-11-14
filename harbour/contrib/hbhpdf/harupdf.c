@@ -2679,4 +2679,30 @@ HB_FUNC( HPDF_LOADICCPROFILEFROMFILE )
 #endif
 }
 
+/*
+HPDF_STATUS
+HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype)
+*/
+HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
+{
+#if HB_HPDF_VERS( 2, 2, 0 )
+   hb_retnl( HPDF_PDFA_SetPDFAConformance( HPDF_Doc_par( 1 ), ( HPDF_PDFAType ) hb_parni( 2 ) ) );
+#else
+   hb_retnl( -1 );
+#endif
+}
+
+/*
+HPDF_STATUS
+HPDF_PDFA_GenerateID(HPDF_Doc pdf)
+*/
+HB_FUNC( HPDF_PDFA_GENERATEID )
+{
+#if HB_HPDF_VERS( 2, 2, 0 )
+   hb_retnl( HPDF_PDFA_GenerateID( HPDF_Doc_par( 1 ) ) );
+#else
+   hb_retnl( -1 );
+#endif
+}
+
 /*----------------------------------------------------------------------*/
