@@ -5855,6 +5855,17 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
          {
             pArea->lpCurTag = NULL;
          }
+         else if( pArea->lpCurTag )
+         {
+            if( hb_nsxTagLockRead( pArea->lpCurTag ) )
+            {
+               hb_nsxTagRefreshScope( pArea->lpCurTag );
+               hb_nsxTagGoTop( pArea->lpCurTag );
+               if( !pArea->lpCurTag->TagEOF )
+                  ulStartRec = pArea->lpCurTag->CurKeyInfo->rec;
+               hb_nsxTagUnLockRead( pArea->lpCurTag );
+            }
+         }
       }
 
       fDirectRead = !hb_setGetStrictRead() && /* !pArea->dbfarea.area.lpdbRelations && */

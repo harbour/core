@@ -9459,6 +9459,18 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
          {
             pArea->uiTag = 0;
          }
+         else if( pArea->uiTag != 0 )
+         {
+            LPCDXTAG pCurrTag = hb_cdxGetActiveTag( pArea );
+            if( pCurrTag )
+            {
+               hb_cdxIndexLockRead( pCurrTag->pIndex );
+               hb_cdxTagRefreshScope( pCurrTag );
+               hb_cdxTagGoTop( pCurrTag );
+               ulStartRec = pCurrTag->CurKey->rec;
+               hb_cdxIndexUnLockRead( pCurrTag->pIndex );
+            }
+         }
       }
       fDirectRead = !hb_setGetStrictRead() && /* !pArea->dbfarea.area.lpdbRelations && */
                     ( !pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||

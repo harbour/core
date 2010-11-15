@@ -54,6 +54,7 @@ xhbini.c
 xhbis.c
 xhbmsgs.c
 xhbmtc.c
+xhbmvinf.c
 xhbqself.c
 xhbproc.c
 xhbregx.c

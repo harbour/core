@@ -1011,9 +1011,7 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                 */
                if( pLex->iState == LOOKUP &&
                    ( HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
-                     !( HB_PP_LEX_NEEDLEFT( pToken->pNext ) ||
-                        HB_PP_TOKEN_TYPE( pToken->pNext->type ) ==
-                                                      HB_PP_TOKEN_LEFT_PB ) ) )
+                     !HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) )
                {
                   pLex->iState = BREAK;
                   return BREAK;

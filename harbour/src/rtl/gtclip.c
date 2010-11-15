@@ -181,7 +181,7 @@ HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem )
             switch( uFormat )
             {
                case CF_UNICODETEXT:
-                  nSize = hb_wstrnlen( ( const wchar_t * ) lpMem, nSize );
+                  nSize = hb_wstrnlen( ( const wchar_t * ) lpMem, nSize >> 1 );
                   if( nSize )
                      hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE,
                                           ( const wchar_t * ) lpMem, nSize );
