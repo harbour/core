@@ -54,5 +54,3 @@ PROCEDURE THROW( oError )
 
    Eval( ErrorBlock(), oError )
    Break( oError )
-
-   RETURN

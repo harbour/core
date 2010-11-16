@@ -4,8 +4,13 @@
 
 /*
  * Harbour Project source code:
- * The default error handler
+ * xHarbour default error handler and error functions:
+ *    xhb_ErrorSys(), __BreakBlock(), __ErrorBlock(),
+ *    __MinimalErrorHandler(), xhb_ErrorNew()
  *
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2004 Ron Pinkas <ron @ xHarbour.com>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -74,6 +79,18 @@ PROCEDURE xhb_ErrorSys()
    ErrorBlock( { | oError | xhb_DefError( oError ) } )
    RETURN
 
+STATIC FUNCTION err_ModuleName( oError, n )
+   RETURN IIF( __objHasMsg( oError, "MODULENAME" ), oError:ModuleName, ;
+               IIF( n != NIL, ProcFile( n ), NIL ) )
+
+STATIC FUNCTION err_ProcName( oError, n )
+   RETURN IIF( __objHasMsg( oError, "PROCNAME" ), oError:ProcName, ;
+               IIF( n != NIL, ProcName( n ), NIL ) )
+
+STATIC FUNCTION err_ProcLine( oError, n )
+   RETURN IIF( __objHasMsg( oError, "PROCLINE" ), oError:ProcLine, ;
+               IIF( n != NIL, ProcLine( n ), NIL ) )
+
 STATIC FUNCTION xhb_DefError( oError )
    LOCAL cMessage
    LOCAL cDOSError
@@ -86,8 +103,9 @@ STATIC FUNCTION xhb_DefError( oError )
    n := 0
    WHILE ! Empty( ProcName( ++n ) )
       IF ProcName( n ) == ProcName()
-         TraceLog( "Error system failure!", oError:ProcName, oError:ProcLine(), oError:ModuleName, oError:description )
-         Alert( "Error system failure!;Please correct error handler:;" + oError:ProcName + "(" + LTrim( Str( oError:ProcLine() ) ) +  ") in module: " + oError:ModuleName )
+         n := 3
+         TraceLog( "Error system failure!", err_ProcName( oError, n ), err_ProcLine( oError, n ), err_ModuleName( oError, n ), oError:description )
+         Alert( "Error system failure!;Please correct error handler:;" + err_ProcName( oError, n ) + "(" + LTrim( Str( err_ProcLine( oError, n ) ) ) +  ") in module: " + err_ModuleName( oError, n ) )
          ErrorLevel( 1 )
          QUIT
       ENDIF
@@ -177,9 +195,9 @@ STATIC FUNCTION xhb_DefError( oError )
       ENDIF
    ELSE
       IF Empty( oError:osCode )
-         Alert( cMessage + ";" + oError:ProcName + "(" + LTrim( Str( oError:ProcLine() ) ) +  ") in module: " + oError:ModuleName )
+         Alert( cMessage + ";" + err_ProcName( oError, 3 ) + "(" + LTrim( Str( err_ProcLine( oError, 3 ) ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
       ELSE
-         Alert( cMessage + ";" + cDOSError + ";" + oError:ProcName + "(" + LTrim( Str( oError:ProcLine() ) ) +  ") in module: " + oError:ModuleName )
+         Alert( cMessage + ";" + cDOSError + ";" + err_ProcName( oError, 3 ) + "(" + LTrim( Str( err_ProcLine( oError, 3 ) ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
       ENDIF
    ENDIF
 
@@ -654,7 +672,14 @@ FUNCTION __ErrorBlock( )
 
 PROCEDURE __MinimalErrorHandler( oError )
 
-   LOCAL cError := "Error!" + hb_eol()
+   LOCAL cError
+   LOCAL xData
+
+   cError := "Error"
+   IF ISNUMBER( oError:SubCode )
+      cError += ": " + hb_ntos( oError:SubCode )
+   ENDIF
+   cError += "!" + hb_eol()
 
    IF ISCHARACTER( oError:Operation )
       cError += "Operation: " + oError:Operation + hb_eol()
@@ -662,14 +687,14 @@ PROCEDURE __MinimalErrorHandler( oError )
    IF ISCHARACTER( oError:Description )
       cError += "Description: " + oError:Description + hb_eol()
    ENDIF
-   IF ISCHARACTER( oError:ModuleName )
-      cError += "Source: " + oError:ModuleName + hb_eol()
+   IF ISCHARACTER( xData := err_ModuleName( oError ) )
+      cError += "Source: " + xData + hb_eol()
    ENDIF
-   IF ISCHARACTER( oError:ProcName )
-      cError += "Procedure: " + oError:ProcName + hb_eol()
+   IF ISCHARACTER( xData := err_ProcName( oError ) )
+      cError += "Procedure: " + xData + hb_eol()
    ENDIF
-   IF ISNUMBER( oError:ProcLine )
-      cError += "Line: " + hb_ntos( oError:ProcLine ) + hb_eol()
+   IF ISNUMBER( xData := err_ProcLine( oError ) )
+      cError += "Line: " + hb_ntos( xData ) + hb_eol()
    ENDIF
 
    OutStd( cError )
@@ -677,3 +702,64 @@ PROCEDURE __MinimalErrorHandler( oError )
    QUIT
 
    RETURN
+
+FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
+                       cOperation, cDescription, aArgs, ;
+                       cModuleName, cProcName, nProcLine )
+
+   LOCAL oError := ErrorNew()
+   LOCAL aStack, n
+
+   IF ISCHARACTER( cSubSystem )
+      oError:SubSystem := cSubSystem
+   ENDIF
+   IF ISNUMBER( nGenCode )
+      oError:GenCode := nGenCode
+   ENDIF
+   IF ISNUMBER( nSubCode )
+      oError:SubCode := nSubCode
+   ENDIF
+   IF ISCHARACTER( cOperation )
+      oError:Operation := cOperation
+   ENDIF
+   IF ISCHARACTER( cDescription )
+      oError:Description := cDescription
+   ENDIF
+   IF ISARRAY( aArgs )
+      oError:Args := aArgs
+   ENDIF
+
+   IF __objHasMsg( oError, "MODULENAME" )
+      IF ISCHARACTER( cModuleName )
+         oError:ModuleName := cModuleName
+      ELSE
+         oError:ModuleName := ProcFile( 1 )
+      ENDIF
+   ENDIF
+
+   IF __objHasMsg( oError, "PROCNAME" )
+      IF ISCHARACTER( cProcName )
+         oError:ProcName := cProcName
+      ELSE
+         oError:ProcName := ProcName( 1 )
+      ENDIF
+   ENDIF
+
+   IF __objHasMsg( oError, "PROCLINE" )
+      IF ISNUMBER( nProcLine )
+         oError:ProcLine := nProcLine
+      ELSE
+         oError:ProcLine := ProcLine( 1 )
+      ENDIF
+   ENDIF
+
+   IF __objHasMsg( oError, "AASTACK" )
+      aStack := {}
+      n := 0
+      WHILE ! Empty( ProcName( ++n ) )
+         AAdd( aStack, { ProcFile( n ), ProcName( n ), ProcLine( n ) } )
+      ENDDO
+      oError:aAStack := aStack
+   ENDIF
+
+   RETURN oError

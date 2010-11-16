@@ -67,7 +67,7 @@
 FUNCTION CStrToVal( cExp, cType )
 
    IF ! ISCHAR( cExp )
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      Throw( xhb_ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDIF
 
    SWITCH cType
@@ -95,17 +95,17 @@ FUNCTION CStrToVal( cExp, cType )
 
       /*
       CASE 'A'
-         Throw( ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+         Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
       CASE 'B'
-         Throw( ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+         Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
       CASE 'O'
-         Throw( ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+         Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
       */
 
       OTHERWISE
-         Throw( ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+         Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
 
 RETURN NIL
@@ -243,7 +243,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          IF xVal == NIL
             cRet := "NIL"
          ELSE
-            Throw( ErrorNew( "VALTOPRG", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+            Throw( xhb_ErrorNew( "VALTOPRG", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
          ENDIF
    ENDSWITCH
 
@@ -315,7 +315,7 @@ FUNCTION ValToDate( xVal )
          RETURN 0d19000101 + xVal
 
       OTHERWISE
-         Throw( ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
 RETURN hb_SToD()
@@ -361,7 +361,7 @@ FUNCTION ValToLogical( xVal )
          RETURN .F.
 
       OTHERWISE
-         Throw( ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
 RETURN .F.
@@ -399,7 +399,7 @@ FUNCTION ValToNumber( xVal )
          RETURN 0
 
       OTHERWISE
-         Throw( ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
 RETURN 0
@@ -448,7 +448,7 @@ FUNCTION ValToObject( xVal )
          EXIT
 
       OTHERWISE
-         Throw( ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
 RETURN 0
@@ -488,7 +488,7 @@ FUNCTION ValToType( xVal, cType )
          RETURN NIL
 
       OTHERWISE
-         Throw( ErrorNew( "VALTOTYPE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTOTYPE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
 RETURN NIL
