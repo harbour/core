@@ -61,12 +61,8 @@
 #include "postgres.h"
 #include "catalog/pg_type.h"
 
-#ifndef HB_PGVERSION
-#  ifdef PG_DIAG_INTERNAL_POSITION
-#     define HB_PGVERSION   0x0800
-#  else
-#     define HB_PGVERSION   0x0700
-#  endif
+#ifndef PG_VERSION_NUM
+#define PG_VERSION_NUM 0
 #endif
 
 static HB_GARBAGE_FUNC( PGconn_release )
@@ -153,7 +149,7 @@ static PGresult * hb_PGresult_par( int iParam )
    return ph ? ( PGresult * ) * ph : NULL;
 }
 
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
 
 static HB_GARBAGE_FUNC( PGcancel_release )
 {
@@ -1127,7 +1123,7 @@ HB_FUNC( LO_UNLINK )
 
 HB_FUNC( PQSERVERVERSION )
 {
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn )
@@ -1141,7 +1137,7 @@ HB_FUNC( PQSERVERVERSION )
 
 HB_FUNC( PQGETCANCEL )
 {
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn )
@@ -1155,7 +1151,7 @@ HB_FUNC( PQGETCANCEL )
 
 HB_FUNC( PQCANCEL )
 {
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
    PGcancel * cancel = hb_PGcancel_par( 1 );
 
    if( cancel )
@@ -1181,7 +1177,7 @@ HB_FUNC( PQCANCEL )
 /* NOTE: Deprecated */
 HB_FUNC( PQFREECANCEL )
 {
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
    void ** ph = ( void ** ) hb_parptrGC( &s_gcPGcancelFuncs, 1 );
 
    /* Check if pointer is not NULL to avoid multiple freeing */
@@ -1200,7 +1196,7 @@ HB_FUNC( PQFREECANCEL )
 
 HB_FUNC( PQESCAPEBYTEACONN )
 {
-#if HB_PGVERSION >= 0x0800
+#if PG_VERSION_NUM >= 80000
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn && HB_ISCHAR( 2 ) )
