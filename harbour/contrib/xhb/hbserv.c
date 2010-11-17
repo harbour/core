@@ -98,12 +98,6 @@
 * Global definition, valid for all systems
 ***************************************************/
 
-HB_EXTERN_BEGIN
-HB_BOOL hb_isService( void );
-void hb_serviceExit( void );
-HB_EXTERN_END
-
-
 static void s_serviceSetHBSig( void );
 static void s_serviceSetDflSig( void );
 static void s_signalHandlersInit( void );

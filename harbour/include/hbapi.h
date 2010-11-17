@@ -960,10 +960,9 @@ extern HB_EXPORT char *    hb_strncpyTrim( char * pDest, const char * pSource, H
 extern HB_EXPORT char *    hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy an existing string buffer to another buffer, as lower case */
 extern HB_EXPORT char *    hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy an existing string buffer to another buffer, as upper case */
 extern HB_EXPORT char *    hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen );
-extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen ); /* return the numeric value of a character string representation of a number */
 extern HB_EXPORT const char * hb_strLTrim( const char * szText, HB_SIZE * nLen ); /* return a pointer to the first non-white space character */
 extern HB_EXPORT HB_SIZE   hb_strRTrimLen( const char * szText, HB_SIZE nLen, HB_BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
-extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen );
+extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen ); /* return the numeric value of a character string representation of a number */
 extern HB_EXPORT HB_MAXINT hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * nLen ); /* remove C ESC sequences and converts them to Clipper chars */
 extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT nNumber );

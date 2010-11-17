@@ -474,6 +474,8 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
 }
 #endif
 
+extern int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL );
+
 int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
    PHB_COMP_LEX pLex = HB_COMP_PARAM->pLex;

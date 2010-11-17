@@ -62,6 +62,7 @@ HB_EXTERN_BEGIN
 /* This hack is needed to force preprocessing if id is also a macro */
 #define HB_CODEPAGE_REQUEST( id )      HB_CODEPAGE_REQUEST_( id )
 #define HB_CODEPAGE_REQUEST_( id )     HB_FUNC_EXTERN( HB_CODEPAGE_##id ); \
+                                       extern void hb_codepage_ForceLink_##id( void ); \
                                        void hb_codepage_ForceLink_##id( void ) \
                                        { \
                                           HB_FUNC_EXEC( HB_CODEPAGE_##id ); \

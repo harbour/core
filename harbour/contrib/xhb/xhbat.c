@@ -57,7 +57,7 @@
 
 /* locates a substring in a string */
 
-HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
+static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
    char cLastChar = ' ';
 

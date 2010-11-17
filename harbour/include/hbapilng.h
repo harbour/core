@@ -64,6 +64,7 @@ HB_EXTERN_BEGIN
 /* This hack is needed to force preprocessing if id is also a macro */
 #define HB_LANG_REQUEST( id )          HB_LANG_REQUEST_( id )
 #define HB_LANG_REQUEST_( id )         HB_FUNC_EXTERN( HB_LANG_##id ); \
+                                       extern void hb_lang_ForceLink_##id( void ); \
                                        void hb_lang_ForceLink_##id( void ) \
                                        { \
                                           HB_FUNC_EXEC( HB_LANG_##id ); \

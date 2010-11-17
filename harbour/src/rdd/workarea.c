@@ -2291,6 +2291,7 @@ HB_FUNC( __RDDPREALLOCATE )
 }
 
 HB_FUNC_EXTERN( RDDSYS );
+extern void _hb_rddWorkAreaForceLink( void );
 void _hb_rddWorkAreaForceLink( void )
 {
    HB_FUNC_EXEC( RDDSYS );

@@ -245,7 +245,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
    return szFormattedDate;
 }
 
-int hb_dateUnformatRaw( const char * szDate, const char * szDateFormat, long * plDate )
+static int hb_dateUnformatRaw( const char * szDate, const char * szDateFormat, long * plDate )
 {
    int d_value = 0, m_value = 0, y_value = 0;
    int iSize = 0;

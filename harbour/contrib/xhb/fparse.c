@@ -80,7 +80,7 @@ FPARSE( cFile, cDelimiter ) -> array
 /* adjustable, but this should be sufficient in normal situation */
 #define MAX_READ 4096
 /*----------------------------------------------------------------------------*/
-void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * iWord )
+static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * iWord )
 {
    if( szText )
    {

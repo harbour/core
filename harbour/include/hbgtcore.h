@@ -88,6 +88,7 @@ HB_EXTERN_BEGIN
 #define HB_GT_REQUEST( id )      HB_GT_REQUEST_( _HB_GT_PREF_( id ) )
 #define HB_GT_REQUEST_( id )     HB_GT_REQUEST__( id )
 #define HB_GT_REQUEST__( id )    HB_FUNC_EXTERN( id ); \
+                                 extern void hb_gt_ForceLink_##id( void ); \
                                  void hb_gt_ForceLink_##id( void ) \
                                  { \
                                     HB_FUNC_EXEC( id ); \

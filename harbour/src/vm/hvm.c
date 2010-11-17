@@ -6456,7 +6456,7 @@ static void hb_vmTSVRefMark( void * value )
 }
 
 /* destructor for terminated threads */
-void hb_vmTSVarClean( void * pThreadItem )
+static void hb_vmTSVarClean( void * pThreadItem )
 {
    if( HB_IS_COMPLEX( ( PHB_ITEM ) pThreadItem ) )
       hb_itemClear( ( PHB_ITEM ) pThreadItem );
@@ -11906,6 +11906,7 @@ HB_FUNC( ERRORLEVEL )
          Don't make this function static, because it's not called from
          this file. [vszakats] */
 
+extern void hb_vmForceLink( void );
 void hb_vmForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));

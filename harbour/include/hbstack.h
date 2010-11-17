@@ -319,6 +319,7 @@ extern PHB_STACKRDD hb_stackRDD( void );
 extern void **      hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
+extern void        hb_stackDec( void );
 extern void        hb_stackDecrease( HB_SIZE nItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
@@ -462,7 +463,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
                                        hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
                                     } while ( 0 )
 
-#endif
+#endif /* HB_STACK_SAFEMACROS */
 
 #define hb_stackPush( )             do { \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \

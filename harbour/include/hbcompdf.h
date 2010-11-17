@@ -600,7 +600,7 @@ typedef struct __EXTERN
 typedef struct _HB_MODULE
 {
    const char *         szName;
-   HB_BOOL              force;
+   HB_BOOL              force;  /* force module compilation */
    struct _HB_MODULE *  pNext;
 } HB_MODULE, * PHB_MODULE;
 

@@ -55,6 +55,9 @@
 
 HB_EXTERN_BEGIN
 
+extern int ct_getfcreate( void );
+extern void ct_setfcreate( int iFileAttr );
+
 extern HB_BOOL ct_getsafety( void );
 extern void ct_setsafety( HB_BOOL bSafety );
 

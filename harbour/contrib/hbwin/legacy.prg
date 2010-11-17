@@ -73,7 +73,6 @@ STATIC PROCEDURE Throw( oError )
       __ErrInHandler()
    ENDIF
    Break( oError )
-   RETURN
 
 STATIC FUNCTION ThrowOpError( nSubCode, cOperator, ... )
    LOCAL oError

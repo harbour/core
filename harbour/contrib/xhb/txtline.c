@@ -56,7 +56,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SIZE nTabLen, HB_BOOL bWrap, char ** pTerm, HB_SIZE * pnTermSizes, HB_SIZE nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF, HB_ISIZ * pnEnd, HB_SIZE * pnEndOffset )
+static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SIZE nTabLen, HB_BOOL bWrap, char ** pTerm, HB_SIZE * pnTermSizes, HB_SIZE nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF, HB_ISIZ * pnEnd, HB_SIZE * pnEndOffset )
 {
    HB_SIZE nPosTerm, nPosition;
    HB_SIZE nPos, nCurrCol, nLastBlk;
@@ -64,17 +64,17 @@ void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SI
 
    HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %" HB_PFS "u, %" HB_PFS "u, %" HB_PFS "u, %d, %p, %p, %" HB_PFS "u, %p, %p, %p, %p)", szText, nTextLen, nLineLen, nTabLen, bWrap, pTerm, pnTermSizes, nTerms, pbFound, pbEOF, pnEnd, pnEndOffset ));
 
-   *pbFound   = HB_FALSE;
-   *pbEOF     = HB_FALSE;
-   *pnEnd     = 0;
-   nCurrCol  = 0;
-   nLastBlk  = 0;
+   *pbFound     = HB_FALSE;
+   *pbEOF       = HB_FALSE;
+   *pnEnd       = 0;
+   *pnEndOffset = 0;
+   nCurrCol     = 0;
+   nLastBlk     = 0;
 
    if( nTextLen == 0 )
    {
-      *pnEnd        = -1;
-      *pnEndOffset = 0;
-      *pbEOF        = HB_TRUE;
+      *pnEnd = -1;
+      *pbEOF = HB_TRUE;
       return;
    }
 
@@ -143,7 +143,7 @@ void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SI
 
       if( nCurrCol > nLineLen )
       {
-         if( bWrap == HB_FALSE || nLastBlk == 0 )
+         if( !bWrap || nLastBlk == 0 )
          {
             *pnEnd = nPos-1;
             *pnEndOffset = nPos;
@@ -160,7 +160,7 @@ void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SI
       }
    }
 
-   if( *pbFound == HB_FALSE && bBreak == HB_FALSE )
+   if( !*pbFound && !bBreak )
    {
       *pnEnd       = nTextLen - 1;
       *pnEndOffset = nTextLen - 1;
@@ -168,7 +168,7 @@ void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SI
    }
 }
 
-HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ nEnd, HB_SIZE nTabLen )
+static HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ nEnd, HB_SIZE nTabLen )
 {
    HB_ISIZ nPos, nSpAdded = 0;
 

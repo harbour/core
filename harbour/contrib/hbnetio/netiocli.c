@@ -1722,7 +1722,7 @@ static HB_FOFFSET s_fileSize( PHB_FILE pFile )
    return llOffset;
 }
 
-void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
+static void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
 {
    HB_SYMBOL_UNUSED( pFile );
    HB_SYMBOL_UNUSED( fDirty );

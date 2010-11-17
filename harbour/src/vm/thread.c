@@ -119,11 +119,11 @@
 
 
 static volatile HB_BOOL s_fThreadInit = HB_FALSE;
-static PHB_ITEM s_pOnceMutex = NULL;
 
 #if !defined( HB_MT_VM )
    /* nothing */
 #else
+   static PHB_ITEM s_pOnceMutex = NULL;
 
    static int s_waiting_for_threads = 0;
 
@@ -196,6 +196,7 @@ static PHB_ITEM s_pOnceMutex = NULL;
 
 #endif /* HB_MT_VM */
 
+#if defined( HB_MT_VM )
 void hb_threadInit( void )
 {
    if( !s_fThreadInit )
@@ -231,6 +232,7 @@ void hb_threadExit( void )
    hb_taskExit();
 #endif
 }
+#endif /* HB_MT_VM */
 
 void hb_threadReleaseCPU( void )
 {

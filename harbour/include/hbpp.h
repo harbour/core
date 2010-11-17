@@ -683,7 +683,6 @@ extern void    hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName, con
 extern void    hb_pp_delDefine( PHB_PP_STATE pState, const char * szDefName );
 extern HB_BOOL hb_pp_lasterror( PHB_PP_STATE pState );
 extern int     hb_pp_errorCount( PHB_PP_STATE pState );
-extern HB_BOOL hb_pp_eof( PHB_PP_STATE pState );
 
 extern void    hb_pp_tokenUpper( PHB_PP_TOKEN pToken );
 extern void    hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken );
