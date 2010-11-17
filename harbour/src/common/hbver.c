@@ -140,6 +140,7 @@ const char * hb_verCPU( void )
 #endif
 }
 
+#if 0
 const char * hb_verHostCPU( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
@@ -148,6 +149,7 @@ const char * hb_verHostCPU( void )
 
    return "";
 }
+#endif
 
 /* NOTE: OS() function, as a primary goal will detect the version number
          of the target platform. As an extra it may also detect the host OS.

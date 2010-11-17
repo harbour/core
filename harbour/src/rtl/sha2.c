@@ -225,8 +225,8 @@ uint64 sha512_k[80] =
 
 /* SHA-256 functions */
 
-void sha256_transf(sha256_ctx *ctx, const unsigned char *message,
-                   unsigned int block_nb)
+static void sha256_transf(sha256_ctx *ctx, const unsigned char *message,
+                          unsigned int block_nb)
 {
     uint32 w[64];
     uint32 wv[8];
@@ -442,8 +442,8 @@ void hb_sha256_final(sha256_ctx *ctx, unsigned char *digest)
 
 /* SHA-512 functions */
 
-void sha512_transf(sha512_ctx *ctx, const unsigned char *message,
-                   unsigned int block_nb)
+static void sha512_transf(sha512_ctx *ctx, const unsigned char *message,
+                          unsigned int block_nb)
 {
     uint64 w[80];
     uint64 wv[8];
