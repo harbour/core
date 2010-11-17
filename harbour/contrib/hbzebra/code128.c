@@ -1,4 +1,4 @@
-/*          
+/*
  * $Id$
  */
 
@@ -55,7 +55,7 @@
 #include "hbapierr.h"
 
 
-static unsigned short s_code[] = {
+static const unsigned short s_code[] = {
    00633,   /*            00  */
    00663,   /*  !    !    01  */
    01463,   /*  "    "    02  */
@@ -159,8 +159,8 @@ static unsigned short s_code[] = {
    01675,   /*  CodB FNC4 CodB 100 */
    01727,   /*  FNC4 CodA CodA 101 */
    01657,   /*  FNC1 FNC1 FNC1 102 */
-   00413,   /*  Start Code A   103 */    
-   00113,   /*  Start Code B   104 */    
+   00413,   /*  Start Code A   103 */
+   00113,   /*  Start Code B   104 */
    00713};  /*  Start Code C   105 */
 
 #define CODESET_A       0
@@ -179,9 +179,8 @@ static unsigned short s_code[] = {
 
 static int _code128_charno( char ch, int iCodeSet )
 {
-
    if( iCodeSet == CODESET_A )
-   { 
+   {
       if( ch >= ' ' && ch <= '_' )
          return ch - ' ';
       else if( ( unsigned char ) ch <= 31 )
@@ -373,7 +372,7 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
 
    pZebra->pBits = hb_bitbuffer_create();
    csum = pCode[ 0 ];
-   for( i = 0; i < iCodeLen; i++ )  
+   for( i = 0; i < iCodeLen; i++ )
    {
       hb_bitbuffer_cat_int( pZebra->pBits, s_code[ pCode[ i ] ], 11 );
       csum += i * pCode[ i ];

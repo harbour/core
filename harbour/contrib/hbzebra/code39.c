@@ -57,7 +57,7 @@
 
 /* Usually one character bitmap does not fit into 1 byte, but if we use enough
    good encoding, we can manage to fit :) [Mindaugas] */
-static HB_UCHAR s_code[] =
+static const HB_UCHAR s_code[] =
 {
    0x58,   /* 0 */
    0x09,   /* 1 */
@@ -105,7 +105,7 @@ static HB_UCHAR s_code[] =
 
 static int _code39_charno( char ch )
 {
-   static char * s_symbols = "-. $/+%";
+   static const char * s_symbols = "-. $/+%";
 
    if( '0' <= ch && ch <= '9' )
       return ch - '0';
@@ -113,7 +113,7 @@ static int _code39_charno( char ch )
       return ch - 'A' + 10;
    else
    {
-      char * ptr = strchr( s_symbols, ch );
+      const char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
          return ptr - s_symbols + 36;
    }

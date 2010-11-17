@@ -56,16 +56,16 @@
 
 
 /* we do not store L-code, but just to bit inversion R-code to obtain it */
-static char s_first[] = { 0x00, 0x34, 0x2C, 0x1C, 0x32, 0x26, 0x0E, 0x2A, 0x1A, 0x16 };
-static char s_rcode[] = { 0x27, 0x33, 0x1B, 0x21, 0x1D, 0x39, 0x05, 0x11, 0x09, 0x17 };
-static char s_gcode[] = { 0x72, 0x66, 0x6C, 0x42, 0x5C, 0x4E, 0x50, 0x44, 0x48, 0x74 };  /* reversion of R-code */
+static const char s_first[] = { 0x00, 0x34, 0x2C, 0x1C, 0x32, 0x26, 0x0E, 0x2A, 0x1A, 0x16 };
+static const char s_rcode[] = { 0x27, 0x33, 0x1B, 0x21, 0x1D, 0x39, 0x05, 0x11, 0x09, 0x17 };
+static const char s_gcode[] = { 0x72, 0x66, 0x6C, 0x42, 0x5C, 0x4E, 0x50, 0x44, 0x48, 0x74 };  /* reversion of R-code */
 
 
 static char _ean13_checksum( const char * szCode )
 {
    int   i, sum = 0;
-   
-   for ( i = 0; i < 12; i++ )  
+
+   for ( i = 0; i < 12; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 3 : 1 );
    return '0' + ( 10000 - sum ) % 10;
 }
@@ -73,8 +73,8 @@ static char _ean13_checksum( const char * szCode )
 static char _ean8_checksum( const char * szCode )
 {
    int   i, sum = 0;
-   
-   for ( i = 0; i < 7; i++ )  
+
+   for ( i = 0; i < 7; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
    return '0' + ( 10000 - sum ) % 10;
 }
@@ -82,8 +82,8 @@ static char _ean8_checksum( const char * szCode )
 static char _upca_checksum( const char * szCode )
 {
    int   i, sum = 0;
-   
-   for ( i = 0; i < 11; i++ )  
+
+   for ( i = 0; i < 11; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
    return '0' + ( 10000 - sum ) % 10;
 }

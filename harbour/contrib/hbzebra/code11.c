@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static char s_code[] = {
+static const char s_code[] = {
    0x10,  /* 0 */
    0x11,  /* 1 */
    0x12,  /* 2 */
@@ -140,7 +140,7 @@ PHB_ZEBRA hb_zebra_create_code11( const char * szCode, HB_SIZE nLen, int iFlags 
    _code11_add( pZebra->pBits, s_code[ 11 ], iFlags, HB_FALSE );  /* start */
 
    csum = ksum = 0;
-   for( i = 0; i < iLen; i++ )  
+   for( i = 0; i < iLen; i++ )
    {
       int no = _code11_charno( szCode[ i ] );
       _code11_add( pZebra->pBits, s_code[ no ], iFlags, HB_FALSE );

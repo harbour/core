@@ -92,7 +92,7 @@ typedef struct
 } DATAMATRIX_SIZE, * PDATAMATRIX_SIZE;
 
 
-static DATAMATRIX_SIZE s_size[ SIZE_COUNT ] = {
+static const DATAMATRIX_SIZE s_size[ SIZE_COUNT ] = {
    { 10,  10,  10,  10,    3,    3,    5 },
    { 12,  12,  12,  12,    5,    5,    7 },
    {  8,  18,   8,  18,    5,    5,    7 },
@@ -178,7 +178,7 @@ static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned 
    }
 }
 
-static void _datamatrix_reed_solomon( char * pData, PDATAMATRIX_SIZE pSize )
+static void _datamatrix_reed_solomon( char * pData, const DATAMATRIX_SIZE * pSize )
 {
    int * pPoly, * pExp, * pLog;
    int i, j, iBits, iMod, iPoly, iECLen, iIndex, iBlocks;
@@ -325,7 +325,7 @@ static void _datamatrix_place_d( int * pArr, int iPRow, int iPCol, int iIndex )
    _datamatrix_place_bit( pArr, iPRow, iPCol,         1, iPCol - 1, ( iIndex << 3 ) + 0 );
 }
 
-static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, PDATAMATRIX_SIZE pSize )
+static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, const DATAMATRIX_SIZE * pSize )
 {
    int * pArr;
    int i, iR, iC, iPRow, iPCol;
@@ -403,7 +403,7 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, PDATAMATR
 PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFlags )
 {
    PHB_ZEBRA  pZebra;
-   PDATAMATRIX_SIZE pSize;
+   const DATAMATRIX_SIZE * pSize;
    char *     pCW;
    int        i, j, iDataCount, iErrorSize, iLen = ( int ) nLen;
 

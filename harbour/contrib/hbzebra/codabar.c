@@ -55,7 +55,7 @@
 #include "hbapierr.h"
 
 
-static char s_code[] = {
+static const char s_code[] = {
    0x60,   /* 0 */
    0x30,   /* 1 */
    0x48,   /* 2 */
@@ -79,13 +79,13 @@ static char s_code[] = {
 
 static int _codabar_charno( char ch )
 {
-   static char * s_symbols = "-$:/.+ABCD";
+   static const char * s_symbols = "-$:/.+ABCD";
 
    if( '0' <= ch && ch <= '9' )
       return ch - '0';
    else
    {
-      char * ptr = strchr( s_symbols, ch );
+      const char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
          return ptr - s_symbols + 10;
    }

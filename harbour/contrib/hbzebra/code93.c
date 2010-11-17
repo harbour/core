@@ -55,7 +55,7 @@
 #include "hbapierr.h"
 
 
-static char s_code[] = {
+static const char s_code[] = {
    0x28,  /* 0 */
    0x12,  /* 1 */
    0x22,  /* 2 */
@@ -107,7 +107,7 @@ static char s_code[] = {
 
 static int _code93_charno( char ch )
 {
-   static char * s_symbols = "-. $/+%";
+   static const char * s_symbols = "-. $/+%";
 
    if( '0' <= ch && ch <= '9' )
       return ch - '0';
@@ -115,10 +115,10 @@ static int _code93_charno( char ch )
       return ch - 'A' + 10;
    else
    {
-      char * ptr = strchr( s_symbols, ch );
+      const char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
          return ptr - s_symbols + 36;
-   } 
+   }
    return -1;
 }
 
@@ -166,7 +166,7 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
    csum = 0;
    ksum = 0;
    k++;
-   for( i = 0; i < iLen; i++ )  
+   for( i = 0; i < iLen; i++ )
    {
       int no = _code93_charno( szCode[ i ] );
       if( no >= 0 )

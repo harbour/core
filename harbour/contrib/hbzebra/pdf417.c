@@ -91,7 +91,7 @@
 #define MAX_CODEWORD_COUNT  928
 
 
-static short s_code[ 3 ][ 929 ] = {
+static const short s_code[ 3 ][ 929 ] = {
  {
    0x03AB, 0x0F57, 0x3EAF, 0x072B, 0x1E57, 0x7CAF, 0x0315, 0x0E2B,
    0x0615, 0x020A, 0x0C15, 0x040A, 0x03B5, 0x0F6B, 0x3ED7, 0x0735,
@@ -447,29 +447,29 @@ static short s_code[ 3 ][ 929 ] = {
    0x69C0, 0x6DE0, 0x2BE1, 0x4BE1, 0x29E0, 0x2DF0, 0x49E0, 0x4DF0,
    0x57E3 }};
 
-static unsigned short s_rs0[] = {
+static const unsigned short s_rs0[] = {
    27, 917 };
 
-static unsigned short s_rs1[] = {
+static const unsigned short s_rs1[] = {
    522, 568, 723, 809 };
 
-static unsigned short s_rs2[] = {
+static const unsigned short s_rs2[] = {
    237, 308, 436, 284, 646, 653, 428, 379 };
 
-static unsigned short s_rs3[] = {
+static const unsigned short s_rs3[] = {
    274, 562, 232, 755, 599, 524, 801, 132, 295, 116, 442, 428, 295,  42, 176,  65 };
 
-static unsigned short s_rs4[] = {
+static const unsigned short s_rs4[] = {
    361, 575, 922, 525, 176, 586, 640, 321, 536, 742, 677, 742, 687, 284, 193, 517,
    273, 494, 263, 147, 593, 800, 571, 320, 803, 133, 231, 390, 685, 330,  63, 410 };
 
-static unsigned short s_rs5[] = {
+static const unsigned short s_rs5[] = {
    539, 422,   6,  93, 862, 771, 453, 106, 610, 287, 107, 505, 733, 877, 381, 612,
    723, 476, 462, 172, 430, 609, 858, 822, 543, 376, 511, 400, 672, 762, 283, 184,
    440,  35, 519,  31, 460, 594, 225, 535, 517, 352, 605, 158, 651, 201, 488, 502,
    648, 733, 717,  83, 404,  97, 280, 771, 840, 629,   4, 381, 843, 623, 264, 543 };
 
-static unsigned short s_rs6[] = {
+static const unsigned short s_rs6[] = {
    521, 310, 864, 547, 858, 580, 296, 379,  53, 779, 897, 444, 400, 925, 749, 415,
    822,  93, 217, 208, 928, 244, 583, 620, 246, 148, 447, 631, 292, 908, 490, 704,
    516, 258, 457, 907, 594, 723, 674, 292, 272,  96, 684, 432, 686, 606, 860, 569,
@@ -479,7 +479,7 @@ static unsigned short s_rs6[] = {
    157, 374, 242, 726, 600, 269, 375, 898, 845, 454, 354, 130, 814, 587, 804,  34,
    211, 330, 539, 297, 827, 865,  37, 517, 834, 315, 550,  86, 801,   4, 108, 539 };
 
-static unsigned short s_rs7[] = {
+static const unsigned short s_rs7[] = {
    524, 894,  75, 766, 882, 857,  74, 204,  82, 586, 708, 250, 905, 786, 138, 720,
    858, 194, 311, 913, 275, 190, 375, 850, 438, 733, 194, 280, 201, 280, 828, 757,
    710, 814, 919,  89,  68, 569,  11, 204, 796, 605, 540, 913, 801, 700, 799, 137,
@@ -497,7 +497,7 @@ static unsigned short s_rs7[] = {
    609, 829, 189,  20, 167,  29, 872, 449,  83, 402,  41, 656, 505, 579, 481, 173,
    404, 251, 688,  95, 497, 555, 642, 543, 307, 159, 924, 558, 648,  55, 497,  10 };
 
-static unsigned short s_rs8[] = {
+static const unsigned short s_rs8[] = {
    352,  77, 373, 504,  35, 599, 428, 207, 409, 574, 118, 498, 285, 380, 350, 492,
    197, 265, 920, 155, 914, 299, 229, 643, 294, 871, 306,  88,  87, 193, 352, 781,
    846,  75, 327, 520, 435, 543, 203, 666, 249, 346, 781, 621, 640, 268, 794, 534,
@@ -1180,7 +1180,7 @@ static int _pdf417_encode( const char * szCode, int iLen, int * pCW )
 static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 {
    int * pEC;
-   unsigned short * coef;
+   const unsigned short * coef;
    int i, j, iM, iECLen;
 
    iECLen = _pdf417_ec_size( iLevel );
