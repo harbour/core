@@ -192,14 +192,14 @@ PROCEDURE ServeClient( Socket )
             nServerPort++
             SvrExecuteAPP( 'trm_app.exe', hb_ntos( nServerPort++ ), hb_dirBase() )
             inkey( 5 )
-            cReply := 'CONNECT;' + '127.0.0.1' + ';' + hb_ntos( nServerPort++ ) + ';'
+            cReply := 'CONNECT;' + 'localhost' + ';' + hb_ntos( nServerPort++ ) + ';'
 
          case cReq == 'VOUCH'
             nServerPort++
 
             cCmdLine := a_[ 3 ] +'   '+ ltrim( str( nServerPort ) )
             SvrExecuteAPP( a_[ 2 ], cCmdLine, a_[ 4 ] )
-            cReply := 'CONNECT;' + '127.0.0.1' + ';' + hb_ntos( nServerPort ) + ';' + a_[ 2 ] + ';'
+            cReply := 'CONNECT;' + 'localhost' + ';' + hb_ntos( nServerPort ) + ';' + a_[ 2 ] + ';'
 
          case cReq == 'ARCONNECTED'
             // No further info required, close connection

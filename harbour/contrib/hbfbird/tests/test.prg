@@ -6,9 +6,15 @@
 #include "simpleio.ch"
 
 FUNCTION Main()
-   LOCAL cDir, cName
-   LOCAL cDBName
+
+   LOCAL cServer := "localhost:"
+   LOCAL cDatabase
+   LOCAL cUser := "SYSDBA"
+   LOCAL cPass := "masterkey"
+   LOCAL nPageSize := 1024
+   LOCAL cCharSet := "ASCII"
    LOCAL nDialect := 1
+   LOCAL cName
 
    LOCAL trans, qry
 
@@ -18,17 +24,18 @@ FUNCTION Main()
    LOCAL fetch_stat
    LOCAL tmp
 
-   hb_FNameSplit( hb_argv( 0 ), @cDir, @cName, NIL )
-   cDBName := hb_FNameMerge( cDir, cName, ".gdb" )
+   hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
+   cDatabase := hb_DirTemp() + cName + ".fdb"
 
-   IF hb_FileExists( cDBName )
-      FErase( cDBName )
+   IF hb_FileExists( cDatabase )
+      FErase( cDatabase )
    ENDIF
 
-   ? tmp := FBCreateDB( cDBName, "sysdba", "masterkey", 1024, "ASCII", nDialect ), FBError( tmp )
+   ? tmp := FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect ), FBError( tmp )
+
 
    /* Connect rdbms */
-   db := FBConnect( "127.0.0.1:" + cDBName, "sysdba", "masterkey" )
+   db := FBConnect( cServer + cDatabase, cUser, cPass )
    IF ISNUMBER( db )
       ? "Error:", db, FBError( db )
       QUIT

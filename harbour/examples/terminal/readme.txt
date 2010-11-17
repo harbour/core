@@ -25,7 +25,7 @@ Terminal Client
 ===============
    Source    => trm_client.prg
    Link      => GTWVG
-   Run       => trm_client.exe  <IP - 127.0.0.1 | vouch.dynalias.com>
+   Run       => trm_client.exe  <IP - localhost | vouch.dynalias.com>
                                 <Port where Terminal Server is Listening - 2011>
                                 <Harbour Application - c:\harbour\contrib\examples\terminal\trm_app.exe>
                                 [Parameters - Norammly Supplied to Appln - Separated by SPACE ]
@@ -37,7 +37,7 @@ Terminal Client
    Parameters supplied TO Harbour Client can be on command line or as an .ini file.
    .Ini file may contain these entries:
 
-      ServerIP      =  127.0.0.1 | vouch.dynalias.com
+      ServerIP      =  localhost | vouch.dynalias.com
       ServerPort    =  2011
       Application   =  c:\harbour\contrib\examples\terminal\trm_app.exe
       Parameters    =  any number of parameters separated by a space

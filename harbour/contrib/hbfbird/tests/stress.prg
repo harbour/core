@@ -4,25 +4,33 @@
 
 /* VERY IMPORTANT: Don't use this query as sample, they are used for stress tests !!! */
 
+#include "simpleio.ch"
+
 FUNCTION Main()
 
    LOCAL oServer, oQuery, oRow, i, x
 
-   LOCAL cServer := "127.0.0.1:" + hb_dirBase() + "stress.gdb"
-   LOCAL cUser := "sysdba"
+   LOCAL cServer := "localhost:"
+   LOCAL cDatabase
+   LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
+   LOCAL nPageSize := 1024
+   LOCAL cCharSet := "WIN1251"
    LOCAL nDialect := 1
-   LOCAL cQuery
+   LOCAL cQuery, cName
 
    CLEAR SCREEN
 
-   IF ! hb_FileExists( hb_dirBase() + "stress.gdb" )
-      ? FBCreateDB( hb_dirBase() + "stress.gdb", cuser, cpass, 1024, "WIN1251", nDialect )
+   hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
+   cDatabase := hb_DirTemp() + cName + ".fdb"
+
+   IF ! hb_FileExists( cDatabase )
+      ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
    ENDIF
 
    ? "Connecting..."
 
-   oServer := TFBServer():New( cServer, cUser, cPass, nDialect )
+   oServer := TFBServer():New( cServer + cDatabase, cUser, cPass, nDialect )
 
    IF oServer:NetErr()
       ? oServer:Error()
@@ -65,7 +73,7 @@ FUNCTION Main()
       oRow:Fieldput(1, i)
       oRow:Fieldput(2, i+1)
       oRow:Fieldput(3, "DEPARTMENT NAME " + strzero( i ) )
-      oRow:Fieldput(4, (i % 10) == 0) )
+      oRow:Fieldput(4, (i % 10) == 0)
       oRow:Fieldput(5, 3000 + i )
       oRow:fieldput(6, Date() )
 

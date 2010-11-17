@@ -58,30 +58,8 @@
 #include "hbapiitm.h"
 
 #include "libpq-fe.h"
-
-#define VARHDRSZ              4
-#define BOOLOID               16
-#define INT8OID               20
-#define INT2OID               21
-#define INT4OID               23
-#define TEXTOID               25
-#define OIDOID                26
-#define FLOAT4OID             700
-#define FLOAT8OID             701
-#define CASHOID               790
-#define BPCHAROID             1042
-#define VARCHAROID            1043
-#define DATEOID               1082
-#define TIMEOID               1083
-#define TIMESTAMPOID          1114
-#define TIMESTAMPTZOID        1184
-#define TIMETZOID             1266
-#define BITOID                1560
-#define VARBITOID             1562
-#define NUMERICOID            1700
-
-#define INV_WRITE             0x00020000
-#define INV_READ              0x00040000
+#include "postgres.h"
+#include "catalog/pg_type.h"
 
 #ifndef HB_PGVERSION
 #  ifdef PG_DIAG_INTERNAL_POSITION

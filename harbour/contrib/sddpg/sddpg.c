@@ -57,39 +57,8 @@
 #include "hbrddsql.h"
 
 #include "libpq-fe.h"
-
-/* TOFIX: these are defined in "server/catalog/pg_type.h",
-   but including this file generates compile errors.
--Ic:/pgsql/include;c:/pgsql/include/server
 #include "postgres.h"
 #include "catalog/pg_type.h"
-*/
-
-#define BOOLOID                 16
-#define BYTEAOID                17
-#define CHAROID                 18
-#define NAMEOID                 19
-#define INT8OID                 20
-#define INT2OID                 21
-#define INT4OID                 23
-#define TEXTOID                 25
-#define OIDOID                  26
-#define CIDROID                650
-#define FLOAT4OID              700
-#define FLOAT8OID              701
-#define CASHOID                790
-#define MACADDROID             829
-#define INETOID                869
-#define BPCHAROID             1042
-#define VARCHAROID            1043
-#define DATEOID               1082
-#define TIMEOID               1083
-#define TIMESTAMPOID          1114
-#define TIMESTAMPTZOID        1184
-#define TIMETZOID             1266
-#define BITOID                1560
-#define VARBITOID             1562
-#define NUMERICOID            1700
 
 typedef struct
 {

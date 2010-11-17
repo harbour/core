@@ -2,27 +2,32 @@
  * $Id$
  */
 
-#include "common.ch"
 #include "simpleio.ch"
 
-Function main()
-   Local oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
+FUNCTION Main()
+   LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
 
-   Local cServer := "127.0.0.1:" + hb_dirBase() + "simple.gdb"
-   Local cUser := "sysdba"
-   Local cPass := "masterkey"
-   Local nDialect := 1
-   Local cQuery
+   LOCAL cServer := "localhost:"
+   LOCAL cDatabase
+   LOCAL cUser := "SYSDBA"
+   LOCAL cPass := "masterkey"
+   LOCAL nPageSize := 1024
+   LOCAL cCharSet := "ASCII"
+   LOCAL nDialect := 1
+   LOCAL cQuery, cName
 
-   IF hb_FileExists( hb_dirBase() + "simple.gdb" )
-      FErase( hb_dirBase() + "simple.gdb" )
+   hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
+   cDatabase := hb_DirTemp() + cName + ".fdb"
+
+   IF hb_FileExists( cDatabase )
+      FErase( cDatabase )
    ENDIF
 
-   ? FBCreateDB( hb_dirBase() + "simple.gdb", cuser, cpass, 1024, "ASCII", nDialect )
+   ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
 
    ? "Connecting..."
 
-   oServer := TFBServer():New( cServer, cUser, cPass, nDialect )
+   oServer := TFBServer():New( cServer + cDatabase, cUser, cPass, nDialect )
 
    IF oServer:NetErr()
       ? oServer:Error()

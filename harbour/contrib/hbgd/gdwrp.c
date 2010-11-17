@@ -921,7 +921,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
       int i;
 
       /* Max Points of polygon */
-      gdPoint points[50]; /* TODO: make this dynamic */
+      gdPoint * points;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -929,6 +929,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
       /* Retrieve point array */
       pPoints     = hb_param( 2, HB_IT_ARRAY );
       pointsTotal = ( int ) hb_arrayLen( pPoints );
+      points = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
 
       for( i = 0; i < pointsTotal; i ++ )
       {
@@ -946,6 +947,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
       /* Draw a polygon */
       gdImagePolygon( im, ( gdPointPtr ) points, pointsTotal, color );
 
+      hb_xfree( points );
    }
    else
    {
@@ -974,7 +976,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
       int i;
 
       /* Max Points of polygon */
-      gdPoint points[50]; /* TODO: make this dynamic */
+      gdPoint * points;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -982,6 +984,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
       /* Retrieve point array */
       pPoints     = hb_param( 2, HB_IT_ARRAY );
       pointsTotal = ( int ) hb_arrayLen( pPoints );
+      points = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
 
       for( i = 0; i < pointsTotal; i ++ )
       {
@@ -999,6 +1002,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
       /* Draw a polygon */
       gdImageOpenPolygon( im, ( gdPointPtr ) points, pointsTotal, color );
 
+      hb_xfree( points );
    }
    else
    {
@@ -1542,7 +1546,7 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
       int i;
 
       /* Max numbery of Styles */
-      int styles[50]; /* TODO: make this dynamic */
+      int * styles;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -1550,14 +1554,17 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
       /* Retrieve style array */
       pStyles     = hb_param( 2, HB_IT_ARRAY );
       styleLength = ( int ) hb_arrayLen( pStyles );
+      styles = ( int * ) hb_xgrab( sizeof( int ) * styleLength );
 
       for( i = 0; i < styleLength; i ++ )
       {
-         styles[ i ] = hb_arrayGetNI( pStyles, i+1 );
+         styles[ i ] = hb_arrayGetNI( pStyles, i + 1 );
       }
 
       /* Set style */
       gdImageSetStyle( im, ( int * ) styles, styleLength);
+
+      hb_xfree( styles );
    }
    else
    {
@@ -3528,9 +3535,7 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
       /* Retrieve radius value */
       radius = hb_parni( 2 );
 
-      /* TODO */
-      gdImageSquareToCircle( im, radius );
-
+      hb_retGdImage( gdImageSquareToCircle( im, radius ) );
    }
    else
    {
