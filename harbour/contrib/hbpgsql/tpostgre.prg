@@ -108,7 +108,7 @@ METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
       nPort := 5432
    ENDIF
 
-   ::pDB := PQconnect( cDatabase, cHost, cUser, cPass, nPort )
+   ::pDB := PQconnectDB( "dbname = " + cDatabase + " host = " + cHost + " user = " + cUser + " password = " + cPass + " port = " +  hb_ntos( nPort ) )
 
    IF PQstatus( ::pDb ) != CONNECTION_OK
        ::lError := .T.

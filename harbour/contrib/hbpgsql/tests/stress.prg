@@ -17,7 +17,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    CLEAR SCREEN
 
    ? "Connecting...."
-   conn := PQconnect( cDatabase, cServer, cUser, cPass, 5432 )
+   conn := PQconnectDB( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
 
    ? PQstatus( conn ), PQerrormessage( conn )
 

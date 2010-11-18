@@ -58,8 +58,30 @@
 #include "hbapiitm.h"
 
 #include "libpq-fe.h"
-#include "postgres.h"
-#include "catalog/pg_type.h"
+
+#define VARHDRSZ              4
+#define BOOLOID               16
+#define INT8OID               20
+#define INT2OID               21
+#define INT4OID               23
+#define TEXTOID               25
+#define OIDOID                26
+#define FLOAT4OID             700
+#define FLOAT8OID             701
+#define CASHOID               790
+#define BPCHAROID             1042
+#define VARCHAROID            1043
+#define DATEOID               1082
+#define TIMEOID               1083
+#define TIMESTAMPOID          1114
+#define TIMESTAMPTZOID        1184
+#define TIMETZOID             1266
+#define BITOID                1560
+#define VARBITOID             1562
+#define NUMERICOID            1700
+
+#define INV_WRITE             0x00020000
+#define INV_READ              0x00040000
 
 #ifndef PG_VERSION_NUM
 #define PG_VERSION_NUM 0
@@ -245,21 +267,53 @@ static FILE * hb_FILE_par( int iParam )
  * Connection handling functions
  */
 
+HB_FUNC( PQCONNECTDB )
+{
+   if( HB_ISCHAR( 1 ) )
+      hb_PGconn_ret( PQconnectdb( hb_parc( 1 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+#if defined( HB_LEGACY_LEVEL3 )
+
+/* NOTE: Deprecated. Because it's not 1 to 1 wrapper. Please use PQCONNECTDB() instead. */
 HB_FUNC( PQCONNECT )
 {
    char conninfo[ 512 ];
+   char buf[ 128 ];
 
-   hb_snprintf( conninfo, sizeof( conninfo ),
-                "dbname = %s host = %s user = %s password = %s port = %i",
-                hb_parcx( 1 ),
-                hb_parcx( 2 ),
-                hb_parcx( 3 ),
-                hb_parcx( 4 ),
-                hb_parni( 5 ) );
+   conninfo[ 0 ] = '\0';
+
+   switch( hb_pcount() )
+   {
+      case 5:
+         hb_snprintf( buf, sizeof( buf ), "port = %i ", hb_parni( 5 ) );
+         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
+         /* FALLTHROUGH */
+      case 4:
+         hb_snprintf( buf, sizeof( buf ), "password = %s ", hb_parc( 4 ) );
+         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
+         /* FALLTHROUGH */
+      case 3:
+         hb_snprintf( buf, sizeof( buf ), "user = %s ", hb_parc( 3 ) );
+         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
+         /* FALLTHROUGH */
+      case 2:
+         hb_snprintf( buf, sizeof( buf ), "host = %s ", hb_parc( 2 ) );
+         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
+         /* FALLTHROUGH */
+      case 1:
+         hb_snprintf( buf, sizeof( buf ), "dbname = %s ", hb_parc( 1 ) );
+         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
+   }
 
    hb_PGconn_ret( PQconnectdb( conninfo ) );
 }
 
+#endif /* defined( HB_LEGACY_LEVEL3 ) */
+
+/* NOTE: Deprecated */
 HB_FUNC( PQSETDBLOGIN )
 {
    hb_PGconn_ret( PQsetdbLogin( hb_parcx( 1 ) /* pghost */,
@@ -289,7 +343,7 @@ HB_FUNC( PQCLOSE )
    }
 }
 
-#endif
+#endif /* defined( HB_LEGACY_LEVEL3 ) */
 
 HB_FUNC( PQRESET )
 {

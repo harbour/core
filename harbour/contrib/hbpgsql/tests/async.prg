@@ -13,7 +13,7 @@ FUNCTION Main( cServer, cDatabase, cUser, cPass )
 
    CLEAR SCREEN
 
-   ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432 )
+   ? "Connect", conn := PQconnectDB( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
 
    ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
 

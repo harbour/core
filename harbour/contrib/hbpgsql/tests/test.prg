@@ -15,7 +15,7 @@ PROCEDURE main()
    conn := PQsetdbLogin( "localhost", "5432", NIL, NIL, cDb, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
-   conn := PQConnect( cDb, "localhost", cuser, cpass, 5432 )
+   conn := PQconnectDB( "dbname = " + cDb + " host = localhost user = " + cUser + " password = " + cPass + " port = 5432" )
 
    ? PQstatus( conn ), PQerrormessage( conn )
 
