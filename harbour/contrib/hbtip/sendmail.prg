@@ -95,10 +95,11 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL cData
    LOCAL oUrl1
 
-   LOCAL cTmp          := ""
-   LOCAL cTo           := ""
-   LOCAL cCC           := ""
-   LOCAL cBCC          := ""
+   LOCAL cTmp
+   LOCAL cTo
+   LOCAL cCC
+   LOCAL cBCC
+   LOCAL tmp
 
    LOCAL lConnectPlain := .F.
    LOCAL lReturn       := .T.
@@ -168,12 +169,17 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    // cTo
    IF ISARRAY( xTo )
+      FOR tmp := Len( xTo ) TO 1 STEP -1
+         IF Empty( xTo[ tmp ] )
+            hb_ADel( xTo, tmp, .T. )
+         ENDIF
+      NEXT
+      cTo := ""
+      cTmp := ""
       IF Len( xTo ) > 1
          FOR EACH cTo IN xTo
             IF cTo:__enumIndex() != 1
-               IF ! Empty( cTo )
-                  cTmp += tip_GetRawEMail( AllTrim( cTo ) ) + ","
-               ENDIF
+               cTmp += tip_GetRawEMail( AllTrim( cTo ) ) + ","
             ENDIF
          NEXT
          cTmp := SubStr( cTmp, 1, Len( cTmp ) - 1 )
@@ -189,11 +195,15 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    // CC (Carbon Copy)
    IF ISARRAY( xCC )
+      FOR tmp := Len( xCC ) TO 1 STEP -1
+         IF Empty( xCC[ tmp ] )
+            hb_ADel( xCC, tmp, .T. )
+         ENDIF
+      NEXT
+      cCC := ""
       IF Len( xCC ) > 0
          FOR EACH cTmp IN xCC
-            IF ! Empty( cTmp )
-               cCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
-            ENDIF
+            cCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
          NEXT
          cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
@@ -204,11 +214,15 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    // BCC (Blind Carbon Copy)
    IF ISARRAY( xBCC )
+      FOR tmp := Len( xBCC ) TO 1 STEP -1
+         IF Empty( xBCC[ tmp ] )
+            hb_ADel( xBCC, tmp, .T. )
+         ENDIF
+      NEXT
+      cBCC := ""
       IF Len( xBCC ) > 0
          FOR EACH cTmp IN xBCC
-            IF ! Empty( cTmp )
-               cBCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
-            ENDIF
+            cBCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
          NEXT
          cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF

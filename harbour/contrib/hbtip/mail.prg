@@ -560,10 +560,10 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
    cTo := ""
    imax := Len( aTO )
    FOR i := 1 TO imax
-      IF i > 1
+      cTo += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aTo[ i ] ) ) + ">" )
+      IF i < imax
          cTo += "," + tip_CRLF() + " "
       ENDIF
-      cTo += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aTo[ i ] ) ) + ">" )
    NEXT
 
    IF Empty( cTo )
@@ -578,10 +578,10 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       cCC := ""
       imax := Len( aCC )
       FOR i := 2 TO imax
-         IF i > 1
+         cCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aCC[ i ] ) ) + ">" )
+         IF i < imax
             cCC += "," + tip_CRLF() + " "
          ENDIF
-         cCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aCC[ i ] ) ) + ">" )
       NEXT
 
       IF ! Empty( cCC ) .AND. ! ::setFieldPart( "Cc", cCC )
@@ -593,10 +593,10 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       cBCC := ""
       imax := Len( aBCC )
       FOR i := 2 TO imax
-         IF i > 1
+         cBCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aBCC[ i ] ) ) + ">" )
+         IF i < imax
             cBCC += "," + tip_CRLF() + " "
          ENDIF
-         cBCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aBCC[ i ] ) ) + ">" )
       NEXT
 
       IF ! Empty( cBCC ) .AND. ! ::setFieldPart( "Bcc", cBCC )
