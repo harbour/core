@@ -200,8 +200,6 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
       _code39_add( pZebra->pBits, ( char ) s_code[ csum % 43 ], iFlags, HB_FALSE );
 
    _code39_add( pZebra->pBits, 0x52, iFlags, HB_TRUE );    /* stop */
-//   hb_bitbuffer_cat_int( pZebra->pBits, 3, iFlags & HB_ZEBRA_FLAG_WIDE2_5 ? 2 : 1 );
-
    return pZebra;
 }
 

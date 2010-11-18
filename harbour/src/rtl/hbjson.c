@@ -81,9 +81,6 @@
         hb_jsonEncode( xValue [, lHuman = .F. ] ) --> cJSON
 
       Note:
-        - Harbour types unsupported by JSON (date, timestamp, etc.) are
-          encoded as null values;
-        - strings are encoded in UTF-8;
         - JSON encode functions are safe for recursive arrays and hashes.
           Recursive part of array or hash will be stored as null. JSON
           encoder still allows to use same structure in the leaves, in
