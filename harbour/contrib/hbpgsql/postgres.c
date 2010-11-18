@@ -685,11 +685,8 @@ HB_FUNC( PQMETADATA )
                   hb_strncpy( buf, "integer", sizeof( buf ) - 1 );
                   break;
 
-               case OIDOID:
-                  hb_strncpy( buf, "bigint", sizeof( buf ) - 1 );
-                  break;
-
                case INT8OID:
+               case OIDOID:
                   hb_strncpy( buf, "bigint", sizeof( buf ) - 1 );
                   break;
 

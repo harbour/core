@@ -263,7 +263,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    oMail := tipMail():new()
    oMail:SetEncoder( cEncoding )
    oMail:SetCharset( cCharset )
-   oMail:SetHeader( cSubject, cFrom, xTo, xCC, xBCC )
+   oMail:SetHeader( cSubject, cFrom, xTo, xCC )
    oMail:hHeaders[ "Date" ] := tip_Timestamp()
    IF ! Empty( cReplyTo )
       oMail:hHeaders[ "Reply-to" ] := cReplyTo

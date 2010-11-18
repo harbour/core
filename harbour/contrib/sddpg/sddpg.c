@@ -312,6 +312,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             break;
 
          case INT8OID:
+         case OIDOID:
             pFieldInfo.uiType = HB_FT_LONG;
             pFieldInfo.uiLen = 20;
             break;
