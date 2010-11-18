@@ -49,6 +49,7 @@ C_HEADERS := \
    hbhash.h \
    hbiniseg.h \
    hbinit.h \
+   hbjson.h \
    hbmacro.h \
    hbmath.h \
    hbmather.h \
