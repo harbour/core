@@ -207,7 +207,7 @@ HB_FUNC( NUMMIRR )
       do
       {
          usResult <<= 1;
-         if( lValue && 1 )
+         if( lValue & 1 )
             usResult |= 1;
          lValue >>= 1;
       }

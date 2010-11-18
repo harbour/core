@@ -125,7 +125,7 @@ static HB_BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
 
 /* *********************************************************************** */
 
-static void hb_sln_CheckDoubleClick()
+static void hb_sln_CheckDoubleClick( void )
 {
    HB_USHORT usNewButtons = ( s_usMouseState & ~s_usLastMouseState ) & M_BUTTON_KEYMASK;
 

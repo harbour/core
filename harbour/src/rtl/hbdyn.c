@@ -72,7 +72,7 @@
 
 #define _DYNEXEC_MAXPARAM       15
 
-typedef void ( * PHB_DYNADDR )();
+typedef void ( * PHB_DYNADDR )( void );
 
 static int hb_hbtoctype( int iHarbourType )
 {

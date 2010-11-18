@@ -135,7 +135,7 @@ static int hb_sln_try_get_Kbd_State( void );
 
 /* *********************************************************************** */
 
-static void hb_sln_Init_TermType()
+static void hb_sln_Init_TermType( void )
 {
    char * Env;
 
@@ -158,7 +158,7 @@ static void hb_sln_Init_TermType()
 
 /* *********************************************************************** */
 
-static void hb_sln_Init_KeyTranslations()
+static void hb_sln_Init_KeyTranslations( void )
 {
    char ch, keyname[ SLANG_MAX_KEYMAP_KEY_SEQ + 1 ];
    int  keynum, i;
@@ -510,28 +510,28 @@ static int hb_sln_try_get_Kbd_State( void )
 
 /* *********************************************************************** */
 
-int hb_sln_Shft_Pressed()
+int hb_sln_Shft_Pressed( void )
 {
    return ( hb_sln_try_get_Kbd_State() & SHIFT_PRESSED ) != 0;
 }
 
 /* *********************************************************************** */
 
-int hb_sln_Ctrl_Pressed()
+int hb_sln_Ctrl_Pressed( void )
 {
    return ( hb_sln_try_get_Kbd_State() & CONTROL_PRESSED ) != 0;
 }
 
 /* *********************************************************************** */
 
-int hb_sln_Alt_Pressed()
+int hb_sln_Alt_Pressed( void )
 {
    return ( hb_sln_try_get_Kbd_State() & ALT_PRESSED ) != 0;
 }
 
 /* *********************************************************************** */
 
-int hb_sln_Kbd_State()
+int hb_sln_Kbd_State( void )
 {
    return hb_sln_try_get_Kbd_State();
 }

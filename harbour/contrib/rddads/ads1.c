@@ -1155,13 +1155,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
           * fFound after SKIPFILTER. Also get its extracted key to simplify
           * that comparison
           */
-         UNSIGNED32 u32RetVal;
          pucSavedKey = ( UNSIGNED8 * ) hb_xgrab( ADS_MAX_KEY_LENGTH + 1 );
 
          AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS, &u32RecNo );
-         u32RetVal = AdsExtractKey( pArea->hOrdCurrent, pucSavedKey, &u16SavedKeyLen );
-
-         if( u32RetVal != AE_SUCCESS )
+         if( AdsExtractKey( pArea->hOrdCurrent, pucSavedKey, &u16SavedKeyLen ) != AE_SUCCESS )
          {
             u16SavedKeyLen = 0;
          }

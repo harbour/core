@@ -4,7 +4,7 @@
 
 #include "hbdefs.h"
 
-int main()
+int main( void )
 {
    char buf[ 16 ];
    int n, i, l, f, iRet = 0;
