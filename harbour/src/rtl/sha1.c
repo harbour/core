@@ -67,7 +67,7 @@ typedef union _BYTE64QUAD16 {
 } BYTE64QUAD16;
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
-static void SHA1_Transform(sha1_quadbyte state[5], const sha1_byte buffer[64]) {
+static void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
     sha1_quadbyte   a, b, c, d, e;
     BYTE64QUAD16    *block;
 
@@ -122,8 +122,8 @@ void hb_SHA1_Init(SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
-    const sha1_byte * data = ( const sha1_byte * ) datav;
+void hb_SHA1_Update(SHA_CTX *context, void *datav, unsigned int len) {
+    sha1_byte * data = ( sha1_byte * ) datav;
     unsigned int    i, j;
 
     j = (context->count[0] >> 3) & 63;
@@ -146,14 +146,16 @@ void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
 void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
     sha1_quadbyte   i;
     sha1_byte   finalcount[8];
+    sha1_byte   str1[ 1 ] = { '\x80' };
+    sha1_byte   str2[ 1 ] = { '\0' };
 
     for (i = 0; i < 8; i++) {
         finalcount[i] = (sha1_byte)((context->count[(i >= 4 ? 0 : 1)]
          >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
     }
-    hb_SHA1_Update(context, (const sha1_byte *)"\x80", 1);
+    hb_SHA1_Update(context, str1, 1);
     while ((context->count[0] & 504) != 448) {
-        hb_SHA1_Update(context, (const sha1_byte *)"\0", 1);
+        hb_SHA1_Update(context, str2, 1);
     }
     /* Should cause a SHA1_Transform() */
     hb_SHA1_Update(context, finalcount, 8);
