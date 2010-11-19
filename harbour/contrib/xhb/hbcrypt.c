@@ -405,8 +405,8 @@ HB_FUNC( HB_CRYPT )
    unsigned char * cRes = ( unsigned char * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_crypt(
-      ( unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      ( const unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( const unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
    hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );
@@ -426,8 +426,8 @@ HB_FUNC( HB_DECRYPT )
    unsigned char * cRes = ( unsigned char * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_decrypt(
-      ( unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      ( const unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( const unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
    hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );

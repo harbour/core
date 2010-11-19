@@ -66,8 +66,8 @@ static int
 #endif
 _hb_do_sortascend( const void *p1, const void *p2 )
 {
-   char *pc1 = ( char * ) p1;
-   char *pc2 = ( char * ) p2;
+   const char *pc1 = ( const char * ) p1;
+   const char *pc2 = ( const char * ) p2;
 
    pc1 += s_sElementPos;
    pc2 += s_sElementPos;
@@ -82,8 +82,8 @@ static int
 #endif
 _hb_do_sortdescend( const void *p1, const void *p2 )
 {
-   char *pc1 = ( char * ) p1;
-   char *pc2 = ( char * ) p2;
+   const char *pc1 = ( const char * ) p1;
+   const char *pc2 = ( const char * ) p2;
 
    pc1 += s_sElementPos;
    pc2 += s_sElementPos;

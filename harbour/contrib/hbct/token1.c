@@ -118,7 +118,7 @@ static void do_token1( int iSwitch )
          pcSeparatorStr = hb_parc( 2 );
       else
       {
-         pcSeparatorStr = ( char * ) s_pcSeparatorStr;
+         pcSeparatorStr = ( const char * ) s_pcSeparatorStr;
          sSeparatorStrLen = s_sSeparatorStrLen;
       }
 

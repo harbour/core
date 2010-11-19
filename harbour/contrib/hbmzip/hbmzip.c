@@ -193,7 +193,7 @@ HB_FUNC( HB_ZIPOPEN )
          hb_retptrGC( phZip );
 
          if( pszGlobalComment )
-            hb_storc( ( char * ) pszGlobalComment, 3 );
+            hb_storc( ( const char * ) pszGlobalComment, 3 );
       }
    }
    else
@@ -294,7 +294,7 @@ HB_FUNC( HB_ZIPFILEWRITE )
          nLen = hb_parns( 3 );
 
       if( hZip )
-         hb_retni( zipWriteInFileInZip( hZip, (void*) pData, ( unsigned ) nLen ) );
+         hb_retni( zipWriteInFileInZip( hZip, pData, ( unsigned ) nLen ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

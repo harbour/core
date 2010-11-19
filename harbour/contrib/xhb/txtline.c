@@ -56,7 +56,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SIZE nTabLen, HB_BOOL bWrap, char ** pTerm, HB_SIZE * pnTermSizes, HB_SIZE nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF, HB_ISIZ * pnEnd, HB_SIZE * pnEndOffset )
+static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen, HB_SIZE nTabLen, HB_BOOL bWrap, const char ** pTerm, HB_SIZE * pnTermSizes, HB_SIZE nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF, HB_ISIZ * pnEnd, HB_SIZE * pnEndOffset )
 {
    HB_SIZE nPosTerm, nPosition;
    HB_SIZE nPos, nCurrCol, nLastBlk;
@@ -225,7 +225,7 @@ HB_FUNC( HB_READLINE )
 {
    PHB_ITEM pTerm1;
    const char * szText = hb_parcx( 1 );
-   char ** pTerm;
+   const char ** pTerm;
    HB_SIZE * pnTermSizes;
    HB_SIZE nTabLen, nTerms;
    HB_SIZE nLineSize = hb_parni( 3 );
@@ -270,21 +270,21 @@ HB_FUNC( HB_READLINE )
    if( HB_IS_ARRAY( pTerm1 ) )
    {
       nTerms = hb_arrayLen( pTerm1 );
-      pTerm = ( char ** ) hb_xgrab( sizeof( char * ) * nTerms );
+      pTerm = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
       pnTermSizes = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * nTerms );
 
       for( i = 0; i < nTerms; i++ )
       {
          hb_arrayGet( pTerm1, i + 1, pOpt );
-         pTerm[ i ]       = ( char * ) hb_itemGetCPtr( pOpt );
+         pTerm[ i ]       = hb_itemGetCPtr( pOpt );
          pnTermSizes[ i ] = hb_itemGetCLen( pOpt );
       }
    }
    else
    {
-      pTerm            = ( char ** ) hb_xgrab( sizeof( char * ) );
+      pTerm            = ( const char ** ) hb_xgrab( sizeof( char * ) );
       pnTermSizes      = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * 1 );
-      pTerm[ 0 ]       = ( char * ) hb_itemGetCPtr( pTerm1 );
+      pTerm[ 0 ]       = hb_itemGetCPtr( pTerm1 );
       pnTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
       nTerms          = 1;
    }

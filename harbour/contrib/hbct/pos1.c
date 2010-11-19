@@ -72,9 +72,9 @@ static void do_pos1( int iSwitch )
            HB_ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
            HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
-      unsigned char *pcString;
+      const unsigned char *pcString, *puc;
       HB_SIZE sStrLen;
-      unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
+      unsigned char ucChar1 = ' ', ucChar2 = ' ';
       int iMode;
       HB_SIZE sIgnore;
       int iParamShift = 0;
@@ -105,7 +105,7 @@ static void do_pos1( int iSwitch )
          iParamShift += 2;
       }
 
-      pcString = ( unsigned char * ) hb_parc( iParamShift + 1 );
+      pcString = ( const unsigned char * ) hb_parc( iParamShift + 1 );
       sStrLen = hb_parclen( iParamShift + 1 );
 
       if( HB_ISLOG( iParamShift + 2 ) )

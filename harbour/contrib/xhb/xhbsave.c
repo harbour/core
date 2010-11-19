@@ -120,6 +120,6 @@ HB_FUNC( XHB_RESTSCREEN )
       hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
       hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-      hb_gtRest( iTop, iLeft, iBottom, iRight, ( void * ) hb_parc( 5 ) );
+      hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
    }
 }

@@ -1323,7 +1323,7 @@ typedef HB_U32 HB_FATTR;
 #  if defined( HB_BIG_ENDIAN )
 
    #define HB_ORD2DBL( o, d )       do { \
-      if ( ( ( HB_BYTE * ) ( o ) )[ 0 ] & 0x80 ) { \
+      if ( ( ( const HB_BYTE * ) ( o ) )[ 0 ] & 0x80 ) { \
          ( ( HB_BYTE * ) ( d ) )[ 0 ] = ( ( const HB_BYTE * ) ( o ) )[ 0 ]; \
          ( ( HB_BYTE * ) ( d ) )[ 1 ] = ( ( const HB_BYTE * ) ( o ) )[ 1 ]; \
          ( ( HB_BYTE * ) ( d ) )[ 2 ] = ( ( const HB_BYTE * ) ( o ) )[ 2 ]; \
@@ -1368,24 +1368,24 @@ typedef HB_U32 HB_FATTR;
 #  else /* HB_LITTLE_ENDIAN */
 
    #define HB_ORD2DBL( o, d )       do { \
-      if ( ( ( HB_BYTE * ) ( o ) )[ 0 ] & 0x80 ) { \
-         ( ( HB_BYTE * ) ( d ) )[ 0 ] = ( ( HB_BYTE * ) ( o ) )[ 7 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 1 ] = ( ( HB_BYTE * ) ( o ) )[ 6 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 2 ] = ( ( HB_BYTE * ) ( o ) )[ 5 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 3 ] = ( ( HB_BYTE * ) ( o ) )[ 4 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 4 ] = ( ( HB_BYTE * ) ( o ) )[ 3 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 5 ] = ( ( HB_BYTE * ) ( o ) )[ 2 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 6 ] = ( ( HB_BYTE * ) ( o ) )[ 1 ]; \
-         ( ( HB_BYTE * ) ( d ) )[ 7 ] = ( ( HB_BYTE * ) ( o ) )[ 0 ] ^ ( HB_BYTE ) 0x80; \
+      if ( ( ( const HB_BYTE * ) ( o ) )[ 0 ] & 0x80 ) { \
+         ( ( HB_BYTE * ) ( d ) )[ 0 ] = ( ( const HB_BYTE * ) ( o ) )[ 7 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 1 ] = ( ( const HB_BYTE * ) ( o ) )[ 6 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 2 ] = ( ( const HB_BYTE * ) ( o ) )[ 5 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 3 ] = ( ( const HB_BYTE * ) ( o ) )[ 4 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 4 ] = ( ( const HB_BYTE * ) ( o ) )[ 3 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 5 ] = ( ( const HB_BYTE * ) ( o ) )[ 2 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 6 ] = ( ( const HB_BYTE * ) ( o ) )[ 1 ]; \
+         ( ( HB_BYTE * ) ( d ) )[ 7 ] = ( ( const HB_BYTE * ) ( o ) )[ 0 ] ^ ( HB_BYTE ) 0x80; \
       } else { \
-         ( ( HB_BYTE * ) ( d ) )[ 0 ] = ( ( HB_BYTE * ) ( o ) )[ 7 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 1 ] = ( ( HB_BYTE * ) ( o ) )[ 6 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 2 ] = ( ( HB_BYTE * ) ( o ) )[ 5 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 3 ] = ( ( HB_BYTE * ) ( o ) )[ 4 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 4 ] = ( ( HB_BYTE * ) ( o ) )[ 3 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 5 ] = ( ( HB_BYTE * ) ( o ) )[ 2 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 6 ] = ( ( HB_BYTE * ) ( o ) )[ 1 ] ^ ( HB_BYTE ) 0xFF; \
-         ( ( HB_BYTE * ) ( d ) )[ 7 ] = ( ( HB_BYTE * ) ( o ) )[ 0 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 0 ] = ( ( const HB_BYTE * ) ( o ) )[ 7 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 1 ] = ( ( const HB_BYTE * ) ( o ) )[ 6 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 2 ] = ( ( const HB_BYTE * ) ( o ) )[ 5 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 3 ] = ( ( const HB_BYTE * ) ( o ) )[ 4 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 4 ] = ( ( const HB_BYTE * ) ( o ) )[ 3 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 5 ] = ( ( const HB_BYTE * ) ( o ) )[ 2 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 6 ] = ( ( const HB_BYTE * ) ( o ) )[ 1 ] ^ ( HB_BYTE ) 0xFF; \
+         ( ( HB_BYTE * ) ( d ) )[ 7 ] = ( ( const HB_BYTE * ) ( o ) )[ 0 ] ^ ( HB_BYTE ) 0xFF; \
       } } while ( 0 )
 
    #define HB_DBL2ORD( d, o )       do { \

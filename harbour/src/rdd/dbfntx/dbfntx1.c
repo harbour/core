@@ -3607,14 +3607,14 @@ static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, const char * szBagName )
 
    pSeek = hb_fsFNameSplit( szBagName );
    if( ! pSeek->szName )
-      pSeek->szName = ( char * ) "";
+      pSeek->szName = "";
 
    pIndex = pArea->lpIndexes;
    while( pIndex )
    {
       pName = hb_fsFNameSplit( pIndex->IndexName );
       if( ! pName->szName )
-         pName->szName = ( char * ) "";
+         pName->szName = "";
       fFound = !hb_stricmp( pName->szName, pSeek->szName ) &&
                ( !pSeek->szPath || ( pName->szPath &&
                   !hb_stricmp( pName->szPath, pSeek->szPath ) ) ) &&
@@ -6368,11 +6368,11 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
 #else
    fCompound = fTagName && pData->fMultiTag;
 #endif
-   hb_ntxCreateFName( pArea, ( char * ) ( ( fBagName || fCompound ) ?
-                      pOrderInfo->abBagName : pOrderInfo->atomBagName ),
+   hb_ntxCreateFName( pArea, ( fBagName || fCompound ) ?
+                      pOrderInfo->abBagName : pOrderInfo->atomBagName,
                       &fProd, szFileName, szTagName );
    if( fTagName )
-      hb_strncpyUpperTrim( szTagName, ( char * ) pOrderInfo->atomBagName, NTX_MAX_TAGNAME );
+      hb_strncpyUpperTrim( szTagName, pOrderInfo->atomBagName, NTX_MAX_TAGNAME );
 
    pIndex = hb_ntxFindBag( pArea, szFileName );
    if( pIndex && !fCompound )

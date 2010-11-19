@@ -99,7 +99,7 @@ static RDDFUNCS fptSuper;
  * generate Run-Time error
  */
 static HB_ERRCODE hb_memoErrorRT( FPTAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
-                                  char * szFileName, HB_ERRCODE uiOsCode, HB_USHORT uiFlags )
+                                  const char * szFileName, HB_ERRCODE uiOsCode, HB_USHORT uiFlags )
 {
    HB_ERRCODE errCode = HB_FAILURE;
 
@@ -3047,7 +3047,8 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
 {
    HB_ULONG ulBlock = 0, ulSize, ulType, ulOldSize = 0, ulOldType = 0, ulArrayCount = 0;
    HB_BYTE itmBuffer[ FLEX_ITEM_BUFSIZE ];
-   HB_BYTE *bBufPtr = NULL, *bBufAlloc = NULL;
+   const HB_BYTE *bBufPtr = NULL;
+   HB_BYTE *bBufAlloc = NULL, * pbTmp;
    HB_ERRCODE errCode;
    HB_MAXINT iVal;
    HB_LONG lVal;
@@ -3064,19 +3065,19 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
          {
             bBufPtr = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize );
             hb_itemCopyStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
-                               ( HB_WCHAR * ) bBufPtr, ulSize / sizeof( HB_WCHAR ) );
+                               ( HB_WCHAR * ) bBufAlloc, ulSize / sizeof( HB_WCHAR ) );
          }
       }
       else
       {
          ulSize = hb_itemGetCLen( pItem );
-         bBufPtr = ( HB_BYTE * ) hb_itemGetCPtr( pItem );
+         bBufPtr = ( const HB_BYTE * ) hb_itemGetCPtr( pItem );
          if( iTrans == FPT_TRANS_CP && ulSize > 0 )
          {
             HB_SIZE nSize = ulSize;
-            bBufPtr = bBufAlloc = ( HB_BYTE * )
-                                 hb_cdpnDup( ( const char * ) bBufPtr, &nSize,
-                                             hb_vmCDP(), pArea->area.cdPage );
+            bBufAlloc = ( HB_BYTE * ) hb_cdpnDup( ( const char * ) bBufPtr, &nSize,
+                                                  hb_vmCDP(), pArea->area.cdPage );
+            bBufPtr = bBufAlloc;
             ulSize = ( HB_ULONG ) nSize;
          }
       }
@@ -3094,8 +3095,8 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
       ulSize = hb_fptCountSMTItemLength( pArea, pItem, &ulArrayCount, iTrans );
       if( ulSize == 0 )
          return EDBF_DATATYPE;
-      bBufPtr = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize );
-      hb_fptStoreSMTItem( pArea, pItem, &bBufPtr, iTrans );
+      pbTmp = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize );
+      hb_fptStoreSMTItem( pArea, pItem, &pbTmp, iTrans );
       ulType = ( HB_ULONG ) bBufAlloc[ 0 ];
       bBufPtr = bBufAlloc;
    }
@@ -3111,8 +3112,8 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
          ulSize = hb_fptCountSixItemLength( pArea, pItem, &ulArrayCount, iTrans );
          if( ulSize > 0 )
          {
-            bBufPtr = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize );
-            hb_fptStoreSixItem( pArea, pItem, &bBufPtr, iTrans );
+            pbTmp = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize );
+            hb_fptStoreSixItem( pArea, pItem, &pbTmp, iTrans );
             ulType = ( HB_ULONG ) HB_GET_LE_UINT16( bBufAlloc );
             bBufPtr = bBufAlloc;
          }
@@ -3131,8 +3132,8 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
             ulSize = hb_fptCountFlexItemLength( pArea, pItem, &ulArrayCount, iTrans ) - 1;
             if( ulSize > 0 )
             {
-               bBufPtr = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize + 1 );
-               hb_fptStoreFlexItem( pArea, pItem, &bBufPtr, iTrans );
+               pbTmp = bBufAlloc = ( HB_BYTE * ) hb_xgrab( ulSize + 1 );
+               hb_fptStoreFlexItem( pArea, pItem, &pbTmp, iTrans );
                bBufPtr = bBufAlloc + 1; /* FLEX doesn't store the first byte of array ID */
             }
             break;
@@ -3573,7 +3574,7 @@ static HB_ERRCODE hb_fptGetVarFile( FPTAREAP pArea, HB_ULONG ulBlock, const char
       {
          hb_memoErrorRT( pArea, 0, errCode,
                          errCode == EDBF_OPEN_DBF || errCode == EDBF_CREATE ||
-                         errCode == EDBF_WRITE ? ( char * ) szFile :
+                         errCode == EDBF_WRITE ? szFile :
                          pArea->szMemoFileName, 0, 0 );
       }
       return HB_FAILURE;
@@ -3621,7 +3622,7 @@ static HB_ULONG hb_fptPutVarFile( FPTAREAP pArea, HB_ULONG ulBlock, const char *
    {
       hb_memoErrorRT( pArea, 0, errCode,
                       errCode == EDBF_OPEN_DBF || errCode == EDBF_READ ?
-                      ( char * ) szFile : pArea->szMemoFileName, 0, 0 );
+                      szFile : pArea->szMemoFileName, 0, 0 );
       ulBlock = 0;
    }
 
@@ -3708,7 +3709,8 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       }
       else
       {
-         HB_BYTE buffer[ 11 ], *pBlock = NULL, *pAlloc = NULL;
+         HB_BYTE buffer[ 11 ], *pAlloc = NULL, *pbTmp;
+         const HB_BYTE * pBlock = NULL;
          HB_ULONG ulOldBlock = 0, ulOldSize = 0, ulNewSize = 0;
          HB_USHORT uiType = HB_GET_LE_UINT16( pFieldBuf + pField->uiLen - 2 );
 
@@ -3785,7 +3787,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          {
             HB_SIZE ulLen = hb_itemGetCLen( pItem );
 
-            pBlock = ( HB_BYTE * ) hb_itemGetCPtr( pItem );
+            pBlock = ( const HB_BYTE * ) hb_itemGetCPtr( pItem );
             if( ulLen > HB_VF_CHAR )
                ulLen = HB_VF_CHAR;
             if( ulLen > 0 && ( pField->uiFlags & HB_FF_BINARY ) == 0 &&
@@ -3830,8 +3832,8 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
                iTrans = FPT_TRANS_NONE;
 
             ulNewSize = hb_fptCountSMTItemLength( pArea, pItem, &ulArrayCount, iTrans );
-            pBlock = pAlloc = ( HB_BYTE * ) hb_xgrab( ulNewSize );
-            hb_fptStoreSMTItem( pArea, pItem, &pBlock, iTrans );
+            pbTmp = pAlloc = ( HB_BYTE * ) hb_xgrab( ulNewSize );
+            hb_fptStoreSMTItem( pArea, pItem, &pbTmp, iTrans );
             pBlock = pAlloc;
             uiType = HB_VF_ARRAY;
          }
@@ -4017,7 +4019,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
              pArea->bMemoType != DB_MEMO_SMT )
          {
             hb_memoErrorRT( pArea, EG_CREATE, EDBF_MEMOTYPE,
-                            ( char * ) pCreateInfo->abName, 0, 0 );
+                            pCreateInfo->abName, 0, 0 );
             hb_itemRelease( pItem );
             return HB_FAILURE;
          }
@@ -4063,7 +4065,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
          }
          else
          {
-            hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
+            hb_strncpy( szFileName, pCreateInfo->abName, sizeof( szFileName ) - 1 );
          }
          hb_xfree( pFileName );
       }
@@ -4211,7 +4213,7 @@ static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, HB_USHORT uiIndex, const c
          {
             hb_memoErrorRT( pArea, 0, errCode,
                             errCode == EDBF_OPEN_DBF || errCode == EDBF_CREATE ||
-                            errCode == EDBF_WRITE ? ( char * ) szFile :
+                            errCode == EDBF_WRITE ? szFile :
                             pArea->szMemoFileName, 0, 0 );
          }
          return HB_FAILURE;
@@ -4245,7 +4247,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
             pArea->bMemoType != DB_MEMO_SMT )
    {
       hb_memoErrorRT( pArea, EG_OPEN, EDBF_MEMOTYPE,
-                      ( char * ) pOpenInfo->abName, 0, 0 );
+                      pOpenInfo->abName, 0, 0 );
       return HB_FAILURE;
    }
 
@@ -4261,7 +4263,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    else
    {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pOpenInfo->abName, sizeof( szFileName ) - 1 );
+      hb_strncpy( szFileName, pOpenInfo->abName, sizeof( szFileName ) - 1 );
    }
    hb_xfree( pFileName );
 
@@ -4480,7 +4482,7 @@ static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, HB_USHORT uiIndex, const c
       {
          hb_memoErrorRT( pArea, 0, errCode,
                          errCode == EDBF_OPEN_DBF || errCode == EDBF_READ ?
-                         ( char * ) szFile : pArea->szMemoFileName, 0, 0 );
+                         szFile : pArea->szMemoFileName, 0, 0 );
          return HB_FAILURE;
       }
       return HB_SUCCESS;

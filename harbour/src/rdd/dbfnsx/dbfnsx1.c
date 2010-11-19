@@ -848,8 +848,8 @@ static HB_BOOL hb_nsxEvalSeekCond( LPTAGINFO pTag, PHB_ITEM pCondItem )
 /*
  * compare two values using Tag conditions (len & type)
  */
-static int hb_nsxValCompare( LPTAGINFO pTag, HB_UCHAR * val1, int len1,
-                             HB_UCHAR * val2, int len2, int iMode )
+static int hb_nsxValCompare( LPTAGINFO pTag, const HB_UCHAR * val1, int len1,
+                             const HB_UCHAR * val2, int len2, int iMode )
 {
    int iLimit, iResult = 0;
 
@@ -4642,7 +4642,8 @@ static HB_BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pWi
          int iStop = fForward ? -1 : 1;
          if( pTag->fUsrDescend )
             iStop = -iStop;
-         if( iFixed && hb_nsxValCompare( pTag, ( HB_UCHAR * ) szPattern, iFixed,
+         if( iFixed && hb_nsxValCompare( pTag,
+                                         ( const HB_UCHAR * ) szPattern, iFixed,
                                          pTag->CurKeyInfo->val, iFixed,
                                          NSX_CMP_PREFIX ) == -iStop )
          {
@@ -4682,7 +4683,7 @@ static HB_BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pWi
                   break;
                }
             }
-            if( iFixed && hb_nsxValCompare( pTag, ( HB_UCHAR * ) szPattern, iFixed,
+            if( iFixed && hb_nsxValCompare( pTag, ( const HB_UCHAR * ) szPattern, iFixed,
                              pTag->CurKeyInfo->val, iFixed, NSX_CMP_PREFIX ) == iStop )
             {
                break;

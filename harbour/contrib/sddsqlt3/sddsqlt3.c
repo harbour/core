@@ -465,7 +465,7 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                break;
 
             case HB_FT_BLOB:
-               pItem = hb_itemPutCL( NULL, ( char * ) sqlite3_column_blob( st, ui ), sqlite3_column_bytes( st, ui ) );
+               pItem = hb_itemPutCL( NULL, ( const char * ) sqlite3_column_blob( st, ui ), sqlite3_column_bytes( st, ui ) );
                break;
          }
 

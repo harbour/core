@@ -62,18 +62,18 @@ HB_FUNC( RANGEREM )
       const char *pcString = hb_parc( 3 );
       HB_SIZE sStrLen = hb_parclen( 3 );
       char *pcRet;
-      unsigned char *pc;
+      const unsigned char *pc;
       unsigned char ucChar1, ucChar2;
       HB_SIZE sRetIndex;
       int iMode, iBool;
 
       if( HB_ISCHAR( 1 ) )
-         ucChar1 = *( ( unsigned char * ) hb_parc( 1 ) );
+         ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
       else
          ucChar1 = ( unsigned char ) ( hb_parni( 1 ) % 256 );
 
       if( HB_ISCHAR( 2 ) )
-         ucChar2 = *( ( unsigned char * ) hb_parc( 2 ) );
+         ucChar2 = *( ( const unsigned char * ) hb_parc( 2 ) );
       else
          ucChar2 = ( unsigned char ) ( hb_parni( 2 ) % 256 );
 
@@ -81,7 +81,7 @@ HB_FUNC( RANGEREM )
 
       pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
       sRetIndex = 0;
-      for( pc = ( unsigned char * ) pcString; pc < ( unsigned char * ) pcString + sStrLen; pc++ )
+      for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
          iBool = ( ( *pc ) >= ucChar1 );
          if( iMode )
@@ -132,23 +132,23 @@ HB_FUNC( RANGEREPL )
       const char *pcString = hb_parc( 3 );
       HB_SIZE sStrLen = hb_parclen( 3 );
       char *pcRet;
-      unsigned char *pc;
+      const unsigned char *pc;
       unsigned char ucChar1, ucChar2, ucReplace;
       HB_SIZE sRetIndex;
       int iMode, iBool;
 
       if( HB_ISCHAR( 1 ) )
-         ucChar1 = *( ( unsigned char * ) hb_parc( 1 ) );
+         ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
       else
          ucChar1 = ( unsigned char ) ( hb_parni( 1 ) % 256 );
 
       if( HB_ISCHAR( 2 ) )
-         ucChar2 = *( ( unsigned char * ) hb_parc( 2 ) );
+         ucChar2 = *( ( const unsigned char * ) hb_parc( 2 ) );
       else
          ucChar2 = ( unsigned char ) ( hb_parni( 2 ) % 256 );
 
       if( HB_ISCHAR( 4 ) )
-         ucReplace = *( ( unsigned char * ) hb_parc( 4 ) );
+         ucReplace = *( ( const unsigned char * ) hb_parc( 4 ) );
       else
          ucReplace = ( unsigned char ) ( hb_parni( 4 ) % 256 );
 
@@ -156,7 +156,7 @@ HB_FUNC( RANGEREPL )
 
       pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
       sRetIndex = 0;
-      for( pc = ( unsigned char * ) pcString; pc < ( unsigned char * ) pcString + sStrLen; pc++ )
+      for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
          iBool = ( ( *pc ) >= ucChar1 );
          if( iMode )

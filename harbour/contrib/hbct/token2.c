@@ -299,7 +299,7 @@ HB_FUNC( TOKENINIT )
          pcSeparatorStr = hb_parc( 2 );
       else
       {
-         pcSeparatorStr = ( char * ) spcSeparatorStr;
+         pcSeparatorStr = ( const char * ) spcSeparatorStr;
          sSeparatorStrLen = ssSeparatorStrLen;
       }
 
