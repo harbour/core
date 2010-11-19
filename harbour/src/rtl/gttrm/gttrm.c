@@ -2073,11 +2073,11 @@ static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
 
 static int hb_gt_trm_AnsiGetAcsc( PHB_GTTRM pTerm, unsigned char c )
 {
-   unsigned char *ptr;
+   const unsigned char *ptr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetAcsc(%p,%d)", pTerm, c));
 
-   for( ptr = ( unsigned char * ) pTerm->szAcsc; *ptr && *( ptr + 1 ); ptr += 2 )
+   for( ptr = ( const unsigned char * ) pTerm->szAcsc; *ptr && *( ptr + 1 ); ptr += 2 )
    {
       if( *ptr == c )
          return *( ptr + 1 ) | HB_GTTRM_ATTR_ACSC;

@@ -76,16 +76,16 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
                         ++pszCCode;
                      if( HB_ISFIRSTIDCHAR( *pszCCode ) )
                      {
-                        char * name = ( char * ) pszCCode++;
+                        const char * pszName = pszCCode++;
 
                         while( HB_ISNEXTIDCHAR( *pszCCode ) )
                            ++pszCCode;
-                        len = ( int ) ( pszCCode - name );
+                        len = ( int ) ( pszCCode - pszName );
                         while( HB_ISSPACE( *pszCCode ) )
                            ++pszCCode;
                         if( *pszCCode == ')' )
                         {
-                           name = hb_strndup( name, len );
+                           char * name = hb_strndup( pszName, len );
                            hb_compFunctionMarkStatic( HB_COMP_PARAM, name );
                            hb_xfree( name );
                         }
@@ -382,7 +382,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          if( pInline->pCode )
          {
             fprintf( yyc, "#line %i ", pInline->iLine );
-            hb_compGenCString( yyc, ( HB_BYTE * ) pInline->szFileName,
+            hb_compGenCString( yyc, ( const HB_BYTE * ) pInline->szFileName,
                                strlen( pInline->szFileName ) );
             fprintf( yyc, "\n" );
 
@@ -407,7 +407,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                fHasHbInline = HB_TRUE;
             }
             fprintf( yyc, "#line %i ", pInline->iLine );
-            hb_compGenCString( yyc, ( HB_BYTE * ) pInline->szFileName,
+            hb_compGenCString( yyc, ( const HB_BYTE * ) pInline->szFileName,
                                strlen( pInline->szFileName ) );
             fprintf( yyc, "\n" );
 
@@ -437,7 +437,7 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, 
 */
    fprintf( yyc, "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, ",
                  HB_COMP_PARAM->szPrefix, szModulname );
-   hb_compGenCString( yyc, ( HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
+   hb_compGenCString( yyc, ( const HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
    fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
    fprintf( yyc, "#if defined( HB_PRAGMA_STARTUP )\n"
@@ -2680,7 +2680,7 @@ static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    genc_info.yyc = yyc;
 
    fprintf( yyc, "{\n   static const HB_BYTE pcode[] =\n   {\n" );
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &genc_info );
+   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
       fprintf( yyc, "/* %05" HB_PFS "i */\n", pFunc->nPCodePos );

@@ -260,7 +260,7 @@ static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
    return IDENTIFIER;
 }
 
-static char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
+static const char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
 {
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
    {
@@ -268,7 +268,7 @@ static char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
 
-   return ( char * ) pToken->value;
+   return pToken->value;
 }
 
 static const char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOKEN pToken )
@@ -736,7 +736,7 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
       case HB_PP_TOKEN_SEND:
          if( HB_PP_LEX_SELF( pToken ) )
          {
-            pLex->lasttok = yylval_ptr->string = ( char * ) "SELF";
+            pLex->lasttok = yylval_ptr->string = "SELF";
             pLex->iState = IDENTIFIER;
             return IDENTIFIER;
          }

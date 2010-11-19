@@ -2201,7 +2201,8 @@ HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
 {
    LPRDDNODE pRddNode;
    HB_USHORT uiCount;
-   DBENTRYP_V * pFunction, * pSubFunction;
+   DBENTRYP_V * pFunction;
+   const DBENTRYP_V * pSubFunction;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddInheritEx(%p, %p, %p, %s, %p)", pTable, pSubTable, pSuperTable, szDrvName, puiSupperRddId));
 
@@ -2236,7 +2237,7 @@ HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
 
    /* Copy the non NULL entries from pSubTable into pTable */
    pFunction = ( DBENTRYP_V * ) pTable;
-   pSubFunction = ( DBENTRYP_V * ) pSubTable;
+   pSubFunction = ( const DBENTRYP_V * ) pSubTable;
    for( uiCount = 0; uiCount < RDDFUNCSCOUNT; uiCount++ )
    {
       if( * pSubFunction )

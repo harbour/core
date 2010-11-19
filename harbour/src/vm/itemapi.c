@@ -224,7 +224,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    else
    {
       nAlloc = 0;
-      szText = ( char * ) ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      szText = ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -246,19 +246,20 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
    HB_SIZE nAlloc;
+   char * szValue;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen));
 
    if( nLen > 1 )
    {
       nAlloc = nLen + 1;
-      szText = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nLen );
-      ( ( char * ) szText )[ nLen ] = '\0';
+      szValue = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nLen );
+      szValue[ nLen ] = '\0';
    }
    else
    {
       nAlloc = 0;
-      szText = ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      szValue = ( char * ) ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -274,7 +275,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
             [vszakats] */
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.value     = szValue;
    pItem->item.asString.length    = nLen;
    pItem->item.asString.allocated = nAlloc;
 

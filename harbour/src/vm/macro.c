@@ -422,7 +422,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
    {
       HB_MACRO struMacro;
       int iStatus;
-      HB_BOOL fFree;
+      char * pszFree;
 
       struMacro.mode       = HB_MODE_MACRO;
       struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
@@ -442,8 +442,10 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
        *          ? "Type:", type(cText)
        *       RETURN
        */
-      struMacro.string = hb_macroTextSubst( pItem->item.asString.value, &struMacro.length );
-      fFree = struMacro.string != pItem->item.asString.value;
+      pszFree = hb_macroTextSubst( pItem->item.asString.value, &struMacro.length );
+      struMacro.string = pszFree;
+      if( pszFree == pItem->item.asString.value )
+         pszFree = NULL;
 
       if( iContext != 0 )
       {
@@ -480,8 +482,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
       else
          hb_macroSyntaxError( &struMacro );
 
-      if( fFree )
-         hb_xfree( struMacro.string );
+      if( pszFree )
+         hb_xfree( pszFree );
 
       hb_macroDelete( &struMacro );
    }
@@ -706,7 +708,7 @@ char * hb_macroExpandString( const char *szString, HB_SIZE nLength, HB_BOOL *pfN
 
 char * hb_macroTextSymbol( const char *szString, HB_SIZE nLength, HB_BOOL *pfNewString )
 {
-   char *szResult = NULL;
+   char * szResult = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, nLength, pfNewString));
 
@@ -793,7 +795,7 @@ HB_MACRO_PTR hb_macroCompile( const char * szString )
                        HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
    pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
    pMacro->status    = HB_MACRO_CONT;
-   pMacro->string    = ( char * ) szString;
+   pMacro->string    = szString;
    pMacro->length    = strlen( szString );
 
    iStatus = hb_macroParse( pMacro );
@@ -1548,7 +1550,7 @@ void hb_macroGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
          hb_macroGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_COMP_PARAM );
       else
          hb_macroGenPCode4( HB_P_MPUSHSTRLARGE, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_ULBYTE( nStrLen ), HB_COMP_PARAM );
-      hb_macroGenPCodeN( ( HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
+      hb_macroGenPCodeN( ( const HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
    }
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
@@ -1600,7 +1602,7 @@ void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byt
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte4;
 }
 
-void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
+void hb_macroGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 

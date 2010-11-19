@@ -1129,7 +1129,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    fprintf( cargo->yyc, "\thb_xvmPushDouble( * ( double * ) " );
    {
       double d = HB_PCODE_MKDOUBLE( &pFunc->pCode[ nPCodePos + 1 ] );
-      hb_compGenCString( cargo->yyc, ( HB_BYTE * ) &d, sizeof( double ) );
+      hb_compGenCString( cargo->yyc, ( const HB_BYTE * ) &d, sizeof( double ) );
    }
    fprintf( cargo->yyc, ", %d, %d );\n",
             pFunc->pCode[ nPCodePos + 1 + sizeof( double ) ],
@@ -2367,7 +2367,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
       fprintf( yyc, "   HB_BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );
+   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );
 
    fprintf( yyc, "   } while( 0 );\n" );
    if( label_info.fEndRequest )

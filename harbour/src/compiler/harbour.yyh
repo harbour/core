@@ -268,7 +268,7 @@
 typedef union YYSTYPE
 #line 117 "harbour.y"
 {
-   char *  string;      /* to hold a string returned by lex */
+   const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
    HB_MAXINT lNumber;   /* to hold a temporary long number */

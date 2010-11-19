@@ -180,7 +180,7 @@ static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, HB_SIZE nPos, HB_TYPE uiType )
       return NULL;
 }
 
-static const char * hb_usrArrayGetC( PHB_ITEM pArray, HB_SIZE nPos )
+static const char * hb_usrArrayGetCPtr( PHB_ITEM pArray, HB_SIZE nPos )
 {
    PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, nPos );
 
@@ -196,7 +196,7 @@ static PHB_ITEM hb_usrFieldInfoToItem( LPDBFIELDINFO pFieldInfo )
 
    pItem = hb_itemArrayNew( UR_FI_SIZE );
    if( pFieldInfo->atomName )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_FI_NAME ), ( char * ) pFieldInfo->atomName );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_FI_NAME ), pFieldInfo->atomName );
    hb_itemPutNI( hb_arrayGetItemPtr( pItem, UR_FI_TYPE ), pFieldInfo->uiType );
    hb_itemPutNI( hb_arrayGetItemPtr( pItem, UR_FI_TYPEEXT ), pFieldInfo->uiTypeExtended );
    hb_itemPutNI( hb_arrayGetItemPtr( pItem, UR_FI_LEN ), pFieldInfo->uiLen );
@@ -209,7 +209,7 @@ static HB_BOOL hb_usrItemToFieldInfo( PHB_ITEM pItem, LPDBFIELDINFO pFieldInfo )
 {
    if( pItem && hb_arrayLen( pItem ) == UR_FI_SIZE )
    {
-      pFieldInfo->atomName       = hb_usrArrayGetC( pItem, UR_FI_NAME );
+      pFieldInfo->atomName       = hb_usrArrayGetCPtr( pItem, UR_FI_NAME );
       pFieldInfo->uiType         = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_TYPE );
       pFieldInfo->uiTypeExtended = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_TYPEEXT );
       pFieldInfo->uiLen          = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_LEN );
@@ -226,13 +226,13 @@ static PHB_ITEM hb_usrOpenInfoToItem( LPDBOPENINFO pOpenInfo )
    pItem = hb_itemArrayNew( UR_OI_SIZE );
    hb_itemPutNI( hb_arrayGetItemPtr( pItem, UR_OI_AREA ), pOpenInfo->uiArea );
    if( pOpenInfo->abName )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_NAME ), ( char * ) pOpenInfo->abName );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_NAME ), pOpenInfo->abName );
    if( pOpenInfo->atomAlias )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_ALIAS ), ( char * ) pOpenInfo->atomAlias );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_ALIAS ), pOpenInfo->atomAlias );
    hb_itemPutL( hb_arrayGetItemPtr( pItem, UR_OI_SHARED ), pOpenInfo->fShared );
    hb_itemPutL( hb_arrayGetItemPtr( pItem, UR_OI_READONLY ), pOpenInfo->fReadonly );
    if( pOpenInfo->cdpId )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_CDPID ), ( char * ) pOpenInfo->cdpId );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_OI_CDPID ), pOpenInfo->cdpId );
    hb_itemPutNL( hb_arrayGetItemPtr( pItem, UR_OI_CONNECT ), pOpenInfo->ulConnection );
    if( pOpenInfo->lpdbHeader )
       hb_itemPutPtr( hb_arrayGetItemPtr( pItem, UR_OI_HEADER ), pOpenInfo->lpdbHeader );
@@ -245,11 +245,11 @@ static HB_BOOL hb_usrItemToOpenInfo( PHB_ITEM pItem, LPDBOPENINFO pOpenInfo )
    if( pItem && hb_arrayLen( pItem ) == UR_OI_SIZE )
    {
       pOpenInfo->uiArea       = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_OI_AREA );
-      pOpenInfo->abName       = hb_usrArrayGetC( pItem, UR_OI_NAME );
-      pOpenInfo->atomAlias    = hb_usrArrayGetC( pItem, UR_OI_ALIAS );
+      pOpenInfo->abName       = hb_usrArrayGetCPtr( pItem, UR_OI_NAME );
+      pOpenInfo->atomAlias    = hb_usrArrayGetCPtr( pItem, UR_OI_ALIAS );
       pOpenInfo->fShared      = hb_arrayGetL( pItem, UR_OI_SHARED );
       pOpenInfo->fReadonly    = hb_arrayGetL( pItem, UR_OI_READONLY );
-      pOpenInfo->cdpId        = hb_usrArrayGetC( pItem, UR_OI_CDPID );
+      pOpenInfo->cdpId        = hb_usrArrayGetCPtr( pItem, UR_OI_CDPID );
       pOpenInfo->ulConnection = hb_arrayGetNL( pItem, UR_OI_CONNECT );
       pOpenInfo->lpdbHeader   = hb_arrayGetPtr( pItem, UR_OI_HEADER );
       return HB_TRUE;
@@ -614,9 +614,9 @@ static PHB_ITEM hb_usrOrderCondInfoToItem( LPDBORDERCONDINFO pOrderCondInfo )
    pItem = hb_itemArrayNew( UR_ORC_SIZE );
    hb_itemPutL( hb_arrayGetItemPtr( pItem, UR_ORC_ACTIVE ), pOrderCondInfo->fActive );
    if( pOrderCondInfo->abFor )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORC_CFOR ), ( char * ) pOrderCondInfo->abFor );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORC_CFOR ), pOrderCondInfo->abFor );
    if( pOrderCondInfo->abWhile )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORC_CWHILE ), ( char * ) pOrderCondInfo->abWhile );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORC_CWHILE ), pOrderCondInfo->abWhile );
    if( pOrderCondInfo->itmCobFor )
       hb_itemCopy( hb_arrayGetItemPtr( pItem, UR_ORC_BFOR ), pOrderCondInfo->itmCobFor );
    if( pOrderCondInfo->itmCobWhile )
@@ -652,8 +652,8 @@ static HB_BOOL hb_usrItemToOrderCondInfo( PHB_ITEM pItem,
    if( pItem && hb_arrayLen( pItem ) == UR_ORC_SIZE )
    {
       pOrderCondInfo->fActive       = hb_arrayGetL( pItem, UR_ORC_ACTIVE );
-      pOrderCondInfo->abFor         = ( char * ) hb_usrArrayGetC( pItem, UR_ORC_CFOR );
-      pOrderCondInfo->abWhile       = ( char * ) hb_usrArrayGetC( pItem, UR_ORC_CWHILE );
+      pOrderCondInfo->abFor         = hb_arrayGetC( pItem, UR_ORC_CFOR );
+      pOrderCondInfo->abWhile       = hb_arrayGetC( pItem, UR_ORC_CWHILE );
       pOrderCondInfo->itmCobFor     = hb_usrArrayGet( pItem, UR_ORC_BFOR, HB_IT_ANY );
       pOrderCondInfo->itmCobWhile   = hb_usrArrayGet( pItem, UR_ORC_BWHILE, HB_IT_ANY );
       pOrderCondInfo->itmCobEval    = hb_usrArrayGet( pItem, UR_ORC_BEVAL, HB_IT_ANY );
@@ -728,9 +728,9 @@ static PHB_ITEM hb_usrOrderCreateInfoToItem( LPDBORDERCREATEINFO pOrderCreateInf
       hb_itemRelease( pCond );
    }
    if( pOrderCreateInfo->abBagName )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORCR_BAGNAME ), ( char * ) pOrderCreateInfo->abBagName );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORCR_BAGNAME ), pOrderCreateInfo->abBagName );
    if( pOrderCreateInfo->atomBagName )
-      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORCR_TAGNAME ), ( char * ) pOrderCreateInfo->atomBagName );
+      hb_itemPutC( hb_arrayGetItemPtr( pItem, UR_ORCR_TAGNAME ), pOrderCreateInfo->atomBagName );
    if( pOrderCreateInfo->itmOrder )
       hb_itemCopy( hb_arrayGetItemPtr( pItem, UR_ORCR_ORDER ), pOrderCreateInfo->itmOrder );
    hb_itemPutL( hb_arrayGetItemPtr( pItem, UR_ORCR_UNIQUE ), pOrderCreateInfo->fUnique );
@@ -765,8 +765,8 @@ static HB_BOOL hb_usrItemToOrderCreateInfo( PHB_ITEM pItem,
          pOrderCreateInfo->lpdbOrdCondInfo = NULL;
       }
 
-      pOrderCreateInfo->abBagName   = hb_usrArrayGetC( pItem, UR_ORCR_BAGNAME );
-      pOrderCreateInfo->atomBagName = hb_usrArrayGetC( pItem, UR_ORCR_TAGNAME );
+      pOrderCreateInfo->abBagName   = hb_usrArrayGetCPtr( pItem, UR_ORCR_BAGNAME );
+      pOrderCreateInfo->atomBagName = hb_usrArrayGetCPtr( pItem, UR_ORCR_TAGNAME );
       pOrderCreateInfo->itmOrder    = hb_usrArrayGet( pItem, UR_ORCR_ORDER, HB_IT_ANY );
       pOrderCreateInfo->fUnique     = hb_arrayGetL( pItem, UR_ORCR_UNIQUE );
       pOrderCreateInfo->itmCobExpr  = hb_usrArrayGet( pItem, UR_ORCR_BKEY, HB_IT_ANY );

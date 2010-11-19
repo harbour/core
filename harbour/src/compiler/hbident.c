@@ -65,7 +65,7 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
 static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_SIZE func (void *Value, void *Cargo) */
 {
    HB_SIZE nSum = 0;
-   const char * szName = ( char * )Value;
+   const char * szName = ( const char * ) Value;
 
    while( *szName )
       nSum += *szName++;
@@ -89,7 +89,7 @@ static HB_HASH_FUNC( hb_comp_IdentDel )
 static HB_HASH_FUNC( hb_comp_IdentComp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
-   return strcmp( ( char * ) Value, (char *)Cargo );
+   return strcmp( ( const char * ) Value, ( const char * )Cargo );
 }
 
 /* initialize the hash table for identifiers */

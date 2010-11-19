@@ -742,7 +742,7 @@ void hb_sha384_final(sha384_ctx *ctx, unsigned char *digest)
 /* SHA-224 functions */
 
 void hb_sha224(const void *message, unsigned int len,
-            unsigned char *digest)
+               unsigned char *digest)
 {
     sha224_ctx ctx;
 

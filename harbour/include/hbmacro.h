@@ -121,7 +121,7 @@ extern void hb_macroGenPCode1( HB_BYTE byte, HB_COMP_DECL );
 extern void hb_macroGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL );
 extern void hb_macroGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL );
 extern void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL );
-extern void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL );
+extern void hb_macroGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL );
 
 extern HB_SIZE hb_macroGenJump( HB_ISIZ nOffset, HB_COMP_DECL );
 extern HB_SIZE hb_macroGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL );

@@ -434,7 +434,7 @@ static void hb_compDebugStart( void ) { }
 typedef union YYSTYPE
 #line 117 "harbour.y"
 {
-   char *  string;      /* to hold a string returned by lex */
+   const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
    HB_MAXINT lNumber;   /* to hold a temporary long number */
@@ -4783,27 +4783,27 @@ yyreduce:
 
   case 121:
 #line 537 "harbour.y"
-    { (yyval.string) = ( char * ) "STEP"; ;}
+    { (yyval.string) = "STEP"; ;}
     break;
 
   case 122:
 #line 538 "harbour.y"
-    { (yyval.string) = ( char * ) "TO"; ;}
+    { (yyval.string) = "TO"; ;}
     break;
 
   case 123:
 #line 539 "harbour.y"
-    { (yyval.string) = ( char * ) "LOOP"; ;}
+    { (yyval.string) = "LOOP"; ;}
     break;
 
   case 124:
 #line 540 "harbour.y"
-    { (yyval.string) = ( char * ) "EXIT"; ;}
+    { (yyval.string) = "EXIT"; ;}
     break;
 
   case 125:
 #line 541 "harbour.y"
-    { (yyval.string) = ( char * ) "IN"; ;}
+    { (yyval.string) = "IN"; ;}
     break;
 
   case 126:

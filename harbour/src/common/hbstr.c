@@ -176,8 +176,7 @@ char * hb_strndup( const char * pszText, HB_SIZE nLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen));
 
    ul = 0;
-   pszDup = ( char * ) pszText;
-   while( nLen-- && *pszDup++ )
+   while( nLen-- && pszText[ ul ] )
       ++ul;
 
    pszDup = ( char * ) hb_xgrab( ul + 1 );

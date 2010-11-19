@@ -440,7 +440,7 @@ typedef struct _HB_BASEHASH
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
-   HB_BYTE *   pCode;        /* codeblock pcode */
+   const HB_BYTE * pCode;    /* codeblock pcode */
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    PHB_ITEM    pLocals;      /* table with referenced local variables */

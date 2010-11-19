@@ -924,7 +924,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
 
       case HB_SERIAL_SYMBOL:
          nLen = pBuffer[ nOffset++ ];
-         szVal = hb_strndup( ( char * ) &pBuffer[ nOffset ], nLen );
+         szVal = hb_strndup( ( const char * ) &pBuffer[ nOffset ], nLen );
          hb_itemPutSymbol( pItem, hb_dynsymGetSymbol( szVal ) );
          hb_xfree( szVal );
          nOffset += nLen;
@@ -1230,12 +1230,12 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          nSize = 5;
          break;
       case HB_SERIAL_OBJ:
-         nLen = hb_strnlen( ( char * ) pBuffer, nSize - 1 ) + 1;
+         nLen = hb_strnlen( ( const char * ) pBuffer, nSize - 1 ) + 1;
          if( nLen >= nSize )
             nSize++;
          else
          {
-            nLen += hb_strnlen( ( char * ) pBuffer + nLen, nSize - nLen - 1 ) + 2;
+            nLen += hb_strnlen( ( const char * ) pBuffer + nLen, nSize - nLen - 1 ) + 2;
             if( nLen >= nSize )
                nSize++;
             else

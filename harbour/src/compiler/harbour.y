@@ -115,7 +115,7 @@ static void hb_compDebugStart( void ) { }
 
 %union                  /* special structure used by lex and yacc to share info */
 {
-   char *  string;      /* to hold a string returned by lex */
+   const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
    HB_MAXINT lNumber;   /* to hold a temporary long number */
@@ -534,11 +534,11 @@ DynList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1, HB
            ;
 
 IdentName  : IDENTIFIER
-           | STEP             { $$ = ( char * ) "STEP"; }
-           | TO               { $$ = ( char * ) "TO"; }
-           | LOOP             { $$ = ( char * ) "LOOP"; }
-           | EXIT             { $$ = ( char * ) "EXIT"; }
-           | IN               { $$ = ( char * ) "IN"; }
+           | STEP             { $$ = "STEP"; }
+           | TO               { $$ = "TO"; }
+           | LOOP             { $$ = "LOOP"; }
+           | EXIT             { $$ = "EXIT"; }
+           | IN               { $$ = "IN"; }
            | OPTIONAL         { $$ = $<string>1; }
            | EXTERN           { $$ = $<string>1; }
            | DYNAMIC          { $$ = $<string>1; }

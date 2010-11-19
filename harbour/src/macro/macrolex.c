@@ -210,8 +210,9 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                                 PHB_MACRO_LEX pLex )
 {
    HB_SIZE nLen;
+   char * string;
    pLex->quote = HB_FALSE;
-   yylval_ptr->valChar.string = pLex->pDst;
+   string = pLex->pDst;
    while( pLex->nSrc < pLex->nLen )
    {
       char ch = pLex->pString[ pLex->nSrc++ ];
@@ -225,18 +226,19 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
       }
       else if( ch == '"' )
       {
-         nLen = pLex->pDst - yylval_ptr->valChar.string;
+         nLen = pLex->pDst - string;
          *pLex->pDst++ = '\0';
-         hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &nLen );
+         hb_strRemEscSeq( string, &nLen );
          yylval_ptr->valChar.length = nLen;
          return LITERAL;
       }
       *pLex->pDst++ = ch;
    }
-   nLen = pLex->pDst - yylval_ptr->valChar.string;
+   nLen = pLex->pDst - string;
    *pLex->pDst++ = '\0';
-   hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &nLen );
+   hb_strRemEscSeq( string, &nLen );
    yylval_ptr->valChar.length = nLen;
+   yylval_ptr->valChar.string = string;
    hb_macroError( EG_SYNTAX, pMacro );
    return LITERAL;
 }

@@ -579,7 +579,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
             if( HB_COMP_PARAM->fDebugInfo )
             {
                hb_compGenPCode3( HB_P_LOCALNAME, HB_LOBYTE( wLocal ), HB_HIBYTE( wLocal ), HB_COMP_PARAM );
-               hb_compGenPCodeN( ( HB_BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
+               hb_compGenPCodeN( ( const HB_BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
             }
             break;
          }
@@ -1269,8 +1269,8 @@ PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromCl
 
 static int hb_compSort_HB_SIZE( const void * pLeft, const void * pRight )
 {
-    HB_SIZE nLeft  = *( ( HB_SIZE * ) ( pLeft ) );
-    HB_SIZE nRight = *( ( HB_SIZE * ) ( pRight ) );
+    HB_SIZE nLeft  = *( ( const HB_SIZE * ) ( pLeft ) );
+    HB_SIZE nRight = *( ( const HB_SIZE * ) ( pRight ) );
 
     if( nLeft == nRight )
        return 0 ;
@@ -2438,11 +2438,11 @@ void hb_compLinePushIfDebugger( HB_COMP_DECL )
 void hb_compGenModuleName( HB_COMP_DECL, const char * szFunName )
 {
    hb_compGenPCode1( HB_P_MODULENAME, HB_COMP_PARAM );
-   hb_compGenPCodeN( ( HB_BYTE * ) HB_COMP_PARAM->currModule,
+   hb_compGenPCodeN( ( const HB_BYTE * ) HB_COMP_PARAM->currModule,
                      strlen( HB_COMP_PARAM->currModule ), HB_COMP_PARAM );
    hb_compGenPCode1( ':', HB_COMP_PARAM );
    if( szFunName && *szFunName )
-      hb_compGenPCodeN( ( HB_BYTE * ) szFunName, strlen( szFunName ) + 1, HB_COMP_PARAM );
+      hb_compGenPCodeN( ( const HB_BYTE * ) szFunName, strlen( szFunName ) + 1, HB_COMP_PARAM );
    else /* special version "filename:" when the file changes within function */
       hb_compGenPCode1( '\0', HB_COMP_PARAM );
    HB_COMP_PARAM->lastModule = HB_COMP_PARAM->currModule;
@@ -3081,7 +3081,7 @@ void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
             hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_COMP_PARAM );
          else
             hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( HB_BYTE ) nStrLen, HB_COMP_PARAM );
-         hb_compGenPCodeN( ( HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
+         hb_compGenPCodeN( ( const HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
       }
    }
 }
@@ -3367,7 +3367,7 @@ void hb_compStaticDefEnd( HB_COMP_DECL, const char * szVarName )
 
       iVar = HB_COMP_PARAM->iStaticCnt;
       hb_compGenPCode4( HB_P_STATICNAME, bGlobal, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
-      hb_compGenPCodeN( ( HB_BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
+      hb_compGenPCodeN( ( const HB_BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
       if( bGlobal )
       {
          HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc->pOwner;
@@ -3613,7 +3613,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       while( wLocalsCnt-- )
       {
          hb_compGenPCode3( HB_P_LOCALNAME, HB_LOBYTE( iLocalPos ), HB_HIBYTE( iLocalPos ), HB_COMP_PARAM );
-         hb_compGenPCodeN( ( HB_BYTE * ) pVar->szName, strlen( pVar->szName ) + 1, HB_COMP_PARAM );
+         hb_compGenPCodeN( ( const HB_BYTE * ) pVar->szName, strlen( pVar->szName ) + 1, HB_COMP_PARAM );
          iLocalPos--;
          pVar = pVar->pNext;
       }

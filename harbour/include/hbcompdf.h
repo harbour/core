@@ -667,7 +667,7 @@ typedef struct HB_MACRO_      /* a macro compiled pcode container */
    const struct _HB_COMP_FUNCS * funcs;
 
    /* macro compiler only members */
-   char *   string;           /* compiled string */
+   const char * string;       /* compiled string */
    HB_SIZE  length;           /* length of the string */
    int      Flags;            /* some flags we may need */
    int      status;           /* status of compilation */

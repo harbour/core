@@ -79,9 +79,9 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
    if( pCBlock->pCode && pCBlock->dynBuffer )
    {
       pCBlock->dynBuffer = HB_FALSE;
-      hb_xfree( pCBlock->pCode );
+      hb_xfree( ( void * ) pCBlock->pCode );
    }
-   pCBlock->pCode = ( HB_BYTE * ) s_pCode;
+   pCBlock->pCode = s_pCode;
 
    /* free space allocated for local variables
     */
@@ -147,7 +147,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pLocals, pBase;
-   HB_BYTE * pCode;
+   const HB_BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, nLen));
 
@@ -164,8 +164,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
        * can be deallocated after creation of a codeblock. We have to duplicate
        * the passed buffer
        */
-      pCode = ( HB_BYTE * ) hb_xgrab( nLen );
-      memcpy( pCode, pBuffer, nLen );
+      pCode = ( const HB_BYTE * ) memcpy( hb_xgrab( nLen ), pBuffer, nLen );
    }
    else
    {
@@ -174,7 +173,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
        * The only allowed operation on a codeblock is evaluating it then
        * there is no need to duplicate its pcode - just store the pointer to it
        */
-      pCode     = ( HB_BYTE * ) pBuffer;
+      pCode = pBuffer;
    }
 
    if( uiLocals )
@@ -273,8 +272,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
     * to be safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
-   pCode = ( HB_BYTE * ) hb_xgrab( nLen );
-   memcpy( pCode, pBuffer, nLen );
+   pCode = ( HB_BYTE * ) memcpy( hb_xgrab( nLen ), pBuffer, nLen );
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
    pBase = hb_stackBaseItem();

@@ -473,12 +473,13 @@ static PHB_PP_TOKEN hb_pp_tokenNew( const char * value, HB_SIZE nLen,
       }
       else
       {
-         pToken->value = ( char * ) memcpy( hb_xgrab( nLen + 1 ), value, nLen );
-         ( ( char * ) pToken->value )[ nLen ] = '\0';
+         char * val = ( char * ) memcpy( hb_xgrab( nLen + 1 ), value, nLen );
+         val[ nLen ] = '\0';
+         pToken->value = val;
       }
    }
    else
-      pToken->value = ( char * ) value;
+      pToken->value = value;
 
    pToken->len    = nLen;
    pToken->spaces = nSpaces;
@@ -502,9 +503,10 @@ static void hb_pp_tokenSetValue( PHB_PP_TOKEN pToken,
    }
    else
    {
+      char * val = ( char * ) memcpy( hb_xgrab( nLen + 1 ), value, nLen );
+      val[ nLen ] = '\0';
+      pToken->value = val;
       pToken->type &= ~HB_PP_TOKEN_STATIC;
-      pToken->value = ( char * ) memcpy( hb_xgrab( nLen + 1 ), value, nLen );
-      ( ( char * ) pToken->value )[ nLen ] = '\0';
    }
    pToken->len = nLen;
 }
@@ -516,9 +518,10 @@ static PHB_PP_TOKEN hb_pp_tokenClone( PHB_PP_TOKEN pSource )
    memcpy( pDest, pSource, sizeof( HB_PP_TOKEN ) );
    if( HB_PP_TOKEN_ALLOC( pDest->type ) )
    {
-      pDest->value = ( char * ) memcpy( hb_xgrab( pDest->len + 1 ),
-                                        pSource->value, pDest->len );
-      ( ( char * ) pDest->value )[ pDest->len ] = '\0';
+      char * val = ( char * ) memcpy( hb_xgrab( pDest->len + 1 ),
+                                      pSource->value, pDest->len );
+      val[ pDest->len ] = '\0';
+      pDest->value = val;
    }
    pDest->pNext  = NULL;
 
@@ -1906,7 +1909,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
          PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
          HB_BOOL fNested = HB_FALSE;
 
-         pFileName->szName = ( char * ) szFileName;
+         pFileName->szName = szFileName;
          pFileName->szExtension = NULL;
          if( !fSysFile )
          {
@@ -5366,7 +5369,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
 void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
                       const HB_PP_DEFRULE pDefRules[], int iDefRules )
 {
-   PHB_PP_DEFRULE pDefRule;
+   const HB_PP_DEFRULE * pDefRule;
    PHB_PP_MARKER pMarkers;
    PHB_PP_RULE pRule;
 
@@ -5375,7 +5378,7 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
 
    while( --iDefRules >= 0 )
    {
-      pDefRule = ( PHB_PP_DEFRULE ) pDefRules + iDefRules;
+      pDefRule = pDefRules + iDefRules;
       if( pDefRule->markers > 0 )
       {
          HB_USHORT marker;
@@ -5719,7 +5722,7 @@ HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName,
 
    pState->fError = HB_FALSE;
 
-   pState->pFile = hb_pp_FileNew( pState, ( char * ) szFileName, HB_FALSE, NULL,
+   pState->pFile = hb_pp_FileNew( pState, szFileName, HB_FALSE, NULL,
                                   file_in, fSearchPath, NULL, HB_FALSE );
    if( pState->pFile )
    {
@@ -6127,14 +6130,14 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
             hb_xfree( ( void * ) pToken->value );
             pToken->type |= HB_PP_TOKEN_STATIC;
          }
-         pToken->value = ( char * ) hb_szAscii[ ucVal ];
+         pToken->value = hb_szAscii[ ucVal ];
       }
       else
       {
          if( !HB_PP_TOKEN_ALLOC( pToken->type ) )
          {
             pToken->value = ( char * ) memcpy( hb_xgrab( pToken->len + 1 ),
-                                              pToken->value + 1, pToken->len );
+                                               pToken->value + 1, pToken->len );
             pToken->type &= ~HB_PP_TOKEN_STATIC;
          }
          else
@@ -6167,7 +6170,7 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
          hb_xfree( ( void * ) pToken->value );
          pToken->type |= HB_PP_TOKEN_STATIC;
       }
-      pToken->value = ( char * ) hb_szAscii[ ucVal ];
+      pToken->value = hb_szAscii[ ucVal ];
    }
    else
       hb_strupr( ( char * ) pToken->value );

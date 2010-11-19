@@ -566,7 +566,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
    code_info.pCodeMark = ( HB_BYTE * ) hb_xgrab( code_info.nPCodeSize );
    memset( code_info.pCodeMark, 0, code_info.nPCodeSize );
 
-   hb_compPCodeTrace( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &code_info );
+   hb_compPCodeTrace( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &code_info );
 
    if( code_info.fFinished )
    {

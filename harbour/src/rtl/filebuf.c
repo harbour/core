@@ -360,7 +360,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
          pFile = NULL;
       }
       else if( uiExFlags & FXO_COPYNAME )
-         hb_strncpy( ( char * ) pFilename, ( char * ) pszFile, HB_PATH_MAX - 1 );
+         hb_strncpy( ( char * ) pFilename, pszFile, HB_PATH_MAX - 1 );
 
       if( pError )
       {

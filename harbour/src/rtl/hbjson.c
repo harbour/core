@@ -186,7 +186,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
       while( nPos < nLen )
       {
          nPos2 = nPos;
-         while( * ( ( unsigned char * ) szString + nPos2 ) >= ' ' &&
+         while( * ( ( const unsigned char * ) szString + nPos2 ) >= ' ' &&
                 szString[ nPos2 ] != '\\' && szString[ nPos2 ] != '\"' )
             nPos2++;
          if( nPos2 > nPos )
@@ -462,7 +462,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
             }
             szSource++;
          }
-         else if( * ( unsigned char * ) szSource >= ' ' )
+         else if( * ( const unsigned char * ) szSource >= ' ' )
             *szHead++ = *szSource++;
          else
          {
