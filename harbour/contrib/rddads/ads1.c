@@ -2165,7 +2165,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          }
 #endif
 #ifdef ADS_USE_OEM_TRANSLATION
-         else if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+         else if( hb_ads_bOEM && ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
 #if ADS_LIB_VERSION >= 600
             u32RetVal = AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
