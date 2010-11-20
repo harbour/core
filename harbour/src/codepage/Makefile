@@ -69,6 +69,7 @@ C_SOURCES := \
    cprukoi.c \
    cpruwin.c \
    cpsk852.c \
+   cpsk852c.c \
    cpskiso.c \
    cpskkam.c \
    cpskwin.c \
