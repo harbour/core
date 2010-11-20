@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#define IMAGES_OUT "imgs_out/"
+#define IMAGES_OUT "imgs_out" + hb_ps()
 
 Function Main()
 

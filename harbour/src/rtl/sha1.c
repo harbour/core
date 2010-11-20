@@ -148,16 +148,14 @@ void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
 void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
     sha1_quadbyte   i;
     sha1_byte   finalcount[8];
-    sha1_byte   str1[ 1 ] = { '\x80' };
-    sha1_byte   str2[ 1 ] = { '\0' };
 
     for (i = 0; i < 8; i++) {
         finalcount[i] = (sha1_byte)((context->count[(i >= 4 ? 0 : 1)]
          >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
     }
-    hb_SHA1_Update(context, str1, 1);
+    hb_SHA1_Update(context, (const sha1_byte *)"\x80", 1);
     while ((context->count[0] & 504) != 448) {
-        hb_SHA1_Update(context, str2, 1);
+        hb_SHA1_Update(context, (const sha1_byte *)"\0", 1);
     }
     /* Should cause a SHA1_Transform() */
     hb_SHA1_Update(context, finalcount, 8);

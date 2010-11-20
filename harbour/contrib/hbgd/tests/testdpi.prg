@@ -12,8 +12,8 @@
 #include "gd.ch"
 #include "common.ch"
 
-#define IMAGES_IN  "imgs_in/"
-#define IMAGES_OUT "imgs_out/"
+#define IMAGES_IN  "imgs_in" + hb_ps()
+#define IMAGES_OUT "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 

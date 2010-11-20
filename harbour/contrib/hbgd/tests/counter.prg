@@ -17,8 +17,8 @@
 /* Some digits images from:
    http://www.digitmania.holowww.com/all.html */
 
-#define IMAGES_IN  "digits/"
-#define IMAGES_OUT "imgs_out/"
+#define IMAGES_IN  "digits" + hb_ps()
+#define IMAGES_OUT "imgs_out" + hb_ps()
 
 #define DISPLAY_NUM  10
 
