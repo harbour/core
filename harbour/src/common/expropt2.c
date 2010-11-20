@@ -167,12 +167,12 @@ HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                double dValue, dDivisor;
 
                dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
-                          pRight->value.asNum.val.l :
+                          ( double ) pRight->value.asNum.val.l :
                           pRight->value.asNum.val.d;
                if( dDivisor )
                {
                   dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
-                           pLeft->value.asNum.val.l :
+                           ( double ) pLeft->value.asNum.val.l :
                            pLeft->value.asNum.val.d;
                   pSelf->value.asNum.val.d = fmod( dValue, dDivisor );
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
