@@ -51,54 +51,65 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
 #include "sha1.h"
 
 HB_FUNC( HB_SHA1 )
 {
-   sha1_byte digest[ SHA1_DIGEST_LENGTH ];
-   SHA_CTX ctx;
+   PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
 
-   hb_SHA1_Init( &ctx );
-
-   #if HB_SIZE_MAX > UINT_MAX
+   if( pBuffer )
    {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
+      char * buffer = hb_itemGetC( pBuffer );
+      sha1_byte digest[ SHA1_DIGEST_LENGTH ];
+      SHA_CTX ctx;
 
-      while( nCount )
+      hb_SHA1_Init( &ctx );
+
+      #if HB_SIZE_MAX > UINT_MAX
       {
-         unsigned int uiChunk;
+         HB_SIZE nCount = hb_itemGetCLen( pBuffer );
+         HB_SIZE nDone = 0;
 
-         if( nCount > ( HB_SIZE ) UINT_MAX )
+         while( nCount )
          {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
+            unsigned int uiChunk;
 
-         hb_SHA1_Update( &ctx, buffer + nDone, uiChunk );
+            if( nCount > ( HB_SIZE ) UINT_MAX )
+            {
+               uiChunk = UINT_MAX;
+               nCount -= ( HB_SIZE ) uiChunk;
+            }
+            else
+            {
+               uiChunk = ( unsigned int ) nCount;
+               nCount = 0;
+            }
 
-         nDone += ( HB_SIZE ) uiChunk;
+            hb_SHA1_Update( &ctx, buffer + nDone, uiChunk );
+
+            nDone += ( HB_SIZE ) uiChunk;
+         }
       }
-   }
-   #else
-      hb_SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
+      #else
+         hb_SHA1_Update( &ctx, buffer, hb_itemGetCLen( pBuffer ) );
+      #endif
 
-   hb_SHA1_Final( digest, &ctx );
+      hb_SHA1_Final( digest, &ctx );
 
-   if( ! hb_parl( 2 ) )
-   {
-      char hex[ ( sizeof( digest ) * 2 ) + 1 ];
-      hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
-      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      hb_itemFreeC( buffer );
+
+      if( ! hb_parl( 2 ) )
+      {
+         char hex[ ( sizeof( digest ) * 2 ) + 1 ];
+         hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
+         hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      }
+      else
+         hb_retclen( ( char * ) digest, sizeof( digest ) );
    }
    else
-      hb_retclen( ( char * ) digest, sizeof( digest ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
