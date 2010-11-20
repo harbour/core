@@ -7434,7 +7434,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    PHB_ITEM pKeyExp, pForExp = NULL, pResult;
    char szCpndTagName[ CDX_MAXTAGNAMELEN + 1 ], szTagName[ CDX_MAXTAGNAMELEN + 1 ];
    char szFileName[ HB_PATH_MAX ], szTempFile[ HB_PATH_MAX ];
-   char *szFor = NULL;
+   const char *szFor = NULL;
    LPCDXINDEX pIndex;
    LPCDXTAG pTag;
    HB_USHORT uiLen;
@@ -7450,7 +7450,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
 
    if( hb_strlentrim( hb_itemGetCPtr( pOrderInfo->abExpr ) ) +
        ( pArea->dbfarea.area.lpdbOrdCondInfo && pArea->dbfarea.area.lpdbOrdCondInfo->abFor ?
-         hb_strlentrim( ( const char * ) pArea->dbfarea.area.lpdbOrdCondInfo->abFor ) : 0 ) >
+         hb_strlentrim( pArea->dbfarea.area.lpdbOrdCondInfo->abFor ) : 0 ) >
        CDX_HEADEREXPLEN - 2 )
    {
       hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0, NULL );
@@ -7546,7 +7546,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       fExclusive = pArea->dbfarea.area.lpdbOrdCondInfo->fExclusive;
 
       /* Check conditional expression */
-      szFor = ( char * ) pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
+      szFor = pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
       if( szFor )
       {
          if( SELF_COMPILE( ( AREAP ) pArea, szFor ) == HB_FAILURE )

@@ -4616,7 +4616,7 @@ static int hb_ntxQuickSortCompare( LPNTXSORTINFO pSort, HB_BYTE * pKey1, HB_BYTE
 {
    int iLen = pSort->keyLen, i;
 
-   i = hb_ntxValCompare( pSort->pTag, (char *) pKey1, iLen, (char *) pKey2, iLen, HB_TRUE );
+   i = hb_ntxValCompare( pSort->pTag, (const char *) pKey1, iLen, (const char *) pKey2, iLen, HB_TRUE );
    if( i == 0 )
    {
       if( pSort->pTag->fSortRec )
@@ -4861,7 +4861,7 @@ static void hb_ntxSortOrderPages( LPNTXSORTINFO pSort )
             m = ( l + r ) >> 1;
             ulPage = pSort->pSortedPages[ m ];
             pTmp = &pSort->pSwapPage[ ulPage ].pKeyPool[ pSort->pSwapPage[ ulPage ].ulCurKey * ( iLen + 4 ) ];
-            i = hb_ntxValCompare( pSort->pTag, (char *) pKey, iLen, (char *) pTmp, iLen, HB_TRUE );
+            i = hb_ntxValCompare( pSort->pTag, (const char *) pKey, iLen, (const char *) pTmp, iLen, HB_TRUE );
             if( i == 0 )
             {
                if( pSort->pTag->fSortRec )
@@ -4912,7 +4912,7 @@ static HB_BOOL hb_ntxSortKeyGet( LPNTXSORTINFO pSort, HB_BYTE ** pKeyVal, HB_ULO
          m = ( l + r ) >> 1;
          ulPg = pSort->pSortedPages[ m ];
          pTmp = &pSort->pSwapPage[ ulPg ].pKeyPool[ pSort->pSwapPage[ ulPg ].ulCurKey * ( iLen + 4 ) ];
-         i = hb_ntxValCompare( pSort->pTag, (char *) pKey, iLen, (char *) pTmp, iLen, HB_TRUE );
+         i = hb_ntxValCompare( pSort->pTag, (const char *) pKey, iLen, (const char *) pTmp, iLen, HB_TRUE );
          if( i == 0 )
          {
             if( pSort->pTag->fSortRec )
@@ -5152,7 +5152,7 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
       }
       if( fUnique )
       {
-         if( ulKey != 0 && hb_ntxValCompare( pTag, (char *) pSort->pLastKey, iLen, (char *) pKeyVal, iLen, HB_TRUE ) == 0 )
+         if( ulKey != 0 && hb_ntxValCompare( pTag, (const char *) pSort->pLastKey, iLen, (const char *) pKeyVal, iLen, HB_TRUE ) == 0 )
          {
             continue;
          }
@@ -5166,7 +5166,7 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
 #ifdef HB_NTX_DEBUG_EXT
       if( ulKey != 0 )
       {
-         int i = hb_ntxValCompare( pTag, (char *) pSort->pLastKey, iLen, (char *) pKeyVal, iLen, HB_TRUE );
+         int i = hb_ntxValCompare( pTag, (const char *) pSort->pLastKey, iLen, (const char *) pKeyVal, iLen, HB_TRUE );
          if( ! pTag->AscendKey )
             i = -i;
          if( i == 0 )
@@ -6301,7 +6301,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       fTemporary = pArea->dbfarea.area.lpdbOrdCondInfo->fTemporary;
       fExclusive = pArea->dbfarea.area.lpdbOrdCondInfo->fExclusive;
       /* Check conditional expression */
-      szFor = ( char * ) pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
+      szFor = pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
       if( pArea->dbfarea.area.lpdbOrdCondInfo->itmCobFor )
          /* If we have a codeblock for the conditional expression, use it */
          pForExp = hb_itemNew( pArea->dbfarea.area.lpdbOrdCondInfo->itmCobFor );

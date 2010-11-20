@@ -6739,7 +6739,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       fTemporary = pArea->dbfarea.area.lpdbOrdCondInfo->fTemporary;
       fExclusive = pArea->dbfarea.area.lpdbOrdCondInfo->fExclusive;
       /* Check conditional expression */
-      szFor = ( const char * ) pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
+      szFor = pArea->dbfarea.area.lpdbOrdCondInfo->abFor;
       if( pArea->dbfarea.area.lpdbOrdCondInfo->itmCobFor )
          /* If we have a codeblock for the conditional expression, use it */
          pForExp = hb_itemNew( pArea->dbfarea.area.lpdbOrdCondInfo->itmCobFor );
@@ -6797,10 +6797,10 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
     * 3. add the Tag to index file
     */
    fNewFile = !pOrderInfo->atomBagName || !pOrderInfo->atomBagName[0];
-   hb_nsxCreateFName( pArea, ( const char * ) pOrderInfo->abBagName,
+   hb_nsxCreateFName( pArea, pOrderInfo->abBagName,
                       &fProd, szFileName, szTagName );
    if( !fNewFile )
-      hb_strncpyUpperTrim( szTagName, ( const char * ) pOrderInfo->atomBagName, NSX_TAGNAME );
+      hb_strncpyUpperTrim( szTagName, pOrderInfo->atomBagName, NSX_TAGNAME );
 
    pIndex = hb_nsxFindBag( pArea, szFileName );
    if( pIndex )

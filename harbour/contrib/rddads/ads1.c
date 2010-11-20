@@ -2925,7 +2925,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    hConnection = HB_ADS_DEFCONNECTION( pCreateInfo->ulConnection );
 
-   pArea->szDataFileName = hb_strdup( ( char * ) pCreateInfo->abName );
+   pArea->szDataFileName = hb_strdup( pCreateInfo->abName );
 
    fUnicode = HB_FALSE;
    pArea->maxFieldLen = 0;
@@ -3363,7 +3363,8 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* See adsGettValue() for why we don't use pArea->area.uiMaxFieldNameLength here */
    UNSIGNED16 usBufLen, usType, usDecimals;
    DBFIELDINFO dbFieldInfo;
-   char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ], * szFile;
+   char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
+   const char * szFile;
    HB_BOOL fDictionary = HB_FALSE, fUnicode = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
@@ -3381,7 +3382,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 #endif
 #endif
    }
-   szFile = ( char * ) pOpenInfo->abName;
+   szFile = pOpenInfo->abName;
 
    if( pArea->hTable != 0 )
    {
@@ -3423,7 +3424,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
       else
       {
-         commonError( pArea, EG_OPEN, ( HB_ERRCODE ) u32RetVal, 0, ( char * ) pOpenInfo->abName, 0, NULL );
+         commonError( pArea, EG_OPEN, ( HB_ERRCODE ) u32RetVal, 0, pOpenInfo->abName, 0, NULL );
          return HB_FAILURE;
       }
    }
@@ -3452,7 +3453,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
             HB_ERRCODE errOsCode = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
             fRetry = commonError( pArea, EG_OPEN, ( HB_ERRCODE ) u32RetVal, errOsCode,
-                                  ( const char * ) pOpenInfo->abName,
+                                  pOpenInfo->abName,
                                   EF_CANRETRY | EF_CANDEFAULT, &pError ) == E_RETRY;
          }
          else
@@ -3477,7 +3478,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          pOpenInfo->atomAlias = "";
    }
 
-   pArea->szDataFileName = hb_strdup( ( char * ) ( pOpenInfo->abName ) );
+   pArea->szDataFileName = hb_strdup( pOpenInfo->abName );
    pArea->hTable         = hTable;
    pArea->hStatement     = hStatement;
    pArea->hOrdCurrent    = 0;
@@ -4131,7 +4132,7 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if( u32RetVal != AE_SUCCESS )
    {
-      commonError( pArea, EG_CREATE, ( HB_ERRCODE ) u32RetVal, 0, ( char * ) pOrderInfo->abBagName, 0, NULL );
+      commonError( pArea, EG_CREATE, ( HB_ERRCODE ) u32RetVal, 0, pOrderInfo->abBagName, 0, NULL );
       return HB_FAILURE;
    }
    else

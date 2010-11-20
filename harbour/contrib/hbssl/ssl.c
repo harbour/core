@@ -466,24 +466,24 @@ HB_FUNC( SSL_READ )
 
       if( ssl )
       {
-         PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-         int nRead;
+         PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
+         char * pBuffer;
+         HB_SIZE nLen;
+         int nRead = 0;
 
-         if( pBuffer && HB_ISBYREF( 2 ) )
+         if( pItem && HB_ISBYREF( 2 ) &&
+             hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
          {
-            nRead = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_parclen( 2 );
-
-            if( ( HB_SIZE ) nRead <= hb_parcsiz( 2 ) )
+            if( HB_ISNUM( 3 ) )
             {
-               pBuffer = hb_itemUnShareString( pBuffer );
-
-               nRead = SSL_read( ssl, ( void * ) hb_itemGetCPtr( pBuffer ), nRead );
+               nRead = hb_parni( 3 );
+               if( nRead >= 0 && nRead < ( int ) nLen )
+                  nLen = nRead;
             }
-            else
-               nRead = 0;
+            nRead = nLen >= INT_MAX ? INT_MAX : ( int ) nLen;
+
+            nRead = SSL_read( ssl, pBuffer, nRead );
          }
-         else
-            nRead = 0;
 
          hb_retni( nRead );
       }
@@ -500,24 +500,24 @@ HB_FUNC( SSL_PEEK )
 
       if( ssl )
       {
-         PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-         int nRead;
+         PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
+         char * pBuffer;
+         HB_SIZE nLen;
+         int nRead = 0;
 
-         if( pBuffer && HB_ISBYREF( 2 ) )
+         if( pItem && HB_ISBYREF( 2 ) &&
+             hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
          {
-            nRead = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_parclen( 2 );
-
-            if( ( HB_SIZE ) nRead <= hb_parcsiz( 2 ) )
+            if( HB_ISNUM( 3 ) )
             {
-               pBuffer = hb_itemUnShareString( pBuffer );
-
-               nRead = SSL_peek( ssl, ( void * ) hb_itemGetCPtr( pBuffer ), nRead );
+               nRead = hb_parni( 3 );
+               if( nRead >= 0 && nRead < ( int ) nLen )
+                  nLen = nRead;
             }
-            else
-               nRead = 0;
+            nRead = nLen >= INT_MAX ? INT_MAX : ( int ) nLen;
+
+            nRead = SSL_peek( ssl, pBuffer, nRead );
          }
-         else
-            nRead = 0;
 
          hb_retni( nRead );
       }
