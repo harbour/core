@@ -122,7 +122,7 @@ void hb_SHA1_Init(SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void hb_SHA1_Update(SHA_CTX *context, void *datav, unsigned int len) {
+void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
     sha1_byte * data = ( sha1_byte * ) datav;
     unsigned int    i, j;
 
@@ -133,7 +133,9 @@ void hb_SHA1_Update(SHA_CTX *context, void *datav, unsigned int len) {
         memcpy(&context->buffer[j], data, (i = 64-j));
         SHA1_Transform(context->state, context->buffer);
         for ( ; i + 63 < len; i += 64) {
-            SHA1_Transform(context->state, &data[i]);
+            sha1_byte buffer[64];
+            memcpy(buffer, &data[i], 64);
+            SHA1_Transform(context->state, buffer);
         }
         j = 0;
     }

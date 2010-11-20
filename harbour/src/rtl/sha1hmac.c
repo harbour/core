@@ -80,7 +80,7 @@ void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
     ctx->hashkey = 0;
 }
 
-void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, void *key, unsigned int keylen) {
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen) {
 
     /* Do we have anything to work with?  If not, return right away. */
     if (keylen < 1)
@@ -167,7 +167,7 @@ void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx) {
     hb_SHA1_Update(&ctx->shactx, &(ctx->ipad[0]), HMAC_SHA1_BLOCK_LENGTH);
 }
 
-void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, void *data, unsigned int datalen) {
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen) {
     hb_SHA1_Update(&ctx->shactx, data, datalen);
 }
 
