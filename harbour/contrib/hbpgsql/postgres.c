@@ -1266,6 +1266,39 @@ HB_FUNC( PQESCAPEBYTEACONN )
 #endif
 }
 
+HB_FUNC( PQPREPARE )
+{
+   PGconn * conn = hb_PGconn_par( 1 );
+
+   if( conn )
+      hb_PGresult_ret( PQprepare( conn, hb_parcx( 2 ), hb_parcx( 3 ), hb_parni( 4 ), NULL ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( PQEXECPREPARED )
+{
+   PGconn * conn = hb_PGconn_par( 1 );
+
+   if( conn )
+   {
+      PHB_ITEM aParam = hb_param( 3, HB_IT_ARRAY );
+      HB_SIZE n = hb_arrayLen( aParam );
+      HB_SIZE i;
+
+      const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
+
+      for( i = 0; i < n; ++i )
+         paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
+
+      hb_PGresult_ret( PQexecPrepared( conn, hb_parcx( 2 ), n, ( const char * const * ) paramvalues, NULL, NULL, 1 ) );
+
+      hb_xfree( paramvalues );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 
 TODO: Implement Full Large Objects Support
@@ -1278,21 +1311,6 @@ extern int  lo_write(PGconn *conn, int fd, char *buf, size_t len);
 extern int  lo_lseek(PGconn *conn, int fd, int offset, int whence);
 extern Oid  lo_creat(PGconn *conn, int mode);
 extern int  lo_tell(PGconn *conn, int fd);
-
-PGresult *PQprepare(PGconn *conn,
-                    const char *stmtName,
-                    const char *query,
-                    int nParams,
-                    const Oid *paramTypes);
-
-
-PGresult *PQexecPrepared(PGconn *conn,
-                         const char *stmtName,
-                         int nParams,
-                         const char * const *paramValues,
-                         const int *paramLengths,
-                         const int *paramFormats,
-                         int resultFormat);
 
 int PQsendQueryParams(PGconn *conn,
                       const char *command,
