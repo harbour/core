@@ -958,10 +958,10 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
 }
 
 /* ---------------------------------------------------------------------------*/
-#if HB_GD_VERS( 2, 0, 33 )
 HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                               /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
+#if HB_GD_VERS( 2, 0, 33 )
    if( hb_pcount() == 3 &&
        HB_ISPOINTER( 1 ) &&
        HB_ISARRAY( 2 ) &&
@@ -1010,8 +1010,8 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
          HB_ERR_FUNCNAME, 3,
          hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
-}
 #endif /* ( GD_VERS >= 2033 ) */
+}
 
 /* ---------------------------------------------------------------------------*/
 
@@ -1329,9 +1329,9 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 /* Disabled, because there is a .prg implementation which
    works with all gd lib versions. [vszakats] */
 #if 0
-#if HB_GD_VERS( 2, 0, 35 )
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
+#if HB_GD_VERS( 2, 0, 35 )
    if( hb_pcount() == 6 &&
        HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
@@ -1366,8 +1366,8 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
          hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
          hb_paramError( 5 ), hb_paramError( 6 ) );
    }
-}
 #endif /* ( GD_VERS >= 2035 ) */
+}
 #endif
 
 /* ---------------------------------------------------------------------------*/
@@ -3657,10 +3657,13 @@ static void AddImageToFile( const char *szFile, const void * iptr, int sz )
    }
 }
 
+#endif
+
 /*BGD_DECLARE(void *) gdImageGifAnimBeginPtr(gdImagePtr im, int *size, int GlobalCM, int Loops); */
 /* implementation: (void *) gdImageGifAnimBegin( gdImagePtr im, cFile | nHandle, int GlobalCM, int Loops); */
 HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
+#if HB_GD_VERS( 2, 0, 33 )
    if( hb_pcount() == 4 &&
        HB_ISPOINTER( 1 ) &&
         ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
@@ -3704,6 +3707,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
          HB_ERR_FUNCNAME, 3,
          hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
+#endif
 }
 
 /* ---------------------------------------------------------------------------*/
@@ -3712,6 +3716,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 /* implementation: (void *) gdImageGifAnimAdd( gdImagePtr im, cFile | nHandle, int LocalCM, int LeftOfs, int TopOfs, int Delay, int Disposal, gdImagePtr previm); */
 HB_FUNC( GDIMAGEGIFANIMADD )
 {
+#if HB_GD_VERS( 2, 0, 33 )
    if( hb_pcount() == 8 &&
        HB_ISPOINTER( 1 ) &&
        ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
@@ -3761,6 +3766,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
          hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
          hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
    }
+#endif
 }
 
 /* ---------------------------------------------------------------------------*/
@@ -3769,6 +3775,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 /* implementation: gdImageGifAnimEnd( cFile | nHandle ); */
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
+#if HB_GD_VERS( 2, 0, 33 )
    if( hb_pcount() == 1 &&
        ( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
      )
@@ -3798,7 +3805,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
          HB_ERR_FUNCNAME, 1,
          hb_paramError( 1 ) );
    }
+#endif
 }
 
 /* ---------------------------------------------------------------------------*/
-#endif /* ( GD_VERS >= 2033 ) */

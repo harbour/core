@@ -54,9 +54,9 @@
 #include "hbclass.ch"
 #include "gd.ch"
 
-#define DEFAULT( x, y ) IIF( x == NIL, x := y, )
+#define DEFAULT( x, y ) iif( x == NIL, x := y, )
 
-CLASS GDImage
+CREATE CLASS GDImage
 
    PROTECTED:
    DATA pImage
@@ -149,9 +149,7 @@ CLASS GDImage
 
    // Functions usefull for polygons
    METHOD Polygon( aPoints, lFilled, color )
-#if ( GD_VERS >= 2033 )
    METHOD OpenPolygon( aPoints, color )
-#endif
    METHOD AddPoint( x, y )                 INLINE aAdd( ::aPoints, { x, y } )
    METHOD ResetPoints()                    INLINE ::aPoints := {}
    METHOD Points()                         INLINE Len( ::aPoints )
@@ -297,64 +295,62 @@ ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDImage
    ::Create( sx, sy )
-RETURN Self
+   RETURN Self
 
 METHOD PROCEDURE Destruct() CLASS GDImage
-  //__OutDebug( "Destroyed" )
-  IF ::lDestroy
-     ::Destroy()
-  ENDIF
-RETURN
+   //__OutDebug( "Destroyed" )
+   IF ::lDestroy
+      ::Destroy()
+   ENDIF
+   RETURN
 
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
-  DEFAULT aPoints TO ::aPoints
-  DEFAULT lFilled TO .F.
-  DEFAULT color   TO ::pColor
-  IF lFilled
-     gdImageFilledPolygon( ::pImage, aPoints, color )
-  ELSE
-     gdImagePolygon( ::pImage, aPoints, color )
-  ENDIF
-RETURN Self
+   DEFAULT aPoints TO ::aPoints
+   DEFAULT lFilled TO .F.
+   DEFAULT color   TO ::pColor
+   IF lFilled
+      gdImageFilledPolygon( ::pImage, aPoints, color )
+   ELSE
+      gdImagePolygon( ::pImage, aPoints, color )
+   ENDIF
+   RETURN Self
 
-#if ( GD_VERS >= 2033 )
 METHOD OpenPolygon( aPoints, color ) CLASS GDImage
-  DEFAULT aPoints TO ::aPoints
-  DEFAULT color   TO ::pColor
-  gdImageOpenPolygon( ::pImage, aPoints, color )
-RETURN Self
-#endif
+   DEFAULT aPoints TO ::aPoints
+   DEFAULT color   TO ::pColor
+   gdImageOpenPolygon( ::pImage, aPoints, color )
+   RETURN Self
 
 METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
-  DEFAULT lFilled TO .F.
-  DEFAULT color   TO ::pColor
-  IF lFilled
-     gdImageFilledRectangle( ::pImage, x1, y1, x2, y2, color )
-  ELSE
-     gdImageRectangle( ::pImage, x1, y1, x2, y2, color )
-  ENDIF
-RETURN Self
+   DEFAULT lFilled TO .F.
+   DEFAULT color   TO ::pColor
+   IF lFilled
+      gdImageFilledRectangle( ::pImage, x1, y1, x2, y2, color )
+   ELSE
+      gdImageRectangle( ::pImage, x1, y1, x2, y2, color )
+   ENDIF
+   RETURN Self
 
 METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle ) CLASS GDImage
-  DEFAULT lFilled TO .F.
-  DEFAULT color   TO ::pColor
-  DEFAULT nStyle  TO gdArc
-  IF lFilled
-     gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, nStyle )
-  ELSE
-     gdImageArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color )
-  ENDIF
-RETURN Self
+   DEFAULT lFilled TO .F.
+   DEFAULT color   TO ::pColor
+   DEFAULT nStyle  TO gdArc
+   IF lFilled
+      gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, nStyle )
+   ELSE
+      gdImageArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color )
+   ENDIF
+   RETURN Self
 
 METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
-  DEFAULT lFilled TO .F.
-  DEFAULT color   TO ::pColor
-  IF lFilled
-     gdImageFilledEllipse( ::pImage, x, y, nWidth, nHeight, color )
-  ELSE
-     gdImageEllipse( ::pImage, x, y, nWidth, nHeight, color )
-  ENDIF
-RETURN Self
+   DEFAULT lFilled TO .F.
+   DEFAULT color   TO ::pColor
+   IF lFilled
+      gdImageFilledEllipse( ::pImage, x, y, nWidth, nHeight, color )
+   ELSE
+      gdImageEllipse( ::pImage, x, y, nWidth, nHeight, color )
+   ENDIF
+   RETURN Self
 
 METHOD LoadFromFile( cFile ) CLASS GDImage
    LOCAL aLoad
@@ -369,311 +365,311 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
    ::hFile := aLoad[2]
    ::cType := aLoad[3]
    ::cMime := aLoad[4]
-RETURN Self
+   RETURN Self
 
 METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDImage
 
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nWidth     TO ::Width()
-  DEFAULT nHeight    TO ::Height()
-  DEFAULT nDstX      TO 0
-  DEFAULT nDstY      TO 0
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nWidth     TO ::Width()
+   DEFAULT nHeight    TO ::Height()
+   DEFAULT nDstX      TO 0
+   DEFAULT nDstY      TO 0
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
-     ELSE
-        oDestImage := GDImage():Create( nWidth, nHeight )
-     ENDIF
-  ENDIF
-  gdImageCopy( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
+      ELSE
+         oDestImage := GDImage():Create( nWidth, nHeight )
+      ENDIF
+   ENDIF
+   gdImageCopy( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight )
+   RETURN oDestImage
 
 METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nSrcWidth  TO ::Width()
-  DEFAULT nSrcHeight TO ::Height()
-  DEFAULT nDstX      TO 0
-  DEFAULT nDstY      TO 0
-  DEFAULT nDstWidth  TO ::Width()
-  DEFAULT nDstHeight TO ::Height()
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nSrcWidth  TO ::Width()
+   DEFAULT nSrcHeight TO ::Height()
+   DEFAULT nDstX      TO 0
+   DEFAULT nDstY      TO 0
+   DEFAULT nDstWidth  TO ::Width()
+   DEFAULT nDstHeight TO ::Height()
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
-     ELSE
-        oDestImage := GDImage():Create( nDstWidth, nDstHeight )
-     ENDIF
-  ENDIF
-  gdImageCopyResized( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
+      ELSE
+         oDestImage := GDImage():Create( nDstWidth, nDstHeight )
+      ENDIF
+   ENDIF
+   gdImageCopyResized( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   RETURN oDestImage
 
 METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nSrcWidth  TO ::Width()
-  DEFAULT nSrcHeight TO ::Height()
-  DEFAULT nDstX      TO 0
-  DEFAULT nDstY      TO 0
-  DEFAULT nDstWidth  TO ::Width()
-  DEFAULT nDstHeight TO ::Height()
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nSrcWidth  TO ::Width()
+   DEFAULT nSrcHeight TO ::Height()
+   DEFAULT nDstX      TO 0
+   DEFAULT nDstY      TO 0
+   DEFAULT nDstWidth  TO ::Width()
+   DEFAULT nDstHeight TO ::Height()
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
-     ELSE
-        oDestImage := GDImage():Create( nDstWidth, nDstHeight )
-     ENDIF
-  ENDIF
-  gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
+      ELSE
+         oDestImage := GDImage():Create( nDstWidth, nDstHeight )
+      ENDIF
+   ENDIF
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   RETURN oDestImage
 
 METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestImage ) CLASS GDImage
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nWidth     TO ::Width
-  DEFAULT nHeight    TO ::Height
-  DEFAULT nDstX      TO nWidth / 2
-  DEFAULT nDstY      TO nHeight / 2
-  DEFAULT nAngle     TO 90
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nWidth     TO ::Width
+   DEFAULT nHeight    TO ::Height
+   DEFAULT nDstX      TO nWidth / 2
+   DEFAULT nDstY      TO nHeight / 2
+   DEFAULT nAngle     TO 90
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
-     ELSE
-        oDestImage := GDImage():Create( nWidth, nHeight )
-     ENDIF
-  ENDIF
-  //__OutDebug( nAngle )
-  gdImageCopyRotated( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nAngle )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
+      ELSE
+         oDestImage := GDImage():Create( nWidth, nHeight )
+      ENDIF
+   ENDIF
+   //__OutDebug( nAngle )
+   gdImageCopyRotated( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nAngle )
+   RETURN oDestImage
 
 METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nWidth     TO ::Width
-  DEFAULT nHeight    TO ::Height
-  DEFAULT nDstX      TO 0
-  DEFAULT nDstY      TO 0
-  DEFAULT nPerc      TO 100
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nWidth     TO ::Width
+   DEFAULT nHeight    TO ::Height
+   DEFAULT nDstX      TO 0
+   DEFAULT nDstY      TO 0
+   DEFAULT nPerc      TO 100
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
-     ELSE
-        oDestImage := GDImage():Create( nWidth, nHeight )
-     ENDIF
-  ENDIF
-  gdImageCopyMerge( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
+      ELSE
+         oDestImage := GDImage():Create( nWidth, nHeight )
+      ENDIF
+   ENDIF
+   gdImageCopyMerge( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   RETURN oDestImage
 
 METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nWidth     TO ::Width
-  DEFAULT nHeight    TO ::Height
-  DEFAULT nDstX      TO 0
-  DEFAULT nDstY      TO 0
-  DEFAULT nPerc      TO 100
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nWidth     TO ::Width
+   DEFAULT nHeight    TO ::Height
+   DEFAULT nDstX      TO 0
+   DEFAULT nDstY      TO 0
+   DEFAULT nPerc      TO 100
 
-  IF oDestImage == NIL
-     IF ::IsTrueColor()
-        oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
-     ELSE
-        oDestImage := GDImage():Create( nWidth, nHeight )
-     ENDIF
-  ENDIF
-  gdImageCopyMergeGray( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
-RETURN oDestImage
+   IF oDestImage == NIL
+      IF ::IsTrueColor()
+         oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
+      ELSE
+         oDestImage := GDImage():Create( nWidth, nHeight )
+      ENDIF
+   ENDIF
+   gdImageCopyMergeGray( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   RETURN oDestImage
 
 METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
-  LOCAL oDestImage
-  LOCAL nDstX, nDstY, nDstWidth, nDstHeight
+   LOCAL oDestImage
+   LOCAL nDstX, nDstY, nDstWidth, nDstHeight
 
-  DEFAULT nPerc      TO 100
-  DEFAULT nSrcX      TO 0
-  DEFAULT nSrcY      TO 0
-  DEFAULT nSrcWidth  TO ::Width()
-  DEFAULT nSrcHeight TO ::Height()
+   DEFAULT nPerc      TO 100
+   DEFAULT nSrcX      TO 0
+   DEFAULT nSrcY      TO 0
+   DEFAULT nSrcWidth  TO ::Width()
+   DEFAULT nSrcHeight TO ::Height()
 
-  IF nPerc < 0
-     nPerc := 100
-  ENDIF
+   IF nPerc < 0
+      nPerc := 100
+   ENDIF
 
-  nDstX      := 0
-  nDstY      := 0
-  nDstWidth  := nSrcWidth * nPerc / 100
-  nDstHeight := nSrcHeight * nPerc / 100
+   nDstX      := 0
+   nDstY      := 0
+   nDstWidth  := nSrcWidth * nPerc / 100
+   nDstHeight := nSrcHeight * nPerc / 100
 
-  IF ::IsTrueColor()
-     oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
-  ELSE
-     oDestImage := GDImage():Create( nDstWidth, nDstHeight )
-  ENDIF
-  gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   IF ::IsTrueColor()
+      oDestImage := GDImage():CreateTrueColor( nDstWidth, nDstHeight )
+   ELSE
+      oDestImage := GDImage():Create( nDstWidth, nDstHeight )
+   ENDIF
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
 
-RETURN oDestImage
+   RETURN oDestImage
 
 METHOD Rotate( nAngle, lInside ) CLASS GDImage
-  LOCAL oDestImage
-  LOCAL nWidth, nHeight
-  LOCAL nAngRad := nAngle * PI() / 180
+   LOCAL oDestImage
+   LOCAL nWidth, nHeight
+   LOCAL nAngRad := nAngle * PI() / 180
 
-  DEFAULT lInside TO .F.
+   DEFAULT lInside TO .F.
 
-  IF !lInside
-     nWidth  := ::Width * cos( nAngRad ) + ::Height * sin( nAngRad )
-     nHeight := ::Width * sin( nAngRad ) + ::Height * cos( nAngRad )
-  ELSE
-     nWidth  := ::Width
-     nHeight := ::Height
-  ENDIF
-  //__OutDebug( ::Width, ::Height )
-  //__OutDebug( nWidth, nHeight )
+   IF !lInside
+      nWidth  := ::Width * cos( nAngRad ) + ::Height * sin( nAngRad )
+      nHeight := ::Width * sin( nAngRad ) + ::Height * cos( nAngRad )
+   ELSE
+      nWidth  := ::Width
+      nHeight := ::Height
+   ENDIF
+   //__OutDebug( ::Width, ::Height )
+   //__OutDebug( nWidth, nHeight )
 
-  IF ::IsTrueColor()
-     oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
-  ELSE
-     oDestImage := GDImage():Create( nWidth, nHeight )
-  ENDIF
-  IF !lInside
-      ::CopyRotated( ,,,, nWidth - nWidth/2, nHeight - nHeight/2, nAngle, oDestImage )
-  ELSE
-      ::CopyRotated( ,,,,,, nAngle, oDestImage )
-  ENDIF
-  ::Destroy()
-  Self := ::CloneDataFrom( oDestImage )
-  //Self := __ObjClone( oDestImage ) // non funziona
+   IF ::IsTrueColor()
+      oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
+   ELSE
+      oDestImage := GDImage():Create( nWidth, nHeight )
+   ENDIF
+   IF !lInside
+       ::CopyRotated( ,,,, nWidth - nWidth/2, nHeight - nHeight/2, nAngle, oDestImage )
+   ELSE
+       ::CopyRotated( ,,,,,, nAngle, oDestImage )
+   ENDIF
+   ::Destroy()
+   Self := ::CloneDataFrom( oDestImage )
+   //Self := __ObjClone( oDestImage ) // non funziona
 
-  // Move new image to existing one
-  // Signal that this image must not be destroyed
-  oDestImage:lDestroy := .F.
-  oDestImage := NIL
+   // Move new image to existing one
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
 
-RETURN Self
+   RETURN Self
 
 METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
-  LOCAL oDestImage
+   LOCAL oDestImage
 
-  oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
-  ::Destroy()
-  Self := ::CloneDataFrom( oDestImage )
-  //Self := __ObjClone( oDestImage ) // non funziona
+   oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
+   ::Destroy()
+   Self := ::CloneDataFrom( oDestImage )
+   //Self := __ObjClone( oDestImage ) // non funziona
 
-  // Move new image to existing one
-  // Signal that this image must not be destroyed
-  oDestImage:lDestroy := .F.
-  oDestImage := NIL
+   // Move new image to existing one
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
 
-RETURN Self
+   RETURN Self
 
 METHOD Resize( nWidth, nHeight ) CLASS GDImage
-  LOCAL oDestImage
+   LOCAL oDestImage
 
-  oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
-  ::Destroy()
-  Self := ::CloneDataFrom( oDestImage )
-  //Self := __ObjClone( oDestImage ) // non funziona
+   oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
+   ::Destroy()
+   Self := ::CloneDataFrom( oDestImage )
+   //Self := __ObjClone( oDestImage ) // non funziona
 
-  // Move new image to existing one
-  // Signal that this image must not be destroyed
-  oDestImage:lDestroy := .F.
-  oDestImage := NIL
+   // Move new image to existing one
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
 
-RETURN Self
+   RETURN Self
 
 METHOD Zoom( nPerc ) CLASS GDImage
-  LOCAL oDestImage
+   LOCAL oDestImage
 
-  oDestImage := ::CopyZoomed( nPerc )
-  ::Destroy()
-  Self := ::CloneDataFrom( oDestImage )
-  //Self := __ObjClone( oDestImage ) // non funziona
+   oDestImage := ::CopyZoomed( nPerc )
+   ::Destroy()
+   Self := ::CloneDataFrom( oDestImage )
+   //Self := __ObjClone( oDestImage ) // non funziona
 
-  // Move new image to existing one
-  // Signal that this image must not be destroyed
-  oDestImage:lDestroy := .F.
-  oDestImage := NIL
+   // Move new image to existing one
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
 
-RETURN Self
+   RETURN Self
 
 METHOD Clone() CLASS GDImage
-  LOCAL oDestImage
-  LOCAL pImage
+   LOCAL oDestImage
+   LOCAL pImage
 
-  IF ::IsTrueColor()
-     oDestImage := GDImage():CreateTrueColor( ::Width, ::Height )
-  ELSE
-     oDestImage := GDImage():Create( ::Width, ::Height )
-  ENDIF
+   IF ::IsTrueColor()
+      oDestImage := GDImage():CreateTrueColor( ::Width, ::Height )
+   ELSE
+      oDestImage := GDImage():Create( ::Width, ::Height )
+   ENDIF
 
-  pImage := oDestImage:pImage
-  oDestImage := oDestImage:CloneDataFrom( Self )
-  //oDestImage := __objClone( Self )
-  oDestImage:pImage := pImage
-  ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
+   pImage := oDestImage:pImage
+   oDestImage := oDestImage:CloneDataFrom( Self )
+   //oDestImage := __objClone( Self )
+   oDestImage:pImage := pImage
+   ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
 
-  //pImage := oDestImage:pImage
-  //// Signal that this image must not be destroyed
-  //oDestImage:lDestroy := .F.
-  //oDestImage := NIL
-  //oDestImage:pImage := pImage
+   //pImage := oDestImage:pImage
+   //// Signal that this image must not be destroyed
+   //oDestImage:lDestroy := .F.
+   //oDestImage := NIL
+   //oDestImage:pImage := pImage
 
-RETURN oDestImage
+   RETURN oDestImage
 
 METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
-  LOCAL nWidth, nLen
-  LOCAL nPosX
+   LOCAL nWidth, nLen
+   LOCAL nPosX
 
-  DEFAULT color  TO ::pColor
-  DEFAULT nAlign TO gdAlignLeft
+   DEFAULT color  TO ::pColor
+   DEFAULT nAlign TO gdAlignLeft
 
-  IF     nAlign == gdAlignCenter
-     nWidth := ::GetFontWidth()
-     nLen   := Len( cString )
-     nPosX  := x - ( nLen / 2 * nWidth )
-  ELSEIF nAlign == gdAlignRight
-     nWidth := ::GetFontWidth()
-     nLen   := Len( cString )
-     nPosX  := x - ( nLen * nWidth )
-  ELSE
-     nPosX  := x
-  ENDIF
+   IF     nAlign == gdAlignCenter
+      nWidth := ::GetFontWidth()
+      nLen   := Len( cString )
+      nPosX  := x - ( nLen / 2 * nWidth )
+   ELSEIF nAlign == gdAlignRight
+      nWidth := ::GetFontWidth()
+      nLen   := Len( cString )
+      nPosX  := x - ( nLen * nWidth )
+   ELSE
+      nPosX  := x
+   ENDIF
 
-  gdImageString( ::pImage, ::pFont, nPosX, y, cString, color )
-RETURN Self
+   gdImageString( ::pImage, ::pFont, nPosX, y, cString, color )
+   RETURN Self
 
 METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
                     nLineSpacing, nCharMap, nResolution )  CLASS GDImage
-  LOCAL nWidth, nLen
-  LOCAL nPosX
+   LOCAL nWidth, nLen
+   LOCAL nPosX
 
-  DEFAULT nAlign    TO gdAlignLeft
-  DEFAULT color     TO ::pColor
-  DEFAULT cFontName TO ::cFontName
-  DEFAULT nPitch    TO ::nFontPitch
-  DEFAULT nAngle    TO ::nFontAngle
+   DEFAULT nAlign    TO gdAlignLeft
+   DEFAULT color     TO ::pColor
+   DEFAULT cFontName TO ::cFontName
+   DEFAULT nPitch    TO ::nFontPitch
+   DEFAULT nAngle    TO ::nFontAngle
 
-  IF     nAlign == gdAlignCenter
-     nWidth := nPitch //gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
-     //__OutDebug( "nWidth", nWidth  )
-     nLen   := Len( cString )
-     nPosX  := x - ( (nLen / 2) * nWidth )
-  ELSEIF nAlign == gdAlignRight
-     nWidth := gdImageFTWidth( cFontName, nPitch ) //, ::Radians( nAngle ) ) //::GetFontWidth()
-     nLen   := Len( cString )
-     nPosX  := x - ( nLen * nWidth )
-  ELSE
-     nPosX  := x
-  ENDIF
+   IF     nAlign == gdAlignCenter
+      nWidth := nPitch //gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
+      //__OutDebug( "nWidth", nWidth  )
+      nLen   := Len( cString )
+      nPosX  := x - ( (nLen / 2) * nWidth )
+   ELSEIF nAlign == gdAlignRight
+      nWidth := gdImageFTWidth( cFontName, nPitch ) //, ::Radians( nAngle ) ) //::GetFontWidth()
+      nLen   := Len( cString )
+      nPosX  := x - ( nLen * nWidth )
+   ELSE
+      nPosX  := x
+   ENDIF
 
-  gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
-                   cString, nLineSpacing, nCharMap, nResolution )
+   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
+                    cString, nLineSpacing, nCharMap, nResolution )
 
-RETURN Self
+   RETURN Self
 
 METHOD CloneDataFrom( oSrc )
    // copy values from Source to Dest
@@ -697,4 +693,4 @@ METHOD CloneDataFrom( oSrc )
    ::cType       := oSrc:cType
    ::cMime       := oSrc:cMime
 
-RETURN Self
+   RETURN Self

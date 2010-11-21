@@ -9,10 +9,9 @@
 #include "gd.ch"
 #include "simpleio.ch"
 
-#command TurnRight( <x> ) => s_nAngle += M_PI / 3 * <x>
-#command TurnLeft( <x> )  => s_nAngle -= M_PI / 3 * <x>
+#command TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
+#command TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
 
-#define M_PI 3.14159265358979323846
 #define IMAGES_OUT "imgs_out" + hb_ps()
 
 STATIC s_aCoords
@@ -27,13 +26,13 @@ PROCEDURE Main()
 
 PROCEDURE DrawFlake( lOpenPoly )
 
-   LOCAL nDepth, nSide, nSides, nSideLen
+   LOCAL nOrder, nSide, nSides, nSideLen
    LOCAL gdImage, gdColor
    LOCAL cImageName
 
    nSides := 3
    nSideLen := 1500
-   nDepth := 7
+   nOrder := 7
 
    cImageName := IIF( lOpenPoly, "flakeo.png", "flake.png" )
 
@@ -47,8 +46,8 @@ PROCEDURE DrawFlake( lOpenPoly )
    s_nAngle := 0
 
    FOR nSide := 1 TO nSides
-      KochFlake( nDepth, nSideLen, .F. )
-      s_nAngle += M_PI * 2 / nSides
+      KochFlake( nOrder, nSideLen, .F. )
+      s_nAngle += Pi() * 2 / nSides
    NEXT
 
    OutStd( hb_strFormat( "Drawing %d vertices%s", Len( s_aCoords ), hb_eol() ) )
@@ -66,8 +65,8 @@ PROCEDURE DrawFlake( lOpenPoly )
    s_nAngle := 0
 
    FOR nSide := 1 TO nSides
-      KochFlake( nDepth, nSideLen, .T. )
-      s_nAngle += M_PI * 2 / nSides
+      KochFlake( nOrder, nSideLen, .T. )
+      s_nAngle += Pi() * 2 / nSides
    NEXT
 
    OutStd( hb_strFormat( "Drawing %d vertices%s", Len( s_aCoords ), hb_eol() ) )
@@ -83,36 +82,36 @@ PROCEDURE DrawFlake( lOpenPoly )
 
    RETURN
 
-PROCEDURE KochFlake( nDepth, nSideLen, lLeftFirst )
+PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
 
-   IF nDepth == 0
+   IF nOrder == 0
       AAdd( s_aCoords, {;
             s_nCoordX += Cos( s_nAngle ) * nSideLen,;
             s_nCoordY += Sin( s_nAngle ) * nSideLen;
       })
    ELSE
-      KochFlake( nDepth - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nDepth - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnRight( 2 )
       ELSE
          TurnLeft( 2 )
       ENDIF
-      KochFlake( nDepth - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nDepth - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
    ENDIF
 
    RETURN
