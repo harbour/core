@@ -144,10 +144,11 @@ create class TSQLTStatement
 
    var pDB
    var cSql
-   var pRes
    var oRs
 
    EXPORTED:
+
+   var pRes
 
    method new( pDB, cSql )
    method executeQuery( cSql )
@@ -296,7 +297,6 @@ create class TSQLTResultSet
    var      lAfterLast INIT .F.
 
    var      nRow INIT 0
-   var      nRows INIT 0
 
    var      cTableName
    var      aPrimaryKeys
@@ -306,6 +306,8 @@ create class TSQLTResultSet
    var      hColNames
 
    EXPORTED:
+
+   var      nRows INIT 0
 
    method   new( pDB, pStmt )
    method   Close()
@@ -329,7 +331,7 @@ create class TSQLTResultSet
 
    method   getString( nField )
    method   getNumber( nField ) INLINE val( ::getString( nField ) )
-   method   getDate( nField )   INLINE StoD( strtran( ::getString( nField ), "-", "" ) )
+   method   getDate( nField )   INLINE StoD( strtran( ::getString( nField ), "-" ) )
    method   getBoolean( nField ) INLINE ( ::getString( nField ) == "t" )
 
    method   getMetaData()
@@ -345,7 +347,7 @@ create class TSQLTResultSet
 
    method   updateBuffer( nField, xValue, cType )
    method   updateString( nField, cValue ) INLINE ::updateBuffer( nField, cValue, "C" )
-   method   updateNumber( nField, nValue ) INLINE ::updateBuffer( nField, alltrim( str( nValue ) ), "N" )
+   method   updateNumber( nField, nValue ) INLINE ::updateBuffer( nField, hb_ntos( nValue ), "N" )
    method   updateDate( nField, dValue ) INLINE ::updateBuffer( nField, dtos( dValue ), "D" )
    method   updateBoolean( nField, lValue ) INLINE ::updateBuffer( nField, iif( lValue, "t", "f" ), "L" )
 
