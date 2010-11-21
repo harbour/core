@@ -30,3 +30,4 @@ postgres.c
 
 tpostgre.prg
 pgrdd.prg
+hdbcpg.prg
