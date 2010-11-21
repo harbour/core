@@ -71,6 +71,7 @@ C_SOURCES := \
    cpsk852.c \
    cpsk852c.c \
    cpskiso.c \
+   cpskkam.c \
    cpskwin.c \
    cpsl646.c \
    cpsl852.c \
