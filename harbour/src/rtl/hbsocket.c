@@ -787,7 +787,7 @@ static int s_iSessions;
 #endif
 
 #if !defined( HB_HAS_INET_NTOP ) && !defined( HB_IS_INET_NTOA_MT_SAFE ) && defined( AF_INET )
-static const char * hb_inet_ntoa( struct in_addr * addr, char * pBuffer )
+static const char * hb_inet_ntoa( const struct in_addr * addr, char * pBuffer )
 {
    /* dirty hack to make inet_ntoa() MT safe,
     * in many systems inet_ntoa() returns pointer to

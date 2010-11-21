@@ -118,11 +118,11 @@
 #endif
 
 
-static volatile HB_BOOL s_fThreadInit = HB_FALSE;
-
 #if !defined( HB_MT_VM )
    /* nothing */
 #else
+   static volatile HB_BOOL s_fThreadInit = HB_FALSE;
+
    static PHB_ITEM s_pOnceMutex = NULL;
 
    static int s_waiting_for_threads = 0;
