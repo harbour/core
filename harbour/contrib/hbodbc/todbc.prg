@@ -707,21 +707,20 @@ METHOD LoadData( nPos ) CLASS TODBC
 
    LOCAL uData
    LOCAL i
-   LOCAL nType
 
    FOR i := 1 TO Len( ::Fields )
 
-     uData := Space( 64 )
+     uData := ""
+
      IF ::lCacheRS .AND. ::Active
         IF nPos > 0 .AND. nPos <= ::nRecCount
            uData := ::aRecordSet[ nPos, i ]
         ENDIF
      ELSE
 
-        SQLGetData( ::hStmt, ::Fields[ i ]:FieldID, SQL_CHAR, Len( uData ), @uData)
-        nType := ::Fields[ i ]:DataType
+        SQLGetData( ::hStmt, ::Fields[ i ]:FieldID, SQL_CHAR, 256, @uData )
 
-        SWITCH nType
+        SWITCH ::Fields[ i ]:DataType
         CASE SQL_LONGVARCHAR
            uData := AllTrim( uData )
            EXIT
@@ -750,11 +749,7 @@ METHOD LoadData( nPos ) CLASS TODBC
         CASE SQL_INTEGER
         CASE SQL_FLOAT
         CASE SQL_REAL
-
-           IF ISCHARACTER( uData )
-              uData := StrTran( uData, ",", "." )
-              uData := Round( Val( uData ), ::Fields[ i ]:DataDecs )
-           ENDIF
+           uData := Round( Val( StrTran( uData, ",", "." ) ), ::Fields[ i ]:DataDecs )
            uData := hb_odbcNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
            EXIT
 

@@ -129,7 +129,7 @@ STATIC PROCEDURE PutNormal( aDirEntry )
    hb_FNameSplit( aDirEntry[ F_NAME ], NIL, @cName, @cExt )
 
    /* strict DOS like formatting, it does not play well with long file names
-    * which does not used 8.3 DOS convention
+    * which do not stick to 8.3 MS-DOS convention
     */
    QOut( PadR( cName, 8 ) + " " +;
          PadR( Substr( cExt, 2 ), 3 ) + " " +;
