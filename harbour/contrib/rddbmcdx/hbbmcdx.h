@@ -54,9 +54,6 @@
 #ifndef HB_RDDCDX_H_
 #define HB_RDDCDX_H_
 
-#include "hbapirdd.h"
-#include "hbdbferr.h"
-
 #include "hbrdddbf.h"
 
 HB_EXTERN_BEGIN
@@ -113,18 +110,18 @@ HB_EXTERN_BEGIN
 
 #define CURKEY_RAWCNT(pTag)   (((pTag)->curKeyState & CDX_CURKEY_RAWCNT) != 0)
 #define CURKEY_LOGCNT(pTag)   (((pTag)->curKeyState & CDX_CURKEY_LOGCNT) != 0)
-#define CURKEY_SETLOGCNT(pTag, lKeyCount) { (pTag)->curKeyState |= CDX_CURKEY_LOGCNT; \
-                                            (pTag)->logKeyCount = (lKeyCount); }
+#define CURKEY_SETLOGCNT(pTag, lKeyCount) do { (pTag)->curKeyState |= CDX_CURKEY_LOGCNT; \
+                                               (pTag)->logKeyCount = (lKeyCount); } while(0)
 
 #define CURKEY_RAWPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_RAWPOS) != 0 && \
                                  (pTag)->rawKeyRec == (pTag)->CurKey->rec )
-#define CURKEY_SETRAWPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_RAWPOS; \
-                                 (pTag)->rawKeyRec = (pTag)->CurKey->rec; }
+#define CURKEY_SETRAWPOS(pTag) do { (pTag)->curKeyState |= CDX_CURKEY_RAWPOS; \
+                                    (pTag)->rawKeyRec = (pTag)->CurKey->rec; } while(0)
 
 #define CURKEY_LOGPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_LOGPOS) != 0 && \
                                  (pTag)->logKeyRec == (pTag)->pIndex->pArea->dbfarea.ulRecNo )
-#define CURKEY_SETLOGPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_LOGPOS; \
-                                 (pTag)->logKeyRec = (pTag)->pIndex->pArea->dbfarea.ulRecNo; }
+#define CURKEY_SETLOGPOS(pTag) do { (pTag)->curKeyState |= CDX_CURKEY_LOGPOS; \
+                                    (pTag)->logKeyRec = (pTag)->pIndex->pArea->dbfarea.ulRecNo; } while(0)
 
 /*
 #define CURKEY_UNDEF(pTag)    (((pTag)->curKeyState & CDX_CURKEY_UNDEF) != 0)
@@ -471,7 +468,7 @@ typedef struct _CDXAREA
    LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
    HB_BYTE *      bCdxSortTab;   /* Table with sorted characters */
    HB_BOOL        fCdxAppend;    /* Appended record changed */
-
+   HB_BOOL        fSortCDP;      /* Use CDP functions for sorting */
    HB_USHORT      uiTag;         /* current tag focus */
 
 } CDXAREA;
@@ -500,114 +497,9 @@ typedef struct _BM_FILTER_
 typedef BM_FILTER * LPBM_FILTER;
 
 
-/*
- * -- DBFCDX METHODS --
- */
-
 #undef  SUPERTABLE
 #define SUPERTABLE                         ( &cdxSuper )
 
 HB_EXTERN_END
-
-#define hb_cdxBof                                  NULL
-#define hb_cdxEof                                  NULL
-#define hb_cdxFound                                NULL
-static HB_ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
-#define hb_cdxGoTo                                 NULL
-#define hb_cdxGoToId                               NULL
-static HB_ERRCODE hb_cdxGoTop( CDXAREAP pArea );
-static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast );
-static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, HB_LONG lToSkip );
-static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, HB_LONG lUpDown );
-static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, HB_LONG lToSkip );
-#define hb_cdxAddField                             NULL
-static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll );
-#define hb_cdxCreateFields                         NULL
-static HB_ERRCODE hb_cdxDeleteRec( CDXAREAP pArea );
-#define hb_cdxDeleted                              NULL
-#define hb_cdxFieldCount                           NULL
-#define hb_cdxFieldDisplay                         NULL
-#define hb_cdxFieldInfo                            NULL
-#define hb_cdxFieldName                            NULL
-static HB_ERRCODE hb_cdxFlush( CDXAREAP pArea );
-#define hb_cdxGetRec                               NULL
-#define hb_cdxGetValue                             NULL
-#define hb_cdxGetVarLen                            NULL
-static HB_ERRCODE hb_cdxGoCold( CDXAREAP pArea );
-static HB_ERRCODE hb_cdxGoHot( CDXAREAP pArea );
-static HB_ERRCODE hb_cdxPutRec( CDXAREAP pArea, HB_BYTE * pBuffer );
-#define hb_cdxPutValue                             NULL
-static HB_ERRCODE hb_cdxRecall( CDXAREAP pArea );
-#define hb_cdxRecCount                             NULL
-#define hb_cdxRecInfo                              NULL
-#define hb_cdxRecNo                                NULL
-#define hb_cdxRecId                                NULL
-#define hb_cdxSetFieldExtent                       NULL
-#define hb_cdxAlias                                NULL
-static HB_ERRCODE hb_cdxClose( CDXAREAP pArea );
-#define hb_cdxCreate                               NULL
-#define hb_cdxInfo                                 NULL
-#define hb_cdxNewArea                              NULL
-static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
-#define hb_cdxRelease                              NULL
-static HB_ERRCODE hb_cdxStructSize( CDXAREAP pArea, HB_USHORT * uiSize );
-#define hb_cdxSysName                              NULL
-#define hb_cdxEval                                 NULL
-static HB_ERRCODE hb_cdxPack ( CDXAREAP pArea );
-#define hb_cdxPackRec                              NULL
-#define hb_cdxSort                                 NULL
-#define hb_cdxTrans                                NULL
-#define hb_cdxTransRec                             NULL
-static HB_ERRCODE hb_cdxZap ( CDXAREAP pArea );
-#define hb_cdxChildEnd                             NULL
-#define hb_cdxChildStart                           NULL
-#define hb_cdxChildSync                            NULL
-#define hb_cdxSyncChildren                         NULL
-#define hb_cdxClearRel                             NULL
-#define hb_cdxForceRel                             NULL
-#define hb_cdxRelArea                              NULL
-#define hb_cdxRelEval                              NULL
-#define hb_cdxRelText                              NULL
-#define hb_cdxSetRel                               NULL
-static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
-static HB_ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
-#define hb_cdxOrderCondition                       NULL
-static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo );
-static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
-#define hb_cdxClearLocate                          NULL
-#define hb_cdxClearScope                           NULL
-static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec );
-#define hb_cdxFilterText                           NULL
-#define hb_cdxScopeInfo                            NULL
-static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
-#define hb_cdxSetLocate                            NULL
-#define hb_cdxSetScope                             NULL
-#define hb_cdxSkipScope                            NULL
-#define hb_cdxLocate                               NULL
-#define hb_cdxCompile                              NULL
-#define hb_cdxError                                NULL
-#define hb_cdxEvalBlock                            NULL
-#define hb_cdxRawLock                              NULL
-#define hb_cdxLock                                 NULL
-#define hb_cdxUnLock                               NULL
-#define hb_cdxCloseMemFile                         NULL
-#define hb_cdxCreateMemFile                        NULL
-#define hb_cdxGetValueFile                         NULL
-#define hb_cdxOpenMemFile                          NULL
-#define hb_cdxPutValueFile                         NULL
-#define hb_cdxReadDBHeader                         NULL
-#define hb_cdxWriteDBHeader                        NULL
-#define hb_cdxInit                                 NULL
-#define hb_cdxExit                                 NULL
-#define hb_cdxDrop                                 NULL
-#define hb_cdxExists                               NULL
-#define hb_cdxRename                               NULL
-static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem );
-#define hb_cdxWhoCares                             NULL
 
 #endif /* HB_RDDCDX_H_ */
