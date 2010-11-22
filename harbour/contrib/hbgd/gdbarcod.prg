@@ -61,7 +61,7 @@
 #define STARTB           105
 #define STARTC           106
 
-CLASS TCode FROM TBarCode
+CREATE CLASS TCode FROM TBarCode
 
    DATA nType
 
@@ -124,7 +124,7 @@ METHOD New( nTypeCode ) CLASS TCode
       ::KeysModeC := Array(99)
 
       For ii := 1 TO 99
-          ::KeysmodeC[ii] :=  StrZero(ii,2)
+         ::KeysmodeC[ii] :=  StrZero(ii,2)
       Next
 
    ElseIf nTypeCode == 25
@@ -156,7 +156,7 @@ METHOD New( nTypeCode ) CLASS TCode
 
    ::nType := nTypeCode
 
-Return SELF
+   Return SELF
 
 METHOD Draw( cText ) CLASS TCode
 
@@ -170,7 +170,7 @@ METHOD Draw( cText ) CLASS TCode
       ::DrawI25( cText )
    endif
 
-Return NIL
+   Return NIL
 
 METHOD Draw13(cText)  CLASS TCode
 
@@ -182,127 +182,127 @@ METHOD Draw13(cText)  CLASS TCode
 
    ::Settext( ctext )
 
-	// Valid characters
-	If !::CheckCode()
-	   lerror := .T.
-	EndIf
+   // Valid characters
+   If !::CheckCode()
+      lerror := .T.
+   EndIf
 
    If !lerror
 
       If ::book .AND. Len( ::text) != 10
-			::DrawError("Must contains 10 chars if ISBN is true.")
-			lerror := .T.
+         ::DrawError("Must contains 10 chars if ISBN is true.")
+         lerror := .T.
       EndIf
 
-		// book, we changed the code to the right
+      // book, we changed the code to the right
       If ( ::book .And. Len( ::text )==10 )
-			::text := "978"+substr(::text,1, Len( ::text )-1 )
+         ::text := "978"+substr(::text,1, Len( ::text )-1 )
       EndIF
 
-  	   //  contain only 12 characters ?
+        //  contain only 12 characters ?
       If Len( ::text ) != 12
-			::DrawError( "Must contains 12 chars, the 13th digit is automatically added.")
-			lerror := .t.
+         ::DrawError( "Must contains 12 chars, the 13th digit is automatically added.")
+         lerror := .t.
       EndIf
 
       If !lerror
 
-			// If we have to write text, we moved the barcode to the right to have space to put digit
+         // If we have to write text, we moved the barcode to the right to have space to put digit
          ::positionX := iif( ::textfont == 0 , 0, 10 )
 
          xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
 
-   		// First Bar
-   		::positionX := 10
-   		::maxHeight := ::maxHeight + 9
-   		::DrawSingleBar("101")
+         // First Bar
+         ::positionX := 10
+         ::maxHeight := ::maxHeight + 9
+         ::DrawSingleBar("101")
 
-			// start code
-			::maxHeight := ::maxHeight - 9
+         // start code
+         ::maxHeight := ::maxHeight - 9
 
          For ii := 1 To Len( ::text )
 
-             // Calculate check digit
-             If Mod( ((Len(::text) + 1) - ii), 2 ) == 0
-                nchkSum := nchkSum +  Int( Val( Substr(::text , ii, 1) ) )
-             Else
-                nchkSum := nchkSum +  Int( Val( Substr( ::text , ii, 1) ) ) * 3
-             EndIf
+            // Calculate check digit
+            If Mod( ((Len(::text) + 1) - ii), 2 ) == 0
+               nchkSum := nchkSum +  Int( Val( Substr(::text , ii, 1) ) )
+            Else
+               nchkSum := nchkSum +  Int( Val( Substr( ::text , ii, 1) ) ) * 3
+            EndIf
 
-        		 // ANow, the bar of the middle
-             If ii == 8
+              // ANow, the bar of the middle
+            If ii == 8
                ::positionX += 1
-         		::maxHeight := ::maxHeight + 9
-         		::DrawSingleBar("101")
-         		::maxHeight := ::maxHeight - 9
-         		::positionX += 1
-             EndIf
+               ::maxHeight := ::maxHeight + 9
+               ::DrawSingleBar("101")
+               ::maxHeight := ::maxHeight - 9
+               ::positionX += 1
+            EndIf
 
-             jj := Val( SubStr( ::text, ii, 1) )
+            jj := Val( SubStr( ::text, ii, 1) )
 
-             If jj == 0
-                jj := 10
-             EndIf
+            If jj == 0
+               jj := 10
+            EndIf
 
-             If ii > 1 .And. ii < 8
+            If ii > 1 .And. ii < 8
 
                ::DrawSingleBar( iif( Substr(xParity, ii - 1, 1) == "E",;
-                                        ::LeftHand_Even[jj],;
-                                              ::LeftHand_Odd[jj] ) )
-             ElseIf ii > 1 .And. ii >= 8
+                                       ::LeftHand_Even[jj],;
+                                             ::LeftHand_Odd[jj] ) )
+            ElseIf ii > 1 .And. ii >= 8
 
-                ::DrawSingleBar( ::Right_Hand[jj] )
+               ::DrawSingleBar( ::Right_Hand[jj] )
 
-             EndIf
+            EndIf
 
-        Next
+         Next
 
-        jj := Mod( nchkSum, 10 )
+         jj := Mod( nchkSum, 10 )
 
-        If jj != 0
-           nChk := 10 - jj
-        EndIf
+         If jj != 0
+            nChk := 10 - jj
+         EndIf
 
-        If nChk == 0
-           nChk := 10
-        EndIf
+         If nChk == 0
+            nChk := 10
+         EndIf
 
-        ::DrawSingleBar( ::Right_Hand[nChk] )
+         ::DrawSingleBar( ::Right_Hand[nChk] )
 
-        // Now,  finish bar
-        ::maxHeight := ::maxHeight + 9
-        ::DrawSingleBar("101")
+         // Now,  finish bar
+         ::maxHeight := ::maxHeight + 9
+         ::DrawSingleBar("101")
 
-  		  ::lastX := ::positionX
-		  ::lastY := ::maxHeight
+           ::lastX := ::positionX
+         ::lastY := ::maxHeight
 
-		  ctext+=AllTrim( Str( nChk,1 ) )
+         ctext+=AllTrim( Str( nChk,1 ) )
 
-	     // Draw Text
-	     If ::lDrawValue
-	        ::Settext( ctext )
-    		  ::DrawText13()
-    	  EndIf
+         // Draw Text
+         If ::lDrawValue
+            ::Settext( ctext )
+            ::DrawText13()
+         EndIf
 
       EndIf
 
    EndIf
 
-Return NIL
+   Return NIL
 
 METHOD DrawText13()  CLASS TCode
 
-   if ( ::textfont != 0 )
+   if ::textfont != 0
 
-		::Say( 2, ::maxHeight-( ::GetFontHeight() / 2 ),SubStr( ::text,1,1) , ::FillColor )
-		::Say( (10+(3*::res+48*::res)/2)-(::GetFontWidth()*(6/2)),::maxHeight+1,substr(::text,2,6), ::FillColor )
-		::Say( 10+46*::res+(3*::res+46*::res)/2-::GetFontWidth()*(6/2),::maxHeight+1,substr(::text,8,6),::FillColor)
+      ::Say( 2, ::maxHeight-( ::GetFontHeight() / 2 ),SubStr( ::text,1,1) , ::FillColor )
+      ::Say( (10+(3*::res+48*::res)/2)-(::GetFontWidth()*(6/2)),::maxHeight+1,substr(::text,2,6), ::FillColor )
+      ::Say( 10+46*::res+(3*::res+46*::res)/2-::GetFontWidth()*(6/2),::maxHeight+1,substr(::text,8,6),::FillColor)
 
-    EndIf
+   EndIf
 
-    ::lastY :=  ::maxHeight + ::GetFontHeight()
+   ::lastY :=  ::maxHeight + ::GetFontHeight()
 
-Return NIL
+   Return NIL
 
 METHOD Draw8( cText ) CLASS TCode
 
@@ -314,52 +314,52 @@ METHOD Draw8( cText ) CLASS TCode
 
    ::Settext( ctext )
 
-	// Valid characters
-	If !::CheckCode()
-	   lerror := .T.
-	EndIf
+   // Valid characters
+   If !::CheckCode()
+      lerror := .T.
+   EndIf
 
-	If !lerror
+   If !lerror
 
       ::positionX := iif( ::textfont == 0 , 0, 10 )
 
       //xParity := ::Parity[ 7 ]
 
-  		// First Bar
-		::positionX := 10
-		::maxHeight := ::maxHeight + 9
-		::DrawSingleBar("101")
+        // First Bar
+      ::positionX := 10
+      ::maxHeight := ::maxHeight + 9
+      ::DrawSingleBar("101")
 
-		// Start Code
- 		::maxHeight := ::maxHeight - 9
+      // Start Code
+      ::maxHeight := ::maxHeight - 9
 
       For ii := 1 To Len(::text)
 
-           If Mod( ((Len(::text) + 1 ) - ii ), 2 ) == 0
-              nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) )
-           Else
-              nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) ) * 3
-           EndIf
+         If Mod( ((Len(::text) + 1 ) - ii ), 2 ) == 0
+            nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) )
+         Else
+            nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) ) * 3
+         EndIf
 
-           If ii == 5
-              ::positionX += 1
-        		  ::maxHeight := ::maxHeight + 9
-      		  ::DrawSingleBar("01010")
-      		  ::maxHeight := ::maxHeight - 9
-      		  ::positionX += 1
-           EndIf
+         If ii == 5
+            ::positionX += 1
+            ::maxHeight := ::maxHeight + 9
+            ::DrawSingleBar("01010")
+            ::maxHeight := ::maxHeight - 9
+            ::positionX += 1
+         EndIf
 
-           jj := Val( SubStr( ::text, ii, 1) )
+         jj := Val( SubStr( ::text, ii, 1) )
 
-           If jj == 0
-              jj := 10
-           EndIf
+         If jj == 0
+            jj := 10
+         EndIf
 
-           If ii < 5
-              ::DrawSingleBar( ::LeftHand_Odd[jj] )
-           ElseIf ii >= 5
-              ::DrawSingleBar( ::Right_Hand[jj] )
-           EndIf
+         If ii < 5
+            ::DrawSingleBar( ::LeftHand_Odd[jj] )
+         ElseIf ii >= 5
+            ::DrawSingleBar( ::Right_Hand[jj] )
+         EndIf
 
       Next
 
@@ -375,30 +375,29 @@ METHOD Draw8( cText ) CLASS TCode
       ::maxHeight := ::maxHeight + 9
       ::DrawSingleBar("101")
 
-  	   ::lastX := ::positionX
-		::lastY := ::maxHeight
+      ::lastX := ::positionX
+      ::lastY := ::maxHeight
 
-		ctext+=AllTrim( Str( nChk,1 ) )
+      ctext+=AllTrim( Str( nChk,1 ) )
 
- 	   // Draw text
-	   If ::lDrawValue
-	      ::Settext( ctext )
-    	   ::DrawText8()
-    	EndIf
-
+       // Draw text
+      If ::lDrawValue
+         ::Settext( ctext )
+         ::DrawText8()
+      EndIf
 
    EndIf
 
-Return NIL
+   Return NIL
 
 METHOD DrawText8() CLASS TCode
 
-	::say(  10+( (3*::res+34*::res)/2-::GetFontWidth()*(4/2) ),::maxHeight+1, substr( ::text,1,4 ),::fillcolor)
-	::say(10+(32*::res+(3*::res+32*::res)/2-::GetFontWidth()*(4/2)),::maxHeight+1,substr(::text,5,4),::fillcolor)
+   ::say(  10+( (3*::res+34*::res)/2-::GetFontWidth()*(4/2) ),::maxHeight+1, substr( ::text,1,4 ),::fillcolor)
+   ::say(10+(32*::res+(3*::res+32*::res)/2-::GetFontWidth()*(4/2)),::maxHeight+1,substr(::text,5,4),::fillcolor)
 
    ::lastY :=  ::maxHeight + ::GetFontHeight()
 
-Return NIL
+   Return NIL
 
 METHOD FindCharCode( cstring, cchar ) CLASS TCode
 
@@ -408,207 +407,207 @@ METHOD FindCharCode( cstring, cchar ) CLASS TCode
 
    FOR i := 1 TO Len( cstring )
 
-       If SubStr( cstring, i, 1 ) == cchar
-          ++nC
-          nRet := nC
-          EXIT
-       EndIf
+      If SubStr( cstring, i, 1 ) == cchar
+         ++nC
+         nRet := nC
+         EXIT
+      EndIf
 
-       ++nC
+      ++nC
 
    NEXT
 
-Return nret
+   Return nret
 
 METHOD Draw128( cText, cModeCode ) CLASS TCode
 
-    Local cchar, nvalchar, n, i
+   Local cchar, nvalchar, n, i
 
-    Local nSum       := 0
-    Local nC         := 0
-    LOCAL npos
-    //LOCAL value_test := 0
-    Local lTypeCodeC := .F.
-    Local lTypeCodeA := .F.
-    LOCAL lerror     := .F.
-    Local cBarCode   := ""
-    Local cconc      := ""
+   Local nSum       := 0
+   Local nC         := 0
+   LOCAL npos
+   //LOCAL value_test := 0
+   Local lTypeCodeC := .F.
+   Local lTypeCodeA := .F.
+   LOCAL lerror     := .F.
+   Local cBarCode   := ""
+   Local cconc      := ""
 
-    DEFAULT cModeCode TO "B"
+   DEFAULT cModeCode TO "B"
 
-    ::settext( cText )
+   ::settext( cText )
 
-    If !Empty( cModeCode )
-        If ISCHARACTER( cModeCode ) .and. Upper(cModeCode) $'ABC'
-            cModeCode := Upper(cModeCode)
-        Else
-           ::DrawError("Code 128 Modes are A,B o C. Character values.")
-           lerror := .T.
-        EndIf
-    EndIf
+   If !Empty( cModeCode )
+      If ISCHARACTER( cModeCode ) .and. Upper(cModeCode) $'ABC'
+          cModeCode := Upper(cModeCode)
+      Else
+         ::DrawError("Code 128 Modes are A,B o C. Character values.")
+         lerror := .T.
+      EndIf
+   EndIf
 
-	// Checking if all chars are allowed
-	For i := 1 TO Len( ::text )
+   // Checking if all chars are allowed
+   For i := 1 TO Len( ::text )
 
-		If cModeCode == "C"
+      If cModeCode == "C"
 
          npos := AsCAn( ::KeysmodeC, { |x| x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i+1, 1 ) } )
 
-			If npos == 0
-				 ::DrawError("With Code C, you must provide always pair of two integers. Char "+SubStr( ::text, i, 1 )+SubStr( ::text, i+1, 1 )+" not allowed." )
-				 lerror := .T.
-		  EndIf
+         If npos == 0
+            ::DrawError("With Code C, you must provide always pair of two integers. Char "+SubStr( ::text, i, 1 )+SubStr( ::text, i+1, 1 )+" not allowed." )
+            lerror := .T.
+         EndIf
 
-		ElseIf cModeCode == "B"
+      ElseIf cModeCode == "B"
 
-			 If ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
-		       ::DrawError('Char '+ SubStr( ::text, i, 1 )+" not allowed.")
-  			    lerror := .T.
-			 EndIf
+         If ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
+            ::DrawError('Char '+ SubStr( ::text, i, 1 )+" not allowed.")
+            lerror := .T.
+         EndIf
 
-		ElseiF cModeCode == "A"
+      ElseiF cModeCode == "A"
 
-		   If ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
-		      ::DrawError('Char '+ SubStr( ::text, i, 1 ) +" not allowed.")
-  		      lerror := .T.
-		   EndIf
+         If ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
+            ::DrawError('Char '+ SubStr( ::text, i, 1 ) +" not allowed.")
+            lerror := .T.
+         EndIf
 
-		EndIf
+      EndIf
 
    Next
 
    If !lerror
 
-       If Empty(cModeCode)
+      If Empty(cModeCode)
 
-          If Str( Val( ::text ), Len( ::text ) ) == ::text
+         If Str( Val( ::text ), Len( ::text ) ) == ::text
 
-              lTypeCodeC :=  .T.
-              cconc  := ::aCode[ STARTC ]
-              nSum   := STARTB
+            lTypeCodeC :=  .T.
+            cconc  := ::aCode[ STARTC ]
+            nSum   := STARTB
+
+         Else
+
+            For n := 1 TO  Len( ::text )
+               nC += iif( substr( ::text ,n,1 ) > 31, 1, 0 )
+            Next
+
+            If nC < Len( ::text ) / 2
+               lTypeCodeA:= .t.
+               cconc := ::aCode[STARTA]
+               nSum  := FNC1
+            Else
+               cconc := ::aCode[STARTB]
+               nSum := STARTA
+            EndIf
+
+         EndIf
+
+      Else
+
+          If cModeCode =='C'
+
+             lTypeCodeC  := .T.
+             cconc       := ::aCode[STARTC]
+             nSum        := STARTB
+
+          Elseif cModeCode =='A'
+
+             lTypeCodeA := .t.
+             cconc      := ::aCode[STARTB]
+             nSum       := FNC1
 
           Else
 
-              For n := 1 TO  Len( ::text )
-                  nC += iif( substr( ::text ,n,1 ) > 31, 1, 0 )
-              Next
+             cconc := ::aCode[STARTB]
+             nSum := STARTA
 
-              If nC < Len( ::text ) / 2
-                 lTypeCodeA:= .t.
-                 cconc := ::aCode[STARTA]
-                 nSum  := FNC1
-              Else
-                 cconc := ::aCode[STARTB]
-                 nSum := STARTA
-              EndIf
+          EndIf
 
-           EndIf
+      EndIf
 
-       Else
+      nC := 0
 
-           If cModeCode =='C'
+      For n := 1 To Len( ::text )
 
-              lTypeCodeC  := .T.
-              cconc       := ::aCode[STARTC]
-              nSum        := STARTB
+         nC ++
 
-           Elseif cModeCode =='A'
+         cchar := Substr(::text,n,1)
 
-               lTypeCodeA := .t.
-               cconc      := ::aCode[STARTB]
-               nSum       := FNC1
+         if lTypeCodeC
 
-           Else
+            If Len( ::TEXT ) == n
+               cconc += ::aCode[101]
+               nvalchar := Asc(cchar)-31
+            Else
+               nvalchar := Val(Substr( ::text,n,2 ) ) + 1
+               n++
+            EndIf
 
-               cconc := ::aCode[STARTB]
-               nSum := STARTA
+         Elseif lTypeCodeA
 
-           EndIf
+            If cchar > '_'
+               cconc += ::aCode[101]
+               nvalchar  := Asc(cchar)-31
+            Elseif cchar <= ' '
+               nvalchar  := Asc(cchar)+64
+            Else
+               nvalchar  := Asc(cchar)-31
+            Endif
 
-       EndIf
+         Else
 
-       nC := 0
+            If cchar < ' '
+               cconc += ::aCode[CODEA]
+               nvalchar := Asc(cchar)+64
+            Else
+               nvalchar := Asc(cchar)-31
+            EndIf
 
-       For n := 1 To Len( ::text )
+         Endif
+         nSum += (nvalchar-1)*nC
+         cconc := cconc +::aCode[nvalchar]
 
-           nC ++
+      next
 
-           cchar := Substr(::text,n,1)
+      nSum  := nSum%103 +1
+      cconc := cconc + ::aCode[ nSum ] +::aCode[107]
 
-           if lTypeCodeC
+      For n:=1 To Len(cconc) STEP 2
+          cBarCode +=Replicate('1', Val( Substr( cconc, n,1 ) ) )
+          cBarCode +=Replicate('0', Val( substr( cconc, n+1,1 ) ) )
+      Next
 
-              If Len( ::TEXT ) == n
-                 cconc += ::aCode[101]
-                 nvalchar := Asc(cchar)-31
-              Else
-                 nvalchar := Val(Substr( ::text,n,2 ) ) + 1
-                 n++
-              EndIf
+      ::DrawSingleBar( cBarCode )
 
-           Elseif lTypeCodeA
+      ::lastX := ::positionX
+      ::lastY := ::maxHeight
 
-               If cchar > '_'
-                   cconc += ::aCode[101]
-                   nvalchar  := Asc(cchar)-31
-               Elseif cchar <= ' '
-                   nvalchar  := Asc(cchar)+64
-               Else
-                   nvalchar  := Asc(cchar)-31
-               Endif
-
-           Else
-
-               If cchar < ' '
-                   cconc += ::aCode[CODEA]
-                   nvalchar := Asc(cchar)+64
-               Else
-                   nvalchar := Asc(cchar)-31
-               EndIf
-
-           Endif
-           nSum += (nvalchar-1)*nC
-           cconc := cconc +::aCode[nvalchar]
-
-       next
-
-       nSum  := nSum%103 +1
-       cconc := cconc + ::aCode[ nSum ] +::aCode[107]
-
-       For n:=1 To Len(cconc) STEP 2
-           cBarCode +=Replicate('1', Val( Substr( cconc, n,1 ) ) )
-           cBarCode +=Replicate('0', Val( substr( cconc, n+1,1 ) ) )
-       Next
-
-       ::DrawSingleBar( cBarCode )
-
-   	 ::lastX := ::positionX
-		 ::lastY := ::maxHeight
-
-    	 // Draw Text
-   	 If ::lDrawValue
-   	    ::Settext( ctext )
-          ::DrawText()
-       EndIf
+       // Draw Text
+      If ::lDrawValue
+         ::Settext( ctext )
+         ::DrawText()
+      EndIf
 
    EndIf
 
-Return NIL
+   Return NIL
 
 METHOD DrawI25( cText ) CLASS TCode
 
-  ::settext( cText )
+   ::settext( cText )
 
-  ::GenCodei25()
+   ::GenCodei25()
 
-Return NIL
+   Return NIL
 
 METHOD GenCodei25() CLASS TCode
 
    LOCAL lError   := .F.
-   LOCAL bc_string //:= ::text
+   LOCAL bc_string // := ::text
    //LOCAL new_string := ""
 
-   If ( Len(::text) % 2 )!= 0
+   If ( Len(::text) % 2 ) != 0
       ::DrawError("Invalid barcode lenght")
       lError := .T.
    Endif
@@ -628,14 +627,14 @@ METHOD GenCodei25() CLASS TCode
 
       ::lastY := ::maxHeight
 
-        // Draw Text
-       If ::lDrawValue
-          ::DrawText(.T.)
-       EndIf
+       // Draw Text
+      If ::lDrawValue
+         ::DrawText( .T. )
+      EndIf
 
    EndIf
 
-Return NIL
+   Return NIL
 
 /*
    It makes mixe of the value to be codified by the Bar code I25
@@ -657,19 +656,19 @@ METHOD MixCode(value) CLASS TCode
       i    := 1
       s    := ""
 
-      While i < l
+      DO While i < l
 
-        cFirst := ::Findcode( value[i] )
-        cnext  := ::Findcode( value[i+1] )
+         cFirst := ::Findcode( value[i] )
+         cnext  := ::Findcode( value[i+1] )
 
-        // Mix of the codes
-        // NNNNWNNWWW
-        //  N N N W W
-        For k := 1 TO 5
-            s += cFirst[k] + cnext[k]
-        Next
+         // Mix of the codes
+         // NNNNWNNWWW
+         //  N N N W W
+         For k := 1 TO 5
+             s += cFirst[k] + cnext[k]
+         Next
 
-        i += 2
+         i += 2
 
       EndDo
 
@@ -677,17 +676,14 @@ METHOD MixCode(value) CLASS TCode
 
    EndIf
 
-Return bar_string
+   Return bar_string
 
 METHOD Findcode( uval ) CLASS TCode
 
    LOCAL npos
    LOCAL cretc
 
-   npos  :=  AsCan( ::keys, { |x| x[1] == uval } )
+   npos  :=  AScan( ::keys, { |x| x[1] == uval } )
    cretc := ::acode[npos]
 
-Return cretc
-/*
-EOF
-*/
+   Return cretc

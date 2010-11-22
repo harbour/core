@@ -103,9 +103,6 @@
 #define GD2_CHUNKSIZE_MIN             64
 #define GD2_CHUNKSIZE_MAX             4096
 
-#define GD2_VERS                      2
-#define GD2_ID                        "gd2"
-
 #define GD2_FMT_RAW                   1
 #define GD2_FMT_COMPRESSED            2
 

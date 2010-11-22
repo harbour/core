@@ -125,73 +125,73 @@ METHOD SetDefs( hDefs ) CLASS GDChart
    IF ValType( hDefs ) == "H"
       ::hDefs := hDefs
    ENDIF
-RETURN Self
+   RETURN Self
 
 METHOD PieChart() CLASS GDChart
-  LOCAL hElement, nTot := 0
-  LOCAL nDegree := 0
-  LOCAL lFilled, lExtruded, nExtrude, nTotExtr := 0, pTile
-  LOCAL colorp
-  LOCAL nVal, nDim
-  LOCAL nPosX, nPosY
-  LOCAL cLabel, hFont, cFontName, nPitch, nAngle, textcolor
-  LOCAL x, y, nWidth
-  LOCAL aPieDataOfHash, hDefs
-  LOCAL cFontPitch
+   LOCAL hElement, nTot := 0
+   LOCAL nDegree := 0
+   LOCAL lFilled, lExtruded, nExtrude, nTotExtr := 0, pTile
+   LOCAL colorp
+   LOCAL nVal, nDim
+   LOCAL nPosX, nPosY
+   LOCAL cLabel, hFont, cFontName, nPitch, nAngle, textcolor
+   LOCAL x, y, nWidth
+   LOCAL aPieDataOfHash, hDefs
+   LOCAL cFontPitch
 
-  aPieDataOfHash := ::aDataOfHashes
-  hDefs          := ::hDefs
+   aPieDataOfHash := ::aDataOfHashes
+   hDefs          := ::hDefs
 
-  x          := HGetValue( hDefs, "POSX" )
-  y          := HGetValue( hDefs, "POSY" )
-  nWidth     := HGetValue( hDefs, "WIDTH" )
-  cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := HGetValue( hDefs, "POSX" )
+   y          := HGetValue( hDefs, "POSY" )
+   nWidth     := HGetValue( hDefs, "WIDTH" )
+   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
 
-  DEFAULT x          TO ::CenterWidth()
-  DEFAULT y          TO ::CenterHeight()
-  DEFAULT nWidth     TO Min( ::Width(), ::Height() )
-  DEFAULT cFontPitch TO "TINY"
+   DEFAULT x          TO ::CenterWidth()
+   DEFAULT y          TO ::CenterHeight()
+   DEFAULT nWidth     TO Min( ::Width(), ::Height() )
+   DEFAULT cFontPitch TO "TINY"
 
-  DO CASE
-     CASE cFontPitch == "TINY"
-          ::SetFontTiny()
-     CASE cFontPitch == "SMALL"
-          ::SetFontSmall()
-     CASE cFontPitch == "MEDIUM"
-          ::SetFontMediumBold()
-     CASE cFontPitch == "LARGE"
-          ::SetFontLarge()
-     CASE cFontPitch == "GIANT"
-          ::SetFontGiant()
-  ENDCASE
+   DO CASE
+   CASE cFontPitch == "TINY"
+      ::SetFontTiny()
+   CASE cFontPitch == "SMALL"
+      ::SetFontSmall()
+   CASE cFontPitch == "MEDIUM"
+      ::SetFontMediumBold()
+   CASE cFontPitch == "LARGE"
+      ::SetFontLarge()
+   CASE cFontPitch == "GIANT"
+      ::SetFontGiant()
+   ENDCASE
 
-  //__OutDebug( "x, y, nWidth", x, y, nWidth )
+   //__OutDebug( "x, y, nWidth", x, y, nWidth )
 
 
-  /*
-    hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
-  */
+   /*
+     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+   */
 
-  // Before sum of values to determine perentual
-  FOR EACH hElement IN aPieDataOfHash
+   // Before sum of values to determine perentual
+   FOR EACH hElement IN aPieDataOfHash
       nTot += hElement["VALUE"]
       // Check extrution
-      IF ( nExtrude  := HGetValue( hElement, "EXTRUDE" ) ) <> NIL
+      IF ( nExtrude  := HGetValue( hElement, "EXTRUDE" ) ) != NIL
          nTotExtr := Max( nTotExtr, nExtrude )
       ENDIF
-  NEXT
+   NEXT
 
-  nWidth -= ( nTotExtr + 2 ) * 2
+   nWidth -= ( nTotExtr + 2 ) * 2
 
-  //__OutDebug( "nTotExtr, nWidth", nTotExtr, nWidth )
+   //__OutDebug( "nTotExtr, nWidth", nTotExtr, nWidth )
 
-  // Second,
-  FOR EACH hElement IN aPieDataOfHash
+   // Second,
+   FOR EACH hElement IN aPieDataOfHash
       cLabel    := HGetValue( hElement, "LABEL" )
       lFilled   := HGetValue( hElement, "FILLED" )
       nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
-      IF nExtrude <> NIL
+      IF nExtrude != NIL
          lExtruded := .T.
       ELSE
          lExtruded := .F.
@@ -209,7 +209,7 @@ METHOD PieChart() CLASS GDChart
          nPosX   := x
          nPosY   := y
       ENDIF
-      IF pTile <> NIL
+      IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
@@ -222,7 +222,7 @@ METHOD PieChart() CLASS GDChart
       ELSE
          ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, .T., colorp, gdNoFill + gdEdged )
       ENDIF
-      IF cLabel <> NIL
+      IF cLabel != NIL
          hFont := HGetValue( hElement, "FONT" )
          IF hFont == NIL
             ::SetFontMediumBold()
@@ -254,164 +254,164 @@ METHOD PieChart() CLASS GDChart
       ENDIF
 
       nDegree += nDim + 0.1
-  NEXT
-RETURN Self
+   NEXT
+   RETURN Self
 
 METHOD VerticalBarChart() CLASS GDChart
-  LOCAL hElement, nTot := 0
-  //LOCAL nDegree := 0
-  LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
-  LOCAL colorp
-  LOCAL nVal, nDim
-  LOCAL nPosX, nPosY
-  LOCAL nSize, nMax
-  LOCAL nBorder, nThick, n
-  LOCAL x, y, nWidth, nHeight, nMaxValue, color, nMaxLabel, cLabel
-  LOCAL lShowAxis, lShowGrid
+   LOCAL hElement, nTot := 0
+   //LOCAL nDegree := 0
+   LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
+   LOCAL colorp
+   LOCAL nVal, nDim
+   LOCAL nPosX, nPosY
+   LOCAL nSize, nMax
+   LOCAL nBorder, nThick, n
+   LOCAL x, y, nWidth, nHeight, nMaxValue, color, nMaxLabel, cLabel
+   LOCAL lShowAxis, lShowGrid
 
-  LOCAL nLeftLabelSpace   //:= 40
-  LOCAL nRightLabelSpace  //:= 40
-  LOCAL nBottomLabelSpace //:= 40
-  LOCAL nTopLabelSpace    := 40
-  LOCAL lShowLabelLeft    := .T.
-  LOCAL lShowLabelRight   := .T. //.F.
-  LOCAL lShowLabelBottom  := .T.
-  LOCAL lShowLabelTop     := .F.
-  LOCAL cAxisPict
-  LOCAL cFontPitch
+   LOCAL nLeftLabelSpace   //:= 40
+   LOCAL nRightLabelSpace  //:= 40
+   LOCAL nBottomLabelSpace //:= 40
+   LOCAL nTopLabelSpace    := 40
+   LOCAL lShowLabelLeft    := .T.
+   LOCAL lShowLabelRight   := .T. //.F.
+   LOCAL lShowLabelBottom  := .T.
+   LOCAL lShowLabelTop     := .F.
+   LOCAL cAxisPict
+   LOCAL cFontPitch
 
-  LOCAL aDataOfHash, hDefs
+   LOCAL aDataOfHash, hDefs
 
-  aDataOfHash := ::aDataOfHashes
-  hDefs       := ::hDefs
+   aDataOfHash := ::aDataOfHashes
+   hDefs       := ::hDefs
 
-  x          := HGetValue( hDefs, "POSX" )
-  y          := HGetValue( hDefs, "POSY" )
-  nWidth     := HGetValue( hDefs, "WIDTH" )
-  nHeight    := HGetValue( hDefs, "HEIGHT" )
-  nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-  color      := HGetValue( hDefs, "COLOR" )
-  lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-  lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-  cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-  cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := HGetValue( hDefs, "POSX" )
+   y          := HGetValue( hDefs, "POSY" )
+   nWidth     := HGetValue( hDefs, "WIDTH" )
+   nHeight    := HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
+   color      := HGetValue( hDefs, "COLOR" )
+   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
 
-  DEFAULT x          TO 0
-  DEFAULT y          TO 0
-  DEFAULT nWidth     TO ::Width()
-  DEFAULT nHeight    TO ::Height()
-  DEFAULT color      TO ::GetColor()
-  DEFAULT lShowAxis  TO .T.
-  DEFAULT lShowGrid  TO .T.
-  DEFAULT cAxisPict  TO "@E 9,999.99"
-  DEFAULT cFontPitch TO "TINY"
+   DEFAULT x          TO 0
+   DEFAULT y          TO 0
+   DEFAULT nWidth     TO ::Width()
+   DEFAULT nHeight    TO ::Height()
+   DEFAULT color      TO ::GetColor()
+   DEFAULT lShowAxis  TO .T.
+   DEFAULT lShowGrid  TO .T.
+   DEFAULT cAxisPict  TO "@E 9,999.99"
+   DEFAULT cFontPitch TO "TINY"
 
-  DEFAULT nBorder TO 4
+   DEFAULT nBorder TO 4
 
-  /*
-    hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
-  */
+   /*
+     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+   */
 
-  DO CASE
-     CASE cFontPitch == "TINY"
-          ::SetFontTiny()
-     CASE cFontPitch == "SMALL"
-          ::SetFontSmall()
-     CASE cFontPitch == "MEDIUM"
-          ::SetFontMediumBold()
-     CASE cFontPitch == "LARGE"
-          ::SetFontLarge()
-     CASE cFontPitch == "GIANT"
-          ::SetFontGiant()
-  ENDCASE
+   DO CASE
+   CASE cFontPitch == "TINY"
+      ::SetFontTiny()
+   CASE cFontPitch == "SMALL"
+      ::SetFontSmall()
+   CASE cFontPitch == "MEDIUM"
+      ::SetFontMediumBold()
+   CASE cFontPitch == "LARGE"
+      ::SetFontLarge()
+   CASE cFontPitch == "GIANT"
+      ::SetFontGiant()
+   ENDCASE
 
 
 
-  // Before sum of values to determine perentual
-  nMaxLabel := 0
-  nMax      := 0
-  FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
-         nMax := hElement["VALUE"]
-      ELSE
-         nMax := Max( nMax, hElement["VALUE"] )
+   // Before sum of values to determine perentual
+   nMaxLabel := 0
+   nMax      := 0
+   FOR EACH hElement IN aDataOfHash
+       IF hElement:__enumIndex() == 1
+          nMax := hElement["VALUE"]
+       ELSE
+          nMax := Max( nMax, hElement["VALUE"] )
+       ENDIF
+       cLabel    := HGetValue( hElement, "LABEL" )
+       nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
+       nTot      += hElement["VALUE"]
+   NEXT
+
+   //__OutDebug( "Len( LTrim( Str( nMax ) ) )", Len( LTrim( cStr( nMax ) ) ), Str( nMax ) )
+
+   DEFAULT nLeftLabelSpace    TO nBorder + Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() + nBorder
+   DEFAULT nRightLabelSpace   TO nLeftLabelSpace //nBorder + Len( LTrim( Str( nMax ) ) ) * ::GetFontWidth() + nBorder
+   DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
+   DEFAULT nMaxValue          TO nMax
+
+   IF lShowAxis
+      IF lShowLabelLeft
+         x       += nLeftLabelSpace
+         nWidth  -= nLeftLabelSpace
       ENDIF
-      cLabel    := HGetValue( hElement, "LABEL" )
-      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel <> NIL, cLabel, "" ) ) )
-      nTot      += hElement["VALUE"]
-  NEXT
+      IF lShowLabelRight
+         nWidth  -= nRightLabelSpace
+      ENDIF
+      IF lShowLabelBottom
+         y       += nBottomLabelSpace
+         nHeight -= nBottomLabelSpace
+      ENDIF
+      IF lShowLabelTop
+         nHeight -= nTopLabelSpace
+      ENDIF
+   ENDIF
 
-  //__OutDebug( "Len( LTrim( Str( nMax ) ) )", Len( LTrim( cStr( nMax ) ) ), Str( nMax ) )
+   nSize := nWidth / Len( aDataOfHash )
 
-  DEFAULT nLeftLabelSpace    TO nBorder + Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() + nBorder
-  DEFAULT nRightLabelSpace   TO nLeftLabelSpace //nBorder + Len( LTrim( Str( nMax ) ) ) * ::GetFontWidth() + nBorder
-  DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
-  DEFAULT nMaxValue          TO nMax
+   IF lShowGrid
+      ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
 
-  IF lShowAxis
-     IF lShowLabelLeft
-        x       += nLeftLabelSpace
-        nWidth  -= nLeftLabelSpace
-     ENDIF
-     IF lShowLabelRight
-        nWidth  -= nRightLabelSpace
-     ENDIF
-     IF lShowLabelBottom
-        y       += nBottomLabelSpace
-        nHeight -= nBottomLabelSpace
-     ENDIF
-     IF lShowLabelTop
-        nHeight -= nTopLabelSpace
-     ENDIF
-  ENDIF
+      nThick := ::SetThickness( 1 )
 
-  nSize := nWidth / Len( aDataOfHash )
+      ::ResetStyles()
+      ::AddStyle( color )
+      ::AddStyle( color )
+      ::AddStyle( color )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::SetStyle()
+      FOR n := 10 TO 100 STEP 10
+          nDim  := ( ( nMaxValue / 100 ) * n )
+          nPosY := ( nDim / nMaxValue ) * nHeight
+          //__OutDebug( "nDim", nDim )
+          ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
+      NEXT
+       ::SetThickness( nThick )
+   ENDIF
+   IF lShowAxis
+      // Y Axis
+      FOR n := 10 TO 100 STEP 10
+          nDim  := ( ( nMaxValue / 100 ) * n )
+          cLabel := LTrim( Transform( nDim, cAxisPict ) )
+          nPosY := ( nDim / nMaxValue ) * nHeight
+          IF lShowLabelLeft
+             ::Say( x - nLeftLabelSpace + nBorder, ::Height() - ( y + nPosY ), PadL( cLabel, Len( LTrim( Transform( nMaxValue, cAxisPict ) ) ) ), color )
+          ENDIF
+          IF lShowLabelRight
+             ::Say( x + nWidth + nBorder, ::Height() - ( y + nPosY ), cLabel, color )
+          ENDIF
+      NEXT
+   ENDIF
 
-  IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
-
-     nThick := ::SetThickness( 1 )
-
-     ::ResetStyles()
-     ::AddStyle( color )
-     ::AddStyle( color )
-     ::AddStyle( color )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::SetStyle()
-     FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
-         nPosY := ( nDim / nMaxValue ) * nHeight
-         //__OutDebug( "nDim", nDim )
-         ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
-     NEXT
-      ::SetThickness( nThick )
-  ENDIF
-  IF lShowAxis
-     // Y Axis
-     FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
-         cLabel := LTrim( Transform( nDim, cAxisPict ) )
-         nPosY := ( nDim / nMaxValue ) * nHeight
-         IF lShowLabelLeft
-            ::Say( x - nLeftLabelSpace + nBorder, ::Height() - ( y + nPosY ), PadL( cLabel, Len( LTrim( Transform( nMaxValue, cAxisPict ) ) ) ), color )
-         ENDIF
-         IF lShowLabelRight
-            ::Say( x + nWidth + nBorder, ::Height() - ( y + nPosY ), cLabel, color )
-         ENDIF
-     NEXT
-  ENDIF
-
-  // Second,
-  FOR EACH hElement IN aDataOfHash
+   // Second,
+   FOR EACH hElement IN aDataOfHash
       cLabel    := HGetValue( hElement, "LABEL" )
       lFilled   := HGetValue( hElement, "FILLED" )
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
-      //IF nExtrude <> NIL
+      //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
@@ -426,7 +426,7 @@ METHOD VerticalBarChart() CLASS GDChart
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
       nPosY   := y
-      IF pTile <> NIL
+      IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
@@ -442,141 +442,140 @@ METHOD VerticalBarChart() CLASS GDChart
             ::SayVertical( nPosX + nSize / 2 - ::GetFontHeight() / 2, ::Height() - nBorder, PadL( cLabel, nMaxLabel ), color )
          ENDIF
       ENDIF
-
-  NEXT
-RETURN Self
+   NEXT
+   RETURN Self
 
 METHOD HorizontalBarChart() CLASS GDChart
-  LOCAL hElement, nTot := 0
-  //LOCAL nDegree := 0
-  LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
-  LOCAL colorp
-  LOCAL nVal, nDim
-  LOCAL nPosX, nPosY
-  LOCAL nSize, nMax
-  LOCAL nBorder, nThick, n
-  LOCAL x, y, nWidth, nHeight, nMaxValue, color, nMaxLabel, cLabel
-  LOCAL lShowAxis, lShowGrid
+   LOCAL hElement, nTot := 0
+   //LOCAL nDegree := 0
+   LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
+   LOCAL colorp
+   LOCAL nVal, nDim
+   LOCAL nPosX, nPosY
+   LOCAL nSize, nMax
+   LOCAL nBorder, nThick, n
+   LOCAL x, y, nWidth, nHeight, nMaxValue, color, nMaxLabel, cLabel
+   LOCAL lShowAxis, lShowGrid
 
-  LOCAL nLeftLabelSpace   //:= 40
-  LOCAL nRightLabelSpace  //:= 40
-  LOCAL nBottomLabelSpace //:= 40
-  LOCAL nTopLabelSpace    //:= 40
-  LOCAL lShowLabelLeft    := .T.
-  LOCAL lShowLabelRight   := .T.
-  LOCAL lShowLabelBottom  := .T.
-  LOCAL lShowLabelTop     := .T.
-  LOCAL cAxisPict
-  LOCAL cFontPitch
+   LOCAL nLeftLabelSpace   //:= 40
+   LOCAL nRightLabelSpace  //:= 40
+   LOCAL nBottomLabelSpace //:= 40
+   LOCAL nTopLabelSpace    //:= 40
+   LOCAL lShowLabelLeft    := .T.
+   LOCAL lShowLabelRight   := .T.
+   LOCAL lShowLabelBottom  := .T.
+   LOCAL lShowLabelTop     := .T.
+   LOCAL cAxisPict
+   LOCAL cFontPitch
 
-  LOCAL aDataOfHash, hDefs
+   LOCAL aDataOfHash, hDefs
 
-  aDataOfHash := ::aDataOfHashes
-  hDefs       := ::hDefs
+   aDataOfHash := ::aDataOfHashes
+   hDefs       := ::hDefs
 
-  x          := HGetValue( hDefs, "POSX" )
-  y          := HGetValue( hDefs, "POSY" )
-  nWidth     := HGetValue( hDefs, "WIDTH" )
-  nHeight    := HGetValue( hDefs, "HEIGHT" )
-  nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-  color      := HGetValue( hDefs, "COLOR" )
-  lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-  lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-  cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-  cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := HGetValue( hDefs, "POSX" )
+   y          := HGetValue( hDefs, "POSY" )
+   nWidth     := HGetValue( hDefs, "WIDTH" )
+   nHeight    := HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
+   color      := HGetValue( hDefs, "COLOR" )
+   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
 
-  DEFAULT x          TO 0
-  DEFAULT y          TO 0
-  DEFAULT nWidth     TO ::Width()
-  DEFAULT nHeight    TO ::Height()
-  DEFAULT color      TO ::GetColor()
-  DEFAULT lShowAxis  TO .T.
-  DEFAULT lShowGrid  TO .T.
-  DEFAULT cAxisPict  TO "@E 9,999.99"
-  DEFAULT cFontPitch TO "TINY"
+   DEFAULT x          TO 0
+   DEFAULT y          TO 0
+   DEFAULT nWidth     TO ::Width()
+   DEFAULT nHeight    TO ::Height()
+   DEFAULT color      TO ::GetColor()
+   DEFAULT lShowAxis  TO .T.
+   DEFAULT lShowGrid  TO .T.
+   DEFAULT cAxisPict  TO "@E 9,999.99"
+   DEFAULT cFontPitch TO "TINY"
 
-  DEFAULT nBorder TO 4
+   DEFAULT nBorder TO 4
 
-  /*
-    hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
-  */
+   /*
+     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+   */
 
-  DO CASE
-     CASE cFontPitch == "TINY"
-          ::SetFontTiny()
-     CASE cFontPitch == "SMALL"
-          ::SetFontSmall()
-     CASE cFontPitch == "MEDIUM"
-          ::SetFontMediumBold()
-     CASE cFontPitch == "LARGE"
-          ::SetFontLarge()
-     CASE cFontPitch == "GIANT"
-          ::SetFontGiant()
-  ENDCASE
+   DO CASE
+   CASE cFontPitch == "TINY"
+      ::SetFontTiny()
+   CASE cFontPitch == "SMALL"
+      ::SetFontSmall()
+   CASE cFontPitch == "MEDIUM"
+      ::SetFontMediumBold()
+   CASE cFontPitch == "LARGE"
+      ::SetFontLarge()
+   CASE cFontPitch == "GIANT"
+      ::SetFontGiant()
+   ENDCASE
 
-  // Before sum of values to determine perentual
-  nMaxLabel := 0
-  nMax      := 0
-  FOR EACH hElement IN aDataOfHash
+   // Before sum of values to determine perentual
+   nMaxLabel := 0
+   nMax      := 0
+   FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
          nMax := hElement["VALUE"]
       ELSE
          nMax := Max( nMax, hElement["VALUE"] )
       ENDIF
       cLabel    := HGetValue( hElement, "LABEL" )
-      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel <> NIL, cLabel, "" ) ) )
+      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
       nTot      += hElement["VALUE"]
-  NEXT
-  DEFAULT nLeftLabelSpace    TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
-  DEFAULT nRightLabelSpace   TO nBorder + ( Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() / 2 )
-  DEFAULT nTopLabelSpace     TO nBorder + ::GetFontHeight() + nBorder
-  DEFAULT nBottomLabelSpace  TO nTopLabelSpace // nBorder + ::GetFontHeight() + nBorder
-  DEFAULT nMaxValue          TO nMax
+   NEXT
+   DEFAULT nLeftLabelSpace    TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
+   DEFAULT nRightLabelSpace   TO nBorder + ( Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() / 2 )
+   DEFAULT nTopLabelSpace     TO nBorder + ::GetFontHeight() + nBorder
+   DEFAULT nBottomLabelSpace  TO nTopLabelSpace // nBorder + ::GetFontHeight() + nBorder
+   DEFAULT nMaxValue          TO nMax
 
-  IF lShowAxis
-     IF lShowLabelLeft
-        x       += nLeftLabelSpace
-        nWidth  -= nLeftLabelSpace
-     ENDIF
-     IF lShowLabelRight
-        nWidth  -= nRightLabelSpace
-     ENDIF
-     IF lShowLabelBottom
-        y       += nBottomLabelSpace
-        nHeight -= nBottomLabelSpace
-     ENDIF
-     IF lShowLabelTop
-        nHeight -= nTopLabelSpace
-     ENDIF
-  ENDIF
+   IF lShowAxis
+      IF lShowLabelLeft
+         x       += nLeftLabelSpace
+         nWidth  -= nLeftLabelSpace
+      ENDIF
+      IF lShowLabelRight
+         nWidth  -= nRightLabelSpace
+      ENDIF
+      IF lShowLabelBottom
+         y       += nBottomLabelSpace
+         nHeight -= nBottomLabelSpace
+      ENDIF
+      IF lShowLabelTop
+         nHeight -= nTopLabelSpace
+      ENDIF
+   ENDIF
 
-  nSize := nHeight / Len( aDataOfHash )
+   nSize := nHeight / Len( aDataOfHash )
 
-  IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
+   IF lShowGrid
+      ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
 
-     nThick := ::SetThickness( 1 )
+      nThick := ::SetThickness( 1 )
 
-     ::ResetStyles()
-     ::AddStyle( color )
-     ::AddStyle( color )
-     ::AddStyle( color )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::SetStyle()
-     FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
-         nPosX := ( nDim / nMaxValue ) * nWidth
-         ::Line( x + nPosX, y, x + nPosX, y + nHeight, gdStyled )
-     NEXT
+      ::ResetStyles()
+      ::AddStyle( color )
+      ::AddStyle( color )
+      ::AddStyle( color )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::SetStyle()
+      FOR n := 10 TO 100 STEP 10
+          nDim  := ( ( nMaxValue / 100 ) * n )
+          nPosX := ( nDim / nMaxValue ) * nWidth
+          ::Line( x + nPosX, y, x + nPosX, y + nHeight, gdStyled )
+      NEXT
       ::SetThickness( nThick )
-  ENDIF
-  IF lShowAxis
-     // X Axis
-     FOR n := 0 TO 100 STEP 10
+   ENDIF
+   IF lShowAxis
+      // X Axis
+      FOR n := 0 TO 100 STEP 10
          nDim   := ( ( nMaxValue / 100 ) * n )
          cLabel := LTrim( Transform( nDim, cAxisPict ) )
          nPosX  := ( nDim / nMaxValue ) * nWidth - ( ( Len( cLabel ) / 2 ) * ::GetFontWidth() )
@@ -586,16 +585,16 @@ METHOD HorizontalBarChart() CLASS GDChart
          IF lShowLabelBottom
             ::Say( x + nPosX, y + nHeight + nBorder, cLabel, color )
          ENDIF
-     NEXT
-  ENDIF
+      NEXT
+   ENDIF
 
-  // Second,
-  FOR EACH hElement IN aDataOfHash
+   // Second,
+   FOR EACH hElement IN aDataOfHash
       cLabel    := HGetValue( hElement, "LABEL" )
       lFilled   := HGetValue( hElement, "FILLED" )
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
-      //IF nExtrude <> NIL
+      //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
@@ -611,7 +610,7 @@ METHOD HorizontalBarChart() CLASS GDChart
       nPosX   := x
       nPosY   := y + ( nSize * ( hElement:__enumIndex() - 1 ) )
 
-      IF pTile <> NIL
+      IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
@@ -627,203 +626,202 @@ METHOD HorizontalBarChart() CLASS GDChart
             ::Say( nBorder, nPosY + nSize / 2 - ::GetFontHeight() / 2, PadL( cLabel, nMaxLabel ), color )
          ENDIF
       ENDIF
-
-  NEXT
-RETURN Self
+   NEXT
+   RETURN Self
 
 METHOD LineChart() CLASS GDChart
-  LOCAL hElement
-  //LOCAL nDegree := 0
-  LOCAL /*lFilled, lExtruded, nExtrude,*/ pTile
-  LOCAL colorp
-  LOCAL nVal, nDim
-  LOCAL nPosX, nPosY
-  LOCAL cLabel
-  LOCAL nSize, nMax, nMin, nTotRange, nCeiling
-  LOCAL nBorder, nThick, n
-  LOCAL x, y, nWidth, nHeight, nMaxValue, nMinValue, nMaxLabel, nMinLabel
-  LOCAL lShowAxis, lShowGrid
+   LOCAL hElement
+   //LOCAL nDegree := 0
+   LOCAL /*lFilled, lExtruded, nExtrude,*/ pTile
+   LOCAL colorp
+   LOCAL nVal, nDim
+   LOCAL nPosX, nPosY
+   LOCAL cLabel
+   LOCAL nSize, nMax, nMin, nTotRange, nCeiling
+   LOCAL nBorder, nThick, n
+   LOCAL x, y, nWidth, nHeight, nMaxValue, nMinValue, nMaxLabel, nMinLabel
+   LOCAL lShowAxis, lShowGrid
 
-  LOCAL nLeftLabelSpace   //:= 40
-  LOCAL nRightLabelSpace  //:= 40
-  LOCAL nBottomLabelSpace //:= 40
-  LOCAL nTopLabelSpace    := 40
-  LOCAL lShowLabelLeft    := .T.
-  LOCAL lShowLabelRight   := .T. //.F.
-  LOCAL lShowLabelBottom  := .T.
-  LOCAL lShowLabelTop     := .F.
-  LOCAL cAxisPict
-  LOCAL cFontPitch
+   LOCAL nLeftLabelSpace   //:= 40
+   LOCAL nRightLabelSpace  //:= 40
+   LOCAL nBottomLabelSpace //:= 40
+   LOCAL nTopLabelSpace    := 40
+   LOCAL lShowLabelLeft    := .T.
+   LOCAL lShowLabelRight   := .T. //.F.
+   LOCAL lShowLabelBottom  := .T.
+   LOCAL lShowLabelTop     := .F.
+   LOCAL cAxisPict
+   LOCAL cFontPitch
 
-  LOCAL aDataOfHash, hDefs, aPoints
+   LOCAL aDataOfHash, hDefs, aPoints
 
-  aDataOfHash := ::aDataOfHashes
-  hDefs       := ::hDefs
+   aDataOfHash := ::aDataOfHashes
+   hDefs       := ::hDefs
 
-  x          := HGetValue( hDefs, "POSX" )
-  y          := HGetValue( hDefs, "POSY" )
-  nWidth     := HGetValue( hDefs, "WIDTH" )
-  nHeight    := HGetValue( hDefs, "HEIGHT" )
-  nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-  nMinValue  := HGetValue( hDefs, "MINVALUE" )
-  colorp     := HGetValue( hDefs, "COLOR" )
-  lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-  lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-  cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-  cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := HGetValue( hDefs, "POSX" )
+   y          := HGetValue( hDefs, "POSY" )
+   nWidth     := HGetValue( hDefs, "WIDTH" )
+   nHeight    := HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
+   nMinValue  := HGetValue( hDefs, "MINVALUE" )
+   colorp     := HGetValue( hDefs, "COLOR" )
+   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
 
-  DEFAULT x          TO 0
-  DEFAULT y          TO 0
-  DEFAULT nWidth     TO ::Width()
-  DEFAULT nHeight    TO ::Height()
-  DEFAULT colorp     TO ::GetColor()
-  DEFAULT lShowAxis  TO .T.
-  DEFAULT lShowGrid  TO .T.
-  DEFAULT cAxisPict  TO "@E 9,999.99"
-  DEFAULT cFontPitch TO "TINY"
+   DEFAULT x          TO 0
+   DEFAULT y          TO 0
+   DEFAULT nWidth     TO ::Width()
+   DEFAULT nHeight    TO ::Height()
+   DEFAULT colorp     TO ::GetColor()
+   DEFAULT lShowAxis  TO .T.
+   DEFAULT lShowGrid  TO .T.
+   DEFAULT cAxisPict  TO "@E 9,999.99"
+   DEFAULT cFontPitch TO "TINY"
 
-  DEFAULT nBorder TO 4
+   DEFAULT nBorder TO 4
 
-  /*
-    hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
-  */
+   /*
+     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+   */
 
-  DO CASE
-     CASE cFontPitch == "TINY"
-          ::SetFontTiny()
-     CASE cFontPitch == "SMALL"
-          ::SetFontSmall()
-     CASE cFontPitch == "MEDIUM"
-          ::SetFontMediumBold()
-     CASE cFontPitch == "LARGE"
-          ::SetFontLarge()
-     CASE cFontPitch == "GIANT"
-          ::SetFontGiant()
-  ENDCASE
+   DO CASE
+   CASE cFontPitch == "TINY"
+      ::SetFontTiny()
+   CASE cFontPitch == "SMALL"
+      ::SetFontSmall()
+   CASE cFontPitch == "MEDIUM"
+      ::SetFontMediumBold()
+   CASE cFontPitch == "LARGE"
+      ::SetFontLarge()
+   CASE cFontPitch == "GIANT"
+      ::SetFontGiant()
+   ENDCASE
 
-  // Before sum of values to determine percentual
-  nMaxLabel := 0
-  nMax      := 0
-  FOR EACH hElement IN aDataOfHash
+   // Before sum of values to determine percentual
+   nMaxLabel := 0
+   nMax      := 0
+   FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
          nMax := hElement["VALUE"]
       ELSE
          nMax := Max( nMax, hElement["VALUE"] )
       ENDIF
       cLabel    := HGetValue( hElement, "LABEL" )
-      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel <> NIL, cLabel, "" ) ) )
-  NEXT
+      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
+   NEXT
 
-  // Before sum of values to determine percentual
-  nMinLabel := 0
-  nMin      := 0
-  FOR EACH hElement IN aDataOfHash
+   // Before sum of values to determine percentual
+   nMinLabel := 0
+   nMin      := 0
+   FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
          nMin := hElement["VALUE"]
       ELSE
          nMin := Min( nMin, hElement["VALUE"] )
       ENDIF
       cLabel    := HGetValue( hElement, "LABEL" )
-      nMinLabel := Max( nMinLabel, Len( IIF( cLabel <> NIL, cLabel, "" ) ) )
-  NEXT
+      nMinLabel := Max( nMinLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
+   NEXT
 
-  DEFAULT nLeftLabelSpace    TO nBorder + Max( Len( LTrim( Transform( nMax, cAxisPict ) ) ), Len( LTrim( Transform( nMin, cAxisPict ) ) ) ) * ::GetFontWidth() + nBorder
-  DEFAULT nRightLabelSpace   TO nLeftLabelSpace
-  DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
-  DEFAULT nMaxValue          TO nMax
-  DEFAULT nMinValue          TO nMin
+   DEFAULT nLeftLabelSpace    TO nBorder + Max( Len( LTrim( Transform( nMax, cAxisPict ) ) ), Len( LTrim( Transform( nMin, cAxisPict ) ) ) ) * ::GetFontWidth() + nBorder
+   DEFAULT nRightLabelSpace   TO nLeftLabelSpace
+   DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
+   DEFAULT nMaxValue          TO nMax
+   DEFAULT nMinValue          TO nMin
 
-  IF lShowAxis
-     IF lShowLabelLeft
-        x       += nLeftLabelSpace
-        nWidth  -= nLeftLabelSpace
-     ENDIF
-     IF lShowLabelRight
-        nWidth  -= nRightLabelSpace
-     ENDIF
-     IF lShowLabelBottom
-        y       += nBottomLabelSpace
-        nHeight -= nBottomLabelSpace
-     ENDIF
-     IF lShowLabelTop
-        nHeight -= nTopLabelSpace
-     ENDIF
-  ENDIF
+   IF lShowAxis
+      IF lShowLabelLeft
+         x       += nLeftLabelSpace
+         nWidth  -= nLeftLabelSpace
+      ENDIF
+      IF lShowLabelRight
+         nWidth  -= nRightLabelSpace
+      ENDIF
+      IF lShowLabelBottom
+         y       += nBottomLabelSpace
+         nHeight -= nBottomLabelSpace
+      ENDIF
+      IF lShowLabelTop
+         nHeight -= nTopLabelSpace
+      ENDIF
+   ENDIF
 
-  nSize := Len( aDataOfHash ) - 1
+   nSize := Len( aDataOfHash ) - 1
 
-  if nSize > 1
-     nSize := nWidth / nSize
-  else
-     nSize := nWidth
-  endif
+   if nSize > 1
+      nSize := nWidth / nSize
+   else
+      nSize := nWidth
+   endif
 
-  nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
+   nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
 
-  nCeiling := 0
+   nCeiling := 0
 
-  do while ( nTotRange / ( 10 ^ nCeiling ) ) > 100
-     nCeiling++
-  enddo
+   do while ( nTotRange / ( 10 ^ nCeiling ) ) > 100
+      nCeiling++
+   enddo
 
-  nCeiling := 10 ^ nCeiling
+   nCeiling := 10 ^ nCeiling
 
-  nMaxValue := ceiling( nMaxValue / nCeiling ) * nCeiling
-  nMinValue := iif( nMinValue < 0, -ceiling( abs( nMinValue ) / nCeiling ) * nCeiling, ceiling( nMinValue / nCeiling ) * nCeiling )
+   nMaxValue := ceiling( nMaxValue / nCeiling ) * nCeiling
+   nMinValue := iif( nMinValue < 0, -ceiling( abs( nMinValue ) / nCeiling ) * nCeiling, ceiling( nMinValue / nCeiling ) * nCeiling )
 
-  nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
+   nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
 
-  IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., colorp )
+   IF lShowGrid
+      ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., colorp )
 
-     nThick := ::SetThickness( 1 )
+      nThick := ::SetThickness( 1 )
 
-     ::ResetStyles()
-     ::AddStyle( colorp )
-     ::AddStyle( colorp )
-     ::AddStyle( colorp )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::AddStyle( gdTransparent )
-     ::SetStyle()
-     FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nTotRange / 100 ) * n )
-         nPosY := ( nDim / nTotRange ) * nHeight
-         //__OutDebug( "nDim", nDim )
-         ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
-     NEXT
-     FOR EACH hElement IN aDataOfHash
-         nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
-         ::Line( nPosX, ::Height() - y, nPosX, ::Height() - ( y + nHeight ), gdStyled )
-     NEXT
-      ::SetThickness( nThick )
-  ENDIF
+      ::ResetStyles()
+      ::AddStyle( colorp )
+      ::AddStyle( colorp )
+      ::AddStyle( colorp )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::AddStyle( gdTransparent )
+      ::SetStyle()
+      FOR n := 10 TO 100 STEP 10
+          nDim  := ( ( nTotRange / 100 ) * n )
+          nPosY := ( nDim / nTotRange ) * nHeight
+          //__OutDebug( "nDim", nDim )
+          ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
+      NEXT
+      FOR EACH hElement IN aDataOfHash
+          nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
+          ::Line( nPosX, ::Height() - y, nPosX, ::Height() - ( y + nHeight ), gdStyled )
+      NEXT
+       ::SetThickness( nThick )
+   ENDIF
 
-  IF lShowAxis
-     // Y Axis
-     FOR n := 0 TO 100 STEP 10
-         nDim  := ( ( nTotRange / 100 ) * n )
-         cLabel := LTrim( Transform( nMinValue + ( nTotRange / 10 ) * ( n / 10 ), cAxisPict ) )
-         nPosY := ( nDim / nTotRange ) * nHeight
-         IF lShowLabelLeft
-            ::Say( x - nLeftLabelSpace + nBorder, ::Height() - ( y + nPosY ), cLabel, colorp )
-         ENDIF
-         IF lShowLabelRight
-            ::Say( x + nWidth + nBorder, ::Height() - ( y + nPosY ), cLabel, colorp )
-         ENDIF
-     NEXT
-  ENDIF
+   IF lShowAxis
+      // Y Axis
+      FOR n := 0 TO 100 STEP 10
+          nDim  := ( ( nTotRange / 100 ) * n )
+          cLabel := LTrim( Transform( nMinValue + ( nTotRange / 10 ) * ( n / 10 ), cAxisPict ) )
+          nPosY := ( nDim / nTotRange ) * nHeight
+          IF lShowLabelLeft
+             ::Say( x - nLeftLabelSpace + nBorder, ::Height() - ( y + nPosY ), cLabel, colorp )
+          ENDIF
+          IF lShowLabelRight
+             ::Say( x + nWidth + nBorder, ::Height() - ( y + nPosY ), cLabel, colorp )
+          ENDIF
+      NEXT
+   ENDIF
 
-  // Second,
-  aPoints := {}
-  FOR EACH hElement IN aDataOfHash
+   // Second,
+   aPoints := {}
+   FOR EACH hElement IN aDataOfHash
       cLabel    := HGetValue( hElement, "LABEL" )
       //lFilled   := HGetValue( hElement, "FILLED" )
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
-      //IF nExtrude <> NIL
+      //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
@@ -838,7 +836,7 @@ METHOD LineChart() CLASS GDChart
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
       nPosY   := y
-      IF pTile <> NIL
+      IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
@@ -856,52 +854,52 @@ METHOD LineChart() CLASS GDChart
          ENDIF
       ENDIF
 
-  NEXT
+   NEXT
 
-  // Draw lines
-  nThick := ::SetThickness( 3 )
+   // Draw lines
+   nThick := ::SetThickness( 3 )
 
-  //::ResetStyles()
-  //::AddStyle( color )
-  //::AddStyle( color )
-  //::AddStyle( color )
-  //::AddStyle( gdTransparent )
-  //::AddStyle( gdTransparent )
-  //::AddStyle( gdTransparent )
-  //::AddStyle( gdTransparent )
-  //::AddStyle( gdTransparent )
-  //::SetStyle()
-  FOR n := 1 TO Len( aPoints ) - 1
-      ::Line( aPoints[ n ][ 1 ], aPoints[ n ][ 2 ], aPoints[ n + 1 ][ 1 ], aPoints[ n + 1 ][ 2 ], colorp )
-  NEXT
-  ::SetThickness( nThick )
+   //::ResetStyles()
+   //::AddStyle( color )
+   //::AddStyle( color )
+   //::AddStyle( color )
+   //::AddStyle( gdTransparent )
+   //::AddStyle( gdTransparent )
+   //::AddStyle( gdTransparent )
+   //::AddStyle( gdTransparent )
+   //::AddStyle( gdTransparent )
+   //::SetStyle()
+   FOR n := 1 TO Len( aPoints ) - 1
+       ::Line( aPoints[ n ][ 1 ], aPoints[ n ][ 2 ], aPoints[ n + 1 ][ 1 ], aPoints[ n + 1 ][ 2 ], colorp )
+   NEXT
+   ::SetThickness( nThick )
 
-RETURN Self
+   RETURN Self
 
 METHOD Clone() CLASS GDChart
-  LOCAL oDestImage
-  LOCAL pImage
+   LOCAL oDestImage
+   LOCAL pImage
 
-  IF ::IsTrueColor()
-     oDestImage := GDChart():CreateTrueColor( ::Width, ::Height )
-  ELSE
-     oDestImage := GDChart():Create( ::Width, ::Height )
-  ENDIF
+   IF ::IsTrueColor()
+      oDestImage := GDChart():CreateTrueColor( ::Width, ::Height )
+   ELSE
+      oDestImage := GDChart():Create( ::Width, ::Height )
+   ENDIF
 
-  pImage := oDestImage:pImage
-  oDestImage := oDestImage:CloneDataFrom( Self )
-  //oDestImage := __objClone( Self )
-  oDestImage:pImage := pImage
-  ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
+   pImage := oDestImage:pImage
+   oDestImage := oDestImage:CloneDataFrom( Self )
+   //oDestImage := __objClone( Self )
+   oDestImage:pImage := pImage
+   ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
 
-  //pImage := oDestImage:pImage
-  //// Signal that this image must not be destroyed
-  //oDestImage:lDestroy := .F.
-  //oDestImage := NIL
-  //oDestImage:pImage := pImage
+   //pImage := oDestImage:pImage
+   //// Signal that this image must not be destroyed
+   //oDestImage:lDestroy := .F.
+   //oDestImage := NIL
+   //oDestImage:pImage := pImage
 
-RETURN oDestImage
+   RETURN oDestImage
 
 
 METHOD CloneDataFrom( oSrc )
@@ -922,13 +920,13 @@ METHOD CloneDataFrom( oSrc )
    ::aDataOfHashes := AClone( oSrc:aDataOfHashes )
    ::hDefs         := HB_HClone( oSrc:hDefs )
 
-RETURN Self
+   RETURN Self
 
 
 STATIC FUNCTION HGetValue( hHash, cKey )
-  LOCAL nPos
-  LOCAL xVal
-  IF hHash <> NIL
-     xVal := IIF( ( nPos := HB_HPos( hHash, cKey )) == 0, NIL, HB_HValueAt( hHash, nPos) )
-  ENDIF
-RETURN xVal
+   LOCAL nPos
+   LOCAL xVal
+   IF hHash != NIL
+      xVal := IIF( ( nPos := HB_HPos( hHash, cKey )) == 0, NIL, HB_HValueAt( hHash, nPos) )
+   ENDIF
+   RETURN xVal

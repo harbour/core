@@ -3809,3 +3809,10 @@ HB_FUNC( GDIMAGEGIFANIMEND )
 }
 
 /* ---------------------------------------------------------------------------*/
+
+HB_FUNC( HB_GD_VERSION )
+{
+   hb_storni( GD_MAJOR_VERSION, 1 );
+   hb_storni( GD_MINOR_VERSION, 2 );
+   hb_storni( GD_RELEASE_VERSION, 3 );
+}

@@ -62,7 +62,8 @@
 
 #define THICKNESS_I250   0
 #define THICKNESS_I251   0
-CLASS TBarCode  FROM GDImage
+
+CREATE CLASS TBarCode FROM GDImage
 
    // class attributes
    DATA positionX AS NUMERIC INIT  4
@@ -117,9 +118,9 @@ ENDCLASS
 
 METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
 
-   ::Create(sx, sy)
+   ::Create( sx, sy )
 
-   DEFAULT ccolor  TO {255,255,255}
+   DEFAULT ccolor TO {255,255,255}
 
    ::setcolor( ccolor[1], ccolor[2], ccolor[3] )
 
@@ -132,24 +133,24 @@ METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
    endif
 
    ::FillColor  := ::setcolor( ::color_f[1] ,::color_f[2] ,::color_f[3] )
-	::BackColor  := ::setcolor( ::color_b[1] ,::color_b[2] ,::color_b[3] )
+   ::BackColor  := ::setcolor( ::color_b[1] ,::color_b[2] ,::color_b[3] )
 
-	::Setfont("Arial")
+   ::Setfont("Arial")
 
    // configures Fontes
    If        ::textfont == 1 ; ::SetFontSmall()
-   	ElseIf ::textfont == 2 ; ::SetFontLarge()
-   	ElseIf ::textfont == 3 ; ::SetFontMediumBold()
-   	ElseIf ::textfont == 4 ; ::SetFontGiant()
-   	ElseIf ::textfont == 5 ; ::SetFontTiny()
-	EndIf
+      ElseIf ::textfont == 2 ; ::SetFontLarge()
+      ElseIf ::textfont == 3 ; ::SetFontMediumBold()
+      ElseIf ::textfont == 4 ; ::SetFontGiant()
+      ElseIf ::textfont == 5 ; ::SetFontTiny()
+   EndIf
 
-	::SetFontPitch(::textfont)
+   ::SetFontPitch(::textfont)
 
-	// always restores
+   // always restores
    ::maxHeight := ::maxHDefa
 
-Return Self
+   Return Self
 
 METHOD Configure( nmaxHeight, aFillColor, aBackColor, nres, ntextfont, lbook, lDrawValue ) CLASS TBarCode
 
@@ -165,26 +166,25 @@ METHOD Configure( nmaxHeight, aFillColor, aBackColor, nres, ntextfont, lbook, lD
    ::maxHeight  := nmaxHeight
    ::res        := nres
    ::textfont   := ntextfont
-	::lDrawValue := lDrawValue
+   ::lDrawValue := lDrawValue
 
    ::color_b    := aClone(aBackColor)
    ::color_f    := aClone(aFillColor)
 
-
-RETURN NIL
+   RETURN NIL
 
 METHOD SetText( ptext )  CLASS TBarCode
 
    ::text := ptext
 
-Return NIL
+   Return NIL
 
 METHOD ResetColor() CLASS TBarCode
 
    ::FillColor  := ::setcolor( ::color_f[1] ,::color_f[2] ,::color_f[3] )
-	::BackColor  := ::setcolor( ::color_b[1] ,::color_b[2] ,::color_b[3] )
+   ::BackColor  := ::setcolor( ::color_b[1] ,::color_b[2] ,::color_b[3] )
 
-Return NIL
+   Return NIL
 
 METHOD Allocate() CLASS TBarCode
 
@@ -192,79 +192,79 @@ METHOD Allocate() CLASS TBarCode
    LOCAL G := ::color_b[2]
    LOCAL B := ::color_b[3]
 
-Return ::SetColor(R,G,B)
+   Return ::SetColor(R,G,B)
 
 METHOD DrawSingleBar( pcode ) CLASS TBarCode
 
-    LOCAL i
-    LOCAL j
+   LOCAL i
+   LOCAL j
 
-    For j := 1 To Len( pcode )
+   For j := 1 To Len( pcode )
 
-       For i := 1  TO ::res
-           ::Line( ::positionX + i  , ::positionY , ::positionX + i , (::positionY+::maxHeight) ,;
-                        iif( SubStr(pcode,j,1) $ "0", ::BackColor, ::FillColor  ) )
-       Next
+      For i := 1  TO ::res
+         ::Line( ::positionX + i  , ::positionY , ::positionX + i , (::positionY+::maxHeight) ,;
+                 iif( SubStr(pcode,j,1) $ "0", ::BackColor, ::FillColor  ) )
+      Next
 
-      ::NextX()
+     ::NextX()
 
-    Next
+   Next
 
-Return NIL
+   Return NIL
 
 METHOD DrawSingleI25( pcode ) CLASS TBarCode
 
-    LOCAL j
+   LOCAL j
 
-    LOCAL widthSlimBar  := 1
-    LOCAL widthFatBar   := 3
+   LOCAL widthSlimBar  := 1
+   LOCAL widthFatBar   := 3
 
-    LOCAL imgBar
-    LOCAL imgWid
-    LOCAL end_y
-    LOCAL qw
+   LOCAL imgBar
+   LOCAL imgWid
+   LOCAL end_y
+   LOCAL qw
 
-    ::positionX := 10
+   ::positionX := 10
 
-    For j := 1 To Len( pcode )
+   For j := 1 To Len( pcode )
 
-       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
-       imgWid := iif( SubStr(pcode,j,1) =="0" , widthSlimBar, widthFatBar )
+      imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
+      imgWid := iif( SubStr(pcode,j,1) =="0" , widthSlimBar, widthFatBar )
 
- 		 end_y := ::maxHeight
+       end_y := ::maxHeight
 
-		 For qw := 1 TO imgWid
-			::Line( ::positionX, 1, ::positionX, end_y, imgBar)
-			::nextX(.T.)
-		 Next
+      For qw := 1 TO imgWid
+        ::Line( ::positionX, 1, ::positionX, end_y, imgBar)
+        ::nextX(.T.)
+      Next
 
-    Next
+   Next
 
-Return NIL
+   Return NIL
 
 
 METHOD DrawError(ptext) CLASS TBarCode
 
    ::Say( 5, ::error*15, ptext, ::FillColor )
 
-	::error++
+   ::error++
 
-	::lastX := iif( (::GetFontWidth()*Len(ptext) ) > ::lastX , ( ::GetFontWidth()*Len(ptext)) , ::lastX )
-	::lastY := ::error*15
+   ::lastX := iif( (::GetFontWidth()*Len(ptext) ) > ::lastX , ( ::GetFontWidth()*Len(ptext)) , ::lastX )
+   ::lastY := ::error*15
 
-Return NIL
+   Return NIL
 
-METHOD nextX(lI25) CLASS TBarCode
+METHOD nextX( lI25 ) CLASS TBarCode
 
-    DEFAULT li25 TO .F.
+   DEFAULT li25 TO .F.
 
-    If li25
-       ::positionX ++
-    Else
-       ::positionX += ::res
-    EndIf
+   If li25
+      ::positionX ++
+   Else
+      ::positionX += ::res
+   EndIf
 
-Return NIL
+   Return NIL
 
 METHOD DrawText(lIsI25) CLASS TBarCode
 
@@ -286,7 +286,7 @@ METHOD DrawText(lIsI25) CLASS TBarCode
       EndIf
    EndIf
 
-Return .T.
+   Return .T.
 
 METHOD CheckCode() CLASS TBarCode
 
@@ -294,28 +294,28 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL i
 
    For i := 1 To Len( ::text )
-       If !IsInt( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
+       If ISCHARACTER( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
            ::DrawError("Character  "+SubStr( ::text, i, 1 )+" not allowed .")
            lRet := .F.
        EndIf
    Next
 
-Return lRet
+   Return lRet
 
 METHOD CheckValInArray(cchar) CLASS TBarCode
 
-  LOCAL npos
-  LOCAL uret
+   LOCAL npos
+   LOCAL uret
 
-  npos := ASCAN( ::keys, { |x| SubStr( x, 1, 1 ) == cchar } )
+   npos := ASCAN( ::keys, { |x| SubStr( x, 1, 1 ) == cchar } )
 
-  If npos > 0
-     uret := npos
-  Else
-     uret := NIL
-  EndIf
+   If npos > 0
+      uret := npos
+   Else
+      uret := NIL
+   EndIf
 
-Return uret
+   Return uret
 
 METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
 
@@ -329,46 +329,27 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
 
       //::filename := ::text
       If image_style == IMG_FORMAT_PNG
-
          ::OutputPng()
-
       Elseif image_style == IMG_FORMAT_JPEG
-
          ::OutputJpeg( , quality )
-
       ElseIf image_style == IMG_FORMAT_WBMP
-
          ::OutputWBmp( , nFG )
-
       ElseIf image_style == IMG_FORMAT_GIF
-
          ::OutputGif()
-
       EndIf
 
    else
 
       If image_style == IMG_FORMAT_PNG
-
          ::SavePng(  ::filename )
-
       Elseif image_style == IMG_FORMAT_JPEG
-
          ::Savejpeg( ::filename, quality )
-
       ElseIf image_style == IMG_FORMAT_WBMP
-
          ::SaveWBmp( ::filename, nFG )
-
       ElseIf image_style == IMG_FORMAT_GIF
-
          ::SaveGif( ::filename )
-
       EndIf
 
    EndIf
 
-Return .T.
-
-FUNCTION IsInt( pvar )
-Return ! ISCHARACTER( pvar )
+   Return .T.
