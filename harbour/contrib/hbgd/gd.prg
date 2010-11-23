@@ -53,216 +53,200 @@
 #include "common.ch"
 
 FUNCTION gdImageChar( im, font, x, y, char, color )
-RETURN gdImageString( im, font, x, y, char, color )
+   RETURN gdImageString( im, font, x, y, char, color )
 
 FUNCTION gdImageCharUp( im, font, x, y, char, color )
-RETURN gdImageStringUp( im, font, x, y, char, color )
+   RETURN gdImageStringUp( im, font, x, y, char, color )
 
 FUNCTION gdImageCircle( im, cx, cy, w, color )
-RETURN gdImageArc( im, cx, cy, w, w, 0, 360, color )
+   RETURN gdImageArc( im, cx, cy, w, w, 0, 360, color )
 
 FUNCTION gdImageFilledCircle( im, cx, cy, w, color )
-RETURN gdImageFilledEllipse( im, cx, cy, w, w, color )
+   RETURN gdImageFilledEllipse( im, cx, cy, w, w, color )
 
 FUNCTION gdImageEllipse( im, cx, cy, w, h, color )
-RETURN gdImageArc( im, cx, cy, w, h, 0, 360, color )
+   RETURN gdImageArc( im, cx, cy, w, h, 0, 360, color )
 
 FUNCTION gdImageFTWidth( fontname, ptsize, angle )
-  LOCAL nWidth := 0
-  LOCAL cErr
-  LOCAL aRect := Array(8)
-  DEFAULT fontname TO "Arial"
-  DEFAULT ptsize   TO 8
-  DEFAULT angle    TO 0
-  cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-  //__OutDebug( "ptsize", ptsize, aRect )
-  IF cErr == ""
-     nWidth := aRect[3] - aRect[1]
-  ENDIF
+   LOCAL nWidth := 0
+   LOCAL cErr
+   LOCAL aRect := Array( 8 )
 
-RETURN nWidth
+   DEFAULT fontname TO "Arial"
+   DEFAULT ptsize   TO 8
+   DEFAULT angle    TO 0
+
+   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
+
+   IF cErr == ""
+      nWidth := aRect[3] - aRect[1]
+   ENDIF
+
+   RETURN nWidth
 
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
-  LOCAL nWidth := 0
-  LOCAL cErr
-  LOCAL aRect := Array(8)
-  DEFAULT fontname TO "Arial"
-  DEFAULT ptsize   TO 8
-  DEFAULT angle    TO 0
+   LOCAL nWidth := 0
+   LOCAL cErr
+   LOCAL aRect := Array(8)
+   DEFAULT fontname TO "Arial"
+   DEFAULT ptsize   TO 8
+   DEFAULT angle    TO 0
 
-  cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-  IF cErr == ""
-     nWidth := aRect[2] - aRect[8]
-  ENDIF
+   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
+   IF cErr == ""
+      nWidth := aRect[2] - aRect[8]
+   ENDIF
 
-RETURN nWidth
+   RETURN nWidth
 
 FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
-  LOCAL nWidth  := 0
-  LOCAL nHeight := 0
-  LOCAL nX, nY
-  LOCAL cErr
-  LOCAL aRect := Array(8)
-  DEFAULT fontname TO "Arial"
-  DEFAULT ptsize   TO 8
-  DEFAULT angle    TO 0
-  cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
-  //__OutDebug( "ptsize", ptsize, aRect )
-  IF cErr == ""
-     nWidth  := aRect[3] - aRect[1]
-     nHeight := aRect[2] - aRect[8]
-     nX      := aRect[1]
-     nY      := aRect[2]
-  ENDIF
+   LOCAL nWidth  := 0
+   LOCAL nHeight := 0
+   LOCAL nX, nY
+   LOCAL cErr
+   LOCAL aRect := Array( 8 )
 
-RETURN { nWidth, nHeight, nX, nY }
+   DEFAULT fontname TO "Arial"
+   DEFAULT ptsize   TO 8
+   DEFAULT angle    TO 0
+
+   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
+
+   IF cErr == ""
+      nWidth  := aRect[3] - aRect[1]
+      nHeight := aRect[2] - aRect[8]
+      nX      := aRect[1]
+      nY      := aRect[2]
+   ENDIF
+
+   RETURN { nWidth, nHeight, nX, nY }
 
 FUNCTION gdImageStringFT( im, fg, fontname, ptsize, angle, x, y, string, ;
                           linespacing, charmap, resolution )
-  LOCAL cErr
-  LOCAL aRect := Array(8)
-  cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
-  IF cErr == ""
-     cErr := gdImageStringFTEx( im, aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
-  ENDIF
-RETURN cErr
+   LOCAL cErr
+   LOCAL aRect := Array(8)
+   cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
+   IF cErr == ""
+      cErr := gdImageStringFTEx( im, aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
+   ENDIF
+   RETURN cErr
 
 FUNCTION gdImageFromFile( cFile )
-  LOCAL cPath, cName, cExt, cDrive
-  LOCAL cType, cMime
-  LOCAL hFile := {=>}
-  LOCAL oImage
+   LOCAL cPath, cName, cExt, cDrive
+   LOCAL cType, cMime
+   LOCAL hFile := {=>}
+   LOCAL oImage
 
-  IF hb_FileExists( cFile )
-     HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-     //TraceLog( cFile, cPath, cName, cExt, cDrive )
-     cExt := Lower( cExt )
-     DO CASE
-        CASE cExt == ".jpg" .OR. cExt == ".jpeg"
-             hFile[ "file"  ] := cFile
-             hFile[ "path"  ] := cPath
-             hFile[ "name"  ] := cName
-             hFile[ "ext"   ] := cExt
-             hFile[ "drive" ] := cDrive
-             cType  := "jpeg"
-             cMime  := "image/jpeg"
-             oImage := GDImage():LoadFromJpeg( cFile )
+   IF hb_FileExists( cFile )
+      HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
 
+      SWITCH Lower( cExt )
+      CASE ".jpg"
+      CASE ".jpeg"
+         hFile[ "file"  ] := cFile
+         hFile[ "path"  ] := cPath
+         hFile[ "name"  ] := cName
+         hFile[ "ext"   ] := cExt
+         hFile[ "drive" ] := cDrive
+         cType  := "jpeg"
+         cMime  := "image/jpeg"
+         oImage := GDImage():LoadFromJpeg( cFile )
+         EXIT
 
-        CASE cExt == ".gif"
-             hFile[ "file"  ] := cFile
-             hFile[ "path"  ] := cPath
-             hFile[ "name"  ] := cName
-             hFile[ "ext"   ] := cExt
-             hFile[ "drive" ] := cDrive
-             cType  := "gif"
-             cMime  := "image/gif"
-             oImage := GDImage():LoadFromGif( cFile )
+      CASE ".gif"
+         hFile[ "file"  ] := cFile
+         hFile[ "path"  ] := cPath
+         hFile[ "name"  ] := cName
+         hFile[ "ext"   ] := cExt
+         hFile[ "drive" ] := cDrive
+         cType  := "gif"
+         cMime  := "image/gif"
+         oImage := GDImage():LoadFromGif( cFile )
+         EXIT
 
+      CASE ".png"
+         hFile[ "file"  ] := cFile
+         hFile[ "path"  ] := cPath
+         hFile[ "name"  ] := cName
+         hFile[ "ext"   ] := cExt
+         hFile[ "drive" ] := cDrive
+         cType  := "png"
+         cMime  := "image/png"
+         oImage := GDImage():LoadFromPng( cFile )
+         EXIT
 
-        CASE cExt == ".png"
-             hFile[ "file"  ] := cFile
-             hFile[ "path"  ] := cPath
-             hFile[ "name"  ] := cName
-             hFile[ "ext"   ] := cExt
-             hFile[ "drive" ] := cDrive
-             cType  := "png"
-             cMime  := "image/png"
-             oImage := GDImage():LoadFromPng( cFile )
-     ENDCASE
+      ENDSWITCH
 
-  ENDIF
+   ENDIF
 
-RETURN { oImage, hFile, cType, cMime }
+   RETURN { oImage, hFile, cType, cMime }
 
 FUNCTION gdImageToString( oImage )
-  LOCAL cString
+   LOCAL cString
 
-  //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
-  //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
-
-  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-     WITH OBJECT oImage
-        IF :cType != NIL
-           DO CASE
-              CASE :cType == "jpeg"
-                   cString := :ToStringJpeg()
-              CASE :cType == "gif"
-                   cString := :ToStringGif()
-              CASE :cType == "png"
-                   cString := :ToStringPng()
-           ENDCASE
-        ENDIF
-     END
-  ENDIF
-RETURN cString
+   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+      WITH OBJECT oImage
+         IF :cType != NIL
+            DO CASE
+            CASE :cType == "jpeg"
+               cString := :ToStringJpeg()
+            CASE :cType == "gif"
+               cString := :ToStringGif()
+            CASE :cType == "png"
+               cString := :ToStringPng()
+            ENDCASE
+         ENDIF
+      ENDWITH
+   ENDIF
+   RETURN cString
 
 PROCEDURE gdImageToFile( oImage, cFile )
-  LOCAL cString, cExt
+   LOCAL cString, cExt
 
-  DEFAULT cFile TO "image"
+   DEFAULT cFile TO "image"
 
-  //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
-  //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
+   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+      WITH OBJECT oImage
+         IF :cType != NIL
+            DO CASE
+            CASE :cType == "jpeg"
+               cString := :ToStringJpeg()
+               cExt    := ".jpg"
+            CASE :cType == "gif"
+               cString := :ToStringGif()
+               cExt    := ".gif"
+            CASE :cType == "png"
+               cString := :ToStringPng()
+               cExt    := ".png"
+            OTHERWISE
+               cExt    := ""
+            ENDCASE
+            IF cString != NIL
+               hb_MemoWrit( cFile + cExt, cString )
+            ENDIF
+         ENDIF
+      ENDWITH
+   ENDIF
 
-  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-     WITH OBJECT oImage
-        IF :cType != NIL
-           DO CASE
-           CASE :cType == "jpeg"
-                cString := :ToStringJpeg()
-                cExt    := ".jpg"
-           CASE :cType == "gif"
-                cString := :ToStringGif()
-                cExt    := ".gif"
-           CASE :cType == "png"
-                cString := :ToStringPng()
-                cExt    := ".png"
-           OTHERWISE
-                cExt    := ""
-           ENDCASE
-           IF cString != NIL
-              hb_MemoWrit( cFile + cExt, cString )
-           ENDIF
-        ENDIF
-     END
-  ENDIF
-
-RETURN
+   RETURN
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-  DEFAULT nHandle TO 1
+   DEFAULT nHandle TO 1
 
-  //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
-  //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
+   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+      WITH OBJECT oImage
+         IF :cType != NIL
+            DO CASE
+            CASE :cType == "jpeg"
+               :OutputJpeg( nHandle )
+            CASE :cType == "gif"
+               :OutputGif( nHandle )
+            CASE :cType == "png"
+               :OutputPng( nHandle )
+            ENDCASE
+         ENDIF
+      ENDWITH
+   ENDIF
 
-  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-     WITH OBJECT oImage
-        IF :cType != NIL
-           DO CASE
-              CASE :cType == "jpeg"
-                   :OutputJpeg( nHandle )
-              CASE :cType == "gif"
-                   :OutputGif( nHandle )
-              CASE :cType == "png"
-                   :OutputPng( nHandle )
-           ENDCASE
-        ENDIF
-     END
-  ENDIF
-
-RETURN
-
-/*
-
-   ////aRect := { 10, 40, 100, 40, 100, 20, 10, 20 } //Array(8)
-   //aRect := Array(8)
-   ////TraceLog( "aRect = " + hb_dumpVar( aRect ) )
-   //gdImageStringFtEx( , @aRect, blue, "arial", 20, 30, 20, 90, 'Test')
-   ////TraceLog( "aRect = " + hb_dumpVar( aRect ) )
-   //? "aRect = " + hb_dumpVar( aRect )
-   //gdImageStringFtEx(im, aRect, blue, "arial", 20, 30, 20, 90, 'Test')
-   ////TraceLog( "aRect = " + hb_dumpVar( aRect ) )
-
-*/
+   RETURN

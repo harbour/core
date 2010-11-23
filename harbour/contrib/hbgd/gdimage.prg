@@ -298,7 +298,6 @@ METHOD New( sx, sy ) CLASS GDImage
    RETURN Self
 
 METHOD PROCEDURE Destruct() CLASS GDImage
-   //__OutDebug( "Destroyed" )
    IF ::lDestroy
       ::Destroy()
    ENDIF
@@ -442,7 +441,6 @@ METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestIm
          oDestImage := GDImage():Create( nWidth, nHeight )
       ENDIF
    ENDIF
-   //__OutDebug( nAngle )
    gdImageCopyRotated( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nAngle )
    RETURN oDestImage
 
@@ -526,8 +524,6 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
       nWidth  := ::Width
       nHeight := ::Height
    ENDIF
-   //__OutDebug( ::Width, ::Height )
-   //__OutDebug( nWidth, nHeight )
 
    IF ::IsTrueColor()
       oDestImage := GDImage():CreateTrueColor( nWidth, nHeight )
@@ -655,7 +651,6 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
 
    IF     nAlign == gdAlignCenter
       nWidth := nPitch //gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
-      //__OutDebug( "nWidth", nWidth  )
       nLen   := Len( cString )
       nPosX  := x - ( (nLen / 2) * nWidth )
    ELSEIF nAlign == gdAlignRight

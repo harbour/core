@@ -78,6 +78,11 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
    hbwapi_ret_raw_HANDLE( GetCurrentThread() );
 }
 
+HB_FUNC( WAPI_GETCURRENTTHREADID )
+{
+   hb_retnint( GetCurrentThreadId() );
+}
+
 HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 {
    DWORD dwResult = WaitForSingleObject( hbwapi_par_raw_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );

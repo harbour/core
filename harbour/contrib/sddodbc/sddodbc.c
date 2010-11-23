@@ -429,60 +429,60 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          case SQL_WCHAR:
          case SQL_WVARCHAR:
          case SQL_WLONGVARCHAR:
-           pFieldInfo.uiType = HB_FT_STRING;
-           break;
+            pFieldInfo.uiType = HB_FT_STRING;
+            break;
 
          case SQL_VARBINARY:
          case SQL_LONGVARBINARY:
-           pFieldInfo.uiType = HB_FT_STRING;
-           pFieldInfo.uiFlags = HB_FF_BINARY;
-           break;
+            pFieldInfo.uiType = HB_FT_STRING;
+            pFieldInfo.uiFlags = HB_FF_BINARY;
+            break;
 
          case SQL_TINYINT:
          case SQL_SMALLINT:
          case SQL_INTEGER:
          case SQL_BIGINT:
-           pFieldInfo.uiType = HB_FT_INTEGER;
-           break;
+            pFieldInfo.uiType = HB_FT_INTEGER;
+            break;
 
          case SQL_DECIMAL:
          case SQL_NUMERIC:
-           pFieldInfo.uiType = HB_FT_LONG;
-           break;
+            pFieldInfo.uiType = HB_FT_LONG;
+            break;
 
          case SQL_REAL:
          case SQL_FLOAT:
          case SQL_DOUBLE:
-           pFieldInfo.uiType = HB_FT_DOUBLE;
-           break;
+            pFieldInfo.uiType = HB_FT_DOUBLE;
+            break;
 
          case SQL_BIT:
-           pFieldInfo.uiType = HB_FT_LOGICAL;
-           break;
+            pFieldInfo.uiType = HB_FT_LOGICAL;
+            break;
 
          case SQL_DATE:
          case SQL_TYPE_DATE:
-           pFieldInfo.uiType = HB_FT_DATE;
-           break;
+            pFieldInfo.uiType = HB_FT_DATE;
+            break;
 
          case SQL_TIME:
          case SQL_TYPE_TIME:
-           pFieldInfo.uiType = HB_FT_DATE;
-           break;
+            pFieldInfo.uiType = HB_FT_DATE;
+            break;
 
          /*  SQL_DATETIME = SQL_DATE = 9 */
          case SQL_TIMESTAMP:
          case SQL_TYPE_TIMESTAMP:
-           pFieldInfo.uiType = HB_FT_TIMESTAMP;
-           break;
+            pFieldInfo.uiType = HB_FT_TIMESTAMP;
+            break;
 
          default:
-           /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
-           bError = HB_TRUE;
-           errCode = ( HB_ERRCODE ) iDataType;
-           pFieldInfo.uiType = 0;
-           pFieldInfo.uiType = HB_FT_STRING;
-           break;
+            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
+            bError = HB_TRUE;
+            errCode = ( HB_ERRCODE ) iDataType;
+            pFieldInfo.uiType = 0;
+            pFieldInfo.uiType = HB_FT_STRING;
+            break;
       }
 
       if ( ! bError )

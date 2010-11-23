@@ -264,7 +264,6 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
    /* Read file */
    iptr = hb_xgrab( sz );
    hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
-   /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
    return iptr;
 
@@ -287,7 +286,6 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
       /* Read file */
       iptr = hb_xgrab( *sz );
       hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) *sz );
-      /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -338,8 +336,6 @@ static void GDImageCreateFrom( int nType )
    const char *szFile;
    int sz;
    void * iptr;
-
-   /*TraceLog( NULL, "Params = %i, 1 = %i, 2 = %i \n\r", hb_pcount(), hb_parinfo( 1 ), hb_parinfo( 2 ) );*/
 
    if( hb_pcount() == 1 &&
         ( HB_ISCHAR( 1 ) )
@@ -447,7 +443,6 @@ static void GDImageSaveTo( int nType )
       }
 
       /* Retrieve compression level */
-      /*TraceLog( NULL, "Count = %i\n\r", hb_pcount() ); */
       /* check if is numeric */
       if( !( HB_ISNIL( 3 ) || HB_ISNUM( 3 ) ) )
       {
@@ -2424,8 +2419,6 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
 /* implementation: cError := gdImageStringFTEx( im, aRect, int fg, cFontname, nPtSize, nAngle, x, y, cString, nLinespacing, nCharmap, nResolution ) */
 HB_FUNC( GDIMAGESTRINGFTEX )
 {
-   /* TraceLog( NULL, "Parameters: %i, Type 1 =%i=\n\r", hb_pcount(), hb_parinfo( 1 ) ); */
-
    if( hb_pcount() >= 9 &&
        ( HB_ISNIL( 1 ) || HB_ISPOINTER( 1 ) ) &&
        HB_ISARRAY( 2 ) &&
@@ -2455,7 +2448,6 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
-      /*TraceLog( NULL, "Image pointer: %p\n\r", im ); */
 
       /* Retrieve rectangle array */
       pRect = hb_param( 2, HB_IT_ARRAY );
@@ -2466,28 +2458,22 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 
       /* Retrieve foreground color value */
       fg = hb_parni( 3 );
-      /*TraceLog( NULL, "Forecolor: %i\n\r", fg ); */
 
       /* Retrieve fontname value */
       fontname = hb_parc( 4 );
-      /*TraceLog( NULL, "Font: %s\n\r", fontname ); */
 
       /* Retrieve point size value */
       ptsize = hb_parni( 5 );
-      /*TraceLog( NULL, "PTSize: %lf\n\r", ptsize ); */
 
       /* Retrieve angle value in radians */
       angle = hb_parnd( 6 );
-      /*TraceLog( NULL, "Angle: %lf\n\r", angle ); */
 
       /* Retrieve pos value */
       x = hb_parni( 7 );
       y = hb_parni( 8 );
-      /*TraceLog( NULL, "Pos: %i, %i\n\r", x, y ); */
 
       /* Retrieve string value */
       string = hb_parcx( 9 );
-      /*TraceLog( NULL, "String: %s\n\r", string ); */
 
       /* EXTENDED FLAGS */
       flags       = 0;
@@ -2558,8 +2544,6 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 
 HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, int cx, int cy, double radius, double textRadius, double fillPortion, char *font, double points, char *top, char *bottom, int fgcolor) */
 {
-   /*TraceLog( NULL, "Parameters: %i, Type 9 =%i=\n\r", hb_pcount(), hb_parinfo( 10 ) ); */
-
    if( hb_pcount() == 11 &&
        HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&

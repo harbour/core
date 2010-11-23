@@ -158,13 +158,13 @@ static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    PHB_ITEM pItemUnixSocket = hb_arrayGetItemPtr( pItem, 7 );
 
    pMySql = mysql_init( NULL );
-   if ( ! mysql_real_connect( pMySql, 
-                              hb_arrayGetCPtr( pItem, 2 ) /* host */, 
-                              hb_arrayGetCPtr( pItem, 3 ) /* user */, 
+   if ( ! mysql_real_connect( pMySql,
+                              hb_arrayGetCPtr( pItem, 2 ) /* host */,
+                              hb_arrayGetCPtr( pItem, 3 ) /* user */,
                               hb_arrayGetCPtr( pItem, 4 ) /* password */,
-                              hb_arrayGetCPtr( pItem, 5 ) /* db */, 
-                              hb_arrayGetNI( pItem, 6 ) /* port */, 
-                              pItemUnixSocket && HB_IS_STRING( pItemUnixSocket ) ? hb_itemGetCPtr( pItemUnixSocket ) : NULL, 
+                              hb_arrayGetCPtr( pItem, 5 ) /* db */,
+                              hb_arrayGetNI( pItem, 6 ) /* port */,
+                              pItemUnixSocket && HB_IS_STRING( pItemUnixSocket ) ? hb_itemGetCPtr( pItemUnixSocket ) : NULL,
                               hb_arrayGetNI( pItem, 8 ) /* flags*/ ) )
    {
       hb_rddsqlSetError( mysql_errno( pMySql ), mysql_error( pMySql ), NULL, NULL, 0 );
@@ -283,50 +283,50 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       {
          case MYSQL_TYPE_TINY:
          case MYSQL_TYPE_SHORT:
-           pFieldInfo.uiType = HB_FT_INTEGER;
-           break;
+            pFieldInfo.uiType = HB_FT_INTEGER;
+            break;
 
          case MYSQL_TYPE_LONG:
          case MYSQL_TYPE_LONGLONG:
          case MYSQL_TYPE_INT24:
-           pFieldInfo.uiType = HB_FT_LONG;
-           break;
+            pFieldInfo.uiType = HB_FT_LONG;
+            break;
 
          case MYSQL_TYPE_DECIMAL:
          case MYSQL_TYPE_NEWDECIMAL:
          case MYSQL_TYPE_FLOAT:
          case MYSQL_TYPE_DOUBLE:
-           pFieldInfo.uiType = HB_FT_DOUBLE;
-           pFieldInfo.uiDec = ( HB_USHORT ) pMyField->decimals;
-           break;
+            pFieldInfo.uiType = HB_FT_DOUBLE;
+            pFieldInfo.uiDec = ( HB_USHORT ) pMyField->decimals;
+            break;
 
          case MYSQL_TYPE_STRING:
          case MYSQL_TYPE_VAR_STRING:
          case MYSQL_TYPE_ENUM:
-           pFieldInfo.uiType = HB_FT_STRING;
-           break;
+            pFieldInfo.uiType = HB_FT_STRING;
+            break;
 
          case MYSQL_TYPE_DATE:
-           pFieldInfo.uiType = HB_FT_DATE;
-           break;
+            pFieldInfo.uiType = HB_FT_DATE;
+            break;
 
          case MYSQL_TYPE_TINY_BLOB:
          case MYSQL_TYPE_MEDIUM_BLOB:
          case MYSQL_TYPE_LONG_BLOB:
          case MYSQL_TYPE_BLOB:
-           pFieldInfo.uiType = HB_FT_MEMO;
-           break;
+            pFieldInfo.uiType = HB_FT_MEMO;
+            break;
 
          case MYSQL_TYPE_TIMESTAMP:
          case MYSQL_TYPE_DATETIME:
-           pFieldInfo.uiType = HB_FT_TIMESTAMP;
-           pFieldInfo.uiLen = 8;
-           break;
+            pFieldInfo.uiType = HB_FT_TIMESTAMP;
+            pFieldInfo.uiLen = 8;
+            break;
 
          case MYSQL_TYPE_TIME:
-           pFieldInfo.uiType = HB_FT_TIME;
-           pFieldInfo.uiLen = 4;
-           break;
+            pFieldInfo.uiType = HB_FT_TIME;
+            pFieldInfo.uiLen = 4;
+            break;
 
 /*
          case MYSQL_TYPE_YEAR:
@@ -336,10 +336,10 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 */
 
          default:
-           bError = HB_TRUE;
-           errCode = ( HB_ERRCODE ) pMyField->type;
-           pFieldInfo.uiType = 0;
-           break;
+            bError = HB_TRUE;
+            errCode = ( HB_ERRCODE ) pMyField->type;
+            pFieldInfo.uiType = 0;
+            break;
       }
 
       if ( ! bError )

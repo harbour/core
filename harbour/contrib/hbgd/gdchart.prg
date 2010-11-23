@@ -165,9 +165,6 @@ METHOD PieChart() CLASS GDChart
       ::SetFontGiant()
    ENDCASE
 
-   //__OutDebug( "x, y, nWidth", x, y, nWidth )
-
-
    /*
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
@@ -182,8 +179,6 @@ METHOD PieChart() CLASS GDChart
    NEXT
 
    nWidth -= ( nTotExtr + 2 ) * 2
-
-   //__OutDebug( "nTotExtr, nWidth", nTotExtr, nWidth )
 
    // Second,
    FOR EACH hElement IN aPieDataOfHash
@@ -341,8 +336,6 @@ METHOD VerticalBarChart() CLASS GDChart
        nTot      += hElement["VALUE"]
    NEXT
 
-   //__OutDebug( "Len( LTrim( Str( nMax ) ) )", Len( LTrim( cStr( nMax ) ) ), Str( nMax ) )
-
    DEFAULT nLeftLabelSpace    TO nBorder + Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() + nBorder
    DEFAULT nRightLabelSpace   TO nLeftLabelSpace //nBorder + Len( LTrim( Str( nMax ) ) ) * ::GetFontWidth() + nBorder
    DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
@@ -385,7 +378,6 @@ METHOD VerticalBarChart() CLASS GDChart
       FOR n := 10 TO 100 STEP 10
           nDim  := ( ( nMaxValue / 100 ) * n )
           nPosY := ( nDim / nMaxValue ) * nHeight
-          //__OutDebug( "nDim", nDim )
           ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
       NEXT
        ::SetThickness( nThick )
@@ -602,7 +594,6 @@ METHOD HorizontalBarChart() CLASS GDChart
       colorp    := HGetValue( hElement, "COLOR" )
       nVal      := hElement["VALUE"]
       nDim      := ( nVal / nMaxValue ) * nWidth
-      //__OutDebug( "nDim", nDim )
       DEFAULT lFilled  TO .F.
       //DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
@@ -789,7 +780,6 @@ METHOD LineChart() CLASS GDChart
       FOR n := 10 TO 100 STEP 10
           nDim  := ( ( nTotRange / 100 ) * n )
           nPosY := ( nDim / nTotRange ) * nHeight
-          //__OutDebug( "nDim", nDim )
           ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
       NEXT
       FOR EACH hElement IN aDataOfHash
