@@ -1096,7 +1096,7 @@ static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BOOL 
 static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
 {
    LPCDXLIST pLst = pIndex->freeLst;
-   HB_BYTE byPageBuf[CDX_PAGELEN];
+   HB_BYTE byPageBuf[ CDX_PAGELEN ];
    HB_ULONG ulPos;
    HB_BOOL fClean = HB_TRUE;
 
@@ -3901,7 +3901,7 @@ static HB_BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
       if( fDeleted )
-         SUPER_DELETED( ( AREAP ) pArea, &lResult );
+         SELF_DELETED( ( AREAP ) pArea, &lResult );
 
       if( !lResult && pArea->dbfarea.area.dbfi.itmCobExpr )
       {
