@@ -82,7 +82,7 @@ REQUEST HB_GT_STD
 
 STATIC s_nRow := 2
 STATIC s_nCol := 0
-STATIC s_aIncDir := {}
+STATIC s_aCompOptions := {}
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
@@ -92,14 +92,9 @@ STATIC s_cDirBase
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
-   LOCAL cPath, cExt
+   LOCAL cExt
    LOCAL hHeaders
    LOCAL lHeadersDisable := ! Empty( getenv( "HBRUN_NOHEAD" ) )
-
-   cPath := getenv( "HB_INSTALL_INC" )
-   IF !EMPTY( cPath )
-      AADD( s_aIncDir, "-I" + cPath )
-   ENDIF
 
    IF PCount() > 0
       SWITCH Lower( cFile )
@@ -166,7 +161,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                      ENDIF
 
                      cFile := HB_COMPILEBUF( hHeaders, HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                             s_aIncDir, "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                                             s_aCompOptions, "-D" + "__HBSCRIPT__HBRUN", cFile )
                      IF cFile == NIL
                         ERRORLEVEL( 1 )
                         EXIT
@@ -184,13 +179,6 @@ PROCEDURE _APPMAIN( cFile, ... )
    ENDIF
 
    RETURN
-
-STATIC FUNCTION FNameDirGet( cFileName )
-   LOCAL cDir
-
-   hb_FNameSplit( cFileName, @cDir )
-
-   RETURN cDir
 
 STATIC FUNCTION hbrun_CoreHeaderFiles()
    LOCAL hHeaders
@@ -491,7 +479,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
    BEGIN SEQUENCE WITH {|oErr| hbrun_Err( oErr, cCommand ) }
 
-      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n2", "-q2", s_aIncDir )
+      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n2", "-q2", s_aCompOptions )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
