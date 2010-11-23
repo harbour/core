@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+skip={!unix}
+
+incpaths=.
+
+libs=${hb_name}${__HB_DYN__}
