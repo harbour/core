@@ -627,7 +627,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
 static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
    HB_FHANDLE hFile;
-   HB_BOOL fResult = HB_FALSE;
+   HB_BOOL fResult;
 
    hFile = hb_fsOpen( szFileName, FO_READ );
    fResult = hb_zipGetFileInfoFromHandle( hFile, pulCRC, pfText );
