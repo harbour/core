@@ -3,7 +3,6 @@
 #
 
 incpaths=.
-libpaths=.
 
 libs=${hb_name}${__HB_DYN__}
 

@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../uhttpd2.hbc
+../hbhttpd.hbc
 
 -w3 -es2

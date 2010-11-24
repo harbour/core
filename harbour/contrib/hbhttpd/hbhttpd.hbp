@@ -9,5 +9,5 @@
 
 -w3 -es2
 
-umain.prg
-uwidgets.prg
+core.prg
+widgets.prg
