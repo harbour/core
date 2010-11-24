@@ -21,6 +21,7 @@ hbfship/hbfship.hbp
 hbgd/hbgd.hbp
 hbgt/hbgt.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
+hbhttpd/hbhttpd.hbp
 hbide/hbide.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp
