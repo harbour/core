@@ -3,7 +3,8 @@
  */
 
 /*
- * DBFCDX RDD (ver.2) + BMDBFCDX patch
+ * Harbour Project source code:
+ * BM (bitmap filter) RDD header
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>

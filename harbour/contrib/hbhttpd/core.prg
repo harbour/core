@@ -665,7 +665,7 @@ STATIC FUNCTION UErrorHandler( oErr, oServer )
    oServer:LogError( GetErrorDesc( oErr ) )
    BREAK( oErr )
 
-   RETURN NIL
+/* RETURN NIL */
 
 STATIC FUNCTION GetErrorDesc( oErr )
 

@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * BM (bitmap filter) RDD
  *
  * Copyright 1999-2002 Bruno Cantero <bruno@issnet.net>
@@ -61,7 +61,7 @@
 #include "hbvm.h"
 #include "hbset.h"
 #include "hbstack.h"
-#include "hbbmcdx.h"
+#include "hbrddbm.h"
 #include "hbmath.h"
 #include "rddsys.ch"
 #include "hbregex.h"
@@ -76,7 +76,7 @@ static RDDFUNCS bmSuper;
 /*
  * check and avaluate record filter
  */
-static HB_BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
+static HB_BOOL hb_bmCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
 {
    HB_BOOL lResult = HB_FALSE;
    HB_BOOL fDeleted = hb_setGetDeleted();
@@ -127,7 +127,7 @@ static HB_BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
 
 #if ! defined( HB_SIXCDX )
 
-static HB_BYTE * hb_cdxPageGetKeyValActual( LPCDXPAGE pPage )
+static HB_BYTE * hb_bmPageGetKeyValActual( LPCDXPAGE pPage )
 {
     while( pPage->Child )
     {
@@ -140,7 +140,7 @@ static HB_BYTE * hb_cdxPageGetKeyValActual( LPCDXPAGE pPage )
 /*
  * compare two values using Tag conditions (len & type)
  */
-static int hb_cdxValCompareWild( HB_BYTE * val1, HB_BYTE * val2, HB_BOOL fExact )
+static int hb_bmValCompareWild( HB_BYTE * val1, HB_BYTE * val2, HB_BOOL fExact )
 {
    return ( ( fExact ) ? hb_strMatchWildExact( ( const char * ) val2, (const char *) val1 ) : hb_strMatchWild( ( const char * ) val2, ( const char * ) val1 ) ) ? 0: 1;
 }
@@ -150,37 +150,34 @@ static int hb_cdxValCompareWild( HB_BYTE * val1, HB_BYTE * val2, HB_BOOL fExact 
  */
 static int hb_cdxPageSeekKeyWild( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec, HB_BOOL fExact, HB_BOOL fNext  )
 {
-    int k;
+   int k = ( ulKeyRec == CDX_MAX_REC_NUM ) ? -1 : 1;
 
-    k = ( ulKeyRec == CDX_MAX_REC_NUM ) ? -1 : 1;
+   if( fNext ? hb_cdxPageReadNextKey( pPage ) : hb_cdxPageReadTopKey( pPage ) )
+   {
+      do
+      {
+         k = hb_bmValCompareWild( pKey->val, hb_bmPageGetKeyValActual( pPage ), fExact );
+      }
+      while( k && hb_cdxPageReadNextKey( pPage ) );
 
-    if( fNext ?  hb_cdxPageReadNextKey( pPage ) : hb_cdxPageReadTopKey( pPage ) )
-    {
-        do
-        {
-            k = hb_cdxValCompareWild( pKey->val, hb_cdxPageGetKeyValActual( pPage ), fExact );
-        }
-        while( k && hb_cdxPageReadNextKey( pPage ) );
+      if( k == 0 )
+      {
+         while( pPage->Child )
+            pPage = pPage->Child;
 
-        if( k == 0 )
-        {
-            while( pPage->Child )
-            {
-               pPage = pPage->Child;
-            }
-            if( ulKeyRec == CDX_MAX_REC_NUM )
+         if( ulKeyRec == CDX_MAX_REC_NUM )
+            k = 1;
+         else if( ulKeyRec != CDX_IGNORE_REC_NUM )
+         {
+            HB_ULONG ulRec = hb_cdxPageGetKeyRec( pPage, pPage->iCurKey );
+            if( ulKeyRec > ulRec )
                k = 1;
-            else if( ulKeyRec != CDX_IGNORE_REC_NUM )
-            {
-               HB_ULONG ulRec = hb_cdxPageGetKeyRec( pPage, pPage->iCurKey );
-               if( ulKeyRec > ulRec )
-                  k = 1;
-               else if( ulKeyRec < ulRec )
-                  k = -1;
-            }
-        }
-    }
-    return k;
+            else if( ulKeyRec < ulRec )
+               k = -1;
+         }
+      }
+   }
+   return k;
 }
 
 /*
@@ -214,7 +211,6 @@ static HB_ULONG hb_cdxTagKeyFindWild( LPCDXTAG pTag, LPCDXKEY pKey, HB_BOOL fNex
 }
 
 
-/* hb_cdxSeekWild */
 static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pKeyItm, HB_BOOL fFindLast, HB_BOOL fNext, HB_BOOL bAll )
 {
    LPCDXTAG pTag;
@@ -278,7 +274,7 @@ static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pK
             if( retval != HB_FAILURE && ulRec && pArea->dbfarea.fPositioned )
             {
                pArea->dbfarea.area.fFound = ( ulRec == pArea->dbfarea.ulRecNo ||
-                        hb_cdxValCompareWild( pKey->val, pTag->CurKey->val, HB_FALSE ) == 0 );
+                        hb_bmValCompareWild( pKey->val, pTag->CurKey->val, HB_FALSE ) == 0 );
                if( ! pArea->dbfarea.area.fFound && ! fSoftSeek )
                   fEOF = HB_TRUE;
             }
@@ -320,7 +316,7 @@ HB_FUNC( BM_DBGETFILTERARRAY )
             for( ulByte = ( ulLong << 2 ), ulBytes = 0; ulBytes < 4; ulByte++, ulBytes++ )
                if( ( ( char * )( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo )->rmap )[ ulByte ] )
                   for( ulRec = ( ulByte << 3 ) + 1, ulRecno = 0; ulRecno < 8; ulRec++, ulRecno++ )
-                     if( hb_cdxCheckRecordFilter( pArea, ulRec ) )
+                     if( hb_bmCheckRecordFilter( pArea, ulRec ) )
                         hb_arrayAddForward( pList, hb_itemPutNL( pItem, ulRec ) );
 
       SELF_GOTO( ( AREAP ) pArea, ulRecOld );
@@ -491,23 +487,23 @@ HB_FUNC( BM_DBSEEKWILD )
 #endif
 
 
-/* ( DBENTRYP_L )     hb_cdxSkipFilter */
+/* ( DBENTRYP_L )     hb_bmSkipFilter */
 /*
  * Reposition cursor respecting any filter setting.
  */
-static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
+static HB_ERRCODE hb_bmSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
 {
    HB_BOOL fBottom, fDeleted;
    HB_ERRCODE uiError;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkipFilter(%p, %ld)", pArea, lUpDown));
+   HB_TRACE(HB_TR_DEBUG, ("hb_bmSkipFilter(%p, %ld)", pArea, lUpDown));
 
    if( ! hb_setGetDeleted() && ! pArea->dbfarea.area.dbfi.fFilter )
       return HB_SUCCESS;
 
    /* Since lToSkip is passed to SkipRaw, it should never request more than
       a single skip.
-      The implied purpose of hb_cdxSkipFilter is to get off of a "bad" record
+      The implied purpose of hb_bmSkipFilter is to get off of a "bad" record
       after a skip was performed, NOT to skip lToSkip filtered records.
    */
    lUpDown = ( lUpDown < 0  ? -1 : 1 );
@@ -537,7 +533,7 @@ static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
       /* SET FILTER TO */
       if( pArea->dbfarea.area.dbfi.fFilter )
       {
-         if( ! hb_cdxCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+         if( ! hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
          {
             if( SELF_SKIPRAW( (AREAP) pArea, lUpDown ) != HB_SUCCESS )
                return HB_FAILURE;
@@ -582,8 +578,8 @@ static HB_ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
    return uiError;
 }
 
-/* ( DBENTRYP_B )     hb_cdxAppend */
-static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
+/* ( DBENTRYP_B )     hb_bmAppend */
+static HB_ERRCODE hb_bmAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
 {
     if( SUPER_APPEND( (AREAP) pArea, bUnLockAll ) == HB_SUCCESS )
     {
@@ -600,7 +596,7 @@ static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
                 ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size = ulRecCount;
             }
             pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_cdxCheckRecordFilter( pArea, ulRecCount ) )
+            if( hb_bmCheckRecordFilter( pArea, ulRecCount ) )
             {
                 LPCDXTAG pTag;
                 BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, ulRecCount );
@@ -617,16 +613,16 @@ static HB_ERRCODE hb_cdxAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
     else
         return HB_FAILURE;
 }
-/* ( DBENTRYP_I )     hb_cdxCreateFields    : NULL */
-/* ( DBENTRYP_V )     hb_cdxDeleteRec */
-static HB_ERRCODE hb_cdxDeleteRec( CDXAREAP pArea )
+
+/* ( DBENTRYP_V )     hb_bmDeleteRec */
+static HB_ERRCODE hb_bmDeleteRec( CDXAREAP pArea )
 {
     if( SUPER_DELETE( (AREAP) pArea ) == HB_SUCCESS )
     {
         if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
         {
             pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_cdxCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
             {
                 if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
                 {
@@ -656,8 +652,8 @@ static HB_ERRCODE hb_cdxDeleteRec( CDXAREAP pArea )
         return HB_FAILURE;
 }
 
-/* ( DBENTRYP_P )     hb_cdxPutRec          : NULL */
-static HB_ERRCODE hb_cdxPutRec( CDXAREAP pArea, HB_BYTE * pBuffer )
+/* ( DBENTRYP_P )     hb_bmPutRec          : NULL */
+static HB_ERRCODE hb_bmPutRec( CDXAREAP pArea, HB_BYTE * pBuffer )
 {
     if( SUPER_PUTREC( (AREAP) pArea, pBuffer ) == HB_SUCCESS )
     {
@@ -665,7 +661,7 @@ static HB_ERRCODE hb_cdxPutRec( CDXAREAP pArea, HB_BYTE * pBuffer )
         {
             pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
 
-            if( hb_cdxCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
             {
                 if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
                 {
@@ -694,16 +690,16 @@ static HB_ERRCODE hb_cdxPutRec( CDXAREAP pArea, HB_BYTE * pBuffer )
     else
         return HB_FAILURE;
 }
-/* ( DBENTRYP_SI )    hb_cdxPutValue        : NULL */
-/* ( DBENTRYP_V )     hb_cdxRecall */
-static HB_ERRCODE hb_cdxRecall( CDXAREAP pArea )
+
+/* ( DBENTRYP_V )     hb_bmRecall */
+static HB_ERRCODE hb_bmRecall( CDXAREAP pArea )
 {
     if( SUPER_RECALL( (AREAP) pArea ) == HB_SUCCESS )
     {
         if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
         {
             pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_cdxCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
                 BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
             else
                 BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
@@ -715,9 +711,8 @@ static HB_ERRCODE hb_cdxRecall( CDXAREAP pArea )
         return HB_FAILURE;
 }
 
-
-/* ( DBENTRYP_V )     hb_cdxClearFilter */
-static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
+/* ( DBENTRYP_V )     hb_bmClearFilter */
+static HB_ERRCODE hb_bmClearFilter( CDXAREAP pArea )
 {
    HB_ERRCODE errCode = SUPER_CLEARFILTER( ( AREAP ) pArea );
    hb_cdxClearLogPosInfo( pArea );
@@ -731,13 +726,10 @@ static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
    return errCode;
 }
 
-/* ( DBENTRYP_V )     hb_cdxClearLocate     : NULL */
-/* ( DBENTRYP_V )     hb_cdxClearScope      : NULL */
-
-/* ( DBENTRYP_VPLP )  hb_cdxCountScope */
-static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec )
+/* ( DBENTRYP_VPLP )  hb_bmCountScope */
+static HB_ERRCODE hb_bmCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxCountScope(%p, %p, %p)", pArea, pPtr, plRec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_bmCountScope(%p, %p, %p)", pArea, pPtr, plRec));
 
    if( pPtr == NULL )
    {
@@ -752,11 +744,8 @@ static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec
    return SUPER_COUNTSCOPE( ( AREAP ) pArea, pPtr, plRec );
 }
 
-/* ( DBENTRYP_I )     hb_cdxFilterText      : NULL */
-/* ( DBENTRYP_SI )    hb_cdxScopeInfo       : NULL */
-
-/* ( DBENTRYP_VFI )   hb_cdxSetFilter */
-static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
+/* ( DBENTRYP_VFI )   hb_bmSetFilter */
+static HB_ERRCODE hb_bmSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
     HB_ULONG ulRecCount = 0, ulLogKeyCount = 0;
     LPCDXTAG pTag;
@@ -832,150 +821,150 @@ static const RDDFUNCS cdxTable =
 
    /* Movement and positioning methods */
 
-   ( DBENTRYP_BP )    NULL,   /* hb_cdxBof */
-   ( DBENTRYP_BP )    NULL,   /* hb_cdxEof */
-   ( DBENTRYP_BP )    NULL,   /* hb_cdxFound */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxGoBottom */
-   ( DBENTRYP_UL )    NULL,   /* hb_cdxGoTo */
-   ( DBENTRYP_I )     NULL,   /* hb_cdxGoToId */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxGoTop */
-   ( DBENTRYP_BIB )   NULL,   /* hb_cdxSeek */
-   ( DBENTRYP_L )     NULL,   /* hb_cdxSkip */
-   ( DBENTRYP_L )     hb_cdxSkipFilter,
-   ( DBENTRYP_L )     NULL,   /* hb_cdxSkipRaw */
+   ( DBENTRYP_BP )    NULL,   /* Bof */
+   ( DBENTRYP_BP )    NULL,   /* Eof */
+   ( DBENTRYP_BP )    NULL,   /* Found */
+   ( DBENTRYP_V )     NULL,   /* GoBottom */
+   ( DBENTRYP_UL )    NULL,   /* GoTo */
+   ( DBENTRYP_I )     NULL,   /* GoToId */
+   ( DBENTRYP_V )     NULL,   /* GoTop */
+   ( DBENTRYP_BIB )   NULL,   /* Seek */
+   ( DBENTRYP_L )     NULL,   /* Skip */
+   ( DBENTRYP_L )     hb_bmSkipFilter,
+   ( DBENTRYP_L )     NULL,   /* SkipRaw */
 
 
    /* Data management */
 
-   ( DBENTRYP_VF )    NULL,   /* hb_cdxAddField */
-   ( DBENTRYP_B )     hb_cdxAppend,
-   ( DBENTRYP_I )     NULL,   /* hb_cdxCreateFields */
-   ( DBENTRYP_V )     hb_cdxDeleteRec,
-   ( DBENTRYP_BP )    NULL,   /* hb_cdxDeleted */
-   ( DBENTRYP_SP )    NULL,   /* hb_cdxFieldCount */
-   ( DBENTRYP_VF )    NULL,   /* hb_cdxFieldDisplay */
-   ( DBENTRYP_SSI )   NULL,   /* hb_cdxFieldInfo */
-   ( DBENTRYP_SCP )   NULL,   /* hb_cdxFieldName */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxFlush */
-   ( DBENTRYP_PP )    NULL,   /* hb_cdxGetRec */
-   ( DBENTRYP_SI )    NULL,   /* hb_cdxGetValue */
-   ( DBENTRYP_SVL )   NULL,   /* hb_cdxGetVarLen */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxGoCold */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxGoHot */
-   ( DBENTRYP_P )     hb_cdxPutRec,
-   ( DBENTRYP_SI )    NULL,   /* hb_cdxPutValue */
-   ( DBENTRYP_V )     hb_cdxRecall,   /* hb_cdxRecall */
-   ( DBENTRYP_ULP )   NULL,   /* hb_cdxRecCount */
-   ( DBENTRYP_ISI )   NULL,   /* hb_cdxRecInfo */
-   ( DBENTRYP_ULP )   NULL,   /* hb_cdxRecNo */
-   ( DBENTRYP_I )     NULL,   /* hb_cdxRecId */
-   ( DBENTRYP_S )     NULL,   /* hb_cdxSetFieldExtent */
+   ( DBENTRYP_VF )    NULL,   /* AddField */
+   ( DBENTRYP_B )     hb_bmAppend,
+   ( DBENTRYP_I )     NULL,   /* CreateFields */
+   ( DBENTRYP_V )     hb_bmDeleteRec,
+   ( DBENTRYP_BP )    NULL,   /* Deleted */
+   ( DBENTRYP_SP )    NULL,   /* FieldCount */
+   ( DBENTRYP_VF )    NULL,   /* FieldDisplay */
+   ( DBENTRYP_SSI )   NULL,   /* FieldInfo */
+   ( DBENTRYP_SCP )   NULL,   /* FieldName */
+   ( DBENTRYP_V )     NULL,   /* Flush */
+   ( DBENTRYP_PP )    NULL,   /* GetRec */
+   ( DBENTRYP_SI )    NULL,   /* GetValue */
+   ( DBENTRYP_SVL )   NULL,   /* GetVarLen */
+   ( DBENTRYP_V )     NULL,   /* GoCold */
+   ( DBENTRYP_V )     NULL,   /* GoHot */
+   ( DBENTRYP_P )     hb_bmPutRec,
+   ( DBENTRYP_SI )    NULL,   /* PutValue */
+   ( DBENTRYP_V )     hb_bmRecall,
+   ( DBENTRYP_ULP )   NULL,   /* RecCount */
+   ( DBENTRYP_ISI )   NULL,   /* RecInfo */
+   ( DBENTRYP_ULP )   NULL,   /* RecNo */
+   ( DBENTRYP_I )     NULL,   /* RecId */
+   ( DBENTRYP_S )     NULL,   /* SetFieldExtent */
 
 
    /* WorkArea/Database management */
 
-   ( DBENTRYP_CP )    NULL,   /* hb_cdxAlias */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxClose */
-   ( DBENTRYP_VO )    NULL,   /* hb_cdxCreate */
-   ( DBENTRYP_SI )    NULL,   /* hb_cdxInfo */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxNewArea */
-   ( DBENTRYP_VO )    NULL,   /* hb_cdxOpen */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxRelease */
-   ( DBENTRYP_SP )    NULL,   /* hb_cdxStructSize */
-   ( DBENTRYP_CP )    NULL,   /* hb_cdxSysName */
-   ( DBENTRYP_VEI )   NULL,   /* hb_cdxEval */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxPack */
-   ( DBENTRYP_LSP )   NULL,   /* hb_cdxPackRec */
-   ( DBENTRYP_VS )    NULL,   /* hb_cdxSort */
-   ( DBENTRYP_VT )    NULL,   /* hb_cdxTrans */
-   ( DBENTRYP_VT )    NULL,   /* hb_cdxTransRec */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxZap */
+   ( DBENTRYP_CP )    NULL,   /* Alias */
+   ( DBENTRYP_V )     NULL,   /* Close */
+   ( DBENTRYP_VO )    NULL,   /* Create */
+   ( DBENTRYP_SI )    NULL,   /* Info */
+   ( DBENTRYP_V )     NULL,   /* NewArea */
+   ( DBENTRYP_VO )    NULL,   /* Open */
+   ( DBENTRYP_V )     NULL,   /* Release */
+   ( DBENTRYP_SP )    NULL,   /* StructSize */
+   ( DBENTRYP_CP )    NULL,   /* SysName */
+   ( DBENTRYP_VEI )   NULL,   /* Eval */
+   ( DBENTRYP_V )     NULL,   /* Pack */
+   ( DBENTRYP_LSP )   NULL,   /* PackRec */
+   ( DBENTRYP_VS )    NULL,   /* Sort */
+   ( DBENTRYP_VT )    NULL,   /* Trans */
+   ( DBENTRYP_VT )    NULL,   /* TransRec */
+   ( DBENTRYP_V )     NULL,   /* Zap */
 
 
    /* Relational Methods */
 
-   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildEnd */
-   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildStart */
-   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildSync */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxSyncChildren */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxClearRel */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxForceRel */
-   ( DBENTRYP_SSP )   NULL,   /* hb_cdxRelArea */
-   ( DBENTRYP_VR )    NULL,   /* hb_cdxRelEval */
-   ( DBENTRYP_SI )    NULL,   /* hb_cdxRelText */
-   ( DBENTRYP_VR )    NULL,   /* hb_cdxSetRel */
+   ( DBENTRYP_VR )    NULL,   /* ChildEnd */
+   ( DBENTRYP_VR )    NULL,   /* ChildStart */
+   ( DBENTRYP_VR )    NULL,   /* ChildSync */
+   ( DBENTRYP_V )     NULL,   /* SyncChildren */
+   ( DBENTRYP_V )     NULL,   /* ClearRel */
+   ( DBENTRYP_V )     NULL,   /* ForceRel */
+   ( DBENTRYP_SSP )   NULL,   /* RelArea */
+   ( DBENTRYP_VR )    NULL,   /* RelEval */
+   ( DBENTRYP_SI )    NULL,   /* RelText */
+   ( DBENTRYP_VR )    NULL,   /* SetRel */
 
 
    /* Order Management */
 
-   ( DBENTRYP_VOI )   NULL,   /* hb_cdxOrderListAdd */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxOrderListClear */
-   ( DBENTRYP_VOI )   NULL,   /* hb_cdxOrderListDelete */
-   ( DBENTRYP_VOI )   NULL,   /* hb_cdxOrderListFocus */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxOrderListRebuild */
-   ( DBENTRYP_VOO )   NULL,   /* hb_cdxOrderCondition */
-   ( DBENTRYP_VOC )   NULL,   /* hb_cdxOrderCreate */
-   ( DBENTRYP_VOI )   NULL,   /* hb_cdxOrderDestroy */
-   ( DBENTRYP_SVOI )  NULL,   /* hb_cdxOrderInfo */
+   ( DBENTRYP_VOI )   NULL,   /* OrderListAdd */
+   ( DBENTRYP_V )     NULL,   /* OrderListClear */
+   ( DBENTRYP_VOI )   NULL,   /* OrderListDelete */
+   ( DBENTRYP_VOI )   NULL,   /* OrderListFocus */
+   ( DBENTRYP_V )     NULL,   /* OrderListRebuild */
+   ( DBENTRYP_VOO )   NULL,   /* OrderCondition */
+   ( DBENTRYP_VOC )   NULL,   /* OrderCreate */
+   ( DBENTRYP_VOI )   NULL,   /* OrderDestroy */
+   ( DBENTRYP_SVOI )  NULL,   /* OrderInfo */
 
 
    /* Filters and Scope Settings */
 
-   ( DBENTRYP_V )     hb_cdxClearFilter,
-   ( DBENTRYP_V )     NULL,   /* hb_cdxClearLocate */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxClearScope */
-   ( DBENTRYP_VPLP )  hb_cdxCountScope,
-   ( DBENTRYP_I )     NULL,   /* hb_cdxFilterText */
-   ( DBENTRYP_SI )    NULL,   /* hb_cdxScopeInfo */
-   ( DBENTRYP_VFI )   hb_cdxSetFilter,
-   ( DBENTRYP_VLO )   NULL,   /* hb_cdxSetLocate */
-   ( DBENTRYP_VOS )   NULL,   /* hb_cdxSetScope */
-   ( DBENTRYP_VPL )   NULL,   /* hb_cdxSkipScope */
-   ( DBENTRYP_B )     NULL,   /* hb_cdxLocate */
+   ( DBENTRYP_V )     hb_bmClearFilter,
+   ( DBENTRYP_V )     NULL,   /* ClearLocate */
+   ( DBENTRYP_V )     NULL,   /* ClearScope */
+   ( DBENTRYP_VPLP )  hb_bmCountScope,
+   ( DBENTRYP_I )     NULL,   /* FilterText */
+   ( DBENTRYP_SI )    NULL,   /* ScopeInfo */
+   ( DBENTRYP_VFI )   hb_bmSetFilter,
+   ( DBENTRYP_VLO )   NULL,   /* SetLocate */
+   ( DBENTRYP_VOS )   NULL,   /* SetScope */
+   ( DBENTRYP_VPL )   NULL,   /* SkipScope */
+   ( DBENTRYP_B )     NULL,   /* Locate */
 
 
    /* Miscellaneous */
 
-   ( DBENTRYP_CC )    NULL,   /* hb_cdxCompile */
-   ( DBENTRYP_I )     NULL,   /* hb_cdxError */
-   ( DBENTRYP_I )     NULL,   /* hb_cdxEvalBlock */
+   ( DBENTRYP_CC )    NULL,   /* Compile */
+   ( DBENTRYP_I )     NULL,   /* Error */
+   ( DBENTRYP_I )     NULL,   /* EvalBlock */
 
 
    /* Network operations */
 
-   ( DBENTRYP_VSP )   NULL,   /* hb_cdxRawLock */
-   ( DBENTRYP_VL )    NULL,   /* hb_cdxLock */
-   ( DBENTRYP_I )     NULL,   /* hb_cdxUnLock */
+   ( DBENTRYP_VSP )   NULL,   /* RawLock */
+   ( DBENTRYP_VL )    NULL,   /* Lock */
+   ( DBENTRYP_I )     NULL,   /* UnLock */
 
 
    /* Memofile functions */
 
-   ( DBENTRYP_V )     NULL,   /* hb_cdxCloseMemFile */
-   ( DBENTRYP_VO )    NULL,   /* hb_cdxCreateMemFile */
-   ( DBENTRYP_SCCS )  NULL,   /* hb_cdxGetValueFile */
-   ( DBENTRYP_VO )    NULL,   /* hb_cdxOpenMemFile */
-   ( DBENTRYP_SCCS )  NULL,   /* hb_cdxPutValueFile */
+   ( DBENTRYP_V )     NULL,   /* CloseMemFile */
+   ( DBENTRYP_VO )    NULL,   /* CreateMemFile */
+   ( DBENTRYP_SCCS )  NULL,   /* GetValueFile */
+   ( DBENTRYP_VO )    NULL,   /* OpenMemFile */
+   ( DBENTRYP_SCCS )  NULL,   /* PutValueFile */
 
 
    /* Database file header handling */
 
-   ( DBENTRYP_V )     NULL,   /* hb_cdxReadDBHeader */
-   ( DBENTRYP_V )     NULL,   /* hb_cdxWriteDBHeader */
+   ( DBENTRYP_V )     NULL,   /* ReadDBHeader */
+   ( DBENTRYP_V )     NULL,   /* WriteDBHeader */
 
 
    /* non WorkArea functions       */
 
-   ( DBENTRYP_R )     NULL,   /* hb_cdxInit */
-   ( DBENTRYP_R )     NULL,   /* hb_cdxExit */
-   ( DBENTRYP_RVVL )  NULL,   /* hb_cdxDrop */
-   ( DBENTRYP_RVVL )  NULL,   /* hb_cdxExists */
-   ( DBENTRYP_RVVVL ) NULL,   /* hb_cdxRename */
-   ( DBENTRYP_RSLV )  NULL,   /* hb_cdxRddInfo */
+   ( DBENTRYP_R )     NULL,   /* Init */
+   ( DBENTRYP_R )     NULL,   /* Exit */
+   ( DBENTRYP_RVVL )  NULL,   /* Drop */
+   ( DBENTRYP_RVVL )  NULL,   /* Exists */
+   ( DBENTRYP_RVVVL ) NULL,   /* Rename */
+   ( DBENTRYP_RSLV )  NULL,   /* RddInfo */
 
 
    /* Special and reserved methods */
 
-   ( DBENTRYP_SVP )   NULL    /* hb_cdxWhoCares */
+   ( DBENTRYP_SVP )   NULL    /* WhoCares */
 };
 
 #if defined( HB_SIXCDX )
