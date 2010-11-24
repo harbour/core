@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=libmagic:magic.h
+-depcontrol=libmagic:${HB_WITH_LIBMAGIC}
+-depincpath=libmagic:/usr/include
+
+-instfile=inc:hbmagic.ch
+
+hbmagic.c
+hbmagis.prg

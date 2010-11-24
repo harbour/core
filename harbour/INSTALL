@@ -335,6 +335,7 @@ HARBOUR
    HB_WITH_GPM= (on Linux only)
    HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
+   HB_WITH_LIBMAGIC= (currently on *nix systems)
    HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
    HB_WITH_MYSQL=C:\mysql\include
    HB_WITH_OCILIB=C:\ocilib\include
@@ -1487,6 +1488,8 @@ HARBOUR
          http://www.ijg.org/
       HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
          http://libharu.org/
+      HB_WITH_LIBMAGIC - libmagic, file recognition [multiplatform, free, open-source]
+         ftp://ftp.astron.com/pub/file/
       HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
          http://www.winimage.com/zLibDll/minizip.html
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
