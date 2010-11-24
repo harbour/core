@@ -26,8 +26,14 @@ ifeq ($(_SAME_DIR),yes)
 else
 
 ifneq ($(HB_SHELL),sh)
-   INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
-   INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
+   ifneq ($(HB_SHELL),os2)
+      INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
+      INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
+   else
+      # $(CP) and $(MDP) require forward slashes
+      INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
+      INSTALL_FILES_OS := $(subst \,/,$(INSTALL_FILES))
+   endif
 else
    INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
 endif
@@ -71,7 +77,7 @@ ifeq ($(HB_SHELL),os2)
 
    define inst_file_all
       -@$(MDP) $(INSTALL_DIR_OS)
-      $(foreach file,$(INSTALL_FILES),$(inst_file))
+      $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
