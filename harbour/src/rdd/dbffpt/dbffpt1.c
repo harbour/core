@@ -4006,7 +4006,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
             hb_itemRelease( pItem );
             return HB_FAILURE;
          }
-         pArea->bMemoType = hb_itemGetNI( pItem );
+         pArea->bMemoType = ( HB_BYTE ) hb_itemGetNI( pItem );
 /*
          if( !pArea->bMemoType )
          {

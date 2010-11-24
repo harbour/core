@@ -261,7 +261,7 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
             }
          } while( j != l );
          for( i = 0; i <= 255; i++ )
-            pArea->bCdxSortTab[ pbSort[i] ] = i;
+            pArea->bCdxSortTab[ pbSort[i] ] = ( HB_BYTE ) i;
          hb_xfree( pbSort );
       }
    }
@@ -1737,7 +1737,7 @@ static void hb_cdxSetLeafRecord( HB_BYTE *pDst, HB_ULONG ulRec, int iDup, int iT
    int i;
    HB_USHORT usBit;
 
-   usBit = ( ( iTrl << iDCbits ) | iDup ) << ( 16 - iTCbits - iDCbits );
+   usBit = ( HB_USHORT ) ( ( ( iTrl << iDCbits ) | iDup ) << ( 16 - iTCbits - iDCbits ) );
    for( i = 0; i < iReq; i++, ulRec >>= 8 )
    {
       if( i < iReq - 2 )
@@ -9944,7 +9944,7 @@ HB_FUNC( DBFCDX_GETFUNCTABLE )
 
    puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    HB_TRACE(HB_TR_DEBUG, ("DBFCDX_GETFUNCTABLE(%p, %p)", puiCount, pTable));
