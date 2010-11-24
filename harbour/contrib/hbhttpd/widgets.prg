@@ -491,7 +491,6 @@ PROCEDURE UProcWidgets( cURL, aMap )
 
    LOCAL aStack, aURL, aFrame, cI, nI, nL, lRet
 
-   ? "cURL:", cURL
    IF HB_HHasKey( aMap, cURL )
       // aStack[i] = {url_part, function, variables}
       IF ( aStack := hb_HGetDef( session, "_ustack" ) ) == NIL

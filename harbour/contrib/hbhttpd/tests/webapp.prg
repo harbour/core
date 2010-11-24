@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "simpleio.ch"
-
 REQUEST DBFCDX
 
 MEMVAR server, get, post, cookie, session
@@ -89,6 +87,7 @@ FUNCTION Main()
 
    oServer:bLogAccess := {| m | oLogAccess:Add( m + hb_eol() ) }
    oServer:bLogError  := {| m | oLogError:Add( m + hb_eol() ) }
+   oServer:bTrace     := {| ... | QOut( ... ) }
 
    oServer:nPort := 8002
    oServer:bIdle := { |o| iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }

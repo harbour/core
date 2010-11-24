@@ -3,7 +3,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "error.ch"
 
 #include "hbsocket.ch"
@@ -36,6 +35,7 @@ CREATE CLASS UHttpd
    DATA cBindAddress INIT "0.0.0.0"
    DATA bLogAccess   INIT {|| NIL }
    DATA bLogError    INIT {|| NIL }
+   DATA bTrace       INIT {|| NIL }
    DATA bIdle        INIT {|| NIL }
    DATA aMount       INIT { => }
 
@@ -120,8 +120,8 @@ METHOD RUN() CLASS UHttpd
          ENDIF
       ELSE
          hb_mutexQueueInfo( Self:hmtxQueue, @nWaiters )
-         ? "New connection", hSocket
-         ? "Waiters:", nWaiters
+         Eval( Self:bTrace, "New connection", hSocket )
+         Eval( Self:bTrace, "Waiters:", nWaiters )
          IF nWaiters < 2 .AND. Len( aThreads ) < THREAD_COUNT_MAX
          /*
             We need two threads in worst case. If first thread becomes a sessioned
@@ -203,13 +203,13 @@ STATIC FUNCTION ProcessConnection( oServer )
             ELSE
                IF nLen == - 1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
                   nLen := 0
-                  ? "recv() timeout", hSocket
+                  Eval( oServer:bTrace, "recv() timeout", hSocket )
                ENDIF
             ENDIF
          ENDDO
 
          IF nLen == - 1
-            ? "recv() error:", hb_socketGetError()
+            Eval( oServer:bTrace, "recv() error:", hb_socketGetError() )
          ELSEIF nLen == 0 /* connection closed */
          ELSE
 
@@ -234,7 +234,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                server["SERVER_PORT"] := aI[HB_SOCKET_ADINFO_PORT]
             ENDIF
 
-            ? Left( cRequest, At( CR_LF + CR_LF, cRequest ) + 1 )
+            Eval( oServer:bTrace, Left( cRequest, At( CR_LF + CR_LF, cRequest ) + 1 ) )
 
             nReqLen := ParseRequestHeader( @cRequest )
             IF nReqLen == NIL
@@ -250,10 +250,10 @@ STATIC FUNCTION ProcessConnection( oServer )
                ENDDO
 
                IF nLen == - 1
-                  ? "recv() error:", hb_socketGetError()
+                  Eval( oServer:bTrace, "recv() error:", hb_socketGetError() )
                ELSEIF nLen == 0 /* connection closed */
                ELSE
-                  ? cRequest
+                  Eval( oServer:bTrace, cRequest )
                   ParseRequestBody( Left( cRequest, nReqLen ) )
                   cRequest := SubStr( cRequest, nReqLen + 1 )
 
@@ -286,7 +286,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                BREAK
             ENDIF
          ENDIF
-         ? "Close connection1", hSocket
+         Eval( oServer:bTrace, "Close connection1", hSocket )
          hb_socketShutdown( hSocket )
          hb_socketClose( hSocket )
       END SEQUENCE
@@ -374,7 +374,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                ENDIF
 
                IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server["SERVER_PROTOCOL"] == "HTTP/1.0"
-                  ? "Close connection2", hSocket
+                  Eval( oServer:bTrace, "Close connection2", hSocket )
                   hb_socketShutdown( hSocket )
                   hb_socketClose( hSocket )
                ELSE
@@ -387,7 +387,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                ENDIF
 
                IF ! hb_mutexSubscribe( hmtx, SESSION_TIMEOUT, @aData ) .OR. aData == NIL
-                  ? "Session exit"
+                  Eval( oServer:bTrace, "Session exit" )
                   hb_mutexLock( oServer:hmtxSession )
                   HB_HDel( oServer:aSession, cSID )
                   hb_mutexUnlock( oServer:hmtxSession )
@@ -414,7 +414,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
             session := NIL
          ELSE
             /* session already exists */
-            ? "session pries", server["SCRIPT_NAME"]
+            Eval( oServer:bTrace, "session pries", server["SCRIPT_NAME"] )
             hb_mutexNotify( oServer:aSession[cSID, 2], { hSocket, cBuffer, oServer:aMount[cMount, 1], cPath, server, get, post, cookie, oServer:aSession[cSID, 3] } )
             hb_mutexUnlock( oServer:hmtxSession )
          ENDIF
@@ -531,7 +531,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
 
    RETURN NIL
 
-STATIC FUNCTION MakeResponse()
+STATIC FUNCTION MakeResponse( oServer )
 
    LOCAL cRet
 
@@ -604,7 +604,7 @@ STATIC FUNCTION MakeResponse()
    UAddHeader( "Content-Length", hb_ntos( Len( t_cResult ) ) )
    AEval( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
    cRet += CR_LF
-   ? cRet
+   Eval( oServer:bTrace, cRet )
    cRet += t_cResult
 
    RETURN cRet
@@ -613,13 +613,13 @@ STATIC PROCEDURE SendResponse( oServer, hSocket )
 
    LOCAL cSend, nLen
 
-   cSend := MakeResponse()
+   cSend := MakeResponse( oServer )
 
-   //  ? cSend
+   // Eval( oServer:bTrace, cSend )
 
    DO WHILE Len( cSend ) > 0
       IF ( nLen := hb_socketSend( hSocket, cSend ) ) == - 1
-         ? "send() error:", hb_socketGetError(), hSocket
+         Eval( oServer:bTrace, "send() error:", hb_socketGetError(), hSocket )
          EXIT
       ELSEIF nLen > 0
          cSend := SubStr( cSend, nLen + 1 )
@@ -885,7 +885,9 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
    LOCAL aDir, aF, nI, cI, tDate, tHDate
 
-   DEFAULT lIndex TO .F.
+   IF ! hb_isLogical( lIndex )
+      lIndex := .F.
+   ENDIF
 
    cFileName := StrTran( cFileName, "//", "/" )
 
