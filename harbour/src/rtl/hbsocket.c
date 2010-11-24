@@ -1978,7 +1978,7 @@ int hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 int hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 {
    int ret;
-#if defined( __WATCOMC__ ) && defined( HB_OS_LINUX )
+#if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
    /* it's still not supported by Linux OpenWatcom port :-( */
    ret = -1;
    hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
@@ -2093,7 +2093,7 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
       return -1;
    }
 
-#if defined( __WATCOMC__ ) && defined( HB_OS_LINUX )
+#if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
 {
    int iTODO;
    /* it's still not supported by Linux OpenWatcom port :-( */

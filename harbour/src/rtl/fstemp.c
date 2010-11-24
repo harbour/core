@@ -74,7 +74,7 @@
    #include <windows.h>
 #endif
 
-#if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
+#if ( defined( HB_OS_LINUX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
     defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
    #define HB_HAS_MKSTEMP
    #if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || \
