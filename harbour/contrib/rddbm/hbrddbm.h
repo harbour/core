@@ -59,25 +59,19 @@
 
 HB_EXTERN_BEGIN
 
-#define CURKEY_SETLOGCNT(pTag, lKeyCount) do { (pTag)->curKeyState |= CDX_CURKEY_LOGCNT; \
-                                               (pTag)->logKeyCount = (lKeyCount); } while(0)
+// #define CURKEY_SETLOGCNT(pTag, lKeyCount) do { (pTag)->curKeyState |= CDX_CURKEY_LOGCNT; \
+//                                                (pTag)->logKeyCount = (lKeyCount); } while(0)
 
 /* m Bitmap, b Size, r RecNo */
-#define BM_SetBit(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] | (1<<(((r)-1)%32)); } while(0)
-#define BM_ClrBit(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] & ~(1<<(((r)-1)%32)); } while(0)
-#define BM_GetBit(m,b,r) ( ((r)<=(b)) ? (m)[((r)-1)>>5] & (1<<(((r)-1)%32)) : 0 )
+#define BM_SETBIT(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] | (1<<(((r)-1)%32)); } while(0)
+#define BM_CLRBIT(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] & ~(1<<(((r)-1)%32)); } while(0)
+#define BM_GETBIT(m,b,r) ( ((r)<=(b)) ? (m)[((r)-1)>>5] & (1<<(((r)-1)%32)) : 0 )
 
 typedef struct _BM_FILTER_
 {
-   PHB_ITEM   itmCobExpr;       /* Block representation of the FILTER expression */
-   PHB_ITEM   abFilterText;     /* String representation of FILTER expression */
-   HB_BOOL    fFilter;          /* flag to indicate that filter is active */
-   HB_BOOL    fOptimized;       /* Is (should be) filter optimized */
    HB_ULONG * rmap;
    HB_ULONG   Size;
-} BM_FILTER;
-
-typedef BM_FILTER * LPBM_FILTER;
+} BM_FILTER, * PBM_FILTER;
 
 #undef  SUPERTABLE
 #define SUPERTABLE                         ( &bmSuper )

@@ -69,56 +69,64 @@
 
 static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;
 
-static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
+// static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 
 static RDDFUNCS bmSuper;
 
 /*
  * check and avaluate record filter
  */
-static HB_BOOL hb_bmCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
+static HB_BOOL hb_bmCheckRecordFilter( AREAP pArea, HB_ULONG ulRecNo )
 {
    HB_BOOL lResult = HB_FALSE;
    HB_BOOL fDeleted = hb_setGetDeleted();
 
-   if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
+   if( pArea->dbfi.fFilter && pArea->dbfi.fOptimized )
    {
-      if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, ulRecNo ) )
+      if( BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo ) )
       {
-         if( pArea->dbfarea.ulRecNo != ulRecNo || pArea->dbfarea.lpdbPendingRel )
-            SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+//       HB_ULONG ulCurRecNo;
+
+//       SELF_RECNO( pArea, &ulCurRecNo );
+
+//       if( ulCurRecNo != ulRecNo || pArea->dbfarea.lpdbPendingRel )
+//          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
          if( fDeleted )
             SUPER_DELETED( ( AREAP ) pArea, &lResult );
 
-         if( !lResult && pArea->dbfarea.area.dbfi.itmCobExpr )
+         if( ! lResult && pArea->dbfi.itmCobExpr )
          {
-            PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfarea.area.dbfi.itmCobExpr );
-            lResult = HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult );
+            PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+            lResult = HB_IS_LOGICAL( pResult ) && ! hb_itemGetL( pResult );
             if( lResult )
             {
-                LPCDXTAG pTag;
-                BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, ulRecNo );
-                pTag = hb_cdxGetActiveTag( pArea );
-                if( pTag && CURKEY_LOGCNT(pTag)  )
-                    CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - 1 );
+//             LPCDXTAG pTag;
+//             BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+//             pTag = hb_cdxGetActiveTag( pArea );
+//             if( pTag && CURKEY_LOGCNT( pTag ) )
+//                CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - 1 );
             }
          }
       }
       else
          lResult = HB_TRUE;
    }
-   else if( pArea->dbfarea.area.dbfi.itmCobExpr || fDeleted )
+   else if( pArea->dbfi.itmCobExpr || fDeleted )
    {
-      if( pArea->dbfarea.ulRecNo != ulRecNo || pArea->dbfarea.lpdbPendingRel )
-         SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+//    HB_ULONG ulCurRecNo;
+
+//    SELF_RECNO( pArea, &ulCurRecNo );
+
+//    if( ulCurRecNo != ulRecNo || pArea->dbfarea.lpdbPendingRel )
+//       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
       if( fDeleted )
          SELF_DELETED( ( AREAP ) pArea, &lResult );
 
-      if( !lResult && pArea->dbfarea.area.dbfi.itmCobExpr )
+      if( ! lResult && pArea->dbfi.itmCobExpr )
       {
-         PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfarea.area.dbfi.itmCobExpr );
+         PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
          lResult = HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult );
       }
    }
@@ -127,22 +135,23 @@ static HB_BOOL hb_bmCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
 
 #if ! defined( HB_SIXCDX )
 
+#if defined( _BM_WILD_ )
+
 static HB_BYTE * hb_bmPageGetKeyValActual( LPCDXPAGE pPage )
 {
     while( pPage->Child )
-    {
        pPage = pPage->Child;
-    }
+
     return hb_cdxPageGetKeyVal( pPage, pPage->iCurKey );
 }
-
 
 /*
  * compare two values using Tag conditions (len & type)
  */
 static int hb_bmValCompareWild( HB_BYTE * val1, HB_BYTE * val2, HB_BOOL fExact )
 {
-   return ( ( fExact ) ? hb_strMatchWildExact( ( const char * ) val2, (const char *) val1 ) : hb_strMatchWild( ( const char * ) val2, ( const char * ) val1 ) ) ? 0: 1;
+   return ( fExact ? hb_strMatchWildExact( ( const char * ) val2, ( const char * ) val1 ) :
+                     hb_strMatchWild( ( const char * ) val2, ( const char * ) val1 ) ) ? 0 : 1;
 }
 
 /*
@@ -292,6 +301,9 @@ static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pK
    }
 }
 
+#endif
+
+/* For compatibility */
 HB_FUNC( BM_TURBO )
 {
    hb_retl( HB_FALSE );
@@ -299,22 +311,22 @@ HB_FUNC( BM_TURBO )
 
 HB_FUNC( BM_DBGETFILTERARRAY )
 {
-   CDXAREAP pArea = ( CDXAREAP ) hb_rddGetCurrentWorkAreaPointer();
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    PHB_ITEM pList = hb_itemArrayNew( 0 );
 
-   if( pArea->dbfarea.area.dbfi.fOptimized )
+   if( pArea->dbfi.fOptimized )
    {
-      HB_ULONG ulSize = ( ( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo )->Size + 1 ) >> 5 ) + 1;
+      HB_ULONG ulSize = ( ( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size + 1 ) >> 5 ) + 1;
       HB_ULONG ulLong, ulByte, ulBytes, ulRecno;
       PHB_ITEM pItem = hb_itemNew( NULL );
       HB_ULONG ulRec, ulRecOld;
 
-      ulRecOld = pArea->dbfarea.ulRecNo;
+      SELF_RECNO( pArea, &ulRecOld );
 
       for( ulLong = 0; ulLong < ulSize; ulLong++ )
-         if( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap[ulLong] )
+         if( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap[ ulLong ] )
             for( ulByte = ( ulLong << 2 ), ulBytes = 0; ulBytes < 4; ulByte++, ulBytes++ )
-               if( ( ( char * )( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo )->rmap )[ ulByte ] )
+               if( ( ( char * )( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap )[ ulByte ] )
                   for( ulRec = ( ulByte << 3 ) + 1, ulRecno = 0; ulRecno < 8; ulRec++, ulRecno++ )
                      if( hb_bmCheckRecordFilter( pArea, ulRec ) )
                         hb_arrayAddForward( pList, hb_itemPutNL( pItem, ulRec ) );
@@ -328,14 +340,15 @@ HB_FUNC( BM_DBGETFILTERARRAY )
 HB_FUNC( BM_DBSETFILTERARRAY )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArea )
    {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
       if( pArray )
       {
          HB_ULONG ulPos, ulRecCount;
-         LPCDXTAG pTag;
+//       LPCDXTAG pTag;
 
          /* Limpiamos el filtro activo */
          if( SELF_CLEARFILTER( pArea ) != HB_SUCCESS )
@@ -348,18 +361,18 @@ HB_FUNC( BM_DBSETFILTERARRAY )
          pArea->dbfi.lpvCargo = hb_xgrab( sizeof( BM_FILTER ) );
          memset( pArea->dbfi.lpvCargo, 0, sizeof( BM_FILTER ) );
 
-         ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size = ulRecCount;
-         ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1) );
-         memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1 ) );
+         ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size = ulRecCount;
+         ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1) );
+         memset( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, 0, sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1 ) );
 
          for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-            BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ulRecCount, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
-         pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
-         if( pTag ) /* Con índice activo */
-         {
-            pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
-            CURKEY_SETLOGCNT( pTag, ( hb_arrayLen( pArray ) ) );
-         }
+            BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ulRecCount, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+//       pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//       if( pTag ) /* Con índice activo */
+//       {
+//          pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
+//          CURKEY_SETLOGCNT( pTag, ( hb_arrayLen( pArray ) ) );
+//       }
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -371,24 +384,27 @@ HB_FUNC( BM_DBSETFILTERARRAY )
 HB_FUNC( BM_DBSETFILTERARRAYADD )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   HB_ULONG ulPos,ulAdd = 0;
 
    if( pArea && pArea->dbfi.fOptimized )
    {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
       if( pArray )
       {
-         LPCDXTAG pTag;
+         HB_ULONG ulPos, ulAdd = 0;
+//       LPCDXTAG pTag;
 
          for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-            if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
+         {
+            if( ! BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
             {
-               BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+               BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
                ulAdd++;
             }
-         pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
-         if( pTag ) /* Con indice activo */
-            CURKEY_SETLOGCNT( pTag, pTag->logKeyCount + ulAdd );
+         }
+//       pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//       if( pTag ) /* Con indice activo */
+//          CURKEY_SETLOGCNT( pTag, pTag->logKeyCount + ulAdd );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -399,27 +415,28 @@ HB_FUNC( BM_DBSETFILTERARRAYADD )
 
 HB_FUNC( BM_DBSETFILTERARRAYDEL )
 {
-   AREAP pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   HB_ULONG ulPos,ulDel = 0;
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea && pArea->dbfi.fOptimized )
    {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
       if( pArray )
       {
-         LPCDXTAG pTag;
+         HB_ULONG ulPos, ulDel = 0;
+//       LPCDXTAG pTag;
 
          for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
          {
-            if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
+            if( BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
             {
-               BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+               BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
                ulDel++;
             }
          }
-         pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-         if( pTag ) /* Con indice activo */
-             CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - ulDel );
+//       pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//       if( pTag ) /* Con indice activo */
+//          CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - ulDel );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -428,22 +445,22 @@ HB_FUNC( BM_DBSETFILTERARRAYDEL )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
+#if defined( _BM_WILD_ )
 
 HB_FUNC( BM_DBSEEKWILD )
 {
-   PHB_ITEM pKey;
-   HB_BOOL bAll, bNext, bSoftSeek, bFindLast, fFound;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
       if( ! HB_ISNIL( 1 ) )
       {
-         pKey = hb_param( 1, HB_IT_ANY );
-         bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-         bFindLast = hb_parl( 3 );
-         bNext     = hb_parl( 4 );
-         bAll      = hb_parl( 5 );
+         PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
+         HB_BOOL bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
+         HB_BOOL bFindLast = hb_parl( 3 );
+         HB_BOOL bNext     = hb_parl( 4 );
+         HB_BOOL bAll      = hb_parl( 5 );
+         HB_BOOL fFound;
          if( bAll )
          {
             PHB_ITEM pList = hb_itemArrayNew( 0 );
@@ -486,19 +503,21 @@ HB_FUNC( BM_DBSEEKWILD )
 
 #endif
 
+#endif
+
 
 /* ( DBENTRYP_L )     hb_bmSkipFilter */
 /*
  * Reposition cursor respecting any filter setting.
  */
-static HB_ERRCODE hb_bmSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
+static HB_ERRCODE hb_bmSkipFilter( AREAP pArea, HB_LONG lUpDown )
 {
    HB_BOOL fBottom, fDeleted;
    HB_ERRCODE uiError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_bmSkipFilter(%p, %ld)", pArea, lUpDown));
 
-   if( ! hb_setGetDeleted() && ! pArea->dbfarea.area.dbfi.fFilter )
+   if( ! hb_setGetDeleted() && ! pArea->dbfi.fFilter )
       return HB_SUCCESS;
 
    /* Since lToSkip is passed to SkipRaw, it should never request more than
@@ -506,36 +525,40 @@ static HB_ERRCODE hb_bmSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
       The implied purpose of hb_bmSkipFilter is to get off of a "bad" record
       after a skip was performed, NOT to skip lToSkip filtered records.
    */
-   lUpDown = ( lUpDown < 0  ? -1 : 1 );
+   lUpDown = ( lUpDown < 0 ? -1 : 1 );
 
    /* remember if we are here after SELF_GOTOP() */
-   fBottom = pArea->dbfarea.area.fBottom;
+   fBottom = pArea->fBottom;
 
-   while( !pArea->dbfarea.area.fBof && !pArea->dbfarea.area.fEof )
+   while( !pArea->fBof && !pArea->fEof )
    {
       /* SET DELETED */
       if( hb_setGetDeleted() )
       {
-         LPCDXTAG pTag = hb_cdxGetActiveTag( pArea );
+//       LPCDXTAG pTag = hb_cdxGetActiveTag( pArea );
 
-         if( SELF_DELETED( (AREAP) pArea, &fDeleted ) != HB_SUCCESS )
+         if( SELF_DELETED( ( AREAP ) pArea, &fDeleted ) != HB_SUCCESS )
             return HB_FAILURE;
          if( fDeleted )
          {
-            if( SELF_SKIPRAW( (AREAP) pArea, lUpDown ) != HB_SUCCESS )
+            if( SELF_SKIPRAW( ( AREAP ) pArea, lUpDown ) != HB_SUCCESS )
                return HB_FAILURE;
-            else if( pTag )
-               pTag->logKeyPos += lUpDown;
+//          else if( pTag )
+//             pTag->logKeyPos += lUpDown;
             continue;
          }
       }
 
       /* SET FILTER TO */
-      if( pArea->dbfarea.area.dbfi.fFilter )
+      if( pArea->dbfi.fFilter )
       {
-         if( ! hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+         HB_ULONG ulRecNo;
+
+         SELF_RECNO( pArea, &ulRecNo );
+
+         if( ! hb_bmCheckRecordFilter( pArea, ulRecNo ) )
          {
-            if( SELF_SKIPRAW( (AREAP) pArea, lUpDown ) != HB_SUCCESS )
+            if( SELF_SKIPRAW( ( AREAP ) pArea, lUpDown ) != HB_SUCCESS )
                return HB_FAILURE;
             continue;
          }
@@ -549,7 +572,7 @@ static HB_ERRCODE hb_bmSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
     * if we are at BOTTOM position (it's SKIPFILTER called from GOBOTTOM)
     * then GOEOF() if not then GOTOP()
     */
-   if( pArea->dbfarea.area.fBof && lUpDown < 0 )
+   if( pArea->fBof && lUpDown < 0 )
    {
       if( fBottom )
       {
@@ -562,180 +585,190 @@ static HB_ERRCODE hb_bmSkipFilter( CDXAREAP pArea, HB_LONG lUpDown )
             are out of filter so I do not want to do that. I will prefer
             explicit add SELF_GOEOF() method
           */
-         uiError = SELF_GOTO( (AREAP) pArea, 0 );
+         uiError = SELF_GOTO( ( AREAP ) pArea, 0 );
       }
       else
       {
-         uiError = SELF_GOTOP( (AREAP) pArea );
-         pArea->dbfarea.area.fBof = HB_TRUE;
+         uiError = SELF_GOTOP( ( AREAP ) pArea );
+         pArea->fBof = HB_TRUE;
       }
    }
    else
-   {
       uiError = HB_SUCCESS;
-   }
 
    return uiError;
 }
 
 /* ( DBENTRYP_B )     hb_bmAppend */
-static HB_ERRCODE hb_bmAppend( CDXAREAP pArea, HB_BOOL bUnLockAll )
+static HB_ERRCODE hb_bmAppend( AREAP pArea, HB_BOOL bUnLockAll )
 {
-    if( SUPER_APPEND( (AREAP) pArea, bUnLockAll ) == HB_SUCCESS )
-    {
-        if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
-        {
-            HB_ULONG ulRecCount, bytes;
+   if( SUPER_APPEND( ( AREAP ) pArea, bUnLockAll ) == HB_SUCCESS )
+   {
+      if( pArea->dbfi.fFilter && pArea->dbfi.fOptimized )
+      {
+         HB_ULONG ulRecCount, bytes;
 
-            SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
-            bytes = ( (ulRecCount + 1) >> 5 ) + 1;
+         SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
+         bytes = ( ( ulRecCount + 1 ) >> 5 ) + 1;
 
-            if( ( (ulRecCount) >> 5 ) + 1 < bytes )
-            {
-                ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = ( HB_ULONG * ) hb_xrealloc( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, bytes << 2 );
-                ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size = ulRecCount;
-            }
-            pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_bmCheckRecordFilter( pArea, ulRecCount ) )
-            {
-                LPCDXTAG pTag;
-                BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, ulRecCount );
-                pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-                if( pTag && CURKEY_LOGCNT(pTag) ) /* Con índice activo */
-                    CURKEY_SETLOGCNT( pTag, (pTag)->logKeyCount + 1 );
-            }
-            else
-                BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, ulRecCount );
-            pArea->dbfarea.area.dbfi.fFilter = HB_TRUE;
-        }
-        return HB_SUCCESS;
-    }
-    else
-        return HB_FAILURE;
+         if( ( ulRecCount >> 5 ) + 1 < bytes )
+         {
+            ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap = ( HB_ULONG * ) hb_xrealloc( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, bytes << 2 );
+            ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size = ulRecCount;
+         }
+         pArea->dbfi.fFilter = HB_FALSE;
+         if( hb_bmCheckRecordFilter( pArea, ulRecCount ) )
+         {
+//          LPCDXTAG pTag;
+            BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecCount );
+//          pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//          if( pTag && CURKEY_LOGCNT( pTag ) ) /* Con índice activo */
+//             CURKEY_SETLOGCNT( pTag, ( pTag )->logKeyCount + 1 );
+         }
+         else
+            BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecCount );
+         pArea->dbfi.fFilter = HB_TRUE;
+      }
+      return HB_SUCCESS;
+   }
+   else
+      return HB_FAILURE;
 }
 
 /* ( DBENTRYP_V )     hb_bmDeleteRec */
-static HB_ERRCODE hb_bmDeleteRec( CDXAREAP pArea )
+static HB_ERRCODE hb_bmDeleteRec( AREAP pArea )
 {
-    if( SUPER_DELETE( (AREAP) pArea ) == HB_SUCCESS )
-    {
-        if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
-        {
-            pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+   if( SUPER_DELETE( ( AREAP ) pArea ) == HB_SUCCESS )
+   {
+      if( pArea->dbfi.fFilter && pArea->dbfi.fOptimized )
+      {
+         HB_ULONG ulRecNo;
+
+         SELF_RECNO( pArea, &ulRecNo );
+
+         pArea->dbfi.fFilter = HB_FALSE;
+         if( hb_bmCheckRecordFilter( pArea, ulRecNo ) )
+         {
+            if( ! BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo ) )
             {
-                if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
-                {
-                    LPCDXTAG pTag;
-                    BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-                    pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-                    if( pTag && CURKEY_LOGCNT(pTag)  )
-                        CURKEY_SETLOGCNT( pTag, (pTag)->logKeyCount + 1 );
-                }
+//             LPCDXTAG pTag;
+               BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+//             pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//             if( pTag && CURKEY_LOGCNT( pTag )  )
+//                CURKEY_SETLOGCNT( pTag, ( pTag )->logKeyCount + 1 );
             }
-            else
+         }
+         else
+         {
+            if( BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo ) )
             {
-                if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
-                {
-                    LPCDXTAG pTag;
-                    BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-                    pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-                    if( pTag && CURKEY_LOGCNT(pTag) )
-                        CURKEY_SETLOGCNT( pTag, (pTag)->logKeyCount - 1 );
-                }
+//             LPCDXTAG pTag;
+               BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+//             pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+//             if( pTag && CURKEY_LOGCNT( pTag ) )
+//                CURKEY_SETLOGCNT( pTag, ( pTag )->logKeyCount - 1 );
             }
-            pArea->dbfarea.area.dbfi.fFilter = HB_TRUE;
-        }
-        return HB_SUCCESS;
-    }
-    else
-        return HB_FAILURE;
+         }
+         pArea->dbfi.fFilter = HB_TRUE;
+      }
+      return HB_SUCCESS;
+   }
+   else
+      return HB_FAILURE;
 }
 
 /* ( DBENTRYP_P )     hb_bmPutRec          : NULL */
-static HB_ERRCODE hb_bmPutRec( CDXAREAP pArea, HB_BYTE * pBuffer )
+static HB_ERRCODE hb_bmPutRec( AREAP pArea, HB_BYTE * pBuffer )
 {
-    if( SUPER_PUTREC( (AREAP) pArea, pBuffer ) == HB_SUCCESS )
-    {
-        if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
-        {
-            pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
+   if( SUPER_PUTREC( ( AREAP ) pArea, pBuffer ) == HB_SUCCESS )
+   {
+      if( pArea->dbfi.fFilter && pArea->dbfi.fOptimized )
+      {
+         HB_ULONG ulRecNo;
 
-            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
+         SELF_RECNO( pArea, &ulRecNo );
+
+         pArea->dbfi.fFilter = HB_FALSE;
+
+         if( hb_bmCheckRecordFilter( pArea, ulRecNo ) )
+         {
+            if( ! BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo ) )
             {
-                if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
-                {
-                    LPCDXTAG pTag;
-                    BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-                    pTag = hb_cdxGetActiveTag( pArea );
-                    if( pTag )
-                        CURKEY_SETLOGCNT( pTag, pTag->logKeyCount + 1 );
-                }
+//             LPCDXTAG pTag;
+               BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+//             pTag = hb_cdxGetActiveTag( pArea );
+//             if( pTag )
+//                CURKEY_SETLOGCNT( pTag, pTag->logKeyCount + 1 );
             }
-            else
+         }
+         else
+         {
+            if( BM_GETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo ) )
             {
-                if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo ) )
-                {
-                    LPCDXTAG pTag;
-                    BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-                    pTag = hb_cdxGetActiveTag( pArea );
-                    if( pTag )
-                        CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - 1 );
-                }
+//             LPCDXTAG pTag;
+               BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+//             pTag = hb_cdxGetActiveTag( pArea );
+//             if( pTag )
+//                CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - 1 );
             }
-            pArea->dbfarea.area.dbfi.fFilter = HB_TRUE;
-        }
-        return HB_SUCCESS;
-    }
-    else
-        return HB_FAILURE;
+         }
+         pArea->dbfi.fFilter = HB_TRUE;
+      }
+      return HB_SUCCESS;
+   }
+   else
+      return HB_FAILURE;
 }
 
 /* ( DBENTRYP_V )     hb_bmRecall */
-static HB_ERRCODE hb_bmRecall( CDXAREAP pArea )
+static HB_ERRCODE hb_bmRecall( AREAP pArea )
 {
-    if( SUPER_RECALL( (AREAP) pArea ) == HB_SUCCESS )
-    {
-        if( pArea->dbfarea.area.dbfi.fFilter && pArea->dbfarea.area.dbfi.fOptimized )
-        {
-            pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
-            if( hb_bmCheckRecordFilter( pArea, pArea->dbfarea.ulRecNo ) )
-                BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-            else
-                BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size, pArea->dbfarea.ulRecNo );
-            pArea->dbfarea.area.dbfi.fFilter = HB_TRUE;
-        }
-        return HB_SUCCESS;
-    }
-    else
-        return HB_FAILURE;
+   if( SUPER_RECALL( ( AREAP ) pArea ) == HB_SUCCESS )
+   {
+      if( pArea->dbfi.fFilter && pArea->dbfi.fOptimized )
+      {
+         HB_ULONG ulRecNo;
+
+         SELF_RECNO( pArea, &ulRecNo );
+
+         pArea->dbfi.fFilter = HB_FALSE;
+         if( hb_bmCheckRecordFilter( pArea, ulRecNo ) )
+            BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+         else
+            BM_CLRBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size, ulRecNo );
+         pArea->dbfi.fFilter = HB_TRUE;
+      }
+      return HB_SUCCESS;
+   }
+   else
+      return HB_FAILURE;
 }
 
 /* ( DBENTRYP_V )     hb_bmClearFilter */
-static HB_ERRCODE hb_bmClearFilter( CDXAREAP pArea )
+static HB_ERRCODE hb_bmClearFilter( AREAP pArea )
 {
    HB_ERRCODE errCode = SUPER_CLEARFILTER( ( AREAP ) pArea );
-   hb_cdxClearLogPosInfo( pArea );
+// hb_cdxClearLogPosInfo( pArea );
    /* Limpiamos filtro tipo array */
-   if( pArea->dbfarea.area.dbfi.lpvCargo )
+   if( pArea->dbfi.lpvCargo )
    {
-        hb_xfree( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap );
-        hb_xfree( pArea->dbfarea.area.dbfi.lpvCargo );
-        pArea->dbfarea.area.dbfi.lpvCargo = NULL;
+      hb_xfree( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap );
+      hb_xfree( pArea->dbfi.lpvCargo );
+      pArea->dbfi.lpvCargo = NULL;
    }
    return errCode;
 }
 
 /* ( DBENTRYP_VPLP )  hb_bmCountScope */
-static HB_ERRCODE hb_bmCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec )
+static HB_ERRCODE hb_bmCountScope( AREAP pArea, void * pPtr, HB_LONG * plRec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_bmCountScope(%p, %p, %p)", pArea, pPtr, plRec));
 
    if( pPtr == NULL )
    {
-      LPBM_FILTER pMap = (LPBM_FILTER) pArea->dbfarea.area.dbfi.lpvCargo;
-      if( pArea->dbfarea.area.dbfi.fFilter && pMap &&
-          !BM_GetBit( pMap->rmap, pMap->Size, ( HB_ULONG ) *plRec ) )
+      PBM_FILTER pMap = ( PBM_FILTER ) pArea->dbfi.lpvCargo;
+      if( pArea->dbfi.fFilter && pMap &&
+          ! BM_GETBIT( pMap->rmap, pMap->Size, ( HB_ULONG ) *plRec ) )
       {
          *plRec = 0;
       }
@@ -745,74 +778,78 @@ static HB_ERRCODE hb_bmCountScope( CDXAREAP pArea, void * pPtr, HB_LONG * plRec 
 }
 
 /* ( DBENTRYP_VFI )   hb_bmSetFilter */
-static HB_ERRCODE hb_bmSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
+static HB_ERRCODE hb_bmSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
-    HB_ULONG ulRecCount = 0, ulLogKeyCount = 0;
-    LPCDXTAG pTag;
-    PHB_ITEM pResult;
+   HB_ULONG ulRecCount = 0, ulLogKeyCount = 0;
+// LPCDXTAG pTag;
+   PHB_ITEM pResult;
 
-    HB_SYMBOL_UNUSED( ulLogKeyCount );
+   HB_SYMBOL_UNUSED( ulLogKeyCount );
 
-    hb_cdxClearLogPosInfo( pArea );
+// hb_cdxClearLogPosInfo( pArea );
 
-    if( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) != HB_SUCCESS )
-        return HB_FAILURE;
+   if( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) != HB_SUCCESS )
+      return HB_FAILURE;
 
-    pArea->dbfarea.area.dbfi.fOptimized = hb_setGetOptimize();
+   pArea->dbfi.fOptimized = hb_setGetOptimize();
 
-    if( pArea->dbfarea.area.dbfi.fOptimized )
-    {
-        pArea->dbfarea.area.dbfi.lpvCargo = hb_xgrab( sizeof( BM_FILTER ) );
-        memset( pArea->dbfarea.area.dbfi.lpvCargo, 0, sizeof( BM_FILTER ) );
+   if( pArea->dbfi.fOptimized )
+   {
+      pArea->dbfi.lpvCargo = hb_xgrab( sizeof( BM_FILTER ) );
+      memset( pArea->dbfi.lpvCargo, 0, sizeof( BM_FILTER ) );
 
-        pArea->dbfarea.area.dbfi.fFilter = HB_FALSE;
+      pArea->dbfi.fFilter = HB_FALSE;
 
-        pTag = hb_cdxGetActiveTag( pArea );
-        SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
-        ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size = ulRecCount;
-        ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
-        memset( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, 0, sizeof( HB_ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
+//    pTag = hb_cdxGetActiveTag( pArea );
+      SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
+      ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->Size = ulRecCount;
+      ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1 ) );
+      memset( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, 0, sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1 ) );
 
-        if( pTag ) /* with active index */
-        {
-            if( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
-               return HB_FAILURE;
+//    if( pTag ) /* with active index */
+//    {
+//       if( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
+//          return HB_FAILURE;
+//
+//       hb_cdxIndexLockRead( pTag->pIndex );
+//       hb_cdxTagRefreshScope( pTag );
+//       hb_cdxTagGoTop( pTag );
+//       ulLogKeyCount = 0;
+//       while( ! pTag->TagEOF )
+//       {
+//          if( pArea->dbfarea.ulRecNo != pTag->CurKey->rec || pArea->dbfarea.lpdbPendingRel )
+//             SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
+//          pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+//          if( HB_IS_LOGICAL( pResult ) && hb_itemGetL( pResult ) )
+//          {
+//             BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ulRecCount, pTag->CurKey->rec );
+//             ulLogKeyCount++;
+//          }
+//          hb_cdxTagSkipNext( pTag );
+//       }
+//       hb_cdxIndexUnLockRead( pTag->pIndex );
+//       pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
+//       CURKEY_SETLOGCNT( pTag, ulLogKeyCount );
+//    }
+//    else
+      {
+         SELF_GOTOP( ( AREAP ) pArea );
+         while( ! pArea->fEof )
+         {
+            HB_ULONG ulRecNo;
 
-            hb_cdxIndexLockRead( pTag->pIndex );
-            hb_cdxTagRefreshScope( pTag );
-            hb_cdxTagGoTop( pTag );
-            ulLogKeyCount = 0;
-            while( !pTag->TagEOF )
-            {
-               if( pArea->dbfarea.ulRecNo != pTag->CurKey->rec || pArea->dbfarea.lpdbPendingRel )
-                  SELF_GOTO( (AREAP) pArea, pTag->CurKey->rec );
-               pResult = hb_vmEvalBlock( pArea->dbfarea.area.dbfi.itmCobExpr );
-               if( HB_IS_LOGICAL( pResult ) && hb_itemGetL( pResult ) )
-               {
-                  BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ulRecCount, pTag->CurKey->rec );
-                  ulLogKeyCount++;
-               }
-               hb_cdxTagSkipNext( pTag );
-            }
-            hb_cdxIndexUnLockRead( pTag->pIndex );
-            pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
-            CURKEY_SETLOGCNT( pTag, ulLogKeyCount );
-        }
-        else
-        {
-            SELF_GOTOP( ( AREAP ) pArea );
-            while( ! pArea->dbfarea.area.fEof )
-            {
-                pResult = hb_vmEvalBlock( pArea->dbfarea.area.dbfi.itmCobExpr );
-                if( HB_IS_LOGICAL( pResult ) && hb_itemGetL( pResult ) )
-                    BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap, ulRecCount, pArea->dbfarea.ulRecNo );
-                SELF_SKIP( ( AREAP ) pArea, 1 );
-            }
-        }
-        pArea->dbfarea.area.dbfi.fFilter = HB_TRUE;
-    }
+            SELF_RECNO( pArea, &ulRecNo );
 
-    return HB_SUCCESS;
+            pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+            if( HB_IS_LOGICAL( pResult ) && hb_itemGetL( pResult ) )
+               BM_SETBIT( ( ( PBM_FILTER ) pArea->dbfi.lpvCargo )->rmap, ulRecCount, ulRecNo );
+            SELF_SKIP( ( AREAP ) pArea, 1 );
+         }
+      }
+      pArea->dbfi.fFilter = HB_TRUE;
+   }
+
+   return HB_SUCCESS;
 }
 
 
