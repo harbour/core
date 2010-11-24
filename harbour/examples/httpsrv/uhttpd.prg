@@ -1809,13 +1809,13 @@ FUNCTION uhttpd_join( cSeparator, aData )
    LOCAL cRet := "", nI
 
    FOR nI := 1 TO LEN( aData )
-       IF nI > 1;  cRet += cSeparator
-       ENDIF
-       IF     VALTYPE(aData[nI]) $ "CM";  cRet += aData[nI]
-       ELSEIF VALTYPE(aData[nI]) == "N";  cRet += LTRIM(STR(aData[nI]))
-       ELSEIF VALTYPE(aData[nI]) == "D";  cRet += IF(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
-       ELSE
-       ENDIF
+      IF nI > 1;  cRet += cSeparator
+      ENDIF
+      IF     VALTYPE(aData[nI]) $ "CM";  cRet += aData[nI]
+      ELSEIF VALTYPE(aData[nI]) == "N";  cRet += LTRIM(STR(aData[nI]))
+      ELSEIF VALTYPE(aData[nI]) == "D";  cRet += IF(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
+      ELSE
+      ENDIF
    NEXT
    RETURN cRet
 
@@ -1987,7 +1987,7 @@ STATIC PROCEDURE Define_Env( hmServer )
    LOCAL v
 
    FOR EACH v IN hmServer
-       hb_SetEnv( v:__enumKey(), v )
+      hb_SetEnv( v:__enumKey(), v )
    NEXT
 
    RETURN
@@ -2751,70 +2751,68 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
    RETURN MakeResponse()
 
 STATIC FUNCTION LoadMimeTypes()
-   LOCAL hMimeTypes
    // TODO: load mime types from file
-   hMimeTypes := { ;
-                   "css"  =>  "text/css"                  ,;
-                   "htm"  =>  "text/html"                 ,;
-                   "html" =>  "text/html"                 ,;
-                   "txt"  =>  "text/plain"                ,;
-                   "text" =>  "text/plain"                ,;
-                   "asc"  =>  "text/plain"                ,;
-                   "c"    =>  "text/plain"                ,;
-                   "h"    =>  "text/plain"                ,;
-                   "cpp"  =>  "text/plain"                ,;
-                   "hpp"  =>  "text/plain"                ,;
-                   "log"  =>  "text/plain"                ,;
-                   "rtf"  =>  "text/rtf"                  ,;
-                   "xml"  =>  "text/xml"                  ,;
-                   "xsl"  =>  "text/xsl"                  ,;
-                   "bmp"  =>  "image/bmp"                 ,;
-                   "gif"  =>  "image/gif"                 ,;
-                   "jpg"  =>  "image/jpeg"                ,;
-                   "jpe"  =>  "image/jpeg"                ,;
-                   "jpeg" =>  "image/jpeg"                ,;
-                   "png"  =>  "image/png"                 ,;
-                   "tif"  =>  "image/tiff"                ,;
-                   "tiff" =>  "image/tiff"                ,;
-                   "djv"  =>  "image/vnd.djvu"            ,;
-                   "djvu" =>  "image/vnd.djvu"            ,;
-                   "ico"  =>  "image/x-icon"              ,;
-                   "xls"  =>  "application/excel"         ,;
-                   "doc"  =>  "application/msword"        ,;
-                   "pdf"  =>  "application/pdf"           ,;
-                   "ps"   =>  "application/postscript"    ,;
-                   "eps"  =>  "application/postscript"    ,;
-                   "ppt"  =>  "application/powerpoint"    ,;
-                   "bz2"  =>  "application/x-bzip2"       ,;
-                   "gz"   =>  "application/x-gzip"        ,;
-                   "tgz"  =>  "application/x-gtar"        ,;
-                   "js"   =>  "application/x-javascript"  ,;
-                   "tar"  =>  "application/x-tar"         ,;
-                   "tex"  =>  "application/x-tex"         ,;
-                   "zip"  =>  "application/zip"           ,;
-                   "midi" =>  "audio/midi"                ,;
-                   "mp3"  =>  "audio/mpeg"                ,;
-                   "wav"  =>  "audio/x-wav"               ,;
-                   "qt"   =>  "video/quicktime"           ,;
-                   "mov"  =>  "video/quicktime"           ,;
-                   "avi"  =>  "video/x-msvideo"            ;
-                 }
-RETURN hMimeTypes
+   RETURN { ;
+      "css"  =>  "text/css"                  ,;
+      "htm"  =>  "text/html"                 ,;
+      "html" =>  "text/html"                 ,;
+      "txt"  =>  "text/plain"                ,;
+      "text" =>  "text/plain"                ,;
+      "asc"  =>  "text/plain"                ,;
+      "c"    =>  "text/plain"                ,;
+      "h"    =>  "text/plain"                ,;
+      "cpp"  =>  "text/plain"                ,;
+      "hpp"  =>  "text/plain"                ,;
+      "log"  =>  "text/plain"                ,;
+      "rtf"  =>  "text/rtf"                  ,;
+      "xml"  =>  "text/xml"                  ,;
+      "xsl"  =>  "text/xsl"                  ,;
+      "bmp"  =>  "image/bmp"                 ,;
+      "gif"  =>  "image/gif"                 ,;
+      "jpg"  =>  "image/jpeg"                ,;
+      "jpe"  =>  "image/jpeg"                ,;
+      "jpeg" =>  "image/jpeg"                ,;
+      "png"  =>  "image/png"                 ,;
+      "tif"  =>  "image/tiff"                ,;
+      "tiff" =>  "image/tiff"                ,;
+      "djv"  =>  "image/vnd.djvu"            ,;
+      "djvu" =>  "image/vnd.djvu"            ,;
+      "ico"  =>  "image/x-icon"              ,;
+      "xls"  =>  "application/excel"         ,;
+      "doc"  =>  "application/msword"        ,;
+      "pdf"  =>  "application/pdf"           ,;
+      "ps"   =>  "application/postscript"    ,;
+      "eps"  =>  "application/postscript"    ,;
+      "ppt"  =>  "application/powerpoint"    ,;
+      "bz2"  =>  "application/x-bzip2"       ,;
+      "gz"   =>  "application/x-gzip"        ,;
+      "tgz"  =>  "application/x-gtar"        ,;
+      "js"   =>  "application/x-javascript"  ,;
+      "tar"  =>  "application/x-tar"         ,;
+      "tex"  =>  "application/x-tex"         ,;
+      "zip"  =>  "application/zip"           ,;
+      "midi" =>  "audio/midi"                ,;
+      "mp3"  =>  "audio/mpeg"                ,;
+      "wav"  =>  "audio/x-wav"               ,;
+      "qt"   =>  "video/quicktime"           ,;
+      "mov"  =>  "video/quicktime"           ,;
+      "avi"  =>  "video/x-msvideo"           }
 
 STATIC FUNCTION GT_notifier( nEvent, xParams )
-  LOCAL nReturn := 0
-  DO CASE
+   LOCAL nReturn := 0
+
+   DO CASE
    CASE nEvent == HB_GTE_CLOSE
-        IF hb_mutexLock( s_hmtxBusy )
-           s_lQuitRequest := TRUE
-           nReturn := 1
-           hb_mutexUnlock( s_hmtxBusy )
-        ENDIF
-  ENDCASE
+      IF hb_mutexLock( s_hmtxBusy )
+         s_lQuitRequest := TRUE
+         nReturn := 1
+         hb_mutexUnlock( s_hmtxBusy )
+      ENDIF
+   ENDCASE
 
-  HB_SYMBOL_UNUSED( xParams )
+   HB_SYMBOL_UNUSED( xParams )
 
-RETURN nReturn
+   RETURN nReturn
 
 STATIC FUNCTION UHTTPD_UTCOFFSET()
    LOCAL nOffset := HB_UTCOFFSET()

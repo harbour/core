@@ -154,7 +154,7 @@
  *  $TEMPLATE$
  *     Function
  *  $NAME$
- *      hb_gcAlloc()
+ *      hb_gcFree()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -190,7 +190,7 @@
  *  $TEMPLATE$
  *     Function
  *  $NAME$
- *      hb_gcAlloc()
+ *      hb_gcCollectAll()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -225,7 +225,7 @@
  *  $TEMPLATE$
  *     Function
  *  $NAME$
- *      hb_gcAlloc()
+ *      hb_gcItemRef()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -269,7 +269,7 @@
  *  $TEMPLATE$
  *     Procedure
  *  $NAME$
- *      hb_gcAlloc()
+ *      HB_GCALL()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$

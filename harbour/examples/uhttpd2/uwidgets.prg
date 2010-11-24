@@ -33,7 +33,7 @@ METHOD Paint() CLASS UWMain
    UWrite( '<meta http-equiv="content-type" content="text/html; charset=windows-1257">' )
    UWrite( '<script language="javascript" src="/files/main.js"></script>' )
    UWrite( '<body>' )
-   AEval( Self:aChilds, { |x| X:Paint() } )
+   AEval( Self:aChilds, {|x| X:Paint() } )
    UWrite( '</body></html>' )
 
    RETURN Self
@@ -70,7 +70,7 @@ METHOD Paint() CLASS UWLayoutGrid
       UWrite( '<tr>' )
       FOR EACH aCell IN aRow
          UWrite( '<td>' )
-         AEval( aCell, { |o| o:Paint() } )
+         AEval( aCell, {|o| o:Paint() } )
          UWrite( '</td>' )
       NEXT
       UWrite( '</tr>' )
@@ -94,7 +94,7 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
    ENDIF
    IF nCol > Len( Self:aChilds[1] )
       FOR nI := Len( Self:aChilds[1] ) + 1 TO nCol
-         AEval( Self:aChilds, { |x| AAdd( x, {} ) } )
+         AEval( Self:aChilds, {|x| AAdd( x, {} ) } )
       NEXT
    ENDIF
    AAdd( Self:aChilds[nRow, nCol], oWidget )
@@ -185,7 +185,7 @@ METHOD Add( oWidget ) CLASS UWForm
 METHOD Paint() CLASS UWForm
 
    UWrite( '<form action="' + Self:cAction + '" method="' + Self:cMethod + '">' )
-   AEval( Self:aChilds, { |x| X:Paint() } )
+   AEval( Self:aChilds, {|x| X:Paint() } )
    UWrite( '</form>' )
 
    RETURN Self
@@ -498,7 +498,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
          session["_ustack"] := aStack := {}
       ENDIF
 
-      aURL := split( "/", cURL )
+      aURL := uhttpd_split( "/", cURL )
       nI := 1
       nL := Min( Len( aURL ), Len( aStack ) )
       DO WHILE nI <= nL
@@ -524,7 +524,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
       lRet := .T.
       // Enter procedures
       DO WHILE nI <= Len( aURL )
-         cI := join( "/", ASize( AClone(aURL ), nI ) )
+         cI := uhttpd_join( "/", ASize( AClone(aURL ), nI ) )
          IF HB_HHasKey( aMap, cI )
             session["_uthis"] := { "idhash" => { => } }
             IF ( lRet := Eval( aMap[cI], "INIT" ) ) == .T.

@@ -32,18 +32,18 @@ MEMVAR server, get, post, cookie, session
 
 
 CREATE CLASS UHttpd
-   // Settings
+   /* Settings */
    DATA nPort        INIT 80
    DATA cBindAddress INIT "0.0.0.0"
    DATA cAccessLog   INIT "uhttpd_access.log"
    DATA cErrorLog    INIT "uhttpd_error.log"
-   DATA bIdle        INIT { || NIL }
+   DATA bIdle        INIT {|| NIL }
    DATA aMount       INIT { => }
 
-   // Results
+   /* Results */
    DATA cError       INIT ""
 
-   // Private
+   /* Private */
    DATA hAccessLog
    DATA hErrorLog
 
@@ -59,7 +59,7 @@ CREATE CLASS UHttpd
    METHOD RUN()
    METHOD Stop()
 
-   // Private
+   /* Private */
    METHOD LogAccess()
    METHOD LogError( cError )
 
@@ -160,12 +160,12 @@ METHOD RUN() CLASS UHttpd
    ENDDO
    hb_socketClose( Self:hListen )
 
-   // End child threads
+   /* End child threads */
    hb_mutexLock( Self:hmtxSession )
-   HB_HEVAL( Self:aSession, { |k, v| hb_mutexNotify( v[2], NIL ), HB_SYMBOL_UNUSED( k ) } )
+   HB_HEVAL( Self:aSession, {|k, v| hb_mutexNotify( v[2], NIL ), HB_SYMBOL_UNUSED( k ) } )
    hb_mutexUnlock( Self:hmtxSession )
-   AEval( aThreads, { || hb_mutexNotify( Self:hmtxQueue, NIL ) } )
-   AEval( aThreads, { |h| hb_threadJoin( h ) } )
+   AEval( aThreads, {|| hb_mutexNotify( Self:hmtxQueue, NIL ) } )
+   AEval( aThreads, {|h| hb_threadJoin( h ) } )
 
    FClose( Self:hErrorLog )
    FClose( Self:hAccessLog )
@@ -370,7 +370,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                t_aHeader := {}
                t_nStatusCode := 200
                t_lSessionDestroy := .F.
-               BEGIN SEQUENCE WITH { |oErr| UErrorHandler( oErr, oServer ) }
+               BEGIN SEQUENCE WITH {|oErr| UErrorHandler( oErr, oServer ) }
                   Eval( bEval, cPath )
                RECOVER
                   USetStatusCode( 500 )
@@ -448,7 +448,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
          RETURN .F.
       ELSE
          /* not sessioned */
-         BEGIN SEQUENCE WITH { |oErr| UErrorHandler( oErr, oServer ) }
+         BEGIN SEQUENCE WITH {|oErr| UErrorHandler( oErr, oServer ) }
             Eval( bEval, cPath )
          RECOVER
             USetStatusCode( 500 )
@@ -464,8 +464,8 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
 
    LOCAL aRequest, aLine, nI, nJ, cI, nK, nContentLength := 0
 
-   aRequest := split( CR_LF, cRequest )
-   aLine := split( " ", aRequest[1] )
+   aRequest := uhttpd_split( CR_LF, cRequest )
+   aLine := uhttpd_split( " ", aRequest[1] )
 
    server["REQUEST_ALL"] := aRequest[1]
    IF Len( aLine ) == 3 .AND. Left( aLine[3], 5 ) == "HTTP/"
@@ -511,25 +511,25 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
          SWITCH Upper( Left( aRequest[nI], nJ - 1 ) )
          CASE "COOKIE"
             IF ( nK := At( ";", cI ) ) == 0
-               nK := Len( Trim( cI ) )
+               nK := Len( RTrim( cI ) )
             ENDIF
             cI := Left( cI, nK )
             IF ( nK := At( "=", cI ) ) > 0
                /* cookie names are case insensitive, uppercase it */
-               cookie[UPPER(LEFT(cI, nK - 1))] := SubStr( cI, nK + 1 )
+               cookie[ UPPER( LEFT( cI, nK - 1 ) ) ] := SubStr( cI, nK + 1 )
             ENDIF
             EXIT
          CASE "CONTENT-LENGTH"
             nContentLength := Val( cI )
             EXIT
             OTHERWISE
-            server["HTTP_" + STRTRAN(UPPER(LEFT(aRequest[nI], nJ - 1 ) ), "-", "_" )] := cI
+            server[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[nI], nJ - 1 ) ), "-", "_" ) ] := cI
             EXIT
          ENDSWITCH
       ENDIF
    NEXT
    IF !( server["QUERY_STRING"] == "" )
-      FOR EACH cI IN split( "&", server["QUERY_STRING"] )
+      FOR EACH cI IN uhttpd_split( "&", server["QUERY_STRING"] )
          IF ( nI := At( "=", cI ) ) > 0
             get[UUrlDecode(LEFT(cI, nI - 1))] := UUrlDecode( SubStr( cI, nI + 1 ) )
          ELSE
@@ -546,7 +546,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
    LOCAL nI, cPart
 
    IF server["HTTP_CONTENT_TYPE"] == "application/x-www-form-urlencoded"
-      FOR EACH cPart IN split( "&", cRequest )
+      FOR EACH cPart IN uhttpd_split( "&", cRequest )
          IF ( nI := At( "=", cPart ) ) > 0
             post[UUrlDecode(LEFT(cPart, nI - 1))] := UUrlDecode( SubStr( cPart, nI + 1 ) )
          ELSE
@@ -628,7 +628,7 @@ STATIC FUNCTION MakeResponse()
    ENDSWITCH
    cRet += CR_LF
    UAddHeader( "Content-Length", hb_ntos( Len( t_cResult ) ) )
-   AEval( t_aHeader, { |x| cRet += x[1] + ": " + x[2] + CR_LF } )
+   AEval( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
    cRet += CR_LF
    ? cRet
    cRet += t_cResult
@@ -708,9 +708,9 @@ STATIC FUNCTION GetErrorDesc( oErr )
    ENDIF
    IF !Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
    ENDIF
-   IF ValType( oErr:args ) == "A"
+   IF hb_isArray( oErr:args )
       cRet += "Arguments:" + hb_eol()
-      AEval( oErr:args, { |X, Y| cRet += Str( Y, 5 ) + ": " + HB_CStr( X ) + hb_eol() } )
+      AEval( oErr:args, {|X, Y| cRet += Str( Y, 5 ) + ": " + HB_CStr( X ) + hb_eol() } )
    ENDIF
    cRet += hb_eol()
 
@@ -731,13 +731,13 @@ STATIC FUNCTION GetErrorDesc( oErr )
       cRet += "Database areas:" + hb_eol()
       cRet += "    Current: " + hb_ntos( Select() ) + "  " + Alias() + hb_eol()
 
-      BEGIN SEQUENCE WITH { |o| BREAK( o ) }
+      BEGIN SEQUENCE WITH {|o| BREAK( o ) }
          IF !Empty( Alias() )
             cRet += "    Filter: " + dbFilter() + hb_eol()
             cRet += "    Relation: " + dbRelation() + hb_eol()
             cRet += "    Index expression: " + OrdKey( OrdSetFocus() ) + hb_eol()
             cRet += hb_eol()
-            BEGIN SEQUENCE WITH { |o| BREAK( o ) }
+            BEGIN SEQUENCE WITH {|o| BREAK( o ) }
                FOR nI := 1 TO FCount()
                   cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + HB_VALTOEXP( FieldGet( nI ) ) + hb_eol()
                NEXT
@@ -751,7 +751,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
       END SEQUENCE
 
       FOR nI := 1 TO 250
-         BEGIN SEQUENCE WITH { |o| BREAK( o ) }
+         BEGIN SEQUENCE WITH {|o| BREAK( o ) }
             IF ! Empty( Alias( nI ) )
                dbSelectArea( nI )
                cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + ;
@@ -799,7 +799,7 @@ FUNCTION UGetHeader( cType )
 
    LOCAL nI
 
-   IF ( nI := ASCAN( t_aHeader, { |x| Upper(x[1] ) == Upper(cType ) } ) ) > 0
+   IF ( nI := ASCAN( t_aHeader, {|x| Upper(x[1] ) == Upper(cType ) } ) ) > 0
       RETURN t_aHeader[nI, 2]
    ENDIF
 
@@ -809,7 +809,7 @@ PROCEDURE UAddHeader( cType, cValue )
 
    LOCAL nI
 
-   IF ( nI := ASCAN( t_aHeader, { |x| Upper(x[1] ) == Upper(cType ) } ) ) > 0
+   IF ( nI := ASCAN( t_aHeader, {|x| Upper(x[1] ) == Upper(cType ) } ) ) > 0
       t_aHeader[nI, 2] := cValue
    ELSE
       AAdd( t_aHeader, { cType, cValue } )
@@ -986,7 +986,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          RETURN
       ENDIF
       IF ASCAN( { "index.html", "index.htm" }, ;
-            { |x| iif( HB_FileExists( UOSFileName(cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            {|x| iif( HB_FileExists( UOSFileName(cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
          UAddHeader( "Content-Type", "text/html" )
          UWrite( HB_MEMOREAD( UOsFileName(cFileName ) ) )
          RETURN
@@ -1001,17 +1001,17 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       aDir := Directory( UOsFileName( cFileName ), "D" )
       IF HB_HHasKey( get, "s" )
          IF get["s"] == "s"
-            ASort( aDir, , , { |X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
+            ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
                iif( Y[5] == "D", .F. , X[2] < Y[2] ) ) } )
          ELSEIF get["s"] == "m"
-            ASort( aDir, , , { |X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
+            ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
                iif( Y[5] == "D", .F. , DToS( X[3] ) + X[4] < DToS( Y[3] ) + Y[4] ) ) } )
          ELSE
-            ASort( aDir, , , { |X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
+            ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
                iif( Y[5] == "D", .F. , X[1] < Y[1] ) ) } )
          ENDIF
       ELSE
-         ASort( aDir, , , { |X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
+         ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
             iif( Y[5] == "D", .F. , X[1] < Y[1] ) ) } )
       ENDIF
 
@@ -1050,28 +1050,61 @@ PROCEDURE UProcInfo()
 
    UWrite( '<h2>Capabilities</h2>' )
    UWrite( '<table border=1 cellspacing=0>' )
-   UWrite( '<tr><td>RDD</td><td>' + UHtmlEncode( join(", ", rddList() ) ) + '</td></tr>' )
+   UWrite( '<tr><td>RDD</td><td>' + UHtmlEncode( uhttpd_join(", ", rddList() ) ) + '</td></tr>' )
    UWrite( '</table>' )
 
    UWrite( '<h2>Variables</h2>' )
 
    UWrite( '<h3>server</h3>' )
    UWrite( '<table border=1 cellspacing=0>' )
-   HB_HEval( server, { |k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+   HB_HEval( server, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
    UWrite( '</table>' )
 
    IF !Empty( get )
       UWrite( '<h3>get</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
-      HB_HEval( get, { |k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+      HB_HEval( get, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
       UWrite( '</table>' )
    ENDIF
 
    IF !Empty( post )
       UWrite( '<h3>post</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
-      HB_HEval( post, { |k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+      HB_HEval( post, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
       UWrite( '</table>' )
    ENDIF
 
    RETURN
+
+FUNCTION uhttpd_split( cSeparator, cString )
+
+   LOCAL aRet := {}
+   LOCAL nI
+
+   DO WHILE ( nI := At( cSeparator, cString ) ) > 0
+      AAdd( aRet, Left( cString, nI - 1 ) )
+      cString := SubStr( cString, nI + Len( cSeparator ) )
+   ENDDO
+   AAdd( aRet, cString )
+
+   RETURN aRet
+
+FUNCTION uhttpd_join( cSeparator, aData )
+
+   LOCAL cRet := ""
+   LOCAL nI
+
+   FOR nI := 1 TO Len( aData )
+
+      IF nI > 1
+         cRet += cSeparator
+      ENDIF
+
+      IF     ValType( aData[ nI ] ) $ "CM" ; cRet += aData[ nI ]
+      ELSEIF ValType( aData[ nI ] ) == "N" ; cRet += hb_ntos( aData[ nI ] )
+      ELSEIF ValType( aData[ nI ] ) == "D" ; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" )
+      ELSE
+      ENDIF
+   NEXT
+
+   RETURN cRet
