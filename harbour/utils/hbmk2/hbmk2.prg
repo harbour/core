@@ -10363,11 +10363,14 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 
 STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
+   LOCAL hTrans := LoadPOTFilesAsHash( hbmk, aFiles )
 
-   IF ! __i18n_potArraySave( cFileOut, ;
-          __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
-      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+   IF hTrans != NIL
+      IF ! __i18n_potArraySave( cFileOut, ;
+             __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
+                                   hTrans ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+      ENDIF
    ENDIF
 
    RETURN
