@@ -4,7 +4,6 @@
 
 #include "hbclass.ch"
 #include "common.ch"
-#include "fileio.ch"
 #include "error.ch"
 
 #include "hbsocket.ch"
@@ -24,7 +23,7 @@
 #define THREAD_COUNT_MAX        50
 #define SESSION_TIMEOUT        600
 
-#define CR_LF                       (CHR(13)+CHR(10))
+#define CR_LF                       ( Chr( 13 ) + Chr( 10 ) )
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_lSessionDestroy
 
@@ -35,8 +34,8 @@ CREATE CLASS UHttpd
    /* Settings */
    DATA nPort        INIT 80
    DATA cBindAddress INIT "0.0.0.0"
-   DATA cAccessLog   INIT "uhttpd_access.log"
-   DATA cErrorLog    INIT "uhttpd_error.log"
+   DATA bLogAccess   INIT {|| NIL }
+   DATA bLogError    INIT {|| NIL }
    DATA bIdle        INIT {|| NIL }
    DATA aMount       INIT { => }
 
@@ -44,9 +43,6 @@ CREATE CLASS UHttpd
    DATA cError       INIT ""
 
    /* Private */
-   DATA hAccessLog
-   DATA hErrorLog
-
    DATA hmtxQueue
    DATA hmtxLog
    DATA hmtxSession
@@ -84,43 +80,24 @@ METHOD RUN() CLASS UHttpd
       RETURN .F.
    ENDIF
 
-   IF ( Self:hAccessLog := FOpen( Self:cAccessLog, FO_CREAT + FO_WRITE ) ) == - 1
-      Self:cError :=  "Access log file open error " + hb_ntos( FError() )
-      RETURN .F.
-   ENDIF
-   FSeek( Self:hAccessLog, 0, FS_END )
-
-   IF ( Self:hErrorLog := FOpen( Self:cErrorLog, FO_CREAT + FO_WRITE ) ) == - 1
-      Self:cError :=  "Error log file open error " + hb_ntos( FError() )
-      FClose( Self:hAccessLog )
-      RETURN .F.
-   ENDIF
-   FSeek( Self:hErrorLog, 0, FS_END )
-
    Self:hmtxQueue   := hb_mutexCreate()
    Self:hmtxLog     := hb_mutexCreate()
    Self:hmtxSession := hb_mutexCreate()
 
    IF Empty( Self:hListen := hb_socketOpen() )
       Self:cError :=  "Socket create error " + hb_ntos( hb_socketGetError() )
-      FClose( Self:hErrorLog )
-      FClose( Self:hAccessLog )
       RETURN .F.
    ENDIF
 
    IF !hb_socketBind( Self:hListen, { HB_SOCKET_AF_INET, Self:cBindAddress, Self:nPort } )
       Self:cError :=  "Bind error " + hb_ntos( hb_socketGetError() )
       hb_socketClose( Self:hListen )
-      FClose( Self:hErrorLog )
-      FClose( Self:hAccessLog )
       RETURN .F.
    ENDIF
 
    IF !hb_socketListen( Self:hListen )
       Self:cError :=  "Listen error " + hb_ntos( hb_socketGetError() )
       hb_socketClose( Self:hListen )
-      FClose( Self:hErrorLog )
-      FClose( Self:hAccessLog )
       RETURN .F.
    ENDIF
 
@@ -167,9 +144,6 @@ METHOD RUN() CLASS UHttpd
    AEval( aThreads, {|| hb_mutexNotify( Self:hmtxQueue, NIL ) } )
    AEval( aThreads, {|h| hb_threadJoin( h ) } )
 
-   FClose( Self:hErrorLog )
-   FClose( Self:hAccessLog )
-
    RETURN .T.
 
 METHOD Stop() CLASS UHttpd
@@ -181,7 +155,7 @@ METHOD Stop() CLASS UHttpd
 METHOD LogError( cError ) CLASS UHttpd
 
    hb_mutexLock( Self:hmtxLog )
-   FWrite( Self:hErrorLog, DToS( Date() ) + " " + Time() + " " + cError + " " + hb_eol() )
+   Eval( Self:bLogError, DToS( Date() ) + " " + Time() + " " + cError )
    hb_mutexUnlock( Self:hmtxLog )
 
    RETURN NIL
@@ -191,13 +165,13 @@ METHOD LogAccess() CLASS UHttpd
    LOCAL cDate := DToS( Date() ), cTime := Time()
 
    hb_mutexLock( Self:hmtxLog )
-   FWrite( Self:hAccessLog, ;
+   Eval( Self:bLogAccess, ;
       server["REMOTE_ADDR"] + " - - [" + Right( cDate, 2 ) + "/" + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[VAL(SUBSTR(cDate, 5, 2))] + ;
       "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server["REQUEST_ALL"] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
       ' "' + server["HTTP_REFERER"] + '" "' + server["HTTP_USER_AGENT"] + ;
-      '"' + hb_eol() )
+      '"' )
    hb_mutexUnlock( Self:hmtxLog )
 
    RETURN NIL
@@ -966,7 +940,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
             CASE "wav";                                 cI := "audio/x-wav";  EXIT
             CASE "qt";    CASE "mov";                   cI := "video/quicktime";  EXIT
             CASE "avi";                                 cI := "video/x-msvideo";  EXIT
-               OTHERWISE
+            OTHERWISE
                cI := "application/octet-stream"
             ENDSWITCH
          ELSE

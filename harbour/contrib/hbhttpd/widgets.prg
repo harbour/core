@@ -564,7 +564,7 @@ PROCEDURE UWDefaultHandler( cMethod )
       IF ( cID := hb_HGetDef( get, "ajax" ) ) == NIL
          session["_uthis", "main"]:Paint()
       ELSE
-         IF ( oW := GetWidgetById( cID ) ) != NIL
+         IF ( oW := UGetWidgetById( cID ) ) != NIL
             UAddHeader( "Content-type", "text/html; charset=windows-1257" )
             oW:Ajax( hb_HGetDef( get, "action" ) )
          ENDIF
@@ -573,7 +573,7 @@ PROCEDURE UWDefaultHandler( cMethod )
 
    RETURN
 
-STATIC PROC SetWId( oW, cID )
+STATIC PROCEDURE SetWId( oW, cID )
 
    IF cID != NIL
       oW:cID := cID
@@ -582,5 +582,5 @@ STATIC PROC SetWId( oW, cID )
 
    RETURN
 
-FUNCTION GetWidgetById( cID )
+FUNCTION UGetWidgetById( cID )
    RETURN hb_HGetDef( session["_uthis", "idhash"], cID )

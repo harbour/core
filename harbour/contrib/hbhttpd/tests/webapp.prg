@@ -20,6 +20,9 @@ FUNCTION Main()
 
    LOCAL oServer
 
+   LOCAL oLogAccess
+   LOCAL oLogError
+
    IF HB_ARGCHECK( "help" )
       ? "Usage: app [options]"
       ? "Options:"
@@ -71,7 +74,27 @@ FUNCTION Main()
       dbCloseArea()
    ENDIF
 
+   oLogAccess := UHttpdLog():New( "webapp_access.log" )
+
+   IF ! oLogAccess:Add( "" )
+      oLogAccess:Close()
+      ? "Access log file open error " + hb_ntos( FError() )
+      RETURN 0
+   ENDIF
+
+   oLogError := UHttpdLog():New( "webapp_error.log" )
+
+   IF ! oLogError:Add( "" )
+      oLogError:Close()
+      oLogAccess:Close()
+      ? "Error log file open error " + hb_ntos( FError() )
+      RETURN 0
+   ENDIF
+
    oServer := UHttpdNew()
+
+   oServer:bLogAccess := {| m | oLogAccess:Add( m + hb_eol() ) }
+   oServer:bLogError  := {| m | oLogError:Add( m + hb_eol() ) }
 
    oServer:nPort := 8002
    oServer:bIdle := { |o| iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }
@@ -97,9 +120,14 @@ FUNCTION Main()
    ? "Listening on port:", oServer:nPort
 
    IF ! oServer:Run()
+      oLogError:Close()
+      oLogAccess:Close()
       ? "Server error:", oServer:cError
       RETURN 1
    ENDIF
+
+   oLogError:Close()
+   oLogAccess:Close()
 
    RETURN 0
 
@@ -134,7 +162,7 @@ STATIC FUNCTION proc_login( cMethod )
       dbCloseArea()
    ELSEIF cMethod == "GET"
       IF HB_HHasKey( get, "err" )
-         GetWidgetById( "errtxt" ):cText := "Invalid username or password!"
+         UGetWidgetById( "errtxt" ):cText := "Invalid username or password!"
       ENDIF
       UWDefaultHandler( cMethod )
       USessionDestroy()
@@ -168,8 +196,8 @@ STATIC FUNCTION proc_register( cMethod )
       cName := hb_HGetDef( post, "name", "" )
       cPassword := hb_HGetDef( post, "password", "" )
       cPassword2 := hb_HGetDef( post, "password2", "" )
-      GetWidgetById( "user" ):cValue := cUser
-      GetWidgetById( "name" ):cValue := cName
+      UGetWidgetById( "user" ):cValue := cUser
+      UGetWidgetById( "name" ):cValue := cName
       IF Empty( cUser ) .OR. Empty( cName ) .OR. Empty( cPassword ) .OR. Empty( cPassword2 )
          URedirect( "?err=1" )
       ELSEIF !( cPassword == cPassword2 )
@@ -190,11 +218,11 @@ STATIC FUNCTION proc_register( cMethod )
    ELSEIF cMethod == "GET"
       IF HB_HHasKey( get, "err" )
          IF get[ "err" ] == "1"
-            GetWidgetById( "errtxt" ):cText := "All fields are required!"
+            UGetWidgetById( "errtxt" ):cText := "All fields are required!"
          ELSEIF get[ "err" ] == "2"
-            GetWidgetById( "errtxt" ):cText := "Passwords does not match!"
+            UGetWidgetById( "errtxt" ):cText := "Passwords does not match!"
          ELSEIF get[ "err" ] == "3"
-            GetWidgetById( "errtxt" ):cText := "This user already exists!"
+            UGetWidgetById( "errtxt" ):cText := "This user already exists!"
          ENDIF
       ENDIF
       UWDefaultHandler( cMethod )
@@ -258,7 +286,7 @@ STATIC FUNCTION proc_account_edit( cMethod )
       cName := hb_HGetDef( post, "name", "" )
       cPassword := hb_HGetDef( post, "password", "" )
       cPassword2 := hb_HGetDef( post, "password2", "" )
-      GetWidgetById( "name" ):cValue := RTrim( cName )
+      UGetWidgetById( "name" ):cValue := RTrim( cName )
       IF Empty( cName )
          URedirect( "?err=1" )
       ELSEIF ( ! Empty( cPassword ) .OR. ! Empty( cPassword2 ) ) .AND. ! ( cPassword == cPassword2 )
@@ -276,9 +304,9 @@ STATIC FUNCTION proc_account_edit( cMethod )
    ELSEIF cMethod == "GET"
       IF HB_HHasKey( get, "err" )
          IF get[ "err" ] == "1"
-            GetWidgetById( "errtxt" ):cText := "All fields are required!"
+            UGetWidgetById( "errtxt" ):cText := "All fields are required!"
          ELSEIF get[ "err" ] == "2"
-            GetWidgetById( "errtxt" ):cText := "Passwords does not match!"
+            UGetWidgetById( "errtxt" ):cText := "Passwords does not match!"
          ENDIF
       ENDIF
       UWDefaultHandler( cMethod )
@@ -351,7 +379,7 @@ STATIC FUNCTION proc_shopping( cMethod )
       ENDIF
       nT := 0
       carts->( dbEval( {|| nT += TOTAL } ) )
-      GetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
+      UGetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
       UWDefaultHandler( cMethod )
    ELSEIF cMethod == "EXIT"
       items->( dbCloseArea() )
@@ -402,7 +430,7 @@ STATIC FUNCTION proc_cart( cMethod )
       ENDIF
       nT := 0
       carts->( dbEval( {|| nT += TOTAL } ) )
-      GetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
+      UGetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
       UWDefaultHandler( cMethod )
    ELSEIF cMethod == "EXIT"
       items->( dbCloseArea() )
