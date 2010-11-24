@@ -59,50 +59,53 @@ CREATE CLASS UHttpdLog
    METHOD New( cFileName )
    METHOD Add( cMsg )
    METHOD Close()
+   METHOD IsOpen()
 
    PROTECTED:
 
    VAR cFileName
-   VAR fhnd
+   VAR fhnd      INIT F_ERROR
 
 ENDCLASS
 
 METHOD New( cFileName ) CLASS UHttpdLog
    LOCAL cExt
 
-   IF ! hb_isString( cFileName )
-      cFileName := "hbhttpd"
-   ENDIF
+   IF hb_isString( cFileName )
 
-   IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".log"
+      IF Set( _SET_DEFEXTENSIONS )
+         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+         IF Empty( cExt )
+            cFileName += ".log"
+         ENDIF
       ENDIF
-   ENDIF
 
-   ::cFileName := cFileName
+      ::cFileName := cFileName
+   ENDIF
 
    RETURN Self
 
+METHOD IsOpen() CLASS UHttpdLog
+   RETURN ::fhnd != F_ERROR
+
 METHOD Add( cMsg ) CLASS UHttpdLog
 
-   IF Empty( ::fhnd ) .OR. ::fhnd == F_ERROR
-      ::fhnd := hb_FCreate( ::cFileName, FC_NORMAL, FO_WRITE + FO_DENYNONE )
-   ELSE
-      FSeek( ::fhnd, 0, FS_END )
+   IF ! hb_isString( cMsg )
+      RETURN .F.
    ENDIF
 
-   RETURN ! Empty( ::fhnd ) .AND. ;
-          ::fhnd != F_ERROR .AND. ;
-          FWrite( ::fhnd, cMsg ) == Len( cMsg )
+   IF ::fhnd == F_ERROR .AND. ! Empty( ::cFileName )
+      ::fhnd := hb_FCreate( ::cFileName, FC_NORMAL, FO_WRITE + FO_DENYNONE )
+   ENDIF
+
+   RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == Len( cMsg )
 
 METHOD Close() CLASS UHttpdLog
    LOCAL lRetVal
 
-   IF ! Empty( ::fhnd ) .AND. ::fhnd != F_ERROR
+   IF ::fhnd != F_ERROR
       lRetVal := FClose( ::fhnd )
-      ::fhnd := NIL
+      ::fhnd := F_ERROR
    ELSE
       lRetVal := .F.
    ENDIF

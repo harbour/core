@@ -344,7 +344,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                t_aHeader := {}
                t_nStatusCode := 200
                t_lSessionDestroy := .F.
-               BEGIN SEQUENCE WITH {|oErr| UErrorHandler( oErr, oServer ) }
+               BEGIN SEQUENCE WITH {|oErr| iif( UErrorHandler( oErr, oServer ), Break( oErr ), ) }
                   Eval( bEval, cPath )
                RECOVER
                   USetStatusCode( 500 )
@@ -422,7 +422,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
          RETURN .F.
       ELSE
          /* not sessioned */
-         BEGIN SEQUENCE WITH {|oErr| UErrorHandler( oErr, oServer ) }
+         BEGIN SEQUENCE WITH {|oErr| iif( UErrorHandler( oErr, oServer ), Break( oErr ), ) }
             Eval( bEval, cPath )
          RECOVER
             USetStatusCode( 500 )
@@ -662,10 +662,10 @@ STATIC FUNCTION UErrorHandler( oErr, oServer )
       NetErr( .T. )
       RETURN .F.
    ENDIF
-   oServer:LogError( GetErrorDesc( oErr ) )
-   BREAK( oErr )
 
-/* RETURN NIL */
+   oServer:LogError( GetErrorDesc( oErr ) )
+
+   RETURN .T.
 
 STATIC FUNCTION GetErrorDesc( oErr )
 

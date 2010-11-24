@@ -2278,7 +2278,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          hbmk[ _HBMK_cPO ] := PathMakeAbsolute( PathSepToSelf( SubStr( cParam, 5 ) ), FNameDirGet( aParam[ _PAR_cFileName ] ) )
 
-      CASE Left( cParamL, 5 ) == "-hbl"
+      CASE Left( cParamL, 4 ) == "-hbl"
 
          hbmk[ _HBMK_cHBL ] := ""
          hbmk[ _HBMK_cHBLDir ] := ""
