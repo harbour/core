@@ -477,7 +477,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          }
 
          hb_arraySetForward( pItemEof, uiIndex + 1, pItem );
-         hb_itemRelease( pItem );
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
