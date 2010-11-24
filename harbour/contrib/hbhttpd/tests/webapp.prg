@@ -2,19 +2,11 @@
  * $Id$
  */
 
-#include "hbclass.ch"
-#include "common.ch"
-#include "fileio.ch"
-
-#define CR_LF    (CHR(13)+CHR(10))
+#include "simpleio.ch"
 
 REQUEST DBFCDX
 
 MEMVAR server, get, post, cookie, session
-
-STATIC s_aMap
-
-FIELD USER, NAME, PASSWORD, CODE, PRICE, TOTAL, TITLE
 
 FUNCTION Main()
 
@@ -22,6 +14,8 @@ FUNCTION Main()
 
    LOCAL oLogAccess
    LOCAL oLogError
+
+   LOCAL aMap
 
    IF HB_ARGCHECK( "help" )
       ? "Usage: app [options]"
@@ -100,21 +94,21 @@ FUNCTION Main()
    oServer:bIdle := { |o| iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }
 
 
-   s_aMap := {;
-      "login"        => @proc_login(), ;
-      "logout"       => @proc_logout(), ;
-      "register"     => @proc_register(), ;
-      "account"      => @proc_account(), ;
-      "account/edit" => @proc_account_edit(), ;
-      "main"         => @proc_main(), ;
-      "shopping"     => @proc_shopping(), ;
-      "cart"         => @proc_cart() }
+   aMap := {;
+    "login"        => @proc_login(), ;
+    "logout"       => @proc_logout(), ;
+    "register"     => @proc_register(), ;
+    "account"      => @proc_account(), ;
+    "account/edit" => @proc_account_edit(), ;
+    "main"         => @proc_main(), ;
+    "shopping"     => @proc_shopping(), ;
+    "cart"         => @proc_cart() }
 
    oServer:aMount := {;
       "/hello"   => { {|| UWrite( "Hello!")}, .F. }, ;
       "/info"    => { {|| UProcInfo() }, .F. }, ;
       "/files/*" => { {|x| UProcFiles( hb_dirBase() + "files/" + x, .F. ) }, .F. }, ;
-      "/app/*"   => { {|x| UProcWidgets( x, s_aMap ) }, .T. }, ;
+      "/app/*"   => { {|x| UProcWidgets( x, aMap ) }, .T. }, ;
       "/*"       => { {|| URedirect( "/app/login" ) }, .F. } }
 
    ? "Listening on port:", oServer:nPort
@@ -207,9 +201,9 @@ STATIC FUNCTION proc_register( cMethod )
       ELSE
          FLock()
          dbAppend()
-         USER := cUser
-         NAME := cName
-         PASSWORD := cPassword
+         FIELD->USER := cUser
+         FIELD->NAME := cName
+         FIELD->PASSWORD := cPassword
          dbUnlock()
          session[ "loggedin" ] := cUser
          URedirect( "main" )
@@ -250,7 +244,7 @@ STATIC FUNCTION proc_account( cMethod )
       oG:Add( UWHtmlNew( "User name:" ), 1, 1 )
       oG:Add( UWHtmlNew( session[ "loggedin" ] ), 1, 2 )
       oG:Add( UWHtmlNew( "Name:" ), 2, 1 )
-      oG:Add( UWHtmlNew( NAME ), 2, 2 )
+      oG:Add( UWHtmlNew( FIELD->NAME ), 2, 2 )
       oM:Add( UWHtmlNew( ULink("Edit", "account/edit" ) ) )
       UWDefaultHandler( cMethod )
    ELSEIF cMethod == "EXIT"
@@ -275,7 +269,7 @@ STATIC FUNCTION proc_account_edit( cMethod )
       oG:Add( UWHtmlNew( "User name" ), 1, 1 )
       oG:Add( UWHtmlNew( session[ "loggedin" ] ), 1, 2 )
       oG:Add( UWHtmlNew( "Name" ), 2, 1 )
-      oG:Add( UWInputNew( "name", RTrim( NAME ), "name" ), 2, 2 )
+      oG:Add( UWInputNew( "name", RTrim( FIELD->NAME ), "name" ), 2, 2 )
       oG:Add( UWHtmlNew( "Password" ), 3, 1 )
       oG:Add( UWPasswordNew( "password" ), 3, 2 )
       oG:Add( UWHtmlNew( "Password again" ), 4, 1 )
@@ -293,10 +287,10 @@ STATIC FUNCTION proc_account_edit( cMethod )
          URedirect( "?err=2" )
       ELSE
          FLock()
-         NAME := cName
+         FIELD->NAME := cName
          QOut( "PO DBAPPEND", Alias(), RecNo(), cName )
          IF ! Empty( cPassword )
-            PASSWORD := cPassword
+            FIELD->PASSWORD := cPassword
          ENDIF
          dbUnlock()
          URedirect( "../account" )
@@ -306,7 +300,7 @@ STATIC FUNCTION proc_account_edit( cMethod )
          IF get[ "err" ] == "1"
             UGetWidgetById( "errtxt" ):cText := "All fields are required!"
          ELSEIF get[ "err" ] == "2"
-            UGetWidgetById( "errtxt" ):cText := "Passwords does not match!"
+            UGetWidgetById( "errtxt" ):cText := "Passwords do not match!"
          ENDIF
       ENDIF
       UWDefaultHandler( cMethod )
@@ -325,9 +319,9 @@ STATIC FUNCTION proc_main( cMethod )
       ENDIF
       oM := UWMainNew()
       oM:Add( UWMenuNew():AddItem( "Shopping",   "shopping" );
-         :AddItem( "Cart",       "cart" );
-         :AddItem( "My account", "account" );
-         :AddItem( "Logout",     "logout" ) )
+                         :AddItem( "Cart",       "cart" );
+                         :AddItem( "My account", "account" );
+                         :AddItem( "Logout",     "logout" ) )
       oM:Add( UWSeparatorNew() )
       oM:Add( UWLabelNew( "You can do shopping, or edit your cart using menu links above" ) )
    ELSEIF cMethod == "GET"
@@ -359,7 +353,7 @@ STATIC FUNCTION proc_shopping( cMethod )
       oW:AddColumn( 101, "Item No.",    "CODE" )
       oW:AddColumn( 102, "Title",       "TITLE" )
       oW:AddColumn( 103, "Price",       "PRICE" )
-      oW:AddColumn( 104, "",            {|| ULink( "Add to cart", "?add=" + RTrim( CODE ) ) }, .T. )
+      oW:AddColumn( 104, "",            {|| ULink( "Add to cart", "?add=" + RTrim( FIELD->CODE ) ) }, .T. )
       oM:Add( oW )
    ELSEIF cMethod == "GET"
       IF HB_HHasKey( get, "add" )
@@ -378,7 +372,7 @@ STATIC FUNCTION proc_shopping( cMethod )
          RETURN .T.
       ENDIF
       nT := 0
-      carts->( dbEval( {|| nT += TOTAL } ) )
+      carts->( dbEval( {|| nT += FIELD->TOTAL } ) )
       UGetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
       UWDefaultHandler( cMethod )
    ELSEIF cMethod == "EXIT"
@@ -409,10 +403,10 @@ STATIC FUNCTION proc_cart( cMethod )
       ORDSCOPE( 1, session[ "loggedin" ] )
       oW := UWBrowseNew( "1" )
       oW:AddColumn( 101, "Item No.",    "CODE" )
-      oW:AddColumn( 102, "Title",       {|| items->( dbSeek(carts->CODE, .F. ), TITLE ) } )
+      oW:AddColumn( 102, "Title",       {|| items->( dbSeek(carts->CODE, .F. ), FIELD->TITLE ) } )
       oW:AddColumn( 103, "Amount",      "AMOUNT" )
       oW:AddColumn( 104, "Total",       "TOTAL" )
-      oW:AddColumn( 104, "",            {|| ULink( "Delete", "?del=" + RTrim( CODE ) ) }, .T. )
+      oW:AddColumn( 104, "",            {|| ULink( "Delete", "?del=" + RTrim( FIELD->CODE ) ) }, .T. )
       oM:Add( oW )
    ELSEIF cMethod == "GET"
       IF HB_HHasKey( get, "del" )
@@ -429,7 +423,7 @@ STATIC FUNCTION proc_cart( cMethod )
          RETURN .T.
       ENDIF
       nT := 0
-      carts->( dbEval( {|| nT += TOTAL } ) )
+      carts->( dbEval( {|| nT += FIELD->TOTAL } ) )
       UGetWidgetById( "cartsum" ):cText := "Your cart is worth: " + hb_ntos( nT )
       UWDefaultHandler( cMethod )
    ELSEIF cMethod == "EXIT"

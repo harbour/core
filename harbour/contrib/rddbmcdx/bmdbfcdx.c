@@ -4,7 +4,8 @@
 
 /*
  * xHarbour Project source code:
- * DBFCDX RDD (ver.2) + BM (bitmap filter) patch
+ * DBFCDX RDD (ver.2)
+ * + BM (bitmap filter) patch
  *
  * Copyright 1999-2002 Bruno Cantero <bruno@issnet.net>
  * Copyright 2000-2003 Horacio Roldan <harbour_ar@yahoo.com.ar> (portions)
@@ -79,6 +80,10 @@
 #define HB_CDX_DBGCODE
 /*
 #define HB_BMCDXTURBO
+#define HB_CDX_DBGCODE_EXT
+#define HB_CDX_DSPDBG_INFO
+#define HB_CDX_DBGTIME
+#define HB_CDX_DBGUPDT
 */
 
 #include "hbapi.h"
@@ -231,7 +236,7 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
             }
          } while( j != l );
          for( i = 0; i <= 255; i++ )
-            pArea->bCdxSortTab[pbSort[i]] = i;
+            pArea->bCdxSortTab[ pbSort[i] ] = i;
          hb_xfree( pbSort );
       }
    }
@@ -558,6 +563,10 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
          break;
       default:
          ptr = NULL;
+#ifdef HB_CDX_DBGCODE
+         /* TODO: RTerror */
+         printf( "hb_cdxKeyPutItem( invalid item type: %i )", hb_itemType( pItem ) );
+#endif
          break;
    }
 
@@ -619,6 +628,9 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
                hb_itemClear( pItem );
             else
                pItem = hb_itemNew( NULL );
+#ifdef HB_CDX_DBGCODE
+            printf( "hb_cdxKeyGetItem() ??? (%x)\n", pTag->uiType );
+#endif
       }
    }
    else if( pItem )
@@ -895,6 +907,69 @@ static void hb_cdxTagRefreshScope( LPCDXTAG pTag )
    }
 }
 
+#ifdef HB_CDX_DBGCODE_EXT
+/*
+ * check internal integrity of page pool
+ */
+static void hb_cdxTagPoolCheck( LPCDXTAG pTag )
+{
+   LPCDXPAGE pPage, pPrevPage;
+
+   pPage = pTag->pagePool;
+   pPrevPage = NULL;
+   while( pPage )
+   {
+      if( pPage->pPoolPrev != pPrevPage || pPage->TagParent != pTag )
+         hb_cdxErrInternal( "hb_cdxTagPoolCheck: data integrity error." );
+      pPrevPage = pPage;
+      pPage = pPage->pPoolNext;
+   }
+}
+
+/*
+ * check if the Tag buffers was not changed without write lock
+ */
+static void hb_cdxTagCheckBuffers( LPCDXTAG pTag )
+{
+   HB_BOOL fChanged = HB_FALSE;
+
+   hb_cdxTagPoolCheck( pTag );
+   if( pTag->TagChanged )
+      fChanged = HB_TRUE;
+   else
+   {
+      LPCDXPAGE pPage = pTag->pagePool;
+      while( pPage && !fChanged )
+      {
+         fChanged = pPage->fChanged;
+         pPage = pPage->pPoolNext;
+      }
+   }
+   if( fChanged )
+      hb_cdxErrInternal( "hb_cdxTagCheckBuffers: modification without write lock." );
+}
+
+/*
+ * check if the Index buffers was not changed without write lock
+ */
+static void hb_cdxIndexCheckBuffers( LPCDXINDEX pIndex )
+{
+   LPCDXTAG pTag;
+
+   if( pIndex->fChanged || ( pIndex->freeLst && pIndex->freeLst->fStat ) )
+      hb_cdxErrInternal( "hb_cdxIndexCheckBuffers: modification without write lock." );
+
+   if( pIndex->pCompound )
+      hb_cdxTagCheckBuffers( pIndex->pCompound );
+   pTag = pIndex->TagList;
+   while( pTag )
+   {
+      hb_cdxTagCheckBuffers( pTag );
+      pTag = pTag->pNext;
+   }
+}
+#endif
+
 /*
  * get free index page
  */
@@ -928,6 +1003,9 @@ static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
          if( hb_fileReadAt( pFile, byBuf, 4, ulPos ) != 4 )
             hb_errInternal( EDBF_READ, "hb_cdxIndexGetAvailPage: Read index page failed.", NULL, NULL );
          pIndex->freePage = HB_GET_LE_UINT32( byBuf );
+#ifdef HB_CDX_DBGUPDT
+         cdxReadNO++;
+#endif
       }
    }
    else
@@ -993,7 +1071,7 @@ static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BOOL 
 static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
 {
    LPCDXLIST pLst = pIndex->freeLst;
-   HB_BYTE byPageBuf[CDX_PAGELEN];
+   HB_BYTE byPageBuf[ CDX_PAGELEN ];
    HB_ULONG ulPos;
    HB_BOOL fClean = HB_TRUE;
 
@@ -1019,6 +1097,9 @@ static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
       ulPos = pLst->ulAddr;
       pLst->fStat = HB_FALSE;
       pLst = pLst->pNext;
+#ifdef HB_CDX_DBGUPDT
+      cdxWriteNO++;
+#endif
    }
 }
 
@@ -1051,6 +1132,9 @@ static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * p
    if( hb_fileWriteAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
       hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
    pIndex->fChanged = HB_TRUE;
+#ifdef HB_CDX_DBGUPDT
+   cdxWriteNO++;
+#endif
 }
 
 /*
@@ -1064,6 +1148,9 @@ static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * pB
 
    if( hb_fileReadAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
       hb_errInternal( EDBF_READ, "hb_cdxIndexPageRead: Read index page failed.", NULL, NULL );
+#ifdef HB_CDX_DBGUPDT
+   cdxReadNO++;
+#endif
 }
 
 /*
@@ -1081,6 +1168,9 @@ static void hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
       else
          hb_errInternal( 2155, "hb_cdxIndexCheckVersion: Read error on index heading page.", NULL, NULL );
    }
+#ifdef HB_CDX_DBGUPDT
+   cdxReadNO++;
+#endif
    ulFree = HB_GET_LE_UINT32( &byBuf[0] );
    ulVer = HB_GET_BE_UINT32( &byBuf[4] );
    if( !pIndex->fShared )
@@ -1092,6 +1182,8 @@ static void hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
       pIndex->freePage = ulFree;
       hb_cdxIndexDiscardBuffers( pIndex );
    }
+   /* TODO: !!! ## remove it it's for test only */
+   /* hb_cdxIndexDiscardBuffers( pIndex ); */
 }
 
 /*
@@ -1196,6 +1288,9 @@ static HB_BOOL hb_cdxIndexUnLockRead( LPCDXINDEX pIndex )
    {
       return HB_TRUE;
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxIndexCheckBuffers( pIndex );
+#endif
 
    hb_cdxIndexPoolFree( pIndex, CDX_PAGECACHESIZE );
 
@@ -1289,6 +1384,9 @@ static HB_BOOL hb_cdxIndexUnLockWrite( LPCDXINDEX pIndex )
          }
          pIndex->ulVersion = pIndex->freePage;
          pIndex->fFlush = HB_TRUE;
+#ifdef HB_CDX_DBGUPDT
+         cdxWriteNO++;
+#endif
       }
       else if( pIndex->fChanged )
       {
@@ -1305,6 +1403,10 @@ static HB_BOOL hb_cdxIndexUnLockWrite( LPCDXINDEX pIndex )
 static void hb_cdxIndexDiscardBuffers( LPCDXINDEX pIndex )
 {
    LPCDXTAG pTag;
+
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxIndexCheckBuffers( pIndex );
+#endif
 
    hb_cdxIndexDropAvailPage( pIndex );
    if( pIndex->pCompound )
@@ -1467,6 +1569,12 @@ static HB_ULONG hb_cdxPageGetKeyPage( LPCDXPAGE pPage, int iKey )
  */
 static HB_BYTE hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
 {
+#ifdef HB_CDX_DBGCODE_EXT
+   if( iKey < 0 || iKey >= pPage->iKeys )
+      hb_cdxErrInternal( "hb_cdxPageGetKeyTrl: wrong iKey index." );
+   if( ( pPage->PageType & CDX_NODE_LEAF ) == 0 )
+      hb_cdxErrInternal( "hb_cdxPageGetKeyTrl: page is not a leaf." );
+#endif
    if( pPage->pKeyBuf )
       return pPage->pKeyBuf[ ( iKey + 1 ) * ( pPage->TagParent->uiLen + 6 ) - 1 ];
    else
@@ -1475,6 +1583,146 @@ static HB_BYTE hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
       return ( HB_BYTE ) ( HB_GET_LE_UINT16( ptr ) >> ( 16 - pPage->TCBits ) ) & pPage->TCMask;
    }
 }
+
+#if 0
+/*
+ * get key from uncompressed page
+ */
+static LPCDXKEY hb_cdxPageGetKey( LPCDXPAGE pPage, int iKey, LPCDXKEY pKey )
+{
+   return hb_cdxKeyPut( pKey,
+                        hb_cdxPageGetKeyVal( pPage, iKey ),
+                        pPage->TagParent->uiLen,
+                        hb_cdxPageGetKeyRec( pPage, iKey ) );
+}
+#endif
+
+#ifdef HB_CDX_DBGCODE_EXT
+/*
+ * check if keys are sorted in proper order
+ */
+static void hb_cdxPageCheckKeys( LPCDXPAGE pPage )
+{
+   int i, K, iLen = pPage->TagParent->uiLen;
+   HB_ULONG ulRec, ulRecPrev;
+   HB_BYTE * pbVal, pbValPrev[CDX_MAXKEY];
+
+   if( pPage->iKeys > 1 )
+   {
+      pPage->bufKeyNum = 0;
+      pbVal = hb_cdxPageGetKeyVal( pPage, 0 );
+      ulRec = hb_cdxPageGetKeyRec( pPage, 0 );
+      for( i = 1; i < pPage->iKeys; i++ )
+      {
+         memcpy( pbValPrev, pbVal, iLen );
+         ulRecPrev = ulRec;
+         pbVal = hb_cdxPageGetKeyVal( pPage, i );
+         ulRec = hb_cdxPageGetKeyRec( pPage, i );
+         K = hb_cdxValCompare( pPage->TagParent,
+                               pbValPrev, iLen,
+                               pbVal, iLen, CDX_CMP_EXACT );
+         if( K > 0 || ( K == 0 && ulRecPrev >= ulRec ) )
+         {
+            printf( "\r\nikey=%d, pPage->iKeys=%d, K=%d, ulRecPrev=%ld, ulRec=%ld",
+                    i, pPage->iKeys, K, ulRecPrev, ulRec );fflush(stdout);
+            printf( "\r\npbValPrev=[%s] pbVal=[%s], [%d], pPage->pKeyBuf=%p, pPage->iCurKey=%d",
+                    pbValPrev, pbVal, memcmp( pbValPrev, pbVal, iLen ),
+                    pPage->pKeyBuf, pPage->iCurKey );fflush(stdout);
+            hb_cdxErrInternal( "hb_cdxPageCheckKeys: index corrupted." );
+         }
+      }
+   }
+}
+
+/*
+ * Check decoded leaf page if all trailing and duplicate characters are set
+ */
+static void hb_cdxPageCheckDupTrl( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys, HB_BOOL fSpc )
+{
+   int iNum = pPage->TagParent->uiLen, iKey, iPos, iFree = CDX_EXT_FREESPACE;
+   int iLen = iNum + 6;
+   HB_BYTE  bDup, bTrl;
+   HB_BYTE  bTrail = pPage->TagParent->bTrail;
+   HB_BOOL  bErr = HB_FALSE;
+
+   for( iKey = 0; iKey < iKeys; iKey++ )
+   {
+      iPos = iKey * iLen;
+      bTrl = bDup = 0;
+      while( bTrl < iNum && pKeyBuf[ iPos + iNum - bTrl - 1 ] == bTrail )
+         ++bTrl;
+      if( iKey > 0 )
+      {
+#ifdef HB_CDX_PACKTRAIL
+         int iMax = iNum - bTrl;
+#else
+         int iMax = iNum - HB_MAX( pKeyBuf[ iPos - 1 ], bTrl );
+#endif
+         while( bDup < iMax && pKeyBuf[ iPos + bDup ] ==
+                               pKeyBuf[ iPos - iLen + bDup ] )
+            ++bDup;
+      }
+      if( bTrl != pKeyBuf[ iPos + iNum + 5 ] )
+      {
+         printf("\r\nbTrl=%d, keybuf->bTrl=%d, iKey=%d/%d\r\n", bTrl, pKeyBuf[ iPos + iNum + 5 ], iKey, iKeys );
+         fflush(stdout);
+         bErr = HB_TRUE;
+      }
+      if( bDup != ( iKey == 0 ? 0 : pKeyBuf[ iPos + iNum + 4 ] ) )
+      {
+         printf("\r\nbDup=%d, keybuf->bDup=%d (bTrl=%d), iKey=%d/%d\r\n", bDup, pKeyBuf[ iPos + iNum + 4 ], bTrl, iKey, iKeys );
+         fflush(stdout);
+         bErr = HB_TRUE;
+      }
+      if( iKey > 0 )
+      {
+         int K;
+         K = hb_cdxValCompare( pPage->TagParent,
+                               &pKeyBuf[ iPos - iLen ], iNum,
+                               &pKeyBuf[ iPos ], iNum, CDX_CMP_EXACT );
+         if( K > 0 || ( K == 0 &&
+                         HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ) >=
+                         HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) ) )
+         {
+            printf( "\r\nikey=%d, iKeys=%d, K=%d, ulRecPrev=%ld, ulRec=%ld",
+                    iKey, iKeys, K,
+                    ( HB_ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum - iLen ] ),
+                    ( HB_ULONG ) HB_GET_LE_UINT32( &pKeyBuf[ iPos + iNum ] ) );
+            printf( "\r\npbValPrev=[%s] pbVal=[%s], [%d], pKeyBuf=%p",
+                    &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ],
+                    memcmp( &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ], iNum ),
+                    pKeyBuf );
+            fflush(stdout);
+            bErr = HB_TRUE;
+         }
+      }
+      iFree -= iNum + pPage->ReqByte - bDup - bTrl;
+   }
+   if( fSpc && ( iFree != pPage->iFree /* || iFree < 0 */ ) )
+   {
+      printf( "\r\nFreeSpace calculated wrong! iFree=%d, pPage->iFree=%d",
+              iFree, pPage->iFree );
+      fflush(stdout);
+      bErr = HB_TRUE;
+   }
+   if( bErr )
+   {
+      printf("\r\nPage=%lx, Page->iFree=%d, iLen=%d\r\n", pPage->Page, pPage->iFree, iNum );
+      fflush(stdout);
+      hb_cdxErrInternal( "hb_cdxPageCheckDupTrl: index corrupted." );
+   }
+}
+
+static void hb_cdxPageLeafDecode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf );
+static void hb_cdxPageCheckDupTrlRaw( LPCDXPAGE pPage )
+{
+   HB_BYTE *pKeyBuf = ( HB_BYTE * ) hb_xgrab( pPage->iKeys * ( pPage->TagParent->uiLen + 6 ) );
+
+   hb_cdxPageLeafDecode( pPage, pKeyBuf );
+   hb_cdxPageCheckDupTrl( pPage, pKeyBuf, pPage->iKeys, HB_TRUE );
+   hb_xfree( pKeyBuf );
+}
+#endif
 
 /*
  * put record and duplicate + trailing counters into leaf page
@@ -1512,6 +1760,11 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
              pPage->Page, pPage->Left, pPage->Right); fflush(stdout);
       hb_cdxErrInternal( "hb_cdxPageLeafEncode: page is not a leaf." );
    }
+#endif
+#ifdef HB_CDX_DBGCODE_EXT
+   if( ! pKeyBuf )
+      hb_cdxErrInternal( "hb_cdxPageLeafEncode: page has no buffer." );
+   hb_cdxPageCheckDupTrl( pPage, pKeyBuf, iKeys, HB_TRUE );
 #endif
    iNum = pPage->TagParent->uiLen;
    iLen = iNum + 6;
@@ -1556,6 +1809,16 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
    pPage->iKeys = iKeys;
    pPage->fChanged = HB_TRUE;
    pPage->bufKeyNum = 0;
+#ifdef HB_CDX_DBGCODE_EXT
+   {
+      HB_BYTE * pKeyBf = pPage->pKeyBuf;
+      pPage->pKeyBuf = NULL;
+      hb_cdxPageCheckKeys( pPage );
+      pPage->pKeyBuf = pKeyBf;
+   }
+   hb_cdxPageCheckKeys( pPage );
+   hb_cdxPageCheckDupTrl( pPage, pKeyBuf, pPage->iKeys, HB_TRUE );
+#endif
 }
 
 /*
@@ -1615,6 +1878,13 @@ static void hb_cdxPageLeafDecode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf )
       *(pDst++) = ( HB_BYTE ) iDup;
       *(pDst++) = ( HB_BYTE ) iTrl;
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   {
+      HB_BOOL fChg = pPage->fChanged;
+      hb_cdxPageLeafEncode( pPage, pKeyBuf, pPage->iKeys );
+      pPage->fChanged = fChg;
+   }
+#endif
 }
 
 /*
@@ -1649,6 +1919,9 @@ static void hb_cdxPageCalcLeafSpace( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKe
    pPage->iKeys = 0;
    RNMask = pPage->RNMask;
    ReqByte = pPage->ReqByte;
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckDupTrl( pPage, pKeyBuf, iKeys, HB_FALSE );
+#endif
    for( iKey = 0; iKey < iKeys; iKey++ )
    {
       bPtr = &pKeyBuf[ iKey * iLen + iNum ];
@@ -1671,6 +1944,12 @@ static void hb_cdxPageCalcLeafSpace( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKe
          }
          if( iSize > pPage->iFree )
             break;
+#ifdef HB_CDX_DSPDBG_INFO_X
+         printf("\r\npPage->Page=%lx, ulRec=%lx, RNMask=%lx/%lx, RNBits=%d/%d, DCB=%d, TCB=%d (%lx), iKey=%d/%d",
+                pPage->Page, ulRec, RNMask, pPage->RNMask, RNBits, pPage->RNBits,
+                pPage->DCBits, pPage->TCBits, HB_CDXBITMASK( RNBits ), iKey, iKeys);
+         fflush(stdout);
+#endif
          pPage->RNMask = RNMask;
          pPage->RNBits = RNBits;
          pPage->ReqByte = ReqByte;
@@ -1702,6 +1981,13 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
       hb_cdxPageLeafDecode( pPage, pKeyBuf );
       pPage->pKeyBuf = pKeyBuf;
    }
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\ndelkey: Page=%lx, iKey=%d/%d, rec=%ld, iFree=%d",
+          pPage->Page, iKey, pPage->iKeys,
+          ( HB_ULONG ) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
+          pPage->iFree );
+   fflush(stdout);
+#endif
    iSpc = pPage->ReqByte + pPage->TagParent->uiLen -
           pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 2 ] -
           pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 1 ];
@@ -1731,6 +2017,19 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
                                   pPage->pKeyBuf[ iNext + iDup ] )
                ++iDup;
          }
+#ifdef HB_CDX_DSPDBG_INFO
+         printf("+%d=%d", iSpc+iDup, pPage->iFree+iSpc+iDup );
+         if( iSpc+iDup < 0 )
+            printf( " iLen=%d, iDup=%d, iNum=%d pd=%d pt=%d cd=%d ct=%d nd=%d nt=%d",
+                     iLen-6, iDup, iNum,
+                     pPage->pKeyBuf[ iPrev + iLen - 2 ],
+                     pPage->pKeyBuf[ iPrev + iLen - 1 ],
+                     pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 2 ],
+                     pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 1 ],
+                     pPage->pKeyBuf[ iNext + iLen - 2 ],
+                     pPage->pKeyBuf[ iNext + iLen - 1 ] );
+         fflush(stdout);
+#endif
       }
       iSpc += ( pPage->pKeyBuf[ iPos ] = ( HB_BYTE ) iDup );
    }
@@ -1742,7 +2041,10 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
                ( pPage->iKeys - iKey ) * iLen );
    }
    pPage->fBufChanged = pPage->fChanged = HB_TRUE;
-
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+   hb_cdxPageCheckDupTrl( pPage, pPage->pKeyBuf, pPage->iKeys, HB_TRUE );
+#endif
    if( iKey >= pPage->iKeys )
       iRet |= NODE_NEWLASTKEY;
    if( pPage->iKeys == 0 )
@@ -1765,6 +2067,11 @@ static int hb_cdxPageLeafAddKey( LPCDXPAGE pPage, LPCDXKEY pKey )
    HB_BYTE  bTrail = pPage->TagParent->bTrail;
    int iRet = 0;
 
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\naddkey: Page=%lx, iKey=%d/%d, rec=%ld",
+          pPage->Page, pPage->iCurKey, pPage->iKeys, pKey->rec);
+   fflush(stdout);
+#endif
 #ifdef HB_CDX_DBGCODE
    if( ( pPage->PageType & CDX_NODE_LEAF ) == 0 )
       hb_cdxErrInternal( "hb_cdxPageLeafAddKey: page is not a leaf." );
@@ -1781,6 +2088,11 @@ static int hb_cdxPageLeafAddKey( LPCDXPAGE pPage, LPCDXKEY pKey )
    {
       pPage->pKeyBuf = ( HB_BYTE * ) hb_xrealloc( pPage->pKeyBuf, ( pPage->iKeys + 1 ) * iLen );
    }
+
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+   hb_cdxPageCheckDupTrl( pPage, pPage->pKeyBuf, pPage->iKeys, HB_TRUE );
+#endif
 
    iTrl = iDup = 0;
    iKey = pPage->iCurKey;
@@ -1847,7 +2159,10 @@ static int hb_cdxPageLeafAddKey( LPCDXPAGE pPage, LPCDXKEY pKey )
    }
    pPage->iFree -= iSpc;
    pPage->fBufChanged = pPage->fChanged = HB_TRUE;
-
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+   hb_cdxPageCheckDupTrl( pPage, pPage->pKeyBuf, pPage->iKeys, HB_TRUE );
+#endif
    if( iKey >= pPage->iKeys - 1 )
       iRet |= NODE_NEWLASTKEY;
    if( pPage->iFree < 0 )
@@ -1866,6 +2181,11 @@ static void hb_cdxPageIntSetKey( LPCDXPAGE pPage, int iKey, HB_BOOL fIns, HB_BYT
    int iLen = pPage->TagParent->uiLen;
    int iPos = iKey * ( iLen + 8 );
 
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\nintSetKey (%s): Page=%lx, iKey=%d/%d, ulPag=%lx",
+          fIns ? "ins" : "set", pPage->Page, iKey, pPage->iKeys, ulPag);
+   fflush(stdout);
+#endif
 #ifdef HB_CDX_DBGCODE
    if( ( pPage->PageType & CDX_NODE_LEAF ) != 0 )
       hb_cdxErrInternal( "hb_cdxPageIntSetKey: page is a leaf!" );
@@ -1902,6 +2222,12 @@ static void hb_cdxPageIntDelKey( LPCDXPAGE pPage, int iKey )
 {
    int iLen = pPage->TagParent->uiLen + 8;
 
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\nintDelKey: Page=%lx, iKey=%d/%d, ulPag=%lx",
+          pPage->Page, iKey, pPage->iKeys,
+          ( HB_ULONG ) HB_GET_BE_UINT32( &pPage->node.intNode.keyPool[ (iKey+1) * iLen - 4 ] ) );
+   fflush(stdout);
+#endif
 #ifdef HB_CDX_DBGCODE
    if( ( pPage->PageType & CDX_NODE_LEAF ) != 0 )
       hb_cdxErrInternal( "hb_cdxPageIntDelKey: page is a leaf!" );
@@ -1950,7 +2276,18 @@ static void hb_cdxPageLoad( LPCDXPAGE pPage )
       pPage->TCBits     = pPage->node.extNode.trlBits;
       pPage->ReqByte    = pPage->node.extNode.keyBytes;
       pPage->bufKeyNum  = 0;
+#if 0
+      if( !pPage->pKeyBuf )
+      {
+         HB_BYTE *pKeyBuf = ( HB_BYTE * ) hb_xgrab( ( pPage->iKeys + 1 ) * ( pPage->TagParent->uiLen + 6 ) );
+         hb_cdxPageLeafDecode( pPage, pKeyBuf );
+         pPage->pKeyBuf = pKeyBuf;
+      }
+#endif
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
 }
 
 /*
@@ -1991,8 +2328,18 @@ static void hb_cdxPageStore( LPCDXPAGE pPage )
          hb_cdxPageLeafEncode( pPage, pPage->pKeyBuf, pPage->iKeys );
          pPage->fBufChanged = HB_FALSE;
       }
+#ifdef HB_CDX_DBGCODE_EXT
+      if( pPage->pKeyBuf )
+      {
+         hb_xfree( pPage->pKeyBuf );
+         pPage->pKeyBuf = NULL;
+      }
+#endif
    }
    hb_cdxIndexPageWrite( pPage->TagParent->pIndex, pPage->Page, ( HB_BYTE * ) &pPage->node, sizeof( CDXNODE ) );
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
    pPage->fChanged = HB_FALSE;
 }
 
@@ -2004,6 +2351,9 @@ static LPCDXPAGE hb_cdxPageNew( LPCDXTAG pTag, LPCDXPAGE pOwnerPage, HB_ULONG ul
 {
    LPCDXPAGE pPage = NULL;
 
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
    if( ulPage && ulPage != CDX_DUMMYNODE && pTag->pagePool )
    {
       pPage = pTag->pagePool;
@@ -2054,6 +2404,9 @@ static LPCDXPAGE hb_cdxPageNew( LPCDXTAG pTag, LPCDXPAGE pOwnerPage, HB_ULONG ul
    pPage->Owner = pOwnerPage;
    pPage->iCurKey = -1;
    pPage->bUsed = 1;
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
    return pPage;
 }
 
@@ -2062,6 +2415,10 @@ static LPCDXPAGE hb_cdxPageNew( LPCDXTAG pTag, LPCDXPAGE pOwnerPage, HB_ULONG ul
  */
 static void hb_cdxPageFree( LPCDXPAGE pPage, HB_BOOL fReal )
 {
+#ifdef HB_CDX_DBGCODE_EXT
+   LPCDXTAG pTag = pPage->TagParent;
+   hb_cdxTagPoolCheck( pTag );
+#endif
    if( pPage->Child != NULL )
    {
       hb_cdxPageFree( pPage->Child, fReal );
@@ -2079,6 +2436,9 @@ static void hb_cdxPageFree( LPCDXPAGE pPage, HB_BOOL fReal )
       if( pPage->fChanged )
          hb_cdxPageStore( pPage );
 
+#ifdef HB_CDX_DBGCODE_EXT
+      hb_cdxTagPoolCheck( pTag );
+#endif
       if( pPage->pPoolPrev )
       {
          pPage->pPoolPrev->pPoolNext = pPage->pPoolNext;
@@ -2095,6 +2455,9 @@ static void hb_cdxPageFree( LPCDXPAGE pPage, HB_BOOL fReal )
             pPage->pPoolNext->pPoolPrev = NULL;
          }
       }
+#ifdef HB_CDX_DBGCODE_EXT
+      hb_cdxTagPoolCheck( pTag );
+#endif
    }
 
    if( pPage->Owner != NULL && pPage->Owner->Child == pPage )
@@ -2110,6 +2473,9 @@ static void hb_cdxPageFree( LPCDXPAGE pPage, HB_BOOL fReal )
          hb_xfree( pPage->pKeyBuf );
       hb_xfree( pPage );
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
 }
 
 /*
@@ -2133,6 +2499,9 @@ static void hb_cdxPageGetChild( LPCDXPAGE pPage )
          pPage->Child = NULL;
       }
    }
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("GetChild: Parent=%lx, Child=%lx\r\n", pPage->Page, ulPage); fflush(stdout);
+#endif
    if( pPage->Child == NULL )
       pPage->Child = hb_cdxPageNew( pPage->TagParent, pPage, ulPage );
 }
@@ -2150,6 +2519,10 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
    HB_ULONG ulPage;
    int iRet = 0, i;
 
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
+
    if( pPage->iCurKey > 0 )
       iFirstKey = pPage->iCurKey - 1;
    else
@@ -2165,6 +2538,11 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
       if( pPage->Right != CDX_DUMMYNODE )
          iRet |= NODE_BALANCE;
    }
+
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\nleaf balance: Page=%lx (%d/%d)", pPage->Page, iFirstKey, iBlncKeys);
+   fflush(stdout);
+#endif
 
    if( ( iChildRet & ( NODE_SPLIT | NODE_JOIN ) ) == 0 &&
         ( iBlncKeys < 2 || ( iChildRet & NODE_BALANCE ) == 0 ) )
@@ -2212,6 +2590,11 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
       if( i >= iSkip && i < iBlncKeys )
          iKeys += childs[i]->iKeys;
 
+#ifdef HB_CDX_DSPDBG_INFO
+      printf(", childs[%d]->Page=%lx(%d/%d)", i, childs[i]->Page, childs[i]->iKeys, childs[i]->iFree);
+      printf("(%d/%d/%d:%d,%lx)", i, iSkip, iBlncKeys, iKeys, childs[i]->Right);
+      fflush(stdout);
+#endif
    }
    if( ( iChildRet & NODE_SPLIT ) == 0 )
    {
@@ -2229,6 +2612,10 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
          hb_cdxPageFree( childs[i], HB_FALSE );
       return iRet;
    }
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\nleaf balance: Page=%lx iKeys=%d", pPage->Page, iKeys);
+   fflush(stdout);
+#endif
    if( iKeys > 0 )
    {
       iBufSize = iKeys;
@@ -2246,9 +2633,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             {
                HB_BYTE bDup = 0, bMax;
 #ifdef HB_CDX_PACKTRAIL
-               bMax = iLen - 6 - pPtr[ iLen - 1 ];
+               bMax = ( HB_BYTE ) ( iLen - 6 - pPtr[ iLen - 1 ] );
 #else
-               bMax = iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] );
+               bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] ) );
 #endif
                while( bDup < bMax && pPtr[ bDup ] == pPtr[ bDup - iLen ] )
                   ++bDup;
@@ -2261,13 +2648,24 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                   pPtr = pKeyPool;
                   iKeys -= childs[i-1]->iKeys;
                   iSkip++;
+#ifdef HB_CDX_DSPDBG_INFO
+                  printf("\r\niSkip=%d, iBlncKeys=%d", iSkip, iBlncKeys);
+                  fflush(stdout);
+#endif
                }
             }
             pPtr += childs[i]->iKeys * iLen;
+#ifdef HB_CDX_DSPDBG_INFO
+            printf(", childs[%d]->iKeys=%d", i, childs[i]->iKeys);
+            fflush(stdout);
+#endif
          }
       }
    }
 
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckDupTrl( pPage, pKeyPool, iKeys, HB_FALSE );
+#endif
    pPtr = pKeyPool;
    fIns = HB_FALSE;
    i = iSkip;
@@ -2296,12 +2694,15 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             pbKey = hb_cdxPageGetKeyVal( lpTmpPage, 0 );
             bMax = hb_cdxPageGetKeyTrl( lpTmpPage, 0 );
 #ifdef HB_CDX_PACKTRAIL
-            bMax = iLen - 6 - bMax;
+            bMax = ( HB_BYTE ) ( iLen - 6 - bMax );
 #else
-            bMax = iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax );
+            bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax ) );
 #endif
             for( j = 0; j < bMax &&
                          pPtr[ ( iKeys - 1 ) * iLen + j ] == pbKey[ j ]; j++ ) {}
+#ifdef HB_CDX_DSPDBG_INFO
+            printf("\r\nbDup=%d, bTrl=%d ", j, iLen - 6 - bMax ); fflush(stdout);
+#endif
             iSize -= j;
             iMaxReq = lpTmpPage->ReqByte;
             ul = lpTmpPage->RNMask;
@@ -2317,6 +2718,11 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                fIns = HB_TRUE;
             else
             {
+#ifdef HB_CDX_DSPDBG_INFO
+               printf("\r\ninserting bDup=%d #keys=%d/%d (%d) parent=%lx, child=%lx (%d), rec=%ld",
+                      j, iKeys, lpTmpPage->iKeys, i, pPage->Page, lpTmpPage->Page, iSize, ( HB_ULONG ) HB_GET_LE_UINT32( pPtr + iLen - 6 ));
+               fflush( stdout );
+#endif
                if( iBufSize >= iKeys + lpTmpPage->iKeys )
                {
                   memmove( pKeyPool, pPtr, iKeys * iLen );
@@ -2339,19 +2745,40 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                   else
                      hb_cdxPageLeafDecode( lpTmpPage, pPtr );
 #ifdef HB_CDX_PACKTRAIL
-                  bMax = iLen - 6 - pPtr[ iLen - 1 ];
+                  bMax = ( HB_BYTE ) ( iLen - 6 - pPtr[ iLen - 1 ] );
 #else
-                  bMax = iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] );
+                  bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] ) );
 #endif
                   while( bDup < bMax && pPtr[ bDup ] == pPtr[ bDup - iLen ] )
                      ++bDup;
                   pPtr[ iLen - 2 ] = bDup;
                   iKeys += lpTmpPage->iKeys;
+#ifdef HB_CDX_DSPDBG_INFO
+                  printf(" bDup2=%d, bTrl2=%d ", bDup, pPtr[ iLen - 1 ] ); fflush(stdout);
+#endif
                }
                pPtr = pKeyPool;
                childs[i] = lpTmpPage;
                if( iFirstKey + i >= pPage->iKeys )
                   iRet |= NODE_NEWLASTKEY;
+#ifdef HB_CDX_DBGCODE_EXT
+               childs[i]->iKeys = 0;
+               if( childs[i]->pKeyBuf )
+               {
+                  hb_xfree( childs[i]->pKeyBuf );
+                  childs[i]->pKeyBuf = NULL;
+                  childs[i]->fBufChanged = HB_FALSE;
+               }
+               hb_cdxPageCalcLeafSpace( childs[i], pPtr, iKeys );
+               hb_cdxPageLeafEncode( childs[i], pPtr, childs[i]->iKeys );
+               iSize += ( iMaxReq - childs[i]->ReqByte ) * childs[i]->iKeys;
+               if( iSize != childs[i]->iFree )
+               {
+                  printf("\r\ninserting, iSize=%d, childs[i]->iFree=%d", iSize, childs[i]->iFree); fflush(stdout);
+                  printf("\r\niKeys=%d, iMaxReq=%d", iKeys, iMaxReq); fflush(stdout);
+                  hb_cdxErrInternal( "hb_cdxPageGetChild: index corrupted." );
+               }
+#endif
             }
 #endif
          }
@@ -2375,6 +2802,10 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             }
             iBlncKeys++;
             iRet |= NODE_BALANCE;
+#ifdef HB_CDX_DSPDBG_INFO
+            printf("\r\nleaf balance: new child[%d]->Page=%lx",i,childs[i]->Page);
+            fflush(stdout);
+#endif
          }
       }
       childs[i]->iKeys = 0;
@@ -2389,6 +2820,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
           childs[i]->iKeys == iChKeys[i] &&
           childs[i]->iFree == iChFree[i] )
       {
+#ifdef HB_CDX_DSPDBG_INFO
+         printf("\r\niskip++\r\n");fflush(stdout);
+#endif
          iSkip++;
       }
       else
@@ -2404,6 +2838,13 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                               childs[i]->Page );
       else
          iBlncKeys++;
+#ifdef HB_CDX_DSPDBG_INFO
+      printf(" (%d/%d)", childs[i]->iKeys,childs[i]->iFree);
+      fflush(stdout);
+#endif
+#ifdef HB_CDX_DBGCODE_EXT
+      hb_cdxPageCheckKeys( childs[i] );
+#endif
       i++;
    }
    if( i < iBlncKeys )
@@ -2461,6 +2902,10 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
       {
          /* Delete parent key */
          iBlncKeys--;
+#ifdef HB_CDX_DSPDBG_INFO
+         printf("\r\nleaf balance: free child[%d]->Page=%lx", iBlncKeys, childs[iBlncKeys]->Page);
+         fflush(stdout);
+#endif
          if( childs[iBlncKeys]->pKeyBuf )
          {
             hb_xfree( childs[ iBlncKeys ]->pKeyBuf );
@@ -2483,6 +2928,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
    if( pKeyPool )
       hb_xfree( pKeyPool );
    pPage->fChanged = HB_TRUE;
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
    if( pPage->iKeys > pPage->TagParent->MaxKeys )
       iRet |= NODE_SPLIT;
    return iRet;
@@ -2505,6 +2953,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
    if( pPage->Child && pPage->Child->Child )
       hb_cdxPageFree( pPage->Child->Child, HB_FALSE );
 
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
+
    if( pPage->iKeys <= iBlncKeys || pPage->iCurKey <= iBlncKeys / 2 )
       iFirstKey = 0;
    else if( pPage->iCurKey + ( iBlncKeys >> 1 ) >= pPage->iKeys )
@@ -2517,6 +2969,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
       iRet |= NODE_BALANCE;
    }
 
+#ifdef HB_CDX_DSPDBG_INFO
+   printf("\r\nbalance: Page=%lx(%d) (%d/%d)", pPage->Page, pPage->iKeys, iFirstKey, iBlncKeys);
+   fflush(stdout);
+#endif
 
    if( !fForce && iBlncKeys < 2 )
       return iRet;
@@ -2550,6 +3006,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
          iMax = childs[i]->iKeys;
       if( childs[i]->iKeys < iMin )
          iMin = childs[i]->iKeys;
+#ifdef HB_CDX_DSPDBG_INFO
+      printf(", childs[%d]->Page=%lx(%d)", i, childs[i]->Page, childs[i]->iKeys);
+      fflush(stdout);
+#endif
    }
    iNeedKeys = ( iKeys + pPage->TagParent->MaxKeys - 1 )
                        / pPage->TagParent->MaxKeys;
@@ -2660,6 +3120,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
          lpTmpPage->fChanged  = HB_TRUE;
          hb_cdxPageFree( lpTmpPage, HB_FALSE );
       }
+#ifdef HB_CDX_DSPDBG_INFO
+      printf("\r\nint balance: new child[%d]->Page=%lx",iBlncKeys,childs[iBlncKeys]->Page);
+      fflush(stdout);
+#endif
       iBlncKeys++;
       iRet |= NODE_BALANCE;
    }
@@ -2714,6 +3178,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
       for( i = iBlncKeys - 1; i >= iNeedKeys; i-- )
       {
          /* Delete parent key */
+#ifdef HB_CDX_DSPDBG_INFO
+         printf("\r\nbalance: free child[%d]->Page=%lx",i,childs[i]->Page);
+         fflush(stdout);
+#endif
          hb_cdxPageIntDelKey( pPage, iFirstKey + i );
          childs[i]->Owner    = NULL;
          childs[i]->fChanged = HB_FALSE;
@@ -2756,11 +3224,20 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
                                  pPtr - iLen, HB_GET_BE_UINT32( pPtr - 8 ),
                                  childs[i]->Page );
          }
+#ifdef HB_CDX_DSPDBG_INFO
+         printf(" (%d)", childs[i]->iKeys);
+#endif
+#ifdef HB_CDX_DBGCODE_EXT
+         hb_cdxPageCheckKeys( childs[i] );
+#endif
          hb_cdxPageFree( childs[i], HB_FALSE );
       }
       hb_xfree( pKeyPool );
    }
    pPage->fChanged = HB_TRUE;
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pPage );
+#endif
    if( pPage->iKeys > pPage->TagParent->MaxKeys )
       iRet |= NODE_SPLIT;
    return iRet;
@@ -2790,6 +3267,9 @@ static int hb_cdxPageBalance( LPCDXPAGE pPage, int iChildRet )
                                  hb_cdxPageGetKeyVal( pPage->Child, pPage->Child->iKeys-1 ),
                                  hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys-1 ),
                                  pPage->Child->Page );
+#ifdef HB_CDX_DBGCODE_EXT
+            hb_cdxPageCheckKeys( pPage );
+#endif
             pPage->fChanged = HB_TRUE;
             if( pPage->iCurKey >= pPage->iKeys - 1 )
                iRet |= NODE_NEWLASTKEY;
@@ -2841,6 +3321,10 @@ static int hb_cdxPageRootSplit( LPCDXPAGE pPage )
                         hb_cdxPageGetKeyVal( pPage, pPage->iKeys-1 ),
                         hb_cdxPageGetKeyRec( pPage, pPage->iKeys-1 ),
                         pPage->Page );
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxPageCheckKeys( pNewRoot );
+   hb_cdxTagPoolCheck( pPage->TagParent );
+#endif
    hb_cdxPageBalance( pNewRoot, NODE_SPLIT );
    return 0;
 }
@@ -2870,6 +3354,9 @@ static int hb_cdxPageKeyInsert( LPCDXPAGE pPage, LPCDXKEY pKey )
       iChildRet = hb_cdxPageLeafAddKey( pPage, pKey );
    else /* interior node */
       iChildRet = hb_cdxPageKeyInsert( pPage->Child, pKey );
+#ifdef HB_CDX_DBGUPDT
+   cdxTmpStackSize++;
+#endif
    return hb_cdxPageBalance( pPage, iChildRet );
 }
 
@@ -3219,6 +3706,9 @@ static void hb_cdxTagPoolFree( LPCDXTAG pTag, int nPagesLeft )
 {
    LPCDXPAGE pPage, pPageNext;
 
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
    pPage = pTag->pagePool;
    while( nPagesLeft && pPage )
    {
@@ -3234,6 +3724,9 @@ static void hb_cdxTagPoolFree( LPCDXTAG pTag, int nPagesLeft )
       }
       pPage = pPageNext;
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
 }
 
 /*
@@ -3252,6 +3745,9 @@ static void hb_cdxTagPoolFlush( LPCDXTAG pTag )
       }
       pPage = pPage->pPoolNext;
    }
+#ifdef HB_CDX_DBGCODE_EXT
+   hb_cdxTagPoolCheck( pTag );
+#endif
 }
 
 /*
@@ -3428,7 +3924,7 @@ static HB_BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, HB_ULONG ulRecNo )
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
       if( fDeleted )
-         SUPER_DELETED( ( AREAP ) pArea, &lResult );
+         SELF_DELETED( ( AREAP ) pArea, &lResult );
 
       if( !lResult && pArea->dbfarea.area.dbfi.itmCobExpr )
       {
@@ -3794,6 +4290,54 @@ static HB_ULONG hb_cdxTagKeyFind( LPCDXTAG pTag, LPCDXKEY pKey )
    }
    return 0;
 }
+
+#if 0
+/*
+ * find pKey in pTag return 0 or record number, respect descend/unique flags
+ */
+static HB_ULONG hb_cdxTagKeySeek( LPCDXTAG pTag, LPCDXKEY pKey )
+{
+   int K;
+   HB_ULONG ulKeyRec = pKey->rec;
+
+   if( pTag->UsrUnique )
+   {
+      if( pTag->UsrAscend )
+      {
+         if( ulKeyRec == CDX_MAX_REC_NUM )
+            ulKeyRec = CDX_IGNORE_REC_NUM;
+      }
+      else if( ulKeyRec == CDX_IGNORE_REC_NUM )
+         ulKeyRec = CDX_MAX_REC_NUM;
+   }
+   else if( ! pTag->UsrAscend )
+   {
+      if( ulKeyRec == CDX_MAX_REC_NUM )
+         ulKeyRec = CDX_IGNORE_REC_NUM;
+      else if( ulKeyRec == CDX_IGNORE_REC_NUM )
+         ulKeyRec = CDX_MAX_REC_NUM;
+   }
+
+   pTag->CurKey->rec = 0;
+   pTag->fRePos = HB_FALSE;
+   hb_cdxTagOpen( pTag );
+
+   pTag->TagBOF = pTag->TagEOF = HB_FALSE;
+   K = hb_cdxPageSeekKey( pTag->RootPage, pKey, ulKeyRec );
+   if( ulKeyRec == CDX_MAX_REC_NUM )
+      K = - K;
+
+   if( K > 0 )
+      pTag->TagEOF = HB_TRUE;
+   else
+   {
+      hb_cdxSetCurKey( pTag->RootPage );
+      if( K == 0 )
+         return pTag->CurKey->rec;
+   }
+   return 0;
+}
+#endif
 
 /*
  * add the Key into the Tag
@@ -4333,6 +4877,10 @@ static HB_BOOL hb_cdxIndexLoad( LPCDXINDEX pIndex, char * szBaseName )
    while( *pTagPtr != NULL )
       pTagPtr = &(*pTagPtr)->pNext;
    (*pTagPtr) = TagList;
+
+#ifdef HB_CDX_DSPDBG_INFO
+   hb_cdxDspTags( pIndex );
+#endif
 
    return fResult;
 }
@@ -5298,8 +5846,10 @@ static HB_LONG hb_cdxDBOIKeyCount( CDXAREAP pArea, LPCDXTAG pTag, HB_BOOL fFilte
             pTag->curKeyState |= CDX_CURKEY_RAWCNT;
          }
          else if( fLogOpt )
-            CURKEY_SETLOGCNT( pTag, ulKeyCount );
-
+         {
+            pTag->logKeyCount = ulKeyCount;
+            pTag->curKeyState |= CDX_CURKEY_LOGCNT;
+         }
       }
       hb_cdxIndexUnLockRead( pTag->pIndex );
    }
@@ -6485,7 +7035,10 @@ static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, HB_LONG lToSkip )
          if( pArea->dbfarea.area.fEof )
          {
             if( lToSkip == 1 && ulPos && !CURKEY_LOGCNT( pTag ) )
-               CURKEY_SETLOGCNT( pTag, ulPos );
+            {
+               pTag->logKeyCount = ulPos;
+               pTag->curKeyState |= CDX_CURKEY_LOGCNT;
+            }
          }
          else if( ulPos )
          {
@@ -6899,6 +7452,13 @@ static HB_ERRCODE hb_cdxGoCold( CDXAREAP pArea )
                if( fAdd )
                   hb_cdxTagKeyAdd( pTag, pKey );
             }
+#if 0
+            if( pTag->HotKey )
+            {
+               hb_cdxKeyFree( pTag->HotKey );
+               pTag->HotKey = NULL;
+            }
+#endif
          }
          if( pTag->pNext )
             pTag = pTag->pNext;
@@ -7061,6 +7621,28 @@ static HB_ERRCODE hb_cdxClose( CDXAREAP pArea )
          hb_xfree( pArea->bCdxSortTab );
          pArea->bCdxSortTab = NULL;
       }
+#ifdef HB_CDX_DBGTIME
+      printf( "\r\ncdxTimeIntBld=%f, cdxTimeExtBld=%f, cdxTimeBld=%f\r\n"
+              "cdxTimeGetKey=%f, cdxTimeFreeKey=%f\r\n"
+              "cdxTimeExtBlc=%f, cdxTimeIntBlc=%f\r\n"
+              "cdxTimeIdxBld=%f\r\n"
+              "cdxTimeTotal=%f\r\n",
+              (double) cdxTimeIntBld / 1000000, (double) cdxTimeExtBld / 1000000,
+              (double) ( cdxTimeIntBld + cdxTimeExtBld ) / 1000000,
+              (double) cdxTimeGetKey / 1000000, (double) cdxTimeFreeKey / 1000000,
+              (double) cdxTimeIntBlc / 1000000, (double) cdxTimeExtBlc / 1000000,
+              (double) cdxTimeIdxBld / 1000000,
+              (double) ( cdxTimeIntBld + cdxTimeExtBld + cdxTimeIdxBld +
+                         cdxTimeGetKey + cdxTimeFreeKey +
+                         cdxTimeExtBlc + cdxTimeIntBlc ) / 1000000 );
+      fflush(stdout);
+      cdxTimeIntBld = cdxTimeExtBld = 0;
+#endif
+#ifdef HB_CDX_DBGUPDT
+      printf( "\r\n#reads=%ld, #writes=%ld, stacksize=%d\r\n", cdxReadNO, cdxWriteNO, cdxStackSize );
+      fflush(stdout);
+      cdxReadNO = cdxWriteNO = 0;
+#endif
    }
 
    return errCode;
@@ -7528,6 +8110,10 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          break;
       case 'C':
          uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
+#if !( defined( HB_COMPAT_C53 ) && defined( HB_CLP_STRICT ) )
+         if( uiLen > CDX_MAXKEY )
+            uiLen = CDX_MAXKEY;
+#endif
          break;
       default:
          bType = 'U';
@@ -7535,8 +8121,16 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    }
    hb_itemRelease( pResult );
 
-   /* Make sure KEY has proper type and iLen lower than 240 */
-   if( bType == 'C' && uiLen > CDX_MAXKEY )
+   /* Make sure KEY has proper type and length */
+   if( bType == 'U' || uiLen == 0 )
+   {
+      hb_vmDestroyBlockOrMacro( pKeyExp );
+      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
+      return HB_FAILURE;
+   }
+#if defined( HB_COMPAT_C53 ) && defined( HB_CLP_STRICT )
+   else if( bType == 'C' && uiLen > CDX_MAXKEY )
    {
       if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT, NULL ) == E_DEFAULT )
         uiLen = CDX_MAXKEY;
@@ -7547,14 +8141,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
         return HB_FAILURE;
       }
    }
-   /* Make sure KEY has proper type and iLen is not 0 */
-   else if( bType == 'U' || uiLen == 0 )
-   {
-      hb_vmDestroyBlockOrMacro( pKeyExp );
-      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
-      return HB_FAILURE;
-   }
+#endif
    if( pArea->dbfarea.area.lpdbOrdCondInfo )
    {
       fAscend = !pArea->dbfarea.area.lpdbOrdCondInfo->fDescending;
@@ -8917,11 +9504,16 @@ static HB_BOOL hb_cdxQSort( LPCDXSORTINFO pSort, HB_BYTE * pSrc, HB_BYTE * pBuf,
 static void hb_cdxSortSortPage( LPCDXSORTINFO pSort )
 {
    HB_SIZE nSize = pSort->ulKeys * ( pSort->keyLen + 4 );
-
+#ifdef HB_CDX_DBGTIME
+   cdxTimeIdxBld -= hb_cdxGetTime();
+#endif
    if( !hb_cdxQSort( pSort, pSort->pKeyPool, &pSort->pKeyPool[ nSize ], pSort->ulKeys ) )
    {
       memcpy( pSort->pKeyPool, &pSort->pKeyPool[ nSize ], nSize );
    }
+#ifdef HB_CDX_DBGTIME
+   cdxTimeIdxBld += hb_cdxGetTime();
+#endif
 }
 
 static void hb_cdxSortAddNodeKey( LPCDXSORTINFO pSort, int iLevel, HB_BYTE *pKeyVal, HB_ULONG ulRec, HB_ULONG ulPage )
@@ -8991,6 +9583,9 @@ static void hb_cdxSortAddNodeKey( LPCDXSORTINFO pSort, int iLevel, HB_BYTE *pKey
          pPage->Left = pSort->NodeList[ iLevel ]->Page;
          if( iLevel == 0 )
          {
+#ifdef HB_CDX_DBGCODE_EXT
+            hb_cdxPageCheckDupTrlRaw( pSort->NodeList[ iLevel ] );
+#endif
             hb_cdxSortAddNodeKey( pSort, iLevel + 1, pSort->pLastKey, pSort->ulLastRec, pSort->NodeList[ iLevel ]->Page );
          }
          else
@@ -9017,6 +9612,9 @@ static void hb_cdxSortAddNodeKey( LPCDXSORTINFO pSort, int iLevel, HB_BYTE *pKey
       }
       pPage->iFree -= iTmp + pPage->ReqByte;
       pPage->iKeys++;
+#ifdef HB_CDX_DBGCODE_EXT
+      hb_cdxPageCheckDupTrlRaw( pSort->NodeList[ iLevel ] );
+#endif
    }
    else
    {
@@ -9413,6 +10011,22 @@ static void hb_cdxSortOut( LPCDXSORTINFO pSort )
             continue;
          }
       }
+#ifdef HB_CDX_DBGCODE_EXT
+      if( ulKey != 0 )
+      {
+         int i = hb_cdxValCompare( pSort->pTag, pSort->pLastKey, iLen, pKeyVal, iLen, CDX_CMP_EXACT );
+         if( i == 0 )
+         {
+            i = ( pSort->ulLastRec < ulRec ) ? -1 : 1;
+         }
+         if( i > 0 )
+         {
+            printf("\r\nulKey=%ld, pKeyVal=[%s][%ld], pKeyLast=[%s][%ld]\r\n",
+                   ulKey, pKeyVal, ulRec, pSort->pLastKey, pSort->ulLastRec); fflush(stdout);
+            hb_errInternal( 9305, "hb_cdxSortOut: sorting fails.", NULL, NULL );
+         }
+      }
+#endif
       hb_cdxSortAddNodeKey( pSort, 0, pKeyVal, ulRec, 0 );
       memcpy( pSort->pLastKey, pKeyVal, iLen );
       pSort->ulLastRec = ulRec;

@@ -6576,7 +6576,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
          hb_itemRelease( pItem );
          return errCode;
       }
-      pArea->dbfarea.bLockType = hb_itemGetNI( pItem );
+      pArea->dbfarea.bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
       if( pArea->dbfarea.bLockType == 0 )
          pArea->dbfarea.bLockType = DB_DBFLOCK_CLIP;

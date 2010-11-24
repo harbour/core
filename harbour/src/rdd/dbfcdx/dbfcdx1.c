@@ -261,7 +261,7 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
             }
          } while( j != l );
          for( i = 0; i <= 255; i++ )
-            pArea->bCdxSortTab[pbSort[i]] = i;
+            pArea->bCdxSortTab[ pbSort[i] ] = i;
          hb_xfree( pbSort );
       }
    }
@@ -2637,9 +2637,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             {
                HB_BYTE bDup = 0, bMax;
 #ifdef HB_CDX_PACKTRAIL
-               bMax = iLen - 6 - pPtr[ iLen - 1 ];
+               bMax = ( HB_BYTE ) ( iLen - 6 - pPtr[ iLen - 1 ] );
 #else
-               bMax = iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] );
+               bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] ) );
 #endif
                while( bDup < bMax && pPtr[ bDup ] == pPtr[ bDup - iLen ] )
                   ++bDup;
@@ -2698,9 +2698,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             pbKey = hb_cdxPageGetKeyVal( lpTmpPage, 0 );
             bMax = hb_cdxPageGetKeyTrl( lpTmpPage, 0 );
 #ifdef HB_CDX_PACKTRAIL
-            bMax = iLen - 6 - bMax;
+            bMax = ( HB_BYTE ) ( iLen - 6 - bMax );
 #else
-            bMax = iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax );
+            bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax ) );
 #endif
             for( j = 0; j < bMax &&
                          pPtr[ ( iKeys - 1 ) * iLen + j ] == pbKey[ j ]; j++ ) {}
@@ -2749,9 +2749,9 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                   else
                      hb_cdxPageLeafDecode( lpTmpPage, pPtr );
 #ifdef HB_CDX_PACKTRAIL
-                  bMax = iLen - 6 - pPtr[ iLen - 1 ];
+                  bMax = ( HB_BYTE ) ( iLen - 6 - pPtr[ iLen - 1 ] );
 #else
-                  bMax = iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] );
+                  bMax = ( HB_BYTE ) ( iLen - 6 - HB_MAX( pPtr[ iLen - 1 ], pPtr[ -1 ] ) );
 #endif
                   while( bDup < bMax && pPtr[ bDup ] == pPtr[ bDup - iLen ] )
                      ++bDup;
@@ -7066,7 +7066,7 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
          hb_itemRelease( pItem );
          return HB_FAILURE;
       }
-      pArea->dbfarea.bLockType = hb_itemGetNI( pItem );
+      pArea->dbfarea.bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
       if( pArea->dbfarea.bLockType == 0 )
       {
@@ -7688,7 +7688,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          pIndex->fShared    = fShared;
          pIndex->fReadonly  = HB_FALSE;
          pIndex->szFileName = hb_strdup( szFileName );
-         pIndex->fDelete = fTemporary;
+         pIndex->fDelete    = fTemporary;
          if( fTemporary )
             pIndex->szRealName = hb_strdup( szTempFile );
 
