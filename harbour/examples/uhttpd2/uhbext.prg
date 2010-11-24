@@ -8,28 +8,35 @@
 *
 *************************************************************/
 
+FUNCTION split( cSeparator, cString )
 
-FUNC split(cSeparator, cString)
-LOCAL aRet := {}, nI
+   LOCAL aRet := {}
+   LOCAL nI
 
-  DO WHILE (nI := AT(cSeparator, cString)) > 0
-    AADD(aRet, LEFT(cString, nI - 1))
-    cString := SUBSTR(cString, nI + LEN(cSeparator))
-  ENDDO
-  AADD(aRet, cString)
-RETURN aRet
+   DO WHILE ( nI := At( cSeparator, cString ) ) > 0
+      AAdd( aRet, Left( cString, nI - 1 ) )
+      cString := SubStr( cString, nI + Len( cSeparator ) )
+   ENDDO
+   AAdd( aRet, cString )
 
+   RETURN aRet
 
-FUNC join(cSeparator, aData)
-LOCAL cRet := "", nI
+FUNCTION join( cSeparator, aData )
 
-  FOR nI := 1 TO LEN(aData)
-    IF nI > 1;  cRet += cSeparator
-    ENDIF
-    IF     VALTYPE(aData[nI]) $ "CM";  cRet += aData[nI]
-    ELSEIF VALTYPE(aData[nI]) == "N";  cRet += LTRIM(STR(aData[nI]))
-    ELSEIF VALTYPE(aData[nI]) == "D";  cRet += IF(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
-    ELSE
-    ENDIF
-  NEXT
-RETURN cRet
+   LOCAL cRet := ""
+   LOCAL nI
+
+   FOR nI := 1 TO Len( aData )
+
+      IF nI > 1
+         cRet += cSeparator
+      ENDIF
+
+      IF     ValType( aData[ nI ] ) $ "CM" ; cRet += aData[ nI ]
+      ELSEIF ValType( aData[ nI ] ) == "N" ; cRet += hb_ntos( aData[ nI ] )
+      ELSEIF ValType( aData[ nI ] ) == "D" ; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" )
+      ELSE
+      ENDIF
+   NEXT
+
+   RETURN cRet

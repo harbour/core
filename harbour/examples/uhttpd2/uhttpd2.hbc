@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+incpaths=.
+libpaths=.
+
+libs=${hb_name}${__HB_DYN__}
+
+mt=yes

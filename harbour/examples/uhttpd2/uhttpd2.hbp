@@ -2,11 +2,13 @@
 # $Id$
 #
 
--ouhttpd2
+-hblib
+-inc
 
-app.prg
+-o${hb_name}
+
+-w3 -es2
+
 uhbext.prg
 umain.prg
 uwidgets.prg
-
--mt
