@@ -8422,7 +8422,31 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       /* TODO: */
       /*
       case DBOI_TEMPLATE:
+        if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL &&
+            hb_itemGetL( pInfo->itmNewVal ) )
+        {
+           if( hb_cdxIndexLockWrite( pTag->pIndex ) )
+           {
+              if( pTag->Custom && ! pTag->Template )
+                 pTag->Template = HB_TRUE;
+              hb_cdxIndexUnLockWrite( pTag->pIndex );
+           }
+        }
+        hb_itemPutL( pInfo->itmResult, pTag->Template );
+        break;
+
       case DBOI_MULTIKEY:
+        if( hb_itemGetL( pInfo->itmNewVal ) )
+        {
+           if( hb_cdxIndexLockWrite( pTag->pIndex ) )
+           {
+              if( pTag->Custom && ! pTag->MultiKey )
+                 pTag->MultiKey = HB_TRUE;
+              hb_cdxIndexUnLockWrite( pTag->pIndex );
+           }
+        }
+        hb_itemPutL( pInfo->itmResult, pTag->MultiKey );
+        break;
       */
 
       case DBOI_KEYADD:

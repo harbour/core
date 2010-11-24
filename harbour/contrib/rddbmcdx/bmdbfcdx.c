@@ -79,7 +79,6 @@
 
 #define HB_CDX_DBGCODE
 /*
-#define HB_BMCDXTURBO
 #define HB_CDX_DBGCODE_EXT
 #define HB_CDX_DSPDBG_INFO
 #define HB_CDX_DBGTIME
@@ -141,8 +140,53 @@ static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;
 static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 
 static RDDFUNCS cdxSuper;
-#ifdef HB_BMCDXTURBO
-static HB_BOOL bTurbo = HB_FALSE;
+
+
+#ifdef HB_CDX_DSPDBG_INFO
+static void hb_cdxDspTags( LPCDXINDEX pIndex )
+{
+   LPCDXTAG pTag = NULL;
+
+   printf( "\r\n*TAGS*" );
+   while( pIndex )
+   {
+      printf( "\r\nBAG: [%s] ->", pIndex->szFileName );
+      pTag = pIndex->TagList;
+      while( pTag )
+      {
+         printf( " {%s}", pTag->szName );
+         pTag = pTag->pNext;
+      }
+      pIndex = pIndex->pNext;
+   }
+   printf( "\r\n*END*\r\n" ); fflush( stdout );
+}
+#endif
+
+#ifdef HB_CDX_DBGTIME
+#include <sys/time.h>
+typedef HB_LONGLONG CDXDBGTIME;
+
+static CDXDBGTIME cdxTimeIntBld = 0;
+static CDXDBGTIME cdxTimeExtBld = 0;
+static CDXDBGTIME cdxTimeIntBlc = 0;
+static CDXDBGTIME cdxTimeExtBlc = 0;
+static CDXDBGTIME cdxTimeGetKey = 0;
+static CDXDBGTIME cdxTimeFreeKey = 0;
+static CDXDBGTIME cdxTimeIdxBld = 0;
+
+static CDXDBGTIME hb_cdxGetTime()
+{
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+   return ( (CDXDBGTIME) tv.tv_sec * 1000000 + (CDXDBGTIME) tv.tv_usec );
+}
+#endif
+#ifdef HB_CDX_DBGUPDT
+static HB_ULONG cdxWriteNO = 0;
+static HB_ULONG cdxReadNO = 0;
+static HB_SHORT cdxStackSize = 0;
+static HB_SHORT cdxTmpStackSize = 0;
 #endif
 
 
@@ -1209,15 +1253,6 @@ static HB_BOOL hb_cdxIndexLockRead( LPCDXINDEX pIndex )
    pIndex->RdLck = HB_TRUE;
 #endif
 
-#ifdef HB_BMCDXTURBO
-   if( bTurbo )
-   {
-      pIndex->lockRead++;
-      hb_cdxIndexCheckVersion( pIndex );
-      return HB_TRUE;
-   }
-#endif   
-
    ret = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
                             FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
    if( !ret )
@@ -1293,18 +1328,6 @@ static HB_BOOL hb_cdxIndexUnLockRead( LPCDXINDEX pIndex )
 #endif
 
    hb_cdxIndexPoolFree( pIndex, CDX_PAGECACHESIZE );
-
-#ifdef HB_BMCDXTURBO   
-   if( bTurbo )
-   {
-#ifdef HB_CDX_DBGCODE
-      if( pIndex->pArea->dbfarea.fShared && pIndex->fShared &&
-          ! HB_DIRTYREAD( &pIndex->pArea->dbfarea ) )
-         pIndex->RdLck = HB_FALSE;
-#endif
-      return HB_TRUE;
-   }
-#endif   
 
    if( pIndex->pArea->dbfarea.fShared && pIndex->fShared &&
        !HB_DIRTYREAD( &pIndex->pArea->dbfarea ) )
@@ -6805,194 +6828,194 @@ static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pK
 
 HB_FUNC( BM_TURBO )
 {
-#ifdef HB_BMCDXTURBO
-    bTurbo = HB_ISLOG( 1 ) ? ( HB_BOOL ) hb_parl( 1 ) : HB_FALSE;
-    hb_retl( bTurbo );
-#else
-	hb_retl( HB_FALSE );
-#endif	
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( BM_DBGETFILTERARRAY )
 {
-    CDXAREAP pArea = (CDXAREAP) hb_rddGetCurrentWorkAreaPointer();
-    PHB_ITEM pList = hb_itemArrayNew( 0 );
-    HB_ULONG ulRec,ulRecOld;
+   CDXAREAP pArea = ( CDXAREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pList = hb_itemArrayNew( 0 );
 
-    if( pArea->dbfarea.area.dbfi.fOptimized )
-    {
-        HB_ULONG ulSize = ( ( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->Size+1) >> 5 ) + 1;
-        HB_ULONG ulLong, ulByte, ulBytes, ulRecno;
-        PHB_ITEM pItem = hb_itemNew( NULL );
+   if( pArea->dbfarea.area.dbfi.fOptimized )
+   {
+      HB_ULONG ulSize = ( ( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo )->Size + 1 ) >> 5 ) + 1;
+      HB_ULONG ulLong, ulByte, ulBytes, ulRecno;
+      PHB_ITEM pItem = hb_itemNew( NULL );
+      HB_ULONG ulRec, ulRecOld;
 
-        ulRecOld = pArea->dbfarea.ulRecNo;
+      ulRecOld = pArea->dbfarea.ulRecNo;
 
-        for( ulLong = 0; ulLong < ulSize; ulLong++ )
-            if( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap[ulLong] )
-                for( ulByte = (ulLong<<2), ulBytes = 0; ulBytes < 4; ulByte++, ulBytes++ )
-                    if( ((char*)( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap)[ulByte] )
-                        for( ulRec=(ulByte<<3)+1, ulRecno=0; ulRecno < 8; ulRec++, ulRecno++ )
-                            if( hb_cdxCheckRecordFilter( pArea, ulRec ) )
-                               hb_arrayAddForward( pList, hb_itemPutNL( pItem, ulRec ) );
+      for( ulLong = 0; ulLong < ulSize; ulLong++ )
+         if( ( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo)->rmap[ulLong] )
+            for( ulByte = ( ulLong << 2 ), ulBytes = 0; ulBytes < 4; ulByte++, ulBytes++ )
+               if( ( ( char * )( ( LPBM_FILTER ) pArea->dbfarea.area.dbfi.lpvCargo )->rmap )[ ulByte ] )
+                  for( ulRec = ( ulByte << 3 ) + 1, ulRecno = 0; ulRecno < 8; ulRec++, ulRecno++ )
+                     if( hb_cdxCheckRecordFilter( pArea, ulRec ) )
+                        hb_arrayAddForward( pList, hb_itemPutNL( pItem, ulRec ) );
 
-        SELF_GOTO( (AREAP) pArea, ulRecOld );
-        hb_itemRelease( pItem );
-    }
-    hb_itemReturnRelease( pList );
+      SELF_GOTO( ( AREAP ) pArea, ulRecOld );
+      hb_itemRelease( pItem );
+   }
+   hb_itemReturnRelease( pList );
 }
 
 HB_FUNC( BM_DBSETFILTERARRAY )
 {
-    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-    HB_ULONG ulPos,ulRecCount;
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
-    if( pArea )
-    {
-       if( pArray )
-       {
-            LPCDXTAG pTag;
-            /* Limpiamos el filtro activo */
-            if( SELF_CLEARFILTER( pArea ) != HB_SUCCESS )
-               return;
+   if( pArea )
+   {
+      if( pArray )
+      {
+         HB_ULONG ulPos, ulRecCount;
+         LPCDXTAG pTag;
 
-            pArea->dbfi.fOptimized = HB_TRUE;
-            pArea->dbfi.fFilter = HB_TRUE;
+         /* Limpiamos el filtro activo */
+         if( SELF_CLEARFILTER( pArea ) != HB_SUCCESS )
+            return;
 
-            SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
-            pArea->dbfi.lpvCargo = hb_xgrab( sizeof( BM_FILTER ) );
-            memset( pArea->dbfi.lpvCargo, 0, sizeof( BM_FILTER ) );
+         pArea->dbfi.fOptimized = HB_TRUE;
+         pArea->dbfi.fFilter = HB_TRUE;
 
-            ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size = ulRecCount;
-            ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * (((ulRecCount+1) >> 5) + 1) );
-            memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof( HB_ULONG ) * (((ulRecCount+1) >> 5) + 1 ) );
+         SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
+         pArea->dbfi.lpvCargo = hb_xgrab( sizeof( BM_FILTER ) );
+         memset( pArea->dbfi.lpvCargo, 0, sizeof( BM_FILTER ) );
 
-            for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-                BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ulRecCount, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
-            pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
-            if( pTag ) /* Con índice activo */
-            {
-                pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
-                CURKEY_SETLOGCNT( pTag, (hb_arrayLen( pArray )) );
-            }
-       }
-       else
-          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-    }
-    else
-       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+         ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size = ulRecCount;
+         ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap = ( HB_ULONG * ) hb_xgrab( sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1) );
+         memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof( HB_ULONG ) * ( ( ( ulRecCount + 1 ) >> 5 ) + 1 ) );
+
+         for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
+            BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ulRecCount, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+         pTag = hb_cdxGetActiveTag( ( CDXAREAP ) pArea );
+         if( pTag ) /* Con índice activo */
+         {
+            pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
+            CURKEY_SETLOGCNT( pTag, ( hb_arrayLen( pArray ) ) );
+         }
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( BM_DBSETFILTERARRAYADD )
 {
-    AREAP pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
-    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-    HB_ULONG ulPos,ulAdd = 0;
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   HB_ULONG ulPos,ulAdd = 0;
 
-    if( pArea && pArea->dbfi.fOptimized )
-    {
-        if( pArray )
-        {
-             LPCDXTAG pTag;
+   if( pArea && pArea->dbfi.fOptimized )
+   {
+      if( pArray )
+      {
+         LPCDXTAG pTag;
 
-             for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-                 if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
-                 {
-                     BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
-                     ulAdd++;
-                 }
-             pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-             if( pTag ) /* Con índice activo */
-                 CURKEY_SETLOGCNT( pTag, (pTag->logKeyCount + ulAdd) );
-        }
-        else
-           hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-    }
-    else
-       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+         for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
+            if( ! BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
+            {
+               BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+               ulAdd++;
+            }
+         pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
+         if( pTag ) /* Con indice activo */
+            CURKEY_SETLOGCNT( pTag, pTag->logKeyCount + ulAdd );
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( BM_DBSETFILTERARRAYDEL )
 {
-    AREAP pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
-    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-    HB_ULONG ulPos,ulDel = 0;
+   AREAP pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   HB_ULONG ulPos,ulDel = 0;
 
-    if( pArea && pArea->dbfi.fOptimized )
-    {
-       if( pArray )
-       {
-            LPCDXTAG pTag;
+   if( pArea && pArea->dbfi.fOptimized )
+   {
+      if( pArray )
+      {
+         LPCDXTAG pTag;
 
-            for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
-                if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
-                {
-                    BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
-                    ulDel++;
-                }
-            pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-            if( pTag ) /* Con índice activo */
-                CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - ulDel );
-       }
-       else
-          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-    }
-    else
-       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+         for( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
+         {
+            if( BM_GetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) ) )
+            {
+               BM_ClrBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ( HB_ULONG ) hb_arrayGetNL( pArray, ulPos ) );
+               ulDel++;
+            }
+         }
+         pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
+         if( pTag ) /* Con indice activo */
+             CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - ulDel );
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
 
 HB_FUNC( BM_DBSEEKWILD )
 {
-    PHB_ITEM pKey;
-    HB_BOOL bAll, bNext, bSoftSeek, bFindLast, fFound;
-    AREAP pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pKey;
+   HB_BOOL bAll, bNext, bSoftSeek, bFindLast, fFound;
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
-    if( pArea )
-    {
-       if( ! HB_ISNIL( 1 ) )
-       {
-          pKey = hb_param( 1, HB_IT_ANY );
-          bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-          bFindLast = hb_parl( 3 );
-          bNext     = hb_parl( 4 );
-          bAll      = hb_parl( 5 );
-          if( bAll)
-          {
-             PHB_ITEM pList = hb_itemArrayNew( 0 );
-             SELF_GOTOP( ( AREAP ) pArea );
-             if( hb_cdxSeekWild( (CDXAREAP) pArea, bSoftSeek, pKey, bFindLast, HB_FALSE, bAll ) == HB_SUCCESS &&
-                     pArea->fEof == HB_FALSE &&
-                     SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
-             {
-                 hb_arrayAddForward( pList, hb_itemPutNL( NULL, ((CDXAREAP) pArea)->dbfarea.ulRecNo ) );
-                 while( hb_cdxSeekWild( (CDXAREAP) pArea, bSoftSeek, pKey, bFindLast, HB_TRUE, bAll ) == HB_SUCCESS &&
-                         pArea->fEof == HB_FALSE &&
-                         SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
-                 {
-                     hb_arrayAdd( pList, hb_itemPutNL( NULL, ((CDXAREAP) pArea)->dbfarea.ulRecNo ) );
-                 }
-             }
-             hb_itemReturnRelease( pList );
-             return;
-          }
-          else
-             if( hb_cdxSeekWild( (CDXAREAP) pArea, bSoftSeek, pKey, bFindLast, bNext, bAll ) == HB_SUCCESS )
-             {
-                if( SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
-                {
-                   hb_retl( fFound );
-                   return;
-                }
-             }
-       }
-       else
-          hb_errRT_DBCMD( EG_ARG, EDBCMD_SEEK_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-    }
-    else
-       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+   if( pArea )
+   {
+      if( ! HB_ISNIL( 1 ) )
+      {
+         pKey = hb_param( 1, HB_IT_ANY );
+         bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
+         bFindLast = hb_parl( 3 );
+         bNext     = hb_parl( 4 );
+         bAll      = hb_parl( 5 );
+         if( bAll )
+         {
+            PHB_ITEM pList = hb_itemArrayNew( 0 );
+            SELF_GOTOP( ( AREAP ) pArea );
+            if( hb_cdxSeekWild( ( CDXAREAP ) pArea, bSoftSeek, pKey, bFindLast, HB_FALSE, bAll ) == HB_SUCCESS &&
+                pArea->fEof == HB_FALSE &&
+                SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
+            {
+               hb_arrayAddForward( pList, hb_itemPutNL( NULL, ( ( CDXAREAP ) pArea )->dbfarea.ulRecNo ) );
+               while( hb_cdxSeekWild( ( CDXAREAP ) pArea, bSoftSeek, pKey, bFindLast, HB_TRUE, bAll ) == HB_SUCCESS &&
+                      pArea->fEof == HB_FALSE &&
+                      SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
+               {
+                  hb_arrayAdd( pList, hb_itemPutNL( NULL, ( ( CDXAREAP ) pArea )->dbfarea.ulRecNo ) );
+               }
+            }
+            hb_itemReturnRelease( pList );
+            return;
+         }
+         else
+         {
+            if( hb_cdxSeekWild( ( CDXAREAP ) pArea, bSoftSeek, pKey, bFindLast, bNext, bAll ) == HB_SUCCESS )
+            {
+               if( SELF_FOUND( pArea, &fFound ) == HB_SUCCESS )
+               {
+                  hb_retl( fFound );
+                  return;
+               }
+            }
+         }
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_SEEK_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 
-    hb_retl( HB_FALSE );
+   hb_retl( HB_FALSE );
 }
 
 #endif
@@ -9023,13 +9046,15 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          pInfo->itmResult = hb_itemPutL( pInfo->itmResult, pTag && pTag->ChgOnly );
          break;
 
+      /* TODO: */
+      /*
       case DBOI_TEMPLATE:
         if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL &&
             hb_itemGetL( pInfo->itmNewVal ) )
         {
            if( hb_cdxIndexLockWrite( pTag->pIndex ) )
            {
-              if( pTag->Custom && !pTag->Template )
+              if( pTag->Custom && ! pTag->Template )
                  pTag->Template = HB_TRUE;
               hb_cdxIndexUnLockWrite( pTag->pIndex );
            }
@@ -9042,13 +9067,14 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
         {
            if( hb_cdxIndexLockWrite( pTag->pIndex ) )
            {
-              if( pTag->Custom && !pTag->MultiKey )
+              if( pTag->Custom && ! pTag->MultiKey )
                  pTag->MultiKey = HB_TRUE;
               hb_cdxIndexUnLockWrite( pTag->pIndex );
            }
         }
         hb_itemPutL( pInfo->itmResult, pTag->MultiKey );
         break;
+      */
 
       case DBOI_KEYADD:
       {
@@ -9241,6 +9267,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
 /* ( DBENTRYP_V )     hb_cdxClearFilter */
 static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
 {
+   HB_ERRCODE errCode = SUPER_CLEARFILTER( ( AREAP ) pArea );
    hb_cdxClearLogPosInfo( pArea );
    /* Limpiamos filtro tipo array */
    if( pArea->dbfarea.area.dbfi.lpvCargo )
@@ -9249,7 +9276,7 @@ static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
         hb_xfree( pArea->dbfarea.area.dbfi.lpvCargo );
         pArea->dbfarea.area.dbfi.lpvCargo = NULL;
    }
-   return SUPER_CLEARFILTER( ( AREAP ) pArea );
+   return errCode;
 }
 
 /* ( DBENTRYP_V )     hb_cdxClearLocate     : NULL */
