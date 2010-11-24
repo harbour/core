@@ -25,17 +25,17 @@ ifeq ($(_SAME_DIR),yes)
    INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Skip install, destination dir '$(INSTALL_DIR)' is the same as source$(ECHOQUOTE)
 else
 
-ifneq ($(HB_SHELL),sh)
-   ifneq ($(HB_SHELL),os2)
-      INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
-      INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
-   else
-      # $(CP) and $(MDP) require forward slashes
-      INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
-      INSTALL_FILES_OS := $(subst \,/,$(INSTALL_FILES))
-   endif
-else
+ifeq ($(HB_SHELL),sh)
    INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
+else
+ifeq ($(HB_SHELL),os2)
+   # $(CP) and $(MDP) require forward slashes
+   INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
+   INSTALL_FILES_OS := $(subst \,/,$(INSTALL_FILES))
+else
+   INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
+   INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
+endif
 endif
 
 ifeq ($(HB_SHELL),sh)
