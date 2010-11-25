@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+bmdbfcdx.c
