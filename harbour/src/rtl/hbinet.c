@@ -1103,6 +1103,14 @@ HB_FUNC( HB_INETIFINFO )
 * Server Specific functions
 ****/
 
+static int s_inetBind( PHB_SOCKET_STRUCT socket, const void * pSockAddr, unsigned uiLen )
+{
+#if !defined( HB_OS_WIN )
+   hb_socketSetReuseAddr( socket->sd, HB_TRUE );
+#endif
+   return hb_socketBind( socket->sd, pSockAddr, uiLen );
+}
+
 HB_FUNC( HB_INETSERVER )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 2 );
@@ -1130,7 +1138,7 @@ HB_FUNC( HB_INETSERVER )
       if( socket->remote )
          hb_xfree( socket->remote );
       if( !hb_socketInetAddr( &socket->remote, &socket->remotelen, szAddress, iPort ) ||
-          hb_socketBind( socket->sd, socket->remote, socket->remotelen ) != 0 ||
+          s_inetBind( socket, socket->remote, socket->remotelen ) != 0 ||
           hb_socketListen( socket->sd, iListen ) != 0 )
       {
          socket->iError = hb_socketGetError();
@@ -1284,7 +1292,7 @@ HB_FUNC( HB_INETDGRAMBIND )
       hb_xfree( socket->remote );
    if( !hb_socketInetAddr( &socket->remote, &socket->remotelen,
                            szAddress, iPort ) ||
-       hb_socketBind( socket->sd, socket->remote, socket->remotelen ) != 0 )
+       s_inetBind( socket, socket->remote, socket->remotelen ) != 0 )
    {
       socket->iError = hb_socketGetError();
       hb_inetCloseSocket( socket );
