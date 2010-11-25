@@ -44,7 +44,7 @@
 #define MAGIC_RAW               0x000100 /* Don't translate unprintable chars */
 #define MAGIC_ERROR             0x000200 /* Handle ENOENT etc as real errors */
 #define MAGIC_MIME_ENCODING     0x000400 /* Return the MIME encoding */
-#define MAGIC_MIME              (MAGIC_MIME_TYPE|MAGIC_MIME_ENCODING)
+#define MAGIC_MIME              hb_bitOr( MAGIC_MIME_TYPE, MAGIC_MIME_ENCODING )
 #define MAGIC_APPLE             0x000800 /* Return the Apple creator and type */
 #define MAGIC_NO_CHECK_COMPRESS 0x001000 /* Don't check for compressed files */
 #define MAGIC_NO_CHECK_TAR      0x002000 /* Don't check for tar files */

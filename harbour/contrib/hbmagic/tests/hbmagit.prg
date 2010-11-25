@@ -62,7 +62,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cJpeg, cPng, cGif, cElf, cExe, cCom
+   LOCAL cJpeg, cPng, cGif, cElf, cExe, cCom, cText
    LOCAL hMagic
 
    cJpeg := hb_base64decode( ;
@@ -89,6 +89,13 @@ PROCEDURE Main()
             "TVpAAAEAAAAGAAAA//8AALgAAAAAAAAAYAAAAAAAAAA=" )
    cCom := hb_base64decode( ;
             "6fEAUE1PREUvVyBWZXJzaW9uIENoZWNrIFV0aWxpdHk=" )
+   cText := hb_base64decode( ;
+            "H4sICONj7UwCA3Rlc3QAjVFba8IwGH3vr/ioDFosE4YM5qUQayaKtfWyh22M0qZpjWsbMSnz5y+p" + ;
+            "MjcfhoEcksN3LiFGi1WkqFMKJuFlyat7sjWNC7lNyjhn5IoVrNwXlPGGNlpHLY2rFDYWDCzJZEFt" + ;
+            "11FHUSc7SqTtgg1DF/oG/KzGNhJUZkWcCwu2viYc8NFk6kWLYIGVpv9bEdRyLVM1mURCHp75oYyl" + ;
+            "ymviXGiD2QPZg/c78QGmc/ZP6iyjh4v74NxIF7KvA/6v5E99HG1ewxt7meWpy41V2lpOeWGpi2GE" + ;
+            "q8DD45cVBj9mlaUYlTMPPDQHMtvT3AESVhonLFOIiwaPVKHHy8vwKatRNzroDXVOEgv62E0p4Sm1" + ;
+            "/vwKgNl52nW6CC3Xn2+zVY5GaInRGo2mCI07D1+jMUJYczdtU72rb3wD2wEd8GQCAAA=" )
 
    hMagic := magic_open()
    IF Empty( hMagic ) .OR. magic_load( hMagic ) != 0
@@ -105,6 +112,9 @@ PROCEDURE Main()
    T( "Short buffer", " " )
    T( "Empty buffer", "" )
    T( "Null buffer", nil )
+   T( "Compressed data", cText )
+   cText := hb_zuncompress( cText )
+   T( "Plain text", cText )
 
    OutStd( "hb_Magic_Simple(): t: [" + hb_Magic_Simple( hb_argv( 0 ), MAGIC_NONE ) + "] " + ;
             "m: [" + hb_Magic_Simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) + "]" + hb_eol() )

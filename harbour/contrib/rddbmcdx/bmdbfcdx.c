@@ -284,7 +284,7 @@ static AREAP hb_bmGetCurrentWorkArea( void )
    return pArea;
 }
 
-static AREAP hb_bmGetArrayParam( int iParam )
+static PHB_ITEM hb_bmGetArrayParam( int iParam )
 {
    PHB_ITEM pArray = hb_param( iParam, HB_IT_ARRAY );
 
