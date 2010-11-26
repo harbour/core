@@ -470,6 +470,7 @@ char * hb_verPlatform( void )
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K3 = HB_FALSE;
 static HB_BOOL s_fWin2K = HB_FALSE;
 static HB_BOOL s_fWinNT = HB_FALSE;
 static HB_BOOL s_fWin9x = HB_FALSE;
@@ -482,9 +483,22 @@ static void s_hb_winVerInit( void )
    if( GetVersionEx( &osvi ) )
    {
       s_fWinVista = osvi.dwMajorVersion >= 6;
+      s_fWin2K3 = s_fWinVista;
       s_fWin2K = osvi.dwMajorVersion >= 5;
       s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
       s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
+
+#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
+    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
+
+      if( ! s_fWin2K3 && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 2 )
+      {
+         OSVERSIONINFOEX osVerEx;
+         osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
+         if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
+            s_fWin2K3 = ( osVerEx.wProductType != VER_NT_WORKSTATION );
+      }
+#endif
    }
    s_fWinVerInit = HB_TRUE;
 }
@@ -494,6 +508,7 @@ static void s_hb_winVerInit( void )
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K3 = HB_FALSE;
 static HB_BOOL s_fWin2K = HB_FALSE;
 static HB_BOOL s_fWinNT = HB_FALSE;
 static HB_BOOL s_fWin9x = HB_FALSE;
@@ -504,6 +519,7 @@ static void s_hb_winVerInit( void )
 
    /* TODO */
    s_fWinVista = HB_FALSE;
+   s_fWin2K3 = s_fWinVista;
    s_fWin2K = HB_FALSE;
 
    /* Host OS detection: Windows NT family */
@@ -540,6 +556,17 @@ HB_BOOL hb_iswinvista( void )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
    return s_fWinVista;
+#else
+   return HB_FALSE;
+#endif
+}
+
+HB_BOOL hb_iswin2k3( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin2K3;
 #else
    return HB_FALSE;
 #endif

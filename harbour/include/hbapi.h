@@ -1157,6 +1157,7 @@ extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a stat
 extern HB_EXPORT HB_BOOL hb_iswin9x( void );    /* return HB_TRUE if OS == Windows 9x, ME */
 extern HB_EXPORT HB_BOOL hb_iswinnt( void );    /* return HB_TRUE if OS == Windows NT or newer */
 extern HB_EXPORT HB_BOOL hb_iswin2k( void );    /* return HB_TRUE if OS == Windows 2000 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin2k3( void );   /* return HB_TRUE if OS == Windows 2003 Server or newer */
 extern HB_EXPORT HB_BOOL hb_iswinvista( void ); /* return HB_TRUE if OS == Windows Vista or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
 

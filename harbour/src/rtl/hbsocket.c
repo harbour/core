@@ -2432,6 +2432,8 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    return ret;
 }
 
+/* NOTE: For notes on Windows, see:
+            http://paste.lisp.org/display/59751 */
 int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 {
    /* it allows to reuse port immediately without timeout used to

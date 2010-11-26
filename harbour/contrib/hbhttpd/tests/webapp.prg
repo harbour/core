@@ -94,17 +94,17 @@ FUNCTION Main()
 
 
    aMap := {;
-    "login"        => @proc_login(), ;
-    "logout"       => @proc_logout(), ;
-    "register"     => @proc_register(), ;
-    "account"      => @proc_account(), ;
-    "account/edit" => @proc_account_edit(), ;
-    "main"         => @proc_main(), ;
-    "shopping"     => @proc_shopping(), ;
-    "cart"         => @proc_cart() }
+      "login"        => @proc_login(), ;
+      "logout"       => @proc_logout(), ;
+      "register"     => @proc_register(), ;
+      "account"      => @proc_account(), ;
+      "account/edit" => @proc_account_edit(), ;
+      "main"         => @proc_main(), ;
+      "shopping"     => @proc_shopping(), ;
+      "cart"         => @proc_cart() }
 
    oServer:aMount := {;
-      "/hello"   => { {|| UWrite( "Hello!")}, .F. }, ;
+      "/hello"   => { {|| UWrite( "Hello!" ) }, .F. }, ;
       "/info"    => { {|| UProcInfo() }, .F. }, ;
       "/files/*" => { {|x| UProcFiles( hb_dirBase() + "files/" + x, .F. ) }, .F. }, ;
       "/app/*"   => { {|x| UProcWidgets( x, aMap ) }, .T. }, ;

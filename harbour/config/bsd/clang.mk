@@ -18,6 +18,8 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
+
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
    CC_IN :=
@@ -58,17 +60,6 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-define dynlib_object
-   @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
-
-endef
-define create_dynlib
-   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-   $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) $(DYSTRIP)
-endef
-
-DY_RULE = $(create_dynlib)
+DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE2)
 
 include $(TOP)$(ROOT)config/rules.mk
