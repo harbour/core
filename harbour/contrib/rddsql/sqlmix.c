@@ -2166,7 +2166,9 @@ static RDDFUNCS sqlmixTable =
        };
 
 
-HB_FUNC( SQLMIX_GETFUNCTABLE )
+HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SQLMIX ) { HB_FUNC_EXEC( SQLBASE ); }
+
+HB_FUNC_STATIC( SQLMIX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount, * puiSuperRddId, uiRddId;
@@ -2196,25 +2198,13 @@ HB_FUNC( SQLMIX_GETFUNCTABLE )
    }
 }
 
-HB_FUNC( SQLMIX ) { ; }
-
-HB_FUNC_EXTERN( SQLBASE );
-
 static void hb_sqlmixRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if ( hb_rddRegister( "SQLMIX", RDT_FULL ) > 1 )
-   {
-      /* try different RDD registrer order */
-      hb_rddRegister( "SQLBASE", RDT_FULL );
-
-      if ( hb_rddRegister( "SQLMIX", RDT_FULL ) > 1 )
-      {
-         hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-         HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
-      }
-   }
+   if( hb_rddRegister( "SQLBASE", RDT_FULL ) > 1 ||
+       hb_rddRegister( "SQLMIX", RDT_FULL ) > 1 )
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
 HB_INIT_SYMBOLS_BEGIN( sqlmix__InitSymbols )

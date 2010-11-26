@@ -1566,7 +1566,7 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
 
 HB_FUNC( DELIM ) { ; }
 
-HB_FUNC( DELIM_GETFUNCTABLE )
+HB_FUNC_STATIC( DELIM_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount;
@@ -1591,9 +1591,7 @@ static void hb_delimRddInit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( hb_rddRegister( "DELIM", RDT_TRANSFER ) > 1 )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )

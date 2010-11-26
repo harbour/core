@@ -1303,7 +1303,7 @@ static const RDDFUNCS sdfTable = { NULL /* hb_sdfBof */,
 
 HB_FUNC( SDF ) { ; }
 
-HB_FUNC( SDF_GETFUNCTABLE )
+HB_FUNC_STATIC( SDF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount;
@@ -1328,9 +1328,7 @@ static void hb_sdfRddInit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( hb_rddRegister( "SDF", RDT_TRANSFER ) > 1 )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )

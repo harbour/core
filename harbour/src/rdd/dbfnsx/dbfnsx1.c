@@ -8171,9 +8171,9 @@ static const RDDFUNCS nsxTable = {
                              NULL
                            };
 
-HB_FUNC( DBFNSX ) {;}
+HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFNSX ) { HB_FUNC_EXEC( _DBF ); }
 
-HB_FUNC( DBFNSX_GETFUNCTABLE )
+HB_FUNC_STATIC( DBFNSX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
@@ -8208,8 +8208,6 @@ HB_FUNC( DBFNSX_GETFUNCTABLE )
    }
 }
 
-HB_FUNC_EXTERN( _DBF );
-
 static void hb_dbfnsxRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -8222,9 +8220,6 @@ static void hb_dbfnsxRddInit( void * cargo )
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-
-   /* not executed, only to force linking DBF RDD */
-   HB_FUNC_EXEC( _DBF );
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbfnsx1__InitSymbols )

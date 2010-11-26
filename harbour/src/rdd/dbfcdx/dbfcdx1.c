@@ -9855,89 +9855,13 @@ static const RDDFUNCS cdxTable =
 };
 
 
-HB_FUNC_EXTERN( _DBF );
-
 #if defined( HB_SIXCDX )
-
-HB_FUNC( SIXCDX ) {;}
-
-HB_FUNC( SIXCDX_GETFUNCTABLE )
-{
-   RDDFUNCS * pTable;
-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
-
-   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
-   pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = hb_parni( 4 );
-   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
-
-   HB_TRACE(HB_TR_DEBUG, ("SIXCDX_GETFUNCTABLE(%p, %p)", puiCount, pTable));
-
-   if( pTable )
-   {
-      HB_ERRCODE errCode;
-
-      if( puiCount )
-         * puiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBFFPT", puiSuperRddId );
-      if( errCode != HB_SUCCESS )
-         errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBFDBT", puiSuperRddId );
-      if( errCode != HB_SUCCESS )
-         errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBF", puiSuperRddId );
-      hb_retni( errCode );
-      if( errCode == HB_SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
-   }
-   else
-      hb_retni( HB_FAILURE );
-}
-
-static void hb_sixcdxRddInit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   if( hb_rddRegister( "DBF",    RDT_FULL ) <= 1 )
-   {
-      hb_rddRegister( "DBFFPT", RDT_FULL );
-      if( hb_rddRegister( "SIXCDX", RDT_FULL ) <= 1 )
-         return;
-   }
-
-   hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-
-   /* not executed, only to force linking DBF RDD */
-   HB_FUNC_EXEC( _DBF );
-}
-
-HB_INIT_SYMBOLS_BEGIN( sixcdx1__InitSymbols )
-{ "SIXCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX )}, NULL },
-{ "SIXCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( sixcdx1__InitSymbols )
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_sixcdx_rdd_init_ )
-   hb_vmAtInit( hb_sixcdxRddInit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_sixcdx_rdd_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup sixcdx1__InitSymbols
-   #pragma startup _hb_sixcdx_rdd_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sixcdx1__InitSymbols ) \
-                              HB_DATASEG_FUNC( _hb_sixcdx_rdd_init_ )
-   #include "hbiniseg.h"
+#  define HB_CDXRDD     "SIXCDX"
+#else
+#  define HB_CDXRDD     "DBFCDX"
 #endif
 
-#else
-
-HB_FUNC( DBFCDX ) {;}
-
-HB_FUNC( DBFCDX_GETFUNCTABLE )
+HB_FUNC_STATIC( _GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
@@ -9947,7 +9871,7 @@ HB_FUNC( DBFCDX_GETFUNCTABLE )
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
-   HB_TRACE(HB_TR_DEBUG, ("DBFCDX_GETFUNCTABLE(%p, %p)", puiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, (HB_CDXRDD "_GETFUNCTABLE(%p, %p)", puiCount, pTable));
 
    if( pTable )
    {
@@ -9974,39 +9898,43 @@ HB_FUNC( DBFCDX_GETFUNCTABLE )
       hb_retni( HB_FAILURE );
 }
 
-static void hb_dbfcdxRddInit( void * cargo )
+static void hb_cdxRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
    if( hb_rddRegister( "DBF", RDT_FULL ) <= 1 )
    {
       hb_rddRegister( "DBFFPT", RDT_FULL );
-      if( hb_rddRegister( "DBFCDX", RDT_FULL ) <= 1 )
+      if( hb_rddRegister( HB_CDXRDD, RDT_FULL ) <= 1 )
          return;
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-
-   /* not executed, only to force linking DBF RDD */
-   HB_FUNC_EXEC( _DBF );
 }
 
-HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
+#if defined( HB_SIXCDX )
+HB_FUNC_EXTERN( _DBF ); HB_FUNC( SIXCDX ) { HB_FUNC_EXEC( _DBF ); }
+HB_INIT_SYMBOLS_BEGIN( _hb_cdx1_InitSymbols_ )
+{ "SIXCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX )}, NULL },
+{ "SIXCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( _hb_cdx1_InitSymbols_ )
+#else
+HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFCDX ) { HB_FUNC_EXEC( _DBF ); }
+HB_INIT_SYMBOLS_BEGIN( _hb_cdx1_InitSymbols_ )
 { "DBFCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFCDX )}, NULL },
-{ "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_dbfcdx_rdd_init_ )
-   hb_vmAtInit( hb_dbfcdxRddInit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup dbfcdx1__InitSymbols
-   #pragma startup _hb_dbfcdx_rdd_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( dbfcdx1__InitSymbols ) \
-                              HB_DATASEG_FUNC( _hb_dbfcdx_rdd_init_ )
-   #include "hbiniseg.h"
+{ "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( _hb_cdx1_InitSymbols_ )
 #endif
 
+HB_CALL_ON_STARTUP_BEGIN( _hb_cdx_rdd_init_ )
+   hb_vmAtInit( hb_cdxRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_cdx_rdd_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_cdx1_InitSymbols_
+   #pragma startup _hb_cdx_rdd_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_cdx1_InitSymbols_ ) \
+                              HB_DATASEG_FUNC( _hb_cdx_rdd_init_ )
+   #include "hbiniseg.h"
 #endif

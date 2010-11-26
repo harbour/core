@@ -725,10 +725,9 @@ static const RDDFUNCS bmTable =
    ( DBENTRYP_SVP )   NULL               /* WhoCares */
 };
 
-HB_FUNC_EXTERN( DBFCDX );
+HB_FUNC_EXTERN( DBFCDX ); HB_FUNC( BMDBFCDX ) { HB_FUNC_EXEC( DBFCDX ); }
 
-HB_FUNC( BMDBFCDX ) {;}
-HB_FUNC( BMDBFCDX_GETFUNCTABLE )
+HB_FUNC_STATIC( BMDBFCDX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable, * pSuperTable;
    HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
@@ -771,18 +770,9 @@ static void hb_bmRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( hb_rddRegister( "DBF", RDT_FULL ) <= 1 )
-   {
-      hb_rddRegister( "DBFFPT", RDT_FULL );
-      if( hb_rddRegister( "DBFCDX", RDT_FULL ) <= 1 &&
-          hb_rddRegister( "BMDBFCDX", RDT_FULL ) <= 1 )
-         return;
-   }
-
-   hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-
-   /* not executed, only to force linking DBFCDX RDD */
-   HB_FUNC_EXEC( DBFCDX );
+   if( hb_rddRegister( "DBFCDX", RDT_FULL ) > 1 ||
+       hb_rddRegister( "BMDBFCDX", RDT_FULL ) > 1 )
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
 HB_INIT_SYMBOLS_BEGIN( bmap1__InitSymbols )

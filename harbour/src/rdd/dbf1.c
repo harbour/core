@@ -5872,7 +5872,7 @@ static const RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
 
 HB_FUNC( _DBF ) { ; }
 
-HB_FUNC( DBF_GETFUNCTABLE )
+HB_FUNC_STATIC( DBF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount, uiRddId;
@@ -5909,9 +5909,7 @@ static void hb_dbfRddInit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( hb_rddRegister( "DBF", RDT_FULL ) > 1 )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )

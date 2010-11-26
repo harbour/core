@@ -1225,19 +1225,9 @@ static RDDFUNCS sqlbaseTable =
 
 /*================ Module initialization code ========================================*/
 
-static void hb_sqlbaseInit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   if ( hb_rddRegister( "SQLBASE", RDT_FULL ) > 1 )
-   {
-      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
-}
-
 HB_FUNC( SQLBASE ) {;}
 
-HB_FUNC( SQLBASE_GETFUNCTABLE )
+HB_FUNC_STATIC( SQLBASE_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    HB_USHORT * puiCount, uiRddId;
@@ -1266,6 +1256,13 @@ HB_FUNC( SQLBASE_GETFUNCTABLE )
    }
 }
 
+static void hb_sqlbaseInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if ( hb_rddRegister( "SQLBASE", RDT_FULL ) > 1 )
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+}
 
 HB_INIT_SYMBOLS_BEGIN( sqlbase__InitSymbols )
 { "SQLBASE",              {HB_FS_PUBLIC}, {HB_FUNCNAME( SQLBASE )}, NULL },

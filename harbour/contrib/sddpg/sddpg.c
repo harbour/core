@@ -117,8 +117,6 @@ static SDDNODE pgsqldd = {
 };
 
 
-HB_FUNC_EXTERN( SQLBASE );
-
 static void hb_pgsqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -126,11 +124,11 @@ static void hb_pgsqldd_init( void * cargo )
    if ( ! hb_sddRegister( & pgsqldd ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-      HB_FUNC_EXEC( SQLBASE );   /*  force SQLBASE linking */
    }
 }
 
-HB_FUNC( SDDPG ) {;}
+/* force SQLBASE linking */
+HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDPG ) { HB_FUNC_EXEC( SQLBASE ); }
 
 HB_INIT_SYMBOLS_BEGIN( sddpostgre__InitSymbols )
 { "SDDPG", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SDDPG )}, NULL },

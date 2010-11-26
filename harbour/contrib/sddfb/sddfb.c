@@ -98,8 +98,6 @@ static SDDNODE firebirddd = {
 };
 
 
-HB_FUNC_EXTERN( SQLBASE );
-
 static void hb_firebirddd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -107,11 +105,11 @@ static void hb_firebirddd_init( void * cargo )
    if ( ! hb_sddRegister( &firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-      HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
    }
 }
 
-HB_FUNC( SDDFB ) {;}
+/* force SQLBASE linking */
+HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDFB ) { HB_FUNC_EXEC( SQLBASE ); }
 
 HB_INIT_SYMBOLS_BEGIN( firebirddd__InitSymbols )
 { "SDDFB", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SDDFB )}, NULL },

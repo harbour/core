@@ -5427,10 +5427,11 @@ static const RDDFUNCS fptTable =
    ( DBENTRYP_SVP )   NULL    /* hb_fptWhoCares */
 };
 
+HB_FUNC_EXTERN( _DBF );
 
+HB_FUNC( DBFFPT ) { HB_FUNC_EXEC( _DBF ); }
 HB_FUNC( DBFDBT ) {;}
 HB_FUNC( DBFSMT ) {;}
-HB_FUNC( DBFFPT ) {;}
 HB_FUNC( DBFBLOB ) {;}
 
 static void hb_dbffptRegisterRDD( HB_USHORT * pusRddId )
@@ -5461,21 +5462,19 @@ static void hb_dbffptRegisterRDD( HB_USHORT * pusRddId )
       hb_retni( HB_FAILURE );
 }
 
-HB_FUNC( DBFFPT_GETFUNCTABLE )
+HB_FUNC_STATIC( DBFFPT_GETFUNCTABLE )
 {
    HB_TRACE(HB_TR_DEBUG, ("DBFFPT_GETFUNCTABLE()"));
 
    hb_dbffptRegisterRDD( &s_uiRddIdFPT );
 }
 
-HB_FUNC( DBFBLOB_GETFUNCTABLE )
+HB_FUNC_STATIC( DBFBLOB_GETFUNCTABLE )
 {
    HB_TRACE(HB_TR_DEBUG, ("DBFBLOB_GETFUNCTABLE()"));
 
    hb_dbffptRegisterRDD( &s_uiRddIdBLOB );
 }
-
-HB_FUNC_EXTERN( _DBF );
 
 static void hb_dbffptRddInit( void * cargo )
 {
@@ -5486,9 +5485,6 @@ static void hb_dbffptRddInit( void * cargo )
        hb_rddRegister( "DBFBLOB", RDT_FULL ) > 1 )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-
-      /* not executed, only to force linking DBF RDD */
-      HB_FUNC_EXEC( _DBF );
    }
 }
 

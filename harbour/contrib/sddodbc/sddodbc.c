@@ -127,8 +127,6 @@ static SDDNODE odbcdd =
 };
 
 
-HB_FUNC_EXTERN( SQLBASE );
-
 static void hb_odbcdd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -136,11 +134,11 @@ static void hb_odbcdd_init( void * cargo )
    if ( ! hb_sddRegister( & odbcdd ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-      HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
    }
 }
 
-HB_FUNC( SDDODBC ) {;}
+/* force SQLBASE linking */
+HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDODBC ) { HB_FUNC_EXEC( SQLBASE ); }
 
 HB_INIT_SYMBOLS_BEGIN( odbcdd__InitSymbols )
 { "SDDODBC", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDODBC )}, NULL },

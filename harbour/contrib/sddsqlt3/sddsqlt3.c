@@ -98,8 +98,6 @@ static SDDNODE sqlt3dd =
 };
 
 
-HB_FUNC_EXTERN( SQLBASE );
-
 static void hb_sqlt3dd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -111,7 +109,6 @@ static void hb_sqlt3dd_init( void * cargo )
    if( ! hb_sddRegister( &sqlt3dd ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-      HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
    }
 }
 
@@ -124,7 +121,8 @@ static void hb_sqlt3dd_exit( void * cargo )
 #endif
 }
 
-HB_FUNC( SDDSQLITE3 ) {;}
+/* force SQLBASE linking */
+HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDSQLITE3 ) { HB_FUNC_EXEC( SQLBASE ); }
 
 HB_INIT_SYMBOLS_BEGIN( sqlt3dd__InitSymbols )
 { "SDDSQLITE3", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDSQLITE3 )}, NULL },
