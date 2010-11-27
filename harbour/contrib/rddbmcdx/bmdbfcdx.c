@@ -725,9 +725,18 @@ static const RDDFUNCS bmTable =
    ( DBENTRYP_SVP )   NULL               /* WhoCares */
 };
 
-HB_FUNC_EXTERN( DBFCDX ); HB_FUNC( BMDBFCDX ) { HB_FUNC_EXEC( DBFCDX ); }
+#if defined( HB_BMDBFNSX )
+   #define _HB_PARENT_RDD "DBFNSX"
+   HB_FUNC_EXTERN( DBFNSX ); HB_FUNC( BMDBFNSX ) { HB_FUNC_EXEC( DBFNSX ); }
+#elif defined( HB_BMDBFNTX )
+   #define _HB_PARENT_RDD "DBFNTX"
+   HB_FUNC_EXTERN( DBFNTX ); HB_FUNC( BMDBFNTX ) { HB_FUNC_EXEC( DBFNTX ); }
+#else
+   #define _HB_PARENT_RDD "DBFCDX"
+   HB_FUNC_EXTERN( DBFCDX ); HB_FUNC( BMDBFCDX ) { HB_FUNC_EXEC( DBFCDX ); }
+#endif
 
-HB_FUNC_STATIC( BMDBFCDX_GETFUNCTABLE )
+HB_FUNC_STATIC( _GETFUNCTABLE )
 {
    RDDFUNCS * pTable, * pSuperTable;
    HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
@@ -738,7 +747,7 @@ HB_FUNC_STATIC( BMDBFCDX_GETFUNCTABLE )
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
-   HB_TRACE(HB_TR_DEBUG, ("BMDBFCDX_GETFUNCTABLE(%p, %p, %p, %hu, %p)", puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId));
+   HB_TRACE(HB_TR_DEBUG, ("BM" _HB_PARENT_RDD "_GETFUNCTABLE(%p, %p, %p, %hu, %p)", puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId));
 
    if( pTable )
    {
@@ -749,7 +758,7 @@ HB_FUNC_STATIC( BMDBFCDX_GETFUNCTABLE )
       if( !pSuperTable )
          pSuperTable = &bmSuper;
 
-      errCode = hb_rddInheritEx( pTable, &bmTable, pSuperTable, "DBFCDX", puiSuperRddId );
+      errCode = hb_rddInheritEx( pTable, &bmTable, pSuperTable, _HB_PARENT_RDD, puiSuperRddId );
       hb_retni( errCode );
       if( errCode == HB_SUCCESS )
       {
@@ -770,15 +779,33 @@ static void hb_bmRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( hb_rddRegister( "DBFCDX", RDT_FULL ) > 1 ||
-       hb_rddRegister( "BMDBFCDX", RDT_FULL ) > 1 )
+   if( hb_rddRegister( _HB_PARENT_RDD, RDT_FULL ) > 1 ||
+       hb_rddRegister( "BM" _HB_PARENT_RDD, RDT_FULL ) > 1 )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
+#if defined( HB_BMDBFNSX )
+
 HB_INIT_SYMBOLS_BEGIN( bmap1__InitSymbols )
-{ "BMDBFCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFCDX )}, NULL },
-{ "BMDBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFCDX_GETFUNCTABLE )}, NULL }
+{ "BM" _HB_PARENT_RDD,              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFNSX )}, NULL },
+{ "BM" _HB_PARENT_RDD "_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( bmap1__InitSymbols )
+
+#elif defined( HB_BMDBFNTX )
+
+HB_INIT_SYMBOLS_BEGIN( bmap1__InitSymbols )
+{ "BM" _HB_PARENT_RDD,                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFNTX )}, NULL },
+{ "BM" _HB_PARENT_RDD "_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( bmap1__InitSymbols )
+
+#else
+
+HB_INIT_SYMBOLS_BEGIN( bmap1__InitSymbols )
+{ "BM" _HB_PARENT_RDD,                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFCDX )}, NULL },
+{ "BM" _HB_PARENT_RDD "_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( bmap1__InitSymbols )
+
+#endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_bm_rdd_init_ )
    hb_vmAtInit( hb_bmRddInit, NULL );
