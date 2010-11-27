@@ -113,7 +113,8 @@ METHOD RUN() CLASS UHttpd
       IF Empty( hSocket := hb_socketAccept( Self:hListen,, 1000 ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
             Eval( Self:bIdle, Self )
-            IF Self:lStop;  EXIT
+            IF Self:lStop
+               EXIT
             ENDIF
          ELSE
             Self:LogError( "[error] Accept error " + hb_ntos( hb_socketGetError() ) )
@@ -269,7 +270,8 @@ STATIC FUNCTION ProcessConnection( oServer )
                               UAddHeader( "Connection", "keep-alive" )
                            ENDIF
                         ENDIF
-                        IF ! ProcessRequest( oServer, hSocket );  BREAK
+                        IF ! ProcessRequest( oServer, hSocket )
+                           BREAK
                         ENDIF
                      ENDIF
                   ELSE /* We do not support another protocols */
@@ -754,7 +756,7 @@ STATIC FUNCTION ErrDescCode( nCode )
          "BADALIAS", "DUPALIAS" , NIL          , "CREATE"     , "OPEN"    , "CLOSE"      , "READ"    , "WRITE"      , ; // 17, 18, 19, 20, 21, 22, 23, 24
          "PRINT"   , NIL        , NIL          , NIL          , NIL       , "UNSUPPORTED", "LIMIT"   , "CORRUPTION" , ; // 25, 26 - 29, 30, 31, 32
          "DATATYPE", "DATAWIDTH", "NOTABLE"    , "NOORDER"    , "SHARED"  , "UNLOCKED"   , "READONLY", "APPENDLOCK" , ; // 33, 34, 35, 36, 37, 38, 39, 40
-         "LOCK"    }[nCode]                                                                                            // 41
+         "LOCK"    }[ nCode ]                                                                                           // 41
    ENDIF
 
    RETURN iif( cI == NIL, "", "EG_" + cI )
@@ -794,7 +796,8 @@ PROCEDURE UAddHeader( cType, cValue )
 
 PROCEDURE URedirect( cURL, nCode )
 
-   IF nCode == NIL;  nCode := 303
+   IF nCode == NIL
+      nCode := 303
    ENDIF
    USetStatusCode( nCode )
    UAddHeader( "Location", cURL )
@@ -867,10 +870,11 @@ FUNCTION UUrlDecode( cString )
    nI := 1
    DO WHILE nI <= Len( cString )
       nI := HB_AT( "%", cString, nI )
-      IF nI == 0;  EXIT
+      IF nI == 0
+         EXIT
       ENDIF
       IF Upper( SubStr( cString, nI + 1, 1 ) ) $ "0123456789ABCDEF" .AND. ;
-            Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
+         Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
          cString := Stuff( cString, nI, 3, HB_HexToStr( SubStr(cString, nI + 1, 2 ) ) )
       ENDIF
       nI++
@@ -1027,27 +1031,27 @@ PROCEDURE UProcInfo()
 
    UWrite( '<h2>Capabilities</h2>' )
    UWrite( '<table border=1 cellspacing=0>' )
-   UWrite( '<tr><td>RDD</td><td>' + UHtmlEncode( uhttpd_join(", ", rddList() ) ) + '</td></tr>' )
+   UWrite( '<tr><td>RDD</td><td>' + UHtmlEncode( uhttpd_join( ", ", rddList() ) ) + '</td></tr>' )
    UWrite( '</table>' )
 
    UWrite( '<h2>Variables</h2>' )
 
    UWrite( '<h3>server</h3>' )
    UWrite( '<table border=1 cellspacing=0>' )
-   HB_HEval( server, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+   HB_HEval( server, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode( HB_CStr(v ) ) + '</td></tr>' ) } )
    UWrite( '</table>' )
 
    IF !Empty( get )
       UWrite( '<h3>get</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
-      HB_HEval( get, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+      HB_HEval( get, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode( HB_CStr(v ) ) + '</td></tr>' ) } )
       UWrite( '</table>' )
    ENDIF
 
    IF !Empty( post )
       UWrite( '<h3>post</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
-      HB_HEval( post, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode(HB_CStr(v ) ) + '</td></tr>' ) } )
+      HB_HEval( post, {|k, v| UWrite( '<tr><td>' + k + '</td><td>' + UHtmlEncode( HB_CStr(v ) ) + '</td></tr>' ) } )
       UWrite( '</table>' )
    ENDIF
 

@@ -1543,7 +1543,11 @@ else
       else
       ifneq ($(HB_HOST_PLAT_UNIX),)
          # Stick to *nix customs. I do not like it, it needs admin.
-         HB_INSTALL_PREFIX := /usr/local
+         ifeq ($(HB_HOST_PLAT),darwin)
+            HB_INSTALL_PREFIX := /opt/harbour
+         else
+            HB_INSTALL_PREFIX := /usr/local
+         endif
          # Add postfix for cross builds
          ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
             HB_INSTALL_PREFIX := $(HB_INSTALL_PREFIX)/harbour-$(HB_PLATFORM)-$(HB_COMPILER)
