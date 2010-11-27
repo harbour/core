@@ -23,7 +23,7 @@ FUNCTION UWMainNew()
 
    LOCAL oW := UWMain()
 
-   session["_uthis", "main"] := oW
+   session[ "_uthis", "main" ] := oW
 
    RETURN oW
 
@@ -494,7 +494,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
    IF HB_HHasKey( aMap, cURL )
       // aStack[i] = {url_part, function, variables}
       IF ( aStack := hb_HGetDef( session, "_ustack" ) ) == NIL
-         session["_ustack"] := aStack := {}
+         session[ "_ustack" ] := aStack := {}
       ENDIF
 
       aURL := uhttpd_split( "/", cURL )
@@ -512,9 +512,9 @@ PROCEDURE UProcWidgets( cURL, aMap )
       DO WHILE nI <= Len( aStack )
          aFrame := ATAIL( aStack )
          IF aFrame[2] != NIL
-            session["_uthis"] := aFrame[3]
+            session[ "_uthis" ] := aFrame[3]
             Eval( aFrame[2], "EXIT" )
-            session["_uthis"] := NIL
+            session[ "_uthis" ] := NIL
          ENDIF
          ASize( aStack, Len( aStack ) - 1 )
       ENDDO
@@ -525,12 +525,12 @@ PROCEDURE UProcWidgets( cURL, aMap )
       DO WHILE nI <= Len( aURL )
          cI := uhttpd_join( "/", ASize( AClone(aURL ), nI ) )
          IF HB_HHasKey( aMap, cI )
-            session["_uthis"] := { "idhash" => { => } }
+            session[ "_uthis" ] := { "idhash" => { => } }
             IF ( lRet := Eval( aMap[cI], "INIT" ) ) == .T.
-               AAdd( aStack, { aURL[nI], aMap[cI], session["_uthis"] } )
-               session["_uthis"] := NIL
+               AAdd( aStack, { aURL[nI], aMap[cI], session[ "_uthis" ] } )
+               session[ "_uthis" ] := NIL
             ELSE
-               session["_uthis"] := NIL
+               session[ "_uthis" ] := NIL
                EXIT
             ENDIF
          ELSE
@@ -540,14 +540,14 @@ PROCEDURE UProcWidgets( cURL, aMap )
       ENDDO
 
       IF lRet
-         session["_uthis"] :=  ATAIL( aStack )[3]
-         IF server["REQUEST_METHOD"] == "GET"
+         session[ "_uthis" ] :=  ATAIL( aStack )[3]
+         IF server[ "REQUEST_METHOD" ] == "GET"
             Eval( ATAIL( aStack )[2], "GET" )
-         ELSEIF server["REQUEST_METHOD"] == "POST"
+         ELSEIF server[ "REQUEST_METHOD" ] == "POST"
             Eval( ATAIL( aStack )[2], "POST" )
          ENDIF
-         ATAIL( aStack )[3] := session["_uthis"]
-         session["_uthis"] := NIL
+         ATAIL( aStack )[3] := session[ "_uthis" ]
+         session[ "_uthis" ] := NIL
       ENDIF
    ELSE
       USetStatusCode( 404 )
@@ -561,7 +561,7 @@ PROCEDURE UWDefaultHandler( cMethod )
 
    IF cMethod == "GET"
       IF ( cID := hb_HGetDef( get, "ajax" ) ) == NIL
-         session["_uthis", "main"]:Paint()
+         session[ "_uthis", "main" ]:Paint()
       ELSE
          IF ( oW := UGetWidgetById( cID ) ) != NIL
             UAddHeader( "Content-type", "text/html; charset=windows-1257" )
@@ -576,10 +576,10 @@ STATIC PROCEDURE SetWId( oW, cID )
 
    IF cID != NIL
       oW:cID := cID
-      session["_uthis", "idhash", cID] := oW
+      session[ "_uthis", "idhash", cID ] := oW
    ENDIF
 
    RETURN
 
 FUNCTION UGetWidgetById( cID )
-   RETURN hb_HGetDef( session["_uthis", "idhash"], cID )
+   RETURN hb_HGetDef( session[ "_uthis", "idhash" ], cID )

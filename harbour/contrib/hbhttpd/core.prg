@@ -37,7 +37,7 @@ CREATE CLASS UHttpd
    DATA bLogError    INIT {|| NIL }
    DATA bTrace       INIT {|| NIL }
    DATA bIdle        INIT {|| NIL }
-   DATA aMount       INIT { => }
+   DATA hMount       INIT { => }
 
    /* Results */
    DATA cError       INIT ""
@@ -123,12 +123,12 @@ METHOD RUN() CLASS UHttpd
          Eval( Self:bTrace, "New connection", hSocket )
          Eval( Self:bTrace, "Waiters:", nWaiters )
          IF nWaiters < 2 .AND. Len( aThreads ) < THREAD_COUNT_MAX
-         /*
-            We need two threads in worst case. If first thread becomes a sessioned
-            thread, the second one will continue to serve sessionless requests for
-            the same connection. We create two threads here to avoid free thread count
-            check (and aThreads variable sync) in ProcessRequest().
-         */
+            /*
+               We need two threads in worst case. If first thread becomes a sessioned
+               thread, the second one will continue to serve sessionless requests for
+               the same connection. We create two threads here to avoid free thread count
+               check (and aThreads variable sync) in ProcessRequest().
+            */
             AAdd( aThreads, hb_threadStart( @ProcessConnection(), Self ) )
             AAdd( aThreads, hb_threadStart( @ProcessConnection(), Self ) )
          ENDIF
@@ -166,11 +166,11 @@ METHOD LogAccess() CLASS UHttpd
 
    hb_mutexLock( Self:hmtxLog )
    Eval( Self:bLogAccess, ;
-      server["REMOTE_ADDR"] + " - - [" + Right( cDate, 2 ) + "/" + ;
+      server[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[VAL(SUBSTR(cDate, 5, 2))] + ;
-      "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server["REQUEST_ALL"] + '" ' + ;
+      "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
-      ' "' + server["HTTP_REFERER"] + '" "' + server["HTTP_USER_AGENT"] + ;
+      ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
    hb_mutexUnlock( Self:hmtxLog )
 
@@ -224,14 +224,14 @@ STATIC FUNCTION ProcessConnection( oServer )
             t_nStatusCode := 200
 
             IF !Empty( aI := hb_socketGetPeerName( hSocket ) )
-               server["REMOTE_ADDR"] := aI[HB_SOCKET_ADINFO_ADDRESS]
-               server["REMOTE_HOST"] := server["REMOTE_ADDR"]  // no reverse DNS
-               server["REMOTE_PORT"] := aI[HB_SOCKET_ADINFO_PORT]
+               server[ "REMOTE_ADDR" ] := aI[HB_SOCKET_ADINFO_ADDRESS]
+               server[ "REMOTE_HOST" ] := server[ "REMOTE_ADDR" ]  // no reverse DNS
+               server[ "REMOTE_PORT" ] := aI[HB_SOCKET_ADINFO_PORT]
             ENDIF
 
             IF !Empty( aI := hb_socketGetSockName( hSocket ) )
-               server["SERVER_ADDR"] := aI[HB_SOCKET_ADINFO_ADDRESS]
-               server["SERVER_PORT"] := aI[HB_SOCKET_ADINFO_PORT]
+               server[ "SERVER_ADDR" ] := aI[HB_SOCKET_ADINFO_ADDRESS]
+               server[ "SERVER_PORT" ] := aI[HB_SOCKET_ADINFO_PORT]
             ENDIF
 
             Eval( oServer:bTrace, Left( cRequest, At( CR_LF + CR_LF, cRequest ) + 1 ) )
@@ -258,12 +258,12 @@ STATIC FUNCTION ProcessConnection( oServer )
                   cRequest := SubStr( cRequest, nReqLen + 1 )
 
                   /* Deal with supported protocols and methods */
-                  IF server["SERVER_PROTOCOL"] $ "HTTP/1.0 HTTP/1.1"
-                     IF !( server["REQUEST_METHOD"] $ "GET POST" )
+                  IF server[ "SERVER_PROTOCOL" ] $ "HTTP/1.0 HTTP/1.1"
+                     IF !( server[ "REQUEST_METHOD" ] $ "GET POST" )
                         USetStatusCode( 501 )
                      ELSE
-                        IF server["SERVER_PROTOCOL"] == "HTTP/1.1"
-                           IF Lower( server["HTTP_CONNECTION"] ) == "close"
+                        IF server[ "SERVER_PROTOCOL" ] == "HTTP/1.1"
+                           IF Lower( server[ "HTTP_CONNECTION" ] ) == "close"
                               UAddHeader( "Connection", "close" )
                            ELSE
                               UAddHeader( "Connection", "keep-alive" )
@@ -280,7 +280,7 @@ STATIC FUNCTION ProcessConnection( oServer )
 
             SendResponse( oServer, hSocket )
 
-            IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server["SERVER_PROTOCOL"] == "HTTP/1.0"
+            IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server[ "SERVER_PROTOCOL" ] == "HTTP/1.0"
             ELSE
                hb_mutexNotify( oServer:hmtxQueue, { hSocket, cRequest } )
                BREAK
@@ -302,40 +302,41 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
    PRIVATE session
 
    // Search mounting table
-   cMount := server["SCRIPT_NAME"]
-   IF HB_HHasKey( oServer:aMount, cMount )
+   cMount := server[ "SCRIPT_NAME" ]
+   IF cMount $ oServer:hMount
       cPath := ""
    ELSE
       nI := Len( cMount )
       DO WHILE ( nI := HB_RAT( "/", cMount,, nI ) ) > 0
-         IF HB_HHasKey( oServer:aMount, Left( cMount, nI ) + "*" )
+         IF ( Left( cMount, nI ) + "*" ) $ oServer:hMount
             cMount := Left( cMount, nI ) + "*"
-            cPath := SubStr( server["SCRIPT_NAME"], nI + 1 )
+            cPath := SubStr( server[ "SCRIPT_NAME" ], nI + 1 )
             EXIT
          ENDIF
-         nI --
+         nI--
       ENDDO
    ENDIF
 
-   IF cMount != NIL
-      bEval := oServer:aMount[cMount, 1]
+   IF cPath != NIL
+      bEval := oServer:hMount[ cMount, 1 ]
 
-      IF oServer:aMount[cMount, 2]
+      IF oServer:hMount[ cMount, 2 ]
          /* sessioned */
-         IF HB_HHasKey( cookie, "SESSID" );  cSID := cookie["SESSID"]
+         IF "SESSID" $ cookie
+            cSID := cookie[ "SESSID" ]
          ENDIF
 
          hb_mutexLock( oServer:hmtxSession )
-         IF cSID == NIL .OR. ! HB_HHasKey( oServer:aSession, cSID )
+         IF cSID == NIL .OR. !( cSID $ oServer:aSession )
 
             /* create new session */
 
             cSID := HB_MD5( DToS( Date() ) + Time() + Str( HB_RANDOM(), 15, 12 ) )
             hmtx := hb_mutexCreate()
-            oServer:aSession[cSID] := { hb_threadSelf(), hmtx, { => } }
+            oServer:aSession[ cSID ] := { hb_threadSelf(), hmtx, { => } }
 
             // PRIVATE
-            session := oServer:aSession[cSID, 3]
+            session := oServer:aSession[ cSID, 3 ]
 
             hb_mutexUnlock( oServer:hmtxSession )
 
@@ -356,8 +357,8 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                   UAddHeader( "Set-Cookie", "SESSID=" + cSID + "; path=/" )
                ENDIF
 
-               IF server["SERVER_PROTOCOL"] == "HTTP/1.1"
-                  IF Lower( server["HTTP_CONNECTION"] ) == "close"
+               IF server[ "SERVER_PROTOCOL" ] == "HTTP/1.1"
+                  IF Lower( server[ "HTTP_CONNECTION" ] ) == "close"
                      UAddHeader( "Connection", "close" )
                   ELSE
                      UAddHeader( "Connection", "keep-alive" )
@@ -373,7 +374,7 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
                   hb_mutexUnlock( oServer:hmtxSession )
                ENDIF
 
-               IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server["SERVER_PROTOCOL"] == "HTTP/1.0"
+               IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server[ "SERVER_PROTOCOL" ] == "HTTP/1.0"
                   Eval( oServer:bTrace, "Close connection2", hSocket )
                   hb_socketShutdown( hSocket )
                   hb_socketClose( hSocket )
@@ -414,8 +415,8 @@ STATIC FUNCTION ProcessRequest( oServer, hSocket, cBuffer )
             session := NIL
          ELSE
             /* session already exists */
-            Eval( oServer:bTrace, "session pries", server["SCRIPT_NAME"] )
-            hb_mutexNotify( oServer:aSession[cSID, 2], { hSocket, cBuffer, oServer:aMount[cMount, 1], cPath, server, get, post, cookie, oServer:aSession[cSID, 3] } )
+            Eval( oServer:bTrace, "session pries", server[ "SCRIPT_NAME" ] )
+            hb_mutexNotify( oServer:aSession[cSID, 2], { hSocket, cBuffer, oServer:hMount[cMount, 1], cPath, server, get, post, cookie, oServer:aSession[cSID, 3] } )
             hb_mutexUnlock( oServer:hmtxSession )
          ENDIF
 
@@ -441,41 +442,41 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    aRequest := uhttpd_split( CR_LF, cRequest )
    aLine := uhttpd_split( " ", aRequest[1] )
 
-   server["REQUEST_ALL"] := aRequest[1]
+   server[ "REQUEST_ALL" ] := aRequest[1]
    IF Len( aLine ) == 3 .AND. Left( aLine[3], 5 ) == "HTTP/"
-      server["REQUEST_METHOD"] := aLine[1]
-      server["REQUEST_URI"] := aLine[2]
-      server["SERVER_PROTOCOL"] := aLine[3]
+      server[ "REQUEST_METHOD" ] := aLine[1]
+      server[ "REQUEST_URI" ] := aLine[2]
+      server[ "SERVER_PROTOCOL" ] := aLine[3]
    ELSE
-      server["REQUEST_METHOD"] := aLine[1]
-      server["REQUEST_URI"] := iif( Len( aLine ) >= 2, aLine[2], "" )
-      server["SERVER_PROTOCOL"] := iif( Len( aLine ) >= 3, aLine[3], "" )
+      server[ "REQUEST_METHOD" ] := aLine[1]
+      server[ "REQUEST_URI" ] := iif( Len( aLine ) >= 2, aLine[2], "" )
+      server[ "SERVER_PROTOCOL" ] := iif( Len( aLine ) >= 3, aLine[3], "" )
       RETURN 0
    ENDIF
 
    // Fix invalid queries: bind to root
-   IF ! ( Left( server["REQUEST_URI"], 1 ) == "/" )
-      server["REQUEST_URI"] := "/" + server["REQUEST_URI"]
+   IF ! ( Left( server[ "REQUEST_URI" ], 1 ) == "/" )
+      server[ "REQUEST_URI" ] := "/" + server[ "REQUEST_URI" ]
    ENDIF
 
-   IF ( nI := At( "?", server["REQUEST_URI"] ) ) > 0
-      server["SCRIPT_NAME"] := Left( server["REQUEST_URI"], nI - 1 )
-      server["QUERY_STRING"] := SubStr( server["REQUEST_URI"], nI + 1 )
+   IF ( nI := At( "?", server[ "REQUEST_URI" ] ) ) > 0
+      server[ "SCRIPT_NAME" ] := Left( server[ "REQUEST_URI" ], nI - 1 )
+      server[ "QUERY_STRING" ] := SubStr( server[ "REQUEST_URI" ], nI + 1 )
    ELSE
-      server["SCRIPT_NAME"] := server["REQUEST_URI"]
-      server["QUERY_STRING"] := ""
+      server[ "SCRIPT_NAME" ] := server[ "REQUEST_URI" ]
+      server[ "QUERY_STRING" ] := ""
    ENDIF
 
-   server["HTTP_ACCEPT"] := ""
-   server["HTTP_ACCEPT_CHARSET"] := ""
-   server["HTTP_ACCEPT_ENCODING"] := ""
-   server["HTTP_ACCEPT_LANGUAGE"] := ""
-   server["HTTP_CONNECTION"] := ""
-   server["HTTP_HOST"] := ""
-   server["HTTP_KEEP_ALIVE"] := ""
-   server["HTTP_REFERER"] := ""
-   server["HTTP_USER_AGENT"] := ""
-   server["HTTP_CONTENT_TYPE"] := ""
+   server[ "HTTP_ACCEPT" ] := ""
+   server[ "HTTP_ACCEPT_CHARSET" ] := ""
+   server[ "HTTP_ACCEPT_ENCODING" ] := ""
+   server[ "HTTP_ACCEPT_LANGUAGE" ] := ""
+   server[ "HTTP_CONNECTION" ] := ""
+   server[ "HTTP_HOST" ] := ""
+   server[ "HTTP_KEEP_ALIVE" ] := ""
+   server[ "HTTP_REFERER" ] := ""
+   server[ "HTTP_USER_AGENT" ] := ""
+   server[ "HTTP_CONTENT_TYPE" ] := ""
 
    FOR nI := 2 TO Len( aRequest )
       IF aRequest[nI] == ""
@@ -502,8 +503,8 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
          ENDSWITCH
       ENDIF
    NEXT
-   IF !( server["QUERY_STRING"] == "" )
-      FOR EACH cI IN uhttpd_split( "&", server["QUERY_STRING"] )
+   IF !( server[ "QUERY_STRING" ] == "" )
+      FOR EACH cI IN uhttpd_split( "&", server[ "QUERY_STRING" ] )
          IF ( nI := At( "=", cI ) ) > 0
             get[UUrlDecode(LEFT(cI, nI - 1))] := UUrlDecode( SubStr( cI, nI + 1 ) )
          ELSE
@@ -519,7 +520,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
 
    LOCAL nI, cPart
 
-   IF server["HTTP_CONTENT_TYPE"] == "application/x-www-form-urlencoded"
+   IF server[ "HTTP_CONTENT_TYPE" ] == "application/x-www-form-urlencoded"
       FOR EACH cPart IN uhttpd_split( "&", cRequest )
          IF ( nI := At( "=", cPart ) ) > 0
             post[UUrlDecode(LEFT(cPart, nI - 1))] := UUrlDecode( SubStr( cPart, nI + 1 ) )
@@ -540,7 +541,7 @@ STATIC FUNCTION MakeResponse( oServer )
    ENDIF
    UAddHeader( "Date", HttpDateFormat( HB_DATETIME() ) )
 
-   cRet := iif( server["SERVER_PROTOCOL"] == "HTTP/1.0", "HTTP/1.0 ", "HTTP/1.1 " )
+   cRet := iif( server[ "SERVER_PROTOCOL" ] == "HTTP/1.0", "HTTP/1.0 ", "HTTP/1.1 " )
    SWITCH t_nStatusCode
    CASE 200
       cRet += "200 OK"
@@ -898,13 +899,13 @@ PROCEDURE UProcFiles( cFileName, lIndex )
    ENDIF
 
    IF HB_FileExists( uOSFileName( cFileName ) )
-      IF HB_HHasKey( server, "HTTP_IF_MODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server["HTTP_IF_MODIFIED_SINCE"], @tHDate ) .AND. ;
+      IF "HTTP_IF_MODIFIED_SINCE" $ server .AND. ;
+            HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
             HB_FGETDATETIME( UOsFileName( cFileName ), @tDate ) .AND. ;
             ( tDate <= tHDate )
          USetStatusCode( 304 )
-      ELSEIF HB_HHasKey( server, "HTTP_IF_UNMODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server["HTTP_IF_UNMODIFIED_SINCE"], @tHDate ) .AND. ;
+      ELSEIF "HTTP_IF_UNMODIFIED_SINCE" $ server .AND. ;
+            HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
             HB_FGETDATETIME( UOsFileName( cFileName ), @tDate ) .AND. ;
             ( tDate > tHDate )
          USetStatusCode( 412 )
@@ -958,7 +959,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       ENDIF
    ELSEIF HB_DirExists( UOsFileName( cFileName ) )
       IF Right( cFileName, 1 ) != "/"
-         URedirect( "http://" + server["HTTP_HOST"] + server["SCRIPT_NAME"] + "/" )
+         URedirect( "http://" + server[ "HTTP_HOST" ] + server[ "SCRIPT_NAME" ] + "/" )
          RETURN
       ENDIF
       IF ASCAN( { "index.html", "index.htm" }, ;
@@ -975,11 +976,11 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       UAddHeader( "Content-Type", "text/html" )
 
       aDir := Directory( UOsFileName( cFileName ), "D" )
-      IF HB_HHasKey( get, "s" )
-         IF get["s"] == "s"
+      IF "s" $ get
+         IF get[ "s" ] == "s"
             ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
                iif( Y[5] == "D", .F. , X[2] < Y[2] ) ) } )
-         ELSEIF get["s"] == "m"
+         ELSEIF get[ "s" ] == "m"
             ASort( aDir, , , {|X, Y| iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
                iif( Y[5] == "D", .F. , DToS( X[3] ) + X[4] < DToS( Y[3] ) + Y[4] ) ) } )
          ELSE

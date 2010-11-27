@@ -630,7 +630,7 @@ int HBQGraphicsItem::determineResizeMode( const QPointF & pos )
 
 void HBQGraphicsItem::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
 {
-HB_TRACE( HB_TR_ALWAYS, ( "dragEnterEvent( QGraphicsSceneDragDropEvent * event )" ) );
+HB_TRACE( HB_TR_DEBUG, ( "dragEnterEvent( QGraphicsSceneDragDropEvent * event )" ) );
    if( block )
    {
       #if 0

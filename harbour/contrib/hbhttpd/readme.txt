@@ -143,7 +143,7 @@ This table is called mounting table in my uhttpd implementation. It
 allows to mount a single URL or URL subtree to a particular handler
 (function or codeblock).
 Mounting table is hash, having this structure:
-   oServer:aMount := { url => { handler, sessioned }, ... }
+   oServer:hMount := { url => { handler, sessioned }, ... }
 URL can a single URL path, or path containing '*' wildchar in the end.
 Example:
     /app/login   - single URL match http://host/app/login

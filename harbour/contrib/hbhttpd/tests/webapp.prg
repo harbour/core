@@ -13,7 +13,7 @@ FUNCTION Main()
    LOCAL oLogAccess
    LOCAL oLogError
 
-   LOCAL aMap
+   LOCAL hMap
 
    IF HB_ARGCHECK( "help" )
       ? "Usage: app [options]"
@@ -93,7 +93,7 @@ FUNCTION Main()
    oServer:bIdle := { |o| iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }
 
 
-   aMap := {;
+   hMap := {;
       "login"        => @proc_login(), ;
       "logout"       => @proc_logout(), ;
       "register"     => @proc_register(), ;
@@ -103,11 +103,11 @@ FUNCTION Main()
       "shopping"     => @proc_shopping(), ;
       "cart"         => @proc_cart() }
 
-   oServer:aMount := {;
+   oServer:hMount := {;
       "/hello"   => { {|| UWrite( "Hello!" ) }, .F. }, ;
       "/info"    => { {|| UProcInfo() }, .F. }, ;
       "/files/*" => { {|x| UProcFiles( hb_dirBase() + "files/" + x, .F. ) }, .F. }, ;
-      "/app/*"   => { {|x| UProcWidgets( x, aMap ) }, .T. }, ;
+      "/app/*"   => { {|x| UProcWidgets( x, hMap ) }, .T. }, ;
       "/*"       => { {|| URedirect( "/app/login" ) }, .F. } }
 
    ? "Listening on port:", oServer:nPort
