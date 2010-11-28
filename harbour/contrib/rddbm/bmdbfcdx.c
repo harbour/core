@@ -787,7 +787,7 @@ static void hb_bmRddInit( void * cargo )
 #if defined( HB_BMDBFNSX )
 
 HB_INIT_SYMBOLS_BEGIN( bmap1__InitSymbols )
-{ "BM" _HB_PARENT_RDD,              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFNSX )}, NULL },
+{ "BM" _HB_PARENT_RDD,                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( BMDBFNSX )}, NULL },
 { "BM" _HB_PARENT_RDD "_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( bmap1__InitSymbols )
 

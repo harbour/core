@@ -96,7 +96,7 @@ METHOD New( cUrl ) CLASS tURL
 METHOD SetAddress( cUrl ) CLASS tURL
    LOCAL aMatch, cServer, cPath
 
-   ::cAddress := ""
+   ::cAddress := cUrl
    ::cProto := ""
    ::cUserid := ""
    ::cPassword := ""

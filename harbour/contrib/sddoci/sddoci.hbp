@@ -18,9 +18,12 @@
 -depcontrol=ocilib:${HB_WITH_OCILIB}
 -depincpath=ocilib:/usr/include
 -depincpath=ocilib:/usr/local/include
--depimplibs=ocilib:../lib32/ociliba.dll
--depimplibs=ocilib:../lib32/ocilibm.dll
--depimplibs=ocilib:../lib32/ocilibw.dll
+-depimplibs=ocilib:../lib32/ociliba.dll{win&x86}
+-depimplibs=ocilib:../lib32/ocilibm.dll{win&x86}
+-depimplibs=ocilib:../lib32/ocilibw.dll{win&x86}
+-depimplibs=ocilib:../lib64/ociliba.dll{win&x86_64}
+-depimplibs=ocilib:../lib64/ocilibm.dll{win&x86_64}
+-depimplibs=ocilib:../lib64/ocilibw.dll{win&x86_64}
 
 # Using prebuilt static libs with MinGW
 -cflag=-DOCI_API=_stdcall{mingw}

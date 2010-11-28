@@ -12,7 +12,7 @@ MEMVAR session, server, get, post
 
 CREATE CLASS UWMain
 
-   DATA  aChilds     INIT {}
+   VAR  aChilds     INIT {}
 
    METHOD Add( oWidget )
    METHOD Paint()
@@ -48,7 +48,7 @@ METHOD Add( oWidget ) CLASS UWMain
 
 CREATE CLASS UWLayoutGrid
 
-   DATA  aChilds     INIT { { {} } }     // {{{}}, {{}}} ;   {{{}, {}}}
+   VAR  aChilds     INIT { { {} } }     // {{{}}, {{}}} ;   {{{}, {}}}
 
    METHOD Add( oWidget, nRow, nCol )
    METHOD Paint()
@@ -105,7 +105,7 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
 
 CREATE CLASS UWHtml
 
-   DATA  cText
+   VAR  cText
 
    METHOD Paint()
 
@@ -129,9 +129,9 @@ METHOD Paint() CLASS UWHtml
 
 CREATE CLASS UWLabel
 
-   DATA  cText
-   DATA  cID
-   DATA  cStyle
+   VAR  cText
+   VAR  cID
+   VAR  cStyle
 
    METHOD Paint()
 
@@ -159,9 +159,9 @@ METHOD Paint() CLASS UWLabel
 
 CREATE CLASS UWForm
 
-   DATA  cAction
-   DATA  cMethod   INIT "POST"
-   DATA  aChilds   INIT {}
+   VAR  cAction
+   VAR  cMethod   INIT "POST"
+   VAR  aChilds   INIT {}
 
    METHOD Add( oWidget )
    METHOD Paint()
@@ -194,10 +194,10 @@ METHOD Paint() CLASS UWForm
 
 CREATE CLASS UWInput
 
-   DATA  cName
-   DATA  cValue
-   DATA  cID
-   DATA  cStyle
+   VAR  cName
+   VAR  cValue
+   VAR  cID
+   VAR  cStyle
 
    METHOD Paint()
 
@@ -225,8 +225,8 @@ METHOD Paint() CLASS UWInput
 
 CREATE CLASS UWPassword
 
-   DATA  cName
-   DATA  cValue
+   VAR  cName
+   VAR  cValue
 
    METHOD Paint()
 
@@ -251,8 +251,8 @@ METHOD Paint() CLASS UWPassword
 
 CREATE CLASS UWSubmit
 
-   DATA  cName
-   DATA  cValue
+   VAR  cName
+   VAR  cValue
 
    METHOD Paint()
 
@@ -298,7 +298,7 @@ METHOD Paint() CLASS UWSeparator
 
 CREATE CLASS UWMenu
 
-   DATA  aItems    INIT {}
+   VAR  aItems    INIT {}
 
    METHOD AddItem( cTitle, cLink )
    METHOD Paint()
@@ -336,13 +336,13 @@ METHOD Paint() CLASS UWMenu
 
 CREATE CLASS UWBrowse
 
-   DATA cID
-   DATA aColumns   INIT {}
-   DATA nArea
+   VAR cID
+   VAR aColumns   INIT {}
+   VAR nArea
 
-   DATA nRecno
-   DATA lBof       INIT .F.
-   DATA lEof       INIT .F.
+   VAR nRecno
+   VAR lBof       INIT .F.
+   VAR lEof       INIT .F.
 
    METHOD AddColumn( nID, cTitle, cField, lRaw )
    METHOD Paint()

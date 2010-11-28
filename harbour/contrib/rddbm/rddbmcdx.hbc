@@ -1,5 +1,0 @@
-#
-# $Id$
-#
-
-libs=${hb_name}${__HB_DYN__}
