@@ -10,5 +10,5 @@
 -w3 -es2
 
 bmdbfcdx.c
-bmdbfnsx.c
-bmdbfntx.c
+#bmdbfnsx.c
+#bmdbfntx.c
