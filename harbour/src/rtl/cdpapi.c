@@ -303,7 +303,7 @@ static int hb_cdpMultiWeight( PHB_CODEPAGE cdp, const char * szChar )
           ( szChar[ 1 ] == pmulti->cLast[ 0 ] ||
             szChar[ 1 ] == pmulti->cLast[ 1 ] ) )
       {
-         return ( szChar[ 0 ]  == pmulti->cFirst[ 0 ] ) ?
+         return ( szChar[ 0 ] == pmulti->cFirst[ 0 ] ) ?
                 pmulti->sortUp : pmulti->sortLo;
       }
    }
@@ -1987,13 +1987,13 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
          {
             flags[ ( HB_UCHAR ) multi->cFirst[ 0 ] ] |= HB_CDP_MULTI1;
             flags[ ( HB_UCHAR ) multi->cLast [ 0 ] ] |= HB_CDP_MULTI2;
-            multi->sortUp = ++iSortUp;
+            multi->sortUp = ++iSortUp - iAccUp;
          }
          if( multi->cFirst[ 1 ] != ' ' )
          {
             flags[ ( HB_UCHAR ) multi->cFirst[ 1 ] ] |= HB_CDP_MULTI1;
             flags[ ( HB_UCHAR ) multi->cLast [ 1 ] ] |= HB_CDP_MULTI2;
-            multi->sortLo = ++iSortLo;
+            multi->sortLo = ++iSortLo - iAccLo;
          }
          if( *pup == '=' )
          {
@@ -2136,6 +2136,11 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
          sort[ i ] += ( HB_UCHAR ) iAdd;
          if( acc )
             acc[ i ] += ( HB_UCHAR ) iAdd;
+      }
+      for( i = 0; i < cdp->nMulti; ++i )
+      {
+         cdp->multi[ i ].sortUp += iUp;
+         cdp->multi[ i ].sortLo += iUp + iLo;
       }
    }
 
