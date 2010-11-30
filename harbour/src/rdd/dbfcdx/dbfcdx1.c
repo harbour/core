@@ -411,9 +411,9 @@ static int hb_cdxValCompare( LPCDXTAG pTag, const HB_BYTE * val1, int len1,
       }
       else if( pTag->pIndex->pArea->fSortCDP )
       {
-         iResult = hb_cdpcmp( ( const char * ) val1, ( HB_SIZE ) iLimit,
-                              ( const char * ) val2, ( HB_SIZE ) iLimit,
-                              pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
+         return - hb_cdpcmp( ( const char * ) val2, ( HB_SIZE ) len2,
+                             ( const char * ) val1, ( HB_SIZE ) len1,
+                             pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
       }
       else if( iLimit > 0 )
          iResult = memcmp( val1, val2, iLimit );

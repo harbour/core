@@ -860,9 +860,9 @@ static int hb_nsxValCompare( LPTAGINFO pTag, const HB_UCHAR * val1, int len1,
       if( iLimit > 0 )
       {
          if( pTag->pIndex->pArea->dbfarea.area.cdPage->sort )
-            iResult = hb_cdpcmp( ( const char * ) val1, ( HB_SIZE ) iLimit,
-                                 ( const char * ) val2, ( HB_SIZE ) iLimit,
-                                 pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
+            return - hb_cdpcmp( ( const char * ) val2, ( HB_SIZE ) len2,
+                                ( const char * ) val1, ( HB_SIZE ) len1,
+                                pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
          else
             iResult = memcmp( val1, val2, iLimit );
       }

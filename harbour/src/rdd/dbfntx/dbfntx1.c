@@ -680,7 +680,8 @@ static int hb_ntxValCompare( LPTAGINFO pTag, const char* val1, int len1,
       if( iLimit > 0 )
       {
          if( pTag->Owner->Owner->dbfarea.area.cdPage->sort )
-            iResult = hb_cdpcmp( val1, ( HB_SIZE ) iLimit, val2, ( HB_SIZE ) iLimit, pTag->Owner->Owner->dbfarea.area.cdPage, 0 );
+            return - hb_cdpcmp( val2, ( HB_SIZE ) len2, val1, ( HB_SIZE ) len1,
+                                pTag->Owner->Owner->dbfarea.area.cdPage, 0 );
          else
             iResult = memcmp( val1, val2, iLimit );
       }
