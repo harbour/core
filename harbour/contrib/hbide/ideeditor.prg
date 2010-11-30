@@ -426,7 +426,7 @@ METHOD IdeEditsManager:getTabBySource( cSource )
 
    cSource := hbide_pathNormalized( cSource, .t. )
 
-   RETURN ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:pathNormalized == cSource } )
+   RETURN ascan( ::aTabs, {|e_| hb_FileMatch( e_[ TAB_OEDITOR ]:pathNormalized, cSource ) } )
 
 /*----------------------------------------------------------------------*/
 
@@ -541,7 +541,7 @@ METHOD IdeEditsManager:getEditorBySource( cSource )
    LOCAL n
 
    cSource := hbide_pathNormalized( cSource, .t. )
-   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ]:pathNormalized == cSource } ) ) > 0
+   IF ( n := ascan( ::aTabs, {|e_| hb_FileMatch( e_[ TAB_OEDITOR ]:pathNormalized, cSource ) } ) ) > 0
       RETURN ::aTabs[ n, TAB_OEDITOR ]
    ENDIF
 

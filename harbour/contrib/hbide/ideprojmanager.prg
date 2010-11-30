@@ -363,7 +363,7 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
 
    cProjFileName := hbide_pathToOSPath( cProjFileName )
 
-   nAlready := ascan( ::aProjects, {|e_| e_[ 1 ] == hbide_pathNormalized( cProjFileName ) } )
+   nAlready := ascan( ::aProjects, {|e_| hb_FileMatch( e_[ 1 ], hbide_pathNormalized( cProjFileName ) ) } )
 
    IF !empty( cProjFileName ) .AND. hb_fileExists( cProjFileName )
       ::aPrjProps  := ::pullHbpData( hbide_pathToOSPath( cProjFileName ) )
@@ -606,7 +606,7 @@ METHOD IdeProjManager:save( lCanClose )
    IF ( lOk := hbide_createTarget( ::cSaveTo, txt_ ) )
       ::aPrjProps := ::pullHbpData( hbide_pathToOSPath( ::cSaveTo ) )
 
-      IF ( nAlready := ascan( ::aProjects, {|e_| e_[ 1 ] == hbide_pathNormalized( ::cSaveTo ) } ) ) == 0
+      IF ( nAlready := ascan( ::aProjects, {|e_| hb_FileMatch( e_[ 1 ], hbide_pathNormalized( ::cSaveTo ) ) } ) ) == 0
          aadd( ::oIDE:aProjects, { hbide_pathNormalized( ::cSaveTo ), ::cSaveTo, aclone( ::aPrjProps ) } )
          IF ::lUpdateTree
             ::oIDE:updateProjectTree( ::aPrjProps )
@@ -1181,7 +1181,7 @@ METHOD IdeProjManager:getProjectByFile( cProjectFile )
 
    cProjectFile := hbide_pathNormalized( cProjectFile )
 
-   IF ( n := ascan( ::aProjects, {|e_| e_[ 1 ] == cProjectFile } ) ) > 0
+   IF ( n := ascan( ::aProjects, {|e_| hb_FileMatch( e_[ 1 ], cProjectFile ) } ) ) > 0
       aProj := ::aProjects[ n ]
    ENDIF
 

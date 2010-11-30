@@ -615,14 +615,8 @@ FUNCTION hbide_sourceType( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_pathNormalized( cPath, lLower )
-   LOCAL S
-
-   DEFAULT lLower TO .T.
-
-   s := strtran( cPath, "\", "/" )
-
-   RETURN IIF( lLower, lower( s ), s )
+FUNCTION hbide_pathNormalized( cPath )
+   RETURN strtran( cPath, "\", "/" )
 
 /*----------------------------------------------------------------------*/
 
@@ -651,7 +645,7 @@ FUNCTION hbide_pathToOSPath( cPath )
    cPath := strtran( cPath, "\"  , hb_ps() )
 
    IF ( n := at( ":", cPath ) ) > 0
-      cPath := upper( substr( cPath, 1, n - 1 ) ) + substr( cPath, n )
+      cPath := substr( cPath, 1, n - 1 ) + substr( cPath, n )
    ENDIF
 
    RETURN cPath
@@ -1735,7 +1729,7 @@ FUNCTION hbide_isPrevParent( cRoot, cPath )
    cLRoot := hbide_pathNormalized( cRoot, .t. )
    cLPath := hbide_pathNormalized( cPath, .t. )
 
-   IF left( cLPath, len( cLRoot ) ) == cLRoot
+   IF hb_FileMatch( left( cLPath, len( cLRoot ) ), cLRoot )
       RETURN .t.
    ENDIF
 
@@ -1779,7 +1773,7 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
 
    cLRoot := hbide_pathNormalized( cRoot, .t. )
    cLPath := hbide_pathNormalized( cPath, .f. )
-   IF left( lower( cLPath ), len( cLRoot ) ) == cLRoot
+   IF hb_FileMatch( left( lower( cLPath ), len( cLRoot ) ), cLRoot )
       cP := substr( cLPath, len( cRoot ) + 1 )
       RETURN cP
    ENDIF

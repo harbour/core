@@ -646,7 +646,7 @@ METHOD IdeINI:load( cHbideIni )
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( ::aRecentProjects ) < 25
                         cVal := hbide_pathNormalized( cVal, .f. )
-                        IF aScan( ::aRecentProjects, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
+                        IF aScan( ::aRecentProjects, {|e| hb_FileMatch( hbide_pathNormalized( e, .f. ), cVal ) } ) == 0
                            AAdd( ::aRecentProjects, cVal )
                         ENDIF
                      ENDIF
@@ -656,7 +656,7 @@ METHOD IdeINI:load( cHbideIni )
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( ::aRecentFiles ) < 25
                         cVal := hbide_pathNormalized( cVal, .f. )
-                        IF aScan( ::aRecentFiles, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
+                        IF aScan( ::aRecentFiles, {|e| hb_FileMatch( hbide_pathNormalized( e, .f. ), cVal ) } ) == 0
                            AAdd( ::aRecentFiles, cVal )
                         ENDIF
                      ENDIF

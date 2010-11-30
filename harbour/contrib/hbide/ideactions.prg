@@ -794,7 +794,7 @@ FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, cType )
       a_:= oIde:oINI:aRecentFiles
    ENDIF
 
-   IF ( nPos := aScan( a_, {|f| hbide_pathNormalized( f ) == cFileNormal } ) ) > 0
+   IF ( nPos := aScan( a_, {|f| hb_FileMatch( hbide_pathNormalized( f ), cFileNormal ) } ) ) > 0
       hb_aDel( a_, nPos, .T. )
    ENDIF
 

@@ -2432,15 +2432,23 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    return ret;
 }
 
-/* NOTE: For notes on Windows, see:
-            http://paste.lisp.org/display/59751 */
 int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 {
    /* it allows to reuse port immediately without timeout used to
     * clean all pending connections addressed to previous port owner
     */
    int val = fReuse ? 1 : 0, ret;
-   ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+   #if defined( HB_OS_WIN )
+      #if defined( SO_EXCLUSIVEADDRUSE )
+         /* NOTE: For notes on Windows, see: http://paste.lisp.org/display/59751 */
+         ret = setsockopt( sd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, ( const char * ) &val, sizeof( val ) );
+      #else
+         HB_SYMBOL_UNUSED( val );
+         ret = -1;
+      #endif
+   #else
+      ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+   #endif
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 }

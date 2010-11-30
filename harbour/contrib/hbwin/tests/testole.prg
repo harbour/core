@@ -10,7 +10,7 @@
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
- *    Exm_CDO(), Exm_OOOpen()
+ *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
  *
  * www - http://harbour-project.org
  *
@@ -35,6 +35,7 @@ PROCEDURE Main()
       ? "b) SOAP Toolkit client"
       ? "c) PocketSOAP client"
       ? "d) Internet Explorer with callback"
+      ? "e) Create shortcut"
       ? "0) Quit"
       ? "> "
 
@@ -67,6 +68,8 @@ PROCEDURE Main()
          Exm_PocketSOAP()
       ELSEIF nOption == Asc( "d" )
          Exm_IExplorer2()
+      ELSEIF nOption == Asc( "e" )
+         Exm_CreateShortcut()
       ELSEIF nOption == Asc( "0" )
          EXIT
       ENDIF
@@ -485,6 +488,22 @@ STATIC PROCEDURE Exm_PocketSOAP()
       ? oEnvelope:Parameters:Item( 0 ):Value
    ELSE
       ? "Error: PocketSOAP not available.", win_oleErrorText()
+   ENDIF
+
+   RETURN
+
+
+STATIC PROCEDURE Exm_CreateShortcut()
+   LOCAL oShell, oSC
+
+   IF ( oShell := win_oleCreateObject( "WScript.Shell" ) ) != NIL
+      oSC := oShell:CreateShortcut( hb_dirBase() + hb_ps() + "testole.lnk" )
+      oSC:TargetPath := hb_ProgName()
+      oSC:WorkingDirectory := hb_DirBase()
+      oSC:IconLocation := hb_ProgName() + ",0"
+      oSC:Save()
+   ELSE
+      ? "Error: Shell not available. [" + win_oleErrorText()+ "]"
    ENDIF
 
    RETURN

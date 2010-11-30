@@ -132,7 +132,7 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
    FOR EACH a_ IN ::aTabs
       oEditor := a_[ TAB_OEDITOR ]
       IF hb_isObject( oEditor )
-         IF hbide_pathNormalized( oEditor:sourceFile, .t. ) == cSource
+         IF hb_FileMatch( hbide_pathNormalized( oEditor:sourceFile, .t. ), cSource )
             IF oEditor:lLoaded
                IF oEditor:qDocument:isModified()
                   cBuffer := oEditor:prepareBufferToSave( oEditor:qEdit:toPlainText() )
@@ -229,7 +229,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
                // will check later what decision to take
                RETURN .f.
             ENDIF
-            IF hbide_pathNormalized( cNewFile ) == hbide_pathNormalized( cSource )
+            IF hb_FileMatch( hbide_pathNormalized( cNewFile ), hbide_pathNormalized( cSource ) )
                lNew := .f.
             ENDIF
          ENDIF
