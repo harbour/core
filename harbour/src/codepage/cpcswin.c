@@ -54,9 +54,9 @@
 #define HB_CP_ID        CSWIN
 #define HB_CP_INFO      "Czech Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
-#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
-#define HB_CP_UPPER     "A~Á~ÄBCÈD~ÏE~É~Ì~ËFGH.CH.I~ÍJKLMN~ÒO~Ó~ÖPQRØSŠT~U~Ú~Ù~ÜVWXY~İZ"
-#define HB_CP_LOWER     "a~á~äbcèd~ïe~é~ì~ëfgh.ch.i~íjklmn~òo~ó~öpqrøsšt~u~ú~ù~üvwxy~ız"
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "AÁÄBCÈDÏEÉÌËFGH.CH.IÍJKLMNÒOÓÖPQRØSŠTUÚÙÜVWXYİZ"
+#define HB_CP_LOWER     "aáäbcèdïeéìëfgh.ch.iíjklmnòoóöpqrøsštuúùüvwxyız"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

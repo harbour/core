@@ -54,9 +54,9 @@
 #define HB_CP_ID        CS852
 #define HB_CP_INFO      "Czech CP-852"
 #define HB_CP_UNITB     HB_UNITB_852
-#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
-#define HB_CP_UPPER     "A~µ~BC¬D~ÒE~~·~ÓFGH.CH.I~ÖJKLMN~ÕO~à~™PQRüSæT~›U~é~Ş~šVWXY~íZ¦"
-#define HB_CP_LOWER     "a~ ~„bcŸd~Ôe~‚~Ø~‰fgh.ch.i~¡jklmn~åo~¢~”pqrısçt~œu~£~…~vwxy~ìz§"
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "AµBC¬DÒE·ÓFGH.CH.IÖJKLMNÕOà™PQRüSæT›UéŞšVWXYíZ¦"
+#define HB_CP_LOWER     "a „bcŸdÔe‚Ø‰fgh.ch.i¡jklmnåo¢”pqrısçtœu£…vwxyìz§"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

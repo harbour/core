@@ -54,9 +54,9 @@
 #define HB_CP_ID        CSISO
 #define HB_CP_INFO      "Czech ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2
-#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
-#define HB_CP_UPPER     "A~Á~ÄBCÈD~ÏE~É~Ì~ËFGH.CH.I~ÍJKLMN~ÒO~Ó~ÖPQRØS©T~«U~Ú~Ù~ÜVWXY~ÝZ®"
-#define HB_CP_LOWER     "a~á~äbcèd~ïe~é~ì~ëfgh.ch.i~íjklmn~òo~ó~öpqrøs¹t~»u~ú~ù~üvwxy~ýz¾"
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "AÁÄBCÈDÏEÉÌËFGH.CH.IÍJKLMNÒOÓÖPQRØS©T«UÚÙÜVWXYÝZ®"
+#define HB_CP_LOWER     "aáäbcèdïeéìëfgh.ch.iíjklmnòoóöpqrøs¹t»uúùüvwxyýz¾"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -54,9 +54,9 @@
 #define HB_CP_ID        CSKAM
 #define HB_CP_INFO      "Czech Kamenicky (895)"
 #define HB_CP_UNITB     HB_UNITB_KAM
-#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
-#define HB_CP_UPPER     "A~~BC€D~…E~~‰FGH.CH.I~‹JKLMN~¥O~•~™PQRS›T~†U~—~¦~šVWXY~Z’"
-#define HB_CP_LOWER     "a~ ~„bc‡d~ƒe~‚~ˆfgh.ch.i~¡jklmn~¤o~¢~”pqr©s¨t~Ÿu~£~–~vwxy~˜z‘"
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "ABC€D…E‰FGH.CH.I‹JKLMN¥O•™PQRS›T†U—¦šVWXYZ’"
+#define HB_CP_LOWER     "a „bc‡dƒe‚ˆfgh.ch.i¡jklmn¤o¢”pqr©s¨tŸu£–vwxy˜z‘"
 
 /* include CP registration code */
 #include "hbcdpreg.h"
