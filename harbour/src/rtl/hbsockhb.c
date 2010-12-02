@@ -69,6 +69,7 @@
  * HB_SOCKETRECVFROM( hSocket, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], @aAddr, [ nTimeout = FOREVER ] ) --> nBytesRecv
  * HB_SOCKETSETBLOCKINGIO( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETNODELAY( hSocket, lValue ) --> lSuccess
+ * HB_SOCKETSETEXCLUSIVEADDR( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETREUSEADDR( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETKEEPALIVE( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETBROADCAST( hSocket, lValue ) --> lSuccess
@@ -476,6 +477,15 @@ HB_FUNC( HB_SOCKETSETNODELAY )
    if( socket != HB_NO_SOCKET )
    {
       hb_retl( hb_socketSetNoDelay( socket, hb_parl( 2 ) ) == 0 );
+   }
+}
+
+HB_FUNC( HB_SOCKETSETEXCLUSIVEADDR )
+{
+   HB_SOCKET socket = hb_socketParam( 1 );
+   if( socket != HB_NO_SOCKET )
+   {
+      hb_retl( hb_socketSetExclusiveAddr( socket, hb_parl( 2 ) ) == 0 );
    }
 }
 

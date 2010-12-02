@@ -10,8 +10,9 @@ C_SOURCES := \
    cpbgmik.c \
    cpbgwin.c \
    cpcs852.c \
+   cpcs852c.c \
    cpcsiso.c \
-   cpcskam.c \
+   cpcskamc.c \
    cpcswin.c \
    cpde850.c \
    cpde850m.c \
@@ -71,7 +72,7 @@ C_SOURCES := \
    cpsk852.c \
    cpsk852c.c \
    cpskiso.c \
-   cpskkam.c \
+   cpskkamc.c \
    cpskwin.c \
    cpsl646.c \
    cpsl852.c \

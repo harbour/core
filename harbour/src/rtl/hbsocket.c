@@ -600,6 +600,14 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    return -1;
 }
 
+int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
+{
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fReuse );
+   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   return -1;
+}
+
 int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 {
    HB_SYMBOL_UNUSED( sd );
@@ -2432,24 +2440,53 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    return ret;
 }
 
-int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
+/* NOTE: For notes on Windows, see:
+         http://paste.lisp.org/display/59751
+         [vszakats] */
+int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
-   /* it allows to reuse port immediately without timeout used to
-    * clean all pending connections addressed to previous port owner
-    */
-   int val = fReuse ? 1 : 0, ret;
+   int ret;
    #if defined( HB_OS_WIN )
       #if defined( SO_EXCLUSIVEADDRUSE )
-         /* NOTE: For notes on Windows, see: http://paste.lisp.org/display/59751 */
+         int val = fExclusive ? 1 : 0;
          ret = setsockopt( sd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, ( const char * ) &val, sizeof( val ) );
+         hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
       #else
-         HB_SYMBOL_UNUSED( val );
+         HB_SYMBOL_UNUSED( sd );
+         HB_SYMBOL_UNUSED( fExclusive );
+         hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
          ret = -1;
       #endif
    #else
-      ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+      HB_SYMBOL_UNUSED( sd );
+      HB_SYMBOL_UNUSED( fExclusive );
+      hb_socketSetOsError( 0 );
+      ret = 0;
    #endif
-   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
+}
+
+int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
+{
+   int ret;
+   /* it allows to reuse port immediately without timeout used to
+    * clean all pending connections addressed to previous port owner
+    */
+   #if defined( HB_OS_WIN )
+      /* SO_REUSEADDR in MS-Windows makes sth completly different
+       * then in other OS-es
+       */
+      HB_SYMBOL_UNUSED( sd );
+      HB_SYMBOL_UNUSED( fReuse );
+      hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+      ret = -1;
+   #else
+   {
+      int val = fReuse ? 1 : 0;
+      ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+      hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   }
+   #endif
    return ret;
 }
 

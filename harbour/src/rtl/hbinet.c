@@ -1105,7 +1105,12 @@ HB_FUNC( HB_INETIFINFO )
 
 static int s_inetBind( PHB_SOCKET_STRUCT socket, const void * pSockAddr, unsigned uiLen )
 {
+#if defined( HB_OS_WIN )
+   /* TODO: Do not set this for UDP multicast */
+   hb_socketSetExclusiveAddr( socket->sd, HB_TRUE );
+#else
    hb_socketSetReuseAddr( socket->sd, HB_TRUE );
+#endif
    return hb_socketBind( socket->sd, pSockAddr, uiLen );
 }
 
