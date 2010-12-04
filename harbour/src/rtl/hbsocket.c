@@ -603,7 +603,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
    HB_SYMBOL_UNUSED( sd );
-   HB_SYMBOL_UNUSED( fReuse );
+   HB_SYMBOL_UNUSED( fExclusive );
    hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
