@@ -206,6 +206,7 @@
 #define DBOI_RELKEYPOS          130  /* get/set relative key position (in range 0 - 1) */
 #define DBOI_USECURRENT         131  /* get/set "use current index" flag */
 #define DBOI_INDEXTYPE          132  /* current index type */
+#define DBOI_RESETPOS           133  /* rest logical and raw positions */
 
 /* return values for DBOI_OPTLEVEL */
 #define DBOI_OPTIMIZED_NONE       0

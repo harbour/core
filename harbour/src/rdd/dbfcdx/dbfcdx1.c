@@ -6428,6 +6428,24 @@ static void hb_cdxClearLogPosInfo( CDXAREAP pArea )
    }
 }
 
+static void hb_cdxClearPosInfo( CDXAREAP pArea )
+{
+   LPCDXINDEX pIndex = pArea->lpIndexes;
+   LPCDXTAG pTag;
+
+   while( pIndex )
+   {
+      pTag = pIndex->TagList;
+      while( pTag )
+      {
+         pTag->curKeyState &= ~( CDX_CURKEY_LOGPOS | CDX_CURKEY_LOGCNT |
+                                 CDX_CURKEY_RAWPOS | CDX_CURKEY_RAWCNT );
+         pTag = pTag->pNext;
+      }
+      pIndex = pIndex->pNext;
+   }
+}
+
 /*
  * -- DBFCDX METHODS --
  */
@@ -8046,6 +8064,10 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
                                                pIndex ? uiTag : 0 );
          return HB_SUCCESS;
       }
+
+      case DBOI_RESETPOS:
+         hb_cdxClearPosInfo( pArea );
+         return HB_SUCCESS;
    }
 
    if( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )

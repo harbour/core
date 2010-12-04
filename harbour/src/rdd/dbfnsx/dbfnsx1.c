@@ -7237,6 +7237,8 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          pInfo->itmResult = hb_itemPutNI( pInfo->itmResult, pIndex ? i : 0 );
          return HB_SUCCESS;
       }
+      case DBOI_RESETPOS:
+         return HB_SUCCESS;
    }
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )

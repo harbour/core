@@ -6830,6 +6830,8 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          hb_itemPutNI( pInfo->itmResult, pIndex ? i : 0 );
          return HB_SUCCESS;
       }
+      case DBOI_RESETPOS:
+         return HB_SUCCESS;
    }
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
