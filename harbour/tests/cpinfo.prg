@@ -19,7 +19,7 @@
 
 proc main( cdp, info, unicode )
    local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, cOrdMix, cMix, c, i, a
-   local lWarn, lBin, lSort, lEqual, lMixed
+   local lWarn, lBin, lSort, lEqual, lMixed, lIsUp, lIsLo
 
    set alternate to cpinfo.txt additive
    set alternate on
@@ -188,15 +188,23 @@ proc main( cdp, info, unicode )
          cUp2 := substr( cUp, 27 )
          cLo2 := substr( cLo, 27 )
          cOrd2 := ""
+         lIsUp := lIsLo := .f.
          for i := 0 to 255
             c := chr( i )
             if c $ cUp2
-               if ! c $ cOrd2
+               if ! lIsUp
                   cOrd2 += cUp2
+                  lIsUp := .t.
+                  if lIsLo
+                     cOrd2 += cLo2
+                  endif
                endif
             elseif c $ cLo2
-               if ! c $ cOrd2
-                  cOrd2 += cLo2
+               if !lIsLo
+                  if lIsUp
+                     cOrd2 += cLo2
+                  endif
+                  lIsLo := .t.
                endif
             else
                cOrd2 += chr( i )
@@ -407,7 +415,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    local cDef
 
    cDef := ;
-      '/*' + EOL + ' * $Id$' + EOL + ' */' + EOL + EOL + ;
+      '/*' + EOL + ' * $Id' + '$' + EOL + ' */' + EOL + EOL + ;
       '/*' + EOL + ;
       ' * Harbour Project source code:' + EOL + ;
       ' * National Collation Support Module ( $1 )' + EOL + ;
