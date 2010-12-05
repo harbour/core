@@ -18,8 +18,8 @@
 #include "fileio.ch"
 
 proc main( cdp, info, unicode )
-   local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, c, i, a
-   local lWarn, lBin, lSort, lEqual
+   local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, cOrdMix, cMix, c, i, a
+   local lWarn, lBin, lSort, lEqual, lMixed
 
    set alternate to cpinfo.txt additive
    set alternate on
@@ -29,7 +29,7 @@ proc main( cdp, info, unicode )
    /* for test */
    set( _SET_CODEPAGE, iif( empty( cdp ), "PLMAZ", upper( cdp ) ) )
    hb_setTermCP( set( _SET_CODEPAGE ), set( _SET_CODEPAGE ) )
-   lEqual := .t.
+   lEqual := .f.
 #else
    lEqual := .f.
 #endif
@@ -57,7 +57,7 @@ proc main( cdp, info, unicode )
    if !lSort
       ? "simple byte sorting !!!"
    endif
-   lBin := lWarn := .f.
+   lBin := lWarn := lMixed := .f.
    cUp := cLo := cOrd := ""
    for i := 1 to len( a )
       if i < len(a) .and. a[i] > a[ i + 1 ] .and. !isalpha( chr( a[ i ] ) )
@@ -155,20 +155,31 @@ proc main( cdp, info, unicode )
          lBin := lWarn := .t.
       endif
    next
+   cMix := ""
    if ! len( cUp ) == len( cLo )
       ? "number of upper and lower characters is different"
       lWarn := .t.
+   else
+      for i := 1 to len( cUp )
+         cMix += substr( cUp, i, 1 )
+         cMix += substr( cLo, i, 1 )
+      next
    endif
-   cOrd2 := ""
+   cOrd2 := cOrdMix := ""
    for i := 0 to 255
-      if i == asc( cUp )
-         cOrd2 += cUp
-      elseif i == asc( cLo )
-         cOrd2 += cLo
+      if i == asc( cUp ) .or. i == asc( cLo )
+         if i == asc( cUp )
+            cOrd2 += cUp
+         else
+            cOrd2 += cLo
+         endif
+         cOrdMix += cMix
+         cMix := ""
       endif
       c := chr( i )
       if ! c $ cUp .and. ! c $ cLo
-         cOrd2 += chr( i )
+         cOrd2 += c
+         cOrdMix += c
       endif
    next
    if ! cOrd == cOrd2
@@ -220,8 +231,11 @@ proc main( cdp, info, unicode )
                cLo := cLo2
             endif
          endif
+      elseif cOrd == cOrdMix
+         ? "letters case are mixed"
+         lMixed := .t.
       endif
-      if ! cOrd == cOrd2 .and. lSort
+      if ! cOrd == cOrd2 .and. lSort .and. !lMixed
          ? "letters are not sorted continuously"
          lBin := lWarn := .t.
       endif
@@ -246,7 +260,7 @@ proc main( cdp, info, unicode )
 
    if !empty( cdp )
       write_file( "cp" + lower( cdp ) + ".c", ;
-                  genCP( cdp, info, unicode, lBin, lWarn, cUp, cLo ) )
+                  genCP( cdp, info, unicode, lBin, lWarn, lMixed, cUp, cLo ) )
    endif
 
 return
@@ -334,7 +348,7 @@ static function write_file( cName, cBody )
 
 return lRet
 
-static function genCP( id, info, unicode, lBin, lWarn, cUp, cLo )
+static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
    local flags[ 256 ], upper[ 256 ], lower[ 256 ], sort[ 256 ], tmp[ 256 ]
    local i, c
 
@@ -386,10 +400,10 @@ static function genCP( id, info, unicode, lBin, lWarn, cUp, cLo )
    next
 
    return genCPfile( id, info, unicode, flags, upper, lower, sort, ;
-                     lBin, lWarn, cUp, cLo )
+                     lBin, lWarn, lMixed, cUp, cLo )
 
 static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
-                           lBin, lWarn, cUp, cLo )
+                           lBin, lWarn, lMixed, cUp, cLo )
    local cDef
 
    cDef := ;
@@ -408,7 +422,11 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
       '#define HB_CP_UNITB     HB_UNITB_$3' + EOL
    if !lBin
       cDef += ;
-         '#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE' + EOL + ;
+         '#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE' + EOL
+      if lMixed
+         cDef += '#define HB_CP_CSSORT    HB_CDP_CSSORT_MIXED' + EOL
+      endif
+      cDef += ;
          '#define HB_CP_UPPER     "' + cUp + '"' + EOL + ;
          '#define HB_CP_LOWER     "' + cLo + '"' + EOL + ;
          EOL

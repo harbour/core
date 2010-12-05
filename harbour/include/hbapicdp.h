@@ -324,6 +324,13 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
                                              characters being compared are the
                                              same ( interleaving ) */
 
+/* letter case sensitive sorting */
+#define HB_CDP_CSSORT_UPLO          0     /* upper letters first then lower
+                                             ones */
+#define HB_CDP_CSSORT_MIXED         1     /* upper and lower letters are
+                                             mixed */
+#define HB_CDP_CSSORT_IGNORE        2     /* ignore case */
+
 /* byte order */
 #define HB_CDP_ENDIAN_NATIVE        0
 #define HB_CDP_ENDIAN_LITTLE        1
@@ -335,7 +342,8 @@ extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
                                                  PHB_UNITABLE uniTable,
                                                  const char * pszUpper,
                                                  const char * pszLower,
-                                                 unsigned int nACSort );
+                                                 unsigned int nACSort,
+                                                 unsigned int nCaseSort );
 extern HB_EXPORT void         hb_cdpReleaseAll( void );
 extern HB_EXPORT const char * hb_cdpID( void );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp );
