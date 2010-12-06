@@ -161,7 +161,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                      ENDIF
 
                      cFile := HB_COMPILEBUF( hHeaders, HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                             s_aCompOptions, "-D" + "__HBSCRIPT__HBRUN", cFile )
+                                             s_aCompOptions, "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
                      IF cFile == NIL
                         ERRORLEVEL( 1 )
                         EXIT
@@ -179,6 +179,13 @@ PROCEDURE _APPMAIN( cFile, ... )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION FNameDirGet( cFileName )
+   LOCAL cDir
+
+   hb_FNameSplit( cFileName, @cDir )
+
+   RETURN cDir
 
 STATIC FUNCTION hbrun_CoreHeaderFiles()
    LOCAL hHeaders
