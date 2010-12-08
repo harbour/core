@@ -591,9 +591,11 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             case CASE:
             case BREAK:
             case RETURN:
+            case IN:
             case WITH:
             case WHILE:
-            case DECLARE_TYPE:
+            case DOSWITCH:
+            case WITHOBJECT:
                pLex->iState = LITERAL;
                hb_pp_tokenToString( pLex->pPP, pToken );
                pLex->lasttok = hb_comp_tokenString( yylval_ptr, HB_COMP_PARAM,
@@ -785,20 +787,15 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          {
             case FUNCTION:
             case PROCEDURE:
-               if( HB_SUPPORT_HARBOUR && ( pLex->iState != LOOKUP ||
-                   ( !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
-                     HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) ) &&
-                   pLex->iState != INIT && pLex->iState != EXIT &&
-                   pLex->iState != STATIC )
+               if( HB_SUPPORT_HARBOUR &&
+                   ( ( pLex->iState != LOOKUP && pLex->iState != STATIC &&
+                       pLex->iState != INIT && pLex->iState != EXIT ) ||
+                     HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
+                     HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_KEYWORD ) )
                {
                   iType = IDENTIFIER;
                   break;
                }
-               /* Clipper accepts FUNCTION and PROCEDURE in one context only */
-               if( !pToken->pNext ||
-                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_KEYWORD )
-                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
-                                   HB_COMP_ERR_SYNTAX, pToken->value, NULL );
                pLex->iState = iType;
                return pLex->iState;
 
@@ -810,7 +807,8 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                       hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
                   {
                      hb_pp_tokenGet( pLex->pPP );
-                     break;
+                     pLex->iState = BEGINSEQ;
+                     return BEGINSEQ;
                   }
                }
                iType = IDENTIFIER;
@@ -1207,7 +1205,8 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                   else if( pLex->iState == MACROVAR ||
                            pLex->iState == MACROTEXT ||
-                           pLex->iState == IDENTIFIER )
+                           pLex->iState == IDENTIFIER ||
+                           pLex->iState == BEGINSEQ )
                   {
                      pLex->iState = WITH;
                      return WITH;
@@ -1221,7 +1220,8 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                    ( !HB_SUPPORT_HARBOUR && HB_PP_TOKEN_ISEOC( pToken->pNext ) ) )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IIF", NULL );
-               else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
+               else if( pToken->pNext &&
+                        HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
                   pLex->iState = IIF;
                   return IIF;
@@ -1230,7 +1230,7 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, pToken->pNext->value, NULL );
                else
-               iType = IDENTIFIER;
+                  iType = IDENTIFIER;
                break;
 
             case IF:
@@ -1238,7 +1238,8 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                    ( !HB_SUPPORT_HARBOUR && HB_PP_TOKEN_ISEOC( pToken->pNext ) ) )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IF", NULL );
-               else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
+               else if( pToken->pNext &&
+                        HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
                   if( pLex->iState == LOOKUP )
                   {
@@ -1355,9 +1356,8 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                iType = IDENTIFIER;
                break;
 
-            case EXIT:
-            case STATIC:
-               if( pLex->iState == LOOKUP )
+            case IN:
+               if( pLex->iState == IDENTIFIER )
                {
                   pLex->iState = iType;
                   return iType;
@@ -1368,20 +1368,29 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                if( pLex->iState == DECLARE_TYPE )
                   iType = IDENTIFIER;
                break;
-            case IN:
+
+            case EXIT:
             case LOOP:
-            case STEP:
-            case TO:
+            case LOCAL:
+            case STATIC:
+            case MEMVAR:
+            case PUBLIC:
+            case PRIVATE:
+            case PARAMETERS:
+            case EXTERN:
+            case DYNAMIC:
             case ANNOUNCE:
+               if( pLex->iState == LOOKUP )
+               {
+                  pLex->iState = iType;
+                  return iType;
+               }
+               break;
+
+            case TO:
+            case STEP:
             case OPTIONAL:
             case DESCEND:
-            case DYNAMIC:
-            case EXTERN:
-            case LOCAL:
-            case MEMVAR:
-            case PARAMETERS:
-            case PRIVATE:
-            case PUBLIC:
                break;
          }
          pLex->iState = IDENTIFIER;
