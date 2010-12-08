@@ -640,7 +640,7 @@ METHOD IdeProjManager:insertHeader( aHdr, aHbp )
    LOCAL txt_:={}
 
    aadd( txt_, "#" )
-   aadd( txt_, "# $Id$" )
+   aadd( txt_, "# $" + "Id" + "$" )
    aadd( txt_, "#" )
    aadd( txt_, "" )
    aeval( aHdr, {|e| aadd( txt_, e ) } )

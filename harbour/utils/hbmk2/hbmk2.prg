@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour Make (alias hbmk, alias hbmk2)
  *
- * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2011 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -11452,7 +11452,7 @@ STATIC PROCEDURE SetUILang( hbmk )
 STATIC PROCEDURE ShowHeader( hbmk )
 
    OutStd( "Harbour Make (hbmk2) " + HBRawVersion() + _OUT_EOL +;
-           "Copyright (c) 1999-2010, Viktor Szakats" + _OUT_EOL +;
+           "Copyright (c) 1999-2011, Viktor Szakats" + _OUT_EOL +;
            "http://harbour-project.org/" + _OUT_EOL )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;

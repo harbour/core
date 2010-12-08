@@ -201,7 +201,7 @@ FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
 STATIC FUNCTION About()
 
    ?? "Harbour Source Formatter " + HBRawVersion()
-   ? "Copyright (c) 2009-2010, Alexander S.Kresin"
+   ? "Copyright (c) 2009-2011, Alexander S.Kresin"
    ? "http://harbour-project.org/"
    ?
    ? "Syntax:  hbformat [options] [@config] file[s]"

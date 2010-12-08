@@ -292,7 +292,7 @@ STATIC PROCEDURE ShowConfig( netiosrv )
 STATIC PROCEDURE HB_Logo()
 
    OutStd( "Harbour NETIO Server " + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 2009, Przemyslaw Czerpak" + hb_eol() + ;
+           "Copyright (c) 2009-2011, Przemyslaw Czerpak" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() )
 
