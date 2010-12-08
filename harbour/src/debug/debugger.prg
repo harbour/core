@@ -815,6 +815,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    LOCAL cParam1 := ""
    LOCAL cResult
    LOCAL lValid
+   LOCAL oWindow
    LOCAL n
 
    cCommand := AllTrim( cCommand )
@@ -1024,24 +1025,24 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
 
       DO CASE
       CASE starts( "MOVE", cParam )
-         WITH OBJECT ::aWindows[ ::nCurrentWindow ]
-            n := At( " ", cParam1 )
-            IF n > 0
-               n := Val( SubStr( cParam1, n ) )
-            ENDIF
-            :Resize( Val( cParam1 ), n, ;
-                     :nBottom + Val( cParam1 ) - :nTop, :nRight + n - :nLeft )
-         ENDWITH
+         oWindow := ::aWindows[ ::nCurrentWindow ]
+         n := At( " ", cParam1 )
+         IF n > 0
+            n := Val( SubStr( cParam1, n ) )
+         ENDIF
+         oWindow:Resize( Val( cParam1 ), n, ;
+                  oWindow:nBottom + Val( cParam1 ) - oWindow:nTop, ;
+                  oWindow:nRight + n - oWindow:nLeft )
       CASE starts( "NEXT", cParam )
          ::NextWindow()
       CASE starts( "SIZE", cParam )
-         WITH OBJECT ::aWindows[ ::nCurrentWindow ]
-            n := At( " ", cParam1 )
-            IF Val( cParam1 ) >= 2 .AND. n > 0 .AND. Val( SubStr( cParam1, n ) ) > 0
-               :Resize( :nTop, :nLeft, Val( cParam1 ) - 1 + :nTop, ;
-                        Val( SubStr( cParam1, n ) ) - 1 + :nLeft )
-            ENDIF
-         ENDWITH
+         n := At( " ", cParam1 )
+         IF Val( cParam1 ) >= 2 .AND. n > 0 .AND. Val( SubStr( cParam1, n ) ) > 0
+            oWindow := ::aWindows[ ::nCurrentWindow ]
+            oWindow:Resize( oWindow:nTop, oWindow:nLeft, ;
+                     Val( cParam1 ) - 1 + oWindow:nTop, ;
+                     Val( SubStr( cParam1, n ) ) - 1 + oWindow:nLeft )
+         ENDIF
       ENDCASE
 
    CASE starts( "WP", cCommand )

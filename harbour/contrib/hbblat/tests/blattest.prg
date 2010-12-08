@@ -69,39 +69,36 @@ PROCEDURE Main()
    ?
    ? "HBBlat test"
 
-   WITH OBJECT oBlat
-      :cFrom                   := ADDRESS_FROM
-      :cTo                     := ADDRESS_TO
-      //:cUserAUTH               := "myaccount@mydomain.org"
-      //:cPasswordAUTH           := "mypassword"
-      //:cHostname               := "mail.anydomain.com"
-      //:cCC                     := ADDRESS_CC
-      //:cCCFile                 := "f_cc.txt"
-      //:cBCC                    := "info@fsgiudice.com"
-      //:cBCCFile                := "f_bcc.txt"
-      //:cBodyFile               := "c.bat"
-      :cBody                   := e"Body part\n\rEnd Body"
-      :cServerSMTP             := SERVER_SMTP
-      :cSubject                := "Test from Blat"
-      //:lSuppressSubject        := TRUE
-      //:cSubjectFile            := "f_subjct.txt"
-      //:lToUndiscloseRecipients := TRUE
-      :cPostScriptumFile       := "f_ps.txt"
-      :lRequestDisposition     := TRUE          // does not work ???
-      :lRequestReturnReceipt   := TRUE
+   oBlat:cFrom                   := ADDRESS_FROM
+   oBlat:cTo                     := ADDRESS_TO
+   // oBlat:cUserAUTH               := "myaccount@mydomain.org"
+   // oBlat:cPasswordAUTH           := "mypassword"
+   // oBlat:cHostname               := "mail.anydomain.com"
+   // oBlat:cCC                     := ADDRESS_CC
+   // oBlat:cCCFile                 := "f_cc.txt"
+   // oBlat:cBCC                    := "info@fsgiudice.com"
+   // oBlat:cBCCFile                := "f_bcc.txt"
+   // oBlat:cBodyFile               := "c.bat"
+   oBlat:cBody                   := e"Body part\n\rEnd Body"
+   oBlat:cServerSMTP             := SERVER_SMTP
+   oBlat:cSubject                := "Test from Blat"
+   // oBlat:lSuppressSubject        := .T.
+   // oBlat:cSubjectFile            := "f_subjct.txt"
+   // oBlat:lToUndiscloseRecipients := .T.
+   oBlat:cPostScriptumFile       := "f_ps.txt"
+   oBlat:lRequestDisposition     := .T.          // does not work ???
+   oBlat:lRequestReturnReceipt   := .T.
 
-      :cAttachTextFiles         := "f_subjct.txt"
-      :aAttachTextFiles         := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
-      :cAttachListTextFile      := "f_listtx.txt"
+   oBlat:cAttachTextFiles         := "f_subjct.txt"
+   oBlat:aAttachTextFiles         := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
+   oBlat:cAttachListTextFile      := "f_listtx.txt"
 
-      :cLogFile                 := "log.txt"
-      :lLogTimestamp            := TRUE
-      :lDebug                   := TRUE
-      :lLogOverwrite            := TRUE
+   oBlat:cLogFile                 := "log.txt"
+   oBlat:lLogTimestamp            := .T.
+   oBlat:lDebug                   := .T.
+   oBlat:lLogOverwrite            := .T.
 
-      //:lSuperDebug              := TRUE     // This display internal checking
-
-   END
+   // oBlat:lSuperDebug              := .T.     // This display internal checking
 
    ? "Checking options ..."
    //oBlat:Check()

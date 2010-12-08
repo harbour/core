@@ -441,69 +441,59 @@ STATIC FUNCTION ADO_CLOSE( nWA )
 STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL rs := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-      IF aWAData[ WA_EOF ] .OR. :EOF .OR. :BOF
-         xValue := NIL
-         IF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_STRING
-            xValue := Space( :Fields( nField - 1 ):DefinedSize )
+   IF aWAData[ WA_EOF ] .OR. rs:EOF .OR. rs:BOF
+      xValue := NIL
+      IF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_STRING
+         xValue := Space( rs:Fields( nField - 1 ):DefinedSize )
+      ENDIF
+   ELSE
+      xValue := rs:Fields( nField - 1 ):Value
+
+      IF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_STRING
+         IF ValType( xValue ) == "U"
+             xValue := Space( rs:Fields( nField - 1 ):DefinedSize )
+         ELSE
+             xValue := PadR( xValue, rs:Fields( nField - 1 ):DefinedSize )
          ENDIF
-      ELSE
-         xValue := :Fields( nField - 1 ):Value
-
-         IF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_STRING
-            IF ValType( xValue ) == "U"
-                xValue := Space( :Fields( nField - 1 ):DefinedSize )
-            ELSE
-                xValue := PadR( xValue, :Fields( nField - 1 ):DefinedSize )
-            ENDIF
-         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATE
-            /* Null values */
-            IF ValType( xValue ) == "U"
-                xValue := hb_SToD()
-            ENDIF
-#ifdef HB_FT_DATETIME
-         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATETIME
-            /* Null values */
-            IF ValType( xValue ) == "U"
-                xValue := hb_SToD()
-            ENDIF
-#endif
-         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_TIMESTAMP
-            /* Null values */
-            IF ValType( xValue ) == "U"
-                xValue := hb_SToD()
-            ENDIF
+      ELSEIF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_DATE
+         /* Null values */
+         IF ValType( xValue ) == "U"
+             xValue := hb_SToD()
+         ENDIF
+      ELSEIF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_TIMESTAMP
+         /* Null values */
+         IF ValType( xValue ) == "U"
+             xValue := hb_SToD()
          ENDIF
       ENDIF
-   END WITH
+   ENDIF
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_GOTO( nWA, nRecord )
 
    LOCAL nRecNo
+   LOCAL rs := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-      IF :RecordCount > 0
-         :MoveFirst()
-         :Move( nRecord - 1, 0 )
-      ENDIF
-      ADO_RECID( nWA, @nRecNo )
-   END WITH
+   IF rs:RecordCount > 0
+      rs:MoveFirst()
+      rs:Move( nRecord - 1, 0 )
+   ENDIF
+   ADO_RECID( nWA, @nRecNo )
 
    RETURN iif( nRecord == nRecNo, HB_SUCCESS, HB_FAILURE )
 
 STATIC FUNCTION ADO_GOTOID( nWA, nRecord )
    LOCAL nRecNo
+   LOCAL rs := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-      IF :RecordCount > 0
-         :MoveFirst()
-         :Move( nRecord - 1, 0 )
-      ENDIF
-      ADO_RECID( nWA, @nRecNo )
-   END WITH
+   IF rs:RecordCount > 0
+      rs:MoveFirst()
+      rs:Move( nRecord - 1, 0 )
+   ENDIF
+   ADO_RECID( nWA, @nRecNo )
 
    RETURN iif( nRecord == nRecNo, HB_SUCCESS, HB_FAILURE )
 
@@ -895,21 +885,19 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
-   WITH OBJECT oRecordSet
-      ADO_RECID( nWA, @nRecNo )
+   ADO_RECID( nWA, @nRecNo )
 
-      :Close()
-      IF aOrderInfo[ UR_ORI_TAG ] == 0
-          :Open( "SELECT * FROM " + s_aTableNames[ nWA ] , HB_QWith(), adOpenDynamic, adLockPessimistic )
-      ELSE
-          //:Open( "SELECT * FROM " + ::oTabla:cTabla + ' ORDER BY ' + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
-          :Open( "SELECT * FROM " + s_aTableNames[ nWA ], HB_QWith(), adOpenDynamic, adLockPessimistic )
-      ENDIF
-      aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
+   oRecordSet:Close()
+   IF aOrderInfo[ UR_ORI_TAG ] == 0
+       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ] , HB_QWith(), adOpenDynamic, adLockPessimistic )
+   ELSE
+    // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + ' ORDER BY ' + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
+       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ], HB_QWith(), adOpenDynamic, adLockPessimistic )
+   ENDIF
+   aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
 
-      ADO_GOTOP( nWA )
-      ADO_GOTO( nWA, nRecNo )
-   END WITH
+   ADO_GOTOP( nWA )
+   ADO_GOTO( nWA, nRecNo )
 */
    RETURN HB_SUCCESS
 

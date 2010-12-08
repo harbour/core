@@ -87,7 +87,8 @@ FUNCTION gdImageFTWidth( fontname, ptsize, angle )
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
    LOCAL nWidth := 0
    LOCAL cErr
-   LOCAL aRect := Array(8)
+   LOCAL aRect := Array( 8 )
+
    DEFAULT fontname TO "Arial"
    DEFAULT ptsize   TO 8
    DEFAULT angle    TO 0
@@ -185,68 +186,75 @@ FUNCTION gdImageToString( oImage )
    LOCAL cString
 
    IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-      WITH OBJECT oImage
-         IF :cType != NIL
-            DO CASE
-            CASE :cType == "jpeg"
-               cString := :ToStringJpeg()
-            CASE :cType == "gif"
-               cString := :ToStringGif()
-            CASE :cType == "png"
-               cString := :ToStringPng()
-            ENDCASE
-         ENDIF
-      ENDWITH
+      IF oImage:cType != NIL
+         SWITCH oImage:cType
+         CASE "jpeg"
+            cString := oImage:ToStringJpeg()
+            EXIT
+         CASE "gif"
+            cString := oImage:ToStringGif()
+            EXIT
+         CASE "png"
+            cString := oImage:ToStringPng()
+            EXIT
+         ENDSWITCH
+      ENDIF
    ENDIF
    RETURN cString
 
 PROCEDURE gdImageToFile( oImage, cFile )
    LOCAL cString, cExt
 
-   DEFAULT cFile TO "image"
+   IF ! ISCHARACTER( cFile )
+      cFile := "image"
+   ENDIF
 
    IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-      WITH OBJECT oImage
-         IF :cType != NIL
-            DO CASE
-            CASE :cType == "jpeg"
-               cString := :ToStringJpeg()
-               cExt    := ".jpg"
-            CASE :cType == "gif"
-               cString := :ToStringGif()
-               cExt    := ".gif"
-            CASE :cType == "png"
-               cString := :ToStringPng()
-               cExt    := ".png"
-            OTHERWISE
-               cExt    := ""
-            ENDCASE
-            IF cString != NIL
-               hb_MemoWrit( cFile + cExt, cString )
-            ENDIF
+      IF oImage:cType != NIL
+         SWITCH oImage:cType
+         CASE "jpeg"
+            cString := oImage:ToStringJpeg()
+            cExt    := ".jpg"
+            EXIT
+         CASE "gif"
+            cString := oImage:ToStringGif()
+            cExt    := ".gif"
+            EXIT
+         CASE "png"
+            cString := oImage:ToStringPng()
+            cExt    := ".png"
+            EXIT
+         OTHERWISE
+            cExt    := ""
+         ENDSWITCH
+         IF cString != NIL
+            hb_MemoWrit( cFile + cExt, cString )
          ENDIF
-      ENDWITH
+      ENDIF
    ENDIF
 
    RETURN
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   DEFAULT nHandle TO 1
+   IF ! ISNUMBER( nHandle )
+      nHandle := 1
+   ENDIF
 
    IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-      WITH OBJECT oImage
-         IF :cType != NIL
-            DO CASE
-            CASE :cType == "jpeg"
-               :OutputJpeg( nHandle )
-            CASE :cType == "gif"
-               :OutputGif( nHandle )
-            CASE :cType == "png"
-               :OutputPng( nHandle )
-            ENDCASE
-         ENDIF
-      ENDWITH
+      IF oImage:cType != NIL
+         SWITCH oImage:cType
+         CASE "jpeg"
+            oImage:OutputJpeg( nHandle )
+            EXIT
+         CASE "gif"
+            oImage:OutputGif( nHandle )
+            EXIT
+         CASE "png"
+            oImage:OutputPng( nHandle )
+            EXIT
+         ENDSWITCH
+      ENDIF
    ENDIF
 
    RETURN

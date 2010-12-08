@@ -753,10 +753,8 @@ FUNCTION uhttpd_SplitFileName( cFile )
 
    cSep := hb_ps()
 
-   WITH OBJECT hFile
-        :FULLPATH := IIF( !Empty( :PATH ), IIF( !( Right( :PATH, Len( cSep ) ) == cSep ), :PATH + cSep, :PATH ), "" )
-        :UNC      := :FULLPATH + :FULLNAME
-   END
+   hFile:FULLPATH := IIF( !Empty( hFile:PATH ), IIF( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
+   hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
 
 RETURN hFile
 

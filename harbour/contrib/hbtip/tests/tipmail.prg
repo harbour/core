@@ -29,30 +29,27 @@ PROCEDURE MAIN( cFileName )
       ? "Malformed mail. Dumping up to where parsed"
    ENDIF
 
-   WITH OBJECT oMail
-      ? "-------------============== HEADERS =================--------------"
-      FOR i := 1 TO Len( :hHeaders )
-         ? hb_HKeyAt( :hHeaders, i ), ":", hb_HValueAt( :hHeaders, i )
-      NEXT
+   ? "-------------============== HEADERS =================--------------"
+   FOR i := 1 TO Len( oMail:hHeaders )
+      ? hb_HKeyAt( oMail:hHeaders, i ), ":", hb_HValueAt( oMail:hHeaders, i )
+   NEXT
+   ?
+
+   ? "-------------============== RECEIVED =================--------------"
+   FOR EACH cData IN oMail:aReceived
+      ? cData
+   NEXT
+   ?
+
+   ? "-------------============== BODY =================--------------"
+   ? oMail:GetBody()
+   ?
+
+   DO WHILE oMail:GetAttachment() != NIL
+      ? "-------------============== ATTACHMENT =================--------------"
+      ? oMail:NextAttachment():GetBody()
       ?
-
-      ? "-------------============== RECEIVED =================--------------"
-      FOR EACH cData IN :aReceived
-         ? cData
-      NEXT
-      ?
-
-      ? "-------------============== BODY =================--------------"
-      ? :GetBody()
-      ?
-
-      DO WHILE :GetAttachment() != NIL
-         ? "-------------============== ATTACHMENT =================--------------"
-         ? :NextAttachment():GetBody()
-         ?
-      ENDDO
-
-   END
+   ENDDO
 
    ? "DONE"
    ?
