@@ -1,8 +1,8 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 /*----------------------------------------------------------------------*/
@@ -12,7 +12,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
@@ -236,7 +236,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    oCrt:Destroy()
    Return NIL
-   
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
@@ -264,7 +264,7 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
    ENDIF
 
    RETURN 1
-   
+
 //----------------------------------------------------------------------//
 
 Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
@@ -302,7 +302,7 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return NIL
-   
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
@@ -368,7 +368,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
    oCom:create()
 
    RETURN oCom
-   
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
@@ -584,11 +584,14 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
       endif
    enddo
 
-   RETURN NIL 
-   
+   RETURN NIL
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ConfigureRMChart( RMChart )
+   LOCAL oRegion
+   LOCAL oCaption
+   LOCAL oChart
 
    #define RMC_CTRLSTYLEFLAT          0
    #define RMC_PIE_GRADIENT           52
@@ -598,37 +601,35 @@ STATIC FUNCTION ConfigureRMChart( RMChart )
    #define RMC_HATCHBRUSH_OFF         0
 
    /* The code pulled from freewin sources */
-   WITH OBJECT  RMChart
-      :Font             := "Tahoma"
-      :RMCStyle         := RMC_CTRLSTYLEFLAT
+   RMChart:Font             := "Tahoma"
+   RMChart:RMCStyle         := RMC_CTRLSTYLEFLAT
 
-      :AddRegion()
-      WITH OBJECT :Region( 1 )
-         :Footer = "http://vouch.info"
+   RMChart:AddRegion()
 
-         :AddCaption()
-         WITH OBJECT :Caption()
-            :Titel     := "GTWVG Active-X Demo"
-            :FontSize  := 10
-            :Bold      := .T.
-         END
+   oRegion := RMChart:Region( 1 )
+   oRegion:Footer = "http://vouch.info"
 
-         :AddGridlessSeries()
+   oRegion:AddCaption()
 
-         WITH OBJECT :GridLessSeries
-            :SeriesStyle      := RMC_PIE_GRADIENT
-            :Alignment        := RMC_FULL
-            :Explodemode      := RMC_EXPLODE_NONE
-            :Lucent           := .F.
-            :ValueLabelOn     := RMC_VLABEL_ABSOLUTE
-            :HatchMode        := RMC_HATCHBRUSH_OFF
-            :StartAngle       := 0
-            :DataString       := "10*5*20*25"
-         END
-      END
-   END
+   oCaption := oRegion:Caption()
+   oCaption:Titel     := "GTWVG Active-X Demo"
+   oCaption:FontSize  := 10
+   oCaption:Bold      := .T.
 
-   RETURN NIL 
+   oRegion:AddGridlessSeries()
+
+   oChart := oRegion:GridLessSeries
+   oChart:SeriesStyle      := RMC_PIE_GRADIENT
+   oChart:Alignment        := RMC_FULL
+   oChart:Explodemode      := RMC_EXPLODE_NONE
+   oChart:Lucent           := .F.
+   oChart:ValueLabelOn     := RMC_VLABEL_ABSOLUTE
+   oChart:HatchMode        := RMC_HATCHBRUSH_OFF
+   oChart:StartAngle       := 0
+   oChart:DataString       := "10*5*20*25"
+
+   RETURN NIL
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION MyFunction( nMode )
@@ -660,5 +661,5 @@ STATIC FUNCTION MyFunction( nMode )
    endcase
 
    RETURN NIL
-   
+
 //----------------------------------------------------------------------//

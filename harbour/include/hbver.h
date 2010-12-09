@@ -62,7 +62,7 @@
 #define HB_VER_MAJOR    2        /* Major version number */
 #define HB_VER_MINOR    1        /* Minor version number */
 #define HB_VER_RELEASE  0        /* Release number */
-#define HB_VER_STATUS   "beta2"  /* Build status (all lowercase) */
+#define HB_VER_STATUS   "beta3"  /* Build status (all lowercase) */
 #define __HARBOUR__     0x020100 /* Three bytes: Major + Minor + Release. This is recommented for 3rd party .c and .prg level code. */
 
 #endif /* HB_VER_H_ */

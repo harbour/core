@@ -6,7 +6,7 @@ skip={!win}
 
 incpaths=.
 
-gt={hb_name}${__HB_DYN__}
+gt=${hb_name}${__HB_DYN__}
 
 libs=../hbwin/hbwin.hbc
 

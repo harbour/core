@@ -15,7 +15,7 @@
 
 %define name      harbour-wce
 %define version   2.1.0
-%define releasen  beta2
+%define releasen  beta3
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
 %define hb_ccpath /opt/mingw32ce/bin
