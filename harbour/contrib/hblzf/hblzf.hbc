@@ -1,0 +1,8 @@
+#
+# $Id: hblzf.hbc 15773 2010-12-08 16:24:57Z petr_ch $
+#
+
+incpaths=.
+
+libs=${hb_name}${__HB_DYN__}
+libs=3rd/liblzf/lzf.hbc

@@ -965,6 +965,29 @@ HB_FUNC( SQLITE3_STMT_STATUS )
 }
 
 /**
+   sqlite3_stmt_readonly( pStmt ) -> lResult
+
+   Determine If An SQL Statement Writes The Database
+*/
+HB_FUNC( SQLITE3_STMT_READONLY )
+{
+#if SQLITE_VERSION_NUMBER >= 3007004
+   psqlite3_stmt  pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
+
+   if( pStmt )
+   {
+      hb_retl( (HB_BOOL) sqlite3_stmt_readonly( pStmt ) );
+   }
+   else
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+   }
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3007004 */
+}
+
+/**
    Find The Database Handle Associated With A Prepared Statement
 
    sqlite3_db_handle( pStmt ) -> pHbSqlite3
@@ -1492,6 +1515,7 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
 
 HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
 {
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
    HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
@@ -1502,6 +1526,7 @@ HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 }
 
 /*
@@ -1763,6 +1788,28 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
    {
       hb_retptr( NULL );
    }
+}
+
+/**
+   Move a BLOB Handle to a New Row
+*/
+
+HB_FUNC( SQLITE3_BLOB_REOPEN )
+{
+#if SQLITE_VERSION_NUMBER >= 3007004
+   sqlite3_blob   *pBlob = ( sqlite3_blob * ) hb_parptr( 1 );
+
+   if( pBlob )
+   {
+      hb_retni( sqlite3_blob_reopen( pBlob, hb_parnint( 2 ) ) );
+   }
+   else
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+   }
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3007004 */
 }
 
 /**

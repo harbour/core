@@ -20,6 +20,7 @@
 -cpp=no
 
 -cflag=-DSQLITE_OMIT_DEPRECATED
+-cflag=-DSQLITE_ENABLE_COLUMN_METADATA
 -cflag=-D_WIN32_WCE{wce}
 # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
 # so we're forcing the next best available option. This will cause missing
@@ -31,9 +32,10 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.3
+# VER    3.7.4
 # URL    http://www.sqlite.org/sqlite-amalgamation-3_7_3.zip
-# DIFF   sqlite3.dif
+# DIFF   
 #
 # MAP    sqlite3.c
 # MAP    sqlite3.h
+# MAP    sqlite3ext.h

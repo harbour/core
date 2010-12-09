@@ -23,6 +23,7 @@ hbgt/hbgt.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp
 hbide/hbide.hbp
+hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
 hbmagic/hbmagic.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp

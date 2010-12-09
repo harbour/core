@@ -1,0 +1,5 @@
+#
+# $Id: lzf.hbc 15773 2010-12-08 16:24:57Z petr_ch $
+#
+
+libs=${hb_name}${__HB_DYN__}

@@ -1,0 +1,7 @@
+#
+# $Id: hbmk.hbm 14194 2010-12-07 09:50:12Z petr_ch $
+#
+
+../hblzf.hbc
+
+-w3 -es2
