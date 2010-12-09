@@ -15,8 +15,8 @@ PROCEDURE Main()
    LOCAL errno := 0
 
    ? "LZF Api version is", ;
-      hb_ntos( hb_lzf_version() ) + "(" + hb_numtohex( hb_lzf_version() ) +")"
-   ? "LibLZF optimized for", iif( hb_lzf_optimized_for() > 0, "speed.", "compression." )
+      hb_ntos( hb_lzf_version() ) + "(0x" + hb_numtohex( hb_lzf_version() ) +")"
+   ? "LibLZF optimized for", iif( hb_lzf_optimized_for_speed(), "speed.", "compression." )
 
    ? "--- test 1 ---"
    /*

@@ -61,12 +61,6 @@
 #include "lzf.h"
 #include "lzfP.h"
 
-#if ULTRA_FAST
-#  define HB_LZF_OPTIMIZED_FOR    1
-#elif VERY_FAST
-#  define HB_LZF_OPTIMIZED_FOR    0
-#endif
-
 #define HB_LZF_BUFFSIZE  1024
 
 typedef struct
@@ -95,12 +89,16 @@ HB_FUNC( HB_LZF_VERSION )
 }
 
 /**
-   Return 1 if lzf was optimized for speed, 0 for compression
+   Return if lzf was optimized for speed (or for compression)
 */
 
-HB_FUNC( HB_LZF_OPTIMIZED_FOR )
+HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 {
-   hb_retni( HB_LZF_OPTIMIZED_FOR );
+#if ULTRA_FAST
+   hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 /**
