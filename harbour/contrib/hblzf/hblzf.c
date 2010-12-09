@@ -135,11 +135,11 @@ HB_FUNC( LZF_COMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
-   if( pArg != NULL )
+   if( pArg )
    {
       PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
 
-      const char * in_data = NULL;
+      const char * in_data;
       char * out_data;
       HB_SIZE in_len, out_len;
       unsigned int uiResult;
@@ -171,11 +171,11 @@ HB_FUNC( LZF_DECOMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
-   if( pArg != NULL )
+   if( pArg )
    {
       PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
 
-      const char * in_data = NULL;
+      const char * in_data;
       char * buffer;
       HB_SIZE in_len, buffer_size, i = 1;
       unsigned int uiResult;
@@ -184,12 +184,12 @@ HB_FUNC( LZF_DECOMPRESS )
       in_len = hb_itemGetCLen( pArg );
       buffer_size = pLZF_VAR->buffer_size;
 
-      buffer = hb_xgrab( buffer_size + 1 );
+      buffer = ( char * ) hb_xgrab( buffer_size + 1 );
 
       do
       {
          buffer_size *= i++;
-         buffer = hb_xrealloc( buffer, buffer_size );
+         buffer = ( char * ) hb_xrealloc( buffer, buffer_size );
 
          uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
       } while( uiResult == 0 && errno == E2BIG );
