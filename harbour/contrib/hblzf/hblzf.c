@@ -56,6 +56,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbstack.h"
 
 #include "lzf.h"
 #include "lzfP.h"
@@ -66,11 +67,23 @@
 #  define HB_LZF_OPTIMIZED_FOR    0
 #endif
 
-#define LZF_BUFFSIZE  1024
+#define HB_LZF_BUFFSIZE  1024
 
-/* TOFIX: Make it MT compatible */
-HB_SIZE s_delta = 0;
-HB_SIZE s_buffer_size = LZF_BUFFSIZE;
+typedef struct
+{
+   HB_SIZE delta;
+   HB_SIZE buffer_size;
+} HB_LZF_VAR, * PHB_LZF_VAR;
+
+static void hb_lzf_var_init( void * cargo )
+{
+   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) cargo;
+
+   pLZF_VAR->delta = 0;
+   pLZF_VAR->buffer_size = HB_LZF_BUFFSIZE;
+}
+
+static HB_TSD_NEW( s_lzf_var, sizeof( HB_LZF_VAR ), hb_lzf_var_init, NULL );
 
 /**
    Return a LZF_VERSION, API version
@@ -95,9 +108,11 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR )
 
 HB_FUNC( HB_LZF_DELTA )
 {
-   hb_retni( s_delta );
+   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
+
+   hb_retni( pLZF_VAR->delta );
    if( hb_pcount() >= 1 )
-      s_delta = ( HB_SIZE ) hb_parnidef( 1, 0 );
+      pLZF_VAR->delta = ( HB_SIZE ) hb_parnidef( 1, 0 );
 }
 
 /**
@@ -105,9 +120,11 @@ HB_FUNC( HB_LZF_DELTA )
 
 HB_FUNC( HB_LZF_BUFFERSIZE )
 {
-   hb_retni( s_buffer_size );
+   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
+
+   hb_retni( pLZF_VAR->buffer_size );
    if( hb_pcount() >= 1 )
-      s_buffer_size = ( HB_SIZE ) hb_parnidef( 1, LZF_BUFFSIZE );
+      pLZF_VAR->buffer_size = ( HB_SIZE ) hb_parnidef( 1, HB_LZF_BUFFSIZE );
 }
 
 /**
@@ -120,6 +137,8 @@ HB_FUNC( LZF_COMPRESS )
 
    if( pArg != NULL )
    {
+      PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
+
       const char * in_data = NULL;
       char * out_data;
       HB_SIZE in_len, out_len;
@@ -127,7 +146,7 @@ HB_FUNC( LZF_COMPRESS )
 
       in_data = hb_itemGetCPtr( pArg );
       in_len  = hb_itemGetCLen( pArg );
-      out_len = in_len + ( ( s_delta ) ? s_delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
+      out_len = in_len + ( ( pLZF_VAR->delta ) ? pLZF_VAR->delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
 
       out_data = ( char * ) hb_xgrab( out_len + 1 );
 
@@ -154,6 +173,8 @@ HB_FUNC( LZF_DECOMPRESS )
 
    if( pArg != NULL )
    {
+      PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
+
       const char * in_data = NULL;
       char * buffer;
       HB_SIZE in_len, buffer_size, i = 1;
@@ -161,7 +182,7 @@ HB_FUNC( LZF_DECOMPRESS )
 
       in_data = hb_itemGetCPtr( pArg );
       in_len = hb_itemGetCLen( pArg );
-      buffer_size = s_buffer_size;
+      buffer_size = pLZF_VAR->buffer_size;
 
       buffer = hb_xgrab( buffer_size + 1 );
 
