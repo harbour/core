@@ -50,6 +50,7 @@
  *
  */
 
+/* TOFIX: Some platforms don't have this. Build breaker. */
 #include <errno.h>
 
 #include "hbapi.h"
@@ -67,11 +68,12 @@
 
 #define LZF_BUFFSIZE  1024
 
+/* TOFIX: Make it MT compatible */
 HB_SIZE s_delta = 0;
 HB_SIZE s_buffer_size = LZF_BUFFSIZE;
 
 /**
-   Return a LZF_VERSION, API version 
+   Return a LZF_VERSION, API version
 */
 
 HB_FUNC( HB_LZF_VERSION )
@@ -79,8 +81,8 @@ HB_FUNC( HB_LZF_VERSION )
    hb_retni( LZF_VERSION );
 }
 
-/** 
-   Return 1 if lzf was optimized for speed, 0 for compression 
+/**
+   Return 1 if lzf was optimized for speed, 0 for compression
 */
 
 HB_FUNC( HB_LZF_OPTIMIZED_FOR )
@@ -88,104 +90,104 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR )
    hb_retni( HB_LZF_OPTIMIZED_FOR );
 }
 
-/** 
+/**
 */
 
 HB_FUNC( HB_LZF_DELTA )
 {
    hb_retni( s_delta );
-   s_delta = (HB_SIZE) hb_parnidef( 1, 0 );
+   if( hb_pcount() >= 1 )
+      s_delta = ( HB_SIZE ) hb_parnidef( 1, 0 );
 }
 
-/** 
+/**
 */
 
 HB_FUNC( HB_LZF_BUFFERSIZE )
 {
    hb_retni( s_buffer_size );
-   s_buffer_size = (HB_SIZE) hb_parnidef( 1, LZF_BUFFSIZE );
+   if( hb_pcount() >= 1 )
+      s_buffer_size = ( HB_SIZE ) hb_parnidef( 1, LZF_BUFFSIZE );
 }
 
 /**
-   Return a string compressed with LZF 
+   Return a string compressed with LZF
 */
 
-HB_FUNC( HB_LZF_COMPRESS )
+HB_FUNC( LZF_COMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
-   const char *in_data = NULL; 
-   char *out_data; 
-   HB_SIZE in_len, out_len;
-   unsigned int uiResult;
 
    if( pArg != NULL )
+   {
+      const char * in_data = NULL;
+      char * out_data;
+      HB_SIZE in_len, out_len;
+      unsigned int uiResult;
+
       in_data = hb_itemGetCPtr( pArg );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      in_len  = hb_itemGetCLen( pArg );
+      out_len = in_len + ( ( s_delta ) ? s_delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
 
-   in_len  = hb_itemGetCLen( pArg );
-   out_len = in_len + ( (s_delta) ? s_delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
+      out_data = ( char * ) hb_xgrab( out_len + 1 );
 
-   out_data = (char *) hb_xgrab( out_len );
-
-   uiResult = lzf_compress( in_data, in_len, out_data, out_len );
-   if ( uiResult == 0 )
-   {
-      hb_xfree( out_data );
-      hb_retc_null();
-   }
-   else
-   {
-      hb_retclen_buffer( out_data, uiResult );
-   }
-}
-
-/**
-   Return a string decompressed with LZF 
-*/
-
-HB_FUNC( HB_LZF_DECOMPRESS )
-{
-   PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
-   const char *in_data = NULL; 
-   char *buffer;
-   HB_SIZE in_len, buffer_size, i = 1;
-   unsigned int uiResult;
-
-   if( pArg != NULL )
-      in_data = hb_itemGetCPtr( pArg );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   in_len = hb_itemGetCLen( pArg );
-   buffer_size = s_buffer_size;
-
-   buffer = hb_xgrab( buffer_size );
-
-   do
-   {
-      buffer_size *= i++;
-      buffer = hb_xrealloc( buffer, buffer_size );
-
-      uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
-   } while ( uiResult == 0 && errno == E2BIG );
-
-   if ( uiResult == 0 )
-   {
-      if ( errno == EINVAL )
+      uiResult = lzf_compress( in_data, in_len, out_data, out_len );
+      if( uiResult == 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, "LZF decompression failed, compressed data corrupted" );
+         hb_xfree( out_data );
+         hb_retc_null();
+      }
+      else
+         hb_retclen_buffer( out_data, uiResult );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
-         if( hb_pcount() > 1 && (HB_ISNUM(2) && HB_ISBYREF(2)) )
+/**
+   Return a string decompressed with LZF
+*/
+
+HB_FUNC( LZF_DECOMPRESS )
+{
+   PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
+
+   if( pArg != NULL )
+   {
+      const char * in_data = NULL;
+      char * buffer;
+      HB_SIZE in_len, buffer_size, i = 1;
+      unsigned int uiResult;
+
+      in_data = hb_itemGetCPtr( pArg );
+      in_len = hb_itemGetCLen( pArg );
+      buffer_size = s_buffer_size;
+
+      buffer = hb_xgrab( buffer_size + 1 );
+
+      do
+      {
+         buffer_size *= i++;
+         buffer = hb_xrealloc( buffer, buffer_size );
+
+         uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
+      } while( uiResult == 0 && errno == E2BIG );
+
+      if( uiResult == 0 )
+      {
+         if( errno == EINVAL )
          {
+            HB_TRACE( HB_TR_DEBUG, "LZF decompression failed, compressed data corrupted" );
+
             hb_storni( errno, 2 );
          }
+
+         hb_xfree( buffer );
+         hb_retc_null();
       }
-      hb_xfree( buffer );
-      hb_retc_null();
+      else
+         hb_retclen_buffer( buffer, uiResult );
    }
    else
-   {
-      hb_retclen_buffer( buffer, uiResult );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
