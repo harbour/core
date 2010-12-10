@@ -32,11 +32,11 @@ PROCEDURE Main()
    LOCAL nKey, lMark, lResize, lClose
    LOCAL nHeight := 20
    LOCAL nWidth  := Int( nHeight / 2 )
-   LOCAL cFont
+// LOCAL cFont
 
    LOCAL nMSec
 
-   Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
+// Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
    SetCursor( SC_NONE )
@@ -122,7 +122,7 @@ PROCEDURE Main()
 //----------------------------------------------------------------------//
 
 STATIC PROCEDURE DispScreen()
-   LOCAL nRow := 11, nCol := 28
+   LOCAL nRow := 11
    LOCAL cColor := "N/W"
    LOCAL nMaxCol := MaxCol() + 1
 
@@ -307,6 +307,8 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    if Eof()
       lMoved := .F.
    else
@@ -322,6 +324,8 @@ STATIC FUNCTION TBNext( oTbr )
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
+
+   HB_SYMBOL_UNUSED( oTbr )
 
    DBSkip( -1 )
 

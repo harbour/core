@@ -16,6 +16,8 @@
 -depincpathlocal=lzf:3rd/liblzf
 -depfinish=lzf
 
+-instfile=inc:hblzf.ch
+
 hblzf.c
 
 3rd/liblzf/lzf.hbc{HBMK_HAS_LZF_LOCAL}

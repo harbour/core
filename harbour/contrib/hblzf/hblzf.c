@@ -60,9 +60,7 @@
 #include "lzf.h"
 #include "lzfP.h"
 
-#define  LZF_OK         0
-#define  LZF_BUF_ERROR  1
-#define  LZF_MEM_ERROR  2
+#include "hblzf.ch"
 
 /**
    Return a LZF_VERSION, API version
@@ -88,12 +86,11 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 
 HB_FUNC( HB_LZF_COMPRESSBOUND )
 {
-   if ( HB_ISCHAR(1) || HB_ISNUM(1) )
+   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) )
    {
-      HB_SIZE nLen = HB_ISCHAR(1) ? hb_parclen( 1 ) : (HB_SIZE) hb_parns(1);
-      nLen = (HB_SIZE) ( nLen * 1.04 + 1 );
-      hb_retns( nLen );
-   }      
+      HB_SIZE nLen = HB_ISCHAR( 1 ) ? hb_parclen( 1 ) : hb_parns( 1 );
+      hb_retns( ( HB_SIZE ) ( nLen * 1.04 + 1 ) );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -102,7 +99,7 @@ HB_FUNC( HB_LZF_COMPRESSBOUND )
    Return a string compressed with LZF
 */
 
-HB_FUNC( HB_LZF_COMPRESS )
+HB_FUNC( LZF_COMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
@@ -119,13 +116,13 @@ HB_FUNC( HB_LZF_COMPRESS )
 
          if( pBuffer )
          {
-            if( !hb_itemGetWriteCL( pBuffer, &out_data, &out_len ) )
+            if( ! hb_itemGetWriteCL( pBuffer, &out_data, &out_len ) )
                out_data = NULL;
          }
          else
          {
-            out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ? 
-               ( HB_SIZE ) hb_parns( 2 ) :
+            out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ?
+               hb_parns( 2 ) :
                ( HB_SIZE ) ( in_len * 1.04 + 1 );
 
             out_data = ( char * ) hb_xalloc( out_len + 1 );
@@ -142,23 +139,23 @@ HB_FUNC( HB_LZF_COMPRESS )
                else
                   hb_retclen( out_data, uiResult );
 
-               hb_storni( LZF_OK, 3 );
+               hb_storni( HB_LZF_OK, 3 );
             }
             else
             {
                if( !pBuffer )
                   hb_xfree( out_data );
 
-               hb_storni( LZF_BUF_ERROR, 3 );
-            }      
+               hb_storni( HB_LZF_BUF_ERROR, 3 );
+            }
          }
          else
-            hb_storni( LZF_MEM_ERROR, 3 );
+            hb_storni( HB_LZF_MEM_ERROR, 3 );
       }
       else
       {
          hb_retc_null();
-         hb_storni( LZF_OK, 3 );
+         hb_storni( HB_LZF_OK, 3 );
       }
    }
    else
@@ -201,11 +198,7 @@ HB_FUNC( LZF_DECOMPRESS )
       if( uiResult == 0 )
       {
          if( errno == EINVAL )
-         {
-            HB_TRACE( HB_TR_DEBUG, "LZF decompression failed, compressed data corrupted" );
-
             hb_storni( errno, 2 );
-         }
 
          hb_xfree( buffer );
          hb_retc_null();
