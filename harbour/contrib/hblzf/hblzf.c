@@ -56,28 +56,9 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbstack.h"
 
 #include "lzf.h"
 #include "lzfP.h"
-
-#define HB_LZF_BUFFSIZE  1024
-
-typedef struct
-{
-   HB_SIZE delta;
-   HB_SIZE buffer_size;
-} HB_LZF_VAR, * PHB_LZF_VAR;
-
-static void hb_lzf_var_init( void * cargo )
-{
-   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) cargo;
-
-   pLZF_VAR->delta = 0;
-   pLZF_VAR->buffer_size = HB_LZF_BUFFSIZE;
-}
-
-static HB_TSD_NEW( s_lzf_var, sizeof( HB_LZF_VAR ), hb_lzf_var_init, NULL );
 
 /**
    Return a LZF_VERSION, API version
@@ -102,30 +83,6 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 }
 
 /**
-*/
-
-HB_FUNC( HB_LZF_DELTA )
-{
-   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
-
-   hb_retni( pLZF_VAR->delta );
-   if( hb_pcount() >= 1 )
-      pLZF_VAR->delta = ( HB_SIZE ) hb_parnidef( 1, 0 );
-}
-
-/**
-*/
-
-HB_FUNC( HB_LZF_BUFFERSIZE )
-{
-   PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
-
-   hb_retni( pLZF_VAR->buffer_size );
-   if( hb_pcount() >= 1 )
-      pLZF_VAR->buffer_size = ( HB_SIZE ) hb_parnidef( 1, HB_LZF_BUFFSIZE );
-}
-
-/**
    Return a string compressed with LZF
 */
 
@@ -135,7 +92,7 @@ HB_FUNC( LZF_COMPRESS )
 
    if( pArg )
    {
-      PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
+      HB_SIZE delta = hb_parns( 2 );
 
       const char * in_data;
       char * out_data;
@@ -144,7 +101,7 @@ HB_FUNC( LZF_COMPRESS )
 
       in_data = hb_itemGetCPtr( pArg );
       in_len  = hb_itemGetCLen( pArg );
-      out_len = in_len + ( ( pLZF_VAR->delta ) ? pLZF_VAR->delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
+      out_len = in_len + ( delta ? delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
 
       out_data = ( char * ) hb_xgrab( out_len + 1 );
 
@@ -171,16 +128,18 @@ HB_FUNC( LZF_DECOMPRESS )
 
    if( pArg )
    {
-      PHB_LZF_VAR pLZF_VAR = ( PHB_LZF_VAR ) hb_stackGetTSD( &s_lzf_var );
-
       const char * in_data;
       char * buffer;
-      HB_SIZE in_len, buffer_size, i = 1;
+      HB_SIZE in_len;
+      HB_SIZE buffer_size = hb_parns( 3 );
+      HB_SIZE i = 1;
       unsigned int uiResult;
 
       in_data = hb_itemGetCPtr( pArg );
       in_len = hb_itemGetCLen( pArg );
-      buffer_size = pLZF_VAR->buffer_size;
+
+      if( buffer_size <= 0 )
+         buffer_size = 1024;
 
       buffer = ( char * ) hb_xgrab( buffer_size + 1 );
 

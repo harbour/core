@@ -24,10 +24,8 @@ PROCEDURE Main()
       If the output buffer is not large enough or any error occurs
       hb_lzf_compress return 0
    */
-   hb_lzf_delta( -1 )
-
    cStr := TEST_STRING
-   str_compressed := lzf_compress( cStr )
+   str_compressed := lzf_compress( cStr, -1 )
 
    ? "Lenght of a string is", hb_ntos( Len( cStr ) )
    ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
@@ -37,7 +35,6 @@ PROCEDURE Main()
       By default ( delta == 0 ) lenght of output buffer is
       int( len( data_in ) * 1.04 ) + 1
    */
-   hb_lzf_delta( NIL )
 
    cStr := TEST_STRING
    str_compressed := lzf_compress( cStr )
@@ -55,8 +52,7 @@ PROCEDURE Main()
    ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
 
    ? "--- test 4 ---"
-   ? hb_lzf_bufferSize( NIL )
-   str_decompressed := lzf_decompress( str_compressed, @errno )
+   str_decompressed := lzf_decompress( str_compressed, @errno, NIL )
 
    IF errno == EINVAL
       ? "LZF decompression failed, compressed data corrupted"
