@@ -103,6 +103,9 @@ HB_FUNC( LZF_COMPRESS )
       in_len  = hb_itemGetCLen( pArg );
       out_len = in_len + ( delta ? delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
 
+      if( out_len < 0 )
+         out_len = 0;
+
       out_data = ( char * ) hb_xgrab( out_len + 1 );
 
       uiResult = lzf_compress( in_data, in_len, out_data, out_len );
