@@ -99,7 +99,7 @@ HB_FUNC( HB_LZF_COMPRESSBOUND )
    Return a string compressed with LZF
 */
 
-HB_FUNC( LZF_COMPRESS )
+HB_FUNC( HB_LZF_COMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
@@ -134,10 +134,10 @@ HB_FUNC( LZF_COMPRESS )
 
             if( uiResult != 0 )
             {
-               if( !pBuffer )
-                  hb_retclen_buffer( out_data, uiResult );
-               else
+               if( pBuffer )
                   hb_retclen( out_data, uiResult );
+               else
+                  hb_retclen_buffer( out_data, uiResult );
 
                hb_storni( HB_LZF_OK, 3 );
             }
@@ -166,7 +166,7 @@ HB_FUNC( LZF_COMPRESS )
    Return a string decompressed with LZF
 */
 
-HB_FUNC( LZF_DECOMPRESS )
+HB_FUNC( HB_LZF_DECOMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
