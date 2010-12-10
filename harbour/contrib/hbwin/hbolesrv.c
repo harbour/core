@@ -797,6 +797,8 @@ BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
          if( s_fInit )
             hb_vmInit( HB_FALSE );
 
+         hb_oleInit();
+
          if( !s_fServerReady )
          {
             PHB_DYNS pDynSym = hb_dynsymFind( "DLLMAIN" );

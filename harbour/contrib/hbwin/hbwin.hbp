@@ -31,7 +31,6 @@ legacyco.c
 legacycp.c
 mapi.c
 olecore.c
-oleinit.c
 hbolesrv.c
 wapi_alloc.c
 wapi_commctrl.c

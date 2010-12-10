@@ -89,14 +89,45 @@ typedef struct
 typedef struct
 {
    HRESULT  lOleError;
+   int      iInit;
 } HB_OLEDATA, * PHB_OLEDATA;
 
-static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), NULL, NULL );
-#define hb_getOleData()       ( ( PHB_OLEDATA ) hb_stackGetTSD( &s_oleData ) )
+static void hb_oleDataInit( void * cargo )
+{
+   PHB_OLEDATA pOleData = ( PHB_OLEDATA ) cargo;
 
+#if defined( HB_OS_WIN_CE )
+   if( CoInitializeEx( NULL, COINIT_APARTMENTTHREADED ) == S_OK )
+#else
+   if( OleInitialize( NULL ) == S_OK )
+#endif
+      pOleData->iInit = 1;
+}
+
+static void hb_oleDataRelease( void * cargo )
+{
+   PHB_OLEDATA pOleData = ( PHB_OLEDATA ) cargo;
+
+   if( pOleData->iInit )
+   {
+#if defined( HB_OS_WIN_CE )
+      CoUninitialize();
+#else
+      OleUninitialize();
+#endif
+   }
+}
+
+static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), hb_oleDataInit, hb_oleDataRelease );
+#define hb_getOleData()       ( ( PHB_OLEDATA ) hb_stackGetTSD( &s_oleData ) )
 
 HB_FUNC_EXTERN( WIN_OLEAUTO );
 
+
+HB_BOOL hb_oleInit( void )
+{
+   return hb_getOleData()->iInit != 0;
+}
 
 void hb_oleSetError( HRESULT lOleError )
 {
@@ -123,8 +154,6 @@ static void hb_olecore_init( void* cargo )
       /* Never executed. Just force linkage */
       HB_FUNC_EXEC( WIN_OLEAUTO );
    }
-
-   hb_oleInit();
 }
 
 
@@ -1285,6 +1314,8 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    const char* cID = hb_parc( 2 );
    HRESULT     lOleError;
 
+   hb_oleInit();
+
    if( cOleName )
    {
       cCLSID = AnsiToWide( cOleName );
@@ -1334,6 +1365,8 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
    HRESULT     lOleError;
+
+   hb_oleInit();
 
    if( cOleName )
    {
@@ -1391,6 +1424,8 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    UINT           uiArgErr;
    HRESULT        lOleError;
 
+   hb_oleInit();
+
    if( hb_parl( 2 ) )
    {
       hb_oleSetError( S_OK );
@@ -1447,18 +1482,24 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 HB_FUNC( __OLEENUMNEXT )
 {
    IEnumVARIANT * pEnum = hb_oleenumParam( 1 );
-   VARIANTARG     variant;
+   HB_BOOL        fResult = HB_FALSE;
 
-   VariantInit( &variant );
-   if( HB_VTBL( pEnum )->Next( HB_THIS_( pEnum ) 1, &variant, NULL ) == S_OK )
+   if( pEnum )
    {
-      hb_oleVariantToItemEx( hb_stackReturnItem(), &variant,
-                             ( HB_USHORT ) hb_parni( 3 ) );
-      VariantClear( &variant );
-      hb_storl( HB_TRUE, 2 );
+      VARIANTARG     variant;
+
+      hb_oleInit();
+
+      VariantInit( &variant );
+      if( HB_VTBL( pEnum )->Next( HB_THIS_( pEnum ) 1, &variant, NULL ) == S_OK )
+      {
+         hb_oleVariantToItemEx( hb_stackReturnItem(), &variant,
+                                ( HB_USHORT ) hb_parni( 3 ) );
+         VariantClear( &variant );
+         fResult = HB_TRUE;
+      }
    }
-   else
-      hb_storl( HB_FALSE, 2 );
+   hb_storl( fResult, 2 );
 }
 
 
@@ -1545,6 +1586,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    UINT        uiArgErr;
    HRESULT     lOleError;
    HB_USHORT   uiClass;
+
+   hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
 
@@ -1642,6 +1685,8 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    HRESULT     lOleError, lOleErrorEnum;
    HB_BOOL     fAssign;
    HB_USHORT   uiClass;
+
+   hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
 

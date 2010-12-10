@@ -99,6 +99,8 @@ static void hb_oleAxExit( void* cargo )
 
 HB_BOOL hb_oleAxInit( void )
 {
+   hb_oleInit();
+
    if( s_hLib == NULL )
    {
       PHB_AX_WININIT pAtlAxWinInit;
@@ -616,6 +618,8 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
          IID                        rriid;
          void*                      hCLSID;
          const char *               szIID;
+
+         hb_oleInit();
 
          szIID = hb_parc( 3 );
          if( szIID && szIID[ 0 ] == '{' )
