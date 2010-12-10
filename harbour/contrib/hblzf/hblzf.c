@@ -60,6 +60,10 @@
 #include "lzf.h"
 #include "lzfP.h"
 
+#define  LZF_OK         0
+#define  LZF_BUF_ERROR  1
+#define  LZF_MEM_ERROR  2
+
 /**
    Return a LZF_VERSION, API version
 */
@@ -82,40 +86,80 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 #endif
 }
 
+HB_FUNC( HB_LZF_COMPRESSBOUND )
+{
+   if ( HB_ISCHAR(1) || HB_ISNUM(1) )
+   {
+      HB_SIZE nLen = HB_ISCHAR(1) ? hb_parclen( 1 ) : (HB_SIZE) hb_parns(1);
+      nLen = (HB_SIZE) ( nLen * 1.04 + 1 );
+      hb_retns( nLen );
+   }      
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /**
    Return a string compressed with LZF
 */
 
-HB_FUNC( LZF_COMPRESS )
+HB_FUNC( HB_LZF_COMPRESS )
 {
    PHB_ITEM pArg = hb_param( 1, HB_IT_STRING );
 
    if( pArg )
    {
-      HB_SIZE delta = hb_parns( 2 );
+      HB_SIZE in_len = hb_itemGetCLen( pArg );
 
-      const char * in_data;
-      char * out_data;
-      HB_SIZE in_len, out_len;
-      unsigned int uiResult;
-
-      in_data = hb_itemGetCPtr( pArg );
-      in_len  = hb_itemGetCLen( pArg );
-      out_len = in_len + ( delta ? delta : ( ( HB_SIZE ) ( in_len * 1.04 ) + 1 ) );
-
-      if( out_len < 0 )
-         out_len = 0;
-
-      out_data = ( char * ) hb_xgrab( out_len + 1 );
-
-      uiResult = lzf_compress( in_data, in_len, out_data, out_len );
-      if( uiResult == 0 )
+      if( in_len )
       {
-         hb_xfree( out_data );
-         hb_retc_null();
+         PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char * in_data = hb_itemGetCPtr( pArg );
+         char * out_data;
+         HB_SIZE out_len;
+
+         if( pBuffer )
+         {
+            if( !hb_itemGetWriteCL( pBuffer, &out_data, &out_len ) )
+               out_data = NULL;
+         }
+         else
+         {
+            out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ? 
+               ( HB_SIZE ) hb_parns( 2 ) :
+               ( HB_SIZE ) ( in_len * 1.04 + 1 );
+
+            out_data = ( char * ) hb_xalloc( out_len + 1 );
+         }
+
+         if( out_data )
+         {
+            unsigned int uiResult = lzf_compress( in_data, in_len, out_data, out_len );
+
+            if( uiResult != 0 )
+            {
+               if( !pBuffer )
+                  hb_retclen_buffer( out_data, uiResult );
+               else
+                  hb_retclen( out_data, uiResult );
+
+               hb_storni( LZF_OK, 3 );
+            }
+            else
+            {
+               if( !pBuffer )
+                  hb_xfree( out_data );
+
+               hb_storni( LZF_BUF_ERROR, 3 );
+            }      
+         }
+         else
+            hb_storni( LZF_MEM_ERROR, 3 );
       }
       else
-         hb_retclen_buffer( out_data, uiResult );
+      {
+         hb_retc_null();
+         hb_storni( LZF_OK, 3 );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
