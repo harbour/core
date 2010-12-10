@@ -28,7 +28,7 @@
 {win&allmsvc&HB_COMP_VER>'1400'}-dflag=-dynamicbase
 
 -cflag=-DHB_LEGACY_TYPES_OFF
-{allwin&!(HB_BUILD_UNICODE='no')}-cflag=-DUNICODE
+{allwin&!(HB_BUILD_WINUNI='no')}-cflag=-DUNICODE
 
 {HB_BUILD_DEBUG}-prgflag=-l-
 {HB_BUILD_DEBUG}-debug

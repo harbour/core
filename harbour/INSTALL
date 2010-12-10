@@ -673,10 +673,14 @@ HARBOUR
          [all|bin|lib|no]        Strip symbols and debug information from binaries.
                                  Default: no
    - HB_BUILD_OPTIM=no           Enable C compiler optimizations. Default: yes
-   - HB_BUILD_UNICODE=yes        Create Unicode build (on Windows/Windows CE).
-                                 Default: yes
-                                 Instead of turning it off, we recommend to use
-                                 UNICOWS solution to support Win9x/ME systems.
+   - HB_BUILD_WINUNI=yes         Create Unicode build. Only affects Windows (win) targets.
+                                 Default: yes. (For Windows CE targets this is the
+                                 only accepted setting, any user override is ignored.
+                                 When building on Win9x/ME host, the default is 'no'.)
+                                 If enabled, it will make Harbour use the Unicode
+                                 ("wide") flavor of Windows API calls. If you need
+                                 your app to run on Win9x/ME systems, either disable
+                                 this option, or use UNICOWS solution (recommended).
    - HB_BUILD_MODE=[cpp|c]       Change default build mode to C++ or C.
                                  Default: c, except for msvc* compilers, where it's cpp.
    - HB_BUILD_PARTS=
