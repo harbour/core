@@ -387,7 +387,7 @@ HARBOUR
       1.) Install MacPorts, follow their instructions:
           https://www.macports.org/
       2.) $ sudo port install pcre slang allegro cairo freeimage gd2 mysql5-devel postgresql84
-          $ sudo port install upx
+          $ sudo port install upx uncrustify
 
    Linux (generic)
    ---------------
@@ -405,7 +405,7 @@ HARBOUR
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         $ sudo apt-get install bash subversion gcc binutils fakeroot debhelper valgrind upx
+         $ sudo apt-get install bash subversion gcc binutils fakeroot debhelper valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -1559,6 +1559,8 @@ HARBOUR
                (not verified with current Harbour version)
       Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
          http://valgrind.org/
+      Uncrustify (source formatter) [multiplatform, free, open-source]
+         http://uncrustify.sourceforge.net/
       UPX (executable compressor) [win, dos, *nix, free, open-source]
          http://upx.sourceforge.net/
       Nullsoft Installer [win, free, open-source]
