@@ -107,11 +107,12 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE /* Enable undocumented Windows API function call */
 #endif
 
-#if ( defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) && ! defined( __POCC__ )
+#if ( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
+                                    ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) && ! defined( __POCC__ )
 #  if !defined( HB_GTWIN_USE_PCONSOLEINFOEX )
 #     define HB_GTWIN_USE_PCONSOLEINFOEX
 #  endif
-#elif ! defined( _MSC_VER ) || ( _MSC_VER < 1400 )
+#else
 #  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
       typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX
       {
