@@ -1,6 +1,6 @@
 /*
-  $Id$
-*/
+   $Id$
+ */
 
 /*
  * Harbour Project source code:
@@ -42,14 +42,17 @@ HB_EXTERN_BEGIN
 
 struct hb_BTree;
 
-struct hb_BTree * hb_BTreeNew( const char * FileName, HB_USHORT usPageSize, HB_USHORT usKeySize, HB_ULONG ulFlags, HB_ULONG ulBuffers );
-struct hb_BTree * hb_BTreeOpen( const char *FileName, HB_ULONG ulFlags, HB_ULONG ulBuffers );
+struct hb_BTree * hb_BTreeNew( const char * FileName, HB_USHORT usPageSize, HB_USHORT usKeySize,
+                               HB_ULONG ulFlags,
+                               HB_ULONG ulBuffers );
+struct hb_BTree * hb_BTreeOpen( const char * FileName, HB_ULONG ulFlags, HB_ULONG ulBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
 HB_BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
 HB_BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, HB_LONG lData );
 void hb_BTreeGoTop( struct hb_BTree * pBTree );
 void hb_BTreeGoBottom( struct hb_BTree * pBTree );
-HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char * szKey, HB_LONG lData, HB_BOOL bSoftSeek );
+HB_BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char * szKey, HB_LONG lData,
+                      HB_BOOL bSoftSeek );
 HB_LONG hb_BTreeSkip( struct hb_BTree * pBTree, HB_LONG records );
 const char * hb_BTreeKey( struct hb_BTree * pBTree );
 HB_LONG hb_BTreeData( struct hb_BTree * pBTree );
