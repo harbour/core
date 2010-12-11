@@ -126,10 +126,10 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
 
    str_decompressed := ""
-   str_decompressed := hb_lzf_uncompress( str_compressed, @str_decompressed, @nResult )
+   str_decompressed := hb_lzf_decompress( str_compressed, @str_decompressed, @nResult )
 
    IF nResult != HB_LZF_OK
-      ? "hb_lzf_uncompress() return", ;
+      ? "hb_lzf_decompress() return", ;
          iif( nResult == HB_LZF_MEM_ERROR, "HB_LZF_MEM_ERROR", hb_ntos( nResult ) )
    ELSE
       ? iif( cStr == str_decompressed, "OK!", "not OK!" )

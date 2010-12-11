@@ -111,7 +111,7 @@
 #  if !defined( HB_GTWIN_USE_PCONSOLEINFOEX )
 #     define HB_GTWIN_USE_PCONSOLEINFOEX
 #  endif
-#else
+#elif ! defined( _MSC_VER ) || ( _MSC_VER < 1400 )
 #  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
       typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX
       {
