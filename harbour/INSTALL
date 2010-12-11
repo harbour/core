@@ -673,14 +673,6 @@ HARBOUR
          [all|bin|lib|no]        Strip symbols and debug information from binaries.
                                  Default: no
    - HB_BUILD_OPTIM=no           Enable C compiler optimizations. Default: yes
-   - HB_BUILD_WINUNI=yes         Create Unicode build. Only affects Windows (win) targets.
-                                 Default: yes. (For Windows CE targets this is the
-                                 only accepted setting, any user override is ignored.
-                                 When building on Win9x/ME host, the default is 'no'.)
-                                 If enabled, it will make Harbour use the Unicode
-                                 ("wide") flavor of Windows API calls. If you need
-                                 your app to run on Win9x/ME systems, either disable
-                                 this option, or use UNICOWS solution (recommended).
    - HB_BUILD_MODE=[cpp|c]       Change default build mode to C++ or C.
                                  Default: c, except for msvc* compilers, where it's cpp.
    - HB_BUILD_PARTS=
@@ -688,10 +680,20 @@ HARBOUR
    - HB_BUILD_NOGPLLIB=yes       Disable components dependent on GPL 3rd party code,
                                  to allow Harbour for commercial (closed-source)
                                  projects. Default: no
+   - HB_BUILD_WINUNI=yes         For Windows targets only.
+                                 If enabled, it will make Harbour use the Unicode
+                                 ("wide") flavor of Windows API calls. If you need
+                                 your app to run on Win9x/ME systems, either disable
+                                 this option, or use UNICOWS solution (recommended).
+                                 Default: yes. (For Windows CE targets this is the
+                                 only accepted setting, any user override is ignored.
+                                 When building on Win9x/ME host, the default is 'no'.)
    - HB_BUILD_3RDEXT=no          Enable autodetection of 3rd party components
                                  on default system locations. Default: yes
    - HB_BUILD_CONTRIBS=no [<l>]  Don't build any (or space separated <l> list of)
-                                 contrib packages.
+                                 contrib packages. Please note it won't prevent
+                                 building packages which are dependencies of other
+                                 (enabled) packages.
    - HB_BUILD_CONTRIBS=[<l>]     Build space separated <l> list of contrib
                                  libraries. Build all if left empty (default).
    - HB_BUILD_ADDONS=<l>         Build space separated <l> list of additional .hbp
@@ -1223,7 +1225,8 @@ HARBOUR
       Use only those documented in this file.
       Some environment variable settings which are commonly believed by
       users to be useful, but which in reality are either not needed or
-      not even used by Harbour build process and hbmk2. You can delete them:
+      not even used by Harbour build process and hbmk2.
+      You can delete them:
          set HB_DIR=<Harbour root dir>
          set HB_PATH=<Harbour root dir>
          set HRB_DIR=<Some Harbour dir>

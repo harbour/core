@@ -536,19 +536,20 @@ STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL cFile
 
    IF hb_FileExists( cFileNameSrc )
-
-      aLinesPRG := hbqtui_gen_prg( hb_MemoRead( cFileNameSrc ), "hbqtui_" + cName )
-
-      IF ! Empty( aLinesPRG )
-         cFile := ""
-         AEval( aLinesPRG, {| cLine | cFile += cLine + hb_eol() } )
-         IF hb_MemoWrit( cFileNameDst, cFile )
-            RETURN .T.
+      IF ! Empty( cFile := hb_MemoRead( cFileNameSrc ) )
+         IF ! Empty( aLinesPRG := hbqtui_gen_prg( cFile, "hbqtui_" + cName ) )
+            cFile := ""
+            AEval( aLinesPRG, {| cLine | cFile += cLine + hb_eol() } )
+            IF hb_MemoWrit( cFileNameDst, cFile )
+               RETURN .T.
+            ELSE
+               hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cFileNameDst ) )
+            ENDIF
          ELSE
-            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cFileNameDst ) )
+            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Intermediate file (%1$s) is not an .uic file.", cFileNameSrc ) )
          ENDIF
       ELSE
-         hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Intermediate file (%1$s) is not an .uic file.", cFileNameSrc ) )
+         hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Intermediate file (%1$s) empty or cannot be read.", cFileNameSrc ) )
       ENDIF
    ELSE
       hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot find intermediate file: %1$s", cFileNameSrc ) )
