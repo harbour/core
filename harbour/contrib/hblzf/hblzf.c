@@ -62,6 +62,23 @@
 
 #include "hblzf.ch"
 
+static HB_SIZE hb_lzf_compressbound( HB_SIZE nLen )
+{
+   HB_SIZE nBuffSize = ( HB_SIZE ) ( nLen * 1.04 + 1 );
+   return ( nBuffSize >= 32 ) ? nBuffSize : 32; 
+}
+
+HB_FUNC( HB_LZF_COMPRESSBOUND )
+{
+   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) )
+   {
+      HB_SIZE nLen = HB_ISCHAR( 1 ) ? hb_parclen( 1 ) : ( HB_SIZE ) hb_parns( 1 );
+      hb_retns( hb_lzf_compressbound( nLen ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* Return a LZF_VERSION, API version */
 HB_FUNC( HB_LZF_VERSION )
 {
@@ -76,17 +93,6 @@ HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 #else
    hb_retl( HB_FALSE );
 #endif
-}
-
-HB_FUNC( HB_LZF_COMPRESSBOUND )
-{
-   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) )
-   {
-      HB_SIZE nLen = HB_ISCHAR( 1 ) ? hb_parclen( 1 ) : hb_parns( 1 );
-      hb_retns( ( HB_SIZE ) ( nLen * 1.04 + 1 ) );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Return a string compressed with LZF */
@@ -113,8 +119,8 @@ HB_FUNC( HB_LZF_COMPRESS )
          else
          {
             out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ?
-                      hb_parns( 2 ) :
-                      ( HB_SIZE ) ( in_len * 1.04 + 1 );
+                      ( HB_SIZE ) hb_parns( 2 ) :
+                      hb_lzf_compressbound( in_len );
 
             out_data = ( char * ) hb_xalloc( out_len + 1 );
          }
