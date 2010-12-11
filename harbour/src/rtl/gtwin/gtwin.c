@@ -111,6 +111,24 @@
 #  if !defined( HB_GTWIN_USE_PCONSOLEINFOEX )
 #     define HB_GTWIN_USE_PCONSOLEINFOEX
 #  endif
+#else
+#  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
+      typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX
+      {
+         ULONG cbSize;
+         COORD dwSize;
+         COORD dwCursorPosition;
+         WORD wAttributes;
+         SMALL_RECT srWindow;
+         COORD dwMaximumWindowSize;
+         WORD wPopupAttributes;
+         BOOL bFullscreenSupported;
+         COLORREF ColorTable[ 16 ];
+      } CONSOLE_SCREEN_BUFFER_INFOEX, * PCONSOLE_SCREEN_BUFFER_INFOEX;
+#  endif
+#  if !defined( HB_GTWIN_USE_PCONSOLEINFOEX )
+#     define HB_GTWIN_USE_PCONSOLEINFOEX
+#  endif
 #endif
 
 #ifndef MOUSE_WHEELED
