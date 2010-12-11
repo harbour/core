@@ -60,4 +60,6 @@
 #define HB_LZF_MEM_ERROR        2
 #define HB_LZF_DATA_CORRUPTED   22
 
+#define HB_LZF_DEFAULT_BUFFSIZE 1024
+
 #endif /* HBLZF_CH_ */

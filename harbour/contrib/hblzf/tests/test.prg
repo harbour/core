@@ -12,7 +12,7 @@
 PROCEDURE Main()
    LOCAL cStr, str_compressed, str_decompressed
    LOCAL b64_expected_result := "BFRoaXMgIAIUdGVzdCBvZiBMWkYgZXh0ZW5zaW9u"
-   LOCAL nLen, errno := 0, nResult := 0
+   LOCAL nLen, nResult := 0
 
    ? "LZF Api version is", ;
       hb_ntos( hb_lzf_version() ) + "(0x" + hb_numtohex( hb_lzf_version() ) +")"
@@ -55,7 +55,7 @@ PROCEDURE Main()
       ? "Lenght of a string is", hb_ntos( Len( cStr ) )
       ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
 
-      ? hb_base64encode( str_compressed ) == b64_expected_result
+      ? iif( hb_base64encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
       ? "hb_lzf_compress() return ", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -71,7 +71,7 @@ PROCEDURE Main()
       ? "Lenght of a string is", hb_ntos( Len( cStr ) )
       ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
 
-      ? hb_base64encode( str_compressed ) == b64_expected_result
+      ? iif( hb_base64encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
       ? "hb_lzf_compress() return ", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -88,24 +88,51 @@ PROCEDURE Main()
    ENDIF
 
    ? "--- test 6 ---"
-   str_decompressed := hb_lzf_decompress( str_compressed, @errno, NIL )
+   str_decompressed := hb_lzf_decompress( str_compressed, NIL, @nResult )
 
-   IF errno == HB_LZF_DATA_CORRUPTED
+   IF nResult == HB_LZF_DATA_CORRUPTED
       ? "LZF decompression failed, compressed data corrupted"
    ELSE
-      ? cStr == str_decompressed
+      ? iif( cStr == str_decompressed, "OK!", "not OK!" )
    ENDIF
 
    ? "--- test 7 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
    str_compressed := hb_zcompress( cStr, NIL, @nResult )
 
-   str_decompressed := hb_lzf_decompress( str_compressed, @errno, NIL )
+   str_decompressed := hb_lzf_decompress( str_compressed, NIL, @nResult )
 
-   IF errno == HB_LZF_DATA_CORRUPTED
-      ? "LZF decompression failed, compressed data corrupted !"
+   IF nResult == HB_LZF_DATA_CORRUPTED
+      ? "LZF decompression failed, compressed data corrupted!"
    ELSE
-      ? cStr == str_decompressed
+      ? iif( cStr == str_decompressed, "OK!", "not OK!" )
+   ENDIF
+
+   ? "--- test 8 ---"
+   cStr := Replicate( TEST_STRING, _NREPL_ )
+   str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
+
+   str_decompressed := Space( 4096 )
+   str_decompressed := hb_lzf_decompress( str_compressed, @str_decompressed, @nResult )
+
+   IF nResult == HB_LZF_DATA_CORRUPTED
+      ? "LZF decompression failed, compressed data corrupted!"
+   ELSE
+      ? iif( cStr == str_decompressed, "OK!", "not OK!" )
+   ENDIF
+
+   ? "--- test 9 ---"
+   cStr := Replicate( TEST_STRING, _NREPL_ )
+   str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
+
+   str_decompressed := ""
+   str_decompressed := hb_lzf_uncompress( str_compressed, @str_decompressed, @nResult )
+
+   IF nResult != HB_LZF_OK
+      ? "hb_lzf_uncompress() return", ;
+         iif( nResult == HB_LZF_MEM_ERROR, "HB_LZF_MEM_ERROR", hb_ntos( nResult ) )
+   ELSE
+      ? iif( cStr == str_decompressed, "OK!", "not OK!" )
    ENDIF
 
    RETURN

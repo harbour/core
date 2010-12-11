@@ -64,7 +64,7 @@
 
 /**
    Return a LZF_VERSION, API version
-*/
+ */
 
 HB_FUNC( HB_LZF_VERSION )
 {
@@ -73,7 +73,7 @@ HB_FUNC( HB_LZF_VERSION )
 
 /**
    Return if lzf was optimized for speed (or for compression)
-*/
+ */
 
 HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 {
@@ -97,7 +97,7 @@ HB_FUNC( HB_LZF_COMPRESSBOUND )
 
 /**
    Return a string compressed with LZF
-*/
+ */
 
 HB_FUNC( HB_LZF_COMPRESS )
 {
@@ -110,20 +110,20 @@ HB_FUNC( HB_LZF_COMPRESS )
       if( in_len )
       {
          PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         const char * in_data = hb_itemGetCPtr( pArg );
-         char * out_data;
+         const char *in_data = hb_itemGetCPtr( pArg );
+         char *out_data;
          HB_SIZE out_len;
 
          if( pBuffer )
          {
-            if( ! hb_itemGetWriteCL( pBuffer, &out_data, &out_len ) )
+            if( !hb_itemGetWriteCL( pBuffer, &out_data, &out_len ) )
                out_data = NULL;
          }
          else
          {
             out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ?
-               hb_parns( 2 ) :
-               ( HB_SIZE ) ( in_len * 1.04 + 1 );
+                      hb_parns( 2 ) :
+                      ( HB_SIZE ) ( in_len * 1.04 + 1 );
 
             out_data = ( char * ) hb_xalloc( out_len + 1 );
          }
@@ -164,7 +164,7 @@ HB_FUNC( HB_LZF_COMPRESS )
 
 /**
    Return a string decompressed with LZF
-*/
+ */
 
 HB_FUNC( HB_LZF_DECOMPRESS )
 {
@@ -172,40 +172,78 @@ HB_FUNC( HB_LZF_DECOMPRESS )
 
    if( pArg )
    {
-      const char * in_data;
-      char * buffer;
-      HB_SIZE in_len;
-      HB_SIZE buffer_size = hb_parns( 3 );
-      HB_SIZE i = 1;
-      unsigned int uiResult;
+      HB_SIZE in_len = hb_itemGetCLen( pArg );
 
-      in_data = hb_itemGetCPtr( pArg );
-      in_len = hb_itemGetCLen( pArg );
-
-      if( buffer_size <= 0 )
-         buffer_size = 1024;
-
-      buffer = ( char * ) hb_xgrab( buffer_size + 1 );
-
-      do
+      if( in_len )
       {
-         buffer_size *= i++;
-         buffer = ( char * ) hb_xrealloc( buffer, buffer_size );
+         PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char *in_data = hb_itemGetCPtr( pArg );
+         char *buffer;
+         HB_SIZE buffer_size;
 
-         uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
-      } while( uiResult == 0 && errno == E2BIG );
+         if( pBuffer )
+         {
+            if( !hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
+               buffer = NULL;
+         }
+         else
+         {
+            buffer_size = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ?
+                          hb_parns( 2 ) : HB_LZF_DEFAULT_BUFFSIZE;
 
-      if( uiResult == 0 )
-      {
-         if( errno == EINVAL )
-            hb_storni( errno, 2 );
+            buffer = ( char * ) hb_xalloc( buffer_size + 1 );
+         }
 
-         hb_xfree( buffer );
-         hb_retc_null();
+         if( buffer && buffer_size )
+         {
+            HB_SIZE i = 1;
+            unsigned int uiResult;
+
+            do
+            {
+               buffer_size *= i++;
+               buffer = ( char * ) hb_xrealloc( buffer, buffer_size );
+
+               uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
+            }
+            while( uiResult == 0 && errno == E2BIG );
+
+            if( uiResult == 0 )
+            {
+               if( errno == EINVAL )
+                  hb_storni( HB_LZF_DATA_CORRUPTED, 3 );
+
+               if( !pBuffer )
+                  hb_xfree( buffer );
+            }
+            else
+            {
+               if( pBuffer )
+                  hb_retclen( buffer, uiResult );
+               else
+                  hb_retclen_buffer( buffer, uiResult );
+
+               hb_storni( HB_LZF_OK, 3 );
+            }
+         }
+         else
+            hb_storni( (buffer_size) ? HB_LZF_BUF_ERROR : HB_LZF_MEM_ERROR, 3 );
       }
       else
-         hb_retclen_buffer( buffer, uiResult );
+      {
+         hb_retc_null();
+         hb_storni( HB_LZF_OK, 3 );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/**
+   Return a string decompressed with LZF
+ */
+
+HB_FUNC( HB_LZF_UNCOMPRESS )
+{
+   HB_FUNC_EXEC( HB_LZF_DECOMPRESS );
 }
