@@ -443,7 +443,7 @@ HARBOUR
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         bash subversion gcc make glibc-devel rpm valgrind
+         bash subversion gcc make glibc-devel rpm valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -779,7 +779,7 @@ HARBOUR
    Valgrind (on linux and darwin targets)
    --------
       Build Harbour with:
-         HB_USER_DEBUG=yes
+         HB_BUILD_DEBUG=yes
 
       Build app with:
          $ hbmk2 myapp -debug
