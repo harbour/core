@@ -1,5 +1,5 @@
 /*
- * $Id: test.prg 14179 2010-12-08 23:34:33Z petr_ch $
+ * $Id$
  */
 
 #include "simpleio.ch"

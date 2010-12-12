@@ -1,5 +1,5 @@
 /*
- * $Id: test2.prg 14179 2010-12-08 23:34:33Z petr_ch $
+ * $Id$
  */
 
 /* hbmk2 testz.prg -lhbbz2 -lbz2 -lhblzf -llzf -es2 -w3 */
