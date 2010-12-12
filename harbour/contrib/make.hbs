@@ -560,7 +560,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
                cOptionsLibDyn
 
    IF PCount() >= 4
-      nErrorLevel := hb_processRun( cCommand, @cStdErr, @cStdOut )
+      nErrorLevel := hb_processRun( cCommand,, @cStdOut, @cStdErr )
    ELSE
       nErrorLevel := mk_hb_processRun( cCommand )
    ENDIF

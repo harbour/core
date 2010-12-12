@@ -405,6 +405,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, lPostfix )
    LOCAL cBIN
    LOCAL aEnvList
+   LOCAL cStdErr
 
    IF ! hb_isLogical( lPostfix )
       lPostfix := .T.
@@ -457,7 +458,14 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, lPostfix )
          ENDIF
       ENDIF
       IF hbmk2[ "lINFO" ]
-         hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s (autodetected)", cName, cBIN ) )
+         cStdErr := ""
+         IF ! hbmk2[ "lDONTEXEC" ]
+            hb_processRun( cBIN + " -v",,, @cStdErr )
+            IF ! Empty( cStdErr )
+               cStdErr := " [" + StrTran( StrTran( cStdErr, Chr( 13 ) ), Chr( 10 ) ) + "]"
+            ENDIF
+         ENDIF
+         hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s%3$s (autodetected)", cName, cBIN, cStdErr ) )
       ENDIF
    ENDIF
 
