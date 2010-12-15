@@ -35,13 +35,13 @@ get_rpmmacro()
    echo -n "${R}"
 }
 
-for d in /usr /usr/local /opt/xmingw /opt/cross
+for d in /usr /usr/local /usr/local/mingw32 /opt/xmingw /opt/cross
 do
    if [ -z "${TARGET}" ]
    then
-      TARGET=`find $d/bin -maxdepth 1 -name "i[3456]86-mingw*-gcc" \
+      TARGET=`find $d/bin -maxdepth 1 -name "i[3456]86*-mingw*-gcc" \
               2>/dev/null | \
-              sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
+              sed -e '1 !d' -e 's/.*\(i[3456]86.*-mingw[^-]*\).*/\1/g'`
       MINGW_DIR=$d
    fi
 done
