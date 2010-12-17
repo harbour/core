@@ -274,6 +274,14 @@ HB_FUNC( __HBQT_ERROR )
    hb_itemRelease( pError );
 }
 
+HB_FUNC( __HBQT_SETUTF8 )
+{
+   PHB_CODEPAGE cdp = hb_cdpFindExt( "UTF8" );
+
+   if( cdp )
+      hb_vmSetCDP( cdp );
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500

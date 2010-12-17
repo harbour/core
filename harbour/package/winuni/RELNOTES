@@ -62,7 +62,7 @@ Tool/lib versions used to create this package:
    Firebird 2.5.0rc2
    FreeImage 3.13.1
    GD 2.0.35
-   MySQL 5.1.41
+   MySQL 5.5.8
    OCILIB 3.8.0
    OpenSSL 1.0.0a
    PostgreSQL 9.0.1
