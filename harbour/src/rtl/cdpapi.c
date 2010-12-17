@@ -2094,7 +2094,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                      {
                         if( iAcc && nACSort != HB_CDP_ACSORT_NONE )
                            ++iAccUp;
-                        iSortLo = ++iSortUp;
+                        ++iSortUp;
                      }
                      iAccLo = iAccUp;
                      iSortLo = iSortUp;

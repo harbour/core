@@ -143,7 +143,7 @@ static HB_LANG s_lang =
       "",
        "Nieprawidíowa operacja",
        "Przekroczony limit",
-       "Uszkodzony indeks bazy",
+       "Wykryto uszkodzenie danych",
        "Niezgodny typ danych",
        "Wartoûç poza zakresem",
        "Baza jest nie otwarta",
