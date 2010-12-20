@@ -88,8 +88,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL cBCC
    LOCAL tmp
 
-   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
-
    LOCAL oInMail
    LOCAL oUrl
    LOCAL oUrl1
@@ -319,7 +317,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    ENDIF
 
-   oInMail:oUrl:cUserid := cFromRaw
+   oInMail:oUrl:cUserid := tip_GetRawEMail( cFrom )
 
    oInMail:Write( hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, cEncoding ) )
    oInMail:Commit()
@@ -352,8 +350,6 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    LOCAL cFname
    LOCAL cFext
    LOCAL cData
-
-   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
 
    IF ! ISARRAY( aFiles )
       aFiles := {}
@@ -493,7 +489,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    NEXT
 
    IF lRead
-      oMail:hHeaders[ "Disposition-Notification-To" ] := cFromRaw
+      oMail:hHeaders[ "Disposition-Notification-To" ] := tip_GetRawEMail( cFrom )
    ENDIF
 
    IF nPriority != 3

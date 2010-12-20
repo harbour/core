@@ -1,6 +1,6 @@
 diff -urN pcre.orig/pcrefinf.c pcre/pcrefinf.c
---- pcre.orig/pcrefinf.c	2010-06-26 14:10:17.887330037 +0200
-+++ pcre/pcrefinf.c	2010-06-26 14:10:18.107331394 +0200
+--- pcre.orig/pcrefinf.c	2010-12-20 22:31:27.992038219 +0100
++++ pcre/pcrefinf.c	2010-12-20 22:31:28.802038337 +0100
 @@ -126,7 +126,7 @@
    case PCRE_INFO_MINLENGTH:
    *((int *)where) =
@@ -11,8 +11,8 @@ diff -urN pcre.orig/pcrefinf.c pcre/pcrefinf.c
  
    case PCRE_INFO_LASTLITERAL:
 diff -urN pcre.orig/pcreglob.c pcre/pcreglob.c
---- pcre.orig/pcreglob.c	2010-06-26 14:10:17.907330491 +0200
-+++ pcre/pcreglob.c	2010-06-26 14:10:18.107331394 +0200
+--- pcre.orig/pcreglob.c	2010-12-20 22:31:28.052038497 +0100
++++ pcre/pcreglob.c	2010-12-20 22:31:28.822040758 +0100
 @@ -74,11 +74,17 @@
  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
  
