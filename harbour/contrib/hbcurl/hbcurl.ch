@@ -248,6 +248,7 @@
 #define HB_CURLOPT_RTSP_CLIENT_CSEQ           193
 #define HB_CURLOPT_RTSP_SERVER_CSEQ           194
 #define HB_CURLOPT_WILDCARDMATCH              197
+#define HB_CURLOPT_RESOLVE                    198
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -281,13 +282,14 @@
 #define HB_CURL_NETRC_REQUIRED                2  /* A user:password in the URL will be ignored. */
 
 /* HB_CURLOPT_HTTPAUTH option */
-#define HB_CURLAUTH_NONE                      0                   /* nothing */
-#define HB_CURLAUTH_BASIC                     1                   /* Basic (default) */
-#define HB_CURLAUTH_DIGEST                    2                   /* Digest */
-#define HB_CURLAUTH_GSSNEGOTIATE              4                   /* GSS-Negotiate */
-#define HB_CURLAUTH_NTLM                      8                   /* NTLM */
-#define HB_CURLAUTH_DIGEST_IE                 hb_bitShift( 1, 4 ) /* Digest with IE flavour */
-#define HB_CURLAUTH_ANY                       hb_bitNot( 0 )      /* all types set */
+#define HB_CURLAUTH_NONE                      0                    /* nothing */
+#define HB_CURLAUTH_BASIC                     1                    /* Basic (default) */
+#define HB_CURLAUTH_DIGEST                    2                    /* Digest */
+#define HB_CURLAUTH_GSSNEGOTIATE              4                    /* GSS-Negotiate */
+#define HB_CURLAUTH_NTLM                      8                    /* NTLM */
+#define HB_CURLAUTH_DIGEST_IE                 hb_bitShift( 1, 4 )  /* Digest with IE flavour */
+#define HB_CURLAUTH_ONLY                      hb_bitShift( 1, 31 ) /* used together with a single other type to force no auth or just that single type */
+#define HB_CURLAUTH_ANY                       hb_bitNot( 0 )       /* all types set */
 #define HB_CURLAUTH_ANYSAFE                   hb_bitNot( HB_CURLAUTH_BASIC )
 
 /* HB_CURLOPT_HTTP_VERSION option */

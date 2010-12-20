@@ -100,6 +100,7 @@ typedef struct _HB_CURL
    struct curl_slist *    pPREQUOTE;
    struct curl_slist *    pTELNETOPTIONS;
    struct curl_slist *    pMAIL_RCPT;
+   struct curl_slist *    pRESOLVE;
 
    char * ul_name;
    HB_FHANDLE ul_handle;
@@ -510,6 +511,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    hb_curl_slist_free( &hb_curl->pPREQUOTE );
    hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
    hb_curl_slist_free( &hb_curl->pMAIL_RCPT );
+   hb_curl_slist_free( &hb_curl->pRESOLVE );
 
    hb_curl_file_ul_free( hb_curl );
    hb_curl_file_dl_free( hb_curl );
@@ -1409,6 +1411,27 @@ HB_FUNC( CURL_EASY_SETOPT )
 #if LIBCURL_VERSION_NUM >= 0x070F02
          case HB_CURLOPT_CONNECT_ONLY:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECT_ONLY, HB_CURL_OPT_BOOL( 3 ) );
+            break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071503
+         case HB_CURLOPT_RESOLVE:
+            {
+               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
+               curl_easy_setopt( hb_curl->curl, CURLOPT_RESOLVE, NULL );
+               hb_curl_slist_free( &hb_curl->pRESOLVE );
+
+               if( pArray )
+               {
+                  HB_SIZE ulPos;
+                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+
+                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                     hb_curl->pRESOLVE = curl_slist_append( hb_curl->pRESOLVE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESOLVE, hb_curl->pRESOLVE );
+               }
+            }
             break;
 #endif
 

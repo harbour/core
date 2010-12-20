@@ -58,7 +58,7 @@ Tool/lib versions used to create this package:
    Allegro 4.2.2
    Blat 2.6.2
    Cairo 1.8.8
-   libcurl 7.21.0
+   libcurl 7.21.3
    Firebird 2.5.0rc2
    FreeImage 3.13.1
    GD 2.0.35
