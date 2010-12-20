@@ -1,9 +1,9 @@
 /*
  * $Id$
  */
-
+#pragma linenumber=on
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes & Patrick Mast
@@ -82,24 +82,17 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    cReplyTo   -> Optional.
    */
 
-   LOCAL oInMail
-   LOCAL cBodyTemp
-   LOCAL oUrl
-   LOCAL oMail
-   LOCAL oAttach
-   LOCAL aThisFile
-   LOCAL cMimeText
-   LOCAL cFile
-   LOCAL cFname
-   LOCAL cFext
-   LOCAL cData
-   LOCAL oUrl1
-
    LOCAL cTmp
    LOCAL cTo
    LOCAL cCC
    LOCAL cBCC
    LOCAL tmp
+
+   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
+
+   LOCAL oInMail
+   LOCAL oUrl
+   LOCAL oUrl1
 
    LOCAL lConnectPlain := .F.
    LOCAL lReturn       := .T.
@@ -108,8 +101,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
-
-   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
 
    IF ! ISCHARACTER( cServer ) .OR. Empty( cServer )
       cServer := "localhost"
@@ -123,15 +114,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    IF ! ISNUMBER( nPort ) .OR. Empty( nPort )
       nPort := 25
    ENDIF
-   IF ! ISARRAY( aFiles )
-      aFiles := {}
-   ENDIF
-   IF ! ISNUMBER( nPriority )
-      nPriority := 3
-   ENDIF
-   IF ! ISLOGICAL( lRead )
-      lRead := .F.
-   ENDIF
    IF ! ISLOGICAL( lPopAuth )
       lPopAuth := .T.
    ENDIF
@@ -141,30 +123,11 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    IF ! ISNUMBER( nTimeOut )
       nTimeOut := 10000
    ENDIF
-   IF ! ISCHARACTER( cReplyTo )
-      cReplyTo := ""
-   ENDIF
    IF ! ISLOGICAL( lTLS )
       lTLS := .F.
    ENDIF
    IF ! ISCHARACTER( cSMTPPass )
       cSMTPPass := cPass
-   ENDIF
-   IF ! ISCHARACTER( cCharset )
-      cCharset := "ISO-8859-1"
-   ENDIF
-   IF ! ISCHARACTER( cEncoding )
-      cEncoding := "quoted-printable"
-   ENDIF
-
-   cUser := StrTran( cUser, "@", "&at;" )
-
-   IF !( ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody ) )
-
-      IF !( Right( cBody, 2 ) == Chr( 13 ) + Chr( 10 ) )
-         cBody += Chr( 13 ) + Chr( 10 )
-      ENDIF
-
    ENDIF
 
    // cTo
@@ -230,6 +193,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       cBCC := tip_GetRawEMail( AllTrim( xBCC ) )
    ENDIF
 
+   cUser := StrTran( cUser, "@", "&at;" )
+
    IF cPopServer != NIL .AND. lPopAuth
       BEGIN SEQUENCE
          oUrl1 := tUrl():New( iif( lTLS, "pop3s://" , "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
@@ -259,42 +224,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oUrl:nPort   := nPort
    oUrl:cUserid := StrTran( cUser, "&at;", "@" )
-
-   oMail := tipMail():new()
-   oMail:SetEncoder( cEncoding )
-   oMail:SetCharset( cCharset )
-   oMail:SetHeader( cSubject, cFrom, xTo, xCC )
-   oMail:hHeaders[ "Date" ] := tip_Timestamp()
-   IF ! Empty( cReplyTo )
-      oMail:hHeaders[ "Reply-to" ] := cReplyTo
-   ENDIF
-
-   IF ! Empty( aFiles )
-      oAttach := tipMail():new()
-      oAttach:SetEncoder( cEncoding )
-      oAttach:SetCharset( cCharset )
-
-      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
-         cMimeText := "text/html; charset=" + cCharset
-         oAttach:hHeaders[ "Content-Type" ] := cMimeText
-         cBodyTemp := cBody
-         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
-      ELSE
-         oAttach:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
-      ENDIF
-      oAttach:SetBody( cBody )
-      oMail:Attach( oAttach )
-   ELSE
-      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
-         cMimeText := "text/html ; charset=" + cCharset
-         oMail:hHeaders[ "Content-Type" ] := cMimeText
-         cBodyTemp := cBody
-         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
-      ELSE
-         oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
-      ENDIF
-      oMail:SetBody( cBody )
-   ENDIF
 
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
@@ -392,6 +321,101 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oInMail:oUrl:cUserid := cFromRaw
 
+   oInMail:Write( hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, cEncoding ) )
+   oInMail:Commit()
+   oInMail:Close()
+
+   RETURN lReturn
+
+FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
+                          aFiles, nPriority, lRead, ;
+                          cReplyTo, ;
+                          cCharset, cEncoding )
+   /*
+   cFrom      -> Required. Email address of the sender
+   xTo        -> Required. Character string or array of email addresses to send the email to
+   xCC        -> Optional. Character string or array of email adresses for CC (Carbon Copy)
+   cBody      -> Optional. The body message of the email as text, or the filename of the HTML message to send.
+   cSubject   -> Optional. Subject of the sending email
+   aFiles     -> Optional. Array of attachments to the email to send
+   nPriority  -> Optional. Email priority: 1=High, 3=Normal (Standard), 5=Low
+   lRead      -> Optional. If set to .T., a confirmation request is send. Standard setting is .F.
+   cReplyTo   -> Optional.
+   */
+
+   LOCAL cBodyTemp
+   LOCAL oMail
+   LOCAL oAttach
+   LOCAL aThisFile
+   LOCAL cMimeText
+   LOCAL cFile
+   LOCAL cFname
+   LOCAL cFext
+   LOCAL cData
+
+   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
+
+   IF ! ISARRAY( aFiles )
+      aFiles := {}
+   ENDIF
+   IF ! ISNUMBER( nPriority )
+      nPriority := 3
+   ENDIF
+   IF ! ISLOGICAL( lRead )
+      lRead := .F.
+   ENDIF
+   IF ! ISCHARACTER( cReplyTo )
+      cReplyTo := ""
+   ENDIF
+   IF ! ISCHARACTER( cCharset )
+      cCharset := "ISO-8859-1"
+   ENDIF
+   IF ! ISCHARACTER( cEncoding )
+      cEncoding := "quoted-printable"
+   ENDIF
+
+   IF !( ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody ) )
+      IF !( Right( cBody, 2 ) == Chr( 13 ) + Chr( 10 ) )
+         cBody += Chr( 13 ) + Chr( 10 )
+      ENDIF
+   ENDIF
+
+   oMail := tipMail():new()
+   oMail:SetEncoder( cEncoding )
+   oMail:SetCharset( cCharset )
+   oMail:SetHeader( cSubject, cFrom, xTo, xCC )
+   oMail:hHeaders[ "Date" ] := tip_Timestamp()
+   IF ! Empty( cReplyTo )
+      oMail:hHeaders[ "Reply-to" ] := cReplyTo
+   ENDIF
+
+   IF ! Empty( aFiles )
+      oAttach := tipMail():new()
+      oAttach:SetEncoder( cEncoding )
+      oAttach:SetCharset( cCharset )
+
+      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
+         cMimeText := "text/html; charset=" + cCharset
+         oAttach:hHeaders[ "Content-Type" ] := cMimeText
+         cBodyTemp := cBody
+         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
+      ELSE
+         oAttach:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
+      ENDIF
+      oAttach:SetBody( cBody )
+      oMail:Attach( oAttach )
+   ELSE
+      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
+         cMimeText := "text/html ; charset=" + cCharset
+         oMail:hHeaders[ "Content-Type" ] := cMimeText
+         cBodyTemp := cBody
+         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
+      ELSE
+         oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
+      ENDIF
+      oMail:SetBody( cBody )
+   ENDIF
+
    FOR EACH aThisFile IN aFiles
 
       IF ISCHARACTER( aThisFile )
@@ -476,11 +500,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       oMail:hHeaders[ "X-Priority" ] := Str( nPriority, 1 )
    ENDIF
 
-   oInMail:Write( oMail:ToString() )
-   oInMail:Commit()
-   oInMail:Close()
-
-   RETURN lReturn
+   RETURN oMail:ToString()
 
 //-------------------------------------------------------------//
 
