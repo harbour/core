@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-#pragma linenumber=on
+
 /*
  * Harbour Project source code:
  * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
