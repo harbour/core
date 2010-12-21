@@ -1485,7 +1485,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_EGDSOCKET, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
          case HB_CURLOPT_SSL_VERIFYHOST:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYHOST, HB_CURL_OPT_BOOL( 3 ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYHOST, hb_parnl( 3 ) );
             break;
          case HB_CURLOPT_SSL_CIPHER_LIST:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_CIPHER_LIST, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
