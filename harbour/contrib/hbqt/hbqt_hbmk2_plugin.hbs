@@ -1885,6 +1885,7 @@ STATIC FUNCTION hbide_pullSameMethods( cFun, aMethods, cQtObject )
 STATIC PROCEDURE hbide_addReturnMethod( txt_, oM, cQtObject, nInd, nCount, lClubbed, lInIf, nTySame, nArgToCheck )
    LOCAL cFun, sp := space( nInd )
    LOCAL cRetCast := oM:oRet:cCast
+   LOCAL cRetCastT := trim( cRetCast )
    LOCAL cPostFix := ""
    LOCAL cPreFix
 
@@ -1934,10 +1935,18 @@ STATIC PROCEDURE hbide_addReturnMethod( txt_, oM, cQtObject, nInd, nCount, lClub
       ENDIF
       IF nTySame > 1
          aadd( txt_, sp + "CASE " + hbide_getCase( oM, nArgToCheck ) )
-         aadd( txt_, sp + "   " + cPrefix + "RETURN " + cFun + cPostFix )
+         IF cRetCastT == "void"
+            aadd( txt_, sp + "   " + cPrefix + cFun + " ; " + "RETURN Self" + cPostFix )
+         ELSE
+            aadd( txt_, sp + "   " + cPrefix + "RETURN " + cFun + cPostFix )
+         ENDIF
       ELSE
          aadd( txt_, sp + "IF __objGetClsName( hb_pvalue( " + hb_ntos( oM:nArgQCast ) + " ) ) == " + '"' + upper( oM:hArgs[ oM:nArgQCast ]:cCast ) + '"' )
-         aadd( txt_, sp + "   " + cPrefix + "RETURN " + cFun + cPostFix )
+         IF cRetCastT == "void"
+            aadd( txt_, sp + "   " + cPrefix + cFun + " ; " + "RETURN Self" + cPostFix )
+         ELSE
+            aadd( txt_, sp + "   " + cPrefix + "RETURN " + cFun + cPostFix )
+         ENDIF
          aadd( txt_, sp + "ENDIF" )
       ENDIF
       IF nTySame > 1 .AND. nCount == nTySame
@@ -1949,9 +1958,17 @@ STATIC PROCEDURE hbide_addReturnMethod( txt_, oM, cQtObject, nInd, nCount, lClub
          // HB_TRACE( HB_TR_DEBUG, "// RETURN " + cFun + cPostFix )  /* needed to refine the engine further */
       ELSE
          IF "..." $ cFun
-            aadd( txt_, sp + cPrefix + "RETURN " + cFun + cPostFix )
+            IF cRetCastT == "void"
+               aadd( txt_, sp + cPrefix + cFun + " ; " + "RETURN Self" + cPostFix )
+            ELSE
+               aadd( txt_, sp + cPrefix + "RETURN " + cFun + cPostFix )
+            ENDIF
          ELSE
-            aadd( txt_, sp + "RETURN " + cFun + cPostFix )
+            IF cRetCastT == "void"
+               aadd( txt_, sp + cFun + " ; " + "RETURN Self" + cPostFix )
+            ELSE
+               aadd( txt_, sp + "RETURN " + cFun + cPostFix )
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
