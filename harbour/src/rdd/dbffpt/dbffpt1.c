@@ -466,7 +466,7 @@ static void hb_fptPackGCitems( LPMEMOGCTABLE pGCtable )
          j++;
       }
    }
-   pGCtable->usItems = j;
+   pGCtable->usItems = ( HB_USHORT ) j;
 }
 
 /*
