@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * MAPI wrappers
+ * Simple MAPI wrapper
  *
  * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
@@ -51,16 +51,16 @@
  *
  */
 
+#if defined( UNICODE )
+#  undef UNICODE
+#endif
+
 #include "hbwin.h"
 #if defined( HB_OS_WIN_CE )
-   #include "hbwince.h"
+#  include "hbwince.h"
 #endif
 
 #include <mapi.h>
-
-#if ! defined( MAPI_UNICODE )
-#  define MAPI_UNICODE   ( ( ULONG ) 0x80000000 )
-#endif
 
 #if !defined( MAPI_RECEIPT_REQUESTED )
 #  if defined( MAPI_RECIPIENT_REQUESTED )
@@ -131,10 +131,6 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
          if( hb_parl( 7 ) )
             flags |= MAPI_DIALOG;
-
-         #if defined( UNICODE )
-            flags |= MAPI_UNICODE;
-         #endif
 
          if( pFrom && hb_arrayLen( pFrom ) >= 2 )
          {
