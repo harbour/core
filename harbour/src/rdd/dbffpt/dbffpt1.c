@@ -4036,7 +4036,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
                hb_itemRelease( pItem );
                return HB_FAILURE;
             }
-            pArea->uiMemoVersion = hb_itemGetNI( pItem );
+            pArea->uiMemoVersion = ( HB_USHORT ) hb_itemGetNI( pItem );
          }
          else
             pArea->uiMemoVersion = DB_MEMOVER_STD;
@@ -4612,12 +4612,12 @@ static HB_ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
    return errCode;
 }
 
-static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, HB_USHORT uiBlockSize,
+static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, HB_ULONG ulBlockSize,
                                 PHB_ITEM pEvalBlock, HB_LONG lEvalStep )
 {
    HB_ERRCODE errCode = HB_SUCCESS;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fptDoPack(%p,%hu,%p,%ld)", pArea, uiBlockSize, pEvalBlock, lEvalStep));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fptDoPack(%p,%lu,%p,%ld)", pArea, ulBlockSize, pEvalBlock, lEvalStep));
 
    if( pArea->fReadonly )
       errCode = EDBF_READONLY;
@@ -4637,8 +4637,8 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, HB_USHORT uiBlockSize,
       errCode = SELF_RECCOUNT( ( AREAP ) pArea, &ulRecords );
       if( errCode == HB_SUCCESS && ulRecords )
       {
-         pArea->ulNewBlockSize = uiBlockSize && pArea->bMemoType != DB_MEMO_DBT
-                                 ? uiBlockSize : pArea->ulMemoBlockSize;
+         pArea->ulNewBlockSize = ulBlockSize && pArea->bMemoType != DB_MEMO_DBT
+                                 ? ulBlockSize : pArea->ulMemoBlockSize;
          pArea->pMemoTmpFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szFile );
          if( pArea->pMemoTmpFile )
          {
@@ -4908,7 +4908,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
          break;
 
       case DBI_MEMOPACK:
-         return hb_fptDoPack( pArea, hb_arrayGetNI( pItem, 1 ),
+         return hb_fptDoPack( pArea, hb_arrayGetNL( pItem, 1 ),
                                      hb_arrayGetItemPtr( pItem, 2 ),
                                      hb_arrayGetNL( pItem, 3 ) );
 
@@ -4925,7 +4925,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
 
             if( ulBlock && szFile && *szFile )
                errCode = hb_fptGetVarFile( pArea, ulBlock, szFile,
-                                           hb_arrayGetNI( pItem, 3 ),
+                                           ( HB_USHORT ) hb_arrayGetNI( pItem, 3 ),
                                            FPT_DIRECT_TRANS( pArea ) );
          }
          hb_itemPutL( pItem, errCode == HB_SUCCESS );

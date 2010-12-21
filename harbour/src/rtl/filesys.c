@@ -1786,7 +1786,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    else
    {
       HB_FOFFSET nPos;
-      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
@@ -1917,7 +1917,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    else
    {
       HB_FOFFSET nPos;
-      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
@@ -1983,7 +1983,7 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset )
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
    {
-      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
 
       /* This is not atom operation anyhow if someone want to truncate
@@ -2472,7 +2472,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
    {
       HB_USHORT nFlags = convert_seek_flags( uiFlags );
 
-      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
 
       hb_vmUnlock();

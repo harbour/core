@@ -1314,7 +1314,7 @@ void hb_macroGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL
       hb_macroGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
    }
    if( !bIsObject )     /* used in full compiler only */
-      hb_macroGenPCode3( HB_P_WITHOBJECTMESSAGE, HB_LOBYTE( 0xFFFF ), HB_HIBYTE( 0xFFFF ), HB_COMP_PARAM );
+      hb_macroGenPCode3( HB_P_WITHOBJECTMESSAGE, 0xFF, 0xFF, HB_COMP_PARAM );
 }
 
 /* generates an underscore-symbol name for a data assignment */

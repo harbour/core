@@ -3414,8 +3414,8 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    if( pTag->IgnoreCase )
       tagHeader.ignoreCase = 1;
 
-   uiKeyLen = pTag->KeyExpr == NULL ? 0 : strlen( pTag->KeyExpr );
-   uiForLen = pTag->ForExpr == NULL ? 0 : strlen( pTag->ForExpr );
+   uiKeyLen = pTag->KeyExpr == NULL ? 0 : ( HB_USHORT ) strlen( pTag->KeyExpr );
+   uiForLen = pTag->ForExpr == NULL ? 0 : ( HB_USHORT ) strlen( pTag->ForExpr );
 
    if( uiKeyLen + uiForLen > CDX_HEADEREXPLEN - 2 )
    {
@@ -5133,7 +5133,7 @@ static LPCDXTAG hb_cdxFindTag( CDXAREAP pArea, PHB_ITEM pTagItem,
       else if( fBag )
          *puiTag = hb_cdxGetTagNumber( pArea, pTag );
       else
-         *puiTag = iTag;
+         *puiTag = ( HB_USHORT ) iTag;
    }
 
    return pTag;
@@ -5497,7 +5497,7 @@ static HB_BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, HB_BOOL fForwa
    {
       LPCDXKEY pKey;
 
-      pKey = hb_cdxKeyPut( NULL, ( const HB_BYTE * ) szPattern, iFixed,
+      pKey = hb_cdxKeyPut( NULL, ( const HB_BYTE * ) szPattern, ( HB_USHORT ) iFixed,
                      pTag->UsrAscend ? CDX_IGNORE_REC_NUM : CDX_MAX_REC_NUM );
       pKey->mode = CDX_CMP_PREFIX;
       if( !hb_cdxTagKeyFind( pTag, pKey ) )

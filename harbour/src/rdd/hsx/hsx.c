@@ -738,7 +738,7 @@ static int hb_hsxHdrRead( int iHandle )
       return HSX_BADREAD;
 
    pHSX->ulRecCount = HB_GET_LE_UINT32( buffer.header.recCount );
-   pHSX->uiRecordSize = HB_GET_LE_UINT32( buffer.header.recSize );
+   pHSX->uiRecordSize = ( HB_USHORT ) HB_GET_LE_UINT32( buffer.header.recSize );
    pHSX->fIgnoreCase = HB_GET_LE_UINT16( buffer.header.ignoreCase ) != 0;
    pHSX->iFilterType = HB_GET_LE_UINT16( buffer.header.filterType );
    pHSX->fUseHash = HB_GET_LE_UINT32( buffer.header.hashLetters ) != 0;

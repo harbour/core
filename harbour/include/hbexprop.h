@@ -64,8 +64,6 @@ HB_EXTERN_BEGIN
 typedef  HB_EXPR_FUNC( HB_EXPR_FUNC_ );
 typedef  HB_EXPR_FUNC_ *HB_EXPR_FUNC_PTR;
 
-typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DECL );
-
 #if defined( HB_MACRO_SUPPORT )
 #define hb_comp_ExprTable     hb_macro_ExprTable
 #endif
