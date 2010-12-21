@@ -107,9 +107,9 @@ HB_FUNC( VGAPALETTE )
       return;
    }
 
-   red = hb_parni( 2 );
-   green = hb_parni( 3 );
-   blue = hb_parni( 4 );
+   red = ( char ) hb_parni( 2 );
+   green = ( char ) hb_parni( 3 );
+   blue = ( char ) hb_parni( 4 );
 
 #if defined( __DJGPP__ )
    {
