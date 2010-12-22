@@ -2621,6 +2621,17 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
          * bFreeReq = HB_FALSE;
          break;
 
+      case HB_IT_SYMBOL:
+         * bFreeReq = HB_TRUE;
+         * nLen = strlen( hb_itemGetSymbol( pItem )->szName ) + 3;
+         buffer = ( char * ) hb_xgrab( *nLen + 1 );
+         buffer[ 0 ] = '@';
+         memcpy( buffer + 1, hb_itemGetSymbol( pItem )->szName, *nLen - 3 );
+         buffer[ *nLen - 2 ] = '(';
+         buffer[ *nLen - 1 ] = ')';
+         buffer[ *nLen ] = '\0';
+         break;
+
       case HB_IT_POINTER:
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
