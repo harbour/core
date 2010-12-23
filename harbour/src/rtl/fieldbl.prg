@@ -53,19 +53,24 @@
 #include "common.ch"
 
 FUNCTION FIELDBLOCK( cFieldName )
+   LOCAL bField
 
-   IF ISCHARACTER( cFieldName )
-      RETURN {| x | iif( x == NIL, FieldGet( FieldPos( cFieldName ) ),;
-                                   FieldPut( FieldPos( cFieldName ), x ) ) }
-   ENDIF
+   BEGIN SEQUENCE WITH {|| BREAK() }
+      bField := &( "{|x| IIF( x == NIL, FIELD->" + cFieldName + ", " + ;
+                                       "FIELD->" + cFieldName + " := x ) }" )
+   END SEQUENCE
 
-   RETURN NIL
+   RETURN bField
 
 FUNCTION FIELDWBLOCK( cFieldName, nWorkArea )
+   LOCAL bField, cAlias
 
-   IF ISCHARACTER( cFieldName ) .AND. ISNUMBER( nWorkArea )
-      RETURN {| x | iif( x == NIL, ( nWorkArea )->( FieldGet( FieldPos( cFieldName ) ) ),;
-                                   ( nWorkArea )->( FieldPut( FieldPos( cFieldName ), x ) ) ) }
-   ENDIF
+   BEGIN SEQUENCE WITH {|| BREAK() }
+      IF Int( nWorkArea ) != 0
+         cAlias := "(" + HB_NToS( Int( nWorkArea ) ) + ")->"
+         bField := &( "{|x| IIF( x == NIL, " + cAlias + cFieldName + ", " + ;
+                                             + cAlias + cFieldName + " := x ) }" )
+      ENDIF
+   END SEQUENCE
 
-   RETURN NIL
+   RETURN bField
