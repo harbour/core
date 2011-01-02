@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=${hb_name}${__HB_DYN__}
+libs=3rd/minixml/mxml.hbc

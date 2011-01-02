@@ -1,0 +1,109 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Configuration file for Mini-XML, a small XML-like file parsing library.
+ *
+ * Copyright 2003-2010 by Michael R Sweet.
+ *
+ * These coded instructions, statements, and computer programs are the
+ * property of Michael R Sweet and are protected by Federal copyright
+ * law.  Distribution and use rights are outlined in the file "COPYING"
+ * which should have been included with this file.  If this file is
+ * missing or damaged, see the license at:
+ *
+ *     http://www.minixml.org/
+ */
+
+
+#if defined( _MSC_VER )
+#  define _CRT_SECURE_NO_DEPRECATE
+#  define _CRT_SECURE_NO_WARNINGS
+
+#  define close     _close
+#  define open      _open
+#  define read      _read
+#  define snprintf  _snprintf
+#  define strdup    _strdup
+#  define vsnprintf _vsnprintf
+#  define write     _write
+#endif
+
+/*
+ * Include necessary headers...
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <io.h>
+
+
+/*
+ * Version number...
+ */
+
+#define MXML_VERSION "Mini-XML v2.7"
+
+/*
+ * Inline function support...
+ */
+
+#if defined( __GNUC__ )
+#  define inline __inline__
+#elif defined( _MSC_VER )
+#  define inline _inline
+#else
+#  define inline
+#endif
+
+/*
+ * Long long support...
+ */
+
+#define HAVE_LONG_LONG 1
+
+/*
+ * Do we have the snprintf() and vsnprintf() functions?
+ */
+
+#define HAVE_SNPRINTF 1
+#define HAVE_VSNPRINTF 1
+
+/*
+ * Do we have the strXXX() functions?
+ */
+
+#define HAVE_STRDUP 1
+
+/*
+ * Do we have threading support?
+ */
+
+/* #undef HAVE_PTHREAD_H */
+
+
+/*
+ * Define prototypes for string functions as needed...
+ */
+
+#  ifndef HAVE_STRDUP
+extern char *_mxml_strdup(const char *);
+#    define strdup _mxml_strdup
+#  endif /* !HAVE_STRDUP */
+
+extern char *_mxml_strdupf(const char *, ...);
+extern char *_mxml_vstrdupf(const char *, va_list);
+
+#  ifndef HAVE_SNPRINTF
+extern int  _mxml_snprintf(char *, size_t, const char *, ...);
+#    define snprintf _mxml_snprintf
+#  endif /* !HAVE_SNPRINTF */
+
+#  ifndef HAVE_VSNPRINTF
+extern int  _mxml_vsnprintf(char *, size_t, const char *, va_list);
+#    define vsnprintf _mxml_vsnprintf
+#  endif /* !HAVE_VSNPRINTF */
