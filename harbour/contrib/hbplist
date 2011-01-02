@@ -27,6 +27,7 @@ hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
 hbmagic/hbmagic.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp
+hbmxml/hbmxml.hbp                # uses: minixml (locally hosted)
 hbmysql/hbmysql.hbp
 hbmzip/hbmzip.hbp                # uses: minizip (locally hosted)
 hbnetio/hbnetio.hbp
@@ -44,6 +45,7 @@ hbtip/hbtipssl.hbp
 hbtpathy/hbtpathy.hbp
 hbwin/hbwin.hbp
 hbxbp/hbxbp.hbp
+hbxdiff/hbxdiff.hbp              # uses: libxdiff (locally hosted)
 hbxpp/hbxpp.hbp
 hbzebra/hbzebra.hbp
 hbziparc/hbziparc.hbp

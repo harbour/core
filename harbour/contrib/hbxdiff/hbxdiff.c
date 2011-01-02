@@ -135,7 +135,7 @@ static PHB_ITEM hb_mmf_itemPut( PHB_ITEM pItem, void * pMemAddr, int iType )
 static void * hb_mmf_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError )
 {
    PHB_MMF_HOLDER pStructHolder = ( PHB_MMF_HOLDER ) hb_itemGetPtrGC( pItem,
-                                                                      &s_gcxdiffFuncs );
+                                                                      &s_gc_xdiffFuncs );
    int            iError = 0;
 
    HB_SYMBOL_UNUSED( iError );
@@ -390,10 +390,10 @@ static int xdlt_outh( void * priv, mmbuffer_t * mb, int nbuf )
 
       hb_vmPushDynSym( pSym );
       hb_vmPushNil();
-      
+
       for( i = 0; i < nbuf; i++ )
          hb_vmPushString( ( const char * ) mb[ i ].ptr, mb[ i ].size );
-      
+
       hb_vmFunction( ( HB_USHORT ) nbuf );
       iResult = hb_parnidef( -1, 0 );
 
@@ -620,21 +620,21 @@ HB_FUNC( XDL_BDIFF_TGSIZE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-void * wf_malloc( void * priv, unsigned int size )
+static void * wf_malloc( void * priv, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
    return hb_xgrab( size );
 }
 
-void wf_free( void * priv, void * ptr )
+static void wf_free( void * priv, void * ptr )
 {
    HB_SYMBOL_UNUSED( priv );
 
    hb_xfree( ptr );
 }
 
-void * wf_realloc( void * priv, void * ptr, unsigned int size )
+static void * wf_realloc( void * priv, void * ptr, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
