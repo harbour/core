@@ -60,7 +60,11 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#if ! defined( __BORLANDC__ )
+#if defined( __BORLANDC__ ) 
+#undef HAVE_UNISTD_H
+#elif defined( _MSC_VER )
+#undef HAVE_UNISTD_H
+#else
 #define HAVE_UNISTD_H 1
 #endif
  

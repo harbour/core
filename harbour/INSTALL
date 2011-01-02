@@ -350,6 +350,7 @@ HARBOUR
    HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
    HB_WITH_WATT= (on MS-DOS systems)
    HB_WITH_X11= (on *nix systems)
+   HB_WITH_XDIFF=C:\libxdiff-0.23\xdiff (defaults to locally hosted version if not found)
    HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
    To explicitly disable any given components, use the value 'no' (without
@@ -1537,6 +1538,8 @@ HARBOUR
          http://www.bgnett.no/~giva/
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
          http://www.zlib.net/
+      HB_WITH_XDIFF - libxdiff (file differences/patches) [multiplatform, free, open-source]
+         http://www.xmailserver.org/xdiff-lib.html
 
       Windows 95 Winsock2 [win, free, closed-source]
          Information: http://support.microsoft.com/kb/182108/EN-US/

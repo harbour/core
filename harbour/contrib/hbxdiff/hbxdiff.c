@@ -99,6 +99,8 @@ static HB_GARBAGE_FUNC( hb_mmf_destructor )
       if( pStructHolder->hb_mmf->mmf )
       {
          xdl_free_mmfile( pStructHolder->hb_mmf->mmf );
+         hb_xfree( pStructHolder->hb_mmf->mmf );
+
          pStructHolder->hb_mmf->mmf = NULL;
       }
       hb_xfree( pStructHolder->hb_mmf );
