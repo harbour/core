@@ -27,6 +27,7 @@ mxml_str.c
 # URL    
 # DIFF
 #
+# MAP    COPYING
 # MAP    mxml-attr.c     mxml_att.c    
 # MAP    mxml-entity.c   mxml_ent.c  
 # MAP    mxml-file.c     mxml_fil.c    
