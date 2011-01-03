@@ -146,3 +146,59 @@ FUNCTION HexaToDec( cString )
       nNumber += ( At( SubStr( cNewString, nX, 1 ), "0123456789ABCDEF" ) - 1 ) * ( 16 ** ( nLen - nX ) )
    NEXT
    RETURN nNumber
+
+FUNCTION DecToRoman( nNumber ) 
+   LOCAL	cRoman := ""
+	DO WHILE ( nNumber >= 1000 )
+		cRoman  += "M"
+		nNumber -= 1000
+	END
+	DO WHILE ( nNumber >= 900 ) 
+		cRoman  += "CM"
+		nNumber -= 900
+	END
+	DO WHILE ( nNumber >= 500 ) 
+		cRoman  += "D"
+		nNumber -= 500
+	END
+	DO WHILE ( nNumber >= 400 ) 
+		cRoman  += "CD"
+		nNumber -= 400
+	END
+	DO WHILE ( nNumber >= 100 ) 
+		cRoman  += "C"
+		nNumber -= 100
+	END
+	DO WHILE ( nNumber >= 90 ) 
+		cRoman  += "XC"
+		nNumber -= 90
+	END
+	DO WHILE ( nNumber >= 50 ) 
+		cRoman  += "L"
+		nNumber -= 50
+	END
+	DO WHILE ( nNumber >= 40 ) 
+		cRoman  += "XL"
+		nNumber -= 40
+	END
+	DO WHILE ( nNumber >= 10 ) 
+		cRoman  += "X"
+		nNumber -= 10
+	END
+	DO WHILE ( nNumber >= 9 ) 
+		cRoman  += "IX"
+		nNumber -= 9
+	END
+	DO WHILE ( nNumber >= 5 ) 
+		cRoman  += "V"
+		nNumber -= 5
+	END
+	DO WHILE ( nNumber >= 4 ) 
+		cRoman  += "IV"
+		nNumber -= 4
+	END
+	DO WHILE ( nNumber >= 1 ) 
+		cRoman  += "I"
+		--nNumber
+	END
+	RETURN cRoman
