@@ -1069,7 +1069,7 @@ METHOD IdeFindInFiles:find()
    lCpp         := ::oUI:q_checkCpp:isChecked()
    lH           := ::oUI:q_checkH:isChecked()
    lCh          := ::oUI:q_checkCh:isChecked()
-   lRc          := ::oUI:q_checkRc:isChecked()
+   lRc          := ::oUI:q_checkRc:isChecked()       /* Conceptually it is now lText */
 
    aFilter := hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lRc )
 
@@ -1416,8 +1416,9 @@ METHOD IdeFindInFiles:paintRequested( pPrinter )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lRc )
+STATIC FUNCTION hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lTxt )
    LOCAL aFilter := {}
+   LOCAL aExt
 
    IF lPrg
       aadd( aFilter, "*.prg" )
@@ -1433,9 +1434,11 @@ STATIC FUNCTION hbide_buildFilter( lPrg, lC, lCpp, lH, lCh, lRc )
    ENDIF
    IF lCh
       aadd( aFilter, "*.ch" )
+      aadd( aFilter, "*.h" )
    ENDIF
-   IF lRc
-      aadd( aFilter, "*.rc" )
+   IF lTxt
+      aExt := hb_atokens( hbide_setIde():oINI:cTextFileExtensions, "," )
+      aeval( aExt, {|e| iif( empty( e ), NIL, aadd( aFilter, e ) ) } )
    ENDIF
 
    RETURN aFilter

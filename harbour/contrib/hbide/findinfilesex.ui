@@ -99,12 +99,12 @@
       <widget class="QCheckBox" name="checkRc">
        <property name="maximumSize">
         <size>
-         <width>33</width>
+         <width>40</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="text">
-        <string>.rc</string>
+        <string>.txt</string>
        </property>
       </widget>
      </item>
