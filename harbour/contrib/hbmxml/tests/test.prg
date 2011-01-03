@@ -13,6 +13,7 @@ FUNCTION main( cFile )
    LOCAL index
    LOCAL nType, i, nLen
    LOCAL cBuffer
+   LOCAL wt := 1
 
    OutStd( hb_mxmlVersion(), hb_eol() )
 
@@ -40,15 +41,15 @@ FUNCTION main( cFile )
       RETURN -1
    ENDIF
 
-   nType := hb_mxmlNodeType( tree )
+   nType := mxmlGetType( tree )
    IF nType != MXML_ELEMENT
       OutErr( "ERROR: Parent has type ", Type2Text( nType ), ", expected MXML_ELEMENT!" )
       mxmlDelete( tree )
 
       RETURN -1
 
-   ELSEIF hb_mxmlNodeValue( tree ) != "element"
-      OutErr( "ERROR: Parent value is ", hb_mxmlNodeValue( tree ), ', expected "element"' )
+   ELSEIF mxmlGetElement( tree ) != "element"
+      OutErr( "ERROR: Parent value is ", mxmlGetElement( tree ), ', expected "element"' )
       mxmlDelete( tree )
 
       RETURN -1
@@ -57,7 +58,7 @@ FUNCTION main( cFile )
    mxmlNewInteger( tree, 123 )
    mxmlNewOpaque( tree, "opaque" )
    mxmlNewReal( tree, 123.49 )
-   mxmlNewText( tree, .F. , "text" )
+   mxmlNewText( tree, 1 , "text" )
 
    mxmlLoadString( tree, "<group type='string'>string string string</group>", ;
       MXML_TEXT_CALLBACK )
@@ -68,7 +69,7 @@ FUNCTION main( cFile )
       MXML_OPAQUE_CALLBACK )
 
    /* 1st node */
-   node := hb_mxmlNodeChild( tree )
+   node := mxmlGetFirstChild( tree )
    IF Empty( node )
       OutErr( "ERROR: No first child node in basic test!" )
       mxmlDelete( tree )
@@ -76,22 +77,22 @@ FUNCTION main( cFile )
       RETURN -1
    ENDIF
 
-   nType := hb_mxmlNodeType( node )
+   nType := mxmlGetType( node )
    IF nType != MXML_INTEGER
       OutErr( "ERROR: First child has type ", Type2Text( nType ), ", expected MXML_INTEGER!" )
       mxmlDelete( tree )
 
       RETURN -1
 
-   ELSEIF hb_mxmlNodeAsInteger( node ) != 123
-      OutErr( "ERROR: First child value is ", hb_mxmlNodeAsInteger( node ), ", expected 123!" )
+   ELSEIF mxmlGetInteger( node ) != 123
+      OutErr( "ERROR: First child value is ", mxmlGetInteger( node ), ", expected 123!" )
       mxmlDelete( tree )
 
       RETURN -1
    ENDIF
 
    /* 2nd node */
-   node := hb_mxmlNodeNext( node )
+   node := mxmlGetNextSibling( node )
    IF Empty( node )
       OutErr( "ERROR: No second child node in basic test!" )
       mxmlDelete( tree )
@@ -99,22 +100,22 @@ FUNCTION main( cFile )
       RETURN -1
    ENDIF
 
-   nType := hb_mxmlNodeType( node )
+   nType := mxmlGetType( node )
    IF nType != MXML_OPAQUE
       OutErr( "ERROR: Second child has type ", Type2Text( nType ), ", expected MXML_OPAQUE!" )
       mxmlDelete( tree )
 
       RETURN -1
 
-   ELSEIF hb_mxmlNodeAsOpaque( node ) != "opaque"
-      OutErr( "ERROR: Second child value is ", hb_mxmlNodeAsOpaque( node ), ", expected 'opaque'!" )
+   ELSEIF mxmlGetOpaque( node ) != "opaque"
+      OutErr( "ERROR: Second child value is ", mxmlGetOpaque( node ), ", expected 'opaque'!" )
       mxmlDelete( tree )
 
       RETURN -1
    ENDIF
 
    /* 3rd node */
-   node := hb_mxmlNodeNext( node )
+   node := mxmlGetNextSibling( node )
    IF Empty( node )
       OutErr( "ERROR: No third child node in basic test!" )
       mxmlDelete( tree )
@@ -122,22 +123,22 @@ FUNCTION main( cFile )
       RETURN -1
    ENDIF
 
-   nType := hb_mxmlNodeType( node )
+   nType := mxmlGetType( node )
    IF nType != MXML_REAL
       OutErr( "ERROR: Third child has type ", Type2Text( nType ), ", expected MXML_REAL!" )
       mxmlDelete( tree )
 
       RETURN -1
 
-   ELSEIF hb_mxmlNodeAsReal( node ) != 123.49
-      OutErr( "ERROR: Third child value is ", hb_mxmlNodeAsReal( node ), ", expected 123.49!" )
+   ELSEIF mxmlGetReal( node ) != 123.49
+      OutErr( "ERROR: Third child value is ", mxmlGetReal( node ), ", expected 123.49!" )
       mxmlDelete( tree )
 
       RETURN -1
    ENDIF
 
    /* 4th node */
-   node := hb_mxmlNodeNext( node )
+   node := mxmlGetNextSibling( node )
    IF Empty( node )
       OutErr( "ERROR: No fourth child node in basic test!" )
       mxmlDelete( tree )
@@ -145,22 +146,22 @@ FUNCTION main( cFile )
       RETURN -1
    ENDIF
 
-   nType := hb_mxmlNodeType( node )
+   nType := mxmlGetType( node )
    IF nType != MXML_TEXT
       OutErr( "ERROR: Fourth child has type ", Type2Text( nType ), ", expected MXML_TEXT!" )
       mxmlDelete( tree )
 
       RETURN -1
 
-   ELSEIF /*! hb_mxmlNodeWhitespace( node ) .OR. */ hb_mxmlNodeAsText( node ) != "text"
-      OutErr( "ERROR: Fourth child value is ", hb_mxmlNodeAsText( node ), ", expected 'text'!" )
+   ELSEIF mxmlGetText( node, @wt ) != "text" .or. wt != 1
+      OutErr( "ERROR: Fourth child value is ", mxmlGetText( node ), ", expected 'text'!" )
       mxmlDelete( tree )
 
       RETURN -1
    ENDIF
 
    FOR i := 1 TO 4
-      node := hb_mxmlNodeNext( node )
+      node := mxmlGetNextSibling( node )
 
       IF Empty( node )
          OutErr( "ERROR: No group", hb_ntos(i), "child node in basic test!" )
@@ -168,7 +169,7 @@ FUNCTION main( cFile )
 
          RETURN -1
 
-      ELSEIF hb_mxmlNodeType( node ) != MXML_ELEMENT
+      ELSEIF mxmlGetType( node ) != MXML_ELEMENT
          OutErr( "ERROR: Group child", i, "has type ", Type2Text( nType ), ", expected MXML_ELEMENT!" )
          mxmlDelete( tree )
 
@@ -177,42 +178,42 @@ FUNCTION main( cFile )
    NEXT
 
   /*
-   * Test mxmlFindValue...
+   * Test mxmlFindPath...
    */
 
-   node := mxmlFindValue( tree, "*/two" )
+   node := mxmlFindPath( tree, "*/two" )
    IF Empty( node )
       OutErr( "ERROR: Unable to find value for '*/two'" )
       mxmlDelete( tree )
 
       RETURN -2
-   ELSEIF hb_mxmlNodeType( node ) != MXML_OPAQUE .OR. hb_mxmlNodeAsOpaque( node ) != "value"
+   ELSEIF mxmlGetType( node ) != MXML_OPAQUE .OR. mxmlGetOpaque( node ) != "value"
       OutErr( "ERROR: Bad value for '*/two'" )
       mxmlDelete( tree )
 
       RETURN -2
    ENDIF
 
-   node := mxmlFindValue( tree, "foo/*/two" )
+   node := mxmlFindPath( tree, "foo/*/two" )
    IF Empty( node )
       OutErr( "ERROR: Unable to find value for 'foo/*/two'" )
       mxmlDelete( tree )
 
       RETURN -2
-   ELSEIF hb_mxmlNodeType( node ) != MXML_OPAQUE .OR. hb_mxmlNodeAsOpaque( node ) != "value"
+   ELSEIF mxmlGetType( node ) != MXML_OPAQUE .OR. mxmlGetOpaque( node ) != "value"
       OutErr( "ERROR: Bad value for 'foo/*/two'" )
       mxmlDelete( tree )
 
       RETURN -2
    ENDIF
 
-   node := mxmlFindValue( tree, "foo/bar/one/two" )
+   node := mxmlFindPath( tree, "foo/bar/one/two" )
    IF Empty( node )
       OutErr( "ERROR: Unable to find value for 'foo/bar/one/two'" )
       mxmlDelete( tree )
 
       RETURN -2
-   ELSEIF hb_mxmlNodeType( node ) != MXML_OPAQUE .OR. hb_mxmlNodeAsOpaque( node ) != "value"
+   ELSEIF mxmlGetType( node ) != MXML_OPAQUE .OR. mxmlGetOpaque( node ) != "value"
       OutErr( "ERROR: Bad value for 'foo/bar/one/two'" )
       mxmlDelete( tree )
 
@@ -233,7 +234,7 @@ FUNCTION main( cFile )
       RETURN -3
    ENDIF
 
-   i := hb_mxmlIndexNumNodes( index )
+   i := mxmlIndexGetCount( index )
    IF i != 10
       OutErr( "ERROR: Index of all nodes contains ", i, "nodes; expected 10!" )
       index := NIL
@@ -262,7 +263,7 @@ FUNCTION main( cFile )
       RETURN -3
    ENDIF
 
-   i := hb_mxmlIndexNumNodes( index )
+   i := mxmlIndexGetCount( index )
    IF i != 4
       OutErr( "ERROR: Index of groups contains ", i, "nodes; expected 4!" )
       index := NIL
@@ -291,7 +292,7 @@ FUNCTION main( cFile )
       RETURN -3
    ENDIF
 
-   i := hb_mxmlIndexNumNodes( index )
+   i := mxmlIndexGetCount( index )
    IF i != 3
       OutErr( "ERROR: Index of type attributes contains ", i, "nodes; expected 3!" )
       index := NIL
@@ -320,7 +321,7 @@ FUNCTION main( cFile )
       RETURN -3
    ENDIF
 
-   i := hb_mxmlIndexNumNodes( index )
+   i := mxmlIndexGetCount( index )
    IF i != 3
       OutErr( "ERROR: Index of elements and attributes contains contains ", i, "nodes; expected 3!" )
       index := NIL
@@ -345,7 +346,7 @@ FUNCTION main( cFile )
    */
 
    FOR i := 1 TO 9
-      node := hb_mxmlNodeChild( tree )
+      node := mxmlGetFirstChild( tree )
       IF ! Empty( node )
          mxmlDelete( node )
       ELSE
@@ -356,14 +357,14 @@ FUNCTION main( cFile )
       ENDIF
    NEXT
 
-   IF ! Empty( hb_mxmlNodeChild( tree ) )
+   IF ! Empty( mxmlGetFirstChild( tree ) )
       OutErr( "ERROR: Child pointer not NULL after deleting all children!" )
       mxmlDelete( tree )
 
       RETURN -4
    ENDIF
 
-   IF ! Empty( hb_mxmlNodeLastChild( tree ) )
+   IF ! Empty( mxmlGetLastChild( tree ) )
       OutErr( "ERROR: Last child pointer not NULL after deleting all children!" )
       mxmlDelete( tree )
 
@@ -377,9 +378,7 @@ FUNCTION main( cFile )
    * properly...
    */
 
-   tree := mxmlLoadFile( NIL, cFile, @type_cb() )
-   // tree := mxmlLoadString( NIL, hb_memoRead( cFile ), @type_cb() )
-
+   tree := mxmlLoadString( NIL, hb_memoRead( cFile ), @type_cb() )
 
    node := mxmlFindElement( tree, tree, "choice", NIL, NIL, MXML_DESCEND )
    IF Empty( node )
@@ -413,13 +412,14 @@ FUNCTION main( cFile )
 
    mxmlDelete( tree )
 
-   cBuffer := mxmlSaveAllocString( node, @whitespace_cb() ) 
+   cBuffer := mxmlSaveAllocString( node, 0 ) 
    IF Len( cBuffer ) > 0
       hb_memoWrit( "test3.xml", cBuffer + hb_eol() )
    ENDIF
  
-   mxmlSaveFile( node, "test4.xml", @whitespace_cb() ) 
- 
+   OutStd( mxmlSetUserData( node, wt ), hb_eol()  )
+   OutStd( mxmlGetUserData( node ), hb_eol() )
+
    mxmlDelete( node )
 
    OutStd( "--- The End! ---", hb_eol() )
@@ -448,7 +448,7 @@ FUNCTION type_cb( node )
    /* You can lookup attributes and/or use the element name, hierarchy, etc... */
  
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
-      cType := hb_mxmlNodeAsElementName( node )
+      cType := mxmlGetElement( node )
    ENDIF
 
    SWITCH Lower( cType )
@@ -463,10 +463,6 @@ FUNCTION type_cb( node )
 
    CASE "real"
       nResult := MXML_REAL
-      EXIT
-
-   CASE "text"
-      nResult := MXML_TEXT
       EXIT
 
    OTHERWISE
@@ -484,7 +480,7 @@ FUNCTION whitespace_cb( node, where )
    LOCAL nLevel := -1  /* Indentation level */
    LOCAL name          /* Name of element */
 
-   name := hb_mxmlNodeAsElementName( node )
+   name := mxmlGetElement( node )
    /* OutStd( name, hb_eol() ) */
 
   /*
@@ -542,10 +538,10 @@ FUNCTION whitespace_cb( node, where )
           ( ( name == "choice" .OR. name == "option" ) .AND. ;
           where == MXML_WS_BEFORE_CLOSE )
 
-      parent := hb_mxmlNodeParent( node )
+      parent := mxmlGetParent( node )
       DO WHILE ! Empty( parent )
          nLevel++
-         parent := hb_mxmlNodeParent( parent )
+         parent := mxmlGetParent( parent )
       ENDDO
 
       IF nLevel > 8 
@@ -561,7 +557,7 @@ FUNCTION whitespace_cb( node, where )
           where == MXML_WS_AFTER_OPEN )
       RETURN hb_eol()
 
-   ELSEIF where == MXML_WS_AFTER_OPEN .AND. Empty( hb_mxmlNodeChild( node ) )
+   ELSEIF where == MXML_WS_AFTER_OPEN .AND. Empty( mxmlGetFirstChild( node ) )
       RETURN hb_eol()
    ENDIF
 

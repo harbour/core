@@ -1,5 +1,5 @@
 /*
- * "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $"
+ * "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $"
  *
  * Private functions for Mini-XML, a small XML-like file parsing library.
  *
@@ -26,7 +26,7 @@
  * Include necessary headers...
  */
 
-#include "mxml-private.h"
+#include "mxml_pri.h"
 
 
 /*
@@ -327,5 +327,5 @@ _mxml_global(void)
 
 
 /*
- * End of "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $".
+ * End of "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $".
  */

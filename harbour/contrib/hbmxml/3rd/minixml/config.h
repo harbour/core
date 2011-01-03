@@ -17,17 +17,17 @@
  */
 
 
-#if defined( _MSC_VER )
-#  define _CRT_SECURE_NO_DEPRECATE
-#  define _CRT_SECURE_NO_WARNINGS
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
 
-#  define close     _close
-#  define open      _open
-#  define read      _read
-#  define snprintf  _snprintf
-#  define strdup    _strdup
-#  define vsnprintf _vsnprintf
-#  define write     _write
+#define close     _close
+#define open      _open
+#define read      _read
+#define snprintf  _snprintf
+#define strdup    _strdup
+#define vsnprintf _vsnprintf
+#define write     _write
 #endif
 
 /*
@@ -40,7 +40,6 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <io.h>
-
 
 /*
  * Version number...

@@ -1,5 +1,5 @@
 /*
- * "$Id: mxml-search.c 423 2010-11-08 16:07:05Z mike $"
+ * "$Id: mxml-search.c 427 2011-01-03 02:03:29Z mike $"
  *
  * Search/navigation functions for Mini-XML, a small XML-like file
  * parsing library.
@@ -118,22 +118,25 @@ mxmlFindElement(mxml_node_t *node,	/* I - Current node */
 
 
 /*
- * 'mxmlFindValue()' - Find a value with the given path.
+ * 'mxmlFindPath()' - Find a node with the given path.
  *
  * The "path" is a slash-separated list of element names. The name "*" is
  * considered a wildcard for one or more levels of elements.  For example,
  * "foo/one/two", "bar/two/one", "*\/one", and so forth.
  *
+ * The first child node of the found node is returned if the given node has
+ * children and the first child is a value node.
+ * 
  * @since Mini-XML 2.7@
  */
 
-mxml_node_t *				/* O - First value node or NULL */
-mxmlFindValue(mxml_node_t *top,		/* I - Top node */
-              const char  *path)	/* I - Path to element */
+mxml_node_t *				/* O - Found node or NULL */
+mxmlFindPath(mxml_node_t *top,		/* I - Top node */
+	     const char  *path)		/* I - Path to element */
 {
   mxml_node_t	*node;			/* Current node */
-  char		element[256],		/* Current element name */
-		*pathsep;		/* Separator in path */
+  char		element[256];		/* Current element name */
+  const char	*pathsep;		/* Separator in path */
   int		descend;		/* mxmlFindElement option */
 
 
@@ -191,10 +194,13 @@ mxmlFindValue(mxml_node_t *top,		/* I - Top node */
   }
 
  /*
-  * If we get this far, return the first child of the current node...
+  * If we get this far, return the node or its first child...
   */
 
-  return (node->child);
+  if (node->child && node->child->type != MXML_ELEMENT)
+    return (node->child);
+  else
+    return (node);
 }
 
 
@@ -277,5 +283,5 @@ mxmlWalkPrev(mxml_node_t *node,		/* I - Current node */
 
 
 /*
- * End of "$Id: mxml-search.c 423 2010-11-08 16:07:05Z mike $".
+ * End of "$Id: mxml-search.c 427 2011-01-03 02:03:29Z mike $".
  */

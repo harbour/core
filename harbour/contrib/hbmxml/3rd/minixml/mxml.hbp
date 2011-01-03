@@ -10,11 +10,12 @@
 -warn=low
 -cpp=no
 
-{win}-cflag=-DWIN32
+{win}-cflag=-DWIN32 -DWIN
 
 mxml_att.c     
 mxml_ent.c     
 mxml_fil.c     
+mxml_get.c     
 mxml_ind.c     
 mxml_nod.c     
 mxml_pri.c     
@@ -25,17 +26,19 @@ mxml_str.c
 # ORIGIN http://www.minixml.org
 # VER    2.7
 # URL    
-# DIFF
+# DIFF   minixml.dif
 #
 # MAP    COPYING
-# MAP    mxml-attr.c     mxml_att.c    
-# MAP    mxml-entity.c   mxml_ent.c  
-# MAP    mxml-file.c     mxml_fil.c    
-# MAP    mxml-index.c    mxml_ind.c   
-# MAP    mxml-node.c     mxml_nod.c    
-# MAP    mxml-private.c  mxml_pri.c 
-# MAP    mxml-search.c   mxml_sea.c  
-# MAP    mxml-set.c      mxml_set.c     
-# MAP    mxml-string.c   mxml_str.c  
-# MAP    mxml.h          mxml.h        
+# MAP    config.h.in     config.h
+# MAP    mxml-attr.c     mxml_att.c
+# MAP    mxml-entity.c   mxml_ent.c
+# MAP    mxml-file.c     mxml_fil.c
+# MAP    mxml-get.c      mxml_get.c
+# MAP    mxml-index.c    mxml_ind.c
+# MAP    mxml-node.c     mxml_nod.c
+# MAP    mxml-private.c  mxml_pri.c
+# MAP    mxml-search.c   mxml_sea.c
+# MAP    mxml-set.c      mxml_set.c
+# MAP    mxml-string.c   mxml_str.c
+# MAP    mxml.h          mxml.h    
 # MAP    mxml-private.h  mxml_pri.h

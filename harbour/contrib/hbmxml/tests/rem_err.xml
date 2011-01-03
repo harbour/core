@@ -1,0 +1,10 @@
+<!-- notes -->
+<?xml version="1.0" encoding="utf-8"?>
+<group>
+<note>
+<to>Tove</to>
+<from>Jani</from>
+<heading>Reminder</heading>
+<body type="opaque">Don't forget me this weekend!</body>
+</note>
+</group>

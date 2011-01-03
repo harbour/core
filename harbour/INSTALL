@@ -338,6 +338,7 @@ HARBOUR
    HB_WITH_LIBMAGIC= (currently on *nix systems)
    HB_WITH_LZF=C:\liblzf (defaults to locally hosted version if not found)
    HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
+   HB_WITH_MXML=C:\minixml (defaults to locally hosted version if not found)
    HB_WITH_MYSQL=C:\mysql\include
    HB_WITH_OCILIB=C:\ocilib\include
    HB_WITH_ODBC= (may only be needed on non-Windows systems)
@@ -1503,6 +1504,8 @@ HARBOUR
          http://liblzf.plan9.de/
       HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
          http://www.winimage.com/zLibDll/minizip.html
+      HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
+         http://www.minixml.org
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
          http://dev.mysql.com/downloads/
       HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]

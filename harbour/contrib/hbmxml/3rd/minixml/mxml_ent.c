@@ -30,7 +30,7 @@
  * Include necessary headers...
  */
 
-#include "mxml-private.h"
+#include "mxml_pri.h"
 
 
 /*

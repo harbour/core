@@ -1,9 +1,9 @@
 /*
- * "$Id: mxml-index.c 408 2010-09-19 05:26:46Z mike $"
+ * "$Id: mxml-index.c 426 2011-01-01 23:42:17Z mike $"
  *
  * Index support code for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2010 by Michael R Sweet.
+ * Copyright 2003-2011 by Michael R Sweet.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
@@ -15,15 +15,6 @@
  *
  * Contents:
  *
- *   mxmlIndexDelete()   - Delete an index.
- *   mxmlIndexEnum()     - Return the next node in the index.
- *   mxmlIndexFind()     - Find the next matching node.
- *   mxmlIndexNew()      - Create a new index.
- *   mxmlIndexReset()    - Reset the enumeration/find pointer in the index and
- *                         return the first node in the index.
- *   index_compare()     - Compare two nodes.
- *   index_find()        - Compare a node with index values.
- *   index_sort()        - Sort the nodes in the index...
  */
 
 /*
@@ -279,6 +270,30 @@ mxmlIndexFind(mxml_index_t *ind,	/* I - Index to search */
 #endif /* DEBUG */
 
   return (NULL);
+}
+
+
+/*
+ * 'mxmlIndexGetCount()' - Get the number of nodes in an index.
+ *
+ * @since Mini-XML 2.7@
+ */
+
+int					/* I - Number of nodes in index */
+mxmlIndexGetCount(mxml_index_t *ind)	/* I - Index of nodes */
+{
+ /*
+  * Range check input...
+  */
+
+  if (!ind)
+    return (0);
+
+ /*
+  * Return the number of nodes in the index...
+  */
+
+  return (ind->num_nodes);
 }
 
 
@@ -643,5 +658,5 @@ index_sort(mxml_index_t *ind,		/* I - Index to sort */
 
 
 /*
- * End of "$Id: mxml-index.c 408 2010-09-19 05:26:46Z mike $".
+ * End of "$Id: mxml-index.c 426 2011-01-01 23:42:17Z mike $".
  */
