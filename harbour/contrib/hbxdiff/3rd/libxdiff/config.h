@@ -2,6 +2,11 @@
  * $Id$
  */
 
+#if ( defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1360 ) && ( __BORLANDC__ < 1400 ) ) /* for BCC 5.5 */
+#define XRABPLY_TYPE64 __int64
+#define XV64(v) ((xply_word) v ## ui64)
+#endif
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 /* #undef HAVE_DLFCN_H */
 
@@ -101,6 +106,15 @@
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
+
+#if defined( __GNUC__ )
+#  define inline __inline__
+#elif defined( _MSC_VER )
+#  define inline _inline
+#else
+#  define inline
+#endif
+
 #ifndef __cplusplus
 /* #undef inline */
 #endif

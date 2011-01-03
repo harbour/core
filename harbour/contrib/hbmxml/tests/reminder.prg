@@ -55,7 +55,7 @@ STATIC FUNCTION asXML( xml )
    ENDIF
 
    subnode := mxmlGetFirstChild( node )
-   DO WHILE ! Empty( subnode := mxmlGetNext( subnode ) )
+   DO WHILE ! Empty( subnode := mxmlGetNextSibling( subnode ) )
       IF mxmlGetType( subnode ) == MXML_ELEMENT 
          IF mxmlGetElement( subnode ) == "body"
             c := mxmlGetOpaque( subnode )
