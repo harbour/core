@@ -23,6 +23,9 @@
 #if !defined(XINCLUDE_H)
 #define XINCLUDE_H
 
+#if defined(HAVE_HBCONFIG_H)
+#include "_hbconf.h"
+#endif /* #if defined(HAVE_HBCONFIG_H) */
 
 #if defined(HAVE_WINCONFIG_H)
 #include "winconfig.h"
