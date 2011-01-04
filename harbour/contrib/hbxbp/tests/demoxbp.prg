@@ -380,6 +380,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Miscellaneous"
    oSubMenu:addItem( { "Convert Images - XbpBitmap()", {|| Build_Bitmap( oDlg ) } } )
+   oSubMenu:addItem( { "ConfirmBox()"                , {|| Build_ConfirmBox( oDlg ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
@@ -1977,3 +1978,11 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_ConfirmBox( oWnd )
+
+   RETURN MsgBox( "Return Value is = " + ;
+            str( ConfirmBox( oWnd, "What do you want ?", "Confirm Status", XBPMB_YESNOCANCEL, XBPMB_WARNING, 2 ) ) )
+
+/*----------------------------------------------------------------------*/
+

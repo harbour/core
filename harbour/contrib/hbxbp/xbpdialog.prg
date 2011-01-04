@@ -140,8 +140,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::cargo := hb_threadId()                               /* To Be Removed */
-
    /* Thread specific event buffer */
    hbxbp_InitializeEventBuffer()
 

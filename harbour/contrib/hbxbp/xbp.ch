@@ -485,5 +485,45 @@
 
 /*----------------------------------------------------------------------*/
 
+#define XBPMB_OK                                  0
+#define XBPMB_OKCANCEL                            1
+#define XBPMB_RETRYCANCEL                         5
+#define XBPMB_ABORTRETRYIGNORE                    2
+#define XBPMB_YESNO                               4
+#define XBPMB_YESNOCANCEL                         3
+#define XBPMB_CANCEL                              0
+#define XBPMB_ENTER                               0
+#define XBPMB_ENTERCANCEL                         1
+#define XBPMB_HELP                                16384
+
+// Defines for the style
+#define XBPMB_NOICON                              0
+#define XBPMB_QUESTION                            32
+#define XBPMB_WARNING                             48
+#define XBPMB_INFORMATION                         64
+#define XBPMB_CRITICAL                            16
+
+#define XBPMB_APPMODAL                            (0 + 65536)
+#define XBPMB_SYSMODAL                            (4096 + 65536)
+#define XBPMB_MOVEABLE                            65536
+
+// Defbutton
+#define XBPMB_DEFBUTTON1                          0
+#define XBPMB_DEFBUTTON2                          256
+#define XBPMB_DEFBUTTON3                          512
+
+// Confirm box return codes
+#define XBPMB_RET_OK                              1
+#define XBPMB_RET_CANCEL                          2
+#define XBPMB_RET_ABORT                           3
+#define XBPMB_RET_RETRY                           4
+#define XBPMB_RET_IGNORE                          5
+#define XBPMB_RET_YES                             6
+#define XBPMB_RET_NO                              7
+#define XBPMB_RET_ENTER                           9
+#define XBPMB_RET_ERROR                           65535
+
+/*----------------------------------------------------------------------*/
+
 #define _XBP_CH
 #endif

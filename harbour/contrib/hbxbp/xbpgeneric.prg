@@ -404,3 +404,135 @@ FUNCTION hbxbp_getNextID( cString )
    RETURN cString + "_" + hb_ntos( ++hIDs[ cString ] )
 
 /*----------------------------------------------------------------------*/
+/*
+   ConfirmBox( [<oOwner>], <cMessage>, [<cTitle>], ;
+            [<nButtons>],[<nStyle>],[<nStartBtn>] ) --> nAction
+*/
+FUNCTION ConfirmBox( oOwner, cMessage, cTitle, nButtons, nStyle, nStartBtn )
+   LOCAL oMB, nRet
+   LOCAL qEnter, qCancel, qYes, qNo, qRetry, qIgnore, qAbort, qHelp, qClk, qOk
+
+   DEFAULT oOwner    TO SetAppWindow()
+   DEFAULT cTitle    TO ""
+   DEFAULT nButtons  TO XBPMB_OKCANCEL
+   DEFAULT nStyle    TO XBPMB_NOICON
+   DEFAULT nStartBtn TO XBPMB_DEFBUTTON1
+
+   cMessage := strtran( cMessage, chr( 13 ) + chr( 10 ), "<br />" )
+   cMessage := strtran( cMessage, chr( 13 ), "<br />" )
+   cMessage := strtran( cMessage, chr( 10 ), "<br />" )
+
+   oMB := QMessageBox()
+   //
+   oMB:setText( /* "<b>" + */ cMessage /* + "</b>" */ )
+
+   SWITCH nButtons
+   CASE XBPMB_OK
+      qOk := oMB:addButton( "Ok", QMessageBox_AcceptRole )
+      EXIT
+   CASE XBPMB_OKCANCEL
+      qOk     := oMB:addButton( "Ok"    , QMessageBox_AcceptRole )
+      qCancel := oMB:addButton( "Cancel", QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qOk, qCancel ) )
+      EXIT
+   CASE XBPMB_RETRYCANCEL
+      qRetry  := oMB:addButton( "Retry" , QMessageBox_AcceptRole )
+      qCancel := oMB:addButton( "Cancel", QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qRetry, qCancel ) )
+      EXIT
+   CASE XBPMB_ABORTRETRYIGNORE
+      qAbort  := oMB:addButton( "Abort" , QMessageBox_AcceptRole )
+      qRetry  := oMB:addButton( "Retry" , QMessageBox_AcceptRole )
+      qIgnore := oMB:addButton( "Ignore", QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qAbort, ;
+                                 iif( nStartBtn == XBPMB_DEFBUTTON2, qRetry, qIgnore ) ) )
+      EXIT
+   CASE XBPMB_YESNO
+      qYes := oMB:addButton( "Yes" , QMessageBox_AcceptRole )
+      qNo  := oMB:addButton( "No"  , QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qYes, qNo ) )
+      EXIT
+   CASE XBPMB_YESNOCANCEL
+      qYes    := oMB:addButton( "Yes"   , QMessageBox_AcceptRole )
+      qNo     := oMB:addButton( "No"    , QMessageBox_AcceptRole )
+      qCancel := oMB:addButton( "Cancel", QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qYes, ;
+                                 iif( nStartBtn == XBPMB_DEFBUTTON2, qNo, qCancel ) ) )
+      EXIT
+   CASE XBPMB_CANCEL
+      qCancel := oMB:addButton( "Cancel", QMessageBox_AcceptRole )
+      EXIT
+   CASE XBPMB_ENTER
+      qEnter := oMB:addButton( "Enter", QMessageBox_AcceptRole )
+      EXIT
+   CASE XBPMB_ENTERCANCEL
+      qEnter  := oMB:addButton( "Enter" , QMessageBox_AcceptRole )
+      qCancel := oMB:addButton( "Cancel", QMessageBox_AcceptRole )
+      oMB:setDefaultButton( iif( nStartBtn == XBPMB_DEFBUTTON1, qEnter, qCancel ) )
+      EXIT
+   CASE XBPMB_HELP
+      qHelp := oMB:addButton( "Help", QMessageBox_AcceptRole )
+      EXIT
+   OTHERWISE
+      oMB:setStandardButtons( QMessageBox_Ok )
+      EXIT
+   ENDSWITCH
+
+   IF hb_bitAnd( nStyle, XBPMB_INFORMATION )  == XBPMB_INFORMATION
+      oMB:setIcon( QMessageBox_Information )
+   ELSEIF hb_bitAnd( nStyle, XBPMB_QUESTION ) == XBPMB_QUESTION
+      oMB:setIcon( QMessageBox_Question )
+   ELSEIF hb_bitAnd( nStyle, XBPMB_WARNING )  == XBPMB_WARNING
+      oMB:setIcon( QMessageBox_Warning )
+   ELSEIF hb_bitAnd( nStyle, XBPMB_CRITICAL ) == XBPMB_CRITICAL
+      oMB:setIcon( QMessageBox_Critical )
+   ENDIF
+
+   IF hb_isObject( oOwner )
+      oMB:setParent( oOwner:oWidget )
+   ENDIF
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+
+   nRet := oMB:exec()
+   qClk := oMB:clickedButton()
+
+   SWITCH nButtons
+   CASE XBPMB_OK
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qOk ), XBPMB_RET_OK, -1 )
+      EXIT
+   CASE XBPMB_OKCANCEL
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qOk ), XBPMB_RET_OK, XBPMB_RET_CANCEL )
+      EXIT
+   CASE XBPMB_RETRYCANCEL
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL )
+      EXIT
+   CASE XBPMB_ABORTRETRYIGNORE
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qAbort ), XBPMB_RET_ABORT, ;
+                   iif( hbqt_IsEqualGcQtPointer( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL ) )
+      EXIT
+   CASE XBPMB_YESNO
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qYes ), XBPMB_RET_YES, XBPMB_RET_NO )
+      EXIT
+   CASE XBPMB_YESNOCANCEL
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qYes ), XBPMB_RET_YES, ;
+                   iif( hbqt_IsEqualGcQtPointer( qClk, qNo ), XBPMB_RET_NO, XBPMB_RET_CANCEL ) )
+      EXIT
+   CASE XBPMB_CANCEL
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qCancel ), XBPMB_RET_CANCEL, -1 )
+      EXIT
+   CASE XBPMB_ENTER
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qEnter ), XBPMB_RET_ENTER, -1 )
+      EXIT
+   CASE XBPMB_ENTERCANCEL
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qEnter ), XBPMB_RET_ENTER, XBPMB_RET_CANCEL )
+      EXIT
+   CASE XBPMB_HELP
+      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qHelp ), XBPMB_RET_OK, -1 )
+      EXIT
+   ENDSWITCH
+
+   RETURN nRet
+
+/*----------------------------------------------------------------------*/
+

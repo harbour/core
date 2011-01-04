@@ -80,7 +80,7 @@ CLASS XbpStatic  INHERIT  XbpWindow
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
    DATA     options                               INIT 0
-   DATA     type                                  INIT -1
+   DATA     type                                  INIT XBPSTATIC_TYPE_TEXT
 
    DATA     hBitmap
 
