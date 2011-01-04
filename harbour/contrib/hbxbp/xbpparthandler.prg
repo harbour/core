@@ -197,15 +197,15 @@ METHOD addAsChild() CLASS XbpPartHandler
 /*----------------------------------------------------------------------*/
 
 METHOD childFromName( nNameId ) CLASS XbpPartHandler
-   LOCAL i, oXbp
+   LOCAL i
 
    FOR i := 1 TO len( ::aChildren )
-      IF ::aChildren[ i ]:nNameID <> NIL .and. ::aChildren[ i ]:nNameID == nNameID
-         oXbp := ::aChildren[ i ]
+      IF ::aChildren[ i ]:nNameID <> NIL .AND. ::aChildren[ i ]:nNameID == nNameID
+         RETURN ::aChildren[ i ]
       ENDIF
    NEXT
 
-   RETURN oXbp
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

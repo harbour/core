@@ -3249,7 +3249,7 @@ METHOD XbpBrowse:rightVisible()
 METHOD XbpBrowse:addColumn( oCol )
    AAdd( ::columns, oCol )
    ::doConfigure()  /* QT */
-   RETURN Self
+   RETURN oCol
 
 /* Delete a column object from a browse */
 METHOD XbpBrowse:delColumn( nColumn )

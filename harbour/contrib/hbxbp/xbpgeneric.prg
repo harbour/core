@@ -229,7 +229,7 @@ FUNCTION NextAppEvent( mp1, mp2, oXbp )
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
-   LOCAL nEvent
+   LOCAL nEvent := 0
    LOCAL nThreadID := hb_threadId()
 
    //DEFAULT nTimeout TO 0
