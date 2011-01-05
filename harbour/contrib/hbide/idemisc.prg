@@ -2228,3 +2228,14 @@ FUNCTION hbide_synchronizeForHbp( aHbp )
    RETURN txt_
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_setClose( lYes )
+   LOCAL yes
+   STATIC sYes
+   yes := sYes
+   IF hb_isLogical( lYes )
+      sYes := lYes
+   ENDIF
+   RETURN yes
+
+/*----------------------------------------------------------------------*/

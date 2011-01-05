@@ -140,10 +140,13 @@ FUNCTION hbxbp_ClearEventBuffer()
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbxbp_SetEventLoop( oELoop )
+   LOCAL oLoop := t_oEventLoop
 
-   t_oEventLoop := oELoop
+   IF hb_isObject( oELoop )
+      t_oEventLoop := oELoop
+   ENDIF
 
-   RETURN nil
+   RETURN oLoop
 
 /*----------------------------------------------------------------------*/
 
@@ -157,6 +160,8 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    LOCAL qEvent
 
    HB_SYMBOL_UNUSED( mp2 )
+
+   DEFAULT oXbp TO SetAppWindow()
 
    SetAppEvent( nEvent, mp1, mp2, oXbp )
 

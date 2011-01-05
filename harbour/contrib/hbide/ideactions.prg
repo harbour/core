@@ -474,6 +474,7 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "Find"                ), {|| oIde:execAction( "Find"           ) } } )
    oSubMenu:addItem( { ::getAction( "FindEx"              ), {|| oIde:execAction( "FindEx"         ) } } )
+   oSubMenu:oWidget:addAction( ::oFindDock:oWidget:toggleViewAction() )
    oSubMenu:addItem( { ::getAction( "Goto"                ), {|| oIde:execAction( "Goto"           ) } } )
    hbide_menuAddSep( oSubMenu )
    //

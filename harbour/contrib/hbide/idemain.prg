@@ -563,9 +563,11 @@ METHOD HbIde:create( aParams )
       ENDIF
 
       IF nEvent == xbeP_Close
-         ::oINI:save()
-         ::oSM:closeAllSources( .f. /* can not cancel */ )
-         EXIT
+         IF hbide_setClose()
+            ::oINI:save()
+            ::oSM:closeAllSources( .f. /* can not cancel */ )
+            EXIT
+         ENDIF
 
       ELSEIF nEvent == xbeP_Keyboard
          DO CASE

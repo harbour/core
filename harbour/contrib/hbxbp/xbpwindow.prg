@@ -1509,7 +1509,7 @@ METHOD XbpWindow:close( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_close := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_close )
+   ELSEIF len( a_ ) == 0 .AND. hb_isBlock( ::sl_close )
       eval( ::sl_close, NIL, NIL, Self )
    ENDIF
    RETURN Self

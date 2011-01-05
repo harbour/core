@@ -100,7 +100,7 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execEvent( nEvent, pEvent )
 
-   METHOD   close()                               INLINE NIL
+   //METHOD   close()                               INLINE NIL
    METHOD   destroy()
 
    METHOD   showModal()
@@ -204,9 +204,11 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   /* Install Event Loop per Dialog Basis */
-   ::oEventLoop := QEventLoop( ::oWidget )
-   hbxbp_SetEventLoop( ::oEventLoop )
+   /* Install Event Loop per thread/dialog Basis */
+   IF empty( hbxbp_SetEventLoop() )
+      ::oEventLoop := QEventLoop( ::oWidget )
+      hbxbp_SetEventLoop( ::oEventLoop )
+   ENDIF
 
    /* Instal Event Filter */
    ::connectWindowEvents()
@@ -237,16 +239,16 @@ METHOD XbpDialog:destroy()
    HB_TRACE( HB_TR_DEBUG,  ". " )
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
-//   ::oWidget:removeEventFilter( ::pEvents )
-
    ::disconnectWindowEvents()
    ::oWidget:disconnect( QEvent_Close            )
    ::oWidget:disconnect( QEvent_WindowActivate   )
    ::oWidget:disconnect( QEvent_WindowDeactivate )
 
-   hbxbp_SetEventLoop( NIL )
-   ::oEventLoop:exit( 0 )
-   ::oEventLoop := NIL
+   IF !empty( ::oEventLoop )
+      hbxbp_SetEventLoop( NIL )
+      ::oEventLoop:exit( 0 )
+      ::oEventLoop := NIL
+   ENDIF
    ::oMenu := NIL
 
    IF ::isViaQtObject
@@ -267,7 +269,6 @@ METHOD XbpDialog:destroy()
 METHOD XbpDialog:execEvent( nEvent, pEvent )
 
    HB_SYMBOL_UNUSED( pEvent )
-
    DO CASE
 
    CASE nEvent == QEvent_WindowActivate
@@ -277,14 +278,8 @@ METHOD XbpDialog:execEvent( nEvent, pEvent )
       SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
 
    CASE nEvent == QEvent_Close
-      IF hb_isBlock( ::sl_close )
-         IF eval( ::sl_close, NIL, NIL, Self )
-            SetAppEvent( xbeP_Close, NIL, NIL, Self )
-         ENDIF
-      ELSE
-         SetAppEvent( xbeP_Close, NIL, NIL, Self )
-      ENDIF
-
+      ::close()
+      SetAppEvent( xbeP_Close, NIL, NIL, Self )
    ENDCASE
 
    RETURN .T.
