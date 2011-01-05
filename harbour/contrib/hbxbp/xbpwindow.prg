@@ -1839,3 +1839,67 @@ FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
    RETURN oldValue
 
 /*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+
+CLASS HbXbpAppDesktop INHERIT XbpWindow
+
+   METHOD new()
+   METHOD create()
+   METHOD width( nScreen )
+   METHOD virtualWidth()
+   METHOD height( nScreen )
+   METHOD virtualHeight()
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:new()
+
+   ::xbpWindow:init()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:create()
+
+   ::oWidget := QDesktopWidget()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:width( nScreen )
+
+   DEFAULT nScreen TO -1
+
+   RETURN iif( nScreen == -1, ::oWidget:screenGeometry( ::oWidget:primaryScreen() ):right(), ;
+                                                           ::oWidget:screenGeometry( nScreen ):right() )
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:height( nScreen )
+
+   DEFAULT nScreen TO -1
+
+   RETURN iif( nScreen == -1, ::oWidget:screenGeometry( ::oWidget:primaryScreen() ):bottom(), ;
+                                                           ::oWidget:screenGeometry( nScreen ):bottom() )
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:virtualWidth()
+
+   RETURN ::oWidget:width()
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbXbpAppDesktop:virtualHeight()
+
+   RETURN ::oWidget:height()
+
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+

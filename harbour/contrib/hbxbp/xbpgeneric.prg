@@ -292,7 +292,7 @@ FUNCTION AppDesktop()
 
    IF s_oDeskTop == NIL
       s_oDeskTop := XbpWindow():new()
-      s_oDeskTop:oWidget := QDesktopWidget()
+      s_oDeskTop:oWidget := HbXbpAppDesktop():new():create()
    ENDIF
 
    RETURN s_oDeskTop
