@@ -18,7 +18,7 @@
  * - The GNU version of `patch', `diff' and `tar' (hb3rdpat will figure it out
  *   if you have them by the names of `gpatch', `gdiff' or `gtar')
  *
- * - curl, gzip, bzip2 and unzip (only the Info-ZIP version of unzip has been
+ * - curl, gzip, bzip2, xz and unzip (only the Info-ZIP version of unzip has been
  *   tested)
  *
  * hb3rdpat requires several meta data (in the form of specially formatted lines)
@@ -53,7 +53,7 @@
  *   Example: for PCRE, at the time of this writing, it is
  *   `ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.02.zip'.
  *   hb3rdpat can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
- *   `tbz2' or `zip' archives -- one of these must be chosen.
+ *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
  *
  *   hb3rdpat will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
@@ -181,8 +181,8 @@
  * fetch.log            The output `curl' produced while fetching the source
  *                      archive.
  *
- * extract.log          The output the extractor (gzip, bzip2) produced while
- *                      uncompressing the archive.
+ * extract.log          The output the extractor (gzip, bzip2, xz) produced
+ *                      while uncompressing the archive.
  *
  * archive.log          The output the archiver (tar, unzip) produced while
  *                      unpacking the archive.
@@ -239,6 +239,7 @@ STATIC s_aTools := {             ;
    "tar"    => NIL,              ;
    "gzip"   => NIL,              ;
    "bzip2"  => NIL,              ;
+   "xz"     => NIL,              ;
    "unzip"  => NIL               ;
 }
 
@@ -648,6 +649,13 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       },                                                                                  ;
       '.tar.bz2|.tbz|.tbz2' => {                                                          ;
          'Extractor'          => 'bzip2',                                                 ;
+         'ExtractorArgs'      => '-d',                                                    ;
+         'ExtractedFile'      => '.tar',                                                  ;
+         'Archiver'           => 'tar',                                                   ;
+         'ArchiverArgs'       => '--force-local -xvf'                                     ;
+      },                                                                                  ;
+      '.tar.xz|.txz' => {                                                                 ;
+         'Extractor'          => 'xz',                                                    ;
          'ExtractorArgs'      => '-d',                                                    ;
          'ExtractedFile'      => '.tar',                                                  ;
          'Archiver'           => 'tar',                                                   ;
