@@ -355,11 +355,20 @@ static int hb_fsProcessExec( const char * pszFilename,
    hb_fsSetIOError( iResult >= 0, 0 );
 
    if( iStdIn != FS_ERROR )
+   {
       dup2( iStdIn,  0 );
+      close( iStdIn );
+   }
    if( iStdOut != FS_ERROR )
+   {
       dup2( iStdOut, 1 );
+      close( iStdOut );
+   }
    if( iStdErr != FS_ERROR )
+   {
       dup2( iStdErr, 2 );
+      close( iStdErr );
+   }
 
    hb_vmLock();
    hb_freeArgs( argv );
@@ -729,8 +738,13 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       hb_freeArgs( argv );
 
       dup2( hStdIn,  0 );
+      close( hStdIn );
+
       dup2( hStdOut, 1 );
+      close( hStdOut );
+
       dup2( hStdErr, 2 );
+      close( hStdErr );
 
       if( pid < 0 )
          fError = HB_TRUE;
