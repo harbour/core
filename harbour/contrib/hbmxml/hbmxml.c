@@ -47,7 +47,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
  */
 
 #include "hbapi.h"
@@ -61,9 +60,19 @@
 #include "mxml.h"
 #include "config.h"
 
-#define BUFFER_SIZE 8192
+#define BUFFER_SIZE     8192
 
-/*  cb's funcs support */
+#define MXML_ERR_ARGS   ( hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, \
+                                                HB_ERR_ARGS_BASEPARAMS ) )
+
+typedef struct /* placeholder for mxml_node_t */
+{
+   mxml_node_t * node;
+   unsigned int flags;
+} HBMXML_NODE;
+
+/* =========================== cb's funcs support =============================== */
+
 typedef struct
 {
    PHB_DYNS type_cb;
@@ -78,7 +87,6 @@ typedef struct
 {
    PHB_DYNS error_cb;
 } HB_ERROR_CB_VAR;
-
 
 static void hb_type_cb_var_init( void * cargo )
 {
@@ -105,62 +113,70 @@ static HB_TSD_NEW( s_type_cb_var, sizeof( HB_TYPE_CB_VAR ), hb_type_cb_var_init,
 static HB_TSD_NEW( s_save_cb_var, sizeof( HB_SAVE_CB_VAR ), hb_save_cb_var_init, NULL );
 static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init, NULL );
 
-/*  mxml_node_t * support */
-static HB_GARBAGE_FUNC( hb_mxml_nodeDestructor )
-{
-   mxml_node_t ** ppMxml_node = ( mxml_node_t ** ) Cargo;
+/* ========================= mxml_node_t * support ============================== */
 
-   if( *ppMxml_node )
+static HB_GARBAGE_FUNC( hbmxml_nodeDestructor )
+{
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) Cargo;
+
+   if( pHbnode && pHbnode->node )
    {
-      mxmlRelease( *ppMxml_node );
-      *ppMxml_node = NULL;
+      if( mxmlGetUserData( pHbnode->node ) != NULL )
+      {
+         hb_itemRelease( pHbnode->node->user_data );
+         pHbnode->node->user_data = NULL;
+      }
+
+      if( pHbnode->flags == 1 )
+      {
+         mxmlDelete( pHbnode->node );
+   
+         pHbnode->node = NULL;
+      }
    }
 }
 
 static const HB_GC_FUNCS s_gc_mxml_nodeFuncs =
 {
-   hb_mxml_nodeDestructor,
+   hbmxml_nodeDestructor,
    hb_gcDummyMark
 };
 
-mxml_node_t * hb_mxml_node_ItemGet( PHB_ITEM pItem )
+mxml_node_t * mxml_node_param( int iParam )
 {
-   mxml_node_t ** ppMxml_node = ( mxml_node_t ** ) hb_itemGetPtrGC( pItem,
-                                                                    &s_gc_mxml_nodeFuncs );
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs,
+                                                          iParam );
 
-   return ppMxml_node ? *ppMxml_node : NULL;
+   return ( pHbnode && pHbnode->node ) ? pHbnode->node : NULL;
 }
 
-PHB_ITEM hb_mxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node )
+PHB_ITEM hbmxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node, unsigned int uiFlags )
 {
-   mxml_node_t ** ppMxml_node = ( mxml_node_t ** ) hb_gcAllocate( sizeof( mxml_node_t * ),
-                                                                  &s_gc_mxml_nodeFuncs );
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_gcAllocate( sizeof( HBMXML_NODE ),
+                                                            &s_gc_mxml_nodeFuncs );
 
-   *ppMxml_node = pMxml_node;
-   mxmlRetain( *ppMxml_node );
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( pItem );
 
-   return hb_itemPutPtrGC( pItem, ppMxml_node );
+   pHbnode->node = pMxml_node;
+   pHbnode->flags = uiFlags;
+
+   return hb_itemPutPtrGC( pItem, pHbnode );
 }
 
-mxml_node_t * hb_mxml_node_param( int iParam )
+void mxml_node_ret( mxml_node_t * pMxml_node, unsigned int uiFlags )
 {
-   mxml_node_t ** ppMxml_node = ( mxml_node_t ** ) hb_parptrGC( &s_gc_mxml_nodeFuncs,
-                                                                iParam );
-
-   if( ppMxml_node && *ppMxml_node )
-      return *ppMxml_node;
-
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   return NULL;
+   hbmxml_node_ItemPut( hb_stackReturnItem(), pMxml_node, uiFlags );
 }
 
-void hb_mxml_node_ret( mxml_node_t * pMxml_node )
-{
-   hb_mxml_node_ItemPut( hb_stackReturnItem(), pMxml_node );
-}
+/* ========================= mxml_index_t * support ============================= */
 
-/*  mxml_index_t * support */
-static HB_GARBAGE_FUNC( hb_mxml_indexDestructor )
+static HB_GARBAGE_FUNC( hbmxml_indexDestructor )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) Cargo;
 
@@ -173,11 +189,11 @@ static HB_GARBAGE_FUNC( hb_mxml_indexDestructor )
 
 static const HB_GC_FUNCS s_gc_mxml_indexFuncs =
 {
-   hb_mxml_indexDestructor,
+   hbmxml_indexDestructor,
    hb_gcDummyMark
 };
 
-mxml_index_t * hb_mxml_index_ItemGet( PHB_ITEM pItem )
+mxml_index_t * hbmxml_index_ItemGet( PHB_ITEM pItem )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_itemGetPtrGC( pItem,
                                                                        &s_gc_mxml_indexFuncs );
@@ -185,16 +201,24 @@ mxml_index_t * hb_mxml_index_ItemGet( PHB_ITEM pItem )
    return ppMxml_index ? *ppMxml_index : NULL;
 }
 
-PHB_ITEM hb_mxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
+PHB_ITEM hbmxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_gcAllocate( sizeof( mxml_index_t * ),
                                                                      &s_gc_mxml_indexFuncs );
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( pItem );
 
    *ppMxml_index = pMxml_index;
    return hb_itemPutPtrGC( pItem, ppMxml_index );
 }
 
-mxml_index_t * hb_mxml_index_param( int iParam )
+mxml_index_t * mxml_index_param( int iParam )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_parptrGC( &s_gc_mxml_indexFuncs,
                                                                    iParam );
@@ -206,264 +230,154 @@ mxml_index_t * hb_mxml_index_param( int iParam )
    return NULL;
 }
 
-void hb_mxml_index_ret( mxml_index_t * pMxml_index )
+void mxml_index_ret( mxml_index_t * pMxml_index )
 {
-   hb_mxml_index_ItemPut( hb_stackReturnItem(), pMxml_index );
+   hbmxml_index_ItemPut( hb_stackReturnItem(), pMxml_index );
 }
 
-/* non-wrap HB_... funcs */
+/* ========================= non-wrap HB_... funcs ============================== */
 
 HB_FUNC( HB_MXMLVERSION )
 {
    hb_retc( MXML_VERSION );
 }
 
-/* MXML... */
+/* ======================== MXML_... wrapper funcs ============================== */
 
-/* mxml_type_t mxmlGetType( mxml_node_t * node) */
+/*
+ * + mxmlAdd
+ * + mxmlDelete
+ * + mxmlElementDeleteAttr
+ * + mxmlElementGetAttr
+ * + mxmlElementSetAttr
+ * - mxmlElementSetAttrf
+ * - mxmlEntityAddCallback
+ * + mxmlEntityGetName
+ * + mxmlEntityGetValue
+ * - mxmlEntityRemoveCallback
+ * + mxmlFindElement
+ * + mxmlFindPath
+ * + mxmlGetCDATA
+ * - mxmlGetCustom
+ * + mxmlGetElement
+ * + mxmlGetFirstChild
+ * + mxmlGetInteger
+ * + mxmlGetLastChild
+ * + mxmlGetNextSibling
+ * + mxmlGetOpaque
+ * + mxmlGetParent
+ * + mxmlGetPrevSibling
+ * + mxmlGetReal
+ * + mxmlGetRefCount
+ * + mxmlGetText
+ * + mxmlGetType
+ * + mxmlGetUserData
+ * + mxmlIndexDelete
+ * + mxmlIndexEnum
+ * + mxmlIndexFind
+ * + mxmlIndexGetCount
+ * + mxmlIndexNew
+ * + mxmlIndexReset
+ * - mxmlLoadFd
+ * - mxmlLoadFile
+ * + mxmlLoadString
+ * + mxmlNewCDATA
+ * - mxmlNewCustom
+ * + mxmlNewElement
+ * + mxmlNewInteger
+ * + mxmlNewOpaque
+ * + mxmlNewReal
+ * + mxmlNewText
+ * - mxmlNewTextf
+ * + mxmlNewXML
+ * + mxmlRelease
+ * + mxmlRemove
+ * + mxmlRetain
+ * - mxmlSAXLoadFd
+ * - mxmlSAXLoadFile
+ * - mxmlSAXLoadString
+ * + mxmlSaveAllocString
+ * - mxmlSaveFd
+ * - mxmlSaveFile
+ * + mxmlSaveString
+ * + mxmlSetCDATA
+ * - mxmlSetCustom
+ * - mxmlSetCustomHandlers
+ * + mxmlSetElement
+ * + mxmlSetErrorCallback
+ * + mxmlSetInteger
+ * + mxmlSetOpaque
+ * + mxmlSetReal
+ * + mxmlSetText
+ * - mxmlSetTextf
+ * + mxmlSetUserData
+ * + mxmlSetWrapMargin
+ * + mxmlWalkNext
+ * + mxmlWalkPrev
+ */
 
-HB_FUNC( MXMLGETTYPE )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      hb_retni( ( mxml_type_t ) mxmlGetType( node ) );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlGetParent( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETPARENT )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      mxml_node_t * parent = mxmlGetParent( node );
-
-      if( parent )
-         hb_mxml_node_ret( parent );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlGetFirstChild( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETFIRSTCHILD )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      mxml_node_t * first = mxmlGetFirstChild( node );
-
-      if( first )
-         hb_mxml_node_ret( first );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlGetLastChild( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETLASTCHILD )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      mxml_node_t * last = mxmlGetLastChild( node );
-
-      if( last )
-         hb_mxml_node_ret( last );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlGetNextSibling( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETNEXTSIBLING )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      mxml_node_t * next = mxmlGetNextSibling( node );
-
-      if( next )
-         hb_mxml_node_ret( next );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlGetPrevSibling( mxml_node_t *node ) */
-
-HB_FUNC( MXMLGETPREVSIBLING )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      mxml_node_t * previous = mxmlGetPrevSibling( node );
-
-      if( previous )
-         hb_mxml_node_ret( previous );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* char * mxmlGetElement( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETELEMENT )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retstr_utf8( mxmlGetElement( node ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlGetInteger( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETINTEGER )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retni( mxmlGetInteger( node ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* char * mxmlGetOpaque( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETOPAQUE )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retstr_utf8( mxmlGetOpaque( node ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* double mxmlGetReal( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETREAL )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retnd( mxmlGetReal( node ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* char * mxmlGetText( mxml_node_t * node, int * whitespace ) */
-
-HB_FUNC( MXMLGETTEXT )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      int whitespace = hb_parni( 2 );
-
-      hb_retstr_utf8( mxmlGetText( node, &whitespace ) );
-      hb_storni( whitespace, 2 );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* char * mxmlGetCDATA( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETCDATA )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retstr_utf8( mxmlGetCDATA( node ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* void * mxmlGetCustom( mxml_node_t * node ) */
-
-/* void * mxmlGetUserData( mxml_node_t * node ) */
-
-HB_FUNC( MXMLGETUSERDATA )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      PHB_ITEM pItem = ( PHB_ITEM ) mxmlGetUserData( node );
-
-      if( pItem )
-         hb_itemCopy( hb_stackReturnItem(), pItem );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlSetUserData(mxml_node_t * node, void * data ) */
-
-HB_FUNC( MXMLSETUSERDATA )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      PHB_ITEM pItem = ( PHB_ITEM ) hb_param( 2, HB_IT_ANY );
-
-      if( pItem )
-         hb_retni( mxmlSetUserData( node, pItem ) );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
+/*
+ * - mxmlElementSetAttrf
+ * - mxmlEntityAddCallback
+ * - mxmlEntityRemoveCallback
+ * - mxmlGetCustom
+ * - mxmlLoadFd
+ * - mxmlLoadFile
+ * - mxmlNewCustom
+ * - mxmlNewTextf
+ * - mxmlSAXLoadFd
+ * - mxmlSAXLoadFile
+ * - mxmlSAXLoadString
+ * - mxmlSaveFd
+ * - mxmlSaveFile
+ * - mxmlSetCustom
+ * - mxmlSetCustomHandlers
+ * - mxmlSetTextf
+ */
 
 /* void mxmlAdd( mxml_node_t * parent, int where, mxml_node_t * child, mxml_node_t * node ) */
 
 HB_FUNC( MXMLADD )
 {
-   mxml_node_t *  parent = ( mxml_node_t * ) ( HB_ISNIL( 1 ) ? NULL : hb_mxml_node_param( 1 ) );
-   int            where = hb_parni( 2 );
-   mxml_node_t *  child = ( mxml_node_t * ) ( HB_ISNIL( 3 ) ? NULL : hb_mxml_node_param( 3 ) );
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 4 );
+   mxml_node_t *  parent = mxml_node_param( 1 );
+   int            where = hb_parnidef( 2, MXML_ADD_BEFORE );
+   mxml_node_t *  child = mxml_node_param( 3 );
+   mxml_node_t *  node = mxml_node_param( 4 );
 
-   if( node )
-      mxmlAdd( parent, where, child, node );
+   where = ( ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER );
+
+   if( parent && node )
+      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* void mxmlDelete( mxml_node_t * node ) */
 
 HB_FUNC( MXMLDELETE )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
 
-   if( node )
-      mxmlDelete( node );
+   if( pHbnode && pHbnode->node )
+   {
+      if( mxmlGetUserData( pHbnode->node ) != NULL )
+      {
+         hb_itemRelease( pHbnode->node->user_data );
+         pHbnode->node->user_data = NULL;
+      }
+      mxmlDelete( pHbnode->node );
+
+      pHbnode->node = NULL;
+   }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* void mxmlElementDeleteAttr( mxml_node_t * node, const char * name ) */
 
 HB_FUNC( MXMLELEMENTDELETEATTR )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -474,14 +388,14 @@ HB_FUNC( MXMLELEMENTDELETEATTR )
       hb_strfree( hName );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* const char * mxmlElementGetAttr( mxml_node_t * node, const char * name ) */
 
 HB_FUNC( MXMLELEMENTGETATTR )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -492,14 +406,14 @@ HB_FUNC( MXMLELEMENTGETATTR )
       hb_strfree( hName );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* void mxmlElementSetAttr( mxml_node_t * node, const char * name, const char * value ) */
 
 HB_FUNC( MXMLELEMENTSETATTR )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -512,14 +426,14 @@ HB_FUNC( MXMLELEMENTSETATTR )
       hb_strfree( hValue );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* const char * mxmlEntityGetName( int val ) */
 
 HB_FUNC( MXMLENTITYGETNAME )
 {
-   hb_retstr_utf8( mxmlEntityGetName( hb_parni( 1 ) - 1 ) );
+   hb_retstr_utf8( mxmlEntityGetName( hb_parni( 1 ) - 1 ) ); /* ?? */
 }
 
 /* int mxmlEntityGetValue( const char * name ) */
@@ -527,10 +441,9 @@ HB_FUNC( MXMLENTITYGETNAME )
 HB_FUNC( MXMLENTITYGETVALUE )
 {
    void *   hName;
-
    int      i = mxmlEntityGetValue( hb_parstr_utf8( 1, &hName, NULL ) );
 
-   hb_retni( i < 0 ? -1 : i + 1 );
+   hb_retni( i < 0 ? -1 : i + 1 ); /* ?? */
 
    hb_strfree( hName );
 }
@@ -546,8 +459,8 @@ HB_FUNC( MXMLFINDELEMENT )
    void *         hName;
    void *         hAttr;
    void *         hValue;
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-   mxml_node_t *  top = ( mxml_node_t * ) hb_mxml_node_param( 2 );
+   mxml_node_t *  node = mxml_node_param( 1 );
+   mxml_node_t *  top = mxml_node_param( 2 );
 
    if( node && top )
    {
@@ -562,10 +475,10 @@ HB_FUNC( MXMLFINDELEMENT )
       hb_strfree( hValue );
 
       if( nodef )
-         hb_mxml_node_ret( nodef );
+         mxml_node_ret( nodef, 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* mxml_node_t * mxmlFindPath( mxml_node_t * node, const char * path ) */
@@ -573,50 +486,241 @@ HB_FUNC( MXMLFINDELEMENT )
 HB_FUNC( MXMLFINDPATH )
 {
    void *         hPath;
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t *  node = mxml_node_param( 1 );
 
    if( node )
    {
       mxml_node_t * nodef = mxmlFindPath( node, hb_parstr_utf8( 2, &hPath, NULL ) );
 
       if( nodef )
-         hb_mxml_node_ret( nodef );
+         mxml_node_ret( nodef, 0 );
 
       hb_strfree( hPath );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
-/* int mxmlIndexGetCount( mxml_index_t * ind ) */
+/* char * mxmlGetCDATA( mxml_node_t * node ) */
 
-HB_FUNC( MXMLINDEXGETCOUNT )
+HB_FUNC( MXMLGETCDATA )
 {
-   mxml_index_t * index = ( mxml_index_t * ) hb_mxml_index_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
-   if( index )
-      hb_retni( mxmlIndexGetCount( index ) );
+   if( node )
+      hb_retstr_utf8( mxmlGetCDATA( node ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
+}
+
+/* char * mxmlGetElement( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETELEMENT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retstr_utf8( mxmlGetElement( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlGetFirstChild( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETFIRSTCHILD )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      mxml_node_t * first = mxmlGetFirstChild( node );
+
+      if( first )
+         mxml_node_ret( first, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlGetInteger( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETINTEGER )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retni( mxmlGetInteger( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlGetLastChild( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETLASTCHILD )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      mxml_node_t * last = mxmlGetLastChild( node );
+
+      if( last )
+         mxml_node_ret( last, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlGetNextSibling( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETNEXTSIBLING )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      mxml_node_t * next = mxmlGetNextSibling( node );
+
+      if( next )
+         mxml_node_ret( next, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* char * mxmlGetOpaque( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETOPAQUE )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retstr_utf8( mxmlGetOpaque( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlGetParent( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETPARENT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      mxml_node_t * parent = mxmlGetParent( node );
+
+      if( parent )
+         mxml_node_ret( parent, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlGetPrevSibling( mxml_node_t *node ) */
+
+HB_FUNC( MXMLGETPREVSIBLING )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      mxml_node_t * previous = mxmlGetPrevSibling( node );
+
+      if( previous )
+         mxml_node_ret( previous, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* double mxmlGetReal( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETREAL )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retnd( mxmlGetReal( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlGetRefCount( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETREFCOUNT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retni( mxmlGetRefCount( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* char * mxmlGetText( mxml_node_t * node, int * whitespace ) */
+
+HB_FUNC( MXMLGETTEXT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      int whitespace = hb_parni( 2 );
+
+      hb_retstr_utf8( mxmlGetText( node, &whitespace ) );
+      hb_storni( whitespace, 2 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_type_t mxmlGetType( mxml_node_t * node) */
+
+HB_FUNC( MXMLGETTYPE )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retni( ( int ) mxmlGetType( node ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* void * mxmlGetUserData( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETUSERDATA )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      PHB_ITEM pItem = ( PHB_ITEM ) mxmlGetUserData( node );
+
+      if( pItem )
+         hb_itemCopy( hb_stackReturnItem(), pItem );
+   }
+   else
+      MXML_ERR_ARGS;
 }
 
 /* mxml_node_t * mxmlIndexEnum( mxml_index_t * ind ) */
 
 HB_FUNC( MXMLINDEXENUM )
 {
-   mxml_index_t * index = ( mxml_index_t * ) hb_mxml_index_param( 1 );
+   mxml_index_t * index = mxml_index_param( 1 );
 
    if( index )
-      hb_mxml_node_ret( mxmlIndexEnum( index ) );
+      mxml_node_ret( mxmlIndexEnum( index ), 0 );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* mxml_node_t * mxmlIndexFind( mxml_index_t * ind, const char * element, const char * value ) */
 
 HB_FUNC( MXMLINDEXFIND )
 {
-   mxml_index_t * index = ( mxml_index_t * ) hb_mxml_index_param( 1 );
+   mxml_index_t * index = mxml_index_param( 1 );
 
    if( index )
    {
@@ -630,17 +734,41 @@ HB_FUNC( MXMLINDEXFIND )
       hb_strfree( hValue );
 
       if( nodef )
-         hb_mxml_node_ret( nodef );
+         mxml_node_ret( nodef, 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
+}
+
+/* void mxmlIndexDelete( mxml_index_t * ind ) */
+
+HB_FUNC( MXMLINDEXDELETE )
+{
+   mxml_index_t * index = mxml_index_param( 1 );
+
+   if( index )
+      mxmlIndexDelete( index );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlIndexGetCount( mxml_index_t * ind ) */
+
+HB_FUNC( MXMLINDEXGETCOUNT )
+{
+   mxml_index_t * index = mxml_index_param( 1 );
+
+   if( index )
+      hb_retni( mxmlIndexGetCount( index ) );
+   else
+      MXML_ERR_ARGS;
 }
 
 /* mxml_index_t * mxmlIndexNew( mxml_node_t * node, const char * element, const char * attr ) */
 
 HB_FUNC( MXMLINDEXNEW )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -654,39 +782,27 @@ HB_FUNC( MXMLINDEXNEW )
       hb_strfree( hAttribute );
 
       if( index )
-         hb_mxml_index_ret( index );
+         mxml_index_ret( index );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* mxml_node_t * mxmlIndexReset( mxml_index_t * ind ) */
 
 HB_FUNC( MXMLINDEXRESET )
 {
-   mxml_index_t * index = ( mxml_index_t * ) hb_mxml_index_param( 1 );
+   mxml_index_t * index = mxml_index_param( 1 );
 
    if( index )
    {
       mxml_node_t * node = mxmlIndexReset( index );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* void mxmlIndexDelete( mxml_index_t * ind ) */
-
-HB_FUNC( MXMLINDEXDELETE )
-{
-   mxml_index_t * index = ( mxml_index_t * ) hb_mxml_index_param( 1 );
-
-   if( index )
-      mxmlIndexDelete( index );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* ================ mxml_type_t type_cb( mxml_node_t * node ) =================== */
@@ -705,7 +821,7 @@ static mxml_type_t type_cb( mxml_node_t * node )
          PHB_ITEM pNode = hb_itemNew( NULL );
 
          mxmlRetain( node );
-         hb_mxml_node_ItemPut( pNode, node );
+         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushDynSym( pSym );
          hb_vmPushNil();
@@ -746,11 +862,11 @@ HB_FUNC( MXMLLOADSTRING )
    }
    else
    {
-      node_top = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      node_top = mxml_node_param( 1 );
 
       if( ! node_top )
       {
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
          return;
       }
    }
@@ -783,7 +899,7 @@ HB_FUNC( MXMLLOADSTRING )
    pType_cb->type_cb = NULL;
 
    if( node )
-      hb_mxml_node_ret( node );
+      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
 
    hb_strfree( hFree );
 }
@@ -800,25 +916,25 @@ HB_FUNC( MXMLNEWCDATA )
       node = mxmlNewCDATA( MXML_NO_PARENT, hb_parstr_utf8( 2, &hString, NULL ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
 
       hb_strfree( hString );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
          node = mxmlNewCDATA( node_parent, hb_parstr_utf8( 2, &hString, NULL ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
 
          hb_strfree( hString );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -834,25 +950,25 @@ HB_FUNC( MXMLNEWELEMENT )
       node = mxmlNewElement( MXML_NO_PARENT, hb_parstr_utf8( 2, &hName, NULL ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
 
       hb_strfree( hName );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
          node = mxmlNewElement( node_parent, hb_parstr_utf8( 2, &hName, NULL ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
 
          hb_strfree( hName );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -867,21 +983,21 @@ HB_FUNC( MXMLNEWINTEGER )
       node = mxmlNewInteger( MXML_NO_PARENT, hb_parni( 2 ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
          node = mxmlNewInteger( node_parent, hb_parni( 2 ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -897,25 +1013,25 @@ HB_FUNC( MXMLNEWOPAQUE )
       node = mxmlNewOpaque( MXML_NO_PARENT, hb_parstr_utf8( 2, &hOpaque, NULL ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
 
       hb_strfree( hOpaque );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
          node = mxmlNewOpaque( node_parent, hb_parstr_utf8( 2, &hOpaque, NULL ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
 
          hb_strfree( hOpaque );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -930,21 +1046,21 @@ HB_FUNC( MXMLNEWREAL )
       node = mxmlNewReal( MXML_NO_PARENT, hb_parnd( 2 ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
          node = mxmlNewReal( node_parent, hb_parnd( 2 ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -961,13 +1077,13 @@ HB_FUNC( MXMLNEWTEXT )
                           hb_parstr_utf8( 3, &hString, NULL ) );
 
       if( node )
-         hb_mxml_node_ret( node );
+         mxml_node_ret( node, 1 );
 
       hb_strfree( hString );
    }
    else
    {
-      mxml_node_t * node_parent = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+      mxml_node_t * node_parent = mxml_node_param( 1 );
 
       if( node_parent )
       {
@@ -975,12 +1091,12 @@ HB_FUNC( MXMLNEWTEXT )
                              hb_parstr_utf8( 3, &hString, NULL ) );
 
          if( node )
-            hb_mxml_node_ret( node );
+            mxml_node_ret( node, 0 );
 
          hb_strfree( hString );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         MXML_ERR_ARGS;
    }
 }
 
@@ -991,48 +1107,49 @@ HB_FUNC( MXMLNEWXML )
    mxml_node_t *  node;
    void *         hVersion;
 
-   node = mxmlNewXML( HB_ISCHAR( 1 ) ? hb_parstr_utf8( 1, &hVersion, NULL ) : "1.0" );
+   node = mxmlNewXML( HB_ISCHAR( 1 ) ? hb_parstr_utf8( 1, &hVersion, NULL ) : NULL );
 
    if( node )
-      hb_mxml_node_ret( node );
+      mxml_node_ret( node, 1 );
 
-   hb_strfree( hVersion );
+   if( HB_ISCHAR( 1 ) )
+      hb_strfree( hVersion );
 }
 
 /* int mxmlRelease( mxml_node_t * node ) */
 
 HB_FUNC( MXMLRELEASE )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
       hb_retni( mxmlRelease( node ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* void mxmlRemove( mxml_node_t * node ) */
 
 HB_FUNC( MXMLREMOVE )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
       mxmlRemove( node );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* int mxmlRetain( mxml_node_t * node ) */
 
 HB_FUNC( MXMLRETAIN )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
       hb_retni( mxmlRetain( node ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* ============ const char *(*mxml_save_cb_t)(mxml_node_t *, int) =============== */
@@ -1053,7 +1170,7 @@ static const char * save_cb( mxml_node_t * node, int where )
          const char *   pszResult;
 
          mxmlRetain( node );
-         hb_mxml_node_ItemPut( pNode, node );
+         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushDynSym( pSym );
          hb_vmPushNil();
@@ -1090,7 +1207,7 @@ static const char * save_cb( mxml_node_t * node, int where )
 
 HB_FUNC( MXMLSAVEALLOCSTRING )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -1132,6 +1249,34 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
       }
    }
    else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlSaveFd( mxml_node_t * node, * int fd, * mxml_save_cb_t cb ) */
+
+HB_FUNC( MXMLSAVEFD )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node && HB_ISNUM( 2 ) )
+   {
+      mxml_save_cb_t    cb = MXML_NO_CALLBACK;
+      HB_SAVE_CB_VAR *  pSave_cb = ( HB_SAVE_CB_VAR * ) hb_stackGetTSD( &s_save_cb_var );
+
+      if( HB_ISSYMBOL( 3 ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
+
+         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+         {
+            pSave_cb->save_cb = pDynSym;
+            cb = save_cb;
+         }
+      }
+      hb_retni( mxmlSaveFd( node, hb_parnint( 2 ), cb ) );
+      pSave_cb->save_cb = NULL;
+   }
+   else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
@@ -1139,7 +1284,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
 HB_FUNC( MXMLSAVESTRING )
 {
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t *  node = mxml_node_param( 1 );
    PHB_ITEM       pBuffer = hb_param( 2, HB_IT_STRING );
 
    if( node )
@@ -1185,14 +1330,14 @@ HB_FUNC( MXMLSAVESTRING )
          hb_retni( -3 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* int mxmlSetCDATA( mxml_node_t * node, const char * data ) */
 
 HB_FUNC( MXMLSETCDATA )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -1203,14 +1348,14 @@ HB_FUNC( MXMLSETCDATA )
       hb_strfree( hData );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* int mxmlSetElement( mxml_node_t * node, const char * name ) */
 
 HB_FUNC( MXMLSETELEMENT )
 {
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -1221,110 +1366,7 @@ HB_FUNC( MXMLSETELEMENT )
       hb_strfree( hFree );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlSetInteger( mxml_node_t * node, int integer ) */
-
-HB_FUNC( MXMLSETINTEGER )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retni( mxmlSetInteger( node, hb_parnidef( 2, 0 ) ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlSetOpaque( mxml_node_t * node, const char * opaque ) */
-
-HB_FUNC( MXMLSETOPAQUE )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      void * hOpaque;
-
-      hb_retni( mxmlSetOpaque( node, hb_parstr_utf8( 2, &hOpaque, NULL ) ) );
-
-      hb_strfree( hOpaque );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlSetReal( mxml_node_t * node, double real ) */
-
-HB_FUNC( MXMLSETREAL )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-      hb_retni( mxmlSetReal( node, hb_parnd( 2 ) ) );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* int mxmlSetText( mxml_node_t * node, int whitespace, const char * string ) */
-
-HB_FUNC( MXMLSETTEXT )
-{
-   mxml_node_t * node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-
-   if( node )
-   {
-      void * hString;
-
-      hb_retni( mxmlSetText( node, hb_parnidef( 2, 1 ), hb_parstr_utf8( 3, &hString, NULL ) ) );
-
-      hb_strfree( hString );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* void mxmlSetWrapMargin( int column ) */
-
-HB_FUNC( MXMLSETWRAPMARGIN )
-{
-   mxmlSetWrapMargin( hb_parni( 1 ) );
-}
-
-/* mxml_node_t * mxmlWalkNext( mxml_node_t * node, mxml_node_t * top, int descend ) */
-
-HB_FUNC( MXMLWALKNEXT )
-{
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-   mxml_node_t *  top = ( mxml_node_t * ) hb_mxml_node_param( 2 );
-
-   if( node && top )
-   {
-      mxml_node_t * node_next = mxmlWalkNext( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
-
-      if( node_next )
-         hb_mxml_node_ret( node_next );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* mxml_node_t * mxmlWalkPrev( mxml_node_t * node, mxml_node_t * top, int descend ) */
-
-HB_FUNC( MXMLWALKPREV )
-{
-   mxml_node_t *  node = ( mxml_node_t * ) hb_mxml_node_param( 1 );
-   mxml_node_t *  top = ( mxml_node_t * ) hb_mxml_node_param( 2 );
-
-   if( node && top )
-   {
-      mxml_node_t * node_prev = mxmlWalkPrev( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
-
-      if( node_prev )
-         hb_mxml_node_ret( node_prev );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* ================ void ( *mxml_error_cb_t )( const char * ) =================== */
@@ -1369,4 +1411,124 @@ HB_FUNC( MXMLSETERRORCALLBACK )
          mxmlSetErrorCallback( NULL );
       }
    }
+}
+
+/* int mxmlSetInteger( mxml_node_t * node, int integer ) */
+
+HB_FUNC( MXMLSETINTEGER )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retni( mxmlSetInteger( node, hb_parnidef( 2, 0 ) ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlSetOpaque( mxml_node_t * node, const char * opaque ) */
+
+HB_FUNC( MXMLSETOPAQUE )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      void * hOpaque;
+
+      hb_retni( mxmlSetOpaque( node, hb_parstr_utf8( 2, &hOpaque, NULL ) ) );
+
+      hb_strfree( hOpaque );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlSetReal( mxml_node_t * node, double real ) */
+
+HB_FUNC( MXMLSETREAL )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      hb_retni( mxmlSetReal( node, hb_parnd( 2 ) ) );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlSetText( mxml_node_t * node, int whitespace, const char * string ) */
+
+HB_FUNC( MXMLSETTEXT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      void * hString;
+
+      hb_retni( mxmlSetText( node, hb_parnidef( 2, 1 ), hb_parstr_utf8( 3, &hString, NULL ) ) );
+
+      hb_strfree( hString );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* int mxmlSetUserData(mxml_node_t * node, void * data ) */
+
+HB_FUNC( MXMLSETUSERDATA )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+
+      if( pItem )
+         hb_retni( mxmlSetUserData( node, pItem ) );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* void mxmlSetWrapMargin( int column ) */
+
+HB_FUNC( MXMLSETWRAPMARGIN )
+{
+   mxmlSetWrapMargin( hb_parni( 1 ) );
+}
+
+/* mxml_node_t * mxmlWalkNext( mxml_node_t * node, mxml_node_t * top, int descend ) */
+
+HB_FUNC( MXMLWALKNEXT )
+{
+   mxml_node_t *  node = mxml_node_param( 1 );
+   mxml_node_t *  top = mxml_node_param( 2 );
+
+   if( node && top )
+   {
+      mxml_node_t * node_next = mxmlWalkNext( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
+
+      if( node_next )
+         mxml_node_ret( node_next, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* mxml_node_t * mxmlWalkPrev( mxml_node_t * node, mxml_node_t * top, int descend ) */
+
+HB_FUNC( MXMLWALKPREV )
+{
+   mxml_node_t *  node = mxml_node_param( 1 );
+   mxml_node_t *  top = mxml_node_param( 2 );
+
+   if( node && top )
+   {
+      mxml_node_t * node_prev = mxmlWalkPrev( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
+
+      if( node_prev )
+         mxml_node_ret( node_prev, 0 );
+   }
+   else
+      MXML_ERR_ARGS;
 }

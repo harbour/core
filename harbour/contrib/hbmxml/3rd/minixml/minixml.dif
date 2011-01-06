@@ -1,6 +1,6 @@
-diff -urN E:/minixml/minixml.orig/mxml_ent.c E:/minixml/minixml/mxml_ent.c
---- E:/minixml/minixml.orig/mxml_ent.c	2010-09-23 18:43:55 +0000
-+++ E:/minixml/minixml/mxml_ent.c	2011-01-03 12:18:47 +0000
+diff -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
+--- minixml.orig/mxml_ent.c	2010-09-23 18:43:55 +0000
++++ minixml/mxml_ent.c	2011-01-03 12:18:47 +0000
 @@ -30,7 +30,7 @@
   * Include necessary headers...
   */
@@ -10,9 +10,9 @@ diff -urN E:/minixml/minixml.orig/mxml_ent.c E:/minixml/minixml/mxml_ent.c
  
  
  /*
-diff -urN E:/minixml/minixml.orig/mxml_fil.c E:/minixml/minixml/mxml_fil.c
---- E:/minixml/minixml.orig/mxml_fil.c	2010-09-23 18:43:54 +0000
-+++ E:/minixml/minixml/mxml_fil.c	2011-01-03 12:18:52 +0000
+diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
+--- minixml.orig/mxml_fil.c	2010-09-23 18:43:54 +0000
++++ minixml/mxml_fil.c	2011-01-03 12:18:52 +0000
 @@ -56,7 +56,7 @@
  #ifndef WIN32
  #  include <unistd.h>
@@ -22,9 +22,9 @@ diff -urN E:/minixml/minixml.orig/mxml_fil.c E:/minixml/minixml/mxml_fil.c
  
  
  /*
-diff -urN E:/minixml/minixml.orig/mxml_pri.c E:/minixml/minixml/mxml_pri.c
---- E:/minixml/minixml.orig/mxml_pri.c	2010-11-13 15:14:56 +0000
-+++ E:/minixml/minixml/mxml_pri.c	2011-01-03 12:18:37 +0000
+diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
+--- minixml.orig/mxml_pri.c	2010-11-13 15:14:56 +0000
++++ minixml/mxml_pri.c	2011-01-03 12:18:37 +0000
 @@ -1,5 +1,5 @@
  /*
 - * "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $"
@@ -48,9 +48,9 @@ diff -urN E:/minixml/minixml.orig/mxml_pri.c E:/minixml/minixml/mxml_pri.c
 - * End of "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $".
 + * End of "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $".
   */
-diff -urN E:/minixml/minixml.orig/mxml_pri.h E:/minixml/minixml/mxml_pri.h
---- E:/minixml/minixml.orig/mxml_pri.h	2010-09-23 18:43:54 +0000
-+++ E:/minixml/minixml/mxml_pri.h	2011-01-03 12:19:04 +0000
+diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
+--- minixml.orig/mxml_pri.h	2010-09-23 18:43:54 +0000
++++ minixml/mxml_pri.h	2011-01-03 12:19:04 +0000
 @@ -1,5 +1,5 @@
  /*
 - * "$Id: mxml-private.h 408 2010-09-19 05:26:46Z mike $"
