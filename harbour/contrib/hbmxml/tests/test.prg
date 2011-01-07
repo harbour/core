@@ -14,6 +14,8 @@ FUNCTION main( cFile )
    LOCAL nType, i, nLen
    LOCAL cBuffer
    LOCAL wt := 1
+   LOCAL nFile
+   LOCAL tmp
 
    OutStd( hb_mxmlVersion(), hb_eol() )
 
@@ -408,18 +410,28 @@ FUNCTION main( cFile )
    IF ( mxmlSaveString( tree, @cBuffer, @whitespace_cb() ) > 0 )
       hb_memoWrit( "test2.xml", cBuffer + hb_eol() )
    ENDIF
-   OutStd( cBuffer + hb_eol() )
 
+   OutStd( cBuffer + hb_eol() )
    mxmlDelete( tree )
 
    cBuffer := mxmlSaveAllocString( node, 0 ) 
    IF Len( cBuffer ) > 0
       hb_memoWrit( "test3.xml", cBuffer + hb_eol() )
    ENDIF
- 
-   OutStd( mxmlSetUserData( node, wt ), hb_eol()  )
-   OutStd( mxmlGetUserData( node ), hb_eol() )
+   
+   IF mxmlSaveFile( node, "test4.xml" ) < 0
+      OutErr( "ERROR: Can't execute mxmlSaveFile()!", hb_eol() )
+   ENDIF
 
+   tmp := mxmlNewXML()
+   mxmlSaveFile( mxmlLoadFile( tmp, "test4.xml", @type_cb() ), ;
+                 "test5.xml", @whitespace_cb() )
+   tmp := NIL
+
+   IF mxmlSetUserData( node, wt ) > -1
+      OutStd( mxmlGetUserData( node ), hb_eol() )
+   ENDIF
+   
    mxmlDelete( node )
 
    OutStd( "--- The End! ---", hb_eol() )
