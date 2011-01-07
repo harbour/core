@@ -516,6 +516,7 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
 {
    char * cFlags;
    HB_U32 ulFlags = HB_VMFLAG_HARBOUR;
+   int iHandles;
 
    if( hb_cmdargCheck( "INFO" ) )
    {
@@ -547,6 +548,18 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
 
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
+
+   iHandles = hb_cmdargNum( "F" );
+   if( iHandles > 20 )
+   {
+      #if defined( __WATCOMC__ )
+         #if defined(HB_OS_OS2)
+            DosSetMaxFH( iHandles );
+         #elif defined(HB_OS_DOS)
+            _grow_handles( iHandles );
+         #endif
+      #endif
+   }
 
    if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL )
    {
