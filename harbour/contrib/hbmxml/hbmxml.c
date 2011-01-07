@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    MINIXML functions wrapper
  *
- * Copyright 2010 Petr Chornyj <myorg63@mail.ru>
+ * Copyright 2010-2011 Petr Chornyj <myorg63@mail.ru>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -241,20 +241,17 @@ HB_FUNC( HB_MXMLVERSION )
 /* ======================== MXML_... wrapper funcs ============================== */
 
 /*
- * h mxmlElementSetAttrf
  * - mxmlEntityAddCallback
  * - mxmlEntityRemoveCallback
  * - mxmlGetCustom
  * - mxmlLoadFd
  * - mxmlNewCustom
- * h mxmlNewTextf
  * - mxmlSAXLoadFd
  * - mxmlSAXLoadFile
  * - mxmlSAXLoadString
  * - mxmlSaveFd
  * - mxmlSetCustom
  * - mxmlSetCustomHandlers
- * h mxmlSetTextf
  */
 
 /* void mxmlAdd( mxml_node_t * parent, int where, mxml_node_t * child, mxml_node_t * node ) */
@@ -742,7 +739,6 @@ static mxml_type_t type_cb( mxml_node_t * node )
          int      iResult;
          PHB_ITEM pNode = hb_itemNew( NULL );
 
-         mxmlRetain( node );
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushDynSym( pSym );
@@ -814,10 +810,12 @@ HB_FUNC( MXMLLOADFILE )
 
    file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "r" );
    if( file )
+   {
       node = mxmlLoadFile( node_top, file, cb );
 
-   if( node )
-      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
+      if( node )
+         mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
+   }
 
    pType_cb->type_cb = NULL;
    hb_strfree( hFree );
@@ -1150,7 +1148,6 @@ static const char * save_cb( mxml_node_t * node, int where )
 
          const char *   pszResult;
 
-         mxmlRetain( node );
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushDynSym( pSym );

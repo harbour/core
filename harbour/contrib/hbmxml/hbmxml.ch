@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    MINIXML functions wrapper
  *
- * Copyright 2010 Petr Chornyj <myorg63@mail.ru>
+ * Copyright 2010-2011 Petr Chornyj <myorg63@mail.ru>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
