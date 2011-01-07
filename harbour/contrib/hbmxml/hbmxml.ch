@@ -86,4 +86,11 @@
 #define MXML_ADD_AFTER          1   /* Add node after specified node */
 #define MXML_ADD_TO_PARENT      NIL /* Add node relative to parent */
 
+#define MXML_SAX_CDATA          1
+#define MXML_SAX_COMMENT        2
+#define MXML_SAX_DATA           3
+#define MXML_SAX_DIRECTIVE      4
+#define MXML_SAX_ELEMENT_CLOSE  5
+#define MXML_SAX_ELEMENT_OPEN   6
+
 #endif /* HBMXML_CH_ */

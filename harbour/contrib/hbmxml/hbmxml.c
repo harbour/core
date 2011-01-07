@@ -85,6 +85,11 @@ typedef struct
 
 typedef struct
 {
+   PHB_DYNS sax_cb;
+} HB_SAX_CB_VAR;
+
+typedef struct
+{
    PHB_DYNS error_cb;
 } HB_ERROR_CB_VAR;
 
@@ -102,6 +107,13 @@ static void hb_save_cb_var_init( void * cargo )
    pSave_cb->save_cb = NULL;
 }
 
+static void hb_sax_cb_var_init( void * cargo )
+{
+   HB_SAX_CB_VAR * pSax_cb = ( HB_SAX_CB_VAR * ) cargo;
+
+   pSax_cb->sax_cb = NULL;
+}
+
 static void hb_error_cb_var_init( void * cargo )
 {
    HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) cargo;
@@ -111,6 +123,7 @@ static void hb_error_cb_var_init( void * cargo )
 
 static HB_TSD_NEW( s_type_cb_var, sizeof( HB_TYPE_CB_VAR ), hb_type_cb_var_init, NULL );
 static HB_TSD_NEW( s_save_cb_var, sizeof( HB_SAVE_CB_VAR ), hb_save_cb_var_init, NULL );
+static HB_TSD_NEW( s_sax_cb_var, sizeof( HB_SAX_CB_VAR ), hb_sax_cb_var_init, NULL );
 static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init, NULL );
 
 /* ========================= mxml_node_t * support ============================== */
@@ -247,7 +260,6 @@ HB_FUNC( HB_MXMLVERSION )
  * - mxmlLoadFd
  * - mxmlNewCustom
  * - mxmlSAXLoadFd
- * - mxmlSAXLoadFile
  * - mxmlSAXLoadString
  * - mxmlSaveFd
  * - mxmlSetCustom
@@ -1129,6 +1141,128 @@ HB_FUNC( MXMLRETAIN )
       hb_retni( mxmlRetain( node ) );
    else
       MXML_ERR_ARGS;
+}
+
+/* ======= void (*mxml_sax_cb_t)(mxml_node_t *, mxml_sax_event_t, void *)======== */
+
+static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
+{
+   HB_SAX_CB_VAR * pSax_cb = ( HB_SAX_CB_VAR * ) hb_stackGetTSD( &s_sax_cb_var );
+
+   if( node != NULL && pSax_cb != NULL )
+   {
+      PHB_DYNS pSym = pSax_cb->sax_cb;
+
+      if( pSym && hb_vmRequestReenter() )
+      {
+         PHB_ITEM  pNode = hb_itemNew( NULL );
+         HB_USHORT uPCount = 2;
+
+         hbmxml_node_ItemPut( pNode, node, 0 );
+
+         hb_vmPushDynSym( pSym );
+         hb_vmPushNil();
+         hb_vmPushItemRef( pNode );
+         hb_vmPushInteger( ( int ) ( event + 1 ) );
+
+         if( data != NULL )
+         {
+            hb_vmPush( ( PHB_ITEM ) data );
+            uPCount += 1; 
+         }
+         hb_vmProc( uPCount );
+
+         hb_itemRelease( pNode );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
+/* 
+   mxml_node_t * mxmlSAXLoadFile( mxml_node_t * top,
+                                  FILE * fp,
+                                  mxml_load_cb_t cb,
+                                  mxml_sax_cb_t sax_cb,
+                                  void * sax_data )
+ */
+
+HB_FUNC( MXMLSAXLOADFILE )
+{
+   void *            hFree;
+   mxml_node_t *     node_top;
+   mxml_node_t *     node;
+   mxml_load_cb_t    cb = MXML_NO_CALLBACK;
+   mxml_sax_cb_t     cb_sax = MXML_NO_CALLBACK;
+   PHB_ITEM          pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL; 
+   HB_TYPE_CB_VAR *  pType_cb = ( HB_TYPE_CB_VAR * ) hb_stackGetTSD( &s_type_cb_var );
+   HB_SAX_CB_VAR *   pSax_cb = ( HB_SAX_CB_VAR * ) hb_stackGetTSD( &s_sax_cb_var );
+   FILE *            file; 
+
+   if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
+   {
+      node_top = MXML_NO_PARENT;
+   }
+   else
+   {
+      node_top = mxml_node_param( 1 );
+
+      if( ! node_top )
+      {
+         MXML_ERR_ARGS;
+         return;
+      }
+   }
+
+   if( HB_ISSYMBOL( 3 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
+
+      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+      {
+         pType_cb->type_cb = pDynSym;
+         cb = type_cb;
+      }
+   }
+   else if( HB_ISNUM( 3 ) )
+   {
+      switch( hb_parni( 3 ) )
+      {
+      case 0:  cb = MXML_NO_CALLBACK;       break;
+      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+      case 3:  cb = MXML_REAL_CALLBACK;     break;
+      case 4:  cb = MXML_TEXT_CALLBACK;     break;
+      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+      default: cb = MXML_NO_CALLBACK;
+      }
+   }
+
+   if( HB_ISSYMBOL( 4 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 4, HB_IT_SYMBOL ) ) );
+
+      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+      {
+         pSax_cb->sax_cb = pDynSym;
+         cb_sax = sax_cb;
+      }
+   }
+
+   file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb+" );
+   if( file )
+   {
+      node = mxmlSAXLoadFile( node_top, file, cb, cb_sax, pData );
+
+      if( node != NULL )
+         mxml_node_ret( node, ( node_top != NULL ) ? 1 : 0 );
+
+      fclose( file );
+   }
+
+   pType_cb->type_cb = NULL;
+   pSax_cb->sax_cb = NULL;
+
+   hb_strfree( hFree );
 }
 
 /* ============ const char *(*mxml_save_cb_t)(mxml_node_t *, int) =============== */

@@ -6,16 +6,16 @@
 #include "fileio.ch"
 #include "hbinkey.ch"
 
+STATIC event_counts
+
 FUNCTION main( cFile )
 
    LOCAL tree
-   LOCAL node
+   LOCAL node, tmpnode
    LOCAL index
-   LOCAL nType, i, nLen
+   LOCAL nType, nLen, nFile
    LOCAL cBuffer
-   LOCAL wt := 1
-   LOCAL nFile
-   LOCAL tmp
+   LOCAL whitespace := 1
 
    OutStd( hb_mxmlVersion(), hb_eol() )
 
@@ -155,7 +155,7 @@ FUNCTION main( cFile )
 
       RETURN -1
 
-   ELSEIF mxmlGetText( node, @wt ) != "text" .or. wt != 1
+   ELSEIF mxmlGetText( node, @whitespace ) != "text" .or. whitespace != 1
       OutErr( "ERROR: Fourth child value is ", mxmlGetText( node ), ", expected 'text'!" )
       mxmlDelete( tree )
 
@@ -404,8 +404,8 @@ FUNCTION main( cFile )
    */
 
    cBuffer := ""
-   nLen := mxmlSaveString( tree, @cBuffer, @whitespace_cb() )
-   cBuffer := Space( abs( nLen ) )
+   i := mxmlSaveString( tree, @cBuffer, @whitespace_cb() )
+   cBuffer := Space( abs( i ) )
 
    IF ( mxmlSaveString( tree, @cBuffer, @whitespace_cb() ) > 0 )
       hb_memoWrit( "test2.xml", cBuffer + hb_eol() )
@@ -423,16 +423,60 @@ FUNCTION main( cFile )
       OutErr( "ERROR: Can't execute mxmlSaveFile()!", hb_eol() )
    ENDIF
 
-   tmp := mxmlNewXML()
-   mxmlSaveFile( mxmlLoadFile( tmp, "test4.xml", @type_cb() ), ;
+   tmpnode := mxmlNewXML()
+   mxmlSaveFile( mxmlLoadFile( tmpnode, "test4.xml", @type_cb() ), ;
                  "test5.xml", @whitespace_cb() )
-   tmp := NIL
+   tmpnode := NIL
 
-   IF mxmlSetUserData( node, wt ) > -1
+   IF mxmlSetUserData( node, whitespace ) > -1
       OutStd( mxmlGetUserData( node ), hb_eol() )
    ENDIF
    
    mxmlDelete( node )
+
+ /*
+  * Test SAX methods...
+  */
+
+   event_counts := Array( 6 ) ; AFill( event_counts, 0 )
+
+   mxmlSAXLoadFile( NIL, "test.xml", @type_cb(), @sax_cb() )
+
+   IF event_counts[ MXML_SAX_CDATA ] != 1
+      OutErr( hb_strFormat( e"MXML_SAX_CDATA seen %d times, expected 1 times!\n", ;
+                            event_counts[ MXML_SAX_CDATA ] ) )
+      RETURN -6
+   ENDIF   
+
+   IF event_counts[ MXML_SAX_COMMENT ] != 1
+      OutErr( hb_strFormat( e"MXML_SAX_COMMENT seen %d times, expected 1 times!\n", ;
+                            event_counts[ MXML_SAX_COMMENT ] ) )
+      RETURN -6
+   ENDIF   
+
+   IF event_counts[ MXML_SAX_DATA ] != 61
+      OutErr( hb_strFormat( e"MXML_SAX_DATA seen %d times, expected 61 times!\n", ;
+                            event_counts[ MXML_SAX_DATA ] ) )
+      RETURN -6
+   ENDIF   
+
+   IF event_counts[ MXML_SAX_DIRECTIVE ] != 1
+      OutErr( hb_strFormat( e"MXML_SAX_DIRECTIVE seen %d times, expected 1 times!\n", ;
+                            event_counts[ MXML_SAX_DIRECTIVE ] ) )
+      RETURN -6
+   ENDIF   
+
+   IF event_counts[ MXML_SAX_ELEMENT_CLOSE ] != 20
+      OutErr( hb_strFormat( e"MXML_SAX_ELEMENT_CLOSE seen %d times, expected 20 times!\n", ;
+                            event_counts[ MXML_SAX_ELEMENT_CLOSE ] ) )
+      RETURN -6
+   ENDIF   
+
+   IF event_counts[ MXML_SAX_ELEMENT_OPEN ] != 20
+      OutErr( hb_strFormat( e"MXML_SAX_ELEMENT_OPEN seen %d times, expected 20 times!\n", ;
+                            event_counts[ MXML_SAX_ELEMENT_OPEN ] ) )
+      RETURN -6
+   ENDIF   
 
    OutStd( "--- The End! ---", hb_eol() )
 
@@ -576,4 +620,13 @@ FUNCTION whitespace_cb( node, where )
    /* Return NIL for no added whitespace... */
 
    RETURN NIL
- 
+
+PROCEDURE sax_cb( node, sax_event, user_data )
+
+   //mxmlRetain( node )
+
+   HB_SYMBOL_UNUSED( user_data )
+
+   event_counts[ sax_event ] += 1
+
+   RETURN

@@ -1,6 +1,6 @@
-#
-# $Id$
-#
+/*
+ * $Id$
+ */
 
 /*
  * Configuration file for Mini-XML, a small XML-like file parsing library.
