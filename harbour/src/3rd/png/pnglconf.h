@@ -22,7 +22,11 @@
 #define PNG_QUANTIZE_RED_BITS 5
 #define PNG_USER_WIDTH_MAX 1000000L
 #define PNG_QUANTIZE_GREEN_BITS 5
-#define PNG_API_RULE 0
+#if defined( __WATCOMC__ )
+#  define PNG_API_RULE 2
+#else
+#  define PNG_API_RULE 0
+#endif
 #define PNG_QUANTIZE_BLUE_BITS 5
 #define PNG_USER_CHUNK_CACHE_MAX 0
 #define PNG_USER_HEIGHT_MAX 1000000L

@@ -59,12 +59,7 @@
  *                           ... )
  */
 FUNCTION mxmlElementSetAttrf( hNode, cName, cFormat, ... )
-
-   LOCAL cValue
-
-   cValue := hb_strFormat( cFormat, ... )
-
-   RETURN mxmlElementSetAttr( hNode, cName, cValue )
+   RETURN mxmlElementSetAttr( hNode, cName, hb_strFormat( cFormat, ... ) )
 
 /*
  * void mxmlNewTextf( mxml_node_t * node,
@@ -73,12 +68,7 @@ FUNCTION mxmlElementSetAttrf( hNode, cName, cFormat, ... )
  *                    ... )
  */
 FUNCTION mxmlNewTextf( hNode, nWhitespace, cFormat, ... )
-
-   LOCAL cText
-
-   cText := hb_strFormat( cFormat, ... )
-
-   RETURN mxmlNewText( hNode, nWhitespace, cText )
+   RETURN mxmlNewText( hNode, nWhitespace, hb_strFormat( cFormat, ... ) )
 
 /*
  * int mxmlSetTextf( mxml_node_t * node,
@@ -87,9 +77,4 @@ FUNCTION mxmlNewTextf( hNode, nWhitespace, cFormat, ... )
  *                   ... )
  */
 FUNCTION mxmlSetTextf( hNode, nWhitespace, cFormat, ... )
-
-   LOCAL cText
-
-   cText := hb_strFormat( cFormat, ... )
-
-   RETURN mxmlSetText( hNode, nWhitespace, cText )
+   RETURN mxmlSetText( hNode, nWhitespace, hb_strFormat( cFormat, ... ) )
