@@ -1986,7 +1986,7 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsTruncAt(%p, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset));
 
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
@@ -3188,7 +3188,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pFilename, const char * pDefExt,
       {
          /* truncate the file only if properly locked */
          hb_fsSeek( hFile, 0, FS_SET );
-         hb_fsWrite( hFile, NULL, 0 );
+         hb_fsTruncAt( hFile, 0 );
          if( hb_fsError() != 0 )
          {
             hb_fsClose( hFile );
