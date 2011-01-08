@@ -142,8 +142,10 @@ FUNCTION hbxbp_ClearEventBuffer()
 FUNCTION hbxbp_SetEventLoop( oELoop )
    LOCAL oLoop := t_oEventLoop
 
-   IF hb_isObject( oELoop )
-      t_oEventLoop := oELoop
+   IF PCount() == 1
+      IF hb_isObject( oELoop ) .OR. oELoop == NIL
+         t_oEventLoop := oELoop
+      ENDIF
    ENDIF
 
    RETURN oLoop

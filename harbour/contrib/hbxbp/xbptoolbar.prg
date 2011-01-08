@@ -214,7 +214,7 @@ METHOD XbpToolbar:destroy()
          oBtn := aItem[ 2 ]
          aItem := NIL
 
-         ::disConnect( oBtn:oAction, "triggered(bool)" )
+         oBtn:oAction:disConnect( "triggered(bool)" )
 
          oBtn:oAction := NIL
       ELSE
