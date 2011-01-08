@@ -72,13 +72,14 @@ else
 endif
 
 # ORIGIN http://www.libpng.org/pub/png/libpng.html
-# VER    1.4.5
-# URL    http://sourceforge.net/projects/libpng/files/libpng14/1.4.5/lpng145.zip/download
+# VER    1.5.0
+# URL    http://prdownloads.sourceforge.net/libpng/libpng-1.5.0.tar.gz?download
 # DIFF
 #
 # MAP    LICENSE
 # MAP    png.c
 # MAP    pngconf.h
+# MAP    scripts/pnglibconf.h.prebuilt           pnglconf.h
 # MAP    pngerror.c
 # MAP    pngget.c
 # MAP    png.h
@@ -95,3 +96,6 @@ endif
 # MAP    pngwrite.c
 # MAP    pngwtran.c
 # MAP    pngwutil.c
+# MAP    pnginfo.h
+# MAP    pngstruct.h                             pngstru.h
+# MAP    pngdebug.h
