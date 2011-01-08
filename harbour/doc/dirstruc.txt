@@ -76,6 +76,8 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +-imgs_out  - Output directory used by the test program.
 |   |
+|   +---hbformat        - Harbour Source Formatter utility.
+|   |
 |   +---hbgd            - HBGD wrapper for gdLibrary.
 |   |   |
 |   |   +---doc         - Help and license files.
@@ -384,8 +386,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---rddtest         - RDD tests.
 |
 +---utils               - Utilities and tools that are part of Harbour.
-    |
-    +---hbformat        - Harbour Source Formatter utility.
     |
     +---hbi18n          - Harbour i18n .pot/.hbl file manager.
     |
