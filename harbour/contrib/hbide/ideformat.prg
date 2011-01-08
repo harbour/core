@@ -138,7 +138,7 @@ METHOD IdeFormat:show()
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::qEdit, "Pritpal's Favourite" )
 
-      ::oFormat := HbCodeFormat():new()
+      ::oFormat := HbFormatCode():new()
    ENDIF
 
    ::lSelOnly := .f.
@@ -191,4 +191,3 @@ METHOD IdeFormat:execEvent( cEvent, p )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

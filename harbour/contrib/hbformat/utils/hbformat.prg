@@ -77,7 +77,7 @@ FUNCTION MAIN( ... )
       ENDIF
    NEXT
 
-   oRef := hbFormatCode():New( aParams, hb_ArgV( 0 ) )
+   oRef := hbFormatCode():New( aParams, hb_FNameMerge( hb_dirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
       ? "Initialization error", oRef:nErr, Iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr
       RETURN Nil

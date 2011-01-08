@@ -54,9 +54,15 @@
 
 #include "common.ch"
 
+#define RF_STATE_FUNC   1
+#define RF_STATE_VAR    2
+#define RF_STATE_CODE   3
+#define RF_STATE_RET    4
+
+/* TOFIX: Do not use PRIVATE vars in a class */
 MEMVAR cFunctions
 
-CLASS HBFORMATCODE
+CREATE CLASS HBFORMATCODE
 
    DATA cEol
    DATA nLineErr, nErr, cLineErr
@@ -96,9 +102,13 @@ CLASS HBFORMATCODE
    DATA cCommands      INIT  ","
    DATA cClauses       INIT  ","
    DATA cFunctions     INIT  ","
-   DATA aContr INIT { { "if","","elseif","endif" }, { "do","while","","enddo" }, ;
-      { "while", "", "", "enddo" }, { "for", "", "", "next" }, { "do", "case", "case", "endcase" }, ;
-      { "begin", "sequence", "recover", "end" }, { "switch", "", "case", "end" } }
+   DATA aContr         INIT { { "if","","elseif","endif" },;
+                              { "do","while","","enddo" }, ;
+                              { "while", "", "", "enddo" },;
+                              { "for", "", "", "next" },;
+                              { "do", "case", "case", "endcase" }, ;
+                              { "begin", "sequence", "recover", "end" },;
+                              { "switch", "", "case", "end" } }
 
    DATA   bCallback
 
@@ -120,23 +130,23 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    LOCAL i, cParam
 
    ::nErr := 0
-   cIniName := Iif( ( i := Rat( "\", cIniName ) ) = 0, ;
-      Iif( ( i := Rat( "/", cIniName ) ) = 0, "", Left( cIniName, i ) ), ;
-      Left( cIniName, i ) ) + "hbformat.ini"
-   IF !::ReadIni( cIniName )
-      RETURN Self
-   ENDIF
-   FOR i := 1 TO Len( aParams )
-      IF Left( cParam := aParams[i], 1 ) == "@"
-         IF !::ReadIni( SubStr( cParam,2 ) )
-            RETURN Self
-         ENDIF
-      ELSEIF Left( cParam, 1 ) $ "-/"
-         IF !::SetOption( SubStr( cParam,2 ), 0 )
-            RETURN Self
-         ENDIF
+
+   IF hb_isString( cIniName )
+      IF !::ReadIni( cIniName )
+         RETURN Self
       ENDIF
-   NEXT
+      FOR i := 1 TO Len( aParams )
+         IF Left( cParam := aParams[i], 1 ) == "@"
+            IF !::ReadIni( SubStr( cParam,2 ) )
+               RETURN Self
+            ENDIF
+         ELSEIF Left( cParam, 1 ) $ "-/"
+            IF !::SetOption( SubStr( cParam,2 ), 0 )
+               RETURN Self
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
 
    IF Right( ::cCommands, 1 ) != ","
       ::cCommands += ","
@@ -185,14 +195,6 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    ENDIF
 
    RETURN Self
-
-#define RF_STATE_FUNC   1
-
-#define RF_STATE_VAR    2
-
-#define RF_STATE_CODE   3
-
-#define RF_STATE_RET    4
 
 METHOD Reformat( aFile ) CLASS HBFORMATCODE
 
@@ -748,7 +750,7 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
    LOCAL i, nLen, aIni, c
 
    IF hb_FileExists( cIniName )
-      aIni := rf_FileRead( MemoRead( cIniName ) )
+      aIni := __hbformat_FileRead( MemoRead( cIniName ) )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
          IF !Empty( aIni[i] := AllTrim( aIni[i] ) ) .AND. ;
@@ -760,14 +762,14 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
       NEXT
    ENDIF
 
-   RETURN ( ::nErr == 0 )
+   RETURN ::nErr == 0
 
 METHOD File2Array( cFileName ) CLASS HBFORMATCODE
 
    LOCAL aFile, cEol
 
    IF hb_FileExists( cFileName )
-      aFile := rf_FileRead( MemoRead( cFileName ), @cEol )
+      aFile := __hbformat_FileRead( MemoRead( cFileName ), @cEol )
       IF ::nEol < 0
          ::cEol := cEol
       ENDIF

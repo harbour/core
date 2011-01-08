@@ -9,7 +9,6 @@
 -o${hb_name}
 
 hbformat.prg
-hbformac.c
 
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase

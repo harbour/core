@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 
 /* rf_FileRead( cText, @cEol ) */
-HB_FUNC( RF_FILEREAD )
+HB_FUNC( __HBFORMAT_FILEREAD )
 {
    const char * szText = hb_parcx( 1 );
    const char * ptr;
