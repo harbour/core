@@ -62,7 +62,7 @@
 #define XDL_PATCH_REVERSE      ( asc( '+' ) )
 #define XDL_PATCH_MODEMASK     ( hb_bitShift( 1, 8 ) - 1 )
 #define XDL_PATCH_IGNOREBSPACE ( hb_bitShift( 1, 8 ) )
-	
+
 #define XDL_MMB_READONLY       ( hb_bitShift( 1, 0 ) )
 
 #define XDL_MMF_ATOMIC         ( hb_bitShift( 1, 0 ) )

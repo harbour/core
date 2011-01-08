@@ -311,8 +311,8 @@
 #define GREEN                       0x0000FF00
 #define MAGENTA                     0x00FF00FF
 #define ORANGE                      0X000A80FF
-#define PINK  	                    0x00CBC0FF
-#define PURPLE	                    0x00800080
+#define PINK                        0x00CBC0FF
+#define PURPLE                      0x00800080
 #define RED                         0x000000FF
 #define WHITE                       0x00FFFFFF
 #define YELLOW                      0x0000FFFF

@@ -695,8 +695,8 @@ HB_FUNC( ERR_LOAD_BIO_STRINGS )
 
 #if 0
 
-#define BIO_set_url(b,url)	BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,0,(char *)(url))
-#define BIO_set_proxies(b,p)	BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,1,(char *)(p))
+#define BIO_set_url(b,url)    BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,0,(char *)(url))
+#define BIO_set_proxies(b,p)  BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,1,(char *)(p))
 /* BIO_set_nbio(b,n) */
 #define BIO_set_filter_bio(b,s) BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,2,(char *)(s))
 /* BIO *BIO_get_filter_bio(BIO *bio); */
@@ -706,23 +706,23 @@ HB_FUNC( ERR_LOAD_BIO_STRINGS )
 
 #define BIO_get_proxy_header(b,skp) BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,0,(char *)skp)
 #define BIO_get_proxies(b,pxy_p) BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,1,(char *)(pxy_p))
-#define BIO_get_url(b,url)	BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,2,(char *)(url))
-#define BIO_get_no_connect_return(b)	BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,5,NULL)
+#define BIO_get_url(b,url)    BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,2,(char *)(url))
+#define BIO_get_no_connect_return(b)      BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,5,NULL)
 
-#define BIO_set_fp(b,fp,c)	BIO_ctrl(b,BIO_C_SET_FILE_PTR,c,(char *)fp)
-#define BIO_get_fp(b,fpp)	BIO_ctrl(b,BIO_C_GET_FILE_PTR,0,(char *)fpp)
+#define BIO_set_fp(b,fp,c)    BIO_ctrl(b,BIO_C_SET_FILE_PTR,c,(char *)fp)
+#define BIO_get_fp(b,fpp)     BIO_ctrl(b,BIO_C_GET_FILE_PTR,0,(char *)fpp)
 
-int	BIO_indent(BIO *b,int indent,int max);
-long	BIO_ctrl(BIO *bp,int cmd,long larg,void *parg);
-long BIO_callback_ctrl(BIO *b, int cmd, void (*fp)(struct bio_st *, int, const char *, int, long, long));
-char *	BIO_ptr_ctrl(BIO *bp,int cmd,long larg);
-long	BIO_int_ctrl(BIO *bp,int cmd,long larg,int iarg);
-BIO *	BIO_push(BIO *b,BIO *append);
-BIO *	BIO_pop(BIO *b);
-BIO *	BIO_find_type(BIO *b,int bio_type);
-BIO *	BIO_next(BIO *b);
-BIO *	BIO_get_retry_BIO(BIO *bio, int *reason);
-BIO *	BIO_dup_chain(BIO *in);
+int   BIO_indent(BIO *b,int indent,int max);
+long  BIO_ctrl(BIO *bp,int cmd,long larg,void *parg);
+long  BIO_callback_ctrl(BIO *b, int cmd, void (*fp)(struct bio_st *, int, const char *, int, long, long));
+char * BIO_ptr_ctrl(BIO *bp,int cmd,long larg);
+long  BIO_int_ctrl(BIO *bp,int cmd,long larg,int iarg);
+BIO * BIO_push(BIO *b,BIO *append);
+BIO * BIO_pop(BIO *b);
+BIO * BIO_find_type(BIO *b,int bio_type);
+BIO * BIO_next(BIO *b);
+BIO * BIO_get_retry_BIO(BIO *bio, int *reason);
+BIO * BIO_dup_chain(BIO *in);
 
 int BIO_nread0(BIO *bio, char **buf);
 int BIO_nread(BIO *bio, char **buf, int num);
