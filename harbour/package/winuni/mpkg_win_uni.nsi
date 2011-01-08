@@ -356,9 +356,10 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour Project $%HB_VM%\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour Project $%HB_VM%\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour Project $%HB_VM%\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
-!ifndef PKG_NO_IDE
-  CreateShortCut  "$SMPROGRAMS\Harbour Project $%HB_VM%\hbide.lnk" "$INSTDIR\bin\hbide.exe" "" "$INSTDIR\bin\hbide.exe" 0
-!endif
+  ; TOFIX: Only create this shortcut, if 'hb_ide' component was enabled at install time (or when the target filename exists)
+;!ifndef PKG_NO_IDE
+;  CreateShortCut  "$SMPROGRAMS\Harbour Project $%HB_VM%\hbide.lnk" "$INSTDIR\bin\hbide.exe" "" "$INSTDIR\bin\hbide.exe" 0
+;!endif
   CreateDirectory "$SMPROGRAMS\Harbour Project $%HB_VM%\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour Project $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
   WriteINIStr     "$SMPROGRAMS\Harbour Project $%HB_VM%\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"

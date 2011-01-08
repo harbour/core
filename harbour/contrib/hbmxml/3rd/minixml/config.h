@@ -24,7 +24,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "hbdefs.h"
-#include "hb_io.h"    
+#include "hb_io.h"
 
 #if defined ( _MSC_VER )
 #define close      _close

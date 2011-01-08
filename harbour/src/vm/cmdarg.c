@@ -553,9 +553,9 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
    if( iHandles > 20 )
    {
       #if defined( __WATCOMC__ )
-         #if defined(HB_OS_OS2)
+         #if defined( HB_OS_OS2 )
             DosSetMaxFH( iHandles );
-         #elif defined(HB_OS_DOS)
+         #elif defined( HB_OS_DOS )
             _grow_handles( iHandles );
          #endif
       #endif
