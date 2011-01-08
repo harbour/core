@@ -54,167 +54,9 @@
 
 #include "common.ch"
 
-#define rf_FullPath() hb_ArgV( 0 )
-
-#ifndef _CODEFORMAT_EMBEDDED_
-
-ANNOUNCE HB_GTSYS
-REQUEST HB_GT_CGI_DEFAULT
-
 MEMVAR cFunctions
 
-FUNCTION MAIN( ... )
-
-   LOCAL oRef, aParams, cFileName, cInitDir, i, lRecursive := .F.
-
-   // Altd( 2 ); Altd()
-   aParams := hb_AParams()
-
-   IF Empty( aParams ) .OR. ( Left( cFileName := Atail(aParams ), 1 ) $ "@/-" )
-      About()
-      RETURN Nil
-   ENDIF
-
-   FOR i := 1 TO Len( aParams )
-      IF Left( aParams[i], 1 ) $ "-/"
-         IF SubStr( aParams[i], 2 ) == "r"
-            lRecursive := .T.
-            aParams[i] := "#"
-            EXIT
-         ENDIF
-      ENDIF
-   NEXT
-
-   oRef := codeFormat():New( aParams )
-   IF oRef:nErr > 0
-      ? "Initialization error", oRef:nErr, Iif( oRef:nLineErr == 0, "in parameter", "on line " + LTrim( Str(oRef:nLineErr ) ) ), ":", oRef:cLineErr
-      RETURN Nil
-   ENDIF
-
-   oRef:bCallBack := { |a, i|FCallBack( a, i ) }
-
-   IF "*" $ cFileName
-      IF ( i := Rat( ".", cFileName ) ) == 0 .OR. Substr( cFileName,i+1,1 ) < "A"
-         ? "Wrong mask"
-      ELSE
-         cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
-            Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
-            "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
-            Left( cFileName, i ) )
-         cFileName := Iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
-         DirEval( cInitDir, cFileName, lRecursive, { |name|Reformat( oRef,name ) } )
-      ENDIF
-   ELSE
-      Reformat( oRef, cFileName )
-   ENDIF
-   ?
-
-   RETURN Nil
-
-STATIC FUNCTION FCallBack( aFile, nItem )
-
-   LOCAL n := Int( Len( aFile ) / 40 )
-
-   IF nItem % n == 1
-      ?? "."
-   ENDIF
-
-   RETURN Nil
-
-STATIC FUNCTION Reformat( oRef, cFileName )
-
-   LOCAL aFile
-
-   IF !Empty( aFile := oRef:File2Array( cFileName ) )
-      ? "Reformatting " + cFileName
-      ? "<"
-      IF oRef:Reformat( aFile )
-         oRef:Array2File( cFileName, aFile )
-         ?? ">"
-      ELSE
-         ? "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr
-      ENDIF
-   ELSE
-      ? cFileName, "isn't found ..."
-   ENDIF
-
-   RETURN Nil
-
-STATIC FUNCTION CmpMsk( strcmp, mask )
-
-   LOCAL lenm := Len( mask ), i, nPos1 := 1, nPos2, c
-
-   FOR i := 1 TO lenm
-      c := SubStr( mask, i, 1 )
-      IF c == "*"
-         IF i == lenm
-            RETURN .T.
-         ELSE
-            c := SubStr( mask, i + 1, 1 )
-            DO WHILE .T.
-               nPos2 := At( c, SubStr( strcmp, nPos1 ) )
-               IF nPos2 == 0
-                  RETURN .F.
-               ENDIF
-               nPos1 += nPos2 - 1
-               IF CmpMsk( SubStr( strcmp, nPos1 ), SubStr( mask, i + 1 ) )
-                  RETURN .T.
-               ENDIF
-               nPos1 ++
-            ENDDO
-         ENDIF
-      ELSE
-         IF c != SubStr( strcmp, nPos1, 1 )
-            RETURN .F.
-         ENDIF
-         nPos1 ++
-      ENDIF
-   NEXT
-
-   RETURN .T.
-
-FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
-
-   LOCAL i, nLen, aFiles
-
-   IF Right( cInitDir, 1 ) != Set( _SET_DIRSEPARATOR )
-      cInitDir += Set( _SET_DIRSEPARATOR )
-   ENDIF
-   cMask := Iif( cMask == Nil, hb_osFileMask(), Upper( cMask ) )
-
-   aFiles := Directory( cInitDir + hb_osFileMask(), "HSD" )
-   nLen := Len( aFiles )
-   FOR i := 1 TO nLen
-      IF "D" $ aFiles[ i,5 ]
-         IF "." != aFiles[ i,1 ] .AND. ".." != aFiles[ i,1 ] .AND. lRecur
-            DirEval( cInitDir + aFiles[ i,1 ], cMask, lRecur, bCode )
-         ENDIF
-      ELSEIF CmpMsk( Upper( aFiles[ i,1 ] ), cMask )
-         IF bCode != Nil
-            Eval( bCode, cInitDir + aFiles[ i,1 ] )
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN Nil
-
-STATIC FUNCTION About()
-
-   ?? "Harbour Source Formatter " + HBRawVersion()
-   ? "Copyright (c) 2009-2011, Alexander S.Kresin"
-   ? "http://harbour-project.org/"
-   ?
-   ? "Syntax:  hbformat [options] [@config] file[s]"
-   ?
-
-   RETURN Nil
-
-STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour " )
-
-#endif
-
-CLASS CODEFORMAT
+CLASS HBFORMATCODE
 
    DATA cEol
    DATA nLineErr, nErr, cLineErr
@@ -260,7 +102,7 @@ CLASS CODEFORMAT
 
    DATA   bCallback
 
-   METHOD New( aParams )
+   METHOD New( aParams, cIniName )
    METHOD SetOption( cLine, i, aIni )
    METHOD ReadIni( cIniName )
    METHOD Reformat( aFile )
@@ -273,9 +115,9 @@ CLASS CODEFORMAT
 
 ENDCLASS
 
-METHOD New( aParams ) CLASS CODEFORMAT
+METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
 
-   LOCAL i, cParam, cIniName := rf_FullPath()
+   LOCAL i, cParam
 
    ::nErr := 0
    cIniName := Iif( ( i := Rat( "\", cIniName ) ) = 0, ;
@@ -352,7 +194,7 @@ METHOD New( aParams ) CLASS CODEFORMAT
 
 #define RF_STATE_RET    4
 
-METHOD Reformat( aFile ) CLASS CODEFORMAT
+METHOD Reformat( aFile ) CLASS HBFORMATCODE
 
    LOCAL i, iDelta := 0, nLen := Len( aFile ), cToken1, cToken2, nLenToken, nPos
    LOCAL nPosSep, cLine, cLineAll, nLineSegment
@@ -601,7 +443,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
 
 #define FL_STATE_SQBR   12
 
-METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
+METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
 
    LOCAL i, nLen, c, nState := 0, cSymb, cToken, nPos := 1
    LOCAL lFirst, nBegin, nEnd, nB := 0, nA := 0, aBrackets[2]
@@ -771,7 +613,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
 
    RETURN cLine
 
-METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS CODEFORMAT
+METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFORMATCODE
 
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
@@ -798,7 +640,7 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS CODEFORMAT
 
    RETURN .T.
 
-METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS CODEFORMAT
+METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
 
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
@@ -823,7 +665,7 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS CODEFORMAT
 
    RETURN .T.
 
-METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS CODEFORMAT
+METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
 
    LOCAL cBool := ",NOT,AND,OR,F,T,"
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
@@ -848,7 +690,7 @@ METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS CODEFORMAT
 
    RETURN .T.
 
-METHOD SetOption( cLine, i, aIni ) CLASS CODEFORMAT
+METHOD SetOption( cLine, i, aIni ) CLASS HBFORMATCODE
 
    LOCAL nPos, cToken1, cToken2, cTemp, xRes
 
@@ -901,7 +743,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS CODEFORMAT
 
    RETURN ::nErr == 0
 
-METHOD ReadIni( cIniName ) CLASS CODEFORMAT
+METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
 
    LOCAL i, nLen, aIni, c
 
@@ -920,7 +762,7 @@ METHOD ReadIni( cIniName ) CLASS CODEFORMAT
 
    RETURN ( ::nErr == 0 )
 
-METHOD File2Array( cFileName ) CLASS CODEFORMAT
+METHOD File2Array( cFileName ) CLASS HBFORMATCODE
 
    LOCAL aFile, cEol
 
@@ -933,7 +775,7 @@ METHOD File2Array( cFileName ) CLASS CODEFORMAT
 
    RETURN aFile
 
-METHOD Array2File( cFileName, aFile ) CLASS CODEFORMAT
+METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
 
    LOCAL handle, i, nLen := Len( aFile ), cName, cBakName, cPath
 

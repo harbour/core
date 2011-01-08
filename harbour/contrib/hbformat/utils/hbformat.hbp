@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+../hbformat.hbc
+
+-w3 -es2 -l
+
+-o${hb_name}
+
+hbformat.prg
+hbformac.c
+
+-ldflag={allmsvc}-nxcompat
+-ldflag={allmsvc}-dynamicbase
+-ldflag={allmsvc}-fixed:no

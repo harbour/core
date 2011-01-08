@@ -17,6 +17,7 @@ hbexpat/hbexpat.hbp              # uses: expat (locally hosted)
 hbfbird/hbfbird.hbp
 hbfimage/hbfimage.hbp
 hbformat/hbformat.hbp
+hbformat/utils/hbformat.hbp
 hbfoxpro/hbfoxpro.hbp
 hbfship/hbfship.hbp
 hbgd/hbgd.hbp
