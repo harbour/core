@@ -100,6 +100,7 @@ CLASS IdeObject
    ACCESS oRM                                     INLINE ::oIde:oRM
    ACCESS oSetup                                  INLINE ::oIde:oSetup
    ACCESS oINI                                    INLINE ::oIde:oINI
+   ACCESS oFmt                                    INLINE ::oIde:oFmt
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags
@@ -197,6 +198,7 @@ CLASS IdeObject
    ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
    ACCESS oUpDn                                   INLINE ::oIde:oUpDn
    ACCESS oReportsManagerDock                     INLINE ::oIde:oReportsManagerDock
+   ACCESS oFormatDock                             INLINE ::oIde:oFormatDock
    ACCESS oSys                                    INLINE ::oIde:oSys
    ACCESS oSysMenu                                INLINE ::oIde:oSysMenu
 

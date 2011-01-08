@@ -52,6 +52,8 @@ idedict.prg
 idebrowse.prg
 hbqreportsmanager.prg
 hbqtoolbar.prg
+ideformat.prg
+thbformt.prg
 ideparseexpr.c
 
 docviewgenerator.ui
@@ -81,6 +83,7 @@ dbstruct.ui
 fetchdate.ui
 tables.ui
 updown_v.ui
+format.ui
 
 hbide.qrc
 

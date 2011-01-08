@@ -141,13 +141,14 @@ CLASS HbIde
    DATA   oHM                                            /* <Stats> panel manager          */
    DATA   oPM                                            /* Project Manager                */
    DATA   oSM                                            /* Souces Manager                 */
-   DATA   oSK                                            /* Skeletons Managet              */
+   DATA   oSK                                            /* Skeletons Manager              */
    DATA   oSC                                            /* Shortcuts Manager              */
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
    DATA   oRM                                            /* Reports Manager                */
    DATA   oSetup                                         /* Setup Manager                  */
    DATA   oINI                                           /* INI Manager                    */
+   DATA   oFmt                                           /* Code Formatter Manager         */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -242,6 +243,7 @@ CLASS HbIde
    DATA   oQScintillaDock
    DATA   oUpDn
    DATA   oReportsManagerDock
+   DATA   oFormatDock
 
    DATA   qAnimateAction
    DATA   qStatusBarAction
@@ -478,6 +480,9 @@ METHOD HbIde:create( aParams )
    ::oRM := HbqReportsManager():new():create( ::oReportsManagerDock:oWidget )
    ::oReportsManagerDock:oWidget:setWidget( ::oRM:oWidget )
 
+   /* Code Formatter Manager */
+   ::oFmt := IdeFormat():new():create( Self )
+
    /* Fill various elements of the IDE */
    ::oPM:populate()
    ::oSM:loadSources()
@@ -562,7 +567,7 @@ METHOD HbIde:create( aParams )
          EXIT
       ENDIF
 
-      IF nEvent == xbeP_Close
+      IF nEvent == xbeP_Close .AND. oXbp == ::oDlg
          IF hbide_setClose()
             ::oINI:save()
             ::oSM:closeAllSources( .f. /* can not cancel */ )
@@ -704,6 +709,7 @@ METHOD HbIde:execAction( cKey )
       ::oEV:fetchNew()
       EXIT
    CASE "Exit"
+      hbide_setClose( .T. )
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       EXIT
    CASE "Home"

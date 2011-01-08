@@ -2147,6 +2147,7 @@ FUNCTION hbide_getUI( cUI, qParent )
       CASE "dbstruct"            ; RETURN hbqtui_DbStruct( qParent )
       CASE "fetchdate"           ; RETURN hbqtui_FetchDate( qParent )
       CASE "tables"              ; RETURN hbqtui_Tables( qParent )
+      CASE "format"              ; RETURN hbqtui_Format( qParent )
       ENDSWITCH
    ENDIF
 
@@ -2231,7 +2232,7 @@ FUNCTION hbide_synchronizeForHbp( aHbp )
 
 FUNCTION hbide_setClose( lYes )
    LOCAL yes
-   STATIC sYes
+   STATIC sYes := .f.
    yes := sYes
    IF hb_isLogical( lYes )
       sYes := lYes

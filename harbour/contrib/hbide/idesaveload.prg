@@ -926,7 +926,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes" }
+   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting" }
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}

@@ -510,6 +510,7 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2:oWidget:addAction( ::oFormatDock:oWidget:toggleViewAction() )
    oSubMenu2:addItem( { ::getAction( "RemoveTabs"         ), {|| oIde:execAction( "RemoveTabs"         ) } } )
    oSubMenu2:addItem( { ::getAction( "Spaces2Tabs"        ), {|| oIde:execAction( "Spaces2Tabs"        ) } } )
    hbide_menuAddSep( oSubMenu )
