@@ -195,6 +195,14 @@
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
    #endif
+   #if defined( HB_OS_WIN_64 )
+      #if !defined( HB_WIN_IOREAD_LIMIT )
+         #define HB_WIN_IOREAD_LIMIT      HB_U32_MAX
+      #endif
+      #if !defined( HB_WIN_IOWRITE_LIMIT )
+         #define HB_WIN_IOWRITE_LIMIT     HB_U32_MAX
+      #endif
+   #endif
 #endif
 #if defined( HB_USE_SHARELOCKS ) && defined( HB_USE_BSDLOCKS )
    #include <sys/file.h>
@@ -1510,7 +1518,7 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
 
 #if defined( HB_OS_WIN )
    {
-#  if defined( HB_OS_WIN_64 )
+#  if defined( HB_WIN_IOREAD_LIMIT )
       HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       BOOL bResult = TRUE;
 
@@ -1522,9 +1530,9 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
          DWORD dwRead;
 
          /* Determine how much to read this time */
-         if( nCount > ( HB_SIZE ) HB_U32_MAX )
+         if( nCount > ( HB_SIZE ) HB_WIN_IOREAD_LIMIT )
          {
-            dwToRead = HB_U32_MAX;
+            dwToRead = HB_WIN_IOREAD_LIMIT;
             nCount -= ( HB_SIZE ) dwToRead;
          }
          else
@@ -1612,7 +1620,7 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
 
    if( nCount )
    {
-#  if defined( HB_OS_WIN_64 )
+#  if defined( HB_WIN_IOWRITE_LIMIT )
       HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       BOOL bResult = TRUE;
 
@@ -1622,9 +1630,9 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
          DWORD dwWritten;
 
          /* Determine how much to write this time */
-         if( nCount > ( HB_SIZE ) HB_U32_MAX )
+         if( nCount > ( HB_SIZE ) HB_WIN_IOWRITE_LIMIT )
          {
-            dwToWrite = HB_U32_MAX;
+            dwToWrite = HB_WIN_IOWRITE_LIMIT;
             nCount -= ( HB_SIZE ) dwToWrite;
          }
          else
@@ -1732,7 +1740,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 #else
    nRead = 0;
 #  if defined( HB_OS_WIN )
-#     if defined( HB_OS_WIN_64 )
+#     if defined( HB_WIN_IOREAD_LIMIT )
    {
       HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       OVERLAPPED Overlapped;
@@ -1747,9 +1755,9 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
          DWORD dwToRead;
          DWORD dwRead;
 
-         if( nCount > ( HB_SIZE ) HB_U32_MAX )
+         if( nCount > ( HB_SIZE ) HB_WIN_IOREAD_LIMIT )
          {
-            dwToRead = HB_U32_MAX;
+            dwToRead = HB_WIN_IOREAD_LIMIT;
             nCount -= ( HB_SIZE ) dwToRead;
          }
          else
@@ -1863,7 +1871,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
 #else
    nWritten = 0;
 #  if defined( HB_OS_WIN )
-#     if defined( HB_OS_WIN_64 )
+#     if defined( HB_WIN_IOWRITE_LIMIT )
    {
       HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       OVERLAPPED Overlapped;
@@ -1878,9 +1886,9 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
          DWORD dwToWrite;
          DWORD dwWritten;
 
-         if( nCount > ( HB_SIZE ) HB_U32_MAX )
+         if( nCount > ( HB_SIZE ) HB_WIN_IOWRITE_LIMIT )
          {
-            dwToWrite = HB_U32_MAX;
+            dwToWrite = HB_WIN_IOWRITE_LIMIT;
             nCount -= ( HB_SIZE ) dwToWrite;
          }
          else
