@@ -59,9 +59,6 @@
 #define RF_STATE_CODE   3
 #define RF_STATE_RET    4
 
-/* TOFIX: Do not use PRIVATE vars in a class */
-MEMVAR cFunctions
-
 CREATE CLASS HBFORMATCODE
 
    DATA cEol
@@ -203,7 +200,6 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
    LOCAL nContrState, nIndent, nDeep := 0, aDeep := {}
    LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment, lContinue := .F.
    LOCAL nStatePrev, nState := 0
-   PRIVATE cFunctions := Upper( ::cFunctions )
 
    ::nErr := 0
    FOR i := 1 TO nLen
@@ -647,7 +643,7 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
    IF ::lCase .AND. ::nCaseFnc > 0
-      IF ( nPos := At( "," + cToken + ",", m -> cFunctions ) ) != 0
+      IF ( nPos := hb_AtI( "," + cToken + ",", ::cFunctions ) ) != 0
 
          IF ::nCaseFnc > 1
             nPos ++
