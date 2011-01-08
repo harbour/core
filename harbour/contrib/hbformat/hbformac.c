@@ -53,65 +53,65 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-/* rf_FileRead( cText, @cEol ) */
-HB_FUNC( __HBFORMAT_FILEREAD )
+HB_FUNC( __HBFORMAT_FILEREAD ) /* ( cText, @cEol ) */
 {
-   const char * szText = hb_parcx( 1 );
-   const char * ptr;
-   const char * ptr1;
-   unsigned long ul, ulLines = 0;
-   PHB_ITEM arr;
+   const char *   szText = hb_parcx( 1 );
+   const char *   ptr;
+   const char *   ptr1;
+   HB_SIZE        n, nLines = 0;
+   PHB_ITEM       arr;
 
    ptr = szText;
    while( *ptr )
    {
       if( *ptr == '\r' || *ptr == '\n' )
       {
-         if( !ulLines )
-         {
-            hb_storclen( ptr, ( *(ptr+1) == '\r' || *(ptr+1) == '\n' ) ? 2 : 1, 2 );
-         }
-         if( *(ptr+1) == '\r' || *(ptr+1) == '\n' )
-         {
-            ptr ++;
-         }
-         ulLines ++;
+         if( ! nLines )
+            hb_storclen( ptr, ( *( ptr + 1 ) == '\r' || *( ptr + 1 ) == '\n' ) ? 2 : 1, 2 );
+
+         if( *( ptr + 1 ) == '\r' || *( ptr + 1 ) == '\n' )
+            ptr++;
+
+         nLines++;
       }
-      else if( (unsigned int)(*ptr) < 9 )
+      else if( ( unsigned int ) ( *ptr ) < 9 )
       {
          hb_ret();
          return;
       }
-      ptr ++;
+      ptr++;
    }
-   ptr --;
-   if( *ptr != '\r' && *ptr != '\n' )
-      ulLines ++;
 
-   arr = hb_itemArrayNew( ulLines );
+   ptr--;
+
+   if( *ptr != '\r' && *ptr != '\n' )
+      nLines++;
+
+   arr = hb_itemArrayNew( nLines );
 
    ptr = ptr1 = szText;
-   ul = 1;
+   n = 1;
    while( *ptr )
    {
       if( *ptr == '\r' || *ptr == '\n' )
       {
-         hb_arraySetCL( arr, ul, ptr1, ptr - ptr1 );
+         hb_arraySetCL( arr, n, ptr1, ptr - ptr1 );
 
-         if( *(ptr+1) == '\r' || *(ptr+1) == '\n' )
-            ptr ++;
+         if( *( ptr + 1 ) == '\r' || *( ptr + 1 ) == '\n' )
+            ptr++;
 
          ptr1 = ptr + 1;
-         ul ++;
+         n++;
       }
-      ptr ++;
+      ptr++;
    }
 
-   if( ul == ulLines )
+   if( n == nLines )
    {
-      if( *(ptr-1) == 0x1A )
-         ptr --;
-      hb_arraySetCL( arr, ul, ptr1, ptr - ptr1 );
+      if( *( ptr - 1 ) == 0x1A )
+         ptr--;
+
+      hb_arraySetCL( arr, n, ptr1, ptr - ptr1 );
    }
 
    hb_itemReturnRelease( arr );
