@@ -23,6 +23,7 @@
 ../hbxbp/hbxbp.hbc
 ../hbqt/hbqtnetwork.hbc
 ../hbqt/hbqtuitools.hbc
+../hbformat/hbformat.hbc
 
 idemain.prg
 ideobject.prg
@@ -88,5 +89,3 @@ format.ui
 hbide.qrc
 
 -3rd=hbide_file=hbide.ch
-
- 
