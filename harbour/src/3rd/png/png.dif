@@ -1,0 +1,28 @@
+diff -urN png.orig/png.h png/png.h
+--- png.orig/png.h	2011-01-08 14:45:07.826240493 +0100
++++ png/png.h	2011-01-08 14:45:07.826240493 +0100
+@@ -398,7 +398,7 @@
+     /* If pnglibconf.h is missing, you can
+      * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
+      */
+-#   include "pnglibconf.h"
++#   include "pnglconf.h"
+ #endif
+ 
+ #ifndef PNG_VERSION_INFO_ONLY
+diff -urN png.orig/pnglconf.h png/pnglconf.h
+--- png.orig/pnglconf.h	2011-01-08 14:45:07.746241210 +0100
++++ png/pnglconf.h	2011-01-08 14:45:07.746241210 +0100
+@@ -22,7 +22,11 @@
+ #define PNG_QUANTIZE_RED_BITS 5
+ #define PNG_USER_WIDTH_MAX 1000000L
+ #define PNG_QUANTIZE_GREEN_BITS 5
+-#define PNG_API_RULE 0
++#if defined( __WATCOMC__ )
++#  define PNG_API_RULE 2
++#else
++#  define PNG_API_RULE 0
++#endif
+ #define PNG_QUANTIZE_BLUE_BITS 5
+ #define PNG_USER_CHUNK_CACHE_MAX 0
+ #define PNG_USER_HEIGHT_MAX 1000000L

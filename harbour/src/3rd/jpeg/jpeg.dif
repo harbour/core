@@ -1,6 +1,6 @@
 diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
---- jpeg.orig/jmorecfg.h	2010-07-15 17:16:26.470234033 +0200
-+++ jpeg/jmorecfg.h	2010-07-15 17:16:26.470234033 +0200
+--- jpeg.orig/jmorecfg.h	2011-01-08 14:50:04.826240653 +0100
++++ jpeg/jmorecfg.h	2011-01-08 14:50:04.826240653 +0100
 @@ -138,7 +138,9 @@
  #ifdef CHAR_IS_UNSIGNED
  typedef char UINT8;
@@ -45,36 +45,3 @@ diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
  #define LOCAL(type)		static type
  /* a function referenced thru EXTERNs: */
  #define GLOBAL(type)		type
-diff -urN jpeg.orig/README jpeg/README
---- jpeg.orig/README	2010-07-15 17:16:22.240234269 +0200
-+++ jpeg/README	2010-07-15 17:16:22.240234269 +0200
-@@ -1,7 +1,7 @@
- The Independent JPEG Group's JPEG software
- ==========================================
- 
--README for release 8b of 16-May-2010
-+README for release 8a of 28-Feb-2010
- ====================================
- 
- This distribution contains the eighth public release of the Independent JPEG
-@@ -254,8 +254,8 @@
- The "official" archive site for this software is www.ijg.org.
- The most recent released version can always be found there in
- directory "files".  This particular version will be archived as
--http://www.ijg.org/files/jpegsrc.v8b.tar.gz, and in Windows-compatible
--"zip" archive format as http://www.ijg.org/files/jpegsr8b.zip.
-+http://www.ijg.org/files/jpegsrc.v8a.tar.gz, and in Windows-compatible
-+"zip" archive format as http://www.ijg.org/files/jpegsr8a.zip.
- 
- The JPEG FAQ (Frequently Asked Questions) article is a source of some
- general information about JPEG.
-@@ -285,8 +285,7 @@
- fruitful consultations in Boston, MA and Milan, Italy.
- 
- Thank to Hendrik Elstner, Roland Fassauer, Simone Zuck, Guenther
--Maier-Gerber, Walter Stoeber, and Fred Schmitz for corresponding
--business development.
-+Maier-Gerber, and Walter Stoeber for corresponding business development.
- 
- Thank to Nico Zschach and Dirk Stelling of the technical support team
- at the Digital Images company in Halle for providing me with extra

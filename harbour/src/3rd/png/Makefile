@@ -74,7 +74,7 @@ endif
 # ORIGIN http://www.libpng.org/pub/png/libpng.html
 # VER    1.5.0
 # URL    http://prdownloads.sourceforge.net/libpng/libpng-1.5.0.tar.gz?download
-# DIFF
+# DIFF   png.dif
 #
 # MAP    LICENSE
 # MAP    png.c
