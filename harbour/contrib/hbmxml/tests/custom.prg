@@ -7,7 +7,7 @@
 #include "hbmxml.ch"
 #include "hbinkey.ch"
 
-FUNCTION main(  )
+PROCEDURE main()
 
    LOCAL tree, node
    LOCAL xData
@@ -26,14 +26,16 @@ FUNCTION main(  )
       OutErr( "Unable to find <hash> element in XML tree!" )
       mxmlDelete( tree )
 
-      RETURN -1
+      ErrorLevel( -1 )
+      RETURN
    ENDIF
 
    IF hb_md5( _ENCODE( node ) ) != mxmlElementGetAttr( node, "checksum" )
       OutErr( "Custom data of element <hash> is corrupted!" )
       mxmlDelete( tree )
 
-      RETURN -1
+      ErrorLevel( -1 )
+      RETURN
    ENDIF      
 
    xData := mxmlGetCustom( node )
@@ -44,7 +46,8 @@ FUNCTION main(  )
    mxmlSetErrorCallback( NIL )
    mxmlSetCustomHandlers( NIL, NIL )
 
-   RETURN 0
+   ErrorLevel( 0 )
+   RETURN 
 
 STATIC PROCEDURE create_cust()
 

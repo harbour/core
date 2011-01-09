@@ -136,7 +136,6 @@ static HB_GARBAGE_FUNC( hbmxml_nodeDestructor )
       if( pHbnode->flags == 1 )
       {
          mxmlDelete( pHbnode->node );
-
          pHbnode->node = NULL;
       }
    }
@@ -261,15 +260,15 @@ HB_FUNC( MXMLADD )
    mxml_node_t *  parent = mxml_node_param( 1 );
    int            where = hb_parnidef( 2, MXML_ADD_BEFORE );
    mxml_node_t *  child = mxml_node_param( 3 );
-   mxml_node_t *  node = mxml_node_param( 4 );
-
-   where = ( ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER );
-
-   if( parent && node )
+   HBMXML_NODE *  pNode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 4 );
+ 
+   if( parent && pNode && pNode->node )
    {
-      int TODO;
+      where = ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER;
 
-      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
+      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, pNode->node );
+
+      pNode->flags = 0;
    }
    else
       MXML_ERR_ARGS;
@@ -357,7 +356,7 @@ HB_FUNC( MXMLELEMENTSETATTR )
 
 HB_FUNC( MXMLENTITYGETNAME )
 {
-   hb_retstr_utf8( mxmlEntityGetName( hb_parni( 1 ) - 1 ) ); /* ?? */
+   hb_retstr_utf8( mxmlEntityGetName( hb_parni( 1 ) ) );
 }
 
 /* int mxmlEntityGetValue( const char * name ) */
@@ -365,9 +364,8 @@ HB_FUNC( MXMLENTITYGETNAME )
 HB_FUNC( MXMLENTITYGETVALUE )
 {
    void *   hName;
-   int      i = mxmlEntityGetValue( hb_parstr_utf8( 1, &hName, NULL ) );
 
-   hb_retni( i < 0 ? -1 : i + 1 ); /* ?? */
+   hb_retni( mxmlEntityGetValue( hb_parstr_utf8( 1, &hName, NULL ) ) );
 
    hb_strfree( hName );
 }
@@ -1113,13 +1111,13 @@ HB_FUNC( MXMLRELEASE )
 
 HB_FUNC( MXMLREMOVE )
 {
-   mxml_node_t * node = mxml_node_param( 1 );
-
-   if( node )
+   HBMXML_NODE * pNode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
+ 
+   if( pNode && pNode->node )
    {
-      int TODO;
+      mxmlRemove( pNode->node );
 
-      mxmlRemove( node );
+      pNode->flags = 1;
    }
    else
       MXML_ERR_ARGS;
