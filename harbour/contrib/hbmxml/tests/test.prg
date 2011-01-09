@@ -438,7 +438,8 @@ FUNCTION main( cFile )
   */
 
    event_counts := Array( 6 ) ; AFill( event_counts, 0 )
-
+   
+   /* mxmlSAXLoadString( NIL, hb_memoRead( "test.xml" ), @type_cb(), @sax_cb() ) */
    mxmlSAXLoadFile( NIL, "test.xml", @type_cb(), @sax_cb() )
 
    IF event_counts[ MXML_SAX_CDATA ] != 1

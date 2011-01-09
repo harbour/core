@@ -251,7 +251,6 @@ HB_FUNC( HB_MXMLVERSION )
  * - mxmlEntityRemoveCallback
  * - mxmlLoadFd
  * - mxmlSAXLoadFd
- * - mxmlSAXLoadString
  * - mxmlSaveFd
  */
 
@@ -1117,7 +1116,11 @@ HB_FUNC( MXMLREMOVE )
    mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
+   {
+      int TODO;
+
       mxmlRemove( node );
+   }
    else
       MXML_ERR_ARGS;
 }
@@ -1247,6 +1250,90 @@ HB_FUNC( MXMLSAXLOADFILE )
          mxml_node_ret( node, ( node_top != NULL ) ? 1 : 0 );
 
       fclose( file );
+   }
+
+   pCbs->type_cb = NULL;
+   pCbs->sax_cb = NULL;
+
+   hb_strfree( hFree );
+}
+
+/*
+   mxml_node_t * mxmlSAXLoadString( mxml_node_t * top,
+                                    const char * s,
+                                    mxml_load_cb_t cb,
+                                    mxml_sax_cb_t sax_cb,
+                                    void * sax_data )
+ */
+
+HB_FUNC( MXMLSAXLOADSTRING )
+{
+   void *         hFree;
+   mxml_node_t *  node_top;
+   mxml_node_t *  node;
+   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_sax_cb_t  cb_sax = MXML_NO_CALLBACK;
+   PHB_ITEM       pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
+   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   const char *   s;
+
+   if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
+   {
+      node_top = MXML_NO_PARENT;
+   }
+   else
+   {
+      node_top = mxml_node_param( 1 );
+
+      if( ! node_top )
+      {
+         MXML_ERR_ARGS;
+         return;
+      }
+   }
+
+   if( HB_ISSYMBOL( 3 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
+
+      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+      {
+         pCbs->type_cb = pDynSym;
+         cb = type_cb;
+      }
+   }
+   else if( HB_ISNUM( 3 ) )
+   {
+      switch( hb_parni( 3 ) )
+      {
+      case 0:  cb = MXML_NO_CALLBACK;       break;
+      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+      case 3:  cb = MXML_REAL_CALLBACK;     break;
+      case 4:  cb = MXML_TEXT_CALLBACK;     break;
+      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+      default: cb = MXML_NO_CALLBACK;
+      }
+   }
+
+   if( HB_ISSYMBOL( 4 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 4, HB_IT_SYMBOL ) ) );
+
+      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+      {
+         pCbs->sax_cb = pDynSym;
+         cb_sax = sax_cb;
+      }
+   }
+
+   s = hb_parstr_utf8( 2, &hFree, NULL );
+   if( s )
+   {
+      node = mxmlSAXLoadString( node_top, s, cb, cb_sax, pData );
+
+      if( node != NULL )
+         mxml_node_ret( node, ( node_top != NULL ) ? 1 : 0 );
    }
 
    pCbs->type_cb = NULL;
