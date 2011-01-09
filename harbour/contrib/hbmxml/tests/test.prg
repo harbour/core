@@ -3,7 +3,6 @@
  */
 
 #include "hbmxml.ch"
-#include "fileio.ch"
 #include "hbinkey.ch"
 
 STATIC event_counts
@@ -408,7 +407,7 @@ FUNCTION main( cFile )
    cBuffer := Space( abs( i ) )
 
    IF ( mxmlSaveString( tree, @cBuffer, @whitespace_cb() ) > 0 )
-      hb_memoWrit( "test2.xml", cBuffer + hb_eol() )
+      hb_memoWrit( "test2.xml", cBuffer )
    ENDIF
 
    OutStd( cBuffer + hb_eol() )
@@ -416,7 +415,7 @@ FUNCTION main( cFile )
 
    cBuffer := mxmlSaveAllocString( node, 0 ) 
    IF Len( cBuffer ) > 0
-      hb_memoWrit( "test3.xml", cBuffer + hb_eol() )
+      hb_memoWrit( "test3.xml", cBuffer )
    ENDIF
    
    IF mxmlSaveFile( node, "test4.xml" ) < 0
@@ -623,7 +622,7 @@ FUNCTION whitespace_cb( node, where )
 
 PROCEDURE sax_cb( node, sax_event, user_data )
 
-   //mxmlRetain( node )
+   /* mxmlRetain( node ) */
 
    HB_SYMBOL_UNUSED( user_data )
 

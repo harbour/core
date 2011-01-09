@@ -76,42 +76,36 @@ typedef struct /* placeholder for mxml_node_t */
 typedef struct
 {
    PHB_DYNS type_cb;
-} HB_TYPE_CB_VAR;
-
-typedef struct
-{
    PHB_DYNS save_cb;
-} HB_SAVE_CB_VAR;
+   PHB_DYNS sax_cb;
+} HB_CBS_VAR;
 
 typedef struct
 {
-   PHB_DYNS sax_cb;
-} HB_SAX_CB_VAR;
+   PHB_DYNS load_cb;
+   PHB_DYNS save_cb;
+} HB_CUSTOM_CBS_VAR;
 
 typedef struct
 {
    PHB_DYNS error_cb;
 } HB_ERROR_CB_VAR;
 
-static void hb_type_cb_var_init( void * cargo )
+static void hb_cbs_var_init( void * cargo )
 {
-   HB_TYPE_CB_VAR * pType_cb = ( HB_TYPE_CB_VAR * ) cargo;
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) cargo;
 
-   pType_cb->type_cb = NULL;
+   pCbs->type_cb = NULL;
+   pCbs->save_cb = NULL;
+   pCbs->sax_cb = NULL;
 }
 
-static void hb_save_cb_var_init( void * cargo )
+static void hb_custom_cbs_var_init( void * cargo )
 {
-   HB_SAVE_CB_VAR * pSave_cb = ( HB_SAVE_CB_VAR * ) cargo;
+   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) cargo;
 
-   pSave_cb->save_cb = NULL;
-}
-
-static void hb_sax_cb_var_init( void * cargo )
-{
-   HB_SAX_CB_VAR * pSax_cb = ( HB_SAX_CB_VAR * ) cargo;
-
-   pSax_cb->sax_cb = NULL;
+   pCCbs->load_cb = NULL;
+   pCCbs->save_cb = NULL;
 }
 
 static void hb_error_cb_var_init( void * cargo )
@@ -121,9 +115,8 @@ static void hb_error_cb_var_init( void * cargo )
    pError_cb->error_cb = NULL;
 }
 
-static HB_TSD_NEW( s_type_cb_var, sizeof( HB_TYPE_CB_VAR ), hb_type_cb_var_init, NULL );
-static HB_TSD_NEW( s_save_cb_var, sizeof( HB_SAVE_CB_VAR ), hb_save_cb_var_init, NULL );
-static HB_TSD_NEW( s_sax_cb_var, sizeof( HB_SAX_CB_VAR ), hb_sax_cb_var_init, NULL );
+static HB_TSD_NEW( s_cbs_var, sizeof( HB_CBS_VAR ), hb_cbs_var_init, NULL );
+static HB_TSD_NEW( s_custom_cbs_var, sizeof( HB_CUSTOM_CBS_VAR ), hb_custom_cbs_var_init, NULL );
 static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init, NULL );
 
 /* ========================= mxml_node_t * support ============================== */
@@ -143,7 +136,7 @@ static HB_GARBAGE_FUNC( hbmxml_nodeDestructor )
       if( pHbnode->flags == 1 )
       {
          mxmlDelete( pHbnode->node );
-   
+
          pHbnode->node = NULL;
       }
    }
@@ -256,14 +249,10 @@ HB_FUNC( HB_MXMLVERSION )
 /*
  * - mxmlEntityAddCallback
  * - mxmlEntityRemoveCallback
- * - mxmlGetCustom
  * - mxmlLoadFd
- * - mxmlNewCustom
  * - mxmlSAXLoadFd
  * - mxmlSAXLoadString
  * - mxmlSaveFd
- * - mxmlSetCustom
- * - mxmlSetCustomHandlers
  */
 
 /* void mxmlAdd( mxml_node_t * parent, int where, mxml_node_t * child, mxml_node_t * node ) */
@@ -278,7 +267,11 @@ HB_FUNC( MXMLADD )
    where = ( ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER );
 
    if( parent && node )
+   {
+      int TODO;
+
       mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
+   }
    else
       MXML_ERR_ARGS;
 }
@@ -287,7 +280,8 @@ HB_FUNC( MXMLADD )
 
 HB_FUNC( MXMLDELETE )
 {
-   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
+   HBMXML_NODE *  pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
+   int            TODO;
 
    if( pHbnode && pHbnode->node )
    {
@@ -740,11 +734,11 @@ HB_FUNC( MXMLINDEXRESET )
 
 static mxml_type_t type_cb( mxml_node_t * node )
 {
-   HB_TYPE_CB_VAR * pType_cb = ( HB_TYPE_CB_VAR * ) hb_stackGetTSD( &s_type_cb_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-   if( pType_cb != NULL )
+   if( pCbs != NULL )
    {
-      PHB_DYNS pSym = pType_cb->type_cb;
+      PHB_DYNS pSym = pCbs->type_cb;
 
       if( pSym && hb_vmRequestReenter() )
       {
@@ -765,21 +759,18 @@ static mxml_type_t type_cb( mxml_node_t * node )
          hb_vmRequestRestore();
          return ( mxml_type_t ) iResult;
       }
-      else
-         return MXML_TEXT;
    }
-   else
-      return MXML_TEXT;
+   return MXML_TEXT;
 }
 
 HB_FUNC( MXMLLOADFILE )
 {
-   void *            hFree;
-   mxml_node_t *     node_top;
-   mxml_node_t *     node;
-   mxml_load_cb_t    cb = MXML_NO_CALLBACK;
-   HB_TYPE_CB_VAR *  pType_cb = ( HB_TYPE_CB_VAR * ) hb_stackGetTSD( &s_type_cb_var );
-   FILE *            file; 
+   void *         hFree;
+   mxml_node_t *  node_top;
+   mxml_node_t *  node;
+   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   FILE *         file;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -802,7 +793,7 @@ HB_FUNC( MXMLLOADFILE )
 
       if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
       {
-         pType_cb->type_cb = pDynSym;
+         pCbs->type_cb = pDynSym;
          cb = type_cb;
       }
    }
@@ -820,7 +811,7 @@ HB_FUNC( MXMLLOADFILE )
       }
    }
 
-   file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "r" );
+   file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
    if( file )
    {
       node = mxmlLoadFile( node_top, file, cb );
@@ -829,7 +820,7 @@ HB_FUNC( MXMLLOADFILE )
          mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
    }
 
-   pType_cb->type_cb = NULL;
+   pCbs->type_cb = NULL;
    hb_strfree( hFree );
 }
 
@@ -840,11 +831,11 @@ HB_FUNC( MXMLLOADFILE )
 
 HB_FUNC( MXMLLOADSTRING )
 {
-   void *            hFree;
-   mxml_node_t *     node_top;
-   mxml_node_t *     node;
-   mxml_load_cb_t    cb = MXML_NO_CALLBACK;
-   HB_TYPE_CB_VAR *  pType_cb = ( HB_TYPE_CB_VAR * ) hb_stackGetTSD( &s_type_cb_var );
+   void *         hFree;
+   mxml_node_t *  node_top;
+   mxml_node_t *  node;
+   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
@@ -868,7 +859,7 @@ HB_FUNC( MXMLLOADSTRING )
 
       if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
       {
-         pType_cb->type_cb = pDynSym;
+         pCbs->type_cb = pDynSym;
          cb = type_cb;
       }
    }
@@ -887,7 +878,7 @@ HB_FUNC( MXMLLOADSTRING )
    }
 
    node = mxmlLoadString( node_top, hb_parstr_utf8( 2, &hFree, NULL ), cb );
-   pType_cb->type_cb = NULL;
+   pCbs->type_cb = NULL;
 
    if( node )
       mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
@@ -1095,8 +1086,8 @@ HB_FUNC( MXMLNEWTEXT )
 
 HB_FUNC( MXMLNEWXML )
 {
-   mxml_node_t *  node;
    void *         hVersion;
+   mxml_node_t *  node;
 
    node = mxmlNewXML( HB_ISCHAR( 1 ) ? hb_parstr_utf8( 1, &hVersion, NULL ) : NULL );
 
@@ -1147,16 +1138,16 @@ HB_FUNC( MXMLRETAIN )
 
 static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 {
-   HB_SAX_CB_VAR * pSax_cb = ( HB_SAX_CB_VAR * ) hb_stackGetTSD( &s_sax_cb_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-   if( node != NULL && pSax_cb != NULL )
+   if( node != NULL && pCbs != NULL )
    {
-      PHB_DYNS pSym = pSax_cb->sax_cb;
+      PHB_DYNS pSym = pCbs->sax_cb;
 
       if( pSym && hb_vmRequestReenter() )
       {
-         PHB_ITEM  pNode = hb_itemNew( NULL );
-         HB_USHORT uPCount = 2;
+         PHB_ITEM    pNode = hb_itemNew( NULL );
+         HB_USHORT   uPCount = 2;
 
          hbmxml_node_ItemPut( pNode, node, 0 );
 
@@ -1168,7 +1159,7 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
          if( data != NULL )
          {
             hb_vmPush( ( PHB_ITEM ) data );
-            uPCount += 1; 
+            uPCount += 1;
          }
          hb_vmProc( uPCount );
 
@@ -1178,7 +1169,7 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
    }
 }
 
-/* 
+/*
    mxml_node_t * mxmlSAXLoadFile( mxml_node_t * top,
                                   FILE * fp,
                                   mxml_load_cb_t cb,
@@ -1188,15 +1179,14 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 
 HB_FUNC( MXMLSAXLOADFILE )
 {
-   void *            hFree;
-   mxml_node_t *     node_top;
-   mxml_node_t *     node;
-   mxml_load_cb_t    cb = MXML_NO_CALLBACK;
-   mxml_sax_cb_t     cb_sax = MXML_NO_CALLBACK;
-   PHB_ITEM          pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL; 
-   HB_TYPE_CB_VAR *  pType_cb = ( HB_TYPE_CB_VAR * ) hb_stackGetTSD( &s_type_cb_var );
-   HB_SAX_CB_VAR *   pSax_cb = ( HB_SAX_CB_VAR * ) hb_stackGetTSD( &s_sax_cb_var );
-   FILE *            file; 
+   void *         hFree;
+   mxml_node_t *  node_top;
+   mxml_node_t *  node;
+   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_sax_cb_t  cb_sax = MXML_NO_CALLBACK;
+   PHB_ITEM       pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
+   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   FILE *         file;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -1219,7 +1209,7 @@ HB_FUNC( MXMLSAXLOADFILE )
 
       if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
       {
-         pType_cb->type_cb = pDynSym;
+         pCbs->type_cb = pDynSym;
          cb = type_cb;
       }
    }
@@ -1243,12 +1233,12 @@ HB_FUNC( MXMLSAXLOADFILE )
 
       if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
       {
-         pSax_cb->sax_cb = pDynSym;
+         pCbs->sax_cb = pDynSym;
          cb_sax = sax_cb;
       }
    }
 
-   file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb+" );
+   file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
    if( file )
    {
       node = mxmlSAXLoadFile( node_top, file, cb, cb_sax, pData );
@@ -1259,8 +1249,8 @@ HB_FUNC( MXMLSAXLOADFILE )
       fclose( file );
    }
 
-   pType_cb->type_cb = NULL;
-   pSax_cb->sax_cb = NULL;
+   pCbs->type_cb = NULL;
+   pCbs->sax_cb = NULL;
 
    hb_strfree( hFree );
 }
@@ -1269,11 +1259,11 @@ HB_FUNC( MXMLSAXLOADFILE )
 
 static const char * save_cb( mxml_node_t * node, int where )
 {
-   HB_SAVE_CB_VAR * pSave_cb = ( HB_SAVE_CB_VAR * ) hb_stackGetTSD( &s_save_cb_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-   if( node != NULL && pSave_cb != NULL )
+   if( node != NULL && pCbs != NULL )
    {
-      PHB_DYNS pSym = pSave_cb->save_cb;
+      PHB_DYNS pSym = pCbs->save_cb;
 
       if( pSym && hb_vmRequestReenter() )
       {
@@ -1308,11 +1298,8 @@ static const char * save_cb( mxml_node_t * node, int where )
 
          return pszResult;
       }
-      else
-         return NULL;
    }
-   else
-      return NULL;
+   return NULL;
 }
 
 /* char * mxmlSaveAllocString( mxml_node_t *node, mxml_save_cb_t cb ) */
@@ -1323,11 +1310,10 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
    if( node )
    {
-      mxml_save_cb_t    cb = MXML_NO_CALLBACK;
-      HB_SAVE_CB_VAR *  pSave_cb = ( HB_SAVE_CB_VAR * ) hb_stackGetTSD( &s_save_cb_var );
-
-      char              buffer[ BUFFER_SIZE ];
-      int               bytes;
+      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+      char           buffer[ BUFFER_SIZE ];
+      int            bytes;
 
       if( HB_ISSYMBOL( 2 ) )
       {
@@ -1335,13 +1321,13 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
          if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
          {
-            pSave_cb->save_cb = pDynSym;
+            pCbs->save_cb = pDynSym;
             cb = save_cb;
          }
       }
 
       bytes = mxmlSaveString( node, buffer, BUFFER_SIZE, cb );
-      pSave_cb->save_cb = NULL;
+      pCbs->save_cb = NULL;
 
       if( bytes <= 0 )
          hb_retc_null();
@@ -1366,14 +1352,14 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
 HB_FUNC( MXMLSAVEFILE )
 {
-   mxml_node_t * node = mxml_node_param( 1 );
-   FILE *        file;
-   void *        hFree;
-  
+   mxml_node_t *  node = mxml_node_param( 1 );
+   FILE *         file;
+   void *         hFree;
+
    if( node && HB_ISCHAR( 2 ) )
    {
-      mxml_save_cb_t    cb = MXML_NO_CALLBACK;
-      HB_SAVE_CB_VAR *  pSave_cb = ( HB_SAVE_CB_VAR * ) hb_stackGetTSD( &s_save_cb_var );
+      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
       if( HB_ISSYMBOL( 3 ) )
       {
@@ -1381,19 +1367,19 @@ HB_FUNC( MXMLSAVEFILE )
 
          if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
          {
-            pSave_cb->save_cb = pDynSym;
+            pCbs->save_cb = pDynSym;
             cb = save_cb;
          }
       }
 
-      file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "w" );
-      if (file )
-      {   
+      file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "wb" );
+      if( file )
+      {
          hb_retni( mxmlSaveFile( node, file, cb ) );
          fclose( file );
       }
 
-      pSave_cb->save_cb = NULL;
+      pCbs->save_cb = NULL;
       hb_strfree( hFree );
    }
    else
@@ -1409,8 +1395,8 @@ HB_FUNC( MXMLSAVESTRING )
 
    if( node )
    {
-      mxml_save_cb_t    cb = MXML_NO_CALLBACK;
-      HB_SAVE_CB_VAR *  pSave_cb = ( HB_SAVE_CB_VAR * ) hb_stackGetTSD( &s_save_cb_var );
+      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
       if( pBuffer && HB_ISBYREF( 2 ) )
       {
@@ -1423,7 +1409,7 @@ HB_FUNC( MXMLSAVESTRING )
 
             if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
             {
-               pSave_cb->save_cb = pDynSym;
+               pCbs->save_cb = pDynSym;
                cb = save_cb;
             }
          }
@@ -1431,7 +1417,7 @@ HB_FUNC( MXMLSAVESTRING )
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
             int bytes = mxmlSaveString( node, buffer, ( int ) buffer_size, cb );
-            pSave_cb->save_cb = NULL;
+            pCbs->save_cb = NULL;
 
             if( bytes <= 0 )
                hb_retni( -1 );
@@ -1651,4 +1637,201 @@ HB_FUNC( MXMLWALKPREV )
    }
    else
       MXML_ERR_ARGS;
+}
+
+/* const void * mxmlGetCustom( mxml_node_t * node ) */
+
+HB_FUNC( MXMLGETCUSTOM )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+   {
+      PHB_ITEM pItem = ( PHB_ITEM ) mxmlGetCustom( node );
+
+      if( pItem )
+         hb_itemReturn( pItem );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* =============== void ( *mxml_custom_destroy_cb_t )( void * ) ================= */
+
+static void custom_destroy_cb( void * Cargo )
+{
+   PHB_ITEM pItem = ( PHB_ITEM ) Cargo;
+
+   if( pItem != NULL )
+      hb_itemRelease( pItem );
+}
+
+/*
+   mxml_node_t * mxmlNewCustom( mxml_node_t * parent,
+                                void * data, mxml_custom_destroy_cb_t destroy )
+ */
+
+HB_FUNC( MXMLNEWCUSTOM )
+{
+   mxml_node_t * node = MXML_NO_PARENT;
+
+   if( hb_pcount() > 1 )
+   {
+      if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
+      {
+         PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+         node           = mxmlNewCustom( MXML_NO_PARENT, pItem, custom_destroy_cb );
+
+         if( node )
+            mxml_node_ret( node, 1 );
+         else
+            hb_itemRelease( pItem );
+      }
+      else
+      {
+         mxml_node_t * node_parent = mxml_node_param( 1 );
+
+         if( node_parent )
+         {
+            PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+            node           = mxmlNewCustom( node_parent, pItem, custom_destroy_cb );
+
+            if( node )
+               mxml_node_ret( node, 0 );
+            else
+               hb_itemRelease( pItem );
+         }
+         else
+            MXML_ERR_ARGS;
+      }
+   }
+   else
+      MXML_ERR_ARGS;
+
+}
+
+/*
+   int mxmlSetCustom ( mxml_node_t * node,
+                       void * data, mxml_custom_destroy_cb_t destroy )
+ */
+
+HB_FUNC( MXMLSETCUSTOM )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node && hb_pcount() > 1 )
+   {
+      PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+      int           iResult;
+
+      if( pItem )
+      {
+         iResult = mxmlSetCustom( node, pItem, custom_destroy_cb );
+
+         hb_retni( iResult );
+
+         if( iResult < 0 )
+            hb_itemRelease( pItem );
+      }
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+/* ======= int ( *mxml_custom_load_cb_t )( mxml_node_t *, const char * ) ======== */
+
+static int custom_load_cb( mxml_node_t * node, const char * data )
+{
+   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
+
+   if( node != NULL && pCCbs != NULL && data != NULL )
+   {
+      PHB_DYNS pSym = pCCbs->load_cb;
+
+      if( pSym && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pNode = hb_itemNew( NULL );
+         int      iResult;
+
+         hbmxml_node_ItemPut( pNode, node, 0 );
+
+         hb_vmPushDynSym( pSym );
+         hb_vmPushNil();
+         hb_vmPushItemRef( pNode );
+         hb_itemPutCConst( hb_stackAllocItem(), data );
+
+         hb_vmFunction( 2 );
+         iResult = hb_parnidef( -1, 1 );
+
+         hb_itemRelease( pNode );
+
+         hb_vmRequestRestore();
+         return iResult;
+      }
+   }
+   return 1;
+}
+
+/* ============ char * ( *mxml_custom_save_cb_t )( mxml_node_t  * ) ============= */
+
+static char * custom_save_cb( mxml_node_t * node )
+{
+   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
+
+   if( node != NULL && pCCbs != NULL )
+   {
+      PHB_DYNS pSym = pCCbs->save_cb;
+
+      if( pSym && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pNode = hb_itemNew( NULL );
+         char *   pszResult = NULL;
+
+         hbmxml_node_ItemPut( pNode, node, 0 );
+
+         hb_vmPushDynSym( pSym );
+         hb_vmPushNil();
+         hb_vmPushItemRef( pNode );
+
+         hb_vmFunction( 1 );
+
+         if( HB_ISCHAR( -1 ) )
+            pszResult = strdup( hb_parc( -1 ) );
+
+         hb_itemRelease( pNode );
+
+         hb_vmRequestRestore();
+         return pszResult;
+      }
+   }
+   return NULL;
+}
+
+/* void mxmlSetCustomHandlers( mxml_custom_load_cb_t load, mxml_custom_save_cb_t save ) */
+
+HB_FUNC( MXMLSETCUSTOMHANDLERS )
+{
+   mxml_custom_load_cb_t   load = NULL;
+   mxml_custom_save_cb_t   save = NULL;
+
+   if( HB_ISSYMBOL( 1 ) && HB_ISSYMBOL( 2 ) )
+   {
+      HB_CUSTOM_CBS_VAR *  pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
+      PHB_DYNS             pDynLoad = hb_dynsymNew( hb_itemGetSymbol( hb_param( 1, HB_IT_SYMBOL ) ) );
+      PHB_DYNS             pDynSave = hb_dynsymNew( hb_itemGetSymbol( hb_param( 2, HB_IT_SYMBOL ) ) );
+
+      if( pDynLoad && hb_dynsymIsFunction( pDynLoad ) && pDynSave && hb_dynsymIsFunction( pDynSave ) )
+      {
+         pCCbs->load_cb = pDynLoad;
+         pCCbs->save_cb = pDynSave;
+         load = custom_load_cb;
+         save = custom_save_cb;
+      }
+      else
+      {
+         pCCbs->load_cb = NULL;
+         pCCbs->save_cb = NULL;
+      }
+   }
+   mxmlSetCustomHandlers( load, save );
 }
