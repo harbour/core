@@ -47,14 +47,8 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
          HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
          HB_CFLAGS_DYN := -DPNG_BUILD_DLL
 
-         ifeq ($(HB_COMPILER),djgpp)
+         ifneq ($(filter $(HB_COMPILER),djgpp dmc),)
             HB_CFLAGS += -DPNG_NO_SNPRINTF
-         endif
-         ifeq ($(HB_COMPILER),dmc)
-            HB_CFLAGS += -DPNG_NO_SNPRINTF
-         endif
-         ifeq ($(HB_COMPILER),watcom)
-            HB_CFLAGS += -DPNG_NO_SETJMP
          endif
 
          include $(TOP)$(ROOT)config/lib.mk
