@@ -55,7 +55,7 @@
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
-FUNCTION MAIN( ... )
+PROCEDURE Main( ... )
 
    LOCAL oRef, aParams, cFileName, cInitDir, i, lRecursive := .F.
 
@@ -64,7 +64,7 @@ FUNCTION MAIN( ... )
 
    IF Empty( aParams ) .OR. ( Left( cFileName := Atail(aParams ), 1 ) $ "@/-" )
       About()
-      RETURN Nil
+      RETURN
    ENDIF
 
    FOR i := 1 TO Len( aParams )
@@ -79,15 +79,15 @@ FUNCTION MAIN( ... )
 
    oRef := hbFormatCode():New( aParams, hb_FNameMerge( hb_dirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
-      ? "Initialization error", oRef:nErr, Iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr
-      RETURN Nil
+      OutStd( "Initialization error", oRef:nErr, Iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr, hb_eol() )
+      RETURN
    ENDIF
 
    oRef:bCallBack := { |a, i|FCallBack( a, i ) }
 
    IF "*" $ cFileName
       IF ( i := Rat( ".", cFileName ) ) == 0 .OR. Substr( cFileName,i+1,1 ) < "A"
-         ? "Wrong mask"
+         OutErr( "Wrong mask" + hb_eol() )
       ELSE
          cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
             Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
@@ -99,38 +99,36 @@ FUNCTION MAIN( ... )
    ELSE
       Reformat( oRef, cFileName )
    ENDIF
-   ?
+   OutStd( hb_eol() )
 
-   RETURN Nil
+   RETURN
 
-STATIC FUNCTION FCallBack( aFile, nItem )
+STATIC PROCEDURE FCallBack( aFile, nItem )
 
-   LOCAL n := Int( Len( aFile ) / 40 )
-
-   IF nItem % n == 1
-      ?? "."
+   IF nItem % Int( Len( aFile ) / 40 ) == 1
+      OutStd( "." )
    ENDIF
 
-   RETURN Nil
+   RETURN
 
-STATIC FUNCTION Reformat( oRef, cFileName )
+STATIC PROCEDURE Reformat( oRef, cFileName )
 
    LOCAL aFile
 
    IF !Empty( aFile := oRef:File2Array( cFileName ) )
-      ? "Reformatting " + cFileName
-      ? "<"
+      OutStd( "Reformatting " + cFileName + hb_eol() )
+      OutStd( "<" + hb_eol() )
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )
-         ?? ">"
+         OutStd( ">" )
       ELSE
-         ? "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr
+         OutErr( "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr, hb_eol() )
       ENDIF
    ELSE
-      ? cFileName, "isn't found ..."
+      OutErr( cFileName + " isn't found ..." + hb_eol() )
    ENDIF
 
-   RETURN Nil
+   RETURN
 
 STATIC FUNCTION CmpMsk( strcmp, mask )
 
@@ -165,14 +163,14 @@ STATIC FUNCTION CmpMsk( strcmp, mask )
 
    RETURN .T.
 
-FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
+STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
    LOCAL i, nLen, aFiles
 
    IF Right( cInitDir, 1 ) != Set( _SET_DIRSEPARATOR )
       cInitDir += Set( _SET_DIRSEPARATOR )
    ENDIF
-   cMask := Iif( cMask == Nil, hb_osFileMask(), Upper( cMask ) )
+   cMask := Iif( cMask == NIL, hb_osFileMask(), Upper( cMask ) )
 
    aFiles := Directory( cInitDir + hb_osFileMask(), "HSD" )
    nLen := Len( aFiles )
@@ -182,24 +180,24 @@ FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
             DirEval( cInitDir + aFiles[ i,1 ], cMask, lRecur, bCode )
          ENDIF
       ELSEIF CmpMsk( Upper( aFiles[ i,1 ] ), cMask )
-         IF bCode != Nil
+         IF bCode != NIL
             Eval( bCode, cInitDir + aFiles[ i,1 ] )
          ENDIF
       ENDIF
    NEXT
 
-   RETURN Nil
+   RETURN
 
-STATIC FUNCTION About()
+STATIC PROCEDURE About()
 
-   ?? "Harbour Source Formatter " + HBRawVersion()
-   ? "Copyright (c) 2009-2011, Alexander S.Kresin"
-   ? "http://harbour-project.org/"
-   ?
-   ? "Syntax:  hbformat [options] [@config] file[s]"
-   ?
+   OutStd( "Harbour Source Formatter " + HBRawVersion() + hb_eol() +;
+           "Copyright (c) 2009-2011, Alexander S.Kresin" + hb_eol() +;
+           "http://harbour-project.org/" + hb_eol() +;
+           hb_eol() +;
+           "Syntax:  hbformat [options] [@config] file[s]" + hb_eol() +;
+           hb_eol() )
 
-   RETURN Nil
+   RETURN
 
 STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour " )
