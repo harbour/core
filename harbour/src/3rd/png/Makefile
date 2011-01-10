@@ -50,6 +50,9 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
          ifneq ($(filter $(HB_COMPILER),djgpp dmc),)
             HB_CFLAGS += -DPNG_NO_SNPRINTF
          endif
+         ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
+            HB_CFLAGS += -DPNG_ALLOCATED
+         endif
 
          include $(TOP)$(ROOT)config/lib.mk
       else
