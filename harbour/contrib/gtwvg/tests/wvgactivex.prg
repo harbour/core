@@ -314,10 +314,10 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    do case
    case nActiveX == 1
-      hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
+      hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://harbour.vouch.info'+'  ]' )
       oCom:CLSID := 'Shell.Explorer.2'
-      oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
-      oCom:mapEvent( 105, {|| WAPI_OutputDebugString( ' E X P L O R E R - 105' ) } )
+      oCom:mapEvent( 269, {|| WAPI_OutputDebugString( ' E X P L O R E R - 2 6 9' ) } )
+      oCom:mapEvent( 105, {|| WAPI_OutputDebugString( ' E X P L O R E R - 105'   ) } )
 
    case nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
@@ -379,9 +379,9 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
    // After :CREATE() Messages
    //
    if nActiveX == 1
+      hb_gtInfo( HB_GTI_WINTITLE, iif( empty( xParam ), 'http://hbide.vouch.info', xParam ) )
       oCom:AddressBar := .t.
-      hb_gtInfo( HB_GTI_WINTITLE, IIF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
-      oCom:Navigate( IF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
+      oCom:Navigate( iif( empty( xParam ), 'http://hbide.vouch.info', xParam ) )
 
    elseif nActiveX == 4
       ConfigureRMChart( oCom )

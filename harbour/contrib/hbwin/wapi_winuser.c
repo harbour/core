@@ -161,6 +161,13 @@ HB_FUNC( WAPI_DESTROYWINDOW )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_ISWINDOW )
+{
+   BOOL bResult = IsWindow( hbwapi_par_raw_HWND( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
 HB_FUNC( WAPI_DRAWTEXT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );

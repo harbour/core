@@ -222,6 +222,7 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "TB_Compile"   , ::qContextMenu:addAction( ::oAC:getAction( "TB_Compile"    ) ) } )
    aadd( ::aActions, { "TB_CompilePPO", ::qContextMenu:addAction( ::oAC:getAction( "TB_CompilePPO" ) ) } )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
+   aadd( ::aActions, { "Format"       , ::qContextMenu:addAction( ::oFormatDock:oWidget:toggleViewAction() ) } )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                      ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."              ) } )
 
