@@ -62,6 +62,7 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
 #endif
 
 /* *********************************************************************** */
@@ -70,6 +71,169 @@ static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
+
+#if defined( HB_OS_WIN )
+
+typedef struct
+{
+   const char *   name;
+   HB_SIZE        len;
+   int            id;
+} _HB_BUTTON_ID;
+
+static const _HB_BUTTON_ID s_buttons[] =
+{
+   { "OK",             2,     0x0001 },
+   { "QUIT",           4,     0x0002 },
+   { "CANCEL",         6,     0x0002 },
+   { "ABORT",          5,     0x0002 },
+   { "RETRY",          5,     0x0004 },
+   { "AGAIN",          5,     0x0004 },
+   { "TRY AGAIN",      9,     0x0004 },
+   { "DEFAULT",        7,     0x0008 },
+   { "CONTINUE",       8,     0x0008 },
+   { "IGNORE",         6,     0x0008 },
+   { "YES",            3,     0x0010 },
+   { "NO",             2,     0x0020 }
+};
+
+#define _HB_BUTTON_COUNT      HB_SIZEOFARRAY( s_buttons )
+
+static int hb_gt_gui_optionId( const char * pszOption )
+{
+   if( pszOption )
+   {
+      HB_SIZE nSize;
+      int i;
+
+      while( HB_ISSPACE( *pszOption ) )
+         pszOption++;
+      nSize = strlen( pszOption );
+      while( nSize > 0 && HB_ISSPACE( pszOption[ nSize - 1 ] ) )
+         nSize--;
+
+      if( nSize >= 2 && nSize <= 9 )
+      {
+         for( i = 0; i < ( int ) _HB_BUTTON_COUNT; ++i )
+         {
+            if( nSize == s_buttons[ i ].len &&
+                hb_strnicmp( s_buttons[ i ].name, pszOption, nSize ) == 0 )
+            {
+               return s_buttons[ i ].id;
+            }
+         }
+      }
+   }
+   return 0;
+}
+
+static int hb_gt_gui_optionPos( int id, int iType, PHB_ITEM pOptions )
+{
+   int iButton = 0;
+
+   switch( id )
+   {
+      case IDOK:
+         iButton = 0x0001;
+         break;
+      case IDCANCEL:
+         iButton = 0x0002;
+         break;
+      case IDABORT:
+         iButton = 0x0002;
+         break;
+      case IDRETRY:
+         iButton = 0x0004;
+         break;
+      case IDIGNORE:
+         iButton = 0x0008;
+         break;
+      case IDYES:
+         iButton = 0x0010;
+         break;
+      case IDNO:
+         iButton = 0x0020;
+         break;
+      case IDTRYAGAIN:
+         iButton = 0x0004;
+         break;
+      case IDCONTINUE:
+         iButton = 0x0008;
+         break;
+   }
+   if( iButton )
+   {
+      int iOptions = hb_arrayLen( pOptions ), i;
+
+      for( i = 1; i <= iOptions; ++i )
+      {
+         id = hb_gt_gui_optionId( hb_arrayGetCPtr( pOptions, i ) );
+         if( iButton == id || ( iOptions == 1 && iType == id ) )
+            return i;
+      }
+   }
+   return 0;
+}
+
+static int hb_gt_gui_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
+                            int iClrNorm, int iClrHigh, double dDelay )
+{
+   void * hText;
+   LPCTSTR lpText = HB_ITEMGETSTR( pMessage, &hText, NULL );
+   int iRet = 0, iOptions = pOptions ? ( int ) hb_arrayLen( pOptions ) : 0;
+
+   if( lpText && iOptions > 0 )
+   {
+      int i, iType = 0;
+      UINT uType;
+
+      for( i = 1; i <= iOptions; ++i )
+         iType |= hb_gt_gui_optionId( hb_arrayGetCPtr( pOptions, i ) );
+
+      switch( iType )
+      {
+         case 0x01:
+            uType = MB_OK;
+            break;
+         case 0x03:
+            uType = MB_OKCANCEL;
+            break;
+         case 0x06:
+            uType = MB_RETRYCANCEL;
+            break;
+         case 0x0E:
+            uType = MB_CANCELTRYCONTINUE;
+            break;
+         case 0x12:
+            uType = MB_OKCANCEL;
+            break;
+         case 0x21:
+            uType = MB_YESNO;
+            break;
+         case 0x30:
+            uType = MB_YESNO;
+            break;
+         case 0x32:
+            uType = MB_YESNOCANCEL;
+            break;
+         default:
+            uType = MB_OK;
+            break;
+      }
+
+      iRet = MessageBox( NULL, lpText, TEXT( "" ), uType );
+      iRet = hb_gt_gui_optionPos( iRet, iType, pOptions );
+   }
+   else
+      iRet = HB_GTSUPER_ALERT( pGT, pMessage, pOptions, iClrNorm,
+                               iClrHigh, dDelay );
+
+   hb_strfree( hText );
+
+   return iRet;
+}
+
+#endif /* HB_OS_WIN */
 
 /* *********************************************************************** */
 
@@ -149,6 +313,9 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_gui_Version;
    pFuncTable->Tone                       = hb_gt_gui_Tone;
    pFuncTable->Info                       = hb_gt_gui_Info;
+#if defined( HB_OS_WIN )
+   pFuncTable->Alert                      = hb_gt_gui_Alert;
+#endif
 
    return HB_TRUE;
 }
