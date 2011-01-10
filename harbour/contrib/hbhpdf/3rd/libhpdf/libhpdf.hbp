@@ -28,8 +28,6 @@
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
-# Suppress deprecated warnings until libharu gets updated for latest libpng
--cflag=-DPNG_NO_PEDANTIC_WARNINGS
 -cflag=-DHPDF_DLL_MAKE_CDECL{allwin&hbdyn}
 -cflag=-U__COREDLL__{mingwarm}
 
