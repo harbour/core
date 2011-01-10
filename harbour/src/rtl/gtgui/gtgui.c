@@ -154,12 +154,16 @@ static int hb_gt_gui_optionPos( int id, int iType, PHB_ITEM pOptions )
       case IDNO:
          iButton = 0x0020;
          break;
+#ifdef IDTRYAGAIN
       case IDTRYAGAIN:
          iButton = 0x0004;
          break;
+#endif
+#ifdef IDCONTINUE
       case IDCONTINUE:
          iButton = 0x0008;
          break;
+#endif
    }
    if( iButton )
    {
@@ -202,7 +206,11 @@ static int hb_gt_gui_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             uType = MB_RETRYCANCEL;
             break;
          case 0x0E:
-            uType = MB_CANCELTRYCONTINUE;
+#ifdef MB_CANCELTRYCONTINUE
+            uType = hb_iswin2k() ? MB_CANCELTRYCONTINUE : MB_ABORTRETRYIGNORE;
+#else
+            uType = MB_ABORTRETRYIGNORE;
+#endif
             break;
          case 0x12:
             uType = MB_OKCANCEL;
