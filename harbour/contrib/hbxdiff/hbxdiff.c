@@ -544,7 +544,7 @@ HB_FUNC( XDL_BDIFF )
       }
       else if( HB_ISBLOCK( 4 ) )
       {
-         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+         PHB_ITEM pBlock = hb_param( 4, HB_IT_BLOCK );
 
          ecb.priv = ( void * ) pBlock;
          ecb.outf = xdlt_outh;
