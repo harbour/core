@@ -1511,10 +1511,12 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 
       if( ssl )
       {
-         if( HB_ISBLOCK( 2 ) )
+         PHB_ITEM pCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+         if( pCallback )
          {
-            PHB_ITEM pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-            SSL_set_msg_callback_arg( ssl, pPassBlock );
+            PHB_ITEM pPassCallback = hb_itemNew( pCallback );
+            SSL_set_msg_callback_arg( ssl, pPassCallback );
             SSL_set_msg_callback( ssl, hb_ssl_msg_callback );
          }
          else

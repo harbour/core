@@ -116,7 +116,7 @@ typedef struct _HB_CURL
    size_t dl_len;
    size_t dl_pos;
 
-   PHB_ITEM pProgressBlock;
+   PHB_ITEM pProgressCallback;
 
    HB_HASH_TABLE_PTR pHash;
 
@@ -519,10 +519,10 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    hb_curl_buff_ul_free( hb_curl );
    hb_curl_buff_dl_free( hb_curl );
 
-   if( hb_curl->pProgressBlock )
+   if( hb_curl->pProgressCallback )
    {
-      hb_itemRelease( hb_curl->pProgressBlock );
-      hb_curl->pProgressBlock = NULL;
+      hb_itemRelease( hb_curl->pProgressCallback );
+      hb_curl->pProgressCallback = NULL;
    }
 
    if( hb_curl->pHash )
@@ -586,8 +586,8 @@ static HB_GARBAGE_FUNC( PHB_CURL_mark )
    {
       PHB_CURL hb_curl = * hb_curl_ptr;
 
-      if( hb_curl->pProgressBlock )
-         hb_gcMark( hb_curl->pProgressBlock );
+      if( hb_curl->pProgressCallback )
+         hb_gcMark( hb_curl->pProgressCallback );
    }
 }
 
@@ -1589,25 +1589,25 @@ HB_FUNC( CURL_EASY_SETOPT )
 
          case HB_CURLOPT_PROGRESSBLOCK:
             {
-               PHB_ITEM pProgressBlock = hb_param( 3, HB_IT_BLOCK );
+               PHB_ITEM pProgressCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
 
-               if( hb_curl->pProgressBlock )
+               if( hb_curl->pProgressCallback )
                {
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
 
-                  hb_itemRelease( hb_curl->pProgressBlock );
-                  hb_curl->pProgressBlock = NULL;
+                  hb_itemRelease( hb_curl->pProgressCallback );
+                  hb_curl->pProgressCallback = NULL;
                }
 
-               if( pProgressBlock )
+               if( pProgressCallback )
                {
-                  hb_curl->pProgressBlock = hb_itemNew( pProgressBlock );
+                  hb_curl->pProgressCallback = hb_itemNew( pProgressCallback );
                   /* unlock the item so GC will not mark them as used */
-                  hb_gcUnlock( hb_curl->pProgressBlock );
+                  hb_gcUnlock( hb_curl->pProgressCallback );
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, hb_curl_progress_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pProgressBlock );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pProgressCallback );
                }
             }
             break;

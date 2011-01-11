@@ -112,21 +112,17 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
 
    if( bio )
    {
-      PHB_ITEM pPassBlock = NULL;
+      PHB_ITEM pPassCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
 
-      if( HB_ISBLOCK( 2 ) )
+      if( pPassCallback )
       {
-         pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-         hb_retptr( ( * func )( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
+         hb_retptr( ( * func )( bio, NULL, hb_ssl_pem_password_cb, pPassCallback ) );
       }
       else if( HB_ISCHAR( 2 ) )
       {
          /* NOTE: Dropping 'const' qualifier. [vszakats] */
          hb_retptr( ( * func )( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
       }
-
-      if( pPassBlock )
-         hb_itemRelease( pPassBlock );
 
       if( ! HB_ISPOINTER( 1 ) )
          BIO_free( bio );

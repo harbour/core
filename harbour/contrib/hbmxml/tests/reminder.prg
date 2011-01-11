@@ -13,7 +13,7 @@ PROCEDURE main()
    IF hb_fileExists( 'rem.xml' )
       xml := simplexml_load_file( 'rem.xml' )
    ELSE
-      RETURN -1
+      RETURN
    ENDIF
 
    IF ! s_mxml_error
@@ -27,6 +27,8 @@ PROCEDURE main()
 
       IF s_mxml_error
          OutErr( "hbmxml:", s_mxml_error_msg, hb_eol() )
+      ELSE
+         OutStd( asXML( xml ), hb_eol() )
       ENDIF
    ENDIF
 
@@ -56,7 +58,7 @@ STATIC FUNCTION asXML( xml )
 
    subnode := mxmlGetFirstChild( node )
    DO WHILE ! Empty( subnode := mxmlGetNextSibling( subnode ) )
-      IF mxmlGetType( subnode ) == MXML_ELEMENT 
+      IF mxmlGetType( subnode ) == MXML_ELEMENT
          IF mxmlGetElement( subnode ) == "body"
             c := mxmlGetOpaque( subnode )
          ELSE
@@ -64,7 +66,7 @@ STATIC FUNCTION asXML( xml )
          ENDIF
          cText += ( c + " " )
       ENDIF
-   ENDDO   
+   ENDDO
 
    RETURN cText
 
@@ -74,7 +76,7 @@ FUNCTION type_cb( node )
    LOCAL cType
 
    /* You can lookup attributes and/or use the element name, hierarchy, etc... */
- 
+
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
       cType := mxmlGetElement( node )
    ENDIF

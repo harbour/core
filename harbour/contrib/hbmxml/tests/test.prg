@@ -5,16 +5,18 @@
 #include "hbmxml.ch"
 #include "hbinkey.ch"
 
-STATIC event_counts
+STATIC s_event_counts
 
 FUNCTION main( cFile )
 
    LOCAL tree
    LOCAL node, tmpnode
    LOCAL index
-   LOCAL nType, nLen, nFile
+   LOCAL nType
    LOCAL cBuffer
    LOCAL whitespace := 1
+
+   LOCAL i
 
    OutStd( hb_mxmlVersion(), hb_eol() )
 
@@ -413,11 +415,11 @@ FUNCTION main( cFile )
    OutStd( cBuffer + hb_eol() )
    mxmlDelete( tree )
 
-   cBuffer := mxmlSaveAllocString( node, 0 ) 
+   cBuffer := mxmlSaveAllocString( node, 0 )
    IF Len( cBuffer ) > 0
       hb_memoWrit( "test3.xml", cBuffer )
    ENDIF
-   
+
    IF mxmlSaveFile( node, "test4.xml" ) < 0
       OutErr( "ERROR: Can't execute mxmlSaveFile()!", hb_eol() )
    ENDIF
@@ -430,53 +432,53 @@ FUNCTION main( cFile )
    IF mxmlSetUserData( node, whitespace ) > -1
       OutStd( mxmlGetUserData( node ), hb_eol() )
    ENDIF
-   
+
    mxmlDelete( node )
 
  /*
   * Test SAX methods...
   */
 
-   event_counts := Array( 6 ) ; AFill( event_counts, 0 )
-   
+   s_event_counts := Array( 6 ) ; AFill( s_event_counts, 0 )
+
    /* mxmlSAXLoadString( NIL, hb_memoRead( "test.xml" ), @type_cb(), @sax_cb() ) */
    mxmlSAXLoadFile( NIL, "test.xml", @type_cb(), @sax_cb() )
 
-   IF event_counts[ MXML_SAX_CDATA ] != 1
+   IF s_event_counts[ MXML_SAX_CDATA ] != 1
       OutErr( hb_strFormat( e"MXML_SAX_CDATA seen %d times, expected 1 times!\n", ;
-                            event_counts[ MXML_SAX_CDATA ] ) )
+                            s_event_counts[ MXML_SAX_CDATA ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
-   IF event_counts[ MXML_SAX_COMMENT ] != 1
+   IF s_event_counts[ MXML_SAX_COMMENT ] != 1
       OutErr( hb_strFormat( e"MXML_SAX_COMMENT seen %d times, expected 1 times!\n", ;
-                            event_counts[ MXML_SAX_COMMENT ] ) )
+                            s_event_counts[ MXML_SAX_COMMENT ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
-   IF event_counts[ MXML_SAX_DATA ] != 61
+   IF s_event_counts[ MXML_SAX_DATA ] != 61
       OutErr( hb_strFormat( e"MXML_SAX_DATA seen %d times, expected 61 times!\n", ;
-                            event_counts[ MXML_SAX_DATA ] ) )
+                            s_event_counts[ MXML_SAX_DATA ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
-   IF event_counts[ MXML_SAX_DIRECTIVE ] != 1
+   IF s_event_counts[ MXML_SAX_DIRECTIVE ] != 1
       OutErr( hb_strFormat( e"MXML_SAX_DIRECTIVE seen %d times, expected 1 times!\n", ;
-                            event_counts[ MXML_SAX_DIRECTIVE ] ) )
+                            s_event_counts[ MXML_SAX_DIRECTIVE ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
-   IF event_counts[ MXML_SAX_ELEMENT_CLOSE ] != 20
+   IF s_event_counts[ MXML_SAX_ELEMENT_CLOSE ] != 20
       OutErr( hb_strFormat( e"MXML_SAX_ELEMENT_CLOSE seen %d times, expected 20 times!\n", ;
-                            event_counts[ MXML_SAX_ELEMENT_CLOSE ] ) )
+                            s_event_counts[ MXML_SAX_ELEMENT_CLOSE ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
-   IF event_counts[ MXML_SAX_ELEMENT_OPEN ] != 20
+   IF s_event_counts[ MXML_SAX_ELEMENT_OPEN ] != 20
       OutErr( hb_strFormat( e"MXML_SAX_ELEMENT_OPEN seen %d times, expected 20 times!\n", ;
-                            event_counts[ MXML_SAX_ELEMENT_OPEN ] ) )
+                            s_event_counts[ MXML_SAX_ELEMENT_OPEN ] ) )
       RETURN -6
-   ENDIF   
+   ENDIF
 
    OutStd( "--- The End! ---", hb_eol() )
 
@@ -502,7 +504,7 @@ FUNCTION type_cb( node )
    LOCAL cType
 
    /* You can lookup attributes and/or use the element name, hierarchy, etc... */
- 
+
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
       cType := mxmlGetElement( node )
    ENDIF
@@ -530,7 +532,7 @@ FUNCTION type_cb( node )
 
 /* mxmlSaveString */
 
-FUNCTION whitespace_cb( node, where )  
+FUNCTION whitespace_cb( node, where )
 
    LOCAL parent        /* Parent node */
    LOCAL nLevel := -1  /* Indentation level */
@@ -547,8 +549,8 @@ FUNCTION whitespace_cb( node, where )
    SWITCH Lower( name )
    CASE "html"
    CASE "head"
-   CASE "body" 
-   CASE "pre" 
+   CASE "body"
+   CASE "pre"
    CASE "p"
    CASE "h1"
    CASE "h2"
@@ -571,7 +573,7 @@ FUNCTION whitespace_cb( node, where )
       ENDIF
       EXIT
 
-   CASE "dd" 
+   CASE "dd"
    CASE "dt"
    CASE "li"
       /* Put a tab before <li>'s, <dd>'s, and <dt>'s, and a newline after them... */
@@ -584,7 +586,7 @@ FUNCTION whitespace_cb( node, where )
    ENDSWITCH
 
    IF Left( name, 4 ) == "?xml"
-      IF where == MXML_WS_AFTER_OPEN 
+      IF where == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE
          RETURN NIL
@@ -600,9 +602,9 @@ FUNCTION whitespace_cb( node, where )
          parent := mxmlGetParent( parent )
       ENDDO
 
-      IF nLevel > 8 
+      IF nLevel > 8
          nLevel := 8
-      ELSEIF nLevel < 0 
+      ELSEIF nLevel < 0
          nLevel := 0
       ENDIF
 
@@ -625,8 +627,9 @@ PROCEDURE sax_cb( node, sax_event, user_data )
 
    /* mxmlRetain( node ) */
 
+   HB_SYMBOL_UNUSED( node )
    HB_SYMBOL_UNUSED( user_data )
 
-   event_counts[ sax_event ] += 1
+   s_event_counts[ sax_event ] += 1
 
    RETURN
