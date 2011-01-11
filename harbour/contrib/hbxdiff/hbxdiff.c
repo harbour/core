@@ -365,7 +365,7 @@ HB_FUNC( XDL_MMFILE_COMPACT )
    }
 }
 
-/* cbs */
+/* callbacks */
 
 static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
 {
@@ -379,6 +379,32 @@ static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
          return -1;
    }
    return 0;
+}
+
+static int xdlt_outb( void * priv, mmbuffer_t * mb, int nbuf )
+{
+   PHB_ITEM pBlock = ( PHB_ITEM ) priv;
+
+   if( pBlock && hb_vmRequestReenter() )
+   {
+      int   iResult;
+      int   i;
+
+      hb_vmPushEvalSym();
+      hb_vmPush( pBlock );
+
+      for( i = 0; i < nbuf; i++ )
+         hb_vmPushString( ( const char * ) mb[ i ].ptr, mb[ i ].size );
+
+      hb_vmSend( ( HB_USHORT ) nbuf );
+      iResult = hb_parnidef( -1, 0 );
+
+      hb_vmRequestRestore();
+
+      return iResult;
+   }
+   else
+      return -1;
 }
 
 static int xdlt_outh( void * priv, mmbuffer_t * mb, int nbuf )
@@ -427,6 +453,15 @@ HB_FUNC( XDL_DIFF )
       {
          ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 5 ) );
          ecb.outf = xdlt_outf;
+
+         hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
+      }
+      else if( HB_ISBLOCK( 5 ) )
+      {
+         PHB_ITEM pBlock = hb_param( 5, HB_IT_BLOCK );
+
+         ecb.priv = ( void * ) pBlock;
+         ecb.outf = xdlt_outh;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
@@ -507,6 +542,15 @@ HB_FUNC( XDL_BDIFF )
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
+      else if( HB_ISBLOCK( 4 ) )
+      {
+         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+
+         ecb.priv = ( void * ) pBlock;
+         ecb.outf = xdlt_outh;
+
+         hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
+      }
       else if( HB_ISSYMBOL( 4 ) )
       {
          PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
@@ -550,6 +594,15 @@ HB_FUNC( XDL_RABDIFF )
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
+      else if( HB_ISBLOCK( 3 ) )
+      {
+         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+
+         ecb.priv = ( void * ) pBlock;
+         ecb.outf = xdlt_outh;
+
+         hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+      }
       else if( HB_ISSYMBOL( 3 ) )
       {
          PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
@@ -586,6 +639,15 @@ HB_FUNC( XDL_BPATCH )
       {
          ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 3 ) );
          ecb.outf = xdlt_outf;
+
+         hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+      }
+      else if( HB_ISBLOCK( 3 ) )
+      {
+         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+
+         ecb.priv = ( void * ) pBlock;
+         ecb.outf = xdlt_outh;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }

@@ -6,7 +6,7 @@
 #include "fileio.ch"
 #include "simpleio.ch"
 
-PROCEDURE main
+PROCEDURE main()
 
    LOCAL pMMFOld, pMMFNew, pDiff
    LOCAL cFileCtx
@@ -49,3 +49,5 @@ PROCEDURE main
       FClose( hErr )
       FClose( hOld )
    ENDIF
+
+   RETURN

@@ -7,7 +7,7 @@
 
 #define _SIZE 62
 
-PROCEDURE main
+PROCEDURE main()
    LOCAL pMMF
    LOCAL cFileCtx
    LOCAL nSize
@@ -36,3 +36,5 @@ PROCEDURE main
 
    ? xdl_read_mmfile( pMMF, NIL, _SIZE, @nSize )
    ? nSize
+
+   RETURN
