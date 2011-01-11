@@ -461,7 +461,7 @@ HB_FUNC( XDL_DIFF )
          PHB_ITEM pBlock = hb_param( 5, HB_IT_BLOCK );
 
          ecb.priv = ( void * ) pBlock;
-         ecb.outf = xdlt_outh;
+         ecb.outf = xdlt_outb;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
@@ -547,7 +547,7 @@ HB_FUNC( XDL_BDIFF )
          PHB_ITEM pBlock = hb_param( 4, HB_IT_BLOCK );
 
          ecb.priv = ( void * ) pBlock;
-         ecb.outf = xdlt_outh;
+         ecb.outf = xdlt_outb;
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
@@ -599,7 +599,7 @@ HB_FUNC( XDL_RABDIFF )
          PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
 
          ecb.priv = ( void * ) pBlock;
-         ecb.outf = xdlt_outh;
+         ecb.outf = xdlt_outb;
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
@@ -647,7 +647,7 @@ HB_FUNC( XDL_BPATCH )
          PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
 
          ecb.priv = ( void * ) pBlock;
-         ecb.outf = xdlt_outh;
+         ecb.outf = xdlt_outb;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
