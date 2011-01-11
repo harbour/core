@@ -60,55 +60,62 @@
 #define RF_STATE_CODE   3
 #define RF_STATE_RET    4
 
+/* TOFIX:
+     1. 'var ++'
+     2. '- 1' for numeric literals.
+     3. OTHERWISE not handled in DO CASE and SWITCH.
+     ...
+ */
+
 CREATE CLASS HBFORMATCODE
 
-   DATA cEol
-   DATA nLineErr, nErr, cLineErr
+   VAR cEol
+   VAR nLineErr, nErr, cLineErr
 
-   DATA nEol           INIT  -1      // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
-   DATA lFCaseLow      INIT .F.      // If true, convert file name to lower case
-   DATA lNoTabs        INIT .T.      // If true, converts all tabs to spaces
-   DATA lIndent        INIT .T.      // If true, indent code
-   DATA lCase          INIT .T.      // If true, make case conversion
-   DATA lSpaces        INIT .T.      // If true, reformat spaces
-   DATA lIndFunc       INIT .F.      // If true, indent "Function", "Procedure", "Class", "Method"
-   DATA lIndVar        INIT .T.      // If true, indent "Local", "Private", etc. in a function beginning
-   DATA lIndDrt        INIT .F.      // If true, indent  directives
-   DATA lIndRet        INIT .T.      // If true, indent  "Return"
-   DATA nIndLeft       INIT   3      // Leftmost indent - amount of spaces
-   DATA nIndNext       INIT   3      // indent - amount of spaces
-   DATA nIndCont       INIT   3      // Indent for continuation ( after ';' ) lines - amount of spaces
-   DATA lCnvAst        INIT .T.      // If true, convert asterisk '*' to '//'
-   DATA lCnvAmp        INIT .T.      // If true, convert '&&' to '//'
-   DATA lCnvNot        INIT .F.      // If true, convert .NOT. TO !
-   DATA nCaseCmd       INIT   1      // Case of commands ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
-   DATA nCaseBoo       INIT   1      // Case of boolean operators ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
-   DATA nCaseFnc       INIT   4      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title, 4 - as in pattern )
-   DATA nCaseUnk       INIT  -1      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
-   DATA nCaseDrt       INIT   2      // Case of directives ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
-   DATA nSpaceDrt      INIT   0      // Number of spaces after # in directives ( -1 - no change )
-   DATA nLineFnc       INIT   1      // -1 - no change, 1 - insert empty line before a function ( procedure,class ) declaration, 2 - remove it
-   DATA nLineRet       INIT   1      // -1 - no change, 1 - insert empty line before return, 2 - remove it
-   DATA nLineVar       INIT   1      // -1 - no change, 1 - insert empty line before variables declaration, 2 - remove it
-   DATA nLineCode      INIT   1      // -1 - no change, 1 - insert empty line before code in function, 2 - remove it
-   DATA nBr4Comma      INIT   1      // Max level of nesting in brackets, while space is added after a comma
-   DATA nBr4Brac       INIT   2      // Max level of nesting in brackets, while space is added after/before a bracket
+   VAR nEol           INIT  -1      // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
+   VAR lFCaseLow      INIT .F.      // If true, convert file name to lower case
+   VAR lNoTabs        INIT .T.      // If true, converts all tabs to spaces
+   VAR lIndent        INIT .T.      // If true, indent code
+   VAR lCase          INIT .T.      // If true, make case conversion
+   VAR lSpaces        INIT .T.      // If true, reformat spaces
+   VAR lIndFunc       INIT .F.      // If true, indent "Function", "Procedure", "Class", "Method"
+   VAR lIndVar        INIT .T.      // If true, indent "Local", "Private", etc. in a function beginning
+   VAR lIndDrt        INIT .F.      // If true, indent  directives
+   VAR lIndRet        INIT .T.      // If true, indent  "Return"
+   VAR nIndLeft       INIT   3      // Leftmost indent - amount of spaces
+   VAR nIndNext       INIT   3      // indent - amount of spaces
+   VAR nIndCont       INIT   3      // Indent for continuation ( after ';' ) lines - amount of spaces
+   VAR lCnvAst        INIT .T.      // If true, convert asterisk '*' to '//'
+   VAR lCnvAmp        INIT .T.      // If true, convert '&&' to '//'
+   VAR lCnvNot        INIT .F.      // If true, convert .NOT. TO !
+   VAR nCaseCmd       INIT   1      // Case of commands ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
+   VAR nCaseBoo       INIT   1      // Case of boolean operators ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
+   VAR nCaseFnc       INIT   4      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title, 4 - as in pattern )
+   VAR nCaseUnk       INIT  -1      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
+   VAR nCaseDrt       INIT   2      // Case of directives ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
+   VAR nSpaceDrt      INIT   0      // Number of spaces after # in directives ( -1 - no change )
+   VAR nLineFnc       INIT   1      // -1 - no change, 1 - insert empty line before a function ( procedure,class ) declaration, 2 - remove it
+   VAR nLineRet       INIT   1      // -1 - no change, 1 - insert empty line before return, 2 - remove it
+   VAR nLineVar       INIT   1      // -1 - no change, 1 - insert empty line before variables declaration, 2 - remove it
+   VAR nLineCode      INIT   1      // -1 - no change, 1 - insert empty line before code in function, 2 - remove it
+   VAR nBr4Comma      INIT   1      // Max level of nesting in brackets, while space is added after a comma
+   VAR nBr4Brac       INIT   2      // Max level of nesting in brackets, while space is added after/before a bracket
 
-   DATA cExtSave       INIT  ""      // Extension for a formatted file ( "" - replace original )
-   DATA cExtBack       INIT  "bak"   // Extension for a backup file
+   VAR cExtSave       INIT  ""      // Extension for a formatted file ( "" - replace original )
+   VAR cExtBack       INIT  "bak"   // Extension for a backup file
 
-   DATA cCommands      INIT  ","
-   DATA cClauses       INIT  ","
-   DATA cFunctions     INIT  ","
-   DATA aContr         INIT { { "if","","elseif","endif" },;
-                              { "do","while","","enddo" }, ;
-                              { "while", "", "", "enddo" },;
-                              { "for", "", "", "next" },;
-                              { "do", "case", "case", "endcase" }, ;
-                              { "begin", "sequence", "recover", "end" },;
-                              { "switch", "", "case", "end" } }
+   VAR cCommands      INIT  ","
+   VAR cClauses       INIT  ","
+   VAR cFunctions     INIT  ","
+   VAR aContr         INIT { { "if"    , ""        , "elseif" , "endif"     },;
+                             { "do"    , "while"   , ""       , "enddo"     },;
+                             { "while" , ""        , ""       , "enddo"     },;
+                             { "for"   , ""        , ""       , "next"      },;
+                             { "do"    , "case"    , "case"   , "endcase"   },;
+                             { "begin" , "sequence", "recover", "end"       },;
+                             { "switch", ""        , "case"   , "endswitch" } }
 
-   DATA   bCallback
+   VAR bCallback
 
    METHOD New( aParams, cIniName )
    METHOD SetOption( cLine, i, aIni )

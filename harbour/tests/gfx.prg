@@ -50,7 +50,7 @@ FUNCTION Main()
       nWidth := Int( hb_Random( 251 ) )
       nColor := hb_gfxMakeColor( Int( hb_Random(32, 256 ) ), Int( hb_Random(32, 256 ) ), Int( hb_Random(32, 256 ) ) )
 
-      Switch Int( hb_Random( 1, 9 ) )
+      SWITCH Int( hb_Random( 1, 9 ) )
       CASE 1
          hb_gfxLine( nTop, nLeft, nTop + nHeight, nLeft + nWidth, nColor )
          EXIT
@@ -83,7 +83,7 @@ FUNCTION Main()
          ENDIF
          hb_gfxText( nTop, nLeft, "Hello", nColor, nHeight )
          EXIT
-      ENDCASE
+      ENDSWITCH
       IF Seconds() - nSec > 3
          hb_gfxFloodFill( 0, 0, nColor )
          nSec := Seconds()
