@@ -170,7 +170,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
       if( i > 0 && i <= this->listBlock.size() && hb_vmRequestReenter() )
       {
          if( parameterCount == 0 )
-            hb_vmEvalBlockV( this->listBlock.at( i - 1 ), 0 );
+            hb_evalBlock0( this->listBlock.at( i - 1 ) );
          else
          {
             int paramId = s_argCombinations.indexOf( paramString );

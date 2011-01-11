@@ -307,7 +307,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, HB_ULONG ulPCount, ... )
 
 /*
  * Notice that these two functions place the result at hb_stackReturnItem(),
- * that you may access its value using a _par...( -1 ).
+ * that you may access its value using a hb_par...( -1 ).
  */
 
 /* undocumented Clipper _cEval0() */

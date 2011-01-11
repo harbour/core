@@ -390,12 +390,12 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
          PHB_ITEM p1 = hb_itemPutND( NULL, ulnow   > 0 ? ulnow   : dlnow   );
          PHB_ITEM p2 = hb_itemPutND( NULL, ultotal > 0 ? ultotal : dltotal );
 
-         HB_BOOL bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
+         hb_evalBlock( ( PHB_ITEM ) Cargo, p1, p2, NULL );
 
          hb_itemRelease( p1 );
          hb_itemRelease( p2 );
 
-         if( bResult )
+         if( hb_parl( -1 ) )
             return 1; /* Abort */
 
          hb_vmRequestRestore();
