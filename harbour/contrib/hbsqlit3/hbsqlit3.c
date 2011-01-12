@@ -788,10 +788,10 @@ HB_FUNC( SQLITE3_EXEC )
       char *   pszErrMsg = NULL;
       int      rc;
 
-      if( HB_ISBLOCK( 3 ) )
+      if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
       {
          rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText,
-                                                            NULL ), callback, ( void * ) hb_param( 3, HB_IT_BLOCK ),
+                                                            NULL ), callback, ( void * ) hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ),
                             &pszErrMsg );
       }
       else
@@ -1872,9 +1872,9 @@ HB_FUNC( SQLITE3_BUSY_HANDLER )
          pHbSqlite3->cbBusyHandler = NULL;
       }
 
-      if( HB_ISBLOCK( 2 ) )
+      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
-         pHbSqlite3->cbBusyHandler = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         pHbSqlite3->cbBusyHandler = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbBusyHandler );
 
          sqlite3_busy_handler( pHbSqlite3->db, busy_handler,
@@ -1905,7 +1905,7 @@ HB_FUNC( SQLITE3_PROGRESS_HANDLER )
 
       if( HB_ISNUM( 2 ) && HB_ISBLOCK( 3 ) )
       {
-         pHbSqlite3->cbProgressHandler = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+         pHbSqlite3->cbProgressHandler = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbProgressHandler );
 
          sqlite3_progress_handler( pHbSqlite3->db, hb_parni( 2 ), progress_handler,
@@ -1935,9 +1935,9 @@ HB_FUNC( SQLITE3_COMMIT_HOOK )
          pHbSqlite3->cbHookCommit = NULL;
       }
 
-      if( HB_ISBLOCK( 2 ) )
+      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
-         pHbSqlite3->cbHookCommit = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         pHbSqlite3->cbHookCommit = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbHookCommit );
 
          sqlite3_commit_hook( pHbSqlite3->db, hook_commit, ( void * ) pHbSqlite3->cbHookCommit );
@@ -1959,9 +1959,9 @@ HB_FUNC( SQLITE3_ROLLBACK_HOOK )
          pHbSqlite3->cbHookRollback = NULL;
       }
 
-      if( HB_ISBLOCK( 2 ) )
+      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
-         pHbSqlite3->cbHookRollback = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         pHbSqlite3->cbHookRollback = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbHookRollback );
 
          sqlite3_rollback_hook( pHbSqlite3->db, hook_rollback,
@@ -1990,9 +1990,9 @@ HB_FUNC( SQLITE3_SET_AUTHORIZER )
          pHbSqlite3->cbAuthorizer = NULL;
       }
 
-      if( HB_ISBLOCK( 2 ) )
+      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
-         pHbSqlite3->cbAuthorizer = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         pHbSqlite3->cbAuthorizer = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbAuthorizer );
 
          hb_retni( sqlite3_set_authorizer( pHbSqlite3->db, authorizer,
@@ -2265,9 +2265,9 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
          pHbSqlite3->cbFunc = NULL;
       }
 
-      if( HB_ISBLOCK( 4 ) )
+      if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
       {
-         pHbSqlite3->cbFunc = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );
+         pHbSqlite3->cbFunc = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL ) );
          hb_gcUnlock( pHbSqlite3->cbFunc );
 
          hb_retni(

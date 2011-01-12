@@ -69,9 +69,6 @@
 #define XDLT_STD_BLKSIZE ( 1024 * 8 )
 #define XDLT_MAX_LINE_SIZE 80
 
-static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf );
-static int xdlt_outh( void * priv, mmbuffer_t * mb, int nbuf );
-
 static PHB_ITEM hb_mmf_itemPut( PHB_ITEM pItem, void * pMemAddr, int iType );
 static void *   hb_mmf_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError );
 static void     hb_mmf_ret( void * pMemAddr, int iType );
@@ -407,32 +404,6 @@ static int xdlt_outb( void * priv, mmbuffer_t * mb, int nbuf )
       return -1;
 }
 
-static int xdlt_outh( void * priv, mmbuffer_t * mb, int nbuf )
-{
-   PHB_DYNS pSym = ( PHB_DYNS ) priv;
-
-   if( pSym && hb_vmRequestReenter() )
-   {
-      int   iResult;
-      int   i;
-
-      hb_vmPushDynSym( pSym );
-      hb_vmPushNil();
-
-      for( i = 0; i < nbuf; i++ )
-         hb_vmPushString( ( const char * ) mb[ i ].ptr, mb[ i ].size );
-
-      hb_vmFunction( ( HB_USHORT ) nbuf );
-      iResult = hb_parnidef( -1, 0 );
-
-      hb_vmRequestRestore();
-
-      return iResult;
-   }
-   else
-      return -1;
-}
-
 /* int xdl_diff(mmfile_t *mmf1, mmfile_t *mmf2, xpparam_t const *xpp, xdemitconf_t const *xecfg, xdemitcb_t *ecb) */
 
 HB_FUNC( XDL_DIFF )
@@ -456,28 +427,14 @@ HB_FUNC( XDL_DIFF )
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
-      else if( HB_ISBLOCK( 5 ) )
+      else if( HB_ISBLOCK( 5 ) || HB_ISSYMBOL( 5 ) )
       {
-         PHB_ITEM pBlock = hb_param( 5, HB_IT_BLOCK );
+         PHB_ITEM pBlock = hb_param( 5, HB_IT_BLOCK | HB_IT_SYMBOL );
 
          ecb.priv = ( void * ) pBlock;
          ecb.outf = xdlt_outb;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
-      }
-      else if( HB_ISSYMBOL( 5 ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 5, HB_IT_SYMBOL ) ) );
-
-         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         {
-            ecb.priv = pDynSym;
-            ecb.outf = xdlt_outh;
-
-            hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
-         }
-         else
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -542,28 +499,14 @@ HB_FUNC( XDL_BDIFF )
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
-      else if( HB_ISBLOCK( 4 ) )
+      else if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
       {
-         PHB_ITEM pBlock = hb_param( 4, HB_IT_BLOCK );
+         PHB_ITEM pBlock = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
 
          ecb.priv = ( void * ) pBlock;
          ecb.outf = xdlt_outb;
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
-      }
-      else if( HB_ISSYMBOL( 4 ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
-
-         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         {
-            ecb.priv = ( void * ) pDynSym;
-            ecb.outf = xdlt_outh;
-
-            hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
-         }
-         else
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -594,28 +537,14 @@ HB_FUNC( XDL_RABDIFF )
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) )
+      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
       {
-         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
 
          ecb.priv = ( void * ) pBlock;
          ecb.outf = xdlt_outb;
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
-      }
-      else if( HB_ISSYMBOL( 3 ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
-
-         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         {
-            ecb.priv = ( void * ) pDynSym;
-            ecb.outf = xdlt_outh;
-
-            hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
-         }
-         else
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -642,28 +571,14 @@ HB_FUNC( XDL_BPATCH )
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) )
+      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
       {
-         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
+         PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
 
          ecb.priv = ( void * ) pBlock;
          ecb.outf = xdlt_outb;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
-      }
-      else if( HB_ISSYMBOL( 3 ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 3, HB_IT_SYMBOL ) ) );
-
-         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         {
-            ecb.priv = ( void * ) pDynSym;
-            ecb.outf = xdlt_outh;
-
-            hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
-         }
-         else
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
