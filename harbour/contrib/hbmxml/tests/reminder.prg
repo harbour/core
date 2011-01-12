@@ -1,17 +1,20 @@
+/*
+ * $Id$
+ */
 
 #include "hbmxml.ch"
 
-STATIC s_mxml_error := .f.
+STATIC s_mxml_error := .F.
 STATIC s_mxml_error_msg := ""
 
 PROCEDURE main()
 
    LOCAL xml
 
-   mxmlSetErrorCallback( @my_mxmlError() )
+   mxmlSetErrorCallback( {| cErrorMsg | my_mxmlError( cErrorMsg ) } )
 
-   IF hb_fileExists( 'rem.xml' )
-      xml := simplexml_load_file( 'rem.xml' )
+   IF hb_fileExists( "rem.xml" )
+      xml := simplexml_load_file( "rem.xml" )
    ELSE
       RETURN
    ENDIF
@@ -22,8 +25,8 @@ PROCEDURE main()
 
    mxmlDelete( xml )
 
-   IF hb_fileExists( 'rem_err.xml' )
-      xml := simplexml_load_file( 'rem_err.xml' )
+   IF hb_fileExists( "rem_err.xml" )
+      xml := simplexml_load_file( "rem_err.xml" )
 
       IF s_mxml_error
          OutErr( "hbmxml:", s_mxml_error_msg, hb_eol() )
@@ -37,13 +40,13 @@ PROCEDURE main()
 PROCEDURE my_mxmlError( cErrorMsg )
 
    s_mxml_error_msg := cErrorMsg
-   s_mxml_error := .t.
+   s_mxml_error := .T.
 
    RETURN
 
 STATIC FUNCTION simplexml_load_file( file )
 
-   RETURN mxmlLoadString( NIL, hb_memoRead( file ), @type_cb() )
+   RETURN mxmlLoadString( NIL, hb_memoRead( file ), {| node | type_cb( node ) } )
 
 STATIC FUNCTION asXML( xml )
 

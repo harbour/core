@@ -12,14 +12,14 @@ PROCEDURE main()
    LOCAL tree, node
    LOCAL xData
 
-   mxmlSetErrorCallback( @my_mxmlError() )
-   mxmlSetCustomHandlers( @load_c(), @save_c() )
+   mxmlSetErrorCallback( {| cErrorMsg | my_mxmlError( cErrorMsg ) } )
+   mxmlSetCustomHandlers( {| node, cString | load_c( node, cString ) }, {| node | save_c( node ) } )
 
    IF ! hb_FileExists( "cust.xml" )
       create_cust()
    ENDIF
 
-   tree := mxmlLoadFile( tree, "cust.xml", @type_cb() )
+   tree := mxmlLoadFile( tree, "cust.xml", {| node | type_cb( node ) } )
 
    node := mxmlFindElement( tree, tree, "hash", NIL, NIL, MXML_DESCEND )
    IF Empty( node )
@@ -36,10 +36,10 @@ PROCEDURE main()
 
       ErrorLevel( -1 )
       RETURN
-   ENDIF      
+   ENDIF
 
    xData := mxmlGetCustom( node )
-   IF hb_isHash( xData ) .AND. hb_hHasKey( xData, "Today" )
+   IF hb_isHash( xData ) .AND. "Today" $ xData
       OutStd( xData[ "Today" ], hb_eol() )
    ENDIF
 
@@ -47,11 +47,11 @@ PROCEDURE main()
    mxmlSetCustomHandlers( NIL, NIL )
 
    ErrorLevel( 0 )
-   RETURN 
+   RETURN
 
 STATIC PROCEDURE create_cust()
 
-   LOCAL tree, group, element, node 
+   LOCAL tree, group, element, node
    LOCAL hData := {=>}
 
    hData[ "Today" ] := hb_tsToStr( hb_dateTime() )
@@ -65,7 +65,7 @@ STATIC PROCEDURE create_cust()
    mxmlElementSetAttr( element, "type", "custom" )
    mxmlElementSetAttr( element, "checksum", hb_md5( _ENCODE( node ) ) )
 
-   mxmlSaveFile( tree, "cust.xml", @whitespace_cb() )
+   mxmlSaveFile( tree, "cust.xml", {| node, where | whitespace_cb( node, where ) } )
 
    RETURN
 
@@ -76,7 +76,7 @@ PROCEDURE my_mxmlError( cErrorMsg )
    RETURN
 
 FUNCTION load_c( node, cString )
-   
+
    mxmlSetCustom( node, hb_deserialize( hb_base64decode( cString ) ) )
 
    RETURN 0  /* 0 on success or non-zero on error */
@@ -85,7 +85,7 @@ FUNCTION save_c( node )
 
    RETURN _ENCODE( node ) /* string on success or NIL on error */
 
-FUNCTION whitespace_cb( node, where )  
+FUNCTION whitespace_cb( node, where )
 
    LOCAL parent        /* Parent node */
    LOCAL nLevel := -1  /* Indentation level */
@@ -94,7 +94,7 @@ FUNCTION whitespace_cb( node, where )
    name := mxmlGetElement( node )
 
    IF Left( name, 4 ) == "?xml"
-      IF where == MXML_WS_AFTER_OPEN 
+      IF where == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE
          RETURN NIL
@@ -110,9 +110,9 @@ FUNCTION whitespace_cb( node, where )
          parent := mxmlGetParent( parent )
       ENDDO
 
-      IF nLevel > 8 
+      IF nLevel > 8
          nLevel := 8
-      ELSEIF nLevel < 0 
+      ELSEIF nLevel < 0
          nLevel := 0
       ENDIF
 
