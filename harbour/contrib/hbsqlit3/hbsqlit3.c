@@ -262,9 +262,9 @@ static void * hb_sqlite3_param( int iParam, int iType, HB_BOOL fError )
 
 static int callback( void * Cargo, int argc, char ** argv, char ** azColName )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       PHB_ITEM pArrayValue = hb_itemArrayNew( argc );
       PHB_ITEM pArrayColName = hb_itemArrayNew( argc );
@@ -277,7 +277,7 @@ static int callback( void * Cargo, int argc, char ** argv, char ** azColName )
       }
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmPushInteger( argc );
       hb_vmPush( pArrayValue );
       hb_vmPush( pArrayColName );
@@ -300,9 +300,9 @@ static int authorizer( void * Cargo, int iAction, const char * sName1, const cha
                        const char * sName3,
                        const char * sName4 )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       int      iRes;
       PHB_ITEM pItem1 = hb_itemPutStrUTF8( NULL, sName1 );
@@ -311,7 +311,7 @@ static int authorizer( void * Cargo, int iAction, const char * sName1, const cha
       PHB_ITEM pItem4 = hb_itemPutStrUTF8( NULL, sName4 );
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmPushInteger( iAction );
       hb_vmPush( pItem1 );
       hb_vmPush( pItem2 );
@@ -336,14 +336,14 @@ static int authorizer( void * Cargo, int iAction, const char * sName1, const cha
 
 static int busy_handler( void * Cargo, int iNumberOfTimes )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       int iRes;
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmPushInteger( iNumberOfTimes );
       hb_vmSend( 1 );
 
@@ -359,14 +359,14 @@ static int busy_handler( void * Cargo, int iNumberOfTimes )
 
 static int progress_handler( void * Cargo )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       int iRes;
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmSend( 0 );
 
       iRes = hb_parni( -1 );
@@ -381,14 +381,14 @@ static int progress_handler( void * Cargo )
 
 static int hook_commit( void * Cargo )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       int iRes;
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmSend( 0 );
 
       iRes = hb_parni( -1 );
@@ -403,12 +403,12 @@ static int hook_commit( void * Cargo )
 
 static void hook_rollback( void * Cargo )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) Cargo;
+   PHB_ITEM pCallback = ( PHB_ITEM ) Cargo;
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmSend( 0 );
 
       hb_vmRequestRestore();
@@ -417,15 +417,15 @@ static void hook_rollback( void * Cargo )
 
 static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
 {
-   PHB_ITEM pBlock = ( PHB_ITEM ) sqlite3_user_data( ctx );
+   PHB_ITEM pCallback = ( PHB_ITEM ) sqlite3_user_data( ctx );
 
-   if( pBlock && hb_vmRequestReenter() )
+   if( pCallback && hb_vmRequestReenter() )
    {
       PHB_ITEM pResult;
       int      i;
 
       hb_vmPushEvalSym();
-      hb_vmPush( pBlock );
+      hb_vmPush( pCallback );
       hb_vmPushInteger( argc );
 
       if( argc > 0 )

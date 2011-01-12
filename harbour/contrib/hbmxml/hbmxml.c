@@ -100,18 +100,6 @@ static void hb_cbs_var_init( void * cargo )
    pCbs->sax_cb = NULL;
 }
 
-static void hb_cbs_var_release( void * cargo )
-{
-   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) cargo;
-
-   if( pCbs->type_cb )
-      hb_itemRelease( pCbs->type_cb );
-   if( pCbs->save_cb )
-      hb_itemRelease( pCbs->save_cb );
-   if( pCbs->sax_cb )
-      hb_itemRelease( pCbs->sax_cb );
-}
-
 static void hb_custom_cbs_var_init( void * cargo )
 {
    HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) cargo;
@@ -145,7 +133,7 @@ static void hb_error_cb_var_release( void * cargo )
       hb_itemRelease( pError_cb->error_cb );
 }
 
-static HB_TSD_NEW( s_cbs_var, sizeof( HB_CBS_VAR ), hb_cbs_var_init, hb_cbs_var_release );
+static HB_TSD_NEW( s_cbs_var, sizeof( HB_CBS_VAR ), hb_cbs_var_init, NULL );
 static HB_TSD_NEW( s_custom_cbs_var, sizeof( HB_CUSTOM_CBS_VAR ), hb_custom_cbs_var_init, hb_custom_cbs_var_release );
 static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init, hb_error_cb_var_release );
 
@@ -765,9 +753,9 @@ static mxml_type_t type_cb( mxml_node_t * node )
 
    if( pCbs != NULL )
    {
-      PHB_ITEM pBlock = pCbs->type_cb;
+      PHB_ITEM pCallback = pCbs->type_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          int      iResult;
          PHB_ITEM pNode = hb_itemNew( NULL );
@@ -775,7 +763,7 @@ static mxml_type_t type_cb( mxml_node_t * node )
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
 
          hb_vmSend( 1 );
@@ -815,9 +803,9 @@ HB_FUNC( MXMLLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) )
+   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
    {
-      pCbs->type_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -876,9 +864,9 @@ HB_FUNC( MXMLLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) )
+   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
    {
-      pCbs->type_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1169,9 +1157,9 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 
    if( node != NULL && pCbs != NULL )
    {
-      PHB_ITEM pBlock = pCbs->sax_cb;
+      PHB_ITEM pCallback = pCbs->sax_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          PHB_ITEM    pNode = hb_itemNew( NULL );
          HB_USHORT   uPCount = 2;
@@ -1179,7 +1167,7 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
          hb_vmPushInteger( ( int ) ( event + 1 ) );
 
@@ -1188,7 +1176,7 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
             hb_vmPush( ( PHB_ITEM ) data );
             uPCount += 1;
          }
-         hb_vmProc( uPCount );
+         hb_vmSend( uPCount );
 
          hb_itemRelease( pNode );
          hb_vmRequestRestore();
@@ -1230,9 +1218,9 @@ HB_FUNC( MXMLSAXLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) )
+   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
    {
-      pCbs->type_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1249,15 +1237,10 @@ HB_FUNC( MXMLSAXLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 4 ) )
+   if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
    {
-      PHB_ITEM pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 4, HB_IT_SYMBOL ) ) );
-
-      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-      {
-         pCbs->sax_cb = pDynSym;
-         cb_sax = sax_cb;
-      }
+      pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+      cb_sax = sax_cb;
    }
 
    file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
@@ -1311,9 +1294,9 @@ HB_FUNC( MXMLSAXLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) )
+   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
    {
-      pCbs->type_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1330,15 +1313,10 @@ HB_FUNC( MXMLSAXLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 4 ) )
+   if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
    {
-      PHB_ITEM pDynSym = hb_dynsymNew( hb_itemGetSymbol( hb_param( 4, HB_IT_SYMBOL ) ) );
-
-      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-      {
-         pCbs->sax_cb = pDynSym;
-         cb_sax = sax_cb;
-      }
+      pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+      cb_sax = sax_cb;
    }
 
    s = hb_parstr_utf8( 2, &hFree, NULL );
@@ -1364,9 +1342,9 @@ static const char * save_cb( mxml_node_t * node, int where )
 
    if( node != NULL && pCbs != NULL )
    {
-      PHB_ITEM pBlock = pCbs->save_cb;
+      PHB_ITEM pCallback = pCbs->save_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          PHB_ITEM       pNode = hb_itemNew( NULL );
          PHB_ITEM       pResult;
@@ -1376,7 +1354,7 @@ static const char * save_cb( mxml_node_t * node, int where )
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
          hb_vmPushInteger( where );
          hb_vmSend( 2 );
@@ -1422,9 +1400,9 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
       char           buffer[ BUFFER_SIZE ];
       int            bytes;
 
-      if( HB_ISBLOCK( 2 ) )
+      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
-         pCbs->save_cb = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         pCbs->save_cb = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
          cb = save_cb;
       }
 
@@ -1463,9 +1441,9 @@ HB_FUNC( MXMLSAVEFILE )
       mxml_save_cb_t cb = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-      if( HB_ISBLOCK( 3 ) )
+      if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
       {
-         pCbs->save_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+         pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
          cb = save_cb;
       }
 
@@ -1500,9 +1478,9 @@ HB_FUNC( MXMLSAVESTRING )
          char *   buffer;
          HB_SIZE  buffer_size;
 
-         if( HB_ISBLOCK( 3 ) )
+         if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
          {
-            pCbs->save_cb = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+            pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
             cb = save_cb;
          }
 
@@ -1575,15 +1553,15 @@ static void error_cb( const char * pszErrorMsg )
 
    if( pError_cb != NULL )
    {
-      PHB_ITEM pBlock = pError_cb->error_cb;
+      PHB_ITEM pCallback = pError_cb->error_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_itemPutCConst( hb_stackAllocItem(), pszErrorMsg );
 
-         hb_vmProc( 1 );
+         hb_vmSend( 1 );
          hb_vmRequestRestore();
       }
    }
@@ -1591,14 +1569,16 @@ static void error_cb( const char * pszErrorMsg )
 
 HB_FUNC( MXMLSETERRORCALLBACK )
 {
-   if( HB_ISBLOCK( 1 ) )
+   if( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) )
    {
       HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) hb_stackGetTSD( &s_error_cb_var );
 
-      pError_cb->error_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
+      pError_cb->error_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
 
       mxmlSetErrorCallback( error_cb );
    }
+   else
+      mxmlSetErrorCallback( NULL );
 }
 
 /* int mxmlSetInteger( mxml_node_t * node, int integer ) */
@@ -1828,9 +1808,9 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
 
    if( node != NULL && pCCbs != NULL && data != NULL )
    {
-      PHB_ITEM pBlock = pCCbs->load_cb;
+      PHB_ITEM pCallback = pCCbs->load_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          PHB_ITEM pNode = hb_itemNew( NULL );
          int      iResult;
@@ -1838,7 +1818,7 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
          hb_itemPutCConst( hb_stackAllocItem(), data );
 
@@ -1863,9 +1843,9 @@ static char * custom_save_cb( mxml_node_t * node )
 
    if( node != NULL && pCCbs != NULL )
    {
-      PHB_ITEM pBlock = pCCbs->save_cb;
+      PHB_ITEM pCallback = pCCbs->save_cb;
 
-      if( pBlock && hb_vmRequestReenter() )
+      if( pCallback && hb_vmRequestReenter() )
       {
          PHB_ITEM pNode = hb_itemNew( NULL );
          char *   pszResult;
@@ -1873,7 +1853,7 @@ static char * custom_save_cb( mxml_node_t * node )
          hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
-         hb_vmPush( pBlock );
+         hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
 
          hb_vmSend( 1 );
@@ -1893,17 +1873,16 @@ static char * custom_save_cb( mxml_node_t * node )
 
 HB_FUNC( MXMLSETCUSTOMHANDLERS )
 {
-   mxml_custom_load_cb_t   load = NULL;
-   mxml_custom_save_cb_t   save = NULL;
-
-   if( HB_ISBLOCK( 1 ) && HB_ISBLOCK( 2 ) )
+   if( ( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) ) &&
+       ( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) ) )
    {
       HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
 
-      pCCbs->load_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
-      pCCbs->save_cb = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-      load = custom_load_cb;
-      save = custom_save_cb;
+      pCCbs->load_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      pCCbs->save_cb = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+
+      mxmlSetCustomHandlers( custom_load_cb, custom_save_cb );
    }
-   mxmlSetCustomHandlers( load, save );
+   else
+      mxmlSetCustomHandlers( NULL, NULL );
 }
