@@ -184,7 +184,7 @@ static int hb_gt_gui_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 {
    void * hText;
    LPCTSTR lpText = HB_ITEMGETSTR( pMessage, &hText, NULL );
-   int iRet = 0, iOptions = pOptions ? ( int ) hb_arrayLen( pOptions ) : 0;
+   int iRet, iOptions = pOptions ? ( int ) hb_arrayLen( pOptions ) : 0;
 
    if( lpText && iOptions > 0 )
    {

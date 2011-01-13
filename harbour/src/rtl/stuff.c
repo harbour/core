@@ -65,14 +65,19 @@ HB_FUNC( STUFF )
 
       HB_SIZE nTotalLen;
 
-      if( nPos > 0 )
-         nPos--;
+      if( nPos )
+      {
+         if( nPos < 1 || nPos > nText )
+            nPos = nText;
+         else
+            nPos--;
+      }
 
-      if( nPos < 0 || nPos > nText )
-         nPos = nText;
-
-      if( nDel < 0 || nDel > nText - nPos )
-         nDel = nText - nPos;
+      if( nDel )
+      {
+         if( nDel < 1 || nDel > nText - nPos )
+            nDel = nText - nPos;
+      }
 
       if( ( nTotalLen = nText + nInsert - nDel ) > 0 )
       {

@@ -364,13 +364,16 @@ HB_FUNC( XDL_MMFILE_COMPACT )
 
 /* callbacks */
 
+#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRDIFF ) ( p ) )
+#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRDIFF ) hb_numToHandle( hb_parnint( n ) ) )
+
 static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
 {
    int i;
 
    for( i = 0; i < nbuf; i++ )
    {
-      hb_fsWriteLarge( ( HB_FHANDLE ) priv, mb[ i ].ptr, ( HB_SIZE ) mb[ i ].size );
+      hb_fsWriteLarge( hb_ptrToHandle( priv ), mb[ i ].ptr, ( HB_SIZE ) mb[ i ].size );
 
       if( hb_fsError() != 0 )
          return -1;
@@ -422,7 +425,7 @@ HB_FUNC( XDL_DIFF )
 
       if( HB_ISNUM( 5 ) )
       {
-         ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 5 ) );
+         ecb.priv = hb_parHandlePtr( 5 );
          ecb.outf = xdlt_outf;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
@@ -458,10 +461,10 @@ HB_FUNC( XDL_PATCH )
          xdemitcb_t  ecb;
          xdemitcb_t  rjecb;
 
-         ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 4 ) );
+         ecb.priv = hb_parHandlePtr( 4 );
          ecb.outf = xdlt_outf;
 
-         rjecb.priv = ( void * ) hb_numToHandle( hb_parnint( 5 ) );
+         rjecb.priv = hb_parHandlePtr( 5 );
          rjecb.outf = xdlt_outf;
 
          hb_retni( xdl_patch( phb_mmf1->mmf, phb_mmf2->mmf, mode, &ecb, &rjecb ) );
@@ -494,7 +497,7 @@ HB_FUNC( XDL_BDIFF )
 
       if( HB_ISNUM( 4 ) )
       {
-         ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 4 ) );
+         ecb.priv = hb_parHandlePtr( 4 );
          ecb.outf = xdlt_outf;
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
@@ -532,7 +535,7 @@ HB_FUNC( XDL_RABDIFF )
 
       if( HB_ISNUM( 3 ) )
       {
-         ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 3 ) );
+         ecb.priv = hb_parHandlePtr( 3 );
          ecb.outf = xdlt_outf;
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
@@ -566,7 +569,7 @@ HB_FUNC( XDL_BPATCH )
 
       if( HB_ISNUM( 3 ) )
       {
-         ecb.priv = ( void * ) hb_numToHandle( hb_parnint( 3 ) );
+         ecb.priv = hb_parHandlePtr( 3 );
          ecb.outf = xdlt_outf;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
