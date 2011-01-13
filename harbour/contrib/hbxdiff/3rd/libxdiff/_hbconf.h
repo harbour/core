@@ -51,12 +51,12 @@
  */
 
 /* for BCC 5.5 */
-#if ( defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1360 ) && ( __BORLANDC__ < 1400 ) )
+#if ( defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1360 ) && ( __BORLANDC__ < 1400 ) ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 ) && ! defined( __POCC__ ) )
 #  define XRABPLY_TYPE64        __int64
 #  define XV64( v ) ( ( xply_word ) v##ui64 )
 #endif
 
-/* 
+/*
  * Define to 1 if your processor stores words with the most significant byte
  * first (like Motorola and SPARC, unlike Intel and VAX).
  */
@@ -78,12 +78,12 @@
 /* #undef const */
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
- * calls it, or to nothing if 'inline' is not supported under any name. 
+ * calls it, or to nothing if 'inline' is not supported under any name.
  */
 
 #define inline _HB_INLINE_
 
-/* 
+/*
  * Define to empty if the keyword `volatile' does not work. Warning: valid
  * code using `volatile' can become incorrect without. Disable with care.
  */
