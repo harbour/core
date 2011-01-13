@@ -160,11 +160,10 @@ static void hb_expat_hnd_void( int nHnd, void * userdata )
    {
       if( hb_vmRequestReenter() )
       {
-         PHB_ITEM pUserData = hb_itemNew( hb_expat->pVar[ _VAR_xUserData ] );
-
-         hb_evalBlock1( hb_expat->pVar[ nHnd ], pUserData );
-
-         hb_itemRelease( pUserData );
+         hb_vmPushEvalSym();
+         hb_vmPush( hb_expat->pVar[ nHnd ] );
+         hb_vmPush( hb_expat->pVar[ _VAR_xUserData ] );
+         hb_vmSend( 1 );
 
          hb_vmRequestRestore();
       }
@@ -636,13 +635,12 @@ static int XMLCALL hb_expat_NotStandaloneHandler( void * userdata )
    {
       if( hb_vmRequestReenter() )
       {
-         PHB_ITEM pUserData = hb_itemNew( hb_expat->pVar[ _VAR_xUserData ] );
-
-         hb_evalBlock1( hb_expat->pVar[ _VAR_bNotStandaloneHandler ], pUserData );
+         hb_vmPushEvalSym();
+         hb_vmPush( hb_expat->pVar[ _VAR_bNotStandaloneHandler ] );
+         hb_vmPush( hb_expat->pVar[ _VAR_xUserData ] );
+         hb_vmSend( 1 );
 
          iResult = hb_parni( -1 );
-
-         hb_itemRelease( pUserData );
 
          hb_vmRequestRestore();
       }

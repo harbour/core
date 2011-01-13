@@ -66,11 +66,10 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 
    if( size > 0 && userdata && hb_vmRequestReenter() )
    {
-      PHB_ITEM p = hb_itemPutL( NULL, rwflag );
-
-      hb_evalBlock1( ( PHB_ITEM ) userdata, p );
-
-      hb_itemRelease( p );
+      hb_vmPushEvalSym();
+      hb_vmPush( ( PHB_ITEM ) userdata );
+      hb_vmPushLogical( rwflag );
+      hb_vmSend( 1 );
 
       buf[ 0 ] = '\0';
 

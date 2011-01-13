@@ -33,7 +33,7 @@ PROCEDURE Main( cFileName )
    LOCAL v1, v2, v3
 
    IF cFileName == NIL
-      cFileName := "setup.ui"
+      cFileName := ".." + hb_ps() + ".." + hb_ps() + "hbide" + hb_ps() + "setup.ui"
    ENDIF
 
    OutStd( XML_ExpatVersion() + hb_eol() )

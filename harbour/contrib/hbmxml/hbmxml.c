@@ -1559,7 +1559,7 @@ static void error_cb( const char * pszErrorMsg )
       {
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_itemPutCConst( hb_stackAllocItem(), pszErrorMsg );
+         hb_itemPutC( hb_stackAllocItem(), pszErrorMsg );
 
          hb_vmSend( 1 );
          hb_vmRequestRestore();
@@ -1820,7 +1820,7 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
          hb_vmPushItemRef( pNode );
-         hb_itemPutCConst( hb_stackAllocItem(), data );
+         hb_itemPutC( hb_stackAllocItem(), data );
 
          hb_vmSend( 2 );
 

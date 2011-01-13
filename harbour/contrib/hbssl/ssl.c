@@ -1487,17 +1487,13 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
 
    if( userdata && hb_vmRequestReenter() )
    {
-      PHB_ITEM p1 = hb_itemPutL( NULL, write_p );
-      PHB_ITEM p2 = hb_itemPutNI( NULL, version );
-      PHB_ITEM p3 = hb_itemPutNI( NULL, content_type );
-      PHB_ITEM p4 = hb_itemPutCL( NULL, ( const char * ) buf, ( HB_SIZE ) len );
-
-      hb_evalBlock( ( PHB_ITEM ) userdata, p1, p2, p3, p4, NULL );
-
-      hb_itemRelease( p4 );
-      hb_itemRelease( p3 );
-      hb_itemRelease( p2 );
-      hb_itemRelease( p1 );
+      hb_vmPushEvalSym();
+      hb_vmPush( ( PHB_ITEM ) userdata );
+      hb_vmPushLogical( write_p );
+      hb_vmPushInteger( version );
+      hb_vmPushInteger( content_type );
+      hb_vmPushString( ( const char * ) buf, ( HB_SIZE ) len );
+      hb_vmSend( 4 );
 
       hb_vmRequestRestore();
    }

@@ -387,13 +387,11 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
    {
       if( hb_vmRequestReenter() )
       {
-         PHB_ITEM p1 = hb_itemPutND( NULL, ulnow   > 0 ? ulnow   : dlnow   );
-         PHB_ITEM p2 = hb_itemPutND( NULL, ultotal > 0 ? ultotal : dltotal );
-
-         hb_evalBlock( ( PHB_ITEM ) Cargo, p1, p2, NULL );
-
-         hb_itemRelease( p1 );
-         hb_itemRelease( p2 );
+         hb_vmPushEvalSym();
+         hb_vmPush( ( PHB_ITEM ) Cargo );
+         hb_vmPushDouble( ulnow   > 0 ? ulnow   : dlnow  , HB_DEFAULT_DECIMALS );
+         hb_vmPushDouble( ultotal > 0 ? ultotal : dltotal, HB_DEFAULT_DECIMALS );
+         hb_vmSend( 2 );
 
          if( hb_parl( -1 ) )
             return 1; /* Abort */

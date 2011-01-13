@@ -114,10 +114,10 @@ static void hb_zebra_draw_codeblock_callback( void * pDrawBlock, double dX, doub
    {
       hb_vmPushEvalSym();
       hb_vmPush( ( PHB_ITEM ) pDrawBlock );
-      hb_vmPushDouble( dX, 2 );
-      hb_vmPushDouble( dY, 2 );
-      hb_vmPushDouble( dWidth, 2 );
-      hb_vmPushDouble( dHeight, 2 );
+      hb_vmPushDouble( dX, HB_DEFAULT_DECIMALS );
+      hb_vmPushDouble( dY, HB_DEFAULT_DECIMALS );
+      hb_vmPushDouble( dWidth, HB_DEFAULT_DECIMALS );
+      hb_vmPushDouble( dHeight, HB_DEFAULT_DECIMALS );
       hb_vmSend( 4 );
       hb_vmRequestRestore();
    }
