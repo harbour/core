@@ -25,7 +25,7 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
 else
-   CFLAGS += -W
+   CFLAGS += -Wall -Wno-unused -Wno-pointer-sign -Wno-uninitialized -Wno-switch -Wno-strict-overflow -Wno-main
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
