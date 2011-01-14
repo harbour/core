@@ -72,7 +72,7 @@ HB_FUNC( HB_LZF_COMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) )
    {
-      HB_SIZE nLen = HB_ISCHAR( 1 ) ? hb_parclen( 1 ) : hb_parns( 1 );
+      HB_SIZE nLen = HB_ISCHAR( 1 ) ? hb_parclen( 1 ) : ( HB_SIZE ) hb_parns( 1 );
       hb_retns( hb_lzf_compressbound( nLen ) );
    }
    else
@@ -119,7 +119,7 @@ HB_FUNC( HB_LZF_COMPRESS )
          else
          {
             out_len = ( HB_ISNUM( 2 ) && hb_parns( 2 ) >= 0 ) ?
-                      hb_parns( 2 ) :
+                      ( HB_SIZE ) hb_parns( 2 ) :
                       hb_lzf_compressbound( in_len );
 
             out_data = ( char * ) hb_xalloc( out_len + 1 );
