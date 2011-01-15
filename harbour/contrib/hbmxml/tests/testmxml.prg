@@ -605,7 +605,7 @@ PROCEDURE sax_cb( hNode, hEvent, hData )  /* I - Current node */
    RETURN
 
 /*
- * 'type_cb()' - XML data tyep callback for mxmlLoadFile()...
+ * 'type_cb()' - XML data type callback for mxmlLoadFile()...
  */
 
 FUNCTION type_cb( hNode )                 /* O - Data type */

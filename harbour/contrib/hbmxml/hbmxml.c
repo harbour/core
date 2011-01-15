@@ -204,7 +204,7 @@ static HB_GARBAGE_FUNC( hbmxml_indexDestructor )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) Cargo;
 
-   if( *ppMxml_index )
+   if( ppMxml_index && *ppMxml_index )
    {
       mxmlIndexDelete( *ppMxml_index );
       *ppMxml_index = NULL;
@@ -298,7 +298,6 @@ HB_FUNC( MXMLADD )
 HB_FUNC( MXMLDELETE )
 {
    HBMXML_NODE *  pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
-   int            TODO;
 
    if( pHbnode && pHbnode->node )
    {
@@ -685,10 +684,14 @@ HB_FUNC( MXMLINDEXFIND )
 
 HB_FUNC( MXMLINDEXDELETE )
 {
-   mxml_index_t * index = mxml_index_param( 1 );
 
-   if( index )
-      mxmlIndexDelete( index );
+   mxml_index_t ** ppIndex = ( mxml_index_t ** ) hb_parptrGC( &s_gc_mxml_indexFuncs, 1 );
+
+   if( ppIndex && *ppIndex )
+   {
+      mxmlIndexDelete( *ppIndex );
+      *ppIndex = NULL;
+   }
    else
       MXML_ERR_ARGS;
 }
@@ -1471,10 +1474,11 @@ HB_FUNC( MXMLSAVESTRING )
       mxml_save_cb_t cb = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-      if( pBuffer && HB_ISBYREF( 2 ) )
+      if( pBuffer && HB_ISBYREF( 2 ) && hb_parcsiz( 2 ) > 0 )
       {
          char *   buffer;
          HB_SIZE  buffer_size;
+         HB_BOOL  bErr = HB_FALSE;
 
          if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
          {
@@ -1487,17 +1491,17 @@ HB_FUNC( MXMLSAVESTRING )
             int bytes = mxmlSaveString( node, buffer, ( int ) buffer_size, cb );
 
             if( bytes <= 0 )
-               hb_retni( -1 );
+               hb_retni( bytes );
             else if( bytes <= ( int ) ( buffer_size - 1 ) )
             {
                hb_storclen( buffer, ( int ) bytes - 1, 2 ); /* Without EoL */
                hb_retni( bytes );
             }
             else
-               hb_retni( -( bytes + 1 ) );
+               hb_retni( bytes );
          }
          else
-            hb_retni( -2 );
+            bErr = HB_TRUE;
 
          pCbs->save_cb = NULL;
          if( pCbs->hText )
@@ -1505,9 +1509,12 @@ HB_FUNC( MXMLSAVESTRING )
             hb_strfree( pCbs->hText );
             pCbs->hText = NULL;
          }
+  
+         if ( bErr )
+            MXML_ERR_ARGS;
       }
       else
-         hb_retni( -3 );
+         MXML_ERR_ARGS;
    }
    else
       MXML_ERR_ARGS;
