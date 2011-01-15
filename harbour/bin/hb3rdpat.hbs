@@ -670,6 +670,11 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       }                                                                                   ;
    }
 
+   IF Empty( cArchiveURL )
+      OutStd( "E: URL missing" + hb_eol() )
+      RETURN .F.
+   ENDIF
+
    cFileName := URL_GetFileName( cArchiveURL )
 
    FOR EACH cPattern IN hb_HKeys( aActionMap )
