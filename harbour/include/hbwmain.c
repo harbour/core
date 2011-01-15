@@ -64,7 +64,9 @@ static char * s_argv[ HB_MAX_ARGS ];
 #endif
 
 #if defined( HB_VM_STARTUP )
-extern void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+HB_EXTERN_BEGIN
+extern HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+HB_EXTERN_END
 #endif
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
