@@ -1725,7 +1725,8 @@ HB_EXPR_PTR hb_compExprReduceAnd( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       }
    }
    else if( pRight->ExprType == HB_ET_LOGICAL &&
-            HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
+            HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) &&
+            ( HB_COMP_PARAM->mode == HB_MODE_COMPILER || HB_SUPPORT_HARBOUR ) )
    {
       if( pRight->value.asLogical )
       {
@@ -1792,7 +1793,8 @@ HB_EXPR_PTR hb_compExprReduceOr( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       }
    }
    else if( pRight->ExprType == HB_ET_LOGICAL &&
-            HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
+            HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) &&
+            ( HB_COMP_PARAM->mode == HB_MODE_COMPILER || HB_SUPPORT_HARBOUR ) )
    {
       if( pRight->value.asLogical )
       {

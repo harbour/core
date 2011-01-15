@@ -400,13 +400,16 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
 #elif ! defined( HB_COMMON_SUPPORT )
-#  define HB_MACRO_GENFLAGS   ( ( ( HB_BYTE ) HB_COMP_PARAM->supported ) & \
-                                ( HB_COMPFLAG_HARBOUR | \
-                                  HB_COMPFLAG_XBASE | \
-                                  HB_COMPFLAG_SHORTCUTS | \
-                                  HB_COMPFLAG_ARRSTR | \
-                                  HB_COMPFLAG_EXTOPT | \
-                                  HB_COMPFLAG_RT_MACRO ) )
+#  define HB_MACRO_GENFLAGS   ( ( ( ( HB_BYTE ) HB_COMP_PARAM->supported ) & \
+                                  ( HB_COMPFLAG_HARBOUR | \
+                                    HB_COMPFLAG_XBASE | \
+                                    HB_COMPFLAG_SHORTCUTS | \
+                                    HB_COMPFLAG_ARRSTR | \
+                                    HB_COMPFLAG_EXTOPT | \
+                                    HB_COMPFLAG_RT_MACRO ) ) | \
+                                ( ( HB_COMP_PARAM->supported & \
+                                    HB_COMPFLAG_HARBOUR ) == 0 ? \
+                                  HB_COMPFLAG_SHORTCUTS : 0 ) )
 #endif
 
 HB_EXTERN_END
