@@ -78,6 +78,7 @@ typedef struct
    PHB_ITEM type_cb;
    PHB_ITEM save_cb;
    PHB_ITEM sax_cb;
+   void *   hText;
 } HB_CBS_VAR;
 
 typedef struct
@@ -749,7 +750,7 @@ HB_FUNC( MXMLINDEXRESET )
 
 static mxml_type_t type_cb( mxml_node_t * node )
 {
-   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackTestTSD( &s_cbs_var );
 
    if( pCbs != NULL )
    {
@@ -1153,7 +1154,7 @@ HB_FUNC( MXMLRETAIN )
 
 static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 {
-   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackTestTSD( &s_cbs_var );
 
    if( node != NULL && pCbs != NULL )
    {
@@ -1338,17 +1339,21 @@ HB_FUNC( MXMLSAXLOADSTRING )
 
 static const char * save_cb( mxml_node_t * node, int where )
 {
-   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackTestTSD( &s_cbs_var );
 
    if( node != NULL && pCbs != NULL )
    {
       PHB_ITEM pCallback = pCbs->save_cb;
 
+      if( pCbs->hText )
+      {
+         hb_strfree( pCbs->hText );
+         pCbs->hText = NULL;
+      }
+
       if( pCallback && hb_vmRequestReenter() )
       {
          PHB_ITEM       pNode = hb_itemNew( NULL );
-         PHB_ITEM       pResult;
-
          const char *   pszResult;
 
          hbmxml_node_ItemPut( pNode, node, 0 );
@@ -1359,24 +1364,7 @@ static const char * save_cb( mxml_node_t * node, int where )
          hb_vmPushInteger( where );
          hb_vmSend( 2 );
 
-         pResult = hb_param( -1, HB_IT_ANY );
-
-         if( hb_itemType( pResult ) == HB_IT_STRING )
-         {
-            void *         hText;
-            HB_SIZE        nText;
-            const char *   pszText = hb_itemGetStrUTF8( pResult, &hText, &nText );
-
-            int            TOFIX;
-
-            /* TOFIX: This will free pszText pointer, so the returned string buffer will
-                      be invalid. [vszakats] */
-            hb_strfree( hText );
-
-            pszResult = pszText;
-         }
-         else
-            pszResult = NULL;
+         pszResult = hb_itemGetStrUTF8( hb_param( -1, HB_IT_ANY ), &pCbs->hText, NULL );
 
          hb_itemRelease( pNode );
          hb_vmRequestRestore();
@@ -1408,6 +1396,11 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
       bytes = mxmlSaveString( node, buffer, BUFFER_SIZE, cb );
       pCbs->save_cb = NULL;
+      if( pCbs->hText )
+      {
+         hb_strfree( pCbs->hText );
+         pCbs->hText = NULL;
+      }
 
       if( bytes <= 0 )
          hb_retc_null();
@@ -1455,6 +1448,11 @@ HB_FUNC( MXMLSAVEFILE )
       }
 
       pCbs->save_cb = NULL;
+      if( pCbs->hText )
+      {
+         hb_strfree( pCbs->hText );
+         pCbs->hText = NULL;
+      }
       hb_strfree( hFree );
    }
    else
@@ -1487,7 +1485,6 @@ HB_FUNC( MXMLSAVESTRING )
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
             int bytes = mxmlSaveString( node, buffer, ( int ) buffer_size, cb );
-            pCbs->save_cb = NULL;
 
             if( bytes <= 0 )
                hb_retni( -1 );
@@ -1501,6 +1498,13 @@ HB_FUNC( MXMLSAVESTRING )
          }
          else
             hb_retni( -2 );
+
+         pCbs->save_cb = NULL;
+         if( pCbs->hText )
+         {
+            hb_strfree( pCbs->hText );
+            pCbs->hText = NULL;
+         }
       }
       else
          hb_retni( -3 );
@@ -1549,7 +1553,7 @@ HB_FUNC( MXMLSETELEMENT )
 
 static void error_cb( const char * pszErrorMsg )
 {
-   HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) hb_stackGetTSD( &s_error_cb_var );
+   HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) hb_stackTestTSD( &s_error_cb_var );
 
    if( pError_cb != NULL )
    {
@@ -1569,16 +1573,30 @@ static void error_cb( const char * pszErrorMsg )
 
 HB_FUNC( MXMLSETERRORCALLBACK )
 {
-   if( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) )
+   PHB_ITEM pError = hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+   if( pError )
    {
       HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) hb_stackGetTSD( &s_error_cb_var );
 
-      pError_cb->error_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      if( pError_cb->error_cb )
+         hb_itemRelease( pError_cb->error_cb );
+      pError_cb->error_cb = hb_itemNew( pError );
 
       mxmlSetErrorCallback( error_cb );
    }
    else
+   {
+      HB_ERROR_CB_VAR * pError_cb = ( HB_ERROR_CB_VAR * ) hb_stackTestTSD( &s_error_cb_var );
+
+      if( pError_cb && pError_cb->error_cb )
+      {
+         hb_itemRelease( pError_cb->error_cb );
+         pError_cb->error_cb = NULL;
+      }
+
       mxmlSetErrorCallback( NULL );
+   }
 }
 
 /* int mxmlSetInteger( mxml_node_t * node, int integer ) */
@@ -1804,7 +1822,7 @@ HB_FUNC( MXMLSETCUSTOM )
 
 static int custom_load_cb( mxml_node_t * node, const char * data )
 {
-   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
+   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackTestTSD( &s_custom_cbs_var );
 
    if( node != NULL && pCCbs != NULL && data != NULL )
    {
@@ -1839,7 +1857,7 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
 
 static char * custom_save_cb( mxml_node_t * node )
 {
-   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
+   HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackTestTSD( &s_custom_cbs_var );
 
    if( node != NULL && pCCbs != NULL )
    {
@@ -1873,16 +1891,41 @@ static char * custom_save_cb( mxml_node_t * node )
 
 HB_FUNC( MXMLSETCUSTOMHANDLERS )
 {
-   if( ( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) ) &&
-       ( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) ) )
+   PHB_ITEM pLoad = hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ),
+            pSave = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+   if( pLoad && pSave )
    {
       HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackGetTSD( &s_custom_cbs_var );
 
-      pCCbs->load_cb = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      pCCbs->save_cb = hb_itemNew( hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      if( pCCbs->load_cb )
+         hb_itemRelease( pCCbs->load_cb );
+      pCCbs->load_cb = hb_itemNew( pLoad );
+
+      if( pCCbs->save_cb )
+         hb_itemRelease( pCCbs->save_cb );
+      pCCbs->save_cb = hb_itemNew( pSave );
 
       mxmlSetCustomHandlers( custom_load_cb, custom_save_cb );
    }
    else
+   {
+      HB_CUSTOM_CBS_VAR * pCCbs = ( HB_CUSTOM_CBS_VAR * ) hb_stackTestTSD( &s_custom_cbs_var );
+
+      if( pCCbs )
+      {
+         if( pCCbs->load_cb )
+         {
+            hb_itemRelease( pCCbs->load_cb );
+            pCCbs->load_cb = NULL;
+         }
+         if( pCCbs->save_cb )
+         {
+            hb_itemRelease( pCCbs->save_cb );
+            pCCbs->save_cb = NULL;
+         }
+      }
+
       mxmlSetCustomHandlers( NULL, NULL );
+   }
 }
