@@ -1936,3 +1936,74 @@ HB_FUNC( MXMLSETCUSTOMHANDLERS )
       mxmlSetCustomHandlers( NULL, NULL );
    }
 }
+
+/* ============== temporary solution before final 2.7 release ================= */
+
+HB_FUNC( HB_MXMLGETATTRSCOUNT )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node && mxmlGetType( node ) == MXML_ELEMENT )
+      hb_retni( node->value.element.num_attrs );
+   else
+      MXML_ERR_ARGS;
+}
+
+HB_FUNC( HB_MXMLGETATTRSARRAY )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node && mxmlGetType( node ) == MXML_ELEMENT )
+   {
+      PHB_ITEM       pAttrs = hb_itemArrayNew( 0 );
+      int            i;
+      mxml_attr_t *  attr;
+
+      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs ;
+            i > 0; i --, attr++ )
+      {
+         PHB_ITEM pAttr = hb_itemArrayNew( 2 );
+
+         hb_arraySetStrUTF8( pAttr, 1, attr->name );
+         hb_arraySetStrUTF8( pAttr, 2, attr->value );
+
+         hb_arrayAdd( pAttrs, pAttr );
+
+         hb_itemRelease( pAttr );
+      }
+
+      hb_itemReturnRelease( pAttrs );
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+HB_FUNC( HB_MXMLGETATTRS )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node && mxmlGetType( node ) == MXML_ELEMENT )
+   {
+      PHB_ITEM       pAttrs = hb_hashNew( hb_itemNew( NULL ) );
+      int            i;
+      mxml_attr_t *  attr;
+
+      hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
+
+      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs ;
+            i > 0; i --, attr++ )
+      {
+         PHB_ITEM pKey = hb_itemPutStrUTF8( NULL, attr->name );
+         PHB_ITEM pValue = hb_itemPutStrUTF8( NULL, attr->value );
+
+         hb_hashAdd( pAttrs, pKey, pValue );
+
+         hb_itemRelease( pValue );
+         hb_itemRelease( pKey );
+      }
+
+      hb_itemReturnRelease( pAttrs );
+   }
+   else
+      MXML_ERR_ARGS;
+}
