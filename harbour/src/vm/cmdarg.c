@@ -88,10 +88,10 @@ static HANDLE  s_hPrevInstance = 0;
 static int     s_iCmdShow      = 0;
 static HB_BOOL s_WinMainParam  = HB_FALSE;
 
-void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
+void hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow )
 {
-   s_hInstance = hInstance;
-   s_hPrevInstance = hPrevInstance;
+   s_hInstance = ( HANDLE ) hInstance;
+   s_hPrevInstance = ( HANDLE ) hPrevInstance;
    s_iCmdShow = iCmdShow;
    s_WinMainParam = HB_TRUE;
 }

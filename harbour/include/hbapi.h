@@ -1029,7 +1029,7 @@ extern           char *        hb_cmdargString( const char * pszName ); /* Retur
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern           HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
-extern HB_EXPORT void          hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+extern HB_EXPORT void          hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif
 
