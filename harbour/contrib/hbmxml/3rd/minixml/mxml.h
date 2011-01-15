@@ -29,8 +29,16 @@
 #  include <stdlib.h>
 #  include <string.h>
 #  include <ctype.h>
-#  include <errno.h>
-
+#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
+      defined( _WINCE )
+#     include <io.h>
+#     if !defined( UNDER_CE )
+#        define UNDER_CE
+#     endif
+#     define strerror(e)      ""
+#  else
+#     include <errno.h>
+#  endif
 
 /*
  * Constants...
