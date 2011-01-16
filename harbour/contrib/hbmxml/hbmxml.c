@@ -1743,41 +1743,31 @@ static void custom_destroy_cb( void * Cargo )
 
 HB_FUNC( MXMLNEWCUSTOM )
 {
-   mxml_node_t * node = MXML_NO_PARENT;
-
    if( hb_pcount() > 1 )
    {
+      PHB_ITEM       pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+      mxml_node_t *  parent = NULL;
+      mxml_node_t *  node = NULL;
+      
       if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
-      {
-         PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
-         node           = mxmlNewCustom( MXML_NO_PARENT, pItem, custom_destroy_cb );
-
-         if( node )
-            mxml_node_ret( node, 1 );
-         else
-            hb_itemRelease( pItem );
-      }
+         node = mxmlNewCustom( MXML_NO_PARENT, pItem, custom_destroy_cb );
       else
       {
-         mxml_node_t * node_parent = mxml_node_param( 1 );
+         parent = mxml_node_param( 1 );
 
-         if( node_parent )
-         {
-            PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
-            node           = mxmlNewCustom( node_parent, pItem, custom_destroy_cb );
-
-            if( node )
-               mxml_node_ret( node, 0 );
-            else
-               hb_itemRelease( pItem );
-         }
-         else
-            MXML_ERR_ARGS;
+         if( parent != NULL )
+            node = mxmlNewCustom( parent, pItem, custom_destroy_cb );
       }
-   }
-   else
-      MXML_ERR_ARGS;
 
+      if( node != NULL )
+      {
+         mxml_node_ret( node, ( parent != NULL ) ? 0 : 1 );
+         return;
+      }
+
+      hb_itemRelease( pItem );
+   }
+   MXML_ERR_ARGS;
 }
 
 /*
@@ -1932,8 +1922,9 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
       int            i;
       mxml_attr_t *  attr;
 
-      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs ;
-            i > 0; i --, attr++ )
+      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
+            i > 0; 
+            i--, attr++ )
       {
          PHB_ITEM pAttr = hb_itemArrayNew( 2 );
 
@@ -1963,8 +1954,9 @@ HB_FUNC( HB_MXMLGETATTRS )
 
       hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
 
-      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs ;
-            i > 0; i --, attr++ )
+      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
+            i > 0; 
+            i--, attr++ )
       {
          PHB_ITEM pKey = hb_itemPutStrUTF8( NULL, attr->name );
          PHB_ITEM pValue = hb_itemPutStrUTF8( NULL, attr->value );

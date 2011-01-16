@@ -658,7 +658,7 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
           */
 
          IF nWhere == MXML_WS_BEFORE_OPEN .OR. nWhere == MXML_WS_AFTER_CLOSE
-            RETURN hb_eol()
+            RETURN e"\n"
          ENDIF
    ELSEIF cName == "dl" .OR. cName == "ol" .OR. cName == "ul"
 
@@ -666,7 +666,7 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
        * Put a newline before and after list elements...
        */
 
-      RETURN hb_eol()
+      RETURN e"\n"
    ELSEIF cName == "dd" .OR. cName == "dd" .OR. cName == "li"
 
       /*
@@ -674,13 +674,13 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
        */
 
       IF nWhere == MXML_WS_BEFORE_OPEN
-         RETURN Space( 8 )
+         RETURN e"\t"
       ELSEIF nWhere == MXML_WS_AFTER_CLOSE
-         RETURN hb_eol()
+         RETURN e"\n"
       ENDIF
    ELSEIF Left( cName, 4 ) == "?xml"
       IF nWhere == MXML_WS_AFTER_OPEN
-         RETURN hb_eol()
+         RETURN e"\n"
       ELSE
          RETURN nil
       ENDIF
@@ -699,14 +699,14 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
          nLevel := 0
       ENDIF
 
-      RETURN Replicate( Chr( 9 ), nLevel )
+      RETURN Replicate( e"\t", nLevel )
    ELSEIF nWhere == MXML_WS_AFTER_CLOSE .OR.                                                          ;
           ( ( cName == "group" .OR. cName == "option" .OR. cName == "choice" ) .AND.                  ;
               nWhere == MXML_WS_AFTER_OPEN )
 
-      RETURN hb_eol()
+      RETURN e"\n"
    ELSEIF nWhere == MXML_WS_AFTER_OPEN .AND. Empty( mxmlGetFirstChild( hNode ) )
-      RETURN hb_eol()
+      RETURN e"\n"
    ENDIF
 
    /*
