@@ -166,7 +166,7 @@ static const HB_GC_FUNCS s_gc_mxml_nodeFuncs =
    hb_gcDummyMark
 };
 
-mxml_node_t * mxml_node_param( int iParam )
+static mxml_node_t * mxml_node_param( int iParam )
 {
    HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs,
                                                           iParam );
@@ -174,7 +174,7 @@ mxml_node_t * mxml_node_param( int iParam )
    return ( pHbnode && pHbnode->node ) ? pHbnode->node : NULL;
 }
 
-PHB_ITEM hbmxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node, unsigned int uiFlags )
+static PHB_ITEM hbmxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node, unsigned int uiFlags )
 {
    HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_gcAllocate( sizeof( HBMXML_NODE ),
                                                             &s_gc_mxml_nodeFuncs );
@@ -193,7 +193,12 @@ PHB_ITEM hbmxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node, unsigned
    return hb_itemPutPtrGC( pItem, pHbnode );
 }
 
-void mxml_node_ret( mxml_node_t * pMxml_node, unsigned int uiFlags )
+static void mxml_node_push( mxml_node_t * pMxml_node, unsigned int uiFlags )
+{
+   hbmxml_node_ItemPut( hb_stackAllocItem(), pMxml_node, uiFlags );
+}
+
+static void mxml_node_ret( mxml_node_t * pMxml_node, unsigned int uiFlags )
 {
    hbmxml_node_ItemPut( hb_stackReturnItem(), pMxml_node, uiFlags );
 }
@@ -217,15 +222,17 @@ static const HB_GC_FUNCS s_gc_mxml_indexFuncs =
    hb_gcDummyMark
 };
 
-mxml_index_t * hbmxml_index_ItemGet( PHB_ITEM pItem )
+#if 0  /* unused yet */
+static mxml_index_t * hbmxml_index_ItemGet( PHB_ITEM pItem )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_itemGetPtrGC( pItem,
                                                                        &s_gc_mxml_indexFuncs );
 
    return ppMxml_index ? *ppMxml_index : NULL;
 }
+#endif
 
-PHB_ITEM hbmxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
+static PHB_ITEM hbmxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_gcAllocate( sizeof( mxml_index_t * ),
                                                                      &s_gc_mxml_indexFuncs );
@@ -242,7 +249,7 @@ PHB_ITEM hbmxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
    return hb_itemPutPtrGC( pItem, ppMxml_index );
 }
 
-mxml_index_t * mxml_index_param( int iParam )
+static mxml_index_t * mxml_index_param( int iParam )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_parptrGC( &s_gc_mxml_indexFuncs,
                                                                    iParam );
@@ -250,7 +257,7 @@ mxml_index_t * mxml_index_param( int iParam )
    return ( ppMxml_index && *ppMxml_index ) ? *ppMxml_index : NULL;
 }
 
-void mxml_index_ret( mxml_index_t * pMxml_index )
+static void mxml_index_ret( mxml_index_t * pMxml_index )
 {
    hbmxml_index_ItemPut( hb_stackReturnItem(), pMxml_index );
 }
@@ -762,19 +769,14 @@ static mxml_type_t type_cb( mxml_node_t * node )
       if( pCallback && hb_vmRequestReenter() )
       {
          int      iResult;
-         PHB_ITEM pNode = hb_itemNew( NULL );
-
-         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_vmPushItemRef( pNode );
+         mxml_node_push( node, 0 );
 
          hb_vmSend( 1 );
 
          iResult = hb_parnidef( -1, MXML_TEXT );
-
-         hb_itemRelease( pNode );
 
          hb_vmRequestRestore();
          return ( mxml_type_t ) iResult;
@@ -1165,24 +1167,20 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         PHB_ITEM    pNode = hb_itemNew( NULL );
          HB_USHORT   uPCount = 2;
-
-         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_vmPushItemRef( pNode );
+         mxml_node_push( node, 0 );
          hb_vmPushInteger( ( int ) ( event + 1 ) );
 
          if( data != NULL )
          {
             hb_vmPush( ( PHB_ITEM ) data );
-            uPCount += 1;
+            uPCount++;
          }
          hb_vmSend( uPCount );
 
-         hb_itemRelease( pNode );
          hb_vmRequestRestore();
       }
    }
@@ -1356,20 +1354,16 @@ static const char * save_cb( mxml_node_t * node, int where )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         PHB_ITEM       pNode = hb_itemNew( NULL );
          const char *   pszResult;
-
-         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_vmPushItemRef( pNode );
+         mxml_node_push( node, 0 );
          hb_vmPushInteger( where );
          hb_vmSend( 2 );
 
          pszResult = hb_itemGetStrUTF8( hb_param( -1, HB_IT_ANY ), &pCbs->hText, NULL );
 
-         hb_itemRelease( pNode );
          hb_vmRequestRestore();
 
          return pszResult;
@@ -1826,21 +1820,16 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         PHB_ITEM pNode = hb_itemNew( NULL );
          int      iResult;
-
-         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_vmPushItemRef( pNode );
+         mxml_node_push( node, 0 );
          hb_itemPutC( hb_stackAllocItem(), data );
 
          hb_vmSend( 2 );
 
          iResult = hb_parnidef( -1, 1 );
-
-         hb_itemRelease( pNode );
 
          hb_vmRequestRestore();
          return iResult;
@@ -1861,20 +1850,15 @@ static char * custom_save_cb( mxml_node_t * node )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         PHB_ITEM pNode = hb_itemNew( NULL );
          char *   pszResult;
-
-         hbmxml_node_ItemPut( pNode, node, 0 );
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
-         hb_vmPushItemRef( pNode );
+         mxml_node_push( node, 0 );
 
          hb_vmSend( 1 );
 
          pszResult = HB_ISCHAR( -1 ) ? strdup( hb_parc( -1 ) ) : NULL;
-
-         hb_itemRelease( pNode );
 
          hb_vmRequestRestore();
          return pszResult;
