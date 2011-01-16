@@ -1459,7 +1459,7 @@ HB_FUNC( MXMLSAVEFILE )
       hb_strfree( hFree );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      MXML_ERR_ARGS;
 }
 
 /* int mxmlSaveString( mxml_node_t * node, char * buffer, int bufsize, mxml_save_cb_t cb ) */
@@ -1476,48 +1476,37 @@ HB_FUNC( MXMLSAVESTRING )
 
       if( pBuffer && HB_ISBYREF( 2 ) && hb_parcsiz( 2 ) > 0 )
       {
-         char *   buffer;
-         HB_SIZE  buffer_size;
-         HB_BOOL  bErr = HB_FALSE;
-
-         if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
-         {
-            pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
-            cb = save_cb;
-         }
-
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
-            int bytes = mxmlSaveString( node, buffer, ( int ) buffer_size, cb );
+            char *   buffer;
+            HB_SIZE  buffer_size;
+            int      bytes;
 
-            if( bytes <= 0 )
-               hb_retni( bytes );
-            else if( bytes <= ( int ) ( buffer_size - 1 ) )
+            if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
             {
-               hb_storclen( buffer, ( int ) bytes - 1, 2 ); /* Without EoL */
-               hb_retni( bytes );
+               pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+               cb = save_cb;
             }
-            else
-               hb_retni( bytes );
-         }
-         else
-            bErr = HB_TRUE;
 
-         pCbs->save_cb = NULL;
-         if( pCbs->hText )
-         {
-            hb_strfree( pCbs->hText );
-            pCbs->hText = NULL;
+            bytes = mxmlSaveString( node, buffer, ( int ) ( buffer_size + 1 ), cb );
+
+            if( bytes > 0 && ( HB_SIZE ) bytes <= buffer_size )
+               hb_storclen( buffer, bytes - 1, 2 ); /* Without EoL */
+
+            hb_retni( bytes );
+
+            pCbs->save_cb = NULL;
+            if( pCbs->hText )
+            {
+               hb_strfree( pCbs->hText );
+               pCbs->hText = NULL;
+            }
+            return;
          }
-  
-         if ( bErr )
-            MXML_ERR_ARGS;
       }
-      else
-         MXML_ERR_ARGS;
    }
-   else
-      MXML_ERR_ARGS;
+
+   MXML_ERR_ARGS;
 }
 
 /* int mxmlSetCDATA( mxml_node_t * node, const char * data ) */
