@@ -1476,12 +1476,12 @@ HB_FUNC( MXMLSAVESTRING )
 
       if( pBuffer && HB_ISBYREF( 2 ) && hb_parcsiz( 2 ) > 0 )
       {
+         char *   buffer;
+         HB_SIZE  buffer_size;
+         int      bytes;
+
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
-            char *   buffer;
-            HB_SIZE  buffer_size;
-            int      bytes;
-
             if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
             {
                pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
