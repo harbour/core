@@ -190,13 +190,12 @@ HB_FUNC( HB_LZF_DECOMPRESS )
 
          if( buffer && buffer_size )
          {
-            HB_SIZE i = 1;
             unsigned int uiResult;
 
             do
             {
-               buffer_size *= i++;
-               buffer = ( char * ) hb_xrealloc( buffer, buffer_size );
+               buffer_size <<= 1;
+               buffer = ( char * ) hb_xrealloc( buffer, buffer_size + 1 );
 
                uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
             }
