@@ -78,7 +78,7 @@ typedef struct
    PHB_ITEM type_cb;
    PHB_ITEM save_cb;
    PHB_ITEM sax_cb;
-   void *   hText;
+   void * hText;
 } HB_CBS_VAR;
 
 typedef struct
@@ -135,8 +135,10 @@ static void hb_error_cb_var_release( void * cargo )
 }
 
 static HB_TSD_NEW( s_cbs_var, sizeof( HB_CBS_VAR ), hb_cbs_var_init, NULL );
-static HB_TSD_NEW( s_custom_cbs_var, sizeof( HB_CUSTOM_CBS_VAR ), hb_custom_cbs_var_init, hb_custom_cbs_var_release );
-static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init, hb_error_cb_var_release );
+static HB_TSD_NEW( s_custom_cbs_var, sizeof( HB_CUSTOM_CBS_VAR ), hb_custom_cbs_var_init,
+                   hb_custom_cbs_var_release );
+static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_init,
+                   hb_error_cb_var_release );
 
 /* ========================= mxml_node_t * support ============================== */
 
@@ -304,7 +306,7 @@ HB_FUNC( MXMLADD )
 
 HB_FUNC( MXMLDELETE )
 {
-   HBMXML_NODE *  pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
 
    if( pHbnode && pHbnode->node )
    {
@@ -388,7 +390,7 @@ HB_FUNC( MXMLENTITYGETNAME )
 
 HB_FUNC( MXMLENTITYGETVALUE )
 {
-   void *   hName;
+   void * hName;
 
    hb_retni( mxmlEntityGetValue( hb_parstr_utf8( 1, &hName, NULL ) ) );
 
@@ -768,7 +770,7 @@ static mxml_type_t type_cb( mxml_node_t * node )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         int      iResult;
+         int iResult;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1167,7 +1169,7 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         HB_USHORT   uPCount = 2;
+         HB_USHORT uPCount = 2;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1354,7 +1356,7 @@ static const char * save_cb( mxml_node_t * node, int where )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         const char *   pszResult;
+         const char * pszResult;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1782,7 +1784,7 @@ HB_FUNC( MXMLSETCUSTOM )
    if( node && hb_pcount() > 1 )
    {
       PHB_ITEM pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
-      int iResult;
+      int      iResult;
 
       if( pItem )
       {
@@ -1810,7 +1812,7 @@ static int custom_load_cb( mxml_node_t * node, const char * data )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         int      iResult;
+         int iResult;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1926,9 +1928,9 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
       int            i;
       mxml_attr_t *  attr;
 
-      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
-            i > 0;
-            i--, attr++ )
+      for( i = node->value.element.num_attrs, attr = node->value.element.attrs;
+           i > 0;
+           i--, attr++ )
       {
          PHB_ITEM pAttr = hb_itemArrayNew( 2 );
 
@@ -1958,9 +1960,9 @@ HB_FUNC( HB_MXMLGETATTRS )
 
       hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
 
-      for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
-            i > 0;
-            i--, attr++ )
+      for( i = node->value.element.num_attrs, attr = node->value.element.attrs;
+           i > 0;
+           i--, attr++ )
       {
          PHB_ITEM pKey = hb_itemPutStrUTF8( NULL, attr->name );
          PHB_ITEM pValue = hb_itemPutStrUTF8( NULL, attr->value );
