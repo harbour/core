@@ -2810,6 +2810,10 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
 
          pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
          pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+#if ! defined( HB_MACRO_SUPPORT )
+         if( !HB_SUPPORT_HARBOUR )
+            pSelf->value.asOperator.pLeft = hb_compExprListStrip( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
+#endif
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
 
          /* optimize:
