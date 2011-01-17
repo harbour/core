@@ -1485,7 +1485,7 @@ HB_FUNC( MXMLSAVESTRING )
             bytes = mxmlSaveString( node, buffer, ( int ) ( buffer_size + 1 ), cb );
 
             if( bytes > 0 && ( HB_SIZE ) bytes <= buffer_size )
-               hb_storclen( buffer, bytes - 1, 2 ); /* Without EoL */
+               hb_storclen( buffer, bytes, 2 );
 
             hb_retni( bytes );
 
@@ -1851,7 +1851,7 @@ static char * custom_save_cb( mxml_node_t * node )
          hb_vmSend( 1 );
 
          pszText = hb_parstr_utf8( -1, &hText, NULL );
-         pszResult = pszText ? hb_strdup( pszText ) : NULL;
+         pszResult = pszText ? strdup( pszText ) : NULL;
          hb_strfree( hText );
 
          hb_vmRequestRestore();
