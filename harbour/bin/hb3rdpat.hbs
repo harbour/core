@@ -12,14 +12,17 @@
  * 1. CONFIGURATION
  * ----------------
  *
- * For proper operation, the following external tools are required to be present
- * somewhere in your $PATH:
+ * For proper operation, several of the following external tools are required to
+ * be present somewhere in your $PATH:
  *
  * - The GNU version of `patch', `diff' and `tar' (hb3rdpat will figure it out
  *   if you have them by the names of `gpatch', `gdiff' or `gtar')
  *
- * - curl, gzip, bzip2, xz and unzip (only the Info-ZIP version of unzip has been
- *   tested)
+ * - curl, gzip, bzip2, xz and unzip (only the Info-ZIP version of unzip has
+ *   been tested)
+ *
+ * `curl' is unconditionally required for fetching source archives; the rest of the
+ * tools are checked for on an on-demand basis.
  *
  * hb3rdpat requires several meta data (in the form of specially formatted lines)
  * in the component's Makefile (preferred) or .hbp file (if no Makefile is
@@ -537,7 +540,6 @@ STATIC PROCEDURE SetupTools()
 #endif
    LOCAL cPathComp
    LOCAL cTool
-   LOCAL lError
 
    /* Look for g$tool first, only attempt raw name if it isn't found
     * Helps non-GNU userland systems with GNU tools installed.
@@ -557,19 +559,6 @@ STATIC PROCEDURE SetupTools()
          ENDIF
       NEXT
    NEXT
-
-   lError := .F.
-   FOR EACH cTool in hb_HKeys( s_aTools )
-      IF s_aTools[ cTool ] == NIL
-         lError := .T.
-         OutStd( "E: Can not find " + cTool + hb_eol() )
-      ENDIF
-   NEXT
-
-   IF lError
-      ErrorLevel( 1 )
-      QUIT
-   ENDIF
 
    RETURN
 
@@ -700,47 +689,58 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Can not find archiver for `" +                                          ;
                FNameNameExtGet( cArchiveURL ) + "'" + hb_eol() )
       RETURN .F.
-   ELSE
-      /* Fetch */
-      cCommand := hb_strFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                  ;
-                  CombinePath( s_cTempDir, cFileName ),                                   ;
-                  FNameEscape( cArchiveURL ) )
-      TRACE( "Running " + cCommand )
-      nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
-      SaveLog( "fetch", cStdOut, cStdErr )
-      IF nResult != 0
-         OutStd( "E: Error fetching " + cArchiveURL + hb_eol() )
+   ENDIF
+
+   /* Fetch */
+   IF s_aTools[ "curl" ] == NIL
+      OutStd( "E: Required `curl' was not found" + hb_eol() )
+      RETURN .F.
+   ENDIF
+   cCommand := hb_strFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                     ;
+               CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
+   TRACE( "Running " + cCommand )
+   nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
+   SaveLog( "fetch", cStdOut, cStdErr )
+   IF nResult != 0
+      OutStd( "E: Error fetching " + cArchiveURL + hb_eol() )
+      RETURN .F.
+   ENDIF
+
+   /* Extract */
+   IF cExtractor != NIL /* May not need extraction */
+      IF s_aTools[ cExtractor ] == NIL
+         OutStd( "E: Required `" + cExtractor + "' was not found" + hb_eol() )
          RETURN .F.
       ENDIF
-
-      /* Extract */
-      IF cExtractor != NIL /* May not need extraction */
-         cCommand := hb_strFormat( "%s " + cExtractorArgs + " %s",                        ;
-                     cExtractor, CombinePath( s_cTempDir, cFileName ) )
-         TRACE( "Running " + cCommand )
-         nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
-         SaveLog( "extract", cStdOut, cStdErr )
-         IF nResult != 0
-            OutStd( "E: Error extracting " + cFileName + hb_eol() )
-            RETURN .F.
-         ENDIF
-      ELSE
-         cExtractedFileName := cFileName
-      ENDIF
-
-      /* Unarchive */
-      cCommand := hb_strFormat( "%s " + cArchiverArgs + " %s",                            ;
-                  cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
+      cCommand := hb_strFormat( "%s " + cExtractorArgs + " %s",                           ;
+                  cExtractor, CombinePath( s_cTempDir, cFileName ) )
       TRACE( "Running " + cCommand )
-      cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
-      DirChange( CombinePath( s_cTempDir, "root" ) )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
-      DirChange( cCWD )
-      SaveLog( "archive", cStdOut, cStdErr )
+      SaveLog( "extract", cStdOut, cStdErr )
       IF nResult != 0
-         OutStd( "E: Error unarchiving " + cFileName + hb_eol() )
+         OutStd( "E: Error extracting " + cFileName + hb_eol() )
          RETURN .F.
       ENDIF
+   ELSE
+      cExtractedFileName := cFileName
+   ENDIF
+
+   /* Unarchive */
+   IF s_aTools[ cArchiver ] == NIL
+      OutStd( "E: Required `" + cArchiver + "' was not found" + hb_eol() )
+      RETURN .F.
+   ENDIF
+   cCommand := hb_strFormat( "%s " + cArchiverArgs + " %s",                               ;
+               cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
+   TRACE( "Running " + cCommand )
+   cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+   DirChange( CombinePath( s_cTempDir, "root" ) )
+   nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
+   DirChange( cCWD )
+   SaveLog( "archive", cStdOut, cStdErr )
+   IF nResult != 0
+      OutStd( "E: Error unarchiving " + cFileName + hb_eol() )
+      RETURN .F.
    ENDIF
 
    RETURN .T.

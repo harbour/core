@@ -12,3 +12,4 @@
 -instfile=inc:hbfoxpro.ch
 
 dll.prg
+misc.prg

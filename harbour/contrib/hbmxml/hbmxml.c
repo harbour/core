@@ -1402,7 +1402,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
       if( bytes <= 0 )
          hb_retc_null();
       else if( bytes < ( int ) sizeof( buffer ) )
-         hb_retclen_buffer( hb_strdup( buffer ), bytes - 1 );  /* Without EOL */
+         hb_retclen( buffer, bytes );
       else
       {
          char * s = ( char * ) hb_xalloc( bytes + 1 );
@@ -1412,7 +1412,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
          else
          {
             mxmlSaveString( node, s, bytes + 1, cb );
-            hb_retclen_buffer( s, bytes - 1 );
+            hb_retclen_buffer( s, bytes );
          }
       }
    }
@@ -1748,7 +1748,7 @@ HB_FUNC( MXMLNEWCUSTOM )
       PHB_ITEM       pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
       mxml_node_t *  parent = NULL;
       mxml_node_t *  node = NULL;
-      
+
       if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
          node = mxmlNewCustom( MXML_NO_PARENT, pItem, custom_destroy_cb );
       else
@@ -1927,7 +1927,7 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
       mxml_attr_t *  attr;
 
       for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
-            i > 0; 
+            i > 0;
             i--, attr++ )
       {
          PHB_ITEM pAttr = hb_itemArrayNew( 2 );
@@ -1959,7 +1959,7 @@ HB_FUNC( HB_MXMLGETATTRS )
       hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
 
       for ( i = node->value.element.num_attrs, attr = node->value.element.attrs;
-            i > 0; 
+            i > 0;
             i--, attr++ )
       {
          PHB_ITEM pKey = hb_itemPutStrUTF8( NULL, attr->name );
