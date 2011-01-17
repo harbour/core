@@ -1840,7 +1840,9 @@ static char * custom_save_cb( mxml_node_t * node )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         char *   pszResult;
+         char *         pszResult;
+         const char *   pszText;
+         void *         hText;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1848,7 +1850,9 @@ static char * custom_save_cb( mxml_node_t * node )
 
          hb_vmSend( 1 );
 
-         pszResult = HB_ISCHAR( -1 ) ? strdup( hb_parc( -1 ) ) : NULL;
+         pszText = hb_parstr_utf8( -1, &hText, NULL );
+         pszResult = pszText ? hb_strdup( pszText ) : NULL;
+         hb_strfree( hText );
 
          hb_vmRequestRestore();
          return pszResult;
