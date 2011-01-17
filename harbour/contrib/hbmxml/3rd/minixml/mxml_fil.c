@@ -329,8 +329,14 @@ mxmlSaveFd(mxml_node_t    *node,	/* I - Node to write */
     return (-1);
 
   if (col > 0)
+  {
+#ifdef _EOL_CRLF
+    if (mxml_fd_putc('\r', &buf) < 0)
+      return (-1);
+#endif
     if (mxml_fd_putc('\n', &buf) < 0)
       return (-1);
+  }
 
  /*
   * Flush and return...
@@ -368,8 +374,14 @@ mxmlSaveFile(mxml_node_t    *node,	/* I - Node to write */
     return (-1);
 
   if (col > 0)
+  {
+#ifdef _EOL_CRLF
+    if (putc('\r', fp) < 0)
+      return (-1);
+#endif
     if (putc('\n', fp) < 0)
       return (-1);
+  }
 
  /*
   * Return 0 (success)...
@@ -416,7 +428,12 @@ mxmlSaveString(mxml_node_t    *node,	/* I - Node to write */
     return (-1);
 
   if (col > 0)
+  {
+#ifdef _EOL_CRLF
+    mxml_string_putc('\r', ptr);
+#endif
     mxml_string_putc('\n', ptr);
+  }
 
  /*
   * Nul-terminate the buffer...
@@ -2782,6 +2799,10 @@ mxml_write_node(mxml_node_t     *node,	/* I - Node to write */
 
 	  if (global->wrap > 0 && (col + width) > global->wrap)
 	  {
+#ifdef _EOL_CRLF
+	    if ((*putc_cb)('\r', p) < 0)
+	      return (-1);
+#endif
 	    if ((*putc_cb)('\n', p) < 0)
 	      return (-1);
 
@@ -2892,6 +2913,10 @@ mxml_write_node(mxml_node_t     *node,	/* I - Node to write */
 	{
 	  if (global->wrap > 0 && col > global->wrap)
 	  {
+#ifdef _EOL_CRLF
+	    if ((*putc_cb)('\r', p) < 0)
+	      return (-1);
+#endif
 	    if ((*putc_cb)('\n', p) < 0)
 	      return (-1);
 
@@ -2922,6 +2947,10 @@ mxml_write_node(mxml_node_t     *node,	/* I - Node to write */
 	{
 	  if (global->wrap > 0 && col > global->wrap)
 	  {
+#ifdef _EOL_CRLF
+	    if ((*putc_cb)('\r', p) < 0)
+	      return (-1);
+#endif
 	    if ((*putc_cb)('\n', p) < 0)
 	      return (-1);
 
@@ -2945,6 +2974,10 @@ mxml_write_node(mxml_node_t     *node,	/* I - Node to write */
 	{
 	  if (global->wrap > 0 && col > global->wrap)
 	  {
+#ifdef _EOL_CRLF
+	    if ((*putc_cb)('\r', p) < 0)
+	      return (-1);
+#endif
 	    if ((*putc_cb)('\n', p) < 0)
 	      return (-1);
 

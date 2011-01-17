@@ -11,6 +11,7 @@
 -cpp=no
 
 {win}-cflag=-DWIN32 -DWIN
+{win|dos|os2}-cflag=-D_EOL_CRLF
 
 mxml_att.c     
 mxml_ent.c     
