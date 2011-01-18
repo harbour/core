@@ -12,6 +12,7 @@
 fldarr.prg
 isdb.prg
 
+dbsetloc.c
 exec.c
 flddeci.c
 index.c
@@ -19,3 +20,4 @@ isbegseq.c
 isfunc.c
 secondfs.c
 strpeek.c
+users.c
