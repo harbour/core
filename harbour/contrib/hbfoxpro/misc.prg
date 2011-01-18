@@ -71,7 +71,7 @@ FUNCTION SYS( nValue, xPar1 )
    RETURN NIL
 
 
-STATIC PROCEDURE AFILLNESTED( aValue, xVal )
+STATIC FUNCTION AFILLNESTED( aValue, xVal )
    LOCAL item
 
    FOR EACH item in aValue
