@@ -51,4 +51,34 @@
  *
  */
 
+
+/* messages in FP */
 #xtranslate .<!msg!> => :<msg>
+
+
+/* array declarations */
+#xtranslate __FP_DIM( <exp> ) => <exp>
+#xtranslate __FP_DIM( <!name!>( <dim,...> ) ) => <name>\[ <dim> \]
+
+#command PUBLIC <var1> [, <varN> ] => ;
+         <@> PUBLIC __FP_DIM( <var1> ) [, __FP_DIM( <varN> ) ]
+#command PRIVATE <var1> [, <varN> ] => ;
+         <@> PRIVATE __FP_DIM( <var1> ) [, __FP_DIM( <varN> ) ]
+#command DIMENSIONS <!name1!>( <dim1,...> ) [, <!nameN!>( <dimN,...> ) ] => ;
+         PRIVATE <name1>\[ <dim1> \] [, <nameN>\[ <dimN> \] ]
+
+
+/* workaround for problem with command using FIELDS keyword which can
+   wrongly translate FIELD->fieldname.
+ */
+#translate FIELD-><!name!> => _FIELD-><name>
+
+
+/* commands using FIELDS clause which is not accepted by Clipper */
+#command DISPLAY [FIELDS <v,...>] [<off:OFF>] ;
+                 [<prn:TO PRINTER>] [TO FILE <(f)>] ;
+                 [FOR <for>] [WHILE <while>] [NEXT <next>] ;
+                 [RECORD <rec>] [<rest:REST>] [<all:ALL>] => ;
+         __dbList( <.off.>, { <{v}> }, <.all.>, ;
+                   <{for}>, <{while}>, <next>, ;
+                   <rec>, <.rest.>, <.prn.>, <(f)> )

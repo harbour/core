@@ -69,3 +69,20 @@ FUNCTION SYS( nValue, xPar1 )
    ENDSWITCH
 
    RETURN NIL
+
+
+STATIC PROCEDURE AFILLNESTED( aValue, xVal )
+   LOCAL item
+
+   FOR EACH item in aValue
+      IF hb_isArray( item )
+         AFillNested( item, xVal )
+      ELSE
+         item := xVal
+      ENDIF
+   NEXT
+
+   RETURN aValue
+
+FUNCTION __FOX_ARRAY( ... )
+   RETURN AFillNested( Array( ... ), .F. )
