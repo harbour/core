@@ -65,6 +65,7 @@
 static HB_SIZE hb_lzf_compressbound( HB_SIZE nLen )
 {
    HB_SIZE nBuffSize = ( HB_SIZE ) ( nLen * 1.04 + 1 );
+
    return ( nBuffSize >= 32 ) ? nBuffSize : 32;
 }
 
@@ -106,10 +107,10 @@ HB_FUNC( HB_LZF_COMPRESS )
 
       if( in_len )
       {
-         PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         const char * in_data = hb_itemGetCPtr( pArg );
-         char * out_data;
-         HB_SIZE out_len;
+         PHB_ITEM       pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char *   in_data = hb_itemGetCPtr( pArg );
+         char *         out_data;
+         HB_SIZE        out_len;
 
          if( pBuffer )
          {
@@ -170,10 +171,10 @@ HB_FUNC( HB_LZF_DECOMPRESS )
 
       if( in_len )
       {
-         PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         const char * in_data = hb_itemGetCPtr( pArg );
-         char * buffer;
-         HB_SIZE buffer_size;
+         PHB_ITEM       pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char *   in_data = hb_itemGetCPtr( pArg );
+         char *         buffer;
+         HB_SIZE        buffer_size;
 
          if( pBuffer )
          {

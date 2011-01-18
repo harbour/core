@@ -87,8 +87,6 @@ HB_FUNC( INDEXNAMES )
       SELF_ORDINFO( pArea, DBOI_ORDERCOUNT, &pOrderInfo );
       iSize = hb_itemGetNI( pOrderInfo.itmResult );
 
-      pArray = pOrderInfo.itmResult;
-
       pArray = hb_itemArrayNew( iSize );
       for( i = 1; i <= iSize; ++i )
       {
