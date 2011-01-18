@@ -685,6 +685,8 @@ HB_EXPR_PTR hb_compExprNewSend( const char * szMessage, HB_COMP_DECL )
    pExpr->value.asMessage.szMessage = szMessage;
    pExpr->value.asMessage.pMessage  = NULL;
 
+   pExpr->nLength = 0;
+
    return pExpr;
 }
 
@@ -703,6 +705,8 @@ HB_EXPR_PTR hb_compExprNewMacroSend( HB_EXPR_PTR pMessage, HB_COMP_DECL )
 
    pExpr->value.asMessage.szMessage = NULL;
    pExpr->value.asMessage.pMessage  = pMessage;
+
+   pExpr->nLength = 0;
 
    if( pMessage->ExprType == HB_ET_MACRO )
    {

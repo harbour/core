@@ -206,11 +206,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       if( pName->value.asSymbol.funcid == HB_F_EVAL &&
           hb_compExprParamListLen( pParms ) != 0 )
       {
-         HB_EXPR_PTR pEval;
-
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
-         if( !HB_SUPPORT_HARBOUR )
-            pParms = HB_EXPR_USE( pParms, HB_EA_REDUCE );
+         HB_EXPR_PTR pEval;
 
          pEval = hb_compExprNewMethodCall(
                         hb_compExprNewMethodObject(
@@ -219,6 +216,10 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                         hb_compExprNewArgList(
                               pParms->value.asList.pExprList->pNext,
                               HB_COMP_PARAM ) );
+#if !defined( HB_MACRO_SUPPORT )
+         /* force reduction */
+         pEval->nLength = 1;
+#endif
          pParms->value.asList.pExprList = NULL;
          HB_COMP_EXPR_FREE( pParms );
          HB_COMP_EXPR_FREE( pName );
@@ -335,6 +336,12 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                {
                   if( szVar[ i ] == '[' )
                   {
+                     if( !pVar->value.asString.dealloc )
+                     {
+                        szVar = pVar->value.asString.string =
+                           hb_xmemdup( pVar->value.asString.string, i + 1 );
+                        pVar->value.asString.dealloc = HB_TRUE;
+                     }
                      szVar[ i ] = 0;
                      pVar->nLength = i;
                      break;

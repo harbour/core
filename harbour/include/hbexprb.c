@@ -2638,7 +2638,8 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
    {
       case HB_EA_REDUCE:
          /* Clipper does not reduce object expressions */
-         if( HB_SUPPORT_HARBOUR && pSelf->value.asMessage.pObject )
+         if( pSelf->value.asMessage.pObject &&
+             ( HB_SUPPORT_HARBOUR || pSelf->nLength == 1 ) )
             pSelf->value.asMessage.pObject = HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_REDUCE );
          if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
             pSelf->value.asMessage.pParms = HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_REDUCE );
