@@ -12,6 +12,7 @@
 fldarr.prg
 isdb.prg
 
+exec.c
 flddeci.c
 isbegseq.c
 isfunc.c
