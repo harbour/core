@@ -55,8 +55,14 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#include <sys/types.h>
-#include <unistd.h>
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#  include <sys/types.h>
+#  include <unistd.h>
+#elif defined( HB_OS_WIN )
+#  include <windows.h>
+#elif defined( HB_OS_OS2 ) || defined( HB_OS_DOS )
+#  include <process.h>
+#endif
 
 HB_FUNC( EXECNAME )
 {
@@ -88,5 +94,13 @@ HB_FUNC( EXECNAME )
 
 HB_FUNC( EXECPIDNUM )
 {
+#if defined( HB_OS_WIN_CE )
+   hb_retni( 0 );
+#elif defined( HB_OS_WIN )
+   hb_retnint( GetCurrentProcessId() );
+#elif ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+   hb_retnint( _getpid() );
+#else
    hb_retnint( getpid() );
+#endif
 }

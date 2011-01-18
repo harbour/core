@@ -14,6 +14,7 @@ isdb.prg
 
 exec.c
 flddeci.c
+index.c
 isbegseq.c
 isfunc.c
 secondfs.c
