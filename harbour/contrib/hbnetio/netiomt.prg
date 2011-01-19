@@ -8,8 +8,9 @@
  *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is code for simple MT server which is activated by:
- *       NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>],
- *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+ *       NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
+ *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
+ *                       [<sSrvFunc>] )
  *                                              -> <pListenSocket> | NIL
  *    and can be stopped by:
  *       NETIO_SERVERSTOP( <pListenSocket>, .T. )
@@ -60,9 +61,15 @@
 
 #include "error.ch"
 
-FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
+FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
+                         cPasswd, nCompressLevel, nStrategy, ;
+                         sSrvFunc )
    LOCAL pListenSocket, lRPC
    LOCAL oError
+
+   IF sSrvFunc == NIL
+      sSrvFunc := @netio_server()
+   ENDIF
 
    IF hb_mtvm()
       SWITCH ValType( xRPC )
@@ -72,12 +79,15 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
             EXIT
          CASE "L"
             lRPC := xRPC
+            EXIT
          OTHERWISE
             xRPC := NIL
       ENDSWITCH
       pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
       IF !Empty( pListenSocket )
-         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, xRPC, ... ) )
+         hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ;
+                                          xRPC, sSrvFunc, ;
+                                          cPasswd, nCompressLevel, nStrategy ) )
       ENDIF
    ELSE
       oError := ErrorNew()
@@ -96,7 +106,8 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
    ENDIF
    RETURN pListenSocket
 
-STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, ... )
+
+STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
    LOCAL pConnectionSocket
 
    WHILE .T.
@@ -107,7 +118,7 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, ... )
       IF xRPC != NIL
          netio_rpcfilter( pConnectionSocket, xRPC )
       ENDIF
-      hb_threadDetach( hb_threadStart( @netio_server(), pConnectionSocket ) )
+      hb_threadDetach( hb_threadStart( sSrvFunc, pConnectionSocket ) )
       pConnectionSocket := NIL
    ENDDO
    RETURN NIL

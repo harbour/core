@@ -1379,3 +1379,11 @@ HB_FUNC( NETIO_SRVSTATUS )
    }
    hb_retni( iStatus );
 }
+
+HB_FUNC( NETIO_SRVSOCKET )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+
+   if( conn )
+      hb_socketItemPut( hb_stackReturnItem(), conn->sd );
+}
