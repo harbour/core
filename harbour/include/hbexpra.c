@@ -338,7 +338,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                   {
                      if( !pVar->value.asString.dealloc )
                      {
-                        szVar = pVar->value.asString.string =
+                        szVar = pVar->value.asString.string = ( char * )
                            hb_xmemdup( pVar->value.asString.string, i + 1 );
                         pVar->value.asString.dealloc = HB_TRUE;
                      }
