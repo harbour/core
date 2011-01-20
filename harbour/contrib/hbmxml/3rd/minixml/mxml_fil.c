@@ -1963,7 +1963,8 @@ mxml_load_data(
         {
           (*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
 
-          mxmlRelease(node);
+          if (!mxmlRelease(node) && first == node)
+            first = NULL;
         }
 
        /*

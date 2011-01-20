@@ -205,7 +205,11 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
   */
 
   while (node->child)
-    mxmlDelete(node->child);
+  {
+    mxml_node_t *child = node->child;
+    mxmlRemove(child);
+    mxmlRelease(child);
+  }
 
  /*
   * Now delete any node data...

@@ -68,7 +68,6 @@
 typedef struct /* placeholder for mxml_node_t */
 {
    mxml_node_t * node;
-   unsigned int flags;
 } HBMXML_NODE;
 
 /* =========================== cb's funcs support =============================== */
@@ -142,23 +141,35 @@ static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_in
 
 /* ========================= mxml_node_t * support ============================== */
 
+static void hbmxml_relese( mxml_node_t * node )
+{
+   void * user_data;
+
+   if( mxmlGetRefCount( node ) <= ( node->parent ? 2 : 1 ) )
+   {
+      /* remove userData  when last HVM item with given node is cleared
+       * It's not nice solution because node can still exists and can
+       * be extracted yet but there is not destructor for userData
+       * in MXML library so we have no choice :-( [druzus]
+       */
+      if( ( user_data = mxmlGetUserData( node ) ) != NULL )
+      {
+         mxmlSetUserData( node, NULL );
+         hb_itemRelease( ( PHB_ITEM ) user_data );
+      }
+   }
+
+   mxmlRelease( node );
+}
+
 static HB_GARBAGE_FUNC( hbmxml_nodeDestructor )
 {
    HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) Cargo;
 
-   if( pHbnode && pHbnode->node )
+   if( pHbnode->node )
    {
-      if( mxmlGetUserData( pHbnode->node ) != NULL )
-      {
-         hb_itemRelease( pHbnode->node->user_data );
-         pHbnode->node->user_data = NULL;
-      }
-
-      if( pHbnode->flags == 1 )
-      {
-         mxmlDelete( pHbnode->node );
-         pHbnode->node = NULL;
-      }
+      hbmxml_relese( pHbnode->node );
+      pHbnode->node = NULL;
    }
 }
 
@@ -176,33 +187,26 @@ static mxml_node_t * mxml_node_param( int iParam )
    return ( pHbnode && pHbnode->node ) ? pHbnode->node : NULL;
 }
 
-static PHB_ITEM hbmxml_node_ItemPut( PHB_ITEM pItem, mxml_node_t * pMxml_node, unsigned int uiFlags )
+static HBMXML_NODE * mxml_node_new( mxml_node_t * node, int iNew )
 {
    HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_gcAllocate( sizeof( HBMXML_NODE ),
                                                             &s_gc_mxml_nodeFuncs );
+   pHbnode->node = node;
+   if( iNew == 0 )
+      mxmlRetain( node );
 
-   if( pItem )
-   {
-      if( HB_IS_COMPLEX( pItem ) )
-         hb_itemClear( pItem );
-   }
-   else
-      pItem = hb_itemNew( pItem );
-
-   pHbnode->node = pMxml_node;
-   pHbnode->flags = uiFlags;
-
-   return hb_itemPutPtrGC( pItem, pHbnode );
+   return pHbnode;
 }
 
-static void mxml_node_push( mxml_node_t * pMxml_node, unsigned int uiFlags )
+static void mxml_node_push( mxml_node_t * node, int iNew )
 {
-   hbmxml_node_ItemPut( hb_stackAllocItem(), pMxml_node, uiFlags );
+   hb_itemPutPtrGC( hb_stackAllocItem(), mxml_node_new( node, iNew ) );
 }
 
-static void mxml_node_ret( mxml_node_t * pMxml_node, unsigned int uiFlags )
+static void mxml_node_ret( mxml_node_t * node, int iNew )
 {
-   hbmxml_node_ItemPut( hb_stackReturnItem(), pMxml_node, uiFlags );
+   if( node )
+      hb_itemPutPtrGC( hb_stackReturnItem(), mxml_node_new( node, iNew ) );
 }
 
 /* ========================= mxml_index_t * support ============================= */
@@ -211,7 +215,7 @@ static HB_GARBAGE_FUNC( hbmxml_indexDestructor )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) Cargo;
 
-   if( ppMxml_index && *ppMxml_index )
+   if( *ppMxml_index )
    {
       mxmlIndexDelete( *ppMxml_index );
       *ppMxml_index = NULL;
@@ -224,33 +228,6 @@ static const HB_GC_FUNCS s_gc_mxml_indexFuncs =
    hb_gcDummyMark
 };
 
-#if 0  /* unused yet */
-static mxml_index_t * hbmxml_index_ItemGet( PHB_ITEM pItem )
-{
-   mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_itemGetPtrGC( pItem,
-                                                                       &s_gc_mxml_indexFuncs );
-
-   return ppMxml_index ? *ppMxml_index : NULL;
-}
-#endif
-
-static PHB_ITEM hbmxml_index_ItemPut( PHB_ITEM pItem, mxml_index_t * pMxml_index )
-{
-   mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_gcAllocate( sizeof( mxml_index_t * ),
-                                                                     &s_gc_mxml_indexFuncs );
-
-   if( pItem )
-   {
-      if( HB_IS_COMPLEX( pItem ) )
-         hb_itemClear( pItem );
-   }
-   else
-      pItem = hb_itemNew( pItem );
-
-   *ppMxml_index = pMxml_index;
-   return hb_itemPutPtrGC( pItem, ppMxml_index );
-}
-
 static mxml_index_t * mxml_index_param( int iParam )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_parptrGC( &s_gc_mxml_indexFuncs,
@@ -259,9 +236,18 @@ static mxml_index_t * mxml_index_param( int iParam )
    return ( ppMxml_index && *ppMxml_index ) ? *ppMxml_index : NULL;
 }
 
-static void mxml_index_ret( mxml_index_t * pMxml_index )
+static mxml_index_t ** mxml_index_new( mxml_index_t * index )
 {
-   hbmxml_index_ItemPut( hb_stackReturnItem(), pMxml_index );
+   mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_gcAllocate( sizeof( mxml_index_t * ),
+                                                                     &s_gc_mxml_indexFuncs );
+   *ppMxml_index = index;
+
+   return ppMxml_index;
+}
+
+static void mxml_index_ret( mxml_index_t * index )
+{
+   hb_itemPutPtrGC( hb_stackReturnItem(), mxml_index_new( index ) );
 }
 
 /* ========================= non-wrap HB_... funcs ============================== */
@@ -288,36 +274,13 @@ HB_FUNC( MXMLADD )
    mxml_node_t *  parent = mxml_node_param( 1 );
    int            where = hb_parnidef( 2, MXML_ADD_BEFORE );
    mxml_node_t *  child = mxml_node_param( 3 );
-   HBMXML_NODE *  pNode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 4 );
+   mxml_node_t *  node  = mxml_node_param( 4 );
 
-   if( parent && pNode && pNode->node )
+   if( parent && node )
    {
       where = ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER;
 
-      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, pNode->node );
-
-      pNode->flags = 0;
-   }
-   else
-      MXML_ERR_ARGS;
-}
-
-/* void mxmlDelete( mxml_node_t * node ) */
-
-HB_FUNC( MXMLDELETE )
-{
-   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
-
-   if( pHbnode && pHbnode->node )
-   {
-      if( mxmlGetUserData( pHbnode->node ) != NULL )
-      {
-         hb_itemRelease( pHbnode->node->user_data );
-         pHbnode->node->user_data = NULL;
-      }
-      mxmlDelete( pHbnode->node );
-
-      pHbnode->node = NULL;
+      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
    }
    else
       MXML_ERR_ARGS;
@@ -423,8 +386,7 @@ HB_FUNC( MXMLFINDELEMENT )
       hb_strfree( hAttr );
       hb_strfree( hValue );
 
-      if( nodef )
-         mxml_node_ret( nodef, 0 );
+      mxml_node_ret( nodef, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -441,8 +403,7 @@ HB_FUNC( MXMLFINDPATH )
    {
       mxml_node_t * nodef = mxmlFindPath( node, hb_parstr_utf8( 2, &hPath, NULL ) );
 
-      if( nodef )
-         mxml_node_ret( nodef, 0 );
+      mxml_node_ret( nodef, 0 );
 
       hb_strfree( hPath );
    }
@@ -484,8 +445,7 @@ HB_FUNC( MXMLGETFIRSTCHILD )
    {
       mxml_node_t * first = mxmlGetFirstChild( node );
 
-      if( first )
-         mxml_node_ret( first, 0 );
+      mxml_node_ret( first, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -513,8 +473,7 @@ HB_FUNC( MXMLGETLASTCHILD )
    {
       mxml_node_t * last = mxmlGetLastChild( node );
 
-      if( last )
-         mxml_node_ret( last, 0 );
+      mxml_node_ret( last, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -530,8 +489,7 @@ HB_FUNC( MXMLGETNEXTSIBLING )
    {
       mxml_node_t * next = mxmlGetNextSibling( node );
 
-      if( next )
-         mxml_node_ret( next, 0 );
+      mxml_node_ret( next, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -559,8 +517,7 @@ HB_FUNC( MXMLGETPARENT )
    {
       mxml_node_t * parent = mxmlGetParent( node );
 
-      if( parent )
-         mxml_node_ret( parent, 0 );
+      mxml_node_ret( parent, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -576,8 +533,7 @@ HB_FUNC( MXMLGETPREVSIBLING )
    {
       mxml_node_t * previous = mxmlGetPrevSibling( node );
 
-      if( previous )
-         mxml_node_ret( previous, 0 );
+      mxml_node_ret( previous, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -660,7 +616,11 @@ HB_FUNC( MXMLINDEXENUM )
    mxml_index_t * index = mxml_index_param( 1 );
 
    if( index )
-      mxml_node_ret( mxmlIndexEnum( index ), 0 );
+   {
+      mxml_node_t * next = mxmlIndexEnum( index );
+
+      mxml_node_ret( next, 0 );
+   }
    else
       MXML_ERR_ARGS;
 }
@@ -682,8 +642,7 @@ HB_FUNC( MXMLINDEXFIND )
       hb_strfree( hElement );
       hb_strfree( hValue );
 
-      if( nodef )
-         mxml_node_ret( nodef, 0 );
+      mxml_node_ret( nodef, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -751,8 +710,7 @@ HB_FUNC( MXMLINDEXRESET )
    {
       mxml_node_t * node = mxmlIndexReset( index );
 
-      if( node )
-         mxml_node_ret( node, 0 );
+      mxml_node_ret( node, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -835,8 +793,9 @@ HB_FUNC( MXMLLOADFILE )
    {
       node = mxmlLoadFile( node_top, file, cb );
 
-      if( node )
-         mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
+      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
+
+      fclose( file );
    }
 
    pCbs->type_cb = NULL;
@@ -894,8 +853,7 @@ HB_FUNC( MXMLLOADSTRING )
    node = mxmlLoadString( node_top, hb_parstr_utf8( 2, &hFree, NULL ), cb );
    pCbs->type_cb = NULL;
 
-   if( node )
-      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
+   mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
 
    hb_strfree( hFree );
 }
@@ -911,8 +869,7 @@ HB_FUNC( MXMLNEWCDATA )
    {
       node = mxmlNewCDATA( MXML_NO_PARENT, hb_parstr_utf8( 2, &hString, NULL ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
 
       hb_strfree( hString );
    }
@@ -924,8 +881,7 @@ HB_FUNC( MXMLNEWCDATA )
       {
          node = mxmlNewCDATA( node_parent, hb_parstr_utf8( 2, &hString, NULL ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
 
          hb_strfree( hString );
       }
@@ -945,8 +901,7 @@ HB_FUNC( MXMLNEWELEMENT )
    {
       node = mxmlNewElement( MXML_NO_PARENT, hb_parstr_utf8( 2, &hName, NULL ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
 
       hb_strfree( hName );
    }
@@ -958,8 +913,7 @@ HB_FUNC( MXMLNEWELEMENT )
       {
          node = mxmlNewElement( node_parent, hb_parstr_utf8( 2, &hName, NULL ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
 
          hb_strfree( hName );
       }
@@ -978,8 +932,7 @@ HB_FUNC( MXMLNEWINTEGER )
    {
       node = mxmlNewInteger( MXML_NO_PARENT, hb_parni( 2 ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
    }
    else
    {
@@ -989,8 +942,7 @@ HB_FUNC( MXMLNEWINTEGER )
       {
          node = mxmlNewInteger( node_parent, hb_parni( 2 ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
       }
       else
          MXML_ERR_ARGS;
@@ -1008,8 +960,7 @@ HB_FUNC( MXMLNEWOPAQUE )
    {
       node = mxmlNewOpaque( MXML_NO_PARENT, hb_parstr_utf8( 2, &hOpaque, NULL ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
 
       hb_strfree( hOpaque );
    }
@@ -1021,8 +972,7 @@ HB_FUNC( MXMLNEWOPAQUE )
       {
          node = mxmlNewOpaque( node_parent, hb_parstr_utf8( 2, &hOpaque, NULL ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
 
          hb_strfree( hOpaque );
       }
@@ -1041,8 +991,7 @@ HB_FUNC( MXMLNEWREAL )
    {
       node = mxmlNewReal( MXML_NO_PARENT, hb_parnd( 2 ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
    }
    else
    {
@@ -1052,8 +1001,7 @@ HB_FUNC( MXMLNEWREAL )
       {
          node = mxmlNewReal( node_parent, hb_parnd( 2 ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
       }
       else
          MXML_ERR_ARGS;
@@ -1072,8 +1020,7 @@ HB_FUNC( MXMLNEWTEXT )
       node = mxmlNewText( MXML_NO_PARENT, hb_parnidef( 2, 0 ),
                           hb_parstr_utf8( 3, &hString, NULL ) );
 
-      if( node )
-         mxml_node_ret( node, 1 );
+      mxml_node_ret( node, 1 );
 
       hb_strfree( hString );
    }
@@ -1086,8 +1033,7 @@ HB_FUNC( MXMLNEWTEXT )
          node = mxmlNewText( node_parent, hb_parnidef( 2, 0 ),
                              hb_parstr_utf8( 3, &hString, NULL ) );
 
-         if( node )
-            mxml_node_ret( node, 0 );
+         mxml_node_ret( node, 0 );
 
          hb_strfree( hString );
       }
@@ -1113,10 +1059,51 @@ HB_FUNC( MXMLNEWXML )
    else
       node = mxmlNewXML( NULL );
 
-   if( node )
-      mxml_node_ret( node, 1 );
+   mxml_node_ret( node, 1 );
 }
 
+/* void mxmlRemove( mxml_node_t * node ) */
+
+/* mxmlRemove() does not update reference counters, we use our own
+ * wrapper which does it [druzus]
+ */
+
+static void mxmlRemoveRef( mxml_node_t * node )
+{
+   if( node->parent )
+   {
+      mxmlRemove( node );
+      mxmlRelease( node );
+   }
+}
+
+HB_FUNC( MXMLREMOVE )
+{
+   mxml_node_t * node = mxml_node_param( 1 );
+
+   if( node )
+      mxmlRemoveRef( node );
+   else
+      MXML_ERR_ARGS;
+}
+
+/* void mxmlDelete( mxml_node_t * node ) */
+
+HB_FUNC( MXMLDELETE )
+{
+   HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
+
+   if( pHbnode && pHbnode->node )
+   {
+      mxmlRemoveRef( pHbnode->node );
+      hbmxml_relese( pHbnode->node );
+      pHbnode->node = NULL;
+   }
+   else
+      MXML_ERR_ARGS;
+}
+
+#if 0
 /* int mxmlRelease( mxml_node_t * node ) */
 
 HB_FUNC( MXMLRELEASE )
@@ -1125,22 +1112,6 @@ HB_FUNC( MXMLRELEASE )
 
    if( node )
       hb_retni( mxmlRelease( node ) );
-   else
-      MXML_ERR_ARGS;
-}
-
-/* void mxmlRemove( mxml_node_t * node ) */
-
-HB_FUNC( MXMLREMOVE )
-{
-   HBMXML_NODE * pNode = ( HBMXML_NODE * ) hb_parptrGC( &s_gc_mxml_nodeFuncs, 1 );
-
-   if( pNode && pNode->node )
-   {
-      mxmlRemove( pNode->node );
-
-      pNode->flags = 1;
-   }
    else
       MXML_ERR_ARGS;
 }
@@ -1156,6 +1127,7 @@ HB_FUNC( MXMLRETAIN )
    else
       MXML_ERR_ARGS;
 }
+#endif
 
 /* ======= void (*mxml_sax_cb_t)(mxml_node_t *, mxml_sax_event_t, void *)======== */
 
@@ -1252,8 +1224,7 @@ HB_FUNC( MXMLSAXLOADFILE )
    {
       node = mxmlSAXLoadFile( node_top, file, cb, cb_sax, pData );
 
-      if( node != NULL )
-         mxml_node_ret( node, ( node_top != NULL ) ? 1 : 0 );
+      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
 
       fclose( file );
    }
@@ -1328,8 +1299,7 @@ HB_FUNC( MXMLSAXLOADSTRING )
    {
       node = mxmlSAXLoadString( node_top, s, cb, cb_sax, pData );
 
-      if( node != NULL )
-         mxml_node_ret( node, ( node_top != NULL ) ? 1 : 0 );
+      mxml_node_ret( node, ( node_top == MXML_NO_PARENT ) ? 1 : 0 );
    }
 
    pCbs->type_cb = NULL;
@@ -1686,8 +1656,7 @@ HB_FUNC( MXMLWALKNEXT )
    {
       mxml_node_t * node_next = mxmlWalkNext( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
 
-      if( node_next )
-         mxml_node_ret( node_next, 0 );
+      mxml_node_ret( node_next, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -1704,8 +1673,7 @@ HB_FUNC( MXMLWALKPREV )
    {
       mxml_node_t * node_prev = mxmlWalkPrev( node, top, hb_parnidef( 3, MXML_NO_DESCEND ) );
 
-      if( node_prev )
-         mxml_node_ret( node_prev, 0 );
+      mxml_node_ret( node_prev, 0 );
    }
    else
       MXML_ERR_ARGS;
@@ -1748,7 +1716,7 @@ HB_FUNC( MXMLNEWCUSTOM )
    if( hb_pcount() > 1 )
    {
       PHB_ITEM       pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
-      mxml_node_t *  parent = NULL;
+      mxml_node_t *  parent = MXML_NO_PARENT;
       mxml_node_t *  node = NULL;
 
       if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
@@ -1761,9 +1729,9 @@ HB_FUNC( MXMLNEWCUSTOM )
             node = mxmlNewCustom( parent, pItem, custom_destroy_cb );
       }
 
-      if( node != NULL )
+      if( node )
       {
-         mxml_node_ret( node, ( parent != NULL ) ? 0 : 1 );
+         mxml_node_ret( node, ( parent == MXML_NO_PARENT ) ? 1 : 0 );
          return;
       }
 
