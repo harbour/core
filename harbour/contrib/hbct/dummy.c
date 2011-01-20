@@ -196,7 +196,6 @@ HB_FUNC( ERRORORG )   {;}
 HB_FUNC( FILESFREE )  {;}
 HB_FUNC( GETCOUNTRY ) {;}
 HB_FUNC( ISANSI )     {;}
-HB_FUNC( ISAT )       {;}
 HB_FUNC( ISMATH )     {;}
 HB_FUNC( MEMSIZE )    {;}
 HB_FUNC( NUMBUFFERS ) {;}
@@ -218,7 +217,6 @@ HB_FUNC( SHOWKEY )    {;}
 HB_FUNC( SOUND )      {;}
 HB_FUNC( SPEED )      {;}
 HB_FUNC( STACKFREE )  {;}
-HB_FUNC( TOOLVER )    {;}
 /* Introduction PEEK/POKE Functions */
 HB_FUNC( INBYTE )     {;}
 HB_FUNC( INWORD )     {;}
