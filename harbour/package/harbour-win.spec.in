@@ -15,7 +15,7 @@
 
 %define name      harbour-win
 %define version   2.1.0
-%define releasen  beta3
+%define releasen  rc1
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
 %define hb_ccpath /opt/xmingw/bin
