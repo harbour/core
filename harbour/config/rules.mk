@@ -71,6 +71,12 @@ ifeq ($(CPP_RULE),)
    CPP_RULE = $(CXX) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
+# The rule to compile an Objective C source file.
+ifeq ($(OBJC_RULE),)
+   OBJC := $(CC)
+   OBJC_RULE = $(OBJC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.m=$(OBJ_EXT)) $(CC_IN) $<
+endif
+
 # The rule to compile resources.
 ifneq ($(RC),)
    ifeq ($(RC_RULE),)
@@ -100,6 +106,13 @@ endif
 
 %$(OBJ_EXT) : %.cpp
 	$(CPP_RULE)
+
+# Rules for Objective C files
+%$(OBJ_EXT) : $(GRANDP)%.m
+	$(OBJC_RULE)
+
+%$(OBJ_EXT) : %.m
+	$(OBJC_RULE)
 
 # Rules for resource files
 %$(RES_EXT) : $(GRANDP)%.rc
