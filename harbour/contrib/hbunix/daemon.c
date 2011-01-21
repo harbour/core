@@ -36,9 +36,9 @@
 #include "hbvm.h"
 
 /*
- * hb_posix_daemon( [<lNoChdir>], [<lNoClose>] ) --> <lResult>
+ * unix_daemon( [<lNoChdir>], [<lNoClose>] ) --> <lResult>
  */
-HB_FUNC( HB_POSIX_DAEMON )
+HB_FUNC( UNIX_DAEMON )
 {
    int fd;
 

@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    OutStd( hb_strFormat( "Parent(%d) launching child... ", posix_getpid() ) + hb_eol() )
 
-   IF ! hb_posix_daemon( .F., .F. )
+   IF ! unix_daemon( .F., .F. )
       OutStd( "failed." + hb_eol() )
       ErrorLevel( 1 )
       QUIT
