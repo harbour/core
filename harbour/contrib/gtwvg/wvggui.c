@@ -1013,6 +1013,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             case SC_MAXIMIZE:
             {
                /* TODO */
+               break;
             }
          }
 #endif

@@ -58,7 +58,7 @@ HB_FUNC( __TIP_URL_ENCODE )
 {
    const char * cData = hb_parc( 1 );
    HB_ISIZ nLen = hb_parclen( 1 );
-   HB_BOOL bComplete = HB_ISLOG( 2 ) ? hb_parl( 2 ) : HB_TRUE;
+   HB_BOOL bComplete = hb_parldef( 2, HB_TRUE );
    char * cRet;
    HB_ISIZ nPos = 0, nPosRet = 0, nVal;
    char cElem;

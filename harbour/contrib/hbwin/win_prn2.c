@@ -459,7 +459,7 @@ HB_FUNC( WIN_PRINTERLIST )
 {
    PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
 #if ! defined( HB_OS_WIN_CE )
-   HB_BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : HB_TRUE;
+   HB_BOOL bPrinterNamesOnly = ! hb_parl( 1 );
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
 
