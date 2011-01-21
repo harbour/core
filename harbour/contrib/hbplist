@@ -37,7 +37,6 @@ hbnetio/utils/hbnetio.hbp
 hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp
-hbposix/hbposix.hbp
 hbqt/hbqt_all.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
@@ -45,6 +44,7 @@ hbssl/hbssl.hbp
 hbtip/hbtip.hbp
 hbtip/hbtipssl.hbp
 hbtpathy/hbtpathy.hbp
+hbunix/hbunix.hbp
 hbwin/hbwin.hbp
 hbxbp/hbxbp.hbp
 hbxdiff/hbxdiff.hbp              # uses: libxdiff (locally hosted)
