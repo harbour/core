@@ -12,3 +12,4 @@
 -stop{!unix}
 
 hbposix.c
+daemon.c

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * libmagic wrapper functions
  *
- * Copyright 2010. Tamas TEVESZ <ice@extreme.hu>
+ * Copyright 2010 Tamas TEVESZ <ice@extreme.hu>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
