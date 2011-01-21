@@ -1758,10 +1758,10 @@ HB_FUNC( MXMLSETCUSTOM )
       {
          iResult = mxmlSetCustom( node, pItem, custom_destroy_cb );
 
-         hb_retni( iResult );
-
          if( iResult < 0 )
             hb_itemRelease( pItem );
+
+         hb_retni( iResult );
       }
    }
    else
@@ -1892,7 +1892,8 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
 
    if( node && mxmlGetType( node ) == MXML_ELEMENT )
    {
-      PHB_ITEM       pAttrs = hb_itemArrayNew( 0 );
+      PHB_ITEM       pAttrs = hb_itemArrayNew( 0 ),
+                     pAttr = hb_itemNew( NULL );
       int            i;
       mxml_attr_t *  attr;
 
@@ -1900,15 +1901,14 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
            i > 0;
            i--, attr++ )
       {
-         PHB_ITEM pAttr = hb_itemArrayNew( 2 );
+         hb_arrayNew( pAttr, 2 );
 
          hb_arraySetStrUTF8( pAttr, 1, attr->name );
          hb_arraySetStrUTF8( pAttr, 2, attr->value );
 
-         hb_arrayAdd( pAttrs, pAttr );
-
-         hb_itemRelease( pAttr );
+         hb_arrayAddForward( pAttrs, pAttr );
       }
+      hb_itemRelease( pAttr );
 
       hb_itemReturnRelease( pAttrs );
    }
@@ -1922,7 +1922,9 @@ HB_FUNC( HB_MXMLGETATTRS )
 
    if( node && mxmlGetType( node ) == MXML_ELEMENT )
    {
-      PHB_ITEM       pAttrs = hb_hashNew( hb_itemNew( NULL ) );
+      PHB_ITEM       pAttrs = hb_hashNew( hb_itemNew( NULL ) ),
+                     pKey = NULL,
+                     pValue = NULL;
       int            i;
       mxml_attr_t *  attr;
 
@@ -1932,14 +1934,13 @@ HB_FUNC( HB_MXMLGETATTRS )
            i > 0;
            i--, attr++ )
       {
-         PHB_ITEM pKey = hb_itemPutStrUTF8( NULL, attr->name );
-         PHB_ITEM pValue = hb_itemPutStrUTF8( NULL, attr->value );
+         pKey = hb_itemPutStrUTF8( pKey, attr->name );
+         pValue = hb_itemPutStrUTF8( pValue, attr->value );
 
          hb_hashAdd( pAttrs, pKey, pValue );
-
-         hb_itemRelease( pValue );
-         hb_itemRelease( pKey );
       }
+      hb_itemRelease( pKey );
+      hb_itemRelease( pValue );
 
       hb_itemReturnRelease( pAttrs );
    }
