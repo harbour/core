@@ -32,14 +32,11 @@
  * SUCH DAMAGE.
  */
 
-#include "hbapi.h"
+#include "hbposix.h"
 #include "hbvm.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-
 /*
- * hb_posix_daemon( lNoChdir, lNoClose ) --> lResult
+ * hb_posix_daemon( [<lNoChdir>], [<lNoClose>] ) --> <lResult>
  */
 HB_FUNC( HB_POSIX_DAEMON )
 {
@@ -48,6 +45,7 @@ HB_FUNC( HB_POSIX_DAEMON )
    switch( fork() )
    {
       case -1:
+         hb_posix_save_errno();
          hb_retl( HB_FALSE );
          return;
       case 0:
@@ -59,6 +57,7 @@ HB_FUNC( HB_POSIX_DAEMON )
 
    if( setsid() == -1 )
    {
+      hb_posix_save_errno();
       hb_retl( HB_FALSE );
       return;
    }
@@ -74,6 +73,8 @@ HB_FUNC( HB_POSIX_DAEMON )
       if( fd > 2 )
          ( void ) close( fd );
    }
+
+   hb_posix_set_errno( 0 );
 
    hb_retl( HB_TRUE );
 }

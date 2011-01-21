@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * POSIX function wrappers
+ * Harbour Project source code
+ * header file for POSIX function wrappers
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://harbour-project.org
+ * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,10 +50,30 @@
  *
  */
 
-#include "hbposix.h"
+#ifndef __HBPOSIX_H
+#define __HBPOSIX_H
 
-HB_FUNC( POSIX_GETPID )
-{
-   hb_retnint( getpid() );
-}
+#include "hbapi.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+
+
+#define hb_par_uid( n )       ( ( uid_t ) hb_parnl( n ) )
+#define hb_ret_uid( n )       hb_retnint( n )
+
+HB_EXTERN_BEGIN
+
+void hb_posix_param_error( void );
+void hb_posix_result( int iResult );
+
+void hb_posix_save_errno( void );
+void hb_posix_set_errno( int iErrNo );
+int  hb_posix_get_errno( void );
+
+HB_EXTERN_END
+
+#endif /* __HBPOSIX_H */

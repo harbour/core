@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- * POSIX function wrappers
+ * POSIX function wrappers to get/set user and group IDs
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://harbour-project.org
+ * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,8 +52,54 @@
 
 #include "hbposix.h"
 
-HB_FUNC( POSIX_GETPID )
+HB_FUNC( POSIX_GETUID )
 {
-   hb_retnint( getpid() );
+   hb_ret_uid( getuid() );
 }
 
+HB_FUNC( POSIX_GETEUID )
+{
+   hb_ret_uid( geteuid() );
+}
+
+HB_FUNC( POSIX_GETGID )
+{
+   hb_ret_uid( getgid() );
+}
+
+HB_FUNC( POSIX_GETEGID )
+{
+   hb_ret_uid( getegid() );
+}
+
+HB_FUNC( POSIX_SETUID )
+{
+   if( HB_ISNUM( 1 ) )
+      hb_posix_result( setuid( hb_par_uid( 1 ) ) );
+   else
+      hb_posix_param_error();
+}
+
+HB_FUNC( POSIX_SETEUID )
+{
+   if( HB_ISNUM( 1 ) )
+      hb_posix_result( seteuid( hb_par_uid( 1 ) ) );
+   else
+      hb_posix_param_error();
+}
+
+HB_FUNC( POSIX_SETGID )
+{
+   if( HB_ISNUM( 1 ) )
+      hb_posix_result( setgid( hb_par_uid( 1 ) ) );
+   else
+      hb_posix_param_error();
+}
+
+HB_FUNC( POSIX_SETEGID )
+{
+   if( HB_ISNUM( 1 ) )
+      hb_posix_result( setegid( hb_par_uid( 1 ) ) );
+   else
+      hb_posix_param_error();
+}

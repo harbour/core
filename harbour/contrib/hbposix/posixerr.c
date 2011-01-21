@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * POSIX function wrappers
+ * Harbour Project source code
+ * POSIX function errno handling
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://harbour-project.org
+ * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,9 +51,50 @@
  */
 
 #include "hbposix.h"
+#include "hbstack.h"
+#include "hbapierr.h"
 
-HB_FUNC( POSIX_GETPID )
+typedef struct
 {
-   hb_retnint( getpid() );
+   int iErrNo;
+} HB_POSIXERRDATA, * PHB_POSIXERRDATA;
+
+static HB_TSD_NEW( s_posix_errno, sizeof( HB_POSIXERRDATA ), NULL, NULL );
+
+#define HB_POSIX_ERRNO  ( ( PHB_POSIXERRDATA ) hb_stackGetTSD( &s_posix_errno ) )
+
+void hb_posix_save_errno( void )
+{
+   HB_POSIX_ERRNO->iErrNo = errno;
 }
 
+void hb_posix_set_errno( int iErrNo )
+{
+   HB_POSIX_ERRNO->iErrNo = iErrNo;
+}
+
+int hb_posix_get_errno( void )
+{
+   return HB_POSIX_ERRNO->iErrNo;
+}
+
+void hb_posix_param_error( void )
+{
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+void hb_posix_result( int iResult )
+{
+   if( iResult == -1 )
+      hb_posix_save_errno();
+   else
+      hb_posix_set_errno( 0 );
+
+   hb_retni( iResult );
+}
+
+
+HB_FUNC( POSIX_ERRNO )
+{
+   hb_retni( HB_POSIX_ERRNO->iErrNo );
+}

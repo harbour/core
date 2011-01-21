@@ -13,3 +13,5 @@
 
 hbposix.c
 daemon.c
+guids.c
+posixerr.c
