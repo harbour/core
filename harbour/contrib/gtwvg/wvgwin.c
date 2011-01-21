@@ -143,14 +143,14 @@ HB_FUNC( WVG_SENDMESSAGE )
 
 HB_FUNC( WVG_SENDDLGITEMMESSAGE )
 {
-   PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
-   char *   cText = NULL;
-   HB_ISIZ  iLen = 0;
+   PHB_ITEM pText   = hb_param( 5, HB_IT_STRING );
+   char *   cText   = NULL;
+   HB_ISIZ  iLen    = 0;
 
    if( pText )
    {
-      iLen = hb_itemGetCLen( pText );
-      cText = ( char * ) hb_xgrab( iLen + 1 );
+      iLen    = hb_itemGetCLen( pText );
+      cText   = ( char * ) hb_xgrab( iLen + 1 );
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen + 1 );
    }
 
@@ -268,8 +268,8 @@ HB_FUNC( WVG_SETDLGITEMTEXT )
 
 HB_FUNC( WVG_GETDLGITEMTEXT )
 {
-   int      iLen = ( int ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   LPTSTR   cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   int      iLen    = ( int ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   LPTSTR   cText   = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
    char *   szText;
    UINT     iResult;
 
@@ -280,7 +280,7 @@ HB_FUNC( WVG_GETDLGITEMTEXT )
                              );
 
    cText[ iResult ] = '\0';
-   szText = HB_TCHAR_CONVFROM( cText );
+   szText           = HB_TCHAR_CONVFROM( cText );
    hb_retc( szText );
    HB_TCHAR_FREE( szText );
    hb_xfree( cText );
@@ -323,8 +323,8 @@ HB_FUNC( WVG_GETDLGITEM )
 
 HB_FUNC( WVG_MESSAGEBOX )
 {
-   HWND     hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
-   LPTSTR   lpMsg = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   HWND     hWnd    = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
+   LPTSTR   lpMsg   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR   lpTitle = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
 
    hb_retni( MessageBox( hWnd, lpMsg, lpTitle, hb_parnidef( 4, MB_OK ) ) );
@@ -341,10 +341,10 @@ HB_FUNC( WVG_INVALIDATERECT )
    {
       RECT rc = { 0, 0, 0, 0 };
 
-      rc.left = hb_parvni( 2, 1 );
-      rc.top = hb_parvni( 2, 2 );
-      rc.right = hb_parvni( 2, 3 );
-      rc.bottom = hb_parvni( 2, 4 );
+      rc.left    = hb_parvni( 2, 1 );
+      rc.top     = hb_parvni( 2, 2 );
+      rc.right   = hb_parvni( 2, 3 );
+      rc.bottom  = hb_parvni( 2, 4 );
 
       hb_retl( InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc, TRUE ) );
    }
@@ -383,23 +383,23 @@ HB_FUNC( WVG_LOADICON )
  */
 HB_FUNC( WVG_LOADIMAGE )
 {
-   HBITMAP  hImage = 0;
-   LPTSTR   lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   int      iSource = hb_parni( 2 );
+   HBITMAP  hImage     = 0;
+   LPTSTR   lpBuffer   = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   int      iSource    = hb_parni( 2 );
 
    switch( iSource )
    {
-   case 0:
-      hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-      break;
+      case 0:
+         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         break;
 
-   case 1:
-      hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
-      break;
+      case 1:
+         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+         break;
 
-   case 2:
-      hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
-      break;
+      case 2:
+         hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+         break;
    }
 
    HB_TCHAR_FREE( lpBuffer );
@@ -410,7 +410,7 @@ HB_FUNC( WVG_LOADIMAGE )
 
 HB_FUNC( WVG_GETCLIENTRECT )
 {
-   RECT     rc = { 0, 0, 0, 0 };
+   RECT     rc   = { 0, 0, 0, 0 };
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
    GetClientRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc );
@@ -466,13 +466,13 @@ HB_FUNC( WVG_CREATEBRUSH )
  */
 HB_FUNC( WVG_DRAWTEXT )
 {
-   RECT     rc = { 0, 0, 0, 0 };
-   LPTSTR   lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   RECT     rc         = { 0, 0, 0, 0 };
+   LPTSTR   lpBuffer   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-   rc.left = hb_parvni( 3, 1 );
-   rc.top = hb_parvni( 3, 2 );
-   rc.right = hb_parvni( 3, 3 );
-   rc.bottom = hb_parvni( 3, 4 );
+   rc.left    = hb_parvni( 3, 1 );
+   rc.top     = hb_parvni( 3, 2 );
+   rc.right   = hb_parvni( 3, 3 );
+   rc.bottom  = hb_parvni( 3, 4 );
 
    hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpBuffer );
@@ -637,13 +637,13 @@ HB_FUNC( WVG_NOT )
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
-   HMENU hMenu = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
-   int   x = hb_parni( 3 );
-   int   y = hb_parni( 4 );
-   HWND  hWnd = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
+   HMENU hMenu   = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   UINT  uFlags  = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
+   int   x       = hb_parni( 3 );
+   int   y       = hb_parni( 4 );
+   HWND  hWnd    = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
 
-   POINT xy = { 0, 0 };
+   POINT xy      = { 0, 0 };
 
    if( ! HB_ISNUM( 3 ) )
    {
@@ -669,11 +669,11 @@ HB_FUNC( WVG_CHOOSECOLOR )
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
       crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
 
-   cc.lStructSize = sizeof( CHOOSECOLOR );
-   cc.hwndOwner = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
-   cc.rgbResult = ( COLORREF ) hb_parnl( 1 );
-   cc.lpCustColors = crCustClr;
-   cc.Flags = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
+   cc.lStructSize   = sizeof( CHOOSECOLOR );
+   cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
+   cc.rgbResult     = ( COLORREF ) hb_parnl( 1 );
+   cc.lpCustColors  = crCustClr;
+   cc.Flags         = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
       hb_retnl( cc.rgbResult );
@@ -688,8 +688,8 @@ HB_FUNC( WVG_FINDWINDOW )
    HWND     hwnd;
    LPTSTR   lpStr;
 
-   lpStr = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   hwnd = FindWindow( NULL, lpStr );
+   lpStr   = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   hwnd    = FindWindow( NULL, lpStr );
    HB_TCHAR_FREE( lpStr );
 
    if( hwnd )
@@ -715,18 +715,18 @@ HB_FUNC( WVG_SETMENU )
 
    #if 1
    HB_BOOL  bSet;
-   RECT     wi = { 0, 0, 0, 0 };
-   RECT     ci = { 0, 0, 0, 0 };
+   RECT     wi   = { 0, 0, 0, 0 };
+   RECT     ci   = { 0, 0, 0, 0 };
    int      height, width;
 
    bSet = SetMenu( hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
 
    GetWindowRect( hWnd, &wi );
    GetClientRect( hWnd, &ci );
-   height = ( ci.bottom - ci.top );
-   width = ( ci.right - ci.left );
+   height  = ( ci.bottom - ci.top );
+   width   = ( ci.right - ci.left );
 
-   width += ( wi.right - wi.left - ci.right );
+   width  += ( wi.right - wi.left - ci.right );
    height += ( wi.bottom - wi.top - ci.bottom );
 
    SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
@@ -855,8 +855,8 @@ HB_FUNC( WVG_MAKELPARAM )
 HB_FUNC( WVG_CREATEWINDOWEX )
 {
    HWND     hWnd;
-   LPTSTR   szClassName = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR   szWinName = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   LPTSTR   szClassName   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR   szWinName     = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    hWnd = CreateWindowEx( ( DWORD ) hb_parnint( 1 ),
                           szClassName,
@@ -904,7 +904,7 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
 HB_FUNC( WVG_SETWNDPROC )
 {
-   HWND     hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   HWND     hWnd    = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
    WNDPROC  wndProc = ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( 2 );
    WNDPROC  oldProc;
 
@@ -1155,7 +1155,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
       if( pfnLayered )
       {
          HWND     hWnd = hbwapi_par_raw_HWND( 1 );
-         COLORREF cr = HB_ISNUM( 2 ) ? hbwapi_par_COLORREF( 2 ) : RGB( 255, 255, 255 );
+         COLORREF cr   = HB_ISNUM( 2 ) ? hbwapi_par_COLORREF( 2 ) : RGB( 255, 255, 255 );
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
@@ -1174,173 +1174,173 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 {
 /* #if ! defined( HB_OS_WIN_CE ) */
-   HWND  hTB = hbwapi_par_raw_HWND( 1 );
-   int   msg = hbwapi_par_INT( 2 );
+   HWND  hTB  = hbwapi_par_raw_HWND( 1 );
+   int   msg  = hbwapi_par_INT( 2 );
 
    switch( msg )
    {
-   case TB_ADDBITMAP:
-   {
-      TBADDBITMAP tbab;
+      case TB_ADDBITMAP:
+      {
+         TBADDBITMAP tbab;
 
-      tbab.hInst = NULL;
+         tbab.hInst = NULL;
 #if ( _WIN32_IE >= 0x0500 )
-      tbab.nID = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
+         tbab.nID   = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
 #else
-      tbab.nID = ( UINT ) hbwapi_par_raw_HBITMAP( 3 );
+         tbab.nID   = ( UINT ) hbwapi_par_raw_HBITMAP( 3 );
 #endif
-      hbwapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
-      break;
-   }
-   case TB_ADDBUTTONS:
-   {
-      TBBUTTON tbb;
+         hbwapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
+         break;
+      }
+      case TB_ADDBUTTONS:
+      {
+         TBBUTTON tbb;
 
-      tbb.iBitmap = hbwapi_par_INT( 3 );
-      tbb.idCommand = hbwapi_par_INT( 4 );
-      tbb.fsState = TBSTATE_ENABLED;
-      tbb.fsStyle = TBSTYLE_BUTTON;
-      tbb.dwData = 0;
-      tbb.iString = hbwapi_par_INT( 5 );
+         tbb.iBitmap   = hbwapi_par_INT( 3 );
+         tbb.idCommand = hbwapi_par_INT( 4 );
+         tbb.fsState   = TBSTATE_ENABLED;
+         tbb.fsStyle   = TBSTYLE_BUTTON;
+         tbb.dwData    = 0;
+         tbb.iString   = hbwapi_par_INT( 5 );
 
-      hbwapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
-      break;
-   }
-   case TB_ADDSTRING:
-   {
-      int      iString;
-      LPTSTR   szCaption;
+         hbwapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
+         break;
+      }
+      case TB_ADDSTRING:
+      {
+         int      iString;
+         LPTSTR   szCaption;
 
-      szCaption = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-      iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) szCaption );
-      HB_TCHAR_FREE( szCaption );
+         szCaption  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+         iString    = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) szCaption );
+         HB_TCHAR_FREE( szCaption );
 
-      hbwapi_ret_NI( iString );
-      break;
-   }
-   case TB_AUTOSIZE:
-      SendMessage( hTB, TB_AUTOSIZE, ( WPARAM ) 0, ( LPARAM ) 0 );
-      break;
-   case TB_BUTTONCOUNT:
-      break;
-   case TB_BUTTONSTRUCTSIZE:
-      SendMessage( hTB, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
-      break;
-   case TB_CHANGEBITMAP:
-   case TB_CHECKBUTTON:
-   case TB_COMMANDTOINDEX:
-   case TB_DELETEBUTTON:
-   case TB_ENABLEBUTTON:
-   case TB_GETBITMAP:
-   case TB_GETBITMAPFLAGS:
-   case TB_GETBUTTON:
-   case TB_GETBUTTONINFO:
-   case TB_GETBUTTONSIZE:
-   case TB_GETBUTTONTEXT:
-   case TB_GETDISABLEDIMAGELIST:
-   case TB_GETIMAGELIST:
-   case TB_GETITEMRECT:
-   case TB_GETRECT:
-   case TB_GETROWS:
-   case TB_GETSTATE:
-   case TB_GETSTYLE:
-   case TB_GETTEXTROWS:
-   case TB_GETTOOLTIPS:
-   case TB_HIDEBUTTON:
-   case TB_HITTEST:
-   case TB_INDETERMINATE:
-   case TB_INSERTBUTTON:
-   case TB_ISBUTTONCHECKED:
-   case TB_ISBUTTONENABLED:
-   case TB_ISBUTTONHIDDEN:
-   case TB_ISBUTTONHIGHLIGHTED:
-   case TB_ISBUTTONINDETERMINATE:
-   case TB_ISBUTTONPRESSED:
-   case TB_LOADIMAGES:
-   case TB_PRESSBUTTON:
-   case TB_REPLACEBITMAP:
-      break;
-   case TB_SETBITMAPSIZE:
-      SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
-                   ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
-      break;
-   case TB_SETBUTTONINFO:
-      break;
-   case TB_SETBUTTONSIZE:
-      SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
-                   ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
-      break;
-   case TB_SETBUTTONWIDTH:
-      SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
-                   ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
-      break;
-   case TB_SETIMAGELIST:
-      SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_raw_HIMAGELIST( 3 ) );
-      break;
-   case TB_SETINDENT:
-      SendMessage( hTB, TB_SETINDENT, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) 0 );
-      break;
-   case TB_SETMAXTEXTROWS:
-      SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) hbwapi_par_INT( 2 ), ( LPARAM ) 0 );
-      break;
-   case TB_SETPARENT:
-   case TB_SETROWS:
-   case TB_SETSTATE:
-   case TB_SETSTYLE:
-   case TB_SETTOOLTIPS:
-   case TB_SETCMDID:
-   case TB_SETDISABLEDIMAGELIST:
-   case TB_SETDRAWTEXTFLAGS:
-      break;
+         hbwapi_ret_NI( iString );
+         break;
+      }
+      case TB_AUTOSIZE:
+         SendMessage( hTB, TB_AUTOSIZE, ( WPARAM ) 0, ( LPARAM ) 0 );
+         break;
+      case TB_BUTTONCOUNT:
+         break;
+      case TB_BUTTONSTRUCTSIZE:
+         SendMessage( hTB, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
+         break;
+      case TB_CHANGEBITMAP:
+      case TB_CHECKBUTTON:
+      case TB_COMMANDTOINDEX:
+      case TB_DELETEBUTTON:
+      case TB_ENABLEBUTTON:
+      case TB_GETBITMAP:
+      case TB_GETBITMAPFLAGS:
+      case TB_GETBUTTON:
+      case TB_GETBUTTONINFO:
+      case TB_GETBUTTONSIZE:
+      case TB_GETBUTTONTEXT:
+      case TB_GETDISABLEDIMAGELIST:
+      case TB_GETIMAGELIST:
+      case TB_GETITEMRECT:
+      case TB_GETRECT:
+      case TB_GETROWS:
+      case TB_GETSTATE:
+      case TB_GETSTYLE:
+      case TB_GETTEXTROWS:
+      case TB_GETTOOLTIPS:
+      case TB_HIDEBUTTON:
+      case TB_HITTEST:
+      case TB_INDETERMINATE:
+      case TB_INSERTBUTTON:
+      case TB_ISBUTTONCHECKED:
+      case TB_ISBUTTONENABLED:
+      case TB_ISBUTTONHIDDEN:
+      case TB_ISBUTTONHIGHLIGHTED:
+      case TB_ISBUTTONINDETERMINATE:
+      case TB_ISBUTTONPRESSED:
+      case TB_LOADIMAGES:
+      case TB_PRESSBUTTON:
+      case TB_REPLACEBITMAP:
+         break;
+      case TB_SETBITMAPSIZE:
+         SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
+         break;
+      case TB_SETBUTTONINFO:
+         break;
+      case TB_SETBUTTONSIZE:
+         SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
+         break;
+      case TB_SETBUTTONWIDTH:
+         SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
+         break;
+      case TB_SETIMAGELIST:
+         SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_raw_HIMAGELIST( 3 ) );
+         break;
+      case TB_SETINDENT:
+         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) 0 );
+         break;
+      case TB_SETMAXTEXTROWS:
+         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) hbwapi_par_INT( 2 ), ( LPARAM ) 0 );
+         break;
+      case TB_SETPARENT:
+      case TB_SETROWS:
+      case TB_SETSTATE:
+      case TB_SETSTYLE:
+      case TB_SETTOOLTIPS:
+      case TB_SETCMDID:
+      case TB_SETDISABLEDIMAGELIST:
+      case TB_SETDRAWTEXTFLAGS:
+         break;
 
       #if 0
-   case TB_TRANSLATEACCELERATOR:
-   case TB_SETPRESSEDIMAGELIST:
-   case TB_SETWINDOWTHEME:
-   case TB_GETIDEALSIZE:
-   case TB_GETIMAGELISTCOUNT:
-   case TB_GETMETRICS:
-   case TB_GETPRESSEDIMAGELIST:
-   case TB_GETSTRING:
-   case TB_SETLISTGAP:
-   case TB_GETITEMDROPDOWNRECT:
-   case TB_SETHOTITEM2:
-   case TB_SETMETRICS:
-      break;
+      case TB_TRANSLATEACCELERATOR:
+      case TB_SETPRESSEDIMAGELIST:
+      case TB_SETWINDOWTHEME:
+      case TB_GETIDEALSIZE:
+      case TB_GETIMAGELISTCOUNT:
+      case TB_GETMETRICS:
+      case TB_GETPRESSEDIMAGELIST:
+      case TB_GETSTRING:
+      case TB_SETLISTGAP:
+      case TB_GETITEMDROPDOWNRECT:
+      case TB_SETHOTITEM2:
+      case TB_SETMETRICS:
+         break;
       #endif
 
 #if ! defined( HB_OS_WIN_CE )
-   case TB_SETPADDING:
-      SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
-                   ( LPARAM ) MAKELPARAM( hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) ) );
-      break;
-   case TB_MARKBUTTON:
-      SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ), 0 ) );
-      break;
-   case TB_SETINSERTMARK:
-   case TB_SETINSERTMARKCOLOR:
-   case TB_SETCOLORSCHEME:
-   case TB_SETEXTENDEDSTYLE:
-   case TB_SETHOTIMAGELIST:
-   case TB_SETHOTITEM:
-   case TB_INSERTMARKHITTEST:
-   case TB_MAPACCELERATOR:
-   case TB_MOVEBUTTON:
-   case TB_GETINSERTMARK:
-   case TB_GETCOLORSCHEME:
-   case TB_CUSTOMIZE:
-   case TB_GETANCHORHIGHLIGHT:
-   case TB_GETEXTENDEDSTYLE:
-   case TB_GETHOTIMAGELIST:
-   case TB_GETINSERTMARKCOLOR:
-   case TB_GETHOTITEM:
-   case TB_GETOBJECT:
-   case TB_GETUNICODEFORMAT:
-   case TB_GETMAXSIZE:
-   case TB_SAVERESTORE:
-   case TB_SETANCHORHIGHLIGHT:
-   case TB_SETUNICODEFORMAT:
-      break;
+      case TB_SETPADDING:
+         SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELPARAM( hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) ) );
+         break;
+      case TB_MARKBUTTON:
+         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ), 0 ) );
+         break;
+      case TB_SETINSERTMARK:
+      case TB_SETINSERTMARKCOLOR:
+      case TB_SETCOLORSCHEME:
+      case TB_SETEXTENDEDSTYLE:
+      case TB_SETHOTIMAGELIST:
+      case TB_SETHOTITEM:
+      case TB_INSERTMARKHITTEST:
+      case TB_MAPACCELERATOR:
+      case TB_MOVEBUTTON:
+      case TB_GETINSERTMARK:
+      case TB_GETCOLORSCHEME:
+      case TB_CUSTOMIZE:
+      case TB_GETANCHORHIGHLIGHT:
+      case TB_GETEXTENDEDSTYLE:
+      case TB_GETHOTIMAGELIST:
+      case TB_GETINSERTMARKCOLOR:
+      case TB_GETHOTITEM:
+      case TB_GETOBJECT:
+      case TB_GETUNICODEFORMAT:
+      case TB_GETMAXSIZE:
+      case TB_SAVERESTORE:
+      case TB_SETANCHORHIGHLIGHT:
+      case TB_SETUNICODEFORMAT:
+         break;
 #endif
    }
 /* #endif */
