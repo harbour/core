@@ -11589,7 +11589,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list" ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
-      { "-plugin= <.prg|.hbs|.hrb>", I_( "add plugin" ) },;
+      { "-plugin=<.prg|.hbs|.hrb>", I_( "add plugin" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins" ) },;
       NIL,;

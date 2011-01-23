@@ -20,8 +20,8 @@ PROCEDURE Main()
 
    OutStd( hb_strFormat( "Parent(%d) launching child... ", posix_getpid() ) + hb_eol() )
 
-   IF ! unix_daemon( .F., .F. )
-      OutStd( "failed." + hb_eol() )
+   IF unix_daemon( 0, 0 ) == -1
+      OutStd( hb_strFormat( "failed with errno=%d", posix_errno() ) + hb_eol() )
       ErrorLevel( 1 )
       QUIT
    ENDIF

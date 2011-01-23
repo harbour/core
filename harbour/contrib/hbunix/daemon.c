@@ -35,9 +35,6 @@
 #include "hbposix.h"
 #include "hbvm.h"
 
-/*
- * unix_daemon( [<lNoChdir>], [<lNoClose>] ) --> <lResult>
- */
 HB_FUNC( UNIX_DAEMON )
 {
    int fd;
@@ -46,7 +43,7 @@ HB_FUNC( UNIX_DAEMON )
    {
       case -1:
          hb_posix_save_errno();
-         hb_retl( HB_FALSE );
+         hb_retni( -1 );
          return;
       case 0:
          break;
@@ -58,14 +55,14 @@ HB_FUNC( UNIX_DAEMON )
    if( setsid() == -1 )
    {
       hb_posix_save_errno();
-      hb_retl( HB_FALSE );
+      hb_retni( -1 );
       return;
    }
 
-   if( ! hb_parl( 1 ) )
+   if( ! HB_PARLUNIX( 1 ) )
       ( void ) chdir( "/" );
 
-   if( ! hb_parl( 2 ) && ( fd = open( "/dev/null", O_RDWR ) ) != -1 )
+   if( ! HB_PARLUNIX( 2 ) && ( fd = open( "/dev/null", O_RDWR ) ) != -1 )
    {
       ( void ) dup2( fd, STDIN_FILENO );
       ( void ) dup2( fd, STDOUT_FILENO );
@@ -76,5 +73,5 @@ HB_FUNC( UNIX_DAEMON )
 
    hb_posix_set_errno( 0 );
 
-   hb_retl( HB_TRUE );
+   hb_retni( 0 );
 }

@@ -64,6 +64,7 @@
 
 #define hb_par_uid( n )       ( ( uid_t ) hb_parnl( n ) )
 #define hb_ret_uid( n )       hb_retnint( n )
+#define HB_PARLUNIX( n )      ( HB_ISLOG( n ) ? ( int ) hb_parl( n ) : hb_parni( n ) )
 
 HB_EXTERN_BEGIN
 
