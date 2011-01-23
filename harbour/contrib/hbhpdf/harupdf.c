@@ -2706,3 +2706,16 @@ HB_FUNC( HPDF_PDFA_GENERATEID )
 }
 
 /*----------------------------------------------------------------------*/
+
+/*
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_UseUTFEncodings   (HPDF_Doc   pdf);
+*/
+HB_FUNC( HPDF_USEUTFENCODINGS )
+{
+#if HB_HPDF_VERS( 2, 3, 0 )
+   hb_retnl( HPDF_UseUTFEncodings( HPDF_Doc_par( 1 ) ) );
+#else
+   hb_retnl( -1 );
+#endif
+}
