@@ -12,6 +12,6 @@
 -stop{!unix}
 
 daemon.c
-guids.c
 posix.c
 posixerr.c
+uidgid.c
