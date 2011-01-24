@@ -30,14 +30,16 @@ output type: C source (.c) (default)
 <type>: 0=compact (default) 1=normal 2=verbose
 .IP
 3=generate real C code instead of PCODE
-.IP "\fB-go\fP" 10
-output type: Platform dependant object module
 .IP "\fB-gh\fP" 10
 output type: Harbour Portable Object (.hrb)
 .IP "\fB-gd[.<destext>]\fP" 10
 generate dependencies list into (.d) file
+.IP "\fB-ge[<mode>]\fP" 10
+error output <mode>: 0=Clipper (default) 1=IDE friendly
 .IP "\fB-i<path>\fP" 10
 #include file search path
+.IP "\fB-i[-|+]\fP" 10
+disable/enable support for INCLUDE envvar
 .IP "\fB-j[<file>]\fP" 10
 generate i18n gettex file (.pot)
 .IP "\fB-k\fP" 10
@@ -52,6 +54,8 @@ no implicit starting procedure (default)
 <type>: 0=no implicit starting procedure
 .IP
 1=no starting procedure at all
+.IP
+2=add starting procedure if necessary
 .IP "\fB-o<path>\fP" 10
 object file drive and/or path
 .IP "\fB-p[<path>]\fP" 10

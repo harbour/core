@@ -3761,12 +3761,6 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
          hb_compGenCCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
 
-#ifdef HB_GEN_OBJ32
-      case HB_LANG_OBJ32:
-         hb_compGenObj32( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
-         break;
-#endif
-
       case HB_LANG_PORT_OBJ:
          hb_compGenPortObj( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
@@ -3949,11 +3943,6 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             case HB_LANG_C:
                FileName.szExtension = ".c";
                break;
-#ifdef HB_GEN_OBJ32
-            case HB_LANG_OBJ32:
-               FileName.szExtension = ".obj";
-               break;
-#endif
             case HB_LANG_PORT_OBJ:
             case HB_LANG_PORT_OBJ_BUF:
                FileName.szExtension = ".hrb";

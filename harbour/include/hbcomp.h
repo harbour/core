@@ -330,10 +330,6 @@ extern void hb_compStripFuncLines( PFUNCTION pFunc );
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */
 extern void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME );    /* generates the portable objects */
-extern void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME );     /* generates the .NET IL language output */
-extern void hb_compGenJava( HB_COMP_DECL, PHB_FNAME );       /* generates the Java language output */
-extern void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME );      /* generates OBJ 32 bits */
-extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platform dependant object module */
 
 extern void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize ); /* generates the portable objects to memory buffer */
 

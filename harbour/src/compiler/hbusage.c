@@ -73,9 +73,6 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
            "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
            "\n                                   3=generate real C code",
-#ifdef HB_GEN_OBJ32
-           "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
-#endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
            "\n          %cge[<mode>]      error output <mode>: 0=Clipper (default)",
