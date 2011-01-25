@@ -54,6 +54,11 @@
  *
  */
 
+#ifndef HBNETIO_H_
+#define HBNETIO_H_
+
+#include "hbnetio.ch"
+
 /* file name prefix used by this file IO implementation */
 #define NETIO_FILE_PREFIX     "net:"
 #define NETIO_FILE_PREFIX_LEN strlen( NETIO_FILE_PREFIX )
@@ -130,16 +135,4 @@
 /* -> { NETIO_SRVDATA,  id[4], size[ 4 ], ... } + data[ size ] */
 /* alternative answer for all messages: -> { NETIO_ERROR,  err[ 4 ], ... } */
 
-/* netio errors */
-#define NETIO_ERR_UNKNOWN_COMMAND   0xff01
-#define NETIO_ERR_WRONG_PARAM       0xff02
-#define NETIO_ERR_WRONG_FILE_PATH   0xff03
-#define NETIO_ERR_WRONG_FILE_HANDLE 0xff04
-#define NETIO_ERR_WRONG_FILE_SIZE   0xff05
-#define NETIO_ERR_WRONG_STREAMID    0xff06
-#define NETIO_ERR_FILES_MAX         0xff07
-#define NETIO_ERR_READ              0xff08
-#define NETIO_ERR_FILE_IO           0xff09
-#define NETIO_ERR_NOT_EXISTS        0xff0a
-#define NETIO_ERR_UNSUPPORTED       0xff0b
-#define NETIO_ERR_REFUSED           0xff0c
+#endif /* HBNETIO_H_ */

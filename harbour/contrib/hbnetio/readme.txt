@@ -151,7 +151,8 @@ Server side functions:
                    [<sSrvFunc>] )
             -> <pListenSocket>
 
-   NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+   NETIO_SRVSTATUS( <pConnectionSocket>
+                    [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
    NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
    NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
 

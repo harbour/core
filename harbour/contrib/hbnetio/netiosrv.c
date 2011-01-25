@@ -114,6 +114,8 @@ typedef struct _HB_CONSRV
    PHB_ITEM       rpcFilter;
    PHB_ITEM       mutex;
    PHB_CONSTREAM  streams;
+   HB_MAXUINT     wr_count;
+   HB_MAXUINT     rd_count;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -369,7 +371,10 @@ static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
             break;
       }
       else
+      {
          lRead += l;
+         conn->rd_count += l;
+      }
    }
 
    return lRead;
@@ -389,7 +394,10 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
          else
             l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
          if( l > 0 )
+         {
             lSent += l;
+            conn->wr_count += l;
+         }
          if( lLast <= 0 )
          {
             if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
@@ -1346,20 +1354,27 @@ HB_FUNC( NETIO_SRVSENDDATA )
    hb_retl( fResult );
 }
 
-/* NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+/* NETIO_SRVSTATUS( <pConnectionSocket>
+ *                  [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
  */
 HB_FUNC( NETIO_SRVSTATUS )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
-   int iStreamID = hb_parni( 2 );
-   int iStatus = 0;
+   int iStreamID = hb_parni( 2 ), iSrvInfo = 0;
+   int iStatus = NETIO_SRVSTAT_RUNNING;
+
+   if( iStreamID < 0 )
+   {
+      iSrvInfo = iStreamID;
+      iStreamID = 0;
+   }
 
    if( !conn )
-      iStatus = -1;
+      iStatus = NETIO_SRVSTAT_WRONGHANDLE;
    else if( conn->sd == HB_NO_SOCKET )
-      iStatus = -2;
+      iStatus = NETIO_SRVSTAT_CLOSED;
    else if( conn->stop )
-      iStatus = -3;
+      iStatus = NETIO_SRVSTAT_STOPPED;
    else if( iStreamID != 0 && conn->mutex )
    {
       if( hb_threadMutexLock( conn->mutex ) )
@@ -1369,12 +1384,39 @@ HB_FUNC( NETIO_SRVSTATUS )
          {
             if( stream->id == iStreamID )
             {
-               iStatus = stream->type == NETIO_SRVDATA ? 1 : 2;
+               iStatus = stream->type == NETIO_SRVDATA ?
+                         NETIO_SRVSTAT_DATASTREAM : NETIO_SRVSTAT_ITEMSTREAM;
                break;
             }
             stream = stream->next;
          }
          hb_threadMutexUnlock( conn->mutex );
+      }
+   }
+   else switch( iSrvInfo )
+   {
+      case NETIO_SRVINFO_FILESCOUNT:
+         hb_storni( conn->filesCount, 3 );
+         break;
+      case NETIO_SRVINFO_BYTESSENT:
+         hb_stornint( conn->wr_count, 3 );
+         break;
+      case NETIO_SRVINFO_BYTESRECEIVED:
+         hb_stornint( conn->rd_count, 3 );
+         break;
+      case NETIO_SRVINFO_PEERADDRES:
+      {
+         void * addr;
+         unsigned int len;
+         PHB_ITEM pItem = NULL;
+
+         if( hb_socketGetPeerName( conn->sd, &addr, &len ) == 0 )
+         {
+            pItem = hb_socketAddrToItem( addr, len );
+            if( addr )
+               hb_xfree( addr );
+         }
+         hb_itemParamStoreRelease( 3, pItem );
       }
    }
    hb_retni( iStatus );
