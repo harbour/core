@@ -42,7 +42,7 @@ REQUEST __HB_EXTERN__
 #define _NETIOSRV_cPassword         11
 #define _NETIOSRV_MAX_              11
 
-#define DAT_HBSOCKET                1
+#define DAT_CONNSOCKET              1
 #define DAT_SERIAL                  2
 #define DAT_ACTIVATED               3
 #define DAT_IP                      4
@@ -51,22 +51,20 @@ REQUEST __HB_EXTERN__
 #define DAT_TIMEOUT                 7
 #define DAT_BYTESIN                 8
 #define DAT_BYTESOUT                9
-#define DAT_CONNSOCKET              10
-#define DAT_OPENFILES               11
+#define DAT_OPENFILES               10
 
 #include "hbhrb.ch"
 #include "fileio.ch"
 #include "hbclass.ch"
 #include "common.ch"
 #include "hbqtgui.ch"
+#include "hbnetio.ch"
 
 #include "Xbp.ch"
 #include "Gra.ch"
 #include "Appevent.ch"
 
 #define RGB( r, g, b )   GraMakeRGBColor( { r, g, b } )
-
-THREAD STATIC s_hSocket
 
 /*----------------------------------------------------------------------*/
 
@@ -144,7 +142,6 @@ CLASS NetIOServer
    DATA   nNumConxn                               INIT 0
    DATA   oDlg
    DATA   oBrw
-   DATA   oBrowser
    DATA   cTitle
    DATA   pMtx
    DATA   oSys
@@ -232,7 +229,7 @@ METHOD NetIOServer:create( netiosrv )
                                                ltrim( str( int( netiosrv[ _NETIOSRV_nPort ] ) ) ) + " : " + ;
                                                netiosrv[ _NETIOSRV_cRootDir ] + " ]"
 
-      ::oDlg            := XbpDialog():new( , , { 20,20 }, { 800,300 } )
+      ::oDlg            := XbpDialog():new( , , { 20,20 }, { 850,300 } )
       ::oDlg:title      := ::cTitle
       ::oDlg:taskList   := .T.
       ::oDlg:close      := {|| ::confirmExit() }
@@ -287,9 +284,7 @@ METHOD NetIOServer:custom_netio_server( pConnectionSocket )
 METHOD NetIOServer:register_connection( pConnectionSocket )
    LOCAL aPeer, cIP := "", nPort := 0
 
-   s_hSocket := netio_srvSocket( pConnectionSocket )
-
-   aPeer := hb_socketGetPeerName( s_hSocket )
+   netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aPeer )
    IF hb_isArray( aPeer )
       IF len( aPeer ) >= 2
          cIP := xtos( aPeer[ 2 ] )
@@ -301,9 +296,9 @@ METHOD NetIOServer:register_connection( pConnectionSocket )
 
    IF hb_mutexLock( ::pMtx )
       IF ::aData[ 1,2 ] == 0
-         ::aData[ 1 ] := { s_hSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 }
+         ::aData[ 1 ] := { pConnectionSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, 0 }
       ELSE
-         aadd( ::aData, { s_hSocket, len( ::aData ) + 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 } )
+         aadd( ::aData, { pConnectionSocket, len( ::aData ) + 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, 0 } )
       ENDIF
       hb_mutexUnlock( ::pMtx )
    ENDIF
@@ -318,19 +313,16 @@ METHOD NetIOServer:register_connection( pConnectionSocket )
 METHOD NetIOServer:unregister_connection( pConnectionSocket )
    LOCAL n
 
-   HB_SYMBOL_UNUSED( pConnectionSocket )
    ::nNumConxn--
    ::oDlg:title := ::cTitle + " - " + ltrim( str( ::nNumConxn, 6, 0 ) )
-   if ( n := ascan( ::aData, {|e_| e_[ DAT_HBSOCKET ] == s_hSocket } ) ) > 0
+   if ( n := ascan( ::aData, {|e_| e_[ DAT_CONNSOCKET ] == pConnectionSocket } ) ) > 0
       IF hb_mutexLock( ::pMtx )
          ::aData[ n, DAT_ACTIVATED  ] := .f.
          ::aData[ n, DAT_TIMEOUT    ] := dtoc( date() ) + "  " + time()
-         ::aData[ n, DAT_HBSOCKET   ] := NIL
          ::aData[ n, DAT_CONNSOCKET ] := NIL
          hb_mutexUnlock( ::pMtx )
       ENDIF
    ENDIF
-   s_hSocket := NIL
    ::refresh()
 
    RETURN NIL
@@ -568,8 +560,8 @@ METHOD NetIOServer:recNo()
 METHOD NetIOServer:buildColumns()
    LOCAL aPP, oXbpColumn
    LOCAL nClrBG  := GRA_CLR_WHITE
-   LOCAL nClrHFg := GRA_CLR_YELLOW
-   LOCAL nClrHBg := GRA_CLR_BLUE
+   LOCAL nClrHFg := GRA_CLR_BLACK    //YELLOW
+   LOCAL nClrHBg := GRA_CLR_DARKGRAY //BLUE
 
    aPP := {}
    aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "Sr"              } )
@@ -683,10 +675,12 @@ METHOD NetIOServer:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
    aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
    aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 60                } )
+   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 90                } )
    //
    oXbpColumn          := XbpColumn():new()
-   oXbpColumn:dataLink := {|| str( ::aData[ ::recNo(), DAT_BYTESIN ], 6, 0 ) }
+   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := ::aData[ ::recNo(), DAT_BYTESIN ], ;
+                                 netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_BYTESRECEIVED, @n ) ), ;
+                                 ::aData[ ::recNo(), DAT_BYTESIN ] := n, str( n, 10, 0 ) }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
@@ -700,11 +694,12 @@ METHOD NetIOServer:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
    aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
    aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 60                } )
+   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 90                } )
    //
    oXbpColumn            := XbpColumn():new()
-   oXbpColumn:dataLink   := {|| str( ::aData[ ::recNo(), DAT_BYTESOUT ], 6, 0 ) }
-   oXbpColumn:colorBlock := {|| iif( ::aData[ ::recNo,3 ], { GRA_CLR_BLACK, nClrBG }, { GRA_CLR_RED, nClrBG } ) }
+   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := ::aData[ ::recNo(), DAT_BYTESOUT ], ;
+                                 netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_BYTESSENT, @n ) ), ;
+                                 ::aData[ ::recNo(), DAT_BYTESOUT ] := n, str( n, 10, 0 ) }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
@@ -721,8 +716,8 @@ METHOD NetIOServer:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 60                } )
    //
    oXbpColumn            := XbpColumn():new()
-   oXbpColumn:dataLink   := {|| str( iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), 0, ;
-                                   netio_srvOpenFilesCount( ::aData[ ::recNo(), DAT_CONNSOCKET ] ) ), 6, 0 ) }
+   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := 0, ;
+                                netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_FILESCOUNT, @n ) ), str( n, 5, 0 ) }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 

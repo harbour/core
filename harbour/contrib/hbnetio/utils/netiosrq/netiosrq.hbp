@@ -8,7 +8,7 @@
 
 -o${hb_name}
 
--icon={allwin}../../../package/harb_win.ico
+-icon={allwin}../../../../package/harb_win.ico
 -icon={os2}../../package/harb_os2.ico
 
 ../../../hbqt/hbqtuitools.hbc
