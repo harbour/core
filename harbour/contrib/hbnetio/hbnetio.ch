@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HBNETIO_CH_
 #define HBNETIO_CH_
 
@@ -79,6 +81,6 @@
 #define NETIO_SRVINFO_FILESCOUNT    -1
 #define NETIO_SRVINFO_BYTESSENT     -2
 #define NETIO_SRVINFO_BYTESRECEIVED -3
-#define NETIO_SRVINFO_PEERADDRES    -4
+#define NETIO_SRVINFO_PEERADDRESS   -4
 
 #endif /* HBNETIO_CH_ */

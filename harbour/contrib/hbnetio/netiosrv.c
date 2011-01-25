@@ -1404,7 +1404,7 @@ HB_FUNC( NETIO_SRVSTATUS )
       case NETIO_SRVINFO_BYTESRECEIVED:
          hb_stornint( conn->rd_count, 3 );
          break;
-      case NETIO_SRVINFO_PEERADDRES:
+      case NETIO_SRVINFO_PEERADDRESS:
       {
          void * addr;
          unsigned int len;
@@ -1428,14 +1428,4 @@ HB_FUNC( NETIO_SRVSOCKET )
 
    if( conn )
       hb_socketItemPut( hb_stackReturnItem(), conn->sd );
-}
-
-HB_FUNC( NETIO_SRVOPENFILESCOUNT )
-{
-   PHB_CONSRV conn = s_consrvParam( 1 );
-
-   if( conn )
-      hb_retni( conn->filesCount );
-   else
-      hb_retni( 0 );
 }
