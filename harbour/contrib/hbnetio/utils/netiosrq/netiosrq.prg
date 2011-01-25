@@ -225,7 +225,7 @@ METHOD NetIOServer:create( netiosrv )
       MsgBox( "Cannot start server." )
 
    ELSE
-      QResource():registerResource_1( hbqtres_netiosrvq(), ":/resource" )
+      QResource():registerResource_1( hbqtres_netiosrq(), ":/resource" )
 
       ::pMtx            := hb_mutexCreate()
       ::cTitle          := "NetIO Server [ " + netiosrv[ _NETIOSRV_cIFAddr ] + " : " + ;

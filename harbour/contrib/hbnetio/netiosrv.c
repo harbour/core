@@ -1395,5 +1395,5 @@ HB_FUNC( NETIO_SRVOPENFILESCOUNT )
    if( conn )
       hb_retni( conn->filesCount );
    else
-      hb_retni( 0 )
+      hb_retni( 0 );
 }
