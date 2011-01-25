@@ -66,7 +66,7 @@ REQUEST __HB_EXTERN__
 
 #define RGB( r, g, b )   GraMakeRGBColor( { r, g, b } )
 
-THREAD STATIC hSocket
+THREAD STATIC s_hSocket
 
 /*----------------------------------------------------------------------*/
 
@@ -287,9 +287,9 @@ METHOD NetIOServer:custom_netio_server( pConnectionSocket )
 METHOD NetIOServer:register_connection( pConnectionSocket )
    LOCAL aPeer, cIP := "", nPort := 0
 
-   hSocket := netio_srvSocket( pConnectionSocket )
+   s_hSocket := netio_srvSocket( pConnectionSocket )
 
-   aPeer := hb_socketGetPeerName( hSocket )
+   aPeer := hb_socketGetPeerName( s_hSocket )
    IF hb_isArray( aPeer )
       IF len( aPeer ) >= 2
          cIP := xtos( aPeer[ 2 ] )
@@ -301,9 +301,9 @@ METHOD NetIOServer:register_connection( pConnectionSocket )
 
    IF hb_mutexLock( ::pMtx )
       IF ::aData[ 1,2 ] == 0
-         ::aData[ 1 ] := { hSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 }
+         ::aData[ 1 ] := { s_hSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 }
       ELSE
-         aadd( ::aData, { hSocket, len( ::aData ) + 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 } )
+         aadd( ::aData, { s_hSocket, len( ::aData ) + 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, pConnectionSocket, 0 } )
       ENDIF
       hb_mutexUnlock( ::pMtx )
    ENDIF
@@ -321,7 +321,7 @@ METHOD NetIOServer:unregister_connection( pConnectionSocket )
    HB_SYMBOL_UNUSED( pConnectionSocket )
    ::nNumConxn--
    ::oDlg:title := ::cTitle + " - " + ltrim( str( ::nNumConxn, 6, 0 ) )
-   if ( n := ascan( ::aData, {|e_| e_[ DAT_HBSOCKET ] == hSocket } ) ) > 0
+   if ( n := ascan( ::aData, {|e_| e_[ DAT_HBSOCKET ] == s_hSocket } ) ) > 0
       IF hb_mutexLock( ::pMtx )
          ::aData[ n, DAT_ACTIVATED  ] := .f.
          ::aData[ n, DAT_TIMEOUT    ] := dtoc( date() ) + "  " + time()
@@ -330,7 +330,7 @@ METHOD NetIOServer:unregister_connection( pConnectionSocket )
          hb_mutexUnlock( ::pMtx )
       ENDIF
    ENDIF
-   hSocket := NIL
+   s_hSocket := NIL
    ::refresh()
 
    RETURN NIL
