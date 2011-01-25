@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpDataRef
+CLASS DataRef
 
    DATA     changed                               INIT .F.
    DATA     dataLink                              INIT NIL
@@ -95,13 +95,13 @@ CLASS XbpDataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:new()
+METHOD DataRef:new()
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:getData()
+METHOD DataRef:getData()
    LOCAL cClass := __ObjGetClsName( self )
 
    DO CASE
@@ -135,7 +135,7 @@ METHOD XbpDataRef:getData()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:setData( xValue, mp2 )
+METHOD DataRef:setData( xValue, mp2 )
    LOCAL cClass := __ObjGetClsName( self )
 
    HB_SYMBOL_UNUSED( mp2 )
@@ -198,13 +198,13 @@ METHOD XbpDataRef:setData( xValue, mp2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:undo()
+METHOD DataRef:undo()
 
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:validate( xParam )
+METHOD DataRef:validate( xParam )
 
    IF PCount() == 0 .AND. hb_isBlock( ::sl_validate )
       RETURN eval( ::sl_validate, self )
@@ -216,7 +216,7 @@ METHOD XbpDataRef:validate( xParam )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDataRef:editBuffer( xData )
+METHOD DataRef:editBuffer( xData )
 
    IF !( xData == NIL )
       ::sl_editBuffer := xData

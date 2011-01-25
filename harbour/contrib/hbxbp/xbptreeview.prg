@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
+CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
 
    DATA     alwaysShowSelection                   INIT .F.
    DATA     hasButtons                            INIT .F.
@@ -361,7 +361,7 @@ METHOD XbpTreeView:itemSelected( ... )
 /*                      Class XbpTreeViewItem                           */
 /*----------------------------------------------------------------------*/
 
-CLASS XbpTreeViewItem  INHERIT  XbpDataRef
+CLASS XbpTreeViewItem  INHERIT  DataRef
 
    DATA     oWidget
 

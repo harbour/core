@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
+CLASS XbpSLE INHERIT XbpWindow, DataRef
 
    DATA     align                                 INIT XBPSLE_LEFT
    DATA     autoKeyboard                          INIT .T.

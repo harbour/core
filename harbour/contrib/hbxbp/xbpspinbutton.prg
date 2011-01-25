@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
+CLASS XbpSpinButton INHERIT XbpWindow, DataRef
 
    DATA     fastSpin                              INIT    .f.
    DATA     master

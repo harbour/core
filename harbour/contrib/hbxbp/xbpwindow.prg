@@ -135,7 +135,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     hBrushBG
    DATA     is_hidden                             INIT   .F.
    DATA     is_enabled                            INIT   .T.
-   DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
    DATA     resizable                             INIT   .T.
@@ -188,6 +187,9 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   isDerivedFrom( cClassORoObject )
    METHOD   setPresParam( aPPNew )
    METHOD   setStyleSheet( cCSS )                 INLINE  ::oWidget:setStyleSheet( ::oWidget:styleSheet() + " " + cCSS )
+
+   DATA     cTitle                                INIT    ""
+   METHOD   title( cTitle )                       SETGET
 
    METHOD   enter( ... )                          SETGET
    METHOD   leave( ... )                          SETGET
@@ -1322,6 +1324,20 @@ METHOD XbpWindow:getModalState()
 METHOD XbpWindow:hasInputFocus()
 
    RETURN ::oWidget:hasFocus()
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:title( cTitle )
+   LOCAL xTitle := ::cTitle
+
+   IF hb_isChar( cTitle )
+      ::cTitle := cTitle
+      IF hb_isObject( ::oWidget )
+         ::oWidget:setWindowTitle( ::cTitle )
+      ENDIF
+   ENDIF
+
+   RETURN xTitle
 
 /*----------------------------------------------------------------------*/
  *                           Callback Methods

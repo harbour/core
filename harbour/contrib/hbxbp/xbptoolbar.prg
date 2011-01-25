@@ -270,7 +270,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          oBtn:oAction := QAction( ::oWidget )
          oBtn:oAction:setText( cCaption )
 
-         IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
+         IF valtype( xImage ) == "C"
             oBtn:oAction:setIcon( xImage )
          ENDIF
 

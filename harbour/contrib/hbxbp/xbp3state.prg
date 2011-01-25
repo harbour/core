@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
+CLASS Xbp3State  INHERIT  XbpWindow, DataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""

@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpRadioButton  INHERIT  XbpWindow, XbpDataRef
+CLASS XbpRadioButton  INHERIT  XbpWindow, DataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""

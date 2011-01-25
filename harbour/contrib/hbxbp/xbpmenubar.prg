@@ -617,15 +617,6 @@ METHOD XbpMenuBar:onMenuKey( ... )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:setStyleSheet( cCSS, cCSSPops )
-   #if 0
-   LOCAL aChild
-
-   FOR EACH aChild IN ::aItems
-      IF hb_isObject( aChild[ 1 ] == QMF_POPUP )
-         aChild[ 2 ]:setStyleSheet( cCSSPops )
-      ENDIF
-   NEXT
-   #endif
    LOCAL oMenu
 
    FOR EACH oMenu IN ::aChildren
@@ -708,9 +699,12 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    ::oWidget := QMenu()
-   ::oParent:oWidget:addMenu( ::oWidget )
 
-   ::oParent:addChild( self )
+   IF hb_isObject( oParent )
+      ::oParent:oWidget:addMenu( ::oWidget )
+      ::oParent:addChild( self )
+   ENDIF
+
    ::postCreate()
 
    RETURN Self
@@ -730,13 +724,16 @@ METHOD xbpMenu:setTitle( cTitle )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
+   LOCAL qPoint := QPoint( aPos[ 1 ], aPos[ 2 ] )
 
    HB_SYMBOL_UNUSED( oXbp )
    HB_SYMBOL_UNUSED( aPos )
    HB_SYMBOL_UNUSED( nDefaultItem )
    HB_SYMBOL_UNUSED( nControl     )
 
-   RETURN 0
+   ::oWidget:exec( qPoint )
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 

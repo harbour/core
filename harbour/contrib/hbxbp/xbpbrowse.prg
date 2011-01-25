@@ -3548,7 +3548,7 @@ METHOD XbpBrowse:setStyle( nStyle, lNewValue )
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-CREATE CLASS XbpColumn  INHERIT XbpWindow, XbpDataRef
+CREATE CLASS XbpColumn  INHERIT XbpWindow, DataRef
 
    EXPORTED:
 

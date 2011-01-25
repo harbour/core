@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
+CLASS XbpMLE INHERIT XbpWindow, DataRef
 
    DATA     border                                INIT    .T.
    DATA     editable                              INIT    .T.

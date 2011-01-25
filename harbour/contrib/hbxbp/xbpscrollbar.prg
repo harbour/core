@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpScrollBar  INHERIT  XbpWindow, XbpDataRef
+CLASS XbpScrollBar  INHERIT  XbpWindow, DataRef
 
    DATA     autoTrack                             INIT .t.
    DATA     range                                 INIT {0,1}

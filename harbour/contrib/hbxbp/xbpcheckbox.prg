@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
+CLASS XbpCheckBox  INHERIT  XbpWindow, DataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""

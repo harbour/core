@@ -73,7 +73,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
+CLASS XbpListBox  INHERIT  XbpWindow, DataRef
 
    DATA     adjustHeight                          INIT .F.
    DATA     horizScroll                           INIT .F.
