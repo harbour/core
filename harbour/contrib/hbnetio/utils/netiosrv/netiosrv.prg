@@ -28,6 +28,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+#include "hbnetio.ch"
+
 #include "hbgtinfo.ch"
 #include "hbhrb.ch"
 #include "hbsocket.ch"
@@ -55,9 +57,8 @@ REQUEST HB_MT
 #define _NETIOSRV_MAX_              10
 
 #define _NETIOSRV_CONN_pConnection  1
-#define _NETIOSRV_CONN_aAddrPeer    2
-#define _NETIOSRV_CONN_tStart       3
-#define _NETIOSRV_CONN_MAX_         3
+#define _NETIOSRV_CONN_tStart       2
+#define _NETIOSRV_CONN_MAX_         2
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
@@ -256,41 +257,39 @@ PROCEDURE Main( ... )
    RETURN
 
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
-   LOCAL hSrvSocket := netio_srvSocket( pConnectionSocket )
 
-   netiosrv_conn_register( netiosrv, pConnectionSocket, hSrvSocket )
+   netiosrv_conn_register( netiosrv, pConnectionSocket )
 
    BEGIN SEQUENCE
       netio_server( pConnectionSocket )
    END SEQUENCE
 
-   netiosrv_conn_unregister( netiosrv, hSrvSocket )
+   netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
    RETURN NIL
 
-STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket, hSrvSocket )
+STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
    LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
 
    nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
-   nconn[ _NETIOSRV_CONN_aAddrPeer ]   := hb_socketGetPeerName( hSrvSocket )
    nconn[ _NETIOSRV_CONN_tStart ]      := hb_DateTime()
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
-   IF !( hSrvSocket $ netiosrv[ _NETIOSRV_hConnection ] )
-      netiosrv[ _NETIOSRV_hConnection ][ hSrvSocket ] := nconn
+   IF !( pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ] )
+      netiosrv[ _NETIOSRV_hConnection ][ pConnectionSocket ] := nconn
    ENDIF
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
    RETURN
 
-STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, hSrvSocket )
+STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
-   IF hSrvSocket $ netiosrv[ _NETIOSRV_hConnection ]
-      hb_HDel( netiosrv[ _NETIOSRV_hConnection ], hSrvSocket )
+   IF pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ]
+      hb_HDel( netiosrv[ _NETIOSRV_hConnection ], pConnectionSocket )
    ENDIF
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -300,20 +299,54 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, hSrvSocket )
 PROCEDURE cmdConnInfo( netiosrv )
    LOCAL nconn
 
+   LOCAL nStatus
+   LOCAL nFilesCount
+   LOCAL nBytesSent
+   LOCAL nBytesReceived
+   LOCAL aAddressPeer
+
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
    QQOut( "Number of connections: " + hb_ntos( Len( netiosrv[ _NETIOSRV_hConnection ] ) ), hb_eol() )
 
    FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+
+      nFilesCount := 0
+      nBytesSent := 0
+      nBytesReceived := 0
+      aAddressPeer := NIL
+
+      nStatus := ;
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_FILESCOUNT   , @nFilesCount    )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESSENT    , @nBytesSent     )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESRECEIVED, @nBytesReceived )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
+
       QQOut( "#" + hb_ntos( nconn:__enumIndex() ) + " " +;
              hb_TToC( nconn[ _NETIOSRV_CONN_tStart ] ) + " " +;
-             Str( netio_srvOpenFilesCount( nconn[ _NETIOSRV_CONN_pConnection ] ) ) + " " +;
-             AddrToIPPort( nconn[ _NETIOSRV_CONN_aAddrPeer ] ), hb_eol() )
+             PadR( ConnStatusStr( nStatus ), 12 ) + " " +;
+             "fcnt: " + Str( nFilesCount ) + " " +;
+             "send: " + Str( nBytesSent ) + " " +;
+             "recv: " + Str( nBytesReceived ) + " " +;
+             AddrToIPPort( aAddressPeer ), hb_eol() )
    NEXT
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
    RETURN
+
+STATIC FUNCTION ConnStatusStr( nStatus )
+
+   SWITCH nStatus
+   CASE NETIO_SRVSTAT_RUNNING     ; RETURN "RUNNING"
+   CASE NETIO_SRVSTAT_WRONGHANDLE ; RETURN "WRONGHANDLE"
+   CASE NETIO_SRVSTAT_CLOSED      ; RETURN "CLOSED"
+   CASE NETIO_SRVSTAT_STOPPED     ; RETURN "STOPPED"
+   CASE NETIO_SRVSTAT_DATASTREAM  ; RETURN "DATASTREAM"
+   CASE NETIO_SRVSTAT_ITEMSTREAM  ; RETURN "ITEMSTREAM"
+   ENDSWITCH
+
+   RETURN "UNKNOWN"
 
 STATIC FUNCTION AddrToIPPort( aAddr )
    LOCAL cIP
