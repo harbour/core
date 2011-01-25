@@ -7,7 +7,6 @@
  * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *    ...
  *
  * See COPYING for licensing terms.
  *
@@ -19,7 +18,9 @@ FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
                      "clear"   => { ""               , "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
                      "config"  => { ""               , "Show server configuration."    , bShowInfo },;
                      "sysinfo" => { ""               , "Show system/build information.", {|| cmdSysInfo() } },;
-                     "conn"    => { ""               , "Show connection information."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
+                     "show"    => { ""               , "Show list of connections."     , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
+                     "noconn"  => { ""               , "Disable incoming connections." , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .F. ) } },;
+                     "conn"    => { ""               , "Enable incoming connections."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .T. ) } },;
                      "stop"    => { "[<ip:port>|all]", "Stop specified connection(s)." , {| cCommand, netiosrv | cmdConnStop( cCommand, netiosrv ) } },;
                      "quit"    => { ""               , "Stop server and exit."         , bQuit },;
                      "help"    => { ""               , "Display this help."            , {|| cmdHelp( hCmds ) } };

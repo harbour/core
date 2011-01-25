@@ -17,7 +17,6 @@
  * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *    ...
  *
  * See COPYING for licensing terms.
  *
@@ -51,10 +50,11 @@ REQUEST HB_MT
 #define _NETIOSRV_cRPCFFileName     5
 #define _NETIOSRV_hRPCFHRB          6
 #define _NETIOSRV_lEncryption       7
-#define _NETIOSRV_pListenSocket     8
-#define _NETIOSRV_hConnection       9
-#define _NETIOSRV_mtxConnection     10
-#define _NETIOSRV_MAX_              10
+#define _NETIOSRV_lAcceptConn       8
+#define _NETIOSRV_pListenSocket     9
+#define _NETIOSRV_hConnection       10
+#define _NETIOSRV_mtxConnection     11
+#define _NETIOSRV_MAX_              11
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_tStart       2
@@ -95,6 +95,7 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_cRootDir ]      := hb_dirBase()
    netiosrv[ _NETIOSRV_lRPC ]          := .F.
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
+   netiosrv[ _NETIOSRV_lAcceptConn ]   := .T.
    netiosrv[ _NETIOSRV_hConnection ]   := { => }
    netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
 
@@ -259,13 +260,17 @@ PROCEDURE Main( ... )
 
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
 
-   netiosrv_conn_register( netiosrv, pConnectionSocket )
+   IF netiosrv[ _NETIOSRV_lAcceptConn ]
 
-   BEGIN SEQUENCE
-      netio_server( pConnectionSocket )
-   END SEQUENCE
+      netiosrv_conn_register( netiosrv, pConnectionSocket )
 
-   netiosrv_conn_unregister( netiosrv, pConnectionSocket )
+      BEGIN SEQUENCE
+         netio_server( pConnectionSocket )
+      END SEQUENCE
+
+      netiosrv_conn_unregister( netiosrv, pConnectionSocket )
+
+   ENDIF
 
    RETURN NIL
 
@@ -294,6 +299,12 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
    ENDIF
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   RETURN
+
+PROCEDURE cmdConnEnable( netiosrv, lValue )
+
+   netiosrv[ _NETIOSRV_lAcceptConn ] := lValue
 
    RETURN
 
