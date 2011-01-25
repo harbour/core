@@ -155,8 +155,3 @@ Server side functions:
                     [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
    NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
    NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
-
-   NETIO_SRVSOCKET( <pConnectionSocket> ) -> <pHbSocket>
-      <pHbSocket> can be used with Harbour socket functions (hb_socket*())
-      Please remember that <pHbSocket> handle can be used only for statistics
-      and must not be used for any send/receive operations.

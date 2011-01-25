@@ -1417,15 +1417,8 @@ HB_FUNC( NETIO_SRVSTATUS )
                hb_xfree( addr );
          }
          hb_itemParamStoreRelease( 3, pItem );
+         break;
       }
    }
    hb_retni( iStatus );
-}
-
-HB_FUNC( NETIO_SRVSOCKET )
-{
-   PHB_CONSRV conn = s_consrvParam( 1 );
-
-   if( conn )
-      hb_socketItemPut( hb_stackReturnItem(), conn->sd );
 }
