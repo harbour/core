@@ -14,16 +14,18 @@
 
 FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
    LOCAL hCmds := { ;
-                     "?"       => { ""               , "Synonym for 'help'."           , {|| cmdHelp( hCmds ) } },;
-                     "clear"   => { ""               , "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
-                     "config"  => { ""               , "Show server configuration."    , bShowInfo },;
-                     "sysinfo" => { ""               , "Show system/build information.", {|| cmdSysInfo() } },;
-                     "show"    => { ""               , "Show list of connections."     , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
-                     "noconn"  => { ""               , "Disable incoming connections." , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .F. ) } },;
-                     "conn"    => { ""               , "Enable incoming connections."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .T. ) } },;
-                     "stop"    => { "[<ip:port>|all]", "Stop specified connection(s)." , {| cCommand, netiosrv | cmdConnStop( cCommand, netiosrv ) } },;
-                     "quit"    => { ""               , "Stop server and exit."         , bQuit },;
-                     "help"    => { ""               , "Display this help."            , {|| cmdHelp( hCmds ) } };
+                     "?"        => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
+                     "clear"    => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
+                     "config"   => { ""               , "Show server configuration."            , bShowInfo },;
+                     "sysinfo"  => { ""               , "Show system/build information."        , {|| cmdSysInfo() } },;
+                     "show"     => { ""               , "Show list of connections."             , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
+                     "noconn"   => { ""               , "Disable incoming connections."         , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .F. ) } },;
+                     "conn"     => { ""               , "Enable incoming connections."          , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .T. ) } },;
+                     "noshconn" => { ""               , "Disable showing incoming connections." , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnShowEnable( netiosrv, .F. ) } },;
+                     "shconn"   => { ""               , "Enable showing incoming connections."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnShowEnable( netiosrv, .T. ) } },;
+                     "stop"     => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand, netiosrv | cmdConnStop( cCommand, netiosrv ) } },;
+                     "quit"     => { ""               , "Stop server and exit."                 , bQuit },;
+                     "help"     => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } };
                   }
 
    RETURN hCmds

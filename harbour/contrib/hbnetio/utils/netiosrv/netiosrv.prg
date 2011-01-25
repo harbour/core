@@ -7,18 +7,9 @@
  *    demonstration/test code for alternative RDD IO API which uses own
  *    very simple TCP/IP file server.
  *
+ * Copyright 2010-2011 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *
- * See COPYING for licensing terms.
  *
  */
 
@@ -43,18 +34,20 @@ REQUEST HB_MT
    REQUEST __HB_EXTERN__
 #endif
 
-#define _NETIOSRV_nPort             1
-#define _NETIOSRV_cIFAddr           2
-#define _NETIOSRV_cRootDir          3
-#define _NETIOSRV_lRPC              4
-#define _NETIOSRV_cRPCFFileName     5
-#define _NETIOSRV_hRPCFHRB          6
-#define _NETIOSRV_lEncryption       7
-#define _NETIOSRV_lAcceptConn       8
-#define _NETIOSRV_pListenSocket     9
-#define _NETIOSRV_hConnection       10
-#define _NETIOSRV_mtxConnection     11
-#define _NETIOSRV_MAX_              11
+#define _NETIOSRV_cName             1
+#define _NETIOSRV_nPort             2
+#define _NETIOSRV_cIFAddr           3
+#define _NETIOSRV_cRootDir          4
+#define _NETIOSRV_lRPC              5
+#define _NETIOSRV_cRPCFFileName     6
+#define _NETIOSRV_hRPCFHRB          7
+#define _NETIOSRV_lEncryption       8
+#define _NETIOSRV_lAcceptConn       9
+#define _NETIOSRV_lShowConn         10
+#define _NETIOSRV_pListenSocket     11
+#define _NETIOSRV_hConnection       12
+#define _NETIOSRV_mtxConnection     13
+#define _NETIOSRV_MAX_              13
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_tStart       2
@@ -62,11 +55,13 @@ REQUEST HB_MT
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
+   LOCAL netiomgm[ _NETIOSRV_MAX_ ]
 
    LOCAL cParam
    LOCAL aCommand
    LOCAL cCommand
    LOCAL cPassword
+   LOCAL cPasswordManagement
 
    LOCAL bKeyDown
    LOCAL bKeyUp
@@ -75,7 +70,7 @@ PROCEDURE Main( ... )
    LOCAL bKeyTab
 
    LOCAL GetList   := {}
-   LOCAL lQuit     := .F.
+   LOCAL lQuit
    LOCAL hCommands
    LOCAL nSavedRow
    LOCAL nPos
@@ -90,16 +85,28 @@ PROCEDURE Main( ... )
 
    HB_Logo()
 
+   netiosrv[ _NETIOSRV_cName ]         := "Data"
    netiosrv[ _NETIOSRV_nPort ]         := 2941
    netiosrv[ _NETIOSRV_cIFAddr ]       := "0.0.0.0"
    netiosrv[ _NETIOSRV_cRootDir ]      := hb_dirBase()
    netiosrv[ _NETIOSRV_lRPC ]          := .F.
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
    netiosrv[ _NETIOSRV_lAcceptConn ]   := .T.
+   netiosrv[ _NETIOSRV_lShowConn ]     := .F.
    netiosrv[ _NETIOSRV_hConnection ]   := { => }
    netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
 
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
+
+   netiomgm[ _NETIOSRV_cName ]         := "Management"
+   netiomgm[ _NETIOSRV_nPort ]         := 2940
+   netiomgm[ _NETIOSRV_cIFAddr ]       := "127.0.0.1"
+   netiomgm[ _NETIOSRV_lAcceptConn ]   := .T.
+   netiomgm[ _NETIOSRV_lShowConn ]     := .T.
+   netiomgm[ _NETIOSRV_hConnection ]   := { => }
+   netiomgm[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
+
+   hb_HKeepOrder( netiomgm[ _NETIOSRV_hConnection ], .T. )
 
    FOR EACH cParam IN { ... }
       DO CASE
@@ -111,6 +118,13 @@ PROCEDURE Main( ... )
          netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
       CASE Lower( Left( cParam, 6 ) ) == "-pass="
          cPassword := SubStr( cParam, 7 )
+         hb_StrClear( @cParam )
+      CASE Lower( Left( cParam, 11 ) ) == "-adminport="
+         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 12 ) )
+      CASE Lower( Left( cParam, 12 ) ) == "-adminiface="
+         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 13 )
+      CASE Lower( Left( cParam, 11 ) ) == "-adminpass="
+         cPasswordManagement := SubStr( cParam, 12 )
          hb_StrClear( @cParam )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
@@ -173,7 +187,25 @@ PROCEDURE Main( ... )
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
       OutStd( "Cannot start server." + hb_eol() )
    ELSE
-      ShowConfig( netiosrv )
+
+      IF ! Empty( cPasswordManagement )
+         netiomgm[ _NETIOSRV_pListenSocket ] := ;
+            netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
+                            netiomgm[ _NETIOSRV_cIFAddr ],;
+                            NIL,;
+                            { "netio_shutdown" => {|| netio_shutdown( @lQuit ) } },;
+                            cPasswordManagement,;
+                            NIL,;
+                            NIL,;
+                            {| pConnectionSocket | netiosrv_callback( netiomgm, pConnectionSocket ) } )
+         cPasswordManagement := NIL
+
+         IF Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
+            OutStd( "Warning: Cannot start server management." + hb_eol() )
+         ENDIF
+      ENDIF
+
+      ShowConfig( netiosrv, netiomgm )
 
       OutStd( hb_eol() )
       OutStd( "Type a command or '?' for help.", hb_eol() )
@@ -252,15 +284,36 @@ PROCEDURE Main( ... )
       netio_serverstop( netiosrv[ _NETIOSRV_pListenSocket ] )
       netiosrv[ _NETIOSRV_pListenSocket ] := NIL
 
+      IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
+         netio_serverstop( netiomgm[ _NETIOSRV_pListenSocket ] )
+         netiomgm[ _NETIOSRV_pListenSocket ] := NIL
+      ENDIF
+
       OutStd( hb_eol() )
       OutStd( "Server stopped.", hb_eol() )
    ENDIF
 
    RETURN
 
+STATIC FUNCTION netio_shutdown( /* @ */ lQuit )
+
+   QQOut( "Shutdown initiated...", hb_eol() )
+
+   lQuit := .T.
+
+   hb_keyPut( { K_HOME, K_CTRL_Y, K_ENTER } )
+
+   RETURN .T.
+
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
+   LOCAL aAddressPeer
 
    IF netiosrv[ _NETIOSRV_lAcceptConn ]
+
+      IF netiosrv[ _NETIOSRV_lShowConn ]
+         netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+         QQOut( "Connecting (" + netiosrv[ _NETIOSRV_cName ] + "): " + AddrToIPPort( aAddressPeer ), hb_eol() )
+      ENDIF
 
       netiosrv_conn_register( netiosrv, pConnectionSocket )
 
@@ -269,6 +322,11 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
       END SEQUENCE
 
       netiosrv_conn_unregister( netiosrv, pConnectionSocket )
+
+      IF netiosrv[ _NETIOSRV_lShowConn ]
+         netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+         QQOut( "Disconnected (" + netiosrv[ _NETIOSRV_cName ] + "): " + AddrToIPPort( aAddressPeer ), hb_eol() )
+      ENDIF
 
    ENDIF
 
@@ -305,6 +363,12 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 PROCEDURE cmdConnEnable( netiosrv, lValue )
 
    netiosrv[ _NETIOSRV_lAcceptConn ] := lValue
+
+   RETURN
+
+PROCEDURE cmdConnShowEnable( netiosrv, lValue )
+
+   netiosrv[ _NETIOSRV_lShowConn ] := lValue
 
    RETURN
 
@@ -444,13 +508,16 @@ STATIC PROCEDURE ManageCursor( cCommand )
    KEYBOARD Chr( K_HOME ) + iif( ! Empty( cCommand ), Chr( K_END ), "" )
    RETURN
 
-STATIC PROCEDURE ShowConfig( netiosrv )
+STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
    QQOut( "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ), hb_eol() )
    QQOut( "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ], hb_eol() )
    QQOut( "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ), hb_eol() )
    QQOut( "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ), hb_eol() )
    QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_eol() )
+   IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
+      QQOut( "Management iface: "  + netiomgm[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiomgm[ _NETIOSRV_nPort ] ), hb_eol() )
+   ENDIF
 
    RETURN
 
@@ -465,22 +532,27 @@ STATIC PROCEDURE HB_Logo()
 
 STATIC PROCEDURE HB_Usage()
 
-   OutStd(               "Syntax:"                                                                                   , hb_eol() )
-   OutStd(                                                                                                             hb_eol() )
-   OutStd(               "  netiosrv [options]"                                                                      , hb_eol() )
-   OutStd(                                                                                                             hb_eol() )
-   OutStd(               "Options:"                                                                                  , hb_eol() )
-   OutStd(                                                                                                             hb_eol() )
-   OutStd(               "  -port=<port>        accept incoming connections on IP port <port>"                       , hb_eol() )
-   OutStd(               "  -iface=<ipaddr>     accept incoming connections on IPv4 interface <ipaddress>"           , hb_eol() )
-   OutStd(               "  -rootdir=<rootdir>  use <rootdir> as root directory for served file system"              , hb_eol() )
-   OutStd(               "  -rpc                accept RPC requests"                                                 , hb_eol() )
-   OutStd(               "  -rpc=<file.hrb>     set RPC processor .hrb module to <file.hrb>"                         , hb_eol() )
-   OutStd( hb_StrFormat( "                      file.hrb needs to have an entry function named %1$s()", _RPC_FILTER ), hb_eol() )
-   OutStd(               "  -pass=<passwd>      set server password"                                                 , hb_eol() )
-   OutStd(                                                                                                             hb_eol() )
-   OutStd(               "  --version           display version header only"                                         , hb_eol() )
-   OutStd(               "  -help|--help        this help"                                                           , hb_eol() )
+   OutStd(               "Syntax:"                                                                                     , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  netiosrv [options]"                                                                        , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "Options:"                                                                                    , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  -port=<port>          accept incoming connections on IP port <port>"                       , hb_eol() )
+   OutStd(               "  -iface=<ipaddr>       accept incoming connections on IPv4 interface <ipaddress>"           , hb_eol() )
+   OutStd(               "  -rootdir=<rootdir>    use <rootdir> as root directory for served file system"              , hb_eol() )
+   OutStd(               "  -rpc                  accept RPC requests"                                                 , hb_eol() )
+   OutStd(               "  -rpc=<file.hrb>       set RPC processor .hrb module to <file.hrb>"                         , hb_eol() )
+   OutStd(               "                        file.hrb needs to have an entry function named"                      , hb_eol() )
+   OutStd( hb_StrFormat( "                        '%1$s()'", _RPC_FILTER )                                             , hb_eol() )
+   OutStd(               "  -pass=<passwd>        set server password"                                                 , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  -adminport=<port>     accept management connections on IP port <port>"                     , hb_eol() )
+   OutStd(               "  -adminiface=<ipaddr>  accept manegement connections on IPv4 interface <ipaddress>"         , hb_eol() )
+   OutStd(               "  -adminpass=<passwd>   set remote management password"                                      , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  --version             display version header only"                                         , hb_eol() )
+   OutStd(               "  -help|--help          this help"                                                           , hb_eol() )
 
    RETURN
 
