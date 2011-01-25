@@ -27,13 +27,8 @@ FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
    RETURN hCmds
 
 /* TODO: - on the fly change of RPC filter modules
-         - listing active connections
          - listing open files
          - listing active locks
-         - activity meters (transferred bytes, bandwidth, etc)
-         - showing number of connections
-         - showing number of open files
-         - listing transferred bytes
          - gracefully shutting down server by waiting for connections to close and not accept new ones
          - pausing server */
 

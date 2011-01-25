@@ -346,7 +346,7 @@ STATIC FUNCTION ConnStatusStr( nStatus )
    CASE NETIO_SRVSTAT_ITEMSTREAM  ; RETURN "ITEMSTREAM"
    ENDSWITCH
 
-   RETURN "UNKNOWN"
+   RETURN "UNKNOWN:" + hb_ntos( nStatus )
 
 STATIC FUNCTION AddrToIPPort( aAddr )
    LOCAL cIP
@@ -356,7 +356,7 @@ STATIC FUNCTION AddrToIPPort( aAddr )
         aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
       cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ] + ":" + hb_ntos( aAddr[ HB_SOCKET_ADINFO_PORT ] )
    ELSE
-      cIP := ""
+      cIP := "(?)"
    ENDIF
 
    RETURN cIP
