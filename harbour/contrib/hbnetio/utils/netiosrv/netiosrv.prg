@@ -193,7 +193,8 @@ PROCEDURE Main( ... )
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
-                            { "netio_shutdown" => {|| netio_shutdown( @lQuit ) } },;
+                            { "netio_shutdown" => {|| netio_shutdown( @lQuit ) } ,;
+                              "netio_conninfo" => {|| netio_conninfo( netiosrv ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
@@ -304,6 +305,45 @@ STATIC FUNCTION netio_shutdown( /* @ */ lQuit )
    hb_keyPut( { K_HOME, K_CTRL_Y, K_ENTER } )
 
    RETURN .T.
+
+STATIC FUNCTION netio_conninfo( netiosrv )
+   LOCAL nconn
+
+   LOCAL nStatus
+   LOCAL nFilesCount
+   LOCAL nBytesSent
+   LOCAL nBytesReceived
+   LOCAL aAddressPeer
+
+   LOCAL aArray := {}
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+
+      nFilesCount := 0
+      nBytesSent := 0
+      nBytesReceived := 0
+      aAddressPeer := NIL
+
+      nStatus := ;
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_FILESCOUNT   , @nFilesCount    )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESSENT    , @nBytesSent     )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESRECEIVED, @nBytesReceived )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
+
+      AAdd( aArray, {;
+         "tStart"         => nconn[ _NETIOSRV_CONN_tStart ],;
+         "cStatus"        => ConnStatusStr( nStatus ),;
+         "nFilesCount"    => nFilesCount,;
+         "nBytescount"    => nBytesSent,;
+         "nBytesreceived" => nBytesReceived,;
+         "cAddressPeer"   => AddrToIPPort( aAddressPeer ) } )
+   NEXT
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   RETURN aArray
 
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
    LOCAL aAddressPeer

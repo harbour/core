@@ -23,6 +23,7 @@ proc main()
    ? "NETIO_CONNECT():", netio_connect( NETSERVER, NETPORT,, NETPASSWD )
    ?
    /* check if some function are available on server side */
+   ? "Number of connected clients:", Len( netio_funcexec( "netio_conninfo" ) )
    ? "SHUTDOWN server:", netio_funcexec( "netio_shutdown" )
    ?
 
