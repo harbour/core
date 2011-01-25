@@ -33,7 +33,7 @@ hbmxml/hbmxml.hbp                # uses: minixml (locally hosted)
 hbmysql/hbmysql.hbp
 hbmzip/hbmzip.hbp                # uses: minizip (locally hosted)
 hbnetio/hbnetio.hbp
-hbnetio/utils/hbnetio.hbp
+hbnetio/utils/netiosrv/hbnetio.hbp
 hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp

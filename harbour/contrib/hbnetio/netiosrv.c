@@ -1388,7 +1388,7 @@ HB_FUNC( NETIO_SRVSOCKET )
       hb_socketItemPut( hb_stackReturnItem(), conn->sd );
 }
 
-HB_FUNC( NETIO_SRVOPENFILES )
+HB_FUNC( NETIO_SRVOPENFILESCOUNT )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
 
@@ -1397,4 +1397,3 @@ HB_FUNC( NETIO_SRVOPENFILES )
    else
       hb_retni( 0 )
 }
-

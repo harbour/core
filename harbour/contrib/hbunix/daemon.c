@@ -59,8 +59,10 @@ HB_FUNC( UNIX_DAEMON )
       return;
    }
 
-   if( ! HB_PARLUNIX( 1 ) )
-      ( void ) chdir( "/" );
+   if( ! HB_PARLUNIX( 1 ) && chdir( "/" ) == -1 )
+   {
+      /* FALLTHROUGH */
+   }
 
    if( ! HB_PARLUNIX( 2 ) && ( fd = open( "/dev/null", O_RDWR ) ) != -1 )
    {

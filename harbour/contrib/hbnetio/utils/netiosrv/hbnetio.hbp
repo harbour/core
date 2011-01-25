@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+../hbnetio.hbc
+-mt
+
+-w3 -es2 -l
+
+-o${hb_name}
+
+netiosrv.prg
+netiocmd.prg
+
+-ldflag={allmsvc}-nxcompat
+-ldflag={allmsvc}-dynamicbase
+-ldflag={allmsvc}-fixed:no
+
+#-prgflag=-DHB_EXTERN

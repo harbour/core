@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+-mt
+
+-w3 -es2 -l
+
+-o${hb_name}
+
+-icon={allwin}../../../package/harb_win.ico
+
+../../../hbqt/hbqtuitools.hbc
+../../../hbxbp/hbxbp.hbc
+../../../hbnetio/hbnetio.hbc
+
+netiosrq.prg
+netiosrq.qrc
