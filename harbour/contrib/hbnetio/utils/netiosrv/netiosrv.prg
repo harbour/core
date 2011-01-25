@@ -64,6 +64,7 @@ PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
 
    LOCAL cParam
+   LOCAL aCommand
    LOCAL cCommand
    LOCAL cPassword
 
@@ -78,7 +79,6 @@ PROCEDURE Main( ... )
    LOCAL hCommands
    LOCAL nSavedRow
    LOCAL nPos
-   LOCAL aCmd
 
    LOCAL cExt
    LOCAL cFile
@@ -97,6 +97,8 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
    netiosrv[ _NETIOSRV_hConnection ]   := { => }
    netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
+
+   hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
 
    FOR EACH cParam IN { ... }
       DO CASE
@@ -238,10 +240,9 @@ PROCEDURE Main( ... )
          ENDIF
          nHistIndex := Len( aHistory ) + 1
 
-         nPos := iif( Empty( cCommand ), 0, hb_HPos( hCommands, Lower( cCommand ) ) )
-         IF nPos > 0
-            aCmd := hb_HValueAt( hCommands, nPos )
-            Eval( aCmd[ 2 ], cCommand, netiosrv )
+         aCommand := hb_ATokens( cCommand, " " )
+         IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
+            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand, netiosrv )
          ELSE
             QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
          ENDIF
@@ -296,6 +297,37 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
    RETURN
 
+PROCEDURE cmdConnStop( cCommand, netiosrv )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+
+   LOCAL aAddressPeer
+   LOCAL cIPPort
+   LOCAL nconn
+
+   IF Len( aToken ) > 1
+
+      cIPPort := Lower( aToken[ 2 ] )
+
+      hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+      FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+
+         aAddressPeer := NIL
+         netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+
+         IF cIPPort == "all" .OR. cIPPort == AddrToIPPort( aAddressPeer )
+            QQOut( "Stopping connection on " + AddrToIPPort( aAddressPeer ), hb_eol() )
+            netio_serverStop( nconn[ _NETIOSRV_CONN_pConnection ], .T. )
+         ENDIF
+      NEXT
+
+      hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+   ELSE
+      QQOut( "Error: Invalid syntax.", hb_eol() )
+   ENDIF
+
+   RETURN
+
 PROCEDURE cmdConnInfo( netiosrv )
    LOCAL nconn
 
@@ -323,7 +355,7 @@ PROCEDURE cmdConnInfo( netiosrv )
       netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
 
       QQOut( "#" + hb_ntos( nconn:__enumIndex() ) + " " +;
-             hb_TToC( nconn[ _NETIOSRV_CONN_tStart ] ) + " " +;
+             hb_TToC( nconn[ _NETIOSRV_CONN_tStart ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
              PadR( ConnStatusStr( nStatus ), 12 ) + " " +;
              "fcnt: " + Str( nFilesCount ) + " " +;
              "send: " + Str( nBytesSent ) + " " +;

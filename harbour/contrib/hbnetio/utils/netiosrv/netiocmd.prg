@@ -15,13 +15,14 @@
 
 FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
    LOCAL hCmds := { ;
-                     "?"         => { "Synonym for 'help'."           , {|| cmdHelp( hCmds ) } },;
-                     "clear"     => { "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
-                     "config"    => { "Show server configuration."    , bShowInfo },;
-                     "sysinfo"   => { "Show system/build information.", {|| cmdSysInfo() } },;
-                     "conn"      => { "Show connection information."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
-                     "quit"      => { "Stop server and exit."         , bQuit },;
-                     "help"      => { "Display this help."            , {|| cmdHelp( hCmds ) } };
+                     "?"       => { ""               , "Synonym for 'help'."           , {|| cmdHelp( hCmds ) } },;
+                     "clear"   => { ""               , "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
+                     "config"  => { ""               , "Show server configuration."    , bShowInfo },;
+                     "sysinfo" => { ""               , "Show system/build information.", {|| cmdSysInfo() } },;
+                     "conn"    => { ""               , "Show connection information."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
+                     "stop"    => { "[<ip:port>|all]", "Stop specified connection(s)." , {| cCommand, netiosrv | cmdConnStop( cCommand, netiosrv ) } },;
+                     "quit"    => { ""               , "Stop server and exit."         , bQuit },;
+                     "help"    => { ""               , "Display this help."            , {|| cmdHelp( hCmds ) } };
                   }
 
    RETURN hCmds
@@ -44,13 +45,13 @@ STATIC PROCEDURE cmdHelp( hCommands )
    LOCAL n, c, m
 
    m := 0
-   hb_HEval( hCommands, {| k | m := Max( m, Len( k ) ) } )
+   hb_HEval( hCommands, {| k, l | m := Max( m, Len( k + iif( Empty( l[ 1 ] ), "", " " + l[ 1 ] ) ) ) } )
 
    AAdd( aTexts, "Commands:" )
 
    /* Processing commands */
    FOR EACH n IN hCommands
-      AAdd( aTexts, " " + PadR( n:__enumKey(), m ) + " - " + n[ 1 ] )
+      AAdd( aTexts, " " + PadR( n:__enumKey() + iif( Empty( n[ 1 ] ), "", " " + n[ 1 ] ), m ) + " - " + n[ 2 ] )
    NEXT
 
    ASort( aTexts, 2 )
