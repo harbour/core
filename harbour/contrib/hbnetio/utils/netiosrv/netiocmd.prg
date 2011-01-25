@@ -19,6 +19,7 @@ FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
                      "clear"     => { "Clear screen."                 , {|| Scroll(), SetPos( 0, 0 ) } },;
                      "config"    => { "Show server configuration."    , bShowInfo },;
                      "sysinfo"   => { "Show system/build information.", {|| cmdSysInfo() } },;
+                     "conn"      => { "Show connection information."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
                      "quit"      => { "Stop server and exit."         , bQuit },;
                      "help"      => { "Display this help."            , {|| cmdHelp( hCmds ) } };
                   }

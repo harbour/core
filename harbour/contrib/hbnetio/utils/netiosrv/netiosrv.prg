@@ -30,6 +30,7 @@
 
 #include "hbgtinfo.ch"
 #include "hbhrb.ch"
+#include "hbsocket.ch"
 
 /* netio_mtserver() needs MT HVM version */
 REQUEST HB_MT
@@ -49,7 +50,14 @@ REQUEST HB_MT
 #define _NETIOSRV_hRPCFHRB          6
 #define _NETIOSRV_lEncryption       7
 #define _NETIOSRV_pListenSocket     8
-#define _NETIOSRV_MAX_              8
+#define _NETIOSRV_hConnection       9
+#define _NETIOSRV_mtxConnection     10
+#define _NETIOSRV_MAX_              10
+
+#define _NETIOSRV_CONN_pConnection  1
+#define _NETIOSRV_CONN_aAddrPeer    2
+#define _NETIOSRV_CONN_tStart       3
+#define _NETIOSRV_CONN_MAX_         3
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
@@ -76,6 +84,9 @@ PROCEDURE Main( ... )
 
    LOCAL aHistory, nHistIndex
 
+   SET DATE ANSI
+   SET CENTURY ON
+
    HB_Logo()
 
    netiosrv[ _NETIOSRV_nPort ]         := 2941
@@ -83,6 +94,8 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_cRootDir ]      := hb_dirBase()
    netiosrv[ _NETIOSRV_lRPC ]          := .F.
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
+   netiosrv[ _NETIOSRV_hConnection ]   := { => }
+   netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
 
    FOR EACH cParam IN { ... }
       DO CASE
@@ -145,7 +158,10 @@ PROCEDURE Main( ... )
                       netiosrv[ _NETIOSRV_cIFAddr ],;
                       netiosrv[ _NETIOSRV_cRootDir ],;
                       iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) ),;
-                      cPassword )
+                      cPassword,;
+                      NIL,;
+                      NIL,;
+                      {| pConnectionSocket | netiosrv_callback( netiosrv, pConnectionSocket ) } )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
    cPassword := NIL
@@ -238,6 +254,79 @@ PROCEDURE Main( ... )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
+   LOCAL hSrvSocket := netio_srvSocket( pConnectionSocket )
+
+   netiosrv_conn_register( netiosrv, pConnectionSocket, hSrvSocket )
+
+   BEGIN SEQUENCE
+      netio_server( pConnectionSocket )
+   END SEQUENCE
+
+   netiosrv_conn_unregister( netiosrv, hSrvSocket )
+
+   RETURN NIL
+
+STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket, hSrvSocket )
+   LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
+
+   nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
+   nconn[ _NETIOSRV_CONN_aAddrPeer ]   := hb_socketGetPeerName( hSrvSocket )
+   nconn[ _NETIOSRV_CONN_tStart ]      := hb_DateTime()
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   IF !( hSrvSocket $ netiosrv[ _NETIOSRV_hConnection ] )
+      netiosrv[ _NETIOSRV_hConnection ][ hSrvSocket ] := nconn
+   ENDIF
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   RETURN
+
+STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, hSrvSocket )
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   IF hSrvSocket $ netiosrv[ _NETIOSRV_hConnection ]
+      hb_HDel( netiosrv[ _NETIOSRV_hConnection ], hSrvSocket )
+   ENDIF
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   RETURN
+
+PROCEDURE cmdConnInfo( netiosrv )
+   LOCAL nconn
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   QQOut( "Number of connections: " + hb_ntos( Len( netiosrv[ _NETIOSRV_hConnection ] ) ), hb_eol() )
+
+   FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+      QQOut( "#" + hb_ntos( nconn:__enumIndex() ) + " " +;
+             hb_TToC( nconn[ _NETIOSRV_CONN_tStart ] ) + " " +;
+             Str( netio_srvOpenFilesCount( nconn[ _NETIOSRV_CONN_pConnection ] ) ) + " " +;
+             AddrToIPPort( nconn[ _NETIOSRV_CONN_aAddrPeer ] ), hb_eol() )
+   NEXT
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+   RETURN
+
+STATIC FUNCTION AddrToIPPort( aAddr )
+   LOCAL cIP
+
+   IF hb_isArray( aAddr ) .AND. ;
+      ( aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET .OR. ;
+        aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
+      cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ] + ":" + hb_ntos( aAddr[ HB_SOCKET_ADINFO_PORT ] )
+   ELSE
+      cIP := ""
+   ENDIF
+
+   RETURN cIP
 
 STATIC FUNCTION FileSig( cFile )
    LOCAL hFile
