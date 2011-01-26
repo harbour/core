@@ -583,8 +583,8 @@ typedef struct
 
    int      iLineTot;               /* total number of parsed lines */
    int      iCycle;                 /* translation counter */
-   int      iMaxCycles;             /* maximum number of translations */
-   int      iHideStrings;           /* hidden string mode */
+   int      iMaxCycles;             /* maximum number of translations (current) */
+   int      iMaxCyclesSet;          /* maximum number of translations (default) */
    HB_BOOL  fTracePragmas;          /* display information about set pragmas */
    HB_BOOL  fWritePreprocesed;      /* write preprocessed data to file (.ppo) */
    HB_BOOL  fWriteTrace;            /* write translation to file (.ppt) */
@@ -596,7 +596,8 @@ typedef struct
    char *   szTraceFileName;        /* trace output file name */
    FILE *   file_trace;             /* trace output file handle */
 
-   HB_BOOL   fQuiet;                /* do not show standard information */
+   HB_BOOL   fQuietSet;             /* do not show standard information (default) */
+   HB_BOOL   fQuiet;                /* do not show standard information (current) */
    HB_BOOL   fEscStr;               /* use \ in strings as escape character */
    HB_BOOL   fError;                /* indicates error in last operation */
    int       iErrors;               /* number of error during preprocessing */

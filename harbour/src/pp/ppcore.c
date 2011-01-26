@@ -2679,9 +2679,9 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       /* xHarbour extension */
       else if( hb_pp_tokenValueCmp( pToken, "TEXTHIDDEN", HB_PP_CMP_DBASE ) )
       {
-         pValue = hb_pp_pragmaGetInt( pToken->pNext, &pState->iHideStrings );
+         pValue = hb_pp_pragmaGetInt( pToken->pNext, &iValue );
          if( pValue )
-            fError = hb_pp_setCompilerSwitch( pState, pToken->value, pState->iHideStrings );
+            fError = hb_pp_setCompilerSwitch( pState, pToken->value, iValue );
          else
             fError = HB_TRUE;
       }
@@ -5499,8 +5499,8 @@ void hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, int iCycles, void * cargo,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                  PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
-   pState->fQuiet      = fQuiet;
-   pState->iMaxCycles  = ( iCycles > 0 ) ? iCycles : HB_PP_MAX_CYCLES;
+   pState->fQuiet      = pState->fQuietSet = fQuiet;
+   pState->iMaxCycles  = pState->iMaxCyclesSet = ( iCycles > 0 ) ? iCycles : HB_PP_MAX_CYCLES;
    pState->cargo       = cargo;
    pState->pOpenFunc   = pOpenFunc;
    pState->pCloseFunc  = pCloseFunc;
@@ -5522,8 +5522,14 @@ void hb_pp_setIncFunc( PHB_PP_STATE pState, PHB_PP_INC_FUNC pIncFunc )
  */
 void hb_pp_reset( PHB_PP_STATE pState )
 {
-   pState->fError = HB_FALSE;
-   pState->iErrors = 0;
+   pState->fError        = HB_FALSE;
+   pState->iErrors       = 0;
+   pState->iLineTot      = 0;
+   pState->fEscStr       = HB_FALSE;
+   pState->fTracePragmas = HB_FALSE;
+   pState->fQuiet        = pState->fQuietSet;
+   pState->iMaxCycles    = pState->iMaxCyclesSet;
+   pState->iStreamDump   = HB_PP_STREAM_OFF;
 
    hb_pp_InFileFree( pState );
    hb_pp_OutFileFree( pState );
