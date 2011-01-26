@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+../../hbnetio.hbc
+
+-w3 -es2 -l
+
+-o${hb_name}
+
+netiocui.prg

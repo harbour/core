@@ -188,7 +188,8 @@ PROCEDURE Main( ... )
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
-                            { "netio_sendclientinfo" => {| ... | netio_mgmt_rpc_clientinfo( netiomgm, ... ) } ,;
+                            { "netio_ping"           => {| ... | .T. } ,;
+                              "netio_sendclientinfo" => {| ... | netio_mgmt_rpc_clientinfo( netiomgm, ... ) } ,;
                               "netio_sysinfo"        => {| ... | netio_mgmt_rpc_sysinfo() } ,;
                               "netio_shutdown"       => {| ... | netio_mgmt_rpc_shutdown( netiosrv ) } ,;
                               "netio_conninfo"       => {| ... | netio_mgmt_rpc_conninfo( netiosrv ) } ,;
