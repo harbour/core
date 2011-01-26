@@ -18,13 +18,16 @@
 
 #include "hbgtinfo.ch"
 
+#define _NETIOMGM_IPV4_DEF  "127.0.0.1"
+#define _NETIOMGM_PORT_DEF  2940
+
 #if ! defined( _CONSOLEUI_EMBEDDED )
 
 PROCEDURE Main( ... )
    LOCAL cParam
 
-   LOCAL cIP := "127.0.0.1"
-   LOCAL nPort := 2940
+   LOCAL cIP := _NETIOMGM_IPV4_DEF
+   LOCAL nPort := _NETIOMGM_PORT_DEF
    LOCAL cPassword := ""
 
    SET DATE ANSI
@@ -34,12 +37,13 @@ PROCEDURE Main( ... )
 
    FOR EACH cParam IN { ... }
       DO CASE
-      CASE Lower( Left( cParam, 11 ) ) == "-adminport="
-         nPort := Val( SubStr( cParam, 12 ) )
-      CASE Lower( Left( cParam, 12 ) ) == "-adminaddr="
-         cIP := SubStr( cParam, 13 )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminpass="
-         cPassword := SubStr( cParam, 12 )
+      CASE Lower( Left( cParam, 6 ) ) == "-addr="
+         IPPortSplit( SubStr( cParam, 7 ), @cIP, @nPort )
+         IF Empty( nPort )
+            nPort := _NETIOMGM_PORT_DEF
+         ENDIF
+      CASE Lower( Left( cParam, 6 ) ) == "-pass="
+         cPassword := SubStr( cParam, 7 )
          hb_StrClear( @cParam )
       CASE Lower( cParam ) == "--version"
          RETURN
@@ -67,19 +71,18 @@ STATIC PROCEDURE HB_Logo()
 
 STATIC PROCEDURE HB_Usage()
 
-   OutStd( "Syntax:"                                                                                     , hb_eol() )
-   OutStd(                                                                                                 hb_eol() )
-   OutStd( "  netiocui [options]"                                                                        , hb_eol() )
-   OutStd(                                                                                                 hb_eol() )
-   OutStd( "Options:"                                                                                    , hb_eol() )
-   OutStd(                                                                                                 hb_eol() )
-   OutStd( "  -adminport=<port>     connect to netio server on IP port <port>. Default: 2940"            , hb_eol() )
-   OutStd( "  -adminaddr=<ipaddr>   connect to netio server on IPv4 address <ipaddress>"                 , hb_eol() )
-   OutStd( "                        Default: 127.0.0.1"                                                  , hb_eol() )
-   OutStd( "  -adminpass=<passwd>   connect to netio server with password"                               , hb_eol() )
-   OutStd(                                                                                                 hb_eol() )
-   OutStd( "  --version             display version header only"                                         , hb_eol() )
-   OutStd( "  -help|--help          this help"                                                           , hb_eol() )
+   OutStd(               "Syntax:"                                                                                , hb_eol() )
+   OutStd(                                                                                                          hb_eol() )
+   OutStd(               "  netiocui [options]"                                                                   , hb_eol() )
+   OutStd(                                                                                                          hb_eol() )
+   OutStd(               "Options:"                                                                               , hb_eol() )
+   OutStd(                                                                                                          hb_eol() )
+   OutStd(               "  -addr=<ip[:port]>  connect to netio server on IPv4 address <ip:port>"                 , hb_eol() )
+   OutStd( hb_StrFormat( "                     Default: %1$s:%2$d", _NETIOMGM_IPV4_DEF, _NETIOMGM_PORT_DEF )      , hb_eol() )
+   OutStd(               "  -pass=<passwd>     connect to netio server with password"                             , hb_eol() )
+   OutStd(                                                                                                          hb_eol() )
+   OutStd(               "  --version          display version header only"                                       , hb_eol() )
+   OutStd(               "  -help|--help       this help"                                                         , hb_eol() )
 
    RETURN
 
@@ -87,18 +90,20 @@ STATIC PROCEDURE HB_Usage()
 
 STATIC FUNCTION hbnetiosrv_LoadCmds( pConnection, /* @ */ lQuit )
    LOCAL hCmds := { ;
-      "?"         => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
-      "exit"      => { ""               , "Exit console."                         , {|| lQuit := .T. } },;
-      "clear"     => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "sysinfo"   => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
-      "show"      => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
-      "noconn"    => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
-      "conn"      => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
-      "nologconn" => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
-      "logconn"   => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
-      "stop"      => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
-      "quit"      => { ""               , "Stop server and exit console."         , {|| netio_funcexec( pConnection, "netio_shutdown" ) } },;
-      "help"      => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } } }
+      "?"          => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
+      "exit"       => { ""               , "Exit console."                         , {|| lQuit := .T. } },;
+      "clear"      => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
+      "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection ) } },;
+      "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
+      "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
+      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
+      "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
+      "conn"       => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
+      "nologconn"  => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
+      "logconn"    => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
+      "stop"       => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
+      "quit"       => { ""               , "Stop server and exit console."         , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
+      "help"       => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } } }
 
    RETURN hCmds
 
@@ -176,105 +181,144 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
 
    LOCAL pConnection
 
-   /* connect to the server */
-   QQOut( "Connecting to server management interface...", hb_eol() )
+   IF ! Empty( cPassword )
 
-   pConnection := netio_getconnection( cIP, nPort,, cPassword )
-   cPassword := NIL
+      /* connect to the server */
+      QQOut( "Connecting to server management interface...", hb_eol() )
 
-   IF ! Empty( pConnection )
+      pConnection := netio_getconnection( cIP, nPort,, cPassword )
+      cPassword := NIL
 
-      netio_funcexec( pConnection, "netio_sendclientinfo", netiosrv_clientinfo() )
+      IF Empty( pConnection )
+         QQOut( "Error connecting server.", hb_eol() )
+      ELSE
+         netio_funcexec( pConnection, "hbnetiomgm_sendclientinfo", netiosrv_clientinfo() )
+         QQOut( "Connected.", hb_eol() )
+      ENDIF
 
-      QQOut( "Connected.", hb_eol() )
       QQOut( hb_eol() )
-      QQOut( "Type a command or '?' for help.", hb_eol() )
+   ENDIF
 
-      aHistory   := { "quit" }
-      nHistIndex := Len( aHistory ) + 1
-      hCommands  := hbnetiosrv_LoadCmds( pConnection, @lQuit )
+   QQOut( "Type a command or '?' for help.", hb_eol() )
 
-      lQuit := .F.
+   aHistory   := { "quit" }
+   nHistIndex := Len( aHistory ) + 1
+   hCommands  := hbnetiosrv_LoadCmds( @pConnection, @lQuit )
 
-      DO WHILE ! lQuit
+   lQuit := .F.
 
+   DO WHILE ! lQuit
+
+      IF ! Empty( pConnection )
          /* Is connection alive? */
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-            netio_funcexec( pConnection, "netio_ping" )
+            netio_funcexec( pConnection, "hbnetiomgm_ping" )
          RECOVER
             QQOut( "Connection lost.", hb_eol() )
             EXIT
          END SEQUENCE
+      ENDIF
 
-         cCommand := Space( 128 )
+      cCommand := Space( 128 )
 
-         QQOut( "hbnetiosrv$ " )
-         nSavedRow := Row()
+      QQOut( "hbnetiosrv$ " )
+      nSavedRow := Row()
 
-         @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
+      @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
 
-         SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+      SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
-         bKeyIns   := SetKey( K_INS,;
-            {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
-                             SC_NORMAL, SC_INSERT ) ) } )
-         bKeyUp    := SetKey( K_UP,;
-            {|| iif( nHistIndex > 1,;
-                     cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
-                     ManageCursor( cCommand ) } )
-         bKeyDown  := SetKey( K_DOWN,;
-            {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
-                aHistory[ ++nHistIndex ],;
-                ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
-                     ManageCursor( cCommand ) } )
-         bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+      bKeyIns   := SetKey( K_INS,;
+         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
+                          SC_NORMAL, SC_INSERT ) ) } )
+      bKeyUp    := SetKey( K_UP,;
+         {|| iif( nHistIndex > 1,;
+                  cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
+                  ManageCursor( cCommand ) } )
+      bKeyDown  := SetKey( K_DOWN,;
+         {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
+             aHistory[ ++nHistIndex ],;
+             ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
+                  ManageCursor( cCommand ) } )
+      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
 
-         bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
+      bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
 
-         READ
+      READ
 
-         /* Positions the cursor on the line previously saved */
-         SetPos( nSavedRow, MaxCol() - 1 )
+      /* Positions the cursor on the line previously saved */
+      SetPos( nSavedRow, MaxCol() - 1 )
 
-         SetKey( K_ALT_V, bKeyPaste )
-         SetKey( K_DOWN,  bKeyDown  )
-         SetKey( K_UP,    bKeyUp    )
-         SetKey( K_INS,   bKeyIns   )
-         SetKey( K_TAB,   bKeyTab   )
+      SetKey( K_ALT_V, bKeyPaste )
+      SetKey( K_DOWN,  bKeyDown  )
+      SetKey( K_UP,    bKeyUp    )
+      SetKey( K_INS,   bKeyIns   )
+      SetKey( K_TAB,   bKeyTab   )
 
-         QQOut( hb_eol() )
+      QQOut( hb_eol() )
 
-         cCommand := AllTrim( cCommand )
+      cCommand := AllTrim( cCommand )
 
-         IF Empty( cCommand )
-            LOOP
-         ENDIF
+      IF Empty( cCommand )
+         LOOP
+      ENDIF
 
-         IF Empty( aHistory ) .OR. ! ATail( aHistory ) == cCommand
-            IF Len( aHistory ) < 64
-               AAdd( aHistory, cCommand )
-            ELSE
-               ADel( aHistory, 1 )
-               aHistory[ Len( aHistory ) ] := cCommand
-            ENDIF
-         ENDIF
-         nHistIndex := Len( aHistory ) + 1
-
-         aCommand := hb_ATokens( cCommand, " " )
-         IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
-            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
+      IF Empty( aHistory ) .OR. ! ATail( aHistory ) == cCommand
+         IF Len( aHistory ) < 64
+            AAdd( aHistory, cCommand )
          ELSE
-            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
+            ADel( aHistory, 1 )
+            aHistory[ Len( aHistory ) ] := cCommand
          ENDIF
-      ENDDO
+      ENDIF
+      nHistIndex := Len( aHistory ) + 1
 
-      /* Never reached */
+      aCommand := hb_ATokens( cCommand, " " )
+      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
+         Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
+      ELSE
+         QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
+      ENDIF
+   ENDDO
+
+   IF ! Empty( pConnection )
+
       pConnection := NIL
-   ELSE
-      QQOut( "Error connecting server.", hb_eol() )
+
+      IF lQuit
+         QQOut( "Connection closed.", hb_eol() )
+      ENDIF
    ENDIF
 
    RETURN
+
+STATIC FUNCTION GetPassword()
+   LOCAL GetList := {}
+   LOCAL cPassword := Space( 128 )
+   LOCAL nSavedRow
+   LOCAL bKeyPaste
+
+   QQOut( "Enter password: " )
+
+   nSavedRow := Row()
+
+   AAdd( GetList, hb_Get():New( Row(), Col(), {| v | iif( PCount() == 0, cPassword, cPassword := v ) }, "cPassword", "@S" + hb_ntos( MaxCol() - Col() + 1 ), hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD ) ) )
+   ATail( GetList ):hideInput( .T. )
+   ATail( GetList ):postBlock := {|| ! Empty( cPassword ) }
+   ATail( GetList ):display()
+
+   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+
+   READ
+
+   /* Positions the cursor on the line previously saved */
+   SetPos( nSavedRow, MaxCol() - 1 )
+   SetKey( K_ALT_V, bKeyPaste )
+
+   QQOut( hb_eol() )
+
+   RETURN AllTrim( cPassword )
 
 /* Adjusted the positioning of cursor on navigate through history. [vailtom] */
 STATIC PROCEDURE ManageCursor( cCommand )
@@ -296,56 +340,156 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
          ENDIF
       NEXT
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
+   LOCAL tmp
+
+   IF ! Empty( cAddr )
+      cIP := cAddr
+      IF ( tmp := At( ":", cIP ) ) > 0
+         nPort := Val( SubStr( cIP, tmp + Len( ":" ) ) )
+         cIP := Left( cIP, tmp - 1 )
+      ELSE
+         nPort := NIL
+      ENDIF
+   ENDIF
+
    RETURN
 
 /* Commands */
 
+STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection )
+   LOCAL aToken
+
+   LOCAL cIP := _NETIOMGM_IPV4_DEF
+   LOCAL nPort := _NETIOMGM_PORT_DEF
+   LOCAL cPassword
+
+   IF Empty( pConnection )
+      aToken := hb_ATokens( cCommand, " " )
+
+      IF Len( aToken ) >= 2
+         IPPortSplit( aToken[ 2 ], @cIP, @nPort )
+         IF Empty( nPort )
+            nPort := _NETIOMGM_PORT_DEF
+         ENDIF
+      ENDIF
+      IF Len( aToken ) >= 3
+         cPassword := aToken[ 3 ]
+      ELSE
+         cPassword := GetPassword()
+      ENDIF
+
+      QQOut( "Connecting to server management interface...", hb_eol() )
+
+      pConnection := netio_getconnection( cIP, nPort,, cPassword )
+      cPassword := NIL
+
+      IF ! Empty( pConnection )
+
+         netio_funcexec( pConnection, "hbnetiomgm_sendclientinfo", netiosrv_clientinfo() )
+
+         QQOut( "Connected.", hb_eol() )
+      ELSE
+         QQOut( "Error connecting server.", hb_eol() )
+      ENDIF
+   ELSE
+      QQOut( "Already connected. Disconnect first.", hb_eol() )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdDisconnect( /* @ */ pConnection )
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      pConnection := NIL
+   ENDIF
+
+   RETURN
+
 STATIC PROCEDURE cmdSysInfo( pConnection )
    LOCAL cLine
 
-   FOR EACH cLine IN netio_funcexec( pConnection , "netio_sysinfo" )
-      QQOut( cLine, hb_eol() )
-   NEXT
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      FOR EACH cLine IN netio_funcexec( pConnection, "hbnetiomgm_sysinfo" )
+         QQOut( cLine, hb_eol() )
+      NEXT
+   ENDIF
 
    RETURN
 
 STATIC PROCEDURE cmdConnStop( pConnection, cCommand )
-   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL aToken
 
-   IF Len( aToken ) > 1
-      netio_funcexec( pConnection, "netio_stop", aToken[ 2 ] )
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
    ELSE
-      QQOut( "Error: Invalid syntax.", hb_eol() )
+      aToken := hb_ATokens( cCommand, " " )
+      IF Len( aToken ) > 1
+         netio_funcexec( pConnection, "hbnetiomgm_stop", aToken[ 2 ] )
+      ELSE
+         QQOut( "Error: Invalid syntax.", hb_eol() )
+      ENDIF
    ENDIF
 
    RETURN
 
 STATIC PROCEDURE cmdConnInfo( pConnection )
-   LOCAL aArray := netio_funcexec( pConnection, "netio_conninfo" )
+   LOCAL aArray
    LOCAL hConn
 
-   QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      aArray := netio_funcexec( pConnection, "hbnetiomgm_conninfo" )
 
-   FOR EACH hConn IN aArray
-      QQOut( "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
-             hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
-             PadR( hConn[ "cStatus" ], 12 ) + " " +;
-             "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
-             "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
-             "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
-             hConn[ "cAddressPeer" ], hb_eol() )
-   NEXT
+      QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
+
+      FOR EACH hConn IN aArray
+         QQOut( "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
+                hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
+                PadR( hConn[ "cStatus" ], 12 ) + " " +;
+                "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
+                "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
+                "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
+                hConn[ "cAddressPeer" ], hb_eol() )
+      NEXT
+   ENDIF
 
    RETURN
 
-PROCEDURE cmdConnEnable( pConnection, lValue )
+STATIC PROCEDURE cmdShutdown( pConnection )
 
-   netio_funcexec( pConnection, "netio_conn", lValue )
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      netio_funcexec( pConnection, "hbnetiomgm_shutdown" )
+   ENDIF
 
    RETURN
 
-PROCEDURE cmdConnLogEnable( pConnection, lValue )
+STATIC PROCEDURE cmdConnEnable( pConnection, lValue )
 
-   netio_funcexec( pConnection, "netio_logconn", lValue )
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      netio_funcexec( pConnection, "hbnetiomgm_conn", lValue )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnLogEnable( pConnection, lValue )
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      netio_funcexec( pConnection, "hbnetiomgm_logconn", lValue )
+   ENDIF
 
    RETURN

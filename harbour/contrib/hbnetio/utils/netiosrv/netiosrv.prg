@@ -18,7 +18,7 @@
          - listing active locks
          - gracefully shutting down server by waiting for connections to close and not accept new ones
          - pausing server
-         - sort out console UI from server side log output */
+         - sort out console UI from server side output */
 
 #include "fileio.ch"
 
@@ -26,6 +26,12 @@
 #include "hbsocket.ch"
 
 #include "hbnetio.ch"
+
+#define _NETIOSRV_IPV4_DEF  "0.0.0.0"
+#define _NETIOSRV_PORT_DEF  2941
+
+#define _NETIOMGM_IPV4_DEF  "127.0.0.1"
+#define _NETIOMGM_PORT_DEF  2940
 
 /* netio_mtserver() needs MT HVM version */
 REQUEST HB_MT
@@ -78,8 +84,8 @@ PROCEDURE Main( ... )
    HB_Logo()
 
    netiosrv[ _NETIOSRV_cName ]         := "Data"
-   netiosrv[ _NETIOSRV_nPort ]         := 2941
-   netiosrv[ _NETIOSRV_cIFAddr ]       := "0.0.0.0"
+   netiosrv[ _NETIOSRV_nPort ]         := _NETIOSRV_PORT_DEF
+   netiosrv[ _NETIOSRV_cIFAddr ]       := _NETIOSRV_IPV4_DEF
    netiosrv[ _NETIOSRV_cRootDir ]      := hb_dirBase()
    netiosrv[ _NETIOSRV_lRPC ]          := .F.
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
@@ -92,8 +98,8 @@ PROCEDURE Main( ... )
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
 
    netiomgm[ _NETIOSRV_cName ]         := "Management"
-   netiomgm[ _NETIOSRV_nPort ]         := 2940
-   netiomgm[ _NETIOSRV_cIFAddr ]       := "127.0.0.1"
+   netiomgm[ _NETIOSRV_nPort ]         := _NETIOMGM_PORT_DEF
+   netiomgm[ _NETIOSRV_cIFAddr ]       := _NETIOMGM_IPV4_DEF
    netiomgm[ _NETIOSRV_lAcceptConn ]   := .T.
    netiomgm[ _NETIOSRV_lShowConn ]     := .F.
    netiomgm[ _NETIOSRV_hConnection ]   := { => }
@@ -188,16 +194,16 @@ PROCEDURE Main( ... )
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
-                            { "netio_ping"           => {| ... | .T. } ,;
-                              "netio_sendclientinfo" => {| ... | netio_mgmt_rpc_clientinfo( netiomgm, ... ) } ,;
-                              "netio_sysinfo"        => {| ... | netio_mgmt_rpc_sysinfo() } ,;
-                              "netio_shutdown"       => {| ... | netio_mgmt_rpc_shutdown( netiosrv ) } ,;
-                              "netio_conninfo"       => {| ... | netio_mgmt_rpc_conninfo( netiosrv ) } ,;
-                              "netio_stop"           => {| ... | netio_mgmt_rpc_stop( netiosrv, ... ) } ,;
-                              "netio_conn"           => {| ... | netio_mgmt_rpc_conn( netiosrv, .T. ) } ,;
-                              "netio_noconn"         => {| ... | netio_mgmt_rpc_conn( netiosrv, .F. ) } ,;
-                              "netio_logconn"        => {| ... | netio_mgmt_rpc_logconn( netiosrv, .T. ) } ,;
-                              "netio_nologconn"      => {| ... | netio_mgmt_rpc_logconn( netiosrv, .F. ) } },;
+                            { "hbnetiomgm_ping"           => {| ... | .T. } ,;
+                              "hbnetiomgm_sendclientinfo" => {| ... | netiomgm_rpc_clientinfo( netiomgm, ... ) } ,;
+                              "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
+                              "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv ) } ,;
+                              "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
+                              "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
+                              "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
+                              "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
+                              "hbnetiomgm_logconn"        => {| ... | netiomgm_rpc_logconn( netiosrv, .T. ) } ,;
+                              "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
@@ -297,7 +303,7 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
 /* RPC management interface */
 
-STATIC FUNCTION netio_mgmt_rpc_clientinfo( netiosrv, hInfo )
+STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, hInfo )
    LOCAL nconn
 #if 0
    LOCAL h
@@ -328,14 +334,14 @@ STATIC FUNCTION netio_mgmt_rpc_clientinfo( netiosrv, hInfo )
 
    RETURN NIL
 
-STATIC FUNCTION netio_mgmt_rpc_sysinfo()
+STATIC FUNCTION netiomgm_rpc_sysinfo()
    RETURN {;
       "OS: "          + OS()                   ,;
       "Harbour: "     + Version()              ,;
       "C Compiler: "  + hb_Compiler()          ,;
       "Memory (KB): " + hb_ntos( Memory( 0 ) ) }
 
-STATIC FUNCTION netio_mgmt_rpc_logconn( netiosrv, lValue )
+STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lShowConn ]
 
    IF hb_isLogical( lValue )
@@ -344,7 +350,7 @@ STATIC FUNCTION netio_mgmt_rpc_logconn( netiosrv, lValue )
 
    RETURN lOldValue
 
-STATIC FUNCTION netio_mgmt_rpc_conn( netiosrv, lValue )
+STATIC FUNCTION netiomgm_rpc_conn( netiosrv, lValue )
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
 
    IF hb_isLogical( lValue )
@@ -353,7 +359,7 @@ STATIC FUNCTION netio_mgmt_rpc_conn( netiosrv, lValue )
 
    RETURN lOldValue
 
-STATIC FUNCTION netio_mgmt_rpc_stop( netiosrv, cIPPort )
+STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
    LOCAL nconn
    LOCAL aAddressPeer
 
@@ -381,7 +387,7 @@ STATIC FUNCTION netio_mgmt_rpc_stop( netiosrv, cIPPort )
 
    RETURN .F.
 
-STATIC FUNCTION netio_mgmt_rpc_shutdown( netiosrv )
+STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv )
 
    QQOut( "Shutdown initiated...", hb_eol() )
 
@@ -389,7 +395,7 @@ STATIC FUNCTION netio_mgmt_rpc_shutdown( netiosrv )
 
    RETURN .T.
 
-STATIC FUNCTION netio_mgmt_rpc_conninfo( netiosrv )
+STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
    LOCAL nconn
 
    LOCAL nStatus
@@ -505,9 +511,10 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "Options:"                                                                                    , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   OutStd(               "  -port=<port>          accept incoming connections on IP port <port>. Default: 2941"        , hb_eol() )
+   OutStd(               "  -port=<port>          accept incoming connections on IP port <port>"                       , hb_eol() )
+   OutStd( hb_StrFormat( "                        Default: %1$d", _NETIOSRV_PORT_DEF )                                 , hb_eol() )
    OutStd(               "  -iface=<ipaddr>       accept incoming connections on IPv4 interface <ipaddress>"           , hb_eol() )
-   OutStd(               "                        Default: all"                                                        , hb_eol() )
+   OutStd( hb_StrFormat( "                        Default: %1$s", _NETIOSRV_IPV4_DEF )                                 , hb_eol() )
    OutStd(               "  -rootdir=<rootdir>    use <rootdir> as root directory for served file system"              , hb_eol() )
    OutStd(               "  -rpc                  accept RPC requests"                                                 , hb_eol() )
    OutStd(               "  -rpc=<file.hrb>       set RPC processor .hrb module to <file.hrb>"                         , hb_eol() )
@@ -515,12 +522,13 @@ STATIC PROCEDURE HB_Usage()
    OutStd( hb_StrFormat( "                        '%1$s()'", _RPC_FILTER )                                             , hb_eol() )
    OutStd(               "  -pass=<passwd>        set server password"                                                 , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
-   OutStd(                                                                                                               hb_eol() )
-   OutStd(               "  -adminport=<port>     accept management connections on IP port <port>. Default: 2940"      , hb_eol() )
+   OutStd(               "  -adminport=<port>     accept management connections on IP port <port>"                     , hb_eol() )
+   OutStd( hb_StrFormat( "                        Default: %1$d", _NETIOMGM_PORT_DEF )                                 , hb_eol() )
    OutStd(               "  -adminiface=<ipaddr>  accept manegement connections on IPv4 interface <ipaddress>"         , hb_eol() )
-   OutStd(               "                        Default: 127.0.0.1"                                                  , hb_eol() )
+   OutStd( hb_StrFormat( "                        Default: %1$s", _NETIOMGM_IPV4_DEF )                                 , hb_eol() )
    OutStd(               "  -adminpass=<passwd>   set remote management password"                                      , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
    OutStd(               "  -help|--help          this help"                                                           , hb_eol() )
