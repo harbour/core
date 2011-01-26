@@ -462,6 +462,9 @@ static HB_ERRCODE sqlbaseDeleted( SQLBASEAREAP pArea, HB_BOOL* pDeleted )
 
 static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
+   if( uiIndex == 0 || uiIndex > pArea->area.uiFieldCount )
+      return HB_FAILURE;
+
    if ( pArea->bRecordFlags & SQLDD_FLAG_CACHED )
    {
       hb_arrayGet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
@@ -526,6 +529,9 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 {
    LPFIELD    pField;
    HB_ERRCODE    errCode;
+
+   if( uiIndex == 0 || uiIndex > pArea->area.uiFieldCount )
+      return HB_FAILURE;
 
    if ( ! pArea->fPositioned )
       return HB_SUCCESS;

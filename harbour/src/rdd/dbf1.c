@@ -1827,8 +1827,10 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    if( !pArea->fValidBuffer && !hb_dbfReadRecord( pArea ) )
       return HB_FAILURE;
 
+   if( --uiIndex >= pArea->area.uiFieldCount )
+      return HB_FAILURE;
+
    fError = HB_FALSE;
-   uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
    switch( pField->uiType )
    {
@@ -2260,6 +2262,9 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    if( !pArea->fValidBuffer && !hb_dbfReadRecord( pArea ) )
       return HB_FAILURE;
 
+   if( --uiIndex >= pArea->area.uiFieldCount )
+      return HB_FAILURE;
+
    if( !pArea->fPositioned )
       return HB_SUCCESS;
 
@@ -2268,7 +2273,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
       return HB_FAILURE;
 
    errCode = HB_SUCCESS;
-   uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType == HB_FT_MEMO ||
        pField->uiType == HB_FT_IMAGE ||

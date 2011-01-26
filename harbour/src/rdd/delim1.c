@@ -550,7 +550,9 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
-   --uiIndex;
+   if( --uiIndex >= pArea->area.uiFieldCount )
+      return HB_FAILURE;
+
    pField = pArea->area.lpFields + uiIndex;
    switch( pField->uiType )
    {
@@ -651,8 +653,10 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
    if( !pArea->fRecordChanged )
       return HB_FAILURE;
 
+   if( --uiIndex >= pArea->area.uiFieldCount )
+      return HB_FAILURE;
+
    errCode = HB_SUCCESS;
-   --uiIndex;
    pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {

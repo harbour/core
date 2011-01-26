@@ -636,7 +636,7 @@ static void hb_pp_usage( char * szName )
    printf( "\n" );
    printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
    printf( "Options:  -d<id>[=<val>]\t#define <id>\n"
-           "          -e[<func>]    \tuse <func> as entry function in generated .c PP rules\n"
+           "          -e[<func>]    \tuse <func> as entry function in generated .c\n"
            "          -i<path>      \tadd #include file search path\n"
            "          -u[<file>]    \tuse command def set in <file> (or none)\n"
            "          -c[<file>]    \tlook for ChangeLog file\n"
