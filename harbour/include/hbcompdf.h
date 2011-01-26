@@ -837,6 +837,24 @@ typedef struct _HB_COMP
 }
 HB_COMP, * HB_COMP_PTR;
 
+typedef struct
+{
+   HB_BOOL  fDebugInfo;
+   HB_BOOL  fAutoMemvarAssume;
+   HB_BOOL  fI18n;
+   HB_BOOL  fLineNumbers;
+   HB_BOOL  fPPO;
+   HB_BOOL  fPPT;
+   HB_BOOL  fQuiet;
+   HB_BOOL  fForceMemvars;
+   int      iStartProc;
+   int      iWarnings;
+   int      iExitLevel;
+   int      iHidden;
+   int      supported;
+}
+HB_COMP_SWITCHES, * PHB_COMP_SWITCHES;
+
 extern HB_COMP_PTR hb_comp_new( void );
 extern void hb_comp_free( HB_COMP_PTR );
 

@@ -4038,9 +4038,44 @@ static void hb_compGenIncluded( HB_COMP_DECL )
    }
 }
 
+static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
+{
+   pSwitches->fDebugInfo        = HB_COMP_PARAM->fDebugInfo;
+   pSwitches->fAutoMemvarAssume = HB_COMP_PARAM->fAutoMemvarAssume;
+   pSwitches->fI18n             = HB_COMP_PARAM->fI18n;
+   pSwitches->fLineNumbers      = HB_COMP_PARAM->fLineNumbers;
+   pSwitches->fPPO              = HB_COMP_PARAM->fPPO;
+   pSwitches->fPPT              = HB_COMP_PARAM->fPPT;
+   pSwitches->fQuiet            = HB_COMP_PARAM->fQuiet;
+   pSwitches->fForceMemvars     = HB_COMP_PARAM->fForceMemvars;
+   pSwitches->iStartProc        = HB_COMP_PARAM->iStartProc;
+   pSwitches->iWarnings         = HB_COMP_PARAM->iWarnings;
+   pSwitches->iExitLevel        = HB_COMP_PARAM->iExitLevel;
+   pSwitches->iHidden           = HB_COMP_PARAM->iHidden;
+   pSwitches->supported         = HB_COMP_PARAM->supported;
+}
+
+static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
+{
+   HB_COMP_PARAM->fDebugInfo        = pSwitches->fDebugInfo;
+   HB_COMP_PARAM->fAutoMemvarAssume = pSwitches->fAutoMemvarAssume;
+   HB_COMP_PARAM->fI18n             = pSwitches->fI18n;
+   HB_COMP_PARAM->fLineNumbers      = pSwitches->fLineNumbers;
+   HB_COMP_PARAM->fPPO              = pSwitches->fPPO;
+   HB_COMP_PARAM->fPPT              = pSwitches->fPPT;
+   HB_COMP_PARAM->fQuiet            = pSwitches->fQuiet;
+   HB_COMP_PARAM->fForceMemvars     = pSwitches->fForceMemvars;
+   HB_COMP_PARAM->iStartProc        = pSwitches->iStartProc;
+   HB_COMP_PARAM->iWarnings         = pSwitches->iWarnings;
+   HB_COMP_PARAM->iExitLevel        = pSwitches->iExitLevel;
+   HB_COMP_PARAM->iHidden           = pSwitches->iHidden;
+   HB_COMP_PARAM->supported         = pSwitches->supported;
+}
+
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer )
 {
    char buffer[ HB_PATH_MAX * 2 + 80 ];
+   HB_COMP_SWITCHES switches;
    int iStatus = EXIT_SUCCESS;
    PHB_FNAME pFileName = NULL;
    PHB_MODULE pModule;
@@ -4048,6 +4083,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%p)", szPrg, szBuffer));
 
+   hb_compSaveSwitches( HB_COMP_PARAM, &switches );
    /* Initialize support variables */
    hb_compInitVars( HB_COMP_PARAM );
 
@@ -4377,6 +4413,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
       hb_compOutStd( HB_COMP_PARAM, "\nNo code generated.\n" );
 
    hb_compCompileEnd( HB_COMP_PARAM );
+   hb_compRestoreSwitches( HB_COMP_PARAM, &switches );
 
    return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
 }
