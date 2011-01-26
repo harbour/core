@@ -13,16 +13,19 @@
  *
  */
 
-#include "color.ch"
+/* TODO: - on the fly change of RPC filter modules
+         - listing open files
+         - listing active locks
+         - gracefully shutting down server by waiting for connections to close and not accept new ones
+         - pausing server
+         - sort out console UI from server side log output */
+
 #include "fileio.ch"
-#include "inkey.ch"
-#include "setcurs.ch"
 
-#include "hbnetio.ch"
-
-#include "hbgtinfo.ch"
 #include "hbhrb.ch"
 #include "hbsocket.ch"
+
+#include "hbnetio.ch"
 
 /* netio_mtserver() needs MT HVM version */
 REQUEST HB_MT
@@ -44,10 +47,11 @@ REQUEST HB_MT
 #define _NETIOSRV_lEncryption       8
 #define _NETIOSRV_lAcceptConn       9
 #define _NETIOSRV_lShowConn         10
-#define _NETIOSRV_pListenSocket     11
-#define _NETIOSRV_hConnection       12
-#define _NETIOSRV_mtxConnection     13
-#define _NETIOSRV_MAX_              13
+#define _NETIOSRV_lQuit             11
+#define _NETIOSRV_pListenSocket     12
+#define _NETIOSRV_hConnection       13
+#define _NETIOSRV_mtxConnection     14
+#define _NETIOSRV_MAX_              14
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_tStart       2
@@ -58,27 +62,13 @@ PROCEDURE Main( ... )
    LOCAL netiomgm[ _NETIOSRV_MAX_ ]
 
    LOCAL cParam
-   LOCAL aCommand
-   LOCAL cCommand
    LOCAL cPassword
    LOCAL cPasswordManagement
-
-   LOCAL bKeyDown
-   LOCAL bKeyUp
-   LOCAL bKeyIns
-   LOCAL bKeyPaste
-   LOCAL bKeyTab
-
-   LOCAL GetList   := {}
-   LOCAL lQuit
-   LOCAL hCommands
-   LOCAL nSavedRow
-   LOCAL nPos
 
    LOCAL cExt
    LOCAL cFile
 
-   LOCAL aHistory, nHistIndex
+   LOCAL lUI := .T.
 
    SET DATE ANSI
    SET CENTURY ON
@@ -93,6 +83,7 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_lEncryption ]   := .F.
    netiosrv[ _NETIOSRV_lAcceptConn ]   := .T.
    netiosrv[ _NETIOSRV_lShowConn ]     := .F.
+   netiosrv[ _NETIOSRV_lQuit ]         := .F.
    netiosrv[ _NETIOSRV_hConnection ]   := { => }
    netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
 
@@ -102,7 +93,7 @@ PROCEDURE Main( ... )
    netiomgm[ _NETIOSRV_nPort ]         := 2940
    netiomgm[ _NETIOSRV_cIFAddr ]       := "127.0.0.1"
    netiomgm[ _NETIOSRV_lAcceptConn ]   := .T.
-   netiomgm[ _NETIOSRV_lShowConn ]     := .T.
+   netiomgm[ _NETIOSRV_lShowConn ]     := .F.
    netiomgm[ _NETIOSRV_hConnection ]   := { => }
    netiomgm[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
 
@@ -110,6 +101,8 @@ PROCEDURE Main( ... )
 
    FOR EACH cParam IN { ... }
       DO CASE
+      CASE Lower( Left( cParam, 5 ) ) == "-noui"
+         lUI := .F.
       CASE Lower( Left( cParam, 6 ) ) == "-port="
          netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
       CASE Lower( Left( cParam, 7 ) ) == "-iface="
@@ -193,93 +186,37 @@ PROCEDURE Main( ... )
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
-                            { "netio_shutdown" => {|| netio_shutdown( @lQuit ) } ,;
-                              "netio_conninfo" => {|| netio_conninfo( netiosrv ) } },;
+                            { "netio_sysinfo"   => {| ... | netio_mgmt_rpc_sysinfo() } ,;
+                              "netio_shutdown"  => {| ... | netio_mgmt_rpc_shutdown( netiosrv ) } ,;
+                              "netio_conninfo"  => {| ... | netio_mgmt_rpc_conninfo( netiosrv ) } ,;
+                              "netio_stop"      => {| ... | netio_mgmt_rpc_stop( netiosrv, ... ) } ,;
+                              "netio_conn"      => {| ... | netio_mgmt_rpc_conn( netiosrv, .T. ) } ,;
+                              "netio_noconn"    => {| ... | netio_mgmt_rpc_conn( netiosrv, .F. ) } ,;
+                              "netio_logconn"   => {| ... | netio_mgmt_rpc_logconn( netiosrv, .T. ) } ,;
+                              "netio_nologconn" => {| ... | netio_mgmt_rpc_logconn( netiosrv, .F. ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
                             {| pConnectionSocket | netiosrv_callback( netiomgm, pConnectionSocket ) } )
-         cPasswordManagement := NIL
 
          IF Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
             OutStd( "Warning: Cannot start server management." + hb_eol() )
+         ELSE
+            IF lUI
+               hb_threadDetach( hb_threadStart( {|| netio_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
+            ENDIF
          ENDIF
       ENDIF
 
       ShowConfig( netiosrv, netiomgm )
 
-      OutStd( hb_eol() )
-      OutStd( "Type a command or '?' for help.", hb_eol() )
+      hb_idleSleep( 2 )
 
-      lQuit      := .F.
-      aHistory   := { "quit" }
-      nHistIndex := Len( aHistory ) + 1
-      hCommands  := hbnetiosrv_LoadCmds( {|| lQuit := .T. },;            /* codeblock to quit */
-                                         {|| ShowConfig( netiosrv ) } )  /* codeblock to display config both uses local vars */
+      netiomgm[ _NETIOSRV_lShowConn ] := .T.
 
       /* Command prompt */
-      DO WHILE ! lQuit
-
-         cCommand := Space( 128 )
-
-         QQOut( "hbnetiosrv$ " )
-         nSavedRow := Row()
-
-         @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
-
-         SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-
-         bKeyIns   := SetKey( K_INS,;
-            {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
-                             SC_NORMAL, SC_INSERT ) ) } )
-         bKeyUp    := SetKey( K_UP,;
-            {|| iif( nHistIndex > 1,;
-                     cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
-                     ManageCursor( cCommand ) } )
-         bKeyDown  := SetKey( K_DOWN,;
-            {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
-                aHistory[ ++nHistIndex ],;
-                ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
-                     ManageCursor( cCommand ) } )
-         bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
-
-         bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
-
-         READ
-
-         /* Positions the cursor on the line previously saved */
-         SetPos( nSavedRow, MaxCol() - 1 )
-
-         SetKey( K_ALT_V, bKeyPaste )
-         SetKey( K_DOWN,  bKeyDown  )
-         SetKey( K_UP,    bKeyUp    )
-         SetKey( K_INS,   bKeyIns   )
-         SetKey( K_TAB,   bKeyTab   )
-
-         QQOut( hb_eol() )
-
-         cCommand := AllTrim( cCommand )
-
-         IF Empty( cCommand )
-            LOOP
-         ENDIF
-
-         IF Empty( aHistory ) .OR. ! ATail( aHistory ) == cCommand
-            IF Len( aHistory ) < 64
-               AAdd( aHistory, cCommand )
-            ELSE
-               ADel( aHistory, 1 )
-               aHistory[ Len( aHistory ) ] := cCommand
-            ENDIF
-         ENDIF
-         nHistIndex := Len( aHistory ) + 1
-
-         aCommand := hb_ATokens( cCommand, " " )
-         IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
-            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand, netiosrv )
-         ELSE
-            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
-         ENDIF
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ]
+         hb_idleSleep( 5 )
       ENDDO
 
       netio_serverstop( netiosrv[ _NETIOSRV_pListenSocket ] )
@@ -296,54 +233,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC FUNCTION netio_shutdown( /* @ */ lQuit )
-
-   QQOut( "Shutdown initiated...", hb_eol() )
-
-   lQuit := .T.
-
-   hb_keyPut( { K_HOME, K_CTRL_Y, K_ENTER } )
-
-   RETURN .T.
-
-STATIC FUNCTION netio_conninfo( netiosrv )
-   LOCAL nconn
-
-   LOCAL nStatus
-   LOCAL nFilesCount
-   LOCAL nBytesSent
-   LOCAL nBytesReceived
-   LOCAL aAddressPeer
-
-   LOCAL aArray := {}
-
-   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
-
-   FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
-
-      nFilesCount := 0
-      nBytesSent := 0
-      nBytesReceived := 0
-      aAddressPeer := NIL
-
-      nStatus := ;
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_FILESCOUNT   , @nFilesCount    )
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESSENT    , @nBytesSent     )
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESRECEIVED, @nBytesReceived )
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
-
-      AAdd( aArray, {;
-         "tStart"         => nconn[ _NETIOSRV_CONN_tStart ],;
-         "cStatus"        => ConnStatusStr( nStatus ),;
-         "nFilesCount"    => nFilesCount,;
-         "nBytescount"    => nBytesSent,;
-         "nBytesreceived" => nBytesReceived,;
-         "cAddressPeer"   => AddrToIPPort( aAddressPeer ) } )
-   NEXT
-
-   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
-
-   RETURN aArray
+/* Server connect callback */
 
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
    LOCAL aAddressPeer
@@ -400,28 +290,40 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
    RETURN
 
-PROCEDURE cmdConnEnable( netiosrv, lValue )
+/* RPC management interface */
 
-   netiosrv[ _NETIOSRV_lAcceptConn ] := lValue
+STATIC FUNCTION netio_mgmt_rpc_sysinfo()
+   RETURN {;
+      "OS: "          + OS()                   ,;
+      "Harbour: "     + Version()              ,;
+      "C Compiler: "  + hb_Compiler()          ,;
+      "Memory (KB): " + hb_ntos( Memory( 0 ) ) }
 
-   RETURN
+STATIC FUNCTION netio_mgmt_rpc_logconn( netiosrv, lValue )
+   LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
 
-PROCEDURE cmdConnShowEnable( netiosrv, lValue )
+   IF hb_isLogical( lValue )
+      netiosrv[ _NETIOSRV_lShowConn ] := lValue
+   ENDIF
 
-   netiosrv[ _NETIOSRV_lShowConn ] := lValue
+   RETURN lOldValue
 
-   RETURN
+STATIC FUNCTION netio_mgmt_rpc_conn( netiosrv, lValue )
+   LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
 
-PROCEDURE cmdConnStop( cCommand, netiosrv )
-   LOCAL aToken := hb_ATokens( cCommand, " " )
+   IF hb_isLogical( lValue )
+      netiosrv[ _NETIOSRV_lAcceptConn ] := lValue
+   ENDIF
 
-   LOCAL aAddressPeer
-   LOCAL cIPPort
+   RETURN lOldValue
+
+STATIC FUNCTION netio_mgmt_rpc_stop( netiosrv, cIPPort )
    LOCAL nconn
+   LOCAL aAddressPeer
 
-   IF Len( aToken ) > 1
+   IF hb_isString( cIPPort )
 
-      cIPPort := Lower( aToken[ 2 ] )
+      cIPPort := Lower( cIPPort )
 
       hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
@@ -437,13 +339,21 @@ PROCEDURE cmdConnStop( cCommand, netiosrv )
       NEXT
 
       hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
-   ELSE
-      QQOut( "Error: Invalid syntax.", hb_eol() )
+
+      RETURN .T.
    ENDIF
 
-   RETURN
+   RETURN .F.
 
-PROCEDURE cmdConnInfo( netiosrv )
+STATIC FUNCTION netio_mgmt_rpc_shutdown( netiosrv )
+
+   QQOut( "Shutdown initiated...", hb_eol() )
+
+   netiosrv[ _NETIOSRV_lQuit ] := .T.
+
+   RETURN .T.
+
+STATIC FUNCTION netio_mgmt_rpc_conninfo( netiosrv )
    LOCAL nconn
 
    LOCAL nStatus
@@ -452,9 +362,9 @@ PROCEDURE cmdConnInfo( netiosrv )
    LOCAL nBytesReceived
    LOCAL aAddressPeer
 
-   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+   LOCAL aArray := {}
 
-   QQOut( "Number of connections: " + hb_ntos( Len( netiosrv[ _NETIOSRV_hConnection ] ) ), hb_eol() )
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
    FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
 
@@ -469,18 +379,18 @@ PROCEDURE cmdConnInfo( netiosrv )
       netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESRECEIVED, @nBytesReceived )
       netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
 
-      QQOut( "#" + hb_ntos( nconn:__enumIndex() ) + " " +;
-             hb_TToC( nconn[ _NETIOSRV_CONN_tStart ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
-             PadR( ConnStatusStr( nStatus ), 12 ) + " " +;
-             "fcnt: " + Str( nFilesCount ) + " " +;
-             "send: " + Str( nBytesSent ) + " " +;
-             "recv: " + Str( nBytesReceived ) + " " +;
-             AddrToIPPort( aAddressPeer ), hb_eol() )
+      AAdd( aArray, {;
+         "tStart"         => nconn[ _NETIOSRV_CONN_tStart ],;
+         "cStatus"        => ConnStatusStr( nStatus ),;
+         "nFilesCount"    => nFilesCount,;
+         "nBytesSent"     => nBytesSent,;
+         "nBytesReceived" => nBytesReceived,;
+         "cAddressPeer"   => AddrToIPPort( aAddressPeer ) } )
    NEXT
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
-   RETURN
+   RETURN aArray
 
 STATIC FUNCTION ConnStatusStr( nStatus )
 
@@ -508,6 +418,8 @@ STATIC FUNCTION AddrToIPPort( aAddr )
 
    RETURN cIP
 
+/* Helper functions */
+
 STATIC FUNCTION FileSig( cFile )
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
@@ -526,28 +438,6 @@ STATIC FUNCTION FileSig( cFile )
 
    RETURN cExt
 
-/* Complete the command line, based on the first characters that the user typed. [vailtom] */
-STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
-   LOCAL s := Lower( AllTrim( cCommand ) )
-   LOCAL n
-
-   /* We need at least one character to search */
-   IF Len( s ) > 1
-      FOR EACH n IN hCommands
-         IF s == Lower( Left( n:__enumKey(), Len( s ) ) )
-            cCommand := PadR( n:__enumKey(), Len( cCommand ) )
-            ManageCursor( cCommand )
-            RETURN
-         ENDIF
-      NEXT
-   ENDIF
-   RETURN
-
-/* Adjusted the positioning of cursor on navigate through history. [vailtom] */
-STATIC PROCEDURE ManageCursor( cCommand )
-   KEYBOARD Chr( K_HOME ) + iif( ! Empty( cCommand ), Chr( K_END ), "" )
-   RETURN
-
 STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
    QQOut( "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ), hb_eol() )
@@ -563,8 +453,8 @@ STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
 STATIC PROCEDURE HB_Logo()
 
-   OutStd( "Harbour NETIO Server " + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 2009-2011, Przemyslaw Czerpak" + hb_eol() + ;
+   OutStd( "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() +;
+           "Copyright (c) 2009-2011, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() )
 
@@ -587,6 +477,8 @@ STATIC PROCEDURE HB_Usage()
    OutStd( hb_StrFormat( "                        '%1$s()'", _RPC_FILTER )                                             , hb_eol() )
    OutStd(               "  -pass=<passwd>        set server password"                                                 , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
+   OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
    OutStd(               "  -adminport=<port>     accept management connections on IP port <port>"                     , hb_eol() )
    OutStd(               "  -adminiface=<ipaddr>  accept manegement connections on IPv4 interface <ipaddress>"         , hb_eol() )
    OutStd(               "  -adminpass=<passwd>   set remote management password"                                      , hb_eol() )
@@ -595,6 +487,3 @@ STATIC PROCEDURE HB_Usage()
    OutStd(               "  -help|--help          this help"                                                           , hb_eol() )
 
    RETURN
-
-STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour " )

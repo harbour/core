@@ -12,36 +12,27 @@
  *
  */
 
-FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
+#include "color.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
+
+#include "hbgtinfo.ch"
+
+STATIC FUNCTION hbnetiosrv_LoadCmds()
    LOCAL hCmds := { ;
-                     "?"        => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
-                     "clear"    => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
-                     "config"   => { ""               , "Show server configuration."            , bShowInfo },;
-                     "sysinfo"  => { ""               , "Show system/build information."        , {|| cmdSysInfo() } },;
-                     "show"     => { ""               , "Show list of connections."             , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnInfo( netiosrv ) } },;
-                     "noconn"   => { ""               , "Disable incoming connections."         , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .F. ) } },;
-                     "conn"     => { ""               , "Enable incoming connections."          , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnEnable( netiosrv, .T. ) } },;
-                     "noshconn" => { ""               , "Disable showing incoming connections." , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnShowEnable( netiosrv, .F. ) } },;
-                     "shconn"   => { ""               , "Enable showing incoming connections."  , {| cCommand, netiosrv | HB_SYMBOL_UNUSED( cCommand ), cmdConnShowEnable( netiosrv, .T. ) } },;
-                     "stop"     => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand, netiosrv | cmdConnStop( cCommand, netiosrv ) } },;
-                     "quit"     => { ""               , "Stop server and exit."                 , bQuit },;
-                     "help"     => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } };
-                  }
+      "?"         => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
+      "clear"     => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
+      "sysinfo"   => { ""               , "Show system/build information."        , {|| cmdSysInfo() } },;
+      "show"      => { ""               , "Show list of connections."             , {|| cmdConnInfo() } },;
+      "noconn"    => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( .F. ) } },;
+      "conn"      => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( .T. ) } },;
+      "nologconn" => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( .F. ) } },;
+      "logconn"   => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( .T. ) } },;
+      "stop"      => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( cCommand ) } },;
+      "quit"      => { ""               , "Stop server and exit."                 , {|| netio_funcexec( "netio_shutdown" ) } },;
+      "help"      => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } } }
 
    RETURN hCmds
-
-/* TODO: - on the fly change of RPC filter modules
-         - listing open files
-         - listing active locks
-         - gracefully shutting down server by waiting for connections to close and not accept new ones
-         - pausing server */
-
-STATIC PROCEDURE cmdSysInfo()
-   QQOut( "OS: "         + OS(), hb_eol() )
-   QQOut( "Harbour: "    + Version(), hb_eol() )
-   QQOut( "C Compiler: " + hb_Compiler(), hb_eol() )
-   QQOut( "Memory: "     + hb_ntos( Memory( 0 ) ) + "KB", hb_eol() )
-   RETURN
 
 STATIC PROCEDURE cmdHelp( hCommands )
    LOCAL aTexts := {}
@@ -81,5 +72,184 @@ STATIC PROCEDURE cmdHelp( hCommands )
          SetPos( Row(), 0 )
       ENDIF
    NEXT
+
+   RETURN
+
+PROCEDURE netio_cmdUI( cIP, nPort, cPassword )
+   LOCAL GetList := {}
+   LOCAL hCommands
+   LOCAL nSavedRow
+   LOCAL nPos
+   LOCAL aCommand
+   LOCAL cCommand
+
+   LOCAL bKeyDown
+   LOCAL bKeyUp
+   LOCAL bKeyIns
+   LOCAL bKeyPaste
+   LOCAL bKeyTab
+
+   LOCAL aHistory, nHistIndex
+
+   LOCAL lOk
+
+   /* connect to the server */
+   QQOut( "Connecting to server management interface...", hb_eol() )
+
+   lOk := netio_connect( cIP, nPort,, cPassword )
+   cPassword := NIL
+
+   IF lOk
+
+      QQOut( "Connected.", hb_eol() )
+      QQOut( hb_eol() )
+      QQOut( "Type a command or '?' for help.", hb_eol() )
+
+      aHistory   := { "quit" }
+      nHistIndex := Len( aHistory ) + 1
+      hCommands  := hbnetiosrv_LoadCmds()
+
+      /* Command prompt */
+      DO WHILE .T.
+
+         cCommand := Space( 128 )
+
+         QQOut( "hbnetiosrv$ " )
+         nSavedRow := Row()
+
+         @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
+
+         SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+
+         bKeyIns   := SetKey( K_INS,;
+            {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
+                             SC_NORMAL, SC_INSERT ) ) } )
+         bKeyUp    := SetKey( K_UP,;
+            {|| iif( nHistIndex > 1,;
+                     cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
+                     ManageCursor( cCommand ) } )
+         bKeyDown  := SetKey( K_DOWN,;
+            {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
+                aHistory[ ++nHistIndex ],;
+                ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
+                     ManageCursor( cCommand ) } )
+         bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+
+         bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
+
+         READ
+
+         /* Positions the cursor on the line previously saved */
+         SetPos( nSavedRow, MaxCol() - 1 )
+
+         SetKey( K_ALT_V, bKeyPaste )
+         SetKey( K_DOWN,  bKeyDown  )
+         SetKey( K_UP,    bKeyUp    )
+         SetKey( K_INS,   bKeyIns   )
+         SetKey( K_TAB,   bKeyTab   )
+
+         QQOut( hb_eol() )
+
+         cCommand := AllTrim( cCommand )
+
+         IF Empty( cCommand )
+            LOOP
+         ENDIF
+
+         IF Empty( aHistory ) .OR. ! ATail( aHistory ) == cCommand
+            IF Len( aHistory ) < 64
+               AAdd( aHistory, cCommand )
+            ELSE
+               ADel( aHistory, 1 )
+               aHistory[ Len( aHistory ) ] := cCommand
+            ENDIF
+         ENDIF
+         nHistIndex := Len( aHistory ) + 1
+
+         aCommand := hb_ATokens( cCommand, " " )
+         IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
+            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
+         ELSE
+            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
+         ENDIF
+      ENDDO
+
+      /* Never reached */
+      netio_disconnect( cIP, nPort )
+   ENDIF
+
+   RETURN
+
+/* Adjusted the positioning of cursor on navigate through history. [vailtom] */
+STATIC PROCEDURE ManageCursor( cCommand )
+   KEYBOARD Chr( K_HOME ) + iif( ! Empty( cCommand ), Chr( K_END ), "" )
+   RETURN
+
+/* Complete the command line, based on the first characters that the user typed. [vailtom] */
+STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
+   LOCAL s := Lower( AllTrim( cCommand ) )
+   LOCAL n
+
+   /* We need at least one character to search */
+   IF Len( s ) > 1
+      FOR EACH n IN hCommands
+         IF s == Lower( Left( n:__enumKey(), Len( s ) ) )
+            cCommand := PadR( n:__enumKey(), Len( cCommand ) )
+            ManageCursor( cCommand )
+            RETURN
+         ENDIF
+      NEXT
+   ENDIF
+   RETURN
+
+/* Commands */
+
+STATIC PROCEDURE cmdSysInfo()
+   LOCAL cLine
+
+   FOR EACH cLine IN netio_funcexec( "netio_sysinfo" )
+      QQOut( cLine, hb_eol() )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE cmdConnStop( cCommand )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+
+   IF Len( aToken ) > 1
+      netio_funcexec( "netio_stop", aToken[ 2 ] )
+   ELSE
+      QQOut( "Error: Invalid syntax.", hb_eol() )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnInfo()
+   LOCAL aArray := netio_funcexec( "netio_conninfo" )
+   LOCAL hConn
+
+   QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
+
+   FOR EACH hConn IN aArray
+      QQOut( "#" + hb_ntos( hConn:__enumIndex() ) + " " +;
+             hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
+             PadR( hConn[ "cStatus" ], 12 ) + " " +;
+             "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
+             "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
+             "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
+             hConn[ "cAddressPeer" ], hb_eol() )
+   NEXT
+
+   RETURN
+
+PROCEDURE cmdConnEnable( lValue )
+
+   netio_funcexec( "netio_conn", lValue )
+
+   RETURN
+
+PROCEDURE cmdConnLogEnable( lValue )
+
+   netio_funcexec( "netio_logconn", lValue )
 
    RETURN
