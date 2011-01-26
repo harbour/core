@@ -246,7 +246,7 @@ STATIC PROCEDURE cmdConnInfo( pConnection )
    QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
 
    FOR EACH hConn IN aArray
-      QQOut( "#" + hb_ntos( hConn:__enumIndex() ) + " " +;
+      QQOut( "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
              hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
              PadR( hConn[ "cStatus" ], 12 ) + " " +;
              "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;

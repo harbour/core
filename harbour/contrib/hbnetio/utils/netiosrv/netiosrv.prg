@@ -54,9 +54,10 @@ REQUEST HB_MT
 #define _NETIOSRV_MAX_              14
 
 #define _NETIOSRV_CONN_pConnection  1
-#define _NETIOSRV_CONN_tStart       2
-#define _NETIOSRV_CONN_hInfo        3
-#define _NETIOSRV_CONN_MAX_         3
+#define _NETIOSRV_CONN_nThreadID    2
+#define _NETIOSRV_CONN_tStart       3
+#define _NETIOSRV_CONN_hInfo        4
+#define _NETIOSRV_CONN_MAX_         4
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
@@ -268,6 +269,7 @@ STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
    LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
 
    nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
+   nconn[ _NETIOSRV_CONN_nThreadID ]   := hb_threadID()
    nconn[ _NETIOSRV_CONN_tStart ]      := hb_DateTime()
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -294,18 +296,33 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
 /* RPC management interface */
 
-STATIC FUNCTION netio_mgmt_rpc_clientinfo( netiomgm, hInfo )
+STATIC FUNCTION netio_mgmt_rpc_clientinfo( netiosrv, hInfo )
+   LOCAL nconn
+#if 0
    LOCAL h
+#endif
 
-   HB_SYMBOL_UNUSED( netiomgm )
+   IF hb_isHash( hInfo )
 
-   /* QUESTION: How to find out which connection has sent this RPC request? [vszakats] */
+#if 0
+      IF ! Empty( hInfo )
+         QQOut( "Management client information:", hb_eol() )
+         FOR EACH h IN hInfo
+            QQOut( h:__enumKey(), h, hb_eol() )
+         NEXT
+      ENDIF
+#endif
 
-   IF hb_isHash( hInfo ) .AND. ! Empty( hInfo )
-      QQOut( "Management client information:", hb_eol() )
-      FOR EACH h IN hInfo
-         QQOut( h:__enumKey(), h, hb_eol() )
+      hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+
+      FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+         IF nconn[ _NETIOSRV_CONN_nThreadID ] == hb_threadID()
+            nconn[ _NETIOSRV_CONN_hInfo ] := hInfo
+            EXIT
+         ENDIF
       NEXT
+
+      hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
    ENDIF
 
    RETURN NIL
@@ -398,6 +415,7 @@ STATIC FUNCTION netio_mgmt_rpc_conninfo( netiosrv )
       netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
 
       AAdd( aArray, {;
+         "nThreadID"      => nconn[ _NETIOSRV_CONN_nThreadID ],;
          "tStart"         => nconn[ _NETIOSRV_CONN_tStart ],;
          "cStatus"        => ConnStatusStr( nStatus ),;
          "nFilesCount"    => nFilesCount,;
@@ -486,8 +504,9 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "Options:"                                                                                    , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   OutStd(               "  -port=<port>          accept incoming connections on IP port <port>"                       , hb_eol() )
+   OutStd(               "  -port=<port>          accept incoming connections on IP port <port>. Default: 2941"        , hb_eol() )
    OutStd(               "  -iface=<ipaddr>       accept incoming connections on IPv4 interface <ipaddress>"           , hb_eol() )
+   OutStd(               "                        Default: all"                                                        , hb_eol() )
    OutStd(               "  -rootdir=<rootdir>    use <rootdir> as root directory for served file system"              , hb_eol() )
    OutStd(               "  -rpc                  accept RPC requests"                                                 , hb_eol() )
    OutStd(               "  -rpc=<file.hrb>       set RPC processor .hrb module to <file.hrb>"                         , hb_eol() )
@@ -497,8 +516,9 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   OutStd(               "  -adminport=<port>     accept management connections on IP port <port>"                     , hb_eol() )
+   OutStd(               "  -adminport=<port>     accept management connections on IP port <port>. Default: 2940"      , hb_eol() )
    OutStd(               "  -adminiface=<ipaddr>  accept manegement connections on IPv4 interface <ipaddress>"         , hb_eol() )
+   OutStd(               "                        Default: 127.0.0.1"                                                  , hb_eol() )
    OutStd(               "  -adminpass=<passwd>   set remote management password"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
