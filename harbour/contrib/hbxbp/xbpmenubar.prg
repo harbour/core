@@ -700,7 +700,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
    ::oWidget := QMenu()
 
-   IF hb_isObject( oParent )
+   IF hb_isObject( ::oParent )
       ::oParent:oWidget:addMenu( ::oWidget )
       ::oParent:addChild( self )
    ENDIF
