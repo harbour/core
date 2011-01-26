@@ -88,25 +88,6 @@ STATIC PROCEDURE HB_Usage()
 
 #endif
 
-STATIC FUNCTION hbnetiosrv_LoadCmds( pConnection, /* @ */ lQuit )
-   LOCAL hCmds := { ;
-      "?"          => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
-      "exit"       => { ""               , "Exit console."                         , {|| lQuit := .T. } },;
-      "clear"      => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection ) } },;
-      "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
-      "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
-      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
-      "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
-      "conn"       => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
-      "nologconn"  => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
-      "logconn"    => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
-      "stop"       => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
-      "quit"       => { ""               , "Stop server and exit console."         , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
-      "help"       => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } } }
-
-   RETURN hCmds
-
 STATIC PROCEDURE cmdHelp( hCommands )
    LOCAL aTexts := {}
    LOCAL n, c, m
@@ -203,7 +184,22 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
 
    aHistory   := { "quit" }
    nHistIndex := Len( aHistory ) + 1
-   hCommands  := hbnetiosrv_LoadCmds( @pConnection, @lQuit )
+
+   hCommands  := { ;
+      "?"          => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCommands ) } },;
+      "exit"       => { ""               , "Exit console."                         , {|| lQuit := .T. } },;
+      "clear"      => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
+      "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
+      "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
+      "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
+      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
+      "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
+      "conn"       => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
+      "nologconn"  => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
+      "logconn"    => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
+      "stop"       => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
+      "quit"       => { ""               , "Stop server and exit console."         , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
+      "help"       => { ""               , "Display this help."                    , {|| cmdHelp( hCommands ) } } }
 
    lQuit := .F.
 
@@ -221,7 +217,11 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
 
       cCommand := Space( 128 )
 
-      QQOut( "hbnetiosrv$ " )
+      IF Empty( pConnection )
+         QQOut( "hbnetiosrv$ " )
+      ELSE
+         QQOut( "hbnetiosrv://" + cIP + ":" + hb_ntos( nPort ) + "$ " )
+      ENDIF
       nSavedRow := Row()
 
       @ nSavedRow, Col() GET cCommand PICTURE "@S" + hb_ntos( MaxCol() - Col() + 1 ) COLOR hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD )
@@ -360,14 +360,12 @@ STATIC PROCEDURE IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 
 /* Commands */
 
-STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection )
+STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */ nPort )
    LOCAL aToken
-
-   LOCAL cIP := _NETIOMGM_IPV4_DEF
-   LOCAL nPort := _NETIOMGM_PORT_DEF
    LOCAL cPassword
 
    IF Empty( pConnection )
+
       aToken := hb_ATokens( cCommand, " " )
 
       IF Len( aToken ) >= 2
@@ -382,7 +380,7 @@ STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection )
          cPassword := GetPassword()
       ENDIF
 
-      QQOut( "Connecting to server management interface...", hb_eol() )
+      QQOut( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ), hb_eol() )
 
       pConnection := netio_getconnection( cIP, nPort,, cPassword )
       cPassword := NIL
