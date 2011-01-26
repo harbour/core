@@ -18,18 +18,18 @@
 
 #include "hbgtinfo.ch"
 
-STATIC FUNCTION hbnetiosrv_LoadCmds()
+STATIC FUNCTION hbnetiosrv_LoadCmds( pConnection )
    LOCAL hCmds := { ;
       "?"         => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCmds ) } },;
       "clear"     => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "sysinfo"   => { ""               , "Show system/build information."        , {|| cmdSysInfo() } },;
-      "show"      => { ""               , "Show list of connections."             , {|| cmdConnInfo() } },;
-      "noconn"    => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( .F. ) } },;
-      "conn"      => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( .T. ) } },;
-      "nologconn" => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( .F. ) } },;
-      "logconn"   => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( .T. ) } },;
-      "stop"      => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( cCommand ) } },;
-      "quit"      => { ""               , "Stop server and exit."                 , {|| netio_funcexec( "netio_shutdown" ) } },;
+      "sysinfo"   => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
+      "show"      => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
+      "noconn"    => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
+      "conn"      => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
+      "nologconn" => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
+      "logconn"   => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
+      "stop"      => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
+      "quit"      => { ""               , "Stop server and exit."                 , {|| netio_funcexec( pConnection, "netio_shutdown" ) } },;
       "help"      => { ""               , "Display this help."                    , {|| cmdHelp( hCmds ) } } }
 
    RETURN hCmds
@@ -75,7 +75,20 @@ STATIC PROCEDURE cmdHelp( hCommands )
 
    RETURN
 
-PROCEDURE netio_cmdUI( cIP, nPort, cPassword )
+STATIC FUNCTION netiosrv_clientinfo()
+   LOCAL hInfo := { => }
+
+   hb_hKeepOrder( hInfo, .T. )
+
+   hInfo[ "OS()"          ] := OS()
+   hInfo[ "Version()"     ] := Version()
+   hInfo[ "hb_Compiler()" ] := hb_Compiler()
+   hInfo[ "NetName()"     ] := NetName()
+   hInfo[ "hb_UserName()" ] := hb_UserName()
+
+   RETURN hInfo
+
+PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
    LOCAL GetList := {}
    LOCAL hCommands
    LOCAL nSavedRow
@@ -91,15 +104,17 @@ PROCEDURE netio_cmdUI( cIP, nPort, cPassword )
 
    LOCAL aHistory, nHistIndex
 
-   LOCAL lOk
+   LOCAL pConnection
 
    /* connect to the server */
    QQOut( "Connecting to server management interface...", hb_eol() )
 
-   lOk := netio_connect( cIP, nPort,, cPassword )
+   pConnection := netio_getconnection( cIP, nPort,, cPassword )
    cPassword := NIL
 
-   IF lOk
+   IF ! Empty( pConnection )
+
+      netio_funcexec( pConnection, "netio_sendclientinfo", netiosrv_clientinfo() )
 
       QQOut( "Connected.", hb_eol() )
       QQOut( hb_eol() )
@@ -107,7 +122,7 @@ PROCEDURE netio_cmdUI( cIP, nPort, cPassword )
 
       aHistory   := { "quit" }
       nHistIndex := Len( aHistory ) + 1
-      hCommands  := hbnetiosrv_LoadCmds()
+      hCommands  := hbnetiosrv_LoadCmds( pConnection )
 
       /* Command prompt */
       DO WHILE .T.
@@ -204,28 +219,28 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
 
 /* Commands */
 
-STATIC PROCEDURE cmdSysInfo()
+STATIC PROCEDURE cmdSysInfo( pConnection )
    LOCAL cLine
 
-   FOR EACH cLine IN netio_funcexec( "netio_sysinfo" )
+   FOR EACH cLine IN netio_funcexec( pConnection , "netio_sysinfo" )
       QQOut( cLine, hb_eol() )
    NEXT
 
    RETURN
 
-STATIC PROCEDURE cmdConnStop( cCommand )
+STATIC PROCEDURE cmdConnStop( pConnection, cCommand )
    LOCAL aToken := hb_ATokens( cCommand, " " )
 
    IF Len( aToken ) > 1
-      netio_funcexec( "netio_stop", aToken[ 2 ] )
+      netio_funcexec( pConnection, "netio_stop", aToken[ 2 ] )
    ELSE
       QQOut( "Error: Invalid syntax.", hb_eol() )
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE cmdConnInfo()
-   LOCAL aArray := netio_funcexec( "netio_conninfo" )
+STATIC PROCEDURE cmdConnInfo( pConnection )
+   LOCAL aArray := netio_funcexec( pConnection, "netio_conninfo" )
    LOCAL hConn
 
    QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
@@ -242,14 +257,14 @@ STATIC PROCEDURE cmdConnInfo()
 
    RETURN
 
-PROCEDURE cmdConnEnable( lValue )
+PROCEDURE cmdConnEnable( pConnection, lValue )
 
-   netio_funcexec( "netio_conn", lValue )
+   netio_funcexec( pConnection, "netio_conn", lValue )
 
    RETURN
 
-PROCEDURE cmdConnLogEnable( lValue )
+PROCEDURE cmdConnLogEnable( pConnection, lValue )
 
-   netio_funcexec( "netio_logconn", lValue )
+   netio_funcexec( pConnection, "netio_logconn", lValue )
 
    RETURN

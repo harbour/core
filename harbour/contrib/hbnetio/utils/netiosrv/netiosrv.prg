@@ -55,7 +55,8 @@ REQUEST HB_MT
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_tStart       2
-#define _NETIOSRV_CONN_MAX_         2
+#define _NETIOSRV_CONN_hInfo        3
+#define _NETIOSRV_CONN_MAX_         3
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
@@ -186,14 +187,15 @@ PROCEDURE Main( ... )
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
-                            { "netio_sysinfo"   => {| ... | netio_mgmt_rpc_sysinfo() } ,;
-                              "netio_shutdown"  => {| ... | netio_mgmt_rpc_shutdown( netiosrv ) } ,;
-                              "netio_conninfo"  => {| ... | netio_mgmt_rpc_conninfo( netiosrv ) } ,;
-                              "netio_stop"      => {| ... | netio_mgmt_rpc_stop( netiosrv, ... ) } ,;
-                              "netio_conn"      => {| ... | netio_mgmt_rpc_conn( netiosrv, .T. ) } ,;
-                              "netio_noconn"    => {| ... | netio_mgmt_rpc_conn( netiosrv, .F. ) } ,;
-                              "netio_logconn"   => {| ... | netio_mgmt_rpc_logconn( netiosrv, .T. ) } ,;
-                              "netio_nologconn" => {| ... | netio_mgmt_rpc_logconn( netiosrv, .F. ) } },;
+                            { "netio_sendclientinfo" => {| ... | netio_mgmt_rpc_clientinfo( netiomgm, ... ) } ,;
+                              "netio_sysinfo"        => {| ... | netio_mgmt_rpc_sysinfo() } ,;
+                              "netio_shutdown"       => {| ... | netio_mgmt_rpc_shutdown( netiosrv ) } ,;
+                              "netio_conninfo"       => {| ... | netio_mgmt_rpc_conninfo( netiosrv ) } ,;
+                              "netio_stop"           => {| ... | netio_mgmt_rpc_stop( netiosrv, ... ) } ,;
+                              "netio_conn"           => {| ... | netio_mgmt_rpc_conn( netiosrv, .T. ) } ,;
+                              "netio_noconn"         => {| ... | netio_mgmt_rpc_conn( netiosrv, .F. ) } ,;
+                              "netio_logconn"        => {| ... | netio_mgmt_rpc_logconn( netiosrv, .T. ) } ,;
+                              "netio_nologconn"      => {| ... | netio_mgmt_rpc_logconn( netiosrv, .F. ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
@@ -203,7 +205,7 @@ PROCEDURE Main( ... )
             OutStd( "Warning: Cannot start server management." + hb_eol() )
          ELSE
             IF lUI
-               hb_threadDetach( hb_threadStart( {|| netio_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
+               hb_threadDetach( hb_threadStart( {|| netiosrv_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
             ENDIF
          ENDIF
       ENDIF
@@ -292,6 +294,22 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
 /* RPC management interface */
 
+STATIC FUNCTION netio_mgmt_rpc_clientinfo( netiomgm, hInfo )
+   LOCAL h
+
+   HB_SYMBOL_UNUSED( netiomgm )
+
+   /* QUESTION: How to find out which connection has sent this RPC request? [vszakats] */
+
+   IF hb_isHash( hInfo ) .AND. ! Empty( hInfo )
+      QQOut( "Management client information:", hb_eol() )
+      FOR EACH h IN hInfo
+         QQOut( h:__enumKey(), h, hb_eol() )
+      NEXT
+   ENDIF
+
+   RETURN NIL
+
 STATIC FUNCTION netio_mgmt_rpc_sysinfo()
    RETURN {;
       "OS: "          + OS()                   ,;
@@ -300,7 +318,7 @@ STATIC FUNCTION netio_mgmt_rpc_sysinfo()
       "Memory (KB): " + hb_ntos( Memory( 0 ) ) }
 
 STATIC FUNCTION netio_mgmt_rpc_logconn( netiosrv, lValue )
-   LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
+   LOCAL lOldValue := netiosrv[ _NETIOSRV_lShowConn ]
 
    IF hb_isLogical( lValue )
       netiosrv[ _NETIOSRV_lShowConn ] := lValue
