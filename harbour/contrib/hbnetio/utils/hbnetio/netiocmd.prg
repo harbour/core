@@ -36,11 +36,6 @@ PROCEDURE Main( ... )
    LOCAL nPort := _NETIOMGM_PORT_DEF
    LOCAL cPassword := ""
 
-   SET DATE ANSI
-   SET CENTURY ON
-   SET CONFIRM ON
-   SET SCOREBOARD OFF
-
    HB_Logo()
 
    FOR EACH cParam IN { ... }

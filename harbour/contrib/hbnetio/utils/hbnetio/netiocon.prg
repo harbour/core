@@ -38,6 +38,13 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    LOCAL pConnection
 
+   SET DATE ANSI
+   SET CENTURY ON
+   SET CONFIRM ON
+   SET SCOREBOARD OFF
+
+   SetCancel( .F. )
+
    IF ! Empty( cPassword )
       pConnection := ConnectLow( cIP, nPort, cPassword )
       QQOut( hb_eol() )

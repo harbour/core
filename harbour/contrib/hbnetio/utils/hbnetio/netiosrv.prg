@@ -170,8 +170,6 @@ PROCEDURE Main( ... )
       ENDCASE
    NEXT
 
-   SetCancel( .F. )
-
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
       netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
                       netiosrv[ _NETIOSRV_cIFAddr ],;
@@ -188,8 +186,10 @@ PROCEDURE Main( ... )
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
       OutStd( "Cannot start server." + hb_eol() )
    ELSE
+      OutStd( "Ready to accept connections.", hb_eol() )
 
       IF ! Empty( cPasswordManagement )
+
          netiomgm[ _NETIOSRV_pListenSocket ] := ;
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
@@ -223,9 +223,11 @@ PROCEDURE Main( ... )
 
       ShowConfig( netiosrv, netiomgm )
 
-      hb_idleSleep( 2 )
-
-      netiomgm[ _NETIOSRV_lShowConn ] := .T.
+      /* Wait until embedded management console connects */
+      IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
+         hb_idleSleep( 2 )
+         netiomgm[ _NETIOSRV_lShowConn ] := .T.
+      ENDIF
 
       /* Command prompt */
       DO WHILE ! netiosrv[ _NETIOSRV_lQuit ]
