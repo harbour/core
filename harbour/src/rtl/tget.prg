@@ -1063,14 +1063,14 @@ METHOD picture( cPicture ) CLASS GET
 
                   ::cPicMask := Set( _SET_DATEFORMAT )
                   FOR EACH cChar IN "yYmMdD"
-                     ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+                     ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
                   NEXT
 
                ELSEIF "T" $ ::cPicFunc
 
                   ::cPicMask := Set( _SET_TIMEFORMAT )
                   FOR EACH cChar IN "yYmMdDhHsSfF"
-                     ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+                     ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
                   NEXT
 
                ENDIF
@@ -1118,7 +1118,7 @@ METHOD picture( cPicture ) CLASS GET
 
             ::cPicMask := Set( _SET_DATEFORMAT )
             FOR EACH cChar IN "yYmMdD"
-               ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+               ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
             NEXT
             EXIT
 
@@ -1126,7 +1126,7 @@ METHOD picture( cPicture ) CLASS GET
 
             ::cPicMask := Set( _SET_TIMEFORMAT )
             FOR EACH cChar IN "yYmMdDhHsSfF"
-               ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+               ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
             NEXT
             EXIT
 
