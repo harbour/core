@@ -61,6 +61,7 @@ HB_EXTERN_BEGIN
 
 typedef void * PHB_PP_STATE;
 typedef void * PHB_PP_TOKEN;
+typedef void * PHB_PP_OPEN_FUNC;
 
 struct _DEFINES;
 typedef struct _DEFINES

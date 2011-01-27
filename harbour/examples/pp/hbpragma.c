@@ -195,7 +195,7 @@ HB_BOOL hb_pp_ParsePragma( char * szLine )
       else if( hb_strnicmp( szLine, "BEGINDUMP", PRAGMAS_LEN ) == 0 )
       {
          char sBuffer[ HB_PP_STR_SIZE ], *pBuffer, sDirective[9] ;
-         int iSize;
+         int iSize, iOldSize;
          PINLINE pInline;
 
          if( hb_comp_bPPO )
@@ -246,6 +246,7 @@ HB_BOOL hb_pp_ParsePragma( char * szLine )
             }
          }
 
+         iOldSize = 0;
          iSize = strlen( (char*) sBuffer );
          if( pInline->pCode == NULL )
          {
@@ -253,10 +254,10 @@ HB_BOOL hb_pp_ParsePragma( char * szLine )
          }
          else
          {
-            pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + iSize + 1 );
+            iOldSize = strlen( (char*)pInline->pCode );
+            pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, iOldSize + iSize + 1 );
          }
-         memcpy( pInline->pCode + pInline->lPCodeSize, sBuffer, iSize + 1 );
-         pInline->lPCodeSize += iSize;
+         memcpy( pInline->pCode + iOldSize, sBuffer, iSize + 1 );
 
          goto DigestInline;
       }
