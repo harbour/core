@@ -98,6 +98,8 @@ ANNOUNCE ARRAYRDD
 #define RECDATA_DELETED      1
 #define RECDATA_SIZEOF       1
 
+static s_nRddID := -1
+
 /*
  * non work area methods receive RDD ID as first parameter
  * Methods INIT and EXIT does not have to execute SUPER methods - these is
@@ -944,6 +946,8 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSu
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
+   s_nRddID := nRddID
+
    aMyFunc[ UR_INIT         ] := ( @AR_INIT()         )
    aMyFunc[ UR_NEW          ] := ( @AR_NEW()          )
    aMyFunc[ UR_FLUSH        ] := ( @AR_DUMMY()        )
@@ -988,17 +992,11 @@ INIT PROCEDURE ARRAYRDD_INIT()
 FUNCTION hb_EraseArrayRdd( cFullName )
    LOCAL nReturn := HB_FAILURE
    LOCAL aDBFData, oError
-   LOCAL nRDD, aRDDList
    LOCAL hRDDData
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "ARRAYRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in AR_INIT() ? - TODO
-
-      hRDDData := USRRDD_RDDDATA( nRDD )
+      hRDDData := USRRDD_RDDDATA( s_nRddID )
 
       IF hRDDData != NIL
 
@@ -1080,17 +1078,11 @@ FUNCTION hb_EraseArrayRdd( cFullName )
 FUNCTION hb_FileArrayRdd( cFullName )
    LOCAL nReturn := HB_FAILURE
    LOCAL oError
-   LOCAL nRDD, aRDDList
    LOCAL hRDDData
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "ARRAYRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in AR_INIT() ? - TODO
-
-      hRDDData := USRRDD_RDDDATA( nRDD )
+      hRDDData := USRRDD_RDDDATA( s_nRddID )
 
       IF hRDDData != NIL
 

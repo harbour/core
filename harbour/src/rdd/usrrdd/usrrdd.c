@@ -2928,13 +2928,24 @@ HB_FUNC( USRRDD_ID )
 {
    AREAP pArea;
 
-   if( HB_ISNUM( 1 ) )
-      pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
-   else
-      pArea = ( AREAP ) hb_parptr( 1 );
+   if( HB_ISCHAR( 1 ) )
+   {
+      HB_USHORT uiRddId;
+      LPRDDNODE pRddNode = hb_rddFindNode( hb_parc( 1 ), &uiRddId );
 
-   if( pArea && pArea->rddID < s_uiUsrNodes && SELF_USRNODE( pArea ) )
-      hb_retni( pArea->rddID );
+      if( pRddNode && uiRddId < s_uiUsrNodes && s_pUsrRddNodes[ uiRddId ] )
+         hb_retni( uiRddId );
+   }
+   else
+   {
+      if( HB_ISNUM( 1 ) )
+         pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
+      else
+         pArea = ( AREAP ) hb_parptr( 1 );
+
+      if( pArea && pArea->rddID < s_uiUsrNodes && SELF_USRNODE( pArea ) )
+         hb_retni( pArea->rddID );
+   }
 }
 
 HB_FUNC( USRRDD_AREADATA )

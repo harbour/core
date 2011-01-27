@@ -372,13 +372,14 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    if( szDriver && *szDriver )
    {
       char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
-      HB_USHORT uiRddID;
+      LPRDDNODE pRddNode;
 
       hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
-      if( !hb_rddFindNode( szNewDriver, &uiRddID ) )
+      pRddNode = hb_rddFindNode( szNewDriver, NULL );
+      if( !pRddNode )
          return NULL;
 
-      pRddInfo->szDefaultRDD = hb_rddGetNode( uiRddID )->szName;
+      pRddInfo->szDefaultRDD = pRddNode->szName;
    }
    else if( !pRddInfo->szDefaultRDD && hb_rddGetNode( 0 ) )
    {

@@ -75,6 +75,8 @@
 ANNOUNCE LOGRDD
 DYNAMIC  HB_LOGRDDINHERIT  /* To be defined at user level */
 
+STATIC s_nRddID := -1
+
 STATIC FUNCTION LOGRDD_INIT( nRDD )
    LOCAL lActive, cFileName, cTag, cRDDName
 
@@ -186,6 +188,8 @@ FUNCTION LOGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSupe
    LOCAL cSuperRDD := hb_LogRddInherit() /* We are inheriting from a User Defined RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
+   s_nRddID := nRddID
+
    aMyFunc[ UR_INIT         ] := ( @LOGRDD_INIT()         )
    aMyFunc[ UR_EXIT         ] := ( @LOGRDD_EXIT()         )
    aMyFunc[ UR_CREATE       ] := ( @LOGRDD_CREATE()       )
@@ -210,18 +214,12 @@ INIT PROCEDURE _LOGRDD_INIT()
 /* -------------------------------------------------- */
 
 FUNCTION hb_LogRddLogFileName( cFileName )
-   LOCAL nRDD, aRDDList
    LOCAL aRDDData
    LOCAL cOldFileName
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "LOGRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
-
-      aRDDData := USRRDD_RDDDATA( nRDD )
+      aRDDData := USRRDD_RDDDATA( s_nRddID )
 
       cOldFileName := aRDDData[ ARRAY_FILENAME ]
 
@@ -233,18 +231,12 @@ FUNCTION hb_LogRddLogFileName( cFileName )
    RETURN cOldFileName
 
 FUNCTION hb_LogRddTag( cTag )
-   LOCAL nRDD, aRDDList
    LOCAL aRDDData
    LOCAL cOldTag
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "LOGRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
-
-      aRDDData := USRRDD_RDDDATA( nRDD )
+      aRDDData := USRRDD_RDDDATA( s_nRddID )
 
       cOldTag := aRDDData[ ARRAY_TAG ]
 
@@ -256,18 +248,12 @@ FUNCTION hb_LogRddTag( cTag )
    RETURN cOldTag
 
 FUNCTION hb_LogRddActive( lActive )
-   LOCAL nRDD, aRDDList
    LOCAL aRDDData
    LOCAL lOldActive
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "LOGRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
-
-      aRDDData := USRRDD_RDDDATA( nRDD )
+      aRDDData := USRRDD_RDDDATA( s_nRddID )
 
       lOldActive := aRDDData[ ARRAY_ACTIVE ]
 
@@ -279,18 +265,12 @@ FUNCTION hb_LogRddActive( lActive )
    RETURN lOldActive
 
 FUNCTION hb_LogRddMsgLogBlock( bMsgLogBlock )
-   LOCAL nRDD, aRDDList
    LOCAL aRDDData
    LOCAL bOldMsgLogBlock
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "LOGRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
-
-      aRDDData := USRRDD_RDDDATA( nRDD )
+      aRDDData := USRRDD_RDDDATA( s_nRddID )
 
       bOldMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
@@ -302,18 +282,12 @@ FUNCTION hb_LogRddMsgLogBlock( bMsgLogBlock )
    RETURN bOldMsgLogBlock
 
 FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
-   LOCAL nRDD, aRDDList
    LOCAL aRDDData
    LOCAL bOldUserLogBlock
 
-   aRDDList := RDDLIST( RDT_FULL )
-   nRDD     := AScan( aRDDList, "LOGRDD" )
+   IF s_nRddID >= 0
 
-   IF nRDD > 0
-
-      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
-
-      aRDDData := USRRDD_RDDDATA( nRDD )
+      aRDDData := USRRDD_RDDDATA( s_nRddID )
 
       bOldUserLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
