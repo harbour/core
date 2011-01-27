@@ -216,7 +216,7 @@ PROCEDURE Main( ... )
             OutStd( "Warning: Cannot start server management." + hb_eol() )
          ELSE
             IF lUI
-               hb_threadDetach( hb_threadStart( {|| netiosrv_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
+               hb_threadDetach( hb_threadStart( {|| hbnetiocon_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
             ENDIF
          ENDIF
       ENDIF

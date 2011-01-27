@@ -9,10 +9,8 @@
 
 -o${hb_name}
 
--D_CONSOLEUI_EMBEDDED
-
 netiosrv.prg
-netiocui.prg
+netiocon.prg
 
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase

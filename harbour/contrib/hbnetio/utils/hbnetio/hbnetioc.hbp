@@ -8,4 +8,5 @@
 
 -o${hb_name}
 
-netiocui.prg
+netiocmd.prg
+netiocon.prg
