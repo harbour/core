@@ -163,20 +163,7 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
    LOCAL pConnection
 
    IF ! Empty( cPassword )
-
-      /* connect to the server */
-      QQOut( "Connecting to server management interface...", hb_eol() )
-
-      pConnection := netio_getconnection( cIP, nPort,, cPassword )
-      cPassword := NIL
-
-      IF Empty( pConnection )
-         QQOut( "Error connecting server.", hb_eol() )
-      ELSE
-         netio_funcexec( pConnection, "hbnetiomgm_sendclientinfo", netiosrv_clientinfo() )
-         QQOut( "Connected.", hb_eol() )
-      ENDIF
-
+      pConnection := ConnectLow( cIP, nPort, cPassword )
       QQOut( hb_eol() )
    ENDIF
 
@@ -192,12 +179,14 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
       "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
       "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
       "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
-      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection ) } },;
+      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection, .F. ) } },;
+      "showadmin"  => { ""               , "Show list of management connections."  , {|| cmdConnInfo( pConnection, .T. ) } },;
       "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
       "conn"       => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
       "nologconn"  => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
       "logconn"    => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
       "stop"       => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
+      "clientinfo" => { "[<ip:port>"     , "Show client details."                  , {| cCommand | cmdConnClientInfo( pConnection, cCommand ) } },;
       "quit"       => { ""               , "Stop server and exit console."         , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
       "help"       => { ""               , "Display this help."                    , {|| cmdHelp( hCommands ) } } }
 
@@ -292,6 +281,27 @@ PROCEDURE netiosrv_cmdUI( cIP, nPort, cPassword )
 
    RETURN
 
+/* connect to the server */
+STATIC FUNCTION ConnectLow( cIP, nPort, cPassword )
+   LOCAL pConnection
+
+   QQOut( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ), hb_eol() )
+
+   pConnection := netio_getconnection( cIP, nPort,, cPassword )
+   cPassword := NIL
+
+   IF ! Empty( pConnection )
+
+      netio_funcexec( pConnection, "hbnetiomgm_setclientinfo", netiosrv_clientinfo() )
+      netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", "netiocui" )
+
+      QQOut( "Connected.", hb_eol() )
+   ELSE
+      QQOut( "Error connecting server.", hb_eol() )
+   ENDIF
+
+   RETURN pConnection
+
 STATIC FUNCTION GetPassword()
    LOCAL GetList := {}
    LOCAL cPassword := Space( 128 )
@@ -358,6 +368,61 @@ STATIC PROCEDURE IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 
    RETURN
 
+STATIC FUNCTION XToStrX( xValue )
+   LOCAL cType := ValType( xValue )
+
+   LOCAL tmp
+   LOCAL cRetVal
+
+   SWITCH cType
+   CASE "C"
+
+      xValue := StrTran( xValue, Chr(  0 ), '" + Chr(  0 ) + "' )
+      xValue := StrTran( xValue, Chr(  9 ), '" + Chr(  9 ) + "' )
+      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
+      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
+      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
+
+      RETURN xValue
+
+   CASE "N" ; RETURN hb_ntos( xValue )
+   CASE "D" ; RETURN DToC( xValue )
+   CASE "T" ; RETURN hb_TToC( xValue )
+   CASE "L" ; RETURN iif( xValue, ".T.", ".F." )
+   CASE "O" ; RETURN xValue:className() + " Object"
+   CASE "U" ; RETURN "NIL"
+   CASE "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE "A"
+
+      cRetVal := '{ '
+
+      FOR EACH tmp IN xValue
+         cRetVal += XToStrX( tmp )
+         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+            cRetVal += ", "
+         ENDIF
+      NEXT
+
+      RETURN cRetVal + ' }'
+
+   CASE "H"
+
+      cRetVal := '{ '
+
+      FOR EACH tmp IN xValue
+         cRetVal += tmp:__enumKey() + " => " + XToStrX( tmp )
+         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+            cRetVal += ", "
+         ENDIF
+      NEXT
+
+      RETURN cRetVal + ' }'
+
+   CASE "M" ; RETURN 'M:' + xValue
+   ENDSWITCH
+
+   RETURN ""
+
 /* Commands */
 
 STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */ nPort )
@@ -380,19 +445,7 @@ STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */
          cPassword := GetPassword()
       ENDIF
 
-      QQOut( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ), hb_eol() )
-
-      pConnection := netio_getconnection( cIP, nPort,, cPassword )
-      cPassword := NIL
-
-      IF ! Empty( pConnection )
-
-         netio_funcexec( pConnection, "hbnetiomgm_sendclientinfo", netiosrv_clientinfo() )
-
-         QQOut( "Connected.", hb_eol() )
-      ELSE
-         QQOut( "Error connecting server.", hb_eol() )
-      ENDIF
+      pConnection := ConnectLow( cIP, nPort, cPassword )
    ELSE
       QQOut( "Already connected. Disconnect first.", hb_eol() )
    ENDIF
@@ -438,14 +491,36 @@ STATIC PROCEDURE cmdConnStop( pConnection, cCommand )
 
    RETURN
 
-STATIC PROCEDURE cmdConnInfo( pConnection )
+STATIC PROCEDURE cmdConnClientInfo( pConnection, cCommand )
+   LOCAL aToken
+   LOCAL xCargo
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      aToken := hb_ATokens( cCommand, " " )
+      IF Len( aToken ) > 1
+         xCargo := netio_funcexec( pConnection, "hbnetiomgm_clientinfo", aToken[ 2 ] )
+         IF xCargo == NIL
+            QQOut( "No information", hb_eol() )
+         ELSE
+            QQOut( XToStrX( xCargo ), hb_eol() )
+         ENDIF
+      ELSE
+         QQOut( "Error: Invalid syntax.", hb_eol() )
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnInfo( pConnection, lManagement )
    LOCAL aArray
    LOCAL hConn
 
    IF Empty( pConnection )
       QQOut( "Not connected.", hb_eol() )
    ELSE
-      aArray := netio_funcexec( pConnection, "hbnetiomgm_conninfo" )
+      aArray := netio_funcexec( pConnection, iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
 
       QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
 
@@ -456,7 +531,8 @@ STATIC PROCEDURE cmdConnInfo( pConnection )
                 "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
                 "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
                 "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
-                hConn[ "cAddressPeer" ], hb_eol() )
+                hConn[ "cAddressPeer" ] + " " +;
+                iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ), hb_eol() )
       NEXT
    ENDIF
 

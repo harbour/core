@@ -195,15 +195,18 @@ PROCEDURE Main( ... )
                             netiomgm[ _NETIOSRV_cIFAddr ],;
                             NIL,;
                             { "hbnetiomgm_ping"           => {| ... | .T. } ,;
-                              "hbnetiomgm_sendclientinfo" => {| ... | netiomgm_rpc_clientinfo( netiomgm, ... ) } ,;
+                              "hbnetiomgm_setclientinfo"  => {| ... | netiomgm_rpc_setclientinfo( netiomgm, ... ) } ,;
                               "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
+                              "hbnetiomgm_clientinfo"     => {| ... | netiomgm_rpc_clientinfo( netiosrv, netiomgm, ... ) } ,;
                               "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv ) } ,;
                               "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
+                              "hbnetiomgm_adminfo"        => {| ... | netiomgm_rpc_conninfo( netiomgm ) } ,;
                               "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
                               "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
                               "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
                               "hbnetiomgm_logconn"        => {| ... | netiomgm_rpc_logconn( netiosrv, .T. ) } ,;
-                              "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) } },;
+                              "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) } ,;
+                              "hbnetiomgm_cargo"          => {| ... | netiomgm_rpc_cargo( ... ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
@@ -303,22 +306,33 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
 /* RPC management interface */
 
-STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, hInfo )
+STATIC FUNCTION netiomgm_rpc_cargo( pConnSock, nStreamID, xCargo )
+   STATIC s_hCargo := { => }
+
+   LOCAL index := hb_valToStr( pConnSock )
+
+   HB_SYMBOL_UNUSED( nStreamID )
+
+   SWITCH PCount()
+   CASE 1
+      RETURN iif( index $ s_hCargo, s_hCargo[ index ], NIL )
+   CASE 3
+      IF xCargo == NIL
+         IF index $ s_hCargo
+            hb_HDel( s_hCargo, index )
+         ENDIF
+      ELSE
+         s_hCargo[ index ] := xCargo
+      ENDIF
+      RETURN -1
+   ENDSWITCH
+
+   RETURN NIL
+
+STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
    LOCAL nconn
-#if 0
-   LOCAL h
-#endif
 
    IF hb_isHash( hInfo )
-
-#if 0
-      IF ! Empty( hInfo )
-         QQOut( "Management client information:", hb_eol() )
-         FOR EACH h IN hInfo
-            QQOut( h:__enumKey(), h, hb_eol() )
-         NEXT
-      ENDIF
-#endif
 
       hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
@@ -387,6 +401,54 @@ STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
 
    RETURN .F.
 
+STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
+   LOCAL nconn
+   LOCAL aAddressPeer
+   LOCAL xCargo := NIL
+   LOCAL lDone
+
+   IF hb_isString( cIPPort )
+
+      cIPPort := Lower( cIPPort )
+
+      lDone := .F.
+
+      IF ! lDone
+         hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
+         FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
+
+            aAddressPeer := NIL
+            netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+
+            IF cIPPort == AddrToIPPort( aAddressPeer )
+//              xCargo := netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] )
+                xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
+                lDone := .T.
+                EXIT
+            ENDIF
+         NEXT
+         hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
+      ENDIF
+
+      IF ! lDone
+         hb_mutexLock( netiomgm[ _NETIOSRV_mtxConnection ] )
+         FOR EACH nconn IN netiomgm[ _NETIOSRV_hConnection ]
+
+            aAddressPeer := NIL
+            netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+
+            IF cIPPort == AddrToIPPort( aAddressPeer )
+//              xCargo := netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] )
+                xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
+                EXIT
+            ENDIF
+         NEXT
+         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxConnection ] )
+      ENDIF
+   ENDIF
+
+   RETURN xCargo
+
 STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv )
 
    QQOut( "Shutdown initiated...", hb_eol() )
@@ -428,7 +490,8 @@ STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
          "nFilesCount"    => nFilesCount,;
          "nBytesSent"     => nBytesSent,;
          "nBytesReceived" => nBytesReceived,;
-         "cAddressPeer"   => AddrToIPPort( aAddressPeer ) } )
+         "cAddressPeer"   => AddrToIPPort( aAddressPeer ),;
+         "xCargo"         => netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] ) } )
    NEXT
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
