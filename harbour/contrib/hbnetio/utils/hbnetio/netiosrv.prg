@@ -197,6 +197,7 @@ PROCEDURE Main( ... )
                             { "hbnetiomgm_ping"           => {| ... | .T. } ,;
                               "hbnetiomgm_setclientinfo"  => {| ... | netiomgm_rpc_setclientinfo( netiomgm, ... ) } ,;
                               "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
+                              "hbnetiomgm_serverconfig"   => {| ... | netiomgm_rpc_serverconfig( netiosrv, netiomgm ) } ,;
                               "hbnetiomgm_clientinfo"     => {| ... | netiomgm_rpc_clientinfo( netiosrv, netiomgm, ... ) } ,;
                               "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv ) } ,;
                               "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
@@ -247,6 +248,20 @@ PROCEDURE Main( ... )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
+   LOCAL aArray := {;
+      "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ),;
+      "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ],;
+      "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ),;
+      "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ),;
+      "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) }
+
+   IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
+      AAdd( aArray, "Management iface: "  + netiomgm[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiomgm[ _NETIOSRV_nPort ] ) )
+   ENDIF
+
+   RETURN aArray
 
 /* Server connect callback */
 
@@ -356,6 +371,9 @@ STATIC FUNCTION netiomgm_rpc_sysinfo()
       "Harbour: "     + Version()              ,;
       "C Compiler: "  + hb_Compiler()          ,;
       "Memory (KB): " + hb_ntos( Memory( 0 ) ) }
+
+STATIC FUNCTION netiomgm_rpc_serverconfig( netiosrv, netiomgm )
+   RETURN netiosrv_config( netiosrv, netiomgm )
 
 STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lShowConn ]
@@ -548,14 +566,7 @@ STATIC FUNCTION FileSig( cFile )
 
 STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
-   QQOut( "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ), hb_eol() )
-   QQOut( "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ], hb_eol() )
-   QQOut( "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ), hb_eol() )
-   QQOut( "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ), hb_eol() )
-   QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_eol() )
-   IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
-      QQOut( "Management iface: "  + netiomgm[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiomgm[ _NETIOSRV_nPort ] ), hb_eol() )
-   ENDIF
+   AEval( netiosrv_config( netiosrv, netiomgm ), {| tmp | QQOut( tmp, hb_eol() ) } )
 
    RETURN
 

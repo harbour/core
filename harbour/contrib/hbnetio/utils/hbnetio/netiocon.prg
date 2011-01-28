@@ -62,6 +62,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
       "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
       "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
+      "showconf"   => { ""               , "Show server configuration."            , {|| cmdServerConfig( pConnection ) } },;
       "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection, .F. ) } },;
       "showadmin"  => { ""               , "Show list of management connections."  , {|| cmdConnInfo( pConnection, .T. ) } },;
       "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
@@ -408,6 +409,19 @@ STATIC PROCEDURE cmdSysInfo( pConnection )
       QQOut( "Not connected.", hb_eol() )
    ELSE
       FOR EACH cLine IN netio_funcexec( pConnection, "hbnetiomgm_sysinfo" )
+         QQOut( cLine, hb_eol() )
+      NEXT
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdServerConfig( pConnection )
+   LOCAL cLine
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      FOR EACH cLine IN netio_funcexec( pConnection, "hbnetiomgm_serverconfig" )
          QQOut( cLine, hb_eol() )
       NEXT
    ENDIF
