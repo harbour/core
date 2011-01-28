@@ -446,7 +446,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_lPause            130
 #define _HBMK_nLevel            131
 
-#define _HBMK_MAX_              131
+#define _HBMK_cHBX              132
+
+#define _HBMK_MAX_              132
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -845,6 +847,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cOpt_Res
    LOCAL cOpt_Lib
    LOCAL cOpt_Dyn
+   LOCAL cOpt_LibHBX
    LOCAL cBin_CompPRG
    LOCAL cBin_CompC
    LOCAL cBin_CompCPP
@@ -853,6 +856,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cBin_Res
    LOCAL cBin_Lib
    LOCAL cBin_Dyn
+   LOCAL cBin_LibHBX
+   LOCAL cLibHBX_Regex
    LOCAL bBlk_ImpLib
    LOCAL cPath_CompC
    LOCAL tmp, tmp1, tmp2, tmp3, array
@@ -1933,6 +1938,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_aLNG ] := {}
    hbmk[ _HBMK_aINSTPATH ] := {}
    hbmk[ _HBMK_lUNICODE ] := ( hbmk[ _HBMK_cPLAT ] == "wce" )
+   hbmk[ _HBMK_cHBX ] := NIL
 
    aParams := {}
 
@@ -2282,6 +2288,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          hbmk[ _HBMK_cHBL ] := ""
          hbmk[ _HBMK_cHBLDir ] := ""
+
+      CASE Left( cParamL, 5 ) == "-hbx="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, 6 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            hbmk[ _HBMK_cHBX ] := PathMakeAbsolute( PathSepToSelf( cParam ), FNameDirGet( aParam[ _PAR_cFileName ] ) )
+         ENDIF
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -3091,6 +3104,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       #define _HBLIB_FULLPATH( cName ) ( DirAddPathSep( l_cHB_INSTALL_LIB ) + hb_ps() + cLibLibPrefix + cName + cLibLibExt )
 
+      cLibHBX_Regex := "[[:space:]]_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+
       DO CASE
       /* GCC family */
       CASE ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -3224,6 +3239,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             cLibLibExt := ".a"
          ENDIF
+         cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm"
+         cOpt_LibHBX := "-g" + iif( hbmk[ _HBMK_cPLAT ] == "darwin", "", " --defined-only -C" ) + " {LI}"
          IF l_lLIBGROUPING .AND. ;
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
@@ -3464,6 +3481,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
             cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
          ENDIF
+         cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm" + hbmk[ _HBMK_cCCEXT ]
+         cOpt_LibHBX := "-g --defined-only -C {LI}"
          IF !( hbmk[ _HBMK_cPLAT ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-mwindows" )
@@ -3687,6 +3706,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cLibLibExt := ".a"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
+         cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm" + hbmk[ _HBMK_cCCEXT ]
+         cOpt_LibHBX := "-g --defined-only -C {LI}"
          IF l_lLIBGROUPING
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
          ELSE
@@ -3841,6 +3862,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cBin_Lib := "wlib" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
+         cBin_LibHBX := cBin_Lib
+         cOpt_LibHBX := "{LI}"
          IF HBMK_ISPLAT( "win|os2" )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
@@ -3937,6 +3960,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cBin_Lib := "tlib.exe"
          /* Only forward slash is accepted here as option prefix. */
          cOpt_Lib := "/P128 {FA} {OL} {LO}{SCRIPT}"
+         cBin_LibHBX := cBin_Lib
+         cOpt_LibHBX := "{LI}, {OT}"
          cLibLibExt := cLibExt
          cImpLibExt := cLibLibExt
          cLibObjPrefix := "-+ "
@@ -4073,6 +4098,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
          cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c"
+         cBin_LibHBX := "dumpbin.exe"
+         cOpt_LibHBX := "-symbols {LI}"
+         cLibHBX_Regex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
                IF hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
@@ -4242,6 +4270,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", cSourceDLL, cTargetLib, cFlags ) }
+         cBin_LibHBX := "podump.exe"
+         cOpt_LibHBX := "-symbols {LI}"
+         cLibHBX_Regex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -6016,6 +6047,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
          IF lTargetUpToDate .OR. hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
+
+            IF ! Empty( hbmk[ _HBMK_cHBX ] )
+               mk_extern( hbmk, hbmk[ _HBMK_cPROGNAME ], cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, hbmk[ _HBMK_cHBX ] )
+            ENDIF
+
             DoLink( hbmk )
             IF ! lTargetUpToDate .OR. hbmk[ _HBMK_lInstForce ]
                FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
@@ -11037,6 +11073,189 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
 
    RETURN cString
 
+STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, cOutputName )
+   LOCAL aExtern
+
+   IF ( aExtern := __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex ) ) != NIL
+
+      IF hbmk[ _HBMK_lInfo ]
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating extern header... %1$s" ), cOutputName ) )
+      ENDIF
+
+      __hb_extern_gen( aExtern, cOutputName )
+
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex )
+   LOCAL aExtern := NIL
+
+   LOCAL cStdOut, cStdErr
+   LOCAL cTempFile
+   LOCAL hRegex
+   LOCAL aResult
+   LOCAL tmp
+
+   IF ! Empty( cBin_LibHBX ) .AND. ;
+      ! Empty( cLibHBX_Regex )
+
+      IF hb_FileExists( cInputName )
+
+         cOpt_LibHBX := StrTran( cOpt_LibHBX, "{LI}", FNameEscape( cInputName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+         IF "{OT}" $ cOpt_LibHBX
+            FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
+            cOpt_LibHBX := StrTran( cOpt_LibHBX, "{OT}", FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+         ENDIF
+
+         IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX, @cStdErr, @cStdOut ) == 0
+            IF ! Empty( cTempFile )
+               cStdOut := MemoRead( cTempFile )
+            ENDIF
+            IF ! Empty( hRegex := hb_regexComp( cLibHBX_Regex, .T., .T. ) )
+               aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
+               aExtern := {}
+               FOR EACH tmp IN aResult
+                  AAdd( aExtern, tmp[ 2 ] )
+               NEXT
+               ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+            ENDIF
+         ENDIF
+
+         IF ! Empty( cTempFile )
+            FErase( cTempFile )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN aExtern
+
+#define _HB_FUNC_INCLUDE_ "HB_FUNC_INCLUDE"
+#define _HB_FUNC_EXCLUDE_ "HB_FUNC_EXCLUDE"
+
+#define _HB_SELF_PREFIX   "__HBEXTERN__"
+#define _HB_SELF_SUFFIX   "__"
+
+STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
+   LOCAL cFile
+   LOCAL hRegex
+   LOCAL tmp
+
+   aInclude := {}
+   aExclude := {}
+
+   IF ! Empty( cFile := MemoRead( cInputName ) )
+      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            AAdd( aInclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            AAdd( aExclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
+   LOCAL aExtern
+   LOCAL cExtern
+   LOCAL tmp
+
+   LOCAL aInclude
+   LOCAL aExclude
+
+   LOCAL cSelfName := _HB_SELF_PREFIX + Upper( FNameNameGet( cOutputName ) ) + _HB_SELF_SUFFIX
+
+   LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
+   LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
+                  "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
+
+   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude )
+
+   cExtern := "/*" + hb_eol()
+   cExtern += " * $" + "Id" + "$" + hb_eol()
+   cExtern += " */" + hb_eol()
+   IF Empty( aInclude ) .AND. ;
+      Empty( aExclude )
+      cExtern += hb_eol()
+      cExtern += cLine
+      cExtern += "/* NOTE: You can add manual override which functions to include or      */" + hb_eol()
+      cExtern += "/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */" + hb_eol()
+      cExtern += cHelp
+      cExtern += cLine
+   ELSE
+      cExtern += hb_eol()
+      cExtern += cLine
+      cExtern += "/* NOTE: Following comments are control commands for the generator.     */" + hb_eol()
+      cExtern += "/*       Do not edit them unless you know what you are doing.           */" + hb_eol()
+      cExtern += cHelp
+      cExtern += cLine
+      IF ! Empty( aInclude )
+         cExtern += hb_eol()
+         FOR EACH tmp IN aInclude
+            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + hb_eol()
+         NEXT
+      ENDIF
+      IF ! Empty( aExclude )
+         cExtern += hb_eol()
+         FOR EACH tmp IN aExclude
+            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + hb_eol()
+         NEXT
+      ENDIF
+   ENDIF
+   cExtern += hb_eol()
+   cExtern += cLine
+   cExtern += "/* WARNING: Automatically generated code below. DO NOT EDIT!            */" + hb_eol()
+   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
+   cExtern += "/*          compiler family. [vszakats]                                 */" + hb_eol()
+   cExtern += cLine
+   cExtern += hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "ANNOUNCE" + hb_eol()
+   cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
+   cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   IF Empty( aInclude )
+      aExtern := aFuncList
+   ELSE
+      aExtern := {}
+      FOR EACH tmp IN aFuncList
+         IF AScan( aInclude, {| flt | hb_WildMatch( flt, tmp ) } ) > 0
+            AAdd( aExtern, tmp )
+         ENDIF
+      NEXT
+   ENDIF
+   FOR EACH tmp IN aExtern
+      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
+         ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp ) .AND. ;
+         AScan( aExclude, {| flt | hb_WildMatch( flt, tmp ) } ) == 0
+         cExtern += "DYNAMIC " + tmp + hb_eol()
+      ENDIF
+   NEXT
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
+   cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#endif" + hb_eol()
+
+   /* Do not touch the file if the content is unchanged */
+   IF hb_MemoRead( cOutputName ) == cExtern
+      RETURN .T.
+   ENDIF
+
+   RETURN hb_MemoWrit( cOutputName, cExtern )
+
 STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
    LOCAL cSrc := MemoRead( cSrcName )
    LOCAL cDst
@@ -11578,6 +11797,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
+      { "-hbx=<.ch>"         , I_( "Create Harbour header (in .hbx format) with all external symbols. (EXPERIMENTAL)" ) },;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) },;
       NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;
