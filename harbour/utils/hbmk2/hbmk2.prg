@@ -11210,8 +11210,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    cExtern += hb_eol()
    cExtern += cLine
    cExtern += "/* WARNING: Automatically generated code below. DO NOT EDIT!            */" + hb_eol()
-   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
-   cExtern += "/*          compiler family. [vszakats]                                 */" + hb_eol()
+   cExtern += "/*          Regenerate using hbmk2 '-hbx=' option.                      */" + hb_eol()
    cExtern += cLine
    cExtern += hb_eol()
    cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
