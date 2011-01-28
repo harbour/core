@@ -183,6 +183,7 @@ REQUEST hbmk_KEYW
 #define _HEAD_OFF               0
 #define _HEAD_FULL              1
 #define _HEAD_NATIVE            2
+#define _HEAD_DEP               3
 
 #define _COMPDET_bBlock         1
 #define _COMPDET_cCOMP          2
@@ -2208,6 +2209,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 7 ) == "off"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
          CASE SubStr( cParamL, 7 ) == "full"   ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
          CASE SubStr( cParamL, 7 ) == "native" ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
+         CASE SubStr( cParamL, 7 ) == "dep"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
          OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
          ENDCASE
 
@@ -5005,7 +5007,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            "LNK4217: locally defined symbol ... imported in function ..."
                            if using 'dllimport'. [vszakats] */
                   tmp := ""
-               CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) /* TOFIX: cygwin is now a platform */
+               CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm" )
                   tmp := "__attribute__ (( dllimport ))"
                CASE HBMK_ISCOMP( "bcc|watcom" )
                   tmp := "__declspec( dllimport )"
@@ -6698,7 +6700,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    cExt := Lower( FNameExtGet( cFileName ) )
 
    /* Filter out non-source format inputs for MinGW / windres */
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin" ) .AND. HBMK_ISPLAT( "win|wce" ) .AND. cExt == ".res" /* TOFIX: cygwin is now a platform */
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm" ) .AND. HBMK_ISPLAT( "win|wce" ) .AND. cExt == ".res"
       RETURN .F.
    ENDIF
 
@@ -6756,7 +6758,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          ENDIF
       NEXT
 
-   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" ) /* TOFIX: cygwin is now a platform */
+   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
 
       IF hbmk[ _HBMK_lDEBUGINC ]
          hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: Calling C/C++ compiler to detect dependencies of %1$s", cFileName ) )
@@ -8526,7 +8528,7 @@ STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
       nStart := 1
    ENDIF
 
-   IF HBMK_ISPLAT( "win|wce|dos|os2" ) .AND. ! HBMK_ISCOMP( "mingw|mingw64|mingwarm|cygwin" ) /* TOFIX: cygwin is now a platform */
+   IF HBMK_ISPLAT( "win|wce|dos|os2" ) .AND. ! HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 
@@ -9219,6 +9221,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE Lower( cLine ) == "off"     ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
          CASE Lower( cLine ) == "full"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
          CASE Lower( cLine ) == "native"  ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
+         CASE Lower( cLine ) == "dep"     ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="          ) ) ) == "run="          ; cLine := SubStr( cLine, Len( "run="          ) + 1 )
@@ -9742,7 +9745,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|cygwin|gccomf" ) /* TOFIX: cygwin is now a platform */
+   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|gccomf" )
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )

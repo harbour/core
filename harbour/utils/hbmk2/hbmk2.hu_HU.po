@@ -235,7 +235,7 @@ msgstr ".xhp (xMate) project állomány konvertálása .hbp állományba"
 #: hbmk2.prg:7959 hbmk2.prg:11650
 #, c-format
 msgid "Options can also be specified in environment variable %1$s"
-msgstr "A kapcsolók megadhatók %1$s környezeti változóban is"
+msgstr "A kapcsolók megadhatók %1$s környezeti változóban is."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
