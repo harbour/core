@@ -901,7 +901,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL aThreads
    LOCAL thread
 
-   LOCAL nStart := Seconds()
+   LOCAL nStart := hb_milliSeconds()
 
    LOCAL lDoSupportDetection
    LOCAL lDeleteWorkDir := .F.
@@ -6232,7 +6232,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    PlugIn_Execute_All( hbmk, "post_all" )
 
    IF hbmk[ _HBMK_lDEBUGTIME ]
-      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( Round( ( hb_milliSeconds() - nStart ) / 1000, 1 ) ) ) )
    ENDIF
 
    IF ! lSkipBuild .AND. hbmk[ _HBMK_lBEEP ]
@@ -9703,9 +9703,6 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    ENDIF
 
    RETURN cMacro
-
-STATIC FUNCTION TimeElapsed( nStartSec, nEndSec )
-   RETURN Round( ( nEndSec - iif( nEndSec < nStartSec, nStartSec - 86399, nStartSec ) ), 1 )
 
 STATIC FUNCTION IsValidHarbourID( cName )
    LOCAL c
