@@ -77,7 +77,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
 
    IF lError
       oError := ErrorNew()
-      oError:description := hb_langErrMsg( 1 )
+      oError:description := hb_langErrMsg( EG_ARG )
       oError:gencode := EG_ARG
       oError:severity := ES_ERROR
       oError:cansubstitute := .T.
