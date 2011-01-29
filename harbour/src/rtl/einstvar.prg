@@ -52,6 +52,7 @@
  */
 
 #include "common.ch"
+#include "error.ch"
 
 /* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */
 
@@ -60,11 +61,11 @@ FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
    LOCAL oError
 
    IF !( ValType( xValue ) == cType ) .OR. ;
-      ( bValid != NIL .AND. !Eval( bValid, oVar, xValue ) )
+      ( bValid != NIL .AND. ! Eval( bValid, oVar, xValue ) )
       oError := ErrorNew()
       oError:description := hb_langErrMsg( 1 )
-      oError:gencode := 1
-      oError:severity := 2
+      oError:gencode := EG_ARG
+      oError:severity := ES_ERROR
       oError:cansubstitute := .T.
       oError:subsystem := oVar:className
 #ifdef HB_CLP_STRICT

@@ -255,6 +255,12 @@ STATIC FUNCTION hbrun_CoreHeaderFiles()
    ADD HEADER TO hHeaders FILE "hbscalar.hbx"
    ADD HEADER TO hHeaders FILE "hbusrrdd.hbx"
 
+   #if defined( __PLATFORM__UNIX )
+      hb_HCaseMatch( hHeaders, .T. )
+   #else
+      hb_HCaseMatch( hHeaders, .F. )
+   #endif
+
 #else
 
    hHeaders := NIL

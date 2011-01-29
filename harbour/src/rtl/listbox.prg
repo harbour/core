@@ -1094,7 +1094,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
 FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, nSelect, aItems, cCaption,;
+FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lIsOpen, cBitmap )
 
    LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
@@ -1141,7 +1141,7 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, nSelect, aItems, cCaption,;
          o:bitmap := cBitmap
       ENDIF
 
-      o:select( nSelect )
+      o:select( xPos )
    ENDIF
 
    RETURN o
