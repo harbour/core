@@ -1095,7 +1095,7 @@ FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
 FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
-                    cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lIsOpen, cBitmap )
+                    cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
    LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
@@ -1114,7 +1114,6 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
       o:message   := cMessage
       o:fBlock    := bFBlock
       o:sBlock    := bSBlock
-      o:isOpen    := lIsOpen
 
       nLen := Len( aItems )
       FOR nPos := 1 TO nLen
@@ -1130,11 +1129,11 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
          ENDIF
       NEXT
 
-      IF ISLOGICAL( lIsOpen ) .AND. lIsOpen
+      IF ISLOGICAL( lScrollBar ) .AND. lScrollBar
          IF ISLOGICAL( lDropDown ) .AND. lDropDown
             nTop++
          ENDIF
-         o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight,, SCROLL_VERTICAL )
+         o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight )
       ENDIF
 
       IF ISCHARACTER( cBitmap )
