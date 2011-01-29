@@ -861,7 +861,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cLibHBX_Regex
    LOCAL bBlk_ImpLib
    LOCAL cPath_CompC
-   LOCAL tmp, tmp1, tmp2, tmp3, array
+   LOCAL tmp, tmp1, tmp2, tmp3, tmp4, array
    LOCAL cLibBCC_CRTL
    LOCAL cScriptFile
    LOCAL fhnd
@@ -4764,14 +4764,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ELSE
                tmp3 := tmp
             ENDIF
+            tmp4 := FNameDirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt )
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: PRG %1$s %2$s",;
-                  tmp3, FNameDirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ) ) )
+                  tmp3, tmp4 ) )
             ENDIF
-            IF ! hb_FGetDateTime( FNameDirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
+            IF ! hb_FGetDateTime( tmp4, @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) ) .OR.;
+               checkDepTime( hbmk, tmp4, tmp2 )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -5543,15 +5545,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ELSE
                   tmp3 := tmp
                ENDIF
+               tmp4 := FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], cObjExt )
                IF hbmk[ _HBMK_lDEBUGINC ]
                   hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CPRG %1$s %2$s",;
-                     FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], ".c" ),;
-                     FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) )
+                     FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], ".c" ), tmp4 ) )
                ENDIF
                IF ! hb_FGetDateTime( FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], ".c" ), @tmp1 ) .OR. ;
-                  ! hb_FGetDateTime( FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
+                  ! hb_FGetDateTime( tmp4, @tmp2 ) .OR. ;
                   tmp1 > tmp2 .OR. ;
-                  hb_FSize( FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
+                  hb_FSize( tmp4 ) == 0 .OR. ;
+                  checkDepTime( hbmk, tmp4, tmp2 )
                   AAdd( l_aPRG_TODO, tmp )
                ENDIF
             NEXT
@@ -6106,6 +6109,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
          AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+      ENDIF
+      IF hbmk[ _HBMK_lINC ] .AND. hbmk[ _HBMK_lCLEAN ]
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".d", .T. ), {| tmp | FErase( tmp ) } )
       ENDIF
       IF ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ]
          IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
@@ -6693,8 +6699,13 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
       RETURN .F.
    ENDIF
 
-   IF tTimeParent != NIL .AND. hb_FGetDateTime( cFileName, @tTimeSelf ) .AND. tTimeSelf > tTimeParent
-      RETURN .T.
+   IF tTimeParent != NIL
+      IF hb_FGetDateTime( cFileName, @tTimeSelf ) .AND. tTimeSelf > tTimeParent
+         RETURN .T.
+      ENDIF
+      IF checkDepTime( hbmk, cFileName, tTimeParent )
+         RETURN .T.
+      ENDIF
    ENDIF
 
    cExt := Lower( FNameExtGet( cFileName ) )
@@ -7075,6 +7086,36 @@ STATIC FUNCTION getNewestTime( hbmk, cFile, hFiles, lCMode )
    NEXT
 
    RETURN tTime
+
+STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
+   LOCAL cDepFile, tDepTime
+
+   IF hbmk[ _HBMK_lDEBUGINC ]
+      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime: %s (%s)", cFile, hb_tsToStr(tTime)) )
+   ENDIF
+
+   IF cFile $ hbmk[ _HBMK_hDEPTS ]
+      IF hbmk[ _HBMK_lDEBUGINC ]
+         hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECKING....", cFile) )
+      ENDIF
+      FOR EACH cDepFile IN hbmk[ _HBMK_hDEPTS ][ cFile ]
+         IF ( cDepFile := FindHeader( hbmk, cDepFile, "", .F., .F. ) ) != NIL
+            IF ! hb_FGetDateTime( cDepFile, @tDepTime ) .OR. ;
+               tDepTime > tTime
+               IF hbmk[ _HBMK_lDEBUGINC ]
+                  hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s !!! (%s>%s)", cDepFile, hb_tsToStr(tDepTime), hb_tsToStr(tTime) ) )
+               ENDIF
+               RETURN .T.
+            ENDIF
+            IF hbmk[ _HBMK_lDEBUGINC ]
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s (%s)", cDepFile, hb_tsToStr(tDepTime) ) )
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN .F.
+
 
 STATIC FUNCTION clpfile_read( cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
@@ -7543,8 +7584,8 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
    IF ! lSystemHeader
       IF Empty( cParentDir )
          /* Check in current dir */
-         IF hb_FileExists( PathSepToSelf( cFileName ) )
-            RETURN PathSepToSelf( cFileName )
+         IF hb_FileExists( tmp := PathSepToSelf( cFileName ) )
+            RETURN tmp
          ENDIF
       ELSE
          /* Check in parent dir */
