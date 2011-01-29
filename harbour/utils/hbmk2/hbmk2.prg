@@ -2710,9 +2710,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF SubStr( cParamL, 2 ) == "gh"
                hbmk[ _HBMK_lStopAfterHarbour ] := .T.
                hbmk[ _HBMK_lCreateHRB ] := .T.
-            ENDIF
+
             /* Detect if Harbour is only used as preprocessor (-p + -s options) */
-            IF SubStr( cParamL, 2 ) == "p"
+            ELSEIF SubStr( cParamL, 2 ) == "p"
                ++nHarbourPPO
                tmp := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
                IF ! Empty( tmp )
@@ -2720,8 +2720,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
                   cHarbourPPODir := cDir
                ENDIF
-            ENDIF
-            IF SubStr( cParamL, 2 ) == "s"
+            ELSEIF SubStr( cParamL, 2 ) == "s"
                hbmk[ _HBMK_lStopAfterHarbour ] := .T.
                ++nHarbourPPO
             ENDIF
@@ -4860,6 +4859,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF ! Empty( hbmk[ _HBMK_cPO ] )
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-j" )
       ENDIF
+      IF hbmk[ _HBMK_nHEAD ] == _HEAD_DEP
+         AAdd( hbmk[ _HBMK_aOPTPRG ], "-gd" )
+      ENDIF
 
       PlatformPRGFlags( hbmk, hbmk[ _HBMK_aOPTPRG ] )
 
@@ -6715,7 +6717,15 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
       RETURN .F.
    ENDIF
 
-   IF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+   IF !lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_DEP
+      cDependency := FNameDirExtSet( cFileName, hbmk[ _HBMK_cWorkDir ], ".d" )
+      IF !hb_FGetDateTime( cDependency, @tTimeDependency ) .OR. ;
+         tTimeDependency > tTimeParent
+         RETURN .T.
+      ENDIF
+      deplst_read( hbmk, hbmk[ _HBMK_hDEPTS ], cDependency )
+
+   ELSEIF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
 
       IF hbmk[ _HBMK_lDEBUGINC ]
          hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: Calling Harbour compiler to detect dependencies of %1$s", cFileName ) )
@@ -6756,19 +6766,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          ENDIF
       NEXT
 
-   ELSEIF ! lCMode .AND. LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp"
-
-      FOR EACH cDependency IN clpfile_read( SubStr( cFileName, 2 ) )
-         IF ! Empty( cDependency )
-            IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER (CLP) %1$s", cDependency ) )
-            ENDIF
-            IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
-               RETURN .T.
-            ENDIF
-         ENDIF
-      NEXT
-
    ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
 
       IF hbmk[ _HBMK_lDEBUGINC ]
@@ -6801,7 +6798,18 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          ENDIF
       NEXT
    ELSE
-      IF getNewestTime( hbmk, cFileName, @hbmk[ _HBMK_hFiles ], lCMode ) > tTimeParent
+      IF ! lCMode .AND. LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp"
+         FOR EACH cDependency IN clpfile_read( SubStr( cFileName, 2 ) )
+            IF ! Empty( cDependency )
+               IF hbmk[ _HBMK_lDEBUGINC ]
+                  hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER (CLP) %1$s", cDependency ) )
+               ENDIF
+               IF getNewestTime( hbmk, cDependency, @hbmk[ _HBMK_hFiles ], lCMode ) > tTimeParent
+                  RETURN .T.
+               ENDIF
+            ENDIF
+         NEXT
+      ELSEIF getNewestTime( hbmk, cFileName, @hbmk[ _HBMK_hFiles ], lCMode ) > tTimeParent
          RETURN .T.
       ENDIF
    ENDIF
