@@ -101,6 +101,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%bin\hbtest.exe"
   File "$%HB_ABSROOT%bin\hbformat.exe"
   File "$%HB_ABSROOT%bin\hbnetio.exe"
+  File "$%HB_ABSROOT%bin\hbnetioc.exe"
   File "$%HB_ABSROOT%bin\*.hbs"
   File /nonfatal "$%HB_ABSROOT%bin\hbmk.hbc"
   File "$%HB_ABSROOT%bin\upx*.*"
