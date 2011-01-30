@@ -2679,6 +2679,11 @@ HB_FUNC( HPDF_LOADICCPROFILEFROMFILE )
 #endif
 }
 
+/* NOTE: These functions are not exported from libharu. Until we find
+         out it is design decision or bug, I explude them from dynamic
+         builds. [vszakats] */
+#if ! defined( HB_DYNLIB )
+
 /*
 HPDF_STATUS
 HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype)
@@ -2704,6 +2709,8 @@ HB_FUNC( HPDF_PDFA_GENERATEID )
    hb_retnl( -1 );
 #endif
 }
+
+#endif
 
 /*----------------------------------------------------------------------*/
 
