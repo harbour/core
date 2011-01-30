@@ -19,6 +19,7 @@ C_SOURCES := \
    at.c \
    ati.c \
    base64c.c \
+   base64d.c \
    binnum.c \
    box.c \
    cdpapi.c \
@@ -208,7 +209,6 @@ PRG_SOURCES := \
    adir.prg \
    alert.prg \
    altd.prg \
-   base64.prg \
    browdb.prg \
    browse.prg \
    checkbox.prg \
