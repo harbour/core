@@ -18,6 +18,8 @@
 
 -instfile=inc:hbexpat.ch
 
+-cflag=-DXML_STATIC
+
 hbexpat.c
 hbexpatc.c
 hbexpatp.prg
