@@ -1064,7 +1064,9 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
       RETURN NIL
    ENDIF
 
-   DEFAULT lDropDown TO .F.
+   IF !ISLOGICAL( lDropDown )
+      lDropDown := .F.
+   ENDIF
 
    ::nBottom   := nBottom
    ::nRight    := nRight
