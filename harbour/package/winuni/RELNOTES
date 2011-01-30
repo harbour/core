@@ -54,7 +54,7 @@ Tool/lib versions used to create this package:
    External lib dependencies
    -------------------------
 
-   ACE 10.00
+   ACE 10.10
    Allegro 4.2.2
    Blat 2.6.2
    Cairo 1.8.8
