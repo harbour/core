@@ -50,6 +50,8 @@
  *
  */
 
+#if ! defined( HB_DYNLIB )
+
 #include "hbapi.h"
 
 #include "hbwinole.h"
@@ -914,3 +916,5 @@ HB_FUNC( WIN_OLESERVERINIT )
    else
       hb_retl( s_fServerReady );
 }
+
+#endif
