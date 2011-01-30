@@ -7110,17 +7110,15 @@ STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
          hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECKING....", cFile) )
       ENDIF
       FOR EACH cDepFile IN hbmk[ _HBMK_hDEPTS ][ cFile ]
-         IF ( cDepFile := FindHeader( hbmk, cDepFile, "", .F., .F. ) ) != NIL
-            IF ! hb_FGetDateTime( cDepFile, @tDepTime ) .OR. ;
-               tDepTime > tTime
-               IF hbmk[ _HBMK_lDEBUGINC ]
-                  hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s !!! (%s>%s)", cDepFile, hb_tsToStr(tDepTime), hb_tsToStr(tTime) ) )
-               ENDIF
-               RETURN .T.
-            ENDIF
+         IF ! hb_FGetDateTime( cDepFile, @tDepTime ) .OR. ;
+            tDepTime > tTime
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s (%s)", cDepFile, hb_tsToStr(tDepTime) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s !!! (%s>%s)", cDepFile, hb_tsToStr(tDepTime), hb_tsToStr(tTime) ) )
             ENDIF
+            RETURN .T.
+         ENDIF
+         IF hbmk[ _HBMK_lDEBUGINC ]
+            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s (%s)", cDepFile, hb_tsToStr(tDepTime) ) )
          ENDIF
       NEXT
    ENDIF

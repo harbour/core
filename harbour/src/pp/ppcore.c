@@ -1958,7 +1958,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                   if( file_in != NULL )
                   {
                      iAction = HB_PP_OPEN_OK;
-                     szFileName = pFileName->szName;
+                     szFileName = szFileNameBuf;
                      break;
                   }
                   pPath = pPath->pNext;
