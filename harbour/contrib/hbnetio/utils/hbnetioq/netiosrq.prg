@@ -40,7 +40,8 @@ REQUEST __HB_EXTERN__
 #define _NETIOSRV_nCompressionLevel 9
 #define _NETIOSRV_nStrategy         10
 #define _NETIOSRV_cPassword         11
-#define _NETIOSRV_MAX_              11
+#define _NETIOSRV_cINI              12
+#define _NETIOSRV_MAX_              12
 
 #define DAT_CONNSOCKET              1
 #define DAT_SERIAL                  2
@@ -80,6 +81,8 @@ Function Main( ... )
 
    FOR EACH cParam IN { ... }
       DO CASE
+      CASE Lower( Left( cParam, 5 ) ) == "-ini="
+         netiosrv[ _NETIOSRV_cINI ] := AllTrim( SubStr( cParam, 6 ) )
       CASE Lower( Left( cParam, 6 ) ) == "-port="
          netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
       CASE Lower( Left( cParam, 7 ) ) == "-iface="
@@ -139,6 +142,7 @@ Function Main( ... )
 /*----------------------------------------------------------------------*/
 
 CLASS NetIOServer
+   DATA   netiosrv
    DATA   nNumConxn                               INIT 0
    DATA   oDlg
    DATA   oBrw
@@ -155,6 +159,7 @@ CLASS NetIOServer
    DATA   lChanging                               INIT .f.
    DATA   lQuit                                   INIT .f.
    DATA   nCurRec                                 INIT 1
+   DATA   aIPs                                    INIT {}
    DATA   aData                                   INIT { { NIL, ;                   // hSock
                                                            0  , ;                   // nSerial
                                                            .F., ;                   // lActive
@@ -192,6 +197,8 @@ CLASS NetIOServer
    METHOD lastRec()
    METHOD recNo()
    METHOD goto( nRec )
+   METHOD readINI()
+   METHOD manageIPs()
 
    ENDCLASS
 
@@ -204,6 +211,8 @@ METHOD NetIOServer:new()
 
 METHOD NetIOServer:create( netiosrv )
    LOCAL nEvent, mp1, mp2, oXbp
+
+   ::netiosrv := netiosrv
 
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
       netio_mtserver( netiosrv[ _NETIOSRV_nPort     ],;
@@ -223,6 +232,8 @@ METHOD NetIOServer:create( netiosrv )
 
    ELSE
       QResource():registerResource_1( hbqtres_netiosrq(), ":/resource" )
+
+      ::readINI()
 
       ::pMtx            := hb_mutexCreate()
       ::cTitle          := "NetIO Server [ " + netiosrv[ _NETIOSRV_cIFAddr ] + " : " + ;
@@ -272,11 +283,12 @@ METHOD NetIOServer:create( netiosrv )
 /*----------------------------------------------------------------------*/
 
 METHOD NetIOServer:custom_netio_server( pConnectionSocket )
-   ::register_connection( pConnectionSocket )
-   BEGIN SEQUENCE
-      netio_server( pConnectionSocket )
-   END SEQUENCE
-   ::unregister_connection( pConnectionSocket )
+   IF ::register_connection( pConnectionSocket )
+      BEGIN SEQUENCE
+         netio_server( pConnectionSocket )
+      END SEQUENCE
+      ::unregister_connection( pConnectionSocket )
+   ENDIF
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -294,6 +306,10 @@ METHOD NetIOServer:register_connection( pConnectionSocket )
       ENDIF
    ENDIF
 
+   IF !empty( ::aIPs ) .AND. ascan( ::aIPs, {|e_| e_[ 1 ] == cIP .AND. e_[ 2 ] == "Y" } ) > 0
+      RETURN .f.
+   ENDIF
+
    IF hb_mutexLock( ::pMtx )
       IF ::aData[ 1,2 ] == 0
          ::aData[ 1 ] := { pConnectionSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, 0 }
@@ -306,7 +322,7 @@ METHOD NetIOServer:register_connection( pConnectionSocket )
    ::oDlg:title := ::cTitle + " - " + ltrim( str( ::nNumConxn, 6, 0 ) )
    ::refresh()
 
-   RETURN NIL
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
@@ -330,7 +346,7 @@ METHOD NetIOServer:unregister_connection( pConnectionSocket )
 /*----------------------------------------------------------------------*/
 
 METHOD NetIOServer:execEvent( cEvent, p )
-   LOCAL qEvent, oMenu, txt_, s
+   LOCAL qEvent, oMenu, txt_, s, cTmp, cTmp1, qItem, n, oXbp
 
    SWITCH cEvent
    CASE "browser_contextMenu"
@@ -367,6 +383,9 @@ METHOD NetIOServer:execEvent( cEvent, p )
          EXIT
       CASE "Exit"
          PostAppEvent( xbeP_Quit, , , ::oDlg )
+         EXIT
+      CASE "IPs"
+         ::manageIPs()
          EXIT
       ENDSWITCH
       EXIT
@@ -412,9 +431,100 @@ METHOD NetIOServer:execEvent( cEvent, p )
    CASE "qSystemTrayIcon_close"
       PostAppEvent( xbeP_Quit, NIL, NIL, ::oDlg )
       EXIT
+   CASE "ips_buttonDelete"
+      IF p:q_listIPs:currentRow() >= 0
+         qItem := p:q_listIPs:takeItem( p:q_listIPs:currentRow() )
+         IF ( n := ascan( ::aIPs, {|e_| e_[ 1 ] == qItem:text() } ) ) > 0
+            hb_adel( ::aIPs, n, .t. )
+         ENDIF
+      ENDIF
+      EXIT
+   CASE "ips_buttonSave"
+      FOR n := 1 TO p:q_listIPs:count()
+         qItem := p:q_listIPs:item( n - 1 )
+         IF ( n := ascan( ::aIPs, {|e_| e_[ 1 ] == qItem:text() } ) ) > 0
+            ::aIPs[ n, 2 ] := iif( qItem:checkState() == Qt_Checked, "Y", " " )
+         ENDIF
+      NEXT
+      oXbp := XbpFileDialog():new( ::oDlg ):create()
+      oXbp:title := "File name to save IPs ?"
+      oXbp:center := .t.
+      cTmp := oXbp:saveAs( iif( empty( ::netiosrv[ _NETIOSRV_cINI ] ), "", ::netiosrv[ _NETIOSRV_cINI ] ) )
+      IF ! empty( cTmp )
+         cTmp1 := ""
+         aeval( ::aIPs, {|e_| cTmp1 += "netiosrv_ip=" + e_[ 1 ] + ";" + e_[ 2 ] + chr( 13 ) + chr( 10 ) } )
+         hb_memowrit( cTmp, cTmp1 )
+      ENDIF
+      p:done( 0 )
+      EXIT
+   CASE "ips_buttonAdd"
+      IF ! empty( cTmp := QInputDialog():getText( ::oDlg:oWidget, "Manage Connections", "IPv4:IPv6:" ) )
+         qItem := QListWidgetItem()
+         qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
+         qItem:setText( cTmp )
+         qItem:setCheckState( 0 )
+         p:q_listIPs:addItem( qItem )
+         aadd( ::aIPs, { cTmp, " " } )
+      ENDIF
+      EXIT
    ENDSWITCH
 
    RETURN 0
+
+/*----------------------------------------------------------------------*/
+
+METHOD NetIOServer:manageIPs()
+   LOCAL oUI, a_, qItem
+
+   oUI := hbqtui_ManageIPs( ::oDlg:oWidget )
+   oUI:setWindowFlags( Qt_Dialog )
+
+   oUI:q_buttonAdd:connect( "clicked()", {|| ::execEvent( "ips_buttonAdd", oUI ) } )
+   oUI:q_buttonDelete:connect( "clicked()", {|| ::execEvent( "ips_buttonDelete", oUI ) } )
+   oUI:q_buttonSave:connect( "clicked()", {|| ::execEvent( "ips_buttonSave", oUI ) } )
+
+   FOR EACH a_ IN ::aIPs
+      qItem := QListWidgetItem()
+      qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
+      qItem:setText( a_[ 1 ] )
+      qItem:setCheckState( iif( empty( a_[ 2 ] ), Qt_Unchecked, Qt_Checked ) )
+      oUI:q_listIPs:addItem( qItem )
+   NEXT
+
+   oUI:exec()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD NetIOServer:readINI()
+   LOCAL cBuffer, aTxt, s, n
+
+   IF empty( ::netiosrv[ _NETIOSRV_cINI ] )
+      RETURN Self
+   ENDIF
+   IF hb_fileExists( ::netiosrv[ _NETIOSRV_cINI ] )
+      cBuffer := hb_memoread( ::netiosrv[ _NETIOSRV_cINI ] )
+
+      IF ! empty( cBuffer )
+         aTxt := hb_atokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
+         FOR EACH s IN aTxt
+            s := alltrim( s )
+            IF left( lower( s ), 11 ) == "netiosrv_ip"
+               IF ( n := at( "=", s ) ) > 0
+                  s := alltrim( substr( s, n + 1 ) )
+                  IF ( n := at( ";", s ) ) > 0
+                     aadd( ::aIPs, { substr( s, 1, n-1 ), substr( s, n+1 ) } )
+                  ELSE
+                     aadd( ::aIPs, { s, " " } )
+                  ENDIF
+               ENDIF
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -740,6 +850,7 @@ METHOD NetIOServer:buildToolBar()
    oTBar:addItem( "Exit"     , ":/exit.png"     , , , , , "Exit"      )
    oTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    oTBar:addItem( "Terminate", ":/terminate.png", , , , , "Terminate" )
+   oTBar:addItem( "ManageIPs", ":/refresh.png"  , , , , , "IPs"       )
    oTBar:addItem( "About"    , ":/about.png"    , , , , , "About"     )
    oTBar:addItem( "Help"     , ":/help.png"     , , , , , "Help"      )
 

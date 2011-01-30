@@ -6,5 +6,6 @@
 <file>help.png</file>
 <file>about.png</file>
 <file>terminate.png</file>
+<file>refresh.png</file>
 </qresource>
 </RCC>
