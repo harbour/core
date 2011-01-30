@@ -25,6 +25,10 @@
 ../hbqt/hbqtuitools.hbc
 ../hbformat/hbformat.hbc
 
+-lhbcplr
+-lhbpp
+-lhbcommon
+
 idemain.prg
 ideobject.prg
 idestylesheets.prg

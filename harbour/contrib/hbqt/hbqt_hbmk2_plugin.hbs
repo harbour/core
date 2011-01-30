@@ -1607,7 +1607,7 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       ENDIF
 
       IF "hb_parstr_utf8(" $ oMtd:cCmd
-         aadd( ::txt_, "      void * pText;" )
+         aadd( ::txt_, "      void * pText = NULL;" )
       ENDIF
 
       IF ! oMtd:isConstructor
