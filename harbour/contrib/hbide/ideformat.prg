@@ -84,6 +84,7 @@ CLASS IdeFormat INHERIT IdeObject
    METHOD destroy()
    METHOD show()
    METHOD execEvent( cEvent, p )
+   METHOD format( nMode )
 
    ENDCLASS
 
@@ -150,33 +151,21 @@ METHOD IdeFormat:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFormat:execEvent( cEvent, p )
-   LOCAL oEdit, aText, cBuffer
 
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
 
    CASE "checkSelOnly_changed"
-      ::lSelOnly := ::oUI:q_checkSelOnly:checkState() == 1
+      ::lSelOnly := p > 0
       EXIT
 
    CASE "buttonStart_clicked"
-      IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-         IF ::lSelOnly
-
-         ELSE
-            cBuffer := oEdit:qEdit:toPlainText()
-         ENDIF
-
-         aText := hb_aTokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
-
-         ::oFormat:reFormat( aText )
-
-         ::qEdit:setPlainText( hbide_arrayToMemo( aText ) )
-      ENDIF
+      ::format( 1 )
       EXIT
 
    CASE "buttonUpdSrc_clicked"
+      ::format( 2 )
       EXIT
 
    CASE "buttonCancel_clicked"
@@ -189,5 +178,34 @@ METHOD IdeFormat:execEvent( cEvent, p )
    ENDSWITCH
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFormat:format( nMode )
+   LOCAL oEdit, aText, cBuffer
+
+   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      IF ::lSelOnly
+         cBuffer := oEdit:getSelectedText()
+      ELSE
+         cBuffer := oEdit:qEdit:toPlainText()
+      ENDIF
+
+      aText := hb_aTokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
+
+      #ifdef __PRITPAL__
+      IF nMode == 1
+         FormatCode( aText, 3 )
+      ELSE
+         ::oFormat:reFormat( aText )
+      ENDIF
+      #else
+      ::oFormat:reFormat( aText )
+      #endif
+
+      ::qEdit:setPlainText( hbide_arrayToMemo( aText ) )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
