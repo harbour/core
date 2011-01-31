@@ -4096,8 +4096,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cBin_Dyn := cBin_Link
          ENDIF
          cBin_CompCPP := cBin_CompC
-         cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
-         cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Lib := "-nologo {FA} -out:{OL} {LO}{SCRIPT}"
+         cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}{SCRIPT}"
          cOpt_CompC := "-nologo -c"
          cBin_LibHBX := "dumpbin.exe"
          cOpt_LibHBX := "-symbols {LI}"
@@ -4151,7 +4151,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
+         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}{SCRIPT}"
          SWITCH hbmk[ _HBMK_cCOMP ]
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
