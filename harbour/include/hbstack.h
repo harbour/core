@@ -289,21 +289,21 @@ extern void        hb_stackPushReturn( void );
 extern void        hb_stackPopReturn( void );
 extern void        hb_stackRemove( HB_ISIZ nUntilPos );
 
-extern HB_ISIZ     hb_stackTopOffset( void );
-extern HB_ISIZ     hb_stackBaseOffset( void );
-extern HB_ISIZ     hb_stackTotalItems( void );
-extern HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos );
-extern char *      hb_stackDateBuffer( void );
+extern           HB_ISIZ     hb_stackTopOffset( void );
+extern HB_EXPORT HB_ISIZ     hb_stackBaseOffset( void );
+extern           HB_ISIZ     hb_stackTotalItems( void );
+extern HB_EXPORT HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos );
+extern           char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
 extern HB_EXPORT int         hb_stackCallDepth( void );
 extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
 
-extern HB_ISIZ    hb_stackBaseProcOffset( int iLevel );
-extern void       hb_stackDispCall( void );
-extern void       hb_stackFree( void );       /* releases all memory used by the stack */
-extern void       hb_stackInit( void );       /* initializes the stack */
-extern void       hb_stackIncrease( void );   /* increase the stack size */
+extern HB_EXPORT HB_ISIZ     hb_stackBaseProcOffset( int iLevel );
+extern           void        hb_stackDispCall( void );
+extern           void        hb_stackFree( void );       /* releases all memory used by the stack */
+extern           void        hb_stackInit( void );       /* initializes the stack */
+extern           void        hb_stackIncrease( void );   /* increase the stack size */
 
 /* thread specific data */
 extern HB_EXPORT void * hb_stackGetTSD( PHB_TSD pTSD );
@@ -328,17 +328,17 @@ extern void        hb_stackClearMemvarsBase( void );
 extern HB_ITEM_PTR hb_stackLocalVariable( int * piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
-extern HB_ISIZ     hb_stackGetRecoverBase( void );
-extern void        hb_stackSetRecoverBase( HB_ISIZ nBase );
-extern HB_USHORT   hb_stackGetActionRequest( void );
-extern void        hb_stackSetActionRequest( HB_USHORT uiAction );
+extern HB_EXPORT HB_ISIZ     hb_stackGetRecoverBase( void );
+extern           void        hb_stackSetRecoverBase( HB_ISIZ nBase );
+extern           HB_USHORT   hb_stackGetActionRequest( void );
+extern           void        hb_stackSetActionRequest( HB_USHORT uiAction );
 
 extern void        hb_stackSetStaticsBase( void * pBase );
 extern void *      hb_stackGetStaticsBase( void );
 
-extern PHB_ITEM    hb_stackWithObjectItem( void );
-extern HB_ISIZ     hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( HB_ISIZ nOffset );
+extern           PHB_ITEM    hb_stackWithObjectItem( void );
+extern HB_EXPORT HB_ISIZ     hb_stackWithObjectOffset( void );
+extern           void        hb_stackWithObjectSetOffset( HB_ISIZ nOffset );
 
 extern int *       hb_stackKeyPolls( void );
 extern HB_BOOL *   hb_stackDebugRequest( void );

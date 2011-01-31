@@ -1041,22 +1041,22 @@ extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos ); /* g
 extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos ); /* get local variable passed by reference */
 
 /* memvars subsystem */
-extern void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */
+extern           void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */
 extern HB_EXPORT void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern HB_EXPORT HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
-extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
-extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
-extern HB_SIZE    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
-extern void       hb_memvarSetPrivatesBase( HB_SIZE nBase ); /* release PRIVATE variables created after specified base */
-extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
-extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
-extern char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen );
-extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
-extern int        hb_memvarScope( const char * szVarName, HB_SIZE nLength ); /* retrieve scope of a dynamic variable symbol */
-extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
-extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
-extern PHB_ITEM   hb_memvarSaveInArray( int iScope, HB_BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
-extern void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
+extern           void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
+extern           void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
+extern           HB_SIZE    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
+extern           void       hb_memvarSetPrivatesBase( HB_SIZE nBase ); /* release PRIVATE variables created after specified base */
+extern           void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
+extern           void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
+extern           char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen );
+extern           void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
+extern           int        hb_memvarScope( const char * szVarName, HB_SIZE nLength ); /* retrieve scope of a dynamic variable symbol */
+extern           PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern           PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
+extern HB_EXPORT PHB_ITEM   hb_memvarSaveInArray( int iScope, HB_BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
+extern           void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
 
 #ifdef _HB_API_INTERNAL_
 extern void       hb_memvarValueIncRef( PHB_ITEM pValue ); /* increase the reference count of a global value */
