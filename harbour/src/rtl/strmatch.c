@@ -75,7 +75,7 @@ HB_BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
  * WildMatch( cPattern, cValue [, lExact] ) compares
  * cValue with cPattern, cPattern * may contain wildcard characters (?*)
  * When lExact is TRUE then it will check if whole cValue is covered by
- * cPattern else it will check if cPatern is a prefix of cValue
+ * cPattern else it will check if cPattern is a prefix of cValue
  */
 
 /* NOTE: This function is compatible with sx_WildMatch(), except when

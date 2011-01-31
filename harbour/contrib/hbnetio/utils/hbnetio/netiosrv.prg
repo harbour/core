@@ -18,7 +18,9 @@
          - listing active locks
          - gracefully shutting down server by waiting for connections to close and not accept new ones
          - pausing server
-         - sort out console UI from server side output */
+         - sort out console UI from server side output
+         - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6
+         - option to make settings (allow/block lists) persistent by saving them in config file */
 
 #include "fileio.ch"
 
@@ -57,7 +59,10 @@ REQUEST HB_MT
 #define _NETIOSRV_pListenSocket     12
 #define _NETIOSRV_hConnection       13
 #define _NETIOSRV_mtxConnection     14
-#define _NETIOSRV_MAX_              14
+#define _NETIOSRV_hAllow            15
+#define _NETIOSRV_hBlock            16
+#define _NETIOSRV_mtxFilters        17
+#define _NETIOSRV_MAX_              17
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_nThreadID    2
@@ -94,6 +99,9 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_lQuit ]         := .F.
    netiosrv[ _NETIOSRV_hConnection ]   := { => }
    netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
+   netiosrv[ _NETIOSRV_hAllow ]        := { => }
+   netiosrv[ _NETIOSRV_hBlock ]        := { => }
+   netiosrv[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
 
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
 
@@ -104,6 +112,9 @@ PROCEDURE Main( ... )
    netiomgm[ _NETIOSRV_lShowConn ]     := .F.
    netiomgm[ _NETIOSRV_hConnection ]   := { => }
    netiomgm[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
+   netiomgm[ _NETIOSRV_hAllow ]        := { "127.0.0.1" => NIL, "::1" => NIL } /* only localhost can manage */
+   netiomgm[ _NETIOSRV_hBlock ]        := { => }
+   netiomgm[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
 
    hb_HKeepOrder( netiomgm[ _NETIOSRV_hConnection ], .T. )
 
@@ -202,6 +213,14 @@ PROCEDURE Main( ... )
                               "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv ) } ,;
                               "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
                               "hbnetiomgm_adminfo"        => {| ... | netiomgm_rpc_conninfo( netiomgm ) } ,;
+                              "hbnetiomgm_allowadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .T., ... ) } ,;
+                              "hbnetiomgm_allowdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .F., ... ) } ,;
+                              "hbnetiomgm_blockadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .T., ... ) } ,;
+                              "hbnetiomgm_blockdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .F., ... ) } ,;
+                              "hbnetiomgm_allowaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .T., ... ) } ,;
+                              "hbnetiomgm_allowdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .F., ... ) } ,;
+                              "hbnetiomgm_blockaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .T., ... ) } ,;
+                              "hbnetiomgm_blockdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .F., ... ) } ,;
                               "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
                               "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
                               "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
@@ -267,12 +286,72 @@ STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
 
 STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket )
    LOCAL aAddressPeer
+   LOCAL cAddressPeer
+   LOCAL cNamePeer
+   LOCAL lBlocked
 
    IF netiosrv[ _NETIOSRV_lAcceptConn ]
 
+      netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
+      cAddressPeer := AddrToIPPort( aAddressPeer )
+
+      lBlocked := .F.
+
+      /* Handle positive filter */
+      IF ! Empty( netiosrv[ _NETIOSRV_hAllow ] )
+         hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
+         IF !( cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ] )
+            IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) == 0
+               cNamePeer := hb_socketGetPeerName( aAddressPeer )
+               IF cNamePeer == NIL
+                  lBlocked := .T.
+               ELSE
+                  IF !( cNamePeer $ netiosrv[ _NETIOSRV_hAllow ] )
+                     IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cNamePeer ) } ) == 0
+                        /* Not on allow list */
+                        lBlocked := .T.
+                     ENDIF
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+         hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
+         IF lBlocked
+            RETURN NIL
+         ENDIF
+      ENDIF
+
+      /* Handle negative filter */
+      IF ! Empty( netiosrv[ _NETIOSRV_hBlock ] )
+         hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
+         IF cAddressPeer $ netiosrv[ _NETIOSRV_hBlock ]
+            lBlocked := .T.
+         ELSE
+            IF hb_HScan( netiosrv[ _NETIOSRV_hBlock ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) > 0
+               lBlocked := .T.
+            ELSE
+               IF cNamePeer == NIL
+                  cNamePeer := hb_socketGetPeerName( aAddressPeer )
+               ENDIF
+               IF cNamePeer != NIL
+                  IF cNamePeer $ netiosrv[ _NETIOSRV_hBlock ]
+                     lBlocked := .T.
+                  ELSE
+                     IF hb_HScan( netiosrv[ _NETIOSRV_hBlock ], {| tmp | hb_WildMatch( tmp, cNamePeer ) } ) > 0
+                        lBlocked := .T.
+                     ENDIF
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+         hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
+         IF lBlocked
+            RETURN NIL
+         ENDIF
+      ENDIF
+
       IF netiosrv[ _NETIOSRV_lShowConn ]
-         netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
-         QQOut( "Connecting (" + netiosrv[ _NETIOSRV_cName ] + "): " + AddrToIPPort( aAddressPeer ), hb_eol() )
+         QQOut( "Connecting (" + netiosrv[ _NETIOSRV_cName ] + "): " + cAddressPeer, hb_eol() )
       ENDIF
 
       netiosrv_conn_register( netiosrv, pConnectionSocket )
@@ -517,6 +596,29 @@ STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
    RETURN aArray
+
+STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
+   LOCAL lSuccess := .T.
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
+
+   IF lAdd
+      IF !( cAddress $ hList )
+         hList[ cAddress ] := NIL
+      ELSE
+         lSuccess := .F.
+      ENDIF
+   ELSE
+      IF cAddress $ hList
+         hb_HDel( hList, cAddress )
+      ELSE
+         lSuccess := .F.
+      ENDIF
+   ENDIF
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
+
+   RETURN lSuccess
 
 STATIC FUNCTION ConnStatusStr( nStatus )
 
