@@ -50,7 +50,12 @@
  *
  */
 
-FUNCTION hb_cwd()
+/* QUESTION: How to return success/failure when dir is passed? */
+
+FUNCTION hb_cwd( cNewDir )
+   IF hb_isString( cNewDir )
+      /* TODO */
+   ENDIF
    RETURN hb_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 #define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
@@ -174,8 +179,8 @@ FUNCTION hb_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
    /* Different drive spec. There is no way to solve that using relative dirs. */
    IF ! Empty( hb_osDriveSeparator() ) .AND. ;
       tmp == 1 .AND. ;
-      ( Right( aPathBase[ 1 ]  , 1 ) == hb_osDriveSeparator() .OR. ;
-        Right( aPathTarget[ 1 ], 1 ) == hb_osDriveSeparator() )
+      ( Right( aPathBase[ 1 ]  , Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() .OR. ;
+        Right( aPathTarget[ 1 ], Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
       RETURN cPathTarget
    ENDIF
 
@@ -226,7 +231,10 @@ FUNCTION hb_DirAddPathSep( cDir )
       RETURN ""
    ENDIF
 
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+   IF ! Empty( cDir ) .AND. ;
+      ! _ISDRIVESPEC( cDir ) .AND. ;
+      !( Right( cDir, 1 ) == hb_ps() )
+
       cDir += hb_ps()
    ENDIF
 
@@ -239,12 +247,14 @@ FUNCTION hb_DirDelPathSep( cDir )
    ENDIF
 
    IF Empty( hb_osDriveSeparator() )
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
+               !( cDir == hb_ps() + hb_ps() )
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ELSE
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
+               !( cDir == hb_ps() + hb_ps() ) .AND. ;
+               !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ENDIF
@@ -320,7 +330,7 @@ FUNCTION hb_DirUnbuild( cDir )
          ENDIF
          cDirTemp := Left( cDirTemp, tmp - 1 )
          IF ! Empty( hb_osDriveSeparator() ) .AND. ;
-            Right( cDirTemp, 1 ) == hb_osDriveSeparator()
+            Right( cDirTemp, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
             EXIT
          ENDIF
       ENDDO
@@ -349,13 +359,6 @@ FUNCTION hb_FNameNameExtGet( cFileName )
 
    RETURN hb_FNameMerge( NIL, cName, cExt )
 
-FUNCTION hb_FNameExtGet( cFileName )
-   LOCAL cExt
-
-   hb_FNameSplit( cFileName,,, @cExt )
-
-   RETURN cExt
-
 FUNCTION hb_FNameExtDef( cFileName, cDefExt )
    LOCAL cDir, cName, cExt
 
@@ -367,23 +370,16 @@ FUNCTION hb_FNameExtDef( cFileName, cDefExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
+FUNCTION hb_FNameExtGet( cFileName )
+   LOCAL cExt
+
+   hb_FNameSplit( cFileName,,, @cExt )
+
+   RETURN cExt
+
 FUNCTION hb_FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-FUNCTION hb_FNameDirExtSet( cFileName, cDirNew, cExtNew )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-
-   IF cDirNew != NIL
-      cDir := cDirNew
-   ENDIF
-   IF cExtNew != NIL
-      cExt := cExtNew
-   ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
