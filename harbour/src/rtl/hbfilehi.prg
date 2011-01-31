@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION hb_cwd()
    RETURN hb_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
@@ -170,7 +168,7 @@ FUNCTION hb_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
    ENDIF
 
    IF tmp == Len( aPathBase )
-      RETURN s_FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName )
+      RETURN s_FN_FromArray( aPathTarget, tmp, cTargetFileName, "" )
    ENDIF
 
    /* Different drive spec. There is no way to solve that using relative dirs. */
@@ -183,7 +181,7 @@ FUNCTION hb_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
 
    /* Force to return relative paths even when base is different. */
    IF lForceRelative
-      RETURN s_FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) )
+      RETURN s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) )
    ENDIF
 
    RETURN cPathTarget
@@ -199,25 +197,17 @@ STATIC FUNCTION s_FN_ToArray( cPath, /* @ */ cFileName  )
 
    RETURN hb_ATokens( cDir, hb_ps() )
 
-STATIC FUNCTION s_FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
+STATIC FUNCTION s_FN_FromArray( aPath, nFrom, cFileName, cDirPrefix )
+   LOCAL nTo := Len( aPath )
    LOCAL cDir
    LOCAL tmp
-
-   DEFAULT nFrom TO 1
-   DEFAULT nTo   TO Len( aPath )
 
    IF nFrom > Len( aPath ) .OR. nTo < 1
       RETURN ""
    ENDIF
 
-   DEFAULT cDirPrefix TO ""
-
    IF nFrom < 1
       nFrom := 1
-   ENDIF
-
-   IF nTo > Len( aPath )
-      nTo := Len( aPath )
    ENDIF
 
    cDir := ""

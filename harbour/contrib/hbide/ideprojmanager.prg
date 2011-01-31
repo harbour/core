@@ -1615,9 +1615,9 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
    ENDIF
 
    IF hb_isObject( ::cargo )
-      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::cargo:cPath ) )
+      cExe := hbide_PathMakeAbsolute( cExe, hbide_pathToOSPath( ::cargo:cPath ) )
    ELSE
-      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
+      cExe := hbide_PathMakeAbsolute( cExe, hbide_pathToOSPath( ::oProject:location ) )
    ENDIF
 
    IF !empty( cExe )

@@ -54,7 +54,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *    hbide_PathProc(), hbide_DirAddPathSep(), DirDelPathSep()
+ *    hbide_PathMakeAbsolute(), hbide_DirAddPathSep(), DirDelPathSep()
  *    hbide_pwd()
  *
  * See COPYING for licensing terms.
@@ -917,7 +917,7 @@ FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_pathProc( cPathR, cPathA )
+FUNCTION hbide_PathMakeAbsolute( cPathR, cPathA )
    LOCAL cDirA, cDirR, cDriveR, cNameR, cExtR
 
    IF Empty( cPathA )
@@ -1534,8 +1534,8 @@ FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
 
    DEFAULT lForceRelative TO .F.
 
-   cPathBase   := PathProc( hbide_DirAddPathSep( cPathBase ), hb_dirBase() )
-   cPathTarget := PathProc( cPathTarget, hb_dirBase() )
+   cPathBase   := hbide_PathMakeAbsolute( hbide_DirAddPathSep( cPathBase ), hb_dirBase() )
+   cPathTarget := hbide_PathMakeAbsolute( cPathTarget, hb_dirBase() )
 
    /* TODO: Optimize to operate on strings instead of arrays */
 
@@ -1620,29 +1620,6 @@ STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
    NEXT
 
    RETURN hb_FNameMerge( DirDelPathSep( hbide_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
-
-
-STATIC FUNCTION PathProc( cPathR, cPathA )
-   LOCAL cDirA
-   LOCAL cDirR, cDriveR, cNameR, cExtR
-
-   IF Empty( cPathA )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
-
-   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathA, @cDirA )
-
-   IF Empty( cDirA )
-      RETURN cPathR
-   ENDIF
-
-   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
 
 
 FUNCTION hbide_DirAddPathSep( cDir )
@@ -1787,7 +1764,7 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
 
 FUNCTION hbide_syncRoot( cRoot, cPath )
    LOCAL cPth, cFile, cExt
-   LOCAL cPathProc := hbide_pathProc( cRoot, cPath )
+   LOCAL cPathProc := hbide_PathMakeAbsolute( cRoot, cPath )
 
    hb_fNameSplit( cPath, @cPth, @cFile, @cExt )
 
