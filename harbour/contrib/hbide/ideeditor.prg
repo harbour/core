@@ -222,16 +222,16 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "TB_Compile"   , ::qContextMenu:addAction( ::oAC:getAction( "TB_Compile"    ) ) } )
    aadd( ::aActions, { "TB_CompilePPO", ::qContextMenu:addAction( ::oAC:getAction( "TB_CompilePPO" ) ) } )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
-   aadd( ::aActions, { "Format"       , ::qContextMenu:addAction( ::oFormatDock:oWidget:toggleViewAction() ) } )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                      ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."              ) } )
-
    ::qContextSub := ::qContextMenu:addMenu( "Split" )
    //
    aadd( ::aActions, { "Split H"      , ::qContextSub:addAction( "Split Horizontally" ) } )
    aadd( ::aActions, { "Split V"      , ::qContextSub:addAction( "Split Vertically"   ) } )
    aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
    aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
+   aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
+   aadd( ::aActions, { "Format"       , ::qContextMenu:addAction( ::oFormatDock:oWidget:toggleViewAction() ) } )
 
    /* Define code completer */
    ::oIde:qProtoList := QStringList()

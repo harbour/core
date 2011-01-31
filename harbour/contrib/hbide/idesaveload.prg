@@ -117,7 +117,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cCurrentView                            INIT  ""
    //
    DATA   cTextFileExtensions                     INIT  ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,.qtp,.hbs," + ;
-                                                        ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth"
+                                                        ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth,.qrc"
    DATA   aProjFiles                              INIT  {}
    DATA   aFiles                                  INIT  {}
    DATA   aFind                                   INIT  {}
