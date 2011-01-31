@@ -399,13 +399,13 @@ PROCEDURE Main( ... )
 
    FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, FNameNameGet( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
-   MakeDir( s_cTempDir )
+   hb_DirCreate( s_cTempDir )
 
    cThisComponent := FNameNameGet( cCWD )
 
-   MakeDir( CombinePath( s_cTempDir, cThisComponent ) )
-   MakeDir( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
-   MakeDir( CombinePath( s_cTempDir, "root" ) )
+   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent ) )
+   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
+   hb_DirCreate( CombinePath( s_cTempDir, "root" ) )
 
    IF lRediff .AND. cDiffFile == NIL
       OutStd( "Requested rediff mode with no existing local diff, attempting to create one." + hb_eol() )

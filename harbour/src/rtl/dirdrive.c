@@ -50,10 +50,26 @@
  *
  */
 
-/* NOTE: Clipper 5.3 functions */
-
 #include "hbapi.h"
 #include "hbapifs.h"
+
+HB_FUNC( HB_DIRCREATE )
+{
+   if( HB_ISCHAR( 1 ) )
+      hb_retni( hb_fsMkDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
+   else
+      hb_retni( F_ERROR );
+}
+
+HB_FUNC( HB_DIRDELETE )
+{
+   if( HB_ISCHAR( 1 ) )
+      hb_retni( hb_fsRmDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
+   else
+      hb_retni( F_ERROR );
+}
+
+/* NOTE: Clipper 5.3 functions */
 
 #ifdef HB_COMPAT_C53
 
@@ -70,18 +86,12 @@ HB_FUNC( DIRCHANGE )
 
 HB_FUNC( MAKEDIR )
 {
-   if( HB_ISCHAR( 1 ) )
-      hb_retni( hb_fsMkDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
-   else
-      hb_retni( F_ERROR );
+   HB_FUNC_EXEC( HB_DIRCREATE );
 }
 
 HB_FUNC( DIRREMOVE )
 {
-   if( HB_ISCHAR( 1 ) )
-      hb_retni( hb_fsRmDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
-   else
-      hb_retni( F_ERROR );
+   HB_FUNC_EXEC( HB_DIRDELETE );
 }
 
 /* NOTE: Clipper 5.3 undocumented */

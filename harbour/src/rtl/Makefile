@@ -228,6 +228,7 @@ PRG_SOURCES := \
    getsyshb.prg \
    gui.prg \
    hbdoc.prg \
+   hbfilehi.prg \
    hbi18n2.prg \
    hbini.prg \
    input.prg \

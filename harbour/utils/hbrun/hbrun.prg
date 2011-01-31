@@ -587,7 +587,7 @@ STATIC FUNCTION hbrun_HistoryFileName()
    ENDIF
 
    IF ! hb_dirExists( cDir )
-      MakeDir( cDir )
+      hb_dirCreate( cDir )
    ENDIF
 
    RETURN cDir + hb_ps() + cFileName

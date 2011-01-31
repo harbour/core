@@ -42,7 +42,7 @@ PROCEDURE Main()
    ? HB_FLINKREAD( "_hb_slnk.tmp" )
    ? FERROR()
 
-   MakeDir( "_hb_d" )
+   hb_DirCreate( "_hb_d" )
 
    ? HB_FLINKSYM( "_hb_d.tmp", "_hb_dlnk.tmp" )
    ? FERROR()

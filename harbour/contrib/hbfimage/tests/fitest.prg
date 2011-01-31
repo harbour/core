@@ -34,7 +34,7 @@ PROCEDURE Main()
    // Check output directory
    IF !hb_DirExists( IMAGES_OUT )
 #ifdef HB_COMPAT_C53
-      MakeDir( IMAGES_OUT )
+      hb_DirCreate( IMAGES_OUT )
 #endif
    ENDIF
 

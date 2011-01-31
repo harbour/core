@@ -59,7 +59,7 @@ proc main()
 
    rddSetDefault("DBFCDX")
    if !hb_dirExists( cPath )
-      MakeDir( cPath )
+      hb_dirCreate( cPath )
    endif
    dbCreate( cPath + "mydata", { { "F1", "C", 10, 0 }, ;
                                  { "F2", "=",  8, 0 }, ;

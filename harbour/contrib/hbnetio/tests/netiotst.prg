@@ -26,7 +26,7 @@
 request DBFCDX
 
 request HB_DIREXISTS
-request MAKEDIR
+request HB_DIRCREATE
 
 proc main()
    local pSockSrv, lExists
@@ -53,7 +53,7 @@ proc main()
    ? "Directory './data'", iif( !lExists, "not exists", "exists" )
    if !lExists
       ? "Creating directory './data' ->", ;
-       iif( netio_funcexec( "MakeDir", "./data" ) == -1, "error", "OK" )
+       iif( netio_funcexec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
    endif
 
    ? "'" + DBNAME + "'"

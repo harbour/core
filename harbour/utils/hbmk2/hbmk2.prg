@@ -495,9 +495,6 @@ REQUEST hbmk_KEYW
 #define HBMK_ISPLAT( list )     HBMK_IS_IN( hbmk[ _HBMK_cPLAT ], list )
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
 
-#define hb_DirCreate( d )       MakeDir( d )
-#define hb_DirDelete( d )       DirRemove( d )
-
 /* Request some functions for plugins */
 REQUEST HB_REGEX
 REQUEST HBCLASS
@@ -5633,11 +5630,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
 
                      IF lCHD_Comp
-                        tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+                        tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
                         IF hbmk[ _HBMK_lDONTEXEC ]
                            cCHD_DirOld := NIL
                         ELSE
-                           cCHD_DirOld := hb_pwd()
+                           cCHD_DirOld := hb_cwd()
                            IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
                               hbmk_OutStd( hbmk, hb_StrFormat( I_( "'cd' to: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
                            ENDIF
@@ -6296,7 +6293,7 @@ STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
    LOCAL cINCPATH
 
    IF lCHD_Comp
-      cBaseDir := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+      cBaseDir := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
    ENDIF
 
    FOR EACH cINCPATH IN hbmk[ _HBMK_aINCPATH ]
@@ -7814,7 +7811,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
 /* Public functions accessible for plugins */
 
-FUNCTION hbmk2_CWD()                   ; RETURN hb_pwd()
+FUNCTION hbmk2_CWD()                   ; RETURN hb_cwd()
 FUNCTION hbmk2_FindInPath( ... )       ; RETURN FindInPath( ... )
 FUNCTION hbmk2_PathNormalize( ... )    ; RETURN PathNormalize( ... )
 FUNCTION hbmk2_PathMakeAbsolute( ... ) ; RETURN PathMakeAbsolute( ... )
@@ -7868,7 +7865,7 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
 FUNCTION hbmk2_PathFromWorkdirToCWD( ctx )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
-      RETURN DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+      RETURN DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
    ENDIF
    RETURN ""
 
@@ -9637,7 +9634,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
 
    RETURN cItem
 
-STATIC FUNCTION hb_pwd()
+STATIC FUNCTION hb_cwd()
    RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
@@ -9683,7 +9680,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_SELF"
       cMacro := PathSepToSelf( cFileName ) ; EXIT
    CASE "HB_CURDIR"
-      cMacro := hb_pwd() ; EXIT
+      cMacro := hb_cwd() ; EXIT
    CASE "HB_TEMPDIR"
       cMacro := hb_DirTemp() ; EXIT
    CASE "HB_TARGETNAME"

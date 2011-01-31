@@ -774,7 +774,7 @@ FUNCTION hbide_getIniPath( cHbideIni )
          cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
       #endif
          IF ! hb_dirExists( cPath )
-            MakeDir( cPath )
+            hb_DirCreate( cPath )
          ENDIF
          cIni := cPath + "hbide.ini"
       ENDIF
