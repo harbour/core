@@ -184,6 +184,8 @@ METHOD IdeFormat:execEvent( cEvent, p )
 METHOD IdeFormat:format( nMode )
    LOCAL oEdit, aText, cBuffer
 
+   HB_SYMBOL_UNUSED( nMode )
+
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       IF ::lSelOnly
          cBuffer := oEdit:getSelectedText()
