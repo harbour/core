@@ -221,6 +221,8 @@ PROCEDURE Main( ... )
                               "hbnetiomgm_allowdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .F., ... ) } ,;
                               "hbnetiomgm_blockaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .T., ... ) } ,;
                               "hbnetiomgm_blockdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .F., ... ) } ,;
+                              "hbnetiomgm_filters"        => {| ... | netiomgm_rpc_filters( netiosrv ) } ,;
+                              "hbnetiomgm_filtersadmin"   => {| ... | netiomgm_rpc_filters( netiomgm ) } ,;
                               "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
                               "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
                               "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
@@ -619,6 +621,27 @@ STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
 
    RETURN lSuccess
+
+STATIC FUNCTION netiomgm_rpc_filters( netiosrv )
+   LOCAL cType
+   LOCAL hFilter
+   LOCAL cAddress
+
+   LOCAL aArray := {}
+
+   hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
+
+   FOR EACH cType, hFilter IN { "allow", "block" }, { netiosrv[ _NETIOSRV_hAllow ], netiosrv[ _NETIOSRV_hBlock ] }
+      FOR EACH cAddress IN hFilter
+         AAdd( aArray, {;
+            "cType"    => cType,;
+            "cAddress" => cAddress:__enumKey() } )
+      NEXT
+   NEXT
+
+   hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
+
+   RETURN aArray
 
 STATIC FUNCTION ConnStatusStr( nStatus )
 

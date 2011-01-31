@@ -56,23 +56,33 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    nHistIndex := Len( aHistory ) + 1
 
    hCommands  := { ;
-      "?"          => { ""               , "Synonym for 'help'."                   , {|| cmdHelp( hCommands ) } },;
-      "exit"       => { ""               , "Exit console."                         , {|| lQuit := .T. } },;
-      "clear"      => { ""               , "Clear screen."                         , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "connect"    => { "[<ip[:port>]]"  , "Connect."                              , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
-      "disconnect" => { ""               , "Disconnect."                           , {|| cmdDisconnect( @pConnection ) } },;
-      "sysinfo"    => { ""               , "Show system/build information."        , {|| cmdSysInfo( pConnection ) } },;
-      "showconf"   => { ""               , "Show server configuration."            , {|| cmdServerConfig( pConnection ) } },;
-      "show"       => { ""               , "Show list of connections."             , {|| cmdConnInfo( pConnection, .F. ) } },;
-      "showadmin"  => { ""               , "Show list of management connections."  , {|| cmdConnInfo( pConnection, .T. ) } },;
-      "noconn"     => { ""               , "Disable incoming connections."         , {|| cmdConnEnable( pConnection, .F. ) } },;
-      "conn"       => { ""               , "Enable incoming connections."          , {|| cmdConnEnable( pConnection, .T. ) } },;
-      "nologconn"  => { ""               , "Disable logging incoming connections." , {|| cmdConnLogEnable( pConnection, .F. ) } },;
-      "logconn"    => { ""               , "Enable logging incoming connections."  , {|| cmdConnLogEnable( pConnection, .T. ) } },;
-      "stop"       => { "[<ip:port>|all]", "Stop specified connection(s)."         , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
-      "clientinfo" => { "[<ip:port>"     , "Show client details."                  , {| cCommand | cmdConnClientInfo( pConnection, cCommand ) } },;
-      "quit"       => { ""               , "Stop server and exit console."         , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
-      "help"       => { ""               , "Display this help."                    , {|| cmdHelp( hCommands ) } } }
+      "?"             => { ""               , "Synonym for 'help'."                            , {|| cmdHelp( hCommands ) } },;
+      "exit"          => { ""               , "Exit console."                                  , {|| lQuit := .T. } },;
+      "clear"         => { ""               , "Clear screen."                                  , {|| Scroll(), SetPos( 0, 0 ) } },;
+      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
+      "disconnect"    => { ""               , "Disconnect."                                    , {|| cmdDisconnect( @pConnection ) } },;
+      "sysinfo"       => { ""               , "Show system/build information."                 , {|| cmdSysInfo( pConnection ) } },;
+      "showconf"      => { ""               , "Show server configuration."                     , {|| cmdServerConfig( pConnection ) } },;
+      "show"          => { ""               , "Show list of connections."                      , {|| cmdConnInfo( pConnection, .F. ) } },;
+      "showadmin"     => { ""               , "Show list of management connections."           , {|| cmdConnInfo( pConnection, .T. ) } },;
+      "noconn"        => { ""               , "Disable incoming connections."                  , {|| cmdConnEnable( pConnection, .F. ) } },;
+      "conn"          => { ""               , "Enable incoming connections."                   , {|| cmdConnEnable( pConnection, .T. ) } },;
+      "nologconn"     => { ""               , "Disable logging incoming connections."          , {|| cmdConnLogEnable( pConnection, .F. ) } },;
+      "logconn"       => { ""               , "Enable logging incoming connections."           , {|| cmdConnLogEnable( pConnection, .T. ) } },;
+      "filt"          => { ""               , "Show filters."                                  , {|| cmdConnFilters( pConnection, .F. ) } },;
+      "filtadmin"     => { ""               , "Show filters for management connections."       , {|| cmdConnFilters( pConnection, .T. ) } },;
+      "allowadd"      => { "<ip|host>"      , "Add allow filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowadd" ) } },;
+      "allowdel"      => { "<ip|host>"      , "Remove allow filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdel" ) } },;
+      "blockadd"      => { "<ip|host>"      , "Add block filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockadd" ) } },;
+      "blockdel"      => { "<ip|host>"      , "Remove block filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdel" ) } },;
+      "allowaddadmin" => { "<ip|host>"      , "Add allow filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowaddadmin" ) } },;
+      "allowdeladmin" => { "<ip|host>"      , "Remove allow filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdeladmin" ) } },;
+      "blockaddadmin" => { "<ip|host>"      , "Add block filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockaddadmin" ) } },;
+      "blockdeladmin" => { "<ip|host>"      , "Remove block filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdeladmin" ) } },;
+      "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
+      "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| cCommand | cmdConnClientInfo( pConnection, cCommand ) } },;
+      "quit"          => { ""               , "Stop server and exit console."                  , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
+      "help"          => { ""               , "Display this help."                             , {|| cmdHelp( hCommands ) } } }
 
    lQuit := .F.
 
@@ -517,6 +527,43 @@ STATIC PROCEDURE cmdConnLogEnable( pConnection, lValue )
       QQOut( "Not connected.", hb_eol() )
    ELSE
       netio_funcexec( pConnection, "hbnetiomgm_logconn", lValue )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnFilterMod( pConnection, cCommand, cRPC )
+   LOCAL aToken
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      aToken := hb_ATokens( cCommand, " " )
+      IF Len( aToken ) > 1
+         IF netio_funcexec( pConnection, cRPC, aToken[ 1 ] )
+            QQOut( "Done", hb_eol() )
+         ELSE
+            QQOut( "Failed", hb_eol() )
+         ENDIF
+      ELSE
+         QQOut( "Error: Invalid syntax.", hb_eol() )
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnFilters( pConnection, lManagement )
+   LOCAL aArray
+   LOCAL hFilter
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      aArray := netio_funcexec( pConnection, iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
+
+      FOR EACH hFilter IN aArray
+         QQOut( hFilter[ "cType" ],;
+                hFilter[ "cAddress" ], hb_eol() )
+      NEXT
    ENDIF
 
    RETURN
