@@ -1613,7 +1613,10 @@ STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
 
    cDir := ""
    FOR tmp := nFrom TO nTo
-      cDir += aPath[ tmp ] + hb_ps()
+      cDir += aPath[ tmp ]
+      IF nFrom < nTo
+         cDir += hb_ps()
+      ENDIF
    NEXT
 
    RETURN hb_FNameMerge( DirDelPathSep( hbide_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
