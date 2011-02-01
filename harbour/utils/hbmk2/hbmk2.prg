@@ -5175,7 +5175,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ! Empty( cBin_CompCPP ) .AND. ;
             hbmk[ _HBMK_lHBCPPMM ]
 
+#if defined( __PLATFORM__DOS )
             l_cCPPSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkcpp.cpp"
+#else
+            l_cCPPSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkcpp_" + FNameNameGet( hbmk[ _HBMK_cFIRST ] ) + ".cpp"
+#endif
 
             IF ! hbmk[ _HBMK_lCLEAN ]
 

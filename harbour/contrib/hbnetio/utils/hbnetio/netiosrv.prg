@@ -104,6 +104,8 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
 
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
+   hb_HKeepOrder( netiosrv[ _NETIOSRV_hAllow ], .T. )
+   hb_HKeepOrder( netiosrv[ _NETIOSRV_hBlock ], .T. )
 
    netiomgm[ _NETIOSRV_cName ]         := "Management"
    netiomgm[ _NETIOSRV_nPort ]         := _NETIOMGM_PORT_DEF
@@ -117,6 +119,8 @@ PROCEDURE Main( ... )
    netiomgm[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
 
    hb_HKeepOrder( netiomgm[ _NETIOSRV_hConnection ], .T. )
+   hb_HKeepOrder( netiomgm[ _NETIOSRV_hAllow ], .T. )
+   hb_HKeepOrder( netiomgm[ _NETIOSRV_hBlock ], .T. )
 
    FOR EACH cParam IN { ... }
       DO CASE
