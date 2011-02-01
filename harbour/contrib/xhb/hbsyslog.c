@@ -16,7 +16,7 @@
 
 static HANDLE s_RegHandle;
 
-#elif ( defined( HB_OS_UNIX ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
 
 #include <syslog.h>
 

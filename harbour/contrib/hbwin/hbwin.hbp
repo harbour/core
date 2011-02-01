@@ -31,6 +31,7 @@ legacyco.c
 legacycp.c
 mapi.c
 olecore.c
+oleuuid.c{watcom}
 hbolesrv.c
 wapi_alloc.c
 wapi_commctrl.c
