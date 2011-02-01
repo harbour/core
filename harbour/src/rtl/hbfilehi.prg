@@ -51,7 +51,6 @@
  */
 
 /* QUESTION: How to return success/failure when dir is passed? */
-
 FUNCTION hb_cwd( cNewDir )
    IF hb_isString( cNewDir )
       /* TODO */
@@ -61,6 +60,7 @@ FUNCTION hb_cwd( cNewDir )
 #define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
+/* QUESTION: Rename to hb_PathOptimize() ? */
 FUNCTION hb_PathNormalize( cPath )
    LOCAL aDir
    LOCAL cDir

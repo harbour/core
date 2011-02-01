@@ -29,6 +29,7 @@
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
 -cflag=-DHPDF_DLL_MAKE_CDECL{allwin&hbdyn}
+-cflag=-DPNG_ALLOCATED{allpocc}
 -cflag=-U__COREDLL__{mingwarm}
 
 _hbhbpdf.c
