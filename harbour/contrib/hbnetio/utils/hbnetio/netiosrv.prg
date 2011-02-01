@@ -19,8 +19,7 @@
          - gracefully shutting down server by waiting for connections to close and not accept new ones
          - pausing server
          - sort out console UI from server side output
-         - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6
-         - option to make settings (allow/block lists) persistent by saving them in config file */
+         - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
 
@@ -185,6 +184,10 @@ PROCEDURE Main( ... )
       ENDCASE
    NEXT
 
+   IF netiosrv_ConfLoad( netiosrv, netiomgm )
+      OutStd( "Configuration loaded: " + netiosrv_ConfName() + hb_eol() )
+   ENDIF
+
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
       netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
                       netiosrv[ _NETIOSRV_cIFAddr ],;
@@ -227,6 +230,7 @@ PROCEDURE Main( ... )
                               "hbnetiomgm_blockdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .F., ... ) } ,;
                               "hbnetiomgm_filters"        => {| ... | netiomgm_rpc_filters( netiosrv ) } ,;
                               "hbnetiomgm_filtersadmin"   => {| ... | netiomgm_rpc_filters( netiomgm ) } ,;
+                              "hbnetiomgm_filtersave"     => {| ... | netiomgm_rpc_filtersave( netiosrv, netiomgm ) } ,;
                               "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
                               "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
                               "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
@@ -273,6 +277,57 @@ PROCEDURE Main( ... )
    ENDIF
 
    RETURN
+
+#define _NETIOSRV_SIGNATURE "netiosrv"
+
+STATIC FUNCTION netiosrv_ConfName()
+   RETURN hb_ProgName() + ".config"
+
+STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
+   LOCAL hConf := { => }
+
+// hb_HKeepOrder( hConf, .T. )
+
+   hConf[ "signature" ]    := _NETIOSRV_SIGNATURE
+   hConf[ "version" ]      := 1
+   hConf[ "srv.showconn" ] := netiosrv[ _NETIOSRV_lShowConn ]
+   hConf[ "srv.allow" ]    := netiosrv[ _NETIOSRV_hAllow ]
+   hConf[ "srv.block" ]    := netiosrv[ _NETIOSRV_hBlock ]
+   hConf[ "mgm.showconn" ] := netiomgm[ _NETIOSRV_lShowConn ]
+   hConf[ "mgm.allow" ]    := netiomgm[ _NETIOSRV_hAllow ]
+   hConf[ "mgm.block" ]    := netiomgm[ _NETIOSRV_hBlock ]
+
+   RETURN hb_MemoWrit( netiosrv_ConfName(), hb_Serialize( hConf ) )
+
+STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
+   LOCAL hConf := hb_Deserialize( hb_MemoRead( netiosrv_ConfName() ) )
+
+   IF hb_isHash( hConf ) .AND. ;
+      "signature" $ hConf .AND. ;
+      hConf[ "signature" ] == _NETIOSRV_SIGNATURE
+
+      IF "srv.showconn" $ hConf
+         netiosrv[ _NETIOSRV_lShowConn ] := hConf[ "srv.showconn" ]
+      ENDIF
+      IF "srv.allow"    $ hConf
+         netiosrv[ _NETIOSRV_hAllow ]    := hConf[ "srv.allow" ]
+      ENDIF
+      IF "srv.block"    $ hConf
+         netiosrv[ _NETIOSRV_hBlock ]    := hConf[ "srv.block" ]
+      ENDIF
+      IF "mgm.showconn" $ hConf
+         netiomgm[ _NETIOSRV_lShowConn ] := hConf[ "mgm.showconn" ]
+      ENDIF
+      IF "mgm.allow"    $ hConf
+         netiomgm[ _NETIOSRV_hAllow ]    := hConf[ "mgm.allow" ]
+      ENDIF
+      IF "mgm.block"    $ hConf
+         netiomgm[ _NETIOSRV_hBlock ]    := hConf[ "mgm.block" ]
+      ENDIF
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
    LOCAL aArray := {;
@@ -646,6 +701,9 @@ STATIC FUNCTION netiomgm_rpc_filters( netiosrv )
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
 
    RETURN aArray
+
+STATIC FUNCTION netiomgm_rpc_filtersave( netiosrv, netiomgm )
+   RETURN netiosrv_ConfSave( netiosrv, netiomgm )
 
 STATIC FUNCTION ConnStatusStr( nStatus )
 

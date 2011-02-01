@@ -79,6 +79,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "allowdeladmin" => { "<ip|host>"      , "Remove allow filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdeladmin" ) } },;
       "blockaddadmin" => { "<ip|host>"      , "Add block filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockaddadmin" ) } },;
       "blockdeladmin" => { "<ip|host>"      , "Remove block filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdeladmin" ) } },;
+      "filtsave"      => { ""               , "Save filters to disk."                          , {|| cmdConnFilterSave( pConnection ) } },;
       "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
       "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| cCommand | cmdConnClientInfo( pConnection, cCommand ) } },;
       "quit"          => { ""               , "Stop server and exit console."                  , {|| cmdShutdown( pConnection ), lQuit := .T. } },;
@@ -539,7 +540,7 @@ STATIC PROCEDURE cmdConnFilterMod( pConnection, cCommand, cRPC )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
-         IF netio_funcexec( pConnection, cRPC, aToken[ 1 ] )
+         IF netio_funcexec( pConnection, cRPC, aToken[ 2 ] )
             QQOut( "Done", hb_eol() )
          ELSE
             QQOut( "Failed", hb_eol() )
@@ -564,6 +565,16 @@ STATIC PROCEDURE cmdConnFilters( pConnection, lManagement )
          QQOut( hFilter[ "cType" ],;
                 hFilter[ "cAddress" ], hb_eol() )
       NEXT
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE cmdConnFilterSave( pConnection )
+
+   IF Empty( pConnection )
+      QQOut( "Not connected.", hb_eol() )
+   ELSE
+      netio_funcexec( pConnection, "hbnetiomgm_filtersave" )
    ENDIF
 
    RETURN
