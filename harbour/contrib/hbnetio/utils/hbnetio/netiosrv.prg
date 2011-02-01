@@ -286,7 +286,7 @@ STATIC FUNCTION netiosrv_ConfName()
 STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
    LOCAL hConf := { => }
 
-// hb_HKeepOrder( hConf, .T. )
+   hb_HKeepOrder( hConf, .T. )
 
    hConf[ "signature" ]    := _NETIOSRV_SIGNATURE
    hConf[ "version" ]      := 1

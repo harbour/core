@@ -67,9 +67,6 @@ STATIC s_cReBase
 PROCEDURE Main( ... )
    LOCAL hProjectList
 
-   /* Signal that we're doing a Harbour build */
-   hb_setenv( "_HB_BUILD_", "yes" )
-
    s_cBase := ""
    s_cReBase := ""
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
@@ -367,6 +364,9 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    LOCAL cDynSuffix
 
    LOCAL nErrorLevel
+
+   /* Signal that we're doing a Harbour build */
+   hb_setenv( "_HB_BUILD_", "yes" )
 
    /* Preprocessing */
 
