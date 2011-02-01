@@ -21,7 +21,7 @@
 
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
 
--plugin=hbqt_hbmk2_plugin.hbs
+-plugin=hbmk2_qt.hbs
 
 -deppkgname=qt:QtCore
 -depkeyhead=qt:QtCore/qglobal.h

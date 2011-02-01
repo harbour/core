@@ -12,7 +12,7 @@ stop={HB_WITH_QT='no'}QT deselected, build skipped.
 
 incpaths=.
 
-plugins=hbqt_hbmk2_plugin.hbs
+plugins=hbmk2_qt.hbs
 
 {msvc}ldflags=-nodefaultlib:msvcrt.lib -defaultlib:libcmt.lib
 
