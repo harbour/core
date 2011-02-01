@@ -2929,14 +2929,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Decide about output name */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
-      /* If -o with full name wasn't specified, let's
-         make it the first source file specified. */
-      DEFAULT hbmk[ _HBMK_cPROGNAME ] TO FNameNameGet( hbmk[ _HBMK_cFIRST ] )
+      IF ! hbmk[ _HBMK_lCreateHRB ]
+         /* If -o with full name wasn't specified, let's
+            make it the first source file specified. */
+         DEFAULT hbmk[ _HBMK_cPROGNAME ] TO FNameNameGet( hbmk[ _HBMK_cFIRST ] )
 
-      /* Combine output dir with output name. */
-      IF ! Empty( hbmk[ _HBMK_cPROGDIR ] )
-         hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ], @cDir, @cName, @cExt )
-         hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( iif( Empty( cDir ), hbmk[ _HBMK_cPROGDIR ], cDir ), cName, cExt )
+         /* Combine output dir with output name. */
+         IF ! Empty( hbmk[ _HBMK_cPROGDIR ] )
+            hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ], @cDir, @cName, @cExt )
+            hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( iif( Empty( cDir ), hbmk[ _HBMK_cPROGDIR ], cDir ), cName, cExt )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -4692,7 +4694,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
-      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
+      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
          l_aC_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
@@ -4715,7 +4717,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
-      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
+      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
          l_aCPP_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aCPP ]
             IF hbmk[ _HBMK_lDEBUGINC ]
@@ -4737,7 +4739,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Create incremental file list for .prg files */
 
    IF ( ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
-      ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) /* or in preprocessor mode */
+      ( hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. ; /* or in HRB mode */
+      ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] )        /* or in preprocessor mode */
 
       IF ! lDumpInfo
          PlugIn_Execute_All( hbmk, "pre_prg" )
@@ -4745,8 +4748,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       /* Incremental */
 
-      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! lDumpInfo
-         IF hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] /* .ppo files are the dependents in preprocessor mode */
+      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ;
+         ! hbmk[ _HBMK_lCLEAN ] .AND. ! lDumpInfo
+         IF hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ]
+            cHarbourOutputExt := ".hrb"
+            cHarbourOutputDir := hbmk[ _HBMK_cWorkDir ]
+         ELSEIF hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] /* .ppo files are the dependents in preprocessor mode */
             cHarbourOutputExt := ".ppo"
             cHarbourOutputDir := cHarbourPPODir
          ELSE
@@ -4847,7 +4854,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Harbour compilation */
 
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Empty( l_aPRG_TODO ) .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lINC ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C .AND. ;
+      hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ]
+      hbmk_OutStd( hbmk, I_( "Target(s) up to date." ) )
+   ELSEIF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Compiling Harbour sources..." ) )
@@ -4994,7 +5004,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                 hbmk[ _HBMK_cGT ] != NIL .OR. ;
                 l_cCMAIN != NIL ) ) .OR. lHBMAINDLLP
 
+#if defined( __PLATFORM__DOS )
             l_cCSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut.c"
+#else
+            l_cCSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut_" + FNameNameGet( hbmk[ _HBMK_cFIRST ] ) + ".c"
+#endif
 
             IF ! hbmk[ _HBMK_lCLEAN ]
 
@@ -5344,7 +5358,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       hbmk[ _HBMK_aOBJUSER ] := ListCook( hbmk[ _HBMK_aOBJUSER ], cObjExt )
 
-      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
+      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
          l_aRESSRC_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aRESSRC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
@@ -5362,7 +5376,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_aRESSRC_TODO := AClone( hbmk[ _HBMK_aRESSRC ] )
       ENDIF
 
-      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C .AND. ! hbmk[ _HBMK_lCLEAN ]
          IF hbmk[ _HBMK_lREBUILDPO ]
             IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( hbmk[ _HBMK_aPRG ] )
                RebuildPO( hbmk, ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ) )
@@ -5373,7 +5387,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ENDIF
 
-         IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL .AND. ! hbmk[ _HBMK_lCLEAN ]
+         IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL
 
             /* Combine target dir with .hbl output name. */
 
@@ -5391,7 +5405,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF HBMK_ISPLAT( "win|wce|os2" ) .AND. ;
          ! Empty( hbmk[ _HBMK_aICON ] )
 
+#if defined( __PLATFORM__DOS )
          l_cRESSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut.rc"
+#else
+         l_cRESSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut_" + FNameNameGet( hbmk[ _HBMK_cFIRST ] ) + ".rc"
+#endif
 
          IF ! hbmk[ _HBMK_lCLEAN ]
             /* Build .rc stub */
@@ -6075,8 +6093,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", hbmk[ _HBMK_cPROGNAME ] }, .T. )
          ENDIF
       ENDIF
+   ENDIF
 
-      /* Cleanup */
+   /* Cleanup */
+   IF ( ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. ;
+      ( hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. ;
+      ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] )
 
       PlugIn_Execute_All( hbmk, "pre_cleanup" )
 
@@ -6109,25 +6131,39 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
          AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
       ENDIF
-      IF hbmk[ _HBMK_lINC ] .AND. hbmk[ _HBMK_lCLEAN ]
-         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".d", .T. ), {| tmp | FErase( tmp ) } )
+      IF hbmk[ _HBMK_lCLEAN ]
+         IF hbmk[ _HBMK_lINC ]
+            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".ppo", .T. ), {| tmp | FErase( tmp ) } )
+            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".ppt", .T. ), {| tmp | FErase( tmp ) } )
+            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
+            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".d", .T. ), {| tmp | FErase( tmp ) } )
+         ENDIF
+         IF hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ]
+            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".hrb", .T. ), {| tmp | FErase( tmp ) } )
+         ENDIF
       ENDIF
       IF ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ]
          IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
             IF ! Empty( cResExt )
                AEval( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), {| tmp | FErase( tmp ) } )
             ENDIF
-            AEval( l_aOBJ, {| tmp | FErase( tmp ) } )
+            IF ! Empty( l_aOBJ )
+               AEval( l_aOBJ, {| tmp | FErase( tmp ) } )
+            ENDIF
          ENDIF
       ENDIF
-      AEval( l_aCLEAN, {| tmp | FErase( tmp ) } )
+      IF ! Empty( l_aCLEAN )
+         AEval( l_aCLEAN, {| tmp | FErase( tmp ) } )
+      ENDIF
       IF lDeleteWorkDir
          hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
       ENDIF
       IF hbmk[ _HBMK_lCLEAN ]
          DirUnbuild( hbmk[ _HBMK_cWorkDir ] )
       ENDIF
+   ENDIF
 
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
       IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ! lTargetUpToDate .AND. ;
          ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ] )
 
