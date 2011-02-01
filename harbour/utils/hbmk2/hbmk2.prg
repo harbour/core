@@ -866,6 +866,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
+   LOCAL aOBJLIST
 
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterCComp := .F.
@@ -3461,7 +3462,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}{SCRIPT_MINGW}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {IM} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", cSourceDLL, cTargetLib, cFlags ) }
@@ -5952,9 +5953,24 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Dyn, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Dyn, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
+               aOBJLIST := ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] )
+               tmp := ArrayToList( aOBJLIST,, nOpt_Esc, nOpt_FNF, cDynObjPrefix )
+
+               IF "{SCRIPT_MINGW}" $ cOpt_Dyn
+                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
+                  IF fhnd != F_ERROR
+                     FWrite( fhnd, ArrayToList( aOBJLIST, hb_eol(), nOpt_Esc, nOpt_FNF, "INPUT(" + iif( cDynObjPrefix == NIL, "", cDynObjPrefix ), ")" ) )
+                     FClose( fhnd )
+                     cOpt_Dyn := StrTran( cOpt_Dyn, "{SCRIPT_MINGW}" )
+                     tmp := FNameEscape( cScriptFile, nOpt_Esc, nOpt_FNF )
+                  ELSE
+                     hbmk_OutErr( hbmk, I_( "Warning: Dynamic lib link script could not be created, continuing in command line." ) )
+                  ENDIF
+               ENDIF
+
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cDynObjPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , tmp )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
@@ -8402,23 +8418,24 @@ STATIC FUNCTION ListCook( arraySrc, cExtNew )
 
    RETURN array
 
-STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, nFNNotation, cPrefix )
+STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, nFNNotation, cPrefix, cPostfix )
    LOCAL cString := ""
    LOCAL tmp
 
    DEFAULT cSeparator TO " "
    DEFAULT cPrefix TO ""
+   DEFAULT cPostfix TO ""
 
    IF nEscapeMode == NIL .AND. nFNNotation == NIL
       FOR tmp := 1 TO Len( array )
-         cString += cPrefix + array[ tmp ]
+         cString += cPrefix + array[ tmp ] + cPostfix
          IF tmp < Len( array )
             cString += cSeparator
          ENDIF
       NEXT
    ELSE
       FOR tmp := 1 TO Len( array )
-         cString += cPrefix + FNameEscape( array[ tmp ], nEscapeMode, nFNNotation )
+         cString += cPrefix + FNameEscape( array[ tmp ], nEscapeMode, nFNNotation ) + cPostfix
          IF tmp < Len( array )
             cString += cSeparator
          ENDIF
