@@ -752,10 +752,10 @@ HB_FUNC( HB_HKEEPORDER )
             if( ( iFlags & HB_HASH_KEEPORDER ) == 0 )
                hb_hashSetFlags( pHash, HB_HASH_KEEPORDER );
          }
-         else if( ( iFlags & HB_HASH_KEEPORDER ) != 0 )
+         else
          {
-            hb_hashClearFlags( pHash, HB_HASH_KEEPORDER );
-            hb_hashSetFlags( pHash, HB_HASH_RESORT );
+            if( ( iFlags & HB_HASH_KEEPORDER ) != 0 )
+               hb_hashClearFlags( pHash, HB_HASH_KEEPORDER );
          }
       }
    }

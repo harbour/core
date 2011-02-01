@@ -1057,9 +1057,9 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          int iFlags = HB_GET_LE_UINT16( &pBuffer[ nOffset ] );
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                        nOffset + 2, pRef );
+                                       nOffset + 2, pRef );
          hb_hashClearFlags( pItem, HB_HASH_FLAG_MASK );
-         if( ( iFlags & HB_HASH_BINARY ) == 0 )
+         if( ( iFlags & ( HB_HASH_KEEPORDER | HB_HASH_BINARY ) ) != HB_HASH_BINARY )
             iFlags |= HB_HASH_RESORT;
          hb_hashSetFlags( pItem, iFlags );
          break;
@@ -1069,9 +1069,9 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          PHB_ITEM pDefVal = hb_itemNew( NULL );
          nOffset = hb_deserializeItem( pDefVal, cdpIn, cdpOut, pBuffer,
-                                        nOffset, pRef );
+                                       nOffset, pRef );
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                        nOffset, pRef );
+                                       nOffset, pRef );
          hb_hashSetDefault( pItem, pDefVal );
          hb_itemRelease( pDefVal );
          break;

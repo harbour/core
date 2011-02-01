@@ -1092,6 +1092,8 @@ void hb_hashClearFlags( PHB_ITEM pHash, int iFlags )
       {
          hb_xfree( pHash->item.asHash.value->pnPos );
          pHash->item.asHash.value->pnPos = NULL;
+         if( pHash->item.asHash.value->nSize )
+            pHash->item.asHash.value->iFlags |= HB_HASH_RESORT;
       }
    }
 }
