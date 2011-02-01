@@ -11,11 +11,6 @@ LIBNAME := hbzlib
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
-# Ugly workaround to avoid fatal error when building for pocc64
-ifneq ($(HB_COMPILER),pocc64)
-   HB_CFLAGS_DYN := -DZLIB_DLL
-endif
-
 C_SOURCES := \
    adler32.c \
    compress.c \
