@@ -3903,6 +3903,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "win"
+            IF hbmk[ _HBMK_lCreateDyn ]
+               /* NOTE: Hack to avoid link errors when creating dynamic libs for non-Harbour
+                        components, typically in '3rd' dirs inside Harbour repository.
+                        Please tweak this fix if you know the exact reason. */
+               AAdd( l_aLIBSYS, "clib3s" )
+            ENDIF
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + cLibExt ) }
