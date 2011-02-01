@@ -66,9 +66,9 @@ REQUEST __HB_EXTERN__
 #include "hbqtgui.ch"
 #include "hbnetio.ch"
 
-#include "Xbp.ch"
-#include "Gra.ch"
-#include "Appevent.ch"
+#include "xbp.ch"
+#include "gra.ch"
+#include "appevent.ch"
 
 #define RGB( r, g, b )   GraMakeRGBColor( { r, g, b } )
 
