@@ -382,74 +382,75 @@ REQUEST hbmk_KEYW
 #define _HBMK_aRESCMP           76
 #define _HBMK_aOBJUSER          77
 #define _HBMK_aICON             78
-#define _HBMK_aIMPLIBSRC        79
-#define _HBMK_aDEF              80
-#define _HBMK_aINSTFILE         81
-#define _HBMK_hDEPTS            82
+#define _HBMK_cMANIFEST         79
+#define _HBMK_aIMPLIBSRC        80
+#define _HBMK_aDEF              81
+#define _HBMK_aINSTFILE         82
+#define _HBMK_hDEPTS            83
 
-#define _HBMK_aPO               83
-#define _HBMK_cHBL              84
-#define _HBMK_cHBLDir           85
-#define _HBMK_aLNG              86
-#define _HBMK_cPO               87
+#define _HBMK_aPO               84
+#define _HBMK_cHBL              85
+#define _HBMK_cHBLDir           86
+#define _HBMK_aLNG              87
+#define _HBMK_cPO               88
 
-#define _HBMK_hPLUGINHRB        88
-#define _HBMK_hPLUGINVars       89
-#define _HBMK_aPLUGINPars       90
-#define _HBMK_hPLUGINExt        91
+#define _HBMK_hPLUGINHRB        89
+#define _HBMK_hPLUGINVars       90
+#define _HBMK_aPLUGINPars       91
+#define _HBMK_hPLUGINExt        92
 
-#define _HBMK_lDEBUGTIME        92
-#define _HBMK_lDEBUGINC         93
-#define _HBMK_lDEBUGSTUB        94
-#define _HBMK_lDEBUGI18N        95
-#define _HBMK_lDEBUGDEPD        96
-#define _HBMK_lDEBUGPARS        97
+#define _HBMK_lDEBUGTIME        93
+#define _HBMK_lDEBUGINC         94
+#define _HBMK_lDEBUGSTUB        95
+#define _HBMK_lDEBUGI18N        96
+#define _HBMK_lDEBUGDEPD        97
+#define _HBMK_lDEBUGPARS        98
 
-#define _HBMK_cCCPATH           98
-#define _HBMK_cCCPREFIX         99
-#define _HBMK_cCCPOSTFIX        100
-#define _HBMK_cCCEXT            101
+#define _HBMK_cCCPATH           99
+#define _HBMK_cCCPREFIX         100
+#define _HBMK_cCCPOSTFIX        101
+#define _HBMK_cCCEXT            102
 
-#define _HBMK_cWorkDir          102
-#define _HBMK_cWorkDirDynSub    103
-#define _HBMK_nCmd_Esc          104
-#define _HBMK_nScr_Esc          105
-#define _HBMK_nCmd_FNF          106
-#define _HBMK_nScr_FNF          107
-#define _HBMK_nErrorLevel       108
+#define _HBMK_cWorkDir          103
+#define _HBMK_cWorkDirDynSub    104
+#define _HBMK_nCmd_Esc          105
+#define _HBMK_nScr_Esc          106
+#define _HBMK_nCmd_FNF          107
+#define _HBMK_nScr_FNF          108
+#define _HBMK_nErrorLevel       109
 
-#define _HBMK_cPROGDIR          109
-#define _HBMK_cPROGNAME         110
+#define _HBMK_cPROGDIR          110
+#define _HBMK_cPROGNAME         111
 
-#define _HBMK_hAUTOHBC          111 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     112 /* trigger headers found */
+#define _HBMK_hAUTOHBC          112 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     113 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          113 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         114 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          114 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         115 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    115
-#define _HBMK_lStopAfterHarbour 116
+#define _HBMK_lStopAfterInit    116
+#define _HBMK_lStopAfterHarbour 117
 
-#define _HBMK_nCOMPVer          117
-#define _HBMK_lDEPIMPLIB        118 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        119 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          120 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        121 /* Target type: container */
-#define _HBMK_lShowLevel        122 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            123 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     124 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        125 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             126 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        127 /* Links to be created and pointing to the target */
+#define _HBMK_nCOMPVer          118
+#define _HBMK_lDEPIMPLIB        119 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        120 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          121 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        122 /* Target type: container */
+#define _HBMK_lShowLevel        123 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            124 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     125 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        126 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             127 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        128 /* Links to be created and pointing to the target */
 
-#define _HBMK_aArgs             128
-#define _HBMK_nArgTarget        129
-#define _HBMK_lPause            130
-#define _HBMK_nLevel            131
+#define _HBMK_aArgs             129
+#define _HBMK_nArgTarget        130
+#define _HBMK_lPause            131
+#define _HBMK_nLevel            132
 
-#define _HBMK_cHBX              132
+#define _HBMK_cHBX              133
 
-#define _HBMK_MAX_              132
+#define _HBMK_MAX_              133
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1920,6 +1921,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
+   hbmk[ _HBMK_cMANIFEST ] := NIL
    hbmk[ _HBMK_aIMPLIBSRC ] := {}
    hbmk[ _HBMK_aDEF ] := {}
    hbmk[ _HBMK_aINSTFILE ] := {}
@@ -2441,6 +2443,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aICON ], PathNormalize( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-manifest=" ) ) == "-manifest="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-manifest=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            hbmk[ _HBMK_cMANIFEST ] := PathNormalize( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-iflag=" ) ) == "-iflag="
@@ -5413,8 +5422,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
       ENDIF
 
-      IF HBMK_ISPLAT( "win|wce|os2" ) .AND. ;
-         ! Empty( hbmk[ _HBMK_aICON ] )
+      IF ( HBMK_ISPLAT( "win|wce|os2" ) .AND. ! Empty( hbmk[ _HBMK_aICON ] ) ) .OR. ;
+         ( HBMK_ISPLAT( "win|wce" ) .AND. ! Empty( hbmk[ _HBMK_cMANIFEST ] ) )
 
 #if defined( __PLATFORM__DOS )
          l_cRESSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut.rc"
@@ -5428,10 +5437,22 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cFile := '/* This temp source file was generated by hbmk2 tool. */'                + Chr( 10 ) +;
                      '/* You can safely delete it. */'                                         + Chr( 10 ) +;
                      ''                                                                        + Chr( 10 )
-            IF hbmk[ _HBMK_cPLAT ] == "os2"
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
-            ELSE
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
+            IF ! Empty( hbmk[ _HBMK_cMANIFEST ] )
+               cFile += '#include <winuser.h>' + Chr( 10 )
+               cFile += '#ifndef RT_MANIFEST' + Chr( 10 )
+               cFile += '#define RT_MANIFEST 24' + Chr( 10 )
+               cFile += '#endif' + Chr( 10 )
+               cFile += '#ifndef CREATEPROCESS_MANIFEST_RESOURCE_ID' + Chr( 10 )
+               cFile += '#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1' + Chr( 10 )
+               cFile += '#endif' + Chr( 10 )
+               cFile += 'CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "' + PathSepToForward( hbmk[ _HBMK_cMANIFEST ] ) + '"' + Chr( 10 )
+            ENDIF
+            IF ! Empty( hbmk[ _HBMK_aICON ] )
+               IF hbmk[ _HBMK_cPLAT ] == "os2"
+                  AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
+               ELSE
+                  AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
+               ENDIF
             ENDIF
 
             IF hbmk[ _HBMK_lINC ]
@@ -11875,6 +11896,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
+      { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) },;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
       { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) },;
