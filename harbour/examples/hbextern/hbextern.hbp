@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--w3 -es2
-
--nulrdd
-
-hbextern.prg
