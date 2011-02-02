@@ -458,7 +458,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbmk2
 %{_bindir}/hbmk2.*.hbl
 %{_bindir}/hb3rdpat.hbs
-%{_bindir}/hbmk2l2d.hbs
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
