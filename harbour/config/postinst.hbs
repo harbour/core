@@ -425,7 +425,7 @@ STATIC FUNCTION DirBuild( cDir )
             IF hb_FileExists( cDirTemp )
                RETURN .F.
             ELSEIF ! hb_DirExists( cDirTemp )
-               IF MakeDir( cDirTemp ) != 0
+               IF hb_DirCreate( cDirTemp ) != 0
                   RETURN .F.
                ENDIF
             ENDIF

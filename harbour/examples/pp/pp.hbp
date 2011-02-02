@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-pp.c hbppcomp.c hbppcore.c hbpptbl.c hbpragma.c
--lhbcommon
--lhbnortl
--static
--nohblib
