@@ -8023,40 +8023,41 @@ FUNCTION hbmk2_Register_Input_File_Extension( ctx, cExt )
 
 STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
    RETURN {;
-         "cSTATE"       => cState                     ,;
-         "params"       => hbmk[ _HBMK_aPLUGINPars ]  ,;
-         "vars"         => hbmk[ _HBMK_hPLUGINVars ]  ,;
-         "cPLAT"        => hbmk[ _HBMK_cPLAT ]        ,;
-         "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
-         "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
-         "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
-         "cOUTPUTNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
-         "cTARGETNAME"  => hbmk_TARGETNAME( hbmk )    ,;
-         "cTARGETTYPE"  => hbmk_TARGETTYPE( hbmk )    ,;
-         "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
-         "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
-         "lDEBUG"       => hbmk[ _HBMK_lDEBUG ]       ,;
-         "lMAP"         => hbmk[ _HBMK_lMAP ]         ,;
-         "lSTRIP"       => hbmk[ _HBMK_lSTRIP ]       ,;
-         "lDONTEXEC"    => hbmk[ _HBMK_lDONTEXEC ]    ,;
-         "lIGNOREERROR" => hbmk[ _HBMK_lIGNOREERROR ] ,;
-         "lTRACE"       => hbmk[ _HBMK_lTRACE ]       ,;
-         "lQUIET"       => hbmk[ _HBMK_lQuiet ]       ,;
-         "lINFO"        => hbmk[ _HBMK_lInfo ]        ,;
-         "lBEEP"        => hbmk[ _HBMK_lBEEP ]        ,;
-         "lRUN"         => hbmk[ _HBMK_lRUN ]         ,;
-         "lINC"         => hbmk[ _HBMK_lINC ]         ,;
-         "cCCPATH"      => hbmk[ _HBMK_cCCPATH ]      ,;
-         "cCCPREFIX"    => hbmk[ _HBMK_cCCPREFIX ]    ,;
-         "cCCPOSTFIX"   => hbmk[ _HBMK_cCCPOSTFIX ]   ,;
-         "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       ,;
-         "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     ,;
-         "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     ,;
-         "nCmd_FNF"     => hbmk[ _HBMK_nCmd_FNF ]     ,;
-         "nScr_FNF"     => hbmk[ _HBMK_nScr_FNF ]     ,;
-         "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     ,;
-         "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
-         s_cSecToken    => hbmk                       }
+      "cSTATE"       => cState                     ,;
+      "params"       => hbmk[ _HBMK_aPLUGINPars ]  ,;
+      "vars"         => hbmk[ _HBMK_hPLUGINVars ]  ,;
+      "cPLAT"        => hbmk[ _HBMK_cPLAT ]        ,;
+      "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
+      "nCOMPVer"     => hbmk[ _HBMK_nCOMPVer ]     ,;
+      "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
+      "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
+      "cOUTPUTNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
+      "cTARGETNAME"  => hbmk_TARGETNAME( hbmk )    ,;
+      "cTARGETTYPE"  => hbmk_TARGETTYPE( hbmk )    ,;
+      "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
+      "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
+      "lDEBUG"       => hbmk[ _HBMK_lDEBUG ]       ,;
+      "lMAP"         => hbmk[ _HBMK_lMAP ]         ,;
+      "lSTRIP"       => hbmk[ _HBMK_lSTRIP ]       ,;
+      "lDONTEXEC"    => hbmk[ _HBMK_lDONTEXEC ]    ,;
+      "lIGNOREERROR" => hbmk[ _HBMK_lIGNOREERROR ] ,;
+      "lTRACE"       => hbmk[ _HBMK_lTRACE ]       ,;
+      "lQUIET"       => hbmk[ _HBMK_lQuiet ]       ,;
+      "lINFO"        => hbmk[ _HBMK_lInfo ]        ,;
+      "lBEEP"        => hbmk[ _HBMK_lBEEP ]        ,;
+      "lRUN"         => hbmk[ _HBMK_lRUN ]         ,;
+      "lINC"         => hbmk[ _HBMK_lINC ]         ,;
+      "cCCPATH"      => hbmk[ _HBMK_cCCPATH ]      ,;
+      "cCCPREFIX"    => hbmk[ _HBMK_cCCPREFIX ]    ,;
+      "cCCPOSTFIX"   => hbmk[ _HBMK_cCCPOSTFIX ]   ,;
+      "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       ,;
+      "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     ,;
+      "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     ,;
+      "nCmd_FNF"     => hbmk[ _HBMK_nCmd_FNF ]     ,;
+      "nScr_FNF"     => hbmk[ _HBMK_nScr_FNF ]     ,;
+      "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     ,;
+      "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
+      s_cSecToken    => hbmk                       }
 
 STATIC FUNCTION PlugIn_ctx_get_state( ctx )
    RETURN ctx[ "cSTATE" ]
