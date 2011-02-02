@@ -112,7 +112,7 @@ cd %HB_RT%
 if exist %HB_RT%harbour-%HB_VF%-win-log.txt del %HB_RT%harbour-%HB_VF%-win-log.txt
 if exist %HB_RT%harbour-%HB_VF%-win.exe del %HB_RT%harbour-%HB_VF%-win.exe
 
-"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% %~dp0mpkg_win_uni.nsi >> %HB_RT%harbour-%HB_VF%-win-log.txt
+"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% %~dp0mpkg_win_uni.nsi >> %HB_RT%harbour-%HB_VF%-win-log.txt 2>&1
 
 rem ; Create unified archive
 
@@ -179,12 +179,12 @@ echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc64\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\wce\poccarm\*.*"                   >> _hbfiles
-echo "%HB_DR%bin\harbour-%HB_VS%-x64.dll"                >> _hbfiles
-echo "%HB_DR%bin\harbourmt-%HB_VS%-x64.dll"              >> _hbfiles
-echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"            >> _hbfiles
-echo "%HB_DR%bin\harbourmt-%HB_VS%-wce-arm.dll"          >> _hbfiles
-rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"                >> _hbfiles
-rem echo "%HB_DR%bin\harbourmt-%HB_VS%-os2.dll"              >> _hbfiles
+echo "%HB_DR%bin\harbour-%HB_VS%-x64.dll"           >> _hbfiles
+echo "%HB_DR%bin\harbourmt-%HB_VS%-x64.dll"         >> _hbfiles
+echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"       >> _hbfiles
+echo "%HB_DR%bin\harbourmt-%HB_VS%-wce-arm.dll"     >> _hbfiles
+rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"           >> _hbfiles
+rem echo "%HB_DR%bin\harbourmt-%HB_VS%-os2.dll"         >> _hbfiles
 echo "%HB_DR%tests\*.*"                             >> _hbfiles
 echo "%HB_DR%doc\*.*"                               >> _hbfiles
 echo "%HB_DR%comp\mingw\*"                          >> _hbfiles
@@ -192,7 +192,7 @@ echo "%HB_DR%examples\*.*"                          >> _hbfiles
 echo "%HB_DR%contrib\*.*"                           >> _hbfiles
 
 if exist %HB_RT%harbour-%HB_VF%-win.7z del %HB_RT%harbour-%HB_VF%-win.7z
-"%HB_DIR_7Z%7za.exe" a -r %HB_RT%harbour-%HB_VF%-win.7z @_hbfiles >> %HB_RT%harbour-%HB_VF%-win-log.txt
+"%HB_DIR_7Z%7za.exe" a -r %HB_RT%harbour-%HB_VF%-win.7z @_hbfiles >> %HB_RT%harbour-%HB_VF%-win-log.txt 2>&1
 
 del _hbfiles
 
