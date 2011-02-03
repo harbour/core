@@ -217,7 +217,7 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
       defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
-      defined( HB_OS_CYGWIN )
+      defined( HB_OS_CYGWIN ) || defined( HB_OS_MINIX )
 
    if( szValue )
       return setenv( szName, szValue, 1 ) == 0;

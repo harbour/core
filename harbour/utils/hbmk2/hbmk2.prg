@@ -1294,7 +1294,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|cygwin" )
+   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|cygwin|minix" )
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
@@ -1308,6 +1308,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          aCOMPSUP := { "gcc", "diab" }
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          aCOMPSUP := { "gcc", "icc" }
+      case hbmk[ _HBMK_cPLAT ] == "minix"
+         aCOMPSUP := { "gcc", "ack" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -1597,7 +1599,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
          IF Len( aCOMPSUP ) == 1
             hbmk[ _HBMK_cCOMP ] := aCOMPSUP[ 1 ]
-         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin" ) .OR. ;
+         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin|minix" ) .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
             IF AScan( aCOMPSUP, { |tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
@@ -3133,7 +3135,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "symbian" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "cygwin"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "minix"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
@@ -3217,6 +3220,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTC ], "-fno-strict-aliasing" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_C99" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "minix"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_MINIX=1" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_POSIX_SOURCE=1" )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -3349,7 +3356,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! HBMK_ISPLAT( "beos|vxworks" )
                AAdd( l_aLIBSYS, "m" )
                IF hbmk[ _HBMK_lMT ]
-                  IF !( hbmk[ _HBMK_cPLAT ] == "qnx" )
+                  IF ! HBMK_ISPLAT( "qnx|minix" )
                      AAdd( l_aLIBSYS, "pthread" )
                   ENDIF
                ENDIF
@@ -3371,6 +3378,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                AAdd( l_aLIBSYS, "network" )
             CASE hbmk[ _HBMK_cPLAT ] == "qnx"
                AAdd( l_aLIBSYS, "socket" )
+            CASE hbmk[ _HBMK_cPLAT ] == "minix"
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" )
             ENDCASE
 
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
@@ -3407,6 +3417,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF IsGTRequested( hbmk, "gtxwc" )
             IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
                AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
+            ENDIF
+            IF hbmk[ _HBMK_cPLAT ] == "minix" .AND. hb_DirExists( "/usr/pkg/X11R6/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/X11R6/lib" )
             ENDIF
             AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
             AAdd( l_aLIBSYS, "X11" )

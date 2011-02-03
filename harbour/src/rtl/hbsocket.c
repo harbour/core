@@ -123,7 +123,7 @@
 #     define HB_HAS_SOCKADDR_STORAGE
 #     define HB_HAS_ADDRINFO
 #  endif
-#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS )
+#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS ) && !defined( HB_OS_MINIX )
 #     define HB_HAS_INET6
 #     if !defined( HB_OS_VXWORKS )
 #        define HB_HAS_INET6_ADDR_CONST
@@ -1074,9 +1074,11 @@ static void hb_socketSetOsError( int err )
       case ENOTCONN:
          uiErr = HB_SOCKET_ERR_NOTCONN;
          break;
+#if defined( ECONNABORTED )
       case ECONNABORTED:
          uiErr = HB_SOCKET_ERR_CONNABORTED;
          break;
+#endif
       case ECONNRESET:
          uiErr = HB_SOCKET_ERR_CONNRESET;
          break;
@@ -1089,9 +1091,11 @@ static void hb_socketSetOsError( int err )
       case ENETDOWN:
          uiErr = HB_SOCKET_ERR_NETDOWN;
          break;
+#if defined( ENETRESET )
       case ENETRESET:
          uiErr = HB_SOCKET_ERR_NETRESET;
          break;
+#endif
       case EINPROGRESS:
          uiErr = HB_SOCKET_ERR_INPROGRESS;
          break;
@@ -1192,9 +1196,11 @@ static void hb_socketSetOsError( int err )
          uiErr = HB_SOCKET_ERR_TOOMANYREFS;
          break;
 #endif
+#if defined( EHOSTDOWN )
       case EHOSTDOWN:
          uiErr = HB_SOCKET_ERR_HOSTDOWN;
          break;
+#endif
       case EHOSTUNREACH:
          uiErr = HB_SOCKET_ERR_HOSTUNREACH;
          break;
@@ -1206,9 +1212,11 @@ static void hb_socketSetOsError( int err )
          uiErr = HB_SOCKET_ERR_USERS;
          break;
 #endif
+#if defined( EDQUOT )
       case EDQUOT:
          uiErr = HB_SOCKET_ERR_DQUOT;
          break;
+#endif
 #if defined( ESTALE )
       case ESTALE:
          uiErr = HB_SOCKET_ERR_STALE;
@@ -2500,10 +2508,14 @@ int hb_socketSetKeepAlive( HB_SOCKET sd, HB_BOOL fKeepAlive )
 
 int hb_socketSetBroadcast( HB_SOCKET sd, HB_BOOL fBroadcast )
 {
+#if defined( SO_BROADCAST )
    int val = fBroadcast ? 1 : 0, ret;
    ret = setsockopt( sd, SOL_SOCKET, SO_BROADCAST, ( const char * ) &val, sizeof( val ) );
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
+#else
+   return ENOTSUP;
+#endif
 }
 
 int hb_socketSetSndBufSize( HB_SOCKET sd, int iSize )

@@ -451,7 +451,12 @@ char * hb_verPlatform( void )
       struct utsname un;
 
       uname( &un );
+#if defined( HB_OS_MINIX )
+      hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%s Release %s Version %s %s",
+                   un.sysname, un.release, un.version, un.machine );
+#else
       hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%s %s %s", un.sysname, un.release, un.machine );
+#endif
    }
 
 #else
@@ -932,6 +937,11 @@ char * hb_verCompiler( void )
       iVerMinor = iVerMinor / 0x10 * 0xa + iVerMinor % 0x10;
       iVerPatch = __SUNPRO_CC & 0xf;
    #endif
+
+#elif defined( __ACK__ )
+
+   pszName = "Amsterdam Compiler Kit";
+   iVerMajor = iVerMinor = iVerPatch = iVerMicro = 0;
 
 #else
 

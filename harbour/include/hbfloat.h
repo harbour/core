@@ -75,7 +75,7 @@
    /* _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_; */
 #else
 #  include <math.h>
-#  if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
+#  if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER ) || defined( HB_OS_MINIX )
 #     include <float.h>
 #  elif defined( HB_OS_SUNOS )
 #     include <ieeefp.h>    /* for finite() */
@@ -193,7 +193,7 @@
 
 #  if defined( __RSXNT__ ) || defined( __EMX__ ) || \
       defined( __XCC__ ) || defined( __POCC__ ) || \
-      defined( __MINGW32__ ) || defined( HB_OS_HPUX )
+      defined( __MINGW32__ ) || defined( HB_OS_HPUX ) || defined( HB_OS_MINIX )
 #     define hb_isfinite( d )       isfinite( d )
 #  elif defined( _MSC_VER )
 #     define hb_isfinite( d )       _finite( ( double ) d )

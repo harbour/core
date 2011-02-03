@@ -89,7 +89,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <time.h>
-#if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) ) && !defined( __WATCOMC__ )
+#if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) || defined( HB_OS_MINIX )) && !defined( __WATCOMC__ )
 #  if defined( HB_OS_LINUX )
 #     include <pty.h>  /* for openpty and forkpty */
 #  elif defined( HB_OS_DARWIN ) || defined( __NetBSD__ ) || defined( __OpenBSD__ )
@@ -99,7 +99,7 @@
 #        define tigetnum(id)       tgetnum(id)
 #        define tigetstr(id)       tgetstr(id, NULL)
 #     endif
-#  elif defined( HB_OS_BSD )
+#  elif defined( HB_OS_BSD ) || defined( HB_OS_MINIX )
 #     include <libutil.h> /* for openpty and forkpty */
 #  endif
 #  include <utmp.h> /* for login_tty */

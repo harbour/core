@@ -75,7 +75,7 @@
         defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
         defined( HB_OS_BSD ) || defined( HB_OS_SUNOS ) || \
         defined( HB_OS_BEOS ) || defined( HB_OS_QNX ) || \
-        defined( HB_OS_VXWORKS ) ) )
+        defined( HB_OS_VXWORKS ) || defined( HB_OS_MINIX ) ) )
    #include <stdint.h>
    /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
 #  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )

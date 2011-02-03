@@ -69,6 +69,10 @@ ifneq ($(findstring Haiku,$(_DETPLAT_STR)),)
 endif
 ifneq ($(findstring QNX,$(_DETPLAT_STR)),)
    HB_HOST_PLAT := qnx
+else
+ifneq ($(findstring Minix,$(_DETPLAT_STR)),)
+   HB_HOST_PLAT := minix
+endif
 endif
 endif
 endif

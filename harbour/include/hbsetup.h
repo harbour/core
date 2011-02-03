@@ -416,6 +416,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_MINIX
+   #if defined( __minix )
+      #define HB_OS_MINIX
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
    #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
@@ -426,7 +432,8 @@
        defined( HB_OS_VXWORKS ) || \
        defined( HB_OS_BEOS ) || \
        defined( HB_OS_SYMBIAN ) || \
-       defined( HB_OS_CYGWIN )
+       defined( HB_OS_CYGWIN ) || \
+       defined( HB_OS_MINIX )
       #define HB_OS_UNIX
    #endif
 #endif

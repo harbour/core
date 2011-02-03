@@ -65,7 +65,7 @@
 #if defined( __SVR4 )
 #  include <thread.h>
 #endif
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+#if defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( HB_OS_MINIX ) )
 #  include <sched.h>
 #endif
 
