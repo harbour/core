@@ -31,7 +31,10 @@ CFLAGS += -fno-common
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
 else
-   CFLAGS += -Wimplicit-int -Wimplicit-function-declaration -Wmissing-braces -Wreturn-type -Wformat
+   CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
+   ifneq ($(HB_BUILD_MODE),cpp)
+      CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
+   endif
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
