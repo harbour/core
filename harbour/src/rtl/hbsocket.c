@@ -270,6 +270,12 @@
    #define FD_ISSET( s, f ) ( 0 )
 #endif
 
+#if defined( HB_OS_WIN )
+   typedef SOCKET       HB_SOCKET_T;
+#else
+   typedef HB_SOCKET    HB_SOCKET_T;
+#endif
+
 #endif /* HB_SOCKET_OFF */
 
 #include "hbapi.h"
@@ -1447,7 +1453,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
    for( ;; )
    {
       FD_ZERO( &rfds );
-      FD_SET( sd, &rfds );
+      FD_SET( ( HB_SOCKET_T ) sd, &rfds );
 
       if( timeout >= 0 )
       {
@@ -1480,7 +1486,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
    }
 
    return iResult < 0 ? -1 :
-          ( iResult > 0 && FD_ISSET( sd, &rfds ) ? 1 : 0 );
+          ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &rfds ) ? 1 : 0 );
 }
 
 static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
@@ -1495,7 +1501,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
    for( ;; )
    {
       FD_ZERO( &wfds );
-      FD_SET( sd, &wfds );
+      FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 
       if( timeout >= 0 )
       {
@@ -1528,7 +1534,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
    }
 
    return iResult < 0 ? -1 :
-          ( iResult > 0 && FD_ISSET( sd, &wfds ) ? 1 : 0 );
+          ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) ? 1 : 0 );
 }
 
 static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
@@ -1546,10 +1552,10 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
    for( ;; )
    {
       FD_ZERO( &wfds );
-      FD_SET( sd, &wfds );
+      FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 #if defined( HB_OS_WIN )
       FD_ZERO( &efds );
-      FD_SET( sd, &efds );
+      FD_SET( ( HB_SOCKET_T ) sd, &efds );
       pefds = &efds;
 #else
       pefds = NULL;
@@ -1566,7 +1572,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, pefds, ptv );
       hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
 #if defined( HB_OS_WIN )
-      if( iResult > 0 && FD_ISSET( sd, pefds ) )
+      if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, pefds ) )
          iResult = -1;
       else
 #endif
@@ -1589,7 +1595,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       break;
    }
 #if !defined( HB_OS_WIN )
-   if( iResult > 0 && FD_ISSET( sd, &wfds ) )
+   if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) )
    {
       int iError;
       socklen_t len = sizeof( iError );
@@ -1608,7 +1614,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #endif
 
    return iResult < 0 ? -1 :
-          ( iResult > 0 && FD_ISSET( sd, &wfds ) ? 1 : 0 );
+          ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) ? 1 : 0 );
 }
 
 int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
@@ -2676,7 +2682,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
             {
                if( maxsd < sd )
                   maxsd = sd;
-               FD_SET( sd, &fds[ i ] );
+               FD_SET( ( HB_SOCKET_T ) sd, &fds[ i ] );
                ret = 1;
             }
          }
@@ -2717,7 +2723,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                   else
                      sd = HB_NO_SOCKET;
                }
-               if( sd != HB_NO_SOCKET && FD_ISSET( sd, pfds[ i ] ) )
+               if( sd != HB_NO_SOCKET && FD_ISSET( ( HB_SOCKET_T ) sd, pfds[ i ] ) )
                {
                   if( ++nPos != ul )
                   {
