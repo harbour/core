@@ -33,7 +33,7 @@ Client side functions:
       more then one thread call NETIO_CONNECT() then only one connection
       is created. It also means that NETIO_DISCONNECT() does not have to
       be called by the same thread which called NETIO_CONNECT().
-      On application exist all connections are automatically closed.
+      On application exit all connections are automatically closed.
       It possible to open many different connections and keep them open.
       In RDD IO operations and RPC calls it's possible to specify server
       address as part of file or procedure/function name, i.e.
@@ -54,7 +54,7 @@ Client side functions:
       is terminated by CHR(0) so it's not possible to use these two
       characters as part of password. Anyhow when passwords are required
       then it's recommended to open the connection by NETIO_CONNECT()
-      and then specify only server and port is server is not unique
+      and then specify only server and port if server is not unique
       enough to chose from existing connections. If server is not
       given then default connection is chosen.
 

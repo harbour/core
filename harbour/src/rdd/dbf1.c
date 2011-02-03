@@ -619,14 +619,20 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, HB_BOOL fEncrypt
          pArea->pCryptKey = NULL;
          hb_dbfPasswordSet( pArea, pPasswd, HB_FALSE );
          pNewCryptKey = pArea->pCryptKey;
-         if( !fEncrypt && pNewCryptKey )
+         if( !fEncrypt )
          {
-            if( pOldCryptKey )
-               hb_xfree( pNewCryptKey );
-            else
-               pOldCryptKey = pNewCryptKey;
-            pNewCryptKey = NULL;
+            if( pNewCryptKey )
+            {
+               if( pOldCryptKey )
+                  hb_xfree( pNewCryptKey );
+               else
+                  pOldCryptKey = pNewCryptKey;
+               pNewCryptKey = NULL;
+            }
          }
+         else if( !pNewCryptKey )
+            pNewCryptKey = pOldCryptKey;
+
          for( ulRecNo = 1; ulRecNo <= ulRecords; ++ulRecNo )
          {
             pArea->pCryptKey = pOldCryptKey;
@@ -654,7 +660,7 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, HB_BOOL fEncrypt
                break;
          }
          pArea->pCryptKey = pNewCryptKey;
-         if( pOldCryptKey )
+         if( pOldCryptKey && pOldCryptKey != pNewCryptKey )
             hb_xfree( pOldCryptKey );
          if( errCode == HB_SUCCESS )
          {

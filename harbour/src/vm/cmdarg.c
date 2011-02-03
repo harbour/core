@@ -450,7 +450,18 @@ HB_FUNC( HB_ARGV )
 {
    int argc = hb_parni( 1 );
 
-   hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
+   if( argc >= 0 && argc < s_argc )
+   {
+      char * pszFree = NULL;
+      const char * szArgV = hb_osDecodeCP( s_argv[ argc ], &pszFree, NULL );
+
+      if( pszFree )
+         hb_retc_buffer( pszFree );
+      else
+         hb_retc( szArgV );
+   }
+   else
+      hb_retc_null();
 }
 
 HB_FUNC( HB_ARGSHIFT )

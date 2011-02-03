@@ -287,7 +287,7 @@ HB_FUNC( SX_SETPASS )
    HB_BOOL fResult = HB_FALSE;
    PHB_ITEM pItem;
 
-   if( iPCount >=1 )
+   if( iPCount == 1 )
    {
       if( HB_ISCHAR( 1 ) )
       {
@@ -301,7 +301,7 @@ HB_FUNC( SX_SETPASS )
          }
       }
    }
-   else if( iPCount >= 2 || iPCount <= 4 )
+   else if( iPCount >= 2 && iPCount <= 4 )
    {
       if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISCHAR( 3 ) ) &&
           ( iPCount < 4 || HB_ISNUM( 4 ) ) )
@@ -366,12 +366,8 @@ HB_FUNC( SX_DBFENCRYPT )
 
    if( pArea )
    {
-      /* Optional parameter with password is Harbour extension */
-#ifdef HB_SIX3_STRICT
-      PHB_ITEM pItem = hb_itemNew( NULL );
-#else
       PHB_ITEM pItem = hb_itemParam( 1 );
-#endif
+
       if( SELF_INFO( pArea, DBI_ENCRYPT, pItem ) == HB_SUCCESS )
          fResult = hb_itemGetL( pItem );
       hb_itemRelease( pItem );
