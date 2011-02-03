@@ -55,12 +55,11 @@ FUNCTION hb_cwd( cNewDir )
    IF hb_isString( cNewDir )
       /* TODO */
    ENDIF
-   RETURN hb_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+   RETURN hb_DirSepAdd( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 #define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
-/* QUESTION: Rename to hb_PathOptimize() ? */
 FUNCTION hb_PathNormalize( cPath )
    LOCAL aDir
    LOCAL cDir
@@ -105,8 +104,7 @@ FUNCTION hb_PathNormalize( cPath )
 
    RETURN cPath
 
-/* QUESTION: Swap the two parameters? */
-FUNCTION hb_PathMakeAbsolute( cPathR, cPathA )
+FUNCTION hb_PathJoin( cPathA, cPathR )
    LOCAL cDirA
    LOCAL cDirR, cDriveR, cNameR, cExtR
 
@@ -132,7 +130,7 @@ FUNCTION hb_PathMakeAbsolute( cPathR, cPathA )
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
 
-FUNCTION hb_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
+FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    LOCAL tmp
 
    LOCAL aPathBase
@@ -148,11 +146,11 @@ FUNCTION hb_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
    ENDIF
 
    IF ! hb_isLogical( lForceRelative )
-      lForceRelative := .F.
+      lForceRelative := .T.
    ENDIF
 
-   cPathBase   := hb_PathMakeAbsolute( hb_DirAddPathSep( cPathBase ), hb_dirBase() )
-   cPathTarget := hb_PathMakeAbsolute( cPathTarget, hb_dirBase() )
+   cPathBase   := hb_PathJoin( hb_dirBase(), hb_DirSepAdd( cPathBase ) )
+   cPathTarget := hb_PathJoin( hb_dirBase(), cPathTarget )
 
    /* TODO: Optimize to operate on strings instead of arrays */
 
@@ -226,9 +224,9 @@ STATIC FUNCTION s_FN_FromArray( aPath, nFrom, cFileName, cDirPrefix )
       ENDIF
    NEXT
 
-   RETURN hb_FNameMerge( hb_DirDelPathSep( hb_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
+   RETURN hb_FNameMerge( hb_DirSepDel( hb_DirSepAdd( cDirPrefix ) + cDir ), cFileName )
 
-FUNCTION hb_DirAddPathSep( cDir )
+FUNCTION hb_DirSepAdd( cDir )
 
    IF ! hb_isString( cDir )
       RETURN ""
@@ -243,7 +241,7 @@ FUNCTION hb_DirAddPathSep( cDir )
 
    RETURN cDir
 
-FUNCTION hb_DirDelPathSep( cDir )
+FUNCTION hb_DirSepDel( cDir )
 
    IF ! hb_isString( cDir )
       RETURN ""
@@ -277,7 +275,7 @@ FUNCTION hb_DirBuild( cDir )
 
    IF ! hb_DirExists( cDir )
 
-      cDir := hb_DirAddPathSep( cDir )
+      cDir := hb_DirSepAdd( cDir )
 
       IF ! Empty( hb_osDriveSeparator() ) .AND. ;
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
@@ -319,7 +317,7 @@ FUNCTION hb_DirUnbuild( cDir )
 
    IF hb_DirExists( cDir )
 
-      cDir := hb_DirDelPathSep( cDir )
+      cDir := hb_DirSepDel( cDir )
 
       cDirTemp := cDir
       DO WHILE ! Empty( cDirTemp )

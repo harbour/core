@@ -1519,109 +1519,6 @@ FUNCTION hbide_outputLine( cLine, nOccur )
 
 /*----------------------------------------------------------------------*/
 
-/* NOTE: Not used by hbmk2 code, but could be useful for
-         apps creating hbmk2 script/config files. [vszakats] */
-FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
-   LOCAL tmp
-
-   LOCAL aPathBase
-   LOCAL aPathTarget
-
-   LOCAL cTestBase
-   LOCAL cTestTarget
-
-   LOCAL cTargetFileName
-
-   DEFAULT lForceRelative TO .F.
-
-   cPathBase   := hbide_PathMakeAbsolute( hbide_DirAddPathSep( cPathBase ), hb_dirBase() )
-   cPathTarget := hbide_PathMakeAbsolute( cPathTarget, hb_dirBase() )
-
-   /* TODO: Optimize to operate on strings instead of arrays */
-
-   aPathBase   := FN_ToArray( cPathBase )
-   aPathTarget := FN_ToArray( cPathTarget, @cTargetFileName )
-
-   tmp := 1
-   cTestBase := ""
-   cTestTarget := ""
-   DO WHILE tmp <= Len( aPathTarget ) .AND. tmp <= Len( aPathBase )
-      cTestBase   += aPathBase[ tmp ]
-      cTestTarget += aPathTarget[ tmp ]
-      IF ! hb_FileMatch( cTestBase, cTestTarget )
-         EXIT
-      ENDIF
-      ++tmp
-   ENDDO
-
-   IF tmp > Len( aPathTarget ) .AND. tmp > Len( aPathBase )
-      tmp--
-   ENDIF
-
-   IF tmp == Len( aPathBase )
-      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName )
-   ENDIF
-
-   /* Different drive spec. There is way to solve that using relative dirs. */
-   IF ! Empty( hb_osDriveSeparator() ) .AND. ;
-      tmp == 1 .AND. ;
-      ( Right( aPathBase[ 1 ]  , 1 ) == hb_osDriveSeparator() .OR. ;
-        Right( aPathTarget[ 1 ], 1 ) == hb_osDriveSeparator() )
-      RETURN cPathTarget
-   ENDIF
-
-   /* Force to return relative paths even when base is different. */
-   IF lForceRelative
-      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) )
-   ENDIF
-
-   RETURN cPathTarget
-
-
-STATIC FUNCTION FN_ToArray( cPath, /* @ */ cFileName  )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cPath, @cDir, @cName, @cExt )
-
-   IF ! Empty( cName ) .OR. ! Empty( cExt )
-      cFileName := cName + cExt
-   ENDIF
-
-   RETURN hb_ATokens( cDir, hb_ps() )
-
-
-STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
-   LOCAL cDir
-   LOCAL tmp
-
-   DEFAULT nFrom      TO 1
-   DEFAULT nTo        TO Len( aPath )
-
-   IF nFrom > Len( aPath ) .OR. nTo < 1
-      RETURN ""
-   ENDIF
-
-   DEFAULT cDirPrefix TO ""
-
-   IF nFrom < 1
-      nFrom := 1
-   ENDIF
-
-   IF nTo > Len( aPath )
-      nTo := Len( aPath )
-   ENDIF
-
-   cDir := ""
-   FOR tmp := nFrom TO nTo
-      cDir += aPath[ tmp ]
-      IF nFrom < nTo
-         cDir += hb_ps()
-      ENDIF
-   NEXT
-
-   RETURN hb_FNameMerge( DirDelPathSep( hbide_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
-
-
 FUNCTION hbide_DirAddPathSep( cDir )
 
    IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
@@ -1629,7 +1526,6 @@ FUNCTION hbide_DirAddPathSep( cDir )
    ENDIF
 
    RETURN cDir
-
 
 STATIC FUNCTION DirDelPathSep( cDir )
 
