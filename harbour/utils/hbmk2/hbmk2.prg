@@ -3039,7 +3039,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 #endif
 
       DO CASE
-      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos" )
+      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|minix" )
          IF Empty( cPrefix )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
@@ -10051,6 +10051,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "cygwin"
          AAdd( aDf, "__PLATFORM__CYGWIN" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "minix"
+         AAdd( aDf, "__PLATFORM__MINIX" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
@@ -11081,7 +11084,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
    CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
    CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
-   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin" )
+   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
    CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
    CASE "allmingw" ; RETURN HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
@@ -11102,7 +11105,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    ENDIF
 
    IF ! HBMK_IS_IN( cKeyword, "|win|wce|dos|os2" + ;
-                              "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin" + ;
+                              "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" + ;
                               "|msvc|msvc64|msvcia64|msvcarm" + ;
                               "|pocc|pocc64|poccarm|xcc" + ;
                               "|mingw|mingw64|mingwarm|bcc|watcom" + ;
@@ -11861,6 +11864,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - vxworks : gcc, diab",;
       "  - symbian : gcc",;
       "  - cygwin  : gcc",;
+      "  - minix   : gcc",;
       "  - sunos   : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;

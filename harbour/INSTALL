@@ -514,6 +514,7 @@ HARBOUR
    qnx      - QNX
    vxworks  - VxWorks
    symbian  - Symbian OS (experimental)
+   minix    - Minix
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -564,6 +565,11 @@ HARBOUR
    symbian
    -------
    gcc      - GNU C
+
+   minix
+   -------
+   gcc      - GNU C
+   ack      - Amsterdam Compiler Kit
 
    cygwin
    ------
@@ -1400,6 +1406,8 @@ HARBOUR
    x hpux   -> wce/mingw     x86
    x hpux   -> win/mingw     x86
    x hpux   -> dos/djgpp     x86
+     minix  -> minix/gcc     x86
+     minix  -> minix/ack     x86
      sunos  -> sunos/gcc     (CPU cross-builds possible)
      sunos  -> sunos/sunpro  (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
    x sunos  -> wce/mingwarm  arm

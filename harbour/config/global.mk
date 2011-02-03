@@ -1390,6 +1390,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),cygwin)
          HB_PRGFLAGS += -D__PLATFORM__CYGWIN -D__PLATFORM__UNIX
+      else
       ifeq ($(HB_PLATFORM),minix)
          HB_PRGFLAGS += -D__PLATFORM__MINIX -D__PLATFORM__UNIX
       endif
