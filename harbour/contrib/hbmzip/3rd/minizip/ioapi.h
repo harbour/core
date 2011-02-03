@@ -65,7 +65,8 @@
     defined( HB_OS_BSD ) || \
     defined( HB_OS_DARWIN ) || \
     defined( HB_OS_HAIKU ) || \
-    defined( HB_OS_DOS )
+    defined( HB_OS_DOS ) || \
+    defined( HB_OS_MINIX )
 #  define USE_FILE32API
 #endif
 

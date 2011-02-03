@@ -2520,7 +2520,10 @@ int hb_socketSetBroadcast( HB_SOCKET sd, HB_BOOL fBroadcast )
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 #else
-   return ENOTSUP;
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fBroadcast );
+
+   return -1;
 #endif
 }
 
@@ -3064,7 +3067,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
    int iError = 0;
 
 /*
- * TODO: add suppot for alternative long interface intorduced in some
+ * TODO: add support for alternative long interface introduced in some
  *       new systems using 'struct lifreq' with SIOCGLIF* ioctls instead
  *       of 'struct ifreq' and SIOCGIF*
  */

@@ -2,6 +2,9 @@
 # $Id$
 #
 
+# Until Minix gets sa_sigaction support (hbserv.c)
+-stop{minix}
+
 -hblib
 -inc
 

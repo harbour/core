@@ -195,6 +195,14 @@ HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
+   on Minix hosts
+   --------------
+
+      Install GNU make and the GNU compiler/binutils toolchain from
+      the Minix pkgsrc repository; for details see
+
+      http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages
+
 
 2. HOW TO DO A PARTIAL [RE]BUILD
 ================================
@@ -514,7 +522,7 @@ HARBOUR
    qnx      - QNX
    vxworks  - VxWorks
    symbian  - Symbian OS (experimental)
-   minix    - Minix
+   minix    - Minix 3 (tested on 3.1.8; earlier releases probably will not work)
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -569,7 +577,7 @@ HARBOUR
    minix
    -------
    gcc      - GNU C
-   ack      - Amsterdam Compiler Kit
+   ack      - Amsterdam Compiler Kit (does not work yet)
 
    cygwin
    ------

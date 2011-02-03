@@ -2,6 +2,9 @@
 # $Id$
 #
 
+# Needs to be taught that Minix has no threads or shared libraries.
+-stop{minix}
+
 -stop{poccarm}
 # NOTE: old msvcarm can't cope with some PP directives. [vszakats]
 -stop{msvcarm&HB_COMP_VER!='1200'&HB_COMP_VER!='1300'&HB_COMP_VER!='1310')}
