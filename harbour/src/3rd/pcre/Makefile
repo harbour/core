@@ -39,7 +39,7 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE_STATIC
 
-   ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 icc iccia64 djgpp),)
+   ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
       HB_CFLAGS += -DHAVE_INTTYPES_H=0
    else
    ifneq ($(filter $(HB_PLATFORM),vxworks),)
