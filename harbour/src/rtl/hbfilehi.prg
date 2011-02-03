@@ -339,39 +339,28 @@ FUNCTION hb_DirUnbuild( cDir )
 
    RETURN .T.
 
-FUNCTION hb_FNameDirGet( cFileName )
+FUNCTION hb_FNameDir( cFileName )
    LOCAL cDir
 
    hb_FNameSplit( cFileName, @cDir )
 
    RETURN cDir
 
-FUNCTION hb_FNameNameGet( cFileName )
+FUNCTION hb_FNameName( cFileName )
    LOCAL cName
 
    hb_FNameSplit( cFileName,, @cName )
 
    RETURN cName
 
-FUNCTION hb_FNameNameExtGet( cFileName )
+FUNCTION hb_FNameNameExt( cFileName )
    LOCAL cName, cExt
 
    hb_FNameSplit( cFileName,, @cName, @cExt )
 
    RETURN hb_FNameMerge( NIL, cName, cExt )
 
-FUNCTION hb_FNameExtDef( cFileName, cDefExt )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-
-   IF Empty( cExt )
-      cExt := cDefExt
-   ENDIF
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-FUNCTION hb_FNameExtGet( cFileName )
+FUNCTION hb_FNameExt( cFileName )
    LOCAL cExt
 
    hb_FNameSplit( cFileName,,, @cExt )
@@ -382,5 +371,16 @@ FUNCTION hb_FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
+
+FUNCTION hb_FNameExtSetDef( cFileName, cDefExt )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
+   IF Empty( cExt )
+      cExt := cDefExt
+   ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
