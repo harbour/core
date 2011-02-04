@@ -1372,9 +1372,13 @@ HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
+   {
       hb_retni( sqlite3_enable_load_extension( pHbSqlite3->db, hb_parl( 2 ) ) );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+#else
+   hb_retni( -1 );
 #endif /* SQLITE_OMIT_LOAD_EXTENSION */
 }
 
@@ -1473,9 +1477,9 @@ HB_FUNC( SQLITE3_GET_TABLE )
    );
  */
 
-#ifdef SQLITE_ENABLE_COLUMN_METADATA
 HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
 {
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
@@ -1523,6 +1527,9 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+#else
+   hb_reta( 0 );
+#endif /* SQLITE_ENABLE_COLUMN_METADATA */
 }
 
 /**
@@ -1535,34 +1542,45 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
 
 HB_FUNC( SQLITE3_COLUMN_DATABASE_NAME )
 {
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
    psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt )
       hb_retstr_utf8( sqlite3_column_database_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+#else
+   hb_retc_null();
+#endif /* SQLITE_ENABLE_COLUMN_METADATA */
 }
 
 HB_FUNC( SQLITE3_COLUMN_TABLE_NAME )
 {
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
    psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt )
       hb_retstr_utf8( sqlite3_column_table_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+#else
+   hb_retc_null();
+#endif /* SQLITE_ENABLE_COLUMN_METADATA */
 }
 
 HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
 {
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
    psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt )
       hb_retstr_utf8( sqlite3_column_origin_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
-}
+#else
+   hb_retc_null();
 #endif /* SQLITE_ENABLE_COLUMN_METADATA */
+}
 
 /*
    BLOB I/O
