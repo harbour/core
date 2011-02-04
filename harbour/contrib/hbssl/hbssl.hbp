@@ -4,6 +4,8 @@
 
 hbssl.hbm
 
+{allwin&HBMK_HAS_OPENSSL}-cflag=-I${HB_WITH_OPENSSL}/../inc32
+
 -depimplibs=openssl:../out32dll/libeay32.dll
 -depimplibs=openssl:../out32dll/ssleay32.dll
 -depimplibs=openssl:../dll/libeay32.dll

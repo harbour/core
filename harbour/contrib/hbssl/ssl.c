@@ -62,6 +62,13 @@
 
 #include "hbssl.h"
 
+/* NOTE: See: http://www.openssl.org/support/faq.html#PROG2
+         Application must call SSL_INIT(), so that this module gets linked.
+         [vszakats] */
+#if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
+#  include "openssl/applink.c"
+#endif
+
 HB_FUNC( SSL_INIT )
 {
    SSL_library_init();

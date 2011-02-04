@@ -40,6 +40,8 @@ PROCEDURE Main()
        @PEM_READ_BIO_X509_CRL()        ,;
        @PEM_READ_BIO_PKCS7()           }
 
+   SSL_INIT()
+
    OpenSSL_add_all_ciphers()
 
    ctx := hb_EVP_CIPHER_CTX_create()

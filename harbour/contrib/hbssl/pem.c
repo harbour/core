@@ -118,7 +118,7 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
       {
          hb_retptr( ( * func )( bio, NULL, hb_ssl_pem_password_cb, pPassCallback ) );
       }
-      else if( HB_ISCHAR( 2 ) )
+      else
       {
          /* NOTE: Dropping 'const' qualifier. [vszakats] */
          hb_retptr( ( * func )( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );

@@ -16,6 +16,8 @@ PROCEDURE Main()
    LOCAL bio
    LOCAL bioe
 
+   SSL_INIT()
+
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 

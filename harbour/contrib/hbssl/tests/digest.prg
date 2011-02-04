@@ -19,6 +19,8 @@ PROCEDURE Main()
    LOCAL key
    LOCAL iv
 
+   SSL_INIT()
+
    OpenSSL_add_all_digests()
    OpenSSL_add_all_ciphers()
 

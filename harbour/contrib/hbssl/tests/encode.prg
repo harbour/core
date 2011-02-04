@@ -18,6 +18,8 @@ PROCEDURE Main()
    LOCAL encrypted
    LOCAL decrypted
 
+   SSL_INIT()
+
    OpenSSL_add_all_ciphers()
 
    ctx := hb_EVP_ENCODE_CTX_create()

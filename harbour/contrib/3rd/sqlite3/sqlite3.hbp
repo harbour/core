@@ -2,9 +2,6 @@
 # $Id$
 #
 
-# Needs to be taught that Minix has no threads or shared libraries.
--stop{minix}
-
 -stop{poccarm}
 # NOTE: old msvcarm can't cope with some PP directives. [vszakats]
 -stop{msvcarm&HB_COMP_VER!='1200'&HB_COMP_VER!='1300'&HB_COMP_VER!='1310')}
@@ -32,12 +29,15 @@
 # Watcom Linux builds cannot use system header files
 -cflag=-DSQLITE_OS_OTHER{linux&watcom}
 
+-cflag=-DSQLITE_THREADSAFE=0{minix}
+-cflag=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
+
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
 # VER    3.7.5
 # URL    http://www.sqlite.org/sqlite-amalgamation-3070500.zip
-# DIFF
+# DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
 # MAP    sqlite3.h

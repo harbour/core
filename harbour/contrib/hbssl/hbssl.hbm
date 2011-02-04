@@ -19,6 +19,7 @@
 -depincpath=openssl:/usr/local/include
 -depincpath=openssl:/usr/local/ssl/include
 -depincpath=openssl:/boot/common/include
+-depfinish=openssl
 
 {darwin}-cflag=-DOPENSSL_NO_SHA256
 {darwin}-cflag=-DOPENSSL_NO_SHA512
