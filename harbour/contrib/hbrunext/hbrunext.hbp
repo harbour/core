@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-inc
+
+@../../utils/hbrun/hbrun.hbp
+
+-o${hb_name}
+
+-main=__PULLEXT
+pullext.prg
+
+# Always build in shared mode for these platforms because the
+# tool is included in std distro and we want to minimize its size.
+{_HB_BUILD_&(!(HB_BUILD_DYN='no')&(win|wce|os2))}-shared
+
+# Here comes the list of contribs linked in:
+# - Make sure to keep it in sync with pullext.prg.
+# - Do not add contribs which have external dependencies.
+#   (not in the public SVN that is)
+
+hbct.hbc
+hbexpat.hbc
+hbwin.hbc{allwin}
+
