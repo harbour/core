@@ -25,6 +25,8 @@
 -instfile=inc:hbwinole.h
 -instfile=inc:hbwin.ch
 
+hbwinext.prg
+
 axcore.c
 legacycd.c
 legacyco.c
