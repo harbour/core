@@ -8,7 +8,7 @@
 
 -o${hb_name}
 
--main=__PULLEXT
+-request=__PULLEXT
 pullext.prg
 
 # Always build in shared mode for these platforms because the
@@ -23,4 +23,3 @@ pullext.prg
 hbct.hbc
 hbexpat.hbc
 hbwin.hbc{allwin}
-

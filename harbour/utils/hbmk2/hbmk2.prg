@@ -786,6 +786,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_aOBJA
    LOCAL l_aCLEAN
    LOCAL l_cMAIN := NIL
+   LOCAL l_aREQUEST := {}
    LOCAL l_cVCSDIR
    LOCAL l_cVCSHEAD
    LOCAL l_cTSHEAD
@@ -2306,6 +2307,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_cMAIN := "@" + cParam
          ELSE
             hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid -main value ignored: %1$s" ), cParam ) )
+         ENDIF
+
+      CASE Left( cParamL, 9 ) == "-request="
+
+         IF IsValidHarbourID( cParam := SubStr( cParam, 10 ) )
+            AAdd( l_aREQUEST, cParam )
+         ELSE
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid -request value ignored: %1$s" ), cParam ) )
          ENDIF
 
       CASE Left( cParamL, 3 ) == "-gt"
@@ -5049,6 +5058,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   and override the GT if requested by user. */
          IF ( ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lDynVM ] ) .AND. ;
               ( l_cMAIN != NIL .OR. ;
+                ! Empty( l_aREQUEST ) .OR. ;
                 ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
                 hbmk[ _HBMK_cGT ] != NIL .OR. ;
                 l_cCMAIN != NIL ) ) .OR. lHBMAINDLLP
@@ -5093,6 +5103,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF ! Empty( hbmk[ _HBMK_aLIBUSERGT ] )
                   AEval( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) ) } )
                ENDIF
+               AEval( l_aREQUEST, {| tmp | AAdd( array, Upper( tmp ) ) } )
 
                /* Build C stub */
                /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -11908,6 +11919,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "-gui|-std"          , I_( "create GUI/console executable" ) },;
       { "-main=<mainfunc>"   , I_( "override the name of starting function/procedure" ) },;
+      { "-request=<func>"    , I_( "force function/procedure to be linked" ) },;
       { "-fullstatic"        , I_( "link with all static libs" ) },;
       { "-[full|fix]shared"  , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) },;
       { "-nulrdd[-]"         , I_( "link with nulrdd" ) },;
