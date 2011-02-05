@@ -1,7 +1,7 @@
 
 /* pngrtran.c - transforms the data in a row for PNG readers
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [February 3, 2011]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -692,8 +692,13 @@ png_set_gray_to_rgb(png_structp png_ptr)
 {
    png_debug(1, "in png_set_gray_to_rgb");
 
-   png_ptr->transformations |= PNG_GRAY_TO_RGB;
-   png_ptr->flags &= ~PNG_FLAG_ROW_INIT;
+   if (png_ptr != NULL)
+   {
+      /* Because rgb must be 8 bits or more: */
+      png_set_expand_gray_1_2_4_to_8(png_ptr);
+      png_ptr->transformations |= PNG_GRAY_TO_RGB;
+      png_ptr->flags &= ~PNG_FLAG_ROW_INIT;
+   }
 }
 #endif
 
@@ -2427,7 +2432,7 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
 
    png_debug(1, "in png_do_rgb_to_gray");
 
-   if (
+   if (!(row_info->color_type & PNG_COLOR_MASK_PALETTE) &&
        (row_info->color_type & PNG_COLOR_MASK_COLOR))
    {
       png_uint_32 rc = png_ptr->rgb_to_gray_red_coeff;
@@ -3778,7 +3783,7 @@ png_do_expand_palette(png_row_infop row_info, png_bytep row,
          row_info->rowbytes = row_width;
       }
 
-      else if (row_info->bit_depth == 8)
+      if (row_info->bit_depth == 8)
       {
          {
             if (trans_alpha != NULL)

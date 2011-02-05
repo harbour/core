@@ -1,7 +1,7 @@
 
 /* pngset.c - storage of image information into info struct
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [February 3, 2011]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -87,7 +87,7 @@ png_set_cHRM(png_structp png_ptr, png_infop info_ptr,
 #ifdef PNG_gAMA_SUPPORTED
 void PNGFAPI
 png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
-    gamma)
+    file_gamma)
 {
    png_debug1(1, "in %s storage function", "gAMA");
 
@@ -98,15 +98,15 @@ png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
     * wrong, therefore storing them (and setting PNG_INFO_gAMA)
     * must be wrong too.
     */
-   if (gamma > (png_fixed_point)PNG_UINT_31_MAX)
+   if (file_gamma > (png_fixed_point)PNG_UINT_31_MAX)
       png_warning(png_ptr, "Gamma too large, ignored");
 
-   else if (gamma <= 0)
+   else if (file_gamma <= 0)
       png_warning(png_ptr, "Negative or zero gamma ignored");
 
    else
    {
-      info_ptr->gamma = gamma;
+      info_ptr->gamma = file_gamma;
       info_ptr->valid |= PNG_INFO_gAMA;
    }
 }
@@ -352,7 +352,7 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
 
    ++lengthw;
 
-   png_debug1(3, "allocating unit for info (%u bytes)", lengthw);
+   png_debug1(3, "allocating unit for info (%u bytes)", (unsigned int)lengthw);
 
    info_ptr->scal_s_width = (png_charp)png_malloc_warn(png_ptr, lengthw);
 
@@ -366,7 +366,7 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
 
    ++lengthh;
 
-   png_debug1(3, "allocating unit for info (%u bytes)", lengthh);
+   png_debug1(3, "allocating unit for info (%u bytes)", (unsigned int)lengthh);
 
    info_ptr->scal_s_height = (png_charp)png_malloc_warn(png_ptr, lengthh);
 
@@ -522,27 +522,27 @@ png_set_sBIT(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_sRGB_SUPPORTED
 void PNGAPI
-png_set_sRGB(png_structp png_ptr, png_infop info_ptr, int intent)
+png_set_sRGB(png_structp png_ptr, png_infop info_ptr, int srgb_intent)
 {
    png_debug1(1, "in %s storage function", "sRGB");
 
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   info_ptr->srgb_intent = (png_byte)intent;
+   info_ptr->srgb_intent = (png_byte)srgb_intent;
    info_ptr->valid |= PNG_INFO_sRGB;
 }
 
 void PNGAPI
 png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
-    int intent)
+    int srgb_intent)
 {
    png_debug1(1, "in %s storage function", "sRGB_gAMA_and_cHRM");
 
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   png_set_sRGB(png_ptr, info_ptr, intent);
+   png_set_sRGB(png_ptr, info_ptr, srgb_intent);
 
 #  ifdef PNG_gAMA_SUPPORTED
    png_set_gAMA_fixed(png_ptr, info_ptr, 45455L);
@@ -751,10 +751,10 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
       if (textp->key == NULL)
          return(1);
 
-      png_debug2(2, "Allocated %lu bytes at %x in png_set_text",
+      png_debug2(2, "Allocated %lu bytes at %p in png_set_text",
           (unsigned long)(png_uint_32)
           (key_len + lang_len + lang_key_len + text_length + 4),
-          (int)textp->key);
+          textp->key);
 
       png_memcpy(textp->key, text_ptr[i].key,(png_size_t)(key_len));
       *(textp->key + key_len) = '\0';

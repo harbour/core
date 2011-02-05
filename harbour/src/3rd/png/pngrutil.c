@@ -1,7 +1,7 @@
 
 /* pngrutil.c - utilities to read a PNG file
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [February 3, 2011]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -608,7 +608,7 @@ png_handle_IHDR(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_ptr->rowbytes = PNG_ROWBYTES(png_ptr->pixel_depth, png_ptr->width);
    png_debug1(3, "bit_depth = %d", png_ptr->bit_depth);
    png_debug1(3, "channels = %d", png_ptr->channels);
-   png_debug1(3, "rowbytes = %u", png_ptr->rowbytes);
+   png_debug1(3, "rowbytes = %lu", (unsigned long)png_ptr->rowbytes);
    png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth,
        color_type, interlace_type, compression_type, filter_type);
 }
@@ -1248,7 +1248,9 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
          png_snprintf2(umsg, 80,
              "Ignoring iCCP chunk with declared size = %u "
-              "and actual length = %u", profile_size, profile_length);
+              "and actual length = %u",
+              (unsigned int) profile_size,
+              (unsigned int) profile_length);
          png_warning(png_ptr, umsg);
       }
 #else
@@ -1960,7 +1962,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 void /* PRIVATE */
 png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
-   png_size_t slength, index;
+   png_size_t slength, i;
    int state;
 
    png_debug(1, "in png_handle_sCAL");
@@ -2017,21 +2019,21 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Validate the ASCII numbers, need two ASCII numbers separated by
     * a '\0' and they need to fit exactly in the chunk data.
     */
-   index = 0;
+   i = 0;
    state = 0;
 
    if (png_ptr->chunkdata[1] == 45 /* negative width */ ||
-       !png_check_fp_number(png_ptr->chunkdata, slength, &state, &index) ||
-       index >= slength || png_ptr->chunkdata[index++] != 0)
+       !png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
+       i >= slength || png_ptr->chunkdata[i++] != 0)
       png_warning(png_ptr, "Invalid sCAL chunk ignored: bad width format");
 
    else
    {
-      png_size_t heighti = index;
+      png_size_t heighti = i;
 
-      if (png_ptr->chunkdata[index] == 45 /* negative height */ ||
-          !png_check_fp_number(png_ptr->chunkdata, slength, &state, &index) ||
-          index != slength)
+      if (png_ptr->chunkdata[i] == 45 /* negative height */ ||
+          !png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
+          i != slength)
          png_warning(png_ptr, "Invalid sCAL chunk ignored: bad height format");
 
       else
@@ -3605,9 +3607,9 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
    png_debug1(3, "height = %u,", png_ptr->height);
    png_debug1(3, "iwidth = %u,", png_ptr->iwidth);
    png_debug1(3, "num_rows = %u,", png_ptr->num_rows);
-   png_debug1(3, "rowbytes = %u,", png_ptr->rowbytes);
-   png_debug1(3, "irowbytes = %u",
-       PNG_ROWBYTES(png_ptr->pixel_depth, png_ptr->iwidth) + 1);
+   png_debug1(3, "rowbytes = %lu,", (unsigned long)png_ptr->rowbytes);
+   png_debug1(3, "irowbytes = %lu",
+       (unsigned long)PNG_ROWBYTES(png_ptr->pixel_depth, png_ptr->iwidth) + 1);
 
    png_ptr->flags |= PNG_FLAG_ROW_INIT;
 }

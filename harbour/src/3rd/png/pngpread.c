@@ -1,7 +1,7 @@
 
 /* pngpread.c - read a png file in push mode
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [February 3, 2011]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -39,6 +39,64 @@ png_process_data(png_structp png_ptr, png_infop info_ptr,
    {
       png_process_some_data(png_ptr, info_ptr);
    }
+}
+
+png_size_t PNGAPI
+png_process_data_pause(png_structp png_ptr, int save)
+{
+   if (png_ptr != NULL)
+   {
+      /* It's easiest for the caller if we do the save, then the caller doesn't
+       * have to supply the same data again:
+       */
+      if (save)
+         png_push_save_buffer(png_ptr);
+      else
+      {
+         /* This includes any pending saved bytes: */
+         png_size_t remaining = png_ptr->buffer_size;
+         png_ptr->buffer_size = 0;
+
+         /* So subtract the saved buffer size, unless all the data
+          * is actually 'saved', in which case we just return 0
+          */
+         if (png_ptr->save_buffer_size < remaining)
+            return remaining - png_ptr->save_buffer_size;
+      }
+   }
+
+   return 0;
+}
+
+png_uint_32 PNGAPI
+png_process_data_skip(png_structp png_ptr)
+{
+   png_uint_32 remaining = 0;
+
+   if (png_ptr != NULL && png_ptr->process_mode == PNG_SKIP_MODE &&
+      png_ptr->skip_length > 0)
+   {
+      /* At the end of png_process_data the buffer size must be 0 (see the loop
+       * above) so we can detect a broken call here:
+       */
+      if (png_ptr->buffer_size != 0)
+         png_error(png_ptr,
+            "png_process_data_skip called inside png_process_data");
+
+      /* If is impossible for there to be a saved buffer at this point -
+       * otherwise we could not be in SKIP mode.  This will also happen if
+       * png_process_skip is called inside png_process_data (but only very
+       * rarely.)
+       */
+      if (png_ptr->save_buffer_size != 0)
+         png_error(png_ptr, "png_process_data_skip called with saved data");
+
+      remaining = png_ptr->skip_length;
+      png_ptr->skip_length = 0;
+      png_ptr->process_mode = PNG_READ_CHUNK_MODE;
+   }
+
+   return remaining;
 }
 
 /* What we do with the incoming data depends on what we were previously
@@ -582,10 +640,10 @@ png_push_crc_finish(png_structp png_ptr)
 {
    if (png_ptr->skip_length && png_ptr->save_buffer_size)
    {
-      png_size_t save_size = png_ptr->current_buffer_size;
+      png_size_t save_size = png_ptr->save_buffer_size;
       png_uint_32 skip_length = png_ptr->skip_length;
 
-      /* We want the smaller of 'skip_length' and 'current_buffer_size', but
+      /* We want the smaller of 'skip_length' and 'save_buffer_size', but
        * they are of different types and we don't know which variable has the
        * fewest bits.  Carefully select the smaller and cast it to the type of
        * the larger - this cannot overflow.  Do not cast in the following test
@@ -609,10 +667,8 @@ png_push_crc_finish(png_structp png_ptr)
       png_size_t save_size = png_ptr->current_buffer_size;
       png_uint_32 skip_length = png_ptr->skip_length;
 
-      /* We want the smaller of 'skip_length' and 'current_buffer_size', but
-       * they are of different types and we don't know which variable has the
-       * fewest bits.  Carefully select the smaller and cast it to the type of
-       * the larger - this cannot overflow.
+      /* We want the smaller of 'skip_length' and 'current_buffer_size', here,
+       * the same problem exists as above and the same solution.
        */
       if (skip_length < save_size)
          save_size = (png_size_t)skip_length;
@@ -1788,7 +1844,7 @@ png_set_progressive_read_fn(png_structp png_ptr, png_voidp progressive_ptr,
 }
 
 png_voidp PNGAPI
-png_get_progressive_ptr(png_structp png_ptr)
+png_get_progressive_ptr(png_const_structp png_ptr)
 {
    if (png_ptr == NULL)
       return (NULL);

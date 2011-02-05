@@ -1,7 +1,7 @@
 
 /* pngread.c - read a PNG file
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [$RDATE%]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -841,7 +841,7 @@ png_read_image(png_structp png_ptr, png_bytepp image)
    }
    else
    {
-      if (!(png_ptr->transformations & PNG_INTERLACE))
+      if (png_ptr->interlaced && !(png_ptr->transformations & PNG_INTERLACE))
       {
          /* Caller called png_start_read_image or png_read_update_info without
           * first turning on the PNG_INTERLACE transform.  We can fix this here,

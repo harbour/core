@@ -5,7 +5,7 @@
 
 /* libpng version 1.5.0 - last changed on January 6, 2011 */
 
-/* Copyright (c) 1998-2010 Glenn Randers-Pehrson */
+/* Copyright (c) 1998-2011 Glenn Randers-Pehrson */
 
 /* This code is released under the libpng license. */
 /* For conditions of distribution and use, see the disclaimer */
@@ -159,6 +159,7 @@
 #define PNG_WRITE_iTXt_SUPPORTED
 #define PNG_oFFs_SUPPORTED
 #define PNG_USER_TRANSFORM_PTR_SUPPORTED
+#define PNG_USER_TRANSFORM_INFO_SUPPORTED
 #define PNG_hIST_SUPPORTED
 #define PNG_iCCP_SUPPORTED
 #define PNG_sRGB_SUPPORTED

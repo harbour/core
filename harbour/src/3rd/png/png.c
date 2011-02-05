@@ -1,7 +1,7 @@
 
 /* png.c - location for general purpose libpng functions
  *
- * Last changed in libpng 1.5.0 [January 6, 2011]
+ * Last changed in libpng 1.5.1 [February 3, 2011]
  * Copyright (c) 1998-2011 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -14,7 +14,7 @@
 #include "pngpriv.h"
 
 /* Generate a compiler error if there is an old png.h in the search path. */
-typedef png_libpng_version_1_5_0 Your_png_h_is_not_version_1_5_0;
+typedef png_libpng_version_1_5_1 Your_png_h_is_not_version_1_5_1;
 
 /* Tells libpng that we have already handled the first "num_bytes" bytes
  * of the PNG file signature.  If the PNG data is embedded into another
@@ -547,7 +547,7 @@ png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
 #endif /* defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED) */
 
 png_const_charp PNGAPI
-png_get_copyright(png_structp png_ptr)
+png_get_copyright(png_const_structp png_ptr)
 {
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
 #ifdef PNG_STRING_COPYRIGHT
@@ -555,13 +555,13 @@ png_get_copyright(png_structp png_ptr)
 #else
 #  ifdef __STDC__
    return PNG_STRING_NEWLINE \
-     "libpng version 1.5.0 - January 6, 2011" PNG_STRING_NEWLINE \
+     "libpng version 1.5.1 - February 3, 2011" PNG_STRING_NEWLINE \
      "Copyright (c) 1998-2011 Glenn Randers-Pehrson" PNG_STRING_NEWLINE \
      "Copyright (c) 1996-1997 Andreas Dilger" PNG_STRING_NEWLINE \
      "Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc." \
      PNG_STRING_NEWLINE;
 #  else
-      return "libpng version 1.5.0 - January 6, 2011\
+      return "libpng version 1.5.1 - February 3, 2011\
       Copyright (c) 1998-2011 Glenn Randers-Pehrson\
       Copyright (c) 1996-1997 Andreas Dilger\
       Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.";
@@ -578,14 +578,14 @@ png_get_copyright(png_structp png_ptr)
  * it is guaranteed that png.c uses the correct version of png.h.
  */
 png_const_charp PNGAPI
-png_get_libpng_ver(png_structp png_ptr)
+png_get_libpng_ver(png_const_structp png_ptr)
 {
    /* Version of *.c files used when building libpng */
    return png_get_header_ver(png_ptr);
 }
 
 png_const_charp PNGAPI
-png_get_header_ver(png_structp png_ptr)
+png_get_header_ver(png_const_structp png_ptr)
 {
    /* Version of *.h files used when building libpng */
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
@@ -593,7 +593,7 @@ png_get_header_ver(png_structp png_ptr)
 }
 
 png_const_charp PNGAPI
-png_get_header_version(png_structp png_ptr)
+png_get_header_version(png_const_structp png_ptr)
 {
    /* Returns longer string containing both version and date */
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
@@ -1031,10 +1031,10 @@ int
 png_check_fp_string(png_const_charp string, png_size_t size)
 {
    int        state=0;
-   png_size_t index=0;
+   png_size_t char_index=0;
 
-   return png_check_fp_number(string, size, &state, &index) &&
-      (index == size || string[index] == 0);
+   return png_check_fp_number(string, size, &state, &char_index) &&
+      (char_index == size || string[char_index] == 0);
 }
 #endif /* pCAL or sCAL */
 
@@ -1108,46 +1108,46 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
 
       if (fp >= DBL_MIN && fp <= DBL_MAX)
       {
-         int exp;       /* A base 10 exponent */
-         double base;   /* 10^exp */
+         int exp_b10;       /* A base 10 exponent */
+         double base;   /* 10^exp_b10 */
 
          /* First extract a base 10 exponent of the number,
           * the calculation below rounds down when converting
           * from base 2 to base 10 (multiply by log10(2) -
-          * 0.3010, but 77/256 is 0.3008, so exp needs to
+          * 0.3010, but 77/256 is 0.3008, so exp_b10 needs to
           * be increased.  Note that the arithmetic shift
           * performs a floor() unlike C arithmetic - using a
           * C multiply would break the following for negative
           * exponents.
           */
-         (void)frexp(fp, &exp); /* exponent to base 2 */
+         (void)frexp(fp, &exp_b10); /* exponent to base 2 */
 
-         exp = (exp * 77) >> 8; /* <= exponent to base 10 */
+         exp_b10 = (exp_b10 * 77) >> 8; /* <= exponent to base 10 */
 
          /* Avoid underflow here. */
-         base = png_pow10(exp); /* May underflow */
+         base = png_pow10(exp_b10); /* May underflow */
 
          while (base < DBL_MIN || base < fp)
          {
             /* And this may overflow. */
-            double test = png_pow10(exp+1);
+            double test = png_pow10(exp_b10+1);
 
             if (test <= DBL_MAX)
-               ++exp, base = test;
+               ++exp_b10, base = test;
 
             else
                break;
          }
 
-         /* Normalize fp and correct exp, after this fp is in the
-          * range [.1,1) and exp is both the exponent and the digit
+         /* Normalize fp and correct exp_b10, after this fp is in the
+          * range [.1,1) and exp_b10 is both the exponent and the digit
           * *before* which the decimal point should be inserted
           * (starting with 0 for the first digit).  Note that this
-          * works even if 10^exp is out of range because of the
+          * works even if 10^exp_b10 is out of range because of the
           * test on DBL_MAX above.
           */
          fp /= base;
-         while (fp >= 1) fp /= 10, ++exp;
+         while (fp >= 1) fp /= 10, ++exp_b10;
 
          /* Because of the code above fp may, at this point, be
           * less than .1, this is ok because the code below can
@@ -1162,10 +1162,10 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
             /* Allow up to two leading zeros - this will not lengthen
              * the number compared to using E-n.
              */
-            if (exp < 0 && exp > -3) /* PLUS 3 TOTAL 4 */
+            if (exp_b10 < 0 && exp_b10 > -3) /* PLUS 3 TOTAL 4 */
             {
-               czero = -exp; /* PLUS 2 digits: TOTAL 3 */
-               exp = 0;      /* Dot added below before first output. */
+               czero = -exp_b10; /* PLUS 2 digits: TOTAL 3 */
+               exp_b10 = 0;      /* Dot added below before first output. */
             }
             else
                czero = 0;    /* No zeros to add */
@@ -1207,17 +1207,17 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
                         {
                            int ch = *--ascii;
 
-                           if (exp != (-1))
-                              ++exp;
+                           if (exp_b10 != (-1))
+                              ++exp_b10;
 
                            else if (ch == 46)
                            {
                               ch = *--ascii, ++size;
-                              /* Advance exp to '1', so that the
+                              /* Advance exp_b10 to '1', so that the
                                * decimal point happens after the
                                * previous digit.
                                */
-                              exp = 1;
+                              exp_b10 = 1;
                            }
 
                            --cdigits;
@@ -1230,7 +1230,7 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
                          */
                         if (d > 9)  /* cdigits == 0 */
                         {
-                           if (exp == (-1))
+                           if (exp_b10 == (-1))
                            {
                               /* Leading decimal point (plus zeros?), if
                                * we lose the decimal point here it must
@@ -1239,14 +1239,14 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
                               int ch = *--ascii;
 
                               if (ch == 46)
-                                 ++size, exp = 1;
+                                 ++size, exp_b10 = 1;
 
-                              /* Else lost a leading zero, so 'exp' is
+                              /* Else lost a leading zero, so 'exp_b10' is
                                * still ok at (-1)
                                */
                            }
                            else
-                              ++exp;
+                              ++exp_b10;
 
                            /* In all cases we output a '1' */
                            d = 1;
@@ -1269,23 +1269,24 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
 
                   while (czero > 0)
                   {
-                     /* exp == (-1) means we just output the decimal
-                      * place - after the DP don't adjust 'exp' any
+                     /* exp_b10 == (-1) means we just output the decimal
+                      * place - after the DP don't adjust 'exp_b10' any
                       * more!
                       */
-                     if (exp != (-1))
+                     if (exp_b10 != (-1))
                      {
-                        if (exp == 0) *ascii++ = 46, --size;
+                        if (exp_b10 == 0) *ascii++ = 46, --size;
                         /* PLUS 1: TOTAL 4 */
-                        --exp;
+                        --exp_b10;
                      }
                      *ascii++ = 48, --czero;
                   }
 
-                  if (exp != (-1))
+                  if (exp_b10 != (-1))
                   {
-                     if (exp == 0) *ascii++ = 46, --size; /* counted above */
-                     --exp;
+                     if (exp_b10 == 0) *ascii++ = 46, --size; /* counted
+                                                                 above */
+                     --exp_b10;
                   }
                   *ascii++ = (char)(48 + (int)d), ++cdigits;
                }
@@ -1296,12 +1297,12 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
 
             /* Check for an exponent, if we don't need one we are
              * done and just need to terminate the string.  At
-             * this point exp==(-1) is effectively if flag - it got
+             * this point exp_b10==(-1) is effectively if flag - it got
              * to '-1' because of the decrement after outputing
              * the decimal point above (the exponent required is
              * *not* -1!)
              */
-            if (exp >= (-1) && exp <= 2)
+            if (exp_b10 >= (-1) && exp_b10 <= 2)
             {
                /* The following only happens if we didn't output the
                 * leading zeros above for negative exponent, so this
@@ -1310,7 +1311,7 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
                 * zeros were *not* output, so this doesn't increase
                 * the output count.
                 */
-               while (--exp >= 0) *ascii++ = 48;
+               while (--exp_b10 >= 0) *ascii++ = 48;
 
                *ascii = 0;
 
@@ -1329,18 +1330,18 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
             size -= cdigits;
 
             *ascii++ = 69, --size;    /* 'E': PLUS 1 TOTAL 2+precision*/
-            if (exp < 0)
+            if (exp_b10 < 0)
             {
                *ascii++ = 45, --size; /* '-': PLUS 1 TOTAL 3+precision */
-               exp = -exp;
+               exp_b10 = -exp_b10;
             }
 
             cdigits = 0;
 
-            while (exp > 0)
+            while (exp_b10 > 0)
             {
-               exponent[cdigits++] = (char)(48 + exp % 10);
-               exp /= 10;
+               exponent[cdigits++] = (char)(48 + exp_b10 % 10);
+               exp_b10 /= 10;
             }
 
             /* Need another size check here for the exponent digits, so
@@ -1459,11 +1460,10 @@ png_fixed(png_structp png_ptr, double fp, png_const_charp text)
 {
    double r = floor(100000 * fp + .5);
 
-   if (r <= 2147483647. && r >= -2147483648.)
-      return (png_fixed_point)r;
+   if (r > 2147483647. || r < -2147483648.)
+      png_fixed_error(png_ptr, text);
 
-   png_fixed_error(png_ptr, text);
-   /*NOT REACHED*/
+   return (png_fixed_point)r;
 }
 #endif
 
@@ -1477,10 +1477,10 @@ png_fixed(png_structp png_ptr, double fp, png_const_charp text)
  */
 int
 png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
-    png_int_32 div)
+    png_int_32 divisor)
 {
-   /* Return a * times / div, rounded. */
-   if (div != 0)
+   /* Return a * times / divisor, rounded. */
+   if (divisor != 0)
    {
       if (a == 0 || times == 0)
       {
@@ -1492,7 +1492,7 @@ png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
 #ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
          double r = a;
          r *= times;
-         r /= div;
+         r /= divisor;
          r = floor(r+.5);
 
          /* A png_fixed_point is a 32 bit integer. */
@@ -1516,10 +1516,10 @@ png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
          else
             T = times;
 
-         if (div < 0)
-            negative = !negative, D = -div;
+         if (divisor < 0)
+            negative = !negative, D = -divisor;
          else
-            D = div;
+            D = divisor;
 
          /* Following can't overflow because the arguments only
           * have 31 bits each, however the result may be 32 bits.
@@ -1596,11 +1596,11 @@ png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
  */
 png_fixed_point
 png_muldiv_warn(png_structp png_ptr, png_fixed_point a, png_int_32 times,
-    png_int_32 div)
+    png_int_32 divisor)
 {
    png_fixed_point result;
 
-   if (png_muldiv(&result, a, times, div))
+   if (png_muldiv(&result, a, times, divisor))
       return result;
 
    png_warning(png_ptr, "fixed point overflow ignored");
@@ -1791,7 +1791,7 @@ png_8bit_l2[128] =
 static png_int_32
 png_log8bit(unsigned int x)
 {
-   unsigned int log = 0;
+   unsigned int lg2 = 0;
    /* Each time 'x' is multiplied by 2, 1 must be subtracted off the final log,
     * because the log is actually negate that means adding 1.  The final
     * returned value thus has the range 0 (for 255 input) to 7.994 (for 1
@@ -1802,16 +1802,16 @@ png_log8bit(unsigned int x)
       return 0xffffffff;
 
    if ((x & 0xf0) == 0)
-      log  = 4, x <<= 4;
+      lg2  = 4, x <<= 4;
 
    if ((x & 0xc0) == 0)
-      log += 2, x <<= 2;
+      lg2 += 2, x <<= 2;
 
    if ((x & 0x80) == 0)
-      log += 1, x <<= 1;
+      lg2 += 1, x <<= 1;
 
    /* result is at most 19 bits, so this cast is safe: */
-   return (png_int_32)((log << 16) + ((png_8bit_l2[x-128]+32768)>>16));
+   return (png_int_32)((lg2 << 16) + ((png_8bit_l2[x-128]+32768)>>16));
 }
 
 /* The above gives exact (to 16 binary places) log2 values for 8 bit images,
@@ -1847,29 +1847,29 @@ png_log8bit(unsigned int x)
 static png_int_32
 png_log16bit(png_uint_32 x)
 {
-   unsigned int log = 0;
+   unsigned int lg2 = 0;
 
    /* As above, but now the input has 16 bits. */
    if ((x &= 0xffff) == 0)
       return 0xffffffff;
 
    if ((x & 0xff00) == 0)
-      log  = 8, x <<= 8;
+      lg2  = 8, x <<= 8;
 
    if ((x & 0xf000) == 0)
-      log += 4, x <<= 4;
+      lg2 += 4, x <<= 4;
 
    if ((x & 0xc000) == 0)
-      log += 2, x <<= 2;
+      lg2 += 2, x <<= 2;
 
    if ((x & 0x8000) == 0)
-      log += 1, x <<= 1;
+      lg2 += 1, x <<= 1;
 
    /* Calculate the base logarithm from the top 8 bits as a 28 bit fractional
     * value.
     */
-   log <<= 28;
-   log += (png_8bit_l2[(x>>8)-128]+8) >> 4;
+   lg2 <<= 28;
+   lg2 += (png_8bit_l2[(x>>8)-128]+8) >> 4;
 
    /* Now we need to interpolate the factor, this requires a division by the top
     * 8 bits.  Do this with maximum precision.
@@ -1880,19 +1880,19 @@ png_log16bit(png_uint_32 x)
     * the value at 1<<16 (ignoring this) will be 0 or 1; this gives us exactly
     * 16 bits to interpolate to get the low bits of the result.  Round the
     * answer.  Note that the end point values are scaled by 64 to retain overall
-    * precision and that 'log' is current scaled by an extra 12 bits, so adjust
+    * precision and that 'lg2' is current scaled by an extra 12 bits, so adjust
     * the overall scaling by 6-12.  Round at every step.
     */
    x -= 1U << 24;
 
    if (x <= 65536U) /* <= '257' */
-      log += ((23591U * (65536U-x)) + (1U << (16+6-12-1))) >> (16+6-12);
+      lg2 += ((23591U * (65536U-x)) + (1U << (16+6-12-1))) >> (16+6-12);
 
    else
-      log -= ((23499U * (x-65536U)) + (1U << (16+6-12-1))) >> (16+6-12);
+      lg2 -= ((23499U * (x-65536U)) + (1U << (16+6-12-1))) >> (16+6-12);
 
    /* Safe, because the result can't have more than 20 bits: */
-   return (png_int_32)((log + 2048) >> 12);
+   return (png_int_32)((lg2 + 2048) >> 12);
 }
 
 /* The 'exp()' case must invert the above, taking a 20 bit fixed point
@@ -1987,10 +1987,10 @@ png_exp(png_fixed_point x)
 }
 
 static png_byte
-png_exp8bit(png_fixed_point log)
+png_exp8bit(png_fixed_point lg2)
 {
    /* Get a 32 bit value: */
-   png_uint_32 x = png_exp(log);
+   png_uint_32 x = png_exp(lg2);
 
    /* Convert the 32 bit value to 0..255 by multiplying by 256-1, note that the
     * second, rounding, step can't overflow because of the first, subtraction,
@@ -2001,10 +2001,10 @@ png_exp8bit(png_fixed_point log)
 }
 
 static png_uint_16
-png_exp16bit(png_fixed_point log)
+png_exp16bit(png_fixed_point lg2)
 {
    /* Get a 32 bit value: */
-   png_uint_32 x = png_exp(log);
+   png_uint_32 x = png_exp(lg2);
 
    /* Convert the 32 bit value to 0..65535 by multiplying by 65536-1: */
    x -= x >> 16;
@@ -2013,18 +2013,18 @@ png_exp16bit(png_fixed_point log)
 #endif /* FLOATING_ARITHMETIC */
 
 png_byte
-png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma)
+png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma_val)
 {
    if (value > 0 && value < 255)
    {
 #     ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
-         double r = floor(255*pow(value/255.,gamma*.00001)+.5);
+         double r = floor(255*pow(value/255.,gamma_val*.00001)+.5);
          return (png_byte)r;
 #     else
-         png_int_32 log = png_log8bit(value);
+         png_int_32 lg2 = png_log8bit(value);
          png_fixed_point res;
 
-         if (png_muldiv(&res, gamma, log, PNG_FP_1))
+         if (png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
             return png_exp8bit(res);
 
          /* Overflow. */
@@ -2036,18 +2036,18 @@ png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma)
 }
 
 png_uint_16
-png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma)
+png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
 {
    if (value > 0 && value < 65535)
    {
 #     ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
-         double r = floor(65535*pow(value/65535.,gamma*.00001)+.5);
+         double r = floor(65535*pow(value/65535.,gamma_val*.00001)+.5);
          return (png_uint_16)r;
 #     else
-         png_int_32 log = png_log16bit(value);
+         png_int_32 lg2 = png_log16bit(value);
          png_fixed_point res;
 
-         if (png_muldiv(&res, gamma, log, PNG_FP_1))
+         if (png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
             return png_exp16bit(res);
 
          /* Overflow. */
@@ -2065,23 +2065,23 @@ png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma)
  */
 png_uint_16 /* PRIVATE */
 png_gamma_correct(png_structp png_ptr, unsigned int value,
-    png_fixed_point gamma)
+    png_fixed_point gamma_val)
 {
    if (png_ptr->bit_depth == 8)
-      return png_gamma_8bit_correct(value, gamma);
+      return png_gamma_8bit_correct(value, gamma_val);
 
    else
-      return png_gamma_16bit_correct(value, gamma);
+      return png_gamma_16bit_correct(value, gamma_val);
 }
 
 /* This is the shared test on whether a gamma value is 'significant' - whether
  * it is worth doing gamma correction.
  */
 int /* PRIVATE */
-png_gamma_significant(png_fixed_point gamma)
+png_gamma_significant(png_fixed_point gamma_val)
 {
-   return gamma < PNG_FP_1 - PNG_GAMMA_THRESHOLD_FIXED ||
-       gamma > PNG_FP_1 + PNG_GAMMA_THRESHOLD_FIXED;
+   return gamma_val < PNG_FP_1 - PNG_GAMMA_THRESHOLD_FIXED ||
+       gamma_val > PNG_FP_1 + PNG_GAMMA_THRESHOLD_FIXED;
 }
 
 /* Internal function to build a single 16 bit table - the table consists of
@@ -2094,7 +2094,7 @@ png_gamma_significant(png_fixed_point gamma)
  */
 static void
 png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
-   PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma)
+   PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
 {
    /* Various values derived from 'shift': */
    PNG_CONST unsigned int num = 1U << (8U - shift);
@@ -2113,7 +2113,7 @@ png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
       /* The 'threshold' test is repeated here because it can arise for one of
        * the 16 bit tables even if the others don't hit it.
        */
-      if (png_gamma_significant(gamma))
+      if (png_gamma_significant(gamma_val))
       {
          /* The old code would overflow at the end and this would cause the
           * 'pow' function to return a result >1, resulting in an
@@ -2129,13 +2129,13 @@ png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
             png_uint_32 ig = (j << (8-shift)) + i;
 #           ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
                /* Inline the 'max' scaling operation: */
-               double d = floor(65535*pow(ig/(double)max, gamma*.00001)+.5);
+               double d = floor(65535*pow(ig/(double)max, gamma_val*.00001)+.5);
                sub_table[j] = (png_uint_16)d;
 #           else
                if (shift)
                   ig = (ig * 65535U + max_by_2)/max;
 
-               sub_table[j] = png_gamma_16bit_correct(ig, gamma);
+               sub_table[j] = png_gamma_16bit_correct(ig, gamma_val);
 #           endif
          }
       }
@@ -2162,7 +2162,7 @@ png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
  */
 static void
 png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
-   PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma)
+   PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
 {
    PNG_CONST unsigned int num = 1U << (8U - shift);
    PNG_CONST unsigned int max = (1U << (16U - shift))-1U;
@@ -2180,7 +2180,7 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
       table[i] = (png_uint_16p)png_malloc(png_ptr,
           256 * png_sizeof(png_uint_16));
 
-   /* 'gamma' is set to the reciprocal of the value calculated above, so
+   /* 'gamma_val' is set to the reciprocal of the value calculated above, so
     * pow(out,g) is an *input* value.  'last' is the last input value set.
     *
     * In the loop 'i' is used to find output values.  Since the output is 8
@@ -2203,7 +2203,7 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
       png_uint_16 out = (png_uint_16)(i * 257U); /* 16 bit output value */
 
       /* Find the boundary value in 16 bits: */
-      png_uint_32 bound = png_gamma_16bit_correct(out+128U, gamma);
+      png_uint_32 bound = png_gamma_16bit_correct(out+128U, gamma_val);
 
       /* Adjust (round) to (16-shift) bits: */
       bound = (bound * max + 32768U)/65535U + 1U;
@@ -2229,13 +2229,13 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
  */
 static void
 png_build_8bit_table(png_structp png_ptr, png_bytepp ptable,
-   PNG_CONST png_fixed_point gamma)
+   PNG_CONST png_fixed_point gamma_val)
 {
    unsigned int i;
    png_bytep table = *ptable = (png_bytep)png_malloc(png_ptr, 256);
 
-   if (png_gamma_significant(gamma)) for (i=0; i<256; i++)
-      table[i] = png_gamma_8bit_correct(i, gamma);
+   if (png_gamma_significant(gamma_val)) for (i=0; i<256; i++)
+      table[i] = png_gamma_8bit_correct(i, gamma_val);
 
    else for (i=0; i<256; ++i)
       table[i] = (png_byte)i;
