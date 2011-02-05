@@ -23,6 +23,8 @@
 -instfile=inc:ctvideo.ch
 -instfile=inc:hbct.hbx
 
+hbct.hbx
+
 addascii.c
 asciisum.c
 ascpos.c
@@ -109,7 +111,6 @@ wordtoch.c
 
 ct.prg
 ctdummy.prg
-ctextern.prg
 ctmisc.prg
 ctrand.prg
 cttime.prg

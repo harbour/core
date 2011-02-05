@@ -50,6 +50,4 @@
  *
  */
 
-#define __HBEXTERN__HBLZF__ANNOUNCE
-#define __HBEXTERN__HBLZF__REQUEST
 #include "hblzf.hbx"

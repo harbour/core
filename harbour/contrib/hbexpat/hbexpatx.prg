@@ -50,6 +50,4 @@
  *
  */
 
-#define __HBEXTERN__HBEXPAT__ANNOUNCE
-#define __HBEXTERN__HBEXPAT__REQUEST
 #include "hbexpat.hbx"

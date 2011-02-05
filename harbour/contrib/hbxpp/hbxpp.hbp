@@ -16,6 +16,8 @@
 -instfile=inc:thread.ch
 -instfile=inc:hbxpp.hbx
 
+hbxpp.hbx
+
 binnumx.c
 dbcmdx.c
 dbdetacx.c

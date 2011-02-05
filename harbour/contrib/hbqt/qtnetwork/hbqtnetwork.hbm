@@ -6,8 +6,8 @@
 
 qth/filelist.hbm
 
-hbqt_init.cpp
+hbqtnetwork.hbx
 
-hbqt_extern.prg
+hbqt_init.cpp
 
 ../qtcore/hbqtcore.hbc

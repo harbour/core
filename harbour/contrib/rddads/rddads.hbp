@@ -24,8 +24,9 @@
 -instfile=inc:adsextrn.ch
 -instfile=inc:rddads.hbx
 
+rddads.hbx
+
 ads1.c
 adsfunc.c
 adsmgmnt.c
 adsx.c
-adsextrn.prg

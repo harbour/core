@@ -6,6 +6,8 @@
 
 qth/filelist.hbm
 
+hbqtgui.hbx
+
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqgraphicsitem.cpp
 hbqt_hbqgraphicsscene.cpp
@@ -22,7 +24,6 @@ hbqt_hbqsyntaxhighlighter.h
 hbqt_hbqtableview.h
 
 hbqt_errorsys.prg
-hbqt_extern.prg
 
 THbQtUI.prg
 

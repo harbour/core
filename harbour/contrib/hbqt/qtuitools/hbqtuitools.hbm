@@ -6,9 +6,9 @@
 
 qth/filelist.hbm
 
-hbqt_init.cpp
+hbqtuitools.hbx
 
-hbqt_extern.prg
+hbqt_init.cpp
 
 THbQtUILoader.prg
 

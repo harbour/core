@@ -24,11 +24,12 @@
 -instfile=inc:gdextern.ch
 -instfile=inc:hbgd.hbx
 
+hbgd.hbx
+
 gdwrp.c
 
 gd.prg
 gdbar.prg
 gdchart.prg
 gdimage.prg
-gdextern.prg
 gdbarcod.prg

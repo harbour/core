@@ -6,9 +6,9 @@
 
 qth/filelist.hbm
 
-hbqt_init.cpp
+hbqtwebkit.hbx
 
-hbqt_extern.prg
+hbqt_init.cpp
 
 ../qtcore/hbqtcore.hbc
 ../qtgui/hbqtgui.hbc

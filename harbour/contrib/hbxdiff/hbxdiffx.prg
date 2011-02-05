@@ -50,6 +50,4 @@
  *
  */
 
-#define __HBEXTERN__HBXDIFF__ANNOUNCE
-#define __HBEXTERN__HBXDIFF__REQUEST
 #include "hbxdiff.hbx"

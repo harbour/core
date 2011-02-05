@@ -50,6 +50,4 @@
  *
  */
 
-#define __HBEXTERN__HBMXML__ANNOUNCE
-#define __HBEXTERN__HBMXML__REQUEST
 #include "hbmxml.hbx"

@@ -18,7 +18,8 @@
 -instfile=inc:xbpdev.ch
 -instfile=inc:hbxbp.hbx
 
-hbxbpext.prg
+hbxbp.hbx
+
 hbpprocess.prg
 xbp3state.prg
 xbpappevent.prg

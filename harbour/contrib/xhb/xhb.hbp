@@ -24,6 +24,8 @@
 ../hbtip/hbtip.hbc
 ../hbwin/hbwin.hbc
 
+xhb.hbx
+
 bkgtsks.c
 cstructc.c
 datesxhb.c
