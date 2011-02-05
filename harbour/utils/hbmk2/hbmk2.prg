@@ -2894,6 +2894,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
          IF Empty( FNameExtGet( cParam ) )
             cParam := FNameExtSet( cParam, ".prg" )
+         ELSEIF FNameExtGet( cParamL ) == ".hbx"
+            AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D__HBEXTREQ__" )
          ENDIF
          AAdd( hbmk[ _HBMK_aPRG ], cParam )
          DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
