@@ -23,6 +23,6 @@
 
 hbbz2.hbx
 
-hbbz2.c
+core.c
 
 3rd/bz2/bz2.hbc{HBMK_HAS_BZIP2_LOCAL}

@@ -11,18 +11,17 @@
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
 /* -------------------------------------------------------------------- */
 
 #ifndef __HBEXTERN_CH__HBBZ2__
 #define __HBEXTERN_CH__HBBZ2__
 
-#ifdef __HBEXTERN__HBBZ2__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBZ2__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBBZ2__
 #endif
 
-#ifdef __HBEXTERN__HBBZ2__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBZ2__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -32,7 +31,7 @@ DYNAMIC HB_BZ2_UNCOMPRESS
 DYNAMIC HB_BZ2_UNCOMPRESSLEN
 DYNAMIC HB_BZ2_VERSION
 
-#ifdef __HBEXTERN__HBBZ2__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBZ2__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
