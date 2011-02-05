@@ -18,11 +18,11 @@
 #ifndef __HBEXTERN_CH__HBXDIFF__
 #define __HBEXTERN_CH__HBXDIFF__
 
-#ifdef __HBEXTERN__HBXDIFF__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBXDIFF__
 #endif
 
-#ifdef __HBEXTERN__HBXDIFF__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -41,7 +41,7 @@ DYNAMIC XDL_READ_MMFILE
 DYNAMIC XDL_SEEK_MMFILE
 DYNAMIC XDL_WRITE_MMFILE
 
-#ifdef __HBEXTERN__HBXDIFF__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

@@ -22,4 +22,5 @@ pullext.prg
 
 hbct.hbc
 hbexpat.hbc
+hbunix.hbc{unix}
 hbwin.hbc{allwin}

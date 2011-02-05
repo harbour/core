@@ -20,11 +20,11 @@
 #ifndef __HBEXTERN_CH__HBQTCORE__
 #define __HBEXTERN_CH__HBQTCORE__
 
-#ifdef __HBEXTERN__HBQTCORE__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTCORE__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBQTCORE__
 #endif
 
-#ifdef __HBEXTERN__HBQTCORE__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTCORE__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -232,7 +232,7 @@ DYNAMIC __HBQT_SLOTS_CONNECT
 DYNAMIC __HBQT_SLOTS_DISCONNECT
 DYNAMIC __HBQT_SLOTS_NEW
 
-#ifdef __HBEXTERN__HBQTCORE__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTCORE__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

@@ -20,11 +20,11 @@
 #ifndef __HBEXTERN_CH__HBWIN__
 #define __HBEXTERN_CH__HBWIN__
 
-#ifdef __HBEXTERN__HBWIN__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBWIN__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBWIN__
 #endif
 
-#ifdef __HBEXTERN__HBWIN__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBWIN__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -426,7 +426,7 @@ DYNAMIC __WAPI_DEVMODE_GET
 DYNAMIC __WAPI_DEVMODE_NEW
 DYNAMIC __WAPI_DEVMODE_SET
 
-#ifdef __HBEXTERN__HBWIN__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBWIN__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

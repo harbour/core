@@ -18,11 +18,11 @@
 #ifndef __HBEXTERN_CH__RDDADS__
 #define __HBEXTERN_CH__RDDADS__
 
-#ifdef __HBEXTERN__RDDADS__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADS__ANNOUNCE )
    ANNOUNCE __HBEXTERN__RDDADS__
 #endif
 
-#ifdef __HBEXTERN__RDDADS__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADS__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -170,7 +170,7 @@ DYNAMIC ADSWRITEALLRECORDS
 DYNAMIC ADSX
 DYNAMIC HB_RDDADSREGISTER
 
-#ifdef __HBEXTERN__RDDADS__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADS__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

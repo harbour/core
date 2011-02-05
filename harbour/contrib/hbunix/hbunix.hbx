@@ -1,0 +1,45 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: Following comments are control commands for the generator.     */
+/*       Do not edit them unless you know what you are doing.           */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBUNIX__
+#define __HBEXTERN_CH__HBUNIX__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBUNIX__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC POSIX_GETPID
+DYNAMIC POSIX_ERRNO
+DYNAMIC POSIX_GETUID
+DYNAMIC POSIX_GETEUID
+DYNAMIC POSIX_GETGID
+DYNAMIC POSIX_GETEGID
+DYNAMIC POSIX_SETUID
+DYNAMIC POSIX_SETEUID
+DYNAMIC POSIX_SETGID
+DYNAMIC POSIX_SETEGID
+DYNAMIC UNIX_DAEMON
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

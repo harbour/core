@@ -18,11 +18,11 @@
 #ifndef __HBEXTERN_CH__HBXPP__
 #define __HBEXTERN_CH__HBXPP__
 
-#ifdef __HBEXTERN__HBXPP__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXPP__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBXPP__
 #endif
 
-#ifdef __HBEXTERN__HBXPP__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXPP__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -75,7 +75,7 @@ DYNAMIC XPP_TBROWSEDB
 DYNAMIC _DBEXPORT
 DYNAMIC _TYPEFILE
 
-#ifdef __HBEXTERN__HBXPP__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXPP__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

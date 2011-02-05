@@ -11,6 +11,8 @@
 
 -stop{!unix}
 
+hbunix.hbx
+
 daemon.c
 posix.c
 posixerr.c
