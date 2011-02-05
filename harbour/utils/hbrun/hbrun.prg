@@ -413,7 +413,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 STATIC PROCEDURE hbrun_Usage()
 
    OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 1999-2011, Przemyslaw Czerpak" + hb_eol() + ;
+           "Copyright (c) 1999-2011, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() +;
            "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )
