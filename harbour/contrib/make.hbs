@@ -430,7 +430,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lPrimary := cProject $ hProjectReqList
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL ) ) == 0
+         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) +;
+                                                       iif( GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ( lPrimary .OR. lContainer ), " -hbx=" + FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -452,12 +453,6 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                /* Compile documentation */
                IF lInstall
                   mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
-               ENDIF
-
-               /* Create EXTERN list */
-               IF hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
-                  mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
-                                 FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
                ENDIF
             ENDIF
          ELSE
@@ -579,18 +574,6 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
    OutStd( cCommand + hb_eol() )
 
    RETURN hb_processRun( cCommand, ... )
-
-STATIC FUNCTION mk_extern_lib( cInputName, cOutputName )
-   LOCAL aExtern
-
-   IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes"
-      IF ( aExtern := __hb_extern_get_list( cInputName ) ) != NIL
-         OutStd( hb_StrFormat( "! Generating extern header: %1$s", cOutputName ) + hb_eol() )
-         RETURN __hb_extern_gen( aExtern, cOutputName )
-      ENDIF
-   ENDIF
-
-   RETURN .F.
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName
@@ -887,5 +870,3 @@ PROCEDURE LoadProjectListFromString( hProjectList, cString )
    NEXT
 
    RETURN
-
-#include "../config/hbextern.hbs"

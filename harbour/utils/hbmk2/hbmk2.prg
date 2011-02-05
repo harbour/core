@@ -11270,13 +11270,7 @@ STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_R
    LOCAL aExtern
 
    IF ( aExtern := __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex ) ) != NIL
-
-      IF hbmk[ _HBMK_lInfo ]
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating extern header... %1$s" ), cOutputName ) )
-      ENDIF
-
-      __hb_extern_gen( aExtern, cOutputName )
-
+      __hb_extern_gen( hbmk, aExtern, cOutputName )
       RETURN .T.
    ENDIF
 
@@ -11353,7 +11347,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
 
    RETURN
 
-STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
+STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    LOCAL aExtern
    LOCAL cExtern
    LOCAL tmp
@@ -11446,7 +11440,17 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       RETURN .T.
    ENDIF
 
-   RETURN hb_MemoWrit( cOutputName, cExtern )
+   IF hbmk[ _HBMK_lInfo ]
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Updating extern header: %1$s" ), cOutputName ) )
+   ENDIF
+
+   IF hb_MemoWrit( cOutputName, cExtern )
+      RETURN .T.
+   ENDIF
+
+   hbmk_OutErr( hbmk, I_( "Error: Updating extern header." ) )
+
+   RETURN .F.
 
 STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
    LOCAL cSrc := MemoRead( cSrcName )
