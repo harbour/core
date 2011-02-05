@@ -17,6 +17,7 @@
 -depfinish=xdiff
 
 -instfile=inc:hbxdiff.ch
+-instfile=inc:hbxdiff.hbx
 
 hbxdiff.c
 hbxdiffx.prg

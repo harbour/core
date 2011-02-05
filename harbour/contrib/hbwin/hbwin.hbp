@@ -24,6 +24,7 @@
 -instfile=inc:hbwin.h
 -instfile=inc:hbwinole.h
 -instfile=inc:hbwin.ch
+-instfile=inc:hbwin.hbx
 
 hbwin.hbx
 

@@ -17,6 +17,7 @@
 -depfinish=lzf
 
 -instfile=inc:hblzf.ch
+-instfile=inc:hblzf.hbx
 
 hblzf.c
 hblzfx.prg

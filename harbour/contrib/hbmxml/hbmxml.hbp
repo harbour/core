@@ -17,6 +17,7 @@
 -depfinish=mxml
 
 -instfile=inc:hbmxml.ch
+-instfile=inc:hbmxml.hbx
 
 hbmxml.c
 hbmxmlp.prg

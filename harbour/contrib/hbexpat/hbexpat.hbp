@@ -17,6 +17,7 @@
 -depfinish=expat
 
 -instfile=inc:hbexpat.ch
+-instfile=inc:hbexpat.hbx
 
 -cflag=-DXML_STATIC
 
