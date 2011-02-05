@@ -11,8 +11,7 @@
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
 /* -------------------------------------------------------------------- */
 
 #ifndef __HBEXTERN_CH__HBMEMIO__

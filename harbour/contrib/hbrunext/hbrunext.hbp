@@ -8,7 +8,7 @@
 
 -o${hb_name}
 
--request=__PULLEXT
+-request=__HBRUN__PULLEXT
 pullext.prg
 
 # Always build in shared mode for these platforms because the
