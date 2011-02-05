@@ -10,6 +10,9 @@
 -w3 -es2
 
 -instfile=inc:hbzebra.ch
+-instfile=inc:hbzebra.hbx
+
+hbzebra.hbx
 
 # Core
 core.c

@@ -1,0 +1,51 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBZEBRA__
+#define __HBEXTERN_CH__HBZEBRA__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZEBRA__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBZEBRA__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZEBRA__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_ZEBRA_CREATE_CODABAR
+DYNAMIC HB_ZEBRA_CREATE_CODE11
+DYNAMIC HB_ZEBRA_CREATE_CODE128
+DYNAMIC HB_ZEBRA_CREATE_CODE39
+DYNAMIC HB_ZEBRA_CREATE_CODE93
+DYNAMIC HB_ZEBRA_CREATE_DATAMATRIX
+DYNAMIC HB_ZEBRA_CREATE_EAN13
+DYNAMIC HB_ZEBRA_CREATE_EAN8
+DYNAMIC HB_ZEBRA_CREATE_ITF
+DYNAMIC HB_ZEBRA_CREATE_MSI
+DYNAMIC HB_ZEBRA_CREATE_PDF417
+DYNAMIC HB_ZEBRA_CREATE_UPCA
+DYNAMIC HB_ZEBRA_CREATE_UPCE
+DYNAMIC HB_ZEBRA_DESTROY
+DYNAMIC HB_ZEBRA_DRAW
+DYNAMIC HB_ZEBRA_GETCODE
+DYNAMIC HB_ZEBRA_GETERROR
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZEBRA__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

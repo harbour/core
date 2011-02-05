@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBMZIP__
+#define __HBEXTERN_CH__HBMZIP__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMZIP__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBMZIP__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMZIP__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_UNZIPCLOSE
+DYNAMIC HB_UNZIPEXTRACTCURRENTFILE
+DYNAMIC HB_UNZIPEXTRACTCURRENTFILETOHANDLE
+DYNAMIC HB_UNZIPFILECLOSE
+DYNAMIC HB_UNZIPFILEFIRST
+DYNAMIC HB_UNZIPFILEGOTO
+DYNAMIC HB_UNZIPFILEINFO
+DYNAMIC HB_UNZIPFILENEXT
+DYNAMIC HB_UNZIPFILEOPEN
+DYNAMIC HB_UNZIPFILEPOS
+DYNAMIC HB_UNZIPFILEREAD
+DYNAMIC HB_UNZIPGLOBALINFO
+DYNAMIC HB_UNZIPOPEN
+DYNAMIC HB_ZIPCLOSE
+DYNAMIC HB_ZIPDELETEFILE
+DYNAMIC HB_ZIPFILECLOSE
+DYNAMIC HB_ZIPFILECRC32
+DYNAMIC HB_ZIPFILECREATE
+DYNAMIC HB_ZIPFILEWRITE
+DYNAMIC HB_ZIPOPEN
+DYNAMIC HB_ZIPSTOREFILE
+DYNAMIC HB_ZIPSTOREFILEHANDLE
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMZIP__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

@@ -27,7 +27,10 @@
 -depincpathlocal=zlib:../../src/3rd/zlib
 
 -instfile=inc:hbmzip.ch
+-instfile=inc:hbmzip.hbx
 
-hbmzip.c
+hbmzip.hbx
+
+mzip.c
 
 3rd/minizip/minizip.hbc{HBMK_HAS_MINIZIP_LOCAL}

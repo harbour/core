@@ -9,4 +9,8 @@
 
 -w3 -es2
 
+-instfile=inc:hbmemio.hbx
+
+hbmemio.hbx
+
 memio.c
