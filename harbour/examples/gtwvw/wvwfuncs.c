@@ -1,5 +1,5 @@
 /*
-* $Id$
+ * $Id$
  */
 
 /*
@@ -183,7 +183,7 @@ HB_FUNC( WIN_SETBKCOLOR )
 
 /*-------------------------------------------------------------------*/
 
-HB_FUNC( WIN_SETBKMODE )
+HB_FUNC( WVW_SETBKMODE )
 {
    hb_retni( ( int ) SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
@@ -207,20 +207,6 @@ HB_FUNC( WIN_DELETEOBJECT )
 HB_FUNC( WIN_SELECTOBJECT )
 {
    hb_retnl( ( ULONG ) SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
-}
-
-/*-------------------------------------------------------------------*/
-
-HB_FUNC( WIN_LOWORD )
-{
-   hb_retnl( LOWORD( hb_parnl( 1 ) ) );
-}
-
-/*-------------------------------------------------------------------*/
-
-HB_FUNC( WIN_HIWORD )
-{
-   hb_retnl( HIWORD( hb_parnl( 1 ) ) );
 }
 
 /*-------------------------------------------------------------------*/
@@ -415,7 +401,7 @@ HB_FUNC( WIN_RELEASEDC )
 
 /*-------------------------------------------------------------------*/
 
-HB_FUNC( WIN_RECTANGLE )
+HB_FUNC( WVW_RECTANGLE )
 {
    Rectangle( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
 }
