@@ -50,15 +50,16 @@
  *
  */
 
-/* TOFIX: Some platforms don't have this. Build breaker. */
-#include <errno.h>
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
 #include "lzf.h"
 #include "lzfP.h"
+
+#if ! defined( AVOID_ERRNO )
+#  include <errno.h>
+#endif
 
 #include "hblzf.ch"
 
@@ -200,12 +201,20 @@ HB_FUNC( HB_LZF_DECOMPRESS )
 
                uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
             }
-            while( uiResult == 0 && errno == E2BIG );
+            while( uiResult == 0
+#if ! defined( AVOID_ERRNO )
+                   && errno == E2BIG
+#endif
+                   );
 
             if( uiResult == 0 )
             {
+#if ! defined( AVOID_ERRNO )
                if( errno == EINVAL )
                   hb_storni( HB_LZF_DATA_CORRUPTED, 3 );
+               else
+#endif
+                  hb_storni( HB_LZF_OK, 3 );
 
                if( ! pBuffer )
                   hb_xfree( buffer );

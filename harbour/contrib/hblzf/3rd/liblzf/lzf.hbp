@@ -2,8 +2,6 @@
 # $Id$
 #
 
-#-stop
-
 -hblib
 -inc
 
@@ -26,8 +24,8 @@ lzf_d.c
 # MAP    LICENSE
 # MAP    Changes
 # MAP    README
-# MAP    crc32.h      
-# MAP    lzf.h      
+# MAP    crc32.h
+# MAP    lzf.h
 # MAP    lzf_c.c
 # MAP    lzf_d.c
 # MAP    lzfP.h

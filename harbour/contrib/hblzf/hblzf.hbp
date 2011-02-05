@@ -19,7 +19,8 @@
 -instfile=inc:hblzf.ch
 -instfile=inc:hblzf.hbx
 
-hblzf.c
-hblzfx.prg
+hblzf.hbx
+
+core.c
 
 3rd/liblzf/lzf.hbc{HBMK_HAS_LZF_LOCAL}

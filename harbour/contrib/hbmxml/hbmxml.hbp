@@ -19,8 +19,9 @@
 -instfile=inc:hbmxml.ch
 -instfile=inc:hbmxml.hbx
 
-hbmxml.c
-hbmxmlp.prg
-hbmxmlx.prg
+hbmxml.hbx
+
+core.c
+format.prg
 
 3rd/minixml/mxml.hbc{HBMK_HAS_MXML_LOCAL}

@@ -19,7 +19,8 @@
 -instfile=inc:hbxdiff.ch
 -instfile=inc:hbxdiff.hbx
 
-hbxdiff.c
-hbxdiffx.prg
+hbxdiff.hbx
+
+core.c
 
 3rd/libxdiff/xdiff.hbc{HBMK_HAS_XDIFF_LOCAL}

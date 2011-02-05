@@ -21,9 +21,10 @@
 
 -cflag=-DXML_STATIC
 
-hbexpat.c
-hbexpatc.c
-hbexpatp.prg
-hbexpatx.prg
+hbexpat.hbx
+
+core.c
+internal.c
+unitable.prg
 
 3rd/expat/expat.hbc{HBMK_HAS_EXPAT_LOCAL}
