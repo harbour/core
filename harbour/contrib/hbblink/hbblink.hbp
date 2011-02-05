@@ -10,5 +10,8 @@
 -w3 -es2
 
 -instfile=inc:hbblink.ch
+-instfile=inc:hbblink.hbx
+
+hbblink.hbx
 
 blinker.prg

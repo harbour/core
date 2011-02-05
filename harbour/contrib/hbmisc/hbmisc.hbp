@@ -9,6 +9,10 @@
 
 -w3 -es2
 
+-instfile=inc:hbmisc.hbx
+
+hbmisc.hbx
+
 bbabble.c
 dates2.c
 ffind.c

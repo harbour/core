@@ -10,6 +10,9 @@
 -w3 -es2
 
 -instfile=inc:hbfoxpro.ch
+-instfile=inc:hbfoxpro.hbx
+
+hbfoxpro.hbx
 
 dll.prg
 misc.prg

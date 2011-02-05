@@ -9,4 +9,8 @@
 
 -w3 -es2
 
-hbcomm.prg
+-instfile=inc:hbcomm.hbx
+
+hbcomm.hbx
+
+comm.prg

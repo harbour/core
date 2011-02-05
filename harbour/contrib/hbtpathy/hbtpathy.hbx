@@ -1,0 +1,67 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBTPATHY__
+#define __HBEXTERN_CH__HBTPATHY__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTPATHY__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBTPATHY__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTPATHY__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC BIN_AND
+DYNAMIC BIN_NOT
+DYNAMIC BIN_OR
+DYNAMIC BIN_XOR
+DYNAMIC TP_BAUD
+DYNAMIC TP_CLEARIN
+DYNAMIC TP_CLOSE
+DYNAMIC TP_CLRKBD
+DYNAMIC TP_CRC16
+DYNAMIC TP_CRC32
+DYNAMIC TP_CTRLCTS
+DYNAMIC TP_CTRLDTR
+DYNAMIC TP_CTRLRTS
+DYNAMIC TP_DELAY
+DYNAMIC TP_FLUSH
+DYNAMIC TP_IDLE
+DYNAMIC TP_INCHRS
+DYNAMIC TP_INFREE
+DYNAMIC TP_INKEY
+DYNAMIC TP_ISCTS
+DYNAMIC TP_ISDCD
+DYNAMIC TP_ISDSR
+DYNAMIC TP_ISRI
+DYNAMIC TP_LOOKFOR
+DYNAMIC TP_OPEN
+DYNAMIC TP_OUTFREE
+DYNAMIC TP_RECV
+DYNAMIC TP_RECVTO
+DYNAMIC TP_REOPEN
+DYNAMIC TP_SEND
+DYNAMIC TP_SENDSUB
+DYNAMIC TP_UNINSTALL
+DYNAMIC TP_WAITFOR
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTPATHY__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

@@ -6,7 +6,7 @@
 # [ This should be kept in sync with local make file information. ]
 
 # contribs portable, with no external dependencies:
-hbcs=hbblink hbclipsm hbcomm hbct hbfoxpro hbfship hbgt hbmisc hbmzip hbnf hbsms hbtpathy hbxpp hbziparc rddbmcdx rddsql xhb
+hbcs=hbblink hbclipsm hbcomm hbct hbfoxpro hbfship hbgt hbmisc hbmzip hbnf hbsms hbtpathy hbxpp hbziparc rddbm rddsql xhb
 
 # contribs portable, with external dependencies:
 hbcs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt hbtip sddfb sddmy sddpg

@@ -50,4 +50,5 @@
  *
  */
 
+#define __HBEXTREQ__
 #include "hbexpat.hbx"

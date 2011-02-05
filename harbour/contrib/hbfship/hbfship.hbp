@@ -9,6 +9,10 @@
 
 -w3 -es2
 
+-instfile=inc:hbfship.hbx
+
+hbfship.hbx
+
 fldarr.prg
 isdb.prg
 

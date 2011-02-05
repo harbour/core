@@ -9,4 +9,8 @@
 
 -w3 -es2
 
-hbsms.prg
+-instfile=inc:hbsms.hbx
+
+hbsms.hbx
+
+sms.prg

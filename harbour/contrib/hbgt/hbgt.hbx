@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBGT__
+#define __HBEXTERN_CH__HBGT__
+
+#ifdef __HBEXTERN__HBGT__ANNOUNCE
+   ANNOUNCE __HBEXTERN__HBGT__
+#endif
+
+#ifdef __HBEXTERN__HBGT__REQUEST
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC GT_ASCIISUM
+DYNAMIC GT_ASCPOS
+DYNAMIC GT_ATDIFF
+DYNAMIC GT_CHAREVEN
+DYNAMIC GT_CHARMIX
+DYNAMIC GT_CHARODD
+DYNAMIC GT_CHRCOUNT
+DYNAMIC GT_CHRFIRST
+DYNAMIC GT_CHRTOTAL
+DYNAMIC GT_STRCOUNT
+DYNAMIC GT_STRCSPN
+DYNAMIC GT_STRDIFF
+DYNAMIC GT_STREXPAND
+DYNAMIC GT_STRLEFT
+DYNAMIC GT_STRPBRK
+DYNAMIC GT_STRRIGHT
+
+#ifdef __HBEXTERN__HBGT__REQUEST
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

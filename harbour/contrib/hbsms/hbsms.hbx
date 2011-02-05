@@ -1,0 +1,41 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBSMS__
+#define __HBEXTERN_CH__HBSMS__
+
+#ifdef __HBEXTERN__HBSMS__ANNOUNCE
+   ANNOUNCE __HBEXTERN__HBSMS__
+#endif
+
+#ifdef __HBEXTERN__HBSMS__REQUEST
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC SMSCTX_CLOSE
+DYNAMIC SMSCTX_NEW
+DYNAMIC SMSCTX_PIN
+DYNAMIC SMSCTX_RECEIVE
+DYNAMIC SMSCTX_SEND
+DYNAMIC SMS_RECEIVEALL
+DYNAMIC SMS_SEND
+
+#ifdef __HBEXTERN__HBSMS__REQUEST
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

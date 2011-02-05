@@ -10,6 +10,9 @@
 -w3 -es2
 
 -instfile=inc:time87.ch
+-instfile=inc:hbclipsm.hbx
+
+hbclipsm.hbx
 
 date.c
 environ.c
