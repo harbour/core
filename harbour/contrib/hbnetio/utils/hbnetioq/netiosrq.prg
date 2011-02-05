@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Harbour NETIO server management QT client + server
+ * Harbour NETIO server management QT client
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * Copyright 2009-2011 Viktor Szakats (harbour.01 syenar.hu)
- * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,26 +26,6 @@
  * their web site at http://www.gnu.org/).
  *
  */
-
-/* netio_mtserver() needs MT HVM version */
-REQUEST HB_MT
-REQUEST __HB_EXTERN__
-
-#define _RPC_FILTER "HBNETIOSRV_RPCMAIN"
-
-#define _NETIOSRV_nPort             1
-#define _NETIOSRV_cIFAddr           2
-#define _NETIOSRV_cRootDir          3
-#define _NETIOSRV_lRPC              4
-#define _NETIOSRV_cRPCFFileName     5
-#define _NETIOSRV_hRPCFHRB          6
-#define _NETIOSRV_lEncryption       7
-#define _NETIOSRV_pListenSocket     8
-#define _NETIOSRV_nCompressionLevel 9
-#define _NETIOSRV_nStrategy         10
-#define _NETIOSRV_cPassword         11
-#define _NETIOSRV_cINI              12
-#define _NETIOSRV_MAX_              12
 
 #define DAT_CONNSOCKET              1
 #define DAT_SERIAL                  2
@@ -74,80 +53,105 @@ REQUEST __HB_EXTERN__
 
 /*----------------------------------------------------------------------*/
 
-Function Main( ... )
-   LOCAL netiosrv[ _NETIOSRV_MAX_ ]
-   LOCAL cParam, cExt, cFile
+#define _NETIOMGM_IPV4_DEF  "127.0.0.1"
+#define _NETIOMGM_PORT_DEF  2940
 
-   netiosrv[ _NETIOSRV_nPort       ] := 2941
-   netiosrv[ _NETIOSRV_cIFAddr     ] := "0.0.0.0"
-   netiosrv[ _NETIOSRV_cRootDir    ] := hb_dirBase()
-   netiosrv[ _NETIOSRV_lRPC        ] := .F.
-   netiosrv[ _NETIOSRV_lEncryption ] := .F.
+PROCEDURE Main( ... )
+   LOCAL cParam
+
+   LOCAL cIP := _NETIOMGM_IPV4_DEF
+   LOCAL nPort := _NETIOMGM_PORT_DEF
+   LOCAL cPassword := ""
+
+   readINI( @cIP, @nPort, @cPassword )
 
    FOR EACH cParam IN { ... }
       DO CASE
-      CASE Lower( Left( cParam, 5 ) ) == "-ini="
-         netiosrv[ _NETIOSRV_cINI ] := AllTrim( SubStr( cParam, 6 ) )
-      CASE Lower( Left( cParam, 6 ) ) == "-port="
-         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
-      CASE Lower( Left( cParam, 7 ) ) == "-iface="
-         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 8 )
-      CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
-         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
-      CASE Lower( Left( cParam, 6 ) ) == "-pass="
-         netiosrv[ _NETIOSRV_cPassword ]:= SubStr( cParam, 7 )
-         hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 5 ) ) == "-rpc="
-         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
-         hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
-         cExt := Lower( cExt )
-         SWITCH cExt
-            CASE ".prg"
-            CASE ".hbs"
-            CASE ".hrb"
-               EXIT
-            OTHERWISE
-               cExt := FileSig( cFile )
-         ENDSWITCH
-         SWITCH cExt
-            CASE ".prg"
-            CASE ".hbs"
-               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0",;
-                                       "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
-               IF cFile != NIL
-                  netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-               ENDIF
-               EXIT
-            OTHERWISE
-               netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
-               EXIT
-         ENDSWITCH
-         netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) )
-         IF ! netiosrv[ _NETIOSRV_lRPC ]
-            netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL
-            netiosrv[ _NETIOSRV_hRPCFHRB ] := NIL
+      CASE Lower( Left( cParam, 6 ) ) == "-addr="
+         hbnetiocon_IPPortSplit( SubStr( cParam, 7 ), @cIP, @nPort )
+         IF Empty( nPort )
+            nPort := _NETIOMGM_PORT_DEF
          ENDIF
-      CASE Lower( cParam ) == "-rpc"
-         netiosrv[ _NETIOSRV_lRPC ] := .T.
+      CASE Lower( Left( cParam, 6 ) ) == "-pass="
+         cPassword := SubStr( cParam, 7 )
+         hb_StrClear( @cParam )
       CASE Lower( cParam ) == "--version"
-         RETURN NIL
+         RETURN
       CASE Lower( cParam ) == "-help" .OR. ;
-         Lower( cParam ) == "--help"
+           Lower( cParam ) == "--help"
          HB_Usage()
-         RETURN NIL
+         RETURN
       OTHERWISE
          OutStd( "Warning: Unkown parameter ignored: " + cParam + hb_eol() )
       ENDCASE
    NEXT
 
-   NetIOServer():new():create( netiosrv )
+   NetIOMgmtClient():new():create( cIP, nPort, cPassword )
 
-   RETURN ( NIL )
+   RETURN
+
+PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
+   LOCAL tmp
+
+   IF ! Empty( cAddr )
+      cIP := cAddr
+      IF ( tmp := At( ":", cIP ) ) > 0
+         nPort := Val( SubStr( cIP, tmp + Len( ":" ) ) )
+         cIP := Left( cIP, tmp - 1 )
+      ELSE
+         nPort := NIL
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION MyClientInfo()
+   LOCAL hInfo := { => }
+
+   hb_hKeepOrder( hInfo, .T. )
+
+   hInfo[ "OS()"          ] := OS()
+   hInfo[ "Version()"     ] := Version()
+   hInfo[ "hb_Compiler()" ] := hb_Compiler()
+   hInfo[ "NetName()"     ] := NetName()
+   hInfo[ "hb_UserName()" ] := hb_UserName()
+
+   RETURN hInfo
 
 /*----------------------------------------------------------------------*/
 
-CLASS NetIOServer
-   DATA   netiosrv
+STATIC PROCEDURE readINI( /* @ */ cIP, /* @ */ nPort, /* @ */ cPassword )
+   LOCAL cBuffer, aTxt, s, n
+
+   cBuffer := hb_memoread( hb_ProgName() + ".config" )
+
+   IF ! empty( cBuffer )
+      aTxt := hb_atokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
+      FOR EACH s IN aTxt
+         s := alltrim( s )
+         IF left( lower( s ), 2 ) == "ip"
+            IF ( n := at( "=", s ) ) > 0
+               cIP := alltrim( substr( s, n + 1 ) )
+            ENDIF
+         ELSEIF left( lower( s ), 4 ) == "port"
+            IF ( n := at( "=", s ) ) > 0
+               nPort := val( alltrim( substr( s, n + 1 ) ) )
+            ENDIF
+         ELSEIF left( lower( s ), 8 ) == "password"
+            IF ( n := at( "=", s ) ) > 0
+               cPassword := alltrim( substr( s, n + 1 ) )
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+CLASS NetIOMgmtClient
+   DATA   pConnection
+
    DATA   nNumConxn                               INIT 0
    DATA   oDlg
    DATA   oBrw
@@ -178,12 +182,8 @@ CLASS NetIOServer
                                                            0  } }                   // files opened
 
    METHOD new()
-   METHOD create( netiosrv )
+   METHOD create( cIP, nPort, cPassword )
    METHOD execEvent( cEvent, p )
-
-   METHOD custom_netio_server( pConnectionSocket )
-   METHOD register_connection( pConnectionSocket )
-   METHOD unregister_connection( pConnectionSocket )
 
    METHOD buildToolBar()
    METHOD buildSystemTray()
@@ -202,48 +202,34 @@ CLASS NetIOServer
    METHOD lastRec()
    METHOD recNo()
    METHOD goto( nRec )
-   METHOD readINI()
    METHOD manageIPs()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:new()
+METHOD NetIOMgmtClient:new()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:create( netiosrv )
+METHOD NetIOMgmtClient:create( cIP, nPort, cPassword )
    LOCAL nEvent, mp1, mp2, oXbp
 
-   ::netiosrv := netiosrv
+   ::pConnection := netio_getconnection( cIP, nPort,, cPassword )
+   cPassword := NIL
 
-   netiosrv[ _NETIOSRV_pListenSocket ] := ;
-      netio_mtserver( netiosrv[ _NETIOSRV_nPort     ],;
-                      netiosrv[ _NETIOSRV_cIFAddr   ],;
-                      netiosrv[ _NETIOSRV_cRootDir  ],;
-                      iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], ;
-                                 hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) ),;
-                      netiosrv[ _NETIOSRV_cPassword ], ;
-                      netiosrv[ _NETIOSRV_nCompressionLevel ], ;
-                      netiosrv[ _NETIOSRV_nStrategy ], ;
-                      {|p| ::custom_netio_server( p ) } )
-
-   netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( netiosrv[ _NETIOSRV_cPassword ] )
-
-   IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
-      MsgBox( "Cannot start server." )
-
+   IF Empty( ::pConnection )
+      MsgBox( "Cannot connect to server." )
    ELSE
+      netio_funcexec( ::pConnection, "hbnetiomgm_setclientinfo", MyClientInfo() )
+      netio_OpenItemStream( ::pConnection, "hbnetiomgm_cargo", "netiocqt" )
+
       QResource():registerResource_1( hbqtres_netiosrq(), ":/resource" )
 
-      ::readINI()
-
       ::pMtx            := hb_mutexCreate()
-      ::cTitle          := "NetIO Server [ " + netiosrv[ _NETIOSRV_cIFAddr ] + " : " + ;
-                                               ltrim( str( int( netiosrv[ _NETIOSRV_nPort ] ) ) ) + " : " + ;
-                                               netiosrv[ _NETIOSRV_cRootDir ] + " ]"
+      ::cTitle          := "NetIO Server [" + cIP + ":" + ;
+                                            hb_ntos( int( nPort ) ) + "]"
 
       ::oDlg            := XbpDialog():new( , , { 20,20 }, { 850,300 } )
       ::oDlg:title      := ::cTitle
@@ -277,8 +263,7 @@ METHOD NetIOServer:create( netiosrv )
          oXbp:handleEvent( nEvent, mp1, mp2 )
       ENDDO
 
-      netio_serverStop( netiosrv[ _NETIOSRV_pListenSocket ] )
-      netiosrv[ _NETIOSRV_pListenSocket ] := NIL
+      ::pConnection := NIL
 
       ::oDlg:destroy()
    ENDIF
@@ -287,71 +272,11 @@ METHOD NetIOServer:create( netiosrv )
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:custom_netio_server( pConnectionSocket )
-   IF ::register_connection( pConnectionSocket )
-      BEGIN SEQUENCE
-         netio_server( pConnectionSocket )
-      END SEQUENCE
-      ::unregister_connection( pConnectionSocket )
-   ENDIF
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD NetIOServer:register_connection( pConnectionSocket )
-   LOCAL aPeer, cIP := "", nPort := 0
-
-   netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aPeer )
-   IF hb_isArray( aPeer )
-      IF len( aPeer ) >= 2
-         cIP := xtos( aPeer[ 2 ] )
-      ENDIF
-      IF len( aPeer ) >= 3
-         nPort := val( xtos( aPeer[ 3 ] ) )
-      ENDIF
-   ENDIF
-
-   IF !empty( ::aIPs ) .AND. ascan( ::aIPs, {|e_| e_[ 1 ] == cIP .AND. e_[ 2 ] == "Y" } ) > 0
-      RETURN .f.
-   ENDIF
-
-   IF hb_mutexLock( ::pMtx )
-      IF ::aData[ 1,2 ] == 0
-         ::aData[ 1 ] := { pConnectionSocket, 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, 0 }
-      ELSE
-         aadd( ::aData, { pConnectionSocket, len( ::aData ) + 1, .t., pad( cIP, 15 ), nPort, dtoc( date() ) + "  " + time(), space( 18 ), 0, 0, 0 } )
-      ENDIF
-      hb_mutexUnlock( ::pMtx )
-   ENDIF
-   ::nNumConxn++
-   ::oDlg:title := ::cTitle + " - " + ltrim( str( ::nNumConxn, 6, 0 ) )
-   ::refresh()
-
-   RETURN .t.
-
-/*----------------------------------------------------------------------*/
-
-METHOD NetIOServer:unregister_connection( pConnectionSocket )
-   LOCAL n
-
-   ::nNumConxn--
-   ::oDlg:title := ::cTitle + " - " + ltrim( str( ::nNumConxn, 6, 0 ) )
-   if ( n := ascan( ::aData, {|e_| e_[ DAT_CONNSOCKET ] == pConnectionSocket } ) ) > 0
-      IF hb_mutexLock( ::pMtx )
-         ::aData[ n, DAT_ACTIVATED  ] := .f.
-         ::aData[ n, DAT_TIMEOUT    ] := dtoc( date() ) + "  " + time()
-         ::aData[ n, DAT_CONNSOCKET ] := NIL
-         hb_mutexUnlock( ::pMtx )
-      ENDIF
-   ENDIF
-   ::refresh()
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD NetIOServer:execEvent( cEvent, p )
-   LOCAL qEvent, oMenu, txt_, s, cTmp, cTmp1, qItem, n, oXbp
+METHOD NetIOMgmtClient:execEvent( cEvent, p )
+   LOCAL qEvent, oMenu, txt_, s, cTmp, qItem, n
+#if 0
+   LOCAL cTmp1, oXbp
+#endif
 
    SWITCH cEvent
    CASE "browser_contextMenu"
@@ -366,11 +291,10 @@ METHOD NetIOServer:execEvent( cEvent, p )
          EXIT
       CASE "About"
          txt_:= {}
-         AAdd( txt_, "<b>Harbour NetIO Server</b>" )
+         AAdd( txt_, "<b>Harbour NetIO Management Client</b>" )
          AAdd( txt_, "Developed by:" )
-         AAdd( txt_, "Przemyslaw Czerpak" )
-         AAdd( txt_, "Viktor Szakats" )
          AAdd( txt_, "Pritpal Bedi" )
+         AAdd( txt_, "Viktor Szakats" )
          AAdd( txt_, "" )
          AAdd( txt_, "built with:" )
          AAdd( txt_, HB_VERSION() )
@@ -381,7 +305,7 @@ METHOD NetIOServer:execEvent( cEvent, p )
          AAdd( txt_, "<a href='http://harbour-project.org/'>http://harbour-project.org/</a>" )
          s := ""
          aeval( txt_, {|e| s += e + chr( 10 ) } )
-         MsgBox( s, " About NetIO Server" )
+         MsgBox( s, " About NetIO Management Client" )
          EXIT
       CASE "Terminate"
          ::terminate()
@@ -419,7 +343,7 @@ METHOD NetIOServer:execEvent( cEvent, p )
       EXIT
    CASE "qTimer_timeOut"
       ::oDlg:hide()
-      ::oSys:setToolTip( "Harbour NetIO Server: " + ::oDlg:title )
+      ::oSys:setToolTip( "Connected to Harbour NetIO Server: " + ::oDlg:title )
       ::oSys:show()
       EXIT
    CASE "qSystemTrayIcon_activated"
@@ -444,6 +368,7 @@ METHOD NetIOServer:execEvent( cEvent, p )
          ENDIF
       ENDIF
       EXIT
+#if 0
    CASE "ips_buttonSave"
       FOR n := 1 TO p:q_listIPs:count()
          qItem := p:q_listIPs:item( n - 1 )
@@ -462,6 +387,7 @@ METHOD NetIOServer:execEvent( cEvent, p )
       ENDIF
       p:done( 0 )
       EXIT
+#endif
    CASE "ips_buttonAdd"
       IF ! empty( cTmp := QInputDialog():getText( ::oDlg:oWidget, "Manage Connections", "IPv4:IPv6:" ) )
          qItem := QListWidgetItem()
@@ -478,7 +404,7 @@ METHOD NetIOServer:execEvent( cEvent, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:manageIPs()
+METHOD NetIOMgmtClient:manageIPs()
    LOCAL oUI, a_, qItem
 
    oUI := hbqtui_ManageIPs( ::oDlg:oWidget )
@@ -502,38 +428,7 @@ METHOD NetIOServer:manageIPs()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:readINI()
-   LOCAL cBuffer, aTxt, s, n
-
-   IF empty( ::netiosrv[ _NETIOSRV_cINI ] )
-      RETURN Self
-   ENDIF
-   IF hb_fileExists( ::netiosrv[ _NETIOSRV_cINI ] )
-      cBuffer := hb_memoread( ::netiosrv[ _NETIOSRV_cINI ] )
-
-      IF ! empty( cBuffer )
-         aTxt := hb_atokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
-         FOR EACH s IN aTxt
-            s := alltrim( s )
-            IF left( lower( s ), 11 ) == "netiosrv_ip"
-               IF ( n := at( "=", s ) ) > 0
-                  s := alltrim( substr( s, n + 1 ) )
-                  IF ( n := at( ";", s ) ) > 0
-                     aadd( ::aIPs, { substr( s, 1, n-1 ), substr( s, n+1 ) } )
-                  ELSE
-                     aadd( ::aIPs, { s, " " } )
-                  ENDIF
-               ENDIF
-            ENDIF
-         NEXT
-      ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD NetIOServer:showDlgBySystemTrayIconCommand()
+METHOD NetIOMgmtClient:showDlgBySystemTrayIconCommand()
 
    ::oSys:hide()
 
@@ -552,7 +447,7 @@ METHOD NetIOServer:showDlgBySystemTrayIconCommand()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:buildBrowser()
+METHOD NetIOMgmtClient:buildBrowser()
    LOCAL s
 
    ::oBrw := XbpBrowse():new():create( ::oDlg:drawingArea, , { 0,0 }, ::oDlg:currentSize() )
@@ -586,7 +481,7 @@ METHOD NetIOServer:buildBrowser()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:terminate()
+METHOD NetIOMgmtClient:terminate()
 
    IF ::aData[ ::recNo(), DAT_ACTIVATED ] .AND. ::aData[ ::recNo(), DAT_CONNSOCKET ] != NIL
       IF ConfirmBox( , ;
@@ -595,7 +490,7 @@ METHOD NetIOServer:terminate()
              , ;
              XBPMB_CRITICAL ) == XBPMB_RET_OK
 
-         netio_serverStop( ::aData[ ::recNo(), DAT_CONNSOCKET ], .t. )
+         netio_funcexec( ::pConnection, "hbnetiomgm_shutdown" )
       ENDIF
    ENDIF
 
@@ -603,7 +498,7 @@ METHOD NetIOServer:terminate()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:refresh()
+METHOD NetIOMgmtClient:refresh()
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
    ::oDlg:oWidget:setGeometry( ::oDlg:oWidget:geometry() )
@@ -611,7 +506,7 @@ METHOD NetIOServer:refresh()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:skipBlock( nHowMany )
+METHOD NetIOMgmtClient:skipBlock( nHowMany )
    LOCAL nRecs, nCurPos, nSkipped
 
    nRecs    := len( ::aData )
@@ -639,21 +534,21 @@ METHOD NetIOServer:skipBlock( nHowMany )
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:goTop()
+METHOD NetIOMgmtClient:goTop()
    ::nCurRec := 1
    ::refresh()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:goBottom()
+METHOD NetIOMgmtClient:goBottom()
    ::nCurRec := len( ::aData )
    ::refresh()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:goto( nRec )
+METHOD NetIOMgmtClient:goto( nRec )
    IF nRec > 0 .AND. nRec <= len( ::aData )
       ::nCurRec := nRec
       ::refresh()
@@ -662,17 +557,17 @@ METHOD NetIOServer:goto( nRec )
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:lastRec()
+METHOD NetIOMgmtClient:lastRec()
    RETURN len( ::aData )
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:recNo()
+METHOD NetIOMgmtClient:recNo()
    RETURN ::nCurRec
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:buildColumns()
+METHOD NetIOMgmtClient:buildColumns()
    LOCAL aPP, oXbpColumn
    LOCAL nClrBG  := GRA_CLR_WHITE
    LOCAL nClrHFg := GRA_CLR_BLACK    //YELLOW
@@ -840,7 +735,7 @@ METHOD NetIOServer:buildColumns()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:buildToolBar()
+METHOD NetIOMgmtClient:buildToolBar()
    LOCAL oTBar
 
    oTBar := XbpToolBar():new( ::oDlg )
@@ -863,9 +758,9 @@ METHOD NetIOServer:buildToolBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:confirmExit()
+METHOD NetIOMgmtClient:confirmExit()
 
-   IF ConfirmBox( , "Do you want to shut-down the server ?", " Please confirm", XBPMB_YESNO, XBPMB_CRITICAL ) == XBPMB_RET_YES
+   IF ConfirmBox( , "Do you want to exit the management client?", " Please confirm", XBPMB_YESNO, XBPMB_CRITICAL ) == XBPMB_RET_YES
       PostAppEvent( xbeP_Quit, , , ::oDlg )
    ENDIF
 
@@ -873,7 +768,7 @@ METHOD NetIOServer:confirmExit()
 
 /*----------------------------------------------------------------------*/
 
-METHOD NetIOServer:buildSystemTray()
+METHOD NetIOMgmtClient:buildSystemTray()
 
    IF empty( ::oSys )
       ::oSys := QSystemTrayIcon( ::oDlg:oWidget )
@@ -891,7 +786,7 @@ METHOD NetIOServer:buildSystemTray()
 
          ::oSys:setContextMenu( ::oSysMenu )
          ::oSys:hide()
-         ::oSys:setToolTip( "Harbour NetIO Server: " + ::oDlg:title )
+         ::oSys:setToolTip( "Connected to Harbour NetIO Server: " + ::oDlg:title )
       ENDIF
    ENDIF
 
@@ -900,50 +795,16 @@ METHOD NetIOServer:buildSystemTray()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION AppSys()
-   RETURN ( NIL )
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION FileSig( cFile )
-   LOCAL hFile
-   LOCAL cBuff, cSig, cExt
-
-   cExt := ".prg"
-   hFile := FOpen( cFile, FO_READ )
-   IF hFile != F_ERROR
-      cSig := hb_hrbSignature()
-      cBuff := Space( Len( cSig ) )
-      FRead( hFile, @cBuff, Len( cSig ) )
-      FClose( hFile )
-      IF cBuff == cSig
-         cExt := ".hrb"
-      ENDIF
-   ENDIF
-
-   RETURN cExt
-
-/*----------------------------------------------------------------------*/
-
-STATIC PROCEDURE ShowConfig( netiosrv )
-   LOCAL cMsg := ""
-
-   cMsg += "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ) + hb_eol()
-   cMsg += "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ] + hb_eol()
-   cMsg += "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ) + hb_eol()
-   cMsg += "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ) + hb_eol()
-   cMsg += "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] )
-
-   MsgBox( cMsg )
-
-   RETURN
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 STATIC PROCEDURE HB_Logo()
 
-   MsgBox( "Harbour NETIO Server " + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 2009-2011, Przemyslaw Czerpak" + hb_eol() + ;
-           "http://harbour-project.org/" )
+   MsgBox( "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) + hb_eol() +;
+           "Copyright (c) 2009-2011, Pritpal Bedi, Viktor Szakats" + hb_eol() + ;
+           "http://harbour-project.org/" + hb_eol() +;
+           hb_eol() )
 
    RETURN
 
@@ -953,33 +814,24 @@ STATIC PROCEDURE HB_Usage()
    LOCAL aMsg := {}
    LOCAL cMsg
 
-   AAdd( aMsg,               "Syntax:"                                                                                    )
-   AAdd( aMsg,               " "                                                                                          )
-   AAdd( aMsg,               "  netiosrv [options]"                                                                       )
-   AAdd( aMsg,               " "                                                                                          )
-   AAdd( aMsg,               "Options:"                                                                                   )
-   AAdd( aMsg,               " "                                                                                          )
-   AAdd( aMsg,               "  -port=<port>        accept incoming connections on IP port <port>"                        )
-   AAdd( aMsg,               "  -iface=<ipaddr>     accept incoming connections on IPv4 interface <ipaddress>"            )
-   AAdd( aMsg,               "  -rootdir=<rootdir>  use <rootdir> as root directory for served file system"               )
-   AAdd( aMsg,               "  -rpc                accept RPC requests"                                                  )
-   AAdd( aMsg,               "  -rpc=<file.hrb>     set RPC processor .hrb module to <file.hrb>"                          )
-   AAdd( aMsg, hb_StrFormat( "                      file.hrb needs to have an entry function named %1$s()", _RPC_FILTER ) )
-   AAdd( aMsg,               "  -pass=<passwd>      set server password"                                                  )
-   AAdd( aMsg,               " "                                                                                          )
-   AAdd( aMsg,               "  --version           display version header only"                                          )
-   AAdd( aMsg,               "  -help|--help        this help"                                                            )
+   AAdd( aMsg,               "Syntax:"                                                                                 )
+   AAdd( aMsg,                                                                                                         )
+   AAdd( aMsg,               "  netiocui [options]"                                                                    )
+   AAdd( aMsg,                                                                                                         )
+   AAdd( aMsg,               "Options:"                                                                                )
+   AAdd( aMsg,                                                                                                         )
+   AAdd( aMsg,               "  -addr=<ip[:port]>  connect to netio server on IPv4 address <ip:port>"                  )
+   AAdd( aMsg, hb_StrFormat( "                     Default: %1$s:%2$d", _NETIOMGM_IPV4_DEF, _NETIOMGM_PORT_DEF )       )
+   AAdd( aMsg,               "  -pass=<passwd>     connect to netio server with password"                              )
+   AAdd( aMsg,                                                                                                         )
+   AAdd( aMsg,               "  --version          display version header only"                                        )
+   AAdd( aMsg,               "  -help|--help       this help"                                                          )
 
    cMsg := ""
    aeval( aMsg, {|e| cMsg += e + chr( 10 ) } )
    MsgBox( cMsg )
 
    RETURN
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour " )
 
 /*----------------------------------------------------------------------*/
 
