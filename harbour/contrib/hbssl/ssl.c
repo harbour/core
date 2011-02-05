@@ -50,6 +50,15 @@
  *
  */
 
+/* for applink.c */
+#if ! defined( HB_OPENSSL_STATIC )
+#  if defined( _MSC_VER )
+#     ifndef _CRT_SECURE_NO_WARNINGS
+#        define _CRT_SECURE_NO_WARNINGS
+#     endif
+#  endif
+#endif
+
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
@@ -66,7 +75,13 @@
          Application must call SSL_INIT(), so that this module gets linked.
          [vszakats] */
 #if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
-#  include "openssl/applink.c"
+   /* NOTE: It doesn't build in bcc55:
+            Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
+            Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
+    */
+#  if ! defined( __BORLANDC__ )
+#     include "openssl/applink.c"
+#  endif
 #endif
 
 HB_FUNC( SSL_INIT )
