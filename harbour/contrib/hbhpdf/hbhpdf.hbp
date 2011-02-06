@@ -24,7 +24,7 @@
 
 hbhpdf.hbx
 
-harupdf.c
+core.c
 annot.c
 enccns.c
 enccnt.c
