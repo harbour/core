@@ -189,7 +189,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    IF ! Empty( pConnection )
 
-      netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", NIL )
+      netio_OpenItemStream( pConnection, "hbnetiomgm_regnotif", .F. )
       pConnection := NIL
 
       IF lQuit
@@ -214,7 +214,7 @@ PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 
    RETURN
 
-/* connect to the server */
+/* connect to server */
 STATIC FUNCTION ConnectLow( cIP, nPort, cPassword, /* @ */ nStreamID )
    LOCAL pConnection
 
@@ -226,7 +226,7 @@ STATIC FUNCTION ConnectLow( cIP, nPort, cPassword, /* @ */ nStreamID )
    IF ! Empty( pConnection )
 
       netio_funcexec( pConnection, "hbnetiomgm_setclientinfo", MyClientInfo() )
-      nStreamID := netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", "netiocui" )
+      nStreamID := netio_OpenItemStream( pConnection, "hbnetiomgm_regnotif", .T. )
 
       QQOut( "Connected.", hb_eol() )
    ELSE
@@ -264,7 +264,7 @@ STATIC FUNCTION GetPassword()
    ATail( GetList ):display()
 
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    READ
 

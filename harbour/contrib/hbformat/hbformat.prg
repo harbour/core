@@ -176,7 +176,7 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    ENDIF
    IF ! ( ",STR," $ Upper( ::cFunctions ) )
       ::cFunctions += "AAdd,Abs,AChoice,AClone,ACopy,ADel,ADir,AEval,AFields,AFill,AIns,Alert,Alias,AllTrim,AltD," +;
-                      "Array,Asc,ASize,ASort,At,Bin2I,Bin2L,Bin2W,Bof,Browse,CDow,Chr,CMonth,Col,CToD,CurDir," +;
+                      "Array,Asc,AScan,ASize,ASort,At,Bin2I,Bin2L,Bin2W,Bof,Browse,CDow,Chr,CMonth,Col,CToD,CurDir," +;
                       "Date,Day,dbAppend,dbClearFil,dbClearInd,dbCloseAll,dbCloseArea,dbCommit,dbCreate,dbDelete,dbEdit,dbEval,Dbf,dbFilter,dbGoBottom,dbGoto,dbRecall,dbReindex,dbRelation,dbRLock,dbRSelect,dbRunLock," +;
                       "dbSeek,dbSelectArea,dbSetDriver,dbSetFilter,dbSetIndex,dbSetOrder,dbSetRelat,dbSkip,dbStruct,dbUnlock,dbUseArea,Deleted,Descend,DevOut,DevPos," +;
                       "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DosError,Dow,Dtoc,Dtos,Empty,Eof,ErrorBlock,ErrorLevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName," +;

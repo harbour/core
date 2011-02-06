@@ -75,17 +75,15 @@ REQUEST HB_MT
 #define _NETIOSRV_hAllow            15
 #define _NETIOSRV_hBlock            16
 #define _NETIOSRV_mtxFilters        17
-#define _NETIOSRV_MAX_              17
+#define _NETIOSRV_hNotifStream      18
+#define _NETIOSRV_mtxNotifStream    19
+#define _NETIOSRV_MAX_              19
 
 #define _NETIOSRV_CONN_pConnection  1
 #define _NETIOSRV_CONN_nThreadID    2
 #define _NETIOSRV_CONN_tStart       3
 #define _NETIOSRV_CONN_hInfo        4
 #define _NETIOSRV_CONN_MAX_         4
-
-/* TODO: Move this to some local data structure */
-STATIC s_hConnStream := { => }
-STATIC s_mtxConnStream := hb_mutexCreate()
 
 PROCEDURE Main( ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
@@ -105,35 +103,37 @@ PROCEDURE Main( ... )
 
    HB_Logo()
 
-   netiosrv[ _NETIOSRV_cName ]         := "Data"
-   netiosrv[ _NETIOSRV_nPort ]         := _NETIOSRV_PORT_DEF
-   netiosrv[ _NETIOSRV_cIFAddr ]       := _NETIOSRV_IPV4_DEF
-   netiosrv[ _NETIOSRV_cRootDir ]      := hb_dirBase()
-   netiosrv[ _NETIOSRV_lRPC ]          := .F.
-   netiosrv[ _NETIOSRV_lEncryption ]   := .F.
-   netiosrv[ _NETIOSRV_lAcceptConn ]   := .T.
-   netiosrv[ _NETIOSRV_lShowConn ]     := .F.
-   netiosrv[ _NETIOSRV_lQuit ]         := .F.
-   netiosrv[ _NETIOSRV_hConnection ]   := { => }
-   netiosrv[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
-   netiosrv[ _NETIOSRV_hAllow ]        := { => }
-   netiosrv[ _NETIOSRV_hBlock ]        := { => }
-   netiosrv[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
+   netiosrv[ _NETIOSRV_cName ]          := "Data"
+   netiosrv[ _NETIOSRV_nPort ]          := _NETIOSRV_PORT_DEF
+   netiosrv[ _NETIOSRV_cIFAddr ]        := _NETIOSRV_IPV4_DEF
+   netiosrv[ _NETIOSRV_cRootDir ]       := hb_dirBase()
+   netiosrv[ _NETIOSRV_lRPC ]           := .F.
+   netiosrv[ _NETIOSRV_lEncryption ]    := .F.
+   netiosrv[ _NETIOSRV_lAcceptConn ]    := .T.
+   netiosrv[ _NETIOSRV_lShowConn ]      := .F.
+   netiosrv[ _NETIOSRV_lQuit ]          := .F.
+   netiosrv[ _NETIOSRV_hConnection ]    := { => }
+   netiosrv[ _NETIOSRV_mtxConnection ]  := hb_mutexCreate()
+   netiosrv[ _NETIOSRV_hAllow ]         := { => }
+   netiosrv[ _NETIOSRV_hBlock ]         := { => }
+   netiosrv[ _NETIOSRV_mtxFilters ]     := hb_mutexCreate()
 
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hAllow ], .T. )
    hb_HKeepOrder( netiosrv[ _NETIOSRV_hBlock ], .T. )
 
-   netiomgm[ _NETIOSRV_cName ]         := "Management"
-   netiomgm[ _NETIOSRV_nPort ]         := _NETIOMGM_PORT_DEF
-   netiomgm[ _NETIOSRV_cIFAddr ]       := _NETIOMGM_IPV4_DEF
-   netiomgm[ _NETIOSRV_lAcceptConn ]   := .T.
-   netiomgm[ _NETIOSRV_lShowConn ]     := .F.
-   netiomgm[ _NETIOSRV_hConnection ]   := { => }
-   netiomgm[ _NETIOSRV_mtxConnection ] := hb_mutexCreate()
-   netiomgm[ _NETIOSRV_hAllow ]        := { "127.0.0.1" => NIL, "::1" => NIL } /* only localhost can manage */
-   netiomgm[ _NETIOSRV_hBlock ]        := { => }
-   netiomgm[ _NETIOSRV_mtxFilters ]    := hb_mutexCreate()
+   netiomgm[ _NETIOSRV_cName ]          := "Management"
+   netiomgm[ _NETIOSRV_nPort ]          := _NETIOMGM_PORT_DEF
+   netiomgm[ _NETIOSRV_cIFAddr ]        := _NETIOMGM_IPV4_DEF
+   netiomgm[ _NETIOSRV_lAcceptConn ]    := .T.
+   netiomgm[ _NETIOSRV_lShowConn ]      := .F.
+   netiomgm[ _NETIOSRV_hConnection ]    := { => }
+   netiomgm[ _NETIOSRV_mtxConnection ]  := hb_mutexCreate()
+   netiomgm[ _NETIOSRV_hAllow ]         := { "127.0.0.1" => NIL, "::1" => NIL } /* only localhost can manage */
+   netiomgm[ _NETIOSRV_hBlock ]         := { => }
+   netiomgm[ _NETIOSRV_mtxFilters ]     := hb_mutexCreate()
+   netiomgm[ _NETIOSRV_hNotifStream ]   := { => }
+   netiomgm[ _NETIOSRV_mtxNotifStream ] := hb_mutexCreate()
 
    hb_HKeepOrder( netiomgm[ _NETIOSRV_hConnection ], .T. )
    hb_HKeepOrder( netiomgm[ _NETIOSRV_hAllow ], .T. )
@@ -214,7 +214,7 @@ PROCEDURE Main( ... )
                       cPassword,;
                       NIL,;
                       NIL,;
-                      {| pConnectionSocket | netiosrv_callback( netiosrv, pConnectionSocket, .F. ) } )
+                      {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
    cPassword := NIL
@@ -254,11 +254,11 @@ PROCEDURE Main( ... )
                               "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
                               "hbnetiomgm_logconn"        => {| ... | netiomgm_rpc_logconn( netiosrv, .T. ) } ,;
                               "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) } ,;
-                              "hbnetiomgm_cargo"          => {| ... | netiomgm_rpc_cargo( ... ) } },;
+                              "hbnetiomgm_regnotif"       => {| ... | netiomgm_rpc_regnotif( netiomgm, ... ) } },;
                             cPasswordManagement,;
                             NIL,;
                             NIL,;
-                            {| pConnectionSocket | netiosrv_callback( netiomgm, pConnectionSocket, .T. ) } )
+                            {| pConnectionSocket | netiosrv_callback( netiomgm, netiomgm, pConnectionSocket, .T. ) } )
 
          IF Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
             OutStd( "Warning: Cannot start server management." + hb_eol() )
@@ -363,17 +363,16 @@ STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
 
 #define _CLI_pConnSock              1
 #define _CLI_nStreamID              2
-#define _CLI_xCargo                 3
-#define _CLI_lNotify                4
-#define _CLI_nSendErrors            5
-#define _CLI_MAX_                   5
+#define _CLI_lNotify                3
+#define _CLI_nSendErrors            4
+#define _CLI_MAX_                   4
 
-STATIC PROCEDURE netiosrv_notifyclients( cMsg )
+STATIC PROCEDURE netiosrv_notifyclients( netiomgm, cMsg )
    LOCAL aClient
 
-   hb_mutexLock( s_mtxConnStream )
+   hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
 
-   FOR EACH aClient IN s_hConnStream
+   FOR EACH aClient IN netiomgm[ _NETIOSRV_hNotifStream ]
       IF aClient[ _CLI_lNotify ]
          IF ! netio_srvSendItem( aClient[ _CLI_pConnSock ], aClient[ _CLI_nStreamID ], hb_TToS( hb_DateTime() ) + " " + cMsg )
             ++aClient[ _CLI_nSendErrors ]
@@ -381,13 +380,21 @@ STATIC PROCEDURE netiosrv_notifyclients( cMsg )
       ENDIF
    NEXT
 
-   hb_mutexUnLock( s_mtxConnStream )
+   /* Remove clients from notification list after certain amount of failures.
+      To handle clients that exited abnormally. */
+   FOR EACH aClient IN netiomgm[ _NETIOSRV_hNotifStream ] DESCEND
+      IF aClient[ _CLI_nSendErrors ] > 5
+         hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], aClient:__enumKey() )
+      ENDIF
+   NEXT
+
+   hb_mutexUnLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
 
    RETURN
 
 /* Server connect callback */
 
-STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
+STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManagement )
    LOCAL aAddressPeer
    LOCAL cAddressPeer
    LOCAL cNamePeer
@@ -405,7 +412,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
          hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF !( cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ] )
             IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) == 0
-               cNamePeer := hb_socketGetPeerName( aAddressPeer ) /* TOFIX */
+               cNamePeer := NIL /* TOFIX: hb_socketResolveAddr( cAddressPeer ) */
                IF cNamePeer == NIL
                   lBlocked := .T.
                ELSE
@@ -421,7 +428,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF lBlocked
             IF ! lManagement
-               netiosrv_notifyclients( "Connection denied: " + cAddressPeer )
+               netiosrv_notifyclients( netiomgm, "Connection denied: " + cAddressPeer )
             ENDIF
             RETURN NIL
          ENDIF
@@ -437,7 +444,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
                lBlocked := .T.
             ELSE
                IF cNamePeer == NIL
-                  cNamePeer := hb_socketGetPeerName( aAddressPeer ) /* TOFIX */
+                  cNamePeer := NIL /* TOFIX: hb_socketResolveAddr( cAddressPeer ) */
                ENDIF
                IF cNamePeer != NIL
                   IF cNamePeer $ netiosrv[ _NETIOSRV_hBlock ]
@@ -453,7 +460,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF lBlocked
             IF ! lManagement
-               netiosrv_notifyclients( "Connection denied: " + cAddressPeer )
+               netiosrv_notifyclients( netiomgm, "Connection denied: " + cAddressPeer )
             ENDIF
             RETURN NIL
          ENDIF
@@ -463,7 +470,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
          QQOut( "Connecting (" + netiosrv[ _NETIOSRV_cName ] + "): " + cAddressPeer, hb_eol() )
       ENDIF
       IF ! lManagement
-         netiosrv_notifyclients( "Connecting: " + cAddressPeer )
+         netiosrv_notifyclients( netiomgm, "Connecting: " + cAddressPeer )
       ENDIF
 
       netiosrv_conn_register( netiosrv, pConnectionSocket )
@@ -479,7 +486,7 @@ STATIC FUNCTION netiosrv_callback( netiosrv, pConnectionSocket, lManagement )
          QQOut( "Disconnected (" + netiosrv[ _NETIOSRV_cName ] + "): " + AddrToIPPort( aAddressPeer ), hb_eol() )
       ENDIF
       IF ! lManagement
-         netiosrv_notifyclients( "Diconnected: " + cAddressPeer )
+         netiosrv_notifyclients( netiomgm, "Diconnected: " + cAddressPeer )
       ENDIF
 
    ENDIF
@@ -517,31 +524,32 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 
 /* RPC management interface */
 
-STATIC FUNCTION netiomgm_rpc_cargo( pConnSock, nStreamID, xCargo )
+STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister )
    LOCAL index := hb_valToStr( pConnSock )
    LOCAL cli
 
    SWITCH PCount()
-   CASE 1
-      RETURN iif( index $ s_hConnStream, s_hConnStream[ index ][ _CLI_xCargo ], NIL )
-   CASE 3
-      IF xCargo == NIL
-         hb_mutexLock( s_mtxConnStream )
-         IF index $ s_hConnStream
-            hb_HDel( s_hConnStream, index )
+#if 0
+   CASE 2
+      RETURN iif( index $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ index ][ _CLI_xCargo ], NIL )
+#endif
+   CASE 4
+      IF ! hb_isLogical( lRegister ) .OR. ! lRegister
+         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         IF index $ netiomgm[ _NETIOSRV_hNotifStream ]
+            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], index )
          ENDIF
-         hb_mutexUnlock( s_mtxConnStream )
+         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN -1
       ELSE
          cli := Array( _CLI_MAX_ )
          cli[ _CLI_pConnSock ]   := pConnSock
          cli[ _CLI_nStreamID ]   := nStreamID
-         cli[ _CLI_xCargo ]      := xCargo
          cli[ _CLI_lNotify ]     := .T.
          cli[ _CLI_nSendErrors ] := 0
-         hb_mutexLock( s_mtxConnStream )
-         s_hConnStream[ index ] := cli
-         hb_mutexUnlock( s_mtxConnStream )
+         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         netiomgm[ _NETIOSRV_hNotifStream ][ index ] := cli
+         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN nStreamID
       ENDIF
    ENDSWITCH
@@ -643,7 +651,6 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
             netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
             IF cIPPort == AddrToIPPort( aAddressPeer )
-//              xCargo := netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] )
                 xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
                 lDone := .T.
                 EXIT
@@ -660,7 +667,6 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
             netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
             IF cIPPort == AddrToIPPort( aAddressPeer )
-//              xCargo := netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] )
                 xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
                 EXIT
             ENDIF
@@ -713,7 +719,7 @@ STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
          "nBytesSent"     => nBytesSent,;
          "nBytesReceived" => nBytesReceived,;
          "cAddressPeer"   => AddrToIPPort( aAddressPeer ),;
-         "xCargo"         => netiomgm_rpc_cargo( nconn[ _NETIOSRV_CONN_pConnection ] ) } )
+         "xCargo"         => nconn[ _NETIOSRV_CONN_hInfo ] } )
    NEXT
 
    hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -789,6 +795,19 @@ STATIC FUNCTION AddrToIPPort( aAddr )
       cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ] + ":" + hb_ntos( aAddr[ HB_SOCKET_ADINFO_PORT ] )
    ELSE
       cIP := "(?)"
+   ENDIF
+
+   RETURN cIP
+
+STATIC FUNCTION AddrToIP( aAddr )
+   LOCAL cIP
+
+   IF hb_isArray( aAddr ) .AND. ;
+      ( aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET .OR. ;
+        aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
+      cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ]
+   ELSE
+      cIP := ""
    ENDIF
 
    RETURN cIP

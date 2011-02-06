@@ -645,7 +645,7 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 
    // TODO: support outdated compatibility format RFC2616
    IF Len( cDate ) == 29 .AND. Right( cDate, 4 ) == " GMT" .AND. SubStr( cDate, 4, 2 ) == ", "
-      nMonth := ASCAN( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", ;
+      nMonth := AScan( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", ;
          "Oct", "Nov", "Dec" }, SubStr( cDate, 9, 3 ) )
       IF nMonth > 0
          tDate := HB_STOT( SubStr( cDate, 13, 4 ) + PadL( nMonth, 2, "0" ) + SubStr( cDate, 6, 2 ) + ;
@@ -681,7 +681,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
    ENDIF
    IF !Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
    ENDIF
-   IF !Empty( oErr:operation );     cRet += "Operacija: " + oErr:operation + hb_eol()
+   IF !Empty( oErr:operation );     cRet += "Operation: " + oErr:operation + hb_eol()
    ENDIF
    IF !Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
    ENDIF
@@ -776,7 +776,7 @@ FUNCTION UGetHeader( cType )
 
    LOCAL nI
 
-   IF ( nI := ASCAN( t_aHeader, {|x| Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
+   IF ( nI := AScan( t_aHeader, {|x| Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
       RETURN t_aHeader[ nI, 2 ]
    ENDIF
 
@@ -786,7 +786,7 @@ PROCEDURE UAddHeader( cType, cValue )
 
    LOCAL nI
 
-   IF ( nI := ASCAN( t_aHeader, {|x| Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
+   IF ( nI := AScan( t_aHeader, {|x| Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
       t_aHeader[ nI, 2 ] := cValue
    ELSE
       AAdd( t_aHeader, { cType, cValue } )
@@ -966,7 +966,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          URedirect( "http://" + server[ "HTTP_HOST" ] + server[ "SCRIPT_NAME" ] + "/" )
          RETURN
       ENDIF
-      IF ASCAN( { "index.html", "index.htm" }, ;
+      IF AScan( { "index.html", "index.htm" }, ;
             {|x| iif( HB_FileExists( UOSFileName(cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
          UAddHeader( "Content-Type", "text/html" )
          UWrite( HB_MEMOREAD( UOsFileName(cFileName ) ) )
