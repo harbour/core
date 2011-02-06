@@ -47,26 +47,12 @@
  *
  */
 
-/*----------------------------------------------------------------------*
- *                                                                      *
- *                      HaruLib (x)Harbour Wrappers                     *
- *                                   .                                  *
- *                        http://www.libharu.org/                       *
- *                http://sourceforge.net/projects/libharu/              *
- *                                                                      *
- *                   Pritpal Bedi <pritpal@hotmail.com>                 *
- *                                                                      *
- *----------------------------------------------------------------------*/
+#include "hbhpdf.h"
 
-#include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
-#include "hpdf.h"
-
-#define HB_HPDF_VERS( ma, mi, re ) ( HPDF_MAJOR_VERSION >= ma && HPDF_MINOR_VERSION >= mi && HPDF_BUGFIX_VERSION >= re )
-
-static HB_GARBAGE_FUNC( HPDF_Doc_release )
+static HB_GARBAGE_FUNC( hb_HPDF_Doc_release )
 {
    void ** ph = ( void ** ) Cargo;
 
@@ -83,11 +69,11 @@ static HB_GARBAGE_FUNC( HPDF_Doc_release )
 
 static const HB_GC_FUNCS s_gcHPDF_DocFuncs =
 {
-   HPDF_Doc_release,
+   hb_HPDF_Doc_release,
    hb_gcDummyMark
 };
 
-static HPDF_Doc HPDF_Doc_par( int iParam )
+HPDF_Doc hb_HPDF_Doc_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcHPDF_DocFuncs, iParam );
 
@@ -130,21 +116,21 @@ HB_FUNC( HPDF_FREE )
 */
 HB_FUNC( HPDF_NEWDOC )
 {
-   hb_retnl( ( long ) HPDF_NewDoc( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_NewDoc( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_FreeDoc( hNewDoc ) -> NIL
 */
 HB_FUNC( HPDF_FREEDOC )
 {
-   HPDF_FreeDoc( HPDF_Doc_par( 1 ) );
+   HPDF_FreeDoc( hb_HPDF_Doc_par( 1 ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_FreeDocAll() -> NIL
 */
 HB_FUNC( HPDF_FREEDOCALL )
 {
-   HPDF_FreeDocAll( HPDF_Doc_par( 1 ) );
+   HPDF_FreeDocAll( hb_HPDF_Doc_par( 1 ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SaveToFile( hDoc, cFileToSave ) -> hStatus
@@ -154,7 +140,7 @@ HB_FUNC( HPDF_SAVETOFILE )
    char * pszFree;
    const char * pszFileName = hb_fsNameConv( hb_parcx( 2 ), &pszFree );
 
-   hb_retnl( ( long ) HPDF_SaveToFile( HPDF_Doc_par( 1 ), pszFileName ) );
+   hb_retnl( ( long ) HPDF_SaveToFile( hb_HPDF_Doc_par( 1 ), pszFileName ) );
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -164,14 +150,14 @@ HB_FUNC( HPDF_SAVETOFILE )
 */
 HB_FUNC( HPDF_SAVETOSTREAM )
 {
-   hb_retnl( ( long ) HPDF_SaveToStream( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_SaveToStream( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetStreamSize( hDoc ) -> nSize
 */
 HB_FUNC( HPDF_GETSTREAMSIZE )
 {
-   hb_retnl( ( long ) HPDF_GetStreamSize( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_GetStreamSize( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_ReadFromStream( hDoc, @cBuffer ) -> nBytesRead
@@ -186,7 +172,7 @@ HB_FUNC( HPDF_READFROMSTREAM )
 
    buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
 
-   hb_retnl( ( long ) HPDF_ReadFromStream( HPDF_Doc_par( 1 ), buffer, &size ) );
+   hb_retnl( ( long ) HPDF_ReadFromStream( hb_HPDF_Doc_par( 1 ), buffer, &size ) );
 
    if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
       hb_xfree( buffer );
@@ -196,14 +182,14 @@ HB_FUNC( HPDF_READFROMSTREAM )
 */
 HB_FUNC( HPDF_RESETSTREAM )
 {
-   hb_retnl( ( long ) HPDF_ResetStream( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_ResetStream( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_HasDoc( hDoc ) -> lHasDoc
 */
 HB_FUNC( HPDF_HASDOC )
 {
-   hb_retl( HPDF_HasDoc( HPDF_Doc_par( 1 ) ) );
+   hb_retl( HPDF_HasDoc( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetErrorHandler( hDoc, procErrHandler ) -> hStatus
@@ -213,28 +199,28 @@ HB_FUNC( HPDF_SETERRORHANDLER )
    /* TOFIX: This should be extended to pass a wrapper which calls a
              user defined codeblock. */
 
-   hb_retnl( ( long ) HPDF_SetErrorHandler( HPDF_Doc_par( 1 ), ( HPDF_Error_Handler ) hb_parptr( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetErrorHandler( hb_HPDF_Doc_par( 1 ), ( HPDF_Error_Handler ) hb_parptr( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetError( hDoc ) -> nErrorCode
 */
 HB_FUNC( HPDF_GETERROR )
 {
-   hb_retnl( ( long ) HPDF_GetError( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_GetError( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_ResetError( hDoc ) -> NIL
 */
 HB_FUNC( HPDF_RESETERROR )
 {
-   HPDF_ResetError( HPDF_Doc_par( 1 ) );
+   HPDF_ResetError( hb_HPDF_Doc_par( 1 ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetPagesConfiguration( hDoc, nPagePerPages ) -> hStatus
 */
 HB_FUNC( HPDF_SETPAGESCONFIGURATION )
 {
-   hb_retnl( ( long ) HPDF_SetPagesConfiguration( HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetPagesConfiguration( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetPageLayout( hDoc, nLayout ) -> hStatus
@@ -247,14 +233,14 @@ HB_FUNC( HPDF_SETPAGESCONFIGURATION )
 */
 HB_FUNC( HPDF_SETPAGELAYOUT )
 {
-   hb_retnl( ( long ) HPDF_SetPageLayout( HPDF_Doc_par( 1 ), ( HPDF_PageLayout ) hb_parni( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetPageLayout( hb_HPDF_Doc_par( 1 ), ( HPDF_PageLayout ) hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetPageLayout( hDoc ) -> nLayout
 */
 HB_FUNC( HPDF_GETPAGELAYOUT )
 {
-   hb_retni( ( int ) HPDF_GetPageLayout( HPDF_Doc_par( 1 ) ) );
+   hb_retni( ( int ) HPDF_GetPageLayout( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetPageMode( hDoc, nPageMode ) -> hStatus
@@ -267,49 +253,49 @@ HB_FUNC( HPDF_GETPAGELAYOUT )
 */
 HB_FUNC( HPDF_SETPAGEMODE )
 {
-   hb_retnl( ( long ) HPDF_SetPageMode( HPDF_Doc_par( 1 ), ( HPDF_PageMode ) hb_parni( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetPageMode( hb_HPDF_Doc_par( 1 ), ( HPDF_PageMode ) hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetPageMode( hDoc ) -> nPageMode
 */
 HB_FUNC( HPDF_GETPAGEMODE )
 {
-   hb_retni( ( int ) HPDF_GetPageMode( HPDF_Doc_par( 1 ) ) );
+   hb_retni( ( int ) HPDF_GetPageMode( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetOpenAction( hDoc, hDestn ) -> hStatus
 */
 HB_FUNC( HPDF_SETOPENACTION )
 {
-   hb_retnl( ( long ) HPDF_SetOpenAction( HPDF_Doc_par( 1 ), ( HPDF_Destination ) hb_parptr( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetOpenAction( hb_HPDF_Doc_par( 1 ), ( HPDF_Destination ) hb_parptr( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetCurrentPage( hDoc ) -> hPage
 */
 HB_FUNC( HPDF_GETCURRENTPAGE )
 {
-   hb_retptr( ( void * ) HPDF_GetCurrentPage( HPDF_Doc_par( 1 ) ) );
+   hb_retptr( ( void * ) HPDF_GetCurrentPage( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_AddPage( hDoc ) -> hPage
 */
 HB_FUNC( HPDF_ADDPAGE )
 {
-   hb_retptr( ( void  * ) HPDF_AddPage( HPDF_Doc_par( 1 ) ) );
+   hb_retptr( ( void  * ) HPDF_AddPage( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_InsertPage( hDoc, hPage ) -> hPageInserted  : Just before hPage
 */
 HB_FUNC( HPDF_INSERTPAGE )
 {
-   hb_retptr( ( void * ) HPDF_InsertPage( HPDF_Doc_par( 1 ), ( HPDF_Page ) hb_parptr( 2 ) ) );
+   hb_retptr( ( void * ) HPDF_InsertPage( hb_HPDF_Doc_par( 1 ), ( HPDF_Page ) hb_parptr( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetFont( hDoc, cFontName, cEncoding ) -> hFont
 */
 HB_FUNC( HPDF_GETFONT )
 {
-   hb_retptr( ( void * ) HPDF_GetFont( HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
+   hb_retptr( ( void * ) HPDF_GetFont( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadTypeIFontFromFile( hDoc, cAFMFileName, cPFA_PFBFileName ) -> cFontName
@@ -321,7 +307,7 @@ HB_FUNC( HPDF_LOADTYPE1FONTFROMFILE )
    char * pszFree2;
    const char * pszFileName2 = hb_fsNameConv( hb_parcx( 3 ), &pszFree2 );
 
-   hb_retc( HPDF_LoadType1FontFromFile( HPDF_Doc_par( 1 ), pszFileName1, pszFileName2 ) );
+   hb_retc( HPDF_LoadType1FontFromFile( hb_HPDF_Doc_par( 1 ), pszFileName1, pszFileName2 ) );
 
    if( pszFree1 )
       hb_xfree( pszFree1 );
@@ -337,7 +323,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE )
    char * pszFree;
    const char * pszFileName = hb_fsNameConv( hb_parcx( 2 ), &pszFree );
 
-   hb_retc( HPDF_LoadTTFontFromFile( HPDF_Doc_par( 1 ), pszFileName, hb_parl( 3 ) ? HPDF_TRUE : HPDF_FALSE ) );
+   hb_retc( HPDF_LoadTTFontFromFile( hb_HPDF_Doc_par( 1 ), pszFileName, hb_parl( 3 ) ? HPDF_TRUE : HPDF_FALSE ) );
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -350,7 +336,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE2 )
    char * pszFree;
    const char * pszFileName = hb_fsNameConv( hb_parcx( 2 ), &pszFree );
 
-   hb_retc( HPDF_LoadTTFontFromFile2( HPDF_Doc_par( 1 ), pszFileName, hb_parni( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE ) );
+   hb_retc( HPDF_LoadTTFontFromFile2( hb_HPDF_Doc_par( 1 ), pszFileName, hb_parni( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE ) );
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -366,112 +352,112 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE2 )
 */
 HB_FUNC( HPDF_ADDPAGELABEL )
 {
-   hb_retnl( ( long ) HPDF_AddPageLabel( HPDF_Doc_par( 1 ), hb_parni( 2 ), ( HPDF_PageNumStyle ) hb_parni( 3 ), hb_parni( 4 ), hb_parc( 5 ) ) );
+   hb_retnl( ( long ) HPDF_AddPageLabel( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ), ( HPDF_PageNumStyle ) hb_parni( 3 ), hb_parni( 4 ), hb_parc( 5 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseJPFonts( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEJPFONTS )
 {
-   hb_retnl( ( long ) HPDF_UseJPFonts( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseJPFonts( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseKRFonts( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEKRFONTS )
 {
-   hb_retnl( ( long ) HPDF_UseKRFonts( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseKRFonts( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseCNSFonts( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USECNSFONTS )
 {
-   hb_retnl( ( long ) HPDF_UseCNSFonts( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseCNSFonts( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseCNTFonts( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USECNTFONTS )
 {
-   hb_retnl( ( long ) HPDF_UseCNTFonts( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseCNTFonts( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_CreateExtGState( hDoc ) -> hExtGState
 */
 HB_FUNC( HPDF_CREATEEXTGSTATE )
 {
-   hb_retptr( ( void * ) HPDF_CreateExtGState( HPDF_Doc_par( 1 ) ) );
+   hb_retptr( ( void * ) HPDF_CreateExtGState( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_CreateOutline( hDoc, hParentOutline, cTitle, hEncoder ) -> hOutline
 */
 HB_FUNC( HPDF_CREATEOUTLINE )
 {
-   hb_retptr( ( void * ) HPDF_CreateOutline( HPDF_Doc_par( 1 ), ( HPDF_Outline ) hb_parptr( 2 ), hb_parc( 3 ), ( HPDF_Encoder ) hb_parptr( 4 ) ) );
+   hb_retptr( ( void * ) HPDF_CreateOutline( hb_HPDF_Doc_par( 1 ), ( HPDF_Outline ) hb_parptr( 2 ), hb_parc( 3 ), ( HPDF_Encoder ) hb_parptr( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetEncoder( hDoc, cEncoding ) -> hEncoder
 */
 HB_FUNC( HPDF_GETENCODER )
 {
-   hb_retptr( ( void * ) HPDF_GetEncoder( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retptr( ( void * ) HPDF_GetEncoder( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetCurrentEncoder( hDoc ) -> hEncoder
 */
 HB_FUNC( HPDF_GETCURRENTENCODER )
 {
-   hb_retptr( ( void * ) HPDF_GetCurrentEncoder( HPDF_Doc_par( 1 ) ) );
+   hb_retptr( ( void * ) HPDF_GetCurrentEncoder( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetCurrentEncoder( hDoc, hEncoder ) -> hStatus
 */
 HB_FUNC( HPDF_SETCURRENTENCODER )
 {
-   hb_retnl( ( long ) HPDF_SetCurrentEncoder( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetCurrentEncoder( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseJPEncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEJPENCODINGS )
 {
-   hb_retnl( ( long ) HPDF_UseJPEncodings( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseJPEncodings( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseKREncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEKRENCODINGS )
 {
-   hb_retnl( ( long ) HPDF_UseKREncodings( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseKREncodings( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseCNSEncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USECNSENCODINGS )
 {
-   hb_retnl( ( long ) HPDF_UseCNSEncodings( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseCNSEncodings( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_UseCNTEncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USECNTENCODINGS )
 {
-   hb_retnl( ( long ) HPDF_UseCNTEncodings( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( ( long ) HPDF_UseCNTEncodings( hb_HPDF_Doc_par( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadPngImageFromFile( hDoc, cPNGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE )
 {
-   hb_retptr( ( void * ) HPDF_LoadPngImageFromFile( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadPngImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadPngImageFromFile2( hDoc, cPNGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE2 )
 {
-   hb_retptr( ( void * ) HPDF_LoadPngImageFromFile2( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadPngImageFromFile2( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) -> hImage
@@ -482,21 +468,21 @@ HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE2 )
 */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
 {
-   hb_retptr( ( void * ) HPDF_LoadRawImageFromFile( HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadRawImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) -> hImage
 */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
-   hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 {
-   hb_retptr( ( void * ) HPDF_LoadJpegImageFromFile( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadJpegImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetInfoAttr( hDoc, nInfoType, cInfo ) -> hStatus
@@ -509,14 +495,14 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 */
 HB_FUNC( HPDF_SETINFOATTR )
 {
-   hb_retnl( ( long ) HPDF_SetInfoAttr( HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), hb_parc( 3 ) ) );
+   hb_retnl( ( long ) HPDF_SetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), hb_parc( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_GetInfoAttr( hDoc, nInfoType ) -> cInfo
 */
 HB_FUNC( HPDF_GETINFOATTR )
 {
-   hb_retc( HPDF_GetInfoAttr( HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ) ) );
+   hb_retc( HPDF_GetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetInfoDateAttr( hDoc, nInfoType, aDateValues ) -> hStatus
@@ -538,14 +524,14 @@ HB_FUNC( HPDF_SETINFODATEATTR )
    date.seconds = hb_parvni( 3, 6 );
    date.ind     = ' ';
 
-   hb_retnl( ( long ) HPDF_SetInfoDateAttr( HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
+   hb_retnl( ( long ) HPDF_SetInfoDateAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetPassword( hDoc, cOwnerPassword = NO NIL, cUserPassword = CANBE NIL ) -> hStatus
 */
 HB_FUNC( HPDF_SETPASSWORD )
 {
-   hb_retnl( ( long ) HPDF_SetPassword( HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
+   hb_retnl( ( long ) HPDF_SetPassword( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetPermission( hDoc, nPermission ) -> hStatus
@@ -558,7 +544,7 @@ HB_FUNC( HPDF_SETPASSWORD )
 */
 HB_FUNC( HPDF_SETPERMISSION )
 {
-   hb_retnl( ( long ) HPDF_SetPermission( HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetPermission( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetEncryptionMode( hDoc, nEncMode, nKeyLen ) -> hStatus
@@ -570,7 +556,7 @@ HB_FUNC( HPDF_SETPERMISSION )
 */
 HB_FUNC( HPDF_SETENCRYPTIONMODE )
 {
-   hb_retnl( ( long ) HPDF_SetEncryptionMode( HPDF_Doc_par( 1 ), ( HPDF_EncryptMode ) hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retnl( ( long ) HPDF_SetEncryptionMode( hb_HPDF_Doc_par( 1 ), ( HPDF_EncryptMode ) hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SetCompressionMode( hDoc, nCompMode ) -> hStatus
@@ -583,7 +569,7 @@ HB_FUNC( HPDF_SETENCRYPTIONMODE )
 */
 HB_FUNC( HPDF_SETCOMPRESSIONMODE )
 {
-   hb_retnl( ( long ) HPDF_SetCompressionMode( HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
+   hb_retnl( ( long ) HPDF_SetCompressionMode( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -1864,7 +1850,7 @@ HB_FUNC( HPDF_GETCONTENTS )
 
    buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
 
-   hb_retnl( ( long ) HPDF_GetContents( HPDF_Doc_par( 1 ), buffer, &size ) );
+   hb_retnl( ( long ) HPDF_GetContents( hb_HPDF_Doc_par( 1 ), buffer, &size ) );
 
    if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
       hb_xfree( buffer );
@@ -2590,7 +2576,7 @@ HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 
    buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
 
-   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( HPDF_Doc_par( 1 ), buffer, size ) );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
 
    if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
       hb_xfree( buffer );
@@ -2613,7 +2599,7 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
 
    buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
 
-   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( HPDF_Doc_par( 1 ), buffer, size ) );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
 
    if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
       hb_xfree( buffer );
@@ -2643,7 +2629,7 @@ HPDF_AttachFile  (HPDF_Doc    pdf,
 HB_FUNC( HPDF_ATTACHFILE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_EmbeddedFile ) HPDF_AttachFile( HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
+   hb_retptr( ( HPDF_EmbeddedFile ) HPDF_AttachFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 #else
    hb_retptr( NULL );
 #endif
@@ -2659,7 +2645,7 @@ HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
 HB_FUNC( HPDF_ICC_LOADICCFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_OutputIntent ) HPDF_ICC_LoadIccFromMem( HPDF_Doc_par( 1 ), ( HPDF_MMgr ) hb_parptr( 2 ), ( HPDF_Stream ) hb_parptr( 3 ), ( HPDF_Xref ) hb_parptr( 4 ), hb_parni( 5 ) ) );
+   hb_retptr( ( HPDF_OutputIntent ) HPDF_ICC_LoadIccFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_MMgr ) hb_parptr( 2 ), ( HPDF_Stream ) hb_parptr( 3 ), ( HPDF_Xref ) hb_parptr( 4 ), hb_parni( 5 ) ) );
 #else
    hb_retptr( NULL );
 #endif
@@ -2673,7 +2659,7 @@ HPDF_LoadIccProfileFromFile  (HPDF_Doc  pdf,
 HB_FUNC( HPDF_LOADICCPROFILEFROMFILE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_OutputIntent ) HPDF_LoadIccProfileFromFile( HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ) ) );
+   hb_retptr( ( HPDF_OutputIntent ) HPDF_LoadIccProfileFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ) ) );
 #else
    hb_retptr( NULL );
 #endif
@@ -2689,7 +2675,7 @@ HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
           out it is design decision or bug, I excluded them from dynamic
           builds. [vszakats] */
 #if HB_HPDF_VERS( 2, 2, 0 ) && ! defined( HB_DYNLIB )
-   hb_retnl( HPDF_PDFA_SetPDFAConformance( HPDF_Doc_par( 1 ), ( HPDF_PDFAType ) hb_parni( 2 ) ) );
+   hb_retnl( HPDF_PDFA_SetPDFAConformance( hb_HPDF_Doc_par( 1 ), ( HPDF_PDFAType ) hb_parni( 2 ) ) );
 #else
    hb_retnl( -1 );
 #endif
@@ -2704,7 +2690,7 @@ HPDF_UseUTFEncodings   (HPDF_Doc   pdf);
 HB_FUNC( HPDF_USEUTFENCODINGS )
 {
 #if HB_HPDF_VERS( 2, 3, 0 )
-   hb_retnl( HPDF_UseUTFEncodings( HPDF_Doc_par( 1 ) ) );
+   hb_retnl( HPDF_UseUTFEncodings( hb_HPDF_Doc_par( 1 ) ) );
 #else
    hb_retnl( -1 );
 #endif
