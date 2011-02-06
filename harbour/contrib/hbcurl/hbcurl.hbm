@@ -18,4 +18,6 @@
 -instfile=inc:hbcurl.ch
 -instfile=inc:hbcurl.hbx
 
-hbcurl.c
+hbcurl.hbx
+
+core.c

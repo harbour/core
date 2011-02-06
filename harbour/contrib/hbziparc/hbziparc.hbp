@@ -11,6 +11,8 @@
 
 -instfile=inc:hbziparc.hbx
 
-hbziparc.prg
+hbziparc.hbx
+
+ziparc.prg
 
 ../hbmzip/hbmzip.hbc

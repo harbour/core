@@ -20,7 +20,9 @@
 -instfile=inc:hbsqlit3.ch
 -instfile=inc:hbsqlit3.hbx
 
-hbsqlit3.c
+hbsqlit3.hbx
+
+core.c
 hdbcsqlt.prg
 
 ../3rd/sqlite3/sqlite3.hbc{HBMK_HAS_SQLITE3_LOCAL}

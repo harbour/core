@@ -21,6 +21,8 @@
 -instfile=inc:sql.ch
 -instfile=inc:hbodbc.hbx
 
+hbodbc.hbx
+
 odbc.c
 odbcold.c
 

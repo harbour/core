@@ -27,6 +27,8 @@
 -instfile=inc:postgres.ch
 -instfile=inc:hbpgsql.hbx
 
+hbpgsql.hbx
+
 postgres.c
 
 tpostgre.prg

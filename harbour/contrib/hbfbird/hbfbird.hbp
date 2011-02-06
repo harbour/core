@@ -9,9 +9,6 @@
 
 -w3 -es2
 
-firebird.c
-tfirebrd.prg
-
 -stop{pocc64|poccarm}
 
 -depkeyhead=firebird:ibase.h
@@ -25,3 +22,8 @@ tfirebrd.prg
 -depimplibd=firebird:fbclient
 
 -instfile=inc:hbfbird.hbx
+
+hbfbird.hbx
+
+firebird.c
+tfirebrd.prg

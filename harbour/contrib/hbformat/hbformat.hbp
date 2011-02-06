@@ -11,5 +11,7 @@
 
 -instfile=inc:hbformat.hbx
 
-hbformat.prg
-hbformac.c
+hbformat.hbx
+
+hbfmtcls.prg
+fileread.c

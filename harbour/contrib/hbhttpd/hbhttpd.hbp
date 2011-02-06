@@ -11,6 +11,8 @@
 
 -instfile=inc:hbhttpd.hbx
 
+hbhttpd.hbx
+
 core.prg
 widgets.prg
 log.prg

@@ -34,7 +34,9 @@
 -instfile=inc:hbssl.ch
 -instfile=inc:hbssl.hbx
 
-hbssl.c
+hbssl.hbx
+
+ssl_hb.c
 bio.c
 err.c
 evp.c

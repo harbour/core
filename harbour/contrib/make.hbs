@@ -431,7 +431,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
          IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) +;
-                                                       iif( hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
+                                                       iif( "cType" $ hProjectList[ cProject ] .AND. ;
+                                                            hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
                                                             GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
                                                             ( lPrimary .OR. lContainer ), " -hbx=" + FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
 

@@ -20,6 +20,8 @@
 -instfile=inc:mysql.ch
 -instfile=inc:hbmysql.hbx
 
+hbmysql.hbx
+
 mysql.c
 mysqlold.c
 

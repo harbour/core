@@ -22,6 +22,8 @@
 -instfile=inc:hbcairo.ch
 -instfile=inc:hbcairo.hbx
 
+hbcairo.hbx
+
 context.c
 core.c
 image.c

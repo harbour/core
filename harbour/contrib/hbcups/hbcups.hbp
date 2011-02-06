@@ -18,4 +18,6 @@
 
 -instfile=inc:hbcups.hbx
 
-hbcups.c
+hbcups.hbx
+
+core.c

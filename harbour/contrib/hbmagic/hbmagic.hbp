@@ -16,5 +16,7 @@
 -instfile=inc:hbmagic.ch
 -instfile=inc:hbmagic.hbx
 
-hbmagic.c
+hbmagic.hbx
+
+core.c
 hbmagis.prg
