@@ -215,4 +215,21 @@ HB_FUNC( FI_WINDRAW )
 
 /* -------------------------------------------------------------------------- */
 
+#else
+
+HB_FUNC( FI_FITOBITMAP )
+{
+   hb_ret();
+}
+
+HB_FUNC( FI_BITMAPTOFI )
+{
+   hb_ret();
+}
+
+HB_FUNC( FI_WINDRAW )
+{
+   hb_retni( 0 );
+}
+
 #endif /* defined( HB_OS_WIN ) */
