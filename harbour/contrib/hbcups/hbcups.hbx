@@ -1,0 +1,36 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBCUPS__
+#define __HBEXTERN_CH__HBCUPS__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCUPS__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBCUPS__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCUPS__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC CUPSGETDEFAULT
+DYNAMIC CUPSGETDESTS
+DYNAMIC CUPSPRINTFILE
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCUPS__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

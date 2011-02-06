@@ -16,5 +16,6 @@
 -depincpath=curl:/usr/include
 
 -instfile=inc:hbcurl.ch
+-instfile=inc:hbcurl.hbx
 
 hbcurl.c

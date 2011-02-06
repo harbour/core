@@ -9,5 +9,7 @@
 
 -w3 -es2
 
+-instfile=inc:hbformat.hbx
+
 hbformat.prg
 hbformac.c

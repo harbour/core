@@ -1,0 +1,76 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBHTTPD__
+#define __HBEXTERN_CH__HBHTTPD__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBHTTPD__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBHTTPD__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBHTTPD__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC UADDHEADER
+DYNAMIC UGETHEADER
+DYNAMIC UGETWIDGETBYID
+DYNAMIC UHTMLENCODE
+DYNAMIC UHTTPD
+DYNAMIC UHTTPDLOG
+DYNAMIC UHTTPDNEW
+DYNAMIC UHTTPD_JOIN
+DYNAMIC UHTTPD_SPLIT
+DYNAMIC ULINK
+DYNAMIC UOSFILENAME
+DYNAMIC UPROCFILES
+DYNAMIC UPROCINFO
+DYNAMIC UPROCWIDGETS
+DYNAMIC UREDIRECT
+DYNAMIC USESSIONDESTROY
+DYNAMIC USETSTATUSCODE
+DYNAMIC UURLDECODE
+DYNAMIC UURLENCODE
+DYNAMIC UWBROWSE
+DYNAMIC UWBROWSENEW
+DYNAMIC UWDEFAULTHANDLER
+DYNAMIC UWFORM
+DYNAMIC UWFORMNEW
+DYNAMIC UWHTML
+DYNAMIC UWHTMLNEW
+DYNAMIC UWINPUT
+DYNAMIC UWINPUTNEW
+DYNAMIC UWLABEL
+DYNAMIC UWLABELNEW
+DYNAMIC UWLAYOUTGRID
+DYNAMIC UWLAYOUTGRIDNEW
+DYNAMIC UWMAIN
+DYNAMIC UWMAINNEW
+DYNAMIC UWMENU
+DYNAMIC UWMENUNEW
+DYNAMIC UWPASSWORD
+DYNAMIC UWPASSWORDNEW
+DYNAMIC UWRITE
+DYNAMIC UWSEPARATOR
+DYNAMIC UWSEPARATORNEW
+DYNAMIC UWSUBMIT
+DYNAMIC UWSUBMITNEW
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBHTTPD__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

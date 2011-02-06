@@ -20,6 +20,7 @@
 -iflag={bcc}-a
 
 -instfile=inc:hbcairo.ch
+-instfile=inc:hbcairo.hbx
 
 context.c
 core.c

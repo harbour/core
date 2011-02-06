@@ -14,6 +14,7 @@
 -depincpath=libmagic:/usr/include
 
 -instfile=inc:hbmagic.ch
+-instfile=inc:hbmagic.hbx
 
 hbmagic.c
 hbmagis.prg

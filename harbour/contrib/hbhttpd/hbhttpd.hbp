@@ -9,6 +9,8 @@
 
 -w3 -es2
 
+-instfile=inc:hbhttpd.hbx
+
 core.prg
 widgets.prg
 log.prg

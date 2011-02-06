@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBZIPARC__
+#define __HBEXTERN_CH__HBZIPARC__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZIPARC__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBZIPARC__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZIPARC__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_GETFILECOUNT
+DYNAMIC HB_GETFILESINZIP
+DYNAMIC HB_GETZIPCOMMENT
+DYNAMIC HB_SETBUFFER
+DYNAMIC HB_SETDISKZIP
+DYNAMIC HB_SETZIPCOMMENT
+DYNAMIC HB_UNZIPALLFILE
+DYNAMIC HB_UNZIPFILE
+DYNAMIC HB_UNZIPFILEINDEX
+DYNAMIC HB_ZIPDELETEFILES
+DYNAMIC HB_ZIPFILE
+DYNAMIC HB_ZIPFILEBYPKSPAN
+DYNAMIC HB_ZIPFILEBYTDSPAN
+DYNAMIC HB_ZIPTESTPK
+DYNAMIC HB_ZIPWITHPASSWORD
+DYNAMIC SETZIPREADONLY
+DYNAMIC TRANSFERFROMZIP
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBZIPARC__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

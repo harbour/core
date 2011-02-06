@@ -19,6 +19,7 @@
 -iflag={bcc}-a
 
 -instfile=inc:hbblat.ch
+-instfile=inc:hbblat.hbx
 
 blatwrp.c
 blatcls.prg

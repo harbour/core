@@ -16,4 +16,6 @@
 -depcontrol=cups:${HB_WITH_CUPS}
 -depincpath=cups:/usr/include
 
+-instfile=inc:hbcups.hbx
+
 hbcups.c

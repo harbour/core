@@ -12,6 +12,7 @@
 
 -instfile=inc:tip.ch
 -instfile=inc:thtml.ch
+-instfile=inc:hbtip.hbx
 
 encb64c.c
 encurlc.c

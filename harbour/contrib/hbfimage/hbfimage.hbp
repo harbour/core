@@ -21,6 +21,7 @@
 -cflag=-DHB_LEGACY_TYPES_OFF
 
 -instfile=inc:freeimag.ch
+-instfile=inc:hbfimage.hbx
 
 fi_winfu.c
 fi_wrp.c

@@ -9,6 +9,8 @@
 
 -w3 -es2
 
-../hbmzip/hbmzip.hbc
+-instfile=inc:hbziparc.hbx
 
 hbziparc.prg
+
+../hbmzip/hbmzip.hbc

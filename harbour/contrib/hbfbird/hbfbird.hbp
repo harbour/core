@@ -23,3 +23,5 @@ tfirebrd.prg
 -depimplibs=firebird:../bin/fbclient.dll{!(allgcc|allmsvc|allpocc)}
 -depimplibs=firebird:../lib/fbclient_ms.lib{allgcc|allmsvc|allpocc}
 -depimplibd=firebird:fbclient
+
+-instfile=inc:hbfbird.hbx

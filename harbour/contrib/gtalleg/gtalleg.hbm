@@ -10,7 +10,7 @@
 
 -w3 -es2
 
--stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
+-stop{hbdyn|pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
 
 -depkeyhead=allegro:allegro.h
 -depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}

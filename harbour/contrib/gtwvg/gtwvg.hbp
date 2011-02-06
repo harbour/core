@@ -9,7 +9,7 @@
 
 -w3 -es2
 
--stop{!win}
+-stop{!win|hbdyn}
 
 ../hbwin/hbwin.hbc
 

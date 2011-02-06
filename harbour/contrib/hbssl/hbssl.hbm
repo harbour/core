@@ -32,6 +32,7 @@
 -cflag=-DOPENSSL_NO_IDEA
 
 -instfile=inc:hbssl.ch
+-instfile=inc:hbssl.hbx
 
 hbssl.c
 bio.c

@@ -18,6 +18,7 @@
 -depfinish=sqlite3
 
 -instfile=inc:hbsqlit3.ch
+-instfile=inc:hbsqlit3.hbx
 
 hbsqlit3.c
 hdbcsqlt.prg
