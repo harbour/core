@@ -25,5 +25,17 @@
 hbhpdf.hbx
 
 harupdf.c
+annot.c
+enccns.c
+enccnt.c
+encjp.c
+enckr.c
+font.c
+fontcns.c
+fontcnt.c
+fontjp.c
+fontkr.c
+image.c
+pdfa.c
 
 3rd/libhpdf/libhpdf.hbc{HBMK_HAS_LIBHARU_LOCAL}

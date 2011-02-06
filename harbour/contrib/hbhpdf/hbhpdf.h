@@ -51,6 +51,8 @@
 #define __HBHPDF_H
 
 #include "hbapi.h"
+#include "hbapifs.h"
+#include "hbapiitm.h"
 
 #include "hpdf.h"
 
@@ -58,7 +60,7 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT HPDF_Doc HPDF_Doc_par( int iParam );
+extern HB_EXPORT HPDF_Doc hb_HPDF_Doc_par( int iParam );
 
 HB_EXTERN_END
 
