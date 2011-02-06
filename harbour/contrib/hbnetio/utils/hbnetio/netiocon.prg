@@ -54,6 +54,8 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL pConnection
    LOCAL nStreamID
 
+   LOCAL aNotification
+
    SET DATE ANSI
    SET CENTURY ON
    SET CONFIRM ON
@@ -87,14 +89,14 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "logconn"       => { ""               , "Enable logging incoming connections."           , {|| cmdConnLogEnable( pConnection, .T. ) } },;
       "filt"          => { ""               , "Show filters."                                  , {|| cmdConnFilters( pConnection, .F. ) } },;
       "filtadmin"     => { ""               , "Show filters for management connections."       , {|| cmdConnFilters( pConnection, .T. ) } },;
-      "allowadd"      => { "<ip|host>"      , "Add allow filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowadd" ) } },;
-      "allowdel"      => { "<ip|host>"      , "Remove allow filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdel" ) } },;
-      "blockadd"      => { "<ip|host>"      , "Add block filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockadd" ) } },;
-      "blockdel"      => { "<ip|host>"      , "Remove block filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdel" ) } },;
-      "allowaddadmin" => { "<ip|host>"      , "Add allow filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowaddadmin" ) } },;
-      "allowdeladmin" => { "<ip|host>"      , "Remove allow filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdeladmin" ) } },;
-      "blockaddadmin" => { "<ip|host>"      , "Add block filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockaddadmin" ) } },;
-      "blockdeladmin" => { "<ip|host>"      , "Remove block filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdeladmin" ) } },;
+      "allowadd"      => { "<ip>"           , "Add allow filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowadd" ) } },;
+      "allowdel"      => { "<ip>"           , "Remove allow filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdel" ) } },;
+      "blockadd"      => { "<ip>"           , "Add block filter"                               , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockadd" ) } },;
+      "blockdel"      => { "<ip>"           , "Remove block filter"                            , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdel" ) } },;
+      "allowaddadmin" => { "<ip>"           , "Add allow filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowaddadmin" ) } },;
+      "allowdeladmin" => { "<ip>"           , "Remove allow filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_allowdeladmin" ) } },;
+      "blockaddadmin" => { "<ip>"           , "Add block filter for management connections"    , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockaddadmin" ) } },;
+      "blockdeladmin" => { "<ip>"           , "Remove block filter for management connections" , {| cCommand | cmdConnFilterMod( pConnection, cCommand, "hbnetiomgm_blockdeladmin" ) } },;
       "filtsave"      => { ""               , "Save filters to disk."                          , {|| cmdConnFilterSave( pConnection ) } },;
       "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| cCommand | cmdConnStop( pConnection, cCommand ) } },;
       "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| cCommand | cmdConnClientInfo( pConnection, cCommand ) } },;
@@ -161,9 +163,12 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
       /* Dump all messages in queue */
       /* TODO: Move this to a separate thread and display it in a dedicated screen area. */
-      FOR EACH cMsg IN netio_GetData( nStreamID ) /* TODO: Protect against flood */
-         QQOut( "> message from server:", cMsg, hb_eol() )
-      NEXT
+      aNotification := netio_GetData( nStreamID )
+      IF hb_isArray( aNotification )
+         FOR EACH cMsg IN aNotification /* TODO: Protect against flood */
+            QQOut( "> message from server:", cMsg, hb_eol() )
+         NEXT
+      ENDIF
 
       IF Empty( cCommand )
          LOOP

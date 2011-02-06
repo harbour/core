@@ -397,15 +397,12 @@ STATIC PROCEDURE netiosrv_notifyclients( netiomgm, cMsg )
 STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManagement )
    LOCAL aAddressPeer
    LOCAL cAddressPeer
-   LOCAL nAddressFamily
-   LOCAL aNamePeer
-   LOCAL cNamePeer
    LOCAL lBlocked
 
    IF netiosrv[ _NETIOSRV_lAcceptConn ]
 
       netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
-      cAddressPeer := AddrToIPPort( aAddressPeer, @nAddressFamily )
+      cAddressPeer := AddrToIPPort( aAddressPeer )
 
       lBlocked := .F.
 
@@ -414,20 +411,7 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
          hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF !( cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ] )
             IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) == 0
-               aNamePeer := hb_socketGetHosts( cAddressPeer, nAddressFamily )
-               IF Empty( aNamePeer )
-                  lBlocked := .T.
-               ELSE
-                  FOR EACH cNamePeer IN aNamePeer
-                     IF !( cNamePeer $ netiosrv[ _NETIOSRV_hAllow ] )
-                        IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cNamePeer ) } ) == 0
-                           /* Not on allow list */
-                           lBlocked := .T.
-                           EXIT
-                        ENDIF
-                     ENDIF
-                  NEXT
-               ENDIF
+               lBlocked := .T.
             ENDIF
          ENDIF
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
@@ -447,23 +431,6 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
          ELSE
             IF hb_HScan( netiosrv[ _NETIOSRV_hBlock ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) > 0
                lBlocked := .T.
-            ELSE
-               IF aNamePeer == NIL
-                  aNamePeer := hb_socketGetHosts( cAddressPeer, nAddressFamily )
-               ENDIF
-               IF ! Empty( aNamePeer )
-                  FOR EACH cNamePeer IN aNamePeer
-                     IF cNamePeer $ netiosrv[ _NETIOSRV_hBlock ]
-                        lBlocked := .T.
-                        EXIT
-                     ELSE
-                        IF hb_HScan( netiosrv[ _NETIOSRV_hBlock ], {| tmp | hb_WildMatch( tmp, cNamePeer ) } ) > 0
-                           lBlocked := .T.
-                           EXIT
-                        ENDIF
-                     ENDIF
-                  NEXT
-               ENDIF
             ENDIF
          ENDIF
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
@@ -795,30 +762,15 @@ STATIC FUNCTION ConnStatusStr( nStatus )
 
    RETURN "UNKNOWN:" + hb_ntos( nStatus )
 
-STATIC FUNCTION AddrToIPPort( aAddr, /* @ */ nFamily )
+STATIC FUNCTION AddrToIPPort( aAddr )
    LOCAL cIP
 
    IF hb_isArray( aAddr ) .AND. ;
       ( aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET .OR. ;
         aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
       cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ] + ":" + hb_ntos( aAddr[ HB_SOCKET_ADINFO_PORT ] )
-      nFamily := aAddr[ HB_SOCKET_ADINFO_FAMILY ]
    ELSE
       cIP := "(?)"
-      nFamily := -1
-   ENDIF
-
-   RETURN cIP
-
-STATIC FUNCTION AddrToIP( aAddr )
-   LOCAL cIP
-
-   IF hb_isArray( aAddr ) .AND. ;
-      ( aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET .OR. ;
-        aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
-      cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ]
-   ELSE
-      cIP := ""
    ENDIF
 
    RETURN cIP
