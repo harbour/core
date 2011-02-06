@@ -58,57 +58,59 @@ FUNCTION KeyTime( nKey, cClockTime )
    LOCAL nHour, nMin, nSec, nLast
 
    IF t_hIdle != NIL
-      HB_IDLEDEL( t_hIdle )
+      hb_idleDel( t_hIdle )
       t_hIdle := NIL
    ENDIF
 
    IF ISNUMBER( nKey ) .AND. ISCHARACTER( cClockTime )
-      nHour := VAL( SUBSTR( cClockTime, 1, 2 ) )
-      nMin  := VAL( SUBSTR( cClockTime, 4, 2 ) )
-      nSec  := VAL( SUBSTR( cClockTime, 7, 2 ) )
+      nHour := Val( SubStr( cClockTime, 1, 2 ) )
+      nMin  := Val( SubStr( cClockTime, 4, 2 ) )
+      nSec  := Val( SubStr( cClockTime, 7, 2 ) )
       nLast := -1
-      t_hIdle := HB_IDLEADD( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
+      t_hIdle := hb_idleAdd( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
                                             @nLast ) } )
       RETURN .T.
    ENDIF
-RETURN .F.
+
+   RETURN .F.
 
 STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
-   LOCAL ccTime := TIME()
-   LOCAL nHr := VAL( SUBSTR( ccTime, 1, 2 ) )
-   LOCAL nMn := VAL( SUBSTR( ccTime, 4, 2 ) )
-   LOCAL nSc := VAL( SUBSTR( ccTime, 7, 2 ) )
+   LOCAL ccTime := Time()
+   LOCAL nHr := Val( SubStr( ccTime, 1, 2 ) )
+   LOCAL nMn := Val( SubStr( ccTime, 4, 2 ) )
+   LOCAL nSc := Val( SubStr( ccTime, 7, 2 ) )
 
    IF nHour == 99
       IF nHr > nLast
-         __KEYBOARD( nKey )
+         hb_keyPut( nKey )
          nLast := nHr
          IF nHr == 23
-            HB_IDLEDEL( t_hIdle )
+            hb_idleDel( t_hIdle )
             t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF nMin == 99 .AND. nHr == nHour
       IF nMn > nLast
-         __KEYBOARD( nKey )
+         hb_keyPut( nKey )
          nLast := nMn
          IF nMn == 59
-            HB_IDLEDEL( t_hIdle )
+            hb_idleDel( t_hIdle )
             t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF nSec == 99 .AND. nHr == nHour .AND. nMn == nMin
       IF nSc > nLast
-         __KEYBOARD( nKey )
+         hb_keyPut( nKey )
          nLast := nSc
          IF nSc == 59
-            HB_IDLEDEL( t_hIdle )
+            hb_idleDel( t_hIdle )
             t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF ccTime > cClockTime
-      __KEYBOARD( nKey )
-      HB_IDLEDEL( t_hIdle )
+      hb_keyPut( nKey )
+      hb_idleDel( t_hIdle )
       t_hIdle := NIL
    ENDIF
+
    RETURN

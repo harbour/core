@@ -58,7 +58,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
    LOCAL nSeconds
 
    IF t_hIdle != NIL
-      HB_IDLEDEL( t_hIdle )
+      hb_idleDel( t_hIdle )
       t_hIdle := NIL
    ENDIF
 
@@ -68,6 +68,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       ELSEIF nTime < 0
          nTime := -nTime / 18.2
       ENDIF
+      nTime *= 1000
       IF ! ISNUMBER( nCounter )
          nCounter := 1
       ENDIF
@@ -75,8 +76,8 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
          lMode := .F.
       ENDIF
 
-      nSeconds := SECONDS()
-      t_hIdle := HB_IDLEADD( {|| doKeySec( nKey, nTime, lMode, ;
+      nSeconds := hb_milliSeconds()
+      t_hIdle := hb_idleAdd( {|| doKeySec( nKey, nTime, lMode, ;
                                            @nCounter, @nSeconds ) } )
       RETURN .T.
    ENDIF
@@ -84,17 +85,17 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
    RETURN .F.
 
 STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
-   LOCAL nSec := SECONDS()
+   LOCAL nSec := hb_milliSeconds()
 
-   IF lMode .AND. ! EMPTY( NEXTKEY() )
+   IF lMode .AND. ! Empty( NextKey() )
       nSeconds := nSec
    ELSEIF nCounter != 0 .AND. nSec - nSeconds >= nTime
-      __KEYBOARD( nKey )
+      hb_keyPut( nKey )
       IF nCounter > 0
          nCounter--
       ENDIF
       IF nCounter == 0
-         HB_IDLEDEL( t_hIdle )
+         hb_idleDel( t_hIdle )
          t_hIdle := NIL
       ELSE
          nSeconds := nSec
