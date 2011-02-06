@@ -39,6 +39,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL nPos
    LOCAL aCommand
    LOCAL cCommand
+   LOCAL cMsg
 
    LOCAL bKeyDown
    LOCAL bKeyUp
@@ -51,6 +52,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL lQuit
 
    LOCAL pConnection
+   LOCAL nStreamID
 
    SET DATE ANSI
    SET CENTURY ON
@@ -60,7 +62,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    SetCancel( .F. )
 
    IF ! Empty( cPassword )
-      pConnection := ConnectLow( cIP, nPort, cPassword )
+      pConnection := ConnectLow( cIP, nPort, cPassword, @nStreamID )
       QQOut( hb_eol() )
    ENDIF
 
@@ -73,7 +75,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "?"             => { ""               , "Synonym for 'help'."                            , {|| cmdHelp( hCommands ) } },;
       "exit"          => { ""               , "Exit console."                                  , {|| lQuit := .T. } },;
       "clear"         => { ""               , "Clear screen."                                  , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort ) } },;
+      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort, @nStreamID ) } },;
       "disconnect"    => { ""               , "Disconnect."                                    , {|| cmdDisconnect( @pConnection ) } },;
       "sysinfo"       => { ""               , "Show system/build information."                 , {|| cmdSysInfo( pConnection ) } },;
       "showconf"      => { ""               , "Show server configuration."                     , {|| cmdServerConfig( pConnection ) } },;
@@ -157,6 +159,12 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
       cCommand := AllTrim( cCommand )
 
+      /* Dump all messages in queue */
+      /* TODO: Move this to a separate thread and display it in a dedicated screen area. */
+      FOR EACH cMsg IN netio_GetData( nStreamID ) /* TODO: Protect against flood */
+         QQOut( "> message from server:", cMsg, hb_eol() )
+      NEXT
+
       IF Empty( cCommand )
          LOOP
       ENDIF
@@ -181,6 +189,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    IF ! Empty( pConnection )
 
+      netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", NIL )
       pConnection := NIL
 
       IF lQuit
@@ -206,7 +215,7 @@ PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
    RETURN
 
 /* connect to the server */
-STATIC FUNCTION ConnectLow( cIP, nPort, cPassword )
+STATIC FUNCTION ConnectLow( cIP, nPort, cPassword, /* @ */ nStreamID )
    LOCAL pConnection
 
    QQOut( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ), hb_eol() )
@@ -217,7 +226,7 @@ STATIC FUNCTION ConnectLow( cIP, nPort, cPassword )
    IF ! Empty( pConnection )
 
       netio_funcexec( pConnection, "hbnetiomgm_setclientinfo", MyClientInfo() )
-      netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", "netiocui" )
+      nStreamID := netio_OpenItemStream( pConnection, "hbnetiomgm_cargo", "netiocui" )
 
       QQOut( "Connected.", hb_eol() )
    ELSE
@@ -388,7 +397,7 @@ STATIC PROCEDURE cmdHelp( hCommands )
 
    RETURN
 
-STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */ nPort )
+STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */ nPort, /* @ */ nStreamID )
    LOCAL aToken
    LOCAL cPassword
    LOCAL nPortOld
@@ -410,7 +419,7 @@ STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */
          cPassword := GetPassword()
       ENDIF
 
-      pConnection := ConnectLow( cIP, nPort, cPassword )
+      pConnection := ConnectLow( cIP, nPort, cPassword, @nStreamID )
    ELSE
       QQOut( "Already connected. Disconnect first.", hb_eol() )
    ENDIF

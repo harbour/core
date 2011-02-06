@@ -38,12 +38,9 @@
 #define DAT_BYTESOUT                9
 #define DAT_OPENFILES               10
 
-#include "hbhrb.ch"
 #include "fileio.ch"
 #include "hbclass.ch"
-#include "common.ch"
 #include "hbqtgui.ch"
-#include "hbnetio.ch"
 
 #include "xbp.ch"
 #include "gra.ch"
@@ -135,7 +132,7 @@ STATIC PROCEDURE readINI( /* @ */ cIP, /* @ */ nPort, /* @ */ cPassword )
             ENDIF
          ELSEIF left( lower( s ), 4 ) == "port"
             IF ( n := at( "=", s ) ) > 0
-               nPort := val( alltrim( substr( s, n + 1 ) ) )
+               nPort := hb_ntos( substr( s, n + 1 ) )
             ENDIF
          ELSEIF left( lower( s ), 8 ) == "password"
             IF ( n := at( "=", s ) ) > 0
@@ -832,26 +829,5 @@ STATIC PROCEDURE HB_Usage()
    MsgBox( cMsg )
 
    RETURN
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION xtos( xVrb )
-
-   SWITCH valtype( xVrb )
-   CASE "C"
-      RETURN xVrb
-   CASE "N"
-      RETURN ltrim( str( xVrb ) )
-   CASE "L"
-      RETURN iif( xVrb, "T", "F" )
-   CASE "M"
-      RETURN xVrb
-   CASE "A"
-      RETURN "A"
-   OTHERWISE
-      RETURN ""
-   ENDSWITCH
-
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
