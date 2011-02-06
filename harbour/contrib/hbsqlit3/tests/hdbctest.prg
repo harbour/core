@@ -8,7 +8,7 @@ FUNCTION Main()
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs
 
-   oConn := TSQLTConnection():New( "test.db", .T. )
+   oConn := hdbcSQLTConnection():New( "test.db", .T. )
 
    oMeta := oConn:getMetaData()
 

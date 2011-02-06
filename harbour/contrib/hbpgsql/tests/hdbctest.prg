@@ -8,7 +8,7 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs
 
-   oConn := TPGConnection():New( cHost, cDatabase, cUser, cPass )
+   oConn := hdbcPGConnection():New( cHost, cDatabase, cUser, cPass )
 
    oMeta := oConn:getMetaData()
 

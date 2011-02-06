@@ -59,7 +59,7 @@
 
 #define _TODO_ nil
 
-create class TSQLTConnection
+create class hdbcSQLTConnection
 
    PROTECTED:
 
@@ -85,7 +85,7 @@ create class TSQLTConnection
 
 endclass
 
-method new( cDBFile, lCreateIfNotExist ) class TSQLTConnection
+method new( cDBFile, lCreateIfNotExist ) class hdbcSQLTConnection
 
    ::pDB := sqlite3_open( cDbFile, lCreateIfNotExist )
 
@@ -95,13 +95,13 @@ method new( cDBFile, lCreateIfNotExist ) class TSQLTConnection
 
    return Self
 
-method close() class TSQLTConnection
+method close() class hdbcSQLTConnection
 
    ::pDb := nil
 
    return nil
 
-method startTransaction() class TSQLTConnection
+method startTransaction() class hdbcSQLTConnection
 
    if sqlite3_exec( ::pDB, "BEGIN TRANSACTION" ) != SQLITE_OK
       raiseError( sqlite3_errmsg( ::pDb ) )
@@ -110,7 +110,7 @@ method startTransaction() class TSQLTConnection
    return nil
 
 
-method commit() class TSQLTConnection
+method commit() class hdbcSQLTConnection
 
    if sqlite3_exec( ::pDB, "COMMIT" ) != SQLITE_OK
       raiseError( sqlite3_errmsg( ::pDb ) )
@@ -118,7 +118,7 @@ method commit() class TSQLTConnection
 
    return nil
 
-method rollback() class TSQLTConnection
+method rollback() class hdbcSQLTConnection
 
    if sqlite3_exec( ::pDB, "ROLLBACK" ) != SQLITE_OK
       raiseError( sqlite3_errmsg( ::pDb ) )
@@ -126,19 +126,19 @@ method rollback() class TSQLTConnection
 
    return nil
 
-method createStatement() class TSQLTConnection
+method createStatement() class hdbcSQLTConnection
 
-   return TSQLTStatement():new( ::pDB )
+   return hdbcSQLTStatement():new( ::pDB )
 
-method prepareStatement( cSql ) class TSQLTConnection
+method prepareStatement( cSql ) class hdbcSQLTConnection
 
-   return TSQLTPreparedStatement():new( ::pDB, cSql )
+   return hdbcSQLTPreparedStatement():new( ::pDB, cSql )
 
-method getMetadata() class TSQLTConnection
+method getMetadata() class hdbcSQLTConnection
 
-   return TSQLTDatabaseMetaData():new( ::pDB )
+   return hdbcSQLTDatabaseMetaData():new( ::pDB )
 
-create class TSQLTStatement
+create class hdbcSQLTStatement
 
    PROTECTED:
 
@@ -157,26 +157,26 @@ create class TSQLTStatement
 
 endclass
 
-method new( pDB, cSql ) class TSQLTStatement
+method new( pDB, cSql ) class hdbcSQLTStatement
 
    ::pDB      := pDB
    ::cSql     := cSql
 
    return self
 
-method executeQuery( cSql ) class TSQLTStatement
+method executeQuery( cSql ) class hdbcSQLTStatement
 
    ::pRes := sqlite3_prepare( ::pDB, cSql )
 
    if ! hb_isPointer( ::pRes )
       raiseError( sqlite3_errmsg( ::pDb ) )
    else
-      ::oRs := TSQLTResultSet():new( ::pDB, Self )
+      ::oRs := hdbcSQLTResultSet():new( ::pDB, Self )
    endif
 
    return ::oRs
 
-method executeUpdate( cSql ) class TSQLTStatement
+method executeUpdate( cSql ) class hdbcSQLTStatement
 
    Local nRows
 
@@ -188,7 +188,7 @@ method executeUpdate( cSql ) class TSQLTStatement
 
    return nRows
 
-method Close() class TSQLTStatement
+method Close() class hdbcSQLTStatement
 
    if !ISNIL( ::pRes )
 
@@ -200,7 +200,7 @@ method Close() class TSQLTStatement
 
    return nil
 
-create class TSQLTPreparedStatement
+create class hdbcSQLTPreparedStatement
 
    PROTECTED:
 
@@ -228,14 +228,14 @@ create class TSQLTPreparedStatement
 
 endclass
 
-method new( pDB, cSql ) class TSQLTPreparedStatement
+method new( pDB, cSql ) class hdbcSQLTPreparedStatement
 
    ::pDB      := pDB
    ::cSql     := cSql
 
    return self
 
-method executeQuery() class TSQLTPreparedStatement
+method executeQuery() class hdbcSQLTPreparedStatement
 
    if !::lPrepared
       ::aParams := asize( ::aParams, ::nParams )
@@ -248,7 +248,7 @@ method executeQuery() class TSQLTPreparedStatement
 
    return _TODO_
 
-method executeUpdate() class TSQLTPreparedStatement
+method executeUpdate() class hdbcSQLTPreparedStatement
 
    if !::lPrepared
       ::aParams := asize( ::aParams, ::nParams )
@@ -261,7 +261,7 @@ method executeUpdate() class TSQLTPreparedStatement
 
    return _TODO_
 
-method setString( nParam, xValue ) class TSQLTPreparedStatement
+method setString( nParam, xValue ) class hdbcSQLTPreparedStatement
 
    ::aParams[ nParam ] := xValue
 
@@ -273,7 +273,7 @@ method setString( nParam, xValue ) class TSQLTPreparedStatement
 
    return nil
 
-method Close() class TSQLTPreparedStatement
+method Close() class hdbcSQLTPreparedStatement
 
    if ! Empty( ::pRes )
 
@@ -285,7 +285,7 @@ method Close() class TSQLTPreparedStatement
 
    return nil
 
-create class TSQLTResultSet
+create class hdbcSQLTResultSet
 
    PROTECTED:
 
@@ -353,7 +353,7 @@ create class TSQLTResultSet
 
 endclass
 
-method new( pDB, pStmt ) class TSQLTResultSet
+method new( pDB, pStmt ) class hdbcSQLTResultSet
 
    ::pDB      := pDB
    ::pStmt    := pStmt
@@ -369,11 +369,11 @@ method new( pDB, pStmt ) class TSQLTResultSet
 
    return Self
 
-method Close() class TSQLTResultSet
+method Close() class hdbcSQLTResultSet
 
    return nil
 
-method beforeFirst() class TSQLTResultSet
+method beforeFirst() class hdbcSQLTResultSet
 
    ::nRow := 0
    ::lBeforeFirst := .T.
@@ -381,7 +381,7 @@ method beforeFirst() class TSQLTResultSet
 
    return nil
 
-method afterLast() class TSQLTResultSet
+method afterLast() class hdbcSQLTResultSet
 
    ::nRow := ::nRows + 1
    ::lBeforeFirst := .F.
@@ -389,7 +389,7 @@ method afterLast() class TSQLTResultSet
 
    return nil
 
-method relative( nMove ) class TSQLTResultSet
+method relative( nMove ) class hdbcSQLTResultSet
 
    Local nRowNew := ::nRow + nMove
 
@@ -415,7 +415,7 @@ method relative( nMove ) class TSQLTResultSet
 
    return .F.
 
-method absolute( nMove ) class TSQLTResultSet
+method absolute( nMove ) class hdbcSQLTResultSet
 
    if nMove > 0
       if nMove <= ::nRows
@@ -435,7 +435,7 @@ method absolute( nMove ) class TSQLTResultSet
 
    return .F.
 
-method findColumn( cField ) class TSQLTResultSet
+method findColumn( cField ) class hdbcSQLTResultSet
 
    Local nCount
    Local nMax
@@ -452,7 +452,7 @@ method findColumn( cField ) class TSQLTResultSet
 
    return nCount
 
-method getString( nField ) class TSQLTResultSet
+method getString( nField ) class hdbcSQLTResultSet
 
    if ISCHARACTER( nField )
       nField := ::findColumn( nField )
@@ -460,11 +460,11 @@ method getString( nField ) class TSQLTResultSet
 
    return sqlite3_column_text( ::pRes, nField )
 
-method getMetaData() class TSQLTResultSet
+method getMetaData() class hdbcSQLTResultSet
 
-   return TSQLTResultSetMetaData():new( ::pRes )
+   return hdbcSQLTResultSetMetaData():new( ::pRes )
 
-method moveToInsertRow() class TSQLTResultSet
+method moveToInsertRow() class hdbcSQLTResultSet
 
    ::nCurrentRow := ::nRow
 
@@ -472,13 +472,13 @@ method moveToInsertRow() class TSQLTResultSet
 
    return nil
 
-method moveToCurrentRow() class TSQLTResultSet
+method moveToCurrentRow() class hdbcSQLTResultSet
 
    ::nRow := ::nCurrentRow
 
    return nil
 
-method updateBuffer( nField, xValue, cType ) class TSQLTResultSet
+method updateBuffer( nField, xValue, cType ) class hdbcSQLTResultSet
 
    if ISCHARACTER( nField )
       nField := ::findColumn( nField )
@@ -492,25 +492,25 @@ method updateBuffer( nField, xValue, cType ) class TSQLTResultSet
 
    return nil
 
-method insertRow() class TSQLTResultSet
+method insertRow() class hdbcSQLTResultSet
 
    /* TODO */
 
    return nil
 
-method updateRow() class TSQLTResultSet
+method updateRow() class hdbcSQLTResultSet
 
    /* TODO */
 
    return nil
 
-method deleteRow() class TSQLTResultSet
+method deleteRow() class hdbcSQLTResultSet
 
    /* TODO */
 
    return nil
 
-create class TSQLTResultSetMetaData
+create class hdbcSQLTResultSetMetaData
 
    PROTECTED:
 
@@ -525,27 +525,27 @@ create class TSQLTResultSetMetaData
 
 endclass
 
-method new( pRes ) class TSQLTResultSetMetaData
+method new( pRes ) class hdbcSQLTResultSetMetaData
 
    ::pRes := pRes
 
    return Self
 
-method getColumnCount() class TSQLTResultSetMetaData
+method getColumnCount() class hdbcSQLTResultSetMetaData
 
    return sqlite3_column_count( ::pRes )
 
-method getColumnName( nColumn ) class TSQLTResultSetMetaData
+method getColumnName( nColumn ) class hdbcSQLTResultSetMetaData
 
    return sqlite3_column_name( ::pRes, nColumn )
 
-method getColumnDisplaySize( nColumn ) class TSQLTResultSetMetaData
+method getColumnDisplaySize( nColumn ) class hdbcSQLTResultSetMetaData
 
    HB_SYMBOL_UNUSED( nColumn )
 
    return _TODO_
 
-create class TSQLTDatabaseMetaData
+create class hdbcSQLTDatabaseMetaData
 
    PROTECTED:
 
@@ -559,19 +559,19 @@ create class TSQLTDatabaseMetaData
 
 endclass
 
-method new( pDB ) class TSQLTDatabaseMetaData
+method new( pDB ) class hdbcSQLTDatabaseMetaData
 
    ::pDB := pDB
 
    return Self
 
-method getTables() class TSQLTDatabaseMetaData
+method getTables() class hdbcSQLTDatabaseMetaData
 
    /* TODO */
 
    return _TODO_
 
-method getPrimaryKeys() class TSQLTDatabaseMetaData
+method getPrimaryKeys() class hdbcSQLTDatabaseMetaData
 
    /* TODO */
 

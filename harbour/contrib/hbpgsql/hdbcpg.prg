@@ -57,7 +57,7 @@
 #include "error.ch"
 #include "postgres.ch"
 
-create class TPGConnection
+create class hdbcPGConnection
 
    PROTECTED:
 
@@ -83,7 +83,7 @@ create class TPGConnection
 
 endclass
 
-method new( cHost, cDatabase, cUser, cPass, nPort ) class TPGConnection
+method new( cHost, cDatabase, cUser, cPass, nPort ) class hdbcPGConnection
 
    DEFAULT nPort TO 5432
 
@@ -95,13 +95,13 @@ method new( cHost, cDatabase, cUser, cPass, nPort ) class TPGConnection
 
    return Self
 
-method close() class TPGConnection
+method close() class hdbcPGConnection
 
    PQClose( ::pDb )
 
    return nil
 
-method startTransaction() class TPGConnection
+method startTransaction() class hdbcPGConnection
 
    Local pRes    := PQexec( ::pDB, "BEGIN" )
 
@@ -114,7 +114,7 @@ method startTransaction() class TPGConnection
    return nil
 
 
-method commit() class TPGConnection
+method commit() class hdbcPGConnection
 
    Local pRes    := PQexec( ::pDB, "COMMIT" )
 
@@ -126,7 +126,7 @@ method commit() class TPGConnection
 
    return nil
 
-method rollback() class TPGConnection
+method rollback() class hdbcPGConnection
 
    Local pRes := PQexec( ::pDB, "ROLLBACK" )
 
@@ -138,19 +138,19 @@ method rollback() class TPGConnection
 
    return nil
 
-method createStatement() class TPGConnection
+method createStatement() class hdbcPGConnection
 
-   return TPGStatement():new( ::pDB )
+   return hdbcPGStatement():new( ::pDB )
 
-method prepareStatement( cSql ) class TPGConnection
+method prepareStatement( cSql ) class hdbcPGConnection
 
-   return TPGPreparedStatement():new( ::pDB, cSql )
+   return hdbcPGPreparedStatement():new( ::pDB, cSql )
 
-method getMetadata() class TPGConnection
+method getMetadata() class hdbcPGConnection
 
-   return TPGDatabaseMetaData():new( ::pDB )
+   return hdbcPGDatabaseMetaData():new( ::pDB )
 
-create class TPGStatement
+create class hdbcPGStatement
 
    PROTECTED:
 
@@ -169,26 +169,26 @@ create class TPGStatement
 
 endclass
 
-method new( pDB, cSql ) class TPGStatement
+method new( pDB, cSql ) class hdbcPGStatement
 
    ::pDB      := pDB
    ::cSql     := cSql
 
    return self
 
-method executeQuery( cSql ) class TPGStatement
+method executeQuery( cSql ) class hdbcPGStatement
 
    ::pRes := PQexec( ::pDB, cSql )
 
    if PQresultstatus( ::pRes ) != PGRES_TUPLES_OK
       raiseError( PQresultErrormessage( ::pRes ) )
    else
-      ::oRs := TPGResultSet():new( ::pDB, Self )
+      ::oRs := hdbcPGResultSet():new( ::pDB, Self )
    endif
 
    return ::oRs
 
-method executeUpdate( cSql ) class TPGStatement
+method executeUpdate( cSql ) class hdbcPGStatement
 
    Local nRows
 
@@ -202,7 +202,7 @@ method executeUpdate( cSql ) class TPGStatement
 
    return nRows
 
-method Close() class TPGStatement
+method Close() class hdbcPGStatement
 
    if !ISNIL( ::pRes )
 
@@ -214,7 +214,7 @@ method Close() class TPGStatement
 
    return nil
 
-create class TPGPreparedStatement
+create class hdbcPGPreparedStatement
 
    PROTECTED:
 
@@ -242,14 +242,14 @@ create class TPGPreparedStatement
 
 endclass
 
-method new( pDB, cSql ) class TPGPreparedStatement
+method new( pDB, cSql ) class hdbcPGPreparedStatement
 
    ::pDB      := pDB
    ::cSql     := cSql
 
    return self
 
-method executeQuery() class TPGPreparedStatement
+method executeQuery() class hdbcPGPreparedStatement
 
    Local pRes
 
@@ -269,14 +269,14 @@ method executeQuery() class TPGPreparedStatement
       if PQresultstatus( ::pRes ) != PGRES_COMMAND_OK .and. PQresultstatus( ::pRes ) != PGRES_TUPLES_OK
          raiseError( PQresultErrormessage( ::pRes ) )
       else
-         ::oRs := TPGResultSet():new( ::pDB, Self )
+         ::oRs := hdbcPGResultSet():new( ::pDB, Self )
          ::aParams := array( ::nParams )
       endif
    endif
 
    return ::oRs
 
-method executeUpdate() class TPGPreparedStatement
+method executeUpdate() class hdbcPGPreparedStatement
 
    Local nRows
 
@@ -303,7 +303,7 @@ method executeUpdate() class TPGPreparedStatement
 
    return nRows
 
-method setString( nParam, xValue ) class TPGPreparedStatement
+method setString( nParam, xValue ) class hdbcPGPreparedStatement
 
    ::aParams[ nParam ] := xValue
 
@@ -315,7 +315,7 @@ method setString( nParam, xValue ) class TPGPreparedStatement
 
    return nil
 
-method Close() class TPGPreparedStatement
+method Close() class hdbcPGPreparedStatement
 
    if !ISNIL( ::pRes )
 
@@ -333,7 +333,7 @@ method Close() class TPGPreparedStatement
 
    return nil
 
-create class TPGResultSet
+create class hdbcPGResultSet
 
    PROTECTED:
 
@@ -400,7 +400,7 @@ create class TPGResultSet
 
 endclass
 
-method new( pDB, pStmt ) class TPGResultSet
+method new( pDB, pStmt ) class hdbcPGResultSet
 
    ::pDB      := pDB
    ::pStmt    := pStmt
@@ -416,11 +416,11 @@ method new( pDB, pStmt ) class TPGResultSet
 
    return Self
 
-method Close() class TPGResultSet
+method Close() class hdbcPGResultSet
 
    return nil
 
-method beforeFirst() class TPGResultSet
+method beforeFirst() class hdbcPGResultSet
 
    ::nRow := 0
    ::lBeforeFirst := .T.
@@ -428,7 +428,7 @@ method beforeFirst() class TPGResultSet
 
    return nil
 
-method afterLast() class TPGResultSet
+method afterLast() class hdbcPGResultSet
 
    ::nRow := ::nRows + 1
    ::lBeforeFirst := .F.
@@ -436,7 +436,7 @@ method afterLast() class TPGResultSet
 
    return nil
 
-method relative( nMove ) class TPGResultSet
+method relative( nMove ) class hdbcPGResultSet
 
    Local nRowNew := ::nRow + nMove
 
@@ -462,7 +462,7 @@ method relative( nMove ) class TPGResultSet
 
    return .F.
 
-method absolute( nMove ) class TPGResultSet
+method absolute( nMove ) class hdbcPGResultSet
 
    if nMove > 0
       if nMove <= ::nRows
@@ -482,11 +482,11 @@ method absolute( nMove ) class TPGResultSet
 
    return .F.
 
-method findColumn( cField ) class TPGResultSet
+method findColumn( cField ) class hdbcPGResultSet
 
    return PQFNumber( ::pRes, cField )
 
-method getString( nField ) class TPGResultSet
+method getString( nField ) class hdbcPGResultSet
 
    if ISCHARACTER( nField )
       nField := PQFNumber( ::pRes, nField )
@@ -494,11 +494,11 @@ method getString( nField ) class TPGResultSet
 
    return PQgetvalue( ::pRes, ::nRow, nField )
 
-method getMetaData() class TPGResultSet
+method getMetaData() class hdbcPGResultSet
 
-   return TPGResultSetMetaData():new( ::pRes )
+   return hdbcPGResultSetMetaData():new( ::pRes )
 
-method moveToInsertRow() class TPGResultSet
+method moveToInsertRow() class hdbcPGResultSet
 
    ::nCurrentRow := ::nRow
 
@@ -506,13 +506,13 @@ method moveToInsertRow() class TPGResultSet
 
    return nil
 
-method moveToCurrentRow() class TPGResultSet
+method moveToCurrentRow() class hdbcPGResultSet
 
    ::nRow := ::nCurrentRow
 
    return nil
 
-method updateBuffer( nField, xValue, cType ) class TPGResultSet
+method updateBuffer( nField, xValue, cType ) class hdbcPGResultSet
 
    if ISCHARACTER( nField )
       nField := ::findColumn( nField )
@@ -526,7 +526,7 @@ method updateBuffer( nField, xValue, cType ) class TPGResultSet
 
    return nil
 
-method insertRow() class TPGResultSet
+method insertRow() class hdbcPGResultSet
 
    local pRes := ::pRes
    local aBuffer := ::aBuffer
@@ -564,7 +564,7 @@ method insertRow() class TPGResultSet
 
    return nil
 
-method updateRow() class TPGResultSet
+method updateRow() class hdbcPGResultSet
 
    local pRes := ::pRes
    local aBuffer := ::aBuffer
@@ -601,7 +601,7 @@ method updateRow() class TPGResultSet
 
    return nil
 
-method deleteRow() class TPGResultSet
+method deleteRow() class hdbcPGResultSet
 
    local pRes
    local aKeys := ::aPrimaryKeys
@@ -629,7 +629,7 @@ method deleteRow() class TPGResultSet
 
    return nil
 
-create class TPGResultSetMetaData
+create class hdbcPGResultSetMetaData
 
    PROTECTED:
 
@@ -644,25 +644,25 @@ create class TPGResultSetMetaData
 
 endclass
 
-method new( pRes ) class TPGResultSetMetaData
+method new( pRes ) class hdbcPGResultSetMetaData
 
    ::pRes := pRes
 
    return Self
 
-method getColumnCount() class TPGResultSetMetaData
+method getColumnCount() class hdbcPGResultSetMetaData
 
    return PQnfields( ::pRes )
 
-method getColumnName( nColumn ) class TPGResultSetMetaData
+method getColumnName( nColumn ) class hdbcPGResultSetMetaData
 
    return PQfname( ::pRes, nColumn )
 
-method getColumnDisplaySize( nColumn ) class TPGResultSetMetaData
+method getColumnDisplaySize( nColumn ) class hdbcPGResultSetMetaData
 
    return PQfsize( ::pRes, nColumn )
 
-create class TPGDatabaseMetaData
+create class hdbcPGDatabaseMetaData
 
    PROTECTED:
 
@@ -676,13 +676,13 @@ create class TPGDatabaseMetaData
 
 endclass
 
-method new( pDB ) class TPGDatabaseMetaData
+method new( pDB ) class hdbcPGDatabaseMetaData
 
    ::pDB := pDB
 
    return Self
 
-method getTables( cCatalog, cSchema, cTableName, cTableType ) class TPGDatabaseMetaData
+method getTables( cCatalog, cSchema, cTableName, cTableType ) class hdbcPGDatabaseMetaData
 
    Local n, nTables
    Local aTables := {}
@@ -714,7 +714,7 @@ method getTables( cCatalog, cSchema, cTableName, cTableType ) class TPGDatabaseM
 
    return aTables
 
-method getPrimaryKeys( cCatalog, cSchema, cTableName ) class TPGDatabaseMetaData
+method getPrimaryKeys( cCatalog, cSchema, cTableName ) class hdbcPGDatabaseMetaData
 
    Local pRes
    Local cQuery
