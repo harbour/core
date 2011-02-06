@@ -80,7 +80,7 @@ REQUEST HB_GT_STD
 #define HB_LINE_LEN    256
 #define HB_PROMPT      "."
 
-STATIC s_nRow := 2
+STATIC s_nRow
 STATIC s_nCol := 0
 STATIC s_aCompOptions := {}
 STATIC s_aHistory := {}
@@ -279,6 +279,16 @@ EXIT PROCEDURE hbrun_exit()
 
    RETURN
 
+STATIC FUNCTION hbrun_extensionlist()
+   STATIC s_aList
+
+   IF s_aList == NIL
+      s_aList := iif( Type( "__HBRUN_EXTENSIONS()" ) == "UI", &("__hbrun_extensions()"), {} )
+      ASort( s_aList )
+   ENDIF
+
+   RETURN s_aList
+
 STATIC FUNCTION hbrun_FileSig( cFile )
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
@@ -332,6 +342,8 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
+
+   s_nRow := 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 )
 
    DO WHILE .T.
 
@@ -400,7 +412,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
       hbrun_Exec( cCommand )
 
       IF s_nRow >= MaxRow()
-         Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
+         Scroll( 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
          s_nRow := MaxRow() - 1
       ENDIF
 
@@ -448,8 +460,24 @@ STATIC PROCEDURE hbrun_Info( cCommand )
    IF s_lPreserveHistory
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
+   IF ! Empty( hbrun_extensionlist() )
+      hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbrun_extensionlist() ), MaxCol() + 1 ), "W/B" )
+   ENDIF
 
    RETURN
+
+STATIC FUNCTION ArrayToList( array )
+   LOCAL cString := ""
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( array )
+      cString += array[ tmp ]
+      IF tmp < Len( array )
+         cString += ", "
+      ENDIF
+   NEXT
+
+   RETURN cString
 
 /* ********************************************************************** */
 
@@ -481,7 +509,7 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
 /* ********************************************************************** */
 
 STATIC PROCEDURE hbrun_Exec( cCommand )
-   LOCAL pHRB, cHRB, cFunc, bBlock, cEol
+   LOCAL pHRB, cHRB, cFunc, bBlock, cEol, nRowMin
 
    cEol := hb_eol()
    cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
@@ -503,8 +531,9 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
             Eval( bBlock )
             s_nRow := Row()
             s_nCol := Col()
-            IF s_nRow < 2
-               s_nRow := 2
+            nRowMin := 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 )
+            IF s_nRow < nRowMin
+               s_nRow := nRowMin
             ENDIF
          ENDIF
       ENDIF

@@ -50,15 +50,20 @@
  *
  */
 
-ANNOUNCE __HBRUN__PULLEXT
+FUNCTION __hbrun_extensions()
+   LOCAL aList := {}
 
-REQUEST __HBEXTERN__HBCT__
-REQUEST __HBEXTERN__HBEXPAT__
-REQUEST __HBEXTERN__HBMEMIO__
-REQUEST __HBEXTERN__HBMZIP__
-#if defined( __PLATFORM__UNIX )
-REQUEST __HBEXTERN__HBUNIX__
-#endif
-#if defined( __PLATFORM__WINDOWS )
-REQUEST __HBEXTERN__HBWIN__
-#endif
+   #xtranslate PULLEXT <cName> => REQUEST __HBEXTERN__<cName>__ ; AAdd( aList, Lower( <"cName"> ) )
+
+   PULLEXT hbct
+   PULLEXT hbexpat
+   PULLEXT hbmemio
+   PULLEXT hbmzip
+   #if defined( __PLATFORM__UNIX )
+      PULLEXT hbunix
+   #endif
+   #if defined( __PLATFORM__WINDOWS )
+      PULLEXT hbwin
+   #endif
+
+   RETURN aList

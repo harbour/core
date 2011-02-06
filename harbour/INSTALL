@@ -1554,7 +1554,7 @@ HARBOUR
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
-         http://www.bgnett.no/~giva/
+         http://home.broadpark.no/~gvanem/
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
          http://www.zlib.net/
       HB_WITH_XDIFF - libxdiff (file differences/patches) [multiplatform, free, open-source]
