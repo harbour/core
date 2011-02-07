@@ -4,6 +4,6 @@
 
 hbcurl.hbm
 
--stop{!allwin}
+-stop{!allwin|hbdyn}
 
 -cflag=-DCURL_STATICLIB
