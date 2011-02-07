@@ -44,7 +44,7 @@ PROCEDURE Main( ... )
       Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
       Empty( GetEnvC( "HB_HOST_BIN_DIR" ) )
 
-      OutStd( "! Error: This program has to be called from the GNU Make process." + hb_eol() )
+      OutStd( "! Error: This script has to be called from the GNU Make process." + hb_eol() )
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -603,10 +603,11 @@ STATIC FUNCTION GetEnvC( cEnvVar )
 
 STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL aExtern := NIL
+   LOCAL hExtern
 
    LOCAL cStdOut, cStdErr
    LOCAL cTempFile
-   LOCAL hRegex
+   LOCAL pRegex
    LOCAL aResult
    LOCAL tmp
 
@@ -642,11 +643,16 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
             IF ! Empty( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF
-            IF ! Empty( hRegex := hb_regexComp( cRegex, .T., .T. ) )
-               aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
+            IF ! Empty( pRegex := hb_regexComp( cRegex, .T., .T. ) )
+               aResult := hb_regexAll( pRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
                aExtern := {}
+               hExtern := { => }
                FOR EACH tmp IN aResult
-                  AAdd( aExtern, tmp[ 2 ] )
+                  tmp[ 2 ] := hb_asciiUpper( tmp[ 2 ] )
+                  IF !( tmp[ 2 ] $ hExtern )
+                     AAdd( aExtern, tmp[ 2 ] )
+                     hExtern[ tmp[ 2 ] ] := NIL
+                  ENDIF
                NEXT
                ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
             ENDIF
@@ -661,20 +667,20 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
 STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
    LOCAL cFile
-   LOCAL hRegex
+   LOCAL pRegex
    LOCAL tmp
 
    aInclude := {}
    aExclude := {}
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
-         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF
-      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
-         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF

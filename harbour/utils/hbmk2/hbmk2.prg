@@ -2896,7 +2896,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF Empty( FNameExtGet( cParam ) )
             cParam := FNameExtSet( cParam, ".prg" )
          ELSEIF FNameExtGet( cParamL ) == ".hbx"
-            AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D__HBEXTREQ__" )
+            IF hb_FileExists( cParam )
+               AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D__HBEXTREQ__" )
+               AAdd( hbmk[ _HBMK_aPRG ], cParam )
+            ENDIF
+            LOOP
          ENDIF
          AAdd( hbmk[ _HBMK_aPRG ], cParam )
          DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
@@ -6821,7 +6825,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    LOCAL cDependency
    LOCAL aCommand
 
-   STATIC s_hRegexInclude := NIL
+   STATIC s_pRegexInclude := NIL
    STATIC s_hExclStd := NIL
 
    IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
@@ -6951,7 +6955,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 #define _HBMK_HEADER_LEN_           2
 
 STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
-   STATIC s_hRegexInclude
+   STATIC s_pRegexInclude
    STATIC s_hExclStd
 
    LOCAL aDeps
@@ -6965,23 +6969,23 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
          http://en.wikipedia.org/wiki/PCRE
          http://www.pcre.org/pcre.txt */
 
-   IF s_hRegexInclude == NIL
-      s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'|`.+?'"+')',;
+   IF s_pRegexInclude == NIL
+      s_pRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'|`.+?'"+')',;
          .F. /* lCaseSensitive */,;
          .T. /* lNewLine */ )
-      IF Empty( s_hRegexInclude )
+      IF Empty( s_pRegexInclude )
          hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
-         s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
+         s_pRegexInclude := 0 /* To show the error only once by setting to non-NIL empty value */
       ENDIF
    ENDIF
 
    aDeps := {}
-   IF ! Empty( s_hRegexInclude )
+   IF ! Empty( s_pRegexInclude )
 
       cFileBody := MemoRead( cFile )
 
       IF ! Empty( cFileBody )
-         FOR EACH tmp IN hb_regexAll( s_hRegexInclude, cFileBody, ;
+         FOR EACH tmp IN hb_regexAll( s_pRegexInclude, cFileBody, ;
                                       NIL /* lCaseSensitive */, ;
                                       NIL /* lNewLine */, NIL, ;
                                       NIL /* nGetMatch */, ;
@@ -11278,10 +11282,11 @@ STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_R
 
 STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex )
    LOCAL aExtern := NIL
+   LOCAL hExtern
 
    LOCAL cStdOut, cStdErr
    LOCAL cTempFile
-   LOCAL hRegex
+   LOCAL pRegex
    LOCAL aResult
    LOCAL tmp
 
@@ -11300,11 +11305,16 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             IF ! Empty( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF
-            IF ! Empty( hRegex := hb_regexComp( cLibHBX_Regex, .T., .T. ) )
-               aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
+            IF ! Empty( pRegex := hb_regexComp( cLibHBX_Regex, .T., .T. ) )
+               aResult := hb_regexAll( pRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
                aExtern := {}
+               hExtern := { => }
                FOR EACH tmp IN aResult
-                  AAdd( aExtern, tmp[ 2 ] )
+                  tmp[ 2 ] := hb_asciiUpper( tmp[ 2 ] )
+                  IF !( tmp[ 2 ] $ hExtern )
+                     AAdd( aExtern, tmp[ 2 ] )
+                     hExtern[ tmp[ 2 ] ] := NIL
+                  ENDIF
                NEXT
                ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
             ENDIF
@@ -11326,20 +11336,20 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 
 STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
    LOCAL cFile
-   LOCAL hRegex
+   LOCAL pRegex
    LOCAL tmp
 
    aInclude := {}
    aExclude := {}
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
-         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF
-      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
-         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF
