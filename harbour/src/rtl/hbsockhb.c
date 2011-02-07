@@ -84,6 +84,7 @@
  * HB_SOCKETSELECT( aRead, lSetRead, aWrite, lSetWrite, aExcep, lSetExcep, [ nTimeout = FOREVER ] ) --> nRet
  * HB_SOCKETRESOLVEINETADDR( cAddr, nPort ) --> aAddr | NIL
  * HB_SOCKETRESOLVEADDR( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> cResolved
+ * HB_SOCKETGETHOSTNAME( aAddr ) --> cHostName
  * HB_SOCKETGETHOSTS( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> aHosts
  * HB_SOCKETGETIFACES( [ nFamily ], [ lNoAliases ] ) --> aIfaces
  */
@@ -644,6 +645,24 @@ HB_FUNC( HB_SOCKETRESOLVEADDR )
       hb_retc_buffer( szAddr );
    else
       hb_retc( "" );
+}
+
+HB_FUNC( HB_SOCKETGETHOSTNAME )
+{
+   void * addr;
+   unsigned int len;
+
+   if( socketaddrParam( 1, &addr, &len ) )
+   {
+      char * szHostName = hb_socketGetHostName( addr, len );
+
+      if( addr )
+         hb_xfree( addr );
+      if( szHostName )
+         hb_retc_buffer( szHostName );
+      else
+         hb_retc_null();
+   }
 }
 
 HB_FUNC( HB_SOCKETGETHOSTS )

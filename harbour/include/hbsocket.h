@@ -82,6 +82,7 @@ extern HB_EXPORT HB_BOOL      hb_socketResolveInetAddr( void ** pSockAddr, unsig
 extern HB_EXPORT char *       hb_socketResolveAddr( const char * szAddr, int af );
 extern HB_EXPORT PHB_ITEM     hb_socketGetHosts( const char * szAddr, int af );
 extern HB_EXPORT PHB_ITEM     hb_socketGetAliases( const char * szAddr, int af );
+extern HB_EXPORT char *       hb_socketGetHostName( const void * pSockAddr, unsigned len );
 extern HB_EXPORT PHB_ITEM     hb_socketGetIFaces( int af, HB_BOOL fNoAliases );
 extern HB_EXPORT int          hb_socketAddrGetPort( const void * pSockAddr, unsigned len );
 extern HB_EXPORT HB_BOOL      hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pAddrItm );

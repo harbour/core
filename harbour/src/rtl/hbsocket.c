@@ -80,6 +80,9 @@
    platform supports getaddrinfo()/freeaddrinfo() functions:
       #define HB_HAS_ADDRINFO
 
+   platform supports getnameinfo() function:
+      #define HB_HAS_NAMEINFO
+
    platform uses sockaddr structure which contains sa_len member:
       #define HB_HAS_SOCKADDR_SA_LEN
 
@@ -122,6 +125,7 @@
 #     define HB_HAS_INET_NTOP
 #     define HB_HAS_SOCKADDR_STORAGE
 #     define HB_HAS_ADDRINFO
+#     define HB_HAS_NAMEINFO
 #  endif
 #  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS ) && !defined( HB_OS_MINIX )
 #     define HB_HAS_INET6
@@ -181,6 +185,7 @@
 #  define HB_HAS_INET_NTOP
 #  define HB_HAS_SOCKADDR_STORAGE
 #  define HB_HAS_ADDRINFO
+#  define HB_HAS_NAMEINFO
 #  define HB_HAS_INET6_ADDR_CONST
 /* #  define HB_HAS_INET6 */
 #endif
@@ -2743,7 +2748,10 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    return ret;
 }
 
-/* DNS functions */
+
+/*
+ * DNS functions
+ */
 HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const char * szAddr, int iPort )
 {
 #if defined( AF_INET )
@@ -3045,6 +3053,55 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    return NULL;
 }
 
+char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
+{
+   char * szResult = NULL;
+   int af = hb_socketGetAddrFamily( pSockAddr, len );
+
+   if( af != -1 )
+   {
+#if defined( HB_HAS_NAMEINFO )
+      #if !defined( NI_MAXHOST )
+         #define NI_MAXHOST      1025
+      #endif
+      char szHost[ NI_MAXHOST ];
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = getnameinfo( pSockAddr, len, szHost, NI_MAXHOST, NULL, 0, 0 );
+      hb_vmLock();
+      if( iResult == 0 )
+         szResult = hb_strdup( szHost );
+#else
+      struct hostent * he = NULL;
+
+      if( af == AF_INET )
+      {
+         const struct sockaddr_in * sa = ( const struct sockaddr_in * ) pSockAddr;
+         hb_vmUnlock();
+         he = gethostbyaddr( ( const char * ) &sa->sin_addr, sizeof( sa->sin_addr ), af );
+         hb_vmLock();
+      }
+#if defined( HB_HAS_INET6 )
+      else if( af == AF_INET6 )
+      {
+         const struct sockaddr_in6 * sa = ( const struct sockaddr_in6 * ) pSockAddr;
+         hb_vmUnlock();
+         he = gethostbyaddr( ( const char * ) &sa->sin6_addr, sizeof( sa->sin6_addr ), af );
+         hb_vmLock();
+      }
+#endif
+      if( he && he->h_name )
+         szResult = hb_strdup( he->h_name );
+#endif
+   }
+   return szResult;
+}
+
+
+/*
+ * IFACEs
+ */
 #if defined( HB_OS_WIN ) || ( defined( SIOCGIFCONF ) && \
     !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) )
 static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,

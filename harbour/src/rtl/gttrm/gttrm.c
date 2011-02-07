@@ -2776,7 +2776,7 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[f" }, /* kf20 */
       { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[g" }, /* kf21 */
       { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[h" }, /* kf22 */
-      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" }, /* kf23 */
+      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[i" }, /* kf23 */
       { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" }, /* kf24 */
 
       { EXKEY_F1 |KEY_CTRLMASK, "\033[k" },        /* kf25 */
