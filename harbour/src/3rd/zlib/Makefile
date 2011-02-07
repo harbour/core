@@ -11,6 +11,11 @@ LIBNAME := hbzlib
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
+# Ugly workaround to avoid fatal error when building for pocc64 (6.x)
+ifneq ($(HB_COMPILER),pocc64)
+   HB_CFLAGS_DYN := -DZLIB_DLL
+endif
+
 C_SOURCES := \
    adler32.c \
    compress.c \
@@ -32,9 +37,6 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    # To suppress new warnings in version 1.2.5
    ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin djgpp),)
       HB_CFLAGS += -DNO_VIZ
-   endif
-   ifeq ($(HB_COMPILER),bcc)
-      HB_CFLAGS_DYN += -DZLIB_DLL -DZLIB_INTERNAL
    endif
    include $(TOP)$(ROOT)config/lib.mk
 else

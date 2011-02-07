@@ -7,11 +7,10 @@
  * HB_BASE64DECODE() function
  *
  * Copyright 2011 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://harbour-project.org
- *
  * [ base64_decode_* functions are part of the libb64 project, and has
  *   been placed in the public domain. Author: Chris Venter
  *   For details, see http://sourceforge.net/projects/libb64 ]
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
