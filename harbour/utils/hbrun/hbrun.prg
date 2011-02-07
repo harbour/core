@@ -359,16 +359,16 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
       @ nMaxRow, Col() GET cLine ;
                        PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
 
-      SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+      SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
       bKeyIns  := SetKey( K_INS, ;
-         {|| SetCursor( IIF( ReadInsert( !ReadInsert() ), ;
+         {|| SetCursor( iif( ReadInsert( !ReadInsert() ), ;
                           SC_NORMAL, SC_INSERT ) ) } )
       bKeyUp   := SetKey( K_UP, ;
-         {|| IIF( nHistIndex > 1, ;
+         {|| iif( nHistIndex > 1, ;
                   cLine := s_aHistory[ --nHistIndex ], ) } )
       bKeyDown := SetKey( K_DOWN, ;
-         {|| cLine := IIF( nHistIndex < LEN( s_aHistory ), ;
+         {|| cLine := iif( nHistIndex < LEN( s_aHistory ), ;
              s_aHistory[ ++nHistIndex ], ;
              ( nHistIndex := LEN( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE,;

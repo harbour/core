@@ -352,14 +352,14 @@ STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
 
 STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
    LOCAL aArray := {;
-      "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ),;
-      "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ],;
-      "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ),;
-      "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ),;
-      "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) }
+      hb_StrFormat( "Listening on: %1$s:%2$d" , netiosrv[ _NETIOSRV_cIFAddr ], netiosrv[ _NETIOSRV_nPort] ),;
+      hb_StrFormat( "Root filesystem: %1$s"   , netiosrv[ _NETIOSRV_cRootDir ] ),;
+      hb_StrFormat( "RPC support: %1$s"       , iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ) ),;
+      hb_StrFormat( "Encryption: %1$s"        , iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ) ),;
+      hb_StrFormat( "RPC filter module: %1$s" , iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) ) }
 
    IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
-      AAdd( aArray, "Management iface: "  + netiomgm[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiomgm[ _NETIOSRV_nPort ] ) )
+      AAdd( aArray, hb_StrFormat( "Management iface: %1$s:%2$d", netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ] ) )
    ENDIF
 
    RETURN aArray
@@ -556,10 +556,10 @@ STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
 
 STATIC FUNCTION netiomgm_rpc_sysinfo()
    RETURN {;
-      "OS: "          + OS()                   ,;
-      "Harbour: "     + Version()              ,;
-      "C Compiler: "  + hb_Compiler()          ,;
-      "Memory (KB): " + hb_ntos( Memory( 0 ) ) }
+      hb_StrFormat( "OS: %1$s"          , OS() )                  ,;
+      hb_StrFormat( "Harbour: %1$s"     , Version() )             ,;
+      hb_StrFormat( "C Compiler: %1$s"  , hb_Compiler() )         ,;
+      hb_StrFormat( "Memory (KB): %1$d" , Memory( 0 ) )           }
 
 STATIC FUNCTION netiomgm_rpc_serverconfig( netiosrv, netiomgm )
    RETURN netiosrv_config( netiosrv, netiomgm )

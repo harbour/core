@@ -80,7 +80,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "clear"         => { ""               , "Clear screen."                                  , {|| Scroll(), SetPos( 0, 0 ) } },;
       "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort, @nStreamID ) } },;
       "disconnect"    => { ""               , "Disconnect."                                    , {|| cmdDisconnect( @pConnection ) } },;
-      "sysinfo"       => { ""               , "Show system/build information."                 , {|| cmdSysInfo( pConnection ) } },;
+      "sysinfo"       => { ""               , "Show server system/build information."          , {|| cmdSysInfo( pConnection ) } },;
       "showconf"      => { ""               , "Show server configuration."                     , {|| cmdServerConfig( pConnection ) } },;
       "show"          => { ""               , "Show list of connections."                      , {|| cmdConnInfo( pConnection, .F. ) } },;
       "showadmin"     => { ""               , "Show list of management connections."           , {|| cmdConnInfo( pConnection, .T. ) } },;
@@ -288,10 +288,12 @@ STATIC FUNCTION GetPassword()
 
 /* Adjusted the positioning of cursor on navigate through history. [vailtom] */
 STATIC PROCEDURE ManageCursor( cCommand )
+
    hb_keyPut( K_HOME )
    IF ! Empty( cCommand )
       hb_keyPut( K_END )
    ENDIF
+
    RETURN
 
 /* Complete the command line, based on the first characters that the user typed. [vailtom] */
