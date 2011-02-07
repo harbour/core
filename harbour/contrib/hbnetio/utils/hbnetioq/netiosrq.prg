@@ -60,8 +60,6 @@ PROCEDURE Main( ... )
    LOCAL nPort := _NETIOMGM_PORT_DEF
    LOCAL cPassword := ""
 
-   readINI( @cIP, @nPort, @cPassword )
-
    FOR EACH cParam IN { ... }
       DO CASE
       CASE Lower( Left( cParam, 6 ) ) == "-addr="
@@ -87,6 +85,8 @@ PROCEDURE Main( ... )
 
    RETURN
 
+/*----------------------------------------------------------------------*/
+
 PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
    LOCAL tmp
 
@@ -102,6 +102,8 @@ PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 
    RETURN
 
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION MyClientInfo()
    LOCAL hInfo := { => }
 
@@ -116,34 +118,7 @@ STATIC FUNCTION MyClientInfo()
    RETURN hInfo
 
 /*----------------------------------------------------------------------*/
-
-STATIC PROCEDURE readINI( /* @ */ cIP, /* @ */ nPort, /* @ */ cPassword )
-   LOCAL cBuffer, aTxt, s, n
-
-   cBuffer := hb_memoread( hb_ProgName() + ".config" )
-
-   IF ! empty( cBuffer )
-      aTxt := hb_atokens( strtran( cBuffer, chr( 13 ) ), chr( 10 ) )
-      FOR EACH s IN aTxt
-         s := alltrim( s )
-         IF left( lower( s ), 2 ) == "ip"
-            IF ( n := at( "=", s ) ) > 0
-               cIP := alltrim( substr( s, n + 1 ) )
-            ENDIF
-         ELSEIF left( lower( s ), 4 ) == "port"
-            IF ( n := at( "=", s ) ) > 0
-               nPort := hb_ntos( substr( s, n + 1 ) )
-            ENDIF
-         ELSEIF left( lower( s ), 8 ) == "password"
-            IF ( n := at( "=", s ) ) > 0
-               cPassword := alltrim( substr( s, n + 1 ) )
-            ENDIF
-         ENDIF
-      NEXT
-   ENDIF
-
-   RETURN
-
+//                           NetIOMgmtClient
 /*----------------------------------------------------------------------*/
 
 CLASS NetIOMgmtClient
@@ -158,6 +133,7 @@ CLASS NetIOMgmtClient
    DATA   lSystemTrayAvailable
    DATA   oSysMenu
    DATA   qTimer
+   DATA   qTimerRefresh
    DATA   qLayout
    DATA   qAct1
    DATA   qAct2
@@ -166,6 +142,7 @@ CLASS NetIOMgmtClient
    DATA   lQuit                                   INIT .f.
    DATA   nCurRec                                 INIT 1
    DATA   aIPs                                    INIT {}
+   DATA   nRefreshInterval                        INIT 10000
    DATA   aData                                   INIT { { NIL, ;                   // hSock
                                                            0  , ;                   // nSerial
                                                            .F., ;                   // lActive
@@ -200,6 +177,9 @@ CLASS NetIOMgmtClient
    METHOD recNo()
    METHOD goto( nRec )
    METHOD manageIPs()
+
+   /* Information retrieval from the daemon */
+   METHOD cmdConnInfo( lManagement )
 
    ENDCLASS
 
@@ -338,6 +318,9 @@ METHOD NetIOMgmtClient:execEvent( cEvent, p )
          ENDIF
       ENDIF
       EXIT
+   CASE "qTimerRefresh_timeOut"
+      ::cmdConnInfo( .f. )
+      EXIT
    CASE "qTimer_timeOut"
       ::oDlg:hide()
       ::oSys:setToolTip( "Connected to Harbour NetIO Server: " + ::oDlg:title )
@@ -473,6 +456,11 @@ METHOD NetIOMgmtClient:buildBrowser()
    ::buildColumns()
 
    ::oBrw:oWidget:show()
+
+   ::qTimerRefresh := QTimer()
+   ::qTimerRefresh:setInterval( ::nRefreshInterval )
+   ::qTimerRefresh:connect( "timeout()", {|| ::execEvent( "qTimerRefresh_timeOut" ) } )
+   ::qTimerRefresh:start()
 
    RETURN Self
 
@@ -685,9 +673,7 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 90                } )
    //
    oXbpColumn          := XbpColumn():new()
-   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := ::aData[ ::recNo(), DAT_BYTESIN ], ;
-                                 netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_BYTESRECEIVED, @n ) ), ;
-                                 ::aData[ ::recNo(), DAT_BYTESIN ] := n, str( n, 10, 0 ) }
+   oXbpColumn:dataLink   := {|| ::aData[ ::recNo(), DAT_BYTESIN ] }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
@@ -704,9 +690,7 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 90                } )
    //
    oXbpColumn            := XbpColumn():new()
-   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := ::aData[ ::recNo(), DAT_BYTESOUT ], ;
-                                 netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_BYTESSENT, @n ) ), ;
-                                 ::aData[ ::recNo(), DAT_BYTESOUT ] := n, str( n, 10, 0 ) }
+   oXbpColumn:dataLink   := {|| ::aData[ ::recNo(), DAT_BYTESOUT ] }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
@@ -723,8 +707,7 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 60                } )
    //
    oXbpColumn            := XbpColumn():new()
-   oXbpColumn:dataLink   := {|n| iif( empty( ::aData[ ::recNo(), DAT_CONNSOCKET ] ), n := 0, ;
-                                netio_srvStatus( ::aData[ ::recNo(), DAT_CONNSOCKET ], NETIO_SRVINFO_FILESCOUNT, @n ) ), str( n, 5, 0 ) }
+   oXbpColumn:dataLink   := {|| ::aData[ ::recNo(), DAT_OPENFILES ] }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
@@ -788,6 +771,41 @@ METHOD NetIOMgmtClient:buildSystemTray()
    ENDIF
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD NetIOMgmtClient:cmdConnInfo( lManagement )
+   LOCAL aArray
+   LOCAL hConn
+   LOCAL aData
+   LOCAL d_
+
+   IF Empty( ::pConnection )
+      MsgBox( "Not Connected" )
+   ELSE
+      aArray := netio_funcexec( ::pConnection, iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
+      IF ! empty( aArray )
+         aData := {}
+         FOR EACH hConn IN aArray
+            d_:= array( 10 )
+            d_[ DAT_CONNSOCKET ] := NIL
+            d_[ DAT_SERIAL     ] := hConn[ "nThreadID"      ]
+            d_[ DAT_ACTIVATED  ] := .t.
+            d_[ DAT_IP         ] := hConn[ "cAddressPeer"   ]
+            d_[ DAT_PORT       ] := 0
+            d_[ DAT_TIMEIN     ] := hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" )
+            d_[ DAT_TIMEOUT    ] := space( 17 )
+            d_[ DAT_BYTESIN    ] := hConn[ "nBytesReceived" ]
+            d_[ DAT_BYTESOUT   ] := hConn[ "nBytesSent"     ]
+            d_[ DAT_OPENFILES  ] := hConn[ "nFilesCount"    ]
+            aadd( aData, d_ )
+         NEXT
+         ::aData := aData
+         ::refresh()
+      ENDIF
+   ENDIF
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
