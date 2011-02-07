@@ -56,10 +56,11 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    LOCAL aNotification
 
-   SET DATE ANSI
-   SET CENTURY ON
-   SET CONFIRM ON
-   SET SCOREBOARD OFF
+   Set( _SET_CONFIRM, .F. )
+   Set( _SET_SCOREBOARD, .F. )
+
+   Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
+   Set( _SET_TIMEFORMAT, "HH:MM:SS" )
 
    SetCancel( .F. )
 
@@ -68,7 +69,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       QQOut( hb_eol() )
    ENDIF
 
-   QQOut( "Type a command or '?' for help.", hb_eol() )
+   hbnetiocon_ToConsole( "Type a command or '?' for help." )
 
    aHistory   := { "quit" }
    nHistIndex := Len( aHistory ) + 1
@@ -112,7 +113,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             netio_funcexec( pConnection, "hbnetiomgm_ping" )
          RECOVER
-            QQOut( "Connection lost.", hb_eol() )
+            hbnetiocon_ToConsole( "Connection lost." )
             EXIT
          END SEQUENCE
       ENDIF
@@ -166,7 +167,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       aNotification := netio_GetData( nStreamID )
       IF hb_isArray( aNotification )
          FOR EACH cMsg IN aNotification /* TODO: Protect against flood */
-            QQOut( "> message from server:", cMsg, hb_eol() )
+            hbnetiocon_ToConsole( hb_StrFormat( "> message from server: %1$s", cMsg ) )
          NEXT
       ENDIF
 
@@ -188,7 +189,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
          Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
       ELSE
-         QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
+         hbnetiocon_ToConsole( hb_StrFormat( "Error: Unknown command '%1$s'.", cCommand ) )
       ENDIF
    ENDDO
 
@@ -198,7 +199,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       pConnection := NIL
 
       IF lQuit
-         QQOut( "Connection closed.", hb_eol() )
+         hbnetiocon_ToConsole( "Connection closed." )
       ENDIF
    ENDIF
 
@@ -219,11 +220,15 @@ PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 
    RETURN
 
+STATIC PROCEDURE hbnetiocon_ToConsole( cText )
+   QQOut( cText + hb_eol() )
+   RETURN
+
 /* connect to server */
 STATIC FUNCTION ConnectLow( cIP, nPort, cPassword, /* @ */ nStreamID )
    LOCAL pConnection
 
-   QQOut( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ), hb_eol() )
+   hbnetiocon_ToConsole( hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ) )
 
    pConnection := netio_getconnection( cIP, nPort,, cPassword )
    cPassword := NIL
@@ -233,9 +238,9 @@ STATIC FUNCTION ConnectLow( cIP, nPort, cPassword, /* @ */ nStreamID )
       netio_funcexec( pConnection, "hbnetiomgm_setclientinfo", MyClientInfo() )
       nStreamID := netio_OpenItemStream( pConnection, "hbnetiomgm_regnotif", .T. )
 
-      QQOut( "Connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Connected." )
    ELSE
-      QQOut( "Error connecting server.", hb_eol() )
+      hbnetiocon_ToConsole( "Error connecting server." )
    ENDIF
 
    RETURN pConnection
@@ -283,7 +288,10 @@ STATIC FUNCTION GetPassword()
 
 /* Adjusted the positioning of cursor on navigate through history. [vailtom] */
 STATIC PROCEDURE ManageCursor( cCommand )
-   KEYBOARD Chr( K_HOME ) + iif( ! Empty( cCommand ), Chr( K_END ), "" )
+   hb_keyPut( K_HOME )
+   IF ! Empty( cCommand )
+      hb_keyPut( K_END )
+   ENDIF
    RETURN
 
 /* Complete the command line, based on the first characters that the user typed. [vailtom] */
@@ -388,7 +396,7 @@ STATIC PROCEDURE cmdHelp( hCommands )
    m := MaxRow()
 
    FOR EACH n IN aTexts
-      QQOut( n, hb_eol() )
+      hbnetiocon_ToConsole( n )
 
       IF ++c == m
          c := 0
@@ -426,7 +434,7 @@ STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */
 
       pConnection := ConnectLow( cIP, nPort, cPassword, @nStreamID )
    ELSE
-      QQOut( "Already connected. Disconnect first.", hb_eol() )
+      hbnetiocon_ToConsole( "Already connected. Disconnect first." )
    ENDIF
 
    RETURN
@@ -434,7 +442,7 @@ STATIC PROCEDURE cmdConnect( cCommand, /* @ */ pConnection, /* @ */ cIP, /* @ */
 STATIC PROCEDURE cmdDisconnect( /* @ */ pConnection )
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       pConnection := NIL
    ENDIF
@@ -445,10 +453,10 @@ STATIC PROCEDURE cmdSysInfo( pConnection )
    LOCAL cLine
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       FOR EACH cLine IN netio_funcexec( pConnection, "hbnetiomgm_sysinfo" )
-         QQOut( cLine, hb_eol() )
+         hbnetiocon_ToConsole( cLine )
       NEXT
    ENDIF
 
@@ -458,10 +466,10 @@ STATIC PROCEDURE cmdServerConfig( pConnection )
    LOCAL cLine
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       FOR EACH cLine IN netio_funcexec( pConnection, "hbnetiomgm_serverconfig" )
-         QQOut( cLine, hb_eol() )
+         hbnetiocon_ToConsole( cLine )
       NEXT
    ENDIF
 
@@ -471,13 +479,13 @@ STATIC PROCEDURE cmdConnStop( pConnection, cCommand )
    LOCAL aToken
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
          netio_funcexec( pConnection, "hbnetiomgm_stop", aToken[ 2 ] )
       ELSE
-         QQOut( "Error: Invalid syntax.", hb_eol() )
+         hbnetiocon_ToConsole( "Error: Invalid syntax." )
       ENDIF
    ENDIF
 
@@ -488,18 +496,18 @@ STATIC PROCEDURE cmdConnClientInfo( pConnection, cCommand )
    LOCAL xCargo
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
          xCargo := netio_funcexec( pConnection, "hbnetiomgm_clientinfo", aToken[ 2 ] )
          IF xCargo == NIL
-            QQOut( "No information", hb_eol() )
+            hbnetiocon_ToConsole( "No information" )
          ELSE
-            QQOut( XToStrX( xCargo ), hb_eol() )
+            hbnetiocon_ToConsole( hb_StrFormat( "%1$s", XToStrX( xCargo ) ) )
          ENDIF
       ELSE
-         QQOut( "Error: Invalid syntax.", hb_eol() )
+         hbnetiocon_ToConsole( "Error: Invalid syntax." )
       ENDIF
    ENDIF
 
@@ -510,21 +518,21 @@ STATIC PROCEDURE cmdConnInfo( pConnection, lManagement )
    LOCAL hConn
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       aArray := netio_funcexec( pConnection, iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
 
-      QQOut( "Number of connections: " + hb_ntos( Len( aArray ) ), hb_eol() )
+      hbnetiocon_ToConsole( hb_StrFormat( "Number of connections: %1$d", Len( aArray ) ) )
 
       FOR EACH hConn IN aArray
-         QQOut( "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
-                hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" ) + " " +;
-                PadR( hConn[ "cStatus" ], 12 ) + " " +;
-                "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
-                "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
-                "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
-                hConn[ "cAddressPeer" ] + " " +;
-                iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ), hb_eol() )
+         hbnetiocon_ToConsole( "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
+                               hb_TToC( hConn[ "tStart" ] ) + " " +;
+                               PadR( hConn[ "cStatus" ], 12 ) + " " +;
+                               "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
+                               "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
+                               "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
+                               hConn[ "cAddressPeer" ] + " " +;
+                               iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ) )
       NEXT
    ENDIF
 
@@ -533,7 +541,7 @@ STATIC PROCEDURE cmdConnInfo( pConnection, lManagement )
 STATIC PROCEDURE cmdShutdown( pConnection )
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       netio_funcexec( pConnection, "hbnetiomgm_shutdown" )
    ENDIF
@@ -543,7 +551,7 @@ STATIC PROCEDURE cmdShutdown( pConnection )
 STATIC PROCEDURE cmdConnEnable( pConnection, lValue )
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       netio_funcexec( pConnection, "hbnetiomgm_conn", lValue )
    ENDIF
@@ -553,7 +561,7 @@ STATIC PROCEDURE cmdConnEnable( pConnection, lValue )
 STATIC PROCEDURE cmdConnLogEnable( pConnection, lValue )
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       netio_funcexec( pConnection, "hbnetiomgm_logconn", lValue )
    ENDIF
@@ -564,17 +572,17 @@ STATIC PROCEDURE cmdConnFilterMod( pConnection, cCommand, cRPC )
    LOCAL aToken
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
          IF netio_funcexec( pConnection, cRPC, aToken[ 2 ] )
-            QQOut( "Done", hb_eol() )
+            hbnetiocon_ToConsole( "Done" )
          ELSE
-            QQOut( "Failed", hb_eol() )
+            hbnetiocon_ToConsole( "Failed" )
          ENDIF
       ELSE
-         QQOut( "Error: Invalid syntax.", hb_eol() )
+         hbnetiocon_ToConsole( "Error: Invalid syntax." )
       ENDIF
    ENDIF
 
@@ -585,13 +593,13 @@ STATIC PROCEDURE cmdConnFilters( pConnection, lManagement )
    LOCAL hFilter
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       aArray := netio_funcexec( pConnection, iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
 
       FOR EACH hFilter IN aArray
-         QQOut( hFilter[ "cType" ],;
-                hFilter[ "cAddress" ], hb_eol() )
+         hbnetiocon_ToConsole( hFilter[ "cType" ],;
+                               hFilter[ "cAddress" ] )
       NEXT
    ENDIF
 
@@ -600,7 +608,7 @@ STATIC PROCEDURE cmdConnFilters( pConnection, lManagement )
 STATIC PROCEDURE cmdConnFilterSave( pConnection )
 
    IF Empty( pConnection )
-      QQOut( "Not connected.", hb_eol() )
+      hbnetiocon_ToConsole( "Not connected." )
    ELSE
       netio_funcexec( pConnection, "hbnetiomgm_filtersave" )
    ENDIF

@@ -98,8 +98,8 @@ PROCEDURE Main( ... )
 
    LOCAL lUI := .T.
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy.mm.dd"   )
+   Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
 
    HB_Logo()
 
@@ -198,12 +198,12 @@ PROCEDURE Main( ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         OutStd( "Warning: Unkown parameter ignored: " + cParam + hb_eol() )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unkown command line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 
    IF netiosrv_ConfLoad( netiosrv, netiomgm )
-      OutStd( "Configuration loaded: " + netiosrv_ConfName() + hb_eol() )
+      netiosrv_LogEvent( hb_StrFormat( "Configuration loaded: %1$s", netiosrv_ConfName() ) )
    ENDIF
 
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
@@ -220,9 +220,9 @@ PROCEDURE Main( ... )
    cPassword := NIL
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
-      OutStd( "Cannot start server." + hb_eol() )
+      netiosrv_LogEvent( "Cannot start server." )
    ELSE
-      OutStd( "Ready to accept connections.", hb_eol() )
+      netiosrv_LogEvent( "Ready to accept connections." )
 
       IF ! Empty( cPasswordManagement )
 
@@ -261,7 +261,7 @@ PROCEDURE Main( ... )
                             {| pConnectionSocket | netiosrv_callback( netiomgm, netiomgm, pConnectionSocket, .T. ) } )
 
          IF Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
-            OutStd( "Warning: Cannot start server management." + hb_eol() )
+            netiosrv_LogEvent( "Warning: Cannot start server management." )
          ELSE
             IF lUI
                hb_threadDetach( hb_threadStart( {|| hbnetiocon_cmdUI( netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ], cPasswordManagement ) } ) )
@@ -290,10 +290,13 @@ PROCEDURE Main( ... )
          netiomgm[ _NETIOSRV_pListenSocket ] := NIL
       ENDIF
 
-      OutStd( hb_eol() )
-      OutStd( "Server stopped.", hb_eol() )
+      netiosrv_LogEvent( "Server stopped." )
    ENDIF
 
+   RETURN
+
+STATIC PROCEDURE netiosrv_LogEvent( cText )
+   QQOut( hb_TToC( hb_DateTime() ) + " " + cText + hb_eol() )
    RETURN
 
 #define _NETIOSRV_SIGNATURE "netiosrv"
@@ -306,8 +309,8 @@ STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
 
    hb_HKeepOrder( hConf, .T. )
 
-   hConf[ "signature" ]    := _NETIOSRV_SIGNATURE
-   hConf[ "version" ]      := 1
+   hConf[ "__signature" ]  := _NETIOSRV_SIGNATURE
+   hConf[ "__version" ]    := 1
    hConf[ "srv.showconn" ] := netiosrv[ _NETIOSRV_lShowConn ]
    hConf[ "srv.allow" ]    := netiosrv[ _NETIOSRV_hAllow ]
    hConf[ "srv.block" ]    := netiosrv[ _NETIOSRV_hBlock ]
@@ -321,8 +324,8 @@ STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
    LOCAL hConf := hb_Deserialize( hb_MemoRead( netiosrv_ConfName() ) )
 
    IF hb_isHash( hConf ) .AND. ;
-      "signature" $ hConf .AND. ;
-      hConf[ "signature" ] == _NETIOSRV_SIGNATURE
+      "__signature" $ hConf .AND. ;
+      hConf[ "__signature" ] == _NETIOSRV_SIGNATURE
 
       IF "srv.showconn" $ hConf
          netiosrv[ _NETIOSRV_lShowConn ] := hConf[ "srv.showconn" ]
@@ -417,7 +420,7 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF lBlocked
             IF ! lManagement
-               netiosrv_notifyclients( netiomgm, "Connection denied: " + cAddressPeer )
+               netiosrv_notifyclients( netiomgm, hb_StrFormat( "Connection denied: %1$s", cAddressPeer ) )
             ENDIF
             RETURN NIL
          ENDIF
@@ -436,17 +439,17 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxFilters ] )
          IF lBlocked
             IF ! lManagement
-               netiosrv_notifyclients( netiomgm, "Connection denied: " + cAddressPeer )
+               netiosrv_notifyclients( netiomgm, hb_StrFormat( "Connection denied: %1$s", cAddressPeer ) )
             ENDIF
             RETURN NIL
          ENDIF
       ENDIF
 
       IF netiosrv[ _NETIOSRV_lShowConn ]
-         QQOut( "Connecting (" + netiosrv[ _NETIOSRV_cName ] + "): " + cAddressPeer, hb_eol() )
+         netiosrv_LogEvent( hb_StrFormat( "Connecting (%1$s): %2$s", netiosrv[ _NETIOSRV_cName ], cAddressPeer ) )
       ENDIF
       IF ! lManagement
-         netiosrv_notifyclients( netiomgm, "Connecting: " + cAddressPeer )
+         netiosrv_notifyclients( netiomgm, hb_StrFormat( "Connecting: %1$s", cAddressPeer ) )
       ENDIF
 
       netiosrv_conn_register( netiosrv, pConnectionSocket )
@@ -459,10 +462,10 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
 
       netio_srvStatus( pConnectionSocket, NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
       IF netiosrv[ _NETIOSRV_lShowConn ]
-         QQOut( "Disconnected (" + netiosrv[ _NETIOSRV_cName ] + "): " + AddrToIPPort( aAddressPeer ), hb_eol() )
+         netiosrv_LogEvent( hb_StrFormat( "Disconnected (%1$s): %2$s", netiosrv[ _NETIOSRV_cName ], AddrToIPPort( aAddressPeer ) ) )
       ENDIF
       IF ! lManagement
-         netiosrv_notifyclients( netiomgm, "Diconnected: " + cAddressPeer )
+         netiosrv_notifyclients( netiomgm, hb_StrFormat( "Diconnected: %1$s", cAddressPeer ) )
       ENDIF
 
    ENDIF
@@ -595,7 +598,7 @@ STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
          netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
          IF cIPPort == "all" .OR. cIPPort == AddrToIPPort( aAddressPeer )
-            QQOut( "Stopping connection on " + AddrToIPPort( aAddressPeer ), hb_eol() )
+            netiosrv_LogEvent( hb_StrFormat( "Stopping connection on %1$s", AddrToIPPort( aAddressPeer ) ) )
             netio_serverStop( nconn[ _NETIOSRV_CONN_pConnection ], .T. )
          ENDIF
       NEXT
@@ -655,7 +658,7 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
 
 STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv )
 
-   QQOut( "Shutdown initiated...", hb_eol() )
+   netiosrv_LogEvent( "Shutdown initiated..." )
 
    netiosrv[ _NETIOSRV_lQuit ] := .T.
 
@@ -797,7 +800,7 @@ STATIC FUNCTION FileSig( cFile )
 
 STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
-   AEval( netiosrv_config( netiosrv, netiomgm ), {| tmp | QQOut( tmp, hb_eol() ) } )
+   AEval( netiosrv_config( netiosrv, netiomgm ), {| tmp | netiosrv_LogEvent( tmp ) } )
 
    RETURN
 
