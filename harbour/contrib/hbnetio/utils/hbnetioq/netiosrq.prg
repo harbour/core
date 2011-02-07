@@ -200,7 +200,7 @@ METHOD NetIOMgmtClient:create( cIP, nPort, cPassword )
       MsgBox( "Cannot connect to server." )
    ELSE
       netio_funcexec( ::pConnection, "hbnetiomgm_setclientinfo", MyClientInfo() )
-      netio_OpenItemStream( ::pConnection, "hbnetiomgm_cargo", "netiocqt" )
+      netio_OpenItemStream( ::pConnection, "hbnetiomgm_regnotif", .T. )
 
       QResource():registerResource_1( hbqtres_netiosrq(), ":/resource" )
 
@@ -239,6 +239,8 @@ METHOD NetIOMgmtClient:create( cIP, nPort, cPassword )
          nEvent := AppEvent( @mp1, @mp2, @oXbp )
          oXbp:handleEvent( nEvent, mp1, mp2 )
       ENDDO
+
+      netio_OpenItemStream( ::pConnection, "hbnetiomgm_regnotif", .F. )
 
       ::pConnection := NIL
 
