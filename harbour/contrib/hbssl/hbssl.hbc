@@ -6,12 +6,12 @@ incpaths=.
 
 skip={dos}
 
-{!HB_STATIC_OPENSSL}libs=${hb_name}${__HB_DYN__}
-{HB_STATIC_OPENSSL}libs=${hb_name}s${__HB_DYN__}
+{!(HB_STATIC_OPENSSL&!hbdyn)}libs=${hb_name}${__HB_DYN__}
+{ (HB_STATIC_OPENSSL&!hbdyn)}libs=${hb_name}s${__HB_DYN__}
 
 {unix}libs=ssl crypto
 {os2}libs=openssl ssl crypto libosslfips
-{!HB_STATIC_OPENSSL&win}libs=ssleay32 libeay32
-{HB_STATIC_OPENSSL&win&!allmingw}libs=ssleay32 libeay32
-{HB_STATIC_OPENSSL&allmingw}libs=ssl crypto
-{HB_STATIC_OPENSSL&allwin}libs=crypt32
+{!(HB_STATIC_OPENSSL&!hbdyn)&win}libs=ssleay32 libeay32
+{ (HB_STATIC_OPENSSL&!hbdyn)&win&!allmingw}libs=ssleay32 libeay32
+{ (HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=ssl crypto
+{ (HB_STATIC_OPENSSL&!hbdyn)&allwin}libs=crypt32
