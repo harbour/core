@@ -107,6 +107,17 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
+
+#if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
+      defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
+#  ifndef GetWindowLongPtr
+#     define GetWindowLongPtr       GetWindowLong
+#  endif
+#  ifndef SetWindowLongPtr
+#     define SetWindowLongPtr       SetWindowLong
+#  endif
+#endif
+
 #ifndef WS_OVERLAPPEDWINDOW
    #define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
 #endif
@@ -747,11 +758,7 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
       hb_gt_wvt_FitRows( pWVT );
 
       /* Disable "maximize" button */
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-      SetWindowLong( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
-#else
       SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
-#endif
       SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                          SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
       ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -1685,15 +1692,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          if( pWVT->bMaximized )
          {
             pWVT->bMaximized = HB_FALSE;
-
             /* Enable "maximize" button */
-
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-            SetWindowLong( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
-#else
             SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
-#endif
-
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                       SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
             ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -1830,12 +1830,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          if( pSetLayeredWindowAttributes )
          {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-            SetWindowLong( pWVT->hWnd, GWL_EXSTYLE, GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-#else
             SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-#endif
-
             pSetLayeredWindowAttributes( pWVT->hWnd,
                                          ( COLORREF ) 0, /* COLORREF crKey */
                                          255,            /* BYTE bAlpha */
@@ -2516,11 +2511,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->bResizable = bNewValue;
                if( pWVT->hWnd )
                {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-                  SetWindowLong( pWVT->hWnd, GWL_STYLE, pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE );
-#else
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE );
-#endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                   ShowWindow( pWVT->hWnd, SW_HIDE );
