@@ -220,7 +220,7 @@ HARBOUR
    If you want to rebuild one specific contrib package, use this:
 
       cd contrib/<name>
-      ..\..\bin\<plat>\<comp>\hbrun ..\make.hbs [clean] [install] [custom hbmk2 options]
+      ..\..\bin\<plat>\<comp>\hbmk2 ..\make.hbs [clean] [install] [custom hbmk2 options]
 
 
 
@@ -771,7 +771,7 @@ HARBOUR
    If you leave this value empty, the make system will try to autodetect it,
    so in practice all you have to do is to create a native build first (no
    'install' required), then create the cross-build. If you set this value
-   manually, it may be useful to know that harbour, hbpp, hbmk2, hbrun
+   manually, it may be useful to know that harbour, hbpp and hbmk2
    executables are required for a cross-build process to succeed.
 
 

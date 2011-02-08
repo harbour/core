@@ -14,7 +14,7 @@ ifeq ($(HB_BUILD_PARTS),compiler)
 
 else
 
-   # When doing a plain clean, we must not clean hbrun and hbmk2
+   # When doing a plain clean, we must not clean hbmk2
    # before calling it to clean the contrib area.
    _CONTRIB_FIRST :=
    ifneq ($(filter clean,$(HB_MAKECMDGOALS)),)
@@ -48,6 +48,6 @@ include $(ROOT)config/dir.mk
 ifneq ($(HB_NO_HBSCRIPT),yes)
 
 first clean install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)config/postinst.hbs $@,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, config/postinst.hbs skipped.$(ECHOQUOTE))
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)config/postinst.hbs $@,@$(ECHO) $(ECHOQUOTE)! Warning: hbmk2 not found, config/postinst.hbs skipped.$(ECHOQUOTE))
 
 endif

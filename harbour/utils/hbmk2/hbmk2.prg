@@ -512,6 +512,7 @@ REQUEST HB_FGETATTR
 
 /* For hbrun emulation */
 STATIC s_cDirBase_hbrun
+STATIC s_cProgName_hbrun
 
 /* NOTE: Security token to protect against plugins accessing our
          internal structures referenced from context variable */
@@ -11511,6 +11512,7 @@ PROCEDURE hbmk2_hbrun_minimal( cFile, ... )
          ENDIF
       CASE ".hrb"
          s_cDirBase_hbrun := hb_DirBase()
+         s_cProgName_hbrun := hb_ProgName()
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
@@ -11524,6 +11526,10 @@ PROCEDURE hbmk2_hbrun_minimal( cFile, ... )
 /* Public hbrun API */
 FUNCTION hbrun_DirBase()
    RETURN s_cDirBase_hbrun
+
+/* Public hbrun API */
+FUNCTION hbrun_ProgName()
+   RETURN s_cProgName_hbrun
 
 /* Public hbrun API */
 PROCEDURE hbrun_gtInteractive()

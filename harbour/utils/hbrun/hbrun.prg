@@ -87,6 +87,7 @@ STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
 
 STATIC s_cDirBase
+STATIC s_cProgName
 
 /* ********************************************************************** */
 
@@ -166,6 +167,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                      ENDIF
                   OTHERWISE
                      s_cDirBase := hb_DirBase()
+                     s_cProgName := hb_ProgName()
                      hb_argShift( .T. )
                      hb_hrbRun( cFile, ... )
                      EXIT
@@ -270,6 +272,10 @@ STATIC FUNCTION hbrun_CoreHeaderFiles()
 /* Public hbrun API */
 FUNCTION hbrun_DirBase()
    RETURN s_cDirBase
+
+/* Public hbrun API */
+FUNCTION hbrun_ProgName()
+   RETURN s_cProgName
 
 EXIT PROCEDURE hbrun_exit()
 
