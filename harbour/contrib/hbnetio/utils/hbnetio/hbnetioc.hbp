@@ -3,6 +3,7 @@
 #
 
 ../../hbnetio.hbc
+-mt
 
 -w3 -es2 -l
 

@@ -238,7 +238,7 @@ PROCEDURE Main( ... )
                               "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
                               "hbnetiomgm_serverconfig"   => {| ... | netiomgm_rpc_serverconfig( netiosrv, netiomgm ) } ,;
                               "hbnetiomgm_clientinfo"     => {| ... | netiomgm_rpc_clientinfo( netiosrv, netiomgm, ... ) } ,;
-                              "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv ) } ,;
+                              "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv, netiomgm ) } ,;
                               "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
                               "hbnetiomgm_adminfo"        => {| ... | netiomgm_rpc_conninfo( netiomgm ) } ,;
                               "hbnetiomgm_allowadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .T., ... ) } ,;
@@ -659,9 +659,11 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
 
    RETURN xCargo
 
-STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv )
+STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv, netiomgm )
 
    netiosrv_LogEvent( "Shutdown initiated..." )
+
+   netiosrv_notifyclients( netiomgm, "__SHUTDOWN__" )
 
    netiosrv[ _NETIOSRV_lQuit ] := .T.
 

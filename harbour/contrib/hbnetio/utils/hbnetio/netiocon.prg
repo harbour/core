@@ -39,7 +39,6 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL nPos
    LOCAL aCommand
    LOCAL cCommand
-   LOCAL cMsg
 
    LOCAL bKeyDown
    LOCAL bKeyUp
@@ -52,9 +51,8 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL lQuit
 
    LOCAL pConnection
-   LOCAL nStreamID
 
-   LOCAL aNotification
+   LOCAL netcli := { "nStreamID" => NIL }
 
    Set( _SET_CONFIRM, .F. )
    Set( _SET_SCOREBOARD, .F. )
@@ -64,8 +62,11 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    SetCancel( .F. )
 
+   /* TODO: Move this to ConnectLow() */
+   hb_threadDetach( hb_threadStart( {| ... | hbnetiocon_waitStream( netcli, {| nStreamID, xItem | HB_SYMBOL_UNUSED( nStreamID ), hbnetiocon_acceptStreamData( xItem ) } ) } ) )
+
    IF ! Empty( cPassword )
-      pConnection := ConnectLow( cIP, nPort, cPassword, @nStreamID )
+      pConnection := ConnectLow( cIP, nPort, cPassword, @netcli[ "nStreamID" ] )
       QQOut( hb_eol() )
    ENDIF
 
@@ -78,7 +79,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       "?"             => { ""               , "Synonym for 'help'."                            , {|| cmdHelp( hCommands ) } },;
       "exit"          => { ""               , "Exit console."                                  , {|| lQuit := .T. } },;
       "clear"         => { ""               , "Clear screen."                                  , {|| Scroll(), SetPos( 0, 0 ) } },;
-      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort, @nStreamID ) } },;
+      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| cCommand | cmdConnect( cCommand, @pConnection, @cIP, @nPort, @netcli[ "nStreamID" ] ) } },;
       "disconnect"    => { ""               , "Disconnect."                                    , {|| cmdDisconnect( @pConnection ) } },;
       "sysinfo"       => { ""               , "Show server system/build information."          , {|| cmdSysInfo( pConnection ) } },;
       "showconf"      => { ""               , "Show server configuration."                     , {|| cmdServerConfig( pConnection ) } },;
@@ -162,15 +163,6 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
       cCommand := AllTrim( cCommand )
 
-      /* Dump all messages in queue */
-      /* TODO: Move this to a separate thread and display it in a dedicated screen area. */
-      aNotification := netio_GetData( nStreamID )
-      IF hb_isArray( aNotification )
-         FOR EACH cMsg IN aNotification /* TODO: Protect against flood */
-            hbnetiocon_ToConsole( hb_StrFormat( "> message from server: %1$s", cMsg ) )
-         NEXT
-      ENDIF
-
       IF Empty( cCommand )
          LOOP
       ENDIF
@@ -217,6 +209,48 @@ PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
          nPort := NIL
       ENDIF
    ENDIF
+
+   RETURN
+
+/* TODO: To display event in separate screen area than cmd prompt. */
+STATIC FUNCTION hbnetiocon_acceptStreamData( xItem )
+
+   IF hb_isString( xItem )
+      IF xItem == "__SHUTDOWN__"
+         hbnetiocon_ToConsole( "> message from server: Shutting down..." )
+         RETURN .F.
+      ELSE
+         hbnetiocon_ToConsole( hb_StrFormat( "> message from server: %1$s", xItem ) )
+      ENDIF
+   ENDIF
+
+   RETURN .T.
+
+STATIC PROCEDURE hbnetiocon_waitStream( netcli, bBlock ) /* in separate thread */
+   LOCAL lExit := .F.
+   LOCAL xList
+   LOCAL xItem
+   LOCAL xRetVal
+
+   DO WHILE .T.
+      IF netcli[ "nStreamID" ] != NIL
+         IF ( xList := netio_GetData( netcli[ "nStreamID" ] ) ) != NIL
+            IF hb_isArray( xList )
+               FOR EACH xItem IN xList
+                  xRetVal := Eval( bBlock, netcli[ "nStreamID" ], xItem )
+                  IF hb_isLogical( xRetVal ) .AND. ! xRetVal
+                     lExit := .T.
+                     EXIT
+                  ENDIF
+               NEXT
+               IF lExit
+                  EXIT
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+      hb_idleSleep( 0.2 )
+   ENDDO
 
    RETURN
 
