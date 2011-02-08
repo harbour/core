@@ -504,6 +504,14 @@ REQUEST __CLSLOCKDEF
 REQUEST HB_HKEEPORDER
 REQUEST HB_CRC32
 REQUEST __HBDOC_TOSOURCE
+REQUEST HB_LIBEXT
+REQUEST HB_HKEYAT
+REQUEST HB_HDELAT
+REQUEST HB_HKEYS
+REQUEST HB_FGETATTR
+
+/* For hbrun emulation */
+STATIC s_cDirBase_hbrun
 
 /* NOTE: Security token to protect against plugins accessing our
          internal structures referenced from context variable */
@@ -526,6 +534,15 @@ PROCEDURE _APPMAIN( ... )
 
    /* Expand wildcard project specs */
 
+   IF PCount() >= 1
+      tmp := Lower( FNameExtGet( hb_PValue( 1 ) ) )
+      IF tmp == ".hbs" .OR. ;
+         tmp == ".hrb"
+         hbmk2_hbrun_minimal( ... )
+         QUIT
+      ENDIF
+   ENDIF
+
    aArgsProc := {}
    FOR EACH tmp IN hb_AParams()
       DO CASE
@@ -537,19 +554,6 @@ PROCEDURE _APPMAIN( ... )
          FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
             AAdd( aArgsProc, "-target=" + tmp1 )
          NEXT
-#if 0
-      CASE Lower( FNameExtGet( tmp ) ) == ".hbs"
-         hbrun_main( tmp )
-         QUIT
-      CASE Lower( tmp ) == "-ui"
-         #if defined( __PLATFORM__WINCE )
-            hb_gtSelect( hb_gtCreate( "GTWVT" ) )
-         #elif defined( __PLATFORM__WINDOWS )
-            hb_gtSelect( hb_gtCreate( "GTWIN" ) )
-         #endif
-         hbrun_main()
-         QUIT
-#endif
       OTHERWISE
          AAdd( aArgsProc, tmp )
       ENDCASE
@@ -11462,6 +11466,87 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 
    RETURN .F.
 
+STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
+   STATIC s_hHeaders := NIL
+
+   IF s_hHeaders == NIL
+      s_hHeaders := { => }
+
+      /* command to store header files in hash array */
+      #command ADD HEADER TO <hash> FILE <(cFile)> => ;
+               #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
+
+      ADD HEADER TO s_hHeaders FILE "color.ch"
+      ADD HEADER TO s_hHeaders FILE "common.ch"
+      ADD HEADER TO s_hHeaders FILE "directry.ch"
+      ADD HEADER TO s_hHeaders FILE "error.ch"
+      ADD HEADER TO s_hHeaders FILE "fileio.ch"
+      ADD HEADER TO s_hHeaders FILE "hbmemory.ch"
+      ADD HEADER TO s_hHeaders FILE "hbver.ch"
+      ADD HEADER TO s_hHeaders FILE "inkey.ch"
+      ADD HEADER TO s_hHeaders FILE "setcurs.ch"
+      ADD HEADER TO s_hHeaders FILE "simpleio.ch"
+
+      #if defined( __PLATFORM__UNIX )
+         hb_HCaseMatch( s_hHeaders, .T. )
+      #else
+         hb_HCaseMatch( s_hHeaders, .F. )
+      #endif
+   ENDIF
+
+   RETURN s_hHeaders
+
+/* Emulate a minimal hbrun */
+
+PROCEDURE hbmk2_hbrun_minimal( cFile, ... )
+
+   IF ! Empty( cFile := FindInPath( cFile ) )
+      SWITCH Lower( FNameExtGet( cFile ) )
+      CASE ".hbs"
+         cFile := hb_compileBuf( hbmk_CoreHeaderFilesMinimal(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
+                                 "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+         IF cFile == NIL
+            ErrorLevel( 1 )
+            EXIT
+         ENDIF
+      CASE ".hrb"
+         s_cDirBase_hbrun := hb_DirBase()
+         hb_argShift( .T. )
+         hb_hrbRun( cFile, ... )
+         EXIT
+      ENDSWITCH
+   ENDIF
+
+   RETURN
+
+/* ------------------------------------------------------------- */
+
+/* Public hbrun API */
+FUNCTION hbrun_DirBase()
+   RETURN s_cDirBase_hbrun
+
+/* Public hbrun API */
+PROCEDURE hbrun_gtInteractive()
+   hb_gtSelect( hb_gtCreate( hbrun_gtDefault() ) )
+   RETURN
+
+STATIC FUNCTION hbrun_gtDefault()
+#if defined( __PLATFORM__WINCE )
+   RETURN "GTWVT"
+#elif defined( __PLATFORM__WINDOWS )
+   RETURN "GTWIN"
+#elif defined( __PLATFORM__DOS )
+   RETURN "GTDOS"
+#elif defined( __PLATFORM__OS2 )
+   RETURN "GTOS2"
+#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
+   RETURN "GTTRM"
+#else
+   RETURN "GTCGI"
+#endif
+
+/* ------------------------------------------------------------- */
+
 STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
    LOCAL cSrc := MemoRead( cSrcName )
    LOCAL cDst
@@ -12006,7 +12091,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-hbx=<.ch>"         , I_( "Create Harbour header (in .hbx format) with all external symbols. (EXPERIMENTAL)" ) },;
+      { "-hbx=<.ch>"         , I_( "Create Harbour header (in .hbx format) with all external symbols." ) },;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) },;
       NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;

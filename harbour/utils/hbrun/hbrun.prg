@@ -82,7 +82,6 @@ REQUEST HB_GT_STD
 
 STATIC s_nRow
 STATIC s_nCol := 0
-STATIC s_aCompOptions := {}
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
@@ -94,7 +93,6 @@ STATIC s_cDirBase
 PROCEDURE _APPMAIN( cFile, ... )
    LOCAL cExt
    LOCAL hHeaders
-   LOCAL lHeadersDisable := ! Empty( getenv( "HBRUN_NOHEAD" ) )
 
    IF PCount() > 0
       SWITCH Lower( cFile )
@@ -140,7 +138,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             cFile := hbrun_FindInPath( cFile )
             IF ! Empty( cFile )
                hb_FNameSplit( cFile, NIL, NIL, @cExt )
-               cExt := lower( cExt )
+               cExt := Lower( cExt )
                SWITCH cExt
                   CASE ".prg"
                   CASE ".hbs"
@@ -156,12 +154,12 @@ PROCEDURE _APPMAIN( cFile, ... )
                      EXIT
                   CASE ".prg"
                   CASE ".hbs"
-                     IF ! lHeadersDisable
+                     IF Empty( getenv( "HBRUN_NOHEAD" ) )
                         hHeaders := hbrun_CoreHeaderFiles() /* add core header files */
                      ENDIF
 
-                     cFile := HB_COMPILEBUF( hHeaders, HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                             s_aCompOptions, "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                     cFile := HB_COMPILEBUF( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
+                                             "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
                      IF cFile == NIL
                         ERRORLEVEL( 1 )
                         EXIT
@@ -520,7 +518,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
    BEGIN SEQUENCE WITH {|oErr| hbrun_Err( oErr, cCommand ) }
 
-      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n2", "-q2", s_aCompOptions )
+      cHRB := HB_COMPILEFROMBUF( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
