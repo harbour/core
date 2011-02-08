@@ -1469,6 +1469,8 @@ METHOD doConfigure() CLASS TBROWSE
       ::nRowPos := 1
    ENDIF
 
+   ::nBufferPos := ::nRowPos
+
    RETURN Self
 
 
