@@ -59,6 +59,7 @@ FUNCTION __hbrun_extensions()
    PULLEXT hbexpat
    PULLEXT hbmemio
    PULLEXT hbmzip
+   PULLEXT hbnetio
    #if defined( __PLATFORM__UNIX )
       PULLEXT hbunix
    #endif

@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBNETIO__
+#define __HBEXTERN_CH__HBNETIO__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNETIO__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBNETIO__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNETIO__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC NETIO_ACCEPT
+DYNAMIC NETIO_CLOSESTREAM
+DYNAMIC NETIO_COMPRESS
+DYNAMIC NETIO_CONNECT
+DYNAMIC NETIO_DECODE
+DYNAMIC NETIO_DISCONNECT
+DYNAMIC NETIO_FUNCEXEC
+DYNAMIC NETIO_GETCONNECTION
+DYNAMIC NETIO_GETDATA
+DYNAMIC NETIO_LISTEN
+DYNAMIC NETIO_MTSERVER
+DYNAMIC NETIO_OPENDATASTREAM
+DYNAMIC NETIO_OPENITEMSTREAM
+DYNAMIC NETIO_PROCEXEC
+DYNAMIC NETIO_PROCEXECW
+DYNAMIC NETIO_PROCEXISTS
+DYNAMIC NETIO_RPC
+DYNAMIC NETIO_RPCFILTER
+DYNAMIC NETIO_SERVER
+DYNAMIC NETIO_SERVERSTOP
+DYNAMIC NETIO_SRVSENDDATA
+DYNAMIC NETIO_SRVSENDITEM
+DYNAMIC NETIO_SRVSTATUS
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNETIO__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

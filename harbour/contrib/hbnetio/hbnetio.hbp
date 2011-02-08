@@ -9,6 +9,10 @@
 
 -w3 -es2
 
+-instfile=inc:hbnetio.hbx
+
+hbnetio.hbx
+
 netiosrv.c
 netiocli.c
 

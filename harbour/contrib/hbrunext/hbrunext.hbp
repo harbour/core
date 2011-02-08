@@ -24,5 +24,6 @@ hbct.hbc
 hbexpat.hbc
 hbmemio.hbc
 hbmzip.hbc
+hbnetio.hbc
 hbunix.hbc{unix}
 hbwin.hbc{allwin}
