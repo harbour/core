@@ -124,6 +124,7 @@ STATIC FUNCTION MyClientInfo()
 CLASS NetIOMgmtClient
    DATA   pConnection
 
+   DATA   lProcessing                             INIT .F.
    DATA   nNumConxn                               INIT 0
    DATA   oDlg
    DATA   oBrw
@@ -138,11 +139,11 @@ CLASS NetIOMgmtClient
    DATA   qAct1
    DATA   qAct2
    DATA   nPrevWindowState
-   DATA   lChanging                               INIT .f.
-   DATA   lQuit                                   INIT .f.
+   DATA   lChanging                               INIT .F.
+   DATA   lQuit                                   INIT .F.
    DATA   nCurRec                                 INIT 1
    DATA   aIPs                                    INIT {}
-   DATA   nRefreshInterval                        INIT 10000
+   DATA   nRefreshInterval                        INIT 3000
    DATA   aData                                   INIT { { NIL, ;                   // hSock
                                                            0  , ;                   // nSerial
                                                            .F., ;                   // lActive
@@ -180,6 +181,7 @@ CLASS NetIOMgmtClient
 
    /* Information retrieval from the daemon */
    METHOD cmdConnInfo( lManagement )
+   METHOD cmdConnStop( cIPPort )
 
    ENDCLASS
 
@@ -208,7 +210,7 @@ METHOD NetIOMgmtClient:create( cIP, nPort, cPassword )
       ::cTitle          := "NetIO Server [" + cIP + ":" + ;
                                             hb_ntos( int( nPort ) ) + "]"
 
-      ::oDlg            := XbpDialog():new( , , { 20,20 }, { 850,300 } )
+      ::oDlg            := XbpDialog():new( , , { 20,20 }, { 870,300 } )
       ::oDlg:title      := ::cTitle
       ::oDlg:taskList   := .T.
       ::oDlg:close      := {|| ::confirmExit() }
@@ -293,7 +295,8 @@ METHOD NetIOMgmtClient:execEvent( cEvent, p )
          PostAppEvent( xbeP_Quit, , , ::oDlg )
          EXIT
       CASE "IPs"
-         ::manageIPs()
+         ::cmdConnInfo( .f. )
+         //::manageIPs()
          EXIT
       ENDSWITCH
       EXIT
@@ -470,15 +473,17 @@ METHOD NetIOMgmtClient:buildBrowser()
 
 METHOD NetIOMgmtClient:terminate()
 
-   IF ::aData[ ::recNo(), DAT_ACTIVATED ] .AND. ::aData[ ::recNo(), DAT_CONNSOCKET ] != NIL
+   IF ! ::lProcessing
+      ::lProcessing := .t.
       IF ConfirmBox( , ;
              "Terminating: " + ::aData[ ::recNo(), DAT_IP ] + " : " + hb_ntos( ::aData[ ::recNo(), DAT_PORT ] ), ;
              "Critical, be careful", ;
              , ;
              XBPMB_CRITICAL ) == XBPMB_RET_OK
 
-         netio_funcexec( ::pConnection, "hbnetiomgm_shutdown" )
+         ::cmdConnStop( ::aData[ ::recNo(), DAT_IP ] )
       ENDIF
+      ::lProcessing := .f.
    ENDIF
 
    RETURN Self
@@ -486,9 +491,14 @@ METHOD NetIOMgmtClient:terminate()
 /*----------------------------------------------------------------------*/
 
 METHOD NetIOMgmtClient:refresh()
+   LOCAL qRect
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
-   ::oDlg:oWidget:setGeometry( ::oDlg:oWidget:geometry() )
+   qRect := ::oDlg:oWidget:geometry()
+   qRect:setHeight( qRect:height() + 3 )
+   ::oDlg:oWidget:setGeometry( qRect )
+   qRect:setHeight( qRect:height() - 3 )
+   ::oDlg:oWidget:setGeometry( qRect )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -604,13 +614,14 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
    aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
    aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 150               } )
+   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 200               } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| ::aData[ ::recNo(), DAT_IP ] }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
 
+#if 0
    aPP := {}
    aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "Port"            } )
    aadd( aPP, { XBP_PP_COL_HA_FGCLR        , nClrHFg           } )
@@ -627,6 +638,7 @@ METHOD NetIOMgmtClient:buildColumns()
    oXbpColumn:dataLink := {|| str( ::aData[ ::recNo(), DAT_PORT ], 5, 0 ) }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
+#endif
 
    aPP := {}
    aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "DateTime IN"     } )
@@ -638,7 +650,7 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
    aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
    aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 152               } )
+   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 160               } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| ::aData[ ::recNo(), DAT_TIMEIN ] }
@@ -655,7 +667,7 @@ METHOD NetIOMgmtClient:buildColumns()
    aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
    aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
    aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 152               } )
+   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 160               } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| ::aData[ ::recNo(), DAT_TIMEOUT ] }
@@ -663,7 +675,7 @@ METHOD NetIOMgmtClient:buildColumns()
    ::oBrw:addColumn( oXbpColumn )
 
    aPP := {}
-   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "KbIN"            } )
+   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "BytesIN"         } )
    aadd( aPP, { XBP_PP_COL_HA_FGCLR        , nClrHFg           } )
    aadd( aPP, { XBP_PP_COL_HA_BGCLR        , nClrHBg           } )
    aadd( aPP, { XBP_PP_COL_HA_HEIGHT       , 20                } )
@@ -680,7 +692,7 @@ METHOD NetIOMgmtClient:buildColumns()
    ::oBrw:addColumn( oXbpColumn )
 
    aPP := {}
-   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "KbOUT"           } )
+   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "BytesOUT"        } )
    aadd( aPP, { XBP_PP_COL_HA_FGCLR        , nClrHFg           } )
    aadd( aPP, { XBP_PP_COL_HA_BGCLR        , nClrHBg           } )
    aadd( aPP, { XBP_PP_COL_HA_HEIGHT       , 20                } )
@@ -776,6 +788,18 @@ METHOD NetIOMgmtClient:buildSystemTray()
 
 /*----------------------------------------------------------------------*/
 
+METHOD NetIOMgmtClient:cmdConnStop( cIPPort )
+
+   IF Empty( ::pConnection )
+      MsgBox( "Not Connected" )
+   ELSE
+      netio_funcexec( ::pConnection, "hbnetiomgm_stop", cIPPort )
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD NetIOMgmtClient:cmdConnInfo( lManagement )
    LOCAL aArray
    LOCAL hConn
@@ -785,6 +809,12 @@ METHOD NetIOMgmtClient:cmdConnInfo( lManagement )
    IF Empty( ::pConnection )
       MsgBox( "Not Connected" )
    ELSE
+      IF ::lProcessing
+         RETURN NIL
+      ENDIF
+
+      ::lProcessing := .t.
+
       aArray := netio_funcexec( ::pConnection, iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
       IF ! empty( aArray )
          aData := {}
@@ -796,15 +826,18 @@ METHOD NetIOMgmtClient:cmdConnInfo( lManagement )
             d_[ DAT_IP         ] := hConn[ "cAddressPeer"   ]
             d_[ DAT_PORT       ] := 0
             d_[ DAT_TIMEIN     ] := hb_TToC( hConn[ "tStart" ], "YYYY.MM.DD", "HH:MM:SS" )
-            d_[ DAT_TIMEOUT    ] := space( 17 )
+            d_[ DAT_TIMEOUT    ] := space( 19 )
             d_[ DAT_BYTESIN    ] := hConn[ "nBytesReceived" ]
             d_[ DAT_BYTESOUT   ] := hConn[ "nBytesSent"     ]
             d_[ DAT_OPENFILES  ] := hConn[ "nFilesCount"    ]
             aadd( aData, d_ )
          NEXT
          ::aData := aData
-         ::refresh()
+      ELSE
+         ::aData := { { NIL, 0, .F., space( 17 ), 0, space( 19 ), space( 19 ), 0, 0, NIL, 0 } }
       ENDIF
+      ::lProcessing := .f.
+      ::refresh()
    ENDIF
 
    RETURN NIL
