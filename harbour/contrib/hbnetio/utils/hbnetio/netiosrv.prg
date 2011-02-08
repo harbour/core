@@ -98,7 +98,7 @@ PROCEDURE Main( ... )
 
    LOCAL lUI := .T.
 
-   Set( _SET_DATEFORMAT, "yyyy.mm.dd"   )
+   Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
    Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
 
    HB_Logo()
@@ -106,7 +106,7 @@ PROCEDURE Main( ... )
    netiosrv[ _NETIOSRV_cName ]          := "Data"
    netiosrv[ _NETIOSRV_nPort ]          := _NETIOSRV_PORT_DEF
    netiosrv[ _NETIOSRV_cIFAddr ]        := _NETIOSRV_IPV4_DEF
-   netiosrv[ _NETIOSRV_cRootDir ]       := hb_dirBase()
+   netiosrv[ _NETIOSRV_cRootDir ]       := hb_dirBase() + "data"
    netiosrv[ _NETIOSRV_lRPC ]           := .F.
    netiosrv[ _NETIOSRV_lEncryption ]    := .F.
    netiosrv[ _NETIOSRV_lAcceptConn ]    := .T.
@@ -125,6 +125,7 @@ PROCEDURE Main( ... )
    netiomgm[ _NETIOSRV_cName ]          := "Management"
    netiomgm[ _NETIOSRV_nPort ]          := _NETIOMGM_PORT_DEF
    netiomgm[ _NETIOSRV_cIFAddr ]        := _NETIOMGM_IPV4_DEF
+   netiomgm[ _NETIOSRV_cRootDir ]       := "*?:*?:" /* Invalid name */
    netiomgm[ _NETIOSRV_lAcceptConn ]    := .T.
    netiomgm[ _NETIOSRV_lShowConn ]      := .F.
    netiomgm[ _NETIOSRV_hConnection ]    := { => }
@@ -206,6 +207,8 @@ PROCEDURE Main( ... )
       netiosrv_LogEvent( hb_StrFormat( "Configuration loaded: %1$s", netiosrv_ConfName() ) )
    ENDIF
 
+   hb_dirBuild( netiosrv[ _NETIOSRV_cRootDir ] )
+
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
       netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
                       netiosrv[ _NETIOSRV_cIFAddr ],;
@@ -229,7 +232,7 @@ PROCEDURE Main( ... )
          netiomgm[ _NETIOSRV_pListenSocket ] := ;
             netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
                             netiomgm[ _NETIOSRV_cIFAddr ],;
-                            NIL,;
+                            netiomgm[ _NETIOSRV_cRootDir ],;
                             { "hbnetiomgm_ping"           => {| ... | .T. } ,;
                               "hbnetiomgm_setclientinfo"  => {| ... | netiomgm_rpc_setclientinfo( netiomgm, ... ) } ,;
                               "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
