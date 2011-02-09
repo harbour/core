@@ -503,12 +503,15 @@ REQUEST HBCLASS
 REQUEST __CLSLOCKDEF
 REQUEST HB_HKEEPORDER
 REQUEST HB_CRC32
+REQUEST __HBDOC_LOADDIR
 REQUEST __HBDOC_TOSOURCE
+REQUEST __HBDOC_SAVEHBD
 REQUEST HB_LIBEXT
 REQUEST HB_HKEYAT
 REQUEST HB_HDELAT
 REQUEST HB_HKEYS
 REQUEST HB_FGETATTR
+REQUEST HB_FSETATTR
 
 /* For hbrun emulation */
 STATIC s_cDirBase_hbrun
@@ -12167,7 +12170,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
-      hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ) }
+      hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
+      I_( ".hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
 
    DEFAULT lLong TO .F.
 
