@@ -2,6 +2,8 @@
 # $Id$
 #
 
+-stop{hbdyn}
+
 -hblib
 -inc
 

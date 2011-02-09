@@ -803,6 +803,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_lLIBSYSMISC := .T.
    LOCAL l_cCMAIN := NIL
    LOCAL l_lTargetSelected := .F.
+   LOCAL l_cDynLibDir
 
    /* hbmk2 lib ordering tries to satisfy linkers which require this
       (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this won't solve
@@ -874,7 +875,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL fhnd
    LOCAL cFile
    LOCAL lSysLoc
-   LOCAL cPrefix
    LOCAL cPostfix
    LOCAL aOBJLIST
 
@@ -3050,10 +3050,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
       IF hbmk[ _HBMK_lSHAREDDIST ] .OR. ! HBMK_ISCOMP( "gcc|clang|open64" )
-         cPrefix := ""
+         l_cDynLibDir := ""
       ELSE
          /* Only supported by gcc, clang, open64 compilers. */
-         cPrefix := DirAddPathSep( l_cHB_INSTALL_DYN )
+         l_cDynLibDir := DirAddPathSep( l_cHB_INSTALL_DYN )
       ENDIF
 #if 1
       cPostfix := ""
@@ -3064,12 +3064,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       DO CASE
       CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|minix" )
-         IF Empty( cPrefix )
+         IF Empty( l_cDynLibDir )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
          ELSE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cPrefix + hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
-                                                      cPrefix + hbmk[ _HBMK_cDynLibPrefix ] + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
+                                                      l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
          ENDIF
       CASE HBMK_ISPLAT( "os2|win|wce" )
          l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt",;
@@ -4891,6 +4891,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
       OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
+      OutStd( "dynprefix{{" + iif( Empty( l_cDynLibDir ), "", l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] ) + "}}" + hb_eol() )
       OutStd( "dynsuffix{{" + hbmk_DYNSUFFIX( hbmk ) + "}}" + hb_eol() )
       OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
 

@@ -5,6 +5,8 @@
 -w3 -es2 -l
 -kmo
 
+-o${hb_name}
+
 -DHBRUN_WITH_HEADERS
 
 -ldflag={allmsvc}-nxcompat
