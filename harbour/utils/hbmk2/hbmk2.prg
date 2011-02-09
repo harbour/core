@@ -4715,8 +4715,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ] .AND. HBMK_ISPLAT( "win|os2|dos" )
             l_cLIBSELF := l_cIMPLIBNAME
+         ELSE
+            l_cLIBSELF := cName
          ENDIF
-         /* TOFIX: ? Add l_cLIBSELF for *nix dynamic builds to exclude self name. */
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          l_cLIBSELF := cName
@@ -5406,8 +5407,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                with the same name as the output.
                [vszakats] */
       IF l_cLIBSELF != NIL
+         tmp1 := FNameNameGetNoExt( l_cLIBSELF )
          FOR EACH tmp IN hbmk[ _HBMK_aLIBUSER ] DESCEND
-            IF Lower( tmp ) == Lower( l_cLIBSELF )
+            IF hb_FileMatch( FNameNameGet( tmp ), tmp1 )
                hb_ADel( hbmk[ _HBMK_aLIBUSER ], tmp:__enumIndex(), .T. )
             ENDIF
          NEXT
@@ -8924,6 +8926,18 @@ STATIC FUNCTION FNameNameExtGet( cFileName )
    hb_FNameSplit( cFileName,, @cName, @cExt )
 
    RETURN hb_FNameMerge( NIL, cName, cExt )
+
+/* Remove all extensions from name */
+STATIC FUNCTION FNameNameGetNoExt( cFileName )
+   LOCAL cName := cFileName
+
+   hb_FNameSplit( cFileName,, @cName )
+
+   DO WHILE ! Empty( cName ) .AND. ! Empty( FNameExtGet( cName ) )
+      hb_FNameSplit( cName,, @cName )
+   ENDDO
+
+   RETURN cName
 
 STATIC FUNCTION FNameExtGet( cFileName )
    LOCAL cExt
