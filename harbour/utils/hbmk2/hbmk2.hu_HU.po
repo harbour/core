@@ -1289,7 +1289,7 @@ msgstr ""
 
 #: hbmk2.prg:7268
 #, c-format
-msgid "Dependency '%1$s' forcefully disabled"
+msgid "Dependency '%1$s' forcibly disabled"
 msgstr ""
 
 #: hbmk2.prg:7314

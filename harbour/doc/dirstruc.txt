@@ -147,6 +147,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
+|   +---hbrun           - Standalone Harbour Portable Object file runner,
+|   |                     and a "dot prompt" console for the Harbour language.
+|   |
 |   +---hbsqlit3        - Interface for SQLite 3.x library.
 |   |   |
 |   |   +---sqlite3     - An amalgamation of SQLite core library.
@@ -392,9 +395,6 @@ track of all files (read the FAQ if you don't know what SVN is).
     +---hbmk2           - Harbour Make utility.
     |   |
     |   +---examples    - Usage examples.
-    |
-    +---hbrun           - Standalone Harbour Portable Object file runner,
-    |                     and a "dot prompt" console for the Harbour language.
     |
     +---hbtest          - Regression tests for the Run-Time library.
 
