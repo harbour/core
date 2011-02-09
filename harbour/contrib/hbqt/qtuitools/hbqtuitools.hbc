@@ -11,6 +11,6 @@ incpaths=.
 
 libs=../qtgui/hbqtgui.hbc
 
-libs=hbqtuitools${__HB_DYN__}
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {!HB_STATIC_QT}libs=QtUiTools
 {HB_STATIC_QT&(allwin|linux)}libs=QtUiTools

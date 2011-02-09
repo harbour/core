@@ -2,5 +2,5 @@
 # $Id$
 #
 
-libs=${hb_name}${__HB_DYN__}
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=../hbmzip/hbmzip.hbc

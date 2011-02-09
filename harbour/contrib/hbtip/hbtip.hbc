@@ -4,6 +4,6 @@
 
 incpaths=.
 
-{!HB_TIP_OPENSSL|dos}libs=${hb_name}${__HB_DYN__}
-{HB_TIP_OPENSSL&!dos}libs=${hb_name}ssl${__HB_DYN__}
+{!HB_TIP_OPENSSL|dos}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{HB_TIP_OPENSSL&!dos}libs=${_HB_DYNPREF}${hb_name}ssl${_HB_DYNSUFF}
 {HB_TIP_OPENSSL&!dos}libs=../hbssl/hbssl.hbc

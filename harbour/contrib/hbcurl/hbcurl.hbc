@@ -4,8 +4,8 @@
 
 incpaths=.
 
-{!(HB_STATIC_CURL&!hbdyn)}libs=${hb_name}${__HB_DYN__}
-{ (HB_STATIC_CURL&!hbdyn)}libs=${hb_name}s${__HB_DYN__}
+{!(HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{ (HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
 
 {!allwin}libs=curl
 { allwin&!(HB_STATIC_CURL&!hbdyn)}libs=libcurl

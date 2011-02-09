@@ -12,7 +12,7 @@ incpaths=.
 {HB_DYNLOAD_RDDADS}prgflags=-D__HBDYNLOAD__RDDADS__
 {HB_DYNLOAD_RDDADS}shared=yes
 
-{!HB_DYNLOAD_RDDADS}libs=${hb_name}${__HB_DYN__}
+{!HB_DYNLOAD_RDDADS}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {!HB_DYNLOAD_RDDADS&win&x86}libs=ace32
 {!HB_DYNLOAD_RDDADS&win&x86_64}libs=ace64
 {!HB_DYNLOAD_RDDADS&linux}libs=ace

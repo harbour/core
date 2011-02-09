@@ -540,14 +540,14 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    hb_setenv( "CLIPPERCMD" )
 
    IF cDynSuffix != NIL
-      hb_setenv( "__HB_DYN__", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+      hb_setenv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
       hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
 
       IF hb_FileExists( FNameExtSet( cProjectPath, ".hbc" ) )
          cOptionsLibDyn += " " + FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
-      hb_setenv( "__HB_DYN__" )
+      hb_setenv( "_HB_DYNSUFF" )
       hb_setenv( "_HB_BUILD_LIBDYN" )
    ENDIF
 

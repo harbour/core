@@ -6,8 +6,8 @@ incpaths=.
 
 skip={dos}
 
-{!(HB_STATIC_OPENSSL&!hbdyn)}libs=${hb_name}${__HB_DYN__}
-{ (HB_STATIC_OPENSSL&!hbdyn)}libs=${hb_name}s${__HB_DYN__}
+{!(HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{ (HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
 
 {unix}libs=ssl crypto
 {os2}libs=openssl ssl crypto libosslfips

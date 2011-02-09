@@ -4,7 +4,7 @@
 
 incpaths=.
 
-libs=${hb_name}${__HB_DYN__}
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {win}libs=bgd
 {linux}libs=gd png jpeg freetype m
 {darwin}libs=gd
