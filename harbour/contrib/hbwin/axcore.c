@@ -655,8 +655,6 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
                   pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
                   pSink->count = 0;
                   pSink->pItemHandler = hb_itemNew( pItemBlock );
-                  hb_oleItemSetCallBack( hb_param( 1, HB_IT_POINTER ),
-                                         &pSink->pItemHandler );
                   pSink->rriid = rriid;
                   pSink->uiClass = 0;
                   lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
