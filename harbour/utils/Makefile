@@ -13,7 +13,6 @@ ifneq ($(HB_BUILD_PARTS),compiler)
 
    DIRS += \
       hbi18n \
-      hbrun \
       hbtest \
       $(__HB_UTIL_ADDONS)
 

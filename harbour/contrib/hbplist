@@ -39,7 +39,7 @@ hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp
 hbqt/hbqt_all.hbp
-hbrun/hbrunext.hbp
+hbrun/hbrun.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
 hbssl/hbssl.hbp
