@@ -90,7 +90,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                hbmk2[ "vars" ][ "qthdocdir" ] := SubStr( cSrc, Len( "-qthdocdir=" ) + 1 )
             ENDCASE
          ELSE
-            SWITCH Lower( hbmk2_FNameExtGet( cSrc ) )
+            SWITCH Lower( hb_FNameExt( cSrc ) )
             CASE ".qrc"
                AAdd( hbmk2[ "vars" ][ "aQRC_Src" ], cSrc )
                EXIT
@@ -113,23 +113,23 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       hbmk2[ "vars" ][ "aQRC_Dst" ] := {}
       hbmk2[ "vars" ][ "aQRC_PRG" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
-         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".qrb" )
+         cDst := hbmk2_FNameDirExtSet( "rcc_" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".qrb" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
-         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
+         cDst := hbmk2_FNameDirExtSet( "rcc_" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aQRC_PRG" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
       hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aUIC_Src" ]
-         cDst := hbmk2_FNameDirExtSet( "uic_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
+         cDst := hbmk2_FNameDirExtSet( "uic_" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aUIC_Dst" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
       hbmk2[ "vars" ][ "aMOC_Dst" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC_Src" ]
-         cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
+         cDst := hbmk2_FNameDirExtSet( "moc_" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
       NEXT
@@ -138,13 +138,13 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       hbmk2[ "vars" ][ "aQTH_PRG" ] := {}
       hbmk2[ "vars" ][ "aQTH_DOC" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQTH_Src" ]
-         cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
+         cDst := hbmk2_FNameDirExtSet( hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aQTH_CPP" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
-         cDst := hbmk2_FNameDirExtSet( "T" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
+         cDst := hbmk2_FNameDirExtSet( "T" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aQTH_PRG" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
-         cDst := hbmk2_PathNormalize( hbmk2_FNameDirExtSet( "class_" + Lower( hbmk2_FNameNameGet( cSrc ) ), hbmk2_FNameDirGet( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" ) )
+         cDst := hb_PathNormalize( hbmk2_FNameDirExtSet( "class_" + Lower( hb_FNameName( cSrc ) ), hb_FNameDir( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" ) )
          AAdd( hbmk2[ "vars" ][ "aQTH_DOC" ], cDst )
       NEXT
 
@@ -222,8 +222,8 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                                 hb_eol() +;
                                 "#pragma -km+" + hb_eol() +;
                                 hb_eol() +;
-                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_eol() +;
-                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
+                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
+                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
 
                         IF ! hb_MemoWrit( cPRG, cTmp )
                            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
@@ -283,7 +283,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                            EXIT
                         ENDIF
                      ELSE
-                        IF ! uic_to_prg( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
+                        IF ! uic_to_prg( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hb_FNameName( cSrc ) ) )
                            IF ! hbmk2[ "lIGNOREERROR" ]
                               FErase( cTmp )
                               cRetVal := "error"
@@ -436,13 +436,13 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, lPostfix )
                   /* Return silently. It shall fail at dependency detection inside hbmk2 */
                   RETURN NIL
                ELSE
-                  IF ! hb_FileExists( cBIN := hbmk2_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
+                  IF ! hb_FileExists( cBIN := hb_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
                      hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
                      cBIN := ""
                   ENDIF
                ENDIF
             ELSE
-               cBIN := hbmk2_DirAddPathSep( hb_DirBase() ) + cName + ".exe"
+               cBIN := hb_DirSepAdd( hb_DirBase() ) + cName + ".exe"
                IF ! hb_FileExists( cBIN )
                   cBIN := ""
                ENDIF

@@ -767,11 +767,11 @@ FUNCTION hbide_getIniPath( cHbideIni )
    IF empty( cHbideIni )
       IF ! hb_FileExists( cIni := hb_dirBase() + "hbide.ini" )
       #if defined( __PLATFORM__WINDOWS )
-         cPath := hbide_DirAddPathSep( GetEnv( "APPDATA" ) ) + "hbide\"
+         cPath := hb_DirSepAdd( GetEnv( "APPDATA" ) ) + "hbide\"
       #elif defined( __PLATFORM__UNIX )
-         cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
+         cPath := hb_DirSepAdd( GetEnv( "HOME" ) ) + ".hbide/"
       #elif defined( __PLATFORM__OS2 )
-         cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
+         cPath := hb_DirSepAdd( GetEnv( "HOME" ) ) + ".hbide/"
       #endif
          IF ! hb_dirExists( cPath )
             hb_DirCreate( cPath )
