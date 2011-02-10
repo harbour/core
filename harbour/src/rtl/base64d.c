@@ -168,10 +168,9 @@ HB_FUNC( HB_BASE64DECODE )
    if( len <= INT_MAX ) /* TOFIX */
    {
       char * code = ( char * ) hb_xgrab( ( ( ( ( len - 1 ) * 3 ) / 4 ) + 1 ) * sizeof( char ) );
+      HB_SIZE nSize = base64_decode_block( hb_parcx( 1 ), len, code );
 
-      base64_decode_block( hb_parcx( 1 ), len, code );
-
-      hb_retc_buffer( code );
+      hb_retclen_buffer( code, nSize );
    }
    else
       hb_retc_null();
