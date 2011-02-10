@@ -97,7 +97,7 @@ URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
 BuildPrereq:    gcc binutils bash %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:       %{name} harbour lib%{name}.so lib%{name}mt.so
+Provides:       %{name} harbour lib%{name}.so
 BuildRoot:      /tmp/%{name}-%{version}-root
 
 %define         _noautoreq    'libharbour.*'
@@ -137,7 +137,7 @@ Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
 Summary(ru):    ????????? ???????????? ?????????? ??? ??????????? %{dname}
 Summary(hu):    Megosztott könyvtárak a(z) %{dname} fordítóhoz
 Group:          Development/Languages
-Provides:       lib%{name}.so lib%{name}mt.so
+Provides:       lib%{name}.so
 
 %description lib
 %{dname} is a Clipper compatible compiler.
