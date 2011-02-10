@@ -5,10 +5,10 @@
 incpaths=.
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
 {win}libs=bgd
 {linux}libs=gd png jpeg freetype m
 {darwin}libs=gd
+{darwin}libpaths=/opt/local/lib
 
 libs=../hbct/hbct.hbc
-
--L/opt/local/lib{darwin}

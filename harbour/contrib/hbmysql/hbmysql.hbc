@@ -5,5 +5,7 @@
 incpaths=.
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
 {unix}libs=mysqlclient
 {!unix}libs=libmysql
+{darwin}libpaths=/opt/local/lib/mysql5/mysql

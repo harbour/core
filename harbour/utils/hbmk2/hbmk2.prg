@@ -1969,7 +1969,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE "djgpp"  ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "watt" ) ; EXIT
          CASE "watcom" ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "wattcpwf" ) ; EXIT
          ENDSWITCH
-         AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+         IF hb_DirExists( tmp := PathSepToSelf( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], tmp )
+         ENDIF
       ENDIF
    #endif
 
@@ -2430,7 +2432,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], DirDelPathSep( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
+            cParam := DirDelPathSep( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
+            IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ cParam .OR. hb_DirExists( cParam )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], cParam )
+            ENDIF
          ENDIF
 
       CASE Left( cParamL, Len( "-instfile=" ) ) == "-instfile="
@@ -3276,7 +3281,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
             cBin_Dyn := cBin_Lib
-            cOpt_Dyn := "-dynamic -o {OD} {LO} -flat_namespace -undefined suppress -single_module {FD} {DL} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
+            cOpt_Dyn := "-dynamic -o {OD} -flat_namespace -undefined suppress -single_module {FD} {DL} {LO} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
          ELSE
             cBin_Dyn := cBin_CompC
             cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
@@ -9258,7 +9263,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
-               AAddNew( hbmk[ _HBMK_aLIBPATH ], DirDelPathSep( PathNormalize( PathMakeAbsolute( PathSepToSelf( cItem ), FNameDirGet( cFileName ) ) ) ) )
+               cItem := DirDelPathSep( PathNormalize( PathMakeAbsolute( PathSepToSelf( cItem ), FNameDirGet( cFileName ) ) ) )
+               IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ cItem .OR. hb_DirExists( cItem )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], cItem )
+               ENDIF
             ENDIF
          NEXT
 
