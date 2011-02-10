@@ -1792,19 +1792,19 @@ ifeq ($(HB_INIT_DONE),)
       endif
       endif
 
-      HB_DYNLIB_BASE_ST := harbour
+      HB_DYNLIB_BASE := harbour
       ifeq ($(HB_PLATFORM),dos)
-         HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
+         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)
       else
       ifeq ($(HB_PLATFORM),os2)
-         HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
+         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)
       else
-         HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)$(DYNNAME_POST)
+         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(DYNNAME_POST)
       endif
       endif
 
-      export HB_DYNLIB_BASE_ST
-      export HB_DYNLIB_ST
+      export HB_DYNLIB_BASE
+      export HB_DYNLIB_NAME
    endif
 endif
 

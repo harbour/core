@@ -13,8 +13,8 @@ ifneq ($(DYNDIRLIST_BASE),)
    else
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
    endif
-   DYNNAME := $(HB_DYNLIB_ST)
-   DYNNAME2 := $(HB_DYNLIB_BASE_ST)
+   DYNNAME := $(HB_DYNLIB_NAME)
+   DYNNAME2 := $(HB_DYNLIB_BASE)
 
    include $(TOP)$(ROOT)config/dyn.mk
 
