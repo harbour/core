@@ -4703,6 +4703,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
+         IF ! HBMK_ISPLAT( "win|os2|dos" )
+            l_cLIBSELF := cName
+         ENDIF
          cName := hbmk[ _HBMK_cDynLibPrefix ] + cName
          IF Empty( cExt ) .AND. ! Empty( hbmk[ _HBMK_cDynLibExt ] )
             cExt := hbmk[ _HBMK_cDynLibExt ]
@@ -4715,8 +4718,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ] .AND. HBMK_ISPLAT( "win|os2|dos" )
             l_cLIBSELF := l_cIMPLIBNAME
-         ELSE
-            l_cLIBSELF := cName
          ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]

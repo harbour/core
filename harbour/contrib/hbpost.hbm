@@ -48,6 +48,10 @@
 {_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
 {_HB_BUILD_LIBDYN}-depimplib-
 
+"{_HB_BUILD_LIBDYN&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
+"{_HB_BUILD_LIBDYN&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
+"{_HB_BUILD_LIBDYN&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
+
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here
 {hbdyn&unix&!darwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
@@ -77,3 +81,7 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_MAN}-instpath=man:${_HB_INSTALL_MAN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&HB_INSTALL_IMPLIB='yes'}-instpath=depimplib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL}-instforce
+
+# OS X hack
+"{_HB_BUILD_LIBDYN&darwin}-dflag=-undefined suppress"
+"{_HB_BUILD_LIBDYN&darwin}-dflag=-flat_namespace"
