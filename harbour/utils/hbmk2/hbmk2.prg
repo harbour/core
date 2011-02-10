@@ -497,6 +497,8 @@ REQUEST hbmk_KEYW
 #define HBMK_ISPLAT( list )     HBMK_IS_IN( hbmk[ _HBMK_cPLAT ], list )
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
 
+#define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
+
 /* Request some functions for plugins */
 REQUEST HBCLASS
 REQUEST __CLSLOCKDEF
@@ -8537,9 +8539,6 @@ STATIC FUNCTION ListToArray( cList, cSep )
    ENDIF
 
    RETURN array
-
-STATIC FUNCTION PathMakeAbsolute( cPathR, cPathA )
-   RETURN hb_PathJoin( cPathA, cPathR )
 
 STATIC FUNCTION PathSepCount( cPath )
    LOCAL nCount := 0
