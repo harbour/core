@@ -81,7 +81,3 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_MAN}-instpath=man:${_HB_INSTALL_MAN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&HB_INSTALL_IMPLIB='yes'}-instpath=depimplib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL}-instforce
-
-# OS X hack
-"{_HB_BUILD_LIBDYN&darwin}-dflag=-undefined suppress"
-"{_HB_BUILD_LIBDYN&darwin}-dflag=-flat_namespace"

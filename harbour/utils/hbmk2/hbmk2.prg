@@ -3182,7 +3182,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" /* TODO: Check what to use for icc */
+         IF hbmk[ _HBMK_cPLAT ] == "darwin"
             cBin_Lib := "libtool"
             cOpt_Lib := "-static {FA} -o {OL} {LO}"
          ELSE
@@ -3274,8 +3274,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
-         cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
+         IF hbmk[ _HBMK_cPLAT ] == "darwin"
+            cBin_Dyn := cBin_Lib
+            cOpt_Dyn := "-dynamic -o {OD} {LO} -flat_namespace -undefined suppress -single_module {FD} {DL} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
+         ELSE
+            cBin_Dyn := cBin_CompC
+            cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
