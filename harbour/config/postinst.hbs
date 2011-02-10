@@ -37,8 +37,6 @@ PROCEDURE Main( ... )
 
    LOCAL cST_Versioned
    LOCAL cST_Versionless
-   LOCAL cMT_Versioned
-   LOCAL cMT_Versionless
 
    IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
@@ -140,11 +138,8 @@ PROCEDURE Main( ... )
 
          cST_Versioned   := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_ST" )      + GetEnvC( "HB_DYNLIB_EXT" )
          cST_Versionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE_ST" ) + GetEnvC( "HB_DYNLIB_EXT" )
-         cMT_Versioned   := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_MT" )      + GetEnvC( "HB_DYNLIB_EXT" )
-         cMT_Versionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE_MT" ) + GetEnvC( "HB_DYNLIB_EXT" )
 
          mk_hb_FLinkSym( cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cST_Versionless )
-         mk_hb_FLinkSym( cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cMT_Versionless )
 
          DO CASE
          CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
@@ -154,8 +149,6 @@ PROCEDURE Main( ... )
 
             mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versionless )
             mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versioned )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versioned )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg */

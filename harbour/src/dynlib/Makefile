@@ -8,14 +8,15 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
 
-   DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
+   ifeq ($(_HB_BUILD_DYN_ST),yes)
+      DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
+   else
+      DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
+   endif
    DYNNAME := $(HB_DYNLIB_ST)
    DYNNAME2 := $(HB_DYNLIB_BASE_ST)
 
-   DIRS := mt
-
    include $(TOP)$(ROOT)config/dyn.mk
-   include $(TOP)$(ROOT)config/dir.mk
 
    ifneq ($(INSTALL_RULE_DYN),)
       ifneq ($(HB_INSTALL_LIB),)

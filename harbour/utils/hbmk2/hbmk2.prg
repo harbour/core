@@ -198,14 +198,14 @@ REQUEST hbmk_KEYW
 #define _COMPDETE_cCCPATH       5
 #define _COMPDETE_bSetup        6
 
-#define _HBMODE_NATIVE          0
+#define _HBMODE_NATIVE          0xFFFFFF
 #define _HBMODE_HB10            0x010000
 #define _HBMODE_HB20            0x020000
 #define _HBMODE_XHB            -0x010200
 #define _HBMODE_RAW_C          -1
 
-#define _HBMODE_IS_HB( n )      ( n == 0 .OR. n >= _HBMODE_HB10 )
-#define _HBMODE_IS_OLDHB( n )   ( n >= _HBMODE_HB10 )
+#define _HBMODE_IS_HB( n )      ( n >= _HBMODE_HB10 )
+#define _HBMODE_IS_OLDHB( n )   ( n >= _HBMODE_HB10 .AND. n < _HBMODE_NATIVE )
 #define _HBMODE_IS_XHB( n )     ( n <= _HBMODE_XHB )
 
 /* Not implemented yet */
@@ -885,6 +885,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lSysLoc
    LOCAL cPostfix
    LOCAL aOBJLIST
+   LOCAL cHarbourDyn
 
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterCComp := .F.
@@ -3075,18 +3076,23 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       cPostfix := cDL_Version
 #endif
 
+      IF hbmk[ _HBMK_lMT ] .AND. hbmk[ _HBMK_nHBMODE ] <= _HBMODE_HB20
+         cHarbourDyn := iif( HBMK_ISPLAT( "win|os2" ), "harbourm", "harbourmt" )
+      ELSE
+         /* ST mode or newer than Harbour 2.0, where there is only one harbour lib,
+            built in MT mode by default. */
+         cHarbourDyn := "harbour"
+      ENDIF
+
       DO CASE
       CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|minix" )
          IF Empty( l_cDynLibDir )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
-                                                      "harbour"   + cPostfix ) }
+            l_aLIBSHARED := { cHarbourDyn + cPostfix }
          ELSE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
-                                                      l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
+            l_aLIBSHARED := { l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] + cHarbourDyn + cPostfix + hbmk[ _HBMK_cDynLibExt ] }
          ENDIF
       CASE HBMK_ISPLAT( "os2|win|wce" )
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt",;
-                                                   hbmk[ _HBMK_cDynLibPrefix ] + "harbour" ) }
+         l_aLIBSHARED := { hbmk[ _HBMK_cDynLibPrefix ] + cHarbourDyn }
       OTHERWISE
          l_aLIBSHARED := NIL
       ENDCASE
@@ -3480,8 +3486,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF hbmk[ _HBMK_cPLAT ] == "cygwin"
             l_aLIBSHAREDPOST := { "hbmainstd" }
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ),;
-                                                      "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) ) }
+            l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) }
          ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -3610,8 +3615,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt",;
                                                       "xharbour" ) }
          OTHERWISE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ),;
-                                                      "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) ) }
+            l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) }
          ENDCASE
 
          IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
@@ -3727,8 +3731,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
          l_aLIBSHAREDPOST := { "hbmainstd" }
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm",;
-                                                   "harbour" ) }
+         l_aLIBSHARED := { cHarbourDyn }
 
 #if 0 /* Disabled because windres seems to be broken in all gcc builds as of 2010-05-05. [vszakats] */
          cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + hbmk[ _HBMK_cCCEXT ]
@@ -3829,8 +3832,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( l_aLIBSYS, "pdcurses" )
          ENDIF
 
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cLibExt,;
-                                                   "harbour" + cLibExt ) }
+         l_aLIBSHARED := { cHarbourDyn + cLibExt }
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
@@ -3995,16 +3997,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                AAdd( l_aLIBSYS, "clib3s" )
             ENDIF
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + cLibExt ) }
+            l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + cLibExt }
 
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FNameExtSet( l_cHB_INSTALL_LIB + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainwin", "hbmainstd" ), cLibExt ) )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "os2"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cLibExt,;
-                                                      "harbour" + cLibExt ) }
+            l_aLIBSHARED := { cHarbourDyn + cLibExt }
 
             IF hbmk[ _HBMK_lSHARED ]
                /* TOFIX: This line is plain guessing. */
@@ -4012,8 +4012,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cDL_Version + hbmk[ _HBMK_cDynLibExt ],;
-                                                      hbmk[ _HBMK_cDynLibPrefix ] + "harbour" + cDL_Version + hbmk[ _HBMK_cDynLibExt ] ) }
+            l_aLIBSHARED := { hbmk[ _HBMK_cDynLibPrefix ] + cHarbourDyn + cDL_Version + hbmk[ _HBMK_cDynLibExt ] }
          ENDCASE
          IF HBMK_ISPLAT( "win|os2" )
             cBin_Res := "wrc" + hbmk[ _HBMK_cCCEXT ]
@@ -4124,8 +4123,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             ENDIF
          ENDIF
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-bcc" + cLibExt,;
-                                                   "harbour" + cDL_Version_Alter + "-bcc" + cLibExt ) }
+         l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + "-bcc" + cLibExt }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
 
@@ -4295,8 +4293,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt,;
-                                                   "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt ) }
+         l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF ! HBMK_ISCOMP( "icc|iccia64" )
@@ -4410,8 +4407,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt,;
-                                                   "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt ) }
+         l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;

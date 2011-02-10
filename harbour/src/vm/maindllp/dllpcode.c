@@ -64,40 +64,29 @@
 #endif
 
 #define HB_DLL_PREF     TEXT( "harbour" )
-#define HB_DLL_PREF_MT  TEXT( "harbourmt" )
 #define HB_DLL_VER      TEXT( "-" ) TEXT( HB_MACRO2STRING( HB_VER_MAJOR ) ) TEXT( HB_MACRO2STRING( HB_VER_MINOR ) )
 #define HB_DLL_EXT      TEXT( ".dll" )
 
 #define HB_DLL_NAME     HB_DLL_PREF    HB_DLL_EXT
-#define HB_DLL_NAMEMT   HB_DLL_PREF_MT HB_DLL_EXT
 
 #if   defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-arm" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-arm" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-mips" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-mips" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_X86 )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
 #elif defined( __BORLANDC__ )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-bcc" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-bcc" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-x64" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-x64" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-ia64" ) HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER TEXT( "-ia64" ) HB_DLL_EXT
 #else
    #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER HB_DLL_EXT
-   #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER HB_DLL_EXT
 #endif
 
 #if defined( HB_OS_WIN )
@@ -139,11 +128,7 @@ PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
    {
       s_hModule = GetModuleHandle( HB_DLL_NAME );
       if( s_hModule == NULL )
-         s_hModule = GetModuleHandle( HB_DLL_NAMEMT );
-      if( s_hModule == NULL )
          s_hModule = GetModuleHandle( HB_DLL_NAME2 );
-      if( s_hModule == NULL )
-         s_hModule = GetModuleHandle( HB_DLL_NAMEMT2 );
       if( s_hModule == NULL )
          s_hModule = GetModuleHandle( NULL );
 

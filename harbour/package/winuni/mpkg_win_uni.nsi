@@ -91,7 +91,6 @@ Section "Main components" hb_main
 
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-$%HB_VS%.dll"
-  File "$%HB_ABSROOT%bin\harbourmt-$%HB_VS%.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"
   File "$%HB_ABSROOT%bin\hbmk2.exe"
@@ -225,7 +224,6 @@ SectionEnd
 Section "Libs for Borland C" hb_lib_bcc
   SetOutPath $INSTDIR\bin
   ; File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-bcc.dll"
-  ; File "$%HB_ABSROOT%bin\harbourmt-$%HB_VS%-bcc.dll"
   SetOutPath $INSTDIR\lib\win\bcc
   File "$%HB_ABSROOT%lib\win\bcc\*.*"
 SectionEnd
@@ -303,7 +301,6 @@ SectionEnd
 Section /o "Dlls for x64" hb_dlls_x64
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-x64.dll"
-  File "$%HB_ABSROOT%bin\harbourmt-$%HB_VS%-x64.dll"
 SectionEnd
 !endif
 
@@ -311,7 +308,6 @@ SectionEnd
 Section /o "Dlls for WinCE/ARM" hb_dlls_arm
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-wce-arm.dll"
-  File "$%HB_ABSROOT%bin\harbourmt-$%HB_VS%-wce-arm.dll"
 SectionEnd
 !endif
 
@@ -321,7 +317,6 @@ Section /o "Dlls for OS/2" hb_dlls_os2
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with MS-DOS
   File "$%HB_ABSROOT%bin\harbour.dll"
-  File "$%HB_ABSROOT%bin\harbourm.dll"
 SectionEnd
 !endif
 
@@ -330,7 +325,6 @@ Section /o "Dlls for MS-DOS" hb_dlls_dos
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with OS/2
   File "$%HB_ABSROOT%bin\harbour.dll"
-  File "$%HB_ABSROOT%bin\harbourm.dll"
 SectionEnd
 !endif
 !endif

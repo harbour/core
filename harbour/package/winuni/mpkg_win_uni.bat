@@ -124,7 +124,6 @@ echo "%HB_DR%NEWS"                                  >> _hbfiles
 echo "%HB_DR%TODO"                                  >> _hbfiles
 echo "%HB_DR%ChangeLog*"                            >> _hbfiles
 echo "%HB_DR%bin\harbour-%HB_VS%.dll"               >> _hbfiles
-echo "%HB_DR%bin\harbourmt-%HB_VS%.dll"             >> _hbfiles
 echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles
 echo "%HB_DR%bin\hbi18n.exe"                        >> _hbfiles
 echo "%HB_DR%bin\hbmk2.exe"                         >> _hbfiles
@@ -173,18 +172,14 @@ echo "%HB_DR%lib\os2\watcom\*.*"                    >> _hbfiles
 echo "%HB_DR%lib\win\msvc\*.*"                      >> _hbfiles
 echo "%HB_DR%lib\win\msvc64\*.*"                    >> _hbfiles
 rem echo "%HB_DR%bin\harbour-20-bcc.dll"                >> _hbfiles
-rem echo "%HB_DR%bin\harbourmt-20-bcc.dll"              >> _hbfiles
 echo "%HB_DR%lib\win\bcc\*.*"                       >> _hbfiles
 echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc64\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\wce\poccarm\*.*"                   >> _hbfiles
 echo "%HB_DR%bin\harbour-%HB_VS%-x64.dll"           >> _hbfiles
-echo "%HB_DR%bin\harbourmt-%HB_VS%-x64.dll"         >> _hbfiles
 echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"       >> _hbfiles
-echo "%HB_DR%bin\harbourmt-%HB_VS%-wce-arm.dll"     >> _hbfiles
 rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"           >> _hbfiles
-rem echo "%HB_DR%bin\harbourmt-%HB_VS%-os2.dll"         >> _hbfiles
 echo "%HB_DR%tests\*.*"                             >> _hbfiles
 echo "%HB_DR%doc\*.*"                               >> _hbfiles
 echo "%HB_DR%comp\mingw\*"                          >> _hbfiles

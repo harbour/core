@@ -1792,29 +1792,19 @@ ifeq ($(HB_INIT_DONE),)
       endif
       endif
 
+      HB_DYNLIB_BASE_ST := harbour
       ifeq ($(HB_PLATFORM),dos)
-         HB_DYNLIB_BASE_ST := harbour
-         HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
-         HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)
       else
       ifeq ($(HB_PLATFORM),os2)
-         HB_DYNLIB_BASE_ST := harbour
-         HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
-         HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)
       else
-         HB_DYNLIB_BASE_ST := harbour
-         HB_DYNLIB_BASE_MT := harbourmt
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)$(DYNNAME_POST)
-         HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)$(DYNNAME_POST)
       endif
       endif
 
       export HB_DYNLIB_BASE_ST
-      export HB_DYNLIB_BASE_MT
       export HB_DYNLIB_ST
-      export HB_DYNLIB_MT
    endif
 endif
 
