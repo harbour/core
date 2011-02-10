@@ -174,8 +174,8 @@ PROCEDURE Standalone( aParams, hProjectList )
    IF ! lCustom
       /* Find out which projects are in current dir, these will be our primary targets */
       FOR EACH tmp IN hProjectList
-         tmp1 := hb_ps() + FNameDirGet( PathSepToSelf( tmp:__enumKey() ) )
-         IF tmp1 == Right( hb_pwd(), Len( tmp1 ) ) /* Not ultimate solution */
+         tmp1 := hb_ps() + hb_FNameDir( PathSepToSelf( tmp:__enumKey() ) )
+         IF tmp1 == Right( hb_cwd(), Len( tmp1 ) ) /* Not ultimate solution */
             hProjectReqList[ tmp:__enumKey() ] := tmp:__enumKey()
             s_cReBase := SubStr( tmp1, 2 )
          ENDIF
@@ -305,7 +305,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
       FOR EACH cProject IN aFilter
          FOR EACH tmp IN hProjectList
             IF hb_FileMatch( PathSepToSelf( cProject ), PathSepToSelf( tmp:__enumKey() ) ) .OR. ;
-               hb_FileMatch( PathSepToSelf( cProject ), DirDelPathSep( FNameDirGet( PathSepToSelf( tmp:__enumKey() ) ) ) )
+               hb_FileMatch( PathSepToSelf( cProject ), hb_DirSepDel( hb_FNameDir( PathSepToSelf( tmp:__enumKey() ) ) ) )
                IF lFilterNegative
                   IF tmp:__enumKey() $ hProjectReqList
                      hb_HDel( hProjectReqList, tmp:__enumKey() )
@@ -433,7 +433,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) +;
                                                        iif( ( lPrimary .OR. lContainer ) .AND. ;
                                                             hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
-                                                            GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
+                                                            GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -454,7 +454,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
                /* Compile documentation */
                IF lInstall
-                  mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
+                  mk_hbd( hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
                ENDIF
             ENDIF
          ELSE
@@ -500,7 +500,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
                 ENDIF
             #endif
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
-                                         "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
+                                         "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
          ENDIF
       NEXT
    ENDIF
@@ -543,8 +543,8 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
       hb_setenv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
       hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
 
-      IF hb_FileExists( FNameExtSet( cProjectPath, ".hbc" ) )
-         cOptionsLibDyn += " " + FNameExtSet( cProjectPath, ".hbc" )
+      IF hb_FileExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
+         cOptionsLibDyn += " " + hb_FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
       hb_setenv( "_HB_DYNSUFF" )
@@ -615,34 +615,10 @@ STATIC FUNCTION mk_hbd( cDir )
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
 
-STATIC FUNCTION FNameDirGet( cFileName )
-   LOCAL cDir
-
-   hb_FNameSplit( cFileName, @cDir )
-
-   RETURN cDir
-
-STATIC FUNCTION FNameExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-STATIC FUNCTION FNameExtDef( cFileName, cDefExt )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   IF Empty( cExt )
-      cExt := cDefExt
-   ENDIF
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
 STATIC FUNCTION DirGetName( cDir )
    LOCAL cName
 
-   cDir := DirDelPathSep( cDir )
+   cDir := hb_DirSepDel( cDir )
 
    hb_FNameSplit( cDir,, @cName )
 
@@ -652,96 +628,8 @@ STATIC FUNCTION DirGetName( cDir )
 
    RETURN cName
 
-STATIC FUNCTION DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
-   ENDIF
-
-   RETURN cDir
-
-STATIC FUNCTION DirDelPathSep( cDir )
-
-   IF Empty( hb_osDriveSeparator() )
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ELSE
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ENDIF
-
-   RETURN cDir
-
 STATIC FUNCTION PathSepToSelf( cFileName )
    RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
-
-STATIC FUNCTION hb_pwd()
-   RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
-
-STATIC FUNCTION PathMakeAbsolute( cPathR, cPathA )
-   LOCAL cDirA
-   LOCAL cDirR, cDriveR, cNameR, cExtR
-
-   IF Empty( cPathA )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
-
-   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathA, @cDirA )
-
-   IF Empty( cDirA )
-      RETURN cPathR
-   ENDIF
-
-   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
-
-#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
-
-/* NOTE: Can hurt if there are symlinks on the way. */
-STATIC FUNCTION PathNormalize( cPath )
-   LOCAL aDir
-   LOCAL cDir
-
-   IF ! Empty( cPath )
-
-      aDir := hb_ATokens( cPath, hb_ps() )
-
-      FOR EACH cDir IN aDir DESCEND
-         IF cDir == "."
-            hb_ADel( aDir, cDir:__enumIndex(), .T. )
-         ELSEIF !( cDir == ".." ) .AND. ;
-            ! Empty( cDir ) .AND. ;
-            ! _ISDRIVESPEC( cDir )
-            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
-               aDir[ cDir:__enumIndex() + 1 ] == ".."
-               hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
-               hb_ADel( aDir, cDir:__enumIndex(), .T. )
-            ENDIF
-         ENDIF
-      NEXT
-
-      cPath := ""
-      FOR EACH cDir IN aDir
-         cPath += cDir
-         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
-            cPath += hb_ps()
-         ENDIF
-      NEXT
-
-      IF Empty( cPath )
-         cPath := "." + hb_ps()
-      ENDIF
-   ENDIF
-
-   RETURN cPath
 
 /* Convert indented list of line to tree / list of parent-child pairs */
 STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )

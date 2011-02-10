@@ -63,7 +63,7 @@ PROCEDURE Main( ... )
 
             OutStd( "! Copying root documents..." + hb_eol() )
 
-            IF DirBuild( tmp )
+            IF hb_DirBuild( PathSepToSelf( tmp ) )
                FOR EACH aFile IN Directory( "Change*" )
                   mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
                NEXT
@@ -93,7 +93,7 @@ PROCEDURE Main( ... )
 
          OutStd( "! Copying *nix config files..." + hb_eol() )
 
-         IF DirBuild( GetEnvC( "HB_INSTALL_ETC" ) )
+         IF hb_DirBuild( PathSepToSelf( GetEnvC( "HB_INSTALL_ETC" ) ) )
             mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
@@ -104,7 +104,7 @@ PROCEDURE Main( ... )
             OutStd( "! Creating *nix ld config file..." + hb_eol() )
 
             tmp := GetEnvC( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
-            IF DirBuild( tmp )
+            IF hb_DirBuild( PathSepToSelf( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
                IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
@@ -120,7 +120,7 @@ PROCEDURE Main( ... )
 
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
-         IF DirBuild( GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
+         IF hb_DirBuild( PathSepToSelf( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
             FOR EACH tmp IN { "src/main/harbour.1"    ,;
                               "src/pp/hbpp.1"         ,;
                               "utils/hbmk2/hbmk2.1"   ,;
@@ -182,7 +182,7 @@ PROCEDURE Main( ... )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
                FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
                   mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                          PathSepToSelf( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                          PathSepToSelf( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF
          NEXT
@@ -383,104 +383,8 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 STATIC FUNCTION FNameEscape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
 
-STATIC FUNCTION FNameExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
 STATIC FUNCTION PathSepToSelf( cFileName )
    RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
-
-STATIC FUNCTION DirBuild( cDir )
-   LOCAL cDirTemp
-   LOCAL cDirItem
-   LOCAL tmp
-
-   cDir := PathNormalize( PathSepToSelf( cDir ) )
-
-   IF ! hb_DirExists( cDir )
-
-      cDir := DirAddPathSep( cDir )
-
-      IF ! Empty( hb_osDriveSeparator() ) .AND. ;
-         ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
-         cDirTemp := Left( cDir, tmp )
-         cDir := SubStr( cDir, tmp + 1 )
-      ELSEIF Left( cDir, 1 ) == hb_ps()
-         cDirTemp := Left( cDir, 1 )
-         cDir := SubStr( cDir, 2 )
-      ELSE
-         cDirTemp := ""
-      ENDIF
-
-      FOR EACH cDirItem IN hb_ATokens( cDir, hb_ps() )
-         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. ! Empty( cDirTemp )
-            cDirTemp += hb_ps()
-         ENDIF
-         IF ! Empty( cDirItem )  /* Skip root path, if any */
-            cDirTemp += cDirItem
-            IF hb_FileExists( cDirTemp )
-               RETURN .F.
-            ELSEIF ! hb_DirExists( cDirTemp )
-               IF hb_DirCreate( cDirTemp ) != 0
-                  RETURN .F.
-               ENDIF
-            ENDIF
-         ENDIF
-      NEXT
-   ENDIF
-
-   RETURN .T.
-
-#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
-
-/* NOTE: Can hurt if there are symlinks on the way. */
-STATIC FUNCTION PathNormalize( cPath )
-   LOCAL aDir
-   LOCAL cDir
-
-   IF ! Empty( cPath )
-
-      aDir := hb_ATokens( cPath, hb_ps() )
-
-      FOR EACH cDir IN aDir DESCEND
-         IF cDir == "."
-            hb_ADel( aDir, cDir:__enumIndex(), .T. )
-         ELSEIF !( cDir == ".." ) .AND. ;
-            ! Empty( cDir ) .AND. ;
-            ! _ISDRIVESPEC( cDir )
-            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
-               aDir[ cDir:__enumIndex() + 1 ] == ".."
-               hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
-               hb_ADel( aDir, cDir:__enumIndex(), .T. )
-            ENDIF
-         ENDIF
-      NEXT
-
-      cPath := ""
-      FOR EACH cDir IN aDir
-         cPath += cDir
-         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
-            cPath += hb_ps()
-         ENDIF
-      NEXT
-
-      IF Empty( cPath )
-         cPath := "." + hb_ps()
-      ENDIF
-   ENDIF
-
-   RETURN cPath
-
-STATIC FUNCTION DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
-   ENDIF
-
-   RETURN cDir
 
 /* Like hb_FCopy(), but accepts dir as target and can set attributes */
 STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
@@ -696,7 +600,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    LOCAL aInclude
    LOCAL aExclude
 
-   LOCAL cSelfName := _HB_SELF_PREFIX + Upper( __FNameNameGet( cOutputName ) ) + _HB_SELF_SUFFIX
+   LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
    LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
@@ -742,8 +646,8 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    cExtern += "/*          compiler family. [vszakats]                                 */" + hb_eol()
    cExtern += cLine
    cExtern += hb_eol()
-   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
-   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
    cExtern += hb_eol()
    cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
    cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
@@ -778,10 +682,3 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    cExtern += "#endif" + hb_eol()
 
    RETURN hb_MemoWrit( cOutputName, cExtern )
-
-STATIC FUNCTION __FNameNameGet( cFileName )
-   LOCAL cName
-
-   hb_FNameSplit( cFileName,, @cName )
-
-   RETURN cName

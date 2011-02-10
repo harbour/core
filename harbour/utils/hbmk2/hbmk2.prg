@@ -513,6 +513,14 @@ REQUEST HB_HKEYS
 REQUEST HB_FGETATTR
 REQUEST HB_FSETATTR
 
+REQUEST HB_DIRBUILD
+REQUEST HB_FNAMENAME
+REQUEST HB_FNAMEDIR
+REQUEST HB_FNAMEEXTSET
+REQUEST HB_DIRSEPADD
+REQUEST HB_DIRSEPDEL
+REQUEST HB_PATHJOIN
+
 /* For hbrun emulation */
 STATIC s_cDirBase_hbrun
 STATIC s_cProgName_hbrun
@@ -9814,9 +9822,6 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    ENDIF
 
    RETURN cItem
-
-STATIC FUNCTION hb_cwd()
-   RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL nStart

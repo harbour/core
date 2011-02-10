@@ -49,18 +49,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *    hbide_PathMakeAbsolute(), hbide_DirAddPathSep(), DirDelPathSep()
- *    hbide_pwd()
- *
- * See COPYING for licensing terms.
- *
- */
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -917,34 +905,6 @@ FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_PathMakeAbsolute( cPathR, cPathA )
-   LOCAL cDirA, cDirR, cDriveR, cNameR, cExtR
-
-   IF Empty( cPathA )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
-
-   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
-      RETURN cPathR
-   ENDIF
-
-   hb_FNameSplit( cPathA, @cDirA )
-
-   IF Empty( cDirA )
-      RETURN cPathR
-   ENDIF
-
-   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_pwd()
-   RETURN hbide_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
-
-/*----------------------------------------------------------------------*/
-
 function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed )
    LOCAL s := ''
    LOCAL t := valtype( x )
@@ -1519,31 +1479,6 @@ FUNCTION hbide_outputLine( cLine, nOccur )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
-   ENDIF
-
-   RETURN cDir
-
-STATIC FUNCTION DirDelPathSep( cDir )
-
-   IF Empty( hb_osDriveSeparator() )
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ELSE
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ENDIF
-
-   RETURN cDir
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
    LOCAL aDir, a_
 
@@ -1660,7 +1595,7 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
 
 FUNCTION hbide_syncRoot( cRoot, cPath )
    LOCAL cPth, cFile, cExt
-   LOCAL cPathProc := hbide_PathMakeAbsolute( cRoot, cPath )
+   LOCAL cPathProc := hb_PathJoin( cPath, cRoot )
 
    hb_fNameSplit( cPath, @cPth, @cFile, @cExt )
 
@@ -1792,16 +1727,6 @@ FUNCTION hbide_imageForFileType( cType )
       RETURN "source_unknown" //"fl_txt"
    ENDSWITCH
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-/* Borrowed from hbmk2.prg - thanks Viktor */
-
-FUNCTION FNameExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /*----------------------------------------------------------------------*/
 

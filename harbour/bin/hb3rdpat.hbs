@@ -346,8 +346,8 @@ PROCEDURE Main( ... )
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", hb_ps() )
             ENDIF
             /* The destination argument must fit in the 8+3 scheme */
-            IF Len( FNameNameGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
-                  Len( FNameExtGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
+            IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
+                  Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
                OutStd( hb_strFormat( "E: Destination does not fit 8+3, offending "+       ;
                                      "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
@@ -397,11 +397,11 @@ PROCEDURE Main( ... )
       cRoot := cCWD + hb_ps()
    #endif
 
-   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, FNameNameGet( hb_ProgName() ) + "_" ) )
+   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
    hb_DirCreate( s_cTempDir )
 
-   cThisComponent := FNameNameGet( cCWD )
+   cThisComponent := hb_FNameName( cCWD )
 
    hb_DirCreate( CombinePath( s_cTempDir, cThisComponent ) )
    hb_DirCreate( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
@@ -687,7 +687,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    IF cArchiver == NIL
       OutStd( "E: Can not find archiver for `" +                                          ;
-               FNameNameExtGet( cArchiveURL ) + "'" + hb_eol() )
+               hb_FNameNameExt( cArchiveURL ) + "'" + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -765,46 +765,12 @@ STATIC PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
 STATIC PROCEDURE Usage( nExitVal )
 
-   OutStd( "Usage: " + FNameNameExtGet( hb_ProgName() ) + " [-h|-help|-rediff]" + hb_eol() )
+   OutStd( "Usage: " + hb_FNameNameExt( hb_ProgName() ) + " [-h|-help|-rediff]" + hb_eol() )
    OutStd( "       Documentation is provided in the source code." + hb_eol() )
    ErrorLevel( nExitVal )
    QUIT
 
    RETURN
-
-/* from hbmk2 */
-
-STATIC FUNCTION FNameDirGet( cFileName )
-
-   LOCAL cDir
-
-   hb_FNameSplit( cFileName, @cDir )
-
-   RETURN cDir
-
-STATIC FUNCTION FNameNameGet( cFileName )
-
-   LOCAL cName
-
-   hb_FNameSplit( cFileName,, @cName )
-
-   RETURN cName
-
-STATIC FUNCTION FNameNameExtGet( cFileName )
-
-   LOCAL cName, cExt
-
-   hb_FNameSplit( cFileName,, @cName, @cExt )
-
-   RETURN hb_FNameMerge( NIL, cName, cExt )
-
-STATIC FUNCTION FNameExtGet( cFileName )
-
-   LOCAL cExt
-
-   hb_FNameSplit( cFileName,,, @cExt )
-
-   RETURN cExt
 
 STATIC FUNCTION URL_GetFileName( cURL )
 
@@ -851,7 +817,7 @@ STATIC FUNCTION hb_FileTran( cFileName )
 
       /* This is a shot in the dark. Haru works with this transform,
        * but other components may very well need different handling. */
-      cChangeFrom := FNameNameExtGet( aChange[ 1 ] )
+      cChangeFrom := hb_FNameNameExt( aChange[ 1 ] )
       cChangeTo := aChange[ 2 ]
 
       /* Local-style includes */

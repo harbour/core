@@ -439,7 +439,7 @@ METHOD IdeFunctions:loadTags( aProjects )
       FOR EACH cProjectTitle IN a_
          cProjFile := ::oPM:getProjectFileNameFromTitle( cProjectTitle )
          IF ! empty( cProjFile ) .AND. hb_fileExists( cProjFile )
-            cTagFile := FNameExtSet( cProjFile, ".tag" )
+            cTagFile := hb_FNameExtSet( cProjFile, ".tag" )
             IF hb_fileExists( cTagFile )
                lPopulate := .t.
 
@@ -536,7 +536,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
          ::aTags[ n, 2 ] := aCTags
       ENDIF
 
-      hb_memowrit( FNameExtSet( cProjFile, ".tag" ), hb_serialize( aCTags ) )
+      hb_memowrit( hb_FNameExtSet( cProjFile, ".tag" ), hb_serialize( aCTags ) )
 
       ::consolidateList()
       ::populateTable()
