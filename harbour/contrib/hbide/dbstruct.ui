@@ -313,6 +313,19 @@
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="buttonCopyStruct">
+   <property name="geometry">
+    <rect>
+     <x>204</x>
+     <y>360</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Copy Struct</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

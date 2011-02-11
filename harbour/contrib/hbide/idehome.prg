@@ -174,22 +174,22 @@ METHOD IdeHome:execEvent( nMode, p )
    LOCAL cAct, qUrl, cText, cExt
 
    DO CASE
-   CASE nMode == tabWidget_currentChanged
+   CASE nMode == "tabWidget_currentChanged"
       IF p == 0
          ::qCurBrowser := ::qWelcomeBrowser
       ELSEIF p == 1
          ::qCurBrowser := ::qFaqBrowser
       ENDIF
 
-   CASE nMode == browserStat_anchorClicked
+   CASE nMode == "browserStat_anchorClicked"
       qUrl  := QUrlFromPointer( p )
-      cText := lower( qUrl:toString() )
+      cText := qUrl:toString()
 
-      IF "prj-" $ cText
+      IF "prj-" $ lower( cText )
          ::cClickedProject := substr( cText, 5 )
          ::buildProjectDetails( ::cClickedProject )
 
-      ELSEIF "fle-" $ cText
+      ELSEIF "fle-" $ lower( cText )
          ::cClickedSource := substr( cText, 5 )
 
          /* Send it for Editing */
@@ -203,7 +203,7 @@ METHOD IdeHome:execEvent( nMode, p )
          ::buildProjectDetails( ::cClickedProject )
       ENDIF
 
-   CASE nMode == browserWelcome_contextMenuRequested  .OR. nMode == browserFaq_contextMenuRequested
+   CASE nMode == "browserWelcome_contextMenuRequested"  .OR. nMode == "browserFaq_contextMenuRequested"
 
       IF !empty( cAct := hbide_popupBrwContextMenu( ::qCurBrowser, p ) )
          IF cAct $ "Back,Forward,Home"
@@ -289,8 +289,8 @@ METHOD IdeHome:buildWelcomeTab()
    ::qWelcomeBrowser := qBrw
    ::qCurBrowser     := qBrw
 
-   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked          , p ) } )
-   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserWelcome_contextMenuRequested, p ) } )
+   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( "browserStat_anchorClicked"          , p ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "browserWelcome_contextMenuRequested", p ) } )
 
    qSList := QStringList()
    qSList:append( "docs" )
@@ -488,7 +488,7 @@ METHOD IdeHome:buildFaqTab()
    qBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::setStyleSheetTextBrowser( qBrw )
 
-   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserFaq_contextMenuRequested, p  ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "browserFaq_contextMenuRequested", p  ) } )
 
    ::oFaqTab     := oTab
    ::qFaqBrowser := qBrw

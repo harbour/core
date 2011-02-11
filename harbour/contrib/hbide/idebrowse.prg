@@ -486,7 +486,7 @@ METHOD IdeBrowseManager:setPanel( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
-   LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl
+   LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl, aStruct, cTmp
 
    HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
@@ -666,6 +666,22 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
    CASE "buttonZaptable_clicked"
+      EXIT
+   CASE "buttonCopyStruct_clicked"
+      IF !empty( aStruct := ::oCurBrw:dbStruct() )
+         i := 0
+         aeval( aStruct, {|e_| iif( len( e_[ 1 ] ) > i, i := len( e_[ 1 ] ), NIL ) } )
+         i += 2
+
+         cTmp := "   LOCAL aStruct := {"
+         aeval( aStruct, {|e_,n| cTmp += iif( n == 1, ' { ', space( 20 ) + '  { ' ) + ;
+                                    pad( '"' + e_[ 1 ] + '"', i ) + ', "' + e_[ 2 ] + '", ' + ;
+                                        str( e_[ 3 ], 4, 0 ) + ', ' + ;
+                                            str( e_[ 4 ], 2, 0 ) + ' }' + ;
+                                                iif( len( aStruct ) == n, " }", ",;" ) + hb_eol() } )
+
+         QClipboard():setText( cTmp )
+      ENDIF
       EXIT
    /*  End - left-toolbar actions */
 
@@ -854,6 +870,9 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:q_comboType:addItem( "Logical"   )
 
    oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
+
+   ::qStruct:q_buttonCopyStruct:connect( "clicked()", {|| ::execEvent( "buttonCopyStruct_clicked" ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -676,11 +676,13 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
       FOR i := 1 TO len( aSubs )
          IF !empty( aSubs[ i ] )
             cCPath := hbide_buildPathFromSubs( aSubs, i )
-            n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cCPath, .t. ) ) } )
+            //n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cCPath, .t. ) ) } )
+            n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cCPath, .f. ) ) } )
 
             IF n == 0
                cPPath  := hbide_buildPathFromSubs( aSubs, i - 1 )
-               nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cPPath, .t. ) ) } )
+               //nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cPPath, .t. ) ) } )
+               nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cPPath, .f. ) ) } )
 
                oParent := aNodes[ nP, 1 ]
 
