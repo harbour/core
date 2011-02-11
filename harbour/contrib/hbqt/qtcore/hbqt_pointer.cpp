@@ -186,6 +186,36 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
+int hbqt_IsObjectType( int iParam, int iType )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_IsObjectType( %d )", iParam ) );
+
+   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
+   {
+      HBQT_GC_T * p;
+
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pItem );
+      hb_vmSend( 0 );
+
+      pItem = hb_param( -1, HB_IT_POINTER );
+
+      if( pItem )
+      {
+         p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
+
+         if( p && p->ph )
+            return p->type == iType;
+      }
+   }
+
+   /* hbqt_errRT_ARG(); */ /* NOTE: Could not check type for whatever reason */
+
+   return HB_FALSE;
+}
+
 HB_FUNC( HBQT_ISOBJECT )
 {
    PHB_ITEM pParam = hb_param( 1, HB_IT_OBJECT );
