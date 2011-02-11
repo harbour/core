@@ -130,11 +130,11 @@ HB_FUNC( HB_BASE64DECODE )
 
    if( nSrcLen > 0 )
    {
-      HB_SIZE nDstLen = ( ( ( nSrcLen * 3 ) / 4 ) + 1 );
+      HB_SIZE nDstLen = ( ( ( nSrcLen * 3 ) / 4 ) + 1 ) * sizeof( char );
 
       if( nDstLen <= HB_SIZE_MAX )
       {
-         char * code = ( char * ) hb_xgrab( nDstLen * sizeof( char ) );
+         char * code = ( char * ) hb_xgrab( nDstLen );
 
          nDstLen = base64_decode_block( hb_parcx( 1 ), nSrcLen, code );
 
