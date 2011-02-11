@@ -66,13 +66,30 @@
 #include <QtNetwork/QHttpResponseHeader>
 #include <QtNetwork/QNetworkRequest>
 
+#define _RET_GC_PTR_
+
+#ifdef _RET_GC_PTR_
+HB_EXTERN_BEGIN
+extern void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew );
+#if 0  // Classes not initiated yet!
+extern void * hbqt_gcAllocate_QNetworkProxy( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QUrlInfo( void * pObj, bool bNew );
+#endif
+HB_EXTERN_END
+#endif
+
 /*----------------------------------------------------------------------*/
 
 static void hbqt_SlotsExecQHttpResponseHeader( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef _RET_GC_PTR_
+   hb_vmPushPointerGC( hbqt_gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ), true ) ); /* TOFIX: Pass .prg level object to callback */
+#else
    hb_vmPushPointer( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+#endif
    hb_vmSend( 1 );
 }
 
@@ -80,6 +97,13 @@ static void hbqt_SlotsExecQNetworkProxyPointer( PHB_ITEM * codeBlock, void ** ar
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#if 0
+#ifdef _RET_GC_PTR_
+   hb_vmPushPointerGC( hbqt_gcAllocate_QNetworkProxy( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * ) >( arguments[ 1 ] ) ) ), true ) ); /* TOFIX: Pass .prg level object to callback */
+#else
+   hb_vmPushPointer( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+#endif
+#endif
    hb_vmPushPointer( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmPushPointer( *reinterpret_cast< void*( * )>( arguments[ 2 ] ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 2 );
@@ -89,7 +113,11 @@ static void hbqt_SlotsExecQNetworkRequest( PHB_ITEM * codeBlock, void ** argumen
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef _RET_GC_PTR_
+   hb_vmPushPointerGC( hbqt_gcAllocate_QNetworkRequest( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ), true ) ); /* TOFIX: Pass .prg level object to callback */
+#else
    hb_vmPushPointer( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+#endif
    hb_vmSend( 1 );
 }
 
@@ -97,6 +125,13 @@ static void hbqt_SlotsExecQUrlInfo( PHB_ITEM * codeBlock, void ** arguments )
 {
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#if 0
+#ifdef _RET_GC_PTR_
+   hb_vmPushPointerGC( hbqt_gcAllocate_QUrlInfo( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ), true ) ); /* TOFIX: Pass .prg level object to callback */
+#else
+   hb_vmPushPointer( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
+#endif
+#endif
    hb_vmPushPointer( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * )>( arguments[ 1 ] ) ) ) ); /* TOFIX: Pass .prg level object to callback */
    hb_vmSend( 1 );
 }
