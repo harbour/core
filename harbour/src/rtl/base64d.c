@@ -55,20 +55,11 @@
 
 #include "hbapi.h"
 
-typedef enum
-{
-   step_a, step_b, step_c, step_d
-} base64_decodestep;
+/* Warning: this code works only on ASCII based machines */
 
-typedef struct
+static signed char base64_decode_value( char value_in )
 {
-   base64_decodestep step;
-   char plainchar;
-} base64_decodestate;
-
-static int base64_decode_value( char value_in )
-{
-   static const char s_decoding[] =
+   static const signed char s_decoding[] =
    {
       62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1,
       -1, -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -77,88 +68,59 @@ static int base64_decode_value( char value_in )
    };
 
    value_in -= 43;
-   if( value_in < 0 || value_in > ( char ) HB_SIZEOFARRAY( s_decoding ) )
+   if( value_in < 0 || value_in >= ( char ) HB_SIZEOFARRAY( s_decoding ) )
       return -1;
 
    return s_decoding[ ( int ) value_in ];
 }
 
-static int base64_decode_block( const char * code_in, const int length_in, char * pszPlainttextOut )
+static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_in, char * pszPlainttextOut )
 {
-   base64_decodestep    step;
-   char                 plainchar;
-
    const char *         codechar = code_in;
+   const char *         code_end = code_in + length_in;
    char *               pszPlainchar = pszPlainttextOut;
-   char                 fragment;
+   signed char          fragment;
 
-   step       = step_a;
-   plainchar  = 0;
-
-   *pszPlainchar = plainchar;
-
-   switch( step )
+   for( ;; )
    {
-      for( ;; )
+      do
       {
-         case step_a:
-            do
-            {
-               if( codechar == code_in + length_in )
-               {
-                  step       = step_a;
-                  plainchar  = *pszPlainchar;
-                  return pszPlainchar - pszPlainttextOut;
-               }
-               fragment = ( char ) base64_decode_value( *codechar++ );
-            }
-            while( fragment < 0 );
-            *pszPlainchar = ( fragment & 0x03f ) << 2;
-         case step_b:
-            do
-            {
-               if( codechar == code_in + length_in )
-               {
-                  step       = step_b;
-                  plainchar  = *pszPlainchar;
-                  return pszPlainchar - pszPlainttextOut;
-               }
-               fragment = ( char ) base64_decode_value( *codechar++ );
-            }
-            while( fragment < 0 );
-            *pszPlainchar++ |= ( fragment & 0x030 ) >> 4;
-            *pszPlainchar    = ( fragment & 0x00f ) << 4;
-         case step_c:
-            do
-            {
-               if( codechar == code_in + length_in )
-               {
-                  step       = step_c;
-                  plainchar  = *pszPlainchar;
-                  return pszPlainchar - pszPlainttextOut;
-               }
-               fragment = ( char ) base64_decode_value( *codechar++ );
-            }
-            while( fragment < 0 );
-            *pszPlainchar++ |= ( fragment & 0x03c ) >> 2;
-            *pszPlainchar    = ( fragment & 0x003 ) << 6;
-         case step_d:
-            do
-            {
-               if( codechar == code_in + length_in )
-               {
-                  step       = step_d;
-                  plainchar  = *pszPlainchar;
-                  return pszPlainchar - pszPlainttextOut;
-               }
-               fragment = ( char ) base64_decode_value( *codechar++ );
-            }
-            while( fragment < 0 );
-            *pszPlainchar++ |= ( fragment & 0x03f );
+         if( codechar == code_end )
+            return pszPlainchar - pszPlainttextOut;
+         fragment = base64_decode_value( *codechar++ );
       }
+      while( fragment < 0 );
+      *pszPlainchar = ( fragment & 0x03f ) << 2;
+
+      do
+      {
+         if( codechar == code_end )
+            return pszPlainchar - pszPlainttextOut;
+         fragment = base64_decode_value( *codechar++ );
+      }
+      while( fragment < 0 );
+      *pszPlainchar++ |= ( fragment & 0x030 ) >> 4;
+      *pszPlainchar    = ( fragment & 0x00f ) << 4;
+
+      do
+      {
+         if( codechar == code_end )
+            return pszPlainchar - pszPlainttextOut;
+         fragment = base64_decode_value( *codechar++ );
+      }
+      while( fragment < 0 );
+      *pszPlainchar++ |= ( fragment & 0x03c ) >> 2;
+      *pszPlainchar    = ( fragment & 0x003 ) << 6;
+
+      do
+      {
+         if( codechar == code_end )
+            return pszPlainchar - pszPlainttextOut;
+         fragment = base64_decode_value( *codechar++ );
+      }
+      while( fragment < 0 );
+      *pszPlainchar++ |= ( fragment & 0x03f );
    }
-   /* control should not reach here */
-   return pszPlainchar - pszPlainttextOut;
 }
 
 HB_FUNC( HB_BASE64DECODE )
@@ -167,7 +129,7 @@ HB_FUNC( HB_BASE64DECODE )
 
    if( len > 0 && len <= INT_MAX ) /* TOFIX */
    {
-      char * code = ( char * ) hb_xgrab( ( ( ( ( len - 1 ) * 3 ) / 4 ) + 1 ) * sizeof( char ) );
+      char * code = ( char * ) hb_xgrab( ( ( ( len * 3 ) / 4 ) + 1 ) * sizeof( char ) );
       HB_SIZE nSize = base64_decode_block( hb_parcx( 1 ), len, code );
 
       hb_retclen_buffer( code, nSize );
