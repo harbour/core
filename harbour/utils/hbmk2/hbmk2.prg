@@ -2999,9 +2999,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                RETURN _ERRLEV_WORKDIRCREATE
             ENDIF
             #if ! defined( __PLATFORM__UNIX )
-               tmp := At( _WORKDIR_DEF_ + hb_ps(), hbmk[ _HBMK_cWorkDir ] + hb_ps() )
+               tmp := hb_AtI( _WORKDIR_BASE_ + hb_ps(), hbmk[ _HBMK_cWorkDir ] + hb_ps() )
                IF tmp > 0
-                  hb_FSetAttr( Left( hbmk[ _HBMK_cWorkDir ], tmp - 1 ) + _WORKDIR_DEF_, FC_HIDDEN )
+                  hb_FSetAttr( Left( hbmk[ _HBMK_cWorkDir ], tmp - 1 ) + _WORKDIR_BASE_, FC_HIDDEN )
                ENDIF
             #endif
          ENDIF
