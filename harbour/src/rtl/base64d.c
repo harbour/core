@@ -54,6 +54,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapierr.h"
 
 /* Warning: this code works only on ASCII based machines */
 
@@ -125,14 +126,22 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
 
 HB_FUNC( HB_BASE64DECODE )
 {
-   HB_SIZE len = hb_parclen( 1 );
+   HB_SIZE nSrcLen = hb_parclen( 1 );
 
-   if( len > 0 && len <= INT_MAX ) /* TOFIX */
+   if( nSrcLen > 0 )
    {
-      char * code = ( char * ) hb_xgrab( ( ( ( len * 3 ) / 4 ) + 1 ) * sizeof( char ) );
-      HB_SIZE nSize = base64_decode_block( hb_parcx( 1 ), len, code );
+      HB_SIZE nDstLen = ( ( ( nSrcLen * 3 ) / 4 ) + 1 );
 
-      hb_retclen_buffer( code, nSize );
+      if( nDstLen <= HB_SIZE_MAX )
+      {
+         char * code = ( char * ) hb_xgrab( nDstLen * sizeof( char ) );
+
+         nDstLen = base64_decode_block( hb_parcx( 1 ), nSrcLen, code );
+
+         hb_retclen_buffer( code, nDstLen );
+      }
+      else
+         hb_errRT_BASE( EG_STROVERFLOW, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
       hb_retc_null();

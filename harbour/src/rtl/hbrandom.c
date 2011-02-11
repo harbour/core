@@ -66,7 +66,7 @@ static volatile int s_fInit = 0;
  *
  * HB_RANDOM() --> returns a real value n so that 0 <= n < 1
  * HB_RANDOM( x ) --> returns a real number n so that 0 <= n < x
- * HB_RANDOM( x, y) --> Returns a  real number n so that  x <= n < y
+ * HB_RANDOM( x, y ) --> Returns a real number n so that x <= n < y
  */
 HB_FUNC( HB_RANDOM )
 {
@@ -95,7 +95,7 @@ HB_FUNC( HB_RANDOM )
  *
  * HB_RANDOMINT() --> returns 0 or 1, evenly distributed
  * HB_RANDOMINT( N ) --> returns an integer between 1 and N (inclusive)
- * HB_RANDOMINT( x, y) --> Returns a real number between x and y (inclusive)
+ * HB_RANDOMINT( x, y ) --> Returns a real number between x and y (inclusive)
  * The integer returned is of the longest type available
  */
 HB_FUNC( HB_RANDOMINT )
