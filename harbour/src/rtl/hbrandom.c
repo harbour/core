@@ -86,7 +86,7 @@ HB_FUNC( HB_RANDOM )
          dY = dX;
          dX = dZ;
       }
-      hb_retnd(  dRnd * ( dY - dX ) + dX );
+      hb_retnd( dRnd * ( dY - dX ) + dX );
    }
 }
 
