@@ -54,8 +54,8 @@
 #include "hbqt.h"
 
 #include "hbapiitm.h"
-#include "hbvm.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 
 #if QT_VERSION >= 0x040500
 
@@ -219,6 +219,11 @@ HB_FUNC( __HBQT_PTR )
    }
 
    hb_itemReturn( pParam );
+}
+
+void hbqt_errRT_ARG( void )
+{
+   hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 void * hbqt_detachgcpointer( int iParam )
