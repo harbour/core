@@ -165,7 +165,7 @@ HB_FUNC( HB_BASE64DECODE )
 {
    HB_SIZE len = hb_parclen( 1 );
 
-   if( len <= INT_MAX ) /* TOFIX */
+   if( len > 0 && len <= INT_MAX ) /* TOFIX */
    {
       char * code = ( char * ) hb_xgrab( ( ( ( ( len - 1 ) * 3 ) / 4 ) + 1 ) * sizeof( char ) );
       HB_SIZE nSize = base64_decode_block( hb_parcx( 1 ), len, code );
