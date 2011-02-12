@@ -669,7 +669,8 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
    FOR EACH s IN aPaths
       cPath := s
       cPath := hbide_stripRoot( cRoot, cPath )
-      cPath := hbide_pathNormalized( cPath, .t. )
+      //cPath := hbide_pathNormalized( cPath, .t. )
+      cPath := hbide_pathNormalized( cPath, .f. )
 
       aSubs := hb_aTokens( cPath, "/" )
 
@@ -683,19 +684,20 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
                cPPath  := hbide_buildPathFromSubs( aSubs, i - 1 )
                //nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cPPath, .t. ) ) } )
                nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cPPath, .f. ) ) } )
+               IF nP > 0
+                  oParent := aNodes[ nP, 1 ]
 
-               oParent := aNodes[ nP, 1 ]
+                  cOSPath := hbide_pathToOSPath( cRoot + cCPath )
 
-               cOSPath := hbide_pathToOSPath( cRoot + cCPath )
+                  oChild  := QTreeWidgetItem()
+                  oChild:setText( 0, aSubs[ i ] )
+                  oChild:setIcon( 0, cIcon )
+                  oChild:setToolTip( 0, cOSPath )
 
-               oChild  := QTreeWidgetItem()
-               oChild:setText( 0, aSubs[ i ] )
-               oChild:setIcon( 0, cIcon )
-               oChild:setToolTip( 0, cOSPath )
+                  oParent:addChild( oChild )
 
-               oParent:addChild( oChild )
-
-               aadd( aNodes, { oChild, "Path", oParent, cOSPath, aSubs[ i ] } )
+                  aadd( aNodes, { oChild, "Path", oParent, cOSPath, aSubs[ i ] } )
+               ENDIF
             ENDIF
          ENDIF
       NEXT

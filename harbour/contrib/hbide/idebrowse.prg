@@ -2323,10 +2323,17 @@ METHOD IdeBrowse:search( cSearch, lSoft, lLast, nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:refreshAll()
+   LOCAL qRect
 
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
    ::oBrw:setCurrentIndex( .t. )
+   qRect := ::qMdi:geometry()
+   qRect:setHeight( qRect:height() + 3 )
+   ::qMdi:setGeometry( qRect)
+   qRect:setHeight( qRect:height() - 3 )
+   ::qMdi:setGeometry( qRect)
+
    ::dispInfo()
 
    RETURN Self
@@ -2373,7 +2380,7 @@ METHOD IdeBrowse:lock()
 METHOD IdeBrowse:goToAsk()
    LOCAL nRec
 
-   IF ! empty( nRec := ( QInputDialog() ):getInt( , "Goto", "Record_# ?", ::recno(), 1, ::lastrec() ) )
+   IF ! empty( nRec := ( QInputDialog() ):getInt( ::qMdi, "Goto", "Record_# ?", ::recno(), 1, ::lastrec() ) )
       ::goto( nRec )
       ::refreshAll()
    ENDIF

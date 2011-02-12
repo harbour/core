@@ -95,7 +95,7 @@ CLASS HbpProcess
    METHOD new( cShellCmd )
    METHOD create( cShellCmd )
    METHOD destroy()                               VIRTUAL
-   METHOD addArg( cArg )
+   METHOD addArg( cArg, lTokened )
    METHOD start( cShellCmd )
 
    METHOD waitForFinished()                       INLINE ::qProcess:waitForFinished()
@@ -175,13 +175,23 @@ METHOD HbpProcess:output( bBlock )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpProcess:addArg( cArg )
+METHOD HbpProcess:addArg( cArg, lTokened )
+   LOCAL s
+
+   DEFAULT lTokened TO .f.
 
    IF empty( ::qStrList )
       ::qStrList := QStringList()
    ENDIF
-   ::qStrList:append( cArg )
-
+   IF ! lTokened
+      ::qStrList:append( cArg )
+   ELSE
+      FOR EACH s IN hb_aTokens( cArg, " " )
+         IF ! empty( s := alltrim( s ) )
+            ::qStrList:append( s )
+         ENDIF
+      NEXT
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

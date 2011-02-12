@@ -694,7 +694,7 @@ METHOD IdeToolsManager:addPanelsMenu( cPrompt )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpen )
-   LOCAL cArg
+   LOCAL cArg, lTokened
 
    ::oProcess := HbpProcess():new()
 
@@ -704,9 +704,11 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
    ::oProcess:lDetached   := !( lCapture )
 
    IF empty( cCmd )
+      lTokened := .f.
       cCmd := hbide_getShellCommand()
       cArg := iif( hbide_getOS() == "nix", "", "/C " )
    ELSE
+      lTokened := .t.
       cArg := ""
    ENDIF
 
@@ -721,7 +723,7 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
       ::oOutputResult:oWidget:append( cArg )
       ::oOutputResult:oWidget:append( hbide_outputLine() )
    ENDIF
-   ::oProcess:addArg( cArg )
+   ::oProcess:addArg( cArg, lTokened )
    ::oProcess:start( cCmd )
 
    RETURN Self
