@@ -57,7 +57,7 @@
 FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrw
-   LOCAL lExit, lAppend, lKeyPressed, lRefresh, lDispScore
+   LOCAL lExit, lAppend, lKeyPressed, lRefresh
    LOCAL n, nOldCursor, nKey
    LOCAL cOldScreen
    LOCAL bAction
@@ -106,8 +106,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       lKeyPressed := .T.
    ENDIF
 
-   lDispScore := .T.
-
    DO WHILE ! lExit
 
       DO WHILE ! lKeyPressed .AND. ! oBrw:Stabilize()
@@ -131,10 +129,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                             { 2, 2 } )
          ENDIF
 
-         IF lDispScore
-            lDispScore := .F.
-            StatLine( oBrw, lAppend )
-         ENDIF 
+         StatLine( oBrw, lAppend )
 
          oBrw:ForceStable()
 
@@ -163,7 +158,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                lRefresh := .T.
             ELSE
                oBrw:Up()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -175,7 +169,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                oBrw:HitBottom( .T. )
             ELSE
                oBrw:Down()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -184,7 +177,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                lRefresh := .T.
             ELSE
                oBrw:PageUp()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -193,7 +185,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                oBrw:HitBottom( .T. )
             ELSE
                oBrw:PageDown()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -202,7 +193,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                lRefresh := .T.
             ELSE
                oBrw:GoTop()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -211,7 +201,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                lRefresh := .T.
             ELSE
                oBrw:GoBottom()
-               lDispScore := .T.
             ENDIF
             EXIT
 
@@ -354,10 +343,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
       IF lAppend .AND. RecNo() == LastRec() + 1
          dbAppend()
       ENDIF
-      IF RLock()
-         Eval( oCol:Block, xValue )
-         DbUnlock()
-      ENDIF 
+      Eval( oCol:Block, xValue )
 
       IF !lAppend .AND. !Empty( cForExp := OrdFor( IndexOrd() ) ) .AND. ;
          ! &cForExp
