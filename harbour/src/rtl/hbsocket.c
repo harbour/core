@@ -83,6 +83,9 @@
    platform supports getnameinfo() function:
       #define HB_HAS_NAMEINFO
 
+   platform supports gethostbyaddr function:
+      #define HB_HAS_GETHOSTBYADDR
+
    platform uses sockaddr structure which contains sa_len member:
       #define HB_HAS_SOCKADDR_SA_LEN
 
@@ -126,6 +129,7 @@
 #     define HB_HAS_SOCKADDR_STORAGE
 #     define HB_HAS_ADDRINFO
 #     define HB_HAS_NAMEINFO
+#     define HB_HAS_GETHOSTBYADDR
 #  endif
 #  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS ) && !defined( HB_OS_MINIX )
 #     define HB_HAS_INET6
@@ -166,6 +170,7 @@
 #     define HB_HAS_SOCKADDR_STORAGE
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
+#  define HB_HAS_GETHOSTBYADDR
 #elif defined( HB_OS_OS2 )
 #  if defined( __WATCOMC__ )
 #     define HB_HAS_INET_PTON
@@ -179,6 +184,7 @@
 #        define HB_HAS_SOCKADDR_SA_LEN
 #     endif
 #  endif
+#  define HB_HAS_GETHOSTBYADDR
 #elif defined( HB_OS_DOS )
 #  define HB_HAS_INET_ATON
 #  define HB_HAS_INET_PTON
@@ -186,6 +192,7 @@
 #  define HB_HAS_SOCKADDR_STORAGE
 #  define HB_HAS_ADDRINFO
 #  define HB_HAS_NAMEINFO
+#  define HB_HAS_GETHOSTBYADDR
 #  define HB_HAS_INET6_ADDR_CONST
 /* #  define HB_HAS_INET6 */
 #endif
@@ -2929,7 +2936,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 {
    PHB_ITEM pItem = NULL;
 
-#ifdef HB_HAS_ADDRINFO
+#if defined( HB_HAS_ADDRINFO )
    struct addrinfo hints, *res = NULL, *ai;
    int iResult;
 
@@ -2995,7 +3002,8 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
       /* gethostbyname() in Windows and OS2 does not accept direct IP
        * addresses
        */
-#if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
+#if ( defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \
+    defined( HB_HAS_GETHOSTBYADDR )
       {
          ULONG addr = inet_addr( szAddr );
          if( addr != INADDR_NONE || strcmp( "255.255.255.255", szAddr ) == 0 )
@@ -3072,17 +3080,45 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
       hb_vmLock();
       if( iResult == 0 )
          szResult = hb_strdup( szHost );
+#elif defined( HB_HAS_ADDRINFO ) && !defined( HB_HAS_GETHOSTBYADDR )
+      char * szAddr = hb_socketAddrGetName( pSockAddr, len );
+      if( szAddr )
+      {
+         struct addrinfo hints, *res = NULL;
+
+         hb_vmUnlock();
+         memset( &hints, 0, sizeof( hints ) );
+         hints.ai_family = af;
+         hints.ai_flags = AI_CANONNAME;
+         if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+         {
+            if( res->ai_canonname )
+               szResult = hb_strdup( res->ai_canonname );
+            freeaddrinfo( res );
+         }
+         hb_vmLock();
+      }
 #else
       struct hostent * he = NULL;
 
       if( af == AF_INET )
       {
+#if defined( HB_HAS_GETHOSTBYADDR )
          const struct sockaddr_in * sa = ( const struct sockaddr_in * ) pSockAddr;
          hb_vmUnlock();
          he = gethostbyaddr( ( const char * ) &sa->sin_addr, sizeof( sa->sin_addr ), af );
          hb_vmLock();
+#else
+         char * szAddr = hb_socketAddrGetName( pSockAddr, len );
+         if( szAddr )
+         {
+            hb_vmUnlock();
+            he = gethostbyname( szAddr );
+            hb_vmLock();
+         }
+#endif
       }
-#if defined( HB_HAS_INET6 )
+#if defined( HB_HAS_INET6 ) && defined( HB_HAS_GETHOSTBYADDR )
       else if( af == AF_INET6 )
       {
          const struct sockaddr_in6 * sa = ( const struct sockaddr_in6 * ) pSockAddr;
