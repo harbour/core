@@ -9,6 +9,8 @@
 
 -DHBRUN_WITH_HEADERS
 
+-head=dep
+
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase
 -ldflag={allmsvc}-fixed:no

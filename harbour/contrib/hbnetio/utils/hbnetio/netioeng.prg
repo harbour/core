@@ -26,6 +26,9 @@
  *
  */
 
+#define _NETIOMGM_IPV4_DEF  "127.0.0.1"
+#define _NETIOMGM_PORT_DEF  2940
+
 #define _NETIOCLI_cIP                    1
 #define _NETIOCLI_nPort                  2
 #define _NETIOCLI_pConnection            3
@@ -56,17 +59,36 @@ STATIC PROCEDURE hbnetiocon_dispevent( netiocli, cText )
 
    RETURN
 
-STATIC FUNCTION hbnetiocon_init( hConIO, cIP, nPort, cPassword )
+STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
    LOCAL netiocli[ _NETIOCLI_MAX_ ]
 
-   netiocli[ _NETIOCLI_cIP ]         := cIP
-   netiocli[ _NETIOCLI_nPort ]       := nPort
+   LOCAL cParam
+   LOCAL cIP := _NETIOMGM_IPV4_DEF
+   LOCAL nPort := _NETIOMGM_PORT_DEF
+   LOCAL cPassword := ""
+
+   FOR EACH cParam IN aParam
+      DO CASE
+      CASE Lower( Left( cParam, Len( "--netio.addr=" ) ) ) == "--netio.addr="
+         hbnetiocon_IPPortSplit( SubStr( cParam, Len( "--netio.addr=" ) + 1 ), @cIP, @nPort )
+         IF Empty( nPort )
+            nPort := _NETIOMGM_PORT_DEF
+         ENDIF
+      CASE Lower( Left( cParam, Len( "--netio.pass=" ) ) ) == "--netio.pass="
+         cPassword := SubStr( cParam, Len( "--netio.pass=" ) + 1 )
+         hb_StrClear( @cParam )
+      ENDCASE
+   NEXT
+
+   netiocli[ _NETIOCLI_cIP ]         := ""
+   netiocli[ _NETIOCLI_nPort ]       := 0
    netiocli[ _NETIOCLI_pConnection ] := NIL
    netiocli[ _NETIOCLI_nStreamID ]   := NIL
    netiocli[ _NETIOCLI_hConIO ]      := hConIO
    netiocli[ _NETIOCLI_hCommands ]   := { ;
       "?"             => { ""               , "Synonym for 'help'."                            , {| netiocli | cmdHelp( netiocli ) } },;
       "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| netiocli, cCommand | cmdConnect( netiocli, cCommand ) } },;
+      "about"         => { ""               , "About."                                         , {| netiocli | cmdAbout( netiocli ) } },;
       "disconnect"    => { ""               , "Disconnect."                                    , {| netiocli | cmdDisconnect( netiocli ) } },;
       "sysinfo"       => { ""               , "Show server system/build information."          , {| netiocli | cmdSysInfo( netiocli ) } },;
       "showconf"      => { ""               , "Show server configuration."                     , {| netiocli | cmdServerConfig( netiocli ) } },;
@@ -308,6 +330,14 @@ STATIC FUNCTION XToStrX( xValue )
    RETURN ""
 
 /* Commands */
+
+STATIC PROCEDURE cmdAbout( netiocli )
+
+   hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2011, Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
+
+   RETURN
 
 STATIC PROCEDURE cmdHelp( netiocli )
    LOCAL hCommands := netiocli[ _NETIOCLI_hCommands ]

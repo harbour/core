@@ -90,6 +90,7 @@ PROCEDURE _APPMAIN( cFile, ... )
    LOCAL cExt
    LOCAL hHeaders
 
+   /* TODO: Rework parameter handling */
    IF PCount() > 0
       SWITCH Lower( cFile )
          CASE "-?"
@@ -101,7 +102,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             EXIT
          CASE "-v"
          CASE "/v"
-            hbrun_Prompt( "? hb_version()" )
+            hbrun_Prompt( hb_AParams(), "? hb_version()" )
             EXIT
 #if defined( __PLATFORM__WINDOWS )
          CASE "-r"
@@ -128,49 +129,54 @@ PROCEDURE _APPMAIN( cFile, ... )
          CASE "-p"
          CASE "/p"
             s_lPreserveHistory := .F.
-            hbrun_Prompt()
+            hbrun_Prompt( hb_AParams() )
             EXIT
          OTHERWISE
-            cFile := hbrun_FindInPath( cFile )
-            IF ! Empty( cFile )
-               hb_FNameSplit( cFile, NIL, NIL, @cExt )
-               cExt := Lower( cExt )
-               SWITCH cExt
-                  CASE ".prg"
-                  CASE ".hbs"
-                  CASE ".hrb"
-                  CASE ".dbf"
-                     EXIT
-                  OTHERWISE
-                     cExt := hbrun_FileSig( cFile )
-               ENDSWITCH
-               SWITCH cExt
-                  CASE ".dbf"
-                     hbrun_Prompt( "USE " + cFile + " SHARED" )
-                     EXIT
-                  CASE ".prg"
-                  CASE ".hbs"
-                     IF Empty( getenv( "HBRUN_NOHEAD" ) )
-                        hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
-                     ENDIF
-
-                     cFile := HB_COMPILEBUF( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                             "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
-                     IF cFile == NIL
-                        ERRORLEVEL( 1 )
+            IF Left( cFile, 2 ) == "--"
+               hbrun_Prompt( hb_AParams() )
+               EXIT
+            ELSE
+               cFile := hbrun_FindInPath( cFile )
+               IF ! Empty( cFile )
+                  hb_FNameSplit( cFile, NIL, NIL, @cExt )
+                  cExt := Lower( cExt )
+                  SWITCH cExt
+                     CASE ".prg"
+                     CASE ".hbs"
+                     CASE ".hrb"
+                     CASE ".dbf"
                         EXIT
-                     ENDIF
-                  OTHERWISE
-                     s_cDirBase := hb_DirBase()
-                     s_cProgName := hb_ProgName()
-                     hb_argShift( .T. )
-                     hb_hrbRun( cFile, ... )
-                     EXIT
-               ENDSWITCH
+                     OTHERWISE
+                        cExt := hbrun_FileSig( cFile )
+                  ENDSWITCH
+                  SWITCH cExt
+                     CASE ".dbf"
+                        hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
+                        EXIT
+                     CASE ".prg"
+                     CASE ".hbs"
+                        IF Empty( getenv( "HBRUN_NOHEAD" ) )
+                           hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
+                        ENDIF
+
+                        cFile := HB_COMPILEBUF( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
+                                                "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                        IF cFile == NIL
+                           ERRORLEVEL( 1 )
+                           EXIT
+                        ENDIF
+                     OTHERWISE
+                        s_cDirBase := hb_DirBase()
+                        s_cProgName := hb_ProgName()
+                        hb_argShift( .T. )
+                        hb_hrbRun( cFile, ... )
+                        EXIT
+                  ENDSWITCH
+               ENDIF
             ENDIF
       ENDSWITCH
    ELSE
-      hbrun_Prompt()
+      hbrun_Prompt( hb_AParams() )
    ENDIF
 
    RETURN
@@ -223,7 +229,7 @@ STATIC FUNCTION hbrun_FileSig( cFile )
 #define _PLUGIN_cID                 4
 #define _PLUGIN_MAX_                4
 
-STATIC FUNCTION plugins_load( hPlugins )
+STATIC FUNCTION plugins_load( hPlugins, aParams )
    LOCAL hConIO := {;
       "displine"  => {| c | hbrun_ToConsole( c ) } ,;
       "gethidden" => {|| hbrun_GetHidden() } }
@@ -256,7 +262,7 @@ STATIC FUNCTION plugins_load( hPlugins )
       IF ! Empty( plugin[ _PLUGIN_hHRB ] )
          plugin[ _PLUGIN_hMethods ] := Do( hHRBEntry )
          IF ! Empty( plugin[ _PLUGIN_hMethods ] )
-           plugin[ _PLUGIN_ctx ] := Eval( plugin[ _PLUGIN_hMethods ][ "init" ], hConIO )
+           plugin[ _PLUGIN_ctx ] := Eval( plugin[ _PLUGIN_hMethods ][ "init" ], hConIO, aParams )
            IF ! Empty( plugin[ _PLUGIN_ctx ] )
               plugin[ _PLUGIN_cID ] := plugin[ _PLUGIN_hMethods ][ "id" ]
               IF ! Empty( plugin[ _PLUGIN_cID ] )
@@ -277,8 +283,8 @@ STATIC FUNCTION plugins_command( plugins, cCommand, cDomain )
          IF Eval( plugin[ _PLUGIN_hMethods ][ "cmd" ], plugin[ _PLUGIN_ctx ], SubStr( cCommand, Len( plugin[ _PLUGIN_cID ] ) + 2 ) )
             RETURN .T.
          ENDIF
-      ELSEIF !( cDomain == "." )
-         IF Eval( plugin[ _PLUGIN_hMethods ][ "cmd" ], plugin[ _PLUGIN_ctx ], cDomain + cCommand )
+      ELSEIF cDomain == plugin[ _PLUGIN_cID ]
+         IF Eval( plugin[ _PLUGIN_hMethods ][ "cmd" ], plugin[ _PLUGIN_ctx ], cCommand )
             RETURN .T.
          ENDIF
       ENDIF
@@ -297,6 +303,16 @@ STATIC FUNCTION plugins_valid_id( plugins, cID )
 
    RETURN .F.
 
+STATIC FUNCTION plugins_valid_list( plugins )
+   LOCAL plugin
+   LOCAL aList := {}
+
+   FOR EACH plugin IN plugins
+      AAdd( aList, plugin[ _PLUGIN_cID ] )
+   NEXT
+
+   RETURN aList
+
 STATIC PROCEDURE plugins_unload( plugins )
    LOCAL plugin
 
@@ -306,7 +322,7 @@ STATIC PROCEDURE plugins_unload( plugins )
 
    RETURN
 
-STATIC PROCEDURE hbrun_Prompt( cCommand )
+STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
    LOCAL GetList
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
@@ -315,14 +331,13 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL lResize := .F.
    LOCAL plugins
 
-   LOCAL cDomain := "."
+   LOCAL cDomain := ""
+   LOCAL tmp
 
    IF hb_gtVersion( 0 ) == "CGI"
       OutErr( "hbrun: Error: Interactive session not possible with GTCGI terminal driver" + hb_eol() )
       RETURN
    ENDIF
-
-   plugins := plugins_load( __hbrun_plugins() )
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -349,6 +364,8 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 
    s_nRow := 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 )
 
+   plugins := plugins_load( __hbrun_plugins(), aParams )
+
    DO WHILE .T.
 
       IF cLine == NIL
@@ -359,7 +376,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 
       nMaxRow := MaxRow()
       nMaxCol := MaxCol()
-      @ nMaxRow, 0 SAY cDomain
+      @ nMaxRow, 0 SAY cDomain + "."
       @ nMaxRow, Col() GET cLine ;
                        PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
 
@@ -414,11 +431,16 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
       hbrun_Info( cCommand )
 
       IF ! Empty( cCommand )
+
          IF Left( cCommand, 1 ) == "."
             IF cCommand == "."
-               cDomain := "."
+               cDomain := ""
             ELSEIF plugins_valid_id( plugins, SubStr( cCommand, 2 ) )
-               cDomain := SubStr( cCommand, 2 ) + "."
+               cDomain := SubStr( cCommand, 2 )
+            ELSE
+               FOR EACH tmp IN plugins_valid_list( plugins )
+                  hbrun_ToConsole( "." + tmp )
+               NEXT
             ENDIF
          ELSE
             IF ! plugins_command( plugins, cCommand, cDomain )
