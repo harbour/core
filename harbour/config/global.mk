@@ -1756,7 +1756,11 @@ ifeq ($(HB_INIT_DONE),)
       ifeq ($(HB_PLATFORM),darwin)
          DYNNAME_POST := .$(HB_DYN_VER)
       else
+      ifneq ($(filter $(HB_PLATFORM),dos os2),)
+         DYNNAME_POST :=
+      else
          DYNNAME_POST := -$(HB_DYN_VER)
+      endif
       endif
 
       ifeq ($(HB_PLATFORM),win)
@@ -1793,18 +1797,22 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       HB_DYNLIB_BASE := harbour
-      ifeq ($(HB_PLATFORM),dos)
-         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)
-      else
-      ifeq ($(HB_PLATFORM),os2)
-         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)
-      else
-         HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(DYNNAME_POST)
-      endif
-      endif
+      HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(DYNNAME_POST)
 
       export HB_DYNLIB_BASE
       export HB_DYNLIB_NAME
+
+      ifeq ($(_HB_BUILD_DYN_ST),yes)
+         ifneq ($(filter $(HB_PLATFORM),dos os2),)
+            HB_DYNLIB_BASE_2ND := harbours
+         else
+            HB_DYNLIB_BASE_2ND := harbourst
+         endif
+         HB_DYNLIB_NAME_2ND := $(HB_DYNLIB_BASE_2ND)$(DYNNAME_POST)
+
+         export HB_DYNLIB_BASE_2ND
+         export HB_DYNLIB_NAME_2ND
+      endif
    endif
 endif
 
