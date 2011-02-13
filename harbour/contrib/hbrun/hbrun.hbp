@@ -19,6 +19,8 @@
 hbrun.prg
 
 -request=__hbrun_extensions
+headers.prg
+plugins.prg
 pullext.prg
 
 -lhbcplr
@@ -27,6 +29,10 @@ pullext.prg
 
 -icon={allwin}../../package/harb_win.ico
 -icon={os2}../../package/harb_os2.ico
+
+# Plugins
+
+-I../hbnetio/utils/hbnetio
 
 # Here comes the list of contribs linked in:
 # - Make sure to keep it in sync with pullext.prg.

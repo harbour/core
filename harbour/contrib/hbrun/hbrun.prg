@@ -51,12 +51,14 @@
  *
  */
 
+#include "color.ch"
 #include "common.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
 #include "hbgtinfo.ch"
+#include "hbhrb.ch"
 
 /* NOTE: use hbextern library instead of #include "hbextern.ch"
  *       in dynamic builds it will greatly reduce the size because
@@ -70,15 +72,8 @@ REQUEST HB_GT_CGI
 REQUEST HB_GT_PCA
 REQUEST HB_GT_STD
 
-
-/* command to store header files in hash array */
-#command ADD HEADER TO <hash> FILE <(cFile)> => ;
-         #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
-
-
 #define HB_HISTORY_LEN 500
 #define HB_LINE_LEN    256
-#define HB_PROMPT      "."
 
 STATIC s_nRow
 STATIC s_nCol := 0
@@ -156,7 +151,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                   CASE ".prg"
                   CASE ".hbs"
                      IF Empty( getenv( "HBRUN_NOHEAD" ) )
-                        hHeaders := hbrun_CoreHeaderFiles() /* add core header files */
+                        hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
                      ENDIF
 
                      cFile := HB_COMPILEBUF( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
@@ -179,88 +174,6 @@ PROCEDURE _APPMAIN( cFile, ... )
    ENDIF
 
    RETURN
-
-STATIC FUNCTION hbrun_CoreHeaderFiles()
-   LOCAL hHeaders
-
-#ifdef HBRUN_WITH_HEADERS
-
-   hHeaders := { => }
-
-   ADD HEADER TO hHeaders FILE "achoice.ch"
-   ADD HEADER TO hHeaders FILE "assert.ch"
-   ADD HEADER TO hHeaders FILE "blob.ch"
-   ADD HEADER TO hHeaders FILE "box.ch"
-   ADD HEADER TO hHeaders FILE "button.ch"
-   ADD HEADER TO hHeaders FILE "color.ch"
-   ADD HEADER TO hHeaders FILE "common.ch"
-   ADD HEADER TO hHeaders FILE "dbedit.ch"
-   ADD HEADER TO hHeaders FILE "dbinfo.ch"
-   ADD HEADER TO hHeaders FILE "dbstruct.ch"
-   ADD HEADER TO hHeaders FILE "directry.ch"
-   ADD HEADER TO hHeaders FILE "error.ch"
-   ADD HEADER TO hHeaders FILE "fileio.ch"
-   ADD HEADER TO hHeaders FILE "getexit.ch"
-   ADD HEADER TO hHeaders FILE "hb.ch"
-   ADD HEADER TO hHeaders FILE "hbclass.ch"
-   ADD HEADER TO hHeaders FILE "hbcom.ch"
-   ADD HEADER TO hHeaders FILE "hbdebug.ch"
-   ADD HEADER TO hHeaders FILE "hbdyn.ch"
-   ADD HEADER TO hHeaders FILE "hbextcdp.ch"
-   ADD HEADER TO hHeaders FILE "hbextern.ch"
-   ADD HEADER TO hHeaders FILE "hbextlng.ch"
-   ADD HEADER TO hHeaders FILE "hbgfx.ch"
-   ADD HEADER TO hHeaders FILE "hbgfxdef.ch"
-   ADD HEADER TO hHeaders FILE "hbgtinfo.ch"
-   ADD HEADER TO hHeaders FILE "hbhrb.ch"
-   ADD HEADER TO hHeaders FILE "hbinkey.ch"
-   ADD HEADER TO hHeaders FILE "hblang.ch"
-   ADD HEADER TO hHeaders FILE "hblpp.ch"
-   ADD HEADER TO hHeaders FILE "hbmacro.ch"
-   ADD HEADER TO hHeaders FILE "hbmath.ch"
-   ADD HEADER TO hHeaders FILE "hbmemory.ch"
-   ADD HEADER TO hHeaders FILE "hbmemvar.ch"
-   ADD HEADER TO hHeaders FILE "hboo.ch"
-   ADD HEADER TO hHeaders FILE "hbpers.ch"
-   ADD HEADER TO hHeaders FILE "hbsetup.ch"
-   ADD HEADER TO hHeaders FILE "hbsix.ch"
-   ADD HEADER TO hHeaders FILE "hbsocket.ch"
-   ADD HEADER TO hHeaders FILE "hbstdgen.ch"
-   ADD HEADER TO hHeaders FILE "hbsxdef.ch"
-   ADD HEADER TO hHeaders FILE "hbthread.ch"
-   ADD HEADER TO hHeaders FILE "hbtrace.ch"
-   ADD HEADER TO hHeaders FILE "hbusrrdd.ch"
-   ADD HEADER TO hHeaders FILE "hbver.ch"
-   ADD HEADER TO hHeaders FILE "hbzlib.ch"
-   ADD HEADER TO hHeaders FILE "inkey.ch"
-   ADD HEADER TO hHeaders FILE "memoedit.ch"
-   ADD HEADER TO hHeaders FILE "ord.ch"
-   ADD HEADER TO hHeaders FILE "rddsys.ch"
-   ADD HEADER TO hHeaders FILE "reserved.ch"
-   ADD HEADER TO hHeaders FILE "set.ch"
-   ADD HEADER TO hHeaders FILE "setcurs.ch"
-   ADD HEADER TO hHeaders FILE "simpleio.ch"
-   ADD HEADER TO hHeaders FILE "std.ch"
-   ADD HEADER TO hHeaders FILE "tbrowse.ch"
-   ADD HEADER TO hHeaders FILE "harbour.hbx"
-   ADD HEADER TO hHeaders FILE "hbcpage.hbx"
-   ADD HEADER TO hHeaders FILE "hblang.hbx"
-   ADD HEADER TO hHeaders FILE "hbscalar.hbx"
-   ADD HEADER TO hHeaders FILE "hbusrrdd.hbx"
-
-   #if defined( __PLATFORM__UNIX )
-      hb_HCaseMatch( hHeaders, .T. )
-   #else
-      hb_HCaseMatch( hHeaders, .F. )
-   #endif
-
-#else
-
-   hHeaders := NIL
-
-#endif /* HBRUN_WITH_HEADERS */
-
-   RETURN hHeaders
 
 /* Public hbrun API */
 FUNCTION hbrun_DirBase()
@@ -304,6 +217,95 @@ STATIC FUNCTION hbrun_FileSig( cFile )
 
    RETURN cExt
 
+#define _PLUGIN_hHRB                1
+#define _PLUGIN_hMethods            2
+#define _PLUGIN_ctx                 3
+#define _PLUGIN_cID                 4
+#define _PLUGIN_MAX_                4
+
+STATIC FUNCTION plugins_load( hPlugins )
+   LOCAL hConIO := {;
+      "displine"  => {| c | hbrun_ToConsole( c ) } ,;
+      "gethidden" => {|| hbrun_GetHidden() } }
+
+   LOCAL plugin
+   LOCAL plugins := {}
+   LOCAL hHRBEntry
+   LOCAL cFile
+
+   FOR EACH cFile IN hPlugins
+
+      plugin := Array( _PLUGIN_MAX_ )
+      plugin[ _PLUGIN_hHRB ] := NIL
+
+      SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
+      CASE ".hbs"
+      CASE ".prg"
+         cFile := hb_compileFromBuf( cFile, "-n2", "-w", "-es2", "-q0" )
+         IF cFile == NIL
+            EXIT
+         ENDIF
+      CASE ".hrb"
+         plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+         IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbrun_plugin" ) )
+            plugin[ _PLUGIN_hHRB ] := NIL
+         ENDIF
+         EXIT
+      ENDSWITCH
+
+      IF ! Empty( plugin[ _PLUGIN_hHRB ] )
+         plugin[ _PLUGIN_hMethods ] := Do( hHRBEntry )
+         IF ! Empty( plugin[ _PLUGIN_hMethods ] )
+           plugin[ _PLUGIN_ctx ] := Eval( plugin[ _PLUGIN_hMethods ][ "init" ], hConIO )
+           IF ! Empty( plugin[ _PLUGIN_ctx ] )
+              plugin[ _PLUGIN_cID ] := plugin[ _PLUGIN_hMethods ][ "id" ]
+              IF ! Empty( plugin[ _PLUGIN_cID ] )
+                 AAdd( plugins, plugin )
+              ENDIF
+           ENDIF
+        ENDIF
+      ENDIF
+   NEXT
+
+   RETURN plugins
+
+STATIC FUNCTION plugins_command( plugins, cCommand, cDomain )
+   LOCAL plugin
+
+   FOR EACH plugin IN plugins
+      IF Left( cCommand, Len( plugin[ _PLUGIN_cID ] ) + 1 ) == plugin[ _PLUGIN_cID ] + "."
+         IF Eval( plugin[ _PLUGIN_hMethods ][ "cmd" ], plugin[ _PLUGIN_ctx ], SubStr( cCommand, Len( plugin[ _PLUGIN_cID ] ) + 2 ) )
+            RETURN .T.
+         ENDIF
+      ELSEIF !( cDomain == "." )
+         IF Eval( plugin[ _PLUGIN_hMethods ][ "cmd" ], plugin[ _PLUGIN_ctx ], cDomain + cCommand )
+            RETURN .T.
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN .F.
+
+STATIC FUNCTION plugins_valid_id( plugins, cID )
+   LOCAL plugin
+
+   FOR EACH plugin IN plugins
+      IF plugin[ _PLUGIN_cID ] == cID
+         RETURN .T.
+      ENDIF
+   NEXT
+
+   RETURN .F.
+
+STATIC PROCEDURE plugins_unload( plugins )
+   LOCAL plugin
+
+   FOR EACH plugin IN plugins
+      Eval( plugin[ _PLUGIN_hMethods ][ "exit" ], plugin[ _PLUGIN_ctx ] )
+   NEXT
+
+   RETURN
+
 STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL GetList
    LOCAL cLine
@@ -311,11 +313,16 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
    LOCAL lResize := .F.
+   LOCAL plugins
+
+   LOCAL cDomain := "."
 
    IF hb_gtVersion( 0 ) == "CGI"
       OutErr( "hbrun: Error: Interactive session not possible with GTCGI terminal driver" + hb_eol() )
       RETURN
    ENDIF
+
+   plugins := plugins_load( __hbrun_plugins() )
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -352,7 +359,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 
       nMaxRow := MaxRow()
       nMaxCol := MaxCol()
-      @ nMaxRow, 0 SAY HB_PROMPT
+      @ nMaxRow, 0 SAY cDomain
       @ nMaxRow, Col() GET cLine ;
                        PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
 
@@ -391,31 +398,78 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
          LOOP
       ENDIF
 
-      IF EMPTY( s_aHistory ) .OR. ! ATAIL( s_aHistory ) == cLine
-         IF LEN( s_aHistory ) < HB_HISTORY_LEN
-            AADD( s_aHistory, cLine )
+      IF Empty( s_aHistory ) .OR. ! ATail( s_aHistory ) == cLine
+         IF Len( s_aHistory ) < HB_HISTORY_LEN
+            AAdd( s_aHistory, cLine )
          ELSE
-            ADEL( s_aHistory, 1 )
-            s_aHistory[ LEN( s_aHistory ) ] := cLine
+            ADel( s_aHistory, 1 )
+            s_aHistory[ Len( s_aHistory ) ] := cLine
          ENDIF
       ENDIF
-      nHistIndex := LEN( s_aHistory ) + 1
+      nHistIndex := Len( s_aHistory ) + 1
 
       cCommand := AllTrim( cLine, " " )
       cLine := NIL
       @ nMaxRow, 0 CLEAR
       hbrun_Info( cCommand )
 
-      hbrun_Exec( cCommand )
+      IF ! Empty( cCommand )
+         IF Left( cCommand, 1 ) == "."
+            IF cCommand == "."
+               cDomain := "."
+            ELSEIF plugins_valid_id( plugins, SubStr( cCommand, 2 ) )
+               cDomain := SubStr( cCommand, 2 ) + "."
+            ENDIF
+         ELSE
+            IF ! plugins_command( plugins, cCommand, cDomain )
+               hbrun_Exec( cCommand )
+            ENDIF
 
-      IF s_nRow >= MaxRow()
-         Scroll( 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
-         s_nRow := MaxRow() - 1
+            IF s_nRow >= MaxRow()
+               Scroll( 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
+               s_nRow := MaxRow() - 1
+            ENDIF
+         ENDIF
       ENDIF
-
    ENDDO
 
+   plugins_unload( plugins )
+
    RETURN
+
+/* ********************************************************************** */
+
+STATIC PROCEDURE hbrun_ToConsole( cText )
+   QQOut( cText + hb_eol() )
+   RETURN
+
+STATIC FUNCTION hbrun_GetHidden()
+   LOCAL GetList := {}
+   LOCAL cPassword := Space( 128 )
+   LOCAL nSavedRow
+   LOCAL bKeyPaste
+
+   QQOut( "Enter password: " )
+
+   nSavedRow := Row()
+
+   AAdd( GetList, hb_Get():New( Row(), Col(), {| v | iif( PCount() == 0, cPassword, cPassword := v ) }, "cPassword", "@S" + hb_ntos( MaxCol() - Col() + 1 ), hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + hb_ColorIndex( SetColor(), CLR_STANDARD ) ) )
+   ATail( GetList ):hideInput( .T. )
+   ATail( GetList ):postBlock := {|| ! Empty( cPassword ) }
+   ATail( GetList ):display()
+
+   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+
+   READ
+
+   /* Positions the cursor on the line previously saved */
+   SetPos( nSavedRow, MaxCol() - 1 )
+   SetKey( K_ALT_V, bKeyPaste )
+
+   QQOut( hb_eol() )
+
+   RETURN AllTrim( cPassword )
 
 /* ********************************************************************** */
 

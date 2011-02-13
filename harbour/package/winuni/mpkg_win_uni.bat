@@ -133,7 +133,6 @@ echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
 echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
 echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
-echo "%HB_DR%bin\hbnetioc.exe"                      >> _hbfiles
 if exist "%HB_DR%bin\hbide.exe"                     echo "%HB_DR%bin\hbide.exe"                     >> _hbfiles
 if exist "%HB_DR%bin\libgcc_s_dw2-1.dll"            echo "%HB_DR%bin\libgcc_s_dw2-1.dll"            >> _hbfiles
 if exist "%HB_DR%bin\mingwm10.dll"                  echo "%HB_DR%bin\mingwm10.dll"                  >> _hbfiles

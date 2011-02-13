@@ -34,7 +34,6 @@ hbmysql/hbmysql.hbp
 hbmzip/hbmzip.hbp                # uses: minizip (locally hosted)
 hbnetio/hbnetio.hbp
 hbnetio/utils/hbnetio/hbnetio.hbp
-hbnetio/utils/hbnetio/hbnetioc.hbp
 hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp

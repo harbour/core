@@ -50,10 +50,10 @@
  *
  */
 
+#xtranslate PULLEXT <cName> => REQUEST __HBEXTERN__<cName>__ ; AAdd( aList, Lower( <"cName"> ) )
+
 FUNCTION __hbrun_extensions()
    LOCAL aList := {}
-
-   #xtranslate PULLEXT <cName> => REQUEST __HBEXTERN__<cName>__ ; AAdd( aList, Lower( <"cName"> ) )
 
    PULLEXT hbct
    PULLEXT hbexpat

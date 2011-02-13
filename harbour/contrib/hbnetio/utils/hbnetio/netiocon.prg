@@ -50,7 +50,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    LOCAL lQuit
 
-   LOCAL netclictrl := hbrun_plugin()
+   LOCAL netclictrl := __hbrun_plugin()
    LOCAL netclictx
    LOCAL netcliID
 
