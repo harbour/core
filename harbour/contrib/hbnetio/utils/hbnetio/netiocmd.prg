@@ -88,3 +88,18 @@ STATIC PROCEDURE HB_Usage()
    OutStd(               "  -help|--help       this help"                                                         , hb_eol() )
 
    RETURN
+
+STATIC PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
+   LOCAL tmp
+
+   IF ! Empty( cAddr )
+      cIP := cAddr
+      IF ( tmp := At( ":", cIP ) ) > 0
+         nPort := Val( SubStr( cIP, tmp + Len( ":" ) ) )
+         cIP := Left( cIP, tmp - 1 )
+      ELSE
+         nPort := NIL
+      ENDIF
+   ENDIF
+
+   RETURN
