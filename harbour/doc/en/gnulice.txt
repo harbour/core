@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      GNU License
  *  $CATEGORY$
@@ -215,7 +215,7 @@
  *      parties to this License.
  *
  *  $SEEALSO$
- *      GNU License Part 2
+ *      GNU License..
  *  $END$
  */
  /*
@@ -223,7 +223,7 @@
  *  $TEMPLATE$
  *     Document
  *  $NAME$
- *     GNU License
+ *     GNU License..
  *  $CATEGORY$
  *     Document
  *  $SUBCATEGORY$

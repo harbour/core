@@ -854,19 +854,29 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
             CASE DOC_FUN_BEGINS
                EXIT
             CASE DOC_FUN_TEMPLATE
-               oFunc:cTemplate    := s
+               IF ! empty( s )
+                  oFunc:cTemplate    := s
+               ENDIF
                EXIT
             CASE DOC_FUN_FUNCNAME
-               oFunc:cName        := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cName        := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_CATEGORY
-               oFunc:cCategory    := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cCategory    := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_SUBCATEGORY
-               oFunc:cSubCategory := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cSubCategory := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_ONELINER
-               oFunc:cOneLiner    := s
+               IF ! empty( s )
+                  oFunc:cOneLiner    := s
+               ENDIF
                EXIT
             CASE DOC_FUN_SYNTAX
                aadd( oFunc:aSyntax     , s )
@@ -890,28 +900,37 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
                aadd( oFunc:aFiles      , s )
                EXIT
             CASE DOC_FUN_STATUS
-               oFunc:cStatus    := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cStatus    := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_PLATFORMS
-               oFunc:cPlatForms := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cPlatForms := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_SEEALSO
-               oFunc:cSeeAlso   := alltrim( s )
-               EXIT
-            CASE DOC_FUN_SEEALSO
-               oFunc:cVersion   := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cSeeAlso := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_INHERITS
-               oFunc:cInherits  := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cInherits  := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_METHODS
                aadd( oFunc:aMethods    , s )
                EXIT
             CASE DOC_FUN_VERSION
-               oFunc:cVersion   := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cVersion   := alltrim( s )
+               ENDIF
                EXIT
             CASE DOC_FUN_EXTERNALLINK
-               oFunc:cExternalLink := alltrim( s )
+               IF ! empty( s )
+                  oFunc:cExternalLink := alltrim( s )
+               ENDIF
                EXIT
             OTHERWISE
                nPart := DOC_FUN_NONE
@@ -967,7 +986,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
    LOCAL aProto
 
    IF empty( ::aProtoTypes ) //.AND. empty( ::aProtoTypes := hbide_loadHarbourProtos( ::oIde ) )
-      IF !empty( ::cPathInstall )
+      IF ! empty( ::cPathInstall )
          IF ! ::lLoadedProto
             hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
 
@@ -1265,7 +1284,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    ENDIF
 
    IF !empty( oFunc:cPlatforms )
-      aadd( aHtm, x + "Platforms"      + y )
+      aadd( aHtm, x + "Compliance | Platforms" + y )
       aadd( aHtm, v + oFunc:cPlatforms + w )
       aadd( aHtm, z )
    ENDIF

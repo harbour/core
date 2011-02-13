@@ -36,20 +36,22 @@
  *      that produce the video mode change.
  *      The followings are availables for DOS:
  *
- *  <table>
- *      12 rows x 40 columns   12 rows x 80 columns
- *      25 rows x 40 columns   25 rows x 80 columns
- *      28 rows x 40 columns   28 rows x 80 columns
- *      50 rows x 40 columns   43 rows x 80 columns
- *                             50 rows x 80 columns
- *   </table>
+ *      <table>
+ *         12 rows x 40 columns   12 rows x 80 columns
+ *         25 rows x 40 columns   25 rows x 80 columns
+ *         28 rows x 40 columns   28 rows x 80 columns
+ *         50 rows x 40 columns   43 rows x 80 columns
+ *                                50 rows x 80 columns
+ *      </table>
+ *
  *      The follow modes are avaliable to Windows
  *
- *  <table>
- *      25 rows x 40 columns   25 rows x 80 columns
- *      50 rows x 40 columns   43 rows x 80 columns
- *      50 rows x 80 columns
- *   </table>
+ *      <table>
+ *         25 rows x 40 columns   25 rows x 80 columns
+ *         50 rows x 40 columns   43 rows x 80 columns
+ *         50 rows x 80 columns
+ *      </table>
+ *
  *      Some modes only are availables for color and/or VGA monitors.
  *      Any change produced on the screen size is updated in the values
  *      returned by MAXROW() and MAXCOL().
