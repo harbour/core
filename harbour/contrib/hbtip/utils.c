@@ -128,7 +128,7 @@ typedef struct tag_mime
 #define MIME_FLAG_TRIMTABS      0x0002
 #define MIME_FLAG_CASEINSENS    0x0004
 #define MIME_FLAG_CONTINUE      0x0008
-#define MIME_TABLE_SIZE         72
+#define MIME_TABLE_SIZE         71
 
 static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
@@ -196,7 +196,7 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 46*/ { 0, "\x1F\x8B", "application/x-gzip", 0, 0, 0 },
 
    /* PKzip */
-   /* 47*/ { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 },
+   /* 47 { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 }, 2010-12-15 support of xlsx/ods */
 
    /* xml */
    /* 48*/ { 0, "<?xml", "text/xml", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
@@ -263,7 +263,7 @@ typedef struct tag_mime_ext
    HB_USHORT flags;  /* flags for confrontation */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE 19
+#define EXT_MIME_TABLE_SIZE 24
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
@@ -306,7 +306,22 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    /* 17*/ { "rtf", "application/rtf", MIME_FLAG_CASEINSENS },
 
    /* CSV file */
-   /* 18*/ { "csv", "text/csv", MIME_FLAG_CASEINSENS }
+   /* 18*/ { "csv", "text/csv", MIME_FLAG_CASEINSENS },
+
+   /* CSS file */
+   /* 19*/ { "css", "text/css", MIME_FLAG_CASEINSENS },
+
+   /* JS file */
+   /* 20*/ { "js", "application/x-javascript", MIME_FLAG_CASEINSENS },
+
+   /* ODS file */
+   /* 21*/ { "ods", "application/vnd.oasis.opendocument.spreadsheet", MIME_FLAG_CASEINSENS },
+
+   /* XLSX file */
+   /* 22*/ { "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", MIME_FLAG_CASEINSENS },
+
+   /* ZIP file */
+   /* 23*/ { "zip", "application/x-zip", MIME_FLAG_CASEINSENS }
 
 };
 
@@ -385,7 +400,6 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
 static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
 {
    int iCount;
-   HB_BOOL bFormFeed;
 
    for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
@@ -433,44 +447,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
          }
       }
    }
-
-   /* Failure; let's see if it's a text/plain. */
-   bFormFeed = HB_FALSE;
-   iCount = 0;
-   while( iCount < nLen )
-   {
-      /* form feed? */
-      if( cData[ iCount ] == '\x0C' )
-         bFormFeed = HB_TRUE;
-
-      /* esc sequence? */
-      else if( cData[ iCount ] == '\x1B' )
-      {
-         bFormFeed = HB_TRUE;
-         iCount++;
-         if( cData[ iCount ] <= 27 )
-            iCount++;
-
-         if( cData[ iCount ] <= 27 )
-            iCount ++;
-      }
-      else if(
-         ( cData[ iCount ] < 27 && cData[ iCount ] != '\t' && cData[ iCount ] != '\n' && cData[ iCount ] == '\r' ) ||
-           cData[ iCount ] == '\xFF' )
-      {
-         return NULL; /* not an ASCII file, we surrender */
-      }
-
-      iCount++;
-   }
-
-   if( bFormFeed )
-   {
-      /* we have escape sequences, seems a PRN/terminal file */
-      return "application/remote-printing";
-   }
-
-   return "text/plain";
+   return NULL;
 }
 
 static const char * s_findFileMimeType( HB_FHANDLE fileIn )
@@ -533,7 +510,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
          hb_retc_const( ext_type ? ext_type : "unknown" ); /* "unknown" is a valid MIME type */
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( TIP_MIMETYPE )
@@ -547,7 +524,7 @@ HB_FUNC( TIP_MIMETYPE )
       hb_retc_const( magic_type ? magic_type : "unknown" );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -574,22 +551,27 @@ HB_FUNC( __TIP_PSTRCOMPI )
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )
 {
-   const char * cData = hb_parc( 1 );
-
-   if( cData )
+   if( HB_ISCHAR( 1 ) )
    {
       HB_ISIZ nLen = hb_parclen( 1 );
 
       if( nLen )
       {
-         /* Giving maximum final length possible */
-         char * cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
-         HB_ISIZ nPos = 0, nPosRet = 0;
+         const char * pszData = hb_parc( 1 );
+         char * cRet;
+         HB_ISIZ nPos = 0;
+         HB_ISIZ nPosRet = 0;
          HB_BYTE cElem;
+
+         while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
+            nLen--;
+
+         /* Giving maximum final length possible */
+         cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
 
          while( nPos < nLen )
          {
-            cElem = ( HB_BYTE ) cData[ nPos ];
+            cElem = ( HB_BYTE ) pszData[ nPos ];
 
             if( cElem == '&' )
             {
@@ -651,8 +633,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
             }
             else if( cElem >= ' ' )
             {
-               cRet[ nPosRet ] = cElem;
-               nPosRet++;
+               cRet[ nPosRet++ ] = cElem;
             }
 
             nPos++;
@@ -664,7 +645,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          hb_retc_null();
    }
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if defined( HB_LEGACY_LEVEL3 )
@@ -681,4 +662,85 @@ HB_FUNC( HB_BASE64 )
 HB_FUNC( TIP_CRLF )
 {
    hb_retc_const( "\r\n" );
+}
+
+HB_FUNC( TIP_JSONSPECIALCHARS )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+      HB_ISIZ nLen = hb_parclen( 1 );
+
+      if( nLen )
+      {
+         const char * pszData = hb_parc( 1 );
+         char * cRet;
+         HB_ISIZ nPos = 0;
+         HB_ISIZ nPosRet = 0;
+         HB_BYTE cElem;
+
+         while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
+            nLen--;
+
+         /* Giving maximum final length possible */
+         cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
+
+         while( nPos < nLen )
+         {
+            cElem = ( HB_BYTE ) pszData[ nPos ];
+
+            if( cElem == '"' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = '"';
+            }
+            else if( cElem == '\\' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = '\\';
+            }
+            else if( cElem == '/' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = '/';
+            }
+            else if( cElem == '\b' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = 'b';
+            }
+            else if( cElem == '\f' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = 'f';
+            }
+            else if( cElem == '\r' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = 'r';
+            }
+            else if( cElem == '\n' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = 'n';
+            }
+            else if( cElem == '\t' )
+            {
+               cRet[ nPosRet++ ] = '\\';
+               cRet[ nPosRet++ ] = 't';
+            }
+            else if( cElem >= ' ' )
+            {
+               cRet[ nPosRet++ ] = cElem;
+            }
+
+            nPos++;
+         }
+
+         hb_retclen_buffer( cRet, nPosRet );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
