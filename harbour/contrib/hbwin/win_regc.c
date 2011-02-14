@@ -237,6 +237,26 @@ HB_FUNC( WIN_REGSETVALUEEX )
    hb_strfree( hKey );
 }
 
+HB_FUNC( WIN_REGDELETEKEY )
+{
+   void * hKey;
+
+   hb_retl( RegDeleteKey( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                          ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ) ) == ERROR_SUCCESS );
+
+   hb_strfree( hKey );
+}
+
+HB_FUNC( WIN_REGDELETEVALUE )
+{
+   void * hValue;
+
+   hb_retl( RegDeleteValue( ( HKEY ) hb_parptr( 1 ),
+                            ( LPCTSTR ) HB_PARSTR( 2, &hValue, NULL ) ) == ERROR_SUCCESS );
+
+   hb_strfree( hValue );
+}
+
 HB_FUNC( WIN_REGCLOSEKEY )
 {
    hb_retl( RegCloseKey( ( HKEY ) hb_parptr( 1 ) ) == ERROR_SUCCESS );

@@ -7,6 +7,9 @@
 PROCEDURE Main()
    LOCAL tmp
 
+   ? win_regDelete( "HKCU\_TEST\teszt" )
+   ? win_regDelete( "HKCU\_TEST\" )
+
    ? ">" + win_GetCommandLineParam() + "<"
    ? ">" + wapi_GetCommandLine() + "<"
 

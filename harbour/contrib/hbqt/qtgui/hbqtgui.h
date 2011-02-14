@@ -29,16 +29,16 @@ HB_EXTERN_END
 #define hbqt_par_QPrinter( n )                                  ( ( QPrinter                                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWidget( n )                                   ( ( QWidget                                     * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QBitmap                                       0x210679C1
-#define HBQT_TYPE_QBoxLayout                                    0x8E2E0CAF
-#define HBQT_TYPE_QBrush                                        0x96A039B0
-#define HBQT_TYPE_QColor                                        0x0151A39A
-#define HBQT_TYPE_QFont                                         0x0A35B749
+#define HBQT_TYPE_QBitmap                                       ( ( unsigned int ) 0x210679C1 )
+#define HBQT_TYPE_QBoxLayout                                    ( ( unsigned int ) 0x8E2E0CAF )
+#define HBQT_TYPE_QBrush                                        ( ( unsigned int ) 0x96A039B0 )
+#define HBQT_TYPE_QColor                                        ( ( unsigned int ) 0x0151A39A )
+#define HBQT_TYPE_QFont                                         ( ( unsigned int ) 0x0A35B749 )
 #ifndef HBQT_TYPE_QIcon
-#define HBQT_TYPE_QIcon                                         0xBF359640
+#define HBQT_TYPE_QIcon                                         ( ( unsigned int ) 0xBF359640 )
 #endif
 #ifndef HBQT_TYPE_QPixmap
-#define HBQT_TYPE_QPixmap                                       0x25CE65E9
+#define HBQT_TYPE_QPixmap                                       ( ( unsigned int ) 0x25CE65E9 )
 #endif
 
 #endif /* __HBQTGUI_H */

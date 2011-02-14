@@ -23,6 +23,6 @@ HB_EXTERN_END
 #define hbqt_par_HBQSlots( n )                                  ( ( HBQSlots                                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQString( n )                                 ( ( HBQString                                   * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QSize                                         0x5E28750F
+#define HBQT_TYPE_QSize                                         ( ( unsigned int ) 0x5E28750F )
 
 #endif /* __HBQTCORE_H */

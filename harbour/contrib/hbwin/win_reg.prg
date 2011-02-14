@@ -56,6 +56,29 @@
 
 /* ------------------------------------------------------------------- */
 
+/* Predefined Value Types. from winnt.h */
+#define KEY_QUERY_VALUE                1
+#define KEY_SET_VALUE                  2
+#define KEY_CREATE_SUB_KEY             4
+#define KEY_ENUMERATE_SUB_KEYS         8
+#define KEY_NOTIFY                     16
+#define KEY_CREATE_LINK                32
+
+#define REG_NONE                       0   // No value type
+#define REG_SZ                         1   // Unicode nul terminated string
+#define REG_EXPAND_SZ                  2   // Unicode nul terminated string (with environment variable references)
+#define REG_BINARY                     3   // Free form binary
+#define REG_DWORD                      4   // 32-bit number
+#define REG_DWORD_LITTLE_ENDIAN        4   // 32-bit number (same as REG_DWORD)
+#define REG_DWORD_BIG_ENDIAN           5   // 32-bit number
+#define REG_LINK                       6   // Symbolic Link (unicode)
+#define REG_MULTI_SZ                   7   // Multiple Unicode strings
+#define REG_RESOURCE_LIST              8   // Resource list in the resource map
+#define REG_FULL_RESOURCE_DESCRIPTOR   9   // Resource list in the hardware description
+#define REG_RESOURCE_REQUIREMENTS_LIST 10
+
+/* ------------------------------------------------------------------- */
+
 PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntry )
    LOCAL cHKEY
    LOCAL tmp
@@ -112,28 +135,25 @@ FUNCTION win_regWrite( cRegPath, xValue )
 
    RETURN win_regSet( nHKEY, cKey, cEntry, xValue )
 
-/* ------------------------------------------------------------------- */
+FUNCTION win_regDelete( cRegPath )
+   LOCAL nHKEY, cKey, cEntry
+   LOCAL lRetVal
+   LOCAL pKeyHandle
 
-/* Predefined Value Types. from winnt.h */
-#define KEY_QUERY_VALUE                1
-#define KEY_SET_VALUE                  2
-#define KEY_CREATE_SUB_KEY             4
-#define KEY_ENUMERATE_SUB_KEYS         8
-#define KEY_NOTIFY                     16
-#define KEY_CREATE_LINK                32
+   win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-#define REG_NONE                       0   // No value type
-#define REG_SZ                         1   // Unicode nul terminated string
-#define REG_EXPAND_SZ                  2   // Unicode nul terminated string (with environment variable references)
-#define REG_BINARY                     3   // Free form binary
-#define REG_DWORD                      4   // 32-bit number
-#define REG_DWORD_LITTLE_ENDIAN        4   // 32-bit number (same as REG_DWORD)
-#define REG_DWORD_BIG_ENDIAN           5   // 32-bit number
-#define REG_LINK                       6   // Symbolic Link (unicode)
-#define REG_MULTI_SZ                   7   // Multiple Unicode strings
-#define REG_RESOURCE_LIST              8   // Resource list in the resource map
-#define REG_FULL_RESOURCE_DESCRIPTOR   9   // Resource list in the hardware description
-#define REG_RESOURCE_REQUIREMENTS_LIST 10
+   IF Empty( cEntry )
+      lRetVal := win_regDeleteKey( nHKEY, cKey )
+   ELSE
+      IF win_regOpenKeyEx( nHKEY, cKey, 0, KEY_SET_VALUE, @pKeyHandle )
+         lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
+         win_regCloseKey( pKeyHandle )
+      ELSE
+         lRetVal := .F.
+      ENDIF
+   ENDIF
+
+   RETURN lRetVal
 
 FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
    LOCAL xKey := win_regGet( nHKEY, cKeyName, cEntryName )
