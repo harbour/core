@@ -2791,7 +2791,7 @@ static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
                if( pNewMeth )
                   uiIndex = ( HB_USHORT ) ( pNewMeth - pClass->pMethods );
             }
-            fOK = pFunction == NIL || HB_IS_NIL( pFunction ) || uiIndex != 0;
+            fOK = pFunction == NULL || HB_IS_NIL( pFunction ) || uiIndex != 0;
             if( fOK )
             {
                pDelegMsg = hb_objGetMsgSym( pInit );
@@ -2801,7 +2801,7 @@ static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
                   if( pNewMeth )
                      uiSprClass = ( HB_USHORT ) ( pNewMeth - pClass->pMethods );
                }
-               fOK = ( pInit == NIL || HB_IS_NIL( pInit ) || uiSprClass != 0 ) &&
+               fOK = ( pInit == NULL || HB_IS_NIL( pInit ) || uiSprClass != 0 ) &&
                      ( uiIndex != 0 || uiSprClass != 0 );
             }
             break;
