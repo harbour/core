@@ -24,7 +24,8 @@
 ../hbqt/hbqtnetwork.hbc
 ../hbqt/hbqtuitools.hbc
 ../hbformat/hbformat.hbc
-../rddads/rddads.hbc
+# TODO: Need to set 'HB_DYNLOAD_RDDADS=yes' for this to work here
+#../rddads/rddads.hbc
 
 -lhbcplr
 -lhbpp
