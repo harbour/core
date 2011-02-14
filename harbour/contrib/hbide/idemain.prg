@@ -79,6 +79,8 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
+#include "rddads.hbx"
+
 /* Link all Harbour Functions : needed to run external scripts */
 REQUEST __HB_EXTERN__
 REQUEST __HBEXTERN__HBXBP__
@@ -91,12 +93,16 @@ REQUEST __HBEXTERN__HBQTNETWORK__
 REQUEST DBFCDX
 REQUEST DBFNTX
 REQUEST DBFNSX
+REQUEST ADS
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main( ... )
    LOCAL oIde
    LOCAL oResource
+
+   LOCAL hRDDADS
+   LOCAL tmp
 
    #ifdef HB_IDE_DISTRO
       LOCAL cBse := hb_dirBase() + ".."
@@ -112,6 +118,14 @@ PROCEDURE Main( ... )
    SET DATE TO ANSI
    SET CENTURY ON
    SET EPOCH TO 1970
+
+   /* TOFIX: Get the name right for other platforms than Windows. */
+   IF hb_FileExists( tmp := ( hb_dirBase() + "rddads-" + hb_ntos( hb_version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_version( HB_VERSION_MINOR ) ) + hb_libExt() ) )
+      hRDDADS := hb_libLoad( hb_libName( tmp ) )
+      IF ! Empty( hRDDADS )
+         hb_rddadsRegister()
+      ENDIF
+   ENDIF
 
    oResource := QResource()
    oResource:registerResource_1( hbqtres_HbIde(), ":/resource" )

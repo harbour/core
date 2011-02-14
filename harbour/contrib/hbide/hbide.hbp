@@ -24,6 +24,7 @@
 ../hbqt/hbqtnetwork.hbc
 ../hbqt/hbqtuitools.hbc
 ../hbformat/hbformat.hbc
+../rddads/rddads.hbc
 
 -lhbcplr
 -lhbpp
