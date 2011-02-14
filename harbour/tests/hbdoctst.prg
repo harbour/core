@@ -37,7 +37,7 @@ PROCEDURE Main( cRoot )
          cRoot += ".." + hb_ps()
       ENDDO
    ELSE
-      cDir := DirAddPathSep( cDir )
+      cDir := hb_DirSepAdd( cDir )
    ENDIF
 
    OutStd( "Root: " + cRoot + hb_eol() )
@@ -83,7 +83,7 @@ PROCEDURE Main( cRoot )
 STATIC FUNCTION DirGetName( cDir )
    LOCAL cName
 
-   cDir := DirDelPathSep( cDir )
+   cDir := hb_DirSepDel( cDir )
 
    hb_FNameSplit( cDir,, @cName )
 
@@ -92,26 +92,3 @@ STATIC FUNCTION DirGetName( cDir )
    ENDIF
 
    RETURN cName
-
-STATIC FUNCTION DirDelPathSep( cDir )
-
-   IF Empty( hb_osDriveSeparator() )
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ELSE
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
-         cDir := hb_StrShrink( cDir, 1 )
-      ENDDO
-   ENDIF
-
-   RETURN cDir
-
-STATIC FUNCTION DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
-   ENDIF
-
-   RETURN cDir

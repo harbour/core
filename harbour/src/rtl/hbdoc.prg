@@ -76,7 +76,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
    IF ISCHARACTER( cDir )
 
-      cDir := DirAddPathSep( cDir )
+      cDir := hb_DirSepAdd( cDir )
 
       IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
 
@@ -202,7 +202,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             ENDIF
          ELSEIF ! Empty( cSection )
             IF ! Empty( hEntry[ cSection ] )
-              hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
+               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
             hEntry[ cSection ] += cLine
          ELSEIF ! Empty( cLine )
@@ -216,14 +216,6 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    ENDIF
 
    RETURN
-
-STATIC FUNCTION DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
-   ENDIF
-
-   RETURN cDir
 
 FUNCTION __hbdoc_ToSource( aEntry )
    LOCAL cSource := ""

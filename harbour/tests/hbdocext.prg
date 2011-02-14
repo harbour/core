@@ -26,7 +26,7 @@ PROCEDURE Main()
    FOR EACH aFile IN Directory( hb_osFileMask() )
       cFile := __hbdoc_ToSource( __hbdoc_FromSource( MemoRead( aFile[ F_NAME ] ) ) )
       IF ! Empty( cFile )
-         cDst := FNameExtSet( aFile[ F_NAME ], ".txt" )
+         cDst := hb_FNameExtSet( aFile[ F_NAME ], ".txt" )
          IF ! hb_FileExists( cDst )
             ? "Saving", cDst
             hb_MemoWrit( cDst, cHdr + cFile )
@@ -35,10 +35,3 @@ PROCEDURE Main()
    NEXT
 
    RETURN
-
-STATIC FUNCTION FNameExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
