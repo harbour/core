@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * plugin puller
+ * plugin container
  *
  * Copyright 2011 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
@@ -54,9 +54,7 @@
          #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
 
 FUNCTION __hbrun_plugins()
-   LOCAL hPlugins
-
-   hPlugins := { => }
+   LOCAL hPlugins := { => }
 
    ADD PLUGIN TO hPlugins FILE "netioeng.prg"
 

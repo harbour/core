@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header puller
+ * header puller
  *
  * Copyright 2010-2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

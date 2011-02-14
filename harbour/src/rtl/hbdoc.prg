@@ -156,6 +156,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    LOCAL cSection
    LOCAL tmp
    LOCAL nLine
+   LOCAL nStartCol
 
    cFile := StrTran( cFile, Chr( 13 ) )
    cFile := StrTran( cFile, Chr( 9 ), " " )
@@ -203,8 +204,13 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
          ELSEIF ! Empty( cSection )
             IF ! Empty( hEntry[ cSection ] )
                hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
+            ELSE
+               /* some "heuristics" to detect in which column the real content starts,
+                  we assume the first line of content is correct, and use this with all
+                  consecutive lines. [vszakats] */
+               nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
             ENDIF
-            hEntry[ cSection ] += cLine
+            hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )
             _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: Content outside section", cFileName, hb_ntos( nLine ) ) )
          ENDIF
@@ -232,7 +238,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
                !( Left( item:__enumKey(), 1 ) == "_" )
                cSource += " *  $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
-                  cSource += " * " + cLine + hb_eol()
+                  cSource += " * " + Space( 4 ) + cLine + hb_eol()
                NEXT
             ENDIF
          NEXT

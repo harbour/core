@@ -247,7 +247,7 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
       SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
       CASE ".hbs"
       CASE ".prg"
-         cFile := hb_compileFromBuf( cFile, "-n2", "-w", "-es2", "-q0" )
+         cFile := hb_compileFromBuf( cFile, hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
          IF cFile == NIL
             EXIT
          ENDIF
@@ -303,7 +303,7 @@ STATIC FUNCTION plugins_valid_id( plugins, cID )
 
    RETURN .F.
 
-STATIC FUNCTION plugins_valid_list( plugins )
+STATIC FUNCTION plugins_valid_id_list( plugins )
    LOCAL plugin
    LOCAL aList := {}
 
@@ -345,11 +345,11 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
 
    hbrun_HistoryLoad()
 
-   AADD( s_aHistory, padr( "quit", HB_LINE_LEN ) )
+   AAdd( s_aHistory, padr( "quit", HB_LINE_LEN ) )
    nHistIndex := Len( s_aHistory ) + 1
 
    IF ISCHARACTER( cCommand )
-      AADD( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
+      AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
       hbrun_Info( cCommand )
       hbrun_Exec( cCommand )
    ELSE
@@ -378,7 +378,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
       nMaxCol := MaxCol()
       @ nMaxRow, 0 SAY cDomain + "."
       @ nMaxRow, Col() GET cLine ;
-                       PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
+                       PICTURE "@KS" + hb_ntos( nMaxCol - Col() + 1 )
 
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
@@ -402,7 +402,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
       SetKey( K_INS, bKeyIns )
       SetKey( HB_K_RESIZE, bKeyResize )
 
-      IF LastKey() == K_ESC .OR. EMPTY( cLine ) .OR. ;
+      IF LastKey() == K_ESC .OR. Empty( cLine ) .OR. ;
          ( lResize .AND. LastKey() == K_ENTER )
          IF lResize
             lResize := .F.
@@ -438,7 +438,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
             ELSEIF plugins_valid_id( plugins, SubStr( cCommand, 2 ) )
                cDomain := SubStr( cCommand, 2 )
             ELSE
-               FOR EACH tmp IN plugins_valid_list( plugins )
+               FOR EACH tmp IN plugins_valid_id_list( plugins )
                   hbrun_ToConsole( "." + tmp )
                NEXT
             ENDIF
@@ -573,7 +573,7 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
    ELSEIF ISCHARACTER( oErr )
       cMessage += oErr
    ENDIF
-   cMessage += ";;" + ProcName( 2 ) + "(" + hb_NToS( ProcLine( 2 ) ) + ")"
+   cMessage += ";;" + ProcName( 2 ) + "(" + hb_ntos( ProcLine( 2 ) ) + ")"
 
    Alert( cMessage )
 
@@ -593,7 +593,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
    BEGIN SEQUENCE WITH {|oErr| hbrun_Err( oErr, cCommand ) }
 
-      cHRB := HB_COMPILEFROMBUF( cFunc, hb_ProgName(), "-n2", "-q2" )
+      cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
