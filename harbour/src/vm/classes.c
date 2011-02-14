@@ -1404,6 +1404,26 @@ const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiMethod )
    return NULL;
 }
 
+HB_SIZE hb_clsGetVarIndex( HB_USHORT uiClass, PHB_DYNS pVarSym )
+{
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PMETHOD pMethod = hb_clsFindMsg( s_pClasses[ uiClass ], pVarSym );
+      if( pMethod )
+      {
+         PHB_SYMB pFuncSym = pMethod->pFuncSym;
+
+         if( pFuncSym == &s___msgSync || pFuncSym == &s___msgSyncClass )
+            pFuncSym = pMethod->pRealSym;
+
+         if( pFuncSym->value.pFunPtr == HB_FUNCNAME( msgSetData ) ||
+             pFuncSym->value.pFunPtr == HB_FUNCNAME( msgGetData ) )
+            return pMethod->uiData + pMethod->uiOffset;
+      }
+   }
+   return 0;
+}
+
 HB_USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
 {
    HB_USHORT uiClass;
