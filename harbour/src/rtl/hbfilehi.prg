@@ -79,7 +79,6 @@ FUNCTION hb_PathNormalize( cPath )
               ( cDir:__enumIndex() > 2 .OR. ;
                 ( cDir:__enumIndex() == 2 .AND. ! Empty( aDir[ 1 ] ) ) ) )
             hb_ADel( aDir, cDir:__enumIndex(), .T. )
-            hb_ADel( aDir, cDir:__enumIndex(), .T. )
          ELSEIF !( cDir == ".." ) .AND. ;
             ! Empty( cDir ) .AND. ;
             ! _ISDRIVESPEC( cDir )
