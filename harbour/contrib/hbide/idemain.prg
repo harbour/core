@@ -79,7 +79,7 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
-#ifdef __HBIDE__RDDADS
+#ifdef __HBDYNLOAD__RDDADS__
 #include "rddads.hbx"
 #endif
 
@@ -95,7 +95,7 @@ REQUEST __HBEXTERN__HBQTNETWORK__
 REQUEST DBFCDX
 REQUEST DBFNTX
 REQUEST DBFNSX
-#ifdef __HBIDE__RDDADS
+#ifdef __HBDYNLOAD__RDDADS__
 REQUEST ADS
 #endif
 
@@ -105,7 +105,7 @@ PROCEDURE Main( ... )
    LOCAL oIde
    LOCAL oResource
 
-#ifdef __HBIDE__RDDADS
+#ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS
    LOCAL tmp
 #endif
@@ -125,7 +125,7 @@ PROCEDURE Main( ... )
    SET CENTURY ON
    SET EPOCH TO 1970
 
-#ifdef __HBIDE__RDDADS
+#ifdef __HBDYNLOAD__RDDADS__
    /* TOFIX: Get the name right for other platforms than Windows. */
    IF hb_FileExists( tmp := ( hb_dirBase() + "rddads-" + hb_ntos( hb_version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_version( HB_VERSION_MINOR ) ) + hb_libExt() ) )
       hRDDADS := hb_libLoad( hb_libName( tmp ) )
