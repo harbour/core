@@ -377,6 +377,9 @@ DECLARE HBClass ;
 #xcommand MESSAGE <MessageName> [ AS <type> ] DEFERRED => ;
    MESSAGE <MessageName> [ AS <type> ] VIRTUAL
 
+#xcommand MESSAGE <MessageName> [ AS <type> ] IS DEFERRED => ;
+   MESSAGE <MessageName> [ AS <type> ] VIRTUAL
+
 #xcommand MESSAGE <MessageName> [ AS <type> ] METHOD <MethodName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MessageName>) [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
@@ -396,19 +399,17 @@ DECLARE HBClass ;
 #xcommand MESSAGE <MessageName> [ AS <type> ] <arg: ARG, ARGS> <Args,...> [LOCAL <Locals,...>] INLINE <Code,...> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE __HB_CLS_ASID(<MessageName>)(<Args>) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent> <sync>
 
-/* MESSAGE ... IS ... command working like in Class(y) temporary disabled for
- * easier detecting code which was using previous wrong syntax.
- */
-/*
 #xcommand MESSAGE <MessageName> [ AS <type> ] IS <AltMsgName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<AltMsgName> <ctor> <export> <protect> <hidde> <persistent> <sync>
-*/
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:<MessageName> <export> <protect> <hidde> <persistent> <sync>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:<MessageName> <export> <protect> <hidde> <persistent> <sync>
+
+#xcommand MESSAGE <MessageName> [ AS <type> ] IS <AltMsgName> TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+   MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:__HB_CLS_ASID(<AltMsgName>)(__HB_CLS_ASARGS(<MessageName>)) <export> <protect> <hidde> <persistent> <sync>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] IS <SprMethodName> IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:__HB_CLS_ASID(<SprMethodName>)(__HB_CLS_ASARGS(<MessageName>)) <export> <protect> <hidde> <persistent> <sync>

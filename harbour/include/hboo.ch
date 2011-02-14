@@ -134,4 +134,10 @@
 #define HB_OO_CLSM_PFUNCTION    2
 #define HB_OO_CLSM_SCOPE        3
 
+/* Delegate messages */
+#define HB_OO_DELEG_SYMBOL      1
+#define HB_OO_DELEG_MESSAGE     2
+#define HB_OO_DELEG_OBJECT      3
+#define HB_OO_DELEG_SCOPE       4
+
 #endif /* HB_OO_CH_ */

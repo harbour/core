@@ -271,6 +271,12 @@ STATIC PROCEDURE Create( /* MetaClass */ )
       __clsAddMsg( hClass, n, n:__enumIndex(), HB_OO_MSG_VIRTUAL )
    NEXT
 
+   FOR EACH n IN ::aDelegates
+      __clsAddMsg( ::hClass, n[ HB_OO_DELEG_SYMBOL ], n[ HB_OO_DELEG_MESSAGE ], ;
+                   HB_OO_MSG_DELEGATE, n[ HB_OO_DELEG_OBJECT ], ;
+                   n[ HB_OO_DELEG_SCOPE ] )
+   NEXT
+
    IF ::sOnError != NIL
       __clsAddMsg( hClass, "__OnError", ::sOnError, HB_OO_MSG_ONERROR )
    ENDIF
@@ -331,11 +337,11 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
-   LOCAL i
+   LOCAL data
 
-   FOR EACH i IN aData
-      IF ISCHARACTER( i )
-         QSelf():AddData( i, xInit, cType, nScope, lNoInit )
+   FOR EACH data IN aData
+      IF ISCHARACTER( data )
+         QSelf():AddData( data, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -378,11 +384,11 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
-   LOCAL i
+   LOCAL data
 
-   FOR EACH i IN aData
-      IF ISCHARACTER( i )
-         QSelf():AddClassData( i, xInit, cType, nScope, lNoInit )
+   FOR EACH data IN aData
+      IF ISCHARACTER( data )
+         QSelf():AddClassData( data, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -420,15 +426,15 @@ STATIC PROCEDURE AddVirtual( cMethod )
 
    RETURN
 
-STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass )
+STATIC PROCEDURE AddDelegate( xMethod, cDelegMsg, cObject, nScope )
 
-   LOCAL i
+   LOCAL mth
 
    IF ISCHARACTER( xMethod )
-      AAdd( QSelf():aDelegates, { xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
+      AAdd( QSelf():aDelegates, { xMethod, cDelegMsg, cObject, nScope } )
    ELSEIF ISARRAY( xMethod )
-      FOR EACH i IN xMethod
-         AAdd( QSelf():aDelegates, { i, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
+      FOR EACH mth IN xMethod
+         AAdd( QSelf():aDelegates, { mth, cDelegMsg, cObject, nScope } )
       NEXT
    ENDIF
 

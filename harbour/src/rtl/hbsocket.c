@@ -780,13 +780,13 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 #define HB_SOCKADDR_MAX_LEN   256
 
 #if defined( HB_OS_WIN )
-#  define HB_SOCK_GETERROR()        WSAGetLastError()
-#  define HB_SOCK_IS_EINTR()        ( WSAGetLastError() == WSAEINTR )
-#  define HB_SOCK_IS_EINPROGRES()   ( WSAGetLastError() == WSAEWOULDBLOCK )
+#  define HB_SOCK_GETERROR()              WSAGetLastError()
+#  define HB_SOCK_IS_EINTR( err )         ( (err) == WSAEINTR )
+#  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == WSAEWOULDBLOCK )
 #else
-#  define HB_SOCK_GETERROR()        errno
-#  define HB_SOCK_IS_EINTR()        ( errno == EINTR )
-#  define HB_SOCK_IS_EINPROGRES()   ( errno == EINPROGRESS )
+#  define HB_SOCK_GETERROR()              errno
+#  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
+#  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
 #endif
 
 typedef union
@@ -1457,7 +1457,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set rfds;
-   int iResult;
+   int iResult, iError;
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1477,8 +1477,9 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
          ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), &rfds, NULL, NULL, ptv );
-      hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
-      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
+      iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      hb_socketSetOsError( iError );
+      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR( iError ) &&
           hb_vmRequestQuery() == 0 )
 #if defined( HB_HAS_SELECT_TIMER )
          continue;
@@ -1505,7 +1506,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set wfds;
-   int iResult;
+   int iResult, iError;
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1525,8 +1526,9 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
          ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, NULL, ptv );
-      hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
-      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
+      iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      hb_socketSetOsError( iError );
+      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR( iError ) &&
           hb_vmRequestQuery() == 0 )
 #if defined( HB_HAS_SELECT_TIMER )
          continue;
@@ -1556,7 +1558,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #if defined( HB_OS_WIN )
    fd_set efds;
 #endif
-   int iResult;
+   int iResult, iError;
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1582,13 +1584,14 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
          ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, pefds, ptv );
-      hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
+      iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      hb_socketSetOsError( iError );
 #if defined( HB_OS_WIN )
       if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, pefds ) )
          iResult = -1;
       else
 #endif
-      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
+      if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR( iError ) &&
           hb_vmRequestQuery() == 0 )
 #if defined( HB_HAS_SELECT_TIMER )
          continue;
@@ -1615,13 +1618,12 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( void * ) &iError, &len ) != 0 )
       {
          iResult = -1;
-         hb_socketSetOsError( HB_SOCK_GETERROR() );
+         iError = HB_SOCK_GETERROR();
       }
       else if( iError != 0 )
-      {
          iResult = -1;
-         hb_socketSetOsError( iError );
-      }
+
+      hb_socketSetOsError( iError );
    }
 #endif
 
@@ -2213,7 +2215,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
 int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
-   int ret, blk;
+   int ret, blk, err;
 
    hb_vmUnlock();
 
@@ -2222,8 +2224,9 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
     */
    blk = timeout < 0 ? 0 : hb_socketSetBlockingIO( sd, HB_FALSE );
    ret = connect( sd, ( const struct sockaddr * ) pSockAddr, ( socklen_t ) uiLen );
-   hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
-   if( ret != 0 && HB_SOCK_IS_EINPROGRES() && timeout >= 0 )
+   err = ret == 0 ? 0 : HB_SOCK_GETERROR();
+   hb_socketSetOsError( err );
+   if( ret != 0 && timeout >= 0 && HB_SOCK_IS_EINPROGRES( err ) )
    {
       /* inside hb_socketSelectWRE() we have code which hides differences
        * between Windows and POSIX platforms in error detection.
@@ -2260,6 +2263,8 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
    }
    if( lSent >= 0 )
    {
+      int iError;
+
       /* in POSIX systems writing data to broken connection stream causes
        * that system generates SIGPIPE which has to be caught by application
        * otherwise the default action for SIGPIPE is application termination.
@@ -2271,9 +2276,11 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
       do
       {
          lSent = send( sd, ( const char * ) data, len, flags );
-         hb_socketSetOsError( HB_SOCK_GETERROR() );
+         iError = HB_SOCK_GETERROR();
+         hb_socketSetOsError( iError );
       }
-      while( lSent == -1 && HB_SOCK_IS_EINTR() && hb_vmRequestQuery() == 0 );
+      while( lSent == -1 && HB_SOCK_IS_EINTR( iError ) &&
+             hb_vmRequestQuery() == 0 );
    }
    hb_vmLock();
 
@@ -2298,6 +2305,8 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
    }
    if( lSent >= 0 )
    {
+      int iError;
+
       /* see note above about SIGPIPE */
 #if defined( MSG_NOSIGNAL )
       flags |= MSG_NOSIGNAL;
@@ -2306,9 +2315,11 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
       {
          lSent = sendto( sd, ( const char * ) data, len, flags,
                          ( const struct sockaddr * ) pSockAddr, ( socklen_t ) uiSockLen );
-         hb_socketSetOsError( HB_SOCK_GETERROR() );
+         iError = HB_SOCK_GETERROR();
+         hb_socketSetOsError( iError );
       }
-      while( lSent == -1 && HB_SOCK_IS_EINTR() && hb_vmRequestQuery() == 0 );
+      while( lSent == -1 && HB_SOCK_IS_EINTR( iError ) &&
+             hb_vmRequestQuery() == 0 );
    }
    hb_vmLock();
 
@@ -2332,12 +2343,16 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT ti
    }
    if( lReceived >= 0 )
    {
+      int iError;
+
       do
       {
          lReceived = recv( sd, ( char * ) data, len, flags );
-         hb_socketSetOsError( HB_SOCK_GETERROR() );
+         iError = HB_SOCK_GETERROR();
+         hb_socketSetOsError( iError );
       }
-      while( lReceived == -1 && HB_SOCK_IS_EINTR() && hb_vmRequestQuery() == 0 );
+      while( lReceived == -1 && HB_SOCK_IS_EINTR( iError ) &&
+             hb_vmRequestQuery() == 0 );
    }
    hb_vmLock();
 
@@ -2363,13 +2378,16 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
    {
       HB_SOCKADDR_STORAGE st;
       socklen_t salen = sizeof( st );
+      int iError;
 
       do
       {
          lReceived = recvfrom( sd, ( char * ) data, len, flags, &st.sa, &salen );
-         hb_socketSetOsError( HB_SOCK_GETERROR() );
+         iError = HB_SOCK_GETERROR();
+         hb_socketSetOsError( iError );
       }
-      while( lReceived == -1 && HB_SOCK_IS_EINTR() && hb_vmRequestQuery() == 0 );
+      while( lReceived == -1 && HB_SOCK_IS_EINTR( iError ) &&
+             hb_vmRequestQuery() == 0 );
 
       if( pSockAddr && puiSockLen )
       {

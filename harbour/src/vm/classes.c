@@ -1444,17 +1444,21 @@ PHB_SYMB hb_clsMethodSym( PHB_ITEM pBaseSymbol )
    if( pStack->uiClass )
    {
       PMETHOD pMethod = s_pClasses[ pStack->uiClass ]->pMethods + pStack->uiMethod;
+      PHB_SYMB pFuncSym = pMethod->pFuncSym;
 
-      if( pMethod->pFuncSym == &s___msgEvalInline )
+      if( pFuncSym == &s___msgSync || pFuncSym == &s___msgSyncClass )
+         pFuncSym = pMethod->pRealSym;
+
+      if( pFuncSym == &s___msgEvalInline )
          return hb_arrayGetItemPtr( s_pClasses[ pMethod->uiSprClass ]->pInlines,
                                     pMethod->uiData )->item.asBlock.value->pDefSymb;
 /*
-      else if( pMethod->pFuncSym == &s___msgPerform )
+      else if( pFuncSym == &s___msgPerform )
 */
-      else if( pMethod->pFuncSym == &s___msgDelegate )
+      else if( pFuncSym == &s___msgDelegate )
          return s_pClasses[ pStack->uiClass ]->pMethods[ pMethod->uiData ].pFuncSym;
       else
-         return pMethod->pFuncSym;
+         return pFuncSym;
    }
 
    return pBaseSymbol->item.asSymbol.value;
@@ -2628,8 +2632,8 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
  *             HB_OO_CLSTP_CLASS          64 : message is class message not object
  *           * HB_OO_CLSTP_SUPER         128 : message is herited
  *             HB_OO_CLSTP_PERSIST       256 : message is persistent (PROPERTY)
- *             HB_OO_CLSTP_NONVIRTUAL    512 : Class method constructor
- *             HB_OO_CLSTP_OVERLOADED   1024 : Class method constructor
+ *             HB_OO_CLSTP_NONVIRTUAL    512 : Non Virtual message - should not be covered by subclass(es) messages with the same name when executed from a given class message
+ *             HB_OO_CLSTP_OVERLOADED   1024 : message overload NONVIRTUAL one
  *             HB_OO_CLSTP_SYNC         2048 : message synchronized by object or class mutex
  *
  * <pFunction> HB_OO_MSG_METHOD     : \
@@ -2641,13 +2645,14 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
  *             HB_OO_MSG_CLSASSIGN  :  Index class data array
  *             HB_OO_MSG_CLSACCESS  : /
  *             HB_OO_MSG_SUPER      : Handle of super class
- *             HB_OO_MSG_DELEGATE   : delegated message symbol
+ *             HB_OO_MSG_DELEGATE   : Delegated message symbol
  *
  * <pInit>     HB_OO_MSG_ACCESS     :  Optional initializer for (Class)DATA
  *             HB_OO_MSG_CLSACCESS  : /
- *             HB_OO_MSG_ASSIGN     :  item type restriction in assignment
+ *             HB_OO_MSG_ASSIGN     :  Item type restriction in assignment
  *             HB_OO_MSG_CLSASSIGN  : /
  *             HB_OO_MSG_SUPER      : Superclass handle
+ *             HB_OO_MSG_DELEGATE   : Object symbol for delegated message
  */
 static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
                              HB_USHORT uiType, HB_USHORT uiScope,
@@ -2786,7 +2791,19 @@ static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
                if( pNewMeth )
                   uiIndex = ( HB_USHORT ) ( pNewMeth - pClass->pMethods );
             }
-            fOK = uiIndex != 0;
+            fOK = pFunction == NIL || HB_IS_NIL( pFunction ) || uiIndex != 0;
+            if( fOK )
+            {
+               pDelegMsg = hb_objGetMsgSym( pInit );
+               if( pDelegMsg )
+               {
+                  pNewMeth = hb_clsFindMsg( pClass, pDelegMsg );
+                  if( pNewMeth )
+                     uiSprClass = ( HB_USHORT ) ( pNewMeth - pClass->pMethods );
+               }
+               fOK = ( pInit == NIL || HB_IS_NIL( pInit ) || uiSprClass != 0 ) &&
+                     ( uiIndex != 0 || uiSprClass != 0 );
+            }
             break;
          }
          case HB_OO_MSG_REALCLASS:
@@ -4154,7 +4171,7 @@ HB_FUNC( __CLSSYNCWAIT )
 }
 
 /*
- * ClassH( <obj> ) -> <hClass>
+ * __ClassH( <obj> ) -> <hClass>
  *
  * Returns class handle of <obj>
  */
