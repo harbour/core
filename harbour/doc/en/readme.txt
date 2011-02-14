@@ -13,7 +13,7 @@
  *     HARBOUR Read me
  *  $DESCRIPTION$
  *
- *                        <b>The Harbour project</b>
+ * <b>The Harbour project</b>
  *
  * <b>************************************************************************</b>
  * <b>*  This file contains information on obtaining, installing, and using  *</b>

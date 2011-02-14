@@ -2083,16 +2083,16 @@ METHOD HbQtSource:buildDOC()
 
    cLib := ::cQtModule
 
-   hEntry[ "TEMPLATE"     ] := "    " + "Class"
-   hEntry[ "NAME"         ] := "    " + ::cQtObject + "()"
-   hEntry[ "CATEGORY"     ] := "    " + "Harbour Bindings for Qt"
-   hEntry[ "SUBCATEGORY"  ] := "    " + "GUI"
-   hEntry[ "EXTERNALLINK" ] := "    " + "http://doc.trolltech.com/" + cQT_VER + "/" + lower( ::cQtObject ) + ".html"
-   hEntry[ "ONELINER"     ] := "    " + "Creates a new " + ::cQtObject + " object."
-   hEntry[ "INHERITS"     ] := "    " + cInherits
-   hEntry[ "SYNTAX"       ] := "    " + ::cQtObject + "( ... )" + hb_eol()
+   hEntry[ "TEMPLATE"     ] := "Class"
+   hEntry[ "NAME"         ] := ::cQtObject + "()"
+   hEntry[ "CATEGORY"     ] := "Harbour Bindings for Qt"
+   hEntry[ "SUBCATEGORY"  ] := "GUI"
+   hEntry[ "EXTERNALLINK" ] := "http://doc.trolltech.com/" + cQT_VER + "/" + lower( ::cQtObject ) + ".html"
+   hEntry[ "ONELINER"     ] := "Creates a new " + ::cQtObject + " object."
+   hEntry[ "INHERITS"     ] := cInherits
+   hEntry[ "SYNTAX"       ] := ::cQtObject + "( ... )" + hb_eol()
    hEntry[ "ARGUMENTS"    ] := ""
-   hEntry[ "RETURNS"      ] := "    " + "An instance of the object of type " + ::cQtObject
+   hEntry[ "RETURNS"      ] := "An instance of the object of type " + ::cQtObject
    IF ! Empty( ::doc_ )
       hEntry[ "METHODS"      ] := ""
       nLen    := len( ::cQtObject )
@@ -2110,7 +2110,7 @@ METHOD HbQtSource:buildDOC()
             n2    := max( 50, len( cText ) )
             cText := padR( cText, n2 )
             IF !empty( cRet )
-               hEntry[ "METHODS" ] += "    :" + cText + " -> " + cRet + hb_eol()
+               hEntry[ "METHODS" ] += ":" + cText + " -> " + cRet + hb_eol()
             ENDIF
          ENDIF
       NEXT
@@ -2119,21 +2119,21 @@ METHOD HbQtSource:buildDOC()
    hEntry[ "EXAMPLES"    ] := ""
    FOR EACH cText IN ::docum_
       IF !empty( cText )
-         hEntry[ "EXAMPLES" ] += "    " + cText + hb_eol()
+         hEntry[ "EXAMPLES" ] += cText + hb_eol()
       ENDIF
    NEXT
    hEntry[ "TESTS"      ] := ""
-   hEntry[ "STATUS"     ] := "    " + "R"
-   hEntry[ "COMPLIANCE" ] := "    " + "Not Clipper compatible"
-   hEntry[ "PLATFORMS"  ] := "    " + "Windows, Linux, Mac OS X, OS/2"
-   hEntry[ "VERSION"    ] := "    " + cQT_VER + " or upper"
+   hEntry[ "STATUS"     ] := "R"
+   hEntry[ "COMPLIANCE" ] := "Not Clipper compatible"
+   hEntry[ "PLATFORMS"  ] := "Windows, Linux, Mac OS X, OS/2"
+   hEntry[ "VERSION"    ] := cQT_VER + " or upper"
    hEntry[ "FILES"      ] := ""
-   hEntry[ "FILES"      ] += "    " + "Harbour source: " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/T" + ::cQtObject + ".prg" + hb_eol()
-   hEntry[ "FILES"      ] += "    " + "C++ wrappers  : " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/"  + ::cQtObject + ".cpp" + hb_eol()
-   hEntry[ "FILES"      ] += "    " + "Library       : " + "hb" + cLib
+   hEntry[ "FILES"      ] += "Harbour source: " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/T" + ::cQtObject + ".prg" + hb_eol()
+   hEntry[ "FILES"      ] += "C++ wrappers  : " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/"  + ::cQtObject + ".cpp" + hb_eol()
+   hEntry[ "FILES"      ] += "Library       : " + "hb" + cLib
 #if 0
    hEntry[ "SEEALSO"    ] := ""
-   hEntry[ "SEEALSO"    ] += "    " + iif( empty( cInherits ), "", cInherits + "()" )
+   hEntry[ "SEEALSO"    ] += iif( empty( cInherits ), "", cInherits + "()" )
 #endif
 
    RETURN hb_MemoWrit( ::cDOCFileName, __hbdoc_ToSource( { hEntry } ) )

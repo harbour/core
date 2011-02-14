@@ -52,7 +52,7 @@
  *      oObject := HBClass():New("TMyClass")
  *      oObject:End()
  *
- *     RETURN Nil
+ *      RETURN Nil
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

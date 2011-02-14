@@ -166,7 +166,7 @@
  *        DBGOBOTTOM()
  *        ? "Is Eof()",EOF()
  *        USE
- *     RETURN NIL
+ *      RETURN NIL
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -283,7 +283,7 @@
  *        DBGOBOTTOM()
  *        ? "Is Eof()",EOF()
  *        USE
- *     RETURN NIL
+ *      RETURN NIL
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

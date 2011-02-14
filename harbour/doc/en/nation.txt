@@ -116,7 +116,6 @@
  *      DO WHILE !ISAFFIRM( cYesNo )
  *        ACCEPT "Sure " + NATIONMSG( 12 ) + ": " TO cYesNo
  *      END DO
- *  </fixed>
  *  $STATUS$
  *      C
  *  $COMPLIANCE$

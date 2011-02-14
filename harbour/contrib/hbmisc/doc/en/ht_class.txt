@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -71,10 +71,10 @@
  *       #define NEW_LINE CHR( 13 ) + CHR( 10 )
  *      #endif
  *      #include "fileio.ch"
- *      
+ *
  *      PROCEDURE Main( cFile )
  *      LOCAL oFile := TFileRead():New( cFile )
- *      
+ *
  *         oFile:Open()
  *         IF oFile:Error()
  *            QOUT( oFile:ErrorMsg( "FileRead: " ) )
@@ -86,17 +86,15 @@
  *            oFile:Close()
  *         END IF
  *      QUIT
- *  </fixed>
  *  $TESTS$
  *      See Examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class  
+ *      This is a new Harbour Tools class
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
  *      TClass()
  *  $END$
  */
-

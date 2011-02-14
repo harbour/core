@@ -47,7 +47,7 @@
  *      value of <nMode> represents the status of the file to be opened;
  *      the default value is 0. The file open modes are as follows:
 
- *  <table>
+ *      <table>
  *       nMode   fileio.ch      Meaning
  *
  *       0       FO_READ        Read only
@@ -58,7 +58,7 @@
  *       48      FO_DENYREAD    Deny read only
  *       64      FO_DENYNONE    Not deny, Let to others Read / Write
  *       64      FO_SHARED      same as FO_DENYNONE
- *  </table>
+ *      </table>
  *
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function. Files handles may be in the range of 0 to 65535. The
@@ -120,14 +120,14 @@
  *      and their related meaning to the file <cFile> being created by
  *      this function.
  *
- *  <table>
+ *      <table>
  *       <nAttribute>   fileio.ch     Meaning
  *
  *       0              FC_NORMAL     Normal/Default,Read/Write
  *       1              FC_READONLY   Read-only file attribute is set
  *       2              FC_HIDDEN     Hidden,Excluded from normal DIR search
  *       4              FC_SYSTEM     Create,Excluded from normal DIR search
- *  </table>
+ *      </table>
  *  $EXAMPLES$
  *      IF (nh:=FCREATE("test.txt") <0
  *          ? "Cannot create file"
@@ -303,7 +303,7 @@
  *       30             Read fault
  *       32             Sharing violation
  *       33             Lock Violation
- *  </table>
+ *      </table>
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
  *      a value that provides additional informationon the status of

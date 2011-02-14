@@ -519,7 +519,7 @@
  *      specified, the function key is going to be set to NIL releasing by
  *      that any previous Set Function or SETKEY() for that function.
  *  $DESCRIPTION$
- *        Set Function assign a character string with a function key, when
+ *      Set Function assign a character string with a function key, when
  *      this function key is pressed, the keyboard is stuffed with this
  *      character string. Set Function has the effect of clearing any
  *      SETKEY() previously set to the same function number and vice versa.

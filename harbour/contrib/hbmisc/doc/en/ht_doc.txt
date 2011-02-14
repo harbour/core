@@ -102,7 +102,6 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -151,7 +150,6 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -203,7 +201,6 @@
  *      oRtf:WritePar( "See the Links Above" ):EndPar()
  *      oRtf:Close()
  *      RETURN Nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -253,7 +250,6 @@
  *      oTroff:Close()
  *
  *      RETURN Nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

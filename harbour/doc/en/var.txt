@@ -523,7 +523,7 @@
  *      parameter.
  *      If a value is not specified then the NIL is assumed
  *  $EXAMPLES$
-  *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      FUNCTION MEMVARBLOCK( cMemvar )
  *      RETURN {|x| ;
  *          IIF( PCOUNT()==0, ;
  *          __MVGET( cMemvar ),;
@@ -833,7 +833,7 @@
  *        "P"          Pointer
  *        "S"          Symbol
  *        "U"          NIL
- *  </table>
+ *      </table>
  *  $DESCRIPTION$
  *      This function returns one character which represents the data type
  *      of the argument.

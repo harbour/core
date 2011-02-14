@@ -152,7 +152,7 @@
  *  $RETURNS$
  *       A integer number being the index position of the key within the hash table.
  *
- *      TODO: what is the return value if the key does not exist?  zero (0)?  RTE?
+ *       TODO: what is the return value if the key does not exist?  zero (0)?  RTE?
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$

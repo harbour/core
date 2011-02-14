@@ -12,77 +12,76 @@
  *  $ONELINER$
  *      Harbour Extensions
  *  $DESCRIPTION$
- *<b>Language extensions:</b>   </par>
- *--------------------
+ * <b>Language extensions:</b>   </par>
+ * --------------------
  *
- ** Class generation and management.
+ * * Class generation and management.
  *
- *        CA-Cl*pper only allowed creation of objects from a few standard
- *        classes.
+ *         CA-Cl*pper only allowed creation of objects from a few standard
+ *         classes.
  *
- *        In Harbour, you can create your own classes--complete with
- *        Methods, Instance Variables, Class Variables and Inheritance.
- *        Entire applications can be designed and coded in Object Oriented
- *        style.
+ *         In Harbour, you can create your own classes--complete with
+ *         Methods, Instance Variables, Class Variables and Inheritance.
+ *         Entire applications can be designed and coded in Object Oriented
+ *         style.
  *
- ** @<FunctionName>()   </par>
+ * * @<FunctionName>()   </par>
  *
- *        Returns the pointer (address) to a function.
+ *         Returns the pointer (address) to a function.
  *
- *        The returned value is not useful to application-level programming, but
- *        is used at a low level to implement object oriented coding.
- *        (Internally, a class method is a static function and there is no
- *        symbol for it, so it is accessed via its address).
+ *         The returned value is not useful to application-level programming, but
+ *         is used at a low level to implement object oriented coding.
+ *         (Internally, a class method is a static function and there is no
+ *         symbol for it, so it is accessed via its address).
  *
- ** Class HBGetList
+ * * Class HBGetList
  *
- *        Object oriented support for GetLists management.
+ *         Object oriented support for GetLists management.
  *
- ** ProcName() support for class Method names.
+ * * ProcName() support for class Method names.
  *
- *        Class Methods can be retrieved from the call stack.
+ *         Class Methods can be retrieved from the call stack.
  *
- ** Memory() has new return values.
+ * * Memory() has new return values.
  *
- *        See hbmemory.ch
+ *         See hbmemory.ch
  *
- ** Transform()  --> new function in format string
+ * * Transform()  --> new function in format string
  *
- *        @0      Make a zero padded string out of the number.
+ *         @0      Make a zero padded string out of the number.
  *
- ** SToD()  --> dDate
+ * * SToD()  --> dDate
  *
- *        New function that converts a yyyymmdd string to a Date value.
+ *         New function that converts a yyyymmdd string to a Date value.
  *
- ** Optional Compile Time STRONG TYPE declaration (and compile time TYPE
- *  MISMATCH warnings)
+ * * Optional Compile Time STRONG TYPE declaration (and compile time TYPE
+ *   MISMATCH warnings)
  *
- *  Example: LOCAL/STATIC Var AS ...
+ *   Example: LOCAL/STATIC Var AS ...
  *
- ** The Harbour debugger provides new interesting classes:
+ * * The Harbour debugger provides new interesting classes:
  *
- *  - Class TDbWindow could be the foundation for a generic multiplatform
+ *   - Class TDbWindow could be the foundation for a generic multiplatform
  *
- *  - Class TForm
+ *   - Class TForm
  *
- *  - Class TDbMenu implement both pulldown and popup menus.
+ *   - Class TDbMenu implement both pulldown and popup menus.
  *
- *<b>RTL enhanced functionality:</b>   </par>
- *---------------------------
+ * <b>RTL enhanced functionality:</b>   </par>
+ * ---------------------------
  *
- *- Directory( <cMask>, <cFlags>, <lEightDotThree> )
+ * - Directory( <cMask>, <cFlags>, <lEightDotThree> )
  *
- *  The 3rd parameter is a Harbour (optional) parameter and indicates that on
- *  those platforms that support long filenames, that you wish to receive what
- *  would be considered the dos equivalant 8.3 name.
- *  Could affect Adir() and Dir if they were modified to take advantage
- *  of it - currently, they will return long names if the os supports it.
+ *   The 3rd parameter is a Harbour (optional) parameter and indicates that on
+ *   those platforms that support long filenames, that you wish to receive what
+ *   would be considered the dos equivalant 8.3 name.
+ *   Could affect Adir() and Dir if they were modified to take advantage
+ *   of it - currently, they will return long names if the os supports it.
  *
- *- HB_DiskSpace( <nDrive>, <nType> )
+ * - HB_DiskSpace( <nDrive>, <nType> )
  *
- *  The second parameter is a Harbour (optional) parameter and indicates the
- *  type of diskinfo being requested.  See en/diskspac.txt for info.
+ *   The second parameter is a Harbour (optional) parameter and indicates the
+ *   type of diskinfo being requested.  See en/diskspac.txt for info.
  *
  *  $END$
  */
-

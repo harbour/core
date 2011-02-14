@@ -111,23 +111,23 @@
  *      Following are active keys that handled by DBEDIT():       </par>
  *      ---------------------------------------------------
  *
- *     <table>
- *       Key              Meaning
+ *      <table>
+ *        Key              Meaning
  *
- *       Left             Move one column to the left (previous field)
- *       Right            Move one column to the right (next field)
- *       Up               Move up one row (previous record)
- *       Down             Move down one row (next record)
- *       Page-Up          Move to the previous screen
- *       Page-Down        Move to the next screen
- *       Ctrl Page-Up     Move to the top of the file
- *       Ctrl Page-Down   Move to the end of the file
- *       Home             Move to the leftmost visible column
- *       End              Move to the rightmost visible column
- *       Ctrl Left        Pan one column to the left
- *       Ctrl Right       Pan one column to the right
- *       Ctrl Home        Move to the leftmost column
- *       Ctrl End         Move to the rightmost column
+ *        Left             Move one column to the left (previous field)
+ *        Right            Move one column to the right (next field)
+ *        Up               Move up one row (previous record)
+ *        Down             Move down one row (next record)
+ *        Page-Up          Move to the previous screen
+ *        Page-Down        Move to the next screen
+ *        Ctrl Page-Up     Move to the top of the file
+ *        Ctrl Page-Down   Move to the end of the file
+ *        Home             Move to the leftmost visible column
+ *        End              Move to the rightmost visible column
+ *        Ctrl Left        Pan one column to the left
+ *        Ctrl Right       Pan one column to the right
+ *        Ctrl Home        Move to the leftmost column
+ *        Ctrl End         Move to the rightmost column
  *     </table>
  *
  *      When <xUserFunc> is omitted, two more keys are active:
