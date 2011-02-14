@@ -281,7 +281,7 @@
  *       Esc            Abort selection, return 0
  *       First letter   Select next menu with the same first letter,
  *       |              return this item position.
- *      </table>
+ *  </table>
  *      upon exit the cursor is placed at MAXROW()-1, 0
  *      __MenuTo() can be nested without loosing the previous prompts.
  *
@@ -352,7 +352,7 @@
  *
  *      Following are active keys that handled by Menu To:
  *
- *      <table>
+ *  <table>
  *       key              Meaning
  *
  *       Up             - Move to previous item
@@ -367,7 +367,7 @@
  *       Esc            - Abort selection, return 0
  *       First letter   - Select next menu with the same first letter,
  *       |              return this item position.
- *      </table>
+ *  </table>
  *      upon exit the cursor is placed at MAXROW()-1, 0
  *      Menu To can be nested without loosing the previous prompts.
  *
@@ -394,6 +394,6 @@
  *  $COMPLIANCE$
  *      C
  *  $SEEALSO$
- *      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
+ *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$
  */

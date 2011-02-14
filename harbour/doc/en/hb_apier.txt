@@ -8,8 +8,8 @@
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *   Header file for the API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *
  * See COPYING for licensing terms.
  *
@@ -22,8 +22,8 @@
  *      hb_errGetDescription()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -59,8 +59,8 @@
  *      hb_errGetFileName()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -96,8 +96,8 @@
  *      hb_errGetFlags()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -133,8 +133,8 @@
  *      hb_errGetGenCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -170,8 +170,8 @@
  *      hb_errGetOperation()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -207,8 +207,8 @@
  *      hb_errGetOsCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -244,8 +244,8 @@
  *      hb_errGetSeverity()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -281,8 +281,8 @@
  *      hb_errGetSubCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -318,8 +318,8 @@
  *      hb_errGetSubSystem()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -355,8 +355,8 @@
  *      hb_errGetTries()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -392,8 +392,8 @@
  *      hb_errLaunch()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -429,8 +429,8 @@
  *      hb_errNew()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -466,8 +466,8 @@
  *      hb_errPutArgs()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -507,8 +507,8 @@
  *      hb_errPutDescription()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -546,8 +546,8 @@
  *      hb_errPutFileName()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -585,8 +585,8 @@
  *      hb_errPutFlags()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -624,8 +624,8 @@
  *      hb_errPutGenCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -663,8 +663,8 @@
  *      hb_errPutOperation()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -702,8 +702,8 @@
  *      hb_errPutOsCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -741,8 +741,8 @@
  *      hb_errPutSeverity()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -780,8 +780,8 @@
  *      hb_errPutSubCode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -819,8 +819,8 @@
  *      hb_errPutSubSystem()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -858,8 +858,8 @@
  *      hb_errPutTries()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -897,8 +897,8 @@
  *      hb_errRelease()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -932,8 +932,8 @@
  *      hb_errInit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -967,8 +967,8 @@
  *      hb_errExit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1002,8 +1002,8 @@
  *      hb_errLaunchSubst()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1039,8 +1039,8 @@
  *      hb_errRT_New()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1090,8 +1090,8 @@
  *      hb_errRT_New_Subst()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1141,8 +1141,8 @@
  *      hb_errRT_BASE()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1184,8 +1184,8 @@
  *      hb_errRT_BASE_Ext1()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1231,8 +1231,8 @@
  *      hb_errRT_BASE_Subst()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1274,8 +1274,8 @@
  *      hb_errRT_BASE_SubstR()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1315,8 +1315,8 @@
  *      hb_errRT_TERM()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1362,8 +1362,8 @@
  *      hb_errRT_DBCMD()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1405,8 +1405,8 @@
  *      hb_errRT_TOOLS()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1448,8 +1448,8 @@
  *      hb_errInternal()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1489,8 +1489,8 @@
  *      hb_errorHandler()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$

@@ -185,7 +185,7 @@
  *  $ARGUMENTS$
  *      <cDate> Any valid date expression.
  *  $RETURNS$
- *      <nMonth> Numeric value of the day of month.
+ *     <nMonth> Numeric value of the day of month.
  *  $DESCRIPTION$
  *      This function returns the numeric value of the day of month from a
  *      date.

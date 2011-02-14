@@ -8,7 +8,7 @@
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  *   Header file for the API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *    Terminal
  *
  * See COPYING for licensing terms.
@@ -22,8 +22,8 @@
  *      hb_gtInit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -61,8 +61,8 @@
  *      hb_gtExit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -96,8 +96,8 @@
  *      hb_gtAdjustPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -135,8 +135,8 @@
  *      hb_gtBox()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -180,8 +180,8 @@
  *      hb_gtBoxD()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -223,8 +223,8 @@
  *      hb_gtBoxS()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -266,8 +266,8 @@
  *      hb_gtColorSelect()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -303,8 +303,8 @@
  *      hb_gtColorToN()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -340,8 +340,8 @@
  *      hb_gtDispBegin()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -377,8 +377,8 @@
  *      hb_gtDispCount()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -414,8 +414,8 @@
  *      hb_gtDispEnd()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -451,8 +451,8 @@
  *      hb_gtDrawShadow()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -496,8 +496,8 @@
  *      hb_gtGetBlink()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -533,8 +533,8 @@
  *      hb_gtGetColorStr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -570,8 +570,8 @@
  *      hb_gtGetCursor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -607,8 +607,8 @@
  *      hb_gtGetPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -646,8 +646,8 @@
  *      hb_gtIsColor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -683,8 +683,8 @@
  *      hb_gtMaxCol()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -720,8 +720,8 @@
  *      hb_gtMaxRow()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -757,8 +757,8 @@
  *      hb_gtPostExt()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -794,8 +794,8 @@
  *      hb_gtPreExt()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -831,8 +831,8 @@
  *      hb_gtSuspend()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Prepare the reminal for shell output
  *  $SYNTAX$
@@ -868,8 +868,8 @@
  *      hb_gtResume()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Resume the terminal after the shell output
  *  $SYNTAX$
@@ -905,8 +905,8 @@
  *      hb_gtReadKey()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -942,8 +942,8 @@
  *      hb_gtRectSize()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -987,8 +987,8 @@
  *      hb_gtRepChar()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1030,8 +1030,8 @@
  *      hb_gtRest()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1075,8 +1075,8 @@
  *      hb_gtSave()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1120,8 +1120,8 @@
  *      hb_gtScrDim()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1159,8 +1159,8 @@
  *      hb_gtScroll()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1206,8 +1206,8 @@
  *      hb_gtSetBlink()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1243,8 +1243,8 @@
  *      hb_gtSetColorStr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1280,8 +1280,8 @@
  *      hb_gtSetCursor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1317,8 +1317,8 @@
  *      hb_gtSetMode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1356,8 +1356,8 @@
  *      hb_gtSetPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1395,8 +1395,8 @@
  *      hb_gtSetPosContext()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1436,8 +1436,8 @@
  *      hb_gtSetSnowFlag()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1473,8 +1473,8 @@
  *      hb_gtTone()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1510,8 +1510,8 @@
  *      hb_gtWrite()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1549,8 +1549,8 @@
  *      hb_gtWriteAt()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1592,8 +1592,8 @@
  *      hb_gtWriteCon()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1631,8 +1631,8 @@
  *      hb_gtVersion()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1668,8 +1668,8 @@
  *      hb_gtWCreate()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1705,8 +1705,8 @@
  *      hb_gtWDestroy()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1740,8 +1740,8 @@
  *      hb_gtWFlash()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1777,8 +1777,8 @@
  *      hb_gtWApp()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1812,8 +1812,8 @@
  *      hb_gtWCurrent()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1847,8 +1847,8 @@
  *      hb_gtWPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1884,8 +1884,8 @@
  *      hb_gtWVis()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1923,8 +1923,8 @@
  *      hb_gtSLR()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      System Level Request
  *  $SYNTAX$
@@ -1960,8 +1960,8 @@
  *      hb_gtModalRead()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1997,8 +1997,8 @@
  *      hb_gtBeginWrite()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2034,8 +2034,8 @@
  *      hb_gtEndWrite()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2071,8 +2071,8 @@
  *      hb_gtFlushCursor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2108,8 +2108,8 @@
  *      hb_gtSetColor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2145,8 +2145,8 @@
  *      hb_gtGetColor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2182,8 +2182,8 @@
  *      hb_gtSetBorder()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2219,8 +2219,8 @@
  *      hb_gt_Init()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2258,8 +2258,8 @@
  *      hb_gt_Exit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2293,8 +2293,8 @@
  *      hb_gt_AdjustPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2332,8 +2332,8 @@
  *      hb_gt_Box()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2379,8 +2379,8 @@
  *      hb_gt_BoxD()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2426,8 +2426,8 @@
  *      hb_gt_BoxS()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2473,8 +2473,8 @@
  *      hb_gt_Col()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2510,8 +2510,8 @@
  *      hb_gt_DispBegin()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2545,8 +2545,8 @@
  *      hb_gt_DispCount()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2582,8 +2582,8 @@
  *      hb_gt_DispEnd()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2617,8 +2617,8 @@
  *      hb_gt_GetBlink()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2654,8 +2654,8 @@
  *      hb_gt_GetCursorStyle()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2691,8 +2691,8 @@
  *      hb_gt_GetScreenHeight()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2728,8 +2728,8 @@
  *      hb_gt_GetScreenWidth()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2765,8 +2765,8 @@
  *      hb_gt_GetText()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2808,8 +2808,8 @@
  *      hb_gt_HorizLine()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2853,8 +2853,8 @@
  *      hb_gt_IsColor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2890,8 +2890,8 @@
  *      hb_gt_PreExt()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2927,8 +2927,8 @@
  *      hb_gt_PostExt()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2964,8 +2964,8 @@
  *      hb_gt_Suspend()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Suspend the terminal before the shell call
  *  $SYNTAX$
@@ -3001,8 +3001,8 @@
  *      hb_gt_Resume()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Resume the terminal after the shell call
  *  $SYNTAX$
@@ -3038,8 +3038,8 @@
  *      hb_gt_Puts()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3081,8 +3081,8 @@
  *      hb_gt_PutText()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3124,8 +3124,8 @@
  *      hb_gt_ReadKey()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3161,8 +3161,8 @@
  *      hb_gt_RectSize()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3200,8 +3200,8 @@
  *      hb_gt_Replicate()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3243,8 +3243,8 @@
  *      hb_gt_Row()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3280,8 +3280,8 @@
  *      hb_gt_Scroll()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3327,8 +3327,8 @@
  *      hb_gt_SetAttribute()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3370,8 +3370,8 @@
  *      hb_gt_SetBlink()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3405,8 +3405,8 @@
  *      hb_gt_SetCursorStyle()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3440,8 +3440,8 @@
  *      hb_gt_SetMode()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3479,8 +3479,8 @@
  *      hb_gt_SetPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3518,8 +3518,8 @@
  *      hb_gt_Tone()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3555,8 +3555,8 @@
  *      hb_gt_Version()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3592,8 +3592,8 @@
  *      hb_gt_VertLine()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3637,8 +3637,8 @@
  *      hb_inkey()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Wait for keyboard input
  *  $SYNTAX$
@@ -3678,8 +3678,8 @@
  *      hb_inkeyGet()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Extract the next key from the Harbour keyboard buffer
  *  $SYNTAX$
@@ -3715,8 +3715,8 @@
  *      hb_inkeyPut()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Inserts an inkey code into the keyboard buffer
  *  $SYNTAX$
@@ -3750,8 +3750,8 @@
  *      hb_inkeyLast()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Return the value of the last key that was extracted
  *  $SYNTAX$
@@ -3787,8 +3787,8 @@
  *      hb_inkeyNext()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Return the next key without extracting it
  *  $SYNTAX$
@@ -3824,8 +3824,8 @@
  *      hb_inkeyPoll()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Poll the console keyboard to stuff the Harbour buffer
  *  $SYNTAX$
@@ -3859,8 +3859,8 @@
  *      hb_inkeyReset()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Reset the Harbour keyboard buffer
  *  $SYNTAX$
@@ -3894,8 +3894,8 @@
  *      hb_mouseIsPresent()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3931,8 +3931,8 @@
  *      hb_mouseGetCursor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3968,8 +3968,8 @@
  *      hb_mouseSetCursor()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4003,8 +4003,8 @@
  *      hb_mouseCol()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4040,8 +4040,8 @@
  *      hb_mouseRow()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4077,8 +4077,8 @@
  *      hb_mouseSetPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4114,8 +4114,8 @@
  *      hb_mouseIsButtonPressed()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4151,8 +4151,8 @@
  *      hb_mouseCountButton()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4189,7 +4189,7 @@
  *  $CATEGORY$
  *      C level API
  *  $SUBCATEGORY$
- *      Terminal
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4229,8 +4229,8 @@
  *      hb_mouseGetBounds()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4270,8 +4270,8 @@
  *      hb_mouse_Init()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4305,8 +4305,8 @@
  *      hb_mouse_Exit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4340,8 +4340,8 @@
  *      hb_mouse_IsPresent()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4377,8 +4377,8 @@
  *      hb_mouse_Show()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4412,8 +4412,8 @@
  *      hb_mouse_Hide()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4447,8 +4447,8 @@
  *      hb_mouse_Col()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4484,8 +4484,8 @@
  *      hb_mouse_Row()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4521,8 +4521,8 @@
  *      hb_mouse_SetPos()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4558,8 +4558,8 @@
  *      hb_mouse_IsButtonPressed()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4595,8 +4595,8 @@
  *      hb_mouse_CountButton()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4632,8 +4632,8 @@
  *      hb_mouse_SetBounds()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4673,8 +4673,8 @@
  *      hb_mouse_GetBounds()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4714,8 +4714,8 @@
  *      hb_setkeyInit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4749,8 +4749,8 @@
  *      hb_setkeyExit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$

@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *      Document
+ *     Document
  *  $NAME$
  *      Strong Typing
  *  $CATEGORY$

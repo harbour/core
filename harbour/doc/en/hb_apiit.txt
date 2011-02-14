@@ -8,7 +8,7 @@
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *   Header file for the API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *
  * See COPYING for licensing terms.
@@ -22,7 +22,7 @@
  *      hb_evalLaunch()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -59,7 +59,7 @@
  *      hb_evalNew()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -98,7 +98,7 @@
  *      hb_evalPutParam()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -137,7 +137,7 @@
  *      hb_evalRelease()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -174,7 +174,7 @@
  *      hb_itemDo()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -217,7 +217,7 @@
  *      hb_itemDoC()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -260,7 +260,7 @@
  *      hb_itemArrayGet()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -299,7 +299,7 @@
  *      hb_itemArrayNew()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -336,7 +336,7 @@
  *      hb_itemArrayPut()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -377,7 +377,7 @@
  *      hb_itemCopyC()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -418,7 +418,7 @@
  *      hb_itemFreeC()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -455,7 +455,7 @@
  *      hb_itemGetC()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -492,7 +492,7 @@
  *      hb_itemGetCPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -529,7 +529,7 @@
  *      hb_itemGetCLen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -566,7 +566,7 @@
  *      hb_itemGetDS()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -605,7 +605,7 @@
  *      hb_itemGetDL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -642,7 +642,7 @@
  *      hb_itemGetL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -679,7 +679,7 @@
  *      hb_itemGetND()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -716,7 +716,7 @@
  *      hb_itemGetNI()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -753,7 +753,7 @@
  *      hb_itemGetNL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -790,7 +790,7 @@
  *      hb_itemGetNLen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -829,7 +829,7 @@
  *      hb_itemGetPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -866,7 +866,7 @@
  *      hb_itemNew()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -903,7 +903,7 @@
  *      hb_itemInit()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -938,7 +938,7 @@
  *      hb_itemPCount()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -975,7 +975,7 @@
  *      hb_itemParam()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Creates a copy of an item parameter (outside the eval stack)
@@ -1019,7 +1019,7 @@
  *      hb_itemPutC()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1058,7 +1058,7 @@
  *      hb_itemPutCPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1099,7 +1099,7 @@
  *      hb_itemPutCLPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1140,7 +1140,7 @@
  *      hb_itemPutCL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1181,7 +1181,7 @@
  *      hb_itemSetCMemo()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1216,7 +1216,7 @@
  *      hb_itemPutD()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1259,7 +1259,7 @@
  *      hb_itemPutDS()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1298,7 +1298,7 @@
  *      hb_itemPutDL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1337,7 +1337,7 @@
  *      hb_itemPutL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1376,7 +1376,7 @@
  *      hb_itemPutND()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1415,7 +1415,7 @@
  *      hb_itemPutNI()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1454,7 +1454,7 @@
  *      hb_itemPutNL()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1493,7 +1493,7 @@
  *      hb_itemPutNLen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1536,7 +1536,7 @@
  *      hb_itemPutNDLen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1579,7 +1579,7 @@
  *      hb_itemPutNILen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1620,7 +1620,7 @@
  *      hb_itemPutNLLen()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1661,7 +1661,7 @@
  *      hb_itemPutPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1700,7 +1700,7 @@
  *      hb_itemRelease()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1737,7 +1737,7 @@
  *      hb_itemReturn()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1774,7 +1774,7 @@
  *      hb_itemSize()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1811,7 +1811,7 @@
  *      hb_itemType()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1848,7 +1848,7 @@
  *      hb_itemTypeStr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1885,7 +1885,7 @@
  *      hb_itemParamPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1924,7 +1924,7 @@
  *      hb_itemReturnPtr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -1961,7 +1961,7 @@
  *      hb_itemStrCmp()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Our string compare
@@ -2002,7 +2002,7 @@
  *      hb_itemCopy()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Copies an item to one place to another respecting its containts
@@ -2039,7 +2039,7 @@
  *      hb_itemClear()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -2074,7 +2074,7 @@
  *      hb_itemUnRef()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      De-references passed variable
@@ -2111,7 +2111,7 @@
  *      hb_itemStr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Convert a number to a string
@@ -2152,7 +2152,7 @@
  *      hb_itemString()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Convert any scalar to a string
@@ -2193,7 +2193,7 @@
  *      hb_itemValToStr()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *      Convert any scalar to a string
@@ -2230,7 +2230,7 @@
  *      hb_itemPadConv()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *
@@ -2271,7 +2271,7 @@
  *      hb_itemSwap()
  *  $CATEGORY$
  *      C level API
- *  $SUBCATEGORY$
+ * $SUBCATEGORY$
  *      Item
  *  $ONELINER$
  *

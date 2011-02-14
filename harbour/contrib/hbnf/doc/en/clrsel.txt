@@ -14,33 +14,33 @@
  *  $ARGUMENTS$
  *     <aClrData> is an array of subarrays, with each subarray containing
  *        information about the colour settings.
- * 
+ *
  *        The subarray has the following structure:
- * 
+ *
  *         [1]  cName    is the name of this colour setting i.e. "Pick List"
  *                 Maximum length is 20 bytes
- * 
+ *
  *         [2]  cClrStr  is the current colour string
  *                 Default is "W/N,N/W,N/N,N/N,N/W"
- * 
+ *
  *                 If Setting type is "M" (Menu) the colours are...
  *                    1.  Prompt Colour
  *                    2.  Message Colour
  *                    3.  HotKey Colour
  *                    4.  LightBar Colour
  *                    5.  LightBar HotKey Colour
- * 
+ *
  *                 Note: While there are many ways to code the individual
  *                    colour combinations,  they should be in the same
  *                    format that gets returned from SETCOLOR(), so
  *                    the defaults can be found in the colour palette.
- * 
+ *
  *                    foreground [+] / background [*]
  *                    i.e. "GR+/BG*, N/W*, N+/N, , W/N"
- * 
+ *
  *         [3]  cType  is the type of colour setting
  *                 Default is "W" (Window)
- * 
+ *
  *                    T = Title     Only 1 colour element
  *                    D = Desktop   Background colour and character
  *                    M = Menu      For FT_Menuto() style menus
@@ -48,27 +48,27 @@
  *                    G = Get       For use with @ SAY...
  *                    B = Browse    For tBrowse() and *dbEdit()
  *                    A = aChoice   Pick-lists etc...
- * 
+ *
  *                 W/G/B/A are functionally the same but will provide
  *                 a more appropriate test display.
- * 
+ *
  *         [4]  cFillChar  is the character (for desktop background only)
  *                 Default is CHR(177) "±±±±±±±±±±±±±±"
- * 
- * 
+ *
+ *
  *     <lClrMode>   .T.  use colour palette
  *                 .F.  use monochrome palette
- * 
+ *
  *                 Default is the ISCOLOR() setting
- * 
+ *
  *     <cTestChr>  2 Byte character string for colour test display
- * 
+ *
  *                 Default is the CHR(254)+CHR(254)  "þþ"
- * 
+ *
  *  $RETURNS$
  *     An array identical to the one passed, with new selected colours
  *  $DESCRIPTION$
- *       This function allows users to select their own colour combinations
+ *     This function allows users to select their own colour combinations
  *     for all the different types of screen I/O in a typical application.
  *     This facilitates an easy implementation of Ted Means' replacement
  *     of the  @..PROMPT/MENU TO found in the NanForum Toolkit.  If you are
@@ -78,10 +78,10 @@
  *     LOCAL aClrs   := {}
  *     LOCAL lColour := ISCOLOR()
  *     LOCAL cChr    := CHR(254) + CHR(254)
- * 
+ *
  *     SET SCOREBOARD Off
  *     SETBLINK( .F. )       // Allow bright backgrounds
- * 
+ *
  *     *.... a typical application might have the following different settings
  *     *     normally these would be stored in a .dbf/.dbv
  *     aClrs := {;
@@ -96,7 +96,7 @@
  *        { "Database Query", "N/BG, N/GR*,,,N+/BG",          "B"      }, ;
  *        { "Pick List",      "N/GR*,W+/B,,, BG/GR*",         "A"      }  ;
  *              }
- * 
- *    aClrs := FT_ClrSel( aClrs, lColour, cChr )
+ *
+ *     aClrs := FT_ClrSel( aClrs, lColour, cChr )
  *  $END$
  */

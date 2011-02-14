@@ -26,17 +26,17 @@
  *     IF FT_NUMLOCK()
  *        Qout( "NumLock is active" )
  *     ENDIF
- * 
- *   Another one, slightly strange, courtesy of Glenn Scott:
- * 
- * 
+ *
+ *     Another one, slightly strange, courtesy of Glenn Scott:
+ *
+ *
  *       function numBlink()
  *          local lOldNum := ft_numlock()
- * 
+ *
  *          while inkey( .5 ) != 27
  *             ft_numlock( !ft_numlock() )
  *          end
- * 
+ *
  *          return ft_numlock( lOldNum )
  *  $SEEALSO$
  *     FT_CAPLOCK() FT_CTRL() FT_PRTSCR() FT_SHIFT() FT_ALT()

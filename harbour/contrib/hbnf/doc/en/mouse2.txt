@@ -50,7 +50,7 @@
  *     because at least some versions of the mouse drivers do not operate
  *     according to the documentation when confronted with a 43 or 50 line
  *     screen.
- * 
+ *
  *     Normally, FT_MINIT() should be used to initialize the mouse since it
  *     will not reinitialize if already done.
  *  $EXAMPLES$
@@ -106,7 +106,7 @@
  *     when redrawing screens.  The mouse cursor dutifully saves the screen
  *     under it, so if you draw over the mouse cursor it will create a "hole"
  *     in your screen when you move the mouse cursor.
- * 
+ *
  *     Note: A call to FT_MHIDECRS() decrements a mouse driver variable
  *     which indicates whether the cursor is shown. The cursor is visible
  *     only when the variable = 0. Thus multiple calls to FT_MHIDECRS()
@@ -140,7 +140,7 @@
  *     redrawing screens.  The mouse cursor dutifully saves the screen
  *     under it, so if you draw over the mouse cursor it will create a
  *     "hole" in your screen when you move the mouse cursor.
- * 
+ *
  *     Note: A call to FT_MHIDECRS() decrements a mouse driver variable
  *     which indicates whether the cursor is shown. The cursor is visible
  *     only when the variable = 0. Thus multiple calls to FT_MHIDECRS()
@@ -168,12 +168,12 @@
  *  $ARGUMENTS$
  *     <nX> is a variable that will receive the mouse X position in virtual
  *     screen coordinates.  It must be passed by reference.
- * 
+ *
  *     <nY> is a variable that will receive the mouse Y position in virtual
  *     screen coordinates.  It must be passed by reference.
  *  $RETURNS$
  *     an integer representing button status
- * 
+ *
  *           - 0 for no button pressed
  *           - 1 for left pressed
  *           - 2 for right pressed
@@ -212,12 +212,12 @@
  *  $ARGUMENTS$
  *     <nX> is a variable that will receive the mouse X position in text
  *     screen coordinates.  It must be passed by reference.
- * 
+ *
  *     <nY> is a variable that will receive the mouse Y position in text
  *     screen coordinates.  It must be passed by reference.
  *  $RETURNS$
  *     an integer representing button status
- * 
+ *
  *           - 0 for no button pressed
  *           - 1 for left pressed
  *           - 2 for right pressed
@@ -300,7 +300,7 @@
  *     FT_MSETPOS( <nX>, <nY> ) -> NIL
  *  $ARGUMENTS$
  *     <nX> is the desired mouse row.
- * 
+ *
  *     <nY> is the desired mouse column.
  *  $RETURNS$
  *     NIL
@@ -327,7 +327,7 @@
  *     FT_MSETPOS( <nX>, <nY> ) -> NIL
  *  $ARGUMENTS$
  *     <nX> is the desired mouse row.
- * 
+ *
  *     <nY> is the desired mouse column.
  *  $RETURNS$
  *     NIL
@@ -353,7 +353,7 @@
  *     FT_MXLIMIT( <nX1>, <nX2> ) -> NIL
  *  $ARGUMENTS$
  *     <nX1> is the top row limit.
- * 
+ *
  *     <nX2> is the bottom row limit.
  *  $RETURNS$
  *     NIL
@@ -377,7 +377,7 @@
  *     FT_MYLIMIT( <nY1>, <nY2> ) -> NIL
  *  $ARGUMENTS$
  *     <nY1> is the left column limit.
- * 
+ *
  *     <nY2> is the right column limit.
  *  $RETURNS$
  *     NIL
@@ -401,21 +401,21 @@
  *     FT_MBUTPRS( <nButton> [, @nButPrs [, @nX [, @nY] ] ] ) -> nButStatus
  *  $ARGUMENTS$
  *     <nButton> is the mouse button number:
- * 
+ *
  *                0 - Left   Button
  *                1 - Right  Button
  *                2 - Middle Button [if applicable]
- * 
+ *
  *     <nButPrs> is the number of times the specified button was pressed
  *               since the last call to this routine. PASSED BY REFERENCE.
  *     <nX> is the X position of the cursor when the last press occurred.
  *               PASSED BY REFERENCE.
  *     <nY> is the Y position of the cursor when the last press occurred.
  *               PASSED BY REFERENCE.
- * 
+ *
  *  $RETURNS$
  *     An integer representing the button status:
- * 
+ *
  *                0 - no buttons pressed
  *                1 - left button pressed
  *                2 - right button pressed
@@ -450,15 +450,15 @@
  *               0 - Left   Button
  *               1 - Right  Button
  *               2 - Middle Button [if applicable]
- * 
- *    <nButRel> is the number of times the specified button was released
- *              since the last call to this routine. PASSED BY REFERENCE.
- * 
- *    <nX> is the X position of the cursor when the last release occurred.
- *              PASSED BY REFERENCE.
- * 
- *    <nY> is the Y position of the cursor when the last release occurred.
- *              PASSED BY REFERENCE.
+ *
+ *     <nButRel> is the number of times the specified button was released
+ *               since the last call to this routine. PASSED BY REFERENCE.
+ *
+ *     <nX> is the X position of the cursor when the last release occurred.
+ *               PASSED BY REFERENCE.
+ *
+ *     <nY> is the Y position of the cursor when the last release occurred.
+ *               PASSED BY REFERENCE.
  *  $RETURNS$
  *     <nBStat>  - an integer representing button release status
  *                 0 - None
@@ -489,11 +489,11 @@
  *  $ARGUMENTS$
  *     <nCrsType> is the cursor type. A value of 0 indicates the software cursor
  *                (the default) and a value of 1 indicates the hardware cursor.
- * 
+ *
  *     <nScrMask> is the screen mask for the software cursor or the first scan
  *                line of the hardware cursor. See the description for more
  *                information.
- * 
+ *
  *     <nCrsMask> is the cursor mask for the software cursor of the last scan
  *                line of the hardware cursor. See the description for more
  *                information.
@@ -511,10 +511,10 @@
  *     high order bits represent the display atributes such as blinking,
  *     intensity and forground and background colors. The mask is represented in
  *     the diagram below:
- * 
+ *
  *     Bit:     ³15    ³14      12³11       ³10       8³7       0³
  *     Function:³blink ³background³intensity³foreground³character³
- * 
+ *
  *     Blinking and high intensity are on when the bit is 1. The background and
  *     foreground indicate which colors are used for each. The software mouse
  *     cursor uses these two values by taking the mask from the screen cell it
@@ -522,12 +522,12 @@
  *     value. The result is then logically XOR'ed with the cursor mask value.
  *     Thus to keep the character the same but invert the foreground and
  *     background colors the following values would be used:
- * 
+ *
  *     Bit:     ³15    ³14      12³11       ³10       8³7       0³
  *     Function:³blink ³background³intensity³foreground³character³
  *     screen:  ³  0   ³   111    ³    0    ³   111    ³11111111 ³ =30719
  *     cursor:  ³  0   ³   111    ³    0    ³   111    ³00000000 ³ =30464
- * 
+ *
  *     The hardware cursor is the text cursor provided by the video board. One
  *     specifies the range of scan lines which are on using <nScrMask> and
  *     <nCrsMask>. The range of values is dependant upon the type of monitor.

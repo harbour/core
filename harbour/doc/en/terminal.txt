@@ -70,7 +70,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
+ *       RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
  *  $END$
  */
 
@@ -78,11 +78,11 @@
  *  $TEMPLATE$
  *      Command
  *  $NAME$
- *      SAVE SCREEN
+ *     SAVE SCREEN
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
- *      Terminal
+ *    Terminal
  *  $ONELINER$
  *      Save whole screen image and coordinate to an internal buffer
  *  $SYNTAX$
@@ -513,13 +513,13 @@
  *  $TEMPLATE$
  *      Procedure
  *  $NAME$
- *      __TextSave()
+ *     __TextSave()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
- *      Internal
+ *     Internal
  *  $ONELINER$
- *      Redirect console output to printer or file and save old settings
+ *     Redirect console output to printer or file and save old settings
  *  $SYNTAX$
  *      __TextSave( <cFile> )
  *  $ARGUMENTS$

@@ -36,7 +36,7 @@
  *  $NAME$
  *      __SETCENTURY()
  *  $CATEGORY$
- *      API
+ *       API
  *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
@@ -62,7 +62,7 @@
  *  $NAME$
  *      SET()
  *  $CATEGORY$
- *      API
+ *       API
  *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
@@ -656,41 +656,41 @@
  *  $TEMPLATE$
  *      Function
  *  $NAME$
- *      HB_SETKEYSAVE()
+ *     HB_SETKEYSAVE()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
- *      Returns a copy of internal set-key list, optionally overwriting
+ *     Returns a copy of internal set-key list, optionally overwriting
  *  $SYNTAX$
- *      HB_SETKEYSAVE( [ <OldKeys> ] )
+ *     HB_SETKEYSAVE( [ <OldKeys> ] )
  *  $ARGUMENTS$
- *      <OldKeys> is an optional set-key list from a previous call to
- *      HB_SetKeySave(), or NIL to clear current set-key list
+ *     <OldKeys> is an optional set-key list from a previous call to
+ *     HB_SetKeySave(), or NIL to clear current set-key list
  *  $RETURNS$
- *      Current set-key list
+ *     Current set-key list
  *  $DESCRIPTION$
- *      HB_SetKeySave() is designed to act like the set() function which
- *      returns the current state of an environment setting, and optionally
- *      assigning a new value.  In this case, the "environment setting" is the
- *      internal set-key list, and the optional new value is either a value
- *      returned from a previous call to SetKeySave() - to restore that list,
- *      or the value of NIL to clear the current list.
+ *     HB_SetKeySave() is designed to act like the set() function which
+ *     returns the current state of an environment setting, and optionally
+ *     assigning a new value.  In this case, the "environment setting" is the
+ *     internal set-key list, and the optional new value is either a value
+ *     returned from a previous call to SetKeySave() - to restore that list,
+ *     or the value of NIL to clear the current list.
  *  $EXAMPLES$
- *      local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
- *      ... // some other processing
- *      HB_SetKeySave( aKeys )
+ *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
+ *     ... // some other processing
+ *     HB_SetKeySave( aKeys )
  *  $TESTS$
- *      None definable
+ *     None definable
  *  $STATUS$
- *      R
+ *     R
  *  $COMPLIANCE$
- *      H
+ *     H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      SETKEY()
+ *     SETKEY()
  *  $END$
  */
 
@@ -753,18 +753,18 @@
  *  $NAME$
  *      SET KEY
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Assign an action block to a key
  *  $SYNTAX$
  *      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
  *  $ARGUMENTS$
  *      <anKey> is either a numeric key value, or an array of such values
- *
+
  *      <bAction> is an optional code-block to be assigned
- *
+
  *      <bCondition> is an optional condition code-block
  *  $DESCRIPTION$
  *      The Set Key Command function is translated to the SetKey() function
@@ -871,9 +871,9 @@
  *  $NAME$
  *      SET DEFAULT
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Establishes the Harbour search drive and directory.
  *  $SYNTAX$
@@ -902,9 +902,9 @@
  *  $NAME$
  *      SET WRAP
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle wrapping the PROMPTs in a menu.
  *  $SYNTAX$
@@ -933,9 +933,9 @@
  *  $NAME$
  *      SET MESSAGE
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Extablishes a message row for @...PROMPT command
  *  $SYNTAX$
@@ -976,9 +976,9 @@
  *  $NAME$
  *      SET PATH
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Specifies a search path for opening files
  *  $SYNTAX$
@@ -1009,9 +1009,9 @@
  *  $NAME$
  *      SET INTENSITY
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggles the enhaced display of PROMPT's and GETs.
  *  $SYNTAX$
@@ -1039,9 +1039,9 @@
  *  $NAME$
  *      SET ALTERNATE
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle and echos output to an alternate file
  *  $SYNTAX$
@@ -1089,9 +1089,9 @@
  *  $NAME$
  *      SET CENTURY
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle the century digits in all dates display
  *  $SYNTAX$
@@ -1123,9 +1123,9 @@
  *  $NAME$
  *      SET DATE
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Assigns a date format or chooses a predefined date data set.
  *  $SYNTAX$
@@ -1175,9 +1175,9 @@
  *  $NAME$
  *      SET EPOCH
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Specify a base year for interpreting dates
  *  $SYNTAX$
@@ -1204,9 +1204,9 @@
  *  $NAME$
  *      SET FIXED
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Set the number of decimal position to be displayed
  *  $SYNTAX$
@@ -1252,9 +1252,9 @@
  *  $NAME$
  *      SET PRINTER
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggles the printer and controls the printer device
  *  $SYNTAX$
@@ -1309,9 +1309,9 @@
  *  $NAME$
  *      SET CONSOLE
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle the console display
  *  $SYNTAX$
@@ -1345,9 +1345,9 @@
  *  $NAME$
  *      SET DECIMALS
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle the console display
  *  $SYNTAX$
@@ -1380,9 +1380,9 @@
  *  $NAME$
  *      SET DEVICE
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Directs all @...SAY output to a device.
  *  $SYNTAX$
@@ -1422,9 +1422,9 @@
  *  $NAME$
  *      SET BELL
  *  $CATEGORY$
- *      Command
+ *     Command
  *  $SUBCATEGORY$
- *      Environment
+ *     Environment
  *  $ONELINER$
  *      Toggle the bell to sound once a GET has been completed.
  *  $SYNTAX$

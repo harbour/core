@@ -131,26 +131,26 @@
  *  $RETURNS$
  *      DbAppend() always returns NIL
  *  $DESCRIPTION$
- *      This function add a new record to the end of the database
- *      in the selected or aliased work area. All fields in that
- *      database will be given empty data values - character fields
- *      will be filled with blank spaces,date fields with CTOD('//'),
- *      numeric fields with 0, logical fields with .F., and memo fields
- *      with NULL bytes. The header of the database is not updated until
- *      the record is flushed from the buffer and the contents are
- *      written to the disk.
+ *     This function add a new record to the end of the database
+ *     in the selected or aliased work area. All fields in that
+ *     database will be given empty data values - character fields
+ *     will be filled with blank spaces,date fields with CTOD('//'),
+ *     numeric fields with 0, logical fields with .F., and memo fields
+ *     with NULL bytes. The header of the database is not updated until
+ *     the record is flushed from the buffer and the contents are
+ *     written to the disk.
  *
- *      Under a networking enviroment, DBAPPEND() performs an additional
- *      operation: It attrmps to lock the newly added record. If
- *      the database file is currently locked or if a locking assignment
- *      if made to LASTREC()+1, NETERR() will return a logical true (.T.)
- *      immediately after the DBAPPEND() function. This function does
- *      not unlock the locked records.
+ *     Under a networking enviroment, DBAPPEND() performs an additional
+ *     operation: It attrmps to lock the newly added record. If
+ *     the database file is currently locked or if a locking assignment
+ *     if made to LASTREC()+1, NETERR() will return a logical true (.T.)
+ *     immediately after the DBAPPEND() function. This function does
+ *     not unlock the locked records.
  *
- *      If <lLock> is passed a logical true (.T.) value, it will
- *      release the record locks, which allows the application to main-
- *      tain multiple record locks during an appending operation. The
- *      default for this parameter is a logical false (.F.).
+ *     If <lLock> is passed a logical true (.T.) value, it will
+ *     release the record locks, which allows the application to main-
+ *     tain multiple record locks during an appending operation. The
+ *     default for this parameter is a logical false (.F.).
  *  $EXAMPLES$
  *      FUNCTION Main()
  *
@@ -264,7 +264,7 @@
  *  $TEMPLATE$
  *      Procedure
  *  $NAME$
- *      DBCLOSEAREA()
+ *     DBCLOSEAREA()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -306,7 +306,7 @@
  *  $ONELINER$
  *      Updates all index and database buffers for a given workarea
  *  $SYNTAX$
- *      DBCOMMIT()
+ *     DBCOMMIT()
  *  $DESCRIPTION$
  *      This function updates all of the information for a give,selected,
  *      or active workarea. This operation includes all database and index
@@ -352,7 +352,7 @@
  *  $ONELINER$
  *      Flushes the memory buffer and performs a hard-disk write
  *  $SYNTAX$
- *      DBCOMMITALL()
+ *      DBCOMMIT()
  *  $DESCRIPTION$
  *      This function performs a hard-disk write for all work areas.
  *      Before the disk write is performed,all buffers are flushed.
@@ -1240,17 +1240,17 @@
  *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
  *      [<lShared>], [<lReadonly>])
  *  $ARGUMENTS$
- *      <lNewArea>  A optional logical expression for the new work area
+ *     <lNewArea>  A optional logical expression for the new work area
  *
- *      <cDriver>   Database driver name
+ *     <cDriver>   Database driver name
  *
- *      <cName>     File Name
+ *     <cName>     File Name
  *
- *      <xcAlias>   Alias name
+ *     <xcAlias>   Alias name
  *
- *      <lShared>   Shared/exclusive status flag
+ *     <lShared>   Shared/exclusive status flag
  *
- *      <lReadonly> Read-write status flag.
+ *     <lReadonly> Read-write status flag.
  *  $DESCRIPTION$
  *      This function opens an existing database named <cName> in the current
  *      work area. If <lNewArea> is set to a logical true (.T.) value, then

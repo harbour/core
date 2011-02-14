@@ -238,7 +238,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
                !( Left( item:__enumKey(), 1 ) == "_" )
                cSource += " *  $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
-                  cSource += " * " + Space( 4 ) + cLine + hb_eol()
+                  cSource += " * " + iif( Len( cLine ) == 0, "", Space( 4 ) + cLine ) + hb_eol()
                NEXT
             ENDIF
          NEXT

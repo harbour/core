@@ -20,8 +20,8 @@
  *      _evalLaunch()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -57,8 +57,8 @@
  *      _evalNew()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -94,8 +94,8 @@
  *      _evalPutParam()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -131,8 +131,8 @@
  *      _evalRelease()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -168,8 +168,8 @@
  *      _itemArrayGet()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -205,8 +205,8 @@
  *      _itemArrayNew()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -242,8 +242,8 @@
  *      _itemArrayPut()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -279,8 +279,8 @@
  *      _itemNew()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -316,8 +316,8 @@
  *      _itemParam()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -353,8 +353,8 @@
  *      _itemRelease()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -390,8 +390,8 @@
  *      _itemReturn()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -427,8 +427,8 @@
  *      _itemSize()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -464,8 +464,8 @@
  *      _itemType()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Item
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -501,8 +501,8 @@
  *      _reta()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -538,8 +538,8 @@
  *      _pcount()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -575,8 +575,8 @@
  *      _tchdir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -612,8 +612,8 @@
  *      _tchdrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -649,8 +649,8 @@
  *      _tclose()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -686,8 +686,8 @@
  *      _tcommit()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -723,8 +723,8 @@
  *      _tcreat()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -760,8 +760,8 @@
  *      _tcurdir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -797,8 +797,8 @@
  *      _tcurdrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -834,8 +834,8 @@
  *      _tdevraw()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -871,8 +871,8 @@
  *      _terror()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -908,8 +908,8 @@
  *      _tisdevice()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -945,8 +945,8 @@
  *      _tisdrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -982,8 +982,8 @@
  *      _tlock()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1019,8 +1019,8 @@
  *      _tlseek()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1056,8 +1056,8 @@
  *      _tmkdir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1093,8 +1093,8 @@
  *      _topen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1130,8 +1130,8 @@
  *      _tread()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1167,8 +1167,8 @@
  *      _trename()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1204,8 +1204,8 @@
  *      _trmdir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1241,8 +1241,8 @@
  *      _tunlink()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1278,8 +1278,8 @@
  *      _twrite()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1315,8 +1315,8 @@
  *      _bset()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1352,8 +1352,8 @@
  *      _bmove()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1389,8 +1389,8 @@
  *      _bcopy()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1426,8 +1426,8 @@
  *      _bcmp()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Undocumented
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1463,8 +1463,8 @@
  *      _gtBox()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1500,8 +1500,8 @@
  *      _gtColorSelect()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1537,8 +1537,8 @@
  *      _gtDispBegin()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1574,8 +1574,8 @@
  *      _gtDispCount()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1611,8 +1611,8 @@
  *      _gtDispEnd()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1648,8 +1648,8 @@
  *      _gtGetColorStr()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1685,8 +1685,8 @@
  *      _gtGetCursor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1722,8 +1722,8 @@
  *      _gtGetPos()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1759,8 +1759,8 @@
  *      _gtIsColor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1796,8 +1796,8 @@
  *      _gtMaxCol()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1833,8 +1833,8 @@
  *      _gtMaxRow()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1870,8 +1870,8 @@
  *      _gtPostExt()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1907,8 +1907,8 @@
  *      _gtPreExt()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1944,8 +1944,8 @@
  *      _gtRectSize()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1981,8 +1981,8 @@
  *      _gtRepChar()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2018,8 +2018,8 @@
  *      _gtRest()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2055,8 +2055,8 @@
  *      _gtSave()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2092,8 +2092,8 @@
  *      _gtScrDim()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2129,8 +2129,8 @@
  *      _gtScroll()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2166,8 +2166,8 @@
  *      _gtSetBlink()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2203,8 +2203,8 @@
  *      _gtSetColorStr()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2240,8 +2240,8 @@
  *      _gtSetCursor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2277,8 +2277,8 @@
  *      _gtSetMode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2314,8 +2314,8 @@
  *      _gtSetPos()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2351,8 +2351,8 @@
  *      _gtSetSnowFlag()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2388,8 +2388,8 @@
  *      _gtWrite()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2425,8 +2425,8 @@
  *      _gtWriteAt()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2462,8 +2462,8 @@
  *      _gtWriteCon()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2499,8 +2499,8 @@
  *      _gtInit()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2536,8 +2536,8 @@
  *      _gtExit()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2573,8 +2573,8 @@
  *      _gtWCreate()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2610,8 +2610,8 @@
  *      _gtWDestroy()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2647,8 +2647,8 @@
  *      _gtWFlash()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2684,8 +2684,8 @@
  *      _gtWApp()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2721,8 +2721,8 @@
  *      _gtWCurrent()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2758,8 +2758,8 @@
  *      _gtWPos()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2795,8 +2795,8 @@
  *      _gtWVis()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2832,8 +2832,8 @@
  *      _gtModalRead()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2869,8 +2869,8 @@
  *      _gtBeginWrite()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2906,8 +2906,8 @@
  *      _gtEndWrite()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2943,8 +2943,8 @@
  *      _gtFlushCursor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2980,8 +2980,8 @@
  *      _gtSetColor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3017,8 +3017,8 @@
  *      _gtGetColor()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3054,8 +3054,8 @@
  *      _gtSetBorder()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Terminal
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3091,8 +3091,8 @@
  *      _xalloc()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Fixed memory
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3128,8 +3128,8 @@
  *      _xgrab()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Fixed memory
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3165,8 +3165,8 @@
  *      _xfree()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Fixed memory
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3202,8 +3202,8 @@
  *      _exmgrab()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Fixed memory
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3239,8 +3239,8 @@
  *      _fsChDir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3276,8 +3276,8 @@
  *      _fsChDrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3313,8 +3313,8 @@
  *      _fsClose()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3350,8 +3350,8 @@
  *      _fsCommit()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3387,8 +3387,8 @@
  *      _fsCreate()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3424,8 +3424,8 @@
  *      _fsCurDir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3461,8 +3461,8 @@
  *      _fsCurDrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3498,8 +3498,8 @@
  *      _fsDelete()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3535,8 +3535,8 @@
  *      _fsError()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3572,8 +3572,8 @@
  *      _fsExtOpen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3609,8 +3609,8 @@
  *      _fsIsDrv()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3646,8 +3646,8 @@
  *      _fsLock()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3683,8 +3683,8 @@
  *      _fsMkDir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3720,8 +3720,8 @@
  *      _fsOpen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3757,8 +3757,8 @@
  *      _fsRead()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3794,8 +3794,8 @@
  *      _fsRmDir()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3831,8 +3831,8 @@
  *      _fsRename()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3868,8 +3868,8 @@
  *      _fsSeek()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3905,8 +3905,8 @@
  *      _fsWrite()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      FileSys
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3942,8 +3942,8 @@
  *      ALENGTH
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3979,8 +3979,8 @@
  *      _parc()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4016,8 +4016,8 @@
  *      _parclen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4053,8 +4053,8 @@
  *      _parcsiz()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4090,8 +4090,8 @@
  *      _pards()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4127,8 +4127,8 @@
  *      _parinfa()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4164,8 +4164,8 @@
  *      _parinfo()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4201,8 +4201,8 @@
  *      _parl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4238,8 +4238,8 @@
  *      _parnd()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4275,8 +4275,8 @@
  *      _parni()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4312,8 +4312,8 @@
  *      _parnl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4349,8 +4349,8 @@
  *      _ret()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4386,8 +4386,8 @@
  *      _retc()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4423,8 +4423,8 @@
  *      _retclen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4460,8 +4460,8 @@
  *      _retds()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4497,8 +4497,8 @@
  *      _retl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4534,8 +4534,8 @@
  *      _retnd()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4571,8 +4571,8 @@
  *      _retni()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4608,8 +4608,8 @@
  *      _retnl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4645,8 +4645,8 @@
  *      _storc()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4682,8 +4682,8 @@
  *      _storclen()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4719,8 +4719,8 @@
  *      _stords()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4756,8 +4756,8 @@
  *      _storl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4793,8 +4793,8 @@
  *      _stornd()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4830,8 +4830,8 @@
  *      _storni()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4867,8 +4867,8 @@
  *      _stornl()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Extend
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4904,8 +4904,8 @@
  *      _errGetDescription()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4941,8 +4941,8 @@
  *      _errGetFileName()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4978,8 +4978,8 @@
  *      _errGetFlags()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5015,8 +5015,8 @@
  *      _errGetGenCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5052,8 +5052,8 @@
  *      _errGetOperation()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5089,8 +5089,8 @@
  *      _errGetOsCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5126,8 +5126,8 @@
  *      _errGetSeverity()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5163,8 +5163,8 @@
  *      _errGetSubCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5200,8 +5200,8 @@
  *      _errGetSubSystem()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5237,8 +5237,8 @@
  *      _errGetTries()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5274,8 +5274,8 @@
  *      _errLaunch()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5311,8 +5311,8 @@
  *      _errNew()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5348,8 +5348,8 @@
  *      _errPutDescription()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5385,8 +5385,8 @@
  *      _errPutFileName()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5422,8 +5422,8 @@
  *      _errPutFlags()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5459,8 +5459,8 @@
  *      _errPutGenCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5496,8 +5496,8 @@
  *      _errPutOperation()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5533,8 +5533,8 @@
  *      _errPutOsCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5570,8 +5570,8 @@
  *      _errPutSeverity()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5607,8 +5607,8 @@
  *      _errPutSubCode()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5644,8 +5644,8 @@
  *      _errPutSubSystem()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5681,8 +5681,8 @@
  *      _errPutTries()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5718,8 +5718,8 @@
  *      _errRelease()
  *  $CATEGORY$
  *      C level API compatability
- *  $SUBCATEGORY$
- *      Error
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
