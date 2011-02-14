@@ -111,7 +111,7 @@
  *      Following are active keys that handled by DBEDIT():       </par>
  *      ---------------------------------------------------
  *
- *     <table>
+ *      <table>
  *       Key              Meaning
  *
  *       Left             Move one column to the left (previous field)
@@ -128,16 +128,16 @@
  *       Ctrl Right       Pan one column to the right
  *       Ctrl Home        Move to the leftmost column
  *       Ctrl End         Move to the rightmost column
- *     </table>
+ *      </table>
  *
  *      When <xUserFunc> is omitted, two more keys are active:
  *
- *     <table>
+ *      <table>
  *       Key              Meaning
  *
  *       Esc              Terminate BROWSE()
  *       Enter            Terminate BROWSE()
- *     </table>
+ *      </table>
  *
  *      When DBEDIT() execute <xUserFunc> it pass the following arguments:
  *      nMode and the index of current record in <acColumns>. If <acColumns>
@@ -205,7 +205,7 @@
  *      Header files are dbedit.ch, inkey.ch
  *      Library is rtl
  *  $SEEALSO$
- *     @...SAY,BROWSE(),TBrowse class,TRANSFORM()
+ *      @...SAY,BROWSE(),TBrowse class,TRANSFORM()
  *  $END$
  */
 
@@ -260,7 +260,7 @@
  *      On top of the screen you see a status line with the following
  *      indication:
  *
- *       <table>
+ *      <table>
  *       Record ###/###   Current record number / Total number of records.
  *       <none>           There are no records, the file is empty.
  *       <new>            You are in append mode at the bottom of file.

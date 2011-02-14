@@ -261,7 +261,7 @@
  *      <aArray> will remain unchanged,as the last element in the array will
  *      become a NIL data type.
  *  $EXAMPLES$
- *     LOCAL aArray
+ *      LOCAL aArray
  *      aArray := {"Harbour", "is", "Power"}
  *
  *      ADEL(aArray, 2) // Result: aArray is {"Harbour", "Power"}

@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      Compiler Options
  *  $CATEGORY$
@@ -271,7 +271,7 @@
  *        USE
  *
  *      RETURN
- *     </fixed>
+ *      </fixed>
  *
  *      <b>Passing an undeclared variable by the reference </b>  </par>
  *      ===============================================   </par>
@@ -290,7 +290,7 @@
  *      Handling of object messages   </par>
  *      ===========================   </par>
  *
- *        The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
+ *      The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
  *      the way chained send messages are handled.
  *
  *      For example, the following code:

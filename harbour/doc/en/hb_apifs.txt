@@ -59,7 +59,7 @@
  *      hb_fsChDrv()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Change working drive
@@ -96,7 +96,7 @@
  *      hb_fsClose()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Close a file
@@ -131,7 +131,7 @@
  *      hb_fsCommit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Commit updates of a file
@@ -166,7 +166,7 @@
  *      hb_fsCreate()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Create a file
@@ -205,7 +205,7 @@
  *      hb_fsCreateTemp()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Create a temporary file from components
@@ -246,7 +246,7 @@
  *      hb_fsCurDir()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Retrieve a static pointer containing current directory for specified drive
@@ -283,7 +283,7 @@
  *      hb_fsCurDirBuff()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Copy current directory for given drive into a buffer
@@ -324,7 +324,7 @@
  *      hb_fsCurDrv()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Retrieve current drive number
@@ -361,7 +361,7 @@
  *      hb_fsDelete()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Delete a file
@@ -398,7 +398,7 @@
  *      hb_fsEof()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Determine if an open file is position at end-of-file
@@ -435,7 +435,7 @@
  *      hb_fsError()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Retrieve file system error
@@ -472,7 +472,7 @@
  *      hb_fsFile()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Determine if a file exists
@@ -509,7 +509,7 @@
  *      hb_fsFSize()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Determine the size of a file
@@ -548,7 +548,7 @@
  *      hb_fsExtOpen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Open a file using default extension and a list of paths
@@ -593,7 +593,7 @@
  *      hb_fsIsDrv()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Determine if a drive number is a valid drive
@@ -630,7 +630,7 @@
  *      hb_fsIsDevice()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Determine if a file is attached to a device (console?)
@@ -667,7 +667,7 @@
  *      hb_fsLock()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Request a lock on a portion of a file
@@ -710,7 +710,7 @@
  *      hb_fsMkDir()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Create a directory
@@ -747,7 +747,7 @@
  *      hb_fsOpen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Open a file
@@ -786,7 +786,7 @@
  *      hb_fsRead()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Read contents of a file into a buffer (<=64K)
@@ -827,7 +827,7 @@
  *      hb_fsReadLarge()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Read contents of a file into a buffer (>64K)
@@ -868,7 +868,7 @@
  *      hb_fsRmDir()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Remove a directory
@@ -905,7 +905,7 @@
  *      hb_fsRename()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Rename a file
@@ -944,7 +944,7 @@
  *      hb_fsSeekLarge()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Reposition an open file
@@ -985,7 +985,7 @@
  *      hb_fsTell()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Retrieve the current position of a file
@@ -1022,7 +1022,7 @@
  *      hb_fsTempName()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Create a temporary file name in a buffer
@@ -1061,7 +1061,7 @@
  *      hb_fsSetDevMode()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Change the device mode of a file (text/binary)
@@ -1100,7 +1100,7 @@
  *      hb_fsSetDevRaw()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Change the device mode of a file to raw (binary)
@@ -1135,7 +1135,7 @@
  *      hb_fsSetDevText()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Change the device mode of a file to text
@@ -1170,7 +1170,7 @@
  *      hb_fsSetError()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Set the file system error number
@@ -1205,7 +1205,7 @@
  *      hb_fsWrite()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Write to an open file from a buffer (<=64K)
@@ -1246,7 +1246,7 @@
  *      hb_fsWriteLarge()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Write to an open file from a buffer (>64K)
@@ -1287,7 +1287,7 @@
  *      hb_fsFNameSplit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Split given filename into path, name and extension
@@ -1324,7 +1324,7 @@
  *      hb_fsFNameMerge()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      This function joins path, name and extension into a string with a filename
@@ -1363,7 +1363,7 @@
  *      hb_fsFLock()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *
@@ -1404,7 +1404,7 @@
  *      hb_fsFUnlock()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *

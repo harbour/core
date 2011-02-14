@@ -113,7 +113,7 @@
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
- *     Application
+ *      Application
  *  $ONELINER$
  *      This function allways returns an empty string.
  *  $SYNTAX$

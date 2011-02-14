@@ -8,8 +8,8 @@
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *   Header file for the API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *
  * See COPYING for licensing terms.
  *
@@ -22,8 +22,8 @@
  *      hb_langRegister()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -59,8 +59,8 @@
  *      hb_langDeRegister()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -96,8 +96,8 @@
  *      hb_langFind()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -133,8 +133,8 @@
  *      hb_langSelect()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -170,8 +170,8 @@
  *      hb_langSelectID()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -207,8 +207,8 @@
  *      hb_langDGetItem()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -244,8 +244,8 @@
  *      hb_langID()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -281,8 +281,8 @@
  *      hb_langName()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -318,8 +318,8 @@
  *      hb_langDGetErrorDesc()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -355,8 +355,8 @@
  *      HB_LANG_REQUEST()
  *  $CATEGORY$
  *      API
- * $SUBCATEGORY$
- *    Language and Nation
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *
  *  $SYNTAX$

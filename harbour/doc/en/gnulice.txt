@@ -221,15 +221,15 @@
  /*
  *  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
- *     GNU License..
+ *      GNU License..
  *  $CATEGORY$
- *     Document
+ *      Document
  *  $SUBCATEGORY$
  *      License
  *  $ONELINER$
- *     Gnu License File Part 2
+ *      Gnu License File Part 2
  *  $DESCRIPTION$
  *      7. If, as a consequence of a court judgment or allegation of patent
  *      infringement or for any other reason (not limited to patent

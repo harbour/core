@@ -183,7 +183,7 @@
  *      that match passed skeleton should be either included in deletion
  *      (if .T.) or excluded from deletion (if .F.)
  *  $RETURNS$
- *    Nothing
+ *      Nothing
  *  $DESCRIPTION$
  *      This function releases values stored in memory variables. It shouldn't
  *      be called directly, it should be placed into RELEASE ALL command.
@@ -833,7 +833,7 @@
  *        "P"          Pointer
  *        "S"          Symbol
  *        "U"          NIL
- *  </table>
+ *      </table>
  *  $DESCRIPTION$
  *      This function returns one character which represents the data type
  *      of the argument.

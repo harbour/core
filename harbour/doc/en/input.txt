@@ -336,7 +336,7 @@
  *  $COMPLIANCE$
  *      KEYBOARD is compliant with CA-Cl*pper 5.3
  *  $SEEALSO$
- *       CLEAR TYPEAHEAD,__KEYBOARD()
+ *      CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
  */
 
@@ -391,7 +391,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *       @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
+ *      @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
  *  $END$
  */
 

@@ -137,13 +137,13 @@
  *        [<lNoOptimize>])
  *  $ARGUMENTS$
  *      <cForCondition> is a string that specifies the FOR condition for the
- *   order.
+ *      order.
  *
- *     <bForCondition> is a code block that defines a FOR condition that
- *   each record within the scope must meet in order to be processed. If
- *   a record does not meet the specified condition, it is ignored and the
- *   next  record is processed.Duplicate keys values are not added to the
- *   index file when a FOR condition is Used.
+ *      <bForCondition> is a code block that defines a FOR condition that
+ *      each record within the scope must meet in order to be processed. If
+ *      a record does not meet the specified condition, it is ignored and the
+ *      next  record is processed.Duplicate keys values are not added to the
+ *      index file when a FOR condition is Used.
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$

@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      Macro compiler
  *  $CATEGORY$
@@ -27,7 +27,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      HB_SETMACRO()
  *  $CATEGORY$

@@ -27,7 +27,7 @@
  *  $SYNTAX$
  *      OS() --> <cOperatingSystem>
  *  $RETURNS$
- *     <cOperatinSystem> The current operating system.
+ *      <cOperatinSystem> The current operating system.
  *  $DESCRIPTION$
  *      This function will return the current operating system.
  *  $EXAMPLES$
@@ -120,10 +120,10 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     src/rtl/gete.c
+ *      src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
- *     GETE
+ *      GETE
  *  $END$
  */
 
@@ -166,10 +166,10 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     src/rtl/gete.c
+ *      src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
- *     GETENV
+ *      GETENV
  *  $END$
  */
 
@@ -223,7 +223,7 @@
  *      src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
- *     GETENV, GETE
+ *      GETENV, GETE
  *  $END$
  */
 

@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      Command line utility
  *  $CATEGORY$

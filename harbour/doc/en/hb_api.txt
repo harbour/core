@@ -8,8 +8,8 @@
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *   Header file for the API
- * $SUBCATEGORY$
- *    Extend, Array API, misc API and base declarations
+ *  $SUBCATEGORY$
+ *      Extend, Array API, misc API and base declarations
  *
  * See COPYING for licensing terms.
  *
@@ -22,8 +22,8 @@
  *      hb_parc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *      Retrieve a string parameter
  *  $SYNTAX$
@@ -61,7 +61,7 @@
  *      hb_parclen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a string parameter length
@@ -100,7 +100,7 @@
  *      hb_parcsiz()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a by-reference string parameter length, including terminator
@@ -139,7 +139,7 @@
  *      hb_pards()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a date as a string yyyymmdd
@@ -178,7 +178,7 @@
  *      hb_pardsbuff()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a date as a string yyyymmdd
@@ -219,7 +219,7 @@
  *      hb_parinfa()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve length or element type of an array parameter
@@ -258,7 +258,7 @@
  *      hb_parinfo()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Determine the param count or data type
@@ -295,7 +295,7 @@
  *      hb_parl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a logical parameter as an int
@@ -334,7 +334,7 @@
  *      hb_parnd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a numeric parameter as a double
@@ -373,7 +373,7 @@
  *      hb_parni()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a numeric parameter as a integer
@@ -412,7 +412,7 @@
  *      hb_parnl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a numeric parameter as a long
@@ -451,7 +451,7 @@
  *      hb_param()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a direct pointer to an item parameter
@@ -494,7 +494,7 @@
  *      hb_pcount()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns the number of supplied parameters
@@ -532,7 +532,7 @@
  *      hb_ret()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Post a NIL return value
@@ -568,7 +568,7 @@
  *      hb_retc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a string
@@ -604,7 +604,7 @@
  *      hb_retclen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a string with a specific length
@@ -642,7 +642,7 @@
  *      hb_retds()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a date, must use yyyymmdd format
@@ -678,7 +678,7 @@
  *      hb_retd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a date
@@ -718,7 +718,7 @@
  *      hb_retdl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a long value as a julian date
@@ -754,7 +754,7 @@
  *      hb_retl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a logical integer
@@ -790,7 +790,7 @@
  *      hb_retnd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a double
@@ -826,7 +826,7 @@
  *      hb_retni()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a integer number
@@ -862,7 +862,7 @@
  *      hb_retnl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a long number
@@ -898,7 +898,7 @@
  *      hb_retnlen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a double, with specific width and decimals
@@ -938,7 +938,7 @@
  *      hb_retndlen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a double, with specific width and decimals
@@ -978,7 +978,7 @@
  *      hb_retnilen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a integer number, with specific width
@@ -1016,7 +1016,7 @@
  *      hb_retnllen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a long number, with specific width
@@ -1054,7 +1054,7 @@
  *      hb_reta()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns an array with a specific length
@@ -1090,7 +1090,7 @@
  *      hb_storc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores a szString on a variable by reference
@@ -1129,7 +1129,7 @@
  *      hb_storclen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores a fixed length string on a variable by reference
@@ -1170,7 +1170,7 @@
  *      hb_stords()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      SzDate must have yyyymmdd format
@@ -1209,7 +1209,7 @@
  *      hb_storl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores a logical integer on a variable by reference
@@ -1248,7 +1248,7 @@
  *      hb_storni()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores an integer on a variable by reference
@@ -1287,7 +1287,7 @@
  *      hb_stornl()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores a long on a variable by reference
@@ -1326,7 +1326,7 @@
  *      hb_stornd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Stores a double on a variable by reference
@@ -1365,7 +1365,7 @@
  *      hb_xinit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Initialize fixed memory subsystem
@@ -1400,7 +1400,7 @@
  *      hb_xexit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Deinitialize fixed memory subsystem
@@ -1435,7 +1435,7 @@
  *      hb_xalloc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Allocates memory, returns NULL on failure
@@ -1472,7 +1472,7 @@
  *      hb_xgrab()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Allocates memory, exits on failure
@@ -1509,7 +1509,7 @@
  *      hb_xfree()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Frees memory
@@ -1544,7 +1544,7 @@
  *      hb_xrealloc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Reallocates memory
@@ -1583,7 +1583,7 @@
  *      hb_xsize()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns the size of an allocated memory block
@@ -1620,7 +1620,7 @@
  *      hb_xquery()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Query different types of memory information
@@ -1657,7 +1657,7 @@
  *      hb_xmemcpy()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy more than memcpy() can
@@ -1699,7 +1699,7 @@
  *      hb_xmemset()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Set more than memset() can
@@ -1741,7 +1741,7 @@
  *      hb_arrayNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Creates a new array
@@ -1780,7 +1780,7 @@
  *      hb_arrayLen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrives the array len
@@ -1817,7 +1817,7 @@
  *      hb_arrayIsObject()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrives if the array is an object
@@ -1854,7 +1854,7 @@
  *      hb_arrayAdd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Add a new item to the end of an array item
@@ -1893,7 +1893,7 @@
  *      hb_arrayIns()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Insert a nil item into an array, without changing the length
@@ -1932,7 +1932,7 @@
  *      hb_arrayDel()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Delete an array item, without changing length
@@ -1971,7 +1971,7 @@
  *      hb_arraySize()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Sets the array total length
@@ -2010,7 +2010,7 @@
  *      hb_arrayLast()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve last item in an array
@@ -2049,7 +2049,7 @@
  *      hb_arrayRelease()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Releases an array - don't call it - use ItemRelease() !!!
@@ -2086,7 +2086,7 @@
  *      hb_arraySet()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Sets an array element
@@ -2127,7 +2127,7 @@
  *      hb_arrayGet()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves an item
@@ -2168,7 +2168,7 @@
  *      hb_arrayGetItemPtr()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns pointer to specified element of the array
@@ -2207,7 +2207,7 @@
  *      hb_arrayCopyC()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy a string into an array item
@@ -2250,7 +2250,7 @@
  *      hb_arrayGetC()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the string contained on an array element
@@ -2289,7 +2289,7 @@
  *      hb_arrayGetCPtr()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the string pointer on an array element
@@ -2328,7 +2328,7 @@
  *      hb_arrayGetCLen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the string length contained on an array element
@@ -2367,7 +2367,7 @@
  *      hb_arrayGetL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the logical value contained on an array element
@@ -2406,7 +2406,7 @@
  *      hb_arrayGetNI()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the int value contained on an array element
@@ -2445,7 +2445,7 @@
  *      hb_arrayGetNL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the long numeric value contained on an array element
@@ -2484,7 +2484,7 @@
  *      hb_arrayGetND()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the double value contained on an array element
@@ -2523,7 +2523,7 @@
  *      hb_arrayGetDS()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the date value contained in an array element
@@ -2564,7 +2564,7 @@
  *      hb_arrayGetDL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the date value contained in an array element, as a long integer
@@ -2603,7 +2603,7 @@
  *      hb_arrayGetType()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves the type of an array item
@@ -2642,7 +2642,7 @@
  *      hb_arrayFill()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Fill an array with a given item
@@ -2685,7 +2685,7 @@
  *      hb_arrayScan()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Scan an array for a given item, or until code-block item returns TRUE
@@ -2728,7 +2728,7 @@
  *      hb_arrayEval()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Execute a code-block for every element of an array item
@@ -2771,7 +2771,7 @@
  *      hb_arrayCopy()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy items from one array to another
@@ -2816,7 +2816,7 @@
  *      hb_arrayClone()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a duplicate of an existing array, including all nested items
@@ -2853,7 +2853,7 @@
  *      hb_arraySort()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Sorts an array item
@@ -2896,7 +2896,7 @@
  *      hb_stricmp()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compare two strings without regards to case
@@ -2935,7 +2935,7 @@
  *      hb_strnicmp()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compare two string without regards to case, limited by length
@@ -2976,7 +2976,7 @@
  *      hb_strupr()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Convert a string in-place to upper-case
@@ -3013,7 +3013,7 @@
  *      hb_strdup()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns a pointer to a newly allocated copy of the source string
@@ -3050,7 +3050,7 @@
  *      hb_strMatchRegExp()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compare two strings using a regular expression pattern
@@ -3089,7 +3089,7 @@
  *      hb_strEmpty()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns whether a string contains only white space
@@ -3128,7 +3128,7 @@
  *      hb_strDescend()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy a string to a buffer, inverting each character
@@ -3167,7 +3167,7 @@
  *      hb_strAt()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns an index to a sub-string within another string
@@ -3210,7 +3210,7 @@
  *      hb_strUpper()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Convert an existing string buffer to upper case
@@ -3249,7 +3249,7 @@
  *      hb_strLower()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Convert an existing string buffer to lower case
@@ -3288,7 +3288,7 @@
  *      hb_strncpyUpper()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy an existing string buffer to another buffer, as upper case
@@ -3329,7 +3329,7 @@
  *      hb_strVal()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Return the numeric value of a character string representation of a number
@@ -3368,7 +3368,7 @@
  *      hb_strLTrim()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Return a pointer to the first non-white space character
@@ -3407,7 +3407,7 @@
  *      hb_strRTrimLen()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Return length of a string, ignoring trailing white space (or true spaces)
@@ -3448,7 +3448,7 @@
  *      hb_numRound()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Round a number to a specific number of digits
@@ -3487,7 +3487,7 @@
  *      hb_clsReleaseAll()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Releases all defined classes
@@ -3522,7 +3522,7 @@
  *      hb_objGetClsName()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves an object class name
@@ -3559,7 +3559,7 @@
  *      hb_objGetMethod()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns the method pointer of a object class
@@ -3598,7 +3598,7 @@
  *      hb_objHasMsg()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns TRUE/FALSE whether szString is an existing message for object
@@ -3637,7 +3637,7 @@
  *      hb_dynsymGet()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Finds and creates a dynamic symbol if not found
@@ -3674,7 +3674,7 @@
  *      hb_dynsymNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Creates a new dynamic symbol based on a local one
@@ -3711,7 +3711,7 @@
  *      hb_dynsymFind()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Finds a dynamic symbol
@@ -3748,7 +3748,7 @@
  *      hb_dynsymFindName()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Converts to uppercase and finds a dynamic symbol
@@ -3785,7 +3785,7 @@
  *      hb_dynsymLog()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Displays all dynamic symbols
@@ -3820,7 +3820,7 @@
  *      hb_dynsymRelease()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Releases the memory of the dynamic symbol table
@@ -3855,7 +3855,7 @@
  *      hb_dynsymEval()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Enumerates all dynamic symbols
@@ -3892,7 +3892,7 @@
  *      hb_cmdargInit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Initialize command line argument API's
@@ -3929,7 +3929,7 @@
  *      hb_cmdargARGC()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve command line argument count
@@ -3966,7 +3966,7 @@
  *      hb_cmdargARGV()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve command line argument buffer pointer
@@ -4003,7 +4003,7 @@
  *      hb_cmdargIsInternal()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Determine if a string is an internal setting
@@ -4040,7 +4040,7 @@
  *      hb_cmdargCheck()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Check if a given internal switch (like //INFO) was set
@@ -4077,7 +4077,7 @@
  *      hb_cmdargString()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns the string value of an internal switch (like //TEMPPATH:"C:\")
@@ -4114,7 +4114,7 @@
  *      hb_cmdargNum()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Returns the numeric value of an internal switch (like //F:90)
@@ -4151,7 +4151,7 @@
  *      hb_cmdargProcessVM()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Check for command line internal arguments
@@ -4186,7 +4186,7 @@
  *      hb_symbolNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Create a new symbol
@@ -4223,7 +4223,7 @@
  *      hb_codeblockNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Create a code-block
@@ -4266,7 +4266,7 @@
  *      hb_codeblockMacroNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -4305,7 +4305,7 @@
  *      hb_codeblockDelete()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Delete a codeblock
@@ -4340,7 +4340,7 @@
  *      hb_codeblockGetVar()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Get local variable referenced in a codeblock
@@ -4379,7 +4379,7 @@
  *      hb_codeblockGetRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Get local variable passed by reference
@@ -4418,7 +4418,7 @@
  *      hb_codeblockEvaluate()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Evaluate a codeblock
@@ -4453,7 +4453,7 @@
  *      hb_codeblockCopy()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy a codeblock
@@ -4490,7 +4490,7 @@
  *      hb_memvarValueNew()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Create a new global value
@@ -4529,7 +4529,7 @@
  *      hb_memvarValueBaseAddress()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve the base address of the values table
@@ -4566,7 +4566,7 @@
  *      hb_memvarsInit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Initialize the memvar API system
@@ -4601,7 +4601,7 @@
  *      hb_memvarsRelease()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Clear all PUBLIC and PRIVATE variables
@@ -4636,7 +4636,7 @@
  *      hb_memvarsFree()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Release the memvar API system
@@ -4671,7 +4671,7 @@
  *      hb_memvarValueIncRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Increase the reference count of a global value
@@ -4706,7 +4706,7 @@
  *      hb_memvarValueDecRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Decrease the reference count of a global value
@@ -4741,7 +4741,7 @@
  *      hb_memvarSetValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy an item into a symbol
@@ -4778,7 +4778,7 @@
  *      hb_memvarGet()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy an symbol value into an item
@@ -4817,7 +4817,7 @@
  *      hb_memvarGetValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy an symbol value into an item, with error trapping
@@ -4854,7 +4854,7 @@
  *      hb_memvarGetRefer()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Copy a reference to a symbol value into an item, with error trapping
@@ -4891,7 +4891,7 @@
  *      hb_memvarGetPrivatesBase()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve current PRIVATE variables stack base
@@ -4928,7 +4928,7 @@
  *      hb_memvarSetPrivatesBase()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Release PRIVATE variables created after specified base
@@ -4963,7 +4963,7 @@
  *      hb_memvarNewParameter()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -5000,7 +5000,7 @@
  *      hb_memvarGetStrValuePtr()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -5039,7 +5039,7 @@
  *      hb_memvarCreateFromItem()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -5078,7 +5078,7 @@
  *      hb_memvarScope()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve scope of a dynamic variable symbol
@@ -5117,7 +5117,7 @@
  *      hb_conInit()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Initialize the console API system
@@ -5152,7 +5152,7 @@
  *      hb_conRelease()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Release the console API system
@@ -5187,7 +5187,7 @@
  *      hb_conNewLine()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a pointer to a static buffer containing new-line characters
@@ -5224,7 +5224,7 @@
  *      hb_conOutStd()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Output an string to STDOUT
@@ -5261,7 +5261,7 @@
  *      hb_conOutErr()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Output an string to STDERR
@@ -5298,7 +5298,7 @@
  *      hb_conSetCursor()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve and optionally set cursor shape
@@ -5337,7 +5337,7 @@
  *      hb_conSetColor()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve and optionally set console color
@@ -5374,7 +5374,7 @@
  *      hb_conXSaveRestRelease()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Release the save/restore API
@@ -5409,7 +5409,7 @@
  *      hb_compReservedName()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Determines if a string contains a reserve word
@@ -5446,7 +5446,7 @@
  *      hb_procname()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve a procedure name into a buffer
@@ -5485,7 +5485,7 @@
  *      hb_macroGetValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieve results of a macro expansion
@@ -5520,7 +5520,7 @@
  *      hb_macroSetValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Assign a value to a macro-expression item
@@ -5555,7 +5555,7 @@
  *      hb_macroTextValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Macro text substitution
@@ -5590,7 +5590,7 @@
  *      hb_macroPushSymbol()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Handle a macro function calls, e.g. var := &macro()
@@ -5625,7 +5625,7 @@
  *      hb_macroRun()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Executes pcode compiled by macro compiler
@@ -5660,7 +5660,7 @@
  *      hb_macroCompile()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compile a string and return a pcode buffer
@@ -5697,7 +5697,7 @@
  *      hb_macroDelete()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Release all memory allocated for macro evaluation
@@ -5732,7 +5732,7 @@
  *      hb_macroTextSubst()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Substitute macro variables occurences within a given string
@@ -5771,7 +5771,7 @@
  *      hb_macroIsIdent()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Determine if a string is a valid function or variable name
@@ -5808,7 +5808,7 @@
  *      hb_macroPopAliasedValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compiles and evaluates an aliased macro expression
@@ -5845,7 +5845,7 @@
  *      hb_macroPushAliasedValue()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Compiles and evaluates an aliased macro expression
@@ -5882,7 +5882,7 @@
  *      hb_macroGetType()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Determine the type of an expression
@@ -5919,7 +5919,7 @@
  *      hb_gcAlloc()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Allocates a memory controlled by the garbage collector
@@ -5958,7 +5958,7 @@
  *      hb_gcFree()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Deallocates a memory allocated by the garbage collector
@@ -5993,7 +5993,7 @@
  *      hb_gcLock()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Do not release passed memory block
@@ -6030,7 +6030,7 @@
  *      hb_gcUnlock()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Passed block is allowed to be released
@@ -6067,7 +6067,7 @@
  *      hb_gcLockItem()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Do not release a memory block stored inside an item
@@ -6102,7 +6102,7 @@
  *      hb_gcUnlockItem()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Allow to release the item
@@ -6137,7 +6137,7 @@
  *      hb_gcCollect()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Checks if a single memory block can be released
@@ -6172,7 +6172,7 @@
  *      hb_gcCollectAll()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Checks if all memory blocks can be released
@@ -6207,7 +6207,7 @@
  *      hb_gcItemRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Checks if passed item refers passed memory block pointer
@@ -6242,7 +6242,7 @@
  *      hb_vmIsLocalRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Hvm.c - mark all local variables as used
@@ -6277,7 +6277,7 @@
  *      hb_vmIsStaticRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Hvm.c - mark all static variables as used
@@ -6312,7 +6312,7 @@
  *      hb_memvarsIsMemvarRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Memvars.c - mark all memvar variables as used
@@ -6347,7 +6347,7 @@
  *      hb_clsIsClassRef()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Classes.c - mark all class internals as used
@@ -6382,7 +6382,7 @@
  *      hb_codeblockDeleteGarbage()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Clear a codeblock before releasing by the GC
@@ -6417,7 +6417,7 @@
  *      hb_arrayReleaseGarbage()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Clear an array before releasing by the GC
@@ -6452,7 +6452,7 @@
  *      hb_idleState()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Services a single idle state
@@ -6487,7 +6487,7 @@
  *      hb_idleReset()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Services a single idle state
@@ -6522,7 +6522,7 @@
  *      hb_idleShutDown()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Closes all background tasks
@@ -6557,7 +6557,7 @@
  *      hb_verPlatform()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves a newly allocated buffer containing platform version
@@ -6594,7 +6594,7 @@
  *      hb_verCompiler()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves a newly allocated buffer containing compiler version
@@ -6631,7 +6631,7 @@
  *      hb_verHarbour()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Retrieves a newly allocated buffer containing harbour version
@@ -6668,7 +6668,7 @@
  *      hb_verBuildInfo()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      Display harbour, compiler, and platform versions to standard console
@@ -6703,7 +6703,7 @@
  *      HB_IS_OF_TYPE()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6742,7 +6742,7 @@
  *      HB_IS_BYREF()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6779,7 +6779,7 @@
  *      HB_IS_ARRAY()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6816,7 +6816,7 @@
  *      HB_IS_NIL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6853,7 +6853,7 @@
  *      HB_IS_BLOCK()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6890,7 +6890,7 @@
  *      HB_IS_DATE()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6927,7 +6927,7 @@
  *      HB_IS_DOUBLE()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -6964,7 +6964,7 @@
  *      HB_IS_INTEGER()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7001,7 +7001,7 @@
  *      HB_IS_LOGICAL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7038,7 +7038,7 @@
  *      HB_IS_LONG()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7075,7 +7075,7 @@
  *      HB_IS_NUMERIC()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7112,7 +7112,7 @@
  *      HB_IS_OBJECT()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7149,7 +7149,7 @@
  *      HB_IS_STRING()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7186,7 +7186,7 @@
  *      HB_IS_MEMO()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7223,7 +7223,7 @@
  *      HB_IS_SYMBOL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7260,7 +7260,7 @@
  *      HB_IS_MEMVAR()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7297,7 +7297,7 @@
  *      HB_IS_POINTER()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7334,7 +7334,7 @@
  *      ISNIL()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *      NOTE: Intentionally using a different method
@@ -7371,7 +7371,7 @@
  *      ISCHAR()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7408,7 +7408,7 @@
  *      ISNUM()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      Extend
  *  $ONELINER$
  *
@@ -7445,8 +7445,8 @@
  *      ISLOG()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7482,8 +7482,8 @@
  *      ISDATE()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7519,8 +7519,8 @@
  *      ISMEMO()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7556,8 +7556,8 @@
  *      ISBYREF()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *      NOTE: Intentionally using a different method
  *  $SYNTAX$
@@ -7593,8 +7593,8 @@
  *      ISARRAY()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7630,8 +7630,8 @@
  *      ISOBJECT()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7667,8 +7667,8 @@
  *      ISBLOCK()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *      Not available in CA-Cl*pper.
  *  $SYNTAX$
@@ -7704,8 +7704,8 @@
  *      ISPOINTER()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *      Not available in CA-Cl*pper.
  *  $SYNTAX$
@@ -7741,8 +7741,8 @@
  *      HB_ISSPACE()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
- *    Extend
+ *  $SUBCATEGORY$
+ *      Extend
  *  $ONELINER$
  *
  *  $SYNTAX$

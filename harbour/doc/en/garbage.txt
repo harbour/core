@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      The Garbage Collector
  *  $CATEGORY$
@@ -101,7 +101,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      hb_gcAlloc()
  *  $CATEGORY$
@@ -152,7 +152,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      hb_gcFree()
  *  $CATEGORY$
@@ -165,7 +165,7 @@
  *      void hb_gcFree( void *pMemoryPtr );
  *  $ARGUMENTS$
  *      <pMemoryPtr> The pointer to memory for release. This memory
- *        pointer have to be allocated with hb_gcAlloc() function.
+ *      pointer have to be allocated with hb_gcAlloc() function.
  *  $RETURNS$
  *      Nothing.
  *  $DESCRIPTION$
@@ -188,7 +188,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      hb_gcCollectAll()
  *  $CATEGORY$
@@ -223,7 +223,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      hb_gcItemRef()
  *  $CATEGORY$
@@ -267,7 +267,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Procedure
+ *      Procedure
  *  $NAME$
  *      HB_GCALL()
  *  $CATEGORY$

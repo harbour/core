@@ -4,7 +4,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Document
+ *      Document
  *  $NAME$
  *      The idle states
  *  $CATEGORY$
@@ -37,7 +37,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      HB_IDLEADD()
  *  $CATEGORY$
@@ -76,7 +76,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Function
+ *      Function
  *  $NAME$
  *      HB_IDLEDEL()
  *  $CATEGORY$
@@ -119,7 +119,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Procedure
+ *      Procedure
  *  $NAME$
  *      HB_IdleState()
  *  $CATEGORY$
@@ -166,7 +166,7 @@
 
 /*  $DOC$
  *  $TEMPLATE$
- *     Procedure
+ *      Procedure
  *  $NAME$
  *      hb_idleState()
  *  $CATEGORY$
