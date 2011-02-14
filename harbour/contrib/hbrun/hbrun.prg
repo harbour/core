@@ -109,7 +109,7 @@ PROCEDURE _APPMAIN( cFile, ... )
          CASE "-ra"
          CASE "/r"
          CASE "/ra"
-            IF win_reg( .T., Right( Lower( cFile ), 1 ) == "a" )
+            IF win_reg_self( .T., Right( Lower( cFile ), 1 ) == "a" )
                OutStd( "hbrun: Harbour Script File registered" + hb_eol() )
             ELSE
                OutErr( "hbrun: Error: Registering Harbour Script File" + hb_eol() )
@@ -119,7 +119,7 @@ PROCEDURE _APPMAIN( cFile, ... )
          CASE "-ua"
          CASE "/u"
          CASE "/ua"
-            IF win_reg( .F., Right( Lower( cFile ), 1 ) == "a" )
+            IF win_reg_self( .F., Right( Lower( cFile ), 1 ) == "a" )
                OutStd( "hbrun: Harbour Script File unregistered" + hb_eol() )
             ELSE
                OutErr( "hbrun: Error: Unregistering Harbour Script File" + hb_eol() )
@@ -746,57 +746,33 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
 
 #if defined( __PLATFORM__WINDOWS )
 
-STATIC FUNCTION win_reg( lRegister, lAllUser )
-   LOCAL lRetVal
-   LOCAL cFileName
-   LOCAL fhnd := hb_FTempCreateEx( @cFileName )
+STATIC FUNCTION win_reg_self( lRegister, lAllUser )
+   RETURN win_reg_app( lRegister, lAllUser, hb_ProgName() )
 
-   IF fhnd != F_ERROR
-      FWrite( fhnd, win_reg_file( lRegister, lAllUser ) )
-      FClose( fhnd )
-      /* The regedit version I tested (win7) didn't return an errorlevel on error. [vszakats] */
-      lRetVal := ( hb_processRun( "regedit.exe /s " + Chr( 34 ) + cFileName + Chr( 34 ) ) == 0 )
-      FErase( cFileName )
-   ELSE
-      lRetVal := .F.
-   ENDIF
-
-   RETURN lRetVal
-
-STATIC FUNCTION win_reg_file( lRegister, lAllUser, cAppPath )
+STATIC FUNCTION win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL cHive := iif( hb_isLogical( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
+   LOCAL lSuccess := .T.
+   LOCAL tmp
 
-   IF ! hb_isString( cAppPath )
-      cAppPath := hb_ProgName()
+   LOCAL aEntries := {;
+      cHive + '\'                          , ""                     ,;
+      cHive + '\.hbs\'                     , "HBSFile"              ,;
+      cHive + '\HBSFile\'                  , "Harbour Script File"  ,;
+      cHive + '\HBSFile\DefaultIcon\'      , cAppPath + ",-1"       ,;
+      cHive + '\HBSFile\Shell\'            , "Run"                  ,;
+      cHive + '\HBSFile\Shell\Run\'        , ""                     ,;
+      cHive + '\HBSFile\Shell\Run\Command\', cAppPath + ' "%1"'     }
+
+   IF lRegister
+      FOR tmp := 1 TO Len( aEntries ) STEP 2
+         lSuccess := lSuccess .AND. win_regWrite( aEntries[ tmp ], aEntries[ tmp + 1 ] )
+      NEXT
+   ELSE
+      FOR tmp := Len( aEntries ) - 1 TO 3 STEP -2
+         lSuccess := win_regDelete( aEntries[ tmp ] )
+      NEXT
    ENDIF
 
-   IF hb_isLogical( lRegister ) .AND. ! lRegister
-      /* unregister */
-      RETURN ;
-         'REGEDIT4' + hb_eol() +;
-         hb_eol() +;
-         '[-' + cHive + '\.hbs]' + hb_eol() +;
-         hb_eol() +;
-         '[-' + cHive + '\HBSFile]' + hb_eol()
-   ENDIF
-
-   /* register */
-   RETURN ;
-      'REGEDIT4' + hb_eol() +;
-      hb_eol() +;
-      '[' + cHive + '\.hbs]' + hb_eol() +;
-      '@="HBSFile"' + hb_eol() +;
-      hb_eol() +;
-      '[' + cHive + '\HBSFile]' + hb_eol() +;
-      '@="Harbour Script File"' + hb_eol() +;
-      hb_eol() +;
-      '[' + cHive + '\HBSFile\DefaultIcon]' + hb_eol() +;
-      '@="' + StrTran( cAppPath, "\", "\\" ) + ',-1"' + hb_eol() +;
-      hb_eol() +;
-      '[' + cHive + '\HBSFile\Shell]' + hb_eol() +;
-      '@="Run"' + hb_eol() +;
-      hb_eol() +;
-      '[' + cHive + '\HBSFile\Shell\Run\Command]' + hb_eol() +;
-      '@="' + StrTran( cAppPath, "\", "\\" ) + ' \"%1\""'
+   RETURN lSuccess
 
 #endif
