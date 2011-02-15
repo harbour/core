@@ -581,6 +581,9 @@ void hb_vmTerminateThreads( void )
       hb_vmThreadRequest |= HB_THREQUEST_QUIT;
       --s_iRunningCount;
 
+      hb_threadMutexUnlockAll();
+      hb_threadMutexUnsubscribeAll();
+
       hb_threadCondBroadcast( &s_vmCond );
 
       while( s_iStackCount > 1 )
@@ -8649,6 +8652,18 @@ void hb_vmRequestCancel( void )
 HB_USHORT hb_vmRequestQuery( void )
 {
    HB_STACK_TLS_PRELOAD
+
+#if defined( HB_MT_VM )
+   if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+   {
+      if( !hb_stackQuitState() )
+      {
+         hb_stackSetQuitState( HB_TRUE );
+         hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+      }
+   }
+#endif
+
    return hb_stackGetActionRequest();
 }
 

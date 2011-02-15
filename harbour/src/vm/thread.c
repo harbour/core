@@ -1639,6 +1639,27 @@ void hb_threadMutexUnlockAll( void )
    HB_CRITICAL_UNLOCK( s_mutexlst_mtx );
 }
 
+void hb_threadMutexUnsubscribeAll( void )
+{
+   HB_CRITICAL_LOCK( s_mutexlst_mtx );
+   if( s_pMutexList )
+   {
+      PHB_MUTEX pMutex = s_pMutexList;
+      do
+      {
+         if( pMutex->waiters )
+         {
+            HB_CRITICAL_LOCK( pMutex->mutex );
+            if( pMutex->waiters )
+               HB_COND_SIGNALN( pMutex->cond_w, pMutex->waiters );
+            HB_CRITICAL_UNLOCK( pMutex->mutex );
+         }
+         pMutex = pMutex->pNext;
+      }
+      while( pMutex != s_pMutexList );
+   }
+   HB_CRITICAL_UNLOCK( s_mutexlst_mtx );
+}
 #endif
 
 static HB_GARBAGE_FUNC( hb_mutexDestructor )
@@ -2210,7 +2231,8 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear )
             HB_COND_SIGNAL( pMutex->cond_l );
       }
 
-      while( !pMutex->events || hb_arrayLen( pMutex->events ) == 0 )
+      while( ( !pMutex->events || hb_arrayLen( pMutex->events ) == 0 ) &&
+             hb_vmRequestQuery() == 0 )
       {
          pMutex->waiters++;
 #  if defined( HB_PTHREAD_API )
@@ -2319,7 +2341,8 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_B
             struct timespec ts;
 
             hb_threadTimeInit( &ts, ulMilliSec );
-            while( !pMutex->events || hb_arrayLen( pMutex->events ) == 0 )
+            while( ( !pMutex->events || hb_arrayLen( pMutex->events ) == 0 ) &&
+                   hb_vmRequestQuery() == 0 )
             {
                if( pthread_cond_timedwait( &pMutex->cond_w, &pMutex->mutex, &ts ) != 0 )
                   break;
