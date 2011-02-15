@@ -102,6 +102,45 @@ void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
    fputc( '"', yyc );
 }
 
+static void hb_compGenCStrData( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen,
+                                int iMethod )
+{
+#ifdef __HB_CSTRING_SIZE_MAX
+   #if __HB_CSTRING_SIZE_MAX -0 < 1
+      #undef __HB_CSTRING_SIZE_MAX
+      #define __HB_CSTRING_SIZE_MAX   4096
+   #endif
+   if( nLen > __HB_CSTRING_SIZE_MAX )
+   {
+      HB_SIZE nPos;
+
+      fprintf( yyc, "\t{\tconst unsigned char str[ %" HB_PFS "u ] = {", nLen + 1 );
+      for( nPos = 0; nPos < nLen; nPos++ )
+      {
+         if( ( nPos & 0x0F ) == 0 )
+            fprintf( yyc, "\n\t\t" );
+         fprintf( yyc, "%d,", ( int ) pText[ nPos ] );
+      }
+      fprintf( yyc, "0 };\n\t\thb_xvmPushString" );
+      if( iMethod < 0 )
+         fprintf( yyc, "Const( " );
+      else
+         fprintf( yyc, "Hidden( %d, ", iMethod );
+      fprintf( yyc, "( const char * ) str,  %" HB_PFS "u );\n\t}\n", nLen );
+   }
+   else
+#endif
+   {
+      fprintf( yyc, "\thb_xvmPushString" );
+      if( iMethod < 0 )
+         fprintf( yyc, "Const( " );
+      else
+         fprintf( yyc, "Hidden( %d, ", iMethod );
+      hb_compGenCString( yyc, pText, nLen );
+      fprintf( yyc, ", %" HB_PFS "u );\n", nLen );
+   }
+}
+
 static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
 {
    if( iLocal1 != iLocal2 )
@@ -1359,15 +1398,13 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
 
 static HB_GENC_FUNC( hb_p_pushstr )
 {
-   HB_USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ) - 1;
+   HB_SIZE nLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ) - 1;
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
-   hb_compGenCString( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], usLen );
-   fprintf( cargo->yyc, ", %hu );\n", usLen );
+   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], nLen, -1 );
 
-   return 4 + usLen;
+   return 4 + nLen;
 }
 
 static HB_GENC_FUNC( hb_p_pushstrlarge )
@@ -1376,25 +1413,21 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
-   hb_compGenCString( cargo->yyc, &pFunc->pCode[ nPCodePos + 4 ], nLen );
-   fprintf( cargo->yyc, ", %" HB_PFS "u );\n", nLen );
+   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], nLen, -1 );
 
    return 5 + nLen;
 }
 
 static HB_GENC_FUNC( hb_p_pushstrhidden )
 {
-   HB_USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 2 ] );
+   HB_SIZE nLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 2 ] );
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushStringHidden( %d, ",
-            pFunc->pCode[ nPCodePos + 1 ] );
-   hb_compGenCString( cargo->yyc, &pFunc->pCode[ nPCodePos + 4 ], usLen );
-   fprintf( cargo->yyc, ", %hu );\n", usLen );
+   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], nLen,
+                       pFunc->pCode[ nPCodePos + 1 ] );
 
-   return 4 + usLen;
+   return 4 + nLen;
 }
 
 static HB_GENC_FUNC( hb_p_pushsym )
