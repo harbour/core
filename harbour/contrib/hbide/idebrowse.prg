@@ -186,6 +186,11 @@ CLASS IdeBrowseManager INHERIT IdeObject
 
 METHOD IdeBrowseManager:new( oIde )
    ::oIde := oIde
+
+   IF hbide_setAdsAvailable()
+      aadd( ::aRdds, "ADS" )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -507,7 +512,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
                ::oCurPanel:addBrowser( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
-                             iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX,DBFNSX" ), "DBFCDX", ::qRddCombo:currentText() ) } )
+                             iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX,DBFNSX,ADS" ), "DBFCDX", ::qRddCombo:currentText() ) } )
             ENDIF
          NEXT
       ENDIF
@@ -532,7 +537,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "buttonOpen_clicked"
-      IF ::currentDriver() $ "DBFCDX,DBFNTX,DBFNSX"
+      IF ::currentDriver() $ "DBFCDX,DBFNTX,DBFNSX,ADS"
          IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
             hb_fNameSplit( cTable, @cPath )
             ::oIde:cWrkFolderLast := cPath
@@ -778,7 +783,7 @@ METHOD IdeBrowseManager:populateFieldData()
       qItm := ::qStruct:q_tableFields:item( nRow, 1 )
       ::qStruct:q_editName:setText( qItm:text() )
       qItm := ::qStruct:q_tableFields:item( nRow, 2 )
-      ::qStruct:q_comboType:setCurrentIndex( ascan( {"Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
+      ::qStruct:q_comboType:setCurrentIndex( ascan( { "Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
       qItm := ::qStruct:q_tableFields:item( nRow, 3 )
       ::qStruct:q_editSize:setText( qItm:text() )
       qItm := ::qStruct:q_tableFields:item( nRow, 4 )
@@ -2607,6 +2612,7 @@ METHOD IdeBrowse:use()
    CASE "DBFCDX"
    CASE "DBFNTX"
    CASE "DBFNSX"
+   CASE "ADS"
       bError := ErrorBlock( {|o| break( o ) } )
       BEGIN SEQUENCE
          IF empty( ::cAlias )
@@ -2648,6 +2654,7 @@ METHOD IdeBrowse:exists()
    CASE "DBFCDX"
    CASE "DBFNSX"
    CASE "DBFNTX"
+   CASE "ADS"
       RETURN hb_fileExists( ::cTable )
    OTHERWISE
       RETURN hbide_execScriptFunction( "tableExists", ::cTable, ::cDriver, ::cConxn )

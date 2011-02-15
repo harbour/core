@@ -2041,3 +2041,16 @@ FUNCTION hbide_setClose( lYes )
    RETURN yes
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_setAdsAvailable( lYes )
+   LOCAL yes
+   STATIC sYes := .f.
+   yes := sYes
+   IF hb_isLogical( lYes )
+      sYes := lYes
+   ENDIF
+   RETURN yes
+
+/*----------------------------------------------------------------------*/
+
+

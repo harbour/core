@@ -130,6 +130,7 @@ PROCEDURE Main( ... )
    IF hb_FileExists( tmp := ( hb_dirBase() + "rddads-" + hb_ntos( hb_version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_version( HB_VERSION_MINOR ) ) + hb_libExt() ) )
       hRDDADS := hb_libLoad( hb_libName( tmp ) )
       IF ! Empty( hRDDADS )
+         hbide_setAdsAvailable( .t. )
          hb_rddadsRegister()
       ENDIF
    ENDIF

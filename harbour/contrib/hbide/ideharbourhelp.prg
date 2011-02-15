@@ -183,6 +183,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD getDocFunction( acBuffer )
    METHOD getFunctionPrototypes()
    METHOD pullDefinitions( acBuffer )
+   METHOD pullDefinitionsHBD( cFileHBD )
 
    ENDCLASS
 
@@ -222,6 +223,8 @@ METHOD IdeHarbourHelp:show()
       ::populateRootInfo()
 
       ::refreshDocTree()
+
+      ::oUI:q_editInstall:setText( ::cPathInstall )
    ENDIF
 
    RETURN Self
@@ -584,7 +587,7 @@ METHOD IdeHarbourHelp:populateIndexedSelection()
 
 METHOD IdeHarbourHelp:refreshDocTree()
    LOCAL aPaths, cFolder, cNFolder, aDocs, oChild, oParent, oRoot, cRoot
-   LOCAL aDir, a_, cTextFile, n
+   LOCAL aDir, a_, cTextFile, n, aHbd
 
    IF empty( ::cPathInstall ) .OR. ! hb_dirExists( ::cPathInstall )
       RETURN Self
@@ -606,15 +609,27 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    aPaths := {}
    aDocs  := {}
-   hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
-   cRoot  := aPaths[ 1 ]
 
-   FOR EACH cFolder IN aPaths
-      cNFolder := hbide_pathNormalized( cFolder, .t. )
-      IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
-         aadd( aDocs, cFolder )
-      ENDIF
-   NEXT
+   cRoot := ::cPathInstall
+   IF ! ( right( cRoot, 1 ) $ "/\" )
+      cRoot += hb_ps()
+   ENDIF
+   cRoot := hbide_pathToOSPath( cRoot )
+   aHbd := directory( cRoot + "*.hbd" )
+
+   IF ! empty( aHbd )
+      aPaths := { cRoot }
+      aDocs := { cRoot }
+   ELSE
+      hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
+
+      FOR EACH cFolder IN aPaths
+         cNFolder := hbide_pathNormalized( cFolder, .t. )
+         IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
+            aadd( aDocs, cFolder )
+         ENDIF
+      NEXT
+   ENDIF
 
    oRoot := QTreeWidgetItem()
    oRoot:setText( 0, aPaths[ 1 ] )
@@ -626,13 +641,17 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    aadd( ::aNodes, { oRoot, "Path", NIL, cRoot, cRoot } )
    hbide_buildFoldersTree( ::aNodes, aDocs )
-   ::aNodes[ 1,2 ] := "Root"
+   ::aNodes[ 1,2 ] := iif( empty( aHbd ), "Root", "Path" )
 
    FOR EACH cFolder IN aDocs
       IF ( n := ascan( ::aNodes, {|e_| e_[ 2 ] == "Path" .AND. lower( e_[ 4 ] ) == lower( cFolder ) } ) ) > 0
          oParent := ::aNodes[ n, 1 ]
 
-         aDir    := directory( cFolder + "*.txt" )
+         IF ! empty( aHbd )
+            aDir := aHbd
+         ELSE
+            aDir := directory( cFolder + "*.txt" )
+         ENDIF
          FOR EACH a_ IN aDir
             IF a_[ 5 ] != "D"
                cTextFile := cFolder + a_[ 1 ]
@@ -669,7 +688,6 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
    FOR EACH s IN aPaths
       cPath := s
       cPath := hbide_stripRoot( cRoot, cPath )
-      //cPath := hbide_pathNormalized( cPath, .t. )
       cPath := hbide_pathNormalized( cPath, .f. )
 
       aSubs := hb_aTokens( cPath, "/" )
@@ -677,12 +695,10 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
       FOR i := 1 TO len( aSubs )
          IF !empty( aSubs[ i ] )
             cCPath := hbide_buildPathFromSubs( aSubs, i )
-            //n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cCPath, .t. ) ) } )
             n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cCPath, .f. ) ) } )
 
             IF n == 0
                cPPath  := hbide_buildPathFromSubs( aSubs, i - 1 )
-               //nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .t. ), hbide_pathNormalized( cRoot + cPPath, .t. ) ) } )
                nP      := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cPPath, .f. ) ) } )
                IF nP > 0
                   oParent := aNodes[ nP, 1 ]
@@ -732,7 +748,6 @@ METHOD IdeHarbourHelp:populateIndex()
          qItem := QListWidgetItem()
          qItem:setText( a_[ 2 ] )
          a_[ 5 ] := qItem
-         //::oUI:q_listIndex:addItem_1( qItem )
          ::oUI:q_listIndex:addItem( qItem )
       ENDIF
    NEXT
@@ -944,13 +959,102 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
 
 /*----------------------------------------------------------------------*/
 
+#define __S2A( c )  hb_aTokens( strtran( c, chr( 13 ) ), chr( 10 ) )
+
+METHOD IdeHarbourHelp:pullDefinitionsHBD( cFileHBD )
+   LOCAL oFunc, hDoc, hFile
+   LOCAL aFn := {}
+
+   IF hb_fileExists( cFileHBD )
+      hFile := __hbdoc_LoadHBD( cFileHBD )
+   ENDIF
+
+   FOR EACH hDoc IN hFile
+      oFunc := IdeDocFunction():new()
+
+      IF "TEMPLATE" $ hDoc
+         oFunc:cTemplate := hDoc[ "TEMPLATE" ]
+      ENDIF
+      IF "FUNCNAME" $ hDoc
+         oFunc:cName := hDoc[ "FUNCNAME" ]
+      ENDIF
+      IF "NAME" $ hDoc
+         oFunc:cName := hDoc[ "NAME" ]
+      ENDIF
+      IF "CATEGORY" $ hDoc
+         oFunc:cCategory := hDoc[ "CATEGORY" ]
+      ENDIF
+      IF "SUBCATEGORY" $ hDoc
+         oFunc:cSubCategory := hDoc[ "SUBCATEGORY" ]
+      ENDIF
+      IF "ONELINER" $ hDoc
+         oFunc:cOneLiner := hDoc[ "ONELINER" ]
+      ENDIF
+      IF "SYNTAX" $ hDoc
+         oFunc:aSyntax := __S2A( hDoc[ "SYNTAX" ] )
+      ENDIF
+      IF "ARGUMENTS" $ hDoc
+         oFunc:aArguments := __S2A( hDoc[ "ARGUMENTS" ] )
+      ENDIF
+      IF "RETURNS" $ hDoc
+         oFunc:aReturns := __S2A( hDoc[ "RETURNS" ] )
+      ENDIF
+      IF "DESCRIPTION" $ hDoc
+         oFunc:aDescription := __S2A( hDoc[ "DESCRIPTION" ] )
+      ENDIF
+      IF "EXAMPLES" $ hDoc
+         oFunc:aExamples := __S2A( hDoc[ "EXAMPLES" ] )
+      ENDIF
+      IF "TESTS" $ hDoc
+         oFunc:aTests := __S2A( hDoc[ "TESTS" ] )
+      ENDIF
+      IF "FILES" $ hDoc
+         oFunc:aFiles := __S2A( hDoc[ "FILES" ] )
+      ENDIF
+      IF "STATUS" $ hDoc
+         oFunc:cStatus := hDoc[ "STATUS" ]
+      ENDIF
+      IF "PLATFORMS" $ hDoc
+         oFunc:cPlatForms := hDoc[ "PLATFORMS" ]
+      ENDIF
+      IF "COMPLIANCE" $ hDoc
+         oFunc:cPlatForms := hDoc[ "COMPLIANCE" ]
+      ENDIF
+      IF "SEEALSO" $ hDoc
+         oFunc:cSeeAlso := hDoc[ "SEEALSO" ]
+      ENDIF
+      IF "VERSION" $ hDoc
+         oFunc:cVersion := hDoc[ "VERSION" ]
+      ENDIF
+      IF "INHERITS" $ hDoc
+         oFunc:cInherits := hDoc[ "INHERITS" ]
+      ENDIF
+      IF "METHODS" $ hDoc
+         oFunc:aMethods := __S2A( hDoc[ "METHODS" ] )
+      ENDIF
+      IF "EXTERNALLINK" $ hDoc
+         oFunc:cExternalLink := hDoc[ "EXTERNALLINK" ]
+      ENDIF
+
+      aadd( aFn, oFunc )
+   NEXT
+
+   RETURN aFn
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
    LOCAL aFn, oFunc, oTWItem
    LOCAL cIcon   := hbide_image( "dc_function" )
    LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
 
    IF nParsed == 0
-      IF !empty( aFn := ::pullDefinitions( cTextFile ) )
+      IF ".hbd" $ lower( cTextFile )
+         aFn := ::pullDefinitionsHBD( cTextFile )
+      ELSE
+         aFn := ::pullDefinitions( cTextFile )
+      ENDIF
+      IF ! empty( aFn  )
          FOR EACH oFunc IN aFn
             oTWItem   := QTreeWidgetItem()
             oTWItem:setText( 0, oFunc:cName )
@@ -980,44 +1084,74 @@ METHOD IdeHarbourHelp:getDocFunction( acBuffer )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:getFunctionPrototypes()
-   LOCAL a_, cFolder, aFN, oFunc, cNFolder
+   LOCAL a_, cFolder, aFN, oFunc, cNFolder, cRoot, aHbd
    LOCAL aPaths := {}
    LOCAL aDocs  := {}
    LOCAL aProto
 
-   IF empty( ::aProtoTypes ) //.AND. empty( ::aProtoTypes := hbide_loadHarbourProtos( ::oIde ) )
+   IF empty( ::aProtoTypes )
       IF ! empty( ::cPathInstall )
          IF ! ::lLoadedProto
-            hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
 
-            FOR EACH cFolder IN aPaths
-               cNFolder := hbide_pathNormalized( cFolder, .t. )
-               IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
-                  aadd( aDocs, cFolder )
-               ENDIF
-            NEXT
+            cRoot := ::cPathInstall
+            IF ! ( right( cRoot, 1 ) $ "/\" )
+               cRoot += hb_ps()
+            ENDIF
+            cRoot := hbide_pathToOSPath( cRoot )
+            aHbd := directory( cRoot + "*.hbd" )
 
-            aProto := {}
-            FOR EACH cFolder IN aDocs
-               FOR EACH a_ IN directory( cFolder + "*.txt" )
-                  IF a_[ 5 ] != "D"
-                     aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
-                     FOR EACH oFunc IN aFn
-                        IF hb_isObject( oFunc )
-                           IF !empty( oFunc:aSyntax )
-                              IF "C Prototype" $ oFunc:aSyntax[ 1 ]
-                                 aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
-                              ELSE
-                                 aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
-                              ENDIF
-                           ENDIF
-                        ENDIF
-                     NEXT
+            IF ! empty( aHbd )
+               aPaths := { cRoot }
+               aDocs := { cRoot }
+            ELSE
+               hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
+
+               FOR EACH cFolder IN aPaths
+                  cNFolder := hbide_pathNormalized( cFolder, .t. )
+                  IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
+                     aadd( aDocs, cFolder )
                   ENDIF
                NEXT
-            NEXT
+            ENDIF
 
-            /* hbide_saveHarbourProtos( ::oIde, aProto ) */
+            aProto := {}
+
+            IF empty( aHbd )
+               FOR EACH cFolder IN aDocs
+                  FOR EACH a_ IN directory( cFolder + "*.txt" )
+                     IF a_[ 5 ] != "D"
+                        aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
+                        FOR EACH oFunc IN aFn
+                           IF hb_isObject( oFunc )
+                              IF !empty( oFunc:aSyntax )
+                                 IF "C Prototype" $ oFunc:aSyntax[ 1 ]
+                                    aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
+                                 ELSE
+                                    aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
+                                 ENDIF
+                              ENDIF
+                           ENDIF
+                        NEXT
+                     ENDIF
+                  NEXT
+               NEXT
+            ELSE
+               FOR EACH a_ IN aHbd
+                  aFn := ::pullDefinitionsHBD( cRoot + a_[ 1 ] )
+                  FOR EACH oFunc IN aFn
+                     IF hb_isObject( oFunc )
+                        IF !empty( oFunc:aSyntax )
+                           IF "C Prototype" $ oFunc:aSyntax[ 1 ]
+                              aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
+                           ELSE
+                              aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                  NEXT
+               NEXT
+            ENDIF
+
             ::aProtoTypes := aProto
             ::lLoadedProto := .t.
          ENDIF
