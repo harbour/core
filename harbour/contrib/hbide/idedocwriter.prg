@@ -680,69 +680,54 @@ METHOD IdeDocWriter:saveInFunction()
 
 METHOD IdeDocWriter:buildDocument()
    LOCAL s
-   LOCAL txt_:= {}
    LOCAL nIndex := ::oUI:q_comboTemplate:currentIndex()
 
-   aadd( txt_, "/*  $DOC$" )
-   aadd( txt_, " *  $TEMPLATE$" )
-   aadd( txt_, " *      " + iif( nIndex == 2, "Class", iif( nIndex == 1, "Procedure", "Function" ) ) )
+   LOCAL hEntry := { => }
+
+   hb_HKeepOrder( hEntry, .T. )
+
+   hEntry[ "TEMPLATE"     ] := iif( nIndex == 2, "Class", iif( nIndex == 1, "Procedure", "Function" ) )
    IF !empty( s := ::oUI:q_editName:text() )
-      aadd( txt_, " *  $NAME$" )
-      aadd( txt_, " *      " + s )
+      hEntry[ "NAME"         ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editOneLiner:text() )
-      aadd( txt_, " *  $ONELINER$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-   IF !empty( s := ::oUI:q_editSyntax:text() )
-      aadd( txt_, " *  $SYNTAX$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-   IF !empty( s := ::oUI:q_editReturns:text() )
-      aadd( txt_, " *  $RETURNS$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-
-   hbide_populateParam( @txt_, " *  $ARGUMENTS$"  , ::oUI:q_plainArgs:toPlainText() )
-   hbide_populateParam( @txt_, " *  $DESCRIPTION$", ::oUI:q_plainDesc:toPlainText() )
-   hbide_populateParam( @txt_, " *  $EXAMPLES$"   , ::oUI:q_plainExamples:toPlainText() )
-   hbide_populateParam( @txt_, " *  $TESTS$"      , ::oUI:q_plainTests:toPlainText() )
-
    IF !empty( s := ::oUI:q_editCategory:text() )
-      aadd( txt_, " *  $CATEGORY$" )
-      aadd( txt_, " *      " + s )
+      hEntry[ "CATEGORY"     ] := s
    ENDIF
    IF !empty( s := ::oUI:q_editSubCategory:text() )
-      aadd( txt_, " *  $SUBCATEGORY$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-   IF !empty( s := ::oUI:q_editVersion:text() )
-      aadd( txt_, " *  $VERSION$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-   IF !empty( s := ::oUI:q_editStatus:text() )
-      aadd( txt_, " *  $STATUS$" )
-      aadd( txt_, " *      " + s )
-   ENDIF
-   IF !empty( s := ::oUI:q_editCompliance:text() )
-      aadd( txt_, " *  $PLATFORMS$" )
-      aadd( txt_, " *      " + s )
+      hEntry[ "SUBCATEGORY"  ] := s
    ENDIF
    IF !empty( s := ::oUI:q_editExtLink:text() )
-      aadd( txt_, " *  $EXTERNALLINK$" )
-      aadd( txt_, " *      " + s )
+      hEntry[ "EXTERNALLINK" ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editSeeAlso:text() )
-      aadd( txt_, " *  $SEEALSO$" )
-      aadd( txt_, " *      " + s )
+   IF !empty( s := ::oUI:q_editOneLiner:text() )
+      hEntry[ "ONELINER"     ] := s
+   ENDIF
+   IF !empty( s := ::oUI:q_editSyntax:text() )
+      hEntry[ "SYNTAX"       ] := s
+   ENDIF
+   hEntry[ "ARGUMENTS"    ] := ::oUI:q_plainArgs:toPlainText()
+   IF !empty( s := ::oUI:q_editReturns:text() )
+      hEntry[ "RETURNS"      ] := s
+   ENDIF
+   hEntry[ "DESCRIPTION"  ] := ::oUI:q_plainDesc:toPlainText()
+   hEntry[ "EXAMPLES"     ] := ::oUI:q_plainExamples:toPlainText()
+   hEntry[ "TESTS"        ] := ::oUI:q_plainTests:toPlainText()
+   IF !empty( s := ::oUI:q_editStatus:text() )
+      hEntry[ "STATUS"       ] := s
+   ENDIF
+   IF !empty( s := ::oUI:q_editCompliance:text() )
+      hEntry[ "PLATFORMS"    ] := s
+   ENDIF
+   IF !empty( s := ::oUI:q_editVersion:text() )
+      hEntry[ "VERSION"      ] := s
    ENDIF
    IF !empty( s := ::oUI:q_editFiles:text() )
-      aadd( txt_, " *  $FILES$" )
-      aadd( txt_, " *      " + s )
+      hEntry[ "FILES"        ] := s
    ENDIF
-   aadd( txt_, " *  $END$" )
-   aadd( txt_, "*/" )
+   IF !empty( s := ::oUI:q_editSeeAlso:text() )
+      hEntry[ "SEEALSO"      ] += s
+   ENDIF
 
-   RETURN txt_
+   RETURN __hbdoc_ToSource( { hEntry } )
 
 /*----------------------------------------------------------------------*/

@@ -19,51 +19,8 @@ PROCEDURE Main()
       IF Right( aFile[ F_NAME ], 2 ) == ".c" .OR. ;
          Right( aFile[ F_NAME ], 4 ) == ".prg"
 
-         hb_MemoWrit( aFile[ F_NAME ], __hbdoc_filter_out( MemoRead( aFile[ F_NAME ] ) ) )
+         hb_MemoWrit( aFile[ F_NAME ], __hbdoc_FilterOut( MemoRead( aFile[ F_NAME ] ) ) )
       ENDIF
    NEXT
 
    RETURN
-
-FUNCTION __hbdoc_filter_out( cFile )
-   LOCAL lEntry := .F.
-   LOCAL cLine
-   LOCAL cOK := ""
-   LOCAL nToSkip := 0
-   LOCAL nEmpty := 0
-
-   cFile := StrTran( cFile, Chr( 13 ) )
-   cFile := StrTran( cFile, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
-
-      SWITCH AllTrim( SubStr( cLine, 4 ) )
-      CASE "$DOC$"
-         lEntry := .T.
-         EXIT
-      CASE "$END$"
-         lEntry := .F.
-         nToSkip := 1
-         EXIT
-      OTHERWISE
-         IF ! lEntry
-            IF nToSkip > 0
-               nToSkip--
-            ELSE
-               IF Empty( cLine )
-                  nEmpty++
-               ELSE
-                  nEmpty := 0
-               ENDIF
-               IF nEmpty < 2
-                  cOK += cLine
-                  IF cLine:__enumIndex() < Len( cLine:__enumBase() )
-                     cOK += hb_eol()
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDSWITCH
-   NEXT
-
-   RETURN cOK
