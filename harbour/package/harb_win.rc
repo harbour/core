@@ -8,8 +8,10 @@
    ---------------------------------------------------------------
  */
 
-#include "hbapi.h"
 #include "hbver.h"
+
+#define HB_MACRO2STRING( macro )       HB_MACRO2STRING_( macro )
+#define HB_MACRO2STRING_( macro )      #macro
 
 #define HB_VER_PRODUCTVERSION          HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
 #define HB_VER_PRODUCTVERSION_STR      HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE ) HB_VER_STATUS "\0"

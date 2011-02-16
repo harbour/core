@@ -13,8 +13,8 @@ netiosrv.prg
 netiocon.prg
 netioeng.prg
 
--ldflag={allmsvc}-nxcompat
--ldflag={allmsvc}-dynamicbase
--ldflag={allmsvc}-fixed:no
+-ldflag={win&allmsvc}-nxcompat
+-ldflag={win&allmsvc}-dynamicbase
+-ldflag={win&allmsvc}-fixed:no
 
 #-prgflag=-DHB_EXTERN
