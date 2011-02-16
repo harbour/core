@@ -15,7 +15,7 @@
 -ldflag={allmsvc}-dynamicbase
 -ldflag={allmsvc}-fixed:no
 
-# not required, for convenience only
+# required by some plugins (f.e. netio management console)
 -mt
 
 hbrun.prg
@@ -29,8 +29,11 @@ pullext.prg
 -lhbpp
 -lhbcommon
 
--icon={allwin}../../package/harb_win.ico
--icon={os2}../../package/harb_os2.ico
+# not using these together with .rc input, because some compilers (mingw)
+# do not support multiple .rc inputs
+#-icon={allwin}../../package/harb_win.ico
+#-icon={os2}../../package/harb_os2.ico
+hbrun.rc
 
 # Plugins
 
