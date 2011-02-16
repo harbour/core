@@ -12,5 +12,5 @@
 
 /*
    NOTE: I deleted all the information in this file due to copyright
-         vilolation! 2004-4-19 [ckedem].
+         violation! 2004-4-19 [ckedem].
  */

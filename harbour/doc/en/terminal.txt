@@ -567,7 +567,7 @@
  *  $COMPLIANCE$
  *      C52U
  *  $PLATFORMS$
- *       A
+ *       All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

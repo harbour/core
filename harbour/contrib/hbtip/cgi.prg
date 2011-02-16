@@ -6,7 +6,7 @@
  * xHarbour Project source code:
  * TipCgi Class oriented cgi protocol
  *
- * Copyright 2006 Lorenzo Fiorini <lorenzo_fiorini@teamwork.it>
+ * Copyright 2006 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
  *
  * code from:
  * TIP Class oriented Internet protocol library
@@ -85,18 +85,17 @@ CREATE CLASS TIpCgi
    VAR cSID
    VAR cDumpSavePath
    VAR lDumpHtml    INIT .F.
+   VAR Cargo
 
    METHOD New()
    METHOD Header( cValue )
    METHOD Redirect( cUrl )
-   METHOD Print( cString )
+   METHOD Write( cString )
    METHOD Flush()
    METHOD ErrHandler( xError )
 
    METHOD StartHtml( hOptions )
    METHOD EndHtml()
-   METHOD StartFrameSet( hOptions )
-   METHOD EndFrameSet( hOptions )
    METHOD SaveHtmlPage( cFile )
 
    METHOD StartSession( cSID )
@@ -190,12 +189,6 @@ METHOD Redirect( cUrl ) CLASS TIpCgi
 
    RETURN Self
 
-METHOD Print( cString ) CLASS TIpCgi
-
-   ::cHtmlPage += cString + _CRLF
-
-   RETURN Self
-
 METHOD Flush() CLASS TIpCgi
 
    LOCAL nLen
@@ -240,121 +233,15 @@ METHOD Flush() CLASS TIpCgi
 
       IF ( nH := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
          IF ( FWrite( nH, @cSession, nFileSize ) ) != nFileSize
-            ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+            ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
          ENDIF
          FClose( nH )
       ELSE
-         ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+         ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
       ENDIF
    ENDIF
 
    RETURN lRet
-
-METHOD DestroySession( cID ) CLASS TIpCgi
-
-   LOCAL cFile
-   LOCAL cSID := ::cSID
-   LOCAL lRet
-
-   IF ! Empty( cID )
-      cSID := cID
-   ENDIF
-
-   IF ! Empty( cSID )
-
-      ::hSession := { => }
-
-      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
-
-      IF !( lRet := ( FErase( cFile ) == 0 ) )
-         ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-      ELSE
-         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( Date() - 1 )
-         ::CreateSID()
-         cSID := ::cSID
-         ::hCookies[ "SESSIONID" ] := cSID
-      ENDIF
-
-   ENDIF
-
-   RETURN lRet
-
-METHOD ErrHandler( xError ) CLASS TIpCgi
-
-   LOCAL nCalls
-
-   ::Print( '<table border="1">' )
-
-   ::Print( '<tr><td>SCRIPT NAME:</td><td>' + GetEnv( "SCRIPT_NAME" ) + '</td></tr>' )
-
-   IF ISOBJECT( xError )
-      ::Print( '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>' )
-      ::Print( '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>' )
-      ::Print( '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>' )
-      ::Print( '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>' )
-   ELSEIF ISCHARACTER( xError )
-      ::Print( '<tr><td>ERROR MESSAGE:</td><td>' + xError + '</td></tr>' )
-   ENDIF
-
-   FOR nCalls := 2 to 6
-      IF ! Empty( procname( nCalls ) )
-         ::Print( '<tr><td>PROC/LINE:</td><td>' + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + '</td></tr>' )
-      ENDIF
-   NEXT
-
-   ::Print( '</table>' )
-
-   ::Flush()
-
-   RETURN NIL
-
-METHOD StartHtml( hOptions ) CLASS TIpCgi
-
-   ::cHtmlPage += '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
-                  '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
-                  '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
-                  '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
-                  '<head>' + ;
-                  HtmlTag( hOptions, 'title', 'title' ) + ;
-                  HtmlScript( hOptions ) + ;
-                  HtmlStyle( hOptions ) + ;
-                  '</head>' + ;
-                  '<body ' + ;
-                     HtmlAllOption( hOptions ) + ;
-                  '>'
-
-   RETURN Self
-
-METHOD EndHtml() CLASS TIpCgi
-
-   ::cHtmlPage += '</body></html>'
-
-   RETURN Self
-
-METHOD StartFrameSet( hOptions ) CLASS TIpCgi
-
-   ::cHtmlPage += '<?xml version="1.0"?>' + _CRLF + ;
-                  '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
-                  '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
-                  '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
-                  '<head>' + ;
-                  HtmlTag( hOptions, 'title', 'title' ) + ;
-                  HtmlScript( hOptions ) + ;
-                  HtmlStyle( hOptions ) + ;
-                  '</head>' + ;
-                  '<frameset ' + ;
-                     HtmlValue( hOptions, 'frame' ) + ;
-                  '>'
-
-   RETURN Self
-
-METHOD EndFrameSet( hOptions ) CLASS TIpCgi
-
-   ::cHtmlPage += '</frameset><noframes>' + ;
-                     HtmlValue( hOptions, 'frame' ) + ;
-                  '</noframes></html>'
-
-   RETURN Self
 
 METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
@@ -398,7 +285,8 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    ENDIF
 
    IF Empty( ::cSessionSavePath )
-      ::cSessionSavePath := hb_DirTemp()
+      /* TOFIX: *nix specific default. [vszakats] */
+      ::cSessionSavePath := "/tmp/"
    ENDIF
 
    IF ! Empty( cSID )
@@ -443,6 +331,101 @@ METHOD SessionDecode( cData ) CLASS TIpCgi
    ::hSession := hb_Deserialize( cData )
 
    RETURN hb_isHash( ::hSession )
+
+METHOD DestroySession( cID ) CLASS TIpCgi
+
+   LOCAL cFile
+   LOCAL cSID := ::cSID
+   LOCAL lRet
+
+   IF ! Empty( cID )
+      cSID := cID
+   ENDIF
+
+   IF ! Empty( cSID )
+
+      ::hSession := { => }
+
+      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+
+      IF !( lRet := ( FErase( cFile ) == 0 ) )
+         ::Write( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+      ELSE
+         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( Date() - 1 )
+         ::CreateSID()
+         cSID := ::cSID
+         ::hCookies[ "SESSIONID" ] := cSID
+      ENDIF
+
+   ENDIF
+
+   RETURN lRet
+
+METHOD ErrHandler( xError ) CLASS TIpCgi
+
+   LOCAL nCalls
+   LOCAL cErrMsg := ""
+
+   cErrMsg += '<table border="1">'
+
+   cErrMsg += '<tr><td>SCRIPT NAME:</td><td>' + GetEnv( "SCRIPT_NAME" ) + '</td></tr>'
+
+   IF ISOBJECT( xError )
+      cErrMsg += '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>'
+      cErrMsg += '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>'
+      cErrMsg += '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>'
+      cErrMsg += '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>'
+   ELSEIF ISCHARACTER( xError )
+      cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + TIP_HTMLSPECIALCHARS( xError ) + '</td></tr>'
+   ENDIF
+
+   nCalls := 1
+   DO WHILE ! Empty( ProcName( nCalls ) )
+      cErrMsg += '<tr><td>PROC/LINE:</td><td>' + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + '</td></tr>'
+      nCalls++
+   ENDDO
+
+   cErrMsg += '</table>'
+
+   ::Write( cErrMsg )
+
+   OutErr( cErrMsg )
+
+   ::Flush()
+
+   QUIT
+
+   RETURN NIL
+
+METHOD Write( cString ) CLASS TIpCgi
+
+   ::cHtmlPage += cString + _CRLF
+
+   RETURN Self
+
+METHOD StartHtml( hOptions ) CLASS TIpCgi
+
+   ::cHtmlPage += '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
+                  '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
+                  '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
+                  '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
+                  '<head>' + ;
+                  HtmlTag( hOptions, 'title', 'title' ) + ;
+                  HtmlScript( hOptions ) + ;
+                  HtmlStyle( hOptions ) + ;
+                  HtmlLinkRel( hOptions ) + ;
+                  '</head>' + ;
+                  '<body ' + ;
+                     HtmlAllOption( hOptions ) + ;
+                  '>'
+
+   RETURN Self
+
+METHOD EndHtml() CLASS TIpCgi
+
+   ::cHtmlPage += '</body></html>'
+
+   RETURN Self
 
 STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
@@ -544,84 +527,120 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
 
    RETURN cVal
 
-STATIC FUNCTION HtmlScript( xVal, cKey )
+STATIC FUNCTION HtmlScript( hVal, cKey )
 
-   LOCAL cVal := ""
+   LOCAL hTmp
+   LOCAL cRet := ""
+   LOCAL cVal
    LOCAL nPos
    LOCAL cTmp
 
    DEFAULT cKey TO "script"
 
-   IF ! Empty( xVal )
-      IF ( nPos := hb_HPos( xVal, cKey ) ) != 0
-         cVal := hb_HValueAt( xVal, nPos )
-         IF hb_isHash( cVal )
-            IF ( nPos := hb_HPos( cVal, "src" ) ) != 0
-               cVal := hb_HValueAt( cVal, nPos )
+   IF ! Empty( hVal )
+      IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
+         hTmp := hb_HValueAt( hVal, nPos )
+         IF hb_isHash( hTmp )
+            IF ( nPos := hb_HPos( hTmp, "src" ) ) != 0
+               cVal := hb_HValueAt( hTmp, nPos )
                IF ISCHARACTER( cVal )
                   cVal := { cVal }
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { | cFile | cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
-                  cVal := cTmp
+                  ascan( cVal, { | cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
+                  cRet += cTmp
                ENDIF
             ENDIF
-            IF ( nPos := hb_HPos( cVal, "var" ) ) != 0
-               cVal := hb_HValueAt( cVal, nPos )
+            IF ( nPos := hb_HPos( hTmp, "var" ) ) != 0
+               cVal := hb_HValueAt( hTmp, nPos )
                IF ISCHARACTER( cVal )
                   cVal := { cVal }
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { | cVar | cTmp += cVar } )
-                  cVal := '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
+                  cRet += '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
                ENDIF
             ENDIF
          ENDIF
-         hb_HDel( xVal, cKey )
+         hb_HDel( hVal, cKey )
       ENDIF
    ENDIF
 
-   RETURN cVal
+   RETURN cRet
 
-STATIC FUNCTION HtmlStyle( xVal, cKey )
+STATIC FUNCTION HtmlStyle( hVal, cKey )
 
-   LOCAL cVal := ""
+   LOCAL hTmp
+   LOCAL cRet := ""
+   LOCAL cVal
    LOCAL nPos
    LOCAL cTmp
 
    DEFAULT cKey TO "style"
 
-   IF ! Empty( xVal )
-      IF ( nPos := hb_HPos( xVal, cKey ) ) != 0
-         cVal := hb_HValueAt( xVal, nPos )
-         IF hb_isHash( cVal )
-            IF ( nPos := hb_HPos( cVal, "src" ) ) != 0
-               cVal := hb_HValueAt( cVal, nPos )
+   IF ! Empty( hVal )
+      IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
+         hTmp := hb_HValueAt( hVal, nPos )
+         IF hb_isHash( hTmp )
+            IF ( nPos := hb_HPos( hTmp, "src" ) ) != 0
+               cVal := hb_HValueAt( hTmp, nPos )
                IF ISCHARACTER( cVal )
                   cVal := { cVal }
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  AScan( cVal, { | cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
-                  cVal := cTmp
+                  AScan( cVal, { | cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
+                  cRet += cTmp
                ENDIF
             ENDIF
-            IF ( nPos := hb_HPos( cVal, "var" ) ) != 0
-               cVal := hb_HValueAt( cVal, nPos )
+            IF ( nPos := hb_HPos( hTmp, "var" ) ) != 0
+               cVal := hb_HValueAt( hTmp, nPos )
                IF ISCHARACTER( cVal )
                   cVal := { cVal }
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  AScan( cVal, { |cVar| cTmp += cVar } )
-                  cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
+                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  cRet += '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
                ENDIF
             ENDIF
          ENDIF
-         hb_HDel( xVal, cKey )
+         hb_HDel( hVal, cKey )
       ENDIF
    ENDIF
 
-   RETURN cVal
+   RETURN cRet
+
+STATIC FUNCTION HtmlLinkRel( hVal, cKey )
+
+   LOCAL hTmp
+   LOCAL cRet := ""
+   LOCAL cVal
+   LOCAL nPos
+   LOCAL cTmp
+
+   DEFAULT cKey TO "link"
+
+   IF ! Empty( hVal )
+      IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
+         hTmp := hb_HValueAt( hVal, nPos )
+         IF hb_isHash( hTmp )
+            IF ( nPos := hb_HPos( hTmp, "rel" ) ) != 0
+               cVal := hb_HValueAt( hTmp, nPos )
+               IF ISCHARACTER( cVal )
+                  cVal := { cVal, cVal }
+               ENDIF
+               IF ISARRAY( cVal )
+                  cTmp := ""
+                  AScan( cVal, { | aVal | cTmp += '<link rel="' + aVal[1] + '" href="' + aVal[2] + '"/>' + _CRLF } )
+                  cRet += cTmp
+               ENDIF
+            ENDIF
+         ENDIF
+         hb_HDel( hVal, cKey )
+      ENDIF
+   ENDIF
+
+   RETURN cRet
