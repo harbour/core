@@ -50,12 +50,24 @@
  *
  */
 
+#include "directry.ch"
+
 #command ADD PLUGIN TO <hash> FILE <(cFile)> => ;
          #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
 
 FUNCTION __hbrun_plugins()
    LOCAL hPlugins := { => }
+   LOCAL file
 
    ADD PLUGIN TO hPlugins FILE "netiomgm.prg"
+
+   FOR EACH file IN Directory( hb_DirBase() + "*.hbs" )
+   hb_alert( hb_DirBase() + file[ F_NAME ] )
+      hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
+   NEXT
+   FOR EACH file IN Directory( hb_DirBase() + "*.hrb" )
+   hb_alert( hb_DirBase() + file[ F_NAME ] )
+      hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
+   NEXT
 
    RETURN hPlugins
