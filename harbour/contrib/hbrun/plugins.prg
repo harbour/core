@@ -56,6 +56,6 @@
 FUNCTION __hbrun_plugins()
    LOCAL hPlugins := { => }
 
-   ADD PLUGIN TO hPlugins FILE "netioeng.prg"
+   ADD PLUGIN TO hPlugins FILE "netiomgm.prg"
 
    RETURN hPlugins

@@ -11,7 +11,7 @@
 
 netiosrv.prg
 netiocon.prg
-netioeng.prg
+netiomgm.prg
 
 -ldflag={win&allmsvc}-nxcompat
 -ldflag={win&allmsvc}-dynamicbase
