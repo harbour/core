@@ -294,7 +294,12 @@
 #command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
       => AdsSetCharType( iif( Upper( <(x)> ) == "OEM", ADS_OEM, ADS_ANSI ) )
 
+/* TOFIX: This command is clashing with std.ch one.
+          Remove it after redirecting dbCommitAll()
+          to AdsWriteAllRecords() on RDD level.
+          [vszakats] */
 #command COMMIT                 => AdsWriteAllRecords()
+
 #command BEGIN TRANSACTION      => AdsBeginTransaction()
 #command COMMIT TRANSACTION     => AdsCommitTransaction()
 #command ROLLBACK TRANSACTION   => AdsRollback()

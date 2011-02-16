@@ -285,8 +285,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    ENDIF
 
    IF Empty( ::cSessionSavePath )
-      /* TOFIX: *nix specific default. [vszakats] */
-      ::cSessionSavePath := "/tmp/"
+      ::cSessionSavePath := hb_DirTemp()
    ENDIF
 
    IF ! Empty( cSID )
