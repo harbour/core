@@ -614,7 +614,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
    IF ! ( right( cRoot, 1 ) $ "/\" )
       cRoot += hb_ps()
    ENDIF
-   cRoot := hbide_pathToOSPath( cRoot )
+   cRoot := hbide_pathToOSPath( cRoot + "/doc/" )
    aHbd := directory( cRoot + "*.hbd" )
 
    IF ! empty( aHbd )
@@ -622,7 +622,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
       aDocs := { cRoot }
    ELSE
       hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
-
+      cRoot := aPaths[ 1 ]
       FOR EACH cFolder IN aPaths
          cNFolder := hbide_pathNormalized( cFolder, .t. )
          IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
@@ -790,184 +790,36 @@ METHOD IdeHarbourHelp:populateIndex()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
-   LOCAL a_, s, nPart, oFunc
-   LOCAL lIsFunc := .f.
-   LOCAL aFn     := {}
 
    IF hb_isArray( acBuffer )
-      a_:= acBuffer
+      RETURN doc2functions( __hbdoc_fromSource( hbide_arrayTOmemo( acBuffer ) ) )
    ELSE
       IF hb_fileExists( acBuffer )
-         a_:= hbide_readSource( acBuffer )
+         RETURN doc2functions( __hbdoc_fromSource( memoread( acBuffer ) ) )
       ELSE
-         a_:= hbide_memoTOarray( acBuffer )
+         RETURN doc2functions( __hbdoc_fromSource( acBuffer ) )
       ENDIF
    ENDIF
 
-   IF .t.
-      nPart := DOC_FUN_NONE
+   RETURN {}
 
-      FOR EACH s IN a_
-         DO CASE
+/*----------------------------------------------------------------------*/
 
-         CASE "$DOC$"         $ s
-            lIsFunc := .t.
-            nPart   := DOC_FUN_BEGINS
-            oFunc   := IdeDocFunction():new()
+METHOD IdeHarbourHelp:pullDefinitionsHBD( cFileHBD )
 
-         CASE "$END$"         $ s
-            IF lIsFunc
-               oFunc:lOk := .t.
-               aadd( aFn, oFunc )
-            ENDIF
-
-         CASE "$TEMPLATE$"    $ s
-            nPart := DOC_FUN_TEMPLATE
-         CASE "$FUNCNAME$"    $ s   .OR.  "$NAME$" $ s
-            nPart := DOC_FUN_FUNCNAME
-         CASE "$CATEGORY$"    $ s
-            nPart := DOC_FUN_CATEGORY
-         CASE "$SUBCATEGORY$" $ s
-            nPart := DOC_FUN_SUBCATEGORY
-         CASE "$ONELINER$"    $ s
-            nPart := DOC_FUN_ONELINER
-         CASE "$SYNTAX$"      $ s
-            nPart := DOC_FUN_SYNTAX
-         CASE "$ARGUMENTS$"   $ s
-            nPart := DOC_FUN_ARGUMENTS
-         CASE "$RETURNS$"     $ s
-            nPart := DOC_FUN_RETURNS
-         CASE "$DESCRIPTION$" $ s
-            nPart := DOC_FUN_DESCRIPTION
-         CASE "$EXAMPLES$"    $ s
-            nPart := DOC_FUN_EXAMPLES
-         CASE "$TESTS$"       $ s
-            nPart := DOC_FUN_TESTS
-         CASE "$FILES$"       $ s
-            nPart := DOC_FUN_FILES
-         CASE "$STATUS$"       $ s
-            nPart := DOC_FUN_STATUS
-         CASE "$PLATFORMS$"   $ s  .OR.  "$COMPLIANCE$" $ s
-            nPart := DOC_FUN_PLATFORMS
-         CASE "$SEEALSO$"     $ s
-            nPart := DOC_FUN_SEEALSO
-         CASE "$VERSION$"     $ s
-            nPart := DOC_FUN_VERSION
-         CASE "$INHERITS"     $ s
-            nPart := DOC_FUN_INHERITS
-         CASE "$METHODS"      $ s
-            nPart := DOC_FUN_METHODS
-         CASE "$EXTERNALLINK" $ s
-            nPart := DOC_FUN_EXTERNALLINK
-         OTHERWISE
-            IF ! lIsFunc
-               LOOP   // It is a fake line not within $DOC$ => $END$ block
-            ENDIF
-            s := substr( s, 8 )
-
-            SWITCH nPart
-            CASE DOC_FUN_BEGINS
-               EXIT
-            CASE DOC_FUN_TEMPLATE
-               IF ! empty( s )
-                  oFunc:cTemplate    := s
-               ENDIF
-               EXIT
-            CASE DOC_FUN_FUNCNAME
-               IF ! empty( s )
-                  oFunc:cName        := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_CATEGORY
-               IF ! empty( s )
-                  oFunc:cCategory    := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_SUBCATEGORY
-               IF ! empty( s )
-                  oFunc:cSubCategory := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_ONELINER
-               IF ! empty( s )
-                  oFunc:cOneLiner    := s
-               ENDIF
-               EXIT
-            CASE DOC_FUN_SYNTAX
-               aadd( oFunc:aSyntax     , s )
-               EXIT
-            CASE DOC_FUN_ARGUMENTS
-               aadd( oFunc:aArguments  , s )
-               EXIT
-            CASE DOC_FUN_RETURNS
-               aadd( oFunc:aReturns    , s )
-               EXIT
-            CASE DOC_FUN_DESCRIPTION
-               aadd( oFunc:aDescription, s )
-               EXIT
-            CASE DOC_FUN_EXAMPLES
-               aadd( oFunc:aExamples   , s )
-               EXIT
-            CASE DOC_FUN_TESTS
-               aadd( oFunc:aTests      , s )
-               EXIT
-            CASE DOC_FUN_FILES
-               aadd( oFunc:aFiles      , s )
-               EXIT
-            CASE DOC_FUN_STATUS
-               IF ! empty( s )
-                  oFunc:cStatus    := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_PLATFORMS
-               IF ! empty( s )
-                  oFunc:cPlatForms := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_SEEALSO
-               IF ! empty( s )
-                  oFunc:cSeeAlso := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_INHERITS
-               IF ! empty( s )
-                  oFunc:cInherits  := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_METHODS
-               aadd( oFunc:aMethods    , s )
-               EXIT
-            CASE DOC_FUN_VERSION
-               IF ! empty( s )
-                  oFunc:cVersion   := alltrim( s )
-               ENDIF
-               EXIT
-            CASE DOC_FUN_EXTERNALLINK
-               IF ! empty( s )
-                  oFunc:cExternalLink := alltrim( s )
-               ENDIF
-               EXIT
-            OTHERWISE
-               nPart := DOC_FUN_NONE
-               EXIT
-            ENDSWITCH
-         ENDCASE
-      NEXT
+   IF hb_fileExists( cFileHBD )
+      doc2functions( __hbdoc_LoadHBD( cFileHBD ) )
    ENDIF
 
-   RETURN aFn
+   RETURN {}
 
 /*----------------------------------------------------------------------*/
 
 #define __S2A( c )  hb_aTokens( strtran( c, chr( 13 ) ), chr( 10 ) )
 
-METHOD IdeHarbourHelp:pullDefinitionsHBD( cFileHBD )
-   LOCAL oFunc, hDoc, hFile
+STATIC FUNCTION doc2functions( hFile )
+   LOCAL oFunc, hDoc
    LOCAL aFn := {}
-
-   IF hb_fileExists( cFileHBD )
-      hFile := __hbdoc_LoadHBD( cFileHBD )
-   ENDIF
 
    FOR EACH hDoc IN hFile
       oFunc := IdeDocFunction():new()
@@ -1097,7 +949,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
             IF ! ( right( cRoot, 1 ) $ "/\" )
                cRoot += hb_ps()
             ENDIF
-            cRoot := hbide_pathToOSPath( cRoot )
+            cRoot := hbide_pathToOSPath( cRoot + "/doc/" )
             aHbd := directory( cRoot + "*.hbd" )
 
             IF ! empty( aHbd )

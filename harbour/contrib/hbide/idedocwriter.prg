@@ -416,7 +416,7 @@ METHOD IdeDocWriter:fillFormByObject( oFunc )
    ::oUI:q_editOneLiner    :setText      ( oFunc:cOneLiner     )
    ::oUI:q_editSyntax      :setText      ( hbide_ar2delString( oFunc:aSyntax , "; " ) )
    ::oUI:q_editReturns     :setText      ( hbide_ar2delString( oFunc:aReturns, "; " ) )
-   ::oUI:q_editSeeAlso     :setText      ( oFunc:cSeaAlso      )
+   ::oUI:q_editSeeAlso     :setText      ( oFunc:cSeeAlso      )
    ::oUI:q_editFiles       :setText      ( hbide_ar2delString( oFunc:aFiles  , "; " ) )
    ::oUI:q_plainArgs       :setPlainText ( hbide_arrayTOmemo( oFunc:aArguments    ) )
    ::oUI:q_plainDesc       :setPlainText ( hbide_arrayTOmemo( oFunc:aDescription  ) )
@@ -509,7 +509,6 @@ METHOD IdeDocWriter:pullDocFromSource( nLineFrom, oEdit )
 
 METHOD IdeDocWriter:loadCurrentFuncDoc()
    LOCAL oEdit, nCurLine, n, cProto, nProtoLine, aFacts, aDoc, oFunc
-   //LOCAL qCursor, qEdit
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       IF oEdit:isModified()
@@ -631,7 +630,7 @@ METHOD IdeDocWriter:saveInFile()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocWriter:saveInFunction()
-   LOCAL nCurLine, oEdit, qCursor, a_, b_, s
+   LOCAL nCurLine, oEdit, qCursor, a_
 
    /* Bring it on top and make it current */
    ::oSM:editSource( ::cSourceFile, , , , , , .f. )
@@ -656,17 +655,11 @@ METHOD IdeDocWriter:saveInFunction()
          qCursor:beginEditBlock()
 
          ::removeDocHelp( nCurLine, oEdit )
-         b_:={}
+
          a_:= ::buildDocument()
-         FOR EACH s IN a_
-            IF "*" $ s
-               aadd( b_, s )
-            ENDIF
-         NEXT
+
          oEdit:home()
-         oEdit:insertText( hbide_arrayToMemo( b_ ) )
-         oEdit:up()
-         oEdit:deleteLine()
+         oEdit:insertText( a_ )
 
          qCursor:endEditBlock()
          oEdit:qEdit:setTextCursor( qCursor )
@@ -725,7 +718,7 @@ METHOD IdeDocWriter:buildDocument()
       hEntry[ "FILES"        ] := s
    ENDIF
    IF !empty( s := ::oUI:q_editSeeAlso:text() )
-      hEntry[ "SEEALSO"      ] += s
+      hEntry[ "SEEALSO"      ] := s
    ENDIF
 
    RETURN __hbdoc_ToSource( { hEntry } )
