@@ -1,18 +1,16 @@
-//NOTEST
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-// Warning: This sample must be tested using /dTEST compiler flag
-
-//TODO: Check why there is core dump om Linux if this file is compiled
-// without /dTEST
+#ifndef TEST
+#warning Warning: This sample must be tested using /dTEST compiler flag
+#endif
 
 #define FIRST
 #define SECOND
 #define THIRD
 
-function Main()
+FUNCTION Main()
 
    QOut( "testing Harbour /d compiler flag" )
 
@@ -20,7 +18,7 @@ function Main()
       QOut( "Fine, you have just tested the /d compiler flag" )
    #else
       QOut( "Please use /dTEST compiler flag" )
-      QOut( "Or run 'SET HB_USER_PRGFLAGS=/dTEST' if you are using the GNU Make System" )
+      QOut( "Or run 'set HB_USER_PRGFLAGS=/dTEST' if you are using the GNU Make System" )
    #endif
 
    #ifdef FIRST
@@ -43,4 +41,4 @@ function Main()
       QOut( "FIRST is not defined" )
    #endif
 
-return nil
+   RETURN NIL

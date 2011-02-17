@@ -1326,7 +1326,7 @@ static void disp_cursor( InOutBase * ioBase )
             cv = ioBase->cvvis;
             break;
          case SC_SPECIAL2:
-            /* TODO: find a proper sequqnce to set a cursor
+            /* TODO: find a proper sequence to set a cursor
                to SC_SPECIAL2 under Linux console?
                There is no such mode in current stable kernels (2.4.20)
              */

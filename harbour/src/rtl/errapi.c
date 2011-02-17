@@ -493,8 +493,6 @@ HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
    return pOld;
 }
 
-/* TOFIX: Make it Clipper compatible. [vszakats] */
-
 HB_FUNC( DOSERROR )
 {
    PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
