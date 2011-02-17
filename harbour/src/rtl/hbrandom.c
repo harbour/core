@@ -54,9 +54,7 @@
 #include "hbdate.h"
 
 #include <stdlib.h>
-#if !defined( HB_OS_WIN )     /* for DBL_EPSILON */
-   #include <float.h>
-#endif
+#include <float.h>
 
 /* Globally available data, no need to MT it */
 static volatile int s_fInit = 0;
@@ -95,7 +93,7 @@ HB_FUNC( HB_RANDOM )
  *
  * HB_RANDOMINT() --> returns 0 or 1, evenly distributed
  * HB_RANDOMINT( N ) --> returns an integer between 1 and N (inclusive)
- * HB_RANDOMINT( x, y ) --> Returns a real number between x and y (inclusive)
+ * HB_RANDOMINT( x, y ) --> Returns an integer number between x and y (inclusive)
  * The integer returned is of the longest type available
  */
 HB_FUNC( HB_RANDOMINT )
@@ -131,7 +129,7 @@ double hb_random_num()
 {
    double d1, d2;
 
-   if( !s_fInit )
+   if( ! s_fInit )
    {
       srand( ( unsigned ) hb_dateMilliSeconds() );
       s_fInit = HB_TRUE;
@@ -139,8 +137,7 @@ double hb_random_num()
 
    d1 = ( double ) rand();
    d2 = ( double ) RAND_MAX;
-#if defined( HB_OS_WIN )
-   /* TOFIX: it breaks the range of random values */
+#if defined( __BORLANDC__ )
    /* It seems that on Windows platform there some weirdness about EPSILON value so
       that a float division using an epsilon smaller than 1e-10 may be rounded.
       Must dig if it's a borland lib bug or a windows problem.

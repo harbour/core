@@ -6,8 +6,6 @@
 ICON 1 DISCARDABLE "../../package/harb_os2.ico"
 #else
 1 ICON DISCARDABLE "../../package/harb_win.ico"
-#if defined( __MINGW32__ ) || defined( __BORLANDC__ ) || defined( _MSC_VER )
 #include "../../package/harb_win.rc"
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "../../package/harb_win.mft"
-#endif
+__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST "../../package/harb_win.mft"
 #endif

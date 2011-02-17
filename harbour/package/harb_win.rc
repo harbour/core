@@ -57,11 +57,8 @@ END
 
 /* Preparation for manifest */
 
-#include <winuser.h>
-
-#ifndef RT_MANIFEST
-#define RT_MANIFEST 24
-#endif
-#ifndef CREATEPROCESS_MANIFEST_RESOURCE_ID
-#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
-#endif
+/* Not using predefined Windows macros here, because some C compilers
+   with fail badly with their own definitions (f.e. pocc) and/or their own
+   Windows headers. [vszakats] */
+#define __HB_CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#define __HB_RT_MANIFEST                        24
