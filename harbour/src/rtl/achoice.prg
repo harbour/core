@@ -11,6 +11,15 @@
  *
  */
 
+/* TOFIX:
+   ---
+   #include "inkey.ch"
+   CLS
+   KEYBOARD Chr( K_DOWN ) + Chr( K_UP ) // bogus '2' appears out of the area here.
+   AChoice( 0, 0, 0, 0, { "1", "2" } )
+   ---
+ */
+
 #include "achoice.ch"
 #include "color.ch"
 #include "common.ch"

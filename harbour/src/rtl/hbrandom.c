@@ -57,7 +57,7 @@
 #include <float.h>
 
 /* Globally available data, no need to MT it */
-static volatile int s_fInit = 0;
+static volatile HB_BOOL s_fInit = HB_FALSE;
 
 /*
  * HB_RANDOM

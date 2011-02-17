@@ -7282,7 +7282,6 @@ STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
 
    RETURN .F.
 
-
 STATIC FUNCTION clpfile_read( cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
    LOCAL aFiles
