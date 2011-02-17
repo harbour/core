@@ -98,7 +98,7 @@ void setWhatsThis ( int column, const QString & whatsThis )
 QSize sizeHint ( int column ) const
 void sortChildren ( int column, Qt::SortOrder order )
 QString statusTip ( int column ) const
-QTreeWidgetItem * takeChild ( int index )
+QTreeWidgetItem * takeChild ( int index ) [*A=1*]
 QList<QTreeWidgetItem *> takeChildren ()
 QString text ( int column ) const
 int textAlignment ( int column ) const

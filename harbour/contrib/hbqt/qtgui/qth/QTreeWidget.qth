@@ -64,7 +64,7 @@ void setHeaderLabels ( const QStringList & labels )
 void setItemWidget ( QTreeWidgetItem * item, int column, QWidget * widget )
 int sortColumn () const
 void sortItems ( int column, Qt::SortOrder order )
-QTreeWidgetItem * takeTopLevelItem ( int index )
+QTreeWidgetItem * takeTopLevelItem ( int index )   [*A=1*]
 QTreeWidgetItem * topLevelItem ( int index ) const
 int topLevelItemCount () const
 QRect visualItemRect ( const QTreeWidgetItem * item ) const

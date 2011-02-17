@@ -1595,14 +1595,14 @@ METHOD HbQtSource:buildMethodBody( oMtd )
       ELSE
          FP := oMtd:cCmd
       ENDIF
-      //
+
+      /* Manage Re-Attached */
+      IF oMtd:nAttach > 0
+         FP := strtran( FP, ", false", ", true" )
+      ENDIF
+
       /* Manage detached Argument */
       IF oMtd:nDetach > 0
-         #if 0
-         aadd( ::txt_, "      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), " + hb_ntos( oMtd:nDetach + 1 ) + " );" )
-         aadd( ::txt_, "      if( q && q->ph )" )
-         aadd( ::txt_, "         q->bNew = false;" )
-         #endif
          aadd( ::txt_, "      hbqt_detachgcpointer( " + hb_ntos( oMtd:nDetach + 1 ) + " );" )
       ENDIF
 
@@ -2200,6 +2200,9 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                CASE "D"
                   oMtd:nDetach := val( cVal )
                   EXIT
+               CASE "A"
+                  oMtd:nAttach := val( cVal )
+                  EXIT
                CASE "xxx"
                   EXIT
                ENDSWITCH
@@ -2675,6 +2678,7 @@ CREATE CLASS HbqtMethod
    DATA   cMrk                                    INIT ""   //                                                                       ^^^
 
    DATA   nDetach                                 INIT 0
+   DATA   nAttach                                 INIT 0
 
    DATA   cFun                                    INIT ""
    DATA   cRet                                    INIT ""

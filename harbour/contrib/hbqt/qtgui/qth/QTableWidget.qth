@@ -70,9 +70,9 @@ void setRowCount ( int rows )
 void setVerticalHeaderItem ( int row, QTableWidgetItem * item )   [*D=2*]
 void setVerticalHeaderLabels ( const QStringList & labels )
 void sortItems ( int column, Qt::SortOrder order = Qt::AscendingOrder )
-QTableWidgetItem * takeHorizontalHeaderItem ( int column )
-QTableWidgetItem * takeItem ( int row, int column )
-QTableWidgetItem * takeVerticalHeaderItem ( int row )
+QTableWidgetItem * takeHorizontalHeaderItem ( int column ) [*A=1*]
+QTableWidgetItem * takeItem ( int row, int column )        [*A=1*]
+QTableWidgetItem * takeVerticalHeaderItem ( int row )      [*A=1*]
 QTableWidgetItem * verticalHeaderItem ( int row ) const
 int visualColumn ( int logicalColumn ) const
 QRect visualItemRect ( const QTableWidgetItem * item ) const
