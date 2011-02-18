@@ -1558,7 +1558,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiLen = 8;
                dbFieldInfo.uiDec = uiDec;
             }
-#ifdef ADS_CISTRING
+#if ADS_LIB_VERSION >= 710
             else if( pArea->iFileType == ADS_ADT && ! hb_strnicmp( szFieldType, "cicharacter", 2 ) )
             {
                dbFieldInfo.uiType = HB_FT_STRING;
@@ -1633,7 +1633,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiTypeExtended = ADS_LOGICAL;
                dbFieldInfo.uiLen = 1;
             }
-#ifdef ADS_LONGLONG
+#if ADS_LIB_VERSION >= 700
             else if( ! hb_strnicmp( szFieldType, "longlong", 3 ) )
             {
                dbFieldInfo.uiType = HB_FT_INTEGER;
@@ -1654,7 +1654,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiTypeExtended = ADS_MEMO;
                dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT ) ? 9 : ( uiLen == 4 ? 4 : 10 );
             }
-#ifdef ADS_MONEY
+#if ADS_LIB_VERSION >= 700
             else if( ! hb_strnicmp( szFieldType, "money", 3 ) || ( iNameLen == 1 && iData == 'Y' ) )
             {
                dbFieldInfo.uiType = HB_FT_CURRENCY;
@@ -1663,7 +1663,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiDec = 4;
             }
 #endif
-#ifdef ADS_MODTIME
+#if ADS_LIB_VERSION >= 800
             else if( pArea->iFileType == ADS_ADT &&
                      ( ! hb_strnicmp( szFieldType, "modtime", 3 ) || ( iNameLen == 1 && iData == '=' ) ) )
             {
@@ -1681,7 +1681,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             if( ( iNameLen == 1 && iData == 'I' ) || ! hb_strnicmp( szFieldType, "integer", 2 ) )
             {
                dbFieldInfo.uiType = HB_FT_INTEGER;
-#ifdef ADS_LONGLONG
+#if ADS_LIB_VERSION >= 700
                dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : ( uiLen == 8 ? 8 : 4 );
                dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 4 ? ADS_INTEGER :
                                             ( dbFieldInfo.uiLen == 2 ? ADS_SHORTINT : ADS_LONGLONG);
@@ -1815,7 +1815,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiTypeExtended = ADS_RAW;
                dbFieldInfo.uiFlags = HB_FF_BINARY;
             }
-#if ADS_ROWVERSION
+#if ADS_LIB_VERSION >= 800
             else if( pArea->iFileType == ADS_ADT &&
                      ( ! hb_strnicmp( szFieldType, "rowversion", 2 ) || ( iNameLen == 1 && iData == '^' ) ) )
             {
@@ -1991,7 +1991,7 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
                   hb_itemPutC( pItem, "RAW" );
                else if( pField->uiFlags & HB_FF_UNICODE )
                   hb_itemPutC( pItem, "NCHAR" );
-#ifdef ADS_CISTRING
+#if ADS_LIB_VERSION >= 710
                else if( pField->uiTypeExtended == ADS_CISTRING )
                   hb_itemPutC( pItem, "CICHARACTER" );
 #endif
@@ -2255,7 +2255,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
       }
       case HB_FT_INTEGER:
       {
-#ifdef ADS_LONGLONG
+#if ADS_LIB_VERSION >= 700
          if( pField->uiTypeExtended == ADS_LONGLONG )
          {
 #ifndef HB_LONG_LONG_OFF
@@ -2349,7 +2349,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             dVal = 0.0;
             pArea->area.fEof = HB_TRUE;
          }
-#ifdef ADS_MONEY /* Not defined below 7.00 */
+#if ADS_LIB_VERSION >= 700
          if( pField->uiTypeExtended == ADS_CURDOUBLE ||
              pField->uiTypeExtended == ADS_DOUBLE ||
              pField->uiTypeExtended == ADS_MONEY )
@@ -2997,7 +2997,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
                cType = "NChar";
                fUnicode = HB_TRUE;
             }
-#ifdef ADS_CISTRING
+#if ADS_LIB_VERSION >= 710
             else if( pField->uiTypeExtended == ADS_CISTRING )
                cType = "CICharacter";
 #endif
@@ -3023,7 +3023,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_INTEGER:
             if( pField->uiTypeExtended == ADS_SHORTINT )
                cType = "ShortInt";
-#ifdef ADS_LONGLONG
+#if ADS_LIB_VERSION >= 700
             else if( pField->uiTypeExtended == ADS_LONGLONG )
                cType = "Longlong";
 #endif
@@ -3546,7 +3546,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiFlags = HB_FF_BINARY;
             break;
 
-#ifdef ADS_CISTRING /* Not defined below 7.10 */
+#if ADS_LIB_VERSION >= 710
          case ADS_CISTRING:
             dbFieldInfo.uiType = HB_FT_STRING;
             break;
@@ -3570,7 +3570,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiDec = ( HB_USHORT ) usDecimals;
             break;
 
-#ifdef ADS_MONEY /* Not defined below 7.00 */
+#if ADS_LIB_VERSION >= 700
          case ADS_MONEY:
             dbFieldInfo.uiType = HB_FT_CURRENCY;
             AdsGetFieldDecimals( pArea->hTable, szName, &usDecimals );
@@ -3580,7 +3580,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
          case ADS_INTEGER:
          case ADS_SHORTINT:
-#ifdef ADS_LONGLONG
+#if ADS_LIB_VERSION >= 700
          case ADS_LONGLONG:
 #endif
             dbFieldInfo.uiType = HB_FT_INTEGER;
@@ -3594,17 +3594,21 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             break;
 
+#if ADS_LIB_VERSION >= 800
          case ADS_MODTIME:
             dbFieldInfo.uiType = HB_FT_MODTIME;
             break;
+#endif
 
          case ADS_AUTOINC:
             dbFieldInfo.uiType = HB_FT_AUTOINC;
             break;
 
+#if ADS_LIB_VERSION >= 800
          case ADS_ROWVERSION:
             dbFieldInfo.uiType = HB_FT_ROWVER;
             break;
+#endif
 
          case ADS_LOGICAL:
             dbFieldInfo.uiType = HB_FT_LOGICAL;
@@ -4149,8 +4153,10 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
            ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
            pucWhile, u32Options, ADS_DEFAULT, &hIndex);
 #else
-   u32RetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
+   u32RetVal = AdsCreateIndex( hTableOrIndex,
+           ( UNSIGNED8 * ) pOrderInfo->abBagName,
+           ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+           ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
            ( pArea->area.lpdbOrdCondInfo && pArea->area.lpdbOrdCondInfo->abFor ) ?
            ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
            pucWhile, u32Options, &hIndex);

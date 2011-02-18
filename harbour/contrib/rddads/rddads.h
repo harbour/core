@@ -105,25 +105,6 @@
    #define ADS_LIB_VERSION _ADS_LIB_VERSION
 #endif
 
-/* QUESTION: Why do we redefine this? Normally it is 4082 in 7.10 or upper and 256 in lower versions. [vszakats] */
-#undef ADS_MAX_KEY_LENGTH
-#if ADS_LIB_VERSION >= 800
-   #define ADS_MAX_KEY_LENGTH   4082   /* maximum key value length.  This is the max key length */
-#else                                  /* of ADI indexes.  Max CDX key length is 240.  Max */
-   #define ADS_MAX_KEY_LENGTH    256   /* NTX key length is 256 */
-#endif
-
-/* TOFIX: These should rather be guarded with ADS_LIB_VERSION than being defined here. [vszakats] */
-#ifndef ADS_CISTRING
-   #define ADS_CISTRING             20    /* CaSe INSensiTIVE character data (>= 7.10) */
-#endif
-#ifndef ADS_ROWVERSION
-   #define ADS_ROWVERSION           21    /* 8 byte integer, incremented for every update, unique to entire table (>= 8.00) */
-#endif
-#ifndef ADS_MODTIME
-   #define ADS_MODTIME              22    /* 8 byte timestamp, updated when record is updated (>= 8.00) */
-#endif
-
 HB_EXTERN_BEGIN
 
 #if ADS_LIB_VERSION >= 600
