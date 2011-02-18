@@ -186,7 +186,7 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
-int hbqt_IsObjectType( int iParam, unsigned int iType )
+int hbqt_IsObjectType( int iParam, HB_U32 iType )
 {
    PHB_ITEM pItem;
 

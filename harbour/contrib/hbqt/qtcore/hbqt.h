@@ -80,7 +80,7 @@ typedef struct
    void * ph;
    bool bNew;
    PHBQT_GC_FUNC func;
-   unsigned int type;
+   HB_U32 type;
 } HBQT_GC_T;
 
 typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments );
@@ -93,7 +93,7 @@ extern HB_EXPORT void * hbqt_gcpointer( int iParam );
 extern HB_EXPORT void * hbqt_detachgcpointer( int iParam );
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
-extern HB_EXPORT int hbqt_IsObjectType( int iParam, unsigned int iType );
+extern HB_EXPORT int hbqt_IsObjectType( int iParam, HB_U32 iType );
 extern HB_EXPORT void hbqt_errRT_ARG( void );
 
 HB_EXTERN_END

@@ -342,6 +342,8 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
       RETURN
    ENDIF
 
+   hb_GTInfo( HB_GTI_ICONRES, 1 )
+
    CLEAR SCREEN
    SET SCOREBOARD OFF
    GetList := {}

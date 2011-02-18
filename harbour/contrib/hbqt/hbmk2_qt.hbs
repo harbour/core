@@ -1361,7 +1361,7 @@ METHOD HbQtSource:build()
    NEXT
    aadd( aLine, "" )
    FOR EACH s IN ::hRef
-      aadd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( unsigned int ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + hb_asciiUpper( ::cQtModule ) + s:__enumKey() ), 8 ) + " )" )
+      aadd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( HB_U32 ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + hb_asciiUpper( ::cQtModule ) + s:__enumKey() ), 8 ) + " )" )
    NEXT
    aadd( aLine, "" )
    /*----------------------------------------------------------------------*/
@@ -1384,11 +1384,11 @@ METHOD HbQtSource:build()
           aadd( aLine, "   " + ::cQtObject + " * ph;"                    )
       ENDIF
    ENDIF
-   aadd( aLine, "   bool bNew;"                    )
-   aadd( aLine, "   PHBQT_GC_FUNC func;"           )
-   aadd( aLine, "   int type;"           )
+   aadd( aLine, "   bool bNew;"                     )
+   aadd( aLine, "   PHBQT_GC_FUNC func;"            )
+   aadd( aLine, "   HB_U32 type;"                   )
    aadd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
-   aadd( aLine, " "                               )
+   aadd( aLine, " "                                 )
 
    aadd( aLine, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cQtObject + " )"  )
    aadd( aLine, "{"                                     )
