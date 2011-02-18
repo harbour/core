@@ -250,7 +250,7 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
       SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
       CASE ".hbs"
       CASE ".prg"
-         cFile := hb_compileFromBuf( cFile, hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
+         cFile := hb_compileFromBuf( cFile, __hbrun_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
          IF cFile == NIL
             EXIT
          ENDIF

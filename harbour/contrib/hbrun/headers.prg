@@ -55,83 +55,81 @@
          #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
 
 FUNCTION __hbrun_CoreHeaderFiles()
-   LOCAL hHeaders
+   STATIC s_hHeaders
 
 #ifdef HBRUN_WITH_HEADERS
 
-   hHeaders := { => }
+   IF s_hHeaders == NIL
+      s_hHeaders := { => }
 
-   ADD HEADER TO hHeaders FILE "achoice.ch"
-   ADD HEADER TO hHeaders FILE "assert.ch"
-   ADD HEADER TO hHeaders FILE "blob.ch"
-   ADD HEADER TO hHeaders FILE "box.ch"
-   ADD HEADER TO hHeaders FILE "button.ch"
-   ADD HEADER TO hHeaders FILE "color.ch"
-   ADD HEADER TO hHeaders FILE "common.ch"
-   ADD HEADER TO hHeaders FILE "dbedit.ch"
-   ADD HEADER TO hHeaders FILE "dbinfo.ch"
-   ADD HEADER TO hHeaders FILE "dbstruct.ch"
-   ADD HEADER TO hHeaders FILE "directry.ch"
-   ADD HEADER TO hHeaders FILE "error.ch"
-   ADD HEADER TO hHeaders FILE "fileio.ch"
-   ADD HEADER TO hHeaders FILE "getexit.ch"
-   ADD HEADER TO hHeaders FILE "hb.ch"
-   ADD HEADER TO hHeaders FILE "hbclass.ch"
-   ADD HEADER TO hHeaders FILE "hbcom.ch"
-   ADD HEADER TO hHeaders FILE "hbdebug.ch"
-   ADD HEADER TO hHeaders FILE "hbdyn.ch"
-   ADD HEADER TO hHeaders FILE "hbextcdp.ch"
-   ADD HEADER TO hHeaders FILE "hbextern.ch"
-   ADD HEADER TO hHeaders FILE "hbextlng.ch"
-   ADD HEADER TO hHeaders FILE "hbgfx.ch"
-   ADD HEADER TO hHeaders FILE "hbgfxdef.ch"
-   ADD HEADER TO hHeaders FILE "hbgtinfo.ch"
-   ADD HEADER TO hHeaders FILE "hbhrb.ch"
-   ADD HEADER TO hHeaders FILE "hbinkey.ch"
-   ADD HEADER TO hHeaders FILE "hblang.ch"
-   ADD HEADER TO hHeaders FILE "hblpp.ch"
-   ADD HEADER TO hHeaders FILE "hbmacro.ch"
-   ADD HEADER TO hHeaders FILE "hbmath.ch"
-   ADD HEADER TO hHeaders FILE "hbmemory.ch"
-   ADD HEADER TO hHeaders FILE "hbmemvar.ch"
-   ADD HEADER TO hHeaders FILE "hboo.ch"
-   ADD HEADER TO hHeaders FILE "hbpers.ch"
-   ADD HEADER TO hHeaders FILE "hbsetup.ch"
-   ADD HEADER TO hHeaders FILE "hbsix.ch"
-   ADD HEADER TO hHeaders FILE "hbsocket.ch"
-   ADD HEADER TO hHeaders FILE "hbstdgen.ch"
-   ADD HEADER TO hHeaders FILE "hbsxdef.ch"
-   ADD HEADER TO hHeaders FILE "hbthread.ch"
-   ADD HEADER TO hHeaders FILE "hbtrace.ch"
-   ADD HEADER TO hHeaders FILE "hbusrrdd.ch"
-   ADD HEADER TO hHeaders FILE "hbver.ch"
-   ADD HEADER TO hHeaders FILE "hbzlib.ch"
-   ADD HEADER TO hHeaders FILE "inkey.ch"
-   ADD HEADER TO hHeaders FILE "memoedit.ch"
-   ADD HEADER TO hHeaders FILE "ord.ch"
-   ADD HEADER TO hHeaders FILE "rddsys.ch"
-   ADD HEADER TO hHeaders FILE "reserved.ch"
-   ADD HEADER TO hHeaders FILE "set.ch"
-   ADD HEADER TO hHeaders FILE "setcurs.ch"
-   ADD HEADER TO hHeaders FILE "simpleio.ch"
-   ADD HEADER TO hHeaders FILE "std.ch"
-   ADD HEADER TO hHeaders FILE "tbrowse.ch"
-   ADD HEADER TO hHeaders FILE "harbour.hbx"
-   ADD HEADER TO hHeaders FILE "hbcpage.hbx"
-   ADD HEADER TO hHeaders FILE "hblang.hbx"
-   ADD HEADER TO hHeaders FILE "hbscalar.hbx"
-   ADD HEADER TO hHeaders FILE "hbusrrdd.hbx"
+      ADD HEADER TO s_hHeaders FILE "achoice.ch"
+      ADD HEADER TO s_hHeaders FILE "assert.ch"
+      ADD HEADER TO s_hHeaders FILE "blob.ch"
+      ADD HEADER TO s_hHeaders FILE "box.ch"
+      ADD HEADER TO s_hHeaders FILE "button.ch"
+      ADD HEADER TO s_hHeaders FILE "color.ch"
+      ADD HEADER TO s_hHeaders FILE "common.ch"
+      ADD HEADER TO s_hHeaders FILE "dbedit.ch"
+      ADD HEADER TO s_hHeaders FILE "dbinfo.ch"
+      ADD HEADER TO s_hHeaders FILE "dbstruct.ch"
+      ADD HEADER TO s_hHeaders FILE "directry.ch"
+      ADD HEADER TO s_hHeaders FILE "error.ch"
+      ADD HEADER TO s_hHeaders FILE "fileio.ch"
+      ADD HEADER TO s_hHeaders FILE "getexit.ch"
+      ADD HEADER TO s_hHeaders FILE "hb.ch"
+      ADD HEADER TO s_hHeaders FILE "hbclass.ch"
+      ADD HEADER TO s_hHeaders FILE "hbcom.ch"
+      ADD HEADER TO s_hHeaders FILE "hbdebug.ch"
+      ADD HEADER TO s_hHeaders FILE "hbdyn.ch"
+      ADD HEADER TO s_hHeaders FILE "hbextcdp.ch"
+      ADD HEADER TO s_hHeaders FILE "hbextern.ch"
+      ADD HEADER TO s_hHeaders FILE "hbextlng.ch"
+      ADD HEADER TO s_hHeaders FILE "hbgfx.ch"
+      ADD HEADER TO s_hHeaders FILE "hbgfxdef.ch"
+      ADD HEADER TO s_hHeaders FILE "hbgtinfo.ch"
+      ADD HEADER TO s_hHeaders FILE "hbhrb.ch"
+      ADD HEADER TO s_hHeaders FILE "hbinkey.ch"
+      ADD HEADER TO s_hHeaders FILE "hblang.ch"
+      ADD HEADER TO s_hHeaders FILE "hblpp.ch"
+      ADD HEADER TO s_hHeaders FILE "hbmacro.ch"
+      ADD HEADER TO s_hHeaders FILE "hbmath.ch"
+      ADD HEADER TO s_hHeaders FILE "hbmemory.ch"
+      ADD HEADER TO s_hHeaders FILE "hbmemvar.ch"
+      ADD HEADER TO s_hHeaders FILE "hboo.ch"
+      ADD HEADER TO s_hHeaders FILE "hbpers.ch"
+      ADD HEADER TO s_hHeaders FILE "hbsetup.ch"
+      ADD HEADER TO s_hHeaders FILE "hbsix.ch"
+      ADD HEADER TO s_hHeaders FILE "hbsocket.ch"
+      ADD HEADER TO s_hHeaders FILE "hbstdgen.ch"
+      ADD HEADER TO s_hHeaders FILE "hbsxdef.ch"
+      ADD HEADER TO s_hHeaders FILE "hbthread.ch"
+      ADD HEADER TO s_hHeaders FILE "hbtrace.ch"
+      ADD HEADER TO s_hHeaders FILE "hbusrrdd.ch"
+      ADD HEADER TO s_hHeaders FILE "hbver.ch"
+      ADD HEADER TO s_hHeaders FILE "hbzlib.ch"
+      ADD HEADER TO s_hHeaders FILE "inkey.ch"
+      ADD HEADER TO s_hHeaders FILE "memoedit.ch"
+      ADD HEADER TO s_hHeaders FILE "ord.ch"
+      ADD HEADER TO s_hHeaders FILE "rddsys.ch"
+      ADD HEADER TO s_hHeaders FILE "reserved.ch"
+      ADD HEADER TO s_hHeaders FILE "set.ch"
+      ADD HEADER TO s_hHeaders FILE "setcurs.ch"
+      ADD HEADER TO s_hHeaders FILE "simpleio.ch"
+      ADD HEADER TO s_hHeaders FILE "std.ch"
+      ADD HEADER TO s_hHeaders FILE "tbrowse.ch"
+      ADD HEADER TO s_hHeaders FILE "harbour.hbx"
+      ADD HEADER TO s_hHeaders FILE "hbcpage.hbx"
+      ADD HEADER TO s_hHeaders FILE "hblang.hbx"
+      ADD HEADER TO s_hHeaders FILE "hbscalar.hbx"
+      ADD HEADER TO s_hHeaders FILE "hbusrrdd.hbx"
 
-   #if defined( __PLATFORM__UNIX )
-      hb_HCaseMatch( hHeaders, .T. )
-   #else
-      hb_HCaseMatch( hHeaders, .F. )
-   #endif
-
-#else
-
-   hHeaders := NIL
+      #if defined( __PLATFORM__UNIX )
+         hb_HCaseMatch( s_hHeaders, .T. )
+      #else
+         hb_HCaseMatch( s_hHeaders, .F. )
+      #endif
+   ENDIF
 
 #endif /* HBRUN_WITH_HEADERS */
 
-   RETURN hHeaders
+   RETURN s_hHeaders
