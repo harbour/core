@@ -1998,55 +1998,55 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
                else
                   hb_itemPutC( pItem, "C" );
                break;
-       
+
             case HB_FT_LOGICAL:
                hb_itemPutC( pItem, "L" );
                break;
-       
+
             case HB_FT_DATE:
                hb_itemPutC( pItem, "D" );
                break;
-       
+
             case HB_FT_LONG:
                hb_itemPutC( pItem, "N" );
                break;
-       
+
             case HB_FT_INTEGER:
                hb_itemPutC( pItem, "I" );
                break;
-       
+
             case HB_FT_DOUBLE:
                hb_itemPutC( pItem, "B" );
                break;
-       
+
             case HB_FT_TIME:
                hb_itemPutC( pItem, "T" );
                break;
-       
+
             case HB_FT_TIMESTAMP:
                hb_itemPutC( pItem, "@" );
                break;
-       
+
             case HB_FT_MODTIME:
                hb_itemPutC( pItem, "=" );
                break;
-       
+
             case HB_FT_ROWVER:
                hb_itemPutC( pItem, "^" );
                break;
-       
+
             case HB_FT_AUTOINC:
                hb_itemPutC( pItem, "+" );
                break;
-       
+
             case HB_FT_CURRENCY:
                hb_itemPutC( pItem, "Y" );
                break;
-       
+
             case HB_FT_CURDOUBLE:
                hb_itemPutC( pItem, "Z" );
                break;
-       
+
             case HB_FT_VARLENGTH:
                if( pField->uiFlags & HB_FF_BINARY )
                   hb_itemPutC( pItem, "VARBINARY" );
@@ -2055,22 +2055,22 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
                else
                   hb_itemPutC( pItem, "Q" );
                break;
-       
+
             case HB_FT_MEMO:
                if( pField->uiFlags & HB_FF_UNICODE )
                   hb_itemPutC( pItem, "NMEMO" );
                else
                   hb_itemPutC( pItem, "M" );
                break;
-       
+
             case HB_FT_IMAGE:
                hb_itemPutC( pItem, "P" );
                break;
-       
+
             case HB_FT_BLOB:
                hb_itemPutC( pItem, "W" );
                break;
-       
+
             default:
                hb_itemPutC( pItem, "U" );
                break;
@@ -5390,9 +5390,7 @@ HB_FUNC( ADS ) { ; }
 HB_FUNC( ADSADT ) { ; }
 HB_FUNC( ADSNTX ) { ; }
 HB_FUNC( ADSCDX ) { ; }
-#if ADS_LIB_VERSION >= 900
 HB_FUNC( ADSVFP ) { ; }
-#endif
 
 static void hb_adsRddInit( void * cargo )
 {
