@@ -1313,7 +1313,7 @@ METHOD HbQtSource:build()
    ENDIF
    IF !empty( ::cmntd_ )
       aadd( aLine, " *  " )
-      aadd( aLine, " *  " + "*** Commented out protostypes ***" )
+      aadd( aLine, " *  " + "*** Commented out prototypes ***" )
       aadd( aLine, " *  " )
       aeval( ::cmntd_, {|e| aadd( aLine, " *  " + e ) } )
    ENDIF

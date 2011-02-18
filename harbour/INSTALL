@@ -1683,7 +1683,7 @@ HARBOUR
       http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
 
    Source Repository Checkout (anonymous) [needs Subversion]:
-      svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+      svn co http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 
    Miscellaneous documents:
       /doc subdirectory under this directory.
