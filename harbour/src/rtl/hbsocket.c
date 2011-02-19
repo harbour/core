@@ -3094,7 +3094,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
       int iResult;
 
       hb_vmUnlock();
-      iResult = getnameinfo( pSockAddr, len, szHost, NI_MAXHOST, NULL, 0, 0 );
+      iResult = getnameinfo( ( const struct sockaddr * ) pSockAddr, len, szHost, NI_MAXHOST, NULL, 0, 0 );
       hb_vmLock();
       if( iResult == 0 )
          szResult = hb_strdup( szHost );
