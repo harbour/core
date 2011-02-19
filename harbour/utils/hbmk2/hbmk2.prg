@@ -8668,13 +8668,6 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
    RETURN cFileName
 
-STATIC FUNCTION hb_FNameDir( cFileName )
-   LOCAL cDir
-
-   hb_FNameSplit( cFileName, @cDir )
-
-   RETURN cDir
-
 /* Remove all extensions from name */
 STATIC FUNCTION FNameNameGetNoExt( cFileName )
    LOCAL cName := cFileName
