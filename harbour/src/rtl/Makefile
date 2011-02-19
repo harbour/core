@@ -83,6 +83,7 @@ C_SOURCES := \
    hbdynhb.c \
    hbfeof.c \
    hbfile.c \
+   hbfilehc.c \
    hbgtcore.c \
    hbhex.c \
    hbi18n1.c \
