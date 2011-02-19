@@ -274,8 +274,11 @@ METHOD IdeHarbourHelp:clear()
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Path"
-         a_[ 3 ]:removeChild( a_[ 1 ] )
-         a_[ 1 ] := NIL ; a_[ 3 ] := NIL
+         IF hb_isObject( a_[ 3 ] )
+            a_[ 3 ]:removeChild( a_[ 1 ] )
+            a_[ 3 ] := NIL
+         ENDIF
+         a_[ 1 ] := NIL
       ENDIF
    NEXT
    IF !empty( ::aNodes )
@@ -808,7 +811,7 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
 METHOD IdeHarbourHelp:pullDefinitionsHBD( cFileHBD )
 
    IF hb_fileExists( cFileHBD )
-      doc2functions( __hbdoc_LoadHBD( cFileHBD ) )
+      RETURN doc2functions( __hbdoc_LoadHBD( cFileHBD ) )
    ENDIF
 
    RETURN {}

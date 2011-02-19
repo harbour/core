@@ -59,7 +59,7 @@ bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )
 virtual bool insertRows ( int row, int count, const QModelIndex & parent = QModelIndex() )
 virtual QMap<int, QVariant> itemData ( const QModelIndex & index ) const
 // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
-// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const [*A=1*]
 virtual QStringList mimeTypes () const
 virtual QModelIndex parent ( const QModelIndex & index ) const = 0
 bool removeColumn ( int column, const QModelIndex & parent = QModelIndex() )

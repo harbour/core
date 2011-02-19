@@ -51,8 +51,8 @@ enum ItemType { Type, UserType }
 </ENUMS>
 
 <PROTOS>
-void addChild ( QTreeWidgetItem * child )   [*D=1*]
-void addChildren ( const QList<QTreeWidgetItem *> & children )
+void addChild ( QTreeWidgetItem * child )                                     [*D=1*]
+void addChildren ( const QList<QTreeWidgetItem *> & children )                [*D=1*]
 QBrush background ( int column ) const
 Qt::CheckState checkState ( int column ) const
 QTreeWidgetItem * child ( int index ) const
@@ -75,7 +75,7 @@ bool isHidden () const
 bool isSelected () const
 QTreeWidgetItem * parent () const
 virtual void read ( QDataStream & in )
-void removeChild ( QTreeWidgetItem * child )
+void removeChild ( QTreeWidgetItem * child )                                  [*A=1*]
 void setBackground ( int column, const QBrush & brush )
 void setCheckState ( int column, Qt::CheckState state )
 void setChildIndicatorPolicy ( QTreeWidgetItem::ChildIndicatorPolicy policy )
@@ -98,8 +98,8 @@ void setWhatsThis ( int column, const QString & whatsThis )
 QSize sizeHint ( int column ) const
 void sortChildren ( int column, Qt::SortOrder order )
 QString statusTip ( int column ) const
-QTreeWidgetItem * takeChild ( int index ) [*A=1*]
-QList<QTreeWidgetItem *> takeChildren ()
+QTreeWidgetItem * takeChild ( int index )                                     [*A=1*]
+QList<QTreeWidgetItem *> takeChildren ()                                      [*A=1*]
 QString text ( int column ) const
 int textAlignment ( int column ) const
 QString toolTip ( int column ) const
