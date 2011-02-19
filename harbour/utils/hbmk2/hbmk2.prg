@@ -533,7 +533,7 @@ PROCEDURE _APPMAIN( ... )
 
    LOCAL aArgsTarget
    LOCAL nTarget
-   LOCAL nTargetTODO
+   LOCAL nTargetTO_DO
    LOCAL nTargetPos
    LOCAL lHadTarget
 
@@ -612,7 +612,7 @@ PROCEDURE _APPMAIN( ... )
 
    lOldExact := Set( _SET_EXACT, .F. )
 
-   nTargetTODO := 1
+   nTargetTO_DO := 1
    DO WHILE .T.
 
       aArgsTarget := {}
@@ -626,25 +626,25 @@ PROCEDURE _APPMAIN( ... )
               Lower( hb_FNameExt( tmp ) ) == ".hbp" .AND. ;
               ! lHadTarget
             ++nTarget
-            IF nTarget == nTargetTODO
+            IF nTarget == nTargetTO_DO
                AAdd( aArgsTarget, tmp )
                nTargetPos := Len( aArgsTarget )
             ENDIF
          CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
             ++nTarget
-            IF nTarget == nTargetTODO
+            IF nTarget == nTargetTO_DO
                AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
                nTargetPos := Len( aArgsTarget )
             ENDIF
          OTHERWISE
-            IF ! lHadTarget .OR. nTarget == nTargetTODO
+            IF ! lHadTarget .OR. nTarget == nTargetTO_DO
                AAdd( aArgsTarget, tmp )
             ENDIF
          ENDCASE
       NEXT
 
       /* Exit if there was no more targets found on the command line */
-      IF nTarget < nTargetTODO .AND. nTargetTODO != 1
+      IF nTarget < nTargetTO_DO .AND. nTargetTO_DO != 1
          EXIT
       ENDIF
 
@@ -656,7 +656,7 @@ PROCEDURE _APPMAIN( ... )
          EXIT
       ENDIF
 
-      ++nTargetTODO
+      ++nTargetTO_DO
    ENDDO
 
    Set( _SET_EXACT, lOldExact )
@@ -910,7 +910,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cDL_Version_Alter
    LOCAL cDL_Version
 
-   LOCAL aTODO
+   LOCAL aTO_DO
    LOCAL aThreads
    LOCAL thread
 
@@ -4988,17 +4988,17 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* Use integrated compiler */
 
          aThreads := {}
-         FOR EACH aTODO IN ArraySplit( l_aPRG_TO_DO, l_nJOBS )
+         FOR EACH aTO_DO IN ArraySplit( l_aPRG_TO_DO, l_nJOBS )
             aCommand := ArrayAJoin( { { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
-                                      aTODO,;
+                                      aTO_DO,;
                                       iif( hbmk[ _HBMK_lBLDFLGP ], { hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
                                       ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                       hbmk[ _HBMK_aOPTPRG ] } )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
-                  IF Len( aTODO:__enumBase() ) > 1
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour compiler command (embedded) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
+                  IF Len( aTO_DO:__enumBase() ) > 1
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour compiler command (embedded) job #%1$s:" ), hb_ntos( aTO_DO:__enumIndex() ) ) )
                   ELSE
                      hbmk_OutStd( hbmk, I_( "Harbour compiler command (embedded):" ) )
                   ENDIF
@@ -5008,7 +5008,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ]
-               IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
+               IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
                   AAdd( aThreads, { hb_threadStart( @hb_compile(), "harbour", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
@@ -5750,11 +5750,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF "{IC}" $ cOpt_CompC
 
                      aThreads := {}
-                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
-                        IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
-                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
+                     FOR EACH aTO_DO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
+                        IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
+                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
                         ELSE
-                           IF ! CompileCLoop( hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
+                           IF ! CompileCLoop( hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
                                  hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                                  EXIT
@@ -5791,17 +5791,17 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      ENDIF
 
                      aThreads := {}
-                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
+                     FOR EACH aTO_DO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
 
                         IF lCHD_Comp
                            /* Convert source filenames relative to the target dir */
-                           tmp := AClone( aTODO )
+                           tmp := AClone( aTO_DO )
                            FOR EACH tmp1 IN tmp
                               tmp1 := hb_PathNormalize( PathMakeAbsolute( tmp1, tmp2 ) )
                            NEXT
                            cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( tmp,, nOpt_Esc, nOpt_FNF ) ) )
                         ELSE
-                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc, nOpt_FNF ) ) )
+                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTO_DO,, nOpt_Esc, nOpt_FNF ) ) )
                         ENDIF
 
                         /* Handle moving the whole command line to a script, if requested. */
@@ -5821,8 +5821,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                         IF hbmk[ _HBMK_lTRACE ]
                            IF ! hbmk[ _HBMK_lQuiet ]
-                              IF Len( aTODO:__enumBase() ) > 1
-                                 hbmk_OutStd( hbmk, hb_StrFormat( I_( "C/C++ compiler command job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
+                              IF Len( aTO_DO:__enumBase() ) > 1
+                                 hbmk_OutStd( hbmk, hb_StrFormat( I_( "C/C++ compiler command job #%1$s:" ), hb_ntos( aTO_DO:__enumIndex() ) ) )
                               ELSE
                                  hbmk_OutStd( hbmk, I_( "C/C++ compiler command:" ) )
                               ENDIF
@@ -5835,7 +5835,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         ENDIF
 
                         IF ! hbmk[ _HBMK_lDONTEXEC ]
-                           IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
+                           IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
                               AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
                            ELSE
                               IF ( tmp := hb_processRun( cCommand ) ) != 0
@@ -6764,7 +6764,7 @@ STATIC PROCEDURE DoBeep( lSuccess )
 
    RETURN
 
-STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
+STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
    LOCAL lResult := .T.
    LOCAL cCommand
    LOCAL tmp, tmp1
@@ -6772,7 +6772,7 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cObjExt, nOpt
    LOCAL lOutputSpecified
    LOCAL cOutputFile
 
-   FOR EACH tmp IN aTODO
+   FOR EACH tmp IN aTO_DO
 
       cCommand := cOpt_CompC
 
