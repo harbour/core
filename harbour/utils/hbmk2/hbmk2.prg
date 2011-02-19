@@ -771,11 +771,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cHB_INSTALL_INC
    LOCAL l_cHB_INSTALL_ADD
 
-   LOCAL l_aPRG_TODO
-   LOCAL l_aC_TODO
-   LOCAL l_aCPP_TODO
-   LOCAL l_aCGEN_TODO
-   LOCAL l_aRESSRC_TODO
+   LOCAL l_aPRG_TO_DO
+   LOCAL l_aC_TO_DO
+   LOCAL l_aCPP_TO_DO
+   LOCAL l_aCGEN_TO_DO
+   LOCAL l_aRESSRC_TO_DO
    LOCAL l_aLIBSHARED
    LOCAL l_aLIBSHAREDPOST := {}
    LOCAL l_aLIB
@@ -4805,7 +4805,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
-         l_aC_TODO := {}
+         l_aC_TO_DO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: C %1$s %2$s", tmp, FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) )
@@ -4815,11 +4815,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) ) .OR. ;
                hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
-               AAdd( l_aC_TODO, tmp )
+               AAdd( l_aC_TO_DO, tmp )
             ENDIF
          NEXT
       ELSE
-         l_aC_TODO := AClone( hbmk[ _HBMK_aC ] )
+         l_aC_TO_DO := AClone( hbmk[ _HBMK_aC ] )
       ENDIF
    ENDIF
 
@@ -4828,7 +4828,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
-         l_aCPP_TODO := {}
+         l_aCPP_TO_DO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aCPP ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: C++ %1$s %2$s", tmp, FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) )
@@ -4838,11 +4838,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompCPP ) ) .OR. ;
                hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
-               AAdd( l_aCPP_TODO, tmp )
+               AAdd( l_aCPP_TO_DO, tmp )
             ENDIF
          NEXT
       ELSE
-         l_aCPP_TODO := AClone( hbmk[ _HBMK_aCPP ] )
+         l_aCPP_TO_DO := AClone( hbmk[ _HBMK_aCPP ] )
       ENDIF
    ENDIF
 
@@ -4870,7 +4870,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cHarbourOutputExt := ".c"
             cHarbourOutputDir := hbmk[ _HBMK_cWorkDir ]
          ENDIF
-         l_aPRG_TODO := {}
+         l_aPRG_TO_DO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
             IF LEFTEQUAL( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
                tmp3 := SubStr( tmp, 2 )
@@ -4887,7 +4887,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) ) .OR.;
                checkDepTime( hbmk, tmp4, tmp2 )
-               AAdd( l_aPRG_TODO, tmp )
+               AAdd( l_aPRG_TO_DO, tmp )
             ENDIF
          NEXT
       ELSE
@@ -4897,7 +4897,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             NEXT
          ENDIF
 
-         l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
+         l_aPRG_TO_DO := hbmk[ _HBMK_aPRG ]
       ENDIF
 
       IF ! Empty( hbmk[ _HBMK_hAUTOHBCFOUND ] )
@@ -4911,7 +4911,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
       ENDIF
    ELSE
-      l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
+      l_aPRG_TO_DO := hbmk[ _HBMK_aPRG ]
    ENDIF
 
    /* Dump hbmk2 build information */
@@ -4965,10 +4965,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Harbour compilation */
 
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Empty( l_aPRG_TODO ) .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lINC ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C .AND. ;
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Empty( l_aPRG_TO_DO ) .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lINC ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C .AND. ;
       hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ]
       hbmk_OutStd( hbmk, I_( "Target(s) up to date." ) )
-   ELSEIF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+   ELSEIF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Len( l_aPRG_TO_DO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Compiling Harbour sources..." ) )
@@ -4988,7 +4988,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* Use integrated compiler */
 
          aThreads := {}
-         FOR EACH aTODO IN ArraySplit( l_aPRG_TODO, l_nJOBS )
+         FOR EACH aTODO IN ArraySplit( l_aPRG_TO_DO, l_nJOBS )
             aCommand := ArrayAJoin( { { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
                                       aTODO,;
                                       iif( hbmk[ _HBMK_lBLDFLGP ], { hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
@@ -5060,7 +5060,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cCommand := FNameEscape( hb_DirSepAdd( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      " " + iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE, "-n", "-n2" ) ) +;
-                     " " + ArrayToList( l_aPRG_TODO,, hbmk[ _HBMK_nCmd_Esc ] ) +;
+                     " " + ArrayToList( l_aPRG_TO_DO,, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      iif( hbmk[ _HBMK_lBLDFLGP ], " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
                      iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                      iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
@@ -5262,7 +5262,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutStd( cFile )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aC ], l_cCSTUB )
-                  AAdd( l_aC_TODO, l_cCSTUB )
+                  AAdd( l_aC_TO_DO, l_cCSTUB )
                ELSE
                   hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
@@ -5370,7 +5370,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutStd( cFile )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aCPP ], l_cCPPSTUB )
-                  AAdd( l_aCPP_TODO, l_cCPPSTUB )
+                  AAdd( l_aCPP_TO_DO, l_cCPPSTUB )
                ELSE
                   hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
@@ -5477,7 +5477,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       hbmk[ _HBMK_aOBJUSER ] := ListCook( hbmk[ _HBMK_aOBJUSER ], cObjExt )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
-         l_aRESSRC_TODO := {}
+         l_aRESSRC_TO_DO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aRESSRC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: RESSRC %1$s %2$s", tmp, FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ) ) )
@@ -5487,11 +5487,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) ) .OR. ;
                hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ) ) == 0
-               AAdd( l_aRESSRC_TODO, tmp )
+               AAdd( l_aRESSRC_TO_DO, tmp )
             ENDIF
          NEXT
       ELSE
-         l_aRESSRC_TODO := AClone( hbmk[ _HBMK_aRESSRC ] )
+         l_aRESSRC_TO_DO := AClone( hbmk[ _HBMK_aRESSRC ] )
       ENDIF
 
       IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C .AND. ! hbmk[ _HBMK_lCLEAN ]
@@ -5500,8 +5500,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                RebuildPO( hbmk, ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ) )
             ENDIF
          ELSE
-            IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. Len( l_aPRG_TODO ) > 0
-               UpdatePO( hbmk, ListDirExt( l_aPRG_TODO, hbmk[ _HBMK_cWorkDir ], ".pot", .T. ) )
+            IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. Len( l_aPRG_TO_DO ) > 0
+               UpdatePO( hbmk, ListDirExt( l_aPRG_TO_DO, hbmk[ _HBMK_cWorkDir ], ".pot", .T. ) )
             ENDIF
          ENDIF
 
@@ -5573,7 +5573,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   OutStd( cFile )
                ENDIF
                hb_AIns( hbmk[ _HBMK_aRESSRC ], 1, l_cRESSTUB, .T. )
-               AAdd( l_aRESSRC_TODO, l_cRESSTUB )
+               AAdd( l_aRESSRC_TO_DO, l_cRESSTUB )
             ELSE
                hbmk_OutErr( hbmk, I_( "Warning: Stub helper .rc file could not be created." ) )
             ENDIF
@@ -5590,7 +5590,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ASize( hbmk[ _HBMK_aRESSRC ], 0 )
       ENDIF
 
-      IF Len( l_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! hbmk[ _HBMK_lCLEAN ]
+      IF Len( l_aRESSRC_TO_DO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! hbmk[ _HBMK_lCLEAN ]
 
          PlugIn_Execute_All( hbmk, "pre_res" )
 
@@ -5608,7 +5608,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF "{IR}" $ cOpt_Res
 
-            FOR EACH tmp IN l_aRESSRC_TODO
+            FOR EACH tmp IN l_aRESSRC_TO_DO
 
                cCommand := cOpt_Res
                cCommand := StrTran( cCommand, "{IR}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
@@ -5635,7 +5635,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             NEXT
          ELSE
-            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TODO,, nOpt_Esc, nOpt_FNF ) )
+            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TO_DO,, nOpt_Esc, nOpt_FNF ) )
 
             cOpt_Res := AllTrim( cOpt_Res )
 
@@ -5684,7 +5684,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
 
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
-            l_aPRG_TODO := {}
+            l_aPRG_TO_DO := {}
 
             FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
                IF LEFTEQUAL( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
@@ -5702,11 +5702,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   tmp1 > tmp2 .OR. ;
                   hb_FSize( tmp4 ) == 0 .OR. ;
                   checkDepTime( hbmk, tmp4, tmp2 )
-                  AAdd( l_aPRG_TODO, tmp )
+                  AAdd( l_aPRG_TO_DO, tmp )
                ENDIF
             NEXT
          ELSE
-            l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
+            l_aPRG_TO_DO := hbmk[ _HBMK_aPRG ]
          ENDIF
       ENDIF
 
@@ -5717,14 +5717,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          FOR EACH tmp3 IN { _CCOMP_PASS_C, _CCOMP_PASS_CPP }
 
             IF tmp3 == _CCOMP_PASS_C
-               l_aCGEN_TODO := ArrayJoin( ListDirExt( l_aPRG_TODO, hbmk[ _HBMK_cWorkDir ], ".c", .T. ), l_aC_TODO )
+               l_aCGEN_TO_DO := ArrayJoin( ListDirExt( l_aPRG_TO_DO, hbmk[ _HBMK_cWorkDir ], ".c", .T. ), l_aC_TO_DO )
                cBin_CompCGEN := cBin_CompC
             ELSE
-               l_aCGEN_TODO := AClone( l_aCPP_TODO )
+               l_aCGEN_TO_DO := AClone( l_aCPP_TO_DO )
                cBin_CompCGEN := cBin_CompCPP
             ENDIF
 
-            IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. Len( l_aCGEN_TODO ) > 0
+            IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. Len( l_aCGEN_TO_DO ) > 0
 
                IF ! Empty( cBin_CompCGEN )
 
@@ -5750,7 +5750,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF "{IC}" $ cOpt_CompC
 
                      aThreads := {}
-                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
+                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
                         IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                            AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                         ELSE
@@ -5791,7 +5791,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      ENDIF
 
                      aThreads := {}
-                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
+                     FOR EACH aTODO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
 
                         IF lCHD_Comp
                            /* Convert source filenames relative to the target dir */
@@ -10226,7 +10226,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
    LOCAL tPO
    LOCAL cLNG
    LOCAL tLNG
-   LOCAL aPO_TODO
+   LOCAL aPO_TO_DO
    LOCAL lUpdateNeeded
 
    LOCAL aNew := {}
@@ -10246,18 +10246,18 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
          tLNG := NIL
          hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
          lUpdateNeeded := .F.
-         aPO_TODO := {}
+         aPO_TO_DO := {}
          FOR EACH cPO IN hbmk[ _HBMK_aPO ]
             IF tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG )
                lUpdateNeeded := .T.
             ENDIF
-            AAdd( aPO_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
+            AAdd( aPO_TO_DO, StrTran( cPO, _LNG_MARKER, cLNG ) )
          NEXT
          IF lUpdateNeeded
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TO_DO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHBL( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            GenHBL( hbmk, aPO_TO_DO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
          ENDIF
       NEXT
