@@ -1413,7 +1413,7 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
 
    HB_GENC_LABEL();
 
-   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], nLen, -1 );
+   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 4 ], nLen, -1 );
 
    return 5 + nLen;
 }
@@ -1424,7 +1424,7 @@ static HB_GENC_FUNC( hb_p_pushstrhidden )
 
    HB_GENC_LABEL();
 
-   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 3 ], nLen,
+   hb_compGenCStrData( cargo->yyc, &pFunc->pCode[ nPCodePos + 4 ], nLen,
                        pFunc->pCode[ nPCodePos + 1 ] );
 
    return 4 + nLen;
