@@ -3,12 +3,12 @@
  */
 
 /*
- * xHarbour Project source code:
- *   CT3 numeric functions
+ * Harbour Project source code:
+ *   CT3 string functions: NUMLINE()
  *
- * NUMLINE()
+ * Copyright 2011 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
- * www - http://www.xharbour.org
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,28 +59,23 @@ HB_FUNC( NUMLINE )
 
    if( HB_ISCHAR( 1 ) )
    {
-      const char * pcString = hb_parc( 1 );
-      const char * pBuffer;
       HB_ISIZ nStrLen = hb_parclen( 1 );
-      HB_ISIZ nLength = hb_parnsdef( 2, 80 );
+      const char * pcString = hb_parc( 1 );
+      HB_ISIZ nLineLength = hb_parnsdef( 2, 80 );
 
       while( nStrLen > 0 )
       {
-         pBuffer = ( char * ) memchr( pcString, 13, nStrLen );
-         if( ! pBuffer )
-            pBuffer = pcString + nStrLen;
+         const char * pBuffer = ( const char * ) memchr( pcString, HB_CHAR_LF, nStrLen );
 
-         if( ( pBuffer - pcString ) > nLength )
-            pBuffer = pcString + nLength;
+         if( ! pBuffer || ( pBuffer - pcString ) > nLineLength )
+            pBuffer = pcString + nLineLength;
          else
-         {
             ++pBuffer;
-            if( *pBuffer == 10 )
-               ++pBuffer;
-         }
          nStrLen -= pBuffer - pcString;
          pcString = pBuffer;
          ++nLines;
+         if( nStrLen == 0 )
+            ++nLines;
       }
    }
 
