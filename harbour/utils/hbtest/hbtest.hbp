@@ -4,10 +4,6 @@
 
 -q0 -w3 -es2 -kmo
 
--ldflag={allmsvc}-nxcompat
--ldflag={allmsvc}-dynamicbase
--ldflag={allmsvc}-fixed:no
-
 hbtest.prg
 rt_array.prg
 rt_date.prg

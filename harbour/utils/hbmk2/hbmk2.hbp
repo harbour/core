@@ -4,10 +4,6 @@
 
 -q0 -w3 -es2 -kmo -l
 
--ldflag={allmsvc}-nxcompat
--ldflag={allmsvc}-dynamicbase
--ldflag={allmsvc}-fixed:no
-
 {HB_HAS_GPM}-prgflag=-DHB_HAS_GPM
 {HB_HAS_WATT}-prgflag=-DHB_HAS_WATT
 

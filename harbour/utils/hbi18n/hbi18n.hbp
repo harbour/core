@@ -4,9 +4,5 @@
 
 -q0 -w3 -es2 -kmo -l
 
--ldflag={allmsvc}-nxcompat
--ldflag={allmsvc}-dynamicbase
--ldflag={allmsvc}-fixed:no
-
 -nulrdd
 hbi18n.prg

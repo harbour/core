@@ -11,10 +11,6 @@
 
 -head=dep
 
--ldflag={win&allmsvc}-nxcompat
--ldflag={win&allmsvc}-dynamicbase
--ldflag={win&allmsvc}-fixed:no
-
 -cflag=-Zm200{wce&allmsvc}
 
 # required by some plugins (f.e. netio management console)
