@@ -51,6 +51,7 @@
 "{_HB_BUILD_LIBDYN&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
 "{_HB_BUILD_LIBDYN&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
 "{_HB_BUILD_LIBDYN&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
+"{_HB_BUILD_LIBDYN&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
 
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here

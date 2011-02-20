@@ -55,6 +55,6 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE2)
+DY_RULE = $(DY) $(DFLAGS) -Wl,-soname,$(LIB_PREF)$(DYNNAME2)$(DYN_EXT).$(HB_VER_MAJOR).$(HB_VER_MINOR) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE2)
 
 include $(TOP)$(ROOT)config/rules.mk
