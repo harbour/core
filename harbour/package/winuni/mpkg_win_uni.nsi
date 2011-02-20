@@ -92,14 +92,14 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-$%HB_VS%.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
+  File "$%HB_ABSROOT%bin\hbformat.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"
   File "$%HB_ABSROOT%bin\hbmk2.exe"
   File "$%HB_ABSROOT%bin\hbmk2.*.hbl"
+  File "$%HB_ABSROOT%bin\hbnetio.exe"
   File "$%HB_ABSROOT%bin\hbpp.exe"
   File "$%HB_ABSROOT%bin\hbrun.exe"
   File "$%HB_ABSROOT%bin\hbtest.exe"
-  File "$%HB_ABSROOT%bin\hbformat.exe"
-  File "$%HB_ABSROOT%bin\hbnetio.exe"
   File "$%HB_ABSROOT%bin\*.hbs"
   File /nonfatal "$%HB_ABSROOT%bin\hbmk.hbc"
   File "$%HB_ABSROOT%bin\upx*.*"
@@ -141,13 +141,13 @@ SectionEnd
 Section /o "x64 tools" hb_main_x64
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-x64.exe"
+  File "$%HB_ABSROOT%bin\hbformat-x64.exe"
   File "$%HB_ABSROOT%bin\hbi18n-x64.exe"
   File "$%HB_ABSROOT%bin\hbmk2-x64.exe"
+  File "$%HB_ABSROOT%bin\hbnetio-x64.exe"
   File "$%HB_ABSROOT%bin\hbpp-x64.exe"
   File "$%HB_ABSROOT%bin\hbrun-x64.exe"
   File "$%HB_ABSROOT%bin\hbtest-x64.exe"
-  File "$%HB_ABSROOT%bin\hbformat-x64.exe"
-  File "$%HB_ABSROOT%bin\hbnetio-x64.exe"
 SectionEnd
 !endif
 

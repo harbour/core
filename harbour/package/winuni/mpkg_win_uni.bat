@@ -51,21 +51,20 @@ xcopy /y /s    %~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib             
 xcopy /y /s    %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib                   %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib                   %HB_ABSROOT%lib\
 
+xcopy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll           %HB_ABSROOT%bin\
 xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll         %HB_ABSROOT%bin\
-xcopy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\*.dll             %HB_ABSROOT%bin\
 
 rem ; Create special implibs for Borland (requires BCC in PATH)
 for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib %%a
 
-rem ; Using msvc64 because mingw64 .dll handling is broken.
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\harbour.exe       %HB_ABSROOT%bin\harbour-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbpp.exe          %HB_ABSROOT%bin\hbpp-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbformat.exe      %HB_ABSROOT%bin\hbformat-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbi18n.exe        %HB_ABSROOT%bin\hbi18n-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbmk2.exe         %HB_ABSROOT%bin\hbmk2-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbrun.exe         %HB_ABSROOT%bin\hbrun-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbtest.exe        %HB_ABSROOT%bin\hbtest-x64.exe
- copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbnetio.exe       %HB_ABSROOT%bin\hbnetio-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\harbour.exe     %HB_ABSROOT%bin\harbour-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbformat.exe    %HB_ABSROOT%bin\hbformat-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbi18n.exe      %HB_ABSROOT%bin\hbi18n-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe       %HB_ABSROOT%bin\hbmk2-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe     %HB_ABSROOT%bin\hbnetio-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbpp.exe        %HB_ABSROOT%bin\hbpp-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbrun.exe       %HB_ABSROOT%bin\hbrun-x64.exe
+ copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbtest.exe      %HB_ABSROOT%bin\hbtest-x64.exe
 
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      %HB_ABSROOT%bin\
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      %HB_ABSROOT%bin\upx_LICENSE.txt
@@ -125,14 +124,14 @@ echo "%HB_DR%TODO"                                  >> _hbfiles
 echo "%HB_DR%ChangeLog*"                            >> _hbfiles
 echo "%HB_DR%bin\harbour-%HB_VS%.dll"               >> _hbfiles
 echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles
+echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
 echo "%HB_DR%bin\hbi18n.exe"                        >> _hbfiles
 echo "%HB_DR%bin\hbmk2.exe"                         >> _hbfiles
 echo "%HB_DR%bin\hbmk2.*.hbl"                       >> _hbfiles
+echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
 echo "%HB_DR%bin\hbpp.exe"                          >> _hbfiles
 echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
-echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
-echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
 if exist "%HB_DR%bin\hbide.exe"                     echo "%HB_DR%bin\hbide.exe"                     >> _hbfiles
 if exist "%HB_DR%bin\libgcc_s_dw2-1.dll"            echo "%HB_DR%bin\libgcc_s_dw2-1.dll"            >> _hbfiles
 if exist "%HB_DR%bin\mingwm10.dll"                  echo "%HB_DR%bin\mingwm10.dll"                  >> _hbfiles
@@ -147,13 +146,13 @@ if exist "%HB_DR%bin\hbmk.hbc"                      echo "%HB_DR%bin\hbmk.hbc"  
 echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
 echo "%HB_DR%include\*.*"                           >> _hbfiles
 echo "%HB_DR%bin\harbour-x64.exe"                   >> _hbfiles
+echo "%HB_DR%bin\hbformat-x64.exe"                  >> _hbfiles
 echo "%HB_DR%bin\hbi18n-x64.exe"                    >> _hbfiles
 echo "%HB_DR%bin\hbmk2-x64.exe"                     >> _hbfiles
+echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
 echo "%HB_DR%bin\hbpp-x64.exe"                      >> _hbfiles
 echo "%HB_DR%bin\hbrun-x64.exe"                     >> _hbfiles
 echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
-echo "%HB_DR%bin\hbformat-x64.exe"                  >> _hbfiles
-echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
 echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
 echo "%HB_DR%lib\win\mingw64\*.*"                   >> _hbfiles
 echo "%HB_DR%lib\wce\mingwarm\*.*"                  >> _hbfiles
