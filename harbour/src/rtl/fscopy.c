@@ -51,7 +51,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX )
@@ -68,9 +67,9 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
-   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
    {
-      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
       {
 #if defined( HB_OS_UNIX )
          struct stat struFileInfo;
@@ -93,7 +92,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
             else
             {
                errCode = hb_fsError();
-               bRetVal = errCode == 0;
+               bRetVal = ( errCode == 0 );
                break;
             }
          }
@@ -128,18 +127,13 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
 HB_FUNC( HB_FCOPY )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
-   {
-      const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
+   const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
-      if( *pszSource && *pszDest )
-         hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
-      else
-      {
-         hb_fsSetFError( 2 /* file not found */ );
-         hb_retni( F_ERROR );
-      }
-   }
+   if( pszSource && pszDest )
+      hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   {
+      hb_fsSetFError( 2 /* file not found */ );
+      hb_retni( F_ERROR );
+   }
 }
