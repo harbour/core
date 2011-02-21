@@ -217,4 +217,30 @@ EC_KEY * EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey);
 int EVP_PKEY_decrypt( unsigned char * dec_key, const unsigned char * enc_key, int enc_key_len, EVP_PKEY * private_key );
 int EVP_PKEY_encrypt( unsigned char * enc_key, const unsigned char * key    , int key_len    , EVP_PKEY * pub_key     );
 
+/* 1.0.0 */
+int EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx);
+int EVP_PKEY_sign(EVP_PKEY_CTX *ctx,
+			unsigned char *sig, size_t *siglen,
+			const unsigned char *tbs, size_t tbslen);
+
+int EVP_PKEY_verify_init(EVP_PKEY_CTX *ctx);
+int EVP_PKEY_verify(EVP_PKEY_CTX *ctx,
+			const unsigned char *sig, size_t siglen,
+			const unsigned char *tbs, size_t tbslen);
+
+int EVP_PKEY_verify_recover_init(EVP_PKEY_CTX *ctx);
+int EVP_PKEY_verify_recover(EVP_PKEY_CTX *ctx,
+			unsigned char *rout, size_t *routlen,
+			const unsigned char *sig, size_t siglen);
+
+int EVP_PKEY_encrypt_init(EVP_PKEY_CTX *ctx);
+int EVP_PKEY_encrypt(EVP_PKEY_CTX *ctx,
+			unsigned char *out, size_t *outlen,
+			const unsigned char *in, size_t inlen);
+
+int EVP_PKEY_decrypt_init(EVP_PKEY_CTX *ctx);
+int EVP_PKEY_decrypt(EVP_PKEY_CTX *ctx,
+			unsigned char *out, size_t *outlen,
+			const unsigned char *in, size_t inlen);
+
 #endif

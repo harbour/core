@@ -348,12 +348,18 @@ static void fs_win_set_drive( int iDrive )
    if( iDrive >= 0 && iDrive <= 25 )
    {
       TCHAR szBuffer[ 3 ];
+      HB_BOOL fResult;
+      UINT uiErrMode;
 
       szBuffer[ 0 ] = ( TCHAR ) ( iDrive + 'A' );
       szBuffer[ 1 ] = TEXT( ':' );
       szBuffer[ 2 ] = TEXT( '\0' );
 
-      hb_fsSetIOError( SetCurrentDirectory( szBuffer ) != 0, 0 );
+      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+      fResult = SetCurrentDirectory( szBuffer ) != FALSE;
+      SetErrorMode( uiErrMode );
+
+      hb_fsSetIOError( fResult, 0 );
    }
 }
 
@@ -2681,8 +2687,11 @@ HB_BOOL hb_fsChDir( const char * pDirname )
 #if defined( HB_OS_WIN )
    {
       LPTSTR lpDirname = HB_TCHAR_CONVTO( pDirname );
+      UINT uiErrMode;
 
-      fResult = SetCurrentDirectory( lpDirname ) != 0;
+      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+      fResult = SetCurrentDirectory( lpDirname ) != FALSE;
+      SetErrorMode( uiErrMode );
       hb_fsSetIOError( fResult, 0 );
 
       HB_TCHAR_FREE( lpDirname );
