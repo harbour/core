@@ -62,8 +62,8 @@
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
-   HB_ERRCODE errCode = 0;
-   HB_BOOL bRetVal = HB_TRUE;
+   HB_ERRCODE errCode;
+   HB_BOOL bRetVal;
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
@@ -78,12 +78,21 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          HB_USHORT nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
-         while( ( nBytesRead = hb_fsRead( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
+         for( ;; )
          {
-            if( nBytesRead != hb_fsWrite( fhndDest, pbyBuffer, nBytesRead ) )
+            if( ( nBytesRead = hb_fsRead( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
+            {
+               if( nBytesRead != hb_fsWrite( fhndDest, pbyBuffer, nBytesRead ) )
+               {
+                  errCode = hb_fsError();
+                  bRetVal = HB_FALSE;
+                  break;
+               }
+            }
+            else
             {
                errCode = hb_fsError();
-               bRetVal = HB_FALSE;
+               bRetVal = errCode == 0;
                break;
             }
          }

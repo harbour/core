@@ -673,9 +673,9 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_OLE( EG_ARG, 1014, ( HB_ERRCODE ) lOleError, "Failed to obtain connection point", HB_ERR_FUNCNAME );
+            hb_ret();
       }
       else
-         hb_errRT_OLE( EG_ARG, 1015, 0, "Failed to obtain connection point", HB_ERR_FUNCNAME );
+         hb_errRT_OLE( EG_ARG, 1015, 0, NULL, HB_ERR_FUNCNAME );
    }
 }
