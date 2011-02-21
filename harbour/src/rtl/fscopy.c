@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapierr.h"
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX )
@@ -131,11 +132,11 @@ HB_FUNC( HB_FCOPY )
    {
       const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
-      if( pszSource && pszDest )
+      if( *pszSource && *pszDest )
          hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
       else
       {
-         hb_fsSetFError( 2 );
+         hb_fsSetFError( 2 /* file not found */ );
          hb_retni( F_ERROR );
       }
    }
