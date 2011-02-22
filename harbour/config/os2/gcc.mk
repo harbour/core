@@ -130,7 +130,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(if $(wildcard __dyn__.def),@$(RM) __dyn__.def,)
-   @$(ECHO) $(ECHOQUOTE)LIBRARY $(DYNNAME2) INITINSTANCE TERMINSTANCE$(ECHOQUOTE) >> __dyn__.def
+   @$(ECHO) $(ECHOQUOTE)LIBRARY $(DYNNAME) INITINSTANCE TERMINSTANCE$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)PROTMODE$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)CODE PRELOAD MOVEABLE DISCARDABLE$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)DATA PRELOAD MOVEABLE MULTIPLE NONSHARED$(ECHOQUOTE) >> __dyn__.def
