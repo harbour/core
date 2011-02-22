@@ -35,7 +35,8 @@ PROCEDURE Main( ... )
    LOCAL cSH_Script
    LOCAL nAttr
 
-   LOCAL cDynVersioned
+   LOCAL cDynVersionFull
+   LOCAL cDynVersionComp
    LOCAL cDynVersionless
 
    IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
@@ -136,10 +137,12 @@ PROCEDURE Main( ... )
 
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
-         cDynVersioned   := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_NAME" ) + GetEnvC( "HB_DYNLIB_EXT" )
-         cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_EXT" )
+         cDynVersionFull := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" )
+         cDynVersionComp := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POSC" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXC" )
+         cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" )                               + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_FLinkSym( cDynVersioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         mk_hb_FLinkSym( cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
+         mk_hb_FLinkSym( cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
 
          DO CASE
          CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
@@ -147,8 +150,9 @@ PROCEDURE Main( ... )
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersioned, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersioned )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg */
@@ -464,10 +468,10 @@ STATIC FUNCTION mk_extern_core()
    LOCAL aExtern
 
    IF GetEnvC( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
-      ! Empty( GetEnvC( "HB_DYNLIB_NAME" ) )
+      ! Empty( GetEnvC( "HB_DYNLIB_BASE" ) )
 
       /* TOFIX: Use list of libs instead of dynamic lib */
-      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_NAME" ) + GetEnvC( "HB_DYNLIB_EXT" ) ) ) != NIL
+      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
 

@@ -58,7 +58,7 @@ define create_dynlib
    $(foreach file,$^,$(dynlib_object))
    $(DY) $(DFLAGS) -install_name "$(LIB_PREF)$(DYNNAME2)$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ -filelist __dyn__.tmp $(DLIBS) $(DYSTRIP)
    $(LN) $(@F) $(DYN_FILE2)
-   $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR)$(DYN_EXT)
+   $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR).$(HB_VER_MINOR)$(DYN_EXT)
 endef
 
 DY_RULE = $(create_dynlib)

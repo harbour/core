@@ -1747,57 +1747,84 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DYN),no)
 
-      ifeq ($(HB_PLATFORM_UNIX),)
-         HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
-      else
-         HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
-      endif
+      HB_DYNLIB_POSC :=
+      HB_DYNLIB_PEXC :=
 
-      ifeq ($(HB_PLATFORM),darwin)
-         DYNNAME_POST := .$(HB_DYN_VER)
+      ifneq ($(filter $(HB_PLATFORM),win wce),)
+
+         # harbour-xy[-subtype][.dll|.lib]
+
+         HB_DYNLIB_POST := -$(HB_VER_MAJOR)$(HB_VER_MINOR)
+         HB_DYNLIB_PEXT :=
+
+         ifeq ($(HB_PLATFORM),win)
+            ifeq ($(HB_COMPILER),bcc)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-bcc
+            else
+            ifeq ($(HB_CPU),x86_64)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-x64
+            else
+            ifeq ($(HB_CPU),ia64)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-ia64
+            endif
+            endif
+            endif
+         else
+         ifeq ($(HB_PLATFORM),wce)
+            HB_DYNLIB_POST := $(HB_DYNLIB_POST)-wce
+            ifeq ($(HB_CPU),arm)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-arm
+            else
+            ifeq ($(HB_CPU),x86)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-x86
+            else
+            ifeq ($(HB_CPU),mips)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-mips
+            else
+            ifeq ($(HB_CPU),sh)
+               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-sh
+            endif
+            endif
+            endif
+            endif
+         endif
+         endif
       else
       ifneq ($(filter $(HB_PLATFORM),dos os2),)
-         DYNNAME_POST :=
+         # harbour[.dll|.???]
+         HB_DYNLIB_POST :=
+         HB_DYNLIB_PEXT :=
       else
-         DYNNAME_POST := -$(HB_DYN_VER)
+         HB_DYN_VERCPT := $(HB_VER_MAJOR).$(HB_VER_MINOR)
+         HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
+
+         ifeq ($(HB_PLATFORM),darwin)
+            # libharbour.2.1.0.dylib
+            # libharbour.2.1.dylib ->
+            # libharbour.dylib ->
+            HB_DYNLIB_POST := .$(HB_DYN_VER)
+            HB_DYNLIB_PEXT :=
+            HB_DYNLIB_POSC := .$(HB_DYN_VERCPT)
+            HB_DYNLIB_PEXC :=
+         else
+            # libharbour.s?.2.1.0
+            # libharbour.s?.2.1 ->
+            # libharbour.s? ->
+            HB_DYNLIB_POST :=
+            HB_DYNLIB_PEXT := .$(HB_DYN_VER)
+            HB_DYNLIB_POSC :=
+            HB_DYNLIB_PEXC := .$(HB_DYN_VERCPT)
+         endif
       endif
       endif
 
-      ifeq ($(HB_PLATFORM),win)
-         ifeq ($(HB_COMPILER),bcc)
-            DYNNAME_POST := $(DYNNAME_POST)-bcc
-         else
-         ifeq ($(HB_CPU),x86_64)
-            DYNNAME_POST := $(DYNNAME_POST)-x64
-         else
-         ifeq ($(HB_CPU),ia64)
-            DYNNAME_POST := $(DYNNAME_POST)-ia64
-         endif
-         endif
-         endif
-      else
-      ifeq ($(HB_PLATFORM),wce)
-         DYNNAME_POST := $(DYNNAME_POST)-wce
-         ifeq ($(HB_CPU),arm)
-            DYNNAME_POST := $(DYNNAME_POST)-arm
-         else
-         ifeq ($(HB_CPU),x86)
-            DYNNAME_POST := $(DYNNAME_POST)-x86
-         else
-         ifeq ($(HB_CPU),mips)
-            DYNNAME_POST := $(DYNNAME_POST)-mips
-         else
-         ifeq ($(HB_CPU),sh)
-            DYNNAME_POST := $(DYNNAME_POST)-sh
-         endif
-         endif
-         endif
-         endif
-      endif
-      endif
+      export HB_DYNLIB_POST
+      export HB_DYNLIB_PEXT
+      export HB_DYNLIB_POSC
+      export HB_DYNLIB_PEXC
 
       HB_DYNLIB_BASE := harbour
-      HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(DYNNAME_POST)
+      HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(HB_DYNLIB_POST)
 
       export HB_DYNLIB_BASE
       export HB_DYNLIB_NAME
@@ -1808,7 +1835,7 @@ ifeq ($(HB_INIT_DONE),)
          else
             HB_DYNLIB_BASE_2ND := harbourst
          endif
-         HB_DYNLIB_NAME_2ND := $(HB_DYNLIB_BASE_2ND)$(DYNNAME_POST)
+         HB_DYNLIB_NAME_2ND := $(HB_DYNLIB_BASE_2ND)$(HB_DYNLIB_POST)
 
          export HB_DYNLIB_BASE_2ND
          export HB_DYNLIB_NAME_2ND
