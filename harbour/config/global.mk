@@ -1823,11 +1823,7 @@ ifeq ($(HB_INIT_DONE),)
       export HB_DYNLIB_POSC
       export HB_DYNLIB_PEXC
 
-      HB_DYNLIB_BASE := harbour
-      HB_DYNLIB_NAME := $(HB_DYNLIB_BASE)$(HB_DYNLIB_POST)
-
-      export HB_DYNLIB_BASE
-      export HB_DYNLIB_NAME
+      export HB_DYNLIB_BASE := harbour
 
       ifeq ($(_HB_BUILD_DYN_ST),yes)
          ifneq ($(filter $(HB_PLATFORM),dos os2),)
@@ -1835,10 +1831,7 @@ ifeq ($(HB_INIT_DONE),)
          else
             HB_DYNLIB_BASE_2ND := harbourst
          endif
-         HB_DYNLIB_NAME_2ND := $(HB_DYNLIB_BASE_2ND)$(HB_DYNLIB_POST)
-
          export HB_DYNLIB_BASE_2ND
-         export HB_DYNLIB_NAME_2ND
       endif
    endif
 endif
