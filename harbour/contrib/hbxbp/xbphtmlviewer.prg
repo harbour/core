@@ -95,7 +95,7 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
    DATA     oURL
    DATA     cSelectedText
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   execSlot( cSlot, p )
@@ -142,7 +142,7 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpHTMLViewer:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

@@ -78,8 +78,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    DATA     type                                  INIT    XBPCOMBO_DROPDOWN
    DATA     drawMode                              INIT    XBP_DRAW_NORMAL
 
-//   MESSAGE  init( ... )                           METHOD  new( ... )
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
@@ -125,7 +124,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

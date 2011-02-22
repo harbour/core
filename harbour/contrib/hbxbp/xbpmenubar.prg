@@ -116,7 +116,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
    DATA     aIds                                   INIT {}
    DATA     className                              INIT "XbpMenuBar"
 
-   METHOD   new( oParent, aPresParams, lVisible )
+   METHOD   init( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, aPresParams, lVisible )
@@ -154,7 +154,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:new( oParent, aPresParams, lVisible )
+METHOD xbpMenuBar:init( oParent, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
@@ -674,7 +674,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
    DATA     title                                 INIT  ""
 
-   METHOD   new( oParent, aPresParams, lVisible )
+   METHOD   init( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )
    METHOD   getTitle()
    METHOD   setTitle( cTitle )
@@ -686,7 +686,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenu:new( oParent, aPresParams, lVisible )
+METHOD xbpMenu:init( oParent, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 

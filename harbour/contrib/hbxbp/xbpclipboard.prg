@@ -78,7 +78,7 @@ CLASS XbpClipBoard
    DATA   oWidget
    DATA   oOldXbp
 
-   METHOD new()
+   METHOD init()
    METHOD create()
    METHOD destroy()
 
@@ -96,7 +96,7 @@ CLASS XbpClipBoard
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpClipBoard:new()
+METHOD XbpClipBoard:init()
 
    RETURN Self
 

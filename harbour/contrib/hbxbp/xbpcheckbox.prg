@@ -80,7 +80,7 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, DataRef
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -97,7 +97,7 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpCheckBox:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

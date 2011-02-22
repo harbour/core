@@ -79,7 +79,7 @@ CLASS XbpPresSpace
    DATA     mode                                  INIT      XBPPS_MODE_NORMAL
    DATA     d
 
-   METHOD   new()
+   METHOD   init()
    METHOD   create( oDevice, aPageSize, nUnits )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()                             VIRTUAL
@@ -158,7 +158,7 @@ CLASS XbpPresSpace
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPresSpace:new()
+METHOD XbpPresSpace:init()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

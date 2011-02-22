@@ -88,7 +88,7 @@ CLASS XbpPrintDialog INHERIT XbpWindow
    DATA     printRange                            INIT      XBPPDLG_PRINT_ALLPAGES
    DATA     printToFile                           INIT      .F.
 
-   METHOD   new( oParent, oOwner )
+   METHOD   init( oParent, oOwner )
    METHOD   create( oParent, oOwner )
    METHOD   destroy()
    METHOD   display( oXbpPrinter )
@@ -98,7 +98,7 @@ CLASS XbpPrintDialog INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPrintDialog:new( oParent, oOwner )
+METHOD XbpPrintDialog:init( oParent, oOwner )
 
    ::xbpWindow:init( oParent, oOwner )
 

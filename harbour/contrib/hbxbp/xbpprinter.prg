@@ -94,7 +94,7 @@ CLASS XbpPrinter
    /* Internal */
    DATA     isValid
 
-   METHOD   new()
+   METHOD   init()
    METHOD   create( cDeviceName, nSpoolFormat, cDeviceParams )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()                             VIRTUAL
@@ -137,7 +137,7 @@ CLASS XbpPrinter
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPrinter:new()
+METHOD XbpPrinter:init()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

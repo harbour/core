@@ -117,7 +117,7 @@ CLASS XbpFontDialog INHERIT XbpWindow
    DATA     viewPrinterFonts                      INIT   .F.
    DATA     viewScreenFonts                       INIT   .T.
 
-   METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD   init( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   execSlot( cSlot, p )
    METHOD   display( nMode )
@@ -144,7 +144,7 @@ CLASS XbpFontDialog INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFontDialog:new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+METHOD XbpFontDialog:init( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    DEFAULT oParent    TO ::oParent
    DEFAULT oOwner     TO ::oOwner

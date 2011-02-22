@@ -83,7 +83,7 @@ CLASS XbpStyle
    DATA   colorFG
    DATA   colorBG
 
-   METHOD New()                                   INLINE Self
+   METHOD init()                                  INLINE Self
    METHOD Create()
    METHOD Configure()                             VIRTUAL
    METHOD Destroy()                               VIRTUAL

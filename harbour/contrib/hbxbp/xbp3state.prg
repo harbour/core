@@ -80,7 +80,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, DataRef
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -97,7 +97,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD Xbp3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD Xbp3State:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

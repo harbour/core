@@ -80,7 +80,7 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
 
    DATA     aItems                                INIT {}
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -101,7 +101,7 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpStatusBar:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -311,14 +311,14 @@ CLASS XbpStatusBarPanel
    DATA     width                                 INIT 0
    DATA     minWidth                              INIT 0
 
-   METHOD   new( cCaption, nStyle, cKey )
+   METHOD   init( cCaption, nStyle, cKey )
    METHOD   create( cCaption, nStyle, cKey )
    METHOD   caption( cCaption )                   SETGET
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatusBarPanel:new( cCaption, nStyle, cKey )
+METHOD XbpStatusBarPanel:init( cCaption, nStyle, cKey )
 
    DEFAULT cCaption       TO ::sl_caption
    DEFAULT nStyle         TO ::style

@@ -88,7 +88,7 @@ CLASS XbpBitmap
    ACCESS   xSize                                 INLINE  ::oWidget:width()
    ACCESS   ySize                                 INLINE  ::oWidget:height()
 
-   METHOD   new()                                 INLINE  Self
+   METHOD   init()                                INLINE  Self
    METHOD   create( oPS )
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()                             VIRTUAL

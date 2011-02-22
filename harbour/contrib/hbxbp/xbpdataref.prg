@@ -84,7 +84,7 @@ CLASS DataRef
    DATA     sl_editBuffer
    DATA     sl_buffer
 
-   METHOD   new()
+   METHOD   init()
    METHOD   getData()
    METHOD   setData( xValue, mp2 )
    METHOD   undo()
@@ -95,7 +95,7 @@ CLASS DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:new()
+METHOD DataRef:init()
 
    RETURN self
 

@@ -300,7 +300,7 @@ EXPORTED:
    MESSAGE _right()                               METHOD Right()
    MESSAGE _end()                                 METHOD End()
 
-   METHOD new( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
+   METHOD init( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )   // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD execSlot( nEvent, p1, p2, p3 )                    // executes view events
    METHOD supplyInfo( nMode, nCall, nRole, nX, nY )                // supplies cell parameters to Qt engine
@@ -603,7 +603,7 @@ METHOD XbpBrowse:disconnect()
 /*----------------------------------------------------------------------*/
 
 /* Just to retain TBrowse functionality: in the future */
-METHOD XbpBrowse:new( nTop, nLeft, nBottom, nRight )
+METHOD XbpBrowse:init( nTop, nLeft, nBottom, nRight )
 
    DEFAULT nTop    TO 0
    DEFAULT nLeft   TO 0

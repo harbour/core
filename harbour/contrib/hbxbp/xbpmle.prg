@@ -84,7 +84,7 @@ CLASS XbpMLE INHERIT XbpWindow, DataRef
 
    DATA     changed                               INIT    .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
@@ -123,7 +123,7 @@ CLASS XbpMLE INHERIT XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpMLE:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

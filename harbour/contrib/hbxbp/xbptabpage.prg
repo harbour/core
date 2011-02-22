@@ -84,7 +84,7 @@ CLASS XbpTabPage  INHERIT  XbpWindow
    DATA     tabHeight                             INIT -1  /* Determines the height of the tab.                                                                                */
    DATA     type                                  INIT XBPTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -105,7 +105,7 @@ CLASS XbpTabPage  INHERIT  XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpTabPage:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -258,7 +258,7 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
    DATA     aTabs                 INIT {}
    DATA     qCornerWidget
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject ) VIRTUAL
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -271,7 +271,7 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabWidget:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpTabWidget:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

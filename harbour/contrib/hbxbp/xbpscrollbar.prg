@@ -83,7 +83,7 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, DataRef
 
    DATA     sl_xbeSB_Scroll
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
@@ -103,7 +103,7 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpScrollBar:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

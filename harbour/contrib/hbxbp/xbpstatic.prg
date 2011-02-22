@@ -84,7 +84,7 @@ CLASS XbpStatic  INHERIT  XbpWindow
 
    DATA     hBitmap
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -96,7 +96,7 @@ CLASS XbpStatic  INHERIT  XbpWindow
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpStatic:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

@@ -88,7 +88,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
    DATA     sl_draw
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -109,7 +109,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpPushButton:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:INIT( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

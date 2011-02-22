@@ -85,7 +85,7 @@ CLASS XbpFileDialog INHERIT XbpWindow
    DATA     title                                 INIT NIL  // ""
    DATA     validatePath                          INIT .f.
 
-   METHOD   new( oParent, oOwner, aPos )
+   METHOD   init( oParent, oOwner, aPos )
    METHOD   create( oParent, oOwner, aPos )
    METHOD   execSlot( cSlot, p )
    METHOD   destroy()
@@ -98,7 +98,7 @@ CLASS XbpFileDialog INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFileDialog:new( oParent, oOwner, aPos )
+METHOD XbpFileDialog:init( oParent, oOwner, aPos )
 
    ::xbpWindow:INIT( oParent, oOwner, aPos )
 

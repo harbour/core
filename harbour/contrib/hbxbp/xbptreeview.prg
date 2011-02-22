@@ -83,7 +83,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
    DATA     oRootItem
    ACCESS   rootItem()                            INLINE ::oRootItem
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -124,7 +124,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpTreeView:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -381,7 +381,7 @@ CLASS XbpTreeViewItem  INHERIT  DataRef
    DATA     aChilds                               INIT {}
    DATA     tooltipText                           INIT ""
 
-   METHOD   new()
+   METHOD   init()
    METHOD   create()
    METHOD   configure()
    METHOD   destroy()
@@ -444,7 +444,7 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:new()
+METHOD XbpTreeViewItem:init()
 
    RETURN Self
 

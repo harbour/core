@@ -88,7 +88,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
 
    DATA     nOldIndex                             INIT 0
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -145,7 +145,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpListBox:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

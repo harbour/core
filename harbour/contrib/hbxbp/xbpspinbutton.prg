@@ -90,7 +90,7 @@ CLASS XbpSpinButton INHERIT XbpWindow, DataRef
 
    DATA     nOldValue                             INIT    0
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
@@ -127,7 +127,7 @@ CLASS XbpSpinButton INHERIT XbpWindow, DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSpinButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpSpinButton:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

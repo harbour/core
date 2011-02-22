@@ -76,7 +76,7 @@
 
 CLASS XbpRtf INHERIT XbpWindow
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure()
@@ -159,7 +159,7 @@ CLASS XbpRtf INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpRtf:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpRtf:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

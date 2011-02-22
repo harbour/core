@@ -101,7 +101,7 @@ CLASS XbpToolBar  INHERIT  XbpWindow
 
    METHOD   numItems()                            INLINE Len( ::aItems )
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -130,9 +130,9 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpToolbar:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
@@ -450,13 +450,13 @@ CLASS XbpToolbarButton
    DATA     command                               INIT 0
    DATA     oAction
 
-   METHOD   new( cCaption, nStyle, cKey )
+   METHOD   init( cCaption, nStyle, cKey )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbarButton:new( cCaption, nStyle, cKey )
+METHOD XbpToolbarButton:init( cCaption, nStyle, cKey )
 
    DEFAULT cCaption       TO ::caption
    DEFAULT nStyle         TO ::style

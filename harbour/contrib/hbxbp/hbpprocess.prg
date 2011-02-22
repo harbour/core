@@ -92,7 +92,7 @@ CLASS HbpProcess
    DATA   cShellCmd
    DATA   lDetached                               INIT   .f.
 
-   METHOD new( cShellCmd )
+   METHOD init( cShellCmd )
    METHOD create( cShellCmd )
    METHOD destroy()                               VIRTUAL
    METHOD addArg( cArg, lTokened )
@@ -128,7 +128,7 @@ CLASS HbpProcess
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpProcess:new( cShellCmd )
+METHOD HbpProcess:init( cShellCmd )
 
    ::cShellCmd := cShellCmd
 

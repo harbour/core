@@ -93,7 +93,7 @@ CLASS XbpDialog FROM XbpWindow
    DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
    DATA     sysMenu                               INIT  .T.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -122,7 +122,7 @@ CLASS XbpDialog FROM XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -391,16 +391,16 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    DATA     clipSiblings                          INIT .T.
    DATA     clipChildren                          INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpDrawingArea:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible := .t.
 
    RETURN Self
