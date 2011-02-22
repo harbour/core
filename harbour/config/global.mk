@@ -1747,6 +1747,9 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DYN),no)
 
+      HB_DYNLIB_POST :=
+      HB_DYNLIB_PEXT :=
+      HB_DYNLIB_PLOC :=
       HB_DYNLIB_POSC :=
       HB_DYNLIB_PEXC :=
 
@@ -1754,35 +1757,34 @@ ifeq ($(HB_INIT_DONE),)
 
          # harbour-xy[-subtype][.dll|.lib]
 
-         HB_DYNLIB_POST := -$(HB_VER_MAJOR)$(HB_VER_MINOR)
-         HB_DYNLIB_PEXT :=
+         HB_DYNLIB_PLOC := -$(HB_VER_MAJOR)$(HB_VER_MINOR)
 
          ifeq ($(HB_PLATFORM),win)
             ifeq ($(HB_COMPILER),bcc)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-bcc
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-bcc
             else
             ifeq ($(HB_CPU),x86_64)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-x64
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-x64
             else
             ifeq ($(HB_CPU),ia64)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-ia64
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-ia64
             endif
             endif
             endif
          else
          ifeq ($(HB_PLATFORM),wce)
-            HB_DYNLIB_POST := $(HB_DYNLIB_POST)-wce
+            HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-wce
             ifeq ($(HB_CPU),arm)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-arm
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-arm
             else
             ifeq ($(HB_CPU),x86)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-x86
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-x86
             else
             ifeq ($(HB_CPU),mips)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-mips
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-mips
             else
             ifeq ($(HB_CPU),sh)
-               HB_DYNLIB_POST := $(HB_DYNLIB_POST)-sh
+               HB_DYNLIB_PLOC := $(HB_DYNLIB_PLOC)-sh
             endif
             endif
             endif
@@ -1792,8 +1794,6 @@ ifeq ($(HB_INIT_DONE),)
       else
       ifneq ($(filter $(HB_PLATFORM),dos os2),)
          # harbour[.dll|.???]
-         HB_DYNLIB_POST :=
-         HB_DYNLIB_PEXT :=
       else
          HB_DYN_VERCPT := $(HB_VER_MAJOR).$(HB_VER_MINOR)
          HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
@@ -1803,16 +1803,12 @@ ifeq ($(HB_INIT_DONE),)
             # libharbour.2.1.dylib ->
             # libharbour.dylib ->
             HB_DYNLIB_POST := .$(HB_DYN_VER)
-            HB_DYNLIB_PEXT :=
             HB_DYNLIB_POSC := .$(HB_DYN_VERCPT)
-            HB_DYNLIB_PEXC :=
          else
             # libharbour.s?.2.1.0
             # libharbour.s?.2.1 ->
             # libharbour.s? ->
-            HB_DYNLIB_POST :=
             HB_DYNLIB_PEXT := .$(HB_DYN_VER)
-            HB_DYNLIB_POSC :=
             HB_DYNLIB_PEXC := .$(HB_DYN_VERCPT)
          endif
       endif
@@ -1823,13 +1819,13 @@ ifeq ($(HB_INIT_DONE),)
       export HB_DYNLIB_POSC
       export HB_DYNLIB_PEXC
 
-      export HB_DYNLIB_BASE := harbour
+      export HB_DYNLIB_BASE := harbour$(HB_DYNLIB_PLOC)
 
       ifeq ($(_HB_BUILD_DYN_ST),yes)
          ifneq ($(filter $(HB_PLATFORM),dos os2),)
-            HB_DYNLIB_BASE_2ND := harbours
+            HB_DYNLIB_BASE_2ND := harbours$(HB_DYNLIB_PLOC)
          else
-            HB_DYNLIB_BASE_2ND := harbourst
+            HB_DYNLIB_BASE_2ND := harbourst$(HB_DYNLIB_PLOC)
          endif
          export HB_DYNLIB_BASE_2ND
       endif
