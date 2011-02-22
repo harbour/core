@@ -67,9 +67,11 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
-   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+   /* TODO: Change to use hb_fileExtOpen() */
+   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
    {
-      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+      /* TODO: Change to use hb_fileExtOpen() */
+      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
       {
 #if defined( HB_OS_UNIX )
          struct stat struFileInfo;
@@ -80,9 +82,9 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
          for( ;; )
          {
-            if( ( nBytesRead = hb_fsRead( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
+            if( ( nBytesRead = hb_fsReadLarge( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
             {
-               if( nBytesRead != hb_fsWrite( fhndDest, pbyBuffer, nBytesRead ) )
+               if( nBytesRead != hb_fsWriteLarge( fhndDest, pbyBuffer, nBytesRead ) )
                {
                   errCode = hb_fsError();
                   bRetVal = HB_FALSE;
