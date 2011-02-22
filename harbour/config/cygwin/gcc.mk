@@ -91,7 +91,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(HB_USER_DFLAGS) $(DLIBS) -Wl,--output-def,$(DYN_DIR)/$(basename $@).def,--out-implib,$(IMP_FILE) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
+   $(DY) $(DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(HB_USER_DFLAGS) $(DLIBS) -Wl,--output-def,$(DYN_DIR)/$(basename $@).def,--out-implib,$(IMP_FILE) $(DYSTRIP)
+   $(LN) $(@F) $(DYN_FILE_NVR)
+   $(LN) $(@F) $(DYN_FILE_CPT)
 endef
 
 DY_RULE = $(create_dynlib)
