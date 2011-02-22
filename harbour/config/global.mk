@@ -1753,7 +1753,7 @@ ifeq ($(HB_INIT_DONE),)
       HB_DYNLIB_POSC :=
       HB_DYNLIB_PEXC :=
 
-      ifneq ($(filter $(HB_PLATFORM),win wce),)
+      ifneq ($(filter $(HB_PLATFORM),win wce cygwin),)
 
          # harbour-xy[-subtype][.dll|.lib]
 
