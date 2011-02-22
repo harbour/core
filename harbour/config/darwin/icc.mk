@@ -57,7 +57,7 @@ define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
    $(DY) $(DFLAGS) -install_name "$(DYN_PREF)$(DYNNAME)$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ -filelist __dyn__.tmp $(DLIBS) $(DYSTRIP)
-   $(LN) $(@F) $(DYN_FILE2)
+   $(LN) $(@F) $(DYN_FILE_NVR)
    $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME).$(HB_VER_MAJOR).$(HB_VER_MINOR)$(DYN_EXT)
 endef
 

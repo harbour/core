@@ -55,6 +55,6 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) -Wl,-soname,$(DYN_PREF)$(DYNNAME)$(DYN_EXT)$(HB_DYNLIB_PEXC) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE2) && $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME)$(DYN_EXT)$(HB_DYNLIB_PEXC)
+DY_RULE = $(DY) $(DFLAGS) -Wl,-soname,$(DYN_PREF)$(DYNNAME)$(DYN_EXT)$(HB_DYNLIB_PEXC) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME)$(DYN_EXT)$(HB_DYNLIB_PEXC)
 
 include $(TOP)$(ROOT)config/rules.mk
