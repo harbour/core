@@ -9,7 +9,6 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(DYNDIRLIST_BASE),)
 
    DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
-   DYNNAME := $(HB_DYNLIB_NAME_2ND)
    DYNNAME2 := $(HB_DYNLIB_BASE_2ND)
 
    include $(TOP)$(ROOT)config/dyn.mk

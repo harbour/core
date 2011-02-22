@@ -10,8 +10,8 @@ ifneq ($(HB_COMPILER),)
 ifneq ($(LIBNAME),)
    DIR_RULE := @$(ECHO) $(ECHOQUOTE)! '$(LIBNAME)' library skipped $(if $(HB_SKIP_REASON),($(HB_SKIP_REASON)),)$(ECHOQUOTE)
 else
-ifneq ($(DYNNAME),)
-   DIR_RULE := @$(ECHO) $(ECHOQUOTE)! '$(DYNNAME)' dynamic library skipped$(ECHOQUOTE)
+ifneq ($(DYNNAME2),)
+   DIR_RULE := @$(ECHO) $(ECHOQUOTE)! '$(DYNNAME2)' dynamic library skipped$(ECHOQUOTE)
 else
    DIR_RULE :=
 endif
