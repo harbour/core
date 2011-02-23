@@ -1747,9 +1747,9 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DYN),no)
 
+      HB_DYNLIB_PLOC :=
       HB_DYNLIB_POST :=
       HB_DYNLIB_PEXT :=
-      HB_DYNLIB_PLOC :=
       HB_DYNLIB_POSC :=
       HB_DYNLIB_PEXC :=
 
