@@ -10,7 +10,7 @@
 -w3 -es2
 
 -depkeyhead=expat:expat.h
--depcontrol=expat:no{HB_BUILD_3RDEXT='no'}
+-depcontrol=expat:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}
 -depincpath=expat:/usr/include
 -depincpathlocal=expat:3rd/expat
