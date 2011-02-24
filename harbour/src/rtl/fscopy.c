@@ -77,7 +77,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          struct stat struFileInfo;
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
-         HB_USHORT nBytesRead;
+         HB_SIZE nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
          for( ;; )
