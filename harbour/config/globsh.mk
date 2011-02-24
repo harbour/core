@@ -72,6 +72,8 @@ clean::
 	   $(RM) $(basename $(DYN_FILE)).ilk; \
 	   $(RM) $(basename $(DYN_FILE)).def; \
 	   $(RM) $(basename $(DYN_FILE)).exp; \
+	   $(RM) $(DYN_FILE_NVR); \
+	   $(RM) $(DYN_FILE_CPT); \
 	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
 	fi ; \
 	if [ -n "$(IMP_FILE)" ]; then \

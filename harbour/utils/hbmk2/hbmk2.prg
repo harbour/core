@@ -111,6 +111,8 @@
          autodetection of watcom cross-build setups, poccarm/pocc64 setups,
          clang, etc. */
 
+/* TODO: Turn off lib grouping by default */
+
 /* TODO: Use hashes instead of arrays for input files, options */
 /* TODO: Avoid adding certain options and input files twice */
 

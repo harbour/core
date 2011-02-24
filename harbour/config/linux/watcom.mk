@@ -58,22 +58,22 @@ LDFLAGS += SYS linux
 LDLIBS := $(HB_USER_LIBS)
 LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
-DY := $(LD)
-DFLAGS += OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
-DY_OUT :=
-DLIBS :=
-
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-define dynlib_object
-   @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
-
-endef
-define create_dynlib
-   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-   $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' @__dyn__.tmp && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
-endef
-
-DY_RULE = $(create_dynlib)
+#DY := $(LD)
+#DFLAGS += OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
+#DY_OUT :=
+#DLIBS :=
+#
+## NOTE: The empty line directly before 'endef' HAVE TO exist!
+#define dynlib_object
+#   @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
+#
+#endef
+#define create_dynlib
+#   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+#   $(foreach file,$^,$(dynlib_object))
+#   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' @__dyn__.tmp && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
+#endef
+#
+#DY_RULE = $(create_dynlib)
 
 include $(TOP)$(ROOT)config/common/watcom.mk
