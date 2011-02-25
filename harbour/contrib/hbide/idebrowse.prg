@@ -491,20 +491,18 @@ METHOD IdeBrowseManager:setPanel( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
-   LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl, aStruct, cTmp
+   LOCAL cTable, cPath, cPanel, qMime, qList, i, cExt, qUrl, aStruct, cTmp
 
    HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH cEvent
    CASE "dockDbu_dragEnterEvent"
-      qEvent := QDragEnterEventFromPointer( p )
-      qEvent:acceptProposedAction()
+      p:acceptProposedAction()
       EXIT
 
    CASE "dockDbu_dropEvent"
-      qEvent := QDropEventFromPointer( p )
-      qMime := qEvent:mimeData()
+      qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:hbUrlList()
          FOR i := 0 TO qList:size() - 1

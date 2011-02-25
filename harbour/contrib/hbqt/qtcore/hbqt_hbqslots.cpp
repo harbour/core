@@ -135,54 +135,90 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
    if( id < 0 || c != QMetaObject::InvokeMetaMethod )
       return id;
 
-   // Q_ASSERT(id < slotList.size());
-
    QObject * object = sender();
-   const QMetaMethod meta = object->metaObject()->method( id );
-   QList<QByteArray> arrayOfTypes = meta.parameterTypes();
-   int parameterCount = arrayOfTypes.size();
-   QStringList parList;
-
-   HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
-
-   for( int i = 0; i < parameterCount; i++ )
-   {
-      if( arrayOfTypes.at( i ).contains( "::" ) ) // if includes :: is a enum -> int
-         parList += "int";
-      else
-      {
-         if( arrayOfTypes.at( i ).contains( "*" ) )  // if includes * is a pointer -> pointer
-            parList += "pointer";
-         else
-            parList += arrayOfTypes.at( i ); //
-      }
-   }
-
-   QByteArray paramString = parList.join( "$" ).toAscii();
-   HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
-
    if( object )
    {
       char szSlotName[ 20 ];
       hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", id );
       int i = object->property( szSlotName ).toInt();
 
-      if( i > 0 && i <= this->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= this->listBlock.size() )
       {
-         if( parameterCount == 0 )
-            hb_evalBlock0( this->listBlock.at( i - 1 ) );
-         else
+         QByteArray pString, paramString;
+         const QMetaMethod meta = object->metaObject()->method( id );
+         QList<QByteArray> arrayOfTypes = meta.parameterTypes();
+         int parameterCount = arrayOfTypes.size();
+
+         if( parameterCount > 0 )
          {
-            int paramId = s_argCombinations.indexOf( paramString );
-            PHBQT_SLOT_FUNC pCallback;
+            char szParams[ 20 ];
+            hb_snprintf( szParams, sizeof( szParams ), "PARAM_%d", id );
+            paramString = object->property( szParams ).toByteArray();
 
-            HB_TRACE( HB_TR_DEBUG, ( "  params=%s,  paramId=%d", ( char *) paramString.data(), paramId ) );
+            char szPList[ 20 ];
+            hb_snprintf( szPList, sizeof( szPList ), "PLIST_%d", id );
+            pString = object->property( szPList ).toByteArray();
 
-            pCallback = s_pCallback.at( paramId );
-            if( pCallback )
-               pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments );
+            if( paramString.isNull() )
+            {
+               QStringList parList, pList;
+
+               HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
+
+               for( int i = 0; i < parameterCount; i++ )
+               {
+                  if( arrayOfTypes.at( i ).contains( "::" ) )
+                  {
+                     parList += "int";
+                     pList += "int";
+                  }
+                  else
+                  {
+                     if( arrayOfTypes.at( i ).contains( "*" ) )
+                     {
+                        parList += "pointer";
+                        pList += arrayOfTypes.at( i );
+                     }
+                     else
+                     {
+                        parList += arrayOfTypes.at( i );
+                        pList += arrayOfTypes.at( i );
+                     }
+                  }
+               }
+               paramString = parList.join( "$" ).toAscii();
+               object->setProperty( szParams, paramString );
+
+               pString = pList.join( "$" ).toAscii();
+               object->setProperty( szPList, pString );
+
+               HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
+            }
+            #if 0
+            else
+            {
+               HB_TRACE( HB_TR_ALWAYS, ( "       pList is assigned %s ", ( char * ) pString.data() ) );
+            }
+            #endif
          }
-         hb_vmRequestRestore();
+
+         if( hb_vmRequestReenter() )
+         {
+            if( parameterCount == 0 )
+               hb_evalBlock0( this->listBlock.at( i - 1 ) );
+            else
+            {
+               int paramId = s_argCombinations.indexOf( paramString );
+               PHBQT_SLOT_FUNC pCallback;
+
+               HB_TRACE( HB_TR_DEBUG, ( "  params=%s,  paramId=%d", ( char * ) paramString.data(), paramId ) );
+
+               pCallback = s_pCallback.at( paramId );
+               if( pCallback )
+                  pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments, pString );
+            }
+            hb_vmRequestRestore();
+         }
       }
    }
    return -1;
@@ -229,7 +265,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
                            hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", slotId );
 
                            object->setProperty( szSlotName, ( int ) t_slots->listBlock.size() );
-                           object->setProperty( hb_parcx( 3 ), ( int ) t_slots->listBlock.size() );
+                           object->setProperty( pszSignal, ( int ) t_slots->listBlock.size() );
 
                            nResult = 0;
                         }
@@ -316,3 +352,4 @@ HB_FUNC( __HBQT_SLOTS_NEW )
 }
 
 #endif
+

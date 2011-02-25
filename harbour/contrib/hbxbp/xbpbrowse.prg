@@ -463,12 +463,12 @@ EXPORTED:
    METHOD   edit()                                  INLINE ::oTableView:edit( ::getCurrentIndex() )
 
    METHOD   manageFrameResized()
-   METHOD   manageCommitData( pWidget )
+   METHOD   manageCommitData( qWidget )
    METHOD   manageEditorClosed( pWidget, nHint )
    METHOD   manageScrollContents( nX, nY )
-   METHOD   manageMouseDblClick( pEvent )
-   METHOD   manageMousePress( pEvent )
-   METHOD   manageMouseWheel( pEvent )
+   METHOD   manageMouseDblClick( oMouseEvent )
+   METHOD   manageMousePress( oMouseEvent )
+   METHOD   manageMouseWheel( oWheelEvent )
 
    ENDCLASS
 
@@ -970,8 +970,7 @@ METHOD XbpBrowse:manageFrameResized()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:manageCommitData( pWidget )
-   LOCAL qWidget := QLineEditFromPointer( pWidget )
+METHOD XbpBrowse:manageCommitData( qWidget )
    LOCAL cTxt    := qWidget:text()
    LOCAL oCol    := ::columns[ ::colPos ]
    LOCAL cTyp    := valtype( eval( oCol:block ) )
@@ -994,7 +993,7 @@ METHOD XbpBrowse:manageCommitData( pWidget )
 
 METHOD XbpBrowse:manageEditorClosed( pWidget, nHint )
 
-   QLineEditFromPointer( pWidget ):close()
+   pWidget:close()
 //HB_TRACE( HB_TR_ALWAYS, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
    DO CASE
    CASE nHint == QAbstractItemDelegate_NoHint                 /* 0  RETURN is presses    */
@@ -1032,8 +1031,7 @@ METHOD XbpBrowse:manageScrollContents( nX, nY )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:manageMouseDblClick( pEvent )
-   LOCAL oMouseEvent := QMouseEventFromPointer( pEvent )
+METHOD XbpBrowse:manageMouseDblClick( oMouseEvent )
 
    IF oMouseEvent:button() == Qt_LeftButton
       SetAppEvent( xbeBRW_ItemSelected, NIL, NIL, Self )
@@ -1043,8 +1041,7 @@ METHOD XbpBrowse:manageMouseDblClick( pEvent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:manageMouseWheel( pEvent )
-   LOCAL oWheelEvent := QWheelEventFromPointer( pEvent )
+METHOD XbpBrowse:manageMouseWheel( oWheelEvent )
 
    IF oWheelEvent:orientation() == Qt_Vertical
       IF oWheelEvent:delta() > 0
@@ -1064,8 +1061,7 @@ METHOD XbpBrowse:manageMouseWheel( pEvent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:manageMousePress( pEvent )
-   LOCAL oMouseEvent := QMouseEventFromPointer( pEvent )
+METHOD XbpBrowse:manageMousePress( oMouseEvent )
 
    ::oModelIndex := ::oTableView:indexAt( oMouseEvent:pos() )
    IF ::oModelIndex:isValid()      /* Reposition the record pointer */

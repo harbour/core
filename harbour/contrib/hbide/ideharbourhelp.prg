@@ -177,7 +177,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD buildView( oFunc )
    METHOD print()
    METHOD exportAsPdf()
-   METHOD paintRequested( pPrinter )
+   METHOD paintRequested( qPrinter )
    METHOD parseTextFile( cTextFile, oParent )
    METHOD jumpToFunction( cFunction )
    METHOD getDocFunction( acBuffer )
@@ -416,7 +416,7 @@ METHOD IdeHarbourHelp:installSignals()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
-   LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower, qUrl
+   LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -436,8 +436,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "browserView_anchorClicked"
-      qUrl := QUrlFromPointer( p )
-      cText := lower( qUrl:toString() )
+      cText := lower( p:toString() )
       nLen := len( cText )
       IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
          ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
@@ -1324,8 +1323,7 @@ METHOD IdeHarbourHelp:print()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:paintRequested( pPrinter )
-   LOCAL qPrinter := QPrinterFromPointer( pPrinter )
+METHOD IdeHarbourHelp:paintRequested( qPrinter )
 
    ::oUI:q_browserView:print( qPrinter )
 

@@ -92,7 +92,7 @@ void HBQTableView::mousePressEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::MouseButtonPress );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -105,7 +105,7 @@ void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::MouseButtonDblClick );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -118,7 +118,7 @@ void HBQTableView::wheelEvent( QWheelEvent * event )
    if( block )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Wheel );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::Wheel );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );

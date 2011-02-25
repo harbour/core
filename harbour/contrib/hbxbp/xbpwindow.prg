@@ -77,11 +77,11 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
-   CLASSDATA nProperty                            INIT  0
+   CLASSDATA nProperty                            INIT   0
 
-   DATA     qtProperty                            INIT  ""
+   DATA     qtProperty                            INIT   ""
    DATA     qtObject
-   DATA     isViaQtObject                         INIT  .f.
+   DATA     isViaQtObject                         INIT   .f.
 
    /*  CONFIGURATION */
    DATA     animate                               INIT   .F.
@@ -172,7 +172,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   setQtProperty( cProperty )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   grabEvent( nEvent, pEvent )
+   METHOD   grabEvent( nEvent, oEvent )
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   captureMouse( lCapture )
    METHOD   invalidateRect( aRect )
@@ -458,7 +458,6 @@ METHOD XbpWindow:destroy()
    ENDIF
 
    ::XbpPartHandler:destroy()
-//   ::clearSlots()
 
    IF !empty( ::qtObject )
       ::qtObject:destroy()
@@ -519,13 +518,14 @@ METHOD XbpWindow:clearSlots()
       NEXT
    ENDIF
    ::aPresParams           := NIL
+   ::aPresParams           := NIL
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:grabEvent( nEvent, pEvent )
-   LOCAL oEvent, nXbpKey, oP0, oP1, oObj_O, oObj_N
+METHOD XbpWindow:grabEvent( nEvent, oEvent )
+   LOCAL nXbpKey, oP0, oP1, oObj_O, oObj_N
    LOCAL lRet := .t.
 
 //HB_TRACE( HB_TR_DEBUG, hb_threadId(), "XbpWindow:grabEvent", nEvent )
@@ -533,13 +533,11 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
    SWITCH ( nEvent )
 
    CASE QEvent_MouseMove                     // :motion()
-      oEvent      := QMouseEventFromPointer( pEvent )
       SetAppEvent( xbeM_Motion, { oEvent:x(), oEvent:y() }, NIL, self )
       lRet := .f.
       EXIT
    CASE QEvent_MouseButtonPress              // :lbClick() :mbClick() :rbClick()
                                              // :lbDown() :mbDown() :rbDown()
-      oEvent      := QMouseEventFromPointer( pEvent )
       DO CASE
       CASE oEvent:button() == Qt_LeftButton
          SetAppEvent( xbeM_LbDown, { oEvent:x(), oEvent:y() }, NIL, self )
@@ -551,7 +549,6 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       lRet := .f.
       EXIT
    CASE QEvent_MouseButtonRelease            // :mbUp() :rbUp() :lbUp()
-      oEvent      := QMouseEventFromPointer( pEvent )
       DO CASE
       CASE oEvent:button() == Qt_LeftButton
          SetAppEvent( xbeM_LbUp, { oEvent:x(), oEvent:y() }, NIL, self )
@@ -563,7 +560,6 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       lRet := .f.
       EXIT
    CASE QEvent_MouseButtonDblClick           // :lbDblClick() :mbDblClick() :rbDblClick()
-      oEvent      := QMouseEventFromPointer( pEvent )
       DO CASE
       CASE oEvent:button() == Qt_LeftButton
          SetAppEvent( xbeM_LbDblClick, { oEvent:x(), oEvent:y() }, NIL, self )
@@ -575,26 +571,22 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       lRet := .f.
       EXIT
    CASE QEvent_ContextMenu                   //
-      oEvent      := QContextMenuEventFromPointer( pEvent )
       //SetAppEvent( xbeM_Context, { oEvent:globalX(), oEvent:globalY() }, NIL, self )
       ::hbContextMenu( { oEvent:globalX(), oEvent:globalY() } )
       EXIT
    CASE QEvent_Enter                         // :enter()
       IF ( ::lTrack )
-         oEvent      := QMouseEventFromPointer( pEvent )
          SetAppEvent( xbeM_Enter, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDIF
       lRet := .f.
       EXIT
    CASE QEvent_Leave                         // :leave()
       IF ( ::lTrack )
-         oEvent      := QMouseEventFromPointer( pEvent )
          SetAppEvent( xbeM_Leave, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDIF
       lRet := .f.
       EXIT
    CASE QEvent_Wheel                         // :wheel()
-      oEvent      := QWheelEventFromPointer( pEvent )
       SetAppEvent( xbeM_Wheel, { oEvent:x(), oEvent:y() }, { oEvent:buttons(), oEvent:delta() }, self )
       lRet := .f.
       EXIT
@@ -607,27 +599,23 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       lRet := .f.
       EXIT
    CASE QEvent_Paint                         // :paint()
-      oEvent      := QPaintEventFromPointer( pEvent )
       oObj_N      := oEvent:rect()
       SetAppEvent( xbeP_Paint, { oObj_N:left(), oObj_N:top(), oObj_N:right(), oObj_N:bottom() }, NIL, Self )
       lRet := .f.
       EXIT
    CASE QEvent_Move                          // :move()
-      oEvent      := QMoveEventFromPointer( pEvent )
       oP0         := oEvent:oldPos()
       oP1         := oEvent:pos()
       SetAppEvent( xbeP_Move, { oP0:x(), oP0:y() }, { oP1:x(), oP1:y() }, Self )
       lRet := .f.
       EXIT
    CASE QEvent_Resize                        // :resize()
-      oEvent      := QResizeEventFromPointer( pEvent )
       oObj_O      := oEvent:oldSize()
       oObj_N      := oEvent:size()
       SetAppEvent( xbeP_Resize, { oObj_O:width(), oObj_O:height() }, { oObj_N:width(), oObj_N:height() }, Self )
       lRet := .f.
       EXIT
    CASE QEvent_DragEnter                     // :dragEnter()
-      oEvent      := QDragEnterEventFromPointer( pEvent )
       oObj_O      := oEvent:pos()
       SetAppEvent( xbeP_DragEnter, { oEvent:mouseButtons(), { oObj_O:x(), oObj_O:y() } }, /* oDragObj */, Self )
       EXIT
@@ -635,12 +623,10 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       SetAppEvent( xbeP_DragLeave, NIL, NIL, Self )
       EXIT
    CASE QEvent_DragMove                      // :dragMotion()
-      oEvent      := QDragEnterEventFromPointer( pEvent )
       oObj_O      := oEvent:pos()
       SetAppEvent( xbeP_DragMotion, { oEvent:mouseButtons(), { oObj_O:x(), oObj_O:y() } }, NIL, Self )
       EXIT
    CASE QEvent_Drop                          // :dragDrop()
-      oEvent      := QDragEnterEventFromPointer( pEvent )
       oObj_O      := oEvent:pos()
       SetAppEvent( xbeP_DragDrop, { oEvent:mouseButtons()  , { oObj_O:x(), oObj_O:y() } }, /* oDragObj */, Self )
       EXIT
@@ -648,7 +634,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
       SetAppEvent( xbeP_HelpRequest, NIL, NIL, Self )
       EXIT
    CASE QEvent_KeyPress                      // :keyBoard()
-      nXbpkey := XbpQKeyEventToAppEvent( pEvent )
+      nXbpkey := XbpQKeyEventToAppEvent( oEvent )
       SetAppEvent( xbeP_Keyboard, nXbpKey, NIL, self )
       EXIT
 

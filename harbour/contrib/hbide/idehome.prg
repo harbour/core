@@ -120,7 +120,7 @@ CLASS IdeHome INHERIT IdeObject
    METHOD buildFaqTab()
    METHOD setStyleSheetTextBrowser( qBrw )
    METHOD print()
-   METHOD paintRequested( pPrinter )
+   METHOD paintRequested( qPrinter )
 
    ENDCLASS
 
@@ -171,7 +171,7 @@ METHOD IdeHome:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHome:execEvent( nMode, p )
-   LOCAL cAct, qUrl, cText, cExt
+   LOCAL cAct, cText, cExt
 
    DO CASE
    CASE nMode == "tabWidget_currentChanged"
@@ -182,8 +182,7 @@ METHOD IdeHome:execEvent( nMode, p )
       ENDIF
 
    CASE nMode == "browserStat_anchorClicked"
-      qUrl  := QUrlFromPointer( p )
-      cText := qUrl:toString()
+      cText := p:toString()
 
       IF "prj-" $ lower( cText )
          ::cClickedProject := substr( cText, 5 )
@@ -249,11 +248,8 @@ METHOD IdeHome:print()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHome:paintRequested( pPrinter )
-   LOCAL qPrinter := QPrinterFromPointer( pPrinter )
-
+METHOD IdeHome:paintRequested( qPrinter )
    ::qCurBrowser:print( qPrinter )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

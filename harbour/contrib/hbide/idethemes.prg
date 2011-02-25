@@ -751,8 +751,7 @@ METHOD IdeThemes:selectThemeProc( nMode, p )
 
    DO CASE
    CASE nMode == 1
-      qModalIndex := QModelIndexFromPointer( p )
-      ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
+      ::cSelTheme := ::aThemes[ p:row() + 1, 1 ]
       ::oSL:done( 1 )
 
    CASE nMode == 2

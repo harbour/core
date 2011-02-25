@@ -160,7 +160,7 @@ METHOD HbqToolbar:destroy()
 METHOD HbqToolbar:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qRC
 
-   qEvent := QMouseEventFromPointer( p )
+   qEvent := p
 
    SWITCH cEvent
    CASE "QEvent_MouseLeave"

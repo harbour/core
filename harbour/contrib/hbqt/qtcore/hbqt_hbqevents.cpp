@@ -170,7 +170,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
    if( found <= listBlock.size() && hb_vmRequestReenter() )
    {
-      PHB_ITEM pEvent = hb_itemPutPtr( NULL, event );
+      PHB_ITEM pEvent = hbqt_create_objectFromEventType( event, ( int ) eventtype );
       ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
       hb_itemRelease( pEvent );
       hb_vmRequestRestore();

@@ -1470,14 +1470,13 @@ METHOD HbIde:setCodec( cCodec )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:testPainter( qPainter )
-   LOCAL qP := QPainterFromPointer( qPainter )
 
-   HB_TRACE( HB_TR_DEBUG, "qPainter:isActive()", qP:isActive() )
+   HB_TRACE( HB_TR_DEBUG, "qPainter:isActive()", qPainter:isActive() )
 
-   qP:setPen( Qt_red )
-   qP:drawEllipse( 100,300,100,150 )
-   qP:setFont( ::oFont:oWidget )
-   qP:drawText( 100,300,"Harbour" )
+   qPainter:setPen( Qt_red )
+   qPainter:drawEllipse( 100,300,100,150 )
+   qPainter:setFont( ::oFont:oWidget )
+   qPainter:drawText( 100,300,"Harbour" )
 
    //qPainter:fillRect( 100, 100, 500, 500, QColor( 175, 175, 255 ) )
 

@@ -252,35 +252,8 @@ METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF hb_isPointer( pQtObject )
-      SWITCH ::type
-      CASE XBPSTATIC_TYPE_ICON
-      CASE XBPSTATIC_TYPE_SYSICON
-      CASE XBPSTATIC_TYPE_BITMAP
-      CASE XBPSTATIC_TYPE_TEXT
-         ::oWidget := QLabelFromPointer( pQtObject )
-         EXIT
-      CASE XBPSTATIC_TYPE_GROUPBOX
-         ::oWidget := QGroupBoxFromPointer( pQtObject )
-         EXIT
-      CASE XBPSTATIC_TYPE_RAISEDBOX
-      CASE XBPSTATIC_TYPE_RECESSEDBOX
-      CASE XBPSTATIC_TYPE_RAISEDRECT
-      CASE XBPSTATIC_TYPE_RECESSEDRECT
-      CASE XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
-      CASE XBPSTATIC_TYPE_BGNDFRAME
-      CASE XBPSTATIC_TYPE_FGNDRECT
-      CASE XBPSTATIC_TYPE_BGNDRECT
-      CASE XBPSTATIC_TYPE_HALFTONERECT
-      CASE XBPSTATIC_TYPE_HALFTONEFRAME
-      CASE XBPSTATIC_TYPE_RAISEDLINE
-      CASE XBPSTATIC_TYPE_RECESSEDLINE
-         ::oWidget := QFrameFromPointer( pQtObject )
-         EXIT
-      OTHERWISE
-         ::oWidget := QFrameFromPointer( pQtObject )
-         EXIT
-      ENDSWITCH
+   IF hb_isObject( pQtObject )
+      ::oWidget := pQtObject:oWidget
    ENDIF
 
    RETURN Self

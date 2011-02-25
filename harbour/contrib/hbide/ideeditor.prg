@@ -120,7 +120,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD insertSeparator( cSep )
    METHOD zoom( nKey )
    METHOD printPreview()
-   METHOD paintRequested( pPrinter )
+   METHOD paintRequested( qPrinter )
    METHOD setMark()
    METHOD gotoMark( nIndex )
    METHOD goto( nLine )
@@ -1011,9 +1011,7 @@ METHOD IdeEditsManager:printPreview()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:paintRequested( pPrinter )
-   LOCAL qPrinter
-   qPrinter := QPrinterFromPointer( pPrinter )
+METHOD IdeEditsManager:paintRequested( qPrinter )
    ::qCurEdit:print( qPrinter )
    RETURN Self
 

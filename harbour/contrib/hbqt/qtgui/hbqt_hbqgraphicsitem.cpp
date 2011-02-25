@@ -65,6 +65,10 @@
 
 #include <math.h>
 
+HB_EXTERN_BEGIN
+extern void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );
+HB_EXTERN_END
+
 HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphicsItem( parent )
 {
    iType = type;
@@ -483,7 +487,7 @@ void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    if( block ){
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
-      PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
+      PHB_ITEM p2 = hbqt_create_objectFromEventType( event, QEvent::GraphicsSceneContextMenu );
       PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
@@ -765,7 +769,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
-      PHB_ITEM p2 = hb_itemPutPtr( NULL, painter );
+      PHB_ITEM p2 = hbqt_create_object( hbqt_gcAllocate_QPainter( painter, false ), ( const char * ) "QPainter*", 0 );
       PHB_ITEM p3 = hb_itemPutPtr( NULL, &rect );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );

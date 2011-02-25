@@ -187,10 +187,8 @@ METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 METHOD XbpTreeView:execSlot( cSlot, p )
    LOCAL n, qPt, qItem, oItem, qPos
 
-   IF hb_isPointer( p )
-      IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqualGcQtPointer( o:oWidget, p ) ) } ) ) > 0
-         oItem := ::aItems[ n ]
-      ENDIF
+   IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqualGcQtPointer( o:oWidget, p ) ) } ) ) > 0
+      oItem := ::aItems[ n ]
    ENDIF
 
    DO CASE

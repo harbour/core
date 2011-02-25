@@ -83,7 +83,7 @@ typedef struct
    HB_U32 type;
 } HBQT_GC_T;
 
-typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments );
+typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QByteArray pList );
 
 HB_EXTERN_BEGIN
 
@@ -95,7 +95,11 @@ extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
 extern HB_EXPORT int hbqt_IsObjectType( int iParam, HB_U32 iType );
 extern HB_EXPORT void hbqt_errRT_ARG( void );
-
+extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const char* szParentClsStr );
+extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
+extern HB_EXPORT void * hbqt_getqtptr( void );
+extern HB_EXPORT PHB_ITEM hbqt_create_object( void * p, const char * objectList, int iIndex );
+extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type );
 HB_EXTERN_END
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
@@ -105,3 +109,4 @@ HB_EXTERN_END
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
 
 #endif /* __HBQT_H */
+

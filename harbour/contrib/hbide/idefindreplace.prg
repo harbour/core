@@ -722,7 +722,7 @@ CLASS IdeFindInFiles INHERIT IdeObject
    METHOD destroy()
    METHOD show()
    METHOD print()
-   METHOD paintRequested( pPrinter )
+   METHOD paintRequested( qPrinter )
    METHOD find()
    METHOD findInABunch( aFiles )
    METHOD showLog( nType, cMsg, aLines )
@@ -1405,13 +1405,8 @@ METHOD IdeFindInFiles:print()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindInFiles:paintRequested( pPrinter )
-   LOCAL qPrinter
-
-   qPrinter := QPrinterFromPointer( pPrinter )
-
+METHOD IdeFindInFiles:paintRequested( qPrinter )
    ::oUI:q_editResults:print( qPrinter )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

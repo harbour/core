@@ -31,8 +31,8 @@ HB_FUNC( QT_QTREEWIDGET )
 </CODE>
 
 <PROTOS>
-void addTopLevelItem ( QTreeWidgetItem * item )   [*D=1*]
-void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )
+void addTopLevelItem ( QTreeWidgetItem * item )                               [*D=1*]
+void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )              [*D=1*]
 void closePersistentEditor ( QTreeWidgetItem * item, int column = 0 )
 int columnCount () const
 int currentColumn () const

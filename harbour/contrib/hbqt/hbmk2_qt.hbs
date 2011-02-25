@@ -1746,7 +1746,6 @@ METHOD HbQtSource:buildClassEx()
    aadd( aClsEx, '   hb_arraySetPtr( pObj, 1, hb_parptr( 1 ) );' )
    aadd( aClsEx, '}' )
    aadd( aClsEx, '' )
-   #endif
    aadd( aClsEx, 'static void * hbqt_getqtptr( void )' )
    aadd( aClsEx, '{' )
    aadd( aClsEx, '   PHB_ITEM pObj = hb_stackSelfItem();' )
@@ -1757,6 +1756,7 @@ METHOD HbQtSource:buildClassEx()
    aadd( aClsEx, '      return NULL;' )
    aadd( aClsEx, '}' )
    aadd( aClsEx, '' )
+   #endif
    FOR EACH oMtd IN ::aMethods
       aBdy := ::getMethodBody( oMtd, 'Q' + uObj + '_' + upper( oMtd:cHBFunc ), 1 )
       aeval( aBdy, {|e| aadd( aClsEx, e ) } )

@@ -236,7 +236,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD pageUp()
    METHOD pageDown()
    METHOD printPreview()
-   METHOD paintRequested( pPrinter )
+   METHOD paintRequested( qPrinter )
    METHOD tabs2spaces()
    METHOD spaces2tabs()
    METHOD removeTrailingSpaces()
@@ -596,18 +596,15 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
-   LOCAL key, kbm, qEvent, lAlt, lCtrl, lShift
+   LOCAL key, kbm, lAlt, lCtrl, lShift
 
    HB_SYMBOL_UNUSED( nMode )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nEvent
    CASE QEvent_KeyPress
-
-      qEvent := QKeyEventFromPointer( p )
-
-      key    := qEvent:key()
-      kbm    := qEvent:modifiers()
+      key    := p:key()
+      kbm    := p:modifiers()
 
       lAlt   := hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
       lCtrl  := hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
@@ -1854,9 +1851,7 @@ METHOD IdeEdit:printPreview()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:paintRequested( pPrinter )
-   LOCAL qPrinter
-   qPrinter := QPrinterFromPointer( pPrinter )
+METHOD IdeEdit:paintRequested( qPrinter )
    ::qEdit:print( qPrinter )
    RETURN Self
 
