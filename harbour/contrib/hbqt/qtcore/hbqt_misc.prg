@@ -52,7 +52,136 @@
 
 #include "hbclass.ch"
 #include "error.ch"
-#include "hbqtgui.ch"
+
+#define QEvent_None                               0
+#define QEvent_Timer                              1
+#define QEvent_MouseButtonPress                   2
+#define QEvent_MouseButtonRelease                 3
+#define QEvent_MouseButtonDblClick                4
+#define QEvent_MouseMove                          5
+#define QEvent_KeyPress                           6
+#define QEvent_KeyRelease                         7
+#define QEvent_FocusIn                            8
+#define QEvent_FocusOut                           9
+#define QEvent_Enter                              10
+#define QEvent_Leave                              11
+#define QEvent_Paint                              12
+#define QEvent_Move                               13
+#define QEvent_Resize                             14
+#define QEvent_Show                               17
+#define QEvent_Hide                               18
+#define QEvent_Close                              19
+#define QEvent_ParentChange                       21
+#define QEvent_WindowActivate                     24
+#define QEvent_WindowDeactivate                   25
+#define QEvent_ShowToParent                       26
+#define QEvent_HideToParent                       27
+#define QEvent_Wheel                              31
+#define QEvent_WindowTitleChange                  33
+#define QEvent_WindowIconChange                   34
+#define QEvent_ApplicationWindowIconChange        35
+#define QEvent_ApplicationFontChange              36
+#define QEvent_ApplicationLayoutDirectionChange   37
+#define QEvent_ApplicationPaletteChange           38
+#define QEvent_PaletteChange                      39
+#define QEvent_Clipboard                          40
+#define QEvent_MetaCall                           43
+#define QEvent_SockAct                            50
+#define QEvent_ShortcutOverride                   51
+#define QEvent_DeferredDelete                     52
+#define QEvent_DragEnter                          60
+#define QEvent_DragLeave                          62
+#define QEvent_DragMove                           61
+#define QEvent_Drop                               63
+#define QEvent_ChildAdded                         68
+#define QEvent_ChildPolished                      69
+#define QEvent_ChildInserted                      70
+#define QEvent_ChildRemoved                       71
+#define QEvent_PolishRequest                      74
+#define QEvent_Polish                             75
+#define QEvent_LayoutRequest                      76
+#define QEvent_UpdateRequest                      77
+#define QEvent_UpdateLater                        78
+#define QEvent_ContextMenu                        82
+#define QEvent_InputMethod                        83
+#define QEvent_AccessibilityPrepare               86
+#define QEvent_TabletMove                         87
+#define QEvent_LocaleChange                       88
+#define QEvent_LanguageChange                     89
+#define QEvent_LayoutDirectionChange              90
+#define QEvent_TabletPress                        92
+#define QEvent_TabletRelease                      93
+#define QEvent_OkRequest                          94
+#define QEvent_IconDrag                           96
+#define QEvent_FontChange                         97
+#define QEvent_EnabledChange                      98
+#define QEvent_ActivationChange                   99
+#define QEvent_StyleChange                        100
+#define QEvent_IconTextChange                     101
+#define QEvent_ModifiedChange                     102
+#define QEvent_WindowBlocked                      103
+#define QEvent_WindowUnblocked                    104
+#define QEvent_WindowStateChange                  105
+#define QEvent_MouseTrackingChange                109
+#define QEvent_ToolTip                            110
+#define QEvent_WhatsThis                          111
+#define QEvent_StatusTip                          112
+#define QEvent_ActionChanged                      113
+#define QEvent_ActionAdded                        114
+#define QEvent_ActionRemoved                      115
+#define QEvent_FileOpen                           116
+#define QEvent_Shortcut                           117
+#define QEvent_WhatsThisClicked                   118
+#define QEvent_AccessibilityHelp                  119
+#define QEvent_ToolBarChange                      120
+#define QEvent_ApplicationActivate                121
+#define QEvent_ApplicationActivated               121
+#define QEvent_ApplicationDeactivate              122
+#define QEvent_QueryWhatsThis                     123
+#define QEvent_EnterWhatsThisMode                 124
+#define QEvent_LeaveWhatsThisMode                 125
+#define QEvent_ZOrderChange                       126
+#define QEvent_HoverEnter                         127
+#define QEvent_HoverLeave                         128
+#define QEvent_HoverMove                          129
+#define QEvent_AccessibilityDescription           130
+#define QEvent_ParentAboutToChange                131
+#define QEvent_WinEventAct                        132
+#define QEvent_EnterEditFocus                     150
+#define QEvent_LeaveEditFocus                     151
+#define QEvent_MenubarUpdated                     153
+#define QEvent_GraphicsSceneMouseMove             155
+#define QEvent_GraphicsSceneMousePress            156
+#define QEvent_GraphicsSceneMouseRelease          157
+#define QEvent_GraphicsSceneMouseDoubleClick      158
+#define QEvent_GraphicsSceneContextMenu           159
+#define QEvent_GraphicsSceneHoverEnter            160
+#define QEvent_GraphicsSceneHoverMove             161
+#define QEvent_GraphicsSceneHoverLeave            162
+#define QEvent_GraphicsSceneHelp                  163
+#define QEvent_GraphicsSceneDragEnter             164
+#define QEvent_GraphicsSceneDragMove              165
+#define QEvent_GraphicsSceneDragLeave             166
+#define QEvent_GraphicsSceneDrop                  167
+#define QEvent_GraphicsSceneWheel                 168
+#define QEvent_KeyboardLayoutChange               169
+#define QEvent_DynamicPropertyChange              170
+#define QEvent_TabletEnterProximity               171
+#define QEvent_TabletLeaveProximity               172
+#define QEvent_NonClientAreaMouseMove             173
+#define QEvent_NonClientAreaMouseButtonPress      174
+#define QEvent_NonClientAreaMouseButtonRelease    175
+#define QEvent_NonClientAreaMouseButtonDblClick   176
+#define QEvent_MacSizeChange                      177
+#define QEvent_ContentsRectChange                 178
+#define QEvent_GraphicsSceneResize                181
+#define QEvent_GraphicsSceneMove                  182
+#define QEvent_CursorChange                       183
+#define QEvent_ToolTipChange                      184
+#define QEvent_GrabMouse                          186
+#define QEvent_UngrabMouse                        187
+#define QEvent_GrabKeyboard                       188
+#define QEvent_UngrabKeyboard                     189
 
 /*----------------------------------------------------------------------*/
 
@@ -231,295 +360,147 @@ FUNCTION hbqt_createQtObject( cObjectList, nIndex, pPtr )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbqt_createQtObjectByType( nType, pPtr )
-   LOCAL qObj
+   LOCAL qObj, cObj
 
-   SWITCH nType
-   CASE QEvent_Timer                              // Regular timer events (QTimerEvent).
-//      qObj := HB_QTimerEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_MouseButtonPress                   // Mouse press (QMouseEvent).
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_MouseButtonRelease                 // Mouse release (QMouseEvent).
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_MouseButtonDblClick                // Mouse press again (QMouseEvent).
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_MouseMove                          // Mouse move (QMouseEvent).
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_KeyPress                           // Key press (QKeyEvent).
-      qObj := HB_QKeyEvent(); EXIT
-   CASE QEvent_KeyRelease                         // Key release (QKeyEvent).
-      qObj := HB_QKeyEvent(); EXIT
-   CASE QEvent_FocusIn                            // Widget gains keyboard focus (QFocusEvent).
-      qObj := HB_QFocusEvent(); EXIT
-   CASE QEvent_FocusOut                           // Widget loses keyboard focus (QFocusEvent).
-      qObj := HB_QFocusEvent(); EXIT
-   CASE QEvent_Enter                              // Mouse enters widget's boundaries.
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_Leave                              // Mouse leaves widget's boundaries.
-      qObj := HB_QMouseEvent(); EXIT
-   CASE QEvent_Paint                              // Screen update necessary (QPaintEvent).
-      qObj := HB_QPaintEvent(); EXIT
-   CASE QEvent_Move                               // Widget's position changed (QMoveEvent).
-      qObj := HB_QMoveEvent(); EXIT
-   CASE QEvent_Resize                             // Widget's size changed (QResizeEvent).
-      qObj := HB_QResizeEvent(); EXIT
-   CASE QEvent_Show                               // Widget was shown on screen (QShowEvent).
-      qObj := HB_QShowEvent(); EXIT
-   CASE QEvent_Hide                               // Widget was hidden (QHideEvent).
-      qObj := HB_QHideEvent(); EXIT
-   CASE QEvent_Close                              // Widget was closed (QCloseEvent).
-//      qObj := HB_QCloseEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ParentChange                       // The widget parent has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowActivate                     // Window was activated.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowDeactivate                   // Window was deactivated.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ShowToParent                       // A child widget has been shown.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_HideToParent                       // A child widget has been hidden.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_Wheel                              // Mouse wheel rolled (QWheelEvent).
-      qObj := HB_QWheelEvent(); EXIT
-   CASE QEvent_WindowTitleChange                  // The window title has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowIconChange                   // The window's icon has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationWindowIconChange        // The application's icon has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationFontChange              // The default application font has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationLayoutDirectionChange   // The default application layout direction has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationPaletteChange           // The default application palette has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_PaletteChange                      // Palette of the widget changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_Clipboard                          // The clipboard contents have changed (QClipboardEvent).
-//      qObj := HB_QClipboardEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_MetaCall                           // An asynchronous method invocation via QMetaObject_invokeMethod().
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_SockAct                            // Socket activated, used to implement QSocketNotifier.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ShortcutOverride                   // Key press in child, for overriding shortcut key handling (QKeyEvent).
-      qObj := HB_QKeyEvent(); EXIT
-   CASE QEvent_DeferredDelete                     // The object will be deleted after it has cleaned up.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_DragEnter                          // The cursor enters a widget during a drag and drop operation (QDragEnterEvent).
-      qObj := HB_QDragEnterEvent(); EXIT
-   CASE QEvent_DragLeave                          // The cursor leaves a widget during a drag and drop operation (QDragLeaveEvent).
-      qObj := HB_QDragLeaveEvent(); EXIT
-   CASE QEvent_DragMove                           // A drag and drop operation is in progress (QDragMoveEvent).
-      qObj := HB_QDragMoveEvent(); EXIT
-   CASE QEvent_Drop                               // A drag and drop operation is completed (QDropEvent).
-      qObj := HB_QDropEvent(); EXIT
-   CASE QEvent_ChildAdded                         // An object gets a child (QChildEvent).
-//      qObj := HB_QChildEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ChildPolished                      // A widget child gets polished (QChildEvent).
-//      qObj := HB_QChildEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ChildInserted                      // An object gets a child (QChildEvent). Qt3Support only, use ChildAdded instead.
-//      qObj := HB_QChildEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ChildRemoved                       // An object loses a child (QChildEvent).
-//      qObj := HB_QChildEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_PolishRequest                      // The widget should be polished.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_Polish                             // The widget is polished.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LayoutRequest                      // Widget layout needs to be redone.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_UpdateRequest                      // The widget should be repainted.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_UpdateLater                        // The widget should be queued to be repainted at a later time.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ContextMenu                        // Context popup menu (QContextMenuEvent).
-      qObj := HB_QContextMenuEvent(); EXIT
-   CASE QEvent_InputMethod                        // An input method is being used (QInputMethodEvent).
-      qObj := HB_QInputMethodEvent(); EXIT
-   CASE QEvent_AccessibilityPrepare               // Accessibility information is requested.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_TabletMove                         // Wacom tablet move (QTabletEvent).
-//      qObj := HB_QTabletEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LocaleChange                       // The system locale has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LanguageChange                     // The application translation changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LayoutDirectionChange              // The direction of layouts changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_TabletPress                        // Wacom tablet press (QTabletEvent).
-//      qObj := HB_QTabletEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_TabletRelease                      // Wacom tablet release (QTabletEvent).
-//      qObj := HB_QTabletEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_OkRequest                          // Ok button in decoration pressed. Supported only for Windows CE.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_IconDrag                           // The main icon of a window has been dragged away (QIconDragEvent).
-//      qObj := HB_QIconDragEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_FontChange                         // Widget's font has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_EnabledChange                      // Widget's enabled state has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ActivationChange                   // A widget's top-level window activation state has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_StyleChange                        // Widget's style has been changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_IconTextChange                     // Widget's icon text has been changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ModifiedChange                     // Widgets modification state has been changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowBlocked                      // The window is blocked by a modal dialog.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowUnblocked                    // The window is unblocked after a modal dialog exited.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WindowStateChange                  // The window's state (minimized, maximized or full-screen) has changed (QWindowStateChangeEvent).
-      qObj := HB_QWindowStateChangeEvent(); EXIT
-   CASE QEvent_MouseTrackingChange                // The mouse tracking state has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ToolTip                            // A tooltip was requested (QHelpEvent).
-      qObj := HB_QHelpEvent(); EXIT
-   CASE QEvent_WhatsThis                          // The widget should reveal "What's This?" help (QHelpEvent).
-      qObj := HB_QHelpEvent(); EXIT
-   CASE QEvent_StatusTip                          // A status tip is requested (QStatusTipEvent).
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ActionChanged                      // An action has been changed (QActionEvent).
-//      qObj := HB_QActionEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ActionAdded                        // A new action has been added (QActionEvent).
-//      qObj := HB_QActionEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ActionRemoved                      // An action has been removed (QActionEvent).
-//      qObj := HB_QActionEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_FileOpen                           // File open request (QFileOpenEvent).
-//      qObj := HB_QFileOpenEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_Shortcut                           // Key press in child for shortcut key handling (QShortcutEvent).
-//      qObj := HB_QShortcutEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WhatsThisClicked                   // A link in a widget's "What's This?" help was clicked.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_AccessibilityHelp                  // Used to query accessibility help texts (QAccessibleEvent).
-//      qObj := HB_QAccessibleEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ToolBarChange                      // The toolbar button is toggled on Mac OS X.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationActivate                // The application has been made available to the user.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationActivated               // This enum has been deprecated. Use ApplicationActivate instead.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ApplicationDeactivate              // The application has been suspended, and is unavailable to the user.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_QueryWhatsThis                     // The widget should accept the event if it has "What's This?" help.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_EnterWhatsThisMode                 // Send to toplevel widgets when the application enters "What's This?" mode.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LeaveWhatsThisMode                 // Send to toplevel widgets when the application leaves "What's This?" mode.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ZOrderChange                       // The widget's z-order has changed. This event is never sent to top level windows.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_HoverEnter                         // The mouse cursor enters a hover widget (QHoverEvent).
-//      qObj := HB_QHoverEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_HoverLeave                         // The mouse cursor leaves a hover widget (QHoverEvent).
-//      qObj := HB_QHoverEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_HoverMove                          // The mouse cursor moves inside a hover widget (QHoverEvent).
-//      qObj := HB_QHoverEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_AccessibilityDescription           // Used to query accessibility description texts (QAccessibleEvent).
-//      qObj := HB_QAccessibleEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ParentAboutToChange                // The widget parent is about to change.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_WinEventAct                        // A Windows-specific activation event has occurred.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_EnterEditFocus                     // An editor widget gains focus for editing.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_LeaveEditFocus                     // An editor widget loses focus for editing.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_MenubarUpdated                     // The window's menu bar has been updated.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_GraphicsSceneMouseMove             // Move mouse in a graphics scene (QGraphicsSceneMouseEvent).
-      qObj := HB_QGraphicsSceneMouseEvent(); EXIT
-   CASE QEvent_GraphicsSceneMousePress            // Mouse press in a graphics scene (QGraphicsSceneMouseEvent).
-      qObj := HB_QGraphicsSceneMouseEvent(); EXIT
-   CASE QEvent_GraphicsSceneMouseRelease          // Mouse release in a graphics scene (QGraphicsSceneMouseEvent).
-      qObj := HB_QGraphicsSceneMouseEvent(); EXIT
-   CASE QEvent_GraphicsSceneMouseDoubleClick      // Mouse press again (double click) in a graphics scene (QGraphicsSceneMouseEvent).
-      qObj := HB_QGraphicsSceneMouseEvent(); EXIT
-   CASE QEvent_GraphicsSceneContextMenu           // Context popup menu over a graphics scene (QGraphicsSceneContextMenuEvent).
-      qObj := HB_QGraphicsSceneContextMenuEvent(); EXIT
-   CASE QEvent_GraphicsSceneHoverEnter            // The mouse cursor enters a hover item in a graphics scene (QGraphicsSceneHoverEvent).
-      qObj := HB_QGraphicsSceneHoverEvent(); EXIT
-   CASE QEvent_GraphicsSceneHoverMove             // The mouse cursor moves inside a hover item in a graphics scene (QGraphicsSceneHoverEvent).
-      qObj := HB_QGraphicsSceneHoverEvent(); EXIT
-   CASE QEvent_GraphicsSceneHoverLeave            // The mouse cursor leaves a hover item in a graphics scene (QGraphicsSceneHoverEvent).
-      qObj := HB_QGraphicsSceneHoverEvent(); EXIT
-   CASE QEvent_GraphicsSceneHelp                  // The user requests help for a graphics scene (QHelpEvent).
-      qObj := HB_QHelpEvent(); EXIT
-   CASE QEvent_GraphicsSceneDragEnter             // The cursor enters a graphics scene during a drag and drop operation.
-      qObj := HB_QGraphicsSceneDragDropEvent(); EXIT
-   CASE QEvent_GraphicsSceneDragMove              // A drag and drop operation is in progress over a scene.
-      qObj := HB_QGraphicsSceneDragDropEvent(); EXIT
-   CASE QEvent_GraphicsSceneDragLeave             // The cursor leaves a graphics scene during a drag and drop operation.
-      qObj := HB_QGraphicsSceneDragDropEvent(); EXIT
-   CASE QEvent_GraphicsSceneDrop                  // A drag and drop operation is completed over a scene.
-      qObj := HB_QGraphicsSceneDragDropEvent(); EXIT
-   CASE QEvent_GraphicsSceneWheel                 // Mouse wheel rolled in a graphics scene (QGraphicsSceneWheelEvent).
-      qObj := HB_QGraphicsSceneWheelEvent(); EXIT
-   CASE QEvent_KeyboardLayoutChange               // The keyboard layout has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_DynamicPropertyChange              // A dynamic property was added, changed or removed from the object. User events should have values b
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_TabletEnterProximity               // Wacom tablet enter proximity event (QTabletEvent), sent to QApplication.
-//      qObj := HB_QTabletEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_TabletLeaveProximity               // Wacom tablet leave proximity event (QTabletEvent), sent to QApplication.
-//      qObj := HB_QTabletEvent(); EXIT
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_NonClientAreaMouseMove             // A mouse move occurred outside the client area.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_NonClientAreaMouseButtonPress      // A mouse button press occurred outside the client area.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_NonClientAreaMouseButtonRelease    // A mouse button release occurred outside the client area.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_NonClientAreaMouseButtonDblClick   // A mouse double click occurred outside the client area.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_MacSizeChange                      // The user changed his widget sizes (Mac OS X only).
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ContentsRectChange                 // The margins of the widget's content rect changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_GraphicsSceneResize                // Widget was resized (QGraphicsSceneResizeEvent).
-      qObj := HB_QGraphicsSceneResizeEvent(); EXIT
-   CASE QEvent_GraphicsSceneMove                  // Widget was moved (QGraphicsSceneMoveEvent).
-      qObj := HB_QGraphicsSceneMoveEvent(); EXIT
-   CASE QEvent_CursorChange                       // The widget's cursor has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_ToolTipChange                      // The widget's tooltip has changed.
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_GrabMouse                          // Item gains mouse grab (QGraphicsItem only).
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_UngrabMouse                        // Item loses mouse grab (QGraphicsItem only).
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_GrabKeyboard                       // Item gains keyboard grab (QGraphicsItem only).
-      qObj := HB_QEvent(); EXIT
-   CASE QEvent_UngrabKeyboard                     // Item loses keyboard grab (QGraphicsItem only).
-      qObj := HB_QEvent(); EXIT
-   OTHERWISE
-      qObj := HB_QEvent(); EXIT
-   ENDSWITCH
+   STATIC s_b_ := { ;
+                    QEvent_Timer                             => "QEvent"      ,;
+                    QEvent_MouseButtonPress                  => "QMouseEvent" ,;
+                    QEvent_MouseButtonRelease                => "QMouseEvent" ,;
+                    QEvent_MouseButtonDblClick               => "QMouseEvent" ,;
+                    QEvent_MouseMove                         => "QMouseEvent" ,;
+                    QEvent_KeyPress                          => "QKeyEvent"   ,;
+                    QEvent_KeyRelease                        => "QKeyEvent"   ,;
+                    QEvent_FocusIn                           => "QFocusEvent" ,;
+                    QEvent_FocusOut                          => "QFocusEvent" ,;
+                    QEvent_Enter                             => "QMouseEvent" ,;
+                    QEvent_Leave                             => "QMouseEvent" ,;
+                    QEvent_Paint                             => "QPaintEvent" ,;
+                    QEvent_Move                              => "QMoveEvent"  ,;
+                    QEvent_Resize                            => "QResizeEvent",;
+                    QEvent_Show                              => "QShowEvent"  ,;
+                    QEvent_Hide                              => "QHideEvent"  ,;
+                    QEvent_Close                             => "QEvent"      ,;
+                    QEvent_ParentChange                      => "QEvent"      ,;
+                    QEvent_WindowActivate                    => "QEvent"      ,;
+                    QEvent_WindowDeactivate                  => "QEvent"      ,;
+                    QEvent_ShowToParent                      => "QEvent"      ,;
+                    QEvent_HideToParent                      => "QEvent"      ,;
+                    QEvent_Wheel                             => "QWheelEvent" ,;
+                    QEvent_WindowTitleChange                 => "QEvent"      ,;
+                    QEvent_WindowIconChange                  => "QEvent"      ,;
+                    QEvent_ApplicationWindowIconChange       => "QEvent"      ,;
+                    QEvent_ApplicationFontChange             => "QEvent"      ,;
+                    QEvent_ApplicationLayoutDirectionChange  => "QEvent"      ,;
+                    QEvent_ApplicationPaletteChange          => "QEvent"      ,;
+                    QEvent_PaletteChange                     => "QEvent"      ,;
+                    QEvent_Clipboard                         => "QEvent"      ,;
+                    QEvent_MetaCall                          => "QEvent"      ,;
+                    QEvent_SockAct                           => "QEvent"      ,;
+                    QEvent_ShortcutOverride                  => "QKeyEvent"   ,;
+                    QEvent_DeferredDelete                    => "QEvent"      ,;
+                    QEvent_DragEnter                         => "QDragEnterEvent" ,;
+                    QEvent_DragLeave                         => "QDragLeaveEvent" ,;
+                    QEvent_DragMove                          => "QDragMoveEvent"  ,;
+                    QEvent_Drop                              => "QDropEvent"      ,;
+                    QEvent_ChildAdded                        => "QEvent"      ,;
+                    QEvent_ChildPolished                     => "QEvent"      ,;
+                    QEvent_ChildInserted                     => "QEvent"      ,;
+                    QEvent_ChildRemoved                      => "QEvent"      ,;
+                    QEvent_PolishRequest                     => "QEvent"      ,;
+                    QEvent_Polish                            => "QEvent"      ,;
+                    QEvent_LayoutRequest                     => "QEvent"      ,;
+                    QEvent_UpdateRequest                     => "QEvent"      ,;
+                    QEvent_UpdateLater                       => "QEvent"      ,;
+                    QEvent_ContextMenu                       => "QContextMenuEvent" ,;
+                    QEvent_InputMethod                       => "QInputMethodEvent" ,;
+                    QEvent_AccessibilityPrepare              => "QEvent"      ,;
+                    QEvent_TabletMove                        => "QEvent"      ,;
+                    QEvent_LocaleChange                      => "QEvent"      ,;
+                    QEvent_LanguageChange                    => "QEvent"      ,;
+                    QEvent_LayoutDirectionChange             => "QEvent"      ,;
+                    QEvent_TabletPress                       => "QEvent"      ,;
+                    QEvent_TabletRelease                     => "QEvent"      ,;
+                    QEvent_OkRequest                         => "QEvent"      ,;
+                    QEvent_IconDrag                          => "QEvent"      ,;
+                    QEvent_FontChange                        => "QEvent"      ,;
+                    QEvent_EnabledChange                     => "QEvent"      ,;
+                    QEvent_ActivationChange                  => "QEvent"      ,;
+                    QEvent_StyleChange                       => "QEvent"      ,;
+                    QEvent_IconTextChange                    => "QEvent"      ,;
+                    QEvent_ModifiedChange                    => "QEvent"      ,;
+                    QEvent_WindowBlocked                     => "QEvent"      ,;
+                    QEvent_WindowUnblocked                   => "QEvent"      ,;
+                    QEvent_WindowStateChange                 => "QWindowStateChangeEvent" ,;
+                    QEvent_MouseTrackingChange               => "QEvent"      ,;
+                    QEvent_ToolTip                           => "QHelpEvent"  ,;
+                    QEvent_WhatsThis                         => "QHelpEvent"  ,;
+                    QEvent_StatusTip                         => "QEvent"      ,;
+                    QEvent_ActionChanged                     => "QEvent"      ,;
+                    QEvent_ActionAdded                       => "QEvent"      ,;
+                    QEvent_ActionRemoved                     => "QEvent"      ,;
+                    QEvent_FileOpen                          => "QEvent"      ,;
+                    QEvent_Shortcut                          => "QEvent"      ,;
+                    QEvent_WhatsThisClicked                  => "QEvent"      ,;
+                    QEvent_AccessibilityHelp                 => "QEvent"      ,;
+                    QEvent_ToolBarChange                     => "QEvent"      ,;
+                    QEvent_ApplicationActivate               => "QEvent"      ,;
+                    QEvent_ApplicationActivated              => "QEvent"      ,;
+                    QEvent_ApplicationDeactivate             => "QEvent"      ,;
+                    QEvent_QueryWhatsThis                    => "QEvent"      ,;
+                    QEvent_EnterWhatsThisMode                => "QEvent"      ,;
+                    QEvent_LeaveWhatsThisMode                => "QEvent"      ,;
+                    QEvent_ZOrderChange                      => "QEvent"      ,;
+                    QEvent_HoverEnter                        => "QEvent"      ,;
+                    QEvent_HoverLeave                        => "QEvent"      ,;
+                    QEvent_HoverMove                         => "QEvent"      ,;
+                    QEvent_AccessibilityDescription          => "QEvent"      ,;
+                    QEvent_ParentAboutToChange               => "QEvent"      ,;
+                    QEvent_WinEventAct                       => "QEvent"      ,;
+                    QEvent_EnterEditFocus                    => "QEvent"      ,;
+                    QEvent_LeaveEditFocus                    => "QEvent"      ,;
+                    QEvent_MenubarUpdated                    => "QEvent"      ,;
+                    QEvent_GraphicsSceneMouseMove            => "QGraphicsSceneMouseEvent"       ,;
+                    QEvent_GraphicsSceneMousePress           => "QGraphicsSceneMouseEvent"       ,;
+                    QEvent_GraphicsSceneMouseRelease         => "QGraphicsSceneMouseEvent"       ,;
+                    QEvent_GraphicsSceneMouseDoubleClick     => "QGraphicsSceneMouseEvent"       ,;
+                    QEvent_GraphicsSceneContextMenu          => "QGraphicsSceneContextMenuEvent" ,;
+                    QEvent_GraphicsSceneHoverEnter           => "QGraphicsSceneHoverEvent"       ,;
+                    QEvent_GraphicsSceneHoverMove            => "QGraphicsSceneHoverEvent"       ,;
+                    QEvent_GraphicsSceneHoverLeave           => "QGraphicsSceneHoverEvent"       ,;
+                    QEvent_GraphicsSceneHelp                 => "QHelpEvent"  ,;
+                    QEvent_GraphicsSceneDragEnter            => "QGraphicsSceneDragDropEvent"    ,;
+                    QEvent_GraphicsSceneDragMove             => "QGraphicsSceneDragDropEvent"    ,;
+                    QEvent_GraphicsSceneDragLeave            => "QGraphicsSceneDragDropEvent"    ,;
+                    QEvent_GraphicsSceneDrop                 => "QGraphicsSceneDragDropEvent"    ,;
+                    QEvent_GraphicsSceneWheel                => "QGraphicsSceneWheelEvent"       ,;
+                    QEvent_KeyboardLayoutChange              => "QEvent"      ,;
+                    QEvent_DynamicPropertyChange             => "QEvent"      ,;
+                    QEvent_TabletEnterProximity              => "QEvent"      ,;
+                    QEvent_TabletLeaveProximity              => "QEvent"      ,;
+                    QEvent_NonClientAreaMouseMove            => "QEvent"      ,;
+                    QEvent_NonClientAreaMouseButtonPress     => "QEvent"      ,;
+                    QEvent_NonClientAreaMouseButtonRelease   => "QEvent"      ,;
+                    QEvent_NonClientAreaMouseButtonDblClick  => "QEvent"      ,;
+                    QEvent_MacSizeChange                     => "QEvent"      ,;
+                    QEvent_ContentsRectChange                => "QEvent"      ,;
+                    QEvent_GraphicsSceneResize               => "QGraphicsSceneResizeEvent" ,;
+                    QEvent_GraphicsSceneMove                 => "QGraphicsSceneMoveEvent"   ,;
+                    QEvent_CursorChange                      => "QEvent"      ,;
+                    QEvent_ToolTipChange                     => "QEvent"      ,;
+                    QEvent_GrabMouse                         => "QEvent"      ,;
+                    QEvent_UngrabMouse                       => "QEvent"      ,;
+                    QEvent_GrabKeyboard                      => "QEvent"      ,;
+                    QEvent_UngrabKeyboard                    => "QEvent"       ;
+                  }
 
-   IF !empty( qObj )
-      qObj:pPtr := pPtr
+   IF hb_hHasKey( s_b_, nType )
+      cObj := s_b_[ nType ]
+   ELSE
+      cObj := "QEvent"
    ENDIF
+
+   qObj := eval( &( "{|| HB_" + cObj + "() }" ) )
+   qObj:pPtr := pPtr
 
    RETURN qObj
 
