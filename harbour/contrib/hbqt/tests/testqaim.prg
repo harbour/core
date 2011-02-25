@@ -16,19 +16,10 @@
 
 #include "common.ch"
 
-STATIC qApp
 STATIC oWnd
 
 STATIC oDA, oForeColor, oAlphaColor, oBackBrush, oSize, oPixmap, oIcon, oFont
 
-
-INIT PROCEDURE Qt_Start()
-   qApp := QApplication()
-   RETURN
-
-EXIT PROCEDURE Qt_End()
-   qApp:quit()
-   RETURN
 
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3
@@ -73,7 +64,7 @@ PROCEDURE Main()
    lay2:addWidget( bt3 )
 
    oWnd:Show()
-   qApp:exec()
+   QApplication():exec()
 
    RETURN
 

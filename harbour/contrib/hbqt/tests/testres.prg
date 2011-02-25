@@ -27,7 +27,6 @@ INIT PROCEDURE Qt_Start()
 
 EXIT PROCEDURE Qt_End()
    s_re1:unregisterResource_1( HBQTRES_TESTRES() )
-   s_qApp:quit()
    RETURN
 
 PROCEDURE Main()
