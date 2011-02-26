@@ -49,8 +49,6 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
-
 #ifndef _HBQTGUI_CH
 #define _HBQTGUI_CH
 

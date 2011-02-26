@@ -348,6 +348,13 @@ static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** argument
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC_EXTERN( HB_QEVENT );
+
+void _hbqtcore_force_link_for_event( void )
+{
+   HB_FUNC_EXEC( HB_QEVENT );
+}
+
 static void hbqt_registerCallbacks( void )
 {
    hbqt_slots_register_callback( "qint64"                  , hbqt_SlotsExecInt              );
@@ -376,6 +383,8 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QStringList"             , hbqt_SlotsExecStringList       );
    hbqt_slots_register_callback( "QTime"                   , hbqt_SlotsExecQTime            );
    hbqt_slots_register_callback( "QUrl"                    , hbqt_SlotsExecQUrl             );
+
+   hbqt_events_register_createobj( QEvent::Timer                             , "hb_QEvent"                         );
 }
 
 /*----------------------------------------------------------------------*/
