@@ -183,6 +183,10 @@ typedef struct
 
    HB_BOOL  bResizable;
    HB_BOOL  bClosable;
+   HB_BOOL  bFullScreen;
+   int      MarginTop;
+   int      MarginLeft;
+   HB_BOOL  AltEnter;                     /* Can use Alt+Enter to enter full screen mode */
 
    HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */

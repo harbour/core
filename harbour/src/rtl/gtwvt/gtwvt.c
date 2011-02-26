@@ -126,6 +126,16 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define _WVT_WS_NORESIZE  ( WS_OVERLAPPEDWINDOW & ~( WS_THICKFRAME ) )
 #define _WVT_WS_MAXED     ( WS_OVERLAPPEDWINDOW & ~( WS_MAXIMIZEBOX ) )
 
+/*
+ * Left for testing to someone with multi monitor workspace on older platforms
+#ifndef NO_MULTIMON
+#if WINVER < 0x0500
+#define COMPILE_MULTIMON_STUBS
+#include <multimon.h>
+#endif
+#endif
+*/
+
 static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
 
@@ -140,6 +150,7 @@ static const int K_Ctrl[] =
 };
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
+static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT );
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
@@ -337,6 +348,11 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bMaximized        = HB_FALSE;
    pWVT->bBeingMarked      = HB_FALSE;
    pWVT->bBeginMarked      = HB_FALSE;
+   pWVT->bFullScreen       = HB_FALSE;
+   pWVT->AltEnter          = HB_FALSE;
+
+   pWVT->MarginTop         = 0;
+   pWVT->MarginLeft        = 0;
 
    pWVT->lpSelectCopy      = TEXT( "Mark and Copy" );
    pWVT->hSelectCopy       = NULL;
@@ -410,8 +426,8 @@ static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
 {
    POINT xy;
 
-   xy.x = col * pWVT->PTEXTSIZE.x;
-   xy.y = row * pWVT->PTEXTSIZE.y;
+   xy.x = col * pWVT->PTEXTSIZE.x + pWVT->MarginLeft;
+   xy.y = row * pWVT->PTEXTSIZE.y + pWVT->MarginTop;
 
    return xy;
 }
@@ -420,10 +436,10 @@ static RECT hb_gt_wvt_GetXYFromColRowRect( PHB_GTWVT pWVT, RECT colrow )
 {
    RECT xy;
 
-   xy.left   = colrow.left * pWVT->PTEXTSIZE.x;
-   xy.top    = colrow.top  * pWVT->PTEXTSIZE.y;
-   xy.right  = ( colrow.right  + 1 ) * pWVT->PTEXTSIZE.x;
-   xy.bottom = ( colrow.bottom + 1 ) * pWVT->PTEXTSIZE.y;
+   xy.left   = colrow.left * pWVT->PTEXTSIZE.x + pWVT->MarginLeft;
+   xy.top    = colrow.top  * pWVT->PTEXTSIZE.y + pWVT->MarginTop;
+   xy.right  = ( colrow.right  + 1 ) * pWVT->PTEXTSIZE.x + pWVT->MarginLeft;
+   xy.bottom = ( colrow.bottom + 1 ) * pWVT->PTEXTSIZE.y + pWVT->MarginTop;
 
    return xy;
 }
@@ -728,7 +744,17 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                top = ( top < 0 ? 0 : top );
             }
 
-            SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+            if( !pWVT->bFullScreen )
+               SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+            else
+            {
+               pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
+               pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
+               /* there were some problems with repainting earlier, i hope they won't come back
+                * InvalidateRect( pWVT->hWnd, NULL, TRUE );
+                * UpdateWindow( pWVT->hWnd );
+                */
+            }
 
             if( pWVT->CaretExist && !pWVT->CaretHidden )
                hb_gt_wvt_UpdateCaret( pWVT );
@@ -738,7 +764,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
             height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
-            SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
+            if( !pWVT->bFullScreen )
+               SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
             if( width > maxWidth || height > maxHeight )
                hb_gt_wvt_FitRows( pWVT );
          }
@@ -922,8 +949,8 @@ static POINT hb_gt_wvt_GetColRowFromXY( PHB_GTWVT pWVT, LONG x, LONG y )
 {
    POINT colrow;
 
-   colrow.x = x / pWVT->PTEXTSIZE.x;
-   colrow.y = y / pWVT->PTEXTSIZE.y;
+   colrow.x = ( x - pWVT->MarginLeft ) / pWVT->PTEXTSIZE.x;
+   colrow.y = ( y - pWVT->MarginTop ) / pWVT->PTEXTSIZE.y;
 
    return colrow;
 }
@@ -931,6 +958,29 @@ static POINT hb_gt_wvt_GetColRowFromXY( PHB_GTWVT pWVT, LONG x, LONG y )
 static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
 {
    RECT colrow;
+
+   if( pWVT->bFullScreen )
+   {
+      if( xy.left >= pWVT->MarginLeft )
+         xy.left   = xy.left - pWVT->MarginLeft;
+      else
+         xy.left   = 0;
+
+      if( xy.right >= pWVT->MarginLeft )
+         xy.right  = xy.right - pWVT->MarginLeft;
+      else
+         xy.right  = 0;
+
+      if( xy.top >= pWVT->MarginTop )
+         xy.top    = xy.top - pWVT->MarginTop;
+      else
+         xy.top    = 0;
+
+      if( xy.bottom >= pWVT->MarginTop )
+         xy.bottom = xy.bottom - pWVT->MarginTop;
+      else
+         xy.bottom = 0;
+   }
 
    colrow.left   = xy.left   / pWVT->PTEXTSIZE.x;
    colrow.top    = xy.top    / pWVT->PTEXTSIZE.y;
@@ -1170,6 +1220,14 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
 
          switch( wParam )
          {
+            case VK_RETURN:
+               /* in WM_CHAR i was unable to read Alt key state */
+               if( bAlt && pWVT->AltEnter )
+               {
+                  hb_gt_wvt_FullScreen( pWVT->pGT );
+                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               }
+               break;
             case VK_LEFT:
                hb_gt_wvt_TranslateKey( pWVT, K_LEFT , K_SH_LEFT , K_ALT_LEFT , K_CTRL_LEFT  );
                break;
@@ -1523,6 +1581,13 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    HB_USHORT   usChar;
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
+
+   /* for sure there is a better method for repainting not used screen area
+    * ExcludeClipRect()?
+    */
+   if( pWVT->bFullScreen )
+      FillRect( hdc, &updateRect, CreateSolidBrush( pWVT->COLORS[ 0 ] ) );
+
 #if defined( UNICODE )
    SelectObject( hdc, pWVT->hFont );
    hostCDP = pWVT->hostCDP ? pWVT->hostCDP : hb_vmCDP();
@@ -1692,6 +1757,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          if( pWVT->bMaximized )
          {
             pWVT->bMaximized = HB_FALSE;
+
             /* Enable "maximize" button */
             SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
@@ -1831,6 +1897,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          if( pSetLayeredWindowAttributes )
          {
             SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+
             pSetLayeredWindowAttributes( pWVT->hWnd,
                                          ( COLORREF ) 0, /* COLORREF crKey */
                                          255,            /* BYTE bAlpha */
@@ -1858,6 +1925,81 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
       UpdateWindow( pWVT->hWnd );
    }
+
+   return HB_TRUE;
+}
+
+static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
+{
+   PHB_GTWVT pWVT;
+   RECT rt;
+   DWORD dwStyle;
+   DWORD dwExtendedStyle;
+#ifdef MONITOR_DEFAULTTONEAREST
+   HMONITOR mon;
+   MONITORINFO mi;
+#endif
+
+   pWVT = HB_GTWVT_GET( pGT );
+
+   dwStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+   dwExtendedStyle = GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE );
+
+   if( pWVT->bFullScreen )
+   {
+      dwStyle |= WS_CAPTION | WS_BORDER;
+      dwExtendedStyle |= WS_EX_TOPMOST;
+
+      if( pWVT->bResizable )
+         dwStyle |= WS_THICKFRAME;
+
+      pWVT->MarginLeft = 0;
+      pWVT->MarginTop = 0;
+      pWVT->bFullScreen = HB_FALSE;
+   }
+   else
+   {
+      dwStyle &= ~( WS_CAPTION | WS_BORDER | WS_THICKFRAME );
+      dwExtendedStyle &= ~WS_EX_TOPMOST;
+
+      pWVT->bMaximized = HB_FALSE;
+      pWVT->bFullScreen = HB_TRUE;
+   }
+
+   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, dwStyle );
+   SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, dwExtendedStyle );
+
+   if( !pWVT->bFullScreen )
+   {
+      ShowWindow( pWVT->hWnd, SW_MAXIMIZE );
+      hb_gt_wvt_Maximize( pWVT );
+      return HB_FALSE;
+   }
+
+   rt.left   = 0;
+   rt.top    = 0;
+   rt.right  = 0;
+   rt.bottom = 0;
+
+#ifdef MONITOR_DEFAULTTONEAREST
+   mon = MonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
+   mi.cbSize = sizeof( mi );
+   GetMonitorInfo( mon, &mi );
+
+   rt = mi.rcMonitor;
+#else
+   GetClientRect( GetDesktopWindow(), &rt );
+#endif
+
+   SetWindowPos( pWVT->hWnd, HWND_TOP, rt.left, rt.top,
+                 rt.right - rt.left,
+                 rt.bottom - rt.top,
+                 SWP_FRAMECHANGED );
+
+   if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+      hb_gt_wvt_FitSize( pWVT );
+   else
+      hb_gt_wvt_FitRows( pWVT );
 
    return HB_TRUE;
 }
@@ -1924,7 +2066,7 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    if( pWVT->hWnd ) /* Is the window already open? */
    {
-      if( pWVT->bResizable )
+      if( pWVT->bResizable && ! pWVT->bFullScreen )
       {
          fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, NULL );
          HB_GTSELF_REFRESH( pGT );
@@ -2074,7 +2216,23 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
+
       case HB_GTI_FULLSCREEN:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bFullScreen );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            if( ( hb_itemGetL( pInfo->pNewVal ) && !pWVT->bFullScreen )
+               || ( !hb_itemGetL( pInfo->pNewVal ) && pWVT->bFullScreen ) )
+                hb_gt_wvt_FullScreen( pGT );
+         }
+         break;
+
+      case HB_GTI_ALTENTER:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->AltEnter );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            pWVT->AltEnter = hb_itemGetL( pInfo->pNewVal );
+         break;
+
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );

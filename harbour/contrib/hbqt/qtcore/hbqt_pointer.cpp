@@ -355,12 +355,10 @@ PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const 
       {
          hb_arrayNew( pSuper, 0 );
 
-         char szParentClsBuffer[ strlen( szParentClsStr ) + 1 ];
+         char * pszParentClsBuffer = hb_strdup( szParentClsStr );
          char * szSingleClsName;
 
-         hb_strncpy( szParentClsBuffer, szParentClsStr, strlen( szParentClsStr ) );
-
-         szSingleClsName = strtok( szParentClsBuffer, " ," );
+         szSingleClsName = strtok( pszParentClsBuffer, " ," );
 
          PHB_ITEM pItem = hb_itemNew( NULL );
 
@@ -371,6 +369,8 @@ PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const 
             szSingleClsName = strtok( NULL, " ," );
          }
          hb_itemRelease( pItem );
+
+         hb_xfree( pszParentClsBuffer );
       }
 
       hb_vmPushDynSym( s___HBCLASS );

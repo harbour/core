@@ -141,6 +141,8 @@
 #define HB_GTI_INKEYFILTER      60  /* Get/Set inkey keycodes filter */
 #define HB_GTI_INKEYREAD        61  /* Get/Set inkey read block */
 
+#define HB_GTI_ALTENTER         62  /* Toggles Alt+Enter as full screen switch (supported by: GTWVT) */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2
