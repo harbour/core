@@ -468,7 +468,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
          ( cFile LIKE ".+\.(push|wan|waf||afl|mpeg|mpg|mpe|qt|mov)" ) .OR. ;
          ( cFile LIKE ".+\.(viv|vivo|asf|asx|avi|movie|vgm|vgx)" ) .OR. ;
          ( cFile LIKE ".+\.(xdr|vgp|vts|vtts|3dmf|3dm|qd3d|qd3)" ) .OR. ;
-         ( cFile LIKE ".+\.(svr|wrl|wrz|vrt)" ) .OR. Empty( cFExt )
+         ( cFile LIKE ".+\.(svr|wrl|wrz|vrt|xml)" ) .OR. Empty( cFExt )
          oAttach:SetEncoder( "base64" )
       ELSE
          oAttach:SetEncoder( cEncoding )
@@ -666,6 +666,7 @@ FUNCTION hb_SetMimeType( cFile, cFname, cFext )
    CASE ( cFile LIKE ".+\.ccs" ); RETURN "text/ccs; name=" + cFname + cFext
    CASE ( cFile LIKE ".+\.(htm|html)" ); RETURN "text/html; name=" + cFname + cFext
    CASE ( cFile LIKE ".+\.pgr" ); RETURN "text/parsnegar-document; name=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.xml" ); RETURN "text/xml; name=" + cFname + cFext
    CASE ( cFile LIKE ".+\.txt" ); RETURN "text/plain; name=" + cFname + cFext
    CASE ( cFile LIKE ".+\.rtx" ); RETURN "text/richtext; name=" + cFname + cFext
    CASE ( cFile LIKE ".+\.tsv" ); RETURN "text/tab-separated-values; name=" + cFname + cFext

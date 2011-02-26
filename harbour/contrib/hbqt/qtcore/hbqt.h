@@ -66,6 +66,7 @@
 #endif
 
 #include <QtCore/qglobal.h>
+#include <QtCore/QEvent>
 
 #if !( QT_VERSION >= 0x040500 )
 #  error QT library version 4.5.0 or upper is required for hbqt.
@@ -87,6 +88,8 @@ typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QBy
 
 HB_EXTERN_BEGIN
 
+extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj );
+extern HB_EXPORT void hbqt_events_unregister_createobj( QEvent::Type eventtype );
 extern HB_EXPORT void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback );
 extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
 extern HB_EXPORT void * hbqt_gcpointer( int iParam );
@@ -100,6 +103,7 @@ extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT void * hbqt_getqtptr( void );
 extern HB_EXPORT PHB_ITEM hbqt_create_object( void * p, const char * objectList, int iIndex );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type );
+extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName );
 HB_EXTERN_END
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
@@ -109,4 +113,3 @@ HB_EXTERN_END
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
 
 #endif /* __HBQT_H */
-

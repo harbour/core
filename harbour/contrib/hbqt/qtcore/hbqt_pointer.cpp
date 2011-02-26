@@ -331,102 +331,95 @@ HB_FUNC( __HBQT_SETUTF8 )
 
 PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const char* szParentClsStr )
 {
-    static PHB_DYNS s__CLSLOCKDEF = NULL;
+   static PHB_DYNS s__CLSLOCKDEF = NULL;
 
-    PHB_ITEM oClass = NULL;
+   PHB_ITEM oClass = NULL;
 
-    if( s__CLSLOCKDEF == NULL )
-    {
-        s__CLSLOCKDEF = hb_dynsymGetCase( "__CLSLOCKDEF" );
-    }
+   if( s__CLSLOCKDEF == NULL )
+      s__CLSLOCKDEF = hb_dynsymGetCase( "__CLSLOCKDEF" );
 
-    hb_vmPushDynSym( s__CLSLOCKDEF );
-    hb_vmPushNil();
-    hb_vmPushItemRef( s_oClass );
-    hb_vmDo( 1 );
+   hb_vmPushDynSym( s__CLSLOCKDEF );
+   hb_vmPushNil();
+   hb_vmPushItemRef( s_oClass );
+   hb_vmDo( 1 );
 
-    if( hb_itemGetL( hb_stackReturnItem() ) )
-    {
-        static PHB_DYNS s___HBCLASS = NULL;
+   if( hb_itemGetL( hb_stackReturnItem() ) )
+   {
+      static PHB_DYNS s___HBCLASS = NULL;
 
-        if( s___HBCLASS == NULL )
-        {
-            s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
-        }
+      if( s___HBCLASS == NULL )
+         s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
 
-        PHB_ITEM pSuper = hb_itemNew( NULL );
-        if( szParentClsStr )
-        {
-           hb_arrayNew( pSuper, 0 );
+      PHB_ITEM pSuper = hb_itemNew( NULL );
+      if( szParentClsStr )
+      {
+         hb_arrayNew( pSuper, 0 );
 
-           char szParentClsBuffer[ strlen( szParentClsStr ) + 1 ];
-           char* szSingleClsName;
+         char szParentClsBuffer[ strlen( szParentClsStr ) + 1 ];
+         char * szSingleClsName;
 
-           strcpy( szParentClsBuffer, szParentClsStr );
-           szParentClsBuffer[ strlen( szParentClsStr ) ] = 0;
+         hb_strncpy( szParentClsBuffer, szParentClsStr, strlen( szParentClsStr ) );
 
-           szSingleClsName = strtok( szParentClsBuffer, " ," );
+         szSingleClsName = strtok( szParentClsBuffer, " ," );
 
-           PHB_ITEM pItem = hb_itemNew( NULL );
+         PHB_ITEM pItem = hb_itemNew( NULL );
 
-           while( szSingleClsName != NULL )
-           {
-              hb_itemPutC( pItem, szSingleClsName );
-              hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
-              szSingleClsName = strtok( NULL, " ," );
-           }
-           hb_itemRelease( pItem );
-        }
+         while( szSingleClsName != NULL )
+         {
+            hb_itemPutC( pItem, szSingleClsName );
+            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
+            szSingleClsName = strtok( NULL, " ," );
+         }
+         hb_itemRelease( pItem );
+      }
 
-        hb_vmPushDynSym( s___HBCLASS );
-        hb_vmPushNil();
-        hb_vmDo( 0 );
+      hb_vmPushDynSym( s___HBCLASS );
+      hb_vmPushNil();
+      hb_vmDo( 0 );
 
-        PHB_ITEM pClsName = hb_itemNew( NULL );
-        hb_itemPutC( pClsName, szClsName );
+      PHB_ITEM pClsName = hb_itemNew( NULL );
+      hb_itemPutC( pClsName, szClsName );
 
-        PHB_ITEM pSym_ClsFunc = hb_itemNew( NULL );
-        hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( szClsName )->pSymbol );
+      PHB_ITEM pSym_ClsFunc = hb_itemNew( NULL );
+      hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( szClsName )->pSymbol );
 
-        hb_objSendMsg( hb_stackReturnItem(), "New", 3, pClsName, pSuper, pSym_ClsFunc );
+      hb_objSendMsg( hb_stackReturnItem(), "New", 3, pClsName, pSuper, pSym_ClsFunc );
 
-        oClass = hb_itemNew( hb_stackReturnItem() );
+      oClass = hb_itemNew( hb_stackReturnItem() );
 
-        hb_itemRelease( pSym_ClsFunc );
-        hb_itemRelease( pSuper );
-        hb_itemRelease( pClsName );
+      hb_itemRelease( pSym_ClsFunc );
+      hb_itemRelease( pSuper );
+      hb_itemRelease( pClsName );
 
-        hb_objSendMsg( oClass, "Create", 0 );
-        hb_objSendMsg( oClass, "Instance", 0 );
+      hb_objSendMsg( oClass, "Create", 0 );
+      hb_objSendMsg( oClass, "Instance", 0 );
 #if 0
-        PHB_ITEM pDataName = hb_itemNew( NULL );
-        hb_itemPutC( pDataName, "PPTR" );
-        hb_objSendMsg( oClass, "AddData", 1, pDataName );
+      PHB_ITEM pDataName = hb_itemNew( NULL );
+      hb_itemPutC( pDataName, "PPTR" );
+      hb_objSendMsg( oClass, "AddData", 1, pDataName );
 #endif
-    }
+   }
 
-    return oClass;
+   return oClass;
 }
 
 void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass )
 {
-    if( s_oClass && oClass )
-    {
-        static PHB_DYNS s__CLSUNLOCKDEF = NULL;
+   if( s_oClass && oClass )
+   {
+      static PHB_DYNS s__CLSUNLOCKDEF = NULL;
 
-        if( s__CLSUNLOCKDEF == NULL )
-        {
-            s__CLSUNLOCKDEF = hb_dynsymGetCase( "__CLSUNLOCKDEF" );
-        }
+      if( s__CLSUNLOCKDEF == NULL )
+         s__CLSUNLOCKDEF = hb_dynsymGetCase( "__CLSUNLOCKDEF" );
 
-        hb_vmPushDynSym( s__CLSUNLOCKDEF );
-        hb_vmPushNil();
-        hb_vmPushItemRef( s_oClass );
-        hb_vmPush( oClass );
-        hb_vmDo( 2 );
+      hb_vmPushDynSym( s__CLSUNLOCKDEF );
+      hb_vmPushNil();
+      hb_vmPushItemRef( s_oClass );
+      hb_vmPush( oClass );
+      hb_vmDo( 2 );
 
-        hb_itemRelease( oClass );
-    }
+      hb_itemRelease( oClass );
+   }
 }
 
 void * hbqt_getqtptr( void )
@@ -444,9 +437,7 @@ PHB_ITEM hbqt_create_object( void * p, const char * objectList, int iIndex )
    static PHB_DYNS s_createObject = NULL;
 
    if( s_createObject == NULL )
-   {
-       s_createObject = hb_dynsymGetCase( "HBQT_CREATEQTOBJECT" );
-   }
+      s_createObject = hb_dynsymGetCase( "HBQT_CREATEQTOBJECT" );
 
    hb_vmPushDynSym( s_createObject );
    hb_vmPushNil();
@@ -463,9 +454,7 @@ PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type )
    static PHB_DYNS s_createObject = NULL;
 
    if( s_createObject == NULL )
-   {
-       s_createObject = hb_dynsymGetCase( "HBQT_CREATEQTOBJECTBYTYPE" );
-   }
+      s_createObject = hb_dynsymGetCase( "HBQTGUI_CREATEQTOBJECTBYTYPE" );
 
    hb_vmPushDynSym( s_createObject );
    hb_vmPushNil();
@@ -477,7 +466,21 @@ PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type )
    return hb_stackReturnItem();
 }
 
+PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName )
+{
+   PHB_ITEM pItemEvent = hb_itemPutPtr( NULL, pEvent );
+
+   hb_vmPushDynSym( hb_dynsymGetCase( pszName ) );
+   hb_vmPushNil();
+   hb_vmDo( 0 );
+
+   hb_objSendMsg( hb_stackReturnItem(), "_PPTR", 1, pItemEvent );
+
+   hb_itemRelease( pItemEvent );
+
+   return hb_stackReturnItem();
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500
-

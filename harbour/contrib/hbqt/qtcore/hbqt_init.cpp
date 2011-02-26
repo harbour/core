@@ -411,4 +411,3 @@ HB_CALL_ON_STARTUP_END( _hbqtcore_init_ )
 #endif
 
 #endif
-

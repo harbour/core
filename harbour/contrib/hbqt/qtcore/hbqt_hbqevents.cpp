@@ -65,6 +65,41 @@
 #include <QtCore/QPointer>
 #include <QtCore/QVariant>
 
+/*----------------------------------------------------------------------*/
+
+#include <QtCore/QStringList>
+
+/*----------------------------------------------------------------------*/
+
+static QList<QEvent::Type> s_lstEvent;
+static QList<QByteArray> s_lstCreateObj;
+
+void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj )
+{
+   int iIndex = s_lstEvent.indexOf( eventtype );
+
+   if( iIndex == -1 )
+   {
+      s_lstEvent << eventtype;
+      s_lstCreateObj << szCreateObj;
+   }
+   else
+      s_lstCreateObj[ eventtype ] = szCreateObj;
+}
+
+void hbqt_events_unregister_createobj( QEvent::Type eventtype )
+{
+   int iIndex = s_lstEvent.indexOf( eventtype );
+
+   if( iIndex > -1 )
+   {
+      s_lstEvent.removeAt( iIndex );
+      s_lstCreateObj.removeAt( iIndex );
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
 HBQEvents::HBQEvents( QObject * parent ) : QObject( parent )
 {
 }
@@ -170,7 +205,14 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
    if( found <= listBlock.size() && hb_vmRequestReenter() )
    {
-      PHB_ITEM pEvent = hbqt_create_objectFromEventType( event, ( int ) eventtype );
+      PHB_ITEM pEvent;
+
+      int eventId = s_lstEvent.indexOf( eventtype );
+      if( eventId > -1 )
+         pEvent = hbqt_create_objectFromEventType2( event, s_lstCreateObj.at( eventId ) );
+      else
+         pEvent = hbqt_create_objectFromEventType( event, ( int ) eventtype );
+
       ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
       hb_itemRelease( pEvent );
       hb_vmRequestRestore();

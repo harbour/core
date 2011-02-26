@@ -60,6 +60,8 @@
 #include "hbvm.h"
 #include "hbinit.h"
 
+#include "hbqtgui.ch"
+
 #if QT_VERSION >= 0x040500
 
 #include <QtGui/QApplication>
@@ -145,6 +147,63 @@ static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments, Q
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC_EXTERN( HB_QCONTEXTMENUEVENT );
+HB_FUNC_EXTERN( HB_QDRAGENTEREVENT );
+HB_FUNC_EXTERN( HB_QDRAGLEAVEEVENT );
+HB_FUNC_EXTERN( HB_QDRAGMOVEEVENT );
+HB_FUNC_EXTERN( HB_QDROPEVENT );
+HB_FUNC_EXTERN( HB_QEVENT );
+HB_FUNC_EXTERN( HB_QFOCUSEVENT );
+HB_FUNC_EXTERN( HB_QFOCUSEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENECONTEXTMENUEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENEDRAGDROPEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENEHOVEREVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENEMOUSEEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENEMOVEEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENERESIZEEVENT );
+HB_FUNC_EXTERN( HB_QGRAPHICSSCENEWHEELEVENT );
+HB_FUNC_EXTERN( HB_QHELPEVENT );
+HB_FUNC_EXTERN( HB_QHIDEEVENT );
+HB_FUNC_EXTERN( HB_QINPUTMETHODEVENT );
+HB_FUNC_EXTERN( HB_QKEYEVENT );
+HB_FUNC_EXTERN( HB_QMOUSEEVENT );
+HB_FUNC_EXTERN( HB_QMOVEEVENT );
+HB_FUNC_EXTERN( HB_QPAINTEVENT );
+HB_FUNC_EXTERN( HB_QRESIZEEVENT );
+HB_FUNC_EXTERN( HB_QSHOWEVENT );
+HB_FUNC_EXTERN( HB_QWHEELEVENT );
+HB_FUNC_EXTERN( HB_QWINDOWSTATECHANGEEVENT );
+
+void _hbqtgui_force_link_for_event( void )
+{
+   HB_FUNC_EXEC( HB_QCONTEXTMENUEVENT );
+   HB_FUNC_EXEC( HB_QDRAGENTEREVENT );
+   HB_FUNC_EXEC( HB_QDRAGLEAVEEVENT );
+   HB_FUNC_EXEC( HB_QDRAGMOVEEVENT );
+   HB_FUNC_EXEC( HB_QDROPEVENT );
+   HB_FUNC_EXEC( HB_QEVENT );
+   HB_FUNC_EXEC( HB_QFOCUSEVENT );
+   HB_FUNC_EXEC( HB_QFOCUSEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENECONTEXTMENUEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENEDRAGDROPEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENEHOVEREVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENEMOUSEEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENEMOVEEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENERESIZEEVENT );
+   HB_FUNC_EXEC( HB_QGRAPHICSSCENEWHEELEVENT );
+   HB_FUNC_EXEC( HB_QHELPEVENT );
+   HB_FUNC_EXEC( HB_QHIDEEVENT );
+   HB_FUNC_EXEC( HB_QINPUTMETHODEVENT );
+   HB_FUNC_EXEC( HB_QKEYEVENT );
+   HB_FUNC_EXEC( HB_QMOUSEEVENT );
+   HB_FUNC_EXEC( HB_QMOVEEVENT );
+   HB_FUNC_EXEC( HB_QPAINTEVENT );
+   HB_FUNC_EXEC( HB_QRESIZEEVENT );
+   HB_FUNC_EXEC( HB_QSHOWEVENT );
+   HB_FUNC_EXEC( HB_QWHEELEVENT );
+   HB_FUNC_EXEC( HB_QWINDOWSTATECHANGEEVENT );
+}
+
 static void hbqt_registerCallbacks( void )
 {
    hbqt_slots_register_callback( "QColor"                           , hbqt_SlotsExecQColor          );
@@ -153,6 +212,135 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QTextBlock"                       , hbqt_SlotsExecQTextBlock      );
    hbqt_slots_register_callback( "QTextCharFormat"                  , hbqt_SlotsExecQTextCharFormat );
    hbqt_slots_register_callback( "QTextCursor"                      , hbqt_SlotsExecQTextCursor     );
+
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Timer                             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MouseButtonPress                  , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MouseButtonRelease                , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MouseButtonDblClick               , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MouseMove                         , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_KeyPress                          , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_KeyRelease                        , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_FocusIn                           , "hb_QFocusEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_FocusOut                          , "hb_QFocusEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Enter                             , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Leave                             , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Paint                             , "hb_QPaintEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Move                              , "hb_QMoveEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Resize                            , "hb_QResizeEvent"                   );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Show                              , "hb_QShowEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Hide                              , "hb_QHideEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Close                             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ParentChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowActivate                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowDeactivate                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ShowToParent                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_HideToParent                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Wheel                             , "hb_QWheelEvent"                    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowTitleChange                 , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowIconChange                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationWindowIconChange       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationFontChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationLayoutDirectionChange  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationPaletteChange          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_PaletteChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Clipboard                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MetaCall                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_SockAct                           , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ShortcutOverride                  , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_DeferredDelete                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_DragEnter                         , "hb_QDragEnterEvent"                );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_DragLeave                         , "hb_QDragLeaveEvent"                );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_DragMove                          , "hb_QDragMoveEvent"                 );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Drop                              , "hb_QDropEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ChildAdded                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ChildPolished                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ChildInserted                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ChildRemoved                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_PolishRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Polish                            , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LayoutRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_UpdateRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_UpdateLater                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ContextMenu                       , "hb_QContextMenuEvent"              );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_InputMethod                       , "hb_QInputMethodEvent"              );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_AccessibilityPrepare              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_TabletMove                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LocaleChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LanguageChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LayoutDirectionChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_TabletPress                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_TabletRelease                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_OkRequest                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_IconDrag                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_FontChange                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_EnabledChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ActivationChange                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_StyleChange                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_IconTextChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ModifiedChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowBlocked                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowUnblocked                   , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WindowStateChange                 , "hb_QWindowStateChangeEvent"        );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MouseTrackingChange               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ToolTip                           , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WhatsThis                         , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_StatusTip                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ActionChanged                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ActionAdded                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ActionRemoved                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_FileOpen                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_Shortcut                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WhatsThisClicked                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_AccessibilityHelp                 , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ToolBarChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationActivate               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationActivated              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ApplicationDeactivate             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_QueryWhatsThis                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_EnterWhatsThisMode                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LeaveWhatsThisMode                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ZOrderChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_HoverEnter                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_HoverLeave                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_HoverMove                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_AccessibilityDescription          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ParentAboutToChange               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_WinEventAct                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_EnterEditFocus                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_LeaveEditFocus                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MenubarUpdated                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneMouseMove            , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneMousePress           , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneMouseRelease         , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneMouseDoubleClick     , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneContextMenu          , "hb_QGraphicsSceneContextMenuEvent" );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneHoverEnter           , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneHoverMove            , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneHoverLeave           , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneHelp                 , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneDragEnter            , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneDragMove             , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneDragLeave            , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneDrop                 , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneWheel                , "hb_QGraphicsSceneWheelEvent"       );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_KeyboardLayoutChange              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_DynamicPropertyChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_TabletEnterProximity              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_TabletLeaveProximity              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_NonClientAreaMouseMove            , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_NonClientAreaMouseButtonPress     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_NonClientAreaMouseButtonRelease   , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_NonClientAreaMouseButtonDblClick  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_MacSizeChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ContentsRectChange                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneResize               , "hb_QGraphicsSceneResizeEvent"      );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GraphicsSceneMove                 , "hb_QGraphicsSceneMoveEvent"        );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_CursorChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_ToolTipChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GrabMouse                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_UngrabMouse                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_GrabKeyboard                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( ( QEvent::Type ) QEvent_UngrabKeyboard                    , "hb_QEvent"                         );
 }
 
 /*----------------------------------------------------------------------*/
@@ -213,4 +401,3 @@ HB_CALL_ON_STARTUP_END( _hbqtgui_init_ )
 #endif
 
 #endif
-
