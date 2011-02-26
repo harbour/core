@@ -134,7 +134,7 @@ PROCEDURE Main( ... )
 
       IF !( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
          ! Empty( GetEnvC( "HB_INSTALL_DYN" ) ) .AND. ;
-         hb_FileExists( PathSepToSelf( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) ) )
+         hb_FileExists( PathSepToSelf( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
 
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
