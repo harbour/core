@@ -91,8 +91,8 @@ void HBQTableView::mousePressEvent( QMouseEvent * event )
 {
    if( block )
    {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
-      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::MouseButtonPress );
+      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType2( event, "hb_QMouseEvent" );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -104,8 +104,8 @@ void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
 {
    if( block )
    {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
-      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::MouseButtonDblClick );
+      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType2( event, "hb_QMouseEvent" );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -117,8 +117,8 @@ void HBQTableView::wheelEvent( QWheelEvent * event )
 {
    if( block )
    {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Wheel );
-      PHB_ITEM p1 = hbqt_create_objectFromEventType( event, QEvent::Wheel );
+      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Wheel );
+      PHB_ITEM p1 = hbqt_create_objectFromEventType2( event, "hb_QWheelEvent" );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -130,9 +130,9 @@ void HBQTableView::scrollContentsBy( int x, int y )
 {
    if( block )
    {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, HBQT_HBQTABLEVIEW_scrollContentsBy );
-      PHB_ITEM p1  = hb_itemPutNI( NULL, x );
-      PHB_ITEM p2  = hb_itemPutNI( NULL, y );
+      PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_HBQTABLEVIEW_scrollContentsBy );
+      PHB_ITEM p1 = hb_itemPutNI( NULL, x );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, y );
       hb_vmEvalBlockV( block, 3, p0, p1, p2 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
