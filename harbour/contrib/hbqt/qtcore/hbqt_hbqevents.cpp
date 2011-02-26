@@ -84,7 +84,7 @@ void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreate
       s_lstCreateObj << szCreateObj;
    }
    else
-      s_lstCreateObj[ eventtype ] = szCreateObj;
+      s_lstCreateObj[ iIndex ] = szCreateObj;
 }
 
 void hbqt_events_unregister_createobj( QEvent::Type eventtype )
