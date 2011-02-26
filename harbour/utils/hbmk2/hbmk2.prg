@@ -1071,7 +1071,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       /* NOTE: Don't forget to make these ignored in the main
                option processing loop. */
       DO CASE
-      CASE cParamL             == "-quiet"     ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+      CASE cParamL == "-quiet" .OR. ;
+           cParamL == "--hbdirbin" .OR. ;
+           cParamL == "--hbdirdyn" .OR. ;
+           cParamL == "--hbdirlib" .OR. ;
+           cParamL == "--hbdirinc" .OR. ;
+           cParamL == "--hbinfo"               ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
       CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
