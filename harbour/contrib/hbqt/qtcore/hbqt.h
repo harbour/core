@@ -111,15 +111,4 @@ HB_EXTERN_END
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
 
-#define HBQT_SLOT_CALLBACK_OBJ_1( _name_ ) \
-   static void hbqt_SlotsExec##_name_( PHB_ITEM * codeBlock, void ** arguments, QStringList pList ) \
-   { \
-      Q_UNUSED( pList ); \
-      \
-      hb_vmPushEvalSym(); \
-      hb_vmPush( codeBlock ); \
-      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
-      hb_vmSend( 1 ); \
-   }
-
 #endif /* __HBQT_H */

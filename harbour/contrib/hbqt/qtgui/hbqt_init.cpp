@@ -55,6 +55,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbqt.h"
+#include "hbqtinit.h"
 
 #include "hbapierr.h"
 #include "hbvm.h"

@@ -4,12 +4,9 @@
 
 /*
  * Harbour Project source code:
- * QT wrapper main header
+ * QT wrapper init helper macros
  *
- * Copyright 2009 Marcos Antonio Gambeta (marcosgambeta at gmail dot com)
- * Copyright 2009 Pritpal Bedi (pritpal@vouchcac.com)
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * Copyright 2010 Francesco Perillo ()
+ * Copyright 2011 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,48 +49,38 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-#include "hbqtinit.h"
+#define HBQT_SLOT_CALLBACK_OBJ( _name_ ) \
+   static void hbqt_SlotsExec##_name_( PHB_ITEM * codeBlock, void ** arguments, QStringList pList ) \
+   { \
+      Q_UNUSED( pList ); \
+      \
+      hb_vmPushEvalSym(); \
+      hb_vmPush( codeBlock ); \
+      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
+      hb_vmSend( 1 ); \
+   }
 
-#include "hbvm.h"
-#include "hbinit.h"
+#define HBQT_SLOT_CALLBACK_OBJ_INT( _name_ ) \
+   static void hbqt_SlotsExec##_name_##Int( PHB_ITEM * codeBlock, void ** arguments, QStringList pList ) \
+   { \
+      Q_UNUSED( pList ); \
+      \
+      hb_vmPushEvalSym(); \
+      hb_vmPush( codeBlock ); \
+      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ); \
+      hb_vmSend( 2 ); \
+   }
 
-#if QT_VERSION >= 0x040500
-
-/*----------------------------------------------------------------------*/
-
-static void hbqt_registerCallbacks( void )
-{
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( __HBQTUITOOLS ) {;}
-
-static void hbqt_lib_init( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   hbqt_registerCallbacks();
-}
-
-static void hbqt_lib_exit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-}
-
-HB_CALL_ON_STARTUP_BEGIN( _hbqtuitools_init_ )
-   hb_vmAtInit( hbqt_lib_init, NULL );
-   hb_vmAtExit( hbqt_lib_exit, NULL );
-HB_CALL_ON_STARTUP_END( _hbqtuitools_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hbqtuitools_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqtuitools_init_ )
-   #include "hbiniseg.h"
-#endif
-
-#endif
+#define HBQT_SLOT_CALLBACK_OBJ_OBJ( _name1_, _name2_ ) \
+   static void hbqt_SlotsExec##_name1_##_name2_( PHB_ITEM * codeBlock, void ** arguments, QStringList pList ) \
+   { \
+      Q_UNUSED( pList ); \
+      \
+      hb_vmPushEvalSym(); \
+      hb_vmPush( codeBlock ); \
+      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name1_( new _name1_( ( *reinterpret_cast< _name1_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name1_ ) ) ); \
+      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name2_( new _name2_( ( *reinterpret_cast< _name2_( * ) >( arguments[ 2 ] ) ) ), true ), HB_MACRO2STRING( _name2_ ) ) ); \
+      hb_vmSend( 2 ); \
+   }

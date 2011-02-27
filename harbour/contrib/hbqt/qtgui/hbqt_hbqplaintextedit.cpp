@@ -1246,7 +1246,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             hb_arraySetNI( p2, 4, columnEnds     );
             hb_arraySetNI( p2, 5, selectionMode  );
             hb_arraySetNI( p2, 6, selectionState );
-            hb_arraySet( p2, 7, hbqt_create_objectFromEventType2( event, "hb_QKeyEvent" ) );
+            hb_arraySet( p2, 7, hbqt_create_object( event, "hb_QKeyEvent" ) );
             hb_vmEvalBlockV( block, 2, p1, p2 );
             hb_itemRelease( p1 );
             hb_itemRelease( p2 );
