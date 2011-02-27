@@ -183,7 +183,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                      }
                      else
                      {
-                        parList += arrayOfTypes.at( i ).trimmed().toUpper();
+                        parList += arrayOfTypes.at( i ).trimmed();
                         pList += arrayOfTypes.at( i ).trimmed().toUpper();
                      }
                   }
