@@ -203,22 +203,20 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
    bool ret = true;
 
-   if( found <= listBlock.size() && hb_vmRequestReenter() )
+   if( found <= listBlock.size() )
    {
-      PHB_ITEM pEvent;
-
       int eventId = s_lstEvent.indexOf( eventtype );
-      if( eventId > -1 )
-         pEvent = hbqt_create_objectFromEventType2( event, s_lstCreateObj.at( eventId ) );
-      else
-         pEvent = hbqt_create_objectFromEventType( event, ( int ) eventtype );
+      if( eventId > -1 && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pEvent = hbqt_create_object( event, s_lstCreateObj.at( eventId ) );
 
-      ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
-      hb_itemRelease( pEvent );
-      hb_vmRequestRestore();
+         ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
+         hb_itemRelease( pEvent );
+         hb_vmRequestRestore();
 
-      if( eventtype == QEvent::Close )
-         event->ignore();
+         if( eventtype == QEvent::Close )
+            event->ignore();
+      }
    }
    return ret;
 }

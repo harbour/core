@@ -487,7 +487,7 @@ void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    if( block ){
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
-      PHB_ITEM p2 = hbqt_create_objectFromEventType2( event, "hb_QGraphicsSceneContextMenuEvent" );
+      PHB_ITEM p2 = hbqt_create_object( event, "hb_QGraphicsSceneContextMenuEvent" );
       PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );

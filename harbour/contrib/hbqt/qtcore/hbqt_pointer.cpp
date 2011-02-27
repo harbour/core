@@ -432,49 +432,20 @@ void * hbqt_getqtptr( void )
       return NULL;
 }
 
-PHB_ITEM hbqt_create_object( void * p, const char * objectName )
+PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
 {
-   PHB_ITEM pItem = hb_itemPutPtr( NULL, p );
+   PHB_ITEM pRetVal;
+   PHB_ITEM pItem = hb_itemPutPtr( NULL, pObject );
 
-   hb_vmPushDynSym( hb_dynsymGet( objectName ) );
+   hb_vmPushDynSym( hb_dynsymGet( pszObjectName ) );
    hb_vmPushNil();
    hb_vmDo( 0 );
 
-   hb_objSendMsg( hb_stackReturnItem(), "_PPTR", 1, pItem );
+   pRetVal = hb_itemNew( hb_stackReturnItem() ) ;
+   hb_objSendMsg( pRetVal, "_PPTR", 1, pItem );
+   hb_itemReturn( pRetVal );
 
    hb_itemRelease( pItem );
-
-   return hb_stackReturnItem();
-}
-
-PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type )
-{
-   static PHB_DYNS s_createObject = NULL;
-
-   if( s_createObject == NULL )
-      s_createObject = hb_dynsymGetCase( "HBQTGUI_CREATEQTOBJECTBYTYPE" );
-
-   hb_vmPushDynSym( s_createObject );
-   hb_vmPushNil();
-   hb_vmPushInteger( type );
-   //hb_vmPushPointerGC( hbqt_gcAllocate_QObject( pEvent, false ) );
-   hb_vmPushPointer( pEvent );
-   hb_vmDo( 2 );
-
-   return hb_stackReturnItem();
-}
-
-PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName )
-{
-   PHB_ITEM pItemEvent = hb_itemPutPtr( NULL, pEvent );
-
-   hb_vmPushDynSym( hb_dynsymGet( pszName ) );
-   hb_vmPushNil();
-   hb_vmDo( 0 );
-
-   hb_objSendMsg( hb_stackReturnItem(), "_PPTR", 1, pItemEvent );
-
-   hb_itemRelease( pItemEvent );
 
    return hb_stackReturnItem();
 }

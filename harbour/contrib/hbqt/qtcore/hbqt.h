@@ -102,9 +102,7 @@ extern HB_EXPORT void hbqt_errRT_ARG( void );
 extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const char* szParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT void * hbqt_getqtptr( void );
-extern HB_EXPORT PHB_ITEM hbqt_create_object( void * p, const char * objectName );
-extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type );
-extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName );
+extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );
 HB_EXTERN_END
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )

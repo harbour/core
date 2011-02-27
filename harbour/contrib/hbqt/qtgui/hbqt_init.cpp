@@ -90,7 +90,7 @@ static void hbqt_SlotsExecQColor( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QColor( new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QColor" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QColor( new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), true ), "QColor" ) );
    hb_vmSend( 1 );
 }
 
@@ -100,8 +100,8 @@ static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QItemSelection" ) );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QItemSelection" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), "QItemSelection" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), "QItemSelection" ) );
    hb_vmSend( 2 );
 }
 
@@ -111,7 +111,7 @@ static void hbqt_SlotsExecQTextCharFormat( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QTextCharFormat" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), true ), "QTextCharFormat" ) );
    hb_vmSend( 1 );
 }
 
@@ -121,7 +121,7 @@ static void hbqt_SlotsExecQFont( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QFont( new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QFont" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QFont( new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), true ), "QFont" ) );
    hb_vmSend( 1 );
 }
 
@@ -131,7 +131,7 @@ static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QTextCursor" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), true ), "QTextCursor" ) );
    hb_vmSend( 1 );
 }
 
@@ -141,7 +141,7 @@ static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), true ), ( const char * ) "QTextBlock" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), true ), "QTextBlock" ) );
    hb_vmSend( 1 );
 }
 
