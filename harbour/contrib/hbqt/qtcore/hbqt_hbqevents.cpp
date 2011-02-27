@@ -81,10 +81,10 @@ void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreate
    if( iIndex == -1 )
    {
       s_lstEvent << eventtype;
-      s_lstCreateObj << szCreateObj;
+      s_lstCreateObj << szCreateObj.toUpper();
    }
    else
-      s_lstCreateObj[ iIndex ] = szCreateObj;
+      s_lstCreateObj[ iIndex ] = szCreateObj.toUpper();
 }
 
 void hbqt_events_unregister_createobj( QEvent::Type eventtype )
