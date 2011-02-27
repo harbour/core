@@ -67,6 +67,7 @@
 
 #include <QtCore/qglobal.h>
 #include <QtCore/QEvent>
+#include <QtCore/QStringList>
 
 #if !( QT_VERSION >= 0x040500 )
 #  error QT library version 4.5.0 or upper is required for hbqt.
@@ -84,7 +85,7 @@ typedef struct
    HB_U32 type;
 } HBQT_GC_T;
 
-typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QByteArray pList );
+typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QStringList pList );
 
 HB_EXTERN_BEGIN
 
@@ -101,7 +102,7 @@ extern HB_EXPORT void hbqt_errRT_ARG( void );
 extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const char* szParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT void * hbqt_getqtptr( void );
-extern HB_EXPORT PHB_ITEM hbqt_create_object( void * p, const char * objectList, int iIndex );
+extern HB_EXPORT PHB_ITEM hbqt_create_object( void * p, const char * objectName );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType( void * pEvent, int type );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName );
 HB_EXTERN_END

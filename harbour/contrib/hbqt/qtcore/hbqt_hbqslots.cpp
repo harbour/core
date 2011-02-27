@@ -148,6 +148,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          const QMetaMethod meta = object->metaObject()->method( id );
          QList<QByteArray> arrayOfTypes = meta.parameterTypes();
          int parameterCount = arrayOfTypes.size();
+         QStringList pList;
 
          if( parameterCount > 0 )
          {
@@ -157,11 +158,11 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
             char szPList[ 20 ];
             hb_snprintf( szPList, sizeof( szPList ), "PLIST_%d", id );
-            pString = object->property( szPList ).toByteArray();
+            pList = object->property( szPList ).toStringList();
 
             if( paramString.isNull() )
             {
-               QStringList parList, pList;
+               QStringList parList;
 
                HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
 
@@ -177,12 +178,13 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                      if( arrayOfTypes.at( i ).contains( "*" ) )
                      {
                         parList += "pointer";
-                        pList += arrayOfTypes.at( i );
+                        // use [] because .at returns const QByteArray
+                        pList += arrayOfTypes[ i ].replace( "*", "" ).trimmed().toUpper();
                      }
                      else
                      {
-                        parList += arrayOfTypes.at( i );
-                        pList += arrayOfTypes.at( i );
+                        parList += arrayOfTypes.at( i ).trimmed().toUpper();
+                        pList += arrayOfTypes.at( i ).trimmed().toUpper();
                      }
                   }
                }
@@ -190,7 +192,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                object->setProperty( szParams, paramString );
 
                pString = pList.join( "$" ).toAscii();
-               object->setProperty( szPList, pString );
+               object->setProperty( szPList, pList );
 
                HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
             }
@@ -215,7 +217,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
                pCallback = s_pCallback.at( paramId );
                if( pCallback )
-                  pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments, pString );
+                  pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments, pList );
             }
             hb_vmRequestRestore();
          }
@@ -352,4 +354,3 @@ HB_FUNC( __HBQT_SLOTS_NEW )
 }
 
 #endif
-

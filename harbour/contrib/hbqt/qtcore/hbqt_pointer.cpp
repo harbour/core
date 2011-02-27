@@ -432,19 +432,17 @@ void * hbqt_getqtptr( void )
       return NULL;
 }
 
-PHB_ITEM hbqt_create_object( void * p, const char * objectList, int iIndex )
+PHB_ITEM hbqt_create_object( void * p, const char * objectName )
 {
-   static PHB_DYNS s_createObject = NULL;
+   PHB_ITEM pItem = hb_itemPutPtr( NULL, p );
 
-   if( s_createObject == NULL )
-      s_createObject = hb_dynsymGetCase( "HBQT_CREATEQTOBJECT" );
-
-   hb_vmPushDynSym( s_createObject );
+   hb_vmPushDynSym( hb_dynsymGet( objectName ) );
    hb_vmPushNil();
-   hb_vmPushString( objectList, strlen( objectList ) );
-   hb_vmPushInteger( iIndex );
-   hb_vmPushPointerGC( p );
-   hb_vmDo( 3 );
+   hb_vmDo( 0 );
+
+   hb_objSendMsg( hb_stackReturnItem(), "_PPTR", 1, pItem );
+
+   hb_itemRelease( pItem );
 
    return hb_stackReturnItem();
 }
@@ -470,7 +468,7 @@ PHB_ITEM hbqt_create_objectFromEventType2( void * pEvent, const char * pszName )
 {
    PHB_ITEM pItemEvent = hb_itemPutPtr( NULL, pEvent );
 
-   hb_vmPushDynSym( hb_dynsymGetCase( pszName ) );
+   hb_vmPushDynSym( hb_dynsymGet( pszName ) );
    hb_vmPushNil();
    hb_vmDo( 0 );
 
