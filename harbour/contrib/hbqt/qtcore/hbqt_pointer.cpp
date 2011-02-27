@@ -437,6 +437,8 @@ PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
    PHB_ITEM pRetVal;
    PHB_ITEM pItem = hb_itemPutPtr( NULL, pObject );
 
+   HB_TRACE( HB_TR_DEBUG, ( "create_object %s", pszObjectName ) );
+
    hb_vmPushDynSym( hb_dynsymGet( pszObjectName ) );
    hb_vmPushNil();
    hb_vmDo( 0 );

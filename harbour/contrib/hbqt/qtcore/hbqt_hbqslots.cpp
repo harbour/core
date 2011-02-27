@@ -144,7 +144,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
       if( i > 0 && i <= this->listBlock.size() )
       {
-         QByteArray pString, paramString;
+         QByteArray paramString;
          const QMetaMethod meta = object->metaObject()->method( id );
          QList<QByteArray> arrayOfTypes = meta.parameterTypes();
          int parameterCount = arrayOfTypes.size();
@@ -163,7 +163,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
             if( paramString.isNull() )
             {
                QStringList parList;
-
                HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
 
                for( int i = 0; i < parameterCount; i++ )
@@ -175,33 +174,27 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                   }
                   else
                   {
-                     if( arrayOfTypes.at( i ).contains( "*" ) )
-                     {
-                        parList += "pointer";
-                        // use [] because .at returns const QByteArray
-                        pList += arrayOfTypes[ i ].replace( "*", "" ).trimmed().toUpper();
-                     }
-                     else
-                     {
-                        parList += arrayOfTypes.at( i ).trimmed();
+         //            if( arrayOfTypes.at( i ).contains( "*" ) )
+         //            {
+         //               parList += "pointer";
+         //               // use [] because .at returns const QByteArray
+         //               HB_TRACE( HB_TR_ALWAYS, ( "SlotsProxy callback object %s", arrayOfTypes[i].replace( "*","").trimmed().toUpper().data() ) );
+         //               pList += arrayOfTypes[ i ].replace( "*", "" ).trimmed().toUpper();
+         //            }
+         //            else
+         //            {
+                        parList += arrayOfTypes.at( i ).trimmed() ;
                         pList += arrayOfTypes.at( i ).trimmed().toUpper();
-                     }
+         //            }
                   }
                }
                paramString = parList.join( "$" ).toAscii();
                object->setProperty( szParams, paramString );
 
-               pString = pList.join( "$" ).toAscii();
                object->setProperty( szPList, pList );
 
                HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
             }
-            #if 0
-            else
-            {
-               HB_TRACE( HB_TR_ALWAYS, ( "       pList is assigned %s ", ( char * ) pString.data() ) );
-            }
-            #endif
          }
 
          if( hb_vmRequestReenter() )
