@@ -104,7 +104,7 @@ static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), ( const char * ) pList.at( 0 ).toAscii().data()) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), ( const char * ) pList.at( 0 ).toAscii().data() ) );
    hb_vmSend( 1 );
 }
 
@@ -348,7 +348,7 @@ static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** argument
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
 #if 0
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndexList( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ), true ), "QModelIndexList" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndexList( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QModelIndexList" ) );
 #else
    hb_vmPushNil();
 #endif

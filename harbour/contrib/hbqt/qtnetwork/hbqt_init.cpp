@@ -85,7 +85,7 @@ static void hbqt_SlotsExecQHttpResponseHeader( PHB_ITEM * codeBlock, void ** arg
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ), true ), "QHttpResponseHeader" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( ( *reinterpret_cast< QHttpResponseHeader( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QHttpResponseHeader" ) );
    hb_vmSend( 1 );
 }
 
@@ -106,7 +106,7 @@ static void hbqt_SlotsExecQNetworkRequest( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QNetworkRequest( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ), true ), "QNetworkRequest" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QNetworkRequest( new QNetworkRequest( ( *reinterpret_cast< QNetworkRequest( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QNetworkRequest" ) );
    hb_vmSend( 1 );
 }
 
@@ -117,7 +117,7 @@ static void hbqt_SlotsExecQUrlInfo( PHB_ITEM * codeBlock, void ** arguments, QSt
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
 #if 0
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QUrlInfo( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ), true ), "QUrlInfo" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QUrlInfo( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QUrlInfo" ) );
 #else
    hb_vmPushNil();
 #endif
