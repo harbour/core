@@ -739,21 +739,26 @@ void HBQGraphicsItem::prepare( QPainter * painter )
    {
    case HBQT_GRAPHICSITEM_SIMPLETEXT :
    {
-      if( m_sizePolicy == HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_NONE ){
+      if( m_sizePolicy == HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_NONE )
+      {
          return;
       }
       QRectF rect = boundingRect();
       adjustRect( rect );
       QFontMetricsF fm( painter->font() );
-      if( m_sizePolicy == HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_AUTO ){
+      if( m_sizePolicy == HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_AUTO )
+      {
          qreal wd = fm.width( QString_text );
-         if( wd > width() ){
+         if( wd > width() )
+         {
             setWidth( wd );
          }
       }
-      else {
+      else
+      {
          QRectF rc = fm.boundingRect( rect, textFlags(), QString_text );
-         if( rc.height() > rect.height() ){
+         if( rc.height() > rect.height() )
+         {
             //setStretch( rc.height() - rect.height() );
          }
       }
@@ -765,11 +770,12 @@ void HBQGraphicsItem::prepare( QPainter * painter )
 
 void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * /* widget */ )
 {
-   if( block ){
+   if( block )
+   {
       QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
-      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "QPainter*" );
+      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "hb_QPainter" );
       PHB_ITEM p3 = hb_itemPutPtr( NULL, &rect );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
