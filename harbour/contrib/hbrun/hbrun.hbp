@@ -26,6 +26,7 @@ pullext.prg
 -lhbcplr
 -lhbpp
 -lhbcommon
+-lhbpmcom{dos}
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs

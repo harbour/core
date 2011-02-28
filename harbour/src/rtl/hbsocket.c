@@ -767,6 +767,14 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    return NULL;
 }
 
+char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
+{
+   HB_SYMBOL_UNUSED( pSockAddr );
+   HB_SYMBOL_UNUSED( len );
+   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   return NULL;
+}
+
 PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 {
    HB_SYMBOL_UNUSED( af );
