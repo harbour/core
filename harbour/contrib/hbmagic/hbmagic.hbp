@@ -10,6 +10,7 @@
 -w3 -es2
 
 -depkeyhead=libmagic:magic.h
+-depcontrol=libmagic:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=libmagic:${HB_WITH_LIBMAGIC}
 -depincpath=libmagic:/usr/include
 -depincpath=libmagic:/opt/local/include
