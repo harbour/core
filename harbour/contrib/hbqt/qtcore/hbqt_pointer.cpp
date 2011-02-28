@@ -443,7 +443,7 @@ PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
    hb_vmPushNil();
    hb_vmDo( 0 );
 
-   pRetVal = hb_itemNew( hb_stackReturnItem() ) ;
+   pRetVal = hb_itemNew( hb_stackReturnItem() );
    hb_objSendMsg( pRetVal, "_PPTR", 1, pItem );
    hb_itemReturn( pRetVal );
 

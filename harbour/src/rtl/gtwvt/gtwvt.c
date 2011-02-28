@@ -349,7 +349,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bBeingMarked      = HB_FALSE;
    pWVT->bBeginMarked      = HB_FALSE;
    pWVT->bFullScreen       = HB_FALSE;
-   pWVT->AltEnter          = HB_FALSE;
+   pWVT->bAltEnter         = HB_FALSE;
 
    pWVT->MarginTop         = 0;
    pWVT->MarginLeft        = 0;
@@ -1222,7 +1222,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
          {
             case VK_RETURN:
                /* in WM_CHAR i was unable to read Alt key state */
-               if( bAlt && pWVT->AltEnter )
+               if( bAlt && pWVT->bAltEnter )
                {
                   hb_gt_wvt_FullScreen( pWVT->pGT );
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
@@ -2216,7 +2216,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-
       case HB_GTI_FULLSCREEN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bFullScreen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
@@ -2228,9 +2227,9 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ALTENTER:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->AltEnter );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bAltEnter );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
-            pWVT->AltEnter = hb_itemGetL( pInfo->pNewVal );
+            pWVT->bAltEnter = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_KBDSUPPORT:

@@ -174,18 +174,8 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                   }
                   else
                   {
-         //            if( arrayOfTypes.at( i ).contains( "*" ) )
-         //            {
-         //               parList += "pointer";
-         //               // use [] because .at returns const QByteArray
-         //               HB_TRACE( HB_TR_ALWAYS, ( "SlotsProxy callback object %s", arrayOfTypes[i].replace( "*","").trimmed().toUpper().data() ) );
-         //               pList += arrayOfTypes[ i ].replace( "*", "" ).trimmed().toUpper();
-         //            }
-         //            else
-         //            {
-                        parList += arrayOfTypes.at( i ).trimmed() ;
-                        pList += arrayOfTypes.at( i ).trimmed().toUpper();
-         //            }
+                     parList += arrayOfTypes.at( i ).trimmed() ;
+                     pList += arrayOfTypes.at( i ).trimmed().toUpper();
                   }
                }
                paramString = parList.join( "$" ).toAscii();

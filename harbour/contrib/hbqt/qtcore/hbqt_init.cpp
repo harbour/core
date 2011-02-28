@@ -94,7 +94,6 @@ extern void * hbqt_gcAllocate_QDateTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QStringList( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew );
 HB_EXTERN_END
 
 /*----------------------------------------------------------------------*/
@@ -105,37 +104,8 @@ static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecPointer 1 %s", pList.at( 0 ).toAscii().data() ) );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), ( const char * ) pList.at( 0 ).toAscii().data() ) );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecPointer 2 %s", pList.at( 0 ).toAscii().data() ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), ( const char * ) pList.at( 0 ).toAscii().data()) );
    hb_vmSend( 1 );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecPointer 3 %s", pList.at( 0 ).toAscii().data() ) );
-}
-
-static void hbqt_SlotsExecQMdiSubWindow( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
-{
-   Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQMdiSubWindow 1 %s", pList.at( 0 ).toAscii().data() ) );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QMdiSubWindow( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "QMdiSubWindow" ) );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQMdiSubWindow 2 %s", pList.at( 0 ).toAscii().data() ) );
-   hb_vmSend( 1 );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQMdiSubWindow 3 %s", pList.at( 0 ).toAscii().data() ) );
-}
-
-static void hbqt_SlotsExecQTreeWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
-{
-   Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQTreeWidgetItem 1 %s", pList.at( 0 ).toAscii().data() ) );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "QTreeWidgetItem" ) );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQTreeWidgetItem 2 %s", pList.at( 0 ).toAscii().data() ) );
-   hb_vmSend( 1 );
-   HB_TRACE( HB_TR_DEBUG, ( "ExecQTreeWidgetItem 3 %s", pList.at( 0 ).toAscii().data() ) );
 }
 
 static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -243,7 +213,7 @@ static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "QModelIndex" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QModelIndex" ) );
    hb_vmSend( 1 );
 }
 
@@ -253,8 +223,8 @@ static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "QModelIndex" ) );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ), true ), "QModelIndex" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QModelIndex" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 2 ] ) ) ), true ), "hb_QModelIndex" ) );
    hb_vmSend( 2 );
 }
 
@@ -264,7 +234,7 @@ static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QStringList( new QStringList( ( *reinterpret_cast< QStringList( * ) >( arguments[ 1 ] ) ) ), true ), "QStringList" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QStringList( new QStringList( ( *reinterpret_cast< QStringList( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QStringList" ) );
    hb_vmSend( 1 );
 }
 
@@ -274,7 +244,7 @@ static void hbqt_SlotsExecQPoint( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QPoint( new QPoint( ( *reinterpret_cast< QPoint( * ) >( arguments[ 1 ] ) ) ), true ), "QPoint" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QPoint( new QPoint( ( *reinterpret_cast< QPoint( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QPoint" ) );
    hb_vmSend( 1 );
 }
 
@@ -284,7 +254,7 @@ static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments, QString
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QUrl( new QUrl( ( *reinterpret_cast< QUrl( * ) >( arguments[ 1 ] ) ) ), true ), "QUrl" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QUrl( new QUrl( ( *reinterpret_cast< QUrl( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QUrl" ) );
    hb_vmSend( 1 );
 }
 
@@ -294,7 +264,7 @@ static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QDate( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ), true ), "QDate" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QDate( new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QDate" ) );
    hb_vmSend( 1 );
 }
 
@@ -304,7 +274,7 @@ static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments, QS
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QDateTime( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ), true ), "QDateTime" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QDateTime( new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QDateTime" ) );
    hb_vmSend( 1 );
 }
 
@@ -314,7 +284,7 @@ static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTime( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ), true ), "QTime" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QTime( new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTime" ) );
    hb_vmSend( 1 );
 }
 
@@ -324,7 +294,7 @@ static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRectF( new QRectF( ( *reinterpret_cast< QRectF( * ) >( arguments[ 1 ] ) ) ), true ), "QRectF" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRectF( new QRectF( ( *reinterpret_cast< QRectF( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRectF" ) );
    hb_vmSend( 1 );
 }
 
@@ -334,7 +304,7 @@ static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QSt
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "QRect" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRect" ) );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }
@@ -345,7 +315,7 @@ static void hbqt_SlotsExecQRect( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "QRect" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRect" ) );
    hb_vmSend( 1 );
 }
 
@@ -355,7 +325,7 @@ static void hbqt_SlotsExecQSizeF( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QSizeF( new QSizeF( ( *reinterpret_cast< QSizeF( * ) >( arguments[ 1 ] ) ) ), true ), "QSizeF" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QSizeF( new QSizeF( ( *reinterpret_cast< QSizeF( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QSizeF" ) );
    hb_vmSend( 1 );
 }
 
@@ -365,7 +335,7 @@ static void hbqt_SlotsExecModelIndexIntInt( PHB_ITEM * codeBlock, void ** argume
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "QModelIndex" ) );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QModelIndex" ) );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
    hb_vmSend( 3 );
@@ -385,13 +355,35 @@ static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** argument
    hb_vmSend( 1 );
 }
 
+static void hbqt_SlotsExecQObject( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
+{
+   Q_UNUSED( pList );
+
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QObject" ) );
+   hb_vmSend( 1 );
+}
+
+static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
+{
+   Q_UNUSED( pList );
+
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPush( hbqt_create_object( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
+   hb_vmSend( 1 );
+}
+
 /*----------------------------------------------------------------------*/
 
 HB_FUNC_EXTERN( HB_QEVENT );
+// HB_FUNC_EXTERN( QMODELINDEX );
 
 void _hbqtcore_force_link_for_event( void )
 {
    HB_FUNC_EXEC( HB_QEVENT );
+  //  HB_FUNC_EXEC( QMODELINDEX );
 }
 
 static void hbqt_registerCallbacks( void )
@@ -406,8 +398,6 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "double"                  , hbqt_SlotsExecDouble           );
    hbqt_slots_register_callback( "pointer"                 , hbqt_SlotsExecPointer          );
    hbqt_slots_register_callback( "pointer$pointer"         , hbqt_SlotsExecPointerPointer   );
-   hbqt_slots_register_callback( "QTreeWidgetItem*"        , hbqt_SlotsExecQTreeWidgetItem  );
-   hbqt_slots_register_callback( "QMdiSubWindow*"          , hbqt_SlotsExecQMdiSubWindow    );
    hbqt_slots_register_callback( "pointer$int"             , hbqt_SlotsExecPointerInt       );
    hbqt_slots_register_callback( "QDate"                   , hbqt_SlotsExecQDate            );
    hbqt_slots_register_callback( "QDateTime"               , hbqt_SlotsExecQDateTime        );
@@ -424,8 +414,8 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QStringList"             , hbqt_SlotsExecStringList       );
    hbqt_slots_register_callback( "QTime"                   , hbqt_SlotsExecQTime            );
    hbqt_slots_register_callback( "QUrl"                    , hbqt_SlotsExecQUrl             );
-// hbqt_slots_register_callback( "QObject*"                , hbqt_SlotsExecQObject          );
-// hbqt_slots_register_callback( "QWidget*"                , hbqt_SlotsExecQWidget          );
+   hbqt_slots_register_callback( "QObject*"                , hbqt_SlotsExecQObject          );
+   hbqt_slots_register_callback( "QWidget*"                , hbqt_SlotsExecQWidget          );
 
    hbqt_events_register_createobj( QEvent::Timer                             , "hb_QEvent"                         );
 }
