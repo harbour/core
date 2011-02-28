@@ -337,8 +337,8 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
    LOCAL cDomain := ""
    LOCAL tmp
 
-   IF hb_gtVersion( 0 ) == "CGI"
-      OutErr( "hbrun: Error: Interactive session not possible with GTCGI terminal driver" + hb_eol() )
+   IF ! hb_gtInfo( HB_GTI_FULLSCREEN )
+      OutErr( "hbrun: Error: Interactive session not possible with " + hb_gtVersion( 0 ) + " terminal driver" + hb_eol() )
       RETURN
    ENDIF
 

@@ -327,6 +327,9 @@ PROCEDURE Main( ... )
       mk_extern_core()
    ENDIF
 
+   OutStd( "! postinst.hbs finished" + ;
+      iif( nErrorLevel == 0, "", " with with errorlevel=" + hb_ntos( nErrorLevel ) ) + hb_eol() )
+
    ErrorLevel( nErrorLevel )
 
    RETURN
