@@ -264,7 +264,7 @@ METHOD XbpListBox:toggleSelected( nIndex )
 
 METHOD XbpListBox:getItemIndex( pItm )
 
-   RETURN  ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o, pItm ) } )
+   RETURN ascan( ::aItems, {|o| hbqt_IsEqual( o, pItm ) } )
 
 /*----------------------------------------------------------------------*/
 
@@ -275,7 +275,7 @@ METHOD XbpListBox:execSlot( cSlot, p )
       IF hb_isBlock( ::hb_contextMenu )
          qPos := p
          IF ( qItm := ::oWidget:itemAt( qPos ) ):hasValidPointer()
-            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o, qItm ) } ) ) > 0
+            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqual( o, qItm ) } ) ) > 0
                qPt := ::oWidget:mapToGlobal( QPoint( p ) )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
             ENDIF

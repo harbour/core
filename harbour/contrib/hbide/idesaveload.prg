@@ -349,7 +349,7 @@ METHOD IdeINI:save( cHbideIni )
       nTabs := ::oIde:qTabWidget:count()
       FOR n := 1 TO nTabs
          pTab  := ::oIde:qTabWidget:widget( n - 1 )
-         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget, pTab ) } )
+         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqual( e_[ 1 ]:oWidget, pTab ) } )
          oEdit := ::oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )

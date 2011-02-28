@@ -436,7 +436,7 @@ METHOD IdeEditsManager:getTabCurrent()
 
    IF !empty( ::qTabWidget )
       qTab := ::qTabWidget:currentWidget()
-      nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget, qTab ) } )
+      nTab := ascan( ::aTabs, {|e_| hbqt_IsEqual( e_[ TAB_OTAB ]:oWidget, qTab ) } )
    ENDIF
    RETURN nTab
 
@@ -447,7 +447,7 @@ METHOD IdeEditsManager:getDocumentCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqual( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:document()
       ENDIF
    ENDIF
@@ -461,7 +461,7 @@ METHOD IdeEditsManager:getEditObjectCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqual( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCoEdit
       ENDIF
    ENDIF
@@ -475,7 +475,7 @@ METHOD IdeEditsManager:getEditCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqual( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCqEdit
       ENDIF
    ENDIF
@@ -489,7 +489,7 @@ METHOD IdeEditsManager:getEditorCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqual( e_[ TAB_OTAB ]:oWidget, qTab ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]
       ENDIF
    ENDIF
@@ -504,7 +504,7 @@ METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
    IF hb_isNumeric( nIndex ) .AND. nIndex >= 0 .AND. nIndex < ::qTabWidget:count()
       qTab := ::qTabWidget:widget( nIndex )
       FOR EACH a_ IN ::aTabs
-         IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqualGcQtPointer( a_[ TAB_OTAB ]:oWidget, qTab )
+         IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqual( a_[ TAB_OTAB ]:oWidget, qTab )
             RETURN ::aTabs[ a_:__enumIndex(), TAB_OEDITOR ]
          ENDIF
       NEXT

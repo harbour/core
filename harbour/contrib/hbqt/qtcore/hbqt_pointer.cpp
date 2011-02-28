@@ -309,7 +309,7 @@ HB_FUNC( HBQT_FINDCHILD )
    hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
 }
 
-HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
+HB_FUNC( HBQT_ISEQUAL )
 {
    hb_retl( hbqt_pPtrFromObj( 1 ) == hbqt_pPtrFromObj( 2 ) );
 }

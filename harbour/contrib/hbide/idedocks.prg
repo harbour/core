@@ -635,7 +635,7 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
 
    CASE "x_mdiArea_subWindowActivated"
       IF ! empty( ::oIde:aMdies )
-         IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqualGcQtPointer( e, p ) } ) )  > 0
+         IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqual( e, p ) } ) )  > 0
 
             ::setView( ::oIde:aMdies[ n ]:objectName() )
 
@@ -1963,4 +1963,3 @@ METHOD IdeDocks:buildFormatWidget()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

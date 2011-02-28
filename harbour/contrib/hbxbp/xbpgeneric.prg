@@ -506,40 +506,39 @@ FUNCTION ConfirmBox( oOwner, cMessage, cTitle, nButtons, nStyle, nStartBtn )
 
    SWITCH nButtons
    CASE XBPMB_OK
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qOk ), XBPMB_RET_OK, -1 )
+      nRet := iif( hbqt_IsEqual( qClk, qOk ), XBPMB_RET_OK, -1 )
       EXIT
    CASE XBPMB_OKCANCEL
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qOk ), XBPMB_RET_OK, XBPMB_RET_CANCEL )
+      nRet := iif( hbqt_IsEqual( qClk, qOk ), XBPMB_RET_OK, XBPMB_RET_CANCEL )
       EXIT
    CASE XBPMB_RETRYCANCEL
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL )
+      nRet := iif( hbqt_IsEqual( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL )
       EXIT
    CASE XBPMB_ABORTRETRYIGNORE
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qAbort ), XBPMB_RET_ABORT, ;
-                   iif( hbqt_IsEqualGcQtPointer( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL ) )
+      nRet := iif( hbqt_IsEqual( qClk, qAbort ), XBPMB_RET_ABORT, ;
+                   iif( hbqt_IsEqual( qClk, qRetry ), XBPMB_RET_RETRY, XBPMB_RET_CANCEL ) )
       EXIT
    CASE XBPMB_YESNO
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qYes ), XBPMB_RET_YES, XBPMB_RET_NO )
+      nRet := iif( hbqt_IsEqual( qClk, qYes ), XBPMB_RET_YES, XBPMB_RET_NO )
       EXIT
    CASE XBPMB_YESNOCANCEL
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qYes ), XBPMB_RET_YES, ;
-                   iif( hbqt_IsEqualGcQtPointer( qClk, qNo ), XBPMB_RET_NO, XBPMB_RET_CANCEL ) )
+      nRet := iif( hbqt_IsEqual( qClk, qYes ), XBPMB_RET_YES, ;
+                   iif( hbqt_IsEqual( qClk, qNo ), XBPMB_RET_NO, XBPMB_RET_CANCEL ) )
       EXIT
    CASE XBPMB_CANCEL
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qCancel ), XBPMB_RET_CANCEL, -1 )
+      nRet := iif( hbqt_IsEqual( qClk, qCancel ), XBPMB_RET_CANCEL, -1 )
       EXIT
    CASE XBPMB_ENTER
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qEnter ), XBPMB_RET_ENTER, -1 )
+      nRet := iif( hbqt_IsEqual( qClk, qEnter ), XBPMB_RET_ENTER, -1 )
       EXIT
    CASE XBPMB_ENTERCANCEL
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qEnter ), XBPMB_RET_ENTER, XBPMB_RET_CANCEL )
+      nRet := iif( hbqt_IsEqual( qClk, qEnter ), XBPMB_RET_ENTER, XBPMB_RET_CANCEL )
       EXIT
    CASE XBPMB_HELP
-      nRet := iif( hbqt_IsEqualGcQtPointer( qClk, qHelp ), XBPMB_RET_OK, -1 )
+      nRet := iif( hbqt_IsEqual( qClk, qHelp ), XBPMB_RET_OK, -1 )
       EXIT
    ENDSWITCH
 
    RETURN nRet
 
 /*----------------------------------------------------------------------*/
-

@@ -338,7 +338,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
       qPoint  := ::oWidget:mapToGlobal( p )
       qWidget := QApplication():widgetAt( qPoint )
 
-      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qWidget ) } ) - 1
+      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqual( o:oWidget, qWidget ) } ) - 1
    ELSE
       iIndex := p
    ENDIF
@@ -346,7 +346,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
 
-      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qTab ) } ) ) > 0
+      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqual( o:oWidget, qTab ) } ) ) > 0
          oTab := ::aChildren[ nIndex ]
 
          DO CASE

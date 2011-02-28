@@ -1402,7 +1402,7 @@ METHOD IdeBrowsePanel:execEvent( cEvent, p )
    SWITCH cEvent
    CASE "mdiArea_subWindowActivated"
       IF ! empty( ::aBrowsers )
-         IF ( n := ascan( ::aBrowsers, {|e_| hbqt_IsEqualGcQtPointer( e_[ SUB_WINDOW ], p ) } ) )  > 0
+         IF ( n := ascan( ::aBrowsers, {|e_| hbqt_IsEqual( e_[ SUB_WINDOW ], p ) } ) )  > 0
             oBrw := ::aBrowsers[ n, SUB_BROWSER ]
 
             oBrw:configure()
