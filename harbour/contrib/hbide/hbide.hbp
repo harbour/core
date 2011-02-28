@@ -27,10 +27,6 @@
 # TODO: Need to set 'HB_DYNLOAD_RDDADS=yes' for this to be enabled
 ../rddads/rddads.hbc{HB_DYNLOAD_RDDADS}
 
--lhbcplr
--lhbpp
--lhbcommon
-
 idemain.prg
 ideobject.prg
 idestylesheets.prg

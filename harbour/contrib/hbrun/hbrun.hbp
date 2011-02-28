@@ -23,9 +23,6 @@ headers.prg
 plugins.prg
 pullext.prg
 
--lhbcplr
--lhbpp
--lhbcommon
 -lhbpmcom{dos}
 
 # not using these together with .rc input, because some compilers (mingw)

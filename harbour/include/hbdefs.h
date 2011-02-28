@@ -1562,6 +1562,8 @@ typedef HB_U32 HB_FATTR;
    #define HB_EXPORT
 #endif
 
+#define HB_EXPORT_INT HB_EXPORT
+
 #if defined( __RSXNT__ )
    /* RSXNT does not support any type of export keyword.
       Exported (i.e., public) names can be obtained via

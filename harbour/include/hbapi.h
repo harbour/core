@@ -1078,8 +1078,8 @@ extern HB_EXPORT int          hb_conSetCursor( HB_BOOL bSetCursor, int iNewCurso
 extern HB_EXPORT const char * hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
-extern char *       hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen );
-extern char *       hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen );
+extern HB_EXPORT_INT char *       hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen );
+extern               char *       hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen );
 
 /* misc */
 extern HB_EXPORT char *   hb_procname( int iLevel, char * szName, HB_BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
