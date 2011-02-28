@@ -42,7 +42,7 @@ typedef struct
 
 /* NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
  */
-static HB_FUNCINFO hb_StdFunc[] =
+static const HB_FUNCINFO s_stdFunc[] =
 {
    { "AADD"      , 2,  2 },
    { "ABS"       , 1,  1 },
@@ -113,7 +113,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "YEAR"      , 1,  1 }
 };
 
-#define HB_STD_FUNCOUNT    ( sizeof( hb_StdFunc ) / sizeof( HB_FUNCINFO ) )
+#define HB_STD_FUNCOUNT    ( sizeof( s_stdFunc ) / sizeof( HB_FUNCINFO ) )
 
 HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {
@@ -129,7 +129,7 @@ HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
    do
    {
       uiMiddle = ( uiFirst + uiLast ) >> 1;
-      iCmp = strncmp( szFuncCall, hb_StdFunc[ uiMiddle ].cFuncName, iLen );
+      iCmp = strncmp( szFuncCall, s_stdFunc[ uiMiddle ].cFuncName, iLen );
       if( iCmp <= 0 )
          uiLast = uiMiddle;
       else
@@ -138,11 +138,11 @@ HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
    while( uiFirst < uiLast );
 
    if( uiFirst != uiMiddle )
-      iCmp = strncmp( szFuncCall, hb_StdFunc[ uiFirst ].cFuncName, iLen );
+      iCmp = strncmp( szFuncCall, s_stdFunc[ uiFirst ].cFuncName, iLen );
 
    if( iCmp == 0 )
    {
-      PHB_FUNCINFO pFunc = &hb_StdFunc[ uiFirst ];
+      const HB_FUNCINFO * pFunc = &s_stdFunc[ uiFirst ];
 
       if( ( pFunc->iMinParam != -1 && iArgs < pFunc->iMinParam ) ||
           ( pFunc->iMaxParam != -1 && iArgs > pFunc->iMaxParam ) )

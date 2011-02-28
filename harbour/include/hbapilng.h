@@ -74,10 +74,10 @@ HB_EXTERN_BEGIN
 #define HB_LANG_ANNOUNCE( id )          HB_LANG_ANNOUNCE_( id )
 #define HB_LANG_ANNOUNCE_( id )         HB_FUNC( HB_LANG_##id ) {}
 
-typedef struct _HB_LANG
+typedef const struct _HB_LANG
 {
    const void * pItemList[ HB_LANG_ITEM_MAX_ ];
-} HB_LANG, * PHB_LANG, * HB_LANG_PTR;
+} HB_LANG, * PHB_LANG;
 
 extern HB_EXPORT PHB_LANG  hb_vmLang( void );
 extern HB_EXPORT void      hb_vmSetLang( PHB_LANG pLang );

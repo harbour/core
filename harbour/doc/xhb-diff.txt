@@ -1159,7 +1159,7 @@ not support strings with embedded 0 so they are not fully functional here.
 
 ###    SYMBOL ITEMS AND FUNCTION REFERENCES    ###
 ==================================================
-Harbour support SYMBOL items ( VALTYPE(funcSym) == "S" ) which can be used
+Harbour supports SYMBOL items ( VALTYPE(funcSym) == "S" ) which can be used
 as function or message references. They have similar functionality to
 SYMBOL objects in Class(y) and understands NAME, EXEC and EVAL messages.
 They can be created literally by compiler using @<funcName>(), f.e:
@@ -1285,7 +1285,7 @@ xHarbour and Class(y) gives wrong results:
       [var] [var3] [var3] [var3]
 
 Please note that Harbour does not make any tricks with compile time static
-bindings. It's uses only dynamic bindings and resolves all problems with
+bindings. It uses only dynamic bindings and resolves all problems with
 instance area super casting.
 
 Correct instance area super casting is very important functionality when
@@ -1298,13 +1298,13 @@ important thing.
 
 ###    OOP AND PRIVATE/HIDDEN DATAs    ###
 ==========================================
-In bigger projects where different programmers works on different classes
+In bigger projects where different programmers work on different classes
 which are later used as ancestors of some new classes it's extremely important
 to give support for real private (hidden) data for each class programmer
 which will not cause problems if name conflicts appears. Otherwise
 each method and instance variable name used by each programmer has to be
 agreed with project manager to eliminate possible name conflicts. In really
-big projects such name conflicts can be nightmare which eliminates some
+big projects such name conflicts can be nightmare a which eliminates some
 languages.
 
 Harbour resolves this problem automatically. All hidden variables and

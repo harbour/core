@@ -54,7 +54,8 @@
 #include "hbcomp.h"
 
 static void hb_pp_ErrorGen( void * cargo,
-                            const char * szMsgTable[], char cPrefix, int iErrorCode,
+                            const char * const szMsgTable[],
+                            char cPrefix, int iErrorCode,
                             const char * szParam1, const char * szParam2 )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;

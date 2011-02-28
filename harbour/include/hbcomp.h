@@ -176,8 +176,8 @@ extern void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION );
 extern void hb_compElseIfKill( PFUNCTION );
 extern void hb_compLoopKill( PFUNCTION );
 
-extern void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
-extern void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
+extern void hb_compGenError( HB_COMP_DECL, const char * const szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
+extern void hb_compGenWarning( HB_COMP_DECL, const char * const szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
 extern HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL );             /* generates the pcode to jump to a specific offset */
 extern HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL );        /* generates the pcode to jump if false */
@@ -350,8 +350,8 @@ extern void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG 
 /* global readonly variables used by compiler
  */
 
-extern const char *  hb_comp_szErrors[];
-extern const char *  hb_comp_szWarnings[];
+extern const char * const hb_comp_szErrors[];
+extern const char * const hb_comp_szWarnings[];
 
 /* table with PCODEs' length */
 extern const HB_BYTE hb_comp_pcode_len[];

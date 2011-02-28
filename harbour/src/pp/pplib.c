@@ -60,7 +60,7 @@
 
 HB_EXTERN_BEGIN
 
-static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
+static void hb_pp_ErrorMessage( void * cargo, const char * const szMsgTable[],
                                 char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {

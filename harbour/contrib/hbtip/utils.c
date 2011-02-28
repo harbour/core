@@ -130,7 +130,7 @@ typedef struct tag_mime
 #define MIME_FLAG_CONTINUE      0x0008
 #define MIME_TABLE_SIZE         71
 
-static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
+static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
    /* Dos/win executable */
    /*  0*/ { 0, "MZ", "application/x-dosexec", 0, 0, 0 },
@@ -348,7 +348,7 @@ static const char * s_findExtMimeType( const char * cExt )
 
 static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, int iElem )
 {
-   MIME_ENTRY * elem = s_mimeTable + iElem;
+   const MIME_ENTRY * elem = s_mimeTable + iElem;
    HB_ISIZ nPos = elem->pos;
    HB_ISIZ nDataLen = strlen( elem->pattern );
 
@@ -403,7 +403,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
 
    for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
-      MIME_ENTRY * elem = s_mimeTable + iCount;
+      const MIME_ENTRY * elem = s_mimeTable + iCount;
       HB_ISIZ nPos = elem->pos;
       HB_ISIZ nDataLen = strlen( elem->pattern );
 

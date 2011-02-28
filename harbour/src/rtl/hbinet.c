@@ -114,7 +114,7 @@ typedef struct
          p = hb_itemPutPtrGC( p, s ); \
       } while( 0 )
 
-static const char * s_inetCRLF = "\r\n";
+static const char * const s_inetCRLF = "\r\n";
 
 static HB_COUNTER s_initialize = 1;
 
@@ -743,7 +743,7 @@ HB_FUNC( HB_INETRECVALL )
 }
 
 
-static void s_inetRecvPattern( const char ** patterns, int * patternsizes,
+static void s_inetRecvPattern( const char * const * patterns, int * patternsizes,
                                int iPatternsCount, int iParam )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );

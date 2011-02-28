@@ -104,14 +104,14 @@
 
 
 /* warning messages */
-static const char * hb_pp_szWarnings[] =
+static const char * const hb_pp_szWarnings[] =
 {
    "1%s",                                                               /* C10?? */
    "1Redefinition or duplicate definition of #define %s"                /* C1005 */
 };
 
 /* error messages */
-static const char * hb_pp_szErrors[] =
+static const char * const hb_pp_szErrors[] =
 {
    "Illegal character '\\x%s'",                                         /* C2004 */
    "Unterminated string '%s'",                                          /* C2007 */
@@ -224,7 +224,7 @@ static void hb_pp_disp( PHB_PP_STATE pState, const char * szMessage )
 
 static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char * szParam )
 {
-   const char ** szMsgTable = type == 'W' ? hb_pp_szWarnings : hb_pp_szErrors;
+   const char * const * szMsgTable = type == 'W' ? hb_pp_szWarnings : hb_pp_szErrors;
 
    if( pState->pErrorFunc )
    {

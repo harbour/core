@@ -916,7 +916,7 @@ extern HB_EXPORT HB_BOOL   hb_hashDelAt( PHB_ITEM pHash, HB_SIZE nPos );
 
 /* string management */
 
-extern const char * hb_szAscii[ 256 ];      /* array of 1 character length strings */
+extern const char * const hb_szAscii[ 256 ];    /* array of 1 character length strings */
 
 extern HB_EXPORT int       hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
 extern HB_EXPORT int       hb_strnicmp( const char * s1, const char * s2, HB_SIZE nLen ); /* compare two string without regards to case, limited by length */
