@@ -769,7 +769,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
-      PHB_ITEM p2 = hbqt_create_object( hbqt_gcAllocate_QPainter( painter, false ), "QPainter*" );
+      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "QPainter*" );
       PHB_ITEM p3 = hb_itemPutPtr( NULL, &rect );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );

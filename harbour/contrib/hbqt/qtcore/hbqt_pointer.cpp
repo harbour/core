@@ -435,7 +435,7 @@ void * hbqt_getqtptr( void )
 PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
 {
    PHB_ITEM pRetVal;
-   PHB_ITEM pItem = hb_itemPutPtr( NULL, pObject );
+   PHB_ITEM pItem;
 
    HB_TRACE( HB_TR_DEBUG, ( "create_object %s", pszObjectName ) );
 
@@ -443,10 +443,30 @@ PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
    hb_vmPushNil();
    hb_vmDo( 0 );
 
+   pItem = hb_itemPutPtr( NULL, pObject );
    pRetVal = hb_itemNew( hb_stackReturnItem() );
    hb_objSendMsg( pRetVal, "_PPTR", 1, pItem );
    hb_itemReturn( pRetVal );
+   hb_itemRelease( pItem );
 
+   return hb_stackReturnItem();
+}
+
+PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName )
+{
+   PHB_ITEM pRetVal;
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "create_object_GC %s", pszObjectName ) );
+
+   hb_vmPushDynSym( hb_dynsymGet( pszObjectName ) );
+   hb_vmPushNil();
+   hb_vmDo( 0 );
+
+   pItem = hb_itemPutPtrGC( NULL, pObject );
+   pRetVal = hb_itemNew( hb_stackReturnItem() );
+   hb_objSendMsg( pRetVal, "_PPTR", 1, pItem );
+   hb_itemReturn( pRetVal );
    hb_itemRelease( pItem );
 
    return hb_stackReturnItem();

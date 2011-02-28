@@ -57,7 +57,7 @@
       \
       hb_vmPushEvalSym(); \
       hb_vmPush( codeBlock ); \
-      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
+      hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
       hb_vmSend( 1 ); \
    }
 
@@ -68,7 +68,7 @@
       \
       hb_vmPushEvalSym(); \
       hb_vmPush( codeBlock ); \
-      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
+      hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_##_name_( new _name_( ( *reinterpret_cast< _name_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name_ ) ) ); \
       hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) ); \
       hb_vmSend( 2 ); \
    }
@@ -80,7 +80,7 @@
       \
       hb_vmPushEvalSym(); \
       hb_vmPush( codeBlock ); \
-      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name1_( new _name1_( ( *reinterpret_cast< _name1_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name1_ ) ) ); \
-      hb_vmPush( hbqt_create_object( hbqt_gcAllocate_##_name2_( new _name2_( ( *reinterpret_cast< _name2_( * ) >( arguments[ 2 ] ) ) ), true ), HB_MACRO2STRING( _name2_ ) ) ); \
+      hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_##_name1_( new _name1_( ( *reinterpret_cast< _name1_( * ) >( arguments[ 1 ] ) ) ), true ), HB_MACRO2STRING( _name1_ ) ) ); \
+      hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_##_name2_( new _name2_( ( *reinterpret_cast< _name2_( * ) >( arguments[ 2 ] ) ) ), true ), HB_MACRO2STRING( _name2_ ) ) ); \
       hb_vmSend( 2 ); \
    }
