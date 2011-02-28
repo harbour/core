@@ -77,7 +77,8 @@
 #define HB_GTI_KBDALT           12  /* This will get/set the status of the alt-numpad
                                        key handling.
                                        Default is Enabled. */
-#define HB_GTI_FULLSCREEN       13  /* Is it full screen GT driver? */
+#define HB_GTI_ISSCREENPOS      13  /* Is it full screen GT driver? */
+#define HB_GTI_FULLSCREEN       HB_GTI_ISSCREENPOS /* Compatibility. Do not use it. */
 #define HB_GTI_KBDSUPPORT       14  /* Is it keyboard input supported? */
 #define HB_GTI_CLIPBOARDDATA    15  /* Get/Set clipboard */
 #define HB_GTI_CLIPBOARDPASTE   16  /* Paste clipboard data into keyboard buffer */
@@ -142,6 +143,7 @@
 #define HB_GTI_INKEYREAD        61  /* Get/Set inkey read block */
 
 #define HB_GTI_ALTENTER         62  /* Toggles Alt+Enter as full screen switch (supported by: GTWVT) */
+#define HB_GTI_ISFULLSCREEN     63  /* Is the GT windows using the full physical display? (supported by: GTWVT) */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

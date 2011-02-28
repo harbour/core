@@ -3598,7 +3598,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    pTerm = HB_GTTRM_GET( pGT );
    switch( iType )
    {
-      case HB_GTI_FULLSCREEN:
+      case HB_GTI_ISSCREENPOS:
       case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;

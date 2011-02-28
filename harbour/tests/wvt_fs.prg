@@ -18,9 +18,9 @@ PROCEDURE MAIN()
 
    ? "GTWVT test"
 
-   ?  HB_GtInfo( HB_GTI_FULLSCREEN, .T. ), "we should be on full screen"
+   ?  HB_GtInfo( HB_GTI_ISFULLSCREEN, .T. ), "we should be on full screen"
    WAIT
-   ?  HB_GtInfo( HB_GTI_FULLSCREEN, .F. ), "we should be windowed"
+   ?  HB_GtInfo( HB_GTI_ISFULLSCREEN, .F. ), "we should be windowed"
    ?  HB_GtInfo( HB_GTI_ALTENTER, .T. ), "Alt+Enter is now enabled, try it"
    DO WHILE Inkey( 0 ) != K_ESC
       ? Row()

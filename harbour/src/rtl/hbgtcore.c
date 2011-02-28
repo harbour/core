@@ -1496,8 +1496,10 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    switch( iType )
    {
+      case HB_GTI_ALTENTER:
+      case HB_GTI_ISFULLSCREEN:
       case HB_GTI_ISGRAPHIC:
-      case HB_GTI_FULLSCREEN:
+      case HB_GTI_ISSCREENPOS:
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISCTWIN:
       case HB_GTI_ISMULTIWIN:
@@ -1678,7 +1680,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       memset( &gtInfo, 0, sizeof( gtInfo ) );
 
-      HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
+      HB_GTSELF_INFO( pGT, HB_GTI_ISSCREENPOS, &gtInfo );
       if( gtInfo.pResult )
       {
          fScreen = hb_itemGetL( gtInfo.pResult );
