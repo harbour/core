@@ -11,7 +11,7 @@ PRG_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-LIBS = hbcplr hbpp hbcommon $(HB_LIBS_MT_NORDD)
+LIBS = $(HB_LIBS_MT_NORDD)
 
 ifneq ($(HB_HAS_GPM),)
    HB_PRGFLAGS += -DHB_HAS_GPM
