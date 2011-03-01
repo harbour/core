@@ -54,12 +54,12 @@ AR := xLib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
-DFLAGS += -nologo -dll $(LIBPATHS)
+DFLAGS += -nologo -dll -noexpobj $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 ifeq ($(HB_SHELL),sh)
-   DYNFIX = && mv $(DYN_DIR)/$(@:.dll=.LIB) $(LIB_DIR)/$(@:.dll=.lib) && $(RM) $(DYN_DIR)/$(@:.dll=.EXP)
+   DYNFIX = && mv $(DYN_DIR)/$(@:.dll=.LIB) $(LIB_DIR)/$(@:.dll=.lib)
 else
    DYNFIX :=
 endif

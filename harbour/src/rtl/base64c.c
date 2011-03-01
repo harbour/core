@@ -51,49 +51,57 @@
  */
 
 #include "hbapi.h"
+#include "hbapierr.h"
 
 HB_FUNC( HB_BASE64ENCODE )
 {
    HB_SIZE len = hb_parclen( 1 );
 
-   if( len <= INT_MAX ) /* TOFIX */
+   if( len > 0 )
    {
-      const char * s = hb_parcx( 1 );
-      char * t, * p;
+      HB_SIZE dst = ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( char );
 
-      t = p = ( char * ) hb_xgrab( ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( *t ) );
-
-      while( len-- > 0 )
+      if( dst > len )
       {
-         static const char s_b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-         int x, y;
+         const char * s = hb_parcx( 1 );
+         char * t, * p;
 
-         x = *s++;
-         *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
+         t = p = ( char * ) hb_xgrab( dst );
 
-         if( len-- == 0 )
+         while( len-- > 0 )
          {
-            *p++ = s_b64chars[ ( x << 4 ) & 0x3F ];
-            *p++ = '=';
-            *p++ = '=';
-            break;
-         }
-         y = *s++;
-         *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
+            static const char s_b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+            int x, y;
 
-         if( len-- == 0 )
-         {
-            *p++ = s_b64chars[ ( y << 2 ) & 0x3F ];
-            *p++ = '=';
-            break;
+            x = *s++;
+            *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
+
+            if( len-- == 0 )
+            {
+               *p++ = s_b64chars[ ( x << 4 ) & 0x3F ];
+               *p++ = '=';
+               *p++ = '=';
+               break;
+            }
+            y = *s++;
+            *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
+
+            if( len-- == 0 )
+            {
+               *p++ = s_b64chars[ ( y << 2 ) & 0x3F ];
+               *p++ = '=';
+               break;
+            }
+            x = *s++;
+            *p++ = s_b64chars[ ( ( y << 2 ) | ( ( x >> 6 ) & 3 ) ) & 0x3F ];
+            *p++ = s_b64chars[ x & 0x3F ];
          }
-         x = *s++;
-         *p++ = s_b64chars[ ( ( y << 2 ) | ( ( x >> 6 ) & 3 ) ) & 0x3F ];
-         *p++ = s_b64chars[ x & 0x3F ];
+         *p = '\0';
+
+         hb_retc_buffer( t );
       }
-      *p = '\0';
-
-      hb_retc_buffer( t );
+      else
+         hb_errRT_BASE( EG_STROVERFLOW, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
       hb_retc_null();

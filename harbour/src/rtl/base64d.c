@@ -54,11 +54,10 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
 
 /* Warning: this code works only on ASCII based machines */
 
-static signed char base64_decode_value( char value_in )
+static signed char base64_decode_value( int value_in )
 {
    static const signed char s_decoding[] =
    {
@@ -69,10 +68,10 @@ static signed char base64_decode_value( char value_in )
    };
 
    value_in -= 43;
-   if( value_in < 0 || value_in >= ( char ) HB_SIZEOFARRAY( s_decoding ) )
+   if( value_in < 0 || value_in >= ( int ) HB_SIZEOFARRAY( s_decoding ) )
       return -1;
 
-   return s_decoding[ ( int ) value_in ];
+   return s_decoding[ value_in ];
 }
 
 static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_in, char * pszPlainttextOut )
@@ -131,17 +130,10 @@ HB_FUNC( HB_BASE64DECODE )
    if( nSrcLen > 0 )
    {
       HB_SIZE nDstLen = ( ( ( nSrcLen * 3 ) / 4 ) + 1 ) * sizeof( char );
+      char * code = ( char * ) hb_xgrab( nDstLen );
 
-      if( nDstLen <= HB_SIZE_MAX )
-      {
-         char * code = ( char * ) hb_xgrab( nDstLen );
-
-         nDstLen = base64_decode_block( hb_parcx( 1 ), nSrcLen, code );
-
-         hb_retclen_buffer( code, nDstLen );
-      }
-      else
-         hb_errRT_BASE( EG_STROVERFLOW, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      nDstLen = base64_decode_block( hb_parcx( 1 ), nSrcLen, code );
+      hb_retclen_buffer( code, nDstLen );
    }
    else
       hb_retc_null();
