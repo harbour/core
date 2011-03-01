@@ -1,14 +1,16 @@
 #include "hbqtgui.ch"
 
-STATIC s_qApp
-STATIC oWnd
-
 PROCEDURE Main()
 
+   LOCAL s_qApp
+   LOCAL oWnd
+
    s_qApp := QApplication()
+
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
-   oWnd:resize( 640, 480 )
+   oWnd:resize( 300, 200 )
+
    oWnd:show()
    s_qApp:exec()
 

@@ -1,17 +1,19 @@
 #include "hbqtgui.ch"
-
-STATIC s_qApp
-STATIC finestra
 STATIC font
 STATIC testo
 STATIC modificatore
 
 PROCEDURE Main()
 
+   LOCAL s_qApp
+   LOCAL finestra
+
    s_qApp := QApplication()
+
    finestra := QMainWindow()
    finestra:resize( 320, 200 )
    finestra:setWindowTitle( "Giovanni" )
+
    font := QFont()
    font:setPointSize( 30 )
    testo := QLabel( finestra )
@@ -19,6 +21,7 @@ PROCEDURE Main()
    testo:move( 10, 10 )
    testo:resize( 280, 100 )
    testo:setfont( font )
+
    modificatore := QSpinBox( finestra )
    modificatore:move( 50, 150 )
    modificatore:resize( 50, 25 )
@@ -27,7 +30,9 @@ PROCEDURE Main()
    modificatore:setMaximum( 72 )
    modificatore:setSingleStep( 1 )
    modificatore:setValue( 30 )
+
    finestra:show()
+
    s_qApp:exec()
 
    RETURN

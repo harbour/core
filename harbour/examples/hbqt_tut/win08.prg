@@ -1,29 +1,29 @@
 #include "hbqtgui.ch"
-
-STATIC s_qApp
-STATIC oWnd
 STATIC testo
 STATIC orolo
-STATIC pulsante_start, pulsante_stop
 
 PROCEDURE Main()
+
+   LOCAL s_qApp
+   LOCAL oWnd
+   LOCAL pulsante_start, pulsante_stop
 
    s_qApp := QApplication()
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
-   oWnd:resize( 640, 480 )
+   oWnd:resize( 300, 200 )
    testo := Qlabel( oWnd )
    testo:setText( "clocking..." )
-   testo:move( 100, 100 )
+   testo:move( 50, 50 )
    testo:resize( 200, 100 )
    orolo := QTimer()
    orolo:Connect( "timeout()", { || stampa_orologio() } )
    pulsante_start := QPushButton( oWnd )
-   pulsante_start:move( 300, 100 )
+   pulsante_start:move( 150, 50 )
    pulsante_start:setText( "Start" )
    pulsante_start:connect( "pressed()", { || start() } )
    pulsante_stop := QPushButton( oWnd )
-   pulsante_stop:move( 300, 200 )
+   pulsante_stop:move( 150, 100 )
    pulsante_stop:setText( "Stop" )
    pulsante_stop:connect( "pressed()", { || stop() } )
    oWnd:show()

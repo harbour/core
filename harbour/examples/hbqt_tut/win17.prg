@@ -1,26 +1,30 @@
 #include "hbqtgui.ch"
-
-STATIC s_qApp
-STATIC finestra
-STATIC font
-STATIC testo
 STATIC palette
 STATIC slider_rosso, slider_verde, slider_blu
+STATIC testo
 
 PROCEDURE Main()
 
+   LOCAL s_qApp
+   LOCAL finestra
+   LOCAL font
+
    s_qApp := QApplication()
+
    finestra := QMainWindow()
    finestra:resize( 320, 400 )
    finestra:setWindowTitle( "Giovanni" )
+
    font := QFont()
    font:setPointSize( 30 )
    font:setBold( .T. )
+
    testo := QLabel( finestra )
    testo:setText( "Colori" )
    testo:move( 100, 10 )
    testo:resize( 200, 100 )
    testo:setfont( font )
+
    slider_rosso := QSlider( finestra )
    slider_rosso:resize( 30, 200 )
    slider_rosso:move( 100, 120 )
@@ -30,6 +34,7 @@ PROCEDURE Main()
    slider_rosso:setPageStep( 10 )
    slider_rosso:setValue( 0 )
    slider_rosso:Connect( "valueChanged(int)", { || cambia_colori() } )
+
    slider_verde := QSlider( finestra )
    slider_verde:resize( 30, 200 )
    slider_verde:move( 150, 120 )
@@ -39,6 +44,7 @@ PROCEDURE Main()
    slider_verde:setPageStep( 10 )
    slider_verde:setValue( 0 )
    slider_verde:Connect( "valueChanged(int)", { || cambia_colori() } )
+
    slider_blu := QSlider( finestra )
    slider_blu:resize( 30, 200 )
    slider_blu:move( 200, 120 )
@@ -48,7 +54,9 @@ PROCEDURE Main()
    slider_blu:setPageStep( 10 )
    slider_blu:setValue( 0 )
    slider_blu:Connect( "valueChanged(int)", { || cambia_colori() } )
+
    finestra:show()
+
    s_qApp:exec()
 
    RETURN
@@ -60,4 +68,3 @@ PROCEDURE cambia_colori()
    testo:setPalette( palette )
 
    RETURN
-

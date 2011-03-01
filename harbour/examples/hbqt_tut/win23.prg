@@ -1,10 +1,10 @@
 #include "hbqtgui.ch"
 
-STATIC s_qApp
-STATIC finestra
-STATIC bottone1, bottone2, bottone3
-
 PROCEDURE Main()
+
+   LOCAL s_qApp
+   LOCAL finestra
+   LOCAL bottone1, bottone2, bottone3
 
    s_qApp := QApplication()
 
@@ -28,18 +28,17 @@ PROCEDURE Main()
    bottone3:Connect( "clicked()", { || messaggio( "NON SO" ) } )
 
    finestra:show()
-
    s_qApp:exec()
 
    RETURN
 
 PROCEDURE messaggio( msg )
 
-   STATIC oBox
+   LOCAL oBox
 
    oBox := QMessageBox()
    oBox:setInformativeText( msg )
    oBox:setWindowTitle( "Informazione" )
-   oBox:show()
+   oBox:exec()
 
    RETURN

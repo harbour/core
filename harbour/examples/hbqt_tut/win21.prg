@@ -1,11 +1,9 @@
 #include "hbqtgui.ch"
-
-STATIC s_qApp
-STATIC finestra
 STATIC lcd
-STATIC pulsante_diminuisci, pulsante_aumenta
 
 PROCEDURE Main()
+
+   LOCAL s_qApp, finestra, pulsante_diminuisci, pulsante_aumenta
 
    s_qApp := QApplication()
    finestra := QMainWindow()
@@ -34,7 +32,7 @@ PROCEDURE incrementa()
    LOCAL x
 
    x := lcd:value()
-   x++
+   x ++
    lcd:display( x )
 
    RETURN
@@ -44,7 +42,7 @@ PROCEDURE decrementa()
    LOCAL x
 
    x := lcd:value()
-   x--
+   x --
    lcd:display( x )
 
    RETURN

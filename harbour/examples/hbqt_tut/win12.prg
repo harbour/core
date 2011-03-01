@@ -1,5 +1,4 @@
 #include "hbqtgui.ch"
-
 STATIC tabella
 
 PROCEDURE Main()
