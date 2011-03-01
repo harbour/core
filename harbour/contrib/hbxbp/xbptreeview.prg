@@ -515,13 +515,13 @@ METHOD XbpTreeViewItem:delItem( oItem )
 
 METHOD XbpTreeViewItem:getChildItems()
 
-   RETURN NIL
+   RETURN ::aChilds
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeViewItem:getParentItem()
 
-   RETURN NIL
+   RETURN ::oParent
 
 /*----------------------------------------------------------------------*/
 
