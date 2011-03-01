@@ -4109,7 +4109,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          SWITCH hbmk[ _HBMK_nWARN ]
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
          CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc-" ) ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-" ) ; EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
          ENDSWITCH
          cOpt_CompC += " {FC} {LC}"

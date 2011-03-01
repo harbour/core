@@ -1817,7 +1817,7 @@ static HB_BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_win_IsFullScreen()
+static HB_BOOL hb_gt_win_IsFullScreen( void )
 {
    DWORD dwModeFlags;
    typedef BOOL ( WINAPI * P_GCDM )( LPDWORD );
