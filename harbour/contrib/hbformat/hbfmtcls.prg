@@ -72,7 +72,7 @@ CREATE CLASS HBFORMATCODE
    VAR cEol
    VAR nLineErr, nErr, cLineErr
 
-   VAR nEol           INIT  -1      // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
+   VAR nEol           INIT  0       // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
    VAR lFCaseLow      INIT .F.      // If true, convert file name to lower case
    VAR lNoTabs        INIT .T.      // If true, converts all tabs to spaces
    VAR lIndent        INIT .T.      // If true, indent code
@@ -213,6 +213,9 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
    FOR i := 1 TO nLen
       IF aFile[ i ] == NIL
          EXIT
+      ENDIF
+      IF Empty( aFile[ i ] )
+         LOOP
       ENDIF
       IF ::bCallBack != NIL
          Eval( ::bCallBack, aFile, i )
@@ -773,12 +776,16 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
 
 METHOD File2Array( cFileName ) CLASS HBFORMATCODE
 
-   LOCAL aFile, cEol
+   LOCAL aFile
 
    IF hb_FileExists( cFileName )
-      aFile := __hbformat_FileRead( MemoRead( cFileName ), @cEol )
+      aFile := hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
       IF ::nEol < 0
-         ::cEol := cEol
+         IF Chr( 13 ) + Chr( 10 ) $ MemoRead( cFileName )
+            ::cEol := Chr( 13 ) + Chr( 10 )
+         ELSE
+            ::cEol := Chr( 10 )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -788,7 +795,7 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
 
    LOCAL handle, i, nLen := Len( aFile ), cName, cBakName, cPath
 
-   cName := iif( ( i := Rat(".",cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
+   cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
    IF Empty( ::cExtSave )
       cBakName := cName + iif( Left( ::cExtBack, 1 ) != ".", ".", "" ) + ::cExtBack
       IF FRename( cFileName, cBakName ) == F_ERROR
@@ -800,8 +807,8 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
       cFileName := cName + iif( Left( ::cExtSave, 1 ) != ".", ".", "" ) + ::cExtSave
    ENDIF
    IF ::lFCaseLow
-      cPath := iif( ( i := Rat( '\', cFileName ) ) == 0, ;
-            iif( ( i := Rat( '/', cFileName ) ) == 0, "", Left( cFileName, i ) ), ;
+      cPath := iif( ( i := RAt( "\", cFileName ) ) == 0, ;
+            iif( ( i := RAt( "/", cFileName ) ) == 0, "", Left( cFileName, i ) ), ;
             Left( cFileName, i ) )
       cFileName := cPath + Lower( iif( i == 0, cFileName, Substr( cFileName, i + 1 ) ) )
    ENDIF

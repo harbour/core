@@ -85,6 +85,8 @@ PROCEDURE ultimo()
 
 PROCEDURE creafiletest()
 
+   LOCAL aCampi, i, m_num
+
    IF .NOT. File( "test.dbf" )
       aCampi := {}
       AAdd( aCampi, { "num", "N", 6, 0 } )

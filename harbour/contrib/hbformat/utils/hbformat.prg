@@ -117,7 +117,7 @@ STATIC PROCEDURE Reformat( oRef, cFileName )
    LOCAL aFile
 
    IF !Empty( aFile := oRef:File2Array( cFileName ) )
-      OutStd( "Reformatting " + cFileName + hb_eol() )
+      OutStd( "Reformatting " + cFileName + " (" + hb_ntos( Len( aFile ) ) + " lines)" + hb_eol() )
       OutStd( "<" + hb_eol() )
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )

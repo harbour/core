@@ -33,8 +33,8 @@ PROCEDURE incrementa()
 
    LOCAL x
 
-   x = lcd:value()
-   x ++
+   x := lcd:value()
+   x++
    lcd:display( x )
 
    RETURN
@@ -43,8 +43,8 @@ PROCEDURE decrementa()
 
    LOCAL x
 
-   x = lcd:value()
-   x --
+   x := lcd:value()
+   x--
    lcd:display( x )
 
    RETURN
