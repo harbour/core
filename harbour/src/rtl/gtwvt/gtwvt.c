@@ -1938,6 +1938,10 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 #ifdef MONITOR_DEFAULTTONEAREST
    HMONITOR mon;
    MONITORINFO mi;
+   typedef HMONITOR ( WINAPI * P_MFW )( HWND, DWORD );
+   typedef BOOL ( WINAPI * P_GMI )( HMONITOR, LPMONITORINFO );
+   P_MFW pMonitorFromWindow;
+   P_GMI pGetMonitorInfo;
 #endif
 
    pWVT = HB_GTWVT_GET( pGT );
@@ -1982,11 +1986,23 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    rt.bottom = 0;
 
 #ifdef MONITOR_DEFAULTTONEAREST
-   mon = MonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
-   mi.cbSize = sizeof( mi );
-   GetMonitorInfo( mon, &mi );
+   pMonitorFromWindow = ( P_MFW )
+                         GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                         "MonitorFromWindow" );
+   pGetMonitorInfo = ( P_GMI )
+                       GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                       "GetMonitorInfo" );
 
-   rt = mi.rcMonitor;
+   if( pMonitorFromWindow && pGetMonitorInfo )
+   {
+      mon = pMonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
+      mi.cbSize = sizeof( mi );
+      pGetMonitorInfo( mon, &mi );
+      rt = mi.rcMonitor;
+   }
+   else
+      GetClientRect( GetDesktopWindow(), &rt );
+   
 #else
    GetClientRect( GetDesktopWindow(), &rt );
 #endif
@@ -2220,9 +2236,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bFullScreen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
-            if( ( hb_itemGetL( pInfo->pNewVal ) && !pWVT->bFullScreen )
-               || ( !hb_itemGetL( pInfo->pNewVal ) && pWVT->bFullScreen ) )
-                hb_gt_wvt_FullScreen( pGT );
+            if( hb_itemGetL( pInfo->pNewVal ) != pWVT->bFullScreen )
+               hb_gt_wvt_FullScreen( pGT );
          }
          break;
 

@@ -6,27 +6,29 @@ ifeq ($(HB_BUILD_MODE),cpp)
    HB_BUILD_MODE := c
 endif
 
-HB_CMP := pcc
-
 OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
+
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
-CC_OUT := -o$(subst x,x, )
+CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC) -fpic
+CFLAGS += -I. -I$(HB_HOST_INC)
 
-# Warning and optimization options are not stable yet
 #ifneq ($(HB_BUILD_WARN),no)
-#   CFLAGS +=
+#   CFLAGS += -W -Wall
 #else
-#   CFLAGS +=
+#   CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
+#   ifneq ($(HB_BUILD_MODE),cpp)
+#      CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
+#   endif
 #endif
 #
 #ifneq ($(HB_BUILD_OPTIM),no)
-#   CFLAGS += -O
+#   CFLAGS += -O3
 #endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
@@ -34,7 +36,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := $(CC)
-LD_OUT := -o$(subst x,x, )
+LD_OUT := -o
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
@@ -49,17 +51,6 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-define dynlib_object
-   @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
-
-endef
-define create_dynlib
-   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-   $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
-endef
-
-DY_RULE = $(create_dynlib)
+DY_RULE = $(DY) $(DFLAGS) -Wl,-soname,$(DYN_NAME_CPT) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
 
 include $(TOP)$(ROOT)config/rules.mk

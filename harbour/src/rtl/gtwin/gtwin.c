@@ -136,6 +136,18 @@
 #  define MOUSE_WHEELED 0x0004
 #endif
 
+#ifndef CONSOLE_FULLSCREEN_HARDWARE
+#  define CONSOLE_FULLSCREEN_HARDWARE 2
+#endif
+
+#ifndef CONSOLE_FULLSCREEN_MODE
+#  define CONSOLE_FULLSCREEN_MODE 1
+#endif
+
+#ifndef CONSOLE_WINDOWED_MODE
+#  define CONSOLE_WINDOWED_MODE 0
+#endif
+
 /*
  To disable mouse, initialization was made in cmdarg.c
 */
@@ -1805,12 +1817,63 @@ static HB_BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 
 /* *********************************************************************** */
 
+static HB_BOOL hb_gt_win_IsFullScreen()
+{
+   DWORD dwModeFlags;
+   typedef BOOL ( WINAPI * P_GCDM )( LPDWORD );
+
+   P_GCDM pGetConsoleDisplayMode = ( P_GCDM )
+             GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                             "GetConsoleDisplayMode" );
+
+   if( pGetConsoleDisplayMode && pGetConsoleDisplayMode( &dwModeFlags ) )
+   {
+      if( dwModeFlags & CONSOLE_FULLSCREEN_HARDWARE )
+         return HB_TRUE;
+   }
+
+   return HB_FALSE;
+}
+
+/* *********************************************************************** */
+
+static HB_BOOL hb_gt_win_FullScreen( HB_BOOL bFullScreen )
+{
+   typedef BOOL ( WINAPI * P_SCDM )( HANDLE, DWORD, LPDWORD );
+
+   P_SCDM pSetConsoleDisplayMode = ( P_SCDM )
+             GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                             "SetConsoleDisplayMode" );
+
+   if( pSetConsoleDisplayMode )
+   {
+      if( bFullScreen )
+         return pSetConsoleDisplayMode( s_HOutput, CONSOLE_FULLSCREEN_MODE, NULL );
+      else
+         return !pSetConsoleDisplayMode( s_HOutput, CONSOLE_WINDOWED_MODE, NULL );
+   }
+
+   return HB_FALSE;
+}
+
+/* *********************************************************************** */
+
 static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch( iType )
    {
+      case HB_GTI_ISFULLSCREEN:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, hb_gt_win_IsFullScreen() );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( hb_itemGetL( pInfo->pResult ) != bNewValue )
+                hb_gt_win_FullScreen( bNewValue );
+         }
+         break;
+
       case HB_GTI_ISSCREENPOS:
       case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
