@@ -712,9 +712,9 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFORMATCODE
       IF __ObjHasMsg( Self, cToken1 )
          IF Empty( cToken2 )
             xRes := ""
-         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2, 1 ) == "-" .AND. IsDigit( Ltrim( SubStr( cToken2, 2 ) ) ) )
+         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2, 1 ) == "-" .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
             xRes := Val( cToken2 )
-         ELSEIF Isalpha( cToken2 )
+         ELSEIF IsAlpha( cToken2 )
             IF ( cTemp := Upper( cToken2 ) ) == "ON" .OR. cTemp == "YES"
                xRes := .T.
             ELSEIF cTemp == "OFF" .OR. cTemp == "NO"
@@ -760,7 +760,7 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
    LOCAL i, nLen, aIni, c
 
    IF hb_FileExists( cIniName )
-      aIni := __hbformat_FileRead( MemoRead( cIniName ) )
+      aIni := hb_ATokens( StrTran( MemoRead( cIniName ), Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
          IF !Empty( aIni[ i ] := AllTrim( aIni[ i ] ) ) .AND. ;
