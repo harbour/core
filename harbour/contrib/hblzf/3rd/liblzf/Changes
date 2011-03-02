@@ -1,3 +1,14 @@
+3.6  Mon Feb  7 17:37:31 CET 2011
+	- fixed hash calculation in C♯ version (Tiago Freitas Leal).
+        - unroll copy for small sizes, use memcpy for larger sizes,
+          greatly speeding up decompression in most cases.
+        - finally disable rep movsb - it's a big loss on modern intel cpus,
+          and only a small win on amd cpus.
+        - improve C++ compatibility of the code.
+        - slightly improve compressor speed.
+        - halved memory requirements for compressor on 64 bit architectures,
+          which can improve the speed quite a bit on older cpus.
+
 3.5  Fri May  1 02:28:42 CEST 2009
 	- lzf_compress did sometimes write one octet past the given output
           buffer (analyzed and nice testcase by Salvatore Sanfilippo).

@@ -10,7 +10,7 @@ DESCRIPTION
 
     A C♯ implementation without external dependencies is available, too.
 
-    I do not know for certain wether any patents in any countries apply
+    I do not know for certain whether any patents in any countries apply
     to this algorithm, but at the moment it is believed that it is free
     from any patents. More importantly, it is also free to use in every
     software package (see LICENSE).
@@ -20,7 +20,7 @@ DESCRIPTION
 
     NOTE: This package contains a very bare-bones command-line utility
     which is neither optimized for speed nor for compression. This library
-    is really intented to be used inside larger programs.
+    is really intended to be used inside larger programs.
 
 AUTHOR
     This library was written by Marc Lehmann <schmorp@schmorp.de> (See also

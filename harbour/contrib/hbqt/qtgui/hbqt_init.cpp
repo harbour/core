@@ -588,7 +588,15 @@ static void hbqt_lib_exit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 }
 
-HB_FUNC( HBQT_PUSHEVENT )
+#if 0
+/* TOFIX: Accept .prg level object already created instead of duplicating
+          logic present in QKeyEvent.qth and QMouseEvent.qth.
+          Check its type here.
+          Another pending TOFIX is why this doesn't work, and why does it
+          GPF even:
+             QApplication():sendEvent( oWnd, QKeyEvent( QEvent_KeyPress, Qt_Key_X, Qt_NoModifier, "X", 0 ) )
+ */
+HB_FUNC( HBQTGUI_EVENTPUSH )
 {
    switch( hb_parni( 2 ) )
    {
@@ -626,6 +634,7 @@ HB_FUNC( HBQT_PUSHEVENT )
       }
    }
 }
+#endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtgui_init_ )
    hb_vmAtInit( hbqt_lib_init, NULL );

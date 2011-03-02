@@ -1,6 +1,6 @@
 diff -urN liblzf.orig/lzf.h liblzf/lzf.h
---- liblzf.orig/lzf.h	2011-01-04 15:34:58 +0000
-+++ liblzf/lzf.h	2011-01-04 14:30:25 +0000
+--- liblzf.orig/lzf.h	2011-03-01 17:34:48.870928894 +0100
++++ liblzf/lzf.h	2011-03-01 17:34:48.910930654 +0100
 @@ -37,6 +37,10 @@
  #ifndef LZF_H
  #define LZF_H
