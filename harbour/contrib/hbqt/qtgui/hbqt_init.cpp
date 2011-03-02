@@ -79,6 +79,7 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QWidget>
+#include <QtGui/QKeyEvent>
 
 #include <QtCore/QStringList>
 
@@ -585,6 +586,45 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+}
+
+HB_FUNC( HBQT_PUSHEVENT )
+{
+   switch( hb_parni( 2 ) )
+   {
+      case QEvent::KeyPress:
+      case QEvent::KeyRelease:
+      case QEvent::ShortcutOverride:
+      {
+         QKeyEvent pKeyEvent = QKeyEvent( ( QEvent::Type ) hb_parni( 2 ),
+                                       hb_parni( 3 ),
+                                     ( Qt::KeyboardModifiers ) hb_parni( 4 ),
+                                     ( HB_ISCHAR( 5 ) ? hbqt_par_QString( 5 ) : QString() ),
+                                     ( HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ),
+                                     ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 1 ) );
+
+         QObject * pObj = ( QObject * ) hbqt_gcpointer( 1 );
+         s_app->sendEvent( pObj, &pKeyEvent );
+         break;
+      }
+      case QEvent::MouseButtonPress:
+      case QEvent::MouseButtonRelease:
+      case QEvent::MouseButtonDblClick:
+      case QEvent::MouseMove:
+      {
+         #if 0  /* QPoint is in qrcore so how to handle ? qtcore is always required anyway for any Qt appln */
+         QKeyEvent pMouseEvent = QMouseEvent( ( QEvent::Type ) hb_parni( 2 ),
+                                     hbqt_par_QPoint( 3 ),
+                                     ( Qt::MouseButton ) hb_parni( 4 ),
+                                     ( Qt::MouseButtons ) hb_parni( 5 ),
+                                     ( Qt::KeyboardModifiers ) hb_parni( 6 ) );
+
+         QObject * pObj = ( QObject * ) hbqt_gcpointer( 1 );
+         s_app->sendEvent( pObj, &pMouseEvent );
+         #endif
+         break;
+      }
+   }
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtgui_init_ )
