@@ -5,10 +5,7 @@ STATIC modificatore
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL finestra
-
-   s_qApp := QApplication()
 
    finestra := QMainWindow()
    finestra:resize( 320, 200 )
@@ -33,7 +30,7 @@ PROCEDURE Main()
 
    finestra:show()
 
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

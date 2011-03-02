@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL pulsante1
-
-   s_qApp := QApplication()
 
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
@@ -19,7 +16,7 @@ PROCEDURE Main()
    Pulsante1:Connect( "clicked()", { || messaggio() } )
 
    oWnd:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

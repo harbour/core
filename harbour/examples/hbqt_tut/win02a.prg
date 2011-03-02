@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL testo
-
-   s_qApp := QApplication()
 
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
@@ -17,6 +14,6 @@ PROCEDURE Main()
    testo:move( 100, 100 )
 
    oWnd:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

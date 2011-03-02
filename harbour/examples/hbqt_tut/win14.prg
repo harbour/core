@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL barra_progresso
    LOCAL k
-
-   s_qApp := QApplication()
 
    barra_progresso := QProgressBar()
    barra_progresso:resize( 400, 50 )
@@ -21,6 +18,6 @@ PROCEDURE Main()
    next k
 
    barra_progresso:quit()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

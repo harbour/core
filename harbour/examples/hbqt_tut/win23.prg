@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL finestra
    LOCAL bottone1, bottone2, bottone3
-
-   s_qApp := QApplication()
 
    finestra := QMainWindow()
    finestra:resize( 400, 300 )
@@ -28,7 +25,7 @@ PROCEDURE Main()
    bottone3:Connect( "clicked()", { || messaggio( "NON SO" ) } )
 
    finestra:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

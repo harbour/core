@@ -2,12 +2,9 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL barra_schede
    LOCAL clienti, fornitori, magazzino
-
-   s_qApp := QApplication()
 
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
@@ -26,6 +23,6 @@ PROCEDURE Main()
    barra_schede:addTab( magazzino, "Scheda Magazzino" )
 
    oWnd:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

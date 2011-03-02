@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL calendario
-
-   s_qApp := QApplication()
 
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
@@ -19,6 +16,6 @@ PROCEDURE Main()
    calendario:setGridVisible( .T. )
 
    oWnd:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

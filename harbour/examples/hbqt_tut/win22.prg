@@ -3,14 +3,11 @@ STATIC edit1, edit2, edit3
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL finestra
    LOCAL testo
    LOCAL calcola
 
    SET DATE ITALIAN
-
-   s_qApp := QApplication()
 
    finestra := QMainWindow()
    finestra:resize( 400, 300 )
@@ -40,7 +37,7 @@ PROCEDURE Main()
 
    finestra:show()
 
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

@@ -4,11 +4,9 @@ STATIC orolo
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL pulsante_start, pulsante_stop
 
-   s_qApp := QApplication()
    oWnd := QMainWindow()
    oWnd:setWindowTitle( "Finestra di Giovanni" )
    oWnd:resize( 300, 200 )
@@ -27,7 +25,7 @@ PROCEDURE Main()
    pulsante_stop:setText( "Stop" )
    pulsante_stop:connect( "pressed()", { || stop() } )
    oWnd:show()
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

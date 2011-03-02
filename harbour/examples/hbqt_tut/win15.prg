@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL finestra
    LOCAL logo
-
-   s_qApp := QApplication()
 
    finestra := QmainWindow()
    finestra:SetFixedSize( 400, 300 )
@@ -20,6 +17,6 @@ PROCEDURE Main()
 
    finestra:show()
 
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

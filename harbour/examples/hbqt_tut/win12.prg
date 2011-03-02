@@ -4,12 +4,12 @@ STATIC tabella
 PROCEDURE Main()
 
    //------------Dichiarazioni--------------
-   LOCAL applicazione, finestra
+   LOCAL finestra
    LOCAL cella, valore
    LOCAL num_campi, num_record, intestazioni
    LOCAL x, y
    LOCAL pulsante_primo, pulsante_ultimo
-   applicazione := QApplication()
+
    finestra := QMainWindow()
    finestra:resize( 800, 600 )
    //------------Apre DBF e conta campi e record------------
@@ -61,8 +61,7 @@ PROCEDURE Main()
    pulsante_ultimo:Connect( "clicked()", { || ultimo() } )
    //------------Esecuzione--------------
    finestra:show()
-   applicazione:exec()
-   applicazione:quit()
+   QApplication():exec()
 
    RETURN
 

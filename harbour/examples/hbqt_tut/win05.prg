@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL oWnd
    LOCAL oSBar
-
-   s_qApp := QApplication()
 
    oWnd := QMainWindow()
    oWnd:show()
@@ -19,6 +16,6 @@ PROCEDURE Main()
 
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN

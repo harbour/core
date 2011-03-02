@@ -2,9 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL applicazione, finestra, ui, file
+   LOCAL finestra, ui, file
 
-   applicazione := QApplication()
    file := QFile( "prova.ui" )
    file:open( 1 )
    ui := QUiLoader()
@@ -13,7 +12,6 @@ PROCEDURE Main()
    file:close()
    finestra:show()
 
-   applicazione:exec()
-   applicazione:quit()
+   QApplication():exec()
 
    RETURN

@@ -5,11 +5,8 @@ STATIC testo
 
 PROCEDURE Main()
 
-   LOCAL s_qApp
    LOCAL finestra
    LOCAL font
-
-   s_qApp := QApplication()
 
    finestra := QMainWindow()
    finestra:resize( 320, 400 )
@@ -57,7 +54,7 @@ PROCEDURE Main()
 
    finestra:show()
 
-   s_qApp:exec()
+   QApplication():exec()
 
    RETURN
 

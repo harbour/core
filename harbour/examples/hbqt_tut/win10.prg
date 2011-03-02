@@ -2,11 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL qApp
    LOCAL finestra
    LOCAL oMenuBar, oMenu1, oVoceIns, oVoceMod
-
-   qApp := QApplication()
 
    // ----------Impostazione Finestra-----------
    finestra := QmainWindow()
@@ -33,7 +30,7 @@ PROCEDURE Main()
    oMenuBar:addMenu( oMenu1 )
 
    finestra:Show()
-   qApp:exec()
+   QApplication():exec()
 
    RETURN
 
