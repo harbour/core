@@ -1,0 +1,89 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+; Header File to Generate Sources
+;
+
+<CLASS>
+QObject  = no
+Inherit  = 
+New      = 
+</CLASS>
+
+<CODE>
+#include <QtNetwork/QUrlInfo>
+
+
+/*
+ * QUrlInfo ()
+ * QUrlInfo ( const QUrlInfo & ui )
+ * QUrlInfo ( const QString & name, int permissions, const QString & owner, const QString & group, qint64 size, const QDateTime & lastModified, const QDateTime & lastRead, bool isDir, bool isFile, bool isSymLink, bool isWritable, bool isReadable, bool isExecutable )
+ * QUrlInfo ( const QUrl & url, int permissions, const QString & owner, const QString & group, qint64 size, const QDateTime & lastModified, const QDateTime & lastRead, bool isDir, bool isFile, bool isSymLink, bool isWritable, bool isReadable, bool isExecutable )
+ * virtual ~QUrlInfo ()
+ * 
+ */
+HB_FUNC( QT_QURLINFO )
+{
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      __HB_RETPTRGC__( new QUrlInfo( *hbqt_par_QUrlInfo( 1 ) ) );
+   }
+   else 
+   {
+      __HB_RETPTRGC__( new QUrlInfo() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum PermissionSpec { ReadOwner, WriteOwner, ExeOwner, ReadGroup, ..., ExeOther }
+</ENUMS>
+
+<PROTOS>
+QString group () const
+bool isDir () const
+bool isExecutable () const
+bool isFile () const
+bool isReadable () const
+bool isSymLink () const
+bool isValid () const
+bool isWritable () const
+QDateTime lastModified () const
+QDateTime lastRead () const
+QString name () const
+QString owner () const
+int permissions () const
+virtual void setDir ( bool b )
+virtual void setFile ( bool b )
+virtual void setGroup ( const QString & s )
+virtual void setLastModified ( const QDateTime & dt )
+void setLastRead ( const QDateTime & dt )
+virtual void setName ( const QString & name )
+virtual void setOwner ( const QString & s )
+virtual void setPermissions ( int p )
+virtual void setReadable ( bool b )
+virtual void setSize ( qint64 size )
+virtual void setSymLink ( bool b )
+virtual void setWritable ( bool b )
+qint64 size () const
+
+bool equal ( const QUrlInfo & i1, const QUrlInfo & i2, int sortBy )
+bool greaterThan ( const QUrlInfo & i1, const QUrlInfo & i2, int sortBy )
+bool lessThan ( const QUrlInfo & i1, const QUrlInfo & i2, int sortBy )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

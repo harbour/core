@@ -12,3 +12,5 @@ QHttpHeader.qth
 QHttpRequestHeader.qth
 QHttpResponseHeader.qth
 QNetworkRequest.qth
+QNetworkProxy.qth
+QUrlInfo.qth

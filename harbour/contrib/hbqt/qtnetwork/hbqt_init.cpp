@@ -71,10 +71,8 @@ HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QObject( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew );
-#if 0  // Classes not initiated yet!
 extern void * hbqt_gcAllocate_QNetworkProxy( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QUrlInfo( void * pObj, bool bNew );
-#endif
 HB_EXTERN_END
 
 /*----------------------------------------------------------------------*/
@@ -95,7 +93,7 @@ static void hbqt_SlotsExecQNetworkProxyPointer( PHB_ITEM * codeBlock, void ** ar
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), ( const char * ) pList.at( 0 ).data() ) );
+   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QNetworkProxy( new QNetworkProxy( ( *reinterpret_cast< QNetworkProxy( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QNetworkProxy" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QObject( ( *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) ), false ), ( const char * ) pList.at( 1 ).data() ) );
    hb_vmSend( 2 );
 }
@@ -116,11 +114,7 @@ static void hbqt_SlotsExecQUrlInfo( PHB_ITEM * codeBlock, void ** arguments, QSt
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#if 0
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QUrlInfo( new QUrlInfo( ( *reinterpret_cast< QUrlInfo( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QUrlInfo" ) );
-#else
-   hb_vmPushNil();
-#endif
    hb_vmSend( 1 );
 }
 
