@@ -133,13 +133,9 @@ extern HB_EXPORT PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage,
 /* send message which allows to set execution context for debugger */
 extern HB_EXPORT void       hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset );
 
-/* Harbour equivalent for Clipper internal __mdCreate() */
-HB_USHORT hb_clsCreate( HB_USHORT usSize, const char * szClassName );
-/* Harbour equivalent for Clipper internal __mdAdd() */
-void hb_clsAdd( HB_USHORT usClassH, const char * szMethodName, PHB_FUNC pFuncPtr );
-/* Harbour equivalent for Clipper internal __mdAssociate() */
-void hb_clsAssociate( HB_USHORT usClassH );
-
+extern HB_EXPORT HB_USHORT  hb_clsCreate( HB_USHORT usSize, const char * szClassName ); /* Harbour equivalent for Clipper internal __mdCreate() */
+extern HB_EXPORT void       hb_clsAdd( HB_USHORT usClassH, const char * szMethodName, PHB_FUNC pFuncPtr ); /* Harbour equivalent for Clipper internal __mdAdd() */
+extern HB_EXPORT void       hb_clsAssociate( HB_USHORT usClassH ); /* Harbour equivalent for Clipper internal __mdAssociate() */
 
 HB_EXTERN_END
 
