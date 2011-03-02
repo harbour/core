@@ -4,15 +4,18 @@
 
 -es2
 -w3
+-n
+-mt
 
 -gtwvt
--mt
 
 -d__WITH_WVT__
 
+#../../hbxbp/hbxbp.hbc
 ../hbqtcore.hbc
 ../hbqtgui.hbc
 ../hbqtnetwork.hbc
 
 wvtqt.prg
-dialogqt.prg
+browqt.prg
+

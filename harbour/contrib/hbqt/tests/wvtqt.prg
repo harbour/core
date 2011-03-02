@@ -131,7 +131,7 @@ PROCEDURE Main()
 //----------------------------------------------------------------------//
 
 STATIC PROCEDURE DispScreen()
-   LOCAL nRow := 11 //, nCol := 28
+   LOCAL nRow := 10
    LOCAL cColor := "N/W"
    LOCAL nMaxCol := MaxCol() + 1
 
@@ -159,6 +159,7 @@ STATIC PROCEDURE DispScreen()
    DispOutAt( ++nRow, 0, PadC( "<    Click X Button     >", nMaxCol ), cColor )
    DispOutAt( ++nRow, 0, PadC( "< F9 Resize Mode Toggle >", nMaxCol ), cColor )
    DispOutAt( ++nRow, 0, PadC( "< F10 Open New Window   >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F12 Open hbQT Window  >", nMaxCol ), cColor )
 
    DispOutAt( maxrow(), 0, Space( MaxCol() + 1 ), "N/G*" )
 
