@@ -16,7 +16,7 @@ QObject  = no
 Inherits = QEvent
 Type     = Core
 New      = 
-Constructor = no
+Constructor = 
 </CLASS>
 
 <CODE>
@@ -28,7 +28,10 @@ Constructor = no
  */
 HB_FUNC( QT_QFOCUSEVENT )
 {
-   // __HB_RETPTRGC__( new QFocusEvent() );
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QFocusEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::FocusReason ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::OtherFocusReason ) ) );
+   }
 }
 </CODE>
 

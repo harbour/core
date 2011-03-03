@@ -16,7 +16,7 @@ QObject  = no
 Inherits = QEvent
 Type     = Core
 New      = 
-Constructor = no
+Constructor =
 </CLASS>
 
 <CODE>
@@ -28,7 +28,7 @@ Constructor = no
  */
 HB_FUNC( QT_QSHOWEVENT )
 {
-   // __HB_RETPTRGC__( new QShowEvent() );
+   __HB_RETPTRGC__( new QShowEvent() );
 }
 </CODE>
 

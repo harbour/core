@@ -37,6 +37,10 @@ HB_FUNC( QT_QMOUSEEVENT )
    {
       __HB_RETPTRGC__( new QMouseEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), ( Qt::MouseButton ) hb_parni( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ) ) );  
    }
+   else if( hb_pcount() == 6 )
+   {
+      __HB_RETPTRGC__( new QMouseEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ), ( Qt::MouseButton ) hb_parni( 4 ), ( Qt::MouseButtons ) hb_parni( 5 ), ( Qt::KeyboardModifiers ) hb_parni( 6 ) ) );  
+   }
 }
 </CODE>
 

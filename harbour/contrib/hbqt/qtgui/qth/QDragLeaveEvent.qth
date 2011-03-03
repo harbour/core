@@ -28,7 +28,7 @@ Constructor = no
  */
 HB_FUNC( QT_QDRAGLEAVEEVENT )
 {
-   // __HB_RETPTRGC__( new QDragLeaveEvent() );
+   __HB_RETPTRGC__( new QDragLeaveEvent() );
 }
 </CODE>
 

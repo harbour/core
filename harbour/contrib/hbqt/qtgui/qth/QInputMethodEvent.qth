@@ -29,7 +29,14 @@ Destructor =
  */
 HB_FUNC( QT_QINPUTMETHODEVENT )
 {
-   __HB_RETPTRGC__( new QInputMethodEvent() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      __HB_RETPTRGC__( new QInputMethodEvent( *hbqt_par_QInputMethodEvent( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QInputMethodEvent() );
+   }
 }
 </CODE>
 

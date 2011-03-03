@@ -588,53 +588,6 @@ static void hbqt_lib_exit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 }
 
-#if 0
-/* TOFIX: Accept .prg level object already created instead of duplicating
-          logic present in QKeyEvent.qth and QMouseEvent.qth.
-          Check its type here.
-          Another pending TOFIX is why this doesn't work, and why does it
-          GPF even:
-             QApplication():sendEvent( oWnd, QKeyEvent( QEvent_KeyPress, Qt_Key_X, Qt_NoModifier, "X", 0 ) )
- */
-HB_FUNC( HBQTGUI_EVENTPUSH )
-{
-   switch( hb_parni( 2 ) )
-   {
-      case QEvent::KeyPress:
-      case QEvent::KeyRelease:
-      case QEvent::ShortcutOverride:
-      {
-         QKeyEvent pKeyEvent = QKeyEvent( ( QEvent::Type ) hb_parni( 2 ),
-                                       hb_parni( 3 ),
-                                     ( Qt::KeyboardModifiers ) hb_parni( 4 ),
-                                     ( HB_ISCHAR( 5 ) ? hbqt_par_QString( 5 ) : QString() ),
-                                     ( HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ),
-                                     ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 1 ) );
-
-         QObject * pObj = ( QObject * ) hbqt_gcpointer( 1 );
-         s_app->sendEvent( pObj, &pKeyEvent );
-         break;
-      }
-      case QEvent::MouseButtonPress:
-      case QEvent::MouseButtonRelease:
-      case QEvent::MouseButtonDblClick:
-      case QEvent::MouseMove:
-      {
-         #if 0  /* QPoint is in qrcore so how to handle ? qtcore is always required anyway for any Qt appln */
-         QKeyEvent pMouseEvent = QMouseEvent( ( QEvent::Type ) hb_parni( 2 ),
-                                     hbqt_par_QPoint( 3 ),
-                                     ( Qt::MouseButton ) hb_parni( 4 ),
-                                     ( Qt::MouseButtons ) hb_parni( 5 ),
-                                     ( Qt::KeyboardModifiers ) hb_parni( 6 ) );
-
-         QObject * pObj = ( QObject * ) hbqt_gcpointer( 1 );
-         s_app->sendEvent( pObj, &pMouseEvent );
-         #endif
-         break;
-      }
-   }
-}
-#endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtgui_init_ )
    hb_vmAtInit( hbqt_lib_init, NULL );

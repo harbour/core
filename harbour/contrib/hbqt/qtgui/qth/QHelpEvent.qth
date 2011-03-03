@@ -13,11 +13,10 @@
 
 <CLASS>
 QObject    = no
-Inherits   = 
+Inherits   = QEvent
 Type       = Core
 New        =
 Destructor = 
-Constructor = no
 </CLASS>
 
 <CODE>
@@ -29,7 +28,10 @@ Constructor = no
  */
 HB_FUNC( QT_QHELPEVENT )
 {
-   // __HB_RETPTRGC__( new QHelpEvent() );
+   if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
+   {
+      __HB_RETPTRGC__( new QHelpEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) ) );
+   }
 }
 </CODE>
 

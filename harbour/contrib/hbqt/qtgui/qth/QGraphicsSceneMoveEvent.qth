@@ -16,7 +16,7 @@ QObject  = no
 Inherit  = QGraphicsSceneEvent
 Type     = 
 New      = 
-Constructor = no
+Constructor = 
 </CLASS>
 
 <CODE>
@@ -31,7 +31,7 @@ Constructor = no
  */
 HB_FUNC( QT_QGRAPHICSSCENEMOVEEVENT )
 {
-   //__HB_RETPTRGC__( new QGraphicsSceneMoveEvent() );
+   __HB_RETPTRGC__( new QGraphicsSceneMoveEvent() );
 }
 </CODE>
 
