@@ -85,7 +85,6 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -167,18 +166,6 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := pQtObject
-   ENDIF
 
    RETURN Self
 

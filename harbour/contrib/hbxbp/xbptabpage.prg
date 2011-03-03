@@ -86,7 +86,6 @@ CLASS XbpTabPage  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -148,19 +147,6 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    oPar:addChild( SELF )
    ::postCreate()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpTabPage:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QWidgetFromPointer( pQtObject )
-
-   ENDIF
 
    RETURN Self
 
@@ -260,7 +246,6 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject ) VIRTUAL
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   execSlot( cSlot, p )

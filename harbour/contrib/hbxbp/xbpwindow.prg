@@ -229,7 +229,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   isEnabled()                           INLINE ::is_enabled
    METHOD   isVisible()                           INLINE !( ::is_hidden )
-   METHOD   hbCreateFromQtPtr()                   VIRTUAL
    METHOD   destroy()
    METHOD   disable()
    METHOD   enable()
@@ -1904,4 +1903,3 @@ METHOD HbXbpAppDesktop:virtualHeight()
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-

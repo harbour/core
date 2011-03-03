@@ -90,7 +90,6 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -228,18 +227,6 @@ METHOD XbpListBox:disConnect()
    ::oWidget:disConnect( "itemSelectionChanged()"                                )
 
    ::oWidget:disconnect( "customContextMenuRequested(QPoint)"                    )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpListBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := pQtObject
-   ENDIF
 
    RETURN Self
 

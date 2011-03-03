@@ -90,7 +90,6 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   connect()
@@ -136,36 +135,6 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::postCreate()
 
    ::setCaption( ::caption )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QPushButtonFromPointer( pQtObject )
-
-   ELSE
-      ::oWidget := QPushButton( ::oParent:oWidget )
-      ::setPosAndSize()
-      IF ::visible
-         ::oWidget:show()
-      ENDIF
-
-      ::setCaption( ::caption )
-
-      IF ::default
-         ::oWidget:setDefault( .t. )
-      ENDIF
-
-   ENDIF
-
-   ::connect()
-   ::addAsChild()
-   ::postCreate()
 
    RETURN Self
 

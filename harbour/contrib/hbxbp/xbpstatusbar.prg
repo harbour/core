@@ -82,7 +82,6 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -135,18 +134,6 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpStatusBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isObject( pQtObject )
-      ::oWidget := pQtObject:oWidget
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

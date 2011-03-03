@@ -85,7 +85,6 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, DataRef
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
    METHOD   connect()
@@ -128,18 +127,6 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::postCreate()
 
    ::setRange( ::range )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpScrollBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QScrollBarFromPointer( pQtObject )
-   ENDIF
 
    RETURN Self
 

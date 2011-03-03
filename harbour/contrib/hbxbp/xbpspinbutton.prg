@@ -92,7 +92,6 @@ CLASS XbpSpinButton INHERIT XbpWindow, DataRef
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   connect()
@@ -158,18 +157,6 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::postCreate()
 
    ::setData()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpSpinButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QSpinBoxFromPointer( pQtObject )
-   ENDIF
 
    RETURN Self
 
@@ -283,4 +270,3 @@ METHOD XbpSpinButton:endSpin( ... )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -95,7 +95,6 @@ CLASS XbpDialog FROM XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execEvent( nEvent, pEvent )
@@ -216,16 +215,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:connect( QEvent_WindowDeactivate , {|e| ::execEvent( QEvent_WindowDeactivate , e ) } )
 
    ::postCreate()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::qtObjects := pQtObject
-
-   ::create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 

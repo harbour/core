@@ -80,7 +80,6 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
@@ -154,34 +153,6 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QComboBoxFromPointer( pQtObject )
-   ELSE
-      ::oSLE := XbpSLE():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
-      ::oLB  := XbpListBox():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
-
-      ::oWidget := QComboBox( ::pParent )
-      ::oWidget:setModel(::xbpListBox:model() )
-      ::oWidget:setView( ::xbpListBox:oWidget )
-      ::oWidget:setLineEdit( ::xbpSLE:oWidget )
-      ::oWidget:setEditable( ::xbpSLE:editable )
-      ::oWidget:setFrame( ::xbpSLE:border )
-
-      ::setPosAndSize()
-      IF ::visible
-         ::show()
-      ENDIF
-      ::connect()
-   ENDIF
-   ::AddAsChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

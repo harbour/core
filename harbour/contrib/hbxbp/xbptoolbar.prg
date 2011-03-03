@@ -103,7 +103,6 @@ CLASS XbpToolBar  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   execSlot( cSlot, p )
@@ -189,18 +188,6 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpToolbar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QToolBarFromPointer( pQtObject )
-   ENDIF
 
    RETURN Self
 
@@ -469,4 +456,3 @@ METHOD XbpToolbarButton:init( cCaption, nStyle, cKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

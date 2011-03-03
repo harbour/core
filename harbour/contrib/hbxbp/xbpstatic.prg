@@ -86,7 +86,6 @@ CLASS XbpStatic  INHERIT  XbpWindow
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -244,18 +243,6 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:addChild( SELF )
    ::postCreate()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isObject( pQtObject )
-      ::oWidget := pQtObject:oWidget
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
