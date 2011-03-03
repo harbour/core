@@ -522,7 +522,8 @@ METHOD XbpPrinter:startDoc( cDocName )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:getEngineProperty( nProperty )
-   LOCAL oVariant := QVariantFromPointer( ::oEngine:property( nProperty ) )
+   //LOCAL oVariant := QVariantFromPointer( ::oEngine:property( nProperty ) )
+   LOCAL oVariant := ::oEngine:property( nProperty )
 
    DO CASE
    CASE nProperty == QPrintEngine_PPK_CollateCopies

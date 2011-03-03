@@ -229,7 +229,6 @@ METHOD HbQtUILoader:loadContents( cUiFull )
 
 METHOD HbQtUILoader:loadUI( cUiFull, qParent )
    LOCAL oWidget, qUiLoader, qFile //, pWidget
-   #if 1
    LOCAL cBuffer
 
    /* This method allows to use ui components stored in a
@@ -238,25 +237,10 @@ METHOD HbQtUILoader:loadUI( cUiFull, qParent )
    cBuffer := hb_memoRead( cUiFull )
    qFile := QBuffer()
    qFile:setData( cBuffer, len( cBuffer ) )
-   #else
-   qFile := QFile( cUiFull )
-   #endif
+
    IF qFile:open( 1 )
       qUiLoader  := QUiLoader()
       oWidget := qUiLoader:load( qFile, qParent )
-      #if 0
-      pWidget    := qUiLoader:load( qFile, qParent )
-      DO CASE
-      CASE ::widgets[ 1,1 ] == "QWidget"
-         oWidget    := QWidgetFromPointer( pWidget )
-      CASE ::widgets[ 1,1 ] == "QDialog"
-         oWidget    := QDialogFromPointer( pWidget )
-      CASE ::widgets[ 1,1 ] == "QMainWindow"
-         oWidget    := QMainWindowFromPointer( pWidget )
-      OTHERWISE
-         oWidget    := QWidgetFromPointer( pWidget )
-      ENDCASE
-      #endif
       qFile:close()
       qFile := NIL
       qUiLoader := NIL

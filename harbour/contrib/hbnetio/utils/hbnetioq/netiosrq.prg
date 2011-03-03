@@ -301,12 +301,12 @@ METHOD NetIOMgmtClient:execEvent( cEvent, p )
       ENDSWITCH
       EXIT
    CASE "QEvent_WindowStateChange"
-      qEvent := QWindowStateChangeEventFromPointer( p )
+      qEvent := p
       ::nPrevWindowState := qEvent:oldState()
       EXIT
    CASE "QEvent_Hide"
       IF ::lSystemTrayAvailable
-         qEvent := QHideEventFromPointer( p )
+         qEvent := p
          IF ! ::lChanging
             ::lChanging := .t.
             IF qEvent:spontaneous()
@@ -605,7 +605,7 @@ METHOD NetIOMgmtClient:buildColumns()
    ::oBrw:addColumn( oXbpColumn )
 
    aPP := {}
-   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "IP"              } )
+   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "IP:Port"         } )
    aadd( aPP, { XBP_PP_COL_HA_FGCLR        , nClrHFg           } )
    aadd( aPP, { XBP_PP_COL_HA_BGCLR        , nClrHBg           } )
    aadd( aPP, { XBP_PP_COL_HA_HEIGHT       , 20                } )
@@ -620,25 +620,6 @@ METHOD NetIOMgmtClient:buildColumns()
    oXbpColumn:dataLink := {|| ::aData[ ::recNo(), DAT_IP ] }
    oXbpColumn:create( , , , , aPP )
    ::oBrw:addColumn( oXbpColumn )
-
-#if 0
-   aPP := {}
-   aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "Port"            } )
-   aadd( aPP, { XBP_PP_COL_HA_FGCLR        , nClrHFg           } )
-   aadd( aPP, { XBP_PP_COL_HA_BGCLR        , nClrHBg           } )
-   aadd( aPP, { XBP_PP_COL_HA_HEIGHT       , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK     } )
-   aadd( aPP, { XBP_PP_COL_DA_BGCLR        , nClrBG            } )
-   aadd( aPP, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE     } )
-   aadd( aPP, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY  } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWHEIGHT    , 20                } )
-   aadd( aPP, { XBP_PP_COL_DA_ROWWIDTH     , 55                } )
-   //
-   oXbpColumn          := XbpColumn():new()
-   oXbpColumn:dataLink := {|| str( ::aData[ ::recNo(), DAT_PORT ], 5, 0 ) }
-   oXbpColumn:create( , , , , aPP )
-   ::oBrw:addColumn( oXbpColumn )
-#endif
 
    aPP := {}
    aadd( aPP, { XBP_PP_COL_HA_CAPTION      , "DateTime IN"     } )
@@ -784,7 +765,7 @@ METHOD NetIOMgmtClient:buildSystemTray()
       ENDIF
    ENDIF
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

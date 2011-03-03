@@ -400,8 +400,8 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
-   IF !empty( ::qtObject )
-      ::oWidget := QWidgetFromPointer( ::qtObject )
+   IF ! empty( ::qtObject )
+      ::oWidget := ::qtObject:oWidget
    ELSE
       ::oWidget := QWidget()
    ENDIF
