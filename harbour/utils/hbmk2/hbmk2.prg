@@ -3523,6 +3523,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_cPLAT ] == "cygwin"
             l_aLIBSHAREDPOST := { "hbmainstd" }
             l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) }
+            IF ! l_lNOHBLIB .AND. ! hbmk[ _HBMK_lCreateDyn ]
+               l_aLIBSTATICPOST := l_aLIBSHAREDPOST
+            ENDIF
          ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
