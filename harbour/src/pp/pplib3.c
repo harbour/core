@@ -55,6 +55,8 @@
 #include "hbvm.h"
 #include "hbinit.h"
 
+#ifdef HB_LEGACY_LEVEL3
+
 HB_FUNC_EXTERN( __PP_INIT );
 HB_FUNC_EXTERN( __PP_ADDRULE );
 HB_FUNC_EXTERN( __PP_PROCESS );
@@ -152,3 +154,5 @@ HB_FUNC( __PP_FREE )
       s_pp = NULL;
    }
 }
+
+#endif /* HB_LEGACY_LEVEL3 */

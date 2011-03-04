@@ -154,7 +154,7 @@ PHB_PP_STATE hb_pp_Param( int iParam )
 
 /*
  * initialize new PP context and return pointer to it.
- * __PP_INIT( [<cIncludePath>], [<cStdChFile> ] [, <lArchDefs>] )
+ * __PP_INIT( [<cIncludePath>], [<cStdChFile> ] [, <lArchDefs>] ) -> <pPP>
  * when <cStdChFile> is empty string ("") then no default rules are used
  * only the dynamically created #defines like __HARBOUR__, __DATE__, __TIME__
  */
@@ -165,7 +165,7 @@ HB_FUNC( __PP_INIT )
    if( pState )
    {
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
-      HB_BOOL fArchDefs = ! HB_ISLOG( 3 ) || hb_parl( 3 );
+      HB_BOOL fArchDefs = hb_parldef( 3, 1 );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAllocate( sizeof( PHB_PP_STATE ),
@@ -196,7 +196,7 @@ HB_FUNC( __PP_INIT )
 
 /*
  * add new (or replace previous) include paths.
- * __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] )
+ * __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] ) -> NIL
  */
 HB_FUNC( __PP_PATH )
 {
@@ -208,7 +208,7 @@ HB_FUNC( __PP_PATH )
 
 /*
  * reset the PP context (remove all rules added by user or preprocessed code)
- * __PP_RESET( <pPP> )
+ * __PP_RESET( <pPP> ) -> NIL
  */
 HB_FUNC( __PP_RESET )
 {
@@ -220,7 +220,7 @@ HB_FUNC( __PP_RESET )
 
 /*
  * preprocess and execute new preprocessor directive
- * __PPADDRULE( <pPP>, <cDirective> )
+ * __PP_ADDRULE( <pPP>, <cDirective> ) -> <lOK>
  */
 HB_FUNC( __PP_ADDRULE )
 {
