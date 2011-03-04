@@ -17,45 +17,46 @@
 * base64test -u [-d]  to use url encoding/decoding.
 *****/
 
-#Define hSTDIN 0
-#Define hSTDOUT 1
+#define hSTDIN 0
+#define hSTDOUT 1
 
 PROCEDURE MAIN( ... )
+
    LOCAL oEncoder
    LOCAL cData
    LOCAL cBuffer := Space( 1024 )
    LOCAL nLen
-   LOCAL cOption, lHelp := .F.,lDecode := .F., lQp := .F., lUrl := .F.
-   LOCAL hInpu := hSTDIN
-   LOCAL hOutpu := hSTDOUT
+   LOCAL lHelp := .F. , lDecode := .F. , lQp := .F. , lUrl := .F.
+   LOCAL hInput := hSTDIN
+   LOCAL hOutput := hSTDOUT
 
    /* Parameter parsing */
    FOR nLen := 1 TO PCount()
       cData := Lower( hb_PValue( nLen ) )
       DO CASE
-         CASE cData == '-h'
-            lHelp := .T.
+      CASE cData == '-h'
+         lHelp := .T.
 
-         CASE cData == '-d'
-            lDecode := .T.
+      CASE cData == '-d'
+         lDecode := .T.
 
-         CASE cData == '-q'
-            lQp := .T.
+      CASE cData == '-q'
+         lQp := .T.
 
-         CASE cData == '-u'
-            lUrl := .T.
+      CASE cData == '-u'
+         lUrl := .T.
 
          OTHERWISE
-            IF File(cData) .and. hInpu = hSTDIN
-               hInpu = FOpen(cData)
-            ELSEIF hOutpu = hSTDOUT
-               hOutpu = FCreate(cData)
-            ELSE
-               ? "Wrong parameter", cData
-               ?
-               lHelp := .T.
-               EXIT
-            ENDIF
+         IF File( cData ) .AND. hInput = hSTDIN
+            hInput = FOpen( cData )
+         ELSEIF hOutput = hSTDOUT
+            hOutput = FCreate( cData )
+         ELSE
+            ? "Wrong parameter", cData
+            ?
+            lHelp := .T.
+            EXIT
+         ENDIF
       ENDCASE
    NEXT
 
@@ -82,17 +83,17 @@ PROCEDURE MAIN( ... )
 
    /* Reading input stream */
    cData := ""
-   nLen := FRead( hInpu, @cBuffer, 1024 )
+   nLen := FRead( hInput, @cBuffer, 1024 )
    DO WHILE nLen > 0
       IF nLen < 1024
-         cData += Substr( cBuffer, 1, nLen )
+         cData += SubStr( cBuffer, 1, nLen )
       ELSE
          cData += cBuffer
       ENDIF
-      nLen := FRead( hInpu, @cBuffer, 1024 )
+      nLen := FRead( hInput, @cBuffer, 1024 )
    ENDDO
-   IF hInpu <> hSTDIN
-      FClose(hInpu)
+   IF hInput <> hSTDIN
+      FClose( hInput )
    ENDIF
 
    /* Encoding/decoding */
@@ -103,8 +104,9 @@ PROCEDURE MAIN( ... )
    ENDIF
 
    /* Writing stream */
-   FWrite( hOutpu, cData )
-   IF hOutpu <> hSTDOUT
-      FClose(hOutpu)
+   FWrite( hOutput, cData )
+   IF hOutput <> hSTDOUT
+      FClose( hOutput )
    ENDIF
-RETURN
+
+   RETURN

@@ -4,7 +4,11 @@
 # GNU copyright 1997 to 1999 by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE := 1
+export DH_VERBOSE := 1
+
+ifeq ($(DH_VERBOSE),1)
+   export HB_BUILD_VERBOSE := yes
+endif
 
 export HB_INSTALL_PKG_ROOT := $(CURDIR)/debian/harbour
 export HB_INSTALL_BIN := $(HB_INSTALL_PKG_ROOT)/usr/bin
@@ -24,6 +28,8 @@ endif
 export HB_SYSLOC := yes
 export HB_BUILD_PKG := no
 export HB_BUILD_SHARED := yes
+export HB_BUILD_CONTRIB_DYN := yes
+export HB_BUILD_DEBUG := yes
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    export HB_BUILD_OPTIM := no
 endif
@@ -33,7 +39,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	make
+	$(MAKE)
 
 	touch build-stamp
 
@@ -42,7 +48,7 @@ clean:
 	dh_testroot
 	rm -f build-stamp configure-stamp
 
-	-make clean
+	-$(MAKE) clean
 
 	dh_clean
 
@@ -52,7 +58,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	make install
+	$(MAKE) install
 
 
 # Build architecture-independent files here.
@@ -69,7 +75,7 @@ binary-arch: build install
 #	dh_install
 	dh_installman
 	dh_link
-	dh_strip
+	dh_strip --dbg-package=harbour-dbg
 	dh_compress
 	dh_fixperms
 #	dh_makeshlibs

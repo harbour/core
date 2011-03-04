@@ -3,23 +3,23 @@
  */
 
 /*
-   Download an file from an ftp server
-*/
+ * Download an file from an ftp server
+ */
 
 #include "common.ch"
 
-PROCEDURE MAIN( cFile)
+PROCEDURE MAIN( cFile )
 
    ? TRP20FTPEnv( cFile )
 
-RETURN
+   RETURN
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Static Function TRP20FTPEnv()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
+   /**********************************************************************
+    *
+    *     Static Function TRP20FTPEnv()
+    *
+    **********************************************************************/
+
 STATIC FUNCTION TRP20FTPEnv( cCarpeta )
 
    LOCAL aFiles
@@ -33,14 +33,14 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
    LOCAL cPassword
    LOCAL cFile     := ""
 
-   cServer   := "ftpserver" //change ftpserver to the real name  or ip of your ftp server
-   cUser     := "ftpuser"  // change ftpuser to an valid user on ftpserer
-   cPassword := "ftppass"  // change ftppass  to an valid password for ftpuser
+   cServer   := "ftpserver"   /* change ftpserver to the real name  or ip of your ftp server */
+   cUser     := "ftpuser"     /* change ftpuser to an valid user on ftpserer */
+   cPassword := "ftppass"     /* change ftppass  to an valid password for ftpuser */
    cUrl      := "ftp://" + cUser + ":" + cPassword + "@" + cServer
 
-   // Leemos ficheros a enviar
+   /* Leemos ficheros a enviar */
    aFiles := { { cCarpeta, 1, 2, 3 } }
-   //     aFiles := Directory( cCarpeta )
+   /* aFiles := Directory( cCarpeta ) */
 
    IF Len( aFiles ) > 0
 
@@ -49,7 +49,7 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       oFTP:nConnTimeout := 20000
       oFTP:bUsePasv     := .T.
 
-      // Comprobamos si el usuario contiene una @ para forzar el userid
+      /* Comprobamos si el usuario contiene una @ para forzar el userid */
       IF At( "@", cUser ) > 0
          oFTP:oUrl:cServer   := cServer
          oFTP:oUrl:cUserID   := cUser
@@ -57,12 +57,12 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       ENDIF
 
       IF oFTP:Open( cUrl )
-         FOR each cFile IN afiles
+         FOR EACH cFile IN afiles
             IF !oFtp:DownloadFile( cFile[ 1 ] )
                lRetorno := .F.
                EXIT
             ELSE
-               lRetorno := .t.
+               lRetorno := .T.
             ENDIF
          NEXT
          oFTP:Close()
@@ -79,4 +79,5 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
          lRetorno := .F.
       ENDIF
    ENDIF
-RETURN lRetorno
+
+   RETURN lRetorno

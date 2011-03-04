@@ -56,8 +56,9 @@
 
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here
-{hbdyn&unix&!darwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
+{hbdyn&unix&!darwin&!cygwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
 {hbdyn&unix&darwin}-o${hb_outputname}.${hb_major}.${hb_minor}.${hb_release}${hb_dynext}
+{hbdyn&unix&cygwin}-o${hb_outputname}${hb_dynext}
 {hbdyn&!unix&allwin}-o${hb_outputname}-${hb_major}${hb_minor}${hb_dynsuffix}
 {hbdyn&!unix&!allwin}-o${hb_outputname}${hb_dynsuffix}
 

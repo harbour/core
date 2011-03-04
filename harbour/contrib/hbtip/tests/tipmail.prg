@@ -3,23 +3,24 @@
  */
 
 /******************************************
-* TIP test
-* Mail - reading and writing multipart mails
-*
-* Test for reading a multipart message (that must already
-* be in its canonical form, that is, line terminator is
-* CRLF and it must have no headers other than SMTP/Mime).
-*
-* This test writes data to standard output, and is
-* compiled only under GTCGI;
-*****/
+ * TIP test
+ * Mail - reading and writing multipart mails
+ *
+ * Test for reading a multipart message (that must already
+ * be in its canonical form, that is, line terminator is
+ * CRLF and it must have no headers other than SMTP/Mime).
+ *
+ * This test writes data to standard output, and is
+ * compiled only under GTCGI;
+ ******************************************/
 
 PROCEDURE MAIN( cFileName )
+
    LOCAL oMail, cData, i
 
    IF cFileName != NIL
-      cData := MemoRead(cFileName)
-      IF Ferror() > 0
+      cData := MemoRead( cFileName )
+      IF FError() > 0
          ? "Can't open", cFileName
          QUIT
       ENDIF
@@ -54,5 +55,6 @@ PROCEDURE MAIN( cFileName )
    ? "DONE"
    ?
    /* Writing stream */
-   //FWrite( 1, oMail:ToString() )
-RETURN
+   /* FWrite( 1, oMail:ToString() ) */
+
+   RETURN

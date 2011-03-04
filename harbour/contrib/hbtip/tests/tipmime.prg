@@ -3,14 +3,15 @@
  */
 
 /******************************************
-* TIP test
-* MIME type test
-*
-* This test tries to detect the mime type of a give file.
-*
-* Usage:
-* mimetest filename
-*****/
+ * TIP test
+ * MIME type test
+ *
+ * This test tries to detect the mime type of a give file.
+ *
+ * Usage:
+ * mimetest filename
+ ******************************************/
+
 
 PROCEDURE MAIN( cFileName )
 
@@ -21,7 +22,7 @@ PROCEDURE MAIN( cFileName )
       QUIT
    ENDIF
    
-   IF ( ! file( cFileName ) )
+   IF ( ! File( cFileName ) )
       ?
       ? "File", cFileName, "is not valid"
       ?
@@ -31,4 +32,4 @@ PROCEDURE MAIN( cFileName )
    ? cFileName + ":", Tip_FileMimeType( cFileName )
    ?
    
-RETURN
+   RETURN

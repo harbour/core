@@ -3,11 +3,12 @@
  */
 
 /******************************************
-* TIP test
-* FTP Advanced operations Test
-*****/
+ * TIP test
+ * FTP Advanced operations Test
+ ******************************************/
 
 PROCEDURE MAIN( cUrl )
+
    LOCAL oCon, oUrl
 
    oUrl := tURL():New( cUrl )
@@ -55,4 +56,5 @@ PROCEDURE MAIN( cUrl )
 
    ? "Done"
    ?
-RETURN
+
+   RETURN

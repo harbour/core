@@ -3,11 +3,12 @@
  */
 
 /******************************************
-* TIP test
-* HTTP Advanced operations Test
-*****/
+ * TIP test
+ * HTTP Advanced operations Test
+ ******************************************/
 
 PROCEDURE MAIN( cUrl )
+
    LOCAL oCon, oUrl, i
 
    oUrl := tURL():New( cUrl )
@@ -33,8 +34,8 @@ PROCEDURE MAIN( cUrl )
 
       IF oCon:Get( oUrl:cPath )
          ? "Get Sucessful"
-         FOR i := 1 to Len( oCon:hHeaders )
-            ? hb_HKeyAt( oCon:hHeaders, i ) +":", hb_HValueAt( oCon:hHeaders, i )
+         FOR i := 1 TO Len( oCon:hHeaders )
+            ? hb_HKeyAt( oCon:hHeaders, i ) + ":", hb_HValueAt( oCon:hHeaders, i )
          NEXT
       ELSE
          ? "Get failure (server reply:", oCon:cReply , ")"
@@ -54,4 +55,6 @@ PROCEDURE MAIN( cUrl )
 
    ? "Done"
    ?
-RETURN
+
+   RETURN
+
