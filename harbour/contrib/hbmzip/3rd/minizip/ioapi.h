@@ -64,7 +64,7 @@
     defined( HB_OS_VXWORKS ) || \
     defined( HB_OS_BSD ) || \
     defined( HB_OS_DARWIN ) || \
-    defined( HB_OS_HAIKU ) || \
+    defined( HB_OS_BEOS ) || \
     defined( HB_OS_DOS ) || \
     defined( HB_OS_OS2 ) || \
     defined( HB_OS_CYGWIN ) || \

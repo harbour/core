@@ -169,7 +169,7 @@ STATIC FUNCTION hbqt_QTranslateKeyKP( kbm, key, shiftkey, altkey, controlkey, ;
    RETURN c
 
 
-FUNCTION XbpQKeyEventToAppEvent( oKeyEvent )
+FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
    LOCAL c := 0
    LOCAL key, kbm, txt, x
 
