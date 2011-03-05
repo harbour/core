@@ -58,9 +58,7 @@
 #endif
 
 #define HB_USE_ARRAYAT_REF
-/* Temporary disabled optimization with references to object variables
-   until we will not have extended reference items in our HVM [druzus] */
-/* #define HB_USE_OBJMSG_REF */
+#define HB_USE_OBJMSG_REF
 
 
 /* Forward declarations
@@ -4804,7 +4802,7 @@ static void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, HB_BYTE bOpEq, HB_COMP_DEC
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq != bNewOp )
+      if( HB_SUPPORT_EXTOPT && bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
@@ -4953,7 +4951,7 @@ static void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, HB_BYTE bOpEq, HB_COMP_DECL
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq != bNewOp )
+      if( HB_SUPPORT_EXTOPT && bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
@@ -5072,7 +5070,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      if( HB_SUPPORT_EXTOPT )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
@@ -5174,7 +5172,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DEC
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      if( HB_SUPPORT_EXTOPT )
       {
          /* push reference to current value */
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
@@ -5285,7 +5283,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL 
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      if( HB_SUPPORT_EXTOPT )
       {
          /* push reference to current value */
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
