@@ -159,20 +159,15 @@ FUNCTION AppType()
 /*----------------------------------------------------------------------*/
 
 FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
-   LOCAL qEvent
 
    HB_SYMBOL_UNUSED( mp2 )
 
    DEFAULT oXbp TO SetAppWindow()
 
-   SetAppEvent( nEvent, mp1, mp2, oXbp )
-
    IF nEvent == xbeP_Keyboard
-      IF mp1 == xbeK_TAB
-         qEvent := QEvent( QEvent_KeyPress )
-         //s_oApp:postEvent( oXbp:oWidget, qEvent )
-         QApplication():postEvent( oXbp:oWidget, qEvent )
-      ENDIF
+      QApplication():sendEvent( oXbp:oWidget, QKeyEvent( QEvent_KeyPress, XbpAppEventToQKeyEvent( mp1 ), XbpAppEventModifier( mp1 ) ) )
+   ELSE
+      SetAppEvent( nEvent, mp1, mp2, oXbp )
    ENDIF
 
    RETURN .T.
