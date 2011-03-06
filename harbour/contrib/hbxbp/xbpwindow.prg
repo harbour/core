@@ -325,10 +325,10 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::aPP := aclone( aPresParams )
    ENDIF
-   Xbp_PresParam( @::aPresParams )
+   hbxbp_PresParam( @::aPresParams )
    IF !empty( ::aPP )
       FOR i := 1 TO len( ::aPP )
-         Xbp_SetPresParam( ::aPresParams, ::aPP[ i,1 ], ::aPP[ i,2 ] )
+         hbxbp_SetPresParam( ::aPresParams, ::aPP[ i,1 ], ::aPP[ i,2 ] )
          ::aPP[ i,1 ] := NIL
          ::aPP[ i,2 ] := NIL
       NEXT
@@ -337,24 +337,24 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DO CASE
    CASE cClass $ 'XBPDIALOG,XBPDRAWINGAREA'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_DIALOGBACKGROUND )
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_DIALOGBACKGROUND )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_DIALOGBACKGROUND )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_DIALOGBACKGROUND )
    CASE cClass $ 'XBPPUSHBUTTON'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_FGCLR         , XBPSYSCLR_BUTTONTEXT       )
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_FGCLR         , XBPSYSCLR_BUTTONTEXT       )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
    CASE cClass $ 'XBPTABPAGE'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
    CASE cClass $ 'XBPLISTBOX'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
    CASE cClass $ 'XBPSCROLLBAR'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_SCROLLBAR        )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_SCROLLBAR        )
    CASE cClass $ 'XBPSLE,XBPMLE'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_3DFACE           )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_3DFACE           )
    CASE cClass $ 'XBPSPINBUTTON,XBPCOMBOBOX,XBPTREEVIEW'
-      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+      hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
    ENDCASE
 
    RETURN Self
@@ -633,7 +633,7 @@ METHOD XbpWindow:grabEvent( nEvent, oEvent )
       SetAppEvent( xbeP_HelpRequest, NIL, NIL, Self )
       EXIT
    CASE QEvent_KeyPress                      // :keyBoard()
-      nXbpkey := XbpQKeyEventToAppEvent( oEvent )
+      nXbpkey := hbxbp_QKeyEventToAppEvent( oEvent )
       SetAppEvent( xbeP_Keyboard, nXbpKey, NIL, self )
       EXIT
 
@@ -887,7 +887,7 @@ METHOD XbpWindow:setColorBG( nRGB )
    cName  := Xbp_RgbToName( nRGB )
 
    IF hb_isNumeric( nRGB )
-      oldRGB  := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
+      oldRGB  := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
       cQTName := Xbp_XbpToQTName( __ObjGetClsName( self ) )
 
       IF empty( cQTName )
@@ -896,7 +896,7 @@ METHOD XbpWindow:setColorBG( nRGB )
          ::setStyleSheet( "background-color: "+ cName +";" )
       ENDIF
    ELSE
-      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
+      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
    ENDIF
 
    RETURN oldRGB
@@ -909,10 +909,10 @@ METHOD XbpWindow:setColorFG( nRGB )
    cName := Xbp_RgbToName( nRGB )
 
    IF hb_isNumeric( nRGB )
-      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
+      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
       ::setStyleSheet( "color: "+ cName +";" )
    ELSE
-      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
+      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
    ENDIF
 
    RETURN oldRGB
@@ -937,7 +937,7 @@ METHOD XbpWindow:setColorFG( nRGB )
    ENDIF
 
    LOCAL oColor := QColor( nRGB )
-   Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
+   hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
    ::setStyleSheet( "color: "+ oColor:name +";" )
    RETURN Self
    #endif
@@ -970,7 +970,7 @@ METHOD XbpWindow:setFontCompoundName( xFont )
    LOCAL cAttr   := "normal"
    LOCAL cWeight := "normal"
 
-   cOldFont := Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
+   cOldFont := hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
 
    IF hb_isNumeric( cFont )
 
@@ -992,7 +992,7 @@ METHOD XbpWindow:setFontCompoundName( xFont )
          ENDIF
          cFace := alltrim( cFont )
 
-         Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
+         hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
 
          IF cAttr == "bolditalic"
             cAttr   := "italic"
@@ -1251,7 +1251,7 @@ METHOD XbpWindow:setPresParam( aPPNew )
 
    IF hb_isArray( aPPNew )
       FOR i := 1 TO len( aPPNew )
-         Xbp_SetPresParam( ::aPresParams, aPPNew[ i,1 ], aPPNew[ i,2 ] )
+         hbxbp_SetPresParam( ::aPresParams, aPPNew[ i,1 ], aPPNew[ i,2 ] )
       NEXT
    ENDIF
 
@@ -1783,7 +1783,7 @@ METHOD xbpWindow:setStyle()
 #endif
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Xbp_PresParam( aPP )
+STATIC FUNCTION hbxbp_PresParam( aPP )
 
    aadd( aPP, { XBP_PP_FGCLR              , NIL } )
    aadd( aPP, { XBP_PP_BGCLR              , NIL } )
@@ -1808,7 +1808,7 @@ STATIC FUNCTION Xbp_PresParam( aPP )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
+FUNCTION hbxbp_SetPresParamIfNil( aPP, nParam, xValue )
    LOCAL n
 
    IF xValue != NIL
@@ -1825,7 +1825,7 @@ FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
+FUNCTION hbxbp_SetPresParam( aPP, nParam, xValue )
    LOCAL oldValue, n
 
    IF ( n := ascan( aPP, {|e_| e_[ 1 ] == nParam } ) ) > 0
@@ -1843,9 +1843,9 @@ FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-CLASS HbXbpAppDesktop INHERIT XbpWindow
+CLASS HbpAppDesktop INHERIT XbpWindow
 
-   METHOD new()
+   METHOD init()
    METHOD create()
    METHOD width( nScreen )
    METHOD virtualWidth()
@@ -1856,7 +1856,7 @@ CLASS HbXbpAppDesktop INHERIT XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:new()
+METHOD HbpAppDesktop:init()
 
    ::xbpWindow:init()
 
@@ -1864,7 +1864,7 @@ METHOD HbXbpAppDesktop:new()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:create()
+METHOD HbpAppDesktop:create()
 
    ::oWidget := QDesktopWidget()
 
@@ -1872,7 +1872,7 @@ METHOD HbXbpAppDesktop:create()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:width( nScreen )
+METHOD HbpAppDesktop:width( nScreen )
 
    DEFAULT nScreen TO -1
 
@@ -1881,7 +1881,7 @@ METHOD HbXbpAppDesktop:width( nScreen )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:height( nScreen )
+METHOD HbpAppDesktop:height( nScreen )
 
    DEFAULT nScreen TO -1
 
@@ -1890,13 +1890,13 @@ METHOD HbXbpAppDesktop:height( nScreen )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:virtualWidth()
+METHOD HbpAppDesktop:virtualWidth()
 
    RETURN ::oWidget:width()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbXbpAppDesktop:virtualHeight()
+METHOD HbpAppDesktop:virtualHeight()
 
    RETURN ::oWidget:height()
 

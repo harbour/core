@@ -864,7 +864,7 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       ::manageScrollContents( p1, p2 )
       EXIT
    CASE __ev_keypress__
-      SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, Self )
+      SetAppEvent( xbeP_Keyboard, hbxbp_QKeyEventToAppEvent( p1 ), NIL, Self )
       EXIT
    CASE __ev_contextMenuRequested__
       oPoint := ::oTableView:mapToGlobal( QPoint( p1 ) )

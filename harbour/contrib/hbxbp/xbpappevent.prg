@@ -71,7 +71,7 @@
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqt_QTranslateKey( kbm, key, shiftkey, altkey, controlkey )
+STATIC FUNCTION hbxbp_QTranslateKey( kbm, key, shiftkey, altkey, controlkey )
    LOCAL c
 
    IF hb_bitAnd( kbm, Qt_AltModifier ) == Qt_AltModifier
@@ -90,7 +90,7 @@ STATIC FUNCTION hbqt_QTranslateKey( kbm, key, shiftkey, altkey, controlkey )
 
    RETURN c
 
-STATIC FUNCTION hbqt_QTranslateKey5( kbm, key, shiftkey, altkey, controlkey, sh_controlkey )
+STATIC FUNCTION hbxbp_QTranslateKey5( kbm, key, shiftkey, altkey, controlkey, sh_controlkey )
    LOCAL c, lShift, lControl
 
    IF hb_bitAnd( kbm, Qt_AltModifier ) == Qt_AltModifier
@@ -112,7 +112,7 @@ STATIC FUNCTION hbqt_QTranslateKey5( kbm, key, shiftkey, altkey, controlkey, sh_
 
    RETURN c
 
-STATIC FUNCTION hbqt_QTranslateKeyDigit( kbm, key, altkey )
+STATIC FUNCTION hbxbp_QTranslateKeyDigit( kbm, key, altkey )
    LOCAL c
 
    IF hb_bitAnd( kbm, Qt_AltModifier ) == Qt_AltModifier
@@ -123,7 +123,7 @@ STATIC FUNCTION hbqt_QTranslateKeyDigit( kbm, key, altkey )
 
    RETURN c
 
-STATIC FUNCTION hbqt_QTranslateKeyAlpha( kbm, key, shiftkey, altkey, controlkey, text )
+STATIC FUNCTION hbxbp_QTranslateKeyAlpha( kbm, key, shiftkey, altkey, controlkey, text )
    LOCAL c
 
    HB_SYMBOL_UNUSED( key )
@@ -141,7 +141,7 @@ STATIC FUNCTION hbqt_QTranslateKeyAlpha( kbm, key, shiftkey, altkey, controlkey,
 
    RETURN c
 
-STATIC FUNCTION hbqt_QTranslateKeyKP( kbm, key, shiftkey, altkey, controlkey, ;
+STATIC FUNCTION hbxbp_QTranslateKeyKP( kbm, key, shiftkey, altkey, controlkey, ;
                                       keyKP, shiftkeyKP, altkeyKP, controlkeyKP )
    LOCAL c
 
@@ -179,107 +179,107 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
 
    SWITCH( key )
    CASE Qt_Key_Escape
-      c := hbqt_QTranslateKey( kbm, xbeK_ESC, xbeK_SH_ESC, xbeK_ESC, xbeK_ESC )
+      c := hbxbp_QTranslateKey( kbm, xbeK_ESC, xbeK_SH_ESC, xbeK_ESC, xbeK_ESC )
       EXIT
    CASE Qt_Key_Return
    CASE Qt_Key_Enter            /* Typically located on the keypad. */
-      c := hbqt_QTranslateKey( kbm, xbeK_ENTER, xbeK_ENTER, xbeK_ALT_ENTER, xbeK_CTRL_ENTER )
+      c := hbxbp_QTranslateKey( kbm, xbeK_ENTER, xbeK_ENTER, xbeK_ALT_ENTER, xbeK_CTRL_ENTER )
       EXIT
    CASE Qt_Key_Tab
    CASE Qt_Key_Backtab
-      c := hbqt_QTranslateKey( kbm, xbeK_TAB, xbeK_SH_TAB, xbeK_TAB, xbeK_CTRL_TAB )
+      c := hbxbp_QTranslateKey( kbm, xbeK_TAB, xbeK_SH_TAB, xbeK_TAB, xbeK_CTRL_TAB )
       EXIT
    CASE Qt_Key_Backspace
-      c := hbqt_QTranslateKey( kbm, xbeK_BS, xbeK_SH_BS, xbeK_ALT_BS, xbeK_CTRL_BS )
+      c := hbxbp_QTranslateKey( kbm, xbeK_BS, xbeK_SH_BS, xbeK_ALT_BS, xbeK_CTRL_BS )
       EXIT
    CASE Qt_Key_Insert
-      c := hbqt_QTranslateKey( kbm, xbeK_INS, xbeK_SH_INS, xbeK_ALT_INS, xbeK_CTRL_INS )
+      c := hbxbp_QTranslateKey( kbm, xbeK_INS, xbeK_SH_INS, xbeK_ALT_INS, xbeK_CTRL_INS )
       EXIT
    CASE Qt_Key_Delete
-      c := hbqt_QTranslateKey( kbm, xbeK_DEL, xbeK_SH_DEL, xbeK_ALT_DEL, xbeK_CTRL_DEL )
+      c := hbxbp_QTranslateKey( kbm, xbeK_DEL, xbeK_SH_DEL, xbeK_ALT_DEL, xbeK_CTRL_DEL )
       EXIT
 
    CASE Qt_Key_Home
-      c := hbqt_QTranslateKey5( kbm, xbeK_HOME, xbeK_SH_HOME, xbeK_ALT_HOME, xbeK_CTRL_HOME, xbeK_SH_CTRL_HOME )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_HOME, xbeK_SH_HOME, xbeK_ALT_HOME, xbeK_CTRL_HOME, xbeK_SH_CTRL_HOME )
       EXIT
    CASE Qt_Key_End
-      c := hbqt_QTranslateKey5( kbm, xbeK_END, xbeK_SH_END, xbeK_ALT_END, xbeK_CTRL_END, xbeK_SH_CTRL_END )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_END, xbeK_SH_END, xbeK_ALT_END, xbeK_CTRL_END, xbeK_SH_CTRL_END )
       EXIT
    CASE Qt_Key_Left
-      c := hbqt_QTranslateKey5( kbm, xbeK_LEFT, xbeK_SH_LEFT, xbeK_ALT_LEFT, xbeK_CTRL_LEFT, xbeK_SH_CTRL_LEFT )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_LEFT, xbeK_SH_LEFT, xbeK_ALT_LEFT, xbeK_CTRL_LEFT, xbeK_SH_CTRL_LEFT )
       EXIT
    CASE Qt_Key_Up
-      c := hbqt_QTranslateKey5( kbm, xbeK_UP, xbeK_SH_UP, xbeK_ALT_UP, xbeK_CTRL_UP, xbeK_SH_CTRL_UP )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_UP, xbeK_SH_UP, xbeK_ALT_UP, xbeK_CTRL_UP, xbeK_SH_CTRL_UP )
       EXIT
    CASE Qt_Key_Right
-      c := hbqt_QTranslateKey5( kbm, xbeK_RIGHT, xbeK_SH_RIGHT, xbeK_ALT_RIGHT, xbeK_CTRL_RIGHT, xbeK_SH_CTRL_RIGHT )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_RIGHT, xbeK_SH_RIGHT, xbeK_ALT_RIGHT, xbeK_CTRL_RIGHT, xbeK_SH_CTRL_RIGHT )
       EXIT
    CASE Qt_Key_Down
-      c := hbqt_QTranslateKey5( kbm, xbeK_DOWN, xbeK_SH_DOWN, xbeK_ALT_DOWN, xbeK_CTRL_DOWN, xbeK_SH_CTRL_DOWN )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_DOWN, xbeK_SH_DOWN, xbeK_ALT_DOWN, xbeK_CTRL_DOWN, xbeK_SH_CTRL_DOWN )
       EXIT
    CASE Qt_Key_PageUp
-      c := hbqt_QTranslateKey5( kbm, xbeK_PGUP, xbeK_SH_PGUP, xbeK_ALT_PGUP, xbeK_CTRL_PGUP, xbeK_SH_CTRL_PGUP )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_PGUP, xbeK_SH_PGUP, xbeK_ALT_PGUP, xbeK_CTRL_PGUP, xbeK_SH_CTRL_PGUP )
       EXIT
    CASE Qt_Key_PageDown
-      c := hbqt_QTranslateKey5( kbm, xbeK_PGDN, xbeK_SH_PGDN, xbeK_ALT_PGDN, xbeK_CTRL_PGDN, xbeK_SH_CTRL_PGDN )
+      c := hbxbp_QTranslateKey5( kbm, xbeK_PGDN, xbeK_SH_PGDN, xbeK_ALT_PGDN, xbeK_CTRL_PGDN, xbeK_SH_CTRL_PGDN )
       EXIT
 
    CASE Qt_Key_F1
-      c := hbqt_QTranslateKey( kbm, xbeK_F1, xbeK_SH_F1, xbeK_ALT_F1, xbeK_CTRL_F1 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F1, xbeK_SH_F1, xbeK_ALT_F1, xbeK_CTRL_F1 )
       EXIT
    CASE Qt_Key_F2
-      c := hbqt_QTranslateKey( kbm, xbeK_F2, xbeK_SH_F2, xbeK_ALT_F2, xbeK_CTRL_F2 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F2, xbeK_SH_F2, xbeK_ALT_F2, xbeK_CTRL_F2 )
       EXIT
    CASE Qt_Key_F3
-      c := hbqt_QTranslateKey( kbm, xbeK_F3, xbeK_SH_F3, xbeK_ALT_F3, xbeK_CTRL_F3 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F3, xbeK_SH_F3, xbeK_ALT_F3, xbeK_CTRL_F3 )
       EXIT
    CASE Qt_Key_F4
-      c := hbqt_QTranslateKey( kbm, xbeK_F4, xbeK_SH_F4, xbeK_ALT_F4, xbeK_CTRL_F4 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F4, xbeK_SH_F4, xbeK_ALT_F4, xbeK_CTRL_F4 )
       EXIT
    CASE Qt_Key_F5
-      c := hbqt_QTranslateKey( kbm, xbeK_F5, xbeK_SH_F5, xbeK_ALT_F5, xbeK_CTRL_F5 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F5, xbeK_SH_F5, xbeK_ALT_F5, xbeK_CTRL_F5 )
       EXIT
    CASE Qt_Key_F6
-      c := hbqt_QTranslateKey( kbm, xbeK_F6, xbeK_SH_F6, xbeK_ALT_F6, xbeK_CTRL_F6 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F6, xbeK_SH_F6, xbeK_ALT_F6, xbeK_CTRL_F6 )
       EXIT
    CASE Qt_Key_F7
-      c := hbqt_QTranslateKey( kbm, xbeK_F7, xbeK_SH_F7, xbeK_ALT_F7, xbeK_CTRL_F7 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F7, xbeK_SH_F7, xbeK_ALT_F7, xbeK_CTRL_F7 )
       EXIT
    CASE Qt_Key_F8
-      c := hbqt_QTranslateKey( kbm, xbeK_F8, xbeK_SH_F8, xbeK_ALT_F8, xbeK_CTRL_F8 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F8, xbeK_SH_F8, xbeK_ALT_F8, xbeK_CTRL_F8 )
       EXIT
    CASE Qt_Key_F9
-      c := hbqt_QTranslateKey( kbm, xbeK_F9, xbeK_SH_F9, xbeK_ALT_F9, xbeK_CTRL_F9 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F9, xbeK_SH_F9, xbeK_ALT_F9, xbeK_CTRL_F9 )
       EXIT
    CASE Qt_Key_F10
-      c := hbqt_QTranslateKey( kbm, xbeK_F10, xbeK_SH_F10, xbeK_ALT_F10, xbeK_CTRL_F10 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F10, xbeK_SH_F10, xbeK_ALT_F10, xbeK_CTRL_F10 )
       EXIT
    CASE Qt_Key_F11
-      c := hbqt_QTranslateKey( kbm, xbeK_F11, xbeK_SH_F11, xbeK_ALT_F11, xbeK_CTRL_F11 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F11, xbeK_SH_F11, xbeK_ALT_F11, xbeK_CTRL_F11 )
       EXIT
    CASE Qt_Key_F12
-      c := hbqt_QTranslateKey( kbm, xbeK_F12, xbeK_SH_F12, xbeK_ALT_F12, xbeK_CTRL_F12 )
+      c := hbxbp_QTranslateKey( kbm, xbeK_F12, xbeK_SH_F12, xbeK_ALT_F12, xbeK_CTRL_F12 )
       EXIT
 
    CASE Qt_Key_Asterisk
       x := Qt_Key_Asterisk
-      c := hbqt_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_ASTERISK, xbeK_P_CTRL_ASTERISK )
+      c := hbxbp_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_ASTERISK, xbeK_P_CTRL_ASTERISK )
       EXIT
    CASE Qt_Key_Plus
       x := Qt_Key_Plus
-      c := hbqt_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_PLUS, xbeK_P_CTRL_PLUS )
+      c := hbxbp_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_PLUS, xbeK_P_CTRL_PLUS )
       EXIT
    CASE Qt_Key_Minus
       x := Qt_Key_Minus
-      c := hbqt_QTranslateKeyKP( kbm, x, x, xbeK_ALT_MINUS, x, x, x, xbeK_P_ALT_MINUS, xbeK_P_CTRL_MINUS )
+      c := hbxbp_QTranslateKeyKP( kbm, x, x, xbeK_ALT_MINUS, x, x, x, xbeK_P_ALT_MINUS, xbeK_P_CTRL_MINUS )
       EXIT
    CASE Qt_Key_Slash
       x := Qt_Key_Slash
-      c := hbqt_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_SLASH, xbeK_P_CTRL_SLASH )
+      c := hbxbp_QTranslateKeyKP( kbm, x, x, x, x, x, x, xbeK_P_ALT_SLASH, xbeK_P_CTRL_SLASH )
       EXIT
 
    CASE Qt_Key_CapsLock
-      c := hbqt_QTranslateKey( kbm, xbeK_CAPS_LOCK, xbeK_SH_CAPS_LOCK, xbeK_ALT_CAPS_LOCK, xbeK_CTRL_CAPS_LOCK )
+      c := hbxbp_QTranslateKey( kbm, xbeK_CAPS_LOCK, xbeK_SH_CAPS_LOCK, xbeK_ALT_CAPS_LOCK, xbeK_CTRL_CAPS_LOCK )
       EXIT
    CASE Qt_Key_NumLock
       c := xbeK_NUM_LOCK         ; EXIT
@@ -287,121 +287,121 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
       c := xbeK_SCROLL_LOCK      ; EXIT
 
    CASE Qt_Key_Space
-      c := hbqt_QTranslateKey( kbm, xbeK_SPACE, xbeK_SPACE, xbeK_ALT_SPACE, xbeK_SPACE )
+      c := hbxbp_QTranslateKey( kbm, xbeK_SPACE, xbeK_SPACE, xbeK_ALT_SPACE, xbeK_SPACE )
       EXIT
    CASE Qt_Key_Equal
       x := Qt_Key_Equal
-      c := hbqt_QTranslateKey( kbm, x, x, xbeK_ALT_EQUALS, x )
+      c := hbxbp_QTranslateKey( kbm, x, x, xbeK_ALT_EQUALS, x )
       EXIT
 
    CASE Qt_Key_0
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_0, xbeK_ALT_0 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_0, xbeK_ALT_0 )
       EXIT
    CASE Qt_Key_1
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_1, xbeK_ALT_1 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_1, xbeK_ALT_1 )
       EXIT
    CASE Qt_Key_2
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_2, xbeK_ALT_2 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_2, xbeK_ALT_2 )
       EXIT
    CASE Qt_Key_3
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_3, xbeK_ALT_3 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_3, xbeK_ALT_3 )
       EXIT
    CASE Qt_Key_4
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_4, xbeK_ALT_4 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_4, xbeK_ALT_4 )
       EXIT
    CASE Qt_Key_5
-      c := hbqt_QTranslateKeyKP( kbm, Qt_Key_5, Qt_Key_5, xbeK_ALT_5, Qt_Key_5, Qt_Key_5, Qt_Key_5, xbeK_P_ALT_5, xbeK_P_CTRL_5 )
+      c := hbxbp_QTranslateKeyKP( kbm, Qt_Key_5, Qt_Key_5, xbeK_ALT_5, Qt_Key_5, Qt_Key_5, Qt_Key_5, xbeK_P_ALT_5, xbeK_P_CTRL_5 )
       EXIT
    CASE Qt_Key_6
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_6, xbeK_ALT_6 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_6, xbeK_ALT_6 )
       EXIT
    CASE Qt_Key_7
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_7, xbeK_ALT_7 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_7, xbeK_ALT_7 )
       EXIT
    CASE Qt_Key_8
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_8, xbeK_ALT_8 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_8, xbeK_ALT_8 )
       EXIT
    CASE Qt_Key_9
-      c := hbqt_QTranslateKeyDigit( kbm, Qt_Key_9, xbeK_ALT_9 )
+      c := hbxbp_QTranslateKeyDigit( kbm, Qt_Key_9, xbeK_ALT_9 )
       EXIT
 
    CASE Qt_Key_A
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_A, 'a', xbeK_ALT_A, xbeK_CTRL_A, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_A, 'a', xbeK_ALT_A, xbeK_CTRL_A, txt )
       EXIT
    CASE Qt_Key_B
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_B, 'b', xbeK_ALT_B, xbeK_CTRL_B, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_B, 'b', xbeK_ALT_B, xbeK_CTRL_B, txt )
       EXIT
    CASE Qt_Key_C
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_C, 'c', xbeK_ALT_C, xbeK_CTRL_C, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_C, 'c', xbeK_ALT_C, xbeK_CTRL_C, txt )
       EXIT
    CASE Qt_Key_D
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_D, 'd', xbeK_ALT_D, xbeK_CTRL_D, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_D, 'd', xbeK_ALT_D, xbeK_CTRL_D, txt )
       EXIT
    CASE Qt_Key_E
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_E, 'e', xbeK_ALT_E, xbeK_CTRL_E, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_E, 'e', xbeK_ALT_E, xbeK_CTRL_E, txt )
       EXIT
    CASE Qt_Key_F
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_F, 'f', xbeK_ALT_F, xbeK_CTRL_F, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_F, 'f', xbeK_ALT_F, xbeK_CTRL_F, txt )
       EXIT
    CASE Qt_Key_G
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_G, 'g', xbeK_ALT_G, xbeK_CTRL_G, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_G, 'g', xbeK_ALT_G, xbeK_CTRL_G, txt )
       EXIT
    CASE Qt_Key_H
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_H, 'h', xbeK_ALT_H, xbeK_CTRL_H, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_H, 'h', xbeK_ALT_H, xbeK_CTRL_H, txt )
       EXIT
    CASE Qt_Key_I
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_I, 'i', xbeK_ALT_I, xbeK_CTRL_I, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_I, 'i', xbeK_ALT_I, xbeK_CTRL_I, txt )
       EXIT
    CASE Qt_Key_J
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_J, 'j', xbeK_ALT_J, xbeK_CTRL_J, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_J, 'j', xbeK_ALT_J, xbeK_CTRL_J, txt )
       EXIT
    CASE Qt_Key_K
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_K, 'k', xbeK_ALT_K, xbeK_CTRL_K, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_K, 'k', xbeK_ALT_K, xbeK_CTRL_K, txt )
       EXIT
    CASE Qt_Key_L
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_L, 'l', xbeK_ALT_L, xbeK_CTRL_L, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_L, 'l', xbeK_ALT_L, xbeK_CTRL_L, txt )
       EXIT
    CASE Qt_Key_M
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_M, 'm', xbeK_ALT_M, xbeK_CTRL_M, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_M, 'm', xbeK_ALT_M, xbeK_CTRL_M, txt )
       EXIT
    CASE Qt_Key_N
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_N, 'n', xbeK_ALT_N, xbeK_CTRL_N, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_N, 'n', xbeK_ALT_N, xbeK_CTRL_N, txt )
       EXIT
    CASE Qt_Key_O
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_O, 'o', xbeK_ALT_O, xbeK_CTRL_O, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_O, 'o', xbeK_ALT_O, xbeK_CTRL_O, txt )
       EXIT
    CASE Qt_Key_P
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_P, 'p', xbeK_ALT_P, xbeK_CTRL_P, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_P, 'p', xbeK_ALT_P, xbeK_CTRL_P, txt )
       EXIT
    CASE Qt_Key_Q
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_Q, 'q', xbeK_ALT_Q, xbeK_CTRL_Q, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_Q, 'q', xbeK_ALT_Q, xbeK_CTRL_Q, txt )
       EXIT
    CASE Qt_Key_R
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_R, 'r', xbeK_ALT_R, xbeK_CTRL_R, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_R, 'r', xbeK_ALT_R, xbeK_CTRL_R, txt )
       EXIT
    CASE Qt_Key_S
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_S, 's', xbeK_ALT_S, xbeK_CTRL_S, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_S, 's', xbeK_ALT_S, xbeK_CTRL_S, txt )
       EXIT
    CASE Qt_Key_T
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_T, 't', xbeK_ALT_T, xbeK_CTRL_T, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_T, 't', xbeK_ALT_T, xbeK_CTRL_T, txt )
       EXIT
    CASE Qt_Key_U
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_U, 'u', xbeK_ALT_U, xbeK_CTRL_U, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_U, 'u', xbeK_ALT_U, xbeK_CTRL_U, txt )
       EXIT
    CASE Qt_Key_V
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_V, 'v', xbeK_ALT_V, xbeK_CTRL_V, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_V, 'v', xbeK_ALT_V, xbeK_CTRL_V, txt )
       EXIT
    CASE Qt_Key_W
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_W, 'w', xbeK_ALT_W, xbeK_CTRL_W, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_W, 'w', xbeK_ALT_W, xbeK_CTRL_W, txt )
       EXIT
    CASE Qt_Key_X
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_X, 'x', xbeK_ALT_X, xbeK_CTRL_X, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_X, 'x', xbeK_ALT_X, xbeK_CTRL_X, txt )
       EXIT
    CASE Qt_Key_Y
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_Y, 'y', xbeK_ALT_Y, xbeK_CTRL_Y, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_Y, 'y', xbeK_ALT_Y, xbeK_CTRL_Y, txt )
       EXIT
    CASE Qt_Key_Z
-      c := hbqt_QTranslateKeyAlpha( kbm, Qt_Key_Z, 'z', xbeK_ALT_Z, xbeK_CTRL_Z, txt )
+      c := hbxbp_QTranslateKeyAlpha( kbm, Qt_Key_Z, 'z', xbeK_ALT_Z, xbeK_CTRL_Z, txt )
       EXIT
 
    //-----------------------//
@@ -415,13 +415,13 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
 
 #if 0
    CASE Qt_Key_BracketLeft
-      c := hbqt_QTranslateKey( kbm, '[', '[', xbeK_ALT_OSB, '[' )
+      c := hbxbp_QTranslateKey( kbm, '[', '[', xbeK_ALT_OSB, '[' )
       EXIT
    CASE Qt_Key_Backslash
-      c := hbqt_QTranslateKey( kbm, Qt_Key_Backslash, Qt_Key_Backslash, Qt_Key_Backslash, Qt_Key_Backslash )
+      c := hbxbp_QTranslateKey( kbm, Qt_Key_Backslash, Qt_Key_Backslash, Qt_Key_Backslash, Qt_Key_Backslash )
       EXIT
    CASE Qt_Key_BracketRight
-      c := hbqt_QTranslateKey( kbm, ']', ']', xbeK_ALT_CSB, ']' )
+      c := hbxbp_QTranslateKey( kbm, ']', ']', xbeK_ALT_CSB, ']' )
       EXIT
 
    CASE Qt_Key_AsciiCircum
@@ -439,7 +439,7 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
    CASE Qt_Key_AsciiTilde
       c := '~'                   ; EXIT
    CASE Qt_Key_QuoteDbl
-      c := hbqt_QTranslateKey( kbm, Qt_Key_QuoteDbl, Qt_Key_QuoteDbl, xbeK_ALT_QUOTE, Qt_Key_QuoteDbl )
+      c := hbxbp_QTranslateKey( kbm, Qt_Key_QuoteDbl, Qt_Key_QuoteDbl, xbeK_ALT_QUOTE, Qt_Key_QuoteDbl )
       EXIT
    CASE Qt_Key_Space
       c := ' '                   ; EXIT
@@ -460,10 +460,10 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
    CASE Qt_Key_ParenRight
       c := ')'                   ; EXIT
    CASE Qt_Key_Comma
-      c := hbqt_QTranslateKey( kbm, ',', ',', xbeK_ALT_COMMA, ',' )
+      c := hbxbp_QTranslateKey( kbm, ',', ',', xbeK_ALT_COMMA, ',' )
       EXIT
    CASE Qt_Key_Period
-      c := hbqt_QTranslateKey( kbm, '.', '.', xbeK_ALT_PERIOD, '.' )
+      c := hbxbp_QTranslateKey( kbm, '.', '.', xbeK_ALT_PERIOD, '.' )
       EXIT
    CASE Qt_Key_Colon
       c := ''                    ; EXIT
@@ -474,7 +474,7 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
    CASE Qt_Key_Greater
       c := '>'                   ; EXIT
    CASE Qt_Key_Question
-      c := hbqt_QTranslateKey( kbm, '?', '?', '?', xbeK_CTRL_QUESTION )
+      c := hbxbp_QTranslateKey( kbm, '?', '?', '?', xbeK_CTRL_QUESTION )
       EXIT
    CASE Qt_Key_At
       c := '@'                   ; EXIT
@@ -518,9 +518,8 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
 
    RETURN c
 
-/*----------------------------------------------------------------------*/
 
-FUNCTION XbpAppEventToQKeyEvent( key )
+FUNCTION hbxbp_appEventToQKeyEvent( key )
 
    SWITCH( key )
    CASE xbeK_ESC
@@ -796,9 +795,8 @@ FUNCTION XbpAppEventToQKeyEvent( key )
 
    RETURN key
 
-/*----------------------------------------------------------------------*/
 
-FUNCTION XbpAppEventModifier( key )
+FUNCTION hbxbp_appEventModifier( key )
 
    SWITCH( key )
    CASE xbeK_SH_ESC
@@ -1064,4 +1062,3 @@ FUNCTION XbpAppEventModifier( key )
 
    RETURN Qt_NoModifier
 
-/*----------------------------------------------------------------------*/

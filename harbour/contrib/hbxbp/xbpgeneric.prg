@@ -56,7 +56,7 @@
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
- *                     Xbase++ Compatible Function
+ *                    Xbase++ Compatible Functions
  *
  *                            Pritpal Bedi
  *                              08Jun2009
@@ -165,7 +165,7 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    DEFAULT oXbp TO SetAppWindow()
 
    IF nEvent == xbeP_Keyboard
-      QApplication():sendEvent( oXbp:oWidget, QKeyEvent( QEvent_KeyPress, XbpAppEventToQKeyEvent( mp1 ), XbpAppEventModifier( mp1 ) ) )
+      QApplication():sendEvent( oXbp:oWidget, QKeyEvent( QEvent_KeyPress, hbxbp_appEventToQKeyEvent( mp1 ), hbxbp_appEventModifier( mp1 ) ) )
    ELSE
       SetAppEvent( nEvent, mp1, mp2, oXbp )
    ENDIF
@@ -294,7 +294,7 @@ FUNCTION AppDesktop()
 
    IF s_oDeskTop == NIL
       s_oDeskTop := XbpWindow():new()
-      s_oDeskTop:oWidget := HbXbpAppDesktop():new():create()
+      s_oDeskTop:oWidget := HbpAppDesktop():new():create()
    ENDIF
 
    RETURN s_oDeskTop

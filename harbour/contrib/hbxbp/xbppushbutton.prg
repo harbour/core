@@ -146,7 +146,7 @@ METHOD XbpPushButton:execSlot( cSlot, p )
    CASE cSlot == "clicked()" .OR. cSlot == "pressed()"
       ::activate()
    CASE cSlot == "keyPressed()"
-      IF XbpQKeyEventToAppEvent( p ) == xbeK_ENTER
+      IF hbxbp_QKeyEventToAppEvent( p ) == xbeK_ENTER
          ::oWidget:click()
       ENDIF
    ENDCASE
