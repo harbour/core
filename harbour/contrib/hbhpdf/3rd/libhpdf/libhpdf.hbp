@@ -22,7 +22,6 @@
 -depincpath=png:/opt/local/include
 -depincpathlocal=png:../../../../src/3rd/png
 
-# This is a dependency of png
 -depkeyhead=zlib:zlib.h
 -depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
