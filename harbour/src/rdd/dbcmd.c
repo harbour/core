@@ -1634,7 +1634,7 @@ HB_FUNC( RLOCK )
 
 HB_FUNC( SELECT )
 {
-   if( hb_parinfo( 0 ) == 0 )
+   if( hb_pcount() == 0 )
    {
       hb_retni( hb_rddGetCurrentWorkAreaNumber() );
    }
@@ -1770,13 +1770,15 @@ HB_FUNC( DBSETRELATION )
       HB_USHORT uiChildArea;
       char * szAlias = NULL;
 
-      if( hb_pcount() < 2 || ( !( hb_parinfo( 1 ) & HB_IT_NUMERIC ) && ( hb_parinfo( 1 ) != HB_IT_STRING ) ) || !( HB_ISNIL( 4 ) || HB_ISLOG( 4 ) )  )
+      if( hb_pcount() < 2 ||
+          hb_param( 1, HB_IT_NUMERIC | HB_IT_STRING ) == NULL ||
+          !( HB_ISNIL( 4 ) || HB_ISLOG( 4 ) ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return;
       }
 
-      if( hb_parinfo( 1 ) & HB_IT_NUMERIC )
+      if( HB_ISNUM( 1 ) )
       {
          uiChildArea = ( HB_AREANO ) hb_parni( 1 );
       }

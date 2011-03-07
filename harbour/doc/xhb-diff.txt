@@ -1018,10 +1018,10 @@ In Harbour it's new type TIMESTAMP for which VALTYPE() function returns
 "T". It has its own HVM arithmetic similar to the one used by DATE type
 but not exactly the same. The difference (-) between two TIMESTAMP values
 is represented as number where integer part is number of days and fractional
-part is time in given day. Non-exact comparison (=, >, <, >=, <=)
-comparison for TIMESTAMP and DATA value assumes that both values are equal
-if the date part is the same. Such semantic is also respected by native RDDs
-when mixed DATE and TIMESTAMP values are used in indexes, seeks, scopes, etc.
+part is time in given day. Non-exact comparison (=, >, <, >=, <=) for
+TIMESTAMP and DATA value assumes that both values are equal if the date
+part is the same. Such semantic is also respected by native RDDs when
+mixed DATE and TIMESTAMP values are used in indexes, seeks, scopes, etc.
 When number is added to DATE type then like in Clipper only integer part
 increase (decrease) DATE value but when it's added to TIMESTAMP value then
 fractional part is also significant. When TIMESTAMP value is added to DATE

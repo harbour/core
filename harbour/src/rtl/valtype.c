@@ -138,7 +138,7 @@ HB_FUNC( HB_ISSTRING )
 
 HB_FUNC( HB_ISCHAR )
 {
-   hb_retl( ( hb_parinfo( 1 ) & HB_IT_MEMO ) == HB_IT_STRING );
+   hb_retl( ( hb_parinfo( 1 ) & ( HB_IT_MEMO | HB_IT_STRING ) ) == HB_IT_STRING );
 }
 
 HB_FUNC( HB_ISMEMO )

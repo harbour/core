@@ -1007,7 +1007,7 @@ ElemList   : ExtArgument               { $$ = hb_compExprNewList( $1, HB_COMP_PA
            | ElemList ',' ExtArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-BlockHead   : CBSTART         { $$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; }
+BlockHead   : CBSTART         { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; }
               BlockVars '|'   { $$ = $<asExpr>2; }
             ;
 
