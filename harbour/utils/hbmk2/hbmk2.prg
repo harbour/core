@@ -9478,9 +9478,10 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
       IF !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL )
          EXIT
       ENDIF
+      nEnd += Len( _MACRO_CLOSE )
    ENDDO
 
-   IF nStart > 0
+   IF nStart > 0 .AND. nEnd > 0
 
       /* Separate filter from the rest of the item */
       cFilterSrc := SubStr( cItem, nStart + Len( _MACRO_OPEN ), nEnd - nStart - Len( _MACRO_OPEN ) )
