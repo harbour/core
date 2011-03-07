@@ -66,7 +66,7 @@
 #define HB_MAX_UTF8        3
 
 
-static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE nLen, HB_SIZE  )
+static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE nLen, HB_SIZE nUTF8Pos )
 {
    if( nUTF8Pos > 0 && nUTF8Pos <= nLen )
    {
