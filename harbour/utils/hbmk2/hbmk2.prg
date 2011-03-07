@@ -9467,9 +9467,20 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    LOCAL cExprWithValue := "hbmk_KEYW( hbmk, '%1', '%2', '%3' )"
    LOCAL tmp
 
-   IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
-      !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL ) .AND. ;
-      ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart + Len( _MACRO_OPEN ) ) ) > 0
+   nEnd := 1
+   DO WHILE .T.
+      IF ( nStart := hb_At( _MACRO_OPEN, cItem, nEnd ) ) == 0
+         EXIT
+      ENDIF
+      IF ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart + Len( _MACRO_OPEN ) ) ) == 0
+         EXIT
+      ENDIF
+      IF !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL )
+         EXIT
+      ENDIF
+   ENDDO
+
+   IF nStart > 0
 
       /* Separate filter from the rest of the item */
       cFilterSrc := SubStr( cItem, nStart + Len( _MACRO_OPEN ), nEnd - nStart - Len( _MACRO_OPEN ) )
