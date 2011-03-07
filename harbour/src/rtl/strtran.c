@@ -73,8 +73,6 @@ HB_FUNC( STRTRAN )
 
       if( nSeek && nSeek <= nText )
       {
-         const char * szSeek = hb_itemGetCPtr( pSeek );
-         const char * szReplace;
          HB_SIZE nStart;
 
          nStart = hb_parnldef( 4, 1 );
@@ -87,6 +85,8 @@ HB_FUNC( STRTRAN )
          else if( nStart > 0 )
          {
             PHB_ITEM pReplace = hb_param( 3, HB_IT_STRING );
+            const char * szSeek = hb_itemGetCPtr( pSeek );
+            const char * szReplace;
             HB_SIZE nReplace;
             HB_SIZE nCount;
             HB_BOOL bAll;
