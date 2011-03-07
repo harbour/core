@@ -13,6 +13,14 @@
 #include "simpleio.ch"
 
 PROCEDURE Main()
+    LOCAL a, b, c, d
+
+    ? HB_GSAPI_REVISION( @a, @b, @c, @d )
+
+    ? a
+    ? b
+    ? c
+    ? d
 
     ? HB_GS( { "--version" } )
 

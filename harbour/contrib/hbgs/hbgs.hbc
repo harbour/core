@@ -2,6 +2,11 @@
 # $Id$
 #
 
+skip={dos|wce}
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 libs=gs
+#{darwin}frameworks=Ghostscript
+
+{darwin}libpaths=/opt/local/lib
