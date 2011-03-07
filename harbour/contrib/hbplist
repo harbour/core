@@ -21,6 +21,7 @@ hbformat/utils/hbformat.hbp
 hbfoxpro/hbfoxpro.hbp
 hbfship/hbfship.hbp
 hbgd/hbgd.hbp
+hbgs/hbgs.hbp
 hbgt/hbgt.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp

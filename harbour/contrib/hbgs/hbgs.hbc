@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+libs=gs

@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depoptional=gs:yes
+-depkeyhead=gs:iapi.h
+-depcontrol=gs:${HB_WITH_GS}
+-depimplibs=gs:${HB_WITH_GS_BIN}/gsdll32.dll{win&&x86}
+-depimplibs=gs:${HB_WITH_GS_BIN}/gsdll64.dll{win&&x86_64}
+-depimplibd=gs:gs
+
+-instfile=inc:hbgs.hbx
+
+hbgs.hbx
+
+core.c
