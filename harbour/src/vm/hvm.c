@@ -8693,17 +8693,53 @@ void hb_vmRequestRestore( void )
 
    uiAction = ( HB_USHORT ) hb_stackItemFromTop( -1 )->item.asInteger.value |
               hb_stackGetActionRequest();
-   if( uiAction & HB_QUIT_REQUESTED )
-      hb_stackSetActionRequest( HB_QUIT_REQUESTED );
-   else if( uiAction & HB_BREAK_REQUESTED )
-      hb_stackSetActionRequest( HB_BREAK_REQUESTED );
-   else if( uiAction & HB_ENDPROC_REQUESTED )
-      hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
-   else
-      hb_stackSetActionRequest( 0 );
 
-   hb_stackDec();
-   hb_stackPopReturn();
+#if defined( HB_MT_VM )
+   if( uiAction & HB_VMSTACK_REQUESTED )
+      hb_vmThreadQuit();
+   else
+#endif
+   {
+      if( uiAction & HB_QUIT_REQUESTED )
+         hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+      else if( uiAction & HB_BREAK_REQUESTED )
+         hb_stackSetActionRequest( HB_BREAK_REQUESTED );
+      else if( uiAction & HB_ENDPROC_REQUESTED )
+         hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
+      else
+         hb_stackSetActionRequest( 0 );
+
+      hb_stackDec();
+      hb_stackPopReturn();
+   }
+}
+
+HB_BOOL hb_vmRequestReenterExt( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenterExt()"));
+
+   if( !s_fHVMActive )
+      return HB_FALSE;
+
+#if defined( HB_MT_VM )
+   {
+      HB_STACK_TLS_PRELOAD
+      HB_USHORT uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
+
+      if( uiAction )
+         hb_vmThreadInit( NULL );
+      else
+         hb_stackPushReturn();
+
+      hb_vmPushInteger( uiAction | hb_stackGetActionRequest() );
+   }
+#else
+   hb_stackPushReturn();
+   hb_vmPushInteger( hb_stackGetActionRequest() );
+   hb_stackSetActionRequest( 0 );
+#endif
+
+   return HB_TRUE;
 }
 
 HB_BOOL hb_vmIsActive( void )

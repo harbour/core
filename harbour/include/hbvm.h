@@ -129,12 +129,17 @@ extern HB_EXPORT void      hb_vmRequestEndProc( void );
 extern HB_EXPORT HB_USHORT hb_vmRequestQuery( void );
 extern HB_EXPORT HB_BOOL   hb_vmRequestReenter( void );
 extern HB_EXPORT void      hb_vmRequestRestore( void );
+extern HB_EXPORT HB_BOOL   hb_vmRequestReenterExt( void );
+
 extern HB_EXPORT HB_BOOL   hb_vmIsActive( void );
 
 /* Return values of hb_vmRequestQuery() */
-#define HB_QUIT_REQUESTED       1   /* immediately quit the application */
-#define HB_BREAK_REQUESTED      2   /* break to nearest RECOVER/END sequence */
-#define HB_ENDPROC_REQUESTED    4   /* immediately return from procedure (error handler in macro evaluation) */
+#define HB_QUIT_REQUESTED     1     /* immediately quit the application */
+#define HB_BREAK_REQUESTED    2     /* break to nearest RECOVER/END sequence */
+#define HB_ENDPROC_REQUESTED  4     /* immediately return from procedure (error handler in macro evaluation) */
+#ifdef _HB_API_INTERNAL_
+#define HB_VMSTACK_REQUESTED  0x100 /* inetrnel flag to signal thread local stack */
+#endif
 
 /* Public PCode functions */
 

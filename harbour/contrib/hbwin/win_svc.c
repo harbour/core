@@ -53,6 +53,7 @@
 #include "hbwapi.h"
 
 #include "hbvm.h"
+#include "hbapiitm.h"
 
 #if ! defined( HB_OS_WIN_CE )
 
@@ -62,7 +63,7 @@
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
-static char                  s_szHarbourEntryFunc[ HB_SYMBOL_NAME_LEN + 1 ];
+static PHB_SYMB              s_sHarbourEntryFunc = NULL;
 static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
@@ -98,11 +99,9 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 
    if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( s_szHarbourEntryFunc );
-
-      if( pDynSym )
+      if( s_sHarbourEntryFunc != NULL )
       {
-         if( hb_vmRequestReenter() )
+         if( hb_vmRequestReenterExt() )
          {
             DWORD i;
             int iArgCount = 0;
@@ -111,7 +110,7 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
             SetServiceStatus( s_hStatus, &s_ServiceStatus );
 
-            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+            hb_vmPushSymbol( s_sHarbourEntryFunc );
             hb_vmPushNil();
 
             for( i = 1; i < dwArgc; ++i )
@@ -130,6 +129,10 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             hb_vmProc( ( HB_USHORT ) iArgCount );
 
             hb_vmRequestRestore();
+         }
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ("HVM stack not available") );
          }
       }
       else
@@ -295,8 +298,14 @@ HB_FUNC( WIN_SERVICESTART )
 
    SERVICE_TABLE_ENTRY lpServiceTable[ 2 ];
 
-   HB_TCHAR_COPYTO( s_lpServiceName, hb_parcx( 1 ), HB_SIZEOFARRAY( s_lpServiceName ) - 1 );
-   hb_strncpy( s_szHarbourEntryFunc, hb_parcx( 2 ), HB_SIZEOFARRAY( s_szHarbourEntryFunc ) - 1 );
+   HB_ITEMCOPYSTR( hb_param( 1, HB_IT_STRING ), s_lpServiceName, HB_SIZEOFARRAY( s_lpServiceName ) );
+   s_sHarbourEntryFunc = hb_itemGetSymbol( hb_param( 2, HB_IT_SYMBOL ) );
+   if( s_sHarbourEntryFunc == NULL && HB_ISCHAR( 2 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 2 ) );
+      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
+         s_sHarbourEntryFunc = hb_dynsymSymbol( pDynSym );
+   }
 
    lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
    lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SvcMainFunction;

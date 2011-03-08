@@ -374,7 +374,7 @@ extern HB_EXPORT void hb_threadReleaseCPU( void );
 extern HB_EXPORT void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
 extern HB_EXPORT HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
 extern HB_EXPORT void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
-extern HB_EXPORT HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns HB_TRUE when counter reach after decrementation */
+extern HB_EXPORT HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns HB_TRUE when counter reaches 0 after decrementation */
 
 /* Critical sections or fast non recursive MUTEXes */
 extern HB_EXPORT void     hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );
