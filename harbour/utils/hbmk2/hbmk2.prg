@@ -5085,37 +5085,46 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ELSE
          /* Use external compiler */
 
-         cCommand := FNameEscape( hb_DirSepAdd( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
-                     " " + iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE, "-n", "-n2" ) ) +;
-                     " " + ArrayToList( l_aPRG_TO_DO,, hbmk[ _HBMK_nCmd_Esc ] ) +;
-                     iif( hbmk[ _HBMK_lBLDFLGP ], " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
-                     iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                     iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
-
-         cCommand := AllTrim( cCommand )
-
-         IF hbmk[ _HBMK_lTRACE ]
-            IF ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutStd( hbmk, I_( "Harbour compiler command:" ) )
-            ENDIF
-            OutStd( cCommand + _OUT_EOL )
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
+            tmp1 := l_aPRG_TO_DO /* Call compiler for each source file to avoid compiler bugs. */
+         ELSE
+            tmp1 := { ArrayToList( l_aPRG_TO_DO,, hbmk[ _HBMK_nCmd_Esc ] ) }
          ENDIF
 
-         IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
-            IF ! hbmk[ _HBMK_lQuiet ]
-               OutErr( cCommand + _OUT_EOL )
-            ENDIF
-            IF ! hbmk[ _HBMK_lIGNOREERROR ]
-               IF lDeleteWorkDir
-                  hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
+         FOR EACH tmp IN tmp1
+
+            cCommand := FNameEscape( hb_DirSepAdd( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
+                        " " + iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE, "-n", "-n2" ) ) +;
+                        " " + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), tmp ) +;
+                        iif( hbmk[ _HBMK_lBLDFLGP ], " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
+                        iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
+                        iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
+
+            cCommand := AllTrim( cCommand )
+
+            IF hbmk[ _HBMK_lTRACE ]
+               IF ! hbmk[ _HBMK_lQuiet ]
+                  hbmk_OutStd( hbmk, I_( "Harbour compiler command:" ) )
                ENDIF
-               IF hbmk[ _HBMK_lBEEP ]
-                  DoBeep( .F. )
-               ENDIF
-               RETURN _ERRLEV_COMPPRG
+               OutStd( cCommand + _OUT_EOL )
             ENDIF
-         ENDIF
+
+            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+               IF ! hbmk[ _HBMK_lQuiet ]
+                  OutErr( cCommand + _OUT_EOL )
+               ENDIF
+               IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                  IF lDeleteWorkDir
+                     hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
+                  ENDIF
+                  IF hbmk[ _HBMK_lBEEP ]
+                     DoBeep( .F. )
+                  ENDIF
+                  RETURN _ERRLEV_COMPPRG
+               ENDIF
+            ENDIF
+         NEXT
       ENDIF
    ENDIF
 
