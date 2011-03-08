@@ -103,14 +103,14 @@ HB_FUNC( HB_GS )
 HB_FUNC( HB_GSAPI_REVISION )
 {
    gsapi_revision_t r;
+   int result = gsapi_revision( &r, sizeof( r ) );
 
-   if( gsapi_revision( &r, sizeof( r ) ) == 0 )
+   if( result == 0 )
    {
       hb_storc( r.product, 1 );
       hb_storc( r.copyright, 2 );
       hb_stornl( r.revision, 3 );
       hb_stornl( r.revisiondate, 4 );
-      hb_retl( HB_TRUE );
    }
    else
    {
@@ -118,6 +118,7 @@ HB_FUNC( HB_GSAPI_REVISION )
       hb_storc( NULL, 2 );
       hb_stornl( 0, 3 );
       hb_stornl( 0, 4 );
-      hb_retl( HB_TRUE );
    }
+
+   hb_retni( result );
 }
