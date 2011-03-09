@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 
 #include <zlib.h>
 
@@ -62,7 +63,9 @@ static HB_GARBAGE_FUNC( hb_gz_Destructor )
    gzFile * gzHolder = ( gzFile * ) Cargo;
    if( * gzHolder )
    {
+      hb_vmUnlock();
       gzclose( * gzHolder );
+      hb_vmLock();
       * gzHolder = NULL;
    }
 }
@@ -92,7 +95,9 @@ HB_FUNC( HB_GZOPEN )
    const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
    if( cFile && cMode )
    {
+      hb_vmUnlock();
       gzFile gz = gzopen( cFile, cMode );
+      hb_vmLock();
       if( gz )
       {
          gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
@@ -113,7 +118,12 @@ HB_FUNC( HB_GZDOPEN )
    const char * cMode = hb_parc( 2 );
    if( HB_ISNUM( 1 ) && cMode )
    {
-      gzFile gz = gzdopen( hb_parni( 1 ), cMode );
+      gzFile gz;
+
+      hb_vmUnlock();
+      gz = gzdopen( hb_parni( 1 ), cMode );
+      hb_vmLock();
+
       if( gz )
       {
          gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
@@ -136,8 +146,15 @@ HB_FUNC( HB_GZCLOSE )
    if( gzHolder )
    {
       gzFile gz = * gzHolder;
+      int iResult;
+
       * gzHolder = NULL;
-      hb_retni( gzclose( gz ) );
+
+      hb_vmUnlock();
+      iResult = gzclose( gz );
+      hb_vmLock();
+
+      hb_retni( iResult );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -172,13 +189,20 @@ HB_FUNC( HB_GZREAD )
       gzFile gz = hb_gzParam( 1 );
       if( gz )
       {
+         int iResult;
+
          if( HB_ISNUM( 3 ) )
          {
             HB_SIZE nLim = hb_parns( 3 );
             if( nLim < nLen )
                nLen = nLim;
          }
-         hb_retni( gzread( gz, szBuffer, ( unsigned ) nLen ) );
+
+         hb_vmUnlock();
+         iResult = gzread( gz, szBuffer, ( unsigned ) nLen );
+         hb_vmLock();
+
+         hb_retni( iResult );
       }
    }
    else
@@ -195,8 +219,17 @@ HB_FUNC( HB_GZWRITE )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retni( gzwrite( gz, szData,
-                            HB_ISNUM( 3 ) ? ( unsigned ) hb_parns( 3 ) : ( unsigned ) hb_parclen( 2 ) ) );
+      {
+         int iResult;
+
+         hb_vmUnlock();
+         iResult = gzwrite( gz, szData,
+                            HB_ISNUM( 3 ) ? ( unsigned ) hb_parns( 3 ) :
+                                            ( unsigned ) hb_parclen( 2 ) );
+         hb_vmLock();
+
+         hb_retni( iResult );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -217,7 +250,13 @@ HB_FUNC( HB_GZGETS )
 
          if( szBuffer )
          {
-            if( gzgets( gz, szBuffer, iLen ) != Z_NULL )
+            char * szBuff;
+
+            hb_vmUnlock();
+            szBuff = gzgets( gz, szBuffer, iLen );
+            hb_vmLock();
+
+            if( szBuff != Z_NULL )
                hb_retc_buffer( szBuffer );
             else
                hb_xfree( szBuffer );
@@ -238,7 +277,15 @@ HB_FUNC( HB_GZPUTS )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retni( gzputs( gz, szData ) );
+      {
+         int iResult;
+
+         hb_vmUnlock();
+         iResult = gzputs( gz, szData );
+         hb_vmLock();
+
+         hb_retni( iResult );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -253,7 +300,15 @@ HB_FUNC( HB_GZPUTC )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retni( gzputc( gz, hb_parni( 2 ) ) );
+      {
+         int iResult;
+
+         hb_vmUnlock();
+         iResult = gzputc( gz, hb_parni( 2 ) );
+         hb_vmLock();
+
+         hb_retni( iResult );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -266,7 +321,15 @@ HB_FUNC( HB_GZGETC )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retni( gzgetc( gz ) );
+   {
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = gzgetc( gz );
+      hb_vmLock();
+
+      hb_retni( iResult );
+   }
 }
 
 /*
@@ -279,7 +342,15 @@ HB_FUNC( HB_GZUNGETC )
 #if ZLIB_VERNUM >= 0x1202
       gzFile gz = hb_gzParam( 2 );
       if( gz )
-         hb_retni( gzungetc( hb_parni( 1 ), gz ) );
+      {
+         int iResult;
+
+         hb_vmUnlock();
+         iResult = gzungetc( hb_parni( 1 ), gz );
+         hb_vmLock();
+
+         hb_retni( iResult );
+      }
 #endif
    }
    else
@@ -293,7 +364,15 @@ HB_FUNC( HB_GZFLUSH )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retni( gzflush( gz, hb_parnidef( 2, Z_SYNC_FLUSH ) ) );
+   {
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = gzflush( gz, hb_parnidef( 2, Z_SYNC_FLUSH ) );
+      hb_vmLock();
+
+      hb_retni( iResult );
+   }
 }
 
 /*
@@ -305,7 +384,16 @@ HB_FUNC( HB_GZSEEK )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), hb_parnidef( 3, SEEK_SET ) ) );
+      {
+         HB_MAXINT nResult;
+
+         hb_vmUnlock();
+         nResult = gzseek( gz, ( z_off_t ) hb_parnint( 2 ),
+                           hb_parnidef( 3, SEEK_SET ) );
+         hb_vmLock();
+
+         hb_retnint( nResult );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -318,17 +406,33 @@ HB_FUNC( HB_GZREWIND )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retni( gzrewind( gz ) );
+   {
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = gzrewind( gz );
+      hb_vmLock();
+
+      hb_retni( iResult );
+   }
 }
 
 /*
- * HB_GZTELL( <pGZipStream> ) => <lResult>
+ * HB_GZTELL( <pGZipStream> ) => <nResult>
  */
 HB_FUNC( HB_GZTELL )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retnint( gztell( gz ) );
+   {
+      HB_MAXINT nResult;
+
+      hb_vmUnlock();
+      nResult = gztell( gz );
+      hb_vmLock();
+
+      hb_retnint( nResult );
+   }
 }
 
 /*
@@ -338,7 +442,15 @@ HB_FUNC( HB_GZEOF )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retl( gzeof( gz ) != 0 );
+   {
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = gzeof( gz );
+      hb_vmLock();
+
+      hb_retl( iResult != 0 );
+   }
 }
 
 /*
@@ -349,7 +461,15 @@ HB_FUNC( HB_GZDIRECT )
 #if ZLIB_VERNUM >= 0x1230
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retl( gzdirect( gz ) != 0 );
+   {
+      int iResult;
+
+      hb_vmUnlock();
+      iResult = gzdirect( gz );
+      hb_vmLock();
+
+      hb_retl( iResult != 0 );
+   }
 #endif
 }
 
