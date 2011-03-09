@@ -197,7 +197,7 @@ void * hbqt_pPtrFromObj( int iParam )
 
       pointer = hbqt_gcpointer( -1 );
 
-      if ( iParam == 0 && ! pointer )
+      if( iParam == 0 && ! pointer )
           hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
       return pointer;
@@ -207,7 +207,7 @@ void * hbqt_pPtrFromObj( int iParam )
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj= IS_POINTER" ) );
       pointer = hbqt_gcpointer( iParam );
 
-      if ( iParam == 0 && ! pointer )
+      if( iParam == 0 && ! pointer )
           hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
       return pointer;
@@ -215,7 +215,7 @@ void * hbqt_pPtrFromObj( int iParam )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj(): returns NULL" ) );
-      if ( iParam == 0 )
+      if( iParam == 0 )
           hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return NULL; /* TODO: Still better if RTE. */
    }
@@ -234,8 +234,8 @@ void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )
 
    if( pSelf == NULL )
    {
-       HB_TRACE( HB_TR_DEBUG, ( "hbqt_set_pptr(): returns NULL" ) );
-       return; /* TODO: Still better if RTE. */
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_set_pptr(): returns NULL" ) );
+      return; /* TODO: Still better if RTE. */
    }
 
    // push the _PPTR address
@@ -266,7 +266,6 @@ void hbqt_itemPushReturn( void* ptr, PHB_ITEM pSelf )
    if( hb_stackReturnItem() != pSelf )
       hb_itemReturn( pSelf );
 }
-
 
 HBQT_GC_T * hbqt_getObjectGC( int iParam )
 {

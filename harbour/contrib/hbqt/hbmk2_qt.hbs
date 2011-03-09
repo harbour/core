@@ -1151,20 +1151,20 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
    n := ascan( ::code_, {|e| f $ e } )
 
    aadd( ::new_, ::cFunc )
-   FOR i := n+1 TO len( ::code_ )
+   FOR i := n + 1 TO len( ::code_ )
       aadd( ::new_, ::code_[ i ] )
       IF trim( ::code_[ i ] ) == "}"
          n1 := i
          EXIT
       ENDIF
    NEXT
-   ::old_:={}
+   ::old_ :={}
    FOR i := 1 TO len( ::code_ )
       IF i < n .or. i > n1
          aadd( ::old_, ::code_[ i ] )
       ENDIF
    NEXT
-   ::code_:= ::old_
+   ::code_ := ::old_
 
    /* Pullout constructor methods */
    #if 0
@@ -1348,7 +1348,6 @@ METHOD HbQtSource:build()
 
    /*----------------------------------------------------------------------*/
    /* Generate necessary declarations */
-   aadd( aLine, "" )
 
    aadd( aLine, "HB_EXTERN_BEGIN" )
    aadd( aLine, "" )
@@ -1358,12 +1357,12 @@ METHOD HbQtSource:build()
    NEXT
    aadd( aLine, "" )
    aadd( aLine, "void _hb_force_link_" + ::cQtObject +"( void )" )
-   aadd( aLine, "{"                               )
+   aadd( aLine, "{" )
    aadd( aLine, "   HB_FUNC_EXEC( __HB" + Upper( ::cQtModule ) + " );" )
    FOR EACH s IN ::hRef
       aadd( aLine, "   HB_FUNC_EXEC( HB_" + upper( s:__enumKey() ) + " );" )
    NEXT
-   aadd( aLine, "}"  )
+   aadd( aLine, "}" )
    aadd( aLine, "" )
    FOR EACH s IN ::hRef
       aadd( aLine, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s:__enumKey() + " );" )
@@ -1373,18 +1372,7 @@ METHOD HbQtSource:build()
       aadd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
    aadd( aLine, "" )
-   aadd( aLine, "HB_EXTERN_END" )
-   aadd( aLine, "" )
    aadd( aLine, "HB_FUNC_EXTERN( " + uQtObject + " );" )
-   aadd( aLine, "" )
-   aadd( aLine, "HB_INIT_SYMBOLS_BEGIN( __HBQT_CLS_" + uQtObject  + "__ )" )
-// aadd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
-   aadd( aLine, '   { "HB_' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( HB_' + uQtObject + ' ) }, NULL }' )
-   aadd( aLine, "HB_INIT_SYMBOLS_END( __HBQT_CLS_" + uQtObject + "__ )" )
-
-   aadd( aLine, "" )
-   aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass );" )
-   aadd( aLine, "" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
    s := upper( "HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" )  )
@@ -1392,6 +1380,10 @@ METHOD HbQtSource:build()
       aadd( aLine, "HB_FUNC_EXTERN( " + upper( alltrim( k ) ) + " );" )
    NEXT
 // aadd( aLine, "HB_FUNC_EXTERN( HB_" + uQtObject + " );" )
+   aadd( aLine, "" )
+   aadd( aLine, "HB_EXTERN_END" )
+   aadd( aLine, "" )
+   aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass );" )
    aadd( aLine, "" )
 
 #if 0
@@ -1409,34 +1401,12 @@ METHOD HbQtSource:build()
    aadd( aLine, "      {" )
    aadd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
    aadd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
-   aadd( aLine, "      }" )
-   aadd( aLine, "      return;" ) /* QUESTION: Is this intended here? */
+   aadd( aLine, "      }" ) /* TODO: Error handling */
    aadd( aLine, "   }" )
    aadd( aLine, '   return s_oClass;' )
    aadd( aLine, "}" )
    aadd( aLine, "" )
 #endif
-
-   aadd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
-   aadd( aLine, "{" )
-   aadd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
-   aadd( aLine, "   if( s_oClass == NULL )" )
-   aadd( aLine, "   {" )
-   aadd( aLine, "      s_oClass = hb_itemNew( NULL );" )
-   FOR EACH k IN hb_aTokens( s, "," )
-      aadd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
-   NEXT
-   aadd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
-   aadd( aLine, "      if( oClass )" )
-   aadd( aLine, "      {" )
-   aadd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
-   aadd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
-   aadd( aLine, "      }" )
-   aadd( aLine, "      return;" ) /* QUESTION: Is this intended here? */
-   aadd( aLine, "   }" )
-   aadd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
 
    FOR EACH s IN ::hRef
       IF s:__enumKey() == "QList" /* TOFIX: Ugly hack */
@@ -1586,6 +1556,28 @@ METHOD HbQtSource:build()
    aadd( aLine, "}" )
    aadd( aLine, "" )
 
+   /* Internal class instantiation. TODO: Rename to __QCLASS */
+   aadd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
+   aadd( aLine, "{" )
+   aadd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
+   aadd( aLine, "   if( s_oClass == NULL )" )
+   aadd( aLine, "   {" )
+   aadd( aLine, "      s_oClass = hb_itemNew( NULL );" )
+   FOR EACH k IN hb_aTokens( s, "," )
+      aadd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
+   NEXT
+   aadd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
+   aadd( aLine, "      if( oClass )" )
+   aadd( aLine, "      {" )
+   aadd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
+   aadd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
+   aadd( aLine, "      }" )
+   aadd( aLine, "      return;" )
+   aadd( aLine, "   }" )
+   aadd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
+   aadd( aLine, "}" )
+   aadd( aLine, "" )
+
    /* Build the constructor */
    aadd( aLine, ::new_[ 1 ] )           // Func definition
    aadd( aLine, ::new_[ 2 ] )           // {
@@ -1595,25 +1587,23 @@ METHOD HbQtSource:build()
    /* Insert Functions */
    aeval( ::txt_, {|e| aadd( aLine, strtran( e, chr( 13 ) ) ) } )
 
-   /* A try to generate classes on C++ level - only for QObject, QPaintDevice, QWidget */
-//
-    //IF !empty( aClsExt := ::buildClassEx() )
-//
-//       aeval( aClsExt, {|e| aadd( aLine, strtran( e, chr( 13 ) ) ) } )
-//
- //   ENDIF
-
-   aadd( aLine, '' )
-   aadd( aLine, 'static void s_registerMethods( HB_USHORT uiClass )' )
-   aadd( aLine, '{' )
+   aadd( aLine, "" )
+   aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass )" )
+   aadd( aLine, "{" )
    aadd( aLine, '   hb_clsAdd( uiClass, ' +padr( '"new"',35) +', HB_FUNCNAME( ' + padr( upper( "NEW" ),35) + ' ) );' )
    FOR EACH oMtd IN ::aMethods
       IF !empty( oMtd:cHBFunc )
          aadd( aLine, '   hb_clsAdd( uiClass, ' +padr( '"' + oMtd:cHBFunc +'"',35) +', HB_FUNCNAME( ' + padr( upper( oMtd:cHBFunc ),35) + ' ) );' )
    ENDIF
    NEXT
-   aadd( aLine, '}' )
-   aadd( aLine, '' )
+   aadd( aLine, "}" )
+   aadd( aLine, "" )
+   aadd( aLine, "" )
+   aadd( aLine, "HB_INIT_SYMBOLS_BEGIN( __HBQT_CLS_" + uQtObject  + "__ )" )
+// aadd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
+   aadd( aLine, '   { "HB_' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( HB_' + uQtObject + ' ) }, NULL }' )
+   aadd( aLine, "HB_INIT_SYMBOLS_END( __HBQT_CLS_" + uQtObject + "__ )" )
+   aadd( aLine, "" )
 
    /* Footer */
    hbqtgen_BuildFooter( @aLine, ::cQtVer )
@@ -1664,7 +1654,7 @@ METHOD HbQtSource:getConstructor( nClsType )
       NEXT
       aadd( aLine, " " )
       IF nClsType == 0
-         aadd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ) , hb_stackSelfItem() );" )
+         aadd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
       ELSE
          aadd( aLine, "   hb_arraySetPtrGC( pObject, 1, hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, true ) );" )
       ENDIF
@@ -1689,6 +1679,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    LOCAL txt_:= {}
    LOCAL ooMtd, i, a_
    LOCAL q
+   LOCAL nStrCnt
 
    HB_SYMBOL_UNUSED( cMtdName )
 
@@ -1700,7 +1691,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
       ENDIF
    NEXT
 
-   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" ) + ";"
+   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
 
    // check for methods already worked
    IF ( ascan( ::func_, {|e_| e_[ 1 ] == oMtd:cFun } ) ) > 0
@@ -1777,15 +1768,15 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + ")"
             next
 
-            aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) +"( pcount " + ;
-                iif( a_[i]:nArgsReal == a_[i]:nArgs , "==", "<=" ) + ;
-                 hb_ntos( a_[i]:nArgs ) + " " + t_ + " )" )
+            aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount " + ;
+                iif( a_[i]:nArgsReal == a_[i]:nArgs , "==", "<=" ) + " " + ;
+                 hb_ntos( a_[i]:nArgs ) + t_ + " )" )
 
             aadd( txt_, "      {" )
 
             IF ! empty( a_[i]:aPre )
                FOR n := 1 TO len( a_[i]:aPre )
-                  aadd( txt_, "   " + a_[i]:aPre[ n, 1 ] )
+                  aadd( txt_, "         " + a_[i]:aPre[ n ][ 1 ] )
                NEXT
                aadd( txt_, "" )
             ENDIF
@@ -1795,25 +1786,28 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                aadd( txt_, "        hbqt_detachgcpointer( " + hb_ntos( a_[i]:nDetach ) + " );" )
             ENDIF
 
-            IF "hb_parstr_utf8(" $ a_[i]:cCmd
-               aadd( txt_, "      void * pText = NULL;" )
-            ENDIF
+            nStrCnt := 0
+            DO WHILE "%%%" $ FP
+               ++nStrCnt
+               FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
+               aadd( txt_, "         void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
+            ENDDO
 
             IF ! a_[i]:isConstructor
-               aadd( txt_, "         " + FP + "; /* REM A1 */" )
+               aadd( txt_, "         " + FP + ";" )
             ELSE
-               aadd( txt_, "      " + FP + "; /* REM A2 */")
+               aadd( txt_, "      " + FP + ";" )
             ENDIF
 
-            IF "hb_parstr_utf8(" $ a_[i]:cCmd
-               aadd( txt_, "      hb_strfree( pText );" )
-            ENDIF
+            FOR q := nStrCnt TO 1 STEP -1
+               aadd( txt_, "         hb_strfree( pText" + StrZero( q, 2, 0 ) + " );" )
+            NEXT
 
             /* Return values back to PRG */
             IF ! empty( a_[i]:aPre )
                aadd( txt_, "" )
                FOR q := 1 TO len( a_[i]:aPre )
-                  aadd( txt_, "       " + a_[i]:aPre[ q, 4 ] + "( " + a_[i]:aPre[ q, 3 ] + ", " + hb_ntos( a_[i]:aPre[ q, 2 ] ) + " );" )
+                  aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
                NEXT
             ENDIF
 
@@ -1838,8 +1832,8 @@ METHOD HbQtSource:buildMethodBody( oMtd )
    LOCAL aBdy
    LOCAL cFunc
 
-   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" ) + ";"
-   oMtd:cCmdN := StrTran( oMtd:cCmdN, "(  )", "()" ) + ";"
+   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
+   oMtd:cCmdN := StrTran( oMtd:cCmdN, "(  )", "()" )
 
    aBdy := ::getMethodBody( oMtd, "QT_" + upper( ::cQtObject ) + "_" + upper( oMtd:cHBFunc ), ::aMethods, 0 )
 
@@ -2044,7 +2038,7 @@ STATIC FUNCTION __TY_TYPEScpp( oM, nArgs )
       s += hbide_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast ) + " && "
    NEXT
    IF " && " $ s
-      s := substr( s, 1, len( s ) - 4 )
+      s := Left( s, len( s ) - 4 )
    ENDIF
    RETURN s
 
@@ -2418,8 +2412,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "L"
 
          CASE oArg:cCast == "QString"
-            oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText, NULL )"
-            oArg:cBodyN  := "hb_parstr_utf8( " + cHBIdxN + ", &pText, NULL )"
+            oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
+            oArg:cBodyN  := "hb_parstr_utf8( " + cHBIdxN + ", &pText%%%, NULL )"
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
 #if 0
