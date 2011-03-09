@@ -75,13 +75,11 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QRectF>
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
 
 #include <QtCore/QStringList>
 
 HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QObject( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QSize( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QSizeF( void * pObj, bool bNew );
@@ -365,16 +363,6 @@ static void hbqt_SlotsExecQObject( PHB_ITEM * codeBlock, void ** arguments, QStr
    hb_vmSend( 1 );
 }
 
-static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
-{
-   Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
-   hb_vmSend( 1 );
-}
-
 /*----------------------------------------------------------------------*/
 
 HB_FUNC_EXTERN( HB_QEVENT );
@@ -415,7 +403,6 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QTime"                   , hbqt_SlotsExecQTime            );
    hbqt_slots_register_callback( "QUrl"                    , hbqt_SlotsExecQUrl             );
    hbqt_slots_register_callback( "QObject*"                , hbqt_SlotsExecQObject          );
-   hbqt_slots_register_callback( "QWidget*"                , hbqt_SlotsExecQWidget          );
 
    hbqt_events_register_createobj( QEvent::Timer                             , "hb_QEvent"                         );
 }

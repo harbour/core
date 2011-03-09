@@ -288,6 +288,16 @@ static void hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem( PHB_ITEM * codeBlock, 
    hb_vmSend( 2 );
 }
 
+static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
+{
+   Q_UNUSED( pList );
+
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
+   hb_vmSend( 1 );
+}
+
 static void hbqt_SlotsExecQWidgetQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
@@ -309,7 +319,6 @@ static void hbqt_SlotsExecQWidgetInt( PHB_ITEM * codeBlock, void ** arguments, Q
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }
-
 
 
 HB_FUNC_EXTERN( HB_QABSTRACTBUTTON );
@@ -412,6 +421,7 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QWidget*$QWidget*"                   , hbqt_SlotsExecQWidgetQWidget   );
    hbqt_slots_register_callback( "QTreeWidgetItem*"                    , hbqt_SlotsExecQTreeWidgetItem  );
    hbqt_slots_register_callback( "QListWidgetItem*"                    , hbqt_SlotsExecQListWidgetItem  );
+   hbqt_slots_register_callback( "QWidget*"                            , hbqt_SlotsExecQWidget          );
 
    hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    );
    hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    );
