@@ -24,6 +24,9 @@
 -instfile=inc:adsextrn.ch
 -instfile=inc:rddads.hbx
 
+# To avoid a warning in ACE header
+-cflag=-Wno-pragmas{allmingw}
+
 rddads.hbx
 
 ads1.c

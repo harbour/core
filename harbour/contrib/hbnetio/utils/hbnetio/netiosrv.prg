@@ -86,6 +86,10 @@ REQUEST HB_MT
 #define _NETIOSRV_CONN_MAX_         4
 
 PROCEDURE Main( ... )
+   netiosrv_Main( .T., ... )
+   RETURN
+
+PROCEDURE netiosrv_Main( lUI, ... )
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
    LOCAL netiomgm[ _NETIOSRV_MAX_ ]
 
@@ -95,8 +99,6 @@ PROCEDURE Main( ... )
 
    LOCAL cExt
    LOCAL cFile
-
-   LOCAL lUI := .T.
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
    Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
@@ -142,6 +144,8 @@ PROCEDURE Main( ... )
 
    FOR EACH cParam IN { ... }
       DO CASE
+      CASE Lower( cParam ) == "-a"
+         /* Ignore */
       CASE Lower( Left( cParam, 5 ) ) == "-noui"
          lUI := .F.
       CASE Lower( Left( cParam, 6 ) ) == "-port="
