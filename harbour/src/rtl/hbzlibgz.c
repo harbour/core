@@ -95,9 +95,12 @@ HB_FUNC( HB_GZOPEN )
    const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
    if( cFile && cMode )
    {
+      gzFile gz;
+
       hb_vmUnlock();
-      gzFile gz = gzopen( cFile, cMode );
+      gz = gzopen( cFile, cMode );
       hb_vmLock();
+
       if( gz )
       {
          gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),

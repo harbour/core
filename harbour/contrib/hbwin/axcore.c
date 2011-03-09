@@ -421,7 +421,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo2 obtain error %08X", hr) );
+         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo2 obtain error %08lX", hr) );
       }
 
 
@@ -468,7 +468,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo obtain error %08X", hr) );
+         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo obtain error %08lX", hr) );
       }
    }
 
