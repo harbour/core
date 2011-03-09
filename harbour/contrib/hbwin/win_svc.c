@@ -63,7 +63,7 @@
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
-static PHB_SYMB              s_sHarbourEntryFunc = NULL;
+static PHB_ITEM              s_pHarbourEntryFunc = NULL;
 static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
@@ -99,7 +99,7 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 
    if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
-      if( s_sHarbourEntryFunc != NULL )
+      if( s_pHarbourEntryFunc != NULL )
       {
          if( hb_vmRequestReenterExt() )
          {
@@ -110,8 +110,8 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
             SetServiceStatus( s_hStatus, &s_ServiceStatus );
 
-            hb_vmPushSymbol( s_sHarbourEntryFunc );
-            hb_vmPushNil();
+            hb_vmPushEvalSym();
+            hb_vmPush( s_pHarbourEntryFunc );
 
             for( i = 1; i < dwArgc; ++i )
             {
@@ -126,7 +126,7 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
                HB_TCHAR_FREE( pszArg );
             }
 
-            hb_vmProc( ( HB_USHORT ) iArgCount );
+            hb_vmSend( ( HB_USHORT ) iArgCount );
 
             hb_vmRequestRestore();
          }
@@ -295,17 +295,22 @@ HB_FUNC( WIN_SERVICESTART )
 {
    HB_BOOL bRetVal = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
+   PHB_ITEM pEntryFunc;
 
    SERVICE_TABLE_ENTRY lpServiceTable[ 2 ];
 
    HB_ITEMCOPYSTR( hb_param( 1, HB_IT_STRING ), s_lpServiceName, HB_SIZEOFARRAY( s_lpServiceName ) );
-   s_sHarbourEntryFunc = hb_itemGetSymbol( hb_param( 2, HB_IT_SYMBOL ) );
-   if( s_sHarbourEntryFunc == NULL && HB_ISCHAR( 2 ) )
+
+   if( s_pHarbourEntryFunc )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 2 ) );
-      if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         s_sHarbourEntryFunc = hb_dynsymSymbol( pDynSym );
+      hb_itemRelease( s_pHarbourEntryFunc );
+      s_pHarbourEntryFunc = NULL;
    }
+
+   pEntryFunc = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+   if( pEntryFunc )
+      s_pHarbourEntryFunc = hb_itemNew( pEntryFunc );
 
    lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
    lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SvcMainFunction;

@@ -81,7 +81,7 @@ PROCEDURE Main( cMode )
 
    CASE "S"
 
-      IF win_serviceStart( _SERVICE_NAME, "SrvMain" )
+      IF win_serviceStart( _SERVICE_NAME, @SrvMain() )
          ? "Service has started OK"
       ELSE
          ? "Service has had some problems: " + hb_ntos( wapi_GetLastError() )
