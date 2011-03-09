@@ -1466,7 +1466,7 @@ HARBOUR
          http://www.delorie.com/djgpp/
       Open Watcom [win, dos, os2, linux, free, open-source]
          http://www.openwatcom.org/
-      XCode [darwin, free, closed-source]
+      XCode [darwin, free: <= 3.x / commercial: >= 4.x, hybrid-source]
          http://developer.apple.com/TOOLS/Xcode/
       MS Windows SDK [win, free, closed-source]
          http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
