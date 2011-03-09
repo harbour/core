@@ -347,6 +347,7 @@ HARBOUR
    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
    HB_WITH_LIBMAGIC= (currently on *nix systems)
    HB_WITH_LZF=C:\liblzf (defaults to locally hosted version if not found)
+   HB_WITH_MINILZO=C:\minilzo\ (defaults to locally hosted version if not found)
    HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
    HB_WITH_MXML=C:\minixml (defaults to locally hosted version if not found)
    HB_WITH_MYSQL=C:\mysql\include
@@ -1521,8 +1522,10 @@ HARBOUR
          http://libharu.org/
       HB_WITH_LIBMAGIC - libmagic, file recognition [multiplatform, free, open-source]
          ftp://ftp.astron.com/pub/file/
-      HB_WITH_LZF - lzf library [multiplatform, free, open-source]
+      HB_WITH_LZF - lzf library (RT data compression) [multiplatform, free, open-source]
          http://liblzf.plan9.de/
+      HB_WITH_MINILZO - miniLZO library (RT data compression) [multiplatform, free, open-source]
+         http://www.oberhumer.com/opensource/minilzo/
       HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
          http://www.winimage.com/zLibDll/minizip.html
       HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]

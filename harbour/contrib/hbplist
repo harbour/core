@@ -30,6 +30,7 @@ hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
 hbmagic/hbmagic.hbp
 hbmemio/hbmemio.hbp
 hbmisc/hbmisc.hbp
+hbmlzo/hbmlzo.hbp                # uses: libmlzo (locally hosted)
 hbmxml/hbmxml.hbp                # uses: minixml (locally hosted)
 hbmysql/hbmysql.hbp
 hbmzip/hbmzip.hbp                # uses: minizip (locally hosted)
