@@ -1921,6 +1921,11 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
             AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
          }
       }
+      if( pWVT->bFullScreen )
+      {
+         pWVT->bFullScreen = HB_FALSE;
+         hb_gt_wvt_FullScreen( pWVT->pGT );
+      }
 
       ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
       UpdateWindow( pWVT->hWnd );
@@ -2237,7 +2242,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
             if( hb_itemGetL( pInfo->pNewVal ) != pWVT->bFullScreen )
-               hb_gt_wvt_FullScreen( pGT );
+            {
+               if( pWVT->hWnd )
+                  hb_gt_wvt_FullScreen( pGT );
+               else
+                  pWVT->bFullScreen = hb_itemGetL( pInfo->pNewVal );
+            }
          }
          break;
 
