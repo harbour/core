@@ -449,7 +449,6 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
       static PHB_DYNS s___HBCLASS = NULL;
 
       char * pszParentClsBuffer = hb_strdup( szParentClsStr );
-      char * szSingleClsName;
 
       if( s___HBCLASS == NULL )
          s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
@@ -465,17 +464,21 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
 
       HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", szClsName ) );
 
-      szSingleClsName = strtok( pszParentClsBuffer, " ," );
-
-      PHB_ITEM pItem = hb_itemNew( NULL );
-
-      while( szSingleClsName != NULL )
       {
-         hb_itemPutC( pItem, szSingleClsName );
-         hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
-         szSingleClsName = strtok( NULL, " ," );
+         char * szSingleClsName = strtok( pszParentClsBuffer, " ," );
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         while( szSingleClsName != NULL )
+         {
+            hb_itemPutC( pItem, szSingleClsName );
+            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
+            szSingleClsName = strtok( NULL, " ," );
+         }
+
+         hb_itemRelease( pItem );
       }
-      hb_itemRelease( pItem );
+
+      hb_xfree( pszParentClsBuffer );
 
       hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( szClsName )->pSymbol );
 
