@@ -451,7 +451,7 @@ PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const 
       static PHB_DYNS s___HBCLASS = NULL;
 
       char * pszParentClsBuffer = hb_strdup( szParentClsStr );
-      char* szSingleClsName;
+      char * szSingleClsName;
 
       if( s___HBCLASS == NULL )
          s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
@@ -491,7 +491,7 @@ PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const 
 
       hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( test )->pSymbol );
 
-      hb_objSendMsg( hb_stackReturnItem(), "New", 3, pClsName, pSuper, pSym_ClsFunc );
+      hb_objSendMsg( hb_stackReturnItem(), "NEW", 3, pClsName, pSuper, pSym_ClsFunc );
 
       oClass = hb_itemNew( hb_stackReturnItem() );
 
@@ -499,8 +499,8 @@ PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const 
       hb_itemRelease( pSuper );
       hb_itemRelease( pClsName );
 
-      hb_objSendMsg( oClass, "Create", 0 );
-      hb_objSendMsg( oClass, "Instance", 0 );
+      hb_objSendMsg( oClass, "CREATE", 0 );
+      hb_objSendMsg( oClass, "INSTANCE", 0 );
    }
 
    return oClass;
