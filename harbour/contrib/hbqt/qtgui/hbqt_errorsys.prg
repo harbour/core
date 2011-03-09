@@ -209,7 +209,7 @@ STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    DEFAULT cTitle TO "Information"
    DEFAULT nIcon  TO QMessageBox_Information
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setText( cMsg )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )

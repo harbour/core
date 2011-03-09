@@ -1801,7 +1801,7 @@ METHOD IdeEditor:qscintilla()
    STATIC oSci, qLexer, qAPIs, fontBold, fontNormal, fontItalic, c1, c2, c3
 
    IF empty( oSci )
-      oSci := HBQsciScintilla():new()
+      oSci := HBQsciScintilla()
       //
       oSci:setAutoIndent( .t. )
       oSci:setCaretLineVisible( .t. )
@@ -1840,8 +1840,8 @@ METHOD IdeEditor:qscintilla()
       oSci:setMatchedBraceBackgroundColor( c2 )
       oSci:setUnmatchedBraceForegroundColor( c3 )
 
-      qLexer := QsciLexerFlagship():new()
-      //qLexer := QsciLexerCPP():new()
+      qLexer := QsciLexerFlagship()
+      //qLexer := QsciLexerCPP()
       qLexer:setDefaultFont( ::oFont:oWidget )
       qLexer:setFoldAtElse( .f. )
 
@@ -1868,7 +1868,7 @@ METHOD IdeEditor:qscintilla()
       qLexer:setColor( QColor( 127,  67, 255 ), SCE_FS_OPERATOR )
       qLexer:setColor( QColor( 255,   0,   0 ), SCE_FS_BRACE    )
 
-      qApis := QsciAPIs():new( qLexer )
+      qApis := QsciAPIs( qLexer )
       qApis:load( "c:/temp/cpp.api" )
       qApis:prepare()
       qLexer:setAPIs( qApis )

@@ -62,14 +62,14 @@ FUNCTION Main( oIde )
       oIde := hbide_setIde()
    ENDIF
 
-   qDlg := QDialog():new( oIde:oDlg:oWidget )
+   qDlg := QDialog( oIde:oDlg:oWidget )
    qdlg:resize( 300, 350 )
 
-   qLbl := QLabel():new( qDlg )
+   qLbl := QLabel( qDlg )
    qLbl:setText( "Harbour-Qt Gui Dialog as Script" )
    qLbl:move( 20,20 )
 
-   qCombo := QComboBox():new( qDlg )
+   qCombo := QComboBox( qDlg )
    qCombo:move( 100, 100 )
    qCombo:resize( 130, 30 )
    qCombo:addItem( "Sky"       )
@@ -77,21 +77,21 @@ FUNCTION Main( oIde )
    qCombo:addItem( "The Limit" )
    qCombo:setCurrentIndex( 0 )
 
-   qCheck := QCheckBox():new( qDlg )
+   qCheck := QCheckBox( qDlg )
    qCheck:move( 100, 150 )
    qCheck:setText( "Harbour is Preferred ?" )
    qCheck:setChecked( .t. )
 
-   qEdit := QLineEdit():new( qDlg )
+   qEdit := QLineEdit( qDlg )
    qEdit:move( 100, 180 )
    qEdit:resize( 130, 30 )
    qEdit:setText( "Harbour Root Path" )
 
-   qBtnOk := QPushButton():new( qDlg )
+   qBtnOk := QPushButton( qDlg )
    qBtnOk:move( 50, 300 )
    qBtnOk:setText( "OK" )
 
-   qBtnCn := QPushButton():new( qDlg )
+   qBtnCn := QPushButton( qDlg )
    qBtnCn:move( 170, 300 )
    qBtnCn:setText( "Cancel" )
 

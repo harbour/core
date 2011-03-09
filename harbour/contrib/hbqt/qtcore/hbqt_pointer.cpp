@@ -296,7 +296,6 @@ HBQT_GC_T * hbqt_getObjectGC( int iParam )
 
    /* hbqt_errRT_ARG(); */ /* NOTE: Could not check type for whatever reason */
 
-
    return NULL;
 }
 
@@ -432,7 +431,7 @@ HB_FUNC( __HBQT_SETUTF8 )
       hb_vmSetCDP( cdp );
 }
 
-PHB_ITEM hbqt_defineClassBegin( const char* szClsName, PHB_ITEM s_oClass, const char * szParentClsStr )
+PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char * szParentClsStr )
 {
    static PHB_DYNS s__CLSLOCKDEF = NULL;
 
