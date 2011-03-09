@@ -27,11 +27,11 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QFILEDIALOG )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) 0 ) );
    }
-   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }

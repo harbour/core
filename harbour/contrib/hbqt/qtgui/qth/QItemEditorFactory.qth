@@ -35,7 +35,7 @@ New      =
  */
 HB_FUNC( QT_QITEMEDITORFACTORY )
 {
-   if( HB_ISPOINTER( 1 ) )
+   if( HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QItemEditorFactory() );
    }

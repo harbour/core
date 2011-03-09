@@ -32,12 +32,16 @@ Calls    = QT_QAction
  */
 HB_FUNC( QT_QACTION )
 {
-   if( HB_ISPOINTER( 1 ) )
-      __HB_RETPTRGC__( new QAction( hbqt_par_QObject( 1 ) ) );
-   else if( HB_ISPOINTER( 2 ) )
-      __HB_RETPTRGC__( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
-   else if( HB_ISPOINTER( 3 ) )
+   int pcount;
+   pcount = hb_pcount();
+   if( pcount==3 && HB_ISOBJECT( 1 ) && HB_ISOBJECT(2) && HB_ISOBJECT( 3 ) )
       __HB_RETPTRGC__( new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
+   else if( pcount==2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT(2) )
+      __HB_RETPTRGC__( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
+   else if( pcount == 1 && HB_ISOBJECT( 1 ) )
+      __HB_RETPTRGC__( new QAction( hbqt_par_QObject( 1 ) ) );
+   else 
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 </CODE>
 

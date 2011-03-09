@@ -784,15 +784,15 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
    else
       hb_gt_wvt_FitRows( pWVT );
 
-      /* Disable "maximize" button */
-      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
-      SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-      ShowWindow( pWVT->hWnd, SW_HIDE );
-      ShowWindow( pWVT->hWnd, SW_NORMAL );
+   /* Disable "maximize" button */
+   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
+   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                      SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+   ShowWindow( pWVT->hWnd, SW_HIDE );
+   ShowWindow( pWVT->hWnd, SW_NORMAL );
 
-      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+   if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+      hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
 
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
@@ -2002,7 +2002,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    }
    else
       GetClientRect( GetDesktopWindow(), &rt );
-   
+
 #else
    GetClientRect( GetDesktopWindow(), &rt );
 #endif

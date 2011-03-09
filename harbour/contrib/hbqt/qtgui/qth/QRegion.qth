@@ -33,7 +33,7 @@ New      = nX, nY, nWidth, nHeight, nType
  */
 HB_FUNC( QT_QREGION )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QRegion( *hbqt_par_QRegion( 1 ) ) );      
    }
@@ -41,7 +41,7 @@ HB_FUNC( QT_QREGION )
    {
       __HB_RETPTRGC__( new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) );
    }
-   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
    {
       if(      ( QString ) "QPolygon" == hbqt_par_QString( 1 ) )
       {
@@ -60,7 +60,7 @@ HB_FUNC( QT_QREGION )
          __HB_RETPTRGC__( new QRegion() );
       }
    }
-   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) );      
    }

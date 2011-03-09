@@ -36,7 +36,7 @@ Folder   = hbqscintilla
  */
 HB_FUNC( QT_QSCIDOCUMENT )
 {
-   if( HB_ISPOINTER( 1 ) )
+   if( HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QsciDocument( *hbqt_par_QsciDocument( 1 ) ) );
    }

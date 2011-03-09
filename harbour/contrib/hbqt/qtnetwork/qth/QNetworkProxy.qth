@@ -32,7 +32,7 @@ New      =
  */
 HB_FUNC( QT_QNETWORKPROXY )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QNetworkProxy( *hbqt_par_QNetworkProxy( 1 ) ) );
    }

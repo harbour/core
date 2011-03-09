@@ -38,9 +38,9 @@ New      =
  */
 HB_FUNC( QT_QBRUSH )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hbqt_getObjectGC( 1 );
       if( q )
       {
          if( q->type == HBQT_TYPE_QBrush )
@@ -77,42 +77,17 @@ HB_FUNC( QT_QBRUSH )
    {
       __HB_RETPTRGC__( new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
    {
       __HB_RETPTRGC__( new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISOBJECT( 2 ) )
    {
       __HB_RETPTRGC__( new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) );
-   }
-   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
-   {
-      QString objName = hbqt_par_QString( 1 );
-
-      if(      objName == ( QString ) "QPixmap" )
-      {
-         __HB_RETPTRGC__( new QBrush( *hbqt_par_QPixmap( 2 ) ) );
-      }
-      else if( objName == ( QString ) "QImage" )
-      {
-         __HB_RETPTRGC__( new QBrush( *hbqt_par_QImage( 2 ) ) );
-      }
-      else if( objName == ( QString ) "QGradient" )
-      {
-         __HB_RETPTRGC__( new QBrush( *hbqt_par_QGradient( 2 ) ) );
-      }
-      else if( objName == ( QString ) "QColor" )
-      {
-         __HB_RETPTRGC__( new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
-      }
-      else
-      {
-         __HB_RETPTRGC__( new QBrush() );
-      }
    }
    else
    {

@@ -26,7 +26,7 @@ New      = pDevice
  */
 HB_FUNC( QT_QPAINTER )
 {
-   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QPainter( hbqt_par_QPaintDevice( 1 ) ) );
    }

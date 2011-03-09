@@ -30,7 +30,7 @@ Calls    = QT_QComboBox
  */
 HB_FUNC( QT_QCOMBOBOX )
 {
-   __HB_RETPTRGC__( new QComboBox( hb_pcount() == 1 && HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
+   __HB_RETPTRGC__( new QComboBox( hb_pcount() == 1 && HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
 }
 </CODE>
 

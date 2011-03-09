@@ -29,7 +29,7 @@ Constructor =
  */
 HB_FUNC( QT_QWHEELEVENT )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QWheelEvent( *hbqt_par_QWheelEvent( 1 ) ) );
    }

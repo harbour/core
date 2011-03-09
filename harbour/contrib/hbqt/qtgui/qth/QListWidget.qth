@@ -26,7 +26,7 @@ New      = pParent
  */
 HB_FUNC( QT_QLISTWIDGET )
 {
-   __HB_RETPTRGC__( new QListWidget( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
+   __HB_RETPTRGC__( new QListWidget( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
 }
 </CODE>
 

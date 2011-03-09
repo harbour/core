@@ -121,6 +121,14 @@ METHOD HbQtObjectHandler:onError()
 
 /*----------------------------------------------------------------------*/
 
+/* TOFIX: Eliminate that */
+STATIC FUNCTION HBQEventsFromPointer( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
+   NEXT
+   RETURN HB_HBQEvents():fromPointer( ... )
+
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 

@@ -29,7 +29,7 @@ Constructor = no
  */
 HB_FUNC( QT_QIODEVICE )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       // __HB_RETPTRGC__( new QIODevice( hbqt_par_QObject( 1 ) ) );
    }

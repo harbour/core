@@ -32,7 +32,7 @@ New      =
  */
 HB_FUNC( QT_QBITMAP )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QBitmap( *hbqt_par_QBitmap( 1 ) ) );
    }
@@ -48,7 +48,7 @@ HB_FUNC( QT_QBITMAP )
    {
       __HB_RETPTRGC__( new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )   
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )   
    {
       if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
       {

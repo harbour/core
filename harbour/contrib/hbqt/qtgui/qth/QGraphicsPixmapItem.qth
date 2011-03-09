@@ -29,12 +29,12 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSPIXMAPITEM )
 {
-   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
    {
-      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hbqt_pPtrFromObj( 1 );
       if( p->type == HBQT_TYPE_QPixmap )
       {
-         __HB_RETPTRGC__( new QGraphicsPixmapItem( *hbqt_par_QPixmap( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
+         __HB_RETPTRGC__( new QGraphicsPixmapItem( *hbqt_par_QPixmap( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
       }
       else
       {

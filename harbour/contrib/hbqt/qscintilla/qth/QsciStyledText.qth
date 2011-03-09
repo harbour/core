@@ -40,7 +40,7 @@ HB_FUNC( QT_QSCISTYLEDTEXT )
    {
       __HB_RETPTRGC__( new QsciStyledText( hbqt_par_QString( 1 ), hb_parni( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
    {
       __HB_RETPTRGC__( new QsciStyledText( hbqt_par_QString( 1 ), *hbqt_par_QsciStyle( 2 ) ) );
    }

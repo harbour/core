@@ -44,7 +44,7 @@ HB_EXTERN_END
 HB_FUNC( QT_QAPPLICATION )
 {
    //__HB_RETPTRGC__( ( QApplication * ) __hbqtgui_app() );
-   hb_retptr( __hbqtgui_app() );
+   hbqt_itemPushReturn( hbqt_gcAllocate_QApplication( (void *) __hbqtgui_app(), false) , hb_stackSelfItem() );
 }
 
 HB_FUNC( QT_QAPPLICATION_EXECUTE )

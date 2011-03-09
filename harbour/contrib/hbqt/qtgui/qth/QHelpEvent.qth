@@ -28,7 +28,7 @@ Destructor =
  */
 HB_FUNC( QT_QHELPEVENT )
 {
-   if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
+   if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISOBJECT( 2 ) && HB_ISOBJECT( 3 ) )
    {
       __HB_RETPTRGC__( new QHelpEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) ) );
    }

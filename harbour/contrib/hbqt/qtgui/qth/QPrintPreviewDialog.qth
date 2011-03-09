@@ -27,7 +27,7 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-   if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
+   if( hb_pcount() >= 2 && HB_ISOBJECT( 2 ) )
       __HB_RETPTRGC__( new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
    else
       __HB_RETPTRGC__( new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );

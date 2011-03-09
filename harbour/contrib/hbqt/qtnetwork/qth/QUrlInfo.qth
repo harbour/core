@@ -34,7 +34,7 @@ New      =
  */
 HB_FUNC( QT_QURLINFO )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QUrlInfo( *hbqt_par_QUrlInfo( 1 ) ) );
    }

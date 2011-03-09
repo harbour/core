@@ -38,7 +38,7 @@ folder   = hbqtdesigner
  */
 HB_FUNC( QT_QDESIGNERFORMEDITORINTERFACE )
 {
-   if( HB_ISPOINTER( 1 ) )
+   if( HB_ISOBJECT( 1 ) )
    {
       __HB_RETPTRGC__( new QDesignerFormEditorInterface( hbqt_par_QObject( 1 ) ) );
    }
