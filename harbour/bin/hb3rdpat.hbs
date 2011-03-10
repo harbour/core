@@ -6,7 +6,7 @@
 /*
  * hb3rdpat - a tool to help update 3rd party components while keeping local fixes
  *
- * Copyright 2010 Tamas Tevesz
+ * Copyright 2010, 2011 Tamas TEVESZ
  * See COPYING for licensing terms.
  *
  * 1. CONFIGURATION
@@ -24,7 +24,7 @@
  * `curl' is unconditionally required for fetching source archives; the rest of the
  * tools are checked for on an on-demand basis.
  *
- * hb3rdpat requires several meta data (in the form of specially formatted lines)
+ * hb3rdpat requires several metadata (in the form of specially formatted lines)
  * in the component's Makefile (preferred) or .hbp file (if no Makefile is
  * present). Formatting rules are as follows:
  *
@@ -113,6 +113,10 @@
  *   forward slash (`/'). DOS-style backslash separators are not recognized and
  *   will produce undefined results.
  *
+ *   The `-validate' command line argument causes hb3rdpat to validate the
+ *   metadata without executing any actions that might otherwise be necessary.
+ *   It is recommended to use this after a component's metadata changes.
+ *
  * 2. MODES OF OPERATION
  * ---------------------
  *
@@ -127,7 +131,7 @@
  * to a `local diff refresh' mode. This mode is used to refresh the local diff
  * after Harbour-specific modifications have been made to the component's
  * source. In order to help with the initial diff creation, hb3rdpat will proceed
- * even if no `DIFF' is specified amongst the meta data, and defaults to
+ * even if no `DIFF' is specified amongst the metadata, and defaults to
  * creating a diff named `$(component).dif').
  *
  * If no differences between the original and the Harbour trees were found,
@@ -249,35 +253,38 @@ STATIC s_aTools := {             ;
 PROCEDURE Main( ... )
 
    LOCAL cFileName
-   LOCAL cFile             /* memorized input make file */
+   LOCAL cFile                /* memorized input make file */
    LOCAL aDir
-   LOCAL aRegexMatch       /* regex match results */
-   LOCAL cMemoLine         /* MemoLine */
-   LOCAL nMemoLine         /* Line number */
-   LOCAL cDiffFile         /* Local modifications */
+   LOCAL aRegexMatch          /* regex match results */
+   LOCAL cMemoLine            /* MemoLine */
+   LOCAL nMemoLine            /* Line number */
+   LOCAL cDiffFile            /* Local modifications */
    LOCAL cCWD
-   LOCAL cThisComponent    /* component being processed */
-   LOCAL aOneMap           /* one pair from s_aChangeMap */
-   LOCAL cCommand          /* patch/diff commands */
-   LOCAL nRunResult        /* patch/diff exit vals */
-   LOCAL cDiffText         /* diff will return the new diff in this */
-   LOCAL nDiffFD           /* for writing newly created diff file */
-   LOCAL cArchiveURL       /* URL for the component */
-   LOCAL cTopIndicator     /* file signifying the top of the component's source tree */
-   LOCAL cStdOut           /* stdout and stderr for various externally-run apps */
+   LOCAL cThisComponent       /* component being processed */
+   LOCAL aOneMap              /* one pair from s_aChangeMap */
+   LOCAL cCommand             /* patch/diff commands */
+   LOCAL nRunResult           /* patch/diff exit vals */
+   LOCAL cDiffText            /* diff will return the new diff in this */
+   LOCAL nDiffFD              /* for writing newly created diff file */
+   LOCAL cArchiveURL          /* URL for the component */
+   LOCAL cTopIndicator        /* file signifying the top of the component's source tree */
+   LOCAL cStdOut              /* stdout and stderr for various externally-run apps */
    LOCAL cStdErr
-   LOCAL lRediff := .F.    /* whether or not operating as rediff */
-   LOCAL aArgv
+   LOCAL lRediff := .F.       /* whether or not operating as rediff */
+   LOCAL lValidateOnly := .F. /* syntactic metadata validation only */
+   LOCAL cArg
    LOCAL cRoot := NIL
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
 
-   aArgv := hb_AParams()
-   IF ! Empty( aArgv )
-      SWITCH aArgv[ 1 ]
+   FOR EACH cArg IN hb_AParams()
+      SWITCH cArg
          CASE "-rediff"
             lRediff := .T.
+            EXIT
+         CASE "-validate"
+            lValidateOnly := .T.
             EXIT
          CASE "-h"
          CASE "-help"
@@ -287,7 +294,7 @@ PROCEDURE Main( ... )
          OTHERWISE
             Usage( 1 )
       ENDSWITCH
-   ENDIF
+   NEXT
 
    IF ! hb_FileExists( cFileName := "Makefile" )
       IF Empty( aDir := Directory( "*.hbp" ) )
@@ -347,7 +354,7 @@ PROCEDURE Main( ... )
             ENDIF
             /* The destination argument must fit in the 8+3 scheme */
             IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
-                  Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
+                  Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
                OutStd( hb_strFormat( "E: Destination does not fit 8+3, offending "+       ;
                                      "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
@@ -379,6 +386,11 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
    NEXT
+
+   IF lValidateOnly
+      OutStd( "Metadata syntax is OK." + hb_eol() )
+      QUIT
+   ENDIF
 
    IF Empty( s_aChangeMap ) .AND. cDiffFile == NIL
       OutStd( "No file name changes and no local diff, nothing to do." + hb_eol() )
