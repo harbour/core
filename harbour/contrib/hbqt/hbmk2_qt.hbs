@@ -1153,7 +1153,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
    aadd( ::new_, ::cFunc )
    FOR i := n + 1 TO len( ::code_ )
       aadd( ::new_, ::code_[ i ] )
-      IF trim( ::code_[ i ] ) == "}"
+      IF RTrim( ::code_[ i ] ) == "}"
          n1 := i
          EXIT
       ENDIF
@@ -1643,9 +1643,9 @@ METHOD HbQtSource:getConstructor( nClsType )
          IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
                s := ::new_[ i ]
-               s := trim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
-               s := strtran( s, ");", ";" )
-               s := strtran( s, "( "+ ::cQtObject + "* )" )
+               s := RTrim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
+               s := RTrim( strtran( s, ");" ) ) + ";"
+               s := strtran( s, "( " + ::cQtObject + "* )" )
                aadd( aLine, s )
             ELSE
                aadd( aLine, ::new_[ i ] )

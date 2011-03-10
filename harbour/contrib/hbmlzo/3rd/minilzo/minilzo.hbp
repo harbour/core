@@ -9,14 +9,12 @@
 
 -warn=low
 
-#-cflag=
-
 minilzo.c
 
 # ORIGIN http://www.oberhumer.com/opensource/lzo/
 # VER    2.04
 # URL    http://www.oberhumer.com/opensource/lzo/download/minilzo-2.04.tar.gz
-# DIFF   
+# DIFF
 #
 # MAP    COPYING
 # MAP    lzoconf.h

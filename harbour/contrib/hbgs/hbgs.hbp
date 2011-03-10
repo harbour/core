@@ -14,6 +14,7 @@
 -depkeyhead=gs:iapi.h
 -depcontrol=gs:${HB_WITH_GS}
 -depincpath=gs:/usr/include
+-depincpath=gs:/usr/include/ghostscript
 -depincpath=gs:/opt/local/include/ghostscript
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll32.dll{win&&x86}
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll64.dll{win&&x86_64}

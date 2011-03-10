@@ -99,7 +99,7 @@ extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
 extern HB_EXPORT int hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
 extern HB_EXPORT void hbqt_errRT_ARG( void );
-extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char* szParentClsStr );
+extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char * szParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT void * hbqt_getqtptr( void );
 extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );

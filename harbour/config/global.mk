@@ -1134,6 +1134,12 @@ else
    HB_PLATFORM_UNIX := yes
 endif
 
+ifeq ($(HB_PLATFORM),beos)
+   HB_LD_LIBRARY_PATH = LIBRARY_PATH
+else
+   HB_LD_LIBRARY_PATH = LD_LIBRARY_PATH
+endif
+
 PLAT_COMP := $(HB_PLATFORM)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 
 OBJ_DIR := obj/$(PLAT_COMP)
@@ -1152,13 +1158,13 @@ else
    endif
    ifeq ($(HB_LD_PATH_SET),)
       ifneq ($(HB_SRC_ROOTPATH),)
-         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
+         export $(HB_LD_LIBRARY_PATH) := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$($(HB_LD_LIBRARY_PATH))
       else
-         export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
+         export $(HB_LD_LIBRARY_PATH) := $(abspath $(DYN_DIR)):$($(HB_LD_LIBRARY_PATH))
       endif
       export HB_LD_PATH_SET := yes
-      ifneq ($(LD_LIBRARY_PATH),)
-         $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
+      ifneq ($($(HB_LD_LIBRARY_PATH)),)
+         $(info ! $(HB_LD_LIBRARY_PATH): $($(HB_LD_LIBRARY_PATH)))
       endif
    endif
 endif
@@ -1611,12 +1617,12 @@ endif
 
 ifeq ($(HB_SYSLOC),)
    ifeq ($(HB_PLATFORM),beos)
-      ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
+      ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$($(HB_LD_LIBRARY_PATH))),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
          HB_SYSLOC := yes
       endif
    else
    ifneq ($(HB_PLATFORM_UNIX),)
-      ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
+      ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin $(subst :, ,$($(HB_LD_LIBRARY_PATH))),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
          HB_SYSLOC := yes
       endif
    endif

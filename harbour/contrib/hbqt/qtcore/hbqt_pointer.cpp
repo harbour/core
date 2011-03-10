@@ -198,7 +198,7 @@ void * hbqt_pPtrFromObj( int iParam )
       pointer = hbqt_gcpointer( -1 );
 
       if( iParam == 0 && ! pointer )
-          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
       return pointer;
    }
@@ -208,7 +208,7 @@ void * hbqt_pPtrFromObj( int iParam )
       pointer = hbqt_gcpointer( iParam );
 
       if( iParam == 0 && ! pointer )
-          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
       return pointer;
    }
@@ -216,7 +216,7 @@ void * hbqt_pPtrFromObj( int iParam )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj(): returns NULL" ) );
       if( iParam == 0 )
-          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return NULL; /* TODO: Still better if RTE. */
    }
 }
