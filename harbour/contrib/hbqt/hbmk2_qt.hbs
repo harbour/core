@@ -1644,7 +1644,9 @@ METHOD HbQtSource:getConstructor( nClsType )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
                s := ::new_[ i ]
                s := RTrim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
-               s := RTrim( strtran( s, ");" ) ) + ";"
+               IF ");" $ s
+                  s := RTrim( strtran( s, ");" ) ) + ";"
+               ENDIF
                s := strtran( s, "( " + ::cQtObject + "* )" )
                aadd( aLine, s )
             ELSE
