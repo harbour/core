@@ -272,8 +272,9 @@ static const HB_PP_OPERATOR * hb_pp_operatorFind( PHB_PP_STATE pState,
 
    while( --i >= 0 )
    {
-      if( pOperator->len <= nLen &&
-          hb_strnicmp( pOperator->name, buffer, pOperator->len ) == 0 )
+      if( pOperator->len <= nLen && pOperator->name[ 0 ] == buffer[ 0 ] &&
+          ( pOperator->len == 1 ||
+            hb_strnicmp( pOperator->name + 1, buffer + 1, pOperator->len - 1 ) == 0 ) )
          return pOperator;
 
       ++pOperator;
@@ -284,8 +285,12 @@ static const HB_PP_OPERATOR * hb_pp_operatorFind( PHB_PP_STATE pState,
 
    do
    {
-      if( pOperator->len <= nLen &&
-          hb_strnicmp( pOperator->name, buffer, pOperator->len ) == 0 )
+      if( pOperator->len <= nLen && pOperator->name[ 0 ] == buffer[ 0 ] &&
+          ( pOperator->len == 1 ||
+            ( pOperator->len >= 4 ?
+              hb_strnicmp( pOperator->name + 1, buffer + 1, pOperator->len - 1 ) == 0 :
+              ( pOperator->name[ 1 ] == buffer[ 1 ] &&
+                ( pOperator->len == 2 || pOperator->name[ 2 ] == buffer[ 2 ] ) ) ) ) )
          return pOperator;
 
       ++pOperator;
