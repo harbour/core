@@ -161,7 +161,11 @@ int hb_tr_level( void )
 {
    if( s_level == -1 )
    {
-      char * env;
+      char env[ HB_PATH_MAX ];
+      int enabled = s_enabled;
+
+      /* protection against recursive or concurrent calls */
+      s_enabled = 0;
 
       s_level = HB_TR_DEFAULT;
 
@@ -169,8 +173,8 @@ int hb_tr_level( void )
 
       if( s_fp == NULL )
       {
-         env = hb_getenv( "HB_TR_OUTPUT" );
-         if( env != NULL && env[ 0 ] != '\0' )
+         if( hb_getenv_buffer( "HB_TR_OUTPUT", env, sizeof( env ) ) &&
+             env[ 0 ] != '\0' )
          {
             s_fp = hb_fopen( env, "w" );
 
@@ -179,15 +183,12 @@ int hb_tr_level( void )
          }
          else
             s_fp = stderr;
-
-         if( env )
-            hb_xfree( env );
       }
 
       /* ; */
 
-      env = hb_getenv( "HB_TR_LEVEL" );
-      if( env != NULL && env[ 0 ] != '\0' )
+      if( hb_getenv_buffer( "HB_TR_LEVEL", env, sizeof( env ) ) &&
+          env[ 0 ] != '\0' )
       {
          int i;
 
@@ -202,36 +203,25 @@ int hb_tr_level( void )
          }
       }
 
-      if( env )
-         hb_xfree( env );
-
       /* ; */
 
       if( s_sysout < 0 )
       {
-         env = hb_getenv( "HB_TR_SYSOUT" );
-         if( env != NULL && env[ 0 ] != '\0' )
-            s_sysout = 1;
-         else
-            s_sysout = 0;
-
-         if( env )
-            hb_xfree( env );
+         s_sysout = ( hb_getenv_buffer( "HB_TR_SYSOUT", env, sizeof( env ) ) &&
+                      env[ 0 ] != '\0' ) ? 1 : 0;
       }
 
       /* ; */
 
       if( s_flush < 0 )
       {
-         env = hb_getenv( "HB_TR_FLUSH" );
-         if( env != NULL && env[ 0 ] != '\0' )
-            s_flush = 1;
-         else
-            s_flush = 0;
-
-         if( env )
-            hb_xfree( env );
+         s_flush = ( hb_getenv_buffer( "HB_TR_FLUSH", env, sizeof( env ) ) &&
+                     env[ 0 ] != '\0' ) ? 1 : 0;
       }
+
+      /* ; */
+
+      s_enabled = enabled;
    }
 
    return s_level;

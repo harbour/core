@@ -695,6 +695,16 @@ static size_t put_hex( char *buffer, size_t bufsize, size_t size,
    return size;
 }
 
+static int _hb_strnlen( const char * str, int len )
+{
+   int i = 0;
+
+   while( len-- && *str++ )
+      ++i;
+
+   return i;
+}
+
 static size_t put_str( char *buffer, size_t bufsize, size_t size,
                        const char * str, int flags, int width, int precision )
 {
@@ -703,7 +713,7 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    if( precision < 0 )
       precision = ( int ) strlen( str );
    else if( precision > 0 )
-      precision = ( int ) hb_strnlen( str, precision );
+      precision = ( int ) _hb_strnlen( str, precision );
 
    width -= precision;
    if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( width > 0 )
