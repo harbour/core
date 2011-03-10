@@ -56,7 +56,7 @@
 /* ************************************************************************ */
 
 #ifndef HB_MACRO_SUPPORT
-HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
+HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_COMP_CARGO_FUNC_PTR pEval )
 {
    HB_SIZE nLen = 0;
 
@@ -74,7 +74,7 @@ HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR 
    return nLen;
 }
 
-HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval )
+HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_COMP_CARGO2_FUNC_PTR pEval )
 {
    HB_SIZE nLen = 0;
 

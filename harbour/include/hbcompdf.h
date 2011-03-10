@@ -877,13 +877,11 @@ typedef struct _HB_COMP_FUNCS
 
 
 /* Support for traversing of linked list */
-#define HB_CARGO_FUNC( proc )   void proc( HB_COMP_DECL, void *cargo )
-typedef HB_CARGO_FUNC( HB_CARGO_FUNC_ );
-typedef HB_CARGO_FUNC_ *HB_CARGO_FUNC_PTR;
+#define HB_COMP_CARGO_FUNC( proc )   void proc( HB_COMP_DECL, void *cargo )
+typedef HB_COMP_CARGO_FUNC( ( * HB_COMP_CARGO_FUNC_PTR ) );
 
-#define HB_CARGO2_FUNC( proc )  void proc( HB_COMP_DECL, void *cargo, void *dummy )
-typedef HB_CARGO2_FUNC( HB_CARGO2_FUNC_ );
-typedef HB_CARGO2_FUNC_ *HB_CARGO2_FUNC_PTR;
+#define HB_COMP_CARGO2_FUNC( proc )  void proc( HB_COMP_DECL, void *cargo, void *dummy )
+typedef HB_COMP_CARGO2_FUNC( ( * HB_COMP_CARGO2_FUNC_PTR ) );
 
 /* pcode chunks bytes size */
 #define HB_PCODE_CHUNK   100

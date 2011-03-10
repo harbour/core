@@ -269,7 +269,7 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
    HB_SIZE nCount;
    int rc = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%.*s, %s, %" HB_PFS "u)", ( int ) count, s1, s2, count));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%.*s, %.*s, %" HB_PFS "u)", ( int ) count, s1, ( int ) count, s2, count));
 
    for( nCount = 0; nCount < count; nCount++ )
    {

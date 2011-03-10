@@ -72,8 +72,7 @@ HB_EXTERN_BEGIN
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
 #define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE nPCodePos, type cargo )
-typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
-typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
+typedef HB_PCODE_FUNC( ( * HB_PCODE_FUNC_PTR ), HB_VOID_PTR );
 
 extern HB_ISIZ hb_compPCodeSize( PFUNCTION, HB_SIZE );
 extern void hb_compPCodeEval( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
@@ -301,8 +300,8 @@ extern void hb_compCodeBlockRewind( HB_COMP_DECL );                   /* restart
 #endif    /* HB_MACRO_SUPPORT */
 
 
-extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval );
-extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
+extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_COMP_CARGO_FUNC_PTR pEval );
+extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_COMP_CARGO2_FUNC_PTR pEval );
 
 extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const args[] );
 extern void hb_compChkPaths( HB_COMP_DECL );

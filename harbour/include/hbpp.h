@@ -90,43 +90,35 @@ HB_EXTERN_BEGIN
 
 /* function to open included files */
 #define HB_PP_OPEN_FUNC_( func ) int func( void *, char *, HB_BOOL, HB_BOOL, HB_BOOL, HB_PATHNAMES *, HB_BOOL *, FILE **, const char **, HB_SIZE *, HB_BOOL * )
-typedef HB_PP_OPEN_FUNC_( HB_PP_OPEN_FUNC );
-typedef HB_PP_OPEN_FUNC * PHB_PP_OPEN_FUNC;
+typedef HB_PP_OPEN_FUNC_( ( * PHB_PP_OPEN_FUNC ) );
 
 /* function to close included files */
 #define HB_PP_CLOSE_FUNC_( func ) void func( void *, FILE * )
-typedef HB_PP_CLOSE_FUNC_( HB_PP_CLOSE_FUNC );
-typedef HB_PP_CLOSE_FUNC * PHB_PP_CLOSE_FUNC;
+typedef HB_PP_CLOSE_FUNC_( ( * PHB_PP_CLOSE_FUNC ) );
 
 /* function to generate errors */
 #define HB_PP_ERROR_FUNC_( func ) void func( void *, const char * const *, char, int, const char *, const char * )
-typedef HB_PP_ERROR_FUNC_( HB_PP_ERROR_FUNC );
-typedef HB_PP_ERROR_FUNC * PHB_PP_ERROR_FUNC;
+typedef HB_PP_ERROR_FUNC_( ( * PHB_PP_ERROR_FUNC ) );
 
 /* function to redirect stdout messages */
 #define HB_PP_DISP_FUNC_( func ) void func( void *, const char * )
-typedef HB_PP_DISP_FUNC_( HB_PP_DISP_FUNC );
-typedef HB_PP_DISP_FUNC * PHB_PP_DISP_FUNC;
+typedef HB_PP_DISP_FUNC_( ( * PHB_PP_DISP_FUNC ) );
 
 /* function for catching #pragma dump data */
 #define HB_PP_DUMP_FUNC_( func ) void func( void *, char *, HB_SIZE, int )
-typedef HB_PP_DUMP_FUNC_( HB_PP_DUMP_FUNC );
-typedef HB_PP_DUMP_FUNC * PHB_PP_DUMP_FUNC;
+typedef HB_PP_DUMP_FUNC_( ( * PHB_PP_DUMP_FUNC ) );
 
 /* function for catching HB_INLINE(...){...} data */
 #define HB_PP_INLINE_FUNC_( func ) void func( void *, char *, char *, HB_SIZE, int )
-typedef HB_PP_INLINE_FUNC_( HB_PP_INLINE_FUNC );
-typedef HB_PP_INLINE_FUNC * PHB_PP_INLINE_FUNC;
+typedef HB_PP_INLINE_FUNC_( ( * PHB_PP_INLINE_FUNC ) );
 
 /* function for catching #pragma dump data */
 #define HB_PP_SWITCH_FUNC_( func ) HB_BOOL func( void *, const char *, int *, HB_BOOL )
-typedef HB_PP_SWITCH_FUNC_( HB_PP_SWITCH_FUNC );
-typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
+typedef HB_PP_SWITCH_FUNC_( ( * PHB_PP_SWITCH_FUNC ) );
 
 /* function to register included files */
 #define HB_PP_INC_FUNC_( func ) void func( void *, const char * )
-typedef HB_PP_INC_FUNC_( HB_PP_INC_FUNC );
-typedef HB_PP_INC_FUNC * PHB_PP_INC_FUNC;
+typedef HB_PP_INC_FUNC_( ( * PHB_PP_INC_FUNC ) );
 
 
 /* preprocessor tokens */

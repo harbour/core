@@ -217,7 +217,10 @@ typedef struct _HB_SYMB
 } HB_SYMB, * PHB_SYMB;
 
 #define HB_DYNS_FUNC( hbfunc )   HB_BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
-typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
+typedef HB_DYNS_FUNC( ( * PHB_DYNS_FUNC ) );
+
+#define HB_CARGO_FUNC( func )    void func( void *cargo )
+typedef HB_CARGO_FUNC( ( * PHB_CARGO_FUNC ) );
 
 typedef void * ( * PHB_ALLOCUPDT_FUNC )( void *, int );
 

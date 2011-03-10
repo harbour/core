@@ -569,8 +569,7 @@ extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, HB_SIZE nOffset );
 
 /* garbage collector */
 #define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
-typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
+typedef HB_GARBAGE_FUNC( ( * HB_GARBAGE_FUNC_PTR ) );
 
 typedef struct
 {

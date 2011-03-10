@@ -7634,7 +7634,7 @@ static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
    }
 }
 
-static HB_CARGO2_FUNC( hb_compEnumEvalStart )
+static HB_COMP_CARGO2_FUNC( hb_compEnumEvalStart )
 {
    const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
@@ -7678,7 +7678,7 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
    }
 }
 
-static HB_CARGO_FUNC( hb_compEnumEvalEnd )
+static HB_COMP_CARGO_FUNC( hb_compEnumEvalEnd )
 {
    const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
