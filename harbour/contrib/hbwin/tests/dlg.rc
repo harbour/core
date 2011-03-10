@@ -1,0 +1,31 @@
+/*
+ * $Id$
+ */
+
+#include <windows.h>
+#include <commctrl.h>
+#include <richedit.h>
+
+LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
+
+101 DIALOGEX DISCARDABLE 6, 18, 210, 174
+STYLE WS_POPUP|DS_MODALFRAME|DS_CONTEXTHELP|DS_3DLOOK|DS_CENTER|WS_CAPTION|WS_SYSMENU|WS_VISIBLE
+CAPTION "Sample Dialog (Win32 API Demo With Harbour)"
+FONT 8, "Segoe UI", 0, 0, 1
+{
+   CONTROL "", 1003, "Edit", ES_AUTOHSCROLL|WS_BORDER|WS_TABSTOP, 8, 48, 192, 14
+   CONTROL "&Name:", 1002, "Static", WS_GROUP, 8, 36, 75, 10
+   CONTROL "Gender", 1008, "Button", BS_GROUPBOX, 8, 104, 76, 42
+   CONTROL "&Male", 1004, "Button", BS_AUTORADIOBUTTON, 20, 116, 47, 10
+   CONTROL "&Female", 1005, "Button", BS_AUTORADIOBUTTON, 20, 132, 44, 10
+   CONTROL "", 1006, "ComboBox", WS_BORDER|CBS_DROPDOWNLIST|CBS_SORT|CBS_HASSTRINGS|WS_VSCROLL|WS_TABSTOP, 8, 84, 192, 36
+   CONTROL "&Occupation:", 1008, "Static", WS_GROUP, 8, 72, 40, 8
+   CONTROL "Own a &car?", 1007, "Button", BS_AUTOCHECKBOX|WS_TABSTOP, 96, 116, 58, 10
+   CONTROL "Click me!", 4001, "Button", BS_DEFPUSHBUTTON|WS_TABSTOP, 8, 156, 84, 14
+   CONTROL "This example demonstrates how to work with some features of the native Win32 API. The following function displays a dialog created with an external resource editor.", 4002, "Static", SS_CENTER|WS_GROUP, 4, 4, 204, 28
+   CONTROL "&Has children?", 4003, "Button", BS_AUTOCHECKBOX|WS_TABSTOP, 96, 132, 58, 10
+}
+
+LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
+
+1 MANIFEST "dlg.xml"

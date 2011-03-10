@@ -111,6 +111,19 @@
 #define hbwapi_ret_LRESULT( hr )            ( hb_retnint( hr ) )
 #define hbwapi_ret_COLORREF( cr )           ( hb_retnint( cr ) )
 
+#if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
+      defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
+#  ifndef GetWindowLongPtr
+#     define GetWindowLongPtr       GetWindowLong
+#  endif
+#  ifndef SetWindowLongPtr
+#     define SetWindowLongPtr       SetWindowLong
+#  endif
+#  ifndef GWLP_USERDATA
+#     define GWLP_USERDATA          GWL_USERDATA
+#  endif
+#endif
+
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );

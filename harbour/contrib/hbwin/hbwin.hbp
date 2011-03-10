@@ -48,6 +48,7 @@ wapi_wingdi_font.c
 wapi_winnetwk.c
 wapi_winnls.c
 wapi_winuser.c
+wapi_winuser_dlg.c
 wce_simc.c
 wce_smsc.c
 win_bmp.c
