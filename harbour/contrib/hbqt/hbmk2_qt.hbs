@@ -2104,13 +2104,10 @@ METHOD HbQtSource:buildDOC()
    hEntry[ "COMPLIANCE"   ] := "Not Clipper compatible"
    hEntry[ "PLATFORMS"    ] := "Windows, Linux, Mac OS X, OS/2"
    hEntry[ "VERSION"      ] := cQT_VER + " or upper"
-   hEntry[ "FILES"        ] := ""
-   hEntry[ "FILES"        ] += "Harbour source: " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/T" + ::cQtObject + ".prg" + hb_eol()
-   hEntry[ "FILES"        ] += "C++ wrappers  : " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/"  + ::cQtObject + ".cpp" + hb_eol()
-   hEntry[ "FILES"        ] += "Library       : " + "hb" + cLib
+   hEntry[ "FILES"        ] := "Library: " + "hb" + cLib
 #if 0
    hEntry[ "SEEALSO"      ] := ""
-   hEntry[ "SEEALSO"      ] += iif( empty( cInherits ), "", cInherits + "()" )
+   hEntry[ "SEEALSO"      ] += iif( Empty( cInherits ), "", cInherits + "()" )
 #endif
 
    RETURN hb_MemoWrit( ::cDOCFileName, __hbdoc_ToSource( { hEntry } ) )
