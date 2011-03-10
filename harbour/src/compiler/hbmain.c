@@ -71,6 +71,12 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compMain()"));
 
+   if( pBufPtr && pnSize )
+   {
+      * pBufPtr = NULL;
+      * pnSize = 0;
+   }
+
    HB_COMP_PARAM = hb_comp_new();
    HB_COMP_PARAM->cargo = cargo;
 
@@ -159,20 +165,12 @@ int hb_compMainExt( int argc, const char * const argv[],
    if( iStatus == EXIT_SUCCESS )
       hb_compI18nSave( HB_COMP_PARAM, HB_TRUE );
 
-   if( pBufPtr && pnSize )
+   if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
    {
-      if( iStatus == EXIT_SUCCESS )
-      {
-         * pBufPtr = HB_COMP_PARAM->pOutBuf;
-         * pnSize = HB_COMP_PARAM->nOutBufSize;
-         HB_COMP_PARAM->pOutBuf = NULL;
-         HB_COMP_PARAM->nOutBufSize = 0;
-      }
-      else
-      {
-         * pBufPtr = NULL;
-         * pnSize = 0;
-      }
+      * pBufPtr = HB_COMP_PARAM->pOutBuf;
+      * pnSize = HB_COMP_PARAM->nOutBufSize;
+      HB_COMP_PARAM->pOutBuf = NULL;
+      HB_COMP_PARAM->nOutBufSize = 0;
    }
 
    hb_comp_free( HB_COMP_PARAM );
