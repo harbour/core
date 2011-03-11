@@ -1077,7 +1077,7 @@ CREATE CLASS HbQtSource
    METHOD buildMethodBody( oMtd )
    METHOD buildDOC()
    METHOD getMethodBody( oMtd, cMtdName, aMethods, nClsType )
-   METHOD buildClassEx()
+   METHOD normalizeCmd( oMtd, v )
 
 ENDCLASS
 
@@ -1667,6 +1667,24 @@ METHOD HbQtSource:getConstructorW()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbQtSource:normalizeCmd( oMtd, v )
+   LOCAL FP
+
+   IF ! oMtd:isConstructor
+      FP := strtran( oMtd:cCmd, "hbqt_par_" + ::cQtObject + "( 1 )", v, 1, 1 )
+   ELSE
+      FP := oMtd:cCmd
+   ENDIF
+
+   /* Manage Re-Attached */
+   IF oMtd:nAttach > 0
+      FP := strtran( FP, ", false", ", true" )
+   ENDIF
+
+   RETURN FP
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    LOCAL FP, cTmp, n
    LOCAL v, t_
@@ -1725,96 +1743,98 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
 
       /* One line function body */
 // FP: to check, modificare come sopra
-      IF ! oMtd:isConstructor
-         aadd( txt_, "   if( " + v + " )" )
-         aadd( txt_, "   {" )
-         aadd( txt_, "      int pcount = hb_pcount();" )
-      ENDIF
 
-      for i := 1 to len( a_ )
-         IF ! a_[i]:isConstructor
-            // change only the first occurrence of the string, to not change parameters
-            FP := strtran( a_[i]:cCmd, "hbqt_par_" + ::cQtObject + "( 1 )", v, 1, 1 )
-         ELSE
-            FP := oMtd:cCmd
+      IF len( a_ ) == 1 .AND. a_[ 1 ]:nArgs == 0
+         IF ! oMtd:isConstructor
+            FP := ::normalizeCmd( a_[ 1 ], v )
+
+            aadd( txt_, "   if( " + v + " )" )
+            aadd( txt_, "   {" )
+            aadd( txt_, "      " + FP + ";" )
+            aadd( txt_, "   }" )
+         ENDIF
+      ELSE
+         IF ! oMtd:isConstructor
+            aadd( txt_, "   if( " + v + " )" )
+            aadd( txt_, "   {" )
+            aadd( txt_, "      int pcount = hb_pcount();" )
          ENDIF
 
-         /* Manage Re-Attached */
-         IF a_[i]:nAttach > 0
-            FP := strtran( FP, ", false", ", true" )
-         ENDIF
+         FOR i := 1 TO len( a_ )
+            FP := ::normalizeCmd( a_[ i ], v )
 
-         DO CASE
-         CASE a_[i]:nArgs == 0
-            aadd( txt_,"      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
-            aadd( txt_,"      {" )
-            aadd( txt_,"         " + FP + ";" )
-            aadd( txt_,"      }" )
-         OTHERWISE
-
-            t_ := __TY_TYPEScpp( a_[i], a_[i]:nArgsReal ) // return string of checks for real arguments
-
-            if ! empty( t_ )
-               t_ := " && " + t_
-            endif
-
-            for n := a_[i]:nArgsReal+1 to a_[i]:nArgs
-               t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + ")"
-            next
-
-            aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount " + ;
-                iif( a_[i]:nArgsReal == a_[i]:nArgs , "==", "<=" ) + " " + ;
-                 hb_ntos( a_[i]:nArgs ) + t_ + " )" )
-
-            aadd( txt_, "      {" )
-
-            IF ! empty( a_[i]:aPre )
-               FOR n := 1 TO len( a_[i]:aPre )
-                  aadd( txt_, "         " + a_[i]:aPre[ n ][ 1 ] )
-               NEXT
-               aadd( txt_, "" )
-            ENDIF
-
-            /* Manage detached Argument */
-            IF a_[i]:nDetach > 0
-               aadd( txt_, "        hbqt_detachgcpointer( " + hb_ntos( a_[i]:nDetach ) + " );" )
-            ENDIF
-
-            nStrCnt := 0
-            DO WHILE "%%%" $ FP
-               ++nStrCnt
-               FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
-               aadd( txt_, "         void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
-            ENDDO
-
-            IF ! a_[i]:isConstructor
+            DO CASE
+            CASE a_[ i ]:nArgs == 0
+               aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
+               aadd( txt_, "      {" )
                aadd( txt_, "         " + FP + ";" )
-            ELSE
-               aadd( txt_, "      " + FP + ";" )
-            ENDIF
+               aadd( txt_, "      }" )
 
-            FOR q := nStrCnt TO 1 STEP -1
-               aadd( txt_, "         hb_strfree( pText" + StrZero( q, 2, 0 ) + " );" )
-            NEXT
+            OTHERWISE
+               t_ := __TY_TYPEScpp( a_[ i ], a_[ i ]:nArgsReal ) // return string of checks for real arguments
 
-            /* Return values back to PRG */
-            IF ! empty( a_[i]:aPre )
-               aadd( txt_, "" )
-               FOR q := 1 TO len( a_[i]:aPre )
-                  aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
+               IF ! empty( t_ )
+                  t_ := " && " + t_
+               ENDIF
+
+               FOR n := a_[ i ]:nArgsReal + 1 TO a_[ i ]:nArgs
+                  t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + ")"
                NEXT
-            ENDIF
 
-            aadd( txt_, "      }" )
-         ENDCASE
-      NEXT
+               aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount " + ;
+                                      iif( a_[i]:nArgsReal == a_[i]:nArgs , "==", "<=" ) + " " + ;
+                                      hb_ntos( a_[i]:nArgs ) + t_ + " )" )
+
+               aadd( txt_, "      {" )
+
+               IF ! empty( a_[ i ]:aPre )
+                  FOR n := 1 TO len( a_[i]:aPre )
+                     aadd( txt_, "         " + a_[i]:aPre[ n ][ 1 ] )
+                  NEXT
+                  aadd( txt_, "" )
+               ENDIF
+
+               /* Manage detached Argument */
+               IF a_[i]:nDetach > 0
+                  aadd( txt_, "        hbqt_detachgcpointer( " + hb_ntos( a_[i]:nDetach ) + " );" )
+               ENDIF
+
+               nStrCnt := 0
+               DO WHILE "%%%" $ FP
+                  ++nStrCnt
+                  FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
+                  aadd( txt_, "         void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
+               ENDDO
+
+               IF ! a_[i]:isConstructor
+                  aadd( txt_, "         " + FP + ";" )
+               ELSE
+                  aadd( txt_, "      " + FP + ";" )
+               ENDIF
+
+               FOR q := nStrCnt TO 1 STEP -1
+                  aadd( txt_, "         hb_strfree( pText" + StrZero( q, 2, 0 ) + " );" )
+               NEXT
+
+               /* Return values back to PRG */
+               IF ! empty( a_[i]:aPre )
+                  aadd( txt_, "" )
+                  FOR q := 1 TO len( a_[i]:aPre )
+                     aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
+                  NEXT
+               ENDIF
+
+               aadd( txt_, "      }" )
+            ENDCASE
+         NEXT
+         IF empty( oMtd:fBody_ )
+            aadd( txt_, "      else " )
+            aadd( txt_, "         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); " )
+            aadd( txt_, "   }" )
+         ENDIF
+      ENDIF
    ENDIF
 
-   IF empty( oMtd:fBody_ )
-      aadd( txt_, "      else " )
-      aadd( txt_, "         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); " )
-      aadd( txt_, "   }" )
-   ENDIF
    aadd( txt_, "}" )
    aadd( txt_, ""  )
 
@@ -1842,97 +1862,6 @@ METHOD HbQtSource:buildMethodBody( oMtd )
    aadd( ::doc_, "" )
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtSource:buildClassEx()
-   LOCAL aClsEx := {}
-   LOCAL cObj, uObj, cNew, uNew, oMtd
-   LOCAL aBdy
-
-   IF ! ( ::cQtObject $ "QPaintDevice,QWidget" )
-      RETURN aClsEx
-   ENDIF
-
-   cObj := ::cQtObject
-   uObj := upper( cObj )
-   cNew := cObj + "New"
-   uNew := uObj + "NEW"
-
-   aadd( aClsEx, '#include "hbapicls.h"' )
-   aadd( aClsEx, '#include "hbapiitm.h"' )
-   aadd( aClsEx, '#include "hbstack.h"' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'HB_FUNC_EXTERN( ' + uNew + ' );' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'static PHB_ITEM s_p' + cObj + ' = NULL;' )
-   aadd( aClsEx, 'static HB_SYMB  s_sym' + cNew + ' = { "' + uNew + '", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ' + uNew + ' )}, NULL };' )
-   aadd( aClsEx, '' )
-   #if 0
-   aadd( aClsEx, 'HB_FUNC( Q' + uObj + '_' + 'PPTR )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   PHB_ITEM pObj = hb_stackSelfItem();' )
-   aadd( aClsEx, '   hb_retptr( hb_arrayGetPtr( pObj, 1 ) );' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'HB_FUNC( Q' + uObj + '__' + 'PPTR )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   PHB_ITEM pObj = hb_stackSelfItem();' )
-   aadd( aClsEx, '   hb_arraySetPtr( pObj, 1, hb_parptr( 1 ) );' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'static void * hbqt_getqtptr( void )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   PHB_ITEM pObj = hb_stackSelfItem();' )
-   aadd( aClsEx, '   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_arrayGetPtrGC( pObj, 1, hbqt_gcFuncs() );' )
-   aadd( aClsEx, '   if( p && p->ph )' )
-   aadd( aClsEx, '      return p->ph;' )
-   aadd( aClsEx, '   else' )
-   aadd( aClsEx, '      return NULL;' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   #endif
-   FOR EACH oMtd IN ::aMethods
-      aBdy := ::getMethodBody( oMtd, 'Q' + uObj + '_' + upper( oMtd:cHBFunc ), ::aMethods, 1 )
-      aeval( aBdy, {|e| aadd( aClsEx, e ) } )
-   NEXT
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'static HB_USHORT hbqt_' + cObj + 'ClassCreate( void )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   HB_USHORT usClassH = hb_clsCreate( 1, "Q' + uObj + '" );' )
-   aadd( aClsEx, '' )
-   //aadd( aClsEx, '   hb_clsAdd( usClassH, "PPTR", HB_FUNCNAME( Q' + uObj + '_PPTR ) );' )
-   //aadd( aClsEx, '   hb_clsAdd( usClassH, "_PPTR", HB_FUNCNAME( Q' + uObj + '__PPTR ) );' )
-   FOR EACH oMtd IN ::aMethods
-      IF ! empty( oMtd:cHBFunc )
-         aadd( aClsEx, '   hb_clsAdd( usClassH, ' +padr( '"' + oMtd:cHBFunc + '"', 30) +', HB_FUNCNAME( ' + padr( upper( oMtd:cHBFunc ), 30 ) + ' ) );' )
-      ENDIF
-   NEXT
-   aadd( aClsEx, '' )
-   aadd( aClsEx, '   return usClassH;' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'void hbqt_' + cObj + 'Init( void )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   hb_dynsymNew( &s_sym' + cNew + ' );' )
-   aadd( aClsEx, '   s_p' + cObj + ' = hb_itemNew( NULL );' )
-   aadd( aClsEx, '   hb_clsAssociate( hbqt_' + cObj + 'ClassCreate() );' )
-   aadd( aClsEx, '   hb_itemMove( s_p' + cObj + ', hb_stackReturnItem() );' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'PHB_ITEM hbqt_' + cNew + '( void )' )
-   aadd( aClsEx, '{' )
-   aadd( aClsEx, '   if( ! s_p' + cObj + ' || ! HB_IS_OBJECT( s_p' + cObj + ' ) )' )
-   aadd( aClsEx, '      hbqt_errRT_ARG();' )
-   aadd( aClsEx, '   return hb_arrayClone( s_p' + cObj + ' );' )
-   aadd( aClsEx, '}' )
-   aadd( aClsEx, '' )
-   aadd( aClsEx, 'HB_FUNC( ' + uNew + ' )' )
-   aBdy := ::getConstructor( 1 )
-   aeval( aBdy, {|e| aadd( aClsEx, e ) } )
-
-   RETURN aClsEx
 
 /*----------------------------------------------------------------------*/
 
