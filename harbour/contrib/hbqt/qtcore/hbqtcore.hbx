@@ -3,13 +3,11 @@
  */
 
 /* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
 /*          Syntax: // HB_FUNC_INCLUDE <func>                           */
 /*                  // HB_FUNC_EXCLUDE <func>                           */
 /* -------------------------------------------------------------------- */
-
-// HB_FUNC_EXCLUDE QT_*
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */
@@ -34,6 +32,7 @@ DYNAMIC HBQTOBJECTHANDLER
 DYNAMIC HBQT_FINDCHILD
 DYNAMIC HBQT_ISEQUAL
 DYNAMIC HBQT_ISOBJECT
+DYNAMIC HBQT_PROMOTWIDGET
 DYNAMIC HB_HBQEVENTS
 DYNAMIC HB_HBQSLOTS
 DYNAMIC HB_HBQSTRING
@@ -154,6 +153,9 @@ DYNAMIC QTIME
 DYNAMIC QTIMELINE
 DYNAMIC QTIMER
 DYNAMIC QTRANSLATOR
+DYNAMIC QT_QURL_SETQUERYDELIMITERS
+DYNAMIC QT_VERSION
+DYNAMIC QT_VERSION_STR
 DYNAMIC QURL
 DYNAMIC QVARIANT
 DYNAMIC QVERSION

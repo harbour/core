@@ -3,13 +3,11 @@
  */
 
 /* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
 /*          Syntax: // HB_FUNC_INCLUDE <func>                           */
 /*                  // HB_FUNC_EXCLUDE <func>                           */
 /* -------------------------------------------------------------------- */
-
-// HB_FUNC_EXCLUDE QT_*
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */

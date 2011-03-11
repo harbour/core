@@ -214,3 +214,12 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    RETURN .F.
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbqt_promotWidget( oWidget, cWidgetTo )
+   LOCAL oObj := Eval( &( "{|| HB_" + cWidgetTo + "() }" ) )
+
+   oObj:pPtr := oWidget:pPtr
+
+   RETURN oObj
+
+/*----------------------------------------------------------------------*/

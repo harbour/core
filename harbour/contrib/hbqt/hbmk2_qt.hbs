@@ -1049,6 +1049,7 @@ CREATE CLASS HbQtSource
    DATA   code_                                   INIT {}
    DATA   cls_                                    INIT {}
    DATA   new_                                    INIT {}
+   DATA   newW_                                   INIT {}
    DATA   old_                                    INIT {}
    DATA   enums_                                  INIT {}
    DATA   enum_                                   INIT {}
@@ -1078,6 +1079,7 @@ CREATE CLASS HbQtSource
    METHOD parseVariables( cProto )
    METHOD build()
    METHOD getConstructor( nClsType )
+   METHOD getConstructorW()
    METHOD buildCppCode( oMtd )
    METHOD buildMethodBody( oMtd )
    METHOD buildDOC()
@@ -1165,6 +1167,9 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
       ENDIF
    NEXT
    ::code_ := ::old_
+
+   ::newW_:= aClone( ::new_ )
+   ::newW_[ 1 ] := "HB_FUNC( " + upper( ::cQtObject ) + " )"
 
    /* Pullout constructor methods */
    #if 0
@@ -1578,10 +1583,14 @@ METHOD HbQtSource:build()
    aadd( aLine, "}" )
    aadd( aLine, "" )
 
+   /* Build PRG level constructor */
+   aadd( aLine, ::newW_[ 1 ] )           // Func definition
+   aadd( aLine, ::newW_[ 2 ] )           // {
+   aeval( ::getConstructorW(), {|e| aadd( aLine, e ) } )
+
    /* Build the constructor */
    aadd( aLine, ::new_[ 1 ] )           // Func definition
    aadd( aLine, ::new_[ 2 ] )           // {
-
    aeval( ::getConstructor( 0 ), {|e| aadd( aLine, e ) } )
 
    /* Insert Functions */
@@ -1624,13 +1633,7 @@ METHOD HbQtSource:build()
 METHOD HbQtSource:getConstructor( nClsType )
    LOCAL i, s, aLine := {}
 
-
-   IF nClsType == 1
-      aadd( aLine, "   if( s_p" + ::cQtObject + " == NULL )" )
-      aadd( aLine, "      hbqt_" + ::cQtObject + "Init();" )
-      aadd( aLine, "   PHB_ITEM pObject = hbqt_" + ::cQtObject + "New();" )
-      aadd( aLine, "" )
-   ENDIF
+   HB_SYMBOL_UNUSED( nClsType )
 
    IF ::isConstructor
       IF ::isList
@@ -1655,21 +1658,24 @@ METHOD HbQtSource:getConstructor( nClsType )
          ENDIF
       NEXT
       aadd( aLine, " " )
-      IF nClsType == 0
-         aadd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
-      ELSE
-         aadd( aLine, "   hb_arraySetPtrGC( pObject, 1, hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, true ) );" )
-      ENDIF
+      aadd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
    ELSE
       FOR i := 3 TO len( ::new_ ) - 1
           aadd( aLine, ::new_[ i ] )
       NEXT
    ENDIF
-   IF nClsType == 1
-      aadd( aLine, "   hb_itemReturnRelease( pObject );" )
-   ENDIF
    aadd( aLine, ::new_[ len( ::new_ ) ] ) // }
    aadd( aLine, "" )
+
+   RETURN aLine
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:getConstructorW()
+   LOCAL aLine := ::getConstructor( 0 )
+
+   aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hbqt_itemPushReturn", "hbqt_create_objectGC" ) } )
+   aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hb_stackSelfItem()" , '"HB_' + upper( ::cQtObject ) + '"' ) } )
 
    RETURN aLine
 
@@ -1970,12 +1976,12 @@ METHOD HbQtSource:buildClass()
    NEXT
 
    txt_ := hbqtgen_BuildCopyrightText( 1 )
-
+#if 0
    aadd( txt_, "" )
-   aadd( txt_, "FUNCTION " + ::cQtObject + "( ... )" )
+   aadd( txt_, "FUNCTION x" + ::cQtObject + "( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cQtObject + "():new( ... )" )
    aadd( txt_, "" )
-
+#endif
    aadd( txt_, "   "                                        )
    aadd( txt_, "   "                                        )
 
@@ -2009,7 +2015,7 @@ STATIC FUNCTION hbide_paramCheckStrCpp( cType, nArg, cCast )
 
    SWITCH cType
    CASE "PB"
-//    RETURN "( " + "hb_isBlock( hb_pvalue( " + hb_ntos( nArg ) + " ) )" + " .OR. " + "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
+   // RETURN "( " + "hb_isBlock( hb_pvalue( " + hb_ntos( nArg ) + " ) )" + " .OR. " + "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
       RETURN "! HB_ISNIL( " + hb_ntos( nArg ) + " )"
    CASE "P"  //TODO
       RETURN "HB_ISPOINTER( " + hb_ntos( nArg ) + " )"
