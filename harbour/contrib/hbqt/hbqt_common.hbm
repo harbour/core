@@ -33,3 +33,4 @@
 {bsd}-depincpath=qt:/usr/local/include/qt4
 {darwin}-depincpath=qt:/Developer/qt/include
 {darwin}-depincpath=qt:/Library/Frameworks
+{beos}-depincpath=qt:/boot/common/include

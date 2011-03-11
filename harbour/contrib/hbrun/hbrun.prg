@@ -255,10 +255,14 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
             EXIT
          ENDIF
       CASE ".hrb"
-         plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-         IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbrun_plugin" ) )
+         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+            plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+            IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbrun_plugin" ) )
+               plugin[ _PLUGIN_hHRB ] := NIL
+            ENDIF
+         RECOVER
             plugin[ _PLUGIN_hHRB ] := NIL
-         ENDIF
+         END SEQUENCE
          EXIT
       ENDSWITCH
 

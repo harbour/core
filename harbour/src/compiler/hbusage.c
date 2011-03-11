@@ -254,7 +254,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Ross Presser (ross_presser imtek.com)\n"
          "Ryszard Glab (rglab imid.med.pl)\n"
          "Tamas Tevesz (ice extreme.hu)\n"
-         "Teo Fonrouge (teo windtelsoft.dot.com)\n"
+         "Teo Fonrouge (teo windtelsoft.com)\n"
          "Tim Stone (timstone mstrlink.com)\n"
          "Tomaz Zupan (tomaz.zupan orpo.si)\n"
          "Vailton Renato (vailtom gmail.com)\n"
