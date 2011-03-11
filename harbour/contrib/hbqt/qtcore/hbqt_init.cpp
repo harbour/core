@@ -92,6 +92,7 @@ extern void * hbqt_gcAllocate_QDateTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QStringList( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QList( void * pObj, bool bNew );
 HB_EXTERN_END
 
 /*----------------------------------------------------------------------*/
@@ -345,11 +346,7 @@ static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#if 0
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QModelIndexList( new QModelIndexList( ( *reinterpret_cast< QModelIndexList( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QModelIndexList" ) );
-#else
-   hb_vmPushNil();
-#endif
+   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QList( new QList< QModelIndex *>( ( *reinterpret_cast< QList< QModelIndex *> *>( arguments[ 1 ] ) ) ), true ), "hb_QModelIndexList" ) );
    hb_vmSend( 1 );
 }
 
