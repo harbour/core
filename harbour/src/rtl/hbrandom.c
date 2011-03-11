@@ -136,16 +136,7 @@ double hb_random_num()
    }
 
    d1 = ( double ) rand();
-   d2 = ( double ) RAND_MAX;
-#if defined( __BORLANDC__ )
-   /* It seems that on Windows platform there some weirdness about EPSILON value so
-      that a float division using an epsilon smaller than 1e-10 may be rounded.
-      Must dig if it's a borland lib bug or a windows problem.
-    */
-   d2 += 0.001;
-#else
-   d2 += DBL_EPSILON;
-#endif
+   d2 = ( double ) RAND_MAX + 1.0;
 
    return d1 / d2;
 }
