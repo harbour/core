@@ -98,8 +98,8 @@ PROCEDURE Main( ... )
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
 
-#if defined( __PLATFORM__LINUX )
-         IF ! Empty( GetEnvC( "HB_INSTALL_DYN" ) )
+         IF GetEnvC( "HB_PLATFORM" ) $ "linux" .AND. ;
+            ! Empty( GetEnvC( "HB_INSTALL_DYN" ) )
 
             OutStd( "! Creating Linux ld config file..." + hb_eol() )
 
@@ -114,7 +114,6 @@ PROCEDURE Main( ... )
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
          ENDIF
-#endif
       ENDIF
 
       IF ! Empty( GetEnvC( "HB_INSTALL_MAN" ) )
