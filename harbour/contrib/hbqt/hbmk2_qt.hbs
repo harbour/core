@@ -45,8 +45,8 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL tSrc
    LOCAL tDst
 
-   LOCAL cDstCPP, cDstPRG, cDstDOC
-   LOCAL tDstCPP, tDstPRG
+   LOCAL cDstCPP, cDstDOC
+   LOCAL tDstCPP
 
    LOCAL cTmp
    LOCAL cPRG
@@ -135,15 +135,11 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       NEXT
 
       hbmk2[ "vars" ][ "aQTH_CPP" ] := {}
-      hbmk2[ "vars" ][ "aQTH_PRG" ] := {}
       hbmk2[ "vars" ][ "aQTH_DOC" ] := {}
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQTH_Src" ]
          cDst := hbmk2_FNameDirExtSet( hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aQTH_CPP" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
-         cDst := hbmk2_FNameDirExtSet( "T" + hb_FNameName( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
-         AAdd( hbmk2[ "vars" ][ "aQTH_PRG" ], cDst )
-         hbmk2_AddInput_PRG( hbmk2, cDst )
          cDst := hb_PathNormalize( hbmk2_FNameDirExtSet( "class_" + Lower( hb_FNameName( cSrc ) ), hb_FNameDir( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" ) )
          AAdd( hbmk2[ "vars" ][ "aQTH_DOC" ], cDst )
       NEXT
@@ -298,27 +294,29 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          ENDIF
       ENDIF
 
+      EXIT
+
+   CASE "pre_c"
+
       IF ! hbmk2[ "lCLEAN" ] .AND. ;
          ! Empty( hbmk2[ "vars" ][ "aQTH_Src" ] )
 
          IF ! Empty( hbmk2[ "vars" ][ "qtmodule" ] ) .AND. ;
             ! Empty( hbmk2[ "vars" ][ "qtver" ] )
 
-            FOR EACH cSrc, cDstCPP, cDstPRG, cDstDOC IN hbmk2[ "vars" ][ "aQTH_Src" ], hbmk2[ "vars" ][ "aQTH_CPP" ], hbmk2[ "vars" ][ "aQTH_PRG" ], hbmk2[ "vars" ][ "aQTH_DOC" ]
+            FOR EACH cSrc, cDstCPP, cDstDOC IN hbmk2[ "vars" ][ "aQTH_Src" ], hbmk2[ "vars" ][ "aQTH_CPP" ], hbmk2[ "vars" ][ "aQTH_DOC" ]
 
                IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                   lBuildIt := ! hb_FGetDateTime( cDstCPP, @tDstCPP ) .OR. ;
-                              ! hb_FGetDateTime( cDstPRG, @tDstPRG ) .OR. ;
                               ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDstCPP .OR. ;
-                              tSrc > tDstPRG
+                              tSrc > tDstCPP
                ELSE
                   lBuildIt := .T.
                ENDIF
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ! qth_to_src( cSrc, cDstCPP, cDstPRG, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
+                     IF ! qth_to_src( cSrc, cDstCPP, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"
                            EXIT
@@ -332,10 +330,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
             cRetVal := "error"
          ENDIF
       ENDIF
-
-      EXIT
-
-   CASE "pre_c"
 
       IF ! hbmk2[ "lCLEAN" ] .AND. ;
          ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] )
@@ -392,7 +386,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          AEval( hbmk2[ "vars" ][ "aUIC_Dst" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aQTH_CPP" ], {| tmp | FErase( tmp ) } )
-         AEval( hbmk2[ "vars" ][ "aQTH_PRG" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aQTH_DOC" ], {| tmp | FErase( tmp ) } )
       ENDIF
 
@@ -505,7 +498,7 @@ PROCEDURE Main( cSrc )
 
          FOR EACH aFile IN Directory( cSrc )
             cFN := hb_FNameMerge( FNameDirGet( cSrc ), aFile[ F_NAME ] )
-            qth_to_src( cFN, cFN + ".cpp", cFN + ".prg", cFN + ".txt", "QtModule", "0x040500" )
+            qth_to_src( cFN, cFN + ".cpp", cFN + ".txt", "QtModule", "0x040500" )
          NEXT
 
          EXIT
@@ -1015,10 +1008,10 @@ STATIC FUNCTION hbqtui_stripRear( /* @ */ cString, cTkn )
 
 /*======================================================================*/
 
-STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cPRGFileName, cDOCFileName, cQtModule, cQtVer )
+STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule, cQtVer )
    LOCAL oSrc
 
-   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileName, cDOCFileName )
+   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    oSrc:build()
 
    RETURN .T.
@@ -1027,7 +1020,7 @@ STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cPRGFileName, cDOCFileNa
 
 CREATE CLASS HbQtSource
 
-   DATA   cCPPFileName, cPRGFileName, cDOCFileName
+   DATA   cCPPFileName, cDOCFileName
    DATA   hRef
 
    DATA   cQtModule
@@ -1074,7 +1067,7 @@ CREATE CLASS HbQtSource
    DATA   cIntLong                                INIT "qint32,quint32,QRgb"
    DATA   cIntLongLong                            INIT "qint64,quint64,qlonglong,qulonglong,ulong"
 
-   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileName, cDOCFileName )
+   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    METHOD parseProto( cProto, fBody_ )
    METHOD parseVariables( cProto )
    METHOD build()
@@ -1083,7 +1076,6 @@ CREATE CLASS HbQtSource
    METHOD buildCppCode( oMtd )
    METHOD buildMethodBody( oMtd )
    METHOD buildDOC()
-   METHOD buildClass()
    METHOD getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    METHOD buildClassEx()
 
@@ -1091,7 +1083,7 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileName, cDOCFileName )
+METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    LOCAL cQth, s, n, i, n1, b_, tmp, cOrg, fBody_
    LOCAL f
 
@@ -1110,7 +1102,6 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cPRGFileNa
    hb_fNameSplit( cQTHFileName,, @tmp )
 
    ::cCPPFileName := cCPPFileName
-   ::cPRGFileName := cPRGFileName
    ::cDOCFileName := cDOCFileName
 
    ::cQtModule := cQtModule
@@ -1377,7 +1368,6 @@ METHOD HbQtSource:build()
       aadd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
    aadd( aLine, "" )
-   aadd( aLine, "HB_FUNC_EXTERN( " + uQtObject + " );" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
    s := upper( "HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" )  )
@@ -1607,9 +1597,8 @@ METHOD HbQtSource:build()
    NEXT
    aadd( aLine, "}" )
    aadd( aLine, "" )
-   aadd( aLine, "" )
    aadd( aLine, "HB_INIT_SYMBOLS_BEGIN( __HBQT_CLS_" + uQtObject  + "__ )" )
-// aadd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
+   aadd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
    aadd( aLine, '   { "HB_' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( HB_' + uQtObject + ' ) }, NULL }' )
    aadd( aLine, "HB_INIT_SYMBOLS_END( __HBQT_CLS_" + uQtObject + "__ )" )
    aadd( aLine, "" )
@@ -1622,9 +1611,6 @@ METHOD HbQtSource:build()
 
    /* Distribute in specific lib subfolder */
    hbqtgen_CreateTarget( ::cCPPFileName, aLine )
-
-   /* Build CLASS */
-   ::buildClass()
 
    RETURN Self
 
@@ -1947,54 +1933,6 @@ METHOD HbQtSource:buildClassEx()
    aeval( aBdy, {|e| aadd( aClsEx, e ) } )
 
    RETURN aClsEx
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtSource:buildClass()
-   LOCAL cM, cC, oMtd, oArg, cP, txt_:= {}, lClub
-
-   lClub := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "clubmethods" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
-
-   FOR EACH oMtd IN ::aMethods
-      cM := "" ; cC := "::pPtr, "
-      IF oMtd:nArgs > 0
-         FOR EACH oArg IN oMtd:hArgs
-            cP := strtran( strtran( oArg:cDoc, "@" ), "::", "_" )
-            cM += cP + ", "
-            cC += iif( left( cP, 1 ) == "p", "__hbqt_ptr( " + cP + " )", cP ) + ", "
-         NEXT
-      ENDIF
-      cM := alltrim( cM ) ; cM := iif( right( cM,1 ) == ",", substr( cM, 1, len( cM ) - 1 ), cM )
-      cC := allTrim( cC ) ; cC := iif( right( cC,1 ) == ",", substr( cC, 1, len( cC ) - 1 ), cC )
-
-      cM :=                             oMtd:cHBFunc + "(" + iif( empty( cM ), "", " " ) + cM + iif( empty( cM ), "", " " ) + ")"
-      cC := "Qt_" + ::cQtObject + "_" + oMtd:cHBFunc + "(" + iif( empty( cC ), "", " " ) + cC + iif( empty( cC ), "", " " ) + ")"
-
-      oMtd:cMtdDef  := cM
-      oMtd:cMtdCall := cC
-      oMtd:areFuncClubbed := lClub
-   NEXT
-
-   txt_ := hbqtgen_BuildCopyrightText( 1 )
-#if 0
-   aadd( txt_, "" )
-   aadd( txt_, "FUNCTION x" + ::cQtObject + "( ... )" )
-   aadd( txt_, "   RETURN HB_" + ::cQtObject + "():new( ... )" )
-   aadd( txt_, "" )
-#endif
-   aadd( txt_, "   "                                        )
-   aadd( txt_, "   "                                        )
-
-   IF !empty( ::subCls_ )
-      aadd( txt_, ""                                        )
-      aeval( ::subCls_, {|e| aadd( txt_, e ) } )
-      aadd( txt_, ""                                        )
-   ENDIF
-
-   /* Generate .prg */
-   hbqtgen_CreateTarget( ::cPRGFileName, txt_ )
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

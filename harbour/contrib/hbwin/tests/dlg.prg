@@ -62,7 +62,7 @@ FUNCTION DialogFunc( hWnd, message, wParam, lParam, wPHigh, wPLow )
       SWITCH wPLow
       CASE IDC_BUTTON1
          cText := wapi_GetDlgItemText( hWnd, IDC_EDIT1 )
-         wapi_MessageBox( 0, 'Hello [' + cText + ']!' + Chr( 13 ) + 'How are you?', 'Hi!', MB_ICONASTERISK )
+         wapi_MessageBox( 0, "Hello [" + cText + "]!" + Chr( 13 ) + "How are you?", "Hi!", MB_ICONASTERISK )
          RETURN .T.
       ENDSWITCH
    ENDSWITCH

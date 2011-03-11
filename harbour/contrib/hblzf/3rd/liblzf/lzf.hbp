@@ -11,6 +11,7 @@
 
 -warn=low
 -cpp=no
+-pic
 
 # See lzfP.h for more
 -cflag=-DVERY_FAST=1

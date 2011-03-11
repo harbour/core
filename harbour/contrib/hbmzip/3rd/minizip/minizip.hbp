@@ -11,6 +11,7 @@
 
 -warn=low
 -cpp=no
+-pic
 
 ioapi.c
 zip.c

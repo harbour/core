@@ -20,6 +20,7 @@
 
 -warn=low
 -cpp=no
+-pic
 
 -cflag=-DSQLITE_OMIT_DEPRECATED
 -cflag=-DSQLITE_ENABLE_COLUMN_METADATA
