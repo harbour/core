@@ -93,6 +93,8 @@ extern void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QStringList( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QList( void * pObj, bool bNew );
+
+extern void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew );
 HB_EXTERN_END
 
 /*----------------------------------------------------------------------*/
@@ -401,7 +403,7 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QUrl"                    , hbqt_SlotsExecQUrl             );
    hbqt_slots_register_callback( "QObject*"                , hbqt_SlotsExecQObject          );
 
-   hbqt_events_register_createobj( QEvent::Timer                             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Timer           , "hb_QEvent"                    , hbqt_gcAllocate_QEvent );
 }
 
 /*----------------------------------------------------------------------*/

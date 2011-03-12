@@ -73,8 +73,10 @@
 
 static QList<QEvent::Type> s_lstEvent;
 static QList<QByteArray> s_lstCreateObj;
+static QList<PHBQT_EVENT_FUNC> s_pEventAllocateCallback;
 
-void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj )
+
+void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj, PHBQT_EVENT_FUNC pCallback )
 {
    int iIndex = s_lstEvent.indexOf( eventtype );
 
@@ -82,6 +84,7 @@ void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreate
    {
       s_lstEvent << eventtype;
       s_lstCreateObj << szCreateObj.toUpper();
+      s_pEventAllocateCallback << pCallback;
    }
    else
       s_lstCreateObj[ iIndex ] = szCreateObj.toUpper();
@@ -95,6 +98,7 @@ void hbqt_events_unregister_createobj( QEvent::Type eventtype )
    {
       s_lstEvent.removeAt( iIndex );
       s_lstCreateObj.removeAt( iIndex );
+      s_pEventAllocateCallback.removeAt( iIndex );
    }
 }
 
@@ -208,10 +212,15 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       int eventId = s_lstEvent.indexOf( eventtype );
       if( eventId > -1 && hb_vmRequestReenter() )
       {
-         PHB_ITEM pEvent = hbqt_create_object( event, s_lstCreateObj.at( eventId ) );
+         PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( found - 1 );
+         if( pCallback )
+         {
+            PHB_ITEM pEvent = hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) );
 
-         ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
-         hb_itemRelease( pEvent );
+            ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
+
+            hb_itemRelease( pEvent );
+         }
          hb_vmRequestRestore();
 
          if( eventtype == QEvent::Close )

@@ -57,7 +57,7 @@ bool registerResource ( const QString & rccFileName, const QString & mapRoot = Q
       {
          void * pText1 = NULL;
          void * pText2 = NULL;
-         hb_retl( _resource->registerResource( hb_parstr_utf8( 1, &pText1, NULL ), hb_parstr_utf8( 2, &pText2, NULL ) ) ); /* REM A1 */
+         hb_retl( _resource->registerResource( hb_parstr_utf8( 1, &pText1, NULL ), hb_parstr_utf8( 2, &pText2, NULL ) ) );
          hb_strfree( pText1 );
          hb_strfree( pText2 );
       }
@@ -74,7 +74,7 @@ bool registerResource_1 ( const uchar * rccData, const QString & mapRoot = QStri
       if( pcount <= 2 && HB_ISCHAR( 1 ) && ( pcount < 2 || HB_ISCHAR( 2 ) ) )
       {
          void * pText = NULL;
-         hb_retl( _resource->registerResource( ( const uchar * ) hb_parc( 1 ), hb_parstr_utf8( 2, &pText, NULL ) ) ); /* REM A1 */
+         hb_retl( _resource->registerResource( ( const uchar * ) hb_parc( 1 ), hb_parstr_utf8( 2, &pText, NULL ) ) );
          hb_strfree( pText );
       }
       else
@@ -83,8 +83,40 @@ bool registerResource_1 ( const uchar * rccData, const QString & mapRoot = QStri
 }
 
 QStringList searchPaths ()
-bool unregisterResource ( const QString & rccFileName, const QString & mapRoot = QString() )
-bool unregisterResource ( const uchar * rccData, const QString & mapRoot = QString() )
+
+bool unregisterResource ( const QString & rccFileName, const QString & mapRoot = QString() ) {
+   QResource * _resource = ( QResource * ) hbqt_pPtrFromObj( 0 );
+   if( _resource )
+   {
+      int pcount = hb_pcount();
+      if( pcount <= 2 && HB_ISCHAR( 1 ) && ( pcount < 2 || HB_ISCHAR( 2 ) ) )
+      {
+         void * pText1 = NULL;
+         void * pText2 = NULL;
+         hb_retl( _resource->unregisterResource( hb_parstr_utf8( 1, &pText1, NULL ), hb_parstr_utf8( 2, &pText2, NULL ) ) );
+         hb_strfree( pText1 );
+         hb_strfree( pText2 );
+      }
+      else
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
+bool unregisterResource_1 ( const uchar * rccData, const QString & mapRoot = QString() ) {
+   QResource * _resource = ( QResource * ) hbqt_pPtrFromObj( 0 );
+   if( _resource )
+   {
+      int pcount = hb_pcount();
+      if( pcount <= 2 && HB_ISCHAR( 1 ) && ( pcount < 2 || HB_ISCHAR( 2 ) ) )
+      {
+         void * pText = NULL;
+         hb_retl( _resource->unregisterResource( ( const uchar * ) hb_parc( 1 ), hb_parstr_utf8( 2, &pText, NULL ) ) );
+         hb_strfree( pText );
+      }
+      else
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
 </PROTOS>
 
 <SLOTS>

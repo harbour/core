@@ -151,6 +151,7 @@ void * hbqt_gcpointer( int iParam )
 
    if( p && p->ph )
    {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns p->: %p", p->ph ) );
       return p->ph;
    }
    else if( HB_ISPOINTER( iParam ) )

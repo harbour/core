@@ -86,10 +86,11 @@ typedef struct
 } HBQT_GC_T;
 
 typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QStringList pList );
+typedef void * ( * PHBQT_EVENT_FUNC )( void * pObj, bool bNew );
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj );
+extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj, PHBQT_EVENT_FUNC pCallback );
 extern HB_EXPORT void hbqt_events_unregister_createobj( QEvent::Type eventtype );
 extern HB_EXPORT void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback );
 extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
