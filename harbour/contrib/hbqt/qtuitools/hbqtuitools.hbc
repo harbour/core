@@ -13,4 +13,4 @@ libs=../qtgui/hbqtgui.hbc
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {!HB_STATIC_QT}libs=QtUiTools
-{HB_STATIC_QT&(allwin|linux)}libs=QtUiTools
+{HB_STATIC_QT&(allwin|linux|beos)}libs=QtUiTools
