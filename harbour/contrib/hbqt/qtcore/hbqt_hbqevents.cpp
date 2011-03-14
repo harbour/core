@@ -87,7 +87,10 @@ void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreate
       s_pEventAllocateCallback << pCallback;
    }
    else
+   {
       s_lstCreateObj[ iIndex ] = szCreateObj.toUpper();
+      s_pEventAllocateCallback[ iIndex ] = pCallback;
+   }
 }
 
 void hbqt_events_unregister_createobj( QEvent::Type eventtype )
@@ -212,7 +215,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       int eventId = s_lstEvent.indexOf( eventtype );
       if( eventId > -1 && hb_vmRequestReenter() )
       {
-         PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( found - 1 );
+         PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( eventId );
          if( pCallback )
          {
             PHB_ITEM pEvent = hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) );
