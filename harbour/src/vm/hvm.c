@@ -8745,10 +8745,11 @@ HB_BOOL hb_vmRequestReenterExt( void )
 
    if( !s_fHVMActive )
       return HB_FALSE;
-
-#if defined( HB_MT_VM )
+   else
    {
       HB_STACK_TLS_PRELOAD
+
+#if defined( HB_MT_VM )
       HB_USHORT uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
 
       if( uiAction )
@@ -8757,12 +8758,12 @@ HB_BOOL hb_vmRequestReenterExt( void )
          hb_stackPushReturn();
 
       hb_vmPushInteger( uiAction | hb_stackGetActionRequest() );
-   }
 #else
-   hb_stackPushReturn();
-   hb_vmPushInteger( hb_stackGetActionRequest() );
+      hb_stackPushReturn();
+      hb_vmPushInteger( hb_stackGetActionRequest() );
 #endif
-   hb_stackSetActionRequest( 0 );
+      hb_stackSetActionRequest( 0 );
+   }
 
    return HB_TRUE;
 }
