@@ -949,17 +949,12 @@ static const HB_GC_FUNCS s_gcThreadFuncs =
    hb_threadMark
 };
 
-static HB_THREAD_STARTFUNC( hb_threadStartVM )
-{
 #if defined( HB_MT_VM )
-   PHB_ITEM pThItm = ( PHB_ITEM ) Cargo;
+HB_CARGO_FUNC( hb_threadStartVM )
+{
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) cargo;
    HB_ULONG ulPCount, ulParam;
-   PHB_THREADSTATE pThread;
    HB_BOOL fSend = HB_FALSE;
-
-   pThread = ( PHB_THREADSTATE ) hb_itemGetPtrGC( pThItm, &s_gcThreadFuncs );
-
-   hb_vmThreadInit( ( void * ) pThread );
 
    ulPCount = ( HB_ULONG ) hb_arrayLen( pThread->pParams );
    if( ulPCount > 0 )
@@ -1011,6 +1006,16 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 0 );
    }
+}
+
+static HB_THREAD_STARTFUNC( hb_threadStartFunc )
+{
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) Cargo;
+
+   hb_vmThreadInit( ( void * ) pThread );
+
+   /* execute user thread function */
+   pThread->pFunc( pThread->cargo );
 
    /* hb_vmThreadQuit() unlocks and release HVM stack and may release
     * also pThItm item so we should not access any HVM items or
@@ -1027,11 +1032,8 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
    HB_CRITICAL_UNLOCK( s_thread_mtx );
 
    HB_THREAD_END
-#else
-   hb_itemRelease( ( PHB_ITEM ) Cargo );
-   HB_THREAD_RAWEND
-#endif
 }
+#endif
 
 PHB_THREADSTATE hb_threadStateNew( void )
 {
@@ -1060,6 +1062,48 @@ PHB_THREADSTATE hb_threadStateNew( void )
    return pThread;
 }
 
+PHB_THREADSTATE hb_threadStateClone( HB_ULONG ulAttr, PHB_ITEM pParams )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_THREADSTATE pThread = NULL;
+
+   pThread = hb_threadStateNew();
+   if( hb_stackId() != NULL )
+   {
+      pThread->pszCDP    = hb_cdpID();
+      pThread->pszLang   = hb_langID();
+      pThread->pI18N     = hb_i18n_alloc( hb_vmI18N() );
+      pThread->pszDefRDD = hb_stackRDD()->szDefaultRDD;
+      pThread->pSet      = hb_setClone( hb_stackSetStruct() );
+
+      if( ( ulAttr & HB_THREAD_INHERIT_MEMVARS ) != 0 )
+      {
+         int iScope = 0;
+         if( ( ulAttr & HB_THREAD_INHERIT_PUBLIC ) != 0 )
+            iScope |= HB_MV_PUBLIC;
+         if( ( ulAttr & HB_THREAD_INHERIT_PRIVATE ) != 0 )
+            iScope |= HB_MV_PRIVATE;
+         pThread->pMemvars = hb_memvarSaveInArray( iScope,
+                                    ( ulAttr & HB_THREAD_MEMVARS_COPY ) != 0 );
+      }
+      if( pParams && hb_arrayLen( pParams ) > 0 )
+      {
+         /* detach LOCAL variables passed by reference */
+         HB_SIZE nPCount, nParam;
+
+         nPCount = hb_arrayLen( pParams );
+         for( nParam = 1; nParam <= nPCount; ++nParam )
+         {
+            PHB_ITEM pParam = hb_arrayGetItemPtr( pParams, nParam );
+            if( HB_IS_BYREF( pParam ) )
+               hb_memvarDetachLocal( pParam );
+         }
+      }
+      pThread->pParams = pParams;
+   }
+   return pThread;
+}
+
 static PHB_THREADSTATE hb_thParam( int iParam, int iPos )
 {
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE )
@@ -1069,6 +1113,35 @@ static PHB_THREADSTATE hb_thParam( int iParam, int iPos )
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
+}
+
+PHB_ITEM hb_threadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pFunc, void * cargo )
+{
+#if !defined( HB_MT_VM )
+   HB_SYMBOL_UNUSED( ulAttr );
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( cargo );
+   return NULL;
+#else
+   PHB_THREADSTATE pThread;
+   PHB_ITEM pReturn;
+
+   pThread = hb_threadStateClone( ulAttr, NULL );
+   pThread->pFunc = pFunc;
+   pThread->cargo = cargo;
+   pReturn = hb_itemNew( pThread->pThItm );
+
+   if( hb_vmThreadRegister( ( void * ) pThread ) )
+      pThread->th_h = hb_threadCreate( &pThread->th_id, hb_threadStartFunc, ( void * ) pThread );
+
+   if( !pThread->th_h )
+   {
+      hb_vmThreadRelease( pThread );
+      hb_itemRelease( pReturn );
+      pReturn = NULL;
+   }
+   return pReturn;
+#endif
 }
 
 HB_FUNC( HB_THREADSTART )
@@ -1112,75 +1185,59 @@ HB_FUNC( HB_THREADSTART )
 
    if( pStart )
    {
+#if !defined( HB_MT_VM )
       HB_STACK_TLS_PRELOAD
-      PHB_ITEM pReturn;
+      hb_ret();
+#else
+      HB_STACK_TLS_PRELOAD
       PHB_THREADSTATE pThread;
-      HB_ULONG ulPCount, ulParam;
+      PHB_ITEM pReturn, pParams;
+      HB_SIZE nPCount;
 
-      pThread = hb_threadStateNew();
-      pReturn = pThread->pThItm;
+      pParams = hb_arrayBaseParams();
+      nPCount = hb_arrayLen( pParams );
 
-      pThread->pszCDP    = hb_cdpID();
-      pThread->pszLang   = hb_langID();
-      pThread->pI18N     = hb_i18n_alloc( hb_vmI18N() );
-      pThread->pszDefRDD = hb_stackRDD()->szDefaultRDD;
-      pThread->pSet      = hb_setClone( hb_stackSetStruct() );
-      pThread->pParams   = hb_arrayBaseParams();
-
-      ulPCount = ( HB_ULONG ) hb_arrayLen( pThread->pParams );
       /* remove thread attributes */
       if( ulStart > 1 )
       {
-         for( ulParam = 1; ulParam < ulStart; ++ulParam )
-            hb_arrayDel( pThread->pParams, 1 );
-         ulPCount -= ulStart - 1;
-         hb_arraySize( pThread->pParams, ulPCount );
-      }
-      if( HB_IS_STRING( pStart ) && pSymbol )
-         hb_itemPutSymbol( hb_arrayGetItemPtr( pThread->pParams, 1 ), pSymbol );
-      /* detach LOCAL variables passed by reference */
-      for( ulParam = 1; ulParam <= ulPCount; ++ulParam )
-      {
-         PHB_ITEM pParam = hb_arrayGetItemPtr( pThread->pParams, ulParam );
-         if( HB_IS_BYREF( pParam ) )
+         do
          {
-            if( ulParam == 1 )
-               hb_itemCopy( pParam, hb_itemUnRef( pParam ) );
-            else
-               hb_memvarDetachLocal( pParam );
+            hb_arrayDel( pParams, 1 );
+            nPCount--;
          }
+         while( --ulStart > 1 );
+         hb_arraySize( pParams, nPCount );
       }
 
-      if( ( ulAttr & HB_THREAD_INHERIT_MEMVARS ) != 0 )
+      /* update startup item if necessary */
+      if( HB_IS_STRING( pStart ) && pSymbol )
+         hb_itemPutSymbol( hb_arrayGetItemPtr( pParams, 1 ), pSymbol );
+      else
       {
-         int iScope = 0;
-         if( ( ulAttr & HB_THREAD_INHERIT_PUBLIC ) != 0 )
-            iScope |= HB_MV_PUBLIC;
-         if( ( ulAttr & HB_THREAD_INHERIT_PRIVATE ) != 0 )
-            iScope |= HB_MV_PRIVATE;
-         pThread->pMemvars = hb_memvarSaveInArray( iScope,
-                                    ( ulAttr & HB_THREAD_MEMVARS_COPY ) != 0 );
+         PHB_ITEM pParam = hb_arrayGetItemPtr( pParams, 1 );
+         if( HB_IS_BYREF( pParam ) )
+            hb_itemCopy( pParam, hb_itemUnRef( pParam ) );
       }
+
+      pThread = hb_threadStateClone( ulAttr, pParams );
+      pThread->pFunc = hb_threadStartVM;
+      pThread->cargo = pThread;
+      pReturn = pThread->pThItm;
 
       /* make copy of thread pointer item before we pass it to new thread
        * to avoid race condition
        */
       hb_itemReturn( pReturn );
 
-#if defined( HB_MT_VM )
       if( hb_vmThreadRegister( ( void * ) pThread ) )
-#endif
-         pThread->th_h = hb_threadCreate( &pThread->th_id, hb_threadStartVM, ( void * ) pReturn );
+         pThread->th_h = hb_threadCreate( &pThread->th_id, hb_threadStartFunc, ( void * ) pThread );
 
       if( !pThread->th_h )
       {
-#if defined( HB_MT_VM )
          hb_vmThreadRelease( pThread );
-#else
-         hb_itemRelease( pReturn );
-#endif
          hb_ret();
       }
+#endif
    }
    else
    {

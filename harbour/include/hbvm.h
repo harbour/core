@@ -193,6 +193,7 @@ extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM s
 extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send QUIT request to given thread */
 extern HB_EXPORT void     hb_vmWaitForThreads( void ); /* wait for all threads to terminate can be called only by main HVM thread */
 extern HB_EXPORT void     hb_vmTerminateThreads( void ); /* send QUIT request to all threads except current one and wait for their termination, should be called only by main HVM thread */
+extern HB_EXPORT PHB_ITEM hb_vmThreadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pThreadFunc, void * cargo ); /* create new thread with HVM stack */
 extern HB_EXPORT void *   hb_vmThreadState( void );
 
 /* various flags for supported features */

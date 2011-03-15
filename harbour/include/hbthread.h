@@ -410,6 +410,8 @@ typedef struct _HB_THREADSTATE
    void *         pI18N;
    void *         hGT;
    void *         pStackId;
+   void *         cargo;
+   PHB_CARGO_FUNC pFunc;
    HB_BOOL        fActive;
    HB_BOOL        fFinished;
    PHB_ITEM       pParams;
@@ -432,6 +434,8 @@ extern void hb_threadInit( void );
 extern void hb_threadExit( void );
 
 extern PHB_THREADSTATE hb_threadStateNew( void );
+extern PHB_THREADSTATE hb_threadStateClone( HB_ULONG ulAttr, PHB_ITEM pParams );
+extern PHB_ITEM        hb_threadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pFunc, void * cargo );
 
 extern void    hb_threadMutexUnlockAll( void );
 extern void    hb_threadMutexUnsubscribeAll( void );

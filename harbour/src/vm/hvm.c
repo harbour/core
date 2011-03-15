@@ -412,7 +412,17 @@ void hb_vmLock( void ) {}
 void hb_vmUnlock( void ) {}
 HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait ) { HB_SYMBOL_UNUSED( fWait ); return HB_TRUE; }
 void hb_vmResumeThreads( void ) {}
-
+/*
+HB_BOOL hb_vmThreadRegister( void * Cargo ) { HB_SYMBOL_UNUSED( Cargo ); return HB_FALSE; }
+void hb_vmThreadRelease( void * Cargo )
+{
+   PHB_THREADSTATE pState = ( PHB_THREADSTATE ) Cargo;
+   PHB_ITEM pThItm = pState->pThItm;
+   pState->pThItm = NULL;
+   if( pThItm )
+      hb_itemRelease( pThItm );
+}
+*/
 #else
 
 static HB_CRITICAL_NEW( s_vmMtx );
@@ -653,11 +663,11 @@ static void hb_vmStackAdd( PHB_THREADSTATE pState )
       pState->th_no = ++s_threadNo;
 }
 
-static PHB_ITEM hb_vmStackDel( PHB_THREADSTATE pState )
+static PHB_ITEM hb_vmStackDel( PHB_THREADSTATE pState, HB_BOOL fCounter )
 {
    PHB_ITEM pThItm;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel(%p)", pState));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel(%p,%d)", pState, ( int ) fCounter));
 
    pState->fActive = HB_FALSE;
    pState->pStackId = NULL;
@@ -674,6 +684,8 @@ static PHB_ITEM hb_vmStackDel( PHB_THREADSTATE pState )
             s_vmStackLst = NULL;
       }
       pState->pPrev = pState->pNext = NULL;
+      if( fCounter )
+         s_iStackCount--;
    }
 
    /* NOTE: releasing pThItm may force pState freeing if parent
@@ -718,7 +730,7 @@ static void hb_vmStackRelease( void )
    HB_VM_LOCK
 
    fLocked = hb_stackUnlock() == 1;
-   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList() );
+   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList(), HB_FALSE );
 
    HB_VM_UNLOCK
 
@@ -766,8 +778,7 @@ void hb_vmThreadRelease( void * Cargo )
 
    HB_VM_LOCK
 
-   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) Cargo );
-   s_iStackCount--;
+   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) Cargo, HB_TRUE );
    hb_threadCondBroadcast( &s_vmCond );
 
    HB_VM_UNLOCK
@@ -888,6 +899,20 @@ void hb_vmThreadQuitRequest( void * Cargo )
 }
 
 #endif /* HB_MT_VM */
+
+PHB_ITEM hb_vmThreadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pFunc, void * cargo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadStart(%lu,%p,%p)", ulAttr, pFunc, cargo));
+
+#if defined( HB_MT_VM )
+   return hb_threadStart( ulAttr, pFunc, cargo );
+#else
+   HB_SYMBOL_UNUSED( ulAttr );
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( cargo );
+   return NULL;
+#endif /* HB_MT_VM */
+}
 
 void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
 {
@@ -8736,8 +8761,8 @@ HB_BOOL hb_vmRequestReenterExt( void )
 #else
    hb_stackPushReturn();
    hb_vmPushInteger( hb_stackGetActionRequest() );
-   hb_stackSetActionRequest( 0 );
 #endif
+   hb_stackSetActionRequest( 0 );
 
    return HB_TRUE;
 }
