@@ -3458,12 +3458,11 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
    if( !wnd->window )
    {
-      int whiteColor, blackColor;
+      int blackColor;
 
       /* Set standard colors */
       hb_gt_xwc_setPalette( wnd );
 
-      whiteColor = WhitePixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
       blackColor = BlackPixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
       wnd->window = XCreateSimpleWindow( wnd->dpy, DefaultRootWindow( wnd->dpy ),
                               0, 0,

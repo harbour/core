@@ -124,6 +124,7 @@ extern void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QCloseEvent( void * pObj, bool bNew );
 
 HB_EXTERN_END
 
@@ -457,14 +458,14 @@ static void hbqt_registerCallbacks( void )
    hbqt_events_register_createobj( QEvent::KeyRelease                        , "hb_QKeyEvent"                      , hbqt_gcAllocate_QKeyEvent );
    hbqt_events_register_createobj( QEvent::FocusIn                           , "hb_QFocusEvent"                    , hbqt_gcAllocate_QFocusEvent );
    hbqt_events_register_createobj( QEvent::FocusOut                          , "hb_QFocusEvent"                    , hbqt_gcAllocate_QFocusEvent );
-   hbqt_events_register_createobj( QEvent::Enter                             , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
-   hbqt_events_register_createobj( QEvent::Leave                             , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
+   hbqt_events_register_createobj( QEvent::Enter                             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::Leave                             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::Paint                             , "hb_QPaintEvent"                    , hbqt_gcAllocate_QPaintEvent );
    hbqt_events_register_createobj( QEvent::Move                              , "hb_QMoveEvent"                     , hbqt_gcAllocate_QMoveEvent );
    hbqt_events_register_createobj( QEvent::Resize                            , "hb_QResizeEvent"                   , hbqt_gcAllocate_QResizeEvent );
    hbqt_events_register_createobj( QEvent::Show                              , "hb_QShowEvent"                     , hbqt_gcAllocate_QShowEvent );
    hbqt_events_register_createobj( QEvent::Hide                              , "hb_QHideEvent"                     , hbqt_gcAllocate_QHideEvent );
-   hbqt_events_register_createobj( QEvent::Close                             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::Close                             , "hb_QCloseEvent"                    , hbqt_gcAllocate_QCloseEvent );
    hbqt_events_register_createobj( QEvent::ParentChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::WindowActivate                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::WindowDeactivate                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );

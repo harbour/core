@@ -34,6 +34,7 @@ QButtonGroup.qth
 QCalendarWidget.qth
 QCheckBox.qth
 QClipboard.qth
+QCloseEvent.qth
 QColor.qth
 QColorDialog.qth
 QComboBox.qth

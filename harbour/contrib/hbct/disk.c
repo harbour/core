@@ -197,6 +197,7 @@ HB_FUNC( VOLUME )
 {
    HB_BOOL bReturn = HB_FALSE;
 
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    if( ! ct_getsafety() )
    {
       PHB_FNAME fname;
@@ -233,18 +234,19 @@ HB_FUNC( VOLUME )
          if( pszFree )
             hb_xfree( pszFree );
       }
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-      {
-         LPTSTR lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
-         LPTSTR lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
-         bReturn = SetVolumeLabel( lpRoot, lpVolName );
-         if( lpRoot )
-            HB_TCHAR_FREE( lpRoot );
-         if( lpVolName )
-            HB_TCHAR_FREE( lpVolName );
-      }
-#endif
+
+      LPTSTR lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
+      LPTSTR lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
+
+      bReturn = SetVolumeLabel( lpRoot, lpVolName );
+
+      if( lpRoot )
+         HB_TCHAR_FREE( lpRoot );
+
+      if( lpVolName )
+         HB_TCHAR_FREE( lpVolName );
    }
+#endif
    hb_retl( bReturn );
 }
 
