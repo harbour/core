@@ -1056,6 +1056,8 @@ int hb_fsProcessRun( const char * pszFilename,
 {
    HB_FHANDLE hProcess;
 
+   hb_vmUnlock();
+
    iResult = -1;
    hProcess = hb_fsProcessOpen( pszFilename, phStdin, phStdout, phStderr,
                                 fDetach, NULL );
@@ -1199,7 +1201,6 @@ int hb_fsProcessRun( const char * pszFilename,
          if( prfds == NULL && pwfds == NULL )
             break;
 
-         hb_vmUnlock();
          n = select( fdMax + 1, prfds, pwfds, NULL, NULL );
          if( n > 0 )
          {
@@ -1255,7 +1256,6 @@ int hb_fsProcessRun( const char * pszFilename,
                   nErrBuf += ul;
             }
          }
-         hb_vmLock();
       }
 
       if( hStdin != FS_ERROR )
@@ -1274,6 +1274,7 @@ int hb_fsProcessRun( const char * pszFilename,
       HB_SYMBOL_UNUSED( nStdInLen );
 
 #endif
+      hb_vmLock();
    }
 }
 #endif
