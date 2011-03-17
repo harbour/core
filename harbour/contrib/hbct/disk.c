@@ -206,6 +206,8 @@ HB_FUNC( VOLUME )
       char * sVolName = NULL;
       char sRootBuf[ 4 ], sVolNameBuf[ 12 ];
       char * pszFree;
+      LPTSTR lpRoot;
+      LPTSTR lpVolName;
 
       if( hb_parclen( 1 ) > 0 )
       {
@@ -218,6 +220,7 @@ HB_FUNC( VOLUME )
                hb_strncpy( sRootBuf, fname->szPath, sizeof( sRootBuf ) - 1 );
                sRoot = sRootBuf;
             }
+
             if( fname->szName )
             {
                hb_strncpy( sVolNameBuf, fname->szName, sizeof( sVolNameBuf ) - 1 );
@@ -231,12 +234,13 @@ HB_FUNC( VOLUME )
             hb_strncpy( sVolNameBuf, sDiskName, sizeof( sVolNameBuf ) - 1 );
             sVolName = sVolNameBuf;
          }
+
          if( pszFree )
             hb_xfree( pszFree );
       }
 
-      LPTSTR lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
-      LPTSTR lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
+      lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
+      lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
 
       bReturn = SetVolumeLabel( lpRoot, lpVolName );
 
