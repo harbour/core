@@ -218,7 +218,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
          PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( eventId );
          if( pCallback )
          {
-            PHB_ITEM pEvent = hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) );
+            PHB_ITEM pEvent = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
 
             ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
 

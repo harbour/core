@@ -72,7 +72,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
    VAR cargo
 #ifdef HB_EXTENSION
-   VAR shadowed   INIT .F. AS LOGICAL         /* NOTE: This method is a Harbour extension [vszakats] */
+   VAR shadowed   INIT .F. AS LOGICAL         /* NOTE: This property is a Harbour extension [vszakats] */
 #endif
 
    METHOD addItem( oItem )
@@ -224,7 +224,7 @@ METHOD display() CLASS POPUPMENU
 
 #ifdef HB_EXTENSION
       IF ::shadowed
-         hb_Shadow( nTop + 1, nLeft + 1, ::nBottom + 1, ::nRight + 1 )
+         hb_Shadow( nTop, nLeft, ::nBottom, ::nRight )
       ENDIF
 #endif
 
@@ -476,16 +476,30 @@ METHOD open() CLASS POPUPMENU
    IF ( nRight := ::nRight ) < 0
       nRight := nLeft + ::nWidth + 1
    ENDIF
-   IF nRight < 0 .OR. nRight > MaxCol()
-      ::nLeft := MaxCol() - ::nWidth - 1
-      ::nRight := MaxCol()
-      ::nTop++
-      ::nBottom++
+
+#ifdef HB_EXTENSION
+   IF nRight < 0 .OR. nRight > iif( ::shadowed, MaxCol() - 2, MaxCol() )
+      ::nLeft := MaxCol() - ::nWidth - iif( ::shadowed, 3, 1 )
+      ::nRight := iif( ::shadowed, MaxCol() - 2, MaxCol() )
       nLeft := ::nLeft
       nRight := ::nRight
       nTop := ::nTop
       nBottom := ::nBottom
    ENDIF
+   IF ::shadowed
+      nBottom += 1
+      nRight  += 2
+   ENDIF
+#else
+   IF nRight < 0 .OR. nRight > MaxCol()
+      ::nLeft := MaxCol() - ::nWidth - 1
+      ::nRight := MaxCol()
+      nLeft := ::nLeft
+      nRight := ::nRight
+      nTop := ::nTop
+      nBottom := ::nBottom
+   ENDIF
+#endif
 
    ::aSaveScr := { nTop, nLeft, nBottom, nRight, SaveScreen( nTop, nLeft, nBottom, nRight ) }
 

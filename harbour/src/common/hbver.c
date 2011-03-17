@@ -684,6 +684,18 @@ char * hb_verCompiler( void )
    iVerMinor = 0;
    iVerPatch = 0;
 
+#elif defined( __INTEL_COMPILER )
+
+   pszName = "Intel(R) C";
+
+   #if defined( __cplusplus )
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   iVerMajor = __INTEL_COMPILER / 100;
+   iVerMinor = ( __INTEL_COMPILER % 100 ) / 10;
+   iVerPatch = 0;
+
 #elif defined( __ICL )
 
    pszName = "Intel(R) C";
