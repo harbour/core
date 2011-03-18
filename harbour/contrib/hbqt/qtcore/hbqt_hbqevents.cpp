@@ -194,40 +194,42 @@ bool HBQEvents::hbClear()
    return true;
 }
 
+/* DONOT Reformat */
 bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
-   QEvent::Type eventtype = event->type();
-
-   if( ( int ) eventtype == 0 )
-      return false;
-
-   char prop[ 20 ];
-   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
-
-   int found = object->property( prop ).toInt();
-   if( found == 0 )
-      return false;
-
-   bool ret = true;
-
-   if( found <= listBlock.size() )
+   bool ret = false;
+   if( object )
    {
-      int eventId = s_lstEvent.indexOf( eventtype );
-      if( eventId > -1 && hb_vmRequestReenter() )
+      QEvent::Type eventtype = event->type();
+      if( ( int ) eventtype > 0 )
       {
-         PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( eventId );
-         if( pCallback )
+         char prop[ 20 ];
+         hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
+
+         int found = object->property( prop ).toInt();
+         if( found > 0 )
          {
-            PHB_ITEM pEvent = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
-
-            ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pEvent ) );
-
-            hb_itemRelease( pEvent );
+            if( found <= listBlock.size() &&  listBlock.at( found - 1 ) != NULL )
+            {
+               int eventId = s_lstEvent.indexOf( eventtype );
+               if( eventId > -1 )
+               {
+                  PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( eventId );
+                  if( pCallback )
+                  {
+                     if( hb_vmRequestReenter() )
+                     {
+                        ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) ) );
+                        hb_vmRequestRestore();
+                     }
+                  }
+                  if( eventtype == QEvent::Close )
+                  {
+                     event->ignore();
+                  }
+               }
+            }
          }
-         hb_vmRequestRestore();
-
-         if( eventtype == QEvent::Close )
-            event->ignore();
       }
    }
    return ret;

@@ -18,6 +18,7 @@ QBitArray.qth
 QBuffer.qth
 QByteArray.qth
 QChar.qth
+QChildEvent.qth
 QCoreApplication.qth
 QDataStream.qth
 QDate.qth

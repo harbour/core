@@ -25,6 +25,7 @@ QAbstractSlider.qth
 QAbstractSpinBox.qth
 QAbstractTextDocumentLayout.qth
 QAction.qth
+QActionEvent.qth
 QActionGroup.qth
 QApplication.qth
 QBitmap.qth
@@ -62,6 +63,7 @@ QDropEvent.qth
 QErrorMessage.qth
 QFileDialog.qth
 QFileIconProvider.qth
+QFileOpenEvent.qth
 QFileSystemModel.qth
 QFocusEvent.qth
 QFocusFrame.qth
@@ -109,6 +111,7 @@ QHBoxLayout.qth
 QHeaderView.qth
 QHelpEvent.qth
 QHideEvent.qth
+QHoverEvent.qth
 QIcon.qth
 QImage.qth
 QImageReader.qth
@@ -175,6 +178,7 @@ QResizeEvent.qth
 QScrollArea.qth
 QScrollBar.qth
 QSessionManager.qth
+QShortcutEvent.qth
 QShowEvent.qth
 QSizeGrip.qth
 QSizePolicy.qth

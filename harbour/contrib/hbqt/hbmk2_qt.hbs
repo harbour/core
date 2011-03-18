@@ -1451,37 +1451,40 @@ METHOD HbQtSource:build()
          aadd( aLine, "   " )
          aadd( aLine, "   if( p )" )
          aadd( aLine, "   {" )
-         aadd( aLine, "      if( p->bNew && p->ph )" )
+         aadd( aLine, "      if( p->bNew )" )
          aadd( aLine, "      {" )
-         aadd( aLine, "         " + ::cQtObject + " " + iif( ::isList, "< void * >", "" ) + "* ph = p->ph;" )
-         aadd( aLine, "         const QMetaObject * m = ( ph )->metaObject();" )
-         aadd( aLine, '         if( ( QString ) m->className() != ( QString ) "QObject" )' )
-         #ifdef _GEN_TRACE_
+         aadd( aLine, "         if( p->ph )" )
          aadd( aLine, "         {" )
+         #ifdef _GEN_TRACE_
          aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   /.\\   ", ( void * ) p, ( void * ) p->ph ) );' )
          #endif
-         aadd( aLine, "            delete ( p->ph ); " )
+         aadd( aLine, "            delete ( " + ::cQtObject + " * )( p->ph ); " )
          #ifdef _GEN_TRACE_
          aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   \\./   ", ( void * ) p, ( void * ) p->ph ) );' )
+         #endif
          aadd( aLine, "         }" )
+         #ifdef _GEN_TRACE_
          aadd( aLine, "         else" )
          aadd( aLine, "         {" )
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NO__rel_' + ::cQtObject + '          ", ( void * ) p->ph ) );')
+         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     Object already deleted!", ( void * ) p->ph ) );' )
          aadd( aLine, "         }" )
          #endif
          aadd( aLine, "      }" )
          #ifdef _GEN_TRACE_
          aadd( aLine, "      else" )
          aadd( aLine, "      {" )
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     Object already deleted!", ( void * ) p->ph ) );' )
+         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    Object not created with new=true", ( void * ) p->ph ) );' )
          aadd( aLine, "      }" )
          #endif
+
          aadd( aLine, "      p->ph = NULL;" )
+         aadd( aLine, "      p = NULL;" )
          aadd( aLine, "   }" )
+
          #ifdef _GEN_TRACE_
          aadd( aLine, "   else" )
          aadd( aLine, "   {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    Object not created with new=true", ( void * ) p->ph ) );' )
+         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid" ) );' )
          aadd( aLine, "   }" )
          #endif
       ELSE
@@ -1724,7 +1727,8 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
 
    aadd( txt_, "HB_FUNC_STATIC( " + upper( oMtd:cHBFunc ) + " )" )
    aadd( txt_, "{" )
-   aadd( txt_, '      HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject+":"+oMtd:cHBFunc + '" ));' )
+//   aadd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   aadd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
 
    IF !empty( oMtd:fBody_ )
       aeval( oMtd:fBody_, {|e| aadd( txt_, e ) } )
@@ -1756,6 +1760,9 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
             aadd( txt_, "   if( " + v + " )" )
             aadd( txt_, "   {" )
             aadd( txt_, "      " + FP + ";" )
+            IF oMtd:oRet:cCast == "void"
+               aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
+            ENDIF
             aadd( txt_, "   }" )
          ENDIF
       ELSE
@@ -1773,6 +1780,9 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
                aadd( txt_, "      {" )
                aadd( txt_, "         " + FP + ";" )
+               IF oMtd:oRet:cCast == "void"
+                  aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
+               ENDIF
                aadd( txt_, "      }" )
 
             OTHERWISE
@@ -1827,6 +1837,10 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                   FOR q := 1 TO len( a_[i]:aPre )
                      aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
                   NEXT
+               ENDIF
+
+               IF oMtd:oRet:cCast == "void"
+                  aadd( txt_, "         hb_itemReturn( hb_stackSelfItem() );" )
                ENDIF
 
                aadd( txt_, "      }" )

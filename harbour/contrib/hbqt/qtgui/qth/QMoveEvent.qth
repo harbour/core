@@ -14,9 +14,9 @@
 <CLASS>
 QObject  = no
 Inherits = QEvent
-Type     = Core
+Type     = 
 New      = 
-Constructor = no
+Constructor =
 </CLASS>
 
 <CODE>

@@ -100,6 +100,7 @@ extern void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
 
+extern void * hbqt_gcAllocate_QActionEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QDragEnterEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew );
@@ -115,12 +116,14 @@ extern void * hbqt_gcAllocate_QGraphicsSceneResizeEvent( void * pObj, bool bNew 
 extern void * hbqt_gcAllocate_QGraphicsSceneWheelEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QHideEvent( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QHoverEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QInputMethodEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QShortcutEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew );
@@ -359,6 +362,7 @@ HB_FUNC_EXTERN( HB_QTREEWIDGETITEM );
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC_EXTERN( HB_QACTIONEVENT );
 HB_FUNC_EXTERN( HB_QCONTEXTMENUEVENT );
 HB_FUNC_EXTERN( HB_QDRAGENTEREVENT );
 HB_FUNC_EXTERN( HB_QDRAGLEAVEEVENT );
@@ -376,18 +380,21 @@ HB_FUNC_EXTERN( HB_QGRAPHICSSCENERESIZEEVENT );
 HB_FUNC_EXTERN( HB_QGRAPHICSSCENEWHEELEVENT );
 HB_FUNC_EXTERN( HB_QHELPEVENT );
 HB_FUNC_EXTERN( HB_QHIDEEVENT );
+HB_FUNC_EXTERN( HB_QHOVEREVENT );
 HB_FUNC_EXTERN( HB_QINPUTMETHODEVENT );
 HB_FUNC_EXTERN( HB_QKEYEVENT );
 HB_FUNC_EXTERN( HB_QMOUSEEVENT );
 HB_FUNC_EXTERN( HB_QMOVEEVENT );
 HB_FUNC_EXTERN( HB_QPAINTEVENT );
 HB_FUNC_EXTERN( HB_QRESIZEEVENT );
+HB_FUNC_EXTERN( HB_QSHORTCUTEVENT );
 HB_FUNC_EXTERN( HB_QSHOWEVENT );
 HB_FUNC_EXTERN( HB_QWHEELEVENT );
 HB_FUNC_EXTERN( HB_QWINDOWSTATECHANGEEVENT );
 
 void _hbqtgui_force_link_for_event( void )
 {
+   HB_FUNC_EXEC( HB_QACTIONEVENT );
    HB_FUNC_EXEC( HB_QCONTEXTMENUEVENT );
    HB_FUNC_EXEC( HB_QDRAGENTEREVENT );
    HB_FUNC_EXEC( HB_QDRAGLEAVEEVENT );
@@ -405,6 +412,7 @@ void _hbqtgui_force_link_for_event( void )
    HB_FUNC_EXEC( HB_QGRAPHICSSCENEWHEELEVENT );
    HB_FUNC_EXEC( HB_QHELPEVENT );
    HB_FUNC_EXEC( HB_QHIDEEVENT );
+   HB_FUNC_EXEC( HB_QHOVEREVENT );
    HB_FUNC_EXEC( HB_QINPUTMETHODEVENT );
    HB_FUNC_EXEC( HB_QKEYEVENT );
    HB_FUNC_EXEC( HB_QMOUSEEVENT );
@@ -412,6 +420,7 @@ void _hbqtgui_force_link_for_event( void )
    HB_FUNC_EXEC( HB_QPAINTEVENT );
    HB_FUNC_EXEC( HB_QRESIZEEVENT );
    HB_FUNC_EXEC( HB_QSHOWEVENT );
+   HB_FUNC_EXEC( HB_QSHORTCUTEVENT );
    HB_FUNC_EXEC( HB_QWHEELEVENT );
    HB_FUNC_EXEC( HB_QWINDOWSTATECHANGEEVENT );
 
@@ -520,11 +529,11 @@ static void hbqt_registerCallbacks( void )
    hbqt_events_register_createobj( QEvent::ToolTip                           , "hb_QHelpEvent"                     , hbqt_gcAllocate_QHelpEvent );
    hbqt_events_register_createobj( QEvent::WhatsThis                         , "hb_QHelpEvent"                     , hbqt_gcAllocate_QHelpEvent );
    hbqt_events_register_createobj( QEvent::StatusTip                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ActionChanged                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ActionAdded                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ActionRemoved                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::ActionChanged                     , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
+   hbqt_events_register_createobj( QEvent::ActionAdded                       , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
+   hbqt_events_register_createobj( QEvent::ActionRemoved                     , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
    hbqt_events_register_createobj( QEvent::FileOpen                          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Shortcut                          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::Shortcut                          , "hb_QShortcutEvent"                 , hbqt_gcAllocate_QShortcutEvent );
    hbqt_events_register_createobj( QEvent::WhatsThisClicked                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::AccessibilityHelp                 , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::ToolBarChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
@@ -535,9 +544,9 @@ static void hbqt_registerCallbacks( void )
    hbqt_events_register_createobj( QEvent::EnterWhatsThisMode                , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::LeaveWhatsThisMode                , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::ZOrderChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::HoverEnter                        , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::HoverLeave                        , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::HoverMove                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::HoverEnter                        , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
+   hbqt_events_register_createobj( QEvent::HoverLeave                        , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
+   hbqt_events_register_createobj( QEvent::HoverMove                         , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
    hbqt_events_register_createobj( QEvent::AccessibilityDescription          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::ParentAboutToChange               , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
    hbqt_events_register_createobj( QEvent::WinEventAct                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
@@ -584,8 +593,8 @@ static void hbqt_registerCallbacks( void )
 
 static QApplication * s_app = NULL;
 
-static int s_argc;
-static char ** s_argv;
+//static int s_argc;
+//static char ** s_argv;
 
 HB_FUNC_EXTERN( __HBQTCORE );
 
@@ -605,6 +614,9 @@ QApplication * __hbqtgui_app( void )
 
 static void hbqt_lib_init( void * cargo )
 {
+   static int s_argc;
+   static char ** s_argv;
+
    HB_SYMBOL_UNUSED( cargo );
 
    s_argc = hb_cmdargARGC();
@@ -616,6 +628,7 @@ static void hbqt_lib_init( void * cargo )
       hb_errInternal( 11001, "hbqt_lib_init(): HBQTGUI Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
+   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_init %p", s_app ) );
 
    hbqt_registerCallbacks();
 }
@@ -623,6 +636,11 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 0" ) );
+   s_app->exit( 0 );
+   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 1" ) );
+   delete s_app;
+   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 2" ) );
 }
 
 

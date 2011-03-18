@@ -365,12 +365,10 @@ static void hbqt_SlotsExecQObject( PHB_ITEM * codeBlock, void ** arguments, QStr
 /*----------------------------------------------------------------------*/
 
 HB_FUNC_EXTERN( HB_QEVENT );
-// HB_FUNC_EXTERN( QMODELINDEX );
 
 void _hbqtcore_force_link_for_event( void )
 {
    HB_FUNC_EXEC( HB_QEVENT );
-  //  HB_FUNC_EXEC( QMODELINDEX );
 }
 
 static void hbqt_registerCallbacks( void )
