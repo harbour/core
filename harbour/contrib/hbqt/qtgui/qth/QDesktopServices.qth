@@ -15,7 +15,7 @@
 QObject  = no
 Inherits =
 Type     = 
-New      =
+New      = 
 Constructor = no
 </CLASS>
 
@@ -35,7 +35,7 @@ Constructor = no
  */
 HB_FUNC( QT_QDESKTOPSERVICES )
 {
-   //__HB_RETPTRGC__( QDesktopServices() );
+   __HB_RETPTRGC__( NULL );
 }
 </CODE>
 
@@ -45,22 +45,22 @@ enum StandardLocation { DesktopLocation, DocumentsLocation, FontsLocation, Appli
 
 <PROTOS>
 QString displayName ( StandardLocation type ){
-   hb_retstr_utf8( QDesktopServices::displayName( ( QDesktopServices::StandardLocation ) hb_parni( 2 ) ).toUtf8().data() );
+   hb_retstr_utf8( QDesktopServices::displayName( ( QDesktopServices::StandardLocation ) hb_parni( 1 ) ).toUtf8().data() );
 }
 bool openUrl ( const QUrl & url ){
-   hb_retl( QDesktopServices::openUrl( *hbqt_par_QUrl( 2 ) ) );
+   hb_retl( QDesktopServices::openUrl( *hbqt_par_QUrl( 1 ) ) );
 }
 void setUrlHandler ( const QString & scheme, QObject * receiver, const char * method ){
    void * pText;
-   QDesktopServices::setUrlHandler( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) );
+   QDesktopServices::setUrlHandler( hb_parstr_utf8( 1, &pText, NULL ), hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
    hb_strfree( pText );
 }
 QString storageLocation ( StandardLocation type ){
-   hb_retstr_utf8( QDesktopServices::storageLocation( ( QDesktopServices::StandardLocation ) hb_parni( 2 ) ).toUtf8().data() );
+   hb_retstr_utf8( QDesktopServices::storageLocation( ( QDesktopServices::StandardLocation ) hb_parni( 1 ) ).toUtf8().data() );
 }
 void unsetUrlHandler ( const QString & scheme ){
    void * pText;
-   QDesktopServices::unsetUrlHandler( hb_parstr_utf8( 2, &pText, NULL ) );
+   QDesktopServices::unsetUrlHandler( hb_parstr_utf8( 1, &pText, NULL ) );
    hb_strfree( pText );
 }
 </PROTOS>
