@@ -32,6 +32,10 @@ HB_FUNC( QT_QHELPEVENT )
    {
       __HB_RETPTRGC__( new QHelpEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QHelpEvent( *hbqt_par_QHelpEvent( 1 ) ) );
+   }
 }
 </CODE>
 

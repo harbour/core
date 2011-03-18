@@ -40,6 +40,10 @@ HB_FUNC( QT_QCONTEXTMENUEVENT )
    {
       __HB_RETPTRGC__( new QContextMenuEvent( ( QContextMenuEvent::Reason ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ), ( Qt::KeyboardModifiers ) hb_parni( 4 ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QContextMenuEvent( *hbqt_par_QContextMenuEvent( 1 ) ) );
+   }
 }
 </CODE>
 

@@ -28,7 +28,14 @@ New      =
  */
 HB_FUNC( QT_QINPUTEVENT )
 {
-   __HB_RETPTRGC__( new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      __HB_RETPTRGC__( new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QInputEvent( *hbqt_par_QInputEvent( 1 ) ) );
+   }
 }
 </CODE>
 

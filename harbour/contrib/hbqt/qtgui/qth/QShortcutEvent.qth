@@ -75,6 +75,10 @@ HB_FUNC( QT_QSHORTCUTEVENT )
    {
       __HB_RETPTRGC__( new QShortcutEvent( *hbqt_par_QKeySequence( 1 ), hb_parni( 2 ), (  HB_ISLOG( 3 ) ? hb_parl( 3 ) : false ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QShortcutEvent( *hbqt_par_QShortcutEvent( 1 ) ) );
+   }
 }
 </CODE>
 

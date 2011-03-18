@@ -74,6 +74,10 @@ HB_FUNC( QT_QHOVEREVENT )
    {
       __HB_RETPTRGC__( new QHoverEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QHoverEvent( *hbqt_par_QHoverEvent( 1 ) ) );
+   }
 }
 </CODE>
 

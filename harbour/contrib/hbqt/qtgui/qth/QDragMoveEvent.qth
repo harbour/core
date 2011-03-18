@@ -33,6 +33,10 @@ HB_FUNC( QT_QDRAGMOVEEVENT )
    {
       __HB_RETPTRGC__( new QDragMoveEvent( *hbqt_par_QPoint( 1 ), ( Qt::DropActions ) hb_parni( 2 ), hbqt_par_QMimeData( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ), ( QEvent::Type ) ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : QEvent::DragMove ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QDragMoveEvent( *hbqt_par_QDragMoveEvent( 1 ) ) );
+   }
 }
 </CODE>
 

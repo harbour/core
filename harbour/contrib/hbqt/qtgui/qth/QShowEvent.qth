@@ -28,7 +28,14 @@ Constructor =
  */
 HB_FUNC( QT_QSHOWEVENT )
 {
-   __HB_RETPTRGC__( new QShowEvent() );
+   if( hb_pcount() == 0 )
+   {
+      __HB_RETPTRGC__( new QShowEvent() );
+   }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QShowEvent( *hbqt_par_QShowEvent( 1 ) ) );
+   }
 }
 </CODE>
 

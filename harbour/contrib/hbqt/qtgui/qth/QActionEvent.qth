@@ -74,6 +74,10 @@ HB_FUNC( QT_QACTIONEVENT )
    {
       __HB_RETPTRGC__( new QActionEvent( hb_parni( 1 ), hbqt_par_QAction( 2 ), ( HB_ISOBJECT( 3 ) ? hbqt_par_QAction( 3 ) : 0 ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QActionEvent( *hbqt_par_QActionEvent( 1 ) ) );
+   }
 }
 </CODE>
 

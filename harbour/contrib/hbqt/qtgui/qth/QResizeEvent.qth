@@ -14,7 +14,7 @@
 <CLASS>
 QObject  = no
 Inherits = QEvent
-Type     = Core
+Type     = 
 New      = 
 Constructor =
 </CLASS>
@@ -31,6 +31,10 @@ HB_FUNC( QT_QRESIZEEVENT )
    if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
    {
       __HB_RETPTRGC__( new QResizeEvent( *hbqt_par_QSize( 1 ), *hbqt_par_QSize( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QResizeEvent( *hbqt_par_QResizeEvent( 1 ) ) );
    }
 }
 </CODE>

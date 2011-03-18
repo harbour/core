@@ -32,6 +32,10 @@ HB_FUNC( QT_QFOCUSEVENT )
    {
       __HB_RETPTRGC__( new QFocusEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::FocusReason ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::OtherFocusReason ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QFocusEvent( *hbqt_par_QFocusEvent( 1 ) ) );
+   }
 }
 </CODE>
 
