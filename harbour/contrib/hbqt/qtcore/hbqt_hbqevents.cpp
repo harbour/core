@@ -295,9 +295,11 @@ HB_FUNC( __HBQT_EVENTS_DISCONNECT )
          {
             object->setProperty( prop, QVariant() );
 
-            hb_itemRelease( t_events->listBlock.at( i - 1 ) );
-            t_events->listBlock[ i - 1 ] = NULL;
-
+            if( t_events->listBlock[ i - 1 ] != NULL )
+            {
+               hb_itemRelease( t_events->listBlock.at( i - 1 ) );
+               t_events->listBlock[ i - 1 ] = NULL;
+            }
             nResult = 0;
 
             HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", type ) );

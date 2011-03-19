@@ -129,6 +129,8 @@ STATIC FUNCTION HBQEventsFromPointer( ... )
    NEXT
    RETURN HB_HBQEvents():fromPointer( ... )
 
+/*----------------------------------------------------------------------*/
+
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 

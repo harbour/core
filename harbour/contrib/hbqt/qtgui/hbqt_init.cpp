@@ -628,7 +628,7 @@ static void hbqt_lib_init( void * cargo )
       hb_errInternal( 11001, "hbqt_lib_init(): HBQTGUI Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_init %p", s_app ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_init %p", s_app ) );
 
    hbqt_registerCallbacks();
 }
@@ -636,11 +636,6 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 0" ) );
-   s_app->exit( 0 );
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 1" ) );
-   delete s_app;
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit 2" ) );
 }
 
 

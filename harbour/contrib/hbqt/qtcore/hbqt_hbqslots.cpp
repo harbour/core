@@ -315,9 +315,11 @@ HB_FUNC( __HBQT_SLOTS_DISCONNECT )
             else
                nResult = 4;
 
-            hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
-
-            t_slots->listBlock[ i - 1 ] = NULL;
+            if( t_slots->listBlock.at( i - 1 ) != NULL )
+            {
+               hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
+               t_slots->listBlock[ i - 1 ] = NULL;
+            }
          }
          else
             nResult = 3;
