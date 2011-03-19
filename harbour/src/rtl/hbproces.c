@@ -318,7 +318,7 @@ static int hb_fsProcessExec( const char * pszFilename,
             if( iMaxFD < 3 )
                iMaxFD = 1024;
             for( i = 3; i < iMaxFD; ++i )
-               close( i );
+               hb_fsClose( i );
          }
          /* reset extended process attributes */
          setuid( getuid() );
@@ -422,18 +422,30 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
    sa.bInheritHandle = HB_TRUE;
 
    if( phStdin != NULL )
-      fError = !CreatePipe( &hPipes[0], &hPipes[1], &sa, 0 );
+   {
+      fError = !CreatePipe( &hPipes[ 0 ], &hPipes[ 1 ], &sa, 0 );
+      if( !fError )
+         SetHandleInformation( hPipes[ 1 ], HANDLE_FLAG_INHERIT, 0 );
+   }
    if( !fError && phStdout != NULL )
-      fError = !CreatePipe( &hPipes[2], &hPipes[3], &sa, 0 );
+   {
+      fError = !CreatePipe( &hPipes[ 2 ], &hPipes[ 3 ], &sa, 0 );
+      if( !fError )
+         SetHandleInformation( hPipes[ 2 ], HANDLE_FLAG_INHERIT, 0 );
+   }
    if( !fError && phStderr != NULL )
    {
       if( phStdout == phStderr )
       {
-         hPipes[4] = hPipes[2];
-         hPipes[5] = hPipes[3];
+         hPipes[ 4 ] = hPipes[ 2 ];
+         hPipes[ 5 ] = hPipes[ 3 ];
       }
       else
-         fError = CreatePipe( &hPipes[4], &hPipes[5], &sa, 0 ) ? HB_FALSE : HB_TRUE;
+      {
+         fError = !CreatePipe( &hPipes[ 4 ], &hPipes[ 5 ], &sa, 0 );
+         if( !fError )
+            SetHandleInformation( hPipes[ 4 ], HANDLE_FLAG_INHERIT, 0 );
+      }
    }
 
    if( fError )
@@ -515,7 +527,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          CloseHandle( hPipes[ i ] );
    }
 }
-#elif defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+#elif defined( HB_OS_UNIX ) && \
+      !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
 {
    HB_BOOL fError = HB_FALSE;
    HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },
@@ -578,15 +591,25 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
                dup2( hNull, 2 );
 
             if( hNull != FS_ERROR )
-               close( hNull );
+               hb_fsClose( hNull );
          }
 
          if( phStdin != NULL )
+         {
             dup2( hPipeIn[ 0 ], 0 );
+            hb_fsClose( hPipeIn[ 1 ] );
+         }
          if( phStdout != NULL )
+         {
             dup2( hPipeOut[ 1 ], 1 );
+            hb_fsClose( hPipeOut[ 0 ] );
+         }
          if( phStderr != NULL )
+         {
             dup2( hPipeErr[ 1 ], 2 );
+            if( phStdout != phStderr )
+               hb_fsClose( hPipeErr[ 0 ] );
+         }
 
          /* close all non std* handles */
          {
@@ -595,7 +618,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
             if( iMaxFD < 3 )
                iMaxFD = 1024;
             for( i = 3; i < iMaxFD; ++i )
-               close( i );
+               hb_fsClose( i );
          }
 
          /* reset extended process attributes */
@@ -631,19 +654,19 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
    hb_fsSetIOError( !fError, 0 );
 
    if( hPipeIn[ 0 ] != FS_ERROR )
-      close( hPipeIn[ 0 ] );
+      hb_fsClose( hPipeIn[ 0 ] );
    if( hPipeIn[ 1 ] != FS_ERROR )
-      close( hPipeIn[ 1 ] );
+      hb_fsClose( hPipeIn[ 1 ] );
    if( hPipeOut[ 0 ] != FS_ERROR )
-      close( hPipeOut[ 0 ] );
+      hb_fsClose( hPipeOut[ 0 ] );
    if( hPipeOut[ 1 ] != FS_ERROR )
-      close( hPipeOut[ 1 ] );
+      hb_fsClose( hPipeOut[ 1 ] );
    if( phStdout != phStderr )
    {
       if( hPipeErr[ 0 ] != FS_ERROR )
-         close( hPipeErr[ 0 ] );
+         hb_fsClose( hPipeErr[ 0 ] );
       if( hPipeErr[ 1 ] != FS_ERROR )
-         close( hPipeErr[ 1 ] );
+         hb_fsClose( hPipeErr[ 1 ] );
    }
 }
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
@@ -916,6 +939,8 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
       if( TerminateProcess( hProc, fGentle ? 0 : 1 ) )
          fResult = HB_TRUE;
       hb_fsSetIOError( fResult, 0 );
+      /* hProc has to be closed by hb_fsProcessValue() */
+      /* CloseHandle( hProc ); */
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -1155,6 +1180,8 @@ int hb_fsProcessRun( const char * pszFilename,
          hb_fsClose( hStdout );
       if( hStderr != FS_ERROR )
          hb_fsClose( hStderr );
+
+      CloseHandle( ( HANDLE ) hb_fsGetOsHandle( hProcess ) );
 
 #elif defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN )
 

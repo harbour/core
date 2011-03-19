@@ -120,6 +120,9 @@
       #include <sys/time.h>
    #endif
 #endif
+#if !defined( HB_OS_WIN )
+#  include <errno.h>
+#endif
 
 #if ( defined( __DMC__ ) || defined( __BORLANDC__ ) || \
       defined( __IBMCPP__ ) || defined( _MSC_VER ) || \
@@ -369,7 +372,10 @@ static void fs_win_set_drive( int iDrive )
 
 static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
 {
-   if( fHandle == ( HB_FHANDLE ) HB_STDIN_HANDLE )
+   if( fHandle == ( HB_FHANDLE ) FS_ERROR )
+      return NULL;
+
+   else if( fHandle == ( HB_FHANDLE ) HB_STDIN_HANDLE )
       return GetStdHandle( STD_INPUT_HANDLE );
 
    else if( fHandle == ( HB_FHANDLE ) HB_STDOUT_HANDLE )
@@ -654,12 +660,12 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
             {
                if( fRead )
                {
-                  close( hPipeHandle[ 1 ] );
+                  hb_fsClose( hPipeHandle[ 1 ] );
                   hFileHandle = hPipeHandle[ 0 ];
                }
                else
                {
-                  close( hPipeHandle[ 0 ] );
+                  hb_fsClose( hPipeHandle[ 0 ] );
                   hFileHandle = hPipeHandle[ 1 ];
                }
             }
@@ -673,14 +679,14 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                hNullHandle = open( "/dev/null", O_RDWR );
                if( fRead )
                {
-                  close( hPipeHandle[ 0 ] );
+                  hb_fsClose( hPipeHandle[ 0 ] );
                   dup2( hPipeHandle[ 1 ], 1 );
                   dup2( hNullHandle, 0 );
                   dup2( hNullHandle, 2 );
                }
                else
                {
-                  close( hPipeHandle[ 1 ] );
+                  hb_fsClose( hPipeHandle[ 1 ] );
                   dup2( hPipeHandle[ 0 ], 0 );
                   dup2( hNullHandle, 1 );
                   dup2( hNullHandle, 2 );
@@ -689,7 +695,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                if( iMaxFD < 3 )
                   iMaxFD = 1024;
                for( hNullHandle = 3; hNullHandle < iMaxFD; ++hNullHandle )
-                  close( hNullHandle );
+                  hb_fsClose( hNullHandle );
                setuid( getuid() );
                setgid( getgid() );
 #if defined( __WATCOMC__ )
@@ -702,8 +708,8 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
          }
          else
          {
-            close( hPipeHandle[ 0 ] );
-            close( hPipeHandle[ 1 ] );
+            hb_fsClose( hPipeHandle[ 0 ] );
+            hb_fsClose( hPipeHandle[ 1 ] );
          }
       }
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
@@ -898,7 +904,21 @@ void hb_fsClose( HB_FHANDLE hFileHandle )
 #if defined( HB_OS_WIN )
    hb_fsSetIOError( CloseHandle( DosToWinHandle( hFileHandle ) ) != 0, 0 );
 #else
-   hb_fsSetIOError( close( hFileHandle ) == 0, 0 );
+   {
+      int ret;
+#  if defined( EINTR )
+      /* ignoring EINTR in close() it's quite common bug when sockets or
+       * pipes are used. Without such protection it's not safe to use
+       * signals in user code.
+       */
+      do
+         ret = close( hFileHandle );
+      while( ret == -1 && errno == EINTR );
+#  else
+      ret = close( hFileHandle );
+#  endif
+      hb_fsSetIOError( ret == 0, 0 );
+   }
 #endif
    hb_vmLock();
 }
