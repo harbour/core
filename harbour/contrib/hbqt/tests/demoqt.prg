@@ -73,28 +73,12 @@
 
 #include "common.ch"
 
-
-STATIC s_qApp
-
 STATIC oSys, oMenuSys, oActShow, oActHide
 
 /*----------------------------------------------------------------------*/
 
-INIT PROCEDURE Qt_Start()
-
-   hbqt_errorsys()
-
-   s_qApp := QApplication()
-   RETURN
-
-EXIT PROCEDURE Qt_End()
-   s_qApp:quit()
-   RETURN
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION My_Events()
-   HB_TRACE( HB_TR_ALWAYS, "Key Pressed" )
+FUNCTION My_Events( e )
+   HB_TRACE( HB_TR_ALWAYS, "Key Pressed", e:key() )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -102,6 +86,8 @@ FUNCTION My_Events()
 PROCEDURE Main()
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList
+
+   hbqt_errorsys()
 
    oWnd := QMainWindow()
    oWnd:show()
@@ -130,10 +116,10 @@ PROCEDURE Main()
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
    oWnd:connect(  6, {|e| My_Events( e ) } )
-   oWnd:connect( 19, {|| s_qApp:quit() } )
+   oWnd:connect( 19, {|| QApplication():quit() } )
    oWnd:Show()
 
-   s_qApp:exec()
+   QApplication():exec()
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
@@ -235,7 +221,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu1:addSeparator()
 
    oActExit := oMenu1:addAction( "E&xit" )
-   oActExit:connect( "triggered(bool)", {|| s_qApp:quit() } )
+   oActExit:connect( "triggered(bool)", {|| QApplication():quit() } )
 
    oMenuBar:addMenu( oMenu1 )
 

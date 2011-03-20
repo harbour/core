@@ -705,8 +705,9 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    AAdd( aLinesPRG, "   LOCAL hWidget := { => }" )
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   hb_hCaseMatch( hWidget, .F. )" )
+   AAdd( aLinesPRG, "   hb_hKeepOrder( hWidget, .T. )" )
    AAdd( aLinesPRG, "" )
-
+   
    SWITCH cMCls
    CASE "QDialog"
       AAdd( aLinesPRG, "   oRootWidget := QDialog( qParent )" )
@@ -1565,6 +1566,7 @@ METHOD HbQtSource:build()
    aadd( aLine, "   if( s_oClass == NULL )" )
    aadd( aLine, "   {" )
    aadd( aLine, "      s_oClass = hb_itemNew( NULL );" )
+   aadd( aLine, "      hbqt_addDeleteList( s_oClass );" )
    FOR EACH k IN hb_aTokens( s, "," )
       aadd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
    NEXT

@@ -118,6 +118,7 @@ HBQSlots::~HBQSlots()
    {
       if( listBlock[ i ] != NULL )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "      HBQSlots::~HBQSlots() %d", i ) );
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
       }
@@ -125,7 +126,7 @@ HBQSlots::~HBQSlots()
    /* QUESTION: Should there be all remaining active slots disconnected at this point? */
 
    /* Should be disconnected, but this is a responsibility of programmer as object is only known to the application */
-   listBlock.clear();
+   //listBlock.clear();
 }
 
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )

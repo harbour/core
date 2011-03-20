@@ -157,7 +157,8 @@ void * hbqt_gcpointer( int iParam )
    else if( HB_ISPOINTER( iParam ) )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns RAW pointer: %p", hb_parptr( iParam ) ) );
-      return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
+      return NULL;
+      //return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
    }
    else if( HB_ISOBJECT( iParam ) )
    {
@@ -166,7 +167,8 @@ void * hbqt_gcpointer( int iParam )
       hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
       hb_vmPush( pObj );
       hb_vmSend( 0 );
-      return hbqt_gcpointer( -1 );
+      void * ptr = hbqt_gcpointer( -1 );
+      return ptr;
    }
    else
    {
@@ -184,8 +186,8 @@ void * hbqt_pPtrFromObj( int iParam )
 
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj( %d )", iParam ) );
 
-    if( ! s_pDyns_hPPtrAssign )
-       s_pDyns_hPPtrAssign = hb_dynsymGetCase( "PPTR" );
+   if( ! s_pDyns_hPPtrAssign )
+      s_pDyns_hPPtrAssign = hb_dynsymGetCase( "PPTR" );
 
    pObj = hb_param( iParam, HB_IT_ANY );
 
@@ -418,9 +420,8 @@ HB_FUNC( HBQT_ISEQUAL )
 
 HB_FUNC( __HBQT_ERROR )
 {
-   PHB_ITEM pError = hb_errRT_New( ES_ERROR, "HBQT", EG_ARG, hb_parnidef( 1, 1001 ), NULL, NULL, 0, EF_NONE );
-   hb_errLaunch( pError );
-   hb_itemRelease( pError );
+   HB_TRACE( HB_TR_ALWAYS, ( "In __HBQT_ERROR" ));
+   hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HBQT_SETUTF8 )

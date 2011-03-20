@@ -121,11 +121,14 @@ HBQEvents::~HBQEvents()
    {
       if( listBlock[ i ] != NULL )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::~HBQEvents() %d", i ) );
+
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
+
+         HB_TRACE( HB_TR_DEBUG, ( "                            X" ) );
       }
    }
-   listBlock.clear();
 }
 
 bool HBQEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
@@ -194,15 +197,18 @@ bool HBQEvents::hbClear()
    return true;
 }
 
-/* DONOT Reformat */
+/* DO NOT Reformat */
 bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
-   bool ret = false;
    if( object )
    {
       QEvent::Type eventtype = event->type();
       if( ( int ) eventtype > 0 )
       {
+         if( eventtype == QEvent::Close )
+         {
+             event->ignore();
+         }
          char prop[ 20 ];
          hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
 
@@ -219,20 +225,16 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                   {
                      if( hb_vmRequestReenter() )
                      {
-                        ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) ) );
+                        hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
                         hb_vmRequestRestore();
                      }
-                  }
-                  if( eventtype == QEvent::Close )
-                  {
-                     event->ignore();
                   }
                }
             }
          }
       }
    }
-   return ret;
+   return false;
 }
 
 HB_FUNC( __HBQT_EVENTS_CONNECT )
@@ -297,8 +299,10 @@ HB_FUNC( __HBQT_EVENTS_DISCONNECT )
 
             if( t_events->listBlock[ i - 1 ] != NULL )
             {
+               HB_TRACE( HB_TR_ALWAYS, ( "           __HBQT_EVENTS_DISCONNECT %d=", i-1 ) );
                hb_itemRelease( t_events->listBlock.at( i - 1 ) );
                t_events->listBlock[ i - 1 ] = NULL;
+               HB_TRACE( HB_TR_ALWAYS, ( "                                    X=" ) );
             }
             nResult = 0;
 
@@ -320,5 +324,40 @@ HB_FUNC( __HBQT_EVENTS_NEW )
 {
    hb_retptrGC( hbqt_gcAllocate_HBQEvents( ( HBQEvents * ) new HBQEvents(), true ) );
 }
+
+static void hbqt_events_init( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+}
+
+static void hbqt_events_exit( void * cargo )
+{
+   int i;
+   int iItems = s_lstCreateObj.size();
+   HB_TRACE( HB_TR_DEBUG, ( "ENTERING hbqt_events_exit, len=%d", s_lstCreateObj.size() ) );
+
+   for( i = 0; i < iItems; i++ )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_events_exit, deleting item %d", i ));
+      s_lstEvent.removeAt( 0 );
+      s_lstCreateObj.removeAt( 0 );
+      s_pEventAllocateCallback.removeAt( 0 );
+   }
+
+   HB_TRACE( HB_TR_DEBUG, ( "EXITING hbqt_events_exit, len=%d", s_lstCreateObj.size() ) );
+   HB_SYMBOL_UNUSED( cargo );
+}
+
+HB_CALL_ON_STARTUP_BEGIN( _hbqtevents_init_ )
+   hb_vmAtInit( hbqt_events_init, NULL );
+   hb_vmAtExit( hbqt_events_exit, NULL );
+HB_CALL_ON_STARTUP_END( _hbqtevents_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hbqtevents_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqtevents_init_ )
+   #include "hbiniseg.h"
+#endif
 
 #endif

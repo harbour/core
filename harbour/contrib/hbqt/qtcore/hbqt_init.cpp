@@ -57,6 +57,7 @@
 #include "hbqt.h"
 #include "hbqtinit.h"
 
+#include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbinit.h"
 #include "hbstack.h"
@@ -408,6 +409,14 @@ static void hbqt_registerCallbacks( void )
 
 HB_FUNC( __HBQTCORE ) {;}
 
+static QList<PHB_ITEM> s_PHB_ITEM_tobedeleted;
+
+void hbqt_addDeleteList( PHB_ITEM item )
+{
+   s_PHB_ITEM_tobedeleted << item ;
+}
+
+
 static void hbqt_lib_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -422,6 +431,15 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+
+   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit, len=%d", s_PHB_ITEM_tobedeleted.size() ) );
+
+   int i;
+   for( i = 0; i < s_PHB_ITEM_tobedeleted.size(); ++i )
+   {
+      hb_itemRelease( s_PHB_ITEM_tobedeleted.at( i ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "hbqt_lib_exit, deleted item %d", i  ));
+   }
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtcore_init_ )

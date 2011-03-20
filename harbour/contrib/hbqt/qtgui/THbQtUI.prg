@@ -67,6 +67,7 @@
 
 #include "hbclass.ch"
 #include "error.ch"
+#include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -98,9 +99,15 @@ METHOD HbQtUI:new( oRootWidget, hWidget )
 
 /* QUESTION: Is this needed? */
 METHOD HbQtUI:destroy()
+   LOCAL oObj
 
    ::oWidget:close()
    ::oWidget := NIL
+
+   FOR EACH oObj IN ::qObj DESCEND
+      oObj := NIL
+   NEXT
+   ::qObj := {=>}
 
    RETURN NIL
 
