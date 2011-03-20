@@ -95,7 +95,6 @@ CLASS XbpSpinButton INHERIT XbpWindow, DataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   connect()
-   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
 
@@ -215,23 +214,8 @@ METHOD XbpSpinButton:connect()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSpinButton:disconnect()
-
-   #if 0
-   ::oWidget:connect( QEvent_FocusIn  )
-   ::oWidget:connect( QEvent_FocusOut )
-   ::oWidget:connect( QEvent_KeyPress )
-   #endif
-
-   ::oWidget:disconnect( "valueChanged(int)" )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpSpinButton:destroy()
 
-   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

@@ -85,7 +85,6 @@ CLASS XbpRadioButton  INHERIT  XbpWindow, DataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   connect()
-   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
 
@@ -152,12 +151,6 @@ METHOD XbpRadioButton:handleEvent( nEvent, mp1, mp2 )
 
 METHOD XbpRadioButton:connect()
    ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpRadioButton:disconnect()
-   ::oWidget:disconnect( "clicked()" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -81,7 +81,6 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   configure()
    METHOD   destroy()
    METHOD   connect()
-   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
@@ -233,23 +232,8 @@ METHOD XbpRtf:connect()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpRtf:disconnect()
-
-*  ::oWidget:disconnect( "copyAvailable(bool)"                       )
-   ::oWidget:disconnect( "currentCharFormatChanged(QTextCharFormat)" )
-   ::oWidget:disconnect( "cursorPositionChanged()"                   )
-   ::oWidget:disconnect( "redoAvailable(bool)"                       )
-   ::oWidget:disconnect( "undoAvailable(bool)"                       )
-   ::oWidget:disconnect( "textChanged()"                             )
-   ::oWidget:disconnect( "selectionChanged()"                        )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpRtf:destroy()
 
-   ::disconnect()
    ::xbpWindow:destroy()
 
    ::oTextDocument   := NIL

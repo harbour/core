@@ -200,9 +200,6 @@ METHOD XbpToolbar:destroy()
       IF aItem[ 3 ] == XBPTOOLBAR_BUTTON_DEFAULT
          oBtn := aItem[ 2 ]
          aItem := NIL
-
-         oBtn:oAction:disConnect( "triggered(bool)" )
-
          oBtn:oAction := NIL
       ELSE
          aItem := NIL

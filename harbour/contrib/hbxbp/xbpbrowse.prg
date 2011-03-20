@@ -455,7 +455,6 @@ EXPORTED:
    ACCESS   getDbfModel()                           INLINE ::oDbfModel
    METHOD   openPersistentEditor()
    METHOD   connect()
-   METHOD   disconnect()
 
    METHOD   setFocus()                              INLINE ::oTableView:setFocus()
 
@@ -476,8 +475,6 @@ EXPORTED:
 
 METHOD XbpBrowse:destroy()
    LOCAL i
-
-   ::disconnect()
 
    ::bSkipBlock               := NIL
    ::bGoTopBlock              := NIL
@@ -568,35 +565,6 @@ METHOD XbpBrowse:connect()
 
    ::qDelegate        : connect( "closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)", {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } )
    ::qDelegate        : connect( "commitData(QWidget*)"             , {|p      | ::execSlot( __editor_commitData__ , p              ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpBrowse:disconnect()
-
-   ::oLeftHeaderView  : disconnect( "sectionPressed(int)"                )
-   ::oLeftFooterView  : disconnect( "sectionPressed(int)"                )
-
-   ::oRightHeaderView : disconnect( "sectionPressed(int)"                )
-   ::oRightFooterView : disconnect( "sectionPressed(int)"                )
-
-   ::oTableView       : disconnect( QEvent_KeyPress                      )
-   ::oTableView       : disconnect( "customContextMenuRequested(QPoint)" )
-
-   ::oHScrollBar      : disconnect( "actionTriggered(int)"               )
-   ::oHScrollBar      : disconnect( "sliderReleased()"                   )
-
-   ::oVScrollBar      : disconnect( "actionTriggered(int)"               )
-   ::oVScrollBar      : disconnect( "sliderReleased()"                   )
-
-   ::oHeaderView      : disconnect( "sectionPressed(int)"                )
-   ::oHeaderView      : disconnect( "sectionResized(int,int,int)"        )
-
-   ::oWidget          : disconnect( QEvent_Resize                        )
-
-   ::qDelegate        : disconnect( "closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)" )
-   ::qDelegate        : disconnect( "commitData(QWidget*)"              )
 
    RETURN Self
 

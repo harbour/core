@@ -93,7 +93,6 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   connect()
-   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
@@ -172,16 +171,8 @@ METHOD XbpPushButton:connect()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:disconnect()
-   ::oWidget:disconnect( "clicked()" )
-   ::oWidget:disconnect( "pressed()" )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpPushButton:destroy()
 
-   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

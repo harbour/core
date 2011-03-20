@@ -93,7 +93,6 @@ CLASS XbpSLE INHERIT XbpWindow, DataRef
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p, p2 )
    METHOD   connect()
-   METHOD   disconnect()
 
    METHOD   clear()                               INLINE  ::oWidget:clear()
    METHOD   copyMarked()                          INLINE  ::oWidget:copy()
@@ -180,24 +179,8 @@ METHOD XbpSLE:connect()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSLE:disconnect()
-   #if 0
-   ::oWidget:disconnect( QEvent_FocusIn                   )
-   ::oWidget:disconnect( QEvent_FocusOut                  )
-   #endif
-   ::oWidget:disconnect( "cursorPositionChanged(int,int)" )
-*  ::oWidget:disconnect( "editingFinished()"              )
-   ::oWidget:disconnect( "returnPressed()"                )
-*  ::oWidget:disconnect( "selectionChanged()"             )
-   ::oWidget:disconnect( "textChanged(QString)"           )
-   ::oWidget:disconnect( "textEdited(QString)"            )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpSLE:destroy()
 
-   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

@@ -87,7 +87,6 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, DataRef
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
    METHOD   connect()
-   METHOD   disconnect()
    METHOD   setCaption( xCaption )
 
    METHOD   selected( ... )                       SETGET
@@ -157,15 +156,8 @@ METHOD XbpCheckBox:connect()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpCheckBox:disconnect()
-   ::oWidget:disconnect( "stateChanged(int)" )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpCheckBox:destroy()
 
-   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

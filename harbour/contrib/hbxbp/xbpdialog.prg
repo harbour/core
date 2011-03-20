@@ -221,15 +221,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:destroy()
-   LOCAL qtObj
 
    HB_TRACE( HB_TR_DEBUG,  ". " )
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
-
-   ::disconnectWindowEvents()
-   ::oWidget:disconnect( QEvent_Close            )
-   ::oWidget:disconnect( QEvent_WindowActivate   )
-   ::oWidget:disconnect( QEvent_WindowDeactivate )
 
    IF !empty( ::oEventLoop )
       hbxbp_SetEventLoop( NIL )
@@ -238,13 +232,7 @@ METHOD XbpDialog:destroy()
    ENDIF
    ::oMenu := NIL
 
-   IF ::isViaQtObject
-      qtObj := ::oWidget
-   ENDIF
    ::XbpWindow:destroy()
-   IF ::isViaQtObject
-      qtObj:destroy()
-   ENDIF
 
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
    HB_TRACE( HB_TR_DEBUG,  ". " )
