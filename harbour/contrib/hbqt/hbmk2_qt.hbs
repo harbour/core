@@ -707,7 +707,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    AAdd( aLinesPRG, "   hb_hCaseMatch( hWidget, .F. )" )
    AAdd( aLinesPRG, "   hb_hKeepOrder( hWidget, .T. )" )
    AAdd( aLinesPRG, "" )
-   
+
    SWITCH cMCls
    CASE "QDialog"
       AAdd( aLinesPRG, "   oRootWidget := QDialog( qParent )" )
@@ -1467,25 +1467,23 @@ METHOD HbQtSource:build()
          #ifdef _GEN_TRACE_
          aadd( aLine, "         else" )
          aadd( aLine, "         {" )
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     Object already deleted!", ( void * ) p->ph ) );' )
+         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     already deleted!", ( void * ) p->ph ) );' )
          aadd( aLine, "         }" )
          #endif
          aadd( aLine, "      }" )
          #ifdef _GEN_TRACE_
          aadd( aLine, "      else" )
          aadd( aLine, "      {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    Object not created with new=true", ( void * ) p->ph ) );' )
+         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a _new_ object", ( void * ) p->ph ) );' )
          aadd( aLine, "      }" )
          #endif
-
          aadd( aLine, "      p->ph = NULL;" )
          aadd( aLine, "      p = NULL;" )
          aadd( aLine, "   }" )
-
          #ifdef _GEN_TRACE_
          aadd( aLine, "   else" )
          aadd( aLine, "   {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid" ) );' )
+         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid GC object" ) );' )
          aadd( aLine, "   }" )
          #endif
       ELSE
@@ -1493,18 +1491,29 @@ METHOD HbQtSource:build()
          aadd( aLine, "   " )
          aadd( aLine, "   if( p )" )
          aadd( aLine, "   {" )
-         aadd( aLine, "      if( p->bNew && p->ph )" )
-         #ifdef _GEN_TRACE_
+         aadd( aLine, "      if( p->bNew )" )
          aadd( aLine, "      {" )
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
-         #endif
-         aadd( aLine, "         delete ( ( " + ::cQtObject + IF( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
+         aadd( aLine, "         if( p->ph )" )
+         aadd( aLine, "         {" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
+         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
+         #endif
+         aadd( aLine, "            delete ( ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
+         #ifdef _GEN_TRACE_
+         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
+         #endif
+         aadd( aLine, "         }" )
+         #ifdef _GEN_TRACE_
+         aadd( aLine, "         else" )
+         aadd( aLine, "         {" )
+         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     object already deleted!", ( void * ) p->ph ) );' )
+         aadd( aLine, "         }" )
+         #endif
          aadd( aLine, "      }" )
+         #ifdef _GEN_TRACE_
          aadd( aLine, "      else" )
          aadd( aLine, "      {" )
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     Object already deleted!", ( void * ) p->ph ) );' )
+         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     not a _new_ object!", ( void * ) p->ph ) );' )
          aadd( aLine, "      }" )
          #endif
          aadd( aLine, "      p->ph = NULL;" )
@@ -1512,7 +1521,7 @@ METHOD HbQtSource:build()
          #ifdef _GEN_TRACE_
          aadd( aLine, "   else" )
          aadd( aLine, "   {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    Object not created with new=true", ( void * ) p->ph ) );' )
+         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a valid GC object!", ( void * ) p ) );' )
          aadd( aLine, "   }" )
          #endif
       ENDIF
