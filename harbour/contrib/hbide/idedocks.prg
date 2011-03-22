@@ -179,47 +179,46 @@ METHOD IdeDocks:destroy()
    ::oIde:oProjRoot      := NIL
    ::oIde:oOpenedSources := NIL
 
-   ::disconnect( ::oOutputResult:oWidget       , "copyAvailable(bool)"     )
+   ::oOutputResult:oWidget       : disconnect( "copyAvailable(bool)"     )
+   ::oEnvironDock:oWidget        : disconnect( "visibilityChanged(bool)" )
+   ::oPropertiesDock:oWidget     : disconnect( "visibilityChanged(bool)" )
+   ::oThemesDock:oWidget         : disconnect( "visibilityChanged(bool)" )
+   ::oDocViewDock:oWidget        : disconnect( "visibilityChanged(bool)" )
+   ::oDocWriteDock:oWidget       : disconnect( "visibilityChanged(bool)" )
+   ::oFindDock:oWidget           : disconnect( "visibilityChanged(bool)" )
+   ::oFunctionsDock:oWidget      : disconnect( "visibilityChanged(bool)" )
+   ::oSkeltnDock:oWidget         : disconnect( "visibilityChanged(bool)" )
+   ::oHelpDock:oWidget           : disconnect( "visibilityChanged(bool)" )
+   ::oFuncDock:oWidget           : disconnect( "visibilityChanged(bool)" )
 
-   ::disconnect( ::oEnvironDock:oWidget        , "visibilityChanged(bool)" )
-   ::disconnect( ::oPropertiesDock:oWidget     , "visibilityChanged(bool)" )
-   ::disconnect( ::oThemesDock:oWidget         , "visibilityChanged(bool)" )
-   ::disconnect( ::oDocViewDock:oWidget        , "visibilityChanged(bool)" )
-   ::disconnect( ::oDocWriteDock:oWidget       , "visibilityChanged(bool)" )
-   ::disconnect( ::oFindDock:oWidget           , "visibilityChanged(bool)" )
-   ::disconnect( ::oFunctionsDock:oWidget      , "visibilityChanged(bool)" )
-   ::disconnect( ::oSkeltnDock:oWidget         , "visibilityChanged(bool)" )
-   ::disconnect( ::oHelpDock:oWidget           , "visibilityChanged(bool)" )
-   ::disconnect( ::oFuncDock:oWidget           , "visibilityChanged(bool)" )
-
-   ::disconnect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)" )
-   ::disconnect( ::oQScintillaDock:oWidget     , "visibilityChanged(bool)" )
-   ::disconnect( ::oReportsManagerDock:oWidget , "visibilityChanged(bool)" )
-   ::disconnect( ::oFormatDock:oWidget         , "visibilityChanged(bool)" )
+   ::oSourceThumbnailDock:oWidget: disconnect( "visibilityChanged(bool)" )
+   ::oQScintillaDock:oWidget     : disconnect( "visibilityChanged(bool)" )
+   ::oReportsManagerDock:oWidget : disconnect( "visibilityChanged(bool)" )
+   ::oFormatDock:oWidget         : disconnect( "visibilityChanged(bool)" )
 
    #if 0  /* Not Implemented */
-   ::disconnect( ::oDockPT:oWidget             , "visibilityChanged(bool)" )
-   ::disconnect( ::oDockED:oWidget             , "visibilityChanged(bool)" )
-   ::disconnect( ::oDockB2:oWidget             , "visibilityChanged(bool)" )
+   ::oDockPT:oWidget             : disconnect( "visibilityChanged(bool)" )
+   ::oDockED:oWidget             : disconnect( "visibilityChanged(bool)" )
+   ::oDockB2:oWidget             : disconnect( "visibilityChanged(bool)" )
    #endif
 
    IF !empty( ::oSys )
-      ::disconnect( ::oSys                     , "activated(QSystemTrayIcon::ActivationReason)" )
-      ::disconnect( ::qAct1                    , "triggered(bool)"         )
-      ::disconnect( ::qAct2                    , "triggered(bool)"         )
+      ::oSys                     : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
+      ::qAct1                    : disconnect( "triggered(bool)"         )
+      ::qAct2                    : disconnect( "triggered(bool)"         )
    ENDIF
 
    FOR EACH qTBtn IN ::aPanels
-      ::disconnect( qTBtn, "clicked()" )
+      qTBtn:disconnect( "clicked()" )
       qTBtn := NIL
    NEXT
    FOR EACH qTBtn IN ::aMdiBtns
-      ::disconnect( qTBtn, "clicked()" )
+      qTBtn:disconnect( "clicked()" )
       qTBtn := NIL
    NEXT
 
    FOR EACH qTBtn IN ::oIde:aMarkTBtns
-      ::disconnect( qTBtn, "clicked()" )
+      qTBtn:disconnect( "clicked()" )
    NEXT
 
    RETURN Self
@@ -1103,7 +1102,7 @@ METHOD IdeDocks:buildViewWidget( cView )
    LOCAL oFrame, qTBtnClose, qDrop, qMdi, n
 
    IF ::oIde:lCurEditsMdi
-      qMdi := QMdiSubWindow( ::oStackedWidget:oWidget )
+      qMdi := QMdiSubWindow()
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
       IF cView == "Stats"

@@ -1844,7 +1844,7 @@ METHOD IdeBrowse:buildMdiWindow()
 
    ::nID := ++nID
 
-   ::qMdi := QMdiSubWindow( ::oDlg:oWidget )
+   ::qMdi := QMdiSubWindow()
    //
    ::qMdi:setWidget( ::oWnd:oWidget )
    ::oPanel:qWidget:addSubWindow( ::qMdi )

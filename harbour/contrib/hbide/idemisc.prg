@@ -293,6 +293,7 @@ FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    ENDIF
 
    cFile := oDlg:open( cDftDir, , .f. )
+   oDlg:destroy()
 
    RETURN cFile
 
@@ -313,6 +314,7 @@ FUNCTION hbide_saveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
    ENDIF
 
    cFile := oDlg:saveAs( cDftFile, .f., .t. )
+   oDlg:destroy()
 
    RETURN cFile
 
@@ -333,7 +335,7 @@ FUNCTION hbide_fetchADir( oWnd, cTitle, cDftDir )
    oDlg:oWidget:setFileMode( 4 )
 
    cFile := oDlg:open( cDftDir, , .f. )
-
+   oDlg:destroy()
    IF hb_isChar( cFile )
       //cFile := strtran( cFile, "/", hb_ps() )
       RETURN cFile

@@ -138,6 +138,7 @@ PROCEDURE Main( ... )
 
    oResource := QResource()
    oResource:registerResource_1( hbqtres_HbIde(), ":/resource" )
+   //oResource:registerResource( HBQString( hbqtres_HbIde() ), ":/resource" )
 
    oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()
@@ -366,9 +367,44 @@ CLASS HbIde
 
 METHOD HbIde:destroy()
 
+   /* Very important - destroy resources */
+   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
+   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+
    ::oSBar := NIL
    ::oMenu := NIL
    ::oTBar := NIL
+
+   ::oSetup:destroy()
+   ::oUpdn:destroy()
+   ::oHL:destroy()
+   ::oDK:destroy()
+   ::oHM:destroy()
+   ::oSK:destroy()
+   ::oFR:destroy()
+   ::oFF:destroy()
+   ::oSearchReplace:destroy()
+
+   ::oFN:destroy()
+   ::oTM:destroy()
+
+   ::oSC:destroy()
+   ::oDW:destroy()
+   ::oEV:destroy()
+   ::oTH:destroy()
+   ::oPM:destroy()
+
+   //::oEM:destroy()       /* Almost GPF's */
+
+   ::oAC:destroy()
+   ::oDlg:destroy()
+
+   ::oFont := NIL
+
+   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
 
    RETURN self
 
@@ -569,6 +605,8 @@ METHOD HbIde:create( aParams )
 
    ::showApplicationCursor()
    qSplash:close()
+   qSplash := NIL
+   qPixMap := NIL
 
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::oINI:aTaggedProjects )
@@ -613,41 +651,6 @@ METHOD HbIde:create( aParams )
    ENDDO
 
    DbCloseAll()
-
-#if 0
-
-   /* Very important - destroy resources */
-   HB_TRACE( HB_TR_DEBUG, "======================================================" )
-   HB_TRACE( HB_TR_DEBUG, "Before    ::oDlg:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_DEBUG, "                                                      " )
-
-   ::oSetup:destroy()
-   ::oUpdn:destroy()
-   ::oTM:destroy()
-   ::oSK:destroy()
-   ::oSC:destroy()
-   ::oDW:destroy()
-   ::oEV:destroy()
-   ::oFN:destroy()
-   ::oHM:destroy()
-   ::oHL:destroy()
-   ::oTH:destroy()
-   ::oFF:destroy()
-   ::oFR:destroy()
-   ::oPM:destroy()
-   ::oEM:destroy()
-   ::oDK:destroy()
-   ::oSearchReplace:destroy()
-   ::oDlg:destroy()
-   ::oAC:destroy()
-
-   ::oFont := NIL
-   qSplash := NIL
-
-   HB_TRACE( HB_TR_DEBUG, "                                                      " )
-   HB_TRACE( HB_TR_DEBUG, "After     ::oDlg:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_DEBUG, "======================================================" )
-#endif
 
    RETURN self
 

@@ -233,12 +233,10 @@ METHOD IdeHarbourHelp:show()
 
 METHOD IdeHarbourHelp:destroy()
 
-   IF !empty( ::oUI )
-      ::disconnect( ::oUI:q_treeDoc     , "itemSelectionChanged()" )
-      ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
-
+   IF ! empty( ::oUI )
+      ::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
+      ::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
       ::clear()
-
       ::oUI:destroy()
    ENDIF
 

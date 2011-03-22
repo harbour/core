@@ -516,6 +516,8 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
 
    ENDIF
 
+   oDlg:destroy()
+
    RETURN cFile
 
 /*----------------------------------------------------------------------*/
