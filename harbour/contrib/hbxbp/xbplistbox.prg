@@ -119,6 +119,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
    METHOD   getItemIndex( pItm )
    METHOD   toggleSelected( nIndex )
    METHOD   connect()
+   METHOD   disConnect()
    METHOD   setItemColorFG( nIndex, aRGB )
 
 
@@ -205,6 +206,27 @@ METHOD XbpListBox:connect()
    ::oWidget:connect( "itemSelectionChanged()"                               , {|p,p1| ::execSlot( "itemSelectionChanged()"                               , p, p1 ) } )
 
    ::oWidget:connect( "customContextMenuRequested(QPoint)"                   , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)"                   , p1    ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:disConnect()
+
+//   ::oWidget:disconnect( QEvent_ContextMenu )
+
+   ::oWidget:disConnect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)" )
+   ::oWidget:disConnect( "currentRowChanged(int)"                                )
+   ::oWidget:disConnect( "currentTextChanged(QString)"                           )
+   ::oWidget:disConnect( "itemActivated(QListWidgetItem*)"                       )
+   ::oWidget:disConnect( "itemChanged(QListWidgetItem*)"                         )
+   ::oWidget:disConnect( "itemClicked(QListWidgetItem*)"                         )
+   ::oWidget:disConnect( "itemDoubleClicked(QListWidgetItem*)"                   )
+   ::oWidget:disConnect( "itemEntered(QListWidgetItem*)"                         )
+   ::oWidget:disConnect( "itemPressed(QListWidgetItem*)"                         )
+   ::oWidget:disConnect( "itemSelectionChanged()"                                )
+
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"                    )
 
    RETURN Self
 
@@ -322,6 +344,8 @@ METHOD XbpListBox:clear( lConnect )
 
    DEFAULT lConnect TO .t.
 
+   ::disConnect()
+
    FOR EACH qItm IN ::aItems
       qItm := NIL
    NEXT
@@ -330,6 +354,9 @@ METHOD XbpListBox:clear( lConnect )
       IF lConnect
          ::oWidget:clear()
       ENDIF
+   ENDIF
+   IF lConnect
+      ::connect()
    ENDIF
 
    RETURN .t.

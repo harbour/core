@@ -225,6 +225,11 @@ METHOD XbpDialog:destroy()
    HB_TRACE( HB_TR_DEBUG,  ". " )
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
+   ::disconnectWindowEvents()
+   ::oWidget:disconnect( QEvent_Close            )
+   ::oWidget:disconnect( QEvent_WindowActivate   )
+   ::oWidget:disconnect( QEvent_WindowDeactivate )
+
    IF !empty( ::oEventLoop )
       hbxbp_SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )

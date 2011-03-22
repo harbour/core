@@ -93,6 +93,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
 
    METHOD   itemFromPos( aPos )
    METHOD   connect()
+   METHOD   disconnect()
 
    DATA     sl_itemCollapsed
    DATA     sl_itemExpanded
@@ -224,6 +225,8 @@ METHOD XbpTreeView:handleEvent( nEvent, mp1, mp2 )
 METHOD XbpTreeView:destroy()
    LOCAL i
 
+   ::disconnect()
+
    FOR i := len( ::aItems ) TO 1 step -1
       ::aItems[ i ]:destroy()
    NEXT
@@ -258,6 +261,24 @@ METHOD XbpTreeView:connect()
 *  ::oWidget:connect( "itemPressed(QTreeWidgetItem*,int)"              , {|p,p1| ::execSlot( "itemPressed(QTreeWidgetItem*,int)"       , p, p1 ) } )
 *  ::oWidget:connect( "itemSelectionChanged()"                         , {|p1  | ::execSlot( "itemSelectionChanged()"                  , p1    ) } )
    ::oWidget:connect( "customContextMenuRequested(QPoint)"             , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)"      , p1    ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTreeView:disconnect()
+
+   ::oWidget:disconnect( "itemCollapsed(QTreeWidgetItem*)"                )
+   ::oWidget:disconnect( "itemExpanded(QTreeWidgetItem*)"                 )
+*  ::oWidget:disconnect( "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)"   )
+*  ::oWidget:disconnect( "itemActivated(QTreeWidgetItem*,int)"            )
+*  ::oWidget:disconnect( "itemChanged(QTreeWidgetItem*,int)"              )
+   ::oWidget:disconnect( "itemClicked(QTreeWidgetItem*,int)"              )
+   ::oWidget:disconnect( "itemDoubleClicked(QTreeWidgetItem*,int)"        )
+   ::oWidget:disconnect( "itemEntered(QTreeWidgetItem*,int)"              )
+*  ::oWidget:disconnect( "itemPressed(QTreeWidgetItem*,int)"              )
+*  ::oWidget:disconnect( "itemSelectionChanged()"                )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"    )
 
    RETURN Self
 

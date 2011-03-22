@@ -85,6 +85,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execSlot( cSlot, p )
    METHOD   connect()
+   METHOD   disconnect()
 
    METHOD   listBoxFocus( lFocus )                VIRTUAL      // -> lOldFocus
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize
@@ -164,8 +165,17 @@ METHOD XbpComboBox:connect()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpComboBox:disconnect()
+   ::oWidget:disconnect( "highlighted(int)"         )
+   ::oWidget:disconnect( "activated(int)"           )
+*  ::oWidget:disconnect( "currentIndexChanged(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpComboBox:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

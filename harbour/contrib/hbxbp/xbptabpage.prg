@@ -250,6 +250,7 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
    METHOD   destroy()
    METHOD   execSlot( cSlot, p )
    METHOD   connect()
+   METHOD   disconnect()
 
    ENDCLASS
 
@@ -297,8 +298,17 @@ METHOD XbpTabWidget:connect()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpTabWidget:disconnect()
+   ::oWidget:disconnect( "currentChanged(int)"                )
+   ::oWidget:disconnect( "tabCloseRequested(int)"             )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpTabWidget:destroy()
 
+   ::disconnect()
    ::oParent:oTabWidget := NIL
    ::xbpWindow:destroy()
 

@@ -85,6 +85,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, DataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   setCaption( xCaption )
 
@@ -157,8 +158,15 @@ METHOD Xbp3State:connect()
 
 /*----------------------------------------------------------------------*/
 
+METHOD Xbp3State:disconnect()
+   ::oWidget:disconnect( "stateChanged(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD Xbp3State:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

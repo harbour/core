@@ -88,6 +88,7 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, DataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
    METHOD   connect()
+   METHOD   disconnect()
 
    METHOD   scroll( ... )                         SETGET
 
@@ -189,8 +190,15 @@ METHOD XbpScrollBar:connect()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpScrollBar:disconnect()
+   ::oWidget:disconnect( "actionTriggered(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpScrollBar:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

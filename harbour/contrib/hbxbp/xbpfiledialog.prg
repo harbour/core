@@ -87,8 +87,12 @@ CLASS XbpFileDialog INHERIT XbpWindow
 
    METHOD   init( oParent, oOwner, aPos )
    METHOD   create( oParent, oOwner, aPos )
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   execSlot( cSlot, p )
    METHOD   destroy()
+   DESTRUCTOR _destroy()
+
    METHOD   open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    METHOD   saveAs( cDefaultFile, lFileList, lCenter )
    METHOD   extractFileNames( lAllowMultiple )
@@ -108,13 +112,23 @@ METHOD XbpFileDialog:init( oParent, oOwner, aPos )
 
 METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
+   oParent := NIL
    ::xbpWindow:create( oParent, oOwner, aPos )
 
-   ::oWidget := QFileDialog( ::pParent )
+   ::oWidget := QFileDialog()// ::pParent )
    //::oWidget:setStyle( AppDesktop():style() )
    //::setStyle()
    //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
    //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+
+   ::connect()
+
+   ::postCreate()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFileDialog:connect()
 
    ::oWidget:connect( "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
    ::oWidget:connect( "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
@@ -125,7 +139,21 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
    ::oWidget:connect( "filesSelected(QStringList)", {|p| ::execSlot( "filesSelected(QStringList)", p ) } )
    ::oWidget:connect( "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
 
-   ::postCreate()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFileDialog:disconnect()
+
+   ::oWidget:disconnect( "accepted()"                 )
+   ::oWidget:disconnect( "finished(int)"              )
+   ::oWidget:disconnect( "rejected()"                 )
+   ::oWidget:disconnect( "currentChanged(QString)"    )
+   ::oWidget:disconnect( "directoryEntered(QString)"  )
+   ::oWidget:disconnect( "fileSelected(QString)"      )
+   ::oWidget:disconnect( "filesSelected(QStringList)" )
+   ::oWidget:disconnect( "filterSelected(QString)"    )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -151,10 +179,18 @@ METHOD XbpFileDialog:execSlot( cSlot, p )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpFileDialog:_destroy()
+   HB_TRACE( HB_TR_ALWAYS, "XbpFileDialog:_destroy()" )
+   RETURN ::destroy()
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpFileDialog:destroy()
-
-   ::xbpWindow:destroy()
-
+   IF !empty( ::oWidget )
+      HB_TRACE( HB_TR_ALWAYS, "XbpFileDialog:destroy()" )
+      ::disconnect()
+      ::xbpWindow:destroy()
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

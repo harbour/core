@@ -185,7 +185,7 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpHTMLViewer:destroy()
 
    ::oWidget:stop()
-
+   ::disconnect()
    IF !empty( ::oURL )
       ::oURL := NIL
    ENDIF

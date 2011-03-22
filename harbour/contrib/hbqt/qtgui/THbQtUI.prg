@@ -78,6 +78,7 @@ CREATE CLASS HbQtUI INHERIT HbQtObjectHandler
 
    METHOD new( oRootWidget, hWidget )
    METHOD destroy()
+   DESTRUCTOR _destroy()
 
    ERROR HANDLER __OnError( ... )
 
@@ -98,16 +99,22 @@ METHOD HbQtUI:new( oRootWidget, hWidget )
 /*----------------------------------------------------------------------*/
 
 /* QUESTION: Is this needed? */
+METHOD HbQtUI:_destroy()
+   RETURN ::destroy()
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbQtUI:destroy()
    LOCAL oObj
 
-   ::oWidget:close()
-   ::oWidget := NIL
+   IF !empty( ::oWidget )
+      ::oWidget := NIL
 
-   FOR EACH oObj IN ::qObj DESCEND
-      oObj := NIL
-   NEXT
-   ::qObj := {=>}
+      FOR EACH oObj IN ::qObj DESCEND
+         oObj := NIL
+      NEXT
+      ::qObj := NIL
+   ENDIF
 
    RETURN NIL
 
