@@ -216,7 +216,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
  */
 HB_FUNC( __HBQT_SLOTS_CONNECT )
 {
-   int nResult;
+   int nResult = 0;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
 
    if( t_slots )
@@ -224,7 +224,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
       QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 ); /* get sender */
       if( object )
       {
-         PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK ) );  /* get codeblock */
+         PHB_ITEM pBlock = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_BYREF ) );  /* get codeblock */
          if( pBlock )
          {
             const char * pszSignal = hb_parcx( 3 );
@@ -268,10 +268,24 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
                   nResult = 5;
             }
             else
-               nResult = 4;
+            {
+               if( t_slots->listBlock.at( i - 1 ) != NULL )
+               {
+                  hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
+               }
+               t_slots->listBlock[ i - 1 ] = pBlock;
+               nResult = 0;
+            }
+
+            if( nResult > 0 )
+            {
+               hb_itemRelease( pBlock );
+            }
          }
          else
+         {
             nResult = 3;
+         }
       }
       else
          nResult = 2;
@@ -285,6 +299,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
 /*
  * Harbour function to disconnect signals
  */
+
 HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 {
    int nResult;
@@ -318,6 +333,7 @@ HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 
             if( t_slots->listBlock.at( i - 1 ) != NULL )
             {
+               HB_TRACE( HB_TR_ALWAYS, ( "              __HBQT_SLOTS_DISCONNECT %d", i ) );
                hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
                t_slots->listBlock[ i - 1 ] = NULL;
             }

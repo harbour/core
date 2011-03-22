@@ -52,6 +52,7 @@
 
 #include "hbclass.ch"
 #include "error.ch"
+#include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -59,14 +60,15 @@ CREATE CLASS HbQtObjectHandler
 
    VAR    pPtr     /* TODO: Rename to __pPtr */
 
-   VAR    __pSlots   PROTECTED
-   VAR    __pEvents  PROTECTED
+   VAR    __pSlots                                           PROTECTED
+   VAR    __pEvents                                          PROTECTED
 
    METHOD fromPointer( pPtr )
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
+   DESTRUCTOR _destroy()
 
    ERROR HANDLER onError()
 
@@ -177,8 +179,8 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
+   #if 0
    LOCAL nResult
-
    SWITCH ValType( cnEvent )
    CASE "C"
 
@@ -212,8 +214,22 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    ENDSWITCH
 
    __hbqt_error( 1300 + nResult )
-
    RETURN .F.
+   #endif
+   RETURN cnEvent
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:_destroy()
+
+   HB_TRACE( HB_TR_DEBUG, "                              _destroy()", ::className(), 0 )
+
+   ::__pSlots := NIL
+   ::__pEvents := NIL
+
+   HB_TRACE( HB_TR_DEBUG, "                              _destroy()", ::className(), 1 )
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
