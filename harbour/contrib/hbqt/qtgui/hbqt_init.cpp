@@ -58,6 +58,7 @@
 #include "hbqtinit.h"
 
 #include "hbapierr.h"
+#include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbinit.h"
 
@@ -82,6 +83,7 @@
 #include <QtGui/QKeyEvent>
 
 #include <QtCore/QStringList>
+#include <QtCore/QTextCodec>
 
 HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QColor( void * pObj, bool bNew );
@@ -592,9 +594,7 @@ static void hbqt_registerCallbacks( void )
 /*----------------------------------------------------------------------*/
 
 static QApplication * s_app = NULL;
-
-//static int s_argc;
-//static char ** s_argv;
+static QList<PHB_ITEM> s_PHB_ITEM_tobedeleted;
 
 HB_FUNC_EXTERN( __HBQTCORE );
 
@@ -610,6 +610,12 @@ HB_EXTERN_END
 QApplication * __hbqtgui_app( void )
 {
    return s_app;
+}
+
+void hbqt_addDeleteList( PHB_ITEM item )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "-------------------------hbqt_addDeleteList # %d", s_PHB_ITEM_tobedeleted.size() ) );
+   s_PHB_ITEM_tobedeleted << item ;
 }
 
 static void hbqt_lib_init( void * cargo )
@@ -631,11 +637,26 @@ static void hbqt_lib_init( void * cargo )
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_init %p", s_app ) );
 
    hbqt_registerCallbacks();
+
+   QTextCodec * codec = QTextCodec::codecForName( "UTF8" );
+   QTextCodec::setCodecForTr( codec );
+   QTextCodec::setCodecForCStrings( codec );
 }
 
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+   int i;
+   for( i = s_PHB_ITEM_tobedeleted.size() - 1; i >= 0; --i )
+   {
+      if( s_PHB_ITEM_tobedeleted.at( i ) != NULL )
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_exit, deleted item %d", i  ));
+         hb_itemRelease( s_PHB_ITEM_tobedeleted.at( i ) );
+         s_PHB_ITEM_tobedeleted[ i ] = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "   hbqt_lib_exit, deleted item %d", i  ));
+      }
+   }
 }
 
 
