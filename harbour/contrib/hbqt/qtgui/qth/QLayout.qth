@@ -37,8 +37,8 @@ enum SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMax
 
 <PROTOS>
 bool activate ()
-virtual void addItem ( QLayoutItem * item )    [*D=1*]
-void addWidget ( QWidget * w )                 [*D=1*]
+virtual void addItem ( QLayoutItem * item )     [*D=1*]
+void addWidget ( QWidget * w )               
 QRect contentsRect () const
 virtual int count () const = 0
 virtual Qt::Orientations expandingDirections () const
@@ -51,7 +51,7 @@ QWidget * menuBar () const
 virtual QSize minimumSize () const
 QWidget * parentWidget () const
 void removeItem ( QLayoutItem * item )          [*A=1*]
-void removeWidget ( QWidget * widget )          [*A=1*]
+void removeWidget ( QWidget * widget )        
 bool setAlignment ( QWidget * w, Qt::Alignment alignment )     
 void setAlignment ( Qt::Alignment alignment )
 bool setAlignment ( QLayout * l, Qt::Alignment alignment )

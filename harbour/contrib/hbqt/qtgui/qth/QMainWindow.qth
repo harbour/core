@@ -59,8 +59,8 @@ flags DockOptions
 
 <PROTOS>
 
-void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
-void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )   [*D=2*]
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )   [*D=2*]
 void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
 void addToolBar ( QToolBar * toolbar )
 QToolBar * addToolBar ( const QString & title )               // NOT implemented
@@ -72,7 +72,7 @@ DockOptions dockOptions () const
 Qt::DockWidgetArea dockWidgetArea ( QDockWidget * dockwidget ) const
 bool documentMode () const
 QSize iconSize () const
-void insertToolBar ( QToolBar * before, QToolBar * toolbar )
+void insertToolBar ( QToolBar * before, QToolBar * toolbar )      [*D=2*]
 void insertToolBarBreak ( QToolBar * before )
 bool isAnimated () const
 bool isDockNestingEnabled () const
@@ -84,14 +84,14 @@ void removeToolBarBreak ( QToolBar * before )
 bool restoreDockWidget ( QDockWidget * dockwidget )
 bool restoreState ( const QByteArray & state, int version = 0 )
 QByteArray saveState ( int version = 0 ) const
-void setCentralWidget ( QWidget * widget )                        
+void setCentralWidget ( QWidget * widget )                        [*D=1*]
 void setCorner ( Qt::Corner corner, Qt::DockWidgetArea area )
 void setDockOptions ( DockOptions options )
 void setDocumentMode ( bool enabled )
 void setIconSize ( const QSize & iconSize )
-void setMenuBar ( QMenuBar * menuBar )                           
-void setMenuWidget ( QWidget * menuBar )                         
-void setStatusBar ( QStatusBar * statusbar )                     
+void setMenuBar ( QMenuBar * menuBar )                            [*D=1*]
+void setMenuWidget ( QWidget * menuBar )                          [*D=1*]
+void setStatusBar ( QStatusBar * statusbar )                      [*D=1*]
 void setTabPosition ( Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition )
 void setTabShape ( QTabWidget::TabShape tabShape )
 void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )

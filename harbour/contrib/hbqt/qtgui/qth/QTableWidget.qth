@@ -55,24 +55,24 @@ int row ( const QTableWidgetItem * item ) const
 int rowCount () const
 QList<QTableWidgetItem *> selectedItems ()
 QList<QTableWidgetSelectionRange> selectedRanges () const
-void setCellWidget ( int row, int column, QWidget * widget )   [*D=3*]
+void setCellWidget ( int row, int column, QWidget * widget )           [*D=3*]
 void setColumnCount ( int columns )
 void setCurrentCell ( int row, int column )
 void setCurrentCell ( int row, int column, QItemSelectionModel::SelectionFlags command )
-void setCurrentItem ( QTableWidgetItem * item )   [*D=1*]
+void setCurrentItem ( QTableWidgetItem * item )                        [*D=1*]
 void setCurrentItem ( QTableWidgetItem * item, QItemSelectionModel::SelectionFlags command )   [*D=1*]
 void setHorizontalHeaderItem ( int column, QTableWidgetItem * item )   [*D=2*]
 void setHorizontalHeaderLabels ( const QStringList & labels )
-void setItem ( int row, int column, QTableWidgetItem * item )   [*D=3*]
+void setItem ( int row, int column, QTableWidgetItem * item )          [*D=3*]
 void setItemPrototype ( const QTableWidgetItem * item )
 void setRangeSelected ( const QTableWidgetSelectionRange & range, bool select )
 void setRowCount ( int rows )
-void setVerticalHeaderItem ( int row, QTableWidgetItem * item )   [*D=2*]
+void setVerticalHeaderItem ( int row, QTableWidgetItem * item )        [*D=2*]
 void setVerticalHeaderLabels ( const QStringList & labels )
 void sortItems ( int column, Qt::SortOrder order = Qt::AscendingOrder )
-QTableWidgetItem * takeHorizontalHeaderItem ( int column ) [*A=1*]
-QTableWidgetItem * takeItem ( int row, int column )        [*A=1*]
-QTableWidgetItem * takeVerticalHeaderItem ( int row )      [*A=1*]
+QTableWidgetItem * takeHorizontalHeaderItem ( int column )             [*A=1*]
+QTableWidgetItem * takeItem ( int row, int column )                    [*A=1*]
+QTableWidgetItem * takeVerticalHeaderItem ( int row )                  [*A=1*]
 QTableWidgetItem * verticalHeaderItem ( int row ) const
 int visualColumn ( int logicalColumn ) const
 QRect visualItemRect ( const QTableWidgetItem * item ) const

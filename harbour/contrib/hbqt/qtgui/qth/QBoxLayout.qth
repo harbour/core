@@ -36,11 +36,11 @@ enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop }
 
 <PROTOS>
 void addLayout ( QLayout * layout, int stretch = 0 )   [*D=1*]
-void addSpacerItem ( QSpacerItem * spacerItem )   [*D=1*]
+void addSpacerItem ( QSpacerItem * spacerItem )        [*D=1*]
 void addSpacing ( int size )
 void addStretch ( int stretch = 0 )
 void addStrut ( int size )
-void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 )   [*D=1*]
+void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 ) 
 Direction direction () const
 void insertLayout ( int index, QLayout * layout, int stretch = 0 )
 void insertSpacerItem ( int index, QSpacerItem * spacerItem )

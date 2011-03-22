@@ -41,7 +41,7 @@ void editItem ( QTreeWidgetItem * item, int column = 0 )
 QList<QTreeWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags, int column = 0 ) const
 QTreeWidgetItem * headerItem () const
 int indexOfTopLevelItem ( QTreeWidgetItem * item ) const
-void insertTopLevelItem ( int index, QTreeWidgetItem * item )
+void insertTopLevelItem ( int index, QTreeWidgetItem * item )                 [*D=2*]
 void insertTopLevelItems ( int index, const QList<QTreeWidgetItem *> & items )
 QTreeWidgetItem * invisibleRootItem () const
 bool isFirstItemColumnSpanned ( const QTreeWidgetItem * item ) const
@@ -54,17 +54,17 @@ void openPersistentEditor ( QTreeWidgetItem * item, int column = 0 )
 void removeItemWidget ( QTreeWidgetItem * item, int column )
 QList<QTreeWidgetItem *> selectedItems () const
 void setColumnCount ( int columns )
-void setCurrentItem ( QTreeWidgetItem * item )   [*D=1*]
-void setCurrentItem ( QTreeWidgetItem * item, int column )   [*D=1*]
+void setCurrentItem ( QTreeWidgetItem * item )                                [*D=1*]
+void setCurrentItem ( QTreeWidgetItem * item, int column )                    [*D=1*]
 void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::SelectionFlags command )   [*D=1*]
 void setFirstItemColumnSpanned ( const QTreeWidgetItem * item, bool span )
-void setHeaderItem ( QTreeWidgetItem * item )   [*D=1*]
+void setHeaderItem ( QTreeWidgetItem * item )                                 [*D=1*]
 void setHeaderLabel ( const QString & label )
 void setHeaderLabels ( const QStringList & labels )
 void setItemWidget ( QTreeWidgetItem * item, int column, QWidget * widget )
 int sortColumn () const
 void sortItems ( int column, Qt::SortOrder order )
-QTreeWidgetItem * takeTopLevelItem ( int index )   [*A=1*]
+QTreeWidgetItem * takeTopLevelItem ( int index )                              [*A=1*]
 QTreeWidgetItem * topLevelItem ( int index ) const
 int topLevelItemCount () const
 QRect visualItemRect ( const QTreeWidgetItem * item ) const
