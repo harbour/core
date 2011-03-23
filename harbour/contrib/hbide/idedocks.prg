@@ -179,7 +179,7 @@ METHOD IdeDocks:destroy()
    ::oIde:oProjRoot      := NIL
    ::oIde:oOpenedSources := NIL
 
-#if 1
+#if 0
 
    ::oOutputResult:oWidget       : disconnect( "copyAvailable(bool)"     )
    ::oEnvironDock:oWidget        : disconnect( "visibilityChanged(bool)" )
@@ -224,7 +224,7 @@ METHOD IdeDocks:destroy()
    NEXT
 
 #else
-
+   #if 0
    ::oOutputResult:oWidget        := NIL
    ::oEnvironDock:oWidget         := NIL
    ::oPropertiesDock:oWidget      := NIL
@@ -242,29 +242,48 @@ METHOD IdeDocks:destroy()
    ::oReportsManagerDock:oWidget  := NIL
    ::oFormatDock:oWidget          := NIL
 
-   #if 0  /* Not Implemented */
    ::oDockPT:oWidget              := NIL
    ::oDockED:oWidget              := NIL
    ::oDockB2:oWidget              := NIL
    #endif
 
-   IF !empty( ::oIde:oSys )
-      ::oIde:oSys                 := NIL
-      ::qAct1                     := NIL
-      ::qAct2                     := NIL
-   ENDIF
+   ::oIde:oOutputResult           := NIL
+   ::oIde:oEnvironDock            := NIL
+   ::oIde:oPropertiesDock         := NIL
+   ::oIde:oThemesDock             := NIL
+   ::oIde:oDocViewDock            := NIL
+   ::oIde:oDocWriteDock           := NIL
+   ::oIde:oFindDock               := NIL
+   ::oIde:oFunctionsDock          := NIL
+   ::oIde:oSkeltnDock             := NIL
+   ::oIde:oHelpDock               := NIL
+   ::oIde:oFuncDock               := NIL
+
+   ::oIde:oSourceThumbnailDock    := NIL
+   ::oIde:oQScintillaDock         := NIL
+   ::oIde:oReportsManagerDock     := NIL
+   ::oIde:oFormatDock             := NIL
+
+   ::oIde:oDockPT                 := NIL
+   ::oIde:oDockED                 := NIL
+   ::oIde:oDockB2                 := NIL
+
+   ::oIde:oSys                    := NIL
+   ::qAct1                        := NIL
+   ::qAct2                        := NIL
 
    FOR EACH qTBtn IN ::aPanels
       qTBtn := NIL
    NEXT
+   ::aPanels := NIL
    FOR EACH qTBtn IN ::aMdiBtns
       qTBtn := NIL
    NEXT
-
+   ::aMdiBtns := NIL
    FOR EACH qTBtn IN ::oIde:aMarkTBtns
       qTBtn := NIL
    NEXT
-
+   ::oIde:aMarkTBtns := NIL
 #endif
 
    RETURN Self
