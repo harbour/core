@@ -179,6 +179,8 @@ METHOD IdeDocks:destroy()
    ::oIde:oProjRoot      := NIL
    ::oIde:oOpenedSources := NIL
 
+#if 1
+
    ::oOutputResult:oWidget       : disconnect( "copyAvailable(bool)"     )
    ::oEnvironDock:oWidget        : disconnect( "visibilityChanged(bool)" )
    ::oPropertiesDock:oWidget     : disconnect( "visibilityChanged(bool)" )
@@ -203,7 +205,7 @@ METHOD IdeDocks:destroy()
    #endif
 
    IF !empty( ::oSys )
-      ::oSys                     : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
+      ::oIde:oSys                : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
       ::qAct1                    : disconnect( "triggered(bool)"         )
       ::qAct2                    : disconnect( "triggered(bool)"         )
    ENDIF
@@ -220,6 +222,50 @@ METHOD IdeDocks:destroy()
    FOR EACH qTBtn IN ::oIde:aMarkTBtns
       qTBtn:disconnect( "clicked()" )
    NEXT
+
+#else
+
+   ::oOutputResult:oWidget        := NIL
+   ::oEnvironDock:oWidget         := NIL
+   ::oPropertiesDock:oWidget      := NIL
+   ::oThemesDock:oWidget          := NIL
+   ::oDocViewDock:oWidget         := NIL
+   ::oDocWriteDock:oWidget        := NIL
+   ::oFindDock:oWidget            := NIL
+   ::oFunctionsDock:oWidget       := NIL
+   ::oSkeltnDock:oWidget          := NIL
+   ::oHelpDock:oWidget            := NIL
+   ::oFuncDock:oWidget            := NIL
+
+   ::oSourceThumbnailDock:oWidget := NIL
+   ::oQScintillaDock:oWidget      := NIL
+   ::oReportsManagerDock:oWidget  := NIL
+   ::oFormatDock:oWidget          := NIL
+
+   #if 0  /* Not Implemented */
+   ::oDockPT:oWidget              := NIL
+   ::oDockED:oWidget              := NIL
+   ::oDockB2:oWidget              := NIL
+   #endif
+
+   IF !empty( ::oIde:oSys )
+      ::oIde:oSys                 := NIL
+      ::qAct1                     := NIL
+      ::qAct2                     := NIL
+   ENDIF
+
+   FOR EACH qTBtn IN ::aPanels
+      qTBtn := NIL
+   NEXT
+   FOR EACH qTBtn IN ::aMdiBtns
+      qTBtn := NIL
+   NEXT
+
+   FOR EACH qTBtn IN ::oIde:aMarkTBtns
+      qTBtn := NIL
+   NEXT
+
+#endif
 
    RETURN Self
 
@@ -455,8 +501,10 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
    CASE "dockReportsManager_visibilityChanged"
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockQScintilla_visibilityChanged"
@@ -562,7 +610,6 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
                   ::qTimer := QTimer()
                   ::qTimer:setSingleShot( .t. )
                   ::qTimer:setInterval( 250 )
-                  //::connect( ::qTimer, "timeout()", {|| ::execEvent( "qTimer_timeOut" ) } )
                   ::qTimer:connect( "timeout()", {|| ::execEvent( "qTimer_timeOut" ) } )
                ENDIF
                ::qTimer:start()
