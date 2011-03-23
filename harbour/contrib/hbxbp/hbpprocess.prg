@@ -300,12 +300,11 @@ METHOD HbpProcess:finish()
    ::qProcess:disconnect( "stateChanged(int)"         )
    ::qProcess:disconnect( "error(int)"                )
    #endif
-   #if 0
    ::qProcess:disconnect( "started()"                 )
    ::qProcess:disconnect( "readyReadStandardOutput()" )
    ::qProcess:disconnect( "readyReadStandardError()"  )
    ::qProcess:disconnect( "finished(int,QProcess::ExitStatus)" )
-   #endif
+
    IF hb_isBlock( ::bFinish )
       eval( ::bFinish, ::nExitCode, ::nExitStatus, Self )
    ENDIF

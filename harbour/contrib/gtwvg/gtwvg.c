@@ -2691,7 +2691,7 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
+   //if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
    {
       if( pWVT->hWnd ) /* Is the window already open */
       {
@@ -2704,7 +2704,7 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
              * make sure that the mode selected along with the current
              * font settings will fit in the window
              */
-            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
+            //if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
             {
                fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
             }

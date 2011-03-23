@@ -235,13 +235,15 @@ METHOD XbpRtf:connect()
 
 METHOD XbpRtf:disconnect()
 
-*  ::oWidget:disconnect( "copyAvailable(bool)"                       )
-   ::oWidget:disconnect( "currentCharFormatChanged(QTextCharFormat)" )
-   ::oWidget:disconnect( "cursorPositionChanged()"                   )
-   ::oWidget:disconnect( "redoAvailable(bool)"                       )
-   ::oWidget:disconnect( "undoAvailable(bool)"                       )
-   ::oWidget:disconnect( "textChanged()"                             )
-   ::oWidget:disconnect( "selectionChanged()"                        )
+   IF ! empty( ::oWidget )
+   *  ::oWidget:disconnect( "copyAvailable(bool)"                       )
+      ::oWidget:disconnect( "currentCharFormatChanged(QTextCharFormat)" )
+      ::oWidget:disconnect( "cursorPositionChanged()"                   )
+      ::oWidget:disconnect( "redoAvailable(bool)"                       )
+      ::oWidget:disconnect( "undoAvailable(bool)"                       )
+      ::oWidget:disconnect( "textChanged()"                             )
+      ::oWidget:disconnect( "selectionChanged()"                        )
+   ENDIF
 
    RETURN Self
 
