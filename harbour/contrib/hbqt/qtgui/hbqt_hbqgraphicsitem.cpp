@@ -67,6 +67,7 @@
 
 HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( void * pObj, bool bNew );
 HB_EXTERN_END
 
 HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphicsItem( parent )
@@ -487,7 +488,7 @@ void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    if( block ){
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
-      PHB_ITEM p2 = hbqt_create_object( event, "hb_QGraphicsSceneContextMenuEvent" );
+      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( event, false ), "hb_QGraphicsSceneContextMenuEvent" );
       PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );

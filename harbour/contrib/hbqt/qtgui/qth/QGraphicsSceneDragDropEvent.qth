@@ -45,7 +45,11 @@ void acceptProposedAction ()
 Qt::MouseButtons buttons () const
 Qt::DropAction dropAction () const
 const QMimeData * mimeData () const{
-   hb_retptrGC( hbqt_gcAllocate_QMimeData( ( void* ) hbqt_par_QGraphicsSceneDragDropEvent( 1 )->mimeData(), false ) );
+   QGraphicsSceneDragDropEvent * _graphicsscenedragdropevent = ( QGraphicsSceneDragDropEvent * ) hbqt_pPtrFromObj( 0 );
+   if( _graphicsscenedragdropevent )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) _graphicsscenedragdropevent->mimeData(), true ), "hb_QMimeData" );
+   }
 }
 Qt::KeyboardModifiers modifiers () const
 QPointF pos () const

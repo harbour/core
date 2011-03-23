@@ -74,6 +74,10 @@
 
 #include "hbqt_hbqplaintextedit.h"
 
+HB_EXTERN_BEGIN
+extern void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew );
+HB_EXTERN_END
+
 #include <QtGui/QApplication>
 
 #define selectionState_off                        0
@@ -1246,7 +1250,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             hb_arraySetNI( p2, 4, columnEnds     );
             hb_arraySetNI( p2, 5, selectionMode  );
             hb_arraySetNI( p2, 6, selectionState );
-            hb_arraySet( p2, 7, hbqt_create_object( event, "hb_QKeyEvent" ) );
+            hb_arraySet( p2, 7, hbqt_create_objectGC( hbqt_gcAllocate_QKeyEvent( event, false ), "hb_QKeyEvent" ) );
             hb_vmEvalBlockV( block, 2, p1, p2 );
             hb_itemRelease( p1 );
             hb_itemRelease( p2 );

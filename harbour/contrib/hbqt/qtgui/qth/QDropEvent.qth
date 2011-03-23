@@ -21,6 +21,7 @@ Constructor = no
 
 <CODE>
 #include <QtGui/QDropEvent>
+#include <QtCore/QMimeData>
 
 
 /*
@@ -51,7 +52,11 @@ Qt::KeyboardModifiers keyboardModifiers () const
 # how to construct dynamically - no separate keyword ???
 #
 const QMimeData * mimeData () const{
-   hb_retptrGC( hbqt_gcAllocate_QMimeData( ( void* ) hbqt_par_QDropEvent( 1 )->mimeData(), false ) );
+   QDropEvent * _dropevent = ( QDropEvent * ) hbqt_pPtrFromObj( 0 );
+   if( _dropevent )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) _dropevent->mimeData(), true ), "hb_QMimeData" );
+   }
 }
 #
 #
