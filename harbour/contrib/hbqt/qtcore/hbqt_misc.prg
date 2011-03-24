@@ -136,6 +136,10 @@ STATIC FUNCTION HBQEventsFromPointer( ... )
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 
+   IF ! hb_isBlock( bBlock )
+      RETURN .f.
+   ENDIF
+
    SWITCH ValType( cnEvent )
    CASE "C"
 
@@ -163,7 +167,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       SWITCH nResult
       CASE 0
          RETURN .T.
-      CASE -3 /* event already connected */
+      CASE -3 /* bBlock not supplied */
          RETURN .F.
       ENDSWITCH
       EXIT
@@ -179,7 +183,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
-   #if 0
+
    LOCAL nResult
    SWITCH ValType( cnEvent )
    CASE "C"
@@ -192,6 +196,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
       CASE 5 /* disconnect failure */
          RETURN .T.
       CASE 1 /* wrong slot container, no connect was called yet */
+      CASE 2 /* object has been already freed */
       CASE 3 /* event not found */
          RETURN .F.
       ENDSWITCH
@@ -215,8 +220,6 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    __hbqt_error( 1300 + nResult )
    RETURN .F.
-   #endif
-   RETURN cnEvent
 
 /*----------------------------------------------------------------------*/
 
