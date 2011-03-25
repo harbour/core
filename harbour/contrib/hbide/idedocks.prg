@@ -1220,7 +1220,7 @@ METHOD IdeDocks:buildViewWidget( cView )
          ENDIF
       ENDIF
       qMdi:setWidget( oFrame:oWidget )
-      qMdi:show()
+
       ::oStackedWidget:oWidget:addSubWindow( qMdi )
       qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
                                  {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qMdi, { p, p1 } ) } )
