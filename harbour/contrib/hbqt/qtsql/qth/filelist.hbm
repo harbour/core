@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+
+-pflag=-qtver=0x040500
+-pflag=-qtmodule=qtsql
+-pflag=-qthdocdir=../doc/
+
+QSqlDatabase.qth
+QSqlQuery.qth
+QSqlError.qth
+QSqlIndex.qth
+QSqlRecord.qth
+QSqlDriver.qth
+QSqlResult.qth
+QSqlField.qth
+QSqlQueryModel.qth
+QSqlTableModel.qth
+QSqlRelationalTableModel.qth
+
+
+

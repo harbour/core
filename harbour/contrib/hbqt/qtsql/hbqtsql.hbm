@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-i.
+
+qth/filelist.hbm
+
+hbqtsql.hbx
+
+
+../qtcore/hbqtcore.hbc

@@ -1,0 +1,55 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBQTSQL__
+#define __HBEXTERN_CH__HBQTSQL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSQL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBQTSQL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSQL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_QSQLDATABASE
+DYNAMIC HB_QSQLDRIVER
+DYNAMIC HB_QSQLERROR
+DYNAMIC HB_QSQLFIELD
+DYNAMIC HB_QSQLINDEX
+DYNAMIC HB_QSQLQUERY
+DYNAMIC HB_QSQLQUERYMODEL
+DYNAMIC HB_QSQLRECORD
+DYNAMIC HB_QSQLRELATIONALTABLEMODEL
+DYNAMIC HB_QSQLRESULT
+DYNAMIC HB_QSQLTABLEMODEL
+DYNAMIC QSQLDATABASE
+DYNAMIC QSQLDRIVER
+DYNAMIC QSQLERROR
+DYNAMIC QSQLFIELD
+DYNAMIC QSQLINDEX
+DYNAMIC QSQLQUERY
+DYNAMIC QSQLQUERYMODEL
+DYNAMIC QSQLRECORD
+DYNAMIC QSQLRELATIONALTABLEMODEL
+DYNAMIC QSQLRESULT
+DYNAMIC QSQLTABLEMODEL
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSQL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

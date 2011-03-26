@@ -1,0 +1,124 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = 
+Inherit  = QSqlQueryModel
+Type     = 
+New      = 
+</CLASS>
+
+<CODE>
+#include <QtSql/QSqlTableModel>
+#include <QtSql/QSqlIndex>
+
+
+/*
+ * QSqlTableModel ( QObject * parent = 0, QSqlDatabase db = QSqlDatabase() )
+ * virtual ~QSqlTableModel ()
+ */
+HB_FUNC( QT_QSQLTABLEMODEL )
+{
+   __HB_RETPTRGC__( new QSqlTableModel() );
+}
+</CODE>
+
+<ENUMS>
+enum EditStrategy { OnFieldChange, OnRowChange, OnManualSubmit }
+</ENUMS>
+
+<PROTOS>
+QSqlDatabase database () const
+EditStrategy editStrategy () const
+int fieldIndex ( const QString & fieldName ) const
+QString filter () const
+bool insertRecord ( int row, const QSqlRecord & record )
+virtual bool insertRows ( int row, int count, const QModelIndex & parent = QModelIndex() )
+bool isDirty ( const QModelIndex & index ) const
+QSqlIndex primaryKey () const
+virtual bool removeColumns ( int column, int count, const QModelIndex & parent = QModelIndex() )
+virtual bool removeRows ( int row, int count, const QModelIndex & parent = QModelIndex() )
+virtual void revertRow ( int row )
+virtual bool select ()
+virtual bool setData ( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole )
+virtual void setEditStrategy ( EditStrategy strategy )
+virtual void setFilter ( const QString & filter )
+bool setRecord ( int row, const QSqlRecord & record )
+virtual void setSort ( int column, Qt::SortOrder order )
+virtual void setTable ( const QString & tableName )
+virtual void sort ( int column, Qt::SortOrder order )
+QString tableName () const
+</PROTOS>
+
+<SLOTS>
+virtual void revert ()
+void revertAll ()
+virtual bool submit ()
+bool submitAll ()
+</SLOTS>
+
+<SIGNALS>
+void beforeDelete ( int row )
+void beforeInsert ( QSqlRecord & record )
+void beforeUpdate ( int row, QSqlRecord & record )
+void primeInsert ( int row, QSqlRecord & record )
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+
