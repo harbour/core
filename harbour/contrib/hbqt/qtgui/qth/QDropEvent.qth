@@ -52,10 +52,10 @@ Qt::KeyboardModifiers keyboardModifiers () const
 # how to construct dynamically - no separate keyword ???
 #
 const QMimeData * mimeData () const{
-   QDropEvent * _dropevent = ( QDropEvent * ) hbqt_pPtrFromObj( 0 );
-   if( _dropevent )
+   QDropEvent * p = ( QDropEvent * ) hbqt_pPtrFromObj( 0 );
+   if( p )
    {
-      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) _dropevent->mimeData(), true ), "hb_QMimeData" );
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData(), true ), "hb_QMimeData" );
    }
 }
 #

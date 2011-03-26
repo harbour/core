@@ -96,7 +96,13 @@ QVariant boundValue ( const QString & placeholder ) const
 QVariant boundValue ( int pos ) const
 QMap<QString, QVariant> boundValues () const
 void clear ()
-//const QSqlDriver * driver () const
+const QSqlDriver * driver () const{
+   QSqlQuery * p = ( QSqlQuery * ) hbqt_pPtrFromObj( 0 );
+   if( p )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QSqlDriver( ( void* ) p->driver(), true ), "hb_QSqlDriver" );
+   }
+}
 bool exec ( const QString & query )
 bool exec ()
 bool execBatch ( BatchExecutionMode mode = ValuesAsRows )
@@ -119,7 +125,13 @@ QSql::NumericalPrecisionPolicy numericalPrecisionPolicy () const
 bool prepare ( const QString & query )
 bool previous ()
 QSqlRecord record () const
-//const QSqlResult * result () const
+const QSqlResult * result () const{
+   QSqlQuery * p = ( QSqlQuery * ) hbqt_pPtrFromObj( 0 );
+   if( p )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QSqlResult( ( void* ) p->result(), true ), "hb_QSqlResult" );
+   }
+}
 bool seek ( int index, bool relative = false )
 void setForwardOnly ( bool forward )
 void setNumericalPrecisionPolicy ( QSql::NumericalPrecisionPolicy precisionPolicy )
