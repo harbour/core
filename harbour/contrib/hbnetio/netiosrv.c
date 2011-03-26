@@ -533,7 +533,7 @@ HB_FUNC( NETIO_RPCFILTER )
          PHB_ITEM pHash = hb_param( 2, HB_IT_HASH );
          if( pHash )
          {
-            conn->rpcFilter = ( PHB_ITEM ) hb_itemNew( pHash );
+            conn->rpcFilter = hb_itemNew( pHash );
             hb_gcUnlock( conn->rpcFilter );
          }
       }

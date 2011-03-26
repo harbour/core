@@ -145,6 +145,7 @@
 #define HB_GTI_ALTENTER         62  /* Toggles Alt+Enter as full screen switch (supported by: GTWVT) */
 #define HB_GTI_ISFULLSCREEN     63  /* Is the GT windows using the full physical display? (supported by: GTWIN, GTWVT) */
 #define HB_GTI_ONLINE           64  /* Is terminal connected? */
+#define HB_GTI_VERSION          65  /* Get terminal version string */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

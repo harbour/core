@@ -1655,6 +1655,10 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTI_RESIZEMODE_FONT );
          break;
 
+      case HB_GTI_VERSION:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult,
+                  HB_GTSELF_VERSION( pGT, hb_itemGetNI( pInfo->pNewVal ) ) );
+
       default:
          return HB_FALSE;
    }
@@ -2301,6 +2305,8 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
       case HB_K_CLOSE:
       case HB_K_GOTFOCUS:
       case HB_K_LOSTFOCUS:
+      case HB_K_CONNECT:
+      case HB_K_DISCONNECT:
          iMask = HB_INKEY_GTEVENT;
          break;
       default:

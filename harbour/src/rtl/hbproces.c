@@ -419,7 +419,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 
    memset( &sa, 0, sizeof( sa ) );
    sa.nLength = sizeof( sa );
-   sa.bInheritHandle = HB_TRUE;
+   sa.bInheritHandle = TRUE;
 
    if( phStdin != NULL )
    {
@@ -485,16 +485,16 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          si.hStdOutput = phStdout ? hPipes[ 3 ] : GetStdHandle( STD_OUTPUT_HANDLE );
          si.hStdError  = phStderr ? hPipes[ 5 ] : GetStdHandle( STD_ERROR_HANDLE );
       }
-      fError = CreateProcess( NULL,           /* lpAppName */
-                              lpCommand,
-                              NULL,           /* lpProcessAttr */
-                              NULL,           /* lpThreadAttr */
-                              TRUE,           /* bInheritHandles */
-                              dwFlags,        /* dwCreationFlags */
-                              NULL,           /* lpEnvironment */
-                              NULL,           /* lpCurrentDirectory */
-                              &si,
-                              &pi ) ? HB_FALSE : HB_TRUE;
+      fError = ! CreateProcess( NULL,           /* lpAppName */
+                                lpCommand,
+                                NULL,           /* lpProcessAttr */
+                                NULL,           /* lpThreadAttr */
+                                TRUE,           /* bInheritHandles */
+                                dwFlags,        /* dwCreationFlags */
+                                NULL,           /* lpEnvironment */
+                                NULL,           /* lpCurrentDirectory */
+                                &si,
+                                &pi );
       hb_fsSetIOError( !fError, 0 );
       hb_xfree( lpCommand );
       if( !fError )

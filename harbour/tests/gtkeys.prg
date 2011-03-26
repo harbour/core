@@ -207,6 +207,12 @@ aadd(aKeys, { "K_MMMIDDLEDOWN",  1013, "Mouse Move Middle Down"         }  )
 aadd(aKeys, { "K_MWFORWARD",     1014, "Mouse Wheel Forward"            }  )
 aadd(aKeys, { "K_MWBACKWARD",    1015, "Mouse Wheel Backward"           }  )
 aadd(aKeys, { "K_NCMOUSEMOVE",   1016, "Non-Client Area Mouse Movement" }  )
+aadd(aKeys, { "HB_K_RESIZE",     1101, "screen dimension changed"       }  )
+aadd(aKeys, { "HB_K_CLOSE",      1102, "close button hit"               }  )
+aadd(aKeys, { "HB_K_GETFOCUS",   1103, "focus restored"                 }  )
+aadd(aKeys, { "HB_K_LOSTFOCUS",  1104, "focus lost"                     }  )
+aadd(aKeys, { "HB_K_CONNECT",    1105, "remote terminal connected"      }  )
+aadd(aKeys, { "HB_K_DISCONNECT", 1106, "remote terminal disconnected"   }  )
 
 ? os(), version(), date(), time()
 
@@ -215,25 +221,30 @@ setcancel(.f.)
 //altd(0)
 
 #ifdef __HARBOUR__
-   set(_SET_EVENTMASK,INKEY_ALL)
+   set( _SET_EVENTMASK, hb_bitOR( INKEY_ALL, HB_INKEY_GTEVENT ) )
    hb_gtInfo(HB_GTI_ESCDELAY,50)
    hb_cdpSelect( "PLMAZ" )
    hb_setTermCP( "PLISO" )
    ? hb_gtVersion(1), hb_gtVersion()
+#else
+   #ifdef INKEY_ALL
+      set(_SET_EVENTMASK,INKEY_ALL)
+   #endif
 #endif
 
 ? "@ - interrupt, keycodes checking: "
 ?
 while (.t.)
-   k:=inkey(0,INKEY_ALL)
+   k:=inkey(0)
    if (i:=ascan(aKeys, { |x| x[2]==k }))!=0
       ? " key:"+str(aKeys[i,2],7)+"  "+padr(aKeys[i,1],18)+aKeys[i,3]
-   elseif k>=32 .and. k<=126 .or. (k>=160 .and. k<=255) .or. IsAlpha(chr(k))
+   elseif k>=32 .and. k<=126 .or. (k>=160 .and. k<=255) .or.;
+          (k>=0 .and. k<=255 .and. IsAlpha(chr(k)))
       ? "char:"+str(k,7)+"  "+chr(k)
    else
       ? " key:"+str(k,7)
    endif
-//    ?? "  ("+ltrim(str(maxrow()))+":"+ltrim(str(maxcol()))+")"
+//   ?? "  ("+ltrim(str(maxrow()))+":"+ltrim(str(maxcol()))+")"
 
    if k==asc("@") .and. nextkey()==0
       exit

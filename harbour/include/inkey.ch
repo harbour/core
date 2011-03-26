@@ -100,6 +100,8 @@
 #define HB_K_CLOSE              1102
 #define HB_K_GOTFOCUS           1103
 #define HB_K_LOSTFOCUS          1104
+#define HB_K_CONNECT            1105
+#define HB_K_DISCONNECT         1106
 
 /* Harbour extension - this marks that multi-characters keycode will be
    returned - call Inkey() until ZERO will be returned
