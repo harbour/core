@@ -984,6 +984,16 @@ METHOD IdeSetup:destroy()
       ::oUI:destroy()
    ENDIF
 
+   ::oINI             := NIL
+   ::qOrgPalette      := NIL
+   ::aItems           := NIL
+   ::aTree            := NIL
+   ::aStyles          := NIL
+   ::aKeyItems        := NIL
+   ::aDictionaries    := NIL
+   ::nCurThemeSlot    := NIL
+   ::aHilighters      := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

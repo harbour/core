@@ -363,6 +363,8 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
 
    cProjFileName := hbide_pathToOSPath( cProjFileName )
 
+   ::oIde:oPropertiesDock:setWindowTitle( cProjFileName )
+
    nAlready := ascan( ::aProjects, {|e_| hb_FileMatch( e_[ 1 ], hbide_pathNormalized( cProjFileName ) ) } )
 
    IF !empty( cProjFileName ) .AND. hb_fileExists( cProjFileName )

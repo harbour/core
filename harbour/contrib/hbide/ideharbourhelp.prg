@@ -232,6 +232,7 @@ METHOD IdeHarbourHelp:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:destroy()
+   LOCAL aTmp, oFun
 
    IF ! empty( ::oUI )
       ::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
@@ -239,6 +240,27 @@ METHOD IdeHarbourHelp:destroy()
       ::clear()
       ::oUI:destroy()
    ENDIF
+
+   ::aNodes              := NIL
+   ::aFunctions          := NIL
+   FOR EACH aTmp IN ::aFuncByFile
+      aTmp[ 1 ] := NIL
+      FOR EACH oFun IN aTmp[ 2 ]
+         oFun := NIL
+      NEXT
+      aTmp[ 2 ] := NIL
+   NEXT
+
+   ::aFuncByFile         := NIL
+   ::aHistory            := NIL
+   ::aCategory           := NIL
+   ::nCurTVItem          := NIL
+   ::nCurInHist          := NIL
+   ::qHiliter            := NIL
+   ::hIndex              := NIL
+   ::aProtoTypes         := NIL
+   ::lLoadedProto        := NIL
+   ::aFuncDefs           := NIL
 
    RETURN Self
 

@@ -103,7 +103,6 @@ REQUEST ADS
 
 PROCEDURE Main( ... )
    LOCAL oIde
-   LOCAL oResource
 
 #ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS
@@ -136,9 +135,7 @@ PROCEDURE Main( ... )
    ENDIF
 #endif
 
-   oResource := QResource()
-   oResource:registerResource_1( hbqtres_HbIde(), ":/resource" )
-   //oResource:registerResource( HBQString( hbqtres_HbIde() ), ":/resource" )
+   QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()
@@ -368,8 +365,8 @@ CLASS HbIde
 METHOD HbIde:destroy()
 
    /* Very important - destroy resources */
-   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
-   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------" )
+   HB_TRACE( HB_TR_ALWAYS, "Before    ::oIde:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
 
    ::oSBar := NIL
@@ -394,6 +391,7 @@ METHOD HbIde:destroy()
    ::oEV:destroy()
    ::oTH:destroy()
    ::oPM:destroy()
+   ::oRM:destroy()
 
    //::oEM:destroy()       /* Almost GPF's */
 
@@ -403,7 +401,7 @@ METHOD HbIde:destroy()
    ::oFont := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_ALWAYS, "After     ::oIde:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
 
    RETURN self

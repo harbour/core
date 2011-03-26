@@ -245,6 +245,17 @@ METHOD IdeFunctions:destroy()
       ::oUI:destroy()
    ENDIF
 
+   ::isNotSetYet  := NIL
+   ::aHdr         := NIL
+   ::aItems       := NIL
+   ::aTags        := NIL
+   ::aList        := NIL
+   ::inAction     := NIL
+   ::nPNm         := NIL
+   ::nPPr         := NIL
+   ::nPSr         := NIL
+   ::aProjList    := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

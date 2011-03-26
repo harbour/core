@@ -174,12 +174,13 @@ METHOD IdeDocks:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:destroy()
-   LOCAL qTBtn
+   LOCAL qTmp
 
-   ::oIde:oProjRoot      := NIL
-   ::oIde:oOpenedSources := NIL
+   ::oDlg:oWidget                : disconnect( QEvent_WindowStateChange  )
+   ::oDlg:oWidget                : disconnect( QEvent_Hide               )
 
-#if 0
+   ::oIde:oProjRoot              := NIL
+   ::oIde:oOpenedSources         := NIL
 
    ::oOutputResult:oWidget       : disconnect( "copyAvailable(bool)"     )
    ::oEnvironDock:oWidget        : disconnect( "visibilityChanged(bool)" )
@@ -210,81 +211,64 @@ METHOD IdeDocks:destroy()
       ::qAct2                    : disconnect( "triggered(bool)"         )
    ENDIF
 
-   FOR EACH qTBtn IN ::aPanels
-      qTBtn:disconnect( "clicked()" )
-      qTBtn := NIL
+   ::oIde:oOutputResult          := NIL
+   ::oIde:oEnvironDock           := NIL
+   ::oIde:oPropertiesDock        := NIL
+   ::oIde:oThemesDock            := NIL
+   ::oIde:oDocViewDock           := NIL
+   ::oIde:oDocWriteDock          := NIL
+   ::oIde:oFindDock              := NIL
+   ::oIde:oFunctionsDock         := NIL
+   ::oIde:oSkeltnDock            := NIL
+   ::oIde:oHelpDock              := NIL
+   ::oIde:oFuncDock              := NIL
+
+   ::oIde:oSourceThumbnailDock   := NIL
+   ::oIde:oQScintillaDock        := NIL
+   ::oIde:oReportsManagerDock    := NIL
+   ::oIde:oFormatDock            := NIL
+
+   ::oIde:oDockPT                := NIL
+   ::oIde:oDockED                := NIL
+   ::oIde:oDockB2                := NIL
+
+   ::oIde:oSys                   := NIL
+   ::qAct1                       := NIL
+   ::qAct2                       := NIL
+
+   FOR EACH qTmp IN ::aPanels
+      qTmp:disconnect( "clicked()" )
+      qTmp := NIL
    NEXT
-   FOR EACH qTBtn IN ::aMdiBtns
-      qTBtn:disconnect( "clicked()" )
-      qTBtn := NIL
+   FOR EACH qTmp IN ::aMdiBtns
+      qTmp:disconnect( "clicked()" )
+      qTmp := NIL
    NEXT
 
-   FOR EACH qTBtn IN ::oIde:aMarkTBtns
-      qTBtn:disconnect( "clicked()" )
+   FOR EACH qTmp IN ::oIde:aMarkTBtns
+      qTmp:disconnect( "clicked()" )
+      qTmp := NIL
    NEXT
 
-#else
-   #if 0
-   ::oOutputResult:oWidget        := NIL
-   ::oEnvironDock:oWidget         := NIL
-   ::oPropertiesDock:oWidget      := NIL
-   ::oThemesDock:oWidget          := NIL
-   ::oDocViewDock:oWidget         := NIL
-   ::oDocWriteDock:oWidget        := NIL
-   ::oFindDock:oWidget            := NIL
-   ::oFunctionsDock:oWidget       := NIL
-   ::oSkeltnDock:oWidget          := NIL
-   ::oHelpDock:oWidget            := NIL
-   ::oFuncDock:oWidget            := NIL
-
-   ::oSourceThumbnailDock:oWidget := NIL
-   ::oQScintillaDock:oWidget      := NIL
-   ::oReportsManagerDock:oWidget  := NIL
-   ::oFormatDock:oWidget          := NIL
-
-   ::oDockPT:oWidget              := NIL
-   ::oDockED:oWidget              := NIL
-   ::oDockB2:oWidget              := NIL
-   #endif
-
-   ::oIde:oOutputResult           := NIL
-   ::oIde:oEnvironDock            := NIL
-   ::oIde:oPropertiesDock         := NIL
-   ::oIde:oThemesDock             := NIL
-   ::oIde:oDocViewDock            := NIL
-   ::oIde:oDocWriteDock           := NIL
-   ::oIde:oFindDock               := NIL
-   ::oIde:oFunctionsDock          := NIL
-   ::oIde:oSkeltnDock             := NIL
-   ::oIde:oHelpDock               := NIL
-   ::oIde:oFuncDock               := NIL
-
-   ::oIde:oSourceThumbnailDock    := NIL
-   ::oIde:oQScintillaDock         := NIL
-   ::oIde:oReportsManagerDock     := NIL
-   ::oIde:oFormatDock             := NIL
-
-   ::oIde:oDockPT                 := NIL
-   ::oIde:oDockED                 := NIL
-   ::oIde:oDockB2                 := NIL
-
-   ::oIde:oSys                    := NIL
-   ::qAct1                        := NIL
-   ::qAct2                        := NIL
-
-   FOR EACH qTBtn IN ::aPanels
-      qTBtn := NIL
+   FOR EACH qTmp IN ::oIde:aMdies
+      qTmp:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
+      qTmp := NIL
    NEXT
-   ::aPanels := NIL
-   FOR EACH qTBtn IN ::aMdiBtns
-      qTBtn := NIL
-   NEXT
-   ::aMdiBtns := NIL
-   FOR EACH qTBtn IN ::oIde:aMarkTBtns
-      qTBtn := NIL
-   NEXT
-   ::oIde:aMarkTBtns := NIL
-#endif
+
+   ::nPass                       := NIL
+   ::aPanels                     := NIL
+   ::aMdiBtns                    := NIL
+   ::aBtnLines                   := NIL
+   ::aBtnDocks                   := NIL
+   ::oBtnTabClose                := NIL
+   ::qMdiToolBar                 := NIL
+   ::qMdiToolBarL                := NIL
+   ::aViewsInfo                  := NIL
+   ::qTBtnClose                  := NIL
+   ::qTimer                      := NIL
+   ::nPrevWindowState            := NIL
+   ::qAct1                       := NIL
+   ::qAct2                       := NIL
 
    RETURN Self
 
@@ -528,78 +512,104 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       EXIT
    CASE "dockQScintilla_visibilityChanged"
       IF p; ::oBM:show() ; ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockSourceThumbnail_visibilityChanged"
       IF p; ::oEM:showThumbnail(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockSkltnsTree_visibilityChanged"
       IF p; ::oSK:showTree(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockHelpDock_visibilityChanged"
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockDocViewer_visibilityChanged"
       IF p; ::oHL:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockDocWriter_visibilityChanged"
       IF p; ::oDW:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "oFuncDock_visibilityChanged"
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "docFunctions_visibilityChanged"
       IF p; ::oFN:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockProperties_visibilityChanged"
       IF p; ::oPM:fetchProperties(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "docEnvironments_visibilityChanged"
       IF p; ::oEV:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "docSkeletons_visibilityChanged"
       IF p; ::oSK:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockThemes_visibilityChanged"
       IF p; ::oTH:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    CASE "dockFindInFiles_visibilityChanged"
       IF p; ::oFF:show(); ENDIF
-      IF ! p .AND. ! p1:isVisible()
-         p1:raise()
+      IF !empty( p1 )
+         IF ! p .AND. ! p1:isVisible()
+            p1:raise()
+         ENDIF
       ENDIF
       EXIT
    /* Miscellaneous */

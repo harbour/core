@@ -153,6 +153,24 @@ METHOD HbqToolbar:onError( ... )
 
 METHOD HbqToolbar:destroy()
 
+   ::oWidget            := NIL
+   ::cName              := NIL
+   ::oParent            := NIL
+   ::hItems             := NIL
+   ::allowedAreas       := NIL
+   ::initialArea        := NIL
+   ::orientation        := NIL
+   ::size               := NIL
+   ::moveable           := NIL
+   ::floatable          := NIL
+   ::lPressed           := NIL
+   ::qPos               := NIL
+   ::qDrag              := NIL
+   ::qMime              := NIL
+   ::qDropAction        := NIL
+   ::qPix               := NIL
+   ::qByte              := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

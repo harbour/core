@@ -443,26 +443,33 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          ::contextMenuScene( p1 )
 
       CASE p == QEvent_GraphicsSceneDragEnter
+HB_TRACE( HB_TR_ALWAYS, QEvent_GraphicsSceneDragEnter, valtype( p1 ), p1 )
          p1:acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragMove
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDragMove", valtype( p1 ), p1 )
          p1:acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragLeave
 
       CASE p == QEvent_GraphicsSceneDrop
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 0, p1:className() )
          qMime := p1:mimeData()
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 1 )
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 2 )
             IF p2[ 1 ] == "DataTree"
                IF p2[ 2 ] != p2[ 3 ]
                   ::addField( p2[ 2 ], p2[ 3 ], p1:scenePos(), NIL )
                ENDIF
             ENDIF
-
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 21 )
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 3 )
             ::addObject( qMime:html(), p1:scenePos(), NIL )
-
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 31 )
          ELSEIF qMime:hasFormat( "application/x-menuitem" )
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 4 )
             cType := qMime:html()
             SWITCH cType
             CASE "Rectangle"          ;                        EXIT
@@ -478,8 +485,10 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
             CASE "Diagonal Line Left" ; cType := "LineDL"    ; EXIT
             ENDSWITCH
             ::addObject( cType, p1:scenePos(), NIL )
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 41 )
 
          ELSEIF qMime:hasUrls()
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 5 )
             qList := qMime:hbUrlList()
             FOR i := 0 TO qList:size() - 1
                cFile := ( QUrl( qList:at( i ) ) ):toLocalFile()
@@ -499,8 +508,11 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
                   END SEQUENCE
                ENDIF
             NEXT
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 51 )
+
          ENDIF
       ENDCASE
+HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 1000 )
 
       EXIT
 
