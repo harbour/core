@@ -1068,7 +1068,9 @@ PHB_THREADSTATE hb_threadStateClone( HB_ULONG ulAttr, PHB_ITEM pParams )
    PHB_THREADSTATE pThread = NULL;
 
    pThread = hb_threadStateNew();
+#if defined( HB_MT_VM )
    if( hb_stackId() != NULL )
+#endif
    {
       pThread->pszCDP    = hb_cdpID();
       pThread->pszLang   = hb_langID();

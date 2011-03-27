@@ -140,3 +140,36 @@ double hb_random_num()
 
    return d1 / d2;
 }
+
+void hb_random_block( void * data, HB_SIZE len )
+{
+   HB_BYTE * ptr = ( HB_BYTE * ) data;
+   int i, n, v;
+
+   if( ! s_fInit )
+   {
+      srand( ( unsigned ) hb_dateMilliSeconds() );
+      s_fInit = HB_TRUE;
+   }
+
+#if RAND_MAX >= HB_U32_MAX
+   n = 4;
+#elif RAND_MAX >= UINT24_MAX
+   n = 3;
+#elif RAND_MAX >= HB_U16_MAX
+   n = 2;
+#else
+   n = 1;
+#endif
+   i = 1;
+   v = 0;
+
+   while( len-- )
+   {
+      if( --i == 0 )
+         v = rand();
+      else
+         v >>= 8;
+      *ptr++ = ( HB_BYTE ) v;
+   }
+}
