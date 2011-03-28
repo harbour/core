@@ -149,6 +149,47 @@ METHOD IdeThemes:new( oIde, cThemesFile )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeThemes:destroy()
+
+   IF !empty( ::oSL )
+      ::oSL:qObj[ "listOptions"  ]:disConnect( "doubleClicked(QModelIndex)" )
+      ::oSL:qObj[ "buttonOk"     ]:disConnect( "clicked()" )
+      ::oSL:qObj[ "buttonCancel" ]:disConnect( "clicked()" )
+      ::oSL:destroy()
+   ENDIF
+
+   ::aIni        := NIL
+   ::aThemes     := NIL
+   ::aControls   := NIL
+   ::aItems      := NIL
+   ::aPatterns   := NIL
+   ::aApplyAct   := NIL
+
+   IF !empty( ::oUI )
+      ::oUI:q_listThemes    :disconnect( "currentRowChanged(int)" )
+      ::oUI:q_listItems     :disconnect( "currentRowChanged(int)" )
+      ::oUI:q_buttonColor   :disconnect( "clicked()"              )
+      ::oUI:q_buttonSave    :disconnect( "clicked()"              )
+      ::oUI:q_buttonSaveAs  :disconnect( "clicked()"              )
+      ::oUI:q_buttonCopy    :disconnect( "clicked()"              )
+      ::oUI:q_buttonApply   :disconnect( "clicked()"              )
+      ::oUI:q_buttonApplyAll:disconnect( "clicked()"              )
+      ::oUI:q_buttonDefault :disconnect( "clicked()"              )
+      ::oUI:q_checkItalic   :disconnect( "stateChanged(int)"      )
+      ::oUI:q_checkBold     :disconnect( "stateChanged(int)"      )
+      ::oUI:q_checkUnderline:disconnect( "stateChanged(int)"      )
+      ::oUI:q_buttonClose   :disconnect( "clicked()"              )
+
+      ::qHiliter := NIL
+      ::qEdit    := NIL
+
+      ::oUI:destroy()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeThemes:create( oIde, cThemesFile )
    LOCAL s, b_
 
@@ -204,29 +245,6 @@ METHOD IdeThemes:create( oIde, cThemesFile )
    aadd( ::aPatterns, { "BracketsAndBraces" , "\(|\)|\{|\}|\[|\]|\|"  , .f. } )
 
    aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" , .f. } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeThemes:destroy()
-
-   IF !empty( ::oSL )
-      ::oSL:qObj[ "listOptions"  ]:disConnect( "doubleClicked(QModelIndex)" )
-      ::oSL:qObj[ "buttonOk"     ]:disConnect( "clicked()" )
-      ::oSL:qObj[ "buttonCancel" ]:disConnect( "clicked()" )
-      ::oSL:destroy()
-   ENDIF
-
-   IF !empty( ::oUI )
-      ::qHiliter := NIL
-      ::qEdit    := NIL
-
-      //::oThemesDock:oWidget:setWidget( QWidget() )
-      IF !empty( ::oUI )
-         ::oUI:destroy()
-      ENDIF
-   ENDIF
 
    RETURN Self
 

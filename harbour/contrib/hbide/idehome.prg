@@ -164,7 +164,9 @@ METHOD IdeHome:destroy()
    ::qWelcomeBrowser:disconnect( "customContextMenuRequested(QPoint)" )
    ::qFaqBrowser:disconnect( "customContextMenuRequested(QPoint)" )
 
+   ::oWelcomeTab     := NIL
    ::qWelcomeBrowser := NIL
+   ::qCurBrowser     := NIL
 
    RETURN Self
 

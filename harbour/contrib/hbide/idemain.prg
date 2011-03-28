@@ -102,7 +102,7 @@ REQUEST ADS
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main( ... )
-   LOCAL oIde
+   LOCAL oIde, oTmp
 
 #ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS
@@ -137,8 +137,11 @@ PROCEDURE Main( ... )
 
    QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
 
-   oIde := HbIde():new( hb_aParams() ):create()
+   oTmp := HbIde():new( hb_aParams() )
+   oIde := oTmp:create()
    oIde:destroy()
+   oTmp := NIL
+   oIde := NIL
 
    RETURN
 
@@ -363,6 +366,7 @@ CLASS HbIde
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:destroy()
+   LOCAL xTmp
 
    /* Very important - destroy resources */
    HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------" )
@@ -376,9 +380,9 @@ METHOD HbIde:destroy()
    ::oSetup:destroy()
    ::oUpdn:destroy()
    ::oHL:destroy()
-   ::oDK:destroy()
    ::oHM:destroy()
    ::oSK:destroy()
+
    ::oFR:destroy()
    ::oFF:destroy()
    ::oSearchReplace:destroy()
@@ -393,12 +397,124 @@ METHOD HbIde:destroy()
    ::oPM:destroy()
    ::oRM:destroy()
 
-   //::oEM:destroy()       /* Almost GPF's */
+   ::oBM:destroy()
+   ::oSM:destroy()
+   ::oEM:destroy()
 
    ::oAC:destroy()
+   ::oDK:destroy()
+   ::oDA := NIL
    ::oDlg:destroy()
 
-   ::oFont := NIL
+   ::oINI:destroy()
+   ::oFmt:destroy()
+
+   FOR EACH xTmp IN ::aUserDict
+      xTmp:destroy()
+   NEXT
+   FOR EACH xTmp IN ::aSkltns
+      xTmp[ 1 ] := NIL
+      xTmp[ 2 ] := NIL
+   NEXT
+
+   ::oFont                    := NIL
+   ::oTH                      := NIL
+
+   ::aMeta                    := NIL
+   ::mp1                      := NIL
+   ::mp2                      := NIL
+   ::oXbp                     := NIL
+   ::nEvent                   := NIL
+   ::aTabs                    := NIL
+   ::aViews                   := NIL
+   ::aMdies                   := NIL
+   ::aProjData                := NIL
+   ::aPrpObjs                 := NIL
+   ::aEditorPath              := NIL
+   ::aSrcOnCmdLine            := NIL
+   ::aHbpOnCmdLine            := NIL
+   ::oTabParent               := NIL
+   ::oFrame                   := NIL
+   ::aTags                    := NIL
+   ::aText                    := NIL
+   ::aSkltns                  := NIL
+   ::aSources                 := NIL
+   ::aFuncList                := NIL
+   ::aLines                   := NIL
+   ::aComments                := NIL
+   ::aProjects                := NIL
+   ::aUserDict                := NIL
+   ::aMarkTBtns               := NIL
+   //
+   ::oStackedWidget           := NIL
+   ::oStackedWidgetMisc       := NIL
+   ::oFont                    := NIL
+   ::oProjTree                := NIL
+   ::oEditTree                := NIL
+   ::oFuncList                := NIL
+   ::oOutputResult            := NIL
+   ::oCompileResult           := NIL
+   ::oLinkResult              := NIL
+   ::oNewDlg                  := NIL
+   ::oPBFind                  := NIL
+   ::oPBRepl                  := NIL
+   ::oPBClose                 := NIL
+   ::oFind                    := NIL
+   ::oRepl                    := NIL
+   ::oCurProjItem             := NIL
+   ::oCurProject              := NIL
+   ::oProjRoot                := NIL
+   ::oExes                    := NIL
+   ::oLibs                    := NIL
+   ::oDlls                    := NIL
+   ::oProps                   := NIL
+   ::oGeneral                 := NIL
+   ::oSearchReplace           := NIL
+   ::oMainToolbar             := NIL
+   ::oDockR                   := NIL
+   ::oDockB                   := NIL
+   ::oDockB1                  := NIL
+   ::oDockB2                  := NIL
+   ::oDockPT                  := NIL
+   ::oDockED                  := NIL
+   ::oThemesDock              := NIL
+   ::oPropertiesDock          := NIL
+   ::oEnvironDock             := NIL
+   ::oFuncDock                := NIL
+   ::oDocViewDock             := NIL
+   ::oDocWriteDock            := NIL
+   ::oFunctionsDock           := NIL
+   ::oSkltnsTreeDock          := NIL
+   ::oHelpDock                := NIL
+   ::oSkeltnDock              := NIL
+   ::oFindDock                := NIL
+   ::oSourceThumbnailDock     := NIL
+   ::oQScintillaDock          := NIL
+   ::oUpDn                    := NIL
+   ::oReportsManagerDock      := NIL
+   ::oFormatDock              := NIL
+   ::lClosing                 := NIL
+   ::lStatusBarVisible        := NIL
+   ::nModeUI                  := NIL
+   ::oSys                     := NIL
+   ::oSysMenu                 := NIL
+
+   ::qLayout                  := NIL
+   ::qTabWidget               := NIL
+   ::qLayoutFrame             := NIL
+   ::qViewsCombo              := NIL
+   ::qFindDlg                 := NIL
+   ::qFontWrkProject          := NIL
+   ::qBrushWrkProject         := NIL
+   ::qProcess                 := NIL
+   ::qHelpBrw                 := NIL
+   ::qTBarLines               := NIL
+   ::qTBarPanels              := NIL
+   ::qTBarDocks               := NIL
+   ::qAnimateAction           := NIL
+   ::qStatusBarAction         := NIL
+   ::qCompModel               := NIL
+   ::qProtoList               := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
    HB_TRACE( HB_TR_ALWAYS, "After     ::oIde:destroy()", memory( 1001 )             )
@@ -444,7 +560,7 @@ METHOD HbIde:create( aParams )
    ::oFont:create( "10.Courier" )
 
    /* Functions Tag Manager */
-   ::oFN := IdeFunctions():new():create( Self )
+   ::oFN := IdeFunctions():new( Self ):create()
 
    /* Skeletons Manager     */
    ::oSK := IdeSkeletons():new( Self ):create()
@@ -649,6 +765,9 @@ METHOD HbIde:create( aParams )
    ENDDO
 
    DbCloseAll()
+   ::cProjIni := NIL
+   hbide_setIde( NIL )
+   hbide_destroyPlugins()
 
    RETURN self
 

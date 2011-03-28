@@ -152,8 +152,18 @@ METHOD HbqToolbar:onError( ... )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqToolbar:destroy()
+   LOCAL xTmp
 
-   ::oWidget            := NIL
+   FOR EACH xTmp IN ::hItems
+      IF xTmp:className() == "QTOOLBUTTON"
+         xTmp:disconnect( QEvent_MouseButtonPress   )
+         xTmp:disconnect( QEvent_MouseButtonRelease )
+         xTmp:disconnect( QEvent_MouseMove          )
+         xTmp:disconnect( QEvent_Enter              )
+         xTmp:disconnect( "clicked()" )
+      ENDIF
+      xTmp := NIL
+   NEXT
    ::cName              := NIL
    ::oParent            := NIL
    ::hItems             := NIL
@@ -170,6 +180,7 @@ METHOD HbqToolbar:destroy()
    ::qDropAction        := NIL
    ::qPix               := NIL
    ::qByte              := NIL
+   ::oWidget            := NIL
 
    RETURN Self
 

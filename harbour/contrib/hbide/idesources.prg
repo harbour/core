@@ -75,6 +75,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
 
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD destroy()
    METHOD loadSources()
    METHOD saveSource( nTab, lCancel, lAs )
    METHOD saveNamedSource( cSource )
@@ -97,6 +98,12 @@ METHOD IdeSourcesManager:new( oIde )
    ::oIde := oIde
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:destroy()
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

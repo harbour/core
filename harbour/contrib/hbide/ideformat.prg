@@ -110,6 +110,15 @@ METHOD IdeFormat:create( oIde )
 METHOD IdeFormat:destroy()
 
    IF !empty( ::oUI )
+      ::oUI:q_btnEditCmnds:disconnect( "clicked()"         )
+      ::oUI:q_btnStart    :disconnect( "clicked()"         )
+      ::oUI:q_btnCancel   :disconnect( "clicked()"         )
+      ::oUI:q_btnUpdSrc   :disconnect( "clicked()"         )
+      ::oUI:q_checkSelOnly:disconnect( "stateChanged(int)" )
+
+      ::qEdit    := NIL
+      ::qHiliter := NIL
+      ::oFormat  := NIL
 
       ::oUI:destroy()
    ENDIF

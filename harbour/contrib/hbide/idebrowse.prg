@@ -57,7 +57,7 @@
  *
  *                            Harbour-Qt IDE
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                 Pritpal Bedi <bedipritpal@hotmail.com>
  *                               27Jun2010
  */
 /*----------------------------------------------------------------------*/
@@ -266,12 +266,82 @@ METHOD IdeBrowseManager:setStyleSheet( nMode )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
-   LOCAL oPanel
+   LOCAL oPanel, qDock, qAct, qBtn
+
+   ::qRddCombo:disconnect( "currentIndexChanged(QString)" )
+   ::qTablesButton:disconnect( "clicked()" )
+   ::qIndexButton:disconnect( "clicked()" )
+   ::qPanelsButton:disconnect( "clicked()" )
+
+   IF !empty( ::qTimer )
+      ::qTimer:disconnect( "timeout()" )
+      ::qTimer:stop()
+      ::qTimer := nil
+   ENDIF
+
+   qDock := ::oIde:oEM:oQScintillaDock:oWidget
+   qDock:setWidget( QWidget() )
+   qDock:disconnect( QEvent_DragEnter )
+   qDock:disconnect( QEvent_Drop )
+
+   IF !empty( ::qStruct )
+      ::qStruct:disconnect( QEvent_Close )
+
+      ::qStruct:q_tableFields:disconnect( "itemSelectionChanged()" )
+      ::qStruct:q_buttonCopyStruct:disconnect( "clicked()" )
+
+      ::qStruct:q_tableFields:clearContents()
+
+      ::qStruct:destroy()
+      ::qStruct := NIL
+   ENDIF
+
+   FOR EACH qAct IN ::aIndexAct
+      qAct:disconnect( "triggered(bool)" )
+      qAct := NIL
+   NEXT
+   FOR EACH qAct IN ::aPanelsAct
+      qAct:disconnect( "triggered(bool)" )
+      qAct := NIL
+   NEXT
+
+   FOR EACH qBtn IN ::aToolBtns
+      qBtn:disconnect( "clicked()" )
+      qBtn := NIL
+   NEXT
 
    FOR EACH oPanel IN ::aPanels
       oPanel:destroy()
    NEXT
-   ::aPanels := {}
+   ::aPanels             := NIL
+
+   ::qDbu                := NIL
+   ::qStack              := NIL
+   ::qLayout             := NIL
+   ::qVSplitter          := NIL
+   ::qToolBar            := NIL
+   ::qToolBarL           := NIL
+   ::qStruct             := NIL
+   ::qRddCombo           := NIL
+   ::qConxnCombo         := NIL
+   ::qStatus             := NIL
+   ::qTimer              := NIL
+   ::aStatusPnls         := NIL
+   ::aPanels             := NIL
+   ::aToolBtns           := NIL
+   ::aButtons            := NIL
+   ::aIndexAct           := NIL
+   ::aRdds               := NIL
+   ::aConxns             := NIL
+   ::oCurBrw             := NIL
+   ::oCurPanel           := NIL
+   ::qPanelsMenu         := NIL
+   ::qIndexMenu          := NIL
+   ::qTablesMenu         := NIL
+   ::qPanelsButton       := NIL
+   ::qIndexButton        := NIL
+   ::qTablesButton       := NIL
+   ::aPanelsAct          := NIL
 
    RETURN Self
 
@@ -463,7 +533,8 @@ METHOD IdeBrowseManager:addPanel( cPanel )
 METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
 
-   ( qAct := ::qPanelsMenu:addAction( cPanel ) ):setIcon( hbide_image( "panel_7" ) )
+   qAct := ::qPanelsMenu:addAction( cPanel )
+   qAct:setIcon( hbide_image( "panel_7" ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
 
@@ -739,6 +810,7 @@ METHOD IdeBrowseManager:showTablesTree()
    oUI:exec()
    oUI:q_buttonOk:disconnect( "clicked()" )
    ::oIde:oINI:cTablesDialogGeometry := hbide_posAndSize( oUI:oWidget )
+   oUI:destroy()
 
    RETURN Self
 
@@ -1218,12 +1290,20 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
 METHOD IdeBrowsePanel:destroy()
    LOCAL aBrw, oSub
 
+   ::qWidget:disconnect( "subWindowActivated(QMdiSubWindow*)" )
+
    FOR EACH aBrw IN ::aBrowsers
       oSub := aBrw[ SUB_WINDOW ]
       ::qWidget:removeSubWindow( oSub )
       aBrw[ SUB_BROWSER ]:destroy()
       oSub := NIL
+      aBrw := NIL
    NEXT
+   ::aBrowsers    := NIL
+
+   ::qMenuWindows := NIL
+   ::qStruct      := NIL
+   ::qWidget      := NIL
 
    RETURN Self
 
@@ -1702,6 +1782,11 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
 
 METHOD IdeBrowse:destroy()
 
+   IF !empty( ::qTimer )
+      ::qTimer:disconnect( "timeout()" )
+      ::qTimer := NIL
+   ENDIF
+
    IF ! empty( ::qMdi )
    *  ::qMdi:disconnect( "aboutToActivate()" )
       ::qMdi:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
@@ -1717,6 +1802,7 @@ METHOD IdeBrowse:destroy()
       ENDIF
       ::oManager:oCurBrw := NIL
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

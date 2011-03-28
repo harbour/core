@@ -125,8 +125,39 @@ CLASS IdeDocFunction
    DATA   lOk                                     INIT .f.
 
    METHOD new()                                   INLINE Self
+   METHOD destroy()
 
    ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocFunction:destroy()
+
+   ::cName             := NIL
+   ::cTemplate         := NIL
+   ::cCategory         := NIL
+   ::cSubCategory      := NIL
+   ::cOneliner         := NIL
+   ::cStatus           := NIL
+   ::cPlatforms        := NIL
+   ::cSeeAlso          := NIL
+   ::cVersion          := NIL
+   ::cInherits         := NIL
+   ::cExternalLink     := NIL
+   ::aSyntax           := NIL
+   ::aArguments        := NIL
+   ::aReturns          := NIL
+   ::aDescription      := NIL
+   ::aExamples         := NIL
+   ::aTests            := NIL
+   ::aFiles            := NIL
+   ::aMethods          := NIL
+   ::aSource           := NIL
+   ::oTVItem           := NIL
+   ::cSourceTxt        := NIL
+   ::lOk               := NIL
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -235,9 +266,25 @@ METHOD IdeHarbourHelp:destroy()
    LOCAL aTmp, oFun
 
    IF ! empty( ::oUI )
-      ::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
-      ::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
+      ::oUI:q_buttonInstall    :disconnect( "clicked()"                           )
+      ::oUI:q_buttonHome       :disconnect( "clicked()"                           )
+      ::oUI:q_buttonBackward   :disconnect( "clicked()"                           )
+      ::oUI:q_buttonForward    :disconnect( "clicked()"                           )
+      ::oUI:q_buttonUp         :disconnect( "clicked()"                           )
+      ::oUI:q_buttonRefresh    :disconnect( "clicked()"                           )
+      ::oUI:q_buttonPrint      :disconnect( "clicked()"                           )
+      ::oUI:q_buttonPdf        :disconnect( "clicked()"                           )
+      ::oUI:q_browserView      :disconnect( "anchorClicked(QUrl)"                 )
+      ::oUI:q_tabWidgetContents:disconnect( "currentChanged(int)"                 )
+      ::oUI:q_editInstall      :disconnect( "textChanged(QString)"                )
+      ::oUI:q_editIndex        :disconnect( "textChanged(QString)"                )
+      ::oUI:q_editIndex        :disconnect( "returnPressed()"                     )
+      ::oUI:q_listIndex        :disconnect( "itemDoubleClicked(QListWidgetItem*)" )
+      ::oUI:q_treeDoc          :disconnect( "itemSelectionChanged()"              )
+      ::oUI:q_treeCategory     :disconnect( "itemSelectionChanged()"              )
+
       ::clear()
+
       ::oUI:destroy()
    ENDIF
 
@@ -246,6 +293,7 @@ METHOD IdeHarbourHelp:destroy()
    FOR EACH aTmp IN ::aFuncByFile
       aTmp[ 1 ] := NIL
       FOR EACH oFun IN aTmp[ 2 ]
+         oFun:destroy()
          oFun := NIL
       NEXT
       aTmp[ 2 ] := NIL
@@ -256,11 +304,12 @@ METHOD IdeHarbourHelp:destroy()
    ::aCategory           := NIL
    ::nCurTVItem          := NIL
    ::nCurInHist          := NIL
-   ::qHiliter            := NIL
    ::hIndex              := NIL
    ::aProtoTypes         := NIL
    ::lLoadedProto        := NIL
    ::aFuncDefs           := NIL
+
+   ::qHiliter            := NIL
 
    RETURN Self
 
@@ -282,20 +331,20 @@ METHOD IdeHarbourHelp:clear()
    /* Contents Tab */
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Function"
-         a_[ 3 ]:removeChild( a_[ 1 ] )
+//         a_[ 3 ]:removeChild( a_[ 1 ] )
          a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "File"
-         a_[ 3 ]:removeChild( a_[ 1 ] )
+//         a_[ 3 ]:removeChild( a_[ 1 ] )
          a_[ 1 ] := NIL ; a_[ 3 ] := NIL
       ENDIF
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Path"
          IF hb_isObject( a_[ 3 ] )
-            a_[ 3 ]:removeChild( a_[ 1 ] )
+//            a_[ 3 ]:removeChild( a_[ 1 ] )
             a_[ 3 ] := NIL
          ENDIF
          a_[ 1 ] := NIL
@@ -315,7 +364,7 @@ METHOD IdeHarbourHelp:clear()
    /* Category Tab */
    FOR EACH a_ IN ::aCategory
       IF a_[ 7 ] == " "
-         a_[ 6 ]:removeChild( a_[ 5 ] )
+//         a_[ 6 ]:removeChild( a_[ 5 ] )
          a_[ 6 ] := NIL ; a_[ 5 ] := NIL
       ENDIF
    NEXT
@@ -324,7 +373,7 @@ METHOD IdeHarbourHelp:clear()
          a_[ 5 ] := NIL
       ENDIF
    NEXT
-   ::aCategory := {}
+   ::aCategory := NIL
 
    ::oUI:q_treeDoc:clear()
    ::oUI:q_treeCategory:clear()

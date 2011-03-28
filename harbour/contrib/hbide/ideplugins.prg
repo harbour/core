@@ -316,3 +316,13 @@ FUNCTION hbide_execScriptFunction( cFunc, ... )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_destroyPlugins()
+
+   s_aPlugins := NIL
+   s_aLoaded  := NIL
+   s_aPersist := NIL
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

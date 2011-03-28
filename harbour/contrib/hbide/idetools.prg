@@ -157,7 +157,7 @@ METHOD IdeToolsManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:destroy()
-   LOCAL qAct
+   LOCAL qAct, xTmp
 
    IF !empty( ::oUI )
       FOR EACH qAct IN ::aAct
@@ -189,6 +189,27 @@ METHOD IdeToolsManager:destroy()
 
       ::oUI:destroy()
    ENDIF
+
+   FOR EACH xTmp IN ::aBtns
+      xTmp:disconnect( "clicked()" )
+      xTmp := NIL
+   NEXT
+   FOR EACH xTmp IN ::aToolbars
+      xTmp := NIL
+   NEXT
+
+   ::aAct            := NIL
+   ::qToolsMenu      := NIL
+   ::qToolsButton    := NIL
+   ::aPanelsAct      := NIL
+   ::qPanelsButton   := NIL
+   ::qPanelsMenu     := NIL
+   ::oProcess        := NIL
+   ::lExecuting      := NIL
+   ::aHdr            := NIL
+   ::aBtns           := NIL
+   ::aToolbars       := NIL
+   ::aPlugins        := NIL
 
    RETURN Self
 

@@ -126,6 +126,11 @@ METHOD IdeEnvironments:destroy()
       ::oUI_1:destroy()
    ENDIF
 
+   ::aNames           := NIL
+   ::aEnvrns          := NIL
+   ::aShellContents   := NIL
+   ::aCommons         := NIL
+
    RETURN Self
 
 /*------------------------------------------------------------------------*/

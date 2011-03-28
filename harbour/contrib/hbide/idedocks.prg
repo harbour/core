@@ -209,6 +209,16 @@ METHOD IdeDocks:destroy()
       ::oIde:oSys                : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
       ::qAct1                    : disconnect( "triggered(bool)"         )
       ::qAct2                    : disconnect( "triggered(bool)"         )
+
+      ::oIde:oSys := NIL
+      ::qAct1     := NIL
+      ::qAct2     := NIL
+   ENDIF
+
+   IF !empty( ::qTimer )
+      ::qTimer:disconnect( "timeout()" )
+      ::qTimer:stop()
+      ::qTimer := NIL
    ENDIF
 
    ::oIde:oOutputResult          := NIL
@@ -232,9 +242,15 @@ METHOD IdeDocks:destroy()
    ::oIde:oDockED                := NIL
    ::oIde:oDockB2                := NIL
 
+   ::oIde:oDockB1                := NIL
+   ::oIde:oLinkResult            := NIL
+
    ::oIde:oSys                   := NIL
    ::qAct1                       := NIL
    ::qAct2                       := NIL
+
+   ::oIde:oDockB                 := NIL
+   ::oIde:oCompileResult         := NIL
 
    FOR EACH qTmp IN ::aPanels
       qTmp:disconnect( "clicked()" )
@@ -255,20 +271,21 @@ METHOD IdeDocks:destroy()
       qTmp := NIL
    NEXT
 
+   ::qMdiToolBar:destroy()
+   ::qMdiToolBar := NIL
+   ::qMdiToolBarL:destroy()
+   ::qMdiToolBarL := NIL
+
    ::nPass                       := NIL
    ::aPanels                     := NIL
    ::aMdiBtns                    := NIL
    ::aBtnLines                   := NIL
    ::aBtnDocks                   := NIL
    ::oBtnTabClose                := NIL
-   ::qMdiToolBar                 := NIL
-   ::qMdiToolBarL                := NIL
    ::aViewsInfo                  := NIL
    ::qTBtnClose                  := NIL
    ::qTimer                      := NIL
    ::nPrevWindowState            := NIL
-   ::qAct1                       := NIL
-   ::qAct2                       := NIL
 
    RETURN Self
 

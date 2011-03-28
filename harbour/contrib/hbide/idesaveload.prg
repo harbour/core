@@ -161,6 +161,7 @@ CLASS IdeINI INHERIT IdeObject
 
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD destroy()
    METHOD load( cHbideIni )
    METHOD save( cHbideIni )
 
@@ -182,6 +183,31 @@ CLASS IdeINI INHERIT IdeObject
 METHOD IdeINI:new( oIde )
    ::oIde := oIde
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeINI:destroy()
+
+   ::aINI              := NIL
+   ::aAppThemes        := NIL
+
+   ::aProjFiles        := NIL
+   ::aFiles            := NIL
+   ::aFind             := NIL
+   ::aReplace          := NIL
+   ::aRecentProjects   := NIL
+   ::aRecentFiles      := NIL
+   ::aFolders          := NIL
+   ::aViews            := NIL
+   ::aTaggedProjects   := NIL
+   ::aTools            := NIL
+   ::aUserToolbars     := NIL
+   ::aKeywords         := NIL
+   ::aDbuPanelNames    := NIL
+   ::aDbuPanelsInfo    := NIL
+   ::aDictionaries     := NIL
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

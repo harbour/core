@@ -210,6 +210,8 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
       CASE 0
          RETURN .T.
       CASE -3 /* event not found */
+      CASE -2 /* event not found */
+      CASE -1 /* event not found */
          RETURN .F.
       ENDSWITCH
       EXIT

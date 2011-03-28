@@ -593,7 +593,6 @@ METHOD IdeFunctions:consolidateList()
 
 METHOD IdeFunctions:populateTable()
    LOCAL oTbl, qItm, a_, n
-   LOCAL qApp := QApplication()
 
    ::clear( .t. )
    ::buildHeader()
@@ -610,7 +609,7 @@ METHOD IdeFunctions:populateTable()
       oTbl:setItem( n, 0, qItm )
       oTbl:setRowHeight( n, 16 )
 
-      qApp:processEvents()
+      QApplication():processEvents()
 
       aadd( ::aItems, qItm )
       n++

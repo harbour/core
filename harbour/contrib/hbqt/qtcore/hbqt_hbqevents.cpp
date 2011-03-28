@@ -257,13 +257,10 @@ HB_FUNC( __HBQT_EVENTS_CONNECT )
             hb_snprintf( prop, sizeof( prop ), "P%iP", type ); /* Make it a unique identifier */
 
             int i = object->property( prop ).toInt();
-            if( i == 0 )  /* No Duplicates of same event with same object - it is a design decision - never alter */
+            if( i == 0 )
             {
                t_events->listBlock << codeblock;
-
                object->setProperty( prop, ( int ) t_events->listBlock.size() );
-
-               nResult = 0;
             }
             else
             {
@@ -272,9 +269,8 @@ HB_FUNC( __HBQT_EVENTS_CONNECT )
                   hb_itemRelease( t_events->listBlock.at( i - 1 ) );
                }
                t_events->listBlock[ i - 1 ] = codeblock;
-
-               nResult = 0;
             }
+            nResult = 0;
          }
          else
             nResult = -3;

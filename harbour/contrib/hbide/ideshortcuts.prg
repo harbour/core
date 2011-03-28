@@ -284,6 +284,10 @@ METHOD IdeShortcuts:destroy()
       ::oUI:destroy()
    ENDIF
 
+   ::aMethods  := NIL
+   ::aKeys     := NIL
+   ::aDftSCuts := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

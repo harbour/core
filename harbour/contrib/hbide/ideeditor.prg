@@ -190,14 +190,33 @@ METHOD IdeEditsManager:new( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:setStyleSheet( nMode )
+METHOD IdeEditsManager:destroy()
+   LOCAL a_
 
-   ::qContextMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-   ::qContextSub:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qCompleter:disconnect( "activated(QString)" )
+
+   ::oIde:qCompModel := NIL
+   ::oIde:qProtoList := NIL
+
+   FOR EACH a_ IN ::aActions
+      a_[ 2 ] := NIL
+      a_:= NIL
+   NEXT
+   ::aActions     := NIL
+   ::aProtos      := NIL
+
+   ::qContextMenu := NIL
+   ::qFldsStrList := NIL
+   ::qFldsModel   := NIL
+
+   FOR EACH a_ IN ::oIde:aTabs
+      a_[ 2 ]:destroy()
+      a_:= NIL
+   NEXT
 
    RETURN Self
 
-/*------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:create( oIde )
 
@@ -248,6 +267,15 @@ METHOD IdeEditsManager:create( oIde )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:setStyleSheet( nMode )
+
+   ::qContextMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qContextSub:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:updateFieldsList( cAlias )
    LOCAL aFlds
 
@@ -279,7 +307,7 @@ METHOD IdeEditsManager:updateCompleter()
    aHrb := ::oHL:getFunctionPrototypes()
    aUsr := hbide_getUserPrototypes()
 
-   ::qCompleter:disconnect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:disconnect( "activated(QString)" )
 
    ::aProtos := {}
    aeval( aHrb, {|e| aadd( ::aProtos, e ) } )
@@ -338,24 +366,6 @@ METHOD IdeEditsManager:getProto( cWord )
    ENDIF
 
    RETURN ""
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:destroy()
-   LOCAL a_
-
-   ::qCompleter:disconnect( "activated(QString)" )
-   ::oIde:qCompModel := NIL
-   ::oIde:qProtoList := NIL
-   ::oIde:qCompleter := NIL
-
-   FOR EACH a_ IN ::aActions
-      a_[ 2 ] := NIL
-   NEXT
-   ::aActions := NIL
-   ::qContextMenu := NIL
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1420,6 +1430,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
+HB_TRACE( HB_TR_ALWAYS, "..........................................................IdeEditor:destroy()", 0 )
    ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
 
    IF !empty( ::qTimerSave )
@@ -1432,9 +1443,10 @@ METHOD IdeEditor:destroy()
 
    ::qHiliter := NIL
 
-   ::qCqEdit := NIL
-   ::qCoEdit := NIL
-   ::qEdit   := NIL
+   ::qCqEdit  := NIL
+   ::qCoEdit  := NIL
+   ::qEdit    := NIL
+
    DO WHILE len( ::aEdits ) > 0
       oEdit := ::aEdits[ 1 ]
       hb_adel( ::aEdits, 1, .t. )
@@ -1447,14 +1459,11 @@ METHOD IdeEditor:destroy()
    ENDIF
 
    IF !Empty( ::qHiliter )
-      ::qHiliter  := NIL
+      ::qHiliter := NIL
    ENDIF
 
    ::oEdit := NIL
-
-   IF !Empty( ::qLayout )
-      ::qLayout   := NIL
-   ENDIF
+   ::qLayout := NIL
 
    IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
       hb_adel( ::oIde:aTabs, n, .T. )
@@ -1471,7 +1480,7 @@ METHOD IdeEditor:destroy()
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-
+HB_TRACE( HB_TR_ALWAYS, "................................................................IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

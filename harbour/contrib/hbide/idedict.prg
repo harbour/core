@@ -142,6 +142,15 @@ METHOD IdeDictionary:create( oIde )
 
 METHOD IdeDictionary:destroy()
 
+   ::cDictInfo        := NIL
+   ::cFilename        := NIL
+   ::lCaseSensitive   := NIL
+   ::cConvMode        := NIL
+   ::lAutoComplete    := NIL
+   ::cBgColor         := NIL
+   ::qBgColor         := NIL
+   ::aItems           := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

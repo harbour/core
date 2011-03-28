@@ -85,7 +85,7 @@ FUNCTION hbide_setIde( oIde )
    LOCAL oldIde
    STATIC ide
    oldIde := ide
-   IF hb_isObject( oIde )
+   IF PCount() > 0
       ide := oIde
    ENDIF
    RETURN oldIde

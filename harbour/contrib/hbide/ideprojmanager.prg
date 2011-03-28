@@ -299,8 +299,26 @@ METHOD IdeProjManager:create( oIDE )
 METHOD IdeProjManager:destroy()
 
    IF !empty( ::oUI )
+      ::oUI:q_buttonCn          :disconnect( "clicked()" )
+      ::oUI:q_buttonSave        :disconnect( "clicked()" )
+      ::oUI:q_buttonSaveExit    :disconnect( "clicked()" )
+      ::oUI:q_buttonSelect      :disconnect( "clicked()" )
+      ::oUI:q_buttonUp          :disconnect( "clicked()" )
+      ::oUI:q_buttonDown        :disconnect( "clicked()" )
+   // ::oUI:q_buttonSort        :disconnect( "clicked()" )
+   // ::oUI:q_buttonSortZA      :disconnect( "clicked()" )
+   // ::oUI:q_buttonSortOrg     :disconnect( "clicked()" )
+      ::oUI:q_tabWidget         :disconnect( "currentChanged(int)" )
+      ::oUI:q_buttonChoosePrjLoc:disconnect( "clicked()" )
+      ::oUI:q_buttonChooseWd    :disconnect( "clicked()" )
+      ::oUI:q_buttonChooseDest  :disconnect( "clicked()" )
+      ::oUI:q_buttonBackup      :disconnect( "clicked()" )
+      ::oUI:q_editPrjLoctn      :disconnect( "textChanged(QString)" )
+
       ::oUI:destroy()
    ENDIF
+
+   ::aPrjProps := NIL
 
    RETURN Self
 
@@ -1149,6 +1167,9 @@ METHOD IdeProjManager:selectCurrentProject()
    oDlg:q_btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
                                                                                              oDlg:done( 1 ) } )
    oDlg:exec()
+
+   oDlg:q_btnCancel:disconnect( "clicked()" )
+   oDlg:q_btnOk    :disconnect( "clicked()" )
    oDlg:destroy()
    oDlg := NIL
 

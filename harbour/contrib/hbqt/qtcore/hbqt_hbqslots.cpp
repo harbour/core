@@ -123,10 +123,6 @@ HBQSlots::~HBQSlots()
          listBlock[ i ] = NULL;
       }
    }
-   /* QUESTION: Should there be all remaining active slots disconnected at this point? */
-
-   /* Should be disconnected, but this is a responsibility of programmer as object is only known to the application */
-   //listBlock.clear();
 }
 
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
