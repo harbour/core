@@ -41,8 +41,8 @@ mxml_str.c
 # MAP    mxml-index.c    mxml_ind.c
 # MAP    mxml-node.c     mxml_nod.c
 # MAP    mxml-private.c  mxml_pri.c
+# MAP    mxml-private.h  mxml_pri.h
 # MAP    mxml-search.c   mxml_sea.c
 # MAP    mxml-set.c      mxml_set.c
 # MAP    mxml-string.c   mxml_str.c
 # MAP    mxml.h          mxml.h
-# MAP    mxml-private.h  mxml_pri.h

@@ -1,9 +1,9 @@
 /*
- * "$Id: mxml-file.c 415 2010-09-19 07:29:46Z mike $"
+ * "$Id: mxml-file.c 438 2011-03-24 05:47:51Z mike $"
  *
  * File loading code for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2010 by Michael R Sweet.
+ * Copyright 2003-2011 by Michael R Sweet.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
@@ -1582,18 +1582,21 @@ mxml_load_data(
 
     if (ch == '<' && whitespace && type == MXML_TEXT)
     {
-      node = mxmlNewText(parent, whitespace, "");
-
-      if (sax_cb)
+      if (parent)
       {
-        (*sax_cb)(node, MXML_SAX_DATA, sax_data);
+	node = mxmlNewText(parent, whitespace, "");
 
-        if (!mxmlRelease(node))
-          node = NULL;
+	if (sax_cb)
+	{
+	  (*sax_cb)(node, MXML_SAX_DATA, sax_data);
+
+	  if (!mxmlRelease(node))
+	    node = NULL;
+	}
+
+	if (!first && node)
+	  first = node;
       }
-
-      if (!first && node)
-        first = node;
 
       whitespace = 0;
     }
@@ -1964,7 +1967,7 @@ mxml_load_data(
           (*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
 
           if (!mxmlRelease(node) && first == node)
-            first = NULL;
+	    first = NULL;
         }
 
        /*
@@ -3106,5 +3109,5 @@ mxml_write_ws(mxml_node_t     *node,	/* I - Current node */
 
 
 /*
- * End of "$Id: mxml-file.c 415 2010-09-19 07:29:46Z mike $".
+ * End of "$Id: mxml-file.c 438 2011-03-24 05:47:51Z mike $".
  */

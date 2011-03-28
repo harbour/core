@@ -1,5 +1,5 @@
 /*
- * "$Id: mxml-node.c 427 2011-01-03 02:03:29Z mike $"
+ * "$Id: mxml-node.c 436 2011-01-22 01:02:05Z mike $"
  *
  * Node support code for Mini-XML, a small XML-like file parsing library.
  *
@@ -15,6 +15,22 @@
  *
  * Contents:
  *
+ *   mxmlAdd()         - Add a node to a tree.
+ *   mxmlDelete()      - Delete a node and all of its children.
+ *   mxmlGetRefCount() - Get the current reference (use) count for a node.
+ *   mxmlNewCDATA()    - Create a new CDATA node.
+ *   mxmlNewCustom()   - Create a new custom data node.
+ *   mxmlNewElement()  - Create a new element node.
+ *   mxmlNewInteger()  - Create a new integer node.
+ *   mxmlNewOpaque()   - Create a new opaque string.
+ *   mxmlNewReal()     - Create a new real number node.
+ *   mxmlNewText()     - Create a new text fragment node.
+ *   mxmlNewTextf()    - Create a new formatted text fragment node.
+ *   mxmlRemove()      - Remove a node from its parent.
+ *   mxmlNewXML()      - Create a new XML document tree.
+ *   mxmlRelease()     - Release a node.
+ *   mxmlRetain()      - Retain a node.
+ *   mxml_new()        - Create a new node.
  */
 
 /*
@@ -205,11 +221,7 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
   */
 
   while (node->child)
-  {
-    mxml_node_t *child = node->child;
-    mxmlRemove(child);
-    mxmlRelease(child);
-  }
+    mxmlDelete(node->child);
 
  /*
   * Now delete any node data...
@@ -791,5 +803,5 @@ mxml_new(mxml_node_t *parent,		/* I - Parent node */
 
 
 /*
- * End of "$Id: mxml-node.c 427 2011-01-03 02:03:29Z mike $".
+ * End of "$Id: mxml-node.c 436 2011-01-22 01:02:05Z mike $".
  */
