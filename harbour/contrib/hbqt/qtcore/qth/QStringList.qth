@@ -39,7 +39,7 @@ HB_FUNC( QT_QSTRINGLIST )
 
 <PROTOS>
 void append ( const QString & value )
-// bool contains ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+//bool contains ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
 QStringList filter ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
 QStringList filter ( const QRegExp & rx ) const
 int indexOf ( const QString & value, int from = 0 ) const
@@ -50,31 +50,22 @@ int lastIndexOf ( const QRegExp & rx, int from = -1 ) const
 int lastIndexOf ( const QString & value, int from = -1 ) const
 int lastIndexOf ( QRegExp & rx, int from = -1 ) const
 int removeDuplicates ()
-// QStringList & replaceInStrings ( const QString & before, const QString & after, Qt::CaseSensitivity cs = Qt::CaseSensitive )
-// QStringList & replaceInStrings ( const QRegExp & rx, const QString & after )
+QStringList & replaceInStrings ( const QString & before, const QString & after, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+QStringList & replaceInStrings ( const QRegExp & rx, const QString & after )
 void sort ()
-
-
-
 QString & at ( int i ) const
 QString & back ()
-
 int count ( const QString & value ) const
-
 bool endsWith ( const QString & value ) const
-
-//QString & first ()
+QString & first ()
 const QString & first () const
-
-//QString & front ()
+QString & front ()
 const QString & front () const
-
 void insert ( int i, const QString & value )
-
-//QString & last ()
+QString & last ()
 const QString & last () const
 
-QList<QString> mid ( int pos, int length = -1 ) const
+//QList<QString> mid ( int pos, int length = -1 ) const
 
 void prepend ( const QString & value )
 void push_back ( const QString & value )

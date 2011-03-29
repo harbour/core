@@ -448,10 +448,16 @@ METHOD XbpWindow:disconnectWindowEvents()
 
 METHOD XbpWindow:destroy()
 
+   ::aPresParams := NIL
+
    ::oParent := NIL
    ::oOwner  := NIL
 
-   IF Len( ::aChildren ) > 0
+   IF !empty( ::oTabWidget )
+      ::oTabWidget := NIL
+   ENDIF
+
+   IF ! empty( ::aChildren )
       aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
    ENDIF

@@ -1673,6 +1673,34 @@ METHOD IdeBrowse:new( oIde, oManager, oPanel, aInfo )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:destroy()
+
+   IF !empty( ::qTimer )
+      ::qTimer:disconnect( "timeout()" )
+      ::qTimer := NIL
+   ENDIF
+
+   IF ! empty( ::qMdi )
+   *  ::qMdi:disconnect( "aboutToActivate()" )
+      ::qMdi:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
+      ::qMdi:disconnect( QEvent_Close )
+   ENDIF
+
+   IF ! empty( ::oWnd )
+      ::qLayout:removeWidget( ::qSplitter )
+      ::oWnd:destroy()
+      ::qForm := NIL
+      IF ::lOpened
+         ( ::cAlias )->( dbCloseArea() )
+      ENDIF
+      ::qSplitter := NIL
+      ::oManager:oCurBrw := NIL
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    LOCAL xVrb, cT, cName, n
    LOCAL lMissing := .t.
@@ -1775,33 +1803,6 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::qTimer := QTimer()
    ::qTimer:setInterval( 5 )
    ::qTimer:connect( "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:destroy()
-
-   IF !empty( ::qTimer )
-      ::qTimer:disconnect( "timeout()" )
-      ::qTimer := NIL
-   ENDIF
-
-   IF ! empty( ::qMdi )
-   *  ::qMdi:disconnect( "aboutToActivate()" )
-      ::qMdi:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
-      ::qMdi:disconnect( QEvent_Close )
-   ENDIF
-
-   IF ! empty( ::oWnd )
-      ::qLayout:removeWidget( ::qSplitter )
-      ::oWnd:destroy()
-      ::qForm := NIL
-      IF ::lOpened
-         ( ::cAlias )->( dbCloseArea() )
-      ENDIF
-      ::oManager:oCurBrw := NIL
-   ENDIF
 
    RETURN Self
 

@@ -378,12 +378,13 @@ METHOD IdeEdit:destroy()
    ::qEdit:disconnect( QEvent_Wheel               )
    ::qEdit:disconnect( QEvent_FocusIn             )
    ::qEdit:disconnect( QEvent_FocusOut            )
+   ::qEdit:disconnect( QEvent_Resize              )
    ::qEdit:disconnect( QEvent_MouseButtonDblClick )
 
    ::disconnectEditSignals( Self )
 
-   ::qEdit    := NIL
-   ::qFont    := NIL
+   ::qEdit  := NIL
+   ::qFont  := NIL
 
    RETURN Self
 

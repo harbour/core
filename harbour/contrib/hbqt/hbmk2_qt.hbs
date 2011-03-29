@@ -1080,6 +1080,7 @@ CREATE CLASS HbQtSource
    METHOD buildDOC()
    METHOD getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    METHOD normalizeCmd( oMtd, v )
+   METHOD getReturnAsList( oMtd, FP, cPrefix )
 
 ENDCLASS
 
@@ -1383,28 +1384,6 @@ METHOD HbQtSource:build()
    aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass );" )
    aadd( aLine, "" )
 
-#if 0
-   aadd( aLine, "static PHB_ITEM __instantiate()" )
-   aadd( aLine, "{" )
-   aadd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
-   aadd( aLine, "   if( s_oClass == NULL )" )
-   aadd( aLine, "   {" )
-   aadd( aLine, "      s_oClass = hb_itemNew( NULL );" )
-   FOR EACH k IN hb_aTokens( s, "," )
-      aadd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
-   NEXT
-   aadd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
-   aadd( aLine, "      if( oClass )" )
-   aadd( aLine, "      {" )
-   aadd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
-   aadd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
-   aadd( aLine, "      }" ) /* TODO: Error handling */
-   aadd( aLine, "   }" )
-   aadd( aLine, '   return s_oClass;' )
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
-#endif
-
    FOR EACH s IN ::hRef
       IF s:__enumKey() == "QList" /* TOFIX: Ugly hack */
          tmp := s:__enumKey() + "< void * >"
@@ -1497,6 +1476,13 @@ METHOD HbQtSource:build()
          #ifdef _GEN_TRACE_
          aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
          #endif
+         IF ::isList
+         aadd( aLine, "            int i; " )
+         aadd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
+         aadd( aLine, "            {" )
+         aadd( aLine, "               hb_itemRelease( p->ph->at( i ) );" )
+         aadd( aLine, "            }" )
+         ENDIF
          aadd( aLine, "            delete ( ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
          #ifdef _GEN_TRACE_
          aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
@@ -1540,7 +1526,6 @@ METHOD HbQtSource:build()
       aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
    ELSE
       aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
-      // aadd( aLine, "   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );" )
    ENDIF
    aadd( aLine, "" )
    IF ::isObject
@@ -1702,13 +1687,69 @@ METHOD HbQtSource:normalizeCmd( oMtd, v )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
+   LOCAL cRetCast, n, n1, cCast, cParas, nStrCnt, lFar
+   LOCAL aLines := {}
+
+   IF oMtd:isRetList
+      cRetCast := oMtd:oRet:cCast
+      lFar := "*" $ cRetCast
+      IF ( n := at( "<", cRetCast ) ) > 0
+         IF ( n1 := at( ">", cRetCast ) ) > 0
+            cCast := alltrim( substr( cRetCast, n + 1, n1 - n - 1 ) )
+            cCast := strtran( cCast, "*" )
+            cCast := strtran( cCast, " " )
+         ENDIF
+      ENDIF
+      IF ! empty( cCast )
+         cParas := oMtd:cParas
+         nStrCnt := 0
+         DO WHILE "%%%" $ cParas
+            ++nStrCnt
+            cParas := StrTran( cParas, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
+         ENDDO
+
+         aadd( aLines, cPrefix + 'QList<PHB_ITEM> * qList = new QList< PHB_ITEM >;' )
+         aadd( aLines, cPrefix + cRetCast + ' qL = p->' + oMtd:cFun + cParas + ';' )
+         aadd( aLines, cPrefix + "int i;" )
+         aadd( aLines, cPrefix + "for( i = 0; i < qL.size(); i++ )" )
+         aadd( aLines, cPrefix + "{" )
+         IF cCast == "QString"
+            aadd( aLines, cPrefix + '   const char * str = qL.at( i ).data();' )
+            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            aadd( aLines, cPrefix + '   hb_itemPutCL( pItem, str, strlen( str ) );' )
+            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+         ELSEIF cCast == "int"
+            aadd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
+            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            aadd( aLines, cPrefix + '   hb_itemPutNI( pItem, qL.at( i ) );' )
+            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+         ELSEIF cCast == "qreal"
+            aadd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
+            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            aadd( aLines, cPrefix + '   hb_itemPutND( pItem, qL.at( i ) );' )
+            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+         ELSE
+            IF lFar
+               aadd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( ( void * ) qL.at( i ), false ) , "HB_' + upper( cCast ) + '" ) ) );' )
+            ELSE
+               aadd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( new ' + cCast + '( qL.at( i ) ), true ) , "HB_' + upper( cCast ) + '" ) ) );' )
+            ENDIF
+         ENDIF
+         aadd( aLines, cPrefix + '}' )
+         aadd( aLines, cPrefix + 'hbqt_create_objectGC( hbqt_gcAllocate_QList( qList, true ), "HB_QLIST" );' )
+      ENDIF
+   ELSE
+      aadd( aLines, cPrefix + FP + ";" )
+   ENDIF
+
+   RETURN aLines
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
-   LOCAL FP, cTmp, n
-   LOCAL v, t_
+   LOCAL FP, cTmp, n, v, t_, q, nStrCnt, ooMtd, i, a_
    LOCAL txt_:= {}
-   LOCAL ooMtd, i, a_
-   LOCAL q
-   LOCAL nStrCnt
 
    HB_SYMBOL_UNUSED( cMtdName )
 
@@ -1730,15 +1771,20 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    oMtd:cHBFunc := oMtd:cFun
    aadd( ::func_, { oMtd:cFun, 0, "" } )
 
-   aadd( txt_, "/* " + strtran( oMtd:cProto, chr( 13 ) ) + " */" )
+//   aadd( txt_, "/* " + strtran( oMtd:cProto, chr( 13 ) ) + " */" )
+   FOR EACH ooMtd IN a_
+      aadd( txt_, "/* " + strtran( ooMtd:cProto, chr( 13 ) ) + " */" )
+   NEXT
 
 // v := "_" + lower( substr( ::cQtObject, 2 ) )  /* This unneccessarily makes it difficlt to compare two sources with similar functions */
    v := "p"
 
    aadd( txt_, "HB_FUNC_STATIC( " + upper( oMtd:cHBFunc ) + " )" )
    aadd( txt_, "{" )
+   #ifdef _GEN_TRACE_
 // aadd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
    aadd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   #endif
 
    IF !empty( oMtd:fBody_ )
       aeval( oMtd:fBody_, {|e| aadd( txt_, e ) } )
@@ -1758,7 +1804,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
 
             aadd( txt_, "   if( " + v + " )" )
             aadd( txt_, "   {" )
-            aadd( txt_, "      " + FP + ";" )
+            aeval( ::getReturnAsList( a_[ 1 ], FP, "      " ), {|e| aadd( txt_, e ) } )
             IF oMtd:oRet:cCast == "void"
                aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
             ENDIF
@@ -1778,7 +1824,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
             CASE a_[ i ]:nArgs == 0
                aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
                aadd( txt_, "      {" )
-               aadd( txt_, "         " + FP + ";" )
+               aeval( ::getReturnAsList( a_[ i ], FP, "      " ), {|e| aadd( txt_, e ) } )
                IF oMtd:oRet:cCast == "void"
                   aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
                ENDIF
@@ -1809,7 +1855,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                ENDIF
 
                /* Manage detached Argument */
-               IF a_[i]:nDetach > 0
+               IF a_[ i ]:nDetach > 0
                   aadd( txt_, "        hbqt_detachgcpointer( " + hb_ntos( a_[i]:nDetach ) + " );" )
                ENDIF
 
@@ -1820,20 +1866,16 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                   aadd( txt_, "         void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
                ENDDO
 
-               IF ! a_[i]:isConstructor
-                  aadd( txt_, "         " + FP + ";" )
-               ELSE
-                  aadd( txt_, "      " + FP + ";" )
-               ENDIF
+               aeval( ::getReturnAsList( a_[ i ], FP, iif( ! a_[ i ]:isConstructor, "         ", "      " ) ), {|e| aadd( txt_, e ) } )
 
                FOR q := nStrCnt TO 1 STEP -1
                   aadd( txt_, "         hb_strfree( pText" + StrZero( q, 2, 0 ) + " );" )
                NEXT
 
                /* Return values back to PRG */
-               IF ! empty( a_[i]:aPre )
+               IF ! empty( a_[ i ]:aPre )
                   aadd( txt_, "" )
-                  FOR q := 1 TO len( a_[i]:aPre )
+                  FOR q := 1 TO len( a_[ i ]:aPre )
                      aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
                   NEXT
                ENDIF
@@ -2418,13 +2460,13 @@ METHOD HbQtSource:buildCppCode( oMtd )
    LOCAL oRet   := oMtd:oRet
    LOCAL cPara  := oMtd:cParas
    LOCAL cParaN := oMtd:cParasN
-   LOCAL cRef
+   LOCAL cRef, cRefInList
 
    oMtd:cWdg      := "hbqt_par_" + ::cQtObject + "( 1 )->"
    oMtd:cParas    := iif( oMtd:isVariable(), "", "( " + oMtd:cParas + " )" )
-   oMtd:cParasN   := iif( oMtd:isVariable(), "", "( " + oMtd:cParasN + " )" )
+   //oMtd:cParasN   := iif( oMtd:isVariable(), "", "( " + oMtd:cParasN + " )" )
    oMtd:cCmn      := oMtd:cWdg + oMtd:cFun + oMtd:cParas
-   oMtd:cCmnN     := "( _" + lower( substr( ::cQtObject, 2 ) ) + " )->" + oMtd:cFun + oMtd:cParasN
+   //oMtd:cCmnN     := "( _" + lower( substr( ::cQtObject, 2 ) ) + " )->" + oMtd:cFun + oMtd:cParasN
    oMtd:cDocNMRet := HBQTGEN_THIS_PROPER( oRet:cName )
 
    DO CASE
@@ -2453,16 +2495,27 @@ METHOD HbQtSource:buildCppCode( oMtd )
          oMtd:cPrgRet := ""
       OTHERWISE
          cRef := "QList"
+         cRefInList := strtran( oRet:cCast, "QList<" )
+         cRefInList := strtran( cRefInList, ">" )
+         cRefInList := strtran( cRefInList, "*" )
+         cRefInList := strtran( cRefInList, " " )
+         oMtd:isRetList := .t.
          oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-         oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmnN + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
+         //oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmnN + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ENDCASE
 
    CASE oRet:cCast == "T"
       /* TOFIX: Such code is not valid and should never be generated [vszakats] */
+      #if 1
+      oMtd:cCmd := "hb_itemReturn( " + oMtd:cCmn + " )"
+      oMtd:cCmdN := "hb_itemReturn( " + oMtd:cCmnN + " )"
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
+      #else
       oMtd:cCmd := "hb_retptr( " + oMtd:cCmn + " )"
       oMtd:cCmdN := "hb_retptr( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "p" + oMtd:cDocNMRet
+      #endif
 
    CASE oRet:cCast == "void"
       oMtd:cCmd := oMtd:cCmn
@@ -2605,6 +2658,9 @@ METHOD HbQtSource:buildCppCode( oMtd )
    IF ( oMtd:lValid := ! Empty( oMtd:cCmd ) )
       aadd( ::aMethods, oMtd )
       hbqtgen_AddRef( ::hRef, cRef )
+      IF ! empty( cRefInList ) .AND. ! ( cRefInList $ "int,qreal" )
+         hbqtgen_AddRef( ::hRef, cRefInList )
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -2622,6 +2678,7 @@ CREATE CLASS HbqtMethod
    DATA   isSibling                               INIT .f.  //  is nother function with same name
    DATA   isConstructor                           INIT .f.
    DATA   areFuncClubbed                          INIT .t.
+   DATA   isRetList                               INIT .f.
 
    DATA   cProto                                  INIT ""   //  QWidget * widget ( QWidget * parent, const QString & name ) const  [*D=4*]
 

@@ -176,6 +176,12 @@ METHOD IdeDocks:create( oIde )
 METHOD IdeDocks:destroy()
    LOCAL qTmp
 
+   FOR EACH qTmp IN ::oIde:aViews
+      qTmp:oTabWidget:oWidget:disconnect( QEvent_DragEnter )
+      qTmp:oTabWidget:oWidget:disconnect( QEvent_DragMove )
+      qTmp:oTabWidget:oWidget:disconnect( QEvent_Drop      )
+   NEXT
+
    ::oDlg:oWidget                : disconnect( QEvent_WindowStateChange  )
    ::oDlg:oWidget                : disconnect( QEvent_Hide               )
 
@@ -689,21 +695,26 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
+   CASE "editWidget_dragMoveEvent"
    CASE "editWidget_dragEnterEvent"
+HB_TRACE( HB_TR_DEBUG, "editWidget_dragEnterEvent", 0 )
       p:acceptProposedAction()
       EXIT
 
    CASE "editWidget_dropEvent"
+HB_TRACE( HB_TR_DEBUG, "editWidget_dropEvent", 0 )
       qMime := p:mimeData()
       IF qMime:hasUrls()
-         qList := qMime:hbUrlList()
+         qList := qMime:urls()
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl( qList:at( i ) )
+            qUrl := qList:at( i )
             IF hbide_isValidText( qUrl:toLocalFile() )
                ::oSM:editSource( hbide_pathToOSPath( qUrl:toLocalFile() ) )
             ENDIF
          NEXT
+         qList := NIL
       ENDIF
+      qMime := NIL
       EXIT
 
    CASE "projectTree_dragEnterEvent"
@@ -980,7 +991,6 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEven
    oDock:hide()
 
    IF !empty( cEventVisibility )
-      //::connect( oDock:oWidget, cEventVisibility, {|p| ::execEvent( cEventVisibility, p, oDock:oWidget ) } )
       oDock:oWidget:connect( cEventVisibility, {|p| ::execEvent( cEventVisibility, p, oDock:oWidget ) } )
    ENDIF
 
@@ -1227,6 +1237,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
          qDrop:setAcceptDrops( .t. )
          qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
+         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent", p ) } )
          qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
       ENDIF
 
@@ -1279,6 +1290,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
          qDrop:setAcceptDrops( .t. )
          qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
+         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
          qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
 
       ENDIF

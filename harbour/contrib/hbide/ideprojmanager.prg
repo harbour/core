@@ -318,7 +318,23 @@ METHOD IdeProjManager:destroy()
       ::oUI:destroy()
    ENDIF
 
-   ::aPrjProps := NIL
+   IF !empty( ::aPrjProps )
+      ::aPrjProps[ 1,1 ] := NIL
+      ::aPrjProps[ 1,2 ] := NIL
+      ::aPrjProps[ 1 ] := NIL
+      ::aPrjProps[ 2,1 ] := NIL
+      ::aPrjProps[ 2,2 ] := NIL
+      ::aPrjProps[ 2 ] := NIL
+      ::aPrjProps[ 3,1 ] := NIL
+      ::aPrjProps[ 3,2 ] := NIL
+      ::aPrjProps[ 3 ] := NIL
+      ::aPrjProps[ 4,1 ] := NIL
+      ::aPrjProps[ 4,2 ] := NIL
+      ::aPrjProps[ 4 ] := NIL
+      ::aPrjProps[ 5 ] := NIL
+
+      ::aPrjProps := NIL
+   ENDIF
 
    RETURN Self
 
