@@ -1448,7 +1448,7 @@ HARBOUR
    C/C++ Compilers/Shells:
 
       MinGW/MinGW-64 [win, *nix, free, open-soource]
-         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended, but only up to 4.5.0)
+         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended) [NOTE: 4.5.1 is broken]
          http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home, broken as of 4.5.0-1)
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
          http://nuwen.net/mingw.html (unofficial)

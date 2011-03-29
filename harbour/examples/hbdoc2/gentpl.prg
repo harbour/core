@@ -105,7 +105,7 @@ METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
    ::cExtension := cExtension
    ::nType := nType
 
-   IF hb_DirExists( ::cFolder )
+   IF ! hb_DirExists( ::cFolder )
       ? "Creating folder " + ::cFolder
       hb_DirCreate( ::cFolder )
    ENDIF

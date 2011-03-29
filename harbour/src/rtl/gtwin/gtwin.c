@@ -132,6 +132,8 @@
 #  endif
 #endif
 
+#undef HB_GTWIN_USE_PCONSOLEINFOEX
+
 #ifndef MOUSE_WHEELED
 #  define MOUSE_WHEELED 0x0004
 #endif
