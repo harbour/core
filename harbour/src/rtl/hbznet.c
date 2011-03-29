@@ -367,7 +367,7 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
    uInt uiSize = HB_ZNET_BUFSIZE - ( pStream->crypt ? 2 : 0 );
 
    if( pStream->wr.avail_out > 0 )
-      pStream->err = deflate( &pStream->wr, Z_SYNC_FLUSH );
+      pStream->err = deflate( &pStream->wr, Z_PARTIAL_FLUSH );
    else
       pStream->err = Z_OK;
 
@@ -377,7 +377,7 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
          break;
 
       if( pStream->err == Z_OK )
-         pStream->err = deflate( &pStream->wr, Z_SYNC_FLUSH );
+         pStream->err = deflate( &pStream->wr, Z_PARTIAL_FLUSH );
    }
 
    return uiSize - pStream->wr.avail_out;
