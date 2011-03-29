@@ -167,7 +167,10 @@ void hb_random_block( void * data, HB_SIZE len )
    while( len-- )
    {
       if( --i == 0 )
+      {
          v = rand();
+         i = n;
+      }
       else
          v >>= 8;
       *ptr++ = ( HB_BYTE ) v;

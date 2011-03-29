@@ -1065,7 +1065,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
 PHB_THREADSTATE hb_threadStateClone( HB_ULONG ulAttr, PHB_ITEM pParams )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_THREADSTATE pThread = NULL;
+   PHB_THREADSTATE pThread;
 
    pThread = hb_threadStateNew();
 #if defined( HB_MT_VM )
@@ -1189,6 +1189,7 @@ HB_FUNC( HB_THREADSTART )
    {
 #if !defined( HB_MT_VM )
       HB_STACK_TLS_PRELOAD
+      HB_SYMBOL_UNUSED( ulAttr );
       hb_ret();
 #else
       HB_STACK_TLS_PRELOAD

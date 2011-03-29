@@ -945,7 +945,8 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
-#elif ( defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN ) ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+#elif ( defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN ) ) || \
+      ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 {
    pid_t pid = ( pid_t ) hProcess;
    if( pid > 0 )
