@@ -483,7 +483,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
 
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
       // But usually, original filename is set here
-      oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + cFname + cFext
+      oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + '"' + cFname + cFext + '"'
       oAttach:SetBody( cData )
       oMail:Attach( oAttach )
    NEXT

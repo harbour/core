@@ -231,7 +231,7 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", cEnc, .F. )
       IF Empty( aMatch )
-         ::hHeaders[ cPart ] := cEnc += "; "+ cOption + '="' + cValue + '"'
+         ::hHeaders[ cPart ] := cEnc += "; " + cOption + '="' + cValue + '"'
       ELSE
          ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + '="' +;
                                 cValue + '"' + aMatch[ 3 ]
