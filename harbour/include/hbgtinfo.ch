@@ -158,28 +158,27 @@
 #define HB_GTI_FONTQ_HIGH       3
 
 /* Keyboard shifts states */
-#define HB_GTI_KBD_SHIFT        1
-#define HB_GTI_KBD_CTRL         2
-#define HB_GTI_KBD_ALT          4
-#define HB_GTI_KBD_LWIN         8
-#define HB_GTI_KBD_RWIN         16
-#define HB_GTI_KBD_MENU         32
-#define HB_GTI_KBD_INSERT       128
-#define HB_GTI_KBD_SCROLOCK     256
-#define HB_GTI_KBD_NUMLOCK      512
-#define HB_GTI_KBD_CAPSLOCK     1024
-#define HB_GTI_KBD_INALTSEQ     2048
-#define HB_GTI_KBD_ACCENT1      4096
-#define HB_GTI_KBD_ACCENT2      8192
-#define HB_GTI_KBD_ACCENT3      16384
-#define HB_GTI_KBD_ACCENT4      32768
-
-#define HB_GTI_KBD_LSHIFT       65536
-#define HB_GTI_KBD_RSHIFT       131072
-#define HB_GTI_KBD_LCTRL        262144
-#define HB_GTI_KBD_RCTRL        524288
-#define HB_GTI_KBD_LALT         1048576
-#define HB_GTI_KBD_RALT         2097572
+#define HB_GTI_KBD_SHIFT        0x000001
+#define HB_GTI_KBD_CTRL         0x000002
+#define HB_GTI_KBD_ALT          0x000004
+#define HB_GTI_KBD_LWIN         0x000008
+#define HB_GTI_KBD_RWIN         0x000010
+#define HB_GTI_KBD_MENU         0x000020
+#define HB_GTI_KBD_INSERT       0x000080
+#define HB_GTI_KBD_SCROLOCK     0x000100
+#define HB_GTI_KBD_NUMLOCK      0x000200
+#define HB_GTI_KBD_CAPSLOCK     0x000400
+#define HB_GTI_KBD_INALTSEQ     0x000800
+#define HB_GTI_KBD_ACCENT1      0x001000
+#define HB_GTI_KBD_ACCENT2      0x002000
+#define HB_GTI_KBD_ACCENT3      0x004000
+#define HB_GTI_KBD_ACCENT4      0x008000
+#define HB_GTI_KBD_LSHIFT       0x010000
+#define HB_GTI_KBD_RSHIFT       0x020000
+#define HB_GTI_KBD_LCTRL        0x040000
+#define HB_GTI_KBD_RCTRL        0x080000
+#define HB_GTI_KBD_LALT         0x100000
+#define HB_GTI_KBD_RALT         0x200000
 
 /* Harbour GT callback events - WORK IN PROGRESS */
 #define HB_GTE_ACTIVATE         1
