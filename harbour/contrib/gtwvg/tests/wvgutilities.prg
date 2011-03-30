@@ -1,8 +1,8 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 /*----------------------------------------------------------------------*/
@@ -12,7 +12,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 //
@@ -209,7 +209,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
    ENDCASE
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 //  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
 //-------------------------------------------------------------------//
@@ -226,7 +226,7 @@ FUNCTION WvtSetBlocks( a_ )
    ENDIF
 
    RETURN o
-   
+
 //-------------------------------------------------------------------//
 //  WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
 //-------------------------------------------------------------------//
@@ -255,7 +255,7 @@ FUNCTION WvtSetObjects( aObject )
    endif
 
    RETURN oObjects
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION SetMouseCheck( lYes )
@@ -268,7 +268,7 @@ FUNCTION SetMouseCheck( lYes )
    endif
 
    RETURN lOYes
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION WvtWindowExpand( nUnits )
@@ -280,12 +280,12 @@ FUNCTION WvtWindowExpand( nUnits )
    Wvt_setFont( "Courier New", sUnits )
 
    RETURN .t.
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION rgb( r,g,b )
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION VouChoice( aChoices )
@@ -302,13 +302,13 @@ FUNCTION VouChoice( aChoices )
    RestScreen( 7, 48, 13, 55, scr )
 
    RETURN nChoice
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION Hb_Clear()
    CLS
    RETURN .f.
-   
+
 //----------------------------------------------------------------------//
 
 FUNCTION MyMenuProcedure( nID )
@@ -319,7 +319,7 @@ FUNCTION MyMenuProcedure( nID )
       alert( 'Procedure 102' )
    endcase
    Return .t.
-   
+
 //----------------------------------------------------------------------//
 
 FUNCTION BuildWvgToolBar( oDA, nActiveX )
@@ -352,29 +352,29 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
    oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
 
    RETURN oTBar
-   
+
 //----------------------------------------------------------------------//
 
 FUNCTION SetGT( nIndex, pGT )
    LOCAL oldGT
    STATIC pGT_:= { NIL, NIL, NIL }
    oldGT := pGT_[ nIndex ]
-   IF !empty( pGT )
+   IF PCount() == 2
       pGT_[ nIndex ] := pGT
-   ENDIF    
+   ENDIF
    RETURN oldGT
-   
+
 /*----------------------------------------------------------------------*/
- 
+
 FUNCTION SetFonts( hFont )
    LOCAL oldFont
    thread STATIC t_ahFonts := {}
    oldFont := t_ahFonts
    IF !empty( hFont )
       aadd( t_ahFonts, hFont )
-   ENDIF    
+   ENDIF
    RETURN oldFont
-   
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION SetIcons( hIcon )
@@ -383,9 +383,9 @@ FUNCTION SetIcons( hIcon )
    oldIcon := t_ahIcons
    IF !empty( hIcon )
       aadd( t_ahIcons, hIcon )
-   ENDIF    
+   ENDIF
    RETURN oldIcon
-   
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION Popups( nID, lDestroy )
@@ -455,15 +455,15 @@ FUNCTION Popups( nID, lDestroy )
    hPop_[ nID ] := hPop
 
    RETURN Wvt_SetPopupMenu( hPop_[ nID ] )
-   
+
 //-------------------------------------------------------------------//
-  
+
 FUNCTION DispStatusMsg( cMsg )
 
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb(198,198,198), "Arial", 18, , 900 )
 
    RETURN .t.
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION ClearStatusMsg()
@@ -475,7 +475,7 @@ FUNCTION ClearStatusMsg()
    SetPos( nRow, nCol )
 
    RETURN .t.
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION WvtPictures( nSlot,cFilePic )
@@ -489,7 +489,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
    endif
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
@@ -499,11 +499,11 @@ FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
    endif
 
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetResource( cName )
    RETURN hb_dirBase() + cName
-   
+
 /*----------------------------------------------------------------------*/
-   
+

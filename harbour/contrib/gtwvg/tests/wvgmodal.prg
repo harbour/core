@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-/*    
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 /*----------------------------------------------------------------------*/
@@ -11,7 +11,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -44,7 +44,14 @@ FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
    RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , ,nTime )
 
 /*----------------------------------------------------------------------*/
-   
+
+#xUntranslate alert( =>
+FUNCTION Just_Alert( cMsg, aOpt )
+   RETURN Alert( cMsg, aOpt )
+#xTranslate Alert( => MyAlert(
+
+/*----------------------------------------------------------------------*/
+
 #define DLG_CLR_MOUSE              1
 #define DLG_CLR_CAPT               2
 #define DLG_CLR_TEXT               3
@@ -53,7 +60,7 @@ FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
 #define DLG_CLR_SHADOW             6
 #define DLG_CLR_HILITE             7
 #define DLG_CLR_HISEL              8
-                                   
+
 #define K_MOVING                   1001
 #define K_LEFT_DOWN                1002
 #define K_LEFT_DBLCLICK            1006
@@ -315,6 +322,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
 FUNCTION DoModalWindow()
    LOCAL oCrt, nSel, pGT
+   LOCAL aLastPaint := WvtSetBlocks( {} )
 
    /* This part can be clubbed in a separate prg for different dialogs
     * OR can be loaded from a data dictionary.
@@ -341,7 +349,7 @@ FUNCTION DoModalWindow()
    SetColor( 'N/W' )
    CLS
    do while .t.
-      nSel := alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
+      nSel := Just_Alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
 
       if nSel == 0  .or. nSel == 1
          exit
@@ -351,6 +359,8 @@ FUNCTION DoModalWindow()
 
    SetGT( 3, pGT )
    oCrt:Destroy()
+
+   WvtSetBlocks( aLastPaint )
    Return NIL
-   
+
 //----------------------------------------------------------------------//

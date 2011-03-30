@@ -74,13 +74,13 @@ EXIT PROCEDURE CleanHandles()
    FOR EACH obj IN SetFonts()
       WVG_DeleteObject( obj )
       obj := NIL
-   NEXT 
+   NEXT
 
    FOR EACH obj IN SetIcons()
       WVG_DeleteObject( obj )
       obj := NIL
-   NEXT 
-   RETURN 
+   NEXT
+   RETURN
 
 //-------------------------------------------------------------------//
 
@@ -104,10 +104,10 @@ PROCEDURE Main()
    LOCAL nBtnRow   := nMaxRows - 1
    LOCAL cLabel    := "(x)Harbour simulated GUI."
    LOCAL aObjects  := WvtSetObjects( {} )
-   
+
    SET DATE BRITISH
 
-   SET( _SET_EVENTMASK, INKEY_ALL )
+   SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
    Wvt_SetGui( .t. )
    WvtSetKeys( .t. )
@@ -259,7 +259,7 @@ Function HB_GTSYS()
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
    Return NIL
-   
+
 //------------------------------------------------------------------//
 
 PROCEDURE WvtConsoleGets( nMode )
@@ -275,7 +275,7 @@ PROCEDURE WvtConsoleGets( nMode )
    ENDIF
 
    RETURN
-   
+
 //----------------------------------------------------------------------//
 
 PROCEDURE WvtNextGetsConsole()
@@ -322,7 +322,7 @@ PROCEDURE WvtNextGets()
    ENDIF
 
    RETURN
-   
+
 //----------------------------------------------------------------------//
 
 PROCEDURE WvtNextGets_X()
@@ -402,7 +402,7 @@ PROCEDURE WvtNextGets_X()
    Wvt_RestScreen( wvtScr )
    SetPos( nRow, nCol )
    RETURN
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION WvtPartialScreen()
@@ -445,7 +445,7 @@ FUNCTION WvtPartialScreen()
    Wvt_SetPopupMenu( hPopup )
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 
 function WvtLines()
@@ -506,7 +506,7 @@ function WvtLines()
    RestScreen( 0,0,maxrow(),maxcol(), scr )
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION CreateMainMenu()
@@ -538,6 +538,8 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Google Maps"                 , {|| WvtConsoleGets( 1 ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Wvg Console with GCUI"       , {|| ExecGCUI()          } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "Modal Window"                , {|| DoModalWindow()     } )
    g_oMenuBar:addItem( "",oMenu )
 
    oMenu := wvtMenu():new():create()
@@ -588,7 +590,7 @@ FUNCTION CreateMainMenu()
    #endif
 
    RETURN g_oMenuBar
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION ActivateMenu( oMenu )
@@ -607,7 +609,7 @@ STATIC FUNCTION ActivateMenu( oMenu )
    ENDIF
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION GoogleMap()
@@ -649,5 +651,5 @@ STATIC FUNCTION GoogleMap()
    ENDDO
 
    RETURN NIL
-   
+
 //----------------------------------------------------------------------//

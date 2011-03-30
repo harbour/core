@@ -58,7 +58,7 @@ FUNCTION WvtMyBrowse()
 //----------------------------------------------------------------------//
 
 FUNCTION ExecBrowser( oCrt )
-   LOCAL nKey, bBlock, oBrowse , aLastPaint, i, aLastPaint1, pGT
+   LOCAL nKey, bBlock, oBrowse , aLastPaint, i, pGT
    LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_
    LOCAL lEnd       := .f.
    LOCAL aBlocks    := {}
@@ -150,7 +150,7 @@ FUNCTION ExecBrowser( oCrt )
    While !lEnd
       oBrowse:ForceStable()
 
-      nKey := InKey( 0, INKEY_ALL )
+      nKey := InKey( 0, INKEY_ALL  + HB_INKEY_GTEVENT )
 
       do case
       case nKey == K_F12
@@ -163,6 +163,7 @@ FUNCTION ExecBrowser( oCrt )
 
       case nKey == K_F6
          hb_gtInfo( HB_GTI_RESIZABLE, .f. )
+
       case nKey == K_F7
          hb_gtInfo( HB_GTI_RESIZABLE, .t. )
 
@@ -187,9 +188,7 @@ FUNCTION ExecBrowser( oCrt )
          oBrowse:RefreshAll()
 
       case nKey == K_F3
-         aLastPaint1 := WvtSetBlocks( {} )
          DoModalWindow()
-         WvtSetBlocks( aLastPaint1 )
 
       case nKey == K_F4
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
