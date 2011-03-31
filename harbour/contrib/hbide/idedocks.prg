@@ -726,9 +726,9 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dragEnterEvent" )
 HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       qMime := p:mimeData()
       IF qMime:hasUrls()
-         qList := qMime:hbUrlList()
+         qList := qMime:urls()
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl( qList:at( i ) )
+            qUrl := qList:at( i )
             IF hbide_sourceType( qUrl:toLocalFile() ) == ".hbp"
                ::oPM:loadProperties( qUrl:toLocalFile(), .f., .f., .t. )
             ENDIF
@@ -1454,7 +1454,7 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oFindDock           , "search"        } )
    aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
    aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
-   aadd( aBtns, { ::oReportsManagerDock  , "designer"      } )
+   aadd( aBtns, { ::oReportsManagerDock , "designer"      } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2             , "builderror"    } )
 

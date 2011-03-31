@@ -204,14 +204,17 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
          ::qMime:setData( "application/x-toolbaricon", ::qByte )
          ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
 
-         ::qPix  := QPixmap( QIcon( ::hItems[ p1 ]:icon ):pixmap( 16,16 ) )
+         ::qPix  := QIcon( ::hItems[ p1 ]:icon ):pixmap( 16,16 )
 
          ::qDrag := QDrag( hbide_setIde():oDlg:oWidget )
          ::qDrag:setMimeData( ::qMime )
          ::qDrag:setPixmap( ::qPix )
          ::qDrag:setHotSpot( QPoint( 15,15 ) )
-         ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
-         ::qDropAction := ::qDrag:exec( Qt_MoveAction )
+         ::qDrag:setDragCursor( ::qPix, Qt_CopyAction + Qt_IgnoreAction )
+HB_TRACE( HB_TR_DEBUG, "..............................0" )
+         ::qDropAction := ::qDrag:exec( Qt_CopyAction + Qt_IgnoreAction )  /* Why this is not terminated GPF's */
+HB_TRACE( HB_TR_DEBUG, "..............................1" )
+
          ::qDrag := NIL
          ::qPos  := NIL
          ::hItems[ p1 ]:setChecked( .f. )

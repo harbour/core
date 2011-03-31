@@ -55,7 +55,7 @@ const QMimeData * mimeData () const{
    QDropEvent * p = ( QDropEvent * ) hbqt_pPtrFromObj( 0 );
    if( p )
    {
-      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData(), true ), "hb_QMimeData" );
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData(), false ), "hb_QMimeData" );
    }
 }
 #

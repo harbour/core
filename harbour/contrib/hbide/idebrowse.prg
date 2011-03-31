@@ -575,9 +575,9 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    CASE "dockDbu_dropEvent"
       qMime := p:mimeData()
       IF qMime:hasUrls()
-         qList := qMime:hbUrlList()
+         qList := qMime:urls()
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl( qList:at( i ) )
+            qUrl := qList:at( i )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
                ::oCurPanel:addBrowser( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;

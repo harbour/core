@@ -294,6 +294,10 @@ METHOD HbqReportsManager:create( qParent )
 
 METHOD HbqReportsManager:destroy()
 
+   ::qTreeObjects:disconnect( "itemClicked(QTreeWidgetItem*,int)" )
+
+   ::qParent       := NIL
+
    ::aSources      := NIL
    ::aPages        := NIL
    ::qToolbar      := NIL
@@ -489,33 +493,27 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          ::contextMenuScene( p1 )
 
       CASE p == QEvent_GraphicsSceneDragEnter
-HB_TRACE( HB_TR_ALWAYS, QEvent_GraphicsSceneDragEnter, valtype( p1 ), p1 )
+HB_TRACE( HB_TR_DEBUG, "QEvent_GraphicsSceneDragEnter", valtype( p1 ), p1 )
          p1:acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragMove
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDragMove", valtype( p1 ), p1 )
+HB_TRACE( HB_TR_DEBUG, "QEvent_GraphicsSceneDragMove", valtype( p1 ), p1 )
          p1:acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragLeave
+         p1:acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDrop
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 0, p1:className() )
          qMime := p1:mimeData()
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 1 )
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 2 )
             IF p2[ 1 ] == "DataTree"
                IF p2[ 2 ] != p2[ 3 ]
                   ::addField( p2[ 2 ], p2[ 3 ], p1:scenePos(), NIL )
                ENDIF
             ENDIF
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 21 )
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 3 )
             ::addObject( qMime:html(), p1:scenePos(), NIL )
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 31 )
          ELSEIF qMime:hasFormat( "application/x-menuitem" )
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 4 )
             cType := qMime:html()
             SWITCH cType
             CASE "Rectangle"          ;                        EXIT
@@ -531,13 +529,11 @@ HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 4 )
             CASE "Diagonal Line Left" ; cType := "LineDL"    ; EXIT
             ENDSWITCH
             ::addObject( cType, p1:scenePos(), NIL )
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 41 )
 
          ELSEIF qMime:hasUrls()
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 5 )
-            qList := qMime:hbUrlList()
+            qList := qMime:urls()
             FOR i := 0 TO qList:size() - 1
-               cFile := ( QUrl( qList:at( i ) ) ):toLocalFile()
+               cFile := qList:at( i ):toLocalFile()
 
                IF ".dbf" == right( lower( cFile ), 4 )
                   hb_fNameSplit( cFile, @cPath, @cAlias )
@@ -554,12 +550,12 @@ HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 5 )
                   END SEQUENCE
                ENDIF
             NEXT
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 51 )
-
          ENDIF
-      ENDCASE
-HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 1000 )
 
+         p1:acceptProposedAction()
+         p1:accept()
+HB_TRACE( HB_TR_DEBUG, "QEvent_GraphicsSceneDrop", 1000, p1:dropAction() )
+      ENDCASE
       EXIT
 
    CASE "treeObjects_clicked"
@@ -598,7 +594,7 @@ HB_TRACE( HB_TR_ALWAYS, "QEvent_GraphicsSceneDrop", valtype( p1 ), 1000 )
          ::qMime:setData( "application/x-menuitem", ::qByte )
          ::qMime:setHtml( ::qAct:text() )
 
-         ::qPix  := QPixmap( qIcon:pixmap( 16,16 ) )
+         ::qPix  := qIcon:pixmap( 16,16 )
 
          ::qDrag := QDrag( hbide_setIde():oDlg:oWidget )
          ::qDrag:setMimeData( ::qMime )
@@ -1574,6 +1570,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
    qDlg:move( 20, 20 )
    qDlg:resize( 400, 600 )
    qDlg:exec()
+   qDlg:disconnect( "paintRequested(QPrinter*)" )
 
    RETURN qStr
 
@@ -1725,6 +1722,8 @@ CLASS HqrGraphicsItem
 
 METHOD HqrGraphicsItem:new( oRM, cParent, cType, cName, aPos, aGeometry )
 
+   HB_TRACE( HB_TR_DEBUG, "HqrGraphicsItem:new" )
+
    ::oRM       := oRM
    ::cParent   := cParent
    ::cType     := cType
@@ -1751,7 +1750,7 @@ METHOD HqrGraphicsItem:new( oRM, cParent, cType, cName, aPos, aGeometry )
       EXIT
    CASE "Text"
       ::nWidth := 300 ;  ::nHeight := 50
-      ::oWidget := HBQGraphicsItem( HBQT_GRAPHICSITEM_SIMPLETEXT )
+      ::oWidget := HBQGraphicsItem( HBQT_GRAPHICSITEM_SIMPLETEXT )//, ::oRM:qScene )
       EXIT
    CASE "Field"
       ::nWidth := 300 ;  ::nHeight := 50
@@ -1836,6 +1835,8 @@ METHOD HqrGraphicsItem:onError( ... )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
+
+   HB_TRACE( HB_TR_DEBUG, "HqrGraphicsItem:execEvent", P, P1, P2 )
 
    DO CASE
    CASE cEvent == "graphicsItem_block"
