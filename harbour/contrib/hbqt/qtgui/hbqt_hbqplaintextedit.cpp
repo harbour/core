@@ -262,7 +262,10 @@ HBQPlainTextEdit::~HBQPlainTextEdit()
 void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
 {
    if( pBlock )
+   {
       block = hb_itemNew( pBlock );
+      hb_gcUnlock( block );
+   }
 }
 
 /*----------------------------------------------------------------------*/

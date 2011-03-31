@@ -136,6 +136,7 @@ HBQAbstractItemModel::HBQAbstractItemModel( PHB_ITEM pBlock ) : QAbstractItemMod
    if( pBlock)
    {
       block = hb_itemNew( pBlock );
+      hb_gcUnlock( block );
    }
 }
 

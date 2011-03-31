@@ -73,7 +73,6 @@ public:
    HBQSlots( QObject *parent = 0 );
    ~HBQSlots();
    QList<PHB_ITEM>  listBlock;
-   QList<QObject *> listObj;
 
    int qt_metacall( QMetaObject::Call call, int id, void **arguments );
 };

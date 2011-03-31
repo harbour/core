@@ -22,6 +22,25 @@ New      =
 #include <QtGui/QGraphicsItem>
 #include "hbqt_hbqgraphicsitem.h"
 
+HBQT_GC_FUNC( hbqt_gcMark_HBQGraphicsItem )
+{
+   HBQT_GC_T_HBQGraphicsItem * p = ( HBQT_GC_T_HBQGraphicsItem * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "gcMark_HBQGraphicsItem" ) );
+   if( p )
+     if( p->ph )
+     {
+        HBQGraphicsItem * ip = ( HBQGraphicsItem * ) p->ph;
+        if( ip )
+        {
+            if (ip->block)
+            {
+               hb_gcMark( ip->block );
+            }
+        }
+     }
+}
+
 /*
  * HBQGraphicsItem ()
  * HBQGraphicsItem ( QGraphicsItem * parent )

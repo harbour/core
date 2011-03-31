@@ -647,14 +647,16 @@ static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
    int i;
-   for( i = s_PHB_ITEM_tobedeleted.size() - 1; i >= 0; --i )
+   void * ptr;
+
+   while( ! s_PHB_ITEM_tobedeleted.isEmpty() )
    {
+      i = s_PHB_ITEM_tobedeleted.size() - 1;
       if( s_PHB_ITEM_tobedeleted.at( i ) != NULL )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_exit, deleted item %d", i  ));
-         hb_itemRelease( s_PHB_ITEM_tobedeleted.at( i ) );
-         s_PHB_ITEM_tobedeleted[ i ] = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "   hbqt_lib_exit, deleted item %d", i  ));
+         ptr = (void *) s_PHB_ITEM_tobedeleted.at( i );
+         s_PHB_ITEM_tobedeleted.removeAt( i );
+         hb_itemRelease( ptr );
       }
    }
 }

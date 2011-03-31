@@ -159,8 +159,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    CASE "N"
 
       IF Empty( ::__pEvents )
-         ::__pEvents := __hbqt_events_new()
-         ::installEventFilter( HBQEventsFromPointer( ::__pEvents ) )
+         ::__pEvents := __hbqt_events_new(Self)
       ENDIF
       nResult := __hbqt_events_connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
 

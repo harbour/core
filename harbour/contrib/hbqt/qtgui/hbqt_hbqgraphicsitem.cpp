@@ -134,6 +134,7 @@ void HBQGraphicsItem::hbSetBlock( PHB_ITEM b )
 {
    if( b ){
       block = hb_itemNew( b );
+      hb_gcUnlock( block );
    }
 }
 

@@ -28,6 +28,25 @@ New      =
 #include <QtCore/QAbstractItemModel>
 #include "hbqt_hbqabstractitemmodel.h"
 
+HBQT_GC_FUNC( hbqt_gcMark_HBQAbstractItemModel )
+{
+   HBQT_GC_T_HBQAbstractItemModel * p = ( HBQT_GC_T_HBQAbstractItemModel * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "gcMark_HBQAbstractItemModel" ) );
+   if( p )
+     if( p->ph )
+     {
+        HBQAbstractItemModel * ip = ( HBQAbstractItemModel * ) p->ph;
+        if( ip )
+        {
+            if (ip->block)
+            {
+               hb_gcMark( ip->block );
+            }
+        }
+     }
+}
+
 
 /*
  * HBQAbstractItemModel ( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) )

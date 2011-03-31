@@ -1373,11 +1373,14 @@ METHOD HbQtSource:build()
    aadd( aLine, "" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
-   s := upper( "HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" )  )
+   if n > 0
+      s := upper( strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ) )
+   else
+      s := "HBQTOBJECTHANDLER"
+   endif
    FOR EACH k IN hb_aTokens( s, "," )
       aadd( aLine, "HB_FUNC_EXTERN( " + upper( alltrim( k ) ) + " );" )
    NEXT
-// aadd( aLine, "HB_FUNC_EXTERN( HB_" + uQtObject + " );" )
    aadd( aLine, "" )
    aadd( aLine, "HB_EXTERN_END" )
    aadd( aLine, "" )
@@ -1401,8 +1404,13 @@ METHOD HbQtSource:build()
 
    /* Insert user defined code - INCLUDEs */
    aadd( aLine, "#include <QtCore/QPointer>" )
+   n := aScan( ::code_, {|e| "gcMark" $ e } )
    IF !empty( ::code_ )
+      if n == 0
       aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) } )
+      else
+         aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n-1 )
+      endif
       aadd( aLine, "" )
    ENDIF
 
@@ -1420,7 +1428,14 @@ METHOD HbQtSource:build()
    aadd( aLine, "   bool bNew;"                     )
    aadd( aLine, "   PHBQT_GC_FUNC func;"            )
    aadd( aLine, "   HB_U32 type;"                   )
+   aadd( aLine, "   PHBQT_GC_FUNC mark;"            )
    aadd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
+   aadd( aLine, " "                                 )
+   aadd( aLine, " "                                 )
+   if( n > 0 )
+      aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, n )
+   endif
+   aadd( aLine, " "                                 )
    aadd( aLine, " "                                 )
 
    aadd( aLine, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cQtObject + " )"  )
@@ -1536,6 +1551,11 @@ METHOD HbQtSource:build()
    aadd( aLine, "   p->bNew = bNew;" )
    aadd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
    aadd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
+   if n > 0
+      aadd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
+   else
+      aadd( aLine, "   p->mark = NULL;" )
+   endif
    aadd( aLine, "" )
    #ifdef _GEN_TRACE_
    aadd( aLine, "   if( bNew )" )

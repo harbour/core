@@ -103,6 +103,7 @@ void HBQGraphicsScene::hbSetBlock( PHB_ITEM b )
 {
    if( b ){
       block = hb_itemNew( b );
+      hb_gcUnlock( block );
 
       QDesktopWidget * qWid = new QDesktopWidget();
 
@@ -493,12 +494,12 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
                //
                hb_vmEvalBlockV( block, 3, p1, p2, p3 );
                //
+            }
+         }
                hb_itemRelease( p1 );
                hb_itemRelease( p2 );
                hb_itemRelease( p3 );
             }
-         }
-      }
       else
       {
          PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );

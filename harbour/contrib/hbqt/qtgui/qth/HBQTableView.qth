@@ -28,6 +28,24 @@ New      =
 #include <QtGui/QTableView>
 #include "hbqt_hbqtableview.h"
 
+HBQT_GC_FUNC( hbqt_gcMark_HBQTableView )
+{
+   HBQT_GC_T_HBQTableView * p = ( HBQT_GC_T_HBQTableView * ) Cargo;
+
+   if( p )
+     if( p->ph )
+     {
+        HBQTableView * ip = ( HBQTableView * ) p->ph;
+        if( ip )
+        {
+            if (ip->block)
+            {
+               hb_gcMark( ip->block );
+            }
+        }
+     }
+}
+
 
 /*
  * HBQTableView ( QWidget * parent = 0 )

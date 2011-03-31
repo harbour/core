@@ -26,6 +26,22 @@ New      =
 
 #include "hbqt_hbqplaintextedit.h"
 
+HBQT_GC_FUNC( hbqt_gcMark_HBQPlainTextEdit )
+{
+   HBQT_GC_T_HBQPlainTextEdit * p = ( HBQT_GC_T_HBQPlainTextEdit * ) Cargo;
+
+   if( p )
+     if( p->ph )
+     {
+        HBQPlainTextEdit * ip = ( HBQPlainTextEdit * ) p->ph;
+        if( ip )
+        {
+            if (ip->block)
+               hb_gcMark( ip->block );
+        }
+     }
+}
+
 /*
  * HBQPlainTextEdit ( QWidget * parent = 0 )
  * HBQPlainTextEdit ( const QString & text, QWidget * parent = 0 )

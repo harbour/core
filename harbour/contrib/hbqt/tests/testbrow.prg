@@ -14,12 +14,6 @@
 #include "hbtrace.ch"
 #include "common.ch"
 
-STATIC qApp
-STATIC oWnd
-
-STATIC qSlots
-
-STATIC oDA
 STATIC oSize
 STATIC aStru1
 STATIC nCX1
@@ -33,6 +27,10 @@ STATIC oColorLN
 
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i
+   LOCAL oWnd, oDA
+
+
+   hbqt_errorsys()
 
    SET DATE ANSI
    SET CENTURY ON
@@ -113,6 +111,7 @@ STATIC PROCEDURE my_select( qModelIndex, nCX, nCY  )
 
    nCX := qModelIndex:column()
    nCY := qModelIndex:row()
+   HB_TRACE( HB_TR_DEBUG, ( "my_select "+hb_ntos( nCX )+ "/"+hb_ntos( nCY ) ) )
    RETURN
 
 STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )

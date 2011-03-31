@@ -114,7 +114,7 @@ HBQSlots::~HBQSlots()
 {
    int i;
 
-   for( i = 0; i < listBlock.size(); i++ )
+   for( i = listBlock.size() - 1; i >= 0 ; i-- )
    {
       if( listBlock[ i ] != NULL )
       {
@@ -224,6 +224,7 @@ HB_FUNC( __HBQT_SLOTS_CONNECT )
          if( pBlock )
          {
             const char * pszSignal = hb_parcx( 3 );
+            hb_gcUnlock( pBlock );
 
             int i = object->property( pszSignal ).toInt();
             if( i == 0 )

@@ -83,6 +83,7 @@ typedef struct
    bool bNew;
    PHBQT_GC_FUNC func;
    HB_U32 type;
+   PHBQT_GC_FUNC mark;
 } HBQT_GC_T;
 
 typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QStringList pList );

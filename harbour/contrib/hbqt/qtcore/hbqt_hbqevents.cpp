@@ -252,6 +252,7 @@ HB_FUNC( __HBQT_EVENTS_CONNECT )
          if( codeblock )
          {
             int type = hb_parni( 3 );
+            hb_gcUnlock( codeblock );
 
             char prop[ 20 ];
             hb_snprintf( prop, sizeof( prop ), "P%iP", type ); /* Make it a unique identifier */
@@ -330,7 +331,15 @@ HB_FUNC( __HBQT_EVENTS_DISCONNECT )
 
 HB_FUNC( __HBQT_EVENTS_NEW )
 {
-   hb_retptrGC( hbqt_gcAllocate_HBQEvents( ( HBQEvents * ) new HBQEvents(), true ) );
+   HBQEvents * p;
+   QObject * o;
+
+   o = (QObject *) hbqt_pPtrFromObj( 1 );
+
+   p = new HBQEvents();
+   o->installEventFilter( p );
+ 
+   hb_retptrGC( hbqt_gcAllocate_HBQEvents( p, true ) );
 }
 
 static void hbqt_events_init( void * cargo )

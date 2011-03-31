@@ -83,10 +83,21 @@ static HB_GARBAGE_FUNC( Q_release )
       p->func( p );
 }
 
+static HB_GARBAGE_FUNC( Q_mark )
+{
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "HB_GARBAGE_FUNC( Q_mark )  p=%p  p->ph=%p  p->mark=%p", p, p->ph, p->mark ) );
+   if( p && p->ph && p->mark )
+      p->mark( p );
+}
+
+
+
 static const HB_GC_FUNCS QT_gcFuncs =
 {
    Q_release,
-   hb_gcDummyMark
+   Q_mark
 };
 
 const HB_GC_FUNCS * hbqt_gcFuncs( void )
