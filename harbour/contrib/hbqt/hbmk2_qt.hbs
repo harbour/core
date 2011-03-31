@@ -1373,11 +1373,11 @@ METHOD HbQtSource:build()
    aadd( aLine, "" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
-   if n > 0
+   IF n > 0
       s := upper( strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ) )
-   else
+   ELSE
       s := "HBQTOBJECTHANDLER"
-   endif
+   ENDIF
    FOR EACH k IN hb_aTokens( s, "," )
       aadd( aLine, "HB_FUNC_EXTERN( " + upper( alltrim( k ) ) + " );" )
    NEXT
@@ -1406,11 +1406,11 @@ METHOD HbQtSource:build()
    aadd( aLine, "#include <QtCore/QPointer>" )
    n := aScan( ::code_, {|e| "gcMark" $ e } )
    IF !empty( ::code_ )
-      if n == 0
-      aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) } )
-      else
+      IF n == 0
+         aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) } )
+      ELSE
          aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n-1 )
-      endif
+      ENDIF
       aadd( aLine, "" )
    ENDIF
 
@@ -1432,9 +1432,9 @@ METHOD HbQtSource:build()
    aadd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
    aadd( aLine, " "                                 )
    aadd( aLine, " "                                 )
-   if( n > 0 )
+   IF n > 0
       aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, n )
-   endif
+   ENDIF
    aadd( aLine, " "                                 )
    aadd( aLine, " "                                 )
 

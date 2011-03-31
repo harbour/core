@@ -496,10 +496,10 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
                //
             }
          }
-               hb_itemRelease( p1 );
-               hb_itemRelease( p2 );
-               hb_itemRelease( p3 );
-            }
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
+         hb_itemRelease( p3 );
+      }
       else
       {
          PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );

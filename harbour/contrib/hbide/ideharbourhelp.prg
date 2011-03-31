@@ -365,7 +365,8 @@ METHOD IdeHarbourHelp:clear()
    FOR EACH a_ IN ::aCategory
       IF a_[ 7 ] == " "
 //         a_[ 6 ]:removeChild( a_[ 5 ] )
-         a_[ 6 ] := NIL ; a_[ 5 ] := NIL
+         a_[ 5 ] := NIL
+         a_[ 6 ] := NIL
       ENDIF
    NEXT
    FOR EACH a_ IN ::aCategory
@@ -373,7 +374,7 @@ METHOD IdeHarbourHelp:clear()
          a_[ 5 ] := NIL
       ENDIF
    NEXT
-   ::aCategory := NIL
+   ::aCategory := {}
 
    ::oUI:q_treeDoc:clear()
    ::oUI:q_treeCategory:clear()
