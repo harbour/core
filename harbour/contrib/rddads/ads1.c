@@ -2542,7 +2542,16 @@ static HB_ERRCODE adsGetVarLen( ADSAREAP pArea, HB_USHORT uiIndex, HB_ULONG * ul
    return HB_SUCCESS;
 }
 
-#define  adsGoCold                NULL
+static HB_ERRCODE adsGoCold( ADSAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsGoCold(%p)", pArea ));
+
+   if( !pArea->fReadonly )
+      AdsWriteRecord( pArea->hTable );
+
+   return HB_SUCCESS;
+}
+
 #define  adsGoHot                 NULL
 
 static HB_ERRCODE adsPutRec( ADSAREAP pArea, const HB_BYTE * pBuffer )
