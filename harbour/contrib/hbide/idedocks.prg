@@ -712,6 +712,8 @@ HB_TRACE( HB_TR_DEBUG, "editWidget_dropEvent", 0 )
                ::oSM:editSource( hbide_pathToOSPath( qUrl:toLocalFile() ) )
             ENDIF
          NEXT
+         p:setDropAction( Qt_CopyAction )
+         p:accept()
          qList := NIL
       ENDIF
       qMime := NIL

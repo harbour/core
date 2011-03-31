@@ -67,6 +67,7 @@
 
 HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QRectF( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( void * pObj, bool bNew );
 HB_EXTERN_END
 
@@ -777,8 +778,8 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
-      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "hb_QPainter" );
-      PHB_ITEM p3 = hb_itemPutPtr( NULL, &rect );
+      PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "hb_QPainter" ) );
+      PHB_ITEM p3 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QRectF( &rect, false ), "hb_QRectF" ) );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );

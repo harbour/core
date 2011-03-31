@@ -1696,23 +1696,23 @@ CLASS HqrGraphicsItem
    METHOD setPos( ... )                           SETGET
    METHOD setLineType( ... )                      SETGET
 
-   METHOD draw( qPainter, qRect, lDrawSelection )
+   METHOD draw( qPainter, qRectF, lDrawSelection )
    METHOD setupPainter( qPainter, lDrawSelection )
-   METHOD drawBarcode( qPainter, qRect )
-   METHOD drawImage( qPainter, qRect )
+   METHOD drawBarcode( qPainter, qRectF )
+   METHOD drawImage( qPainter, qRectF )
    METHOD drawChart( qPainter, qRect )
-   METHOD drawText( qPainter, qRect )
-   METHOD drawField( qPainter, qRect )
-   METHOD drawGradient( qPainter, qRect )
+   METHOD drawText( qPainter, qRectF )
+   METHOD drawField( qPainter, qRectF )
+   METHOD drawGradient( qPainter, qRectF )
    METHOD drawLine( qPainter, qRect )
-   METHOD drawRect( qPainter, qRect )
-   METHOD drawRoundRect( qPainter, qRect )
-   METHOD drawEllipse( qPainter, qRect )
-   METHOD drawPie( qPainter, qRect )
-   METHOD drawArc( qPainter, qRect )
-   METHOD drawChord( qPainter, qRect )
-   METHOD drawDiamond( qPainter, qRect )
-   METHOD drawTriangle( qPainter, qRect )
+   METHOD drawRect( qPainter, qRectF )
+   METHOD drawRoundRect( qPainter, qRectF )
+   METHOD drawEllipse( qPainter, qRectF )
+   METHOD drawPie( qPainter, qRectF )
+   METHOD drawArc( qPainter, qRectF )
+   METHOD drawChord( qPainter, qRectF )
+   METHOD drawDiamond( qPainter, qRectF )
+   METHOD drawTriangle( qPainter, qRectF )
    METHOD drawSelection( qPainter, qRect )
 
    ERROR  HANDLER OnError( ... )
@@ -2314,8 +2314,7 @@ METHOD HqrGraphicsItem:drawSelection( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
-   LOCAL qRectF := QRectF( qRect )
+METHOD HqrGraphicsItem:draw( qPainter, qRectF, lDrawSelection )
 
    DEFAULT lDrawSelection TO .t.
 
@@ -2348,20 +2347,20 @@ METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawRect( qPainter, qRect )
-   qPainter:drawRect( qRect )
+METHOD HqrGraphicsItem:drawRect( qPainter, qRectF )
+   qPainter:drawRect( qRectF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawRoundRect( qPainter, qRect )
-   qPainter:drawRoundedRect( qRect, 10/UNIT, 10/UNIT )
+METHOD HqrGraphicsItem:drawRoundRect( qPainter, qRectF )
+   qPainter:drawRoundedRect( qRectF, 10/UNIT, 10/UNIT )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawEllipse( qPainter, qRect )
-   qPainter:drawEllipse( qRect )
+METHOD HqrGraphicsItem:drawEllipse( qPainter, qRectF )
+   qPainter:drawEllipse( qRectF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2386,15 +2385,15 @@ METHOD HqrGraphicsItem:drawLine( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawPie( qPainter, qRect )
-   qPainter:drawPie( qRect, ::nStartAngle * 16, ::nSpanAngle * 16 )
+METHOD HqrGraphicsItem:drawPie( qPainter, qRectF )
+   qPainter:drawPie( qRectF, ::nStartAngle * 16, ::nSpanAngle * 16 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawDiamond( qPainter, qRect )
+METHOD HqrGraphicsItem:drawDiamond( qPainter, qRectF )
    LOCAL p := QPainterPath()
-   LOCAL x := qRect:x(), y := qRect:y(), w := qRect:width(), h := qRect:height()
+   LOCAL x := qRectF:x(), y := qRectF:y(), w := qRectF:width(), h := qRectF:height()
 
    p:moveTo( x, y + h / 2 )
    p:lineTo( x + w / 2, y )
@@ -2408,13 +2407,13 @@ METHOD HqrGraphicsItem:drawDiamond( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawTriangle( qPainter, qRect )
+METHOD HqrGraphicsItem:drawTriangle( qPainter, qRectF )
    LOCAL p := QPainterPath()
 
-   p:moveTo( qRect:x(), qRect:y() + qRect:height() )
-   p:lineTo( qRect:x() + qRect:width() / 2, qRect:y() )
-   p:lineTo( qRect:x() + qRect:width(), qRect:y() + qRect:height() )
-   p:lineTo( qRect:x(), qRect:y() + qRect:height() )
+   p:moveTo( qRectF:x(), qRectF:y() + qRectF:height() )
+   p:lineTo( qRectF:x() + qRectF:width() / 2, qRectF:y() )
+   p:lineTo( qRectF:x() + qRectF:width(), qRectF:y() + qRectF:height() )
+   p:lineTo( qRectF:x(), qRectF:y() + qRectF:height() )
 
    qPainter:drawPath( p )
 
@@ -2422,53 +2421,49 @@ METHOD HqrGraphicsItem:drawTriangle( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawArc( qPainter, qRect )
-   qPainter:drawArc( qRect, ::nStartAngle * 16, ::nSpanAngle * 16 )
+METHOD HqrGraphicsItem:drawArc( qPainter, qRectF )
+   qPainter:drawArc( qRectF, ::nStartAngle * 16, ::nSpanAngle * 16 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawChord( qPainter, qRect )
-   qPainter:drawChord( qRect, ::nStartAngle * 16, ::nSpanAngle * 16 )
+METHOD HqrGraphicsItem:drawChord( qPainter, qRectF )
+   qPainter:drawChord( qRectF, ::nStartAngle * 16, ::nSpanAngle * 16 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawText( qPainter, qRect )
-   qPainter:drawText( qRect, ::textFlags(), ::text() )
+METHOD HqrGraphicsItem:drawText( qPainter, qRectF )
+   qPainter:drawText( qRectF, ::textFlags(), ::text() )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawField( qPainter, qRect )
-   qPainter:drawText( qRect, ::textFlags(), ::text() )
+METHOD HqrGraphicsItem:drawField( qPainter, qRectF )
+   qPainter:drawText( qRectF, ::textFlags(), ::text() )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawGradient( qPainter, qRect )
-   qPainter:drawRect( qRect )
+METHOD HqrGraphicsItem:drawGradient( qPainter, qRectF )
+   qPainter:drawRect( qRectF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawBarcode( qPainter, qRect )
-   LOCAL fl, clr, rc, w, x, i, cCode
+METHOD HqrGraphicsItem:drawBarcode( qPainter, qRectF )
+   LOCAL rc, w, x, i, cCode
 
-   rc    := qRect:adjusted( 5, 5, -10, -10 )
-
+   rc    := qRectF:adjusted( 5, 5, -10, -10 )
    cCode := fetchBarString( ::text() )
-
-   fl    := QColor( Qt_white )
-   clr   := QColor( Qt_black )
    w     := rc:width() / len( cCode )
    x     := 0.0
 
    FOR i := 1 TO len( cCode )
       IF substr( cCode, i, 1 ) == "1"
-         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), clr )
+         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), QColor( Qt_black ) )
       ELSE
-         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), fl )
+         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), QColor( Qt_white ) )
       ENDIF
       x += w
    NEXT
@@ -2477,7 +2472,7 @@ METHOD HqrGraphicsItem:drawBarcode( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
+METHOD HqrGraphicsItem:drawImage( qPainter, qRectF )
    LOCAL qPix, image, rc, img, point
    LOCAL drawTextType := HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE
    LOCAL paintType    := HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO
@@ -2486,7 +2481,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
    LOCAL cText        := "Picture"
    LOCAL qObj         := ::oWidget
 
-   rc    := QRectF( qRect:adjusted( 1, 1, -2, -2 ) )
+   rc    := qRectF:adjusted( 1, 1, -2, -2 )
 
    textH := 0
    sw    := 0
@@ -2496,14 +2491,14 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
       textH = qPainter:font():pixelSize()
    ENDIF
 
-   qPix  := QPixmap( ::pixmap() )
-   image := QImage( qPix:toImage() )
+   qPix  := ::pixmap()
+   image := qPix:toImage()
 
    IF image:isNull()
-      qPainter:drawRect( qRect )
+      qPainter:drawRect( qRectF )
    ELSE
       img   := QImage( 0, 0 )
-      point := qRect:topLeft()
+      point := qRectF:topLeft()
       cx    := 0; cy := 0; cw := qPix:width(); ch := qPix:height()
 
       SWITCH paintType
