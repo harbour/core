@@ -22,6 +22,9 @@ New      =
 <CODE>
 #include <QtGui/QBrush>
 
+#define HBQT_TYPE_QLinearGradient                               ( ( HB_U32 ) 0x342B02A6 )
+#define HBQT_TYPE_QConicalGradient                              ( ( HB_U32 ) 0x42120943 )
+#define HBQT_TYPE_QRadialGradient                               ( ( HB_U32 ) 0x472E5B62 )
 
 /*
  * QBrush ()
@@ -55,7 +58,7 @@ HB_FUNC( QT_QBRUSH )
          {
             __HB_RETPTRGC__( new QBrush( *hbqt_par_QImage( 1 ) ) );
          }
-         else if( q->type == HBQT_TYPE_QGradient )
+         else if( q->type == HBQT_TYPE_QGradient || q->type == HBQT_TYPE_QLinearGradient || q->type == HBQT_TYPE_QConicalGradient || q->type == HBQT_TYPE_QRadialGradient )
          {
             __HB_RETPTRGC__( new QBrush( *hbqt_par_QGradient( 1 ) ) );
          }

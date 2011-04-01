@@ -321,8 +321,6 @@ int hbqt_isObjectType( int iParam, HB_U32 iType )
 
    if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
    {
-      HBQT_GC_T * p;
-
       hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
       hb_vmPush( pItem );
       hb_vmSend( 0 );
@@ -331,10 +329,12 @@ int hbqt_isObjectType( int iParam, HB_U32 iType )
 
       if( pItem )
       {
-         p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
+         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
 
          if( p && p->ph )
+         {
             return p->type == iType;
+         }
       }
    }
 

@@ -150,9 +150,32 @@ void drawPolyline ( const QPoint * points, int pointCount )
 void drawPolyline ( const QPolygonF & points )
 void drawPolyline ( const QPolygon & points )
 
-void drawRect ( const QRectF & rectangle )
-void drawRect ( const QRect & rectangle )
-void drawRect ( int x, int y, int width, int height )
+//void drawRect ( const QRectF & rectangle )
+//void drawRect ( const QRect & rectangle )
+void drawRect ( int x, int y, int width, int height ){
+   QPainter * p = ( QPainter * ) hbqt_pPtrFromObj( 0 );
+   if( p )
+   {
+      int pcount = hb_pcount();
+
+      if( pcount == 1 && HB_ISOBJECT( 1 ) )
+      {
+         if( hbqt_isObjectType( 1, HBQT_TYPE_QRectF ) )
+         {
+            p->drawRect( *hbqt_par_QRectF( 1 ) );
+         }
+         else if( hbqt_isObjectType( 1, HBQT_TYPE_QRect ) )
+         {
+            p->drawRect( *hbqt_par_QRect( 1 ) );
+         }
+      }
+      else if( pcount == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+      {
+         p->drawRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+      }
+      hb_itemReturn( hb_stackSelfItem() );
+   }
+}
 
 void drawRects ( const QRectF * rectangles, int rectCount )
 void drawRects ( const QRect * rectangles, int rectCount )
@@ -163,13 +186,60 @@ void drawRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::Si
 void drawRoundedRect ( const QRect & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
 void drawRoundedRect ( int x, int y, int w, int h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
 
-void drawText ( const QPointF & position, const QString & text )
-void drawText ( const QPoint & position, const QString & text )
-void drawText ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
-void drawText ( const QRectF & rectangle, int flags, const QString & text, QRectF * boundingRect = 0 )
-void drawText ( const QRect & rectangle, int flags, const QString & text, QRect * boundingRect = 0 )
-void drawText ( int x, int y, const QString & text )
-void drawText ( int x, int y, int width, int height, int flags, const QString & text, QRect * boundingRect = 0 )
+//void drawText ( const QPointF & position, const QString & text )
+//void drawText ( const QPoint & position, const QString & text )
+//void drawText ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
+//void drawText ( const QRectF & rectangle, int flags, const QString & text, QRectF * boundingRect = 0 )
+//void drawText ( const QRect & rectangle, int flags, const QString & text, QRect * boundingRect = 0 )
+//void drawText ( int x, int y, const QString & text )
+void drawText ( int x, int y, int width, int height, int flags, const QString & text, QRect * boundingRect = 0 ){
+   QPainter * p = ( QPainter * ) hbqt_pPtrFromObj( 0 );
+   if( p )
+   {
+      void * pText01 = NULL;
+      int pcount = hb_pcount();
+
+      if( pcount >= 2 && HB_ISOBJECT( 1 ) && HB_ISCHAR( 2 ) )
+      {
+         if( hbqt_isObjectType( 1, HBQT_TYPE_QPointF ) )
+         {
+            p->drawText( *hbqt_par_QPointF( 1 ), hb_parstr_utf8( 2, &pText01, NULL ) );
+         }
+         else if( hbqt_isObjectType( 1, HBQT_TYPE_QPoint ) )
+         {
+            p->drawText( *hbqt_par_QPoint( 1 ), hb_parstr_utf8( 2, &pText01, NULL ) );
+         }
+         else if( hbqt_isObjectType( 1, HBQT_TYPE_QRectF ) )
+         {
+            p->drawText( *hbqt_par_QRectF( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), ( HB_ISOBJECT( 3 ) ? *hbqt_par_QTextOption( 3 ) : QTextOption() ) );
+         }
+      }
+      else if( pcount >= 3 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
+      {
+         if( hbqt_isObjectType( 1, HBQT_TYPE_QRectF ) )
+         {
+            p->drawText( *hbqt_par_QRectF( 1 ), hb_parni( 2 ), hb_parstr_utf8( 3, &pText01, NULL ), ( HB_ISOBJECT( 4 ) ? hbqt_par_QRectF( 4 ) : 0 ) );
+         }
+         else if( hbqt_isObjectType( 1, HBQT_TYPE_QRect ) )
+         {
+            p->drawText( *hbqt_par_QRect( 1 ), hb_parni( 2 ), hb_parstr_utf8( 3, &pText01, NULL ), ( HB_ISOBJECT( 4 ) ? hbqt_par_QRect( 4 ) : 0 ) );
+         }
+      }
+      else if( pcount >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
+      {
+         p->drawText( hb_parni( 1 ), hb_parni( 2 ), hb_parstr_utf8( 3, &pText01, NULL ) );
+      }
+      else if( pcount >= 6 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) && HB_ISCHAR( 6 ) )
+      {
+         p->drawText( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parstr_utf8( 6, &pText01, NULL ), ( HB_ISOBJECT( 7 ) ? hbqt_par_QRect( 7 ) : 0 ) );
+      }
+
+      if( pText01 )
+         hb_strfree( pText01 );
+
+      hb_itemReturn( hb_stackSelfItem() );
+   }
+}
 
 
 void drawTiledPixmap ( const QRectF & rectangle, const QPixmap & pixmap, const QPointF & position = QPointF() )

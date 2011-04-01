@@ -225,7 +225,9 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                   {
                      if( hb_vmRequestReenter() )
                      {
-                        hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
+                        PHB_ITEM pItem = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
+                        hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem );
+                        hb_itemRelease( pItem );
                         hb_vmRequestRestore();
                      }
                   }

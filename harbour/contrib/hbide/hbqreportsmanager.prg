@@ -958,7 +958,7 @@ METHOD HbqReportsManager:addObject( cType, qPos, qGeo )
       qGrad:setColorAt( 0, QColor( 195,225,255 ) )
       qGrad:setColorAt( 1, QColor( Qt_darkBlue ):darker( 150 ) )
       qGrad:setCoordinateMode( QGradient_StretchToDeviceMode )
-      oHqrObject:setBrush( QBrush( "QGradient", qGrad ) )
+      oHqrObject:setBrush( QBrush( qGrad ) )
       oHqrObject:setPen( QPen( Qt_NoPen ) )
       EXIT
    CASE "Barcode"
@@ -2434,6 +2434,7 @@ METHOD HqrGraphicsItem:drawChord( qPainter, qRectF )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawText( qPainter, qRectF )
+HB_TRACE( HB_TR_ALWAYS, qRectF:className(), ::textFlags(), ::text() )
    qPainter:drawText( qRectF, ::textFlags(), ::text() )
    RETURN Self
 
@@ -2678,7 +2679,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       lg:setColorAt( 0, cv[ 3 ] )
       lg:setColorAt( 1, QColor( cv[ 3 ]:red() * nColorFactor, cv[ 3 ]:green() * nColorFactor, cv[ 3 ]:blue() * nColorFactor, cv[ 3 ]:alpha() ) )
       //
-      br := QBrush( "QGradient", lg )
+      br := QBrush( lg )
       //
       qPainter:fillRect( QRectF( rc:x() + x, rc:y() + py * maxpv - py * cv[ 2 ] * powVal, barWidth, py * cv[ 2 ] * powVal ), br )
 
