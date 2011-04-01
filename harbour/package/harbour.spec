@@ -78,7 +78,7 @@
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
+%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads} hbrun"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
@@ -414,12 +414,16 @@ make install %{?_smp_mflags}
 %{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
 rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
-rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so}
+rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
 rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/liblibhpdf.a \
       $HB_INSTALL_LIB/libpng.a \
-      $HB_INSTALL_LIB/libsqlite3.a
+      $HB_INSTALL_LIB/libsqlite3.a \
+      $HB_INSTALL_LIB/libexpat.a \
+      $HB_INSTALL_LIB/liblzf.a \
+      $HB_INSTALL_LIB/libminilzo.a \
+      $HB_INSTALL_LIB/libmxml.a
 
 ######################################################################
 ## Post install
@@ -487,14 +491,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbuddall.a
+%{_libdir}/%{name}/libhbbz2.a
+%{_libdir}/%{name}/libhbcomm.a
+%{_libdir}/%{name}/libhbexpat.a
+%{_libdir}/%{name}/libhbformat.a
+%{_libdir}/%{name}/libhblzf.a
+%{_libdir}/%{name}/libhbmemio.a
+%{_libdir}/%{name}/libhbmlzo.a
+%{_libdir}/%{name}/libhbmxml.a
+%{_libdir}/%{name}/libhbsqlit3.a
+%{_libdir}/%{name}/libhbunix.a
+%{_libdir}/%{name}/libhbzebra.a
+%{_libdir}/%{name}/libhbhttpd.a
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
 %files lib
 %defattr(755,root,root,755)
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/*.so
-%{!?hb_ldconf:%{_libdir}/*.so}
+%{_libdir}/%{name}/libharbour*.so*
+%{!?hb_ldconf:%{_libdir}/libharbour*.so*}
 %{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %files contrib
