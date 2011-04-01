@@ -547,7 +547,7 @@ HB_FUNC( WVW_SETTOOLTIP )
       return;
    }
 
-   if (s_pWvwData.s_bMainCoordMode)
+   if (hb_getWvwData()->s_bMainCoordMode)
    {
      hb_wvw_HBFUNCPrologue(usWinNum, &usTop, &usLeft, &usBottom, &usRight);
    }

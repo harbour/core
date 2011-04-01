@@ -1416,7 +1416,8 @@ HB_FUNC( NETIO_SRVSTATUS )
             if( addr )
                hb_xfree( addr );
          }
-         hb_itemParamStoreRelease( 3, pItem );
+         if( !hb_itemParamStoreRelease( 3, pItem ) && pItem )
+            hb_itemRelease( pItem );
          break;
       }
    }

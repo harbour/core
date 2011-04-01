@@ -1404,171 +1404,6 @@ static int hb_gt_wvw_ReadKey( PHB_GT pGT, int eventmask )
   return( bKey ? c : 0 );
 }
 
-/*-------------------------------------------------------------------*/
-/*                                                                   */
-/*   Copied from gtwin                                               */
-/*                                                                   */
-
-#if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined(__WATCOMC__) || defined(__MINGW32__)
-static int hb_Inp9x( USHORT usPort )
-{
-  USHORT usVal;
-
-  HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x( %hu )", usPort ) );
-
-  #if defined( __BORLANDC__ ) || defined(__DMC__)
-     _DX = usPort;
-     __emit__( 0xEC );        /* ASM  IN AL, DX */
-     __emit__( 0x32,0xE4 );   /* ASM XOR AH, AH */
-     usVal = _AX;
-
-  #elif defined( __XCC__ )
-
-     __asm {
-              mov   dx, usPort
-              xor   ax, ax
-              in    al, dx
-              mov   usVal, ax
-           }
-
-  #elif defined( __MINGW32__ )
-     __asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
-
-  #elif defined( __WATCOMC__ )
-
-     usVal = inp( usPort );
-
-  #else
-
-     usVal = (int) _inp( usPort );
-  #endif
-
-  return( usVal );
-}
-
-/*-------------------------------------------------------------------*/
-/*                                                                   */
-/*    Copied from gtwin                                              */
-/*                                                                   */
-static int hb_Outp9x( USHORT usPort, USHORT usVal )
-{
-  HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x( %hu, %hu )", usPort, usVal ) );
-
-  #if defined( __BORLANDC__ ) || defined(__DMC__)
-    _DX = usPort;
-    _AL = usVal;
-    __emit__( 0xEE );        /* ASM OUT DX, AL */
-
-   #elif defined( __XCC__ )
-
-      __asm {
-               mov   dx, usPort
-               mov   ax, usVal
-               out   dx, al
-            }
-
-   #elif defined( __MINGW32__ )
-
-      __asm__ __volatile__ ("outb %b0,%w1": :"a" (usVal), "Nd" (usPort));
-
-   #elif defined( __WATCOMC__ )
-
-       outp( usPort, usVal );
-
-  #else
-     _outp( usPort, usVal );
-  #endif
-
-  return( usVal );
-}
-
-/*-------------------------------------------------------------------*/
-/*                                                                   */
-/*    Copied from gtwin                                              */
-/*                                                                   */
-/* dDurat is in seconds */
-static void gt_w9xTone( double dFreq, double dDurat )
-{
-    INT   uLSB,uMSB;
-    ULONG lAdjFreq;
-
-    HB_TRACE( HB_TR_DEBUG, ("hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat ) );
-
-    /* sync with internal clock with very small time period */
-    hb_idleSleep( 0.01 );
-
-    /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-       less than < 20 hz (and so should we) to maintain compatibility .. */
-
-    if ( dFreq >= 20.0 )
-    {
-      /* Setup Sound Control Port Registers and timer channel 2 */
-      hb_Outp9x( 67, 182 ) ;
-
-      lAdjFreq = ( ULONG ) ( 1193180 / dFreq ) ;
-
-      if( ( LONG ) lAdjFreq < 0 )
-         uLSB = lAdjFreq + 65536;
-      else
-         uLSB = lAdjFreq % 256;
-
-      if( ( LONG ) lAdjFreq < 0 )
-         uMSB = lAdjFreq + 65536;
-      else
-         uMSB = lAdjFreq / 256;
-
-      /* set the frequency (LSB,MSB) */
-
-      hb_Outp9x( 66, (USHORT)uLSB );
-      hb_Outp9x( 66, (USHORT)uMSB );
-
-      /* Get current Port setting */
-      /* enable Speaker Data & Timer gate bits */
-      /* (00000011B is bitmask to enable sound) */
-      /* Turn on Speaker - sound Tone for duration.. */
-
-      hb_Outp9x( 97, (USHORT)hb_Inp9x( 97 ) | 3 );
-
-      hb_idleSleep( dDurat );
-
-      /* Read back current Port value for Reset */
-      /* disable Speaker Data & Timer gate bits */
-      /* (11111100B is bitmask to disable sound) */
-      /* Turn off the Speaker ! */
-
-      hb_Outp9x( 97, hb_Inp9x( 97 ) & 0xFC );
-
-    }
-    else
-    {
-       hb_idleSleep( dDurat );
-    }
-}
-#endif
-
-/*-------------------------------------------------------------------*/
-/*                                                                   */
-/* dDurat is in seconds */
-/*                                                                   */
-static void gt_wNtTone( double dFreq, double dDurat )
-{
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wNtTone(%lf, %lf)", dFreq, dDurat ) );
-
-    /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-       less than < 20 hz.  Windows NT minimum is 37... */
-
-    /* sync with internal clock with very small time period */
-    hb_idleSleep( 0.01 );
-
-    if ( dFreq >= 37.0 )
-    {
-       Beep( (ULONG) dFreq, (ULONG) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
-    }
-    else
-    {
-       hb_idleSleep( dDurat );
-    }
-}
 
 /*-------------------------------------------------------------------*/
 /*                                                                   */
@@ -1576,36 +1411,11 @@ static void gt_wNtTone( double dFreq, double dDurat )
 /*                                                                   */
 static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvw_Tone(%lf, %lf)", dFrequency, dDuration));
-    HB_SYMBOL_UNUSED( pGT );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvw_Tone(%lf, %lf)", dFrequency, dDuration));
 
-    /*
-      According to the Clipper NG, the duration in 'ticks' is truncated to the
-      interger portion  ... Depending on the platform, xHarbour allows a finer
-      resolution, but the minimum is 1 tick (for compatibility)
-     */
-    /* Convert from ticks to seconds */
-    dDuration  = ( HB_MIN( HB_MAX( 1.0, dDuration ), ULONG_MAX ) ) / 18.2;
+   HB_SYMBOL_UNUSED( pGT );
 
-    /* keep the frequency in an acceptable range */
-    dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
-
-    /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
-    if( hb_iswin9x() )
-    {
-       #if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __WATCOMC__ )  || defined(__MINGW32__)
-          gt_w9xTone( dFrequency, dDuration );
-       #else
-          gt_wNtTone( dFrequency, dDuration );
-       #endif
-    }
-
-    /* If Windows NT or NT2k, use wNtTone, which provides TONE()
-       reset sequence support (new) */
-    else if( hb_iswinnt() )
-    {
-       gt_wNtTone( dFrequency, dDuration );
-    }
+   hb_gt_winapi_tone( dFrequency, dDuration );
 }
 
 /*-------------------------------------------------------------------*/
@@ -1688,6 +1498,19 @@ static void hb_gt_wvw_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
   }
 
 }
+
+/*-------------------------------------------------------------------*/
+
+static void hb_gt_wvw_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvw_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol));
+
+   HB_SYMBOL_UNUSED( pGT );
+
+   *piRow = hb_gt_wvw_mouse_Row( pGT );
+   *piCol = hb_gt_wvw_mouse_Col( pGT );
+}
+
 
 /*-------------------------------------------------------------------*/
 static BOOL hb_gt_wvw_mouse_ButtonState( PHB_GT pGT, int iButton )
@@ -7954,6 +7777,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->MouseCol              = hb_gt_wvw_mouse_Col;
     pFuncTable->MouseRow              = hb_gt_wvw_mouse_Row;
     pFuncTable->MouseSetPos           = hb_gt_wvw_mouse_SetPos;
+    pFuncTable->MouseGetPos           = hb_gt_wvw_mouse_GetPos;
     pFuncTable->MouseCountButton      = hb_gt_wvw_mouse_CountButton;
     pFuncTable->MouseButtonState      = hb_gt_wvw_mouse_ButtonState;
 

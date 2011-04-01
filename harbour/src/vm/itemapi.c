@@ -150,6 +150,8 @@ HB_BOOL hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem )
          HB_STACK_TLS_PRELOAD
          hb_itemMoveToRef( hb_stackItemFromBase( uiParam ), pItem );
       }
+      else
+         hb_itemClear( hb_stackItemFromBase( uiParam ) );
       return HB_TRUE;
    }
 
@@ -168,6 +170,8 @@ HB_BOOL hb_itemParamStoreRelease( HB_USHORT uiParam, PHB_ITEM pItem )
          hb_itemMoveToRef( hb_stackItemFromBase( uiParam ), pItem );
          hb_itemRelease( pItem );
       }
+      else
+         hb_itemClear( hb_stackItemFromBase( uiParam ) );
       return HB_TRUE;
    }
 
