@@ -1796,8 +1796,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
       aadd( txt_, "/* " + strtran( ooMtd:cProto, chr( 13 ) ) + " */" )
    NEXT
 
-// v := "_" + lower( substr( ::cQtObject, 2 ) )  /* This unneccessarily makes it difficlt to compare two sources with similar functions */
-   v := "p"
+   v := "p"  /* NEVER change this */
 
    aadd( txt_, "HB_FUNC_STATIC( " + upper( oMtd:cHBFunc ) + " )" )
    aadd( txt_, "{" )
@@ -1835,6 +1834,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
             aadd( txt_, "   if( " + v + " )" )
             aadd( txt_, "   {" )
             aadd( txt_, "      int pcount = hb_pcount();" )
+            aadd( txt_, "   " )
          ENDIF
 
          FOR i := 1 TO len( a_ )
@@ -1845,9 +1845,11 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
                aadd( txt_, "      {" )
                aeval( ::getReturnAsList( a_[ i ], FP, "      " ), {|e| aadd( txt_, e ) } )
+#if 0
                IF oMtd:oRet:cCast == "void"
                   aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
                ENDIF
+#endif
                aadd( txt_, "      }" )
 
             OTHERWISE
@@ -1900,18 +1902,20 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                   NEXT
                ENDIF
 
-               IF oMtd:oRet:cCast == "void"
-                  aadd( txt_, "         hb_itemReturn( hb_stackSelfItem() );" )
-               ENDIF
-
                aadd( txt_, "      }" )
             ENDCASE
          NEXT
-         IF empty( oMtd:fBody_ )
-            aadd( txt_, "      else " )
-            aadd( txt_, "         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); " )
-            aadd( txt_, "   }" )
+
+         aadd( txt_, "      else " )
+         aadd( txt_, "      {" )
+         aadd( txt_, "         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); " )
+         aadd( txt_, "      }" )
+         IF oMtd:oRet:cCast == "void"
+            aadd( txt_, "  " )
+            aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
          ENDIF
+         aadd( txt_, "   }" )
+
       ENDIF
    ENDIF
 
@@ -2970,3 +2974,152 @@ STATIC FUNCTION hbqtgen_stripLastFrom( cStr, cDlm )
    RETURN cStr
 
 /*----------------------------------------------------------------------*/
+#if 0   /* KEEP AS IS - A Work in progress */
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_pullSameMethods( cFun, aMethods, cQtObject )
+   LOCAL i, oMtd, a_:={}, b_:={}, c_:={}, nArgs, n, txt_:={}
+   LOCAL cSpc, cCrc, lFirst, nMtds, nTySame, lInIf
+
+   FOR EACH oMtd IN aMethods
+      IF oMtd:cFun == cFun
+         aadd( a_, oMtd )
+      ENDIF
+   NEXT
+   asort( a_, , , {|e,f| strzero( e:nArgs,2 ) + iif( e:nArgs == 0, "", e:hArgs[ 1 ]:cTypeHB ) > strzero( f:nArgs, 2 ) + iif( f:nArgs == 0, "", f:hArgs[ 1 ]:cTypeHB )  } )
+
+   /* know the maximum groups by number of parameters - first CASE */
+   aeval( a_, {|o| iif( ascan( b_, o:nArgs ) == 0, aadd( b_, o:nArgs ), NIL ) } )
+
+   /* also take into account optional arguments if any */
+   FOR EACH oMtd IN a_
+      IF oMtd:nArgsReal < oMtd:nArgs
+         FOR i := oMtd:nArgs - 1 TO oMtd:nArgsReal STEP -1
+            IF ascan( b_, i ) == 0
+               aadd( b_, i )
+            ENDIF
+         NEXT
+      ENDIF
+   NEXT
+
+   /* Build the structure number of parameters wise */
+   FOR EACH nArgs IN b_
+      aadd( c_, { nArgs, {}, {}, {} } )
+      n := len( c_ )
+      FOR EACH oMtd IN a_
+         IF oMtd:nArgs == nArgs
+            aadd( c_[ n,2 ], oMtd )
+         ENDIF
+      NEXT
+      /* Again append methods with optional arguments */
+      FOR EACH oMtd IN a_
+         IF oMtd:nArgsReal < oMtd:nArgs
+            FOR i := oMtd:nArgs - 1 TO oMtd:nArgsReal STEP -1
+               IF i == nArgs
+                  aadd( c_[ n,2 ], oMtd )
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   NEXT
+
+   /* stack groups based on parameters descending */
+   asort( c_, , , {|e,f| e[ 1 ] > f[ 1 ] } )
+
+   /* again sort no of arguments based methods by type of arguments */
+   FOR i := 10 TO 0 STEP -1  /* consider maximum 10 arguments */
+      IF ( n := ascan( c_, {|e_| e_[ 1 ] == i } ) ) > 0
+         a_:= c_[ n,2 ]
+         asort( a_, , , {|e,f| __TY( e, c_[ n,1 ] ) < __TY( f, c_[ n,1 ] ) } )
+      ENDIF
+   NEXT
+
+   cSpc := "   "
+   aadd( txt_, cSpc + "SWITCH PCount()" )
+   FOR EACH b_ IN c_
+      n := b_[ 1 ]
+      a_:= b_[ 2 ]
+      aadd( txt_, cSpc + "CASE " + hb_ntos( n ) )      /* number of parameters */
+      cCrc    := "xxx"
+      nMtds   := 0
+      lInIf   := .f.
+      nTySame := 0
+      IF n > 0
+         lFirst := .t.
+         aadd( txt_, cSpc + cSpc + "DO CASE" )               /* type of parameters   */
+      ENDIF
+      FOR EACH oMtd IN a_
+         IF n > 0
+            IF cCrc != __TY( oMtd, n )
+               cCrc    := __TY( oMtd, n )
+               nMtds   := 0
+               nTySame := 0
+               aeval( a_, {|o| iif( __TY( o,n ) == cCrc, nTySame++, NIL ) } )
+               lInIf   := oMtd:nArgQCast > 0 .AND. oMtd:nArgQCast <= n .AND. nTySame > 1
+               IF ! lFirst
+                  lFirst := .t.
+                  aadd( txt_, cSpc + cSpc + "ENDCASE" )
+               ENDIF
+               aadd( txt_, cSpc + cSpc + "CASE " + __TY_TYPES( oMtd,n ) )
+            ENDIF
+         ENDIF
+         nMtds++
+         hbide_addReturnMethod( txt_, oMtd, cQtObject, iif( n == 0, 6, 9 ), nMtds, .t., lInIf, nTySame, n )
+      NEXT
+      IF n > 0
+         aadd( txt_, cSpc + cSpc + "ENDCASE" )
+         aadd( txt_, cSpc + cSpc + "EXIT" )
+      ENDIF
+   NEXT
+   aadd( txt_, cSpc + "ENDSWITCH" )
+
+   RETURN txt_
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION __TY_TYPES( oM, nArgs )
+   LOCAL i, s := ""
+   FOR i := 1 TO nArgs
+      s += hbide_paramCheckStr( oM:hArgs[ i ]:cTypeHB, i ) + " .AND. "
+   NEXT
+   IF " .AND. " $ s
+      s := substr( s, 1, len( s ) - 7 )
+   ENDIF
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION __TY( oM, nArgs )
+   LOCAL i, s := ""
+   FOR i := 1 TO nArgs
+      s += PadR( oM:hArgs[ i ]:cTypeHB, 3 )
+   NEXT
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_paramCheckStr( cType, nArg )
+
+   SWITCH cType
+   CASE "PB"
+      RETURN "( " + " hb_pvalue( " + hb_ntos( nArg ) + " )" + " != NIL )"
+   CASE "P"
+      RETURN "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
+   CASE "O"
+      RETURN "hb_isObject( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
+   CASE "CO"
+      RETURN "( hb_isObject( hb_pvalue( " + hb_ntos( nArg ) + " ) ) .OR. hb_isChar( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
+   CASE "N"
+      RETURN  "hb_isNumeric( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
+   CASE "L"
+      RETURN  "hb_isLogical( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
+   CASE "C"
+      RETURN  "hb_isChar( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
+   ENDSWITCH
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+#endif
+/*----------------------------------------------------------------------*/
+
+
