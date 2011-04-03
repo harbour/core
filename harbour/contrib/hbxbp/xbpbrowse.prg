@@ -300,7 +300,8 @@ EXPORTED:
    MESSAGE _right()                               METHOD Right()
    MESSAGE _end()                                 METHOD End()
 
-   METHOD init( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
+   //METHOD init( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
+   METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )     // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )   // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD execSlot( nEvent, p1, p2, p3 )                    // executes view events
    METHOD supplyInfo( nMode, nCall, nRole, nX, nY )                // supplies cell parameters to Qt engine
@@ -603,17 +604,15 @@ METHOD XbpBrowse:disconnect()
 /*----------------------------------------------------------------------*/
 
 /* Just to retain TBrowse functionality: in the future */
-METHOD XbpBrowse:init( nTop, nLeft, nBottom, nRight )
+//METHOD XbpBrowse:init( nTop, nLeft, nBottom, nRight )
+METHOD XbpBrowse:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT nTop    TO 0
-   DEFAULT nLeft   TO 0
-   DEFAULT nBottom TO MaxRow()
-   DEFAULT nRight  TO MaxCol()
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::nTop    := nTop
-   ::nLeft   := nLeft
-   ::nBottom := nBottom
-   ::nRight  := nRight
+   ::nTop    := iif( empty( ::aPos  ), 0, ::aPos[ 1 ] )
+   ::nLeft   := iif( empty( ::aPos  ), 0, ::aPos[ 2 ] )
+   ::nBottom := iif( empty( ::aSize ), MaxRow(), ::aSize[ 1 ] )
+   ::nRight  := iif( empty( ::aSize ), MaxCol(), ::aSize[ 2 ] )
 
    ::colorSpec := SetColor()
 

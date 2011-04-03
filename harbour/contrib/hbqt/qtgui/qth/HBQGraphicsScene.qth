@@ -27,17 +27,19 @@ HBQT_GC_FUNC( hbqt_gcMark_HBQGraphicsScene )
    HBQT_GC_T_HBQGraphicsScene * p = ( HBQT_GC_T_HBQGraphicsScene * ) Cargo;
 
    if( p )
-     if( p->ph )
-     {
-        HBQGraphicsScene * ip = ( HBQGraphicsScene * ) p->ph;
-        if( ip )
-        {
+   {
+      if( p->ph )
+      {
+         HBQGraphicsScene * ip = ( HBQGraphicsScene * ) p->ph;
+         if( ip )
+         {
             if (ip->block)
             {
                hb_gcMark( ip->block );
             }
-        }
-     }
+         }
+      }
+   }
 }
 
 /*

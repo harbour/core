@@ -28,17 +28,19 @@ HBQT_GC_FUNC( hbqt_gcMark_HBQGraphicsItem )
 
    HB_TRACE( HB_TR_DEBUG, ( "gcMark_HBQGraphicsItem" ) );
    if( p )
-     if( p->ph )
-     {
-        HBQGraphicsItem * ip = ( HBQGraphicsItem * ) p->ph;
-        if( ip )
-        {
+   {
+      if( p->ph )
+      {
+         HBQGraphicsItem * ip = ( HBQGraphicsItem * ) p->ph;
+         if( ip )
+         {
             if (ip->block)
             {
                hb_gcMark( ip->block );
             }
-        }
-     }
+         }
+      }
+   }
 }
 
 /*
