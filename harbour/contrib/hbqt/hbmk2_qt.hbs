@@ -1860,7 +1860,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
                ENDIF
 
                FOR n := a_[ i ]:nArgsReal + 1 TO a_[ i ]:nArgs
-                  t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + ")"
+                  t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + " )"
                NEXT
 
                aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount " + ;
@@ -2099,7 +2099,6 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    LOCAL aArg, n, nn, cHBIdx, nIndex, s, ss, cFirstParamCast, cArg
    LOCAL oMtd, oRet, oArg, k, cKey, cVal
    LOCAL cRef
-   LOCAL cHBIdxN := "1", sN := ""
 
    IF ( n := at( "(", cProto ) ) == 0
       RETURN .f.
@@ -2167,9 +2166,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          oMtd:hArgs[ nIndex ] := oArg
 
          oMtd:nHBIdx := nIndex // iif( oMtd:isConstructor, 0, 1 )
-         oMtd:nHBIdxN := nIndex
          cHBIdx := hb_ntos( oMtd:nHBIdx )
-         cHBIdxN := hb_ntos( nIndex )
          oMtd:cDocNM := HBQTGEN_THIS_PROPER( oArg:cName )
 
          oMtd:nArgs++
@@ -2187,53 +2184,42 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          DO CASE
          CASE oArg:cCast == "..."
             oArg:cBody   := "..."
-            oArg:cBodyN  := "..."
             oArg:cDoc    := "..."
             oArg:cTypeHB := "..."
 
          CASE oArg:cCast == "PHB_ITEM"
             oArg:cBody   := "hb_param( " + cHBIdx + ", HB_IT_ANY )"
-            oArg:cBodyN  := "hb_param( " + cHBIdxN + ", HB_IT_ANY )"
             oArg:cDoc    := "x" + oMtd:cDocNM
             oArg:cTypeHB := "PB"
 
          CASE oArg:cCast == "T"
             oArg:cBody   := "hb_param( " + cHBIdx + ", HB_IT_ANY )"
-            oArg:cBodyN  := "hb_param( " + cHBIdxN + ", HB_IT_ANY )"
             oArg:cDoc    := "x" + oMtd:cDocNM
             oArg:cTypeHB := "P"
 
-         CASE oArg:cCast $ ::cInt .and. oArg:lFar
+         CASE oArg:cCast $ ::cInt .AND. oArg:lFar
             aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
-            aadd( oMtd:aPreN, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdxN, "i" + oMtd:cDocNM, "hb_storni" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
-            oArg:cBodyN  := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
-         CASE oArg:cCast $ ::cIntLong .and. oArg:lFar
+         CASE oArg:cCast $ ::cIntLong .AND. oArg:lFar
             aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
-            aadd( oMtd:aPreN, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdxN, "i" + oMtd:cDocNM, "hb_stornl" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
-            oArg:cBodyN  := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
-         CASE oArg:cCast $ ::cIntLongLong .and. oArg:lFar
+         CASE oArg:cCast $ ::cIntLongLong .AND. oArg:lFar
             aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornint" } )
-            aadd( oMtd:aPreN, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdxN, "i" + oMtd:cDocNM, "hb_stornint" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
-            oArg:cBodyN  := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ ::cInt
             IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnidef( " + cHBIdx + ", " + oArg:cDefault + " )"
-               oArg:cBodyN := "hb_parnidef( " + cHBIdxN + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parni( " + cHBIdx + " )"
-               oArg:cBodyN := "hb_parni( " + cHBIdxN + " )"
             ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
@@ -2241,10 +2227,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:cCast $ ::cIntLong
             IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnldef( " + cHBIdx + ", " + oArg:cDefault + " )"
-               oArg:cBodyN := "hb_parnldef( " + cHBIdxN + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parnl( " + cHBIdx + " )"
-               oArg:cBodyN := "hb_parnl( " + cHBIdxN + " )"
             ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
@@ -2252,10 +2236,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:cCast $ "qlonglong,qulonglong"
             IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "( " + oArg:cCast + " ) hb_parnintdef( " + cHBIdx + ", " + oArg:cDefault + " )"
-               oArg:cBodyN := "( " + oArg:cCast + " ) hb_parnintdef( " + cHBIdxN + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "( " + oArg:cCast + " ) hb_parnint( " + cHBIdx + " )"
-               oArg:cBodyN := "( " + oArg:cCast + " ) hb_parnint( " + cHBIdxN + " )"
             ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
@@ -2263,76 +2245,68 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:cCast $ ::cIntLongLong
             IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnintdef( " + cHBIdx + ", " + oArg:cDefault + " )"
-               oArg:cBodyN := "hb_parnintdef( " + cHBIdxN + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parnint( " + cHBIdx + " )"
-               oArg:cBodyN := "hb_parnint( " + cHBIdxN + " )"
             ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast $ "double,qreal" .and. oArg:lFar
+         CASE oArg:cCast $ "double,qreal" .AND. oArg:lFar
             aadd( oMtd:aPre, { "qreal qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
-            aadd( oMtd:aPreN, { "qreal qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdxN, "qr" + oMtd:cDocNM, "hb_stornd"  } )
             oArg:cBody   := "&qr" + oMtd:cDocNM
-            oArg:cBodyN  := "&qr" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ "double,qreal,float"
-            oArg:cBody   := "hb_parnd( " + cHBIdx + " )"
-            oArg:cBodyN  := "hb_parnd( " + cHBIdxN + " )"
+            s := "hb_parnd( " + cHBIdx + " )"
+            IF !empty( oArg:cDefault )
+               oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
+            ELSE
+               oArg:cBody := s
+            ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "uchar" .and. oArg:lFar .and. ! oArg:lConst
+         CASE oArg:cCast == "uchar" .AND. oArg:lFar .AND. ! oArg:lConst
             /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
             oArg:cBody   := "( uchar * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "uchar" .and. oArg:lFar .and. oArg:lConst
+         CASE oArg:cCast == "uchar" .AND. oArg:lFar .AND. oArg:lConst
             oArg:cBody   := "( const uchar * ) hb_parc( " + cHBIdx + " )"
-            oArg:cBodyN  := "( uchar ) hb_parni( " + cHBIdxN + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "uchar" .and. ! oArg:lFar .and. ! oArg:lConst
+         CASE oArg:cCast == "uchar" .AND. ! oArg:lFar .AND. ! oArg:lConst
             oArg:cBody   := "( uchar ) hb_parni( " + cHBIdx + " )"
-            oArg:cBodyN  := "( uchar ) hb_parni( " + cHBIdxN + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "char" .and. oArg:lFar .and. ! oArg:lConst
+         CASE oArg:cCast == "char" .AND. oArg:lFar .AND. ! oArg:lConst
             /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
             oArg:cBody   := "( char * ) hb_parc( " + cHBIdx + " )"
-            oArg:cBodyN  := "( char * ) hb_parc( " + cHBIdxN + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "char" .and. oArg:lFar .and. oArg:lConst
+         CASE oArg:cCast == "char" .AND. oArg:lFar .AND. oArg:lConst
             oArg:cBody   := "( const char * ) hb_parc( " + cHBIdx + " )"
-            oArg:cBodyN  := "( const char * ) hb_parc( " + cHBIdxN + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
-         CASE oArg:cCast == "char" .and. ! oArg:lFar .and. ! oArg:lConst
+         CASE oArg:cCast == "char" .AND. ! oArg:lFar .AND. ! oArg:lConst
             oArg:cBody   := "( char ) hb_parni( " + cHBIdx + " )"
-            oArg:cBodyN  := "( char ) hb_parni( " + cHBIdxN + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE ( "::" $ oArg:cCast ) .and. oArg:lFar
+         CASE ( "::" $ oArg:cCast ) .AND. oArg:lFar
             aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = ( " + oArg:cCast + " ) 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
-            aadd( oMtd:aPreN, { oArg:cCast + " i" + oMtd:cDocNM + " = ( " + oArg:cCast + " ) 0;", oMtd:nHBIdxN, "i" + oMtd:cDocNM, "hb_storni" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
-            oArg:cBodyN  := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
          CASE ( "::" $ oArg:cCast )
             s := "( " + oArg:cCast + " ) hb_parni( " + cHBIdx + " )"
-            sN := "( " + oArg:cCast + " ) hb_parni( " + cHBIdxN + " )"
             IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                IF ascan( ::enum_, oArg:cDefault ) > 0
                   ss := ::cQtObject + "::" + oArg:cDefault
@@ -2342,87 +2316,79 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                ENDIF
                ss := "( " + oArg:cCast + " ) " + ss
                oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + ss + " )"
-               oArg:cBodyN := "( HB_ISNUM( " + cHBIdxN + " ) ? " + sN + " : " + ss + " )"
             ELSE
                oArg:cBody := s
-               oArg:cBodyN := sN
             ENDIF
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "bool" .and. oArg:lFar
+         CASE oArg:cCast == "bool" .AND. oArg:lFar
             aadd( oMtd:aPre, { "bool i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
-            aadd( oMtd:aPreN, { "bool i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdxN, "i" + oMtd:cDocNM, "hb_stornl" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
-            oArg:cBodyN  := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@l" + oMtd:cDocNM
             oArg:cTypeHB := "L"
 
          CASE oArg:cCast == "bool"
-            oArg:cBody   := "hb_parl( " + cHBIdx + " )"
-            oArg:cBodyN  := "hb_parl( " + cHBIdxN + " )"
+            s := "hb_parl( " + cHBIdx + " )"
+            IF !empty( oArg:cDefault )
+               oArg:cBody := "( HB_ISLOG( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
+            ELSE
+               oArg:cBody := s
+            ENDIF
             oArg:cDoc    := "l" + oMtd:cDocNM
             oArg:cTypeHB := "L"
 
          CASE oArg:cCast == "QString"
             oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
-            oArg:cBodyN  := "hb_parstr_utf8( " + cHBIdxN + ", &pText%%%, NULL )"
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
 #if 0
          CASE oArg:cCast == "FT_Face"
             oArg:cBody   := "hbqt_par_FT_Face( " + cHBIdx + " )"
-            oArg:cBodyN  := "hbqt_par_FT_Face( " + cHBIdxN + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 #endif
          CASE oArg:cCast == "QIcon"
             cRef := "QIcon"
             s := "*hbqt_par_QIcon( " + cHBIdx + " )"
-            sN := "*hbqt_par_QIcon( " + cHBIdxN + " )"
             oArg:cBody   := "( HB_ISCHAR( " + cHBIdx + " ) ? " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) )" + " : " + s + ")"
-            oArg:cBodyN  := "( HB_ISCHAR( " + cHBIdxN + " ) ? " + "QIcon( hbqt_par_QString( " + cHBIdxN + " ) )" + " : " + sN + ")"
-            oArg:cDoc    := "co" + oArg:cCast //oMtd:cDocNM  // "p"
-            oArg:cTypeHB := "CO" // "PCO"
+            oArg:cDoc    := "co" + oArg:cCast
+            oArg:cTypeHB := "CO"
 
          CASE oArg:lFar
             cRef := oArg:cCast
-            oArg:cBody   := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            oArg:cBodyN  := "hbqt_par_" + oArg:cCast + "( " + cHBIdxN + " )"
-            oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM
-            oArg:cTypeHB := "O" // "PO"
+            oArg:cBody := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
+            IF !empty( oArg:cDefault )
+               oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + oArg:cBody + " : " + oArg:cDefault + " )"
+            ENDIF
+            oArg:cDoc    := "o" + oArg:cCast
+            oArg:cTypeHB := "O"
 
          CASE oArg:lAnd .AND. oArg:lConst
             cRef := oArg:cCast
             s := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            sN := "*hbqt_par_" + oArg:cCast + "( " + cHBIdxN + " )"
-            IF !empty( oArg:cDefault ) .and. ( "(" $ oArg:cDefault )
+            IF !empty( oArg:cDefault ) .AND. ( "(" $ oArg:cDefault )
                oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
-               oArg:cBodyN := "( HB_ISOBJECT( " + cHBIdxN + " ) ? " + sN + " : " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := s
-               oArg:cBodyN := sN
             ENDIF
-            oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM
-            oArg:cTypeHB := "O" //"PO"
+            oArg:cDoc    := "o" + oArg:cCast
+            oArg:cTypeHB := "O"
 
          CASE oArg:lAnd
             cRef := oArg:cCast
             oArg:cBody   := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            oArg:cBodyN  := "*hbqt_par_" + oArg:cCast + "( " + cHBIdxN + " )"
-            oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM //p
-            oArg:cTypeHB := "O" //"PO"
+            oArg:cDoc    := "o" + oArg:cCast
+            oArg:cTypeHB := "O"
 
          CASE oArg:cCast == "QChar"
             cRef := oArg:cCast
             oArg:cBody   := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            oArg:cBodyN  := "*hbqt_par_" + oArg:cCast + "( " + cHBIdxN + " )"
-            oArg:cDoc    := "o" + oArg:cCast //oMtd:cDocNM
-            oArg:cTypeHB := "O" //"PO"
+            oArg:cDoc    := "o" + oArg:cCast
+            oArg:cTypeHB := "O"
 
          OTHERWISE
             oArg:cBody   := ""   /* Just in case */
-            oArg:cBodyN  := ""   /* Just in case */
             oArg:cDoc    := ""
             oArg:cTypeHB := ""
 
@@ -2431,7 +2397,6 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          hbqtgen_AddRef( ::hRef, cRef )
 
          oMtd:cParas += oArg:cBody + ", "
-         oMtd:cParasN += oArg:cBodyN + ", "
          oMtd:cDocs  += oArg:cDoc + ", "
       NEXT
    ENDIF
@@ -2457,14 +2422,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
       oMtd:cParas := substr( oMtd:cParas, 1, len( oMtd:cParas ) - 2 )
       oMtd:cDocs  := substr( oMtd:cDocs , 1, len( oMtd:cDocs  ) - 2 )
    ENDIF
-   IF right( oMtd:cParasN, 2 ) == ", "
-      oMtd:cParasN := substr( oMtd:cParasN, 1, len( oMtd:cParasN ) - 2 )
-   ENDIF
 
    ::buildCppCode( oMtd )
-
-   HB_SYMBOL_UNUSED( cHBIdxN )
-   HB_SYMBOL_UNUSED( sN )
 
    RETURN oMtd:lValid
 
@@ -2483,39 +2442,31 @@ STATIC PROCEDURE hbqtgen_AddRef( hRef, cRef )
 METHOD HbQtSource:buildCppCode( oMtd )
    LOCAL oRet   := oMtd:oRet
    LOCAL cPara  := oMtd:cParas
-   LOCAL cParaN := oMtd:cParasN
    LOCAL cRef, cRefInList
 
    oMtd:cWdg      := "hbqt_par_" + ::cQtObject + "( 1 )->"
    oMtd:cParas    := iif( oMtd:isVariable(), "", "( " + oMtd:cParas + " )" )
-   //oMtd:cParasN   := iif( oMtd:isVariable(), "", "( " + oMtd:cParasN + " )" )
    oMtd:cCmn      := oMtd:cWdg + oMtd:cFun + oMtd:cParas
-   //oMtd:cCmnN     := "( _" + lower( substr( ::cQtObject, 2 ) ) + " )->" + oMtd:cFun + oMtd:cParasN
    oMtd:cDocNMRet := HBQTGEN_THIS_PROPER( oRet:cName )
 
    DO CASE
    CASE oMtd:isConstructor
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + ::cQtObject + "( new " + oRet:cCast + "( " + cPara + " ), true )" + ', "HB_' + upper(::cQtObject) +'")'
-      oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_" + ::cQtObject + "( new " + oRet:cCast + "( " + cParaN + " ), true )" + ', "HB_' + upper( ::cQtObject ) + '")'
-      oMtd:cPrgRet := "o" + ::cQtObject  // "p"
+      oMtd:cPrgRet := "o" + ::cQtObject
 
    CASE "<" $ oRet:cCast
       DO CASE
       CASE ! ( "QList" $ oRet:cCast )
          oMtd:cCmd := ""
-         oMtd:cCmdN := ""
          oMtd:cPrgRet := ""
       CASE "::" $ oRet:cCast
          oMtd:cCmd := ""
-         oMtd:cCmdN := ""
          oMtd:cPrgRet := ""
       CASE "QPair" $ oRet:cCast
          oMtd:cCmd := ""
-         oMtd:cCmdN := ""
          oMtd:cPrgRet := ""
       CASE "<T>" $ oRet:cCast
          oMtd:cCmd := ""
-         oMtd:cCmdN := ""
          oMtd:cPrgRet := ""
       OTHERWISE
          cRef := "QList"
@@ -2525,92 +2476,73 @@ METHOD HbQtSource:buildCppCode( oMtd )
          cRefInList := strtran( cRefInList, " " )
          oMtd:isRetList := .t.
          oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-         //oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmnN + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ENDCASE
 
    CASE oRet:cCast == "T"
-      /* TOFIX: Such code is not valid and should never be generated [vszakats] */
-      #if 1
       oMtd:cCmd := "hb_itemReturn( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_itemReturn( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
-      #else
-      oMtd:cCmd := "hb_retptr( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retptr( " + oMtd:cCmnN + " )"
-      oMtd:cPrgRet := "p" + oMtd:cDocNMRet
-      #endif
 
    CASE oRet:cCast == "void"
       oMtd:cCmd := oMtd:cCmn
-      oMtd:cCmdN := oMtd:cCmnN
       oMtd:cPrgRet := "NIL"
 
    CASE oRet:cCast $ ::cInt
       oMtd:cCmd := "hb_retni( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retni( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE oRet:cCast $ ::cIntLong
       oMtd:cCmd := "hb_retnl( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retnl( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE oRet:cCast $ ::cIntLongLong
       oMtd:cCmd := "hb_retnint( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retnint( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE oRet:cCast $ "double,qreal,float"
       oMtd:cCmd := "hb_retnd( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retnd( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE "::" $ oRet:cCast
       oMtd:cCmd := "hb_retni( ( " + oRet:cCast + " ) " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retni( ( " + oRet:cCast + " ) " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE oRet:cCast == "bool"
       oMtd:cCmd := "hb_retl( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retl( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "l" + oMtd:cDocNMRet
 
    CASE oRet:cCast == "char" .AND. oRet:lFar
       oMtd:cCmd := "hb_retc( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retc( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "c" + oMtd:cDocNMRet
 
    CASE oRet:cCast == "char"
       oMtd:cCmd := "hb_retni( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retni( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "c" + oMtd:cDocNMRet
 
    CASE oRet:cCast == "QString"
       oMtd:cCmd := "hb_retstr_utf8( " + oMtd:cCmn + ".toUtf8().data()" + " )"
-      oMtd:cCmdN := "hb_retstr_utf8( " + oMtd:cCmnN + ".toUtf8().data()" + " )"
       oMtd:cPrgRet := "c" + oMtd:cDocNMRet
 
    CASE oRet:cCast == "FT_Face"
       oMtd:cCmd := "hb_retc( " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retc( " + oMtd:cCmnN + " )"
       oMtd:cPrgRet := "c" + oMtd:cDocNMRet
 
    CASE oRet:lFar .AND. ( oRet:cCast $ "uchar" )
       oMtd:cCmd := "hb_retc( ( const char * ) " + oMtd:cCmn + " )"
-      oMtd:cCmdN := "hb_retc( ( const char * ) " + oMtd:cCmnN + " )"
-      oMtd:cPrgRet := "c" + oMtd:cDocNMRet //p
+      oMtd:cPrgRet := "c" + oMtd:cDocNMRet
 
    CASE oRet:lFar .AND. ! oRet:lConst
+      cRef := oRet:cCast
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
+      #if 0
       IF hbqtgen_isAqtObject( oRet:cCast )
          cRef := oRet:cCast
          oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
-         oMtd:cCmdN := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmnN, .F. )
       ELSE
          /* TOFIX: Such code is not valid and should never be generated [vszakats] */
          oMtd:cCmd := "hb_retptr( ( " + oRet:cCast + "* ) " + oMtd:cCmn + " )"
-         oMtd:cCmdN := "hb_retptr( ( " + oRet:cCast + "* ) " + oMtd:cCmnN + " )"
       ENDIF
+      #endif
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2619,8 +2551,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              "Abstract" $ oRet:cCast
       cRef := oRet:cCast
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-      oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmnN + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
                              oRet:lFar     .AND. ;
@@ -2628,8 +2559,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lVirt
       cRef := oRet:cCast
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-      oMtd:cCmdN := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmnN + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet  //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
                              oRet:lFar     .AND. ;
@@ -2637,38 +2567,32 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConstL
       cRef := oRet:cCast
       oMtd:cCmd := hbqtgen_Get_Command_1( oRet:cCast, oMtd:cCmn )
-      oMtd:cCmdN := hbqtgen_Get_Command_1( oRet:cCast, oMtd:cCmnN )
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lAnd .AND. oRet:lConst
       cRef := oRet:cCast
       oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
-      oMtd:cCmdN := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmnN )
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lConst
       cRef := oRet:cCast
       oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
-      oMtd:cCmdN := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmnN )
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lAnd
       cRef := oRet:cCast
       oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
-      oMtd:cCmdN := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmnN )
-      oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
+      oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    OTHERWISE
       /* No attribute is attached to return value */
       IF hbqtgen_isAqtObject( oRet:cCast )
          cRef := oRet:cCast
          oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
-         oMtd:cCmdN := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmnN )
-         oMtd:cPrgRet := "o" + oMtd:cDocNMRet //p
+         oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ELSE
          oMtd:cError := "<<< " + oMtd:cProto + " | " + oRet:cCast + " >>>"
          oMtd:cCmd := ""
-         oMtd:cCmdN := ""
          oMtd:cPrgRet := ""
       ENDIF
    ENDCASE
@@ -2676,7 +2600,6 @@ METHOD HbQtSource:buildCppCode( oMtd )
    /* Lists to be disabled in parameters - TODO */
    IF "<" $ oMtd:cPar
       oMtd:cCmd := ""
-      oMtd:cCmdN := ""
    ENDIF
 
    IF ( oMtd:lValid := ! Empty( oMtd:cCmd ) )

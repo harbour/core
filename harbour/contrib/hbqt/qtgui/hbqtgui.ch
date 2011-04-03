@@ -2277,6 +2277,17 @@
 #define QDesktopServices_DataLocation                        9    // Returns a directory location where persistent application data can be stored. QCoreApplication::applicationName and QCoreApplication::organizationName should work on all platforms.
 #define QDesktopServices_CacheLocation                       10   // Returns a directory location where user-specific non-essential (cached) data should be written.
 
+
+#define QFormLayout_FieldsStayAtSizeHint                     0    // The fields never grow beyond their effective size hint. This is the default for QMacStyle.
+#define QFormLayout_ExpandingFieldsGrow                      1    // Fields with an horizontal size policy of Expanding or MinimumExpanding will grow to fill the available space. The other fields will not grow beyond their effective size hint. This is the default policy for Plastique.
+#define QFormLayout_AllNonFixedFieldsGrow                    2    // All fields with a size policy that allows them to grow will grow to fill the available space. This is the default policy for most styles.
+#define QFormLayout_LabelRole                                0    // A label widget.
+#define QFormLayout_FieldRole                                1    // A field widget.
+#define QFormLayout_SpanningRole                             2    // A widget that spans label and field columns.
+#define QFormLayout_DontWrapRows                             0    // Fields are always laid out next to their label. This is the default policy for all styles except Qt Extended styles and QS60Style.
+#define QFormLayout_WrapLongRows                             1    // Labels are given enough horizontal space to fit the widest label, and the rest of the space is given to the fields. If the minimum size of a field pair is wider than the available space, the field is wrapped to the next line. This is the default policy for Qt Extended styles and and QS60Style.
+#define QFormLayout_WrapAllRows                              2    // Fields are always laid out below their label.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
