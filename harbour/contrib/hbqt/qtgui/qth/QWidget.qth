@@ -201,7 +201,7 @@ void setGeometry ( const QRect & )
 void setGeometry ( int x, int y, int w, int h )
 
 // void setInputContext ( QInputContext * context )
-void setLayout ( QLayout * layout )
+void setLayout ( QLayout * layout )                              [*D=1*]
 void setLayoutDirection ( Qt::LayoutDirection direction )
 void setLocale ( const QLocale & locale )
 

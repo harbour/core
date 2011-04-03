@@ -27,7 +27,14 @@ New      = pParent
  */
 HB_FUNC( QT_QDOCKWIDGET )
 {
-   __HB_RETPTRGC__( new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QDockWidget( hbqt_par_QString( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDockWidget( ( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   }
 }
 </CODE>
 
