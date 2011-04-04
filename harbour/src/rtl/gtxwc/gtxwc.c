@@ -2945,20 +2945,23 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
    }
 
 #if 1
-   do
+   if( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
    {
-      while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
+      do
       {
-         XEvent evt;
-         XNextEvent( wnd->dpy, &evt );
-         hb_gt_xwc_WndProc( wnd, &evt );
+         do
+         {
+            XEvent evt;
+            XNextEvent( wnd->dpy, &evt );
+            hb_gt_xwc_WndProc( wnd, &evt );
+         }
+         while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
+         hb_gt_xwc_UpdateSize( wnd );
+         hb_gt_xwc_UpdatePts( wnd );
+         hb_gt_xwc_UpdateCursor( wnd );
       }
-      hb_gt_xwc_UpdateSize( wnd );
-      hb_gt_xwc_UpdatePts( wnd );
-      hb_gt_xwc_UpdateCursor( wnd );
+      while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
    }
-   while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
-
 #else
 {
    HB_BOOL fRepeat;
@@ -2995,11 +2998,9 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows 
       wnd->cols = cols;
       wnd->rows = rows;
 
-      if( wnd->pCurrScr == NULL )
-         wnd->pCurrScr = ( HB_ULONG * ) hb_xgrab( iSize * sizeof( HB_ULONG ) );
-      else
-         wnd->pCurrScr = ( HB_ULONG * ) hb_xrealloc( wnd->pCurrScr, iSize * sizeof( HB_ULONG ) );
-
+      if( wnd->pCurrScr != NULL )
+         hb_xfree( wnd->pCurrScr );
+      wnd->pCurrScr = ( HB_ULONG * ) hb_xgrab( iSize * sizeof( HB_ULONG ) );
       memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( HB_ULONG ) );
       hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
       HB_GTSELF_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
@@ -3033,6 +3034,7 @@ static HB_BOOL hb_gt_xwc_Resize( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows )
                                      DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) ) );
             wnd->drw = wnd->pm;
             XResizeWindow( wnd->dpy, wnd->window, wnd->width, wnd->height );
+            XSync( wnd->dpy, False );
          }
       }
 
@@ -3615,8 +3617,8 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
 
       if( iCol == wnd->cols && iRow == wnd->rows )
       {
-         fResult = HB_TRUE;
          HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
+         fResult = HB_TRUE;
       }
       else if( !wnd->fInit )
       {
@@ -3629,9 +3631,15 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
          HB_XWC_XLIB_LOCK
          fResult = hb_gt_xwc_Resize( wnd, iCol, iRow );
          HB_XWC_XLIB_UNLOCK
-         if( fResult )
-            HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
          hb_gt_xwc_Enable();
+
+         /* hack for multiple window resizing when user executes
+          * series of setmode() function. I'll look for cleaner
+          * solution in some spare time.
+          */
+         hb_gt_xwc_RealRefresh( wnd );
+         hb_idleSleep( 0.1 );
+         hb_gt_xwc_RealRefresh( wnd );
       }
    }
 
