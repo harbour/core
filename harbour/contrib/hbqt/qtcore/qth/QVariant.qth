@@ -79,7 +79,6 @@ enum Type { Invalid, BitArray, Bitmap, Bool, ..., UserType }
 
 <PROTOS>
 bool canConvert ( Type t ) const
-bool canConvert ( Type t ) const
 void clear ()
 bool convert ( Type t )
 bool isNull () const

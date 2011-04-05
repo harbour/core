@@ -75,8 +75,9 @@ QString & append ( const QString & str )
 QString & append ( const QStringRef & reference )
 QString & append ( const QLatin1String & str )
 QString & append ( const QByteArray & ba )
-QString & append ( const char * str )
+//QString & append ( const char * str )
 QString & append ( QChar ch )
+
 QString arg ( const QString & a, int fieldWidth = 0, const QChar & fillChar = QLatin1Char( ' ' ) ) const
 QString arg ( const QString & a1, const QString & a2 ) const
 QString arg ( const QString & a1, const QString & a2, const QString & a3 ) const
@@ -87,16 +88,17 @@ QString arg ( const QString & a1, const QString & a2, const QString & a3, const 
 QString arg ( const QString & a1, const QString & a2, const QString & a3, const QString & a4, const QString & a5, const QString & a6, const QString & a7, const QString & a8 ) const
 QString arg ( const QString & a1, const QString & a2, const QString & a3, const QString & a4, const QString & a5, const QString & a6, const QString & a7, const QString & a8, const QString & a9 ) const
 QString arg ( int a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( uint a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( long a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( ulong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( qlonglong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( qulonglong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( short a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( ushort a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( uint a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( long a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( ulong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( qlonglong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( qulonglong a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( short a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( ushort a, int fieldWidth = 0, int base = 10, const QChar & fillChar = QLatin1Char( ' ' ) ) const
 QString arg ( QChar a, int fieldWidth = 0, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( char a, int fieldWidth = 0, const QChar & fillChar = QLatin1Char( ' ' ) ) const
-QString arg ( double a, int fieldWidth = 0, char format = 'g', int precision = -1, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( char a, int fieldWidth = 0, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+//QString arg ( double a, int fieldWidth = 0, char format = 'g', int precision = -1, const QChar & fillChar = QLatin1Char( ' ' ) ) const
+
 const QChar at ( int position ) const
 //iterator begin ()
 //const_iterator begin () const
@@ -152,11 +154,13 @@ QString mid ( int position, int n = -1 ) const
 QStringRef midRef ( int position, int n = -1 ) const
 QString normalized ( NormalizationForm mode ) const
 QString normalized ( NormalizationForm mode, QChar::UnicodeVersion version ) const
+
 QString & prepend ( const QString & str )
 QString & prepend ( const QLatin1String & str )
 QString & prepend ( const QByteArray & ba )
-QString & prepend ( const char * str )
+//QString & prepend ( const char * str )
 QString & prepend ( QChar ch )
+
 void push_back ( const QString & other )
 void push_back ( QChar ch )
 void push_front ( const QString & other )
@@ -186,16 +190,18 @@ QStringRef rightRef ( int n ) const
 QString section ( QChar sep, int start, int end = -1, SectionFlags flags = SectionDefault ) const
 QString section ( const QString & sep, int start, int end = -1, SectionFlags flags = SectionDefault ) const
 QString section ( const QRegExp & reg, int start, int end = -1, SectionFlags flags = SectionDefault ) const
+
 QString & setNum ( int n, int base = 10 )
-QString & setNum ( uint n, int base = 10 )
-QString & setNum ( long n, int base = 10 )
-QString & setNum ( ulong n, int base = 10 )
-QString & setNum ( qlonglong n, int base = 10 )
-QString & setNum ( qulonglong n, int base = 10 )
-QString & setNum ( short n, int base = 10 )
-QString & setNum ( ushort n, int base = 10 )
-QString & setNum ( double n, char format = 'g', int precision = 6 )
-QString & setNum ( float n, char format = 'g', int precision = 6 )
+//QString & setNum ( uint n, int base = 10 )
+//QString & setNum ( long n, int base = 10 )
+//QString & setNum ( ulong n, int base = 10 )
+//QString & setNum ( qlonglong n, int base = 10 )
+//QString & setNum ( qulonglong n, int base = 10 )
+//QString & setNum ( short n, int base = 10 )
+//QString & setNum ( ushort n, int base = 10 )
+//QString & setNum ( double n, char format = 'g', int precision = 6 )
+//QString & setNum ( float n, char format = 'g', int precision = 6 )
+
 QString & setUnicode ( const QChar * unicode, int size )
 QString & setUtf16 ( const ushort * unicode, int size )
 QString simplified () const
@@ -252,13 +258,15 @@ QString fromUtf16 ( const ushort * unicode, int size = -1 )
 //QString fromWCharArray ( const wchar_t * string, int size = -1 )
 int localeAwareCompare ( const QString & s1, const QString & s2 )
 int localeAwareCompare ( const QString & s1, const QStringRef & s2 )
-QString number ( long n, int base = 10 )
-QString number ( double n, char format = 'g', int precision = 6 )
-QString number ( ulong n, int base = 10 )
+
+//QString number ( long n, int base = 10 )
+//QString number ( double n, char format = 'g', int precision = 6 )
+//QString number ( ulong n, int base = 10 )
 QString number ( int n, int base = 10 )
-QString number ( uint n, int base = 10 )
-QString number ( qlonglong n, int base = 10 )
-QString number ( qulonglong n, int base = 10 )
+//QString number ( uint n, int base = 10 )
+//QString number ( qlonglong n, int base = 10 )
+//QString number ( qulonglong n, int base = 10 )
+
 </PROTOS>
 
 <SLOTS>

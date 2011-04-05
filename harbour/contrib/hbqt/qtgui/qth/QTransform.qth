@@ -60,6 +60,7 @@ bool isInvertible () const
 bool isRotating () const
 bool isScaling () const
 bool isTranslating () const
+
 void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
 QPointF map ( const QPointF & p ) const
 QPoint map ( const QPoint & point ) const
@@ -69,7 +70,8 @@ QPolygonF map ( const QPolygonF & polygon ) const
 QPolygon map ( const QPolygon & polygon ) const
 QRegion map ( const QRegion & region ) const
 QPainterPath map ( const QPainterPath & path ) const
-void map ( int x, int y, int * tx, int * ty ) const
+//void map ( int x, int y, int * tx, int * ty ) const
+
 QRectF mapRect ( const QRectF & rectangle ) const
 QRect mapRect ( const QRect & rectangle ) const
 QPolygon mapToPolygon ( const QRect & rectangle ) const

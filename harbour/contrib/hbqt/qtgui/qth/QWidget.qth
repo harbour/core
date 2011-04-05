@@ -223,8 +223,8 @@ void setMinimumWidth ( int minw )
 void setMouseTracking ( bool enable )
 void setPalette ( const QPalette & )
 
-void setParent ( QWidget * parent = 0 )
-void setParent ( QWidget * parent, Qt::WindowFlags f = 0 )
+//void setParent ( QWidget * parent = 0 )
+void setParent ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 
 void setShortcutAutoRepeat ( int id, bool enable = true )
 void setShortcutEnabled ( int id, bool enable = true )

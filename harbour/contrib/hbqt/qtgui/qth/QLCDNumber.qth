@@ -38,7 +38,7 @@ enum SegmentStyle { Outline, Filled, Flat }
 
 <PROTOS>
 bool checkOverflow ( double num ) const
-bool checkOverflow ( int num ) const
+//bool checkOverflow ( int num ) const
 int intValue () const
 Mode mode () const
 int numDigits () const
@@ -53,7 +53,7 @@ double value () const
 <SLOTS>
 void display ( const QString & s )
 void display ( double num )
-void display ( int num )
+//void display ( int num )
 void setBinMode ()
 void setDecMode ()
 void setHexMode ()

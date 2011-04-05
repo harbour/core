@@ -34,7 +34,7 @@
 #include "hbclass.ch"
 
 #define I_( x )                 hb_i18n_gettext( x )
-#define  _GEN_TRACE_
+#define  _xGEN_TRACE_
 
 #if defined( __HBSCRIPT__HBMK )
 
@@ -1073,14 +1073,15 @@ CREATE CLASS HbQtSource
    METHOD parseProto( cProto, fBody_ )
    METHOD parseVariables( cProto )
    METHOD build()
-   METHOD getConstructor( nClsType )
+   METHOD getConstructor()
    METHOD getConstructorW()
    METHOD buildCppCode( oMtd )
    METHOD buildMethodBody( oMtd )
    METHOD buildDOC()
-   METHOD getMethodBody( oMtd, cMtdName, aMethods, nClsType )
+   METHOD getMethodBody( oMtd, cMtdName, aMethods )
    METHOD normalizeCmd( oMtd, v )
    METHOD getReturnAsList( oMtd, FP, cPrefix )
+   METHOD getReturnMethod( oMtd, lAddRet )
 
 ENDCLASS
 
@@ -1286,9 +1287,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtSource:build()
-   LOCAL i, s, oMtd, tmp, tmp1, n, k
-   LOCAL aLine
-   LOCAL uQtObject
+   LOCAL i, s, oMtd, tmp, tmp1, n, k, aLine, uQtObject
 
    uQtObject := upper( ::cQtObject )
 
@@ -1638,10 +1637,8 @@ METHOD HbQtSource:build()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:getConstructor( nClsType )
+METHOD HbQtSource:getConstructor()
    LOCAL i, s, aLine := {}
-
-   HB_SYMBOL_UNUSED( nClsType )
 
    IF ::isConstructor
       IF ::isList
@@ -1680,7 +1677,7 @@ METHOD HbQtSource:getConstructor( nClsType )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtSource:getConstructorW()
-   LOCAL aLine := ::getConstructor( 0 )
+   LOCAL aLine := ::getConstructor()
 
    aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hbqt_itemPushReturn", "hbqt_create_objectGC" ) } )
    aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hb_stackSelfItem()" , '"HB_' + upper( ::cQtObject ) + '"' ) } )
@@ -1691,6 +1688,8 @@ METHOD HbQtSource:getConstructorW()
 
 METHOD HbQtSource:normalizeCmd( oMtd, v )
    LOCAL FP
+
+   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
 
    IF ! oMtd:isConstructor
       FP := strtran( oMtd:cCmd, "hbqt_par_" + ::cQtObject + "( 1 )", v, 1, 1 )
@@ -1767,31 +1766,78 @@ METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
-   LOCAL FP, cTmp, n, v, t_, q, nStrCnt, ooMtd, i, a_
-   LOCAL txt_:= {}
+METHOD HbQtSource:getReturnMethod( oMtd, lAddRet )
+   LOCAL txt_, nStrCnt, n, FP, v
+
+   txt_:= {}
+
+   v := "p"  /* NEVER change this */
+   FP := ::normalizeCmd( oMtd, v )
+
+   IF ! empty( oMtd:aPre )
+      FOR n := 1 TO len( oMtd:aPre )
+         aadd( txt_, oMtd:aPre[ n,1 ] )
+      NEXT
+      aadd( txt_, "" )
+   ENDIF
+
+   /* Manage detached Argument */
+   IF oMtd:nDetach > 0
+      aadd( txt_, "hbqt_detachgcpointer( " + hb_ntos( oMtd:nDetach ) + " );" )
+   ENDIF
+
+   nStrCnt := 0
+   DO WHILE "%%%" $ FP
+      ++nStrCnt
+      FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
+      aadd( txt_, "void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
+   ENDDO
+
+   aeval( ::getReturnAsList( oMtd, FP, "" ), {|e| aadd( txt_, e ) } )
+
+   FOR n := nStrCnt TO 1 STEP -1
+      aadd( txt_, "hb_strfree( pText" + StrZero( n, 2, 0 ) + " );" )
+   NEXT
+
+   /* Return values back to PRG */
+   IF ! empty( oMtd:aPre )
+      aadd( txt_, "" )
+      FOR n := 1 TO len( oMtd:aPre )
+         aadd( txt_, oMtd:aPre[ n,4 ] + "( " + oMtd:aPre[ n,3 ] + ", " + hb_ntos( oMtd:aPre[ n,2 ] ) + " );" )
+      NEXT
+   ENDIF
+
+   IF lAddRet
+      aadd( txt_, "return;" )
+   ENDIF
+
+   RETURN txt_
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
+   LOCAL cTmp, n, v, ooMtd, i, nArgs, nArgGrps
+   LOCAL txt_:= {}, a_:= {}, b_:= {}, c_:= {}, d_:= {}
+   LOCAL cCrc, nMtds, lInIf, lFirst, nTySame
 
    HB_SYMBOL_UNUSED( cMtdName )
 
-   // list all the overloaded methods
-   a_ := {}
+   /* check for methods already been worked on */
+   IF ascan( ::func_, {|e_| e_[ 1 ] == oMtd:cFun } ) > 0
+      RETURN {}
+   ENDIF
+   aadd( ::func_, { oMtd:cFun, 0, "" } )
+
+   oMtd:cHBFunc := oMtd:cFun
+   oMtd:cCmd    := StrTran( oMtd:cCmd, "(  )", "()" )
+
    FOR EACH ooMtd IN aMethods
       IF ooMtd:cFun == oMtd:cFun
-        aadd( a_, ooMtd )
+         aadd( a_, ooMtd )
       ENDIF
    NEXT
 
-   oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
-
-   // check for methods already worked
-   IF ( ascan( ::func_, {|e_| e_[ 1 ] == oMtd:cFun } ) ) > 0
-      return {}
-   ENDIF
-
-   oMtd:cHBFunc := oMtd:cFun
-   aadd( ::func_, { oMtd:cFun, 0, "" } )
-
-//   aadd( txt_, "/* " + strtran( oMtd:cProto, chr( 13 ) ) + " */" )
+   /* Display method prototypes on top of the method body */
    FOR EACH ooMtd IN a_
       aadd( txt_, "/* " + strtran( ooMtd:cProto, chr( 13 ) ) + " */" )
    NEXT
@@ -1801,139 +1847,177 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods, nClsType )
    aadd( txt_, "HB_FUNC_STATIC( " + upper( oMtd:cHBFunc ) + " )" )
    aadd( txt_, "{" )
    #ifdef _GEN_TRACE_
-// aadd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
-   aadd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   aadd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   //aadd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
    #endif
 
+   /* If method is manually written in .qth - no more processing */
    IF !empty( oMtd:fBody_ )
       aeval( oMtd:fBody_, {|e| aadd( txt_, e ) } )
-   ELSE
-      IF ! oMtd:isConstructor
-         cTmp := ::cQtObject + iif( ::isList, "< void * >", "" )
-         IF nClsType == 0
-            aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_pPtrFromObj( 0 );" )
-         ELSEIF nClsType == 1
-            aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_getqtptr();" )
-         ENDIF
-      ENDIF
-
-      IF len( a_ ) == 1 .AND. a_[ 1 ]:nArgs == 0
-         IF ! oMtd:isConstructor
-            FP := ::normalizeCmd( a_[ 1 ], v )
-
-            aadd( txt_, "   if( " + v + " )" )
-            aadd( txt_, "   {" )
-            aeval( ::getReturnAsList( a_[ 1 ], FP, "      " ), {|e| aadd( txt_, e ) } )
-            IF oMtd:oRet:cCast == "void"
-               aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
-            ENDIF
-            aadd( txt_, "   }" )
-         ENDIF
-      ELSE
-         IF ! oMtd:isConstructor
-            aadd( txt_, "   if( " + v + " )" )
-            aadd( txt_, "   {" )
-            aadd( txt_, "      int pcount = hb_pcount();" )
-            aadd( txt_, "   " )
-         ENDIF
-
-         FOR i := 1 TO len( a_ )
-            FP := ::normalizeCmd( a_[ i ], v )
-
-            DO CASE
-            CASE a_[ i ]:nArgs == 0
-               aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount == 0 )" )
-               aadd( txt_, "      {" )
-               aeval( ::getReturnAsList( a_[ i ], FP, "      " ), {|e| aadd( txt_, e ) } )
-#if 0
-               IF oMtd:oRet:cCast == "void"
-                  aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
-               ENDIF
-#endif
-               aadd( txt_, "      }" )
-
-            OTHERWISE
-               t_ := __TY_TYPEScpp( a_[ i ], a_[ i ]:nArgsReal ) // return string of checks for real arguments
-
-               IF ! empty( t_ )
-                  t_ := " && " + t_
-               ENDIF
-
-               FOR n := a_[ i ]:nArgsReal + 1 TO a_[ i ]:nArgs
-                  t_ += " && ( pcount < " + hb_ntos( n )+ " || " + hbide_paramCheckStrCpp( a_[i]:hArgs[ n ]:cTypeHB, n, a_[i]:hArgs[ n ]:cCast ) + " )"
-               NEXT
-
-               aadd( txt_, "      " + iif( i > 1 , "else if", "if" ) + "( pcount " + ;
-                                      iif( a_[i]:nArgsReal == a_[i]:nArgs , "==", "<=" ) + " " + ;
-                                      hb_ntos( a_[i]:nArgs ) + t_ + " )" )
-
-               aadd( txt_, "      {" )
-
-               IF ! empty( a_[ i ]:aPre )
-                  FOR n := 1 TO len( a_[i]:aPre )
-                     aadd( txt_, "         " + a_[i]:aPre[ n ][ 1 ] )
-                  NEXT
-                  aadd( txt_, "" )
-               ENDIF
-
-               /* Manage detached Argument */
-               IF a_[ i ]:nDetach > 0
-                  aadd( txt_, "        hbqt_detachgcpointer( " + hb_ntos( a_[i]:nDetach ) + " );" )
-               ENDIF
-
-               nStrCnt := 0
-               DO WHILE "%%%" $ FP
-                  ++nStrCnt
-                  FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
-                  aadd( txt_, "         void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
-               ENDDO
-
-               aeval( ::getReturnAsList( a_[ i ], FP, iif( ! a_[ i ]:isConstructor, "         ", "      " ) ), {|e| aadd( txt_, e ) } )
-
-               FOR q := nStrCnt TO 1 STEP -1
-                  aadd( txt_, "         hb_strfree( pText" + StrZero( q, 2, 0 ) + " );" )
-               NEXT
-
-               /* Return values back to PRG */
-               IF ! empty( a_[ i ]:aPre )
-                  aadd( txt_, "" )
-                  FOR q := 1 TO len( a_[ i ]:aPre )
-                     aadd( txt_, "         " + a_[i]:aPre[ q ][ 4 ] + "( " + a_[i]:aPre[ q ][ 3 ] + ", " + hb_ntos( a_[i]:aPre[ q ][ 2 ] ) + " );" )
-                  NEXT
-               ENDIF
-
-               aadd( txt_, "      }" )
-            ENDCASE
-         NEXT
-
-         aadd( txt_, "      else " )
-         aadd( txt_, "      {" )
-         aadd( txt_, "         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); " )
-         aadd( txt_, "      }" )
-         IF oMtd:oRet:cCast == "void"
-            aadd( txt_, "  " )
-            aadd( txt_, "      hb_itemReturn( hb_stackSelfItem() );" )
-         ENDIF
-         aadd( txt_, "   }" )
-
-      ENDIF
+      aadd( txt_, "}" )
+      aadd( txt_, "" )
+      RETURN txt_
    ENDIF
 
-   aadd( txt_, "}" )
-   aadd( txt_, ""  )
+   /* Sort per number of arguments */
+   asort( a_, , , {|e,f| strzero( e:nArgs,2 ) + iif( e:nArgs == 0, "", e:hArgs[ 1 ]:cTypeHB ) > strzero( f:nArgs, 2 ) + iif( f:nArgs == 0, "", f:hArgs[ 1 ]:cTypeHB )  } )
+
+   /* know the maximum groups by number of parameters - first CASE */
+   aeval( a_, {|o| iif( ascan( b_, o:nArgs ) == 0, aadd( b_, o:nArgs ), NIL ) } )
+
+   /* also take into account optional arguments if any */
+   FOR EACH ooMtd IN a_
+      IF ooMtd:nArgsReal < ooMtd:nArgs
+         FOR i := ooMtd:nArgs - 1 TO ooMtd:nArgsReal STEP -1
+            IF ascan( b_, i ) == 0
+               aadd( b_, i )
+            ENDIF
+         NEXT
+      ENDIF
+   NEXT
+
+   /* Build the structure number of parameters wise */
+   FOR EACH nArgs IN b_
+      aadd( c_, { nArgs, {}, {}, {} } )
+      n := len( c_ )
+      FOR EACH ooMtd IN a_
+         IF ooMtd:nArgs == nArgs
+            aadd( c_[ n,2 ], ooMtd )
+         ENDIF
+      NEXT
+      /* Again append methods with optional arguments */
+      FOR EACH ooMtd IN a_
+         IF ooMtd:nArgsReal < ooMtd:nArgs
+            FOR i := ooMtd:nArgs - 1 TO ooMtd:nArgsReal STEP -1
+               IF i == nArgs
+                  aadd( c_[ n,2 ], ooMtd )
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   NEXT
+
+   /* stack groups based on parameters descending */
+   asort( c_, , , {|e,f| e[ 1 ] > f[ 1 ] } )
+
+   /* again sort no of arguments based methods by type of arguments */
+   FOR i := 10 TO 0 STEP -1  /* consider maximum 10 arguments */
+      IF ( n := ascan( c_, {|e_| e_[ 1 ] == i } ) ) > 0
+         d_:= c_[ n,2 ]                      // d_ == a_
+         asort( d_, , , {|e,f| __TY( e, c_[ n,1 ] ) < __TY( f, c_[ n,1 ] ) } )
+      ENDIF
+   NEXT
+
+
+   cTmp := ::cQtObject + iif( ::isList, "< void * >", "" )
+   aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_pPtrFromObj( 0 );" )
+
+   aadd( txt_, "   if( " + v + " )" )
+   aadd( txt_, "   {" )
+
+   IF len( a_ ) == 1 .and. oMtd:nArgs == oMtd:nArgsReal    /* Only one method - no overloads */
+      FOR EACH b_ IN c_
+         nArgs    := b_[ 1 ]
+         a_       := b_[ 2 ]
+         FOR EACH oMtd IN a_
+            IF oMtd:nArgs > 0
+               aadd( txt_, "      " + iif( oMtd:__enumIndex() == 1, "if", "else if" ) + "( " + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
+               aadd( txt_, "      {" )
+            ENDIF
+            //
+            aeval( ::getReturnMethod( oMtd, ( oMtd:nArgs > 0 ) ), {|e| aadd( txt_, space( iif( oMtd:nArgs > 0, 9, 6 ) ) + e ) } )
+            //
+            IF oMtd:nArgs > 0
+               aadd( txt_, "      }" )
+               aadd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
+            ENDIF
+         NEXT
+      NEXT
+
+   ELSE
+
+      nArgs := 0
+      aadd( txt_, "      switch( hb_pcount() )" )
+      aadd( txt_, "      {" )
+
+      FOR EACH b_ IN c_
+         nArgs    := b_[ 1 ]
+         a_       := b_[ 2 ]
+         nArgGrps := len( c_ )
+         cCrc     := "xxx"
+         nMtds    := 0
+         lInIf    := .f.
+         nTySame  := 0
+         lFirst   := nArgs > 0
+
+         aadd( txt_, "         case " + hb_ntos( nArgs ) + ":" )      /* number of parameters */
+         aadd( txt_, "         {" )
+
+         FOR EACH oMtd IN a_
+            IF nArgs > 0
+               IF cCrc != __TY( oMtd, nArgs )
+                  cCrc    := __TY( oMtd, nArgs )
+                  nMtds   := 0
+                  nTySame := 0
+                  aeval( a_, {|o| iif( __TY( o,nArgs ) == cCrc, nTySame++, NIL ) } )
+                  lInIf   := oMtd:nArgQCast > 0 .AND. oMtd:nArgQCast <= nArgs .AND. nTySame > 1
+                  aadd( txt_, "            " + iif( lFirst, "if( ", "else if( " ) + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
+                  aadd( txt_, "            {" )
+               ENDIF
+            ENDIF
+            IF lFirst
+               lFirst := .f.
+            ENDIF
+
+            nMtds++
+
+            IF lInIf
+               aadd( txt_, "               " + iif( nMtds == 1, "if( ", "else if( " ) + __TY_Method( oMtd,nArgs ) + " )" )
+               aadd( txt_, "               {" )
+            ENDIF
+            //
+            aeval( ::getReturnMethod( oMtd, .t. ), {|e| aadd( txt_, space( iif( nArgs == 0, 12, 15 ) + iif( lInIf, 3, 0 ) ) + e ) } )
+            //
+            IF lInIf
+               aadd( txt_, "               }" )
+            ENDIF
+
+            IF nArgs > 0 .AND. ! lInIf
+               aadd( txt_, "            }" )
+            ELSEIF nArgs > 0 .AND. lInIf .AND. nMtds == nTySame
+               aadd( txt_, "            }" )
+            ENDIF
+         NEXT
+         IF nArgs > 0
+            aadd( txt_, "            break;" )
+            aadd( txt_, "         }" )
+         ENDIF
+      NEXT
+      IF nArgs == 0
+         aadd( txt_, "         }" )  // CASE
+      ENDIF
+      aadd( txt_, "      }" )        // SWITCH
+      aadd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
+
+   ENDIF
+
+   aadd( txt_, "   }" )           // if( p )
+   aadd( txt_, "}" )              // HB_FUNC()
+   aadd( txt_, "" )
+
+   HB_SYMBOL_UNUSED( d_ )
+   HB_SYMBOL_UNUSED( nArgGrps )
 
    RETURN txt_
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtSource:buildMethodBody( oMtd )
-   LOCAL aBdy
-   LOCAL cFunc
+   LOCAL aBdy, cFunc
 
    oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
-   oMtd:cCmdN := StrTran( oMtd:cCmdN, "(  )", "()" )
 
-   aBdy := ::getMethodBody( oMtd, "QT_" + upper( ::cQtObject ) + "_" + upper( oMtd:cHBFunc ), ::aMethods, 0 )
+   aBdy := ::getMethodBody( oMtd, "QT_" + upper( ::cQtObject ) + "_" + upper( oMtd:cHBFunc ), ::aMethods )
 
    aeval( aBdy, {|e| aadd( ::txt_, e ) } )
 
@@ -1960,7 +2044,7 @@ STATIC FUNCTION hbqtgen_prgRetNormalize( cPrgRet )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_paramCheckStrCpp( cType, nArg, cCast )
+STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast )
 
    HB_SYMBOL_UNUSED( cCast )
 
@@ -1991,7 +2075,7 @@ STATIC FUNCTION hbide_paramCheckStrCpp( cType, nArg, cCast )
 STATIC FUNCTION __TY_TYPEScpp( oM, nArgs )
    LOCAL i, s := ""
    FOR i := 1 TO nArgs
-      s += hbide_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast ) + " && "
+      s += hbqtgen_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast ) + " && "
    NEXT
    IF " && " $ s
       s := Left( s, len( s ) - 4 )
@@ -2412,7 +2496,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
       ENDIF
    NEXT
    FOR EACH oArg IN oMtd:hArgs
-      IF oArg:cTypeHB $ "O"              // "PO"
+      IF oArg:cTypeHB $ "O"
          oMtd:nArgHBObj := oArg:__enumIndex()
          EXIT
       ENDIF
@@ -2897,120 +2981,6 @@ STATIC FUNCTION hbqtgen_stripLastFrom( cStr, cDlm )
    RETURN cStr
 
 /*----------------------------------------------------------------------*/
-#if 0   /* KEEP AS IS - A Work in progress */
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_pullSameMethods( cFun, aMethods, cQtObject )
-   LOCAL i, oMtd, a_:={}, b_:={}, c_:={}, nArgs, n, txt_:={}
-   LOCAL cSpc, cCrc, lFirst, nMtds, nTySame, lInIf
-
-   FOR EACH oMtd IN aMethods
-      IF oMtd:cFun == cFun
-         aadd( a_, oMtd )
-      ENDIF
-   NEXT
-   asort( a_, , , {|e,f| strzero( e:nArgs,2 ) + iif( e:nArgs == 0, "", e:hArgs[ 1 ]:cTypeHB ) > strzero( f:nArgs, 2 ) + iif( f:nArgs == 0, "", f:hArgs[ 1 ]:cTypeHB )  } )
-
-   /* know the maximum groups by number of parameters - first CASE */
-   aeval( a_, {|o| iif( ascan( b_, o:nArgs ) == 0, aadd( b_, o:nArgs ), NIL ) } )
-
-   /* also take into account optional arguments if any */
-   FOR EACH oMtd IN a_
-      IF oMtd:nArgsReal < oMtd:nArgs
-         FOR i := oMtd:nArgs - 1 TO oMtd:nArgsReal STEP -1
-            IF ascan( b_, i ) == 0
-               aadd( b_, i )
-            ENDIF
-         NEXT
-      ENDIF
-   NEXT
-
-   /* Build the structure number of parameters wise */
-   FOR EACH nArgs IN b_
-      aadd( c_, { nArgs, {}, {}, {} } )
-      n := len( c_ )
-      FOR EACH oMtd IN a_
-         IF oMtd:nArgs == nArgs
-            aadd( c_[ n,2 ], oMtd )
-         ENDIF
-      NEXT
-      /* Again append methods with optional arguments */
-      FOR EACH oMtd IN a_
-         IF oMtd:nArgsReal < oMtd:nArgs
-            FOR i := oMtd:nArgs - 1 TO oMtd:nArgsReal STEP -1
-               IF i == nArgs
-                  aadd( c_[ n,2 ], oMtd )
-               ENDIF
-            NEXT
-         ENDIF
-      NEXT
-   NEXT
-
-   /* stack groups based on parameters descending */
-   asort( c_, , , {|e,f| e[ 1 ] > f[ 1 ] } )
-
-   /* again sort no of arguments based methods by type of arguments */
-   FOR i := 10 TO 0 STEP -1  /* consider maximum 10 arguments */
-      IF ( n := ascan( c_, {|e_| e_[ 1 ] == i } ) ) > 0
-         a_:= c_[ n,2 ]
-         asort( a_, , , {|e,f| __TY( e, c_[ n,1 ] ) < __TY( f, c_[ n,1 ] ) } )
-      ENDIF
-   NEXT
-
-   cSpc := "   "
-   aadd( txt_, cSpc + "SWITCH PCount()" )
-   FOR EACH b_ IN c_
-      n := b_[ 1 ]
-      a_:= b_[ 2 ]
-      aadd( txt_, cSpc + "CASE " + hb_ntos( n ) )      /* number of parameters */
-      cCrc    := "xxx"
-      nMtds   := 0
-      lInIf   := .f.
-      nTySame := 0
-      IF n > 0
-         lFirst := .t.
-         aadd( txt_, cSpc + cSpc + "DO CASE" )               /* type of parameters   */
-      ENDIF
-      FOR EACH oMtd IN a_
-         IF n > 0
-            IF cCrc != __TY( oMtd, n )
-               cCrc    := __TY( oMtd, n )
-               nMtds   := 0
-               nTySame := 0
-               aeval( a_, {|o| iif( __TY( o,n ) == cCrc, nTySame++, NIL ) } )
-               lInIf   := oMtd:nArgQCast > 0 .AND. oMtd:nArgQCast <= n .AND. nTySame > 1
-               IF ! lFirst
-                  lFirst := .t.
-                  aadd( txt_, cSpc + cSpc + "ENDCASE" )
-               ENDIF
-               aadd( txt_, cSpc + cSpc + "CASE " + __TY_TYPES( oMtd,n ) )
-            ENDIF
-         ENDIF
-         nMtds++
-         hbide_addReturnMethod( txt_, oMtd, cQtObject, iif( n == 0, 6, 9 ), nMtds, .t., lInIf, nTySame, n )
-      NEXT
-      IF n > 0
-         aadd( txt_, cSpc + cSpc + "ENDCASE" )
-         aadd( txt_, cSpc + cSpc + "EXIT" )
-      ENDIF
-   NEXT
-   aadd( txt_, cSpc + "ENDSWITCH" )
-
-   RETURN txt_
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION __TY_TYPES( oM, nArgs )
-   LOCAL i, s := ""
-   FOR i := 1 TO nArgs
-      s += hbide_paramCheckStr( oM:hArgs[ i ]:cTypeHB, i ) + " .AND. "
-   NEXT
-   IF " .AND. " $ s
-      s := substr( s, 1, len( s ) - 7 )
-   ENDIF
-   RETURN s
-
-/*----------------------------------------------------------------------*/
 
 STATIC FUNCTION __TY( oM, nArgs )
    LOCAL i, s := ""
@@ -3021,28 +2991,27 @@ STATIC FUNCTION __TY( oM, nArgs )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_paramCheckStr( cType, nArg )
+STATIC FUNCTION __TY_Method( oMtd, nArgs )
+   LOCAL nArg, oArg, aIdx := {}, cRet
 
-   SWITCH cType
-   CASE "PB"
-      RETURN "( " + " hb_pvalue( " + hb_ntos( nArg ) + " )" + " != NIL )"
-   CASE "P"
-      RETURN "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   CASE "O"
-      RETURN "hb_isObject( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   CASE "CO"
-      RETURN "( hb_isObject( hb_pvalue( " + hb_ntos( nArg ) + " ) ) .OR. hb_isChar( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
-   CASE "N"
-      RETURN  "hb_isNumeric( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   CASE "L"
-      RETURN  "hb_isLogical( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   CASE "C"
-      RETURN  "hb_isChar( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   ENDSWITCH
-   RETURN ""
+   FOR EACH oArg IN oMtd:hArgs
+      IF oArg:__enumIndex() >= oMtd:nArgQCast
+         IF ! ( "::" $ oArg:cCast ) .AND. ! ( oArg:cCast == "QString" ) .AND. ( left( oArg:cCast, 1 ) == "Q" )
+            aadd( aIdx, oArg:__enumIndex() )
+         ENDIF
+      ENDIF
+      IF oArg:__enumIndex() == nArgs
+         EXIT
+      ENDIF
+   NEXT
+
+   cRet := ""
+   FOR EACH nArg IN aIdx
+      cRet += "hbqt_isObjectType( " + hb_ntos( nArg ) + ", " + "HBQT_TYPE_" + oMtd:hArgs[ nArg ]:cCast + " )" + " && "
+   NEXT
+   cRet := substr( cRet, 1, len( cRet ) - 4 )
+
+   RETURN cRet
 
 /*----------------------------------------------------------------------*/
-#endif
-/*----------------------------------------------------------------------*/
-
 

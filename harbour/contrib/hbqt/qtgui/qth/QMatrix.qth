@@ -48,8 +48,9 @@ qreal dy () const
 QMatrix inverted ( bool * invertible = 0 ) const
 bool isIdentity () const
 bool isInvertible () const
+
 void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
-void map ( int x, int y, int * tx, int * ty ) const
+//void map ( int x, int y, int * tx, int * ty ) const
 QPointF map ( const QPointF & point ) const
 QPoint map ( const QPoint & point ) const
 QLineF map ( const QLineF & line ) const
@@ -57,6 +58,7 @@ QLine map ( const QLine & line ) const
 QPolygonF map ( const QPolygonF & polygon ) const
 QPolygon map ( const QPolygon & polygon ) const
 QRegion map ( const QRegion & region ) const
+
 QPainterPath map ( const QPainterPath & path ) const
 QRectF mapRect ( const QRectF & rectangle ) const
 QRect mapRect ( const QRect & rectangle ) const

@@ -61,7 +61,7 @@ bool wordWrap () const
 void clear ()
 void setMovie ( QMovie * movie )
 void setNum ( int num )
-void setNum ( double num )
+//void setNum ( double num )
 void setPicture ( const QPicture & picture )
 void setPixmap ( const QPixmap & )
 void setText ( const QString & )
