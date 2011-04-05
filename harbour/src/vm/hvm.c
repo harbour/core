@@ -8198,26 +8198,93 @@ static void hb_vmDoExitFunctions( void )
 /*
  * extended item reference functions
  */
-static PHB_ITEM hb_vmItemRefRead( PHB_ITEM pRefer )
+static PHB_ITEM hb_vmItemRawRefRead( PHB_ITEM pRefer )
 {
    return ( PHB_ITEM ) pRefer->item.asExtRef.value;
 }
 
-static PHB_ITEM hb_vmItemRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+static PHB_ITEM hb_vmItemRawRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
 {
    HB_SYMBOL_UNUSED( pSource );
    return ( PHB_ITEM ) pRefer->item.asExtRef.value;
 }
 
-static void hb_vmItemRefCopy( PHB_ITEM pDest )
+static void hb_vmItemRawRefCopy( PHB_ITEM pDest )
 {
    pDest->type = HB_IT_NIL;
    hb_itemCopy( pDest, ( PHB_ITEM ) pDest->item.asExtRef.value );
 }
 
-static void hb_vmItemRefDummy( void * value )
+static void hb_vmItemRawRefDummy( void * value )
 {
    HB_SYMBOL_UNUSED( value );
+}
+
+static const HB_EXTREF s_ItmExtRawRef = {
+          hb_vmItemRawRefRead,
+          hb_vmItemRawRefWrite,
+          hb_vmItemRawRefCopy,
+          hb_vmItemRawRefDummy,
+          hb_vmItemRawRefDummy };
+
+typedef struct
+{
+   HB_ITEM  memvar;
+   PHB_ITEM  value;
+} HB_ITMREF, * PHB_ITMREF;
+
+static PHB_ITEM hb_vmItemRefRead( PHB_ITEM pRefer )
+{
+   return &( ( PHB_ITMREF ) pRefer->item.asExtRef.value )->memvar;
+}
+
+static PHB_ITEM hb_vmItemRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pSource );
+   return ( ( PHB_ITMREF ) pRefer->item.asExtRef.value )->value;
+}
+
+static void hb_vmItemRefCopy( PHB_ITEM pDest )
+{
+   pDest->type = HB_IT_NIL;
+   hb_itemCopy( pDest, &( ( PHB_ITMREF ) pDest->item.asExtRef.value )->memvar );
+}
+
+static void hb_vmItemRefClear( void * value )
+{
+   PHB_ITMREF pItmRef = ( PHB_ITMREF ) value;
+
+#if 1
+   if( !HB_IS_MEMVAR( &pItmRef->memvar ) ||
+       pItmRef->memvar.item.asMemvar.value != pItmRef->value ||
+       !HB_IS_EXTREF( pItmRef->value ) ||
+       pItmRef->value->item.asExtRef.func != &s_ItmExtRawRef )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmItemRefClear()", NULL, NULL );
+#endif
+
+   if( hb_xRefDec( pItmRef->value ) )
+      hb_xfree( pItmRef->value );
+   else
+   {
+      pItmRef->memvar.type = HB_IT_NIL;
+      hb_itemCopyFromRef( &pItmRef->memvar, pItmRef->value );
+      hb_itemMove( pItmRef->value, &pItmRef->memvar );
+   }
+
+   hb_xfree( value );
+}
+
+static void hb_vmItemRefMark( void * value )
+{
+   /* the original value should be accessible from initial item so it's
+    * not necessary to mark if form this point.
+    */
+#if 1
+   HB_SYMBOL_UNUSED( value );
+#else
+   hb_gcItemRef( ( ( PHB_ITMREF ) value )->memvar );
+   hb_gcItemRef( ( ( PHB_ITMREF ) value )->value );
+#endif
 }
 
 /*
@@ -8229,17 +8296,28 @@ void hb_vmPushItemRef( PHB_ITEM pItem )
              hb_vmItemRefRead,
              hb_vmItemRefWrite,
              hb_vmItemRefCopy,
-             hb_vmItemRefDummy,
-             hb_vmItemRefDummy };
+             hb_vmItemRefClear,
+             hb_vmItemRefMark };
 
    HB_STACK_TLS_PRELOAD
+   PHB_ITMREF pItmRef;
    PHB_ITEM pRefer;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushItemRef(%p)", pItem));
 
+   pItmRef = ( PHB_ITMREF ) hb_xgrab( sizeof( HB_ITMREF ) );
+
+   pItmRef->value = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+   pItmRef->value->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pItmRef->value->item.asExtRef.value = ( void * ) pItem;
+   pItmRef->value->item.asExtRef.func = &s_ItmExtRawRef;
+
+   pItmRef->memvar.type = HB_IT_BYREF | HB_IT_MEMVAR;
+   pItmRef->memvar.item.asMemvar.value = pItmRef->value;
+
    pRefer = hb_stackAllocItem();
    pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
-   pRefer->item.asExtRef.value = ( void * ) pItem;
+   pRefer->item.asExtRef.value = ( void * ) pItmRef;
    pRefer->item.asExtRef.func = &s_ItmExtRef;
 }
 
