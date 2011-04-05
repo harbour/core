@@ -2434,7 +2434,6 @@ METHOD HqrGraphicsItem:drawChord( qPainter, qRectF )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawText( qPainter, qRectF )
-HB_TRACE( HB_TR_ALWAYS, qRectF:className(), ::textFlags(), ::text() )
    qPainter:drawText( qRectF, ::textFlags(), ::text() )
    RETURN Self
 

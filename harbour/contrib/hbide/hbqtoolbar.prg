@@ -211,9 +211,7 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
          ::qDrag:setPixmap( ::qPix )
          ::qDrag:setHotSpot( QPoint( 15,15 ) )
          ::qDrag:setDragCursor( ::qPix, Qt_CopyAction + Qt_IgnoreAction )
-HB_TRACE( HB_TR_DEBUG, "..............................0" )
          ::qDropAction := ::qDrag:exec( Qt_CopyAction + Qt_IgnoreAction )  /* Why this is not terminated GPF's */
-HB_TRACE( HB_TR_DEBUG, "..............................1" )
 
          ::qDrag := NIL
          ::qPos  := NIL
