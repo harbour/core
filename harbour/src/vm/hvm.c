@@ -8240,8 +8240,7 @@ static PHB_ITEM hb_vmItemRefRead( PHB_ITEM pRefer )
 
 static PHB_ITEM hb_vmItemRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
 {
-   HB_SYMBOL_UNUSED( pSource );
-   return ( ( PHB_ITMREF ) pRefer->item.asExtRef.value )->value;
+   return hb_itemUnRefWrite( ( ( PHB_ITMREF ) pRefer->item.asExtRef.value )->value, pSource );
 }
 
 static void hb_vmItemRefCopy( PHB_ITEM pDest )
