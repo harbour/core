@@ -34,17 +34,19 @@ HBQT_GC_FUNC( hbqt_gcMark_HBQAbstractItemModel )
 
    HB_TRACE( HB_TR_DEBUG, ( "gcMark_HBQAbstractItemModel" ) );
    if( p )
-     if( p->ph )
-     {
-        HBQAbstractItemModel * ip = ( HBQAbstractItemModel * ) p->ph;
-        if( ip )
-        {
-            if (ip->block)
+   {
+      if( p->ph )
+      {
+         HBQAbstractItemModel * ip = ( HBQAbstractItemModel * ) p->ph;
+         if( ip )
+         {
+            if( ip->block )
             {
                hb_gcMark( ip->block );
             }
-        }
-     }
+         }
+      }
+   }
 }
 
 

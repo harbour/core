@@ -1702,7 +1702,7 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    LOCAL qProcess, qStr
 
    IF empty( cProject )
-      cProject := ::oPM:getCurrentProject()
+      cProject := ::oPM:getCurrentProject( .f. )
    ENDIF
 
    IF !empty( cProject )
@@ -1730,14 +1730,15 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    IF ! hb_FileExists( cTargetFN )
       cTmp := "Launch error: file not found - " + cTargetFN
 
-   ELSEIF oProject:type == "Executable"
+   ELSEIF empty( oProject ) .OR. oProject:type == "Executable"
       cTmp := "Launching application [ " + cTargetFN + " ]"
 
       if .t.
          qProcess := QProcess()
 
+         qStr := QStringList()
+
          IF !empty( oProject )
-            qStr := QStringList()
             IF !empty( oProject:launchParams )
                qStr:append( oProject:launchParams )
             ENDIF
