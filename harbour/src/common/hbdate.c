@@ -77,7 +77,7 @@
 #endif
 
 #include <time.h>
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2 )
 #  include <sys/time.h>
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
@@ -128,7 +128,7 @@ void hb_timeStampGetLocal( int * piYear, int * piMonth, int * piDay,
       struct tm st;
       time_t seconds, millisecs;
 
-#  if defined( HB_OS_UNIX )
+#  if defined( HB_OS_UNIX ) || defined( HB_OS_OS2 )
       struct timeval tv;
       gettimeofday( &tv, NULL );
       seconds = tv.tv_sec;
@@ -170,7 +170,7 @@ HB_MAXUINT hb_dateMilliSeconds( void )
              HB_MILLISECS_PER_DAY +
              hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
    }
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 )
    {
       struct timeval tv;
       gettimeofday( &tv, NULL );
