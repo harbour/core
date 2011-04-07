@@ -1527,7 +1527,7 @@ HB_FUNC( HB_THREADTERMINATEALL )
 /* hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
  * Execute <bAction> only once. <onceControl> is variable which holds
  * the execution status and have to be initialized to NIL. In most of
- * cases it will be simple staticvariable in user code.
+ * cases it will be simple static variable in user code.
  * When <bAction> is executed by a thread all other threads which call
  * hb_threadOnce() are stopped even if they use different <onceControl>.
  * Because hb_threadOnce() uses single recursive mutex then deadlock caused

@@ -184,7 +184,7 @@ HB_MAXUINT hb_dateMilliSeconds( void )
       ftime( &tb );
       return ( ( HB_MAXUINT ) tb.time +
                ( HB_MAXUINT ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
-             tb.time;
+             tb.millitm;
    }
 #endif
 }
