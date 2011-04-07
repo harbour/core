@@ -104,7 +104,7 @@ HB_EXTERN_BEGIN
 #define WVT_CHAR_QUEUE_SIZE         128
 #define WVT_MAX_TITLE_SIZE          128
 #define WVT_MAX_ROWS                256
-#define WVT_MAX_COLS                512
+#define WVT_MAX_COLS               1024
 #define WVT_MAX_WINDOWS             256
 #if defined( HB_OS_WIN_CE )
 #  define WVT_DEFAULT_ROWS          15
