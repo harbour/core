@@ -232,7 +232,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
          }
          if( eventtype == QEvent::Close )
          {
-             event->ignore();
+             return true;
          }
       }
    }
