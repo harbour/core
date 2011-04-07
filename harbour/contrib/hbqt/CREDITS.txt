@@ -73,6 +73,8 @@
  *    for taking keen interest in hbQT development and peeking the code;
  *    for providing tips here and there to improve the code quality;
  *    for hitting bulls eye to describe why few objects need GC detachment;
+ *    for implementing a lot simplified SIGNALS/SLOTS mechanism;
+ *    for porting prg class code on c++ level;
  *
  * Carlos Bacco
  *    for implementing HBQT_TYPE_Q*Class enums;
@@ -82,5 +84,9 @@
  *    for providing tips and trick to manipulate HVM internals to the best
  *    of its use and always showing a path when we get stuck;
  *    A true tradition of a MASTER...
+ *
+ * Teo Fonrouge
+ *    for providing building blocks how a prg level class can be ported to c++;
+ *
 */
 /*----------------------------------------------------------------------*/
