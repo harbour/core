@@ -172,7 +172,7 @@ HB_ERRCODE hb_fsOsError( void )
 /* set FERROR() code */
 void hb_fsSetFError( HB_ERRCODE uiError )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%hu)", uiError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%u)", uiError));
 
    hb_stackIOErrors()->uiFError = uiError;
 }
@@ -182,7 +182,7 @@ void  hb_fsSetError( HB_ERRCODE uiError )
 {
    PHB_IOERRORS pIOErrors;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%hu)", uiError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%u)", uiError));
 
    pIOErrors = hb_stackIOErrors();
    /* TODO: untranslate uiError into errno */

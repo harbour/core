@@ -907,7 +907,7 @@ HB_ERRCODE hb_dbfGetEGcode( HB_ERRCODE errCode )
 {
    HB_ERRCODE errEGcode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetEGcode(%hu)", errCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetEGcode(%u)", errCode));
 
    switch( errCode )
    {

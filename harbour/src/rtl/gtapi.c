@@ -657,7 +657,7 @@ HB_ERRCODE hb_gtPutChar( int iRow, int iCol, int iColor, HB_BYTE bAttr, HB_USHOR
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%d, %d, %d, %hu, %hu)", iRow, iCol, iColor, bAttr, usChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%d, %d, %d, %u, %hu)", iRow, iCol, iColor, bAttr, usChar));
 
    pGT = hb_gt_Base();
    if( pGT )
