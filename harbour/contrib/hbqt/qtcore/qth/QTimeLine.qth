@@ -12,10 +12,10 @@
  */
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherit  = QObject
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -28,7 +28,14 @@ New      =
  */
 HB_FUNC( QT_QTIMELINE )
 {
-   __HB_RETPTRGC__( new QTimeLine() );
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QTimeLine( hb_parni( 1 ), HB_ISOBJECT( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QTimeLine() );
+   }
 }
 </CODE>
 

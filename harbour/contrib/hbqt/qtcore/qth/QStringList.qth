@@ -30,7 +30,18 @@ New      =
  */
 HB_FUNC( QT_QSTRINGLIST )
 {
-   __HB_RETPTRGC__( new QStringList() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QStringList( *hbqt_par_QStringList( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QStringList( hbqt_par_QString( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QStringList() );
+   }
 }
 </CODE>
 

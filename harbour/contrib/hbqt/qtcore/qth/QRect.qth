@@ -14,7 +14,7 @@
 <CLASS>
 QObject  = no
 Type     = PlainObject
-New      = 
+New      =
 </CLASS>
 
 
@@ -37,7 +37,14 @@ HB_FUNC( QT_QRECT )
    }
    else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
    {
-      __HB_RETPTRGC__( new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      if( hbqt_isObjectType( 2, HBQT_TYPE_QPoint ) )
+      {
+         __HB_RETPTRGC__( new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      }
+      if( hbqt_isObjectType( 2, HBQT_TYPE_QSize ) )
+      {
+         __HB_RETPTRGC__( new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QSize( 2 ) ) );
+      }
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
@@ -112,7 +119,7 @@ QRect translated ( const QPoint & offset ) const
 QRect united ( const QRect & rectangle ) const
 int width () const
 int x () const
-int y () const 
+int y () const
 </PROTOS>
 
 <SLOTS>

@@ -26,7 +26,14 @@ Calls    = QT_Qbject
  */
 HB_FUNC( QT_QOBJECT )
 {
-   __HB_RETPTRGC__( new QObject( hbqt_par_QObject( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QObject( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QObject( 0 ) );
+   }
 }
 </CODE>
 

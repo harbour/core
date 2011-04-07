@@ -30,8 +30,15 @@ List     = yes
  */
 HB_FUNC( QT_QLIST )
 {
-   QList<void*>* list = NULL;
-   __HB_RETPTRGC__( ( QList<void*>* ) list );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QList< void * >( *hbqt_par_QList( 1 ) ) );
+   }
+   else
+   {
+      QList< void * >* list = NULL;
+      __HB_RETPTRGC__( ( QList< void * >* ) list );
+   }
 }
 </CODE>
 

@@ -13,10 +13,10 @@
 
 <CLASS>
 QObject    = no
-Inherits   = 
+Inherits   =
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -30,7 +30,18 @@ Destructor =
  */
 HB_FUNC( QT_QREGEXP )
 {
-   __HB_RETPTRGC__( new QRegExp() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QRegExp( *hbqt_par_QRegExp( 1 ) ) );
+   }
+   else if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QRegExp( hbqt_par_QString( 1 ), HB_ISNUM( 2 ) ? ( Qt::CaseSensitivity ) hb_parni( 2 ) : Qt::CaseSensitive, HB_ISNUM( 3 ) ? ( QRegExp::PatternSyntax ) hb_parni( 3 ) : QRegExp::RegExp ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QRegExp() );
+   }
 }
 </CODE>
 

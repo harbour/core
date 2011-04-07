@@ -13,9 +13,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 Destructor = no
 Constructor = no
 </CLASS>
@@ -51,7 +51,7 @@ virtual int mibEnum () const = 0
 virtual QByteArray name () const = 0
 QString toUnicode ( const QByteArray & a ) const
 #
-// QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
+//QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
 #
 QString toUnicode ( const char * chars ) const
 

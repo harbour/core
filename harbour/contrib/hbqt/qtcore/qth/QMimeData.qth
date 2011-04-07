@@ -12,11 +12,11 @@
  */
 
 <CLASS>
-QObject    = 
+QObject    =
 Inherits   = QObject
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -29,7 +29,10 @@ Destructor =
  */
 HB_FUNC( QT_QMIMEDATA )
 {
-   __HB_RETPTRGC__( new QMimeData() );
+   if( hb_pcount() == 0 )
+   {
+      __HB_RETPTRGC__( new QMimeData() );
+   }
 }
 </CODE>
 
@@ -59,7 +62,7 @@ void setUrls ( const QList<QUrl> & urls )
 QString text () const
 QList<QUrl> urls () const
 
-#          Harbour Callable Function Till QList<QUrl> is not resolved        
+#          Harbour Callable Function Till QList<QUrl> is not resolved
 #
 QStringList * hbUrlList() const{
    QMimeData * _mimedata = ( QMimeData * ) hbqt_pPtrFromObj( 0 );

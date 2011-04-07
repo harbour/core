@@ -12,11 +12,11 @@
  */
 
 <CLASS>
-QObject    = 
+QObject    =
 Inherits   = QObject
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -28,7 +28,14 @@ Destructor =
  */
 HB_FUNC( QT_QTRANSLATOR )
 {
-   __HB_RETPTRGC__( new QTranslator() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QTranslator( hbqt_par_QTranslator( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QTranslator( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
+   }
 }
 </CODE>
 

@@ -43,7 +43,18 @@ Destructor = no
  */
 HB_FUNC( QT_QCHAR )
 {
-   __HB_RETPTRGC__( new QChar() );
+   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QChar( *hbqt_par_QLatin1Char( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QChar( hb_parni( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QChar() );
+   }
 }
 </CODE>
 

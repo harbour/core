@@ -28,7 +28,18 @@ New      =
  */
 HB_FUNC( QT_QBITARRAY )
 {
-   __HB_RETPTRGC__( new QBitArray() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QBitArray( *hbqt_par_QBitArray( 1 ) ) );
+   }
+   else if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QBitArray( hb_parni( 1 ), HB_ISLOG( 2 ) ? hb_parl( 2 ) : false ) );   
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QBitArray() );
+   }
 }
 </CODE>
 

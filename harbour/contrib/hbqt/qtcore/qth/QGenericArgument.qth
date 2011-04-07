@@ -14,7 +14,7 @@
 <CLASS>
 QObject  = NO
 Inherits =
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -30,15 +30,19 @@ New      =
 
 /*
  * QGenericArgument ( const char * name = 0, const void * data = 0 )
- * 
+ *
  */
 HB_FUNC( QT_QGENERICARGUMENT )
 {
-   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QGenericArgument( *hbqt_par_QGenericArgument( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
       __HB_RETPTRGC__( new QGenericArgument( hb_parc( 1 ), 0 ) );
    }
-   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       __HB_RETPTRGC__( new QGenericArgument( hb_parc( 1 ), hb_parptr( 2 ) ) );
    }

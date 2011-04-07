@@ -35,7 +35,14 @@ New      =
  */
 HB_FUNC( QT_QBUFFER )
 {
-   __HB_RETPTRGC__( new QBuffer() );
+   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QBuffer( hbqt_par_QByteArray( 1 ), HB_ISOBJECT( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QBuffer( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
+   }
 }
 </CODE>
 

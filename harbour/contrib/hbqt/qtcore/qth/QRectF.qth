@@ -14,7 +14,7 @@
 <CLASS>
 QObject  = no
 Type     = PlainObject
-New      = 
+New      =
 </CLASS>
 
 <CODE>
@@ -37,7 +37,14 @@ HB_FUNC( QT_QRECTF )
    }
    else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
    {
-      __HB_RETPTRGC__( new QRectF( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      if( hbqt_isObjectType( 2, HBQT_TYPE_QPointF ) )
+      {
+         __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) );
+      }
+      if( hbqt_isObjectType( 2, HBQT_TYPE_QSizeF ) )
+      {
+         __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QSizeF( 2 ) ) );
+      }
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {

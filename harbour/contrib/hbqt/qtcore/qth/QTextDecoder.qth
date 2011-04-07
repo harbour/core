@@ -13,7 +13,7 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
 New      = pTextCodec
 </CLASS>
@@ -28,7 +28,10 @@ New      = pTextCodec
  */
 HB_FUNC( QT_QTEXTDECODER )
 {
-   __HB_RETPTRGC__( new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
+   }
 }
 </CODE>
 

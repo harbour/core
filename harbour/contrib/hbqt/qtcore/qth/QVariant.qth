@@ -69,7 +69,107 @@ QVariant ( const QRegExp & regExp )
  */
 HB_FUNC( QT_QVARIANT )
 {
-   __HB_RETPTRGC__( new QVariant() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      HB_U32 iType = hbqt_getObjectType( 1 );
+
+      if( iType == HBQT_TYPE_QVariant )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QVariant( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QByteArray )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QByteArray( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QBitArray )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QBitArray( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QLatin1String )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QLatin1String( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QStringList )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QStringList( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QDate )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QDate( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QTime )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QTime( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QDateTime )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QDateTime( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QChar )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QChar( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QSize )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QSize( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QSizeF )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QSizeF( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QRect )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QRect( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QRectF )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QRectF( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QPoint )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QPoint( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QPointF )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QPointF( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QLine )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QLine( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QLineF )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QLineF( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QUrl )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QUrl( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QLocale )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QLocale( 1 ) ) );
+      }
+      else if( iType == HBQT_TYPE_QRegExp )
+      {
+         __HB_RETPTRGC__( new QVariant( *hbqt_par_QRegExp( 1 ) ) );
+      }
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QVariant( hbqt_par_QString( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QVariant( hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISLOG( 1 ) )
+   {
+      __HB_RETPTRGC__( new QVariant( hb_parl( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QVariant() );
+   }
 }
 </CODE>
 

@@ -13,9 +13,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
@@ -29,7 +29,14 @@ New      =
  */
 HB_FUNC( QT_QMODELINDEX )
 {
-   __HB_RETPTRGC__( new QModelIndex() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QModelIndex( *hbqt_par_QModelIndex( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QModelIndex() );
+   }
 }
 </CODE>
 

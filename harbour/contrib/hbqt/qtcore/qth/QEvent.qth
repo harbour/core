@@ -27,7 +27,14 @@ New      = nType
  */
 HB_FUNC( QT_QEVENT )
 {
-   __HB_RETPTRGC__( new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QEvent( *hbqt_par_QEvent( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
+   }
 }
 </CODE>
 

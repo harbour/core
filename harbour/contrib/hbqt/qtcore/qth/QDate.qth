@@ -13,10 +13,10 @@
 
 <CLASS>
 QObject    = no
-Inherits   = 
+Inherits   =
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -28,7 +28,18 @@ Destructor =
  */
 HB_FUNC( QT_QDATE )
 {
-   __HB_RETPTRGC__( new QDate() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QDate( *hbqt_par_QDate( 1 ) ) );
+   }
+   else if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ))
+   {
+      __HB_RETPTRGC__( new QDate( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDate() );
+   }
 }
 </CODE>
 

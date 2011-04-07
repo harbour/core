@@ -116,11 +116,11 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          if( p->type == HBQT_TYPE_QBrush )
             vv = * ( ( QBrush * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QColor )
-            vv = QColor( * ( ( QColor * ) ( p->ph ) ) );
+            vv = * ( ( QColor * ) ( p->ph ) ) );
          else if( p->type == HBQT_TYPE_QSize )
             vv = * ( ( QSize * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QIcon )
-            vv = QIcon( * ( ( QIcon * ) ( p->ph ) ) );
+            vv = * ( ( QIcon * ) ( p->ph ) ) );
          else if( p->type == HBQT_TYPE_QPixmap )
             vv = * ( ( QPixmap * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QFont )
@@ -211,3 +211,4 @@ void HBQAbstractItemModel::reset()
 }
 
 #endif
+

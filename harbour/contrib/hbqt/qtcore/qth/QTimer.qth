@@ -26,7 +26,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTIMER )
 {
-   __HB_RETPTRGC__( new QTimer( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( new QTimer( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
 }
 </CODE>
 

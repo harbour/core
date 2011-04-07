@@ -14,7 +14,7 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
@@ -33,11 +33,19 @@ HB_FUNC( QT_QSETTINGS )
 {
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), 0 ) );
+      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ) ) );
+      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
+   }
+   else if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      __HB_RETPTRGC__( new QSettings( ( QSettings::Scope ) hb_parni( 1 ), hbqt_par_QString( 2 ), HB_ISCHAR( 3 ) ? hbqt_par_QString( 3 ) : QString(), HB_ISOBJECT( 4 ) ? hbqt_par_QObject( 4 ) : 0 ) );
+   }
+   else if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
+   {
+      __HB_RETPTRGC__( new QSettings( ( QSettings::Format ) hb_parni( 1 ), ( QSettings::Scope ) hb_parni( 2 ), hbqt_par_QString( 3 ), HB_ISCHAR( 4 ) ? hbqt_par_QString( 4 ) : QString(), HB_ISOBJECT( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) );
    }
    else
    {

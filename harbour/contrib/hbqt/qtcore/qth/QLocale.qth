@@ -13,10 +13,10 @@
 
 <CLASS>
 QObject    = no
-Inherits   = 
+Inherits   =
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -30,7 +30,22 @@ Destructor =
  */
 HB_FUNC( QT_QLOCALE )
 {
-   __HB_RETPTRGC__( new QLocale() );
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QLocale( *hbqt_par_QLocale( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QLocale( hbqt_par_QString( 1 ) ) );
+   }
+   else if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QLocale( ( QLocale::Language ) hb_parni( 1 ), HB_ISNUM( 2 ) ? ( QLocale::Country ) hb_parni( 2 ) : QLocale::AnyCountry ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QLocale() );
+   }
 }
 </CODE>
 

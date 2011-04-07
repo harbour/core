@@ -30,7 +30,14 @@ ClubMethods = no
  */
 HB_FUNC( QT_QRESOURCE )
 {
-   __HB_RETPTRGC__( new QResource() );
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      __HB_RETPTRGC__( new QResource( hbqt_par_QString( 1 ), HB_ISOBJECT( 2 ) ? *hbqt_par_QLocale( 2 ) : QLocale() ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QResource() );
+   }
 }
 </CODE>
 
