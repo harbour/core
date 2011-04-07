@@ -471,6 +471,9 @@ EXPORTED:
    METHOD   manageMousePress( oMouseEvent )
    METHOD   manageMouseWheel( oWheelEvent )
 
+   DATA     hColors                               INIT {=>}
+   DATA     hIcons                                INIT {=>}
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1432,19 +1435,24 @@ METHOD XbpBrowse:fetchColumnInfo( nCall, nRole, nArea, nRow, nCol )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-//
-// TODO: Review the color < 25 case when resolved in HBQt, and avoid unnecessary creation of new QColor/Qicon GC objects
-//
-//   However, tested with medium data sets, seems not being a big issue by now
-//   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
 
 METHOD XbpBrowse:compatColor( nColor )
-   RETURN QColor( nColor )
+
+   IF ! hb_hHasKey( ::hColors, nColor )
+      ::hColors[ nColor ] := QColor( nColor )
+   ENDIF
+
+   RETURN ::hColors[ nColor ]
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:compatIcon( cIcon )
-   RETURN QIcon( QPixmap( Trim( cIcon ) ) )
+
+   IF ! hb_hHasKey( ::hIcons, cIcon )
+      ::hIcons[ cIcon ] := QIcon( QPixmap( Trim( cIcon ) ) )
+   ENDIF
+
+   RETURN ::hIcons[ cIcon ]
 
 /*----------------------------------------------------------------------*/
 

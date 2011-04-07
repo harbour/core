@@ -66,6 +66,7 @@
 #include <QtGui/QWidget>
 #include <QtCore/QFlags>
 
+
 QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 )
 {
    QVariant vv;
@@ -87,7 +88,6 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       if( hb_itemType( ret ) & HB_IT_STRING )
       {
          vv = hb_itemGetCPtr( ret );
-         //vv = hb_itemGetC( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ s = %s ]", hb_itemGetCPtr( ret ) ) );
       }
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
@@ -110,15 +110,17 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
          hb_vmPush( ret );
          hb_vmSend( 0 );
+
          HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
+
          if( p->type == HBQT_TYPE_QBrush )
             vv = * ( ( QBrush * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QColor )
-            vv = * ( ( QColor * ) ( p->ph ) );
+            vv = QColor( * ( ( QColor * ) ( p->ph ) ) );
          else if( p->type == HBQT_TYPE_QSize )
             vv = * ( ( QSize * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QIcon )
-            vv = * ( ( QIcon * ) ( p->ph ) );
+            vv = QIcon( * ( ( QIcon * ) ( p->ph ) ) );
          else if( p->type == HBQT_TYPE_QPixmap )
             vv = * ( ( QPixmap * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QFont )
