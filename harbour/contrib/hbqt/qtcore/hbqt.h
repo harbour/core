@@ -110,6 +110,7 @@ extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
 extern HB_EXPORT void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf );
 extern HB_EXPORT HBQT_GC_T * hbqt_getObjectGC( int iParam ); /* returns a pointer to the HBQT_GC_T area */
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
+extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
 
 HB_EXTERN_END
 
