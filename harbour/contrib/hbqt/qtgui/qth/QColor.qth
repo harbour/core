@@ -63,7 +63,9 @@ HB_FUNC( QT_QCOLOR )
       else hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   {
+      __HB_RETPTRGC__( new QColor() );
+   }
 }
 </CODE>
 

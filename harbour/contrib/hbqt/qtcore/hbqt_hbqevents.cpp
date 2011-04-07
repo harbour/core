@@ -205,10 +205,6 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       QEvent::Type eventtype = event->type();
       if( ( int ) eventtype > 0 )
       {
-         if( eventtype == QEvent::Close )
-         {
-             event->ignore();
-         }
          char prop[ 20 ];
          hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
 
@@ -233,6 +229,10 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                   }
                }
             }
+         }
+         if( eventtype == QEvent::Close )
+         {
+             event->ignore();
          }
       }
    }
@@ -340,7 +340,7 @@ HB_FUNC( __HBQT_EVENTS_NEW )
 
    p = new HBQEvents();
    o->installEventFilter( p );
- 
+
    hb_retptrGC( hbqt_gcAllocate_HBQEvents( p, true ) );
 }
 
