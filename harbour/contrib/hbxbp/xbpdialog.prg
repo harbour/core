@@ -258,6 +258,7 @@ METHOD XbpDialog:execEvent( nEvent, pEvent )
       SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
 
    CASE nEvent == QEvent_Close
+      pEvent:ignore()
       ::close()
       SetAppEvent( xbeP_Close, NIL, NIL, Self )
    ENDCASE
