@@ -916,25 +916,34 @@ HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          wc = uniCodes[ uc ];
          if( cdp->nMultiUC &&
              ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-             ulS + 1 < nSrc &&
-             ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
+             ulS + 1 < nSrc )
          {
-            for( i = 0; i < cdp->nMulti; ++i )
+            HB_UCHAR uc2 = ( HB_UCHAR ) pSrc[ ulS + 1 ];
+            if( ( cdp->flags[ uc2 ] & HB_CDP_MULTI2 ) != 0 )
             {
-               if( pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 0 ] ||
-                   pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 1 ] )
+               for( i = 0; i < cdp->nMulti; ++i )
                {
-                  if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 0 ] )
+                  if( uc2 == cdp->multi[ i ].cLast[ 0 ] ||
+                      uc2 == cdp->multi[ i ].cLast[ 1 ] )
                   {
-                     wc = cdp->multi[ i ].wcUp;
-                     ++ulS;
-                     break;
-                  }
-                  else if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 1 ] )
-                  {
-                     wc = cdp->multi[ i ].wcLo;
-                     ++ulS;
-                     break;
+                     if( uc == cdp->multi[ i ].cFirst[ 0 ] )
+                     {
+                        if( cdp->multi[ i ].wcUp )
+                        {
+                           wc = cdp->multi[ i ].wcUp;
+                           ++ulS;
+                        }
+                        break;
+                     }
+                     else if( uc == cdp->multi[ i ].cFirst[ 1 ] )
+                     {
+                        if( cdp->multi[ i ].wcLo )
+                        {
+                           wc = cdp->multi[ i ].wcLo;
+                           ++ulS;
+                        }
+                        break;
+                     }
                   }
                }
             }
@@ -980,25 +989,34 @@ HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
          wc = uniCodes[ uc ];
          if( cdp->nMultiUC &&
              ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
-             ulS + 1 < nSrc &&
-             ( cdp->flags[ ( HB_UCHAR ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
+             ulS + 1 < nSrc )
          {
-            for( i = 0; i < cdp->nMulti; ++i )
+            HB_UCHAR uc2 = ( HB_UCHAR ) pSrc[ ulS + 1 ];
+            if( ( cdp->flags[ uc2 ] & HB_CDP_MULTI2 ) != 0 )
             {
-               if( pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 0 ] ||
-                   pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 1 ] )
+               for( i = 0; i < cdp->nMulti; ++i )
                {
-                  if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 0 ] )
+                  if( uc2 == cdp->multi[ i ].cLast[ 0 ] ||
+                      uc2 == cdp->multi[ i ].cLast[ 1 ] )
                   {
-                     wc = cdp->multi[ i ].wcUp;
-                     ++ulS;
-                     break;
-                  }
-                  else if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 1 ] )
-                  {
-                     wc = cdp->multi[ i ].wcLo;
-                     ++ulS;
-                     break;
+                     if( uc == cdp->multi[ i ].cFirst[ 0 ] )
+                     {
+                        if( cdp->multi[ i ].wcUp )
+                        {
+                           wc = cdp->multi[ i ].wcUp;
+                           ++ulS;
+                        }
+                        break;
+                     }
+                     else if( uc == cdp->multi[ i ].cFirst[ 1 ] )
+                     {
+                        if( cdp->multi[ i ].wcLo )
+                        {
+                           wc = cdp->multi[ i ].wcLo;
+                           ++ulS;
+                        }
+                        break;
+                     }
                   }
                }
             }
@@ -1285,14 +1303,20 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, HB_BOOL fCtrl, int iEndian,
                   {
                      if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 0 ] )
                      {
-                        wc = cdp->multi[ i ].wcUp;
-                        ++ulS;
+                        if( cdp->multi[ i ].wcUp )
+                        {
+                           wc = cdp->multi[ i ].wcUp;
+                           ++ulS;
+                        }
                         break;
                      }
                      else if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 1 ] )
                      {
-                        wc = cdp->multi[ i ].wcLo;
-                        ++ulS;
+                        if( cdp->multi[ i ].wcLo )
+                        {
+                           wc = cdp->multi[ i ].wcLo;
+                           ++ulS;
+                        }
                         break;
                      }
                   }
@@ -1515,14 +1539,20 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
                      {
                         if( pSrc[ ul ]  == cdpIn->multi[ i ].cFirst[ 0 ] )
                         {
-                           wc = cdpIn->multi[ i ].wcUp;
-                           ++ul;
+                           if( cdpIn->multi[ i ].wcUp )
+                           {
+                              wc = cdpIn->multi[ i ].wcUp;
+                              ++ul;
+                           }
                            break;
                         }
                         else if( pSrc[ ul ]  == cdpIn->multi[ i ].cFirst[ 1 ] )
                         {
-                           wc = cdpIn->multi[ i ].wcLo;
-                           ++ul;
+                           if( cdpIn->multi[ i ].wcLo )
+                           {
+                              wc = cdpIn->multi[ i ].wcLo;
+                              ++ul;
+                           }
                            break;
                         }
                      }
@@ -1598,14 +1628,20 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE nSrc,
                      {
                         if( pSrc[ ul ]  == cdpIn->multi[ i ].cFirst[ 0 ] )
                         {
-                           wc = cdpIn->multi[ i ].wcUp;
-                           ++ul;
+                           if( cdpIn->multi[ i ].wcUp )
+                           {
+                              wc = cdpIn->multi[ i ].wcUp;
+                              ++ul;
+                           }
                            break;
                         }
                         else if( pSrc[ ul ]  == cdpIn->multi[ i ].cFirst[ 1 ] )
                         {
-                           wc = cdpIn->multi[ i ].wcLo;
-                           ++ul;
+                           if( cdpIn->multi[ i ].wcLo )
+                           {
+                              wc = cdpIn->multi[ i ].wcLo;
+                              ++ul;
+                           }
                            break;
                         }
                      }
