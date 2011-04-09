@@ -87,23 +87,29 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
 
       if( hb_itemType( ret ) & HB_IT_STRING )
       {
-         vv = hb_itemGetCPtr( ret );
+         void * pText01 = NULL;
+         vv = hb_itemGetStrUTF8( ret, &pText01, NULL );
+         hb_strfree( pText01 );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ s = %s ]", hb_itemGetCPtr( ret ) ) );
+         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
       {
          vv = hb_itemGetL( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ l = %i ]", hb_itemGetL( ret ) ) );
+         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
       {
          vv = hb_itemGetND( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ d = %f ]", hb_itemGetND( ret ) ) );
+         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       {
          vv = hb_itemGetNI( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ n = %i ]", hb_itemGetNI( ret ) ) );
+         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_OBJECT )
       {
@@ -125,6 +131,8 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
             vv = * ( ( QPixmap * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QFont )
             vv = * ( ( QFont * ) ( p->ph ) );
+
+         hb_itemRelease( ret );
       }
 
       hb_vmRequestRestore();
