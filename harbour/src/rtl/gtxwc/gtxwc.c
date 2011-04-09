@@ -2945,23 +2945,19 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
    }
 
 #if 1
-   if( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
+   do
    {
-      do
+      while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
       {
-         do
-         {
-            XEvent evt;
-            XNextEvent( wnd->dpy, &evt );
-            hb_gt_xwc_WndProc( wnd, &evt );
-         }
-         while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
-         hb_gt_xwc_UpdateSize( wnd );
-         hb_gt_xwc_UpdatePts( wnd );
-         hb_gt_xwc_UpdateCursor( wnd );
+         XEvent evt;
+         XNextEvent( wnd->dpy, &evt );
+         hb_gt_xwc_WndProc( wnd, &evt );
       }
-      while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
+      hb_gt_xwc_UpdateSize( wnd );
+      hb_gt_xwc_UpdatePts( wnd );
+      hb_gt_xwc_UpdateCursor( wnd );
    }
+   while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
 #else
 {
    HB_BOOL fRepeat;
