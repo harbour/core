@@ -138,8 +138,8 @@ HARBOUR
       You should see 'Hello world!' on screen.
 
       NOTE: You can override default (host) architecture by adding
-            values below to HB_USER_CFLAGS, HB_USER_LDFLAGS, HB_USER_DFLAGS
-            envvars, you can use multiple values:
+            values below to HB_USER_CFLAGS, HB_USER_LDFLAGS envvars,
+            you can use multiple values:
 
             Intel 32-bit: "-arch i386"
             Intel 64-bit: "-arch ppc"
