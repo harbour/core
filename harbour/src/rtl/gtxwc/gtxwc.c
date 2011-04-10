@@ -1552,8 +1552,8 @@ static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
 
    for( i = 0; i < 256; i++ )
    {
-      usCh16 = hb_cdpGetU16( wnd->hostCDP, HB_TRUE, ( unsigned char ) i );
-      usBx16 = hb_cdpGetU16( wnd->boxCDP, HB_TRUE, ( unsigned char ) i );
+      usCh16 = hb_cdpGetU16Disp( wnd->hostCDP, ( unsigned char ) i );
+      usBx16 = hb_cdpGetU16Disp( wnd->boxCDP, ( unsigned char ) i );
 
       wnd->charTrans[ i ].type = CH_CHAR;
       wnd->charTrans[ i ].u.ch16 = usCh16;
@@ -1844,7 +1844,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
       /* hack for euro sign */
       else if( outISO == 0x20ac )
       {
-         ikey = hb_cdpGetChar( wnd->hostCDP, HB_FALSE, ( HB_WCHAR ) outISO );
+         ikey = hb_cdpGetChar( wnd->hostCDP, ( HB_WCHAR ) outISO );
          hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
          return;
       }

@@ -222,9 +222,9 @@ HB_FUNC( HB_STRTOUTF8 )
       if( cdp )
       {
          szString = hb_parc( 1 );
-         nDest = hb_cdpStrAsUTF8Len( cdp, HB_FALSE, szString, nLen, 0 );
+         nDest = hb_cdpStrAsUTF8Len( cdp, szString, nLen, 0 );
          szDest = ( char * ) hb_xgrab( nDest + 1 );
-         hb_cdpStrToUTF8( cdp, HB_FALSE, szString, nLen, szDest, nDest + 1 );
+         hb_cdpStrToUTF8( cdp, szString, nLen, szDest, nDest + 1 );
       }
    }
    if( szDest )
@@ -249,9 +249,9 @@ HB_FUNC( HB_UTF8TOSTR )
          if( cdp )
          {
             szString = hb_parc( 1 );
-            nDest = hb_cdpUTF8AsStrLen( cdp, HB_FALSE, szString, nLen, 0 );
+            nDest = hb_cdpUTF8AsStrLen( cdp, szString, nLen, 0 );
             szDest = ( char * ) hb_xgrab( nDest + 1 );
-            hb_cdpUTF8ToStr( cdp, HB_FALSE, szString, nLen, szDest, nDest + 1 );
+            hb_cdpUTF8ToStr( cdp, szString, nLen, szDest, nDest + 1 );
          }
       }
 

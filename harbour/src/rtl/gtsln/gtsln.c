@@ -356,7 +356,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_
    for( i = 0; i < 256; i++ )
    {
       if( hb_sln_Is_Unicode )
-         iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
+         iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
       else
          iDst = i;
 
@@ -391,12 +391,12 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_
             if( hb_cdpIsAlpha( cdpHost, i ) )
             {
 #ifdef HB_SLN_UNICODE
-               iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
+               iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
 #else
                if( hb_sln_Is_Unicode )
-                  iDst = hb_cdpGetU16( cdpHost, HB_TRUE, ( HB_BYTE ) i );
+                  iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
                else
-                  iDst = hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
+                  iDst = hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 #endif
                HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
                if( fBox )
@@ -415,7 +415,7 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
 
    for( i = 0; i < 256; i++ )
       hb_sln_inputTab[ i ] = ( unsigned char )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
    hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
 
    /* init national chars */

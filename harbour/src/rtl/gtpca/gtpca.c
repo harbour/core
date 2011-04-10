@@ -463,7 +463,7 @@ static void hb_gt_pca_setKeyTrans( PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 
    for( i = 0; i < 256; ++i )
       s_keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
 }
 
 static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )

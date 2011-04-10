@@ -771,7 +771,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      if( pWVT->inCDP )
                      {
 #if defined( UNICODE )
-                        c = hb_cdpGetChar( pWVT->inCDP, HB_FALSE, ( HB_WCHAR ) c );
+                        c = hb_cdpGetChar( pWVT->inCDP, ( HB_WCHAR ) c );
 #else
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
                            c = pWVT->keyTransTbl[ c ];

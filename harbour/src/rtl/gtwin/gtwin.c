@@ -625,10 +625,10 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
           *       very slow in some cases
           */
 
-         uc = hb_cdpGetChar( cdpHost, HB_FALSE, wc );
+         uc = hb_cdpGetChar( cdpHost, wc );
          if( uc == '?' && wc >= 0x100 && cdpHost != s_cdpBox )
          {
-            uc = hb_cdpGetChar( s_cdpBox, HB_FALSE, wc );
+            uc = hb_cdpGetChar( s_cdpBox, wc );
             if( uc != '?' )
                bAttr |= HB_GT_ATTR_BOX;
          }
@@ -1490,8 +1490,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
-            ch = hb_cdpGetChar( s_cdpIn ? s_cdpIn : hb_vmCDP(), HB_FALSE,
-                                ( HB_WCHAR ) ch );
+            ch = hb_cdpGetChar( s_cdpIn ? s_cdpIn : hb_vmCDP(), ( HB_WCHAR ) ch );
 #else
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
@@ -1745,9 +1744,9 @@ static HB_BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
       for( i = 0; i < 256; i++ )
       {
          s_charTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
+                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
          s_charTransRev[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_TRUE, cdpTerm, cdpHost );
+                           hb_cdpTranslateDispChar( i, cdpTerm, cdpHost );
       }
    }
 #  endif
@@ -1795,7 +1794,7 @@ static HB_BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 
       for( i = 0; i < 256; i++ )
          s_keyTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
    }
 #  endif
 
@@ -2121,8 +2120,8 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
             break;
 #if defined( UNICODE )
          s_pCharInfoScreen[ i ].Char.UnicodeChar =
-               hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? s_cdpBox : s_cdpHost,
-                             HB_TRUE, ( HB_UCHAR ) usChar );
+               hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? s_cdpBox : s_cdpHost,
+                                 ( HB_UCHAR ) usChar );
 #else
          s_pCharInfoScreen[ i ].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
 #endif

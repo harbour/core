@@ -190,7 +190,7 @@ static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_C
 
    for( i = 0; i < 256; ++i )
       pGTSTD->keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
 }
 
 static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, HB_SIZE nLen )

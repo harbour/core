@@ -753,7 +753,7 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
             }
             if( i > iLen )
                i = iLen;
-            pTerm->iOutBufIndex += hb_cdpStrToUTF8( cdp, HB_TRUE, pStr, i,
+            pTerm->iOutBufIndex += hb_cdpStrToUTF8Disp( cdp, pStr, i,
                                     pTerm->pOutBuf + pTerm->iOutBufIndex,
                                     pTerm->iOutBufSize - pTerm->iOutBufIndex );
             pStr += i;
@@ -1468,13 +1468,13 @@ again:
       {
          HB_USHORT uc = 0;
          n = i = 0;
-         if( hb_cdpGetFromUTF8( pTerm->cdpIn, HB_FALSE, ( HB_UCHAR ) nKey, &n, &uc ) )
+         if( hb_cdpGetFromUTF8( pTerm->cdpIn, ( HB_UCHAR ) nKey, &n, &uc ) )
          {
             while( n > 0 )
             {
                ch = test_bufch( pTerm, i++, pTerm->esc_delay );
                if( ch < 0 || ch > 255 ||
-                   !hb_cdpGetFromUTF8( pTerm->cdpIn, HB_FALSE, ch, &n, &uc ) )
+                   !hb_cdpGetFromUTF8( pTerm->cdpIn, ch, &n, &uc ) )
                   break;
             }
             if( n == 0 )
@@ -2235,7 +2235,7 @@ static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpTerm, PHB_CO
 
    for( i = 0; i < 256; ++i )
       pTerm->keyTransTbl[ i ] = ( unsigned char )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
 
    pTerm->cdpIn = cdpTerm;
 }
@@ -2287,7 +2287,7 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpHost, PHB_C
          if( hb_cdpIsAlpha( cdpHost, i ) )
          {
             unsigned char uc = ( unsigned char )
-                              hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
+                              hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
             pTerm->chrattr[i] = uc | HB_GTTRM_ATTR_STD;
             if( box )

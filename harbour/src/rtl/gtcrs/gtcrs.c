@@ -1854,7 +1854,7 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
       for( i = 0; i < 256; ++i )
-         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, cdpTerm, cdpHost );
    }
    else if( ioBase->in_transtbl != NULL )
    {
@@ -1919,7 +1919,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
          if( hb_cdpIsAlpha( cdpHost, i ) )
          {
             unsigned char uc = ( unsigned char )
-                              hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
+                              hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
             ioBase->std_chmap[i] = uc | A_NORMAL;
             if( box )

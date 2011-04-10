@@ -1262,9 +1262,9 @@ static HB_BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
    for( i = 0; i < 256; i++ )
    {
       s_charTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpHost, cdpTerm );
+                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
       s_charTransRev[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateDispChar( i, cdpTerm, cdpHost );
    }
 
    return HB_TRUE;
@@ -1293,7 +1293,7 @@ static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
    for( i = 0; i < 256; i++ )
    {
       s_keyTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
    }
 
    return HB_TRUE;

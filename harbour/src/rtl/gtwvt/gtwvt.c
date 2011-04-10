@@ -1389,7 +1389,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   default:
 #if defined( UNICODE )
                      c = hb_cdpGetChar( pWVT->inCDP ? pWVT->inCDP : hb_vmCDP(),
-                                        HB_FALSE, ( HB_WCHAR ) c );
+                                        ( HB_WCHAR ) c );
 #else
                      if( pWVT->fKeyTrans )
                      {
@@ -1610,7 +1610,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
           */
          iColor &= 0xff;
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : hostCDP, HB_TRUE, ( HB_BYTE ) usChar );
+         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : hostCDP, ( HB_BYTE ) usChar );
          if( len == 0 )
          {
             iOldColor = iColor;
@@ -3087,7 +3087,7 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
       for( i = 0; i < 256; i++ )
       {
          pWVT->chrTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_TRUE, cdpHost, cdpTerm );
+                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
       }
    }
 #  endif
@@ -3132,7 +3132,7 @@ static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
       for( i = 0; i < 256; i++ )
       {
          pWVT->keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
+                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
       }
       pWVT->fKeyTrans = HB_TRUE;
    }

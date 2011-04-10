@@ -450,7 +450,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                      hb_xfree( szDest );
                      return NULL;
                   }
-                  *szHead++ = hb_cdpGetChar( hb_vmCDP(), HB_TRUE, ( HB_WCHAR ) val );
+                  *szHead++ = hb_cdpGetChar( hb_vmCDP(), ( HB_WCHAR ) val );
                   szSource += 3;
                   break;
                }
