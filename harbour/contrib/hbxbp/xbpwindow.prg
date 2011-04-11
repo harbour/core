@@ -1274,7 +1274,7 @@ METHOD XbpWindow:currentPos()
 
 METHOD XbpWindow:currentSize()
 
-   RETURN { ::oWidget:width(), ::oWidget:height() }
+   RETURN { ::oWidget:frameGeometry():width(), ::oWidget:frameGeometry():height() }
 
 /*----------------------------------------------------------------------*/
 

@@ -91,7 +91,6 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          vv = hb_itemGetStrUTF8( ret, &pText01, NULL );
          hb_strfree( pText01 );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ s = %s ]", hb_itemGetCPtr( ret ) ) );
-         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
       {
@@ -130,9 +129,11 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
             vv = * ( ( QFont * ) ( p->ph ) );
 
       }
-      if( ret )
-         hb_itemRelease( ret );
 
+      if( ret )
+      {
+         hb_itemRelease( ret );
+      }
       hb_vmRequestRestore();
    }
 
