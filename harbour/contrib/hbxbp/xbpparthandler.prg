@@ -87,16 +87,19 @@ CLASS XbpPartHandler
 
    METHOD   addChild( oXbp )
    METHOD   addAsChild()
+   METHOD   addAsOwned( oXbp )
    METHOD   childFromName( nNameId )
    METHOD   childList()
    METHOD   delChild( oXbp )
    METHOD   setName( nNameId )
-   METHOD   setOwner( oXbp )
+   METHOD   setOwner( oOwner )
    METHOD   setParent( oParent )
+   METHOD   moveOwned( nOffSetX, nOffSetY )
 
    METHOD   notifier()
 
    DATA     aChildren                             INIT    {}
+   DATA     aOwned                                INIT    {}
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
@@ -123,6 +126,10 @@ METHOD create( oParent, oOwner ) CLASS XbpPartHandler
 
    ::oParent := oParent
    ::oOwner  := oOwner
+
+   IF hb_isObject( ::oOwner )
+      ::oOwner:addAsOwned( Self )
+   ENDIF
 
    RETURN Self
 
@@ -196,6 +203,16 @@ METHOD addAsChild() CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
+METHOD addAsOwned( oXbp ) CLASS XbpPartHandler
+
+   IF ! empty( oXbp )
+      aadd( ::aOwned, oXbp )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD childFromName( nNameId ) CLASS XbpPartHandler
    LOCAL i
 
@@ -240,11 +257,11 @@ METHOD setName( nNameId ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setOwner( oXbp ) CLASS XbpPartHandler
+METHOD setOwner( oOwner ) CLASS XbpPartHandler
    LOCAL oOldXbp := ::oOwner
 
-   IF valtype( oXbp ) == "O"
-      ::oOwner := oXbp
+   IF valtype( oOwner ) == "O"
+      ::oOwner := oOwner
    ENDIF
 
    RETURN oOldXbp
@@ -279,5 +296,19 @@ METHOD setParent( oParent ) CLASS XbpPartHandler
 METHOD notifier() CLASS XbpPartHandler
 
    RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
+   LOCAL oXbp, oPos
+
+   FOR EACH oXbp IN ::aOwned
+      IF oXbp:moveWithOwner
+         oPos := oXbp:oWidget:pos()
+         oXbp:oWidget:move( oPos:x() + nOffSetX, oPos:y() + nOffSetY )
+      ENDIF
+   NEXT
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/

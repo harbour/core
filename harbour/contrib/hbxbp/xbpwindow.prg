@@ -611,6 +611,7 @@ METHOD XbpWindow:grabEvent( nEvent, oEvent )
    CASE QEvent_Move                          // :move()
       oP0         := oEvent:oldPos()
       oP1         := oEvent:pos()
+      ::moveOwned( oP1:x() - oP0:x(), oP1:y() - oP0:y() )
       SetAppEvent( xbeP_Move, { oP0:x(), oP0:y() }, { oP1:x(), oP1:y() }, Self )
       lRet := .f.
       EXIT
