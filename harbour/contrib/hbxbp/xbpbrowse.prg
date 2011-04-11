@@ -774,16 +774,14 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterView := QHeaderView( Qt_Horizontal )
    //
    ::oFooterView:setHighlightSections( .F. )
-
    ::oFooterView:setMinimumHeight( 20 )
    ::oFooterView:setMaximumHeight( 20 )
    ::oFooterView:setResizeMode( QHeaderView_Fixed )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
    //
    ::oFooterModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
-
+   //
    ::oFooterView:setModel( ::oFooterModel )
-   ::oFooterView:setFocusPolicy( Qt_NoFocus )
 
    /*  Widget for ::setLeftFrozen( aColumns )  */
    ::buildLeftFreeze()
@@ -1240,7 +1238,7 @@ METHOD XbpBrowse:navigate( p1, p2 )
 
 METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
 
-   IF nCall == HBQT_QAIM_headerData .and. nX == Qt_Vertical
+   IF nCall == HBQT_QAIM_headerData .AND. nX == Qt_Vertical
       RETURN NIL
    ENDIF
 
@@ -1263,9 +1261,9 @@ METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
          ENDIF
          RETURN ::rowCount
       ELSEIF nCall == HBQT_QAIM_data
-         RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, nX+1 )
+         RETURN ::fetchColumnInfo( nCall, nRole, 0, nY+1, nX+1 )
       ELSEIF nCall == HBQT_QAIM_headerData
-         RETURN ::fetchColumnInfo( nCall,nRole, 0, 0 , nY+1 )
+         RETURN ::fetchColumnInfo( nCall, nRole, 0, 0, nY+1 )
       ENDIF
       RETURN nil
 
@@ -1276,9 +1274,9 @@ METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
          ENDIF
          RETURN ::colCount
       ELSEIF nCall == HBQT_QAIM_data
-         RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, nX+1 )
+         RETURN ::fetchColumnInfo( nCall, nRole, 1, nY+1, nX+1 )
       ELSEIF nCall == HBQT_QAIM_headerData
-         RETURN ::fetchColumnInfo( nCall,nRole, 1, 0 , nY+1 )
+         RETURN ::fetchColumnInfo( nCall, nRole, 1, 0, nY+1 )
       ENDIF
       RETURN nil
 
@@ -1343,7 +1341,7 @@ METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
 
    ENDCASE
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

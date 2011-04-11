@@ -117,11 +117,16 @@ CLASS XbpDialog FROM XbpWindow
    DATA     aMinSize
    METHOD   minSize( aSize )                      SETGET
 
+   DATA     oMdi
+   DATA     nFlags
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   DEFAULT oParent TO AppDeskTop()
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -155,13 +160,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setObjectName( "mainWindow" )
    ENDIF
 
-   IF !empty( ::title )
-      ::oWidget:setWindowTitle( ::title )
-   ENDIF
-   IF hb_isChar( ::icon )
-      ::oWidget:setWindowIcon( ::icon )
-   ENDIF
-
    IF !empty( ::qtObject )
       ::drawingArea:qtObject := ::oWidget:centralWidget()
       ::drawingArea:create()
@@ -172,12 +170,12 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    nFlags := ::oWidget:windowFlags()
    nnFlags := nFlags
-   IF !( ::maxButton )
+   IF ! ::maxButton
       IF hb_bitAnd( nFlags, Qt_WindowMaximizeButtonHint ) == Qt_WindowMaximizeButtonHint
          nFlags -= Qt_WindowMaximizeButtonHint
       ENDIF
    ENDIF
-   IF !( ::minButton )
+   IF ! ::minButton
       IF hb_bitAnd( nFlags, Qt_WindowMinimizeButtonHint ) == Qt_WindowMinimizeButtonHint
          nFlags -= Qt_WindowMinimizeButtonHint
       ENDIF
@@ -195,8 +193,21 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setWindowFlags( nFlags )
    ENDIF
 
+   IF !empty( ::title )
+      ::oWidget:setWindowTitle( ::title )
+   ENDIF
+   IF hb_isChar( ::icon )
+      ::oWidget:setWindowIcon( ::icon )
+   ENDIF
+
+   ::nFlags := nFlags
+   IF __objGetClsName( ::oParent ) == "XBPDRAWINGAREA"
+      ::setParent( ::oParent )
+   ELSE
+      ::setPosAndSize()
+   ENDIF
+
    //::setQtProperty()
-   ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
@@ -224,6 +235,11 @@ METHOD XbpDialog:destroy()
 
    HB_TRACE( HB_TR_DEBUG,  ". " )
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
+
+   IF ! empty( ::oMdi )
+//      ::oParent:oWidget:removeSubWindow( ::oMdi )
+      ::oMdi := NIL
+   ENDIF
 
    ::disconnectWindowEvents()
    ::oWidget:disconnect( QEvent_Close            )
@@ -375,6 +391,8 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
+   DATA     oBrush
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -397,11 +415,16 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    IF ! empty( ::qtObject )
       ::oWidget := ::qtObject:oWidget
    ELSE
+      #if 0
       ::oWidget := QWidget()
+      #else
+      ::oWidget := QMdiArea()
+      ::oBrush  := QApplication():palette():button()
+      ::oWidget:setBackground( ::oBrush )
+      #endif
    ENDIF
 
    ::oWidget:setMouseTracking( .T. )
-   // ::oWidget:setFocusPolicy( Qt_StrongFocus )
    ::oWidget:setFocusPolicy( Qt_NoFocus )
    ::oWidget:setObjectName( hbxbp_getNextID( "XBaseDrawingArea" ) )
 

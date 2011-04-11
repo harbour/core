@@ -92,7 +92,7 @@ CLASS XbpPartHandler
    METHOD   delChild( oXbp )
    METHOD   setName( nNameId )
    METHOD   setOwner( oXbp )
-   METHOD   setParent( oXbp )
+   METHOD   setParent( oParent )
 
    METHOD   notifier()
 
@@ -251,11 +251,22 @@ METHOD setOwner( oXbp ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setParent( oXbp ) CLASS XbpPartHandler
+METHOD setParent( oParent ) CLASS XbpPartHandler
    LOCAL oOldXbp := ::oParent
 
-   IF valtype( oXbp ) == "O"
-      ::oParent := oXbp
+   IF valtype( oParent ) == "O"
+      IF __objHasMsg( Self, "OMDI" )
+         IF ! empty( ::oMdi )
+            ::oParent:oWidget:removeSubWindow( ::oWidget ) //::oMdi )
+            ::oWidget:setWindowFlags( ::nFlags )
+            ::oMdi:close()
+            ::oMdi := NIL
+         ELSEIF __objGetClsName( oParent ) == "XBPDRAWINGAREA"
+            ::oMdi := oParent:oWidget:addSubWindow( ::oWidget )
+         ENDIF
+         ::oWidget:show()
+      ENDIF
+      ::oParent := oParent
    ENDIF
 
    RETURN oOldXbp

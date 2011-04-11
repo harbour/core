@@ -293,8 +293,7 @@ FUNCTION SetAppFocus( oXbp )
 FUNCTION AppDesktop()
 
    IF s_oDeskTop == NIL
-      s_oDeskTop := XbpWindow():new()
-      s_oDeskTop:oWidget := HbpAppDesktop():new():create()
+      s_oDeskTop := HbpAppDesktop():new():create()
    ENDIF
 
    RETURN s_oDeskTop

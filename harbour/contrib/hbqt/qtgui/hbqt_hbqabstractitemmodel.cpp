@@ -97,19 +97,16 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       {
          vv = hb_itemGetL( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ l = %i ]", hb_itemGetL( ret ) ) );
-         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
       {
          vv = hb_itemGetND( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ d = %f ]", hb_itemGetND( ret ) ) );
-         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       {
          vv = hb_itemGetNI( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchData[ n = %i ]", hb_itemGetNI( ret ) ) );
-         hb_itemRelease( ret );
       }
       else if( hb_itemType( ret ) & HB_IT_OBJECT )
       {
@@ -132,8 +129,9 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          else if( p->type == HBQT_TYPE_QFont )
             vv = * ( ( QFont * ) ( p->ph ) );
 
-         hb_itemRelease( ret );
       }
+      if( ret )
+         hb_itemRelease( ret );
 
       hb_vmRequestRestore();
    }
@@ -176,30 +174,22 @@ QVariant HBQAbstractItemModel::data( const QModelIndex & index, int role ) const
    if( !index.isValid() )
       return QVariant();
 
-   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_data, role, index.column(), index.row() );
-
-   return ret;
+   return hbqt_fetchData( block, HBQT_QAIM_data, role, index.column(), index.row() );
 }
 
 QVariant HBQAbstractItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_headerData, role, orientation, section );
-
-   return ret;
+   return hbqt_fetchData( block, HBQT_QAIM_headerData, role, orientation, section );
 }
 
 int HBQAbstractItemModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_rowCount, 0, 0, 0 );
-
-   return ret.toInt() ;
+   return hbqt_fetchData( block, HBQT_QAIM_rowCount, 0, 0, 0 ).toInt();
 }
 
 int HBQAbstractItemModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_columnCount, 0, 0, 0 );
-
-   return ret.toInt() ;
+   return hbqt_fetchData( block, HBQT_QAIM_columnCount, 0, 0, 0 ).toInt();
 }
 
 QModelIndex HBQAbstractItemModel::index( int row, int column, const QModelIndex & parent ) const
