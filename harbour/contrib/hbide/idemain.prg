@@ -664,8 +664,6 @@ METHOD HbIde:create( aParams )
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
 
-   /* Restore Settings */
-   hbide_restSettings( Self )
    /* Again to be displayed in Statusbar */
    ::setCodec( ::cWrkCodec )
    ::oDK:setStatusText( SB_PNL_THEME, ::cWrkTheme )
@@ -687,8 +685,6 @@ METHOD HbIde:create( aParams )
       ::cWrkFolderLast := hb_dirBase() + "projects" + hb_ps()
    ENDIF
 
-   ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
-
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
 
@@ -699,6 +695,11 @@ METHOD HbIde:create( aParams )
 
    /* Refresh Stylesheet for all components at once */
    ::oDK:animateComponents( ::nAnimantionMode )
+
+   /* Restore Settings - just before making application visible */
+   hbide_restSettings( Self )
+
+   ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
 
    ::oDlg:Show()
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
