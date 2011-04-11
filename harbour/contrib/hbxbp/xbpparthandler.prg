@@ -252,17 +252,20 @@ METHOD setOwner( oXbp ) CLASS XbpPartHandler
 /*----------------------------------------------------------------------*/
 
 METHOD setParent( oParent ) CLASS XbpPartHandler
+   LOCAL oRect
    LOCAL oOldXbp := ::oParent
 
    IF valtype( oParent ) == "O"
       IF __objHasMsg( Self, "OMDI" )
          IF ! empty( ::oMdi )
-            ::oParent:oWidget:removeSubWindow( ::oWidget ) //::oMdi )
+            ::oParent:oWidget:removeSubWindow( ::oWidget )
             ::oWidget:setWindowFlags( ::nFlags )
             ::oMdi:close()
             ::oMdi := NIL
          ELSEIF __objGetClsName( oParent ) == "XBPDRAWINGAREA"
+            oRect := ::oWidget:frameGeometry()
             ::oMdi := oParent:oWidget:addSubWindow( ::oWidget )
+            ::oMdi:resize( oRect:width(), oRect:height() )
          ENDIF
          ::oWidget:show()
       ENDIF

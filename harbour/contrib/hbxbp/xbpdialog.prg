@@ -200,11 +200,11 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setWindowIcon( ::icon )
    ENDIF
 
+   ::setPosAndSize()
+
    ::nFlags := nFlags
    IF __objGetClsName( ::oParent ) == "XBPDRAWINGAREA"
       ::setParent( ::oParent )
-   ELSE
-      ::setPosAndSize()
    ENDIF
 
    //::setQtProperty()
