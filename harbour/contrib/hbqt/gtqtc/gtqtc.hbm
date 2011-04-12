@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-i.
+
+
+../qtcore/hbqtcore.hbc
+
+gtqtc.cpp
+
+gtqtc.h

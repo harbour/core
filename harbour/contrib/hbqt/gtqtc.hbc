@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+# ---------------------------------------------------------------
+# Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
+libs=gtqtc/gtqtc.hbc

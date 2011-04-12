@@ -14,3 +14,4 @@ libs=hbqtnetwork.hbc
 libs=hbqtuitools.hbc
 # libs=hbqtwebkit.hbc
 libs=hbqtsql.hbc
+libs=gtqtc.hbc
