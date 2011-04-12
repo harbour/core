@@ -143,6 +143,7 @@
 #define K_SH_ENTER          K_ENTER           /* Shift-Enter == Enter */
 #endif
 
+#if 0
 #ifndef WM_MOUSEWHEEL
 #  define WM_MOUSEWHEEL 0x020A
 #endif
@@ -161,6 +162,7 @@
 #endif
 #ifndef SC_MAXIMIZE
 #  define SC_MAXIMIZE 0xF030
+#endif
 #endif
 
 #define SYS_EV_MARK  1000
@@ -193,7 +195,7 @@ public:
    void   displayCell( int iRow, int iCol );
    void   displayBlock( int iRow, int iCol );
    void   resizeImage( const QSize &newSize );
-   void   drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y );
+   void   drawBoxCharacter( QPainter *painter, HB_USHORT usChar, HB_BYTE bColor, int x, int y );
    void   copyTextOnClipboard( void );
    void   paintCopyOperation( void );
 
@@ -278,8 +280,8 @@ typedef struct
 
    int          iCmdShow;
 
-   USHORT       ROWS;                         /* number of displayable rows in window */
-   USHORT       COLS;                         /* number of displayable columns in window */
+   HB_USHORT    ROWS;                         /* number of displayable rows in window */
+   HB_USHORT    COLS;                         /* number of displayable columns in window */
 
    bool         CaretExist;                   /* TRUE if a caret has been created */
    bool         CaretHidden;                  /* TRUE if a caret has been hiden */
@@ -330,8 +332,8 @@ typedef struct
    bool         bAlreadySizing;
 
 #if !defined( UNICODE )
-   BYTE         keyTransTbl[ 256 ];
-   BYTE         chrTransTbl[ 256 ];
+   HB_BYTE         keyTransTbl[ 256 ];
+   HB_BYTE         chrTransTbl[ 256 ];
 #endif
 
 } HB_GTWVT, * PHB_GTWVT;

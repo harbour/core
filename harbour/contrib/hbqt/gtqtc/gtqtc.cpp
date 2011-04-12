@@ -63,9 +63,6 @@
 
 #define WM_MY_UPDATE_CARET         1700
 
-static  QApplication *  app      = NULL;
-static  bool            hbqtinit = true;
-
 static  int             s_GtId;
 static  HB_GT_FUNCS     SuperTable;
 #define HB_GTSUPER      (&SuperTable)
@@ -139,11 +136,12 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    pWVT->qWnd->~MainWindow();
 
    s_wvtWindows[ pWVT->iHandle ] = NULL;
-
+#if 0
    if( --s_wvtCount == 0 )
    {
-      app->quit();
+      Qapplication::quit();
    }
+#endif
    hb_xfree( pWVT );
 }
 
@@ -213,7 +211,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    {
       int i;
       for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( HB_BYTE ) i;
    }
 #endif
 #endif
@@ -384,7 +382,7 @@ static bool hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 int hb_gt_wvt_getKbdState( void )
 {
    int iKbdState = 0;
-   Qt::KeyboardModifiers kbState = qApp->keyboardModifiers();
+   Qt::KeyboardModifiers kbState = QApplication::keyboardModifiers();
 
    if( kbState & Qt::ShiftModifier   ) iKbdState |= HB_GTI_KBD_SHIFT;
    if( kbState & Qt::ControlModifier ) iKbdState |= HB_GTI_KBD_CTRL;
@@ -404,7 +402,7 @@ int hb_gt_wvt_getKbdState( void )
 #if 0
 void hb_gt_wvt_setKbdState( int iKbdState )
 {
-   BYTE kbState[256];
+   HB_BYTE kbState[256];
 
    GetKeyboardState( kbState );
 
@@ -426,8 +424,8 @@ void hb_gt_wvt_setKbdState( int iKbdState )
 #if 0
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
+   HB_BYTE pszAnsi[ 2 ];
+   HB_BYTE pszOem[ 2 ];
 
    pszAnsi[ 0 ] = ( CHAR ) c;
    pszAnsi[ 1 ] = 0;
@@ -446,8 +444,8 @@ static bool hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
 {
    if( HB_GTSELF_RESIZE( pWVT->pGT, iRows, iCols ) )
    {
-      pWVT->ROWS = ( USHORT ) iRows;
-      pWVT->COLS = ( USHORT ) iCols;
+      pWVT->ROWS = ( HB_USHORT ) iRows;
+      pWVT->COLS = ( HB_USHORT ) iCols;
 
       pWVT->qWnd->_drawingArea->_iROWS = iRows;
       pWVT->qWnd->_drawingArea->_iCOLS = iCols;
@@ -560,30 +558,6 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
  */
 /* ********************************************************************** */
 
-static void hbqt_Init( void * cargo )
-{
-   if( ! hbqtinit )
-   {
-      int argc;
-      char ** argv;
-
-      HB_SYMBOL_UNUSED( cargo );
-
-      argc = hb_cmdargARGC();
-      argv = hb_cmdargARGV();
-
-      app = new QApplication( argc, argv );
-
-      if( app )
-         hbqtinit = true;
-
-      if( ! hbqtinit )
-         hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
-
-      hb_cmdargInit( argc, argv );
-   }
-}
-
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    int          iCmdShow = 0;
@@ -591,11 +565,9 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
-   hbqt_Init( NULL );
-   if( hbqtinit )
-      pWVT = hb_gt_wvt_New( pGT, iCmdShow );
-      if( !pWVT )
-         hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
+   pWVT = hb_gt_wvt_New( pGT, iCmdShow );
+   if( !pWVT )
+      hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
 
@@ -684,7 +656,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    PHB_GTWVT pWVT;
    bool fResult = FALSE;
@@ -760,12 +732,12 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( dDuration );
 
    /* Not exactly what this function is supposed to do, but ... */
-   qApp->beep();
+   QApplication::beep();
 }
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
+static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
@@ -801,17 +773,17 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       int i;
 
       for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = ( BYTE ) i;
+         pWVT->chrTransTbl[ i ] = ( HB_BYTE ) i;
 
       if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
           cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
       {
          for( i = 0; i < cdpHost->nChars; ++i )
          {
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                               ( BYTE ) cdpTerm->CharsUpper[ i ];
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                               ( BYTE ) cdpTerm->CharsLower[ i ];
+            pWVT->chrTransTbl[ ( HB_BYTE ) cdpHost->CharsUpper[ i ] ] =
+                               ( HB_BYTE ) cdpTerm->CharsUpper[ i ];
+            pWVT->chrTransTbl[ ( HB_BYTE ) cdpHost->CharsLower[ i ] ] =
+                               ( HB_BYTE ) cdpTerm->CharsLower[ i ];
          }
       }
    }
@@ -823,7 +795,7 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    return TRUE;
 }
 
-static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
+static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
@@ -849,7 +821,7 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent(%p)", pGT));
 
@@ -869,7 +841,7 @@ static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
    *piCol = pWVT->MousePos.x();
 }
 
-static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_SYMBOL_UNUSED( iButton );
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
@@ -879,11 +851,11 @@ static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
    switch( iButton )
    {
    case 0:
-      return ( qApp->mouseButtons() & Qt::LeftButton );
+      return ( QApplication::mouseButtons() & Qt::LeftButton );
    case 1:
-      return ( qApp->mouseButtons() & Qt::RightButton );
+      return ( QApplication::mouseButtons() & Qt::RightButton );
    case 2:
-      return ( qApp->mouseButtons() & Qt::MidButton );
+      return ( QApplication::mouseButtons() & Qt::MidButton );
    }
    return FALSE;
 }
@@ -900,7 +872,7 @@ static int hb_gt_wvt_mouse_CountButton( PHB_GT pGT )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTWVT pWVT;
    int iVal;
@@ -983,7 +955,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.y() ), pWVT->COLS );
+            HB_GTSELF_SETMODE( pGT, ( HB_USHORT ) ( iVal / pWVT->PTEXTSIZE.y() ), pWVT->COLS );
          }
          break;
 
@@ -992,7 +964,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.x() ) );
+            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( HB_USHORT ) ( iVal / pWVT->PTEXTSIZE.x() ) );
          }
          break;
 
@@ -1076,10 +1048,10 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CURSORBLINKRATE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qApp->cursorFlashTime() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, QApplication::cursorFlashTime() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            qApp->setCursorFlashTime( hb_itemGetNI( pInfo->pNewVal ) );
+            QApplication::setCursorFlashTime( hb_itemGetNI( pInfo->pNewVal ) );
          }
          break;
 
@@ -1114,7 +1086,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             bool bOldCentre = pWVT->CenterWindow;
             pWVT->CenterWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
+            HB_GTSELF_SETMODE( pGT, ( HB_USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( HB_USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
             pWVT->CenterWindow = bOldCentre;
          }
          break;
@@ -1301,7 +1273,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
@@ -1451,10 +1423,10 @@ void DrawingArea::copyTextOnClipboard( void )
    {
       for( icol = left; icol <= right; icol++ )
       {
-         //BYTE bColor, bAttr;
+         //HB_BYTE bColor, bAttr;
          int iColor;
          HB_BYTE bAttr;
-         USHORT usChar;
+         HB_USHORT usChar;
 
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
             break;
@@ -1510,10 +1482,10 @@ void DrawingArea::redrawBuffer( const QRect & rect )
    painter.setFont( font );
    painter.setBackgroundMode( Qt::OpaqueMode );
 
-   USHORT usChar;
+   HB_USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
-   //BYTE   bColor, bAttr, bOldColor = 0, bOldAttr = 0;
-   BYTE   bAttr, bOldAttr = 0;
+   //HB_BYTE   bColor, bAttr, bOldColor = 0, bOldAttr = 0;
+   HB_BYTE   bAttr, bOldAttr = 0;
    int bColor, bOldColor = 0;
    char   text[ WVT_MAX_COLS ];
    QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
@@ -1635,8 +1607,8 @@ void DrawingArea::displayCell( int iRow, int iCol )
    QFont font( _qFont, painter.device() );
    painter.setFont( font );
 
-   USHORT usChar;
-   BYTE   bAttr;
+   HB_USHORT usChar;
+   HB_BYTE   bAttr;
    int    bColor = 0;
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
@@ -2440,7 +2412,7 @@ void MainWindow::setWindowSize( void )
    resize( _drawingArea->_wndWidth, _drawingArea->_wndHeight );
 }
 
-void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y )
+void DrawingArea::drawBoxCharacter( QPainter *painter, HB_USHORT usChar, HB_BYTE bColor, int x, int y )
 {
    /* Common to all drawing operations except characters */
    int iGap  = 2;
