@@ -1282,7 +1282,13 @@ METHOD XbpWindow:currentPos()
 
 METHOD XbpWindow:currentSize()
 
-   RETURN { ::oWidget:frameGeometry():width(), ::oWidget:frameGeometry():height() }
+   IF ::className() == "HBPAPPDESKTOP"
+      RETURN { ::width(), ::height() }
+   ELSE
+      RETURN { ::oWidget:frameGeometry():width(), ::oWidget:frameGeometry():height() }
+   ENDIF
+
+   RETURN {}
 
 /*----------------------------------------------------------------------*/
 
