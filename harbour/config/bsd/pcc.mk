@@ -2,9 +2,13 @@
 # $Id$
 #
 
+# TODO: No autodetection
+
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_BUILD_MODE := c
 endif
+
+HB_CMP := pcc
 
 OBJ_EXT := .o
 LIB_PREF := lib
@@ -14,29 +18,29 @@ HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
-CC_OUT := -o
+CC_OUT := -o$(subst x,x, )
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-#ifneq ($(HB_BUILD_WARN),no)
-#   CFLAGS += -W -Wall
-#else
-#   CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
-#   ifneq ($(HB_BUILD_MODE),cpp)
-#      CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
-#   endif
-#endif
-#
-#ifneq ($(HB_BUILD_OPTIM),no)
-#   CFLAGS += -O3
-#endif
+ifneq ($(HB_BUILD_WARN),no)
+   CFLAGS += -W -Wall
+else
+   CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
+   ifneq ($(HB_BUILD_MODE),cpp)
+      CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
+   endif
+endif
+
+ifneq ($(HB_BUILD_OPTIM),no)
+   CFLAGS += -O3
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
 LD := $(CC)
-LD_OUT := -o
+LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))

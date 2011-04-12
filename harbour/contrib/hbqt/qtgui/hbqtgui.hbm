@@ -16,14 +16,12 @@ hbqt_hbqsyntaxhighlighter.cpp
 hbqt_hbqtableview.cpp
 hbqt_init.cpp
 hbqt_utils.cpp
-gtqtc.cpp
 
 hbqt_hbqabstractitemmodel.h
 hbqt_hbqgraphicsscene.h
 hbqt_hbqplaintextedit.h
 hbqt_hbqsyntaxhighlighter.h
 hbqt_hbqtableview.h
-gtqtc.h
 
 hbqt_errorsys.prg
 

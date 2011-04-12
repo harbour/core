@@ -19,7 +19,7 @@
 
 -i.
 
--stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
+-stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
 
 -plugin=hbmk2_qt.hbs
 

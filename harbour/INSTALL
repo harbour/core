@@ -543,12 +543,14 @@ HARBOUR
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
    open64   - Open64 C/C++
+   pcc      - Portable C Compiler (experimental)
 
    darwin
    ------
    gcc      - GNU C
    clang    - Clang compiler frontend
    icc      - Intel(R) C/C++
+   pcc      - Portable C Compiler (experimental)
 
    bsd
    ---
@@ -581,6 +583,7 @@ HARBOUR
    -------
    gcc      - GNU C
    ack      - Amsterdam Compiler Kit (does not work yet)
+   pcc      - Portable C Compiler (experimental)
 
    cygwin
    ------
@@ -590,6 +593,7 @@ HARBOUR
    -----
    gcc      - GNU C
    sunpro   - Sun Studio C/C++
+   pcc      - Portable C Compiler (experimental)
 
    win
    ---

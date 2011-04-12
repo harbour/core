@@ -1319,19 +1319,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|cygwin|minix" )
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
-         aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
+         aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-         aCOMPSUP := { "gcc", "clang", "icc" }
+         aCOMPSUP := { "gcc", "clang", "icc", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "bsd"
          aCOMPSUP := { "gcc", "clang", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
-         aCOMPSUP := { "gcc", "sunpro" }
+         aCOMPSUP := { "gcc", "sunpro", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          aCOMPSUP := { "gcc", "diab" }
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          aCOMPSUP := { "gcc", "icc" }
       case hbmk[ _HBMK_cPLAT ] == "minix"
-         aCOMPSUP := { "gcc", "ack" }
+         aCOMPSUP := { "gcc", "ack", "pcc" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -3217,6 +3217,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "symbian" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "cygwin"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "sunos"   .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "minix"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
          #if defined( __PLATFORM__UNIX )
@@ -3265,6 +3269,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
             cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCPOSTFIX ]
             cBin_CompCPP := cBin_CompC
+         CASE hbmk[ _HBMK_cCOMP ] == "pcc"
+            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "pcc" + hbmk[ _HBMK_cCCPOSTFIX ]
          CASE hbmk[ _HBMK_cCOMP ] == "open64"
             cBin_CompCPP := "openCC"
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, "opencc" )
@@ -3410,14 +3416,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF lStopAfterCComp
             IF ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
-               IF HBMK_ISPLAT( "darwin|sunos" )
+               IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
                ENDIF
             ENDIF
          ELSE
-            IF HBMK_ISPLAT( "darwin|sunos" )
+            IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc" )
                AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
@@ -10933,7 +10939,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
    CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
-   CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
+   CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64|pcc" )
    CASE "allmingw" ; RETURN HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
    CASE "allmsvc"  ; RETURN HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
    CASE "allpocc"  ; RETURN HBMK_ISCOMP( "pocc|pocc64|poccarm" )
@@ -11793,8 +11799,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <plat> value:" ),;
-      "  - linux   : gcc, clang, icc, watcom, sunpro, open64",;
-      "  - darwin  : gcc, clang, icc",;
+      "  - linux   : gcc, clang, icc, watcom, sunpro, open64, pcc",;
+      "  - darwin  : gcc, clang, icc, pcc",;
       "  - win     : mingw, msvc, bcc, watcom, icc, pocc, xcc,",;
       "  -           mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce     : mingwarm, mingw, msvcarm, poccarm",;
@@ -11807,8 +11813,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - vxworks : gcc, diab",;
       "  - symbian : gcc",;
       "  - cygwin  : gcc",;
-      "  - minix   : gcc",;
-      "  - sunos   : gcc, sunpro" }
+      "  - minix   : gcc, ack, pcc",;
+      "  - sunos   : gcc, sunpro, pcc" }
 
    LOCAL aOpt_Basic := {;
       { "-o<outname>"        , I_( "output file name" ) },;
