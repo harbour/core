@@ -28,6 +28,7 @@ xbpbrowse.prg
 xbpcheckbox.prg
 xbpclipboard.prg
 xbpcombobox.prg
+xbpcrt.prg
 xbpdataref.prg
 xbpdialog.prg
 xbpfiledialog.prg
