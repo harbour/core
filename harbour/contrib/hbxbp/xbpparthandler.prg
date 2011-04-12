@@ -317,7 +317,7 @@ METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
    LOCAL oXbp, oPos
 
    FOR EACH oXbp IN ::aOwned
-      IF oXbp:moveWithOwner
+      IF oXbp:className() == "XBPDIALOG" .AND. oXbp:moveWithOwner
          oPos := oXbp:oWidget:pos()
          oXbp:oWidget:move( oPos:x() + nOffSetX, oPos:y() + nOffSetY )
       ENDIF

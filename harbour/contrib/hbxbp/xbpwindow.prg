@@ -1160,6 +1160,7 @@ METHOD XbpWindow:setPos( aPos, lPaint )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
+   LOCAL oSize, oSizeF
 
    IF empty( ::qtObject )
       DEFAULT aPos  TO ::aPos
@@ -1168,8 +1169,11 @@ METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
       IF hb_isArray( aPos ) .and. hb_isArray( aSize )
          DEFAULT lPaint TO .T.
 
-         ::oWidget:resize( aSize[ 1 ], aSize[ 2 ] )
+         oSize  := ::oWidget:size()
+         oSizeF := ::oWidget:frameSize()
+
          ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
+         ::oWidget:resize( aSize[ 1 ] - ( oSizeF:width()-oSize:width() ), aSize[ 2 ] )
       ENDIF
    ENDIF
 
