@@ -9479,6 +9479,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    LOCAL cOperator
    LOCAL cChar
    LOCAL lSkipQuote
+   LOCAL cRetVal
 
    LOCAL cExpr := "hbmk_KEYW( hbmk, '%1' )"
    LOCAL cExprWithValue := "hbmk_KEYW( hbmk, '%1', '%2', '%3' )"
@@ -9569,20 +9570,21 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
          cFilterHarb := StrTran( cFilterHarb, "&", ".AND." )
          cFilterHarb := StrTran( cFilterHarb, "|", ".OR." )
 
+         cRetVal := ""
+
          /* Evaluate filter */
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             bFilter := &( "{| hbmk |" + cFilterHarb + "}" )
+            IF ISLOGICAL( xResult := Eval( bFilter, hbmk ) ) .AND. xResult
+               cRetVal := cItem
+            ENDIF
          RECOVER
-            bFilter := NIL
+            IF ! hbmk[ _HBMK_lQuiet ]
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Error in filter expression: '%1$s'" ), cFilterSrc ) )
+            ENDIF
          END SEQUENCE
 
-         IF ISBLOCK( bFilter ) .AND. ISLOGICAL( xResult := Eval( bFilter, hbmk ) )
-            IF xResult
-               RETURN cItem
-            ENDIF
-         ENDIF
-
-         RETURN ""
+         RETURN cRetVal
       ENDIF
    ENDIF
 
