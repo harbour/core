@@ -450,6 +450,10 @@ METHOD XbpWindow:destroy()
 
    ::aPresParams := NIL
 
+   IF !empty( ::oOwner )
+      ::oOwner:delOwned( Self )  /* Not a public function */
+   ENDIF
+
    ::oParent := NIL
    ::oOwner  := NIL
 

@@ -91,6 +91,7 @@ CLASS XbpPartHandler
    METHOD   childFromName( nNameId )
    METHOD   childList()
    METHOD   delChild( oXbp )
+   METHOD   delOwned( oXbp )
    METHOD   setName( nNameId )
    METHOD   setOwner( oOwner )
    METHOD   setParent( oParent )
@@ -126,6 +127,8 @@ METHOD create( oParent, oOwner ) CLASS XbpPartHandler
 
    ::oParent := oParent
    ::oOwner  := oOwner
+
+//   DEFAULT ::oOwner TO ::oParent
 
    IF hb_isObject( ::oOwner )
       ::oOwner:addAsOwned( Self )
@@ -237,9 +240,20 @@ METHOD delChild( oXbp ) CLASS XbpPartHandler
 
    n := ascan( ::aChildren, {|o| o == oXbp } )
    IF n > 0
+      oXbp:oOwner:delOwned( oXbp )
       oXbp:destroy()
-      adel( ::aChildren, n )
-      asize( ::aChildren, len( ::aChildren )-1 )
+      hb_adel( ::aChildren, n, .t. )
+   endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD delOwned( oXbp ) CLASS XbpPartHandler
+   LOCAL n
+
+   IF ( n := ascan( ::aOwned, {|o| o == oXbp } ) ) > 0
+      hb_adel( ::aOwned, n, .t. )
    endif
 
    RETURN Self
