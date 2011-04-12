@@ -332,12 +332,15 @@ typedef struct
    bool         bAlreadySizing;
 
 #if !defined( UNICODE )
-   HB_BYTE         keyTransTbl[ 256 ];
-   HB_BYTE         chrTransTbl[ 256 ];
+   HB_BYTE      keyTransTbl[ 256 ];
+   HB_BYTE      chrTransTbl[ 256 ];
 #endif
 
 } HB_GTWVT, * PHB_GTWVT;
 
+
+#define HB_GTI_WIDGET          2001
+#define HB_GTI_DRAWINGAREA     2002
 
 /*----------------------------------------------------------------------*/
 
