@@ -13,6 +13,7 @@
 
 hbunix.hbx
 
+chdir.c
 chroot.c
 daemon.c
 posix.c

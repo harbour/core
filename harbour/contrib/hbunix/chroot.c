@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * POSIX function wrappers (chroot)
+ * UNIX function wrappers (chroot)
  *
  * Copyright 2011 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
