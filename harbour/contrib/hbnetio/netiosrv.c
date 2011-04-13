@@ -692,47 +692,62 @@ HB_FUNC( NETIO_COMPRESS )
    }
 }
 
+static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
+{
+   if( conn && conn->sd != HB_NO_SOCKET && !conn->stop && !conn->login )
+   {
+      HB_BYTE msgbuf[ NETIO_MSGLEN ];
+
+      if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN &&
+          HB_GET_LE_INT32( msgbuf ) == NETIO_LOGIN )
+      {
+         long len = HB_GET_LE_INT16( &msgbuf[ 4 ] );
+
+         if( len < ( long ) sizeof( msgbuf ) &&
+             len == ( long ) strlen( NETIO_LOGINSTRID ) &&
+             s_srvRecvAll( conn, msgbuf, len ) == len )
+         {
+            if( memcmp( NETIO_LOGINSTRID, msgbuf, len ) == 0 )
+            {
+               HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_LOGIN );
+               HB_PUT_LE_UINT32( &msgbuf[ 4 ], NETIO_CONNECTED );
+               memset( msgbuf + 8, '\0', NETIO_MSGLEN - 8 );
+               if( s_srvSendAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
+                  conn->login = HB_TRUE;
+            }
+         }
+      }
+      if( !conn->login )
+         s_consrv_disconnect( conn );
+   }
+
+   return conn->login;
+}
+
+/* NETIO_VERIFYCLIENT( <pConnectionSocket> ) -> <lAccepted>
+ */
+HB_FUNC( NETIO_VERIFYCLIENT )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+   if( conn )
+      hb_retl( s_netio_login_accept( conn ) );
+}
+
 /* NETIO_SERVER( <pConnectionSocket> ) -> NIL
  */
 HB_FUNC( NETIO_SERVER )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
 
-   /* clear return value if any */
-   hb_ret();
-
-   if( conn && conn->sd != HB_NO_SOCKET && !conn->stop )
+   if( s_netio_login_accept( conn ) )
    {
-      HB_BYTE msgbuf[ NETIO_MSGLEN ];
+      /* clear return value if any */
+      hb_ret();
 
-      if( !conn->login )
-      {
-         if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN &&
-             HB_GET_LE_INT32( msgbuf ) == NETIO_LOGIN )
-         {
-            long len = HB_GET_LE_INT16( &msgbuf[ 4 ] );
-
-            if( len < ( long ) sizeof( msgbuf ) &&
-                len == ( long ) strlen( NETIO_LOGINSTRID ) &&
-                s_srvRecvAll( conn, msgbuf, len ) == len )
-            {
-               if( memcmp( NETIO_LOGINSTRID, msgbuf, len ) == 0 )
-               {
-                  HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_LOGIN );
-                  HB_PUT_LE_UINT32( &msgbuf[ 4 ], NETIO_CONNECTED );
-                  memset( msgbuf + 8, '\0', NETIO_MSGLEN - 8 );
-                  if( s_srvSendAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
-                     conn->login = HB_TRUE;
-               }
-            }
-         }
-      }
-
-      if( !conn->login )
-         s_consrv_disconnect( conn );
-      else for( ;; )
+      for( ;; )
       {
          HB_BYTE buffer[ 2048 ], * ptr = NULL, * msg;
+         HB_BYTE msgbuf[ NETIO_MSGLEN ];
          HB_BOOL fNoAnswer = HB_FALSE;
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;

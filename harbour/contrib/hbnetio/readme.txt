@@ -140,6 +140,7 @@ Server side functions:
             -> <pConnectionSocket> | NIL
    NETIO_COMPRESS( <pConnectionSocket>,
                    [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
+   NETIO_VERIFYCLIENT( <pConnectionSocket> ) -> <lAccepted>
    NETIO_SERVER( <pConnectionSocket> ) -> NIL
    NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
    NETIO_RPCFILTER( <pConnectionSocket>,
