@@ -2354,7 +2354,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   cParam := NIL
                ENDIF
             ENDIF
-            IF !( Lower( cParam ) == "gtnul" )
+            IF ! Empty( cParam ) .AND. !( Lower( cParam ) == "gtnul" )
                IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
                   AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], PathSepToSelf( cParam ) )
