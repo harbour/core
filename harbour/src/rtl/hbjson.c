@@ -431,27 +431,28 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                   break;
                case 'u':
                {
-                  int i, val = 0;
+                  HB_WCHAR wc = 0;
+                  int i;
 
-                  szSource++;
-                  for( i = 0; i < 4 && ( ( *szSource >= '0' && *szSource <= '9' ) ||
-                                         ( *szSource >= 'A' && *szSource <= 'F' ) ||
-                                         ( *szSource >= 'a' && *szSource <= 'f' ) ); i++ )
+                  for( i = 0; i < 4; i++ )
                   {
-                     if( szSource[ i ] <= '9' )
-                        val = ( val << 4 ) + szSource[ i ] - '0';
-                     else if( *szSource <= 'F' )
-                        val = ( val << 4 ) + szSource[ i ] - 'A' + 10;
-                     else if( *szSource <= 'f' )
-                        val = ( val << 4 ) + szSource[ i ] - 'a' + 10;
+                     char c = *++szSource;
+                     wc <<= 4;
+                     if( c >= '0' && c <= '9' )
+                        wc += c - '0';
+                     else if( c >= 'A' && c <= 'F' )
+                        wc += c - 'A' + 10;
+                     else if( c >= 'a' && c <= 'f' )
+                        wc += c - 'a' + 10;
+                     else
+                     {
+                        hb_xfree( szDest );
+                        return NULL;
+                     }
                   }
-                  if( i < 4 )
-                  {
-                     hb_xfree( szDest );
-                     return NULL;
-                  }
-                  *szHead++ = hb_cdpGetChar( hb_vmCDP(), ( HB_WCHAR ) val );
-                  szSource += 3;
+                  szHead += hb_cdpU16ToStr( hb_vmCDP(), HB_CDP_ENDIAN_NATIVE,
+                                            &wc, 1,
+                                            szHead, szDest + nAlloc - szHead );
                   break;
                }
                default:

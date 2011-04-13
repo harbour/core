@@ -162,7 +162,10 @@ void hb_cdpBuildTransTable( PHB_UNITABLE uniTable )
                            hb_xgrab( ( wcMax + 1 ) * sizeof( HB_UCHAR ) );
       memset( uniTrans, '\0', ( wcMax + 1 ) * sizeof( HB_UCHAR ) );
       for( i = 0; i < 256; ++i )
-         uniTrans[ uniTable->uniCodes[ i ] ] = ( HB_UCHAR ) i;
+      {
+         if( uniTable->uniCodes[ i ] )
+            uniTrans[ uniTable->uniCodes[ i ] ] = ( HB_UCHAR ) i;
+      }
 
       uniTable->wcMax = wcMax;
       uniTable->uniTrans = uniTrans;
