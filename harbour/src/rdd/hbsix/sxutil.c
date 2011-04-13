@@ -72,13 +72,14 @@ HB_FUNC( SX_SLIMFAST )
       {
          if( c == cQuote )
             cQuote = 0;
-         else if( c == '"' || c == '\'' )
-            cQuote = c;
          else if( !cQuote )
          {
-            if( c == ' ' && nDst && szDst[nDst - 1] == ' ' )
+            if( c == '"' || c == '\'' )
+               cQuote = c;
+            else if( c == ' ' && nDst && szDst[nDst - 1] == ' ' )
                continue;
-            c = ( char ) hb_charUpper( ( HB_UCHAR ) c );
+            else
+               c = ( char ) hb_charUpper( ( HB_UCHAR ) c );
          }
          szDst[nDst++] = c;
       }

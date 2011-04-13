@@ -5,6 +5,9 @@
 ROOT := ../../
 
 C_SOURCES := \
+   cp_big5.c \
+   cp_utf8.c \
+   cp_u16le.c \
    cpbg866.c \
    cpbgiso.c \
    cpbgmik.c \

@@ -159,7 +159,9 @@ HB_FUNC( HB_TRANSLATE )
       PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFindExt( szIdIn ) : hb_vmCDP();
       PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFindExt( szIdOut ) : hb_vmCDP();
 
-      if( cdpIn && cdpOut && cdpIn->uniTable != cdpOut->uniTable )
+      if( cdpIn && cdpOut && cdpIn != cdpOut &&
+          ( cdpIn->uniTable != cdpOut->uniTable ||
+            cdpIn->fCustom || cdpOut->fCustom ) )
       {
          char * szResult = hb_cdpnDup( hb_parc( 1 ), &nLen, cdpIn, cdpOut );
          hb_retclen_buffer( szResult, nLen );

@@ -131,8 +131,8 @@ void hb_idleState( void )
                pIdleData->fCollectGarbage = HB_TRUE;
             }
          }
-         pIdleData->fIamIdle = HB_FALSE;
       }
+      pIdleData->fIamIdle = HB_FALSE;
    }
 }
 

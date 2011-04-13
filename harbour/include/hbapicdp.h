@@ -77,6 +77,26 @@ HB_EXTERN_BEGIN
    typedef unsigned short  HB_WCHAR;
 #endif
 
+
+/* forward declaration */
+struct _HB_CODEPAGE;
+
+#define HB_CODEPAGE_PTR       struct _HB_CODEPAGE *
+
+#define HB_CDPCHAR_GET( c, s, n, i, w )   (c)->wcharGet( c, s, n, i, w )
+#define HB_CDPCHAR_PUT( c, s, n, i, w )   (c)->wcharPut( c, s, n, i, w )
+#define HB_CDPCHAR_LEN( c, w )            (c)->wcharLen( c, w )
+
+#define HB_CDP_GET_FUNC( func ) HB_BOOL func( HB_CODEPAGE_PTR cdp, const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR * wc )
+typedef HB_CDP_GET_FUNC( ( * PHB_CDP_GET_FUNC ) );
+
+#define HB_CDP_PUT_FUNC( func ) HB_BOOL func( HB_CODEPAGE_PTR cdp, char * pDst, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR wc )
+typedef HB_CDP_PUT_FUNC( ( * PHB_CDP_PUT_FUNC ) );
+
+#define HB_CDP_LEN_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+typedef HB_CDP_LEN_FUNC( ( * PHB_CDP_LEN_FUNC ) );
+
+
 typedef struct _HB_UNITABLE
 {
    const char *      uniID;
@@ -106,6 +126,10 @@ typedef struct _HB_CODEPAGE
    const HB_UCHAR *        sort;
    const HB_UCHAR *        acc;
    int                     nACSort;
+   HB_BOOL                 fCustom;
+   PHB_CDP_GET_FUNC        wcharGet;
+   PHB_CDP_PUT_FUNC        wcharPut;
+   PHB_CDP_LEN_FUNC        wcharLen;
    int                     nMulti;
    int                     nMultiUC;
    PHB_MULTICHAR           multi;
@@ -312,6 +336,15 @@ extern HB_UNITABLE hb_uniTbl_646YU;
 extern HB_EXPORT PHB_CODEPAGE hb_vmCDP( void );
 extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 
+
+/* character flags */
+#define HB_CDP_DIGIT    0x01
+#define HB_CDP_ALPHA    0x02
+#define HB_CDP_LOWER    0x04
+#define HB_CDP_UPPER    0x08
+#define HB_CDP_MULTI1   0x10
+#define HB_CDP_MULTI2   0x20
+
 /* accented character sorting */
 #define HB_CDP_ACSORT_NONE          0     /* no special sorting for accented
                                              characters */
@@ -344,6 +377,7 @@ extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
                                                  const char * pszLower,
                                                  unsigned int nACSort,
                                                  unsigned int nCaseSort );
+extern HB_EXPORT void         hb_cdpBuildTransTable( PHB_UNITABLE uniTable );
 extern HB_EXPORT void         hb_cdpReleaseAll( void );
 extern HB_EXPORT const char * hb_cdpID( void );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp );
