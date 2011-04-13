@@ -375,12 +375,12 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
             pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
             pszTempDir[ len + 1 ] = '\0';
          }
-         else
-         {
-            pszTempDir[ 0 ] = '.';
-            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
-            pszTempDir[ 2 ] = '\0';
-         }
+      }
+      else
+      {
+         pszTempDir[ 0 ] = '.';
+         pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
+         pszTempDir[ 2 ] = '\0';
       }
    }
 #elif defined( HB_OS_WIN )
