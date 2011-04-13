@@ -100,7 +100,7 @@ CLASS XbpPartHandler
    METHOD   notifier()
 
    DATA     aChildren                             INIT    {}
-   DATA     aOwned                                INIT    {}
+   DATA     _aOwned                               INIT    {}
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
@@ -209,7 +209,7 @@ METHOD addAsChild() CLASS XbpPartHandler
 METHOD addAsOwned( oXbp ) CLASS XbpPartHandler
 
    IF ! empty( oXbp )
-      aadd( ::aOwned, oXbp )
+      aadd( ::_aOwned, oXbp )
    ENDIF
 
    RETURN Self
@@ -252,8 +252,8 @@ METHOD delChild( oXbp ) CLASS XbpPartHandler
 METHOD delOwned( oXbp ) CLASS XbpPartHandler
    LOCAL n
 
-   IF ( n := ascan( ::aOwned, {|o| o == oXbp } ) ) > 0
-      hb_adel( ::aOwned, n, .t. )
+   IF ( n := ascan( ::_aOwned, {|o| o == oXbp } ) ) > 0
+      hb_adel( ::_aOwned, n, .t. )
    endif
 
    RETURN Self
@@ -316,8 +316,8 @@ METHOD notifier() CLASS XbpPartHandler
 METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
    LOCAL oXbp, oPos
 
-   FOR EACH oXbp IN ::aOwned
-      IF oXbp:className() == "XBPDIALOG" .AND. oXbp:moveWithOwner
+   FOR EACH oXbp IN ::_aOwned
+      IF __objHasMsg( oXbp, "MOVEWITHOWNER" ) .AND. oXbp:moveWithOwner
          oPos := oXbp:oWidget:pos()
          oXbp:oWidget:move( oPos:x() + nOffSetX, oPos:y() + nOffSetY )
       ENDIF
