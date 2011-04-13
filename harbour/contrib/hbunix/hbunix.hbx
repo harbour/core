@@ -3,16 +3,15 @@
  */
 
 /* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
 /*          Syntax: // HB_FUNC_INCLUDE <func>                           */
 /*                  // HB_FUNC_EXCLUDE <func>                           */
 /* -------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
 /* -------------------------------------------------------------------- */
 
 #ifndef __HBEXTERN_CH__HBUNIX__
@@ -26,16 +25,17 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC POSIX_GETPID
 DYNAMIC POSIX_ERRNO
-DYNAMIC POSIX_GETUID
+DYNAMIC POSIX_GETEGID
 DYNAMIC POSIX_GETEUID
 DYNAMIC POSIX_GETGID
-DYNAMIC POSIX_GETEGID
-DYNAMIC POSIX_SETUID
+DYNAMIC POSIX_GETPID
+DYNAMIC POSIX_GETUID
+DYNAMIC POSIX_SETEGID
 DYNAMIC POSIX_SETEUID
 DYNAMIC POSIX_SETGID
-DYNAMIC POSIX_SETEGID
+DYNAMIC POSIX_SETUID
+DYNAMIC UNIX_CHROOT
 DYNAMIC UNIX_DAEMON
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
