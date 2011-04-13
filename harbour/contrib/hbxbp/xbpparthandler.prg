@@ -318,7 +318,7 @@ METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
 
    FOR EACH oXbp IN ::_aOwned
       IF __objHasMsg( oXbp, "MOVEWITHOWNER" ) .AND. oXbp:moveWithOwner
-         IF oXbp:oParent:className() != "XBPDRAWINGAREA"
+         IF !( oXbp:oParent:className() == "XBPDRAWINGAREA" )
             oPos := oXbp:oWidget:pos()
             oXbp:oWidget:move( oPos:x() + nOffSetX, oPos:y() + nOffSetY )
          ENDIF
