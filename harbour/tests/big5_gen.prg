@@ -12,6 +12,47 @@
  *
  */
 
+
+/* ***************************************************************************
+
+these characters are mapped to U+FFFD REPLACEMENT CHARACTER in BIG5.TXT:
+   0xA15A      SPACING UNDERSCORE             duplicates A1C4
+   0xA1C3      SPACING HEAVY OVERSCORE        not in Unicode
+   0xA1C5      SPACING HEAVY UNDERSCORE       not in Unicode
+   0xA1FE      LT DIAG UP RIGHT TO LOW LEFT   duplicates A2AC
+   0xA240      LT DIAG UP LEFT TO LOW RIGHT   duplicates A2AD
+   0xA2CC      HANGZHOU NUMERAL TEN           conflicts with A451 mapping
+   0xA2CE      HANGZHOU NUMERAL THIRTY        conflicts with A4CA mapping
+
+duplicated character has the following mapping in BIG5.TXT:
+   0xA1C4	0xFF3F	# FULLWIDTH LOW LINE
+   0xA2AC	0x2571	# BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT
+   0xA2AD	0x2572	# BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT
+   0xA451	0x5341	# <CJK>
+   0xA4CA	0x5345	# <CJK>
+
+
+# iconv using the following mapping for them:
+0xA15A	0x2574	# BOX DRAWINGS LIGHT LEFT
+0xA1C3	0xFFE3	# FULLWIDTH MACRON
+0xA1C5	0x02CD	# MODIFIER LETTER LOW MACRON
+0xA1FE	0xFF0F	# FULLWIDTH SOLIDUS
+0xA240	0xFF3C	# FULLWIDTH REVERSE SOLIDUS
+0xA2CC	0x5341	# <CJK>
+0xA2CE	0x5345	# <CJK>
+
+# this seems to be closer mapping:
+0xA15A	0xFF3F	# FULLWIDTH LOW LINE
+0xA1C3	0xFFE3	# FULLWIDTH MACRON
+0xA1C5	0x02CD	# MODIFIER LETTER LOW MACRON
+0xA1FE	0x2571	# BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT
+0xA240	0x2572	# BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT
+0xA2CC	0x5341	# <CJK>
+0xA2CE	0x5345	# <CJK>
+
+*************************************************************************** */
+
+
 proc main()
    local cLine, aVal, aVal2, aValU, aValU2, hVal, aInd, ;
          n, nn, nBG5, nU16, nMin, nMax, nUMin, nUMax, cResult, nBit

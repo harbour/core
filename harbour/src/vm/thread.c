@@ -71,8 +71,8 @@
   hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
   hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
   hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+  hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> ) -> <xCodeResult>
 ** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) -> .T.
-  hb_criticalCode( <pMtx>, <bCode> | <@sFunc()> ) -> <xCodeResult>
   hb_mtVM() -> <lMultiThreadVM>
 
   * - this function call can be ignored by the destination thread in some
@@ -2590,25 +2590,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
    }
 }
 
-HB_FUNC( HB_MUTEXQUEUEINFO )
-{
-   PHB_ITEM pItem = hb_mutexParam( 1 );
-
-   if( pItem )
-   {
-      PHB_MUTEX pMutex = hb_mutexPtr( pItem );
-
-      if( pMutex )
-      {
-         HB_STACK_TLS_PRELOAD
-         hb_storni( pMutex->waiters, 2 );
-         hb_storns( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
-         hb_retl( HB_TRUE );
-      }
-   }
-}
-
-HB_FUNC( HB_CRITICALCODE )
+HB_FUNC( HB_MUTEXEVAL )
 {
    PHB_ITEM pItem = hb_mutexParam( 1 );
 
@@ -2628,6 +2610,24 @@ HB_FUNC( HB_CRITICALCODE )
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
+HB_FUNC( HB_MUTEXQUEUEINFO )
+{
+   PHB_ITEM pItem = hb_mutexParam( 1 );
+
+   if( pItem )
+   {
+      PHB_MUTEX pMutex = hb_mutexPtr( pItem );
+
+      if( pMutex )
+      {
+         HB_STACK_TLS_PRELOAD
+         hb_storni( pMutex->waiters, 2 );
+         hb_storns( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
+         hb_retl( HB_TRUE );
+      }
    }
 }
 

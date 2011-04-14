@@ -128,6 +128,8 @@ static HB_CODEPAGE s_utf8_codepage =
      HB_FALSE, hb_cdpUTF8_get, hb_cdpUTF8_put, hb_cdpUTF8_len,
      0, 0, NULL, NULL, NULL };
 
+HB_CODEPAGE_ANNOUNCE( UTF8 )
+
 static HB_CODEPAGE s_en_codepage =
    { "EN", "English CP-437", HB_UNITB_437,
      NULL, NULL, NULL, NULL, NULL, 0, 
