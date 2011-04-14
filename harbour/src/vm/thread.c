@@ -62,7 +62,7 @@
   hb_threadTerminateAll() -> NIL
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
-  hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+  hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) -> <lFirstCall>
   hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
   hb_mutexCreate() -> <pMtx>
   hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
@@ -71,10 +71,16 @@
   hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
   hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
   hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) -> .T.
+  hb_criticalCode( <pMtx>, <bCode> | <@sFunc()> ) -> <xCodeResult>
+  hb_mtVM() -> <lMultiThreadVM>
 
   * - this function call can be ignored by the destination thread in some
       cases. HVM does not guaranties that the QUIT signal will be always
       delivered.
+  ** - this is only information function and nWaitersCount or nQueueLength
+       can be changed simultaneously by other threads so they cannot be
+       used for MT synchronization
 */
 
 /* NOTE: Need to have these before Harbour headers,
@@ -2586,7 +2592,6 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
 
 HB_FUNC( HB_MUTEXQUEUEINFO )
 {
-   HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_mutexParam( 1 );
 
    if( pItem )
@@ -2595,16 +2600,35 @@ HB_FUNC( HB_MUTEXQUEUEINFO )
 
       if( pMutex )
       {
+         HB_STACK_TLS_PRELOAD
          hb_storni( pMutex->waiters, 2 );
          hb_storns( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
          hb_retl( HB_TRUE );
-         return;
       }
    }
+}
 
-   hb_storni( 0, 2 );
-   hb_storns( 0, 3 );
-   hb_retl( HB_FALSE );
+HB_FUNC( HB_CRITICALCODE )
+{
+   PHB_ITEM pItem = hb_mutexParam( 1 );
+
+   if( pItem )
+   {
+      PHB_ITEM pEval = hb_param( 2, HB_IT_EVALITEM );
+
+      if( pEval )
+      {
+         if( hb_threadMutexLock( pItem ) )
+         {
+            hb_vmPushEvalSym();
+            hb_vmPush( pEval );
+            hb_vmSend( 0 );
+            hb_threadMutexUnlock( pItem );
+         }
+      }
+      else
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
 }
 
 HB_FUNC( HB_MTVM )
