@@ -5495,6 +5495,15 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       /* Process build-time configuration */
 
+      /* TOFIX: This doesn't work well when doing cross-platform
+                build f.e. on a 32-bit *nix system to 64-bit target
+                where the 64-bit target doesn't happen to provide
+                64-bit flavor of gpm lib. This is the case when
+                building 64-bit target on a 32-bit Ubuntu 10.10
+                system. Moral of the story: we should decide about
+                gpm using dynamic information instead of using
+                hbmk2 build-time default HB_HAS_GPM value.
+                [vszakats] */
       #if defined( HB_HAS_GPM )
          IF hbmk[ _HBMK_cPLAT ] == "linux"
             FOR EACH tmp IN l_aLIBHB
