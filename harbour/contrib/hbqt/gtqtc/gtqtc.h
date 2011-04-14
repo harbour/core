@@ -79,6 +79,9 @@
 #include "inkey.ch"
 #include "hbvm.h"
 #include "hbthread.h"
+#include "hbapistr.h"
+
+#include "hbqt.h"
 
 #define WVT_CHAR_QUEUE_SIZE        4096 //  128
 #define WVT_MAX_TITLE_SIZE         128
@@ -143,31 +146,7 @@
 #define K_SH_ENTER          K_ENTER           /* Shift-Enter == Enter */
 #endif
 
-#if 0
-#ifndef WM_MOUSEWHEEL
-#  define WM_MOUSEWHEEL 0x020A
-#endif
-#ifndef WM_ENTERSIZEMOVE
-#  define WM_ENTERSIZEMOVE 561
-#endif
-#ifndef WM_EXITSIZEMOVE
-#  define WM_EXITSIZEMOVE  562
-#endif
-
-#ifndef SWP_DEFERERASE
-#  define SWP_DEFERERASE 0x2000
-#endif
-#ifndef SW_NORMAL
-#  define SW_NORMAL 1
-#endif
-#ifndef SC_MAXIMIZE
-#  define SC_MAXIMIZE 0xF030
-#endif
-#endif
-
 #define SYS_EV_MARK  1000
-
-void hb_ToOutDebug( const char * sTraceMsg, ... );
 
 /*----------------------------------------------------------------------*/
 
@@ -341,6 +320,11 @@ typedef struct
 
 #define HB_GTI_WIDGET          2001
 #define HB_GTI_DRAWINGAREA     2002
+
+HB_EXTERN_BEGIN
+extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QMainWindow( void * pObj, bool bNew );
+HB_EXTERN_END
 
 /*----------------------------------------------------------------------*/
 

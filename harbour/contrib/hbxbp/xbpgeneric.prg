@@ -173,26 +173,6 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
-/*
- *  Internal to the XbpParts, must NOT be called from application code
- */
-FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
-
-   IF ++t_nEventIn > EVENT_BUFFER
-      t_nEventIn := 1
-   ENDIF
-
-//HB_TRACE( HB_TR_DEBUG, 0, "SetAppEvent ... ", hb_threadId(), nEvent, xbeP_Paint )
-
-   t_events[ t_nEventIn, 1 ] := nEvent
-   t_events[ t_nEventIn, 2 ] := mp1
-   t_events[ t_nEventIn, 3 ] := mp2
-   t_events[ t_nEventIn, 4 ] := oXbp
-
-//HB_TRACE( HB_TR_DEBUG, 1, "SetAppEvent ... ", hb_threadId(), nEvent )
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
 
 FUNCTION LastAppEvent( mp1, mp2, oXbp, nThreadID )
    LOCAL nEvent
@@ -227,6 +207,30 @@ FUNCTION NextAppEvent( mp1, mp2, oXbp )
    ENDIF
 
    RETURN nEvent
+
+/*----------------------------------------------------------------------*/
+/*
+ *  Internal to the XbpParts, must NOT be called from application code
+ */
+FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
+
+   IF empty( t_events )
+      hbxbp_InitializeEventBuffer()
+   ENDIF
+
+   IF ++t_nEventIn > EVENT_BUFFER
+      t_nEventIn := 1
+   ENDIF
+
+//HB_TRACE( HB_TR_ALWAYS, "SetAppEvent ... ", t_nEventIn, nEvent, oXbp:className(), oXbp:title )
+
+   t_events[ t_nEventIn, 1 ] := nEvent
+   t_events[ t_nEventIn, 2 ] := mp1
+   t_events[ t_nEventIn, 3 ] := mp2
+   t_events[ t_nEventIn, 4 ] := iif( empty( oXbp ), t_oAppWindow, oXbp )
+
+//HB_TRACE( HB_TR_DEBUG, 1, "SetAppEvent ... ", hb_threadId(), nEvent )
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

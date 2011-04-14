@@ -72,6 +72,10 @@
 #include "xbp.ch"
 #include "appevent.ch"
 
+#define HB_GTI_WIDGET          2001
+#define HB_GTI_DRAWINGAREA     2002
+#define HB_GTI_DISABLE         2003
+
 /*----------------------------------------------------------------------*/
 
 CLASS XbpCrt  INHERIT  XbpWindow, XbpPartHandler
@@ -251,6 +255,9 @@ CLASS XbpCrt  INHERIT  XbpWindow, XbpPartHandler
    METHOD   dragLeave( xParam )                   SETGET
    METHOD   dragDrop( xParam, xParam1 )           SETGET
 
+   DATA     nFlags
+   DATA     oMDI
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -261,18 +268,10 @@ METHOD XbpCrt:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   if hb_isArray( aPos )
-      ::aPos := aPos
-   endif
-   if hb_isArray( aSize )
-      ::aSize := aSize
-   endif
-   if hb_isArray( aPresParams )
-      ::aPresParams := aPresParams
-   endif
-   if hb_isLogical( lVisible )
-      ::visible := lVisible
-   endif
+   ::resizeMode  := 0
+   ::mouseMode   := 0
+
+   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. )
 
    RETURN Self
 
@@ -281,70 +280,57 @@ METHOD XbpCrt:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   //Local lRowCol := .T.
+
+   ::XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::maxRow := ::aSize[ 1 ]
    ::maxCol := ::aSize[ 2 ]
 
-   ::XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   hb_gtReload( "QTC" )
+   ::pGT := hb_gtSelect()
 
-   if ::lModal
-      ::pGT  := hb_gtCreate( "QTC" )
-      ::pGTp := hb_gtSelect( ::pGT )
-   else
-      hb_gtReload( "QTC" )
-      ::pGT := hb_gtSelect()
-   endif
-#if 0
-   IF ::lModal
-      ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
-      IF ::resizable
-         ::style += WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_THICKFRAME
-      ENDIF
+   /* CreateWindow() be forced to execute */
+   ? " "
+
+   ::oWidget := hb_gtInfo( HB_GTI_WIDGET )
+   ::drawingArea:oWidget := hb_gtInfo( HB_GTI_DRAWINGAREA )
+
+   ::oWidget:setWindowTitle( ::title )
+
+   hb_gtInfo( HB_GTI_CLOSABLE , ::closable  )
+   hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
+
+   //hb_gtInfo( HB_GTI_RESIZEMODE, iif( ::resizeMode == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT ) )
+
+   IF ! empty( ::toolTipText )
+      ::oWidget:setTooltip( ::toolTipText )
+   ENDIF
+   IF hb_isChar( ::icon )
+      ::oWidget:setWindowIcon( ::icon )
    ENDIF
 
-   hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
+   IF ::lModal
+      hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
+   ENDIF
+   IF ::visible
+      ::oWidget:show()
+      ::lHasInputFocus := .t.
+   ENDIF
+
+
+   ::nFlags := ::oWidget:windowFlags()
+   IF __objGetClsName( ::oParent ) == "XBPDRAWINGAREA"
+      ::setParent( ::oParent )
+   ENDIF
+
+
+   // HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
+
+#if 0
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
                            ::maxRow+1, ::maxCol+1, ::pGTp, .F., lRowCol, HB_WNDTYPE_CRT } )
    hb_gtInfo( HB_GTI_SETFONT, { ::fontName, ::fontHeight, ::fontWidth } )
 #endif
-   IF hb_isNumeric( ::icon )
-      hb_gtInfo( HB_GTI_ICONRES, ::icon )
-   ELSE
-      IF ( ".png" $ lower( ::icon ) )
-         hb_gtInfo( HB_GTI_ICONFILE, ::icon )
-      ELSE
-         hb_gtInfo( HB_GTI_ICONRES, ::icon )
-      ENDIF
-   ENDIF
-
-   /* CreateWindow() be forced to execute */
-   ? " "
-   //::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
-
-   hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )
-   hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
-   hb_gtInfo( HB_GTI_RESIZEMODE, if( ::resizeMode == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT ) )
-
-
-   IF ::lModal
-      //hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
-   ENDIF
-
-   IF ::visible
-      //hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, .t. )
-      ::lHasInputFocus := .t.
-   ENDIF
-
-   /*  Drawing Area of oCrt will point to itself */
-   ::drawingArea := XbpDrawingArea():new():create( self, , ::aPos, ::aSize, , .t. )
-
-   HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
-
-   /*  Not working yet. need to investigate how I have implemented it. */
-   if !empty( ::toolTipText )
-      //Wvt_SetTooltip( ::toolTipText )
-   endif
 
    RETURN Self
 

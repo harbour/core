@@ -31,7 +31,7 @@ New      =
 HB_GARBAGE_FUNC( hbqt_gcMark_HBQSlots )
 {
    HBQT_GC_T_HBQSlots * p = ( HBQT_GC_T_HBQSlots * ) Cargo;
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQSlots   cargo=%p", Cargo ) );
+   //HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQSlots   cargo=%p", Cargo ) );
    if( p )
    {
       if( p->ph )
@@ -41,11 +41,11 @@ HB_GARBAGE_FUNC( hbqt_gcMark_HBQSlots )
 
          for( i = t_slots->listBlock.size() - 1; i >= 0 ; i-- )
          {
-            HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQSlots marking %d", i ) );
+            //HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQSlots marking %d", i ) );
             if( t_slots->listBlock[ i ] != NULL )
             {
                hb_gcMark( t_slots->listBlock[ i ] );
-               HB_TRACE( HB_TR_ALWAYS, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
+               //HB_TRACE( HB_TR_ALWAYS, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
             }
          }
       }

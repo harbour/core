@@ -707,7 +707,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    int  c = 0;
    bool fKey = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
+   //HB_TRACE( HB_TR_ALWAYS, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
    pWVT = HB_GTWVT_GET( pGT );
@@ -1033,10 +1033,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
          if( pWVT->qWnd )
          {
-            //pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
-            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
+            pInfo->pResult = hb_itemPutStrUTF8( pInfo->pResult, pWVT->qWnd->windowTitle().toUtf8().data() );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-               pWVT->qWnd->setWindowTitle( hb_itemGetCPtr( pInfo->pNewVal ) );
+            {
+               void * pText01 = NULL;
+               pWVT->qWnd->setWindowTitle( hb_itemGetStrUTF8( pInfo->pNewVal, &pText01, NULL ) );
+               hb_strfree( pText01 );
+            }
          }
          break;
 
@@ -1303,11 +1306,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_WIDGET:
-          pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->qWnd );
+          //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QWidget( pWVT->qWnd, false ) );
+          pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMainWindow( pWVT->qWnd, false ), "HB_QMAINWINDOW" ) );
           break;
 
       case HB_GTI_DRAWINGAREA:
-          pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->qWnd->_drawingArea );
+          //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QMainWindow( pWVT->qWnd->_drawingArea, false ) );
+          pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( pWVT->qWnd->_drawingArea, false ), "HB_QWIDGET" ) );
           break;
 
       default:

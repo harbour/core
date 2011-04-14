@@ -42,7 +42,7 @@ HB_FUNC( QT_HBQEVENTS )
 static HB_GARBAGE_FUNC( hbqt_gcMark_HBQEvents )
 {
    HBQT_GC_T_HBQEvents * p = ( HBQT_GC_T_HBQEvents * ) Cargo;
-   HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQEvents   cargo=%p", (void*)Cargo ) );
+   //HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQEvents   cargo=%p", (void*)Cargo ) );
    if( p )
    {
       if( p->ph )
@@ -52,11 +52,11 @@ static HB_GARBAGE_FUNC( hbqt_gcMark_HBQEvents )
 
          for( i = t_slots->listBlock.size() - 1; i >= 0 ; i-- )
          {
-//            HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQEvents marking %d", i ) );
+            //HB_TRACE( HB_TR_ALWAYS, ( "hbqt_gcMark_HBQEvents marking %d", i ) );
             if( t_slots->listBlock[ i ] != NULL )
             {
                hb_gcMark( t_slots->listBlock[ i ] );
-//               HB_TRACE( HB_TR_ALWAYS, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
+               //HB_TRACE( HB_TR_ALWAYS, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
             }
          }
       }
