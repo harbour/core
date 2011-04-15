@@ -11307,7 +11307,7 @@ STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
 
       /* command to store header files in hash array */
       #command ADD HEADER TO <hash> FILE <(cFile)> => ;
-               #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
+               #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
       ADD HEADER TO s_hHeaders FILE "color.ch"
       ADD HEADER TO s_hHeaders FILE "common.ch"

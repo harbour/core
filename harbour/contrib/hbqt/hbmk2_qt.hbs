@@ -220,7 +220,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                                 "#pragma -km+" + hb_eol() +;
                                 hb_eol() +;
                                 "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
-                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
+                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + " | RETURN %s" + hb_eol()
 
                         IF ! hb_MemoWrit( cPRG, cTmp )
                            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
@@ -3014,4 +3014,3 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
    RETURN cRet
 
 /*----------------------------------------------------------------------*/
-

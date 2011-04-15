@@ -53,7 +53,7 @@
 #include "directry.ch"
 
 #command ADD PLUGIN TO <hash> FILE <(cFile)> => ;
-         #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
+         #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
 FUNCTION __hbrun_plugins()
    LOCAL hPlugins := { => }

@@ -52,7 +52,7 @@
 
 /* command to store header files in hash array */
 #command ADD HEADER TO <hash> FILE <(cFile)> => ;
-         #pragma __streaminclude <(cFile)>|<hash>\[ <(cFile)> \] := %s
+         #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
 FUNCTION __hbrun_CoreHeaderFiles()
    STATIC s_hHeaders
