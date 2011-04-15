@@ -894,65 +894,26 @@ STATIC FUNCTION Xbp_RgbToName( nRgb )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorBG( nRGB )
-   LOCAL oldRGB, cName, cQTName
+   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
+   LOCAL oPalette
 
-   cName  := Xbp_RgbToName( nRGB )
-
-   IF hb_isNumeric( nRGB )
-      oldRGB  := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
-      cQTName := Xbp_XbpToQTName( __ObjGetClsName( self ) )
-
-      IF empty( cQTName )
-         ::setStyleSheet( "background-color: "+ cName +";" )
-      ELSE
-         ::setStyleSheet( "background-color: "+ cName +";" )
-      ENDIF
-   ELSE
-      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
-   ENDIF
+   oPalette := ::oWidget:palette()
+   oPalette:setColor( QPalette_Window, QColor( nRGB ) )
+   ::oWidget:setPalette( oPalette )
 
    RETURN oldRGB
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
-   LOCAL oldRGB, cName
+   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
+   LOCAL oPalette
 
-   cName := Xbp_RgbToName( nRGB )
-
-   IF hb_isNumeric( nRGB )
-      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
-      ::setStyleSheet( "color: "+ cName +";" )
-   ELSE
-      oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
-   ENDIF
+   oPalette := ::oWidget:palette()
+   oPalette:setColor( QPalette_WindowText, QColor( nRGB ) )
+   ::oWidget:setPalette( oPalette )
 
    RETURN oldRGB
-
-   #if 0
-   LOCAL cClass  := __ObjGetClsName( self )
-
-   IF hb_isNumeric( nRGB )
-      IF empty( ::oPalette )
-         ::oPalette := ::oWidget:palette()
-      ENDIF
-
-      DO CASE
-      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR,XBPTABPAGE'
-         ::oPalette:setColor( QPalette_ButtonText, QColor( nRGB ) )
-      OTHERWISE
-         ::oPalette:setColor( QPalette_Foreground, QColor( nRGB ) )
-         ::oPalette:setColor( QPalette_Text      , QColor( nRGB ) )
-      ENDCASE
-
-      ::oWidget:setPalette( ::oPalette )
-   ENDIF
-
-   LOCAL oColor := QColor( nRGB )
-   hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
-   ::setStyleSheet( "color: "+ oColor:name +";" )
-   RETURN Self
-   #endif
 
 /*----------------------------------------------------------------------*/
 
