@@ -1062,6 +1062,24 @@ METHOD XbpWindow:setTrackPointer( lTrack )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:currentPos()
+
+   RETURN { ::oWidget:x(), ::oWidget:y() }
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:currentSize()
+
+   IF ::className() == "HBPAPPDESKTOP"
+      RETURN { ::width(), ::height() }
+   ELSE
+      RETURN { ::oWidget:width(), ::oWidget:height() }
+   ENDIF
+
+   RETURN {}
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:setPos( aPos, lPaint )
 
    DEFAULT aPos TO ::aPos
@@ -1076,7 +1094,6 @@ METHOD XbpWindow:setPos( aPos, lPaint )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
-   LOCAL oSize, oSizeF
 
    IF empty( ::qtObject )
       DEFAULT aPos  TO ::aPos
@@ -1085,11 +1102,8 @@ METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
       IF hb_isArray( aPos ) .and. hb_isArray( aSize )
          DEFAULT lPaint TO .T.
 
-         oSize  := ::oWidget:size()
-         oSizeF := ::oWidget:frameSize()
-
          ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
-         ::oWidget:resize( aSize[ 1 ] - ( oSizeF:width()-oSize:width() ), aSize[ 2 ] )
+         ::oWidget:resize( aSize[ 1 ], aSize[ 2 ] )
       ENDIF
    ENDIF
 
@@ -1187,24 +1201,6 @@ METHOD XbpWindow:setPresParam( aPPNew )
    ENDIF
 
    RETURN ::aPresParams
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:currentPos()
-
-   RETURN { ::oWidget:x(), ::oWidget:y() }
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:currentSize()
-
-   IF ::className() == "HBPAPPDESKTOP"
-      RETURN { ::width(), ::height() }
-   ELSE
-      RETURN { ::oWidget:frameGeometry():width(), ::oWidget:frameGeometry():height() }
-   ENDIF
-
-   RETURN {}
 
 /*----------------------------------------------------------------------*/
 
