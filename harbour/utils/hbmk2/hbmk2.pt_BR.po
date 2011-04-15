@@ -893,7 +893,7 @@ msgstr "Carregando projeto do hbmake: %1$s"
 
 #: hbmk2.prg:7851 hbmk2.prg:11512
 #, c-format
-msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)."
+msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname). Do not add core Harbour libraries, they are automatically added as needed."
 msgstr "linkar com a biblioteca <libname>. <libname> deve omitir path, extensão e o prefixo 'lib' (à menos que faça parte do nome-de-arquivo)."
 
 #: hbmk2.prg:7942 hbmk2.prg:11633

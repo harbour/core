@@ -11848,7 +11848,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    LOCAL aOpt_Basic := {;
       { "-o<outname>"        , I_( "output file name" ) },;
-      { "-l<libname>"        , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)." ) },;
+      { "-l<libname>"        , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname). Do not add core Harbour libraries, they are automatically added as needed." ) },;
       { "-L<libpath>"        , I_( "additional path to search for libraries" ) },;
       { "-i<p>|-incpath=<p>" , I_( "additional path to search for headers" ) },;
       { "-static|-shared"    , I_( "link with static/shared libs" ) },;

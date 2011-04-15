@@ -804,7 +804,7 @@ msgstr ""
 
 #: hbmk2.prg:7850 hbmk2.prg:11512
 #, c-format
-msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)."
+msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname). Do not add core Harbour libraries, they are automatically added as needed."
 msgstr "szerkessze be <libname> függvénykönyvtárat. <libname>-ben nem szerepelhet útvonal, kiterjesztés és 'lib' előtag (kivéve ha az a név része)."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633

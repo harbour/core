@@ -11,10 +11,6 @@
 -mt
 hbmk2.prg
 
--lhbcplr
--lhbpp
--lhbcommon
-
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
 -lng=es_PE,hu_HU,pt_BR
