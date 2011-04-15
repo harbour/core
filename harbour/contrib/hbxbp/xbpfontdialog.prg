@@ -414,24 +414,43 @@ METHOD XbpFont:new( oPS )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFont:create( cFontName )
-   LOCAL n, cFont, nPtSize
+   LOCAL n, s, cFont, nPoint, cAttr := ""
+   LOCAL aAttr := { "bolditalic", "italic", "bold" }
 
-   IF !empty( cFontName )
-      IF ( n := at( '.', cFontName ) ) > 0
-         cFont   := '"' + substr( cFontName, n + 1 ) + '"'
-         nPtSize := val( substr( cFontName, 1, n - 1 ) )
+   IF ! empty( cFontName )
+      cFont := cFontName
+      s := lower( cFont )
+      n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
+      IF n > 0
+         cAttr := aAttr[ n ]
+         n     := at( cAttr, s )
+         cFont := substr( cFont, 1, n-1 )
+      ENDIF
+      IF ( n := at( ".", cFont ) ) > 0
+         nPoint := val( substr( cFont, 1, n-1 ) )
+         cFont  := substr( cFont, n+1 )
+      ELSE
+         nPoint := 0
+      ENDIF
+      cFont := alltrim( cFont )
+
+      IF "italic" $ cAttr
+         ::italic := .t.
+      ENDIF
+      IF "bold" $ cAttr
+         ::bold := .t.
       ENDIF
    ENDIF
+
    IF empty( cFont )
-      cFont   := ::familyName
-      nPtSize := ::nominalPointSize
+      cFont  := ::familyName
+      nPoint := ::nominalPointSize
+   ENDIF
+   IF empty( nPoint )
+      nPoint := 12
    ENDIF
 
-   IF empty( nPtSize )
-      nPtSize := 12
-   ENDIF
-
-   ::oWidget := QFont( cFont, nPtSize )
+   ::oWidget := QFont( cFont, nPoint )
 
    ::oWidget:setBold( ::bold )
    ::oWidget:setItalic( ::italic )
@@ -536,7 +555,7 @@ METHOD XbpFont:createFont()
    ::aFontInfo[  1 ] := ::familyName
    ::aFontInfo[  2 ] := ::height
    ::aFontInfo[  3 ] := ::width
-   ::aFontInfo[  4 ] := IF( ::bold, 75, -1 )
+   ::aFontInfo[  4 ] := iif( ::bold, 75, -1 )
    ::aFontInfo[  5 ] := ::italic
    ::aFontInfo[  6 ] := ::underscore
    ::aFontInfo[  7 ] := ::strikeout
@@ -551,7 +570,7 @@ METHOD XbpFont:createFont()
    //aFont := Xbp_FontCreate( ::aFontInfo )
 
    IF empty( aFont[ 1 ] )
-      RETURN nil
+      RETURN NIL
    ENDIF
 
    ::hFont     := aFont[ 15 ]

@@ -110,7 +110,7 @@ CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD init( oParent, oOwner ) CLASS XbpPartHandler
+METHOD XbpPartHandler:init( oParent, oOwner )
 
    ::oParent := oParent
    ::oOwner  := oOwner
@@ -120,7 +120,7 @@ METHOD init( oParent, oOwner ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner ) CLASS XbpPartHandler
+METHOD XbpPartHandler:create( oParent, oOwner )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -128,7 +128,7 @@ METHOD create( oParent, oOwner ) CLASS XbpPartHandler
    ::oParent := oParent
    ::oOwner  := oOwner
 
-//   DEFAULT ::oOwner TO ::oParent
+   // DEFAULT ::oOwner TO ::oParent
 
    IF hb_isObject( ::oOwner )
       ::oOwner:addAsOwned( Self )
@@ -138,7 +138,7 @@ METHOD create( oParent, oOwner ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner ) CLASS XbpPartHandler
+METHOD XbpPartHandler:configure( oParent, oOwner )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -150,7 +150,7 @@ METHOD configure( oParent, oOwner ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS XbpPartHandler
+METHOD XbpPartHandler:destroy()
 
    ::aChildren  := NIL
    ::nNameId    := NIL
@@ -163,7 +163,7 @@ METHOD destroy() CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( hEvent, mp1, mp2 ) CLASS XbpPartHandler
+METHOD XbpPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    HB_SYMBOL_UNUSED( hEvent )
    HB_SYMBOL_UNUSED( mp1 )
@@ -173,7 +173,7 @@ METHOD handleEvent( hEvent, mp1, mp2 ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD status( nStatus ) CLASS XbpPartHandler
+METHOD XbpPartHandler:status( nStatus )
    LOCAL nOldStatus := ::nStatus
 
    IF hb_isNumeric( nStatus )
@@ -184,7 +184,7 @@ METHOD status( nStatus ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD addChild( oXbp ) CLASS XbpPartHandler
+METHOD XbpPartHandler:addChild( oXbp )
 
    oXbp:nNameID := oXbp:nID
    aadd( ::aChildren, oXbp )
@@ -196,7 +196,7 @@ METHOD addChild( oXbp ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD addAsChild() CLASS XbpPartHandler
+METHOD XbpPartHandler:addAsChild()
 
    IF !empty( ::oParent )
       ::oParent:addChild( Self )
@@ -206,7 +206,7 @@ METHOD addAsChild() CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD addAsOwned( oXbp ) CLASS XbpPartHandler
+METHOD XbpPartHandler:addAsOwned( oXbp )
 
    IF ! empty( oXbp )
       aadd( ::_aOwned, oXbp )
@@ -216,7 +216,7 @@ METHOD addAsOwned( oXbp ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD childFromName( nNameId ) CLASS XbpPartHandler
+METHOD XbpPartHandler:childFromName( nNameId )
    LOCAL i
 
    FOR i := 1 TO len( ::aChildren )
@@ -229,13 +229,13 @@ METHOD childFromName( nNameId ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD childList() CLASS XbpPartHandler
+METHOD XbpPartHandler:childList()
 
    RETURN ::aChildren
 
 /*----------------------------------------------------------------------*/
 
-METHOD delChild( oXbp ) CLASS XbpPartHandler
+METHOD XbpPartHandler:delChild( oXbp )
    LOCAL n
 
    n := ascan( ::aChildren, {|o| o == oXbp } )
@@ -249,18 +249,21 @@ METHOD delChild( oXbp ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD delOwned( oXbp ) CLASS XbpPartHandler
+METHOD XbpPartHandler:delOwned( oXbp )
    LOCAL n
 
    IF ( n := ascan( ::_aOwned, {|o| o == oXbp } ) ) > 0
       hb_adel( ::_aOwned, n, .t. )
+      IF empty( ::_aOwned )
+         ::_aOwned := {}
+      ENDIF
    endif
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setName( nNameId ) CLASS XbpPartHandler
+METHOD XbpPartHandler:setName( nNameId )
    LOCAL nOldNameId := ::nNameId
 
    IF Valtype( nNameId ) == "N"
@@ -271,7 +274,7 @@ METHOD setName( nNameId ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setOwner( oOwner ) CLASS XbpPartHandler
+METHOD XbpPartHandler:setOwner( oOwner )
    LOCAL oOldXbp := ::oOwner
 
    IF valtype( oOwner ) == "O"
@@ -282,7 +285,7 @@ METHOD setOwner( oOwner ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setParent( oParent ) CLASS XbpPartHandler
+METHOD XbpPartHandler:setParent( oParent )
    LOCAL oRect
    LOCAL oOldXbp := ::oParent
 
@@ -307,13 +310,13 @@ METHOD setParent( oParent ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD notifier() CLASS XbpPartHandler
+METHOD XbpPartHandler:notifier()
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
+METHOD XbpPartHandler:moveOwned( nOffSetX, nOffSetY )
    LOCAL oXbp, oPos
 
    FOR EACH oXbp IN ::_aOwned
@@ -328,3 +331,4 @@ METHOD moveOwned( nOffSetX, nOffSetY ) CLASS XbpPartHandler
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

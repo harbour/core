@@ -167,6 +167,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     aPP
    DATA     qLayout
    DATA     nLayout
+   DATA     oFont
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -956,69 +957,23 @@ METHOD XbpWindow:setColorFG( nRGB )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setFont( oFont )
-   LOCAL cAttr := ""
 
-   // TODO:
-   //::oWidget:setFont( oFont:oWidget ) /* Works but need to be refined */
-
-   IF oFont:bold .and. oFont:italic
-      cAttr := "bolditalic"
-   ELSEIF oFont:bold
-      cAttr := "bold"
-   ELSEIF oFont:italic
-      cAttr := "italic"
-   ENDIF
-
-   ::setFontCompoundName( oFont:compoundName + " " + cAttr )
+   ::oFont := oFont
+   ::oWidget:setFont( ::oFont:oWidget )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setFontCompoundName( xFont )
-   LOCAL cOldFont, s, n, nPoint, cFont, cFace, cCSS
-   LOCAL aAttr   := { "bolditalic", "italic", "bold" }
-   LOCAL cAttr   := "normal"
-   LOCAL cWeight := "normal"
+   LOCAL cOldFont := hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
+   LOCAL oFont
 
-   cOldFont := hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
+   oFont := Xbpfont():new( Self ):create( xFont )
 
-   IF hb_isNumeric( cFont )
+   hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
 
-   ELSE
-      IF !empty( xFont )
-         cFont := xFont
-         s := lower( cFont )
-         n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
-         IF n > 0
-            cAttr := aAttr[ n ]
-            n     := at( cAttr, s )
-            cFont := substr( cFont, 1, n-1 )
-         ENDIF
-         IF ( n := at( ".", cFont ) ) > 0
-            nPoint := val( substr( cFont,1,n-1 ) )
-            cFont  := substr( cFont,n+1 )
-         ELSE
-            nPoint := 0
-         ENDIF
-         cFace := alltrim( cFont )
-
-         hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
-
-         IF cAttr == "bolditalic"
-            cAttr   := "italic"
-            cWeight := "bold"
-         ENDIF
-         IF cAttr == "bold"
-            cAttr := "normal"
-            cWeight := "bold"
-         ENDIF
-
-         cCSS := 'font-family: "'+ cFace + '"; font-style: ' + cAttr + '; font-size: ' + ;
-                                    hb_ntos( nPoint ) + 'pt; font-weight: ' + cWeight + ';'
-         ::setStyleSheet( cCSS )
-      ENDIF
-   ENDIF
+   ::setFont( oFont )
 
    RETURN cOldFont
 
