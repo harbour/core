@@ -499,8 +499,8 @@ static bool hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iW
 
 static void hb_gt_wvt_QCenterWindow( PHB_GTWVT pWVT )
 {
-   int iDTWidth  = QDesktopWidget().width();
-   int iDTHeight = QDesktopWidget().height();
+   int iDTWidth  = QDesktopWidget().screenGeometry( QDesktopWidget().primaryScreen() ).right();
+   int iDTHeight = QDesktopWidget().screenGeometry( QDesktopWidget().primaryScreen() ).bottom();
    int iWidth    = pWVT->qWnd->width();
    int iHeight   = pWVT->qWnd->height();
    pWVT->qWnd->move( ( iDTWidth - iWidth ) / 2, ( iDTHeight - iHeight ) / 2 );
@@ -567,20 +567,18 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    pWVT = hb_gt_wvt_New( pGT, iCmdShow );
    if( !pWVT )
+   {
       hb_errInternal( 10001, "Maximum number of QTC windows reached, cannot create another one", NULL, NULL );
-
+   }
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-#if 1  /* To be activated for stand alone console */
-   pWVT->qEventLoop = new QEventLoop( pWVT->qWnd );
-#endif
+   if( ! pWVT->qEventLoop )  /* To be activated for stand alone console */
+   {
+      pWVT->qEventLoop = new QEventLoop();
+   }
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
    HB_GTSELF_SEMICOLD( pGT );
-
-   /* Transferred back to its original position from REFRESH method */
-   /* Actually this is the way it must be issued */
-   hb_gt_wvt_CreateConsoleWindow( pWVT );
 }
 
 /* ********************************************************************** */
@@ -636,18 +634,22 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    HB_GTSUPER_REFRESH( pGT );
 
    pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT && pWVT->qWnd )
+   if( pWVT )
    {
       if( !pWVT->fInit )
       {
          pWVT->fInit = HB_TRUE;
+
+         #if 1
+         hb_gt_wvt_CreateConsoleWindow( pWVT );
+         #endif
+
          if( pWVT->CenterWindow )
          {
             hb_gt_wvt_QCenterWindow( pWVT );
          }
          pWVT->qWnd->setFocus();
          pWVT->qWnd->_drawingArea->setFocus();
-   HB_TRACE( HB_TR_ALWAYS, ("hb_gt_wvt_Refresh(%p)", pGT) );
          pWVT->qWnd->show();
          pWVT->qWnd->update();
       }
@@ -715,7 +717,13 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    {
       if( pWVT->qEventLoop ) /* Is the window already open */
       {
-         pWVT->qEventLoop->processEvents();
+         pWVT->qEventLoop->processEvents( QEventLoop::AllEvents );
+         hb_releaseCPU();
+      }
+      else
+      {
+         QApplication::processEvents( QEventLoop::AllEvents );
+         hb_releaseCPU();
       }
       fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
    }
@@ -784,53 +792,6 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
       }
    }
 #  endif
-
-#if 0
-#if defined( UNICODE )
-   /*
-    * We are displaying text in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost )
-         HB_GTWVT_GET( pGT )->hostCDP = cdpHost;
-   }
-#else
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      int i;
-
-      for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = ( HB_BYTE ) i;
-
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         for( i = 0; i < cdpHost->nChars; ++i )
-         {
-            pWVT->chrTransTbl[ ( HB_BYTE ) cdpHost->CharsUpper[ i ] ] =
-                               ( HB_BYTE ) cdpTerm->CharsUpper[ i ];
-            pWVT->chrTransTbl[ ( HB_BYTE ) cdpHost->CharsLower[ i ] ] =
-                               ( HB_BYTE ) cdpTerm->CharsLower[ i ];
-         }
-      }
-   }
-#endif
-#endif
 
    return HB_TRUE;
 }
@@ -1306,14 +1267,18 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_WIDGET:
-          //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QWidget( pWVT->qWnd, false ) );
-          pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMainWindow( pWVT->qWnd, false ), "HB_QMAINWINDOW" ) );
-          break;
+         //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QWidget( pWVT->qWnd, false ) );
+         pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMainWindow( pWVT->qWnd, false ), "HB_QMAINWINDOW" ) );
+         break;
 
       case HB_GTI_DRAWINGAREA:
-          //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QMainWindow( pWVT->qWnd->_drawingArea, false ) );
-          pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( pWVT->qWnd->_drawingArea, false ), "HB_QWIDGET" ) );
-          break;
+         //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QMainWindow( pWVT->qWnd->_drawingArea, false ) );
+         pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( pWVT->qWnd->_drawingArea, false ), "HB_QWIDGET" ) );
+         break;
+
+      case HB_GTI_EVENTLOOP:
+
+         break;
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );

@@ -75,6 +75,7 @@
 #define HB_GTI_WIDGET          2001
 #define HB_GTI_DRAWINGAREA     2002
 #define HB_GTI_DISABLE         2003
+#define HB_GTI_EVENTLOOP       2004
 
 /*----------------------------------------------------------------------*/
 
@@ -289,7 +290,7 @@ METHOD XbpCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtReload( "QTC" )
    ::pGT := hb_gtSelect()
 
-   /* CreateWindow() be forced to execute */
+   /* Creates physical window */
    ? " "
 
    ::oWidget := hb_gtInfo( HB_GTI_WIDGET )
@@ -314,6 +315,7 @@ METHOD XbpCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    IF ::visible
       ::oWidget:show()
+      ::oWidget:setFocus()
       ::lHasInputFocus := .t.
    ENDIF
 
@@ -358,18 +360,14 @@ METHOD XbpCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpCrt:destroy()
 
+   ::oMDI := NIL
+
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
    ENDIF
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-
-   if ::lModal
-      //hb_gtInfo( HB_GTI_ENABLE  , ::pGTp )
-      hb_gtSelect( ::pGTp )
-      //hb_gtInfo( HB_GTI_SETFOCUS, ::pGTp )
    ENDIF
 
    ::pGT  := NIL

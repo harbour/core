@@ -320,6 +320,8 @@ typedef struct
 
 #define HB_GTI_WIDGET          2001
 #define HB_GTI_DRAWINGAREA     2002
+#define HB_GTI_DISABLE         2003
+#define HB_GTI_EVENTLOOP       2004
 
 HB_EXTERN_BEGIN
 extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
