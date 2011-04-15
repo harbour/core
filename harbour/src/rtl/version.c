@@ -174,6 +174,11 @@ HB_FUNC( HB_VERSION )
    }
 }
 
+HB_FUNC( HB_OSBITWIDTH )
+{
+   hb_retni( hb_verHostBitWidth() );
+}
+
 HB_FUNC( HB_OSISWIN9X )
 {
    hb_retl( hb_iswin9x() );

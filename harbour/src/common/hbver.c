@@ -66,6 +66,7 @@
  *    hb_verPlatform() (support for detecting Windows NT on DOS)
  *    hb_verPlatform() (rearrangment and cleanup)
  *    hb_verPlatform() (Wine detection and some more)
+ *    hb_verHostBitWidth()
  *
  * See COPYING for licensing terms.
  *
@@ -150,6 +151,45 @@ const char * hb_verHostCPU( void )
    return "";
 }
 #endif
+
+int hb_verHostBitWidth( void )
+{
+   int nBits;
+
+   /* Inherit the bit width we're building for */
+   #if   defined( HB_ARCH_64BIT )
+      nBits = 64;
+   #elif defined( HB_ARCH_32BIT )
+      nBits = 32;
+   #elif defined( HB_ARCH_16BIT )
+      nBits = 16;
+   #else
+      nBits = 0;
+   #endif
+
+   #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_64 )
+   {
+      typedef BOOL ( WINAPI * P_ISWOW64PROCESS )( HANDLE, PBOOL );
+
+      P_ISWOW64PROCESS pIsWow64Process = ( P_ISWOW64PROCESS ) GetProcAddress( GetModuleHandle( TEXT( "kernel32" ) ), "IsWow64Process" );
+
+      if( pIsWow64Process )
+      {
+         BOOL bIsWow64 = FALSE;
+
+         if( ! pIsWow64Process( GetCurrentProcess(), &bIsWow64 ) )
+         {
+            /* Try alternative method? */
+         }
+
+         if( bIsWow64 )
+            nBits = 64;
+      }
+   }
+   #endif
+
+   return nBits;
+}
 
 /* NOTE: OS() function, as a primary goal will detect the version number
          of the target platform. As an extra it may also detect the host OS.

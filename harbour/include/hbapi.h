@@ -1138,6 +1138,7 @@ extern HB_EXPORT void *       hb_libSymAddr( PHB_ITEM pDynLib, const char * pszS
 extern HB_EXPORT void         hb_dynCall( int iFuncFlags, void * pFunction, int iParams, int iFirst, int * piArgFlags );
 
 /* misc */
+extern HB_EXPORT int          hb_verHostBitWidth( void );    /* retrieves bit width of host OS */
 extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
 extern HB_EXPORT const char * hb_verPlatformMacro( void );   /* retrieves a constant string with OS platform (as it appears in __PLATFORM__* macro) */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
