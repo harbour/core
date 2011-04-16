@@ -1468,6 +1468,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
       IF Empty( l_cHB_INSTALL_PREFIX )
+         l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
+#if 0
          DO CASE
          CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
@@ -1481,6 +1483,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
             RETURN _ERRLEV_FAILHBDETECT
          ENDCASE
+#endif
       ENDIF
 
       /* Detect special non-installed dir layout (after simple 'make') */
@@ -1496,10 +1499,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
              hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
                                           hb_ps() + "hbvm.h" )
          l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
-      ENDIF
-
       /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
-      IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+      ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
                                       hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
                                       hb_ps() + "hbvm.h" )
          IF Empty( l_cHB_INSTALL_BIN )
@@ -1515,6 +1516,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF Empty( l_cHB_INSTALL_INC )
             l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
          ENDIF
+      ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
+                                          hb_ps() + "hbvm.h" )
+         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
+         RETURN _ERRLEV_FAILHBDETECT
       ENDIF
 
       #if defined( __PLATFORM__UNIX )

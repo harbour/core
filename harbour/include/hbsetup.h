@@ -410,6 +410,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_ANDROID /* Experimental */
+   #if defined( __ANDROID__ )
+      #define HB_OS_ANDROID
+   #endif
+#endif
+
 #ifndef HB_OS_CYGWIN
    #if defined( __CYGWIN__ )
       #define HB_OS_CYGWIN
@@ -432,6 +438,7 @@
        defined( HB_OS_VXWORKS ) || \
        defined( HB_OS_BEOS ) || \
        defined( HB_OS_SYMBIAN ) || \
+       defined( HB_OS_ANDROID ) || \
        defined( HB_OS_CYGWIN ) || \
        defined( HB_OS_MINIX )
       #define HB_OS_UNIX

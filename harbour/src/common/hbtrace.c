@@ -63,6 +63,8 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+#elif defined( HB_OS_ANDROID )
+   #include <android/log.h>
 #elif defined( HB_OS_UNIX ) && \
       ! defined( __WATCOMC__ ) && \
       ! defined( HB_OS_VXWORKS ) && \
@@ -282,7 +284,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
             TCHAR lp[ 1024 ];
          } buf;
 
-
          /* We add \n at the end of the buffer to make WinDbg display look readable. */
          if( proc )
             hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d:%s() %s %s\n",
@@ -297,6 +298,29 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
             buf.lp[ HB_SIZEOFARRAY( buf.lp ) - 1 ] = 0;
          #endif
          OutputDebugString( buf.lp );
+      }
+#  elif defined( HB_OS_ANDROID )
+      {
+         char psz[ 1024 ];
+         int slevel;
+
+         switch( level )
+         {
+            case HB_TR_ALWAYS:  slevel = ANDROID_LOG_ASSERT;  break;
+            case HB_TR_FATAL:   slevel = ANDROID_LOG_VERBOSE; break;
+            case HB_TR_ERROR:   slevel = ANDROID_LOG_ERROR    break;
+            case HB_TR_WARNING: slevel = ANDROID_LOG_WARN;    break;
+            case HB_TR_INFO:    slevel = ANDROID_LOG_INFO;    break;
+            case HB_TR_DEBUG:   slevel = ANDROID_LOG_DEBUG;   break;
+            default:            slevel = ANDROID_LOG_DEBUG;
+         }
+
+         if( proc )
+            hb_snprintf( psz, sizeof( psz ), "%s:%d:%s() %s", file, line, proc, pszLevel );
+         else
+            hb_snprintf( psz, sizeof( psz ), "%s:%d: %s", file, line, pszLevel );
+
+         __android_log_print( slevel, psz, message );
       }
 #  else
       {
