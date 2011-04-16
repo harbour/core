@@ -327,7 +327,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:qtObject := hbide_getUI( "mainwindow" )
    ::oDlg:create( , , , , , .f. )
 
-   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
+   ::oDlg:oWidget:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
    ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ) }
    ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
@@ -1546,7 +1546,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDockPT, , { 0,0 }, { 100,10 }, , .t. )
 
-   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
+   ::oProjTree:oWidget:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
    ::oProjTree:oWidget:setMinimumWidth( 100 )
    ::oProjTree:oWidget:setSizePolicy( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oProjTree:oWidget:setIconSize( QSize( 12,12 ) )
@@ -1867,7 +1867,7 @@ METHOD IdeDocks:getMarkWidget( nIndex )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:animateComponents( nMode )
-   LOCAL cStyle, oView
+   LOCAL cStyle, oView, oMenu
 
    IF nMode == NIL
       ::oIde:nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
@@ -1879,10 +1879,13 @@ METHOD IdeDocks:animateComponents( nMode )
    ::qAnimateAction:setChecked( ::nAnimantionMode != HBIDE_ANIMATION_NONE )
 
    /* Main Window */
-   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
+   ::oDlg:oWidget:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
    /* Main Menu Bar with all its submenus */
-   ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ), GetStyleSheet( "QMenuPop", nMode ) )
+   ::oDlg:menubar():oWidget:setStyleSheet( GetStyleSheet( "QMenuBar", nMode ) )
+   FOR EACH oMenu IN ::oDlg:menubar():childList()
+      oMenu:oWidget:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   NEXT
 
    /* Toolbars */
    ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
@@ -1925,7 +1928,7 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oQScintillaDock:oWidget      : setStyleSheet( cStyle )
    ::oSourceThumbnailDock:oWidget : setStyleSheet( cStyle )
 
-   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
+   ::oProjTree:oWidget:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
 
    /* Edior Tab Widget */
    FOR EACH oView IN ::aViews

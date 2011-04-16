@@ -324,7 +324,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:imageWidth  := 20
    oTBar:imageHeight := 20
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
-   oTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+   oTBar:oWidget:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    oTBar:oWidget:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
    oTBar:oWidget:setFocusPolicy( Qt_NoFocus )
 
@@ -385,7 +385,7 @@ METHOD IdeActions:buildMainMenu()
    // LOCAL cTheme := "QMenuPop"
 
    oMenuBar := ::oDlg:MenuBar()
-   //oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
+   //oMenuBar:oWidget:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
 
    /*----------------------------------------------------------------------------*/
    /*                                   File                                     */
