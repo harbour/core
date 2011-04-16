@@ -332,7 +332,7 @@ METHOD XbpFontDialog:XbpFontObject()
    oXbp:nominalPointSize := ::oFont:pointSize()
    oXbp:weightClass      := ::oFont:weight()
 
-   oXbp:setCompoundName( hb_ntos( oXbp:nominalPointSize ) + "." + oXbp:familyName )
+   oXbp:setCompoundName( trim( hb_ntos( oXbp:nominalPointSize ) + "." + oXbp:familyName + " " + iif( oXbp:bold, "bold", "" ) + iif( oXbp:italic, "italic", "" ) ) )
 
    oXbp:create()
 

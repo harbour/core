@@ -189,8 +189,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   isDerivedFrom( cClassORoObject )
    METHOD   setPresParam( aPPNew )
    METHOD   setCSSAttribute( cAttr, cCSS )
-   METHOD   setStyleSheet( cAttr, cCSS )
-   METHOD   getCSS( nAttr, xValue )
 
    DATA     cTitle                                INIT    ""
    METHOD   title( cTitle )                       SETGET
@@ -269,6 +267,10 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   postCreate()
 
    ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget )
+
+   PROTECTED:
+   METHOD   setStyleSheet( cAttr, cCSS )
+   METHOD   getCSS( nAttr, xValue )
 
    ENDCLASS
 
