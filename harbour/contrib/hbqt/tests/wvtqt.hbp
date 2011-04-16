@@ -2,20 +2,13 @@
 # $Id$
 #
 
--es2
--w3
--n
+@hbmk.hbm
+
 -mt
 
 -gtwvt
 
 -d__WITH_WVT__
 
-#../../hbxbp/hbxbp.hbc
-../hbqtcore.hbc
-../hbqtgui.hbc
-../hbqtnetwork.hbc
-
 wvtqt.prg
 browqt.prg
-
