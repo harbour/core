@@ -316,7 +316,7 @@ extern void *       hb_stackGetGT( void );
 extern void         hb_stackSetGT( void * );
 extern PHB_STACKRDD hb_stackRDD( void );
 
-extern void **      hb_stackDebugInfo( void );
+extern HB_EXPORT void ** hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDec( void );
