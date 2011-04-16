@@ -138,8 +138,8 @@ DispMem( "oDlg := GuiStdDialog" )
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
 
    /* Make background color of :drawingArea different */
-   oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
    oDa:setFontCompoundName( "10.Tohama italics" )
+   oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
    //oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
    #ifdef __HARBOUR__
@@ -415,7 +415,8 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_ToolBar( oDA )
-   LOCAL oTBar, s, txt_:= {}
+   LOCAL oTBar
+   //LOCAL s, txt_:= {}
 
    // Create an XbpToolBar object and
    // add it at the top of the dialog
@@ -449,7 +450,7 @@ FUNCTION Build_ToolBar( oDA )
    oTBar:transparentColor := GRA_CLR_INVALID
    oTBar:buttonClick := {|oButton| ExeToolbar( oButton, oDa ) }
 
-   #ifdef __HARBOUR__
+   #ifdef __xHARBOUR__
    aadd( txt_, ' ' )
    aadd( txt_, ' QToolBar {                                                    ' )
    aadd( txt_, '     background: cyan;                                         ' )
@@ -464,7 +465,7 @@ FUNCTION Build_ToolBar( oDA )
    s := ""
    aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
 
-   oTBar:setStyleSheet( s )
+   oTBar:setStyleSheet( "TOOLBAR", s )
    #endif
 
    RETURN nil
@@ -767,7 +768,6 @@ FUNCTION Build_PushButton( oDA )
     oXbp:create( , , {180,200}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
     /* Harbour supports presentation colors */
-    //oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
     oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
 
     oXbp := XbpPushButton():new( oDA )
@@ -924,8 +924,8 @@ FUNCTION Build_TreeView( oWnd )
    oTree:hasButtons := .T.
    oTree:create()
    oTree:itemCollapsed := {|oItem,aRect,oSelf| HB_SYMBOL_UNUSED( aRect ), HB_SYMBOL_UNUSED( oSelf ), MsgBox( oItem:caption ) }
-   #ifdef __HARBOUR__
-   oTree:setStyleSheet( GetTreeStyleSheet() )
+   #ifdef __xHARBOUR__
+   oTree:setStyleSheet( "MYTREE", GetTreeStyleSheet() )
    #endif
    FOR i := 1 TO 5
       WorkAreaInfo( oTree, i )
@@ -1276,8 +1276,8 @@ FUNCTION Build_HTMLViewer( oWnd )
    oFrm:type := XBPSTATIC_TYPE_RECESSEDBOX
    oFrm:options := XBPSTATIC_FRAMETHICK
    oFrm:create()
-   #ifdef __HARBOUR__
-   //oFrm:setStyleSheet( "border: 2px solid yellow;" )
+   #ifdef __xHARBOUR__
+   //oFrm:setStyleSheet( "HTML", "border: 2px solid yellow;" )
    #endif
 
    sz_:= oFrm:currentSize()
@@ -1639,7 +1639,7 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_Browse( oWnd )
-   LOCAL aPresParam, oXbpBrowse, oXbpColumn, s
+   LOCAL aPresParam, oXbpBrowse, oXbpColumn
    LOCAL cPath := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps()
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
@@ -1677,9 +1677,9 @@ FUNCTION Build_Browse( oWnd )
 
    oXbpBrowse:headerRbDown  := {|mp1, mp2, o| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( o ) }
 
-   #ifdef __HARBOUR__
+   #ifdef __xHARBOUR__
    s := "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 gray); "
-   oXbpBrowse:setStyleSheet( s )
+   oXbpBrowse:setStyleSheet( "XBPBROWSE", s )
    #endif
 
    aPresParam := {}
@@ -1702,7 +1702,7 @@ FUNCTION Build_Browse( oWnd )
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:type     := XBPCOL_TYPE_FILEICON
    cPath := hb_DirBase() + hb_ps()
-   oXbpColumn:dataLink := {|n| n := recno(), IF( n%3 == 0, cPath + "abs3.png", IF( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
+   oXbpColumn:dataLink := {|n| n := recno(), iif( n%3 == 0, cPath + "abs3.png", iif( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
    oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
@@ -1726,7 +1726,7 @@ FUNCTION Build_Browse( oWnd )
 
    oXbpColumn            := XbpColumn():new()
    oXbpColumn:dataLink   := {|| test->Last }
-   oXbpColumn:colorBlock := {|x| IF( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
+   oXbpColumn:colorBlock := {|x| iif( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
    oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
@@ -1838,7 +1838,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
-   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                      } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "City"                     } )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
@@ -1861,7 +1861,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
-   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                      } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "St"                       } )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
@@ -1884,7 +1884,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
-   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                      } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Zip-USA"                  } )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
@@ -1907,7 +1907,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
-   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Generic"                  } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Notes"                    } )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )

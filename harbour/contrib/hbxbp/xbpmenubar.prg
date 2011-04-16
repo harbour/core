@@ -147,8 +147,6 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   setStyle()
    METHOD   numItems()                            INLINE len( ::aMenuItems )
 
-   METHOD   setStyleSheet( cCSS, cCSSPops )
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -603,21 +601,8 @@ METHOD XbpMenuBar:onMenuKey( ... )
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:setStyleSheet( cCSS, cCSSPops )
-   LOCAL oMenu
-
-   FOR EACH oMenu IN ::aChildren
-      oMenu:setStyleSheet( cCSSPops )
-   NEXT
-   ::oWidget:setStyleSheet( cCSS )
-
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
-
 METHOD xbpMenuBar:setStyle()
-   LOCAL txt_:={}
-   LOCAL s
+   LOCAL s, txt_:={}
 
    aadd( txt_, 'QMenuBar {                                                                ' )
    aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,             ' )
@@ -667,7 +652,6 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   setTitle( cTitle )
    METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
-   METHOD   setStyleSheet( cCSS )
 
    ENDCLASS
 
@@ -723,18 +707,6 @@ METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
-
-METHOD xbpMenu:setStyleSheet( cCSS )
-   LOCAL oMenu
-
-   FOR EACH oMenu IN ::aChildren
-      oMenu:setStyleSheet( cCSS )
-   NEXT
-   ::oWidget:setStyleSheet( cCSS )
-
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
 
 METHOD xbpMenu:setStyle()
    LOCAL s, txt_:={}

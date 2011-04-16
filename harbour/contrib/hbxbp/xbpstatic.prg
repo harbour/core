@@ -298,9 +298,9 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
 
          ELSEIF hb_isChar( ::caption )               /* $HARBOUR$ */
             IF ::options == XBPSTATIC_BITMAP_SCALED
-               ::oWidget:setStyleSheet( 'border-image: url('+ ::caption +');' )
+               ::setCSSAttribute( "XBPSTATIC_BITMAP_SCALED"   , 'border-image: url(' + ::caption + ');' )
             ELSE
-               ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
+               ::setCSSAttribute( "XBPSTATIC_BITMAP_NONSCALED", 'background: url(' + ::caption + '); repeat-xy;' )
             ENDIF
          ENDIF
 

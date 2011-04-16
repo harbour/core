@@ -450,6 +450,8 @@ METHOD XbpFont:create( cFontName )
       nPoint := 12
    ENDIF
 
+   ::setCompoundName( hb_ntos( nPoint ) + "." + cFont + " " + cAttr )
+
    ::oWidget := QFont( cFont, nPoint )
 
    ::oWidget:setBold( ::bold )

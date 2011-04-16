@@ -168,6 +168,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     qLayout
    DATA     nLayout
    DATA     oFont
+   DATA     aCSS                                  INIT   { { "", "" } }
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -187,7 +188,9 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   setSize( aSize, lPaint )
    METHOD   isDerivedFrom( cClassORoObject )
    METHOD   setPresParam( aPPNew )
-   METHOD   setStyleSheet( cCSS )                 INLINE  ::oWidget:setStyleSheet( ::oWidget:styleSheet() + " " + cCSS )
+   METHOD   setCSSAttribute( cAttr, cCSS )
+   METHOD   setStyleSheet( cAttr, cCSS )
+   METHOD   getCSS( nAttr, xValue )
 
    DATA     cTitle                                INIT    ""
    METHOD   title( cTitle )                       SETGET
@@ -336,6 +339,23 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::aPP := NIL
 
+   /* Initialize CSS parameters */
+   IF ( i := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_FGCLR } ) ) > 0
+      IF ! ( ::aPresParams[ i, 2 ] == NIL )
+         ::setCSSAttribute( "XBP_PP_FGCLR", ::getCSS( XBP_PP_FGCLR, ::aPresParams[ i, 2 ] ) )
+      ENDIF
+   ENDIF
+   IF ( i := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_BGCLR } ) ) > 0
+      IF ! ( ::aPresParams[ i, 2 ] == NIL )
+         ::setCSSAttribute( "XBP_PP_BGCLR", ::getCSS( XBP_PP_BGCLR, ::aPresParams[ i, 2 ] ) )
+      ENDIF
+   ENDIF
+   IF ( i := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COMPOUNDNAME } ) ) > 0
+      IF ! ( ::aPresParams[ i, 2 ] == NIL )
+         ::setCSSAttribute( "XBP_PP_COMPOUNDNAME", ::getCSS( XBP_PP_COMPOUNDNAME, ::aPresParams[ i, 2 ] ) )
+      ENDIF
+   ENDIF
+
    DO CASE
    CASE cClass $ 'XBPDIALOG,XBPDRAWINGAREA'
       hbxbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_DIALOGBACKGROUND )
@@ -384,6 +404,7 @@ METHOD XbpWindow:setQtProperty( cProperty )
 METHOD XbpWindow:postCreate()
 
    ::status := iif( ::oWidget:hasValidPointer(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
+   ::setStyleSheet()
 
    RETURN Self
 
@@ -886,41 +907,131 @@ METHOD XbpWindow:lockUpdate()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Xbp_RgbToName( nRgb )
-   LOCAL oColor := QColor( nRGB )
-   LOCAL cName := oColor:name
-
+   LOCAL cName := QColor( nRGB ):name()
    RETURN '#'+substr( cName,6 ) + substr( cName,4,2 ) + substr( cName,2,2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setColorBG( nRGB )
-   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
-   LOCAL oPalette
+METHOD XbpWindow:setStyleSheet( cAttr, cCSS )
+   LOCAL n, s := ""
 
-   oPalette := ::oWidget:palette()
-   oPalette:setColor( QPalette_Window, QColor( nRGB ) )
-   ::oWidget:setPalette( oPalette )
+   IF ! empty( cAttr )
+      ::setCSSAttribute( cAttr, cCSS )
+   ENDIF
+   FOR n := 1 TO len( ::aCSS )
+      s += ::aCSS[ n,2 ] + " "
+   NEXT
+
+   ::oWidget:setStyleSheet( "" )                /* Must Enforce It */
+   ::oWidget:setStyleSheet( s )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setCSSAttribute( cAttr, cCSS )
+   LOCAL n
+
+   DEFAULT cCSS TO ""
+
+   IF ( n := ascan( ::aCSS, {|e_| e_[ 1 ] == cAttr } ) ) == 0
+      aadd( ::aCSS, { cAttr, cCSS } )
+   ELSE
+      ::aCSS[ n, 2 ] := cCSS
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:getCSS( nAttr, xValue )
+   LOCAL s, n, nPoint, cFont, cFace, cCSS
+   LOCAL aAttr   := { "bolditalic", "italic", "bold" }
+   LOCAL cAttr   := "normal"
+   LOCAL cWeight := "normal"
+
+   SWITCH nAttr
+
+   CASE XBP_PP_COMPOUNDNAME
+      cFont := xValue
+      s := lower( cFont )
+      n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
+      IF n > 0
+         cAttr   := aAttr[ n ]
+         n       := at( cAttr, s )
+         cFont   := substr( cFont, 1, n-1 )
+      ENDIF
+      IF ( n := at( ".", cFont ) ) > 0
+         nPoint  := val( substr( cFont,1,n-1 ) )
+         cFont   := substr( cFont,n+1 )
+      ELSE
+         nPoint := 0
+      ENDIF
+      cFace := alltrim( cFont )
+
+      IF cAttr == "bolditalic"
+         cAttr   := "italic"
+         cWeight := "bold"
+      ENDIF
+      IF cAttr == "bold"
+         cAttr   := "normal"
+         cWeight := "bold"
+      ENDIF
+
+      cCSS := 'font-family: "'+ cFace + '"; font-style: ' + cAttr + '; font-size: ' + ;
+                                 hb_ntos( nPoint ) + 'pt; font-weight: ' + cWeight + ';'
+      RETURN cCSS
+
+   CASE XBP_PP_BGCLR
+      RETURN "background-color: " + Xbp_RgbToName( xValue ) + ";"
+
+   CASE XBP_PP_FGCLR
+      RETURN "color: " + Xbp_RgbToName( xValue ) + ";"
+
+   ENDSWITCH
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setColorBG( nRGB )
+   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
+
+   IF hb_isNumeric( nRGB )
+      hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
+      ::setCSSAttribute( "XBP_PP_BGCLR", ::getCSS( XBP_PP_BGCLR, nRGB ) )
+      ::setStyleSheet()
+   ENDIF
 
    RETURN oldRGB
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
-   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
-   LOCAL oPalette
+   LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
 
-   oPalette := ::oWidget:palette()
-   oPalette:setColor( QPalette_WindowText, QColor( nRGB ) )
-   ::oWidget:setPalette( oPalette )
+   IF hb_isNumeric( nRGB )
+      hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
+      ::setCSSAttribute( "XBP_PP_FGCLR", ::getCSS( XBP_PP_FGCLR, nRGB ) )
+      ::setStyleSheet()
+   ENDIF
 
    RETURN oldRGB
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setFont( oFont )
+   LOCAL cAttr := ""
 
-   ::oFont := oFont
-   ::oWidget:setFont( ::oFont:oWidget )
+   IF oFont:bold .and. oFont:italic
+      cAttr := "bolditalic"
+   ELSEIF oFont:bold
+      cAttr := "bold"
+   ELSEIF oFont:italic
+      cAttr := "italic"
+   ENDIF
+
+   ::setFontCompoundName( oFont:compoundName + " " + cAttr )
 
    RETURN Self
 
@@ -928,13 +1039,13 @@ METHOD XbpWindow:setFont( oFont )
 
 METHOD XbpWindow:setFontCompoundName( xFont )
    LOCAL cOldFont := hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
-   LOCAL oFont
 
-   oFont := Xbpfont():new( Self ):create( xFont )
-
-   hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
-
-   ::setFont( oFont )
+   IF ! hb_isNumeric( xFont )
+      IF ! empty( xFont )
+         ::setCSSAttribute( "XBP_PP_COMPOUNDNAME", ::getCSS( XBP_PP_COMPOUNDNAME, xFont ) )
+         ::setStyleSheet()
+      ENDIF
+   ENDIF
 
    RETURN cOldFont
 
