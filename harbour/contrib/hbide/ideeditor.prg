@@ -1430,7 +1430,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
-HB_TRACE( HB_TR_ALWAYS, "..........................................................IdeEditor:destroy()", 0 )
+HB_TRACE( HB_TR_DEBUG, "..........................................................IdeEditor:destroy()", 0 )
    ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
 
    IF !empty( ::qTimerSave )
@@ -1480,7 +1480,7 @@ HB_TRACE( HB_TR_ALWAYS, ".......................................................
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-HB_TRACE( HB_TR_ALWAYS, "................................................................IdeEditor:destroy()", 1 )
+HB_TRACE( HB_TR_DEBUG, "................................................................IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

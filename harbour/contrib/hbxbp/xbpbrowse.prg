@@ -975,7 +975,7 @@ METHOD XbpBrowse:manageCommitData( qWidget )
    LOCAL oCol    := ::columns[ ::colPos ]
    LOCAL cTyp    := valtype( eval( oCol:block ) )
 
-   HB_TRACE( HB_TR_ALWAYS, cTxt )
+   HB_TRACE( HB_TR_DEBUG, cTxt )
    DO CASE
    CASE cTyp == "C"
       oCol:setData( cTxt )
@@ -994,7 +994,7 @@ METHOD XbpBrowse:manageCommitData( qWidget )
 METHOD XbpBrowse:manageEditorClosed( pWidget, nHint )
 
    pWidget:close()
-//HB_TRACE( HB_TR_ALWAYS, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
+//HB_TRACE( HB_TR_DEBUG, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
    DO CASE
    CASE nHint == QAbstractItemDelegate_NoHint                 /* 0  RETURN is presses    */
 

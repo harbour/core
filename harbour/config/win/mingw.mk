@@ -35,6 +35,7 @@ endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
+   # CFLAGS += -Wextra
 else
    CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
    ifneq ($(HB_BUILD_MODE),cpp)

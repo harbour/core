@@ -709,7 +709,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    int  c = 0;
    bool fKey = HB_FALSE;
 
-   //HB_TRACE( HB_TR_ALWAYS, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
+   //HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
    pWVT = HB_GTWVT_GET( pGT );
@@ -2759,5 +2759,3 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 }
 #endif
 /*----------------------------------------------------------------------*/
-
-

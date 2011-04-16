@@ -222,7 +222,7 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
       t_nEventIn := 1
    ENDIF
 
-//HB_TRACE( HB_TR_ALWAYS, "SetAppEvent ... ", t_nEventIn, nEvent, oXbp:className(), oXbp:title )
+//HB_TRACE( HB_TR_DEBUG, "SetAppEvent ... ", t_nEventIn, nEvent, oXbp:className(), oXbp:title )
 
    t_events[ t_nEventIn, 1 ] := nEvent
    t_events[ t_nEventIn, 2 ] := mp1

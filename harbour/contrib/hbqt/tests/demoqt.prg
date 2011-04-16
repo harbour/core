@@ -78,7 +78,7 @@ STATIC oSys, oMenuSys, oActShow, oActHide
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events( e )
-   HB_TRACE( HB_TR_ALWAYS, "Key Pressed", e:key() )
+   HB_TRACE( HB_TR_DEBUG, "Key Pressed", e:key() )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -391,7 +391,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
-*  oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
+*  oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oTV:hovered" ) } )
    oDirModel := QDirModel()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
@@ -407,7 +407,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView( oWnd )
    oListBox:setMouseTracking( .t. )
-*  oListBox:connect( "hovered()", {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
+*  oListBox:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList()
 

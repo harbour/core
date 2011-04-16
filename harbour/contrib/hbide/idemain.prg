@@ -369,9 +369,9 @@ METHOD HbIde:destroy()
    LOCAL xTmp
 
    /* Very important - destroy resources */
-   HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------" )
-   HB_TRACE( HB_TR_ALWAYS, "Before    ::oIde:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+   HB_TRACE( HB_TR_DEBUG, "------------------------------------------------------" )
+   HB_TRACE( HB_TR_DEBUG, "Before    ::oIde:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_DEBUG, "                                                      " )
 
    ::oSBar := NIL
    ::oMenu := NIL
@@ -516,9 +516,9 @@ METHOD HbIde:destroy()
    ::qCompModel               := NIL
    ::qProtoList               := NIL
 
-   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-   HB_TRACE( HB_TR_ALWAYS, "After     ::oIde:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
+   HB_TRACE( HB_TR_DEBUG, "                                                      " )
+   HB_TRACE( HB_TR_DEBUG, "After     ::oIde:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_DEBUG, "======================================================" )
 
    RETURN self
 
@@ -1198,7 +1198,7 @@ METHOD HbIde:manageFocusInEditor()
    LOCAL qEdit
 
    IF !empty( qEdit := ::oEM:getEditCurrent() )
-//      HB_TRACE( HB_TR_ALWAYS, 1000001 )
+//      HB_TRACE( HB_TR_DEBUG, 1000001 )
       qEdit:setFocus( 0 )
    ENDIF
 

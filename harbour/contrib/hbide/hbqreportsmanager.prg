@@ -1555,7 +1555,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
    qList := qInfo:availablePrinters()
    FOR i := 0 TO qList:size() - 1
       qStr := qList:at( i )
-//HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
+//HB_TRACE( HB_TR_DEBUG, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
    NEXT
    qPrinter:setOutputFormat( QPrinter_PdfFormat )
    qPrinter:setOrientation( ::qScene:orientation() )
@@ -1597,7 +1597,7 @@ METHOD HbqReportsManager:printReport( qPrinter )
          qRectF     := QRectF( TO_MMS( qRectF:x() ), TO_MMS( qRectF:y() ), TO_MMS( qRectF:width() ), TO_MMS( qRectF:height() ) )
 
          qT := oHqrObject:transform()
-//HB_TRACE( HB_TR_ALWAYS, qT:m11(), qT:m12(), qT:m13(), qT:m21(), qT:m22(), qT:m23(), qT:m31(), qT:m32(), qT:m33() )
+//HB_TRACE( HB_TR_DEBUG, qT:m11(), qT:m12(), qT:m13(), qT:m21(), qT:m22(), qT:m23(), qT:m31(), qT:m32(), qT:m33() )
          qT:translate( 0,0 )
          qPainter:resetMatrix()
          qPainter:setWorldTransform( qT )

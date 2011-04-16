@@ -180,14 +180,14 @@ METHOD XbpFileDialog:execSlot( cSlot, p )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:_destroy()
-   HB_TRACE( HB_TR_ALWAYS, "XbpFileDialog:_destroy()" )
+   HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:_destroy()" )
    RETURN ::destroy()
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:destroy()
    IF !empty( ::oWidget )
-      HB_TRACE( HB_TR_ALWAYS, "XbpFileDialog:destroy()" )
+      HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:destroy()" )
       ::disconnect()
       ::xbpWindow:destroy()
    ENDIF
