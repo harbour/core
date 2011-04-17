@@ -92,54 +92,22 @@ ifneq ($(HB_BUILD_NAME),)
    ifeq ($(HB_BUILD_NAME),.r)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
-      HB_BUILD_WINUNI := no
-      HB_BUILD_MODE ?= c
-   else
-   ifeq ($(HB_BUILD_NAME),.ru)
-      HB_BUILD_DEBUG := no
-      HB_BUILD_OPTIM := yes
-      HB_BUILD_WINUNI := yes
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.rp)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
-      HB_BUILD_WINUNI := no
-      HB_BUILD_MODE ?= cpp
-   else
-   ifeq ($(HB_BUILD_NAME),.rpu)
-      HB_BUILD_DEBUG := no
-      HB_BUILD_OPTIM := yes
-      HB_BUILD_WINUNI := yes
       HB_BUILD_MODE ?= cpp
    else
    ifeq ($(HB_BUILD_NAME),.d)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
-      HB_BUILD_WINUNI := no
-      HB_BUILD_MODE ?= c
-   else
-   ifeq ($(HB_BUILD_NAME),.du)
-      HB_BUILD_DEBUG := yes
-      HB_BUILD_OPTIM := no
-      HB_BUILD_WINUNI := yes
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.dp)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
-      HB_BUILD_WINUNI := no
       HB_BUILD_MODE ?= cpp
-   else
-   ifeq ($(HB_BUILD_NAME),.dpu)
-      HB_BUILD_DEBUG := yes
-      HB_BUILD_OPTIM := no
-      HB_BUILD_WINUNI := yes
-      HB_BUILD_MODE ?= cpp
-   endif
-   endif
-   endif
-   endif
    endif
    endif
    endif
