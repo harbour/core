@@ -100,7 +100,6 @@
 
 /* TODO: Support debug/release modes. Some default setting can be set
          accordingly, and user can use it to further tweak settings. */
-/* TODO: Support unicode/non-unicode build modes. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
@@ -359,7 +358,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_lINC              55
 #define _HBMK_lREBUILDPO        56
 #define _HBMK_lMINIPO           57
-#define _HBMK_lUNICODE          58
+#define _HBMK_lWINUNI           58
 #define _HBMK_nCONF             59
 #define _HBMK_lIGNOREERROR      60
 #define _HBMK_lIMPLIB           61
@@ -1517,7 +1516,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
          ENDIF
       ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
-                                          hb_ps() + "hbvm.h" )
+                                            hb_ps() + "hbvm.h" )
          hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
@@ -1971,7 +1970,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_cPO ] := NIL
    hbmk[ _HBMK_aLNG ] := {}
    hbmk[ _HBMK_aINSTPATH ] := {}
-   hbmk[ _HBMK_lUNICODE ] := ( hbmk[ _HBMK_cPLAT ] == "wce" )
+   hbmk[ _HBMK_lWINUNI ] := .F.
    hbmk[ _HBMK_cHBX ] := NIL
 
    aParams := {}
@@ -2168,6 +2167,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-implib"          ; hbmk[ _HBMK_lIMPLIB ]      := .T.
       CASE cParamL == "-implib-" .OR. ;
            cParamL == "-noimplib"        ; hbmk[ _HBMK_lIMPLIB ]      := .F.
+      CASE cParamL == "-winuni"          ; hbmk[ _HBMK_lWINUNI ]      := .T.
+      CASE cParamL == "-winuni-"         ; hbmk[ _HBMK_lWINUNI ]      := .F.
       CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]        := .T.
       CASE cParamL == "-beep-" .OR. ;
            cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F.
@@ -2996,6 +2997,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       hbmk[ _HBMK_lMT ] := .F.
    ENDIF
 
+   IF hbmk[ _HBMK_cPLAT ] == "wce"
+      hbmk[ _HBMK_lWINUNI ] := .T.
+   ENDIF
+
    /* Start doing the make process. */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ;
       ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aRESSRC ] ) + Len( hbmk[ _HBMK_aRESCMP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0 .AND. ! hbmk[ _HBMK_lContainer ]
@@ -3654,8 +3659,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         IF hbmk[ _HBMK_cPLAT ] == "wce"
+         IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
          ENDIF
@@ -4043,6 +4050,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF HBMK_ISPLAT( "win|os2|dos" )
             AAdd( hbmk[ _HBMK_aOPTA ], "-p=64" )
          ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "win"
+            IF hbmk[ _HBMK_lWINUNI ]
+               AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            ENDIF
+         ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "win"
             IF hbmk[ _HBMK_lCreateDyn ]
@@ -4118,6 +4130,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
          cLibBCC_CRTL := "cw32mt.lib"
+         IF hbmk[ _HBMK_lWINUNI ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+         ENDIF
          IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* Adding weird hack for xhb to make it possible to force ST C mode. */
             IF AScan( hbmk[ _HBMK_aOPTC ], {| tmp | tmp == "-tW" } ) == 0
@@ -4317,8 +4332,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTL ], "-implib:{OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
-         IF hbmk[ _HBMK_cPLAT ] == "wce"
+         IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
             DO CASE
@@ -4416,8 +4433,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cBin_LibHBX := "podump.exe"
          cOpt_LibHBX := "-symbols {LI}"
          cLibHBX_Regex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
-         IF hbmk[ _HBMK_cPLAT ] == "wce"
+         IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
@@ -9198,16 +9217,22 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lMAP ] := .F.
          ENDCASE
 
+      CASE Lower( Left( cLine, Len( "hbcppmm="      ) ) ) == "hbcppmm="      ; cLine := SubStr( cLine, Len( "hbcppmm="      ) + 1 )
+         DO CASE
+         CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .T.
+         CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .F.
+         ENDCASE
+
       CASE Lower( Left( cLine, Len( "implib="       ) ) ) == "implib="       ; cLine := SubStr( cLine, Len( "implib="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lIMPLIB ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lIMPLIB ] := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "hbcppmm="      ) ) ) == "hbcppmm="      ; cLine := SubStr( cLine, Len( "hbcppmm="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "winuni="       ) ) ) == "winuni="       ; cLine := SubStr( cLine, Len( "winuni="       ) + 1 )
          DO CASE
-         CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .T.
-         CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .F.
+         CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lWINUNI ] := .T.
+         CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lWINUNI ] := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "strip="        ) ) ) == "strip="        ; cLine := SubStr( cLine, Len( "strip="        ) + 1 )
@@ -10970,8 +10995,8 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "nodebug"  ; RETURN ! hbmk[ _HBMK_lDEBUG ]
    CASE "shared"   ; RETURN hbmk[ _HBMK_lSHARED ]
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
-   CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
-   CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
+   CASE "winuni"   ; RETURN hbmk[ _HBMK_lWINUNI ]
+   CASE "winansi"  ; RETURN ! hbmk[ _HBMK_lWINUNI ]
    CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
    CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64|pcc" )
@@ -11888,7 +11913,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]trace"         , I_( "show commands executed" ) },;
       { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
       { "-[no]ignore"        , I_( "ignore errors when running compiler tools (default: off)" ) },;
-      { "-[no]hbcppmm"       , I_( "forces to override standard C++ memory management functions with Harbour ones" ) },;
+      { "-[no]hbcppmm"       , I_( "override standard C++ memory management functions with Harbour ones" ) },;
+      { "-winuni[-]"         , I_( "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)" ) },;
       { "-nohblib[-]"        , I_( "do not use static core Harbour libraries when linking" ) },;
       { "-nodefgt[-]"        , I_( "do not link default GTs (effective in -static mode)" ) },;
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) },;
@@ -12002,8 +12028,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_AUTOHBC_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' char are ignored" ),;
-      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
