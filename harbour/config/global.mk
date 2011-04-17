@@ -381,7 +381,7 @@ ifeq ($(HB_HOST_PLAT),)
          ifeq ($(HB_HOST_BIN),)
             ifneq ($(__HB_BUILD_WINUNI),no)
                export __HB_BUILD_WINUNI := no
-               $(info ! Win9x/ME host detected: Windows UNICODE mode forcibly turned off)
+               $(info ! Win9x/ME host detected: Windows UNICODE build mode forcibly turned off)
             endif
          endif
       endif
