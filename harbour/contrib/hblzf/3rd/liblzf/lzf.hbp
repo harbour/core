@@ -15,6 +15,7 @@
 
 # See lzfP.h for more
 -cflag=-DVERY_FAST=1
+-cflag=-DAVOID_ERRNO=1{wce}
 
 lzf_c.c
 lzf_d.c

@@ -57,7 +57,7 @@
 #include "lzf.h"
 #include "lzfP.h"
 
-#if ! defined( AVOID_ERRNO )
+#if ! AVOID_ERRNO
 #  include <errno.h>
 #endif
 
@@ -202,14 +202,14 @@ HB_FUNC( HB_LZF_DECOMPRESS )
                uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
             }
             while( uiResult == 0
-#if ! defined( AVOID_ERRNO )
+#if ! AVOID_ERRNO
                    && errno == E2BIG
 #endif
                    );
 
             if( uiResult == 0 )
             {
-#if ! defined( AVOID_ERRNO )
+#if ! AVOID_ERRNO
                if( errno == EINVAL )
                   hb_storni( HB_LZF_DATA_CORRUPTED, 3 );
                else
