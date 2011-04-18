@@ -222,10 +222,6 @@ HARBOUR
       cd contrib/<name>
       ..\..\bin\<plat>\<comp>\hbmk2 ..\make.hbs [clean] [install] [custom hbmk2 options]
 
-      KNOWN ISSUE: Some targets (notably wce) has to be manually configured in this
-                   scenario, since the autodetection results of core build is not
-                   available here, and hbmk2 misses some of the autodetection cases.
-
 
 
 3. HOW TO CREATE DISTRIBUTABLE PACKAGES
