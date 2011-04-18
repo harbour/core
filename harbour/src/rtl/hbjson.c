@@ -135,19 +135,19 @@ static void _hb_jsonCtxAdd( PHB_JSON_ENCODE_CTX pCtx, const char * szString, HB_
 
 static void _hb_jsonCtxAddIndent( PHB_JSON_ENCODE_CTX pCtx, HB_SIZE nCount )
 {
-   if( nCount <= 0 )
-      return;
-
-   if( pCtx->pHead + nCount >= pCtx->pBuffer + pCtx->nAlloc )
+   if( nCount > 0 )
    {
-      HB_SIZE nSize = pCtx->pHead - pCtx->pBuffer;
+      if( pCtx->pHead + nCount >= pCtx->pBuffer + pCtx->nAlloc )
+      {
+         HB_SIZE nSize = pCtx->pHead - pCtx->pBuffer;
 
-      pCtx->nAlloc += ( pCtx->nAlloc << 1 ) + nCount;
-      pCtx->pBuffer = ( char * ) hb_xrealloc( pCtx->pBuffer, pCtx->nAlloc );
-      pCtx->pHead = pCtx->pBuffer + nSize;
+         pCtx->nAlloc += ( pCtx->nAlloc << 1 ) + nCount;
+         pCtx->pBuffer = ( char * ) hb_xrealloc( pCtx->pBuffer, pCtx->nAlloc );
+         pCtx->pHead = pCtx->pBuffer + nSize;
+      }
+      hb_xmemset( pCtx->pHead, ' ', nCount );
+      pCtx->pHead += nCount;
    }
-   hb_xmemset( pCtx->pHead, ' ', nCount );
-   pCtx->pHead += nCount;
 }
 
 static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE nLevel )

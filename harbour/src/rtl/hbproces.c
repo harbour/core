@@ -66,6 +66,9 @@
 #  include <fcntl.h>
 #  include <signal.h>
 #elif defined( HB_OS_OS2 )
+#  define INCL_DOSERRORS
+#  define INCL_DOSPROCESS
+#  include <os2.h>
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
@@ -395,95 +398,70 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
                              HB_FHANDLE * phStderr,
                              HB_BOOL fDetach, HB_ULONG * pulPID )
 {
+   HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },
+              hPipeOut[ 2 ] = { FS_ERROR, FS_ERROR },
+              hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
    HB_FHANDLE hResult = FS_ERROR;
+   HB_BOOL fError = HB_FALSE;
    char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
 
    pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
 
-#if defined( HB_OS_WIN )
-{
-
-#if defined( HB_OS_WIN_CE )
-#  define CreatePipe( hIn, hOut, sa, flags )    ( FALSE )
-#endif
-
-   HB_BOOL fError = HB_FALSE;
-   HANDLE hPipes[ 6 ];
-   SECURITY_ATTRIBUTES sa;
-   int i;
-
-   for( i = 0; i < 6; ++i )
-      hPipes[ i ] = INVALID_HANDLE_VALUE;
-
-   memset( &sa, 0, sizeof( sa ) );
-   sa.nLength = sizeof( sa );
-   sa.bInheritHandle = TRUE;
 
    if( phStdin != NULL )
-   {
-      fError = !CreatePipe( &hPipes[ 0 ], &hPipes[ 1 ], &sa, 0 );
-      if( !fError )
-         SetHandleInformation( hPipes[ 1 ], HANDLE_FLAG_INHERIT, 0 );
-   }
+      fError = !hb_fsPipeCreate( hPipeIn );
    if( !fError && phStdout != NULL )
-   {
-      fError = !CreatePipe( &hPipes[ 2 ], &hPipes[ 3 ], &sa, 0 );
-      if( !fError )
-         SetHandleInformation( hPipes[ 2 ], HANDLE_FLAG_INHERIT, 0 );
-   }
+      fError = !hb_fsPipeCreate( hPipeOut );
    if( !fError && phStderr != NULL )
    {
       if( phStdout == phStderr )
       {
-         hPipes[ 4 ] = hPipes[ 2 ];
-         hPipes[ 5 ] = hPipes[ 3 ];
+         hPipeErr[ 0 ] = hPipeOut[ 0 ];
+         hPipeErr[ 1 ] = hPipeOut[ 1 ];
       }
       else
-      {
-         fError = !CreatePipe( &hPipes[ 4 ], &hPipes[ 5 ], &sa, 0 );
-         if( !fError )
-            SetHandleInformation( hPipes[ 4 ], HANDLE_FLAG_INHERIT, 0 );
-      }
+         fError = !hb_fsPipeCreate( hPipeErr );
    }
 
-   if( fError )
-      hb_fsSetIOError( HB_FALSE, 0 );
-   else
+   if( !fError )
    {
+#if defined( HB_OS_WIN )
+
       PROCESS_INFORMATION pi;
       STARTUPINFO si;
       DWORD dwFlags = 0;
-#if defined( UNICODE )
+#  if defined( UNICODE )
       LPWSTR lpCommand = hb_mbtowc( pszFilename );
-#else
+#  else
       char * lpCommand = hb_strdup( pszFilename );
-#endif
+#  endif
+
       memset( &pi, 0, sizeof( pi ) );
       memset( &si, 0, sizeof( si ) );
       si.cb = sizeof( si );
-#ifdef STARTF_USESTDHANDLES
+#  ifdef STARTF_USESTDHANDLES
       si.dwFlags = STARTF_USESTDHANDLES;
-#endif
+#  endif
       if( fDetach )
       {
-#ifdef STARTF_USESHOWWINDOW
+#  ifdef STARTF_USESHOWWINDOW
          si.dwFlags |= STARTF_USESHOWWINDOW;
-#endif
+#  endif
          si.wShowWindow = SW_HIDE;
-         si.hStdInput  = hPipes[ 0 ];
-         si.hStdOutput = hPipes[ 3 ];
-         si.hStdError  = hPipes[ 5 ];
-#ifdef DETACHED_PROCESS
+         si.hStdInput  = ( HANDLE ) hb_fsGetOsHandle( hPipeIn [ 0 ] );
+         si.hStdOutput = ( HANDLE ) hb_fsGetOsHandle( hPipeOut[ 1 ] );
+         si.hStdError  = ( HANDLE ) hb_fsGetOsHandle( hPipeErr[ 1 ] );
+#  ifdef DETACHED_PROCESS
          dwFlags |= DETACHED_PROCESS;
-#endif
+#  endif
       }
       else
       {
-         si.hStdInput  = phStdin  ? hPipes[ 0 ] : GetStdHandle( STD_INPUT_HANDLE );
-         si.hStdOutput = phStdout ? hPipes[ 3 ] : GetStdHandle( STD_OUTPUT_HANDLE );
-         si.hStdError  = phStderr ? hPipes[ 5 ] : GetStdHandle( STD_ERROR_HANDLE );
+         si.hStdInput  = phStdin  ? ( HANDLE ) hb_fsGetOsHandle( hPipeIn [ 0 ] ) : GetStdHandle( STD_INPUT_HANDLE );
+         si.hStdOutput = phStdout ? ( HANDLE ) hb_fsGetOsHandle( hPipeOut[ 1 ] ) : GetStdHandle( STD_OUTPUT_HANDLE );
+         si.hStdError  = phStderr ? ( HANDLE ) hb_fsGetOsHandle( hPipeErr[ 1 ] ) : GetStdHandle( STD_ERROR_HANDLE );
       }
       fError = ! CreateProcess( NULL,           /* lpAppName */
                                 lpCommand,
@@ -501,57 +479,28 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       {
          if( phStdin != NULL )
          {
-            *phStdin = ( HB_FHANDLE ) hPipes[ 1 ];
-            hPipes[ 1 ] = INVALID_HANDLE_VALUE;
+            *phStdin = ( HB_FHANDLE ) hPipeIn[ 1 ];
+            hPipeIn[ 1 ] = FS_ERROR;
          }
          if( phStdout != NULL )
          {
-            *phStdout = ( HB_FHANDLE ) hPipes[ 2 ];
-            hPipes[ 2 ] = INVALID_HANDLE_VALUE;
+            *phStdout = ( HB_FHANDLE ) hPipeOut[ 0 ];
+            hPipeOut[ 0 ] = FS_ERROR;
          }
          if( phStderr != NULL )
          {
-            *phStderr = ( HB_FHANDLE ) hPipes[ 4 ];
-            hPipes[ 4 ] = INVALID_HANDLE_VALUE;
+            *phStderr = ( HB_FHANDLE ) hPipeErr[ 0 ];
+            hPipeErr[ 0 ] = FS_ERROR;
          }
          if( pulPID )
             *pulPID = pi.dwProcessId;
          CloseHandle( pi.hThread );
          hResult = ( HB_FHANDLE ) pi.hProcess;
       }
-   }
 
-   for( i = phStdout == phStderr ? 3 : 5; i >= 0; --i )
-   {
-      if( hPipes[ i ] != INVALID_HANDLE_VALUE )
-         CloseHandle( hPipes[ i ] );
-   }
-}
 #elif defined( HB_OS_UNIX ) && \
-      !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
-{
-   HB_BOOL fError = HB_FALSE;
-   HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },
-              hPipeOut[ 2 ] = { FS_ERROR, FS_ERROR },
-              hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
+    !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
 
-   if( phStdin != NULL )
-      fError = pipe( hPipeIn ) != 0;
-   if( !fError && phStdout != NULL )
-      fError = pipe( hPipeOut ) != 0;
-   if( !fError && phStderr != NULL )
-   {
-      if( phStdout == phStderr )
-      {
-         hPipeErr[ 0 ] = hPipeOut[ 0 ];
-         hPipeErr[ 1 ] = hPipeOut[ 1 ];
-      }
-      else
-         fError = pipe( hPipeErr ) != 0;
-   }
-
-   if( !fError )
-   {
       pid_t pid = fork();
 
       if( pid == -1 )
@@ -627,7 +576,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 
          /* execute command */
          {
-#if 0
+#  if 0
             char * argv[4];
 
             argv[0] = ( char * ) "sh";
@@ -635,92 +584,26 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
             argv[2] = ( char * ) pszFilename;
             argv[3] = ( char * ) 0;
             execv( "/bin/sh", argv );
-#else
+#  else
             char ** argv;
 
             argv = hb_buildArgs( pszFilename );
-#if defined( __WATCOMC__ )
+#     if defined( __WATCOMC__ )
             execvp( argv[ 0 ], ( const char ** ) argv );
-#else
+#     else
             execvp( argv[ 0 ], argv );
-#endif
+#     endif
             hb_freeArgs( argv );
-#endif
+#  endif
             exit(1);
          }
       }
-   }
 
-   hb_fsSetIOError( !fError, 0 );
-
-   if( hPipeIn[ 0 ] != FS_ERROR )
-      hb_fsClose( hPipeIn[ 0 ] );
-   if( hPipeIn[ 1 ] != FS_ERROR )
-      hb_fsClose( hPipeIn[ 1 ] );
-   if( hPipeOut[ 0 ] != FS_ERROR )
-      hb_fsClose( hPipeOut[ 0 ] );
-   if( hPipeOut[ 1 ] != FS_ERROR )
-      hb_fsClose( hPipeOut[ 1 ] );
-   if( phStdout != phStderr )
-   {
-      if( hPipeErr[ 0 ] != FS_ERROR )
-         hb_fsClose( hPipeErr[ 0 ] );
-      if( hPipeErr[ 1 ] != FS_ERROR )
-         hb_fsClose( hPipeErr[ 1 ] );
-   }
-}
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
-{
 
-#if defined( HB_OS_OS2 ) && defined( __GNUC__ )
-
-#  define _hb_pipe( e, p )    do { \
-                                 (e) = pipe( (p) ) != 0; \
-                                 if( !(e) ) \
-                                 { \
-                                    setmode( (p)[ 0 ], O_BINARY ); \
-                                    setmode( (p)[ 1 ], O_BINARY ); \
-                                 } \
-                              } while( 0 )
-#else
-
-#  define pid_t               int
-#  define _hb_pipe( e, p )    do { \
-                                 (e) = _pipe( (p), 2048, _O_BINARY ) != 0; \
-                              } while( 0 )
-#endif
-
-   HB_BOOL fError = HB_FALSE;
-   HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },
-              hPipeOut[ 2 ] = { FS_ERROR, FS_ERROR },
-              hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
-
-   if( phStdin != NULL )
-   {
-      _hb_pipe( fError, hPipeIn );
-   }
-   if( !fError && phStdout != NULL )
-   {
-      _hb_pipe( fError, hPipeOut );
-   }
-   if( !fError && phStderr != NULL )
-   {
-      if( phStdout == phStderr )
-      {
-         hPipeErr[ 0 ] = hPipeOut[ 0 ];
-         hPipeErr[ 1 ] = hPipeOut[ 1 ];
-      }
-      else
-      {
-         _hb_pipe( fError, hPipeErr );
-      }
-   }
-
-   if( !fError )
-   {
       int hStdIn, hStdOut, hStdErr;
       char ** argv;
-      pid_t pid;
+      int pid;
 
       hStdIn  = dup( 0 );
       hStdOut = dup( 1 );
@@ -792,40 +675,35 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
             *pulPID = pid;
          hResult = ( HB_FHANDLE ) pid;
       }
+
+#else
+   int iTODO; /* TODO: for given platform */
+
+   HB_SYMBOL_UNUSED( pszFilename );
+   HB_SYMBOL_UNUSED( fDetach );
+   HB_SYMBOL_UNUSED( pulPID );
+
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+#endif
    }
 
    hb_fsSetIOError( !fError, 0 );
 
    if( hPipeIn[ 0 ] != FS_ERROR )
-      close( hPipeIn[ 0 ] );
+      hb_fsClose( hPipeIn[ 0 ] );
    if( hPipeIn[ 1 ] != FS_ERROR )
-      close( hPipeIn[ 1 ] );
+      hb_fsClose( hPipeIn[ 1 ] );
    if( hPipeOut[ 0 ] != FS_ERROR )
-      close( hPipeOut[ 0 ] );
+      hb_fsClose( hPipeOut[ 0 ] );
    if( hPipeOut[ 1 ] != FS_ERROR )
-      close( hPipeOut[ 1 ] );
+      hb_fsClose( hPipeOut[ 1 ] );
    if( phStdout != phStderr )
    {
       if( hPipeErr[ 0 ] != FS_ERROR )
-         close( hPipeErr[ 0 ] );
+         hb_fsClose( hPipeErr[ 0 ] );
       if( hPipeErr[ 1 ] != FS_ERROR )
-         close( hPipeErr[ 1 ] );
+         hb_fsClose( hPipeErr[ 1 ] );
    }
-}
-#else
-{
-   int iTODO; /* TODO: for given platform */
-
-   HB_SYMBOL_UNUSED( pszFilename );
-   HB_SYMBOL_UNUSED( phStdin );
-   HB_SYMBOL_UNUSED( phStdout );
-   HB_SYMBOL_UNUSED( phStderr );
-   HB_SYMBOL_UNUSED( fDetach );
-   HB_SYMBOL_UNUSED( pulPID );
-
-   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-}
-#endif
 
    if( pszFree )
       hb_xfree( pszFree );
@@ -883,6 +761,26 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
       else
          iRetStatus = WIFEXITED( iStatus ) ? WEXITSTATUS( iStatus ) : 0;
       hb_vmLock();
+   }
+   else
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+}
+#elif defined( HB_OS_OS2 )
+{
+   PID pid = ( PID ) hProcess;
+
+   if( pid > 0 )
+   {
+      RESULTCODES resultCodes = { 0, 0 };
+      APIRET ret;
+
+      ret = DosWaitChild( DCWA_PROCESS, fWait ? DCWW_WAIT : DCWW_NOWAIT,
+                          &resultCodes, &pid, pid );
+      hb_fsSetIOError( ret == NO_ERROR, 0 );
+      if( ret == NO_ERROR )
+         iRetStatus = resultCodes.codeResult;
+      else
+         iRetStatus = -2;
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -952,6 +850,21 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
    if( pid > 0 )
    {
       if( kill( pid, fGentle ? SIGTERM : SIGKILL ) == 0 )
+         fResult = HB_TRUE;
+      hb_fsSetIOError( fResult, 0 );
+   }
+   else
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+}
+#elif defined( HB_OS_OS2 )
+{
+   PID pid = ( PID ) hProcess;
+
+   HB_SYMBOL_UNUSED( fGentle );
+
+   if( pid > 0 )
+   {
+      if( DosKillProcess( DKP_PROCESS, pid ) == NO_ERROR )
          fResult = HB_TRUE;
       hb_fsSetIOError( fResult, 0 );
    }
@@ -1324,7 +1237,7 @@ int hb_fsProcessRun( const char * pszFilename,
    return iResult;
 }
 
-/* temporary hack for still missing sysconf() in Watcom 1.8 */
+/* temporary hack for still missing sysconf() in Watcom 1.9 */
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && \
     __WATCOMC__ <= 1290
 _WCRTLINK long sysconf( int __name )

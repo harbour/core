@@ -475,6 +475,47 @@ HB_FUNC( HB_FISDEVICE )
    hb_retl( hb_fsIsDevice( hb_numToHandle( hb_parnint( 1 ) ) ) );
 }
 
+/* HB_PREAD( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
+      -> <nBytesRead> */
+HB_FUNC( HB_PREAD )
+{
+   HB_FHANDLE hStdHandle = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
+   PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
+   char * buffer;
+   HB_SIZE nSize;
+
+   if( hStdHandle != FS_ERROR && pBuffer && HB_ISBYREF( 2 ) &&
+       hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
+   {
+      HB_ERRCODE uiError = 0;
+
+      if( HB_ISNUM( 3 ) )
+      {
+         HB_ISIZ nToRead = hb_parns( 3 );
+
+         if( nToRead >= 0 && ( HB_SIZE ) nToRead < nSize )
+            nSize = nToRead;
+      }
+
+      if( nSize > 0 )
+      {
+         nSize = hb_fsPipeRead( hStdHandle, buffer, nSize, hb_parnint( 4 ) );
+         uiError = hb_fsError();
+      }
+      else
+         nSize = 0;
+
+      if( nSize == ( HB_SIZE ) -1 )
+         hb_retni( -1 );
+      else
+         hb_retns( nSize );
+      hb_fsSetFError( uiError );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+
 HB_FUNC( HB_OSERROR )
 {
    hb_retni( hb_fsOsError() );
