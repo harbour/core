@@ -312,6 +312,25 @@
    #define HB_FS_IO_16BIT
 #endif
 
+#if defined( HB_OS_UNIX ) && defined( EINTR )
+#  define HB_FAILURE_RETRY( ret, exp ) \
+               do \
+               { \
+                  ( ret ) = ( exp ); \
+                  hb_fsSetIOError( ( ret ) != -1, 0 ); \
+               } \
+               while( ( ret ) == -1 && hb_fsOsError() == EINTR && \
+                      hb_vmRequestQuery() == 0 )
+#else
+#  define HB_FAILURE_RETRY( ret, exp ) \
+               do \
+               { \
+                  ( ret ) = ( exp ); \
+                  hb_fsSetIOError( ( ret ) != -1, 0 ); \
+               } \
+               while( 0 )
+#endif
+
 static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 
 #if defined( HB_OS_WIN ) && defined( HB_OS_HAS_DRIVE_LETTER )
@@ -622,7 +641,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
       char * pszTmp;
       HB_BOOL fRead;
       HB_SIZE nLen;
-      int iMaxFD;
+      int iMaxFD, iResult;
 
       nLen = strlen( pFilename );
       if( pMode && ( *pMode == 'r' || *pMode == 'w' ) )
@@ -675,19 +694,20 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                argv[1] = "-c";
                argv[2] = pFilename;
                argv[3] = 0;
-               hNullHandle = open( "/dev/null", O_RDWR );
+               HB_FAILURE_RETRY( hNullHandle, open( "/dev/null", O_RDWR ) );
                if( fRead )
                {
                   hb_fsClose( hPipeHandle[ 0 ] );
-                  dup2( hPipeHandle[ 1 ], 1 );
-                  dup2( hNullHandle, 0 );
-                  dup2( hNullHandle, 2 );
+                  HB_FAILURE_RETRY( iResult, dup2( hPipeHandle[ 1 ], 1 ) );
+                  HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 0 ) );
+                  HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 2 ) );
                }
                else
                {
                   hb_fsClose( hPipeHandle[ 1 ] );
-                  dup2( hPipeHandle[ 0 ], 0 );
-                  dup2( hNullHandle, 1 );
+                  HB_FAILURE_RETRY( iResult, dup2( hPipeHandle[ 0 ], 0 ) );
+                  HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 1 ) );
+                  HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 2 ) );
                   dup2( hNullHandle, 2 );
                }
                iMaxFD = sysconf( _SC_OPEN_MAX );
@@ -698,9 +718,9 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                setuid( getuid() );
                setgid( getgid() );
 #if defined( __WATCOMC__ )
-               execv( "/bin/sh", argv );
+               HB_FAILURE_RETRY( iResult, execv( "/bin/sh", argv ) );
 #else
-               execv( "/bin/sh", ( char ** ) argv );
+               HB_FAILURE_RETRY( iResult, execv( "/bin/sh", ( char ** ) argv ) );
 #endif
                exit( 1 );
             }
@@ -778,7 +798,9 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 }
 #else
 {
-   int iTODO; /* TODO: for given platform */
+#  if !defined( HB_OS_DOS )
+      int iTODO; /* TODO: for given platform */
+#  endif
 
    hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
    hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -787,6 +809,44 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 #endif
 
    return fResult;
+}
+
+int hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsPipeOrSock(%p,%" HB_PFS "u)", ( void * ) ( HB_PTRDIFF ) hPipeHandle));
+
+#if defined( HB_OS_UNIX )
+{
+   struct stat statbuf;
+   if( fstat( hPipeHandle, &statbuf ) == 0 )
+   {
+      if( S_ISFIFO( statbuf.st_mode ) || S_ISSOCK( statbuf.st_mode ) )
+         return 1;
+   }
+   return 0;
+}
+#elif defined( HB_OS_WIN )
+{
+   return ( GetFileType( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ) ) ==
+            FILE_TYPE_PIPE ) ? 1 : 0;
+}
+#elif defined( HB_OS_OS2 )
+{
+   ULONG type = 0, attr = 0;
+   if( DosQueryHType( ( HFILE ) hPipeHandle, &type, &attr ) == NO_ERROR )
+   {
+      if( ( type & 0xFF ) == FHT_PIPE )
+         return 1;
+   }
+   return 0;
+}
+#else
+#  if !defined( HB_OS_DOS )
+      int iTODO; /* TODO: for given platform */
+#  endif
+   HB_SYMBOL_UNUSED( hPipeHandle );
+   return -1;
+#endif
 }
 
 HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
@@ -902,8 +962,9 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
 }
 #else
 {
-   int iTODO; /* TODO: for given platform */
-
+#  if !defined( HB_OS_DOS )
+      int iTODO; /* TODO: for given platform */
+#  endif
    HB_SYMBOL_UNUSED( hPipeHandle );
    HB_SYMBOL_UNUSED( nBufferSize );
    HB_SYMBOL_UNUSED( nTimeOut );
@@ -969,15 +1030,16 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, HB_USHORT uiFlags )
          hFileHandle = _sopen( pFilename, flags, share, mode );
       else
          hFileHandle = _open( pFilename, flags, mode );
+      hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
 #elif defined( HB_FS_SOPEN )
       if( share )
          hFileHandle = sopen( pFilename, flags, share, mode );
       else
          hFileHandle = open( pFilename, flags, mode );
-#else
-      hFileHandle = open( pFilename, flags | share, mode );
-#endif
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+#else
+      HB_FAILURE_RETRY( hFileHandle, open( pFilename, flags | share, mode ) );
+#endif
       hb_vmLock();
    }
 #endif
@@ -1024,12 +1086,13 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, HB_FATTR ulAttr )
       hb_vmUnlock();
 #if defined( HB_FS_DOSCREAT )
       hFileHandle = _creat( pFilename, attr );
+      hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
 #elif defined( HB_FS_SOPEN )
       hFileHandle = open( pFilename, flags, mode );
-#else
-      hFileHandle = open( pFilename, flags | share, mode );
-#endif
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+#else
+      HB_FAILURE_RETRY( hFileHandle, open( pFilename, flags | share, mode ) );
+#endif
       hb_vmLock();
    }
 #endif
@@ -1082,10 +1145,10 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, HB_FATTR ulAttr, HB_USHORT uiF
       hb_vmUnlock();
 #if defined( HB_FS_SOPEN )
       hFileHandle = open( pFilename, flags, mode );
-#else
-      hFileHandle = open( pFilename, flags | share, mode );
-#endif
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+#else
+      HB_FAILURE_RETRY( hFileHandle, open( pFilename, flags | share, mode ) );
+#endif
       hb_vmLock();
    }
 #endif
@@ -1617,7 +1680,7 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
 
 #elif defined( HB_OS_UNIX )
    {
-      int iAttr = HB_FA_POSIX_ATTR( ulAttr );
+      int iAttr = HB_FA_POSIX_ATTR( ulAttr ), iResult;
       if( iAttr == 0 )
       {
          iAttr = ( ulAttr & HB_FA_HIDDEN ) ? S_IRUSR : ( S_IRUSR | S_IRGRP | S_IROTH );
@@ -1634,8 +1697,8 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
             if( iAttr & S_IROTH ) iAttr |= S_IXOTH;
          }
       }
-      fResult = chmod( pszFileName, iAttr ) != -1;
-      hb_fsSetIOError( fResult, 0 );
+      HB_FAILURE_RETRY( iResult, chmod( pszFileName, iAttr ) );
+      fResult = iResult != -1;
    }
 #else
    {
@@ -1673,10 +1736,11 @@ HB_USHORT hb_fsRead( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount )
       uiRead = bResult ? ( HB_USHORT ) dwRead : 0;
    }
 #else
-   uiRead = read( hFileHandle, pBuff, uiCount );
-   hb_fsSetIOError( uiRead != ( HB_USHORT ) -1, 0 );
-   if( uiRead == ( HB_USHORT ) -1 )
-      uiRead = 0;
+   {
+      long lRead;
+      HB_FAILURE_RETRY( lRead, read( hFileHandle, pBuff, uiCount ) );
+      uiRead = lRead == -1 ? 0 : ( HB_USHORT ) lRead;
+   }
 #endif
 
    hb_vmLock();
@@ -1713,17 +1777,17 @@ HB_USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT uiCo
 #else
    if( uiCount )
    {
-      uiWritten = write( hFileHandle, pBuff, uiCount );
-      hb_fsSetIOError( uiWritten != ( HB_USHORT ) -1, 0 );
-      if( uiWritten == ( HB_USHORT ) -1 )
-         uiWritten = 0;
+      long lWritten;
+      HB_FAILURE_RETRY( lWritten, write( hFileHandle, pBuff, uiCount ) );
+      uiWritten = lWritten == -1 ? 0 : ( HB_USHORT ) lWritten;
    }
    else
    {
+      int iResult;
 #  if defined( HB_USE_LARGEFILE64 )
-      hb_fsSetIOError( ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
+      HB_FAILURE_RETRY( iResult, ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) );
 #  else
-      hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
+      HB_FAILURE_RETRY( iResult, ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) );
 #  endif
       uiWritten = 0;
    }
@@ -1788,13 +1852,12 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
    }
 #elif defined( HB_FS_IO_16BIT )
    {
-      unsigned int uiRead = 0;
-
       nRead = 0;
 
       while( nCount )
       {
          unsigned int uiToRead;
+         long lRead;
 
          /* Determine how much to read this time */
          if( nCount > ( HB_SIZE ) INT_MAX )
@@ -1808,25 +1871,23 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
             nCount = 0;
          }
 
-         uiRead = read( hFileHandle, ( HB_UCHAR * ) pBuff + nRead, uiToRead );
+         HB_FAILURE_RETRY( lRead, read( hFileHandle, ( HB_UCHAR * ) pBuff + nRead, uiToRead ) );
 
-         if( uiRead == ( unsigned int ) -1 )
+         if( lRead <= 0 )
             break;
 
-         nRead += ( HB_SIZE ) uiRead;
+         nRead += lRead;
 
-         if( uiRead != uiToRead )
+         if( lRead != ( long ) uiToRead )
             break;
       }
-      hb_fsSetIOError( uiRead != ( unsigned int ) -1, 0 );
    }
 #else
-
-   nRead = read( hFileHandle, pBuff, nCount );
-   hb_fsSetIOError( nRead != ( HB_SIZE ) -1, 0 );
-   if( nRead == ( HB_SIZE ) -1 )
-      nRead = 0;
-
+   {
+      long lRead;
+      HB_FAILURE_RETRY( lRead, read( hFileHandle, pBuff, nCount ) );
+      nRead = lRead == -1 ? 0 : lRead;
+   }
 #endif
 
    hb_vmLock();
@@ -1895,11 +1956,10 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
    if( nCount )
    {
 #  if defined( HB_FS_IO_16BIT )
-      unsigned int uiWritten = 0;
-
       while( nCount )
       {
          unsigned int uiToWrite;
+         long lWritten;
 
          /* Determine how much to write this time */
          if( nCount > ( HB_SIZE ) INT_MAX )
@@ -1913,32 +1973,33 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
             nCount = 0;
          }
 
-         uiWritten = write( hFileHandle, ( const HB_UCHAR * ) pBuff + nWritten,
-                            uiToWrite );
+         HB_FAILURE_RETRY( lWritten, write( hFileHandle,
+                                            ( const HB_UCHAR * ) pBuff + nWritten,
+                                            uiToWrite ) );
 
-         if( uiWritten == ( unsigned int ) -1 )
+         if( lWritten <= 0 )
             break;
 
-         nWritten += ( HB_SIZE ) uiWritten;
+         nWritten += lWritten;
 
-         if( uiWritten != uiToWrite )
+         if( lWritten != ( long ) uiToWrite )
             break;
       }
-      hb_fsSetIOError( uiWritten != ( unsigned int ) -1, 0 );
 #  else
-      nWritten = write( hFileHandle, pBuff, nCount );
-      hb_fsSetIOError( nWritten != ( HB_SIZE ) -1, 0 );
-      if( nWritten == ( HB_SIZE ) -1 )
-         nWritten = 0;
+      long lWritten;
+      HB_FAILURE_RETRY( lWritten, write( hFileHandle, pBuff, nCount ) );
+      nWritten = lWritten == -1 ? 0 : lWritten;
 #  endif
    }
    else
+   {
+      int iResult;
 #  if defined( HB_USE_LARGEFILE64 )
-      hb_fsSetIOError( ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
+      HB_FAILURE_RETRY( iResult, ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) );
 #  else
-      hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
+      HB_FAILURE_RETRY( iResult, ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) );
 #  endif
-
+   }
 #endif
 
    hb_vmLock();
@@ -1955,14 +2016,15 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    hb_vmUnlock();
 
 #if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+   {
+      long lRead;
 #  if defined( HB_USE_LARGEFILE64 )
-   nRead = pread64( hFileHandle, pBuff, nCount, nOffset );
+      HB_FAILURE_RETRY( lRead, pread64( hFileHandle, pBuff, nCount, nOffset ) );
 #  else
-   nRead = pread( hFileHandle, pBuff, nCount, nOffset );
+      HB_FAILURE_RETRY( lRead, pread( hFileHandle, pBuff, nCount, nOffset ) );
 #  endif
-   hb_fsSetIOError( nRead != ( HB_SIZE ) -1, 0 );
-   if( nRead == ( HB_SIZE ) -1 )
-      nRead = 0;
+      nRead = lRead == -1 ? 0 : lRead;
+   }
 #else
    nRead = 0;
 #  if defined( HB_OS_WIN )
@@ -2063,10 +2125,9 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
          hb_fsSetIOError( HB_FALSE, 0 );
       else
       {
-         nRead = read( hFileHandle, pBuff, nCount );
-         hb_fsSetIOError( nRead != ( HB_SIZE ) -1, 0 );
-         if( nRead == ( HB_SIZE ) -1 )
-            nRead = 0;
+         long lRead;
+         HB_FAILURE_RETRY( lRead, read( hFileHandle, pBuff, nCount ) );
+         nRead = lRead == -1 ? 0 : lRead;
       }
    }
 #  endif
@@ -2086,14 +2147,15 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    hb_vmUnlock();
 
 #if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+   {
+      long lWritten;
 #  if defined( HB_USE_LARGEFILE64 )
-   nWritten = pwrite64( hFileHandle, pBuff, nCount, nOffset );
+      HB_FAILURE_RETRY( lWritten, pwrite64( hFileHandle, pBuff, nCount, nOffset ) );
 #  else
-   nWritten = pwrite( hFileHandle, pBuff, nCount, nOffset );
+      HB_FAILURE_RETRY( lWritten, pwrite( hFileHandle, pBuff, nCount, nOffset ) );
 #  endif
-   hb_fsSetIOError( nWritten != ( HB_SIZE ) -1, 0 );
-   if( nWritten == ( HB_SIZE ) -1 )
-      nWritten = 0;
+      nWritten = lWritten == -1 ? 0 : lWritten;
+   }
 #else
    nWritten = 0;
 #  if defined( HB_OS_WIN )
@@ -2194,10 +2256,9 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
          hb_fsSetIOError( HB_FALSE, 0 );
       else
       {
-         nWritten = write( hFileHandle, pBuff, nCount );
-         hb_fsSetIOError( nWritten != ( HB_SIZE ) -1, 0 );
-         if( nWritten == ( HB_SIZE ) -1 )
-            nWritten = 0;
+         long lWritten;
+         HB_FAILURE_RETRY( lWritten, write( hFileHandle, pBuff, nCount ) );
+         nWritten = lWritten == -1 ? 0 : lWritten;
       }
    }
 #  endif
@@ -2215,6 +2276,7 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsTruncAt(%p, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset));
 
    hb_vmUnlock();
+
 #if defined( HB_OS_WIN )
    {
       ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
@@ -2232,14 +2294,21 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset )
          fResult = SetEndOfFile( DosToWinHandle( hFileHandle ) ) != 0;
       else
          fResult = HB_FALSE;
+
+      hb_fsSetIOError( fResult, 0 );
    }
-#elif defined( HB_USE_LARGEFILE64 )
-   fResult = ftruncate64( hFileHandle, nOffset ) != -1;
 #else
-   fResult = ftruncate( hFileHandle, nOffset ) != -1;
+   {
+      int iResult;
+#  if defined( HB_USE_LARGEFILE64 )
+      HB_FAILURE_RETRY( iResult, ftruncate64( hFileHandle, nOffset ) );
+#  else
+      HB_FAILURE_RETRY( iResult, ftruncate( hFileHandle, nOffset ) );
+#  endif
+      fResult = iResult != -1;
+   }
 #endif
 
-   hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
    return fResult;
@@ -2260,7 +2329,8 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
    hb_fsSetIOError( DosResetBuffer( hFileHandle ) == 0, 0 );
 
 #elif defined( HB_OS_UNIX )
-
+{
+   int iResult;
    /* We should check here only for _POSIX_SYNCHRONIZED_IO defined
     * and it should be enough to test if fdatasync() declaration
     * exists in <unistd.h>. Unfortunately on some OS-es like Darwin
@@ -2271,13 +2341,13 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 #  if defined( _POSIX_SYNCHRONIZED_IO ) && _POSIX_SYNCHRONIZED_IO - 0 > 0
       /* faster - flushes data buffers only, without updating directory info
        */
-      hb_fsSetIOError( fdatasync( hFileHandle ) == 0, 0 );
+      HB_FAILURE_RETRY( iResult, fdatasync( hFileHandle ) );
 #  else
       /* slower - flushes all file data buffers and i-node info
        */
-      hb_fsSetIOError( fsync( hFileHandle ) == 0, 0 );
+      HB_FAILURE_RETRY( iResult, fsync( hFileHandle ) );
 #  endif
-
+}
 #elif defined( __WATCOMC__ )
 
    hb_fsSetIOError( fsync( hFileHandle ) == 0, 0 );
@@ -2445,6 +2515,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
 #elif defined( HB_OS_UNIX )
    {
       struct flock lock_info;
+      int iResult;
 
       switch( uiMode & FL_MASK )
       {
@@ -2456,9 +2527,10 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
             lock_info.l_pid    = getpid();
 
-            fResult = ( fcntl( hFileHandle,
+            HB_FAILURE_RETRY( iResult, fcntl( hFileHandle,
                                ( uiMode & FLX_WAIT ) ? F_SETLKW: F_SETLK,
-                               &lock_info ) >= 0 );
+                               &lock_info ) );
+            fResult = iResult != -1;
             break;
 
          case FL_UNLOCK:
@@ -2469,7 +2541,8 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
             lock_info.l_whence = SEEK_SET;
             lock_info.l_pid    = getpid();
 
-            fResult = ( fcntl( hFileHandle, F_SETLK, &lock_info ) >= 0 );
+            HB_FAILURE_RETRY( iResult, fcntl( hFileHandle, F_SETLK, &lock_info ) );
+            fResult = iResult != -1;
             break;
 
          default:
@@ -2574,6 +2647,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
 #elif defined( HB_USE_LARGEFILE64 )
    {
       struct flock64 lock_info;
+      int iResult;
 
       hb_vmUnlock();
       switch( uiMode & FL_MASK )
@@ -2586,9 +2660,10 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
             lock_info.l_pid    = getpid();
 
-            fResult = ( fcntl( hFileHandle,
+            HB_FAILURE_RETRY( iResult, fcntl( hFileHandle,
                                ( uiMode & FLX_WAIT ) ? F_SETLKW64: F_SETLK64,
-                               &lock_info ) != -1 );
+                               &lock_info ) );
+            fResult = iResult != -1;
             break;
 
          case FL_UNLOCK:
@@ -2599,7 +2674,8 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
             lock_info.l_whence = SEEK_SET;
             lock_info.l_pid    = getpid();
 
-            fResult = ( fcntl( hFileHandle, F_SETLK64, &lock_info ) != -1 );
+            HB_FAILURE_RETRY( iResult, fcntl( hFileHandle, F_SETLK64, &lock_info ) );
+            fResult = iResult != -1;
             break;
 
          default:
@@ -3384,16 +3460,16 @@ HB_FHANDLE hb_fsExtOpen( const char * pFilename, const char * pDefExt,
    if( hFile != FS_ERROR && uiExFlags & FXO_SHARELOCK )
    {
 #if defined( HB_USE_BSDLOCKS )
-      int iLock;
+      int iLock, iResult;
       if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
           ( uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0 )
          iLock = LOCK_SH | LOCK_NB;
       else
          iLock = LOCK_EX | LOCK_NB;
       hb_vmUnlock();
-      iLock = flock( hFile, iLock );
+      HB_FAILURE_RETRY( iResult, flock( hFile, iLock ) );
       hb_vmLock();
-      if( iLock != 0 )
+      if( iResult != 0 )
 #else
       HB_USHORT uiLock;
       if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
