@@ -60,7 +60,7 @@ _DET_VAR_INC_ := HB_INC_PCRE
 _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/local/include /opt/csw/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/csw/include
 _DET_INC_LOCL := src/3rd/pcre
 _DET_INC_HEAD := /pcre.h
 
