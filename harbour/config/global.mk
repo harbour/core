@@ -1356,6 +1356,9 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       ifeq ($(HB_PLATFORM),qnx)
          HB_PRGFLAGS += -D__PLATFORM__QNX -D__PLATFORM__UNIX
       else
+      ifeq ($(HB_PLATFORM),android)
+         HB_PRGFLAGS += -D__PLATFORM__ANDROID -D__PLATFORM__UNIX
+      else
       ifeq ($(HB_PLATFORM),vxworks)
          HB_PRGFLAGS += -D__PLATFORM__VXWORKS -D__PLATFORM__UNIX
       else
@@ -1367,6 +1370,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),minix)
          HB_PRGFLAGS += -D__PLATFORM__MINIX -D__PLATFORM__UNIX
+      endif
       endif
       endif
       endif

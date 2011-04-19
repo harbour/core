@@ -1317,7 +1317,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|cygwin|minix" )
+   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|cygwin|minix" )
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64", "pcc" }
@@ -1327,6 +1327,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          aCOMPSUP := { "gcc", "clang", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro", "pcc" }
+      CASE hbmk[ _HBMK_cPLAT ] == "android"
+         aCOMPSUP := { "gcc", "gccarm" }
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          aCOMPSUP := { "gcc", "diab" }
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
@@ -1630,7 +1632,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
          IF Len( aCOMPSUP ) == 1
             hbmk[ _HBMK_cCOMP ] := aCOMPSUP[ 1 ]
-         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin|minix" ) .OR. ;
+         ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin|minix" ) .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
             IF AScan( aCOMPSUP, { |tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
@@ -1924,7 +1926,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
-   IF lSysLoc .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|vxworks|linux|cygwin" )
+   IF lSysLoc .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin" )
       hbmk[ _HBMK_lSHARED ] := .T.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ELSE
@@ -3139,7 +3141,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
 
       DO CASE
-      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|vxworks|sunos|minix" )
+      CASE HBMK_ISPLAT( "darwin|bsd|linux|hpux|beos|qnx|android|vxworks|sunos|minix" )
          IF Empty( l_cDynLibDir )
             l_aLIBSHARED := { cHarbourDyn + cPostfix }
          ELSE
@@ -3229,6 +3231,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "beos"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "android" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "android" .AND. hbmk[ _HBMK_cCOMP ] == "gccarm" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "symbian" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "cygwin"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -3375,6 +3379,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "qnx" .OR. ;
+              hbmk[ _HBMK_cPLAT ] == "android" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "vxworks" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "cygwin" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "bsd" )
@@ -3447,7 +3452,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
          IF hbmk[ _HBMK_lPIC ] .AND. ! HBMK_ISPLAT( "darwin|cygwin" )
-            IF HBMK_ISPLAT( "bsd|hpux|sunos|linux" )
+            IF HBMK_ISPLAT( "bsd|hpux|sunos|linux|android" )
                AAdd( hbmk[ _HBMK_aOPTC ], "-fPIC" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fpic" )
@@ -3469,7 +3474,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! HBMK_ISPLAT( "beos|vxworks" )
                AAdd( l_aLIBSYS, "m" )
                IF hbmk[ _HBMK_lMT ]
-                  IF ! HBMK_ISPLAT( "qnx|minix" )
+                  IF ! HBMK_ISPLAT( "qnx|android|minix" )
                      AAdd( l_aLIBSYS, "pthread" )
                   ENDIF
                ENDIF
@@ -3478,6 +3483,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             CASE HBMK_ISPLAT( "linux|cygwin" )
                AAdd( l_aLIBSYS, "dl" )
                AAdd( l_aLIBSYS, "rt" )
+            CASE hbmk[ _HBMK_cPLAT ] == "android"
+               AAdd( l_aLIBSYS, "dl" )
             CASE hbmk[ _HBMK_cPLAT ] == "sunos"
                AAdd( l_aLIBSYS, "rt" )
                AAdd( l_aLIBSYS, "socket" )
@@ -7995,7 +8002,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
       CASE                                       hb_FileExists( tmp := cDir + "lib" + hb_FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         hb_FNameExtSet( cLib, ".dll" )   ) ; RETURN tmp
       ENDCASE
-   CASE hbmk[ _HBMK_cCOMP ] == "gcc" .AND. HBMK_ISPLAT( "linux|sunos" )
+   CASE hbmk[ _HBMK_cCOMP ] == "gcc" .AND. HBMK_ISPLAT( "linux|sunos|android" )
       DO CASE
       CASE                                       hb_FileExists( tmp := cDir + "lib" + hb_FNameExtSet( cLib, ".so" )    ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir + "lib" + hb_FNameExtSet( cLib, ".a" )     ) ; RETURN tmp
@@ -9978,6 +9985,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "qnx"
          AAdd( aDf, "__PLATFORM__QNX" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "android"
+         AAdd( aDf, "__PLATFORM__ANDROID" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          AAdd( aDf, "__PLATFORM__VXWORKS" )
          AAdd( aDf, "__PLATFORM__UNIX" )
@@ -11020,7 +11030,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
    CASE "winuni"   ; RETURN hbmk[ _HBMK_lWINUNI ]
    CASE "winansi"  ; RETURN ! hbmk[ _HBMK_lWINUNI ]
-   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" )
+   CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
    CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64|pcc" )
    CASE "allmingw" ; RETURN HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
@@ -11041,7 +11051,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    ENDIF
 
    IF ! HBMK_IS_IN( cKeyword, "|win|wce|dos|os2" + ;
-                              "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|cygwin|minix" + ;
+                              "|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix" + ;
                               "|msvc|msvc64|msvcia64|msvcarm" + ;
                               "|pocc|pocc64|poccarm|xcc" + ;
                               "|mingw|mingw64|mingwarm|bcc|watcom" + ;
@@ -11893,6 +11903,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - hpux    : gcc",;
       "  - beos    : gcc",;
       "  - qnx     : gcc",;
+      "  - android : gcc, gccarm",;
       "  - vxworks : gcc, diab",;
       "  - symbian : gcc",;
       "  - cygwin  : gcc",;
