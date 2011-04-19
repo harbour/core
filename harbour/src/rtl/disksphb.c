@@ -57,14 +57,15 @@
 #if defined( HB_OS_DARWIN )
    #include <sys/param.h>
    #include <sys/mount.h>
+#elif defined( HB_OS_ANDROID )
+   #include <sys/statfs.h>
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    #if defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
       #include <sys/stat.h>
    #else
       #include <sys/statvfs.h>
    #endif
-#endif
-#if defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN )
    #include <windows.h>
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
@@ -359,7 +360,8 @@ HB_FUNC( HB_DISKSPACE )
    }
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) || defined( HB_OS_SYMBIAN ) )
    {
-#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_ANDROID ) || \
+    defined( HB_OS_VXWORKS )
       struct statfs sf;
 #else
       struct statvfs sf;
@@ -368,7 +370,8 @@ HB_FUNC( HB_DISKSPACE )
 
       szPath = hb_fsNameConv( szPath, &pszFree );
 
-#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_ANDROID ) || \
+    defined( HB_OS_VXWORKS )
       if( statfs( szPath, &sf ) == 0 )
 #else
       if( statvfs( szPath, &sf ) == 0 )

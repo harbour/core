@@ -9123,6 +9123,8 @@ static HB_BOOL hb_cdxSortKeyGet( LPCDXSORTINFO pSort, HB_BYTE ** pKeyVal, HB_ULO
       pSort->pSwapPage[ ulPage ].ulKeyBuf--;
       return HB_TRUE;
    }
+   *pulRec = 0;
+   *pKeyVal = NULL;
    return HB_FALSE;
 }
 
@@ -9168,6 +9170,8 @@ static HB_BOOL hb_cdxSortKeyGet( LPCDXSORTINFO pSort, HB_BYTE ** pKeyVal, HB_ULO
       *pKeyVal = pKey;
       return HB_TRUE;
    }
+   *pulRec = 0;
+   *pKeyVal = NULL;
    return HB_FALSE;
 }
 

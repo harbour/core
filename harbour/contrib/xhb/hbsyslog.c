@@ -17,7 +17,7 @@
 
    static HANDLE s_RegHandle;
 
-#elif defined( HB_OS_ANDROID )
+#elif defined( HB_OS_ANDROID ) && 0
 
    #include <android/log.h>
 
@@ -114,13 +114,13 @@ HB_FUNC( HB_SYSLOGMESSAGE )
       #endif
          hb_retl( HB_FALSE );
 
-   #elif defined( HB_OS_ANDROID )
+   #elif defined( HB_OS_ANDROID ) && 0
 
       int logval;
 
       switch( hb_parni( 2 ) )
       {
-         case HB_LOG_CRITICAL: logval = ANDROID_LOG_VERBOSE; break;
+         case HB_LOG_CRITICAL: logval = ANDROID_LOG_FATAL; break;
          case HB_LOG_ERROR:    logval = ANDROID_LOG_ERROR; break;
          case HB_LOG_WARN:     logval = ANDROID_LOG_WARN; break;
          case HB_LOG_INFO:     logval = ANDROID_LOG_INFO; break;

@@ -306,9 +306,9 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
          switch( level )
          {
-            case HB_TR_ALWAYS:  slevel = ANDROID_LOG_ASSERT;  break;
-            case HB_TR_FATAL:   slevel = ANDROID_LOG_VERBOSE; break;
-            case HB_TR_ERROR:   slevel = ANDROID_LOG_ERROR    break;
+            case HB_TR_ALWAYS:  slevel = ANDROID_LOG_VERBOSE; break;
+            case HB_TR_FATAL:   slevel = ANDROID_LOG_FATAL;   break;
+            case HB_TR_ERROR:   slevel = ANDROID_LOG_ERROR;   break;
             case HB_TR_WARNING: slevel = ANDROID_LOG_WARN;    break;
             case HB_TR_INFO:    slevel = ANDROID_LOG_INFO;    break;
             case HB_TR_DEBUG:   slevel = ANDROID_LOG_DEBUG;   break;

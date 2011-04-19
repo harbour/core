@@ -672,7 +672,7 @@ HB_FUNC( FPARSELINE )
    if( szText )
    {
       const char * szDelim = hb_parc( 2 );
-      int iWords;
+      int iWords = 0;
       hb_ParseLine( pArray, szText, szDelim ? ( unsigned char ) *szDelim : ',', &iWords );
       nWords = iWords;
    }

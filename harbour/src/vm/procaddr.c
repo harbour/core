@@ -117,7 +117,7 @@ PHB_FUNC hb_vmProcAddress( const char * szFuncName )
       { "hb_xalloc",           ( PHB_FUNC ) hb_xalloc                   },
       { "hb_xfree",            ( PHB_FUNC ) hb_xfree                    },
       { "hb_xgrab",            ( PHB_FUNC ) hb_xgrab                    },
-      { "hb_xrealloc",         ( PHB_FUNC ) hb_xrealloc                 },
+      { "hb_xrealloc",         ( PHB_FUNC ) hb_xrealloc                 }
    };
 
    unsigned int uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_funcTable ), uiMiddle;

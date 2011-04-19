@@ -1107,6 +1107,9 @@ static int hb_hsxAdd( int iHandle, HB_ULONG *pulRecNo, PHB_ITEM pExpr, HB_BOOL f
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iRetVal, iRet;
 
+   if( pulRecNo )
+      *pulRecNo = 0;
+
    if( ! pHSX )
       return HSX_BADHANDLE;
 

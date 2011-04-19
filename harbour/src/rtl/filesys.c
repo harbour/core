@@ -308,6 +308,14 @@
    #define HB_FS_SOPEN
 #endif
 
+#if defined( HB_OS_ANDROID )
+   /* hack for missing functions in android libc library */
+   #define fdatasync          fsync
+   #define ftruncate64        ftruncate
+   #define pread64            pread
+   #define pwrite64(f,b,s,o)  pwrite(f,(void*)b,s,o)
+#endif
+
 #if UINT_MAX == USHRT_MAX
    #define HB_FS_IO_16BIT
 #endif

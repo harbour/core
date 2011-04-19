@@ -576,6 +576,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
          iPos++;
    }
 
+   *dVal = 0;
    *lVal = 0;
 
    /* Hex Number */

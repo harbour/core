@@ -68,7 +68,8 @@
     defined( HB_OS_DOS ) || \
     defined( HB_OS_OS2 ) || \
     defined( HB_OS_CYGWIN ) || \
-    defined( HB_OS_MINIX )
+    defined( HB_OS_MINIX ) || \
+    defined( HB_OS_ANDROID )
 #  define USE_FILE32API
 #endif
 

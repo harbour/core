@@ -64,24 +64,25 @@
 #  if defined( __WATCOMC__ ) || defined( __CEGCC__ ) || \
       defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
 #     include <sys/stat.h>
+#  elif defined( HB_OS_ANDROID )
+#     include <sys/statfs.h>
 #  elif defined( HB_OS_DARWIN )
 #     include <sys/param.h>
 #     include <sys/mount.h>
 #  else
 #     include <sys/statvfs.h>
 #  endif
-#endif
-#if defined( HB_OS_WIN )
-   #include <windows.h>
-   #if defined( HB_OS_WIN_CE )
-      #include "hbwince.h"
-   #endif
+#elif defined( HB_OS_WIN )
+#  include <windows.h>
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
 #elif defined( HB_OS_OS2 )
-   #define INCL_BASE
-   #define INCL_DOSERRORS
-   #include <os2.h>
+#  define INCL_BASE
+#  define INCL_DOSERRORS
+#  include <os2.h>
 #elif defined( HB_OS_DOS )
-   #include <dos.h>
+#  include <dos.h>
 #endif
 
 HB_FUNC( DISKSPACE )
@@ -237,7 +238,8 @@ HB_FUNC( DISKSPACE )
 
          bError = HB_FALSE;
 #else
-#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_ANDROID ) || \
+    defined( HB_OS_VXWORKS )
          struct statfs st;
          bError = statfs( szName, &st ) != 0;
 #else
