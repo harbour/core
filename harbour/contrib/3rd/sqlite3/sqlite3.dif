@@ -1,6 +1,6 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2011-04-16 16:42:35.408188114 +0200
-+++ sqlite3/sqlite3.c	2011-04-16 16:42:35.538191765 +0200
+--- sqlite3.orig/sqlite3.c	2011-04-19 16:01:37.408190109 +0200
++++ sqlite3/sqlite3.c	2011-04-19 16:01:37.528188662 +0200
 @@ -24781,7 +24781,9 @@
    case ENODEV:
    case ENXIO:
