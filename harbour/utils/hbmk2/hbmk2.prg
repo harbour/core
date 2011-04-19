@@ -1481,7 +1481,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "bin" + hb_ps() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + ".."
          OTHERWISE
-            hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
+            hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
             RETURN _ERRLEV_FAILHBDETECT
          ENDCASE
 #endif
@@ -1519,7 +1519,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
       ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
                                             hb_ps() + "hbvm.h" )
-         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
+         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
 
@@ -1705,9 +1705,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Please choose a C compiler by using -compiler= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Choose a C compiler by using -compiler= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nSetup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN _ERRLEV_UNKNCOMP
          ENDIF
@@ -7113,7 +7113,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
          .F. /* lCaseSensitive */,;
          .T. /* lNewLine */ )
       IF Empty( s_pRegexInclude )
-         hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
+         hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
          s_pRegexInclude := 0 /* To show the error only once by setting to non-NIL empty value */
       ENDIF
    ENDIF
@@ -11983,7 +11983,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
-      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Please note that .hbp files are automatically considered as separate targets." ) },;
+      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate targets." ) },;
       NIL,;
       { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
       NIL,;

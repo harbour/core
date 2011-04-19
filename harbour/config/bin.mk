@@ -117,6 +117,10 @@ endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
+ifneq ($(__HB_BUILD_NOSYSLIB),)
+   SYSLIBS := $(filter-out $(__HB_BUILD_NOSYSLIB),$(SYSLIBS))
+endif
+
 ifneq ($(HB_PLATFORM_UNIX),)
    ifeq ($(BUILD_SHARED),yes)
       SYSLIBS :=

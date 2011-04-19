@@ -19,6 +19,10 @@ endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
+ifneq ($(__HB_BUILD_NOSYSLIB),)
+   SYSLIBS := $(filter-out $(__HB_BUILD_NOSYSLIB),$(SYSLIBS))
+endif
+
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk

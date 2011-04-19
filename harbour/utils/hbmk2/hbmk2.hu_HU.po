@@ -374,7 +374,7 @@ msgstr "C fordító debug információ hozzáadása (vagy sem). Harbour szintű 
 
 #: hbmk2.prg:1300 hbmk2.prg:1671
 #, c-format
-msgid "Please choose a C compiler by using -compiler= option.\\nYou have the following choices on your platform: %1$s"
+msgid "Choose a C compiler by using -compiler= option.\\nYou have the following choices on your platform: %1$s"
 msgstr "Kérem, válasszon C fordítót a -compiler= kapcsoló segítségével.\\nA következő lehetőségek közül választhat: %1$s"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
@@ -404,7 +404,7 @@ msgstr ""
 
 #: hbmk2.prg:1105 hbmk2.prg:1450
 #, c-format
-msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory."
+msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory."
 msgstr "Hiba: HB_INSTALL_PREFIX nincs megadva, automata detektálás nem járt sikerrel.\\nKérem, futtassa ezt a programot a Harbour könyvtárán belüli eredeti helyéről vagy állítsa be a HB_INSTALL_PREFIX környezeti változót a Harbour gyökér könyvtárára."
 
 #: hbmk2.prg:2096 hbmk2.prg:2938
@@ -624,7 +624,7 @@ msgstr ""
 
 #: hbmk2.prg:1302 hbmk2.prg:1673
 #, c-format
-msgid "Could not detect any supported C compiler in your PATH.\\nPlease setup one or set -compiler= option to one of these values: %1$s"
+msgid "Could not detect any supported C compiler in your PATH.\\nSetup one or set -compiler= option to one of these values: %1$s"
 msgstr "Nem sikerült automatikusan detektálni egyetlen C fordítót sem a PATH-ban.\\nKérem, telepítsen egyet vagy állítsa a -compiler= kapcsolót a következő értékek valamelyikére: %1$s"
 
 #: hbmk2.prg:7824 hbmk2.prg:11479
@@ -1019,7 +1019,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Please note that .hbp files are automatically considered as separate targets."
+msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate targets."
 msgstr ""
 
 #: hbmk2.prg:11633
@@ -1254,7 +1254,7 @@ msgstr ""
 
 #: hbmk2.prg:6786
 #, c-format
-msgid "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings."
+msgid "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings."
 msgstr ""
 
 #: hbmk2.prg:11633

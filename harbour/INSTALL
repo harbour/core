@@ -17,8 +17,8 @@ HARBOUR
 ===============================================
 
    ==========================================================================
-   NOTE: Before reporting a problem to developers, please make sure to read
-         the TROUBLESHOOTING section in this document and try the suggestions
+   NOTE: Before reporting a problem to developers, make sure to read the
+         TROUBLESHOOTING section in this document and try the suggestions
          you find there.
    ==========================================================================
 
@@ -42,7 +42,7 @@ HARBOUR
           your setup. It's also highly discouraged to keep multiple copies
           of the same compiler, or different versions of the same compiler
           in PATH at the same time. For the list of supported compilers,
-          please look up the relevant section in this document.
+          look up the relevant section in this document.
       3.) GNU Make 3.81 or upper is required. We recommend this link:
              http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.82-mingw32/make-3.82-3-mingw32-bin.tar.lzma/download
           Unpack it to your PATH or Harbour source root directory.
@@ -99,8 +99,8 @@ HARBOUR
       1.) You need to get GNU Make. If you use OS/2 host, 3.81r3 or upper
           version is required. We recommend this link:
              ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip
-          If you use other host, please refer to other platform instructions
-          in this section.
+          If you use other host, refer to other platform instructions in
+          this section.
           You can also use included copy named os2-make.exe instead.
 
       > make [install]
@@ -302,7 +302,7 @@ HARBOUR
 
       > package\winuni\mpkg_win_uni.bat
 
-      NOTE: Please read instructions in file and do the necessary
+      NOTE: Carefully read in-file instructions and do the necessary
             steps before calling the script.
 
 
@@ -1220,7 +1220,7 @@ HARBOUR
 10. TROUBLESHOOTING
 ===================
 
-   Please evaluate these points before reporting an issue on the developers'
+   Always evaluate these points before reporting an issue on the developers'
    mailing list.
 
    1. Make sure to have carefully read this document.
@@ -1652,8 +1652,8 @@ HARBOUR
      The size limit for e-mails sent to the development list is
      40KB. If you need more, upload it to a site where we can
      access it, or use the sf.net page to submit it.
-     Please use the same coding style as you find in the files
-     you're patching.
+     Always use the same coding/formatting style as you find in
+     the files you're patching.
    - Given a good history of valuable contributions, you can get
      write access to the source repository.
    - Of course there is more into Harbour contribution than writing
