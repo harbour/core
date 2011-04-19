@@ -100,7 +100,7 @@ CLASS XbpPartHandler
    METHOD   notifier()
 
    DATA     aChildren                             INIT    {}
-   DATA     _aOwned                               INIT    {}
+   DATA     a_Owned                               INIT    {}
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
@@ -209,7 +209,7 @@ METHOD XbpPartHandler:addAsChild()
 METHOD XbpPartHandler:addAsOwned( oXbp )
 
    IF ! empty( oXbp )
-      aadd( ::_aOwned, oXbp )
+      aadd( ::a_Owned, oXbp )
    ENDIF
 
    RETURN Self
@@ -252,10 +252,10 @@ METHOD XbpPartHandler:delChild( oXbp )
 METHOD XbpPartHandler:delOwned( oXbp )
    LOCAL n
 
-   IF ( n := ascan( ::_aOwned, {|o| o == oXbp } ) ) > 0
-      hb_adel( ::_aOwned, n, .t. )
-      IF empty( ::_aOwned )
-         ::_aOwned := {}
+   IF ( n := ascan( ::a_Owned, {|o| o == oXbp } ) ) > 0
+      hb_adel( ::a_Owned, n, .t. )
+      IF empty( ::a_Owned )
+         ::a_Owned := {}
       ENDIF
    endif
 
@@ -319,7 +319,7 @@ METHOD XbpPartHandler:notifier()
 METHOD XbpPartHandler:moveOwned( nOffSetX, nOffSetY )
    LOCAL oXbp, oPos
 
-   FOR EACH oXbp IN ::_aOwned
+   FOR EACH oXbp IN ::a_Owned
       IF __objHasMsg( oXbp, "MOVEWITHOWNER" ) .AND. oXbp:moveWithOwner
          IF !( oXbp:oParent:className() == "XBPDRAWINGAREA" )
             oPos := oXbp:oWidget:pos()
