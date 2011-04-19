@@ -2,4 +2,4 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_PLATFORM)/mingw.mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/mingwarm.mk
