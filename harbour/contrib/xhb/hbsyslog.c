@@ -17,10 +17,6 @@
 
    static HANDLE s_RegHandle;
 
-#elif defined( HB_OS_ANDROID ) && 0
-
-   #include <android/log.h>
-
 #elif defined( HB_OS_UNIX ) && \
       ! defined( __WATCOMC__ ) && \
       ! defined( HB_OS_VXWORKS ) && \
@@ -113,22 +109,6 @@ HB_FUNC( HB_SYSLOGMESSAGE )
       else
       #endif
          hb_retl( HB_FALSE );
-
-   #elif defined( HB_OS_ANDROID ) && 0
-
-      int logval;
-
-      switch( hb_parni( 2 ) )
-      {
-         case HB_LOG_CRITICAL: logval = ANDROID_LOG_FATAL; break;
-         case HB_LOG_ERROR:    logval = ANDROID_LOG_ERROR; break;
-         case HB_LOG_WARN:     logval = ANDROID_LOG_WARN; break;
-         case HB_LOG_INFO:     logval = ANDROID_LOG_INFO; break;
-         default:              logval = ANDROID_LOG_DEBUG;
-      }
-
-      __android_log_print( logval, "xhb", "[%lX]: %s", hb_parnl( 3 ), hb_parcx( 1 ) );
-      hb_retl( HB_TRUE );
 
    #elif defined( HB_OS_UNIX ) && \
          ! defined( __WATCOMC__ ) && \
