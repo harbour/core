@@ -821,7 +821,7 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 
 int hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsPipeOrSock(%p,%" HB_PFS "u)", ( void * ) ( HB_PTRDIFF ) hPipeHandle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsPipeOrSock(%p)", ( void * ) ( HB_PTRDIFF ) hPipeHandle));
 
 #if defined( HB_OS_UNIX )
 {
