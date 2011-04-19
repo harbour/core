@@ -334,128 +334,129 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLIBUSERGT        31
 #define _HBMK_aLIBUSERSYS       32
 #define _HBMK_aLIBUSERSYSPRE    33
-#define _HBMK_aLIBPATH          34
-#define _HBMK_aINSTPATH         35
-#define _HBMK_aOPTC             36
-#define _HBMK_aOPTPRG           37
-#define _HBMK_aOPTRES           38
-#define _HBMK_aOPTL             39
-#define _HBMK_aOPTA             40
-#define _HBMK_aOPTD             41
-#define _HBMK_aOPTI             42
-#define _HBMK_lCPP              43
-#define _HBMK_lSHARED           44
-#define _HBMK_lSTATICFULL       45
-#define _HBMK_lSHAREDDIST       46
-#define _HBMK_lNULRDD           47
-#define _HBMK_lMAP              48
-#define _HBMK_lBEEP             49
-#define _HBMK_lSTRIP            50
-#define _HBMK_lOPTIM            51
-#define _HBMK_nCOMPR            52
-#define _HBMK_nWARN             53
-#define _HBMK_lRUN              54
-#define _HBMK_lINC              55
-#define _HBMK_lREBUILDPO        56
-#define _HBMK_lMINIPO           57
-#define _HBMK_lWINUNI           58
-#define _HBMK_nCONF             59
-#define _HBMK_lIGNOREERROR      60
-#define _HBMK_lIMPLIB           61
-#define _HBMK_lHBCPPMM          62
-#define _HBMK_aVAR              63
-#define _HBMK_hDEP              64
+#define _HBMK_aLIBFILTEROUT     34
+#define _HBMK_aLIBPATH          35
+#define _HBMK_aINSTPATH         36
+#define _HBMK_aOPTC             37
+#define _HBMK_aOPTPRG           38
+#define _HBMK_aOPTRES           39
+#define _HBMK_aOPTL             40
+#define _HBMK_aOPTA             41
+#define _HBMK_aOPTD             42
+#define _HBMK_aOPTI             43
+#define _HBMK_lCPP              44
+#define _HBMK_lSHARED           45
+#define _HBMK_lSTATICFULL       46
+#define _HBMK_lSHAREDDIST       47
+#define _HBMK_lNULRDD           48
+#define _HBMK_lMAP              49
+#define _HBMK_lBEEP             50
+#define _HBMK_lSTRIP            51
+#define _HBMK_lOPTIM            52
+#define _HBMK_nCOMPR            53
+#define _HBMK_nWARN             54
+#define _HBMK_lRUN              55
+#define _HBMK_lINC              56
+#define _HBMK_lREBUILDPO        57
+#define _HBMK_lMINIPO           58
+#define _HBMK_lWINUNI           59
+#define _HBMK_nCONF             60
+#define _HBMK_lIGNOREERROR      61
+#define _HBMK_lIMPLIB           62
+#define _HBMK_lHBCPPMM          63
+#define _HBMK_aVAR              64
+#define _HBMK_hDEP              65
 
-#define _HBMK_lCreateLib        65
-#define _HBMK_lCreateDyn        66
-#define _HBMK_lCreateImpLib     67
-#define _HBMK_lCreatePPO        68
-#define _HBMK_lCreateHRB        69
+#define _HBMK_lCreateLib        66
+#define _HBMK_lCreateDyn        67
+#define _HBMK_lCreateImpLib     68
+#define _HBMK_lCreatePPO        69
+#define _HBMK_lCreateHRB        70
 
-#define _HBMK_lDynVM            70
+#define _HBMK_lDynVM            71
 
-#define _HBMK_lBLDFLGP          71
-#define _HBMK_lBLDFLGC          72
-#define _HBMK_lBLDFLGL          73
+#define _HBMK_lBLDFLGP          72
+#define _HBMK_lBLDFLGC          73
+#define _HBMK_lBLDFLGL          74
 
-#define _HBMK_cFIRST            74
-#define _HBMK_aPRG              75
-#define _HBMK_aC                76
-#define _HBMK_aCPP              77
-#define _HBMK_aRESSRC           78
-#define _HBMK_aRESCMP           79
-#define _HBMK_aOBJUSER          80
-#define _HBMK_aICON             81
-#define _HBMK_cMANIFEST         82
-#define _HBMK_aIMPLIBSRC        83
-#define _HBMK_aDEF              84
-#define _HBMK_aINSTFILE         85
-#define _HBMK_hDEPTS            86
-#define _HBMK_aREQUEST          87
+#define _HBMK_cFIRST            75
+#define _HBMK_aPRG              76
+#define _HBMK_aC                77
+#define _HBMK_aCPP              78
+#define _HBMK_aRESSRC           79
+#define _HBMK_aRESCMP           80
+#define _HBMK_aOBJUSER          81
+#define _HBMK_aICON             82
+#define _HBMK_cMANIFEST         83
+#define _HBMK_aIMPLIBSRC        84
+#define _HBMK_aDEF              85
+#define _HBMK_aINSTFILE         86
+#define _HBMK_hDEPTS            87
+#define _HBMK_aREQUEST          88
 
-#define _HBMK_aPO               88
-#define _HBMK_cHBL              89
-#define _HBMK_cHBLDir           90
-#define _HBMK_aLNG              91
-#define _HBMK_cPO               92
+#define _HBMK_aPO               89
+#define _HBMK_cHBL              90
+#define _HBMK_cHBLDir           91
+#define _HBMK_aLNG              92
+#define _HBMK_cPO               93
 
-#define _HBMK_hPLUGINHRB        93
-#define _HBMK_hPLUGINVars       94
-#define _HBMK_aPLUGINPars       95
-#define _HBMK_hPLUGINExt        96
+#define _HBMK_hPLUGINHRB        94
+#define _HBMK_hPLUGINVars       95
+#define _HBMK_aPLUGINPars       96
+#define _HBMK_hPLUGINExt        97
 
-#define _HBMK_lDEBUGTIME        97
-#define _HBMK_lDEBUGINC         98
-#define _HBMK_lDEBUGSTUB        99
-#define _HBMK_lDEBUGI18N        100
-#define _HBMK_lDEBUGDEPD        101
-#define _HBMK_lDEBUGPARS        102
+#define _HBMK_lDEBUGTIME        98
+#define _HBMK_lDEBUGINC         99
+#define _HBMK_lDEBUGSTUB        100
+#define _HBMK_lDEBUGI18N        101
+#define _HBMK_lDEBUGDEPD        102
+#define _HBMK_lDEBUGPARS        103
 
-#define _HBMK_cCCPATH           103
-#define _HBMK_cCCPREFIX         104
-#define _HBMK_cCCPOSTFIX        105
-#define _HBMK_cCCEXT            106
+#define _HBMK_cCCPATH           104
+#define _HBMK_cCCPREFIX         105
+#define _HBMK_cCCPOSTFIX        106
+#define _HBMK_cCCEXT            107
 
-#define _HBMK_cWorkDir          107
-#define _HBMK_cWorkDirDynSub    108
-#define _HBMK_nCmd_Esc          109
-#define _HBMK_nScr_Esc          110
-#define _HBMK_nCmd_FNF          111
-#define _HBMK_nScr_FNF          112
-#define _HBMK_nErrorLevel       113
+#define _HBMK_cWorkDir          108
+#define _HBMK_cWorkDirDynSub    109
+#define _HBMK_nCmd_Esc          110
+#define _HBMK_nScr_Esc          111
+#define _HBMK_nCmd_FNF          112
+#define _HBMK_nScr_FNF          113
+#define _HBMK_nErrorLevel       114
 
-#define _HBMK_cPROGDIR          114
-#define _HBMK_cPROGNAME         115
+#define _HBMK_cPROGDIR          115
+#define _HBMK_cPROGNAME         116
 
-#define _HBMK_hAUTOHBC          116 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     117 /* trigger headers found */
+#define _HBMK_hAUTOHBC          117 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     118 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          118 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         119 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          119 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         120 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    120
-#define _HBMK_lStopAfterHarbour 121
+#define _HBMK_lStopAfterInit    121
+#define _HBMK_lStopAfterHarbour 122
 
-#define _HBMK_nCOMPVer          122
-#define _HBMK_lDEPIMPLIB        123 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        124 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          125 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        126 /* Target type: container */
-#define _HBMK_lShowLevel        127 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            128 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     129 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        130 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             131 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        132 /* Links to be created and pointing to the target */
+#define _HBMK_nCOMPVer          123
+#define _HBMK_lDEPIMPLIB        124 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        125 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          126 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        127 /* Target type: container */
+#define _HBMK_lShowLevel        128 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            129 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     130 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        131 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             132 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        133 /* Links to be created and pointing to the target */
 
-#define _HBMK_aArgs             133
-#define _HBMK_nArgTarget        134
-#define _HBMK_lPause            135
-#define _HBMK_nLevel            136
+#define _HBMK_aArgs             134
+#define _HBMK_nArgTarget        135
+#define _HBMK_lPause            136
+#define _HBMK_nLevel            137
 
-#define _HBMK_cHBX              137
+#define _HBMK_cHBX              138
 
-#define _HBMK_MAX_              137
+#define _HBMK_MAX_              138
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1952,6 +1953,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_aLIBUSERGT ] := {}
    hbmk[ _HBMK_aLIBUSERSYS ] := {}
    hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
+   hbmk[ _HBMK_aLIBFILTEROUT ] := {}
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
    hbmk[ _HBMK_cMANIFEST ] := NIL
@@ -2642,15 +2644,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
-           !( Left( cParam, 3 ) == "-l-" )
+           !( cParam == "-l-" )
 
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             cParam := PathSepToSelf( cParam )
-            IF _IS_AUTOLIBSYSPRE( cParam )
-               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
+            IF Left( cParam, 1 ) == "-"
+               AAdd( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cParam, 2 ) )
             ELSE
-               AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+               IF _IS_AUTOLIBSYSPRE( cParam )
+                  AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+               ENDIF
             ENDIF
          ENDIF
 
@@ -5518,6 +5524,17 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          NEXT
       ENDIF
+
+      /* Handle filter list of libs */
+      FOR EACH tmp2 IN hbmk[ _HBMK_aLIBFILTEROUT ]
+         FOR EACH tmp1 IN { hbmk[ _HBMK_aLIBUSER ], l_aLIB3RD, hbmk[ _HBMK_aLIBUSERSYSPRE ], l_aLIBSYS, hbmk[ _HBMK_aLIBUSERSYS ] }
+            FOR EACH tmp IN tmp1 DESCEND
+               IF hb_FileMatch( tmp, tmp2 )
+                  hb_ADel( tmp1, tmp:__enumIndex(), .T. )
+               ENDIF
+            NEXT
+         NEXT
+      NEXT
 
       /* Process build-time configuration */
 
@@ -8978,10 +8995,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                ENDIF
             ELSE
                cItem := PathSepToSelf( cItem )
-               IF _IS_AUTOLIBSYSPRE( cItem )
-                  AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
+               IF Left( cItem, 1 ) == "-"
+                  AAddNewNotEmpty( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cItem, 2 ) )
                ELSE
-                  AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+                  IF _IS_AUTOLIBSYSPRE( cItem )
+                     AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
+                  ELSE
+                     AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+                  ENDIF
                ENDIF
             ENDIF
          NEXT
