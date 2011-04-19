@@ -510,7 +510,7 @@ METHOD IdeSkeletons:showTree()
       ::oSkltnsTreeDock:oWidget:setWidget( ::oTree:oWidget )
    ENDIF
 
-   ::oTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
+   ::oTree:oWidget:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
 
    RETURN Self
 
