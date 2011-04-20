@@ -6022,7 +6022,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                lTargetUpToDate := .T.
                IF lTargetUpToDate
-                  FOR EACH tmp IN ArrayAJoin( { l_aOBJ, hbmk[ _HBMK_aOBJUSER ], l_aOBJA, hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_aRESCMP ] } )
+                  FOR EACH tmp IN ArrayAJoin( { l_aOBJ, hbmk[ _HBMK_aOBJUSER ], l_aOBJA, ListDirExt( ArrayAJoin( { hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_aRESCMP ] } ), hbmk[ _HBMK_cWorkDir ], cResExt, .F. ) } )
                      IF hbmk[ _HBMK_lDEBUGINC ]
                         hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: EXEDEP %1$s", tmp ) )
                      ENDIF
