@@ -16,6 +16,9 @@
 {win}-cflag=-DWIN32 -DWIN
 {win|dos|os2}-cflag=-D_EOL_CRLF
 
+# For strdup()
+-cflag=-std=gnu90{!lngcpp&allgcc}
+
 mxml_att.c
 mxml_ent.c
 mxml_fil.c

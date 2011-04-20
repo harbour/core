@@ -17,6 +17,8 @@
 
 -w3 -es2
 
+-cflag=-std=gnu++98{allgcc}
+
 -i.
 
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}

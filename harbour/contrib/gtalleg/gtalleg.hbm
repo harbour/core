@@ -21,5 +21,8 @@
 
 -iflag={bcc}-a
 
+# For allegro headers
+-cflag=-std=gnu90{!lngcpp&allgcc}
+
 gtalleg.c
 ssf.c

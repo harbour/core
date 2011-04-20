@@ -25,6 +25,10 @@ randtabl.c
 
 {bcc}-aflag=/C
 
+-cflag=-DBZ_STRICT_ANSI
+# For fileno()
+-cflag=-std=gnu90{!lngcpp&allgcc}
+
 # ORIGIN http://www.bzip.org/
 # VER    1.0.6
 # URL    http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz

@@ -1573,7 +1573,7 @@ HB_FUNC( HPDF_VERSION_TEXT )
    hb_retc_const( HPDF_VERSION_TEXT );
 }
 /*----------------------------------------------------------------------*/
-//                    New Functions in LibHaru 2.2.0
+/*                    New Functions in LibHaru 2.2.0                    */
 /*----------------------------------------------------------------------*/
 /*
 HPDF_EXPORT(HPDF_STATUS)

@@ -31,6 +31,9 @@
 # Patent will expire in 2010/2011
 -cflag=-DOPENSSL_NO_IDEA
 
+# For _fileno() in openssl/applink.c
+-cflag=-std=gnu90{!lngcpp&allgcc}
+
 -instfile=inc:hbssl.ch
 -instfile=inc:hbssl.hbx
 

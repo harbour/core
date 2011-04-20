@@ -575,7 +575,7 @@ static void hb_mixTagAddKeyPos( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos
       MIX_COPY_CHILDS_EXTERNAL( pTag, pNewNode, 1, pNode, k + 1, MIX_NODE_ORDER - k );
       for ( j = 1; j <= MIX_NODE_ORDER - k; j++ )
       {
-         pNewNode->Child[ j ]->Parent = pNewNode;  // Do NOT forget to re-parent
+         pNewNode->Child[ j ]->Parent = pNewNode;  /* Do NOT forget to re-parent */
       }
    }
    pNode->KeyCount = k;
@@ -1887,7 +1887,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
          break;
 
       case DBOI_NUMBER:
-         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  // kitaip
+         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  /* kitaip */
          break;
 
       case DBOI_ISCOND:

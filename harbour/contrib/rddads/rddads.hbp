@@ -9,9 +9,6 @@
 
 -w3 -es2
 
-# for ADS headers
--cflag=-std=gnu89{!lngcpp&allgcc}
-
 -stop{!(linux|win)}
 
 -depkeyhead=ads:ace.h
@@ -29,6 +26,9 @@
 
 # To avoid a warning in ACE header
 -cflag=-Wno-pragmas{allmingw}
+
+# for ADS headers
+-cflag=-std=gnu90{!lngcpp&allgcc}
 
 rddads.hbx
 

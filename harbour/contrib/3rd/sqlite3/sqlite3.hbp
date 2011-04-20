@@ -6,7 +6,7 @@
 
 -stop{poccarm}
 # NOTE: old msvcarm can't cope with some PP directives. [vszakats]
--stop{msvcarm&HB_COMP_VER!='1200'&HB_COMP_VER!='1300'&HB_COMP_VER!='1310')}
+-stop{msvcarm&(HB_COMP_VER='1200')&!(HB_COMP_VER='1300')&!(HB_COMP_VER='1310')}
 # NOTE: dos based watcom runs out of memory. [vszakats]
 -stop{HB_HOST_PLAT='dos'&watcom}
 # NOTE: disable *nix builds on non-*nix platforms; [vszakats]

@@ -23,6 +23,9 @@
 -instfile=inc:freeimag.ch
 -instfile=inc:hbfimage.hbx
 
+# For FreeImage headers
+-cflag=-std=gnu90{!lngcpp&allgcc}
+
 hbfimage.hbx
 
 fi_winfu.c
