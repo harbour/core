@@ -596,6 +596,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 #endif
 
    hb_curl_form_free( &hb_curl->pHTTPPOST_First );
+   hb_curl->pHTTPPOST_Last = NULL;
    hb_curl_slist_free( &hb_curl->pHTTPHEADER );
    hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
    hb_curl_slist_free( &hb_curl->pQUOTE );
