@@ -24,7 +24,7 @@
 -instfile=inc:hbfimage.hbx
 
 # For FreeImage headers
--cflag=-std=gnu90{!lngcpp&allgcc}
+-cflag=-std=gnu89{!lngcpp&allgcc}
 
 hbfimage.hbx
 

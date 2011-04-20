@@ -27,7 +27,7 @@ randtabl.c
 
 -cflag=-DBZ_STRICT_ANSI
 # For fileno()
--cflag=-std=gnu90{!lngcpp&allgcc}
+-cflag=-std=gnu89{!lngcpp&allgcc}
 
 # ORIGIN http://www.bzip.org/
 # VER    1.0.6

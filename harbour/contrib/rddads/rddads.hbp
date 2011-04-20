@@ -28,7 +28,7 @@
 -cflag=-Wno-pragmas{allmingw}
 
 # for ADS headers
--cflag=-std=gnu90{!lngcpp&allgcc}
+-cflag=-std=gnu89{!lngcpp&allgcc}
 
 rddads.hbx
 

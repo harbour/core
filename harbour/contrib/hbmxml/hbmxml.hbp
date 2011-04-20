@@ -20,7 +20,7 @@
 -instfile=inc:hbmxml.hbx
 
 # For strdup()
--cflag=-std=gnu90{!lngcpp&allgcc}
+-cflag=-std=gnu89{!lngcpp&allgcc}
 
 hbmxml.hbx
 
