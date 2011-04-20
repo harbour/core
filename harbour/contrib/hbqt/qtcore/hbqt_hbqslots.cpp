@@ -330,7 +330,6 @@ HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 
             if( t_slots->listBlock.at( i - 1 ) != NULL )
             {
-               //HB_TRACE( HB_TR_DEBUG, ( "              __HBQT_SLOTS_DISCONNECT %d", i ) );
                hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
                t_slots->listBlock[ i - 1 ] = NULL;
             }

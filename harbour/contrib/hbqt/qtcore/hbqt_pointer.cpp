@@ -139,7 +139,6 @@ void * hbqt_par_obj( int iParam )
    }
    else
    {
-      //hb_errRT_BASE( EG_ARG, 8000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       HBQT_GC_T * p;
       p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
       if( p && p->ph )
@@ -169,7 +168,6 @@ void * hbqt_gcpointer( int iParam )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns RAW pointer: %p", hb_parptr( iParam ) ) );
       return NULL;
-      //return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
    }
    else if( HB_ISOBJECT( iParam ) )
    {
@@ -240,8 +238,8 @@ void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )
    static PHB_DYNS s_pDyns_hPPtrAssign = NULL;
 
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_set_pptr( ptr =%p, pSelf=%p )", ptr, pSelf ) );
-   // get the position of _PPTR member, the
-   // leading underscore because I want to write to it
+   /* get the position of _PPTR member, the
+      leading underscore because I want to write to it */
 
    if( ! s_pDyns_hPPtrAssign )
       s_pDyns_hPPtrAssign = hb_dynsymGetCase( "_PPTR" );
@@ -252,25 +250,25 @@ void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )
       return; /* TODO: Still better if RTE. */
    }
 
-   // push the _PPTR address
+   /* push the _PPTR address */
    hb_vmPushDynSym( s_pDyns_hPPtrAssign );
 
-   // push the instance we want change _PPTR value
-   // it was already on the stack, but we push a pointer to it
+   /* push the instance we want change _PPTR value
+      it was already on the stack, but we push a pointer to it */
    hb_vmPush( pSelf );
 
-   // push the actual value
+   /* push the actual value */
    hb_vmPushPointerGC( ptr );
 
-   // run the command with 1 parameter
+   /* run the command with 1 parameter */
    hb_vmSend( 1 );
 }
 
 void hbqt_itemPushReturn( void* ptr, PHB_ITEM pSelf )
 {
    HB_TRACE( HB_TR_DEBUG, ( "itemPushReturn( ptr =%p, pSelf=%p )", ptr, pSelf ) );
-   // get the position of _PPTR member, the
-   // leading underscore because I want to write to it
+   /* get the position of _PPTR member, the
+      leading underscore because I want to write to it */
 
    if( pSelf == NULL )
       pSelf = hb_stackSelfItem();
@@ -526,7 +524,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
       hb_vmPushNil();
       hb_vmDo( 0 );
 
-// TODO: change this hack
+      /* TODO: change this hack */
       char test[ HB_SYMBOL_NAME_LEN + 1 ];
       hb_snprintf( test, sizeof( test ), "HB_%s", szClsName );
 
@@ -618,4 +616,4 @@ PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName )
 
 /*----------------------------------------------------------------------*/
 
-#endif                  // #if QT_VERSION >= 0x040500
+#endif

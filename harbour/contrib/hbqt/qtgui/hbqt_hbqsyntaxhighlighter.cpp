@@ -164,7 +164,6 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
    #endif
-//HB_TRACE( HB_TR_DEBUG, ( "SYNTSX HIGHLIGHTING" ) );
 
    int index = 0;
 

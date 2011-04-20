@@ -9,6 +9,8 @@
 
 -w3 -es2
 
+-cflag=-std=c89{allgcc}
+
 -instfile=inc:hbnetio.hbx
 
 hbnetio.hbx

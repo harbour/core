@@ -13,6 +13,8 @@
 
 -cflag=-DWIN32_LEAN_AND_MEAN
 
+-cflag=-std=c89{allgcc}
+
 -depkeyhead=png:png.h
 -depcontrol=png:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=png:${HB_WITH_PNG}

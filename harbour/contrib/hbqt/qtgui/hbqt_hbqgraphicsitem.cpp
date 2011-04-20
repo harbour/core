@@ -79,8 +79,8 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
 
    iResizeMode          = RESIZE_MODE_FIXED;
    iResizeFlags         = RESIZE_MODE_LEFT | RESIZE_MODE_TOP | RESIZE_MODE_RIGHT | RESIZE_MODE_BOTTOM;
-   dWidth               = 20 / UNIT; // 20 mm
-   dHeight              = 20 / UNIT; // 20 mm
+   dWidth               = 20 / UNIT; /* 20 mm */
+   dHeight              = 20 / UNIT; /* 20 mm */
    iOpacity             = 100;
    iResizeHandle        = 2 / UNIT;
    iBGMode              = Qt::TransparentMode;
@@ -483,7 +483,7 @@ void HBQGraphicsItem::setLegendColorRectWidth( int legendColorRectWidth )
 }
 
 /*----------------------------------------------------------------------*/
-//                            Mouse Events
+/*                            Mouse Events                              */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
@@ -533,7 +533,7 @@ void HBQGraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
    QGraphicsItem::mousePressEvent( event );
 
    if( event->buttons() == Qt::LeftButton ){
-      // emit( itemSelected( this, event->pos() ) );
+      /* emit( itemSelected( this, event->pos() ) ); */
       if( block ){
          PHB_ITEM p1 = hb_itemPutNI( NULL, 21101 );
          PHB_ITEM p2 = hb_itemPutC( NULL, objectName().toLatin1().data() );
@@ -551,9 +551,9 @@ void HBQGraphicsItem::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 
    QRectF nGeometry = geometry();
    if( nGeometry != QRectF_geometry ){
-      // emit( geometryChanged( this, nGeometry, QRectF_geometry ) );
+      /* emit( geometryChanged( this, nGeometry, QRectF_geometry ) ); */
       if( block ){
-         // Inform geometry is changed
+         /* Inform geometry is changed */
       }
    }
 }
@@ -632,7 +632,7 @@ int HBQGraphicsItem::determineResizeMode( const QPointF & pos )
    return mode;
 }
 /*----------------------------------------------------------------------*/
-//                             Drag Events
+/*                             Drag Events                              */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsItem::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
@@ -703,13 +703,13 @@ void HBQGraphicsItem::dropEvent( QGraphicsSceneDragDropEvent * event )
          QTreeWidgetItem * item = tree->topLevelItem( row );
 
          hb_arrayNew( p3, 3 );
-         //
+
          hb_arraySetC( p3, 1, tree->objectName().toLatin1().data() );
          hb_arraySetC( p3, 2, roleDataMap.value( Qt::DisplayRole ).toString().toLatin1().data() );
          hb_arraySetC( p3, 3, item->text( 0 ).toLatin1().data() );
-         //
+
          hb_vmEvalBlockV( block, 3, p1, p2, p3 );
-         //
+
          hb_itemRelease( p1 );
          hb_itemRelease( p2 );
          hb_itemRelease( p3 );
@@ -726,8 +726,9 @@ void HBQGraphicsItem::dropEvent( QGraphicsSceneDragDropEvent * event )
    }
    QGraphicsItem::dropEvent( event );
 }
+
 /*----------------------------------------------------------------------*/
-//                              Painting
+/*                              Painting                                */
 /*----------------------------------------------------------------------*/
 
 QRectF HBQGraphicsItem::boundingRect() const
@@ -762,7 +763,7 @@ void HBQGraphicsItem::prepare( QPainter * painter )
          QRectF rc = fm.boundingRect( rect, textFlags(), QString_text );
          if( rc.height() > rect.height() )
          {
-            //setStretch( rc.height() - rect.height() );
+            /* setStretch( rc.height() - rect.height() ); */
          }
       }
    }

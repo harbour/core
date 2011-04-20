@@ -10,6 +10,8 @@
 
 -w3 -es2
 
+-cflag=-std=c89{allgcc}
+
 -depkeyhead=curl:curl/curl.h
 -depcontrol=curl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=curl:${HB_WITH_CURL}

@@ -1375,7 +1375,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       case Qt::Key_Tab     :
       case Qt::Key_Backtab :
          event->ignore();
-         return;                                    // let the completer do default behavior
+         return;                                    /* let the completer do default behavior */
       case Qt::Key_Space:
          if( block ){
             PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
@@ -1432,7 +1432,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
    bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
    QString completionPrefix = hbTextUnderCursor( true );
-   //QString completionPrefix = hbTextUnderCursor( false );
+   /*QString completionPrefix = hbTextUnderCursor( false );*/
 
    if( hasModifier ||
          event->text().isEmpty() ||
@@ -1454,7 +1454,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    cr.setTop( cr.top() + horzRulerHeight + 5 );
    cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
 
-   c->complete( cr ); // pop it up!
+   c->complete( cr ); /* pop it up! */
 }
 
 /*----------------------------------------------------------------------*/
@@ -1589,7 +1589,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    this->hbPaintHighlight( event );
    this->hbPaintSelection( event );
 
-// this->hbDrawCursor( event );
+/* this->hbDrawCursor( event ); */
 
    QPlainTextEdit::paintEvent( event );
 }

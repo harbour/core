@@ -181,7 +181,7 @@ void HBQGraphicsScene::setMagnetArea( int magnetArea )
 }
 
 /*----------------------------------------------------------------------*/
-//                            Mouse Events
+/*                            Mouse Events                              */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
@@ -289,8 +289,9 @@ void HBQGraphicsScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
    }
    QGraphicsScene::mouseReleaseEvent( event );
 }
+
 /*----------------------------------------------------------------------*/
-//                             Key Events
+/*                             Key Events                               */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::keyReleaseEvent( QKeyEvent * keyEvent )
@@ -402,8 +403,9 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
       }
    }
 }
+
 /*----------------------------------------------------------------------*/
-//                             Drag & Drop
+/*                             Drag & Drop                              */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
@@ -487,13 +489,12 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
             if( curItem )
             {
                hb_arrayNew( p3, 3 );
-               //
+
                hb_arraySetC( p3, 1, tree->objectName().toLatin1().data() );
                hb_arraySetC( p3, 2, parent->text( 0 ).toLatin1().data() );
                hb_arraySetC( p3, 3, curItem->text( 0 ).toLatin1().data() );
-               //
+
                hb_vmEvalBlockV( block, 3, p1, p2, p3 );
-               //
             }
          }
          hb_itemRelease( p1 );
@@ -511,8 +512,9 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
    }
    QGraphicsScene::dropEvent( event );
 }
+
 /*----------------------------------------------------------------------*/
-//                              General
+/*                              General                                 */
 /*----------------------------------------------------------------------*/
 
 bool HBQGraphicsScene::showGrid()
@@ -572,7 +574,7 @@ void HBQGraphicsScene::drawBorder()
 }
 
 /*----------------------------------------------------------------------*/
-//                              Magnets
+/*                              Magnets                                 */
 /*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::setLeftMagnet( bool magneted )

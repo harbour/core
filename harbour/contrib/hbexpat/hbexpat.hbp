@@ -9,6 +9,8 @@
 
 -w3 -es2
 
+-cflag=-std=c89{allgcc}
+
 -depkeyhead=expat:expat.h
 -depcontrol=expat:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}
