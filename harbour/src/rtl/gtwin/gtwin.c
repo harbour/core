@@ -442,12 +442,27 @@ static const CLIPKEYCODE extKeyTab[CLIP_EXTKEY_COUNT] = {
 
 static int hb_gt_win_getKbdState( void )
 {
-   /* Workaround for problems with GetKeyboardState() used with
-    * MS-Windows console
-    */
-   ( void ) GetKeyState( 0 );
+   int iKbdState = 0;
 
-   return hb_gt_winapi_getKbdState();
+   if( GetKeyState( VK_SHIFT    ) & 0x80 ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( GetKeyState( VK_CONTROL  ) & 0x80 ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( GetKeyState( VK_MENU     ) & 0x80 ) iKbdState |= HB_GTI_KBD_ALT;
+   if( GetKeyState( VK_LWIN     ) & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
+   if( GetKeyState( VK_RWIN     ) & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
+   if( GetKeyState( VK_APPS     ) & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
+   if( GetKeyState( VK_SCROLL   ) & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( GetKeyState( VK_NUMLOCK  ) & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( GetKeyState( VK_CAPITAL  ) & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( GetKeyState( VK_INSERT   ) & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
+
+   if( GetKeyState( VK_LSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_LSHIFT;
+   if( GetKeyState( VK_RSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_RSHIFT;
+   if( GetKeyState( VK_LCONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_LCTRL;
+   if( GetKeyState( VK_RCONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_RCTRL;
+   if( GetKeyState( VK_LMENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_LALT;
+   if( GetKeyState( VK_RMENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_RALT;
+
+   return iKbdState;
 }
 
 /* *********************************************************************** */

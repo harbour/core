@@ -16,11 +16,6 @@
 {win}-cflag=-DWIN32 -DWIN
 {win|dos|os2}-cflag=-D_EOL_CRLF
 
-# for snprintf()/vsnprintf(). They can be disabled in config.h
-# using HAVE_SNPRINTF and HAVE_VSNPRINTF, but then isdigit()
-# becomes the missing bit. [vszakats]
-#-cflag=-std=gnu89{!lngcpp&allgcc}
-
 mxml_att.c
 mxml_ent.c
 mxml_fil.c
