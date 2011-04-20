@@ -61,8 +61,8 @@
  * Do we have the snprintf() and vsnprintf() functions?
  */
 
-#define HAVE_SNPRINTF 1
-#define HAVE_VSNPRINTF 1
+/* #define HAVE_SNPRINTF 1 */
+/* #define HAVE_VSNPRINTF 1 */
 
 
 /*

@@ -25,7 +25,7 @@
 -instfile=inc:rddads.hbx
 
 # To avoid a warning in ACE header
--cflag=-Wno-pragmas{allmingw}
+-cflag+=-Wno-unknown-pragmas{allgcc}
 
 # for ADS headers
 -cflag=-std=gnu89{!lngcpp&allgcc}

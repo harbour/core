@@ -338,125 +338,128 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLIBPATH          35
 #define _HBMK_aINSTPATH         36
 #define _HBMK_aOPTC             37
-#define _HBMK_aOPTPRG           38
-#define _HBMK_aOPTRES           39
-#define _HBMK_aOPTL             40
-#define _HBMK_aOPTA             41
-#define _HBMK_aOPTD             42
-#define _HBMK_aOPTI             43
-#define _HBMK_lCPP              44
-#define _HBMK_lSHARED           45
-#define _HBMK_lSTATICFULL       46
-#define _HBMK_lSHAREDDIST       47
-#define _HBMK_lNULRDD           48
-#define _HBMK_lMAP              49
-#define _HBMK_lBEEP             50
-#define _HBMK_lSTRIP            51
-#define _HBMK_lOPTIM            52
-#define _HBMK_nCOMPR            53
-#define _HBMK_nWARN             54
-#define _HBMK_lRUN              55
-#define _HBMK_lINC              56
-#define _HBMK_lREBUILDPO        57
-#define _HBMK_lMINIPO           58
-#define _HBMK_lWINUNI           59
-#define _HBMK_nCONF             60
-#define _HBMK_lIGNOREERROR      61
-#define _HBMK_lIMPLIB           62
-#define _HBMK_lHBCPPMM          63
-#define _HBMK_aVAR              64
-#define _HBMK_hDEP              65
+#define _HBMK_aOPTCUSER         38
+#define _HBMK_aOPTPRG           39
+#define _HBMK_aOPTRES           40
+#define _HBMK_aOPTL             41
+#define _HBMK_aOPTA             42
+#define _HBMK_aOPTD             43
+#define _HBMK_aOPTI             44
+#define _HBMK_lCPP              45
+#define _HBMK_lSHARED           46
+#define _HBMK_lSTATICFULL       47
+#define _HBMK_lSHAREDDIST       48
+#define _HBMK_lNULRDD           49
+#define _HBMK_lMAP              50
+#define _HBMK_lBEEP             51
+#define _HBMK_lSTRIP            52
+#define _HBMK_lOPTIM            53
+#define _HBMK_nCOMPR            54
+#define _HBMK_nWARN             55
+#define _HBMK_lRUN              56
+#define _HBMK_lINC              57
+#define _HBMK_lREBUILDPO        58
+#define _HBMK_lMINIPO           59
+#define _HBMK_lWINUNI           60
+#define _HBMK_nCONF             61
+#define _HBMK_lIGNOREERROR      62
+#define _HBMK_lIMPLIB           63
+#define _HBMK_lHBCPPMM          64
+#define _HBMK_aVAR              65
+#define _HBMK_hDEP              66
 
-#define _HBMK_lCreateLib        66
-#define _HBMK_lCreateDyn        67
-#define _HBMK_lCreateImpLib     68
-#define _HBMK_lCreatePPO        69
-#define _HBMK_lCreateHRB        70
+#define _HBMK_lCreateLib        67
+#define _HBMK_lCreateDyn        68
+#define _HBMK_lCreateImpLib     69
+#define _HBMK_lCreatePPO        70
+#define _HBMK_lCreateHRB        71
 
-#define _HBMK_lDynVM            71
+#define _HBMK_lDynVM            72
 
-#define _HBMK_lBLDFLGP          72
-#define _HBMK_lBLDFLGC          73
-#define _HBMK_lBLDFLGL          74
+#define _HBMK_lBLDFLGP          73
+#define _HBMK_lBLDFLGC          74
+#define _HBMK_lBLDFLGL          75
 
-#define _HBMK_cFIRST            75
-#define _HBMK_aPRG              76
-#define _HBMK_aC                77
-#define _HBMK_aCPP              78
-#define _HBMK_aRESSRC           79
-#define _HBMK_aRESCMP           80
-#define _HBMK_aOBJUSER          81
-#define _HBMK_aICON             82
-#define _HBMK_cMANIFEST         83
-#define _HBMK_aIMPLIBSRC        84
-#define _HBMK_aDEF              85
-#define _HBMK_aINSTFILE         86
-#define _HBMK_hDEPTS            87
-#define _HBMK_aREQUEST          88
+#define _HBMK_cFIRST            76
+#define _HBMK_aPRG              77
+#define _HBMK_aC                78
+#define _HBMK_aCPP              79
+#define _HBMK_aRESSRC           80
+#define _HBMK_aRESCMP           81
+#define _HBMK_aOBJUSER          82
+#define _HBMK_aICON             83
+#define _HBMK_cMANIFEST         84
+#define _HBMK_aIMPLIBSRC        85
+#define _HBMK_aDEF              86
+#define _HBMK_aINSTFILE         87
+#define _HBMK_hDEPTS            88
+#define _HBMK_aREQUEST          89
 
-#define _HBMK_aPO               89
-#define _HBMK_cHBL              90
-#define _HBMK_cHBLDir           91
-#define _HBMK_aLNG              92
-#define _HBMK_cPO               93
+#define _HBMK_aPO               90
+#define _HBMK_cHBL              91
+#define _HBMK_cHBLDir           92
+#define _HBMK_aLNG              93
+#define _HBMK_cPO               94
 
-#define _HBMK_hPLUGINHRB        94
-#define _HBMK_hPLUGINVars       95
-#define _HBMK_aPLUGINPars       96
-#define _HBMK_hPLUGINExt        97
+#define _HBMK_hPLUGINHRB        95
+#define _HBMK_hPLUGINVars       96
+#define _HBMK_aPLUGINPars       97
+#define _HBMK_hPLUGINExt        98
 
-#define _HBMK_lDEBUGTIME        98
-#define _HBMK_lDEBUGINC         99
-#define _HBMK_lDEBUGSTUB        100
-#define _HBMK_lDEBUGI18N        101
-#define _HBMK_lDEBUGDEPD        102
-#define _HBMK_lDEBUGPARS        103
+#define _HBMK_lDEBUGTIME        99
+#define _HBMK_lDEBUGINC         100
+#define _HBMK_lDEBUGSTUB        101
+#define _HBMK_lDEBUGI18N        102
+#define _HBMK_lDEBUGDEPD        103
+#define _HBMK_lDEBUGPARS        104
 
-#define _HBMK_cCCPATH           104
-#define _HBMK_cCCPREFIX         105
-#define _HBMK_cCCPOSTFIX        106
-#define _HBMK_cCCEXT            107
+#define _HBMK_cCCPATH           105
+#define _HBMK_cCCPREFIX         106
+#define _HBMK_cCCPOSTFIX        107
+#define _HBMK_cCCEXT            108
 
-#define _HBMK_cWorkDir          108
-#define _HBMK_cWorkDirDynSub    109
-#define _HBMK_nCmd_Esc          110
-#define _HBMK_nScr_Esc          111
-#define _HBMK_nCmd_FNF          112
-#define _HBMK_nScr_FNF          113
-#define _HBMK_nErrorLevel       114
+#define _HBMK_cWorkDir          109
+#define _HBMK_cWorkDirDynSub    110
+#define _HBMK_nCmd_Esc          111
+#define _HBMK_nScr_Esc          112
+#define _HBMK_nCmd_FNF          113
+#define _HBMK_nScr_FNF          114
+#define _HBMK_nErrorLevel       115
 
-#define _HBMK_cPROGDIR          115
-#define _HBMK_cPROGNAME         116
+#define _HBMK_cPROGDIR          116
+#define _HBMK_cPROGNAME         117
 
-#define _HBMK_hAUTOHBC          117 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     118 /* trigger headers found */
+#define _HBMK_hAUTOHBC          118 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     119 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          119 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         120 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          120 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         121 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    121
-#define _HBMK_lStopAfterHarbour 122
+#define _HBMK_lStopAfterInit    122
+#define _HBMK_lStopAfterHarbour 123
 
-#define _HBMK_nCOMPVer          123
-#define _HBMK_lDEPIMPLIB        124 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        125 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          126 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        127 /* Target type: container */
-#define _HBMK_lShowLevel        128 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            129 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     130 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        131 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             132 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        133 /* Links to be created and pointing to the target */
+#define _HBMK_nCOMPVer          124
+#define _HBMK_lDEPIMPLIB        125 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        126 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          127 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        128 /* Target type: container */
+#define _HBMK_lShowLevel        129 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            130 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     131 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        132 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             133 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        134 /* Links to be created and pointing to the target */
+#define _HBMK_cC                135 /* C dialect */
+#define _HBMK_cCPP              136 /* C++ dialect */
 
-#define _HBMK_aArgs             134
-#define _HBMK_nArgTarget        135
-#define _HBMK_lPause            136
-#define _HBMK_nLevel            137
+#define _HBMK_aArgs             137
+#define _HBMK_nArgTarget        138
+#define _HBMK_lPause            139
+#define _HBMK_nLevel            140
 
-#define _HBMK_cHBX              138
+#define _HBMK_cHBX              141
 
-#define _HBMK_MAX_              138
+#define _HBMK_MAX_              141
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1020,6 +1023,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_lShowLevel ] := .F.
 
    hbmk[ _HBMK_aLINK ] := {}
+
+   hbmk[ _HBMK_cC ] := ""
+   hbmk[ _HBMK_cCPP ] := ""
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -1942,6 +1948,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_hDEPTS ] := { => }
    hbmk[ _HBMK_aOPTPRG ] := {}
    hbmk[ _HBMK_aOPTC ] := {}
+   hbmk[ _HBMK_aOPTCUSER ] := {}
    hbmk[ _HBMK_aOPTRES ] := {}
    hbmk[ _HBMK_aOPTL ] := {}
    hbmk[ _HBMK_aOPTA ] := {}
@@ -2259,9 +2266,27 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 5 ) == "-cpp="
 
          DO CASE
-         CASE SubStr( cParamL, 6 ) == "def" ; hbmk[ _HBMK_lCPP ] := NIL
-         CASE SubStr( cParamL, 6 ) == "yes" ; hbmk[ _HBMK_lCPP ] := .T.
-         CASE SubStr( cParamL, 6 ) == "no"  ; hbmk[ _HBMK_lCPP ] := .F.
+         CASE SubStr( cParamL, 6 ) == "def"   ; hbmk[ _HBMK_lCPP ] := NIL
+         CASE SubStr( cParamL, 6 ) == "yes"   ; hbmk[ _HBMK_lCPP ] := .T.
+         CASE SubStr( cParamL, 6 ) == "no"    ; hbmk[ _HBMK_lCPP ] := .F.
+         CASE SubStr( cParamL, 6 ) == "iso98" ; hbmk[ _HBMK_cCPP ] := "iso98"
+         CASE SubStr( cParamL, 6 ) == "iso03" ; hbmk[ _HBMK_cCPP ] := "iso03"
+         CASE SubStr( cParamL, 6 ) == "iso0x" ; hbmk[ _HBMK_cCPP ] := "iso0x"
+         CASE SubStr( cParamL, 6 ) == "gnu98" ; hbmk[ _HBMK_cCPP ] := "gnu98"
+         CASE SubStr( cParamL, 6 ) == "gnu0x" ; hbmk[ _HBMK_cCPP ] := "gnu0x"
+         CASE SubStr( cParamL, 6 ) == ""      ; hbmk[ _HBMK_cCPP ] := ""
+         ENDCASE
+
+      CASE Left( cParamL, 3 ) == "-c="
+
+         DO CASE
+         CASE SubStr( cParamL, 4 ) == "iso90"  ; hbmk[ _HBMK_cC ] := "iso90"
+         CASE SubStr( cParamL, 4 ) == "iso99"  ; hbmk[ _HBMK_cC ] := "iso99"
+         CASE SubStr( cParamL, 4 ) == "iso1X"  ; hbmk[ _HBMK_cC ] := "iso1X"
+         CASE SubStr( cParamL, 4 ) == "gnu90"  ; hbmk[ _HBMK_cC ] := "gnu90"
+         CASE SubStr( cParamL, 4 ) == "gnu99"  ; hbmk[ _HBMK_cC ] := "gnu99"
+         CASE SubStr( cParamL, 4 ) == "gnu1X"  ; hbmk[ _HBMK_cC ] := "gnu1X"
+         CASE SubStr( cParamL, 4 ) == ""       ; hbmk[ _HBMK_cC ] := ""
          ENDCASE
 
       CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T.
@@ -2557,6 +2582,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-cflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( hbmk[ _HBMK_aOPTC ], PathSepToSelf( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-cflag+=" ) ) == "-cflag+="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-cflag+=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( hbmk[ _HBMK_aOPTCUSER ], PathSepToSelf( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-resflag=" ) ) == "-resflag="
@@ -5863,7 +5895,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                   /* Order is significant */
                   cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
-                                                               GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
+                                                               GetEnv( "HB_USER_CFLAGS" ) +;
+                                                               iif( ! Empty( hbmk[ _HBMK_aOPTC ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ), "" ) +;
+                                                               iif( ! Empty( hbmk[ _HBMK_aOPTCUSER ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTCUSER ] ), "" ) )
                   cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FNameEscape( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, nOpt_FNF ) )
                   cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , FNameEscape( l_cHB_INSTALL_INC, nOpt_Esc, nOpt_FNF ) )
 
@@ -6095,7 +6129,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                /* Order is significant */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
-                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
+                                                          GetEnv( "HB_USER_LDFLAGS" ) +;
+                                                          iif( ! Empty( hbmk[ _HBMK_aOPTL ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ), "" ) )
                cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ) )
@@ -7073,7 +7108,9 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
       tmp := ""
       hb_processRun( cBin_CompC + " -MM" +;
                      " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
-                           GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
+                     GetEnv( "HB_USER_CFLAGS" ) +;
+                     " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
+                     " " + ArrayToList( hbmk[ _HBMK_aOPTCUSER ] ) +;
                      " " + FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
                      " " + cFileName,, @tmp )
 
