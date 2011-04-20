@@ -2748,7 +2748,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depimplibs=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
-            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aIMPLIBSRC ], PathSepToSelf( tmp ) )
+            FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
+               AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aIMPLIBSRC ], PathSepToSelf( tmp1 ) )
+            NEXT
          ENDIF
 
       CASE Left( cParam, Len( "-depimplibd=" ) ) == "-depimplibd="

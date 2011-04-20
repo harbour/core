@@ -59,6 +59,12 @@
 
 #include "hbbz2.ch"
 
+/* Required if bz2 lib was built with BZ_NO_STDIO [vszakats] */
+void bz_internal_error( int errcode )
+{
+   hb_errInternal( ( HB_ERRCODE ) errcode, "libbzip2", NULL, NULL );
+}
+
 static void * hb_bz2Alloc( void * cargo, int nmemb, int size )
 {
    HB_SYMBOL_UNUSED( cargo );
