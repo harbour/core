@@ -20,6 +20,9 @@
 -instfile=inc:xhbextrn.ch
 -instfile=inc:xhb.hbx
 
+# For hbserv.c, maybe more
+-cflag=-std=gnu89{!lngcpp&allgcc&unix}
+
 ../hbct/hbct.hbc
 ../hbtip/hbtip.hbc
 ../hbwin/hbwin.hbc
