@@ -17,4 +17,6 @@
 
 {_HB_BUILD_LIBDYN}-hbdyn
 
+-cflag=-std=c89{!lngcpp&allgcc}
+
 -warn=yes

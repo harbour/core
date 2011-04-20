@@ -32,13 +32,15 @@ HB_EXTERN_END
 #define HBQT_TYPE_QBrush                                        ( ( HB_U32 ) 0x94319C70 )
 #define HBQT_TYPE_QColor                                        ( ( HB_U32 ) 0x03C0065A )
 #define HBQT_TYPE_QFont                                         ( ( HB_U32 ) 0xF6037D8A )
-#define HBQT_TYPE_QIcon                                         ( ( HB_U32 ) 0x43035C83 )
 #define HBQT_TYPE_QGradient                                     ( ( HB_U32 ) 0x7F4BEC23 )
 #define HBQT_TYPE_QMatrix                                       ( ( HB_U32 ) 0xAA3E35B7 )
 #define HBQT_TYPE_QImage                                        ( ( HB_U32 ) 0xA0AB4AEC )
 #define HBQT_TYPE_QBitmap                                       ( ( HB_U32 ) 0xBA602AD4 )
 #define HBQT_TYPE_QBoxLayout                                    ( ( HB_U32 ) 0xA184A755 )
 
+#ifndef HBQT_TYPE_QIcon
+#define HBQT_TYPE_QIcon                                         ( ( HB_U32 ) 0x43035C83 )
+#endif
 #ifndef HBQT_TYPE_QPixmap
 #define HBQT_TYPE_QPixmap                                       ( ( HB_U32 ) 0xBEA836FC )
 #endif

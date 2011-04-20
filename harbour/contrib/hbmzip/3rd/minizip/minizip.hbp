@@ -13,6 +13,9 @@
 -cpp=no
 -pic
 
+# for f*64() functions
+-cflag=-std=gnu89{!lngcpp&allgcc}
+
 ioapi.c
 zip.c
 unzip.c

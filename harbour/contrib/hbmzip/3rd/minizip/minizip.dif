@@ -1,6 +1,6 @@
-diff -urN minizip.orig/crypt.h minizip/crypt.h
---- minizip.orig/crypt.h	2011-04-19 15:58:45.649571580 +0200
-+++ minizip/crypt.h	2011-04-19 15:58:45.649571580 +0200
+diff -urN minizip.orig\crypt.h minizip\crypt.h
+--- minizip.orig\crypt.h	Wed Apr 20 03:26:49 2011
++++ minizip\crypt.h	Wed Apr 20 03:26:49 2011
 @@ -38,6 +38,8 @@
                       * unpredictable manner on 16-bit systems; not a problem
                       * with any known compiler so far, though */
@@ -10,9 +10,9 @@ diff -urN minizip.orig/crypt.h minizip/crypt.h
      temp = ((unsigned)(*(pkeys+2)) & 0xffff) | 2;
      return (int)(((temp * (temp ^ 1)) >> 8) & 0xff);
  }
-diff -urN minizip.orig/ioapi.c minizip/ioapi.c
---- minizip.orig/ioapi.c	2011-04-19 15:58:45.651571109 +0200
-+++ minizip/ioapi.c	2011-04-19 15:58:45.651571109 +0200
+diff -urN minizip.orig\ioapi.c minizip\ioapi.c
+--- minizip.orig\ioapi.c	Wed Apr 20 03:26:49 2011
++++ minizip\ioapi.c	Wed Apr 20 03:26:49 2011
 @@ -15,6 +15,7 @@
  #endif
  
@@ -142,19 +142,15 @@ diff -urN minizip.orig/ioapi.c minizip/ioapi.c
  {
      pzlib_filefunc_def->zopen_file = fopen_file_func;
      pzlib_filefunc_def->zread_file = fread_file_func;
-diff -urN minizip.orig/ioapi.h minizip/ioapi.h
---- minizip.orig/ioapi.h	2011-04-19 15:58:45.652571415 +0200
-+++ minizip/ioapi.h	2011-04-19 15:58:45.652571415 +0200
+diff -urN minizip.orig\ioapi.h minizip\ioapi.h
+--- minizip.orig\ioapi.h	Wed Apr 20 03:26:49 2011
++++ minizip\ioapi.h	Wed Apr 20 03:26:49 2011
 @@ -21,29 +21,58 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
  
 -#if (!defined(_WIN32)) && (!defined(WIN32))
-+#if !(defined(_WIN32) || defined(WIN32)) && \
-+    !(defined(__MSDOS__) || defined(MSDOS)) && \
-+    !(defined(OS_2) || defined(__OS2__) || defined(OS2)) && \
-+    !defined(__WATCOMC__)
- 
+-
 -  // Linux needs this to support file operation on files larger then 4+GB
 -  // But might need better if/def to select just the platforms that needs them.
 -
@@ -170,6 +166,11 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
 -        #ifndef _FILE_OFFSET_BIT
 -                #define _FILE_OFFSET_BIT 64
 -        #endif
++#if !(defined(_WIN32) || defined(WIN32)) && \
++    !(defined(__MSDOS__) || defined(MSDOS)) && \
++    !(defined(OS_2) || defined(__OS2__) || defined(OS2)) && \
++    !defined(__WATCOMC__)
++
 +  /* Linux needs this to support file operation on files larger then 4+GB
 +   * on 32bit platforms
 +   * But might need better if/def to select just the platforms that needs them.
@@ -220,9 +221,20 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
  #if defined(USE_FILE32API)
  #define fopen64 fopen
  #define ftello64 ftell
-diff -urN minizip.orig/unzip.c minizip/unzip.c
---- minizip.orig/unzip.c	2011-04-19 15:58:45.667570882 +0200
-+++ minizip/unzip.c	2011-04-19 15:58:45.668569995 +0200
+@@ -178,8 +207,8 @@
+ 
+ #define ZREAD64(filefunc,filestream,buf,size)     ((*((filefunc).zfile_func64.zread_file))   ((filefunc).zfile_func64.opaque,filestream,buf,size))
+ #define ZWRITE64(filefunc,filestream,buf,size)    ((*((filefunc).zfile_func64.zwrite_file))  ((filefunc).zfile_func64.opaque,filestream,buf,size))
+-//#define ZTELL64(filefunc,filestream)            ((*((filefunc).ztell64_file)) ((filefunc).opaque,filestream))
+-//#define ZSEEK64(filefunc,filestream,pos,mode)   ((*((filefunc).zseek64_file)) ((filefunc).opaque,filestream,pos,mode))
++/*#define ZTELL64(filefunc,filestream)            ((*((filefunc).ztell64_file)) ((filefunc).opaque,filestream))*/
++/*#define ZSEEK64(filefunc,filestream,pos,mode)   ((*((filefunc).zseek64_file)) ((filefunc).opaque,filestream,pos,mode))*/
+ #define ZCLOSE64(filefunc,filestream)             ((*((filefunc).zfile_func64.zclose_file))  ((filefunc).zfile_func64.opaque,filestream))
+ #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
+ 
+diff -urN minizip.orig\unzip.c minizip\unzip.c
+--- minizip.orig\unzip.c	Wed Apr 20 03:26:49 2011
++++ minizip\unzip.c	Wed Apr 20 03:26:49 2011
 @@ -68,13 +68,17 @@
  #include <stdlib.h>
  #include <string.h>
@@ -309,9 +321,9 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
  
      pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
      pfile_in_zip_read_info->crc32=0;
-diff -urN minizip.orig/zip.c minizip/zip.c
---- minizip.orig/zip.c	2011-04-19 15:58:45.685570830 +0200
-+++ minizip/zip.c	2011-04-19 15:58:45.686568570 +0200
+diff -urN minizip.orig\zip.c minizip\zip.c
+--- minizip.orig\zip.c	Wed Apr 20 03:26:49 2011
++++ minizip\zip.c	Wed Apr 20 03:26:49 2011
 @@ -29,16 +29,20 @@
  #include "zlib.h"
  #include "zip.h"
@@ -507,3 +519,15 @@ diff -urN minizip.orig/zip.c minizip/zip.c
  
    if(pData == NULL || *dataLen < 4)
      return ZIP_PARAMERROR;
+diff -urN minizip.orig\zip.h minizip\zip.h
+--- minizip.orig\zip.h	Wed Apr 20 03:26:49 2011
++++ minizip\zip.h	Wed Apr 20 03:26:49 2011
+@@ -44,7 +44,7 @@
+ extern "C" {
+ #endif
+ 
+-//#define HAVE_BZIP2
++/*#define HAVE_BZIP2*/
+ 
+ #ifndef _ZLIB_H
+ #include "zlib.h"

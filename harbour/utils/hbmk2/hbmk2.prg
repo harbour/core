@@ -11028,6 +11028,8 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "nodebug"  ; RETURN ! hbmk[ _HBMK_lDEBUG ]
    CASE "shared"   ; RETURN hbmk[ _HBMK_lSHARED ]
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
+   CASE "lngcpp"   ; RETURN hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
+   CASE "lngc"     ; RETURN hbmk[ _HBMK_lCPP ] != NIL .AND. ! hbmk[ _HBMK_lCPP ]
    CASE "winuni"   ; RETURN hbmk[ _HBMK_lWINUNI ]
    CASE "winansi"  ; RETURN ! hbmk[ _HBMK_lWINUNI ]
    CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix" )

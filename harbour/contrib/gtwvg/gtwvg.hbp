@@ -16,8 +16,6 @@
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
 
--cflag=-std=c89{allgcc}
-
 -instfile=inc:hbgtwvg.ch
 -instfile=inc:wvtwin.ch
 -instfile=inc:wvgparts.ch
