@@ -19,9 +19,6 @@
 -instfile=inc:hbmxml.ch
 -instfile=inc:hbmxml.hbx
 
-# For strdup()
--cflag=-std=gnu89{!lngcpp&allgcc}
-
 hbmxml.hbx
 
 core.c

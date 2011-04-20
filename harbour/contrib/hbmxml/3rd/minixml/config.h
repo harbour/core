@@ -69,7 +69,7 @@
  * Do we have the strXXX() functions?
  */
 
-#define HAVE_STRDUP 1
+/* #define HAVE_STRDUP 1 */
 
 
 /*
