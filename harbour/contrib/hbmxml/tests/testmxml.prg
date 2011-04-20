@@ -5,7 +5,7 @@
 /*
  * Test program for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2010 by Michael R Sweet.
+ * Copyright 2003-2011 by Michael R Sweet.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
@@ -552,8 +552,8 @@ PROCEDURE Main( cFileArg )
          QUIT
       ENDIF
 
-      IF s_aSAXEventCounts[ MXML_SAX_DATA ] != 61
-         OutErr( hb_strFormat( "MXML_SAX_DATA seen %d times, expected 61 times!",                     ;
+      IF s_aSAXEventCounts[ MXML_SAX_DATA ] != 60
+         OutErr( hb_strFormat( "MXML_SAX_DATA seen %d times, expected 60 times!",                     ;
                                s_aSAXEventCounts[ MXML_SAX_DATA ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT

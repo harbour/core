@@ -527,9 +527,9 @@ static LRESULT CALLBACK s_MsgFilterFunc( int nCode, WPARAM wParam, LPARAM lParam
    switch( msg->message )
    {
       case WM_USER:
-      case WM_USER+1:
-      case WM_USER+2:
-      case WM_USER+3:
+      case WM_USER + 1:
+      case WM_USER + 2:
+      case WM_USER + 3:
       case WM_QUIT:
          /* we'll ignore the request here.
             the application must still receive the message */
@@ -754,7 +754,7 @@ HB_FUNC( HB_STARTSERVICE )
    int iCount = hb_threadCountStacks();
    if( iCount > 2 || ( sp_hooks == NULL && iCount > 1 ) )
    {
-      /*TODO: Right error code here*/
+      /* TODO: Right error code here */
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Service must be started before starting threads", NULL, 0);
       return;
    }
@@ -952,7 +952,7 @@ HB_FUNC( HB_SIGNALDESC )
          case SEGV_MAPERR: hb_retc_const( "Segmentation fault: address not mapped to object"); return;
          case SEGV_ACCERR: hb_retc_const( "Segmentation fault: invalid permissions for mapped object"); return;
          #endif
-         default: hb_retc_const("Segmentation fault"); return;
+         default: hb_retc_const( "Segmentation fault" ); return;
       }
 
       case SIGILL: switch( iSubSig )
@@ -1030,58 +1030,58 @@ HB_FUNC( HB_SIGNALDESC )
       switch( iSubSig )
       {
          case EXCEPTION_ACCESS_VIOLATION:
-            hb_retc_const("Memory read/write access violation"); return;
+            hb_retc_const( "Memory read/write access violation" ); return;
 
          case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
-            hb_retc_const("Array out of bounds" ); return;
+            hb_retc_const( "Array out of bounds" ); return;
 
          case EXCEPTION_DATATYPE_MISALIGNMENT:
-            hb_retc_const("Data misaligned" ); return;
+            hb_retc_const( "Data misaligned" ); return;
 
          case EXCEPTION_FLT_DENORMAL_OPERAND:
-            hb_retc_const("Denormal operand in Floating-point operation"); return;
+            hb_retc_const( "Denormal operand in Floating-point operation" ); return;
 
          case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-            hb_retc_const("Floating-point division by zero"); return;
+            hb_retc_const( "Floating-point division by zero" ); return;
 
          case EXCEPTION_FLT_INEXACT_RESULT:
-            hb_retc_const("Inexact floating-point operation result"); return;
+            hb_retc_const( "Inexact floating-point operation result" ); return;
 
          case EXCEPTION_FLT_INVALID_OPERATION:
-            hb_retc_const("Invalid floating-point operation"); return;
+            hb_retc_const( "Invalid floating-point operation" ); return;
 
          case EXCEPTION_FLT_OVERFLOW:
-            hb_retc_const("Floating-point numeric overflow"); return;
+            hb_retc_const( "Floating-point numeric overflow" ); return;
 
          case EXCEPTION_FLT_STACK_CHECK:
-            hb_retc_const("Floating-point out of stack"); return;
+            hb_retc_const( "Floating-point out of stack" ); return;
 
          case EXCEPTION_FLT_UNDERFLOW:
-            hb_retc_const("Floating-point numeric underflow"); return;
+            hb_retc_const( "Floating-point numeric underflow" ); return;
 
          case EXCEPTION_ILLEGAL_INSTRUCTION:
-            hb_retc_const("Illegal instruction"); return;
+            hb_retc_const( "Illegal instruction" ); return;
 
          case EXCEPTION_IN_PAGE_ERROR:
-            hb_retc_const("Paging error"); return;
+            hb_retc_const( "Paging error" ); return;
 
          case EXCEPTION_INT_DIVIDE_BY_ZERO:
-            hb_retc_const("Integer division by zero"); return;
+            hb_retc_const( "Integer division by zero" ); return;
 
          case EXCEPTION_INT_OVERFLOW:
-            hb_retc_const("Integer numeric overflow"); return;
+            hb_retc_const( "Integer numeric overflow" ); return;
 
          case EXCEPTION_PRIV_INSTRUCTION:
-            hb_retc_const("Illegal instruction for current machine mode"); return;
+            hb_retc_const( "Illegal instruction for current machine mode" ); return;
 
          case EXCEPTION_STACK_OVERFLOW:
-            hb_retc_const("Stack overflow"); return;
+            hb_retc_const( "Stack overflow" ); return;
       }
    }
 
    #endif
 
-   hb_retc_const("Unrecognized signal");
+   hb_retc_const( "Unrecognized signal" );
 }
 
 
