@@ -11,7 +11,7 @@
 
 -stop{!unix}
 
--cflag=-std=gnu89{!lngcpp&allgcc}
+-c=gnu90
 
 hbunix.hbx
 

@@ -17,6 +17,7 @@
 
 {_HB_BUILD_LIBDYN}-hbdyn
 
--cflag=-std=c89{!lngcpp&allgcc}
+-c=iso90
+-cpp=iso98
 
 -warn=yes
