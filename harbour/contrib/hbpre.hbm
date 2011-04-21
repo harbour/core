@@ -18,6 +18,5 @@
 {_HB_BUILD_LIBDYN}-hbdyn
 
 -c=iso90
--cpp=iso98
 
 -warn=yes

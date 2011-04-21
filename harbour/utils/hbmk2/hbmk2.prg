@@ -4037,6 +4037,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_cC ] == "iso99" ; AAdd( hbmk[ _HBMK_aOPTCX ], "-za99" )
+         ENDCASE
          IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
             IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
@@ -4585,6 +4588,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_cC ] == "iso90" ; AAdd( hbmk[ _HBMK_aOPTCX ], "-xc99=none" )
+         CASE hbmk[ _HBMK_cC ] == "iso99" ; AAdd( hbmk[ _HBMK_aOPTCX ], "-xc99=all" )
+         ENDCASE
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -4719,6 +4726,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_cC ] == "iso90" ; AAdd( hbmk[ _HBMK_aOPTCX ], "-Xdialect-ansi" ) /* Conform to ANSI X3.159-1989 with some additions [as shown in the table below]. */
+         ENDCASE
          /* lib path list ({DL}) must precede lib list */
          cBin_Dyn := cBin_CompC
          cOpt_Dyn := "-Xpic -Wl, -Xshared -o {OD} {LO} {DL} {FD} {LS}"
@@ -6699,25 +6709,52 @@ STATIC PROCEDURE Set_lCreateDyn( hbmk, lValue )
 
 STATIC FUNCTION gcc_opt_lngc_fill( hbmk )
 
-   SWITCH hbmk[ _HBMK_cC ]
-   CASE "iso90" ; RETURN "-std=c89"
-   CASE "iso99" ; RETURN "-std=c9x"
-   CASE "iso1x" ; RETURN "-std=c1x"
-   CASE "gnu90" ; RETURN "-std=gnu89"
-   CASE "gnu99" ; RETURN "-std=gnu9x"
-   CASE "gnu1x" ; RETURN "-std=gnu1x"
-   ENDSWITCH
+   DO CASE
+   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
+
+      SWITCH hbmk[ _HBMK_cC ]
+      CASE "iso90" ; RETURN "-std=c89"
+      CASE "iso99" ; RETURN "-std=c9x"
+      CASE "iso1x" ; RETURN "-std=c1x"
+      CASE "gnu90" ; RETURN "-std=gnu89"
+      CASE "gnu99" ; RETURN "-std=gnu9x"
+      CASE "gnu1x" ; RETURN "-std=gnu1x"
+      ENDSWITCH
+
+   CASE HBMK_ISCOMP( "icc|clang" )
+
+      SWITCH hbmk[ _HBMK_cC ]
+      CASE "iso90" ; RETURN "-std=c89"
+      CASE "iso99" ; RETURN "-std=c99"
+      CASE "gnu90" ; RETURN "-std=gnu89"
+      CASE "gnu99" ; RETURN "-std=gnu99"
+      ENDSWITCH
+
+   ENDCASE
 
    RETURN ""
 
 STATIC FUNCTION gcc_opt_lngcpp_fill( hbmk )
 
-   SWITCH hbmk[ _HBMK_cCPP ]
-   CASE "iso98" ; RETURN "-std=c++98"
-   CASE "iso0x" ; RETURN "-std=c++0x"
-   CASE "gnu98" ; RETURN "-std=gnu++98"
-   CASE "gnu0x" ; RETURN "-std=gnu++0x"
-   ENDSWITCH
+   DO CASE
+   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|" )
+
+      SWITCH hbmk[ _HBMK_cCPP ]
+      CASE "iso98" ; RETURN "-std=c++98"
+      CASE "iso0x" ; RETURN "-std=c++0x"
+      CASE "gnu98" ; RETURN "-std=gnu++98"
+      CASE "gnu0x" ; RETURN "-std=gnu++0x"
+      ENDSWITCH
+
+   CASE HBMK_ISCOMP( "icc" )
+
+      SWITCH hbmk[ _HBMK_cCPP ]
+      CASE "iso98"
+      CASE "gnu98" ; RETURN "-std=gnu++98"
+      CASE "iso0x" ; RETURN "-std=c++0x"
+      ENDSWITCH
+
+   ENDCASE
 
    RETURN ""
 
