@@ -141,31 +141,9 @@ const char * hb_verCPU( void )
 #endif
 }
 
-#if 0
-const char * hb_verHostCPU( void )
+static HB_BOOL s_win_iswow64( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
-
-   /* TODO */
-
-   return "";
-}
-#endif
-
-int hb_verHostBitWidth( void )
-{
-   int nBits;
-
-   /* Inherit the bit width we're building for */
-   #if   defined( HB_ARCH_64BIT )
-      nBits = 64;
-   #elif defined( HB_ARCH_32BIT )
-      nBits = 32;
-   #elif defined( HB_ARCH_16BIT )
-      nBits = 16;
-   #else
-      nBits = 0;
-   #endif
+   HB_BOOL bRetVal = HB_FALSE;
 
    #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_64 )
    {
@@ -183,10 +161,41 @@ int hb_verHostBitWidth( void )
          }
 
          if( bIsWow64 )
-            nBits = 64;
+            bRetVal = HB_TRUE;
       }
    }
    #endif
+
+   return bRetVal;
+}
+
+const char * hb_verHostCPU( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
+
+   if( s_win_iswow64() )
+      return "x86-64";
+
+   return hb_verCPU();
+}
+
+int hb_verHostBitWidth( void )
+{
+   int nBits;
+
+   /* Inherit the bit width we're building for */
+   #if   defined( HB_ARCH_64BIT )
+      nBits = 64;
+   #elif defined( HB_ARCH_32BIT )
+      nBits = 32;
+   #elif defined( HB_ARCH_16BIT )
+      nBits = 16;
+   #else
+      nBits = 0;
+   #endif
+
+   if( s_win_iswow64() )
+      nBits = 64;
 
    return nBits;
 }

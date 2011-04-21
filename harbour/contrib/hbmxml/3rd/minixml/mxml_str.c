@@ -27,8 +27,10 @@
  */
 
 #include "config.h"
-#include "mxml.h"
 
+#ifndef HAVE_VSNPRINTF
+#  include <ctype.h>
+#endif
 
 /*
  * The va_copy macro is part of C99, but many compilers don't implement it.

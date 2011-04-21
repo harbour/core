@@ -174,6 +174,11 @@ HB_FUNC( HB_VERSION )
    }
 }
 
+HB_FUNC( HB_OSCPU )
+{
+   hb_retc_const( hb_verHostCPU() );
+}
+
 HB_FUNC( HB_OSIS64BIT )
 {
    hb_retl( hb_verHostBitWidth() >= 64 );
