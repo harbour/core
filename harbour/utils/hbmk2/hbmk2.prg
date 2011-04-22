@@ -1342,7 +1342,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          aCOMPSUP := { "gcc", "icc" }
       case hbmk[ _HBMK_cPLAT ] == "minix"
-         aCOMPSUP := { "gcc", "ack", "pcc" }
+         aCOMPSUP := { "gcc", "clang", "ack" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -3269,6 +3269,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "minix"   .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "beos"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "android" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -12026,7 +12027,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - vxworks : gcc, diab",;
       "  - symbian : gcc",;
       "  - cygwin  : gcc",;
-      "  - minix   : gcc, ack, pcc",;
+      "  - minix   : gcc, clang, ack",;
       "  - sunos   : gcc, sunpro, pcc" }
 
    LOCAL aOpt_Basic := {;
