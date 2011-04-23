@@ -838,7 +838,7 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 }
 
 /*----------------------------------------------------------------------*/
-//                   An Alternative to WndProc Callbacks
+/*                   An Alternative to WndProc Callbacks                */
 /*----------------------------------------------------------------------*/
 
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
