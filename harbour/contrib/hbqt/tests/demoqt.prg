@@ -78,6 +78,7 @@ STATIC oSys, oMenuSys, oActShow, oActHide
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events( e )
+   HB_SYMBOL_UNUSED( e )
    HB_TRACE( HB_TR_DEBUG, "Key Pressed", e:key() )
    RETURN nil
 
