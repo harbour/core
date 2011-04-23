@@ -88,7 +88,7 @@ typedef struct tagSCROLLBARINFO {;
     int   xyThumbTop;
     int   xyThumbBottom;
     int   reserved;
-    DWORD x; //rgstate[CCHILDREN_SCROLLBAR+1];
+    DWORD x; /* rgstate[CCHILDREN_SCROLLBAR+1]; */
 } SCROLLBARINFO
 
 typedef struct tagSCROLLINFO {;

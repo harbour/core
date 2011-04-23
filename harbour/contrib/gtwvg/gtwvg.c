@@ -642,7 +642,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       PHB_ITEM pEvParams = hb_itemNew( NULL );
       hb_itemPutNI( pEvParams, iKey );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
-      // hb_itemRelease( pEvParams ); /* Under situations it GPF's */
+      /* hb_itemRelease( pEvParams ); */ /* Under situations it GPF's */
    }
 }
 
@@ -4461,11 +4461,11 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
       pWVT->hWndTT = hwndTT;
 }
 
-/*----------------------------------------------------------------------//
+/*-----------------------------------------------------------------------/
  *
  *                 Exported functions for API calls
  *
-//----------------------------------------------------------------------*/
+/-----------------------------------------------------------------------*/
 
 PHB_GTWVT hb_wvt_gtGetWVT( void )
 {

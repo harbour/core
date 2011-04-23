@@ -336,7 +336,7 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
 
    ::WvgSysWindow:create( oParent, oOwner )
 
-//   ::nWndProc := hb_AsCallBack( "WNDPROC", Self )
+   /* ::nWndProc := hb_AsCallBack( "WNDPROC", Self ) */
 
    RETURN Self
 
@@ -443,7 +443,7 @@ METHOD display( nMode ) CLASS WvgFontDialog
 
 METHOD destroy() CLASS WvgFontDialog
 
-//   hb_FreeCallBack( ::nWndProc )
+   /* hb_FreeCallBack( ::nWndProc ) */
 
    RETURN Self
 
@@ -476,9 +476,9 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-//
-//                          Class WvgFont()
-//
+/*
+                            Class WvgFont()
+*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
