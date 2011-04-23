@@ -84,8 +84,8 @@
 
 #include "gtwvt.h"
 
-#ifndef WS_EX_LAYERED
-#define WS_EX_LAYERED           0x00080000
+#ifndef WS_EX_COMPOSITED
+#define WS_EX_COMPOSITED        0x02000000
 #endif
 
 #ifndef LWA_ALPHA
@@ -157,7 +157,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    WNDCLASS wndclass;
 
    memset( &wndclass, 0, sizeof( wndclass ) );
-   wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+   wndclass.style         = CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
 /* wndclass.cbClsExtra    = 0; */
 /* wndclass.cbWndExtra    = 0; */
@@ -1879,31 +1879,15 @@ static void hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 
 static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
-   if( !pWVT->hWnd )
+   if( ! pWVT->hWnd )
    {
       hb_gt_wvt_CreateWindow( pWVT );
-      if( !pWVT->hWnd )
+      if( ! pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
 #if ! defined( HB_OS_WIN_CE )
       if( ! GetSystemMetrics( SM_REMOTESESSION ) )
-      {
-         typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
-
-         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
-                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  "SetLayeredWindowAttributes" );
-
-         if( pSetLayeredWindowAttributes )
-         {
-            SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-
-            pSetLayeredWindowAttributes( pWVT->hWnd,
-                                         ( COLORREF ) 0, /* COLORREF crKey */
-                                         255,            /* BYTE bAlpha */
-                                         LWA_ALPHA       /* DWORD dwFlags */ );
-         }
-      }
+         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
 #endif
 
       /* Set icon */
@@ -1991,12 +1975,10 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    rt.bottom = 0;
 
 #ifdef MONITOR_DEFAULTTONEAREST
-   pMonitorFromWindow = ( P_MFW )
-                         GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                         "MonitorFromWindow" );
-   pGetMonitorInfo = ( P_GMI )
-                       GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                       "GetMonitorInfo" );
+   pMonitorFromWindow = ( P_MFW ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                                  "MonitorFromWindow" );
+   pGetMonitorInfo = ( P_GMI ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                               "GetMonitorInfo" );
 
    if( pMonitorFromWindow && pGetMonitorInfo )
    {

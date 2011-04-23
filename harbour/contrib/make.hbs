@@ -66,6 +66,7 @@ STATIC s_cReBase
 
 PROCEDURE Main( ... )
    LOCAL hProjectList
+   LOCAL aParams
 
    s_cBase := ""
    s_cReBase := ""
@@ -91,11 +92,17 @@ PROCEDURE Main( ... )
    LoadProjectListFromFile( hProjectList, s_cHome + "hbplist" )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
 
+   aParams := hb_AParams()
+
+   IF AScanL( aParams, "verbose" ) > 0
+      hb_setenv( "HB_BUILD_VERBOSE", "yes" )
+   ENDIF
+
    /* Build */
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
-      Standalone( hb_AParams(), hProjectList )
+      Standalone( aParams, hProjectList )
    ELSE
-      GNUMake( hb_AParams(), hProjectList )
+      GNUMake( aParams, hProjectList )
    ENDIF
 
    RETURN
@@ -128,6 +135,8 @@ PROCEDURE Standalone( aParams, hProjectList )
         AScanL( aParams, "all" ) > 0 .AND. ;
         AScanL( aParams, "all" ) > AScanL( aParams, "clean" )
       nAction := _ACT_INC_REBUILD
+   CASE AScanL( aParams, "rebuild" ) > 0
+      nAction := _ACT_INC_REBUILD
    CASE AScanL( aParams, "clean" ) > 0 .AND. ;
         AScanL( aParams, "install" ) > 0 .AND. ;
         AScanL( aParams, "install" ) > AScanL( aParams, "clean" )
@@ -154,7 +163,9 @@ PROCEDURE Standalone( aParams, hProjectList )
       IF !( Lower( tmp ) == "install" ) .AND. ;
          !( Lower( tmp ) == "clean" ) .AND. ;
          !( Lower( tmp ) == "all" ) .AND. ;
-         !( Lower( tmp ) == "first" )
+         !( Lower( tmp ) == "first" ) .AND. ;
+         !( Lower( tmp ) == "rebuild" ) .AND. ;
+         !( Lower( tmp ) == "verbose" )
 
          cOptionsUser += " " + tmp
 
@@ -267,6 +278,8 @@ PROCEDURE GNUMake( aParams, hProjectList )
       ELSE
          nAction := _ACT_INC
       ENDIF
+   CASE AScanL( aParams, "rebuild" ) > 0
+      nAction := _ACT_INC_REBUILD
    OTHERWISE
       nAction := _ACT_INC
    ENDCASE

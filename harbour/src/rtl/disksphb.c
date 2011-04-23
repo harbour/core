@@ -225,9 +225,8 @@ HB_FUNC( HB_DISKSPACE )
             static P_GDFSE s_pGetDiskFreeSpaceEx = NULL;
             static HB_BOOL s_fInit = HB_FALSE;
 
-            if( !s_fInit )
+            if( ! s_fInit )
             {
-               s_fInit = HB_TRUE;
                s_pGetDiskFreeSpaceEx = ( P_GDFSE )
 #if defined( UNICODE )
                      GetProcAddress( GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
@@ -236,6 +235,7 @@ HB_FUNC( HB_DISKSPACE )
                      GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
                                      "GetDiskFreeSpaceExA" );
 #endif
+               s_fInit = HB_TRUE;
             }
             if( s_pGetDiskFreeSpaceEx )
             {

@@ -1264,6 +1264,17 @@ HARBOUR
    8. Try to do no or only small modifications at once to command examples
       included in this document. If it doesn't work, fall back to documented
       examples as is.
+   9. If everything fails and you are to report a problem to the developers,
+      make sure to include your OS version/language/CPU architecture,
+      harbour revision, C compiler name/release and version, environment
+      variables and verbose log output containing _both stderr and stdout in
+      one combined stream_ (use 'make > log.txt 2>&1'). Enable verbose
+      mode using 'HB_BUILD_VERBOSE=yes'.
+      Complete log output is rarely necessary, but always make sure to include
+      the top of the output (lines starting with '!') and the area where
+      problematic behavior occurred. Compress your log using zip or gzip if
+      it is larger than 25KB.
+      Without these, your chances are lower to get useful or any response.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
