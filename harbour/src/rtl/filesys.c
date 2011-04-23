@@ -322,21 +322,21 @@
 
 #if defined( HB_OS_UNIX ) && defined( EINTR )
 #  define HB_FAILURE_RETRY( ret, exp ) \
-               do \
-               { \
-                  ( ret ) = ( exp ); \
-                  hb_fsSetIOError( ( ret ) != -1, 0 ); \
-               } \
-               while( ( ret ) == -1 && hb_fsOsError() == EINTR && \
-                      hb_vmRequestQuery() == 0 )
+            do \
+            { \
+               ( ret ) = ( exp ); \
+               hb_fsSetIOError( ( ret ) != -1, 0 ); \
+            } \
+            while( ( ret ) == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR && \
+                   hb_vmRequestQuery() == 0 )
 #else
 #  define HB_FAILURE_RETRY( ret, exp ) \
-               do \
-               { \
-                  ( ret ) = ( exp ); \
-                  hb_fsSetIOError( ( ret ) != -1, 0 ); \
-               } \
-               while( 0 )
+            do \
+            { \
+               ( ret ) = ( exp ); \
+               hb_fsSetIOError( ( ret ) != -1, 0 ); \
+            } \
+            while( 0 )
 #endif
 
 static HB_BOOL s_fUseWaitLocks = HB_TRUE;
