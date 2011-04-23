@@ -1234,7 +1234,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list"
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths."
 msgstr ""
 
 #: hbmk2.prg:11633

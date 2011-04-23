@@ -2286,10 +2286,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          DO CASE
          CASE SubStr( cParamL, 4 ) == "iso90"  ; hbmk[ _HBMK_cC ] := "iso90"
          CASE SubStr( cParamL, 4 ) == "iso99"  ; hbmk[ _HBMK_cC ] := "iso99"
-         CASE SubStr( cParamL, 4 ) == "iso1x"  ; hbmk[ _HBMK_cC ] := "iso1X"
+         CASE SubStr( cParamL, 4 ) == "iso1x"  ; hbmk[ _HBMK_cC ] := "iso1x"
          CASE SubStr( cParamL, 4 ) == "gnu90"  ; hbmk[ _HBMK_cC ] := "gnu90"
          CASE SubStr( cParamL, 4 ) == "gnu99"  ; hbmk[ _HBMK_cC ] := "gnu99"
-         CASE SubStr( cParamL, 4 ) == "gnu1x"  ; hbmk[ _HBMK_cC ] := "gnu1X"
+         CASE SubStr( cParamL, 4 ) == "gnu1x"  ; hbmk[ _HBMK_cC ] := "gnu1x"
          CASE SubStr( cParamL, 4 ) == ""       ; hbmk[ _HBMK_cC ] := ""
          ENDCASE
 
@@ -12059,6 +12059,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]debug"         , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
       { "-[no]optim"         , I_( "toggle C compiler optimizations (default: on)" ) },;
       { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
+      { "-c=[<std>]"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) },;
+      { "-cpp=[<std>]"       , I_( "select C++ standard. Allowed values are: iso98, iso03, iso0x, gnu98, gnu0x" ) },;
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
       { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) },;
@@ -12102,6 +12104,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-dflag=<f>"         , I_( "pass flag to linker (dynamic library)" ) },;
       { "-iflag=<f>"         , I_( "pass flag to import library creation command" ) },;
       { "-runflag=<f>"       , I_( "pass flag to output executable when -run option is used" ) },;
+      { "-cflag+=<f>"        , I_( "pass flag to C compiler overriding C compiler flags added by hbmk2 itself. Use with caution." ) },;
       { "-3rd=<f>"           , I_( "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself" ) },;
       { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"               , I_( "enable incremental build mode" ) },;
@@ -12126,7 +12129,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
       { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list. May be ';' delimited list of paths." ) },;
       { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
-      { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list" ) },;
+      { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths." ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
       { "-plugin=<.prg|.hbs|.hrb>", I_( "add plugin" ) },;
