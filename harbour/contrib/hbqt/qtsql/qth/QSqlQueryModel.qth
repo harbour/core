@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherit  = QAbstractTableModel
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -71,7 +71,7 @@ New      =
 /*
  * QSqlQueryModel ( QObject * parent = 0 )
  * virtual ~QSqlQueryModel ()
- * 
+ *
  */
 HB_FUNC( QT_QSQLQUERYMODEL )
 {
@@ -108,6 +108,3 @@ void setQuery ( const QString & query, const QSqlDatabase & db = QSqlDatabase() 
 
 <VARIABLES>
 </VARIABLES>
-
-
-

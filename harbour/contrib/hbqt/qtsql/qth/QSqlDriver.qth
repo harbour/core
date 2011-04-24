@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherit  = QObject
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -117,6 +117,3 @@ void notification ( const QString & name )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

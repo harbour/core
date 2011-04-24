@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherit  = 
-Type     = 
-New      = 
+Inherit  =
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -101,6 +101,3 @@ ErrorType type () const
 
 <VARIABLES>
 </VARIABLES>
-
-
-

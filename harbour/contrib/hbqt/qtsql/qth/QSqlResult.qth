@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherit  = 
-Type     = 
-New      = 
+Inherit  =
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -66,7 +66,7 @@ New      =
 
 
 /*
- * 
+ *
  */
 HB_FUNC( QT_QSQLRESULT )
 {
@@ -89,6 +89,3 @@ virtual QVariant handle () const
 
 <VARIABLES>
 </VARIABLES>
-
-
-

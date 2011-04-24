@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherit  = QSqlTableModel
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -94,6 +94,3 @@ virtual void setRelation ( int column, const QSqlRelation & relation )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

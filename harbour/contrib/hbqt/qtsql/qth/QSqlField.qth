@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherit  = 
-Type     = 
-New      = 
+Inherit  =
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -115,6 +115,3 @@ QVariant value () cons
 
 <VARIABLES>
 </VARIABLES>
-
-
-

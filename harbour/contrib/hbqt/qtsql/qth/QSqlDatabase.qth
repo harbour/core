@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherit  = 
-Type     = 
-New      = 
+Inherit  =
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -133,6 +133,3 @@ void removeDatabase ( const QString & connectionName )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

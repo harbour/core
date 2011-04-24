@@ -7,16 +7,13 @@
 -pflag=-qthdocdir=../doc/
 
 QSqlDatabase.qth
-QSqlQuery.qth
-QSqlError.qth
-QSqlIndex.qth
-QSqlRecord.qth
 QSqlDriver.qth
-QSqlResult.qth
+QSqlError.qth
 QSqlField.qth
+QSqlIndex.qth
+QSqlQuery.qth
 QSqlQueryModel.qth
-QSqlTableModel.qth
+QSqlRecord.qth
 QSqlRelationalTableModel.qth
-
-
-
+QSqlResult.qth
+QSqlTableModel.qth

@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherit  = QSqlQueryModel
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -119,6 +119,3 @@ void primeInsert ( int row, QSqlRecord & record )
 
 <VARIABLES>
 </VARIABLES>
-
-
-
