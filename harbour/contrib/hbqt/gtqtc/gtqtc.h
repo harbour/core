@@ -310,10 +310,8 @@ typedef struct
    bool         bResizing;
    bool         bAlreadySizing;
 
-#if !defined( UNICODE )
    HB_BYTE      keyTransTbl[ 256 ];
    HB_BYTE      chrTransTbl[ 256 ];
-#endif
 
 } HB_GTWVT, * PHB_GTWVT;
 

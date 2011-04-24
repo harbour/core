@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
@@ -1339,11 +1339,11 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 /* ********************************************************************** */
 
-DrawingArea::DrawingArea(QWidget *parent)
-    : QWidget(parent)
+DrawingArea::DrawingArea( QWidget *parent )
+    : QWidget( parent )
 {
-   setAttribute(Qt::WA_StaticContents);
-   setAttribute(Qt::WA_PaintOnScreen);
+   setAttribute( Qt::WA_StaticContents );
+   setAttribute( Qt::WA_PaintOnScreen );
 
    _COLORS[ 0] = BLACK;
    _COLORS[ 1] = BLUE;
@@ -1439,7 +1439,6 @@ void DrawingArea::copyTextOnClipboard( void )
    {
       for( icol = left; icol <= right; icol++ )
       {
-         //HB_BYTE bColor, bAttr;
          int iColor;
          HB_BYTE bAttr;
          HB_USHORT usChar;
@@ -1499,12 +1498,11 @@ void DrawingArea::redrawBuffer( const QRect & rect )
    painter.setBackgroundMode( Qt::OpaqueMode );
 
    HB_USHORT usChar;
-   int    iCol, iRow, len, iTop, startCol;
-   //HB_BYTE   bColor, bAttr, bOldColor = 0, bOldAttr = 0;
    HB_BYTE   bAttr, bOldAttr = 0;
-   int bColor, bOldColor = 0;
-   char   text[ WVT_MAX_COLS ];
-   QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
+   int       iCol, iRow, len, iTop, startCol;
+   int       bColor, bOldColor = 0;
+   char      text[ WVT_MAX_COLS ];
+   QRect     rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
 
    for( iRow = rcRect.top(); iRow <= rcRect.bottom(); ++iRow )
    {
@@ -1518,7 +1516,11 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-         //usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         #if defined( UNICODE )
+         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
+         #else
+         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         #endif
 
          if( bAttr & HB_GT_ATTR_BOX )
          {
@@ -1539,10 +1541,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          else if( bColor != bOldColor || bAttr != bOldAttr )
          {
             text[ len ] = '\0';
-            if( bOldAttr & HB_GT_ATTR_BOX )
-            {
-            }
-            else
+            if( ! bOldAttr & HB_GT_ATTR_BOX )
             {
                painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
                painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
@@ -1667,7 +1666,7 @@ void DrawingArea::timerEvent( QTimerEvent *event )
 
 void DrawingArea::resizeImage( const QSize &newSize )
 {
-   if ( _image->size() == newSize )
+   if( _image->size() == newSize )
       return;
 
    QImage *newImage = new QImage( newSize, QImage::Format_RGB32 );
