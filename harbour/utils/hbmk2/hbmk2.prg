@@ -1901,7 +1901,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF hbmk[ _HBMK_lInfo ]
       hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), l_cHB_INSTALL_BIN, l_cHB_INSTALL_INC, l_cHB_INSTALL_LIB, l_cHB_INSTALL_DYN ) )
       IF ! Empty( cPath_CompC )
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
+         IF Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. ;
+            Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
+         ELSE
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s [%2$s...%3$s]" ), cPath_CompC, hbmk[ _HBMK_cCCPREFIX ], hbmk[ _HBMK_cCCPOSTFIX ] ) )
+         ENDIF
       ENDIF
    ENDIF
 
