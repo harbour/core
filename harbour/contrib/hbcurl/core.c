@@ -999,7 +999,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                   {
                      PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
 
@@ -1033,7 +1033,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, hb_curl->pHTTPHEADER );
@@ -1053,7 +1053,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, hb_curl->pHTTP200ALIASES );
@@ -1116,7 +1116,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pMAIL_RCPT = curl_slist_append( hb_curl->pMAIL_RCPT, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_RCPT, hb_curl->pMAIL_RCPT );
@@ -1150,7 +1150,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
@@ -1169,7 +1169,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, hb_curl->pPOSTQUOTE );
@@ -1188,7 +1188,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, hb_curl->pPREQUOTE );
@@ -1424,7 +1424,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pRESOLVE = curl_slist_append( hb_curl->pRESOLVE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESOLVE, hb_curl->pRESOLVE );
@@ -1571,7 +1571,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   HB_SIZE ulPos;
                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
                      hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, hb_curl->pTELNETOPTIONS );
