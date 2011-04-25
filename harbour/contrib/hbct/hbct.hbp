@@ -9,6 +9,9 @@
 
 -w3 -es2
 
+# For stime()
+-c=gnu90{linux}
+
 -instfile=inc:ct.h
 -instfile=inc:ctmath.h
 -instfile=inc:ctset.h

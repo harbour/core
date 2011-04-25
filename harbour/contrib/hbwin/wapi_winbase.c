@@ -310,7 +310,7 @@ HB_FUNC( WAPI_MULDIV )
 
 /* WinCE does not support GetShortPathName()/GetLongPathName() functions */
 
-typedef DWORD ( WINAPI * _HB_GETPATHNAME ) ( LPCTSTR, LPTSTR, DWORD );
+typedef DWORD ( WINAPI * _HB_GETPATHNAME )( LPCTSTR, LPTSTR, DWORD );
 
 static void s_getPathName( _HB_GETPATHNAME getPathName )
 {
@@ -358,13 +358,24 @@ static void s_getPathName( _HB_GETPATHNAME getPathName )
    hb_strfree( hLongPath );
 }
 
+#endif
+
 HB_FUNC( WAPI_GETSHORTPATHNAME )
 {
+#if !defined( HB_OS_WIN_CE )
    s_getPathName( GetShortPathName );
+#else
+   {
+      HB_SIZE nSize = hb_parclen( 1 );
+      hb_storclen( hb_parc( 1 ), nSize, 2 );
+      hb_retns( nSize );
+   }
+#endif
 }
 
 HB_FUNC( WAPI_GETLONGPATHNAME )
 {
+#if !defined( HB_OS_WIN_CE )
    static _HB_GETPATHNAME s_getPathNameAddr = NULL;
 
    if( !s_getPathNameAddr )
@@ -381,6 +392,11 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
          s_getPathNameAddr = GetShortPathName;
    }
    s_getPathName( s_getPathNameAddr );
-}
-
+#else
+   {
+      HB_SIZE nSize = hb_parclen( 1 );
+      hb_storclen( hb_parc( 1 ), nSize, 2 );
+      hb_retns( nSize );
+   }
 #endif
+}

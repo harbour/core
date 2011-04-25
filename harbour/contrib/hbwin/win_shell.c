@@ -91,6 +91,7 @@
                         [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
 {
+#if ! defined( HB_OS_WIN_CE )
    NOTIFYICONDATA tnid;
 
    memset( &tnid, 0, sizeof( tnid ) );
@@ -121,6 +122,9 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 
    hbwapi_ret_L( Shell_NotifyIcon( HB_ISLOG( 6 ) ?
                  ( hb_parl( 6 ) ? NIM_ADD : NIM_DELETE ) : NIM_MODIFY, &tnid ) );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 /* Details:

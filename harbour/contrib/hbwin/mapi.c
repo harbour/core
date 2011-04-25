@@ -51,8 +51,12 @@
  *
  */
 
-#if defined( UNICODE )
-#  undef UNICODE
+#include "hbapi.h" /* for HB_OS_* detection */
+
+#if ! defined( HB_OS_WIN_CE )
+#  if defined( UNICODE )
+#     undef UNICODE
+#  endif
 #endif
 
 #include "hbwin.h"

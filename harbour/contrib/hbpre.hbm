@@ -19,4 +19,7 @@
 
 -c=iso90
 
+# For cegcc Windows headers
+-c=gnu90{wce&allmingw}
+
 -warn=yes

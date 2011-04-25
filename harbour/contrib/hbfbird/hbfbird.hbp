@@ -23,6 +23,9 @@
 
 -instfile=inc:hbfbird.hbx
 
+# For FireBird headers
+-c=gnu90
+
 hbfbird.hbx
 
 firebird.c

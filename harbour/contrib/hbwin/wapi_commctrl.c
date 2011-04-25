@@ -310,6 +310,7 @@ HIMAGELIST ImageList_LoadImage( HINSTANCE hi, LPCTSTR lpbmp, int cx, int cGrow,
 */
 HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
 {
+#if ! defined( HB_OS_WIN_CE )
    LPCTSTR image;
 
    if( HB_ISCHAR( 2 ) )
@@ -324,6 +325,9 @@ HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
                                                hbwapi_par_COLORREF( 5 ),
                                                hbwapi_par_UINT( 6 ),
                                                hbwapi_par_UINT( 7 ) ) );
+#else
+   hbwapi_ret_raw_HANDLE( NULL );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
