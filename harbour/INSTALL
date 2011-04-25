@@ -1468,7 +1468,7 @@ HARBOUR
    C/C++ Compilers/Shells:
 
       MinGW/MinGW-64 [win, *nix, free, open-soource]
-         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended) [NOTE: 4.5.1 is broken]
+         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended) [NOTE: 4.5.1 is broken, 4.5.2 OK]
          http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home, broken as of 4.5.0-1)
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
          http://nuwen.net/mingw.html (unofficial)
@@ -1568,10 +1568,10 @@ HARBOUR
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
          Recommended Mac OS X binary package:
-            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.7.1.dmg
+            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.7.2.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.7.1-mingw.exe
+            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.7.2-mingw.exe
          How to create Windows static and MSVC builds:
             http://doc.trolltech.com/4.7/deployment-windows.html
          NOTES:
