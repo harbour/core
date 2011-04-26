@@ -356,7 +356,7 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_ToolBar( oDA )
-   LOCAL oTBar, s, txt_:= {}
+   LOCAL oTBar
 
    // Create an XbpToolBar object and
    // add it at the top of the dialog
@@ -389,24 +389,6 @@ FUNCTION Build_ToolBar( oDA )
 
    oTBar:transparentColor := GRA_CLR_INVALID
    oTBar:buttonClick := {|oButton| ExeToolbar( oButton, oDa ) }
-
-   #ifdef __HARBOUR__
-   aadd( txt_, ' ' )
-   aadd( txt_, ' QToolBar {                                                    ' )
-   aadd( txt_, '     background: cyan;                                         ' )
-   aadd( txt_, '     spacing: 3px; /* spacing between items in the tool bar */ ' )
-   aadd( txt_, ' }                                                             ' )
-   aadd( txt_, '                                                               ' )
-   aadd( txt_, ' QToolBar::handle {                                            ' )
-   aadd( txt_, '     image: url(save.png);                                     ' )
-   aadd( txt_, ' }                                                             ' )
-   aadd( txt_, ' ' )
-
-   s := ""
-   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
-
-   oTBar:setStyleSheet( s )
-   #endif
 
    RETURN nil
 
@@ -865,9 +847,6 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTree:hasButtons := .T.
    oTree:create()
    oTree:itemCollapsed := {|oItem,aRect,oSelf| HB_SYMBOL_UNUSED( aRect ), HB_SYMBOL_UNUSED( oSelf ), MsgBox( oItem:caption ) }
-   #ifdef __HARBOUR__
-   oTree:setStyleSheet( GetTreeStyleSheet() )
-   #endif
    FOR i := 1 TO 5
       WorkAreaInfo( oTree, i )
    NEXT
@@ -1219,9 +1198,6 @@ STATIC FUNCTION Build_HTMLViewer( oWnd )
    oFrm:type := XBPSTATIC_TYPE_RECESSEDBOX
    oFrm:options := XBPSTATIC_FRAMETHICK
    oFrm:create()
-   #ifdef __HARBOUR__
-   //oFrm:setStyleSheet( "border: 2px solid yellow;" )
-   #endif
 
    sz_:= oFrm:currentSize()
    // oHtm := XbpHTMLViewer():new( oWnd, , {10,10}, {sz_[1]-25,sz_[2]-30-15} )
@@ -1582,7 +1558,7 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Browse( oWnd )
-   LOCAL aPresParam, oXbpBrowse, oXbpColumn, s
+   LOCAL aPresParam, oXbpBrowse, oXbpColumn
    LOCAL cPath := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps()
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
@@ -1619,11 +1595,6 @@ STATIC FUNCTION Build_Browse( oWnd )
    ENDIF
 
    oXbpBrowse:headerRbDown  := {|mp1, mp2, o| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( o ) }
-
-   #ifdef __HARBOUR__
-   s := "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 gray); "
-   oXbpBrowse:setStyleSheet( s )
-   #endif
 
    aPresParam := {}
    aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Icons"                    } )
