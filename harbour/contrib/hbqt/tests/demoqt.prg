@@ -78,8 +78,7 @@ STATIC oSys, oMenuSys, oActShow, oActHide
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events( e )
-   HB_SYMBOL_UNUSED( e )
-   HB_TRACE( HB_TR_DEBUG, "Key Pressed", e:key() )
+   MsgInfo( "Pressed: " + hb_ntos( e:key() ) )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -187,8 +186,6 @@ PROCEDURE ExecOneMore()
    oEventLoop := 0
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
-
-   HB_GCALL( .T.)
 
    RETURN
 
@@ -528,7 +525,6 @@ STATIC FUNCTION MsgInfo( cMsg )
    oMB:exec()
 
    oMB := NIL
-   HB_GCALL( .T.)
 
    RETURN nil
 
@@ -542,7 +538,6 @@ STATIC FUNCTION FileDialog()
    oFD:exec()
 
    oFD := NIL
-   HB_GCALL( .T.)
 
    RETURN nil
 
@@ -583,7 +578,6 @@ STATIC FUNCTION Dialogs( cType )
    ENDCASE
 
    oDlg := NIL
-   HB_GCALL( .T. )
 
    RETURN nil
 

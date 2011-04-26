@@ -191,18 +191,6 @@ void * hbqt_pPtrFromObj( int iParam )
 
       return pointer;
    }
-#if 1   /* TOFIX: This is the only raw pointers usage - HBQEvents and HBQSlots */
-   else if( hb_itemType( pObj ) == HB_IT_POINTER )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj= IS_POINTER" ) );
-      pointer = hbqt_gcpointer( iParam );
-
-      if( iParam == 0 && ! pointer )
-         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-      return pointer;
-   }
-#endif
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj(): returns NULL" ) );
@@ -210,6 +198,34 @@ void * hbqt_pPtrFromObj( int iParam )
          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return NULL; /* TODO: Still better if RTE. */
    }
+}
+
+void * hbqt_pPtrFromObject( PHB_ITEM pObj )
+{
+   static PHB_DYNS s_pDyns_hPPtrAssign = NULL;
+   void * pointer;
+
+   if( ! s_pDyns_hPPtrAssign )
+      s_pDyns_hPPtrAssign = hb_dynsymGetCase( "PPTR" );
+
+   if( hb_itemType( pObj ) == HB_IT_OBJECT )
+   {
+      hb_vmPushDynSym( s_pDyns_hPPtrAssign );
+      hb_vmPush( pObj );
+      hb_vmSend( 0 );
+
+      pointer = hbqt_gcpointer( -1 );
+
+      if( ! pointer )
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
+      return pointer;
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   return NULL;
 }
 
 void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )

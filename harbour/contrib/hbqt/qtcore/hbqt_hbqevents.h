@@ -68,13 +68,12 @@ class HBQEvents: public QObject
    Q_OBJECT
 
 public:
-   HBQEvents( QObject *parent = 0 );
+   HBQEvents( PHB_ITEM pObj );
    ~HBQEvents();
-   QList<PHB_ITEM>     listBlock;
+   QList<PHB_ITEM> listBlock;
 
-   bool hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock );
-   bool hbDisconnect( PHB_ITEM pObj, int iEvent );
-   bool hbClear();
+   int hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock );
+   int hbDisconnect( PHB_ITEM pObj, int iEvent );
 
 protected:
    bool eventFilter( QObject * obj, QEvent * event );

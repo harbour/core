@@ -36,7 +36,7 @@ New      =
  */
 HB_FUNC( QT_HBQEVENTS )
 {
-   __HB_RETPTRGC__( new HBQEvents() );
+   __HB_RETPTRGC__( new HBQEvents( hb_param( 1, HB_IT_OBJECT ) ) );
 }
 
 static HB_GARBAGE_FUNC( hbqt_gcMark_HBQEvents )
@@ -69,9 +69,8 @@ static HB_GARBAGE_FUNC( hbqt_gcMark_HBQEvents )
 </ENUMS>
 
 <PROTOS>
-bool hbConnect( PHB_ITEM obj, int event, PHB_ITEM block )
-bool hbDisconnect( PHB_ITEM obj, int event )
-bool hbClear()
+int hbConnect( PHB_ITEM obj, int event, PHB_ITEM block )
+int hbDisconnect( PHB_ITEM obj, int event )
 </PROTOS>
 
 <SLOTS>

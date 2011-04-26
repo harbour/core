@@ -308,8 +308,8 @@ METHOD XbpTabWidget:disconnect()
 
 METHOD XbpTabWidget:destroy()
 
-   ::disconnect()
    ::oParent:oTabWidget := NIL
+   //::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

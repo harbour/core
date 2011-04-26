@@ -63,7 +63,7 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pSlots                                           PROTECTED
    VAR    __pEvents                                          PROTECTED
 
-   METHOD fromPointer( pPtr )
+   //METHOD fromPointer( pPtr )
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
@@ -73,18 +73,6 @@ CREATE CLASS HbQtObjectHandler
    ERROR HANDLER onError()
 
 ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-/* TODO: Drop this function when all raw QT pointers are fully eliminated from .prg level. */
-METHOD HbQtObjectHandler:fromPointer( pPtr )
-   /* NOTE: Non-GC collected pointers are allowed here. */
-   IF hb_isPointer( pPtr )
-      ::pPtr := pPtr
-   ELSE
-      __hbqt_error()
-   ENDIF
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -123,16 +111,6 @@ METHOD HbQtObjectHandler:onError()
 
 /*----------------------------------------------------------------------*/
 
-/* TOFIX: Eliminate that */
-STATIC FUNCTION HBQEventsFromPointer( ... )
-   LOCAL p
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )
-   NEXT
-   RETURN HB_HBQEvents():fromPointer( ... )
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 
@@ -144,9 +122,9 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    CASE "C"
 
       IF Empty( ::__pSlots )
-         ::__pSlots := __hbqt_slots_new()
+         ::__pSlots := HBQSlots( Self )
       ENDIF
-      nResult := __hbqt_slots_connect( ::__pSlots, ::pPtr, cnEvent, bBlock )
+      nResult := ::__pSlots:hbconnect( Self, cnEvent, bBlock )
 
       SWITCH nResult
       CASE 0
@@ -157,11 +135,10 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       EXIT
 
    CASE "N"
-
       IF Empty( ::__pEvents )
-         ::__pEvents := __hbqt_events_new(Self)
+         ::__pEvents := HBQEvents( Self )
       ENDIF
-      nResult := __hbqt_events_connect( ::__pEvents, ::pPtr, cnEvent, bBlock )
+      nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
 
       SWITCH nResult
       CASE 0
@@ -183,11 +160,12 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
 
-   LOCAL nResult
+   LOCAL nResult := 0
    SWITCH ValType( cnEvent )
    CASE "C"
-
-      nResult := __hbqt_slots_disconnect( ::__pSlots, ::pPtr, cnEvent )
+      IF ! empty( ::__pSlots )
+         nResult := ::__pSlots:hbdisconnect( Self, cnEvent )
+      ENDIF
 
       SWITCH nResult
       CASE 0
@@ -202,8 +180,9 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
       EXIT
 
    CASE "N"
-
-      nResult := __hbqt_events_disconnect( ::__pEvents, ::pPtr, cnEvent )
+      IF ! empty( ::__pEvents )
+         nResult := ::__pEvents:hbdisconnect( Self, cnEvent )
+      ENDIF
 
       SWITCH nResult
       CASE 0
@@ -226,12 +205,8 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:_destroy()
 
-   HB_TRACE( HB_TR_DEBUG, "                              _destroy()", ::className(), 0 )
-
-   ::__pSlots := NIL
-   ::__pEvents := NIL
-
-   HB_TRACE( HB_TR_DEBUG, "                              _destroy()", ::className(), 1 )
+//   ::__pSlots := NIL
+//   ::__pEvents := NIL
 
    RETURN NIL
 

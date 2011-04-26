@@ -64,6 +64,7 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QVariant>
+#include <QtGui/QMessageBox>
 
 /*----------------------------------------------------------------------*/
 
@@ -107,11 +108,18 @@ void hbqt_events_unregister_createobj( QEvent::Type eventtype )
 
 /*----------------------------------------------------------------------*/
 
-HBQEvents::HBQEvents( QObject * parent ) : QObject( parent )
+HBQEvents::HBQEvents( PHB_ITEM pObj ) : QObject()
 {
+   if( pObj )
+   {
+      QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+      if( object )
+      {
+         object->installEventFilter( this );
+      }
+   }
 }
 
-/* QUESTION: Shouldn't all events be disconnected at this point? */
 HBQEvents::~HBQEvents()
 {
    HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::~HBQEvents()" ) );
@@ -121,81 +129,88 @@ HBQEvents::~HBQEvents()
    {
       if( listBlock[ i ] != NULL )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::~HBQEvents() %d", i ) );
-
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
-
-         HB_TRACE( HB_TR_DEBUG, ( "                            X" ) );
       }
    }
 }
 
-bool HBQEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
+int HBQEvents::hbConnect( PHB_ITEM pObj, int type, PHB_ITEM bBlock )
 {
-   HB_SYMBOL_UNUSED( pObj   );
-   HB_SYMBOL_UNUSED( iEvent );
-   HB_SYMBOL_UNUSED( bBlock );
+   int nResult = -1;
 
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );          /* get sender    */
-
-   if( object )
+   if( true )
    {
-      PHB_ITEM codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+      QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+      if( object )
+      {
+         PHB_ITEM codeblock = hb_itemNew( bBlock );
+         if( codeblock )
+         {
+            hb_gcUnlock( codeblock );
 
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );  /* Make it a unique identifier */
+            char prop[ 20 ];
+            hb_snprintf( prop, sizeof( prop ), "P%iP", type ); /* Make it a unique identifier */
 
-      listBlock << codeblock;
-
-      object->setProperty( prop, ( int ) listBlock.size() );
-
-      return true;
+            int i = object->property( prop ).toInt();
+            if( i == 0 )
+            {
+               listBlock << codeblock;
+               object->setProperty( prop, ( int ) listBlock.size() );
+            }
+            else
+            {
+               if( listBlock.at( i - 1 ) != NULL )
+               {
+                  hb_itemRelease( listBlock.at( i - 1 ) );
+               }
+               listBlock[ i - 1 ] = codeblock;
+            }
+            nResult = 0;
+         }
+         else
+            nResult = -3;
+      }
+      else
+         nResult = -2;
    }
-   return false;
+   else
+      nResult = -1;
+
+   return nResult;
 }
 
-bool HBQEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
+int HBQEvents::hbDisconnect( PHB_ITEM pObj, int type )
 {
-   HB_SYMBOL_UNUSED( pObj );
+   int nResult = -1;
 
-   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
-
+   QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
    if( object )
    {
       char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", iEvent, "P" );    /* Make it a unique identifier */
+      hb_snprintf( prop, sizeof( prop ), "P%iP", type );    /* Make it a unique identifier */
 
       int i = object->property( prop ).toInt();
       if( i > 0 && i <= listBlock.size() )
       {
-         hb_itemRelease( listBlock.at( i - 1 ) );
-         listBlock[ i - 1 ] = NULL;
          object->setProperty( prop, QVariant() );
 
-         HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", iEvent ) );
-         return true;
+         if( listBlock[ i - 1 ] != NULL )
+         {
+            hb_itemRelease( listBlock.at( i - 1 ) );
+            listBlock[ i - 1 ] = NULL;
+         }
+         nResult = 0;
       }
+      else
+         nResult = -3;
    }
-   return false;
+   else
+      nResult = -2;
+
+   return nResult;
 }
 
-bool HBQEvents::hbClear()
-{
-   HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::hbClear()" ) );
-   int i;
-
-   for( i = 0; i < listBlock.size(); i++ )
-   {
-      if( listBlock[ i ] != NULL )
-      {
-         hb_itemRelease( listBlock.at( i ) );
-         listBlock[ i ] = NULL;
-      }
-   }
-   listBlock.clear();
-   return true;
-}
 
 /* DO NOT Reformat */
 bool HBQEvents::eventFilter( QObject * object, QEvent * event )
@@ -237,111 +252,6 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       }
    }
    return false;
-}
-
-HB_FUNC( __HBQT_EVENTS_CONNECT )
-{
-   int nResult;
-   HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
-
-   if( t_events )
-   {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 ); /* get sender    */
-
-      if( object )
-      {
-         PHB_ITEM codeblock = hb_itemNew( hb_param( 4, HB_IT_BLOCK | HB_IT_BYREF ) );
-         if( codeblock )
-         {
-            int type = hb_parni( 3 );
-            hb_gcUnlock( codeblock );
-
-            char prop[ 20 ];
-            hb_snprintf( prop, sizeof( prop ), "P%iP", type ); /* Make it a unique identifier */
-
-            int i = object->property( prop ).toInt();
-            if( i == 0 )
-            {
-               t_events->listBlock << codeblock;
-               object->setProperty( prop, ( int ) t_events->listBlock.size() );
-            }
-            else
-            {
-               if( t_events->listBlock.at( i - 1 ) != NULL )
-               {
-                  hb_itemRelease( t_events->listBlock.at( i - 1 ) );
-               }
-               t_events->listBlock[ i - 1 ] = codeblock;
-            }
-            nResult = 0;
-         }
-         else
-            nResult = -3;
-      }
-      else
-         nResult = -2;
-   }
-   else
-      nResult = -1;
-
-   hb_retni( nResult );
-}
-
-HB_FUNC( __HBQT_EVENTS_DISCONNECT )
-{
-   int nResult;
-   HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
-
-   if( t_events )
-   {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );
-
-      if( object )
-      {
-         int type = hb_parni( 3 );
-
-         char prop[ 20 ];
-         hb_snprintf( prop, sizeof( prop ), "P%iP", type );    /* Make it a unique identifier */
-
-         int i = object->property( prop ).toInt();
-         if( i > 0 && i <= t_events->listBlock.size() )
-         {
-            object->setProperty( prop, QVariant() );
-
-            if( t_events->listBlock[ i - 1 ] != NULL )
-            {
-               HB_TRACE( HB_TR_DEBUG, ( "           __HBQT_EVENTS_DISCONNECT %d=", i-1 ) );
-               hb_itemRelease( t_events->listBlock.at( i - 1 ) );
-               t_events->listBlock[ i - 1 ] = NULL;
-               HB_TRACE( HB_TR_DEBUG, ( "                                    X=" ) );
-            }
-            nResult = 0;
-
-            HB_TRACE( HB_TR_DEBUG, ( "      QT_EVENTS_DISCONNECT: %i", type ) );
-         }
-         else
-            nResult = -3;
-      }
-      else
-         nResult = -2;
-   }
-   else
-      nResult = -1;
-
-   hb_retni( nResult );
-}
-
-HB_FUNC( __HBQT_EVENTS_NEW )
-{
-   HBQEvents * p;
-   QObject * o;
-
-   o = (QObject *) hbqt_pPtrFromObj( 1 );
-
-   p = new HBQEvents();
-   o->installEventFilter( p );
-
-   hb_retptrGC( hbqt_gcAllocate_HBQEvents( p, true ) );
 }
 
 static void hbqt_events_init( void * cargo )

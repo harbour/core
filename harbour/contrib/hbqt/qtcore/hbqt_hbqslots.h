@@ -70,9 +70,12 @@ class HBQSlots: public QObject
 {
 
 public:
-   HBQSlots( QObject *parent = 0 );
+   HBQSlots( PHB_ITEM pObj );
    ~HBQSlots();
    QList<PHB_ITEM>  listBlock;
+
+   int hbConnect( PHB_ITEM obj, char * pszSignal, PHB_ITEM block );
+   int hbDisconnect( PHB_ITEM obj, char * pszSignal );
 
    int qt_metacall( QMetaObject::Call call, int id, void **arguments );
 };
