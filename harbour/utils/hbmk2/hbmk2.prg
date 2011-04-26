@@ -244,6 +244,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
 #define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
+#define _HBMK_DIR_TPL           "HBMK_DIR_%1$s"
 #define _HBMK_SCRIPT            "__HBSCRIPT__HBMK"
 
 #define _HBMK_IMPLIB_EXE_POST   "_exe"
@@ -7918,6 +7919,7 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                   dep[ _HBMKDEP_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
                   IF ! Empty( cIncludeDir )
                      hbmk[ _HBMK_hDEPTSDIR ][ cIncludeDir ] := NIL
+                     hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( cName ) ) ] := cIncludeDir
                      /* Adjust implib source names with component path */
                      FOR EACH tmp IN dep[ _HBMKDEP_aIMPLIBSRC ]
                         tmp := hb_PathNormalize( PathMakeAbsolute( tmp, hb_DirSepAdd( cIncludeDir ) ) )
@@ -7967,6 +7969,7 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
                   AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( PathSepToSelf( cDir ) ) )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-D" + hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
                   hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
+                  hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := hb_DirSepDel( PathSepToSelf( cDir ) )
                   IF dep[ _HBMKDEP_lFoundLOCAL ]
                      hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL_LOCAL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
                   ENDIF
@@ -9908,7 +9911,11 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hb_ntos( hbmk[ _HBMK_nLevel ] ) ; EXIT
    OTHERWISE
       IF cMacro $ hbmk[ _HBMK_hDEPTMACRO ] /* Check for dependency detection macros */
-         cMacro := "1"
+         IF Empty( hbmk[ _HBMK_hDEPTMACRO ][ cMacro ] )
+            cMacro := "1"
+         ELSE
+            cMacro := hbmk[ _HBMK_hDEPTMACRO ][ cMacro ]
+         ENDIF
       ELSE
          /* NOTE: If macro not found, try to interpret as
                   envvar. If it doesn't exist, empty string
