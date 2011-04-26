@@ -81,7 +81,6 @@ xcopy /y       "%HB_WITH_QT%\..\bin\uic.exe"                                    
 xcopy /y       "%HB_WITH_QT%\..\bin\rcc.exe"                                              %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtCore4.a"                                         %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtGui4.a"                                          %HB_ABSROOT%lib\win\mingw\
-xcopy /y       "%HB_WITH_QT%\..\lib\libQtUiTools.a"                                       %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtNetwork4.a"                                      %HB_ABSROOT%lib\win\mingw\
  copy /y       "%HB_WITH_QT%\..\LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt
  copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt

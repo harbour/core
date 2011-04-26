@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--pflag=-qtver=0x040500
--pflag=-qtmodule=qtuitools
--pflag=-qthdocdir=../doc/
-
-QUiLoader.qth

@@ -69,12 +69,6 @@
 
 /*----------------------------------------------------------------------*/
 
-HB_EXTERN_BEGIN
-extern void * hbqt_gcAllocate_QObject( void * pObj, bool bNew );
-HB_EXTERN_END
-
-/*----------------------------------------------------------------------*/
-
 static HB_GARBAGE_FUNC( Q_release )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
@@ -433,14 +427,6 @@ HB_FUNC( __HBQT_ISPOINTER )
    HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
 
    hb_retl( p && p->ph );
-}
-
-#include <QtCore/QObject>
-
-HB_FUNC( HBQT_FINDCHILD )
-{
-   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
-   hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
 }
 
 HB_FUNC( HBQT_ISEQUAL )
