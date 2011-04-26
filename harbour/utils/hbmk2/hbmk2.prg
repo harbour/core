@@ -5728,7 +5728,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cFile += '#endif' + Chr( 10 )
                cFile += 'CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "' + PathSepToForward( hbmk[ _HBMK_cMANIFEST ] ) + '"' + Chr( 10 )
             ENDIF
-            IF ! Empty( hbmk[ _HBMK_aICON ] )
+            IF ! Empty( hbmk[ _HBMK_aICON ] ) .AND. !( hbmk[ _HBMK_cCOMP ] == "bcc" ) /* BCC cannot handle certain new .ico files */
                IF hbmk[ _HBMK_cPLAT ] == "os2"
                   AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
                ELSE
