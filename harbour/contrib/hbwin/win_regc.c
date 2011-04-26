@@ -201,8 +201,20 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               0,
                               dwType,
                               ( const BYTE * ) &nSpace,
-                              sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
+                              sizeof( DWORD ) ) == ERROR_SUCCESS );
    }
+#if defined( REG_QWORD )
+   else if( dwType == REG_QWORD )
+   {
+      HB_U64 nSpace = ( HB_U64 ) hb_parnint( 5 );
+      hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
+                              lpKey,
+                              0,
+                              dwType,
+                              ( const BYTE * ) &nSpace,
+                              sizeof( HB_U64 ) ) == ERROR_SUCCESS );
+   }
+#endif
    else if( dwType == REG_SZ ||
             dwType == REG_EXPAND_SZ ||
             dwType == REG_MULTI_SZ )

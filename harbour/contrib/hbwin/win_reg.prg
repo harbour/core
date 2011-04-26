@@ -64,19 +64,6 @@
 #define KEY_NOTIFY                     16
 #define KEY_CREATE_LINK                32
 
-#define REG_NONE                       0   // No value type
-#define REG_SZ                         1   // Unicode nul terminated string
-#define REG_EXPAND_SZ                  2   // Unicode nul terminated string (with environment variable references)
-#define REG_BINARY                     3   // Free form binary
-#define REG_DWORD                      4   // 32-bit number
-#define REG_DWORD_LITTLE_ENDIAN        4   // 32-bit number (same as REG_DWORD)
-#define REG_DWORD_BIG_ENDIAN           5   // 32-bit number
-#define REG_LINK                       6   // Symbolic Link (unicode)
-#define REG_MULTI_SZ                   7   // Multiple Unicode strings
-#define REG_RESOURCE_LIST              8   // Resource list in the resource map
-#define REG_FULL_RESOURCE_DESCRIPTOR   9   // Resource list in the hardware description
-#define REG_RESOURCE_REQUIREMENTS_LIST 10
-
 /* ------------------------------------------------------------------- */
 
 PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntry )
@@ -128,12 +115,12 @@ FUNCTION win_regRead( cRegPath, xDefault )
 
    RETURN win_regGet( nHKEY, cKey, cEntry, xDefault )
 
-FUNCTION win_regWrite( cRegPath, xValue )
+FUNCTION win_regWrite( cRegPath, xValue, nType )
    LOCAL nHKEY, cKey, cEntry
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   RETURN win_regSet( nHKEY, cKey, cEntry, xValue )
+   RETURN win_regSet( nHKEY, cKey, cEntry, xValue, nType )
 
 FUNCTION win_regDelete( cRegPath )
    LOCAL nHKEY, cKey, cEntry
@@ -197,10 +184,15 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault )
 
       IF ISCHARACTER( xRetVal )
          DO CASE
-         CASE nValueType == REG_DWORD .OR. nValueType == REG_DWORD_LITTLE_ENDIAN
+         CASE nValueType == WIN_REG_DWORD .OR. ;
+              nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
             xRetVal := Bin2U( xRetVal )
-         CASE nValueType == REG_DWORD_BIG_ENDIAN
+         CASE nValueType == WIN_REG_DWORD_BIG_ENDIAN
             xRetVal := Bin2U( Right( xRetVal, 2 ) + Left( xRetVal, 2 ) )
+         CASE nValueType == WIN_REG_QWORD .OR. ;
+              nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
+              xRetVal := hb_bitShift( Bin2U( SubStr( xRetVal, 5, 2 ) + SubStr( xRetVal, 7, 2 ) ), 32 ) +;
+                                      Bin2U( SubStr( xRetVal, 1, 2 ) + SubStr( xRetVal, 3, 2 ) )
          OTHERWISE
             /* Strip ending zero byte */
             IF Right( xRetVal, 1 ) == Chr( 0 )
@@ -218,9 +210,8 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault )
 
    RETURN xRetVal
 
-FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue )
+FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType )
    LOCAL cName
-   LOCAL nValueType
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
@@ -229,20 +220,32 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue )
       /* no support for Arrays, Codeblock ... */
       SWITCH ValType( xValue )
       CASE "L"
-         nValueType := REG_DWORD
+         nValueType := WIN_REG_DWORD
          cName := iif( xValue, 1, 0 )
          EXIT
       CASE "D"
-         nValueType := REG_SZ
+         nValueType := WIN_REG_SZ
          cName := DToS( xValue )
          EXIT
       CASE "N"
-         nValueType := REG_DWORD
+         IF ! hb_isNumeric( nValueType ) .OR. ;
+            !( nValueType == WIN_REG_DWORD .OR. ;
+               nValueType == WIN_REG_DWORD_LITTLE_ENDIAN .OR. ;
+               nValueType == WIN_REG_DWORD_BIG_ENDIAN .OR. ;
+               nValueType == WIN_REG_QWORD .OR. ;
+               nValueType == WIN_REG_QWORD_LITTLE_ENDIAN )
+            nValueType := WIN_REG_DWORD
+         ENDIF
          cName := xValue
          EXIT
       CASE "C"
       CASE "M"
-         nValueType := REG_SZ
+         IF ! hb_isNumeric( nValueType ) .OR. ;
+            !( nValueType == WIN_REG_SZ .OR. ;
+               nValueType == WIN_REG_EXPAND_SZ .OR. ;
+               nValueType == WIN_REG_MULTI_SZ )
+            nValueType := WIN_REG_SZ
+         ENDIF
          cName := xValue
          EXIT
       ENDSWITCH

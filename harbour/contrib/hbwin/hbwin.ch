@@ -70,6 +70,22 @@
 #define WIN_HKEY_CURRENT_CONFIG     0x80000005
 #define WIN_HKEY_DYN_DATA           0x80000006
 
+/* Windows registry key types in win_regWrite()/win_regSet()/win_regSetValueEx() functions */
+#define WIN_REG_NONE                       0   /* No value type */
+#define WIN_REG_SZ                         1   /* Unicode nul terminated string */
+#define WIN_REG_EXPAND_SZ                  2   /* Unicode nul terminated string (with environment variable references) */
+#define WIN_REG_BINARY                     3   /* Free form binary */
+#define WIN_REG_DWORD                      4   /* 32-bit number */
+#define WIN_REG_DWORD_LITTLE_ENDIAN        4   /* 32-bit number (same as REG_DWORD) */
+#define WIN_REG_DWORD_BIG_ENDIAN           5   /* 32-bit number */
+#define WIN_REG_LINK                       6   /* Symbolic Link (unicode) */
+#define WIN_REG_MULTI_SZ                   7   /* Multiple Unicode strings */
+#define WIN_REG_RESOURCE_LIST              8   /* Resource list in the resource map */
+#define WIN_REG_FULL_RESOURCE_DESCRIPTOR   9   /* Resource list in the hardware description */
+#define WIN_REG_RESOURCE_REQUIREMENTS_LIST 10
+#define WIN_REG_QWORD                      11  /* 64-bit number */
+#define WIN_REG_QWORD_LITTLE_ENDIAN        11  /* 64-bit number (same as REG_QWORD) */
+
 /* WIN_PORT() related values */
 
 /* WIN_COMOPEN() bit rates */

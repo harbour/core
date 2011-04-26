@@ -21,6 +21,7 @@
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\doc\readme.txt"
   !define MUI_ICON "harb_win.ico"
+  !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 SetDateSave on
 SetDatablockOptimize on
