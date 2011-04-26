@@ -84,15 +84,16 @@ static TOKEN_ENVIRONMENT sTokEnvNew( void )
 {
    TOKEN_ENVIRONMENT env = ( TOKEN_ENVIRONMENT )
          hb_xalloc( sizeof( TOKEN_POSITION ) * ( 2 + TOKEN_ENVIRONMENT_STEP ) );
+
    if( env == NULL )
       return NULL;
 
    /* use the first element to store current length and use of token env */
-   env[0].sStartPos = 0;                    /* 0-based index to next free, unused element */
-   env[0].sEndPos = TOKEN_ENVIRONMENT_STEP; /* but there are 100 elements ready for use */
+   env[ 0 ].sStartPos = 0;                    /* 0-based index to next free, unused element */
+   env[ 0 ].sEndPos = TOKEN_ENVIRONMENT_STEP; /* but there are 100 elements ready for use */
 
    /* use second element to store actual index with tokennext() */
-   env[1].sStartPos = 0;        /* 0-based index value that is to be used NEXT */
+   env[ 1 ].sStartPos = 0;        /* 0-based index value that is to be used NEXT */
 
    return env;
 }
@@ -107,21 +108,19 @@ static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
    TOKEN_ENVIRONMENT env = *pEnv;
 
    /* new memory needed ? */
-   if( env[0].sStartPos == env[0].sEndPos )
+   if( env[ 0 ].sStartPos == env[ 0 ].sEndPos )
    {
       env = *pEnv = ( TOKEN_ENVIRONMENT )
                hb_xrealloc( env, sizeof( TOKEN_POSITION ) *
-                            ( 2 + env[0].sEndPos + TOKEN_ENVIRONMENT_STEP ) );
-      if( env == NULL )
-         return 0;
+                            ( 2 + env[ 0 ].sEndPos + TOKEN_ENVIRONMENT_STEP ) );
 
-      env[0].sEndPos += TOKEN_ENVIRONMENT_STEP;
+      env[ 0 ].sEndPos += TOKEN_ENVIRONMENT_STEP;
    }
 
-   index = env[0].sStartPos + 2;        /* +2  because of extra elements */
-   env[index].sStartPos = pPos->sStartPos;
-   env[index].sEndPos = pPos->sEndPos;
-   env[0].sStartPos++;
+   index = env[ 0 ].sStartPos + 2;        /* +2  because of extra elements */
+   env[ index ].sStartPos = pPos->sStartPos;
+   env[ index ].sEndPos = pPos->sEndPos;
+   env[ 0 ].sStartPos++;
 
    return 1;
 }
@@ -132,7 +131,7 @@ static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
 
 static int sTokEnvEnd( TOKEN_ENVIRONMENT env )
 {
-   return env[1].sStartPos >= env[0].sStartPos;
+   return env[ 1 ].sStartPos >= env[ 0 ].sStartPos;
 }
 
 /* -------------------------------------------------------------------- */
@@ -141,7 +140,7 @@ static int sTokEnvEnd( TOKEN_ENVIRONMENT env )
 
 static HB_SIZE sTokEnvGetSize( TOKEN_ENVIRONMENT env )
 {
-   return sizeof( TOKEN_POSITION ) * ( 2 + env[0].sEndPos );
+   return sizeof( TOKEN_POSITION ) * ( 2 + env[ 0 ].sEndPos );
 }
 
 /* -------------------------------------------------------------------- */
@@ -150,10 +149,10 @@ static HB_SIZE sTokEnvGetSize( TOKEN_ENVIRONMENT env )
 
 static TOKEN_POSITION *sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 {
-   if( env[1].sStartPos >= env[0].sStartPos )
+   if( env[ 1 ].sStartPos >= env[ 0 ].sStartPos )
       return NULL;
 
-   return env + 2 + ( env[1].sStartPos ); /* "+2" because of extra elements */
+   return env + 2 + ( env[ 1 ].sStartPos ); /* "+2" because of extra elements */
 }
 
 /* -------------------------------------------------------------------- */
@@ -162,7 +161,7 @@ static TOKEN_POSITION *sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 
 static TOKEN_POSITION *sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
 {
-   if( index >= env[0].sStartPos )
+   if( index >= env[ 0 ].sStartPos )
       return NULL;
 
    return env + 2 + index; /* "+2" because of extra elements */
@@ -174,11 +173,11 @@ static TOKEN_POSITION *sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index 
 
 static int sTokEnvIncPtr( TOKEN_ENVIRONMENT env )
 {
-   if( env[1].sStartPos >= env[0].sStartPos )
+   if( env[ 1 ].sStartPos >= env[ 0 ].sStartPos )
       return 0;
    else
    {
-      env[1].sStartPos++;
+      env[ 1 ].sStartPos++;
       return 1;
    }
 }
@@ -189,11 +188,11 @@ static int sTokEnvIncPtr( TOKEN_ENVIRONMENT env )
 
 static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 {
-   if( sCnt >= env[0].sStartPos )
+   if( sCnt >= env[ 0 ].sStartPos )
       return 0;
    else
    {
-      env[1].sStartPos = sCnt;
+      env[ 1 ].sStartPos = sCnt;
       return 1;
    }
 }
@@ -205,11 +204,11 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 /* sTokEnvDecPtr currently not used ! */
 /* static int sTokEnvDecPtr( TOKEN_ENVIRONMENT env )
 {
-   if( env[1].sStartPos <= 0 )
+   if( env[ 1 ].sStartPos <= 0 )
       return 0;
    else
    {
-      env[1].sStartPos--;
+      env[ 1 ].sStartPos--;
       return 1;
    }
 } */
@@ -220,7 +219,7 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 
 static HB_SIZE sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
 {
-   return env[1].sStartPos;
+   return env[ 1 ].sStartPos;
 }
 
 /* -------------------------------------------------------------------- */
@@ -229,7 +228,7 @@ static HB_SIZE sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
 
 static HB_SIZE sTokEnvGetCnt( TOKEN_ENVIRONMENT env )
 {
-   return env[0].sStartPos;
+   return env[ 0 ].sStartPos;
 }
 
 /* -------------------------------------------------------------------- */
