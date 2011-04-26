@@ -2618,15 +2618,6 @@ METHOD HbQtSource:buildCppCode( oMtd )
    CASE oRet:lFar .AND. ! oRet:lConst
       cRef := oRet:cCast
       oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
-      #if 0
-      IF hbqtgen_isAqtObject( oRet:cCast )
-         cRef := oRet:cCast
-         oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
-      ELSE
-         /* TOFIX: Such code is not valid and should never be generated [vszakats] */
-         oMtd:cCmd := "hb_retptr( ( " + oRet:cCast + "* ) " + oMtd:cCmn + " )"
-      ENDIF
-      #endif
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;

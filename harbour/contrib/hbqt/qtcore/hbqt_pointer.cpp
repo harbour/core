@@ -92,8 +92,6 @@ static HB_GARBAGE_FUNC( Q_mark )
       p->mark( p );
 }
 
-
-
 static const HB_GC_FUNCS QT_gcFuncs =
 {
    Q_release,
@@ -113,38 +111,25 @@ void * hbqt_par_obj( int iParam )
 
    if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
    {
-      HBQT_GC_T * p;
-      void * pr;
-
       hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
       hb_vmPush( pItem );
       hb_vmSend( 0 );
 
       pItem = hb_param( -1, HB_IT_POINTER );
 
-      p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
 
       if( p && p->ph )
          return p->ph;
-#if 1
-      else if( ( pr = hb_itemGetPtr( pItem ) ) != NULL )
-         return pr; /* TOFIX: Only required in QList.cpp hb_retptr() calls. Though the latter should be fixed, rather than this code. */
-#endif
       else
          hb_errRT_BASE( EG_ARG, 8001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
-   else if( HB_ISPOINTER( iParam ) )
-   {
-      return hb_parptr( iParam );
-   }
    else
    {
-      HBQT_GC_T * p;
-      p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
       if( p && p->ph )
          return p->ph;
    }
-
    return NULL;
 }
 
@@ -153,21 +138,13 @@ void * hbqt_gcpointer( int iParam )
 #if 0
    return hbqt_par_obj( iParam );
 #else
-   HBQT_GC_T * p;
-
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer( %d )", iParam ) );
 
-   p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
-
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
    if( p && p->ph )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns p->: %p", p->ph ) );
       return p->ph;
-   }
-   else if( HB_ISPOINTER( iParam ) )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns RAW pointer: %p", hb_parptr( iParam ) ) );
-      return NULL;
    }
    else if( HB_ISOBJECT( iParam ) )
    {
@@ -214,6 +191,7 @@ void * hbqt_pPtrFromObj( int iParam )
 
       return pointer;
    }
+#if 1   /* TOFIX: This is the only raw pointers usage - HBQEvents and HBQSlots */
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj= IS_POINTER" ) );
@@ -224,6 +202,7 @@ void * hbqt_pPtrFromObj( int iParam )
 
       return pointer;
    }
+#endif
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj(): returns NULL" ) );
@@ -304,7 +283,6 @@ HBQT_GC_T * hbqt_getObjectGC( int iParam )
          return p;
       }
    }
-
    /* hbqt_errRT_ARG(); */ /* NOTE: Could not check type for whatever reason */
 
    return NULL;
