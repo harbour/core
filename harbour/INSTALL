@@ -1716,6 +1716,8 @@ HARBOUR
    Miscellaneous documents:
       /doc subdirectory under this directory.
 
+   Particularly, comparing xHarbour to Harbour:
+      http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/trunk/harbour/doc/xhb-diff.txt
 
 
 [ Copyright (c) 2009-2011 Viktor Szakats (harbour.01 syenar.hu)

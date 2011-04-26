@@ -474,10 +474,10 @@ STATIC PROCEDURE Exm_SOAP()
 
 
 STATIC PROCEDURE Exm_PocketSOAP()
-   LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
    LOCAL oHttp := win_oleCreateObject( "PocketSOAP.HTTPTransport.2" )
+   LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
 
-   IF ! Empty( oEnvelope ) .OR. ! Empty( oHttp )
+   IF ! Empty( oHttp ) .OR. ! Empty( oEnvelope )
 
       oEnvelope:EncodingStyle := ""
       oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
