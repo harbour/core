@@ -47,7 +47,6 @@ shift.c
 stod.c
 
 # BAD_C_SOURCES
-#ontick.c
 #peek.c
 #poke.c
 
@@ -119,6 +118,7 @@ ntow.prg
 nwlstat.prg
 nwsem.prg
 nwuid.prg
+ontick.prg
 page.prg
 pchr.prg
 pegs.prg
