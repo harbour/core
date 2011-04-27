@@ -120,7 +120,7 @@ HB_FUNC( PRINTSEND )
       r.h.ah = 0;
       for( i = 0; i < len && !( r.h.ah & 1 ); i++ )
       {
-         r.h.al = string[i];
+         r.h.al = string[ i ];
          __dpmi_int( 0x17, &r );
       }
       if( r.h.ah & 1 )

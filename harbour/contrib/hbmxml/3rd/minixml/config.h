@@ -54,7 +54,9 @@
  * Long long support...
  */
 
+#ifndef __BORLANDC__
 #define HAVE_LONG_LONG 1
+#endif
 
 
 /*

@@ -185,7 +185,7 @@ static void do_token1( int iSwitch )
             {
                s_iPreSeparator = s_iPostSeparator;
                if( sMatchedPos < sSeparatorStrLen )
-                  s_iPostSeparator = pcSeparatorStr[sMatchedPos];
+                  s_iPostSeparator = pcSeparatorStr[ sMatchedPos ];
                else
                   s_iPostSeparator = -1;
             }

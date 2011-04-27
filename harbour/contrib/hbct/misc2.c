@@ -69,7 +69,7 @@ HB_FUNC( COMPLEMENT )
             char *szBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
             for( ulPos = 0; ulPos < nLen; ulPos++ )
-               szBuffer[ulPos] = ~szSrc[ulPos];
+               szBuffer[ ulPos ] = ~szSrc[ ulPos ];
             hb_retclen_buffer( szBuffer, nLen );
          }
          else

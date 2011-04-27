@@ -65,8 +65,8 @@
 #include <time.h>
 
 /* TODO: make it MT safe */
-static double s_dTimeSet = 0;
-static double s_dTimeCounter = 0;
+static double  s_dTimeSet       = 0;
+static double  s_dTimeCounter   = 0;
 
 HB_FUNC( WAITPERIOD )
 {
@@ -74,8 +74,8 @@ HB_FUNC( WAITPERIOD )
 
    if( hb_pcount() > 0 )
    {
-      s_dTimeSet = d;
-      s_dTimeCounter = d + hb_parnd( 1 )  / 100.0;
+      s_dTimeSet       = d;
+      s_dTimeCounter   = d + hb_parnd( 1 ) / 100.0;
    }
 
    if( d < s_dTimeSet )
@@ -90,22 +90,22 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
 
    if( nLen == 2 || nLen == 5 || nLen == 8 || nLen == 11 )
    {
-      static const int s_iMax[] = { 23, 59, 59, 99 };
-      int i, iVal;
-      HB_SIZE ul;
+      static const int  s_iMax[] = { 23, 59, 59, 99 };
+      int               i, iVal;
+      HB_SIZE           ul;
 
       fValid = HB_TRUE;
       for( ul = 0; fValid && ul < nLen; ++ul )
       {
-         fValid = ul % 3 == 2 ? szTime[ul] == ':' :
-                  ( szTime[ul] >= '0' && szTime[ul] <= '9' );
+         fValid = ul % 3 == 2 ? szTime[ ul ] == ':' :
+                  ( szTime[ ul ] >= '0' && szTime[ ul ] <= '9' );
       }
       for( ul = 0, i = 0; fValid && ul < nLen; ul += 3, ++i )
       {
-         iVal = 10 * ( szTime[ul] - '0' ) + ( szTime[ul + 1] - '0' );
-         fValid = iVal <= s_iMax[i];
+         iVal    = 10 * ( szTime[ ul ] - '0' ) + ( szTime[ ul + 1 ] - '0' );
+         fValid  = iVal <= s_iMax[ i ];
          if( piDecode )
-            piDecode[i] = iVal;
+            piDecode[ i ] = iVal;
       }
    }
 
@@ -119,29 +119,29 @@ HB_FUNC( TIMEVALID )
 
 HB_FUNC( SETTIME )
 {
-   HB_BOOL fResult = HB_FALSE;
-   int iTime[4];
+   HB_BOOL  fResult = HB_FALSE;
+   int      iTime[ 4 ];
 
-   iTime[0] = iTime[1] = iTime[2] = iTime[3] = 0;
+   iTime[ 0 ] = iTime[ 1 ] = iTime[ 2 ] = iTime[ 3 ] = 0;
    if( _hb_timeValid( hb_parc( 1 ), hb_parclen( 1 ), iTime ) )
    {
 #if defined( HB_OS_WIN )
       SYSTEMTIME st;
       GetLocalTime( &st );
-      st.wHour         = ( WORD ) iTime[0];
-      st.wMinute       = ( WORD ) iTime[1];
-      st.wSecond       = ( WORD ) iTime[2];
-      st.wMilliseconds = ( WORD ) iTime[3] * 10;
-      fResult = SetLocalTime( &st );
-#elif defined( HB_OS_LINUX ) && !defined( HB_OS_ANDROID ) && !defined( __WATCOMC__ )
+      st.wHour         = ( WORD ) iTime[ 0 ];
+      st.wMinute       = ( WORD ) iTime[ 1 ];
+      st.wSecond       = ( WORD ) iTime[ 2 ];
+      st.wMilliseconds = ( WORD ) iTime[ 3 ] * 10;
+      fResult          = SetLocalTime( &st );
+#elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
 /* stime exists only in SVr4, SVID, X/OPEN and Linux */
       HB_ULONG lNewTime;
-      time_t tm;
+      time_t   tm;
 
-      lNewTime = iTime[0] * 3600 + iTime[1] * 60 + iTime[2];
-      tm = time( NULL );
-      tm += lNewTime - ( tm % 86400 );
-      fResult = stime( &tm ) == 0;
+      lNewTime   = iTime[ 0 ] * 3600 + iTime[ 1 ] * 60 + iTime[ 2 ];
+      tm         = time( NULL );
+      tm        += lNewTime - ( tm % 86400 );
+      fResult    = stime( &tm ) == 0;
 #endif
    }
 
@@ -150,8 +150,8 @@ HB_FUNC( SETTIME )
 
 HB_FUNC( SETDATE )
 {
-   HB_BOOL fResult = HB_FALSE;
-   long lDate = hb_pardl( 1 );
+   HB_BOOL  fResult = HB_FALSE;
+   long     lDate   = hb_pardl( 1 );
 
    if( lDate )
    {
@@ -167,16 +167,16 @@ HB_FUNC( SETDATE )
          st.wMonth     = ( WORD ) iMonth;
          st.wDay       = ( WORD ) iDay;
          st.wDayOfWeek = ( WORD ) hb_dateJulianDOW( lDate );
-         fResult = SetLocalTime( &st );
-#elif defined( HB_OS_LINUX ) && !defined( HB_OS_ANDROID ) && !defined( __WATCOMC__ )
+         fResult       = SetLocalTime( &st );
+#elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
 /* stime exists only in SVr4, SVID, X/OPEN and Linux */
-         long lNewDate;
-         time_t tm;
+         long     lNewDate;
+         time_t   tm;
 
-         lNewDate = lDate - hb_dateEncode( 1970, 1, 1 );
-         tm = time( NULL );
-         tm = lNewDate * 86400 + ( tm % 86400 );
-         fResult = stime( &tm ) == 0;
+         lNewDate   = lDate - hb_dateEncode( 1970, 1, 1 );
+         tm         = time( NULL );
+         tm         = lNewDate * 86400 + ( tm % 86400 );
+         fResult    = stime( &tm ) == 0;
 #endif
       }
    }
