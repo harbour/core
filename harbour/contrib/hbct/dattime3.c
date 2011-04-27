@@ -51,19 +51,17 @@
  *
  */
 
+/* stime exists only in SVr4, SVID, X/OPEN and Linux */
+#ifndef _SVID_SOURCE
+#  define _SVID_SOURCE
+#endif
+
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_LINUX )
-   /* stime exists only in SVr4, SVID, X/OPEN and Linux */
-#   ifndef _SVID_SOURCE
-#      define _SVID_SOURCE
-#   endif
-#endif
 #if defined( HB_OS_WIN )
-   #include <windows.h>
+#  include <windows.h>
 #endif
-
 #include <time.h>
 
 /* TODO: make it MT safe */
