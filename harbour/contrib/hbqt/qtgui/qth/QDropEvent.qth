@@ -15,7 +15,7 @@
 QObject  = no
 Inherits = QEvent
 Type     = Core
-New      = 
+New      =
 Constructor = no
 </CLASS>
 
@@ -48,11 +48,11 @@ void acceptProposedAction ()
 Qt::DropAction dropAction () const
 Qt::KeyboardModifiers keyboardModifiers () const
 
-# This function is OK if called as line below, but do not found a way 
+# This function is OK if called as line below, but do not found a way
 # how to construct dynamically - no separate keyword ???
 #
 const QMimeData * mimeData () const{
-   QDropEvent * p = ( QDropEvent * ) hbqt_pPtrFromObj( 0 );
+   QDropEvent * p = ( QDropEvent * ) hbqt_par_ptr( 0 );
    if( p )
    {
       hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData(), false ), "hb_QMimeData" );

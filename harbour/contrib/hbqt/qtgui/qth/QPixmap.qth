@@ -40,7 +40,7 @@ HB_FUNC( QT_QPIXMAP )
    }
    else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hbqt_pPtrFromObj( 1 );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hbqt_par_ptr( 1 );
       if( q )
       {
          if( q->type == HBQT_TYPE_QPixmap )

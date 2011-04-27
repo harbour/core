@@ -97,7 +97,7 @@ const HB_GC_FUNCS * hbqt_gcFuncs( void )
    return &QT_gcFuncs;
 }
 
-static void * hbqt_GCPointerFromItem( PHB_ITEM pObj )
+static void * s_hbqt_GCPointerFromItem( PHB_ITEM pObj )
 {
    static PHB_DYNS s_pDyns_hPPtrAssign = NULL;
 
@@ -118,37 +118,23 @@ static void * hbqt_GCPointerFromItem( PHB_ITEM pObj )
    return NULL;
 }
 
-void * hbqt_par_obj( int iParam )
+void * hbqt_par_ptr( int iParam )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_obj( %d )", iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_ptr( %d )", iParam ) );
 
-   return hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
+   return s_hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
 }
 
-void * hbqt_gcpointer( int iParam )
+void * hbqt_get_ptr( PHB_ITEM pObj )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer( %d )", iParam ) );
-
-   return hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
+   return s_hbqt_GCPointerFromItem( pObj );
 }
 
-void * hbqt_pPtrFromObj( int iParam )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj( %d )", iParam ) );
-
-   return hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
-}
-
-void * hbqt_pPtrFromObject( PHB_ITEM pObj )
-{
-   return hbqt_GCPointerFromItem( pObj );
-}
-
-void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )
+static void s_hbqt_set_ptr( PHB_ITEM pSelf, void * ptr )
 {
    static PHB_DYNS s_pDyns_hPPtrAssign = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_set_pptr( ptr =%p, pSelf=%p )", ptr, pSelf ) );
+   HB_TRACE( HB_TR_DEBUG, ( "s_hbqt_set_ptr( pSelf=%p, ptr=%p )", pSelf, ptr ) );
 
    /* get the position of _PPTR member, the
       leading underscore because I want to write to it */
@@ -173,7 +159,7 @@ void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_set_pptr(): returns NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "s_hbqt_set_ptr(): returns NULL" ) );
       return; /* TODO: Still better if RTE. */
    }
 }
@@ -188,13 +174,13 @@ void hbqt_itemPushReturn( void* ptr, PHB_ITEM pSelf )
    if( ! pSelf )
       pSelf = hb_stackSelfItem();
 
-   hbqt_set_pptr( ptr, pSelf );
+   s_hbqt_set_ptr( pSelf, ptr );
 
    if( hb_stackReturnItem() != pSelf )
       hb_itemReturn( pSelf );
 }
 
-HBQT_GC_T * hbqt_getObjectGC( int iParam )
+HBQT_GC_T * hbqt_par_ptrGC( int iParam )
 {
    static PHB_DYNS s_pDyns_hPPtr = NULL;
 
@@ -215,8 +201,7 @@ HBQT_GC_T * hbqt_getObjectGC( int iParam )
    return NULL;
 }
 
-
-int hbqt_isObjectType( int iParam, HB_U32 iType )
+HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType )
 {
    PHB_ITEM pItem;
 
@@ -304,9 +289,9 @@ void hbqt_errRT_ARG( void )
    hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-void * hbqt_detachgcpointer( int iParam )
+void hbqt_par_detach_ptrGC( int iParam )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_detachgcpointer( %d )", iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_detach_ptrGC( %d )", iParam ) );
 
    if( HB_ISOBJECT( iParam ) )
    {
@@ -322,8 +307,6 @@ void * hbqt_detachgcpointer( int iParam )
       if( p && p->ph )
          p->bNew = false;
    }
-
-   return NULL;
 }
 
 HB_FUNC( __HBQT_ISPOINTER )
@@ -335,7 +318,7 @@ HB_FUNC( __HBQT_ISPOINTER )
 
 HB_FUNC( HBQT_ISEQUAL )
 {
-   hb_retl( hbqt_pPtrFromObj( 1 ) == hbqt_pPtrFromObj( 2 ) );
+   hb_retl( hbqt_par_ptr( 1 ) == hbqt_par_ptr( 2 ) );
 }
 
 HB_FUNC( __HBQT_ERROR )
@@ -446,16 +429,6 @@ void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass )
 
       hb_itemRelease( oClass );
    }
-}
-
-void * hbqt_getqtptr( void )
-{
-   PHB_ITEM pObj = hb_stackSelfItem();
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_arrayGetPtrGC( pObj, 1, hbqt_gcFuncs() );
-   if( p && p->ph )
-      return p->ph;
-   else
-      return NULL;
 }
 
 PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )

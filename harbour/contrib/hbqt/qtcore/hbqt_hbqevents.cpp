@@ -112,7 +112,7 @@ HBQEvents::HBQEvents( PHB_ITEM pObj ) : QObject()
 {
    if( pObj )
    {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
          object->installEventFilter( this );
@@ -141,7 +141,7 @@ int HBQEvents::hbConnect( PHB_ITEM pObj, int type, PHB_ITEM bBlock )
 
    if( true )
    {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
          PHB_ITEM codeblock = hb_itemNew( bBlock );
@@ -184,7 +184,7 @@ int HBQEvents::hbDisconnect( PHB_ITEM pObj, int type )
 {
    int nResult = -1;
 
-   QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+   QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
       char prop[ 20 ];

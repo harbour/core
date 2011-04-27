@@ -1392,7 +1392,7 @@ METHOD HbQtSource:build()
       ELSE
          tmp := s:__enumKey()
       ENDIF
-      aadd( aLine, PadR( "#define hbqt_par_" + s:__enumKey() + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_gcpointer( n ) )" )
+      aadd( aLine, PadR( "#define hbqt_par_" + s:__enumKey() + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_par_ptr( n ) )" )
    NEXT
    aadd( aLine, "" )
    FOR EACH s IN ::hRef
@@ -1783,7 +1783,7 @@ METHOD HbQtSource:getReturnMethod( oMtd, lAddRet )
 
    /* Manage detached Argument */
    IF oMtd:nDetach > 0
-      aadd( txt_, "hbqt_detachgcpointer( " + hb_ntos( oMtd:nDetach ) + " );" )
+      aadd( txt_, "hbqt_par_detach_ptrGC( " + hb_ntos( oMtd:nDetach ) + " );" )
    ENDIF
 
    nStrCnt := 0
@@ -1910,7 +1910,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
 
 
    cTmp := ::cQtObject + iif( ::isList, "< void * >", "" )
-   aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_pPtrFromObj( 0 );" )
+   aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_par_ptr( 0 );" )
 
    aadd( txt_, "   if( " + v + " )" )
    aadd( txt_, "   {" )

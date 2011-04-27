@@ -95,23 +95,22 @@ extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QB
 extern HB_EXPORT void hbqt_events_unregister_createobj( QEvent::Type eventtype );
 extern HB_EXPORT void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback );
 extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
-extern HB_EXPORT void * hbqt_gcpointer( int iParam );
-extern HB_EXPORT void * hbqt_detachgcpointer( int iParam );
+
+extern HB_EXPORT void * hbqt_par_ptr( int iParam );
+extern HB_EXPORT HBQT_GC_T * hbqt_par_ptrGC( int iParam ); /* returns a pointer to the HBQT_GC_T area */
+extern HB_EXPORT void hbqt_par_detach_ptrGC( int iParam );
+extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
+extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
+extern HB_EXPORT HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
+extern HB_EXPORT void * hbqt_get_ptr( PHB_ITEM pObj );
+
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
-extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
-extern HB_EXPORT int hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
 extern HB_EXPORT void hbqt_errRT_ARG( void );
 extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char * szParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
-extern HB_EXPORT void * hbqt_getqtptr( void );
 extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName );
-extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
-extern HB_EXPORT void hbqt_set_pptr( void * ptr, PHB_ITEM pSelf );
-extern HB_EXPORT HBQT_GC_T * hbqt_getObjectGC( int iParam ); /* returns a pointer to the HBQT_GC_T area */
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
-extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
-extern HB_EXPORT void * hbqt_pPtrFromObject( PHB_ITEM pObj );
 
 HB_EXTERN_END
 

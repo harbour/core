@@ -14,8 +14,8 @@
 <CLASS>
 QObject  = no
 Inherit  = QGraphicsItem
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -37,14 +37,14 @@ HB_FUNC( QT_QGRAPHICSLINEITEM )
    }
    else if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
    {
-      HBQT_GC_T * p = ( HBQT_GC_T * ) hbqt_pPtrFromObj( 1 );
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hbqt_par_ptr( 1 );
       if( p->type == HBQT_TYPE_QLineF )
       {
          __HB_RETPTRGC__( new QGraphicsLineItem( *hbqt_par_QLineF( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
       }
       else
       {
-         __HB_RETPTRGC__( new QGraphicsLineItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
+         __HB_RETPTRGC__( new QGraphicsLineItem( hbqt_par_QGraphicsItem( 1 ) ) );
       }
    }
    else

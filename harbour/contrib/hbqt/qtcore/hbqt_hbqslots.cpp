@@ -134,7 +134,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 
    if( true )
    {
-      QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
          PHB_ITEM pBlock = hb_itemNew( bBlock );
@@ -211,7 +211,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 {
    int nResult = 1;
 
-   QObject * object = ( QObject * ) hbqt_pPtrFromObject( pObj );
+   QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
       int i = object->property( pszSignal ).toInt();

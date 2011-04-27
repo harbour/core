@@ -65,7 +65,7 @@ QList<QUrl> urls () const
 #          Harbour Callable Function Till QList<QUrl> is not resolved
 #
 QStringList * hbUrlList() const{
-   QMimeData * _mimedata = ( QMimeData * ) hbqt_pPtrFromObj( 0 );
+   QMimeData * _mimedata = ( QMimeData * ) hbqt_par_ptr( 0 );
    if( _mimedata )
    {
       QStringList strList;

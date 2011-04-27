@@ -20,14 +20,14 @@ extern HB_EXPORT void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew );
 
 HB_EXTERN_END
 
-#define hbqt_par_QAction( n )                                   ( ( QAction                                     * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QContextMenuEvent( n )                         ( ( QContextMenuEvent                           * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QPalette( n )                                  ( ( QPalette                                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QRegion( n )                                   ( ( QRegion                                     * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QPainter( n )                                  ( ( QPainter                                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QPixmap( n )                                   ( ( QPixmap                                     * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QPrinter( n )                                  ( ( QPrinter                                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWidget( n )                                   ( ( QWidget                                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QAction( n )                                   ( ( QAction                                     * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QContextMenuEvent( n )                         ( ( QContextMenuEvent                           * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QPalette( n )                                  ( ( QPalette                                    * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QRegion( n )                                   ( ( QRegion                                     * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QPainter( n )                                  ( ( QPainter                                    * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QPixmap( n )                                   ( ( QPixmap                                     * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QPrinter( n )                                  ( ( QPrinter                                    * ) hbqt_par_ptr( n ) )
+#define hbqt_par_QWidget( n )                                   ( ( QWidget                                     * ) hbqt_par_ptr( n ) )
 
 #define HBQT_TYPE_QBrush                                        ( ( HB_U32 ) 0x94319C70 )
 #define HBQT_TYPE_QColor                                        ( ( HB_U32 ) 0x03C0065A )

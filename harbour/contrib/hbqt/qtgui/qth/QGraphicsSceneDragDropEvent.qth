@@ -14,9 +14,9 @@
 <CLASS>
 QObject  = no
 Inherit  = QGraphicsSceneEvent
-Type     = 
-New      = 
-Constructor = 
+Type     =
+New      =
+Constructor =
 </CLASS>
 
 <CODE>
@@ -27,7 +27,7 @@ Constructor =
 #include <QtCore/QPoint>
 
 
-/* 
+/*
  * QGraphicsSceneDragDropEvent ()
  * ~QGraphicsSceneDragDropEvent ()
  */
@@ -45,7 +45,7 @@ void acceptProposedAction ()
 Qt::MouseButtons buttons () const
 Qt::DropAction dropAction () const
 const QMimeData * mimeData () const{
-   QGraphicsSceneDragDropEvent * _graphicsscenedragdropevent = ( QGraphicsSceneDragDropEvent * ) hbqt_pPtrFromObj( 0 );
+   QGraphicsSceneDragDropEvent * _graphicsscenedragdropevent = ( QGraphicsSceneDragDropEvent * ) hbqt_par_ptr( 0 );
    if( _graphicsscenedragdropevent )
    {
       hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) _graphicsscenedragdropevent->mimeData(), false ), "hb_QMimeData" );
