@@ -471,17 +471,18 @@ REQUEST hbmk_KEYW
 #define _HBMKDEP_aKeyHeader     3
 #define _HBMKDEP_cControl       4
 #define _HBMKDEP_lOptional      5
-#define _HBMKDEP_aINCPATH       6
-#define _HBMKDEP_aINCPATHLOCAL  7
-#define _HBMKDEP_aIMPLIBSRC     8
-#define _HBMKDEP_cIMPLIBDST     9
-#define _HBMKDEP_cFound         10
-#define _HBMKDEP_lFound         11
-#define _HBMKDEP_lFoundLOCAL    12
-#define _HBMKDEP_cVersion       13
-#define _HBMKDEP_lForced        14
-#define _HBMKDEP_lDetected      15
-#define _HBMKDEP_MAX_           15
+#define _HBMKDEP_cINCROOT       6
+#define _HBMKDEP_aINCPATH       7
+#define _HBMKDEP_aINCPATHLOCAL  8
+#define _HBMKDEP_aIMPLIBSRC     9
+#define _HBMKDEP_cIMPLIBDST     10
+#define _HBMKDEP_cFound         11
+#define _HBMKDEP_lFound         12
+#define _HBMKDEP_lFoundLOCAL    13
+#define _HBMKDEP_cVersion       14
+#define _HBMKDEP_lForced        15
+#define _HBMKDEP_lDetected      16
+#define _HBMKDEP_MAX_           16
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -2769,6 +2770,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
             hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cControl ] := AllTrim( tmp )
             AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         ENDIF
+
+      CASE Left( cParam, Len( "-depincroot=" ) ) == "-depincroot="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depincroot=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cINCROOT ] := hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) )
          ENDIF
 
       CASE Left( cParam, Len( "-depincpath=" ) ) == "-depincpath="
@@ -7670,6 +7678,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
          dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_cControl ] := NIL
          dep[ _HBMKDEP_lOptional ] := .F.
+         dep[ _HBMKDEP_cINCROOT ] := ""
          dep[ _HBMKDEP_aINCPATH ] := {}
          dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
          dep[ _HBMKDEP_aIMPLIBSRC ] := {}
@@ -7709,6 +7718,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       dep[ _HBMKDEP_cControl ] := cControlL
       dep[ _HBMKDEP_aKeyHeader ] := {}
       dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_cINCROOT ] := ""
       dep[ _HBMKDEP_aINCPATH ] := {}
       dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
       dep[ _HBMKDEP_aIMPLIBSRC ] := {}
@@ -7716,6 +7726,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       dep[ _HBMKDEP_lForced ] := .T.
    CASE cControlL == "local"
       dep[ _HBMKDEP_cControl ] := cControlL
+      dep[ _HBMKDEP_cINCROOT ] := ""
       dep[ _HBMKDEP_aINCPATH ] := {}
    CASE cControlL == "nolocal"
       dep[ _HBMKDEP_cControl ] := cControlL
@@ -7729,6 +7740,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
    CASE cControlL == "force"
       dep[ _HBMKDEP_aKeyHeader ] := {}
       dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_cINCROOT ] := ""
       dep[ _HBMKDEP_aINCPATH ] := {}
       dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
       dep[ _HBMKDEP_cFound ] := "."
@@ -7848,6 +7860,10 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
    LOCAL cIncludeDir
    LOCAL cVersion
 
+   IF ! Empty( dep[ _HBMKDEP_cINCROOT ] )
+      RETURN .F.
+   ENDIF
+
    FOR EACH cName IN dep[ _HBMKDEP_aPKG ]
 
       IF ! Empty( cName )
@@ -7942,6 +7958,7 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
 /* Try detection by header */
 STATIC FUNCTION dep_try_header_detection( hbmk, dep )
    LOCAL aINCPATH
+   LOCAL cDirOri
    LOCAL cDir
    LOCAL cFileName
 
@@ -7952,7 +7969,8 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
    IF ! dep[ _HBMKDEP_lFound ]
       FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
                              dep[ _HBMKDEP_aINCPATHLOCAL ] }
-         FOR EACH cDir IN aINCPATH
+         FOR EACH cDirOri IN aINCPATH
+            cDir := iif( aINCPATH:__enumIndex() == 1, dep[ _HBMKDEP_cINCROOT ], "" ) + cDirOri
             FOR EACH cFileName IN dep[ _HBMKDEP_aKeyHeader ]
                IF HeaderExists( cDir, cFileName ) != NIL
                   dep[ _HBMKDEP_cFound ] := hb_DirSepDel( PathSepToSelf( cDir ) )
@@ -9518,6 +9536,12 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          IF dep_split_arg( hbmk, cLine, @cName, @cLine )
             hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, cLine, cFileName ) )
             AAddNew( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depincroot="   ) ) ) == "depincroot="   ; cLine := SubStr( cLine, Len( "depincroot="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cINCROOT ] := hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cLine, cFileName ) ), hb_FNameDir( cFileName ) ) )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depincpath="   ) ) ) == "depincpath="   ; cLine := SubStr( cLine, Len( "depincpath="   ) + 1 )
@@ -12141,6 +12165,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) },;
       { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
       { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
+      { "-depincroot=<d:r>"       , I_( "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options." ) },;
       { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list. May be ';' delimited list of paths." ) },;
       { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
       { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths." ) },;
