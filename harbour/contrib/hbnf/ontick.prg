@@ -69,7 +69,7 @@ PROCEDURE FT_ONTICK( bOnTick, nTickInterval )
    IF hb_isBlock( bOnTick )
       t_bOnTick := bOnTick
       IF hb_isNumeric( nTickInterval )
-         t_nTickInterval := ( 1 / 18 ) * nTickInterval * 1000
+         t_nTickInterval := ( 1 / 18.20648 ) * nTickInterval * 1000
       ENDIF
       t_nLastCheck := hb_milliSeconds()
       IF Empty( t_hIdle )
