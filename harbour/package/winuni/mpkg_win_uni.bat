@@ -14,6 +14,8 @@ rem   create required packages beforehand.
 rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 rem - Run this from vanilla official source tree only.
 
+echo ! Self: %0
+
 if "%HB_VS%" == "" set HB_VS=21
 if "%HB_VL%" == "" set HB_VL=210
 if "%HB_VM%" == "" set HB_VM=2.1

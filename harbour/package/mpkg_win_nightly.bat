@@ -32,6 +32,8 @@ pushd
 
 cd %~dp0
 
+echo ! Self: %0
+
 set _HB_DIR_3RD=%~dp03rd\
 set _HB_DIR_COMP=%~dp0comp\
 set _HB_DIR_TOOL=%~dp0tool\
