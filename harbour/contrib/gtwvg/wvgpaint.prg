@@ -481,6 +481,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
       FOR n := 1 TO LEN( aFilter )
           c += aFilter[n][1] + chr(0) + aFilter[n][2] + chr(0)
       NEXT
+      c += chr( 0 )
    ENDIF
    if WVG_And( nFlags,OFN_ALLOWMULTISELECT ) > 0
       cFile := space( 32000 )

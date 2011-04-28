@@ -108,6 +108,27 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
+#if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
+      defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
+#  ifndef GetWindowLongPtr
+#     define GetWindowLongPtr       GetWindowLong
+#  endif
+#  ifndef SetWindowLongPtr
+#     define SetWindowLongPtr       SetWindowLong
+#  endif
+#define WVT_DWORD_LONG_PTR    DWORD
+#else
+#define WVT_DWORD_LONG_PTR    LONG_PTR
+#endif
+
+#ifndef WS_OVERLAPPEDWINDOW
+   #define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
+#endif
+
+#define _WVT_WS_DEF       ( WS_OVERLAPPEDWINDOW )
+#define _WVT_WS_NORESIZE  ( WS_OVERLAPPEDWINDOW & ~( WS_THICKFRAME ) )
+#define _WVT_WS_MAXED     ( WS_OVERLAPPEDWINDOW & ~( WS_MAXIMIZEBOX ) )
+
 static PHB_GTWVT   s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int         s_wvtCount = 0;
 static PHB_GUIDATA s_guiData;
@@ -412,9 +433,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->pPP->bRowCols     = HB_FALSE;
    pWVT->pPP->iWndType     = 0;
 
-   pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
-   pWVT->inCDP      = hb_vmCDP();
+   /* pWVT->hostCDP = pWVT->inCDP = hb_vmCDP(); */
    pWVT->boxCDP     = hb_cdpFind( "EN" );
 #else
    {
@@ -937,15 +957,7 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
    hb_gt_wvt_FitSizeRows( pWVT );
 
    /* Disable "maximize" button */
-   {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-      DWORD style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
-      SetWindowLong( pWVT->hWnd, GWL_STYLE, style &~ WS_MAXIMIZEBOX );
-#else
-      LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
-      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, ( HB_PTRDIFF ) style &~ WS_MAXIMIZEBOX );
-#endif
-   }
+   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
    SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
               SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
 }
@@ -1760,7 +1772,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
-#if ! defined( UNICODE )
+#if defined( UNICODE )
+   PHB_CODEPAGE hostCDP;
+#else
    HFONT       hFont, hOldFont = NULL;
 #endif
    HB_USHORT   usChar;
@@ -1811,7 +1825,11 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
    BeginPaint( pWVT->hWnd, &ps );
    hdc = pWVT->hGuiDC;
+
+#if defined( UNICODE )
    SelectObject( hdc, pWVT->hFont );
+   hostCDP = pWVT->hostCDP ? pWVT->hostCDP : hb_vmCDP();
+#endif
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {
@@ -1825,7 +1843,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
          iColor &= 0xff;
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( BYTE ) usChar );
+         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : hostCDP, ( HB_BYTE ) usChar );
          if( len == 0 )
          {
             iOldColor = iColor;
@@ -2109,13 +2127,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             pWVT->bMaximized = HB_FALSE;
 
             /* Enable "maximize" button */
-            {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-               SetWindowLong( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX  );
-#else
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX );
-#endif
-            }
+            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                           SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
          }
@@ -2571,12 +2583,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          if( pSetLayeredWindowAttributes )
          {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-            SetWindowLong( pWVT->hWnd, GWL_EXSTYLE, GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-#else
             SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-#endif
-
             pSetLayeredWindowAttributes( pWVT->hWnd,
                ( COLORREF ) 0 /* COLORREF crKey */,
                255 /* BYTE bAlpha */,
@@ -3286,20 +3293,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->bResizable = bNewValue;
                if( pWVT->hWnd )
                {
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-                  LONG style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
-#else
-                  LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
-#endif
+                  WVT_DWORD_LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
                   if( pWVT->bResizable )
                      style = style | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
                   else
                      style = ( style & ~( WS_MAXIMIZEBOX | WS_THICKFRAME ) ) | WS_BORDER;
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
-                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
-#else
+
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
-#endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                }
@@ -3644,9 +3644,9 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 #if ( _WIN32_WINNT >= 0x0500 ) && ! defined( HB_OS_WIN_CE )
                   if ( s_guiData->pfnLayered )
                   {
-                     SetWindowLong( pWVT->hWnd,
+                     SetWindowLongPtr( pWVT->hWnd,
                                     GWL_EXSTYLE,
-                                    GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+                                    GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
                      s_guiData->pfnLayered( pWVT->hWnd,
                                        RGB( 255,255,255 ),
