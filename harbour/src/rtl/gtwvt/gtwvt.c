@@ -157,7 +157,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    WNDCLASS wndclass;
 
    memset( &wndclass, 0, sizeof( wndclass ) );
-   wndclass.style         = CS_DBLCLKS;
+   wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
 /* wndclass.cbClsExtra    = 0; */
 /* wndclass.cbWndExtra    = 0; */
@@ -1886,7 +1886,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
 #if ! defined( HB_OS_WIN_CE )
-      if( ! GetSystemMetrics( SM_REMOTESESSION ) )
+      if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
          SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
 #endif
 

@@ -413,35 +413,39 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, lPostfix )
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
+
       IF lPostfix
          cName += GetEnv( "HB_QTPOSTFIX" )
       ENDIF
-      IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
-         ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
+      cName += hbmk2[ "cCCEXT" ]
 
-         cBIN := ""
-         IF hbmk2[ "cPLAT" ] $ "win|os2"
+      IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
+         ! hb_FileExists( cBIN := hb_DirSepAdd( GetEnv( "HB_QTPATH" ) ) + cName )
+
+         #if defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__OS2 )
 
             hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
 
             IF ! Empty( GetEnv( "HB_WITH_QT" ) )
 
-               IF GetEnv( "HB_W_ITH_QT" ) == "no"
+               IF GetEnv( "HB_WITH_QT" ) == "no"
                   /* Return silently. It shall fail at dependency detection inside hbmk2 */
                   RETURN NIL
                ELSE
-                  IF ! hb_FileExists( cBIN := hb_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
+                  IF ! hb_FileExists( cBIN := hb_PathNormalize( hb_DirSepAdd( GetEnv( "HB_WITH_QT" ) ) + "..\bin\" + cName ) )
                      hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
                      cBIN := ""
                   ENDIF
                ENDIF
             ELSE
-               cBIN := hb_DirSepAdd( hb_DirBase() ) + cName + ".exe"
+               cBIN := hb_DirSepAdd( hb_DirBase() ) + cName
                IF ! hb_FileExists( cBIN )
                   cBIN := ""
                ENDIF
             ENDIF
-         ENDIF
+         #else
+            cBIN := ""
+         #endif
 
          IF Empty( cBIN )
             cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )

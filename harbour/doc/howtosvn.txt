@@ -77,8 +77,6 @@ by Ryszard Glab
  8) Run 'svn update' again
  9) Commit changes running:
     svn commit -F file_with_saved_ChangeLog_changes --username sfuser
- 10) Mail file_with_saved_ChangeLog_changes as an email body (do not
-    send it as an attachment) to the harbour list
 
 Important notes:
 
