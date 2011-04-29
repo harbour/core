@@ -949,6 +949,8 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       FD_SET( hPipeHandle, &rfds );
       iResult = select( hPipeHandle + 1, &rfds, NULL, NULL, &tv );
       hb_fsSetIOError( iResult >= 0, 0 );
+      if( nTimeOut < 0 && iResult == 0 )
+         continue;
       if( iResult != -1 || nTimeOut == 0 || errno != EINTR ||
           hb_vmRequestQuery() != 0 )
          break;

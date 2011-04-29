@@ -107,7 +107,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
                 [vszakats] */
       if( nSize > 2 && nSize <= ( 32 * 1024 * 1024 ) )
       {
-         void * pbmfh = hb_xgrab( nSize );
+         void * pbmfh = hb_xgrab( nSize + 1 );
 
          hb_fsSeek( fhnd, 0, FS_SET );
 
