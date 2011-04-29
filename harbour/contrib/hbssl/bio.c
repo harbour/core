@@ -190,17 +190,19 @@ HB_FUNC( BIO_GET_FLAGS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
 HB_FUNC( BIO_TEST_FLAGS )
 {
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
+#if ! defined( HB_OPENSSL_OLD_OSX_ )
       hb_retni( BIO_test_flags( bio, hb_parni( 2 ) ) );
+#else
+      hb_retni( 0 );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-#endif
 
 HB_FUNC( BIO_SET_FD )
 {

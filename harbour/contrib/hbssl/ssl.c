@@ -1252,20 +1252,20 @@ HB_FUNC( SSL_GET_MODE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
 HB_FUNC( SSL_SET_MTU )
 {
    if( hb_SSL_is( 1 ) )
    {
+#if ! defined( HB_OPENSSL_OLD_OSX_ )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
          SSL_set_mtu( ssl, hb_parnl( 2 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-#endif
 
 HB_FUNC( SSL_GET_CERTIFICATE )
 {
