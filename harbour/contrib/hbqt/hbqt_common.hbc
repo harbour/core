@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------
 
 stop={dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}'hbqt' doesn't support this platform/compiler (${hb_plat}/${hb_comp}).
-stop={HB_WITH_QT='no'|HB_BUILD_3RDEXT='no'}QT deselected, build skipped.
+stop={HB_WITH_QT='no'}QT deselected, build skipped.
 
 incpaths=.
 
