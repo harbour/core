@@ -268,6 +268,7 @@ PRG_SOURCES := \
    tobject.prg \
    tpersist.prg \
    tpopup.prg \
+   tpopuphb.prg \
    treport.prg \
    tscalar.prg \
    tsymbol.prg \

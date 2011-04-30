@@ -71,9 +71,6 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
    EXPORTED:
 
    VAR cargo
-#ifdef HB_EXTENSION
-   VAR shadowed   INIT .F. AS LOGICAL         /* NOTE: This property is a Harbour extension [vszakats] */
-#endif
 
    METHOD addItem( oItem )
    METHOD close( lCloseChild )
@@ -105,12 +102,6 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
    METHOD New( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
 
-#ifdef HB_EXTENSION
-   METHOD setCoors( nRow, nCol, lTop )        /* NOTE: This method is a Harbour extension [vszakats] */
-   METHOD isShortCut( nKey, nID )             /* NOTE: This method is a Harbour extension [vszakats] */
-   METHOD isQuick( nKey, nID )                /* NOTE: This method is a Harbour extension [vszakats] */
-#endif
-
    PROTECTED:
 
    VAR cBorder    INIT B_SINGLE + SEPARATOR_SINGLE
@@ -125,6 +116,8 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
    VAR aItems     INIT {}
    VAR aSaveScr
+
+   VAR lShadowed  INIT .F. /* Harbour extension */
 
    METHOD setMetrics()
 
@@ -222,11 +215,9 @@ METHOD display() CLASS POPUPMENU
                   SubStr( ::cBorder, 1, 8 ) + " ", ;
                   hb_ColorIndex( ::cColorSpec, 5 ) )
 
-#ifdef HB_EXTENSION
-      IF ::shadowed
+      IF ::lShadowed
          hb_Shadow( nTop, nLeft, ::nBottom, ::nRight )
       ENDIF
-#endif
 
       nLeft++
       FOR nPos := 1 TO nLen
@@ -477,29 +468,18 @@ METHOD open() CLASS POPUPMENU
       nRight := nLeft + ::nWidth + 1
    ENDIF
 
-#ifdef HB_EXTENSION
-   IF nRight < 0 .OR. nRight > iif( ::shadowed, MaxCol() - 2, MaxCol() )
-      ::nLeft := MaxCol() - ::nWidth - iif( ::shadowed, 3, 1 )
-      ::nRight := iif( ::shadowed, MaxCol() - 2, MaxCol() )
+   IF nRight < 0 .OR. nRight > iif( ::lShadowed, MaxCol() - 2, MaxCol() )
+      ::nLeft := MaxCol() - ::nWidth - iif( ::lShadowed, 3, 1 )
+      ::nRight := iif( ::lShadowed, MaxCol() - 2, MaxCol() )
       nLeft := ::nLeft
       nRight := ::nRight
       nTop := ::nTop
       nBottom := ::nBottom
    ENDIF
-   IF ::shadowed
+   IF ::lShadowed
       nBottom += 1
       nRight  += 2
    ENDIF
-#else
-   IF nRight < 0 .OR. nRight > MaxCol()
-      ::nLeft := MaxCol() - ::nWidth - 1
-      ::nRight := MaxCol()
-      nLeft := ::nLeft
-      nRight := ::nRight
-      nTop := ::nTop
-      nBottom := ::nBottom
-   ENDIF
-#endif
 
    ::aSaveScr := { nTop, nLeft, nBottom, nRight, SaveScreen( nTop, nLeft, nBottom, nRight ) }
 
@@ -535,135 +515,6 @@ METHOD setItem( nPos, oItem ) CLASS POPUPMENU
    ENDIF
 
    RETURN Self /* NOTE: CA-Cl*pper returns NIL, which is wrong. */
-
-#ifdef HB_EXTENSION
-
-METHOD setCoors( nRow, nCol, lTop ) CLASS POPUPMENU
-   LOCAL oItem
-   LOCAL nDif
-
-   ::setMetrics()
-
-   IF ::nTop == -1 .OR. ::nLeft == -1
-      ::nTop    := nRow
-      ::nLeft   := nCol
-      ::nBottom := ::nTop + ::nItemCount + 1
-      ::nRight  := ::nLeft + ::nWidth - 1
-
-      IF ::nRight > MaxCol()
-         nDif     := ::nRight - MaxCol()
-         ::nRight -= nDif
-         ::nLeft  -= nDif
-         IF !lTop
-            ::nTop++
-            ::nBottom++
-         ENDIF
-      ENDIF
-
-      IF ::nLeft < 0
-         nDif     := ::nLeft
-         ::nRight -= nDif
-         ::nLeft  -= nDif
-      ENDIF
-
-      IF ::nBottom > MaxRow()
-         nDif      := ::nBottom - MaxRow()
-         ::nBottom -= nDif
-         ::nTop    -= nDif
-      ENDIF
-
-      IF ::nTop < 0
-         nDif      := ::nTop
-         ::nBottom -= nDif
-         ::nTop    -= nDif
-      ENDIF
-
-      FOR EACH oItem IN ::aItems
-         IF oItem:isPopup()
-            oItem:data:setCoors( nRow + oItem:__enumIndex(), ::nRight + 1, .F. )
-         ENDIF
-      NEXT
-   ENDIF
-
-   RETURN Self
-
-METHOD isShortCut( nKey, nID ) CLASS POPUPMENU
-
-   LOCAL nItem
-   LOCAL nTotal
-   LOCAL nShortCut
-   LOCAL oItem
-   LOCAL i
-
-   DO CASE
-   // Test and assign top menu item shortCut, enabled, and !PopUp:
-   // Changed by enclosing assignment before ':Enabled':
-   CASE ( ( nShortCut := ::getShortCt( nKey ) ) > 0 ) .AND. ;
-          ( ( oItem := ::getItem( nShortcut ) ):enabled ) .AND. ;
-          ( !( oItem:isPopUp() ) )
-      ::select( nShortCut )
-      Eval( oItem:data, oItem )
-      nID := oItem:id
-
-      RETURN .T.
-
-   // Test and assignment for TopBar MenuItem:
-   CASE nShortCut == 0
-      nTotal := ::nItemCount
-      nItem  := ::nCurrent
-      IF nItem == 0
-         nItem := 1
-      ENDIF
-
-      // Loop to wrap around through TopMenu from Current Item:
-      FOR i := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):enabled
-         ELSEIF !oItem:isPopUp()
-         ELSEIF oItem:data:isQuick( nKey, @nID )
-            RETURN .T.
-         ENDIF
-         IF ++nItem > nTotal
-            nItem := 1
-         ENDIF
-      NEXT
-
-   ENDCASE
-
-   RETURN .F.
-
-METHOD isQuick( nKey, nID ) CLASS POPUPMENU
-
-   LOCAL nItem
-   LOCAL nTotal
-   LOCAL nShortCut
-   LOCAL oItem
-
-   IF ( nShortCut := ::getShortCt( nKey ) ) == 0
-
-      nTotal := ::nItemCount
-
-      FOR nItem := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):Enabled
-         ELSEIF ! oItem:isPopUp()
-         ELSEIF oItem:Data:isQuick( nKey, @nID )
-            RETURN .T.
-         ENDIF
-      NEXT
-
-   ELSEIF !( oItem := ::getItem( nShortCut ) ):IsPopUp()
-
-      IF oItem:enabled
-         ::select( nShortCut )
-         Eval( oItem:Data, oItem )
-         nID := oItem:id
-         RETURN .T.
-      ENDIF
-
-   ENDIF
-
-   RETURN .F.
-
-#endif
 
 METHOD setMetrics() CLASS POPUPMENU
 
