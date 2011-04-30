@@ -53,6 +53,8 @@
 
 #include "hbclass.ch"
 
+#ifdef HB_COMPAT_C53
+
 CREATE CLASS hb_POPUPMENU INHERIT hbPOPUPMENU
 
    EXPORTED:
@@ -197,3 +199,5 @@ METHOD isQuick( nKey, nID ) CLASS hb_POPUPMENU
    ENDIF
 
    RETURN .F.
+
+#endif
