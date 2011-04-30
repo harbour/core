@@ -156,6 +156,11 @@ HB_FUNC( HB_KEYINS )
    }
 }
 
+HB_FUNC( HB_KEYNEXT )
+{
+   hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
+}
+
 HB_FUNC( NEXTKEY )
 {
 #if defined( HB_LEGACY_LEVEL3 )
