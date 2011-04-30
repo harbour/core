@@ -395,6 +395,10 @@ typedef struct
    HB_BOOL  bSelectCopy;
    char *   pszSelectCopy;
    HB_BOOL  bClosable;
+   HB_BOOL  bFullScreen;
+   HB_BOOL  bAltEnter;                      /* Can use Alt+Enter to enter full screen mode */
+   int      MarginTop;
+   int      MarginLeft;
 
    int      ResizeMode;                     /* Sets the resizing mode either to FONT or ROWS */
    RECT     sRectNew;
