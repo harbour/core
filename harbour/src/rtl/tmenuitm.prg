@@ -124,7 +124,7 @@ METHOD data( boData ) CLASS MENUITEM
       IF ISBLOCK( boData )
          ::boData := boData
       ELSE
-         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() == "POPUPMENU" } )
+         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() $ "POPUPMENU|HB_POPUPMENU" } )
       ENDIF
    ENDIF
 
@@ -171,7 +171,7 @@ METHOD style( cStyle ) CLASS MENUITEM
    RETURN ::cStyle
 
 METHOD isPopUp() CLASS MENUITEM
-   RETURN ISOBJECT( ::data ) .AND. ::data:ClassName() == "POPUPMENU"
+   RETURN ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
 
 METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
 

@@ -321,7 +321,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::ShowMsg( .T. )
          ELSE
 
-            IF ::oMenu:ClassName() == "POPUPMENU"
+            IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
                ::oMenu:close()
             ENDIF
 
@@ -337,14 +337,14 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             IF GetList != NIL .AND. HitTest( GetList, MRow(), MCol(), ::GetMsgArray() ) != 0
                GetActive():ExitState := GE_MOUSEHIT
                ReadStats( SNLASTEXIT, GE_MOUSEHIT ) // Reset Get System values
-               IF ::oMenu:ClassName() == "POPUPMENU"
+               IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
                   ::PopMenu()
                ENDIF
                nReturn := -1
                EXIT
             ENDIF
 
-            IF ::oMenu:ClassName() == "POPUPMENU"
+            IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
                ::PopMenu()
             ENDIF
 
@@ -417,7 +417,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          GetActive():ExitState := GE_SHORTCUT
          ReadStats( SNNEXTGET, nNewItem ) // Reset Get System values
-         IF ::oMenu:ClassName() == "POPUPMENU"
+         IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
             ::PopMenu()
          ENDIF
 
@@ -547,7 +547,7 @@ METHOD Execute() CLASS HBMenuSys
    // Execute the Data block if selected MenuItem is !IsPopUp:
    IF ISOBJECT( oNewMenu ) .AND. !oNewMenu:IsPopUp
 
-      IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU"
+      IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU|HB_POPUPMENU"
          SetPos( ::nOldRow, ::nOldCol )
          SetCursor( ::nOldCursor )
          Eval( oNewMenu:data, oNewMenu )
@@ -559,7 +559,7 @@ METHOD Execute() CLASS HBMenuSys
       ::oMenu:select( iif( ::PopMenu(), ::oMenu:current, 0 ) )
 
       // Display newly selected current menu item:
-      IF ::oMenu:ClassName() == "POPUPMENU" .AND. ;
+      IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU" .AND. ;
          ::nMenuLevel == 1 .AND. ;
          !::oMenu:isOpen
 
