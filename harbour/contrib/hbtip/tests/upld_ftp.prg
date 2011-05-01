@@ -10,19 +10,16 @@
 #include "common.ch"
 #include "directry.ch"
 
-FUNCTION MAIN( cMask )
+PROCEDURE MAIN( cMask )
 
-   LOCAL lRet
+   ? TRP20FTPEnv( cMask  )
 
-   lRet := TRP20FTPEnv( cMask  )
-   ? lRet
-
-   RETURN nil
+   RETURN
 
 /**********************************************************************
- * 
+ *
  *     Static Function TRP20FTPEnv()
- * 
+ *
  **********************************************************************/
 
 STATIC FUNCTION TRP20FTPEnv( cCarpeta )
@@ -63,7 +60,7 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       IF oFTP:Open( cUrl )
          FOR EACH cFile IN afiles
             ? "arquivo : " + cFile[ F_NAME ]
-            IF !oFtp:UploadFile( cFile[ F_NAME ] )
+            IF ! oFtp:UploadFile( cFile[ F_NAME ] )
                lRetorno := .F.
                EXIT
             ELSE

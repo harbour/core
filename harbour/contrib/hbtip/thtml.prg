@@ -1600,7 +1600,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
    RETURN lRet
 
 /*
-  HTML Tag data are adopted for xHarbour from Tidy.exe (www.sourceforge.net/tidy)
+  HTML Tag data are adopted for Harbour from Tidy.exe (www.sourceforge.net/tidy)
 */
 STATIC PROCEDURE _Init_Html_TagTypes
    s_hTagTypes := { => }
@@ -1733,7 +1733,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
 
 /*
-  HTML Tag attribute data are adopted for xHarbour from Tidy.exe (www.sourceforge.net/tidy)
+  HTML Tag attribute data are adopted for Harbour from Tidy.exe (www.sourceforge.net/tidy)
 */
 STATIC PROCEDURE _Init_Html_Attributes
                                   // attribute    NAME                TYPE

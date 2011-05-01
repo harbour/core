@@ -102,7 +102,7 @@ PROCEDURE Main()
    LOCAL nRgt      := 75
    LOCAL nMaxRows  := MaxRow()
    LOCAL nBtnRow   := nMaxRows - 1
-   LOCAL cLabel    := "(x)Harbour simulated GUI."
+   LOCAL cLabel    := "Harbour simulated GUI."
    LOCAL aObjects  := WvtSetObjects( {} )
 
    SET DATE BRITISH
@@ -127,7 +127,7 @@ PROCEDURE Main()
 
    pGT := SetGT( 1, hb_gtSelect() )
 
-   //  Force mouse pointer right below the xHarbour label
+   //  Force mouse pointer right below the Harbour label
    //
    Wvt_SetMousePos( 2,40 )
 
@@ -375,7 +375,7 @@ PROCEDURE WvtNextGets_X()
    clr := SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
 
-   @ MaxRow(), 0 SAY PadC( "(x)Harbour + WVT Console GUI Screen",80 ) COLOR "R+/W"
+   @ MaxRow(), 0 SAY PadC( "Harbour + WVT Console GUI Screen",80 ) COLOR "R+/W"
 
    @  6, nColGet SAY "< Date >"
    @  9, nColGet SAY "<" + PadC( "Name", 33 ) + ">"

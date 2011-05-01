@@ -112,7 +112,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:AddObject( oBox )
 
    oText := WvtLabel():New( oDlg, 101, 4, oDlg:MaxCol()-40, 7,oDlg:MaxCol()-2 )
-   oText:Text              := "(x)Harbour"
+   oText:Text              := "Harbour"
    oText:nFontHeight       := 36
    oText:nAlignHorz        := 2
    oText:nAlignVert        := 2
@@ -135,7 +135,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oTBar:lFloating := .f.
    oTBar:Tooltip   := "Toolbar"
    oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) } , "Lock" )
-   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( "(x)Harbour" ) } , "New" )
+   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( "Harbour" ) } , "New" )
    oTBar:AddButton( aImg_[ 3 ], {|| oImg:SetImage( aImg_[ 3 ] ) } , "Calculator" )
    oTBar:AddButton()
    oTBar:AddButton( aImg_[ 5 ], {|| oImg:SetImage( aImg_[ 5 ] ) } , "Restore" )
@@ -263,7 +263,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    aGets_:= { pad("Pritpal",20 ), pad( "Bedi",20 ), pad( "60, New Professor Colony",30 ), ;
               pad( "Ludhiana, INDIA",30 ),;
               "PB", pad( "141004",10 ), ctod( "22/06/04" ), .t., 48, 17000, ;
-              pad( "Wvtgui is a classical example of (x)Harbour capabilities...",65 ) }
+              pad( "Wvtgui is a classical example of Harbour capabilities...",65 ) }
 
    oGet1 := WvtGets():New( oDlg, , 4, 2, 37, 62 )
    oGet1:AddGets( nGetRow+00, nGetCol, aGets_[ 1 ], "@ "       , "N/W*,N/GR*" )

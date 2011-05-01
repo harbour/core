@@ -34,7 +34,7 @@
  *
  *      You also need to include in your PRG file following lines:
  *
- *      REQUEST _ADS   </par>
+ *      REQUEST ADS   </par>
  *      rddRegister( "ADS", 1 )   </par>
  *      rddsetdefault( "ADS" )   </par>
  *
@@ -62,61 +62,61 @@
  *      increase the setting for the TABLES configuration value in the Advantage
  *      Database Server configuration registry key using the Registry Editor.
  *      For NetWare, edit the configuration file ads.cfg.
-
+ *
  *      See ace.hlp under adslocal.cfg, or the Advantage Error Guide for
  *      error 7005.
-
+ *
  *      SPEED AND PERFORMANCE ISSUES
-
+ *
  *      If you have sluggish browsers, one issue could be the scrollbar.
  *      If it's fast with the scrollbar disabled, the browse/scrolling logic
  *      may not be as optimized as it could be. Scrollbars should always use
  *      ADSGetRelKeyPos() and ADSSetRelKeyPos() instead of key counting functions.
-
+ *
  *      If filtered data seems slower than expected, check these things:
  *      First, optimization is not on by default, so at the top of the app
  *      call
-
- *         set(_SET_OPTIMIZE, .t.)
-
+ *
+ *         Set( _SET_OPTIMIZE, .T. )
+ *
  *      or its command equivalent.  RDDADS will use an AOF whenever
  *      dbSetFilter is called *if it can*.
-
+ *
  *      Second, make sure the filter is one ADS can understand. UDFs are out,
  *      as are references to public or private variables. It's also best to
  *      remove field aliases from the string. ADS cannot reference aliases for other
  *      related tables, so they're superfluous.
  *      You can call
-
+ *
  *         ? AdsIsExprValid( cFilter )
-
+ *
  *      to check.  If this returns False, neither the Local Server nor the
  *      Remote Server can process it, so optimization will never occur (but
  *      the Harbour RDD will process the filtering locally by eval'ing the
  *      codeblock and testing each record). The only way to speed it up is to
  *      fix the filter so ADS understands it.
-
+ *
  *      You can also use dbOrderInfo(DBOI_OPTLEVEL) to see if the current
  *      filter is optimized or not. COMIX users can use:
  *
- *            func rlOptLevel()
- *            return dbOrderInfo(DBOI_OPTLEVEL)
-
+ *            FUNCTION rlOptLevel()
+ *               RETURN dbOrderInfo(DBOI_OPTLEVEL)
+ *
  *      This returns the Clipper/COMIX values (not ADS-defined values) because
  *      this is an RDD call, not just a wrapper to the ADS call, which uses different numbers).
-
+ *
  *  $COMPLIANCE$
  *      Every attempt has been made to make the RDD compliant with the
  *      standard dbfcdx RDD at the .prg level.
  *      One important difference is the handling of structural indexes.
  *      ACE will <b>always</b> automatically open an index with the same
  *      name as the data file.  There is no way to turn this feature off.
-
+ *
  *      You can use the Set() function call as well as the equivalent
  *      commands for SET DEFAULT TO, DATEFORMAT, DELETE, and EPOCH.
  *      Harbour automatically makes the call to ADS to change its internal
  *      setting to match Harbour's.
-
+ *
  *      INDEXING and Progress Displays:
  *      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
  *      is an external process doing the indexing that knows nothing of
@@ -128,19 +128,19 @@
  *      codeblock by the ADS server.
  *
  *       <table>
- *       FUNCTION Main()
+ *       PROCEDURE Main()
  *          ...
- *          AdsRegCallBack( {|nPercent| outputstuff(nPercent)}  )
+ *          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
  *          /* The above codeblock will be called approximately
  *               every 2 seconds while indexing.
  *               The codeblock can return .T. to abort.   */
  *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
  *          AdsClrCallBack()
- *       RETURN nil
+ *       RETURN
  *
- *       FUNCTION outputstuff(nPercent)  /* The "callback" function */
+ *       FUNCTION outputstuff( nPercent )  /* The "callback" function */
  *          ? "output stuff", nPercent
- *       RETURN inkey() == 27
+ *       RETURN Inkey() == 27
  *       /*  If press ESC, returns .T. to abort.   */
  *      </table>
  *
@@ -151,7 +151,7 @@
  *      1) In ACE, skipping backwards to BOF goes to the phantom record and
  *      sets the record number to 0.  In RDDADS, the  record pointer stays at
  *      the Top record and only the BOF flag is set to True.
-
+ *
  *      2) In RDDADS, a filter expression can be used that may not be
  *      valid on the server (because of references to public variables or
  *      User-Defined Functions).
@@ -159,15 +159,14 @@
  *      but will be filtered by the application running on the client.
  *      These situations lose the benefits of having a data server and should
  *      be avoided, but they will function as they would in a Clipper program.
-
+ *
  *      One problem with this scenario is that index key counting
  *      functions that are supposed to give an accurate count respecting
  *      the filter (e.g. dbOrderInfo(DBOI_KEYCOUNT) will return the values the
  *      Server knows about, so the counts may be inaccurate.
-
+ *
  *      3) When setting a relation, the expression must be one that can be
  *      evaluated by the Advantage Expression Engine.  UDFs will fail.
-
  *
  * $END$
  */

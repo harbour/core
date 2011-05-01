@@ -16,7 +16,7 @@ PROCEDURE Main
    hQUery := hb_Hash()
    hb_hSetCaseMatch( hQuery, .F. )
 
-   hQuery["q"]    := "xHarbour"
+   hQuery["q"]    := "Harbour"
    hQuery["hl"]   := "en"
    hQuery["btnG"] := "Google+Search"
 

@@ -19,7 +19,7 @@
 #endif
 
 
-#ifdef __HARBOUR__             //  Harbour and xHarbour
+#ifdef __HARBOUR__
    #include      "hbclass.ch"
 #endif
 

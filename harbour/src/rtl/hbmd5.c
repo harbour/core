@@ -56,7 +56,7 @@
  */
 
 /*
-MD5 digest (based on RFC 1321 only). [x]Harbour implementation
+MD5 digest (based on RFC 1321 only). Harbour implementation
 
 PRG functions:
 

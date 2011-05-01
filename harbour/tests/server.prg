@@ -3,7 +3,7 @@
  */
 
 ***************************************************
-* X harbour Inet demo server program
+* Harbour Inet demo server program
 *
 * Giancarlo Niccolai
 *
@@ -11,7 +11,7 @@
 * to demonstrate how to use timeout sockets.
 *
 
-Procedure Main( cPort )
+PROCEDURE Main( cPort )
    LOCAL Socket, s
    LOCAL nResponse, cResponse
    LOCAL nTurn := 0, nTurn1 := 0
@@ -26,8 +26,8 @@ Procedure Main( cPort )
 
    hb_InetInit()
 
-   @ 1, 15 SAY "X H A R B O U R - Inet Api Server Demo"
-   @ 2, 5 SAY "Contact this server using telnet or the xHarbour Inet Client demo"
+   @ 1, 15 SAY "H A R B O U R - Inet Api Server Demo"
+   @ 2, 5 SAY "Contact this server using telnet or the Harbour Inet Client demo"
    @ 3, 5 SAY "Press a [KEY] to terminate the program"
    @ 5, 5 SAY "Server listening on port " + cPort + "..."
    Socket := hb_InetServer( Val( cPort ) )
@@ -108,7 +108,7 @@ Procedure Main( cPort )
 
    hb_InetCleanup()
 
-RETURN
+   RETURN
 
 
 PROCEDURE Progress( nProgress, nDrow, nDcol )
@@ -136,4 +136,4 @@ PROCEDURE Progress( nProgress, nDrow, nDcol )
 
    @ nRow, nCol
 
-RETURN
+   RETURN

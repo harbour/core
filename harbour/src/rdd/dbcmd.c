@@ -1217,7 +1217,7 @@ HB_FUNC( ORDCONDSET )
       lpdbOrdCondInfo->fUseCurrent   = hb_parl( 14 );
       lpdbOrdCondInfo->fCustom       = hb_parl( 15 );
       lpdbOrdCondInfo->fNoOptimize   = hb_parl( 16 );
-      /* 18th parameter in[x]Harbour is MEMORY flag added by Alexander for
+      /* 18th parameter in [x]Harbour is MEMORY flag added by Alexander for
          DBFNTX, so far it was served in hacked way inside SELF_ORDSETCOND()
          so it was working only if this method was called from ORDCONDSET()
          function. I also do not like the idea that it was called MEMORY.

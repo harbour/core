@@ -1,8 +1,8 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
@@ -13,7 +13,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -31,9 +31,9 @@
 #define ID_STA_TEXT                71
 #define ID_STA_IMAGE               72
 #define ID_ICO_VOUCH               81
-                                   
+
 #define ID_GRP_COMP                113
-                                   
+
 #define ID_MNU_FILE                201
 #define ID_MNU_CONTROL             202
 
@@ -96,7 +96,7 @@ FUNCTION DynWinDialog( nInfo )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_GROUPBOX
    aDlg   := Wvt_AddDlgItem( aDlg, 7, 41,  4, 17, {0,0,4,0},ID_GRP_COMP, "BUTTON" , nStyle, "Compiler" )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTORADIOBUTTON
-   aDlg   := Wvt_AddDlgItem( aDlg, 8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "(x)Harbour" )
+   aDlg   := Wvt_AddDlgItem( aDlg, 8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "Harbour"  )
    aDlg   := Wvt_AddDlgItem( aDlg, 9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Clipper"  )
    aDlg   := Wvt_AddDlgItem( aDlg,10, 43,  1, 14, {}, ID_RDO_XBASE , "BUTTON" , nStyle, "Xbase++"  )
 
@@ -158,7 +158,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          WVG_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
 
       case wParam == ID_RDO_XH
-         WVG_MessageBox( hDlg, "(x)Harbour", "Compiler" )
+         WVG_MessageBox( hDlg, "Harbour", "Compiler" )
 
       case wParam == ID_RDO_CLIP
          WVG_MessageBox( hDlg, "Clipper", "Compiler" )
@@ -200,35 +200,35 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
          WVG_SetBkColor( wParam, RGB( 10,200,45 ) )
          Return 1
-      ENDIF 
-      EXIT 
+      ENDIF
+      EXIT
 
    CASE WM_CTLCOLORSTATIC
       IF ( WVG_GetDlgItem( hDlg,ID_STA_TEXT ) == lParam )
          WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
          Return 1
-      ENDIF 
-      EXIT 
-      
+      ENDIF
+      EXIT
+
    CASE WM_INITDIALOG
       WVG_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       IF empty( aHFonts := SetFonts() )
          IF ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
             SetFonts( hFont )
-         ENDIF 
-      ENDIF 
+         ENDIF
+      ENDIF
 
       IF len( aHFonts ) > 0
          WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, ahFonts[ 1 ], 0 )
-      ENDIF 
+      ENDIF
 
       IF empty( SetIcons() )
          SetIcons( WVG_LoadIcon( "vr_1.ico" ) )
-      ENDIF 
+      ENDIF
       IF !empty( SetIcons() )
          WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
-      ENDIF 
+      ENDIF
 
       /*
       if t_hImage == nil
@@ -243,7 +243,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
       WVG_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 
-      Wvt_LBAddString( hDlg, ID_LST_LIST, "(x)Harbour"  )
+      Wvt_LBAddString( hDlg, ID_LST_LIST, "Harbour"   )
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Gtwvt"     )
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Wvtgui"    )
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Modeless"  )
@@ -262,15 +262,15 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
       WVG_InvalidateRect( hDlg )
 
-      EXIT 
+      EXIT
 
    CASE WM_DESTROY
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
       //
       /* cText := */ WVG_GetDlgItemText( hDlg, ID_MLE )
-      EXIT 
-   END 
+      EXIT
+   END
 
    RETURN 0
 
@@ -279,13 +279,13 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 STATIC FUNCTION GetEditText()
    LOCAL cText := ""
 
-   cText += "Welcome in the Wonderful World of (x)Harbour!"
+   cText += "Welcome in the Wonderful World of Harbour!"
    cText += CRLF + CRLF
    cText += "When Peter Rees first published GTWVT, a Windows "
    cText += "Terminal Driver, on 22 Dec 2003, everybody took it "
    cText += "lightly, except for me, as I was aware that what "
-   cText += "wonderful contribution to (x)Harbour he has made, "
-   cText += "what immense possibilities he has opened for (x)Harbour "
+   cText += "wonderful contribution to Harbour he has made, "
+   cText += "what immense possibilities he has opened for Harbour "
    cText += "developers, what limitations he has cleared for Clipper "
    cText += "savvy user base."
    cText += CRLF + CRLF
@@ -334,24 +334,24 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    CASE WM_INITDIALOG
       DrawSlide( hDlg, nSlide )
-      EXIT 
+      EXIT
 
    CASE WM_PAINT
       DrawSlide( hDlg, nSlide )
-      EXIT 
+      EXIT
 
    CASE WM_TIMER
       nSlide++
       IF nSlide > len( t_aSlides )
          nSlide := 1
-      ENDIF 
+      ENDIF
       DrawSlide( hDlg, nSlide )
 
-      EXIT 
-   END 
+      EXIT
+   END
 
    RETURN 0
-   
+
 //-------------------------------------------------------------------//
 
 FUNCTION DrawSlide( hDlg, nSlide )
@@ -367,5 +367,5 @@ FUNCTION DrawSlide( hDlg, nSlide )
    WVG_ReleaseDC( hDlg,hDC )
 
    Return NIL
-   
+
 //----------------------------------------------------------------------//

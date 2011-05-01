@@ -3,7 +3,7 @@
  */
 
 /*
- * [x]Harbour Project source code:
+ * Harbour Project source code:
  *    XWindow Console
  * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
  * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>

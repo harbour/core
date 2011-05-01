@@ -714,19 +714,19 @@
  *      DLLs doing all the indexing. So to do progress meters
  *      you need to implement this.
  *  $EXAMPLES$
- *       FUNCTION Main()
+ *       PROCEDURE Main()
  *          ...
- *          AdsRegCallBack( {|nPercent| outputstuff(nPercent)}  )
+ *          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
  *          /* The above codeblock will be called approximately
  *               every 2 seconds while indexing.
  *               The codeblock can return .T. to abort.   */
  *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
  *          AdsClrCallBack()
- *       RETURN nil
+ *       RETURN
  *
- *       FUNCTION outputstuff(nPercent)  /* The "callback" function */
+ *       FUNCTION outputstuff( nPercent )  /* The "callback" function */
  *          ? "output stuff", nPercent
- *       RETURN inkey() == 27
+ *       RETURN Inkey() == 27
  *       /*  If press ESC, returns .T. to abort.   */
  *  $STATUS$
  *      R
@@ -1219,7 +1219,7 @@
  *      AdsDDAddTable() adds a new table to an ADS data dictionary.
  *      To add the table you must be connected as ADSSYS user using the AdsConnect60() function
  *  $EXAMPLES$
- *  IF adsConnect60("xharbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+ *  IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
  *     // Add one user
  *      AdsDDCreateUser(,"Luiz", "papael", "This is luiz User")
  *     // Add the tables
@@ -1228,7 +1228,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      xHarbour extension
+ *      Harbour extension
  *  $PLATFORMS$
  *      Windows 32-bit, Linux
  *  $FILES$
@@ -1258,7 +1258,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      xHarbour extension
+ *      Harbour extension
  *  $PLATFORMS$
  *      Windows 32-bit, Linux
  *  $FILES$
@@ -1290,7 +1290,7 @@
  *      Adsconnect60() makes the connection to an advantage database server.
  *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
- *      IF adsConnect60("xharbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+ *      IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
  *         // Add one user
  *         AdsDDCreateUser(, "Luiz", "papael", "This is luiz User")
  *      ENDIF
@@ -1485,5 +1485,3 @@ ADSIsRecordEncrypted
 ADSIsTableEncrypted
 
 */
-
-

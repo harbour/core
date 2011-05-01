@@ -60,20 +60,20 @@ REQUEST ADS
 #  include "rddads.hbx"
 #endif
 
-function Main()
+PROCEDURE Main()
 
-   local i
-   local aRay
+   LOCAL i
+   LOCAL aRay
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-   local l := hb_libLoad( hb_libName( "rddads" ) )
+   LOCAL l := hb_libLoad( hb_libName( "rddads" ) )
 
    hb_rddadsRegister()
 
    HB_SYMBOL_UNUSED( l )
 #endif
 
-   rddsetdefault( "ADS" )
+   rddSetDefault( "ADS" )
    SET SERVER LOCAL    // REMOTE
 
    // use test   // make this available to get some stats on open tables below
@@ -87,7 +87,7 @@ function Main()
    ?
 
    aRay := AdsMgGetInstallInfo()
-   IF len(aRay) > 7
+   IF Len( aRay ) > 7
       ? "Install info:"
       ? aRay[1]
       ? aRay[2]
@@ -100,72 +100,72 @@ function Main()
       ?
    ENDIF
 
-      ? "Activity info:"
-   ? AdsMgGetActivityInfo(1)
-   ? AdsMgGetActivityInfo(2)
+   ? "Activity info:"
+   ? AdsMgGetActivityInfo( 1 )
+   ? AdsMgGetActivityInfo( 2 )
 
-   aRay := AdsMgGetActivityInfo(3)
-   IF len(aRay) > 3
+   aRay := AdsMgGetActivityInfo( 3 )
+   IF Len( aRay ) > 3
       ? "Up Time:", aRay[1], aRay[2], aRay[3], aRay[4]
       ?
    ENDIF
 
    ?    "    Item          In Use     MaxUsed    Rejected"
-   aRay := AdsMgGetActivityInfo(4)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 4 )
+   IF Len( aRay ) > 2
       ? "Users:         ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(5)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 5 )
+   IF Len( aRay ) > 2
       ? "Connections:   ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(6)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 6 )
+   IF Len( aRay ) > 2
       ? "WorkAreas:     ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(7)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 7 )
+   IF Len( aRay ) > 2
       ? "Tables:        ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(8)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 8 )
+   IF Len( aRay ) > 2
       ? "Indexes:       ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(9)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 9 )
+   IF Len( aRay ) > 2
       ? "Locks:         ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(10)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 10 )
+   IF Len( aRay ) > 2
       ? "TpsHeaderElems:", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(11)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 11 )
+   IF Len( aRay ) > 2
       ? "TpsVisElems:   ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(12)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 12 )
+   IF Len( aRay ) > 2
       ? "TpsMemoElems:  ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   aRay := AdsMgGetActivityInfo(13)
-   IF len(aRay) > 2
+   aRay := AdsMgGetActivityInfo( 13 )
+   IF Len( aRay ) > 2
       ? "WorkerThreads: ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
-   wait
+   WAIT
    ?
 
    aRay := AdsMgGetCommStats()
-   IF len(aRay) > 10
+   IF Len( aRay ) > 10
       ? aRay[1] , "% of pkts with checksum failures "
       ? aRay[2] , "Total packets received           "
       ? aRay[3] , "Receive packets out of sequence  "
@@ -179,11 +179,11 @@ function Main()
       ? aRay[11], "SendTo failed (NT only)          "
    ENDIF
 
-   wait
+   WAIT
    ?
 
-   aRay := AdsMgGetConfigInfo(0)
-   IF len(aRay) > 24
+   aRay := AdsMgGetConfigInfo( 0 )
+   IF Len( aRay ) > 24
       ? aRay[1] , " number connections            "
       ? aRay[2] , " number work areas             "
       ? aRay[3] , " number tables                 "
@@ -212,11 +212,11 @@ function Main()
       // ? aRay[26], " reserved                      "
    ENDIF
 
-   wait
+   WAIT
    ?
 
-   aRay := AdsMgGetConfigInfo(1)
-   IF len(aRay) > 12
+   aRay := AdsMgGetConfigInfo( 1 )
+   IF Len( aRay ) > 12
       ? aRay[1] , " Total mem taken by cfg params "
       ? aRay[2] , " memory taken by connections   "
       ? aRay[3] , " memory taken by work areas    "
@@ -238,9 +238,9 @@ function Main()
    // Second arg: Max # of users (required for memory allocation, default is 100)
    aRay := AdsMgGetUserNames()
    IF aRay != NIL
-      ? "Number of connected users: ", len(aRay)
-      FOR i := 1 TO len(aRay)
-         ? aRay[i]
+      ? "Number of connected users: ", Len( aRay )
+      FOR i := 1 TO Len( aRay )
+         ? aRay[ i ]
       NEXT
    ENDIF
 
@@ -250,4 +250,5 @@ function Main()
 
    ? "end"
    ?
-return nil
+
+   RETURN
