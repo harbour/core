@@ -568,6 +568,8 @@ PROCEDURE _APPMAIN( ... )
          FOR EACH tmp1 IN FN_Expand( tmp, .T. )
             AAdd( aArgsProc, tmp1 )
          NEXT
+      CASE Empty( hb_FNameExt( tmp ) ) .AND. hb_FileExists( hb_FNameExtSet( tmp, ".hbp" ) )
+         AAdd( aArgsProc, hb_FNameExtSet( tmp, ".hbp" ) )
       CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
          FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
             AAdd( aArgsProc, "-target=" + tmp1 )
