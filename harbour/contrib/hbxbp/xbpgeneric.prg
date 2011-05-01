@@ -73,14 +73,14 @@
 
 /*----------------------------------------------------------------------*/
 
-#define EVENT_BUFFER    200
+#define EVENT_BUFFER    128
 
 /*----------------------------------------------------------------------*/
 
 STATIC s_oDeskTop
 STATIC s_hLastEvent := {=>}
 
-THREAD STATIC t_events
+THREAD STATIC t_events    := {}
 
 THREAD STATIC t_nEventIn  := 0
 THREAD STATIC t_nEventOut := 0
@@ -118,12 +118,12 @@ EXIT PROCEDURE hbxbp_End()
  * Will be called from XbpDialog() | XbpCRT()
  */
 FUNCTION hbxbp_InitializeEventBuffer()
-
+#if 0
    IF empty( t_events )
       t_events := array( EVENT_BUFFER )
       aeval( t_events, {|e,i| HB_SYMBOL_UNUSED( e ), t_events[ i ] := { 0, NIL, NIL, NIL } } )
    ENDIF
-
+#endif
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -189,6 +189,62 @@ FUNCTION LastAppEvent( mp1, mp2, oXbp, nThreadID )
    RETURN nEvent
 
 /*----------------------------------------------------------------------*/
+#if 1
+/*----------------------------------------------------------------------*/
+
+FUNCTION NextAppEvent( mp1, mp2, oXbp )
+   LOCAL nEvent
+
+   IF ! empty( t_events )
+      nEvent := t_events[ 1, 1 ]
+      mp1    := t_events[ 1, 2 ]
+      mp2    := t_events[ 1, 3 ]
+      oXbp   := t_events[ 1, 4 ]
+   ENDIF
+
+   RETURN nEvent
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE SetAppEvent( nEvent, mp1, mp2, oXbp )
+
+   aadd( t_events, { nEvent, mp1, mp2, iif( empty( oXbp ), t_oAppWindow, oXbp ) } )
+
+   /* HB_TRACE( HB_TR_ALWAYS, len( t_events ) ) */
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
+   LOCAL nEvent := 0
+
+   HB_SYMBOL_UNUSED( nTimeOut )
+
+   DO WHILE ! empty( t_oEventLoop )
+      t_oEventLoop:processEvents( QEventLoop_AllEvents )
+
+      IF ! empty( t_events )
+         nEvent := t_events[ 1, 1 ]
+         mp1    := t_events[ 1, 2 ]
+         mp2    := t_events[ 1, 3 ]
+         oXbp   := t_events[ 1, 4 ]
+
+         hb_adel( t_events, 1, .t. )
+
+         EXIT
+      ENDIF
+
+      hb_releaseCPU()
+   ENDDO
+
+   s_hLastEvent[ hb_threadID() ] := { nEvent, mp1, mp2, oXbp }
+
+   RETURN nEvent
+
+/*----------------------------------------------------------------------*/
+#else
+/*----------------------------------------------------------------------*/
 
 FUNCTION NextAppEvent( mp1, mp2, oXbp )
    LOCAL nEvent, n
@@ -212,25 +268,43 @@ FUNCTION NextAppEvent( mp1, mp2, oXbp )
 /*
  *  Internal to the XbpParts, must NOT be called from application code
  */
-FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
+PROCEDURE SetAppEvent( nEvent, mp1, mp2, oXbp )
+   LOCAL ooXbp := iif( empty( oXbp ), t_oAppWindow, oXbp )
+   LOCAL nEventIn := t_nEventIn
 
    IF empty( t_events )
       hbxbp_InitializeEventBuffer()
    ENDIF
 
-   IF ++t_nEventIn > EVENT_BUFFER
-      t_nEventIn := 1
+   /* if current event is not taken and it is of same nature just update parameters */
+   IF ! empty( t_nEventIn ) .AND. ! empty( t_events[ nEventIn, 4 ] ) ;
+            .AND. nEvent == t_events[ nEventIn, 1 ] .AND. ooXbp == t_events[ nEventIn, 4 ]
+      t_events[ nEventIn, 2 ] := mp1
+      t_events[ nEventIn, 3 ] := mp2
+      RETURN
    ENDIF
 
-//HB_TRACE( HB_TR_DEBUG, "SetAppEvent ... ", t_nEventIn, nEvent, oXbp:className(), oXbp:title )
+   IF ++nEventIn > len( t_events )
+      nEventIn := 1
+   ENDIF
 
-   t_events[ t_nEventIn, 1 ] := nEvent
-   t_events[ t_nEventIn, 2 ] := mp1
-   t_events[ t_nEventIn, 3 ] := mp2
-   t_events[ t_nEventIn, 4 ] := iif( empty( oXbp ), t_oAppWindow, oXbp )
+   IF !empty( t_events[ nEventIn, 4 ] )
+      hb_ains( t_events, nEventIn, { nEvent, mp1, mp2, ooXbp }, .t. )
 
-//HB_TRACE( HB_TR_DEBUG, 1, "SetAppEvent ... ", hb_threadId(), nEvent )
-   RETURN nil
+      HB_TRACE( HB_TR_ALWAYS, "................t_nEventIn", 0, nEventIn )
+
+   ELSE
+      HB_TRACE( HB_TR_ALWAYS, "................t_nEventIn", 1, nEventIn )
+
+      t_events[ nEventIn, 1 ] := nEvent
+      t_events[ nEventIn, 2 ] := mp1
+      t_events[ nEventIn, 3 ] := mp2
+      t_events[ nEventIn, 4 ] := ooXbp
+   ENDIF
+
+   t_nEventIn := nEventIn
+
+   RETURN
 
 /*----------------------------------------------------------------------*/
 
@@ -238,35 +312,40 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    LOCAL nEvent := 0
    LOCAL nThreadID := hb_threadId()
 
-   //DEFAULT nTimeout TO 0
    HB_SYMBOL_UNUSED( nTimeOut )
 
-   IF ++t_nEventOut > EVENT_BUFFER
+   IF empty( t_nEventOut ) .OR. ++t_nEventOut > len( t_events )
       t_nEventOut := 1
    ENDIF
-//HB_TRACE( HB_TR_DEBUG, "            AppEvent ... ", nThreadID, t_nEventOut )
-   DO WHILE !empty( t_oEventLoop ) //.t.
+
+   HB_TRACE( HB_TR_ALWAYS, "t_nEventOut", t_nEventOut )
+
+   //DO WHILE ! empty( t_oEventLoop )
       t_oEventLoop:processEvents( QEventLoop_AllEvents )
 
-      IF !empty(   t_events[ t_nEventOut, 4 ] )
-         //
+      IF ! empty( t_events[ t_nEventOut, 4 ] )
          nEvent := t_events[ t_nEventOut, 1 ]
          mp1    := t_events[ t_nEventOut, 2 ]
          mp2    := t_events[ t_nEventOut, 3 ]
          oXbp   := t_events[ t_nEventOut, 4 ]
-         //
+
          t_events[ t_nEventOut, 4 ] := NIL
-         EXIT
+         //EXIT
+      ELSE
+         mp1 := NIL
+         mp2 := NIL
+         oXbp := t_oAppWindow
       ENDIF
+
       hb_releaseCPU()
-   ENDDO
+   //ENDDO
 
    s_hLastEvent[ nThreadID ] := { nEvent, mp1, mp2, oXbp }
 
-//HB_TRACE( HB_TR_DEBUG, "..........................", hb_threadId() )
-
    RETURN nEvent
 
+/*----------------------------------------------------------------------*/
+#endif
 /*----------------------------------------------------------------------*/
 
 FUNCTION SetAppWindow( oXbp )
