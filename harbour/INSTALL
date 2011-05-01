@@ -754,10 +754,11 @@ HARBOUR
                                  sunpro) to specify path to compiler/linker/archive
                                  tool to help them run from *nix hosts as cross-build
                                  tools. Ending slash must be added.
-   - HB_CCPREFIX=[<prefix>]      Used with gcc family to specify
+   - HB_CCPREFIX=[<prefix>]      Used with gcc compiler family to specify
                                  compiler/linker/archive tool name prefix.
-   - HB_CCPOSTFIX=[<postfix>]    Used with gcc family to specify compiler/linker
-                                 tool name postfix (usually version number).
+   - HB_CCPOSTFIX=[<postfix>]    Used with gcc compiler family to specify
+                                 compiler/linker tool name postfix
+                                 (usually version number).
 
    Cross-building
    --------------
@@ -1048,7 +1049,7 @@ HARBOUR
    for Windows x64 (x86-64) hosts
    ------------------------------
 
-      Same as 32-bit Windows, but you'll have to change %ProgramFiles% to
+      Same as 32-bit Windows, but, you'll have to change %ProgramFiles% to
       %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for
       both x86 and x64 without building a native target first, and potential
       differences with some compilers in order to use native binaries if
@@ -1266,7 +1267,7 @@ HARBOUR
       examples as is.
    9. If everything fails and you are to report a problem to the developers,
       make sure to include your OS version/language/CPU architecture,
-      harbour revision, C compiler name/release and version, environment
+      Harbour revision, C compiler name/release and version, environment
       variables and verbose log output containing _both stderr and stdout in
       one combined stream_ (use 'make > log.txt 2>&1'). Enable verbose
       mode using 'HB_BUILD_VERBOSE=yes'.
