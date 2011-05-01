@@ -12020,6 +12020,8 @@ STATIC PROCEDURE SetUILang( hbmk )
    RETURN
 
 STATIC PROCEDURE ShowHeader( hbmk )
+   LOCAL cTrsText
+   LOCAL cTrsTextI
 
    OutStd( "Harbour Make (hbmk2) " + HBRawVersion() + _OUT_EOL +;
            "Copyright (c) 1999-2011, Viktor Szakats" + _OUT_EOL +;
@@ -12028,7 +12030,11 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
       !( hbmk[ _HBMK_cUILNG ] == "en-GB" ) .AND. ;
       !( hbmk[ _HBMK_cUILNG ] == "en-US" )
-      OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ) + _OUT_EOL )
+      cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" )
+      cTrsTextI := I_( cTrsText )
+      IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )
+         OutStd( hb_StrFormat( cTrsTextI, hbmk[ _HBMK_cUILNG ] ) + _OUT_EOL )
+      ENDIF
    ENDIF
 
    OutStd( _OUT_EOL )
