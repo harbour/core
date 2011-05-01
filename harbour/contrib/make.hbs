@@ -83,6 +83,8 @@ PROCEDURE Main( ... )
    #else
       s_cBinDir := hb_DirBase()
    #endif
+   /* For *nixes */
+   s_cBinDir := hb_PathNormalize( s_cBinDir )
 
    /* Load list of projects */
 
