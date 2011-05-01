@@ -76,7 +76,7 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
       oQuery := oServer:Query( cQuery )
 
       IF oQuery:neterr()
-         ? oQuery:errorMeg()
+         ? oQuery:errorMsg()
       ENDIF
 
       oQuery:destroy()
