@@ -6,7 +6,7 @@
 
 #include "simpleio.ch"
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL oServer, oQuery, oRow, i, x
 
@@ -137,4 +137,4 @@ FUNCTION Main()
 
    ? "Closing..."
 
-   RETURN NIL
+   RETURN

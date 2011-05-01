@@ -79,12 +79,14 @@
 #include "common.ch"
 #include "hbsqlit3.ch"
 
-FUNCTION main()
-   LOCAL cFile := ":memory:", cSQLTEXT
+PROCEDURE main()
+   LOCAL cFile := ":memory:"
+   LOCAL cSQLTEXT
    LOCAL pDb, cb
-   //
+
    IF Empty( pDb := PrepareDB(cFile) )
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
    // Authorizer1
    sqlite3_set_authorizer( pDb, @Authorizer() /*"Authorizer"*/ )
@@ -110,55 +112,55 @@ FUNCTION main()
    sqlite3_sleep( 3000 )
    //
    pDb := Nil   // close database
-   //
-RETURN 0
+
+   RETURN
 
 /**
 */
 FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
-LOCAL oldColor := SetColor( "R/N" )
-   //
-   Qout( "=>", StrZero(nAction, 2), cName1, cName2, cDatabaseName, cTriggerOrViewName )
+   LOCAL oldColor := SetColor( "R/N" )
+
+   QOut( "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    SetColor( oldColor )
-   //
-RETURN SQLITE_OK
+
+   RETURN SQLITE_OK
 
 /**
 */
 FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
-LOCAL oldColor := SetColor( "R/N" )
-   //
-   Qout( "=>", StrZero(nAction, 2), cName1, cName2, cDatabaseName, cTriggerOrViewName )
+   LOCAL oldColor := SetColor( "R/N" )
+
+   QOut( "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    SetColor( oldColor )
-   //
-RETURN iif( cName2 == "pasw", SQLITE_IGNORE, SQLITE_OK )
+
+   RETURN iif( cName2 == "pasw", SQLITE_IGNORE, SQLITE_OK )
 
 /**
 */
 FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
-   //
+
    HB_SYMBOL_UNUSED( cName1 )
    HB_SYMBOL_UNUSED( cName2 )
    HB_SYMBOL_UNUSED( cDatabaseName )
    HB_SYMBOL_UNUSED( cTriggerOrViewName )
 
-RETURN iif( nAction == SQLITE_SELECT, SQLITE_DENY, SQLITE_OK )
+   RETURN iif( nAction == SQLITE_SELECT, SQLITE_DENY, SQLITE_OK )
 
 /**
 */
 FUNCTION CallBack( nColCount, aValue, aColName )
-LOCAL nI
-LOCAL oldColor := SetColor( "G/N" )
-   //
+   LOCAL nI
+   LOCAL oldColor := SetColor( "G/N" )
+
    FOR nI := 1 TO nColCount
-      Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
+      QOut( Padr( aColName[ nI ], 5 ) , " == ", aValue[ nI ] )
    NEXT
 
    SetColor( oldColor )
-   //
-RETURN 0
+
+   RETURN 0
 
 /**
 */
@@ -193,7 +195,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_ROW        , "SQLITE_ROW"        , "sqlite3_step() has another row ready"        }, ;
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
-   //
+
    DEFAULT lShortMsg TO .T.
 
    IF hb_IsNumeric( nError )
@@ -204,8 +206,8 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
          cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif(lShortMsg,2,3) ], cErrorMsg )
       ENDIF
    ENDIF
-   //
-RETURN cErrorMsg
+
+   RETURN cErrorMsg
 
 /**
 */
@@ -219,7 +221,7 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Andy"  => 20, ;
                      "Ivet"  => 28  ;
                     }, enum
-   //
+
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
@@ -228,9 +230,9 @@ STATIC FUNCTION PrepareDB( cFile )
    ENDIF
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(32) )"
-   cMsg := cErrorMsg( sqlite3_exec(pDb, cSQLTEXT) )
+   cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
-   IF cMsg <> "SQLITE_OK"
+   IF !( cMsg == "SQLITE_OK" )
       QOut( "Can't create table : person" )
       pDb := NIL // close database
 
@@ -256,5 +258,5 @@ STATIC FUNCTION PrepareDB( cFile )
 
    sqlite3_clear_bindings( pStmt )
    sqlite3_finalize( pStmt )
-   //
-RETURN pDb
+
+   RETURN pDb

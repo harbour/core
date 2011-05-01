@@ -15,7 +15,7 @@
 #define REMOTE_URL_DEL      "ftp://harbour:power@localhost/" + RENAME_FILE_TO
 #define REMOTE_URL_MEM      "ftp://harbour:power@localhost/from_mem.txt"
 
-FUNCTION Main( cDL, cUL )
+PROCEDURE Main( cDL, cUL )
    LOCAL curl
    LOCAL info
    LOCAL tmp
@@ -27,7 +27,7 @@ FUNCTION Main( cDL, cUL )
 
    ? curl_version()
    ? curl_getdate( "Sun, 1 Jun 2008 02:10:58 +0200" )
-   
+
    info := curl_version_info()
 
    FOR tmp := 1 TO Len( info )
@@ -156,7 +156,7 @@ FUNCTION Main( cDL, cUL )
       ? "DOWNLOAD FILE TO MEM:", curl_easy_perform( curl )
 
       tmp := "test_dlm.bin"
-      ? "WRITING TO FILE: ", tmp 
+      ? "WRITING TO FILE: ", tmp
       f := FCreate( tmp, FC_NORMAL )
       IF f != F_ERROR
          FWrite( f, curl_easy_dl_buff_get( curl ) )
@@ -185,7 +185,7 @@ FUNCTION Main( cDL, cUL )
       ? "DOWNLOAD DIRLIST TO STRING:", curl_easy_perform( curl )
 
       ? "RESULT 1: " + curl_easy_dl_buff_get( curl )
-      ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_GET, @tmp ) 
+      ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_GET, @tmp )
       ? "RESULT 2: " + tmp
 
       /* Cleanup session */
@@ -196,7 +196,7 @@ FUNCTION Main( cDL, cUL )
 
    curl_global_cleanup()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION CurGet()
    RETURN { Row(), Col() }

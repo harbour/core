@@ -62,7 +62,7 @@
 
 
 *:--------------------------------------------------------------------
-FUNCTION main ()
+PROCEDURE main ()
 *:--------------------------------------------------------------------
 local cScr
 local nchoice
@@ -101,7 +101,7 @@ local farr := { "addmonth ( ddate )  Add a month to ddate     ", ;
       nchoice := achoice ( 5, 7,  20,  65, farr )   //, ,1)
 
       if empty ( nchoice )
-         return NIL
+         return
       endif
 
       @ 0, 0 clear to maxrow(), maxcol()
@@ -154,7 +154,7 @@ local farr := { "addmonth ( ddate )  Add a month to ddate     ", ;
       restscreen ( 4, 5, 21, 66, cScr)
    enddo
 
-   return NIL
+   return
 
 *:--------------------------------------------------------------------
 FUNCTION addmtest()

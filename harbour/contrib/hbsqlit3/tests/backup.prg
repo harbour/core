@@ -67,16 +67,18 @@
 #include "common.ch"
 #include "hbsqlit3.ch"
 
-FUNCTION main()
+PROCEDURE main()
    LOCAL cFileSource := ":memory:", cFileDest := "backup.db", cSQLTEXT
    LOCAL pDbSource, pDbDest, pBackup, cb, nDbFlags
    //
    IF sqlite3_libversion_number() < 3006011
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
 
    IF Empty( pDbSource := PrepareDB(cFileSource) )
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
 
    nDbFlags := SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + ;
@@ -85,8 +87,8 @@ FUNCTION main()
 
    IF Empty( pDbDest )
       QOut( "Can't open database : ", cFileDest )
-
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
 
    sqlite3_trace( pDbDest, .T., "backup.log" )
@@ -95,8 +97,8 @@ FUNCTION main()
    pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
    IF Empty( pBackup )
       QOut( "Can't initialize backup" )
-
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ELSE
       QOut( "Start backup.." )
    ENDIF
@@ -113,26 +115,26 @@ FUNCTION main()
    QOut( "" )
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
    cb := @CallBack() // "CallBack"
-   Qout( cErrorMsg(sqlite3_exec(pDbDest, cSQLTEXT, cb)) )
+   QOut( cErrorMsg(sqlite3_exec(pDbDest, cSQLTEXT, cb)) )
 
-   pDbDest := Nil   // close database
+   pDbDest := NIL   // close database
 
    sqlite3_sleep( 3000 )
-   //
-   RETURN 0
+
+   RETURN
 
 /**
 */
 FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
-   //
+
    FOR nI := 1 TO nColCount
       Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
    NEXT
 
    SetColor( oldColor )
-   //
+
    RETURN 0
 
 /**
@@ -168,7 +170,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_ROW        , "SQLITE_ROW"        , "sqlite3_step() has another row ready"        }, ;
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
-   //
+
    DEFAULT lShortMsg TO .T.
 
    IF hb_IsNumeric( nError )
@@ -179,7 +181,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
          cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif(lShortMsg,2,3) ], cErrorMsg )
       ENDIF
    ENDIF
-   //
+
    RETURN cErrorMsg
 
 /**
@@ -194,7 +196,7 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Andy"  => 20, ;
                      "Ivet"  => 28  ;
                     }, enum
-   //
+
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
@@ -207,7 +209,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    cMsg := cErrorMsg( sqlite3_exec(pDb, cSQLTEXT) )
 
-   IF cMsg <> "SQLITE_OK"
+   IF !( cMsg == "SQLITE_OK" )
       QOut( "Can't create table : person" )
       pDb := NIL // close database
 
@@ -232,5 +234,5 @@ STATIC FUNCTION PrepareDB( cFile )
 
    sqlite3_clear_bindings( pStmt )
    sqlite3_finalize( pStmt )
-   //
+
    RETURN pDb

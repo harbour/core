@@ -4,7 +4,7 @@
 
 #include "common.ch"
 
-FUNCTION Main( cHost, cDatabase, cUser, cPass )
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs
 
@@ -197,4 +197,4 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
 
    ? "Closing..."
 
-   RETURN NIL
+   RETURN

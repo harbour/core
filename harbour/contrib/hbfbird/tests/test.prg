@@ -5,7 +5,7 @@
 #include "common.ch"
 #include "simpleio.ch"
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL cServer := "localhost:"
    LOCAL cDatabase
@@ -113,4 +113,4 @@ FUNCTION Main()
    /* Close connection with rdbms */
    ? "Status Close Database: ", tmp := FBClose( db ), FBError( tmp )
 
-   RETURN NIL
+   RETURN

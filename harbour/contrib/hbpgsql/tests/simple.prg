@@ -4,7 +4,7 @@
 
 #include "common.ch"
 
-FUNCTION Main( cHost, cDatabase, cUser, cPass )
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct
 
    LOCAL cQuery
@@ -165,4 +165,4 @@ FUNCTION Main( cHost, cDatabase, cUser, cPass )
 
    ? "Closing..."
 
-   RETURN NIL
+   RETURN

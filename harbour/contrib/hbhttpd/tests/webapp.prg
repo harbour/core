@@ -6,7 +6,7 @@ REQUEST DBFCDX
 
 MEMVAR server, get, post, cookie, session
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL oServer
 
@@ -20,12 +20,12 @@ FUNCTION Main()
       ? "Options:"
       ? "  //help               Print help"
       ? "  //stop               Stop running server"
-      RETURN 0
+      RETURN
    ENDIF
 
    IF HB_ARGCHECK( "stop" )
       HB_MEMOWRIT( ".uhttpd.stop", "" )
-      RETURN 0
+      RETURN
    ELSE
       FErase( ".uhttpd.stop" )
    ENDIF
@@ -71,7 +71,7 @@ FUNCTION Main()
    IF ! oLogAccess:Add( "" )
       oLogAccess:Close()
       ? "Access log file open error " + hb_ntos( FError() )
-      RETURN 0
+      RETURN
    ENDIF
 
    oLogError := UHttpdLog():New( "webapp_error.log" )
@@ -80,7 +80,7 @@ FUNCTION Main()
       oLogError:Close()
       oLogAccess:Close()
       ? "Error log file open error " + hb_ntos( FError() )
-      RETURN 0
+      RETURN
    ENDIF
 
    oServer := UHttpdNew()
@@ -116,13 +116,14 @@ FUNCTION Main()
       oLogError:Close()
       oLogAccess:Close()
       ? "Server error:", oServer:cError
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
 
    oLogError:Close()
    oLogAccess:Close()
 
-   RETURN 0
+   RETURN
 
 STATIC FUNCTION proc_login( cMethod )
 

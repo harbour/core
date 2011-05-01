@@ -8,7 +8,7 @@
 
 #include "inkey.ch"
 
-FUNCTION Main( cServer, cDatabase, cUser, cPass )
+PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    LOCAL conn
 
    CLEAR SCREEN
@@ -21,9 +21,7 @@ FUNCTION Main( cServer, cDatabase, cUser, cPass )
    Query( conn, "SELECT codigo, descri FROM fornec limit 100", .F. )
    Query( conn, "SELECT pedido, vlrped FROM pedido", .T. )
 
-   conn := NIL
-
-   RETURN NIL
+   RETURN
 
 PROCEDURE Query( conn, cQuery, lCancel )
    LOCAL pCancel, cErrMsg := Space( 30 )

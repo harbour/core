@@ -53,12 +53,13 @@
 #include "common.ch"
 #include "hbsqlit3.ch"
 
-FUNCTION main()
+PROCEDURE main()
    LOCAL cSQLTEXT, cFile := ":memory:"
    LOCAL pDb, cb := @CallBack()
-   //
-   IF Empty( pDb := PrepareDB(cFile) )
-      RETURN 1
+
+   IF Empty( pDb := PrepareDB( cFile ) )
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
    //
    sqlite3_commit_hook( pDb, "HookCommitY" )
@@ -103,50 +104,50 @@ FUNCTION main()
    pDb := NIL
 
    sqlite3_sleep( 10000 )
-   //
-   RETURN 0
+
+   RETURN
 
 /**
 */
 FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
-   //
+
    FOR nI := 1 TO nColCount
-      Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
+      QOut( PadR( aColName[ nI ], 5 ) , " == ", aValue[ nI ] )
    NEXT
 
    SetColor( oldColor )
-   //
+
    RETURN 0
 
 /**
 */
 FUNCTION HookCommitY()
    LOCAL oldColor := SetColor( "R+/N" )
-   //
-   Qout( "!! COMMIT" )
+
+   QOut( "!! COMMIT" )
 
    SetColor( oldColor )
-   //
+
    RETURN 0
 
 FUNCTION HookCommitN()
    LOCAL oldColor := SetColor( "B+/N" )
-   //
-   Qout( "?? COMMIT or ROLLBACK" )
+
+   QOut( "?? COMMIT or ROLLBACK" )
 
    SetColor( oldColor )
-   //
+
    RETURN 1 // not 0
 
 FUNCTION HookRollback()
    LOCAL oldColor := SetColor( "R+/N" )
-   //
-   Qout( "!! ROLLBACK" )
+
+   QOut( "!! ROLLBACK" )
 
    SetColor( oldColor )
-   //
+
    RETURN 1
 
 /**
@@ -208,7 +209,7 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Andy"  => 20, ;
                      "Ivet"  => 28  ;
                     }, enum
-   //
+
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
@@ -219,7 +220,7 @@ STATIC FUNCTION PrepareDB( cFile )
    Qout( cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )" )
    cMsg := cErrorMsg( sqlite3_exec(pDb, cSQLTEXT) )
 
-   IF cMsg <> "SQLITE_OK"
+   IF !( cMsg == "SQLITE_OK" )
       QOut( "Can't create table : person" )
       pDb := NIL // close database
 
@@ -235,8 +236,8 @@ STATIC FUNCTION PrepareDB( cFile )
       RETURN NIL
    ENDIF
 
-   QOut( sqlite3_sql(pStmt) )
-   QOut( Replicate("-", Len(cSQLTEXT)) )
+   QOut( sqlite3_sql( pStmt ) )
+   QOut( Replicate( "-", Len( cSQLTEXT ) ) )
 
    FOR EACH enum IN hPerson
       sqlite3_reset( pStmt )

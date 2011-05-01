@@ -19,7 +19,7 @@ STATIC s_oServer
 STATIC s_aTableTemp := {}
 STATIC s_aTempDBF   := {}
 
-FUNCTION Main( cServer, cDatabase, cUser, cPass )
+PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    LOCAL i
    LOCAL cQuery
 
@@ -65,7 +65,9 @@ FUNCTION Main( cServer, cDatabase, cUser, cPass )
       SQLApplyUpdates()
    ENDIF
 
-   RETURN SQLGarbageCollector()
+   SQLGarbageCollector()
+
+   RETURN
 
 
 /* Put theses functions in a library */

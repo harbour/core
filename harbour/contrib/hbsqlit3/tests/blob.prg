@@ -128,7 +128,7 @@ PROCEDURE main()
             sqlite3_finalize( stmt )
          ENDIF
       ENDIF
-      wait
+      WAIT
    ENDIF
 
    RETURN

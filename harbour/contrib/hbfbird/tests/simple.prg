@@ -4,7 +4,7 @@
 
 #include "simpleio.ch"
 
-FUNCTION Main()
+PROCEDURE Main()
    LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
 
    LOCAL cServer := "localhost:"
@@ -187,4 +187,4 @@ FUNCTION Main()
 
    ? "Closing..."
 
-   RETURN NIL
+   RETURN
