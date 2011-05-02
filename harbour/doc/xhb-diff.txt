@@ -634,7 +634,7 @@ Clipper does not. This example shows such macro messages usage:
 
       proc main()
          memvar var
-         local o := errorNew(), msg:="cargo"
+         local o := errorNew(), msg := "cargo"
          private var := "CAR"
 
          o:&msg := "<cargo>"
@@ -2346,7 +2346,7 @@ keep code clean and locate places where string constant values
 are overwritten what is illegal. It also helps C compiler to better
 optimize the code because it has additional information that some
 variables/memory regions are readonly and cannot be modified during
-code execution what can give some addition speed improvement.
+code execution what can give some additional speed improvement.
 If some C code does not respect it then during compilation with
 Harbour header files C compilers usually generate warning and
 C++ ones errors, i.e. code like:

@@ -1612,7 +1612,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
 
             DO CASE
-            CASE hbmk[ _HBMK_cPLAT ] == "win"
+            CASE hbmk[ _HBMK_cCOMP ] == "mingw64"
+               FOR EACH tmp IN { "/usr", "/usr/local", "/usr/local/mingw32", "/opt/xmingw", "/opt/cross" }
+                  FOR EACH tmp2 IN { "amd64-mingw32msvc" }
+                     AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win", "mingw64", tmp2 + "-", tmp + hb_ps() + "bin", NIL } )
+                     AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win", "mingw64", "", tmp + hb_ps() + tmp2 + hb_ps() + "bin", NIL } )
+                  NEXT
+               NEXT
+            CASE hbmk[ _HBMK_cPLAT ] == "win" .OR. hbmk[ _HBMK_cCOMP ] == "mingw"
                FOR EACH tmp IN { "/usr", "/usr/local", "/usr/local/mingw32", "/opt/xmingw", "/opt/cross" }
                   FOR EACH tmp2 IN { "i?86-mingw", "i?86-pc-mingw", "i?86-mingw32", "i?86-pc-mingw32", "i?86-mingw32msvc", "i?86-pc-mingw32msvc" }
                      FOR tmp3 := 3 TO 6
