@@ -526,14 +526,13 @@
  *      // cB = a string buffer passed-by-reference to hold the result
  *      // nMaxLine = maximum number of bytes to read
  *
- *      #define EOL HB_OSNEWLINE()
  *      FUNCTION FREADln( nH, cB, nMaxLine )
  *      LOCAL cLine, nSavePos, nEol, nNumRead
  *      cLine := space( nMaxLine )
  *      cB := ''
  *      nSavePos := FSEEK( nH, 0, FS_RELATIVE )
  *      nNumRead := FREAD( nH, @cLine, nMaxLine )
- *      IF ( nEol := AT( EOL, substr( cLine, 1, nNumRead ) ) ) == 0
+ *      IF ( nEol := AT( hb_eol(), substr( cLine, 1, nNumRead ) ) ) == 0
  *        cB := cLine
  *      ELSE
  *        cB := SUBSTR( cLine, 1, nEol - 1 )

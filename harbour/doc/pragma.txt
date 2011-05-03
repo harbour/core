@@ -117,7 +117,7 @@ Syntax:
 
 
 ?
-#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+hb_eol();<v>:=""
 ?
 
 #pragma __stream
@@ -198,4 +198,3 @@ Syntax:
   For example:
 
   #pragma   RECURSELEVEL 2048
-

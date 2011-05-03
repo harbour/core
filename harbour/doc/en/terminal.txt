@@ -346,7 +346,7 @@
  *  $TEMPLATE$
  *      Function
  *  $NAME$
- *      HB_OSNEWLINE()
+ *      hb_eol()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -354,7 +354,7 @@
  *  $ONELINER$
  *      Returns the newline character(s) to use with the current OS
  *  $SYNTAX$
- *      HB_OSNewLine() --> cString
+ *      hb_eol() --> cString
  *  $RETURNS$
  *      <cString> A character string containing the character or characters
  *      required to move the screen cursor or print head to the start of a
@@ -374,12 +374,12 @@
  *      // Get the newline character(s) for the current OS.
  *      STATIC s_cNewLine
  *      ...
- *      s_cNewLine := HB_OSNewLine()
+ *      s_cNewLine := hb_eol()
  *      ...
  *      OutStd( "Hello World!" + s_cNewLine )
  *  $TESTS$
- *      ? valtype( HB_OSNewLine() ) == "C"
- *      ? LEN( HB_OSNewLine() ) == 1
+ *      ? ValType( hb_eol() ) == "C"
+ *      ? Len( hb_eol() ) == 1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

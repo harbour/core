@@ -297,7 +297,7 @@
    #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
 
    /* TEXT INTO <varname> */
-   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+hb_eol();<v>:=""
 
    /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE
@@ -306,7 +306,7 @@
    #xtranslate hb_enumIndex(<!v!>) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 

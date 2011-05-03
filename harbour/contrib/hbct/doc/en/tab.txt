@@ -19,18 +19,18 @@
  *      <cFillChar|nFillChar>
  *      <cNewLineCharacters>      string indicating new line,
  *                                default is the string returned by
- *                                hb_osnewline()
+ *                                hb_eol()
  *      <cTabChar|nTabChar>       character indicating a tab stop,
  *                                default is chr(9)
  *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
  *                                should be ignored as a newline indicator,
  *                                default is .F. (functions uses chr(141))
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
  *      tabexpand("-"+chr(9)+"!")             == "-       !"
  *      tabexpand("----"+chr(9) +"!")         == "----    !"
@@ -38,7 +38,7 @@
  *      tabexpand("-"+chr(9)+ "!", 4)         == "-   !"
  *      tabexpand("----"+chr(9)+ "!", 8)      == "----    !"
  *      tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!"
- *      tabexpand("-"+chr(9)+"!"+hb_osnewline()+"----"+chr(9)+ "!",, "+") == "-+++++++!"+hb_osnewline()+"----++++!"
+ *      tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -71,20 +71,20 @@
  *      <cFillChar|nFillChar>
  *      <cNewLineCharacters>      string indicating new line,
  *                                default is the string returned by
- *                                hb_osnewline()
+ *                                hb_eol()
  *      <cTabChar|nTabChar>       character indicating a tab stop,
  *                                default is chr(9)
  *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
  *                                should be ignored as a newline indicator,
  *                                default is .F. (functions uses chr(141))
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
