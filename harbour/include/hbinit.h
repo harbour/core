@@ -161,7 +161,9 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       }
 
 #elif defined( HB_GNUC_STARTUP ) || \
-      defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || defined( __DCC__ )
+      defined( __GNUC__ ) || \
+      defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || \
+      defined( __DCC__ )
 
    #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.

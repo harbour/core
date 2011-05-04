@@ -9939,28 +9939,45 @@ static void hb_cdxRddInit( void * cargo )
 }
 
 #if defined( HB_SIXCDX )
+
 HB_FUNC_EXTERN( _DBF ); HB_FUNC( SIXCDX ) { HB_FUNC_EXEC( _DBF ); }
-HB_INIT_SYMBOLS_BEGIN( _hb_cdx1_InitSymbols_ )
+HB_INIT_SYMBOLS_BEGIN( _hb_sixcdx1_InitSymbols_ )
 { "SIXCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX )}, NULL },
 { "SIXCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( _hb_cdx1_InitSymbols_ )
-#else
-HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFCDX ) { HB_FUNC_EXEC( _DBF ); }
-HB_INIT_SYMBOLS_BEGIN( _hb_cdx1_InitSymbols_ )
-{ "DBFCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFCDX )}, NULL },
-{ "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( _hb_cdx1_InitSymbols_ )
-#endif
+HB_INIT_SYMBOLS_END( _hb_sixcdx1_InitSymbols_ )
 
-HB_CALL_ON_STARTUP_BEGIN( _hb_cdx_rdd_init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_sixcdx_rdd_init_ )
    hb_vmAtInit( hb_cdxRddInit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_cdx_rdd_init_ )
+HB_CALL_ON_STARTUP_END( _hb_sixcdx_rdd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_cdx1_InitSymbols_
-   #pragma startup _hb_cdx_rdd_init_
+   #pragma startup _hb_sixcdx1_InitSymbols_
+   #pragma startup _hb_sixcdx_rdd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_cdx1_InitSymbols_ ) \
-                              HB_DATASEG_FUNC( _hb_cdx_rdd_init_ )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_sixcdx1_InitSymbols_ ) \
+                              HB_DATASEG_FUNC( _hb_sixcdx_rdd_init_ )
    #include "hbiniseg.h"
+#endif
+
+#else
+
+HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFCDX ) { HB_FUNC_EXEC( _DBF ); }
+HB_INIT_SYMBOLS_BEGIN( _hb_dbfcdx1_InitSymbols_ )
+{ "DBFCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFCDX )}, NULL },
+{ "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( _hb_dbfcdx1_InitSymbols_ )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_dbfcdx_rdd_init_ )
+   hb_vmAtInit( hb_cdxRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_dbfcdx1_InitSymbols_
+   #pragma startup _hb_dbfcdx_rdd_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_dbfcdx1_InitSymbols_ ) \
+                              HB_DATASEG_FUNC( _hb_dbfcdx_rdd_init_ )
+   #include "hbiniseg.h"
+#endif
+
 #endif

@@ -123,7 +123,8 @@ static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
             while( ul + 1 < nLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
                ++ul;
          }
-         nStart = ul + nDelim;
+         ul += nDelim - 1;
+         nStart = ul + 1;
       }
    }
    if( --nToken == 0 )
@@ -166,7 +167,8 @@ static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE nLen,
                while( ul + 1 < nLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
                   ++ul;
             }
-            nStart = ul + nDelim;
+            ul += nDelim - 1;
+            nStart = ul + 1;
          }
       }
       hb_arraySetCL( pArray, ++nToken, szLine + nStart, ul - nStart );

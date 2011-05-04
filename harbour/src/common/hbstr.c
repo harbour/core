@@ -497,7 +497,7 @@ double hb_numRound( double dNum, int iDec )
    doComplete5 *= HB_DBLFL_PREC_FACTOR;
 #endif
 
-   modf( doComplete5, &doComplete5i );
+   ( void ) modf( doComplete5, &doComplete5i );
 
 #if defined( __XCC__ ) || defined( __POCC__ )
    if( iDec < 16 )
@@ -522,7 +522,7 @@ double hb_numInt( double dNum )
    /* Similar hack as in round to make this functions compatible */
    dNum *= HB_DBLFL_PREC_FACTOR;
 #endif
-   modf( dNum, &dInt );
+   ( void ) modf( dNum, &dInt );
 
    return dInt;
 }
