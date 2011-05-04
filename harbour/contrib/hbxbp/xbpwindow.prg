@@ -627,7 +627,7 @@ METHOD XbpWindow:grabEvent( nEvent, oEvent )
       oP0         := oEvent:oldPos()
       oP1         := oEvent:pos()
       ::moveOwned( oP1:x() - oP0:x(), oP1:y() - oP0:y() )
-   //   SetAppEvent( xbeP_Move, { oP0:x(), oP0:y() }, { oP1:x(), oP1:y() }, Self )
+   // SetAppEvent( xbeP_Move, { oP0:x(), oP0:y() }, { oP1:x(), oP1:y() }, Self )
       RETURN .f.
    CASE QEvent_Resize                        // :resize()
       oObj_O      := oEvent:oldSize()
@@ -667,6 +667,11 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
 
    SWITCH ( nEvent )
 
+   CASE xbeP_Close
+      IF ! empty( ::oWidget )
+         ::destroy()
+      ENDIF
+      EXIT
    CASE xbeP_Keyboard
       ::keyboard( mp1 )
       EXIT

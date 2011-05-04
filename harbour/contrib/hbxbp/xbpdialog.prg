@@ -96,10 +96,8 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execEvent( nEvent, pEvent )
 
-   //METHOD   close()                               INLINE NIL
    METHOD   destroy()
 
    METHOD   showModal()
@@ -138,6 +136,23 @@ METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+#if 0
+Qt::FramelessWindowHint
+
+Qt_CustomizeWindowHint
+Qt_WindowTitleHint
+Qt_WindowSystemMenuHint
+Qt_WindowMinimizeButtonHint
+Qt_WindowMaximizeButtonHint
+Qt_WindowMinMaxButtonsHint
+Qt_WindowCloseButtonHint
+Qt_WindowContextHelpButtonHint
+Qt_WindowShadeButtonHint
+Qt_WindowStaysOnTopHint
+Qt_WindowStaysOnBottomHint
+Qt_WindowOkButtonHint
+Qt_WindowCancelButtonHint
+#endif
 
 METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL nFlags, nnFlags
@@ -155,7 +170,11 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
-      ::oWidget := QMainWindow()
+      IF ::taskList
+         ::oWidget := QMainWindow()
+      ELSE
+         ::oWidget := QMainWindow( SetAppWindow() )
+      ENDIF
       ::oWidget:setMouseTracking( .t. )
       ::oWidget:setObjectName( "mainWindow" )
    ENDIF
@@ -168,32 +187,38 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setCentralWidget( ::drawingArea:oWidget )
    ENDIF
 
-   nFlags := ::oWidget:windowFlags()
-   nnFlags := nFlags
-   IF ! ::maxButton
-      IF hb_bitAnd( nFlags, Qt_WindowMaximizeButtonHint ) == Qt_WindowMaximizeButtonHint
-         nFlags -= Qt_WindowMaximizeButtonHint
+   nnFlags := ::oWidget:windowFlags()
+   nFlags  := Qt_Window
+
+   IF ::border == XBPDLG_NO_BORDER
+      nFlags := hb_bitOr( nFlags, Qt_FramelessWindowHint )
+
+   ELSE
+      nFlags := hb_bitOr( nFlags, Qt_CustomizeWindowHint )
+      nFlags := hb_bitOr( nFlags, Qt_WindowCloseButtonHint )
+
+      IF ::titleBar
+         nFlags := hb_bitOr( nFlags, Qt_WindowTitleHint )
+      ENDIF
+      IF ::sysMenu
+         nFlags := hb_bitOr( nFlags, Qt_WindowSystemMenuHint )
+      ENDIF
+      IF ::maxButton
+         nFlags := hb_bitOr( nFlags, Qt_WindowMaximizeButtonHint )
+      ENDIF
+      IF ::minButton
+         nFlags := hb_bitOr( nFlags, Qt_WindowMinimizeButtonHint )
       ENDIF
    ENDIF
-   IF ! ::minButton
-      IF hb_bitAnd( nFlags, Qt_WindowMinimizeButtonHint ) == Qt_WindowMinimizeButtonHint
-         nFlags -= Qt_WindowMinimizeButtonHint
-      ENDIF
+
+   IF ::alwaysOnTop
+      nFlags += hb_bitOr( nFlags, Qt_WindowStaysOnTopHint )
    ENDIF
-   #if 0
-   IF !( ::taskList )
-      IF hb_bitAnd( nFlags, Qt_Window ) == Qt_Window
-         nFlags -= Qt_Window
-      ENDIF
-      /* This hides the taskbar entry but title bar is not visible */
-      nFlags += Qt_ToolTip + Qt_WindowTitleHint
-   ENDIF
-   #endif
    IF nnFlags != nFlags
       ::oWidget:setWindowFlags( nFlags )
    ENDIF
 
-   IF !empty( ::title )
+   IF ! empty( ::title )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
    IF hb_isChar( ::icon )
@@ -201,6 +226,18 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    ::setPosAndSize()
+
+   IF ::border == XBPDLG_RAISEDBORDERTHICK_FIXED   .OR. ;
+      ::border == XBPDLG_RAISEDBORDERTHIN_FIXED    .OR. ;
+      ::border == XBPDLG_RECESSEDBORDERTHICK_FIXED .OR. ;
+      ::border == XBPDLG_RECESSEDBORDERTHIN_FIXED
+
+      ::oWidget:setMinimumWidth( ::oWidget:width() )
+      ::oWidget:setMaximumWidth( ::oWidget:width() )
+      ::oWidget:setMinimumHeight( ::oWidget:height() )
+      ::oWidget:setMaximumHeight( ::oWidget:height() )
+   ENDIF
+
 
    ::nFlags := nFlags
    IF __objGetClsName( ::oParent ) == "XBPDRAWINGAREA"
@@ -233,11 +270,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpDialog:destroy()
 
-   HB_TRACE( HB_TR_DEBUG,  ". " )
-   HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
-
    IF ! empty( ::oMdi )
-//      ::oParent:oWidget:removeSubWindow( ::oMdi )
       ::oMdi := NIL
    ENDIF
 
@@ -254,9 +287,6 @@ METHOD XbpDialog:destroy()
    ::oMenu := NIL
 
    ::XbpWindow:destroy()
-
-   HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
-   HB_TRACE( HB_TR_DEBUG,  ". " )
 
    RETURN Self
 
@@ -279,7 +309,7 @@ METHOD XbpDialog:execEvent( nEvent, pEvent )
       SetAppEvent( xbeP_Close, NIL, NIL, Self )
    ENDCASE
 
-   RETURN .T.
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 
