@@ -2204,19 +2204,23 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
          hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
       else if( pState->pFuncOut || pState->pFuncEnd )
       {
-         char * pBuffer = ( char * ) hb_xgrab( nSize );
          PHB_PP_TOKEN pToken;
          HB_BOOL fEOL = HB_FALSE;
 
-         nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
-
-         if( pState->iStreamDump == HB_PP_STREAM_C )
-            hb_strRemEscSeq( pBuffer, &nSize );
-
          if( ! pState->pStreamBuffer )
             pState->pStreamBuffer = hb_membufNew();
-         hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
-         hb_xfree( pBuffer );
+
+         if( nSize )
+         {
+            char * pBuffer = ( char * ) hb_xgrab( nSize );
+
+            nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
+            if( pState->iStreamDump == HB_PP_STREAM_C )
+               hb_strRemEscSeq( pBuffer, &nSize );
+
+            hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
+            hb_xfree( pBuffer );
+         }
 
          /* insert new tokens into incoming buffer
           * so they can be preprocessed
