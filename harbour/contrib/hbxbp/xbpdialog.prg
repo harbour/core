@@ -88,7 +88,7 @@ CLASS XbpDialog FROM XbpWindow
 
    DATA     alwaysOnTop                           INIT  .F.
    DATA     border                                INIT  XBPDLG_RAISEDBORDERTHICK
-   DATA     titleBar                              INIT  .F.
+   DATA     titleBar                              INIT  .T.
    DATA     moveWithOwner                         INIT  .T.
    DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
    DATA     sysMenu                               INIT  .T.
@@ -136,23 +136,6 @@ METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-#if 0
-Qt::FramelessWindowHint
-
-Qt_CustomizeWindowHint
-Qt_WindowTitleHint
-Qt_WindowSystemMenuHint
-Qt_WindowMinimizeButtonHint
-Qt_WindowMaximizeButtonHint
-Qt_WindowMinMaxButtonsHint
-Qt_WindowCloseButtonHint
-Qt_WindowContextHelpButtonHint
-Qt_WindowShadeButtonHint
-Qt_WindowStaysOnTopHint
-Qt_WindowStaysOnBottomHint
-Qt_WindowOkButtonHint
-Qt_WindowCancelButtonHint
-#endif
 
 METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL nFlags, nnFlags
@@ -195,24 +178,25 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ELSE
       nFlags := hb_bitOr( nFlags, Qt_CustomizeWindowHint )
-      nFlags := hb_bitOr( nFlags, Qt_WindowCloseButtonHint )
 
       IF ::titleBar
          nFlags := hb_bitOr( nFlags, Qt_WindowTitleHint )
-      ENDIF
-      IF ::sysMenu
-         nFlags := hb_bitOr( nFlags, Qt_WindowSystemMenuHint )
-      ENDIF
-      IF ::maxButton
-         nFlags := hb_bitOr( nFlags, Qt_WindowMaximizeButtonHint )
-      ENDIF
-      IF ::minButton
-         nFlags := hb_bitOr( nFlags, Qt_WindowMinimizeButtonHint )
+
+         IF ::sysMenu
+            nFlags := hb_bitOr( nFlags, Qt_WindowCloseButtonHint )
+            nFlags := hb_bitOr( nFlags, Qt_WindowSystemMenuHint )
+         ENDIF
+         IF ::maxButton
+            nFlags := hb_bitOr( nFlags, Qt_WindowMaximizeButtonHint )
+         ENDIF
+         IF ::minButton
+            nFlags := hb_bitOr( nFlags, Qt_WindowMinimizeButtonHint )
+         ENDIF
       ENDIF
    ENDIF
 
    IF ::alwaysOnTop
-      nFlags += hb_bitOr( nFlags, Qt_WindowStaysOnTopHint )
+      nFlags := hb_bitOr( nFlags, Qt_WindowStaysOnTopHint )
    ENDIF
    IF nnFlags != nFlags
       ::oWidget:setWindowFlags( nFlags )
@@ -230,7 +214,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::border == XBPDLG_RAISEDBORDERTHICK_FIXED   .OR. ;
       ::border == XBPDLG_RAISEDBORDERTHIN_FIXED    .OR. ;
       ::border == XBPDLG_RECESSEDBORDERTHICK_FIXED .OR. ;
-      ::border == XBPDLG_RECESSEDBORDERTHIN_FIXED
+      ::border == XBPDLG_RECESSEDBORDERTHIN_FIXED  .OR. ;
+      ::border == XBPDLG_DLGBORDER
 
       ::oWidget:setMinimumWidth( ::oWidget:width() )
       ::oWidget:setMaximumWidth( ::oWidget:width() )

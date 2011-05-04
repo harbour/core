@@ -406,6 +406,11 @@ METHOD XbpWindow:setQtProperty( cProperty )
 METHOD XbpWindow:postCreate()
 
    ::status := iif( ::oWidget:hasValidPointer(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
+
+   IF ! empty( ::toolTipText ) .AND. hb_isChar( ::toolTipText )
+      ::oWidget:setTooltip( ::toolTipText )
+   ENDIF
+
    ::setStyleSheet()
 
    RETURN Self
@@ -1033,6 +1038,9 @@ METHOD XbpWindow:setModalState( nState )
    CASE nState == XBP_DISP_SYSMODAL
       // TODO:
    ENDCASE
+
+   ::oWidget:hide()
+   ::oWidget:show()
 
    RETURN Self
 
