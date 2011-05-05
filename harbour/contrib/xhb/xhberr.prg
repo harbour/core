@@ -75,6 +75,21 @@
 
 REQUEST Select, Alias, RecNo, DbFilter, DbRelation, IndexOrd, IndexKey
 
+STATIC s_cErrorLog := "error.log"
+STATIC s_lErrorLogAppend := .F.
+
+FUNCTION xhb_ErrorLog( cErrorLog, lErrorLogAppend )
+   LOCAL aValueOld := { s_cErrorLog, s_lErrorLogAppend }
+
+   IF hb_isString( cErrorLog )
+      s_cErrorLog := cErrorLog
+   ENDIF
+   IF hb_isLogical( lErrorLogAppend )
+      s_lErrorLogAppend := lErrorLogAppend
+   ENDIF
+
+   RETURN aValueOld
+
 PROCEDURE xhb_ErrorSys()
    ErrorBlock( { | oError | xhb_DefError( oError ) } )
    RETURN
@@ -269,8 +284,8 @@ Return cMessage
 STATIC FUNCTION LogError( oerr )
 
      LOCAL cScreen
-     LOCAL cLogFile    := "error.log"  // error log file name
-     LOCAL lAppendLog  := .T.          // .f. = create a new error log (default) .t. = append to a existing one.
+     LOCAL cLogFile    := s_cErrorLog       // error log file name
+     LOCAL lAppendLog  := s_lErrorLogAppend // .F. = create a new error log (default) .t. = append to a existing one.
      LOCAL nStart      := 1
      LOCAL nCellSize
      LOCAL nRange
@@ -311,11 +326,11 @@ STATIC FUNCTION LogError( oerr )
      Endif
 
 
-     If nHandle < 3 .and. lower( cLogFile ) != "error.log"
+     If nHandle < 3 .and. !( lower( cLogFile ) == "error.log" )
         // Force creating error.log in case supplied log file cannot
         // be created for any reason
         cLogFile := "error.log"
-        nHandle := Fcreate( cLogFile, FC_NORMAL )
+        nHandle := FCreate( cLogFile, FC_NORMAL )
      Endif
 
      If nHandle < 3
