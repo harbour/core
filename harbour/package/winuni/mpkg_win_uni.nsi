@@ -111,6 +111,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%bin\QtCore4.dll"
   File "$%HB_ABSROOT%bin\QtGui4.dll"
   File "$%HB_ABSROOT%bin\QtNetwork4.dll"
+  File "$%HB_ABSROOT%bin\QtSql4.dll"
   File "$%HB_ABSROOT%bin\uic.exe"
   File "$%HB_ABSROOT%bin\rcc.exe"
   File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt"

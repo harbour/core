@@ -79,11 +79,13 @@ xcopy /y       "%HB_WITH_QT%\..\bin\mingwm10.dll"                               
 xcopy /y       "%HB_WITH_QT%\..\bin\QtCore4.dll"                                          %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\QtGui4.dll"                                           %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\QtNetwork4.dll"                                       %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\QtSql4.dll"                                           %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\uic.exe"                                              %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\bin\rcc.exe"                                              %HB_ABSROOT%bin\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtCore4.a"                                         %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtGui4.a"                                          %HB_ABSROOT%lib\win\mingw\
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtNetwork4.a"                                      %HB_ABSROOT%lib\win\mingw\
+xcopy /y       "%HB_WITH_QT%\..\lib\libQtSql4.a"                                          %HB_ABSROOT%lib\win\mingw\
  copy /y       "%HB_WITH_QT%\..\LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt
  copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt
 
@@ -139,6 +141,7 @@ if exist "%HB_DR%bin\mingwm10.dll"                  echo "%HB_DR%bin\mingwm10.dl
 if exist "%HB_DR%bin\QtCore4.dll"                   echo "%HB_DR%bin\QtCore4.dll"                   >> _hbfiles
 if exist "%HB_DR%bin\QtGui4.dll"                    echo "%HB_DR%bin\QtGui4.dll"                    >> _hbfiles
 if exist "%HB_DR%bin\QtNetwork4.dll"                echo "%HB_DR%bin\QtNetwork4.dll"                >> _hbfiles
+if exist "%HB_DR%bin\QtSql4.dll"                    echo "%HB_DR%bin\QtSql4.dll"                    >> _hbfiles
 if exist "%HB_DR%bin\uic.exe"                       echo "%HB_DR%bin\uic.exe"                       >> _hbfiles
 if exist "%HB_DR%bin\rcc.exe"                       echo "%HB_DR%bin\rcc.exe"                       >> _hbfiles
 if exist "%HB_DR%bin\Qt_LICENSE_LGPL.txt"           echo "%HB_DR%bin\Qt_LICENSE_LGPL.txt"           >> _hbfiles
