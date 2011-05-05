@@ -1230,54 +1230,57 @@ HARBOUR
    Always evaluate these points before reporting an issue on the developers'
    mailing list.
 
-   1. Make sure to have carefully read this document.
-   2. Make sure to do a 'make clean' before doing a build after refreshing
-      the sources.
-   3. If that still fails, make sure to install fresh source tree in a new
-      local directory and start over. See HOW TO GET HARBOUR
-      section for instructions to get the source.
-   4. If you are doing a cross-build, make sure to have rebuilt the native
-      Harbour executables for your host platform. See 'HB_HOST_BIN'
-      build messages to find their location.
-   5. Keep your PATH clean from old, mixed compiler tools or other Harbour
-      versions when building Harbour. The surest way to achieve this is to
-      leave only C compiler directory in PATH:
-         set PATH=C:\<compilerdir>
-   6. Remove all old, unnecessary environment variables from your environment.
-      Use only those documented in this file.
-      Some environment variable settings which are commonly believed by
-      users to be useful, but which in reality are either not needed or
-      not even used by Harbour build process and hbmk2.
-      You can delete them:
-         set HB_DIR=<Harbour root dir>
-         set HB_PATH=<Harbour root dir>
-         set HRB_DIR=<Some Harbour dir>
-         set INCLUDE=<Harbour include dir>
-         set LIB=<Harbour lib dir>
-         set HB_GT_LIB=
-         set HB_*_INSTALL=
-         set HB_INSTALL_???=
-         set HB_INC_*=
-         set HB_DIR_*=
-         set HB_LEX=
-   7. Remove any Harbour build settings documented in OPTIONS AVAILABLE WHEN
-      BUILDING HARBOUR section.
-   8. Try to do no or only small modifications at once to command examples
-      included in this document. If it doesn't work, fall back to documented
-      examples as is.
-   9. If everything fails and you are to report a problem to the developers,
-      make sure to include your OS version/language/CPU architecture,
-      Harbour revision, C compiler name/release and version, environment
-      variables and verbose log output containing _both stderr and stdout in
-      one combined stream_ (use 'make > log.txt 2>&1'). Enable verbose
-      mode using 'HB_BUILD_VERBOSE=yes'.
-      Complete log output is rarely necessary, but always make sure to include
-      the top of the output (lines starting with '!') and the area where
-      problematic behavior occurred _first_. Make sure to not only include
-      a link failure or a make tool failure only, as it's most of the time
-      not enough information. Compress your log using zip or gzip if it is
-      larger than 25KB.
-      Without these, your chances are lower to get useful or any response.
+   1.  Make sure to have carefully read this document.
+   2.  Make sure to do a 'make clean' before doing a build after refreshing
+       the sources.
+   3.  If that still fails, make sure to install fresh source tree in a new
+       local directory and start over. See HOW TO GET HARBOUR
+       section for instructions to get the source.
+   4.  If you are doing a cross-build, make sure to have rebuilt the native
+       Harbour executables for your host platform. See 'HB_HOST_BIN'
+       build messages to find their location.
+   5.  Keep your PATH clean from old, mixed compiler tools or other Harbour
+       versions when building Harbour. The surest way to achieve this is to
+       leave only C compiler directory in PATH:
+          set PATH=C:\<compilerdir>
+   6.  Remove all old, unnecessary environment variables from your environment.
+       Use only those documented in this file.
+       Some environment variable settings which are commonly believed by
+       users to be useful, but which in reality are either not needed or
+       not even used by Harbour build process and hbmk2.
+       You can delete them:
+          set HB_DIR=<Harbour root dir>
+          set HB_PATH=<Harbour root dir>
+          set HRB_DIR=<Some Harbour dir>
+          set INCLUDE=<Harbour include dir>
+          set LIB=<Harbour lib dir>
+          set HB_GT_LIB=
+          set HB_*_INSTALL=
+          set HB_INSTALL_???=
+          set HB_INC_*=
+          set HB_DIR_*=
+          set HB_LEX=
+   7.  Remove any Harbour build settings documented in OPTIONS AVAILABLE WHEN
+       BUILDING HARBOUR section.
+   8.  Try to do no or only small modifications at once to command examples
+       included in this document. If it doesn't work, fall back to documented
+       examples as is.
+   9.  If everything fails and you are to report a problem to the developers,
+       make sure to include your OS version/language/CPU architecture,
+       Harbour revision, C compiler name/release and version, environment
+       variables and verbose log output containing _both stderr and stdout in
+       one combined stream_ (use 'make > log.txt 2>&1'). Enable verbose
+       mode using 'HB_BUILD_VERBOSE=yes'.
+       Complete log output is rarely necessary, but always make sure to include
+       the top of the output (lines starting with '!') and the area where
+       problematic behavior occurred _first_. Make sure to not only include
+       a link failure or a make tool failure only, as it's most of the time
+       not enough information. Compress your log using zip or gzip if it is
+       larger than 25KB.
+       Without these, your chances are lower to get useful or any response.
+   10. If you are to report a build problem with a Harbour application,
+       most of the above point applies, plus make sure to use '-trace'
+       command line option when running hbmk2.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
