@@ -156,7 +156,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       IF ::taskList
          ::oWidget := QMainWindow()
       ELSE
-         ::oWidget := QMainWindow( SetAppWindow() )
+         ::oWidget := QMainWindow( SetAppWindow():oWidget )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
       ::oWidget:setObjectName( "mainWindow" )
