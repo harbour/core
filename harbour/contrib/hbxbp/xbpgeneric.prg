@@ -221,24 +221,26 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 
    HB_SYMBOL_UNUSED( nTimeOut )
 
-   DO WHILE ! empty( t_oEventLoop )
-      t_oEventLoop:processEvents( QEventLoop_AllEvents )
+   t_oEventLoop:processEvents( QEventLoop_AllEvents )
 
-      IF ! empty( t_events )
-         nEvent := t_events[ 1, 1 ]
-         mp1    := t_events[ 1, 2 ]
-         mp2    := t_events[ 1, 3 ]
-         oXbp   := t_events[ 1, 4 ]
+   IF ! empty( t_events )
+      nEvent := t_events[ 1, 1 ]
+      mp1    := t_events[ 1, 2 ]
+      mp2    := t_events[ 1, 3 ]
+      oXbp   := t_events[ 1, 4 ]
 
-         hb_adel( t_events, 1, .t. )
+      hb_adel( t_events, 1, .t. )
 
-         EXIT
-      ENDIF
+   ELSE
+      oXbp := SetAppWindow()
 
-      hb_releaseCPU()
-   ENDDO
+   ENDIF
 
-   s_hLastEvent[ hb_threadID() ] := { nEvent, mp1, mp2, oXbp }
+   hb_releaseCPU()
+
+   IF nEvent != 0
+      s_hLastEvent[ hb_threadID() ] := { nEvent, mp1, mp2, oXbp }
+   ENDIF
 
    RETURN nEvent
 

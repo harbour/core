@@ -143,9 +143,9 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpPushButton:execSlot( cSlot, p )
 
    DO CASE
-   CASE cSlot == "clicked()" // .OR. cSlot == "pressed()"
+   CASE cSlot == "clicked()"
       ::activate()
-   CASE cSlot == "keyPressed()"
+   CASE cSlot == "QEvent_KeyPress"
       IF hbxbp_QKeyEventToAppEvent( p ) == xbeK_ENTER
          ::oWidget:click()
       ENDIF
@@ -166,13 +166,15 @@ METHOD XbpPushButton:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPushButton:connect()
-   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( "clicked()"    , {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( QEvent_KeyPress, {|e| ::execSlot( "QEvent_KeyPress", e ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPushButton:disconnect()
    ::oWidget:disconnect( "clicked()" )
+   ::oWidget:disconnect( QEvent_KeyPress )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -530,6 +530,7 @@ FUNCTION hbxbp_appEventToQKeyEvent( key )
    CASE xbeK_CTRL_ENTER
       RETURN Qt_Key_Enter
    CASE xbeK_TAB
+      RETURN Qt_Key_Tab
    CASE xbeK_SH_TAB
       RETURN Qt_Key_Backtab
    CASE xbeK_CTRL_TAB

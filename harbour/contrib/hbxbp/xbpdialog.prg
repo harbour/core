@@ -279,7 +279,6 @@ METHOD XbpDialog:destroy()
 
 METHOD XbpDialog:execEvent( nEvent, pEvent )
 
-   HB_SYMBOL_UNUSED( pEvent )
    DO CASE
 
    CASE nEvent == QEvent_WindowActivate

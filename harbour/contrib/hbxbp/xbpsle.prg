@@ -219,7 +219,7 @@ METHOD XbpSLE:execSlot( cSlot, p, p2 )
 
    CASE cSlot == "returnPressed()"
       ::sl_editBuffer := ::oWidget:text()
-      ::returnPressed()
+      PostAppEvent( xbeP_Keyboard, xbeK_TAB, NIL, Self )
 
    CASE cSlot == "selectionChanged()"
 
