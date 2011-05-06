@@ -376,8 +376,9 @@ HARBOUR
    components:
       HB_QT_BUILD_STATIC=yes (only meaningful on Windows platform)
 
-   You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools
-   by using HB_QTPATH and optionally HB_QTPOSTFIX envvars, f.e.:
+   You can override autodetection of QT 'moc', 'rcc' and 'uic' tools
+   by using HB_QTPATH and optionally HB_QTPOSTFIX envvars. This may
+   only be necessary on some *nix systems. F.e.:
       HB_QTPATH=/opt/qt45/bin/
       HB_QTPOSTFIX=
 
