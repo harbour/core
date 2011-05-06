@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-HB_FUNC( __TIP_URL_ENCODE )
+HB_FUNC( TIP_URLENCODE )
 {
    const char * cData = hb_parc( 1 );
    HB_ISIZ nLen = hb_parclen( 1 );
@@ -116,7 +116,7 @@ HB_FUNC( __TIP_URL_ENCODE )
    hb_retclen_buffer( cRet, nPosRet );
 }
 
-HB_FUNC( __TIP_URL_DECODE )
+HB_FUNC( TIP_URLDECODE )
 {
    const char * cData = hb_parc( 1 );
    HB_ISIZ nLen = hb_parclen( 1 );

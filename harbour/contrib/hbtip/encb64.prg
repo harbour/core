@@ -72,4 +72,4 @@ METHOD Encode( cData ) CLASS TIPEncoderBase64
    RETURN __tip_base64_encode( cData, ::bHttpExcept )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
-   RETURN __tip_base64_decode( cData )
+   RETURN hb_base64decode( cData )

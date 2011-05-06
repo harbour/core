@@ -132,9 +132,9 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
          cData += cTmp + "="
-         cTmp := __tip_url_Encode( hb_cStr( hb_HValueAt( xPostData, nI ) ) )
+         cTmp := tip_URLEncode( hb_cStr( hb_HValueAt( xPostData, nI ) ) )
          cData += cTmp
          IF nI != y
             cData += "&"
@@ -144,9 +144,9 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
          cData += cTmp + "="
-         cTmp := __tip_url_Encode( hb_cStr( xPostData[ nI, 2 ] ) )
+         cTmp := tip_URLEncode( hb_cStr( xPostData[ nI, 2 ] ) )
          cData += cTmp
          IF nI != y
             cData += "&"
@@ -514,17 +514,17 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
    ELSEIF hb_isHash( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
          cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cTmp + '"' + cCrlf + cCrLf
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
          cData += cTmp + cCrLf
       NEXT
    ELSEIF hb_isArray( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
          cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cTmp + '"' + cCrlf + cCrLf
-         cTmp := __tip_url_Encode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
          cData += cTmp + cCrLf
       NEXT
 

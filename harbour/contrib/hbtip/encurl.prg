@@ -63,7 +63,7 @@ METHOD New() CLASS TIPEncoderURL
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderURL
-   RETURN __tip_url_encode( cData )
+   RETURN tip_URLencode( cData )
 
 METHOD Decode( cData ) CLASS TIPEncoderURL
-   RETURN __tip_url_decode( cData )
+   RETURN tip_URLdecode( cData )

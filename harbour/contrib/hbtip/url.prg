@@ -207,8 +207,8 @@ METHOD AddGetForm( xPostData )
    IF hb_isHash( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cData += __tip_url_Encode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
-         cData += __tip_url_Encode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
+         cData += tip_URLEncode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
+         cData += tip_URLEncode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
          IF nI != y
             cData += "&"
          ENDIF
@@ -216,8 +216,8 @@ METHOD AddGetForm( xPostData )
    ELSEIF hb_isArray( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cData += __tip_url_Encode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) ) + "="
-         cData += __tip_url_Encode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
+         cData += tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) ) + "="
+         cData += tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
          IF nI != y
             cData += "&"
          ENDIF
