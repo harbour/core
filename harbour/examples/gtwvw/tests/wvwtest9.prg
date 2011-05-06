@@ -510,6 +510,8 @@ FUNCTION DEMO_Browse()
 
    local oMouse, nHScrollBar, nVScrollBar
 
+   local aColumnsSep, tmp
+
    //x init window
    nCurWindow := WVW_nOpenWindow("BROWSE Demo", nTop, nLeft, nBottom, nRight)
    if nCurWindow==0
@@ -553,9 +555,14 @@ FUNCTION DEMO_Browse()
    WVW_SetPen( nStyle, 0, rgb( 210,1210,210 ) )
    WVW_SetIcon(, 'DIA_EXCL.ico' )
 
+   aColumnsSep := Array( oBrowse:colCount )
+   FOR EACH tmp IN aColumnsSep
+      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep()
+   NEXT
+
    AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
    AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawGridHorz( nWindow, oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
+   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, len( aColumnsSep ) ) } )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow(),maxcol()-15, , , {|| xDebugInfo() } ))

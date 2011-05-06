@@ -130,6 +130,10 @@ FUNCTION xBrowse1()
    LOCAL nCursor := setCursor( 0 )
    LOCAL nWin
 
+ #IFDEF __GTWVW__
+   LOCAL aColumnsSep, tmp
+ #ENDIF
+
    USE '..\..\..\tests\TEST' NEW
    if NetErr()
       return nil
@@ -162,9 +166,14 @@ FUNCTION xBrowse1()
  #IFDEF __GTWVW__
    Wvw_SetPen( 0, 0, rgb( 210,1210,210 ) )
 
+   aColumnsSep := Array( oBrowse:colCount )
+   FOR EACH tmp IN aColumnsSep
+      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep()
+   NEXT
+
    AddMiscObjects( nWin, {|nWindow| WVW_DrawBoxRecessed( nWindow, nTop+1, nLeft+1, nBottom-1, nRight-1 ) } )
    AddMiscObjects( nWin, {|nWindow| WVW_DrawGridHorz( nWindow, oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nWin, {|nWindow| WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
+   AddMiscObjects( nWin, {|nWindow| WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, len( aColumnsSep ) ) } )
  #ENDIF
 
    While !lEnd
