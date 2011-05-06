@@ -249,6 +249,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::postCreate()
 
+   ::oWidget:setAttribute( Qt_WA_DeleteOnClose, .f. )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -289,8 +291,8 @@ METHOD XbpDialog:execEvent( nEvent, pEvent )
 
    CASE nEvent == QEvent_Close
       pEvent:ignore()
-      ::close()
       SetAppEvent( xbeP_Close, NIL, NIL, Self )
+
    ENDCASE
 
    RETURN .F.

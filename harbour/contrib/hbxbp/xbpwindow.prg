@@ -673,11 +673,7 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
    SWITCH ( nEvent )
 
    CASE xbeP_Close
-      #if 0
-      IF ! empty( ::oWidget )
-         ::destroy()
-      ENDIF
-      #endif
+      ::close()
       EXIT
    CASE xbeP_Keyboard
       ::keyboard( mp1 )
