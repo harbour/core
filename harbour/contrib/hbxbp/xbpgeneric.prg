@@ -210,8 +210,6 @@ PROCEDURE SetAppEvent( nEvent, mp1, mp2, oXbp )
 
    aadd( t_events, { nEvent, mp1, mp2, iif( empty( oXbp ), t_oAppWindow, oXbp ) } )
 
-   /* HB_TRACE( HB_TR_ALWAYS, len( t_events ) ) */
-
    RETURN
 
 /*----------------------------------------------------------------------*/
