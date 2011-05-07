@@ -93,6 +93,10 @@ CLASS XbpDialog FROM XbpWindow
    DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
    DATA     sysMenu                               INIT  .T.
 
+   DATA     modalResult                           INIT  XBP_MRESULT_NONE
+   DATA     l_modalState                          INIT .f.
+   METHOD   setModalResult( nResult )             INLINE ::modalResult := nResult
+
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -251,6 +255,10 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget:setAttribute( Qt_WA_DeleteOnClose, .f. )
 
+   IF empty( SetAppWindow() )
+      SetAppWindow( Self )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -332,14 +340,33 @@ METHOD XbpDialog:minSize( aSize )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:showModal()
+   LOCAL nEvent, mp1, mp2, oXbp
 
    ::hide()
-   ::oWidget:setWindowModality( 2 )
+   ::oWidget:setWindowModality( XBP_DISP_APPMODAL )
    ::show()
    ::is_hidden      := .f.
    ::lHasInputFocus := .t.
+   ::l_modalState   := .t.
 
-   RETURN .t.
+   nEvent := 0
+   DO WHILE nEvent != xbeP_Close
+      nEvent := AppEvent( @mp1, @mp2, @oXbp )
+      IF ::modalResult != XBP_MRESULT_NONE
+         EXIT
+      ENDIF
+      oXbp:handleEvent( nEvent, mp1, mp2 )
+   ENDDO
+   IF nEvent == xbeP_Close
+      ::modalResult := XBP_MRESULT_CANCEL
+   ENDIF
+
+   ::l_modalState := .f.
+   ::hide()
+   ::oWidget:setWindowModality( XBP_DISP_MODELESS )
+   ::show()
+
+   RETURN ::modalResult
 
 /*----------------------------------------------------------------------*/
 

@@ -145,10 +145,22 @@ METHOD XbpPushButton:execSlot( cSlot, p )
    DO CASE
    CASE cSlot == "clicked()"
       ::activate()
+      IF ::oParent:className() == "XBPDRAWINGAREA"
+         IF ::oParent:oParent:l_modalState
+            IF ::default
+               ::oParent:oParent:setModalResult( XBP_MRESULT_OK )
+            ENDIF
+            IF ::cancel
+               ::oParent:oParent:setModalResult( XBP_MRESULT_CANCEL )
+            ENDIF
+         ENDIF
+      ENDIF
+
    CASE cSlot == "QEvent_KeyPress"
       IF hbxbp_QKeyEventToAppEvent( p ) == xbeK_ENTER
          ::oWidget:click()
       ENDIF
+
    ENDCASE
 
    RETURN nil

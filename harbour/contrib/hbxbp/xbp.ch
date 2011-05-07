@@ -445,6 +445,13 @@
 
 #define APPTYPE_PM                                3
 
+#define XBP_MRESULT_NONE                          0
+#define XBP_MRESULT_OK                            1
+#define XBP_MRESULT_CANCEL                        2
+#define XBP_MRESULT_RETRY                         4
+#define XBP_MRESULT_YESTOALL                      8
+#define XBP_MRESULT_ERROR                         ( -1 )
+
 /*----------------------------------------------------------------------*/
 /*                      Harbour Parts Constants                         */
 /*----------------------------------------------------------------------*/
