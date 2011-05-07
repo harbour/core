@@ -505,7 +505,7 @@ METHOD xbpMenuBar:execSlot( cSlot, p )
    IF ! empty( p ) .AND. ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
       IF cSlot == "triggered(bool)"
          IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
-            eval( ::aMenuItems[ nIndex,4 ] )
+            eval( ::aMenuItems[ nIndex,4 ], nIndex, NIL, Self )
 
          ELSE
             ::itemSelected( nIndex )
