@@ -400,3 +400,55 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    }
 #endif
 }
+
+HB_FUNC( WAPI_GETSYSTEMDIRECTORY )
+{
+#if defined( HB_OS_WIN_CE )
+   hb_retc_const( "\\Windows" );
+#else
+   UINT nLen = GetSystemDirectory( NULL, 0 );
+
+   if( nLen )
+   {
+      LPTSTR buffer = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+
+      nLen = GetSystemDirectory( buffer, nLen );
+      hbwapi_SetLastError( GetLastError() );
+
+      HB_RETSTRLEN( buffer, nLen );
+
+      hb_xfree( buffer );
+   }
+   else
+   {
+      hbwapi_SetLastError( GetLastError() );
+      hb_retc_null();
+   }
+#endif
+}
+
+HB_FUNC( WAPI_GETWINDOWSDIRECTORY )
+{
+#if defined( HB_OS_WIN_CE )
+   hb_retc_const( "\\Windows" );
+#else
+   UINT nLen = GetWindowsDirectory( NULL, 0 );
+
+   if( nLen )
+   {
+      LPTSTR buffer = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+
+      nLen = GetWindowsDirectory( buffer, nLen );
+      hbwapi_SetLastError( GetLastError() );
+
+      HB_RETSTRLEN( buffer, nLen );
+
+      hb_xfree( buffer );
+   }
+   else
+   {
+      hbwapi_SetLastError( GetLastError() );
+      hb_retc_null();
+   }
+#endif
+}
