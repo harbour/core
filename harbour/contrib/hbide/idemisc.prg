@@ -1486,7 +1486,7 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
 
    DEFAULT lSubs TO .t.
 
-   IF right( cRootPath, 1 ) != hb_ps()
+   IF !( right( cRootPath, 1 ) == hb_ps() )
       cRootPath += hb_ps()
    ENDIF
    cRootPath := hbide_pathToOSPath( cRootPath )
@@ -1496,7 +1496,7 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
    IF lSubs
       aDir := directory( cRootPath + "*", "D" )
       FOR EACH a_ IN aDir
-         IF a_[ 5 ] == "D" .AND. left( a_[ 1 ], 1 ) != "."
+         IF a_[ 5 ] == "D" .AND. !( left( a_[ 1 ], 1 ) == "." )
             hbide_fetchSubPaths( @aPaths, cRootPath + a_[ 1 ] )
          ENDIF
       NEXT
@@ -1662,7 +1662,7 @@ FUNCTION hbide_groupSources( cMode, a_ )
 
       FOR EACH s IN a_
          s := alltrim( s )
-         IF left( s, 1 ) != "#"
+         IF !( left( s, 1 ) == "#" )
             cTyp := hbide_sourceType( s )
 
             IF ( n := ascan( aSrc, {|e| cTyp == e } ) ) > 0

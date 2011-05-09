@@ -806,9 +806,9 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
             ::aViewsInfo[ n, 3 ] := p1[ 1 ]
             ::aViewsInfo[ n, 4 ] := p1[ 2 ]
          ENDIF
-         IF p1[ 2 ] >= 8 .AND. ::cWrkView != p:objectName()
+         IF p1[ 2 ] >= 8 .AND. !( ::cWrkView == p:objectName() )
             ::setView( p:objectName() )
-            IF p:objectName() != "Stats" .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
+            IF !( p:objectName() == "Stats" ) .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
                oEdit:setDocumentProperties()
                oEdit:qCoEdit:relayMarkButtons()
                oEdit:qCoEdit:toggleLineNumbers()
@@ -859,7 +859,7 @@ METHOD IdeDocks:stackZoom( nMode )
       IF ::nViewStyle == 4
          nT := 0
          FOR EACH qMdi IN ::oIde:aMdies
-            IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+            IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
                qRect := qMdi:geometry()
                nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
                qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
@@ -869,7 +869,7 @@ METHOD IdeDocks:stackZoom( nMode )
       ELSE
          nL := 0
          FOR EACH qMdi IN ::oIde:aMdies
-            IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+            IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
                qRect := qMdi:geometry()
                nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
                qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
@@ -896,7 +896,7 @@ METHOD IdeDocks:stackHorizontally()
    nL     := 0
 
    FOR EACH qMdi IN ::oIde:aMdies
-      IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+      IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
          qMdi:setGeometry( QRect( nL, nT, nW, nH ) )
          nL += nW
       ENDIF
@@ -920,7 +920,7 @@ METHOD IdeDocks:stackVertically()
    nT     := 0
 
    FOR EACH qMdi IN ::oIde:aMdies
-      IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+      IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
          qMdi:setGeometry( QRect( 0, nT, nW, nH ) )
          nT += nH
       ENDIF
@@ -1004,7 +1004,7 @@ METHOD IdeDocks:setViewInitials()
    LOCAL a_
 
    FOR EACH a_ IN ::aViewsInfo
-      IF a_[ 1 ] != "Stats"
+      IF !( a_[ 1 ] == "Stats" )
          ::setView( a_[ 1 ] )
 
          IF ::qTabWidget:count() == 1
@@ -1028,7 +1028,7 @@ METHOD IdeDocks:setView( cView )
 
    CASE "New..."
       cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
-      IF cView != "New..." .AND. cView != "Stats" .AND. cView != "Main"
+      IF !( cView == "New..." ) .AND. !( cView == "Stats" ) .AND. !( cView == "Main" )
          IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) > 0
             MsgBox( "View: " + cView + ", already exists" )
          ELSE
@@ -1353,7 +1353,7 @@ METHOD IdeDocks:buildToolBarPanels()
       ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
 
       FOR EACH a_ IN ::aViewsInfo
-         IF a_[ 1 ] != "Stats"
+         IF !( a_[ 1 ] == "Stats" )
             ::addPanelButton( a_[ 1 ] )
          ENDIF
       NEXT

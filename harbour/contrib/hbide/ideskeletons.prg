@@ -260,7 +260,7 @@ METHOD IdeSkeletons:rename( cName )
 
    IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
       cNewName := hbide_fetchAString( ::oDlg:oWidget, cName, "Name", "Change Skeleton's Name" )
-      IF !empty( cNewName ) .AND. cNewName != cName
+      IF !empty( cNewName ) .AND. !( cNewName == cName )
          ::aSkltns[ n, 1 ] := cNewName
          ::updateTree()
          hbide_saveSkltns( ::oIde )

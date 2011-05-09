@@ -175,7 +175,7 @@ METHOD IdeDictionary:load( cDict )
       ::lAutoComplete   := iif( a_[ 4 ] == "NO", .f., .t. )
       ::cBgColor        := a_[ 5 ]
 
-      IF ::cBgColor != "NONE"
+      IF !( ::cBgColor == "NONE" )
          q_:= hbide_evalAsIs( ::cBgColor )
          IF hb_isArray( q_ ) .AND. len( q_ ) == 3
             ::qBgColor := QColor( q_[ 1 ], q_[ 2 ], q_[ 3 ] )

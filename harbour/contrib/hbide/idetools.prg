@@ -465,7 +465,7 @@ METHOD IdeToolsManager:buildUserToolbars()
             qTBtn:setMaximumHeight( 20 )
             qTBtn:connect( "clicked()", hbide_toolBlock( Self, b_ ) )
             qTBar:addWidget( qTBtn )
-            IF b_[ 8 ] != "YES"
+            IF !( b_[ 8 ] == "YES" )
                qTBtn:setEnabled( .f. )
             ENDIF
             aadd( ::aBtns, qTBtn )

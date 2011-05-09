@@ -725,7 +725,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
             aDir := directory( cFolder + "*.txt" )
          ENDIF
          FOR EACH a_ IN aDir
-            IF a_[ 5 ] != "D"
+            IF !( a_[ 5 ] == "D" )
                cTextFile := cFolder + a_[ 1 ]
                oChild := QTreeWidgetItem()
                oChild:setText( 0, a_[ 1 ]  )
@@ -1043,7 +1043,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
             IF empty( aHbd )
                FOR EACH cFolder IN aDocs
                   FOR EACH a_ IN directory( cFolder + "*.txt" )
-                     IF a_[ 5 ] != "D"
+                     IF !( a_[ 5 ] == "D" )
                         aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
                         FOR EACH oFunc IN aFn
                            IF hb_isObject( oFunc )
@@ -1368,7 +1368,7 @@ METHOD IdeHarbourHelp:exportAsPdf()
 
    IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Documents", "*.pdf" } } ) )
       hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
-      IF empty( cExt ) .OR. lower( cExt ) != ".pdf"
+      IF empty( cExt ) .OR. !( Lower( cExt ) == ".pdf" )
          cPdf := cPath + cFile + ".pdf"
       ENDIF
       qPrinter := QPrinter()

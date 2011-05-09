@@ -2429,7 +2429,7 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
    LOCAL n := 0
 
    DO WHILE .t.
-      IF substr( cText, ++n, 1 ) != " "
+      IF !( substr( cText, ++n, 1 ) == " " )
          EXIT
       ENDIF
    ENDDO

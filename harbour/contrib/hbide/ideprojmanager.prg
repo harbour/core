@@ -964,7 +964,7 @@ METHOD IdeProjManager:sortSources( cMode )
 
       FOR EACH s IN a_
          s := alltrim( s )
-         IF left( s, 1 ) != "#"
+         IF !( left( s, 1 ) == "#" )
             cTyp := hbide_sourceType( s )
 
             IF ( n := ascan( aSrc, {|e| cTyp == e } ) ) > 0

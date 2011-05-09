@@ -509,7 +509,7 @@ METHOD IdeBrowseManager:addPanels()
       IF empty( aPnl[ 2 ] )
          aPnl[ 2 ] := "NO"
       ENDIF
-      IF aPnl[ 1 ] != "Main"
+      IF !( aPnl[ 1 ] == "Main" )
          ::addPanel( aPnl[ 1 ], aPnl[ 2 ] == "YES" )
       ENDIF
    NEXT
@@ -621,7 +621,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    CASE "qPanelsButton_clicked"
       cPanel := hbide_fetchAString( ::qToolbar, "New...", "Name the Panel", "New Panel" )
-      IF cPanel != "New..." .AND. cPanel != "Main"
+      IF !( cPanel == "New..." ) .AND. !( cPanel == "Main" )
          IF ::isPanel( cPanel )
             MsgBox( "Panel: " + cPanel + ", already exists" )
          ELSE

@@ -593,9 +593,9 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "DbStructDialogGeometry"      ; ::cDbStructDialogGeometry           := cVal ; EXIT
                      CASE "TablesDialogGeometry"        ; ::cTablesDialogGeometry             := cVal ; EXIT
                      //
-                     CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := ( cVal != "NO" ); EXIT
-                     CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := ( cVal != "NO" ); EXIT
-                     CASE "HorzRulerDisplayMode"        ; ::oIde:lHorzRulerVisible            := ( cVal != "NO" ); EXIT
+                     CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := !( cVal == "NO" ); EXIT
+                     CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := !( cVal == "NO" ); EXIT
+                     CASE "HorzRulerDisplayMode"        ; ::oIde:lHorzRulerVisible            := !( cVal == "NO" ); EXIT
                      //
                      CASE "RecentTabIndex"              ; ::cRecentTabIndex                   := cVal ; EXIT
                      //
@@ -625,22 +625,22 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "PointSize"                   ; ::nPointSize                        := val( cVal ); EXIT
                      CASE "LineEndingMode"              ; ::cLineEndingMode                   := cVal ; EXIT
                      //
-                     CASE "TrimTrailingBlanks"          ; ::oINI:lTrimTrailingBlanks          := cVal != "NO" ; EXIT
-                     CASE "SaveSourceWhenComp"          ; ::oINI:lSaveSourceWhenComp          := cVal != "NO" ; EXIT
-                     CASE "SupressHbKWordsToUpper"      ; ::oINI:lSupressHbKWordsToUpper      := cVal != "NO" ; EXIT
-                     CASE "ReturnAsBeginKeyword"        ; ::oINI:lReturnAsBeginKeyword        := cVal != "NO" ; EXIT
-                     CASE "ConvTabToSpcWhenLoading"     ; ::oINI:lConvTabToSpcWhenLoading     := cVal != "NO" ; EXIT
-                     CASE "AutoIndent"                  ; ::oINI:lAutoIndent                  := cVal != "NO" ; EXIT
-                     CASE "SmartIndent"                 ; ::oINI:lSmartIndent                 := cVal != "NO" ; EXIT
-                     CASE "TabToSpcInEdits"             ; ::oINI:lTabToSpcInEdits             := cVal != "NO" ; EXIT
+                     CASE "TrimTrailingBlanks"          ; ::oINI:lTrimTrailingBlanks          := !( cVal == "NO" ) ; EXIT
+                     CASE "SaveSourceWhenComp"          ; ::oINI:lSaveSourceWhenComp          := !( cVal == "NO" ) ; EXIT
+                     CASE "SupressHbKWordsToUpper"      ; ::oINI:lSupressHbKWordsToUpper      := !( cVal == "NO" ) ; EXIT
+                     CASE "ReturnAsBeginKeyword"        ; ::oINI:lReturnAsBeginKeyword        := !( cVal == "NO" ) ; EXIT
+                     CASE "ConvTabToSpcWhenLoading"     ; ::oINI:lConvTabToSpcWhenLoading     := !( cVal == "NO" ) ; EXIT
+                     CASE "AutoIndent"                  ; ::oINI:lAutoIndent                  := !( cVal == "NO" ) ; EXIT
+                     CASE "SmartIndent"                 ; ::oINI:lSmartIndent                 := !( cVal == "NO" ) ; EXIT
+                     CASE "TabToSpcInEdits"             ; ::oINI:lTabToSpcInEdits             := !( cVal == "NO" ) ; EXIT
                      CASE "TabSpaces"                   ; ::oIde:nTabSpaces                   := val( cVal )  ; EXIT
                      CASE "IndentSpaces"                ; ::oINI:nIndentSpaces                := val( cVal )  ; EXIT
                      CASE "TmpBkpPrd"                   ; ::oINI:nTmpBkpPrd                   := val( cVal )  ; EXIT
                      CASE "BkpPath"                     ; ::oINI:cBkpPath                     := cVal ; EXIT
                      CASE "BkpSuffix"                   ; ::oINI:cBkpSuffix                   := cVal ; EXIT
-                     CASE "CodeListWithArgs"            ; ::oINI:lCompletionWithArgs          := cVal != "NO" ; EXIT
-                     CASE "CompletionWithArgs"          ; ::oINI:lCompleteArgumented          := cVal != "NO" ; EXIT
-                     CASE "EditsMdi"                    ; ::lEditsMdi                         := cVal != "NO" ; EXIT
+                     CASE "CodeListWithArgs"            ; ::oINI:lCompletionWithArgs          := !( cVal == "NO" ) ; EXIT
+                     CASE "CompletionWithArgs"          ; ::oINI:lCompleteArgumented          := !( cVal == "NO" ) ; EXIT
+                     CASE "EditsMdi"                    ; ::lEditsMdi                         := !( cVal == "NO" ) ; EXIT
 
                      ENDSWITCH
                   ENDIF

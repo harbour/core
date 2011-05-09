@@ -156,7 +156,7 @@ METHOD IdeEnvironments:parse( cEnvFile )
             cPart := "common"
          ELSE
             cPart := "environment"
-            IF ( s != cEnv ) .AND. !empty( cEnv )
+            IF !( s == cEnv ) .AND. !empty( cEnv )
                aadd( ::aNames, cEnv )
                aadd( ::aEnvrns, { cEnv, a_ } )
             ENDIF

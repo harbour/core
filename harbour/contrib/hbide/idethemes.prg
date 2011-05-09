@@ -602,7 +602,7 @@ METHOD IdeThemes:copy()
 
    cTheme := qGo:textValue()
 
-   IF !empty( cTheme ) .and. ( cTheme != ::aThemes[ ::nCurTheme, 1 ] )
+   IF !empty( cTheme ) .and. !( cTheme == ::aThemes[ ::nCurTheme, 1 ] )
       aItems := aclone( ::aThemes[ ::nCurTheme ] )
       aItems[ 1 ] := cTheme
       aadd( ::aThemes, aItems )

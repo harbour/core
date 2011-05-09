@@ -1380,7 +1380,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE ::aProjData[ n, TRE_TYPE ] == "Project Name"
       cHbp := hbide_pathToOSPath( ::oPM:getProjectFileNameFromTitle( ::aProjData[ n, TRE_ORIGINAL ] ) )
       //
-      IF Alltrim( Upper( ::cWrkProject ) ) != Alltrim( Upper( oXbpTreeItem:caption ) )
+      IF !( Alltrim( Upper( ::cWrkProject ) ) == Alltrim( Upper( oXbpTreeItem:caption ) ) )
          aadd( aPops, { "Set as Current"                 , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
       aadd( aPops, { "Properties"                        , {|| ::oPM:loadProperties( cHbp, .f., .t., .t. ) } } )

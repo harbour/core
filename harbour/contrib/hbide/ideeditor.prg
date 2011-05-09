@@ -1352,7 +1352,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::qDocument  := ::qEdit:document()
 
-   IF ::cType != "U"
+   IF !( ::cType == "U" )
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
    ::qCursor := ::qEdit:textCursor()
@@ -1700,7 +1700,7 @@ METHOD IdeEditor:setTabImage( qEdit )
 
 METHOD IdeEditor:applyTheme( cTheme )
 
-   IF ::cType != "U"
+   IF !( ::cType == "U" )
       IF empty( cTheme )
          cTheme := ::oTH:selectTheme()
       ENDIF
@@ -1722,7 +1722,7 @@ METHOD IdeEditor:showThumbnail()
       ::qThumbnail:fontFamily := "Courier New"
       ::qThumbnail:setFont()
       ::qThumbnail:setReadOnly( .t. )
-      IF ::cType != "U"
+      IF !( ::cType == "U" )
          ::qTNHiliter := ::oTH:SetSyntaxHilighting( ::qThumbnail:qEdit, @::cTheme )
       ENDIF
       ::qThumbnail:qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
