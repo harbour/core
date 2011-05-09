@@ -5068,7 +5068,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
     s_pWvwData->s_sApp->pSymWVW_TIMER = hb_dynsymFind( "WVW_TIMER" ) ;
     s_pWvwData->s_sApp->pSymWVW_ONCTLCOLOR = hb_dynsymFind( "WVW_ONCTLCOLOR" ) ;
 
-    h = LoadLibraryEx( "msimg32.dll", NULL, 0 );
+    h = LoadLibrary( "msimg32.dll" );
     if ( h )
     {
       s_pWvwData->s_sApp->pfnGF = ( wvwGradientFill ) GetProcAddress( h, "GradientFill" );

@@ -4329,7 +4329,7 @@ static void hb_wvt_gtLoadGuiData( void )
    s_guiData->solidBrush     = CreateSolidBrush( RGB( 0,0,0 ) );
    s_guiData->whiteBrush     = CreateSolidBrush( RGB( 198,198,198 ) );
 
-   h = LoadLibraryEx( TEXT( "msimg32.dll" ), NULL, 0 );
+   h = LoadLibrary( TEXT( "msimg32.dll" ) );
    if( h )
    {
       /* workaround for wrong declarations in some old C compilers */
