@@ -123,7 +123,7 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-                                                         IF( hb_isNil( lExpanded ), .f., lExpanded ), nLevels )
+                                                         iif( hb_isNil( lExpanded ), .f., lExpanded ), nLevels )
 
    ENDCLASS
 
@@ -331,7 +331,7 @@ CLASS WvgTreeViewItem
    METHOD   destroy()
 
    METHOD   expand( lExpand )                      INLINE WVG_TreeView_Expand( ::hTree, ::hItem, ;
-                                                            IF( hb_isLogical( lExpand ), lExpand, .t. ) )
+                                                            iif( hb_isLogical( lExpand ), lExpand, .t. ) )
    METHOD   isExpanded()
    METHOD   setCaption( cCaption )
    METHOD   setExpandedImage( nResIdoBitmap )
@@ -418,7 +418,7 @@ METHOD addItem( cCaption ) CLASS WvgTreeViewItem
    oItem:caption := cCaption
    oItem:oWnd    := ::oWnd
 
-   hParent := if( hb_isObject( oItem:oParent ), oItem:oParent:hItem, NIL )
+   hParent := iif( hb_isObject( oItem:oParent ), oItem:oParent:hItem, NIL )
 
    oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
 

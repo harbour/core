@@ -254,7 +254,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       elseif xParams[ 1 ] == WM_MOUSELEAVE
          /* Nothing */
       else
-         aPos := if( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
+         aPos := iif( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
       ENDIF
 
       SWITCH xParams[ 1 ]

@@ -467,8 +467,8 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
    oWvgFont:underscore       := aFont[ 6 ]
    oWvgFont:strikeOut        := aFont[ 7 ]
    oWvgFont:codePage         := aFont[ 8 ]
-   oWvgFont:setCompoundName( trim( aFont[ 1 ] +" "+ IF( oWvgFont:bold, "Bold ", "" ) + ;
-                                                    IF( oWvgFont:italic, "Italic", "" ) ) )
+   oWvgFont:setCompoundName( trim( aFont[ 1 ] +" "+ iif( oWvgFont:bold, "Bold ", "" ) + ;
+                                                    iif( oWvgFont:italic, "Italic", "" ) ) )
    oWvgFont:create()
 
    RETURN oWvgFont
@@ -601,7 +601,7 @@ METHOD createFont() CLASS WvgFont
    ::aFontInfo[  1 ] := ::familyName
    ::aFontInfo[  2 ] := ::height
    ::aFontInfo[  3 ] := ::width
-   ::aFontInfo[  4 ] := IF( ::bold, FW_BOLD, 0 )
+   ::aFontInfo[  4 ] := iif( ::bold, FW_BOLD, 0 )
    ::aFontInfo[  5 ] := ::italic
    ::aFontInfo[  6 ] := ::underscore
    ::aFontInfo[  7 ] := ::strikeout

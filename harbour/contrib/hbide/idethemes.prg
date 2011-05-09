@@ -935,9 +935,9 @@ STATIC FUNCTION Attr2Str( a_ )
    RETURN padl( hb_ntos( a_[ 1 ] ), 4 ) + "," +;
           padl( hb_ntos( a_[ 2 ] ), 4 ) + "," +;
           padl( hb_ntos( a_[ 3 ] ), 4 ) + "," +;
-          IF( a_[ 4 ], " Yes", "  No" ) + "," +;
-          IF( a_[ 5 ], " Yes", "  No" ) + "," +;
-          IF( a_[ 6 ], " Yes", "  No" ) + ","
+          iif( a_[ 4 ], " Yes", "  No" ) + "," +;
+          iif( a_[ 5 ], " Yes", "  No" ) + "," +;
+          iif( a_[ 6 ], " Yes", "  No" ) + ","
 
 /*----------------------------------------------------------------------*/
 

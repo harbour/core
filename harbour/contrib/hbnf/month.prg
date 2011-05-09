@@ -48,7 +48,7 @@ LOCAL lIsMonth, nTemp, aRetVal
   ENDIF
 
   nTemp := MONTH( dGivenDate ) - MONTH( aRetVal[2] )
-  nTemp += IF(nTemp >= 0, 1, 13)
+  nTemp += iif(nTemp >= 0, 1, 13)
 
   aRetVal[1] += PADL(LTRIM(STR(nTemp, 2)), 2, '0')
   aRetVal[2] := FT_MADD( aRetVal[2], nTemp - 1 )

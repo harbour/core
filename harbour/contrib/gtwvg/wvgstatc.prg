@@ -313,7 +313,7 @@ METHOD setCaption( xCaption, cDll )
          WVG_DeleteObject( ::hBitmap )
       ENDIF
 
-      ::hBitmap := WVG_LoadImage( ::caption, IF( hb_isNUmeric( ::caption ), 1, 2 ) )
+      ::hBitmap := WVG_LoadImage( ::caption, iif( hb_isNUmeric( ::caption ), 1, 2 ) )
 
       WVG_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 

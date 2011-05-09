@@ -70,8 +70,8 @@
 #translate makehi( <X> )        => ((<X>) * 256)
 #translate REG_DS               => .T.
 #translate REG_ES               => .F.
-#translate highbyte( <X> )      => ( int( if( (<X>) \< 0, 65536 + (<X>), (<X>) ) / 256 ) )
-#translate lowbyte( <X> )       => (      if( (<X>) \< 0, 65536 + (<X>), (<X>) ) % 256   )
+#translate highbyte( <X> )      => ( int( iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) / 256 ) )
+#translate lowbyte( <X> )       => (      iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) % 256   )
 #translate carrySet( <XFLAGS> ) => (ft_isbiton((<XFLAGS>), FLAG_CARRY))
 
 #endif // __FTINT86_CH__

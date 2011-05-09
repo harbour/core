@@ -116,7 +116,7 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    METHOD   pos()                                 VIRTUAL
 
    DATA     sl_undo                               INIT    .T.
-   ACCESS   undo                                  INLINE  IF( ::sl_undo, NIL, NIL )
+   ACCESS   undo                                  INLINE  iif( ::sl_undo, NIL, NIL )
    ASSIGN   undo( lUndo )                         INLINE  ::sl_undo := lUndo
 
    METHOD   setEditable()                         VIRTUAL

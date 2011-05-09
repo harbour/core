@@ -298,7 +298,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
       exit
 
    case "O"
-      cCaption := IF( bAction == NIL, xCaption:title, bAction )
+      cCaption := iif( bAction == NIL, xCaption:title, bAction )
       aItem    := { MF_POPUP , xCaption:hMenu , cCaption, xCaption }
       exit
 
@@ -377,7 +377,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
    DEFAULT lCheck TO .T.
 
    IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      nRet := WVG_CheckMenuItem( ::hMenu, nItemNum, MF_BYPOSITION + IF( lCheck, MF_CHECKED, MF_UNCHECKED ) )
+      nRet := WVG_CheckMenuItem( ::hMenu, nItemNum, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
    RETURN IIF( nRet == -1, .F., .T. )

@@ -42,7 +42,7 @@ FUNCTION FT_ACCTADJ(dGivenDate, lIsEnd)
   lIsEnd     := VALTYPE(lIsEnd) == "L"
   nTemp      := FT_DAYTOBOW(dGivenDate)
 
-  IF nTemp > ( 2 + IF(!lIsEnd, 1, 0) )
+  IF nTemp > ( 2 + iif(!lIsEnd, 1, 0) )
      dGivenDate += ( 7 - nTemp )      // Next Week Start (This Week End + 1)
   ELSE
      dGivenDate -= nTemp              // This Week Start (Prior Week End + 1)

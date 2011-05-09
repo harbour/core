@@ -145,7 +145,7 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
    DO CASE
 
    CASE ::className == "BUTTON"     /* CheckBox, Radio, 3State */
-      ::sendMessage( BM_SETCHECK, IF( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
+      ::sendMessage( BM_SETCHECK, iif( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
 
    CASE ::className == "LISTBOX"    /* Single Selection */
       IF !empty( ::sl_editBuffer )

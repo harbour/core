@@ -169,7 +169,7 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
 
       IF !aSumData[ i,1 ]  // not commented out !
          aAdd( aTags, { Upper( Trim( cName ) ) ,;
-                        IF( cType = "METH", IF( !Empty( cClassName ), cClassName + ":" + Upper( cType ), Upper( cType ) ), Upper( cType ) ),;
+                        iif( cType = "METH", iif( !Empty( cClassName ), cClassName + ":" + Upper( cType ), Upper( cType ) ), Upper( cType ) ),;
                         aSumData[ i,2 ],;
                         cModule        ,;
                         cSyntax        ,;
@@ -344,7 +344,7 @@ FUNCTION CheckComments( aText )
 
    FOR i := nLine TO nLines
 
-      nState   := if( lInComment, 1, 0 )
+      nState   := iif( lInComment, 1, 0 )
       lChanged := .F.
       cText    := aText[ i ]
 
@@ -409,7 +409,7 @@ FUNCTION CheckComments( aText )
          ENDDO
       ENDIF
 
-      cComments := substr( cComments, 1, i-1 ) + chr( nState + ( If( lInComment, 2, 0 ) + If( lChanged, 4, 0 ) ) ) + substr( cComments, i+1 )
+      cComments := substr( cComments, 1, i-1 ) + chr( nState + ( iif( lInComment, 2, 0 ) + iif( lChanged, 4, 0 ) ) ) + substr( cComments, i+1 )
       IF nState == 0 .AND. lLineComment
          lInComment := .F.
       ENDIF
@@ -444,4 +444,3 @@ STATIC FUNCTION IsInString( cText, nPos, nStart, cQuote )
    RETURN ( lInString )
 
 /*----------------------------------------------------------------------*/
-
