@@ -224,10 +224,20 @@ char * hb_username( void )
 
 HB_FUNC( NETNAME )
 {
-   hb_retc_buffer( ( char * ) hb_osDecodeCP( hb_netname(), NULL, NULL ) );
+   char * buffer = hb_netname();
+
+   if( buffer )
+      hb_retc_buffer( ( char * ) hb_osDecodeCP( buffer, NULL, NULL ) );
+   else
+      hb_retc_null();
 }
 
 HB_FUNC( HB_USERNAME )
 {
-   hb_retc_buffer( ( char * ) hb_osDecodeCP( hb_username(), NULL, NULL ) );
+   char * buffer = hb_username();
+
+   if( buffer )
+      hb_retc_buffer( ( char * ) hb_osDecodeCP( buffer, NULL, NULL ) );
+   else
+      hb_retc_null();
 }
