@@ -393,7 +393,7 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
          bSearch := { | aItem | Left( _LISTBOX_ITEMDATA( aItem ), nLen ) == cData }
       ELSE
          cData := Lower( cData )
-         bSearch := { | aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) = cData }
+         bSearch := { | aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) == cData }
       ENDIF
    ENDIF
 

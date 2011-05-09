@@ -282,7 +282,7 @@ REQUEST hbmk_KEYW
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
 
-#define LEFTEQUAL( l, r )       ( l = r ) /* NOTE: This requires Set( _SET_EXACT, .F. ) */
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
 /* Logic (hack) to automatically add some libs to their
    right place in the liblist. In case of 'unicows' lib,
@@ -548,8 +548,6 @@ PROCEDURE _APPMAIN( ... )
    LOCAL nTargetPos
    LOCAL lHadTarget
 
-   LOCAL lOldExact
-
    /* Expand wildcard project specs */
 
    IF PCount() >= 1
@@ -623,8 +621,6 @@ PROCEDURE _APPMAIN( ... )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
-   lOldExact := Set( _SET_EXACT, .F. )
-
    nTargetTO_DO := 1
    DO WHILE .T.
 
@@ -671,8 +667,6 @@ PROCEDURE _APPMAIN( ... )
 
       ++nTargetTO_DO
    ENDDO
-
-   Set( _SET_EXACT, lOldExact )
 
    IF nResult != 0 .AND. lPause
       OutStd( I_( "Press any key to continue..." ) )
