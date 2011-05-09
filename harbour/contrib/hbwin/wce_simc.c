@@ -54,25 +54,36 @@
 #include "hbapiitm.h"
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
-
-#include <simmgr.h>
+#  include <simmgr.h>
+#  define __HB_COMPONENT_SUPPORTED__
+#endif
 
 HB_FUNC( WCE_SIMINITIALIZE ) /* hSim by reference, lNotifications */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    HSIM hSim = 0;
    HRESULT hResult = SimInitialize( hb_parl( 2 ) ? SIM_INIT_SIMCARD_NOTIFICATIONS : 0, NULL, 0, &hSim );
 
    hb_storptr( hResult == S_OK ? hSim : 0, 1 );
    hb_retnl( hResult );
+#else
+   hb_storptr( 0, 1 );
+   hb_retnl( -1 );
+#endif
 }
 
 HB_FUNC( WCE_SIMDEINITIALIZE ) /* hSim */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    hb_retnl( SimDeinitialize( ( HSIM ) hb_parptr( 1 ) ) );
+#else
+   hb_retnl( -1 );
+#endif
 }
 
 HB_FUNC( WCE_SIMPHONEBOOKSTATUS ) /* hSim, nLocation, @nTotal, @nUsed */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    DWORD dwUsed = 0, dwTotal = 0;
    HRESULT hResult = SimGetPhonebookStatus( ( HSIM ) hb_parptr( 1 ), ( DWORD ) hb_parnl( 2 ) /* dwLocation */, &dwUsed, &dwTotal );
 
@@ -80,10 +91,16 @@ HB_FUNC( WCE_SIMPHONEBOOKSTATUS ) /* hSim, nLocation, @nTotal, @nUsed */
    hb_stornl( hResult == S_OK ? ( long ) dwUsed : 0, 4 );
 
    hb_retnl( hResult );
+#else
+   hb_stornl( 0, 3 );
+   hb_stornl( 0, 4 );
+   hb_retnl( -1 );
+#endif
 }
 
 HB_FUNC( WCE_SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    HSIM hSim = ( HSIM ) hb_parptr( 1 );
    DWORD dwIndex = ( DWORD ) hb_parnl( 3 );
    SIMPHONEBOOKENTRY PhoneEntry;
@@ -102,10 +119,14 @@ HB_FUNC( WCE_SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
 
    hb_itemParamStoreForward( 4, pArray );
    hb_itemRelease( pArray );
+#else
+   hb_reta( 0 );
+#endif
 }
 
 HB_FUNC( WCE_SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, nPlan, nAddrType */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    SIMPHONEBOOKENTRY PhoneEntry;
 
    void * hAddress;
@@ -122,11 +143,16 @@ HB_FUNC( WCE_SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, 
 
    hb_strfree( hAddress );
    hb_strfree( hText );
+#else
+   hb_retnl( -1 );
+#endif
 }
 
 HB_FUNC( WCE_SIMDELETEPHONEBOOKENTRY ) /* hSim, nLocation, nPos */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    hb_retnl( SimDeletePhonebookEntry( ( HSIM ) hb_parptr( 1 ), ( DWORD ) hb_parnl( 2 ), ( DWORD ) hb_parnl( 3 ) ) );
-}
-
+#else
+   hb_retnl( -1 );
 #endif
+}

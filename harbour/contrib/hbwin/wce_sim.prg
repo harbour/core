@@ -50,8 +50,6 @@
  *
  */
 
-#if defined( __PLATFORM__WINCE )
-
 #include "hbclass.ch"
 
 #include "common.ch"
@@ -231,5 +229,3 @@ METHOD End() CLASS wce_sim
    ENDIF
 
    RETURN NIL
-
-#endif

@@ -136,7 +136,7 @@ HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
 {
    TCHAR * pLibPath = hbwapi_FileNameAtSystemDir( pFileName );
 
-   HMODULE h = LoadLibrary( pLibPath );
+   HMODULE h = LoadLibraryEx( pLibPath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
 
    hb_xfree( pLibPath );
 

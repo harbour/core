@@ -55,11 +55,13 @@
 #if defined( HB_OS_WIN_CE ) && \
    ! defined( __MINGW32__ ) && \
    !( ! defined( __cplusplus ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
-
-#include <sms.h>
+#  include <sms.h>
+#  define __HB_COMPONENT_SUPPORTED__
+#endif
 
 HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 {
+#ifdef __HB_COMPONENT_SUPPORTED__
    SMS_HANDLE smshHandle = 0;
    HRESULT hr = SmsOpen( SMS_MSGTYPE_TEXT, SMS_MODE_SEND, &smshHandle, NULL ); /* try to open an SMS Handle */
 
@@ -112,6 +114,7 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 
       SmsClose( smshHandle );
    }
-}
-
+#else
+   hb_retnl( -1 );
 #endif
+}
