@@ -58,7 +58,7 @@
 
 #define CRLF (Chr(13)+Chr(10))
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
+#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, .F. )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
@@ -136,7 +136,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    LOCAL cUri
 
    // Prevents case matching
-   hb_HSetCaseMatch( hUrl, FALSE )
+   hb_HSetCaseMatch( hUrl, .F. )
 
    cTemp := cUrl
    cUri  := ""
@@ -257,7 +257,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    hb_hSet( hUrl, "URI"     , cURI )
 
    // Prevents externals to add something else to this Hash
-   hb_HSetAutoAdd( hUrl, FALSE )
+   hb_HSetAutoAdd( hUrl, .F. )
 RETURN hUrl
 
 
@@ -270,7 +270,7 @@ RETURN hUrl
   Parameters:
   cString     -   Initial string
   cDelim      -   Delimiter - default CRLF
-  lRemDelim   -   Remove delimiter from return values - default TRUE
+  lRemDelim   -   Remove delimiter from return values - default .T.
 
   Returns:
   aLines      -   Array with lines / fields for each element
@@ -286,7 +286,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL nHowMany := 0
 
    DEFAULT cDelim    TO ( CHR(13) + CHR(10) )
-   DEFAULT lRemDelim TO TRUE
+   DEFAULT lRemDelim TO .T.
    DEFAULT nCount    TO -1
 
    //WriteToLogFile( "Splitstring: " + cStr( cString ) )
@@ -320,12 +320,12 @@ RETURN aLines
 */
 FUNCTION uhttpd_URLEncode( cString, lComplete )
 #ifdef HB_USE_HBTIP
-   DEFAULT lComplete TO TRUE
+   DEFAULT lComplete TO .T.
    RETURN TIPENCODERURL_ENCODE( cString, lComplete )
 #else
    LOCAL cRet := "", i, nVal, cChar
 
-   DEFAULT lComplete TO TRUE
+   DEFAULT lComplete TO .T.
 
    FOR i := 1 TO Len( cString )
       cChar := SubStr( cString, i, 1)
@@ -340,7 +340,7 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
               cChar == '/' .OR. cChar == ';' .OR. cChar == '_'
             cRet += cChar
 
-         CASE IIF( !lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', FALSE )
+         CASE IIF( !lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
             cRet += cChar
 
          OTHERWISE
@@ -465,7 +465,7 @@ RETURN aRetVal[ 4, 2 ]
 
 FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
   LOCAL cHtml
-  DEFAULT lProtected TO FALSE
+  DEFAULT lProtected TO .F.
   DEFAULT aTranslate TO { { '"', '&quot;' }, { ' ', '&nbsp;' } }
 
   //TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
@@ -711,7 +711,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
   //DEFAULT cLog    TO AppFullPath() + cSep + "logfile.log"
   DEFAULT cLog    TO cSep + "tmp" + cSep + "logfile.log"
-  DEFAULT lCreate TO FALSE
+  DEFAULT lCreate TO .F.
 
   IF cLog <> NIL
 
@@ -822,7 +822,7 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
 
       OTHERWISE
          Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-   END
+   ENDSWITCH
 
 RETURN NIL
 

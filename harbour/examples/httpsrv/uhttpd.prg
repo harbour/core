@@ -140,7 +140,7 @@ REQUEST __HB_EXTERN__
 #define HRB_ACTIVATE_CACHE   .F.   // if .T. caching of HRB modules will be enabled. (NOTE: changes of files will not be loaded until server is active)
 
 #define CR_LF    (CHR(13)+CHR(10))
-#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
+#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, .F. )
 
 #ifdef __PLATFORM__WINDOWS
    REQUEST HB_GT_WVT_DEFAULT
@@ -156,7 +156,7 @@ REQUEST __HB_EXTERN__
 // dynamic call for HRB support
 DYNAMIC HRBMAIN
 
-STATIC s_lQuitRequest := FALSE
+STATIC s_lQuitRequest := .F.
 
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
 STATIC s_hmtxHRB
@@ -187,7 +187,7 @@ STATIC s_hHandlers         := { ;
                                 "/serverstatus"  => "server-status"           ;
                               }
 
-//STATIC s_lAcceptPathInfo   := TRUE
+//STATIC s_lAcceptPathInfo   := .T.
 
 // SCRIPTALIASES: now read from ini file
 //STATIC s_hScriptAliases    := { "/info" => "/cgi-bin/info.hrb" }
@@ -234,22 +234,22 @@ FUNCTION MAIN( ... )
    // ----------------------- Parameters defaults -----------------------------
 
    // defaults not changeble via ini file
-   lStop                := FALSE
+   lStop                := .F.
    cConfig              := EXE_Path() + hb_ps() + APP_NAME + ".ini"
-   lConsole             := TRUE
+   lConsole             := .T.
    nStartServiceThreads := START_SERVICE_THREADS
 
    // Check GT version - if I have started app with //GT:NUL then I have to disable
    // console and application will start in hidden way.
    cGT := HB_GTVERSION()
    IF ( cGT == "NUL" )
-      lConsole := FALSE
+      lConsole := .F.
    ELSE
       hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| GT_notifier( nEvent, ... ) } )
    ENDIF
 
    // TOCHECK: now not force case insensitive
-   //HB_HSETCASEMATCH( s_hScriptAliases, FALSE )
+   //HB_HSETCASEMATCH( s_hScriptAliases, .F. )
 
    // ----------------- Line command parameters checking ----------------------
 
@@ -269,10 +269,10 @@ FUNCTION MAIN( ... )
          cCmdDocumentRoot := hb_PValue( i++ )
 
       CASE cPar == "--indexes"          .OR. cPar == "-i"
-         lCmdIndexes := TRUE
+         lCmdIndexes := .T.
 
       CASE cPar == "--stop"             .OR. cPar == "-s"
-         lStop    := TRUE
+         lStop    := .T.
 
       CASE cPar == "--config"           .OR. cPar == "-c"
          cConfig     := hb_PValue( i++ )
@@ -334,7 +334,7 @@ FUNCTION MAIN( ... )
    nMaxThreads           := hDefault[ "THREADS" ][ "MAX_NUM" ]
 
    // ATTENTION: script aliases can be in mixed case
-   // i.e. we can have /info or /Info that will be different unless lScriptAliasMixedCase will be FALSE
+   // i.e. we can have /info or /Info that will be different unless lScriptAliasMixedCase will be .F.
    FOR EACH xVal IN hDefault[ "SCRIPTALIASES" ]
        IF HB_ISSTRING( xVal )
           hb_HSet( s_hScriptAliases, IIF( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ), xVal )
@@ -615,7 +615,7 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Memory release
-         //hb_GCAll( TRUE )
+         //hb_GCAll( .T. )
 
       ENDDO
 
@@ -653,7 +653,7 @@ STATIC FUNCTION AcceptConnections()
    LOCAL lCanNotify
 #endif
    LOCAL pThread
-   LOCAL lQuitRequest := FALSE
+   LOCAL lQuitRequest := .F.
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -683,14 +683,14 @@ STATIC FUNCTION AcceptConnections()
 #ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
-         lQuitRequest := TRUE
+         lQuitRequest := .T.
       ENDIF
 #endif
 
       IF hb_mutexLock( s_hmtxBusy )
          IF s_lQuitRequest
             hb_mutexUnlock( s_hmtxBusy )
-            lQuitRequest := TRUE
+            lQuitRequest := .T.
          ENDIF
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
@@ -739,7 +739,7 @@ STATIC FUNCTION AcceptConnections()
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
-      lCanNotify := FALSE
+      lCanNotify := .F.
 
       // If I have no more running threads to use ...
       IF nConnections > nMaxThreads
@@ -756,7 +756,7 @@ STATIC FUNCTION AcceptConnections()
             IF hb_mutexLock( s_hmtxBusy )
                pThread := hb_threadStart( @ServiceConnection() )
                AADD( s_aServiceThreads, pThread )
-               lCanNotify := TRUE
+               lCanNotify := .T.
                hb_mutexUnlock( s_hmtxBusy )
             ENDIF
          ENDIF
@@ -774,11 +774,11 @@ STATIC FUNCTION AcceptConnections()
          IF hb_mutexLock( s_hmtxBusy )
             pThread := hb_threadStart( @ProcessConnection() )
             AADD( s_aRunningThreads, pThread )
-            lCanNotify := TRUE
+            lCanNotify := .T.
             hb_mutexUnlock( s_hmtxBusy )
          ENDIF
       ELSE
-         lCanNotify := TRUE
+         lCanNotify := .T.
       ENDIF
       // Otherwise I send connection to running thread queue
       //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
@@ -801,7 +801,7 @@ STATIC FUNCTION AcceptConnections()
 STATIC FUNCTION ProcessConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadID
-   LOCAL lQuitRequest := FALSE
+   LOCAL lQuitRequest := .F.
 
    PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
@@ -829,7 +829,7 @@ STATIC FUNCTION ProcessConnection()
 #ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
-         lQuitRequest := TRUE
+         lQuitRequest := .T.
          EXIT
       ENDIF
 #endif
@@ -837,7 +837,7 @@ STATIC FUNCTION ProcessConnection()
       IF hb_mutexLock( s_hmtxBusy )
          IF s_lQuitRequest
             hb_mutexUnlock( s_hmtxBusy )
-            lQuitRequest := TRUE
+            lQuitRequest := .T.
             EXIT
          ENDIF
          hb_mutexUnlock( s_hmtxBusy )
@@ -848,7 +848,7 @@ STATIC FUNCTION ProcessConnection()
 
       // received a -1 value, I have to quit
       IF HB_ISNUMERIC( hSocket )
-         lQuitRequest := TRUE
+         lQuitRequest := .T.
          EXIT
 
       ELSEIF hSocket == NIL   // no socket received, thread can graceful quit, but ...
@@ -942,7 +942,7 @@ STATIC FUNCTION ProcessConnection()
       ENDIF
 
       // Memory release
-      hb_GCAll( TRUE )
+      hb_GCAll( .T. )
 
    ENDDO
 
@@ -954,7 +954,7 @@ STATIC FUNCTION ProcessConnection()
    IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
       //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
       IF ( nPos := aScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
-         hb_aDel( s_aRunningThreads, nPos, TRUE )
+         hb_aDel( s_aRunningThreads, nPos, .T. )
          s_nThreads := Len( s_aRunningThreads )
       ENDIF
       hb_mutexUnlock( s_hmtxBusy )
@@ -966,7 +966,7 @@ STATIC FUNCTION ServiceConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadId
    LOCAL nError := 500013
-   LOCAL lQuitRequest := FALSE
+   LOCAL lQuitRequest := .F.
 
    PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
@@ -989,7 +989,7 @@ STATIC FUNCTION ServiceConnection()
 #ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
-         lQuitRequest := TRUE
+         lQuitRequest := .T.
          EXIT
       ENDIF
 #endif
@@ -997,7 +997,7 @@ STATIC FUNCTION ServiceConnection()
       IF hb_mutexLock( s_hmtxBusy )
          IF s_lQuitRequest
             hb_mutexUnlock( s_hmtxBusy )
-            lQuitRequest := TRUE
+            lQuitRequest := .T.
             EXIT
          ENDIF
          hb_mutexUnlock( s_hmtxBusy )
@@ -1008,7 +1008,7 @@ STATIC FUNCTION ServiceConnection()
 
       // received a -1 value, I have to quit
       IF HB_ISNUMERIC( hSocket )
-         lQuitRequest := TRUE
+         lQuitRequest := .T.
          EXIT
       ELSEIF hSocket == NIL   // no socket received, thread can graceful quit, but ...
          IF hb_mutexLock( s_hmtxBusy )
@@ -1086,7 +1086,7 @@ STATIC FUNCTION ServiceConnection()
       ENDIF
 
       // Memory release
-      hb_GCAll( TRUE )
+      hb_GCAll( .T. )
 
    ENDDO
 
@@ -1097,7 +1097,7 @@ STATIC FUNCTION ServiceConnection()
    // here to avoid race condition
    IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
       IF ( nPos := aScan( s_aServiceThreads, hb_threadSelf() ) > 0 )
-         hb_aDel( s_aServiceThreads, nPos, TRUE )
+         hb_aDel( s_aServiceThreads, nPos, .T. )
          s_nServiceThreads := Len( s_aServiceThreads )
       ENDIF
       hb_mutexUnlock( s_hmtxBusy )
@@ -1631,7 +1631,7 @@ PROCEDURE uhttpd_SetStatusCode(nStatusCode)
 
 PROCEDURE uhttpd_SetHeader( cType, cValue )
    //LOCAL nI
-   //DEFAULT lReplace TO TRUE // Needed from SetCookie()
+   //DEFAULT lReplace TO .T. // Needed from SetCookie()
 
    hb_HSet( _HTTP_RESPONSE, cType, cValue )
 
@@ -1668,7 +1668,7 @@ PROCEDURE uhttpd_DelHeader( cType )
    LOCAL nI
 
    IF ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
-      hb_aDel( t_aHeader, nI, TRUE )
+      hb_aDel( t_aHeader, nI, .T. )
    ENDIF
    RETURN
 */
@@ -1833,7 +1833,7 @@ STATIC FUNCTION uproc_default()
    cFileName := NIL
    cPathInfo := ""
 
-   DO WHILE TRUE
+   DO WHILE .T.
 
       #ifdef DEBUG_ACTIVE
          //hb_ToOutDebug( "cFileName = %s, cScript = %s\n\r", cFileName, cScript )
@@ -1908,7 +1908,7 @@ STATIC FUNCTION uproc_default()
 
             // Check for PATH_INFO: I will search if there is a physical file removing parts from right
             cBaseFile := cScript
-            lFound := FALSE
+            lFound := .F.
             DO WHILE !Empty( cBaseFile )
 
                //hb_toOutDebug( "cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
@@ -1922,14 +1922,14 @@ STATIC FUNCTION uproc_default()
 
                IF HB_FileExists( uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile ) )
                   cFileName := uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile )
-                  lFound := TRUE
+                  lFound := .T.
                   EXIT
                ENDIF
 
                cFile := FileUnAlias( cBaseFile )
                IF cFile != NIL .AND. HB_FileExists( uhttpd_OSFileName( cFile ) )
                   cFileName := uhttpd_OSFileName( cFile )
-                  lFound := TRUE
+                  lFound := .T.
                   EXIT
                ENDIF
             ENDDO
@@ -2235,7 +2235,7 @@ STATIC PROCEDURE WriteToConsole( ... )
    RETURN
 
 STATIC FUNCTION ParseIni( cConfig )
-   LOCAL hIni := hb_IniRead( cConfig, TRUE ) // TRUE = load all keys in MixedCase, redundant as it is default, but to remember
+   LOCAL hIni := hb_IniRead( cConfig, .T. ) // .T. = load all keys in MixedCase, redundant as it is default, but to remember
    LOCAL cSection, hSect, cKey, xVal, cVal, nPos
    LOCAL hDefault
 
@@ -2249,8 +2249,8 @@ STATIC FUNCTION ParseIni( cConfig )
                      "PORT"                 => LISTEN_PORT              ,;
                      "APPLICATION_ROOT"     => EXE_Path()               ,;
                      "DOCUMENT_ROOT"        => EXE_Path() + hb_ps() + "home"     ,;
-                     "SHOW_INDEXES"         => FALSE                    ,;
-                     "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
+                     "SHOW_INDEXES"         => .F.                      ,;
+                     "SCRIPTALIASMIXEDCASE" => .T.                      ,;
                      "SESSIONPATH"          => EXE_Path() + hb_ps() + "sessions" ,;
                      "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     ,;
                      "CONSOLE-ROWS"         => MaxRow() + 1             ,;
@@ -2267,7 +2267,7 @@ STATIC FUNCTION ParseIni( cConfig )
                    },;
      "SCRIPTALIASES"  => { => } ,;
      "ALIASES"        => { => }  ;
-   }, FALSE )
+   }, .F. )
 
    //hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
 
@@ -2804,7 +2804,7 @@ STATIC FUNCTION GT_notifier( nEvent, xParams )
    DO CASE
    CASE nEvent == HB_GTE_CLOSE
       IF hb_mutexLock( s_hmtxBusy )
-         s_lQuitRequest := TRUE
+         s_lQuitRequest := .T.
          nReturn := 1
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF

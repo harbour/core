@@ -71,11 +71,11 @@ CLASS uhttpd_Cookie
    DATA cDomain
    DATA cPath              INIT "/"
    DATA cExpire
-   DATA lSecure            INIT FALSE
+   DATA lSecure            INIT .F.
    DATA lHttpOnly
    DATA nExpireDays        INIT 0
    DATA nExpireSecs        INIT 7200       // 1 hour  - TODO set environment constant
-   DATA lCookiesSent       INIT FALSE
+   DATA lCookiesSent       INIT .F.
 
    METHOD SetCookie()
    METHOD DeleteCookie()
@@ -102,7 +102,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    DEFAULT cDomain      TO ::cDomain
    DEFAULT cPath        TO ::cPath
    DEFAULT cExpires     TO uhttpd_DateToGMT( Date(), Time(), ::nExpireDays, ::nExpireSecs )
-   DEFAULT lHttpOnly    TO FALSE
+   DEFAULT lHttpOnly    TO .F.
 
    ::lHttpOnly := lHttpOnly
 
@@ -141,7 +141,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    ENDIF
 
    // Send the header
-   //uhttpd_SetHeader( "Set-Cookie", cStr, FALSE )
+   //uhttpd_SetHeader( "Set-Cookie", cStr, .F. )
    uhttpd_SetHeader( "Set-Cookie", cStr )
 
    RETURN NIL
@@ -166,7 +166,7 @@ METHOD DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 METHOD GetCookie( cCookieName ) CLASS uhttpd_Cookie
    LOCAL cHeader, cRet
    LOCAL nPos := 1
-   DO WHILE TRUE
+   DO WHILE .T.
        IF ( cHeader := uhttpd_GetHeader( "Set-Cookie", @nPos ) ) != NIL
           IF cHeader == cCookieName
              cRet := cHeader

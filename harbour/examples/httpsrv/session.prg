@@ -115,22 +115,22 @@ CLASS uhttpd_Session
    DATA cSID
    DATA cSavePath               INIT "/tmp"
    DATA cName                   // INIT "SESSIONID"
-   DATA lAuto_Start             INIT FALSE     // FALSE = no autostart
+   DATA lAuto_Start             INIT .F.       // .F. = no autostart
    DATA nGc_Probability         INIT 33        // Every 1/3 of checks i'll lunch Session GC
    DATA nGc_MaxLifeTime         INIT 1440      // seconds - Number of seconds after gc can delete a session
    // DATA cSerialize_Handler      INIT "HBHTMLLIB"
    DATA nCookie_LifeTime        INIT 3600 //0         // Number of seconds to keep cookie, 0 = until browser is closed
    DATA cCookie_Path            INIT "/"
    DATA cCookie_Domain
-   DATA lCookie_Secure          INIT FALSE
-   DATA lUse_Cookies            INIT TRUE      // TRUE = Use cookies to store session id on client side
-   DATA lUse_Only_Cookies       INIT FALSE
+   DATA lCookie_Secure          INIT .F.
+   DATA lUse_Cookies            INIT .T.       // .T. = Use cookies to store session id on client side
+   DATA lUse_Only_Cookies       INIT .F.
    DATA cReferrer_Check                        // If is set check if referrer is equal to, if it isn't block
    // DATA cEntropy_File
    // DATA nEntropy_Lenght
    DATA cCache_Limiter          INIT "nocache" // Possible values are: none, nocache, private, private_no_expire, public
    DATA nCache_Expire           INIT 180       // in minutes, not checked if cCache_Limiter == none or nocache
-   DATA lUse_Trans_SID          INIT FALSE     // FALSE = no SID appended to URL
+   DATA lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
 
    // Session Storage code blocks
    DATA bOpen                   //INIT {|cPath, cName| ::SessionOpen( cPath, cName ) }
@@ -144,7 +144,7 @@ CLASS uhttpd_Session
 
    DATA nActiveSessions         INIT 0
 
-   DATA lSessionActive          INIT FALSE
+   DATA lSessionActive          INIT .F.
 
    METHOD GenerateSID()
    METHOD CheckSID()
@@ -198,8 +198,8 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
 RETURN Self
 
 METHOD Start( cSID ) CLASS uhttpd_Session
-  LOCAL lSendCookie := TRUE
-  LOCAL lDefine_SID := TRUE
+  LOCAL lSendCookie := .T.
+  LOCAL lDefine_SID := .T.
   LOCAL xVal, nRand, nPos
   LOCAL hUrl
 
@@ -212,7 +212,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
   //TraceLog( "Active Sessions : " + hb_cStr( ::nActiveSessions ) )
 
   IF ::nActiveSessions <> 0
-     RETURN FALSE
+     RETURN .F.
   ENDIF
 
   // Start checking ID from global vars
@@ -222,8 +222,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
         IF HB_ISARRAY( ::cSID )
            ::cSID := ::cSID[ 1 ] // Get Only 1-st
         ENDIF
-        lSendCookie := FALSE
-        lDefine_SID := FALSE
+        lSendCookie := .F.
+        lDefine_SID := .F.
         //::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ), "/pointtoit/tmp/log.txt" )
      ENDIF
 
@@ -231,8 +231,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
         // Check if the SID is NOT valid, someone altered it
         //::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
         ::cSID      := NIL   // invalidate current SID, i'll generate a new one
-        lSendCookie := TRUE
-        lDefine_SID := TRUE
+        lSendCookie := .T.
+        lDefine_SID := .T.
       ENDIF
 
      IF !Empty( ::cSID ) .AND. !Empty( ::cReferrer_Check )
@@ -246,8 +246,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
         //IF !( oUrl:cServer == _SERVER[ "SERVER_NAME" ] )
         IF !( hUrl[ "HOST" ] == _SERVER[ "SERVER_NAME" ] )
            ::cSID      := NIL   // invalidate current SID, i'll generate a new one
-           lSendCookie := TRUE
-           lDefine_SID := TRUE
+           lSendCookie := .T.
+           lDefine_SID := .T.
         ENDIF
 
         // // Check whether the current request was referred to by
@@ -268,8 +268,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
     // Is use_cookies set to false?
     IF !::lUse_Cookies .AND. lSendCookie
-       lDefine_SID := TRUE
-       lSendCookie := FALSE
+       lDefine_SID := .T.
+       lSendCookie := .F.
     ENDIF
 
     // Should we send a cookie?
@@ -314,20 +314,20 @@ METHOD Start( cSID ) CLASS uhttpd_Session
        ENDIF
     ENDIF
 
-RETURN TRUE
+RETURN .T.
 
 METHOD Destroy() CLASS uhttpd_Session
 
     IF ::nActiveSessions == 0
-       RETURN FALSE
+       RETURN .F.
     ENDIF
 
     // Destroy session
     IF !Eval( ::bDestroy, ::cSID )
-       RETURN FALSE
+       RETURN .F.
     ENDIF
 
-RETURN TRUE
+RETURN .T.
 
 METHOD Close() CLASS uhttpd_Session
   LOCAL cVal
@@ -335,7 +335,7 @@ METHOD Close() CLASS uhttpd_Session
     //TraceLog( "Session Close() - oCGI:h_Session", DumpValue( oCGI:h_Session ) )
 
     IF ::nActiveSessions == 0
-      RETURN FALSE
+      RETURN .F.
     ENDIF
 
     // Encode session
@@ -351,7 +351,7 @@ METHOD Close() CLASS uhttpd_Session
     ENDIF
     ::nActiveSessions--
 
-RETURN TRUE
+RETURN .T.
 
 METHOD Open( cPath, cName ) CLASS uhttpd_Session
 RETURN Eval( ::bOpen, cPath, cName  )
@@ -367,7 +367,7 @@ RETURN Eval( ::bGC, nMaxLifeTime )
 
 
 METHOD IsRegistered() CLASS uhttpd_Session
-  LOCAL lRegistered := FALSE
+  LOCAL lRegistered := .F.
 RETURN lRegistered
 
 METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
@@ -579,12 +579,12 @@ METHOD SessionOpen( cPath, cName ) CLASS uhttpd_Session
   IF cPath <> NIL THEN ::cSavePath := cPath
   IF cName <> NIL THEN ::cName     := cName
 
-RETURN TRUE
+RETURN .T.
 
 METHOD SessionClose() CLASS uhttpd_Session
   //TraceLog( "SessionClose()" )
   // Nothing to do
-RETURN TRUE
+RETURN .T.
 
 METHOD SessionRead( cID ) CLASS uhttpd_Session
   LOCAL nH
@@ -629,7 +629,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
   LOCAL nH
   LOCAL cFile
   LOCAL nFileSize
-  LOCAL lOk := FALSE
+  LOCAL lOk := .F.
   LOCAL nRetry  := 0
 
   //TraceLog( "SessionWrite() - cID, cData", cID, cData )
@@ -646,7 +646,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
            IF ( FWrite( nH, @cData,  nFileSize ) ) <> nFileSize
               uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
            ELSE
-              lOk := TRUE
+              lOk := .T.
            ENDIF
            FClose( nH )
         ELSE
@@ -662,7 +662,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
      //   FErase( cFile )
      //ENDIF
      // Return that all is ok
-     lOk := TRUE
+     lOk := .T.
   ENDIF
 RETURN lOk
 
@@ -680,7 +680,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
   cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
 
-  lOk := FALSE
+  lOk := .F.
   DO WHILE nRetry++ <= ::nFileRetry
      IF ( lOk := ( FErase( cFile ) == 0 ) )
         EXIT
@@ -720,7 +720,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
       ENDIF
   NEXT
 
-RETURN TRUE
+RETURN .T.
 
 STATIC FUNCTION TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
   LOCAL aRetVal
@@ -794,7 +794,7 @@ METHOD Encode() CLASS uhttpd_Session
 RETURN IIF( !Empty( aSerial ), HB_Serialize( aSerial ), NIL )
 
 METHOD Decode( cData ) CLASS uhttpd_Session
-  LOCAL lOk := TRUE
+  LOCAL lOk := .T.
   LOCAL cSerial := cData
   LOCAL xVal, aElem
   //LOCAL cKey
@@ -829,9 +829,9 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 
         OTHERWISE
            uhttpd_Die( "ERROR: On deserializing session data" )
-           lOk := FALSE
+           lOk := .F.
            EXIT
-     END
+     ENDSWITCH
   ENDDO
 
 RETURN lOk
@@ -844,7 +844,7 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
           uhttpd_SetHeader( 'Expires', uhttpd_DateToGMT( ,,-1, ) )
           uhttpd_SetHeader( 'Cache-Control', 'no-cache' )
           //uhttpd_SetHeader("Cache-Control", "no-store, no-cache, must-revalidate")  // HTTP/1.1
-          //uhttpd_SetHeader("Cache-Control", "post-check=0, pre-check=0", FALSE )
+          //uhttpd_SetHeader("Cache-Control", "post-check=0, pre-check=0", .F. )
           uhttpd_SetHeader( 'Pragma', 'no-cache' )
      CASE ::cCache_Limiter == 'private'
           uhttpd_SetHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
