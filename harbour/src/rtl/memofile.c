@@ -72,31 +72,23 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 
          if( nSize != 0 )
          {
-            void * pbyBuffer;
+            char * pbyBuffer = ( char * ) hb_xgrab( nSize + 1 );
+
+            hb_fsSeek( fhnd, 0, FS_SET );
+            nSize = hb_fsReadLarge( fhnd, pbyBuffer, nSize );
 
             /* Don't read the file terminating EOF character */
-
 #if ! defined( HB_OS_UNIX )
-            if( bHandleEOF )
+            if( bHandleEOF && nSize > 0 )
             {
-               char cEOF = HB_CHAR_NUL;
-
-               hb_fsSeek( fhnd, -1, FS_END );
-               hb_fsRead( fhnd, &cEOF, sizeof( char ) );
-
-               if( cEOF == HB_CHAR_EOF )
-                  nSize--;
+               if( pbyBuffer[ nSize - 1 ] == HB_CHAR_EOF )
+                  --nSize;
             }
 #else
             HB_SYMBOL_UNUSED( bHandleEOF );
 #endif
 
-            pbyBuffer = hb_xgrab( nSize + sizeof( char ) );
-
-            hb_fsSeek( fhnd, 0, FS_SET );
-            hb_fsReadLarge( fhnd, pbyBuffer, nSize );
-
-            hb_retclen_buffer( ( char * ) pbyBuffer, nSize );
+            hb_retclen_buffer( pbyBuffer, nSize );
          }
          else
             hb_retc_null();
@@ -139,7 +131,7 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
 #if ! defined( HB_OS_UNIX )
-         if( bHandleEOF )  /* if true, then write EOF */
+         if( bHandleEOF && bRetVal )  /* if true, then write EOF */
          {
             char cEOF = HB_CHAR_EOF;
             hb_fsWrite( fhnd, &cEOF, sizeof( char ) );

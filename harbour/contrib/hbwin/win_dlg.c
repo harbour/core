@@ -251,8 +251,8 @@ static void s_GetFileName( HB_BOOL fSave )
    ofn.lpstrFilter      = lpstrFilter = s_dialogPairs( 5, &ofn.nFilterIndex );
 
    ofn.nMaxFile         = hbwapi_par_DWORD( 7 );
-   if( ofn.nMaxFile < 0x100 )
-      ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x100;
+   if( ofn.nMaxFile < 0x400 )
+      ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x400;
    ofn.lpstrFile        = ( LPTSTR )
                           memset( hb_xgrab( ofn.nMaxFile * sizeof( TCHAR ) ),
                                   0, ofn.nMaxFile * sizeof( TCHAR ) );
@@ -260,10 +260,13 @@ static void s_GetFileName( HB_BOOL fSave )
    ofn.lpstrInitialDir  = HB_PARSTR( 3, &hInitDir, NULL );
    ofn.lpstrTitle       = HB_PARSTR( 2, &hTitle, NULL );
    ofn.Flags            = HB_ISNUM( 1 ) ? hbwapi_par_DWORD( 1 ) :
-                          OFN_EXPLORER | OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY;
+                          ( OFN_EXPLORER | OFN_ALLOWMULTISELECT |
+                            OFN_HIDEREADONLY | OFN_NOCHANGEDIR );
    ofn.lpstrDefExt      = HB_PARSTR( 4, &hDefExt, NULL );
    if( ofn.lpstrDefExt && ofn.lpstrDefExt[ 0 ] == '.' )
       ++ofn.lpstrDefExt;
+
+   HB_ITEMCOPYSTR( hb_param( 8, HB_IT_ANY ), ofn.lpstrFile, ofn.nMaxFile );
 
    if( fSave ? GetSaveFileName( &ofn ) : GetOpenFileName( &ofn ) )
    {
@@ -291,7 +294,7 @@ static void s_GetFileName( HB_BOOL fSave )
 }
 
 /* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
- *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>] )
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */
@@ -301,7 +304,7 @@ HB_FUNC( WIN_GETOPENFILENAME )
 }
 
 /* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
- *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>] )
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */

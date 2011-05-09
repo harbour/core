@@ -324,7 +324,7 @@ static void hb_comSetOsError( PHB_COM pCom, HB_BOOL fError )
 #if defined( HB_OS_UNIX )
 static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
 {
-   struct timeval tv, * ptv;
+   struct timeval tv;
    fd_set rfds;
    int iResult;
 #if !defined( HB_HAS_SELECT_TIMER )
@@ -336,34 +336,36 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       FD_ZERO( &rfds );
       FD_SET( pCom->fd, &rfds );
 
-      if( timeout >= 0 )
+      if( timeout < 0 )
+      {
+         tv.tv_sec = 1;
+         tv.tv_usec = 0;
+      }
+      else
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
          tv.tv_usec = ( timeout % 1000 ) * 1000;
-         ptv = &tv;
       }
-      else
-         ptv = NULL;
 
-      iResult = select( ( int ) ( pCom->fd + 1 ), &rfds, NULL, NULL, ptv );
+      iResult = select( ( int ) ( pCom->fd + 1 ), &rfds, NULL, NULL, &tv );
       hb_comSetOsError( pCom, iResult == -1 );
-      if( iResult == -1 && timeout > 0 && HB_COM_IS_EINTR() &&
-          hb_vmRequestQuery() == 0 )
-#if defined( HB_HAS_SELECT_TIMER )
+      if( iResult == 0 && timeout < 0 )
          continue;
-#else
+      if( iResult != -1 || timeout == 0 || ! HB_COM_IS_EINTR() ||
+          hb_vmRequestQuery() != 0 )
+         break;
+#if !defined( HB_HAS_SELECT_TIMER )
+      else if( timeout > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
          if( timecurr > timer )
          {
-            timeout -= timecurr - timer;
+            if( ( timeout -= timecurr - timer ) <= 0 )
+               break;
             timer = timecurr;
-            if( timeout > 0 )
-               continue;
          }
       }
 #endif
-      break;
    }
 
    return iResult < 0 ? -1 :
@@ -372,7 +374,7 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
 
 static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
 {
-   struct timeval tv, * ptv;
+   struct timeval tv;
    fd_set wfds;
    int iResult;
 #if !defined( HB_HAS_SELECT_TIMER )
@@ -384,30 +386,33 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
       FD_ZERO( &wfds );
       FD_SET( pCom->fd, &wfds );
 
-      if( timeout >= 0 )
+      if( timeout < 0 )
+      {
+         tv.tv_sec = 1;
+         tv.tv_usec = 0;
+      }
+      else
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
          tv.tv_usec = ( timeout % 1000 ) * 1000;
-         ptv = &tv;
       }
-      else
-         ptv = NULL;
 
-      iResult = select( ( int ) ( pCom->fd + 1 ), NULL, &wfds, NULL, ptv );
+      iResult = select( ( int ) ( pCom->fd + 1 ), NULL, &wfds, NULL, &tv );
       hb_comSetOsError( pCom, iResult == -1 );
-      if( iResult == -1 && timeout > 0 && HB_COM_IS_EINTR() &&
-          hb_vmRequestQuery() == 0 )
-#if defined( HB_HAS_SELECT_TIMER )
+      if( iResult == 0 && timeout < 0 )
          continue;
-#else
+      if( iResult != -1 || timeout == 0 || ! HB_COM_IS_EINTR() ||
+          hb_vmRequestQuery() != 0 )
+         break;
+#if !defined( HB_HAS_SELECT_TIMER )
+      else if( timeout > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
          if( timecurr > timer )
          {
-            timeout -= timecurr - timer;
+            if( ( timeout -= timecurr - timer ) <= 0 )
+               break;
             timer = timecurr;
-            if( timeout > 0 )
-               continue;
          }
       }
 #endif
