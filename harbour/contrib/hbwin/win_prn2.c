@@ -132,7 +132,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    {
       typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
       DEFPRINTER fnGetDefaultPrinter;
-      HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
+      HMODULE hWinSpool = hbwapi_LoadLibrarySystem( TEXT( "winspool.drv" ) );
 
       if( hWinSpool )
       {

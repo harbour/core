@@ -125,7 +125,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          typedef BOOL ( WINAPI * DEFPRINTER )( LPCTSTR ); /* stops warnings */
          DEFPRINTER fnSetDefaultPrinter;
 
-         hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
+         hWinSpool = hbwapi_LoadLibrarySystem( TEXT( "winspool.drv" ) );
          if( ! hWinSpool )
             return HB_FALSE;
          fnSetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,

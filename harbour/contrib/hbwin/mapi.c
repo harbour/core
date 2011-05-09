@@ -59,7 +59,7 @@
 #  endif
 #endif
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #if defined( HB_OS_WIN_CE )
 #  include "hbwince.h"
 #endif
@@ -85,7 +85,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
    /* Set default return value */
    hb_retnl( -1 );
 
-   if( ( hMapiDll = LoadLibrary( TEXT( "mapi32.dll" ) ) ) >= ( HINSTANCE ) 32 )
+   if( ( hMapiDll = hbwapi_LoadLibrarySystem( TEXT( "mapi32.dll" ) ) ) >= ( HINSTANCE ) 32 )
    {
       LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiDll, "MAPISendMail" );
 

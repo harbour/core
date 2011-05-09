@@ -85,7 +85,7 @@ HB_FUNC( WAPI_ISUSERANADMIN )
 {
    BOOL bResult = FALSE;
 
-   HMODULE hLib = LoadLibrary( TEXT( "shell32.dll" ) );
+   HMODULE hLib = hbwapi_LoadLibrarySystem( TEXT( "shell32.dll" ) );
 
    if( hLib )
    {

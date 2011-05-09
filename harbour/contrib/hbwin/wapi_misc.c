@@ -101,7 +101,7 @@ HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
    return nLen;
 }
 
-TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
+static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
 {
 #if defined( HB_OS_WIN_CE )
    return hbwapi_tstrdup( pFileName );
@@ -130,4 +130,15 @@ TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
    else
       return hbwapi_tstrdup( pFileName );
 #endif
+}
+
+HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
+{
+   TCHAR * pLibPath = hbwapi_FileNameAtSystemDir( pFileName );
+
+   HMODULE h = LoadLibrary( pLibPath );
+
+   hb_xfree( pLibPath );
+
+   return h;
 }
