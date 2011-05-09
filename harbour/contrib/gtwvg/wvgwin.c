@@ -1148,7 +1148,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
    HINSTANCE                     h;
    wvtSetLayeredWindowAttributes pfnLayered;
 
-   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
+   h = GetModuleHandle( TEXT( "user32.dll" ) );
    if( h )
    {
       pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );

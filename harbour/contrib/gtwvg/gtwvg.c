@@ -2624,31 +2624,6 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
-      /* An experimental call - processed at WndProc to recognize pWVT off hWnd */
-      #if 0
-      SetWindowLongPtr( pWVT->hWnd, GWL_USERDATA, ( LONG_PTR ) pWVT );
-      #endif
-
-#if 0
-      if( ! GetSystemMetrics( SM_REMOTESESSION ) )
-      {
-         typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
-
-         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
-                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                  "SetLayeredWindowAttributes" );
-
-         if( pSetLayeredWindowAttributes )
-         {
-            SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
-            pSetLayeredWindowAttributes( pWVT->hWnd,
-               ( COLORREF ) 0 /* COLORREF crKey */,
-               255 /* BYTE bAlpha */,
-               LWA_ALPHA /* DWORD dwFlags */ );
-         }
-      }
-#endif
-
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 
       /* Set icon */
@@ -4365,7 +4340,7 @@ static void hb_wvt_gtLoadGuiData( void )
       }
    }
 
-   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
+   h = GetModuleHandle( TEXT( "user32.dll" ) );
    if( h )
    {
       s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
