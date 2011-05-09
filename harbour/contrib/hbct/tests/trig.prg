@@ -244,8 +244,8 @@
 
  ? "Testing ATN2( x, y )... where:"
 
- x = SIN( DTOR( 30 ) )
- y = COS( DTOR( 30 ) )
+ x := SIN( DTOR( 30 ) )
+ y := COS( DTOR( 30 ) )
  ? "x = SIN( DTOR( 30 ) ) =", x
  ? "y = COS( DTOR( 30 ) ) =", y
  ?
@@ -268,4 +268,3 @@ PROCEDURE WAIT4
  CLS
 
 RETURN
-

@@ -935,10 +935,10 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
       s := iif( lType, "[U]=", "" ) + 'NIL'
    CASE ( t == "A" )
       s := iif( lType, "[A]=", "" ) + "{"
-      IF len( x ) = 0
+      IF len( x ) == 0
          s += " "
       ELSE
-         s += iif( valtype( x[1] ) = "A" .or. lForceLineFeed, hb_eol(), "" )
+         s += iif( valtype( x[1] ) == "A" .or. lForceLineFeed, hb_eol(), "" )
          j := len( x )
 
          FOR i := 1 TO j

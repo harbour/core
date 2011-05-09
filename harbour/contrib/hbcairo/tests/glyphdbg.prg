@@ -14,7 +14,7 @@ PROC main()
    cairo_select_font_face( hCairo, "Times", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL )
    cairo_set_font_size( hCairo, 200 )
    cairo_set_source_rgb( hCairo, 0, 0, 0.7 )
-   
+
    cairo_move_to( hCairo, 100, 250 )
    cairo_text_path( hCairo, "Ag" )
    path_debug( hCairo )
@@ -35,11 +35,11 @@ PROC path_debug( hCairo, nTolerance )
    cairo_save( hCairo )
 
    IF EMPTY( nTolerance )
-      hPath = cairo_copy_path( hCairo )
+      hPath := cairo_copy_path( hCairo )
    ELSE
       cairo_save( hCairo )
       cairo_set_tolerance( hCairo, nTolerance )
-      hPath = cairo_copy_path_flat( hCairo )
+      hPath := cairo_copy_path_flat( hCairo )
       cairo_restore( hCairo )
    ENDIF
 

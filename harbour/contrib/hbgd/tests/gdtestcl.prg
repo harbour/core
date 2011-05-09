@@ -183,7 +183,7 @@ PROCEDURE Main()
 
    //oI4:SetColor( black )
    //oI4:Say( 100, 10, "Valentina" )
-   IF OS() = "Linux"
+   IF Left( OS(), Len( "Linux" ) ) == "Linux"
       oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD power", "arib____", 40, 45 )
    ELSE
       nSecs := Seconds()

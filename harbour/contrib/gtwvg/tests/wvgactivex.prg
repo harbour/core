@@ -607,7 +607,7 @@ STATIC FUNCTION ConfigureRMChart( RMChart )
    RMChart:AddRegion()
 
    oRegion := RMChart:Region( 1 )
-   oRegion:Footer = "http://vouch.info"
+   oRegion:Footer := "http://vouch.info"
 
    oRegion:AddCaption()
 

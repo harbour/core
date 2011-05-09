@@ -318,13 +318,13 @@ PROCEDURE Progress( nProgress, nDrow, nDcol )
    DispOutAt( nDrow, nDcol, "[ ]" )
 
    DO CASE
-   CASE nProgress = 0
+   CASE nProgress == 0
       DispOutAt( nDrow, nDcol+1, "-" )
-   CASE nProgress = 1
+   CASE nProgress == 1
       DispOutAt( nDrow, nDcol+1, "\" )
-   CASE nProgress = 2
+   CASE nProgress == 2
       DispOutAt( nDrow, nDcol+1, "|" )
-   CASE nProgress = 3
+   CASE nProgress == 3
       DispOutAt( nDrow, nDcol+1, "/" )
    ENDCASE
 
@@ -347,13 +347,13 @@ PROCEDURE Looping( nProgress,  nDrow, nDcol )
    DispOutAt( nDrow, nDcol, "[ ]" )
 
    DO CASE
-   CASE nProgress = 0
+   CASE nProgress == 0
       DispOutAt( nDrow, nDcol+1, "-" )
-   CASE nProgress = 1
+   CASE nProgress == 1
       DispOutAt( nDrow, nDcol+1, "\" )
-   CASE nProgress = 2
+   CASE nProgress == 2
       DispOutAt( nDrow, nDcol+1, "|" )
-   CASE nProgress = 3
+   CASE nProgress == 3
       DispOutAt( nDrow, nDcol+1, "/" )
    ENDCASE
 

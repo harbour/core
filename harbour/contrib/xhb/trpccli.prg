@@ -254,7 +254,7 @@ METHOD ScanServers(cName) CLASS tRPCClient
    ENDIF
 
    HB_MutexLock( ::mtxBusy )
-   ::aServers = {}
+   ::aServers := {}
    HB_MutexUnlock( ::mtxBusy )
 
    hb_inetDGramSend( ::skUDP, ::cNetwork , ::nUdpPort, "XHBR00" + HB_Serialize( cName ) )
@@ -299,8 +299,8 @@ METHOD ScanFunctions( cFunc, cSerial ) CLASS tRPCClient
       cSerial := "00000000.0"
    ENDIF
    HB_MutexLock( ::mtxBusy )
-   ::aFunctions = {}
-   ::aServers = {}
+   ::aFunctions := {}
+   ::aServers := {}
    HB_MutexUnlock( ::mtxBusy )
 
    hb_inetDGramSend( ::skUDP, ::cNetwork, ::nUdpPort,;
@@ -744,23 +744,23 @@ METHOD SendCall( cFunction, aParams ) CLASS tRPCClient
 
    SWITCH ::nLoopMode
       CASE RPC_LOOP_NONE
-         nReq = 0
-         cType = ""
+         nReq := 0
+         cType := ""
       EXIT
 
       CASE RPC_LOOP_ALLDATA
-         nReq = 2
-         cType = "A"
+         nReq := 2
+         cType := "A"
       EXIT
 
       CASE RPC_LOOP_SUMMARY
-         nReq = 2
-         cType = "C"
+         nReq := 2
+         cType := "C"
       EXIT
 
       CASE RPC_LOOP_CONFIRMATION
-         nReq = 2
-         cType = "E"
+         nReq := 2
+         cType := "E"
       EXIT
    END
 
@@ -807,7 +807,7 @@ METHOD TCPAccept() CLASS tRPCClient
 
    cCode := Space(6)
    ::nTCPTimeBegin := INT( Seconds() * 1000 )
-   nTimeLimit = Max( ::nTimeout, ::nTimeLimit )
+   nTimeLimit := Max( ::nTimeout, ::nTimeLimit )
 
 
    DO WHILE .T.
@@ -880,7 +880,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
       /* We have a reply */
       CASE cCode == "XHBR31"
          IF hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
-            nOrigLen = HB_GetLen8( cOrigLen )
+            nOrigLen := HB_GetLen8( cOrigLen )
             IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
                nDataLen := HB_GetLen8( cDataLen )
                cData := Space( nDataLen )
@@ -928,7 +928,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
          IF hb_inetRecvAll( ::skTCP, @cProgress ) == Len( cProgress )
             nProgress := HB_Deserialize( cProgress, Len( cProgress ) )
             IF nProgress != NIL .and. hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
-               nOrigLen = HB_GetLen8( cOrigLen )
+               nOrigLen := HB_GetLen8( cOrigLen )
                IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
                   nDataLen := HB_GetLen8( cDataLen )
                   cData := Space( nDataLen )

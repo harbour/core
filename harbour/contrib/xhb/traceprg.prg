@@ -68,9 +68,9 @@ FUNCTION xhb_setTrace( xTrace )
    IF HB_ISLOGICAL( xTrace )
       s_lSET_TRACE := xTrace
    ELSEIF HB_ISSTRING( xTrace )
-      IF Upper( xTrace ) = "ON"
+      IF Upper( xTrace ) == "ON"
          s_lSET_TRACE := .T.
-      ELSEIF Upper( xTrace ) = "OFF"
+      ELSEIF Upper( xTrace ) == "OFF"
          s_lSET_TRACE := .F.
       ENDIF
    ENDIF

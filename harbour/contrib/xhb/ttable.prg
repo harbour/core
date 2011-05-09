@@ -92,7 +92,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
 
    slNetOk  := .F.
    nSeconds *= 1.00
-   lforever := ( nSeconds = 0 )
+   lforever := ( nSeconds == 0 )
 
    KEYBOARD CHR( 255 )
    INKEY()

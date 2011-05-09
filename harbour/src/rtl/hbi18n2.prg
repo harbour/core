@@ -65,6 +65,7 @@
 #define _I18N_EOL          chr( 10 )
 #define _I18N_DELIM        ( chr( 0 ) + chr( 3 ) + chr( 0 ) )
 
+#define LEFTEQUAL( l, r )  ( Left( l, Len( r ) ) == r )
 
 STATIC FUNCTION __I18N_fileName( cFile )
    LOCAL cExt
@@ -146,8 +147,8 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
       IF lCont
          cValue += hb_eol()
       ELSE
-         IF cLine = "#" .AND. nMode == _I18N_NONE
-            IF cLine = "#:"   // source code references
+         IF LEFTEQUAL( cLine, "#" ) .AND. nMode == _I18N_NONE
+            IF LEFTEQUAL( cLine, "#:" )   // source code references
                IF Empty( aItem[ _I18N_SOURCE ] )
                   aItem[ _I18N_SOURCE ] := ""
                ELSE
@@ -155,7 +156,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
                ENDIF
                aItem[ _I18N_SOURCE ] += strtran( ltrim( substr( cLine, 3 ) ), "\", "/" )
 /*
-            ELSEIF cLine = "#,"   // flags
+            ELSEIF LEFTEQUAL( cLine, "#," )  // flags
                cLine := ltrim( substr( cLine, 3 ) )
                IF cLine == "c-format"
                ELSE
@@ -165,11 +166,11 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
 */
             ENDIF
             cLine := ""
-         ELSEIF cLine = "msgctxt " .AND. nMode == _I18N_NONE
+         ELSEIF LEFTEQUAL( cLine, "msgctxt " ) .AND. nMode == _I18N_NONE
             cLine := ltrim( substr( cLine, 9 ) )
             nMode := _I18N_CONTEXT
             cValue := NIL
-         ELSEIF cLine = "msgid " .AND. ;
+         ELSEIF LEFTEQUAL( cLine, "msgid " ) .AND. ;
                 ( nMode == _I18N_NONE .OR. nMode == _I18N_CONTEXT )
             nIndex := 1
             cLine := ltrim( substr( cLine, 7 ) )
@@ -182,7 +183,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
             ENDIF
             nMode := _I18N_MSGID
             cValue := NIL
-         ELSEIF cLine = "msgid_plural" .AND. nMode == _I18N_MSGID
+         ELSEIF LEFTEQUAL( cLine, "msgid_plural" ) .AND. nMode == _I18N_MSGID
             nOldIndex := nIndex
             nIndex := 2
             n := 13
@@ -208,7 +209,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cLine := ltrim( substr( cLine, n ) )
             cValue := NIL
-         ELSEIF cLine = "msgstr " .AND. nMode == _I18N_MSGID
+         ELSEIF LEFTEQUAL( cLine, "msgstr " ) .AND. nMode == _I18N_MSGID
             nIndex := 0
             cLine := ltrim( substr( cLine, 8 ) )
             nMode := _I18N_MSGSTR
@@ -218,7 +219,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
             ENDIF
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cValue := NIL
-         ELSEIF cLine = "msgstr[" .AND. ;
+         ELSEIF LEFTEQUAL( cLine, "msgstr[" ) .AND. ;
                 ( nMode == _I18N_MSGID .OR. nMode == _I18N_MSGSTR )
             nOldIndex := IIF( nMode == _I18N_MSGSTR, nIndex, -1 )
             nIndex := 0

@@ -219,7 +219,7 @@ METHOD Put() CLASS THtmlControl
       ::cOutput += Space( 2 ) + '     NAME="' + ::Name + '"' + CRLF()
    ENDIF
 
-   IF ::Type = "TEXTAREA"
+   IF ::Type == "TEXTAREA"
 
       IF ::Rows != NIL
          ::cOutput += Space( 2 ) + '     ROWS="' + hb_ntos( ::Rows ) + '"' + CRLF()
@@ -260,7 +260,7 @@ METHOD Put() CLASS THtmlControl
       ::cOutput += Space( 2 ) + '    STYLE="' + ::Style + '"' + CRLF()
    ENDIF
 
-   IF ::type = "IMAGE"
+   IF ::type == "IMAGE"
 
       IF ::Source != NIL
          ::cOutput += Space( 2 ) + '      SRC="' + ::Source + '"' + CRLF()
@@ -272,7 +272,7 @@ METHOD Put() CLASS THtmlControl
       ::cOutput += Space( 2 ) + '    ALIGN="' + ::Align + '"' + CRLF()
    ENDIF
 
-   IF ::type = "RADIO" .or. ::type = "CHECKBOX"
+   IF ::type == "RADIO" .or. ::type == "CHECKBOX"
 
       IF ::Checked
          ::cOutput += Space( 2 ) + '   CHECKED' + CRLF()
@@ -717,7 +717,7 @@ RETURN Self
 METHOD GetControl( cName ) CLASS THtmlForm
 
    LOCAL oRet
-   LOCAL nPos := Ascan( ::aControls, { | e | e:name = cName } )
+   LOCAL nPos := Ascan( ::aControls, { | e | e:name == cName } )
 
    IF nPos > 0
       oRet := ::aControls[ nPos ]

@@ -1742,7 +1742,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ENDIF
 
    IF !empty( ::oManager:aConxns )
-      n := ascan( ::oManager:aConxns, {|e| e = ::cConxn } )
+      n := ascan( ::oManager:aConxns, {|e| e == ::cConxn } )
       ::cConxnFull := ::oManager:aConxns[ n ]
    ENDIF
 
@@ -2435,7 +2435,7 @@ METHOD IdeBrowse:toColumn( ncIndex )
 
    IF valtype( ncIndex ) == "C"
       ncIndex := upper( ncIndex )
-      nIndex := ascan( ::aStruct, {|e_|  e_[ 1 ] = ncIndex } )
+      nIndex := ascan( ::aStruct, {|e_| Left( e_[ 1 ], Len( ncIndex ) ) == ncIndex } )
    ELSE
       nIndex := ncIndex
    ENDIF

@@ -766,7 +766,7 @@ STATIC FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
 
   nTemp := nTotalSec
 
-  FOR nCtr = 1 to 4
+  FOR nCtr := 1 to 4
      nConstant := IF(nCtr == 1, 86400, IF(nCtr == 2, 3600, IF( nCtr == 3, 60, 1)))
      aRetVal[nCtr,1] := INT(nTemp/nConstant)
      aRetval[nCtr,2] := nTotalSec / nConstant

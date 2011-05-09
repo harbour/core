@@ -47,10 +47,10 @@ PROCEDURE MAIN( ... )
          lUrl := .T.
 
          OTHERWISE
-         IF File( cData ) .AND. hInput = hSTDIN
-            hInput = FOpen( cData )
-         ELSEIF hOutput = hSTDOUT
-            hOutput = FCreate( cData )
+         IF hb_FileExists( cData ) .AND. hInput == hSTDIN
+            hInput := FOpen( cData )
+         ELSEIF hOutput == hSTDOUT
+            hOutput := FCreate( cData )
          ELSE
             ? "Wrong parameter", cData
             ?

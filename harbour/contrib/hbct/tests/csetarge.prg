@@ -239,7 +239,7 @@ local ni, nDigit
       qout ("      3 is Float,  4 is Boolean,   5 is Date")
       qout ("      6 is Block,  7 is Array,    8 is Object")
       qout ("      9 is unknown")
-      nDigit = int (oerr:subCode%10)
+      nDigit := int (oerr:subCode%10)
       qout ("    Here it's a "+alltrim(str(nDigit))+", so I return a ")
       do case
         case nDigit == 0

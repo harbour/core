@@ -896,7 +896,7 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 
    /* Check row, many tables exists in current query, so we must have only one table */
 
-   IF Len( aTables ) = 1
+   IF Len( aTables ) == 1
       cTable := aTables[ 1 ]
 
       cQuery := ' select                                      '

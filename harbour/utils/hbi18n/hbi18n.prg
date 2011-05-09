@@ -57,6 +57,8 @@
 #define _HB_I18N_GENHBL 2
 #define _HB_I18N_TRANS  3
 
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
@@ -76,7 +78,7 @@ PROCEDURE Main( ... )
    aFiles := {}
    nMode := 0
    FOR n := 1 TO Len( aParams )
-      IF aParams[ n ] = "-"
+      IF LEFTEQUAL( aParams[ n ], "-" )
          param := SubStr( aParams[ n ], 2 )
          IF param == "m"
             IF nMode != 0
@@ -96,7 +98,7 @@ PROCEDURE Main( ... )
             ELSE
                nMode := _HB_I18N_TRANS
             ENDIF
-         ELSEIF param = "o"
+         ELSEIF LEFTEQUAL( param, "o" )
             IF !Empty( param := SubStr( param, 2 ) )
                cFileOut := param
             ELSEIF n < Len( aParams ) .AND. aParams[ n + 1 ] != "-"

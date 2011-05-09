@@ -649,7 +649,7 @@ METHOD Run() CLASS tRPCServeCon
                nSafeStatus := RPCS_STATUS_ERROR
             ELSE
                HB_MutexLock( ::mtxBusy )
-               ::lCanceled = .T.
+               ::lCanceled := .T.
                HB_MutexUnlock( ::mtxBusy )
                hb_inetSendAll( ::skRemote, "XHBR34")
             ENDIF
@@ -749,7 +749,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
       cChallenge[ nCount ] := Chr( HB_Random(0,255 ) )
    NEXT
 
-   ::nChallengeCRC = HB_Checksum( cChallenge )
+   ::nChallengeCRC := HB_Checksum( cChallenge )
    cChallenge := HB_Crypt( cChallenge, ::cCryptKey )
 
    hb_inetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( Len( cChallenge ) ) + cChallenge )
@@ -980,7 +980,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
             CASE 'C' // Vector of all results
                aRet := {}
-               ::lAllowProgress = .F.
+               ::lAllowProgress := .F.
                FOR nCount := aDesc[ 2 ] TO aDesc[ 3 ] STEP aDesc[ 4 ]
                   IF nSubstPos > 0
                      aSubst[ nSubstPos ] := nCount
@@ -998,7 +998,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
             EXIT
 
             CASE 'E' // Just send confirmation at end
-               ::lAllowProgress = .F.
+               ::lAllowProgress := .F.
                FOR nCount := aDesc[ 2 ] TO aDesc[ 3 ] STEP aDesc[ 4 ]
                   IF nSubstPos > 0
                      aSubst[ nSubstPos ] := nCount
@@ -1033,7 +1033,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
             CASE 'C' // Vector of all results
                aRet := {}
-               ::lAllowProgress = .F.
+               ::lAllowProgress := .F.
                FOR EACH oElem IN  aDesc[ 2 ]
                   IF nSubstPos > 0
                      aSubst[ nSubstPos ] := oElem
@@ -1051,7 +1051,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
             EXIT
 
             CASE 'E' // Just send confirmation at end
-               ::lAllowProgress = .F.
+               ::lAllowProgress := .F.
                FOR EACH oElem IN aDesc[ 2 ]
                   IF nSubstPos > 0
                      aSubst[ nSubstPos ] := oElem

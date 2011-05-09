@@ -2488,7 +2488,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRectF )
    sh    := 0
 
    IF drawTextType == HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE .OR. ::drawTextType == HBQT_GRAPHICSITEM_TEXT_DRAW_BELOW
-      textH = qPainter:font():pixelSize()
+      textH := qPainter:font():pixelSize()
    ENDIF
 
    qPix  := ::pixmap()
@@ -2511,13 +2511,13 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRectF )
       CASE HBQT_GRAPHICSITEM_CENTER_PICTURE_TO_ITEM
          point:setX( point:x() + ( rc:width() - image:width() ) / 2 )
          point:setY( point:y() + ( rc:height() - image:height() - textH ) / 2 )
-         IF ( point:x() < 0 )
+         IF point:x() < 0
             cx := abs( point:x() )
             cw -= 2 * cx
             point:setX( 0 )
          ENDIF
-         IF ( point:y() < 0 )
-            cy = abs( point:y() )
+         IF point:y() < 0
+            cy := abs( point:y() )
             ch -= 2 * cy
             point:setY( 0 )
          ENDIF

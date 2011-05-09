@@ -60,6 +60,8 @@
 #define RF_STATE_CODE   3
 #define RF_STATE_RET    4
 
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
 /* TOFIX:
      1. 'var ++'
      2. '- 1' for numeric literals.
@@ -312,11 +314,11 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                   ENDIF
                   cToken2 := Lower( hb_TokenGet( cLine, 2 ) )
                   IF Left( cToken1, 1 ) == "#"
-                  ELSEIF nLenToken >= 4 .AND. ( ( "static" = cToken1 .AND. ;
-                        ( "function" = cToken2 .OR. "procedure" = cToken2 ) ) .OR. ;
-                        "function" = cToken1 .OR. "procedure" = cToken1 ;
-                        .OR. ( "method" == cToken1 .AND. !lClass ) .OR. ;
-                        ( "class" == cToken1 .AND. !lClass ) )
+                  ELSEIF nLenToken >= 4 .AND. ( ( LEFTEQUAL( "static", cToken1 ) .AND. ;
+                        ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
+                        LEFTEQUAL( "function", cToken1 ) .OR. LEFTEQUAL( "procedure", cToken1 ) ;
+                        .OR. ( LEFTEQUAL( "method", cToken1 ) .AND. !lClass ) .OR. ;
+                        ( LEFTEQUAL( "class", cToken1 ) .AND. !lClass ) )
                      IF nDeep == 0
                         nState := RF_STATE_FUNC
                         IF "class" == cToken1
@@ -328,11 +330,15 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         ::cLineErr := cLine
                         RETURN .F.
                      ENDIF
-                  ELSEIF nLenToken >= 4 .AND. ( "local" = cToken1 .OR.  ;
-                        "private" = cToken1 ;
-                        .OR. "public" = cToken1 .OR. "field" = cToken1  ;
-                        .OR. "static" = cToken1 .OR. "memvar" = cToken1 ;
-                        .OR. "parameters" = cToken1 .OR. "declare" = cToken1 )
+                  ELSEIF nLenToken >= 4 .AND. ( ;
+                        LEFTEQUAL( "local", cToken1 ) .OR. ;
+                        LEFTEQUAL( "private", cToken1 ) .OR. ;
+                        LEFTEQUAL( "public", cToken1 ) .OR. ;
+                        LEFTEQUAL( "field", cToken1 ) .OR. ;
+                        LEFTEQUAL( "static", cToken1 ) .OR. ;
+                        LEFTEQUAL( "memvar", cToken1 ) .OR. ;
+                        LEFTEQUAL( "parameters", cToken1 ) .OR. ;
+                        LEFTEQUAL( "declare", cToken1 ) )
                      IF nStatePrev == RF_STATE_FUNC
                         nState := RF_STATE_VAR
                      ENDIF

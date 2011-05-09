@@ -50,71 +50,70 @@
  *
  */
 
-procedure HB_HashAddMember( aName, cType, uInit, oObj )
+PROCEDURE HB_HashAddMember( aName, cType, uInit, oObj )
 
-   local cName
+   LOCAL cName
 
-   if !( cType == nil )
+   IF !( cType == NIL )
 
-      switch Upper( Left( cType, 1 ) )
+      SWITCH Upper( Left( cType, 1 ) )
+      CASE "S" // STRING
 
-         case "S" // STRING
+         IF uInit == NIL
+            uInit := ""
+         ENDIF
 
-              if uInit == nil
-                 uInit = ""
-              endif
+         EXIT
 
-              exit
+      CASE "N" // NUMERIC
 
-         case "N" // NUMERIC
+         IF uInit == NIL
+            uInit := 0
+         ENDIF
 
-              if uInit == nil
-                 uInit = 0
-              endif
+         EXIT
 
-              exit
+      CASE "L" // LOGICAL
 
-         case "L" // LOGICAL
+         IF uInit == NIL
+            uInit := .F.
+         ENDIF
 
-              if uInit == nil
-                 uInit = .f.
-              endif
+         EXIT
 
-              exit
+      CASE "D" // DATE
 
-         case "D" // DATE
+         IF uInit == NIL
+            uInit := hb_SToD()
+         ENDIF
 
-              if uInit == nil
-                 uInit = CtoD( "" )
-              endif
+         EXIT
 
-              exit
+      CASE "C" // CODEBLOCK
 
-         case "C" // CODEBLOCK
+         IF uInit == NIL
+            uInit := {|| NIL }
+         ENDIF
 
-              if uInit == nil
-                 uInit = { || nil }
-              endif
+         EXIT
 
-              exit
+      CASE "A" // ARRAY
 
-         case "A" // ARRAY
+         IF uInit == NIL
+            uInit := {}
+         ENDIF
 
-              if uInit == nil
-                 uInit = {}
-              endif
+         EXIT
 
-              exit
+      CASE "O" // OBJECT
+         EXIT
 
-         case "O" // OBJECT
-              exit
+      ENDSWITCH
 
-      end switch
+   ENDIF
 
-   endif
+   FOR EACH cName IN aName
+      oObj[ cName ] := uInit
+   NEXT
 
-   for each cName in aName
-       oObj[ cName ] = uInit
-   next
-
-return
+   RETURN
