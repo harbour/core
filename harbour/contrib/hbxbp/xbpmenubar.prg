@@ -114,7 +114,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
    DATA     caption                                INIT ""
    DATA     nItemID                                INIT 0
    DATA     aIds                                   INIT {}
-   DATA     className                              INIT "XbpMenuBar"
+   DATA     className                              INIT "XBPMENUBAR"
 
    METHOD   init( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )
@@ -245,9 +245,9 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
    DO CASE
    CASE cType == "U" .OR. empty( xCaption ) .OR. nStyle == XBPMENUBAR_MIS_SEPARATOR
       IF lInsert
-         oAction := ::oWidget:insertSeparator()
+         oAction := ::oWidget:insertSeparator( pOldAct )
       ELSE
-         ::oWidget:addSeparator()
+         oAction := ::oWidget:addSeparator()
       ENDIF
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 
@@ -370,7 +370,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 METHOD xbpMenuBar:addItem( aItem )
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF PCount() == 1 .and. valtype( aItem ) == "A"
+   IF PCount() == 1 .AND. hb_isArray( aItem )
       ASize( aItem, 4 )
 
       xCaption := aItem[ 1 ]
@@ -645,6 +645,7 @@ METHOD xbpMenuBar:setStyle()
 CLASS xbpMenu INHERIT xbpMenuBar
 
    DATA     title                                 INIT  ""
+   DATA     className                             INIT  "XBPMENU"
 
    METHOD   init( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )
@@ -652,6 +653,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   setTitle( cTitle )
    METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
+   METHOD   normalize( cCaption )
 
    ENDCLASS
 
@@ -670,6 +672,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    ::oWidget := QMenu()
+   ::oWidget:setTitle( ::normalize( ::title ) )
 
    IF hb_isObject( ::oParent )
       ::oParent:oWidget:addMenu( ::oWidget )
@@ -689,8 +692,12 @@ METHOD xbpMenu:getTitle()
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenu:setTitle( cTitle )
+   LOCAL oldTitle := ::title
 
-   RETURN ::title := cTitle
+   ::title := cTitle
+   ::oWidget:setTitle( ::normalize( ::title ) )
+
+   RETURN oldTitle
 
 /*----------------------------------------------------------------------*/
 
@@ -705,6 +712,12 @@ METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    ::oWidget:exec( qPoint )
 
    RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenu:normalize( cCaption )
+
+   RETURN strtran( cCaption, '~', '&' )
 
 /*----------------------------------------------------------------------*/
 

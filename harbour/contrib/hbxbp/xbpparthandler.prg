@@ -128,11 +128,12 @@ METHOD XbpPartHandler:create( oParent, oOwner )
    ::oParent := oParent
    ::oOwner  := oOwner
 
-   // DEFAULT ::oOwner TO ::oParent
-
    IF hb_isObject( ::oOwner )
       ::oOwner:addAsOwned( Self )
    ENDIF
+
+   DEFAULT ::oParent TO SetAppWindow()
+   DEFAULT ::oOwner  TO ::oParent
 
    RETURN Self
 
@@ -217,11 +218,18 @@ METHOD XbpPartHandler:addAsOwned( oXbp )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPartHandler:childFromName( nNameId )
-   LOCAL i
+   LOCAL oXbp, oXbpC
 
-   FOR i := 1 TO len( ::aChildren )
-      IF ::aChildren[ i ]:nNameID <> NIL .AND. ::aChildren[ i ]:nNameID == nNameID
-         RETURN ::aChildren[ i ]
+   FOR EACH oXbp IN ::aChildren
+
+      IF oXbp:nNameID <> NIL .AND. oXbp:nNameID == nNameID
+         RETURN oXbp
+      ELSE
+         FOR EACH oXbpC IN oXbp:aChildren
+            IF oXbpC:nNameID <> NIL .AND. oXbpC:nNameID == nNameID
+               RETURN oXbpC
+            ENDIF
+         NEXT
       ENDIF
    NEXT
 
