@@ -90,7 +90,7 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
          fragment = base64_decode_value( *codechar++ );
       }
       while( fragment < 0 );
-      *pszPlainchar = ( fragment & 0x03f ) << 2;
+      *pszPlainchar = ( fragment & 0x03F ) << 2;
 
       do
       {
@@ -100,7 +100,7 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
       }
       while( fragment < 0 );
       *pszPlainchar++ |= ( fragment & 0x030 ) >> 4;
-      *pszPlainchar    = ( fragment & 0x00f ) << 4;
+      *pszPlainchar    = ( fragment & 0x00F ) << 4;
 
       do
       {
@@ -109,7 +109,7 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
          fragment = base64_decode_value( *codechar++ );
       }
       while( fragment < 0 );
-      *pszPlainchar++ |= ( fragment & 0x03c ) >> 2;
+      *pszPlainchar++ |= ( fragment & 0x03C ) >> 2;
       *pszPlainchar    = ( fragment & 0x003 ) << 6;
 
       do
@@ -119,7 +119,7 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
          fragment = base64_decode_value( *codechar++ );
       }
       while( fragment < 0 );
-      *pszPlainchar++ |= ( fragment & 0x03f );
+      *pszPlainchar++ |= ( fragment & 0x03F );
    }
 }
 

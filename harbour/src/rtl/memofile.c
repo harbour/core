@@ -78,15 +78,11 @@ static void hb_memoread( HB_BOOL bHandleEOF )
             nSize = hb_fsReadLarge( fhnd, pbyBuffer, nSize );
 
             /* Don't read the file terminating EOF character */
-#if ! defined( HB_OS_UNIX )
             if( bHandleEOF && nSize > 0 )
             {
                if( pbyBuffer[ nSize - 1 ] == HB_CHAR_EOF )
                   --nSize;
             }
-#else
-            HB_SYMBOL_UNUSED( bHandleEOF );
-#endif
 
             hb_retclen_buffer( pbyBuffer, nSize );
          }
@@ -130,15 +126,11 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
-#if ! defined( HB_OS_UNIX )
          if( bHandleEOF && bRetVal )  /* if true, then write EOF */
          {
             char cEOF = HB_CHAR_EOF;
             hb_fsWrite( fhnd, &cEOF, sizeof( char ) );
          }
-#else
-         HB_SYMBOL_UNUSED( bHandleEOF );
-#endif
 
          hb_fsClose( fhnd );
       }
