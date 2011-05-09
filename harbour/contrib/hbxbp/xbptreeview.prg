@@ -406,16 +406,16 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
    oItem:oParent := self
    oItem:oXbpTree := oItem:oParent:oXbpTree
 
-   IF xNormalImage <> NIL
+   IF xNormalImage != NIL
       oItem:image := xNormalImage
    ENDIF
-   IF xMarkedImage <> NIL
+   IF xMarkedImage != NIL
       oItem:markedImage := xMarkedImage
    ENDIF
-   IF xExpandedImage <> NIL
+   IF xExpandedImage != NIL
       oItem:expandedImage := xExpandedImage
    ENDIF
-   IF xValue <> NIL
+   IF xValue != NIL
       oItem:xValue := xValue
    ENDIF
 

@@ -222,11 +222,11 @@ METHOD XbpPartHandler:childFromName( nNameId )
 
    FOR EACH oXbp IN ::aChildren
 
-      IF oXbp:nNameID <> NIL .AND. oXbp:nNameID == nNameID
+      IF oXbp:nNameID != NIL .AND. oXbp:nNameID == nNameID
          RETURN oXbp
       ELSE
          FOR EACH oXbpC IN oXbp:aChildren
-            IF oXbpC:nNameID <> NIL .AND. oXbpC:nNameID == nNameID
+            IF oXbpC:nNameID != NIL .AND. oXbpC:nNameID == nNameID
                RETURN oXbpC
             ENDIF
          NEXT
@@ -339,4 +339,3 @@ METHOD XbpPartHandler:moveOwned( nOffSetX, nOffSetY )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

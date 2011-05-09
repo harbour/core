@@ -346,7 +346,7 @@ METHOD XbpStatusBarPanel:caption( cCaption )
 
       ::sl_caption := cCaption
 
-      IF ::oWidget <> NIL
+      IF ::oWidget != NIL
          ::oWidget:setText( cCaption )
       ELSE
          ::oParent:oWidget:showMessage( cCaption )

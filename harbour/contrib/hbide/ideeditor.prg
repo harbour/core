@@ -1493,12 +1493,12 @@ METHOD IdeEditor:prepareBufferToSave( cBuffer )
    // here we can extercise user settings via Setup
    //
    cEOL := iif( ::cEOL == "", cE, ::cEOL )
-   IF cEOL <> cE
+   IF !( cEOL == cE )
       // MsgBox( "Difference in set EOL and current file EOL mode, saving with original mode!" )
    ENDIF
 
    cBuffer := strtran( cBuffer, chr( 13 ) )
-   IF cEOL != chr( 10 )
+   IF !( cEOL == chr( 10 ) )
       cBuffer := strtran( cBuffer, chr( 10 ), cEOL )
    ENDIF
    IF ::oINI:lTrimTrailingBlanks

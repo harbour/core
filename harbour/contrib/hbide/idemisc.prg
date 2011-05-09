@@ -725,7 +725,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    IF ( nPos := hb_At( '(', cText ) ) > 0
       cFileName := alltrim( Subst( cText, 1, nPos - 1 ) )
    ELSE
-      IF ( nPos := At( 'referenced from', Lower( cText ) ) ) <> 00
+      IF ( nPos := At( 'referenced from', Lower( cText ) ) ) != 0
          cFileName := SubStr( cText, nPos + Len( 'referenced from' ) )
       ELSE
        * GCC & MSVC filename detect...
@@ -734,7 +734,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
          ELSE
             nPos := hb_At( ':', cText )
          ENDIF
-         IF nPos <> 00
+         IF nPos != 0
             cFileName := SubStr( cText, 1, nPos - 1 )
          ENDIF
       ENDIF
@@ -746,7 +746,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    cFileName := strtran( cFileName, "\\", "/" )
    cFileName := strtran( cFileName, "\" , "/" )
 
-   IF ( nPos := Rat( ' ', cFileName ) ) <> 00
+   IF ( nPos := Rat( ' ', cFileName ) ) != 0
       cFileName := SubStr( cFileName, nPos + 1 )
    ENDIF
 
@@ -756,7 +756,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
       nPos := hb_At( ':', cFileName )
    ENDIF
 
-   IF nPos <> 00
+   IF nPos != 0
       cFileName := SubStr( cFileName, 1, nPos - 1 )
    ENDIF
 
@@ -943,7 +943,7 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
 
          FOR i := 1 TO j
              s += iif( valtype( x[i] ) == "A", "  ", " " ) + iif( lForceLineFeed, " ", "" ) + hbide_toString( x[i], .F. )
-             s += iif( i <> j, ",", "" )
+             s += iif( i != j, ",", "" )
              IF lLineFeed
                 IF !lInherited .and. ( valtype( x[i] ) == "A" .or. lForceLineFeed )
                    s += hb_eol()
@@ -1038,7 +1038,7 @@ FUNCTION hbide_getUniqueFuncName()
    t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
    n := len( t )
    b := ''
-   WHILE Len( b ) <> 10
+   DO WHILE Len( b ) != 10
       c := Substr( t, HB_RANDOMINT( 1, n ), 1 )
 
       IF !( c $ b )
@@ -1047,7 +1047,7 @@ FUNCTION hbide_getUniqueFuncName()
          ENDIF
          b += c
       ENDIF
-   End
+   ENDDO
    b += '( '
 
    RETURN b
@@ -2054,5 +2054,3 @@ FUNCTION hbide_setAdsAvailable( lYes )
    RETURN yes
 
 /*----------------------------------------------------------------------*/
-
-

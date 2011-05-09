@@ -543,12 +543,12 @@ METHOD XbpFont:list()
 METHOD XbpFont:createFont()
    LOCAL aFont := {}
 
-   IF ::hFont <> NIL
+   IF ::hFont != NIL
       // Win_DeleteObject( ::hFont )
       ::hFont := NIL
    ENDIF
 
-   IF ::oPS <> NIL
+   IF ::oPS != NIL
       //::height := xbp_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 

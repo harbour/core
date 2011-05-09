@@ -132,7 +132,7 @@ METHOD XbpCheckBox:execSlot( cSlot, p )
 
    SWITCH cSlot
    CASE "stateChanged(int)"
-      ::sl_editBuffer := p <> 0
+      ::sl_editBuffer := ( p != 0 )
       ::selected( ::sl_editBuffer )
       EXIT
    ENDSWITCH

@@ -145,7 +145,7 @@ METHOD DataRef:setData( xValue, mp2 )
    IF hb_isBlock( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink, xValue )
 
-   ELSEIF xValue <> NIL
+   ELSEIF xValue != NIL
       ::sl_editBuffer := xValue
 
    ENDIF
@@ -164,7 +164,7 @@ METHOD DataRef:setData( xValue, mp2 )
       RETURN .f.
 
    CASE cClass == "XBPTREEVIEW"
-      IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
+      IF ::sl_editBuffer != NIL .and. ::sl_editBuffer:hItem != NIL
          //Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
@@ -225,4 +225,3 @@ METHOD DataRef:editBuffer( xData )
    RETURN ::sl_editBuffer
 
 /*----------------------------------------------------------------------*/
-

@@ -1023,7 +1023,7 @@ METHOD XbpBrowse:manageScrollContents( nX, nY )
 
    HB_SYMBOL_UNUSED( nY )
 
-   IF nX <> 0
+   IF nX != 0
       ::setHorzOffset()
    ENDIF
 
