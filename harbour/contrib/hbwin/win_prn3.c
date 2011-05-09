@@ -50,45 +50,10 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-
-#include <winspool.h>
-
-/* NOTE: Based on hb_strncat() */
-static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
-{
-   TCHAR * pBuf = pDest;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %" HB_PFS "u)", pDest, pSource, nLen));
-
-   pDest[ nLen ] = TEXT( '\0' );
-
-   while( nLen && *pDest )
-   {
-      pDest++;
-      nLen--;
-   }
-
-   while( nLen && ( *pDest++ = *pSource++ ) != TEXT( '\0' ) )
-      nLen--;
-
-   return pBuf;
-}
-
-static HB_SIZE hb_tstrlen( const TCHAR * pText )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_tstrlen(%p)", pText));
-
-   while( pText[ nLen ] != TEXT( '\0' ) )
-      ++nLen;
-
-   return nLen;
-}
-
+#  include <winspool.h>
 #endif
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
@@ -217,9 +182,9 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             return HB_FALSE;
          }
 
-         nStrLen = hb_tstrlen( lpPrinterName ) +
-                   hb_tstrlen( ppi2->pDriverName ) +
-                   hb_tstrlen( ppi2->pPortName ) + 2;
+         nStrLen = hbwapi_tstrlen( lpPrinterName ) +
+                   hbwapi_tstrlen( ppi2->pDriverName ) +
+                   hbwapi_tstrlen( ppi2->pPortName ) + 2;
 
          /* Allocate buffer big enough for concatenated string.
             String will be in form "printername,drivername,portname". */
@@ -228,11 +193,11 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          pBuffer[ 0 ] = TEXT( '\0' );
 
          /* Build string in form "printername,drivername,portname". */
-         hb_tstrncat( pBuffer, lpPrinterName, nStrLen );
-         hb_tstrncat( pBuffer, TEXT( "," ), nStrLen );
-         hb_tstrncat( pBuffer, ppi2->pDriverName, nStrLen );
-         hb_tstrncat( pBuffer, TEXT( "," ), nStrLen );
-         hb_tstrncat( pBuffer, ppi2->pPortName, nStrLen );
+         hbwapi_tstrncat( pBuffer, lpPrinterName, nStrLen );
+         hbwapi_tstrncat( pBuffer, TEXT( "," ), nStrLen );
+         hbwapi_tstrncat( pBuffer, ppi2->pDriverName, nStrLen );
+         hbwapi_tstrncat( pBuffer, TEXT( "," ), nStrLen );
+         hbwapi_tstrncat( pBuffer, ppi2->pPortName, nStrLen );
 
          /* Set the default printer in win.ini and registry. */
          bFlag = WriteProfileString( TEXT( "windows" ), TEXT( "device" ), pBuffer );
