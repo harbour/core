@@ -115,7 +115,7 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QScrollBar( ::pParent )
-   ::oWidget:setOrientation( IF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
+   ::oWidget:setOrientation( IIF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
    ::oWidget:setTracking( ::autoTrack )
 
    ::connect()

@@ -1899,13 +1899,8 @@ ifeq ($(HB_INIT_DONE),)
 
       export HB_DYNLIB_BASE := harbour$(HB_DYNLIB_PLOC)
 
-      ifeq ($(_HB_BUILD_DYN_ST),yes)
-         ifneq ($(filter $(HB_PLATFORM),dos os2),)
-            HB_DYNLIB_BASE_2ND := harbours$(HB_DYNLIB_PLOC)
-         else
-            HB_DYNLIB_BASE_2ND := harbourst$(HB_DYNLIB_PLOC)
-         endif
-         export HB_DYNLIB_BASE_2ND
+      ifeq ($(__HB_BUILD_DYN_2ND),yes)
+         export HB_DYNLIB_BASE_2ND := harbour2$(HB_DYNLIB_PLOC)
       endif
    endif
 endif

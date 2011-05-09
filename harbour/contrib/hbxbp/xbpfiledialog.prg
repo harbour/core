@@ -259,7 +259,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    nResult := ::oWidget:exec()
    qFocus:setFocus( 0 )
 
-   RETURN IF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
+   RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
 
 /*----------------------------------------------------------------------*/
 
@@ -308,7 +308,7 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    nResult := ::oWidget:exec()
    qFocus:setFocus( 0 )
 
-   RETURN IF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
+   RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
 
 /*----------------------------------------------------------------------*/
 

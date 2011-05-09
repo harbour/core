@@ -130,6 +130,7 @@ PRG_HEADERS := \
    hbsix.ch \
    hbsocket.ch \
    hbstdgen.ch \
+   hbstrict.ch \
    hbsxdef.ch \
    hbthread.ch \
    hbtrace.ch \

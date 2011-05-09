@@ -11,6 +11,7 @@
 -prgflag=-es2
 -prgflag=-kmo
 -prgflag=-i-
+#-prgflag=-u+hbstrict.ch
 
 # It is also supported by official mingw 4.4.x and mingw64 4.4.x,
 # but not supported by mingw tdm 4.4.x, so I only enable it on or

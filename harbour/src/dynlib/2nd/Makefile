@@ -8,7 +8,11 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
 
-   DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
+   ifeq ($(__HB_BUILD_DYN_ST),yes)
+      DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
+   else
+      DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
+   endif
    DYNNAME := $(HB_DYNLIB_BASE_2ND)
 
    include $(TOP)$(ROOT)config/dyn.mk

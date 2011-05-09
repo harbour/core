@@ -225,10 +225,10 @@ METHOD XbpPrinter:resolution()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setCollationMode( nMode )
-   LOCAL nModeOld := IF( ::oWidget:collateCopies(), XBPPRN_COLLATIONMODE_ON, XBPPRN_COLLATIONMODE_OFF )
+   LOCAL nModeOld := IIF( ::oWidget:collateCopies(), XBPPRN_COLLATIONMODE_ON, XBPPRN_COLLATIONMODE_OFF )
 
    IF hb_isNumeric( nMode )
-      ::oWidget:setCollateCopies( IF( nMode == XBPPRN_COLLATIONMODE_ON, .t., .f. ) )
+      ::oWidget:setCollateCopies( IIF( nMode == XBPPRN_COLLATIONMODE_ON, .t., .f. ) )
    ENDIF
 
    RETURN nModeOld
@@ -236,10 +236,10 @@ METHOD XbpPrinter:setCollationMode( nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setColorMode( nMode )
-   LOCAL nModeOld := IF( ::oWidget:colorMode() == QPrinter_Color, XBPPRN_COLORMODE_ON, XBPPRN_COLORMODE_OFF )
+   LOCAL nModeOld := IIF( ::oWidget:colorMode() == QPrinter_Color, XBPPRN_COLORMODE_ON, XBPPRN_COLORMODE_OFF )
 
    IF hb_isNumeric( nMode )
-      ::oWidget:setColorMode( IF( nMode == XBPPRN_COLORMODE_ON, QPrinter_Color, QPrinter_GrayScale ) )
+      ::oWidget:setColorMode( IIF( nMode == XBPPRN_COLORMODE_ON, QPrinter_Color, QPrinter_GrayScale ) )
    ENDIF
 
    RETURN nModeOld
@@ -399,10 +399,10 @@ METHOD XbpPrinter:setNumCopies( nNumCopies )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setOrientation( nOrientation )
-   LOCAL nOldOrientation := IF( ::oWidget:orientation() == QPrinter_Landscape, XBPPRN_ORIENT_LANDSCAPE, XBPPRN_ORIENT_PORTRAIT )
+   LOCAL nOldOrientation := IIF( ::oWidget:orientation() == QPrinter_Landscape, XBPPRN_ORIENT_LANDSCAPE, XBPPRN_ORIENT_PORTRAIT )
 
    IF hb_isNumeric( nOrientation )
-      ::oWidget:setOrientation( if( nOrientation == XBPPRN_ORIENT_LANDSCAPE, QPrinter_Landscape, QPrinter_Portrait ) )
+      ::oWidget:setOrientation( iif( nOrientation == XBPPRN_ORIENT_LANDSCAPE, QPrinter_Landscape, QPrinter_Portrait ) )
    ENDIF
 
    RETURN nOldOrientation
@@ -472,7 +472,7 @@ METHOD XbpPrinter:setResolution( anResolution )
    LOCAL aOldResolution := { ::getEngineProperty( QPrintEngine_PPK_Resolution ), ::oWidget:resolution() }
 
    IF hb_isNumeric( anResolution ) .or. hb_isArray( anResolution )
-      ::oWidget:setResolution( IF( hb_isNumeric( anResolution ), anResolution, anResolution[ 1 ] ) )
+      ::oWidget:setResolution( IIF( hb_isNumeric( anResolution ), anResolution, anResolution[ 1 ] ) )
    ENDIF
 
    RETURN aOldResolution

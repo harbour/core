@@ -317,8 +317,8 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                   ELSEIF nLenToken >= 4 .AND. ( ( LEFTEQUAL( "static", cToken1 ) .AND. ;
                         ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
                         LEFTEQUAL( "function", cToken1 ) .OR. LEFTEQUAL( "procedure", cToken1 ) ;
-                        .OR. ( LEFTEQUAL( "method", cToken1 ) .AND. !lClass ) .OR. ;
-                        ( LEFTEQUAL( "class", cToken1 ) .AND. !lClass ) )
+                        .OR. ( "method" == cToken1 .AND. !lClass ) .OR. ;
+                        ( "class" == cToken1 .AND. !lClass ) )
                      IF nDeep == 0
                         nState := RF_STATE_FUNC
                         IF "class" == cToken1

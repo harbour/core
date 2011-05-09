@@ -336,7 +336,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       aItem := { QMF_STRING, nMenuItemID, oAction:text(), bAction, oAction }
 
    CASE cType == "O"
-      cCaption := IF( bAction == NIL, xCaption:title, bAction )
+      cCaption := IIF( bAction == NIL, xCaption:title, bAction )
       aItem    := { QMF_POPUP, xCaption:oWidget, cCaption, xCaption, NIL }
       IF hb_isChar( cCaption )
          xCaption:oWidget:setTitle( strtran( cCaption, '~','&' ) )
@@ -428,7 +428,7 @@ METHOD xbpMenuBar:checkItem( nItemIndex, lCheck )
       lChecked := ::aMenuItems[ nItemIndex, 5 ]:isChecked()
    ENDIF
 
-   RETURN IF( lCheck, lChecked, !lChecked )
+   RETURN IIF( lCheck, lChecked, !lChecked )
 
 /*----------------------------------------------------------------------*/
 
