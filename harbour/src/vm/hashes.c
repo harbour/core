@@ -277,8 +277,7 @@ static HB_BOOL hb_hashFind( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, HB_SIZE * pnP
                           pKey, iFlags );
       if( i == 0 )
       {
-         if( pnPos )
-            *pnPos = pBaseHash->pnPos ? pBaseHash->pnPos[ nMiddle ] : nMiddle;
+         *pnPos = pBaseHash->pnPos ? pBaseHash->pnPos[ nMiddle ] : nMiddle;
          return HB_TRUE;
       }
       else if( i < 0 )
@@ -287,8 +286,7 @@ static HB_BOOL hb_hashFind( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, HB_SIZE * pnP
          nRight = nMiddle;
    }
 
-   if( pnPos )
-      *pnPos = nLeft;
+   *pnPos = nLeft;
    return HB_FALSE;
 }
 
@@ -933,30 +931,9 @@ void hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType )
       {
          case HB_HASH_UNION:        /* OR */
             pBaseHash = pSource->item.asHash.value;
-            for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
+            if( pBaseHash != pDest->item.asHash.value )
             {
-               PHB_ITEM pVal = &pBaseHash->pPairs[ nPos ].value;
-               if( HB_IS_BYREF( pVal ) )
-                  pVal = hb_itemUnRef( pVal );
-               hb_hashAdd( pDest, &pBaseHash->pPairs[ nPos ].key, pVal );
-            }
-            break;
-
-         case HB_HASH_INTERSECT:    /* AND */
-            pBaseHash = pDest->item.asHash.value;
-            for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
-            {
-               if( !hb_hashFind( pSource->item.asHash.value,
-                                 &pBaseHash->pPairs[ nPos ].key, NULL ) )
-                  hb_hashDel( pDest, &pBaseHash->pPairs[ nPos ].key );
-            }
-            break;
-
-         case HB_HASH_DIFFERENCE:   /* XOR */
-            pBaseHash = pSource->item.asHash.value;
-            for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
-            {
-               if( !hb_hashDel( pDest, &pBaseHash->pPairs[ nPos ].key ) )
+               for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
                {
                   PHB_ITEM pVal = &pBaseHash->pPairs[ nPos ].value;
                   if( HB_IS_BYREF( pVal ) )
@@ -966,9 +943,51 @@ void hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType )
             }
             break;
 
-         case HB_HASH_REMOVE:       /* NOT -> h1 & ( h1 ^ h2 ) */
+         case HB_HASH_INTERSECT:    /* AND */
+            pBaseHash = pDest->item.asHash.value;
+            if( pBaseHash != pSource->item.asHash.value )
+            {
+               for( nPos = 0; nPos < pBaseHash->nLen; )
+               {
+                  HB_SIZE nSrcPos;
+                  if( hb_hashFind( pSource->item.asHash.value,
+                                   &pBaseHash->pPairs[ nPos ].key, &nSrcPos ) )
+                  {
+                     PHB_ITEM pDestVal = &pBaseHash->pPairs[ nPos ].value;
+                     if( HB_IS_BYREF( pDestVal ) )
+                        pDestVal = hb_itemUnRef( pDestVal );
+                     hb_itemCopyFromRef( pDestVal,
+                                         &pSource->item.asHash.value->pPairs[ nSrcPos ].value );
+                     ++nPos;
+                  }
+                  else
+                     hb_hashDelPair( pBaseHash, nPos );
+               }
+            }
+            break;
+
+         case HB_HASH_DIFFERENCE:   /* XOR */
             pBaseHash = pSource->item.asHash.value;
-            if( pDest->item.asHash.value == pBaseHash )
+            if( pBaseHash == pDest->item.asHash.value )
+               hb_hashClear( pDest );
+            else
+            {
+               for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
+               {
+                  if( !hb_hashDel( pDest, &pBaseHash->pPairs[ nPos ].key ) )
+                  {
+                     PHB_ITEM pVal = &pBaseHash->pPairs[ nPos ].value;
+                     if( HB_IS_BYREF( pVal ) )
+                        pVal = hb_itemUnRef( pVal );
+                     hb_hashAdd( pDest, &pBaseHash->pPairs[ nPos ].key, pVal );
+                  }
+               }
+            }
+            break;
+
+         case HB_HASH_REMOVE:       /* NOT -> h1 AND ( h1 XOR h2 ) */
+            pBaseHash = pSource->item.asHash.value;
+            if( pBaseHash == pDest->item.asHash.value )
                hb_hashClear( pDest );
             else
             {
