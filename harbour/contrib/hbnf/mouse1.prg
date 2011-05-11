@@ -2,8 +2,8 @@
  * $Id$
  */
 
-static s_lCrsState:=.F.
-static s_lMinit:=.F.
+THREAD static s_lCrsState:=.F.
+THREAD static s_lMinit:=.F.
 
 #ifdef FT_TEST
 

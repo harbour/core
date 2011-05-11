@@ -42,7 +42,7 @@
 #endif
 
 function ft_rand1(nMax)
-  static nSeed
+  THREAD static nSeed
   local m := 100000000, b := 31415621
 
   nSeed := iif( nSeed == NIL, seconds(), nSeed )   // init_seed()

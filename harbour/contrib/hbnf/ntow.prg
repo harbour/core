@@ -21,20 +21,20 @@
  *
  */
 
-static ones  := { "",     " One",   " Two",   " Three", " Four", " Five",  ;
-                  " Six", " Seven", " Eight", " Nine"                      ;
-                }
+static sc_ones  := { "",     " One",   " Two",   " Three", " Four", " Five",  ;
+                     " Six", " Seven", " Eight", " Nine"                      ;
+                   }
 
-static teens := { " Ten",      " Eleven",    " Twelve",   ;
-                  " Thirteen", " Fourteen",  " Fifteen",  ;
-                  " Sixteen",  " Seventeen", " Eighteen", ;
-                  " Nineteen"                             ;
-                }
+static sc_teens := { " Ten",      " Eleven",    " Twelve",   ;
+                     " Thirteen", " Fourteen",  " Fifteen",  ;
+                     " Sixteen",  " Seventeen", " Eighteen", ;
+                     " Nineteen"                             ;
+                   }
 
-static tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
-                   " Sixty", " Seventy", " Eighty", " Ninety"  }
+static sc_tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
+                      " Sixty", " Seventy", " Eighty", " Ninety"  }
 
-static qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
+static sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
 #ifdef FT_TEST
   function main( cNum )
@@ -48,7 +48,7 @@ function ft_ntow(nAmount)
   nTemp   := int(nAmount % nDiv)
   nAmount := int(nAmount / nDiv)
   nQualNo := int( sol10( nDiv ) / 3 ) + 1
-  sResult += grp_to_words(nAmount, qualifiers[ nQualNo ] )
+  sResult += grp_to_words(nAmount, sc_qualifiers[ nQualNo ] )
 
   if nTemp > (nDiv /= 1000) .and. (nDiv > 1)
      sResult += ft_ntow( nTemp, nDiv )
@@ -62,16 +62,16 @@ static function grp_to_words(nGrp, sQual)
 
   nTemp   := int(nGrp % 100)
   nGrp    := int(nGrp / 100)
-  sResult += ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "")
+  sResult += sc_ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "")
 
   do case
      case nTemp > 19
-         sResult += tens[ int( nTemp / 10 ) + 1 ]
-         sResult += ones[ int( nTemp % 10 ) + 1 ]
+         sResult += sc_tens[ int( nTemp / 10 ) + 1 ]
+         sResult += sc_ones[ int( nTemp % 10 ) + 1 ]
      case nTemp < 20 .and. nTemp > 9
-         sResult += teens[ int( nTemp % 10 ) + 1 ]
+         sResult += sc_teens[ int( nTemp % 10 ) + 1 ]
      case nTemp < 10 .and. nTemp > 0
-         sResult += ones[ int( nTemp) + 1 ]
+         sResult += sc_ones[ int( nTemp) + 1 ]
   endcase
   return sResult + sQual
 

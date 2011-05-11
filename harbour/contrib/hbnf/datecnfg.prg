@@ -231,7 +231,7 @@
 
 FUNCTION FT_DATECNFG( cFYStart ,nDow )
 
-  STATIC aDatePar := { "1980.01.01", 1 }
+  THREAD STATIC aDatePar := { "1980.01.01", 1 }
 
   LOCAL dCheck, cDateFormat := SET(_SET_DATEFORMAT)
 

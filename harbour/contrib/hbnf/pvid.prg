@@ -33,7 +33,7 @@
 #define PV_MAXCOL  9
 #define PV_SCORE  10
 
-static aVideo := {}
+THREAD static aVideo := {}
 
 function FT_PushVid()
 

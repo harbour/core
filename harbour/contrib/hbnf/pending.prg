@@ -34,8 +34,8 @@
 #endif
 
 FUNCTION FT_PENDING (cMsg, nRow, nCol, nWait, cColor)
- STATIC nLast_Time := 0, nRow1 := 24, nCol1 := 0
- STATIC nWait1 := 5, cColor1 := 'W+/R,X'
+ THREAD STATIC nLast_Time := 0, nRow1 := 24, nCol1 := 0
+ THREAD STATIC nWait1 := 5, cColor1 := 'W+/R,X'
  LOCAL  nThis_Time, nTiny := 0.1, cSavColor
 
 *

@@ -66,9 +66,9 @@
 
 #include "ftint86.ch"
 
-static aReg[10]
-static lCrsState:=.F.
-static lMinit:=.F.
+THREAD static aReg[10]
+THREAD static lCrsState:=.F.
+THREAD static lMinit:=.F.
 
 #ifdef FT_TEST
 

@@ -24,7 +24,7 @@
  *
  */
 
-STATIC aRgnStack := {}
+THREAD STATIC aRgnStack := {}
 
 FUNCTION FT_SAVRGN(nTop, nLeft, nBottom, nRight)
 
@@ -50,7 +50,7 @@ FUNCTION FT_RSTRGN(cScreen, nTop, nLeft)
 
 FUNCTION FT_RGNSTACK(cAction, nTop, nLeft, nBottom, nRight)
 
-   STATIC nStackPtr := 0
+   THREAD STATIC nStackPtr := 0
    LOCAL nPopTop
 
    IF cAction == "push"

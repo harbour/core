@@ -120,7 +120,7 @@
 #define cTapeScr   aAdder[23]
 
 // I still use a few of STATICS, but most are set to NIL when quiting...
-STATIC lAdderOpen := .F.,                                                    ;
+THREAD STATIC lAdderOpen := .F.,                                             ;
        aKeys, aWindow, nWinColor, aWinColor, aStdColor
 
 #ifdef FT_TEST
@@ -1255,7 +1255,7 @@ RETURN xVarVal
 */
 FUNCTION _ftAdderTapeUDF(mode,cur_elem,rel_pos)
   LOCAL nKey,nRtnVal
-  STATIC ac_exit_ok := .F.
+  THREAD STATIC ac_exit_ok := .F.
 
   HB_SYMBOL_UNUSED( cur_elem )
   HB_SYMBOL_UNUSED( rel_pos )

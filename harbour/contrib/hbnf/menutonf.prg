@@ -59,25 +59,25 @@
 
 // These arrays hold information about each menu item
 
-static aRow          := {{}}
-static aCol          := {{}}
-static aPrompt       := {{}}
-static aColor        := {{}}
-static aMsgRow       := {{}}
-static aMsgCol       := {{}}
-static aMessage      := {{}}
-static aMsgColor     := {{}}
-static aTrigger      := {{}}
-static aTriggerInkey := {{}}
-static aTriggerColor := {{}}
-static aHome         := {{}}
-static aEnd          := {{}}
-static aUp           := {{}}
-static aDown         := {{}}
-static aLeft         := {{}}
-static aRight        := {{}}
-static aExecute      := {{}}
-static nLevel        := 1
+THREAD static aRow          := {{}}
+THREAD static aCol          := {{}}
+THREAD static aPrompt       := {{}}
+THREAD static aColor        := {{}}
+THREAD static aMsgRow       := {{}}
+THREAD static aMsgCol       := {{}}
+THREAD static aMessage      := {{}}
+THREAD static aMsgColor     := {{}}
+THREAD static aTrigger      := {{}}
+THREAD static aTriggerInkey := {{}}
+THREAD static aTriggerColor := {{}}
+THREAD static aHome         := {{}}
+THREAD static aEnd          := {{}}
+THREAD static aUp           := {{}}
+THREAD static aDown         := {{}}
+THREAD static aLeft         := {{}}
+THREAD static aRight        := {{}}
+THREAD static aExecute      := {{}}
+THREAD static nLevel        := 1
 
 function FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
                     nMsgRow, nMsgCol, cMessage, cMsgColor,   ;

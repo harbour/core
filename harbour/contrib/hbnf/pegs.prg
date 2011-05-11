@@ -46,7 +46,7 @@ memvar getlist
    board_[xx, 3] - subarray containing all target locations
    board_[xx, 4] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
-static board_ := { { {0, 29, 2, 34}, {2, 4}, {3, 9}, .T. } , ;
+THREAD static board_ := { { {0, 29, 2, 34}, {2, 4}, {3, 9}, .T. } , ;
              { {0, 37, 2, 42}, {5}, {10}, .T.}      , ;
              { {0, 45, 2, 50}, {2, 6}, {1, 11}, .T. } , ;
              { {3, 29, 5, 34}, {5, 9}, {6, 16}, .T. } , ;
