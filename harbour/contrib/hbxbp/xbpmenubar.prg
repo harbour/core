@@ -153,8 +153,6 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
 METHOD xbpMenuBar:init( oParent, aPresParams, lVisible )
 
-   DEFAULT lVisible TO .f.
-
    ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
    RETURN Self
