@@ -345,124 +345,126 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOPTPRG           41
 #define _HBMK_aOPTRES           42
 #define _HBMK_aOPTL             43
-#define _HBMK_aOPTA             44
-#define _HBMK_aOPTD             45
-#define _HBMK_aOPTI             46
-#define _HBMK_lCPP              47
-#define _HBMK_lSHARED           48
-#define _HBMK_lSTATICFULL       49
-#define _HBMK_lSHAREDDIST       50
-#define _HBMK_lNULRDD           51
-#define _HBMK_lMAP              52
-#define _HBMK_lBEEP             53
-#define _HBMK_lSTRIP            54
-#define _HBMK_lOPTIM            55
-#define _HBMK_nCOMPR            56
-#define _HBMK_nWARN             57
-#define _HBMK_lRUN              58
-#define _HBMK_lINC              59
-#define _HBMK_lREBUILDPO        60
-#define _HBMK_lMINIPO           61
-#define _HBMK_lWINUNI           62
-#define _HBMK_nCONF             63
-#define _HBMK_lIGNOREERROR      64
-#define _HBMK_lIMPLIB           65
-#define _HBMK_lHBCPPMM          66
-#define _HBMK_aVAR              67
-#define _HBMK_hDEP              68
+#define _HBMK_aOPTLPOST         44
+#define _HBMK_aOPTA             45
+#define _HBMK_aOPTD             46
+#define _HBMK_aOPTDPOST         47
+#define _HBMK_aOPTI             48
+#define _HBMK_lCPP              49
+#define _HBMK_lSHARED           50
+#define _HBMK_lSTATICFULL       51
+#define _HBMK_lSHAREDDIST       52
+#define _HBMK_lNULRDD           53
+#define _HBMK_lMAP              54
+#define _HBMK_lBEEP             55
+#define _HBMK_lSTRIP            56
+#define _HBMK_lOPTIM            57
+#define _HBMK_nCOMPR            58
+#define _HBMK_nWARN             59
+#define _HBMK_lRUN              60
+#define _HBMK_lINC              61
+#define _HBMK_lREBUILDPO        62
+#define _HBMK_lMINIPO           63
+#define _HBMK_lWINUNI           64
+#define _HBMK_nCONF             65
+#define _HBMK_lIGNOREERROR      66
+#define _HBMK_lIMPLIB           67
+#define _HBMK_lHBCPPMM          68
+#define _HBMK_aVAR              69
+#define _HBMK_hDEP              70
 
-#define _HBMK_lCreateLib        69
-#define _HBMK_lCreateDyn        70
-#define _HBMK_lCreateImpLib     71
-#define _HBMK_lCreatePPO        72
-#define _HBMK_lCreateHRB        73
+#define _HBMK_lCreateLib        71
+#define _HBMK_lCreateDyn        72
+#define _HBMK_lCreateImpLib     73
+#define _HBMK_lCreatePPO        74
+#define _HBMK_lCreateHRB        75
 
-#define _HBMK_lDynVM            74
+#define _HBMK_lDynVM            76
 
-#define _HBMK_lBLDFLGP          75
-#define _HBMK_lBLDFLGC          76
-#define _HBMK_lBLDFLGL          77
+#define _HBMK_lBLDFLGP          77
+#define _HBMK_lBLDFLGC          78
+#define _HBMK_lBLDFLGL          79
 
-#define _HBMK_cFIRST            78
-#define _HBMK_aPRG              79
-#define _HBMK_aC                80
-#define _HBMK_aCPP              81
-#define _HBMK_aRESSRC           82
-#define _HBMK_aRESCMP           83
-#define _HBMK_aOBJUSER          84
-#define _HBMK_aICON             85
-#define _HBMK_cMANIFEST         86
-#define _HBMK_aIMPLIBSRC        87
-#define _HBMK_aDEF              88
-#define _HBMK_aINSTFILE         89
-#define _HBMK_hDEPTS            90
-#define _HBMK_aREQUEST          91
+#define _HBMK_cFIRST            80
+#define _HBMK_aPRG              81
+#define _HBMK_aC                82
+#define _HBMK_aCPP              83
+#define _HBMK_aRESSRC           84
+#define _HBMK_aRESCMP           85
+#define _HBMK_aOBJUSER          86
+#define _HBMK_aICON             87
+#define _HBMK_cMANIFEST         88
+#define _HBMK_aIMPLIBSRC        89
+#define _HBMK_aDEF              90
+#define _HBMK_aINSTFILE         91
+#define _HBMK_hDEPTS            92
+#define _HBMK_aREQUEST          93
 
-#define _HBMK_aPO               92
-#define _HBMK_cHBL              93
-#define _HBMK_cHBLDir           94
-#define _HBMK_aLNG              95
-#define _HBMK_cPO               96
+#define _HBMK_aPO               94
+#define _HBMK_cHBL              95
+#define _HBMK_cHBLDir           96
+#define _HBMK_aLNG              97
+#define _HBMK_cPO               98
 
-#define _HBMK_hPLUGINHRB        97
-#define _HBMK_hPLUGINVars       98
-#define _HBMK_aPLUGINPars       99
-#define _HBMK_hPLUGINExt        100
+#define _HBMK_hPLUGINHRB        99
+#define _HBMK_hPLUGINVars       100
+#define _HBMK_aPLUGINPars       101
+#define _HBMK_hPLUGINExt        102
 
-#define _HBMK_lDEBUGTIME        101
-#define _HBMK_lDEBUGINC         102
-#define _HBMK_lDEBUGSTUB        103
-#define _HBMK_lDEBUGI18N        104
-#define _HBMK_lDEBUGDEPD        105
-#define _HBMK_lDEBUGPARS        106
+#define _HBMK_lDEBUGTIME        103
+#define _HBMK_lDEBUGINC         104
+#define _HBMK_lDEBUGSTUB        105
+#define _HBMK_lDEBUGI18N        106
+#define _HBMK_lDEBUGDEPD        107
+#define _HBMK_lDEBUGPARS        108
 
-#define _HBMK_cCCPATH           107
-#define _HBMK_cCCPREFIX         108
-#define _HBMK_cCCPOSTFIX        109
-#define _HBMK_cCCEXT            110
+#define _HBMK_cCCPATH           109
+#define _HBMK_cCCPREFIX         110
+#define _HBMK_cCCPOSTFIX        111
+#define _HBMK_cCCEXT            112
 
-#define _HBMK_cWorkDir          111
-#define _HBMK_cWorkDirDynSub    112
-#define _HBMK_nCmd_Esc          113
-#define _HBMK_nScr_Esc          114
-#define _HBMK_nCmd_FNF          115
-#define _HBMK_nScr_FNF          116
-#define _HBMK_nErrorLevel       117
+#define _HBMK_cWorkDir          113
+#define _HBMK_cWorkDirDynSub    114
+#define _HBMK_nCmd_Esc          115
+#define _HBMK_nScr_Esc          116
+#define _HBMK_nCmd_FNF          117
+#define _HBMK_nScr_FNF          118
+#define _HBMK_nErrorLevel       119
 
-#define _HBMK_cPROGDIR          118
-#define _HBMK_cPROGNAME         119
+#define _HBMK_cPROGDIR          120
+#define _HBMK_cPROGNAME         121
 
-#define _HBMK_hAUTOHBC          120 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     121 /* trigger headers found */
+#define _HBMK_hAUTOHBC          122 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     123 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          122 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         123 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          124 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         125 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    124
-#define _HBMK_lStopAfterHarbour 125
+#define _HBMK_lStopAfterInit    126
+#define _HBMK_lStopAfterHarbour 127
 
-#define _HBMK_nCOMPVer          126
-#define _HBMK_lDEPIMPLIB        127 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        128 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          129 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        130 /* Target type: container */
-#define _HBMK_lShowLevel        131 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            132 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     133 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        134 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             135 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        136 /* Links to be created and pointing to the target */
-#define _HBMK_cC                137 /* C dialect */
-#define _HBMK_cCPP              138 /* C++ dialect */
+#define _HBMK_nCOMPVer          128
+#define _HBMK_lDEPIMPLIB        129 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        130 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          131 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        132 /* Target type: container */
+#define _HBMK_lShowLevel        133 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            134 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     135 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        136 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             137 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        138 /* Links to be created and pointing to the target */
+#define _HBMK_cC                139 /* C dialect */
+#define _HBMK_cCPP              140 /* C++ dialect */
 
-#define _HBMK_aArgs             139
-#define _HBMK_nArgTarget        140
-#define _HBMK_lPause            141
-#define _HBMK_nLevel            142
+#define _HBMK_aArgs             141
+#define _HBMK_nArgTarget        142
+#define _HBMK_lPause            143
+#define _HBMK_nLevel            144
 
-#define _HBMK_cHBX              143
+#define _HBMK_cHBX              145
 
-#define _HBMK_MAX_              143
+#define _HBMK_MAX_              145
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1966,8 +1968,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_aOPTCPPX ] := {}
    hbmk[ _HBMK_aOPTRES ] := {}
    hbmk[ _HBMK_aOPTL ] := {}
+   hbmk[ _HBMK_aOPTLPOST ] := {}
    hbmk[ _HBMK_aOPTA ] := {}
    hbmk[ _HBMK_aOPTD ] := {}
+   hbmk[ _HBMK_aOPTDPOST ] := {}
    hbmk[ _HBMK_aOPTI ] := {}
    l_aOPTRUN := {}
    hbmk[ _HBMK_aRESSRC ] := {}
@@ -2620,11 +2624,25 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTL ], PathSepToSelf( cParam, 2 ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-ldflag+=" ) ) == "-ldflag+="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ldflag+=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( hbmk[ _HBMK_aOPTLPOST ], PathSepToSelf( cParam, 2 ) )
+         ENDIF
+
       CASE Left( cParamL, Len( "-dflag=" ) ) == "-dflag="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-dflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( hbmk[ _HBMK_aOPTD ], PathSepToSelf( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-dflag+=" ) ) == "-dflag+="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-dflag+=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( hbmk[ _HBMK_aOPTDPOST ], PathSepToSelf( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-aflag=" ) ) == "-aflag="
@@ -3227,6 +3245,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          {LO}     list of object files
          {LA}     list of object archive (.a) files
          {LL}     list of lib files
+         {LF}     list of lib files (as flag)
          {LB}     list of lib files with paths
          {FC}     flags for C compiler (user + automatic)
          {FL}     flags for linker (user + automatic)
@@ -3437,6 +3456,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm"
          cOpt_LibHBX := "-g" + iif( hbmk[ _HBMK_cPLAT ] == "darwin", "", " --defined-only -C" ) + " {LI}"
+         IF hbmk[ _HBMK_cPLAT ] == "darwin"
+            cLibHBX_Regex := "[[:space:]]T" + cLibHBX_Regex
+         ENDIF
          IF l_lLIBGROUPING .AND. ;
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
@@ -3445,11 +3467,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
               hbmk[ _HBMK_cPLAT ] == "vxworks" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "cygwin" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "bsd" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB} {LF}" )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
@@ -3714,11 +3736,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
          ENDIF
          IF l_lLIBGROUPING .AND. HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB} {LF}" )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
@@ -3813,7 +3835,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          AAddNotEmpty( hbmk[ _HBMK_aOPTCX ], gcc_opt_lngc_fill( hbmk ) )
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {IM} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {LF} {FD} {IM} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {IM} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_copy( hbmk, cSourceDLL, cTargetLib ) }
@@ -3841,7 +3863,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cBin_Post := "emximp"
             cOpt_Post := "-o {OI} {OB}"
          ENDIF
-         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
          l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          IF ! hbmk[ _HBMK_lSHARED ]
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "socket" } )
@@ -3926,7 +3948,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          AAddNotEmpty( hbmk[ _HBMK_aOPTCX ], gcc_opt_lngc_fill( hbmk ) )
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := "dxe3gen"
-         cOpt_Dyn := "--whole-archive -U {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "--whole-archive -U {FD} -o {OD} {DL} {LO} {LL} {LB} {LF} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
@@ -3937,9 +3959,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm" + hbmk[ _HBMK_cCCEXT ]
          cOpt_LibHBX := "-g --defined-only -C {LI}"
          IF l_lLIBGROUPING
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
@@ -4068,22 +4090,22 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cBin_Link := "wlink" + hbmk[ _HBMK_cCCEXT ]
          DO CASE
-         CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Link := "OP quiet SYS os2v2 {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Link := "OP quiet SYS os2v2 {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          ENDCASE
          cBin_Dyn := cBin_Link
          cDynObjPrefix := cObjPrefix
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cBin_Dyn := NIL
-         CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Dyn := "OP quiet FORM elf dll OP exportall {FD} NAME {OD} {LO} {DL} {LL} {LB}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Dyn := "OP quiet FORM elf dll OP exportall {FD} NAME {OD} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
             IF hbmk[ _HBMK_lCreateDyn ]
                AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATCOM") + hb_ps() + "lib386" ) )
                AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATCOM") + hb_ps() + "lib386" + hb_ps() + "linux" ) )
             ENDIF
-         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          ENDCASE
          IF HBMK_ISPLAT( "win|os2" ) .AND. ! Empty( hbmk[ _HBMK_aDEF ] )
             /* TODO: Watcom wlink requires a non-standard internal layout for .def files.
@@ -4241,8 +4263,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
-         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
+         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe -c {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
@@ -4341,7 +4363,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cBin_CompCPP := cBin_CompC
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}{SCRIPT}"
-         cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}{SCRIPT}"
+         cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LF} {LS}{SCRIPT}"
          cOpt_CompC := "-nologo -c"
          cBin_LibHBX := "dumpbin.exe"
          cOpt_LibHBX := "-symbols {LI}"
@@ -4395,7 +4417,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}{SCRIPT}"
+         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LF} {LS}{SCRIPT}"
          SWITCH hbmk[ _HBMK_cCOMP ]
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
@@ -4514,7 +4536,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_cWorkDir ] := "."
          ENDIF
          cOptIncMask := "-I{DI}"
-         cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LF} {LS}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", cSourceDLL, cTargetLib, cFlags ) }
          cBin_LibHBX := "podump.exe"
          cOpt_LibHBX := "-symbols {LI}"
@@ -4551,7 +4573,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-MT" )
          ENDIF
-         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
+         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LF} {LS}"
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          cDefPrefix := "-def:"
@@ -4617,9 +4639,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-G {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "-G {FD} -o {OD} {DL} {LO} {LL} {LB} {LF} {LS}"
          IF ! lStopAfterCComp
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
@@ -4756,8 +4778,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-         AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
+         AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB} {LF}" )
          l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          IF hbmk[ _HBMK_lSTATICFULL ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl, -Xstatic" ) /* not tested */
@@ -6181,6 +6203,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ) )
                cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LF}"  , iif( ! Empty( hbmk[ _HBMK_aOPTLPOST ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTLPOST ] ), "" ) )
                cOpt_Link := StrTran( cOpt_Link, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
@@ -6293,6 +6316,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LF}"  , iif( ! Empty( hbmk[ _HBMK_aOPTDPOST ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTDPOST ] ), "" ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
@@ -8924,7 +8948,9 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_NIX
-      cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
+      IF StrHasSpecialChar( cFileName )
+         cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
+      ENDIF
       EXIT
    CASE _ESC_BCKSLASH
       cFileName := StrTran( cFileName, "\", "\\" )
@@ -8932,6 +8958,15 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
    ENDSWITCH
 
    RETURN cFileName
+
+STATIC FUNCTION StrHasSpecialChar( cString )
+   LOCAL c
+   FOR EACH c IN cString
+      IF !( hb_asciiIsAlpha( c ) .OR. hb_asciiIsDigit( c ) .OR. c $ "/." )
+         RETURN .T.
+      ENDIF
+   NEXT
+   RETURN .F.
 
 /* Remove all extensions from name */
 STATIC FUNCTION FNameNameGetNoExt( cFileName )
@@ -9313,6 +9348,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE Lower( Left( cLine, Len( "ldflags="      ) ) ) == "ldflags="      ; cLine := SubStr( cLine, Len( "ldflags="      ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             AAddNewNotEmpty( hbmk[ _HBMK_aOPTL ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "ldflags+="     ) ) ) == "ldflags+="     ; cLine := SubStr( cLine, Len( "ldflags+="     ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            AAddNewNotEmpty( hbmk[ _HBMK_aOPTLPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
          NEXT
 
       CASE Lower( Left( cLine, Len( "pflags="       ) ) ) == "pflags="       ; cLine := SubStr( cLine, Len( "pflags="       ) + 1 )
