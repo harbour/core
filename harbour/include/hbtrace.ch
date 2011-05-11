@@ -65,6 +65,11 @@
 #define HB_TR_DEBUG      5
 #define HB_TR_LAST       6
 
+#ifdef _HB_TR_NOALWAYS_
+#undef HB_TR_ALWAYS
+#define HB_TR_ALWAYS     HB_TR_LAST
+#endif
+
 /*
  * Default tracing level.
  */
