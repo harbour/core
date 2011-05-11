@@ -138,7 +138,7 @@ if SP_Init() .and. !empty( AUXILIARY_DICTIONARY )
       Fclose(nAuxHandle)		     // Close the file
       SP_Cache(cWord)			     // Add word to cache
 
-      was_added := (nWritten = len(cWord)+2)
+      was_added := (nWritten == len(cWord)+2)
    endif
 endif
 return was_added
@@ -223,8 +223,8 @@ if sp_init()
       cLookUp := substr(cLookup,1, len(cLookup)-2 )
    endif
    cTemp := "|"+cLookup+"|"
-   if fat(cTemp, COMMON_WORDS) = 0    // Check the common words first
-      if fat(cTemp,CACHE_WORDS) = 0   // then check the cache words
+   if fat(cTemp, COMMON_WORDS) == 0    // Check the common words first
+      if fat(cTemp,CACHE_WORDS) == 0   // then check the cache words
 	  ok	:= .F.
 	  nRow	:= asc(substr(cLookup,1,1))-64
 	  nCol	:= asc(substr(cLookup,2,1))-64
@@ -535,7 +535,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	 // to see if it is a valid word.
 	 //
 	 //////////////////////////////////////////
-	 if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+	 if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
 	    Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
 	 endif
       endif
@@ -552,7 +552,7 @@ if SUGGEST_PREFERENCE $ "AB"
       // to see if it is a valid word.
       //
       //////////////////////////////////////////
-      if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+      if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
 	 Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
       endif
    next
@@ -564,7 +564,7 @@ if SUGGEST_PREFERENCE $ "AB"
    for jj := 2 to zz
       cHold := left(cWord,jj-2)+substr(cWord,jj, 1)+;
 	       substr(cWord,jj-1,1)+substr(cWord,jj+1)
-     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
 	 Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
       endif
    next
@@ -575,7 +575,7 @@ if SUGGEST_PREFERENCE $ "AB"
    //////////////////
 
    cHold := cWord+"E"
-   if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+   if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
       Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
    endif
 
@@ -590,7 +590,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	    do while (ii := fat(aParts_[jj,1],cWord,ii))>0
 	       for kk := 1 to len(aParts_[jj,2])
 		  cHold := substr(cWord,1,ii-1)+aParts_[jj,2,kk]+substr(cWord,ii+1)
-		  if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+		  if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
 		     Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
 		  endif
 	       next
@@ -599,7 +599,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	 else
 	    for kk := 1 to len(aParts_[jj,2])
 	       cHold := strtran(cWord,aParts_[jj,1],aParts_[jj,2,kk])
-	       if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0 .and. Sp_Check(cHold)
+	       if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
 		  Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
 	      endif
 	   next
@@ -623,7 +623,7 @@ if SUGGEST_PREFERENCE $ "AB"
       if ADD_SUFFIXES
 	 for kk := 1 to nSuffix
 	    cTemp := cHold+aEnds[kk]
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       Sp_Check(cTemp)
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
@@ -634,7 +634,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	 //////////
 	 for kk := 1 to nSuffix
 	    cTemp := cHold+substr(cHold,zz,1)+aEnds[kk]
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check( cTemp )
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
@@ -646,7 +646,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	 if substr(cHold,-1,1)=="C"
 	    for kk := 1 to nSuffix
 	       cTemp := cHold+"K"+aEnds[kk]
-	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 		  SP_Check( cTemp )
 		  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	       endif
@@ -658,18 +658,18 @@ if SUGGEST_PREFERENCE $ "AB"
 	 //////////
 	 if substr(cHold,-2,2)=="ND"
 	    cTemp := substr(cHold,1,zz-1)+"SE"
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check( cTemp )
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
 	    for kk := 1 to nSuffix
 	       cTemp := substr(cHold,1,zz-1)+"SE"+aEnds[kk]
-	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 		  SP_Check( cTemp )
 		  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	       endif
 	       cTemp := substr(cHold,1,zz-1)+"S"+aEnds[kk]
-	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 		  SP_Check( cTemp )
 		  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	       endif
@@ -682,7 +682,7 @@ if SUGGEST_PREFERENCE $ "AB"
 	 if substr(cHold,zz,1)=="E"
 	    for kk := 1 to nSuffix
 	       cTemp := substr(cHold,1,zz-1)+aEnds[kk]
-	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	       if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 		  SP_Check( cTemp )
 		  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	       endif
@@ -693,7 +693,7 @@ if SUGGEST_PREFERENCE $ "AB"
       if ADD_PREFIXES
 	 for kk := 1 to 7
 	    cTemp := aBegs[kk]+cHold
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check( cTemp )
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
@@ -702,26 +702,26 @@ if SUGGEST_PREFERENCE $ "AB"
 
       if ADD_PLURALS
 	 cTemp := cHold+"S"
-	 if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	 if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	    SP_Check(cTemp)
 	    Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	 endif
 
 	 if substr(cHold,zz,1)=="Y"
 	    cTemp := substr(cHold,1,zz-1)+"IES"
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check(cTemp)
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
 	 elseif substr(cHold,zz,1)=="F"
 	    cTemp := substr(cHold,1,zz-1)+"VES"
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check(cTemp)
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
 	 elseif substr(cHold,zz,1)=="O"
 	    cTemp := cHold+"ES"
-	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) = 0 .and. ;
+	    if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
 	       SP_Check(cTemp)
 	       Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
 	    endif
@@ -736,7 +736,7 @@ endif
 //
 ////////////////////////////
 if SUGGEST_PREFERENCE $ "MB"
-   if METAPHONE_SIZE = 0
+   if METAPHONE_SIZE == 0
       zz    := min( 5,len(cWord))
       if zz < 3
 	 zz := 3
@@ -763,7 +763,7 @@ if SUGGEST_PREFERENCE $ "MB"
 	       cKey  := c_metafone(cHold,zz)
 	       if cMeta ==  c_Metafone(cHold,zz)
 		  if MAX_DIFFERENCE < 0 .or. abs(len(cWord)-len(cHold)) <= MAX_DIFFERENCE
-		     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0
+		     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0
 			Aadd( aRet_,"B"+SP_Rate(cHold,cWord)+cHold )
 		     endif
 		  endif
@@ -786,7 +786,7 @@ if SUGGEST_PREFERENCE $ "MB"
 	       cKey  := c_metafone(cHold,zz)
 	       if cMeta ==  c_Metafone(cHold,zz)
 		  if MAX_DIFFERENCE < 0 .or. abs(len(cWord)-len(cHold)) <= MAX_DIFFERENCE
-		     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) = 0
+		     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0
 			Aadd( aRet_,"B"+SP_Rate(cHold,cWord)+cHold )
 		     endif
 		  endif
@@ -808,7 +808,7 @@ if nSugg > 1 .and. SORT_SUGGESTIONS
    Asort(aRet_)
 endif
 
-for kk = 1 to nSugg
+for kk := 1 to nSugg
    aRet_[kk] := substr(aRet_[kk],5)
 next
 
@@ -818,7 +818,7 @@ return aRet_
 **
 **     Function:  Sp_Quick()
 **	Purpose:  To return an array of quick spellings
-**	 Syntax:  aSuggest  = Sp_Quick( cWord )
+**	 Syntax:  aSuggest  := Sp_Quick( cWord )
 **    Arguments:  cWord     - Word to look for suggestions for
 **	Returns:  aSuggest  - List of suggested words
 **
@@ -852,7 +852,7 @@ endif
 ** Step One - Do letter doubling
 **
 **********************************
-for jj = 2 to zz
+for jj := 2 to zz
    if substr(cWord,jj,1)$"BCDEFGKLMNOPRSTZ"
       cHold := left(cWord,jj)+substr(cWord,jj, 1)+;
 	       substr(cWord,jj+1)
@@ -861,7 +861,7 @@ for jj = 2 to zz
       ** to see if it is a valid word.
       **
       ******************************************
-      if ascan(arr_,cHold) = 0 .and. Sp_Check(cHold)
+      if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
 	 Aadd(arr_,cHold)
       endif
    endif
@@ -871,14 +871,14 @@ next
 ** Step Two - Remove extra letters
 **
 **********************************
-for jj = 1 to zz
+for jj := 1 to zz
    cHold := left(cWord,jj-1)+substr(cWord,jj+1)
    **
    ** If the word is not already in the list, then check
    ** to see if it is a valid word.
    **
    ******************************************
-   if ascan(arr_,cHold) = 0 .and. Sp_Check(cHold)
+   if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
       Aadd(arr_,cHold)
    endif
 next
@@ -887,10 +887,10 @@ next
 ** Step Three - Transpose the letters
 **
 **************************
-for jj = 2 to zz
+for jj := 2 to zz
    cHold := left(cWord,jj-2)+substr(cWord,jj, 1)+;
 	    substr(cWord,jj-1,1)+substr(cWord,jj+1)
-   if ascan(arr_,cHold) = 0 .and. Sp_Check(cHold)
+   if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
       Aadd(arr_,cHold)
    endif
 next
@@ -901,7 +901,7 @@ next
 ******************
 
 cHold := cWord+"E"
-if ascan(arr_,cHold) = 0 .and. Sp_Check(cHold)
+if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
    Aadd(arr_,cHold)
 endif
 
@@ -911,17 +911,17 @@ endif
 **********************************
 
 
-for jj = 1 to 6
+for jj := 1 to 6
    if substr("AEIOUT",jj,1)$cWord
       ii   := fat(substr("AEIOUT",jj,1),cWord,ii)
       nold := 1
       do while ii > 0
-	 for kk = 1 to chrcount("$",aTryThese[jj])
+	 for kk := 1 to chrcount("$",aTryThese[jj])
 	    ll	  := fat("$",aTryThese[jj],nOld)
 	    cTemp := substr(aTryThese[jj],nOld,ll-nOld)
 	    nOld  := ll +1
 	    cHold := substr(cWord,1,ii-1)+cTemp+substr(cWord,ii+1)
-	    if ascan(arr_,cHold) = 0 .and. Sp_Check(cHold)
+	    if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
 	       Aadd(arr_,cHold)
 	    endif
 	 next
@@ -998,7 +998,7 @@ return cExpand
 **
 **     Function:  Sp_WildCard()
 **	Purpose:  To return an array of wildcard matches
-**	 Syntax:  aSuggest  = Sp_WildCard( cPattern )
+**	 Syntax:  aSuggest  := Sp_WildCard( cPattern )
 **    Arguments:  cPattern  - Pattern to match using * or ?'s
 **	Returns:  aSuggest  - List of matching words
 **
@@ -1016,13 +1016,13 @@ cPattern := upper(cPattern)
 
 if SP_Init()
    x	  := fat("*",cPattern)
-   if x = 0
+   if x == 0
       x := fat("?",cPattern)
    endif
-   if x = 1		     // Can't handle wildcards in first position
+   if x == 1		     // Can't handle wildcards in first position
       return arr_
    endif
-   if x = 2
+   if x == 2
       nStart := 1
       nEnd   := 26
    else
@@ -1031,7 +1031,7 @@ if SP_Init()
    endif
 
 
-   for z = nStart to nEnd
+   for z := nStart to nEnd
       cTemp  := SP_GetBuf(substr(cPattern,1,1)+chr(z+64) )
       ii     := len(cTemp)
       cFirst := substr(cPattern,1,1)+chr(z+64)
@@ -1080,7 +1080,7 @@ LOCAL nFileSize
 **DEBUG**
 @24,30 SAY "At SP_init"
 
-if cOffsets = NIL
+if cOffsets == NIL
    isok    := .F.
    nHandle := fopen(DICTIONARY_PATH+DICTIONARY_NAME,32)
    if nHandle > 0
@@ -1119,7 +1119,7 @@ if cOffsets = NIL
 	 SP_LoadAux( AUXILIARY_DICTIONARY )
       endif
    endif
-   if aGlobal[1] = NIL
+   if aGlobal[1] == NIL
       SP_Common()
    endif
 
@@ -1177,11 +1177,11 @@ LOCAL nCurRec := 0
 **DEBUG**
 @24,30 SAY "At DBF2DIC"
 
-if cDictionary = NIL
+if cDictionary == NIL
    cDictionary := "DICT.DIC"
 endif
 
-if lTalk = NIL
+if lTalk == NIL
    lTalk := .F.
 endif
 
@@ -1199,7 +1199,7 @@ if !file( cDBF )
 endif
 
 use (cDbf) alias DICT new
-if fieldpos("WORD") = 0
+if fieldpos("WORD") == 0
    use
    return -2
 endif
@@ -1232,7 +1232,7 @@ endif
 				       && ADDED - 02/08/96 - JAMES
 IF nHandle > 0			       && Is dictionary already open?
    FCLOSE(nHandle)		       && Yes, close it
-   nHandle = 0
+   nHandle := 0
 ENDIF				       && END OF ADDITION
 
 nH := fcreate(cDictionary)
@@ -1339,11 +1339,11 @@ LOCAL nSize
 //  DEFAULT name for dictionary file
 //
 //////////////////////////////////////
-if cDictionary = NIL
+if cDictionary == NIL
    cDictionary := "DICT.DIC"
 endif
 
-if lTalk = NIL
+if lTalk == NIL
    lTalk := .F.
 endif
 
@@ -1351,7 +1351,7 @@ if !file(cDictionary)
    return -1
 endif
 
-DICTIONARY_NAME = cDictionary
+DICTIONARY_NAME := cDictionary
 
 //
 //  Read the dictionary file
@@ -1399,7 +1399,7 @@ next
 
 for i := 1 to 26
    for j := 1 to 26
-      temp = chr(i+64)+chr(j+64)
+      temp := chr(i+64)+chr(j+64)
       x  := bin2l(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+1),4))
       if !empty(x)
 	 y    := bin2w(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+5),2))
@@ -1412,7 +1412,7 @@ for i := 1 to 26
 	 cBuf := space(y)
 	 fseek(nHandle,x,0)
 	 fread(nHandle,@cBuf,y)
-	 for z = 1 to 26
+	 for z := 1 to 26
 	    if bit(cBuf,z)
 	       append blank
 	       replace DICT->word with temp+chr(z+64)
@@ -1644,9 +1644,9 @@ LOCAL ret_val
 @24,30 SAY "At FAT"
 
 IF PCOUNT() < 3 		       && Is f_rom passed?
-   f_rom = 1
+   f_rom := 1
 ENDIF
 
-ret_val = AT(f_str, SUBSTR(l_str, f_rom))
+ret_val := AT(f_str, SUBSTR(l_str, f_rom))
 
 RETURN(ret_val)

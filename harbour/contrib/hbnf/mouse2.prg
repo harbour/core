@@ -272,7 +272,7 @@ FUNCTION FT_MINIT()
 * If not previously initialized then try
 
    IF !lMinit
-     lMinit=(FT_MRESET()!=0)
+     lMinit := (FT_MRESET()!=0)
    ELSE
 * Reset maximum x and y limits
 
@@ -286,7 +286,7 @@ FUNCTION FT_MRESET()
 
    aReg[AX] := 0        // set mouse function call 0
    FT_INT86( 51, aReg ) // execute mouse interrupt
-   lCrsState=.F.        // Cursor is off after reset
+   lCrsState := .F.     // Cursor is off after reset
 
 * Reset maximum x and y limits
 

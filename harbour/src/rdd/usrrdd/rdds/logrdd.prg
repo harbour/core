@@ -369,23 +369,23 @@ STATIC FUNCTION ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
            cString := hb_ValToExp( xPar1 )
       CASE cCmd == "OPEN"
            // Parameters received: xPar1 = aOpenInfo
-           cString := 'Table : "' + xPar1[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + LTrim( Str( nWA ) )
+           cString := 'Table : "' + xPar1[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + hb_ntos( nWA )
       CASE cCmd == "CLOSE"
            // Parameters received: xPar1 = cTableName, xPar2 = cAlias
-           cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + LTrim( Str( nWA ) )
+           cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + hb_ntos( nWA )
       CASE cCmd == "APPEND"
            // Parameters received: xPar1 = lUnlockAll
-           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+           cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
       CASE cCmd == "DELETE"
            // Parameters received: none
-           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+           cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
       CASE cCmd == "RECALL"
            // Parameters received: none
-           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+           cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
       CASE cCmd == "PUTVALUE"
            // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
            HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
-           cString := Alias() + "(" + LTrim( Str( RecNo() ) ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
+           cString := Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
       CASE cCmd == "ZAP"
            // Parameters received: none
            cString := 'Alias : "' + Alias() + ' Table : "' + dbInfo( DBI_FULLPATH ) + '"'

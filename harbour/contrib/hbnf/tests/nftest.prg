@@ -187,7 +187,7 @@ function Main()
   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMAXLEN"
   ? REPLICATE( "-", 78 )
   ?
-  ? "myarray1 = DIRECTORY()"
+  ? "myarray1 := DIRECTORY()"
   ?
   //aEval( myarray1, {|v| qout( padr(v[1],12), v[2], v[3], v[4], v[5] ) } )
   //?
@@ -221,7 +221,7 @@ function Main()
   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMINLEN"
   ? REPLICATE( "-", 78 )
   ?
-  ? "myarray1 = DIRECTORY()"
+  ? "myarray1 := DIRECTORY()"
   ?
   //aEval( myarray1, {|v| qout( padr(v[1],12), v[2], v[3], v[4], v[5] ) } )
   //?
@@ -256,7 +256,7 @@ function Main()
   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AMEDIAN"
   ? REPLICATE( "-", 78 )
   ?
-  ? "myarray0 = DIRECTORY()"
+  ? "myarray0 := DIRECTORY()"
   ?
   //aEval( myarray0, {|v| qout( padr(v[1],12), v[2], v[3], v[4], v[5] ) } )
   //?
@@ -291,7 +291,7 @@ function Main()
   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_ANOMATCHES"
   ? REPLICATE( "-", 78 )
   ?
-  ? "myarray0 = DIRECTORY()"
+  ? "myarray0 := DIRECTORY()"
   ?
   ? "aNames : "
   AEVAL( aNames, { |x| QQOUT( x + ",") } )
@@ -321,7 +321,7 @@ function Main()
   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AREDIT"
   ? REPLICATE( "-", 78 )
   * set up 2 dimensional array ar[]
-  FOR i = 1 TO 26
+  FOR i := 1 TO 26
     ar[1, i] := i          //  1  ->  26  Numeric
     ar[2, i] := CHR(i+64)  // "A" -> "Z"  Character
     ar[3, i] := CHR(91-i)  // "Z" -> "A"  Character
@@ -394,10 +394,10 @@ function Main()
   ? "Saving array ..."
   ?
   FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
-  IF nErrorCode = 0
+  IF nErrorCode == 0
     DispArray(aArray)
     aSave := FT_RESTARR('invoice.dat',@nErrorCode)
-    IF nErrorCode = 0
+    IF nErrorCode == 0
       ?
       ? "Restoring array from disk ..."
       ?
