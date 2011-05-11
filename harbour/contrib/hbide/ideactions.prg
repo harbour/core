@@ -390,12 +390,12 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   File                                     */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    //oSubMenu:oWidget:setStyleSheet( GetStyleSheet( cTheme ) )
 
    oSubMenu:title := "~File"
 
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
 
    oSubMenu2:addItem( { ::getAction( "New"        ), {|| oIde:execAction( "New"            ) } } )
    oSubMenu2:addItem( { ::getAction( "NewProject" ), {|| oIde:execAction( "NewProject"     ) } } )
@@ -407,7 +407,7 @@ METHOD IdeActions:buildMainMenu()
 
    hbide_menuAddSep( oSubMenu )
 
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:oIni:aRecentFiles[ nIndex ], ;
                                                 oIde:oEM:editSource( cFile ) }
    IF !empty( oIde:oIni:aRecentFiles )
@@ -424,7 +424,7 @@ METHOD IdeActions:buildMainMenu()
    ENDIF
    oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files" ) } )
 
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:oIni:aRecentProjects[ nIndex ], ;
                                                 ::oPM:loadProperties( cFile, .F., .F., .T. ) }
    IF !empty( oIde:oIni:aRecentProjects )
@@ -462,7 +462,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Edit                                     */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Edit"
    oSubMenu:addItem( { ::getAction( "Undo"                ), {|| oIde:execAction( "Undo"           ) } } )
    oSubMenu:addItem( { ::getAction( "Redo"                ), {|| oIde:execAction( "Redo"           ) } } )
@@ -478,14 +478,14 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "Goto"                ), {|| oIde:execAction( "Goto"           ) } } )
    hbide_menuAddSep( oSubMenu )
    //
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:addItem( { ::getAction( "DuplicateLine"      ), {|| oIde:execAction( "DuplicateLine"  ) } } )
    oSubMenu2:addItem( { ::getAction( "DeleteLine"         ), {|| oIde:execAction( "DeleteLine"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineUp"         ), {|| oIde:execAction( "MoveLineUp"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineDown"       ), {|| oIde:execAction( "MoveLineDown"   ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Line" ) } )
    //
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:addItem( { ::getAction( "ToUpper"            ), {|| oIde:execAction( "ToUpper"        ) } } )
    oSubMenu2:addItem( { ::getAction( "ToLower"            ), {|| oIde:execAction( "ToLower"        ) } } )
    oSubMenu2:addItem( { ::getAction( "Invert"             ), {|| oIde:execAction( "Invert"         ) } } )
@@ -501,7 +501,7 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu2,  _T( "~Block" ) } )
 
    hbide_menuAddSep( oSubMenu )
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:addItem( { ::getAction( "InsertSeparator"    ), {|| oIde:execAction( "InsertSeparator"    ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu2:addItem( { ::getAction( "InsertDateTime"     ), {|| oIde:execAction( "InsertDateTime"     ) } } )
@@ -509,7 +509,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "InsertExternalFile" ), {|| oIde:execAction( "InsertExternalFile" ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
 
-   oSubMenu2 := XbpMenu():new( oSubMenu ):create()
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:oWidget:addAction( ::oFormatDock:oWidget:toggleViewAction() )
    oSubMenu2:addItem( { ::getAction( "RemoveTabs"         ), {|| oIde:execAction( "RemoveTabs"         ) } } )
    oSubMenu2:addItem( { ::getAction( "Spaces2Tabs"        ), {|| oIde:execAction( "Spaces2Tabs"        ) } } )
@@ -525,7 +525,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   View                                     */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
 
@@ -576,7 +576,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Project"
    oSubMenu:addItem( { ::getAction( "Properties"          ), {|| oIde:execAction( "Properties"     ) } } )
    hbide_menuAddSep( oSubMenu )
@@ -594,7 +594,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Build                                    */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Build"
    oSubMenu:addItem( { ::getAction( "Compile"             ), {|| oIde:execAction( "Compile"            ) } } )
    oSubMenu:addItem( { ::getAction( "CompilePPO"          ), {|| oIde:execAction( "CompilePPO"         ) } } )
@@ -611,7 +611,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Setup                                    */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Setup"
    oSubMenu:addItem( { ::getAction( "Setup"               ), {|| oIde:execAction( "Setup"              ) } } )
    hbide_menuAddSep( oSubMenu )
@@ -629,7 +629,7 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */
    /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Help"
    oSubMenu:addItem( { ::getAction( "AboutIDE"            ), {|| hbide_help( 1 ) } } )
    hbide_menuAddSep( oSubMenu )

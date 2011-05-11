@@ -153,6 +153,8 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
 METHOD xbpMenuBar:init( oParent, aPresParams, lVisible )
 
+   DEFAULT lVisible TO .f.
+
    ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
    RETURN Self
@@ -169,6 +171,9 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
    if !empty( ::oWidget )
       ::oParent:oMenu := Self
    endif
+   IF ::visible
+      ::show()
+   ENDIF
    ::oParent:addChild( self )
    ::postCreate()
 
@@ -204,8 +209,7 @@ METHOD xbpMenuBar:delAllItems()
    LOCAL aItem
 
    FOR EACH aItem IN ::aMenuItems
-      ::delItem( aItem )
-      aItem := NIL
+      ::delItem( @aItem )
    NEXT
    ::aMenuItems := {}
 
@@ -214,14 +218,24 @@ METHOD xbpMenuBar:delAllItems()
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:delItem( aItem )
+   LOCAL n, oAction
 
-   IF hb_isObject( aItem[ 5 ] ) .AND. __ObjGetClsName( aItem[ 5 ] ) == "QACTION"
-      IF !( aItem[ 5 ]:isSeparator() )
-         aItem[ 5 ]:disConnect( "triggered(bool)" )
-         aItem[ 5 ]:disConnect( "hovered()"       )
+   IF hb_isNumeric( aItem )
+      n := aItem
+      aItem := ::aMenuItems[ n ]  /* Will polish later */
+      hb_adel( ::aMenuItems, n, .t. )
+   ENDIF
+
+   oAction := aItem[ 5 ]
+   aItem := NIL
+
+   IF hb_isObject( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
+      IF !( oAction:isSeparator() )
+         oAction:disConnect( "triggered(bool)" )
+         oAction:disConnect( "hovered()"       )
       ENDIF
-      ::oWidget:removeAction( aItem[ 5 ] )
-      aItem[ 5 ] := NIL
+      oAction:setVisible( .f. )
+      ::oWidget:removeAction( oAction )
    ENDIF
 
    RETURN .t.
@@ -646,6 +660,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
    DATA     title                                 INIT  ""
    DATA     className                             INIT  "XBPMENU"
+   DATA     oAction
 
    METHOD   init( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )
@@ -654,12 +669,16 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
    METHOD   normalize( cCaption )
+   METHOD   show()                                 INLINE iif( hb_isObject( ::oAction ), ::oAction:setVisible( .t. ), NIL )
+   METHOD   hide()                                 INLINE iif( hb_isObject( ::oAction ), ::oAction:setVisible( .f. ), NIL )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenu:init( oParent, aPresParams, lVisible )
+
+   DEFAULT lVisible TO .f.
 
    ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
@@ -669,14 +688,17 @@ METHOD xbpMenu:init( oParent, aPresParams, lVisible )
 
 METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
+   DEFAULT lVisible TO ::visible
+
    ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    ::oWidget := QMenu()
    ::oWidget:setTitle( ::normalize( ::title ) )
 
    IF hb_isObject( ::oParent )
-      ::oParent:oWidget:addMenu( ::oWidget )
+      ::oAction := ::oParent:oWidget:addMenu( ::oWidget )
       ::oParent:addChild( self )
+      ::oAction:setVisible( ::visible )
    ENDIF
 
    ::postCreate()

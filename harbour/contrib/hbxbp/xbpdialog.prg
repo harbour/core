@@ -266,7 +266,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 METHOD XbpDialog:destroy()
 
    IF ! empty( ::oMdi )
-      ::oMdi := NIL
+      ::oMdi:hide()
    ENDIF
 
    ::disconnectWindowEvents()
@@ -282,6 +282,11 @@ METHOD XbpDialog:destroy()
    ::oMenu := NIL
 
    ::XbpWindow:destroy()
+
+   IF ! empty( ::oMdi )
+      ::oMdi:close()
+      ::oMdi := NIL
+   ENDIF
 
    RETURN Self
 
