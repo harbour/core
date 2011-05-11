@@ -24,7 +24,7 @@
  *
  */
 
-STATIC aRgnStack:={}
+STATIC aRgnStack := {}
 
 FUNCTION FT_SAVRGN(nTop, nLeft, nBottom, nRight)
 
@@ -44,6 +44,10 @@ FUNCTION FT_RSTRGN(cScreen, nTop, nLeft)
 
    RETURN NIL
 
+/* NOTE: original NF accepted "pop all" if it contained
+         extra character and _SET_EXACT was set to .F.
+         Harbour version accepts "pop all" only. [vszakats] */
+
 FUNCTION FT_RGNSTACK(cAction, nTop, nLeft, nBottom, nRight)
 
    STATIC nStackPtr := 0
@@ -51,12 +55,12 @@ FUNCTION FT_RGNSTACK(cAction, nTop, nLeft, nBottom, nRight)
 
    IF cAction == "push"
 
-      ASIZE(aRgnStack, ++nStackPtr)[nStackPtr] = ;
+      ASIZE(aRgnStack, ++nStackPtr)[nStackPtr] := ;
          FT_SAVRGN(nTop, nLeft, nBottom, nRight)
 
-   ELSEIF cAction == "pop" .OR. cAction = "pop all"
+   ELSEIF cAction == "pop" .OR. cAction == "pop all"
 
-      nPopTop = IIF("all" $ cAction, 0, nStackPtr-1)
+      nPopTop := IIF("all" $ cAction, 0, nStackPtr-1)
 
       DO WHILE nStackPtr > nPopTop
          FT_RSTRGN(aRgnStack[nStackPtr--])

@@ -56,7 +56,7 @@
       * Thanks to Jim Gale for helping me understand the basics
       LOCAL i, ar[3, 26], aBlocks[3], aHeadings[3], nElem := 1, bGetFunc, cRet
       * set up 2 dimensional array ar[]
-      FOR i = 1 TO 26
+      FOR i := 1 TO 26
          ar[1, i] := i          //  1  ->  26  Numeric
          ar[2, i] := CHR(i+64)  // "A" -> "Z"  Character
          ar[3, i] := CHR(91-i)  // "Z" -> "A"  Character
@@ -158,12 +158,12 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
       nElem := MAX( 1, MIN( LEN(ar[1]), nElem + nSkip ) ),;
       nElem - nStart }
 
-   FOR i = 1 TO LEN(aBlocks)
+   FOR i := 1 TO LEN(aBlocks)
        column := TBColumnNew(aHeadings[i], aBlocks[i] )
        b:addcolumn(column)
    NEXT
 
-   exit_requested = .F.
+   exit_requested := .F.
    DO WHILE !exit_requested
 
       DO WHILE NEXTKEY() == 0 .AND. !b:stabilize()
@@ -171,20 +171,20 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
 
       nKey := INKEY(0)
 
-      meth_no := ASCAN(tb_methods, {|elem| nKey = elem[KEY_ELEM]})
+      meth_no := ASCAN(tb_methods, {|elem| nKey == elem[KEY_ELEM]})
       IF meth_no != 0
           EVAL(tb_methods[meth_no, BLK_ELEM], b)
       ELSE
           DO CASE
               CASE nKey == K_F7
-                  FOR nDim = 1 TO LEN(ar)
+                  FOR nDim := 1 TO LEN(ar)
                      ADEL(ar[nDim], nElem)
                      ASIZE(ar[nDim], LEN(ar[nDim]) - 1)
                   NEXT
                   b:refreshAll()
 
               CASE nKey == K_F8
-                  FOR nDim = 1 TO LEN(ar)
+                  FOR nDim := 1 TO LEN(ar)
                      * check valtype of current element before AINS()
                      cType := VALTYPE(ar[nDim, nElem])
                      cVal  := ar[nDim, nElem]

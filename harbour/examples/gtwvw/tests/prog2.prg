@@ -144,15 +144,15 @@ FUNCTION xBrowse1()
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
  #IFNDEF __GTWVW__
-   oBrowse:ColSep        = chr(179) //'|'
-   oBrowse:HeadSep       = chr(205) //'_'
+   oBrowse:ColSep        := chr(179) //'|'
+   oBrowse:HeadSep       := chr(205) //'_'
  #ELSE
-   oBrowse:ColSep        = "  "     //we'll draw a line between these spaces
-   oBrowse:HeadSep       = "__"
+   oBrowse:ColSep        := "  "     //we'll draw a line between these spaces
+   oBrowse:HeadSep       := "__"
  #ENDIF
-   oBrowse:GoTopBlock    = { || dbGoTop() }
-   oBrowse:GoBottomBlock = { || dbGoBottom() }
-   oBrowse:SkipBlock     = { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:GoTopBlock    := { || dbGoTop() }
+   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
 
    for i := 1 to len( info_ )
       bBlock := VouBlockField( i )
@@ -181,7 +181,7 @@ FUNCTION xBrowse1()
 
       lMessage("Record #" + alltrim(str(recno())) )
 
-      nKey = InKey( 0 )
+      nKey := InKey( 0 )
 
       do case
       case nKey == K_ESC .or. nKey == K_ENTER
@@ -194,25 +194,25 @@ FUNCTION xBrowse1()
          oBrowse:Left()
       case nKey == K_RIGHT
          oBrowse:Right()
-      case nKey = K_PGDN
+      case nKey == K_PGDN
          oBrowse:pageDown()
-      case nKey = K_PGUP
+      case nKey == K_PGUP
          oBrowse:pageUp()
-      case nKey = K_CTRL_PGUP
+      case nKey == K_CTRL_PGUP
          oBrowse:goTop()
-      case nKey = K_CTRL_PGDN
+      case nKey == K_CTRL_PGDN
          oBrowse:goBottom()
-      case nKey = K_HOME
+      case nKey == K_HOME
          oBrowse:home()
-      case nKey = K_END
+      case nKey == K_END
          oBrowse:end()
-      case nKey = K_CTRL_LEFT
+      case nKey == K_CTRL_LEFT
          oBrowse:panLeft()
-      case nKey = K_CTRL_RIGHT
+      case nKey == K_CTRL_RIGHT
          oBrowse:panRight()
-      case nKey = K_CTRL_HOME
+      case nKey == K_CTRL_HOME
          oBrowse:panHome()
-      case nKey = K_CTRL_END
+      case nKey == K_CTRL_END
          oBrowse:panEnd()
       endcase
    end
@@ -229,7 +229,7 @@ RETURN nil
 //-------------------------------------------------------------------//
 STATIC FUNCTION DbSkipBlock( n, oTbr )
    LOCAL nSkipped := 0
-   if n = 0
+   if n == 0
       DBSkip( 0 )
    elseif n > 0
       do while nSkipped != n .and. TBNext( oTbr )

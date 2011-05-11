@@ -80,7 +80,7 @@
 
     if !ft_isBitOn( aRegs[3], FLAG_CARRY )
        if pcount() >= 3
-          nHandle = aRegs[1]
+          nHandle := aRegs[1]
        else
           fclose( aRegs[1] )
        endif
@@ -103,7 +103,7 @@
   Default cPath to ".\"
   Default lHide to .f.
 
-  cPath = alltrim( cPath )
+  cPath := alltrim( cPath )
 
   nHandle := HB_FTempCreate( cPath, nil, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
 

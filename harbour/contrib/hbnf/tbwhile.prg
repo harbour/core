@@ -57,8 +57,8 @@
 
 #command DEFAULT <param> TO <val> [, <paramn> TO <valn> ];
 => ;
-         <param> := IIF(<param> = NIL, <val>, <param> ) ;
-         [; <paramn> := IIF(<paramn> = NIL, <valn>, <paramn> ) ]
+         <param> := IIF(<param> == NIL, <val>, <param> ) ;
+         [; <paramn> := IIF(<paramn> == NIL, <valn>, <paramn> ) ]
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -211,7 +211,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    b:colorSpec := cColorList
 
    /* add a column for each field in the current workarea */
-   FOR i = 1 TO LEN(aFields)
+   FOR i := 1 TO LEN(aFields)
       cHead  := aFields[i, 1]
       bField := aFields[i, 2]
 
@@ -241,7 +241,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    /* save old screen and colors */
    IF lSaveScrn
-      cScrnSave = SAVESCREEN(0, 0, MaxRow(), MaxCol())
+      cScrnSave := SAVESCREEN(0, 0, MaxRow(), MaxCol())
    ENDIF
    cColorSave := SetColor()
 

@@ -46,7 +46,7 @@ FUNCTION FT_SETMODE( nMode )
 /*
   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] = nMode
+  aRegs[ AX ] := nMode
   FT_INT86( VIDEO, aRegs )
 */
 _ft_setmode(nMode)

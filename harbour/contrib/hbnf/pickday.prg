@@ -41,8 +41,8 @@ LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
 LOCAL OLDSCRN := SAVESCREEN(8, 35, 16, 45), oldcolor := setcolor('+w/r')
 @ 8, 35, 16, 45 box B_SINGLE + " "
 /* do not allow user to Esc out, which would cause array access error */
-do while sel = 0
-   sel = achoice(9, 36, 15, 44, days)
+do while sel == 0
+   sel := achoice(9, 36, 15, 44, days)
 enddo
 /* restore previous screen contents and color */
 restscreen(8, 35, 16, 45, oldscrn)

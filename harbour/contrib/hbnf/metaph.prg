@@ -53,7 +53,7 @@
  *  Vowels are only included if they are at the beginning.
  *  Here are the transformations. The order of evaluation is important
  *  as characters may meet more than one transformation conditions.
- *  ( note: v = vowel )
+ *  ( note: v == vowel )
  *
  *    B --> B  unless at end of a word after 'm' as in dumb.
  *    C --> X  (sh)  CIA, TCH, CH, ISCH, CC

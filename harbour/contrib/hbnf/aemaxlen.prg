@@ -29,7 +29,7 @@ FUNCTION MAIN()
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMAXLEN"
    ?
-   ? "myarray1 = DIRECTORY()"
+   ? "myarray1 := DIRECTORY()"
    ?
    var0 := FT_AEMAXLEN( myarray1 )
    ? PADR('FT_AEMAXLEN( myarray1 ) ->',30)

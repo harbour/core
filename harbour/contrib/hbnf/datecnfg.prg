@@ -168,7 +168,7 @@
   RETURN NIL
 
   * DEMO Monthly Calendar function.
-  * nType : 0 = FT_MONTH, 1 = FT_ACCTMONTH
+  * nType : 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
   *
 
   FUNCTION FT_CAL(dGivenDate,nType)
@@ -212,7 +212,7 @@
 
   ?
   WHILE dTemp <= aTemp[3]
-     FOR nTemp = 1 TO 7
+     FOR nTemp := 1 TO 7
         ?? " "
         IF nType == 0 .AND. (dTemp < dStart .or. dTemp > dEnd)
            ?? SPACE(8)

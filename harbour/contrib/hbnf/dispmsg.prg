@@ -182,7 +182,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    /* fill array with left positions for each row */
    aLeft := ARRAY( LEN( aInfo[1] ) )
    FOR i := 1 TO LEN( aInfo[1] )
-      IF LEN( aInfo[1,i] ) = nWidest
+      IF LEN( aInfo[1,i] ) == nWidest
          aLeft[i] := nLeft
       ELSE
          aLeft[i] := nLeft + ROUND( ( nWidest - LEN( aInfo[1,i] ) ) / 2, 0 )

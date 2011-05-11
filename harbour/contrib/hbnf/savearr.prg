@@ -40,11 +40,11 @@ MEMVAR lRet
                 {'Invoice 3', DATE() + 1, 0, .T.}  }, aSave
  LOCAL nErrorCode := 0
  FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
- IF nErrorCode = 0
+ IF nErrorCode == 0
    CLS
    DispArray(aArray)
    aSave := FT_RESTARR('invoice.dat',@nErrorCode)
-   IF nErrorCode = 0
+   IF nErrorCode == 0
      DispArray(aSave)
    ELSE
       ? 'Error restoring array'
@@ -70,17 +70,17 @@ MEMVAR lRet
 
 FUNCTION FT_SAVEARR(aArray, cFileName, nErrorCode)
  LOCAL nHandle, lRet
- nHandle = FCREATE(cFileName)
- nErrorCode = FError()
- IF nErrorCode = 0
+ nHandle := FCREATE(cFileName)
+ nErrorCode := FError()
+ IF nErrorCode == 0
    lRet := _ftsavesub(aArray, nHandle, @nErrorCode)
    FCLOSE(nHandle)
    IF (lRet) .AND. (FERROR() # 0)
-      nErrorCode = FERROR()
-      lRet = .F.
+      nErrorCode := FERROR()
+      lRet := .F.
     ENDIF
  ELSE
-   lRet = .F.
+   lRet := .F.
  ENDIF
  RETURN lRet
 
@@ -90,47 +90,47 @@ STATIC FUNCTION _ftsavesub(xMemVar, nHandle, nErrorCode)
  lRet := .T.
  cValType := ValType(xMemVar)
  FWrite(nHandle, cValType, 1)
- IF FError() = 0
+ IF FError() == 0
    DO CASE
-     CASE cValType = "A"
+     CASE cValType == "A"
        nLen := Len(xMemVar)
        FWrite(nHandle, L2Bin(nLen), 4)
-       IF FError() = 0
+       IF FError() == 0
          AEVAL(xMemVar, {|xMemVar1| lRet := _ftsavesub(xMemVar1, nHandle) } )
        ELSE
-         lRet = .F.
+         lRet := .F.
        ENDIF
-     CASE cValType = "B"
+     CASE cValType == "B"
        lRet := .F.
-     CASE cValType = "C"
+     CASE cValType == "C"
        nLen := Len(xMemVar)
        FWrite(nHandle, L2Bin(nLen), 4)
        FWrite(nHandle, xMemVar)
-     CASE cValType = "D"
+     CASE cValType == "D"
        nLen := 8
        FWrite(nHandle, L2Bin(nLen), 4)
        FWrite(nHandle, DTOC(xMemVar))
-     CASE cValType = "L"
+     CASE cValType == "L"
        nLen := 1
        FWrite(nHandle, L2Bin(nLen), 4)
        FWrite(nHandle, iif(xMemVar, "T", "F") )
-     CASE cValType = "N"
+     CASE cValType == "N"
        cString := STR(xMemVar)
        nLen := LEN(cString)
        FWrite(nHandle, L2Bin(nLen), 4)
        FWrite(nHandle, cString)
    ENDCASE
  ELSE
-   lRet = .F.
+   lRet := .F.
  ENDIF
- nErrorCode = FError()
+ nErrorCode := FError()
  RETURN lRet
 
 FUNCTION FT_RESTARR(cFileName, nErrorCode)
  LOCAL nHandle, aArray
  nHandle := FOPEN(cFileName)
  nErrorCode := FError()
- IF nErrorCode = 0
+ IF nErrorCode == 0
   aArray := _ftrestsub(nHandle, @nErrorCode)
   FCLOSE(nHandle)
  ELSE
@@ -144,30 +144,30 @@ STATIC FUNCTION _ftrestsub(nHandle, nErrorCode)
   FREAD(nHandle, @cValType, 1)
   cLenStr := SPACE(4)
   FREAD(nHandle, @cLenStr, 4)
-  nLen = Bin2L(cLenStr)
-  nErrorCode = FError()
-  IF nErrorCode = 0
+  nLen := Bin2L(cLenStr)
+  nErrorCode := FError()
+  IF nErrorCode == 0
     DO CASE
-      CASE cValType = "A"
+      CASE cValType == "A"
         xMemVar := {}
         FOR nk := 1 TO nLen
           AADD(xMemVar, _ftrestsub(nHandle))      // Recursive call
         NEXT
-      CASE cValType = "C"
+      CASE cValType == "C"
         xMemVar := SPACE(nLen)
         FREAD(nHandle, @xMemVar, nLen)
-      CASE cValType = "D"
-        cMemVar = SPACE(8)
+      CASE cValType == "D"
+        cMemVar := SPACE(8)
         FREAD(nHandle, @cMemVar,8)
         xMemVar := CTOD(cMemVar)
-      CASE cValType = "L"
+      CASE cValType == "L"
         cMemVar := ' '
         FREAD(nHandle, @cMemVar, 1)
-        xMemVar := (cMemVar =  "T")
-      CASE cValType = "N"
+        xMemVar := (cMemVar == "T")
+      CASE cValType == "N"
         cMemVar := SPACE(nLen)
         FREAD(nHandle, @cMemVar, nLen)
-        xMemVar = VAL(cMemVar)
+        xMemVar := VAL(cMemVar)
     ENDCASE
     nErrorCode := FERROR()
   ENDIF

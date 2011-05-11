@@ -28,7 +28,7 @@
 
 FUNCTION MAIN
 LOCAL X
-FOR X = 1 TO 255
+FOR X := 1 TO 255
    QOUT( FT_DEC2BIN( x ))
 next
 return nil
@@ -37,10 +37,10 @@ return nil
 
 function FT_DEC2BIN(x)
 local i, buffer := { '0', '0', '0', '0', '0', '0', '0', '0' }
-for i = 8 to 1 step -1
+for i := 8 to 1 step -1
   if x >= 2 ^ (i - 1)
      x -= 2 ^ (i - 1)
-     buffer[9 - i] = '1'
+     buffer[9 - i] := '1'
   endif
 next
 return ( buffer[1] + buffer[2] + buffer[3] + buffer[4] + ;

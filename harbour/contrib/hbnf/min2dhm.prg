@@ -30,8 +30,8 @@
 function FT_MIN2DHM(nMINS)
   local aDHM_[3]
 
-  aDHM_[1] = ltrim((str(int(nMINS/1440))))
-  aDHM_[2] = ltrim(str(int((nMINS%1440)/60)))
-  aDHM_[3] = ltrim(str(int((nMINS%1440)%60)))
+  aDHM_[1] := ltrim((str(int(nMINS/1440))))
+  aDHM_[2] := ltrim(str(int((nMINS%1440)/60)))
+  aDHM_[3] := ltrim(str(int((nMINS%1440)%60)))
 
   return aDHM_

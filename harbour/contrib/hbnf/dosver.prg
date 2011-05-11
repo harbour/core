@@ -40,7 +40,7 @@ FUNCTION FT_DOSVER()
 /*  local aRegs[ INT86_MAX_REGS ] */
   local cResult
 
-/*  aRegs[ AX ] = MAKEHI( DOSVER )
+/*  aRegs[ AX ] := MAKEHI( DOSVER )
   if FT_INT86( DOS, aRegs )
      cResult := alltrim( str( LOWBYTE( aRegs[ AX ] ) ) ) + "." + ;
                 alltrim( str( HIGHBYTE( aRegs[ AX ] ) ) )

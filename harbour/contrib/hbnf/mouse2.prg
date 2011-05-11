@@ -387,18 +387,18 @@ RETURN NIL                     // no function output
 
 FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordinates
 
-   aReg[AX] = 7                        // set mouse function call 7
-   aReg[CX] = nXMin                    // load vertical minimum parameter
-   aReg[DX] = nXMax                    // load vertical maximum parameter
+   aReg[AX] := 7                        // set mouse function call 7
+   aReg[CX] := nXMin                    // load vertical minimum parameter
+   aReg[DX] := nXMax                    // load vertical maximum parameter
    FT_INT86( 51, aReg )               // execute mouse interrupt
 
 RETURN NIL
 
 FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coordinates
 
-   aReg[AX] = 8                       // set mouse function call 8
-   aReg[CX] = nYMin                   // load horz minimum parameter
-   aReg[DX] = nYMax                   // load horz maximum parameter
+   aReg[AX] := 8                       // set mouse function call 8
+   aReg[CX] := nYMin                   // load horz minimum parameter
+   aReg[DX] := nYMax                   // load horz maximum parameter
    FT_INT86( 51, aReg )              // execute mouse interrupt
 
 RETURN NIL                           // no function output
@@ -428,10 +428,10 @@ RETURN aReg[AX]                 // return button status
   /*
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
 
-   aReg[AX] = 10        // set mouse function call 10
-   aReg[BX] = nCurType  // load cursor type parameter
-   aReg[CX] = nScrMask  // load screen mask value
-   aReg[DX] = nCurMask  // load cursor mask value
+   aReg[AX] := 10        // set mouse function call 10
+   aReg[BX] := nCurType  // load cursor type parameter
+   aReg[CX] := nScrMask  // load screen mask value
+   aReg[DX] := nCurMask  // load cursor mask value
    FT_INT86( 51, aReg ) // execute mouse interrupt
 
 RETURN NIL              // no function output

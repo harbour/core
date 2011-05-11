@@ -41,10 +41,10 @@ memvar getlist
 
 /*
    here's the board array -- structure of which is:
-   board_[xx, 1] = subarray containing box coordinates for this peg
-   board_[xx, 2] = subarray containing all adjacent locations
-   board_[xx, 3] = subarray containing all target locations
-   board_[xx, 4] = is the location occupied or not? .T. = Yes, .F. = No
+   board_[xx, 1] - subarray containing box coordinates for this peg
+   board_[xx, 2] - subarray containing all adjacent locations
+   board_[xx, 3] - subarray containing all target locations
+   board_[xx, 4] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
 static board_ := { { {0, 29, 2, 34}, {2, 4}, {3, 9}, .T. } , ;
              { {0, 37, 2, 42}, {5}, {10}, .T.}      , ;
@@ -113,14 +113,14 @@ do while lastkey() != K_ESC .and. moremoves()
             next
             // only one available move -- do it
             do case
-               case len(possible_) = 1
+               case len(possible_) == 1
                   // clear out original position and the position you jumped over
                   board_[move][4] := board_[possible_[1, 1] ][4] := .F.
                   board_[possible_[1, 2] ][4] := .T.
                   drawbox(move, board_[move])
                   drawbox(possible_[1,1])
                   drawbox(possible_[1,2])
-               case len(possible_) = 0
+               case len(possible_) == 0
                   err_msg('Illegal move!')
                otherwise
                   move2 := possible_[1, 2]

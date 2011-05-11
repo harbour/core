@@ -35,7 +35,7 @@ FUNCTION FT_SETVPG( nPage )
 /*
   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] = MAKEHI( 5 ) + nPage
+  aRegs[ AX ] := MAKEHI( 5 ) + nPage
   FT_INT86( VIDEO, aRegs )
   */
   _ft_setvpg(nPage)

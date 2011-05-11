@@ -61,7 +61,7 @@ FUNCTION FT_Linked( cFuncs )
 
 LOCAL aFuncArray := {}, nSpace, nComma, nFEnd, lRetVal := .F.
 
-IF AT("(",cFuncs) = 0
+IF AT("(",cFuncs) == 0
    // No functions in string
    ALERT("Warning: Expected function(s) in FT_Linked(), but none were found")
 ELSE

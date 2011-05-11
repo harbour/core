@@ -29,7 +29,7 @@ FUNCTION MAIN()
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMINLEN"
    ?
-   ? "myarray1 = DIRECTORY()"
+   ? "myarray1 := DIRECTORY()"
    ?
    aEval( myarray1, {|v| qout( padr(v[1],12), v[2], v[3], v[4], v[5] ) } )
    var0 := FT_AEMINLEN( myarray1 )

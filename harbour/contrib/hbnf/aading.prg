@@ -105,7 +105,7 @@ FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
       nPos := ASCAN( aList1, bScanCode )
 
       // If unique, then add element to new array.
-      IF nPos = 0
+      IF nPos == 0
          AADD( aNewArray, aList2[ nElement ] )
       ENDIF
 

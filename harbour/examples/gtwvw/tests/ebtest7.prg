@@ -837,7 +837,7 @@ Local i , c , s
       If c='9' .or. c='.'
          s := s + c
       EndIf
-      if c = '$' .or. c = '*'
+      if c == '$' .or. c == '*'
          s := s+'9'
       EndIf
    Next i

@@ -101,9 +101,9 @@ return nil
 ==================                                                            */
 function pdfBold()                                                            /*
 ==================                                                            */
-   IF pdfGetFontInfo("NAME") = "Times"
+   IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 2
-   ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
+   ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
       t_aReport[ FONTNAME ] := 6
    ELSE
       t_aReport[ FONTNAME ] := 10 // Courier // 0.04
@@ -117,9 +117,9 @@ return nil
 ========================                                                      */
 function pdfBoldItalic()                                                      /*
 ========================                                                      */
-   IF pdfGetFontInfo("NAME") = "Times"
+   IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 4
-   ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
+   ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
       t_aReport[ FONTNAME ] := 8
    ELSE
       t_aReport[ FONTNAME ] := 12 // 0.04
@@ -764,9 +764,9 @@ return nil
 ====================                                                          */
 function pdfItalic()                                                          /*
 ====================                                                          */
-   IF pdfGetFontInfo("NAME") = "Times"
+   IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 3
-   ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
+   ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
       t_aReport[ FONTNAME ] := 7
    ELSE
       t_aReport[ FONTNAME ] := 11 // 0.04
@@ -786,9 +786,9 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
    IF right( cString, 1 ) == chr(255) .or. right( cString, 1 ) == chr(254 )// reverse or underline
       --nLen
    ENDIF
-   IF pdfGetFontInfo("NAME") = "Times"
+   IF pdfGetFontInfo("NAME") == "Times"
       nArr := 1
-   ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
+   ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
       nArr := 2
    ELSE
       nArr := 3 // 0.04
@@ -865,9 +865,9 @@ return nil
 ====================                                                          */
 function pdfNormal()                                                          /*
 ====================                                                          */
-   IF pdfGetFontInfo("NAME") = "Times"
+   IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 1
-   ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
+   ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
       t_aReport[ FONTNAME ] := 5
    ELSE
       t_aReport[ FONTNAME ] := 9 // 0.04
@@ -969,7 +969,7 @@ local nSize, aSize, nWidth, nHeight
 
       nSize := ascan( aSize, { |arr| arr[ 1 ] == _cPageSize } )
 
-      IF nSize = 0
+      IF nSize == 0
          nSize := 1
       ENDIF
 
@@ -989,18 +989,18 @@ local nSize, aSize, nWidth, nHeight
          nSize := ascan( aSize, { |arr| ( arr[ 3 ] == _nWidth ) .and. ( arr[ 2 ] == _nHeight ) } )
       endif
 
-      IF nSize = 0
+      IF nSize == 0
          nSize := 1
       ENDIF
 
       t_aReport[ PAGESIZE ] := aSize[ nSize ][ 1 ]
 
-      nWidth = _nWidth
-      nHeight = _nHeight
+      nWidth := _nWidth
+      nHeight := _nHeight
 
    endif
 
-   IF t_aReport[ PAGEORIENT ] = "P"
+   IF t_aReport[ PAGEORIENT ] == "P"
       t_aReport[ PAGEX ] := nWidth * 72
       t_aReport[ PAGEY ] := nHeight * 72
    ELSE

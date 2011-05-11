@@ -78,31 +78,31 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
 
     DO CASE
     CASE nKey == K_HOME
-       nJump = nJump - 1
+       nJump := nJump - 1
 
     CASE nKey == K_END
-       nJump = nJump + 1
+       nJump := nJump + 1
 
     CASE nKey == K_UP
-       nJump = nJump - 30
+       nJump := nJump - 30
 
     CASE nKey == K_DOWN
-       nJump = nJump + 30
+       nJump := nJump + 30
 
     CASE nKey == K_PGUP
-       nJump = nJump - 365
+       nJump := nJump - 365
 
     CASE nKey == K_PGDN
-       nJump = nJump + 365
+       nJump := nJump + 365
 
     CASE nKey == K_RIGHT
-       nJump = nJump - 7
+       nJump := nJump - 7
 
     CASE nKey == K_LEFT
-       nJump = nJump + 7
+       nJump := nJump + 7
 
     CASE nKey == K_INS
-       nJump = 0
+       nJump := 0
 
     CASE nKey == K_F1
        IF lShowHelp .AND. .NOT. lHelpIsDisplayed

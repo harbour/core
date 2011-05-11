@@ -37,7 +37,7 @@
   cTimeEnd   := "12:10:30"
 
   aDataTest := FT_ELAPSED(dStart,dEnd,cTimeStart,cTimeEnd)
-  FOR n = 1 to 4
+  FOR n := 1 to 4
     ? aDataTest[n,1], STR(aDataTest[n,2], 12, 4)
     ?? " "
     ?? iif(n == 1, 'Days', iif( n== 2, 'Hours', iif( n == 3, 'Mins.', 'Secs.')))
@@ -78,7 +78,7 @@ FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
 
   nTemp := nTotalSec
 
-  FOR nCtr = 1 to 4
+  FOR nCtr := 1 to 4
      nConstant := iif(nCtr == 1, 86400, iif(nCtr == 2, 3600, iif( nCtr == 3, 60, 1)))
      aRetVal[nCtr,1] := INT(nTemp/nConstant)
      aRetval[nCtr,2] := nTotalSec / nConstant

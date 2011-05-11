@@ -198,7 +198,7 @@ static s_lMinit:=.F.
 
 FUNCTION FT_MMICKEYS( nX, nY ) // read mouse motion counters
 /*
-   aReg[AX] = 11                // set mouse function call 11
+   aReg[AX] := 11                // set mouse function call 11
    FT_INT86( 51, aReg )        // execute mouse interrupt
    */
    Local areturn

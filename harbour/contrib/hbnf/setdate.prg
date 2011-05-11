@@ -49,8 +49,8 @@ function FT_SETDATE( dDate )
 
   dDate := iif( valtype(dDate) != "D", date(), dDate )
 
-  aRegs[ AX ] = SETDATE * ( 2 ^ 8 )
-  aregs[ CX ] = year( dDate )
-  aregs[ DX ] = ( month( dDate ) * ( 2 ^ 8 ) )  + day( dDate )
+  aRegs[ AX ] := SETDATE * ( 2 ^ 8 )
+  aregs[ CX ] := year( dDate )
+  aregs[ DX ] := ( month( dDate ) * ( 2 ^ 8 ) )  + day( dDate )
 
 return( FT_INT86( DOS, aRegs ) )

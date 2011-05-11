@@ -277,9 +277,9 @@ METHOD Normal()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
-   IF cName = "Times"
+   IF cName == "Times"
       ::aReport[ FONTNAME ] := 1
-   ELSEIF cName = "Helvetica"
+   ELSEIF cName == "Helvetica"
       ::aReport[ FONTNAME ] := 5
    ELSE
       ::aReport[ FONTNAME ] := 9
@@ -299,9 +299,9 @@ METHOD Italic()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
-   IF cName = "Times"
+   IF cName == "Times"
       ::aReport[ FONTNAME ] := 3
-   ELSEIF cName = "Helvetica"
+   ELSEIF cName == "Helvetica"
       ::aReport[ FONTNAME ] := 7
    ELSE
       ::aReport[ FONTNAME ] := 11
@@ -727,9 +727,9 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( ::aReport[ FONTNAME ] - 1 ) % 4
    IF right( cString, 1 ) == chr( 255 ) .or. right( cString, 1 ) == chr( 254 )
       --nLen
    ENDIF
-   IF ::GetFontInfo("NAME") = "Times"
+   IF ::GetFontInfo("NAME") == "Times"
       nArr := 1
-   ELSEIF ::GetFontInfo("NAME") = "Helvetica"
+   ELSEIF ::GetFontInfo("NAME") == "Helvetica"
       nArr := 2
    ELSE
       nArr := 3
@@ -824,7 +824,7 @@ local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
 
 DEFAULT _cPageSize TO "LETTER"
 
-   nSize := ascan( aSize, { |arr| arr[ 1 ] = _cPageSize } )
+   nSize := ascan( aSize, { |arr| LEFTEQUAL( arr[ 1 ], _cPageSize ) } )
 
    IF nSize == 0 .or. nSize > 2
       nSize := 1
@@ -832,7 +832,7 @@ DEFAULT _cPageSize TO "LETTER"
 
    ::aReport[ PAGESIZE ] := aSize[ nSize ][ 1 ]
 
-   IF ::aReport[ PAGEORIENT ] = "P"
+   IF ::aReport[ PAGEORIENT ] == "P"
       ::aReport[ PAGEX ] := aSize[ nSize ][ 2 ] * 72
       ::aReport[ PAGEY ] := aSize[ nSize ][ 3 ] * 72
    ELSE

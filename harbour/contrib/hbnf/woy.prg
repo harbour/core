@@ -55,7 +55,7 @@
         EXIT
      END
 
-     IF DTOC( CTOD( cDate) ) = " "
+     IF Left( DTOC( CTOD( cDate) ), 1 ) == " "
         QQOUT( CHR( 7) )
         @ 4,24 SAY "INVALID DATE"
         INKEY(2)

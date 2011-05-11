@@ -78,23 +78,23 @@ function FT_MIL2CIV(cMILTIME)
 
   do case
      case (nHRS == 24 .OR. nHRS == 0) .AND. (cMINS == "00")  // Midnight
-        cCIVTIME = "12:00 m"
+        cCIVTIME := "12:00 m"
      case (nHRS == 12)                                       // Noon to 12:59pm
         if cMINS == "00"
-           cCIVTIME = "12:00 n"
+           cCIVTIME := "12:00 n"
         else
-           cCIVTIME = "12:" + cMINS + " pm"
+           cCIVTIME := "12:" + cMINS + " pm"
         endif
      case (nHRS < 12)                                    // AM
         if nHRS == 0
-           cHRS = "12"
+           cHRS := "12"
         else
-           cHRS = right("  " + ltrim(str(int(nHRS))),2)
+           cHRS := right("  " + ltrim(str(int(nHRS))),2)
         endif
-        cCIVTIME = cHRS + ":" + cMINS + " am"
+        cCIVTIME := cHRS + ":" + cMINS + " am"
 
   otherwise                                           // PM
-     cCIVTIME = right("  " + ltrim(str(int(nHRS - 12))), 2) + ;
+     cCIVTIME := right("  " + ltrim(str(int(nHRS - 12))), 2) + ;
                 ":" + cMINS + " pm"
   endcase
 
@@ -104,37 +104,37 @@ function FT_CIV2MIL(cTIME)
   local cKEY, cMILTIME
 
 *** Insure leading 0's
-cTIME = REPLICATE("0", 3 - at(":", ltrim(cTIME))) + ltrim(cTIME)
+cTIME := REPLICATE("0", 3 - at(":", ltrim(cTIME))) + ltrim(cTIME)
 
 *** Adjust for popular use of '12' for first hour after noon and midnight
 if left(ltrim(cTIME),2) == "12"
-   cTIME = stuff(cTIME, 1, 2, "00")
+   cTIME := stuff(cTIME, 1, 2, "00")
 endif
 
 *** am, pm, noon or midnight
-cKEY = substr(ltrim(cTIME), 7, 1)
+cKEY := substr(ltrim(cTIME), 7, 1)
 
 do case
 case upper(cKEY) == "N"                           // noon
       if left(cTIME,2) + substr(cTIME,4,2) == "0000"
-         cMILTIME = "1200"
+         cMILTIME := "1200"
       else
-         cMILTIME = "    "
+         cMILTIME := "    "
       endif
    case upper(cKEY) == "M"                           // midnight
       if left(cTIME,2) + substr(cTIME,4,2) == "0000"
-         cMILTIME = "0000"
+         cMILTIME := "0000"
       else
-         cMILTIME = "    "
+         cMILTIME := "    "
       endif
    case upper(cKEY) == "A"                           // am
-      cMILTIME = right("00" + ltrim(str(val(left(cTIME,2)))),2) + ;
-                 substr(cTIME,4,2)
+      cMILTIME := right("00" + ltrim(str(val(left(cTIME,2)))),2) + ;
+                  substr(cTIME,4,2)
    case upper(cKEY) == "P"                           // pm
-      cMILTIME = right("00" + ltrim(str(val(left(cTIME,2))+12)),2) + ;
+      cMILTIME := right("00" + ltrim(str(val(left(cTIME,2))+12)),2) + ;
                  substr(cTIME,4,2)
    otherwise
-      cMILTIME = "    "                              // error
+      cMILTIME := "    "                              // error
 endcase
 
   return cMILTIME

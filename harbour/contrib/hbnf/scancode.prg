@@ -54,6 +54,6 @@
 FUNCTION FT_SCANCODE()
   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] = MAKEHI( 0 )
+  aRegs[ AX ] := MAKEHI( 0 )
   FT_INT86( KEYB, aRegs )
   RETURN chr(LOWBYTE( aRegs[AX] )) + chr(HIGHBYTE( aRegs[AX] ))

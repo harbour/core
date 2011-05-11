@@ -102,7 +102,7 @@ FUNCTION FT_ROUND(nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
             nResult := (INT(nResult / nRoundToAmount) * nRoundToAmount) + ;
                        nRoundToAmount
 
-         CASE LEFT(cRoundDirection,1) = ROUND_DOWN
+         CASE LEFT(cRoundDirection,1) == ROUND_DOWN
 
             nResult := INT(nResult / nRoundToAmount) * nRoundToAmount
 

@@ -211,8 +211,8 @@ local ch
    * start menu definitions *************************************
 
    hWnd := WVW_GETWINDOWHANDLE()
-   hMenu = WVW_CreateMenu( )
-      hPopupMenu = WVW_CreateMenu( )
+   hMenu := WVW_CreateMenu( )
+      hPopupMenu := WVW_CreateMenu( )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
@@ -221,7 +221,7 @@ local ch
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Demos",  )
 
-      hPopupMenu = WVW_CreateMenu( )
+      hPopupMenu := WVW_CreateMenu( )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
       WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
@@ -229,14 +229,14 @@ local ch
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Toolbar",  )
 
-      hPopupMenu = WVW_CreateMenu( )
+      hPopupMenu := WVW_CreateMenu( )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
       WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Window",  )
 
-      hPopupMenu = WVW_CreateMenu( )
+      hPopupMenu := WVW_CreateMenu( )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
       WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
       WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
@@ -539,11 +539,11 @@ FUNCTION DEMO_Browse()
 
    oBrowse := TBrowseNew( 3, 2, maxrow()-3, maxcol()-3 )
 
-   oBrowse:ColSep        = '  '
-   oBrowse:HeadSep       = '__'
-   oBrowse:GoTopBlock    = { || dbGoTop() }
-   oBrowse:GoBottomBlock = { || dbGoBottom() }
-   oBrowse:SkipBlock     = { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:ColSep        := '  '
+   oBrowse:HeadSep       := '__'
+   oBrowse:GoTopBlock    := { || dbGoTop() }
+   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
 
    for i := 1 to len( info_ )
       bBlock := VouBlockField( i )
@@ -579,11 +579,11 @@ FUNCTION DEMO_Browse()
    RefreshVXB(oBrowse, nCurWindow, nVScrollBar) //20040704
 
    While !lEnd
-      nKey = InKey( 0 )
+      nKey := InKey( 0 )
 
       do case
       case nKey == K_ESC .or. nKey == K_ENTER
-         lEnd = .t.
+         lEnd := .t.
          loop
 
       case nKey == K_DOWN
@@ -606,34 +606,34 @@ FUNCTION DEMO_Browse()
          if oBrowse:colPos== oBrowse:colCount(); loop; endif
          oBrowse:Right()
 
-      case nKey = K_PGDN
+      case nKey == K_PGDN
          oBrowse:pageDown()
 
-      case nKey = K_PGUP
+      case nKey == K_PGUP
          oBrowse:pageUp()
 
-      case nKey = K_CTRL_PGUP
+      case nKey == K_CTRL_PGUP
          oBrowse:goTop()
 
-      case nKey = K_CTRL_PGDN
+      case nKey == K_CTRL_PGDN
          oBrowse:goBottom()
 
-      case nKey = K_HOME
+      case nKey == K_HOME
          oBrowse:home()
 
-      case nKey = K_END
+      case nKey == K_END
          oBrowse:end()
 
-      case nKey = K_CTRL_LEFT
+      case nKey == K_CTRL_LEFT
          oBrowse:panLeft()
 
-      case nKey = K_CTRL_RIGHT
+      case nKey == K_CTRL_RIGHT
          oBrowse:panRight()
 
-      case nKey = K_CTRL_HOME
+      case nKey == K_CTRL_HOME
          oBrowse:panHome()
 
-      case nKey = K_CTRL_END
+      case nKey == K_CTRL_END
          oBrowse:panEnd()
 
       otherwise
@@ -807,7 +807,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
 
-   if n = 0
+   if n == 0
       DBSkip( 0 )
 
    elseif n > 0
