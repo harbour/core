@@ -69,6 +69,8 @@
 #include "common.ch"
 #include "xbp.ch"
 
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
@@ -100,22 +102,22 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
 
       ELSE
          cType := Upper( Left( cSyntax, At( " ", cSyntax ) - 1 ) )
-         IF ctype = "INIT" .OR. cType = "EXIT"
+         IF LEFTEQUAL( cType, "INIT" ) .OR. LEFTEQUAL( cType, "EXIT" )
             cSyntax := LTrim( Substr( cSyntax, 6 ) )
             cType +=" "+Upper( Left( cSyntax, ( n := At( " ", cSyntax ) ) - 1 ) )
             cSyntax := LTrim( Substr( cSyntax, n + 1 ) )
 
-         ELSEIF cType = "STATIC"
+         ELSEIF LEFTEQUAL( cType, "STATIC" )
             cSyntax := LTrim( Substr( cSyntax, 7 ) )
             cType += " " + Upper( Left( cSyntax, ( n := At( " ", cSyntax ) ) - 1 ) )
             cSyntax := LTrim( Substr( cSyntax, n + 1 ) )
 
-         ELSEIF cType = "DLL"
+         ELSEIF LEFTEQUAL( cType, "DLL" )
             cSyntax := LTrim( Substr( cSyntax, 4 ) )
             cType += " " + Upper( Left( cSyntax, ( n := At( " ", cSyntax ) ) - 1 ) )
             cSyntax := LTrim( Substr( cSyntax, n + 1 ) )
 
-         ELSEIF cType = "DLL32"
+         ELSEIF LEFTEQUAL( cType, "DLL32" )
             cSyntax := LTrim( Substr( cSyntax, 6 ) )
             cType += " " + Upper( Left( cSyntax, ( n := At( " ", cSyntax ) ) - 1 ) )
             cSyntax := LTrim( Substr( cSyntax, n + 1 ) )
@@ -140,7 +142,7 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
                cName   := SubStr( cName, m + 1 )
             ENDIF
 
-            IF cType = "METH"
+            IF LEFTEQUAL( cType, "METH" )
                IF ( n := Rat( " CLASS ", cSyntax ) ) > 0
                   cClassName := Upper( AllTrim( Substr( cSyntax, n + 7 ) ) )
                ELSE
@@ -148,7 +150,7 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
                ENDIF
             ENDIF
 
-         ELSEIF cType = "METH"
+         ELSEIF LEFTEQUAL( cType, "METH" )
             IF ( n := Rat( " CLASS ", cSyntax ) ) > 0
                cName      := Left( cSyntax, n - 1 )
                cClassName := Upper( AllTrim( Substr( cSyntax, n + 7 ) ) )
@@ -169,18 +171,18 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
 
       IF !aSumData[ i,1 ]  // not commented out !
          aAdd( aTags, { Upper( Trim( cName ) ) ,;
-                        iif( cType = "METH", iif( !Empty( cClassName ), cClassName + ":" + Upper( cType ), Upper( cType ) ), Upper( cType ) ),;
+                        iif( LEFTEQUAL( cType, "METH" ), iif( !Empty( cClassName ), cClassName + ":" + Upper( cType ), Upper( cType ) ), Upper( cType ) ),;
                         aSumData[ i,2 ],;
                         cModule        ,;
                         cSyntax        ,;
                         cType          ,;
-                        Iif( cType = "METH", ":", "" ) + cSyntax, ;
+                        Iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, ;
                         aText[ aSumData[ i,2 ] ] ;
                      };
              )
       ENDIF
 
-      AAdd( aFuncList, { Iif( cType = "METH", ":", "" ) + cSyntax, aSumData[ i, 2 ], aSumData[ i, 1 ] } )
+      AAdd( aFuncList, { Iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, aSumData[ i, 2 ], aSumData[ i, 1 ] } )
       AAdd( aLines, i )
    NEXT
 
@@ -206,25 +208,25 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
 
       IF nType == 9 .OR. nType == 10 // PRG code
 
-         IF ! lInClass  .OR. ( cLine = "METH" )
-            IF cline = 'FUNCTION '         .OR. ;
-               cline = 'PROCEDURE '        .OR. ;
-               cline = 'STATIC PROCEDURE ' .OR. ;
-               cline = 'STATIC FUNCTION '  .OR. ;
-               cline = 'DLL FUNC'          .OR. ;
-               cline = 'DLL32 FUNC'        .OR. ;
-               cline = 'METHOD '           .OR. ;
-               cline = 'FUNC '             .OR. ;
-               cline = 'PROC '             .OR. ;
-               cLine = 'METH '             .OR. ;
-               cline = 'STATIC PROC '      .OR. ;
-               cline = 'STATIC FUNC '      .OR. ;
-               cline = 'INIT FUNC'         .OR. ;
-               cline = 'INIT PROC'         .OR. ;
-               cline = 'EXIT FUNC'         .OR. ;
-               cline = 'EXIT PROC'         .OR. ;
-               cline = 'CLASS '            .OR. ;
-               cline = 'INIT CLASS '
+         IF ! lInClass  .OR. LEFTEQUAL( cLine, "METH" )
+            IF LEFTEQUAL( cLine, 'FUNCTION '         ) .OR. ;
+               LEFTEQUAL( cLine, 'PROCEDURE '        ) .OR. ;
+               LEFTEQUAL( cLine, 'STATIC PROCEDURE ' ) .OR. ;
+               LEFTEQUAL( cLine, 'STATIC FUNCTION '  ) .OR. ;
+               LEFTEQUAL( cLine, 'DLL FUNC'          ) .OR. ;
+               LEFTEQUAL( cLine, 'DLL32 FUNC'        ) .OR. ;
+               LEFTEQUAL( cLine, 'METHOD '           ) .OR. ;
+               LEFTEQUAL( cLine, 'FUNC '             ) .OR. ;
+               LEFTEQUAL( cLine, 'PROC '             ) .OR. ;
+               LEFTEQUAL( cLine, 'METH '             ) .OR. ;
+               LEFTEQUAL( cLine, 'STATIC PROC '      ) .OR. ;
+               LEFTEQUAL( cLine, 'STATIC FUNC '      ) .OR. ;
+               LEFTEQUAL( cLine, 'INIT FUNC'         ) .OR. ;
+               LEFTEQUAL( cLine, 'INIT PROC'         ) .OR. ;
+               LEFTEQUAL( cLine, 'EXIT FUNC'         ) .OR. ;
+               LEFTEQUAL( cLine, 'EXIT PROC'         ) .OR. ;
+               LEFTEQUAL( cLine, 'CLASS '            ) .OR. ;
+               LEFTEQUAL( cLine, 'INIT CLASS '       )
 
                // check for multiline declaration
                a := ParsExpr( aText[ i ], .F., , , .F. )
@@ -242,7 +244,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                ENDDO
 
                IF lInClass
-                  IF cLine = 'METH'
+                  IF LEFTEQUAL( cLine, 'METH' )
                      IF " INLINE " $ Upper( c )
                         c := Trim( Left( c, At( " INLINE ", Upper( c ) ) ) )
                      ELSE
@@ -260,9 +262,9 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                aAdd( aSummary, Str( nLine, 5, 0 ) + ': ' +  c )
 
                IF ! lInClass
-                  lInClass := ( cline = 'CLASS ' )
+                  lInClass := LEFTEQUAL( cLine, 'CLASS ' )
                ENDIF
-            ELSEIF cLine = "#PRAGMA BEGINDUMP"
+            ELSEIF LEFTEQUAL( cLine, "#PRAGMA BEGINDUMP" )
                nType  := 1
                nNest  := 0
                ccLine := ""
@@ -273,7 +275,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
 
       ELSE   // C code
 
-        IF cLine = "#PRAGMA ENDDUMP"
+        IF LEFTEQUAL( cLine, "#PRAGMA ENDDUMP" )
             nType := nFileType
             ELSE
                IF nNest == 0

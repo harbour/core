@@ -128,6 +128,22 @@ HB_FUNC( WAPI_MESSAGEBEEP )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_FINDWINDOW )
+{
+   void * hClassName;
+   void * hWindowName;
+
+   HWND hResult = FindWindow(
+      HB_PARSTR( 1, &hClassName, NULL ),
+      HB_PARSTR( 2, &hWindowName, NULL ) );
+
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_raw_HWND( hResult );
+
+   hb_strfree( hClassName );
+   hb_strfree( hWindowName );
+}
+
 HB_FUNC( WAPI_CREATEWINDOWEX )
 {
    void * hClassName;

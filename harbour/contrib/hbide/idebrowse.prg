@@ -2023,7 +2023,7 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       IF ::oBrw:hitBottom
          ::qTimer:stop()
          ::dispInfo()
-      ELSEIF eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) = ::xSearch
+      ELSEIF Left( eval( ::oBrw:getColumn( ::oBrw:colPos ):block ), Len( ::xSearch ) ) == ::xSearch
          ::qTimer:stop()
          ::dispInfo()
       ENDIF
