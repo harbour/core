@@ -682,7 +682,7 @@ HB_BOOL hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos )
    return HB_FALSE;
 }
 
-static HB_BOOL hb_hashClear( PHB_ITEM pHash )
+HB_BOOL hb_hashClear( PHB_ITEM pHash )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hashClear(%p)", pHash));
 

@@ -864,6 +864,7 @@ extern HB_EXPORT HB_BOOL   hb_hashDel( PHB_ITEM pHash, PHB_ITEM pKey );
 extern HB_EXPORT HB_BOOL   hb_hashAdd( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
 extern HB_EXPORT HB_BOOL   hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
 extern HB_EXPORT HB_BOOL   hb_hashRemove( PHB_ITEM pHash, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL   hb_hashClear( PHB_ITEM pHash );
 extern HB_EXPORT HB_BOOL   hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr );
 extern HB_EXPORT void      hb_hashSort( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pHash );

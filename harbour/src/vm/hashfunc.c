@@ -169,10 +169,8 @@ HB_FUNC( HB_HDEL )
 
    if( pHash && pKey )
    {
-      if( hb_hashDel( pHash, pKey ) )
-         hb_itemReturn( pHash );
-      else
-         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 2, pHash, pKey );
+      hb_hashDel( pHash, pKey );
+      hb_itemReturn( pHash );
    }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -285,6 +283,19 @@ HB_FUNC( HB_HVALUES )
 
    if( pHash )
       hb_itemReturnRelease( hb_hashGetValues( pHash ) );
+   else
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_HCLEAR )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+
+   if( pHash )
+   {
+      hb_hashClear( pHash );
+      hb_itemReturn( pHash );
+   }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
