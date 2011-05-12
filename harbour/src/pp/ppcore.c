@@ -2212,7 +2212,7 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
 
          if( nSize )
          {
-            char * pBuffer = ( char * ) hb_xgrab( nSize );
+            char * pBuffer = ( char * ) hb_xgrab( nSize * sizeof( char ) );
 
             nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
             if( pState->iStreamDump == HB_PP_STREAM_C )

@@ -55,21 +55,21 @@
 #define _UNI_NAME_NORM( s ) StrTran( StrTran( StrTran( s, "-" ), "." ), " " )
 
 FUNCTION hb_xml_get_unicode_table( cCP )
-   STATIC s_uni := NIL
+   THREAD STATIC t_uni := NIL
 
    LOCAL cdp
 
-   IF s_uni == NIL
+   IF t_uni == NIL
       /* Gather full list of unicode tables supported by codepage modules. */
-      s_uni := { => }
+      t_uni := { => }
       FOR EACH cdp IN hb_cdpList()
-         s_uni[ _UNI_NAME_NORM( hb_cdpUniID( cdp ) ) ] := cdp
+         t_uni[ _UNI_NAME_NORM( hb_cdpUniID( cdp ) ) ] := cdp
       NEXT
    ENDIF
 
    cCP := _UNI_NAME_NORM( cCP )
-   IF cCP $ s_uni
-      RETURN __hb_xml_cdpu16map( s_uni[ cCP ] )
+   IF cCP $ t_uni
+      RETURN __hb_xml_cdpu16map( t_uni[ cCP ] )
    ENDIF
 
    RETURN NIL
