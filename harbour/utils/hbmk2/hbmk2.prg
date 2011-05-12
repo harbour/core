@@ -5334,9 +5334,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   /* Always request default GT first */
                   AAdd( array, "HB_GT_" + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) )
                ENDIF
-               IF ! Empty( hbmk[ _HBMK_aLIBUSERGT ] )
-                  AEval( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) ) } )
-               ENDIF
+               FOR EACH tmp IN hbmk[ _HBMK_aLIBUSERGT ]
+                  IF hbmk[ _HBMK_cGT ] == NIL .OR. !( Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) == Upper( SubStr( tmp, 3 ) ) )
+                     AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) )
+                  ENDIF
+               NEXT
                AEval( hbmk[ _HBMK_aREQUEST ], {| tmp | AAdd( array, tmp ) } )
 
                /* Build C stub */
