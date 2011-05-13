@@ -8824,13 +8824,15 @@ HB_BOOL hb_vmRequestReenterExt( void )
       return HB_FALSE;
    else
    {
-      HB_STACK_TLS_PRELOAD
-
 #if defined( HB_MT_VM )
+      HB_STACK_TLS_PRELOAD
       HB_USHORT uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
 
       if( uiAction )
+      {
          hb_vmThreadInit( NULL );
+         HB_STACK_TLS_RELOAD
+      }
       else
          hb_stackPushReturn();
 

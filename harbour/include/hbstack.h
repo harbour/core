@@ -245,11 +245,12 @@ typedef struct
 #     endif
 #     if defined( HB_STACK_PRELOAD ) && !defined( HB_USE_TLS )
 #        if defined( hb_stack_ptr_get )
-#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = ( PHB_STACK ) hb_stack_ptr_get();
+#           define HB_STACK_TLS_RELOAD    _hb_stack_ptr_ = ( PHB_STACK ) hb_stack_ptr_get();
 #           undef hb_stack_ptr
 #        else
-#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr;
+#           define HB_STACK_TLS_RELOAD    _hb_stack_ptr_ = hb_stack_ptr;
 #        endif
+#        define HB_STACK_TLS_PRELOAD   PHB_STACK HB_STACK_TLS_RELOAD
 #        define hb_stack            ( * _hb_stack_ptr_ )
 #        define hb_stack_ref()      ( _hb_stack_ptr_ )
 #     else
@@ -266,6 +267,7 @@ typedef struct
 #if !defined( HB_STACK_TLS_PRELOAD )
 #  if defined( HB_STACK_PRELOAD )
 #     define HB_STACK_TLS_PRELOAD
+#     define HB_STACK_TLS_RELOAD
 #     undef  HB_STACK_PRELOAD
 #  elif defined( _HB_STACK_MACROS_ )
 #     define HB_STACK_TLS_PRELOAD
