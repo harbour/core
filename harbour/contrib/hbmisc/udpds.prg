@@ -23,6 +23,8 @@
 
 #include "hbsocket.ch"
 
+STATIC s_lRunThread
+
 /* Client */
 
 FUNCTION hb_UDPDS_Find( nPort, cName )
@@ -57,6 +59,7 @@ FUNCTION hb_UDPDS_Start( nPort, cName, cVersion )
 
    IF ! Empty( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
       IF hb_socketBind( hSocket, { HB_SOCKET_AF_INET, "0.0.0.0", nPort } )
+         s_lRunThread := .T.
          hb_threadDetach( hb_threadStart( @UDPDS(), hSocket, cName, cVersion ) )
          RETURN hSocket
       ENDIF
@@ -67,6 +70,8 @@ FUNCTION hb_UDPDS_Start( nPort, cName, cVersion )
 
 PROCEDURE hb_UDPDS_Stop( hSocket )
 
+   s_lRunThread := .F.
+   hb_idleSleep( 0.1 )
    hb_socketClose( hSocket )
 
    RETURN
@@ -75,19 +80,19 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
 
    LOCAL cBuffer, nLen, aAddr
 
-   DO WHILE .T.
+   DO WHILE s_lRunThread
       cBuffer := Space( 2000 )
       nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, 1000 )
-      IF nLen == - 1
+      IF nLen == -1
          IF hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT
             RETURN
          ENDIF
       ELSE
-        /*
-         * Communication protocol:
-         *   Broadcast request: ENQ, ServerName, NUL
-         *   Server response: ACK, ServerName, NUL, Version
-         */
+         /*
+          * Communication protocol:
+          *   Broadcast request: ENQ, ServerName, NUL
+          *   Server response: ACK, ServerName, NUL, Version
+          */
          IF Left( cBuffer, nLen ) == Chr( 5 ) + cName + Chr( 0 )
             hb_socketSendTo( hSocket, Chr( 6 ) + cName + Chr( 0 ) + iif( cVersion == NIL, "", cVersion ), , , aAddr )
          ENDIF
