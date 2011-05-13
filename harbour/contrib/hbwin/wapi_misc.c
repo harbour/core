@@ -113,7 +113,7 @@ static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
       LPTSTR buffer;
 
       if( pFileName )
-         nLen += hbwapi_tstrlen( pFileName ) + 1;
+         nLen += ( UINT ) hbwapi_tstrlen( pFileName ) + 1;
 
       buffer = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
 

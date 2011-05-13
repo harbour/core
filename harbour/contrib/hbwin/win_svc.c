@@ -223,7 +223,8 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  lpDisplayName,                /* service name to display */
                                  SERVICE_ALL_ACCESS,           /* desired access */
                                  SERVICE_WIN32_OWN_PROCESS,    /* service type */
-                                 SERVICE_DEMAND_START,         /* start type */
+                                 HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : SERVICE_DEMAND_START,
+                                                               /* start type */
                                  SERVICE_ERROR_NORMAL,         /* error control type */
                                  lpPath,                       /* path to service's binary */
                                  NULL,                         /* no load ordering group */

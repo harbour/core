@@ -671,6 +671,13 @@
 #define WIN_SERVICE_PAUSE_PENDING         6
 #define WIN_SERVICE_PAUSED                7
 
+/* WIN_SERVICEINSTALL() start type */
+#define WIN_SERVICE_AUTO_START            0x00000002
+#define WIN_SERVICE_BOOT_START            0x00000000
+#define WIN_SERVICE_DEMAND_START          0x00000003
+#define WIN_SERVICE_DISABLED              0x00000004
+#define WIN_SERVICE_SYSTEM_START          0x00000001
+
 /* WAPI_MESSAGEBOX()/WAPI_MESSAGEBEEP() flags */
 #define WIN_MB_OK                         0x00000000
 #define WIN_MB_OKCANCEL                   0x00000001
