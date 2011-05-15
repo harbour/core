@@ -1408,7 +1408,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-",, "wce" } ,;
                     { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "gcc",,, "cygwin" },;
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
-                    { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64" },; /* Equation Solution build */
+                    { {|| FindInPath( "x86_64-pc-mingw32-gcc"   ) }, "mingw64" },; /* Equation Solution build */
+                    { {|| FindInPath( "i686-w64-mingw32-gcc"    ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
+                    { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" },; /* mingw-w64 build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wcc386"   ),;
@@ -1426,9 +1428,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl.exe"  ) }, "icc"    },;
                     { {|| FindInPath( "xCC.exe"  ) }, "xcc"    },;
-                    { {|| FindInPath( "dmc.exe"  ) }, "dmc"    },;
-                    { {|| FindInPath( "i686-w64-mingw32-gcc" ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
-                    { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" }} /* mingw-w64 build */
+                    { {|| FindInPath( "dmc.exe"  ) }, "dmc"    }}
 #endif
       aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
