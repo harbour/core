@@ -20,4 +20,5 @@ chroot.c
 daemon.c
 posix.c
 posixerr.c
+sleep.c
 uidgid.c

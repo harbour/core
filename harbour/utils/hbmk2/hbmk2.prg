@@ -4121,6 +4121,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          cBin_LibHBX := cBin_Lib
          cOpt_LibHBX := "{LI}"
+         IF HBMK_ISPLAT( "linux|dos|os2" )
+            /* register callconv (-6r, -5r) puts an underscore after names */
+            cLibHBX_Regex := "[[:space:]]_?HB_FUN_([A-Z0-9_]*)_[[:space:]]"
+         ENDIF
          IF HBMK_ISPLAT( "win|os2" )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF

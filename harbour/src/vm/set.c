@@ -312,7 +312,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
       hb_xfree( *set_value );
    *set_value = NULL;
 
-   if( !szFileName )
+   if( ! szFileName )
       return;
 
    /* Open the file either in append (bAppend) or truncate mode (!bAppend), but
@@ -1069,11 +1069,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_DELIMCHARS = hb_strdup( "::" );
    pSet->HB_SET_DELIMITERS = HB_FALSE;
    pSet->HB_SET_DEVICE = hb_strdup( "SCREEN" );
-#if defined( HB_OS_UNIX )
-   pSet->HB_SET_EOF = HB_FALSE;
-#else
    pSet->HB_SET_EOF = HB_TRUE;
-#endif
    pSet->HB_SET_EPOCH = 1900;
    pSet->HB_SET_ESCAPE = HB_TRUE;
    pSet->HB_SET_EVENTMASK = INKEY_KEYBOARD;
@@ -1208,10 +1204,10 @@ int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
-   PHB_SET_LISTENER p_sl = (PHB_SET_LISTENER) hb_xgrab( sizeof( HB_SET_LISTENER ) );
+   PHB_SET_LISTENER p_sl = ( PHB_SET_LISTENER ) hb_xgrab( sizeof( HB_SET_LISTENER ) );
    PHB_SET_LISTENER_LST pList;
 
-   if( !pSet->hb_set_listener )
+   if( ! pSet->hb_set_listener )
    {
       pSet->hb_set_listener = hb_xgrab( sizeof( HB_SET_LISTENER_LST ) );
       memset( pSet->hb_set_listener, 0, sizeof( HB_SET_LISTENER_LST ) );
@@ -1240,7 +1236,7 @@ void hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum when )
       PHB_SET_LISTENER p_sl = pList->first;
       while( p_sl )
       {
-         (* p_sl->callback)( set, when );
+         ( * p_sl->callback )( set, when );
          p_sl = p_sl->next;
       }
    }
@@ -2739,12 +2735,13 @@ HB_FHANDLE hb_setGetPrinterHandle( int iType )
    switch( iType )
    {
       case HB_SET_PRN_DEV:
-         if( !pSet->hb_set_prndevice )
+         if( ! pSet->hb_set_prndevice )
             return FS_ERROR;
          break;
       case HB_SET_PRN_CON:
-         if( !pSet->HB_SET_PRINTER )
+         if( ! pSet->HB_SET_PRINTER )
             return FS_ERROR;
+         break;
       case HB_SET_PRN_ANY:
          break;
       default:

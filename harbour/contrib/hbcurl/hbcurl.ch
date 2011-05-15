@@ -157,7 +157,8 @@
 #define HB_CURLOPT_NOSIGNAL                   99
 #define HB_CURLOPT_SHARE                      100
 #define HB_CURLOPT_PROXYTYPE                  101
-#define HB_CURLOPT_ENCODING                   102
+#define HB_CURLOPT_ACCEPT_ENCODING            102
+#define HB_CURLOPT_ENCODING                   HB_CURLOPT_ACCEPT_ENCODING
 #define HB_CURLOPT_PRIVATE                    103
 #define HB_CURLOPT_HTTP200ALIASES             104
 #define HB_CURLOPT_UNRESTRICTED_AUTH          105
@@ -249,6 +250,7 @@
 #define HB_CURLOPT_RTSP_SERVER_CSEQ           194
 #define HB_CURLOPT_WILDCARDMATCH              197
 #define HB_CURLOPT_RESOLVE                    198
+#define HB_CURLOPT_TRANSFER_ENCODING          199
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -456,7 +458,7 @@
 #define HB_CURLE_UNSUPPORTED_PROTOCOL         1  /* */
 #define HB_CURLE_FAILED_INIT                  2  /* */
 #define HB_CURLE_URL_MALFORMAT                3  /* */
-#define HB_CURLE_OBSOLETE4                    4  /* NOT USED */
+#define HB_CURLE_NOT_BUILT_IN                 4  /* */
 #define HB_CURLE_COULDNT_RESOLVE_PROXY        5  /* */
 #define HB_CURLE_COULDNT_RESOLVE_HOST         6  /* */
 #define HB_CURLE_COULDNT_CONNECT              7  /* */
@@ -500,7 +502,8 @@
 #define HB_CURLE_INTERFACE_FAILED             45 /* CURLOPT_INTERFACE failed */
 #define HB_CURLE_OBSOLETE46                   46 /* NOT USED */
 #define HB_CURLE_TOO_MANY_REDIRECTS           47 /* catch endless re-direct loops */
-#define HB_CURLE_UNKNOWN_TELNET_OPTION        48 /* User specified an unknown option */
+#define HB_CURLE_UNKNOWN_OPTION               48 /* User specified an unknown option */
+#define HB_CURLE_UNKNOWN_TELNET_OPTION        HB_CURLE_UNKNOWN_OPTION
 #define HB_CURLE_TELNET_OPTION_SYNTAX         49 /* Malformed telnet option */
 #define HB_CURLE_OBSOLETE50                   50 /* NOT USED */
 #define HB_CURLE_PEER_FAILED_VERIFICATION     51 /* peer's certificate or fingerprint wasn't verified fine */

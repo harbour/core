@@ -949,9 +949,18 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_AUTOREFERER:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_AUTOREFERER, HB_CURL_OPT_BOOL( 3 ) );
             break;
-         case HB_CURLOPT_ENCODING:
+         case HB_CURLOPT_ACCEPT_ENCODING:
+#if LIBCURL_VERSION_NUM >= 0x071506
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ACCEPT_ENCODING, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+#else
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_ENCODING, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+#endif
             break;
+#if LIBCURL_VERSION_NUM >= 0x071506
+         case HB_CURLOPT_TRANSFER_ENCODING:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_TRANSFER_ENCODING, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            break;
+#endif
          case HB_CURLOPT_FOLLOWLOCATION:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FOLLOWLOCATION, HB_CURL_OPT_BOOL( 3 ) );
             break;
