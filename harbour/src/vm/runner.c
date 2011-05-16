@@ -870,6 +870,30 @@ HB_FUNC( HB_HRBGETFUNSYM )
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_HRBGETFUNLIST )
+{
+   PHRB_BODY pHrbBody = hb_hrbParam( 1 );
+
+   if( pHrbBody )
+   {
+      PHB_SYMB pSym;
+      HB_ULONG nPos;
+      PHB_ITEM paList = hb_itemArrayNew( 0 );
+      PHB_ITEM pFuncName = hb_itemNew( NULL );
+
+      for( nPos = 0, pSym = pHrbBody->pSymRead; nPos < pHrbBody->ulSymbols; ++pSym, ++nPos )
+      {
+         if( pSym->value.pFunPtr != NULL )
+            hb_arrayAdd( paList, hb_itemPutC( pFuncName, pSym->szName ) );
+      }
+
+      hb_itemRelease( pFuncName );
+      hb_itemReturnRelease( paList );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_HRBSIGNATURE )
 {
    hb_retclen( s_szHead, sizeof( s_szHead ) );

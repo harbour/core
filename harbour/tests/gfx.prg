@@ -13,10 +13,8 @@ FUNCTION Main()
    LOCAL nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
 
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
-      ?
-      ? "You are using a non graphics capable gt:"
-      ? hb_gtVersion()
-      ?
+      OutStd( "You are using a non graphics capable gt:" + hb_eol() )
+      OutStd( hb_gtVersion() + hb_eol() )
       QUIT
    ENDIF
 
@@ -25,7 +23,7 @@ FUNCTION Main()
       hb_gtInfo( HB_GTI_FONTSIZE, 24 )
    ENDIF
 
-   ? hb_gtVersion( 1 )
+   OutStd( hb_gtVersion( 1 ) + hb_eol() )
 
    nFontHeight := hb_gtInfo( HB_GTI_FONTSIZE )
    nFontWidth := hb_gtInfo( HB_GTI_FONTWIDTH )
