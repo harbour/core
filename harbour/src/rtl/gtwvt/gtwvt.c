@@ -1220,6 +1220,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
 
          switch( wParam )
          {
+#if 0 /* TOFIX: it breaks Mark and Copy functionality. */
             case VK_RETURN:
                /* in WM_CHAR i was unable to read Alt key state */
                if( bAlt && pWVT->bAltEnter )
@@ -1228,6 +1229,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                }
                break;
+#endif
             case VK_LEFT:
                hb_gt_wvt_TranslateKey( pWVT, K_LEFT , K_SH_LEFT , K_ALT_LEFT , K_CTRL_LEFT  );
                break;
