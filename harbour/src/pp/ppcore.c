@@ -6272,7 +6272,8 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       int iBraces = 0;
       do
       {
-         hb_pp_tokenStr( pToken, pState->pBuffer, HB_FALSE, HB_TRUE, ltype );
+         hb_pp_tokenStr( pToken, pState->pBuffer, ltype != HB_PP_TOKEN_NUL,
+                         HB_TRUE, ltype );
          ltype = HB_PP_TOKEN_TYPE( pToken->type );
          switch( ltype )
          {
