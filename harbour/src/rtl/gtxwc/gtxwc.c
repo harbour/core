@@ -3244,8 +3244,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->cursorType = SC_NORMAL;
 
    /* Window Title */
-   pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
-   wnd->szTitle = hb_strdup( pFileName->szName );
+   pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
+   wnd->szTitle = pFileName->szName ? hb_strdup( pFileName->szName ) : NULL;
    wnd->fDspTitle = HB_TRUE;
    hb_xfree( pFileName );
 
@@ -3471,7 +3471,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
       /* Line width 2 */
       XSetLineAttributes( wnd->dpy, wnd->gc, 1, LineSolid, CapRound, JoinBevel );
-      XStoreName( wnd->dpy, wnd->window, wnd->szTitle );
+      XStoreName( wnd->dpy, wnd->window, wnd->szTitle ? wnd->szTitle : "" );
    }
 
    XSetFont( wnd->dpy, wnd->gc, wnd->xfs->fid );

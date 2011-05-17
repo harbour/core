@@ -104,7 +104,7 @@ HB_FUNC( HB_STRING2POINTER )
 
 HB_FUNC( HB_CMDARGARGV )
 {
-   hb_retc( hb_cmdargARGV()[ 0 ] );
+   hb_retc( hb_cmdargARGVN( 0 ) );
 }
 
 HB_FUNC( HB_VMMODE )

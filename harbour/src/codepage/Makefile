@@ -81,6 +81,8 @@ C_SOURCES := \
    cpsl852.c \
    cpsliso.c \
    cpslwin.c \
+   cpsr646.c \
+   cpsr646c.c \
    cpsrwin.c \
    cpsv437c.c \
    cpsv850.c \
@@ -106,6 +108,7 @@ C_SOURCES := \
    uc1257.c \
    uc1258.c \
    uc646_yu.c \
+   uc646yuc.c \
    uc737.c \
    uc775.c \
    uc850.c \

@@ -359,7 +359,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bSelectCopy       = HB_TRUE;
 
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
       PHB_ITEM  pItem = hb_itemPutC( NULL, pFileName->szName );
 
       pWVT->lpWindowTitle = HB_ITEMGETSTR( pItem, &pWVT->hWindowTitle, NULL );

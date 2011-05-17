@@ -91,7 +91,7 @@ static void debugInit( void )
    if( ! s_iUseDebugName )
    {
       int iRand = ( int ) ( hb_random_num() * 1000000 );
-      pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
       hb_snprintf( szDebugName, sizeof( szDebugName ) - 1, "/tmp/%s%d_dbg", pFileName->szName, iRand );
    }
    else

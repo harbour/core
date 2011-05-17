@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ISO-646-YU / YUSCII / CROSCII / SLOSCII <-> Unicode conversion table
+ * JUS I.B1.002 / ISO-646-YU / YUSCII / CROSCII / SLOSCII <-> Unicode conversion table
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

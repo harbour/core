@@ -10,6 +10,6 @@ gt=gtgui
 
 cflags={watcom}-6r
 
-sources={mingw}hbolesrv-mingw.def
+sources={allmingw}hbolesrv-mingw.def
 sources={watcom}hbolesrv-watcom.def
-sources={!mingw&!watcom}hbolesrv.def
+sources={!allmingw&!watcom}hbolesrv.def
