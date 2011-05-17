@@ -1285,11 +1285,11 @@ static HB_GENC_FUNC( hb_p_pushlong )
 
    if( iSkip == 0 )
    {
-#if INT_MAX >= INT32_MAX
+      fprintf( cargo->yyc, "#if INT_MAX >= INT32_MAX\n" );
       fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) lVal );
-#else
+      fprintf( cargo->yyc, "#else\n" );
       fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", lVal );
-#endif
+      fprintf( cargo->yyc, "#endif\n" );
    }
    return 5 + iSkip;
 }
