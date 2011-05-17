@@ -118,6 +118,11 @@ HB_FUNC( HB_RANDOMINT )
    }
 }
 
+HB_FUNC( HB_RAND32 ) /* returns an integer between 0 and 0xFFFFFFFF (inclusive) */
+{
+   hb_retnint( ( HB_MAXINT ) ( hb_random_num() * ( HB_MAXINT ) HB_U32_MAX ) );
+}
+
 HB_FUNC( HB_RANDOMSEED )
 {
    srand( HB_ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
