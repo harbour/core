@@ -998,6 +998,19 @@ static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
    pWVT->MousePos.x = iCol;
 }
 
+static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
+{
+#if ! defined( HB_OS_WIN_CE )
+   if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
+   {
+      if( fEnable )
+         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
+      else
+         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) & ~WS_EX_COMPOSITED );
+   }
+#endif
+}
+
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
    POINT xy, colrow;
@@ -1039,6 +1052,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->sRectOld.top    = 0;
             pWVT->sRectOld.right  = 0;
             pWVT->sRectOld.bottom = 0;
+
+            hb_gt_wvt_Composited( pWVT, HB_FALSE );
 
             return;
          }
@@ -1119,6 +1134,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                else
                   hb_xfree( sBuffer );
             }
+
+            hb_gt_wvt_Composited( pWVT, HB_TRUE );
+
             return;
          }
          else
@@ -1220,7 +1238,6 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
 
          switch( wParam )
          {
-#if 0 /* TOFIX: it breaks Mark and Copy functionality. */
             case VK_RETURN:
                /* in WM_CHAR i was unable to read Alt key state */
                if( bAlt && pWVT->bAltEnter )
@@ -1229,7 +1246,6 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                }
                break;
-#endif
             case VK_LEFT:
                hb_gt_wvt_TranslateKey( pWVT, K_LEFT , K_SH_LEFT , K_ALT_LEFT , K_CTRL_LEFT  );
                break;
@@ -1887,10 +1903,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       if( ! pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
-#if ! defined( HB_OS_WIN_CE )
-      if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
-         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
-#endif
+      hb_gt_wvt_Composited( pWVT, HB_TRUE );
 
       /* Set icon */
       if( pWVT->hIcon )
