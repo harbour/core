@@ -662,6 +662,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
                   pSink->pConnectionPoint = pCP;
                   pSink->dwCookie = dwCookie;
 
+                  HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
                   pOleItem = hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
                   /* bind call back handler item with returned object */
                   hb_oleItemSetCallBack( pOleItem, &pSink->pItemHandler );
