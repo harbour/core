@@ -117,6 +117,11 @@ public:
    void           hbSetEventBlock( PHB_ITEM pBlock );
    int            horzRulerHeight;
    void           hbUpdateHorzRulerHeight( int height );
+   void           hbSetHighLighter( HBQSyntaxHighlighter * hilighter ){ highlighter = hilighter; };
+   void           hbHighlightPage();
+
+   int            firstVisibleBlockNumber()        { return QPlainTextEdit::firstVisibleBlock().blockNumber(); };
+   int            lastVisibleBlockNumber();
 
 private:
    QVector<int>   bookMark;

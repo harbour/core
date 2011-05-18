@@ -1044,7 +1044,7 @@ METHOD IdeDocks:setView( cView )
       EXIT
 
    OTHERWISE
-      IF ( n := ascan( ::aViews, {|o| o:oWidget:objectName() == cView } ) ) > 0
+      IF ( n := ascan( ::aViews, {|o| iif( hb_isChar( o:oWidget:objectName() ), o:oWidget:objectName() == cView, .f. ) } ) ) > 0
          ::oIde:cWrkView := cView
          IF !( cView == "Stats" )
             ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget

@@ -138,7 +138,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   nPointSize                              INIT  10
    DATA   cLineEndingMode                         INIT  ""
 
-   DATA   lTrimTrailingBlanks                     INIT  .t.
+   DATA   lTrimTrailingBlanks                     INIT  .f.
    DATA   lSaveSourceWhenComp                     INIT  .t.
    DATA   lSupressHbKWordsToUpper                 INIT  .f.
    DATA   lReturnAsBeginKeyword                   INIT  .f.

@@ -101,6 +101,7 @@ extern void * hbqt_gcAllocate_QListWidgetItem( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
+extern void * hbqt_gcAllocate_QRect( void * pObj, bool bNew );
 
 extern void * hbqt_gcAllocate_QActionEvent( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew );
@@ -352,6 +353,17 @@ static void hbqt_SlotsExecQWidgetInt( PHB_ITEM * codeBlock, void ** arguments, Q
    hb_vmSend( 2 );
 }
 
+static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
+{
+   Q_UNUSED( pList );
+
+   hb_vmPushEvalSym();
+   hb_vmPush( codeBlock );
+   hb_vmPush( hbqt_create_objectGC(  hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRect" ) );
+   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+   hb_vmSend( 2 );
+}
+
 
 HB_FUNC_EXTERN( HB_QABSTRACTBUTTON );
 HB_FUNC_EXTERN( HB_QACTION );
@@ -460,6 +472,7 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QTreeWidgetItem*"                    , hbqt_SlotsExecQTreeWidgetItem  );
    hbqt_slots_register_callback( "QListWidgetItem*"                    , hbqt_SlotsExecQListWidgetItem  );
    hbqt_slots_register_callback( "QWidget*"                            , hbqt_SlotsExecQWidget          );
+   hbqt_slots_register_callback( "QRect$int"                           , hbqt_SlotsExecQRectInt         );
 
    hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
    hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );

@@ -178,6 +178,9 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    connect( timer, SIGNAL( timeout() ), this, SLOT( hbUpdateCaret() ) );
    timer->start( 500 );
    #endif
+
+   QTextDocument * doc = document();
+   doc->setDocumentMargin( 0 );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1629,6 +1632,25 @@ void HBQPlainTextEdit::hbUpdateCaret()
 
 /*----------------------------------------------------------------------*/
 
+int HBQPlainTextEdit::lastVisibleBlockNumber()
+{
+   QTextBlock block = firstVisibleBlock();
+   int blockNumber  = block.blockNumber();
+   int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
+   int height       = ( int ) blockBoundingRect( block ).height();
+   int vpHeight     = viewport()->height();
+
+   while( block.isValid() && top < vpHeight )
+   {
+      top += height;
+      ++blockNumber;
+      block = block.next();
+   }
+   return blockNumber;
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
 {
    int   fontWidth = fontMetrics().averageCharWidth();
@@ -1762,7 +1784,8 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
       {
          QPainter p( viewport() );
 
-         int marginX = ( c > 0 ? 0 : contentsRect().left() ) + 2 ;
+         //int marginX = ( c > 0 ? 0 : contentsRect().left() ) + 2 ;
+         int marginX = ( c > 0 ? 0 : contentsRect().left() ) ;
          int fontWidth = fontMetrics().averageCharWidth();
 
          int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) ) + ttop;
@@ -2065,10 +2088,63 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbHighlightPage()
+{
+   int iLastVisBlockNum = lastVisibleBlockNumber();
+   QTextBlock block = firstVisibleBlock();
+   if( block.isValid() )
+   {
+      int i;
+      for( i = block.blockNumber(); i < iLastVisBlockNum; i++ )
+      {
+         highlighter->rehighlightBlock( block );
+         block = block.next();
+         if( ! block.isValid() )
+            break;
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbUpdateLineNumberArea( const QRect &rect, int dy )
 {
    if( dy )
+   {
       lineNumberArea->scroll( 0, dy );
+
+#if QT_VERSION >= 0x040600
+      int rows = abs( dy / fontMetrics().height() );
+      int i;
+      QTextBlock block;
+
+      if( dy < 0 )
+      {
+
+         int iLastVisBlockNum = lastVisibleBlockNumber();
+
+         for( i = iLastVisBlockNum - rows; i <= iLastVisBlockNum; i++ )
+         {
+            block = document()->findBlockByNumber( i );
+            if( block.isValid() )
+            {
+               highlighter->rehighlightBlock( block );
+            }
+         }
+      }
+      else
+      {
+         block = firstVisibleBlock();
+         for( i = 0; i < rows; i++ )
+         {
+            highlighter->rehighlightBlock( block );
+            block = block.next();
+         }
+      }
+#else
+      highlighter->rehighlight();
+#endif
+   }
    else
       lineNumberArea->update( 0, rect.y(), lineNumberArea->width(), rect.height() );
 

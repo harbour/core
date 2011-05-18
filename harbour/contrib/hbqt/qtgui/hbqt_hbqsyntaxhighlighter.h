@@ -59,8 +59,10 @@
 
 #include <QtGui/QSyntaxHighlighter>
 #include <QtGui/QTextBlockUserData>
+#include <QtGui/QPlainTextEdit>
 
 class QTextDocument;
+class HBQPlainTextEdit;
 
 class HBQTextBlockUserData : public QTextBlockUserData
 {
@@ -86,12 +88,15 @@ class HBQSyntaxHighlighter : public QSyntaxHighlighter
 public:
    HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
+   HBQPlainTextEdit * editor;
+
    void hbSetMultiLineCommentFormat( const QTextCharFormat & format );
    void hbSetSingleLineCommentFormat( const QTextCharFormat & format );
    void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
    void hbSetFormat( QString name, const QTextCharFormat & format );
    void hbSetFormatColumnSelection( int start, int count, const QColor & color );
    void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format );
+   void hbSetEditor( HBQPlainTextEdit * edit ){ editor = edit; };
 
 protected:
    void highlightBlock( const QString &text );

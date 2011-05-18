@@ -55,6 +55,7 @@
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqsyntaxhighlighter.h"
+#include "hbqt_hbqplaintextedit.h"
 
 #include <QtCore/QPointer>
 #include <QtCore/QHash>
@@ -145,44 +146,24 @@ void HBQSyntaxHighlighter::hbSetFormatColumnSelection( int start, int count, con
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
-   #if 0
-   QTextBlock curBlock( currentBlock() );
-   int iState = -1;
-   HBQTextBlockUserData * data = ( HBQTextBlockUserData * ) curBlock.userData();
+   int iFirstBlock = editor->firstVisibleBlockNumber();
+   int iLastBlock = editor->lastVisibleBlockNumber();
+   int iBlock = currentBlock().blockNumber();
 
-   QTextBlockFormat fmt( curBlock.blockFormat() );
-   if( data )
+   if( iBlock < iFirstBlock || iBlock > iLastBlock )
    {
-      iState = data->state;
-      HB_TRACE( HB_TR_DEBUG, ( "iState = %i", iState ) );
-
-      switch( iState )
-      {
-      case 99:
-         fmt.setBackground( QColor( 255,255,0 ) );
-         break;
-      }
+      return;
    }
-   #endif
 
    int index = 0;
+   int length = 0;
 
    foreach( const HighlightingRule &rule, HighlightingRules )
    {
-      #if 0
-      QRegExp expression( rule.pattern );
-      index = expression.indexIn( text );
-      while( index >= 0 )
-      {
-         int length = expression.matchedLength();
-         setFormat( index, length, rule.format );
-         index = expression.indexIn( text, index + length );
-      }
-      #endif
       index = rule.pattern.indexIn( text );
       while( index >= 0 )
       {
-         int length = rule.pattern.matchedLength();
+         length = rule.pattern.matchedLength();
          setFormat( index, length, rule.format );
          index = rule.pattern.indexIn( text, index + length );
       }
@@ -192,7 +173,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    index = patternQuotation.indexIn( text );
    while( index >= 0 )
    {
-      int length = patternQuotation.matchedLength();
+      length = patternQuotation.matchedLength();
       setFormat( index, length, quotationFormat );
       index = patternQuotation.indexIn( text, index + length );
    }
@@ -201,7 +182,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    index = commentSingleLine.indexIn( text );
    while( index >= 0 )
    {
-      int length = commentSingleLine.matchedLength();
+      length = commentSingleLine.matchedLength();
       setFormat( index, length, singleLineCommentFormat );
       index = commentSingleLine.indexIn( text, index + length );
    }

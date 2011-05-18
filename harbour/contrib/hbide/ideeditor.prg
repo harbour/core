@@ -1351,10 +1351,11 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::oEdit:qEdit:connect( "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
    ::qDocument  := ::qEdit:document()
-
+#if 0
    IF !( ::cType == "U" )
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
+#endif
    ::qCursor := ::qEdit:textCursor()
 
    /* Populate Tabs Array */
@@ -1368,7 +1369,10 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::oEdit:setReadOnly( .t. )
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
-   ::setTabImage()
+
+   ::qDocument:setModified( .f. )
+   ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
+                                hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
 
    RETURN Self
 
@@ -1430,7 +1434,8 @@ METHOD IdeEditor:split( nOrient, oEditP )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
-HB_TRACE( HB_TR_DEBUG, "..........................................................IdeEditor:destroy()", 0 )
+   HB_TRACE( HB_TR_DEBUG, "..........................................................IdeEditor:destroy()", 0 )
+
    ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
 
    IF !empty( ::qTimerSave )
@@ -1480,7 +1485,7 @@ HB_TRACE( HB_TR_DEBUG, "........................................................
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-HB_TRACE( HB_TR_DEBUG, "................................................................IdeEditor:destroy()", 1 )
+   HB_TRACE( HB_TR_DEBUG, "................................................................IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1545,6 +1550,11 @@ METHOD IdeEditor:setDocumentProperties()
 
    IF !( ::lLoaded )       /* First Time */
       ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
+#if 1
+      IF !( ::cType == "U" )
+         ::qHiliter := ::oTH:setSyntaxHilighting( ::qEdit, @::cTheme )
+      ENDIF
+#endif
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
 
@@ -1563,7 +1573,6 @@ METHOD IdeEditor:setDocumentProperties()
          ::qTimerSave:connect( "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
          ::qTimerSave:start()
       ENDIF
-
       ::oUpDn:show()
    ENDIF
 
@@ -1623,6 +1632,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:qCoEdit:dispStatusInfo()
       ::oUpDn:show()
       oEdit:changeThumbnail()
+      oEdit:qCoEdit:highlightPage()
    ENDIF
 
    RETURN Self

@@ -25,6 +25,7 @@ New      =
 #include <QtGui/QPlainTextEdit>
 
 #include "hbqt_hbqplaintextedit.h"
+#include "hbqt_hbqsyntaxhighlighter.h"
 
 HBQT_GC_FUNC( hbqt_gcMark_HBQPlainTextEdit )
 {
@@ -86,6 +87,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbHighlightCurrentLine(bool b)
    bool           hbHighlightCurrentLine()
    void           hbSetEventBlock( PHB_ITEM block )
+   void           hbSetHighLighter( HBQSyntaxHighlighter * hilighter )
+   void           hbHighlightPage()   
 </PROTOS>
 
 <SLOTS>

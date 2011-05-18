@@ -246,6 +246,8 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD unHighlight()
    METHOD parseCodeCompletion( cSyntax )
 
+   METHOD highlightPage()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -400,8 +402,8 @@ METHOD IdeEdit:disconnectEditSignals( oEdit )
    oEdit:qEdit:disConnect( "copyAvailable(bool)"                )
 
    #if 0
-   oEdit:qEdit:disConnect( "modificationChanged(bool)"          )
    oEdit:qEdit:disConnect( "updateRequest(QRect,int)"           )
+   oEdit:qEdit:disConnect( "modificationChanged(bool)"          )
    oEdit:qEdit:disConnect( "redoAvailable(bool)"                )
    oEdit:qEdit:disConnect( "undoAvailable(bool)"                )
    #endif
@@ -411,17 +413,18 @@ METHOD IdeEdit:disconnectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:connectEditSignals( oEdit )
+
    HB_SYMBOL_UNUSED( oEdit )
 
    oEdit:qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
-   oEdit:qEdit:Connect( "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
-   oEdit:qEdit:Connect( "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
-   oEdit:qEdit:Connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
-   oEdit:qEdit:Connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
+   oEdit:qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
+   oEdit:qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
+   oEdit:qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
+   oEdit:qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
 
    #if 0
+   oEdit:qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, oEdit, p, p1 ) } )
    oEdit:qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
-   oEdit:qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
    oEdit:qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
    oEdit:qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
    #endif
@@ -442,7 +445,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
    SWITCH nMode
 
    CASE customContextMenuRequested
-      //::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
       ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
 
       n := ascan( ::oEditor:aEdits, {|o| o == oEdit } )
@@ -723,6 +725,14 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:highlightPage()
+
+   ::qEdit:hbHighlightPage()
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

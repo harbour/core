@@ -482,9 +482,12 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
       aAttr := ::getThemeAttribute( "SelectionBackground", cTheme )
       qEdit:hbSetSelectionColor( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+
+      qEdit:hbSetHighLighter( qHiliter )
    ENDIF
 
    qHiliter:setDocument( qEdit:document() )
+   qHiliter:hbSetEditor( qEdit )
 
    RETURN qHiliter
 
