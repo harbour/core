@@ -41,6 +41,7 @@ hbrun.rc
 #   (not in the public SVN that is)
 
 hbct.hbc
+hbxpp.hbc
 hbexpat.hbc
 hbmemio.hbc
 hbmzip.hbc

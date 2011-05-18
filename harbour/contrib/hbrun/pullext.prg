@@ -56,6 +56,7 @@ FUNCTION __hbrun_extensions()
    #xtranslate PULLEXT <cName> => REQUEST __HBEXTERN__<cName>__ ; AAdd( aList, Lower( <"cName"> ) )
 
    PULLEXT hbct
+   PULLEXT hbxpp
    PULLEXT hbexpat
    PULLEXT hbmemio
    PULLEXT hbmzip

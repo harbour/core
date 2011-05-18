@@ -223,7 +223,7 @@ HB_FUNC( ORDKEYADD )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_ANY );
+      pOrderInfo.itmNewVal = hb_param( 3, HB_IT_ANY );
       pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
       SELF_ORDINFO( pArea, DBOI_KEYADD, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -245,7 +245,7 @@ HB_FUNC( ORDKEYDEL )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_ANY );
+      pOrderInfo.itmNewVal = hb_param( 3, HB_IT_ANY );
       pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
       SELF_ORDINFO( pArea, DBOI_KEYDELETE, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -267,7 +267,7 @@ HB_FUNC( ORDDESCEND )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_LOGICAL );
+      pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, DBOI_ISDESC, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -289,7 +289,7 @@ HB_FUNC( ORDISUNIQUE )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* HARBOUR extension: NewVal to set/reset unique flag */
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_LOGICAL );
+      pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, DBOI_UNIQUE, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -311,7 +311,7 @@ HB_FUNC( ORDCUSTOM )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_LOGICAL );
+      pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, DBOI_CUSTOM, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
