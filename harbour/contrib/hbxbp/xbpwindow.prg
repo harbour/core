@@ -672,9 +672,6 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
 
    SWITCH ( nEvent )
 
-   CASE xbeP_Close
-      ::close()
-      EXIT
    CASE xbeP_Keyboard
       ::keyboard( mp1 )
       EXIT

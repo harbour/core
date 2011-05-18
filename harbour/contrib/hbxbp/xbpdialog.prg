@@ -294,19 +294,22 @@ METHOD XbpDialog:destroy()
 
 METHOD XbpDialog:execEvent( nEvent, pEvent )
 
-   DO CASE
+   SWITCH nEvent
 
-   CASE nEvent == QEvent_WindowActivate
+   CASE QEvent_WindowActivate
       SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
+      EXIT
 
-   CASE nEvent == QEvent_WindowDeactivate
+   CASE QEvent_WindowDeactivate
       SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
+      EXIT
 
-   CASE nEvent == QEvent_Close
+   CASE QEvent_Close
       pEvent:ignore()
-      SetAppEvent( xbeP_Close, NIL, NIL, Self )
+      ::close()
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN .F.
 
@@ -378,24 +381,25 @@ METHOD XbpDialog:showModal()
 METHOD XbpDialog:setFrameState( nState )
    LOCAL lSuccess := .T.
    LOCAL nCurState := ::getFrameState()
+   LOCAL oWidget := iif( hb_isObject( ::oMdi ), ::oMdi, ::oWidget )
 
    DO CASE
    CASE nState == XBPDLG_FRAMESTAT_MINIMIZED
       IF nCurState != XBPDLG_FRAMESTAT_MINIMIZED
-         ::oWidget:setWindowState( Qt_WindowMinimized )
+         oWidget:setWindowState( Qt_WindowMinimized )
       ENDIF
    CASE nState == XBPDLG_FRAMESTAT_MAXIMIZED
       IF nCurState == XBPDLG_FRAMESTAT_MINIMIZED
-         ::oWidget:show()
-         ::oWidget:setWindowState( Qt_WindowMaximized )
+         oWidget:show()
+         oWidget:setWindowState( Qt_WindowMaximized )
       ELSEIF nCurState == XBPDLG_FRAMESTAT_NORMALIZED
-         ::oWidget:setWindowState( Qt_WindowMaximized )
+         oWidget:setWindowState( Qt_WindowMaximized )
       ENDIF
    CASE nState == XBPDLG_FRAMESTAT_NORMALIZED
       IF nCurState != XBPDLG_FRAMESTAT_MINIMIZED
-         ::oWidget:show()
+         oWidget:show()
       ENDIF
-      ::oWidget:setWindowState( Qt_WindowNoState )
+      oWidget:setWindowState( Qt_WindowNoState )
    ENDCASE
 
    RETURN lSuccess
@@ -403,7 +407,7 @@ METHOD XbpDialog:setFrameState( nState )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:getFrameState()
-   LOCAL nState := ::oWidget:windowState()
+   LOCAL nState := iif( hb_isObject( ::oMdi ), ::oMdi, ::oWidget ):windowState()
 
    IF ( hb_bitAnd( nState, Qt_WindowMinimized ) == Qt_WindowMinimized )
       RETURN XBPDLG_FRAMESTAT_MINIMIZED

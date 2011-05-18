@@ -329,7 +329,8 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:oWidget:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
-   ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ) }
+   ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ), ;
+                                                                      PostAppEvent( xbeP_Close, , , ::oDlg ) }
    ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
    ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
