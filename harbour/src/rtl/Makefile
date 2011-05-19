@@ -16,6 +16,7 @@ C_SOURCES := \
    abs.c \
    accept.c \
    ampm.c \
+   arc4.c \
    at.c \
    ati.c \
    base64c.c \
@@ -96,6 +97,7 @@ C_SOURCES := \
    hbntos.c \
    hbproces.c \
    hbprocfn.c \
+   hbrand.c \
    hbrandom.c \
    hbregex.c \
    hbregexc.c \
