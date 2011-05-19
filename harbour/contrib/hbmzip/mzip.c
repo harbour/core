@@ -183,8 +183,13 @@ HB_FUNC( HB_ZIPOPEN )
    if( szFileName )
    {
       zipcharpc pszGlobalComment = NULL;
-      zipFile hZip = zipOpen2( szFileName, hb_parnidef( 2, APPEND_STATUS_CREATE ),
+      char * pszFree;
+      zipFile hZip = zipOpen2( hb_fsNameConv( szFileName, &pszFree ), hb_parnidef( 2, APPEND_STATUS_CREATE ),
                                &pszGlobalComment, NULL );
+
+      if( pszFree )
+         hb_xfree( pszFree );
+
       if( hZip )
       {
          zipFile* phZip = (zipFile*) hb_gcAllocate( sizeof( zipFile ), &s_gcZipFileFuncs );
@@ -318,7 +323,12 @@ HB_FUNC( HB_UNZIPOPEN )
 
    if( szFileName )
    {
-      unzFile hUnzip = unzOpen( szFileName );
+      char * pszFree;
+      unzFile hUnzip = unzOpen( hb_fsNameConv( szFileName, &pszFree ) );
+
+      if( pszFree )
+         hb_xfree( pszFree );
+
       if( hUnzip )
       {
          unzFile*  phUnzip = (unzFile*) hb_gcAllocate( sizeof( unzFile ), &s_gcUnZipFileFuncs );
@@ -702,7 +712,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( szFileName );
+      char * pszFree;
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_fsNameConv( szFileName, &pszFree ) );
 
       ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
 
@@ -719,15 +730,19 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          fError = HB_TRUE;
 
       HB_TCHAR_FREE( lpFileName );
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #elif defined( HB_OS_UNIX )
    {
       struct stat statbuf;
       struct tm   st;
+      char * pszFree;
 
       ulExtAttr = 0;
 
-      if( stat( szFileName, &statbuf ) == 0 )
+      if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
       {
          if( S_ISDIR( statbuf.st_mode ) )
          {
@@ -765,19 +780,27 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       }
       else
          fError = HB_TRUE;
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #elif defined( HB_OS_DOS )
    {
 #  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       int attr;
+      char * pszFree;
 
-      attr = _chmod( szFileName, 0, 0 );
+      attr = _chmod( hb_fsNameConv( szFileName, &pszFree ), 0, 0 );
+
+      if( pszFree )
+         hb_xfree( pszFree );
+
       if( attr != -1 )
-#else
+#  else
       HB_FATTR attr;
 
       if( hb_fsGetAttr( szFileName, &attr ) )
-#endif
+#  endif
       {
          ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
                                HB_FA_DIRECTORY | HB_FA_ARCHIVE );
@@ -792,8 +815,13 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       FILESTATUS3 fs3;
       APIRET ulrc;
       HB_FATTR ulAttr;
+      char * pszFree;
 
-      ulrc = DosQueryPathInfo( ( PCSZ ) szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      ulrc = DosQueryPathInfo( ( PCSZ ) hb_fsNameConv( szFileName, &pszFree ), FIL_STANDARD, &fs3, sizeof( fs3 ) );
+
+      if( pszFree )
+         hb_xfree( pszFree );
+
       if( ulrc == NO_ERROR )
       {
          ulAttr = 0;
@@ -1100,11 +1128,15 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( szName );
+      char * pszFree;
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_fsNameConv( szName, &pszFree ) );
 
       SetFileAttributes( ( LPCTSTR ) lpFileName, ufi.external_fa & 0xFF );
 
       HB_TCHAR_FREE( lpFileName );
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
@@ -1112,8 +1144,11 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       struct tm         st;
       time_t            tim;
 
+      char * pszFree;
+      const char * szNameOS = hb_fsNameConv( szName, &pszFree );
+
 #  if defined( __DJGPP__ )
-      _chmod( szName, 1, ufi.external_fa & 0xFF );
+      _chmod( szNameOS, 1, ufi.external_fa & 0xFF );
 #  else
       HB_FATTR ulAttr = ufi.external_fa & 0xFFFF0000;
 
@@ -1147,15 +1182,24 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 #  endif
       utim.actime = utim.modtime = mktime( &st );
 
-      utime( szName, &utim );
+      utime( szNameOS, &utim );
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #elif defined( HB_OS_DOS )
-
+   {
 #  if defined( __RSX32__ ) || defined( __GNUC__ )
-      _chmod( szName, 1, ufi.external_fa & 0xFF );
+      char * pszFree;
+
+      _chmod( hb_fsNameConv( szName, &pszFree ), 1, ufi.external_fa & 0xFF );
+
+      if( pszFree )
+         hb_xfree( pszFree );
 #  else
       hb_fsSetAttr( szName, ufi.external_fa & 0xFF );
 #  endif
+   }
 
 #elif defined( HB_OS_OS2 )
    {
@@ -1163,6 +1207,9 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       APIRET ulrc;
       HB_FATTR ulAttr = FILE_NORMAL;
       int iAttr = ufi.external_fa & 0xFF;
+
+      char * pszFree;
+      const char * szNameOS = hb_fsNameConv( szName, &pszFree );
 
       if( iAttr & HB_FA_READONLY )
          ulAttr |= FILE_READONLY;
@@ -1173,7 +1220,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       if( iAttr & HB_FA_ARCHIVE )
          ulAttr |= FILE_ARCHIVED;
 
-      ulrc = DosQueryPathInfo( ( PCSZ ) szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      ulrc = DosQueryPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+
       if( ulrc == NO_ERROR )
       {
          FDATE   fdate;
@@ -1190,9 +1238,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-         ulrc = DosSetPathInfo( ( PCSZ ) szName, FIL_STANDARD,
+         ulrc = DosSetPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #else
    {
@@ -1305,9 +1356,14 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
    int method;
    int level;
    int iResult;
+   char * pszFree;
 
    /* open source file */
-   hUnzip = unzOpen( szZipFile );
+   hUnzip = unzOpen( hb_fsNameConv( szZipFile, &pszFree ) );
+
+   if( pszFree )
+      hb_xfree( pszFree );
+
    if( hUnzip == NULL )
       return UNZ_ERRNO;
 
