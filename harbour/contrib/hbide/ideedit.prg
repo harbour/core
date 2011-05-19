@@ -730,7 +730,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
 METHOD IdeEdit:highlightPage()
 
-   ::qEdit:hbHighlightPage()
+   IF hb_isObject( ::oEditor:qHiliter )
+      ::qEdit:hbHighlightPage()
+   ENDIF
 
    RETURN Self
 

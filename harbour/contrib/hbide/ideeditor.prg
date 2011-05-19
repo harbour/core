@@ -1567,6 +1567,11 @@ METHOD IdeEditor:setDocumentProperties()
                                 hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
       ::lLoaded := .T.
 
+      IF hb_isObject( ::qHiliter )
+         ::qHiliter:hbSetInitialized( .t. )
+         ::qEdit:hbHighlightPage()
+      ENDIF
+
       IF ::cType $ "PRG,C,CPP,H,CH,HBS"
          ::qTimerSave := QTimer()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
@@ -1576,8 +1581,6 @@ METHOD IdeEditor:setDocumentProperties()
       ::oUpDn:show()
    ENDIF
 
-   ::qHiliter:hbSetInitialized( .t. )
-   ::qEdit:hbHighlightPage()
 
    ::nBlock  := qCursor:blockNumber()
    ::nColumn := qCursor:columnNumber()
