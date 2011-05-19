@@ -84,11 +84,13 @@
 #endif
 
 /* Link all Harbour Functions : needed to run external scripts */
-REQUEST __HB_EXTERN__
-REQUEST __HBEXTERN__HBXBP__
-REQUEST __HBEXTERN__HBQTCORE__
-REQUEST __HBEXTERN__HBQTGUI__
-REQUEST __HBEXTERN__HBQTNETWORK__
+/* NOTE: Please only add what's actually requested by plugin developers */
+//REQUEST __HB_EXTERN__
+//REQUEST __HBEXTERN__HBXBP__
+//REQUEST __HBEXTERN__HBQTCORE__
+//REQUEST __HBEXTERN__HBQTGUI__
+//REQUEST __HBEXTERN__HBQTNETWORK__
+//REQUEST __HBEXTERN__HBQTSQL__
 
 /*----------------------------------------------------------------------*/
 
