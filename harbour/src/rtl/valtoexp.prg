@@ -122,33 +122,22 @@ FUNCTION hb_CStr( xVal )
    LOCAL v := ValType( xVal )
 
    SWITCH v
-      CASE "C"
-      CASE "M"
-         RETURN xVal
-      CASE "N"
-         RETURN Str( xVal )
-      CASE "D"
-         RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
-      CASE "T"
-         RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
-      CASE "L"
-         RETURN iif( xVal, ".T.", ".F." )
-      CASE "S"
-         RETURN "@" + xVal:name + "()"
-      CASE "B"
-         RETURN "{||...}"
-      CASE "O"
-         RETURN "{ " + xVal:className + " Object }"
-      CASE "A"
-         RETURN "{ Array of " + hb_NToS( Len( xVal ) ) + " Items }"
-      CASE "H"
-         RETURN "{ Hash of " + hb_NToS( Len( xVal ) ) + " Items }"
-      CASE "P"
-         RETURN "<pointer>"
-      OTHERWISE
-         IF xVal == NIL
-            RETURN "NIL"
-         ENDIF
+   CASE "C"
+   CASE "M" ; RETURN xVal
+   CASE "N" ; RETURN Str( xVal )
+   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
+   CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
+   CASE "S" ; RETURN "@" + xVal:name + "()"
+   CASE "B" ; RETURN "{||...}"
+   CASE "O" ; RETURN "{ " + xVal:className + " Object }"
+   CASE "A" ; RETURN "{ Array of " + hb_NToS( Len( xVal ) ) + " Items }"
+   CASE "H" ; RETURN "{ Hash of " + hb_NToS( Len( xVal ) ) + " Items }"
+   CASE "P" ; RETURN "<pointer>"
+   OTHERWISE
+      IF xVal == NIL
+         RETURN "NIL"
+      ENDIF
    ENDSWITCH
 
    RETURN "???:" + v
