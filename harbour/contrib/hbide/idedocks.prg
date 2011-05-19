@@ -277,11 +277,14 @@ METHOD IdeDocks:destroy()
       qTmp := NIL
    NEXT
 
-   ::qMdiToolBar:destroy()
-   ::qMdiToolBar := NIL
-   ::qMdiToolBarL:destroy()
-   ::qMdiToolBarL := NIL
-
+   IF hb_isObject( ::qMdiToolBar )
+      ::qMdiToolBar:destroy()
+      ::qMdiToolBar := NIL
+   ENDIF
+   IF hb_isObject( ::qMdiToolBarL )
+      ::qMdiToolBarL:destroy()
+      ::qMdiToolBarL := NIL
+   ENDIF
    ::nPass                       := NIL
    ::aPanels                     := NIL
    ::aMdiBtns                    := NIL
