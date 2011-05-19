@@ -97,6 +97,8 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    commentSingleLine = QRegExp( "//[^\n]*" );
 
    patternQuotation = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
+
+   initialized = false;
 }
 
 void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -146,6 +148,9 @@ void HBQSyntaxHighlighter::hbSetFormatColumnSelection( int start, int count, con
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
+   if( ! initialized )
+      return;
+
    int iFirstBlock = editor->firstVisibleBlockNumber();
    int iLastBlock = editor->lastVisibleBlockNumber();
    int iBlock = currentBlock().blockNumber();

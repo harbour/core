@@ -1576,6 +1576,9 @@ METHOD IdeEditor:setDocumentProperties()
       ::oUpDn:show()
    ENDIF
 
+   ::qHiliter:hbSetInitialized( .t. )
+   ::qEdit:hbHighlightPage()
+
    ::nBlock  := qCursor:blockNumber()
    ::nColumn := qCursor:columnNumber()
 

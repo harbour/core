@@ -90,6 +90,8 @@ public:
 
    HBQPlainTextEdit * editor;
 
+   bool initialized;
+
    void hbSetMultiLineCommentFormat( const QTextCharFormat & format );
    void hbSetSingleLineCommentFormat( const QTextCharFormat & format );
    void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
@@ -97,6 +99,7 @@ public:
    void hbSetFormatColumnSelection( int start, int count, const QColor & color );
    void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format );
    void hbSetEditor( HBQPlainTextEdit * edit ){ editor = edit; };
+   void hbSetInitialized( bool bInit ){ initialized = bInit; };
 
 protected:
    void highlightBlock( const QString &text );
