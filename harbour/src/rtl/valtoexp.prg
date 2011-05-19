@@ -57,63 +57,47 @@ FUNCTION hb_VALTOEXP( xVal )
    LOCAL v := ValType( xVal )
 
    SWITCH v
-      CASE "C"
-      CASE "M"
-         cVal := hb_StrToExp( xVal )
-         EXIT
-      CASE "N"
-         cVal := hb_NToS( xVal )
-         EXIT
-      CASE "D"
-         cVal := iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
-         EXIT
-      CASE "T"
-         cVal := 't"' + hb_TSToStr( xVal, .T. ) + '"'
-         EXIT
-      CASE "L"
-         cVal := iif( xVal, ".T.", ".F." )
-         EXIT
-      CASE "S"
-         cVal := "@" + xVal:name + "()"
-         EXIT
-      CASE "A"
+   CASE "C"
+   CASE "M" ; RETURN hb_StrToExp( xVal )
+   CASE "N" ; hb_ntos( xVal )
+   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
+   CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
+   CASE "S" ; RETURN "@" + xVal:name + "()"
+   CASE "A"
+      cVal := "{"
+      FOR EACH v IN xVal
+         cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
+      NEXT
+      cVal += "}"
+      EXIT
+   CASE "O"
+      cVal := "__objSetClass( {"
+      FOR EACH v IN xVal
+         cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
+      NEXT
+      cVal += "}, '" + xVal:className() + "')"
+      EXIT
+   CASE "H"
+      IF Empty( xVal )
+         cVal := "{=>}"
+      ELSE
          cVal := "{"
          FOR EACH v IN xVal
-            cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
+            cVal += iif( v:__enumIndex() == 1, "", ", " ) + ;
+                    hb_ValToExp( v:__enumKey() ) + "=>" + hb_ValToExp( v )
          NEXT
          cVal += "}"
-         EXIT
-      CASE "O"
-         cVal := "__objSetClass( {"
-         FOR EACH v IN xVal
-            cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
-         NEXT
-         cVal += "}, '" + xVal:className() + "')"
-         EXIT
-      CASE "H"
-         IF Empty( xVal )
-            cVal := "{=>}"
-         ELSE
-            cVal := "{"
-            FOR EACH v IN xVal
-               cVal += iif( v:__enumIndex() == 1, "", ", " ) + ;
-                       hb_ValToExp( v:__enumKey() ) + "=>" + hb_ValToExp( v )
-            NEXT
-            cVal += "}"
-         ENDIF
-         EXIT
-      CASE "P"
-         cVal := "<pointer>"
-         EXIT
-      CASE "B"
-         cVal := "{|| ... }"
-         EXIT
-      OTHERWISE
-         IF xVal == NIL
-            cVal := "NIL"
-         ELSE
-            cVal := "???:" + v
-         ENDIF
+      ENDIF
+      EXIT
+   CASE "P" ; RETURN "<pointer>"
+   CASE "B" ; RETURN "{|| ... }"
+   OTHERWISE
+      IF xVal == NIL
+         cVal := "NIL"
+      ELSE
+         cVal := "???:" + v
+      ENDIF
    ENDSWITCH
 
    RETURN cVal
@@ -129,10 +113,10 @@ FUNCTION hb_CStr( xVal )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
-   CASE "B" ; RETURN "{||...}"
+   CASE "B" ; RETURN "{|| ... }"
    CASE "O" ; RETURN "{ " + xVal:className + " Object }"
-   CASE "A" ; RETURN "{ Array of " + hb_NToS( Len( xVal ) ) + " Items }"
-   CASE "H" ; RETURN "{ Hash of " + hb_NToS( Len( xVal ) ) + " Items }"
+   CASE "A" ; RETURN "{ Array of " + hb_ntos( Len( xVal ) ) + " Items }"
+   CASE "H" ; RETURN "{ Hash of " + hb_ntos( Len( xVal ) ) + " Items }"
    CASE "P" ; RETURN "<pointer>"
    OTHERWISE
       IF xVal == NIL

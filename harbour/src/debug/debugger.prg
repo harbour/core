@@ -3378,14 +3378,15 @@ FUNCTION __dbgValToStr( uVal )
 
    DO CASE
    CASE uVal == NIL  ; RETURN "NIL"
-   CASE cType == "B" ; RETURN "{ || ... }"
+   CASE cType == "B" ; RETURN "{|| ... }"
    CASE cType == "A" ; RETURN "{ ... }"
    CASE cType $ "CM" ; RETURN '"' + uVal + '"'
    CASE cType == "L" ; RETURN iif( uVal, ".T.", ".F." )
    CASE cType == "D" ; RETURN DToC( uVal )
-   CASE cType == "N" ; RETURN RTrim( Str( uVal ) )
+   CASE cType == "T" ; RETURN hb_TToC( uVal )
+   CASE cType == "N" ; RETURN Str( uVal )
    CASE cType == "O" ; RETURN "Class " + uVal:ClassName() + " object"
-   CASE cType == "H" ; RETURN "Hash of " + RTrim( Str( Len( uVal ) ) ) + " elements"
+   CASE cType == "H" ; RETURN "Hash of " + hb_ntos( Len( uVal ) ) + " elements"
    CASE cType == "P" ; RETURN "Pointer"
    ENDCASE
 
@@ -3405,10 +3406,10 @@ FUNCTION __dbgCStr( xVal )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
-   CASE "B" ; RETURN "{||...}"
+   CASE "B" ; RETURN "{|| ... }"
    CASE "O" ; RETURN "{ " + xVal:className + " Object }"
-   CASE "A" ; RETURN "{ Array of " + hb_NToS( Len( xVal ) ) + " Items }"
-   CASE "H" ; RETURN "{ Hash of " + hb_NToS( Len( xVal ) ) + " Items }"
+   CASE "A" ; RETURN "{ Array of " + hb_ntos( Len( xVal ) ) + " Items }"
+   CASE "H" ; RETURN "{ Hash of " + hb_ntos( Len( xVal ) ) + " Items }"
    CASE "P" ; RETURN "<pointer>"
    OTHERWISE
       IF xVal == NIL
