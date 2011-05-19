@@ -181,6 +181,8 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
    QTextDocument * doc = document();
    doc->setDocumentMargin( 0 );
+
+   highlighter = NULL;
 }
 
 /*----------------------------------------------------------------------*/
@@ -2090,17 +2092,20 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 
 void HBQPlainTextEdit::hbHighlightPage()
 {
-   int iLastVisBlockNum = lastVisibleBlockNumber();
-   QTextBlock block = firstVisibleBlock();
-   if( block.isValid() )
+   if( highlighter )
    {
-      int i;
-      for( i = block.blockNumber(); i < iLastVisBlockNum; i++ )
+      int iLastVisBlockNum = lastVisibleBlockNumber();
+      QTextBlock block = firstVisibleBlock();
+      if( block.isValid() )
       {
-         highlighter->rehighlightBlock( block );
-         block = block.next();
-         if( ! block.isValid() )
-            break;
+         int i;
+         for( i = block.blockNumber(); i < iLastVisBlockNum; i++ )
+         {
+            highlighter->rehighlightBlock( block );
+            block = block.next();
+            if( ! block.isValid() )
+               break;
+         }
       }
    }
 }
@@ -2113,37 +2118,40 @@ void HBQPlainTextEdit::hbUpdateLineNumberArea( const QRect &rect, int dy )
    {
       lineNumberArea->scroll( 0, dy );
 
-#if QT_VERSION >= 0x040600
-      int rows = abs( dy / fontMetrics().height() );
-      int i;
-      QTextBlock block;
-
-      if( dy < 0 )
+      if( highlighter )
       {
+#if QT_VERSION >= 0x040600
+         int rows = abs( dy / fontMetrics().height() );
+         int i;
+         QTextBlock block;
 
-         int iLastVisBlockNum = lastVisibleBlockNumber();
-
-         for( i = iLastVisBlockNum - rows; i <= iLastVisBlockNum; i++ )
+         if( dy < 0 )
          {
-            block = document()->findBlockByNumber( i );
-            if( block.isValid() )
+
+            int iLastVisBlockNum = lastVisibleBlockNumber();
+
+            for( i = iLastVisBlockNum - rows; i <= iLastVisBlockNum; i++ )
             {
-               highlighter->rehighlightBlock( block );
+               block = document()->findBlockByNumber( i );
+               if( block.isValid() )
+               {
+                  highlighter->rehighlightBlock( block );
+               }
             }
          }
-      }
-      else
-      {
-         block = firstVisibleBlock();
-         for( i = 0; i < rows; i++ )
+         else
          {
-            highlighter->rehighlightBlock( block );
-            block = block.next();
+            block = firstVisibleBlock();
+            for( i = 0; i < rows; i++ )
+            {
+               highlighter->rehighlightBlock( block );
+               block = block.next();
+            }
          }
-      }
 #else
-      highlighter->rehighlight();
+         highlighter->rehighlight();
 #endif
+      }
    }
    else
       lineNumberArea->update( 0, rect.y(), lineNumberArea->width(), rect.height() );
