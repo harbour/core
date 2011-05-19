@@ -157,7 +157,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lCompleteArgumented                     INIT  .f.
 
    DATA   aAppThemes                              INIT  {}
-   DATA   lEditsMdi                               INIT  .t.
+   DATA   lEditsMdi                               INIT  .f.
 
    METHOD new( oIde )
    METHOD create( oIde )
