@@ -95,7 +95,9 @@ struct arc4_stream
 };
 
 #if defined( HB_OS_WIN )
-#  define getpid _getpid
+#  if ! defined( __BORLANDC__ ) && ! defined( __WATCOMC__ )
+#     define getpid _getpid
+#  endif
 #  define pid_t  int
 #endif
 
@@ -108,14 +110,19 @@ static HB_CRITICAL_NEW( arc4_lock );
 #define _ARC4_LOCK()   hb_threadEnterCriticalSection( &arc4_lock )
 #define _ARC4_UNLOCK() hb_threadLeaveCriticalSection( &arc4_lock )
 
+#if defined( __BORLANDC__ ) && defined( _HB_INLINE_ )
+#undef _HB_INLINE_
+#define _HB_INLINE_
+#endif
+
 static _HB_INLINE_ HB_U8 arc4_getbyte( void );
 
 static _HB_INLINE_ void arc4_init( void )
 {
    int n;
 
-   for( n = 0; n < 256; n++ )
-      rs.s[ n ] = n;
+   for( n = 0; n < 256; ++n )
+      rs.s[ n ] = ( HB_U8 ) n;
 
    rs.i = rs.j = 0;
 }
@@ -126,7 +133,7 @@ static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
    HB_U8 si;
 
    rs.i--;
-   for( n = 0; n < 256; n++ )
+   for( n = 0; n < 256; ++n )
    {
       rs.i         = ( rs.i + 1 );
       si           = rs.s[ rs.i ];
@@ -137,7 +144,7 @@ static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
    rs.j = rs.i;
 }
 
-#if ! defined( HB_OS_WIN )
+#if defined( HB_OS_UNIX )
 static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 {
    HB_SIZE numread = 0;
@@ -159,7 +166,7 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 }
 #endif /* ! HB_OS_WIN */
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( __DMC__ )
 
 #define TRY_SEED_MS_CRYPTOAPI
 static int arc4_seed_win32( void )

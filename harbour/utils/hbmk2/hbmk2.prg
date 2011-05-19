@@ -932,7 +932,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lHBMAINDLLP
 
    IF s_cSecToken == NIL
-      s_cSecToken := StrZero( hb_Random( 1, 4294967294 ), 10, 0 )
+      s_cSecToken := StrZero( hb_rand32(), 10, 0 )
    ENDIF
 
    hbmk[ _HBMK_cBUILD ] := ""
