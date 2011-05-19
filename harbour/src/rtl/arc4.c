@@ -51,9 +51,8 @@
 #include "hbdate.h"
 #include "hbthread.h"
 
-
 /* XXX: Check and possibly extend this to other Unix-like platforms */
-#if defined( HB_OS_BSD ) || defined( HB_OS_LINUX )
+#if defined( HB_OS_BSD ) || ( defined( HB_OS_LINUX ) && ! defined ( __WATCOMC__ ) )
 #  define HAVE_SYS_SYSCTL_H
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM
@@ -67,9 +66,15 @@
 #if defined( HB_OS_WIN )
 #  include <wincrypt.h>
 #  include <process.h>
+#elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#  include <sys/types.h>
+#  include <process.h>
 #else
-#  include <sys/param.h>
+#  if ! defined( __WATCOMC__ )
+#     include <sys/param.h>
+#  endif
 #  include <sys/time.h>
+#  include <sys/types.h>
 #  ifdef HAVE_SYS_SYSCTL_H
 #     include <sys/sysctl.h>
 #  endif
