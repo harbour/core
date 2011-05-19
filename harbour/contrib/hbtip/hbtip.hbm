@@ -16,7 +16,6 @@
 
 hbtip.hbx
 
-encb64c.c
 encurlc.c
 utils.c
 

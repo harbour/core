@@ -69,7 +69,27 @@ METHOD New() CLASS TIPEncoderBase64
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
-   RETURN __tip_base64_encode( cData, ::bHttpExcept )
+   RETURN TIP_BASE64ENCODE( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
    RETURN hb_base64decode( cData )
+
+FUNCTION TIP_BASE64ENCODE( cBinary, nLineLength, cCRLF )
+   LOCAL cTextIn := HB_BASE64ENCODE( cBinary )
+
+   LOCAL cText
+   LOCAL tmp
+
+   IF ! hb_isNumeric( nLineLength )
+       RETURN cTextIn
+   ENDIF
+   IF ! hb_isString( cCRLF )
+      cCRLF := hb_eol()
+   ENDIF
+
+   cText := ""
+   FOR tmp := 1 TO Len( cTextIn ) STEP nLineLength
+      cText += SubStr( cTextIn, tmp, nLineLength ) + cCRLF
+   NEXT
+
+   RETURN cText
