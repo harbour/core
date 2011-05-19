@@ -65,26 +65,11 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-/* #include "hbstack.h" */
 
 HB_FUNC( VALTYPE )
 {
    hb_retc( hb_itemTypeStr( hb_param( 1, HB_IT_ANY ) ) );
 }
-
-/*
-HB_FUNC( HB_ISBYREF )
-{
-   if( hb_pcount() )
-   {
-      PHB_ITEM pItem = hb_stackItemFromBase( 1 );
-      if( HB_IS_BYREF( pItem ) )
-      {
-         hb_retl( HB_IS_BYREF( hb_itemUnRefOnce( pItem ) ) );
-      }
-   }
-}
-*/
 
 HB_FUNC( HB_ISNIL )
 {

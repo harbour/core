@@ -70,7 +70,6 @@ FUNCTION SYS( nValue, xPar1 )
 
    RETURN NIL
 
-
 STATIC FUNCTION AFILLNESTED( aValue, xVal )
    LOCAL item
 

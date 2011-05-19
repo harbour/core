@@ -69,6 +69,7 @@
 #include "hbapigt.h"
 #include "hbapicls.h"
 #include "hbapierr.h"
+#include "hbstack.h"
 #include "hbvm.h"
 
 #if 0
@@ -316,6 +317,16 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( HB_MEMOWRIT )
    else
       HB_FUNC_EXEC( MEMOWRIT )
+}
+
+HB_FUNC( HB_ISBYREF )
+{
+   if( hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( 1 );
+      if( HB_IS_BYREF( pItem ) )
+         hb_retl( HB_IS_BYREF( hb_itemUnRefOnce( pItem ) ) );
+   }
 }
 
 HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
