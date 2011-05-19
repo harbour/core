@@ -221,7 +221,7 @@ METHOD IdeThemes:create( oIde, cThemesFile )
           'do','while','exit','enddo','loop',;
           'for','each','next','step','to','in',;
           'with','object','endwith','request',;
-          'nil','and','or','self',;
+          'nil','and','or','in','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message', 'from', 'setget',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
@@ -237,7 +237,8 @@ METHOD IdeThemes:create( oIde, cThemesFile )
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + e + "\b" } )
    aadd( ::aPatterns, { "CLanguageKeywords" , s                       , .t. } )
 
-   s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
+   //s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
+   s := "\:\=|\:|\+|\-|\\|\*|\=|\>|\<|\^|\%|\$|\&|\@|\!"
    aadd( ::aPatterns, { "Operators"         , s                       , .f. } )
 
    aadd( ::aPatterns, { "NumericalConstants", "\b[0-9.]+\b"           , .f. } )

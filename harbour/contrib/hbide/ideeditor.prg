@@ -1427,6 +1427,11 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
    ::relay( oEdit )
 
+   IF hb_isObject( ::qHiliter )
+      oEdit:qEdit:hbSetHighLighter( ::qHiliter )
+      oEdit:qEdit:hbHighlightPage()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

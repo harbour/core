@@ -365,7 +365,6 @@ METHOD IdeEdit:setFont()
 
 METHOD IdeEdit:destroy()
 
-   ::oUpDn:oUI:setParent( ::oDlg:oWidget )
    IF Self == ::oEditor:oEdit
       ::oSourceThumbnailDock:oWidget:hide()
    ENDIF
@@ -467,7 +466,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          EXIT
       CASE "Close Split Window"
          IF n > 0  /* 1 == Main Edit */
-            ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
             oo := ::oEditor:aEdits[ n ]
             hb_adel( ::oEditor:aEdits, n, .t. )
             oo:destroy( .f. )
@@ -521,6 +519,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
    CASE selectionChanged
       //HB_TRACE( HB_TR_DEBUG, "selectionChanged()" )
+
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
@@ -541,6 +540,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ENDIF
       ::oUpDn:show()
       ::unHighlight()
+
+      IF hb_isObject( ::oEditor:qHiliter )
+         ::oEditor:qHiliter:hbSetEditor( qEdit )
+         qEdit:hbSetHighlighter( ::oEditor:qHiliter )
+         qEdit:hbHighlightPage()
+      ENDIF
 
       EXIT
 
