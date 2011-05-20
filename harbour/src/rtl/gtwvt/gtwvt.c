@@ -2298,7 +2298,22 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HB_GTSELF_REFRESH( pGT );
                }
                else
+               {
+                  TEXTMETRIC tm;
+                  HWND       hDesk    = GetDesktopWindow();
+                  HDC        hdc      = GetDC( hDesk );
+                  HFONT      hOldFont = ( HFONT ) SelectObject( hdc, hFont );
+
+                  SetTextCharacterExtra( hdc, 0 );
+                  GetTextMetrics( hdc, &tm );
+                  SelectObject( hdc, hOldFont );
+                  ReleaseDC( hDesk, hdc );
+
+                  pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
+                  pWVT->PTEXTSIZE.y = tm.tmHeight;
+
                   DeleteObject( hFont );
+               }
             }
          }
          break;
