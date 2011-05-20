@@ -110,4 +110,7 @@
 #define HB_XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE   1
 #define HB_XML_PARAM_ENTITY_PARSING_ALWAYS              2
 
+#define HB_XML_ATTR_cName                               1
+#define HB_XML_ATTR_cValue                              2
+
 #endif /* HBEXPAT_CH_ */

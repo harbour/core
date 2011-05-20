@@ -9,6 +9,9 @@
 
 -w3 -es2
 
+# localtime_r, gmtime_r
+-c=gnu90
+
 # component named libzip also has a header
 # named zip.h, so we look for unzip.h to detect minizip
 -depkeyhead=minizip:unzip.h

@@ -59,7 +59,7 @@ PROCEDURE start( xData, cElement, aAttr )
 
    IF ! Empty( aAttr )
       FOR EACH aItem IN aAttr
-         OutStd( " " + aItem[ 1 ] + "='" + aItem[ 2 ] + "'" )
+         OutStd( " " + aItem[ HB_XML_ATTR_cName ] + "='" + aItem[ HB_XML_ATTR_cValue ] + "'" )
       NEXT
    ENDIF
 

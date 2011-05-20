@@ -23,9 +23,6 @@
 #define _N_hAttr            4
 #define _N_MAX_             4
 
-#define _A_cName            1
-#define _A_cValue           2
-
 PROCEDURE Main( cFileName )
    LOCAL p := XML_ParserCreate()
    LOCAL aUserData
@@ -139,7 +136,7 @@ PROCEDURE cb_start( aUserData, cElement, aAttrList )
    ENDIF
 
    FOR EACH aAttr IN aAttrList
-      aNewNode[ _N_hAttr ][ aAttr[ _A_cName ] ] := aAttr[ _A_cValue ]
+      aNewNode[ _N_hAttr ][ aAttr[ HB_XML_ATTR_cName ] ] := aAttr[ HB_XML_ATTR_cValue ]
    NEXT
 
    aUserData[ _D_aNode ] := aNewNode
