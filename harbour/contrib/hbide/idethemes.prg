@@ -221,7 +221,7 @@ METHOD IdeThemes:create( oIde, cThemesFile )
           'do','while','exit','enddo','loop',;
           'for','each','next','step','to','in',;
           'with','object','endwith','request',;
-          'nil','and','or','in','self',;
+          'nil','and','or','in','not','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message', 'from', 'setget',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;

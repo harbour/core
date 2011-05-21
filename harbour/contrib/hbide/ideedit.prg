@@ -452,7 +452,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( QPoint( p ) ) ) ):hasValidPointer()
+      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) ) ):hasValidPointer()
          RETURN Self
       ENDIF
 
@@ -466,6 +466,9 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          EXIT
       CASE "Close Split Window"
          IF n > 0  /* 1 == Main Edit */
+            IF ! ::oIde:lCurEditsMdi
+               ::oIde:oUpDn:oUI:setParent( ::oEditor:qEdit )
+            ENDIF
             oo := ::oEditor:aEdits[ n ]
             hb_adel( ::oEditor:aEdits, n, .t. )
             oo:destroy( .f. )
@@ -2587,6 +2590,7 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
                     'in' => NIL,;
                     'nil' => NIL,;
                     'or' => NIL,;
+                    'not' => NIL,;
                     'and' => NIL }
 
    HB_SYMBOL_UNUSED( oIde )

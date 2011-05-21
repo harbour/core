@@ -572,6 +572,11 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction( ::oDockB2:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
+   IF ::oIde:lCurEditsMdi
+      oSubMenu:oWidget:addSeparator()
+      oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()       )
+      oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()        )
+   ENDIF
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */

@@ -725,6 +725,8 @@ METHOD HbIde:create( aParams )
    qSplash := NIL
    qPixMap := NIL
 
+   ::oDK:hideStats() /* A Work in progress */
+
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::oINI:aTaggedProjects )
 

@@ -94,9 +94,11 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   qTimer
    DATA   nPrevWindowState                        INIT   Qt_WindowNoState
    DATA   lSystemTrayAvailable                    INIT   .f.
-   DATA   lMinimizeInSystemTray                   INIT   .t.  // .f.
+   DATA   lMinimizeInSystemTray                   INIT   .f.  /* TODO: make it user definable */
    DATA   qAct1
    DATA   qAct2
+   DATA   cOldView                                INIT   ""
+
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -154,6 +156,8 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD restState( nMode )
    METHOD setButtonState( cButton, lChecked )
    METHOD buildFormatWidget()
+   METHOD showStats()
+   METHOD hideStats()
 
    ENDCLASS
 
@@ -213,8 +217,10 @@ METHOD IdeDocks:destroy()
 
    IF !empty( ::oSys )
       ::oIde:oSys                : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
-      ::qAct1                    : disconnect( "triggered(bool)"         )
-      ::qAct2                    : disconnect( "triggered(bool)"         )
+      IF hb_isObject( ::qAct1 )
+         ::qAct1                 : disconnect( "triggered(bool)"         )
+         ::qAct2                 : disconnect( "triggered(bool)"         )
+      ENDIF
 
       ::oIde:oSys := NIL
       ::qAct1     := NIL
@@ -1028,6 +1034,8 @@ METHOD IdeDocks:setViewInitials()
 METHOD IdeDocks:setView( cView )
    LOCAL n, nIndex
 
+   ::cOldView := ::oIde:cWrkView
+
    SWITCH cView
 
    CASE "New..."
@@ -1061,6 +1069,8 @@ METHOD IdeDocks:setView( cView )
                   ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
                ENDIF
             ENDIF
+         ELSE
+            ::showStats()
          ENDIF
          IF ::oIde:lCurEditsMdi
             ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
@@ -1077,11 +1087,39 @@ METHOD IdeDocks:setView( cView )
 
 /*------------------------------------------------------------------------*/
 
+METHOD IdeDocks:hideStats()
+
+   IF len( ::oIde:aMdies ) >= 1
+      ::oIde:aMdies[ 1 ]:hide()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:showStats()
+
+   IF len( ::oIde:aMdies ) >= 1
+      IF ::oIde:aMdies[ 1 ]:isHidden()
+         ::oIde:aMdies[ 1 ]:show()
+      ELSE
+         ::oIde:aMdies[ 1 ]:hide()
+         ::setView( "Main" )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildMdiToolbarLeft()
 
    ::qMdiToolbarL := HbqToolbar():new()
    ::qMdiToolbarL:orientation := Qt_Vertical
    ::qMdiToolbarL:create( "EditsManager_Left_Toolbar" )
+   ::qMdiToolbarL:setWindowTitle( "Toolbar: Editing Area's Left" )
+   ::qMdiToolbarL:setObjectName( "ToolbarEditingAreaLeft" )
+   ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
    ::qMdiToolbarL:addToolButton( "ViewTabbed"     , "Toggle tabbed view"         , hbide_image( "view_tabbed"      ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )
    ::qMdiToolbarL:addSeparator()
@@ -1126,6 +1164,8 @@ METHOD IdeDocks:buildMdiToolbar()
    ::qMdiToolbar:orientation := Qt_Horizontal
    ::qMdiToolbar:create( "EditsManager_Top_Toolbar" )
    ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+   ::qMdiToolbar:setObjectName( "ToolbarEditingAreaTop" )
+   ::qMdiToolbar:setWindowTitle( "Toolbar: Editing Area's Top" )
 
    qTBar := ::qMdiToolbar
 
@@ -1243,7 +1283,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
          qDrop:setAcceptDrops( .t. )
          qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
-         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent", p ) } )
+         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
          qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
       ENDIF
 
@@ -1793,7 +1833,13 @@ METHOD IdeDocks:buildStatusBar()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:setStatusText( nPart, xValue )
-   LOCAL oPanel := ::oSBar:getItem( nPart )
+   LOCAL oPanel
+
+   IF ! hb_isObject( ::oSBar )
+      RETURN Self
+   ENDIF
+
+   oPanel := ::oSBar:getItem( nPart )
 
    SWITCH nPart
 
