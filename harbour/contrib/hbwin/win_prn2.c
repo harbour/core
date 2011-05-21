@@ -370,6 +370,8 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
 #endif
 }
 
+#define HB_PRINT_BUFFER_SIZE  ( 32 * 1024 )
+
 HB_FUNC( WIN_PRINTFILERAW )
 {
    int iResult = -1;
@@ -399,12 +401,15 @@ HB_FUNC( WIN_PRINTFILERAW )
 
                if( fhnd != FS_ERROR )
                {
-                  HB_BYTE pbyBuffer[ 32 * 1024 ];
-                  DWORD dwWritten = 0;
+                  HB_BYTE * pbyBuffer = ( HB_BYTE * ) hb_xgrab( HB_PRINT_BUFFER_SIZE );
                   HB_SIZE nRead;
 
-                  while( ( nRead = hb_fsReadLarge( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
+                  iResult = 1;
+
+                  while( ( nRead = hb_fsReadLarge( fhnd, pbyBuffer, HB_PRINT_BUFFER_SIZE ) ) > 0 )
                   {
+                     DWORD nWritten = 0;
+
 #if 0
                      /* TOFIX: This check seems wrong for any input files
                                larger than our read buffer, in such case it
@@ -414,11 +419,29 @@ HB_FUNC( WIN_PRINTFILERAW )
                         nRead--;   /* Skip the EOF() character */
 #endif
 
-                     WritePrinter( hPrinter, pbyBuffer, ( DWORD ) nRead, &dwWritten );
+                     while( nWritten < nRead )
+                     {
+                        DWORD dwWritten = 0;
+                        if( !WritePrinter( hPrinter, &pbyBuffer[ nWritten ],
+                                           ( DWORD ) ( nRead - nWritten ),
+                                           &dwWritten ) )
+                        {
+                           iResult = -7;
+                           break;
+                        }
+                        else if( nWritten == 0 )
+                        {
+                           iResult = -8;
+                           break;
+                        }
+                        nWritten += dwWritten;
+                     }
+                     if( nWritten < nRead )
+                        break;
                   }
 
-                  iResult = 1;
                   hb_fsClose( fhnd );
+                  hb_xfree( pbyBuffer );
                }
                else
                   iResult = -6;

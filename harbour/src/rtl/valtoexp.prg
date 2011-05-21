@@ -59,7 +59,7 @@ FUNCTION hb_VALTOEXP( xVal )
    SWITCH v
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( xVal )
-   CASE "N" ; hb_ntos( xVal )
+   CASE "N" ; RETURN hb_ntos( xVal )
    CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )

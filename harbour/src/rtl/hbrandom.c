@@ -124,8 +124,17 @@ HB_FUNC( HB_RANDOMSEED )
    s_fInit = HB_TRUE;
 }
 
+HB_FUNC( HB_RANDOMMAX )
+{
+#if RAND_MAX > HB_VMLONG_MAX
+   hb_retnd( RAND_MAX );
+#else
+   hb_retnint( RAND_MAX );
+#endif
+}
+
 /* Returns a double value between 0 and 1 */
-double hb_random_num()
+double hb_random_num( void )
 {
    double d1, d2;
 
@@ -136,20 +145,7 @@ double hb_random_num()
    }
 
    d1 = ( double ) rand();
-#ifdef __HB_THIS_FIX_BREAKS_MINGW32_64__
    d2 = ( double ) RAND_MAX + 1.0;
-#else
-   d2 = ( double ) RAND_MAX;
-#if defined( __BORLANDC__ )
-   /* It seems that on Windows platform there some weirdness about EPSILON value so
-      that a float division using an epsilon smaller than 1e-10 may be rounded.
-      Must dig if it's a borland lib bug or a windows problem.
-    */
-   d2 += 0.001;
-#else
-   d2 += DBL_EPSILON;
-#endif
-#endif
 
    return d1 / d2;
 }
