@@ -2827,29 +2827,21 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
    {
       if( pWVT->hWnd ) /* Is the window already open */
       {
-         if( pWVT->bResizable && ! pWVT->bFullScreen )
-         {
-            fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
-            HB_GTSELF_REFRESH( pGT );
-         }
-         else
-         {
-            HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                             pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                          pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
 
-            if( hFont )
+         if( hFont )
+         {
+            /*
+             * make sure that the mode selected along with the current
+             * font settings will fit in the window
+             */
+            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
             {
-               /*
-                * make sure that the mode selected along with the current
-                * font settings will fit in the window
-                */
-               if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-               {
-                  fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
-               }
-               DeleteObject( hFont );
-               HB_GTSELF_REFRESH( pGT );
+               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
             }
+            DeleteObject( hFont );
+            HB_GTSELF_REFRESH( pGT );
          }
       }
       else
@@ -3083,6 +3075,22 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   hb_gt_wvt_ResetWindowSize( pWVT );
                   HB_GTSELF_REFRESH( pGT );
                }
+               else
+               {
+                  TEXTMETRIC tm;
+                  HWND       hDesk    = GetDesktopWindow();
+                  HDC        hdc      = GetDC( hDesk );
+                  HFONT      hOldFont = ( HFONT ) SelectObject( hdc, hFont );
+
+                  SetTextCharacterExtra( hdc, 0 );
+                  GetTextMetrics( hdc, &tm );
+                  SelectObject( hdc, hOldFont );
+                  ReleaseDC( hDesk, hdc );
+
+                  pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
+                  pWVT->PTEXTSIZE.y = tm.tmHeight;
+               }
+
                DeleteObject( hFont );
             }
          }
