@@ -1062,10 +1062,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
       ::nFirstRow := ::naTextLen
    ENDIF
 
-   IF ::nFirstCol >  ::LineLen( ::nRow ) + 1
-      ::nFirstCol := ::LineLen( ::nRow ) + 1
-   ENDIF
-
    IF ( ::nFirstRow + nWndRow ) > ::naTextLen
       DO WHILE ( ::nFirstRow + ( --nWndRow ) ) > ::naTextLen
       ENDDO
