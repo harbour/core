@@ -80,7 +80,7 @@ FUNCTION HRBMAIN()
      IF !Empty( cHtml )
         uhttpd_SetHeader( "Content-Type", "image/gif" )
         uhttpd_SetHeader( "Pragma", "no-cache" )
-        uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + LTrim( Str( hb_randomint( 100 ) ) ) + ".gif" )
+        uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_randomint( 100 ) ) + ".gif" )
         uhttpd_Write( cHtml )
      ELSE
         uhttpd_SetHeader( "Content-Type", "text/html" )
