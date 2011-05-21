@@ -104,6 +104,7 @@ C_SOURCES += \
    initexit.c \
    initsymb.c \
    memvclip.c \
+   pbyref.c \
    pcount.c \
    pvalue.c \
    pvaluehb.c \

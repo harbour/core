@@ -319,6 +319,8 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT )
 }
 
+#if 0
+
 HB_FUNC( HB_ISBYREF )
 {
    if( hb_pcount() )
@@ -328,6 +330,8 @@ HB_FUNC( HB_ISBYREF )
          hb_retl( HB_IS_BYREF( hb_itemUnRefOnce( pItem ) ) );
    }
 }
+
+#endif
 
 HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
 HB_FUNC_EXTERN( HB_LIBLOAD            ) ; HB_FUNC( LIBLOAD                  ) { HB_FUNC_EXEC( HB_LIBLOAD            ); }
