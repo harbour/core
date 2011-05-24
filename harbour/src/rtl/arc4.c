@@ -99,16 +99,14 @@ struct arc4_stream
    HB_U8 s[ 256 ];
 };
 
-#if defined( HB_OS_WIN )
-#  if ! defined( __BORLANDC__ ) && ! defined( __WATCOMC__ )
-#     define getpid _getpid
-#  endif
-#  define pid_t  int
+#if !defined( HB_OS_UNIX )
+#  define NO_PID_CHECK
+#else
+static pid_t              arc4_stir_pid;
 #endif
 
 static int                rs_initialized;
 static struct arc4_stream rs;
-static pid_t              arc4_stir_pid;
 static HB_I32             arc4_count;
 
 static HB_CRITICAL_NEW( arc4_lock );
@@ -214,7 +212,7 @@ static int arc4_seed_sysctl_linux( void )
     */
    int          mib[] = { CTL_KERN, KERN_RANDOM, RANDOM_UUID };
    HB_U8        buf[ ADD_ENTROPY ];
-   HB_SIZE      len, n;
+   size_t       len, n;
    unsigned int i;
    int          any_set;
 
@@ -255,7 +253,7 @@ static int arc4_seed_sysctl_bsd( void )
     */
    int     mib[] = { CTL_KERN, KERN_ARND };
    HB_U8   buf[ ADD_ENTROPY ];
-   HB_SIZE len, n;
+   size_t  len, n;
    int     i, any_set;
 
    memset( buf, 0, sizeof( buf ) );
@@ -515,6 +513,10 @@ static void arc4_stir( void )
 
 static void arc4_stir_if_needed( void )
 {
+#if defined( NO_PID_CHECK )
+   if( arc4_count <= 0 || ! rs_initialized )
+      arc4_stir();
+#else
    pid_t pid = getpid();
 
    if( arc4_count <= 0 || ! rs_initialized || arc4_stir_pid != pid )
@@ -522,6 +524,7 @@ static void arc4_stir_if_needed( void )
       arc4_stir_pid = pid;
       arc4_stir();
    }
+#endif
 }
 
 static _HB_INLINE_ HB_U8 arc4_getbyte( void )

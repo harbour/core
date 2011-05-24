@@ -1000,7 +1000,10 @@ static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 
 static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN_CE )
+   HB_SYMBOL_UNUSED( pWVT );
+   HB_SYMBOL_UNUSED( fEnable );
+#else
    if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
    {
       if( fEnable )

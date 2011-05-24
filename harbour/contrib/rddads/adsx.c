@@ -1180,63 +1180,48 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
 static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
-   LPMIXTAG        pTag;
+   LPMIXTAG pTag = pArea->pTagCurrent;
 
    /* resolve any pending relations */
    if( pArea->adsarea.lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
    /* all others need an index handle */
-   if( uiIndex != DBOI_ORDERCOUNT && pOrderInfo->itmOrder && !HB_IS_NIL( pOrderInfo->itmOrder ) )
+   if( uiIndex != DBOI_ORDERCOUNT )
    {
-      if( HB_IS_STRING( pOrderInfo->itmOrder ) )
+      if( pOrderInfo->itmOrder )
       {
-         pTag = pArea->pTagList;
-         while ( pTag )
+         if( HB_IS_STRING( pOrderInfo->itmOrder ) )
          {
-            if( ! hb_stricmp( hb_itemGetCPtr( pOrderInfo->itmOrder ), pTag->szName ) )
-               break;
+            pTag = pArea->pTagList;
+            while ( pTag )
+            {
+               if( ! hb_stricmp( hb_itemGetCPtr( pOrderInfo->itmOrder ), pTag->szName ) )
+                  break;
 
-            pTag = pTag->pNext;
+               pTag = pTag->pNext;
+            }
          }
-
-         if( ! pTag )
-            return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
-      }
-      else if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
-      {
-         UNSIGNED16 usOrder = 0, usSearch = ( UNSIGNED16 ) hb_itemGetNI( pOrderInfo->itmOrder );
-
-         AdsGetNumIndexes( pArea->adsarea.hTable, &usOrder );
-
-         if( usSearch <= usOrder )
-            return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
-
-         pTag = pArea->pTagList;
-         usOrder++;
-         while ( pTag )
+         else if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
          {
-            if( usSearch == usOrder )
-               break;
+            UNSIGNED16 usOrder = 0, usSearch = ( UNSIGNED16 ) hb_itemGetNI( pOrderInfo->itmOrder );
 
-            pTag = pTag->pNext;
-            usOrder++;
+            AdsGetNumIndexes( pArea->adsarea.hTable, &usOrder );
+
+            pTag = usSearch <= usOrder ? NULL : pArea->pTagList;
+            while ( pTag )
+            {
+               if( ++usOrder == usSearch )
+                  break;
+
+               pTag = pTag->pNext;
+            }
          }
-
-         if( ! pTag )
-            return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
       }
-   }
-   else if( ! pArea->pTagCurrent && uiIndex != DBOI_ORDERCOUNT )
-   {
-      return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
-   }
-   else
-      pTag = pArea->pTagCurrent;
 
-   /* resolve any pending relations */
-   if( pArea->adsarea.lpdbPendingRel )
-      SELF_FORCEREL( ( AREAP ) pArea );
+      if( ! pTag )
+         return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
+   }
 
    switch( uiIndex )
    {
