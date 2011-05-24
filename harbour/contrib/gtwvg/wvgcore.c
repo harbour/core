@@ -439,10 +439,6 @@ BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
          }
          break;
 
-      case WM_CLOSE:
-         DestroyWindow( hDlg );
-         lReturn = 0;
-         break;
 #if ! defined( HB_OS_WIN_CE )
       case WM_NCDESTROY:
 #else
@@ -554,11 +550,6 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
                lReturn = 0;
                break;
          }
-         break;
-
-      case WM_CLOSE:
-         EndDialog( hDlg, IDCANCEL );
-         lReturn = 0;
          break;
 
 #if ! defined( HB_OS_WIN_CE )
