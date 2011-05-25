@@ -626,6 +626,13 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ENDIF
 
       SWITCH ( key )
+
+      CASE Qt_Key_Insert
+         IF lCtrl
+            ::copy()
+         ENDIF
+         EXIT
+
       CASE Qt_Key_Backspace
          IF ! lCtrl .AND. ! lAlt
             IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() <= ::nProtoCol + 1
