@@ -429,7 +429,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                            iResult = -7;
                            break;
                         }
-                        else if( nWritten == 0 )
+                        else if( dwWritten == 0 )
                         {
                            iResult = -8;
                            break;
