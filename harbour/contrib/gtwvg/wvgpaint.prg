@@ -449,6 +449,8 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    nResult := Wvt_CreateDialogModal( xTemplate, .f., cbDlgProc, nDlgMode, hWndParent )
 
+   Wvg_SetFocus( hWndParent )
+   
    Return nResult
 
 /*----------------------------------------------------------------------*/
