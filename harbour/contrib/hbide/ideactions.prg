@@ -311,6 +311,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , "keyboardmappings",""     , "No", "Yes" } )
    aadd( aAct, { "Setup"                , "hbIDE Setup"                  , "idepreferences" , ""     , "No", "Yes" } )
  * aadd( aAct, { "Tools"                , "Tools and Utilities"          , "tools"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "ChangeLog"            , "Manage ChangeLog(s)"          , "memo"           , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -624,11 +625,13 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "TB_Tools"            ), {|| oIde:execAction( "Tools"              ) } } )
    hbide_menuAddSep( oSubMenu )
-   #if 1
+   oSubMenu:addItem( { ::getAction( "ChangeLog"           ), {|| oIde:execAction( "ChangeLog"          ) } } )
+   hbide_menuAddSep( oSubMenu )
+
    oSubMenu2 := hbide_buildCDPMenu( oIde, oSubMenu ) //hbide_buildCodecMenu( oIde, oSubMenu )
    oSubMenu2:title := "~CodePage"
    oSubMenu:addItem( { oSubMenu2, NIL } )
-   #endif
+
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/

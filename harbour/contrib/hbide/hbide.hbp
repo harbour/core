@@ -57,6 +57,7 @@ idebrowse.prg
 hbqreportsmanager.prg
 hbqtoolbar.prg
 ideformat.prg
+idechangelog.prg
 ideparseexpr.c
 
 docviewgenerator.ui
@@ -87,6 +88,7 @@ fetchdate.ui
 tables.ui
 updown_v.ui
 format.ui
+changelog.ui
 
 hbide.qrc
 

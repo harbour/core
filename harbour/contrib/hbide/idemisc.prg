@@ -280,7 +280,7 @@ FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a File"
-   DEFAULT aFlt    TO { { "All Files", "*.*" } }
+   DEFAULT aFlt    TO { { "All Files", "*" } }
    DEFAULT cDftDir TO hb_dirBase()
 
    oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
@@ -1951,6 +1951,7 @@ FUNCTION hbide_getUI( cUI, qParent )
       CASE "fetchdate"           ; RETURN hbqtui_FetchDate( qParent )
       CASE "tables"              ; RETURN hbqtui_Tables( qParent )
       CASE "format"              ; RETURN hbqtui_Format( qParent )
+      CASE "changelog"           ; RETURN hbqtui_Changelog( qParent )
       ENDSWITCH
    ENDIF
 

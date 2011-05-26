@@ -281,5 +281,6 @@
 <file>resources/rp_linediagleft.png</file>
 <file>resources/rp_ellipse.png</file>
 <file>resources/rp_shapes.png</file>
+<file>resources/memo.png</file>
 </qresource>
 </RCC>

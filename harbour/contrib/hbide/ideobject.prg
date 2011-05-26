@@ -101,6 +101,7 @@ CLASS IdeObject
    ACCESS oSetup                                  INLINE ::oIde:oSetup
    ACCESS oINI                                    INLINE ::oIde:oINI
    ACCESS oFmt                                    INLINE ::oIde:oFmt
+   ACCESS oCL                                     INLINE ::oIde:oCL
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags

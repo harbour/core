@@ -175,6 +175,7 @@ CLASS HbIde
    DATA   oSetup                                         /* Setup Manager                  */
    DATA   oINI                                           /* INI Manager                    */
    DATA   oFmt                                           /* Code Formatter Manager         */
+   DATA   oCL                                            /* ChangeLog Manager              */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -626,24 +627,27 @@ METHOD HbIde:create( aParams )
    /* Main Menu */
    ::oAC:buildMainMenu()
 
+   /* Initialize ChangeLog Manager */
+   ::oCL := IdeChangeLog():new():create( Self )
+
    /* Initialize Doc Writer Manager */
-   ::oDW := IdeDocWriter():new( Self ):create()
+   ::oDW := IdeDocWriter():new():create( Self )
 
    /* Once create Find/Replace dialog */
-   ::oFR := IdeFindReplace():new( Self ):create()
-   ::oFF := IdeFindInFiles():new( Self ):create()
+   ::oFR := IdeFindReplace():new():create( Self )
+   ::oFF := IdeFindInFiles():new():create( Self )
 
    /* Sources Manager */
-   ::oSM := IdeSourcesManager():new( Self ):create()
+   ::oSM := IdeSourcesManager():new():create( Self )
 
    /* Edits Manager */
-   ::oEM := IdeEditsManager():new( Self ):create()
+   ::oEM := IdeEditsManager():new():create( Self )
 
    /* Harbour Help Object */
    ::oHL := ideHarbourHelp():new():create( Self )
 
    /* Load Environments */
-   ::oEV := IdeEnvironments():new( Self ):create()
+   ::oEV := IdeEnvironments():new():create( Self )
 
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )
@@ -848,6 +852,10 @@ METHOD HbIde:execAction( cKey )
       ENDIF
       ::lStatusBarVisible := ! ::lStatusBarVisible
       ::qStatusBarAction:setChecked( ::lStatusBarVisible )
+      EXIT
+
+   CASE "ChangeLog"
+      ::oCL:show()
       EXIT
 
    CASE "Tools"
