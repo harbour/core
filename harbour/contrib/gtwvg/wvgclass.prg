@@ -796,19 +796,19 @@ CLASS WvtObject
    ASSIGN ToolTip( cTip )                         INLINE ::cToolTip := cTip
 
    DATA   bHandleEvent
-   DATA   bOnCreate
-   DATA   bOnSelect
-   DATA   bOnFocus
-   DATA   bOnRefresh
-   DATA   bOnLeftUp
-   DATA   bOnLeftDown
-   DATA   bOnMMLeftDown
-   DATA   bOnLeftPressed
-   DATA   bTooltip
-   DATA   bSaveSettings
-   DATA   bRestSettings
-   DATA   bOnHilite
-   DATA   bOnDeHilite
+   DATA   bOnCreate                               INIT   {|| NIL }
+   DATA   bOnSelect                               INIT   {|| NIL }
+   DATA   bOnFocus                                INIT   {|| NIL }
+   DATA   bOnRefresh                              INIT   {|| NIL }
+   DATA   bOnLeftUp                               INIT   {|| NIL }
+   DATA   bOnLeftDown                             INIT   {|| NIL }
+   DATA   bOnMMLeftDown                           INIT   {|| NIL }
+   DATA   bOnLeftPressed                          INIT   {|| NIL }
+   DATA   bTooltip                                INIT   {|| NIL }
+   DATA   bSaveSettings                           INIT   {|| NIL }
+   DATA   bRestSettings                           INIT   {|| NIL }
+   DATA   bOnHilite                               INIT   {|| NIL }
+   DATA   bOnDeHilite                             INIT   {|| NIL }
 
    ACCESS nChildren                               INLINE len( ::aChildren )
    DATA   nIndexOrder
@@ -2522,8 +2522,7 @@ METHOD wvtScrollbar:Create()
       ::bBtnRightBottom := ;
            {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnRgt,4 ) }
       ::bBtnScroll := ;
-           {|| Wvt_DrawScrollThumbHorz( ::nSTop,::nSLeft,::nSBottom,::nSRight,;
-                                            ::aPxlScroll,::nThumbPos ) }
+           {|| Wvt_DrawScrollThumbHorz( ::nSTop,::nSLeft,::nSBottom,::nSRight, ::aPxlScroll,::nThumbPos ) }
       ::bBtnLeftTopDep := ;
            {|| Wvt_DrawScrollButton( ::nBtn1Top,::nBtn1Left,::nBtn1Bottom,::nBtn1Right,::aPxlBtnLft,2,.t. ) }
       ::bBtnRightBottomDep := ;
@@ -2552,7 +2551,57 @@ METHOD wvtScrollbar:Configure( nTop, nLeft, nBottom, nRight )
    ::nBottom  := nBottom
    ::nRight   := nRight
 
-   ::Create()
+   IF ::nBarType == WVT_SCROLLBAR_VERT
+      ::nRight       := ::nLeft + 1
+      ::nBottom      := max( 7, ::nBottom )
+
+      ::nBtn1Top     := ::nTop
+      ::nBtn1Left    := ::nLeft
+      ::nBtn1Bottom  := ::nTop
+      ::nBtn1Right   := ::nRight
+
+      ::nBtn2Top     := ::nBottom
+      ::nBtn2Left    := ::nLeft
+      ::nBtn2Bottom  := ::nBottom
+      ::nBtn2Right   := ::nRight
+
+      ::nSTop        := ::nTop + 1
+      ::nSLeft       := ::nLeft
+      ::nSBottom     := ::nBottom - 1
+      ::nSRight      := ::nRight
+
+      ::nScrollUnits := ::nSBottom - ::nSTop + 1
+
+      ::nTotal       := Eval( ::bTotal   )
+      ::nCurrent     := Eval( ::bCurrent )
+      ::ThumbPos()
+   ELSE
+      ::nBottom      := ::nTop
+      ::nRight       := max( 11, ::nRight )
+
+      ::nBtn1Top     := ::nTop
+      ::nBtn1Left    := ::nLeft
+      ::nBtn1Bottom  := ::nBottom
+      ::nBtn1Right   := ::nLeft + 1
+
+      ::nBtn2Top     := ::nTop
+      ::nBtn2Left    := ::nRight - 1
+      ::nBtn2Bottom  := ::nBottom
+      ::nBtn2Right   := ::nRight
+
+      ::nSTop        := ::nTop
+      ::nSLeft       := ::nLeft + 2
+      ::nSBottom     := ::nBottom
+      ::nSRight      := ::nRight - 2
+
+      ::nScrollUnits := ::nSRight - ::nSLeft + 1
+
+      ::nTotal       := Eval( ::bTotal   )
+      ::nCurrent     := Eval( ::bCurrent )
+
+      ::ThumbPos()
+   ENDIF
+   
    ::Refresh()
 
    RETURN Self

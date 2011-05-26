@@ -507,3 +507,15 @@ FUNCTION GetResource( cName )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION uiDebug( ... )
+   LOCAL aP := hb_aParams()
+   LOCAL s := ""
+   
+   aeval( aP, {|e| s += hb_valTOstr( e ) + "   " } )
+   
+   WAPI_OutputDebugString( s )
+   
+   RETURN NIL
+   
+/*----------------------------------------------------------------------*/
+   
