@@ -73,11 +73,14 @@
 
 CLASS IdeChangeLog INHERIT IdeObject
 
+   DATA   aLog                                    INIT {}
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
    METHOD execEvent( cEvent, p )
+   METHOD refresh()
 
    ENDCLASS
 
@@ -122,7 +125,11 @@ METHOD IdeChangeLog:show()
       ::oUI:q_buttonChangelog :setIcon( hbide_image( "dc_folder"  ) )
       ::oUI:q_buttonAddSrc    :setIcon( hbide_image( "dc_plus"  ) )
 
-      ::oUI:q_buttonChangelog :connect( "clicked()", {|| ::execEvent( "buttonChangelog_clicked"              ) } )
+      ::oUI:q_buttonChangelog :connect( "clicked()", {|| ::execEvent( "buttonChangelog_clicked"         ) } )
+      ::oUI:q_buttonAddSrc    :connect( "clicked()", {|| ::execEvent( "buttonAddSrc_clicked"            ) } )
+      ::oUI:q_buttonDone      :connect( "clicked()", {|| ::execEvent( "buttonDone_clicked"              ) } )
+      ::oUI:q_buttonRefresh   :connect( "clicked()", {|| ::execEvent( "buttonRefresh_clicked"           ) } )
+      ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"              ) } )
 
    ENDIF
 
@@ -133,19 +140,37 @@ METHOD IdeChangeLog:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeChangeLog:execEvent( cEvent, p )
-   LOCAL cPath
+   LOCAL cTmp
 
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
 
+   CASE "buttonSave_clicked"
+      EXIT
+   CASE "buttonRefresh_clicked"
+      ::refresh()
+      EXIT
+   CASE "buttonDone_clicked"
+      IF !empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
+         aadd( ::aLog, { "Desc", cTmp, "" } )
+         ::refresh()
+      ENDIF
+      EXIT
+   CASE "buttonAddSrc_clicked"
+      IF !empty( cTmp := ::oUI:q_editSource:text() )
+         aadd( ::aLog, { "Source", cTmp, "" } )
+         ::refresh()
+      ENDIF
+      EXIT
    CASE "buttonChangelog_clicked"
-      cPath := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
-      IF !empty( cPath )
-         ::oUI:q_editChangelog:setText( cPath )
+      cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
+      IF !empty( cTmp )
+         ::oUI:q_editChangelog:setText( cTmp )
 
          ::oUI:q_plainChangelog:clear()
-         ::oUI:q_plainChangelog:setPlainText( memoread( cPath ) )
+         ::oUI:q_plainChangelog:setPlainText( memoread( cTmp ) )
+         ::refresh()
       ENDIF
       EXIT
 
@@ -155,3 +180,25 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeChangeLog:refresh()
+   LOCAL s := "", a_
+
+   ::oUI:q_plainLogEntry:clear()
+
+   s := "$<" + strzero( 1, 6 ) + "> " + dtos( date() ) + " " + time() + " Harbour "
+
+   FOR EACH a_ IN ::aLog
+      IF a_[ 1 ] == "Source"
+         s += hb_eol() + "  * " + a_[ 2 ]
+
+      ELSEIF a_[ 1 ] == "Desc"
+         s += hb_eol() + "    ! " + a_[ 2 ]
+
+      ENDIF
+   NEXT
+
+   ::oUI:q_plainLogEntry:setPlainText( s )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
