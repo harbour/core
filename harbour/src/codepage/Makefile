@@ -115,6 +115,7 @@ C_SOURCES := \
    uc852.c \
    uc855.c \
    uc857.c \
+   uc858.c \
    uc860.c \
    uc861.c \
    uc862.c \
