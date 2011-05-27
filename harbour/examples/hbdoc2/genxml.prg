@@ -90,7 +90,7 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
    IF ::Depth == 0
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + "." + ::cExtension + [">] + hb_eol() )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
    ELSE
       FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
    ENDIF

@@ -143,7 +143,7 @@ METHOD BeginSection( cSection, cFilename ) CLASS  GenerateHTML
       If cFilename == ::cFilename
          ::OpenTag( "a", "name", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
       ELSE
-         ::OpenTag( "a", "href", cFilename + "." + ::cExtension + "#" + cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
+         ::OpenTag( "a", "href", cFilename + ::cExtension + "#" + cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
       ENDIF
    ELSE
       ::OpenTag( "a", "name", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
@@ -160,12 +160,12 @@ HB_SYMBOL_UNUSED( cFilename )
 
 METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
    IF HB_IsObject( oEntry ) .AND. oEntry:ClassName == "ENTRY"
-      ::OpenTag( "a", "href", ::TargetFilename + "." + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
+      ::OpenTag( "a", "href", ::TargetFilename + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
    ELSE
       IF cSubReference == NIL
-         ::OpenTag( "a", "href", cReference + "." + ::cExtension /* + "#" + oEntry:Filename */ ):Append( oEntry ):CloseTag( "a" ):Newline()
+         ::OpenTag( "a", "href", cReference + ::cExtension /* + "#" + oEntry:Filename */ ):Append( oEntry ):CloseTag( "a" ):Newline()
       ELSE
-         ::OpenTag( "a", "href", cReference + "." + ::cExtension + "#" + cSubReference ):Append( oEntry ):CloseTag( "a" ):Newline()
+         ::OpenTag( "a", "href", cReference + ::cExtension + "#" + cSubReference ):Append( oEntry ):CloseTag( "a" ):Newline()
       ENDIF
    ENDIF
    RETURN self

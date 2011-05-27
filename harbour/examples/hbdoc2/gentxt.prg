@@ -104,7 +104,7 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
    IF ::Depth == 0
-      ::WriteEntry( "", cSection + " (see " + cFilename + "." + ::cExtension + "):", .F. )
+      ::WriteEntry( "", cSection + " (see " + cFilename + ::cExtension + "):", .F. )
    ELSE
       ::WriteEntry( "", cSection + ":", .F. )
    ENDIF
