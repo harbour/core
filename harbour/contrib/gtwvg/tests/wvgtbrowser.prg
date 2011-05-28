@@ -22,6 +22,8 @@
 
 /*----------------------------------------------------------------------*/
 
+#define K_MOVING                1001
+
 #define K_SBLINEUP              1051
 #define K_SBLINEDOWN            1052
 #define K_SBPAGEUP              1053
@@ -139,7 +141,7 @@ FUNCTION ExecBrowser( oCrt )
    aAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
 
-   BuildScrollBars( oBrowse, @aBlocks, @oVBar, @oHBar )
+   Vou_BrwAddScrollBars( oCrt, oBrowse, @oVBar, @oHBar )
  
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -147,14 +149,22 @@ FUNCTION ExecBrowser( oCrt )
    DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
    DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(Hb_ThreadID(),3)+'>',maxcol()+1), 'B/W' )
 
-   oTBar:buttonClick := {|oBtn| IF( oBtn:caption=='Show',__keyboard( chr( K_DOWN ) ),nil ) }
+   oTBar:buttonClick := {|oBtn| Vou_ExecTBarAction( oBtn ) }
 
-   While !lEnd
-      oBrowse:ForceStable()
+   WHILE ! lEnd
+      dispbegin()
+      DO WHILE ( ( nKey := inkey( , INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0 .or. nKey == K_MOVING ) .and. ! oBrowse:stabilize()
+      ENDDO 
+      dispend()
+      
+      IF nKey == 0
+         oVBar:setData( OrdKeyNo() )
+         oHBar:setData( oBrowse:colPos )
+         DO WHILE ( ( nKey := inkey( , INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0 .or. nKey == K_MOVING )
+         ENDDO    
+      ENDIF 
 
-      nKey := InKey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
-
-      do case
+      do CASE
       case nKey == K_F12
          nFactor--
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
@@ -169,23 +179,6 @@ FUNCTION ExecBrowser( oCrt )
       case nKey == K_F7
          hb_gtInfo( HB_GTI_RESIZABLE, .t. )
 
-      case ( oVBar:HandleEvent( nKey ) .or. oHBar:HandleEvent( nKey ) )
-         oBrowse:forceStable()
-         
-      case BrwHandleKey( oBrowse, nKey, @lEnd, oVBar, oHBar )
-
-      case nKey == HB_K_RESIZE
-         oBrowse:nBottom := maxrow() - 3
-         oBrowse:nRight  := maxcol() - 5
-
-         oVBar:configure( oBrowse:nTop, oBrowse:nRight+1, oBrowse:nBottom, oBrowse:nRight+2 )
-         oHBar:configure( oBrowse:nBottom+1, oBrowse:nLeft, oBrowse:nBottom+1, oBrowse:nRight )
-         
-         DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
-         DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
-         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(Hb_ThreadID(),3)+'>',maxcol()+1), 'B/W' )
-         oBrowse:configure()
-
       case nKey == K_F2
          nIndex := IndexOrd()
          nIndex++
@@ -194,12 +187,26 @@ FUNCTION ExecBrowser( oCrt )
          endif
          Set Order To ( nIndex )
          oBrowse:RefreshAll()
-
+         oBrowse:ForceStable()
+         
       case nKey == K_F3
          DoModalWindow()
 
       case nKey == K_F4
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
+
+      case BrwHandleKey( oBrowse, nKey, @lEnd )
+
+      case nKey == HB_K_RESIZE
+         oBrowse:nBottom := maxrow() - 3
+         oBrowse:nRight  := maxcol() - 5
+
+         Vou_BrwResetScrollBars( oBrowse, oVBar, oHBar )
+         
+         DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
+         DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
+         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(Hb_ThreadID(),3)+'>',maxcol()+1), 'B/W' )
+         oBrowse:configure()
 
       endcase
    end
@@ -222,6 +229,95 @@ FUNCTION ExecBrowser( oCrt )
    RETURN NIL
 
 //-------------------------------------------------------------------//
+
+STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
+   LOCAL lVMove := .f.
+   LOCAL lHMove := .f.
+   LOCAL lRet   := .t.
+
+   do case
+   case nKey == K_ESC
+      lEnd := .t.
+
+   case nKey == K_ENTER
+      lEnd := .t.
+
+   case nKey == K_DOWN
+      lVMove := .t.
+      oBrowse:Down()
+
+   case nKey == K_UP
+      lVMove := .t.
+      oBrowse:Up()
+
+   case nKey == K_PGDN
+      lVMove := .t.
+      oBrowse:pageDown()
+
+   case nKey == K_PGUP
+      lVMove := .t.
+      oBrowse:pageUp()
+
+   case nKey == K_CTRL_PGUP
+      lVMove := .t.
+      oBrowse:goTop()
+
+   case nKey == K_CTRL_PGDN
+      lVMove := .t.
+      oBrowse:goBottom()
+
+   case nKey == K_LEFT
+      lHMove := .t.
+      oBrowse:Left()
+
+   case nKey == K_RIGHT
+      lHMove := .t.
+      oBrowse:Right()
+
+   case nKey == K_HOME
+      lHMove := .t.
+      oBrowse:home()
+
+   case nKey == K_END
+      lHMove := .t.
+      oBrowse:end()
+
+   case nKey == K_CTRL_LEFT
+      lHMove := .t.
+      oBrowse:panLeft()
+
+   case nKey == K_CTRL_RIGHT
+      lHMove := .t.
+      oBrowse:panRight()
+
+   case nKey == K_CTRL_HOME
+      lHMove := .t.
+      oBrowse:panHome()
+
+   case nKey == K_CTRL_END
+      lHMove := .t.
+      oBrowse:panEnd()
+
+   case nKey == K_MWBACKWARD
+      lVMove := .t.
+      oBrowse:down()
+
+   case nKey == K_MWFORWARD
+      lVMove := .t.
+      oBrowse:up()
+      
+   otherwise
+      lRet := .f.
+
+   endcase
+
+   IF lHMove .or. lVMove
+      oBrowse:forceStable()
+   ENDIF       
+   
+   RETURN lRet
+
+/*----------------------------------------------------------------------*/
 
 STATIC FUNCTION DbSkipBlock( n )
 
@@ -279,151 +375,112 @@ STATIC FUNCTION TBPrev()
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION VouBlockField( i )
-
    RETURN  {|| fieldget( i ) }
 
-//-------------------------------------------------------------------//
-
-STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd, oVBar, oHBar )
-   LOCAL lRet := .t.
-
-   do case
-   case nKey == K_ESC
-      lEnd := .t.
-
-   case nKey == K_ENTER
-      lEnd := .t.
-
-   case nKey == K_DOWN
-      oBrowse:Down()
-
-   case nKey == K_UP
-      oBrowse:Up()
-
-   case nKey == K_LEFT
-      oBrowse:Left()
-
-   case nKey == K_RIGHT
-      oBrowse:Right()
-
-   case nKey == K_PGDN
-      oBrowse:pageDown()
-
-   case nKey == K_PGUP
-      oBrowse:pageUp()
-
-   case nKey == K_CTRL_PGUP
-      oBrowse:goTop()
-
-   case nKey == K_CTRL_PGDN
-      oBrowse:goBottom()
-
-   case nKey == K_HOME
-      oBrowse:home()
-
-   case nKey == K_END
-      oBrowse:end()
-
-   case nKey == K_CTRL_LEFT
-      oBrowse:panLeft()
-
-   case nKey == K_CTRL_RIGHT
-      oBrowse:panRight()
-
-   case nKey == K_CTRL_HOME
-      oBrowse:panHome()
-
-   case nKey == K_CTRL_END
-      oBrowse:panEnd()
-
-   case nKey == K_MWBACKWARD
-      oBrowse:down()
-
-   case nKey == K_MWFORWARD
-      oBrowse:up()
-
-   case nKey == K_SBTHUMBTRACKVERT
-      OrdKeyGoTo( oVBar:GetPos() )
-      oBrowse:refreshAll()
-      oBrowse:forceStable()
-      lRet := .f.
-      
-   case nKey == K_SBTHUMBTRACKHORZ
-      oBrowse:ColPos := oHBar:GetPos()
-      oBrowse:refreshAll()
-      oBrowse:forceStable()
-      lRet := .f.
-      
-   case nKey == K_SBLINEUP
-      oBrowse:up()
-
-   case nKey == K_SBLINEDOWN
-      oBrowse:down()
-
-   case nKey == K_SBPAGEUP
-     oBrowse:PageUp()
-
-   case nKey == K_SBPAGEDOWN
-      oBrowse:PageDown()
-
-   case nKey == K_SBLINELEFT
-      oBrowse:Left()
-
-   case nKey == K_SBLINERIGHT
-      oBrowse:Right()
-
-   case nKey == K_SBPAGELEFT
-      oBrowse:Left()
-
-   case nKey == K_SBPAGERIGHT
-      oBrowse:right()
-
-   otherwise
-      lRet := .f.
-
-   endcase
-
-   IF lRet
-      oVBar:SetPos( OrdKeyCount(), OrdKeyNo() )
-      oHBar:SetPos( oBrowse:ColCount, oBrowse:ColPos )
-   ENDIF 
-   
-   RETURN lRet
-
 /*----------------------------------------------------------------------*/
-
-STATIC FUNCTION BuildScrollbars( oBrw, aPaint, oVBar, oHBar )
    
-   oVBar := WvtScrollBar():New( oBrw, 999991, oBrw:nTop, oBrw:nRight+1, oBrw:nBottom, oBrw:nRight+2 )
-   oVBar:nBarType   := WVT_SCROLLBAR_VERT
-   oVBar:bTotal     := {|| OrdKeyCount() }
-   oVBar:bCurrent   := {|| OrdKeyNo() }
-   oVBar:aPxlBtnTop := { -2,2,0,0 }
-   oVBar:aPxlBtnBtm := {  0,2,2,0 }
-   oVBar:aPxlScroll := {  0,2,0,0 }
-   oVBar:Create()
+STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 
-   aadd( aPaint, oVBar:bBtnLeftTop     )
-   aadd( aPaint, oVBar:bBtnRightBottom )
-   aadd( aPaint, oVBar:bBtnScroll      )
-   
-   oHBar := WvtScrollBar():New( oBrw, 999990, oBrw:nBottom+1, oBrw:nLeft, oBrw:nBottom+1, oBrw:nRight )
-   oHBar:nBarType   := 2
-   oHBar:bTotal     := {|| oBrw:ColCount }
-   oHBar:bCurrent   := {|| oBrw:ColPos }
-   oHBar:aPxlBtnLft := { 2,-2,0,0 }
-   oHBar:aPxlBtnRgt := { 2, 0,0,2 }
-   oHBar:aPxlScroll := { 2, 0,0,0 }
-   oHBar:Create()
-
-   aadd( aPaint, oHBar:bBtnLeftTop     )
-   aadd( aPaint, oHBar:bBtnRightBottom )
-   aadd( aPaint, oHBar:bBtnScroll      )
-
+   SWITCH oBtn:caption
+   CASE "New"
+      Wvt_Keyboard( K_DOWN      ); EXIT
+   CASE "Select"                
+      Wvt_Keyboard( K_UP        ); EXIT
+   CASE "Calendar"              
+      Wvt_Keyboard( K_RIGHT     ); EXIT
+   CASE "Tools"                 
+      Wvt_Keyboard( K_LEFT      ); EXIT
+   CASE "Index"                 
+      Wvt_Keyboard( K_PGDN      ); EXIT
+   CASE "Show"                  
+      Wvt_Keyboard( K_PGUP      ); EXIT
+   CASE "Hide"
+      Wvt_Keyboard( K_CTRL_HOME ); EXIT
+   ENDSWITCH 
+               
    RETURN NIL
    
 /*----------------------------------------------------------------------*/
+   
+#include 'wvgparts.ch'
+
+FUNCTION Vou_BrwAddScrollBars( oCrt, oBrowse, oVBar, oHBar )
+   LOCAL aXY, aXY1
+
+   aXY  := Wvt_GetXYFromRowCol( oBrowse:nBottom+1, oBrowse:nLeft    )
+   aXY1 := Wvt_GetXYFromRowCol( oBrowse:nBottom+2, oBrowse:nRight+1 )
+   //
+   oHBar := WvgScrollBar():new( oCrt, , { aXY[ 1 ], aXY[ 2 ]+2 }, { aXY1[ 1 ]-aXY[ 1 ], aXY1[ 2 ]-aXY[ 2 ]-2 }, , .t. )
+   oHBar:range := { 1, oBrowse:colCount }
+   oHBar:type  := WVGSCROLL_HORIZONTAL
+   oHBar:create()
+   oHBar:scroll := {|mp1| oBrowse:colPos := mp1[ 1 ], oBrowse:refreshAll(), oBrowse:forceStable() }
+
+   aXY  := Wvt_GetXYFromRowCol( oBrowse:nTop     , oBrowse:nRight+1 )
+   aXY1 := Wvt_GetXYFromRowCol( oBrowse:nBottom+1, oBrowse:nRight+3 )
+   //
+   oVBar := WvgScrollBar():new( oCrt, , { aXY[ 1 ]+2,aXY[ 2 ] }, { aXY1[ 1 ]-aXY[ 1 ]-2, aXY1[ 2 ]-aXY[ 2 ] }, , .t. )
+   oVBar:range := { 1, LastRec() }
+   oVBar:type  := WVGSCROLL_VERTICAL
+   oVBar:create()
+   oVBar:scroll := {|mp1| Vou_BrwSetVScroll( mp1, oBrowse ) }
+
+   RETURN nil
+
 /*----------------------------------------------------------------------*/
+
+FUNCTION Vou_BrwResetScrollBars( oBrowse, oVBar, oHBar )
+   LOCAL aXY, aXY1
+
+   aXY  := Wvt_GetXYFromRowCol( oBrowse:nBottom+1, oBrowse:nLeft )
+   aXY1 := Wvt_GetXYFromRowCol( oBrowse:nBottom+2, oBrowse:nRight+1 )
+   oHBar:setPosAndSize( {aXY[1],aXY[2]+2}, { aXY1[1]-aXY[1], aXY1[2]-aXY[2]-2 }, .t. )
+
+   aXY  := Wvt_GetXYFromRowCol( oBrowse:nTop   , oBrowse:nRight+1 )
+   aXY1 := Wvt_GetXYFromRowCol( oBrowse:nBottom+1, oBrowse:nRight+3 )
+   oVBar:setPosAndSize( {aXY[1]+2,aXY[2]}, { aXY1[1]-aXY[1]-2, aXY1[2]-aXY[2] }, .t. )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
+   LOCAL nCmd, nPos
+
+   nCmd := mp1[ 2 ]
+   nPos := mp1[ 1 ]
+
+   SWITCH nCmd
+
+   CASE WVGSB_NEXTPOS
+      oBrowse:down()
+      EXIT
+
+   CASE WVGSB_PREVPOS
+      oBrowse:up()
+      EXIT
+
+   CASE WVGSB_NEXTPAGE
+      oBrowse:pageDown()
+      EXIT
+
+   CASE WVGSB_PREVPAGE
+      oBrowse:pageUp()
+      EXIT
+
+   CASE WVGSB_SLIDERTRACK
+      OrdKeyGoTo( nPos )
+      oBrowse:refreshAll()
+      EXIT
+
+   ENDSWITCH
+
+   oBrowse:forceStable()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+/*                   For brosers inside WvtDialog()                     */
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
@@ -498,19 +555,19 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
       oBrowse:down()
 
    case nKey == K_SBPAGEUP
-     oBrowse:PageUp()
+     oBrowse:pageUp()
 
    case nKey == K_SBPAGEDOWN
-      oBrowse:PageDown()
+      oBrowse:pageDown()
 
    case nKey == K_SBLINELEFT
-      oBrowse:Left()
+      oBrowse:left()
 
    case nKey == K_SBLINERIGHT
-      oBrowse:Right()
+      oBrowse:right()
 
    case nKey == K_SBPAGELEFT
-      oBrowse:Left()
+      oBrowse:left()
 
    case nKey == K_SBPAGERIGHT
       oBrowse:right()
@@ -522,12 +579,12 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
    if lRet
       if lRefAll
-         oBrowse:RefreshAll()
+         oBrowse:refreshAll()
       endif
-      oBrowse:ForceStable()
+      oBrowse:forceStable()
 
-      oWvtBrw:oVBar:SetPos( OrdKeyCount(),OrdKeyNo() )
-      oWvtBrw:oHBar:SetPos( oBrowse:ColCount, oBrowse:ColPos )
+      oWvtBrw:oVBar:setPos( OrdKeyCount(),OrdKeyNo() )
+      oWvtBrw:oHBar:setPos( oBrowse:ColCount, oBrowse:ColPos )
    endif
 
    RETURN lRet
