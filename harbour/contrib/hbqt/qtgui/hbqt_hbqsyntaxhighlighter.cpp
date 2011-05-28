@@ -174,12 +174,23 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
 
+   /* Multi Line Comments - to ascertain if it is embedded in quotes */
+   int startIndex = 0;
+   if( previousBlockState() != 1 )
+   {
+      startIndex = commentStartExpression.indexIn( text );
+   }
+
    /* Quoted text */
    index = patternQuotation.indexIn( text );
    while( index >= 0 )
    {
       length = patternQuotation.matchedLength();
       setFormat( index, length, quotationFormat );
+      if( startIndex > index && startIndex < index + length )
+      {
+         startIndex = -1;
+      }
       index = patternQuotation.indexIn( text, index + length );
    }
 
@@ -192,18 +203,13 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       index = commentSingleLine.indexIn( text, index + length );
    }
 
+   /* Multi Line Comments - continued */
    setCurrentBlockState( 0 );
 
-   /* Multi Line Comments */
-   int startIndex = 0;
-   if( previousBlockState() != 1 )
-   {
-      startIndex = commentStartExpression.indexIn( text );
-   }
    while( startIndex >= 0 )
    {
-      int endIndex = commentEndExpression.indexIn( text, startIndex );
       int commentLength;
+      int endIndex = commentEndExpression.indexIn( text, startIndex );
       if( endIndex == -1 )
       {
          setCurrentBlockState( 1 );
@@ -219,3 +225,4 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 }
 
 #endif
+
