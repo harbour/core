@@ -235,14 +235,14 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    LOCAL lHMove := .f.
    LOCAL lRet   := .t.
 
-   do case
-   case nKey == K_ESC
+   DO CASE 
+   CASE nKey == K_ESC
       lEnd := .t.
 
-   case nKey == K_ENTER
+   CASE nKey == K_ENTER
       lEnd := .t.
 
-   case nKey == K_DOWN
+   CASE nKey == K_DOWN
       lVMove := .t.
       oBrowse:Down()
 
@@ -250,66 +250,68 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
       lVMove := .t.
       oBrowse:Up()
 
-   case nKey == K_PGDN
+   CASE nKey == K_PGDN
       lVMove := .t.
       oBrowse:pageDown()
 
-   case nKey == K_PGUP
+   CASE nKey == K_PGUP
       lVMove := .t.
       oBrowse:pageUp()
 
-   case nKey == K_CTRL_PGUP
+   CASE nKey == K_CTRL_PGUP
       lVMove := .t.
       oBrowse:goTop()
 
-   case nKey == K_CTRL_PGDN
+   CASE nKey == K_CTRL_PGDN
       lVMove := .t.
       oBrowse:goBottom()
 
-   case nKey == K_LEFT
+   CASE nKey == K_LEFT
       lHMove := .t.
       oBrowse:Left()
 
-   case nKey == K_RIGHT
+   CASE nKey == K_RIGHT
       lHMove := .t.
       oBrowse:Right()
 
-   case nKey == K_HOME
+   CASE nKey == K_HOME
       lHMove := .t.
       oBrowse:home()
 
-   case nKey == K_END
+   CASE nKey == K_END
       lHMove := .t.
       oBrowse:end()
 
-   case nKey == K_CTRL_LEFT
+   CASE nKey == K_CTRL_LEFT
       lHMove := .t.
       oBrowse:panLeft()
 
-   case nKey == K_CTRL_RIGHT
+   CASE nKey == K_CTRL_RIGHT
       lHMove := .t.
       oBrowse:panRight()
 
-   case nKey == K_CTRL_HOME
+   CASE nKey == K_CTRL_HOME
       lHMove := .t.
       oBrowse:panHome()
 
-   case nKey == K_CTRL_END
+   CASE nKey == K_CTRL_END
       lHMove := .t.
       oBrowse:panEnd()
 
-   case nKey == K_MWBACKWARD
+   CASE nKey == K_MWBACKWARD
       lVMove := .t.
       oBrowse:down()
 
-   case nKey == K_MWFORWARD
+   CASE nKey == K_MWFORWARD
       lVMove := .t.
       oBrowse:up()
       
-   otherwise
+   CASE Vou_NavigateToCell( oBrowse, nKey )
+         
+   OTHERWISE 
       lRet := .f.
 
-   endcase
+   ENDCASE 
 
    IF lHMove .or. lVMove
       oBrowse:forceStable()
@@ -401,7 +403,44 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
    RETURN NIL
    
 /*----------------------------------------------------------------------*/
+
+FUNCTION Vou_NavigateToCell( oBrowse )
+   LOCAL nCount
+   LOCAL nHitWhere := oBrowse:HitTest( mrow(), mcol() )
+
+   IF nHitWhere ==  -5121   // on a cell
+      nCount := oBrowse:mRowPos - oBrowse:RowPos
+      DispBegin()
+      WHILE ( nCount < 0 )
+         nCount++
+         oBrowse:Up()
+         oBrowse:ForceStable()
+      ENDDO
    
+      WHILE ( nCount > 0 )
+         nCount --
+         oBrowse:Down()
+         oBrowse:ForceStable()
+      ENDDO
+   
+      nCount := oBrowse:mColPos - oBrowse:ColPos
+      WHILE ( nCount < 0 )
+         nCount++
+         oBrowse:Left()
+      ENDDO
+   
+      WHILE ( nCount > 0 )
+         nCount--
+         oBrowse:Right()
+      ENDDO
+      DispEnd()
+      RETURN .t.
+   ENDIF    
+
+   RETURN .f.
+   
+/*----------------------------------------------------------------------*/
+      
 #include 'wvgparts.ch'
 
 FUNCTION Vou_BrwAddScrollBars( oCrt, oBrowse, oVBar, oHBar )
