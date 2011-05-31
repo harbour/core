@@ -282,5 +282,6 @@
 <file>resources/rp_ellipse.png</file>
 <file>resources/rp_shapes.png</file>
 <file>resources/memo.png</file>
+<file>resources/hideshow.png</file>
 </qresource>
 </RCC>

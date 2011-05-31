@@ -158,6 +158,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildFormatWidget()
    METHOD showStats()
    METHOD hideStats()
+   METHOD hideAllDocks()
 
    ENDCLASS
 
@@ -172,6 +173,39 @@ METHOD IdeDocks:new( oIde )
 METHOD IdeDocks:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:hideAllDocks()
+
+   // Left
+   ::oDockPT                  : hide()
+   ::oDockED                  : hide()
+   ::oSkltnsTreeDock          : hide()
+
+   // Right
+   ::oOutputResult            : hide()
+   ::oEnvironDock             : hide()
+   ::oPropertiesDock          : hide()
+   ::oThemesDock              : hide()
+   ::oDocViewDock             : hide()
+   ::oDocWriteDock            : hide()
+   ::oFindDock                : hide()
+   ::oFunctionsDock           : hide()
+   ::oSkeltnDock              : hide()
+   ::oHelpDock                : hide()
+   ::oFuncDock                : hide()
+   ::oSourceThumbnailDock     : hide()
+   ::oQScintillaDock          : hide()
+   ::oReportsManagerDock      : hide()
+   ::oFormatDock              : hide()
+
+   // Bottom
+   ::oDockB2                  : hide()
+   ::oDockB1                  : hide()
+   ::oDockB                   : hide()
 
    RETURN Self
 

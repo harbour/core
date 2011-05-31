@@ -844,6 +844,9 @@ METHOD HbIde:showApplicationCursor( nCursor )
 METHOD HbIde:execAction( cKey )
 
    SWITCH cKey
+   CASE "Hide"
+      ::oINI:showHideDocks()
+      EXIT
    CASE "ToggleStatusBar"
       IF ::lStatusBarVisible
          ::oSBar:oWidget:hide()

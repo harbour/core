@@ -312,6 +312,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Setup"                , "hbIDE Setup"                  , "idepreferences" , ""     , "No", "Yes" } )
  * aadd( aAct, { "Tools"                , "Tools and Utilities"          , "tools"          , ""     , "No", "Yes" } )
    aadd( aAct, { "ChangeLog"            , "Manage ChangeLog(s)"          , "memo"           , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Hide"              , "Hide Show Docks"              , "hideshow"       , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -332,6 +333,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
    oTBar:addItem( ::getAction( "TB_Exit"              ), , , , , , "Exit"              )
+   oTBar:addItem( ::getAction( "TB_Hide"              ), , , , , , "Hide"              )
    oTBar:addItem( ::getAction( "TB_Home"              ), , , , , , "Home"              )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_New"               ), , , , , , "New"               )
@@ -529,6 +531,8 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu:addItem( { ::getAction( "TB_Hide" ), {|| oIde:execAction( "Hide" ) } } )
 
    ::oIde:qAnimateAction := QAction( oSubMenu:oWidget )
    ::qAnimateAction:setText( "Toggle Animation" )

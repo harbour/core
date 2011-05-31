@@ -159,6 +159,12 @@ CLASS IdeINI INHERIT IdeObject
    DATA   aAppThemes                              INIT  {}
    DATA   lEditsMdi                               INIT  .f.
 
+   DATA   lShowEditsLeftToolbar                   INIT  .t.
+   DATA   lShowEditsTopToolbar                    INIT  .t.
+   DATA   lDocksTabShape                          INIT  QTabWidget_Triangular
+
+   DATA   lShowHideDocks                          INIT  .t.
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -175,6 +181,7 @@ CLASS IdeINI INHERIT IdeObject
    METHOD getSnippetsFile()
    METHOD getShortcutsFile()
    METHOD getThemesFile()
+   METHOD showHideDocks()
 
    ENDCLASS
 
@@ -283,6 +290,21 @@ METHOD IdeINI:getThemesFile()
 
 /*------------------------------------------------------------------------*/
 
+METHOD IdeINI:showHideDocks()
+
+   IF ::lShowHideDocks  /* Assumed visible, hide all */
+      hbide_saveSettings( ::oIde, "tempsettings.ide" )
+      ::oDK:hideAllDocks()
+   ELSE
+      hbide_restSettings( ::oIde, "tempsettings.ide" )
+   ENDIF
+
+   ::lShowHideDocks := ! ::lShowHideDocks
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeINI:save( cHbideIni )
    LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s
 
@@ -290,6 +312,10 @@ METHOD IdeINI:save( cHbideIni )
 
    IF ::oIde:nRunMode != HBIDE_RUN_MODE_INI
       RETURN Nil
+   ENDIF
+
+   IF ! ::lShowHideDocks
+      ::showHideDocks()
    ENDIF
 
    txt_:= {}
@@ -751,21 +777,25 @@ METHOD IdeINI:load( cHbideIni )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_saveSettings( oIde )
+FUNCTION hbide_saveSettings( oIde, cFile )
    LOCAL cPath
 
+   DEFAULT cFile TO "settings.ide"
+
    hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_saveSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget )
+   hbqt_QMainWindow_saveSettings( cPath + cFile, "hbidesettings", oIde:oDlg:oWidget )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_restSettings( oIde )
+FUNCTION hbide_restSettings( oIde, cFile )
    LOCAL cPath
 
+   DEFAULT cFile TO "settings.ide"
+
    hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_restSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget )
+   hbqt_QMainWindow_restSettings( cPath + cFile, "hbidesettings", oIde:oDlg:oWidget )
 
    RETURN nil
 
