@@ -2103,13 +2103,12 @@ static int hb_gt_trm_AnsiGetAcsc( PHB_GTTRM pTerm, unsigned char c )
    return c | HB_GTTRM_ATTR_ALT;
 }
 
-static HB_BOOL hb_gt_trm_AnsiSetMode( PHB_GTTRM pTerm, int * piRow, int * piCol )
+static HB_BOOL hb_gt_trm_AnsiSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetMode(%p,%d,%d)", pTerm, *piRow, *piCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetMode(%p,%d,%d)", pTerm, *piRows, *piCols));
 
-   HB_SYMBOL_UNUSED( pTerm );
-   HB_SYMBOL_UNUSED( piRow );
-   HB_SYMBOL_UNUSED( piCol );
+   if( pTerm->terminal_ext & TERM_PUTTY )
+      return hb_gt_trm_XtermSetMode( pTerm, piRows, piCols );
 
    return HB_FALSE;
 }
