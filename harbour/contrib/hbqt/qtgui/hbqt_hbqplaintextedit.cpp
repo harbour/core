@@ -183,6 +183,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    doc->setDocumentMargin( 0 );
 
    highlighter = NULL;
+   block = NULL;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1382,7 +1383,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
          event->ignore();
          return;                                    /* let the completer do default behavior */
       case Qt::Key_Space:
-         if( block ){
+         if( block )
+         {
             PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
             hb_vmEvalBlockV( block, 1, p1 );
             hb_itemRelease( p1 );
@@ -1391,7 +1393,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
          }
          break;
       case Qt::Key_ParenLeft:
-         if( block ){
+         if( block )
+         {
             PHB_ITEM p1 = hb_itemPutNI( NULL, 21002 );
             hb_vmEvalBlockV( block, 1, p1 );
             hb_itemRelease( p1 );
@@ -1466,7 +1469,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
 void HBQPlainTextEdit::hbRefreshCompleter( const QString & alias )
 {
-   if( block ){
+   if( block )
+   {
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
       PHB_ITEM p2 = hb_itemPutC( NULL, alias.toLatin1().data() );
       hb_vmEvalBlockV( block, 2, p1, p2 );
@@ -1555,13 +1559,21 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 {
    QPainter painter( viewport() );
 
-   int curBlock      = textCursor().blockNumber();
-
    QTextBlock tblock = firstVisibleBlock();
    int blockNumber   = tblock.blockNumber();
    int height        = ( int ) blockBoundingRect( tblock ).height();
    int top           = ( int ) blockBoundingGeometry( tblock ).translated( contentOffset() ).top();
    int bottom        = top + height;
+
+   int curBlock;
+   if( textCursor().isNull() )
+   {
+      curBlock = blockNumber;
+   }
+   else
+   {
+      curBlock = textCursor().blockNumber();
+   }
 
    while( tblock.isValid() && top <= event->rect().bottom() )
    {

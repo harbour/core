@@ -254,6 +254,10 @@ CLASS IdeEdit INHERIT IdeObject
 
 METHOD IdeEdit:new( oIde, oEditor, nMode )
 
+   DEFAULT oIde    TO ::oIde
+   DEFAULT oEditor TO ::oEditor
+   DEFAULT nMode   TO ::nMode
+
    ::oIde    := oIde
    ::oEditor := oEditor
    ::nMode   := nMode

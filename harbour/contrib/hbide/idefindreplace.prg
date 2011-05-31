@@ -1181,7 +1181,7 @@ METHOD IdeFindInFiles:find()
    ::showLog( LOG_SEPARATOR )
    ::showLog( LOG_EMPTY )
 
-   ::oUI:q_labelStatus:setText( "[ Time Taken: " + hb_ntos( nEnd - nStart ) + " ] " + ;
+   ::oUI:q_labelStatus:setText( "[ Time: " + hb_ntos( nEnd - nStart ) + " ] " + ;
                          "[ Searched: " + hb_ntos( ::nSearched ) + " ] [ Finds: " + hb_ntos( ::nFounds ) + " ] " + ;
                          "[ Files not found: " + hb_ntos( ::nMisses ) + " ]" )
    ::lStop := .f.

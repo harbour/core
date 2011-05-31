@@ -99,6 +99,7 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    patternQuotation = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
 
    initialized = false;
+   editor = NULL;
 }
 
 void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -151,13 +152,16 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    if( ! initialized )
       return;
 
-   int iFirstBlock = editor->firstVisibleBlockNumber();
-   int iLastBlock = editor->lastVisibleBlockNumber();
-   int iBlock = currentBlock().blockNumber();
-
-   if( iBlock < iFirstBlock || iBlock > iLastBlock )
+   if( editor )
    {
-      return;
+      int iFirstBlock = editor->firstVisibleBlockNumber();
+      int iLastBlock = editor->lastVisibleBlockNumber();
+      int iBlock = currentBlock().blockNumber();
+
+      if( iBlock < iFirstBlock || iBlock > iLastBlock )
+      {
+         return;
+      }
    }
 
    int index = 0;

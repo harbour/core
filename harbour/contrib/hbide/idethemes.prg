@@ -97,6 +97,7 @@ CLASS IdeThemes INHERIT IdeObject
    VAR    nCurItem                                INIT 1
 
    VAR    qEdit
+   VAR    oEdit
    VAR    qHiliter
    VAR    qMenuApply
 
@@ -121,7 +122,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD setSingleLineCommentRule( qHiliter, cTheme )
    METHOD setSyntaxRule( qHiliter, cName, cPattern, lCaseSensitive, aAttr )
    METHOD setSyntaxFormat( qHiliter, cName, aAttr )
-   METHOD setSyntaxHilighting( qEdit, cTheme, lNew )
+   METHOD setSyntaxHilighting( qEdit, cTheme, lNew, lSetEditor )
    METHOD show()
    METHOD copy()
    METHOD setTheme()
@@ -445,7 +446,7 @@ METHOD IdeThemes:setSyntaxFormat( qHiliter, cName, aAttr )
 
 /*----------------------------------------------------------------------*/
 /*                         setSyntaxHilighting                          */
-METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
+METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew, lSetEditor )
    LOCAL a_, aAttr, qHiliter
 
    IF empty( cTheme )
@@ -454,7 +455,8 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    IF empty( cTheme )
       cTheme := "Bare Minimum"   /* "Pritpal's Favourite" */
    ENDIF
-   DEFAULT lNew TO .f.           /* Apply one which is already formed */
+   DEFAULT lNew       TO .f.           /* Apply one which is already formed */
+   DEFAULT lSetEditor TO .t.
 
    HB_SYMBOL_UNUSED( lNew )
 
@@ -488,7 +490,9 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    ENDIF
 
    qHiliter:setDocument( qEdit:document() )
-   qHiliter:hbSetEditor( qEdit )
+   IF lSetEditor
+      qHiliter:hbSetEditor( qEdit )
+   ENDIF
 
    RETURN qHiliter
 
@@ -558,10 +562,7 @@ METHOD IdeThemes:show()
 
       /* Fill Themes Dialog Values */
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
-      //
-      ::oUI:qObj[ "labelItems"     ]:setText( GetKeyValue( ::aControls, "labelItems"    , "Items"     ) )
-      ::oUI:qObj[ "labelTheme"     ]:setText( GetKeyValue( ::aControls, "labelTheme"    , "Theme"     ) )
-      //
+
       ::oUI:qObj[ "checkItalic"    ]:setText( GetKeyValue( ::aControls, "checkItalic"   , "Italic"    ) )
       ::oUI:qObj[ "checkBold"      ]:setText( GetKeyValue( ::aControls, "checkBold"     , "Bold"      ) )
       ::oUI:qObj[ "checkUnderline" ]:setText( GetKeyValue( ::aControls, "checkUnderline", "Underline" ) )
@@ -575,11 +576,16 @@ METHOD IdeThemes:show()
       aeval( ::aThemes, {|e_| ::oUI:q_listThemes:addItem( e_[ 1 ] ) } )
       aeval( ::aItems , {|e_| ::oUI:q_listItems:addItem( e_[ 2 ] )  } )
 
+      ::oEdit := IdeEdit():new( ::oIde )
       ::qEdit := ::oUI:q_plainThemeText
+      ::oEdit:qEdit := ::qEdit
+
       ::qEdit:setPlainText( GetSource() )
       ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
       ::qEdit:setFont( ::oIde:oFont:oWidget )
       ::qEdit:ensureCursorVisible()
+      ::qEdit:setFocusPolicy( Qt_NoFocus )
+      //::qEdit:setFocusPolicy( Qt_ClickFocus )
 
       ::lCreating := .f.
 
@@ -587,32 +593,8 @@ METHOD IdeThemes:show()
       ::oUI:q_listItems:setCurrentRow( 0 )
 
       ::setTheme()
-      ::setAttributes()
    ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeThemes:copy()
-   LOCAL aItems, qGo, cTheme
-
-   qGo := QInputDialog( ::oUI )
-   qGo:setTextValue( ::aThemes[ ::nCurTheme, 1 ] )
-   qGo:setLabelText( "Name of new Theme?" )
-   qGo:setWindowTitle( "Harbour-Qt [ Get a Value ]" )
-
-   qGo:exec()
-
-   cTheme := qGo:textValue()
-
-   IF !empty( cTheme ) .and. !( cTheme == ::aThemes[ ::nCurTheme, 1 ] )
-      aItems := aclone( ::aThemes[ ::nCurTheme ] )
-      aItems[ 1 ] := cTheme
-      aadd( ::aThemes, aItems )
-      ::oUI:qObj[ "listThemes" ]:addItem( cTheme )
-      ::oUI:qObj[ "listThemes" ]:setCurrentRow( len( ::aThemes ) - 1 )
-   ENDIF
+   ::qEdit:hbHighlightPage()
 
    RETURN Self
 
@@ -620,9 +602,12 @@ METHOD IdeThemes:copy()
 
 METHOD IdeThemes:setTheme()
 
-   IF !::lCreating
-      ::qHiliter := ::setSyntaxHilighting( ::qEdit, ::aThemes[ ::nCurTheme, 1 ], .t. )
+   IF ! ::lCreating
+      ::qHiliter := ::setSyntaxHilighting( ::qEdit, ::aThemes[ ::nCurTheme, 1 ], .t., .t. )
       ::setAttributes()
+      ::qHiliter:hbSetInitialized( .t. )
+      ::setAttributes()
+      ::qEdit:hbHighlightPage()
    ENDIF
 
    RETURN Self
@@ -632,7 +617,7 @@ METHOD IdeThemes:setTheme()
 METHOD IdeThemes:setAttributes()
    LOCAL aAttr
 
-   IF !::lCreating
+   IF ! ::lCreating
       aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2 ]
       //
       ::oUI:qObj[ "checkItalic"    ]:setChecked( aAttr[ THM_ATR_ITALIC ] )
@@ -647,28 +632,24 @@ METHOD IdeThemes:setAttributes()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:updateLineNumbersBkColor()
-   LOCAL oEdit, aAttr
+   LOCAL aAttr
 
-   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-      aAttr := ::getThemeAttribute( "LineNumbersBkColor", ::aThemes[ ::nCurTheme, 1 ] )
-      oEdit:setLineNumbersBkColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
-      oEdit:refresh()
-      ::setAttributes()
-   ENDIF
+   aAttr := ::getThemeAttribute( "LineNumbersBkColor", ::aThemes[ ::nCurTheme, 1 ] )
+   ::oEdit:setLineNumbersBkColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
+   ::setAttributes()
+   ::oEdit:refresh()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:updateCurrentLineColor()
-   LOCAL oEdit, aAttr
+   LOCAL aAttr
 
-   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-      aAttr := ::getThemeAttribute( "CurrentLineBackground", ::aThemes[ ::nCurTheme, 1 ] )
-      oEdit:setCurrentLineColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
-      oEdit:refresh()
-      ::setAttributes()
-   ENDIF
+   aAttr := ::getThemeAttribute( "CurrentLineBackground", ::aThemes[ ::nCurTheme, 1 ] )
+   ::oEdit:setCurrentLineColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] )
+   ::setAttributes()
+   ::oEdit:refresh()
 
    RETURN Self
 
@@ -787,6 +768,30 @@ METHOD IdeThemes:selectThemeProc( nMode, p )
    ENDCASE
 
    RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:copy()
+   LOCAL aItems, qGo, cTheme
+
+   qGo := QInputDialog( ::oUI )
+   qGo:setTextValue( ::aThemes[ ::nCurTheme, 1 ] )
+   qGo:setLabelText( "Name of new Theme?" )
+   qGo:setWindowTitle( "Harbour-Qt [ Get a Value ]" )
+
+   qGo:exec()
+
+   cTheme := qGo:textValue()
+
+   IF !empty( cTheme ) .and. !( cTheme == ::aThemes[ ::nCurTheme, 1 ] )
+      aItems := aclone( ::aThemes[ ::nCurTheme ] )
+      aItems[ 1 ] := cTheme
+      aadd( ::aThemes, aItems )
+      ::oUI:qObj[ "listThemes" ]:addItem( cTheme )
+      ::oUI:qObj[ "listThemes" ]:setCurrentRow( len( ::aThemes ) - 1 )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -964,18 +969,20 @@ STATIC FUNCTION GetSource()
    LOCAL s := ""
    LOCAL txt_:= {}
 
-   aadd( txt_, '/* Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>                 ' )
+   aadd( txt_, '/* Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>              ' )
    aadd( txt_, ' *                                                                         ' )
    aadd( txt_, ' * This program is free software; you can redistribute it and/or modify    ' )
    aadd( txt_, '*/                                                                         ' )
    aadd( txt_, '#include "hbide.ch"                                                        ' )
    aadd( txt_, '                                                                           ' )
-   aadd( txt_, 'CLASS IdeThemes                                                            ' )
+   aadd( txt_, 'CLASS IdeThemes   /* This Class Manages Syntax Higlighting */              ' )
    aadd( txt_, '   VAR    oIde                                                             ' )
    aadd( txt_, '   METHOD new()                                                            ' )
    aadd( txt_, '   ENDCLASS                                                                ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    aadd( txt_, 'METHOD IdeThemes:new( oIde, cThemesFile )                                  ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   * Legacy comment syntax, advised not be used                                                                        ' )
    aadd( txt_, '                                                                           ' )
    aadd( txt_, '   ::oIde  := oIde                                                         ' )
    aadd( txt_, '   ::cThemesFile := cThemesFile                                            ' )
