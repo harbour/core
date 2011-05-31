@@ -432,7 +432,7 @@
         <x>10</x>
         <y>6</y>
         <width>331</width>
-        <height>147</height>
+        <height>125</height>
        </rect>
       </property>
       <property name="title">
@@ -442,7 +442,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>28</y>
+         <y>22</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -455,7 +455,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>66</y>
+         <y>58</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -468,7 +468,7 @@
        <property name="geometry">
         <rect>
          <x>16</x>
-         <y>106</y>
+         <y>92</y>
          <width>89</width>
          <height>16</height>
         </rect>
@@ -481,9 +481,9 @@
        <property name="geometry">
         <rect>
          <x>132</x>
-         <y>20</y>
+         <y>16</y>
          <width>189</width>
-         <height>33</height>
+         <height>29</height>
         </rect>
        </property>
        <property name="title">
@@ -520,7 +520,7 @@
        <property name="geometry">
         <rect>
          <x>132</x>
-         <y>60</y>
+         <y>50</y>
          <width>189</width>
          <height>33</height>
         </rect>
@@ -553,9 +553,9 @@
        <property name="geometry">
         <rect>
          <x>132</x>
-         <y>100</y>
+         <y>88</y>
          <width>189</width>
-         <height>33</height>
+         <height>29</height>
         </rect>
        </property>
        <property name="title">
@@ -593,7 +593,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>158</y>
+        <y>130</y>
         <width>331</width>
         <height>71</height>
        </rect>
@@ -625,6 +625,134 @@
        </property>
        <property name="text">
         <string>Complete the code including arguments body ?</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_25">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>204</y>
+        <width>333</width>
+        <height>149</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Docking Widgets </string>
+      </property>
+      <widget class="QLabel" name="label_30">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>18</y>
+         <width>157</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Tabbed Widgets Tab Shape:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboTabsShape">
+       <property name="geometry">
+        <rect>
+         <x>231</x>
+         <y>14</y>
+         <width>93</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_31">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>44</y>
+         <width>177</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Left Docking Area's Tabs Position:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_32">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>68</y>
+         <width>177</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Top Docking Area's Tabs Position:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_33">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>94</y>
+         <width>177</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Right Docking Area's Tabs Position:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_34">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>120</y>
+         <width>177</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Bottom Docking Area's Tabs Position:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboLeftTabPos">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>40</y>
+         <width>93</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboTopTabPos">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>66</y>
+         <width>93</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboRightTabPos">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>92</y>
+         <width>93</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBottomTabPos">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>118</y>
+         <width>93</width>
+         <height>22</height>
+        </rect>
        </property>
       </widget>
      </widget>

@@ -340,7 +340,8 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ), ;
                                                                       PostAppEvent( xbeP_Close, , , ::oDlg ) }
-   ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   //::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   ::oDlg:setTabPosition( Qt_RightDockWidgetArea, QTabWidget_North )
    ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
