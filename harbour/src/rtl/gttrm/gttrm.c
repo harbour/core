@@ -2961,29 +2961,11 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    }
 
 
-   if( strncmp( szTerm, "linux", 5 ) == 0 ||
-       strcmp( szTerm, "tterm" ) == 0 ||
-       strcmp( szTerm, "teraterm" ) == 0 )
-   {
-      pTerm->Init           = hb_gt_trm_AnsiInit;
-      pTerm->Exit           = hb_gt_trm_AnsiExit;
-      pTerm->SetTermMode    = hb_gt_trm_LinuxSetTermMode;
-      pTerm->GetCursorPos   = hb_gt_trm_AnsiGetCursorPos;
-      pTerm->SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
-      pTerm->SetCursorStyle = hb_gt_trm_LinuxSetCursorStyle;
-      pTerm->SetAttributes  = hb_gt_trm_AnsiSetAttributes;
-      pTerm->SetMode        = hb_gt_trm_AnsiSetMode;
-      pTerm->GetAcsc        = hb_gt_trm_AnsiGetAcsc;
-      pTerm->Tone           = hb_gt_trm_LinuxTone;
-      pTerm->Bell           = hb_gt_trm_AnsiBell;
-      pTerm->szAcsc         = szExtAcsc;
-      pTerm->terminal_type  = TERM_LINUX;
-   }
-   else if( ( pTerm->terminal_ext & TERM_PUTTY ) ||
-            strstr( szTerm, "xterm" ) != NULL ||
-            strncmp( szTerm, "rxvt", 4 ) == 0 ||
-            strcmp( szTerm, "putty" ) == 0 ||
-            strncmp( szTerm, "screen", 6 ) == 0 )
+   if( ( pTerm->terminal_ext & TERM_PUTTY ) ||
+       strstr( szTerm, "xterm" ) != NULL ||
+       strncmp( szTerm, "rxvt", 4 ) == 0 ||
+       strcmp( szTerm, "putty" ) == 0 ||
+       strncmp( szTerm, "screen", 6 ) == 0 )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -2998,6 +2980,24 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->Bell           = hb_gt_trm_AnsiBell;
       pTerm->szAcsc         = szAcsc;
       pTerm->terminal_type  = TERM_XTERM;
+   }
+   else if( strncmp( szTerm, "linux", 5 ) == 0 ||
+            strcmp( szTerm, "tterm" ) == 0 ||
+            strcmp( szTerm, "teraterm" ) == 0 )
+   {
+      pTerm->Init           = hb_gt_trm_AnsiInit;
+      pTerm->Exit           = hb_gt_trm_AnsiExit;
+      pTerm->SetTermMode    = hb_gt_trm_LinuxSetTermMode;
+      pTerm->GetCursorPos   = hb_gt_trm_AnsiGetCursorPos;
+      pTerm->SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
+      pTerm->SetCursorStyle = hb_gt_trm_LinuxSetCursorStyle;
+      pTerm->SetAttributes  = hb_gt_trm_AnsiSetAttributes;
+      pTerm->SetMode        = hb_gt_trm_AnsiSetMode;
+      pTerm->GetAcsc        = hb_gt_trm_AnsiGetAcsc;
+      pTerm->Tone           = hb_gt_trm_LinuxTone;
+      pTerm->Bell           = hb_gt_trm_AnsiBell;
+      pTerm->szAcsc         = szExtAcsc;
+      pTerm->terminal_type  = TERM_LINUX;
    }
    else if( strncmp( szTerm, "cons", 4 ) == 0 )
    {
