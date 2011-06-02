@@ -53,6 +53,10 @@
 
 #include "hbapi.h" /* for HB_OS_* detection */
 
+#if defined( UNICODE )
+#  define HB_UNICODE_ORI
+#endif
+
 #if ! defined( HB_OS_WIN_CE )
 #  if defined( UNICODE )
 #     undef UNICODE
@@ -85,7 +89,13 @@ HB_FUNC( WIN_MAPISENDMAIL )
    /* Set default return value */
    hb_retnl( -1 );
 
-   if( ( hMapiDll = hbwapi_LoadLibrarySystem( TEXT( "mapi32.dll" ) ) ) >= ( HINSTANCE ) 32 )
+   if( ( hMapiDll = hbwapi_LoadLibrarySystem(
+#if defined( HB_UNICODE_ORI ) || defined( UNICODE )
+                                              ( LPCTSTR ) L"mapi32.dll"
+#else
+                                              ( LPCTSTR ) "mapi32.dll"
+#endif
+                                            ) ) >= ( HINSTANCE ) 32 )
    {
       LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiDll, "MAPISendMail" );
 

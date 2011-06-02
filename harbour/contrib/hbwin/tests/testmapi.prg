@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "simpleio.ch"
+
 #include "hbwin.ch"
 
 PROCEDURE Main()
