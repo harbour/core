@@ -2594,6 +2594,8 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
                     'catch' => NIL,;
                     'always' => NIL,;
                     'recover' => NIL,;
+                    'with' => NIL,;
+                    'replace' => NIL,;
                     'hb_symbol_unused' => NIL,;
                     'error' => NIL,;
                     'handler' => NIL,;

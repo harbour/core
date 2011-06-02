@@ -80,6 +80,7 @@ CLASS IdeChangeLog INHERIT IdeObject
    METHOD destroy()
    METHOD show()
    METHOD execEvent( cEvent, p )
+   METHOD updateLog( cLogFile )
    METHOD refresh()
 
    ENDCLASS
@@ -118,7 +119,7 @@ METHOD IdeChangeLog:destroy()
 METHOD IdeChangeLog:show()
 
    IF empty( ::oUI )
-      ::oUI := hbide_getUI( "changelog" )
+      ::oUI := hbide_getUI( "changelog", ::oDlg:oWidget )
       ::oUI:setWindowFlags( Qt_Sheet )
       ::oUI:setWindowIcon( hbide_image( "hbide" ) )
 
@@ -131,6 +132,9 @@ METHOD IdeChangeLog:show()
       ::oUI:q_buttonRefresh   :connect( "clicked()", {|| ::execEvent( "buttonRefresh_clicked"           ) } )
       ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"              ) } )
 
+      ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p   ) } )
+
+      ::updateLog( ::oINI:cChangeLog )
    ENDIF
 
    ::oUI:show()
@@ -165,18 +169,33 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       EXIT
    CASE "buttonChangelog_clicked"
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
-      IF !empty( cTmp )
-         ::oUI:q_editChangelog:setText( cTmp )
-
-         ::oUI:q_plainChangelog:clear()
-         ::oUI:q_plainChangelog:setPlainText( memoread( cTmp ) )
-         ::refresh()
-      ENDIF
+      ::updateLog( cTmp )
+      EXIT
+   CASE "editChangelog_textChanged"
+      ::updateLog( p )
       EXIT
 
    ENDSWITCH
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeChangeLog:updateLog( cLogFile )
+
+   IF !empty( cLogFile ) .AND. hb_fileExists( cLogFile )
+      ::oUI:q_editChangelog:setStyleSheet( "" )
+      ::oINI:cChangeLog := cLogFile
+      ::oUI:q_editChangelog:setText( cLogFile )
+
+      ::oUI:q_plainChangelog:clear()
+      ::oUI:q_plainChangelog:setPlainText( memoread( cLogFile ) )
+      ::refresh()
+   ELSE
+      ::oUI:q_editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -197,6 +216,7 @@ METHOD IdeChangeLog:refresh()
       ENDIF
    NEXT
 
+   ::oUI:q_plainLogEntry:clear()
    ::oUI:q_plainLogEntry:setPlainText( s )
 
    RETURN Self

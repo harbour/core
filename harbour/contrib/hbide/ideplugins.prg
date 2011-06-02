@@ -313,7 +313,7 @@ FUNCTION hbide_execScriptFunction( cFunc, ... )
       RETURN eval( &( "{|...| " + "script_" + cFunc + "( ... )" + "}" ), ... )
    ENDIF
 
-   RETURN NIL
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 

@@ -107,10 +107,8 @@ PROCEDURE Main( ... )
    LOCAL oIde, oTmp
 
 #ifdef __HBDYNLOAD__RDDADS__
-   LOCAL hRDDADS
-   LOCAL tmp
+   LOCAL hRDDADS, tmp
 #endif
-
    #ifdef HB_IDE_DISTRO
       LOCAL cBse := hb_dirBase() + ".."
 
@@ -704,6 +702,10 @@ METHOD HbIde:create( aParams )
 
    /* Restore Settings - just before making application visible */
    hbide_restSettings( Self )
+   IF ! ::oINI:lShowHideDocks
+      ::oINI:lShowHideDocks := .t.
+      ::oINI:showHideDocks()
+   ENDIF
 
    ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
 

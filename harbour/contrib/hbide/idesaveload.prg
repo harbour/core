@@ -161,7 +161,14 @@ CLASS IdeINI INHERIT IdeObject
 
    DATA   lShowEditsLeftToolbar                   INIT  .t.
    DATA   lShowEditsTopToolbar                    INIT  .t.
-   DATA   lDocksTabShape                          INIT  QTabWidget_Triangular
+
+   DATA   nDocksTabShape                          INIT  QTabWidget_Triangular
+   DATA   nDocksLeftTabPos                        INIT  QTabWidget_South
+   DATA   nDocksTopTabPos                         INIT  QTabWidget_South
+   DATA   nDocksBottomTabPos                      INIT  QTabWidget_South
+   DATA   nDocksRightTabPos                       INIT  QTabWidget_South
+
+   DATA   cChangeLog                              INIT  ""
 
    DATA   lShowHideDocks                          INIT  .t.
 
@@ -316,6 +323,7 @@ METHOD IdeINI:save( cHbideIni )
 
    IF ! ::lShowHideDocks
       ::showHideDocks()
+      ::lShowHideDocks := .f.
    ENDIF
 
    txt_:= {}
@@ -382,7 +390,18 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "CodeListWithArgs"          + "=" +   iif( ::lCompletionWithArgs     , "YES", "NO" )     )
    aadd( txt_, "CompletionWithArgs"        + "=" +   iif( ::lCompleteArgumented     , "YES", "NO" )     )
    aadd( txt_, "EditsMdi"                  + "=" +   iif( ::lEditsMdi               , "YES", "NO" )     )
+   //
+   aadd( txt_, "ShowEditsLeftToolbar"      + "=" +   iif( ::lShowEditsLeftToolbar   , "YES", "NO" )     )
+   aadd( txt_, "ShowEditsTopToolbar"       + "=" +   iif( ::lShowEditsTopToolbar    , "YES", "NO" )     )
+   aadd( txt_, "DocksTabShape"             + "=" +   hb_ntos( ::nDocksTabShape )                        )
+   aadd( txt_, "DocksLeftTabPos"           + "=" +   hb_ntos( ::nDocksLeftTabPos )                      )
+   aadd( txt_, "DocksTopTabPos"            + "=" +   hb_ntos( ::nDocksTopTabPos )                       )
+   aadd( txt_, "DocksBottomTabPos"         + "=" +   hb_ntos( ::nDocksRightTabPos )                     )
+   aadd( txt_, "DocksRightTabPos"          + "=" +   hb_ntos( ::nDocksBottomTabPos )                    )
+   aadd( txt_, "ShowHideDocks"             + "=" +   iif( ::lShowHideDocks          , "YES", "NO" )     )
+   aadd( txt_, "ChangeLog"                 + "=" +   ::cChangeLog                                       )
 
+   aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( ::oIde:aProjects )
@@ -651,22 +670,32 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "PointSize"                   ; ::nPointSize                        := val( cVal ); EXIT
                      CASE "LineEndingMode"              ; ::cLineEndingMode                   := cVal ; EXIT
                      //
-                     CASE "TrimTrailingBlanks"          ; ::oINI:lTrimTrailingBlanks          := !( cVal == "NO" ) ; EXIT
-                     CASE "SaveSourceWhenComp"          ; ::oINI:lSaveSourceWhenComp          := !( cVal == "NO" ) ; EXIT
-                     CASE "SupressHbKWordsToUpper"      ; ::oINI:lSupressHbKWordsToUpper      := !( cVal == "NO" ) ; EXIT
-                     CASE "ReturnAsBeginKeyword"        ; ::oINI:lReturnAsBeginKeyword        := !( cVal == "NO" ) ; EXIT
-                     CASE "ConvTabToSpcWhenLoading"     ; ::oINI:lConvTabToSpcWhenLoading     := !( cVal == "NO" ) ; EXIT
-                     CASE "AutoIndent"                  ; ::oINI:lAutoIndent                  := !( cVal == "NO" ) ; EXIT
-                     CASE "SmartIndent"                 ; ::oINI:lSmartIndent                 := !( cVal == "NO" ) ; EXIT
-                     CASE "TabToSpcInEdits"             ; ::oINI:lTabToSpcInEdits             := !( cVal == "NO" ) ; EXIT
+                     CASE "TrimTrailingBlanks"          ; ::lTrimTrailingBlanks               := !( cVal == "NO" ) ; EXIT
+                     CASE "SaveSourceWhenComp"          ; ::lSaveSourceWhenComp               := !( cVal == "NO" ) ; EXIT
+                     CASE "SupressHbKWordsToUpper"      ; ::lSupressHbKWordsToUpper           := !( cVal == "NO" ) ; EXIT
+                     CASE "ReturnAsBeginKeyword"        ; ::lReturnAsBeginKeyword             := !( cVal == "NO" ) ; EXIT
+                     CASE "ConvTabToSpcWhenLoading"     ; ::lConvTabToSpcWhenLoading          := !( cVal == "NO" ) ; EXIT
+                     CASE "AutoIndent"                  ; ::lAutoIndent                       := !( cVal == "NO" ) ; EXIT
+                     CASE "SmartIndent"                 ; ::lSmartIndent                      := !( cVal == "NO" ) ; EXIT
+                     CASE "TabToSpcInEdits"             ; ::lTabToSpcInEdits                  := !( cVal == "NO" ) ; EXIT
                      CASE "TabSpaces"                   ; ::oIde:nTabSpaces                   := val( cVal )  ; EXIT
-                     CASE "IndentSpaces"                ; ::oINI:nIndentSpaces                := val( cVal )  ; EXIT
-                     CASE "TmpBkpPrd"                   ; ::oINI:nTmpBkpPrd                   := val( cVal )  ; EXIT
-                     CASE "BkpPath"                     ; ::oINI:cBkpPath                     := cVal ; EXIT
-                     CASE "BkpSuffix"                   ; ::oINI:cBkpSuffix                   := cVal ; EXIT
-                     CASE "CodeListWithArgs"            ; ::oINI:lCompletionWithArgs          := !( cVal == "NO" ) ; EXIT
-                     CASE "CompletionWithArgs"          ; ::oINI:lCompleteArgumented          := !( cVal == "NO" ) ; EXIT
+                     CASE "IndentSpaces"                ; ::nIndentSpaces                     := val( cVal )  ; EXIT
+                     CASE "TmpBkpPrd"                   ; ::nTmpBkpPrd                        := val( cVal )  ; EXIT
+                     CASE "BkpPath"                     ; ::cBkpPath                          := cVal ; EXIT
+                     CASE "BkpSuffix"                   ; ::cBkpSuffix                        := cVal ; EXIT
+                     CASE "CodeListWithArgs"            ; ::lCompletionWithArgs               := !( cVal == "NO" ) ; EXIT
+                     CASE "CompletionWithArgs"          ; ::lCompleteArgumented               := !( cVal == "NO" ) ; EXIT
                      CASE "EditsMdi"                    ; ::lEditsMdi                         := !( cVal == "NO" ) ; EXIT
+
+                     CASE "ShowEditsLeftToolbar"        ; ::lShowEditsLeftToolbar             := !( cVal == "NO" ) ; EXIT
+                     CASE "ShowEditsTopToolbar"         ; ::lShowEditsTopToolbar              := !( cVal == "NO" ) ; EXIT
+                     CASE "DocksTabShape"               ; ::nDocksTabShape                    := val( cVal )  ; EXIT
+                     CASE "DocksLeftTabPos"             ; ::nDocksLeftTabPos                  := val( cVal )  ; EXIT
+                     CASE "DocksTopTabPos"              ; ::nDocksTopTabPos                   := val( cVal )  ; EXIT
+                     CASE "DocksBottomTabPos"           ; ::nDocksRightTabPos                 := val( cVal )  ; EXIT
+                     CASE "DocksRightTabPos"            ; ::nDocksBottomTabPos                := val( cVal )  ; EXIT
+                     CASE "ShowHideDocks"               ; ::lShowHideDocks                    := !( cVal == "NO" ) ; EXIT
+                     CASE "ChangeLog"                   ; ::cChangeLog                        := cVal ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1122,6 +1151,8 @@ METHOD IdeSetup:disConnectSlots()
    ::oUI:q_checkHilightLine    :disconnect( "stateChanged(int)"        )
    ::oUI:q_checkHorzRuler      :disconnect( "stateChanged(int)"        )
    ::oUI:q_checkLineNumbers    :disconnect( "stateChanged(int)"        )
+   ::oUI:q_checkShowLeftToolbar:disconnect( "stateChanged(int)"        )
+   ::oUI:q_checkShowTopToolbar :disconnect( "stateChanged(int)"        )
 
    ::oUI:q_sliderRed           :disconnect( "valueChanged(int)"        )
    ::oUI:q_sliderGreen         :disconnect( "valueChanged(int)"        )
@@ -1157,6 +1188,12 @@ METHOD IdeSetup:disConnectSlots()
    /* Dictionaries */
    ::oUI:q_buttonDictPath      :disconnect( "clicked()"                )
 
+   ::oUI:q_comboTabsShape      :disconnect( "currentIndexChanged(int)" )
+   ::oUI:q_comboLeftTabPos     :disconnect( "currentIndexChanged(int)" )
+   ::oUI:q_comboTopTabPos      :disconnect( "currentIndexChanged(int)" )
+   ::oUI:q_comboRightTabPos    :disconnect( "currentIndexChanged(int)" )
+   ::oUI:q_comboBottomTabPos   :disconnect( "currentIndexChanged(int)" )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1185,6 +1222,8 @@ METHOD IdeSetup:connectSlots()
    ::oUI:q_checkHilightLine    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
    ::oUI:q_checkHorzRuler      :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
    ::oUI:q_checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
+   ::oUI:q_checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowLeftToolbar_stateChanged", i  ) } )
+   ::oUI:q_checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowTopToolbar_stateChanged", i  ) } )
 
    ::oUI:q_sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
    ::oUI:q_sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
@@ -1218,6 +1257,12 @@ METHOD IdeSetup:connectSlots()
    ::oUI:q_buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
 
    ::oUI:q_buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( "buttonDictPath_clicked"            ) } )
+
+   ::oUI:q_comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTabsShape_currentIndexChanged"   , i ) } )
+   ::oUI:q_comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboLeftTabPos_currentIndexChanged"  , i ) } )
+   ::oUI:q_comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
+   ::oUI:q_comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
+   ::oUI:q_comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
 
    RETURN Self
 
@@ -1287,6 +1332,8 @@ METHOD IdeSetup:populate()
    ::oUI:q_checkHilightLine             : setChecked( ::oIde:lCurrentLineHighlightEnabled )
    ::oUI:q_checkHorzRuler               : setChecked( ::oIde:lHorzRulerVisible            )
    ::oUI:q_checkLineNumbers             : setChecked( ::oIde:lLineNumbersVisible          )
+   ::oUI:q_checkShowLeftToolbar         : setChecked( ::oINI:lShowEditsLeftToolbar        )
+   ::oUI:q_checkShowTopToolbar          : setChecked( ::oINI:lShowEditsTopToolbar         )
 
    /* Line Ending Mode */
    s := ::oINI:cLineEndingMode
@@ -1310,16 +1357,16 @@ METHOD IdeSetup:populate()
    ::oUI:q_checkEditsMdi                : setChecked( ::oINI:lEditsMdi                    )
 
    /* Paths */
-   ::oUI:q_editPathIni                  : setText( ::oIde:cProjIni       )
+   ::oUI:q_editPathIni                  : setText( ::oIde:cProjIni                        )
    //
-   ::oUI:q_editPathHrbRoot              : setText( ::oINI:cPathHrbRoot   )
-   ::oUI:q_editPathHbMk2                : setText( ::oINI:cPathHbMk2     )
-   ::oUI:q_editPathResources            : setText( ::oINI:cPathResources )
-   ::oUI:q_editPathTemp                 : setText( ::oINI:cPathTemp      )
-   ::oUI:q_editPathEnv                  : setText( ::oINI:cPathEnv       )
-   ::oUI:q_editPathShortcuts            : setText( ::oINI:cPathShortcuts )
-   ::oUI:q_editPathSnippets             : setText( ::oINI:cPathSnippets  )
-   ::oUI:q_editPathThemes               : setText( ::oINI:cPathThemes    )
+   ::oUI:q_editPathHrbRoot              : setText( ::oINI:cPathHrbRoot                    )
+   ::oUI:q_editPathHbMk2                : setText( ::oINI:cPathHbMk2                      )
+   ::oUI:q_editPathResources            : setText( ::oINI:cPathResources                  )
+   ::oUI:q_editPathTemp                 : setText( ::oINI:cPathTemp                       )
+   ::oUI:q_editPathEnv                  : setText( ::oINI:cPathEnv                        )
+   ::oUI:q_editPathShortcuts            : setText( ::oINI:cPathShortcuts                  )
+   ::oUI:q_editPathSnippets             : setText( ::oINI:cPathSnippets                   )
+   ::oUI:q_editPathThemes               : setText( ::oINI:cPathThemes                     )
 
    /* Variables */
    ::oUI:q_tableVar:clearContents()
@@ -1360,6 +1407,13 @@ METHOD IdeSetup:populate()
    ::oUI:q_editSec1:setReadOnly( .t. )
    ::oUI:q_editSec5:setReadOnly( .t. )
 
+   /* Dock Widgets */
+   ::oUI:q_comboTabsShape:setCurrentIndex( ::oINI:nDocksTabShape )
+   ::oUI:q_comboLeftTabPos:setCurrentIndex( ::oINI:nDocksLeftTabPos )
+   ::oUI:q_comboTopTabPos:setCurrentIndex( ::oINI:nDocksTopTabPos )
+   ::oUI:q_comboRightTabPos:setCurrentIndex( ::oINI:nDocksRightTabPos )
+   ::oUI:q_comboBottomTabPos:setCurrentIndex( ::oINI:nDocksBottomTabPos )
+
    ::connectSlots()
 
    ::pushThemesData()
@@ -1384,6 +1438,30 @@ METHOD IdeSetup:show()
 
       ::buildTree()
       ::buildKeywords()
+
+      /* Dock Widgets */
+      ::oUI:q_comboTabsShape:addItem( "Rounded" )
+      ::oUI:q_comboTabsShape:addItem( "Triangular" )
+
+      ::oUI:q_comboLeftTabPos:addItem( "Top"    )
+      ::oUI:q_comboLeftTabPos:addItem( "Bottom" )
+      ::oUI:q_comboLeftTabPos:addItem( "Left"   )
+      ::oUI:q_comboLeftTabPos:addItem( "Right"  )
+
+      ::oUI:q_comboTopTabPos:addItem( "Top"    )
+      ::oUI:q_comboTopTabPos:addItem( "Bottom" )
+      ::oUI:q_comboTopTabPos:addItem( "Left"   )
+      ::oUI:q_comboTopTabPos:addItem( "Right"  )
+
+      ::oUI:q_comboBottomTabPos:addItem( "Top"    )
+      ::oUI:q_comboBottomTabPos:addItem( "Bottom" )
+      ::oUI:q_comboBottomTabPos:addItem( "Left"   )
+      ::oUI:q_comboBottomTabPos:addItem( "Right"  )
+
+      ::oUI:q_comboRightTabPos:addItem( "Top"    )
+      ::oUI:q_comboRightTabPos:addItem( "Bottom" )
+      ::oUI:q_comboRightTabPos:addItem( "Left"   )
+      ::oUI:q_comboRightTabPos:addItem( "Right"  )
 
       ::oUI:q_editFontName:setText( ::oINI:cFontName )
       ::oUI:q_editPointSize:setText( hb_ntos( ::oINI:nPointSize ) )
@@ -1447,6 +1525,23 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
    CASE "checkLineNumbers_stateChanged"
       ::oEM:toggleLineNumbers()
+      EXIT
+
+   CASE "checkShowTopToolbar_stateChanged"
+      IF ::oDK:qMdiToolbar:oWidget:isVisible()
+         ::oDK:qMdiToolbar:hide()
+      ELSE
+         ::oDK:qMdiToolbar:show()
+      ENDIF
+      ::oINI:lShowEditsTopToolbar := ::oDK:qMdiToolbar:oWidget:isVisible()
+      EXIT
+   CASE "checkShowLeftToolbar_stateChanged"
+      IF ::oDK:qMdiToolbarL:oWidget:isVisible()
+         ::oDK:qMdiToolbarL:hide()
+      ELSE
+         ::oDK:qMdiToolbarL:show()
+      ENDIF
+      ::oINI:lShowEditsLeftToolbar := ::oDK:qMdiToolbarL:oWidget:isVisible()
       EXIT
 
    CASE "treeWidget_itemSelectionChanged"
@@ -1718,6 +1813,28 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
       p:close()
       p := NIL   /* Must Destroy It */
+      EXIT
+
+   /* Docking Widgets */
+   CASE "comboTabsShape_currentIndexChanged"
+      ::oINI:nDocksTabShape := p
+      ::oDlg:setTabShape( ::oINI:nDocksTabShape )
+      EXIT
+   CASE "comboLeftTabPos_currentIndexChanged"
+      ::oINI:nDocksLeftTabPos := p
+      ::oDlg:setTabPosition( Qt_LeftDockWidgetArea  , ::oINI:nDocksLeftTabPos   )
+      EXIT
+   CASE "comboTopTabPos_currentIndexChanged"
+      ::oINI:nDocksTopTabPos := p
+      ::oDlg:setTabPosition( Qt_TopDockWidgetArea   , ::oINI:nDocksTopTabPos    )
+      EXIT
+   CASE "comboRightTabPos_currentIndexChanged"
+      ::oINI:nDocksRightTabPos := p
+      ::oDlg:setTabPosition( Qt_RightDockWidgetArea , ::oINI:nDocksRightTabPos  )
+      EXIT
+   CASE "comboBottomTabPos_currentIndexChanged"
+      ::oINI:nDocksBottomTabPos := p
+      ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
       EXIT
    ENDSWITCH
 

@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -314,19 +314,19 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>272</y>
+        <y>258</y>
         <width>331</width>
-        <height>83</height>
+        <height>97</height>
        </rect>
       </property>
       <property name="title">
-       <string> Display </string>
+       <string>Editing Area</string>
       </property>
       <widget class="QCheckBox" name="checkHorzRuler">
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>16</y>
+         <y>12</y>
          <width>143</width>
          <height>19</height>
         </rect>
@@ -339,7 +339,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>36</y>
+         <y>28</y>
          <width>151</width>
          <height>19</height>
         </rect>
@@ -352,7 +352,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>58</y>
+         <y>44</y>
          <width>149</width>
          <height>19</height>
         </rect>
@@ -365,7 +365,7 @@
        <property name="geometry">
         <rect>
          <x>182</x>
-         <y>58</y>
+         <y>72</y>
          <width>133</width>
          <height>19</height>
         </rect>
@@ -401,13 +401,39 @@
        <property name="geometry">
         <rect>
          <x>258</x>
-         <y>58</y>
+         <y>72</y>
          <width>59</width>
          <height>19</height>
         </rect>
        </property>
        <property name="text">
         <string>Edit MDI</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkShowLeftToolbar">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>60</y>
+         <width>121</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show left-toolbar</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkShowTopToolbar">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>76</y>
+         <width>121</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show top-toolbar</string>
        </property>
       </widget>
      </widget>
@@ -643,7 +669,7 @@
       <widget class="QLabel" name="label_30">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>12</x>
          <y>18</y>
          <width>157</width>
          <height>16</height>
@@ -656,7 +682,7 @@
       <widget class="QComboBox" name="comboTabsShape">
        <property name="geometry">
         <rect>
-         <x>231</x>
+         <x>225</x>
          <y>14</y>
          <width>93</width>
          <height>22</height>
@@ -666,7 +692,7 @@
       <widget class="QLabel" name="label_31">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>12</x>
          <y>44</y>
          <width>177</width>
          <height>16</height>
@@ -679,7 +705,7 @@
       <widget class="QLabel" name="label_32">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>12</x>
          <y>68</y>
          <width>177</width>
          <height>16</height>
@@ -718,7 +744,7 @@
       <widget class="QComboBox" name="comboLeftTabPos">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>224</x>
          <y>40</y>
          <width>93</width>
          <height>22</height>
@@ -728,7 +754,7 @@
       <widget class="QComboBox" name="comboTopTabPos">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>224</x>
          <y>66</y>
          <width>93</width>
          <height>22</height>
@@ -738,7 +764,7 @@
       <widget class="QComboBox" name="comboRightTabPos">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>224</x>
          <y>92</y>
          <width>93</width>
          <height>22</height>
@@ -748,7 +774,7 @@
       <widget class="QComboBox" name="comboBottomTabPos">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>224</x>
          <y>118</y>
          <width>93</width>
          <height>22</height>

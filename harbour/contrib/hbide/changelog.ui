@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>FormChangelog</class>
+ <widget class="QWidget" name="FormChangelog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>711</height>
+    <width>454</width>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Manage ChangeLog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
-   <property name="spacing">
-    <number>5</number>
-   </property>
    <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">

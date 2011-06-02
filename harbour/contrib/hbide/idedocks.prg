@@ -186,7 +186,6 @@ METHOD IdeDocks:hideAllDocks()
    ::oSkltnsTreeDock          : hide()
 
    // Right
-   ::oOutputResult            : hide()
    ::oEnvironDock             : hide()
    ::oPropertiesDock          : hide()
    ::oThemesDock              : hide()
@@ -375,8 +374,12 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ), ;
                                                                       PostAppEvent( xbeP_Close, , , ::oDlg ) }
    //::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
-   ::oDlg:setTabPosition( Qt_RightDockWidgetArea, QTabWidget_North )
-   ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
+   ::oDlg:setTabShape( ::oINI:nDocksTabShape )
+   ::oDlg:setTabPosition( Qt_RightDockWidgetArea , ::oINI:nDocksRightTabPos  )
+   ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
+   ::oDlg:setTabPosition( Qt_LeftDockWidgetArea  , ::oINI:nDocksLeftTabPos   )
+   ::oDlg:setTabPosition( Qt_TopDockWidgetArea   , ::oINI:nDocksTopTabPos    )
+
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
    ::oDlg:oWidget:resize( 950,520 )
@@ -1180,6 +1183,10 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    ::qMdiToolbarL:addToolButton( "ZoomOut"        , "Zoom Out"                   , hbide_image( "zoomout3"         ), {|| ::oEM:zoom( -1 )                               }, .f. )
    ::qMdiToolbarL:addSeparator()
 
+   IF ! ::oINI:lShowEditsLeftToolbar
+      ::qMdiToolbarL:hide()
+   ENDIF
+
    RETURN Self
 
 /*------------------------------------------------------------------------*/
@@ -1237,6 +1244,10 @@ METHOD IdeDocks:buildMdiToolbar()
    qTBar:addSeparator()
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
+
+   IF ! ::oINI:lShowEditsTopToolbar
+      ::qMdiToolbar:hide()
+   ENDIF
 
    RETURN Self
 
@@ -1791,7 +1802,7 @@ METHOD IdeDocks:buildLinkResults()
 METHOD IdeDocks:buildOutputResults()
    LOCAL nAreas := Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDockB2 := ::getADockWidget( nAreas, "dockOutputResults", "Output Console", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDockB2 := ::getADockWidget( nAreas, "dockOutputResults", "Output Console" )//, QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
 
    ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )
