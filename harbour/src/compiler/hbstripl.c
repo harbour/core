@@ -67,9 +67,11 @@ HB_EXTERN_END
 static HB_STRIP_FUNC( hb_p_line )
 {
    HB_SYMBOL_UNUSED( cargo );
-   if( pFunc->pCode[ nPCodePos + 3 ] == HB_P_LINE )
+   switch( pFunc->pCode[ nPCodePos + 3 ] )
    {
-      hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
+      case HB_P_LINE:
+      case HB_P_MODULENAME:
+         hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
    }
 
    return 3;

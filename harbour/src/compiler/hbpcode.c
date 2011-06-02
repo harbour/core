@@ -93,7 +93,7 @@ static HB_PSIZE_FUNC( hb_p_modulename )
    HB_SIZE nStart = nPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
-   nPCodePos += 3;
+   nPCodePos++;
    while( pFunc->pCode[ nPCodePos++ ]) {};
 
    return ( nPCodePos - nStart );

@@ -1065,7 +1065,6 @@ CodeBlock   : BlockHead
                      HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
                      HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
                HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
-               HB_COMP_PARAM->lastLinePos = 0;
             }
             ;
 

@@ -780,7 +780,6 @@ typedef struct _HB_COMP
    HB_SIZE           nOutBufSize;         /* memory output buffer size */
    HB_BYTE *         pOutBuf;             /* memory output buffer address */
 
-   HB_SIZE           lastLinePos;         /* position of last opcode with line number */
    int               lastLine;            /* last generated in PCODE line number */
    int               currLine;            /* currently compiled line number */
    const char *      lastModule;          /* last generated in PCODE module name */

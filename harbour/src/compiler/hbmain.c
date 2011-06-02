@@ -1284,7 +1284,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
    HB_BYTE * pCode = HB_COMP_PARAM->functions.pLast->pCode;
    HB_SIZE * pNOOPs, * pJumps;
    HB_SIZE nOptimized, nNextByte, nBytes2Copy, nJumpAddr, nNOOP, nJump;
-   HB_BOOL fLineStrip = !HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->fLineNumbers;
+   HB_BOOL fLineStrip = HB_COMP_PARAM->fLineNumbers;
    int iPass;
 
    if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
@@ -2141,7 +2141,6 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
 
    hb_compAddFunc( HB_COMP_PARAM, pFunc );
 
-   HB_COMP_PARAM->lastLinePos = 0;  /* optimization of line numbers opcode generation */
    HB_COMP_PARAM->ilastLineErr = 0; /* position of last syntax error (line number) */
 
    hb_compGenPCode3( HB_P_FRAME, 0, 0, HB_COMP_PARAM );     /* frame for locals and parameters */
@@ -2351,27 +2350,12 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
    if( HB_COMP_PARAM->fLineNumbers )
    {
       if( HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->lastModule != HB_COMP_PARAM->currModule )
-      {
-         if( HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos ] == HB_P_LINE &&
-             HB_COMP_PARAM->functions.pLast->nPCodePos - HB_COMP_PARAM->lastLinePos == 3 )
-            HB_COMP_PARAM->functions.pLast->nPCodePos -= 3;
          hb_compGenModuleName( HB_COMP_PARAM, NULL );
-      }
 
       if( HB_COMP_PARAM->currLine != HB_COMP_PARAM->lastLine )
       {
-         if( HB_COMP_PARAM->functions.pLast->nPCodePos - HB_COMP_PARAM->lastLinePos == 3 &&
-             HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos ] == HB_P_LINE )
-         {
-            HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos + 1 ] = HB_LOBYTE( HB_COMP_PARAM->currLine );
-            HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos + 2 ] = HB_HIBYTE( HB_COMP_PARAM->currLine );
-         }
-         else
-         {
-            HB_COMP_PARAM->lastLinePos = HB_COMP_PARAM->functions.pLast->nPCodePos;
-            hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( HB_COMP_PARAM->currLine ),
-                                         HB_HIBYTE( HB_COMP_PARAM->currLine ), HB_COMP_PARAM );
-         }
+         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( HB_COMP_PARAM->currLine ),
+                                      HB_HIBYTE( HB_COMP_PARAM->currLine ), HB_COMP_PARAM );
          HB_COMP_PARAM->lastLine = HB_COMP_PARAM->currLine;
       }
    }
@@ -3263,7 +3247,6 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
                              HB_COMP_PARAM->functions.pLast->nPCodePos -
                              nStartPos, fCanMove );
       }
-      HB_COMP_PARAM->lastLinePos = nStartPos - 3;
    }
    else if( !nAlways )
    {
@@ -3484,7 +3467,6 @@ void hb_compCodeBlockStart( HB_COMP_DECL, HB_BOOL bLateEval )
    pBlock->bLateEval    = bLateEval;
 
    HB_COMP_PARAM->functions.pLast = pBlock;
-   HB_COMP_PARAM->lastLinePos = 0;
 }
 
 void hb_compCodeBlockEnd( HB_COMP_DECL )
@@ -3736,7 +3718,6 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->pLineFunc        = NULL;
    HB_COMP_PARAM->pDeclFunc        = NULL;
 
-   HB_COMP_PARAM->lastLinePos      = 0;
    HB_COMP_PARAM->iStaticCnt       = 0;
    HB_COMP_PARAM->iVarScope        = VS_LOCAL;
 

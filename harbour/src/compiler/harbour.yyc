@@ -5719,7 +5719,6 @@ yyreduce:
                      HB_COMP_PARAM->functions.pLast->pCode + (yyvsp[(3) - (5)].sNumber),
                      HB_COMP_PARAM->functions.pLast->nPCodePos - (yyvsp[(3) - (5)].sNumber) );
                HB_COMP_PARAM->functions.pLast->nPCodePos = (yyvsp[(3) - (5)].sNumber);
-               HB_COMP_PARAM->lastLinePos = 0;
             ;}
     break;
 

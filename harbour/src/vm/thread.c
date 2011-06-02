@@ -299,7 +299,7 @@ void hb_threadReleaseCPU( void )
    {
       struct timeval tv;
       tv.tv_sec = 0;
-      tv.tv_usec = 1000;
+      tv.tv_usec = 10000;
       select( 0, NULL, NULL, NULL, &tv );
    }
 
