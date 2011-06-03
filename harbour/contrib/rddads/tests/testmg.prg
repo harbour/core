@@ -66,7 +66,7 @@ PROCEDURE Main()
    LOCAL aRay
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-   LOCAL l := hb_libLoad( hb_libName( "rddads" ) )
+   LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
 
    hb_rddadsRegister()
 

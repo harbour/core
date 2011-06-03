@@ -125,9 +125,8 @@ PROCEDURE Main( ... )
    SET EPOCH TO 1970
 
 #ifdef __HBDYNLOAD__RDDADS__
-   /* TOFIX: Get the name right for other platforms than Windows. */
-   IF hb_FileExists( tmp := ( hb_dirBase() + "rddads-" + hb_ntos( hb_version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_version( HB_VERSION_MINOR ) ) + hb_libExt() ) )
-      hRDDADS := hb_libLoad( hb_libName( tmp ) )
+   IF hb_FileExists( tmp := hb_dirBase() + hb_libName( "rddads" + hb_libPostfix() ) )
+      hRDDADS := hb_libLoad( tmp )
       IF ! Empty( hRDDADS )
          hbide_setAdsAvailable( .t. )
          hb_rddadsRegister()

@@ -6,7 +6,6 @@
     Demo of ADS Connection handling and Data Dictionaries
 */
 
-
 #include "ads.ch"
 REQUEST ADS
 
@@ -22,7 +21,7 @@ PROCEDURE MAIN()
    LOCAL hConnection1
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-   LOCAL l := hb_libLoad( hb_libName( "rddads" ) )
+   LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
 
    hb_rddadsRegister()
 
@@ -63,11 +62,11 @@ PROCEDURE MAIN()
       dbCreate( "Table2", aStru )
       //now create an index
       USE table1 NEW
-      INDEX ON FIELD -> id TAG codigo
+      INDEX ON FIELD->id TAG codigo
       USE
 
       USE table2 NEW
-      INDEX ON FIELD -> id TAG codigo
+      INDEX ON FIELD->id TAG codigo
       USE
    ENDIF
 
