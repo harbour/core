@@ -1282,6 +1282,8 @@ HARBOUR
    10. If you are to report a build problem with a Harbour application,
        most of the above point applies, plus make sure to use '-trace'
        command line option when running hbmk2.
+   11. Do not alter the directory layout and files in Harbour and 3rd party
+       packages.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
