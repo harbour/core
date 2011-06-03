@@ -51,6 +51,7 @@ QDesktopServices.qth
 QDesktopWidget.qth
 QDial.qth
 QDialog.qth
+QDialogButtonBox.qth
 QDirModel.qth
 QDockWidget.qth
 QDoubleSpinBox.qth
