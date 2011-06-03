@@ -120,6 +120,7 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
    //::setStyle()
    //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
    //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+   ::oWidget:setOption( QFileDialog_DontResolveSymlinks, .t. )
 
    ::connect()
 

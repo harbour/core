@@ -74,6 +74,8 @@
 CLASS IdeChangeLog INHERIT IdeObject
 
    DATA   aLog                                    INIT {}
+   DATA   cUser                                   INIT ""
+   DATA   nCntr                                   INIT 0
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -135,6 +137,8 @@ METHOD IdeChangeLog:show()
       ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p   ) } )
 
       ::updateLog( ::oINI:cChangeLog )
+
+      ::cUser := hbide_fetchAString( ::oDlg:oWidget, , , "Developer Name" )
    ENDIF
 
    ::oUI:show()
@@ -143,14 +147,43 @@ METHOD IdeChangeLog:show()
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_getLogCounter( cBuffer )
+   LOCAL n, n1, nCntr := 0
+
+   IF ( n := at( "$<", cBuffer ) ) > 0
+      n1 := at( ">", cBuffer )
+      nCntr := val( substr( cBuffer, n + 2, n1 - n - 2 ) )
+   ENDIF
+
+   RETURN nCntr
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeChangeLog:execEvent( cEvent, p )
-   LOCAL cTmp
+   LOCAL cTmp, cTmp1, s, n
 
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
 
    CASE "buttonSave_clicked"
+      IF !empty( cTmp := ::oUI:q_plainLogEntry:toPlainText() )
+         cTmp1 := hb_memoread( ::oINI:cChangeLog )
+         ::nCntr := hbide_getLogCounter( cTmp1 )
+         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + time() + " " + ::cUser
+
+         IF ( n := at( "$<", cTmp1 ) ) > 0
+            cTmp1 := substr( cTmp1, 1, n - 1 ) + hb_eol() + s + hb_eol() + cTmp + hb_eol() + substr( cTmp1, n )
+         ELSE
+            cTmp1 += hb_eol() + s + hb_eol() + cTmp + hb_eol()
+         ENDIF
+         hb_memowrit( ::oINI:cChangeLog, cTmp1 )  /* TODO: put it under locking protocol */
+
+         ::aLog := {}
+         ::oUI:q_plainLogEntry:setPlainText( "" )
+         ::oUI:q_plainCurrentLog:setPlainText( "" )
+      ENDIF
+
       EXIT
    CASE "buttonRefresh_clicked"
       ::refresh()
@@ -158,6 +191,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
    CASE "buttonDone_clicked"
       IF !empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
          aadd( ::aLog, { "Desc", cTmp, "" } )
+         ::oUI:q_plainLogEntry:setPlainText( "" )
          ::refresh()
       ENDIF
       EXIT
@@ -199,13 +233,26 @@ METHOD IdeChangeLog:updateLog( cLogFile )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_dtosFmt( dDate )
+   LOCAL s
+
+   DEFAULT dDate TO date()
+
+   s := dtos( dDate )
+
+   RETURN substr( s, 1, 4 ) + "-" + substr( s, 5, 2 ) + "-" + substr( s, 7, 2 )
+
+/*----------------------------------------------------------------------*/
+
+
 METHOD IdeChangeLog:refresh()
    LOCAL s := "", a_
 
    ::oUI:q_plainLogEntry:clear()
-
-   s := "$<" + strzero( 1, 6 ) + "> " + dtos( date() ) + " " + time() + " Harbour "
-
+   #if 0
+   ::nCntr := hbide_getlogCounter( hb_memoread( ::oINI:cChangeLog ) )
+   s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + time() + " " + ::cUser
+   #endif
    FOR EACH a_ IN ::aLog
       IF a_[ 1 ] == "Source"
          s += hb_eol() + "  * " + a_[ 2 ]
