@@ -5,4 +5,4 @@
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
-libs=super
+libs=superlib
