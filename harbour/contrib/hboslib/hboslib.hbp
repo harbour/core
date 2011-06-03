@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-instfile=inc:hboslib.hbx
+
+hboslib.hbx
+
+core.prg
