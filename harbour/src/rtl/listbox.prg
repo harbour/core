@@ -816,7 +816,7 @@ METHOD changeItem( nOldPos, nNewPos ) CLASS LISTBOX
             ::oVScroll:current := ::scrollbarPos()
          ENDIF
       ELSE
-         nValue := ::nValue - ( ::nBottom - ::nTop - iif( Empty( ::cHotBox + ::cColdBox ), 0, 2 ) + iif( ::lDropDown, 1, 0 ) )
+         nValue := ::nValue - ( ::nBottom - ::nTop - ( iif( Empty( ::cHotBox + ::cColdBox ), 0, 2 ) + iif( ::lDropDown, 1, 0 ) ) )
 
          IF ::nTopItem <= nValue
             ::nTopItem := nValue
