@@ -1633,6 +1633,9 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD recall()
    METHOD recNo()
    METHOD lastRec()
+   METHOD ordKeyCount()
+   METHOD ordKeyNo()
+   METHOD ordKeyGoto( nRec )
    ACCESS dbStruct()                              INLINE ::aStruct
    METHOD indexOrd()
    METHOD ordName( nOrder )
@@ -1837,11 +1840,17 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:goBottomBlock := {| | ::goBottom()     }
    //
    oXbpBrowse:firstPosBlock := {| | 1                }
+   #if 0
    oXbpBrowse:lastPosBlock  := {| | ::lastRec()      }
-
    oXbpBrowse:posBlock      := {| | ::recNo()        }
    oXbpBrowse:goPosBlock    := {|n| ::goto( n )      }
    oXbpBrowse:phyPosBlock   := {| | ::recNo()        }
+   #endif
+   oXbpBrowse:lastPosBlock  := {| | ::ordKeyCount()   }
+   oXbpBrowse:posBlock      := {| | ::ordKeyNo()      }
+   oXbpBrowse:goPosBlock    := {|n| ::ordKeyGoto( n ) }
+   oXbpBrowse:phyPosBlock   := {| | ::ordKeyNo()      }
+
 
    oXbpBrowse:hbContextMenu := {|mp1| ::execEvent( "browser_contextMenu", mp1 ) }
 
@@ -2479,6 +2488,21 @@ METHOD IdeBrowse:goToAsk()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:ordKeyGoto( nRec )
+
+   IF ::nType == BRW_TYPE_DBF
+      ( ::cAlias )->( OrdKeyGoto( nRec ) )
+      ::refreshAll()
+   ELSE
+      IF nRec > 0 .AND. nRec <= len( ::aData )
+         ::nIndex := nRec
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:goto( nRec )
 
    IF ::nType == BRW_TYPE_DBF
@@ -2540,12 +2564,36 @@ METHOD IdeBrowse:indexOrd()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:ordKeyNo()
+
+   IF ::nType == BRW_TYPE_DBF
+      RETURN ( ::cAlias )->( OrdKeyNo() )
+   ELSE
+      RETURN ::nIndex
+   ENDIF
+
+   RETURN 0
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:recNo()
 
    IF ::nType == BRW_TYPE_DBF
       RETURN ( ::cAlias )->( RecNo() )
    ELSE
       RETURN ::nIndex
+   ENDIF
+
+   RETURN 0
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:ordKeyCount()
+
+   IF ::nType == BRW_TYPE_DBF
+      RETURN ( ::cAlias )->( ordKeyCount() )
+   ELSE
+      RETURN len( ::aData )
    ENDIF
 
    RETURN 0
