@@ -94,6 +94,9 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
+        <property name="displayFormat">
+         <string>MM/dd/yyyy</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="5">
@@ -140,7 +143,14 @@
       <item row="4" column="5">
        <widget class="QPushButton" name="buttonDone">
         <property name="text">
-         <string>Done</string>
+         <string>Description OK </string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="buttonSrcDescOK">
+        <property name="text">
+         <string>Source/Desc OK</string>
         </property>
        </widget>
       </item>

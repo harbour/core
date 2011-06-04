@@ -82,8 +82,9 @@ CLASS IdeChangeLog INHERIT IdeObject
    METHOD destroy()
    METHOD show()
    METHOD execEvent( cEvent, p )
-   METHOD updateLog( cLogFile )
+   METHOD updateLog()
    METHOD refresh()
+   METHOD buildLogEntry()
 
    ENDCLASS
 
@@ -128,22 +129,40 @@ METHOD IdeChangeLog:show()
       ::oUI:q_buttonChangelog :setIcon( hbide_image( "dc_folder"  ) )
       ::oUI:q_buttonAddSrc    :setIcon( hbide_image( "dc_plus"  ) )
 
-      ::oUI:q_buttonChangelog :connect( "clicked()", {|| ::execEvent( "buttonChangelog_clicked"         ) } )
-      ::oUI:q_buttonAddSrc    :connect( "clicked()", {|| ::execEvent( "buttonAddSrc_clicked"            ) } )
-      ::oUI:q_buttonDone      :connect( "clicked()", {|| ::execEvent( "buttonDone_clicked"              ) } )
-      ::oUI:q_buttonRefresh   :connect( "clicked()", {|| ::execEvent( "buttonRefresh_clicked"           ) } )
-      ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"              ) } )
+      ::oUI:q_buttonChangelog :connect( "clicked()", {|| ::execEvent( "buttonChangelog_clicked" ) } )
+      ::oUI:q_buttonAddSrc    :connect( "clicked()", {|| ::execEvent( "buttonAddSrc_clicked"    ) } )
+      ::oUI:q_buttonDone      :connect( "clicked()", {|| ::execEvent( "buttonDone_clicked"      ) } )
+      ::oUI:q_buttonRefresh   :connect( "clicked()", {|| ::execEvent( "buttonRefresh_clicked"   ) } )
+      ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
+      ::oUI:q_buttonSrcDescOK :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
 
       ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p   ) } )
 
-      ::updateLog( ::oINI:cChangeLog )
+      ::oUI:q_comboAction:addItem( "! Fixed     : " )
+      ::oUI:q_comboAction:addItem( "& Changed   : " )
+      ::oUI:q_comboAction:addItem( "% Optimized : " )
+      ::oUI:q_comboAction:addItem( "+ Added     : " )
+      ::oUI:q_comboAction:addItem( "- Removed   : " )
+      ::oUI:q_comboAction:addItem( "; Comment   : " )
+      ::oUI:q_comboAction:addItem( "@ TODO      : " )
+      ::oUI:q_comboAction:addItem( "| Moved     : " )
+
+      ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+      ::updateLog()
 
       ::cUser := hbide_fetchAString( ::oDlg:oWidget, , , "Developer Name" )
+
+      ::oUI:q_comboAuthor:addItem( ::cUser )
    ENDIF
 
    ::oUI:show()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_eol()
+   RETURN hb_eol() // chr( 13 ) + chr( 10 )
 
 /*----------------------------------------------------------------------*/
 
@@ -155,7 +174,7 @@ STATIC FUNCTION hbide_getLogCounter( cBuffer )
       nCntr := val( substr( cBuffer, n + 2, n1 - n - 2 ) )
    ENDIF
 
-   RETURN nCntr
+   RETURN nCntr + 1
 
 /*----------------------------------------------------------------------*/
 
@@ -167,46 +186,63 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
    SWITCH cEvent
 
    CASE "buttonSave_clicked"
-      IF !empty( cTmp := ::oUI:q_plainLogEntry:toPlainText() )
+      //IF !empty( cTmp := ::oUI:q_plainLogEntry:toPlainText() )
+      IF ! empty( ::aLog )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
-         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + time() + " " + ::cUser
+         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::cUser
 
          IF ( n := at( "$<", cTmp1 ) ) > 0
-            cTmp1 := substr( cTmp1, 1, n - 1 ) + hb_eol() + s + hb_eol() + cTmp + hb_eol() + substr( cTmp1, n )
+            cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + ::buildLogEntry() + hbide_eol() + substr( cTmp1, n )
          ELSE
-            cTmp1 += hb_eol() + s + hb_eol() + cTmp + hb_eol()
+            cTmp1 += hbide_eol() + s + hbide_eol() + cTmp + hbide_eol()
          ENDIF
          hb_memowrit( ::oINI:cChangeLog, cTmp1 )  /* TODO: put it under locking protocol */
-
          ::aLog := {}
-         ::oUI:q_plainLogEntry:setPlainText( "" )
-         ::oUI:q_plainCurrentLog:setPlainText( "" )
+         ::updateLog()
       ENDIF
-
       EXIT
    CASE "buttonRefresh_clicked"
+      ::aLog := {}
+      ::refresh()
+      EXIT
+   CASE "buttonSrcDesc_clicked"
+      IF ! empty( cTmp := ::oUI:q_editSource:text() )
+         aadd( ::aLog, { "Source", cTmp, "" } )
+      ENDIF
+      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
+         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::oUI:q_plainCurrentLog:clear()
+      ENDIF
       ::refresh()
       EXIT
    CASE "buttonDone_clicked"
-      IF !empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         aadd( ::aLog, { "Desc", cTmp, "" } )
-         ::oUI:q_plainLogEntry:setPlainText( "" )
+      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
+         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::oUI:q_plainCurrentLog:clear()
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonAddSrc_clicked"
-      IF !empty( cTmp := ::oUI:q_editSource:text() )
+      IF ! empty( cTmp := ::oUI:q_editSource:text() )
          aadd( ::aLog, { "Source", cTmp, "" } )
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonChangelog_clicked"
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
-      ::updateLog( cTmp )
+      IF ! empty( cTmp ) .AND. hb_fileExists( cTmp )
+         ::oINI:cChangeLog := cTmp
+         ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+      ENDIF
       EXIT
    CASE "editChangelog_textChanged"
-      ::updateLog( p )
+      IF ! empty( p ) .AND. hb_fileExists( p )
+         ::oUI:q_editChangelog:setStyleSheet( "" )
+         ::updateLog()
+      ELSE
+         ::oUI:q_editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+      ENDIF
       EXIT
 
    ENDSWITCH
@@ -215,19 +251,15 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeChangeLog:updateLog( cLogFile )
+METHOD IdeChangeLog:updateLog()
 
-   IF !empty( cLogFile ) .AND. hb_fileExists( cLogFile )
-      ::oUI:q_editChangelog:setStyleSheet( "" )
-      ::oINI:cChangeLog := cLogFile
-      ::oUI:q_editChangelog:setText( cLogFile )
+   ::oUI:q_plainLogEntry:clear()
+   ::oUI:q_plainCurrentLog:clear()
+   ::oUI:q_plainChangelog:clear()
 
-      ::oUI:q_plainChangelog:clear()
-      ::oUI:q_plainChangelog:setPlainText( memoread( cLogFile ) )
-      ::refresh()
-   ELSE
-      ::oUI:q_editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
-   ENDIF
+   ::oUI:q_plainChangelog:setPlainText( hb_memoread( ::oINI:cChangeLog ) )
+
+   ::refresh()
 
    RETURN Self
 
@@ -244,28 +276,33 @@ STATIC FUNCTION hbide_dtosFmt( dDate )
 
 /*----------------------------------------------------------------------*/
 
-
 METHOD IdeChangeLog:refresh()
-   LOCAL s := "", a_
 
    ::oUI:q_plainLogEntry:clear()
-   #if 0
-   ::nCntr := hbide_getlogCounter( hb_memoread( ::oINI:cChangeLog ) )
-   s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + time() + " " + ::cUser
-   #endif
+   ::oUI:q_plainLogEntry:setPlainText( ::buildLogEntry() )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeChangeLog:buildLogEntry()
+   LOCAL s := "", a_, k, e
+
    FOR EACH a_ IN ::aLog
       IF a_[ 1 ] == "Source"
-         s += hb_eol() + "  * " + a_[ 2 ]
-
+         s += "  * " + upper( a_[ 2 ] ) + hbide_eol()
       ELSEIF a_[ 1 ] == "Desc"
-         s += hb_eol() + "    ! " + a_[ 2 ]
-
+         k := hbide_memoToArray( a_[ 3 ] )
+         FOR EACH e IN k
+            IF e:__enumIndex() == 1
+               s += "    " + a_[ 2 ] + e + hbide_eol()
+            ELSE
+               s += "    " + space( 14 ) + e + hbide_eol()
+            ENDIF
+         NEXT
       ENDIF
    NEXT
 
-   ::oUI:q_plainLogEntry:clear()
-   ::oUI:q_plainLogEntry:setPlainText( s )
-
-   RETURN Self
+   RETURN s
 
 /*----------------------------------------------------------------------*/
