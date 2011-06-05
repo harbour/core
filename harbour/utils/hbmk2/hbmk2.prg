@@ -1482,21 +1482,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
       IF Empty( l_cHB_INSTALL_PREFIX )
          l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
-#if 0
-         DO CASE
-         CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
-            l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
-         CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + "bin" + hb_ps() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
-            l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() )
-         CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + "bin" + hb_ps() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
-            l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".."
-         CASE hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "bin" + hb_ps() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
-            l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + ".."
-         OTHERWISE
-            hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
-            RETURN _ERRLEV_FAILHBDETECT
-         ENDCASE
-#endif
       ENDIF
 
       /* Detect special non-installed dir layout (after simple 'make') */
@@ -2296,6 +2281,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 6 ) == ""      ; hbmk[ _HBMK_cCPP ] := ""
          ENDCASE
 
+         /* dangerous? disable it */
+         hbmk[ _HBMK_cCPP ] := ""
+
       CASE Left( cParamL, 3 ) == "-c="
 
          DO CASE
@@ -2307,6 +2295,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 4 ) == "gnu1x"  ; hbmk[ _HBMK_cC ] := "gnu1x"
          CASE SubStr( cParamL, 4 ) == ""       ; hbmk[ _HBMK_cC ] := ""
          ENDCASE
+
+         /* dangerous? disable it */
+         hbmk[ _HBMK_cC ] := ""
 
       CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T.
       CASE cParamL == "-cpp-" .OR. ;
@@ -3071,7 +3062,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       hbmk[ _HBMK_lPIC ] := .T.
    ENDIF
 
-#if 0 /* disabled to experiment with '-hbdyn -shared' combination. */
+#if 0 /* Disabled to experiment with '-hbdyn -shared' combination. */
    IF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lSHARED ]
       hbmk[ _HBMK_lSHARED ] := .F.
    ENDIF
@@ -12152,8 +12143,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]debug"         , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
       { "-[no]optim"         , I_( "toggle C compiler optimizations (default: on)" ) },;
       { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
-      { "-c=[<std>]"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) },;
-      { "-cpp=[<std>]"       , I_( "select C++ standard. Allowed values are: iso98, iso03, iso0x, gnu98, gnu0x" ) },;
+/*    { "-c=[<std>]"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) }, */;
+/*    { "-cpp=[<std>]"       , I_( "select C++ standard. Allowed values are: iso98, iso03, iso0x, gnu98, gnu0x" ) }, */;
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
       { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) },;
