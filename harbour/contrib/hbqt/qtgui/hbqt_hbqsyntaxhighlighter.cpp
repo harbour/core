@@ -92,14 +92,64 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    multiLineCommentFormat.setForeground( Qt::red );
 
    commentStartExpression = QRegExp( "/\\*" );
-   commentEndExpression = QRegExp( "\\*/" );
-
-   commentSingleLine = QRegExp( "//[^\n]*|^[ ]*\\*[^\n]*" );
-
-   patternQuotation = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
+   commentEndExpression   = QRegExp( "\\*/" );
+   commentSingleLine      = QRegExp( "//[^\n]*|^[ ]*\\*[^\n]*" );
+   patternQuotation       = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
 
    initialized = false;
+   type = 0;
    editor = NULL;
+
+   //entryHeaderFormat.setForeground( Qt::red );
+   entryHeaderFormat.setForeground( QColor( 255, 153, 51 ) );
+   entryHeaderFormat.setFontWeight( 1000 );
+   //entryHeaderFormat.setBackground( Qt::gray );
+
+   //entryTitleFormat.setForeground( Qt::darkBlue );
+   entryTitleFormat.setForeground( QColor( 45, 187, 255 ) );
+   entryTitleFormat.setFontItalic( true );
+   //entryTitleFormat.setFontWeight( 1000 );
+
+   entrySourceFormat.setForeground( Qt::darkGreen );
+   entrySourceFormat.setFontWeight( 1000 );
+
+   entryFixedFormat.setForeground( Qt::blue );
+   entryFixedFormat.setFontItalic( true );
+
+   entryChangedFormat.setForeground( Qt::darkGray );
+   entryChangedFormat.setFontItalic( true );
+
+   entryOptimizedFormat.setForeground( Qt::magenta );
+   entryOptimizedFormat.setFontItalic( true );
+
+   entryAddedFormat.setForeground( Qt::green );
+   entryAddedFormat.setFontItalic( true );
+
+   entryRemovedFormat.setForeground( Qt::red );
+   entryRemovedFormat.setFontItalic( true );
+
+   entryCommentFormat.setForeground( Qt::green );
+   entryCommentFormat.setFontItalic( true );
+
+   entryTodoFormat.setForeground( Qt::blue );
+   entryTodoFormat.setFontItalic( true );
+
+   entryMovedFormat.setForeground( Qt::magenta );
+   entryMovedFormat.setFontItalic( true );
+
+   entryHeaderRegExp     =  QRegExp( "^\\$\\<[0-9]*\\>[^\n]*" );
+   entryTitleRegExp      =  QRegExp( "^[ ]*\\#[^\n]*" );
+   entrySourceRegExp     =  QRegExp( "^[ ]*\\*[^\n]*" );
+   entryFixedRegExp      =  QRegExp( "^[ ]*\\! Fixed  " );
+   entryChangedRegExp    =  QRegExp( "^[ ]*\\& Changed" );
+   entryOptimizedRegExp  =  QRegExp( "^[ ]*\\% Optimzd" );
+   entryAddedRegExp      =  QRegExp( "^[ ]*\\+ Added  " );
+   entryRemovedRegExp    =  QRegExp( "^[ ]*\\- Removed" );
+   entryCommentRegExp    =  QRegExp( "^[ ]*\\; Comment" );
+   entryTodoRegExp       =  QRegExp( "^[ ]*\\@ TODO   " );
+   entryMovedRegExp      =  QRegExp( "^[ ]*\\| Moved  " );
+
+   isEntry               =  QRegExp( "^[ ]*\\||^[ ]*\\@|^[ ]*\\;|^[ ]*\\-|^[ ]*\\+|^[ ]*\\%|^[ ]*\\&|^[ ]*\\!|^[ ]*\\*|^[ ]*\\#|^\\$" );
 }
 
 void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QTextCharFormat & format )
@@ -149,82 +199,221 @@ void HBQSyntaxHighlighter::hbSetFormatColumnSelection( int start, int count, con
 
 void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
-   if( ! initialized )
-      return;
-
-   if( editor )
+   if( type == 0 )   /* PRG C C++ Sources */
    {
-      int iFirstBlock = editor->firstVisibleBlockNumber();
-      int iLastBlock = editor->lastVisibleBlockNumber();
-      int iBlock = currentBlock().blockNumber();
-
-      if( iBlock < iFirstBlock || iBlock > iLastBlock )
-      {
+      if( ! initialized )
          return;
+
+      if( editor )
+      {
+         int iFirstBlock = editor->firstVisibleBlockNumber();
+         int iLastBlock = editor->lastVisibleBlockNumber();
+         int iBlock = currentBlock().blockNumber();
+
+         if( iBlock < iFirstBlock || iBlock > iLastBlock )
+         {
+            return;
+         }
       }
-   }
 
-   int index = 0;
-   int length = 0;
+      int index = 0;
+      int length = 0;
 
-   foreach( const HighlightingRule &rule, HighlightingRules )
-   {
-      index = rule.pattern.indexIn( text );
+      foreach( const HighlightingRule &rule, HighlightingRules )
+      {
+         index = rule.pattern.indexIn( text );
+         while( index >= 0 )
+         {
+            length = rule.pattern.matchedLength();
+            setFormat( index, length, rule.format );
+            index = rule.pattern.indexIn( text, index + length );
+         }
+      }
+
+      /* Multi Line Comments - to ascertain if it is embedded in quotes */
+      int startIndex = 0;
+      if( previousBlockState() != 1 )
+      {
+         startIndex = commentStartExpression.indexIn( text );
+      }
+
+      /* Quoted text */
+      index = patternQuotation.indexIn( text );
       while( index >= 0 )
       {
-         length = rule.pattern.matchedLength();
-         setFormat( index, length, rule.format );
-         index = rule.pattern.indexIn( text, index + length );
+         length = patternQuotation.matchedLength();
+         setFormat( index, length, quotationFormat );
+         if( startIndex > index && startIndex < index + length )
+         {
+            startIndex = -1;
+         }
+         index = patternQuotation.indexIn( text, index + length );
       }
-   }
 
-   /* Multi Line Comments - to ascertain if it is embedded in quotes */
-   int startIndex = 0;
-   if( previousBlockState() != 1 )
-   {
-      startIndex = commentStartExpression.indexIn( text );
-   }
-
-   /* Quoted text */
-   index = patternQuotation.indexIn( text );
-   while( index >= 0 )
-   {
-      length = patternQuotation.matchedLength();
-      setFormat( index, length, quotationFormat );
-      if( startIndex > index && startIndex < index + length )
+      /* Single Line Comments */
+      index = commentSingleLine.indexIn( text );
+      while( index >= 0 )
       {
-         startIndex = -1;
+         length = commentSingleLine.matchedLength();
+         setFormat( index, length, singleLineCommentFormat );
+         index = commentSingleLine.indexIn( text, index + length );
       }
-      index = patternQuotation.indexIn( text, index + length );
-   }
 
-   /* Single Line Comments */
-   index = commentSingleLine.indexIn( text );
-   while( index >= 0 )
-   {
-      length = commentSingleLine.matchedLength();
-      setFormat( index, length, singleLineCommentFormat );
-      index = commentSingleLine.indexIn( text, index + length );
-   }
+      /* Multi Line Comments - continued */
+      setCurrentBlockState( 0 );
 
-   /* Multi Line Comments - continued */
-   setCurrentBlockState( 0 );
-
-   while( startIndex >= 0 )
-   {
-      int commentLength;
-      int endIndex = commentEndExpression.indexIn( text, startIndex );
-      if( endIndex == -1 )
+      while( startIndex >= 0 )
       {
-         setCurrentBlockState( 1 );
-         commentLength = text.length() - startIndex;
+         int commentLength;
+         int endIndex = commentEndExpression.indexIn( text, startIndex );
+         if( endIndex == -1 )
+         {
+            setCurrentBlockState( 1 );
+            commentLength = text.length() - startIndex;
+         }
+         else
+         {
+            commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
+         }
+         setFormat( startIndex, commentLength, multiLineCommentFormat );
+         startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
       }
-      else
+   }
+   else if( type == 1 )  /* ChangeLog */
+   {
+      int index, length;
+
+      index = isEntry.indexIn( text );
+      if( index >= 0 )
       {
-         commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
+         /* Single Line Comments */
+         index = entryHeaderRegExp.indexIn( text );
+         if( index >= 0 )
+         {
+            length = entryHeaderRegExp.matchedLength();
+            setFormat( index, length, entryHeaderFormat );
+         }
+         else
+         {
+            index = entryTitleRegExp.indexIn( text );
+            if( index >= 0 )
+            {
+               length = entryTitleRegExp.matchedLength();
+               setFormat( index, length, entryTitleFormat );
+            }
+            else
+            {
+               index = entrySourceRegExp.indexIn( text );
+               if( index >= 0 )
+               {
+                  length = entrySourceRegExp.matchedLength();
+                  setFormat( index, length, entrySourceFormat );
+               }
+               else
+               {
+                  index = entryFixedRegExp.indexIn( text );
+                  if( index >= 0 )
+                  {
+                     length = entryFixedRegExp.matchedLength();
+                     setFormat( index, length, entryFixedFormat );
+                  }
+                  else
+                  {
+                     index = entryChangedRegExp.indexIn( text );
+                     if( index >= 0 )
+                     {
+                        length = entryChangedRegExp.matchedLength();
+                        setFormat( index, length, entryChangedFormat );
+                     }
+                     else
+                     {
+                        index = entryOptimizedRegExp.indexIn( text );
+                        if( index >= 0 )
+                        {
+                           length = entryOptimizedRegExp.matchedLength();
+                           setFormat( index, length, entryOptimizedFormat );
+                        }
+                        else
+                        {
+                           index = entryAddedRegExp.indexIn( text );
+                           if( index >= 0 )
+                           {
+                              length = entryAddedRegExp.matchedLength();
+                              setFormat( index, length, entryAddedFormat );
+                           }
+                           else
+                           {
+                              index = entryRemovedRegExp.indexIn( text );
+                              if( index >= 0 )
+                              {
+                                 length = entryRemovedRegExp.matchedLength();
+                                 setFormat( index, length, entryRemovedFormat );
+                              }
+                              else
+                              {
+                                 index = entryCommentRegExp.indexIn( text );
+                                 if( index >= 0 )
+                                 {
+                                    length = entryCommentRegExp.matchedLength();
+                                    setFormat( index, length, entryCommentFormat );
+                                 }
+                                 else
+                                 {
+                                    index = entryTodoRegExp.indexIn( text );
+                                    if( index >= 0 )
+                                    {
+                                       length = entryTodoRegExp.matchedLength();
+                                       setFormat( index, length, entryTodoFormat );
+                                    }
+                                    else
+                                    {
+                                       index = entryMovedRegExp.indexIn( text );
+                                       if( index >= 0 )
+                                       {
+                                          length = entryMovedRegExp.matchedLength();
+                                          setFormat( index, length, entryMovedFormat );
+                                       }
+                                       else
+                                       {
+                                       }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
       }
-      setFormat( startIndex, commentLength, multiLineCommentFormat );
-      startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
+#if 0
+      /* Multi Line Comments */
+      int startIndex = 0;
+      if( previousBlockState() != 1 )
+      {
+         startIndex = commentStartExpression.indexIn( text );
+      }
+      /* Multi Line Comments - continued */
+      setCurrentBlockState( 0 );
+
+      while( startIndex >= 0 )
+      {
+         int commentLength;
+         int endIndex = commentEndExpression.indexIn( text, startIndex );
+         if( endIndex == -1 )
+         {
+            setCurrentBlockState( 1 );
+            commentLength = text.length() - startIndex;
+         }
+         else
+         {
+            commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
+         }
+         setFormat( startIndex, commentLength, multiLineCommentFormat );
+         startIndex = commentStartExpression.indexIn( text, startIndex + commentLength );
+      }
+#endif
    }
 }
 

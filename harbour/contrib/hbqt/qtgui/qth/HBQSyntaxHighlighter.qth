@@ -53,6 +53,7 @@ void hbSetFormatColumnSelection( int start, int count, const QColor & color )
 void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format )
 void hbSetEditor( HBQPlainTextEdit * edit )
 void hbSetInitialized( bool init )
+void hbSetType( int ty )
 
 # QTextBlock currentBlock () const
 # int currentBlockState () const

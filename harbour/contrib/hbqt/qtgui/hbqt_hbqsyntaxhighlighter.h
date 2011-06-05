@@ -89,8 +89,8 @@ public:
    HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
    HBQPlainTextEdit * editor;
-
    bool initialized;
+   int  type;
 
    void hbSetMultiLineCommentFormat( const QTextCharFormat & format );
    void hbSetSingleLineCommentFormat( const QTextCharFormat & format );
@@ -100,6 +100,7 @@ public:
    void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format );
    void hbSetEditor( HBQPlainTextEdit * edit ){ editor = edit; };
    void hbSetInitialized( bool bInit ){ initialized = bInit; };
+   void hbSetType( int ty ){ type = ty; };
 
 protected:
    void highlightBlock( const QString &text );
@@ -133,6 +134,33 @@ protected:
    QTextCharFormat quotationFormat;
    QTextCharFormat functionFormat;
    QTextCharFormat directivesFormat;
+
+   QTextCharFormat entryHeaderFormat;
+   QTextCharFormat entryTitleFormat;
+   QTextCharFormat entrySourceFormat;
+   QTextCharFormat entryFixedFormat;
+   QTextCharFormat entryChangedFormat;
+   QTextCharFormat entryOptimizedFormat;
+   QTextCharFormat entryAddedFormat;
+   QTextCharFormat entryRemovedFormat;
+   QTextCharFormat entryCommentFormat;
+   QTextCharFormat entryTodoFormat;
+   QTextCharFormat entryMovedFormat;
+
+   QRegExp entryHeaderRegExp;
+   QRegExp entryTitleRegExp;
+   QRegExp entrySourceRegExp;
+   QRegExp entryFixedRegExp;
+   QRegExp entryChangedRegExp;
+   QRegExp entryOptimizedRegExp;
+   QRegExp entryAddedRegExp;
+   QRegExp entryRemovedRegExp;
+   QRegExp entryCommentRegExp;
+   QRegExp entryTodoRegExp;
+   QRegExp entryMovedRegExp;
+
+   QRegExp isEntry;
+
 };
 
 /*----------------------------------------------------------------------*/

@@ -76,6 +76,10 @@ CLASS IdeChangeLog INHERIT IdeObject
    DATA   aLog                                    INIT {}
    DATA   cUser                                   INIT ""
    DATA   nCntr                                   INIT 0
+   DATA   qHiliter
+   DATA   oEdit
+   DATA   qEdit
+   DATA   oTheme
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -126,33 +130,65 @@ METHOD IdeChangeLog:show()
       ::oUI:setWindowFlags( Qt_Sheet )
       ::oUI:setWindowIcon( hbide_image( "hbide" ) )
 
-      ::oUI:q_buttonChangelog :setIcon( hbide_image( "dc_folder"  ) )
-      ::oUI:q_buttonAddSrc    :setIcon( hbide_image( "dc_plus"  ) )
+      ::oUI:q_buttonOpen      :setIcon( hbide_image( "dc_folder" ) )
+      ::oUI:q_buttonNew       :setIcon( hbide_image( "new"       ) )
+      ::oUI:q_buttonTitle     :setIcon( hbide_image( "dc_plus"   ) )
+      ::oUI:q_buttonSource    :setIcon( hbide_image( "dc_plus"   ) )
+      ::oUI:q_buttonDesc      :setIcon( hbide_image( "dc_plus"   ) )
+      ::oUI:q_buttonSrcDesc   :setIcon( hbide_image( "dc_plus"   ) )
 
-      ::oUI:q_buttonChangelog :connect( "clicked()", {|| ::execEvent( "buttonChangelog_clicked" ) } )
-      ::oUI:q_buttonAddSrc    :connect( "clicked()", {|| ::execEvent( "buttonAddSrc_clicked"    ) } )
-      ::oUI:q_buttonDone      :connect( "clicked()", {|| ::execEvent( "buttonDone_clicked"      ) } )
-      ::oUI:q_buttonRefresh   :connect( "clicked()", {|| ::execEvent( "buttonRefresh_clicked"   ) } )
+      ::oUI:q_buttonOpen      :setToolTip( "Open a ChangeLog"       )
+      ::oUI:q_buttonNew       :setToolTip( "Create Empty ChangeLog" )
+      ::oUI:q_buttonTitle     :setToolTip( "Add Title in current entry" )
+      ::oUI:q_buttonSource    :setToolTip( "Add Source in current entry" )
+      ::oUI:q_buttonDesc      :setToolTip( "Add Action_Description in current entry" )
+      ::oUI:q_buttonSrcDesc   :setToolTip( "Add Source_Action_Description in current entry" )
+
+      ::oUI:q_buttonOpen      :connect( "clicked()", {|| ::execEvent( "buttonOpen_clicked"      ) } )
+      ::oUI:q_buttonNew       :connect( "clicked()", {|| ::execEvent( "buttonNew_clicked"       ) } )
+
+      ::oUI:q_buttonTitle     :connect( "clicked()", {|| ::execEvent( "buttonTitle_clicked"     ) } )
+      ::oUI:q_buttonSource    :connect( "clicked()", {|| ::execEvent( "buttonSource_clicked"    ) } )
+      ::oUI:q_buttonDesc      :connect( "clicked()", {|| ::execEvent( "buttonDesc_clicked"      ) } )
+      ::oUI:q_buttonSrcDesc   :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
+      ::oUI:q_buttonClearDesc :connect( "clicked()", {|| ::execEvent( "buttonClearDesc_clicked" ) } )
+
+      ::oUI:q_buttonCancel    :connect( "clicked()", {|| ::execEvent( "buttonCancel_clicked"    ) } )
       ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
-      ::oUI:q_buttonSrcDescOK :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
 
-      ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p   ) } )
+      ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
 
-      ::oUI:q_comboAction:addItem( "! Fixed     : " )
-      ::oUI:q_comboAction:addItem( "& Changed   : " )
-      ::oUI:q_comboAction:addItem( "% Optimized : " )
-      ::oUI:q_comboAction:addItem( "+ Added     : " )
-      ::oUI:q_comboAction:addItem( "- Removed   : " )
-      ::oUI:q_comboAction:addItem( "; Comment   : " )
-      ::oUI:q_comboAction:addItem( "@ TODO      : " )
-      ::oUI:q_comboAction:addItem( "| Moved     : " )
-
-      ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
-      ::updateLog()
+      ::oUI:q_comboAction     :addItem( "! Fixed  : " )
+      ::oUI:q_comboAction     :addItem( "& Changed: " )
+      ::oUI:q_comboAction     :addItem( "% Optimzd: " )
+      ::oUI:q_comboAction     :addItem( "+ Added  : " )
+      ::oUI:q_comboAction     :addItem( "- Removed: " )
+      ::oUI:q_comboAction     :addItem( "; Comment: " )
+      ::oUI:q_comboAction     :addItem( "@ TODO   : " )
+      ::oUI:q_comboAction     :addItem( "| Moved  : " )
 
       ::cUser := hbide_fetchAString( ::oDlg:oWidget, , , "Developer Name" )
 
-      ::oUI:q_comboAuthor:addItem( ::cUser )
+      ::oUI:q_plainChangelog  :setFont( ::oFont:oWidget )
+      ::oUI:q_plainLogEntry   :setFont( ::oFont:oWidget )
+      ::oUI:q_plainCurrentLog :setFont( ::oFont:oWidget )
+
+      ::oUI:q_plainLogEntry   :ensureCursorVisible()
+
+      ::oUI:setWindowTitle( "Manage ChangeLog(s) " + iif( empty( ::cUser ), "", " - " + ::cUser ) )
+
+      ::oEdit := IdeEdit():new( ::oIde )
+      ::qEdit := ::oUI:q_plainChangelog
+      ::oEdit:qEdit := ::qEdit
+      ::qEdit:setFocusPolicy( Qt_NoFocus )
+      ::qEdit:hbHorzRulerVisible( .f. )
+
+      ::oTheme := IdeThemes():new( ::oIde ):create()
+      ::qHiliter := ::oTheme:setSyntaxHilighting( ::qEdit, , .t., .t. )
+      ::qHiliter:hbSetType( 1 )
+
+      ::oUI:q_editChangelog   :setText( ::oINI:cChangeLog )
+      ::updateLog()
    ENDIF
 
    ::oUI:show()
@@ -185,8 +221,39 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
    SWITCH cEvent
 
+   CASE "buttonTitle_clicked"
+      IF ! empty( cTmp := ::oUI:q_editTitle:text() )
+         aadd( ::aLog, { "Title", cTmp, "" } )
+         ::refresh()
+      ENDIF
+      EXIT
+   CASE "buttonSource_clicked"
+      IF ! empty( cTmp := ::oUI:q_editSource:text() )
+         aadd( ::aLog, { "Source", cTmp, "" } )
+         ::refresh()
+      ENDIF
+      EXIT
+   CASE "buttonDesc_clicked"
+      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
+         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::oUI:q_plainCurrentLog:clear()
+         ::refresh()
+      ENDIF
+      EXIT
+   CASE "buttonSrcDesc_clicked"
+      IF ! empty( cTmp := ::oUI:q_editSource:text() )
+         aadd( ::aLog, { "Source", cTmp, "" } )
+      ENDIF
+      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
+         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::oUI:q_plainCurrentLog:clear()
+      ENDIF
+      ::refresh()
+      EXIT
+   CASE "buttonClearDesc_clicked"
+      ::oUI:q_plainCurrentLog:clear()
+      EXIT
    CASE "buttonSave_clicked"
-      //IF !empty( cTmp := ::oUI:q_plainLogEntry:toPlainText() )
       IF ! empty( ::aLog )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
@@ -202,37 +269,28 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ::updateLog()
       ENDIF
       EXIT
-   CASE "buttonRefresh_clicked"
+   CASE "buttonCancel_clicked"
       ::aLog := {}
       ::refresh()
       EXIT
-   CASE "buttonSrcDesc_clicked"
-      IF ! empty( cTmp := ::oUI:q_editSource:text() )
-         aadd( ::aLog, { "Source", cTmp, "" } )
-      ENDIF
-      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
-         ::oUI:q_plainCurrentLog:clear()
-      ENDIF
-      ::refresh()
-      EXIT
-   CASE "buttonDone_clicked"
-      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
-         ::oUI:q_plainCurrentLog:clear()
-         ::refresh()
-      ENDIF
-      EXIT
-   CASE "buttonAddSrc_clicked"
-      IF ! empty( cTmp := ::oUI:q_editSource:text() )
-         aadd( ::aLog, { "Source", cTmp, "" } )
-         ::refresh()
-      ENDIF
-      EXIT
-   CASE "buttonChangelog_clicked"
+   CASE "buttonOpen_clicked"
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
       IF ! empty( cTmp ) .AND. hb_fileExists( cTmp )
          ::oINI:cChangeLog := cTmp
+         ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+      ENDIF
+      EXIT
+   CASE "buttonNew_clicked"
+      cTmp := hbide_saveAFile( ::oDlg, "New ChangeLog File" )
+      IF ! empty( cTmp )
+         ::oINI:cChangeLog := cTmp
+
+         s += "" + hbide_eol()
+         s += "$<000000> " + hbide_dtosFmt( date() ) + " " + left( time(),5 ) + " hbIDE" + hbide_eol()
+         s += "  # Initialized by hbIDE" + hbide_eol()
+
+         hb_memowrit( ::oINI:cChangeLog, s )
+
          ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
       ENDIF
       EXIT
@@ -242,6 +300,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ::updateLog()
       ELSE
          ::oUI:q_editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+         ::oUI:q_plainChangelog:clear()
       ENDIF
       EXIT
 
@@ -289,7 +348,9 @@ METHOD IdeChangeLog:buildLogEntry()
    LOCAL s := "", a_, k, e
 
    FOR EACH a_ IN ::aLog
-      IF a_[ 1 ] == "Source"
+      IF a_[ 1 ] == "Title"
+         s += "  # " + a_[ 2 ] + hbide_eol()
+      ELSEIF a_[ 1 ] == "Source"
          s += "  * " + upper( a_[ 2 ] ) + hbide_eol()
       ELSEIF a_[ 1 ] == "Desc"
          k := hbide_memoToArray( a_[ 3 ] )
@@ -297,7 +358,7 @@ METHOD IdeChangeLog:buildLogEntry()
             IF e:__enumIndex() == 1
                s += "    " + a_[ 2 ] + e + hbide_eol()
             ELSE
-               s += "    " + space( 14 ) + e + hbide_eol()
+               s += "    " + space( 11 ) + e + hbide_eol()
             ENDIF
          NEXT
       ENDIF
