@@ -73,7 +73,6 @@
 
 CLASS IdeChangeLog INHERIT IdeObject
 
-   DATA   aLog                                    INIT {}
    DATA   cUser                                   INIT ""
    DATA   nCntr                                   INIT 0
    DATA   qHiliter
@@ -88,6 +87,8 @@ CLASS IdeChangeLog INHERIT IdeObject
    METHOD execEvent( cEvent, p )
    METHOD updateLog()
    METHOD refresh()
+   METHOD addToLog( aLog )
+   METHOD getLogEntry()
    METHOD buildLogEntry()
 
    ENDCLASS
@@ -222,29 +223,29 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
    CASE "buttonTitle_clicked"
       IF ! empty( cTmp := ::oUI:q_editTitle:text() )
-         aadd( ::aLog, { "Title", cTmp, "" } )
+         ::addToLog( { "Title", cTmp, "" } )
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonSource_clicked"
       IF ! empty( cTmp := ::oUI:q_editSource:text() )
-         aadd( ::aLog, { "Source", cTmp, "" } )
+         ::addToLog( { "Source", cTmp, "" } )
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonDesc_clicked"
       IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::addToLog( { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
          ::oUI:q_plainCurrentLog:clear()
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonSrcDesc_clicked"
       IF ! empty( cTmp := ::oUI:q_editSource:text() )
-         aadd( ::aLog, { "Source", cTmp, "" } )
+         ::addToLog( { "Source", cTmp, "" } )
       ENDIF
       IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         aadd( ::aLog, { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
+         ::addToLog( { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
          ::oUI:q_plainCurrentLog:clear()
       ENDIF
       ::refresh()
@@ -253,24 +254,23 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       ::oUI:q_plainCurrentLog:clear()
       EXIT
    CASE "buttonSave_clicked"
-      IF ! empty( ::aLog )
+      IF ! empty( cTmp := ::buildLogEntry() )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
          s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::cUser
 
          IF ( n := at( "$<", cTmp1 ) ) > 0
-            cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + ::buildLogEntry() + hbide_eol() + substr( cTmp1, n )
+            //cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + cTmp + hbide_eol() + substr( cTmp1, n )
+            cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + cTmp + substr( cTmp1, n )
          ELSE
             cTmp1 += hbide_eol() + s + hbide_eol() + cTmp1 + hbide_eol()
          ENDIF
          hb_memowrit( ::oINI:cChangeLog, cTmp1 )  /* TODO: put it under locking protocol */
-         ::aLog := {}
          ::updateLog()
       ENDIF
       EXIT
    CASE "buttonCancel_clicked"
-      ::aLog := {}
-      ::refresh()
+      ::oUI:q_plainLogEntry:clear()
       EXIT
    CASE "buttonOpen_clicked"
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
@@ -335,34 +335,129 @@ STATIC FUNCTION hbide_dtosFmt( dDate )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeChangeLog:refresh()
+   RETURN Self
 
-   ::oUI:q_plainLogEntry:clear()
-   ::oUI:q_plainLogEntry:setPlainText( ::buildLogEntry() )
+/*----------------------------------------------------------------------*/
+
+METHOD IdeChangeLog:addToLog( aLog )
+   LOCAL k, e
+   LOCAL a_:= ::getLogEntry()
+
+   DO CASE
+   CASE aLog[ 1 ] == "Title"
+      aadd( a_, "  # " + aLog[ 2 ] )
+   CASE aLog[ 1 ] == "Source"
+      aadd( a_, "  * " + aLog[ 2 ] )
+   CASE aLog[ 1 ] == "Desc"
+      k := hbide_memoToArray( aLog[ 3 ] )
+      FOR EACH e IN k
+         IF e:__enumIndex() == 1
+            aadd( a_, "    " + aLog[ 2 ] + e )
+         ELSE
+            aadd( a_, "    " + space( 11 ) + e )
+         ENDIF
+      NEXT
+   ENDCASE
+
+   ::oUI:q_plainLogEntry:setPlainText( hbide_arrayToMemo( a_ ) )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeChangeLog:buildLogEntry()
-   LOCAL s := "", a_, k, e
+METHOD IdeChangeLog:getLogEntry()
+   LOCAL e, n, f, s_:={}, lHandelled
+   LOCAL a_:= hbide_memoToArray( ::oUI:q_plainLogEntry:toPlainText() )
 
-   FOR EACH a_ IN ::aLog
-      IF a_[ 1 ] == "Title"
-         s += "  # " + a_[ 2 ] + hbide_eol()
-      ELSEIF a_[ 1 ] == "Source"
-         s += "  * " + upper( a_[ 2 ] ) + hbide_eol()
-      ELSEIF a_[ 1 ] == "Desc"
-         k := hbide_memoToArray( a_[ 3 ] )
-         FOR EACH e IN k
-            IF e:__enumIndex() == 1
-               s += "    " + a_[ 2 ] + e + hbide_eol()
-            ELSE
-               s += "    " + space( 11 ) + e + hbide_eol()
-            ENDIF
-         NEXT
+   FOR EACH e IN a_
+      lHandelled := .f.
+      f := ltrim( e )
+
+      SWITCH left( f, 1 )
+      CASE "#"
+         aadd( s_, "  " + f )
+         lHandelled := .t.
+         EXIT
+      CASE "*"
+         IF substr( f,3,7 ) == "Changed"
+            aadd( s_, "    " + f )
+         ELSE
+            aadd( s_, "  " + f )
+         ENDIF
+         lHandelled := .t.
+         EXIT
+      CASE "!"
+         IF substr( f,3,5 ) == "Fixed"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE "%"
+         IF substr( f,3,7 ) == "Optimzd"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE "+"
+         IF substr( f,3,5 ) == "Added"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE "-"
+         IF substr( f,3,7 ) == "Removed"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE ";"
+         IF substr( f,3,7 ) == "Comment"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE "@"
+         IF substr( f,3,4 ) == "TODO"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      CASE "|"
+         IF substr( f,3,5 ) == "Moved"
+            aadd( s_, "    " + f )
+            lHandelled := .t.
+         ENDIF
+         EXIT
+      ENDSWITCH
+
+      IF ! lHandelled
+         n := hbide_howManyPreSpaces( e )
+         IF n >= 15
+            aadd( s_, e )
+         ELSE
+            aadd( s_, space( 15 ) + f )
+         ENDIF
       ENDIF
    NEXT
 
-   RETURN s
+   RETURN s_
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeChangeLog:buildLogEntry()
+   RETURN hbide_arrayToMemo( ::getLogEntry() )
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_howManyPreSpaces( cStr )
+   LOCAL i, n := 0
+
+   FOR i := 1 TO len( cStr )
+      IF ! ( substr( cStr, i, 1 ) == " " )
+         EXIT
+      ENDIF
+      n++
+   NEXT
+   RETURN n
 
 /*----------------------------------------------------------------------*/
