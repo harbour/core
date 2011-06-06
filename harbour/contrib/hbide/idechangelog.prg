@@ -261,7 +261,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          IF ( n := at( "$<", cTmp1 ) ) > 0
             cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + ::buildLogEntry() + hbide_eol() + substr( cTmp1, n )
          ELSE
-            cTmp1 += hbide_eol() + s + hbide_eol() + cTmp + hbide_eol()
+            cTmp1 += hbide_eol() + s + hbide_eol() + cTmp1 + hbide_eol()
          ENDIF
          hb_memowrit( ::oINI:cChangeLog, cTmp1 )  /* TODO: put it under locking protocol */
          ::aLog := {}
