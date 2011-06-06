@@ -159,7 +159,7 @@ METHOD IdeChangeLog:show()
       ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
 
       ::oUI:q_comboAction     :addItem( "! Fixed  : " )
-      ::oUI:q_comboAction     :addItem( "& Changed: " )
+      ::oUI:q_comboAction     :addItem( "* Changed: " )
       ::oUI:q_comboAction     :addItem( "% Optimzd: " )
       ::oUI:q_comboAction     :addItem( "+ Added  : " )
       ::oUI:q_comboAction     :addItem( "- Removed: " )
@@ -188,7 +188,6 @@ METHOD IdeChangeLog:show()
       ::qHiliter:hbSetType( 1 )
 
       ::oUI:q_editChangelog   :setText( ::oINI:cChangeLog )
-      ::updateLog()
    ENDIF
 
    ::oUI:show()

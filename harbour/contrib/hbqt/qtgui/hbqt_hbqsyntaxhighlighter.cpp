@@ -141,7 +141,7 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    entryTitleRegExp      =  QRegExp( "^[ ]*\\#[^\n]*" );
    entrySourceRegExp     =  QRegExp( "^[ ]*\\*[^\n]*" );
    entryFixedRegExp      =  QRegExp( "^[ ]*\\! Fixed  " );
-   entryChangedRegExp    =  QRegExp( "^[ ]*\\& Changed" );
+   entryChangedRegExp    =  QRegExp( "^[ ]*\\* Changed" );
    entryOptimizedRegExp  =  QRegExp( "^[ ]*\\% Optimzd" );
    entryAddedRegExp      =  QRegExp( "^[ ]*\\+ Added  " );
    entryRemovedRegExp    =  QRegExp( "^[ ]*\\- Removed" );
@@ -303,11 +303,11 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
             }
             else
             {
-               index = entrySourceRegExp.indexIn( text );
+               index = entryChangedRegExp.indexIn( text );
                if( index >= 0 )
                {
-                  length = entrySourceRegExp.matchedLength();
-                  setFormat( index, length, entrySourceFormat );
+                  length = entryChangedRegExp.matchedLength();
+                  setFormat( index, length, entryChangedFormat );
                }
                else
                {
@@ -319,11 +319,11 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
                   }
                   else
                   {
-                     index = entryChangedRegExp.indexIn( text );
+                     index = entrySourceRegExp.indexIn( text );
                      if( index >= 0 )
                      {
-                        length = entryChangedRegExp.matchedLength();
-                        setFormat( index, length, entryChangedFormat );
+                        length = entrySourceRegExp.matchedLength();
+                        setFormat( index, length, entrySourceFormat );
                      }
                      else
                      {
