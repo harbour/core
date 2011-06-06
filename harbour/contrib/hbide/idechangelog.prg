@@ -189,8 +189,11 @@ METHOD IdeChangeLog:show()
       ::qHiliter:hbSetType( 1 )
 
       ::oUI:q_editChangelog   :setText( ::oINI:cChangeLog )
+
+      ::oUI:oWidget:connect( QEvent_Close, {|| ::oIde:oINI:cChangelogDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
    ENDIF
 
+   ::oIde:setPosAndSizeByIniEx( ::oUI:oWidget, ::oINI:cChangelogDialogGeometry )
    ::oUI:show()
 
    RETURN Self
