@@ -37,5 +37,6 @@
 hbmzip.hbx
 
 mzip.c
+mziperr.prg
 
 3rd/minizip/minizip.hbc{HBMK_HAS_MINIZIP_LOCAL}
