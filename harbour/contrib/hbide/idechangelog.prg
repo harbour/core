@@ -287,7 +287,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       IF ! empty( cTmp )
          ::oINI:cChangeLog := cTmp
 
-         s += "" + hbide_eol()
+         s := "" + hbide_eol()
          s += "$<000000> " + hbide_dtosFmt( date() ) + " " + left( time(),5 ) + " hbIDE" + hbide_eol()
          s += "  # Initialized by hbIDE" + hbide_eol()
 
