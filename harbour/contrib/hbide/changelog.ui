@@ -40,6 +40,16 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>User:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="editUser"/>
+      </item>
      </layout>
     </widget>
    </item>

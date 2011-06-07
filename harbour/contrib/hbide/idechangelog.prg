@@ -73,7 +73,6 @@
 
 CLASS IdeChangeLog INHERIT IdeObject
 
-   DATA   cUser                                   INIT ""
    DATA   nCntr                                   INIT 0
    DATA   qHiliter
    DATA   oEdit
@@ -158,6 +157,7 @@ METHOD IdeChangeLog:show()
       ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
 
       ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
+      ::oUI:q_editUser        :connect( "textChanged(QString)", {|p| ::execEvent( "editUser_textChanged"     , p ) } )
 
       ::oUI:q_comboAction     :addItem( "! Fixed  : " )
       ::oUI:q_comboAction     :addItem( "* Changed: " )
@@ -168,7 +168,9 @@ METHOD IdeChangeLog:show()
       ::oUI:q_comboAction     :addItem( "@ TODO   : " )
       ::oUI:q_comboAction     :addItem( "| Moved  : " )
 
-      ::cUser := hbide_fetchAString( ::oDlg:oWidget, , , "Developer Name" )
+      IF empty( ::oINI:cChangeLogUser )
+         ::oINI:cChangeLogUser := hbide_fetchAString( ::oDlg:oWidget, ::oINI:cChangeLogUser, , "Developer Name" )
+      ENDIF
 
       ::oUI:q_plainChangelog  :setFont( ::oFont:oWidget )
       ::oUI:q_plainLogEntry   :setFont( ::oFont:oWidget )
@@ -176,7 +178,8 @@ METHOD IdeChangeLog:show()
 
       ::oUI:q_plainLogEntry   :ensureCursorVisible()
 
-      ::oUI:setWindowTitle( "Manage ChangeLog(s) " + iif( empty( ::cUser ), "", " - " + ::cUser ) )
+      ::oUI:q_editUser:setText( ::oINI:cChangeLogUser )
+      ::oUI:setWindowTitle( "Manage ChangeLog(s)" )
 
       ::oEdit := IdeEdit():new( ::oIde )
       ::qEdit := ::oUI:q_plainChangelog
@@ -260,7 +263,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       IF ! empty( cTmp := ::buildLogEntry() )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
-         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::cUser
+         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::oINI:cChangeLogUser
 
          IF ( n := at( "$<", cTmp1 ) ) > 0
             //cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + cTmp + hbide_eol() + substr( cTmp1, n )
@@ -294,6 +297,11 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          hb_memowrit( ::oINI:cChangeLog, s )
 
          ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+      ENDIF
+      EXIT
+   CASE "editUser_textChanged"
+      IF !empty( p )
+         ::oINI:cChangeLogUser := p
       ENDIF
       EXIT
    CASE "editChangelog_textChanged"

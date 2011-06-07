@@ -170,6 +170,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   nDocksRightTabPos                       INIT  QTabWidget_South
 
    DATA   cChangeLog                              INIT  ""
+   DATA   cChangeLogUser                          INIT  ""
 
    DATA   lShowHideDocks                          INIT  .t.
 
@@ -402,6 +403,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "DocksRightTabPos"          + "=" +   hb_ntos( ::nDocksBottomTabPos )                    )
    aadd( txt_, "ShowHideDocks"             + "=" +   iif( ::lShowHideDocks          , "YES", "NO" )     )
    aadd( txt_, "ChangeLog"                 + "=" +   ::cChangeLog                                       )
+   aadd( txt_, "ChangeLogUser"             + "=" +   ::cChangeLogUser                                   )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -699,6 +701,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "DocksRightTabPos"            ; ::nDocksBottomTabPos                := val( cVal )  ; EXIT
                      CASE "ShowHideDocks"               ; ::lShowHideDocks                    := !( cVal == "NO" ) ; EXIT
                      CASE "ChangeLog"                   ; ::cChangeLog                        := cVal ; EXIT
+                     CASE "ChangeLogUser"               ; ::cChangeLogUser                    := cVal ; EXIT
 
                      ENDSWITCH
                   ENDIF
