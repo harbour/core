@@ -87,6 +87,9 @@
 
 #  ifndef HAVE_STRDUP
 extern char	*_mxml_strdup(const char *);
+#  if defined( strdup )
+#     undef strdup
+#  endif
 #    define strdup _mxml_strdup
 #  endif /* !HAVE_STRDUP */
 
