@@ -168,8 +168,8 @@ METHOD IdeChangeLog:show()
       ::oUI:q_comboAction     :addItem( "@ TODO   : " )
       ::oUI:q_comboAction     :addItem( "| Moved  : " )
 
-      IF empty( ::oINI:cChangeLogUser )
-         ::oINI:cChangeLogUser := hbide_fetchAString( ::oDlg:oWidget, ::oINI:cChangeLogUser, , "Developer Name" )
+      IF empty( ::oINI:cUserChangeLog )
+         ::oINI:cUserChangeLog := hbide_fetchAString( ::oDlg:oWidget, ::oINI:cUserChangeLog, , "Developer Name" )
       ENDIF
 
       ::oUI:q_plainChangelog  :setFont( ::oFont:oWidget )
@@ -178,7 +178,7 @@ METHOD IdeChangeLog:show()
 
       ::oUI:q_plainLogEntry   :ensureCursorVisible()
 
-      ::oUI:q_editUser:setText( ::oINI:cChangeLogUser )
+      ::oUI:q_editUser:setText( ::oINI:cUserChangeLog )
       ::oUI:setWindowTitle( "Manage ChangeLog(s)" )
 
       ::oEdit := IdeEdit():new( ::oIde )
@@ -263,7 +263,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       IF ! empty( cTmp := ::buildLogEntry() )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
-         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::oINI:cChangeLogUser
+         s := "$<" + strzero( ::nCntr, 6 ) + "> " + hbide_dtosFmt() + " " + left( time(), 5 ) + " " + ::oINI:cUserChangeLog
 
          IF ( n := at( "$<", cTmp1 ) ) > 0
             //cTmp1 := substr( cTmp1, 1, n - 1 ) + s + hbide_eol() + cTmp + hbide_eol() + substr( cTmp1, n )
@@ -301,7 +301,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       EXIT
    CASE "editUser_textChanged"
       IF !empty( p )
-         ::oINI:cChangeLogUser := p
+         ::oINI:cUserChangeLog := p
       ENDIF
       EXIT
    CASE "editChangelog_textChanged"

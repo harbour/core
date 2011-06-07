@@ -1598,10 +1598,10 @@ METHOD HbIde:setCodec( cCodec )
    DEFAULT cCodec TO ::cWrkCodec
 
    IF ( n := at( ":", cCodec ) ) > 0
-      cCodec := substr( cCodec, n+1 )
+      cCodec := substr( cCodec, 1, n-1 )
    ENDIF
 
-   ::cWrkCodec := hbide_getCDPforID( cCodec )
+   ::cWrkCodec := cCodec
 
    ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec + ":" + hb_cdpUniID( ::cWrkCodec ) )
 
