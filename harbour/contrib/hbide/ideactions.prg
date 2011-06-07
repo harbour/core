@@ -843,7 +843,7 @@ STATIC FUNCTION hbide_buildCDPMenu( oIde, oMenu )
    oSubMenu := XbpMenu():new( oMenu, , .t. ):create()
 
    FOR EACH cdp IN get_list_of_real_codepages()
-      oSubMenu:addItem( { hb_cdpUniID( cdp ), get_cdp_block( oIde, hb_cdpUniID( cdp ) ) } )
+      oSubMenu:addItem( { hbide_getCDPforID( cdp ) + ":" + hb_cdpUniID( cdp ), get_cdp_block( oIde, hb_cdpUniID( cdp ) ) } )
    NEXT
 
    RETURN oSubMenu
@@ -852,12 +852,16 @@ STATIC FUNCTION get_cdp_block( oIde, cCodePage )
    RETURN {|| oIde:setCodec( cCodePage ) }
 
 STATIC FUNCTION get_list_of_real_codepages()
-   LOCAL s_uni, cdp
+   LOCAL cdp
 
-   s_uni := { => }
-   FOR EACH cdp IN hb_cdpList()
-      s_uni[ hb_cdpUniID( cdp ) ] := cdp
-   NEXT
+   STATIC s_uni
+
+   IF empty( s_uni )
+      s_uni := { => }
+      FOR EACH cdp IN hb_cdpList()
+         s_uni[ hb_cdpUniID( cdp ) ] := cdp
+      NEXT
+   ENDIF
 
    RETURN s_uni
 

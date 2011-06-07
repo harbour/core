@@ -363,6 +363,7 @@ METHOD IdeChangeLog:addToLog( aLog )
    ENDCASE
 
    ::oUI:q_plainLogEntry:setPlainText( hbide_arrayToMemo( a_ ) )
+   QApplication():sendEvent( ::oUI:q_plainLogEntry, QKeyEvent( QEvent_KeyPress, Qt_Key_End, Qt_ControlModifier ) )
 
    RETURN Self
 

@@ -1593,8 +1593,13 @@ METHOD HbIde:updateTitleBar()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:setCodec( cCodec )
+   LOCAL n
 
    DEFAULT cCodec TO ::cWrkCodec
+
+   IF ( n := at( ":", cCodec ) ) > 0
+      cCodec := substr( cCodec, n+1 )
+   ENDIF
 
    ::cWrkCodec := hbide_getCDPforID( cCodec )
 
