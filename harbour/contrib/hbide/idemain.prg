@@ -1593,15 +1593,10 @@ METHOD HbIde:updateTitleBar()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:setCodec( cCodec )
-   LOCAL n
 
    DEFAULT cCodec TO ::cWrkCodec
 
-   IF ( n := at( ":", cCodec ) ) > 0
-      cCodec := substr( cCodec, 1, n-1 )
-   ENDIF
-
-   ::cWrkCodec := cCodec
+   ::cWrkCodec := hbide_getCDPforID( cCodec )
 
    ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec + ":" + hb_cdpUniID( ::cWrkCodec ) )
 
