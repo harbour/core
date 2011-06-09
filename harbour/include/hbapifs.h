@@ -152,6 +152,8 @@ extern HB_EXPORT HB_BOOL    hb_fsIsDevice    ( HB_FHANDLE hFileHandle ); /* dete
 extern HB_EXPORT HB_BOOL    hb_fsLock        ( HB_FHANDLE hFileHandle, HB_ULONG ulStart, HB_ULONG ulLength, HB_USHORT uiMode ); /* request a lock on a portion of a file */
 extern HB_EXPORT HB_BOOL    hb_fsLockLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
                                                HB_FOFFSET nLength, HB_USHORT uiMode ); /* request a lock on a portion of a file using 64bit API */
+extern HB_EXPORT int        hb_fsLockTest    ( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
+                                               HB_FOFFSET nLength, HB_USHORT uiMode );
 extern HB_EXPORT HB_BOOL    hb_fsMkDir       ( const char * pszDirName ); /* create a directory */
 extern HB_EXPORT HB_FHANDLE hb_fsOpen        ( const char * pszFileName, HB_USHORT uiFlags ); /* open a file */
 extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount ); /* read contents of a file into a buffer (<=64K) */
@@ -310,6 +312,7 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** ps
                               PHB_ITEM pError );
       void        (* Close ) ( PHB_FILE pFile );
       HB_BOOL     (* Lock ) ( PHB_FILE, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
+      int         (* LockTest ) ( PHB_FILE, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
       HB_SIZE     (* ReadAt ) ( PHB_FILE pFile, void * buffer, HB_SIZE nSize, HB_FOFFSET nOffset );
       HB_SIZE     (* WriteAt ) ( PHB_FILE pFile, const void * buffer, HB_SIZE nSize, HB_FOFFSET nOffset );
       HB_BOOL     (* TruncAt ) ( PHB_FILE pFile, HB_FOFFSET nOffset );
@@ -340,6 +343,7 @@ extern HB_EXPORT PHB_FILE     hb_fileCreateTempEx( char * pszName,
                                                    HB_FATTR ulAttr );
 extern HB_EXPORT void         hb_fileClose( PHB_FILE pFile );
 extern HB_EXPORT HB_BOOL      hb_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
+extern HB_EXPORT int          hb_fileLockTest( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
 extern HB_EXPORT HB_SIZE      hb_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE nSize, HB_FOFFSET nOffset );
 extern HB_EXPORT HB_SIZE      hb_fileWriteAt( PHB_FILE pFile, const void * buffer, HB_SIZE nSize, HB_FOFFSET nOffset );
 extern HB_EXPORT HB_BOOL      hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET nOffset );

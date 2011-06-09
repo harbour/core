@@ -670,6 +670,15 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsLock( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
    return HB_TRUE;
 }
 
+HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_FOFFSET nLength, int iMode )
+{
+   HB_SYMBOL_UNUSED( hFile );
+   HB_SYMBOL_UNUSED( ulStart );
+   HB_SYMBOL_UNUSED( nLength );
+   HB_SYMBOL_UNUSED( iMode );
+   return 0;
+}
+
 /******************************************************
 *
 *  I/O Driver for Memory file system
@@ -790,6 +799,13 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart,
 }
 
 
+static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET ulStart,
+                           HB_FOFFSET nLen, int iType )
+{
+   return hb_memfsLockTest( pFile->hFile, ulStart, nLen, iType );
+}
+
+
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer,
                              HB_SIZE nSize, HB_FOFFSET llOffset )
 {
@@ -843,6 +859,7 @@ static const HB_FILE_FUNCS s_fileFuncs =
    s_fileOpen,
    s_fileClose,
    s_fileLock,
+   s_fileLockTest,
    s_fileReadAt,
    s_fileWriteAt,
    s_fileTruncAt,

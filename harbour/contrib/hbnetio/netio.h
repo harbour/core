@@ -107,6 +107,7 @@
 #define NETIO_SRVITEM         21
 #define NETIO_SRVDATA         22
 #define NETIO_SRVCLOSE        23
+#define NETIO_TESTLOCK        24
 #define NETIO_CONNECTED       0x4321DEAD
 
 /* messages format */
@@ -118,6 +119,7 @@
 /* { NETIO_READ,     file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 4 ], ... } + data[ read ] */
 /* { NETIO_WRITE,    file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 4 ], ... } */
 /* { NETIO_LOCK,     file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_LOCK, ... } */
+/* { NETIO_TESTLOCK, file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_TESTLOCK, result[ 4 ], ... } */
 /* { NETIO_TRUNC,    file_no[2], offset[ 8 ], ... } -> { NETIO_TRUNC, ... } */
 /* { NETIO_SIZE,     file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 4 ], ... } */
 /* { NETIO_COMMIT,   file_no[2], ... } -> { NETIO_SYNC, ... } | NULL */

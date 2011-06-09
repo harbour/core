@@ -751,7 +751,7 @@ HB_FUNC( NETIO_SERVER )
          HB_BOOL fNoAnswer = HB_FALSE;
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
-         int iFileNo, iStreamID;
+         int iFileNo, iStreamID, iResult;
          HB_U32 uiMsg;
          HB_USHORT uiFalgs;
          char * szExt;
@@ -973,6 +973,7 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_UNLOCK:
                fNoAnswer = HB_TRUE;
             case NETIO_LOCK:
+            case NETIO_TESTLOCK:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                llOffset = HB_GET_LE_INT64( &msgbuf[ 6 ] );
                llSize = HB_GET_LE_INT64( &msgbuf[ 14 ] );
@@ -980,6 +981,15 @@ HB_FUNC( NETIO_SERVER )
                pFile = s_srvFileGet( conn, iFileNo );
                if( pFile == NULL )
                   errCode = NETIO_ERR_WRONG_FILE_HANDLE;
+               else if( uiMsg == NETIO_TESTLOCK )
+               {
+                  iResult = hb_fileLockTest( pFile, llOffset, llSize, uiFalgs );
+                  errFsCode = hb_fsError();
+                  HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
+                  HB_PUT_LE_UINT32( &msg[ 4 ], iResult );
+                  HB_PUT_LE_UINT32( &msg[ 8 ], errFsCode );
+                  memset( msg + 12, '\0', NETIO_MSGLEN - 4 );
+               }
                else if( !hb_fileLock( pFile, llOffset, llSize, uiFalgs ) )
                   errCode = s_srvFsError();
                else if( !fNoAnswer )

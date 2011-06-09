@@ -63,6 +63,9 @@
 #if !defined( HB_OS_WIN_CE )
 #  include <sys/types.h>
 #  include <sys/stat.h>
+#  if defined( HB_OS_UNIX )
+#     include <unistd.h>
+#  endif
 #endif
 
 
@@ -303,6 +306,22 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
    return fResult;
 }
 
+static HB_BOOL hb_fileTestLock( PHB_FILE pFile,
+                                HB_FOFFSET nStart, HB_FOFFSET nLen )
+{
+   HB_UINT uiPos;
+
+   uiPos = hb_fileFindOffset( pFile, nStart );
+   if( uiPos < pFile->uiLocks )
+   {
+      PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
+      if( nStart + nLen > pLock->start )
+         return HB_TRUE;
+   }
+
+   return HB_FALSE;
+}
+
 
 /*
  * file methods
@@ -516,6 +535,29 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
    return fResult;
 }
 
+static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
+                           int iType )
+{
+   HB_BOOL fLocked;
+   int iResult;
+
+   hb_threadEnterCriticalSection( &s_fileMtx );
+   fLocked = hb_fileTestLock( pFile, nStart, nLen );
+   hb_threadLeaveCriticalSection( &s_fileMtx );
+   if( fLocked )
+   {
+#if defined( HB_OS_UNIX )
+      iResult = getpid();
+#else
+      iResult = 1;
+#endif
+   }
+   else
+      iResult = hb_fsLockTest( pFile->hFile, nStart, nLen, ( HB_USHORT ) iType );
+
+   return iResult;
+}
+
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
                              HB_FOFFSET nOffset )
 {
@@ -566,6 +608,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileExtOpen,
       s_fileClose,
       s_fileLock,
+      s_fileLockTest,
       s_fileReadAt,
       s_fileWriteAt,
       s_fileTruncAt,
@@ -667,6 +710,12 @@ HB_BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
                      int iType )
 {
    return pFile->pFuncs->Lock( pFile, nStart, nLen, iType );
+}
+
+int hb_fileLockTest( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
+                     int iType )
+{
+   return pFile->pFuncs->LockTest( pFile, nStart, nLen, iType );
 }
 
 HB_SIZE hb_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE nSize,

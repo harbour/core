@@ -291,6 +291,7 @@
 #define DBI_DIRTYREAD           143  /* Get/Set index dirty read flag */
 #define DBI_POSITIONED          144  /* Is cursor positioned to valid record */
 #define DBI_ISTEMPORARY         145  /* Is the table a temporary one? */
+#define DBI_LOCKTEST            146  /* record / file lock test */
 
 /* RECORD MAP (RM) support */
 #define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */

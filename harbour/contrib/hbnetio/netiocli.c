@@ -1611,6 +1611,33 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return fResult;
 }
 
+static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                           int iType )
+{
+   int iResult = -1;
+
+   if( s_fileConLock( pFile->conn ) )
+   {
+      HB_BYTE msgbuf[ NETIO_MSGLEN ];
+
+      HB_PUT_LE_UINT32( &msgbuf[  0 ], NETIO_TESTLOCK );
+      HB_PUT_LE_UINT16( &msgbuf[  4 ], pFile->fd );
+      HB_PUT_LE_UINT64( &msgbuf[  6 ], ulStart );
+      HB_PUT_LE_UINT64( &msgbuf[ 14 ], ulLen );
+      HB_PUT_LE_UINT16( &msgbuf[ 22 ], ( HB_USHORT ) iType );
+#if NETIO_MSGLEN > 24
+      memset( msgbuf + 24, '\0', sizeof( msgbuf ) - 24 );
+#endif
+
+      if( s_fileSendMsg( pFile->conn, msgbuf, NULL, 0, HB_TRUE, HB_FALSE ) )
+         iResult = HB_GET_LE_INT32( &msgbuf[ 4 ] );
+
+      s_fileConUnlock( pFile->conn );
+   }
+
+   return iResult;
+}
+
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * data, HB_SIZE ulSize,
                              HB_FOFFSET llOffset )
 {
@@ -1759,6 +1786,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileOpen,
       s_fileClose,
       s_fileLock,
+      s_fileLockTest,
       s_fileReadAt,
       s_fileWriteAt,
       s_fileTruncAt,

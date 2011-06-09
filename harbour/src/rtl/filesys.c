@@ -2535,7 +2535,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
             lock_info.l_start  = ulStart;
             lock_info.l_len    = ulLength;
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
-            lock_info.l_pid    = getpid();
+            lock_info.l_pid    = 0;
 
             HB_FAILURE_RETRY( iResult, fcntl( hFileHandle,
                                ( uiMode & FLX_WAIT ) ? F_SETLKW: F_SETLK,
@@ -2549,7 +2549,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
             lock_info.l_start  = ulStart;
             lock_info.l_len    = ulLength;
             lock_info.l_whence = SEEK_SET;
-            lock_info.l_pid    = getpid();
+            lock_info.l_pid    = 0;
 
             HB_FAILURE_RETRY( iResult, fcntl( hFileHandle, F_SETLK, &lock_info ) );
             fResult = iResult != -1;
@@ -2668,7 +2668,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
             lock_info.l_start  = nStart;
             lock_info.l_len    = nLength;
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
-            lock_info.l_pid    = getpid();
+            lock_info.l_pid    = 0;
 
             HB_FAILURE_RETRY( iResult, fcntl( hFileHandle,
                                ( uiMode & FLX_WAIT ) ? F_SETLKW64: F_SETLK64,
@@ -2682,7 +2682,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
             lock_info.l_start  = nStart;
             lock_info.l_len    = nLength;
             lock_info.l_whence = SEEK_SET;
-            lock_info.l_pid    = getpid();
+            lock_info.l_pid    = 0;
 
             HB_FAILURE_RETRY( iResult, fcntl( hFileHandle, F_SETLK64, &lock_info ) );
             fResult = iResult != -1;
@@ -2699,6 +2699,52 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
 #endif
 
    return fResult;
+}
+
+int hb_fsLockTest( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
+                   HB_FOFFSET nLength, HB_USHORT uiMode )
+{
+   int iResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsLockTest(%p, %" PFHL "u, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nStart, nLength, uiMode));
+
+#if defined( HB_OS_UNIX )
+{
+#  if defined( HB_USE_LARGEFILE64 )
+      struct flock64 lock_info;
+
+      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;;
+      lock_info.l_start  = nStart;
+      lock_info.l_len    = nLength;
+      lock_info.l_whence = SEEK_SET;
+      lock_info.l_pid    = 0;
+      iResult = fcntl( hFileHandle, F_GETLK64, &lock_info ) != -1 ?
+                ( int ) lock_info.l_pid : -1;
+#  else
+      struct flock lock_info;
+
+      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;;
+      lock_info.l_start  = nStart;
+      lock_info.l_len    = nLength;
+      lock_info.l_whence = SEEK_SET;
+      lock_info.l_pid    = 0;
+      iResult = fcntl( hFileHandle, F_GETLK, &lock_info ) != -1 ?
+                ( int ) lock_info.l_pid : -1;
+#  endif
+}
+#else
+   if( hb_fsLockLarge( hFileHandle, nStart, nLength, ( uiMode & FLX_SHARED ) | FL_LOCK ) )
+   {
+      if( !hb_fsLockLarge( hFileHandle, nStart, nLength, FL_UNLOCK ) )
+         iResult = -1;
+      else
+         iResult = 0;
+   }
+   else
+      iResult = 1;
+#endif
+
+   return iResult;
 }
 
 HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
