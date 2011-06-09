@@ -595,39 +595,34 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 {
-   RECT wi;
    RECT ci;
    int maxWidth;
    int maxHeight;
-   int borderWidth;
-   int borderHeight;
+   int irows = pWVT->ROWS;
+   int icols = pWVT->COLS;
+
+   if( IsZoomed( pWVT->hWnd ) )
+     pWVT->bMaximized = HB_TRUE;
+   else
+     pWVT->bMaximized = HB_FALSE;
 
    GetClientRect( pWVT->hWnd, &ci );
-   GetWindowRect( pWVT->hWnd, &wi );
-
-   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
-
-   if( pWVT->bMaximized )
-   {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
-
-      maxHeight = wi.bottom - wi.top - borderHeight;
-      maxWidth  = wi.right - wi.left - borderWidth;
-   }
-   else
-   {
-      maxWidth = ci.right - ci.left;
-      maxHeight = ci.bottom - ci.top;
-   }
+   maxWidth = ci.right;
+   maxHeight = ci.bottom;
 
    if( maxHeight > 0 )
    {
       HB_BOOL bOldCentre = pWVT->CentreWindow;
+      pWVT->bResizing = HB_TRUE;
       pWVT->CentreWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
       HB_GTSELF_SETMODE( pWVT->pGT, ( maxHeight / pWVT->PTEXTSIZE.y ), ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
+      pWVT->bResizing = HB_FALSE;
+      pWVT->bAlreadySizing = HB_FALSE;
    }
+
+   if( irows != pWVT->ROWS || icols != pWVT->COLS )
+     hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
@@ -640,31 +635,27 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int borderHeight;
    int left;
    int top;
+   int i = 0;
+   int j = 0;
+   int iCalcWidth = 0;
+   int iCalcHeight = 0;
+
+   if( IsZoomed( pWVT->hWnd ) )
+      pWVT->bMaximized = HB_TRUE;
+   else
+      pWVT->bMaximized = HB_FALSE;
 
    GetClientRect( pWVT->hWnd, &ci );
    GetWindowRect( pWVT->hWnd, &wi );
 
-   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+   borderWidth = ( wi.right - wi.left ) - ci.right;
+   borderHeight = ( wi.bottom - wi.top ) - ci.bottom;
 
-   if( pWVT->bMaximized )
-   {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
+   maxWidth  = ci.right;
+   maxHeight = ci.bottom;
 
-      maxHeight = wi.bottom - wi.top - borderHeight;
-      maxWidth  = wi.right - wi.left - borderWidth;
-
-      left = 0;
-      top  = 0;
-   }
-   else
-   {
-      maxHeight = ci.bottom - ci.top;
-      maxWidth  = ci.right  - ci.left;
-
-      left = wi.left;
-      top  = wi.top;
-   }
+   left = wi.left;
+   top  = wi.top;
 
    {
       HFONT hOldFont;
@@ -676,123 +667,131 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
 
-      hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-      if( hFont )
+      for( ;; )
       {
-         HDC        hdc;
-         int        width;
-         int        height;
-         TEXTMETRIC tm;
-
-         hdc       = GetDC( pWVT->hWnd );
-         hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
-         SetTextCharacterExtra( hdc, 0 );
-         GetTextMetrics( hdc, &tm );
-         SelectObject( hdc, hOldFont );
-         ReleaseDC( pWVT->hWnd, hdc );
-
-         width     = tm.tmAveCharWidth * pWVT->COLS;
-         height    = tm.tmHeight       * pWVT->ROWS;
-
-         if( width <= maxWidth &&
-             height <= maxHeight &&
-             tm.tmAveCharWidth >= 3 &&
-             tm.tmHeight >= 4 )
+         hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+         if( hFont )
          {
-#if ! defined( UNICODE )
-            if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
-               DeleteObject( pWVT->hFontBox );
+            HDC        hdc;
+            int        width;
+            int        height;
+            TEXTMETRIC tm;
 
-            if( pWVT->CodePage == pWVT->boxCodePage )
-               pWVT->hFontBox = hFont;
-            else
+            hdc       = GetDC( pWVT->hWnd );
+            hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
+            SetTextCharacterExtra( hdc, 0 );
+            GetTextMetrics( hdc, &tm );
+            SelectObject( hdc, hOldFont );
+            ReleaseDC( pWVT->hWnd, hdc );
+
+            width     = tm.tmAveCharWidth * pWVT->COLS;
+            height    = tm.tmHeight       * pWVT->ROWS;
+
+            if( width <= maxWidth &&
+                height <= maxHeight &&
+                tm.tmAveCharWidth >= 4 &&
+                tm.tmHeight >= 8 )
             {
-               pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->boxCodePage );
-               if( !pWVT->hFontBox )
+#if ! defined( UNICODE )
+               if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
+                  DeleteObject( pWVT->hFontBox );
+
+               if( pWVT->CodePage == pWVT->boxCodePage )
                   pWVT->hFontBox = hFont;
-            }
+               else
+               {
+                  pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->boxCodePage );
+                  if( !pWVT->hFontBox )
+                     pWVT->hFontBox = hFont;
+               }
 #endif
-            if( pWVT->hFont )
-               DeleteObject( pWVT->hFont );
+               if( pWVT->hFont )
+                  DeleteObject( pWVT->hFont );
 
-            pWVT->hFont       = hFont;
-            pWVT->fontHeight  = tm.tmHeight;
-            pWVT->fontWidth   = tm.tmAveCharWidth;
-
-            pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
-            pWVT->PTEXTSIZE.y = tm.tmHeight;
+               pWVT->hFont       = hFont;
+               pWVT->fontHeight  = tm.tmHeight;
+               pWVT->fontWidth   = tm.tmAveCharWidth;
+               pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
+               pWVT->PTEXTSIZE.y = tm.tmHeight;
 
 #if defined( HB_OS_WIN_CE )
-            pWVT->FixedFont = HB_FALSE;
+               pWVT->FixedFont = HB_FALSE;
 #else
-            pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
-                        ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
-                        ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
+               pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+                           ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
+                           ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
-            for( n = 0; n < pWVT->COLS; n++ )
-               pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+               for( n = 0; n < pWVT->COLS; n++ )
+                  pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
-            width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
-            height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
+               width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+               height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
-            if( pWVT->bMaximized )
-            {
-               left = ( ( wi.right - width ) / 2 );
-               top = ( ( wi.bottom - height ) / 2 );
+               if( pWVT->bMaximized )
+               {
+                  pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
+                  pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
+               }
+               else
+               {
+                  pWVT->MarginLeft = 0;
+                  pWVT->MarginTop  = 0;
+                  SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+               }
 
-               left = ( left < 0 ? 0 : left );
-               top = ( top < 0 ? 0 : top );
+               if( pWVT->CaretExist && !pWVT->CaretHidden )
+                  hb_gt_wvt_UpdateCaret( pWVT );
             }
-
-            if( !pWVT->bFullScreen )
-               SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
             else
             {
-               pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
-               pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
-               /* there were some problems with repainting earlier, i hope they won't come back
-                * InvalidateRect( pWVT->hWnd, NULL, TRUE );
-                * UpdateWindow( pWVT->hWnd );
-                */
+               /* I did it this way, so that "Courier New" would size and maximize as expected.
+                * "Courier New"  appears to not scale linearily, sometimes by just decreasing the
+                * font width by one with some font heights makes it all work out?
+                * This code never seems to get executed with "Lucida Console"
+                * Width scaling with some Heights is an issue with Courier New and Terminal
+                * Height scaling with some Widths is an issue with Consolas and Terminal
+                * but this code lets us adjust it here and try creating the font again. [HVB] */
+
+               if( iCalcWidth == 0 && iCalcHeight == 0 )
+               {
+                 iCalcWidth = fontWidth;
+                 iCalcHeight = fontHeight;
+               }
+
+               if( i == j )
+               {
+                 j = 0;
+                 i++;
+               }
+               else if( i > j )
+               {
+                  j++;
+                  if( j == i )
+                    i = 0;
+               }
+               else
+                 i++;
+
+               fontWidth = iCalcWidth - i;
+               fontHeight = iCalcHeight - j;
+
+               if( fontWidth < 4 || fontHeight < 8 )
+               {
+                  width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+                  height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
+                  SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+                  break;
+               }
+
+               continue;
             }
 
-            if( pWVT->CaretExist && !pWVT->CaretHidden )
-               hb_gt_wvt_UpdateCaret( pWVT );
-         }
-         else
-         {
-            width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
-            height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
-
-            if( !pWVT->bFullScreen )
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
-            if( width > maxWidth || height > maxHeight )
-               hb_gt_wvt_FitRows( pWVT );
+            HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
          }
 
-         HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+         break;
       }
    }
-}
-
-static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
-{
-   pWVT->bMaximized = HB_TRUE;
-
-   if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-      hb_gt_wvt_FitSize( pWVT );
-   else
-      hb_gt_wvt_FitRows( pWVT );
-
-   /* Disable "maximize" button */
-   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
-   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                      SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-   ShowWindow( pWVT->hWnd, SW_HIDE );
-   ShowWindow( pWVT->hWnd, SW_NORMAL );
-
-   if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-      hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
 
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
@@ -802,7 +801,6 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
    int        height, width;
    RECT       wi, ci;
    TEXTMETRIC tm;
-   RECT       rcWorkArea;
    int        n;
 
    if( !pWVT->hFont || hFont )
@@ -871,41 +869,41 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
 
    /* Center the window within the CLIENT area on the screen
       but only if pWVT->CentreWindow == HB_TRUE */
-   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+   if( pWVT->bMaximized )
    {
-      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+      pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
+      pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
    }
-
-   if( wi.left < 0 || wi.top < 0 )
+   else if( pWVT->CentreWindow )
    {
-      pWVT->bMaximized = HB_TRUE;
-
-      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-         hb_gt_wvt_FitSize( pWVT );
-      else
-         hb_gt_wvt_FitRows( pWVT );
-
-      /* resize the window to get the specified number of rows and columns */
-      GetWindowRect( pWVT->hWnd, &wi );
-      GetClientRect( pWVT->hWnd, &ci );
-
-      height = ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-      width  = ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-      width  += ( int ) ( wi.right - wi.left - ci.right );
-      height += ( int ) ( wi.bottom - wi.top - ci.bottom );
-
-      /* Center the window within the CLIENT area on the screen
-         but only if pWVT->CentreWindow == HB_TRUE */
-      if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+      RECT rcWorkArea;
+      if( SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) &&  wi.left >= rcWorkArea.left && wi.right <= rcWorkArea.right && wi.top >= rcWorkArea.top && wi.bottom <= rcWorkArea.bottom )
       {
+         /* Window was within the primary monitor's workspace, center it there. */
          wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
          wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+         if( wi.top < rcWorkArea.top )
+            wi.top = rcWorkArea.top;  /* Force window's title bar within the workarea. */
+      }
+      else
+      {
+         /* Not sure where current window is, or user's intention, will just resize it in place.
+          * This results in a Zoom / Implode effect at its current location, depending on size change.
+          * Window may be on a different monitor.
+          * Program's intention may be to size across more than one monitor?
+          * Programmer can always implicitly postion the window as desired.
+          */
+         wi.left += ( ( wi.right - wi.left - width  ) / 2 );
+         wi.top  += ( ( wi.bottom - wi.top - height ) / 2 );
       }
    }
 
-   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+   if( !pWVT->bMaximized )
+   {
+      pWVT->MarginLeft = 0;
+      pWVT->MarginTop  = 0;
+      SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+   }
 
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 
@@ -959,7 +957,7 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
 {
    RECT colrow;
 
-   if( pWVT->bFullScreen )
+   if( pWVT->bMaximized )
    {
       if( xy.left >= pWVT->MarginLeft )
          xy.left   = xy.left - pWVT->MarginLeft;
@@ -1245,8 +1243,8 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                /* in WM_CHAR i was unable to read Alt key state */
                if( bAlt && pWVT->bAltEnter )
                {
-                  hb_gt_wvt_FullScreen( pWVT->pGT );
-                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;   /* this must be FIRST, otherwise some process in hb_gt_wvt_FullScreen posts the ENTER key to the InputQueue */
+                  hb_gt_wvt_FullScreen( pWVT->pGT );  /* this must be last, otherwise some process in hb_gt_wvt_FullScreen posts the ENTER key to the InputQueue */
                }
                break;
             case VK_LEFT:
@@ -1586,11 +1584,12 @@ static HB_BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int
                       lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
 }
 
-static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
+static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
 {
    PAINTSTRUCT ps;
    HDC         hdc;
    RECT        rcRect;
+   HBRUSH      hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
@@ -1606,15 +1605,66 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    /* for sure there is a better method for repainting not used screen area
     * ExcludeClipRect()?
     */
-   if( pWVT->bFullScreen )
-      FillRect( hdc, &updateRect, CreateSolidBrush( pWVT->COLORS[ 0 ] ) );
+   if( pWVT->bMaximized )
+   {
+      RECT ciNew = ps.rcPaint;
+      RECT ciTemp = ps.rcPaint;
+      if( pWVT->MarginLeft > 0 )
+      {
+         ciTemp.right = pWVT->MarginLeft;
+         FillRect( hdc, &ciTemp, hBrush );
+         ciTemp.right = ciNew.right;
+         ciTemp.left = ciTemp.right - pWVT->MarginLeft;
+         FillRect( hdc, &ciTemp, hBrush );
+         ciTemp.left = ciNew.left;
+      }
+      if( pWVT->MarginTop > 0 )
+      {
+         ciTemp.bottom = pWVT->MarginTop;
+         FillRect( hdc, &ciTemp, hBrush );
+         ciTemp.bottom = ciNew.bottom;
+         ciTemp.top = ciTemp.bottom - pWVT->MarginTop;
+         FillRect( hdc, &ciTemp, hBrush );
+      }
+      /*FillRect( hdc, &ps.rcPaint, hBrush);
+       * ^^^ this was previous code, caused entire window/screen to be erased on every
+       * WM_PAINT message which caused a Browse scroll to flicker badly under XP.
+       * Now, only repaints the margin areas as required.
+       */
+   }
+   else if( pWVT->bAlreadySizing )
+   {
+      /* This code solves issue with XP when resizing with mouse on window borders,
+       * only applicable when ResizeMode is by ROWS, depending on Windows settings
+       * to "Show window content while dragging." would cause border artifacts or
+       * content smearing when sizing. Now will paint new area black until mouse
+       * button is released, much like Windows 7 behaviour.
+       * One issue here is that I need a static variable RECT ciLast to store the
+       * Client area coordinates before Window sized, this is set in the WM_ENTERSIZEMOVE
+       * message and then used here to calculate the size changed areas to paint black.
+       */
+      RECT ciNew = ps.rcPaint;
+      RECT ciTemp = ps.rcPaint;
+      if( ciNew.bottom > pWVT->ciLast.bottom )
+      {
+         ciTemp.top = pWVT->ciLast.bottom;
+         FillRect( hdc, &ciTemp, hBrush );
+         ciTemp.top = ciNew.top;
+      }
+
+      if( ciNew.right > pWVT->ciLast.right )
+      {
+         ciTemp.left = pWVT->ciLast.right;
+         FillRect( hdc, &ciTemp, hBrush );
+      }
+   }
 
 #if defined( UNICODE )
    SelectObject( hdc, pWVT->hFont );
    hostCDP = pWVT->hostCDP ? pWVT->hostCDP : hb_vmCDP();
 #endif
 
-   rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, updateRect );
+   rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, ps.rcPaint );
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {
@@ -1674,8 +1724,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
       if( len > 0 )
          hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
    }
-
    EndPaint( pWVT->hWnd, &ps );
+   DeleteObject( hBrush );
 }
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -1704,10 +1754,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       case WM_PAINT:
       {
-         RECT updateRect;
 
-         if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
-            hb_gt_wvt_PaintText( pWVT, updateRect );
+         if( GetUpdateRect( hWnd, NULL, FALSE ) )
+            hb_gt_wvt_PaintText( pWVT );
 
          return 0;
       }
@@ -1775,58 +1824,40 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_ENTERSIZEMOVE:
-         if( pWVT->bMaximized )
-         {
-            pWVT->bMaximized = HB_FALSE;
-
-            /* Enable "maximize" button */
-            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
-            SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                      SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-            ShowWindow( pWVT->hWnd, SW_HIDE );
-            ShowWindow( pWVT->hWnd, SW_NORMAL );
-         }
+         GetClientRect( pWVT->hWnd, &pWVT->ciLast );  /* need in Paint function, client area before sizing started */
          pWVT->bResizing = HB_TRUE;
          return 0;
 
       case WM_EXITSIZEMOVE:
          pWVT->bResizing = HB_FALSE;
-
-         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-         return 0;
-
-      case WM_SIZE:
-         if( pWVT->bResizing )
+         if( pWVT->bAlreadySizing )
+         /* user was resizing as opposed to moving window */
          {
-            if( ! pWVT->bAlreadySizing )
-            {
-               pWVT->bAlreadySizing = HB_TRUE;
-
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-                  hb_gt_wvt_FitRows( pWVT );
-            }
+            hb_gt_wvt_FitRows( pWVT );
             pWVT->bAlreadySizing = HB_FALSE;
          }
          return 0;
 
-#if ! defined( HB_OS_WIN_CE )
-      case WM_NCLBUTTONDBLCLK:
-         if( ! pWVT->bMaximized )
-            hb_gt_wvt_Maximize( pWVT );
+      case WM_SIZE:
+
+         if( ! pWVT->bFullScreen )
+         {
+            if( pWVT->bResizing && pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+               pWVT->bAlreadySizing = HB_TRUE;
+            else if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+            {
+               if( !pWVT->bAlreadySizing )
+                  hb_gt_wvt_FitSize( pWVT );
+            }
+            else
+               /* resize came from Maximize, Restore, other than mouse resizing... */
+               hb_gt_wvt_FitRows( pWVT );
+         }
          return 0;
-#endif
 
       case WM_SYSCOMMAND:
          switch( wParam )
          {
-            case SC_MAXIMIZE:
-            {
-               hb_gt_wvt_Maximize( pWVT );
-               return 0;
-            }
 
             case SYS_EV_MARK:
             {
@@ -1852,30 +1883,6 @@ static WPARAM hb_gt_wvt_ProcessMessages( void )
    return msg.wParam;
 }
 
-static HB_BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFont, int iWidth )
-{
-   HDC        hdc;
-   HFONT      hOldFont;
-   int        width, height, maxWidth, maxHeight;
-   TEXTMETRIC tm;
-   RECT       rcWorkArea;
-
-   SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 );
-
-   maxWidth  = ( int ) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = ( int ) ( rcWorkArea.bottom - rcWorkArea.top );
-
-   hdc       = GetDC( hWnd );
-   hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
-   GetTextMetrics( hdc, &tm );
-   SelectObject( hdc, hOldFont ); /* Put old font back */
-   ReleaseDC( hWnd, hdc );
-
-   width     = ( int ) ( ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth ) * cols );  /* Total pixel width this setting would take */
-   height    = ( int ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
-
-   return ( width <= maxWidth ) && ( height <= maxHeight );
-}
 
 static void hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
@@ -1942,6 +1949,8 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    RECT rt;
    DWORD dwStyle;
    DWORD dwExtendedStyle;
+
+/*Don't need this as Windows automatically maximizes to nearest [HVB]
 #ifdef MONITOR_DEFAULTTONEAREST
    HMONITOR mon;
    MONITORINFO mi;
@@ -1950,7 +1959,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    P_MFW pMonitorFromWindow;
    P_GMI pGetMonitorInfo;
 #endif
-
+*/
    pWVT = HB_GTWVT_GET( pGT );
 
    dwStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
@@ -1972,8 +1981,6 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    {
       dwStyle &= ~( WS_CAPTION | WS_BORDER | WS_THICKFRAME );
       dwExtendedStyle &= ~WS_EX_TOPMOST;
-
-      pWVT->bMaximized = HB_FALSE;
       pWVT->bFullScreen = HB_TRUE;
    }
 
@@ -1982,16 +1989,20 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 
    if( !pWVT->bFullScreen )
    {
-      ShowWindow( pWVT->hWnd, SW_MAXIMIZE );
-      hb_gt_wvt_Maximize( pWVT );
+      ShowWindow( pWVT->hWnd, SW_RESTORE );
       return HB_FALSE;
    }
 
-   rt.left   = 0;
-   rt.top    = 0;
-   rt.right  = 0;
-   rt.bottom = 0;
+   if( !pWVT->bMaximized )
+      ShowWindow( pWVT->hWnd, SW_SHOWMAXIMIZED );
 
+/* Don't need as Windows automatically maximizes to nearest.
+ * That is as long as we use the RECT that Windows provides
+ * and don't handle WM_MINMAXWINDOW or other related messages
+ * and don't change the RECT coordinates (may have negative
+ * numbers for top or left depending on how user configured
+ * monitors relationship and which on is the primary). [HVB]
+ *
 #ifdef MONITOR_DEFAULTTONEAREST
    pMonitorFromWindow = ( P_MFW ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
                                                   "MonitorFromWindow" );
@@ -2011,6 +2022,9 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 #else
    GetClientRect( GetDesktopWindow(), &rt );
 #endif
+*/
+
+   GetClientRect( GetDesktopWindow(), &rt );
 
    SetWindowPos( pWVT->hWnd, HWND_TOP, rt.left, rt.top,
                  rt.right - rt.left,
@@ -2087,26 +2101,28 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    if( pWVT->hWnd ) /* Is the window already open? */
    {
-      if( pWVT->bResizable && ! pWVT->bFullScreen )
+      if( pWVT->bResizable && ! pWVT->bMaximized )
       {
          fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, NULL );
          HB_GTSELF_REFRESH( pGT );
       }
       else
       {
-         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+         /* We're Maximized, Fullscreen or in an unsizable window
+          * Change Font size to fit new mode settings into the window
+          */
+         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, (pWVT->fontHeight * pWVT->ROWS)/iRow, (pWVT->fontWidth * pWVT->COLS)/iCol,
                                           pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-
          if( hFont )
          {
-            /*
-             * make sure that the mode selected along with the current
-             * font settings will fit in the window
-             */
-            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
-            else
-               DeleteObject( hFont );
+            fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
+            hb_gt_wvt_FitSize( pWVT );
+            if( pWVT->bMaximized )
+            {
+               /* Window size not changed, but Margins may have changed, repaint the client area [HVB] */
+               InvalidateRect( pWVT->hWnd, NULL, TRUE );
+               UpdateWindow( pWVT->hWnd );
+            }
 
             HB_GTSELF_REFRESH( pGT );
          }
@@ -2418,15 +2434,37 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 )
-            HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+         if( iVal > 0 && !pWVT->bMaximized )  /* Don't allow if Maximized or FullScreen */
+         {
+            /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
+            RECT ci;
+            GetClientRect( pWVT->hWnd, &ci );
+            if( ci.bottom != iVal )
+            {
+               RECT wi;
+               GetWindowRect( pWVT->hWnd, &wi );
+               iVal += wi.bottom - wi.top - ci.bottom;
+               SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, wi.right - wi.left, iVal, SWP_NOZORDER );
+            }
+         }
          break;
 
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x * pWVT->COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 )
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( iVal / pWVT->PTEXTSIZE.x ) );
+         if( iVal > 0 && !pWVT->bMaximized )  /* Don't allow if Maximized or FullScreen */
+         {
+            /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
+            RECT ci;
+            GetClientRect( pWVT->hWnd, &ci );
+            if( ci.right != iVal )
+            {
+               RECT wi;
+               GetWindowRect( pWVT->hWnd, &wi );
+               iVal += wi.right - wi.left - ci.right;
+               SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, iVal, wi.bottom - wi.top, SWP_NOZORDER );
+            }
+         }
          break;
 
       case HB_GTI_DESKTOPWIDTH:
@@ -2689,12 +2727,19 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
             iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
 
-            if( iY > 0 )
+            if( iY > 0 && iX > 0 && !pWVT->bMaximized)  /* Don't allow if Maximized or FullScreen */
             {
-               HB_BOOL bOldCentre = pWVT->CentreWindow;
-               pWVT->CentreWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
-               HB_GTSELF_SETMODE( pGT, ( iY / pWVT->PTEXTSIZE.y ), ( iX / pWVT->PTEXTSIZE.x ) );
-               pWVT->CentreWindow = bOldCentre;
+               /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
+               RECT ci;
+               GetClientRect( pWVT->hWnd, &ci );
+               if( ci.right != iX || ci.bottom != iY )
+               {
+                   RECT wi;
+                   GetWindowRect( pWVT->hWnd, &wi );
+                   iX += wi.right - wi.left - ci.right;
+                   iY += wi.bottom - wi.top - ci.bottom;
+                   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, iX, iY, SWP_NOZORDER );
+               }
             }
          }
          break;
@@ -2818,31 +2863,69 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
-         if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
-                           ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+      {
+         if( pWVT->hWnd )
          {
-            int x, y;
-            RECT rect = { 0,0,0,0 };
-            GetWindowRect( pWVT->hWnd, &rect );
+           int x, y;
+           RECT wi = { 0,0,0,0 };
+           GetWindowRect( pWVT->hWnd, &wi );
+           if( ! pInfo->pResult )
+              pInfo->pResult = hb_itemNew( NULL );
 
-            if( iType == HB_GTI_SETPOS_ROWCOL )
-            {
-               y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->PTEXTSIZE.y;
-               x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->PTEXTSIZE.x;
-            }
-            else
-            {
-               x = hb_itemGetNI( pInfo->pNewVal );
-               y = hb_itemGetNI( pInfo->pNewVal2 );
-            }
-            hb_retl( SetWindowPos( pWVT->hWnd, NULL,
-                                   x,
-                                   y,
-                                   rect.right - rect.left,
-                                   rect.bottom - rect.top,
-                                   SWP_NOSIZE | SWP_NOZORDER ) );
+           hb_arrayNew( pInfo->pResult, 2 );
+           if( iType == HB_GTI_SETPOS_ROWCOL )
+           {
+              hb_arraySetNI( pInfo->pResult, 1, wi.top / pWVT->PTEXTSIZE.y );
+              hb_arraySetNI( pInfo->pResult, 2, wi.left / pWVT->PTEXTSIZE.x );
+           }
+           else
+           {
+              hb_arraySetNI( pInfo->pResult, 2, wi.top );
+              hb_arraySetNI( pInfo->pResult, 1, wi.left );
+           }
+
+           if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+               ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+           {
+
+              if( iType == HB_GTI_SETPOS_ROWCOL )
+              {
+                 y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->PTEXTSIZE.y;
+                 x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->PTEXTSIZE.x;
+              }
+              else
+              {
+                 x = hb_itemGetNI( pInfo->pNewVal );
+                 y = hb_itemGetNI( pInfo->pNewVal2 );
+              }
+              hb_retl( SetWindowPos( pWVT->hWnd, NULL,
+                                     x,
+                                     y,
+                                     wi.right - wi.left,
+                                     wi.bottom - wi.top,
+                                     SWP_NOSIZE | SWP_NOZORDER ) );
+           }
+           else if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
+           {
+              y = hb_arrayGetNI( pInfo->pNewVal, 2 );
+              x = hb_arrayGetNI( pInfo->pNewVal, 1 );
+
+              if( iType == HB_GTI_SETPOS_ROWCOL )
+              {
+                 y *= pWVT->PTEXTSIZE.y;
+                 x *= pWVT->PTEXTSIZE.x;
+              }
+              hb_retl( SetWindowPos( pWVT->hWnd, NULL,
+                                     x,
+                                     y,
+                                     wi.right - wi.left,
+                                     wi.bottom - wi.top,
+                                     SWP_NOSIZE | SWP_NOZORDER ) );
+
+           }
          }
          break;
+      }
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );

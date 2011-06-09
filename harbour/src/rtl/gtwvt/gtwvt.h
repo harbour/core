@@ -204,6 +204,8 @@ typedef struct
    HB_BOOL  bResizing;
    HB_BOOL  bAlreadySizing;
 
+   RECT     ciLast;                       /* need in WM_ENTERSIZEMOVE processing and hb_gt_wvt_PaintText() function [HVB] */
+
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */
