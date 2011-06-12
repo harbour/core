@@ -7,7 +7,12 @@
  * STRTRAN function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
+ *
+ * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * rewritten to fix incompatibilities with Clipper and fatal performance
+ * of original code
+ *
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,8 +63,6 @@
           string is too large. Example:
           StrTran( "...", ".", Replicate( "A", 32000 ) ) [vszakats] */
 
-/* replaces lots of characters in a string */
-/* TOFIX: Will not work with a search string of > 64 KB on some platforms */
 HB_FUNC( STRTRAN )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
@@ -67,116 +70,112 @@ HB_FUNC( STRTRAN )
 
    if( pText && pSeek )
    {
-      const char * szText = hb_itemGetCPtr( pText );
-      HB_SIZE nText = hb_itemGetCLen( pText );
-      HB_SIZE nSeek = hb_itemGetCLen( pSeek );
+      HB_SIZE nStart, nCount;
 
-      if( nSeek && nSeek <= nText )
+      nStart = hb_parnsdef( 4, 1 );
+      nCount = hb_parnsdef( 5, -1 );
+
+      if( nStart && nCount )
       {
-         HB_SIZE nStart;
+         HB_SIZE nText = hb_itemGetCLen( pText );
+         HB_SIZE nSeek = hb_itemGetCLen( pSeek );
 
-         nStart = hb_parnldef( 4, 1 );
-
-         if( nStart == 0 )
-         {
-            /* Clipper seems to work this way */
-            hb_retc_null();
-         }
-         else if( nStart > 0 )
+         if( nSeek && nSeek <= nText && nStart > 0 )
          {
             PHB_ITEM pReplace = hb_param( 3, HB_IT_STRING );
+            HB_SIZE nReplace = hb_itemGetCLen( pReplace );
+            const char * szReplace = hb_itemGetCPtr( pReplace );
+            const char * szText = hb_itemGetCPtr( pText );
             const char * szSeek = hb_itemGetCPtr( pSeek );
-            const char * szReplace;
-            HB_SIZE nReplace;
-            HB_SIZE nCount;
-            HB_BOOL bAll;
+            HB_SIZE nFound = 0;
+            HB_SIZE nReplaced = 0;
+            HB_SIZE nT = 0;
+            HB_SIZE nS = 0;
 
-            if( pReplace )
+            while( nT < nText && nText - nT >= nSeek - nS )
             {
-               szReplace = hb_itemGetCPtr( pReplace );
-               nReplace = hb_itemGetCLen( pReplace );
-            }
-            else
-            {
-               szReplace = ""; /* shouldn't matter that we don't allocate */
-               nReplace = 0;
-            }
-
-            if( HB_ISNUM( 5 ) )
-            {
-               nCount = hb_parns( 5 );
-               bAll = HB_FALSE;
-            }
-            else
-            {
-               nCount = 0;
-               bAll = HB_TRUE;
-            }
-
-            if( bAll || nCount > 0 )
-            {
-               HB_SIZE nFound = 0;
-               HB_ISIZ nReplaced = 0;
-               HB_SIZE n = 0;
-               HB_SIZE nLength = nText;
-               HB_SIZE nStop = nText - nSeek + 1;
-
-               while( n < nStop )
+               if( szText[ nT ] == szSeek[ nS ] )
                {
-                  if( ( bAll || nReplaced < ( HB_ISIZ ) nCount ) &&
-                      ! memcmp( szText + n, szSeek, nSeek ) )
+                  ++nT;
+                  if( ++nS == nSeek )
                   {
-                     nFound++;
-                     if( nFound >= nStart )
+                     if( ++nFound >= nStart )
                      {
                         nReplaced++;
-                        nLength = nLength - nSeek + nReplace;
-                        n += nSeek;
+                        if( --nCount == 0 )
+                           nT = nText;
                      }
-                     else
-                        n++;
+                     nS = 0;
                   }
-                  else
-                     n++;
                }
+               else if( nS )
+               {
+                  nT -= nS - 1;
+                  nS = 0;
+               }
+               else
+                  ++nT;
+            }
 
-               if( nFound )
+            if( nReplaced )
+            {
+               HB_SIZE nLength = nText;
+
+               if( nSeek > nReplace )
+                  nLength -= ( nSeek - nReplace ) * nReplaced;
+               else
+                  nLength += ( nReplace - nSeek ) * nReplaced;
+
+               if( nLength )
                {
                   char * szResult = ( char * ) hb_xgrab( nLength + 1 );
                   char * szPtr = szResult;
 
-                  nFound = 0;
-                  n = 0;
-                  while( n < nText )
+                  nFound -= nReplaced;
+                  nT = nS = 0;
+                  do
                   {
-                     if( nReplaced && ! memcmp( szText + n, szSeek, nSeek ) )
+                     if( nReplaced && szText[ nT ] == szSeek[ nS ] )
                      {
-                        nFound++;
-                        if( nFound >= nStart )
+                        ++nT;
+                        if( ++nS == nSeek )
                         {
-                           nReplaced--;
-                           memcpy( szPtr, szReplace, nReplace );
-                           szPtr += nReplace;
-                           n += nSeek;
-                        }
-                        else
-                        {
-                           *szPtr = szText[ n ];
-                           szPtr++;
-                           n++;
+                           const char * szCopy;
+
+                           if( nFound )
+                           {
+                              nFound--;
+                              szCopy = szSeek;
+                           }
+                           else
+                           {
+                              nReplaced--;
+                              szCopy = szReplace;
+                              nS = nReplace;
+                           }
+                           while( nS )
+                           {
+                              *szPtr++ = *szCopy++;
+                              --nS;
+                           }
                         }
                      }
                      else
                      {
-                        *szPtr = szText[ n ];
-                        szPtr++;
-                        n++;
+                        if( nS )
+                        {
+                           nT -= nS;
+                           nS = 0;
+                        }
+                        *szPtr++ = szText[ nT++ ];
                      }
                   }
+                  while( nT < nText );
+
                   hb_retclen_buffer( szResult, nLength );
                }
                else
-                  hb_itemReturn( pText );
+                  hb_retc_null();
             }
             else
                hb_itemReturn( pText );
@@ -185,7 +184,7 @@ HB_FUNC( STRTRAN )
             hb_itemReturn( pText );
       }
       else
-         hb_itemReturn( pText );
+         hb_retc_null();
    }
    else
    {
