@@ -1,6 +1,18 @@
+diff -urN liblzf.orig/lzf_c.c liblzf/lzf_c.c
+--- liblzf.orig/lzf_c.c	2011-06-12 13:27:46.566657457 +0200
++++ liblzf/lzf_c.c	2011-06-12 13:27:46.566657457 +0200
+@@ -120,7 +120,7 @@
+    * special workaround for it.
+    */
+ #if defined (WIN32) && defined (_M_X64)
+-  unsigned _int64 off; /* workaround for missing POSIX compliance */
++  unsigned __int64 off; /* workaround for missing POSIX compliance */
+ #else
+   unsigned long off;
+ #endif
 diff -urN liblzf.orig/lzf.h liblzf/lzf.h
---- liblzf.orig/lzf.h	2011-03-03 16:32:45.540929609 +0100
-+++ liblzf/lzf.h	2011-03-03 16:32:45.570926090 +0100
+--- liblzf.orig/lzf.h	2011-06-12 13:27:46.564657718 +0200
++++ liblzf/lzf.h	2011-06-12 13:27:46.564657718 +0200
 @@ -37,6 +37,10 @@
  #ifndef LZF_H
  #define LZF_H
@@ -23,8 +35,8 @@ diff -urN liblzf.orig/lzf.h liblzf/lzf.h
  #endif
  
 diff -urN liblzf.orig/lzfP.h liblzf/lzfP.h
---- liblzf.orig/lzfP.h	2011-03-03 16:32:45.590925701 +0100
-+++ liblzf/lzfP.h	2011-03-03 16:32:45.590925701 +0100
+--- liblzf.orig/lzfP.h	2011-06-12 13:27:46.568657801 +0200
++++ liblzf/lzfP.h	2011-06-12 13:27:46.568657801 +0200
 @@ -141,7 +141,7 @@
  #endif
  
