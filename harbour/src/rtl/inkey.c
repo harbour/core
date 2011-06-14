@@ -171,6 +171,11 @@ HB_FUNC( NEXTKEY )
 #endif
 }
 
+HB_FUNC( HB_KEYLAST )
+{
+   hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
+}
+
 HB_FUNC( LASTKEY )
 {
    hb_retni( hb_inkeyLast( INKEY_ALL ) );

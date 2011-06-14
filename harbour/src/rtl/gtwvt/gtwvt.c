@@ -598,8 +598,6 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    RECT ci;
    int maxWidth;
    int maxHeight;
-   int irows = pWVT->ROWS;
-   int icols = pWVT->COLS;
 
    if( IsZoomed( pWVT->hWnd ) )
      pWVT->bMaximized = HB_TRUE;
@@ -613,16 +611,10 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    if( maxHeight > 0 )
    {
       HB_BOOL bOldCentre = pWVT->CentreWindow;
-      pWVT->bResizing = HB_TRUE;
-      pWVT->CentreWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
+      pWVT->CentreWindow = HB_FALSE;
       HB_GTSELF_SETMODE( pWVT->pGT, ( maxHeight / pWVT->PTEXTSIZE.y ), ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
-      pWVT->bResizing = HB_FALSE;
-      pWVT->bAlreadySizing = HB_FALSE;
    }
-
-   if( irows != pWVT->ROWS || icols != pWVT->COLS )
-     hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
@@ -874,36 +866,61 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
       pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
       pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
    }
-   else if( pWVT->CentreWindow )
+   else
    {
       RECT rcWorkArea;
-      if( SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) &&  wi.left >= rcWorkArea.left && wi.right <= rcWorkArea.right && wi.top >= rcWorkArea.top && wi.bottom <= rcWorkArea.bottom )
+      pWVT->MarginLeft = 0;
+      pWVT->MarginTop  = 0;
+
+      if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
       {
-         /* Window was within the primary monitor's workspace, center it there. */
+         int bRecenter = HB_FALSE;
+
+         if( width > rcWorkArea.right - rcWorkArea.left )
+         {
+            /* New window width is larger than monitor workarea, force to fit and adjusts Font size */
+            width = rcWorkArea.right - rcWorkArea.left;
+            bRecenter = HB_TRUE;
+         }
+
+         if( height > rcWorkArea.bottom - rcWorkArea.top )
+         {
+            /* New window height is larger than monitor workarea, force to fit and adjusts Font height */
+            height = rcWorkArea.bottom - rcWorkArea.top;
+            bRecenter = HB_TRUE;
+         }
+
          wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
          wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
-         if( wi.top < rcWorkArea.top )
-            wi.top = rcWorkArea.top;  /* Force window's title bar within the workarea. */
+
+         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+         {
+            pWVT->ResizeMode = HB_GTI_RESIZEMODE_FONT;
+            SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+            pWVT->ResizeMode = HB_GTI_RESIZEMODE_ROWS;
+         }
+         else
+            SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
+         if( bRecenter )
+         {
+            GetWindowRect( pWVT->hWnd, &wi );
+            width = wi.right - wi.left;
+            height = wi.bottom - wi.top;
+            wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+            wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+            SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOSIZE | SWP_NOZORDER );
+         }
       }
       else
       {
-         /* Not sure where current window is, or user's intention, will just resize it in place.
-          * This results in a Zoom / Implode effect at its current location, depending on size change.
-          * Window may be on a different monitor.
-          * Program's intention may be to size across more than one monitor?
-          * Programmer can always implicitly postion the window as desired.
-          */
-         wi.left += ( ( wi.right - wi.left - width  ) / 2 );
-         wi.top  += ( ( wi.bottom - wi.top - height ) / 2 );
+         /* Will resize window without moving left/top origin */
+         SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
       }
    }
 
-   if( !pWVT->bMaximized )
-   {
-      pWVT->MarginLeft = 0;
-      pWVT->MarginTop  = 0;
-      SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
-   }
+
+
 
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 
@@ -922,6 +939,9 @@ static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
          pWVT->FixedSize = ( int * ) hb_xrealloc( pWVT->FixedSize,
                                                   iCols * sizeof( int ) );
       }
+      if( iRows != pWVT->ROWS || iCols != pWVT->COLS )
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+
       pWVT->ROWS = iRows;
       pWVT->COLS = iCols;
       return HB_TRUE;
@@ -1932,12 +1952,15 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
       if( pWVT->bFullScreen )
       {
+         pWVT->bMaximized = HB_FALSE;
          pWVT->bFullScreen = HB_FALSE;
          hb_gt_wvt_FullScreen( pWVT->pGT );
       }
-
-      ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
-      UpdateWindow( pWVT->hWnd );
+      else
+      {
+        ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
+        UpdateWindow( pWVT->hWnd );
+      }
    }
 
    return HB_TRUE;
