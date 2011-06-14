@@ -150,7 +150,7 @@ local aPrompts := {;
    "Blooming-Fields Nursery"       }
 
 local aPermits := {}
-local x        := 1
+local x
 local nChoice
 local ncntr
 
@@ -203,6 +203,8 @@ local nKey    := lastkey()
 
 local nRow := Row()
 local nCol := Col()
+
+HB_SYMBOL_UNUSED( nRowPos )
 
 @ 0, 20 SAY Str( nRow, 3 ) + " " + Str( nCol, 3 )
 
