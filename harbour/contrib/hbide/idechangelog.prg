@@ -237,7 +237,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       IF ! empty( cTmp := ::oUI:q_comboTitle:currentText() )
          ::addToLog( { "Title", cTmp, "" } )
          ::refresh()
-         IF ascan( ::oINI:aLogTitle, {|e| upper( e ) == cTmp } ) == 0
+         IF ascan( ::oINI:aLogTitle, {|e| upper( e ) == upper( cTmp ) } ) == 0
             aadd( ::oINI:aLogTitle, cTmp )
             ::oUI:q_comboTitle:insertItem( 0,cTmp )
          ENDIF
@@ -247,7 +247,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       IF ! empty( cTmp := ::oUI:q_comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
          ::refresh()
-         IF ascan( ::oINI:aLogSources, {|e| upper( e ) == cTmp } ) == 0
+         IF ascan( ::oINI:aLogSources, {|e| upper( e ) == upper( cTmp ) } ) == 0
             aadd( ::oINI:aLogSources, cTmp )
             ::oUI:q_comboSources:insertItem( 0,cTmp )
          ENDIF
