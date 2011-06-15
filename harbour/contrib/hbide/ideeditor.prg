@@ -1351,11 +1351,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::oEdit:qEdit:connect( "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
    ::qDocument  := ::qEdit:document()
-#if 0
-   IF !( ::cType == "U" )
-      ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
-   ENDIF
-#endif
    ::qCursor := ::qEdit:textCursor()
 
    /* Populate Tabs Array */
@@ -1540,9 +1535,30 @@ METHOD IdeEditor:prepareBufferToLoad( cBuffer )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:reload()
+   LOCAL nAttr, nPos, qCursor, nHPos, nVPos
+
+   qCursor := ::qEdit:textCursor()
+   nPos    := qCursor:position()
+   nHPos   := ::qEdit:horizontalScrollBar():value()
+   nVPos   := ::qEdit:verticalScrollBar():value()
+
+
+   IF hb_fGetAttr( ::sourceFile, @nAttr )
+      ::lReadOnly := hb_bitAnd( nAttr, FC_READONLY ) == FC_READONLY
+   ENDIF
+
+   ::oEdit:setReadOnly( ::lReadOnly )
+
+   ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
+                             hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
 
    ::qEdit:clear()
    ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
+
+   qCursor:setPosition( nPos )
+   ::qEdit:setTextCursor( qCursor )
+   ::qEdit:horizontalScrollBar():setValue( nHPos )
+   ::qEdit:verticalScrollBar():setValue( nVPos )
 
    RETURN Self
 
@@ -1555,11 +1571,11 @@ METHOD IdeEditor:setDocumentProperties()
 
    IF !( ::lLoaded )       /* First Time */
       ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
-#if 1
+
       IF !( ::cType == "U" )
          ::qHiliter := ::oTH:setSyntaxHilighting( ::qEdit, @::cTheme )
       ENDIF
-#endif
+
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
 
