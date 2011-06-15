@@ -172,6 +172,12 @@ METHOD IdeChangeLog:show()
          ::oINI:cUserChangeLog := hbide_fetchAString( ::oDlg:oWidget, ::oINI:cUserChangeLog, , "Developer Name" )
       ENDIF
 
+      aeval( ::oINI:aLogTitle  , {|e| ::oUI:q_comboTitle:insertItem( 0,e ) } )
+      aeval( ::oINI:aLogSources, {|e| ::oUI:q_comboSources:insertItem( 0,e ) } )
+
+      ::oUI:q_comboTitle:setCurrentIndex( -1 )
+      ::oUI:q_comboSources:setCurrentIndex( -1 )
+
       ::oUI:q_plainChangelog  :setFont( ::oFont:oWidget )
       ::oUI:q_plainLogEntry   :setFont( ::oFont:oWidget )
       ::oUI:q_plainCurrentLog :setFont( ::oFont:oWidget )
@@ -228,15 +234,23 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
    SWITCH cEvent
 
    CASE "buttonTitle_clicked"
-      IF ! empty( cTmp := ::oUI:q_editTitle:text() )
+      IF ! empty( cTmp := ::oUI:q_comboTitle:currentText() )
          ::addToLog( { "Title", cTmp, "" } )
          ::refresh()
+         IF ascan( ::oINI:aLogTitle, {|e| upper( e ) == cTmp } ) == 0
+            aadd( ::oINI:aLogTitle, cTmp )
+            ::oUI:q_comboTitle:insertItem( 0,cTmp )
+         ENDIF
       ENDIF
       EXIT
    CASE "buttonSource_clicked"
-      IF ! empty( cTmp := ::oUI:q_editSource:text() )
+      IF ! empty( cTmp := ::oUI:q_comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
          ::refresh()
+         IF ascan( ::oINI:aLogSources, {|e| upper( e ) == cTmp } ) == 0
+            aadd( ::oINI:aLogSources, cTmp )
+            ::oUI:q_comboSources:insertItem( 0,cTmp )
+         ENDIF
       ENDIF
       EXIT
    CASE "buttonDesc_clicked"
@@ -247,7 +261,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       ENDIF
       EXIT
    CASE "buttonSrcDesc_clicked"
-      IF ! empty( cTmp := ::oUI:q_editSource:text() )
+      IF ! empty( cTmp := ::oUI:q_comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
       ENDIF
       IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
@@ -306,6 +320,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       EXIT
    CASE "editChangelog_textChanged"
       IF ! empty( p ) .AND. hb_fileExists( p )
+         ::oINI:cChangeLog := p
          ::oUI:q_editChangelog:setStyleSheet( "" )
          ::updateLog()
       ELSE

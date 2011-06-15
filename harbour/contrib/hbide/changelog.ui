@@ -68,41 +68,48 @@
       <property name="margin">
        <number>0</number>
       </property>
-      <item row="1" column="1" colspan="4">
-       <widget class="QLineEdit" name="editTitle">
-        <property name="readOnly">
-         <bool>false</bool>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Title</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="1" colspan="3">
+       <widget class="QComboBox" name="comboTitle">
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::InsertAlphabetically</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>Source:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="editSource"/>
-      </item>
-      <item row="3" column="3">
+      <item row="4" column="2">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>Action:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="4">
+      <item row="4" column="3">
        <widget class="QComboBox" name="comboAction"/>
       </item>
-      <item row="4" column="0" colspan="5">
+      <item row="5" column="0" colspan="4">
        <widget class="QPlainTextEdit" name="plainCurrentLog">
         <property name="lineWrapMode">
          <enum>QPlainTextEdit::NoWrap</enum>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="5">
+      <item row="6" column="0" colspan="4">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QPushButton" name="buttonTitle">
@@ -154,10 +161,19 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Title</string>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="comboSources">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::InsertAlphabetically</enum>
         </property>
        </widget>
       </item>

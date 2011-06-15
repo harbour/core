@@ -134,6 +134,8 @@ CLASS IdeINI INHERIT IdeObject
    DATA   aDbuPanelNames                          INIT  {}
    DATA   aDbuPanelsInfo                          INIT  {}
    DATA   aDictionaries                           INIT  {}
+   DATA   aLogTitle                               INIT  {}
+   DATA   aLogSources                             INIT  {}
 
    DATA   cFontName                               INIT  "Courier New"
    DATA   nPointSize                              INIT  10
@@ -543,6 +545,20 @@ METHOD IdeINI:save( cHbideIni )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[LOGTITLE]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( ::aLogTitle )
+      aadd( txt_, "logtitle_" + hb_ntos( n ) + "=" + ::aLogTitle[ n ] )
+   NEXT
+   aadd( txt_, " " )
+
+   aadd( txt_, "[LOGSOURCES]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( ::aLogSources )
+      aadd( txt_, "logsources_" + hb_ntos( n ) + "=" + ::aLogSources[ n ] )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
@@ -619,6 +635,12 @@ METHOD IdeINI:load( cHbideIni )
                EXIT
             CASE "[DICTIONARIES]"
                nPart := "INI_DICTIONARIES"
+               EXIT
+            CASE "[LOGTITLE]"
+               nPart := "INI_LOGTITLE"
+               EXIT
+            CASE "[LOGSOURCES]"
+               nPart := "INI_LOGSOURCES"
                EXIT
             OTHERWISE
                DO CASE
@@ -797,6 +819,16 @@ METHOD IdeINI:load( cHbideIni )
                CASE nPart == "INI_DICTIONARIES"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aDictioaries, cVal )
+                  ENDIF
+
+               CASE nPart == "INI_LOGTITLE"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aLogTitle, cVal )
+                  ENDIF
+
+               CASE nPart == "INI_LOGSOURCES"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aLogSources, cVal )
                   ENDIF
 
                ENDCASE
@@ -1480,12 +1512,12 @@ METHOD IdeSetup:show()
       ::setIcons()
       ::connectSlots()
 
+      ::oUI:q_stackedWidget:setCurrentIndex( 0 )
       ::oUI:hide()
    ENDIF
 
    ::populate()
    ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cSetupDialogGeometry )
-   //::oUI:exec()
    ::oUI:show()
 
    RETURN Self
