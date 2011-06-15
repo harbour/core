@@ -599,10 +599,11 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    int maxWidth;
    int maxHeight;
 
-   if( IsZoomed( pWVT->hWnd ) )
-     pWVT->bMaximized = HB_TRUE;
-   else
-     pWVT->bMaximized = HB_FALSE;
+#if defined( HB_OS_WIN_CE )
+   pWVT->bMaximized = HB_FALSE;
+#else
+   pWVT->bMaximized = IsZoomed( pWVT->hWnd );
+#endif
 
    GetClientRect( pWVT->hWnd, &ci );
    maxWidth = ci.right;
@@ -632,10 +633,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int iCalcWidth = 0;
    int iCalcHeight = 0;
 
-   if( IsZoomed( pWVT->hWnd ) )
-      pWVT->bMaximized = HB_TRUE;
-   else
-      pWVT->bMaximized = HB_FALSE;
+#if defined( HB_OS_WIN_CE )
+   pWVT->bMaximized = HB_FALSE;
+#else
+   pWVT->bMaximized = IsZoomed( pWVT->hWnd );
+#endif
 
    GetClientRect( pWVT->hWnd, &ci );
    GetWindowRect( pWVT->hWnd, &wi );
