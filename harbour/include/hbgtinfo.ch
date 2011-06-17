@@ -147,6 +147,8 @@
 #define HB_GTI_ONLINE           64  /* Is terminal connected? */
 #define HB_GTI_VERSION          65  /* Get terminal version string */
 
+#define HB_GTI_MAXIMIZED        66  /* Get/Set Window's Maximized status (supported by: GTWVT) */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2

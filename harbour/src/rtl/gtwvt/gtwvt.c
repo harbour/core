@@ -1960,8 +1960,8 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
       else
       {
-        ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
-        UpdateWindow( pWVT->hWnd );
+         ShowWindow( pWVT->hWnd, pWVT->bMaximized ? SW_SHOWMAXIMIZED : pWVT->iCmdShow );
+         UpdateWindow( pWVT->hWnd );
       }
    }
 
@@ -2278,6 +2278,24 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
+      case HB_GTI_MAXIMIZED:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bMaximized );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            if( hb_itemGetL( pInfo->pNewVal ) != pWVT->bMaximized && !pWVT->bFullScreen )
+            {
+               if( !pWVT->hWnd )
+                  pWVT->bMaximized = hb_itemGetL( pInfo->pNewVal );
+               else if( pWVT->bMaximized )
+                  /* Restore Window */
+                  ShowWindow( pWVT->hWnd, SW_RESTORE );
+               else
+                  /* Maximize Window */
+                  ShowWindow( pWVT->hWnd, SW_SHOWMAXIMIZED );
+            }
+         }
+         break;
+
       case HB_GTI_ISFULLSCREEN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bFullScreen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )

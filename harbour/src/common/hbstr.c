@@ -89,30 +89,24 @@ HB_SIZE hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_S
    if( nSubLen > 0 && nLen >= nSubLen )
    {
       HB_SIZE nPos = 0;
-      HB_SIZE nSubPos = 0;
-
-      while( nPos < nLen && nSubPos < nSubLen )
+      nLen -= nSubLen;
+      do
       {
-         if( szText[ nPos ] == szSub[ nSubPos ] )
+         if( szText[ nPos ] == *szSub )
          {
-            nSubPos++;
-            nPos++;
+            HB_SIZE nSubPos = nSubLen;
+            do
+            {
+               if( --nSubPos == 0 )
+                  return nPos + 1;
+            }
+            while( szText[ nPos + nSubPos ] == szSub[ nSubPos ] );
          }
-         else if( nSubPos )
-         {
-            /* Go back to the first character after the first match,
-               or else tests like "22345" $ "012223456789" will fail. */
-            nPos -= ( nSubPos - 1 );
-            nSubPos = 0;
-         }
-         else
-            nPos++;
       }
-
-      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
+      while( nPos++ < nLen );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 HB_BOOL hb_strEmpty( const char * szText, HB_SIZE nLen )
