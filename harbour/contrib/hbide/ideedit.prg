@@ -515,6 +515,21 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
             ::redo()
          ENDIF
          EXIT
+      CASE "Diff"
+         ::oEditor:vssExecute( "Diff" )
+         EXIT
+      CASE "Get Latest Version"
+         ::oEditor:vssExecute( "Get" )
+         EXIT
+      CASE "Checkin"
+         ::oEditor:vssExecute( "Checkin" )
+         EXIT
+      CASE "Undo Checkout"
+         ::oEditor:vssExecute( "Undocheckout" )
+         EXIT
+      CASE "Checkout"
+         ::oEditor:vssExecute( "Checkout" )
+         EXIT
       ENDSWITCH
       EXIT
 

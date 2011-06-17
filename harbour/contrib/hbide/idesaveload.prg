@@ -108,6 +108,9 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cPathSnippets                           INIT  ""
    DATA   cPathThemes                             INIT  ""
 
+   DATA   cVSSExe                                 INIT  ""
+   DATA   cVSSDatabase                            INIT  ""
+
    DATA   cCurrentProject                         INIT  ""
    DATA   cCurrentTheme                           INIT  ""
    DATA   cCurrentCodec                           INIT  ""
@@ -406,6 +409,8 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "ShowHideDocks"             + "=" +   iif( ::lShowHideDocks          , "YES", "NO" )     )
    aadd( txt_, "ChangeLog"                 + "=" +   ::cChangeLog                                       )
    aadd( txt_, "UserChangeLog"             + "=" +   ::cUserChangeLog                                   )
+   aadd( txt_, "VSSExe"                    + "=" +   ::cVSSExe                                          )
+   aadd( txt_, "VSSDatabase"               + "=" +   ::cVSSDatabase                                     )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -724,6 +729,10 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ShowHideDocks"               ; ::lShowHideDocks                    := !( cVal == "NO" ) ; EXIT
                      CASE "ChangeLog"                   ; ::cChangeLog                        := cVal ; EXIT
                      CASE "UserChangeLog"               ; ::cUserChangeLog                    := cVal ; EXIT
+                     //
+                     CASE "VSSExe"                      ; ::cVSSExe                           := cVal ; EXIT
+                     CASE "VSSDatabase"                 ; ::cVSSDatabase                      := cVal ; EXIT
+
 
                      ENDSWITCH
                   ENDIF
@@ -1049,7 +1058,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting" }
+   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting", "VSS" }
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
@@ -1161,6 +1170,10 @@ METHOD IdeSetup:setIcons()
    /* Dictionaries */
    ::oUI:q_buttonDictPath      : setIcon( hbide_image( "open"      ) )
 
+   /* VSS */
+   ::oUI:q_buttonVSSExe        : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonVSSDatabase   : setIcon( hbide_image( "open"      ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1232,6 +1245,9 @@ METHOD IdeSetup:disConnectSlots()
    ::oUI:q_comboRightTabPos    :disconnect( "currentIndexChanged(int)" )
    ::oUI:q_comboBottomTabPos   :disconnect( "currentIndexChanged(int)" )
 
+   ::oUI:q_buttonVSSExe        :disconnect( "clicked()"                )
+   ::oUI:q_buttonVSSDatabase   :disconnect( "clicked()"                )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1301,6 +1317,9 @@ METHOD IdeSetup:connectSlots()
    ::oUI:q_comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
    ::oUI:q_comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
    ::oUI:q_comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
+
+   ::oUI:q_buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( "buttonVSSExe_clicked"              ) } )
+   ::oUI:q_buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( "buttonVSSDatabase_clicked"         ) } )
 
    RETURN Self
 
@@ -1451,6 +1470,9 @@ METHOD IdeSetup:populate()
    ::oUI:q_comboTopTabPos:setCurrentIndex( ::oINI:nDocksTopTabPos )
    ::oUI:q_comboRightTabPos:setCurrentIndex( ::oINI:nDocksRightTabPos )
    ::oUI:q_comboBottomTabPos:setCurrentIndex( ::oINI:nDocksBottomTabPos )
+
+   ::oUI:q_editVSSExe:setText( ::oINI:cVSSExe )
+   ::oUI:q_editVSSDatabase:setText( ::oINI:cVSSDatabase )
 
    ::connectSlots()
 
@@ -1763,6 +1785,18 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "buttonIni_clicked"
+      EXIT
+   CASE "buttonVSSExe_clicked"
+      IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Installation Path", ::oINI:cVSSExe ) )
+         ::oINI:cVSSExe := cPath
+         ::oUI:q_editVSSExe:setText( hbide_pathStripLastSlash( cPath ) )
+      ENDIF
+      EXIT
+   CASE "buttonVSSDatabase_clicked"
+      IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Database Path", ::oINI:cVSSDatabase ) )
+         ::oINI:cVSSDatabase := cPath
+         ::oUI:q_editVSSDatabase:setText( hbide_pathStripLastSlash( cPath ) )
+      ENDIF
       EXIT
    CASE "buttonHrbRoot_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Harbour's Root Path", ::oINI:cPathHrbRoot ) )

@@ -81,6 +81,7 @@ CLASS IdeEditsManager INHERIT IdeObject
 
    DATA   qContextMenu
    DATA   qContextSub
+   DATA   qSrcControlSub
    DATA   aActions                                INIT  {}
    DATA   aProtos                                 INIT  {}
 
@@ -251,6 +252,17 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
    aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
    aadd( ::aActions, { "Format"       , ::qContextMenu:addAction( ::oFormatDock:oWidget:toggleViewAction() ) } )
+   //
+   ::qSrcControlSub := ::qContextMenu:addMenu( "Source Control - VSS" )
+   aadd( ::aActions, { "Get"          , ::qSrcControlSub:addAction( "Get Latest Version" ) } )
+   aadd( ::aActions, { ""             , ::qSrcControlSub:addSeparator() } )
+   aadd( ::aActions, { "Checkout"     , ::qSrcControlSub:addAction( "Checkout"           ) } )
+   aadd( ::aActions, { "UndoCheckout" , ::qSrcControlSub:addAction( "Undo Checkout"      ) } )
+   aadd( ::aActions, { ""             , ::qSrcControlSub:addSeparator() } )
+   aadd( ::aActions, { "Checkin"      , ::qSrcControlSub:addAction( "Checkin"            ) } )
+   aadd( ::aActions, { ""             , ::qSrcControlSub:addSeparator() } )
+   aadd( ::aActions, { "Diff"         , ::qSrcControlSub:addAction( "Diff"               ) } )
+
 
    /* Define code completer */
    ::oIde:qProtoList := QStringList()
@@ -1255,6 +1267,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD prepareBufferToLoad( cBuffer )
    METHOD prepareBufferToSave( cBuffer )
    METHOD reload()
+   METHOD vssExecute( cAction )
 
    ENDCLASS
 
@@ -1531,6 +1544,42 @@ METHOD IdeEditor:prepareBufferToLoad( cBuffer )
    ENDIF
 
    RETURN cBuffer
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:vssExecute( cAction )
+   LOCAL cPath, cFile, cExt, cCmd, cC, oProcess, cBatch, cOutput := ""
+   LOCAL aCmd := {}
+
+   IF ! empty( ::oINI:cVSSExe ) .AND. ! empty( ::oINI:cVSSDatabase )
+      hb_fNameSplit( ::sourceFile, @cPath, @cFile, @cExt )
+
+      aadd( aCmd, "SET ssdir=" + hbide_pathToOSPath( ::oINI:cVSSDatabase ) )
+      aadd( aCmd, "SET Force_dir=YES" )
+      IF cAction == "Checkin"
+         aadd( aCmd, "call " + '"' + ::oINI:cVSSExe + '/ss.exe' + '" ' + cAction + " " + cFile + cExt + " -ChbIDE" )
+      ELSEIF cAction == "Checkout"
+         aadd( aCmd, "call " + '"' + ::oINI:cVSSExe + '/ss.exe' + '" ' + cAction + " " + cFile + cExt + " -C-" )
+      ELSE
+         aadd( aCmd, "call " + '"' + ::oINI:cVSSExe + '/ss.exe' + '" ' + cAction + " " + cFile + cExt )
+      ENDIF
+
+      cBatch := hbide_getShellCommandsTempFile( aCmd )
+
+      cCmd   := hbide_getShellCommand()
+      cC     := iif( hbide_getOS() == "nix", "", "/C " )
+
+      oProcess := HbpProcess():new()
+      //
+      oProcess:output      := {|cOut| cOutput += cOut }
+      oProcess:finished    := {|| iif( !empty( cOutput ), ::reload(), NIL ), MsgBox( cOutput ) }
+      oProcess:workingPath := hbide_pathToOSPath( cPath )
+
+      oProcess:addArg( cC + cBatch )
+      oProcess:start( cCmd )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
