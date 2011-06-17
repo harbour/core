@@ -9,7 +9,7 @@ rem Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
-rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
+rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW, HB_DIR_UNICOWS,
 rem   create required packages beforehand.
 rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 rem - Run this from vanilla official source tree only.
@@ -88,6 +88,13 @@ xcopy /y       "%HB_WITH_QT%\..\lib\libQtNetwork4.a"                            
 xcopy /y       "%HB_WITH_QT%\..\lib\libQtSql4.a"                                          %HB_ABSROOT%lib\win\mingw\
  copy /y       "%HB_WITH_QT%\..\LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt
  copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt
+
+if exist %HB_ABSROOT%lib\win\mingw\  xcopy /y       "%HB_DIR_UNICOWS%\mingw\libunicows.a"                                      %HB_ABSROOT%lib\win\mingw\
+if exist %HB_ABSROOT%lib\win\mingw\  xcopy /y       "%HB_DIR_UNICOWS%\mingw\unicows_license.txt"                               %HB_ABSROOT%lib\win\mingw\
+if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\unicows.lib"                                      %HB_ABSROOT%lib\win\watcom\
+if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\unicows_license.txt"                              %HB_ABSROOT%lib\win\watcom\
+if exist %HB_ABSROOT%lib\win\bcc\    xcopy /y       "%HB_DIR_UNICOWS%\bcc\unicows.lib"                                         %HB_ABSROOT%lib\win\bcc\
+if exist %HB_ABSROOT%lib\win\bcc\    xcopy /y       "%HB_DIR_UNICOWS%\bcc\unicows_license.txt"                                 %HB_ABSROOT%lib\win\bcc\
 
 pushd
 
