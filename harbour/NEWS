@@ -12,7 +12,7 @@
    The license applies to all entries on or after Version 1.1.0.
 */
 
-Version 2.1.0 (2010-??-??)
+Version 3.0.0 (2011-??-??)
 
 Note
 =============================
@@ -21,16 +21,7 @@ Note
 
 Known build issues
 =============================
-- Contrib hbsqlit3 will not embed foreign sqlite3 library code
-  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
-  For these compilers you will have to supply sqlite3 library
-  yourself. For other compilers, some warnings are expected and
-  normal in this non-Harbour code.
-- Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
-  won't work.
-- gtalleg contrib may not compile on all platforms/compilers.
-- hbcurl won't build when using DMC and libcurl 7.19.0.
-  Earlier versions build okay.
+- None
 
 
 Version 2.0.0 (2009-12-22)
