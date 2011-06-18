@@ -15,7 +15,7 @@ Release notes:
 Unified Windows release for most supported compilers and
 x86, x64, WinCE/ARM, MS-DOS, OS/2, Linux target platforms.
 
-Installed size: 214MB (54MB - 339MB)
+Installed size: 231MB (78MB - 319MB)
 
 The default installation will install MinGW compiler + x86 static
 and shared libs, MSVC and BCC x86 libs and examples.
