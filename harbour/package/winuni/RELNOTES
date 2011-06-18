@@ -1,6 +1,6 @@
 Hi All,
 
-Harbour 2.1.0 (r?????) source archives and Windows binary
+Harbour 3.0.0 (r?????) source archives and Windows binary
 releases are available for download on sourceforge.net:
 
    http://sourceforge.net/projects/harbour-project/files/
@@ -17,26 +17,20 @@ x86, x64, WinCE/ARM, MS-DOS, OS/2, Linux target platforms.
 
 Installed size: 214MB (54MB - 339MB)
 
-The default installation will install MinGW compiler + x86 static and
-shared libs, MSVC and BCC x86 libs and examples.
+The default installation will install MinGW compiler + x86 static
+and shared libs, MSVC and BCC x86 libs and examples.
 
 Options: x86 shared tools, x64 shared tools, MinGW x64 and
-WinCE-ARM libs, MSVC x64 libs, Open Watcom x86 libs,
-shared x64/WinCE-ARM libs, MS-DOS (watcom) libs, OS/2 (watcom)
-libs, Linux (watcom) libs.
+WinCE-ARM libs, MSVC x64 libs, shared x64/WinCE-ARM libs.
 
 Usage:
-1) install/unpack to any directory (C:\hb21)
+1) install/unpack to any directory (C:\hb30)
 2) go to bin dir (optional if you specify path for hbmk2)
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'
    [needs mingw64 to be installed in 'comp/mingw64' dir beforehand]
 5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -platform=wce'
    [needs cegcc to be installed in 'comp/mingwarm' dir beforehand]
-6) For MS-DOS executable, type: 'hbmk2 ../tests/hello.prg -platform=dos'
-   [needs OpenWatcom to be installed in 'comp/watcom' dir beforehand]
-7) For Linux executable, type: 'hbmk2 ../tests/hello.prg -platform=linux'
-   [needs OpenWatcom to be installed in 'comp/watcom' dir beforehand]
 
 Tool/lib versions used to create this package:
 -----------------------------------------------------------------------
@@ -48,7 +42,6 @@ Tool/lib versions used to create this package:
    MinGW w64 GNU C 4.5.3-20110207 (prerelease)
    MinGW CEGCC 4.4.0
    MSVC 2010 (version bundled with MS Windows SDK 7.1)
-   Open Watcom C 1.9
    Borland C/C++ 5.5.1
 
    External lib dependencies
@@ -72,17 +65,7 @@ Tool/lib versions used to create this package:
 Changes since previous (2.0.0) release:
 -----------------------------------------------------------------------
 
-- HBQT libs built against static QT libs are not part anymore
-  of default Harbour binary package. Such libs can only be useful
-  for users who obtained commercial license for QT, which means
-  for majority of users, it isn't. It can easily be built from
-  source though.
-- Built against Firebird 2.5.0rc1.
-- Downgraded to stable mingw64 version. It fixes .dll handling.
-- Upgraded to mingw 4.5.0 official release.
-- Upgraded to QT 4.6.2 (from 4.5.3).
-- Upgraded to MSVC 2010 (from 2008).
-- upx updated to 3.05.
+...
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------

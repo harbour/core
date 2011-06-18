@@ -5,7 +5,7 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
+rem Copyright 2009-2011 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
@@ -19,7 +19,7 @@ echo ! Self: %0
 if "%HB_VS%" == "" set HB_VS=21
 if "%HB_VL%" == "" set HB_VL=210
 if "%HB_VM%" == "" set HB_VM=2.1
-if "%HB_VF%" == "" set HB_VF=2.1.0
+if "%HB_VF%" == "" set HB_VF=2.1.0rc2
 if "%HB_RT%" == "" set HB_RT=C:\hb\
 
 set HB_DR=hb%HB_VS%\
