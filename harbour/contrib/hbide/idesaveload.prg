@@ -93,6 +93,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cDbStructDialogGeometry                 INIT  ""
    DATA   cTablesDialogGeometry                   INIT  ""
    DATA   cChangelogDialogGeometry                INIT  ""
+   DATA   cStatsDialogGeometry                    INIT  ""
    //
    DATA   cRecentTabIndex                         INIT  ""
    //
@@ -163,7 +164,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lCompleteArgumented                     INIT  .f.
 
    DATA   aAppThemes                              INIT  {}
-   DATA   lEditsMdi                               INIT  .f.
+   DATA   lEditsMdi                               INIT  .t.
 
    DATA   lShowEditsLeftToolbar                   INIT  .t.
    DATA   lShowEditsTopToolbar                    INIT  .t.
@@ -178,6 +179,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cUserChangeLog                          INIT  ""
 
    DATA   lShowHideDocks                          INIT  .t.
+   DATA   nEditsViewStyle                         INIT  0
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -347,6 +349,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "DbStructDialogGeometry"    + "=" +   ::cDbStructDialogGeometry                          )
    aadd( txt_, "TablesDialogGeometry"      + "=" +   ::cTablesDialogGeometry                            )
    aadd( txt_, "ChangelogDialogGeometry"   + "=" +   ::cChangelogDialogGeometry                         )
+   aadd( txt_, "StatsDialogGeometry"       + "=" +   ::cStatsDialogGeometry                             )
    //
    aadd( txt_, "CurrentLineHighlightMode"  + "=" +   iif( ::lCurrentLineHighlightEnabled, "YES", "NO" ) )
    aadd( txt_, "LineNumbersDisplayMode"    + "=" +   iif( ::lLineNumbersVisible, "YES", "NO" )          )
@@ -411,6 +414,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "UserChangeLog"             + "=" +   ::cUserChangeLog                                   )
    aadd( txt_, "VSSExe"                    + "=" +   ::cVSSExe                                          )
    aadd( txt_, "VSSDatabase"               + "=" +   ::cVSSDatabase                                     )
+   aadd( txt_, "EditsViewStyle"            + "=" +   hb_ntos( ::nEditsViewStyle )                       )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -424,7 +428,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
    nn := 0
-   FOR j := 2 TO len( ::oIde:aViews )
+   FOR j := 1 TO len( ::oIde:aViews )
       ::oIde:lClosing := .t.
       ::oDK:setView( ::oIde:aViews[ j ]:oWidget:objectName() )
 
@@ -669,6 +673,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "DbStructDialogGeometry"      ; ::cDbStructDialogGeometry           := cVal ; EXIT
                      CASE "TablesDialogGeometry"        ; ::cTablesDialogGeometry             := cVal ; EXIT
                      CASE "ChangelogDialogGeometry"     ; ::cChangelogDialogGeometry          := cVal ; EXIT
+                     CASE "StatsDialogGeometry"         ; ::cStatsDialogGeometry              := cVal ; EXIT
                      //
                      CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := !( cVal == "NO" ); EXIT
                      CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := !( cVal == "NO" ); EXIT
@@ -732,7 +737,7 @@ METHOD IdeINI:load( cHbideIni )
                      //
                      CASE "VSSExe"                      ; ::cVSSExe                           := cVal ; EXIT
                      CASE "VSSDatabase"                 ; ::cVSSDatabase                      := cVal ; EXIT
-
+                     CASE "EditsViewStyle"              ; ::nEditsViewStyle                   := val( cVal ); EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -847,7 +852,7 @@ METHOD IdeINI:load( cHbideIni )
       NEXT
    ENDIF
 
-   ::oIde:lCurEditsMdi := ::lEditsMdi
+   ::lEditsMdi := .t.  /* Enabled Permanently - scheduled to be removed by next commit */
 
    RETURN Self
 

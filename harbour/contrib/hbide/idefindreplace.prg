@@ -115,21 +115,11 @@ METHOD IdeUpDown:show()
    LOCAL oEdit
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-      IF ::oIde:lCurEditsMdi
-         oEdit:qEdit:hbGetSelectionInfo()
-         IF oEdit:aSelectionInfo[ 1 ] > -1
-            ::oUI:setEnabled( .t. )
-         ELSE
-            ::oUI:setEnabled( .f. )
-         ENDIF
+      oEdit:qEdit:hbGetSelectionInfo()
+      IF oEdit:aSelectionInfo[ 1 ] > -1
+         ::oUI:setEnabled( .t. )
       ELSE
-         ::position()
-         oEdit:qEdit:hbGetSelectionInfo()
-         IF oEdit:aSelectionInfo[ 1 ] > -1
-            ::oUI:show()
-         ELSE
-            ::oUI:hide()
-         ENDIF
+         ::oUI:setEnabled( .f. )
       ENDIF
    ENDIF
 
@@ -143,11 +133,7 @@ METHOD IdeUpDown:create( oIde )
 
    ::oIde := oIde
 
-   IF ::oIde:lCurEditsMdi
-      ::oUI := hbide_getUI( "updown_v" )
-   ELSE
-      ::oUI := hbide_getUI( "updown", ::oIde:oDlg:oWidget )
-   ENDIF
+   ::oUI := hbide_getUI( "updown_v" )
 
    ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
    ::oUI:setFocusPolicy( Qt_NoFocus )

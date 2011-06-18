@@ -351,30 +351,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_Rebuild"           ), , , , , , "Rebuild"           )
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
-   IF ! ::oIde:lCurEditsMdi
-   oTBar:addItem( ::getAction( "TB_Undo"              ), , , , , , "Undo"              )
-   oTBar:addItem( ::getAction( "TB_Redo"              ), , , , , , "Redo"              )
-   oTBar:addItem( , , , , , nSep )
-   oTBar:addItem( ::getAction( "TB_Cut"               ), , , , , , "Cut"               )
-   oTBar:addItem( ::getAction( "TB_Copy"              ), , , , , , "Copy"              )
-   oTBar:addItem( ::getAction( "TB_Paste"             ), , , , , , "Paste"             )
-   oTBar:addItem( ::getAction( "TB_SelectAll"         ), , , , , , "SelectAll"         )
-   oTBar:addItem( ::getAction( "TB_SelectionMode"     ), , , , , , "SelectionMode"     )
-   oTBar:addItem( , , , , , nSep )
-   oTBar:addItem( ::getAction( "TB_Find"              ), , , , , , "Find"              )
-   oTBar:addItem( ::getAction( "TB_SetMark"           ), , , , , , "SetMark"           )
-   oTBar:addItem( ::getAction( "TB_Goto"              ), , , , , , "Goto"              )
-   oTBar:addItem( , , , , , nSep )
-   oTBar:addItem( ::getAction( "ZoomIn"               ), , , , , , "ZoomIn"            )
-   oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
-   oTBar:addItem( , , , , , nSep )
-   ENDIF
    oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
-
-   IF ! ::oIde:lCurEditsMdi
-      /* Candidate for separate class - though */
-      oTBar:oWidget:addWidget( ::oIde:oTM:buildPanelsButton() )
-   ENDIF
 
    ::oIde:oMainToolbar := oTBar
 
@@ -541,10 +518,6 @@ METHOD IdeActions:buildMainMenu()
 
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
-   IF ! ::oIde:lCurEditsMdi
-      oSubMenu:oWidget:addAction( ::qTBarPanels:toggleViewAction()                    )
-      oSubMenu:oWidget:addAction( ::qTBarLines:toggleViewAction()                     )
-   ENDIF
    oSubMenu:oWidget:addAction( ::qTBarDocks:toggleViewAction()                        )
 
    ::oIde:qStatusBarAction := QAction( oSubMenu:oWidget )
@@ -577,11 +550,9 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction( ::oDockB2:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
-   IF ::oIde:lCurEditsMdi
-      oSubMenu:oWidget:addSeparator()
-      oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()       )
-      oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()        )
-   ENDIF
+   oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()        )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */

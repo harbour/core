@@ -280,7 +280,6 @@ CLASS HbIde
    DATA   lLineNumbersVisible                     INIT   .t.
    DATA   lHorzRulerVisible                       INIT   .t.
    DATA   lCurrentLineHighlightEnabled            INIT   .t.
-   DATA   lCurEditsMdi                            INIT   .t.
 
    DATA   cWrkFolderLast                          INIT   ""
    DATA   cWrkProject                             INIT   ""
@@ -715,9 +714,9 @@ METHOD HbIde:create( aParams )
       ::oDK:setView( "Main" )
    ELSEIF ::nRunMode == HBIDE_RUN_MODE_HBP
       ::oDockED:hide()
-      ::oDK:setView( "Stats" )
+      ::oDK:setView( "Main" )
    ELSE
-      ::oDK:setView( "Stats" )
+      ::oDK:setView( "Main" )
       ::oDK:setView( cView )
    ENDIF
    ::qTabWidget:setCurrentIndex( -1 )
@@ -729,8 +728,6 @@ METHOD HbIde:create( aParams )
    qSplash:close()
    qSplash := NIL
    qPixMap := NIL
-
-   ::oDK:hideStats() /* A Work in progress */
 
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::oINI:aTaggedProjects )
@@ -873,7 +870,8 @@ METHOD HbIde:execAction( cKey )
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       EXIT
    CASE "Home"
-      ::oDK:setView( "Stats" )
+      //::oDK:setView( "Stats" )
+      ::oHM:show()
       RETURN Self
    CASE "Animate"
       ::oDK:animateComponents()

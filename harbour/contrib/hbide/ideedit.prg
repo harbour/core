@@ -470,9 +470,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          EXIT
       CASE "Close Split Window"
          IF n > 0  /* 1 == Main Edit */
-            IF ! ::oIde:lCurEditsMdi
-               ::oIde:oUpDn:oUI:setParent( ::oEditor:qEdit )
-            ENDIF
             oo := ::oEditor:aEdits[ n ]
             hb_adel( ::oEditor:aEdits, n, .t. )
             oo:destroy( .f. )
@@ -491,29 +488,19 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          ::gotoFunction()
          EXIT
       CASE "Cut"
-         IF ::oIde:lCurEditsMdi
-            ::cut()
-         ENDIF
+         ::cut()
          EXIT
       CASE "Copy"
-         IF ::oIde:lCurEditsMdi
-            ::copy()
-         ENDIF
+         ::copy()
          EXIT
       CASE "Paste"
-         IF ::oIde:lCurEditsMdi
-            ::paste()
-         ENDIF
+         ::paste()
          EXIT
       CASE "Undo"
-         IF ::oIde:lCurEditsMdi
-            ::undo()
-         ENDIF
+         ::undo()
          EXIT
       CASE "Redo"
-         IF ::oIde:lCurEditsMdi
-            ::redo()
-         ENDIF
+         ::redo()
          EXIT
       CASE "Diff"
          ::oEditor:vssExecute( "Diff" )
@@ -777,15 +764,9 @@ METHOD IdeEdit:dispStatusInfo()
 
    ::qEdit:hbGetSelectionInfo()
    nMode := ::aSelectionInfo[ 5 ]
-
-   IF ::oIde:lCurEditsMdi
-      ::oDK:setButtonState( "stream", nMode > 1 )
-   ELSE
-      ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
-      ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
-   ENDIF
-
+   ::oDK:setButtonState( "stream", nMode > 1 )
    ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1483,13 +1464,11 @@ METHOD IdeEdit:toggleHorzRuler()
 
 METHOD IdeEdit:toggleSelectionMode()
    LOCAL qFocus
-   IF ::oIde:lCurEditsMdi
-      qFocus := QApplication():focusWidget()
-      ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "SelectionMode" ), 2, 1 ), .f. )
-      qFocus:setFocus( 0 )
-   ELSE
-      ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
-   ENDIF
+
+   qFocus := QApplication():focusWidget()
+   ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "SelectionMode" ), 2, 1 ), .f. )
+   qFocus:setFocus( 0 )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

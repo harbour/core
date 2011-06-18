@@ -85,7 +85,6 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   qMdiToolBar
    DATA   qMdiToolBarL
    DATA   aViewsInfo                              INIT   {}
-   DATA   nViewStyle                              INIT   0
 
    DATA   qTBtnClose
 
@@ -156,8 +155,6 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD restState( nMode )
    METHOD setButtonState( cButton, lChecked )
    METHOD buildFormatWidget()
-   METHOD showStats()
-   METHOD hideStats()
    METHOD hideAllDocks()
 
    ENDCLASS
@@ -342,26 +339,18 @@ METHOD IdeDocks:destroy()
 METHOD IdeDocks:getEditorPanelsInfo()
    LOCAL b_, a_:= {}
    FOR EACH b_ IN ::aViewsInfo
-      IF ::oIde:lCurEditsMdi
-         aadd( a_, b_[ 1 ] + "," + ;
-                   iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
-                   hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
-                   hb_ntos( ::oStackedWidget:oWidget:viewMode() ) + "," + hb_ntos( ::nViewStyle ) + ","   ;
-             )
-      ELSE
-         aadd( a_, b_[ 1 ] + "," + ;
-                   iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
-                   hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
-                   hb_ntos( b_[ 5 ] ) + "," + hb_ntos( b_[ 6 ] ) + ","   ;
-             )
-      ENDIF
+      aadd( a_, b_[ 1 ] + "," + ;
+                iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
+                hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
+                hb_ntos( ::oStackedWidget:oWidget:viewMode() ) + "," + hb_ntos( ::oINI:nEditsViewStyle ) + ","   ;
+          )
    NEXT
    RETURN a_
 
-/*------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDialog()
-   LOCAL s, aSize, a_, lTiled := .t., x_
+   LOCAL s, aSize, a_, x_, lNew := .f.
 
    ::oIde:oDlg     := XbpDialog():new()
    ::oDlg:icon     := hbide_image( "hbide" )
@@ -382,7 +371,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
-   ::oDlg:oWidget:resize( 950,520 )
+   ::oDlg:oWidget:resize( 1000,640 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
@@ -404,22 +393,14 @@ METHOD IdeDocks:buildDialog()
    ::oIde:qLayout:setVerticalSpacing( 0 )
    //
    ::oDa:setLayout( ::qLayout )
-
-   IF ::oIde:lCurEditsMdi
-      ::buildMdiToolbar()
-      ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
-      ::buildMdiToolbarLeft()
-      ::qLayout:addWidget( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
-      ::buildStackedWidget()
-      ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
-      ::buildSearchReplaceWidget()
-      ::qLayout:addWidget( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
-   ELSE
-      ::buildStackedWidget()
-      ::qLayout:addWidget( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
-      ::buildSearchReplaceWidget()
-      ::qLayout:addWidget( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
-   ENDIF
+   ::buildMdiToolbar()
+   ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
+   ::buildMdiToolbarLeft()
+   ::qLayout:addWidget( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
+   ::buildStackedWidget()
+   ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
+   ::buildSearchReplaceWidget()
+   ::qLayout:addWidget( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
 
    /* Normalize Views */
    FOR EACH s IN ::oINI:aViews
@@ -427,7 +408,6 @@ METHOD IdeDocks:buildDialog()
       asize( a_, 6 )
       IF ! empty( a_[ 2 ] )
          a_[ 2 ] := hbide_array2Rect( hbide_string2nArray( a_[ 2 ] ) )
-         lTiled := .f.
       ENDIF
       DEFAULT a_[ 3 ] TO "0"
       DEFAULT a_[ 4 ] TO "0"
@@ -440,10 +420,8 @@ METHOD IdeDocks:buildDialog()
       aadd( ::aViewsInfo, a_ )
    NEXT
    IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == "Main" } ) == 0
+      lNew := .t.
       hb_ains( ::aViewsInfo, 1, { "Main", NIL, 0, 0, QMdiArea_TabbedView, 0 }, .t. )
-   ENDIF
-   IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == "Stats" } ) == 0
-      hb_ains( ::aViewsInfo, 1, { "Stats", NIL, 0, 0, QMdiArea_TabbedView, 0 }, .t. )
    ENDIF
 
    /* View Panels */
@@ -451,24 +429,32 @@ METHOD IdeDocks:buildDialog()
    FOR EACH a_ IN ::aViewsInfo
       ::buildViewWidget( a_[ 1 ] )
    NEXT
-   IF ::oIde:lCurEditsMdi
-      IF lTiled
-         ::oStackedWidget:tileSubWindows()
-      ENDIF
-   ENDIF
-   ::setView( "Stats" )                  /* Always call with name */
 
-   IF ::oIde:lCurEditsMdi
+   ::setView( "Main" )
+
+   IF lNew
+      ::oStackedWidget:setViewMode( QMdiArea_TabbedView )
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_MAXIMIZED
+      ::stackMaximized()
+
+   ELSE
       IF x_[ 1,5 ] == QMdiArea_TabbedView
          ::oStackedWidget:setViewMode( QMdiArea_TabbedView )
       ENDIF
 
-      IF     x_[ 1,6 ] == 1
+      IF     x_[ 1,6 ] == HBPMDI_STYLE_TILED
          ::oStackedWidget:tileSubWindows()
-      ELSEIF x_[ 1,6 ] == 2
+      ELSEIF x_[ 1,6 ] == HBPMDI_STYLE_CASCADED
          ::oStackedWidget:cascadeSubWindows()
-      ELSEIF x_[ 1,6 ] == 3
+      ELSEIF x_[ 1,6 ] == HBPMDI_STYLE_MAXIMIZED
+         ::oINI:nEditsViewStyle  := HBPMDI_STYLE_MAXIMIZED
          ::stackMaximized()
+      ELSEIF x_[ 1,6 ] == HBPMDI_STYLE_TILEDVERT
+         ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDVERT
+         ::stackVertically()
+      ELSEIF x_[ 1,6 ] == HBPMDI_STYLE_TILEDHORZ
+         ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDHORZ
+         ::stackHorizontally()
       ELSE
          FOR EACH a_ IN x_
             IF !empty( a_[ 2 ] )
@@ -812,32 +798,32 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       ::oStackedWidget:setViewMode( iif( ::oStackedWidget:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
       EXIT
    CASE "buttonViewOrganized_clicked"
-      ::nViewStyle  := HBPMDI_STYLE_ORGANIZED
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_ORGANIZED
       ::restState()
       EXIT
    CASE "buttonSaveLayout_clicked"
-      IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
+      IF ::oINI:nEditsViewStyle == HBPMDI_STYLE_ORGANIZED
          ::savePanelsGeometry()
       ENDIF
       EXIT
    CASE "buttonViewTiled_clicked"
       ::oStackedWidget:tileSubWindows()
-      ::nViewStyle  := HBPMDI_STYLE_TILED
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILED
       EXIT
    CASE "buttonViewCascaded_clicked"
       ::oStackedWidget:cascadeSubWindows()
-      ::nViewStyle  := HBPMDI_STYLE_CASCADED
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_CASCADED
       EXIT
    CASE "buttonViewMaximized_clicked"
-      ::nViewStyle  := HBPMDI_STYLE_MAXIMIZED
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_MAXIMIZED
       ::stackMaximized()
       EXIT
    CASE "buttonViewStackedVert_clicked"
-      ::nViewStyle  := HBPMDI_STYLE_TILEDVERT
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDVERT
       ::stackVertically()
       EXIT
    CASE "buttonViewStackedHorz_clicked"
-      ::nViewStyle  := HBPMDI_STYLE_TILEDHORZ
+      ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDHORZ
       ::stackHorizontally()
       EXIT
    CASE "buttonViewZoomedIn_clicked"
@@ -856,7 +842,7 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
          ENDIF
          IF p1[ 2 ] >= 8 .AND. !( ::cWrkView == p:objectName() )
             ::setView( p:objectName() )
-            IF !( p:objectName() == "Stats" ) .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
+            IF ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
                oEdit:setDocumentProperties()
                oEdit:qCoEdit:relayMarkButtons()
                oEdit:qCoEdit:toggleLineNumbers()
@@ -903,26 +889,22 @@ METHOD IdeDocks:stackZoom( nMode )
 
    HB_SYMBOL_UNUSED( nMode )
 
-   IF ::nViewStyle == 4 .OR. ::nViewStyle == 5
-      IF ::nViewStyle == 4
+   IF ::oINI:nEditsViewStyle == 4 .OR. ::oINI:nEditsViewStyle == 5
+      IF ::oINI:nEditsViewStyle == 4
          nT := 0
          FOR EACH qMdi IN ::oIde:aMdies
-            IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
-               qRect := qMdi:geometry()
-               nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
-               qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
-               nT += nH
-            ENDIF
+            qRect := qMdi:geometry()
+            nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
+            qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
+            nT += nH
          NEXT
       ELSE
          nL := 0
          FOR EACH qMdi IN ::oIde:aMdies
-            IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
-               qRect := qMdi:geometry()
-               nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
-               qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
-               nL += nW
-            ENDIF
+            qRect := qMdi:geometry()
+            nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
+            qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
+            nL += nW
          NEXT
       ENDIF
    ENDIF
@@ -939,15 +921,13 @@ METHOD IdeDocks:stackHorizontally()
    qObj   := qArea:activeSubWindow()
    qVPort := qArea:viewport()
    nH     := qVPort:height()
-   nW     := qVPort:width() / ( len( ::oIde:aMdies ) - 1 )
+   nW     := qVPort:width() / len( ::oIde:aMdies )
    nT     := 0
    nL     := 0
 
    FOR EACH qMdi IN ::oIde:aMdies
-      IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
-         qMdi:setGeometry( QRect( nL, nT, nW, nH ) )
-         nL += nW
-      ENDIF
+      qMdi:setGeometry( QRect( nL, nT, nW, nH ) )
+      nL += nW
    NEXT
 
    ::oStackedWidget:setActiveSubWindow( qObj )
@@ -963,15 +943,13 @@ METHOD IdeDocks:stackVertically()
    qArea  := ::oStackedWidget
    qObj   := qArea:activeSubWindow()
    qVPort := qArea:viewport()
-   nH     := qVPort:height() / ( len( ::oIde:aMdies ) - 1 )
+   nH     := qVPort:height() / len( ::oIde:aMdies )
    nW     := qVPort:width()
    nT     := 0
 
    FOR EACH qMdi IN ::oIde:aMdies
-      IF !( ::aViewsInfo[ qMdi:__enumIndex(), 1 ] == "Stats" )
-         qMdi:setGeometry( QRect( 0, nT, nW, nH ) )
-         nT += nH
-      ENDIF
+      qMdi:setGeometry( QRect( 0, nT, nW, nH ) )
+      nT += nH
    NEXT
 
    ::oStackedWidget:setActiveSubWindow( qObj )
@@ -1052,16 +1030,14 @@ METHOD IdeDocks:setViewInitials()
    LOCAL a_
 
    FOR EACH a_ IN ::aViewsInfo
-      IF !( a_[ 1 ] == "Stats" )
-         ::setView( a_[ 1 ] )
+      ::setView( a_[ 1 ] )
 
-         IF ::qTabWidget:count() == 1
-            ::oEM:setSourceVisibleByIndex( 0 )
-         ELSE
-            ::qTabWidget:setCurrentIndex( 0 )
-            ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
-            ::qTabWidget:setCurrentIndex( 0 )
-         ENDIF
+      IF ::qTabWidget:count() == 1
+         ::oEM:setSourceVisibleByIndex( 0 )
+      ELSE
+         ::qTabWidget:setCurrentIndex( 0 )
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
+         ::qTabWidget:setCurrentIndex( 0 )
       ENDIF
    NEXT
 
@@ -1085,9 +1061,6 @@ METHOD IdeDocks:setView( cView )
             aadd( ::aViewsInfo, { cView, NIL, 0, 0, 0, 0 } )
             ::oTM:addPanelsMenu( cView )
             ::buildViewWidget( cView )
-            IF ! ::oIde:lCurEditsMdi
-               ::addPanelButton( cView )
-            ENDIF
             ::setView( cView )
          ENDIF
       ENDIF
@@ -1096,25 +1069,18 @@ METHOD IdeDocks:setView( cView )
    OTHERWISE
       IF ( n := ascan( ::aViews, {|o| iif( hb_isChar( o:oWidget:objectName() ), o:oWidget:objectName() == cView, .f. ) } ) ) > 0
          ::oIde:cWrkView := cView
-         IF !( cView == "Stats" )
-            ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
-            ::oIde:oTabParent := ::aViews[ n ]
+         ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
+         ::oIde:oTabParent := ::aViews[ n ]
 
-            nIndex := ::oIde:qTabWidget:currentIndex()
-            IF nIndex + 1 == ::oIde:qTabWidget:count()
-               IF !( ::oIde:lClosing )
-                  ::oIde:qTabWidget:setCurrentIndex( 0 )
-                  ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
-               ENDIF
+         nIndex := ::oIde:qTabWidget:currentIndex()
+         IF nIndex + 1 == ::oIde:qTabWidget:count()
+            IF !( ::oIde:lClosing )
+               ::oIde:qTabWidget:setCurrentIndex( 0 )
+               ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
             ENDIF
-         ELSE
-            ::showStats()
          ENDIF
-         IF ::oIde:lCurEditsMdi
-            ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
-         ELSE
-            ::oStackedWidget:oWidget:setCurrentIndex( n - 1 )
-         ENDIF
+
+         ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
          ::setStatusText( SB_PNL_VIEW, ::cWrkView )
       ENDIF
       EXIT
@@ -1124,31 +1090,6 @@ METHOD IdeDocks:setView( cView )
    RETURN NIL
 
 /*------------------------------------------------------------------------*/
-
-METHOD IdeDocks:hideStats()
-
-   IF len( ::oIde:aMdies ) >= 1
-      ::oIde:aMdies[ 1 ]:hide()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:showStats()
-
-   IF len( ::oIde:aMdies ) >= 1
-      IF ::oIde:aMdies[ 1 ]:isHidden()
-         ::oIde:aMdies[ 1 ]:show()
-      ELSE
-         ::oIde:aMdies[ 1 ]:hide()
-         ::setView( "Main" )
-      ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildMdiToolbarLeft()
 
@@ -1265,29 +1206,19 @@ METHOD IdeDocks:setButtonState( cButton, lChecked )
 
 METHOD IdeDocks:buildStackedWidget()
 
-   IF ::oIde:lCurEditsMdi
-      ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-      ::oStackedWidget:oWidget := QMdiArea( ::oDa:oWidget )
-      ::oStackedWidget:oWidget:setObjectName( "editMdiArea" )
-      ::oStackedWidget:oWidget:setDocumentMode( .t. )
-      ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
-      ::oStackedWidget:oWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
-      ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
-      ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
-      ::oStackedWidget:oWidget:setActivationOrder( QMdiArea_CreationOrder )
+   ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
+   ::oStackedWidget:oWidget := QMdiArea( ::oDa:oWidget )
+   ::oStackedWidget:oWidget:setObjectName( "editMdiArea" )
+   ::oStackedWidget:oWidget:setDocumentMode( .t. )
+   ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
+   ::oStackedWidget:oWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
+   ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+   ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+   ::oStackedWidget:oWidget:setActivationOrder( QMdiArea_CreationOrder )
 
-      ::oDa:addChild( ::oStackedWidget )
+   ::oDa:addChild( ::oStackedWidget )
 
-      ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
-
-   ELSE
-      /* Its parent will be drawing area and pages will be XbpTabWidgets() */
-
-      ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-      ::oStackedWidget:oWidget := QStackedWidget( ::oDa:oWidget )
-      ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
-      ::oDa:addChild( ::oStackedWidget )
-   ENDIF
+   ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
    RETURN Self
 
@@ -1296,107 +1227,58 @@ METHOD IdeDocks:buildStackedWidget()
 METHOD IdeDocks:buildViewWidget( cView )
    LOCAL oFrame, qTBtnClose, qDrop, qMdi, n
 
-   IF ::oIde:lCurEditsMdi
-      qMdi := QMdiSubWindow()
-      qMdi:setWindowTitle( cView )
-      qMdi:setObjectName( cView )
-      IF cView == "Stats"
-         qMdi:setWindowIcon( hbide_image( "statistics" ) )
+   qMdi := QMdiSubWindow()
+   qMdi:setWindowTitle( cView )
+   qMdi:setObjectName( cView )
+   qMdi:setWindowIcon( ::getPanelIcon( cView ) )
+
+   oFrame := XbpWindow():new( ::oStackedWidget )
+   oFrame:oWidget := QWidget( ::oStackedWidget:oWidget )
+   oFrame:oWidget:setObjectName( cView )
+   ::oStackedWidget:addChild( oFrame )
+
+   oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   oFrame:qLayout:setContentsMargins( 0,0,0,0 )
+
+   oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
+
+   qTBtnClose := QToolButton()
+   qTBtnClose:setTooltip( "Close Tab" )
+   qTBtnClose:setAutoRaise( .t. )
+   qTBtnClose:setIcon( hbide_image( "closetab" ) )
+   qTBtnClose:connect( "clicked()", {|| ::oSM:closeSource() } )
+   oFrame:oTabWidget:qCornerWidget := qTBtnClose
+   oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
+
+   qDrop := oFrame:oTabWidget:oWidget
+
+   qDrop:setAcceptDrops( .t. )
+   qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
+   qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
+   qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
+
+   oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
+   oFrame:oTabWidget:oWidget:setMovable( .t. )
+
+   oFrame:oWidget:show()
+   oFrame:oTabWidget:oWidget:show()
+
+   aadd( ::oIde:aViews, oFrame )
+   aadd( ::oIde:aMdies, qMdi   )
+
+   IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
+      IF !empty( ::aViewsInfo[ n, 2 ] )
+         qMdi:setGeometry( ::aViewsInfo[ n, 2 ] )
       ELSE
-         qMdi:setWindowIcon( ::getPanelIcon( cView ) )
+         qMdi:resize( 300, 200 )
       ENDIF
-
-      oFrame := XbpWindow():new( ::oStackedWidget )
-      oFrame:oWidget := QWidget( ::oStackedWidget:oWidget )
-      oFrame:oWidget:setObjectName( cView )       /* This will form the basis of showing at top */
-      ::oStackedWidget:addChild( oFrame )
-
-      oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-      oFrame:qLayout:setContentsMargins( 0,0,0,0 )
-
-      oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
-
-      IF !( cView == "Stats" )
-         qTBtnClose := QToolButton()
-         qTBtnClose:setTooltip( "Close Tab" )
-         qTBtnClose:setAutoRaise( .t. )
-         qTBtnClose:setIcon( hbide_image( "closetab" ) )
-         qTBtnClose:connect( "clicked()", {|| ::oSM:closeSource() } )
-         oFrame:oTabWidget:qCornerWidget := qTBtnClose
-         oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
-
-         qDrop := oFrame:oTabWidget:oWidget
-
-         qDrop:setAcceptDrops( .t. )
-         qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
-         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
-         qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
-      ENDIF
-
-      oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
-      oFrame:oTabWidget:oWidget:setMovable( .t. )
-
-      oFrame:oWidget:show()
-      oFrame:oTabWidget:oWidget:show()
-
-      aadd( ::oIde:aViews, oFrame )
-      aadd( ::oIde:aMdies, qMdi   )
-
-      IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
-         IF !empty( ::aViewsInfo[ n, 2 ] )
-            qMdi:setGeometry( ::aViewsInfo[ n, 2 ] )
-         ELSE
-            qMdi:resize( 300, 200 )
-         ENDIF
-      ENDIF
-      qMdi:setWidget( oFrame:oWidget )
-
-      ::oStackedWidget:oWidget:addSubWindow( qMdi )
-      qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
-                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qMdi, { p, p1 } ) } )
-      ::setView( cView )
-
-   ELSE
-
-      oFrame := XbpWindow():new( ::oStackedWidget )
-      oFrame:oWidget := QWidget( ::oStackedWidget:oWidget )
-      oFrame:oWidget:setObjectName( cView )       /* This will form the basis of showing at top */
-      ::oStackedWidget:addChild( oFrame )
-
-      oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-      oFrame:qLayout:setContentsMargins( 0,0,0,0 )
-
-      oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
-      oFrame:oTabWidget:oWidget:setDocumentMode( .t. )
-
-      IF !( cView == "Stats" )
-         qTBtnClose := QToolButton()
-         qTBtnClose:setTooltip( "Close Tab" )
-         qTBtnClose:setAutoRaise( .t. )
-         qTBtnClose:setIcon( hbide_image( "closetab" ) )
-         qTBtnClose:connect( "clicked()", {|| ::oSM:closeSource() } )
-         oFrame:oTabWidget:qCornerWidget := qTBtnClose
-         oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
-
-         qDrop := oFrame:oTabWidget:oWidget
-
-         qDrop:setAcceptDrops( .t. )
-         qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
-         qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
-         qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
-
-      ENDIF
-
-      oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
-      oFrame:oTabWidget:oWidget:setMovable( .t. )
-
-      aadd( ::oIde:aViews, oFrame )
-      oFrame:oWidget:show()
-      oFrame:oTabWidget:oWidget:show()
-
-      ::oStackedWidget:oWidget:addWidget( oFrame:oWidget )
-      ::setView( cView )
    ENDIF
+   qMdi:setWidget( oFrame:oWidget )
+
+   ::oStackedWidget:oWidget:addSubWindow( qMdi )
+   qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
+                              {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qMdi, { p, p1 } ) } )
+   ::setView( cView )
 
    RETURN oFrame
 
@@ -1416,109 +1298,18 @@ METHOD IdeDocks:buildUpDownWidget()
    ::oIde:oUpDn := IdeUpDown():new( ::oIde ):create()
    ::oUpDn:oUI:hide()
 
-   IF ::oIde:lCurEditsMdi
-      ::oUpDn:oUI:setParent( ::qMdiToolbarL:oWidget )
-      ::oUpDn:oUI:show()
-      ::qMdiToolbarL:addWidget( "UpDown", ::oUpDn:oUI:oWidget )
-      ::oUpDn:oUI:hide()
-   ENDIF
+   ::oUpDn:oUI:setParent( ::qMdiToolbarL:oWidget )
+   ::oUpDn:oUI:show()
+   ::qMdiToolbarL:addWidget( "UpDown", ::oUpDn:oUI:oWidget )
+   ::oUpDn:oUI:hide()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildToolBarPanels()
-   LOCAL a_, aBtns, qAct, qTBtn
+   LOCAL a_, aBtns, qAct
    LOCAL qSize := QSize( 20,20 )
-
-   IF ! ::oIde:lCurEditsMdi
-      /* Toolbar Panels */
-      ::oIde:qTBarPanels := QToolBar()
-      ::qTBarPanels:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
-      ::qTBarPanels:setObjectName( "ToolBar_Panels" )
-      ::qTBarPanels:setWindowTitle( "ToolBar: Editor Panels" )
-      ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
-      ::qTBarPanels:setIconSize( qSize )
-
-      ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
-
-      FOR EACH a_ IN ::aViewsInfo
-         IF !( a_[ 1 ] == "Stats" )
-            ::addPanelButton( a_[ 1 ] )
-         ENDIF
-      NEXT
-
-      /* Toolbar Line Actions */
-
-      ::oIde:qTBarLines := QToolBar()
-      ::qTBarLines:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
-      ::qTBarLines:setObjectName( "ToolBar_Lines" )
-      ::qTBarLines:setWindowTitle( "ToolBar: Lines and Blocks" )
-      ::qTBarLines:setIconSize( qSize )
-      ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
-
-      ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
-
-      aBtns := {}
-      aadd( aBtns, { "movelineup"      , "Move Current Line Up"       , {|| ::oEM:moveLine( -1 )                   } } )
-      aadd( aBtns, { "movelinedown"    , "Move Current Line Down"     , {|| ::oEM:moveLine(  1 )                   } } )
-      aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()                     } } )
-      aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine()                  } } )
-      aadd( aBtns, {} )
-      aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers()              } } )
-      aadd( aBtns, { "horzruler"       , "Toggle Horizontal Ruler"    , {|| ::oEM:toggleHorzRuler()                } } )
-      aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
-      aadd( aBtns, {} )
-      aadd( aBtns, { "help1"           , "Toggle Code Completion"     , {|| ::oEM:toggleCodeCompetion()            } } )
-      aadd( aBtns, { "infotips"        , "Toggle Completion Tips"     , {|| ::oEM:toggleCompetionTips()            } } )
-      FOR EACH a_ IN aBtns
-         IF empty( a_ )
-            ::qTBarLines:addSeparator()
-         ELSE
-            qTBtn := QToolButton()
-            qTBtn:setTooltip( a_[ 2 ] )
-            qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
-            qTBtn:setMaximumWidth( 20 )
-            qTBtn:setMaximumHeight( 20 )
-            IF a_[ 1 ] $ "togglelinenumber,curlinehilight,horzruler"
-               //qTBtn:setCheckable( .t. )
-            ENDIF
-            qTBtn:connect( "clicked()", a_[ 3 ] )
-            ::qTBarLines:addWidget( qTBtn )
-            aadd( ::aBtnLines, qTBtn )
-         ENDIF
-      NEXT
-      ::qTBarLines:addSeparator()
-
-      aBtns := {}
-      aadd( aBtns, { "toupper"      , "To Upper"               , {|| ::oEM:convertSelection( "ToUpper" ) } } )
-      aadd( aBtns, { "tolower"      , "To Lower"               , {|| ::oEM:convertSelection( "ToLower" ) } } )
-      aadd( aBtns, { "invertcase"   , "Invert Case"            , {|| ::oEM:convertSelection( "Invert"  ) } } )
-      aadd( aBtns, {} )
-      aadd( aBtns, { "blockcomment" , "Block Comment"          , {|| ::oEM:blockComment()                } } )
-      aadd( aBtns, { "streamcomment", "Stream Comment"         , {|| ::oEM:streamComment()               } } )
-      aadd( aBtns, {} )
-      aadd( aBtns, { "blockindentr" , "Indent Right"           , {|| ::oEM:indent(  1 )                  } } )
-      aadd( aBtns, { "blockindentl" , "Indent Left"            , {|| ::oEM:indent( -1 )                  } } )
-      aadd( aBtns, {} )
-      aadd( aBtns, { "sgl2dblquote" , "Single to Double Quotes", {|| ::oEM:convertDQuotes()              } } )
-      aadd( aBtns, { "dbl2sglquote" , "Double to Single Quotes", {|| ::oEM:convertQuotes()               } } )
-      FOR EACH a_ IN aBtns
-         IF empty( a_ )
-            ::qTBarLines:addSeparator()
-         ELSE
-            qTBtn := QToolButton()
-            qTBtn:setTooltip( a_[ 2 ] )
-            qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
-            qTBtn:setMaximumWidth( 20 )
-            qTBtn:setMaximumHeight( 20 )
-            qTBtn:connect( "clicked()", a_[ 3 ] )
-            ::qTBarLines:addWidget( qTBtn )
-            aadd( ::aBtnLines, qTBtn )
-         ENDIF
-      NEXT
-      ::qTBarLines:addSeparator()
-   ENDIF
 
    /* Right-hand docks toolbar */
    ::oIde:qTBarDocks := QToolBar()
@@ -1561,11 +1352,7 @@ METHOD IdeDocks:buildToolBarPanels()
       ENDIF
    NEXT
 
-   IF ::oIde:lCurEditsMdi
-      ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks )
-   ELSE
-      ::oDlg:oWidget:addToolBar( Qt_RightToolBarArea, ::qTBarDocks )
-   ENDIF
+   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks )
 
    /* User defined toolbars via Tools & Utilities */
    ::oTM:buildUserToolbars()
@@ -1585,15 +1372,11 @@ METHOD IdeDocks:disblePanelButton( qTBtn )
 
 METHOD IdeDocks:getPanelIcon( cView )
    LOCAL n
-   IF ::oIde:lCurEditsMdi
-      IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
-         RETURN hbide_image( "panel_" + hb_ntos( n - 1 ) )
-      ENDIF
-   ELSE
-      IF ( n := ascan( ::aPanels, {|q| q:text() == cView } ) ) > 0
-         RETURN hbide_image( "panel_" + hb_ntos( n ) )
-      ENDIF
+
+   IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
+      RETURN hbide_image( "panel_" + hb_ntos( n ) )
    ENDIF
+
    RETURN ""
 
 /*----------------------------------------------------------------------*/
@@ -1985,16 +1768,11 @@ METHOD IdeDocks:animateComponents( nMode )
 
    /* Toolbars */
    ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-   IF ! ::oIde:lCurEditsMdi
-      ::qTBarPanels :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-      ::qTBarLines  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ENDIF
    ::qTBarDocks  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 
-   IF ::oIde:lCurEditsMdi
-      ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-      ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ENDIF
+   ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+   ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+
    /* User defined toolbars */
    ::oTM:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 

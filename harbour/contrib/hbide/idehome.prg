@@ -99,6 +99,7 @@ CLASS IdeHome INHERIT IdeObject
    DATA   qWelcomeBrowser
    DATA   oFaqTab
    DATA   qFaqBrowser
+   DATA   oView
 
    DATA   cClickedProject
    DATA   cClickedSource
@@ -121,6 +122,8 @@ CLASS IdeHome INHERIT IdeObject
    METHOD setStyleSheetTextBrowser( qBrw )
    METHOD print()
    METHOD paintRequested( qPrinter )
+   METHOD buildView()
+   METHOD show()
 
    ENDCLASS
 
@@ -133,23 +136,65 @@ METHOD IdeHome:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHome:create( oIde )
-   LOCAL oStatFrame
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   oStatFrame := ::aViews[ 1 ]
+   ::buildView()
 
-   oStatFrame:oTabWidget:oWidget:setDocumentMode( .t. )
-   oStatFrame:oTabWidget:oWidget:setStyleSheet( "QTabWidget::tab-bar {left: 5px;}" )
-   oStatFrame:qLayout:setContentsMargins( 0,0,0,0 )
+   ::oView:oTabWidget:oWidget:setDocumentMode( .t. )
+   ::oView:oTabWidget:oWidget:setStyleSheet( "QTabWidget::tab-bar {left: 5px;}" )
+   ::oView:qLayout:setContentsMargins( 0,0,0,0 )
 
    ::buildWelcomeTab()
    ::buildFaqTab()
 
-   oStatFrame:oTabWidget:oWidget:setCurrentIndex( 0 )
+   ::oView:oTabWidget:oWidget:setCurrentIndex( 0 )
+
+   ::oView:hide()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHome:show()
+
+   IF ::oView:oWidget:isVisible()
+      ::oView:hide()
+   ELSE
+      ::oIde:setPosAndSizeByIniEx( ::oView:oWidget, ::oINI:cStatsDialogGeometry )
+      ::oView:show()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHome:buildView()
+   LOCAL oFrame
+
+   oFrame := XbpWindow():new( ::oDa )
+   oFrame:oWidget := QWidget( ::oDa:oWidget )
+   oFrame:oWidget:resize( 750,300 )
+   oFrame:oWidget:connect( QEvent_Close, {|| ::oINI:cStatsDialogGeometry := hbide_posAndSize( ::oView:oWidget ) } )
+
+   oFrame:oWidget:setWindowFlags( Qt_Sheet )
+   oFrame:oWidget:setObjectName( "Stats" )
+   ::oDa:addChild( oFrame )
+
+   oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
+   oFrame:qLayout:setContentsMargins( 0,0,0,0 )
+
+   oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {600,300}, , .t. )
+
+   oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
+   oFrame:oTabWidget:oWidget:setMovable( .t. )
+
+   ::oView := oFrame
+
+   ::oIde:setPosAndSizeByIniEx( oFrame:oWidget, ::oINI:cStatsDialogGeometry )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 
@@ -269,7 +314,8 @@ METHOD IdeHome:setStyleSheetTextBrowser( qBrw )
 METHOD IdeHome:buildWelcomeTab()
    LOCAL oTab, qBrw, qSList
 
-   oTab := XbpTabPage():new( ::aViews[ 1 ], , { 5,5 }, { 700,400 }, , .t. )
+   //oTab := XbpTabPage():new( ::aViews[ 1 ], , { 5,5 }, { 700,400 }, , .t. )
+   oTab := XbpTabPage():new( ::oView, , { 5,5 }, { 700,400 }, , .t. )
    oTab:caption     := "Welcome"
    oTab:minimized   := .F.
    oTab:create()
@@ -472,7 +518,8 @@ METHOD IdeHome:formatSourceInfo( aHtm, aSrc )
 METHOD IdeHome:buildFaqTab()
    LOCAL oTab, qBrw, aFaq, aHtm, a_, b_, s
 
-   oTab := XbpTabPage():new( ::aViews[ 1 ], , { 5,5 }, { 700,400 }, , .t. )
+   //oTab := XbpTabPage():new( ::aViews[ 1 ], , { 5,5 }, { 700,400 }, , .t. )
+   oTab := XbpTabPage():new( ::oView, , { 5,5 }, { 700,400 }, , .t. )
    oTab:caption   := "FAQ's"
    oTab:minimized := .F.
    oTab:create()
