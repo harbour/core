@@ -2104,6 +2104,7 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 
 void HBQPlainTextEdit::hbHighlightPage()
 {
+#if QT_VERSION >= 0x040600
    if( highlighter )
    {
       int iLastVisBlockNum = lastVisibleBlockNumber();
@@ -2120,6 +2121,7 @@ void HBQPlainTextEdit::hbHighlightPage()
          }
       }
    }
+#endif
 }
 
 /*----------------------------------------------------------------------*/
