@@ -370,14 +370,14 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
       HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", szClsName ) );
 
       {
-         char * szSingleClsName = strtok( pszParentClsBuffer, " ," );
+         char * szSingleClsName = strtok( pszParentClsBuffer, " ," ); /* TOFIX: strtok() is not MT safe */
          PHB_ITEM pItem = hb_itemNew( NULL );
 
          while( szSingleClsName != NULL )
          {
             hb_itemPutC( pItem, szSingleClsName );
             hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
-            szSingleClsName = strtok( NULL, " ," );
+            szSingleClsName = strtok( NULL, " ," ); /* TOFIX: strtok() is not MT safe */
          }
 
          hb_itemRelease( pItem );
