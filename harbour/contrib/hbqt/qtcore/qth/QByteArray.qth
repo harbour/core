@@ -77,7 +77,7 @@ int count ( const QByteArray & ba ) const
 int count ( const char * str ) const
 int count ( char ch ) const
 int count () const
-char * data ()
+// char * data ()
 const char * data () const
 bool endsWith ( const QByteArray & ba ) const
 bool endsWith ( const char * str ) const

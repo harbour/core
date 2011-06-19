@@ -120,7 +120,7 @@ int count ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) co
 int count ( QChar ch, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
 int count ( const QRegExp & rx ) const
 int count () const
-QChar * data ()
+//QChar * data ()
 const QChar * data () const
 //iterator end ()
 //const_iterator end () const
