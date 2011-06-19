@@ -490,7 +490,7 @@ METHOD ManageChallenge() CLASS tRPCClient
       RETURN .F.
    ENDIF
 
-   IF cCode != "XHBR94"
+   IF !( cCode == "XHBR94" )
       RETURN .F.
    ENDIF
 
@@ -514,7 +514,7 @@ METHOD ManageChallenge() CLASS tRPCClient
 
    cCode := Space( 8 )
    hb_inetRecvAll( ::skTCP, @cCode )
-   IF hb_inetErrorCode( ::skTCP ) != 0 .or. cCode != "XHBR91OK"
+   IF hb_inetErrorCode( ::skTCP ) != 0 .OR. !( cCode == "XHBR91OK" )
       RETURN .F.
    ENDIF
    /* SUCCESS! */

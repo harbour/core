@@ -68,15 +68,15 @@ CREATE CLASS XHB_TMemoEditor FROM XHBEditor
    VAR    aAsciiKeys
    VAR    aConfigurableKeys
    VAR    aMouseKeys
-   VAR    aExtKeys                                  // Extended keys. For HB_EXT_INKEY use only.
+   VAR    aExtKeys                                 // Extended keys. For HB_EXT_INKEY use only.
 
-   METHOD  MemoInit( xUDF )                         // This method is called after ::New() returns to perform ME_INIT actions
-   METHOD  Edit()                                   // Calls ::Super:Edit(nKey) but is needed to handle configurable keys
-   METHOD  KeyboardHook( nKey )                     // Gets called every time there is a key not handled directly by HBEditor
+   METHOD MemoInit( xUDF )                         // This method is called after ::New() returns to perform ME_INIT actions
+   METHOD Edit()                                   // Calls ::Super:Edit(nKey) but is needed to handle configurable keys
+   METHOD KeyboardHook( nKey )                     // Gets called every time there is a key not handled directly by HBEditor
 
-   METHOD  ExistUdf() INLINE HB_IsString( ::xUserFunction )
-   METHOD  HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by udf
-   METHOD  CallUdf( nMode )                         // Call user function. ( old xDo )
+   METHOD ExistUdf() INLINE HB_IsString( ::xUserFunction )
+   METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by udf
+   METHOD CallUdf( nMode )                         // Call user function. ( old xDo )
 
 ENDCLASS
 

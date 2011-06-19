@@ -339,7 +339,7 @@ METHOD CheckTypes( aParams ) CLASS tRPCFunction
 
    FOR EACH oElem in ::aParameters
       i++
-      IF ValType( aParams[i] ) != oElem[1]
+      IF !( ValType( aParams[ i ] ) == oElem[ 1 ] )
          RETURN .F.
       ENDIF
    NEXT

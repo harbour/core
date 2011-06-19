@@ -60,148 +60,148 @@ FUNCTION sprintf( ... )
 
    aPar    := HB_aParams()
    cReturn := ""
-   cString := aPar[1]
+   cString := aPar[ 1 ]
    nPar    := 2
 
-   DO WHILE !Empty( cString )
+   DO WHILE ! Empty( cString )
 
       nPos := Len( cString ) + 1
       cTok := NIL
 
-      IF '%' $ cString
-         nPos := At( '%', cString )
-         cTok := '%'
+      IF "%" $ cString
+         nPos := At( "%", cString )
+         cTok := "%"
       ENDIF
-      IF '\' $ cString .AND. At( '\', cString ) < nPos
-         nPos := At( '\', cString )
-         cTok := '\'
+      IF "\" $ cString .AND. At( "\", cString ) < nPos
+         nPos := At( "\", cString )
+         cTok := "\"
       ENDIF
 
       cReturn += Left( cString, nPos - 1 )
 
       DO CASE
       CASE cTok == NIL
-           EXIT
+         EXIT
 
-      CASE cTok == '\'
+      CASE cTok == "\"
 
-           SWITCH SubStr( cString, ++nPos, 1 )
-           CASE 't'
-                cReturn += '    '
-                EXIT
+         SWITCH SubStr( cString, ++nPos, 1 )
+         CASE "t"
+            cReturn += "    "
+            EXIT
 
-           CASE 'n'
-                cReturn += Chr( 13 )
-                EXIT
+         CASE "n"
+            cReturn += Chr( 13 )
+            EXIT
 
-           CASE 'r'
-                cReturn += Chr( 10 )
-                EXIT
+         CASE "r"
+            cReturn += Chr( 10 )
+            EXIT
 
-           OTHERWISE
-                cReturn += SubStr( cString, nPos, 1 )
-                EXIT
-           ENDSWITCH
+         OTHERWISE
+            cReturn += SubStr( cString, nPos, 1 )
+            EXIT
+         ENDSWITCH
 
-      CASE cTok == '%'
-           lUnsigned := .F.
+      CASE cTok == "%"
+         lUnsigned := .F.
 
-           SWITCH SubStr( cString, ++nPos, 1 )
-           CASE '%'
-                cReturn += '%'
-                EXIT
+         SWITCH SubStr( cString, ++nPos, 1 )
+         CASE "%"
+            cReturn += "%"
+            EXIT
 
-           CASE '+'
-                cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
-                nPos    := At( '%', cString ) - 1
-                lSign   := .T.
-                EXIT
+         CASE "+"
+            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            nPos    := At( "%", cString ) - 1
+            lSign   := .T.
+            EXIT
 
-           CASE '0'
-                cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
-                nPos    := At( '%', cString ) - 1
-                l0      := .T.
-                EXIT
+         CASE "0"
+            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            nPos    := At( "%", cString ) - 1
+            l0      := .T.
+            EXIT
 
-           CASE '1'
-           CASE '2'
-           CASE '3'
-           CASE '4'
-           CASE '5'
-           CASE '6'
-           CASE '7'
-           CASE '8'
-           CASE '9'
-                nLen    := Val( SubStr( cString, nPos ) )
-                cTok    := Left( cString, nPos - 1 )
-                DO WHILE SubStr( cString, nPos, 1 ) $ '1234567890.'
-                    nPos++
-                ENDDO
-                cString := cTok + SubStr( cString, nPos )
-                nPos    := At( '%', cString ) - 1
-                EXIT
-
-           CASE 'u'
-                lUnsigned := .T.
+         CASE "1"
+         CASE "2"
+         CASE "3"
+         CASE "4"
+         CASE "5"
+         CASE "6"
+         CASE "7"
+         CASE "8"
+         CASE "9"
+            nLen    := Val( SubStr( cString, nPos ) )
+            cTok    := Left( cString, nPos - 1 )
+            DO WHILE SubStr( cString, nPos, 1 ) $ "1234567890."
                 nPos++
+            ENDDO
+            cString := cTok + SubStr( cString, nPos )
+            nPos    := At( "%", cString ) - 1
+            EXIT
 
-           CASE 'd'
-           CASE 'l'
-           CASE 'f'
-           CASE 'i'
-                xVal := aPar[nPar++]
-                IF !ISNUMBER( xVal )
-                   xVal := 0
-                ENDIF
-                IF nLen != 0
-                   IF nLen - Int( nLen ) > 0.0
-                      nDec := Str( nLen )
-                      DO WHILE Right( nDec, 1 ) == '0'
-                        nDec := Left( nDec, Len( nDec ) - 1 )
-                      END
-                      nDec := Val( SubStr( nDec, At( '.', nDec ) + 1 ) )
-                   ELSE
-                      nDec := 0
-                   ENDIF
-                   cTok := Str( IIF( lUnsigned, Abs( xVal ), xVal ), nLen, nDec )
-                ELSE
-                   cTok := hb_NToS( IIF( lUnsigned, Abs( xVal ), xVal ) )
-                ENDIF
-                IF l0
-                   IF '-' $ cTok .AND. Left( cTok, 1 ) != '-'
-                      cTok := StrTran( cTok, '-', ' ' )
-                      cTok := '-' + SubStr( cTok, 2 )
-                   ENDIF
-                   cTok := StrTran( cTok, ' ', '0' )
-                   l0   := .F.
-                ENDIF
-                IF lSign .AND. Left( cTok, 1 ) != '-'
-                   IF nLen == 0
-                      cTok := '+' + cTok
-                   ELSE
-                      cTok := '+' + SubStr( cTok, 2 )
-                   ENDIF
-                   lSign := .F.
-                ENDIF
-                nLen := 0
-                cReturn += cTok
-                EXIT
+         CASE "u"
+            lUnsigned := .T.
+            nPos++
 
-           CASE 'c'
-           CASE 's'
-                IF nLen == 0
-                   nLen := Len( hb_cStr( aPar[nPar] ) )
-                ENDIF
-                cReturn  += PadL( hb_cStr( aPar[nPar++] ), nLen )
-                nLen  := 0
-                l0    := .F.
-                lSign := .F.
-                EXIT
+         CASE "d"
+         CASE "l"
+         CASE "f"
+         CASE "i"
+            xVal := aPar[nPar++]
+            IF !ISNUMBER( xVal )
+               xVal := 0
+            ENDIF
+            IF nLen != 0
+               IF nLen - Int( nLen ) > 0.0
+                  nDec := Str( nLen )
+                  DO WHILE Right( nDec, 1 ) == "0"
+                    nDec := Left( nDec, Len( nDec ) - 1 )
+                  END
+                  nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
+               ELSE
+                  nDec := 0
+               ENDIF
+               cTok := Str( IIF( lUnsigned, Abs( xVal ), xVal ), nLen, nDec )
+            ELSE
+               cTok := hb_NToS( IIF( lUnsigned, Abs( xVal ), xVal ) )
+            ENDIF
+            IF l0
+               IF "-" $ cTok .AND. !( Left( cTok, 1 ) == "-" )
+                  cTok := StrTran( cTok, "-", " " )
+                  cTok := "-" + SubStr( cTok, 2 )
+               ENDIF
+               cTok := StrTran( cTok, " ", "0" )
+               l0   := .F.
+            ENDIF
+            IF lSign .AND. !( Left( cTok, 1 ) == "-" )
+               IF nLen == 0
+                  cTok := "+" + cTok
+               ELSE
+                  cTok := "+" + SubStr( cTok, 2 )
+               ENDIF
+               lSign := .F.
+            ENDIF
+            nLen := 0
+            cReturn += cTok
+            EXIT
 
-           ENDSWITCH
+         CASE "c"
+         CASE "s"
+            IF nLen == 0
+               nLen := Len( hb_cStr( aPar[nPar] ) )
+            ENDIF
+            cReturn  += PadL( hb_cStr( aPar[nPar++] ), nLen )
+            nLen  := 0
+            l0    := .F.
+            lSign := .F.
+            EXIT
+
+         ENDSWITCH
       ENDCASE
 
       cString := SubStr( cString, nPos + 1 )
    ENDDO
 
-RETURN cReturn
+   RETURN cReturn
