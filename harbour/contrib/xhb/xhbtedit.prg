@@ -1961,7 +1961,7 @@ METHOD ReformParagraph() CLASS XHBEditor
 
       FOR nRow := 1 TO ::LastRow()
 
-         ::aText[ nRow ]:cText := StrTran( ::aText[ nRow ]:cText, cSoftCR, "" )
+         ::aText[ nRow ]:cText := StrTran( ::aText[ nRow ]:cText, cSoftCR )
          ::aText[ nRow ]:lSoftCR := .F.
 
          IF At( cHardCR, ::aText[ nRow ]:cText ) != 0
@@ -2324,8 +2324,8 @@ METHOD Hilite() CLASS XHBEditor
    LOCAL cEnhanced := ""
 
    // Swap CLR_STANDARD and CLR_ENHANCED
-   cEnhanced += __StrToken( ::cColorSpec, 2, "," ) +  ","
-   cEnhanced += __StrToken( ::cColorSpec, 1, "," )
+   cEnhanced += hb_tokenGet( ::cColorSpec, 2, "," ) +  ","
+   cEnhanced += hb_tokenGet( ::cColorSpec, 1, "," )
 
    ::SetColor( cEnhanced + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cEnhanced ) ) )
 
@@ -2338,8 +2338,8 @@ METHOD DeHilite() CLASS XHBEditor
    LOCAL cStandard := ""
 
    // Swap CLR_STANDARD and CLR_ENHANCED back to their original position inside cColorSpec
-   cStandard += __StrToken( ::cColorSpec, 2, "," ) +  ","
-   cStandard += __StrToken( ::cColorSpec, 1, "," )
+   cStandard += hb_tokenGet( ::cColorSpec, 2, "," ) +  ","
+   cStandard += hb_tokenGet( ::cColorSpec, 1, "," )
 
    ::SetColor( cStandard + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cStandard ) ) )
 
@@ -3028,7 +3028,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    // 2005/JUL/19 - E.F. - SoftCR must be removed before convert string to
    //                      array. It will be treated by HBEditor.
    IF cSoftCR $ cString
-      cString := StrTran( cString, cSoftCR, "" )
+      cString := StrTran( cString, cSoftCR )
    ENDIF
 
 
@@ -3037,7 +3037,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    cEOL    := WhichEOL( cString )
    nEOLLen := Len( cEOL )
 
-   // __StrTkPtr() needs that string to be tokenized be terminated with a token delimiter
+   // hb_tokenPtr() needs that string to be tokenized be terminated with a token delimiter
    IF ! Right( cString, Len( cEOL ) ) == cEOL
       cString += cEOL
       //GAD so we don't add a blank line by accident at the end of this.
@@ -3047,7 +3047,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    nRetLen := 0
    ncSLen  := Len( cString )
 
-   // If cString starts with EOL delimiters I have to add empty lines since __StrTkPtr
+   // If cString starts with EOL delimiters I have to add empty lines since hb_tokenPtr()
    // gives back _next_ token and would skip these first EOL delimiters
    DO WHILE SubStr( cString, nTokPos + 1, nEOLLen ) == cEOL
       AAdd( aArray, HBTextLine():New( cLine, .F. ) )
@@ -3056,12 +3056,12 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    ENDDO
 
    DO WHILE nRetLen < ncSLen
-      /* TOFIX: Note that __StrToken is not able to cope with delimiters longer than one char */
+      /* TOFIX: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
       // Dos - OS/2 - Windows have CRLF as EOL
       IF nEOLLen > 1
-         cLine := StrTran( __StrTkPtr( @cString, @nTokPos, cEOL ), SubStr( cEOL, 2 ), "" )
+         cLine := StrTran( hb_tokenPtr( @cString, @nTokPos, cEOL ), SubStr( cEOL, 2 ) )
       ELSE
-         cLine := __StrTkPtr( @cString, @nTokPos, cEOL )
+         cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
       ENDIF
       nRetLen += Len( cLine ) + nEOLLen
 
