@@ -254,7 +254,7 @@
 
    // 2006/07/25 - E.F. - Internal use only.
 
-   METHOD  GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min(::nWordWrapCol + 1,::LineLen(nRow ) ),::aText[ nRow ]:cText[ nCol ],"" ), "" )
+   METHOD  GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min(::nWordWrapCol + 1,::LineLen(nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
    METHOD  IsEmptyLine( nRow )  INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), Empty( ::aText[ nRow ]:cText ), .T. )
 
 ENDCLASS
@@ -469,7 +469,7 @@ METHOD RefreshWindow() CLASS XHBEditor
       //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here,
       //               because getline return line number in tbrwtext.prg (debug).
       DispOutAt( Min( ::nTop + i,::nBottom ), ::nLeft, ;
-         PadR( iif( ::nFirstRow + i <= ::LastRow(), SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ),Space(::nNumCols ) ) , ::nNumCols ), ;
+         PadR( iif( ::nFirstRow + i <= ::LastRow(), SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), Space(::nNumCols ) ), ::nNumCols ), ;
          ::LineColor( ::nFirstRow + i ) )
 
    NEXT
@@ -1511,7 +1511,7 @@ METHOD K_Bs() CLASS XHBEditor
             ::aText[ ::nRow ]:lSoftCR := ::aText[ ::nRow + 1 ]:lSoftCR
 
             // remove a SINGLE trailing space, if it exists
-            IF ::aText[ ::nRow ]:cText[-1] == " "
+            IF Right( ::aText[ ::nRow ]:cText, 1 ) == " "
                ::aText[ ::nRow ]:cText := SubStr( ::aText[ ::nRow ]:cText, 1, ::LineLen( ::nRow ) - 1 )
             ENDIF
 
@@ -1595,7 +1595,7 @@ METHOD K_Del() CLASS XHBEditor
       // in case of softcr, reparse the paragraph.
       //
       IF ::aText[ ::nRow ]:lSoftCR == .T.
-         IF ::aText[ ::nRow ]:cText[ -1 ] != " "
+         IF !( Right( ::aText[ ::nRow ]:cText, 1 ) == " " )
             ::aText[ ::nRow ]:cText += " "
          ENDIF
 
@@ -1678,7 +1678,7 @@ METHOD K_Tab() CLASS XHBEditor
                lHardCR := .T.
             ENDIF
 
-            ::aText[ ::nRow ]:cText := ::aText[ ::nRow ]:cText  + ::GetLine( ::nRow + 1 )
+            ::aText[ ::nRow ]:cText := ::aText[ ::nRow ]:cText + ::GetLine( ::nRow + 1 )
             ::RemoveLine( ::nRow + 1 )
             ::aText[ ::nRow ]:lSoftCR := !lHardCR  // .T. if lHardCR == .F.
 
@@ -1821,7 +1821,7 @@ METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS XHBEditor
       ENDIF
       ::AddLine( cLine, lSoftCR )
    ELSE
-      AIns( ::aText, nRow, HBTextLine():New( cLine, lSoftCR ), .T. )
+      hb_AIns( ::aText, nRow, HBTextLine():New( cLine, lSoftCR ), .T. )
    ENDIF
 
    RETURN Self
@@ -1835,7 +1835,7 @@ METHOD RemoveLine( nRow ) CLASS XHBEditor
 
    DEFAULT nRow TO ::nRow
 
-   ADel( ::aText, nRow, .T. )
+   hb_ADel( ::aText, nRow, .T. )
 
    RETURN Self
 
@@ -1850,7 +1850,7 @@ METHOD GetLine( nRow ) CLASS XHBEditor
 
    IF nRow <= ::LastRow() .AND. nRow > 0
       IF ::lEditAllow .OR. Empty( ::nTabWidth )
-         return ::aText[ nRow ]:cText
+         RETURN ::aText[ nRow ]:cText
       ELSE
          RETURN HB_TabExpand( ::aText[ nRow ]:cText, ::nTabWidth )
       ENDIF
@@ -1904,20 +1904,20 @@ METHOD DelWordRight() CLASS XHBEditor
    cText := SubStr( ::aText[ ::nRow ]:cText, nCol )
 
    DO WHILE .T.
-      IF Left( cText, 1 ) == " "  .AND. Len( cText ) > 0
+      IF Left( cText, 1 ) == " " .AND. Len( cText ) > 0
          cText := SubStr( cText, 2 )
-         nSpacesPre ++
+         nSpacesPre++
       ELSE
          EXIT
       ENDIF
    ENDDO
 
    DO WHILE nCutCol <= 1 .AND. nCol < ::LineLen( ::nRow ) - 1
-      nCutCol := At( " ", SubStr( ::aText[ ::nRow ]:cText,nCol ) )
+      nCutCol := At( " ", SubStr( ::aText[ ::nRow ]:cText, nCol ) )
       IF nCutCol <= 1 .AND. nCol < ::LineLen( ::nRow ) - 1
          nCol ++
       ELSEIF nCutCol <= 1 .AND. nCol >= ::LineLen( ::nRow )
-         nCutCol := Len( SubStr( ::aText[::nRow]:cText,::nCol,nCol - ::nCol ) )
+         nCutCol := Len( SubStr( ::aText[::nRow]:cText, ::nCol, nCol - ::nCol ) )
          EXIT
       ENDIF
    ENDDO
@@ -2101,7 +2101,7 @@ METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 *      // I don't need to increment nRow since I'm removing lines, ie line n is
 *      // a different line each time I add it to cLine
 *      oSelf:RemoveLine( nRow )
-*      IF Len( cLine ) > 0 .and. cLine[ -1 ] != " "
+*      IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
 *         cLine += " "
 *      ENDIF
 *   enddo
@@ -2126,7 +2126,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
          EXIT
       ENDIF
       //GAD  This is not needed and will corrupt long lines that do not have any spaces with wordwrap on.
-/*      IF Len( cLine ) > 0 .and. cLine[ -1 ] != " "
+/*      IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
          cLine += " "
       ENDIF
 */
@@ -2311,7 +2311,7 @@ METHOD SetColor( cColorString ) CLASS XHBEditor
 
    LOCAL cOldColor := ::cColorSpec
 
-   IF cColorString != nil
+   IF cColorString != NIL
       ::cColorSpec := cColorString
    ENDIF
 
@@ -2620,7 +2620,7 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
                /* 2006/SEP/17 - E.F. - At this point we need add a new line
                                        to be able to select the last row.
                */
-               IF !Empty( ::aText[::nRowSelEnd]:cText )
+               IF !Empty( ::aText[ ::nRowSelEnd ]:cText )
                   ::AddLine()
                ELSE
                   ::nRowSelEnd := ::LastRow() - 1
@@ -2829,7 +2829,7 @@ METHOD DelTextSelection() CLASS XHBEditor
             //            IF empty( nRowSelStart )
             //               nRowSelStart := ::nColSelRow
             //            ENDIF
-            cText := ::aText[::nRow]:cText
+            cText := ::aText[ ::nRow ]:cText
             ::aText[::nRow]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
             ::RefreshLine()
             ::GoToPos( ::nRow, Max( 1,::nColSelStart ) )
@@ -2884,7 +2884,7 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
       ELSE
          nAtRow --
          for i := 1 TO nLines
-            AIns( ::aText, nAtRow + i, aTmpText[ i ], .T. )
+            hb_AIns( ::aText, nAtRow + i, aTmpText[ i ], .T. )
          next
          IF nLines > 0
             //     ::RemoveLine(nAtRow+nLines)
