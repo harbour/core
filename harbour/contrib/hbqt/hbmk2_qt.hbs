@@ -34,7 +34,6 @@
 #include "hbclass.ch"
 
 #define I_( x )                 hb_i18n_gettext( x )
-#define  _xGEN_TRACE_
 
 #if defined( __HBSCRIPT__HBMK )
 
@@ -865,14 +864,14 @@ STATIC FUNCTION hbqtui_occurs( cString, cCharToFind )
 STATIC FUNCTION hbqtui_pullColumn( cCmd, nCol )
 
    IF     "(0," $ cCmd
-      nCol := 0; RETURN .t.
+      nCol := 0; RETURN .T.
    ELSEIF "(1," $ cCmd
-      nCol := 1; RETURN .t.
+      nCol := 1; RETURN .T.
    ELSEIF "(2," $ cCmd
-      nCol := 2; RETURN .t.
+      nCol := 2; RETURN .T.
    ENDIF
 
-   RETURN .f.
+   RETURN .F.
 
 STATIC FUNCTION hbqtui_pullToolTip( cCmd )
    LOCAL n
@@ -1026,52 +1025,52 @@ STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule,
 
 CREATE CLASS HbQtSource
 
-   DATA   cCPPFileName, cDOCFileName
-   DATA   hRef
+   VAR    cCPPFileName, cDOCFileName
+   VAR    hRef
 
-   DATA   cQtModule
-   DATA   cQtVer
-   DATA   cQtObject
+   VAR    cQtModule
+   VAR    cQtVer
+   VAR    cQtObject
 
-   DATA   aMethods                                INIT {}
+   VAR    aMethods                                INIT {}
 
-   DATA   isList                                  INIT .f.
-   DATA   isDestructor                            INIT .t.
-   DATA   isConstructor                           INIT .f.
-   DATA   isObject                                INIT .t.
-   DATA   isDetached                              INIT .f.
-   DATA   areMethodsClubbed                       INIT .t.
+   VAR    isList                                  INIT .F.
+   VAR    isDestructor                            INIT .T.
+   VAR    isConstructor                           INIT .F.
+   VAR    isObject                                INIT .T.
+   VAR    isDetached                              INIT .F.
+   VAR    areMethodsClubbed                       INIT .T.
 
-   DATA   class_                                  INIT {}
-   DATA   subCls_                                 INIT {}
-   DATA   docum_                                  INIT {}
-   DATA   code_                                   INIT {}
-   DATA   cls_                                    INIT {}
-   DATA   new_                                    INIT {}
-   DATA   newW_                                   INIT {}
-   DATA   old_                                    INIT {}
-   DATA   enums_                                  INIT {}
-   DATA   enum_                                   INIT {}
-   DATA   protos_                                 INIT {}
-   DATA   varbls_                                 INIT {}
-   DATA   slots_                                  INIT {}
+   VAR    class_                                  INIT {}
+   VAR    subCls_                                 INIT {}
+   VAR    docum_                                  INIT {}
+   VAR    code_                                   INIT {}
+   VAR    cls_                                    INIT {}
+   VAR    new_                                    INIT {}
+   VAR    newW_                                   INIT {}
+   VAR    old_                                    INIT {}
+   VAR    enums_                                  INIT {}
+   VAR    enum_                                   INIT {}
+   VAR    protos_                                 INIT {}
+   VAR    varbls_                                 INIT {}
+   VAR    slots_                                  INIT {}
 
-   DATA   dummy_                                  INIT {}
-   DATA   func_                                   INIT { { "", 0 } }
-   DATA   txt_                                    INIT {}
-   DATA   cmntd_                                  INIT {}
-   DATA   doc_                                    INIT {}
-   DATA   constructors_                           INIT {}
+   VAR    dummy_                                  INIT {}
+   VAR    func_                                   INIT { { "", 0 } }
+   VAR    txt_                                    INIT {}
+   VAR    cmntd_                                  INIT {}
+   VAR    doc_                                    INIT {}
+   VAR    constructors_                           INIT {}
 
-   DATA   nFuncs                                  INIT 0
-   DATA   nCnvrtd                                 INIT 0
+   VAR    nFuncs                                  INIT 0
+   VAR    nCnvrtd                                 INIT 0
 
-   DATA   cFunc
-   DATA   cTrMode
+   VAR    cFunc
+   VAR    cTrMode
 
-   DATA   cInt                                    INIT "int,qint16,quint16,short,ushort,unsigned"
-   DATA   cIntLong                                INIT "qint32,quint32,QRgb"
-   DATA   cIntLongLong                            INIT "qint64,quint64,qlonglong,qulonglong,ulong"
+   VAR    cInt                                    INIT "int,qint16,quint16,short,ushort,unsigned"
+   VAR    cIntLong                                INIT "qint32,quint32,QRgb"
+   VAR    cIntLongLong                            INIT "qint64,quint64,qlonglong,qulonglong,ulong"
 
    METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    METHOD parseProto( cProto, fBody_ )
@@ -1098,10 +1097,10 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::hRef := { => }
    hb_HKeepOrder( ::hRef, .T. )
 
-   IF empty( GetEnv( "HBQT_BUILD_TR_LEVEL" ) )
+   IF Empty( GetEnv( "HBQT_BUILD_TR_LEVEL" ) )
       ::cTrMode := "HB_TR_DEBUG"
    ELSE
-      ::cTrMode := upper( GetEnv( "HBQT_BUILD_TR_LEVEL" ) )
+      ::cTrMode := Upper( GetEnv( "HBQT_BUILD_TR_LEVEL" ) )
       IF ! ( ::cTrMode $ "HB_TR_ALWAYS,HB_TR_WARNING,HB_TR_ERROR" )
          ::cTrMode := "HB_TR_DEBUG"
       ENDIF
@@ -1117,20 +1116,20 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
    ::cQtObject := tmp
 
-   cQth := hb_memoread( cQTHFileName )
+   cQth := hb_MemoRead( cQTHFileName )
 
    /* Prepare to be parsed properly */
-   IF ! hb_eol() == Chr( 10 )
+   IF !( hb_eol() == Chr( 10 ) )
       cQth := StrTran( cQth, hb_eol(), Chr( 10 ) )
    ENDIF
-   IF ! hb_eol() == Chr( 13 ) + Chr( 10 )
+   IF !( hb_eol() == Chr( 13 ) + Chr( 10 ) )
       cQth := StrTran( cQth, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    ENDIF
 
-   IF !empty( ::class_:= hbqtgen_PullOutSection( @cQth, "CLASS" ) )
+   IF ! Empty( ::class_:= hbqtgen_PullOutSection( @cQth, "CLASS" ) )
       FOR EACH s IN ::class_
          IF ( n := at( "=", s ) ) > 0
-            aadd( ::cls_, { alltrim( substr( s, 1, n - 1 ) ), alltrim( substr( s, n + 1 ) ) } )
+            AAdd( ::cls_, { AllTrim( SubStr( s, 1, n - 1 ) ), AllTrim( SubStr( s, n + 1 ) ) } )
          ENDIF
       NEXT
    ENDIF
@@ -1146,36 +1145,36 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
    /* Separate constructor function */
    ::new_:= {}
-   f := "HB_FUNC( QT_" + upper( ::cQtObject ) + " )"
+   f := "HB_FUNC( QT_" + Upper( ::cQtObject ) + " )"
    ::cFunc := "HB_FUNC_STATIC( NEW )"
 
-   n := ascan( ::code_, {|e| f $ e } )
+   n := AScan( ::code_, {| e | f $ e } )
 
-   aadd( ::new_, ::cFunc )
-   FOR i := n + 1 TO len( ::code_ )
-      aadd( ::new_, ::code_[ i ] )
+   AAdd( ::new_, ::cFunc )
+   FOR i := n + 1 TO Len( ::code_ )
+      AAdd( ::new_, ::code_[ i ] )
       IF RTrim( ::code_[ i ] ) == "}"
          n1 := i
          EXIT
       ENDIF
    NEXT
    ::old_ :={}
-   FOR i := 1 TO len( ::code_ )
+   FOR i := 1 TO Len( ::code_ )
       IF i < n .or. i > n1
-         aadd( ::old_, ::code_[ i ] )
+         AAdd( ::old_, ::code_[ i ] )
       ENDIF
    NEXT
    ::code_ := ::old_
 
    ::newW_:= aClone( ::new_ )
-   ::newW_[ 1 ] := "HB_FUNC( " + upper( ::cQtObject ) + " )"
+   ::newW_[ 1 ] := "HB_FUNC( " + Upper( ::cQtObject ) + " )"
 
    /* Pullout constructor methods */
    #if 0
    tmp := ::cQtObject + " ("
    FOR EACH s IN ::code_
       IF ( n := at( tmp, s ) ) > 0 .AND. ! ( "~" $ s )
-         aadd( ::constructors_, substr( s, n ) )
+         AAdd( ::constructors_, SubStr( s, n ) )
       ENDIF
    NEXT
    #endif
@@ -1185,16 +1184,16 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::enum_:= {}
    FOR EACH s IN ::enums_
       IF "enum " $ s .or. "flags " $ s
-         b_:= hb_ATokens( alltrim( s ), " " )
-         aadd( ::enum_, b_[ 2 ] )
+         b_:= hb_ATokens( AllTrim( s ), " " )
+         AAdd( ::enum_, b_[ 2 ] )
       ENDIF
    NEXT
 
    /* Pull out Prototypes   */
 //   ::protos_ := hbqtgen_PullOutSection( @cQth, "PROTOS" )
    tmp := hbqtgen_PullOutSection( @cQth, "PROTOS" )
-   aeval( ::constructors_, {|e| aadd( ::protos_, e ) } )
-   aeval( tmp, {|e| aadd( ::protos_, e ) } )
+   AEval( ::constructors_, {| e | AAdd( ::protos_, e ) } )
+   AEval( tmp, {| e | AAdd( ::protos_, e ) } )
 
    /* Pull out Variables */
    ::varbls_ := hbqtgen_PullOutSection( @cQth, "VARIABLES" )
@@ -1203,20 +1202,20 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::slots_  := hbqtgen_PullOutSection( @cQth, "SLOTS"  )
 
    /* Combine signals and protos : same nature */
-   aeval( ::slots_, {|e| aadd( ::protos_, e ) } )
+   AEval( ::slots_, {| e | AAdd( ::protos_, e ) } )
 
-   ::isList            := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "list"        .AND. lower( e_[ 2 ] ) == "yes" } ) > 0
-   ::isDetached        := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "detached"    .AND. lower( e_[ 2 ] ) == "yes" } ) > 0
-   ::isConstructor     := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "constructor" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
-   ::isDestructor      := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "destructor"  .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
-   ::isObject          := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "qobject"     .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
-   ::areMethodsClubbed := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "clubmethods" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
+   ::isList            := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "list"        .AND. Lower( e_[ 2 ] ) == "yes" } ) > 0
+   ::isDetached        := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "detached"    .AND. Lower( e_[ 2 ] ) == "yes" } ) > 0
+   ::isConstructor     := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "constructor" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
+   ::isDestructor      := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "destructor"  .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
+   ::isObject          := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "qobject"     .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
+   ::areMethodsClubbed := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "clubmethods" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
    IF ! ::isConstructor
-      FOR i := 3 TO len( ::new_ ) - 1
-         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+      FOR i := 3 TO Len( ::new_ ) - 1
+         IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
-               ::isConstructor := .t.
+               ::isConstructor := .T.
                EXIT
             ENDIF
          ENDIF
@@ -1225,21 +1224,21 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
    FOR EACH s IN ::protos_
       cOrg := s
-      IF empty( s := alltrim( s ) )
+      IF Empty( s := AllTrim( s ) )
          LOOP
       ENDIF
 
       /* Check if proto is commented out */
-      IF left( s,2 ) == "//"
-         aadd( ::cmntd_, cOrg )
+      IF Left( s, 2 ) == "//"
+         AAdd( ::cmntd_, cOrg )
          LOOP
       ENDIF
       /* Check if it is not ANSI C Comment */
-      IF left( alltrim( cOrg ),1 ) $ "/*"
+      IF Left( AllTrim( cOrg ), 1 ) $ "/*"
          LOOP
       ENDIF
       /* Another comment tokens */
-      IF empty( s ) .or. left( s,1 ) $ "#;}"
+      IF Empty( s ) .or. Left( s, 1 ) $ "#;}"
          LOOP
       ENDIF
 
@@ -1248,32 +1247,32 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
       fBody_:= {}
       IF right( s, 1 ) == "{"
          fBody_:= hbqtgen_PullOutFuncBody( ::protos_, s:__enumIndex() )
-         s := substr( s, 1, len( s ) - 1 )
+         s := SubStr( s, 1, Len( s ) - 1 )
       ENDIF
       IF ::parseProto( s, fBody_ )
          ::nCnvrtd++
       ELSE
-         aadd( ::dummy_, cOrg )
+         AAdd( ::dummy_, cOrg )
       ENDIF
    NEXT
 
    FOR EACH s IN ::varbls_
       cOrg := s
 
-      IF empty( s := alltrim( s ) )
+      IF Empty( s := AllTrim( s ) )
          LOOP
       ENDIF
       /* Check if proto is commented out */
-      IF left( s,2 ) == "//"
-         aadd( ::cmntd_, cOrg )
+      IF Left( s, 2 ) == "//"
+         AAdd( ::cmntd_, cOrg )
          LOOP
       ENDIF
       /* Check if it is not ANSI C Comment */
-      IF left( alltrim( cOrg ),1 ) $ "/*"
+      IF Left( AllTrim( cOrg ), 1 ) $ "/*"
          LOOP
       ENDIF
       /* Another comment tokens */
-      IF empty( s ) .or. left( s,1 ) $ "#;"
+      IF Empty( s ) .or. Left( s, 1 ) $ "#;"
          LOOP
       ENDIF
 
@@ -1282,7 +1281,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
       IF ::parseVariables( s )
          ::nCnvrtd++
       ELSE
-         aadd( ::dummy_, cOrg )
+         AAdd( ::dummy_, cOrg )
       ENDIF
    NEXT
 
@@ -1293,7 +1292,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 METHOD HbQtSource:build()
    LOCAL i, s, oMtd, tmp, tmp1, n, k, aLine, uQtObject
 
-   uQtObject := upper( ::cQtObject )
+   uQtObject := Upper( ::cQtObject )
 
    ::hRef[ ::cQtObject ] := NIL
 
@@ -1303,39 +1302,39 @@ METHOD HbQtSource:build()
    NEXT
 
    /* Pull .cpp copyright text */
-   aLine := hbqtgen_BuildCopyrightText( 0, ::cQtVer )
+   aLine := hbqtgen_BuildCopyrightText( ::cQtVer )
 
    /* Place ENUM definitions into the source */
-   IF !empty( ::enums_ )
-      aadd( aLine, "/*" )
-      aeval( ::enums_, {|e| iif( !empty( e ), aadd( aLine, " *  " + e ), NIL ) } )
-      aadd( aLine, " */ " )
-      aadd( aLine, "" )
+   IF ! Empty( ::enums_ )
+      AAdd( aLine, "/*" )
+      AEval( ::enums_, {| e | iif( ! Empty( e ), AAdd( aLine, " *  " + e ), NIL ) } )
+      AAdd( aLine, " */ " )
+      AAdd( aLine, "" )
    ENDIF
 
    /* Insert information about prototypes not converted to functions */
 #if 0
-   aadd( aLine, "/*" )
-   aadd( aLine, " *  Constructed[ " + hb_ntos( ::nCnvrtd ) + "/" + hb_ntos( ::nFuncs ) + " [ " + hb_ntos( ::nCnvrtd / ::nFuncs * 100 ) + "% ] ]" )
-   aadd( aLine, " *  " )
-   IF !empty( ::dummy_ )
-      aadd( aLine, " *  *** Unconvered Prototypes ***" )
-      aadd( aLine, " *  " )
-      aeval( ::dummy_, {|e| aadd( aLine, " *  " + e ) } )
+   AAdd( aLine, "/*" )
+   AAdd( aLine, " *  Constructed[ " + hb_ntos( ::nCnvrtd ) + "/" + hb_ntos( ::nFuncs ) + " [ " + hb_ntos( ::nCnvrtd / ::nFuncs * 100 ) + "% ] ]" )
+   AAdd( aLine, " *  " )
+   IF ! Empty( ::dummy_ )
+      AAdd( aLine, " *  *** Unconvered Prototypes ***" )
+      AAdd( aLine, " *  " )
+      AEval( ::dummy_, {| e | AAdd( aLine, " *  " + e ) } )
    ENDIF
-   IF !empty( ::cmntd_ )
-      aadd( aLine, " *  " )
-      aadd( aLine, " *  " + "*** Commented out prototypes ***" )
-      aadd( aLine, " *  " )
-      aeval( ::cmntd_, {|e| aadd( aLine, " *  " + e ) } )
+   IF ! Empty( ::cmntd_ )
+      AAdd( aLine, " *  " )
+      AAdd( aLine, " *  " + "*** Commented out prototypes ***" )
+      AAdd( aLine, " *  " )
+      AEval( ::cmntd_, {| e | AAdd( aLine, " *  " + e ) } )
    ENDIF
-   aadd( aLine, " */ " )
-   aadd( aLine, "" )
+   AAdd( aLine, " */ " )
+   AAdd( aLine, "" )
 #endif
 
    IF ::isConstructor
-      FOR i := 3 TO len( ::new_ ) - 1
-         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+      FOR i := 3 TO Len( ::new_ ) - 1
+         IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
                tmp1 := ::new_[ i ]
                DO WHILE ( tmp := At( "hbqt_par_", tmp1 ) ) > 0
@@ -1351,44 +1350,44 @@ METHOD HbQtSource:build()
    /*----------------------------------------------------------------------*/
    /* Generate necessary declarations */
 
-   aadd( aLine, "HB_EXTERN_BEGIN" )
-   aadd( aLine, "" )
-   aadd( aLine, "HB_FUNC_EXTERN( __HB" + Upper( ::cQtModule ) + " );" )
+   AAdd( aLine, "HB_EXTERN_BEGIN" )
+   AAdd( aLine, "" )
+   AAdd( aLine, "HB_FUNC_EXTERN( __HB" + Upper( ::cQtModule ) + " );" )
    FOR EACH s IN ::hRef
-      aadd( aLine, "HB_FUNC_EXTERN( HB_" + upper( s:__enumKey() ) + " );" )
+      AAdd( aLine, "HB_FUNC_EXTERN( HB_" + Upper( s:__enumKey() ) + " );" )
    NEXT
-   aadd( aLine, "" )
-   aadd( aLine, "void _hb_force_link_" + ::cQtObject +"( void )" )
-   aadd( aLine, "{" )
-   aadd( aLine, "   HB_FUNC_EXEC( __HB" + Upper( ::cQtModule ) + " );" )
+   AAdd( aLine, "" )
+   AAdd( aLine, "void _hb_force_link_" + ::cQtObject +"( void )" )
+   AAdd( aLine, "{" )
+   AAdd( aLine, "   HB_FUNC_EXEC( __HB" + Upper( ::cQtModule ) + " );" )
    FOR EACH s IN ::hRef
-      aadd( aLine, "   HB_FUNC_EXEC( HB_" + upper( s:__enumKey() ) + " );" )
+      AAdd( aLine, "   HB_FUNC_EXEC( HB_" + Upper( s:__enumKey() ) + " );" )
    NEXT
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
    FOR EACH s IN ::hRef
-      aadd( aLine, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s:__enumKey() + " );" )
+      AAdd( aLine, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s:__enumKey() + " );" )
    NEXT
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
    FOR EACH s IN ::hRef
-      aadd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
+      AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
 
-   n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
+   n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
    IF n > 0
-      s := upper( strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ) )
+      s := Upper( StrTran( ::cls_[ n, 2 ], "Q", "HB_Q" ) )
    ELSE
       s := "HBQTOBJECTHANDLER"
    ENDIF
    FOR EACH k IN hb_aTokens( s, "," )
-      aadd( aLine, "HB_FUNC_EXTERN( " + upper( alltrim( k ) ) + " );" )
+      AAdd( aLine, "HB_FUNC_EXTERN( " + Upper( AllTrim( k ) ) + " );" )
    NEXT
-   aadd( aLine, "" )
-   aadd( aLine, "HB_EXTERN_END" )
-   aadd( aLine, "" )
-   aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass );" )
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
+   AAdd( aLine, "HB_EXTERN_END" )
+   AAdd( aLine, "" )
+   AAdd( aLine, "static void s_registerMethods( HB_USHORT uiClass );" )
+   AAdd( aLine, "" )
 
    FOR EACH s IN ::hRef
       IF s:__enumKey() == "QList" /* TOFIX: Ugly hack */
@@ -1396,237 +1395,237 @@ METHOD HbQtSource:build()
       ELSE
          tmp := s:__enumKey()
       ENDIF
-      aadd( aLine, PadR( "#define hbqt_par_" + s:__enumKey() + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_par_ptr( n ) )" )
+      AAdd( aLine, PadR( "#define hbqt_par_" + s:__enumKey() + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_par_ptr( n ) )" )
    NEXT
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
    FOR EACH s IN ::hRef
-      aadd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( HB_U32 ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + s:__enumKey() ), 8 ) + " )" )
+      AAdd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( HB_U32 ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + s:__enumKey() ), 8 ) + " )" )
    NEXT
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
    /*----------------------------------------------------------------------*/
 
    /* Insert user defined code - INCLUDEs */
-   aadd( aLine, "#include <QtCore/QPointer>" )
-   n := aScan( ::code_, {|e| "gcMark" $ e } )
-   IF !empty( ::code_ )
+   AAdd( aLine, "#include <QtCore/QPointer>" )
+   n := aScan( ::code_, {| e | "gcMark" $ e } )
+   IF ! Empty( ::code_ )
       IF n == 0
-         aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) } )
+         AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) } )
       ELSE
-         aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n-1 )
+         AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n-1 )
       ENDIF
-      aadd( aLine, "" )
+      AAdd( aLine, "" )
    ENDIF
 
-   aadd( aLine, "typedef struct"                  )
-   aadd( aLine, "{"                               )
+   AAdd( aLine, "typedef struct"                  )
+   AAdd( aLine, "{"                               )
    IF ::isObject
-      aadd( aLine, "   QPointer< "+ ::cQtObject +" > ph;" )
+      AAdd( aLine, "   QPointer< "+ ::cQtObject +" > ph;" )
    ELSE
       IF ::isList
-          aadd( aLine, "   " + ::cQtObject + "< void * > * ph;"                    )
+          AAdd( aLine, "   " + ::cQtObject + "< void * > * ph;"                    )
       ELSE
-          aadd( aLine, "   " + ::cQtObject + " * ph;"                    )
+          AAdd( aLine, "   " + ::cQtObject + " * ph;"                    )
       ENDIF
    ENDIF
-   aadd( aLine, "   bool bNew;"                     )
-   aadd( aLine, "   PHBQT_GC_FUNC func;"            )
-   aadd( aLine, "   HB_U32 type;"                   )
-   aadd( aLine, "   PHBQT_GC_FUNC mark;"            )
-   aadd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
-   aadd( aLine, " "                                 )
-   aadd( aLine, " "                                 )
+   AAdd( aLine, "   bool bNew;"                     )
+   AAdd( aLine, "   PHBQT_GC_FUNC func;"            )
+   AAdd( aLine, "   HB_U32 type;"                   )
+   AAdd( aLine, "   PHBQT_GC_FUNC mark;"            )
+   AAdd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
+   AAdd( aLine, " "                                 )
+   AAdd( aLine, " "                                 )
    IF n > 0
-      aeval( ::code_, {| e | aadd( aLine, StrTran( e, chr( 13 ) ) ) }, n )
+      AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) }, n )
    ENDIF
-   aadd( aLine, " "                                 )
-   aadd( aLine, " "                                 )
+   AAdd( aLine, " "                                 )
+   AAdd( aLine, " "                                 )
 
-   aadd( aLine, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cQtObject + " )"  )
-   aadd( aLine, "{"                                     )
+   AAdd( aLine, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cQtObject + " )"  )
+   AAdd( aLine, "{"                                     )
    IF ::isDestructor .AND. ::isConstructor
       IF ::isObject
-         aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
-         aadd( aLine, "   " )
-         aadd( aLine, "   if( p )" )
-         aadd( aLine, "   {" )
-         aadd( aLine, "      if( p->bNew )" )
-         aadd( aLine, "      {" )
-         aadd( aLine, "         if( p->ph )" )
-         aadd( aLine, "         {" )
+         AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
+         AAdd( aLine, "   " )
+         AAdd( aLine, "   if( p )" )
+         AAdd( aLine, "   {" )
+         AAdd( aLine, "      if( p->bNew )" )
+         AAdd( aLine, "      {" )
+         AAdd( aLine, "         if( p->ph )" )
+         AAdd( aLine, "         {" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   /.\\   ", ( void * ) p, ( void * ) p->ph ) );' )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   /.\\   ", ( void * ) p, ( void * ) p->ph ) );' )
          #endif
-         aadd( aLine, "            delete ( " + ::cQtObject + " * )( p->ph ); " )
+         AAdd( aLine, "            delete ( " + ::cQtObject + " * )( p->ph ); " )
          #ifdef _GEN_TRACE_
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   \\./   ", ( void * ) p, ( void * ) p->ph ) );' )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   \\./   ", ( void * ) p, ( void * ) p->ph ) );' )
          #endif
-         aadd( aLine, "         }" )
+         AAdd( aLine, "         }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "         else" )
-         aadd( aLine, "         {" )
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     already deleted!", ( void * ) p->ph ) );' )
-         aadd( aLine, "         }" )
+         AAdd( aLine, "         else" )
+         AAdd( aLine, "         {" )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     already deleted!", ( void * ) p->ph ) );' )
+         AAdd( aLine, "         }" )
          #endif
-         aadd( aLine, "      }" )
+         AAdd( aLine, "      }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "      else" )
-         aadd( aLine, "      {" )
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a _new_ object", ( void * ) p->ph ) );' )
-         aadd( aLine, "      }" )
+         AAdd( aLine, "      else" )
+         AAdd( aLine, "      {" )
+         AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a _new_ object", ( void * ) p->ph ) );' )
+         AAdd( aLine, "      }" )
          #endif
-         aadd( aLine, "      p->ph = NULL;" )
-         aadd( aLine, "   }" )
+         AAdd( aLine, "      p->ph = NULL;" )
+         AAdd( aLine, "   }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "   else" )
-         aadd( aLine, "   {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid GC object" ) );' )
-         aadd( aLine, "   }" )
+         AAdd( aLine, "   else" )
+         AAdd( aLine, "   {" )
+         AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid GC object" ) );' )
+         AAdd( aLine, "   }" )
          #endif
       ELSE
-         aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
-         aadd( aLine, "   " )
-         aadd( aLine, "   if( p )" )
-         aadd( aLine, "   {" )
-         aadd( aLine, "      if( p->bNew )" )
-         aadd( aLine, "      {" )
-         aadd( aLine, "         if( p->ph )" )
-         aadd( aLine, "         {" )
+         AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
+         AAdd( aLine, "   " )
+         AAdd( aLine, "   if( p )" )
+         AAdd( aLine, "   {" )
+         AAdd( aLine, "      if( p->bNew )" )
+         AAdd( aLine, "      {" )
+         AAdd( aLine, "         if( p->ph )" )
+         AAdd( aLine, "         {" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
          #endif
          IF ::isList
-         aadd( aLine, "            int i; " )
-         aadd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
-         aadd( aLine, "            {" )
-         aadd( aLine, "               hb_itemRelease( p->ph->at( i ) );" )
-         aadd( aLine, "            }" )
+         AAdd( aLine, "            int i; " )
+         AAdd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
+         AAdd( aLine, "            {" )
+         AAdd( aLine, "               hb_itemRelease( p->ph->at( i ) );" )
+         AAdd( aLine, "            }" )
          ENDIF
-         aadd( aLine, "            delete ( ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
+         AAdd( aLine, "            delete ( ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
          #ifdef _GEN_TRACE_
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
          #endif
-         aadd( aLine, "         }" )
+         AAdd( aLine, "         }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "         else" )
-         aadd( aLine, "         {" )
-         aadd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     object already deleted!", ( void * ) p->ph ) );' )
-         aadd( aLine, "         }" )
+         AAdd( aLine, "         else" )
+         AAdd( aLine, "         {" )
+         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     object already deleted!", ( void * ) p->ph ) );' )
+         AAdd( aLine, "         }" )
          #endif
-         aadd( aLine, "      }" )
+         AAdd( aLine, "      }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "      else" )
-         aadd( aLine, "      {" )
-         aadd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     not a _new_ object!", ( void * ) p->ph ) );' )
-         aadd( aLine, "      }" )
+         AAdd( aLine, "      else" )
+         AAdd( aLine, "      {" )
+         AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     not a _new_ object!", ( void * ) p->ph ) );' )
+         AAdd( aLine, "      }" )
          #endif
-         aadd( aLine, "      p->ph = NULL;" )
-         aadd( aLine, "   }" )
+         AAdd( aLine, "      p->ph = NULL;" )
+         AAdd( aLine, "   }" )
          #ifdef _GEN_TRACE_
-         aadd( aLine, "   else" )
-         aadd( aLine, "   {" )
-         aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a valid GC object!", ( void * ) p ) );' )
-         aadd( aLine, "   }" )
+         AAdd( aLine, "   else" )
+         AAdd( aLine, "   {" )
+         AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a valid GC object!", ( void * ) p ) );' )
+         AAdd( aLine, "   }" )
          #endif
       ENDIF
    ELSE
-      aadd( aLine, "   /* CASE else */" )
-      aadd( aLine, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
-      aadd( aLine, "   " )
-      aadd( aLine, "   if( p && p->bNew )" )
-      aadd( aLine, "      p->ph = NULL;" )
+      AAdd( aLine, "   /* CASE else */" )
+      AAdd( aLine, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
+      AAdd( aLine, "   " )
+      AAdd( aLine, "   if( p && p->bNew )" )
+      AAdd( aLine, "      p->ph = NULL;" )
    ENDIF
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
 
-   aadd( aLine, "void * hbqt_gcAllocate_" + ::cQtObject + "( void * pObj, bool bNew )" )
-   aadd( aLine, "{                                      " )
+   AAdd( aLine, "void * hbqt_gcAllocate_" + ::cQtObject + "( void * pObj, bool bNew )" )
+   AAdd( aLine, "{                                      " )
    IF ::isObject
-      aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
+      AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
    ELSE
-      aadd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
+      AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
    ENDIF
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
    IF ::isObject
-      aadd( aLine, "   new( & p->ph ) QPointer< "+ ::cQtObject +" >( ( " + ::cQtObject + " * ) pObj );" )
+      AAdd( aLine, "   new( & p->ph ) QPointer< "+ ::cQtObject +" >( ( " + ::cQtObject + " * ) pObj );" )
    ELSE
-      aadd( aLine, "   p->ph = ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
+      AAdd( aLine, "   p->ph = ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
    ENDIF
-   aadd( aLine, "   p->bNew = bNew;" )
-   aadd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
-   aadd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
+   AAdd( aLine, "   p->bNew = bNew;" )
+   AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
+   AAdd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
    if n > 0
-      aadd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
+      AAdd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
    else
-      aadd( aLine, "   p->mark = NULL;" )
+      AAdd( aLine, "   p->mark = NULL;" )
    endif
-   aadd( aLine, "" )
+   AAdd( aLine, "" )
    #ifdef _GEN_TRACE_
-   aadd( aLine, "   if( bNew )" )
-   aadd( aLine, "   {" )
-   aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _new_' + ::cQtObject + iif( ::isObject, '  under p->pq', '' ) + '", ( void * ) pObj ) );' )
-   aadd( aLine, "   }" )
-   aadd( aLine, "   else" )
-   aadd( aLine, "   {" )
-   aadd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NOT_new_' + ::cQtObject + '", ( void * ) pObj ) );' )
-   aadd( aLine, "   }" )
+   AAdd( aLine, "   if( bNew )" )
+   AAdd( aLine, "   {" )
+   AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _new_' + ::cQtObject + iif( ::isObject, '  under p->pq', '' ) + '", ( void * ) pObj ) );' )
+   AAdd( aLine, "   }" )
+   AAdd( aLine, "   else" )
+   AAdd( aLine, "   {" )
+   AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NOT_new_' + ::cQtObject + '", ( void * ) pObj ) );' )
+   AAdd( aLine, "   }" )
    #endif
-   aadd( aLine, "   return p;" )
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
+   AAdd( aLine, "   return p;" )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
 
    /* Internal class instantiation. TODO: Rename to __QCLASS */
-   aadd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
-   aadd( aLine, "{" )
-   aadd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
-   aadd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' + uQtObject +'" ) );' )
-   aadd( aLine, "   if( s_oClass == NULL )" )
-   aadd( aLine, "   {" )
-   aadd( aLine, "      s_oClass = hb_itemNew( NULL );" )
-   aadd( aLine, "      hbqt_addDeleteList( s_oClass );" )
+   AAdd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
+   AAdd( aLine, "{" )
+   AAdd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
+   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' + uQtObject +'" ) );' )
+   AAdd( aLine, "   if( s_oClass == NULL )" )
+   AAdd( aLine, "   {" )
+   AAdd( aLine, "      s_oClass = hb_itemNew( NULL );" )
+   AAdd( aLine, "      hbqt_addDeleteList( s_oClass );" )
    FOR EACH k IN hb_aTokens( s, "," )
-      aadd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
+      AAdd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
    NEXT
-   aadd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
-   aadd( aLine, "      if( oClass )" )
-   aadd( aLine, "      {" )
-   aadd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
-   aadd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
-   aadd( aLine, "      }" )
-   aadd( aLine, "      return;" )
-   aadd( aLine, "   }" )
-   aadd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
+   AAdd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
+   AAdd( aLine, "      if( oClass )" )
+   AAdd( aLine, "      {" )
+   AAdd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
+   AAdd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
+   AAdd( aLine, "      }" )
+   AAdd( aLine, "      return;" )
+   AAdd( aLine, "   }" )
+   AAdd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
 
    /* Build PRG level constructor */
-   aadd( aLine, ::newW_[ 1 ] )           // Func definition
-   aadd( aLine, ::newW_[ 2 ] )           // {
-   aeval( ::getConstructorW(), {|e| aadd( aLine, e ) } )
+   AAdd( aLine, ::newW_[ 1 ] )           // Func definition
+   AAdd( aLine, ::newW_[ 2 ] )           // {
+   AEval( ::getConstructorW(), {| e | AAdd( aLine, e ) } )
 
    /* Build the constructor */
-   aadd( aLine, ::new_[ 1 ] )           // Func definition
-   aadd( aLine, ::new_[ 2 ] )           // {
-   aeval( ::getConstructor( 0 ), {|e| aadd( aLine, e ) } )
+   AAdd( aLine, ::new_[ 1 ] )           // Func definition
+   AAdd( aLine, ::new_[ 2 ] )           // {
+   AEval( ::getConstructor( 0 ), {| e | AAdd( aLine, e ) } )
 
    /* Insert Functions */
-   aeval( ::txt_, {|e| aadd( aLine, strtran( e, chr( 13 ) ) ) } )
+   AEval( ::txt_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) } )
 
-   aadd( aLine, "" )
-   aadd( aLine, "static void s_registerMethods( HB_USHORT uiClass )" )
-   aadd( aLine, "{" )
-   aadd( aLine, '   hb_clsAdd( uiClass, ' +padr( '"new"',35) +', HB_FUNCNAME( ' + padr( upper( "NEW" ),35) + ' ) );' )
+   AAdd( aLine, "" )
+   AAdd( aLine, "static void s_registerMethods( HB_USHORT uiClass )" )
+   AAdd( aLine, "{" )
+   AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"new"', 35) +', HB_FUNCNAME( ' + PadR( Upper( "NEW" ), 35) + ' ) );' )
    FOR EACH oMtd IN ::aMethods
-      IF !empty( oMtd:cHBFunc )
-         aadd( aLine, '   hb_clsAdd( uiClass, ' +padr( '"' + oMtd:cHBFunc +'"',35) +', HB_FUNCNAME( ' + padr( upper( oMtd:cHBFunc ),35) + ' ) );' )
-   ENDIF
+      IF ! Empty( oMtd:cHBFunc )
+         AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"' + oMtd:cHBFunc +'"', 35 ) +', HB_FUNCNAME( ' + PadR( Upper( oMtd:cHBFunc ), 35) + ' ) );' )
+      ENDIF
    NEXT
-   aadd( aLine, "}" )
-   aadd( aLine, "" )
-   aadd( aLine, "HB_INIT_SYMBOLS_BEGIN( __HBQT_CLS_" + uQtObject  + "__ )" )
-   aadd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
-   aadd( aLine, '   { "HB_' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( HB_' + uQtObject + ' ) }, NULL }' )
-   aadd( aLine, "HB_INIT_SYMBOLS_END( __HBQT_CLS_" + uQtObject + "__ )" )
-   aadd( aLine, "" )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
+   AAdd( aLine, "HB_INIT_SYMBOLS_BEGIN( __HBQT_CLS_" + uQtObject  + "__ )" )
+   AAdd( aLine, '   { "' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( ' + uQtObject + ' ) }, NULL },' )
+   AAdd( aLine, '   { "HB_' + uQtObject + '", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( HB_' + uQtObject + ' ) }, NULL }' )
+   AAdd( aLine, "HB_INIT_SYMBOLS_END( __HBQT_CLS_" + uQtObject + "__ )" )
+   AAdd( aLine, "" )
 
    /* Footer */
    hbqtgen_BuildFooter( @aLine, ::cQtVer )
@@ -1646,35 +1645,35 @@ METHOD HbQtSource:getConstructor()
 
    IF ::isConstructor
       IF ::isList
-          aadd( aLine, "   " + ::cQtObject + "< void * > * pObj = NULL;" )
+         AAdd( aLine, "   " + ::cQtObject + "< void * > * pObj = NULL;" )
       ELSE
-          aadd( aLine, "   " + ::cQtObject + " * pObj = NULL;" )
+         AAdd( aLine, "   " + ::cQtObject + " * pObj = NULL;" )
       ENDIF
-      aadd( aLine, " " )
-      FOR i := 3 TO len( ::new_ ) - 1
-         IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+      AAdd( aLine, " " )
+      FOR i := 3 TO Len( ::new_ ) - 1
+         IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
                s := ::new_[ i ]
-               s := RTrim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
+               s := RTrim( StrTran( s, "__HB_RETPTRGC__(", "pObj =" ) )
                IF ");" $ s
-                  s := RTrim( strtran( s, ");" ) ) + ";"
+                  s := RTrim( StrTran( s, ");" ) ) + ";"
                ENDIF
-               s := strtran( s, "( " + ::cQtObject + "* )" )
-               aadd( aLine, s )
+               s := StrTran( s, "( " + ::cQtObject + "* )" )
+               AAdd( aLine, s )
             ELSE
-               aadd( aLine, ::new_[ i ] )
+               AAdd( aLine, ::new_[ i ] )
             ENDIF
          ENDIF
       NEXT
-      aadd( aLine, " " )
-      aadd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
+      AAdd( aLine, " " )
+      AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
    ELSE
-      FOR i := 3 TO len( ::new_ ) - 1
-          aadd( aLine, ::new_[ i ] )
+      FOR i := 3 TO Len( ::new_ ) - 1
+         AAdd( aLine, ::new_[ i ] )
       NEXT
    ENDIF
-   aadd( aLine, ::new_[ len( ::new_ ) ] ) // }
-   aadd( aLine, "" )
+   AAdd( aLine, ::new_[ Len( ::new_ ) ] ) // }
+   AAdd( aLine, "" )
 
    RETURN aLine
 
@@ -1683,8 +1682,8 @@ METHOD HbQtSource:getConstructor()
 METHOD HbQtSource:getConstructorW()
    LOCAL aLine := ::getConstructor()
 
-   aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hbqt_itemPushReturn", "hbqt_create_objectGC" ) } )
-   aeval( aLine, {|e,i| aLine[ i ] := strtran( e, "hb_stackSelfItem()" , '"HB_' + upper( ::cQtObject ) + '"' ) } )
+   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_itemPushReturn", "hbqt_create_objectGC" ) } )
+   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hb_stackSelfItem()" , '"HB_' + Upper( ::cQtObject ) + '"' ) } )
 
    RETURN aLine
 
@@ -1696,14 +1695,14 @@ METHOD HbQtSource:normalizeCmd( oMtd, v )
    oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
 
    IF ! oMtd:isConstructor
-      FP := strtran( oMtd:cCmd, "hbqt_par_" + ::cQtObject + "( 1 )", v, 1, 1 )
+      FP := StrTran( oMtd:cCmd, "hbqt_par_" + ::cQtObject + "( 1 )", v, 1, 1 )
    ELSE
       FP := oMtd:cCmd
    ENDIF
 
    /* Manage Re-Attached */
    IF oMtd:nAttach > 0
-      FP := strtran( FP, ", false", ", true" )
+      FP := StrTran( FP, ", false", ", true" )
    ENDIF
 
    RETURN FP
@@ -1719,12 +1718,12 @@ METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
       lFar := "*" $ cRetCast
       IF ( n := at( "<", cRetCast ) ) > 0
          IF ( n1 := at( ">", cRetCast ) ) > 0
-            cCast := alltrim( substr( cRetCast, n + 1, n1 - n - 1 ) )
-            cCast := strtran( cCast, "*" )
-            cCast := strtran( cCast, " " )
+            cCast := AllTrim( SubStr( cRetCast, n + 1, n1 - n - 1 ) )
+            cCast := StrTran( cCast, "*" )
+            cCast := StrTran( cCast, " " )
          ENDIF
       ENDIF
-      IF ! empty( cCast )
+      IF ! Empty( cCast )
          cParas := oMtd:cParas
          nStrCnt := 0
          DO WHILE "%%%" $ cParas
@@ -1732,38 +1731,38 @@ METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
             cParas := StrTran( cParas, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
          ENDDO
 
-         aadd( aLines, cPrefix + 'QList<PHB_ITEM> * qList = new QList< PHB_ITEM >;' )
-         aadd( aLines, cPrefix + cRetCast + ' qL = p->' + oMtd:cFun + cParas + ';' )
-         aadd( aLines, cPrefix + "int i;" )
-         aadd( aLines, cPrefix + "for( i = 0; i < qL.size(); i++ )" )
-         aadd( aLines, cPrefix + "{" )
+         AAdd( aLines, cPrefix + 'QList<PHB_ITEM> * qList = new QList< PHB_ITEM >;' )
+         AAdd( aLines, cPrefix + cRetCast + ' qL = p->' + oMtd:cFun + cParas + ';' )
+         AAdd( aLines, cPrefix + "int i;" )
+         AAdd( aLines, cPrefix + "for( i = 0; i < qL.size(); i++ )" )
+         AAdd( aLines, cPrefix + "{" )
          IF cCast == "QString"
-            aadd( aLines, cPrefix + '   const char * str = qL.at( i ).data();' )
-            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
-            aadd( aLines, cPrefix + '   hb_itemPutCL( pItem, str, strlen( str ) );' )
-            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+            AAdd( aLines, cPrefix + '   const char * str = qL.at( i ).data();' )
+            AAdd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            AAdd( aLines, cPrefix + '   hb_itemPutCL( pItem, str, strlen( str ) );' )
+            AAdd( aLines, cPrefix + '   qList->append( pItem );' )
          ELSEIF cCast == "int"
-            aadd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
-            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
-            aadd( aLines, cPrefix + '   hb_itemPutNI( pItem, qL.at( i ) );' )
-            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+            AAdd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
+            AAdd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            AAdd( aLines, cPrefix + '   hb_itemPutNI( pItem, qL.at( i ) );' )
+            AAdd( aLines, cPrefix + '   qList->append( pItem );' )
          ELSEIF cCast == "qreal"
-            aadd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
-            aadd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
-            aadd( aLines, cPrefix + '   hb_itemPutND( pItem, qL.at( i ) );' )
-            aadd( aLines, cPrefix + '   qList->append( pItem );' )
+            AAdd( aLines, cPrefix + '   // TOFIX: how TO release pItem ? ' )
+            AAdd( aLines, cPrefix + '   PHB_ITEM pItem = hb_itemNew( NULL );' )
+            AAdd( aLines, cPrefix + '   hb_itemPutND( pItem, qL.at( i ) );' )
+            AAdd( aLines, cPrefix + '   qList->append( pItem );' )
          ELSE
             IF lFar
-               aadd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( ( void * ) qL.at( i ), false ) , "HB_' + upper( cCast ) + '" ) ) );' )
+               AAdd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( ( void * ) qL.at( i ), false ) , "HB_' + Upper( cCast ) + '" ) ) );' )
             ELSE
-               aadd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( new ' + cCast + '( qL.at( i ) ), true ) , "HB_' + upper( cCast ) + '" ) ) );' )
+               AAdd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( new ' + cCast + '( qL.at( i ) ), true ) , "HB_' + Upper( cCast ) + '" ) ) );' )
             ENDIF
          ENDIF
-         aadd( aLines, cPrefix + '}' )
-         aadd( aLines, cPrefix + 'hbqt_create_objectGC( hbqt_gcAllocate_QList( qList, true ), "HB_QLIST" );' )
+         AAdd( aLines, cPrefix + '}' )
+         AAdd( aLines, cPrefix + 'hbqt_create_objectGC( hbqt_gcAllocate_QList( qList, true ), "HB_QLIST" );' )
       ENDIF
    ELSE
-      aadd( aLines, cPrefix + FP + ";" )
+      AAdd( aLines, cPrefix + FP + ";" )
    ENDIF
 
    RETURN aLines
@@ -1778,41 +1777,41 @@ METHOD HbQtSource:getReturnMethod( oMtd, lAddRet )
    v := "p"  /* NEVER change this */
    FP := ::normalizeCmd( oMtd, v )
 
-   IF ! empty( oMtd:aPre )
-      FOR n := 1 TO len( oMtd:aPre )
-         aadd( txt_, oMtd:aPre[ n,1 ] )
+   IF ! Empty( oMtd:aPre )
+      FOR n := 1 TO Len( oMtd:aPre )
+         AAdd( txt_, oMtd:aPre[ n, 1 ] )
       NEXT
-      aadd( txt_, "" )
+      AAdd( txt_, "" )
    ENDIF
 
    /* Manage detached Argument */
    IF oMtd:nDetach > 0
-      aadd( txt_, "hbqt_par_detach_ptrGC( " + hb_ntos( oMtd:nDetach ) + " );" )
+      AAdd( txt_, "hbqt_par_detach_ptrGC( " + hb_ntos( oMtd:nDetach ) + " );" )
    ENDIF
 
    nStrCnt := 0
    DO WHILE "%%%" $ FP
       ++nStrCnt
       FP := StrTran( FP, "%%%", StrZero( nStrCnt, 2, 0 ), 1, 1 )
-      aadd( txt_, "void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
+      AAdd( txt_, "void * pText" + StrZero( nStrCnt, 2, 0 ) + " = NULL;" )
    ENDDO
 
-   aeval( ::getReturnAsList( oMtd, FP, "" ), {|e| aadd( txt_, e ) } )
+   AEval( ::getReturnAsList( oMtd, FP, "" ), {| e | AAdd( txt_, e ) } )
 
    FOR n := nStrCnt TO 1 STEP -1
-      aadd( txt_, "hb_strfree( pText" + StrZero( n, 2, 0 ) + " );" )
+      AAdd( txt_, "hb_strfree( pText" + StrZero( n, 2, 0 ) + " );" )
    NEXT
 
    /* Return values back to PRG */
-   IF ! empty( oMtd:aPre )
-      aadd( txt_, "" )
-      FOR n := 1 TO len( oMtd:aPre )
-         aadd( txt_, oMtd:aPre[ n,4 ] + "( " + oMtd:aPre[ n,3 ] + ", " + hb_ntos( oMtd:aPre[ n,2 ] ) + " );" )
+   IF ! Empty( oMtd:aPre )
+      AAdd( txt_, "" )
+      FOR n := 1 TO Len( oMtd:aPre )
+         AAdd( txt_, oMtd:aPre[ n, 4 ] + "( " + oMtd:aPre[ n, 3 ] + ", " + hb_ntos( oMtd:aPre[ n, 2 ] ) + " );" )
       NEXT
    ENDIF
 
    IF lAddRet
-      aadd( txt_, "return;" )
+      AAdd( txt_, "return;" )
    ENDIF
 
    RETURN txt_
@@ -1827,54 +1826,54 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    HB_SYMBOL_UNUSED( cMtdName )
 
    /* check for methods already been worked on */
-   IF ascan( ::func_, {|e_| e_[ 1 ] == oMtd:cFun } ) > 0
+   IF AScan( ::func_, { |e_ | e_[ 1 ] == oMtd:cFun } ) > 0
       RETURN {}
    ENDIF
-   aadd( ::func_, { oMtd:cFun, 0, "" } )
+   AAdd( ::func_, { oMtd:cFun, 0, "" } )
 
    oMtd:cHBFunc := oMtd:cFun
    oMtd:cCmd    := StrTran( oMtd:cCmd, "(  )", "()" )
 
    FOR EACH ooMtd IN aMethods
       IF ooMtd:cFun == oMtd:cFun
-         aadd( a_, ooMtd )
+         AAdd( a_, ooMtd )
       ENDIF
    NEXT
 
    /* Display method prototypes on top of the method body */
    FOR EACH ooMtd IN a_
-      aadd( txt_, "/* " + strtran( ooMtd:cProto, chr( 13 ) ) + " */" )
+      AAdd( txt_, "/* " + StrTran( ooMtd:cProto, chr( 13 ) ) + " */" )
    NEXT
 
    v := "p"  /* NEVER change this */
 
-   aadd( txt_, "HB_FUNC_STATIC( " + upper( oMtd:cHBFunc ) + " )" )
-   aadd( txt_, "{" )
+   AAdd( txt_, "HB_FUNC_STATIC( " + Upper( oMtd:cHBFunc ) + " )" )
+   AAdd( txt_, "{" )
    #ifdef _GEN_TRACE_
-   aadd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
-   //aadd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   AAdd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
+   //AAdd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
    #endif
 
    /* If method is manually written in .qth - no more processing */
-   IF !empty( oMtd:fBody_ )
-      aeval( oMtd:fBody_, {|e| aadd( txt_, e ) } )
-      aadd( txt_, "}" )
-      aadd( txt_, "" )
+   IF ! Empty( oMtd:fBody_ )
+      AEval( oMtd:fBody_, {| e | AAdd( txt_, e ) } )
+      AAdd( txt_, "}" )
+      AAdd( txt_, "" )
       RETURN txt_
    ENDIF
 
    /* Sort per number of arguments */
-   asort( a_, , , {|e,f| strzero( e:nArgs,2 ) + iif( e:nArgs == 0, "", e:hArgs[ 1 ]:cTypeHB ) > strzero( f:nArgs, 2 ) + iif( f:nArgs == 0, "", f:hArgs[ 1 ]:cTypeHB )  } )
+   asort( a_, , , {| e, f | StrZero( e:nArgs, 2 ) + iif( e:nArgs == 0, "", e:hArgs[ 1 ]:cTypeHB ) > StrZero( f:nArgs, 2 ) + iif( f:nArgs == 0, "", f:hArgs[ 1 ]:cTypeHB )  } )
 
    /* know the maximum groups by number of parameters - first CASE */
-   aeval( a_, {|o| iif( ascan( b_, o:nArgs ) == 0, aadd( b_, o:nArgs ), NIL ) } )
+   AEval( a_, {| o | iif( AScan( b_, o:nArgs ) == 0, AAdd( b_, o:nArgs ), NIL ) } )
 
    /* also take into account optional arguments if any */
    FOR EACH ooMtd IN a_
       IF ooMtd:nArgsReal < ooMtd:nArgs
          FOR i := ooMtd:nArgs - 1 TO ooMtd:nArgsReal STEP -1
-            IF ascan( b_, i ) == 0
-               aadd( b_, i )
+            IF AScan( b_, i ) == 0
+               AAdd( b_, i )
             ENDIF
          NEXT
       ENDIF
@@ -1882,11 +1881,11 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
 
    /* Build the structure number of parameters wise */
    FOR EACH nArgs IN b_
-      aadd( c_, { nArgs, {}, {}, {} } )
-      n := len( c_ )
+      AAdd( c_, { nArgs, {}, {}, {} } )
+      n := Len( c_ )
       FOR EACH ooMtd IN a_
          IF ooMtd:nArgs == nArgs
-            aadd( c_[ n,2 ], ooMtd )
+            AAdd( c_[ n, 2 ], ooMtd )
          ENDIF
       NEXT
       /* Again append methods with optional arguments */
@@ -1894,7 +1893,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
          IF ooMtd:nArgsReal < ooMtd:nArgs
             FOR i := ooMtd:nArgs - 1 TO ooMtd:nArgsReal STEP -1
                IF i == nArgs
-                  aadd( c_[ n,2 ], ooMtd )
+                  AAdd( c_[ n, 2 ], ooMtd )
                ENDIF
             NEXT
          ENDIF
@@ -1902,38 +1901,38 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    NEXT
 
    /* stack groups based on parameters descending */
-   asort( c_, , , {|e,f| e[ 1 ] > f[ 1 ] } )
+   asort( c_, , , {| e, f | e[ 1 ] > f[ 1 ] } )
 
    /* again sort no of arguments based methods by type of arguments */
    FOR i := 10 TO 0 STEP -1  /* consider maximum 10 arguments */
-      IF ( n := ascan( c_, {|e_| e_[ 1 ] == i } ) ) > 0
-         d_:= c_[ n,2 ]                      // d_ == a_
-         asort( d_, , , {|e,f| __TY( e, c_[ n,1 ] ) < __TY( f, c_[ n,1 ] ) } )
+      IF ( n := AScan( c_, {| e_ | e_[ 1 ] == i } ) ) > 0
+         d_:= c_[ n, 2 ]                      // d_ == a_
+         asort( d_, , , {| e, f | __TY( e, c_[ n, 1 ] ) < __TY( f, c_[ n, 1 ] ) } )
       ENDIF
    NEXT
 
 
    cTmp := ::cQtObject + iif( ::isList, "< void * >", "" )
-   aadd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_par_ptr( 0 );" )
+   AAdd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_par_ptr( 0 );" )
 
-   aadd( txt_, "   if( " + v + " )" )
-   aadd( txt_, "   {" )
+   AAdd( txt_, "   if( " + v + " )" )
+   AAdd( txt_, "   {" )
 
-   IF len( a_ ) == 1 .and. oMtd:nArgs == oMtd:nArgsReal    /* Only one method - no overloads */
+   IF Len( a_ ) == 1 .and. oMtd:nArgs == oMtd:nArgsReal    /* Only one method - no overloads */
       FOR EACH b_ IN c_
          nArgs    := b_[ 1 ]
          a_       := b_[ 2 ]
          FOR EACH oMtd IN a_
             IF oMtd:nArgs > 0
-               aadd( txt_, "      " + iif( oMtd:__enumIndex() == 1, "if", "else if" ) + "( " + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
-               aadd( txt_, "      {" )
+               AAdd( txt_, "      " + iif( oMtd:__enumIndex() == 1, "if", "else if" ) + "( " + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
+               AAdd( txt_, "      {" )
             ENDIF
             //
-            aeval( ::getReturnMethod( oMtd, ( oMtd:nArgs > 0 ) ), {|e| aadd( txt_, space( iif( oMtd:nArgs > 0, 9, 6 ) ) + e ) } )
+            AEval( ::getReturnMethod( oMtd, ( oMtd:nArgs > 0 ) ), {| e | AAdd( txt_, Space( iif( oMtd:nArgs > 0, 9, 6 ) ) + e ) } )
             //
             IF oMtd:nArgs > 0
-               aadd( txt_, "      }" )
-               aadd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
+               AAdd( txt_, "      }" )
+               AAdd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
             ENDIF
          NEXT
       NEXT
@@ -1941,73 +1940,73 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    ELSE
 
       nArgs := 0
-      aadd( txt_, "      switch( hb_pcount() )" )
-      aadd( txt_, "      {" )
+      AAdd( txt_, "      switch( hb_pcount() )" )
+      AAdd( txt_, "      {" )
 
       FOR EACH b_ IN c_
          nArgs    := b_[ 1 ]
          a_       := b_[ 2 ]
-         nArgGrps := len( c_ )
+         nArgGrps := Len( c_ )
          cCrc     := "xxx"
          nMtds    := 0
-         lInIf    := .f.
+         lInIf    := .F.
          nTySame  := 0
          lFirst   := nArgs > 0
 
-         aadd( txt_, "         case " + hb_ntos( nArgs ) + ":" )      /* number of parameters */
-         aadd( txt_, "         {" )
+         AAdd( txt_, "         case " + hb_ntos( nArgs ) + ":" )      /* number of parameters */
+         AAdd( txt_, "         {" )
 
          FOR EACH oMtd IN a_
             IF nArgs > 0
-               IF cCrc != __TY( oMtd, nArgs )
+               IF !( cCrc == __TY( oMtd, nArgs ) )
                   cCrc    := __TY( oMtd, nArgs )
                   nMtds   := 0
                   nTySame := 0
-                  aeval( a_, {|o| iif( __TY( o,nArgs ) == cCrc, nTySame++, NIL ) } )
+                  AEval( a_, {| o | iif( __TY( o,nArgs ) == cCrc, nTySame++, NIL ) } )
                   lInIf   := oMtd:nArgQCast > 0 .AND. oMtd:nArgQCast <= nArgs .AND. nTySame > 1
-                  aadd( txt_, "            " + iif( lFirst, "if( ", "else if( " ) + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
-                  aadd( txt_, "            {" )
+                  AAdd( txt_, "            " + iif( lFirst, "if( ", "else if( " ) + __TY_TYPEScpp( oMtd, nArgs ) + " )" )
+                  AAdd( txt_, "            {" )
                ENDIF
             ENDIF
             IF lFirst
-               lFirst := .f.
+               lFirst := .F.
             ENDIF
 
             nMtds++
 
             IF lInIf
-               aadd( txt_, "               " + iif( nMtds == 1, "if( ", "else if( " ) + __TY_Method( oMtd,nArgs ) + " )" )
-               aadd( txt_, "               {" )
+               AAdd( txt_, "               " + iif( nMtds == 1, "if( ", "else if( " ) + __TY_Method( oMtd, nArgs ) + " )" )
+               AAdd( txt_, "               {" )
             ENDIF
             //
-            aeval( ::getReturnMethod( oMtd, .t. ), {|e| aadd( txt_, space( iif( nArgs == 0, 12, 15 ) + iif( lInIf, 3, 0 ) ) + e ) } )
+            AEval( ::getReturnMethod( oMtd, .T. ), {| e | AAdd( txt_, Space( iif( nArgs == 0, 12, 15 ) + iif( lInIf, 3, 0 ) ) + e ) } )
             //
             IF lInIf
-               aadd( txt_, "               }" )
+               AAdd( txt_, "               }" )
             ENDIF
 
             IF nArgs > 0 .AND. ! lInIf
-               aadd( txt_, "            }" )
+               AAdd( txt_, "            }" )
             ELSEIF nArgs > 0 .AND. lInIf .AND. nMtds == nTySame
-               aadd( txt_, "            }" )
+               AAdd( txt_, "            }" )
             ENDIF
          NEXT
          IF nArgs > 0
-            aadd( txt_, "            break;" )
-            aadd( txt_, "         }" )
+            AAdd( txt_, "            break;" )
+            AAdd( txt_, "         }" )
          ENDIF
       NEXT
       IF nArgs == 0
-         aadd( txt_, "         }" )  // CASE
+         AAdd( txt_, "         }" )  // CASE
       ENDIF
-      aadd( txt_, "      }" )        // SWITCH
-      aadd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
+      AAdd( txt_, "      }" )        // SWITCH
+      AAdd( txt_, "      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );" )
 
    ENDIF
 
-   aadd( txt_, "   }" )           // if( p )
-   aadd( txt_, "}" )              // HB_FUNC()
-   aadd( txt_, "" )
+   AAdd( txt_, "   }" )           // if( p )
+   AAdd( txt_, "}" )              // HB_FUNC()
+   AAdd( txt_, "" )
 
    HB_SYMBOL_UNUSED( d_ )
    HB_SYMBOL_UNUSED( nArgGrps )
@@ -2021,17 +2020,17 @@ METHOD HbQtSource:buildMethodBody( oMtd )
 
    oMtd:cCmd := StrTran( oMtd:cCmd, "(  )", "()" )
 
-   aBdy := ::getMethodBody( oMtd, "QT_" + upper( ::cQtObject ) + "_" + upper( oMtd:cHBFunc ), ::aMethods )
+   aBdy := ::getMethodBody( oMtd, "QT_" + Upper( ::cQtObject ) + "_" + Upper( oMtd:cHBFunc ), ::aMethods )
 
-   aeval( aBdy, {|e| aadd( ::txt_, e ) } )
+   AEval( aBdy, {| e | AAdd( ::txt_, e ) } )
 
    cFunc := iif( ::areMethodsClubbed, hbqtgen_stripLastFrom( oMtd:cHBFunc, "_" ), oMtd:cHBFunc )
 
    oMtd:cDoc := "Qt_" + ::cQtObject + "_" + cFunc + "( p" + ::cQtObject + ;
-                     iif( empty( oMtd:cDocs ), "", ", " + oMtd:cDocs ) + " ) -> " + oMtd:cPrgRet
+                     iif( Empty( oMtd:cDocs ), "", ", " + oMtd:cDocs ) + " ) -> " + oMtd:cPrgRet
 
-   aadd( ::doc_, oMtd:cDoc )
-   aadd( ::doc_, "" )
+   AAdd( ::doc_, oMtd:cDoc )
+   AAdd( ::doc_, "" )
 
    RETURN Self
 
@@ -2039,10 +2038,10 @@ METHOD HbQtSource:buildMethodBody( oMtd )
 
 STATIC FUNCTION hbqtgen_prgRetNormalize( cPrgRet )
 
-   cPrgRet := strtran( cPrgRet, "::", "_" )
-   cPrgRet := strtran( cPrgRet, "<", "_" )
-   cPrgRet := strtran( cPrgRet, " *>" )
-   cPrgRet := strtran( cPrgRet, "*>" )
+   cPrgRet := StrTran( cPrgRet, "::", "_" )
+   cPrgRet := StrTran( cPrgRet, "<", "_" )
+   cPrgRet := StrTran( cPrgRet, " *>" )
+   cPrgRet := StrTran( cPrgRet, "*>" )
 
    RETURN cPrgRet
 
@@ -2082,7 +2081,7 @@ STATIC FUNCTION __TY_TYPEScpp( oM, nArgs )
       s += hbqtgen_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast ) + " && "
    NEXT
    IF " && " $ s
-      s := Left( s, len( s ) - 4 )
+      s := Left( s, Len( s ) - 4 )
    ENDIF
    RETURN s
 
@@ -2097,7 +2096,7 @@ METHOD HbQtSource:buildDOC()
 
    hb_HKeepOrder( hEntry, .T. )
 
-   n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) $ "inherits" .and. !empty( e_[ 2 ] ) } )
+   n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) $ "inherits" .and. ! Empty( e_[ 2 ] ) } )
    cInherits := iif( n > 0, ::cls_[ n, 2 ], "" )
 
    cLib := ::cQtModule
@@ -2106,7 +2105,7 @@ METHOD HbQtSource:buildDOC()
    hEntry[ "NAME"         ] := ::cQtObject + "()"
    hEntry[ "CATEGORY"     ] := "Harbour Bindings for Qt"
    hEntry[ "SUBCATEGORY"  ] := "GUI"
-   hEntry[ "EXTERNALLINK" ] := "http://doc.trolltech.com/" + cQT_VER + "/" + lower( ::cQtObject ) + ".html"
+   hEntry[ "EXTERNALLINK" ] := "http://doc.trolltech.com/" + cQT_VER + "/" + Lower( ::cQtObject ) + ".html"
    hEntry[ "ONELINER"     ] := "Creates a new " + ::cQtObject + " object."
    hEntry[ "INHERITS"     ] := cInherits
    hEntry[ "SYNTAX"       ] := ::cQtObject + "( ... )" + hb_eol()
@@ -2114,21 +2113,21 @@ METHOD HbQtSource:buildDOC()
    hEntry[ "RETURNS"      ] := "An instance of the object of type " + ::cQtObject
    IF ! Empty( ::doc_ )
       hEntry[ "METHODS"      ] := ""
-      nLen    := len( ::cQtObject )
+      nLen    := Len( ::cQtObject )
       n       := at( ::cQtObject, ::doc_[ 1 ] )
       pWidget := "p" + ::cQtObject
-      FOR i := 1 TO len( ::doc_ )
-         IF !empty( cText := ::doc_[ i ] )
-            cText := substr( cText, n + nLen + 1 )
-            cText := strtran( cText, pWidget + ", " )
-            cText := strtran( cText, pWidget )
-            cText := strtran( cText, "(  )", "()" )
+      FOR i := 1 TO Len( ::doc_ )
+         IF ! Empty( cText := ::doc_[ i ] )
+            cText := SubStr( cText, n + nLen + 1 )
+            cText := StrTran( cText, pWidget + ", " )
+            cText := StrTran( cText, pWidget )
+            cText := StrTran( cText, "(  )", "()" )
             n1    := at( "->", cText )
-            cRet  := hbqtgen_prgRetNormalize( alltrim( substr( cText, n1 + 2 ) ) )
-            cText := substr( cText, 1, n1 - 1 )
-            n2    := max( 50, len( cText ) )
+            cRet  := hbqtgen_prgRetNormalize( AllTrim( SubStr( cText, n1 + 2 ) ) )
+            cText := SubStr( cText, 1, n1 - 1 )
+            n2    := Max( 50, Len( cText ) )
             cText := padR( cText, n2 )
-            IF !empty( cRet )
+            IF ! Empty( cRet )
                hEntry[ "METHODS" ] += ":" + cText + " -> " + cRet + hb_eol()
             ENDIF
          ENDIF
@@ -2137,7 +2136,7 @@ METHOD HbQtSource:buildDOC()
    hEntry[ "DESCRIPTION"  ] := ""
    hEntry[ "EXAMPLES"     ] := ""
    FOR EACH cText IN ::docum_
-      IF !empty( cText )
+      IF ! Empty( cText )
          hEntry[ "EXAMPLES" ] += cText + hb_eol()
       ENDIF
    NEXT
@@ -2160,19 +2159,19 @@ METHOD HbQtSource:parseVariables( cProto )
    LOCAL n, oMtd, oRet
 
    IF ( n := at( " ", cProto ) ) == 0
-      RETURN .f.
+      RETURN .F.
    ENDIF
 
    oMtd := HbqtMethod():new()
    oMtd:cProto     := cProto
-   oMtd:isVariable := .t.
+   oMtd:isVariable := .T.
 
    oMtd:cPre := cProto
 
-   oMtd:cRet := alltrim( substr( cProto, 1, n - 1 ) )
-   oMtd:cFun := alltrim( substr( cProto, n + 1    ) )
+   oMtd:cRet := AllTrim( SubStr( cProto, 1, n - 1 ) )
+   oMtd:cFun := AllTrim( SubStr( cProto, n + 1    ) )
 
-   oRet := HbqtArgument():new( oMtd:cRet, ::cQtObject, ::enum_, "const" $ oMtd:cPas, .t. )
+   oRet := HbqtArgument():new( oMtd:cRet, ::cQtObject, ::enum_, "const" $ oMtd:cPas, .T. )
    oMtd:oRet := oRet
 
    ::buildCppCode( oMtd )
@@ -2181,7 +2180,7 @@ METHOD HbQtSource:parseVariables( cProto )
 
 /*----------------------------------------------------------------------*/
 
-#define HBQTGEN_THIS_PROPER( s )   ( upper( left( s,1 ) ) + substr( s,2 ) )
+#define HBQTGEN_THIS_PROPER( s )   ( Upper( Left( s, 1 ) ) + SubStr( s, 2 ) )
 
 METHOD HbQtSource:parseProto( cProto, fBody_ )
    LOCAL aArg, n, nn, cHBIdx, nIndex, s, ss, cFirstParamCast, cArg
@@ -2189,10 +2188,10 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    LOCAL cRef
 
    IF ( n := at( "(", cProto ) ) == 0
-      RETURN .f.
+      RETURN .F.
    ENDIF
    IF ( nn := rat( ")", cProto ) ) == 0
-      RETURN .f.
+      RETURN .F.
    ENDIF
 
    /*                    Method Parsing                    */
@@ -2200,19 +2199,19 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    oMtd:cProto := cProto
    oMtd:fBody_ := fBody_
 
-   oMtd:cPre := alltrim( substr( cProto,     1, n - 1      ) )
-   oMtd:cPar := alltrim( substr( cProto, n + 1, nn - 1 - n ) )
-   oMtd:cPas := alltrim( substr( cProto, nn + 1            ) )
+   oMtd:cPre := AllTrim( SubStr( cProto,     1, n - 1      ) )
+   oMtd:cPar := AllTrim( SubStr( cProto, n + 1, nn - 1 - n ) )
+   oMtd:cPas := AllTrim( SubStr( cProto, nn + 1            ) )
 
    IF ( n := at( "[*", oMtd:cPas ) ) > 0
       IF ( nn := at( "*]", oMtd:cPas ) ) > 0
-         oMtd:cMrk := alltrim( substr( oMtd:cPas, n + 2, nn - n - 2 ) )
-         oMtd:cPas := alltrim( substr( oMtd:cPas, 1, n - 1 ) )
+         oMtd:cMrk := AllTrim( SubStr( oMtd:cPas, n + 2, nn - n - 2 ) )
+         oMtd:cPas := AllTrim( SubStr( oMtd:cPas, 1, n - 1 ) )
          FOR EACH k IN hb_aTokens( oMtd:cMrk, ";" )
             IF ( n := at( "=", k ) ) > 0
-               cKey := alltrim( substr( k, 1, n - 1 ) )
-               cVal := alltrim( substr( k, n + 1 ) )
-               SWITCH upper( cKey )
+               cKey := AllTrim( SubStr( k, 1, n - 1 ) )
+               cVal := AllTrim( SubStr( k, n + 1 ) )
+               SWITCH Upper( cKey )
                CASE "D"
                   oMtd:nDetach := val( cVal )
                   EXIT
@@ -2227,30 +2226,30 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
       ENDIF
    ENDIF
    IF ( n := rat( " ", oMtd:cPre ) ) > 0
-      oMtd:cFun := alltrim( substr( oMtd:cPre, n + 1    ) )
-      oMtd:cRet := alltrim( substr( oMtd:cPre, 1, n - 1 ) )
+      oMtd:cFun := AllTrim( SubStr( oMtd:cPre, n + 1    ) )
+      oMtd:cRet := AllTrim( SubStr( oMtd:cPre, 1, n - 1 ) )
    ELSE
       oMtd:cFun := oMtd:cPre
       oMtd:cRet := ""
    ENDIF
-   IF empty( oMtd:cRet ) .AND. oMtd:cFun == ::cQtObject
-      oMtd:isConstructor := .t.
+   IF Empty( oMtd:cRet ) .AND. oMtd:cFun == ::cQtObject
+      oMtd:isConstructor := .T.
       oMtd:cRet := oMtd:cFun
    ENDIF
 
    /*                 Return Value Parsing                   */
-   oRet := HbqtArgument():new( oMtd:cRet, ::cQtObject, ::enum_, "const" $ oMtd:cPas, .t. )
+   oRet := HbqtArgument():new( oMtd:cRet, ::cQtObject, ::enum_, "const" $ oMtd:cPas, .T. )
    oMtd:oRet := oRet
 
-   IF !empty( oMtd:cPar )
+   IF ! Empty( oMtd:cPar )
       /*                 Arguments Parsing                      */
       aArg := hb_ATokens( oMtd:cPar, "," )
-      aeval( aArg, {| e, i | aArg[ i ] := alltrim( e ) } )
+      AEval( aArg, {| e, i | aArg[ i ] := AllTrim( e ) } )
 
       FOR EACH cArg IN aArg
          nIndex := cArg:__enumIndex()
 
-         oArg := HbqtArgument():new( cArg, ::cQtObject, ::enum_, .f., .f. )
+         oArg := HbqtArgument():new( cArg, ::cQtObject, ::enum_, .F., .F. )
          oMtd:hArgs[ nIndex ] := oArg
 
          oMtd:nHBIdx := nIndex // iif( oMtd:isConstructor, 0, 1 )
@@ -2260,10 +2259,10 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          oMtd:nArgs++
          oMtd:nArgsOpt += iif( oArg:lOptional, 1, 0 )
 
-         IF empty( cFirstParamCast )
+         IF Empty( cFirstParamCast )
             cFirstParamCast := oArg:cCast
             IF "::" $ cFirstParamCast
-               cFirstParamCast := substr( cFirstParamCast, at( "::", cFirstParamCast ) + 2 )
+               cFirstParamCast := SubStr( cFirstParamCast, at( "::", cFirstParamCast ) + 2 )
             ENDIF
          ENDIF
 
@@ -2286,25 +2285,25 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "P"
 
          CASE oArg:cCast $ ::cInt .AND. oArg:lFar
-            aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
+            AAdd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ ::cIntLong .AND. oArg:lFar
-            aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
+            AAdd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ ::cIntLongLong .AND. oArg:lFar
-            aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornint" } )
+            AAdd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornint" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ ::cInt
-            IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
+            IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnidef( " + cHBIdx + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parni( " + cHBIdx + " )"
@@ -2313,7 +2312,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast $ ::cIntLong
-            IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
+            IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnldef( " + cHBIdx + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parnl( " + cHBIdx + " )"
@@ -2322,7 +2321,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast $ "qlonglong,qulonglong"
-            IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
+            IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "( " + oArg:cCast + " ) hb_parnintdef( " + cHBIdx + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "( " + oArg:cCast + " ) hb_parnint( " + cHBIdx + " )"
@@ -2331,7 +2330,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast $ ::cIntLongLong
-            IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
+            IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "hb_parnintdef( " + cHBIdx + ", " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := "hb_parnint( " + cHBIdx + " )"
@@ -2340,14 +2339,14 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast $ "double,qreal" .AND. oArg:lFar
-            aadd( oMtd:aPre, { "qreal qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
+            AAdd( oMtd:aPre, { "qreal qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
             oArg:cBody   := "&qr" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
          CASE oArg:cCast $ "double,qreal,float"
             s := "hb_parnd( " + cHBIdx + " )"
-            IF !empty( oArg:cDefault )
+            IF ! Empty( oArg:cDefault )
                oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := s
@@ -2388,19 +2387,19 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE ( "::" $ oArg:cCast ) .AND. oArg:lFar
-            aadd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = ( " + oArg:cCast + " ) 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
+            AAdd( oMtd:aPre, { oArg:cCast + " i" + oMtd:cDocNM + " = ( " + oArg:cCast + " ) 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_storni" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
          CASE ( "::" $ oArg:cCast )
             s := "( " + oArg:cCast + " ) hb_parni( " + cHBIdx + " )"
-            IF !empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
-               IF ascan( ::enum_, oArg:cDefault ) > 0
+            IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
+               IF AScan( ::enum_, oArg:cDefault ) > 0
                   ss := ::cQtObject + "::" + oArg:cDefault
                ELSE
                   ss := iif( "::" $ oArg:cDefault, oArg:cDefault, ;
-                     iif( isDigit( left( oArg:cDefault, 1 ) ), oArg:cDefault, ::cQtObject + "::" + oArg:cDefault ) )
+                     iif( isDigit( Left( oArg:cDefault, 1 ) ), oArg:cDefault, ::cQtObject + "::" + oArg:cDefault ) )
                ENDIF
                ss := "( " + oArg:cCast + " ) " + ss
                oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + ss + " )"
@@ -2411,14 +2410,14 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast == "bool" .AND. oArg:lFar
-            aadd( oMtd:aPre, { "bool i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
+            AAdd( oMtd:aPre, { "bool i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@l" + oMtd:cDocNM
             oArg:cTypeHB := "L"
 
          CASE oArg:cCast == "bool"
             s := "hb_parl( " + cHBIdx + " )"
-            IF !empty( oArg:cDefault )
+            IF ! Empty( oArg:cDefault )
                oArg:cBody := "( HB_ISLOG( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := s
@@ -2446,7 +2445,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:lFar
             cRef := oArg:cCast
             oArg:cBody := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            IF !empty( oArg:cDefault )
+            IF ! Empty( oArg:cDefault )
                oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + oArg:cBody + " : " + oArg:cDefault + " )"
             ENDIF
             oArg:cDoc    := "o" + oArg:cCast
@@ -2455,7 +2454,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:lAnd .AND. oArg:lConst
             cRef := oArg:cCast
             s := "*hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
-            IF !empty( oArg:cDefault ) .AND. ( "(" $ oArg:cDefault )
+            IF ! Empty( oArg:cDefault ) .AND. ( "(" $ oArg:cDefault )
                oArg:cBody := "( HB_ISOBJECT( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
             ELSE
                oArg:cBody := s
@@ -2492,7 +2491,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    oMtd:nArgsReal := oMtd:nArgs - oMtd:nArgsOpt
 
    FOR EACH oArg IN oMtd:hArgs
-      IF ( left( oArg:cCast, 1 ) == "Q" .OR. left( oArg:cCast, 3 ) == "HBQ" ) .AND. ;
+      IF ( Left( oArg:cCast, 1 ) == "Q" .OR. Left( oArg:cCast, 3 ) == "HBQ" ) .AND. ;
                                             ! ( oArg:cCast $ "QString,QRgb" ) .AND. ;
                                             ! ( "::" $ oArg:cCast )
          oMtd:nArgQCast := oArg:__enumIndex()
@@ -2507,8 +2506,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
    NEXT
 
    IF right( oMtd:cParas, 2 ) == ", "
-      oMtd:cParas := substr( oMtd:cParas, 1, len( oMtd:cParas ) - 2 )
-      oMtd:cDocs  := substr( oMtd:cDocs , 1, len( oMtd:cDocs  ) - 2 )
+      oMtd:cParas := SubStr( oMtd:cParas, 1, Len( oMtd:cParas ) - 2 )
+      oMtd:cDocs  := SubStr( oMtd:cDocs , 1, Len( oMtd:cDocs  ) - 2 )
    ENDIF
 
    ::buildCppCode( oMtd )
@@ -2539,7 +2538,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    DO CASE
    CASE oMtd:isConstructor
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + ::cQtObject + "( new " + oRet:cCast + "( " + cPara + " ), true )" + ', "HB_' + upper(::cQtObject) +'")'
+      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + ::cQtObject + "( new " + oRet:cCast + "( " + cPara + " ), true )" + ', "HB_' + Upper(::cQtObject) +'")'
       oMtd:cPrgRet := "o" + ::cQtObject
 
    CASE "<" $ oRet:cCast
@@ -2558,12 +2557,12 @@ METHOD HbQtSource:buildCppCode( oMtd )
          oMtd:cPrgRet := ""
       OTHERWISE
          cRef := "QList"
-         cRefInList := strtran( oRet:cCast, "QList<" )
-         cRefInList := strtran( cRefInList, ">" )
-         cRefInList := strtran( cRefInList, "*" )
-         cRefInList := strtran( cRefInList, " " )
-         oMtd:isRetList := .t.
-         oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
+         cRefInList := StrTran( oRet:cCast, "QList<" )
+         cRefInList := StrTran( cRefInList, ">" )
+         cRefInList := StrTran( cRefInList, "*" )
+         cRefInList := StrTran( cRefInList, " " )
+         oMtd:isRetList := .T.
+         oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ENDCASE
 
@@ -2629,7 +2628,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              "Abstract" $ oRet:cCast
       cRef := oRet:cCast
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
+      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2637,7 +2636,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              oRet:lVirt
       cRef := oRet:cCast
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + upper( ::cQtObject ) + '" )'
+      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2682,9 +2681,9 @@ METHOD HbQtSource:buildCppCode( oMtd )
    ENDIF
 
    IF ( oMtd:lValid := ! Empty( oMtd:cCmd ) )
-      aadd( ::aMethods, oMtd )
+      AAdd( ::aMethods, oMtd )
       hbqtgen_AddRef( ::hRef, cRef )
-      IF ! empty( cRefInList ) .AND. ! ( cRefInList $ "int,qreal" )
+      IF ! Empty( cRefInList ) .AND. ! ( cRefInList $ "int,qreal" )
          hbqtgen_AddRef( ::hRef, cRefInList )
       ENDIF
    ENDIF
@@ -2697,63 +2696,63 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
 CREATE CLASS HbqtMethod
 
-   DATA   name                                    INIT ""   //  widget
-   DATA   isVariable                              INIT .f.
-   DATA   lValid                                  INIT .t.
-   DATA   nSiblings                               INIT 0    //  names post_fixed by number
-   DATA   isSibling                               INIT .f.  //  is nother function with same name
-   DATA   isConstructor                           INIT .f.
-   DATA   areFuncClubbed                          INIT .t.
-   DATA   isRetList                               INIT .f.
+   VAR    name                                    INIT ""   //  widget
+   VAR    isVariable                              INIT .F.
+   VAR    lValid                                  INIT .T.
+   VAR    nSiblings                               INIT 0    //  names post_fixed by number
+   VAR    isSibling                               INIT .F.  //  is nother function with same name
+   VAR    isConstructor                           INIT .F.
+   VAR    areFuncClubbed                          INIT .T.
+   VAR    isRetList                               INIT .F.
 
-   DATA   cProto                                  INIT ""   //  QWidget * widget ( QWidget * parent, const QString & name ) const  [*D=4*]
+   VAR    cProto                                  INIT ""   //  QWidget * widget ( QWidget * parent, const QString & name ) const  [*D=4*]
 
-   DATA   cPre                                    INIT ""   //  ^^^^^^^^^^^^^^^^
-   DATA   cPar                                    INIT ""   //                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   DATA   cPas                                    INIT ""   //                                                              ^^^^^
-   DATA   cMrk                                    INIT ""   //                                                                       ^^^
+   VAR    cPre                                    INIT ""   //  ^^^^^^^^^^^^^^^^
+   VAR    cPar                                    INIT ""   //                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   VAR    cPas                                    INIT ""   //                                                              ^^^^^
+   VAR    cMrk                                    INIT ""   //                                                                       ^^^
 
-   DATA   nDetach                                 INIT 0
-   DATA   nAttach                                 INIT 0
+   VAR    nDetach                                 INIT 0
+   VAR    nAttach                                 INIT 0
 
-   DATA   cFun                                    INIT ""
-   DATA   cRet                                    INIT ""
+   VAR    cFun                                    INIT ""
+   VAR    cRet                                    INIT ""
 
-   DATA   cParas                                  INIT ""
-   DATA   cParasN                                 INIT ""
-   DATA   cDocs                                   INIT ""
+   VAR    cParas                                  INIT ""
+   VAR    cParasN                                 INIT ""
+   VAR    cDocs                                   INIT ""
 
-   DATA   cDoc                                    INIT ""   // Qt_QWidget_setSize_1( nWidth, nHeight ) -> NIL
+   VAR    cDoc                                    INIT ""   // Qt_QWidget_setSize_1( nWidth, nHeight ) -> NIL
 
-   DATA   cError                                  INIT ""
-   DATA   cCmd                                    INIT ""
-   DATA   cCmdN                                   INIT ""
-   DATA   cCmn                                    INIT ""
-   DATA   cCmnN                                   INIT ""
-   DATA   cDocNM                                  INIT ""
-   DATA   cDocNMRet                               INIT ""
-   DATA   cPrgRet                                 INIT ""
-   DATA   cWdg                                    INIT ""
-   DATA   cHBFunc                                 INIT ""
+   VAR    cError                                  INIT ""
+   VAR    cCmd                                    INIT ""
+   VAR    cCmdN                                   INIT ""
+   VAR    cCmn                                    INIT ""
+   VAR    cCmnN                                   INIT ""
+   VAR    cDocNM                                  INIT ""
+   VAR    cDocNMRet                               INIT ""
+   VAR    cPrgRet                                 INIT ""
+   VAR    cWdg                                    INIT ""
+   VAR    cHBFunc                                 INIT ""
 
-   DATA   aPre                                    INIT {}
-   DATA   aPreN                                   INIT {}
-   DATA   nHBIdx
-   DATA   nHBIdxN
-   DATA   nArgQCast                               INIT 0    //  First argument position of type Q*Class
-   DATA   nArgHBObj                               INIT 0    //  First argument position of type Q*Class
+   VAR    aPre                                    INIT {}
+   VAR    aPreN                                   INIT {}
+   VAR    nHBIdx
+   VAR    nHBIdxN
+   VAR    nArgQCast                               INIT 0    //  First argument position of type Q*Class
+   VAR    nArgHBObj                               INIT 0    //  First argument position of type Q*Class
 
-   DATA   oRet
-   DATA   nArgs                                   INIT 0    //  Number of arguments contained
-   DATA   nArgsOpt                                INIT 0    //  Number of optional arguments contained
-   DATA   nArgsReal                               INIT 0    //  Number of minimum arguments to be supplied
+   VAR    oRet
+   VAR    nArgs                                   INIT 0    //  Number of arguments contained
+   VAR    nArgsOpt                                INIT 0    //  Number of optional arguments contained
+   VAR    nArgsReal                               INIT 0    //  Number of minimum arguments to be supplied
 
-   DATA   hArgs                                   INIT { => }
+   VAR    hArgs                                   INIT { => }
 
-   DATA   fBody_                                  INIT {}
+   VAR    fBody_                                  INIT {}
 
-   DATA   cMtdDef
-   DATA   cMtdCall
+   VAR    cMtdDef
+   VAR    cMtdCall
 
    METHOD new()
 
@@ -2762,7 +2761,7 @@ ENDCLASS
 /*----------------------------------------------------------------------*/
 
 METHOD HbqtMethod:new()
-   hb_hKeepOrder( ::hArgs, .t. )
+   hb_hKeepOrder( ::hArgs, .T. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2771,30 +2770,30 @@ METHOD HbqtMethod:new()
 
 CREATE CLASS HbqtArgument
 
-   DATA   cRaw
-   DATA   cNormal
-   DATA   cName
-   DATA   cCast                                INIT ""
-   DATA   cBody
-   DATA   cBodyN
-   DATA   cDoc
+   VAR    cRaw
+   VAR    cNormal
+   VAR    cName
+   VAR    cCast                                INIT ""
+   VAR    cBody
+   VAR    cBodyN
+   VAR    cDoc
 
-   DATA   lRet                                 INIT .f.
+   VAR    lRet                                 INIT .F.
 
-   DATA   cTypeHb
-   DATA   cTypeQt
-   DATA   cObject
+   VAR    cTypeHb
+   VAR    cTypeQt
+   VAR    cObject
 
-   DATA   lConst                               INIT .f.
-   DATA   lAnd                                 INIT .f.
-   DATA   lFar                                 INIT .f.
-   DATA   lVirt                                INIT .f.
-   DATA   lConstL                              INIT .f.
+   VAR    lConst                               INIT .F.
+   VAR    lAnd                                 INIT .F.
+   VAR    lFar                                 INIT .F.
+   VAR    lVirt                                INIT .F.
+   VAR    lConstL                              INIT .F.
 
-   DATA   lList                                INIT .f.
+   VAR    lList                                INIT .F.
 
-   DATA   lOptional                            INIT .f.
-   DATA   cDefault
+   VAR    lOptional                            INIT .F.
+   VAR    cDefault
 
    METHOD new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 
@@ -2816,37 +2815,37 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
    ::lConstL := lConstL
 
    IF ( n := at( "=", cTxt ) ) > 0
-      ::cDefault  := alltrim( substr( cTxt, n + 1 ) )
-      ::lOptional := .t.
-      cTxt := substr( cTxt, 1, n - 1 )
+      ::cDefault  := AllTrim( SubStr( cTxt, n + 1 ) )
+      ::lOptional := .T.
+      cTxt := SubStr( cTxt, 1, n - 1 )
    ENDIF
 
-   cTxt := strtran( cTxt, "virtual " )
-   cTxt := strtran( cTxt, "const "   )
-   cTxt := strtran( cTxt, "   "     , " " )
-   cTxt := strtran( cTxt, "  "      , " " )
+   cTxt := StrTran( cTxt, "virtual " )
+   cTxt := StrTran( cTxt, "const "   )
+   cTxt := StrTran( cTxt, "   "     , " " )
+   cTxt := StrTran( cTxt, "  "      , " " )
    IF ! ::lList
-      cTxt := strtran( cTxt, "& " )
-      cTxt := strtran( cTxt, "&"  )
-      cTxt := strtran( cTxt, "* " )
-      cTxt := strtran( cTxt, "*"  )
+      cTxt := StrTran( cTxt, "& " )
+      cTxt := StrTran( cTxt, "&"  )
+      cTxt := StrTran( cTxt, "* " )
+      cTxt := StrTran( cTxt, "*"  )
    ENDIF
-   ::cNormal := cTxt := alltrim( cTxt )
+   ::cNormal := cTxt := AllTrim( cTxt )
 
    IF ::lList
       ::cCast := cTxt
       ::cName := ::cCast
    ELSE
       IF ( n := at( " ", cTxt ) ) > 0
-         ::cCast := substr( cTxt, 1, n - 1 )
-         ::cName := substr( cTxt, n + 1 )
+         ::cCast := SubStr( cTxt, 1, n - 1 )
+         ::cName := SubStr( cTxt, n + 1 )
       ELSE
          ::cCast := cTxt
          ::cName := cTxt
       ENDIF
    ENDIF
 
-   IF ascan( enum_, {|e| iif( empty( e ), .f., e == ::cCast ) } ) > 0
+   IF AScan( enum_, {| e | iif( Empty( e ), .F., e == ::cCast ) } ) > 0
       ::cCast := cQtObject + "::" + ::cCast
    ENDIF
 
@@ -2857,7 +2856,7 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
-   RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ) , " + '"HB_' + upper( cWgt ) +'")'
+   RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ) , " + '"HB_' + Upper( cWgt ) +'")'
 
 /*----------------------------------------------------------------------*/
 
@@ -2868,9 +2867,9 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew )
    ENDIF
 
    IF lNew
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) , " + '"HB_' + upper( cWgt ) +'" )'
+      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) , " + '"HB_' + Upper( cWgt ) +'" )'
    ELSE
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", false ) , " + '"HB_' + upper( cWgt ) +'" )'
+      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", false ) , " + '"HB_' + Upper( cWgt ) +'" )'
    ENDIF
    RETURN ""
 
@@ -2885,9 +2884,9 @@ STATIC FUNCTION hbqtgen_PullOutSection( cQth, cSec )
 
    IF ( n := at( cTknB, cQth ) ) > 0
       IF( nn := at( cTknE, cQth ) ) > 0
-         cTxt := substr( cQth, n + len( cTknB ), nn - 1 - ( n + len( cTknB ) ) )
+         cTxt := SubStr( cQth, n + Len( cTknB ), nn - 1 - ( n + Len( cTknB ) ) )
       ENDIF
-      IF !empty( cTxt )
+      IF ! Empty( cTxt )
          a_:= hb_ATokens( cTxt, Chr( 10 ) )
       ENDIF
    ENDIF
@@ -2901,7 +2900,7 @@ STATIC FUNCTION hbqtgen_PullOutFuncBody( protos_, nFrom )
 
    FOR EACH s IN protos_
       IF s:__enumIndex() > nFrom
-         IF left( s, 1 ) == "}"
+         IF Left( s, 1 ) == "}"
             nTo := s:__enumIndex()
             EXIT
          ENDIF
@@ -2910,7 +2909,7 @@ STATIC FUNCTION hbqtgen_PullOutFuncBody( protos_, nFrom )
    IF nTo > nFrom
       FOR EACH s IN protos_
          IF s:__enumIndex() > nFrom .AND. s:__enumIndex() < nTo
-            aadd( a_, s )
+            AAdd( a_, s )
             s := ""
          ENDIF
       NEXT
@@ -2928,33 +2927,31 @@ STATIC FUNCTION hbqtgen_isAqtObject( cCast )
 STATIC FUNCTION hbqtgen_CreateTarget( cFile, txt_ )
    LOCAL cContent := ""
 
-   AEval( txt_, { |e| cContent += RTrim( e ) + hb_eol() } )
+   AEval( txt_, {| e | cContent += RTrim( e ) + hb_eol() } )
 
    RETURN hb_MemoWrit( cFile, cContent )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_BuildCopyrightText( nMode, cQtVer )
+STATIC FUNCTION hbqtgen_BuildCopyrightText( cQtVer )
    LOCAL txt_ := {}
 
-   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */"              )
-   aadd( txt_, ""                                                                              )
-   aadd( txt_, "/* Harbour Project QT wrapper"                                                 )
-   aadd( txt_, "   Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
-   aadd( txt_, "   www - http://harbour-project.org */"                                        )
-   aadd( txt_, ""                                                                              )
-   IF nMode == 0
-   aadd( txt_, '#include "hbqt.h"'                                                             )
-   aadd( txt_, '#include "hbapiitm.h"' )
-   aadd( txt_, '#include "hbvm.h"' )
-   aadd( txt_, '#include "hbapierr.h"' )
-   aadd( txt_, '#include "hbstack.h"' )
-   aadd( txt_, '#include "hbdefs.h"' )
-   aadd( txt_, '#include "hbapicls.h"' )
-   aadd( txt_, ""                                                                              )
-   aadd( txt_, "#if QT_VERSION >= " + cQtVer                                                   )
-   aadd( txt_, ""                                                                              )
-   ENDIF
+   AAdd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */"              )
+   AAdd( txt_, ""                                                                              )
+   AAdd( txt_, "/* Harbour Project QT wrapper"                                                 )
+   AAdd( txt_, "   Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
+   AAdd( txt_, "   www - http://harbour-project.org */"                                        )
+   AAdd( txt_, ""                                                                              )
+   AAdd( txt_, '#include "hbqt.h"'                                                             )
+   AAdd( txt_, '#include "hbapiitm.h"'                                                         )
+   AAdd( txt_, '#include "hbvm.h"'                                                             )
+   AAdd( txt_, '#include "hbapierr.h"'                                                         )
+   AAdd( txt_, '#include "hbstack.h"'                                                          )
+   AAdd( txt_, '#include "hbdefs.h"'                                                           )
+   AAdd( txt_, '#include "hbapicls.h"'                                                         )
+   AAdd( txt_, ""                                                                              )
+   AAdd( txt_, "#if QT_VERSION >= " + cQtVer                                                   )
+   AAdd( txt_, ""                                                                              )
 
    RETURN txt_
 
@@ -2962,7 +2959,7 @@ STATIC FUNCTION hbqtgen_BuildCopyrightText( nMode, cQtVer )
 
 STATIC PROCEDURE hbqtgen_BuildFooter( txt_, cQtVer )
 
-   aadd( txt_, "#endif /* #if QT_VERSION >= " + cQtVer + " */" )
+   AAdd( txt_, "#endif /* #if QT_VERSION >= " + cQtVer + " */" )
 
    RETURN
 
@@ -2971,7 +2968,7 @@ STATIC PROCEDURE hbqtgen_BuildFooter( txt_, cQtVer )
 STATIC FUNCTION hbqtgen_stripLastFrom( cStr, cDlm )
    LOCAL n
    IF ( n := rAt( cDlm, cStr ) ) > 0
-      RETURN substr( cStr, 1, n - 1 )
+      RETURN SubStr( cStr, 1, n - 1 )
    ENDIF
    RETURN cStr
 
@@ -2991,8 +2988,8 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
 
    FOR EACH oArg IN oMtd:hArgs
       IF oArg:__enumIndex() >= oMtd:nArgQCast
-         IF ! ( "::" $ oArg:cCast ) .AND. ! ( oArg:cCast == "QString" ) .AND. ( left( oArg:cCast, 1 ) == "Q" )
-            aadd( aIdx, oArg:__enumIndex() )
+         IF ! ( "::" $ oArg:cCast ) .AND. ! ( oArg:cCast == "QString" ) .AND. ( Left( oArg:cCast, 1 ) == "Q" )
+            AAdd( aIdx, oArg:__enumIndex() )
          ENDIF
       ENDIF
       IF oArg:__enumIndex() == nArgs
@@ -3004,7 +3001,7 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
    FOR EACH nArg IN aIdx
       cRet += "hbqt_isObjectType( " + hb_ntos( nArg ) + ", " + "HBQT_TYPE_" + oMtd:hArgs[ nArg ]:cCast + " )" + " && "
    NEXT
-   cRet := substr( cRet, 1, len( cRet ) - 4 )
+   cRet := SubStr( cRet, 1, Len( cRet ) - 4 )
 
    RETURN cRet
 
