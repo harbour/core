@@ -68,12 +68,12 @@ QString & at ( int i ) const
 QString & back ()
 int count ( const QString & value ) const
 bool endsWith ( const QString & value ) const
-QString & first ()
+//QString & first ()
 const QString & first () const
-QString & front ()
+//QString & front ()
 const QString & front () const
 void insert ( int i, const QString & value )
-QString & last ()
+//QString & last ()
 const QString & last () const
 
 //QList<QString> mid ( int pos, int length = -1 ) const
