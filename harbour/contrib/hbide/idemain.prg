@@ -1596,7 +1596,7 @@ METHOD HbIde:setCodec( cCodec )
 
    ::cWrkCodec := hbide_getCDPforID( cCodec )
 
-   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec + ":" + hb_cdpUniID( ::cWrkCodec ) )
+   ::oDK:setStatusText( SB_PNL_CODEC, hb_cdpUniID( ::cWrkCodec ) )
 
    hb_cdpSelect( ::cWrkCodec )
 
