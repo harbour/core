@@ -10999,11 +10999,10 @@ STATIC FUNCTION VCSDetect( cDir )
    RETURN _VCS_UNKNOWN
 
 STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
-   LOCAL hnd, cStdOut
+   LOCAL cStdOut
    LOCAL nType := VCSDetect( cDir )
    LOCAL cCommand
    LOCAL cResult := ""
-   LOCAL cTemp
    LOCAL tmp, tmp1
 
    SWITCH nType
@@ -11054,87 +11053,80 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
 
    IF ! Empty( cCommand )
 
-      hnd := hb_FTempCreateEx( @cTemp )
-      IF hnd != F_ERROR
-         FClose( hnd )
-         cCommand += ">" + cTemp
-         hb_run( cCommand )
-         cStdOut := hb_MemoRead( cTemp )
-         FErase( cTemp )
+      hb_processRun( cCommand,, @cStdOut )
 
-         SWITCH nType
-         CASE _VCS_SVN
-            /* 10959<n> */
-         CASE _VCS_GIT
-            /* fe3bb56<n> */
-            cStdOut := StrTran( cStdOut, Chr( 13 ) )
-            cResult := StrTran( cStdOut, Chr( 10 ) )
-            EXIT
-         CASE _VCS_MERCURIAL
-            /* changeset:   696:9e33729cafae<n>... */
+      SWITCH nType
+      CASE _VCS_SVN
+         /* 10959<n> */
+      CASE _VCS_GIT
+         /* fe3bb56<n> */
+         cStdOut := StrTran( cStdOut, Chr( 13 ) )
+         cResult := StrTran( cStdOut, Chr( 10 ) )
+         EXIT
+      CASE _VCS_MERCURIAL
+         /* changeset:   696:9e33729cafae<n>... */
+         tmp := At( Chr( 10 ), cStdOut )
+         IF tmp > 0
+            cStdOut := Left( cStdOut, tmp - 1 )
+            cResult := AllTrim( StrTran( cStdOut, "changeset:" ) )
+         ENDIF
+         EXIT
+      CASE _VCS_BAZAAR
+         /* revision-id: pqm@pqm.ubuntu.com-20090813025005-k2k8pa2o38b8m0l8
+            date: 2009-08-13 03:50:05 +0100
+            build-date: 2009-08-13 16:53:32 +0200
+            revno: 4602
+            branch-nick: bzr */
+         tmp := At( "revno: ", cStdOut )
+         IF tmp > 0
+            cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) )
             tmp := At( Chr( 10 ), cStdOut )
             IF tmp > 0
-               cStdOut := Left( cStdOut, tmp - 1 )
-               cResult := AllTrim( StrTran( cStdOut, "changeset:" ) )
+               cResult := Left( cStdOut, tmp - 1 )
             ENDIF
-            EXIT
-         CASE _VCS_BAZAAR
-            /* revision-id: pqm@pqm.ubuntu.com-20090813025005-k2k8pa2o38b8m0l8
-               date: 2009-08-13 03:50:05 +0100
-               build-date: 2009-08-13 16:53:32 +0200
-               revno: 4602
-               branch-nick: bzr */
-            tmp := At( "revno: ", cStdOut )
+         ENDIF
+         EXIT
+      CASE _VCS_FOSSIL
+         /* project-name: Fossil
+            repository:   C:/fossil/fossil.fossil
+            local-root:   C:/fossil/src/
+            project-code: CE59BB9F186226D80E49D1FA2DB29F935CCA0333
+            server-code:  9fbdba27d27885515cbf885579dbffa7cebd8d95
+            checkout:     c774e298c3f213f7487fb0ba638edfa3f1b89edf 2009-09-18 20:58:06 UTC
+            parent:       0eb08b860c5b851c074113fd459d1cd0671f4805 2009-09-16 21:29:18 UTC
+            tags:         trunk
+          */
+         tmp := At( "checkout:", cStdOut )
+         IF tmp > 0
+            cStdOut := LTrim( SubStr( cStdOut, tmp + Len( "checkout:" ) ) )
+            tmp := At( " ", cStdOut )
             IF tmp > 0
-               cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) )
-               tmp := At( Chr( 10 ), cStdOut )
-               IF tmp > 0
-                  cResult := Left( cStdOut, tmp - 1 )
-               ENDIF
+               cResult := Left( cStdOut, tmp - 1 )
             ENDIF
-            EXIT
-         CASE _VCS_FOSSIL
-            /* project-name: Fossil
-               repository:   C:/fossil/fossil.fossil
-               local-root:   C:/fossil/src/
-               project-code: CE59BB9F186226D80E49D1FA2DB29F935CCA0333
-               server-code:  9fbdba27d27885515cbf885579dbffa7cebd8d95
-               checkout:     c774e298c3f213f7487fb0ba638edfa3f1b89edf 2009-09-18 20:58:06 UTC
-               parent:       0eb08b860c5b851c074113fd459d1cd0671f4805 2009-09-16 21:29:18 UTC
-               tags:         trunk
-             */
-            tmp := At( "checkout:", cStdOut )
-            IF tmp > 0
-               cStdOut := LTrim( SubStr( cStdOut, tmp + Len( "checkout:" ) ) )
-               tmp := At( " ", cStdOut )
-               IF tmp > 0
-                  cResult := Left( cStdOut, tmp - 1 )
-               ENDIF
-            ENDIF
-            EXIT
-         CASE _VCS_MONOTONE
-            /* ----------------------------------------------------------------------
-               Revision: c79f2332a1e9036bb52ac1f412b92e6a69fc9071
-               Parent:   bf8b93290ea4e8e946961f51c47f8f4638f65372
-               Author:   ???
-               Date:     2010.07.14. 1:11:47
-               Branch:   free.lp.se:LPlib
+         ENDIF
+         EXIT
+      CASE _VCS_MONOTONE
+         /* ----------------------------------------------------------------------
+            Revision: c79f2332a1e9036bb52ac1f412b92e6a69fc9071
+            Parent:   bf8b93290ea4e8e946961f51c47f8f4638f65372
+            Author:   ???
+            Date:     2010.07.14. 1:11:47
+            Branch:   free.lp.se:LPlib
 
-               Changes against parent bf8b93290ea4e8e946961f51c47f8f4638f65372
+            Changes against parent bf8b93290ea4e8e946961f51c47f8f4638f65372
 
-               no changes
-             */
-            tmp := At( "Revision:", cStdOut )
+            no changes
+          */
+         tmp := At( "Revision:", cStdOut )
+         IF tmp > 0
+            cStdOut := StrTran( LTrim( SubStr( cStdOut, tmp + Len( "Revision:" ) ) ), Chr( 13 ) )
+            tmp := At( Chr( 10 ), cStdOut )
             IF tmp > 0
-               cStdOut := StrTran( LTrim( SubStr( cStdOut, tmp + Len( "Revision:" ) ) ), Chr( 13 ) )
-               tmp := At( Chr( 10 ), cStdOut )
-               IF tmp > 0
-                  cResult := Left( cStdOut, tmp - 1 )
-               ENDIF
+               cResult := Left( cStdOut, tmp - 1 )
             ENDIF
-            EXIT
-         ENDSWITCH
-      ENDIF
+         ENDIF
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN cResult
