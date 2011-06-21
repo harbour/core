@@ -50,9 +50,7 @@
  *
  */
 
-
-
-PROC MyZip( ... )
+PROCEDURE Main( ... )
    LOCAL hZip, aDir, aFile, aWild, ;
          cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment,;
          tmp
@@ -104,4 +102,5 @@ PROC MyZip( ... )
       NEXT
       HB_ZIPCLOSE( hZip, cComment )
    ENDIF
-RETURN
+
+   RETURN

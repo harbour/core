@@ -50,9 +50,7 @@
  *
  */
 
-
-
-PROC MyUnzip( ... )
+PROCEDURE Main( ... )
    LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile, ;
          dDate, cTime, nSize, nCompSize, nErr, ;
          lCrypted, cPassword, cComment, tmp
@@ -113,4 +111,5 @@ PROC MyUnzip( ... )
       ENDDO
       HB_UNZIPCLOSE( hUnzip )
    ENDIF
-RETURN
+
+   RETURN
