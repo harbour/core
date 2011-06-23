@@ -4844,6 +4844,7 @@ HB_FUNC_STATIC( msgNull )
 #ifndef HB_NO_PROFILER
 void hb_mthAddTime( HB_ULONG ulClockTicks )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_stackSelfItem();
    PCLASS pClass = s_pClasses[ hb_objGetClassH( pObject ) ];
    HB_USHORT uiMethod = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
