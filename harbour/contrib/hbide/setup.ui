@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>8</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -434,6 +434,16 @@
        </property>
        <property name="text">
         <string>Show top-toolbar</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboTBSize">
+       <property name="geometry">
+        <rect>
+         <x>124</x>
+         <y>68</y>
+         <width>37</width>
+         <height>21</height>
+        </rect>
        </property>
       </widget>
      </widget>

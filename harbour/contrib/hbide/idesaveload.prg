@@ -180,6 +180,7 @@ CLASS IdeINI INHERIT IdeObject
 
    DATA   lShowHideDocks                          INIT  .t.
    DATA   nEditsViewStyle                         INIT  0
+   DATA   cToolbarSize                            INIT  "12"
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -415,6 +416,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "VSSExe"                    + "=" +   ::cVSSExe                                          )
    aadd( txt_, "VSSDatabase"               + "=" +   ::cVSSDatabase                                     )
    aadd( txt_, "EditsViewStyle"            + "=" +   hb_ntos( ::nEditsViewStyle )                       )
+   aadd( txt_, "ToolbarSize"               + "=" +   ::cToolbarSize                                     )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -738,6 +740,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "VSSExe"                      ; ::cVSSExe                           := cVal ; EXIT
                      CASE "VSSDatabase"                 ; ::cVSSDatabase                      := cVal ; EXIT
                      CASE "EditsViewStyle"              ; ::nEditsViewStyle                   := val( cVal ); EXIT
+                     CASE "ToolbarSize"                 ; ::cToolbarSize                      := cVal ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1071,6 +1074,7 @@ CLASS IdeSetup INHERIT IdeObject
 
    DATA   nCurThemeSlot                           INIT 0
    DATA   aHilighters                             INIT {}
+   DATA   aTBSize                                 INIT { "8","9","10","11","12","13","14","15","16","17","18","19","20" }
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -1249,6 +1253,7 @@ METHOD IdeSetup:disConnectSlots()
    ::oUI:q_comboTopTabPos      :disconnect( "currentIndexChanged(int)" )
    ::oUI:q_comboRightTabPos    :disconnect( "currentIndexChanged(int)" )
    ::oUI:q_comboBottomTabPos   :disconnect( "currentIndexChanged(int)" )
+   ::oUI:q_comboTBSize         :disconnect( "currentIndexChanged(int)" )
 
    ::oUI:q_buttonVSSExe        :disconnect( "clicked()"                )
    ::oUI:q_buttonVSSDatabase   :disconnect( "clicked()"                )
@@ -1322,6 +1327,7 @@ METHOD IdeSetup:connectSlots()
    ::oUI:q_comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
    ::oUI:q_comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
    ::oUI:q_comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
+   ::oUI:q_comboTBSize         :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTBSize_currentIndexChanged"      , i ) } )
 
    ::oUI:q_buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( "buttonVSSExe_clicked"              ) } )
    ::oUI:q_buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( "buttonVSSDatabase_clicked"         ) } )
@@ -1535,6 +1541,9 @@ METHOD IdeSetup:show()
          ::oUI:q_comboStyle:addItem( cStyle )
       NEXT
       ::oUI:q_comboStyle:setCurrentIndex( ascan( ::aStyles, {|e| e == ::oINI:cIdeTheme } ) - 1 )
+
+      aeval( ::aTBSize, {|e| ::oUI:q_comboTBSize:addItem( e ) } )
+      ::oUI:q_comboTBSize:setCurrentIndex( ascan( ::aTBSize, {|e| e == ::oINI:cToolbarSize } ) - 1 )
 
       ::setIcons()
       ::connectSlots()
@@ -1912,6 +1921,11 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "comboBottomTabPos_currentIndexChanged"
       ::oINI:nDocksBottomTabPos := p
       ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
+      EXIT
+
+   CASE "comboTBSize_currentIndexChanged"
+      ::oINI:cToolbarSize := ::oUI:q_comboTBSize:currentText()
+      ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
    ENDSWITCH
 

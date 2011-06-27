@@ -156,6 +156,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD setButtonState( cButton, lChecked )
    METHOD buildFormatWidget()
    METHOD hideAllDocks()
+   METHOD setToolbarSize( nSize )
 
    ENDCLASS
 
@@ -371,7 +372,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
-   ::oDlg:oWidget:resize( 1000,640 )
+   ::oDlg:oWidget:resize( 1000,570 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
@@ -1091,10 +1092,25 @@ METHOD IdeDocks:setView( cView )
 
 /*------------------------------------------------------------------------*/
 
+METHOD IdeDocks:setToolbarSize( nSize )
+
+   ::qMdiToolbarL:size := QSize( nSize,nSize )
+   ::qMdiToolbarL:setIconSize( ::qMdiToolbarL:size )
+   ::qMdiToolbarL:setMaximumWidth( nSize + 8 )
+
+   ::qMdiToolbar:size := QSize( nSize,nSize )
+   ::qMdiToolbar:setIconSize( ::qMdiToolbar:size )
+   ::qMdiToolbar:setMaximumHeight( nSize + 8 )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildMdiToolbarLeft()
 
    ::qMdiToolbarL := HbqToolbar():new()
    ::qMdiToolbarL:orientation := Qt_Vertical
+   ::qMdiToolbarL:size := QSize(  val( ::oINI:cToolbarSize ), val( ::oINI:cToolbarSize ) )
    ::qMdiToolbarL:create( "EditsManager_Left_Toolbar" )
    ::qMdiToolbarL:setWindowTitle( "Toolbar: Editing Area's Left" )
    ::qMdiToolbarL:setObjectName( "ToolbarEditingAreaLeft" )
@@ -1145,6 +1161,7 @@ METHOD IdeDocks:buildMdiToolbar()
 
    ::qMdiToolbar := HbqToolbar():new()
    ::qMdiToolbar:orientation := Qt_Horizontal
+   ::qMdiToolbar:size := QSize(  val( ::oINI:cToolbarSize ), val( ::oINI:cToolbarSize ) )
    ::qMdiToolbar:create( "EditsManager_Top_Toolbar" )
    ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    ::qMdiToolbar:setObjectName( "ToolbarEditingAreaTop" )
@@ -1699,18 +1716,18 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       EXIT
    CASE SB_PNL_CODEC
       xValue := iif( empty( xValue ), "default", xValue )
-      oPanel:caption := "<font color = brown >Encoding: "  + xValue + "</font>"
+      oPanel:caption := "<font color = brown >Enc: "  + xValue + "</font>"
       EXIT
    CASE SB_PNL_ENVIRON
       xValue := iif( empty( xValue ), "default", xValue )
       oPanel:caption := "<font color = blue  >Env: "    + xValue + "</font>"
       EXIT
    CASE SB_PNL_VIEW
-      oPanel:caption := "<font color = green >View: "   + xValue + "</font>"
+      oPanel:caption := "<font color = green >Panel: "   + xValue + "</font>"
       EXIT
    CASE SB_PNL_PROJECT
       xValue := iif( empty( xValue ), "none", xValue )
-      oPanel:caption := "<font color = darkred >Proj: " + xValue + "</font>"
+      oPanel:caption := "<font color = darkred >Prj: " + xValue + "</font>"
       EXIT
    CASE SB_PNL_THEME
       xValue := iif( empty( xValue ), "Bare Minimum", xValue )
