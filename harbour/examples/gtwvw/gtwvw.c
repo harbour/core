@@ -7745,7 +7745,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->WriteAt               = hb_gt_wvw_WriteAt;
     pFuncTable->PutText               = hb_gt_wvw_PutText;
     pFuncTable->SetAttribute          = hb_gt_wvw_SetAttribute;
-    pFuncTable->Scroll                = hb_gt_wvw_Scroll;
+//  pFuncTable->Scroll                = hb_gt_wvw_Scroll;
     pFuncTable->SetMode               = hb_gt_wvw_SetMode;
     pFuncTable->GetBlink              = hb_gt_wvw_GetBlink;
     pFuncTable->SetBlink              = hb_gt_wvw_SetBlink;
