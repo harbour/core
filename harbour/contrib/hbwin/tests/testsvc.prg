@@ -57,6 +57,8 @@
 #define _SERVICE_NAME "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
+   LOCAL nError
+   LOCAL cMsg
 
    DEFAULT cMode TO "S" /* NOTE: Must be the default action */
 
@@ -66,7 +68,10 @@ PROCEDURE Main( cMode )
       IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Test Service" )
          ? "Service has been successfully installed"
       ELSE
-         ? "Error installing service: " + hb_ntos( wapi_GetLastError() )
+         nError := wapi_GetLastError()
+         cMsg := Space( 128 )
+         wapi_FormatMessage( ,,,, @cMsg )
+         ? "Error installing service: " + hb_ntos( nError ) + " " + cMsg
       ENDIf
       EXIT
 
@@ -75,16 +80,25 @@ PROCEDURE Main( cMode )
       IF win_serviceDelete( _SERVICE_NAME )
          ? "Service has been deleted"
       ELSE
-         ? "Error deleting service: " + hb_ntos( wapi_GetLastError() )
+         nError := wapi_GetLastError()
+         cMsg := Space( 128 )
+         wapi_FormatMessage( ,,,, @cMsg )
+         ? "Error deleting service: " + hb_ntos( nError ) + " " + cMsg
       ENDIf
       EXIT
 
    CASE "S"
 
+      /* NOTE: Used when starting up as service.
+               Do not invoke the executable manually with this option */
+
       IF win_serviceStart( _SERVICE_NAME, @SrvMain() )
          ? "Service has started OK"
       ELSE
-         ? "Service has had some problems: " + hb_ntos( wapi_GetLastError() )
+         nError := wapi_GetLastError()
+         cMsg := Space( 128 )
+         wapi_FormatMessage( ,,,, @cMsg )
+         ? "Service has had some problems: " + hb_ntos( nError ) + " " + cMsg
       ENDIF
       EXIT
 
