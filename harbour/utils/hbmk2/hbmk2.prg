@@ -464,7 +464,9 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_cHBX              145
 
-#define _HBMK_MAX_              145
+#define _HBMK_aGT               146
+
+#define _HBMK_MAX_              146
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1968,6 +1970,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
    hbmk[ _HBMK_aLIBFILTEROUT ] := {}
    hbmk[ _HBMK_aOBJUSER ] := {}
+   hbmk[ _HBMK_aGT ] := {}
    hbmk[ _HBMK_aICON ] := {}
    hbmk[ _HBMK_cMANIFEST ] := NIL
    hbmk[ _HBMK_aIMPLIBSRC ] := {}
@@ -2403,6 +2406,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
                   AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], PathSepToSelf( cParam ) )
+               ENDIF
+               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0
+                  AAddNotEmpty( hbmk[ _HBMK_aGT ], PathSepToSelf( cParam ) )
                ENDIF
             ENDIF
          ENDIF
@@ -3258,6 +3264,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0 .AND. ;
             AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
             AAdd( hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_cGT ] )
+         ENDIF
+         IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
+            AAddNotEmpty( hbmk[ _HBMK_aGT ], hbmk[ _HBMK_cGT ] )
          ENDIF
       ENDIF
 
@@ -5288,7 +5297,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF ( ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lDynVM ] ) .AND. ;
               ( l_cMAIN != NIL .OR. ;
                 ! Empty( hbmk[ _HBMK_aREQUEST ] ) .OR. ;
-                ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
+                ! Empty( hbmk[ _HBMK_aGT ] ) .OR. ;
                 hbmk[ _HBMK_cGT ] != NIL .OR. ;
                 l_cCMAIN != NIL ) ) .OR. lHBMAINDLLP
 
@@ -5329,7 +5338,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   /* Always request default GT first */
                   AAdd( array, "HB_GT_" + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) )
                ENDIF
-               FOR EACH tmp IN hbmk[ _HBMK_aLIBUSERGT ]
+               FOR EACH tmp IN hbmk[ _HBMK_aGT ]
                   IF hbmk[ _HBMK_cGT ] == NIL .OR. !( Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) == Upper( SubStr( tmp, 3 ) ) )
                      AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) )
                   ENDIF
@@ -9527,6 +9536,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], PathSepToSelf( cLine ) )
                ENDIF
+               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+                  AAddNotEmpty( hbmk[ _HBMK_aGT ], PathSepToSelf( cLine ) )
+               ENDIF
             ENDIF
          ENDIF
 
@@ -9542,6 +9554,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
                   AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], PathSepToSelf( cLine ) )
+               ENDIF
+               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+                  AAddNotEmpty( hbmk[ _HBMK_aGT ], PathSepToSelf( cLine ) )
                ENDIF
             ENDIF
          ENDIF
@@ -9634,8 +9649,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
    /* Check if it's a core/user GT. */
-   RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == cWhichGT } ) > 0 .OR. ;
-          AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == cWhichGT } ) > 0
+   RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0 .OR. ;
+          AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0
 
 STATIC FUNCTION StrStripQuote( cString )
    RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
