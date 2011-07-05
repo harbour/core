@@ -52,7 +52,8 @@
 #include "hbthread.h"
 
 /* XXX: Check and possibly extend this to other Unix-like platforms */
-#if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || ( defined( HB_OS_LINUX ) && ! defined ( __WATCOMC__ ) )
+#if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
+    ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
 #  define HAVE_SYS_SYSCTL_H
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM

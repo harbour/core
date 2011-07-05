@@ -1669,7 +1669,7 @@ static HB_BOOL hb_pp_tokenValueCmp( PHB_PP_TOKEN pToken, const char * szValue, H
           ( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD ||
             HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_STRING ||
             HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_TEXT ) )
-         return hb_strnicmp( szValue, pToken->value, pToken->len < 4 ? 4 : pToken->len ) == 0;
+         return hb_strnicmp( szValue, pToken->value, pToken->len ) == 0;
       else
          return hb_stricmp( szValue, pToken->value ) == 0;
    }
