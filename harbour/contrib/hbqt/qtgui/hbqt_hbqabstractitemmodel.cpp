@@ -129,11 +129,12 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
             vv = * ( ( QFont * ) ( p->ph ) );
 
       }
-
+      #if 0  /* As discussed on the devel-list with Przemek */
       if( ret )
       {
          hb_itemRelease( ret );
       }
+      #endif
       hb_vmRequestRestore();
    }
 
