@@ -73,10 +73,10 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
 
    if( hb_vmRequestReenter() )
    {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, type );
-      PHB_ITEM p1  = hb_itemPutNI( NULL, role );
-      PHB_ITEM p2  = hb_itemPutNI( NULL, par1 );
-      PHB_ITEM p3  = hb_itemPutNI( NULL, par2 );
+      PHB_ITEM p0 = hb_itemPutNI( NULL, type );
+      PHB_ITEM p1 = hb_itemPutNI( NULL, role );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, par1 );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, par2 );
 
       PHB_ITEM ret = hb_vmEvalBlockV( block, 4, p0, p1, p2, p3 );
 
@@ -127,14 +127,8 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
             vv = * ( ( QPixmap * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QFont )
             vv = * ( ( QFont * ) ( p->ph ) );
+      }
 
-      }
-      #if 0  /* As discussed on the devel-list with Przemek */
-      if( ret )
-      {
-         hb_itemRelease( ret );
-      }
-      #endif
       hb_vmRequestRestore();
    }
 
@@ -143,7 +137,7 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
 
 HBQAbstractItemModel::HBQAbstractItemModel( PHB_ITEM pBlock ) : QAbstractItemModel()
 {
-   if( pBlock)
+   if( pBlock )
    {
       block = hb_itemNew( pBlock );
       hb_gcUnlock( block );
@@ -173,7 +167,7 @@ Qt::ItemFlags HBQAbstractItemModel::flags( const QModelIndex & index ) const
 
 QVariant HBQAbstractItemModel::data( const QModelIndex & index, int role ) const
 {
-   if( !index.isValid() )
+   if( ! index.isValid() )
       return QVariant();
 
    return hbqt_fetchData( block, HBQT_QAIM_data, role, index.column(), index.row() );
@@ -211,4 +205,3 @@ void HBQAbstractItemModel::reset()
 }
 
 #endif
-
