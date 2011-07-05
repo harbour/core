@@ -1777,6 +1777,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
       AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h" ) )
       AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h/wrn/coreip" ) )
+#if 0
    CASE hbmk[ _HBMK_cPLAT ] == "bsd"
       IF hb_DirExists( "/usr/local/lib" ) /* For ports */
          AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
@@ -1790,6 +1791,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hb_DirExists( "/usr/pkg/include" )
          AAdd( hbmk[ _HBMK_aINCPATH ], "/usr/pkg/include" )
       ENDIF
+#endif
    ENDCASE
 
    /* Tweaks to compiler setup */
