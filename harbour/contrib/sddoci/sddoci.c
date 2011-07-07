@@ -133,7 +133,7 @@ static void hb_ocidd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT );
+   OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED );
 
    if( ! hb_sddRegister( &ocidd ) )
    {
