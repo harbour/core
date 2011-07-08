@@ -609,25 +609,37 @@ ifeq ($(HB_COMPILER),)
                         else
                            HB_COMP_PATH := $(call find_in_path,gcc)
                            ifneq ($(HB_COMP_PATH),)
-                              HB_COMPILER := mingw
-                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.6*),)
-                                 HB_COMPILER_VER := 46
+                              # Check for a mingw64-tdm gcc executable in the same directory
+                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-gcc$(HB_HOST_BIN_EXT)),)
+                                 HB_COMPILER := mingw64
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-gcc-4.6*),)
+                                    HB_COMPILER_VER := 46
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-gcc-4.5*),)
+                                    HB_COMPILER_VER := 45
+                                 endif
+                                 endif
                               else
-                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.5*),)
-                                 HB_COMPILER_VER := 45
-                              else
-                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.4*),)
-                                 HB_COMPILER_VER := 44
-                              else
-                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.3*),)
-                                 HB_COMPILER_VER := 43
-                              else
-                              ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-3.4*),)
-                                 HB_COMPILER_VER := 34
-                              endif
-                              endif
-                              endif
-                              endif
+                                 HB_COMPILER := mingw
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.6*),)
+                                    HB_COMPILER_VER := 46
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.5*),)
+                                    HB_COMPILER_VER := 45
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.4*),)
+                                    HB_COMPILER_VER := 44
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.3*),)
+                                    HB_COMPILER_VER := 43
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-3.4*),)
+                                    HB_COMPILER_VER := 34
+                                 endif
+                                 endif
+                                 endif
+                                 endif
+                                 endif
                               endif
                            else
                               HB_COMP_PATH := $(call find_in_path,wcc386)

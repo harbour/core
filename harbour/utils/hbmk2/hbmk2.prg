@@ -1412,6 +1412,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc"   ) }, "mingw64" },; /* Equation Solution build */
                     { {|| FindInPath( "i686-w64-mingw32-gcc"    ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
+                    { {|| FindInSamePath( "x86_64-w64-mingw32-gcc.exe", "gcc" ) }, "mingw64" },; /* mingw-w64 TDM build */
                     { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" },; /* mingw-w64 build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
