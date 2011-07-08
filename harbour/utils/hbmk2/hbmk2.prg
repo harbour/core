@@ -1829,7 +1829,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_nCOMPVer ] := 43
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-3.4" + hb_osFileMask() )
             hbmk[ _HBMK_nCOMPVer ] := 34
-         CASE File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.6" + hb_osFileMask() )
+         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.6" + hb_osFileMask() )
             hbmk[ _HBMK_nCOMPVer ] := 46
          ENDCASE
 
