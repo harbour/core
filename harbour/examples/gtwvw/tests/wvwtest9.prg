@@ -377,7 +377,7 @@ local lEchoing := .f.
    CLS
    ?? "Press Ctrl+E to toggle between echoing what you type to previous window"
    ?
-   do while inkey()<>chr(0); enddo  //clear typeahead
+   do while inkey()!=0; enddo  //clear typeahead
    ch := inkey(0)
    do while !(ch == K_ESC)
       if ch==K_ENTER
