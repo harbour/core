@@ -30,6 +30,7 @@
 
 -cflag=-DHB_LEGACY_TYPES_OFF
 {allwin&!(__HB_BUILD_WINUNI='no')}-winuni
+{allwin&(__HB_BUILD_WINUNI='unicows')}-lunicows
 
 {HB_BUILD_DEBUG}-prgflag=-l-
 {HB_BUILD_DEBUG}-debug

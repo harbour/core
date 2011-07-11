@@ -16,4 +16,10 @@ HB_GT_LIBS += gtwvt gtgui gtwin
 # ws2_32: WSAIoctl()
 # advapi32: GetUserName()
 # gdi32: gtwvt
+
+# must come after user libs and before Windows system libs
+ifeq ($(__HB_BUILD_WINUNI),unicows)
+   SYSLIBS += unicows
+endif
+
 SYSLIBS += kernel32 user32 ws2_32 advapi32 gdi32
