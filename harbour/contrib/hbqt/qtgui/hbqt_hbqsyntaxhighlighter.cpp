@@ -232,9 +232,11 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 
       /* Multi Line Comments - to ascertain if it is embedded in quotes */
       int startIndex = 0;
+      int startSglLine = 0;
       if( previousBlockState() != 1 )
       {
          startIndex = commentStartExpression.indexIn( text );
+         startSglLine = commentSingleLine.indexIn( text );
       }
 
       /* Quoted text */
@@ -247,18 +249,24 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
          {
             startIndex = -1;
          }
+         if( startSglLine > index && startSglLine < index + length )
+         {
+            startSglLine = -1;
+         }
          index = patternQuotation.indexIn( text, index + length );
       }
 
       /* Single Line Comments */
-      index = commentSingleLine.indexIn( text );
-      while( index >= 0 )
+      if( startSglLine >= 0 )
       {
-         length = commentSingleLine.matchedLength();
-         setFormat( index, length, singleLineCommentFormat );
-         index = commentSingleLine.indexIn( text, index + length );
+         index = commentSingleLine.indexIn( text );
+         while( index >= 0 )
+         {
+            length = commentSingleLine.matchedLength();
+            setFormat( index, length, singleLineCommentFormat );
+            index = commentSingleLine.indexIn( text, index + length );
+         }
       }
-
       /* Multi Line Comments - continued */
       setCurrentBlockState( 0 );
 
