@@ -545,7 +545,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
             FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
             cCommand := StrTran( cCommand, "{T}", cTempFile )
          ENDIF
-         IF hb_processRun( cCommand, @cStdErr, @cStdOut ) == 0
+         IF hb_processRun( cCommand,, @cStdOut, @cStdErr ) == 0
             IF ! Empty( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF

@@ -11412,7 +11412,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             cOpt_LibHBX := StrTran( cOpt_LibHBX, "{OT}", FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          ENDIF
 
-         IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX, @cStdErr, @cStdOut ) == 0
+         IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX,, @cStdOut, @cStdErr ) == 0
             IF ! Empty( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF
