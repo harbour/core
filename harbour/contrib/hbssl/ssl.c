@@ -391,7 +391,7 @@ HB_FUNC( SSL_TOTAL_RENEGOTIATIONS )
 
 HB_FUNC( SSL_SET_FD )
 {
-   if( hb_SSL_is( 1 ) )
+   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
@@ -404,7 +404,7 @@ HB_FUNC( SSL_SET_FD )
 
 HB_FUNC( SSL_SET_RFD )
 {
-   if( hb_SSL_is( 1 ) )
+   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
@@ -417,7 +417,7 @@ HB_FUNC( SSL_SET_RFD )
 
 HB_FUNC( SSL_SET_WFD )
 {
-   if( hb_SSL_is( 1 ) )
+   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
