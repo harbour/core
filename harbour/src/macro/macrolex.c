@@ -230,6 +230,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
          *pLex->pDst++ = '\0';
          hb_strRemEscSeq( string, &nLen );
          yylval_ptr->valChar.length = nLen;
+         yylval_ptr->valChar.string = string;
          return LITERAL;
       }
       *pLex->pDst++ = ch;
