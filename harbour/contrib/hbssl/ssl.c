@@ -391,12 +391,14 @@ HB_FUNC( SSL_TOTAL_RENEGOTIATIONS )
 
 HB_FUNC( SSL_SET_FD )
 {
-   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
+   int iSD;
+
+   if( hb_SSL_is( 1 ) && ( iSD = hb_parnidef( 2, -1 ) ) != -1 )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_set_fd( ssl, hb_parni( 2 ) ) );
+         hb_retni( SSL_set_fd( ssl, iSD ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -404,12 +406,14 @@ HB_FUNC( SSL_SET_FD )
 
 HB_FUNC( SSL_SET_RFD )
 {
-   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
+   int iSD;
+
+   if( hb_SSL_is( 1 ) && ( iSD = hb_parnidef( 2, -1 ) ) != -1 )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_set_rfd( ssl, hb_parni( 2 ) ) );
+         hb_retni( SSL_set_rfd( ssl, iSD ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -417,12 +421,14 @@ HB_FUNC( SSL_SET_RFD )
 
 HB_FUNC( SSL_SET_WFD )
 {
-   if( hb_SSL_is( 1 ) && HB_ISNUM( 2 ) )
+   int iSD;
+
+   if( hb_SSL_is( 1 ) && ( iSD = hb_parnidef( 2, -1 ) ) != -1 )
    {
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_set_wfd( ssl, hb_parni( 2 ) ) );
+         hb_retni( SSL_set_wfd( ssl, iSD ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
