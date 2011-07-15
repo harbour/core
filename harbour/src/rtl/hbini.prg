@@ -265,7 +265,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Is it a valid key */
-      aKeyVal := hb_regexSplit( reSplitters, cLine,,, 2 )
+      aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 )
       IF Len( aKeyVal ) == 1
          /* TODO: Signal error */
          cLine := ""
