@@ -35,6 +35,7 @@ atadjust.c
 atnum.c
 atrepl.c
 bitnum.c
+bitstr.c
 blank.c
 charevod.c
 charlihb.c
@@ -87,6 +88,7 @@ misc3.c
 misc4.c
 num1.c
 numat.c
+numbase.c
 numcount.c
 numline.c
 pack.c
@@ -124,7 +126,6 @@ getsecrt.prg
 keysave.prg
 keysec.prg
 keytime.prg
-numconv.prg
 screen3.prg
 scrmark.prg
 showtime.prg
