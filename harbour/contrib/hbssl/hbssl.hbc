@@ -10,7 +10,7 @@ skip={dos}
 { (HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
 
 {unix}libs=ssl crypto
-{os2}libs=openssl ssl crypto libosslfips
+{os2}libs=libssl_s libcrypto_s
 {!(HB_STATIC_OPENSSL&!hbdyn)&win}libs=ssleay32 libeay32
 { (HB_STATIC_OPENSSL&!hbdyn)&win&!allmingw}libs=ssleay32 libeay32
 { (HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=ssl crypto
