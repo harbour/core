@@ -167,7 +167,7 @@ static int hb_gt_gui_optionPos( int id, int iType, PHB_ITEM pOptions )
    }
    if( iButton )
    {
-      int iOptions = hb_arrayLen( pOptions ), i;
+      int iOptions = ( int ) hb_arrayLen( pOptions ), i;
 
       for( i = 1; i <= iOptions; ++i )
       {
