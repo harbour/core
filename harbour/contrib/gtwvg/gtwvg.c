@@ -116,9 +116,9 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #  ifndef SetWindowLongPtr
 #     define SetWindowLongPtr       SetWindowLong
 #  endif
-#define WVT_DWORD_LONG_PTR    DWORD
+#  define HB_GTWVT_LONG_PTR         LONG
 #else
-#define WVT_DWORD_LONG_PTR    LONG_PTR
+#  define HB_GTWVT_LONG_PTR         LONG_PTR
 #endif
 
 #ifndef WS_OVERLAPPEDWINDOW
@@ -2678,8 +2678,8 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 {
    PHB_GTWVT pWVT;
    RECT rt;
-   DWORD dwStyle;
-   DWORD dwExtendedStyle;
+   HB_GTWVT_LONG_PTR nStyle;
+   HB_GTWVT_LONG_PTR nExtendedStyle;
 #ifdef MONITOR_DEFAULTTONEAREST
    HMONITOR mon;
    MONITORINFO mi;
@@ -2691,16 +2691,16 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   dwStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
-   dwExtendedStyle = GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE );
+   nStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+   nExtendedStyle = GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE );
 
    if( pWVT->bFullScreen )
    {
-      dwStyle |= WS_CAPTION | WS_BORDER;
-      dwExtendedStyle |= WS_EX_TOPMOST;
+      nStyle |= WS_CAPTION | WS_BORDER;
+      nExtendedStyle |= WS_EX_TOPMOST;
 
       if( pWVT->bResizable )
-         dwStyle |= WS_THICKFRAME;
+         nStyle |= WS_THICKFRAME;
 
       pWVT->MarginLeft = 0;
       pWVT->MarginTop = 0;
@@ -2708,15 +2708,15 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    }
    else
    {
-      dwStyle &= ~( WS_CAPTION | WS_BORDER | WS_THICKFRAME );
-      dwExtendedStyle &= ~WS_EX_TOPMOST;
+      nStyle &= ~( WS_CAPTION | WS_BORDER | WS_THICKFRAME );
+      nExtendedStyle &= ~WS_EX_TOPMOST;
 
       pWVT->bMaximized = HB_FALSE;
       pWVT->bFullScreen = HB_TRUE;
    }
 
-   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, dwStyle );
-   SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, dwExtendedStyle );
+   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, nStyle );
+   SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, nExtendedStyle );
 
    if( ! pWVT->bFullScreen )
    {
@@ -3453,7 +3453,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->bResizable = bNewValue;
                if( pWVT->hWnd )
                {
-                  WVT_DWORD_LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+                  HB_GTWVT_LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
                   if( pWVT->bResizable )
                      style = style | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
                   else
