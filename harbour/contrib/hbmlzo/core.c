@@ -133,7 +133,10 @@ HB_FUNC( HB_LZO1X_1_COMPRESS )
          int         r;
 
          if( wrkmem == NULL )
+         {
             r = LZO_E_OUT_OF_MEMORY; /* out of memory */
+            dst_len = 0;
+         }
          else
          {
             r = lzo1x_1_compress( ( lzo_bytep ) src, src_len, dst, &dst_len, wrkmem );
