@@ -87,9 +87,9 @@
 
 #  ifndef HAVE_STRDUP
 extern char	*_mxml_strdup(const char *);
-#  if defined( strdup )
-#     undef strdup
-#  endif
+#    if defined( strdup )
+#      undef strdup
+#    endif
 #    define strdup _mxml_strdup
 #  endif /* !HAVE_STRDUP */
 
@@ -98,10 +98,16 @@ extern char	*_mxml_vstrdupf(const char *, va_list);
 
 #  ifndef HAVE_SNPRINTF
 extern int	_mxml_snprintf(char *, size_t, const char *, ...);
+#    if defined( snprintf )
+#      undef snprintf
+#    endif
 #    define snprintf _mxml_snprintf
 #  endif /* !HAVE_SNPRINTF */
 
 #  ifndef HAVE_VSNPRINTF
 extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
+#    if defined( vsnprintf )
+#      undef vsnprintf
+#    endif
 #    define vsnprintf _mxml_vsnprintf
 #  endif /* !HAVE_VSNPRINTF */
