@@ -75,7 +75,11 @@ PROCEDURE Main_STR()
 
 #ifndef RT_NO_C
 
+#ifdef __PLATFORM__WINDOWS
+   IF .F.   /* [U]LONG is 32 bit integer in Win64 */
+#else
    IF l64
+#endif
       TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "1860637360"                           )
       TEST_LINE( Str(R_PASSENL(         100 ))   , "       100"                           )
       TEST_LINE( Str(R_PASSENL(   999999999 ))   , " 999999999"                           )
