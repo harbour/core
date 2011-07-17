@@ -8,7 +8,6 @@
 
 -inc
 -o${hb_name}
--strip
 
 -w3 -es2
 
