@@ -28,7 +28,6 @@ endif
 export HB_SYSLOC := yes
 export HB_BUILD_PKG := no
 export HB_BUILD_SHARED := yes
-export HB_BUILD_CONTRIB_DYN := yes
 export HB_BUILD_DEBUG := yes
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    export HB_BUILD_OPTIM := no
