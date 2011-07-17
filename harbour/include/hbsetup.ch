@@ -62,20 +62,11 @@
 #define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3b undocumented features */
 #define HB_COMPAT_C53             /* Enable Cl*pper 5.3b extensions */
 
-/* ***********************************************************************
- * Leave this #define if you want to allow usage of legacy Harbour 2.0.0/Clipper
- * #defines/types/functions in your 3rd party C code. In later Harbour
- * versions this macro will be first disabled by default, then completely
- * removed, leaving the only default the strict Harbour namespace without
- * legacy stuff.
- * You should modify your 3rd party code to compile without this macro ASAP.
- * NOTE: C code using legacy Clipper (.api) headers is unaffected.
- */
 #ifndef HB_LEGACY_OFF
-#define HB_LEGACY_LEVEL3
+#define HB_LEGACY_LEVEL4
 #endif
 
 /* Future level of legacy cleanup */
-#define HB_LEGACY_LEVEL4
+#define HB_LEGACY_LEVEL5
 
 #endif /* HB_SETUP_CH_ */
