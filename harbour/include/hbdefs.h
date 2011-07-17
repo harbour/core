@@ -112,7 +112,7 @@
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 
-#elif defined( HB_OS_OS2 ) && ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
+#elif defined( HB_OS_OS2 ) && defined( HB_LEGACY_TYPES_ON ) && defined( HB_LEGACY_LEVEL3 )
 
    /* With the exception of WORD, the OS/2 header has its
       own definitions of the Harbour types most of which conflict with the
@@ -388,7 +388,7 @@ typedef HB_UCHAR            HB_U8;
 
 /* Legacy Windows/Clipper-style types */
 
-#if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
+#if defined( HB_LEGACY_TYPES_ON ) && defined( HB_LEGACY_LEVEL3 )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
       #if ! defined( HB_DONT_DEFINE_BOOL )

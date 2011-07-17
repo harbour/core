@@ -28,7 +28,6 @@
 {win&allmsvc&HB_COMP_VER>'1400'}-dflag=-nxcompat
 {win&allmsvc&HB_COMP_VER>'1400'}-dflag=-dynamicbase
 
--cflag=-DHB_LEGACY_TYPES_OFF
 {allwin&!(__HB_BUILD_WINUNI='no')}-winuni
 {allwin&(__HB_BUILD_WINUNI='unicows')}-lunicows
 

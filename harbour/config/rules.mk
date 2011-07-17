@@ -14,8 +14,6 @@ else
    endif
 endif
 
-HB_CFLAGS := -DHB_LEGACY_TYPES_OFF $(HB_CFLAGS)
-
 # Handle it here, so that it can be disabled for individual libs
 ifeq ($(HB_PLATFORM),win)
    ifneq ($(__HB_BUILD_WINUNI),no)

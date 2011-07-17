@@ -18,8 +18,6 @@
 -depincpath=freeimage:/opt/local/include
 -depimplibs=freeimage:../Dist/FreeImage.dll
 
--cflag=-DHB_LEGACY_TYPES_OFF
-
 -instfile=inc:freeimag.ch
 -instfile=inc:hbfimage.hbx
 
