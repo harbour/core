@@ -62,78 +62,60 @@
 
 /* New types */
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned char BYTE;
 #endif
 typedef BYTE *  BYTEP;
 typedef BYTEP   BYTEPP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef BYTEP   PBYTE;
-#endif
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 typedef short SHORT;
 #endif
 typedef SHORT * SHORTP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef SHORTP  PSHORT;
-#endif
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned short USHORT;
 #endif
 typedef USHORT * USHORTP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef USHORTP PUSHORT;
-#endif
 
-#if !( defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) )
 typedef unsigned int WORD;
 typedef WORD *  WORDP;
 typedef WORDP   PWORD;
-#endif
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 typedef long LONG;
 #endif
 typedef LONG *  LONGP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef LONGP   PLONG;
-#endif
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned long ULONG;
 #endif
 typedef ULONG * ULONGP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef ULONGP  PULONG;
-#endif
 
 typedef unsigned long DWORD;
 typedef DWORD * DWORDP;
 typedef DWORDP  PDWORD;
 
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) ) && ( ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 ) )
+#if ! defined( HB_LEGACY_TYPES_ON )
 #undef BOOL
 typedef USHORT BOOL;
 #endif
 typedef BOOL *  BOOLP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef BOOLP   PBOOL;
-#endif
 
 typedef void *  NEARP;
 typedef NEARP * NEARPP;
 
-#if !( defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) )
 typedef void *      FARP;
 typedef FARP *      FARPP;
 typedef FARP        VOIDP;
-#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef FARP        PVOID;
-#endif
 typedef HB_VMHANDLE HANDLE;
-#endif
 
 #define ERRCODE HB_ERRCODE
 
@@ -147,7 +129,7 @@ typedef FUNCP * FUNCPP;
 #define HIDE    static
 #define CLIPPER HARBOUR
 
-#if ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 )
+#if ! defined( HB_LEGACY_TYPES_ON )
 #  undef FALSE
 #  define FALSE      0
 #  undef TRUE

@@ -9,7 +9,6 @@ C_SOURCES := \
    ppcore.c \
    pplib.c \
    pplib2.c \
-   pplib3.c \
 
 LIBNAME := hbpp
 

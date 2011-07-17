@@ -69,29 +69,23 @@ typedef PHB_ITEM  ITEM;
 #define CHARACTER       HB_IT_STRING
 #define NUMERIC         HB_IT_NUMERIC
 #define LOGICAL         HB_IT_LOGICAL
-#if !( defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) )
-   #define DATE            HB_IT_DATE
-#endif
+#define DATE            HB_IT_DATE
 #define ALIAS           HB_IT_ALIAS
 #define MPTR            HB_IT_BYREF        /* or'ed with type when passed by reference */
 #define MEMO            HB_IT_MEMO
 /* NOTE: CA-Cl*pper bug: WORD will conflict with the typedef with the same
          name in clipdefs.h [vszakats] */
-#if !( defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) )
-   #define WORD            ( HB_IT_INTEGER | HB_IT_LONG )
-#endif
+#define WORD            ( HB_IT_INTEGER | HB_IT_LONG )
 #define ARRAY           HB_IT_ARRAY
 #define BLOCK           HB_IT_BLOCK
-#if !( defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) )
-   #define DOUBLE          HB_IT_DOUBLE
-#endif
+#define DOUBLE          HB_IT_DOUBLE
 
 /* Macros */
 
 #define PCOUNT          hb_pcount()
 #define ALENGTH( n )    hb_parinfa( n, 0 )
 
-#if ! defined( HB_LEGACY_TYPES_ON ) || ! defined( HB_LEGACY_LEVEL3 )
+#if ! defined( HB_LEGACY_TYPES_ON )
    #define ISCHAR( n )           HB_ISCHAR( n )
    #define ISNUM( n )            HB_ISNUM( n )
    #define ISLOG( n )            HB_ISLOG( n )

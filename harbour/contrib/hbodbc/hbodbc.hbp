@@ -24,7 +24,6 @@
 hbodbc.hbx
 
 odbc.c
-odbcold.c
 
 todbc.prg
 browodbc.prg

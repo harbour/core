@@ -574,47 +574,6 @@ HB_FUNC( SQLEXECUTE ) /* hStmt --> nRetCode */
    hb_retni( SQLExecute( ( SQLHSTMT ) hb_parptr( 1 ) ) );
 }
 
-#if defined( HB_LEGACY_LEVEL3 )
-
-HB_FUNC( SQLEXECUTESCALAR )
-{
-   SQLHSTMT hStmt;
-   SQLRETURN result = SQLAllocStmt( ( SQLHDBC ) hb_parptr( 2 ), &hStmt );
-
-   if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
-   {
-      void * hStatement;
-      result = SQLExecDirect( ( SQLHSTMT ) hStmt,
-                              ( SQLTCHAR * ) O_HB_PARSTRDEF( 1, &hStatement, NULL ),
-                              ( SQLINTEGER ) SQL_NTS );
-      hb_strfree( hStatement );
-
-      if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
-      {
-         result = SQLFetch( ( SQLHSTMT ) hStmt );
-         if( result != SQL_NO_DATA )
-         {
-            char buffer[ 256 ];
-            SQLLEN nLen = 0;
-            buffer[ 0 ] = '\0';
-            result = SQLGetData( ( SQLHSTMT ) hStmt,
-                                 ( SQLUSMALLINT ) 1,
-                                 ( SQLSMALLINT ) SQL_C_CHAR,
-                                 ( SQLPOINTER ) buffer,
-                                 ( SQLLEN ) sizeof( buffer ),
-                                 ( SQLLEN * ) &nLen );
-            hb_storclen( buffer, nLen, 3 );
-         }
-      }
-   }
-
-   hb_retni( result );
-
-   SQLFreeStmt( ( SQLHSTMT ) hStmt, 0 );
-}
-
-#endif /* defined( HB_LEGACY_LEVEL3 ) */
-
 HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
 {
    hb_retni( SQLMoreResults( ( SQLHSTMT ) hb_parptr( 1 ) ) );

@@ -29,9 +29,6 @@
 hbwin.hbx
 
 axcore.c
-legacycd.c
-legacyco.c
-legacycp.c
 mapi.c
 olecore.c
 oleuuid.c{watcom}
@@ -67,7 +64,6 @@ win_rpc.c
 win_shell.c
 win_svc.c
 
-legacy.prg
 oleauto.prg
 axfunc.prg
 wce_sim.prg

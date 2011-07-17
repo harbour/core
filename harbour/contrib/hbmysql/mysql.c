@@ -198,26 +198,6 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
 #endif
 }
 
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( MYSQL_CLOSE ) /* void mysql_close( MYSQL * mysql ) */
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcMYSQLFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      mysql_close( ( MYSQL * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-}
-
-#endif
-
 HB_FUNC( MYSQL_GET_SERVER_VERSION ) /* long mysql_get_server_version( MYSQL * ) */
 {
    MYSQL * mysql = hb_MYSQL_par( 1 );
@@ -314,26 +294,6 @@ HB_FUNC( MYSQL_USE_RESULT ) /* MYSQL_RES * mysql_use_result( MYSQL * ) */
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( MYSQL_FREE_RESULT ) /* void mysql_free_result( MYSQL_RES * ) */
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcMYSQL_RESFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      mysql_free_result( ( MYSQL_RES * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-}
-
-#endif
 
 HB_FUNC( MYSQL_FETCH_ROW ) /* MYSQL_ROW * mysql_fetch_row( MYSQL_RES * ) */
 {

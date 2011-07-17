@@ -299,10 +299,6 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetBorder( HB_GT_RGB * color );
                              Clipper has no key code 256, so it may as well be
                              used for all the Harbour builds that need it */
 
-#if defined( HB_LEGACY_LEVEL3 )
-#  define INKEY_RAW HB_INKEY_RAW
-#endif
-
 /* Harbour keyboard support functions */
 extern HB_EXPORT int        hb_inkey( HB_BOOL bWait, double dSeconds, int iEvenMask ); /* Wait for keyboard input */
 extern HB_EXPORT void       hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */

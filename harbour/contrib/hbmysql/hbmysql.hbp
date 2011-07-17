@@ -23,7 +23,6 @@
 hbmysql.hbx
 
 mysql.c
-mysqlold.c
 
 tmysql.prg
 tsqlbrw.prg

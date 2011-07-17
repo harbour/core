@@ -4288,18 +4288,6 @@ HB_FUNC_UR_SUPER( WRITEDBHEADER )
       hb_retni( SUPER_WRITEDBHEADER( pArea ) );
 }
 
-#if defined( HB_LEGACY_LEVEL3 )
-
-HB_FUNC_UR_SUPER( WRITEBHEADER )
-{
-   AREAP pArea = hb_usrGetAreaParam( 1 );
-
-   if( pArea )
-      hb_retni( SUPER_WRITEDBHEADER( pArea ) );
-}
-
-#endif
-
 HB_FUNC_UR_SUPER( DROP )
 {
    LPRDDNODE pRDD = hb_usrGetNodeParam( 2 );

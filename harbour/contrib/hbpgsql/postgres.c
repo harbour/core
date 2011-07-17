@@ -275,44 +275,6 @@ HB_FUNC( PQCONNECTDB )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated. Because it's not 1 to 1 wrapper. Please use PQCONNECTDB() instead. */
-HB_FUNC( PQCONNECT )
-{
-   char conninfo[ 512 ];
-   char buf[ 128 ];
-
-   conninfo[ 0 ] = '\0';
-
-   switch( hb_pcount() )
-   {
-      case 5:
-         hb_snprintf( buf, sizeof( buf ), "port = %i ", hb_parni( 5 ) );
-         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
-         /* FALLTHROUGH */
-      case 4:
-         hb_snprintf( buf, sizeof( buf ), "password = %s ", hb_parc( 4 ) );
-         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
-         /* FALLTHROUGH */
-      case 3:
-         hb_snprintf( buf, sizeof( buf ), "user = %s ", hb_parc( 3 ) );
-         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
-         /* FALLTHROUGH */
-      case 2:
-         hb_snprintf( buf, sizeof( buf ), "host = %s ", hb_parc( 2 ) );
-         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
-         /* FALLTHROUGH */
-      case 1:
-         hb_snprintf( buf, sizeof( buf ), "dbname = %s ", hb_parc( 1 ) );
-         hb_strncat( conninfo, buf, sizeof( conninfo ) - 1 );
-   }
-
-   hb_PGconn_ret( PQconnectdb( conninfo ) );
-}
-
-#endif /* defined( HB_LEGACY_LEVEL3 ) */
-
 /* NOTE: Deprecated */
 HB_FUNC( PQSETDBLOGIN )
 {
@@ -324,26 +286,6 @@ HB_FUNC( PQSETDBLOGIN )
                                 hb_parcx( 6 ) /* login */,
                                 hb_parcx( 7 ) /* pwd */ ) );
 }
-
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( PQCLOSE )
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcPGconnFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      PQfinish( ( PGconn * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-}
-
-#endif /* defined( HB_LEGACY_LEVEL3 ) */
 
 HB_FUNC( PQRESET )
 {
@@ -488,26 +430,6 @@ HB_FUNC( PQSTATUS )
 /*
  * Query handling functions
  */
-
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( PQCLEAR )
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcPGresultFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      PQclear( ( PGresult * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-}
-
-#endif
 
 HB_FUNC( PQEXEC )
 {
@@ -1079,28 +1001,6 @@ HB_FUNC( PQCREATETRACE )
 #endif
 }
 
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( PQCLOSETRACE )
-{
-#ifdef NODLL
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcFILEFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      fclose( ( FILE * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-#endif
-}
-
-#endif
-
 HB_FUNC( PQTRACE )
 {
 #ifdef NODLL
@@ -1222,28 +1122,6 @@ HB_FUNC( PQCANCEL )
    hb_storc( NULL, 2 );
 #endif
 }
-
-#if defined( HB_LEGACY_LEVEL3 )
-
-/* NOTE: Deprecated */
-HB_FUNC( PQFREECANCEL )
-{
-#if PG_VERSION_NUM >= 80000
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcPGcancelFuncs, 1 );
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      PQfreeCancel( ( PGcancel * ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-#endif
-}
-
-#endif
 
 HB_FUNC( PQESCAPEBYTEACONN )
 {

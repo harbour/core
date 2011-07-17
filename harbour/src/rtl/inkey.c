@@ -163,12 +163,7 @@ HB_FUNC( HB_KEYNEXT )
 
 HB_FUNC( NEXTKEY )
 {
-#if defined( HB_LEGACY_LEVEL3 )
-   /* NOTE: Dirty extension. Clipper accepts no parameter here. Deprecated */
-   hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
-#else
    hb_retni( hb_inkeyNext( hb_setGetEventMask() ) );
-#endif
 }
 
 HB_FUNC( HB_KEYLAST )

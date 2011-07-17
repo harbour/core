@@ -104,49 +104,7 @@
    #endif
 #endif
 
-/* Include windows.h if applicable and requested */
-#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED ) && defined( HB_LEGACY_LEVEL3 )
-
-   #include <windows.h>
-   #if defined( __GNUC__ )
-      #define HB_DONT_DEFINE_BASIC_TYPES
-   #endif
-
-#elif defined( HB_OS_OS2 ) && defined( HB_LEGACY_TYPES_ON ) && defined( HB_LEGACY_LEVEL3 )
-
-   /* With the exception of WORD, the OS/2 header has its
-      own definitions of the Harbour types most of which conflict with the
-      Harbour #undefs, due to typedef being the prevalent method of
-      defining the types in OS/2, whereas Harbour assumes that the
-      definitions that it is replacing have been defined using
-      #define. Therefore, it is necessary to skip the Harbour
-      definition section when using the OS/2 compilers, include
-      the OS/2 type definitions, and then add the definition for WORD.
-
-      NOTE: This only applies to the common types that most C compilers
-            define. Any new types, particulary those that start with
-            HB_, must be placed AFTER the #endif __IBMCPP__ line!
-   */
-
-   #ifndef INCL_TYPES
-   #define INCL_TYPES
-   #endif
-   #ifndef INCL_DOSEXCEPTIONS
-   #define INCL_DOSEXCEPTIONS
-   #endif
-   #ifndef INCL_ERRORS
-   #define INCL_ERRORS           /* DOS error values     */
-   #endif
-   #ifndef INCL_LONGLONG
-   #define INCL_LONGLONG         /* include native compiler LONGLONG definition */
-   #endif
-
-   #include <os2.h>
-   #undef INT
-   #undef UINT
-   #define HB_DONT_DEFINE_BASIC_TYPES
-
-#elif defined( HB_OS_DOS )
+#if defined( HB_OS_DOS )
 
    #if defined( __WATCOMC__ ) && defined( __386__ ) && !defined( __WINDOWS_386__ )
       #define HB_DOS_INT86 int386
@@ -388,72 +346,56 @@ typedef HB_UCHAR            HB_U8;
 
 /* Legacy Windows/Clipper-style types */
 
-#if defined( HB_LEGACY_TYPES_ON ) && defined( HB_LEGACY_LEVEL3 )
-   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
+#if defined( HB_LEGACY_TYPES_ON )
 
-      #if ! defined( HB_DONT_DEFINE_BOOL )
-         #undef BOOL                         /* boolean */
-         typedef HB_BOOL BOOL;
-      #endif
+   #if ! defined( HB_DONT_DEFINE_BOOL )
+      #undef BOOL                         /* boolean */
+      typedef HB_BOOL BOOL;
+   #endif
 
-      #undef FALSE
-      #define FALSE  0
-      #undef TRUE
-      #define TRUE   (!0)
+   #undef FALSE
+   #define FALSE  0
+   #undef TRUE
+   #define TRUE   (!0)
 
-      #undef UINT                            /* varies with platform */
-      typedef HB_UINT UINT;
+   #undef UINT                            /* varies with platform */
+   typedef HB_UINT UINT;
 
-      #undef SCHAR                           /* 1 byte signed */
-      typedef HB_SCHAR SCHAR;
+   #undef SCHAR                           /* 1 byte signed */
+   typedef HB_SCHAR SCHAR;
 
-      #undef UCHAR                           /* 1 byte unsigned */
-      typedef HB_UCHAR UCHAR;
+   #undef UCHAR                           /* 1 byte unsigned */
+   typedef HB_UCHAR UCHAR;
 
-      #if ! defined( HB_DONT_DEFINE_BYTE )
-         #undef BYTE                            /* 1 byte unsigned */
-         typedef HB_UCHAR BYTE;
-      #endif
+   #if ! defined( HB_DONT_DEFINE_BYTE )
+      #undef BYTE                            /* 1 byte unsigned */
+      typedef HB_UCHAR BYTE;
+   #endif
 
-      #undef SHORT                           /* 2 bytes signed */
-      typedef HB_SHORT SHORT;
+   #undef SHORT                           /* 2 bytes signed */
+   typedef HB_SHORT SHORT;
 
-      #undef USHORT                          /* 2 bytes unsigned */
-      typedef HB_USHORT USHORT;
+   #undef USHORT                          /* 2 bytes unsigned */
+   typedef HB_USHORT USHORT;
 
-      #if ! defined( HB_DONT_DEFINE_LONG )
-         #undef LONG                         /* 4 or 8 bytes signed */
-         typedef HB_LONG LONG;
-      #endif
+   #if ! defined( HB_DONT_DEFINE_LONG )
+      #undef LONG                         /* 4 or 8 bytes signed */
+      typedef HB_LONG LONG;
+   #endif
 
-      #undef ULONG                           /* 4 or 8 bytes unsigned */
-      typedef HB_ULONG ULONG;
+   #undef ULONG                           /* 4 or 8 bytes unsigned */
+   typedef HB_ULONG ULONG;
 
-      #if ! defined( _WINNT_H )
-         #if ! defined( HB_LONG_LONG_OFF )
-            #if ! defined( LONGLONG )
-               typedef HB_LONGLONG LONGLONG;
-            #endif
-            #if ! defined( ULONGLONG )
-               typedef HB_ULONGLONG ULONGLONG;
-            #endif
+   #if ! defined( _WINNT_H )
+      #if ! defined( HB_LONG_LONG_OFF )
+         #if ! defined( LONGLONG )
+            typedef HB_LONGLONG LONGLONG;
+         #endif
+         #if ! defined( ULONGLONG )
+            typedef HB_ULONGLONG ULONGLONG;
          #endif
       #endif
-
-   #else  /* HB_DONT_DEFINE_BASIC_TYPES */
-
-      /*
-       * if HB_DONT_DEFINE_BASIC_TYPES excluded some types which are not
-       * defined in included platform dependent header files then please
-       * add necessary definitions here.
-       */
-
-      /* SCHAR is needed using GCC on OS/2 */
-      #if ! defined( SCHAR )
-         typedef HB_SCHAR SCHAR;          /* 1 byte signed */
-      #endif
-
-   #endif /* HB_DONT_DEFINE_BASIC_TYPES */
+   #endif
 
    #if ! defined( UINT16 )
        typedef HB_U16        UINT16;
