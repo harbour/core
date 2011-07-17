@@ -607,7 +607,6 @@ static void hbqt_registerCallbacks( void )
 /*----------------------------------------------------------------------*/
 
 static QApplication * s_app = NULL;
-static QList<PHB_ITEM> s_PHB_ITEM_tobedeleted;
 
 HB_FUNC_EXTERN( __HBQTCORE );
 
@@ -623,12 +622,6 @@ HB_EXTERN_END
 QApplication * __hbqtgui_app( void )
 {
    return s_app;
-}
-
-void hbqt_addDeleteList( PHB_ITEM item )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "-------------------------hbqt_addDeleteList # %d", s_PHB_ITEM_tobedeleted.size() ) );
-   s_PHB_ITEM_tobedeleted << item;
 }
 
 static void hbqt_lib_init( void * cargo )
@@ -659,17 +652,6 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-   while( ! s_PHB_ITEM_tobedeleted.isEmpty() )
-   {
-      int i = s_PHB_ITEM_tobedeleted.size() - 1;
-      if( s_PHB_ITEM_tobedeleted.at( i ) != NULL )
-      {
-         void * ptr = ( void * ) s_PHB_ITEM_tobedeleted.at( i );
-         s_PHB_ITEM_tobedeleted.removeAt( i );
-         hb_itemRelease( ptr );
-      }
-   }
 }
 
 
