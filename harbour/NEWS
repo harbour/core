@@ -19,9 +19,23 @@ Note
 
   [TODO]
 
+  Please refer to the ChangeLog in the meantime, particularly
+  to entries marked with the keyword "INCOMPATIBILITY".
+
 Known build issues
 =============================
 - None
+
+Known open issues
+=============================
+- HB_TCHAR_* macro usage in Harbour sources
+- ACHOICE() minor Clipper compatibility bugs
+- MENUSYS minor Clipper incompatibility
+- Target specific C code generated for some numeric
+  operations in -gc3 mode (preventing cross-compilation)
+- HBQT class creation not MT safe for multiple reasons (f.e. strtok)
+- HBQT valgrind test shows double free at exit
+- GTWVW bugs (scrolling bug still there)
 
 
 Version 2.0.0 (2009-12-22)
