@@ -142,8 +142,8 @@ HARBOUR
             you can use multiple values:
 
             Intel 32-bit: "-arch i386"
-            Intel 64-bit: "-arch ppc"
-            PPC 32-bit:   "-arch x86_64"
+            Intel 64-bit: "-arch x86_64"
+            PPC 32-bit:   "-arch ppc"
             PPC 64-bit:   "-arch ppc64"
 
    on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
