@@ -93,6 +93,9 @@
 #     include <sys/time.h>
 #     include <sys/types.h>
 #  endif
+#  if defined( HB_OS_HPUX )
+#     include <sys/modem.h>
+#  endif
 #elif defined( HB_HAS_SIOLIB )
 #  include <sioLib.h>
 #elif defined( HB_HAS_PMCOM )
@@ -712,6 +715,9 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
 #elif defined( CRTSCTS )
    #define _HB_OCRTSCTS       CRTSCTS
    #define _HB_ICRTSCTS       CRTSCTS
+#elif defined( CNEW_RTSCTS )
+   #define _HB_OCRTSCTS       CNEW_RTSCTS
+   #define _HB_ICRTSCTS       CNEW_RTSCTS
 #elif defined( CCTS_OFLOW )
    #define _HB_OCRTSCTS       CCTS_OFLOW
    #define _HB_ICRTSCTS       0
