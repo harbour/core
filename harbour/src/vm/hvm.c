@@ -4621,7 +4621,6 @@ static void hb_vmEnumStart( int nVars, int nDescend )
       pValue = hb_stackItemFromTop( -i );
       /* create extended reference for enumerator destructor */
       hb_vmEnumReference( pValue );
-      pBase = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
       /* store the reference to control variable */
       pEnumRef = hb_stackItemFromTop( -i + 1 );
       hb_itemCopy( &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->enumref,
@@ -4631,13 +4630,18 @@ static void hb_vmEnumStart( int nVars, int nDescend )
       /* store the old value of control variable and clear it */
       hb_itemMove( &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->oldvalue,
                    pEnum );
-      /* set the iterator value */
-      pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
-      pEnum->item.asEnum.basePtr = pBase;
-      pEnum->item.asEnum.valuePtr = NULL;
 
+      pBase = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
       if( HB_IS_BYREF( pBase ) )
          pBase = hb_itemUnRef( pBase );
+
+      if( HB_IS_COMPLEX( pEnum ) )
+         hb_itemClear( pEnum );
+
+      /* set the iterator value */
+      pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
+      pEnum->item.asEnum.basePtr = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
+      pEnum->item.asEnum.valuePtr = NULL;
 
       if( HB_IS_OBJECT( pBase ) && hb_objHasOperator( pBase, HB_OO_OP_ENUMSTART ) )
       {
@@ -4687,7 +4691,7 @@ static void hb_vmEnumStart( int nVars, int nDescend )
          else
             fStart = HB_FALSE;
       }
-      else
+      else if( hb_vmRequestQuery() == 0 )
       {
          hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pBase );
          return;
