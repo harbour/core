@@ -52,7 +52,9 @@
  */
 
 #include "hbwinole.h"
+#include "hbapicdp.h"
 #include "hbapilng.h"
+#include "hbapistr.h"
 #include "hbinit.h"
 
 /* enable workaround for wrong OLE variant structure definition */
@@ -337,29 +339,19 @@ static void AnsiToWideBuffer( const char* szString, wchar_t* szWide, int iLen )
 
 static BSTR hb_oleItemToString( PHB_ITEM pItem )
 {
-   const char* szString;
-   BSTR strVal;
-   int iLen, iStrLen;
+   UINT uiStrLen = ( UINT ) hb_itemCopyStrU16( pItem, HB_CDP_ENDIAN_NATIVE,
+                                               NULL, UINT_MAX );
+   BSTR strVal = SysAllocStringLen( NULL, uiStrLen );
 
-   szString = hb_itemGetCPtr( pItem );
-   iLen = ( int ) hb_itemGetCLen( pItem );
-   iStrLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, iLen, NULL, 0 );
-   strVal = SysAllocStringLen( NULL, iStrLen );
-   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, iLen, strVal, iStrLen + 1 );
+   hb_itemCopyStrU16( pItem, HB_CDP_ENDIAN_NATIVE, strVal, uiStrLen + 1 );
+
    return strVal;
 }
 
-
 static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 {
-   char* szString;
-   int iLen, iStrLen;
-
-   iStrLen = ( int ) SysStringLen( strVal );
-   iLen = WideCharToMultiByte( CP_ACP, 0, strVal, iStrLen, NULL, 0, NULL, NULL );
-   szString = ( char* ) hb_xgrab( ( iLen + 1 ) * sizeof( char ) );
-   WideCharToMultiByte( CP_ACP, 0, strVal, iStrLen, szString, iLen + 1, NULL, NULL );
-   hb_itemPutCLPtr( pItem, szString, iLen );
+   hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE, strVal,
+                        SysStringLen( strVal ) );
 }
 
 
