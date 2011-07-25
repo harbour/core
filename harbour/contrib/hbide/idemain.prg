@@ -330,6 +330,8 @@ CLASS HbIde
    DATA   oSys
    DATA   oSysMenu
 
+   DATA   lSortedFuncList                         INIT   .t.
+
    METHOD new( aParams )
    METHOD create( aParams )
    METHOD destroy()
@@ -1445,7 +1447,9 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
 METHOD HbIde:updateFuncList( lSorted )
    LOCAL a_:={}
 
-   DEFAULT lSorted TO .t.
+   DEFAULT lSorted TO ::lSortedFuncList
+
+   ::lSortedFuncList := lSorted
 
    ::oFuncList:clear()
    IF !empty( ::aTags )
