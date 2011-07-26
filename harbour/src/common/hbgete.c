@@ -64,6 +64,8 @@
    #define INCL_DOSMISC
    #define INCL_ERRORS
    #include <os2.h>
+#elif defined( __FreeBSD__ )
+   #include <sys/param.h>
 #endif
 
 /* NOTE: Warning, this function _may_ return NULL as a result if
@@ -232,7 +234,8 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
          return setenv( szName, "", 1 ) == 0;
       else
          return HB_TRUE;
-#  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX )
+#  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
+        ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 )
       unsetenv( szName );
       return HB_TRUE;
 #  else

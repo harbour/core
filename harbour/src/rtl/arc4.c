@@ -59,8 +59,6 @@
 #  define HAVE_DECL_KERN_RANDOM
 #  if defined( HB_OS_LINUX )
 #     define HAVE_DECL_RANDOM_UUID
-#  else
-#     define HAVE_DECL_KERN_ARND
 #  endif
 #endif
 
@@ -78,6 +76,9 @@
 #  include <sys/types.h>
 #  ifdef HAVE_SYS_SYSCTL_H
 #     include <sys/sysctl.h>
+#     if !defined( HB_OS_LINUX ) && defined( KERN_ARND )
+#        define HAVE_DECL_KERN_ARND
+#     endif
 #  endif
 #  include <fcntl.h>
 #  include <unistd.h>
