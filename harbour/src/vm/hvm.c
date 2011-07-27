@@ -7143,35 +7143,32 @@ static void hb_vmPushStaticByRef( HB_USHORT uiStatic )
 static void hb_vmPushVariable( PHB_SYMB pVarSymb )
 {
    HB_STACK_TLS_PRELOAD
-   HB_USHORT uiAction = E_DEFAULT;
    PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
 
    pItem = hb_stackAllocItem();
 
-   do
+   /* First try if passed symbol is a name of field
+      * in a current workarea - if it is not a field (HB_FAILURE)
+      * then try the memvar variable
+      */
+   if( hb_rddFieldGet( pItem, pVarSymb ) != HB_SUCCESS &&
+       hb_memvarGet( pItem, pVarSymb ) != HB_SUCCESS )
    {
-      /* First try if passed symbol is a name of field
-         * in a current workarea - if it is not a field (HB_FAILURE)
-         * then try the memvar variable
-         */
-      if( hb_rddFieldGet( pItem, pVarSymb ) != HB_SUCCESS )
+      HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                         NULL, pVarSymb->szName,
+                                         0, EF_CANRETRY );
+
+      while( hb_errLaunch( pError ) == E_RETRY )
       {
-         if( hb_memvarGet( pItem, pVarSymb ) != HB_SUCCESS )
-         {
-            HB_ITEM_PTR pError;
-
-            pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                    NULL, pVarSymb->szName,
-                                    0, EF_CANRETRY );
-
-            uiAction = hb_errLaunch( pError );
-            hb_errRelease( pError );
-         }
+         if( hb_rddFieldGet( pItem, pVarSymb ) == HB_SUCCESS ||
+             hb_memvarGet( pItem, pVarSymb ) == HB_SUCCESS )
+            break;
       }
+
+      hb_errRelease( pError );
    }
-   while( uiAction == E_RETRY );
 }
 
 
