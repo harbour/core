@@ -12246,7 +12246,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbrun"             , I_( "run target" ) },;
       { "-hbraw"             , I_( "stop after running Harbour compiler" ) },;
       { "-hbcmp|-clipper"    , I_( "stop after creating the object files\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect" ) },;
-      { "-hbcc"              , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
+      { "-hbcc"              , I_( "accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
       { "-hblnk"             , I_( "accept raw linker flags" ) },;
       { "-autohbm[-]"        , hb_StrFormat( I_( "enable (or disable) processing of %1$s in current directory (default: yes)" ), _HBMK_AUTOHBM_NAME ) },;
       { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode" ) },;
