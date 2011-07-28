@@ -1040,9 +1040,13 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
          while( !HB_COMP_PARAM->fExit )
          {
             int j = 1;
+            const char *szSwitch1 = szSwitch + j; /* hack to avoid what is seems a bug in 'Apple clang version 2.1 (tags/Apple/clang-163.7.1) (based on LLVM 3.0svn)' / XCode 4.1 [vszakats] */
 
-            while( szSwitch[j] && !HB_ISOPTSEP( szSwitch[j] ) )
+            while( *szSwitch1 && !HB_ISOPTSEP( *szSwitch1 ) )
+            {
                j++;
+               szSwitch1++;
+            }
 
             if( szSwitch[j] && szSwitch[j] == '/' )
             {
