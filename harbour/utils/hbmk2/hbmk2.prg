@@ -1452,7 +1452,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
                     { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } ,;
-                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingwarm" } }
+                    { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCPOSTFIX ] ),;
+                          FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ),;
+                          NIL ) }, "mingwarm" } }
 #endif
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       l_aLIBHBGT := { "gtwvt", "gtgui" }

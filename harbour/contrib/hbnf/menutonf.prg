@@ -160,6 +160,10 @@ local lChoice := .F.
 local nCursor := set( _SET_CURSOR,SC_NONE )
 local nKey,bKey,nScan,lWrap,cScreen,nPrev
 
+IF ! hb_isLogical( lCold )
+   lCold := .F.
+ENDIF
+
 // Validate the incoming parameters and assign some reasonable defaults
 // to prevent a crash later.
 

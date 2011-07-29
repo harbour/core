@@ -1,6 +1,6 @@
 Hi All,
 
-Harbour 3.0.0 (r?????) source archives and Windows binary
+Harbour 3.0.0 (r16951) source archives and Windows binary
 releases are available for download on sourceforge.net:
 
    http://sourceforge.net/projects/harbour-project/files/
@@ -29,7 +29,7 @@ Usage:
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'
    [needs mingw64 to be installed in 'comp/mingw64' dir beforehand]
-5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -platform=wce'
+5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingwarm'
    [needs cegcc to be installed in 'comp/mingwarm' dir beforehand]
 
 Tool/lib versions used to create this package:
