@@ -1,7 +1,7 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2011-05-26 23:29:45.837407067 +0200
-+++ sqlite3/sqlite3.c	2011-05-26 23:29:45.977411381 +0200
-@@ -24781,7 +24781,9 @@
+--- sqlite3.orig/sqlite3.c	2011-07-27 18:12:09.104445521 +0200
++++ sqlite3/sqlite3.c	2011-07-27 18:12:09.244446575 +0200
+@@ -25143,7 +25143,9 @@
    case ENODEV:
    case ENXIO:
    case ENOENT:
@@ -11,16 +11,7 @@ diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
    case ENOSYS:
      /* these should force the client to close the file and reconnect */
      
-@@ -26047,7 +26049,7 @@
-   */
-   if( pFile->eFileLock > NO_LOCK ){
-     pFile->eFileLock = eFileLock;
--#if !OS_VXWORKS
-+#if !OS_VXWORKS && !__minix
-     /* Always update the timestamp on the old file */
-     utimes(zLockFile, NULL);
- #endif
-@@ -27520,7 +27522,11 @@
+@@ -27884,7 +27886,11 @@
        ** is the same technique used by glibc to implement posix_fallocate()
        ** on systems that do not have a real fallocate() system call.
        */

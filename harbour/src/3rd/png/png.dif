@@ -1,7 +1,7 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	2011-04-09 09:45:32.341938538 +0200
-+++ png/png.h	2011-04-09 09:45:32.341938538 +0200
-@@ -404,7 +404,7 @@
+--- png.orig/png.h	2011-07-27 17:35:34.724446118 +0200
++++ png/png.h	2011-07-27 17:35:35.224445268 +0200
+@@ -410,7 +410,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,8 +11,8 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2011-04-09 09:45:32.251938268 +0200
-+++ png/pnglconf.h	2011-04-09 09:45:32.251938268 +0200
+--- png.orig/pnglconf.h	2011-07-27 17:35:34.604444767 +0200
++++ png/pnglconf.h	2011-07-27 17:35:35.224445268 +0200
 @@ -21,7 +21,11 @@
  #ifndef PNGLCONF_H
  #define PNGLCONF_H
