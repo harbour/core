@@ -95,6 +95,7 @@ optimized.
 
 /* hbfloat.h have to be included first */
 #include "hbfloat.h"
+#include "hbapicdp.h"
 #include <stddef.h>
 
 #if defined( __FreeBSD__ )
@@ -201,6 +202,8 @@ optimized.
 #define _x_ptrdiff_t          ptrdiff_t
 #define _x_ptr                void *
 #define _x_str                char *
+#define _x_wchar              wchar_t
+#define _x_wstr               _x_wchar *
 #define _x_intptr             int *
 
 #define v_x_int         1
@@ -215,9 +218,10 @@ optimized.
 #define v_x_ptrdiff_t   10
 #define v_x_ptr         11
 #define v_x_str         12
-#define v_x_intptr      13
-#define v_x_double      14
-#define v_x_long_dbl    15
+#define v_x_wstr        13
+#define v_x_intptr      14
+#define v_x_double      15
+#define v_x_long_dbl    16
 
 typedef union {
    _x_int         as_x_int;
@@ -232,6 +236,7 @@ typedef union {
    _x_ptrdiff_t   as_x_ptrdiff_t;
    _x_ptr         as_x_ptr;
    _x_str         as_x_str;
+   _x_wstr        as_x_wstr;
    _x_intptr      as_x_intptr;
    _x_double      as_x_double;
    _x_long_dbl    as_x_long_dbl;
@@ -359,6 +364,9 @@ static void va_arg_fill( v_paramlst * plst, va_list va )
              break;
          case v_x_str:
              plst->arglst[ iArg ].value.as_x_str = va_arg( va, _x_str );
+             break;
+         case v_x_wstr:
+             plst->arglst[ iArg ].value.as_x_wstr = va_arg( va, _x_wstr );
              break;
          case v_x_intptr:
              plst->arglst[ iArg ].value.as_x_intptr = va_arg( va, _x_intptr );
@@ -712,7 +720,7 @@ static int _hb_strnlen( const char * str, int len )
 }
 
 static size_t put_str( char *buffer, size_t bufsize, size_t size,
-                       const char * str, int flags, int width, int precision )
+                       const _x_str str, int flags, int width, int precision )
 {
    if( !str )
       str = "(null)";
@@ -733,6 +741,56 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    {
       if( size < bufsize )
          buffer[ size ] = *str++;
+      ++size;
+      --precision;
+   }
+   while( width > 0 )
+   {
+      if( size < bufsize )
+         buffer[ size ] = ' ';
+      ++size;
+      --width;
+   }
+
+   return size;
+}
+
+static size_t put_wstr( char *buffer, size_t bufsize, size_t size,
+                        const _x_wstr wstr, int flags, int width,
+                        int precision )
+{
+   if( !wstr )
+   {
+      const _x_wchar wstr_null[] = { '(', 'n', 'u', 'l', 'l', ')', 0 };
+      wstr = wstr_null;
+   }
+
+   if( precision < 0 )
+   {
+      precision = 0;
+      while( wstr[ precision ] )
+         ++precision;
+   }
+   else if( precision > 0 )
+   {
+      int size = precision;
+      precision = 0;
+      while( precision < size && wstr[ precision ] )
+         ++precision;
+   }
+
+   width -= precision;
+   if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( width > 0 )
+   {
+      if( size < bufsize )
+         buffer[ size ] = ' ';
+      ++size;
+      --width;
+   }
+   while( precision > 0 )
+   {
+      if( size < bufsize )
+         buffer[ size ] = ( char ) *wstr++;
       ++size;
       --precision;
    }
@@ -1262,9 +1320,18 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                      }
                      continue;
                   case 's':   /* const char * */
-                     argval.value.as_x_str = va_arg_n( args, _x_str, param );
-                     size = put_str( buffer, bufsize, size, argval.value.as_x_str,
-                                     flags, width, precision );
+                     if( length == _L_LONG_ )
+                     {
+                        argval.value.as_x_wstr = va_arg_n( args, _x_wstr, param );
+                        size = put_wstr( buffer, bufsize, size, argval.value.as_x_wstr,
+                                         flags, width, precision );
+                     }
+                     else
+                     {
+                        argval.value.as_x_str = va_arg_n( args, _x_str, param );
+                        size = put_str( buffer, bufsize, size, argval.value.as_x_str,
+                                        flags, width, precision );
+                     }
                      continue;
                   case 'n':   /* store current result size in int * arg */
                      /* This is very danger feature in *printf() functions
