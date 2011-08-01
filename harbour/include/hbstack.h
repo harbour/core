@@ -369,6 +369,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
    extern void             hb_stackSetQuitState( HB_USHORT uiState );
    extern int              hb_stackUnlock( void );
    extern int              hb_stackLock( void );
+   extern int              hb_stackLockCount( void );
    extern void *           hb_stackAllocator( void );
 #endif
 
@@ -417,6 +418,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
 #  define hb_stackUnlock()          ( ++hb_stack.iUnlocked )
 #  define hb_stackLock()            ( --hb_stack.iUnlocked )
+#  define hb_stackLockCount()       ( hb_stack.iUnlocked )
 #endif
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \

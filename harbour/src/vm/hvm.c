@@ -8751,15 +8751,36 @@ HB_USHORT hb_vmRequestQuery( void )
 HB_BOOL hb_vmRequestReenter( void )
 {
    HB_STACK_TLS_PRELOAD
+   PHB_ITEM pItem;
+   int iLocks = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenter()"));
 
+#if defined( HB_MT_VM )
+   if( !s_fHVMActive || hb_stackId() == NULL )
+      return HB_FALSE;
+   else
+   {
+      while( hb_stackLockCount() > 0 )
+      {
+         hb_vmLock();
+         ++iLocks;
+      }
+   }
+#else
    if( !s_fHVMActive )
       return HB_FALSE;
+#endif
 
    hb_stackPushReturn();
 
-   hb_vmPushInteger( hb_stackGetActionRequest() );
+   pItem = hb_stackAllocItem();
+   pItem->type = HB_IT_RECOVER;
+   pItem->item.asRecover.recover = NULL;
+   pItem->item.asRecover.base    = iLocks;
+   pItem->item.asRecover.flags   = 0;
+   pItem->item.asRecover.request = hb_stackGetActionRequest();
+
    hb_stackSetActionRequest( 0 );
 
    return HB_TRUE;
@@ -8769,18 +8790,26 @@ void hb_vmRequestRestore( void )
 {
    HB_STACK_TLS_PRELOAD
    HB_USHORT uiAction;
+   PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestRestore()"));
 
-   uiAction = ( HB_USHORT ) hb_stackItemFromTop( -1 )->item.asInteger.value |
-              hb_stackGetActionRequest();
+   pItem = hb_stackItemFromTop( -1 );
+
+   if( pItem->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestRestore", NULL, NULL );
+
+   uiAction = pItem->item.asRecover.request | hb_stackGetActionRequest();
 
 #if defined( HB_MT_VM )
    if( uiAction & HB_VMSTACK_REQUESTED )
       hb_vmThreadQuit();
    else
-#endif
    {
+      int iCount = ( int ) pItem->item.asRecover.base;
+#else
+   {
+#endif
       if( uiAction & HB_QUIT_REQUESTED )
          hb_stackSetActionRequest( HB_QUIT_REQUESTED );
       else if( uiAction & HB_BREAK_REQUESTED )
@@ -8792,6 +8821,11 @@ void hb_vmRequestRestore( void )
 
       hb_stackDec();
       hb_stackPopReturn();
+
+#if defined( HB_MT_VM )
+      while( iCount-- > 0 )
+         hb_vmUnlock();
+#endif
    }
 }
 
@@ -8803,23 +8837,41 @@ HB_BOOL hb_vmRequestReenterExt( void )
       return HB_FALSE;
    else
    {
+      HB_USHORT uiAction = 0;
+      int iLocks = 0;
+      PHB_ITEM pItem;
+
 #if defined( HB_MT_VM )
       HB_STACK_TLS_PRELOAD
-      HB_USHORT uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
 
+      uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
       if( uiAction )
       {
+         /* TODO: add protection against executing hb_threadStateNew()
+          * during GC pass
+          */
          hb_vmThreadInit( NULL );
          HB_STACK_TLS_RELOAD
       }
       else
+      {
+         while( hb_stackLockCount() > 0 )
+         {
+            hb_vmLock();
+            ++iLocks;
+         }
          hb_stackPushReturn();
-
-      hb_vmPushInteger( uiAction | hb_stackGetActionRequest() );
+      }
 #else
       hb_stackPushReturn();
-      hb_vmPushInteger( hb_stackGetActionRequest() );
 #endif
+      pItem = hb_stackAllocItem();
+      pItem->type = HB_IT_RECOVER;
+      pItem->item.asRecover.recover = NULL;
+      pItem->item.asRecover.base    = iLocks;
+      pItem->item.asRecover.flags   = 0;
+      pItem->item.asRecover.request = uiAction | hb_stackGetActionRequest();
+
       hb_stackSetActionRequest( 0 );
    }
 

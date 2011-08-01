@@ -479,7 +479,15 @@ int hb_stackLock( void )
    HB_STACK_TLS_PRELOAD
    return --hb_stack.iUnlocked;
 }
-#endif
+
+#undef hb_stackLockCount
+int hb_stackLockCount( void )
+{
+   HB_STACK_TLS_PRELOAD
+   return hb_stack.iUnlocked;
+}
+
+#endif /* HB_MT_VM */
 
 #undef hb_stackKeyPolls
 int * hb_stackKeyPolls( void )
