@@ -716,7 +716,6 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                   HB_FAILURE_RETRY( iResult, dup2( hPipeHandle[ 0 ], 0 ) );
                   HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 1 ) );
                   HB_FAILURE_RETRY( iResult, dup2( hNullHandle, 2 ) );
-                  dup2( hNullHandle, 2 );
                }
                iMaxFD = sysconf( _SC_OPEN_MAX );
                if( iMaxFD < 3 )

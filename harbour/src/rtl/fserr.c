@@ -195,8 +195,6 @@ void  hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    HB_ERRCODE uiOsErrorLast, uiErrorLast;
    PHB_IOERRORS pIOErrors;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetIOError(%d,%hu)", fResult, uiOperation));
-
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( uiOperation );
 
@@ -214,6 +212,12 @@ void  hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
       uiErrorLast = hb_errnoToDosError( iErrCode );
 #endif
    }
+
+   /* HB_TRACE() message is intentionally here to not overwrite
+    * OS error code processed above.
+    */
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetIOError(%d,%hu)", fResult, uiOperation));
+
    pIOErrors = hb_stackIOErrors();
    pIOErrors->uiOsErrorLast = uiOsErrorLast;
    pIOErrors->uiErrorLast = uiErrorLast;
