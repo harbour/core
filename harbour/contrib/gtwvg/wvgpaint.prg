@@ -255,6 +255,21 @@ function InsertPaint( cID, aPaint, lSet )
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
+/* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
+FUNCTION Wvt_SetDlgCoMode( nMode )
+   LOCAL nOldMode
+   
+   STATIC sMode := 0
+   
+   nOldMode := sMode
+   IF hb_isNumeric( nMode ) .and. nMode <= 1 .and. nMode >= 0 
+      sMode := nMode
+   ENDIF 
+   
+   RETURN nOldMode
+   
+/*----------------------------------------------------------------------*/
+      
 
 FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
                               cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
@@ -263,43 +278,49 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL aFont
-
+   LOCAL nMode := Wvt_SetDlgCoMode()
+   
    aFont := Wvt_GetFontInfo()
 
-   DEFAULT aOffSet TO {}
+   IF nMode == 0
+      DEFAULT aOffSet TO {}
+      aSize( aOffSet,4 )
+      DEFAULT aOffSet[ 1 ] TO 0
+      DEFAULT aOffSet[ 2 ] TO 0
+      DEFAULT aOffSet[ 3 ] TO 0
+      DEFAULT aOffSet[ 4 ] TO 0
 
-   aSize( aOffSet,4 )
-
-   DEFAULT aOffSet[ 1 ] TO 0
-   DEFAULT aOffSet[ 2 ] TO 0
-   DEFAULT aOffSet[ 3 ] TO 0
-   DEFAULT aOffSet[ 4 ] TO 0
-
-   nBaseUnits  := WVG_GetDialogBaseUnits()
-   nBaseUnitsX := WVG_LOWORD( nBaseUnits )
-   nBaseUnitsY := WVG_HIWORD( nBaseUnits )
-
-   nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
-   nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
-
-   /* Position it exactly where user has requested */
-
-   aXY := Wvt_ClientToScreen( nTop,nLeft )
-   nX  := aXY[ 1 ] + aOffSet[ 2 ]
-   nY  := aXY[ 2 ] + aOffSet[ 1 ]
-
-   /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
-    * But in my practice, the values below are 99% accurate.
-    * I have tested it on many fonts but on 1280/800 resolution.
-    * Please feel free to experiment if you find thses values inappropriate.
-    */
-   nXM :=  5.25
-   nYM := 10.25
-
-   nX  := ( nX * nXM / nBaseUnitsX )
-   nY  := ( nY * nYM / nBaseUnitsY )
-   nW  := ( nW * nXM / nBaseUnitsX )
-   nH  := ( nH * nYM / nBaseUnitsY )
+      nBaseUnits  := WVG_GetDialogBaseUnits()
+      nBaseUnitsX := WVG_LOWORD( nBaseUnits )
+      nBaseUnitsY := WVG_HIWORD( nBaseUnits )
+   
+      nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
+      nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
+   
+      /* Position it exactly where user has requested */
+   
+      aXY := Wvt_ClientToScreen( nTop,nLeft )
+      nX  := aXY[ 1 ] + aOffSet[ 2 ]
+      nY  := aXY[ 2 ] + aOffSet[ 1 ]
+   
+      /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
+       * But in my practice, the values below are 99% accurate.
+       * I have tested it on many fonts but on 1280/800 resolution.
+       * Please feel free to experiment if you find thses values inappropriate.
+       */
+      nXM :=  5.25
+      nYM := 10.25
+   
+      nX  := ( nX * nXM / nBaseUnitsX )
+      nY  := ( nY * nYM / nBaseUnitsY )
+      nW  := ( nW * nXM / nBaseUnitsX )
+      nH  := ( nH * nYM / nBaseUnitsY )
+   ELSE 
+      nX  := nLeft
+      nY  := nTop
+      nW  := nCols
+      nH  := nRows
+   ENDIF       
 
    If !ISNUMBER( nStyle )
       nStyle := + WS_CAPTION    + WS_SYSMENU              ;
@@ -336,38 +357,46 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL nBottom, nRight
+   LOCAL nMode := Wvt_SetDlgCoMode()
 
-   nBottom := nTop  + nRows - 1
-   nRight  := nLeft + nCols - 1
-
-   DEFAULT aOffSet TO {}
-
-   aSize( aOffSet,4 )
-
-   DEFAULT aOffSet[ 1 ] TO 0
-   DEFAULT aOffSet[ 2 ] TO 0
-   DEFAULT aOffSet[ 3 ] TO 0
-   DEFAULT aOffSet[ 4 ] TO 0
-
-   nBaseUnits  := WVG_GetDialogBaseUnits()
-   nBaseUnitsX := WVG_LOWORD( nBaseUnits )
-   nBaseUnitsY := WVG_HIWORD( nBaseUnits )
-
-   aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
-   nX  := aXY[ 1 ] + aOffSet[ 2 ]
-   nY  := aXY[ 2 ] + aOffSet[ 1 ]
-
-   aXY := Wvt_GetXYFromRowCol( nBottom+1, nRight+1 )
-   nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
-   nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
-
-   nXM :=  5.25
-   nYM := 10.25
-
-   nX  := ( nX * nXM / nBaseUnitsX )
-   nY  := ( nY * nYM / nBaseUnitsY )
-   nW  := ( nW * nXM / nBaseUnitsX )
-   nH  := ( nH * nYM / nBaseUnitsY )
+   IF nMode == 0 
+      nBottom := nTop  + nRows - 1
+      nRight  := nLeft + nCols - 1
+   
+      DEFAULT aOffSet TO {}
+   
+      aSize( aOffSet,4 )
+   
+      DEFAULT aOffSet[ 1 ] TO 0
+      DEFAULT aOffSet[ 2 ] TO 0
+      DEFAULT aOffSet[ 3 ] TO 0
+      DEFAULT aOffSet[ 4 ] TO 0
+   
+      nBaseUnits  := WVG_GetDialogBaseUnits()
+      nBaseUnitsX := WVG_LOWORD( nBaseUnits )
+      nBaseUnitsY := WVG_HIWORD( nBaseUnits )
+   
+      aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
+      nX  := aXY[ 1 ] + aOffSet[ 2 ]
+      nY  := aXY[ 2 ] + aOffSet[ 1 ]
+   
+      aXY := Wvt_GetXYFromRowCol( nBottom+1, nRight+1 )
+      nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
+      nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
+   
+      nXM :=  5.25
+      nYM := 10.25
+   
+      nX  := ( nX * nXM / nBaseUnitsX )
+      nY  := ( nY * nYM / nBaseUnitsY )
+      nW  := ( nW * nXM / nBaseUnitsX )
+      nH  := ( nH * nYM / nBaseUnitsY )
+   ELSE 
+      nX  := nLeft
+      nY  := nTop
+      nW  := nCols
+      nH  := nRows
+   ENDIF       
 
    aDlg[ 1,4 ]++      /* item count */
 
@@ -454,8 +483,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    Return nResult
 
 /*----------------------------------------------------------------------*/
-/*                       Borrowed from What32
-
+/*
 Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
 hWnd:     Handle to parent window
@@ -466,76 +494,44 @@ nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
+cDefName: DEFAULT file name
 
-Returns:  If OFN_ALLOWMULTISELECT
-              Array of files selected
-          else
-              FileName.
-          endif
+Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
-FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
-   local aFiles, cRet, cFile, n, x, c := ""
-
-   IF aFilter == nil
-      aFilter := {}
-   END
-   IF ValType( aFilter ) == "A"
-      FOR n := 1 TO LEN( aFilter )
-          c += aFilter[n][1] + chr(0) + aFilter[n][2] + chr(0)
-      NEXT
-      c += chr( 0 )
-   ENDIF
-   if WVG_And( nFlags,OFN_ALLOWMULTISELECT ) > 0
-      cFile := space( 32000 )
-     ELSE
-      cFile := padr( trim( cPath ), 255, chr( 0 ) )
-   END
-
-   cRet := WVT__GetOpenFileName( hWnd, @cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
-
-   if WVG_And( nFlags,OFN_ALLOWMULTISELECT ) > 0
-      n := AT( CHR(0)+ CHR(0), cFile )
-      cFile  := LEFT( cFile,n )
-      aFiles := {}
-      IF n == 0 /* no double chr(0) user must have pressed cancel */
-         RETURN aFiles
-      END
-      x := AT( CHR( 0 ),cFile ) /* fist null */
-      cPath := LEFT( cFile,x )
-
-      cFile := STRTRAN( cFile,cPath )
-      IF !EMPTY( cFile ) /* user selected more than 1 file */
-         c := ""
-         FOR n := 1 TO LEN( cFile )
-             IF SUBSTR( cFile,n,1 ) == CHR( 0 )
-                AADD( aFiles,STRTRAN( cPath, CHR( 0 ) ) +"\"+ c )
-                c:=""
-                LOOP
-             END
-             c += SUBSTR( cFile,n,1 )
-         NEXT
-        ELSE
-         /*
-         cFile:=cPath
-         x:=RAT("\",cFile)
-         cPath:=LEFT(cFile,x-1)
-         */
-         aFiles := { STRTRAN( cPath, CHR( 0 ) ) }
-      END
-      Return aFiles
-   else
-      /* cRet := left( cRet, at( chr( 0 ), cRet ) -1 ) */
-
-   end
-
-   Return cRet
-
+FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+   LOCAL cRet, aTmp, xRet, i
+   
+   HB_SYMBOL_UNUSED( hWnd )
+   
+   DEFAULT cPath  TO ""
+   DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
+   
+/* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
+ *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ */
+   cRet := WIN_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   
+   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0 
+      xRet := {}
+      IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
+         cPath := aTmp[ 1 ]
+         FOR i := 2 TO len( aTmp )
+            aadd( xRet, cPath + "\" + aTmp[ i ] )
+         NEXT    
+      ENDIF    
+   ELSE 
+      xRet := cRet   
+   ENDIF    
+   
+   RETURN xRet 
+   
 /*----------------------------------------------------------------------*/
 /*
-Wvt_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex)
+Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
 
 hWnd:     Handle to parent window
-cFile:    (optional) Default FileName
+cDefName: (optional) Default FileName
 cTitle:   Window Title
 aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
 nFlags:   OFN_* values default to OFN_EXPLORER
@@ -546,19 +542,32 @@ nIndex:   Index position of types
 Returns:  FileName.
 */
 
-FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
-   local n,c:=""
+FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+   LOCAL cRet, aTmp, xRet, i, cPath
 
-   IF aFilter == nil
-      aFilter := {}
-   END
-
-   FOR n := 1 TO LEN( aFilter )
-       c += aFilter[ n ][ 1 ]+chr( 0 )+aFilter[ n ][ 2 ]+chr( 0 )
-   NEXT
-   cFile := WVT__GetSaveFileName( hWnd, cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
-
-   Return cFile
+   HB_SYMBOL_UNUSED( hWnd )
+   
+   DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
+   
+/* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+ *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
+ *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ */
+   cRet := WIN_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   
+   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0 
+      xRet := {}
+      IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
+         cPath := aTmp[ 1 ]
+         FOR i := 2 TO len( aTmp )
+            aadd( xRet, cPath + "\" + aTmp[ i ] )
+         NEXT    
+      ENDIF    
+   ELSE 
+      xRet := cRet   
+   ENDIF    
+   
+   RETURN xRet 
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
