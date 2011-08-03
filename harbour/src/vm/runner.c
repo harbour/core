@@ -655,8 +655,6 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
       hb_itemMove( pRetVal, hb_stackReturnItem() );
    }
 
-   hb_hrbExit( pHrbBody );
-
    if( pRetVal )
       hb_itemReturnRelease( pRetVal );
 }

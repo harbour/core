@@ -240,7 +240,7 @@ typedef struct
 
 
 typedef struct {
-   IDispatchVtbl*       lpVtbl;
+   const IDispatchVtbl* lpVtbl;
    DWORD                count;
    IConnectionPoint*    pConnectionPoint;
    DWORD                dwCookie;
@@ -653,7 +653,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
                   pSink = ( ISink* ) hb_xgrab( sizeof( ISink ) );    /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
 
-                  pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
+                  pSink->lpVtbl = &ISink_Vtbl;
                   pSink->count = 0;
                   pSink->pItemHandler = hb_itemNew( pItemBlock );
                   pSink->rriid = rriid;
