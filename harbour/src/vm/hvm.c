@@ -8844,9 +8844,9 @@ HB_BOOL hb_vmRequestReenterExt( void )
 #if defined( HB_MT_VM )
       HB_STACK_TLS_PRELOAD
 
-      uiAction = hb_stackId() == NULL ? HB_VMSTACK_REQUESTED : 0;
-      if( uiAction )
+      if( hb_stackId() == NULL )
       {
+         uiAction = HB_VMSTACK_REQUESTED;
          /* TODO: add protection against executing hb_threadStateNew()
           * during GC pass
           */
