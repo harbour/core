@@ -91,13 +91,13 @@ HB_FUNC( WVW_TBCREATE)
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND hWndParent = pWindowData->hWnd;
    HWND hWndTB;
-   int   iMaxTextRows = (int) ( ISNIL( 2 ) ? 0 : (hb_parl( 2 ) ? 1 : 0) );
-//   DWORD dwStyle = (DWORD) ( ISNIL( 3 ) ? TBSTYLE_FLAT | TBSTYLE_TOOLTIPS : hb_parni( 3 ) );
-    DWORD dwStyle = (DWORD) ( ISNIL( 3 ) ? TBSTYLE_ALTDRAG | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT | TBSTYLE_WRAPABLE : hb_parnl( 3 ) );
+   int   iMaxTextRows = (int) ( HB_ISNIL( 2 ) ? 0 : (hb_parl( 2 ) ? 1 : 0) );
+//   DWORD dwStyle = (DWORD) ( HB_ISNIL( 3 ) ? TBSTYLE_FLAT | TBSTYLE_TOOLTIPS : hb_parni( 3 ) );
+    DWORD dwStyle = (DWORD) ( HB_ISNIL( 3 ) ? TBSTYLE_ALTDRAG | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT | TBSTYLE_WRAPABLE : hb_parnl( 3 ) );
 
-   int   iSystemBitmap = (int) ( ISNIL( 4 ) ? 1 : hb_parni( 4 ) );
-   int   iImageWidth  = (int) ( iSystemBitmap==0 && ISNUM( 5 ) ? hb_parni( 5 ) : -1 );
-   int   iImageHeight = (int) ( iSystemBitmap==0 && ISNUM( 6 ) ? hb_parni( 6 ) : -1 );
+   int   iSystemBitmap = (int) ( HB_ISNIL( 4 ) ? 1 : hb_parni( 4 ) );
+   int   iImageWidth  = (int) ( iSystemBitmap==0 && HB_ISNUM( 5 ) ? hb_parni( 5 ) : -1 );
+   int   iImageHeight = (int) ( iSystemBitmap==0 && HB_ISNUM( 6 ) ? hb_parni( 6 ) : -1 );
    TBADDBITMAP tbab = { 0 };
 
    InitCommonControls();
@@ -229,15 +229,15 @@ HB_FUNC( WVW_TBADDBUTTON )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int  iCommand = ISNIL(2) ? 0 : hb_parni(2);
+   int  iCommand = HB_ISNIL(2) ? 0 : hb_parni(2);
 
-   char * szBitmap = ISCHAR(3) ? (char*) hb_parcx(3) : NULL;
-   UINT uiBitmap = ISNUM(3) ? (UINT) hb_parni(3) : 0;
+   char * szBitmap = HB_ISCHAR(3) ? (char*) hb_parcx(3) : NULL;
+   UINT uiBitmap = HB_ISNUM(3) ? (UINT) hb_parni(3) : 0;
 
-   char * szLabel= ISNIL(4) ? (char*) "" : (char*) hb_parcx(4);
-   int  iBitmapType = ISNIL(5) ? 0 : (int) hb_parni(5);
-   BOOL bMap3Dcolors   = ISLOG(6) ? hb_parl(6) : FALSE;
-   BOOL bDropdown = ISLOG(7) ? hb_parl(7) : FALSE;
+   char * szLabel= HB_ISNIL(4) ? (char*) "" : (char*) hb_parcx(4);
+   int  iBitmapType = HB_ISNIL(5) ? 0 : (int) hb_parni(5);
+   BOOL bMap3Dcolors   = HB_ISLOG(6) ? hb_parl(6) : FALSE;
+   BOOL bDropdown = HB_ISLOG(7) ? hb_parl(7) : FALSE;
    HWND hWndTB;
    USHORT usOldHeight;
 
@@ -325,7 +325,7 @@ HB_FUNC( WVW_TBDELBUTTON )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int  iButton = ISNUM(2) ? hb_parni(2) : -1;
+   int  iButton = HB_ISNUM(2) ? hb_parni(2) : -1;
    HWND hWndTB;
    USHORT usOldHeight;
 
@@ -361,7 +361,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int  iButton = ISNUM(2) ? hb_parni(2) : -1;
+   int  iButton = HB_ISNUM(2) ? hb_parni(2) : -1;
    HWND hWndTB;
    RECT rc;
    RECT rcRect = { 0 };
@@ -403,8 +403,8 @@ HB_FUNC( WVW_TBENABLEBUTTON )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int  iButton = ISNUM(2) ? hb_parni(2) : -1;
-   BOOL bEnable = ISLOG(3)? hb_parl(3) : TRUE;
+   int  iButton = HB_ISNUM(2) ? hb_parni(2) : -1;
+   BOOL bEnable = HB_ISLOG(3)? hb_parl(3) : TRUE;
    int  iCommand;
    HWND hWndTB;
    USHORT usOldHeight;
@@ -510,7 +510,7 @@ HB_FUNC( WVW_SETTOOLTIPACTIVE )
 
    BOOL        bActive = pWindowData->bToolTipActive;
 
-   if ( ! ISNIL( 2 ) )
+   if ( ! HB_ISNIL( 2 ) )
    {
 
       if ( hb_parl(2) && (pWindowData->hWndTT==NULL) )
@@ -618,7 +618,7 @@ HB_FUNC( WVW_SETTOOLTIPWIDTH )
 
    int iTipWidth = SendMessage( pWindowData->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
-   if ( ISNUM( 2 ) )
+   if ( HB_ISNUM( 2 ) )
    {
       SendMessage( pWindowData->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( int ) hb_parni( 2 ) );
    }
@@ -635,7 +635,7 @@ HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
 
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
-   if ( ISNUM( 2 ) )
+   if ( HB_ISNUM( 2 ) )
    {
       SendMessage( pWindowData->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
    }
@@ -651,7 +651,7 @@ HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
 
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
-   if ( ISNUM( 2 ) )
+   if ( HB_ISNUM( 2 ) )
    {
       SendMessage( pWindowData->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
    }
@@ -666,9 +666,9 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    int iIcon;
 
-   if ( ! ISNIL( 3 ) )
+   if ( ! HB_ISNIL( 3 ) )
    {
-      iIcon = ISNIL( 2 ) ? 0 : hb_parni( 2 );
+      iIcon = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
       if ( iIcon > 3 )
       {
          iIcon = 0 ;

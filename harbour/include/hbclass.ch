@@ -554,7 +554,7 @@ DECLARE HBClass ;
    _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
    oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
-#xcommand HIDDE <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
+#xcommand HIDDEN <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
    oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 

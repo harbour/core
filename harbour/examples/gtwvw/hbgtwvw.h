@@ -64,8 +64,6 @@
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
 
-#define HB_OS_WIN_USED
-
 #define TTS_BALLOON             0x40 // added by MAG
 
 #ifndef GRADIENT_FILL_RECT_H
@@ -108,6 +106,7 @@
 
 #include "hbole.h"
 
+#include <windows.h>
 #include <tchar.h>
 #include <stdlib.h>
 #include <commctrl.h>
@@ -234,8 +233,8 @@
  */
 #define WVW_TB_LABELMAXLENGTH 100
 
-//#define WVW_WHICH_WINDOW ( ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) )
-#define WVW_WHICH_WINDOW ( ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ((hb_gt_wvw_GetNumWindows())-1)  : hb_gt_wvw_GetCurWindow() ) : ((UINT) hb_parni( 1 )) )
+//#define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) )
+#define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ((hb_gt_wvw_GetNumWindows())-1)  : hb_gt_wvw_GetCurWindow() ) : ((UINT) hb_parni( 1 )) )
 /*-------------------------------------------------------------------*/
 
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )

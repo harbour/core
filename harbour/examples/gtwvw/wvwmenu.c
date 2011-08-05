@@ -145,7 +145,7 @@ HB_FUNC( WVW_APPENDMENU )
     return;
   }
 
-  if ( ISCHAR( 4 ) )
+  if ( HB_ISCHAR( 4 ) )
   {
     iLen = hb_parclen( 4 );
     if ( iLen > 0 && iLen < 256 )
@@ -216,7 +216,7 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
   UINT usWinNum = WVW_WHICH_WINDOW;
   int iEvent = 0;
 
-  if ( ISNUM( 2 ) )
+  if ( HB_ISNUM( 2 ) )
   {
     iEvent = hb_parnl( 2 ) ;
   }
@@ -238,9 +238,9 @@ HB_FUNC ( WVW_MENUITEM_SETBITMAPS )
    char szResname[_MAX_PATH+1];
    int iWidth, iHeight;
 
-   if ( !ISNIL(4) )
+   if ( !HB_ISNIL(4) )
    {
-     if ( ISNUM(4) )
+     if ( HB_ISNUM(4) )
      {
        sprintf( szResname, "?%u", hb_parni(4) );
 
@@ -264,9 +264,9 @@ HB_FUNC ( WVW_MENUITEM_SETBITMAPS )
      }
     }
 
-   if ( !ISNIL(5) )
+   if ( !HB_ISNIL(5) )
    {
-     if ( ISNUM(5) )
+     if ( HB_ISNUM(5) )
      {
        sprintf( szResname, "?%u", hb_parni(5) );
 
@@ -290,7 +290,7 @@ HB_FUNC ( WVW_MENUITEM_SETBITMAPS )
      }
    }
 
-   if ( !ISNIL(2) )
+   if ( !HB_ISNIL(2) )
    {
    SetMenuItemBitmaps( (HMENU) HB_PARHANDLE(1) , hb_parni(2), MF_BYCOMMAND , (HBITMAP) hBitmapUnchecked, (HBITMAP) hBitmapChecked ) ;
    }
@@ -358,7 +358,7 @@ HB_FUNC( WIN_SETMENU )
 HB_FUNC( WVW_NOSYSMENU )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   BOOL   lRemoveClose = ISNIL(2) ? FALSE : hb_parl(2);
+   BOOL   lRemoveClose = HB_ISNIL(2) ? FALSE : hb_parl(2);
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HMENU  hMenu = GetSystemMenu(pWindowData->hWnd, FALSE);
 
@@ -387,6 +387,6 @@ HB_FUNC( WVW_GETSYSTEMMENU )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   BOOL   lReset = ISNIL(2) ? FALSE : hb_parl(2);
+   BOOL   lReset = HB_ISNIL(2) ? FALSE : hb_parl(2);
    hb_retnl( ( ULONG ) GetSystemMenu( pWindowData->hWnd, lReset ) );
 }
