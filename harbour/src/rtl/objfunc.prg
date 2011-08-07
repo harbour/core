@@ -167,7 +167,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
    RETURN aData
 
-FUNCTION __ObjSetValueList( oObject, aData )
+FUNCTION __objSetValueList( oObject, aData )
 
    IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )

@@ -2892,6 +2892,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( ! Empty( hbmk[ _HBMK_cDynLibExt ] ) .AND. hb_FNameExt( cParamL ) == hbmk[ _HBMK_cDynLibExt ] )
 
          cParam := PathSepToSelf( cParam )
+         IF hb_FNameExt( cParamL ) == ".lib"
+            cParam := FNameDirName( cParam )
+         ENDIF
          IF _IS_AUTOLIBSYSPRE( cParam )
             AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
          ELSE
@@ -8996,6 +8999,13 @@ STATIC FUNCTION FNameNameGetNoExt( cFileName )
    ENDDO
 
    RETURN cName
+
+STATIC FUNCTION FNameDirName( cFileName )
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName )
 
 STATIC FUNCTION FNameDirExtSet( cFileName, cDirNew, cExtNew )
    LOCAL cDir, cName, cExt
