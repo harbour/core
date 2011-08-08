@@ -1297,6 +1297,11 @@ static void FreeParams( DISPPARAMS * dispparam )
 
 /* PRG level functions and methods */
 
+HB_FUNC( __OLEISDISP )
+{
+   hb_retl( hb_oleItemGet( hb_param( 1, HB_IT_ANY ) ) != NIL );
+}
+
 HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    wchar_t*    cCLSID;

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * THROW() compatibility function
+ *    THROW() compatibility function
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,20 @@
  *
  */
 
-PROCEDURE THROW( oError )
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-   Eval( ErrorBlock(), oError )
-   Break( oError )
+HB_FUNC( THROW )
+{
+   PHB_ITEM pError = hb_param( 1, HB_IT_ANY );
+
+   if( pError && HB_IS_OBJECT( pError ) )
+   {
+      PHB_ITEM pResult = hb_errLaunchSubst( pError );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 9101, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

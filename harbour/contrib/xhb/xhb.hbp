@@ -73,6 +73,7 @@ xhbscr.c
 xhbtrim.c
 xhbwith.c
 xstrdel.c
+xthrow.c
 xwin_reg.c
 xwin_ver.c
 
@@ -105,7 +106,6 @@ xhbmemo.prg
 xhbmt.prg
 xhbtedit.prg
 xhbver.prg
-xthrow.prg
 xhw32prn.prg
 
 hjwindow.prg

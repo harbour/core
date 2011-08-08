@@ -220,22 +220,22 @@ HB_FUNC( HB_COMSETERROR )
 
 HB_FUNC( HB_COMRECV )
 {
-  PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
-  char * pBuffer;
-  HB_SIZE nLen;
+   PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
+   char * pBuffer;
+   HB_SIZE nLen;
 
-  if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
-  {
-     if( HB_ISNUM( 3 ) )
-     {
-        long lRead = hb_parnl( 3 );
-        if( lRead >= 0 && lRead < ( long ) nLen )
-           nLen = lRead;
-     }
-     hb_retnl( hb_comRecv( hb_parni( 1 ), pBuffer, ( long ) nLen, hb_parnint( 4 ) ) );
-  }
-  else
-     hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
+   {
+      if( HB_ISNUM( 3 ) )
+      {
+         long lRead = hb_parnl( 3 );
+         if( lRead >= 0 && lRead < ( long ) nLen )
+            nLen = lRead;
+      }
+      hb_retnl( hb_comRecv( hb_parni( 1 ), pBuffer, ( long ) nLen, hb_parnint( 4 ) ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_COMSEND )
