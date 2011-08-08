@@ -1299,7 +1299,7 @@ static void FreeParams( DISPPARAMS * dispparam )
 
 HB_FUNC( __OLEISDISP )
 {
-   hb_retl( hb_oleItemGet( hb_param( 1, HB_IT_ANY ) ) != NIL );
+   hb_retl( hb_oleItemGet( hb_param( 1, HB_IT_ANY ) ) != NULL );
 }
 
 HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
