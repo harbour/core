@@ -60,7 +60,7 @@ HB_FUNC( __HB_XML_CDPU16MAP )
    if( cdp )
    {
       PHB_ITEM pMap = hb_itemArrayNew( UCHAR_MAX + 1 );
-      int tmp;
+      unsigned int tmp;
 
       for( tmp = 0; tmp <= UCHAR_MAX; ++tmp )
          hb_arraySetNI( pMap, tmp + 1, hb_cdpGetU16( cdp, ( HB_UCHAR ) tmp ) );

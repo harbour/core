@@ -431,8 +431,8 @@ static long _ft_skip( long iRecs )
                   iBytesRemaining = 0;
                }
             }
-         } while ( ( iBytesRemaining > 0 ) );
-      } while( ( iBytesRead == BUFFSIZE ) );
+         } while( iBytesRemaining > 0 );
+      } while( iBytesRead == BUFFSIZE );
    }
    else
    {

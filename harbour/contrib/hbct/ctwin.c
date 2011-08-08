@@ -1711,7 +1711,7 @@ static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
    PHB_GTCTW pCTW;
    int iWindow, iCurrWindow;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_PutChar(%p,%d,%d,%d,%d,%hu)", pGT, iRow, iCol, iColor, (int)bAttr, (int)usChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_PutChar(%p,%d,%d,%d,%d,%d)", pGT, iRow, iCol, iColor, (int)bAttr, (int)usChar));
 
    pCTW = HB_GTCTW_GET( pGT );
    iWindow = iCurrWindow = HB_CTW_GETCURRENT( pCTW );
