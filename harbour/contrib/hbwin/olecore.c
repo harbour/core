@@ -1216,12 +1216,16 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
 /* IDispatch parameters, return value handling */
 
-static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
+static void GetParams( DISPPARAMS * dispparam, HB_USHORT uiOffset, HB_BOOL fUseRef )
 {
    VARIANTARG   *pArgs = NULL, *pRefs;
    UINT         uiArgCount, uiArg, uiRefs;
 
    uiArgCount = ( UINT ) hb_pcount();
+   if( uiOffset > uiArgCount )
+      uiArgCount = 0;
+   else
+      uiArgCount -= uiOffset;
 
    if( uiArgCount > 0 )
    {
@@ -1230,7 +1234,7 @@ static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
       {
          for( uiArg = 1; uiArg <= uiArgCount; uiArg++ )
          {
-            if( HB_ISBYREF( uiArg ) )
+            if( HB_ISBYREF( uiOffset + uiArg ) )
                uiRefs++;
          }
       }
@@ -1241,15 +1245,15 @@ static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
       for( uiArg = 0; uiArg < uiArgCount; uiArg++ )
       {
          VariantInit( &pArgs[ uiArg ] );
-         if( fUseRef && HB_ISBYREF( uiArgCount - uiArg ) )
+         if( fUseRef && HB_ISBYREF( uiOffset + uiArgCount - uiArg ) )
          {
             VariantInit( pRefs );
-            hb_oleItemToVariantRef( pRefs, hb_param( uiArgCount - uiArg, HB_IT_ANY ),
+            hb_oleItemToVariantRef( pRefs, hb_param( uiOffset + uiArgCount - uiArg, HB_IT_ANY ),
                                     &pArgs[ uiArg ], NULL );
             ++pRefs;
          }
          else
-            hb_oleItemToVariantRef( &pArgs[ uiArg ], hb_param( uiArgCount - uiArg, HB_IT_ANY ), NULL, NULL );
+            hb_oleItemToVariantRef( &pArgs[ uiArg ], hb_param( uiOffset + uiArgCount - uiArg, HB_IT_ANY ), NULL, NULL );
       }
    }
 
@@ -1259,7 +1263,7 @@ static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
    dispparam->cNamedArgs = 0;
 }
 
-static void PutParams( DISPPARAMS * dispparam, HB_USHORT uiClass )
+static void PutParams( DISPPARAMS * dispparam, HB_USHORT uiOffset, HB_USHORT uiClass )
 {
    VARIANTARG* pRefs = &dispparam->rgvarg[ dispparam->cArgs ];
    PHB_ITEM pItem = NULL;
@@ -1267,12 +1271,12 @@ static void PutParams( DISPPARAMS * dispparam, HB_USHORT uiClass )
 
    for( uiArg = 0; uiArg < dispparam->cArgs; uiArg++ )
    {
-      if( HB_ISBYREF( dispparam->cArgs - uiArg ) )
+      if( HB_ISBYREF( uiOffset + dispparam->cArgs - uiArg ) )
       {
          if( !pItem )
             pItem = hb_itemNew( NULL );
          hb_oleVariantToItemEx( pItem, &dispparam->rgvarg[ uiArg ], uiClass );
-         hb_itemParamStoreForward( ( HB_USHORT ) ( dispparam->cArgs - uiArg ), pItem );
+         hb_itemParamStoreForward( ( HB_USHORT ) ( uiOffset + dispparam->cArgs - uiArg ), pItem );
          VariantClear( pRefs );
          pRefs++;
       }
@@ -1413,7 +1417,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
 HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 {
-   IDispatch *    pDisp = hb_oleParam( 1 );
+   IDispatch *    pDisp;
    IEnumVARIANT * pEnum;
    VARIANTARG     variant;
    DISPPARAMS     dispparam;
@@ -1421,7 +1425,9 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    UINT           uiArgErr;
    HRESULT        lOleError;
 
-   hb_oleInit();
+   pDisp = hb_oleParam( 1 );
+   if( !pDisp )
+      return;
 
    if( hb_parl( 2 ) )
    {
@@ -1613,7 +1619,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          DISPID     lPropPut = DISPID_PROPERTYPUT;
 
          memset( &excep, 0, sizeof( excep ) );
-         GetParams( &dispparam, HB_FALSE );
+         GetParams( &dispparam, 0, HB_FALSE );
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
@@ -1643,14 +1649,14 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    {
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam, HB_TRUE );
+      GetParams( &dispparam, 0, HB_TRUE );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
                                             DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                             &dispparam, &variant, &excep, &uiArgErr );
 
-      PutParams( &dispparam, uiClass );
+      PutParams( &dispparam, 0, uiClass );
       FreeParams( &dispparam );
 
       hb_oleVariantToItemEx( hb_stackReturnItem(), &variant, uiClass );
@@ -1704,7 +1710,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       DISPID     lPropPut = DISPID_PROPERTYPUT;
 
       memset( &excep, 0, sizeof( excep ) );
-      GetParams( &dispparam, HB_FALSE );
+      GetParams( &dispparam, 0, HB_FALSE );
       dispparam.rgdispidNamedArgs = &lPropPut;
       dispparam.cNamedArgs = 1;
 
@@ -1722,14 +1728,14 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
      /* Access */
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam, HB_TRUE );
+      GetParams( &dispparam, 0, HB_TRUE );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_VALUE, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
                                             DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                             &dispparam, &variant, &excep, &uiArgErr );
 
-      PutParams( &dispparam, uiClass );
+      PutParams( &dispparam, 0, uiClass );
       FreeParams( &dispparam );
 
       hb_oleVariantToItemEx( hb_stackReturnItem(), &variant, uiClass );
@@ -1754,6 +1760,117 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError, NULL,
                     hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) );
    }
+}
+
+
+HB_FUNC( __OLEGETNAMEID )
+{
+   IDispatch * pDisp;
+
+   pDisp = hb_oleParam( 1 );
+   if( pDisp )
+   {
+      OLECHAR * pwszMethod;
+      HRESULT lOleError;
+      void * hMethod;
+      DISPID dispid;
+
+      pwszMethod = ( HB_WCHAR * ) hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hMethod, NULL );
+      lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
+                                                   &pwszMethod, 1, LOCALE_USER_DEFAULT, &dispid );
+      hb_strfree( hMethod );
+      if( lOleError == S_OK )
+         hb_retnint( dispid );
+   }
+}
+
+static void hb_oleInvokeCall( WORD wFlags )
+{
+   HB_USHORT uiOffset = 0;
+   PHB_ITEM pObject;
+   IDispatch * pDisp;
+
+   pObject = hb_stackSelfItem();
+   if( HB_IS_NIL( pObject ) )
+      pObject = hb_param( ++uiOffset, HB_IT_ANY );
+
+   pDisp = pObject ? hb_oleItemGetDispatch( pObject ) : NULL;
+   if( pDisp )
+   {
+      DISPID      dispid;
+      DISPPARAMS  dispparam;
+      VARIANTARG  variant;
+      EXCEPINFO   excep;
+      UINT        uiArgErr;
+      HRESULT     lOleError;
+      HB_USHORT   uiClass;
+      OLECHAR*    pwszMethod;
+      void*       hMethod;
+
+      uiClass = hb_objGetClass( pObject );
+      ++uiOffset;
+      pwszMethod = ( HB_WCHAR * ) hb_parstr_u16( uiOffset, HB_CDP_ENDIAN_NATIVE, &hMethod, NULL );
+      if( pwszMethod )
+      {
+         lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
+                                                      &pwszMethod, 1, LOCALE_USER_DEFAULT, &dispid );
+         hb_strfree( hMethod );
+      }
+      else
+      {
+         dispid = ( DISPID ) hb_parnint( uiOffset );
+         lOleError = S_OK;
+      }
+      if( lOleError == S_OK )
+      {
+         DISPID lPropPut = DISPID_PROPERTYPUT;
+         HB_BOOL fPut = wFlags == DISPATCH_PROPERTYPUT;
+
+         if( wFlags == DISPATCH_PROPERTYGET )
+            uiOffset = hb_pcount();
+         memset( &excep, 0, sizeof( excep ) );
+         VariantInit( &variant );
+         GetParams( &dispparam, uiOffset, !fPut );
+         if( fPut )
+         {
+            dispparam.rgdispidNamedArgs = &lPropPut;
+            dispparam.cNamedArgs = 1;
+         }
+
+         lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
+                                               LOCALE_USER_DEFAULT, wFlags,
+                                               &dispparam, &variant, &excep, &uiArgErr );
+
+         if( !fPut )
+            PutParams( &dispparam, uiOffset, uiClass );
+         FreeParams( &dispparam );
+
+         hb_oleVariantToItemEx( hb_stackReturnItem(), &variant, uiClass );
+         VariantClear( &variant );
+
+         hb_oleSetError( lOleError );
+         if( lOleError != S_OK )
+            hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+         return;
+      }
+   }
+   else
+      hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( __OLEINVOKEMETHOD )
+{
+   hb_oleInvokeCall( DISPATCH_METHOD );
+}
+
+HB_FUNC( __OLEINVOKEGET )
+{
+   hb_oleInvokeCall( DISPATCH_PROPERTYGET );
+}
+
+HB_FUNC( __OLEINVOKEPUT )
+{
+   hb_oleInvokeCall( DISPATCH_PROPERTYPUT );
 }
 
 

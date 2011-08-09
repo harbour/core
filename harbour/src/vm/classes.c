@@ -372,6 +372,8 @@ static HB_USHORT s_uiNumericClass   = 0;
 static HB_USHORT s_uiSymbolClass    = 0;
 static HB_USHORT s_uiPointerClass   = 0;
 
+static HB_USHORT s_uiObjectClass    = 0;
+
 /* ================================================ */
 
 /*
@@ -1069,12 +1071,14 @@ void hb_clsDoInit( void )
       { "HBARRAY", "HBBLOCK", "HBCHARACTER",
         "HBDATE", "HBTIMESTAMP",
         "HBHASH", "HBLOGICAL", "HBNIL", "HBNUMERIC",
-        "HBSYMBOL", "HBPOINTER" };
+        "HBSYMBOL", "HBPOINTER",
+        "HBOBJECT" };
    static HB_USHORT * s_puiHandles[] =
       { &s_uiArrayClass, &s_uiBlockClass, &s_uiCharacterClass,
         &s_uiDateClass, &s_uiTimeStampClass,
         &s_uiHashClass, &s_uiLogicalClass, &s_uiNilClass, &s_uiNumericClass,
-        &s_uiSymbolClass, &s_uiPointerClass };
+        &s_uiSymbolClass, &s_uiPointerClass,
+        &s_uiObjectClass };
 
    HB_STACK_TLS_PRELOAD
    int i;
@@ -3305,10 +3309,16 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                      return 0;
 
                   /* Ok, this bucket is empty */
-                  if( pMethod->pMessage == NULL )
+                  if( pMethod->pMessage == NULL ||
+                      ( hb_clsCanClearMethod( pMethod, HB_FALSE ) &&
+                        ( pMethod->pFuncSym == &s___msgVirtual ||
+                          ( s_uiObjectClass != 0 &&
+                            pMethod->uiSprClass == s_uiObjectClass ) ) ) )
                   {
-                     /* Now, we can increment the msg count */
-                     pNewCls->uiMethods++;
+                     if( pMethod->pMessage == NULL )
+                        /* Now, we can increment the msg count */
+                        pNewCls->uiMethods++;
+
                      memcpy( pMethod, pSprCls->pMethods + n, sizeof( METHOD ) );
                      if( ! hb_clsUpdateHiddenMessages( pMethod, pMethod, pNewCls ) )
                      {
@@ -3353,6 +3363,10 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                   }
                }
             }
+            if( pSprCls->fHasOnError )
+               pNewCls->fHasOnError = HB_TRUE;
+            if( pSprCls->fHasDestructor )
+               pNewCls->fHasDestructor = HB_TRUE;
             pNewCls->nOpFlags |= pSprCls->nOpFlags;
             if( pSprCls->uiMutexOffset )
                pNewCls->uiMutexOffset = 1;
@@ -3655,7 +3669,8 @@ HB_FUNC( __CLSMODMSG )
                PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
                if( pBlock )
                {
-                  if( pFuncSym == &s___msgEvalInline )
+                  if( pFuncSym == &s___msgEvalInline &&
+                      pMethod->uiSprClass == uiClass )
                   {
                      hb_arraySet( s_pClasses[ pMethod->uiSprClass ]->pInlines,
                                   pMethod->uiData, pBlock );
