@@ -13,6 +13,7 @@ rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW, HB
 rem   create required packages beforehand.
 rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 rem - Run this from vanilla official source tree only.
+rem - Requires GNU sed tool in PATH
 
 echo ! Self: %0
 
@@ -57,7 +58,19 @@ xcopy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll 
 xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll         %HB_ABSROOT%bin\
 
 rem ; Create special implibs for Borland (requires BCC in PATH)
-for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib %%a
+rem   NOTE: Using intermediate .def files, because direct .dll to .lib conversion
+rem         is buggy in BCC55 and BCC58 (no other versions tested), leaving off
+rem         leading underscore from certain ("random") symbols, resulting in
+rem         unresolved externals, when trying to use. [vszakats]
+for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do (
+   "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%a"
+   echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
+   sed -f _hbtemp.sed < "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" > "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+   "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+   del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
+   del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+)
+del _hbtemp.sed
 
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\harbour.exe     %HB_ABSROOT%bin\harbour-x64.exe
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbformat.exe    %HB_ABSROOT%bin\hbformat-x64.exe
