@@ -63,7 +63,7 @@
 
 CREATE CLASS tIPClientSMTP FROM tIPClient
 
-   METHOD New( oUrl, bTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl, lTLS )
    METHOD Close()
    METHOD Write( cData, nLen, bCommit )
@@ -87,16 +87,9 @@ CREATE CLASS tIPClientSMTP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientSMTP
+METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientSMTP
 
-   LOCAL oLog
-
-   IF ISLOGICAL( bTrace ) .AND. bTrace
-      oLog := tIPLog():New( "smtp" )
-      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ENDIF
-
-   ::super:New( oUrl, bTrace, oCredentials )
+   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "smtp", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "smtps", 465, 25 )
    ::nConnTimeout := 50000

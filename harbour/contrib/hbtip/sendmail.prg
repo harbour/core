@@ -57,7 +57,7 @@
 
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
                       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
-                      bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
+                      xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
                       lTLS, cSMTPPass, cCharset, cEncoding )
    /*
    cServer    -> Required. IP or domain name of the mail server
@@ -74,7 +74,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    cPopServer -> Required. POP3 server name or address
    nPriority  -> Optional. Email priority: 1=High, 3=Normal (Standard), 5=Low
    lRead      -> Optional. If set to .T., a confirmation request is send. Standard setting is .F.
-   bTrace     -> Optional. If set to .T., a log file is created (smtp-<nNr>.log). Standard setting is NIL.
+   xTrace     -> Optional. If set to .T., a log file is created (smtp-<n>.log). Standard setting is .F.
                            If a block is passed, it will be called for each log event with the message a string, no param on session close.
    lPopAuth   -> Optional. Do POP3 authentication before sending mail.
    lNoAuth    -> Optional. Disable Autentication methods
@@ -197,7 +197,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       BEGIN SEQUENCE
          oUrl1 := tUrl():New( iif( lTLS, "pop3s://" , "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
-         opop:= tIPClientPOP():New( oUrl1, bTrace )
+         opop:= tIPClientPOP():New( oUrl1, xTrace )
          IF oPop:Open()
             oPop:Close()
          ENDIF
@@ -226,7 +226,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
    BEGIN SEQUENCE
-      oInmail := tIPClientSMTP():New( oUrl, bTrace )
+      oInmail := tIPClientSMTP():New( oUrl, xTrace )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -291,7 +291,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       BEGIN SEQUENCE
-         oInmail := tIPClientSMTP():New( oUrl, bTrace )
+         oInmail := tIPClientSMTP():New( oUrl, xTrace )
       RECOVER
          lReturn := .F.
       END SEQUENCE

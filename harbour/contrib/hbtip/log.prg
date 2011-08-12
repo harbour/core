@@ -60,6 +60,7 @@ CREATE CLASS TIPLOG
    METHOD New( cFileName )
    METHOD Add( cMsg )
    METHOD Close()
+   METHOD Clear()
 
    PROTECTED:
 
@@ -121,3 +122,6 @@ METHOD Close() CLASS TIPLOG
    ENDIF
 
    RETURN .F.
+
+METHOD Clear() CLASS TIPLOG
+   RETURN ::Close() .AND. FErase( ::cFileName ) == 0

@@ -64,7 +64,7 @@
 
 CREATE CLASS tIPClientPOP FROM tIPClient
 
-   METHOD New( oUrl, bTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
    METHOD OpenDigest( cUrl )
    METHOD Close( lAutoQuit )
@@ -84,15 +84,9 @@ CREATE CLASS tIPClientPOP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientPOP
-   LOCAL oLog
+METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientPOP
 
-   IF ISLOGICAL( bTrace ) .AND. bTrace
-      oLog := tIPLog():New( "pop3" )
-      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ENDIF
-
-   ::super:New( oUrl, bTrace, oCredentials )
+   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "pop3", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "pop3s" .OR. ::oUrl:cProto == "pops", 995, 110 )
    ::nConnTimeout := 10000

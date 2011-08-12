@@ -135,7 +135,7 @@ CREATE CLASS tIPClient
    VAR cProxyUser
    VAR cProxyPassword
 
-   METHOD New( oUrl, bTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
 
    METHOD EnableTLS( lEnable )
@@ -181,8 +181,9 @@ CREATE CLASS tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
+METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
    LOCAL oErr
+   LOCAL oLog
 
    LOCAL aProtoAccepted := { "ftp", "http", "pop", "smtp" }
 #if defined( HB_HAS_OPENSSL )
@@ -190,6 +191,14 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
 #else
    LOCAL aProtoAcceptedSSL := {}
 #endif
+
+   IF ISCHARACTER( xTrace ) .OR. ;
+      ( ISLOGICAL( xTrace ) .AND. xTrace )
+      oLog := tIPLog():New( iif( ISCHARACTER( xTrace ), xTrace, NIL ) )
+      ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
+   ELSEIF ISBLOCK( xTrace )
+      ::bTrace := xTrace
+   ENDIF
 
    IF ISCHARACTER( oUrl )
       oUrl := tUrl():New( oUrl )
@@ -232,7 +241,6 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
 
    ::oUrl         := oUrl
    ::oCredentials := oCredentials
-   ::bTrace       := bTrace
 
    RETURN self
 

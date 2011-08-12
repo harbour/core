@@ -110,9 +110,8 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    // Socket opened in response to a port command
    VAR SocketControl
    VAR SocketPortServer
-   VAR cLogFile
 
-   METHOD New( oUrl, bTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
    METHOD Read( nLen )
    METHOD Write( cData, nLen )
@@ -151,21 +150,13 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    METHOD RMD( cPath )
    METHOD listFiles( cFileSpec )
    METHOD MPut
-   METHOD StartCleanLogFile()
    METHOD fileSize( cFileSpec )
 ENDCLASS
 
 
-METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientFTP
+METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientFTP
 
-   LOCAL oLog
-
-   IF ISLOGICAL( bTrace ) .AND. bTrace
-      oLog := tIPLog():New( "ftp" )
-      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ENDIF
-
-   ::super:new( oUrl, bTrace, oCredentials )
+   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "ftp", xTrace ), oCredentials )
 
    ::nDefaultPort := 21
    ::nConnTimeout := 3000
@@ -179,11 +170,6 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientFTP
    ::RegPasv :=  hb_regexComp( "([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*)" )
 
    RETURN Self
-
-METHOD StartCleanLogFile() CLASS tIPClientFTP
-   FClose( ::nHandle )
-   ::nHandle := FCreate( ::cLogFile )
-   RETURN NIL
 
 METHOD Open( cUrl ) CLASS tIPClientFTP
 
@@ -792,44 +778,51 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
          nStart          := nEnd
 
          // # of links
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd               := hb_At( " ", cEntry, nStart )
          aFile[ F_LEN + 1 ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
          nStart             := nEnd
 
          // owner name
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd               := hb_At( " ", cEntry, nStart )
          aFile[ F_LEN + 2 ] := SubStr( cEntry, nStart, nEnd - nStart )
          nStart             := nEnd
 
          // group name
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd               := hb_At( " ", cEntry, nStart )
          aFile[ F_LEN + 3 ] := SubStr( cEntry, nStart, nEnd - nStart )
          nStart             := nEnd
 
          // file size
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd            := hb_At( " ", cEntry, nStart )
          aFile[ F_SIZE ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
          nStart          := nEnd
 
          // Month
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
          cMonth        := SubStr( cEntry, nStart, nEnd - nStart )
          cMonth        := PadL( AScan( aMonth, cMonth ), 2, "0" )
          nStart        := nEnd
 
          // Day
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
          cDay          := SubStr( cEntry, nStart, nEnd - nStart )
          nStart        := nEnd
 
          // year
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
          cYear         := SubStr( cEntry, nStart, nEnd - nStart )
          nStart        := nEnd
@@ -842,7 +835,8 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
          ENDIF
 
          // file name
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
+         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+         ENDDO
 
          aFile[ F_NAME ] := SubStr( cEntry, nStart )
          aFile[ F_DATE ] := hb_SToD( cYear + cMonth + cDay )

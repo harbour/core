@@ -71,7 +71,7 @@ CREATE CLASS tIPClientHTTP FROM tIPClient
    VAR cBoundary
    VAR aAttachments INIT {}
 
-   METHOD New( oUrl, bTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials )
    METHOD Get( cQuery )
    METHOD Post( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
@@ -91,16 +91,9 @@ CREATE CLASS tIPClientHTTP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientHTTP
+METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientHTTP
 
-   LOCAL oLog
-
-   IF ISLOGICAL( bTrace ) .AND. bTrace
-      oLog := tIPLog():New( "http" )
-      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ENDIF
-
-   ::super:new( oUrl, bTrace, oCredentials )
+   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "http", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "https", 443, 80 )
    ::nConnTimeout := 5000
