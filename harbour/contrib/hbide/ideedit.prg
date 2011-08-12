@@ -241,6 +241,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD spaces2tabs()
    METHOD removeTrailingSpaces()
    METHOD formatBraces()
+   METHOD upperCaseKeywords()
    METHOD findEx( cText, nFlags, nStart )
    METHOD highlightAll( cText )
    METHOD unHighlight()
@@ -1883,6 +1884,49 @@ METHOD IdeEdit:paintRequested( qPrinter )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:upperCaseKeywords()
+   LOCAL qDoc, cText, cRegEx, aMatches, aMatch, b_
+
+   qDoc := ::qEdit:document()
+
+   IF !( qDoc:isEmpty() )
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+
+      b_:= { 'function','procedure','thread','return','static','local','default', ;
+             'if','else','elseif','endif','end', ;
+             'docase','case','endcase','otherwise', ;
+             'switch','endswitch', ;
+             'do','while','exit','enddo','loop',;
+             'for','each','next','step','to','in',;
+             'with','replace','object','endwith','request',;
+             'nil','and','or','in','not','self',;
+             'class','endclass','method','data','var','destructor','inline','assign','access',;
+             'inherit','init','create','virtual','message', 'from', 'setget',;
+             'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
+             'error','handler','private','public' }
+      cRegEx := ""
+      aeval( b_, {|e| cRegEx += iif( empty( cRegEx ), "", "|" ) + "\b" + e + "\b" } )
+
+      aMatches := hb_regExAll( cRegEx, cText, .f., .f., 0, 1, .f. )
+
+      IF ! empty( aMatches )
+         FOR EACH aMatch IN aMatches
+            cText := stuff( cText, aMatch[ 2 ], aMatch[ 3 ] - aMatch[ 2 ] + 1, upper( aMatch[ 1 ] ) )
+         NEXT
+      ENDIF
+
+      qDoc:clear()
+      qDoc:setPlainText( cText )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:formatBraces()
    LOCAL qDoc, cText
 
@@ -2537,7 +2581,7 @@ FUNCTION hbide_isIndentableKeyword( cWord, oIde )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isHarbourKeyword( cWord, oIde )
+FUNCTION hbide_harbourKeywords()
    STATIC s_b_ := { ;
                     'function' => NIL,;
                     'procedure' => NIL,;
@@ -2600,9 +2644,15 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
                     'not' => NIL,;
                     'and' => NIL }
 
+   RETURN s_b_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isHarbourKeyword( cWord, oIde )
+
    HB_SYMBOL_UNUSED( oIde )
 
-   RETURN Lower( cWord ) $ s_b_
+   RETURN Lower( cWord ) $ hbide_harbourKeywords()
 
 /*----------------------------------------------------------------------*/
 

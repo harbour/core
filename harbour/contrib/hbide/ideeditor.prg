@@ -126,6 +126,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD gotoMark( nIndex )
    METHOD goto( nLine )
    METHOD formatBraces()
+   METHOD upperCaseKeywords()
    METHOD removeTabs()
    METHOD RemoveTrailingSpaces()
    METHOD getSelectedText()
@@ -974,6 +975,15 @@ METHOD IdeEditsManager:insertText( cKey )
       ENDCASE
 
       oEdit:insertText( cText )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:upperCaseKeywords()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:upperCaseKeywords()
    ENDIF
    RETURN Self
 

@@ -947,6 +947,7 @@ METHOD HbIde:execAction( cKey )
    CASE "InsertExternalFile"
    CASE "ZoomIn"
    CASE "ZoomOut"
+   CASE "UpperCaseKeywords"
    CASE "FormatBraces"
    CASE "RemoveTabs"
    CASE "Spaces2Tabs"
@@ -1077,6 +1078,9 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "ZoomOut"
       ::oEM:zoom( -1 )
+      EXIT
+   CASE "UpperCaseKeywords"
+      ::oEM:upperCaseKeywords()
       EXIT
    CASE "FormatBraces"
       ::oEM:formatBraces()

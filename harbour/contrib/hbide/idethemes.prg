@@ -226,7 +226,7 @@ METHOD IdeThemes:create( oIde, cThemesFile )
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message', 'from', 'setget',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
-          'error','handler' }
+          'error','handler','private','public' }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + e + "\b" } )
    aadd( ::aPatterns, { "HarbourKeywords"   , s, .f. } )
 
