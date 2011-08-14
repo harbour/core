@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -73,31 +73,24 @@ FUNCTION Main( cSource, cScreen )
 
    SET SCOREBOARD OFF
    SET EPOCH TO 1950
-   
-   Wvt_SetGui( .f. )
-   Wvt_SetFont( "Courier New", 18, 0, 0 )
-   Wvt_SetMouseMove( .t. )
-   
+
    SetColor( "N/W" )
    CLS
-   ? "Press ESC TO EXIT ... "
 
-   hb_gtInfo( HB_GTI_WINTITLE, "Harbour CUI Forms Designer v1.0" )
+   hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer v1.0" )
+   hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+   hb_gtInfo( HB_GTI_ICONFILE  , "../../packages/harb_win.ico" )
 
-   hb_threadStart( {|| thd_dgn_Screen( cSource, cScreen ) } )
-      
-   DO WHILE inkey() != 27
-      
-   ENDDO    
+   dgn_Screen( cSource, cScreen )
 
    RETURN cSource
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 FUNCTION HB_GTSYS()
 
-   REQUEST HB_GT_WVG_DEFAULT
-   
+   REQUEST HB_GT_WVT_DEFAULT
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -66,8 +66,8 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbcuied.ch"
-#include "inkey.ch"  
-#include "wvtwin.ch" 
+#include "inkey.ch"
+#include "wvtwin.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -102,11 +102,11 @@ FUNCTION ScrDisplay( scn_ )
    COLOR scn_[ SCN_CLR_RULER ]
 
    scrMsg()
-   
+
    setcolor( scn_[ SCN_CLR_WINDOW ] )
    setCursor(2)
    dispend()
-   
+
    RETURN NIL
 
 //----------------------------------------------------------------------//
@@ -227,7 +227,7 @@ FUNCTION scrDispGhost(obj_,scn_,gst_)
    LOCAL i,j,nRow,nCol
 
    HB_SYMBOL_UNUSED( obj_ )
-   
+
    DispBegin()
    FOR i := gst_[1] TO gst_[3]
       IF (nRow := i+scn_[SCN_ROW_DIS]) <= scn_[SCN_BOTTOM]
@@ -478,15 +478,13 @@ FUNCTION scrMouse( obj_, scn_, nEvent )
 
          lAnchored := .t.
          scn_[ SCN_LASTKEY ] := K_F6
-         Wvt_SetPointer( WVT_IDC_SIZEALL )
-         Wvt_SetMousePos( scn_[ SCN_ROW_CUR ],scn_[ SCN_COL_CUR ] )
+//         Wvt_SetMousePos( scn_[ SCN_ROW_CUR ], scn_[ SCN_COL_CUR ] )
       ENDIF
 
    ELSEIF nEvent == K_MMLEFTDOWN .AND. lAnchored
 
    ELSEIF nEvent == K_LBUTTONUP  .AND. lAnchored
-      Wvt_SetPointer( WVT_IDC_ARROW )
-      Wvt_SetMousePos( scn_[ SCN_ROW_CUR ],scn_[ SCN_COL_CUR ] )
+//      Wvt_SetMousePos( scn_[ SCN_ROW_CUR ], scn_[ SCN_COL_CUR ] )
       SetCursor( nCursor )
       lAnchored := .f.
       __keyboard( chr( K_ENTER ) )
@@ -496,7 +494,7 @@ FUNCTION scrMouse( obj_, scn_, nEvent )
    ENDIF
 
    RETURN .t.
-   
+
 //----------------------------------------------------------------------//
 
 FUNCTION scrToMouse( scn_, nmRow, nmCol )

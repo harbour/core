@@ -12,9 +12,9 @@
 -mt
 -gui
 
--gtwvg
+-gtwvt
 
-..\gtwvg\gtwvg.hbc
+#..\gtwvg\gtwvg.hbc
 
 cu_main.prg
 cu_desgn.prg

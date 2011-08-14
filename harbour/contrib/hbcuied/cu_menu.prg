@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -65,8 +65,8 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include "hbcuied.ch" 
-#include "common.ch"  
+#include "hbcuied.ch"
+#include "common.ch"
 #include "hbgtinfo.ch"
 
 //----------------------------------------------------------------------//
@@ -76,46 +76,19 @@
 
 //----------------------------------------------------------------------//
 
-FUNCTION thd_dgn_Screen( cSource )
-   LOCAL rpt_, oCrt
-   
-   DEFAULT cSource TO "Untitled"
-   
-   SetMTModule( .t. )
-   
-   oCrt := WvgCrt():New( , , { -1,-1 }, { 24,79 }, , .f. )
-   oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
-   oCrt:icon       := "..\..\package\harb_win.ico"
-   oCrt:create()
-   oCrt:closable   := .f.
-   oCrt:showWindow()
-
-   hb_gtInfo( HB_GTI_WINTITLE, 'Harbour Screen Designer - ' + cSource )
-   SetColor( 'N/W' )
-   CLS
-   SetOCrt( oCrt )
-
-   rpt_:= dgn_Screen( cSource, REP_FOR_MDL )
-
-   oCrt:destroy()
-
-   RETURN rpt_
-   
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION dgn_Screen( cObject, nMode )
+FUNCTION dgn_Screen( cObject, cScreen )
    LOCAL rpt_:={}
    LOCAL bErr
 
    bErr := errorBlock( {|| Break() } )
 
-   IF ! empty( rpt_:= rptDefine( cObject, rpt_, nMode,/*struct_*/, /*cRpt*/, 1, REP_MSG_WAIT_YES ) )
-      rptSave( cObject, /*cRpt*/, rpt_, 1, nMode, REP_MSG_WAIT_YES )
+   IF ! empty( rpt_:= rptDefine( cObject, rpt_, REP_FOR_MDL,/*struct_*/, cScreen, 1, REP_MSG_WAIT_YES ) )
+      rptSave( cObject, /*cRpt*/, rpt_, 1, REP_FOR_MDL, REP_MSG_WAIT_YES )
    ENDIF
 
    errorBlock( bErr )
 
-   RETURN rpt_
+   RETURN NIL
 
 //---------------------------------------------------------------------//
 
@@ -126,7 +99,7 @@ STATIC FUNCTION rptDefine( cObject,rpt_,nMode,struct_,cRpt,nWhere,lMsg )
    obj_:= a_[ 1 ]
    scn_:= a_[ 2 ]
 
-   a_  := Operate(obj_,scn_)                      //  Common TO All Modes
+   a_  := Operate(obj_,scn_)
 
    obj_:= a_[ 1 ]
    scn_:= a_[ 2 ]
@@ -181,8 +154,8 @@ FUNCTION rpt2ObjScn( cObject,rpt_,nMode,struct_,cRpt,nWhere,lMsg )
    LOCAL i, n
 
    HB_SYMBOL_UNUSED( struct_ )
-   
-   rpt_:= IF(rpt_ == NIL .OR. empty(rpt_), rptInit(), rpt_)
+
+   rpt_:= iif(rpt_ == NIL .OR. empty(rpt_), rptInit(), rpt_)
    obj_:= scrScn2obj(rpt_,0)
 
    DO CASE
@@ -196,7 +169,7 @@ FUNCTION rpt2ObjScn( cObject,rpt_,nMode,struct_,cRpt,nWhere,lMsg )
          scn_[SCN_PROPERTY] := prpStr2Mdl(rpt_[n,3])
       ENDIF
       FOR i := 1 TO len(rpt_)                        //  Fields
-         IF inRange(rpt_[i,2],2001,3000)
+         IF VouchInRange(rpt_[i,2],2001,3000)
             aadd(scn_[SCN_FIELDS], prpStr2Fld(rpt_[i,3]))
          ENDIF
       NEXT
@@ -220,7 +193,7 @@ FUNCTION objScn2Rpt(obj_,scn_,nMode)
 
    DO CASE
    CASE nMode == REP_FOR_MDL
-      aeval(obj_,{|e_| IF(e_[OBJ_ROW]==0,'',aadd(rpt_,{'',0,scrObj2str(e_)} )) })
+      aeval(obj_,{|e_| iif(e_[OBJ_ROW]==0,'',aadd(rpt_,{'',0,scrObj2str(e_)} )) })
       IF !empty(scn_[SCN_PROPERTY])
          aadd(rpt_, {'',51,prpMdl2Str(scn_[SCN_PROPERTY]) })
       ENDIF

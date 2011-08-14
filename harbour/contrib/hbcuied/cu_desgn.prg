@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -66,27 +66,8 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbcuied.ch"
-#include "common.ch" 
-#include "inkey.ch"  
-
-//----------------------------------------------------------------------//
-
-#define K_WVT_FULLSCREEN  299701
-
-#define K_WVT_BITMAP      299705
-#define K_WVT_FRAME       299706
-#define K_WVT_ELLIPSE     299707
-#define K_WVT_LINE_H      299708
-#define K_WVT_LINE_V      299709
-#define K_WVT_GRID        299710
-#define K_WVT_BARCODE     299711
-#define K_WVT_TEXTBOX     299712
-
-#define K_WVT_CARRY       299721
-#define K_WVT_BROUGHT     299722
-#define K_WVT_SUMMARY     299723
-#define K_WVT_GROUP       299724
-#define K_WVT_MATRIX      299725
+#include "common.ch"
+#include "inkey.ch"
 
 //----------------------------------------------------------------------//
 
@@ -105,9 +86,9 @@ FUNCTION Operate( obj_,scn_ )
    BEGIN SEQUENCE
 
    DO WHILE .t.
-      scn_[SCN_ROW_PREV] := scn_[SCN_ROW_CUR]
-      scn_[SCN_COL_PREV] := scn_[SCN_COL_CUR]
-      scn_[SCN_REFRESH]  := OBJ_REFRESH_NIL
+      scn_[ SCN_ROW_PREV ] := scn_[ SCN_ROW_CUR ]
+      scn_[ SCN_COL_PREV ] := scn_[ SCN_COL_CUR ]
+      scn_[ SCN_REFRESH  ] := OBJ_REFRESH_NIL
 
       setCursor( .t. )
       setCursor( IF( readInsert(),2,1 ) )
@@ -120,20 +101,20 @@ FUNCTION Operate( obj_,scn_ )
       ENDDO
 
       DO CASE
-      CASE scn_[SCN_GRAPHICS] .AND. ascan( grf_,scn_[ SCN_LASTKEY ] ) > 0
+      CASE scn_[ SCN_GRAPHICS ] .AND. ascan( grf_,scn_[ SCN_LASTKEY ] ) > 0
          //processkey()
 
       CASE scrMouse( obj_, scn_, scn_[ SCN_LASTKEY ] )
 #IF 0
       CASE scn_[ SCN_LASTKEY ] == K_ALT_F6
          graphChar()
-         scn_[SCN_GRAPHICS] := !scn_[SCN_GRAPHICS]
-         scn_[SCN_REFRESH ] := OBJ_REFRESH_ALL
+         scn_[ SCN_GRAPHICS ] := ! scn_[ SCN_GRAPHICS ]
+         scn_[ SCN_REFRESH  ] := OBJ_REFRESH_ALL
 #ENDIF
       /*  Save Report */
       CASE scn_[ SCN_LASTKEY ] == K_ESC
          //EXIT
-         Wvt_KeyBoard( K_CTRL_ENTER )
+         __KeyBoard( chr( K_CTRL_ENTER ) )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_ENTER
          EXIT
 
@@ -150,102 +131,80 @@ FUNCTION Operate( obj_,scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_MWFORWARD
          scrMovUp( scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_HOME
-         IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN]==DGN_SCREEN
-            scn_[SCN_COL_REP] -= (scn_[SCN_COL_CUR] - scn_[SCN_LEFT]  )
-            scn_[SCN_COL_CUR] := scn_[SCN_LEFT]
-         ELSE
-            scn_[SCN_COL_REP] := 1
-            scn_[SCN_COL_CUR] := scn_[SCN_LEFT]
-            scn_[SCN_COL_DIS] := scn_[SCN_LEFT]-1
-            scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
-         ENDIF
+         scn_[ SCN_COL_REP ] := 1
+         scn_[ SCN_COL_CUR ] := scn_[ SCN_LEFT ]
+         scn_[ SCN_COL_DIS ] := scn_[ SCN_LEFT ]-1
+         scn_[ SCN_REFRESH ] := OBJ_REFRESH_ALL
       CASE scn_[ SCN_LASTKEY ] == K_END
-         IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN]==DGN_SCREEN
-            scn_[SCN_COL_REP] += (scn_[SCN_RIGHT] - scn_[SCN_COL_CUR] )
-            scn_[SCN_COL_CUR] := scn_[SCN_RIGHT]
-         ELSE
-            scn_[SCN_COL_REP] := scn_[SCN_COL_MAX]
-            scn_[SCN_COL_CUR] := scn_[SCN_RIGHT]
-            scn_[SCN_COL_DIS] := (scn_[SCN_LEFT]-1) - (scn_[SCN_COL_REP]-(scn_[SCN_RIGHT]-scn_[SCN_LEFT]+1))
-            scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
-         ENDIF
+         scn_[SCN_COL_REP] := scn_[SCN_COL_MAX]
+         scn_[SCN_COL_CUR] := scn_[SCN_RIGHT]
+         scn_[SCN_COL_DIS] := (scn_[SCN_LEFT]-1) - (scn_[SCN_COL_REP]-(scn_[SCN_RIGHT]-scn_[SCN_LEFT]+1))
+         scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
       CASE scn_[ SCN_LASTKEY ] == K_PGUP
-         IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN]==DGN_SCREEN
-            scn_[SCN_ROW_REP] -= ( scn_[ SCN_ROW_CUR ] - scn_[ SCN_TOP ] + 1 )
-            scn_[SCN_ROW_CUR] := scn_[SCN_TOP]
-         ELSE
-            //  scrMovPgUp(scn_)
-            scn_[SCN_ROW_REP] := 1
-            scn_[SCN_ROW_CUR] := scn_[SCN_TOP]
-            scn_[SCN_ROW_DIS] := scn_[SCN_TOP] - 1
-            scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
-         ENDIF
+         //  scrMovPgUp(scn_)
+         scn_[SCN_ROW_REP] := 1
+         scn_[SCN_ROW_CUR] := scn_[SCN_TOP]
+         scn_[SCN_ROW_DIS] := scn_[SCN_TOP] - 1
+         scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
       CASE scn_[ SCN_LASTKEY ] == K_PGDN
-         IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN]==DGN_SCREEN
-            scn_[SCN_ROW_REP] += (scn_[SCN_BOTTOM] - scn_[SCN_ROW_CUR] + 1)
-            scn_[SCN_ROW_CUR] := scn_[SCN_BOTTOM]
-         ELSE
-            //  scn_[SCN_ROW_REP] := scn_[SCN_REP_LINES]
-            //  scn_[SCN_ROW_CUR] := scn_[SCN_BOTTOM]
-         ENDIF
-         
+         //  scn_[SCN_ROW_REP] := scn_[SCN_REP_LINES]
+         //  scn_[SCN_ROW_CUR] := scn_[SCN_BOTTOM]
+
       CASE scn_[ SCN_LASTKEY ] == K_INS
          readInsert( !readInsert() )
-         setcursor( iif( readInsert(),2,1 ) )
-         
+         setcursor( iif( readInsert(), 2, 1 ) )
+
       CASE scn_[ SCN_LASTKEY ] == K_ENTER
          IF scn_[ SCN_MODE ] == OBJ_MODE_SELECT .AND. scn_[ SCN_OBJ_SELECTED ] > 0
             obj_[ scn_[ SCN_OBJ_SELECTED ], OBJ_SECTION ] := scrSecCur( scn_, scn_[ SCN_ROW_REP ] )
-            //IF scn_[SCN_DESIGN] <> DGN_SCREEN .OR. scn_[SCN_DESIGN] <> DGN_MODULE
-               scn_[ SCN_COL_MAX ]   := max( scn_[ SCN_COL_MAX ], obj_[ scn_[ SCN_OBJ_SELECTED ], OBJ_TO_COL ] + 1 )
-            //ENDIF
+            scn_[ SCN_COL_MAX ]   := max( scn_[ SCN_COL_MAX ], obj_[ scn_[ SCN_OBJ_SELECTED ], OBJ_TO_COL ] + 1 )
             scn_[ SCN_MODE         ] := OBJ_MODE_IDLE
             scn_[ SCN_REFRESH      ] := OBJ_REFRESH_LINE
             scn_[ SCN_OBJ_SELECTED ] := 0
             scrMsg()
          ENDIF
-         
-      CASE inRange( scn_[ SCN_LASTKEY ], K_SPACE, 254 ) .AND. scn_[ SCN_MODE ] <> OBJ_MODE_SELECT
+
+      CASE VouchInRange( scn_[ SCN_LASTKEY ], K_SPACE, 254 ) .AND. scn_[ SCN_MODE ] <> OBJ_MODE_SELECT
          scrAddTxt( obj_, scn_, scn_[ SCN_LASTKEY ], 1 )
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F1                           //  Help
-         help('NWREPORT')
-         
+         help( 'NWREPORT' )
+
       CASE scn_[ SCN_LASTKEY ] == K_F2                           //  Calculator
          //calculate()
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F3                           //  OBJECT
          scrObject(obj_,scn_)
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F4                           //  Properties
          scrProperty(obj_,scn_)
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F7 .OR. scn_[ SCN_LASTKEY ] == K_ALT_C      //  Copy
          scrObjCopy(obj_,scn_)
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F8 .OR. scn_[ SCN_LASTKEY ] == K_ALT_V      //  Paste
          scrObjPas(obj_,scn_)
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F9                           //  Box
          scrAddBox( obj_,scn_,0 )
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_F10                          //  Fields
          scrAddFld( obj_,scn_,0 )
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_DEL
          IF ! empty( scn_[ SCN_TEXT_BLOCK_] )
-            obj_:= scrTextDel(obj_,scn_)
-            scrOrdObj(obj_,scn_)
-            scn_[SCN_MODE]         := 0
-            scn_[SCN_OBJ_SELECTED] := 0
-            scn_[SCN_OBJ_HILITE]   := 0
-            scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
+            obj_:= scrTextDel( obj_,scn_ )
+            scrOrdObj( obj_, scn_ )
+            scn_[ SCN_MODE         ] := 0
+            scn_[ SCN_OBJ_SELECTED ] := 0
+            scn_[ SCN_OBJ_HILITE   ] := 0
+            scn_[ SCN_REFRESH      ] := OBJ_REFRESH_ALL
          ELSEIF scrIsObjTxt( obj_,scn_ )
-            scrAddTxt(obj_,scn_,scn_[ SCN_LASTKEY ],2)
-         ELSEIF scn_[SCN_MODE] == OBJ_MODE_SELECT
+            scrAddTxt( obj_, scn_, scn_[ SCN_LASTKEY ], 2 )
+         ELSEIF scn_[ SCN_MODE ] == OBJ_MODE_SELECT
             obj_:= scrObjDel( obj_, scn_, scn_[ SCN_OBJ_SELECTED ] )
-            scn_[SCN_MODE]         := 0
-            scn_[SCN_OBJ_SELECTED] := 0
+            scn_[ SCN_MODE         ] := 0
+            scn_[ SCN_OBJ_SELECTED ] := 0
          ELSEIF scn_[ SCN_OBJ_HILITE ] > 0
             obj_:= scrObjDel( obj_, scn_, scn_[ SCN_OBJ_HILITE ] )
             scn_[ SCN_MODE         ] := 0
@@ -253,66 +212,57 @@ FUNCTION Operate( obj_,scn_ )
             scn_[ SCN_OBJ_HILITE   ] := 0
             scn_[ SCN_REFRESH      ] := OBJ_REFRESH_ALL
          ENDIF
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_BS
-         IF scn_[SCN_MODE] <> OBJ_MODE_SELECT
+         IF scn_[ SCN_MODE ] <> OBJ_MODE_SELECT
             IF scrMovLft( scn_ )
                IF scrIsObjTxt( obj_,scn_ )
                   scrAddTxt( obj_,scn_,scn_[ SCN_LASTKEY ], 3 )
                ENDIF
             ENDIF
          ENDIF
-         
+
       CASE scn_[ SCN_LASTKEY ] == K_ALT_B
-         scrAddBox( obj_,scn_,0 )
-         
+         scrAddBox( obj_, scn_, 0 )
+
       CASE scn_[ SCN_LASTKEY ] == K_ALT_F
-         scrAddFld( obj_,scn_,0 )
+         scrAddFld( obj_, scn_, 0 )
       CASE scn_[ SCN_LASTKEY ] == K_ALT_E
-         scrAddExp( obj_,scn_,0 )
+         //scrAddExp( obj_, scn_, 0 )
       CASE scn_[ SCN_LASTKEY ] == K_ALT_N
-         scrAddLine( obj_,scn_ )
+         scrAddLine( obj_, scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_ALT_O
-         scrDelLine( obj_,scn_ )
+         scrDelLine( obj_, scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_ALT_W
-         scrRepCol( obj_,scn_ )
-      CASE scn_[ SCN_LASTKEY ] == K_ALT_M
-         //arview( { scn_,obj_ } )
+         scrRepCol( obj_, scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_F6    //  Selection of Block
-         scrTextBlock( obj_,scn_ )
+         scrTextBlock( obj_, scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_F7    //  Move, Copy
-         obj_:= scrTextMove( obj_,scn_,1 )
+         obj_:= scrTextMove( obj_, scn_, 1 )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_F8    //  Move, Cut AND Paste
-         obj_:= scrTextMove( obj_,scn_,0 )
-      CASE scn_[ SCN_LASTKEY ] == K_SH_F4
-         scrForRows( obj_,scn_ )
+         obj_:= scrTextMove( obj_, scn_, 0 )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_Z
-         scrExport( obj_,scn_ )
+         scrExport( obj_, scn_ )
       CASE scn_[ SCN_LASTKEY ] == K_CTRL_W
-         scrImport( @obj_,@scn_ )
+         scrImport( @obj_, @scn_ )
       CASE scn_[ SCN_LASTKEY ] == HB_K_RESIZE
          ScrWvtConfig( obj_, scn_ )
          scrDisplay( scn_ )
-         scrMove( obj_,scn_ )
-         scrStatus( obj_,scn_ )
-      CASE scn_[ SCN_LASTKEY ] == K_WVT_FRAME
-         scrAddBox( obj_, scn_, 0, 2 )
-
-      CASE scn_[ SCN_LASTKEY ] == K_WVT_MATRIX
-         arview({scn_,obj_})
+         scrMove( obj_, scn_ )
+         scrStatus( obj_, scn_ )
 
       ENDCASE
 
-      IF scn_[SCN_MODE] == OBJ_MODE_SELECT
-         scn_[SCN_REFRESH] := iif( scn_[ SCN_REFRESH ] == OBJ_REFRESH_NIL,;
-                                    OBJ_REFRESH_LINE, scn_[ SCN_REFRESH ] )
-         scrUpdObjRC( obj_,scn_ )
+      IF scn_[ SCN_MODE    ] == OBJ_MODE_SELECT
+         scn_[ SCN_REFRESH ] := iif( scn_[ SCN_REFRESH ] == OBJ_REFRESH_NIL,;
+                                       OBJ_REFRESH_LINE, scn_[ SCN_REFRESH ] )
+         scrUpdObjRC( obj_, scn_ )
       ENDIF
 
       //  Check on which OBJECT cursor is placed
       //
-      nObj := scrChkObj( obj_,scn_ )
-      
+      nObj := scrChkObj( obj_, scn_ )
+
       IF nObj > 0 .AND. scn_[ SCN_MODE ] <> OBJ_MODE_SELECT
          scn_[ SCN_REFRESH    ] := iif( scn_[ SCN_REFRESH ] == OBJ_REFRESH_NIL, OBJ_REFRESH_LINE, scn_[ SCN_REFRESH ] )
          scn_[ SCN_OBJ_HILITE ] := nObj
@@ -325,19 +275,17 @@ FUNCTION Operate( obj_,scn_ )
       ENDIF
 
       IF nObj > 0 .AND. scn_[ SCN_LASTKEY ] == K_F5   //  Edit
-         IF     obj_[nObj,OBJ_TYPE] == OBJ_O_EXP
-            scrAddExp(obj_,scn_,nObj)
-         ELSEIF obj_[nObj,OBJ_TYPE] == OBJ_O_FIELD
-            scrAddFld(obj_,scn_,nObj)
-         ELSEIF obj_[nObj,OBJ_TYPE] == OBJ_O_TEXT
-            scrTxtProp(obj_,scn_,nObj)
-         ELSEIF obj_[nObj,OBJ_TYPE] == OBJ_O_BOX
-            scrAddBox(obj_,scn_,nObj)
+         IF obj_[ nObj, OBJ_TYPE ] == OBJ_O_FIELD
+            scrAddFld( obj_, scn_, nObj )
+         ELSEIF obj_[ nObj, OBJ_TYPE ] == OBJ_O_TEXT
+            scrTxtProp( obj_, scn_, nObj )
+         ELSEIF obj_[ nObj, OBJ_TYPE ] == OBJ_O_BOX
+            scrAddBox( obj_, scn_, nObj )
          ENDIF
       ENDIF
 
       //  Is the OBJECT selected
-      IF nObj > 0 .AND. scn_[ SCN_LASTKEY ] == K_F6 .AND. obj_[nObj,OBJ_TYPE] == OBJ_O_BOX 
+      IF nObj > 0 .AND. scn_[ SCN_LASTKEY ] == K_F6 .AND. obj_[ nObj,OBJ_TYPE] == OBJ_O_BOX
          scn_[SCN_MODE]         := OBJ_MODE_SELECT
          scn_[SCN_OBJ_SELECTED] := nObj
          scrOnFirstCol( obj_, scn_, nObj, { OBJ_O_BOX } )
@@ -346,22 +294,22 @@ FUNCTION Operate( obj_,scn_ )
       ELSEIF nObj > 0 .AND. scn_[ SCN_LASTKEY ] == K_F6 .AND. ! ( obj_[ nObj,OBJ_TYPE ] == OBJ_O_BOX )
          scn_[ SCN_MODE         ] := OBJ_MODE_SELECT
          scn_[ SCN_OBJ_SELECTED ] := nObj
-         scrOnFirstCol( obj_,scn_,nObj,{ OBJ_O_TEXT } )
+         scrOnFirstCol( obj_, scn_, nObj, { OBJ_O_TEXT } )
          scrMsg( "OBJECT is Selected. Use Arrow Keys TO Move, Enter TO Finished" )
-         
+
       ENDIF
 
-      IF     scn_[SCN_REFRESH] == OBJ_REFRESH_ALL
-         scrMove( obj_,scn_ )
-      ELSEIF scn_[SCN_REFRESH] == OBJ_REFRESH_LINE
-         IF scrIsBoxIn( obj_,scn_ )
-            scrMove( obj_,scn_ )
+      IF     scn_[ SCN_REFRESH ] == OBJ_REFRESH_ALL
+         scrMove( obj_, scn_ )
+      ELSEIF scn_[ SCN_REFRESH ] == OBJ_REFRESH_LINE
+         IF scrIsBoxIn( obj_, scn_ )
+            scrMove( obj_, scn_ )
          ELSE
-            scrMoveLine( obj_,scn_ )
+            scrMoveLine( obj_, scn_ )
          ENDIF
       ENDIF
 
-      scrStatus( obj_,scn_ )                        //  Status Line
+      scrStatus( obj_, scn_ )                        //  Status Line
 
       IF scn_[ SCN_GRAPHICS ]                       //  Graphics Window
          //grfRest()
@@ -500,34 +448,26 @@ FUNCTION scrMovPgUp(scn_)
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION scrExtn(scn_)
-   RETURN IF(scn_[SCN_DESIGN]==DGN_MODULE,'VMD',;
-          IF(scn_[SCN_DESIGN]==DGN_REPORT,'VRP',;
-          IF(scn_[SCN_DESIGN]==DGN_LABEL, 'VLB',;
-          IF(scn_[SCN_DESIGN]==DGN_DOCUMENT,'VDC','VSC'))))
-
-//----------------------------------------------------------------------//
-
 STATIC FUNCTION scrIsObjTxt(obj_,scn_)
    RETURN ascan(obj_, {|e_| e_[OBJ_TYPE]==OBJ_O_TEXT;
          .AND. ;
-         inRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
+         VouchInRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
          .AND. ;
-         inRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL]) }) > 0
+         VouchInRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL]) }) > 0
 
 //----------------------------------------------------------------------//
 
 FUNCTION scrChkObj(obj_,scn_)
    LOCAL n
    n := ascan(obj_,{|e_| IF(e_[OBJ_TYPE]==OBJ_O_BOX .OR. e_[OBJ_TYPE]==OBJ_O_BMP,.f.,;
-         inRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
+         VouchInRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
          .AND. ;
-         inRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL])) })
+         VouchInRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL])) })
    IF empty(n)  //  No OBJECT other than box, check box,BMP
       n := ascan(obj_,{|e_| ;
-         inRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
+         VouchInRange(scn_[SCN_ROW_REP],e_[OBJ_ROW],e_[OBJ_TO_ROW]) ;
          .AND. ;
-         inRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL]) })
+         VouchInRange(scn_[SCN_COL_REP],e_[OBJ_COL],e_[OBJ_TO_COL]) })
    ENDIF
    RETURN n
 
@@ -536,22 +476,22 @@ FUNCTION scrChkObj(obj_,scn_)
 STATIC FUNCTION scrUpdObjRC(obj_,scn_)
    LOCAL nW, nH
    LOCAL nObj := scn_[ SCN_OBJ_SELECTED ]
-   
-   IF nObj > 0 
+
+   IF nObj > 0
       nH := obj_[ nObj,OBJ_TO_ROW ] - obj_[ nObj,OBJ_ROW ]
       nW := obj_[ nObj,OBJ_TO_COL ] - obj_[ nObj,OBJ_COL ]
-         
+
       obj_[ nObj,OBJ_ROW    ] := scn_[SCN_ROW_REP]
       obj_[ nObj,OBJ_COL    ] := scn_[SCN_COL_REP]
-      
-      IF obj_[ nObj,OBJ_TYPE ] == OBJ_O_BOX 
+
+      IF obj_[ nObj,OBJ_TYPE ] == OBJ_O_BOX
          obj_[ nObj,OBJ_TO_ROW ] := obj_[ nObj,OBJ_ROW ] + nH
          obj_[ nObj,OBJ_TO_COL ] := obj_[ nObj,OBJ_COL ] + nW
-      ELSE    
+      ELSE
          obj_[ nObj,OBJ_TO_ROW ] := scn_[SCN_ROW_REP]
          obj_[ nObj,OBJ_TO_COL ] := scn_[SCN_COL_REP] + ;
                   len( obj_[ nObj, iif( obj_[ nObj,OBJ_TYPE ] == OBJ_O_TEXT, OBJ_EQN, OBJ_TEXT ) ] ) - 1
-      ENDIF                   
+      ENDIF
    ENDIF
    RETURN NIL
 
@@ -561,14 +501,10 @@ STATIC FUNCTION scrRepCol( obj_,scn_ )
    LOCAL oCol := scn_[SCN_COL_MAX], nCol
 
    HB_SYMBOL_UNUSED( obj_ )
-   
-   IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN] == DGN_SCREEN
-      RETURN NIL
-   ENDIF
 
    nCol := VouchGetSome( 'Number of Columns?', oCol )
 
-   IF !empty( nCol )   // .AND. nCol <> oCol
+   IF !empty( nCol )
       nCol := max( 10,nCol )
       scn_[SCN_COL_MAX ]             := nCol
       scn_[SCN_RIGHT   ]             := min( maxCol(), scn_[SCN_LEFT]+nCol-1 )
@@ -585,12 +521,6 @@ STATIC FUNCTION scrRepCol( obj_,scn_ )
 STATIC FUNCTION scrAddLine(obj_,scn_)
    LOCAL nRow := scn_[SCN_ROW_REP], nSct
 
-   #IF 0
-   IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN] == DGN_SCREEN
-      RETURN NIL
-   ENDIF
-   #ENDIF
-   
    scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
    scn_[SCN_BOTTOM ] := min(scn_[SCN_BOTTOM]+1,maxrow()-3)
 
@@ -608,42 +538,36 @@ STATIC FUNCTION scrAddLine(obj_,scn_)
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION scrDelLine(obj_,scn_)
-   LOCAL nRow := scn_[SCN_ROW_REP]
-   LOCAL nSct,n,isLast
+STATIC FUNCTION scrDelLine( obj_, scn_ )
+   LOCAL nRow := scn_[ SCN_ROW_REP ]
+   LOCAL nSct, n, isLast
 
-   #IF 0
-   IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN] == DGN_SCREEN
-      RETURN NIL
-   ENDIF
-   #ENDIF
-   
-   isLast := nRow == scn_[SCN_REP_LINES]
+   isLast := nRow == scn_[ SCN_REP_LINES ]
 
-   nSct   := scrSecOrd(scn_,nRow /*scn_[SCN_ROW_REP]*/)
-   IF scn_[SCN_SECTORS_,nSct,SCT_ROWS] == 1    //  A Single Row Must remain IN one group
+   nSct   := scrSecOrd( scn_,nRow /*scn_[SCN_ROW_REP]*/ )
+   IF scn_[ SCN_SECTORS_, nSct, SCT_ROWS ] == 1    //  A Single Row Must remain IN one group
       RETURN NIL
    ENDIF
 
-   scn_[SCN_SECTORS_,nSct,SCT_ROWS]--
-   scn_[SCN_REP_LINES]--
+   scn_[ SCN_SECTORS_, nSct,SCT_ROWS ]--
+   scn_[ SCN_REP_LINES ]--
 
-   IF scn_[SCN_REP_LINES] < (scn_[SCN_BOTTOM]-scn_[SCN_TOP]+1)
-      scn_[SCN_BOTTOM] := max(scn_[SCN_TOP],min(scn_[SCN_BOTTOM]-1,maxrow()-3))
+   IF scn_[ SCN_REP_LINES ] < (scn_[SCN_BOTTOM]-scn_[SCN_TOP]+1)
+      scn_[ SCN_BOTTOM ] := max( scn_[ SCN_TOP ], min( scn_[ SCN_BOTTOM ] - 1, maxrow() - 3 ) )
    ENDIF
 
    DO WHILE .t.
-      IF (n := ascan(obj_,{|e_| e_[OBJ_ROW] == nRow })) == 0
+      IF ( n := ascan( obj_, {|e_| e_[ OBJ_ROW ] == nRow } ) ) == 0
          EXIT
       ENDIF
-      aShrink(obj_,n)
+      VouchAShrink( obj_, n )
    ENDDO
-   IF empty(obj_)
-      aadd(obj_,scrObjBlank())
+   IF empty( obj_ )
+      aadd( obj_, scrObjBlank() )
    ENDIF
 
-   aeval(obj_,{|e_,i| IF(e_[OBJ_ROW] > nRow, obj_[i,OBJ_TO_ROW] -= 1,'') })
-   aeval(obj_,{|e_,i| IF(e_[OBJ_ROW] > nRow, obj_[i,OBJ_ROW]    -= 1,'') })
+   aeval( obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, obj_[ i, OBJ_TO_ROW ] -= 1, '' ) } )
+   aeval( obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, obj_[ i, OBJ_ROW    ] -= 1, '' ) } )
 
    IF isLast
       scn_[SCN_ROW_REP]--
@@ -657,11 +581,11 @@ STATIC FUNCTION scrDelLine(obj_,scn_)
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION scrIsBoxIn(obj_,scn_)
-   RETURN ascan(obj_,{|e_| inRange( scn_[SCN_ROW_REP ], e_[ OBJ_ROW ], e_[ OBJ_TO_ROW ] );
+   RETURN ascan( obj_,{|e_| VouchInRange( scn_[SCN_ROW_REP ], e_[ OBJ_ROW ], e_[ OBJ_TO_ROW ] );
                                      .AND. ;
-                           (e_[OBJ_TYPE] == OBJ_O_BOX ;
-                                       .OR. ;
-                           e_[OBJ_TYPE] == OBJ_O_BMP ) } )    >    0
+                            (e_[OBJ_TYPE] == OBJ_O_BOX ;
+                                     .OR. ;
+                             e_[OBJ_TYPE] == OBJ_O_BMP ) } )    >    0
 
 //----------------------------------------------------------------------//
 
@@ -680,9 +604,9 @@ STATIC FUNCTION scrObjCopy(obj_,scn_)
 
 STATIC FUNCTION scrObjPas(obj_,scn_)       //  Paste Copied OBJECT
    LOCAL nObj,o_,oldRow,oldCol,oldRow2,oldcol2
-   
+
    IF (nObj := scn_[SCN_OBJ_COPIED]) > 0 .AND. scn_[SCN_OBJ_SELECTED] == 0
-      o_:= aclone(obj_[nObj])
+      o_:= aclone(obj_[ nObj])
 
       oldRow  := o_[OBJ_ROW]    ; oldCol  := o_[OBJ_COL]
       oldRow2 := o_[OBJ_TO_ROW] ; oldCol2 := o_[OBJ_TO_COL]
@@ -704,20 +628,20 @@ STATIC FUNCTION scrObjPas(obj_,scn_)       //  Paste Copied OBJECT
 
       aadd(obj_,o_)
 
-      scrOrdObj(obj_)
-      scn_[SCN_OBJ_SELECTED] := 0
-      scn_[SCN_REFRESH     ] := OBJ_REFRESH_LINE
-      scn_[SCN_MODE        ] := 0
-      scn_[SCN_OBJ_COPIED  ] := 0
+      scrOrdObj( obj_ )
+      scn_[ SCN_OBJ_SELECTED ] := 0
+      scn_[ SCN_REFRESH      ] := OBJ_REFRESH_LINE
+      scn_[ SCN_MODE         ] := 0
+      scn_[ SCN_OBJ_COPIED   ] := 0
    ENDIF
    RETURN NIL
 
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION scrObjDel(obj_,scn_,nObj)
-   LOCAL s_:= obj_,nUnique := obj_[nObj,OBJ_OBJ_UNIQUE],n
+   LOCAL s_:= obj_,nUnique := obj_[ nObj,OBJ_OBJ_UNIQUE],n
 
-   aShrink(s_,nObj)
+   VouchAShrink(s_,nObj)
    IF empty(s_)
       aadd(s_,scrObjBlank())
    ENDIF
@@ -726,7 +650,7 @@ STATIC FUNCTION scrObjDel(obj_,scn_,nObj)
 
    IF scn_[SCN_DESIGN] == DGN_MODULE .AND. nUnique > 0
       IF (n := ascan(scn_[SCN_FIELDS],{|e_| e_[1] == nUnique })) > 0
-         aShrink(scn_[SCN_FIELDS],n)
+         VouchAShrink(scn_[SCN_FIELDS],n)
       ENDIF
    ENDIF
    RETURN s_
@@ -735,19 +659,19 @@ STATIC FUNCTION scrObjDel(obj_,scn_,nObj)
 
 STATIC FUNCTION scrObject(obj_,scn_)
    LOCAL nObj
-   LOCAL mnu_:={'Field                        Alt_F',;
-                'Boxes                        Alt_B',;
-                ' ',;
-                'Columns Width                Alt_W',;
-                'Graphic Characters           Alt_F6',;
-                '  ',;
-                'Copy OBJECT                  Alt_C',;
-                'Paste OBJECT                 Alt_V',;
+   LOCAL mnu_:={'Field                        Alt_F'  ,;
+                'Boxes                        Alt_B'  ,;
+                ' '                                   ,;
+                'Columns Width                Alt_W'  ,;
+                'Graphic Characters           Alt_F6' ,;
+                '  '                                  ,;
+                'Copy OBJECT                  Alt_C'  ,;
+                'Paste OBJECT                 Alt_V'  ,;
                 'Selection of Block           Ctrl_F6',;
                 'Copy Selection               Ctrl_F7',;
                 'Cut & Paste Selection        Ctrl_F8',;
-                '  ',;
-                'Matrix                       Alt_M' }
+                '  '                                  ,;
+                'Matrix                       Alt_M'   }
 
    LOCAL sel_:= {.t.,.t.,;
                  .f.,;
@@ -763,60 +687,59 @@ STATIC FUNCTION scrObject(obj_,scn_)
 
    DO CASE
    CASE nObj == 1                              //  Field
-      scrAddFld(obj_,scn_,0)
+      scrAddFld( obj_, scn_, 0 )
    CASE nObj == 2                              //  Box
-      scrAddBox( obj_,scn_,0 )
+      scrAddBox( obj_, scn_, 0 )
    CASE nObj == 3                              //  Blank
-      
+
    CASE nObj == 4                              //  Columns
-      scrRepCol(obj_,scn_)
+      scrRepCol( obj_, scn_ )
    CASE nObj == 5                              //  Graphcs
       //graphChar()
-      scn_[SCN_GRAPHICS] := !scn_[SCN_GRAPHICS]
+      scn_[ SCN_GRAPHICS ] := ! scn_[ SCN_GRAPHICS ]
    CASE nObj == 6                              //  Blank
-      
-   CASE nObj == 7                             //  Copy
-      scrObjCopy(obj_,scn_)
-   CASE nObj ==81                             //  Paste
-      scrObjPas(obj_,scn_)
-   CASE nObj == 9                             //  Block Selection
-      scrTextBlock(obj_,scn_)
+
+   CASE nObj == 7                              //  Copy
+      scrObjCopy( obj_, scn_ )
+   CASE nObj ==81                              //  Paste
+      scrObjPas( obj_, scn_)
+   CASE nObj == 9                              //  Block Selection
+      scrTextBlock( obj_, scn_ )
    CASE nObj == 10                             //  Copy Selectin
-      obj_:= scrTextMove(obj_,scn_,1)
+      obj_:= scrTextMove( obj_, scn_, 1 )
    CASE nObj == 11                             //  Copy & Cut Selection
-      obj_:= scrTextMove(obj_,scn_,0)
+      obj_:= scrTextMove( obj_, scn_, 0 )
    CASE nObj == 12                             //  Blank
-      
+
    CASE nObj == 13                             //  Matrix
-      arview({scn_,obj_})
    ENDCASE
 
    RETURN nObj
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION scrTxtProp(obj_,scn_,nObj)
+STATIC FUNCTION scrTxtProp( obj_, scn_, nObj )
    LOCAL sel_, v_
 
-   obj_[nObj,OBJ_F_LEN]  := len(obj_[nObj,OBJ_EQN])
-   obj_[nObj,OBJ_F_TYPE] := 'C'
+   obj_[ nObj,OBJ_F_LEN  ] := len(obj_[ nObj,OBJ_EQN ] )
+   obj_[ nObj,OBJ_F_TYPE ] := 'C'
 
-   v_:= scrObj2Vv(obj_[nObj])
+   v_:= scrObj2Vv( obj_[ nObj ] )
    sel_:= scrVvSelAble(scn_)
 
    sel_[ VV_ID        ] := .F.
-   sel_[ VV_ALIGN     ] := .t.
+   sel_[ VV_ALIGN     ] := .T.
    sel_[ VV_COLOR     ] := .T.
    sel_[ VV_F_LEN     ] := .F.
-   sel_[ VV_F_DEC     ] := .f.
+   sel_[ VV_F_DEC     ] := .F.
    sel_[ VV_REPEATED  ] := .F.
    sel_[ VV_VERTICLE  ] := .F.
    sel_[ VV_WRAP_SEMI ] := .F.
    sel_[ VV_ZERO      ] := .F.
    sel_[ VV_EQN       ] := .F.
 
-   scrField( nObj,3,obj_,scn_,v_,sel_,'W/B    ' )
-   
+   scrField( nObj, 3, obj_, scn_, v_, sel_, 'W/B    ' )
+
    RETURN NIL
 
 //----------------------------------------------------------------------//
@@ -828,9 +751,9 @@ STATIC FUNCTION scrOnFirstCol( obj_,scn_,nObj,type_ )
       IF VouchInArray( obj_[ nObj, OBJ_TYPE ], type_ )
          IF obj_[ nObj, OBJ_TYPE ] == OBJ_O_BOX
             nCur := scn_[ SCN_COL_CUR ]
-            nOff := scn_[ SCN_COL_REP ] - obj_[ nObj,OBJ_COL ]
-            scn_[ SCN_COL_CUR ] := max( scn_[ SCN_LEFT ], scn_[ SCN_COL_CUR ]-nOff )
-            scn_[ SCN_COL_REP ] := obj_[nObj,OBJ_COL]
+            nOff := scn_[ SCN_COL_REP ] - obj_[ nObj, OBJ_COL ]
+            scn_[ SCN_COL_CUR ] := max( scn_[ SCN_LEFT ], scn_[ SCN_COL_CUR ] - nOff )
+            scn_[ SCN_COL_REP ] := obj_[ nObj, OBJ_COL]
             IF nOff > nCur - scn_[ SCN_LEFT ]
                scn_[ SCN_REFRESH ] := OBJ_REFRESH_ALL
                scn_[ SCN_COL_DIS ] += nOff - ( nCur - scn_[ SCN_LEFT ] )
@@ -844,8 +767,8 @@ STATIC FUNCTION scrOnFirstCol( obj_,scn_,nObj,type_ )
                scn_[ SCN_REFRESH ] := OBJ_REFRESH_ALL
                scn_[ SCN_ROW_DIS ] += nOff - ( nCur - scn_[ SCN_TOP ] )
             ENDIF
-                        
-         ELSE    
+
+         ELSE
             IF scn_[ SCN_LASTKEY ] == K_RIGHT
                nCur := scn_[ SCN_COL_CUR ]
                nOff := obj_[ nObj, OBJ_TO_COL ] - scn_[ SCN_COL_REP ] + 1 //  NEXT Col TO OBJECT
@@ -863,15 +786,16 @@ STATIC FUNCTION scrOnFirstCol( obj_,scn_,nObj,type_ )
                nCur := scn_[ SCN_COL_CUR ]
                nOff := scn_[ SCN_COL_REP ] - obj_[ nObj,OBJ_COL ]
                scn_[ SCN_COL_CUR ] := max( scn_[ SCN_LEFT ], scn_[ SCN_COL_CUR ]-nOff )
-               scn_[ SCN_COL_REP ] := obj_[nObj,OBJ_COL]
+               scn_[ SCN_COL_REP ] := obj_[ nObj,OBJ_COL]
                IF nOff > nCur-scn_[SCN_LEFT]
                   scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
                   scn_[SCN_COL_DIS] += nOff-(nCur-scn_[SCN_LEFT])
                ENDIF
            ENDIF
-        ENDIF    
+        ENDIF
       ENDIF
    ENDIF
+
    RETURN NIL
 
 //----------------------------------------------------------------------//
@@ -881,10 +805,10 @@ FUNCTION scrGetChar(obj_,nRow,nCol)
 
    //  Locate Text
    n := ascan(obj_,{|e_| e_[OBJ_ROW]==nRow .AND. ;
-                     inRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
+                     VouchInRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
    IF n == 0   //  Locate Box
-      n := ascan(obj_,{|e_| inRange(nRow,e_[OBJ_ROW],e_[OBJ_TO_ROW]) .AND. ;
-                     inRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
+      n := ascan(obj_,{|e_| VouchInRange(nRow,e_[OBJ_ROW],e_[OBJ_TO_ROW]) .AND. ;
+                     VouchInRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
    ENDIF
 
    IF n > 0
@@ -929,16 +853,15 @@ FUNCTION scrGetChar(obj_,nRow,nCol)
 
 STATIC FUNCTION scrTextBlock(obj_,scn_)
    LOCAL n, nKey
-   LOCAL key_:= {K_RIGHT,K_LEFT,K_UP,K_DOWN,K_ENTER}
+   LOCAL key_:= { K_RIGHT,K_LEFT,K_UP,K_DOWN,K_ENTER }
 
-   scrMsg('Use <Arrow Keys> TO Select Text Block, <Enter> TO Finish')
-   scn_[SCN_TEXT_BLOCK_] := {scn_[SCN_ROW_REP],scn_[SCN_COL_REP],;
-                               scn_[SCN_ROW_REP],scn_[SCN_COL_REP]}
-   scrMove(obj_,scn_)
-   scrStatus(obj_,scn_)
+   scrMsg( 'Use <Arrow Keys> TO Select Text Block, <Enter> TO Finish' )
+   scn_[ SCN_TEXT_BLOCK_ ] := { scn_[ SCN_ROW_REP ], scn_[ SCN_COL_REP ], scn_[ SCN_ROW_REP ], scn_[ SCN_COL_REP ] }
+   scrMove( obj_, scn_ )
+   scrStatus( obj_, scn_ )
 
    DO WHILE .t.
-      nKey := scrInkey(key_)
+      nKey := scrInkey( key_ )
 
       DO CASE
       CASE nKey == key_[1]
@@ -1048,9 +971,9 @@ STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
       DO WHILE .t.
          n := ascan(obj_,{|e_| e_[OBJ_ROW]==i ;
                                        .AND. ;
-                        (inRange(e_[OBJ_COL],gst_[2],gst_[4]);
+                        (VouchInRange(e_[OBJ_COL],gst_[2],gst_[4]);
                                        .OR. ;
-                         inRange(e_[OBJ_TO_COL],gst_[2],gst_[4])) ;
+                         VouchInRange(e_[OBJ_TO_COL],gst_[2],gst_[4])) ;
                                        .AND.;
                                    !VouchInArray(n,del_) })
          IF n > 0
@@ -1102,8 +1025,7 @@ STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
                   ins_[n1,OBJ_TO_COL]  := ins_[n1,OBJ_COL]+len(s3)-1
                ENDIF
 
-            ELSEIF obj_[n,OBJ_TYPE] == OBJ_O_FIELD .OR. ;
-                   obj_[n,OBJ_TYPE] == OBJ_O_EXP
+            ELSEIF obj_[n,OBJ_TYPE] == OBJ_O_FIELD .OR. obj_[n,OBJ_TYPE] == OBJ_O_EXP
                aadd(del_,n)
 
             ELSEIF obj_[n,OBJ_TYPE] == OBJ_O_BOX
@@ -1125,9 +1047,9 @@ STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
       DO WHILE .t.
          n := ascan(obj_,{|e_| e_[OBJ_ROW]==i;
                                       .AND. ;
-                     (inRange(e_[OBJ_COL],old_[2],old_[4]);
+                     (VouchInRange(e_[OBJ_COL],old_[2],old_[4]);
                                        .OR. ;
-                      inRange(e_[OBJ_TO_COL],old_[2],old_[4])) ;
+                      VouchInRange(e_[OBJ_TO_COL],old_[2],old_[4])) ;
                                       .AND. ;
                                   !VouchInArray(n,del_) })
          IF n > 0
@@ -1247,9 +1169,9 @@ STATIC FUNCTION scrTextDel(obj_,scn_)
       DO WHILE .t.
          n := ascan(obj_,{|e_| e_[OBJ_ROW]==i;
                                       .AND. ;
-                     (inRange(e_[OBJ_COL],   old_[2],old_[4]);
+                     (VouchInRange(e_[OBJ_COL],   old_[2],old_[4]);
                                        .OR. ;
-                      inRange(e_[OBJ_TO_COL],old_[2],old_[4])) ;
+                      VouchInRange(e_[OBJ_TO_COL],old_[2],old_[4])) ;
                                       .AND. ;
                                   !VouchInArray(n,del_) })
          IF n > 0
@@ -1331,48 +1253,6 @@ STATIC FUNCTION scrTextDel(obj_,scn_)
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION scrNewBand( obj_,scn_,nSecId )
-
-   HB_SYMBOL_UNUSED( obj_ )
-   HB_SYMBOL_UNUSED( scn_ )
-   HB_SYMBOL_UNUSED( nSecId )
-   
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION scrGroup(obj_,scn_)
-
-   HB_SYMBOL_UNUSED( obj_ )
-   HB_SYMBOL_UNUSED( scn_ )
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION scrHd2Sm( nOrdH )
-   RETURN  SCT_ID_GRP01_S - (nOrdH - SCT_ID_GRP01_H)
-
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION scrGrpEqn( eqn,scn_ )
-   
-   HB_SYMBOL_UNUSED( eqn )
-   HB_SYMBOL_UNUSED( scn_ )
-
-   RETURN NIL 
-
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION scrForRows( obj_,scn_ )
-
-   HB_SYMBOL_UNUSED( obj_ )
-   HB_SYMBOL_UNUSED( scn_ )
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
 STATIC FUNCTION scrExport( obj_,scn_ )
    LOCAL cFile := 'SCREEN'
    LOCAL rpt_
@@ -1383,7 +1263,7 @@ STATIC FUNCTION scrExport( obj_,scn_ )
       //save_array( rpt_, trim( cFile ) + '.vsc' )
       uiDebug( rpt_ )
    ENDIF
-   
+
    RETURN file( cFile )
 
 //----------------------------------------------------------------------//
