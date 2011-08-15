@@ -71,124 +71,285 @@
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrProperty( obj_,scn_ )
-   LOCAL prp_
+FUNCTION scrAddBox( obj_, scn_, nObj, Sel )
+   LOCAL nKey,o_,border,cClr, nnObj, cFile
+
+   nnObj  := nObj
+   cFile  := ''
+   sel    := 2
+
+   IF nnObj == 0
+      o_:= scrObjBlank()
+
+      o_[ OBJ_TYPE       ] := OBJ_O_BOX
+      o_[ OBJ_ROW        ] := scn_[ SCN_ROW_REP ]
+      o_[ OBJ_COL        ] := scn_[ SCN_COL_REP ]
+      o_[ OBJ_TO_ROW     ] := scn_[ SCN_ROW_REP ]
+      o_[ OBJ_TO_COL     ] := scn_[ SCN_COL_REP ]
+      o_[ OBJ_SECTION    ] := scrSecCur( scn_, scn_[ SCN_ROW_REP ] )
+      o_[ OBJ_F_LEN      ] := 9
+      o_[ OBJ_MDL_F_TYPE ] := sel + 60
+
+      aadd( obj_, o_ )
+      nObj := len( obj_ )
+   ENDIF
+
+   border := 'ÚÄ¿³ÙÄÀ³'            //  can be DOUBLE_SINGLE, etc
+   cClr     := "w/b"
+   obj_[ nObj, OBJ_BORDER ] := 0.5
+
+   obj_[ nObj, OBJ_BOX_SHAPE ] := border
+   obj_[ nObj, OBJ_COLOR     ] := cClr
+   obj_[ nObj, OBJ_ID        ] := "Frame"
+   obj_[ nObj, OBJ_EQN       ] := cFile
+   obj_[ nObj, OBJ_PATTERN   ] := 'CLEAR     '
+
+   IF nnObj > 0
+      scrOnLastCol( obj_, scn_, nObj )
+      scrMove( obj_, scn_ )
+   ENDIF
+
+   IF .t.
+      scrMsg( 'Draw Frame WITH <Arrow Keys>. Finish WITH <Enter>' )
+
+      DO WHILE .t.
+         nKey := inkey( 0 )
+         DO CASE
+         CASE nKey == K_RIGHT
+            IF scrMovRgt( scn_ )
+               obj_[ nObj,OBJ_TO_COL ]++
+            ENDIF
+         CASE nKey == K_LEFT
+            IF scrMovLft( scn_ )
+               obj_[ nObj,OBJ_TO_COL ]--
+            ENDIF
+         CASE nKey == K_DOWN
+            IF scrMovDn( scn_ )
+               obj_[ nObj,OBJ_TO_ROW ]++
+            ENDIF
+         CASE nKey == K_UP
+            IF scrMovUp( scn_ )
+               obj_[ nObj,OBJ_TO_ROW ]--
+            ENDIF
+         CASE nKey == K_ENTER
+            EXIT
+         ENDCASE
+         scrMove( obj_,scn_ )
+         scrStatus( obj_,scn_ )
+      ENDDO
+   ENDIF
+
+   scrOrdObj( obj_ )
+   scrMsg()
+   scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+FUNCTION scrAddFld( obj_,scn_,nObj )
+   LOCAL v_, n, sel_
+
+   sel_:= scrVvSelAble( scn_ )
+   v_  := iif( nObj > 0, scrObj2Vv( obj_[ nObj ] ), scrVvBlank() )
+   n   := v_[ VV_FIELD ]
+   IF nObj == 0
+      v_[ VV_FIELD   ] := 0
+      v_[ VV_ID      ] := space( 10 )
+      v_[ VV_F_PIC   ] := space( 15 )
+      v_[ VV_COLOR   ] := 'N/W   '
+   ENDIF
+
+   v_[ VV_EQN        ] := 'fieldget('+ ltrim( str( n ) ) + ')'
+
+   sel_[ VV_ALIGN    ] := .f.
+   sel_[ VV_PRN_LEN  ] := .f.
+   sel_[ VV_PRN_LEN  ] := .f.
+   sel_[ VV_ALIGN    ] := .f.
+   sel_[ VV_COLOR    ] := .f.
+   sel_[ VV_POINT    ] := .f.
+   sel_[ VV_COL_JUST ] := .f.
+   sel_[ VV_PATTERN  ] := .f.
+   sel_[ VV_F_TYPE   ] := .T.
+
+   scrField( nObj, 1, obj_, scn_, v_, sel_, OBJ_CLR_FIELD )
+
+   IF nObj > 0
+      scrOrdObj( obj_ )
+   ENDIF
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+FUNCTION scrAddTxt( obj_,scn_,nKey,nMode )
+   LOCAL txt_:={},n, lClub,i
+   LOCAL n1,s1,s2,nTxt,nDel
+   LOCAL nRepCol := scn_[SCN_COL_REP], nRepRow := scn_[SCN_ROW_REP]
+   LOCAL lOrder := .f.
+   //  nMode   1.Add   2.Del   3.BS
+
+   //  Scan obj_ FOR Text Objects Related WITH Current Report Row
+   aeval( obj_,{|e_| iif( e_[ OBJ_TYPE ] == OBJ_O_TEXT .AND. e_[ OBJ_ROW ] == nRepRow, aadd( txt_,e_ ),'' ) } )
+   IF nMode == 1      //  New Character
+      IF empty( txt_ ) .OR. ascan( txt_,{|e_| VouchInRange( nRepCol, e_[OBJ_COL],e_[OBJ_TO_COL] ) } ) == 0
+         aadd( txt_, scrObjBlank() ) ; lOrder := .t.
+         nTxt := len( txt_ )
+         txt_[ nTxt, OBJ_TYPE    ]  := OBJ_O_TEXT
+         txt_[ nTxt, OBJ_F_TYPE  ]  := 'C'
+         txt_[ nTxt, OBJ_F_LEN   ]  := 1
+         txt_[ nTxt, OBJ_ALIGN   ]  := 'L'
+         txt_[ nTxt, OBJ_ROW     ]  := scn_[SCN_ROW_REP]
+         txt_[ nTxt, OBJ_COL     ]  := scn_[SCN_COL_REP]
+         txt_[ nTxt, OBJ_EQN     ]  := ''
+         txt_[ nTxt, OBJ_ID      ]  := 'Text'
+         txt_[ nTxt, OBJ_COLOR   ]  := 'N/W'
+         txt_[ nTxt, OBJ_PITCH   ]  := 10
+         txt_[ nTxt, OBJ_SECTION ]  := scrSecCur( scn_,scn_[SCN_ROW_REP] )
+         txt_[ nTxt, OBJ_TO_ROW  ]  := scn_[SCN_ROW_REP]
+         txt_[ nTxt, OBJ_TO_COL  ]  := scn_[SCN_COL_REP]
+      ENDIF
+   ENDIF
+
+   nTxt := ascan( txt_,{|e_| VouchInRange( nRepCol, e_[ OBJ_COL ], e_[ OBJ_TO_COL ] ) } )
+
+   IF     nMode == 1
+      txt_[nTxt,OBJ_EQN] := substr( txt_[nTxt,OBJ_EQN],1,;
+                        scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] ) + ;
+                                 chr( nKey ) + ;
+           substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + ;
+                                            iif( ReadInsert(),1,2 ) )
+      txt_[nTxt,OBJ_TO_COL] := txt_[nTxt,OBJ_COL]+len( txt_[nTxt,OBJ_EQN] )-1
+
+   ELSEIF nMode == 2  .OR. nMode == 3 //  Delete
+      IF readInsert()
+         txt_[nTxt,OBJ_EQN] := substr( txt_[nTxt,OBJ_EQN],1,;
+                        scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] ) + ;
+           substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + 2 )
+         txt_[nTxt,OBJ_TO_COL] := txt_[nTxt,OBJ_COL]+len( txt_[nTxt,OBJ_EQN] )-1
+      ELSE             //  Divide it IN two objects
+         s1   := substr( txt_[nTxt,OBJ_EQN],1,scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] )
+         s2   := substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + 2 )
+         nDel := 0
+         IF len( s1 ) > 0
+            txt_[nTxt,OBJ_EQN]     := s1
+            txt_[nTxt,OBJ_TO_COL]  := txt_[nTxt,OBJ_COL]+len( s1 )-1
+            txt_[nTxt,OBJ_PRN_LEN] := len( s1 )
+         ELSE
+            nDel := nTxt
+         ENDIF
+
+         IF len( s2 ) > 0
+            IF nDel == 0
+               aadd( txt_,aclone( txt_[nTxt] ) )  //  scrObjBlank() )
+               lOrder := .t.
+               n1                := len( txt_ )
+            ELSE
+               n1 := nDel
+            ENDIF
+            txt_[n1,OBJ_TYPE]    := OBJ_O_TEXT
+            txt_[n1,OBJ_F_TYPE]  := 'C'
+            txt_[n1,OBJ_F_LEN]   := len( s2 )
+            txt_[n1,OBJ_PRN_LEN] := len( s2 )
+            //  txt_[n1,OBJ_ALIGN]   := 'L'
+            txt_[n1,OBJ_ROW]     := scn_[SCN_ROW_REP]
+            txt_[n1,OBJ_COL]     := scn_[SCN_COL_REP]+1
+            txt_[n1,OBJ_EQN]     := s2
+            txt_[n1,OBJ_ID]      := 'Text'
+            txt_[n1,OBJ_SECTION] := scrSecCur( scn_,scn_[SCN_ROW_REP] )
+            txt_[n1,OBJ_TO_ROW]  := scn_[SCN_ROW_REP]
+            txt_[n1,OBJ_TO_COL]  := txt_[n1,OBJ_COL]+len( s2 )-1
+         ENDIF
+         IF len( s1 )==0.AND.len( s2 )==0
+            VouchAShrink( txt_,nTxt )
+            IF empty( txt_ )
+               aadd( txt_,scrObjBlank() )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF !empty( txt_ )
+      DO WHILE .t.
+         IF( n := ascan( txt_,{|e_| e_[OBJ_TO_COL] < e_[OBJ_COL] } ) ) > 0
+            VouchAShrink( txt_,n )
+         ELSE
+            EXIT
+         ENDIF
+      ENDDO
+      IF empty( txt_ )
+         aadd( txt_,scrObjBlank() )
+      ENDIF
+      //  CLUB DIFFERENT TEXT OBJECTS IF THESE ARE ADJACENT
+      asort( txt_,,,{|e_,f_| e_[OBJ_COL]<f_[OBJ_COL] } )
+
+      DO WHILE .t.
+         lClub := .f.
+//         n     := txt_[1,OBJ_TO_COL]
+         FOR i := 2 TO len( txt_ )
+            IF txt_[i,OBJ_COL] == txt_[i-1,OBJ_TO_COL]+1
+               txt_[i-1,OBJ_EQN]    += txt_[i,OBJ_EQN]    //  Club both
+               txt_[i-1,OBJ_TO_COL] := txt_[i-1,OBJ_COL] + len( txt_[i-1,OBJ_EQN] ) - 1
+               txt_[i-1,OBJ_F_LEN]  := len( txt_[i-1,OBJ_EQN] )
+               VouchAShrink( txt_,i )
+//               lUpdate := .t.
+               lClub   := .t.
+            ENDIF
+         NEXT
+         IF !lClub
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+
+   DO WHILE .t.
+      IF( n := ascan( obj_,{|e_| e_[OBJ_TYPE] == OBJ_O_TEXT .AND. ;
+                                e_[OBJ_ROW ] == scn_[SCN_ROW_REP] } ) ) > 0
+         VouchAShrink( obj_,n )
+         IF empty( obj_ )
+            aadd( obj_, scrObjBlank() )
+         ENDIF
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+
+   aeval( txt_,{|e_| iif( e_[OBJ_ROW]>0,aadd( obj_,e_ ),'' ) } )   //  Now attach txt_
+
+   DO WHILE .t.
+      IF( n := ascan( obj_,{|e_| e_[OBJ_TO_COL] < e_[OBJ_COL] } ) ) > 0
+         VouchAShrink( obj_,n )
+         IF empty( obj_ )
+            aadd( obj_,scrObjBlank() )
+         ENDIF
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+
+   IF lOrder
+      //  scrOrdObj( obj_ )
+   ENDIF
+   IF     nMode == 1
+      keyboard( chr( K_RIGHT ) )
+   ENDIF
+
+   scn_[SCN_REFRESH] := OBJ_REFRESH_LINE
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+FUNCTION scrProperty( obj_, scn_ )
+   LOCAL prp_:= {}
 
    HB_SYMBOL_UNUSED( obj_ )
 
    DO CASE
    CASE scn_[ SCN_DESIGN ] == DGN_MODULE
-      prp_:= iif( empty( scn_[SCN_PROPERTY ] ), prpMdlBlank(), scn_[ SCN_PROPERTY ] )
-      //prp_:= prpModule( prp_ )  /* Fetch actual values */
       scn_[SCN_PROPERTY] := prp_
 
    ENDCASE
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-#IF 0
-FUNCTION prpRStr2Ar(s,s1,s2)
-   LOCAL prp_:= array(REP_INIT_VRBLS)
-
-   IF empty(s)                    //  IF no property is defined, defaults
-      RETURN  prpRepBlank()
-   ENDIF
-
-   prp_[ REP_DESC       ] :=      substr( s , REP_OS_DESC      , REP_LEN_DESC       )
-   prp_[ REP_TYPE       ] := val( substr( s , REP_OS_TYPE      , REP_LEN_TYPE       ) )
-   prp_[ REP_IDX_NO     ] := val( substr( s , REP_OS_IDX_NO    , REP_LEN_IDX_NO     ) )
-   prp_[ REP_IDX_EXP    ] :=      substr( s , REP_OS_IDX_EXP   , REP_LEN_IDX_EXP    )
-   prp_[ REP_PG_SIZE    ] :=      substr( s , REP_OS_PG_SIZE   , REP_LEN_PG_SIZE    )
-   prp_[ REP_PG_LEN     ] := val( substr( s , REP_OS_PG_LEN    , REP_LEN_PG_LEN     ) )
-   prp_[ REP_PG_WID     ] := val( substr( s , REP_OS_PG_WID    , REP_LEN_PG_WID     ) )
-   prp_[ REP_LINES      ] := val( substr( s , REP_OS_LINES     , REP_LEN_LINES      ) )
-   prp_[ REP_MG_TOP     ] := val( substr( s , REP_OS_MG_TOP    , REP_LEN_MG_TOP     ) )
-   prp_[ REP_MG_LEFT    ] := val( substr( s , REP_OS_MG_LEFT   , REP_LEN_MG_LEFT    ) )
-   prp_[ REP_MG_BOTTOM  ] := val( substr( s , REP_OS_MG_BOTTOM , REP_LEN_MG_BOTTOM  ) )
-   prp_[ REP_EJ_BEFORE  ] :=      substr( s , REP_OS_EJ_BEFORE , REP_LEN_EJ_BEFORE  ) == 'T'
-   prp_[ REP_EJ_AFTER   ] :=      substr( s , REP_OS_EJ_AFTER  , REP_LEN_EJ_AFTER   ) == 'T'
-   prp_[ REP_PLAIN      ] := val( substr( s , REP_OS_PLAIN     , REP_LEN_PLAIN      ) )
-   prp_[ REP_FTR_PAG    ] :=      substr( s , REP_OS_FTR_PAG   , REP_LEN_FTR_PAG    )
-   prp_[ REP_SMR_NEXT   ] :=      substr( s , REP_OS_SMR_NEXT  , REP_LEN_SMR_NEXT   ) == 'T'
-   prp_[ REP_HDR_PAGES  ] :=      substr( s , REP_OS_HDR_PAGES , REP_LEN_HDR_PAGES  )
-   prp_[ REP_BNK_LINES  ] := val( substr( s , REP_OS_BNK_LINES , REP_LEN_BNK_LINES  ) )
-   prp_[ REP_BNK_AFTER  ] := val( substr( s , REP_OS_BNK_AFTER , REP_LEN_BNK_AFTER  ) )
-   prp_[ REP_DATA_BOX   ] :=      substr( s , REP_OS_DATA_BOX  , REP_LEN_DATA_BOX   ) == 'T'
-   prp_[ REP_FILE       ] :=      substr( s , REP_OS_FILE      , REP_LEN_FILE       )
-   prp_[ REP_COPIES     ] := val( substr( s , REP_OS_COPIES    , REP_LEN_COPIES     ) )
-   prp_[ REP_TTL_PAGES  ] :=      substr( s , REP_OS_TTL_PAGES , REP_LEN_TTL_PAGES  )
-   prp_[ REP_INIT_CPI   ] := val( substr( s , REP_OS_INIT_CPI  , REP_LEN_INIT_CPI   ) )
-   prp_[ REP_PRN_QLY    ] :=      substr( s , REP_OS_PRN_QLY   , REP_LEN_PRN_QLY    )
-   prp_[ REP_RECONFIRM  ] :=      substr( s , REP_OS_RECONFIRM , REP_LEN_RECONFIRM  ) == 'T'
-   prp_[ REP_FTR_BOTTOM ] :=      substr( s , REP_OS_FTR_BOTTOM, REP_LEN_FTR_BOTTOM ) == 'T'
-   prp_[ REP_HTML       ] :=      substr( s , REP_OS_HTML      , REP_LEN_HTML       ) == 'T'
-   prp_[ REP_PRINTER    ] :=      substr( s , REP_OS_PRINTER   , REP_LEN_PRINTER    )
-   prp_[ REP_ORIENT     ] :=      substr( s , REP_OS_ORIENT    , REP_LEN_ORIENT     )
-   prp_[ REP_PREVIEW    ] :=      substr( s , REP_OS_PREVIEW   , REP_LEN_PREVIEW    ) == 'T'
-   prp_[ REP_GRAY       ] :=      substr( s , REP_OS_GRAY      , REP_LEN_GRAY       ) == 'T'
-   prp_[ REP_WINDLG     ] :=      substr( s , REP_OS_WINDLG    , REP_LEN_WINDLG     ) == 'T'
-   prp_[ REP_DUPLEX     ] := val( substr( s , REP_OS_DUPLEX    , REP_LEN_DUPLEX     ) )
-   prp_[ REP_COLS       ] := val( substr( s , REP_OS_COLS      , REP_LEN_COLS       ) )
-   prp_[ REP_ROWS       ] := val( substr( s , REP_OS_ROWS      , REP_LEN_ROWS       ) )
-
-   prp_[ REP_FOR        ] :=      substr( s1, REP_OS_FOR       , REP_LEN_FOR        )
-   prp_[ REP_WHILE      ] :=      substr( s1, REP_OS_WHILE     , REP_LEN_WHILE      )
-   prp_[ REP_FIRST      ] :=      substr( s1, REP_OS_FIRST     , REP_LEN_FIRST      )
-   prp_[ REP_EXE_PRE    ] :=      substr( s2, REP_OS_EXE_PRE   , REP_LEN_EXE_PRE    )
-   prp_[ REP_EXE_POST   ] :=      substr( s2, REP_OS_EXE_POST  , REP_LEN_EXE_POST   )
-
-   prp_[ REP_ORIENT     ] := iif( empty( prp_[ REP_ORIENT ] ), 'P', prp_[ REP_ORIENT ] )
-
-   RETURN prp_
-#ENDIF
-//----------------------------------------------------------------------//
-
-FUNCTION prpRAr2Str(prp_,s,s1,s2)   //  Passed by reference
-
-   s :=        pad( prp_[ REP_DESC       ]  , REP_LEN_DESC      ) +;
-        pad( NTRIM( prp_[ REP_TYPE       ] ), REP_LEN_TYPE      ) +;
-        pad( NTRIM( prp_[ REP_IDX_NO     ] ), REP_LEN_IDX_NO    ) +;
-               pad( prp_[ REP_IDX_EXP    ]  , REP_LEN_IDX_EXP   ) +;
-               pad( prp_[ REP_PG_SIZE    ]  , REP_LEN_PG_SIZE   ) +;
-        pad( NTRIM( prp_[ REP_PG_LEN     ] ), REP_LEN_PG_LEN    ) +;
-        pad( NTRIM( prp_[ REP_PG_WID     ] ), REP_LEN_PG_WID    ) +;
-        pad( NTRIM( prp_[ REP_LINES      ] ), REP_LEN_LINES     ) +;
-        pad( NTRIM( prp_[ REP_MG_TOP     ] ), REP_LEN_MG_TOP    ) +;
-        pad( NTRIM( prp_[ REP_MG_LEFT    ] ), REP_LEN_MG_LEFT   ) +;
-        pad( NTRIM( prp_[ REP_MG_BOTTOM  ] ), REP_LEN_MG_BOTTOM ) +;
-               iif( prp_[ REP_EJ_BEFORE  ]  , 'T','F'           ) +;
-               iif( prp_[ REP_EJ_AFTER   ]  , 'T','F'           ) +;
-        pad( NTRIM( prp_[ REP_PLAIN      ] ), REP_LEN_PLAIN     ) +;
-               pad( prp_[ REP_FTR_PAG    ]  , REP_LEN_FTR_PAG   ) +;
-               iif( prp_[ REP_SMR_NEXT   ]  , 'T','F'           ) +;
-               pad( prp_[ REP_HDR_PAGES  ]  , REP_LEN_HDR_PAGES ) +;
-        pad( NTRIM( prp_[ REP_BNK_LINES  ] ), REP_LEN_BNK_LINES ) +;
-        pad( NTRIM( prp_[ REP_BNK_AFTER  ] ), REP_LEN_BNK_AFTER ) +;
-               iif( prp_[ REP_DATA_BOX   ]  ,'T','F'            ) +;
-               pad( prp_[ REP_FILE       ]  , REP_LEN_FILE      ) +;
-        pad( NTRIM( prp_[ REP_COPIES     ] ), REP_LEN_COPIES    ) +;
-               pad( prp_[ REP_TTL_PAGES  ]  , REP_LEN_TTL_PAGES ) +;
-        pad( NTRIM( prp_[ REP_INIT_CPI   ] ), REP_LEN_INIT_CPI  ) +;
-               pad( prp_[ REP_PRN_QLY    ]  , REP_LEN_PRN_QLY   ) +;
-               iif( prp_[ REP_RECONFIRM  ]  , 'T','F'           ) +;
-               iif( prp_[ REP_FTR_BOTTOM ]  , 'T','F'           ) +;
-               iif( prp_[ REP_HTML       ]  , 'T','F'           ) +;
-               pad( prp_[ REP_PRINTER    ]  , REP_LEN_PRINTER   ) +;
-               pad( prp_[ REP_ORIENT     ]  , REP_LEN_ORIENT    ) +;
-               iif( prp_[ REP_PREVIEW    ]  , 'T','F'           ) +;
-               iif( prp_[ REP_GRAY       ]  , 'T','F'           ) +;
-               iif( prp_[ REP_WINDLG     ]  , 'T','F'           ) +;
-        pad( NTRIM( prp_[ REP_DUPLEX     ] ), REP_LEN_DUPLEX    ) +;
-        pad( NTRIM( prp_[ REP_COLS       ] ), REP_LEN_COLS      ) +;
-        pad( NTRIM( prp_[ REP_ROWS       ] ), REP_LEN_ROWS      )
-
-   s1 :=       pad( prp_[ REP_FOR        ] ,  REP_LEN_FOR       ) +;
-               pad( prp_[ REP_WHILE      ] ,  REP_LEN_WHILE     ) +;
-               pad( prp_[ REP_FIRST      ] ,  REP_LEN_FIRST     )
-
-   s2 :=       pad( prp_[ REP_EXE_PRE    ] ,  REP_LEN_EXE_PRE   ) +;
-               pad( prp_[ REP_EXE_POST   ] ,  REP_LEN_EXE_POST  )
 
    RETURN NIL
 
@@ -538,256 +699,6 @@ FUNCTION scrClrFrBk( cClr )
 #ENDIF
 //----------------------------------------------------------------------//
 
-FUNCTION scrAddBox( obj_, scn_, nObj, Sel )
-   LOCAL nKey,o_,border,cClr, nnObj, cFile
-
-   DEFAULT Sel TO 0
-
-   nnObj     := nObj
-   cFile     := ''
-   border    := '        '+chr( 255 )
-   cClr      := 'N/X   '
-   sel       := 2
-
-   IF nnObj == 0
-      o_:= scrObjBlank()
-
-      o_[ OBJ_TYPE       ] := OBJ_O_BOX
-      o_[ OBJ_ROW        ] := scn_[ SCN_ROW_REP ]
-      o_[ OBJ_COL        ] := scn_[ SCN_COL_REP ]
-      o_[ OBJ_TO_ROW     ] := scn_[ SCN_ROW_REP ]
-      o_[ OBJ_TO_COL     ] := scn_[ SCN_COL_REP ]
-      o_[ OBJ_SECTION    ] := scrSecCur( scn_, scn_[ SCN_ROW_REP ] )
-      o_[ OBJ_F_LEN      ] := 9
-      o_[ OBJ_MDL_F_TYPE ] := sel + 60
-
-      aadd( obj_, o_ )
-      nObj := len( obj_ )
-   ELSE
-      sel := obj_[ nObj, OBJ_MDL_F_TYPE ] - 60
-   ENDIF
-
-   IF sel == 2
-      border := 'ÚÄ¿³ÙÄÀ³'            //  can be DOUBLE_SINGLE, etc
-      cClr     := "w/b"
-      obj_[ nObj, OBJ_BORDER ] := 0.5
-   ENDIF
-
-   obj_[ nObj, OBJ_BOX_SHAPE ] := border
-   obj_[ nObj, OBJ_COLOR     ] := cClr
-   obj_[ nObj, OBJ_ID        ] := "Frame"
-   obj_[ nObj, OBJ_EQN       ] := cFile
-   obj_[ nObj, OBJ_PATTERN   ] := 'CLEAR     '
-
-   IF nnObj == 0
-      scrMsg( 'Draw Frame WITH <Arrow Keys>. Finish WITH <Enter>' )
-
-      DO WHILE .t.
-         nKey := inkey( 0 )
-         DO CASE
-         CASE nKey == K_RIGHT .AND. sel <> 5
-            IF scrMovRgt( scn_ )
-               obj_[ nObj,OBJ_TO_COL ]++
-            ENDIF
-         CASE nKey == K_LEFT  .AND. sel <> 5
-            IF scrMovLft( scn_ )
-               obj_[ nObj,OBJ_TO_COL ]--
-            ENDIF
-         CASE nKey == K_DOWN  .AND. sel <> 4
-            IF scrMovDn( scn_ )
-               obj_[ nObj,OBJ_TO_ROW ]++
-            ENDIF
-         CASE nKey == K_UP    .AND. sel <> 4
-            IF scrMovUp( scn_ )
-               obj_[ nObj,OBJ_TO_ROW ]--
-            ENDIF
-         CASE nKey == K_ENTER
-            EXIT
-         ENDCASE
-         scrMove( obj_,scn_ )
-         scrStatus( obj_,scn_ )
-      ENDDO
-   ENDIF
-
-   scrOrdObj( obj_ )
-   scrMsg()
-   scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
-FUNCTION scrAddFld( obj_,scn_,nObj )
-
-   HB_SYMBOL_UNUSED( obj_ )
-   HB_SYMBOL_UNUSED( nObj )
-
-   DO CASE
-   CASE scn_[SCN_DESIGN] == DGN_MODULE
-      scrMdlFld( obj_, scn_, nObj )
-   ENDCASE
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
-FUNCTION scrAddTxt( obj_,scn_,nKey,nMode )
-   LOCAL txt_:={},n, lClub,i
-   LOCAL n1,s1,s2,nTxt,nDel
-   LOCAL nRepCol := scn_[SCN_COL_REP], nRepRow := scn_[SCN_ROW_REP]
-   LOCAL lOrder := .f.
-   //  nMode   1.Add   2.Del   3.BS
-
-   //  Scan obj_ FOR Text Objects Related WITH Current Report Row
-   aeval( obj_,{|e_| iif( e_[ OBJ_TYPE ] == OBJ_O_TEXT .AND. e_[ OBJ_ROW ] == nRepRow, aadd( txt_,e_ ),'' ) } )
-   IF nMode == 1      //  New Character
-      IF empty( txt_ ) .OR. ascan( txt_,{|e_| VouchInRange( nRepCol, e_[OBJ_COL],e_[OBJ_TO_COL] ) } ) == 0
-         aadd( txt_, scrObjBlank() ) ; lOrder := .t.
-         nTxt := len( txt_ )
-         txt_[ nTxt, OBJ_TYPE    ]  := OBJ_O_TEXT
-         txt_[ nTxt, OBJ_F_TYPE  ]  := 'C'
-         txt_[ nTxt, OBJ_F_LEN   ]  := 1
-         txt_[ nTxt, OBJ_ALIGN   ]  := 'L'
-         txt_[ nTxt, OBJ_ROW     ]  := scn_[SCN_ROW_REP]
-         txt_[ nTxt, OBJ_COL     ]  := scn_[SCN_COL_REP]
-         txt_[ nTxt, OBJ_EQN     ]  := ''
-         txt_[ nTxt, OBJ_ID      ]  := 'Text'
-         txt_[ nTxt, OBJ_COLOR   ]  := 'N/W'
-         txt_[ nTxt, OBJ_PITCH   ]  := 10
-         txt_[ nTxt, OBJ_SECTION ]  := scrSecCur( scn_,scn_[SCN_ROW_REP] )
-         txt_[ nTxt, OBJ_TO_ROW  ]  := scn_[SCN_ROW_REP]
-         txt_[ nTxt, OBJ_TO_COL  ]  := scn_[SCN_COL_REP]
-      ENDIF
-   ENDIF
-
-   nTxt := ascan( txt_,{|e_| VouchInRange( nRepCol, e_[ OBJ_COL ], e_[ OBJ_TO_COL ] ) } )
-
-   IF     nMode == 1
-      txt_[nTxt,OBJ_EQN] := substr( txt_[nTxt,OBJ_EQN],1,;
-                        scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] ) + ;
-                                 chr( nKey ) + ;
-           substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + ;
-                                            iif( ReadInsert(),1,2 ) )
-      txt_[nTxt,OBJ_TO_COL] := txt_[nTxt,OBJ_COL]+len( txt_[nTxt,OBJ_EQN] )-1
-
-   ELSEIF nMode == 2  .OR. nMode == 3 //  Delete
-      IF readInsert()
-         txt_[nTxt,OBJ_EQN] := substr( txt_[nTxt,OBJ_EQN],1,;
-                        scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] ) + ;
-           substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + 2 )
-         txt_[nTxt,OBJ_TO_COL] := txt_[nTxt,OBJ_COL]+len( txt_[nTxt,OBJ_EQN] )-1
-      ELSE             //  Divide it IN two objects
-         s1   := substr( txt_[nTxt,OBJ_EQN],1,scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] )
-         s2   := substr( txt_[nTxt,OBJ_EQN],scn_[SCN_COL_REP]-txt_[nTxt,OBJ_COL] + 2 )
-         nDel := 0
-         IF len( s1 ) > 0
-            txt_[nTxt,OBJ_EQN]     := s1
-            txt_[nTxt,OBJ_TO_COL]  := txt_[nTxt,OBJ_COL]+len( s1 )-1
-            txt_[nTxt,OBJ_PRN_LEN] := len( s1 )
-         ELSE
-            nDel := nTxt
-         ENDIF
-
-         IF len( s2 ) > 0
-            IF nDel == 0
-               aadd( txt_,aclone( txt_[nTxt] ) )  //  scrObjBlank() )
-               lOrder := .t.
-               n1                := len( txt_ )
-            ELSE
-               n1 := nDel
-            ENDIF
-            txt_[n1,OBJ_TYPE]    := OBJ_O_TEXT
-            txt_[n1,OBJ_F_TYPE]  := 'C'
-            txt_[n1,OBJ_F_LEN]   := len( s2 )
-            txt_[n1,OBJ_PRN_LEN] := len( s2 )
-            //  txt_[n1,OBJ_ALIGN]   := 'L'
-            txt_[n1,OBJ_ROW]     := scn_[SCN_ROW_REP]
-            txt_[n1,OBJ_COL]     := scn_[SCN_COL_REP]+1
-            txt_[n1,OBJ_EQN]     := s2
-            txt_[n1,OBJ_ID]      := 'Text'
-            txt_[n1,OBJ_SECTION] := scrSecCur( scn_,scn_[SCN_ROW_REP] )
-            txt_[n1,OBJ_TO_ROW]  := scn_[SCN_ROW_REP]
-            txt_[n1,OBJ_TO_COL]  := txt_[n1,OBJ_COL]+len( s2 )-1
-         ENDIF
-         IF len( s1 )==0.AND.len( s2 )==0
-            VouchAShrink( txt_,nTxt )
-            IF empty( txt_ )
-               aadd( txt_,scrObjBlank() )
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
-   IF !empty( txt_ )
-      DO WHILE .t.
-         IF( n := ascan( txt_,{|e_| e_[OBJ_TO_COL] < e_[OBJ_COL] } ) ) > 0
-            VouchAShrink( txt_,n )
-         ELSE
-            EXIT
-         ENDIF
-      ENDDO
-      IF empty( txt_ )
-         aadd( txt_,scrObjBlank() )
-      ENDIF
-      //  CLUB DIFFERENT TEXT OBJECTS IF THESE ARE ADJACENT
-      asort( txt_,,,{|e_,f_| e_[OBJ_COL]<f_[OBJ_COL] } )
-
-      DO WHILE .t.
-         lClub := .f.
-//         n     := txt_[1,OBJ_TO_COL]
-         FOR i := 2 TO len( txt_ )
-            IF txt_[i,OBJ_COL] == txt_[i-1,OBJ_TO_COL]+1
-               txt_[i-1,OBJ_EQN]    += txt_[i,OBJ_EQN]    //  Club both
-               txt_[i-1,OBJ_TO_COL] := txt_[i-1,OBJ_COL] + len( txt_[i-1,OBJ_EQN] ) - 1
-               txt_[i-1,OBJ_F_LEN]  := len( txt_[i-1,OBJ_EQN] )
-               VouchAShrink( txt_,i )
-//               lUpdate := .t.
-               lClub   := .t.
-            ENDIF
-         NEXT
-         IF !lClub
-            EXIT
-         ENDIF
-      ENDDO
-   ENDIF
-
-   DO WHILE .t.
-      IF( n := ascan( obj_,{|e_| e_[OBJ_TYPE] == OBJ_O_TEXT .AND. ;
-                                e_[OBJ_ROW ] == scn_[SCN_ROW_REP] } ) ) > 0
-         VouchAShrink( obj_,n )
-         IF empty( obj_ )
-            aadd( obj_, scrObjBlank() )
-         ENDIF
-      ELSE
-         EXIT
-      ENDIF
-   ENDDO
-
-   aeval( txt_,{|e_| iif( e_[OBJ_ROW]>0,aadd( obj_,e_ ),'' ) } )   //  Now attach txt_
-
-   DO WHILE .t.
-      IF( n := ascan( obj_,{|e_| e_[OBJ_TO_COL] < e_[OBJ_COL] } ) ) > 0
-         VouchAShrink( obj_,n )
-         IF empty( obj_ )
-            aadd( obj_,scrObjBlank() )
-         ENDIF
-      ELSE
-         EXIT
-      ENDIF
-   ENDDO
-
-   IF lOrder
-      //  scrOrdObj( obj_ )
-   ENDIF
-   IF     nMode == 1
-      keyboard( chr( K_RIGHT ) )
-   ENDIF
-
-   scn_[SCN_REFRESH] := OBJ_REFRESH_LINE
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
 FUNCTION scrSecCur( scn_, nRepRow )         //  Numeric id of sector
    LOCAL n,i
    n := 0
@@ -850,7 +761,7 @@ FUNCTION scrInkey( key_ )
 
    DO WHILE .t.
       nKey := inkey( 0 )
-      IF ascan( key_,nKey )>0
+      IF ascan( key_, nKey ) > 0
          EXIT
       ENDIF
    ENDDO

@@ -119,60 +119,34 @@ STATIC FUNCTION rptInit()
 
 //---------------------------------------------------------------------//
 
-STATIC FUNCTION s2sct(s)
-   LOCAL sct_:= array( SCT_INIT_VRBLS )
-
-   sct_[SCT_ORDER] := val(substr(s,SCT_OS_ORDER,SCT_LEN_ORDER))
-   sct_[SCT_ID   ] :=     substr(s,SCT_OS_ID   ,SCT_LEN_ID   )
-   sct_[SCT_SAY  ] :=     substr(s,SCT_OS_SAY  ,SCT_LEN_SAY  )
-   sct_[SCT_ROWS ] := val(substr(s,SCT_OS_ROWS ,SCT_LEN_ROWS ))
-   sct_[SCT_COLOR] :=     substr(s,SCT_OS_COLOR,SCT_LEN_COLOR)
-   sct_[SCT_EQN  ] :=     substr(s,SCT_OS_EQN  ,SCT_LEN_EQN  )
-   sct_[SCT_EJECT] :=     substr(s,SCT_OS_EJECT,SCT_LEN_EJECT) == 'T'
-   sct_[SCT_RESET] :=     substr(s,SCT_OS_RESET,SCT_LEN_RESET) == 'T'
-
-   RETURN sct_
-
-//---------------------------------------------------------------------//
-
-STATIC FUNCTION sct2s(sct_)
-   LOCAL s := ;
-   str(sct_[SCT_ORDER],SCT_LEN_ORDER)   + ;
-   pad(sct_[SCT_ID   ],SCT_LEN_ID   )   + ;
-   pad(sct_[SCT_SAY  ],SCT_LEN_SAY  )   + ;
-   str(sct_[SCT_ROWS ],SCT_LEN_ROWS )   + ;
-   pad(sct_[SCT_COLOR],SCT_LEN_COLOR)   + ;
-   pad(sct_[SCT_EQN  ],SCT_LEN_EQN  )   + ;
-    IF(sct_[SCT_EJECT],'T','F'      )   + ;
-    IF(sct_[SCT_RESET],'T','F'      )
-   RETURN s
-
-//---------------------------------------------------------------------//
-
 FUNCTION rpt2ObjScn( cObject,rpt_,nMode,struct_,cRpt,nWhere,lMsg )
    LOCAL obj_,scn_:={}
-   LOCAL i, n
+   LOCAL n
 
    HB_SYMBOL_UNUSED( struct_ )
 
-   rpt_:= iif(rpt_ == NIL .OR. empty(rpt_), rptInit(), rpt_)
+   rpt_:= iif( rpt_ == NIL .OR. empty( rpt_ ), rptInit(), rpt_ )
    obj_:= scrScn2obj(rpt_,0)
 
    DO CASE
 
    CASE nMode == REP_FOR_MDL
-      scn_:= scrConfig(obj_,DGN_MODULE)
-      IF (n := ascan(rpt_,{|e_| e_[2]==1 })) > 0
-         scn_[SCN_PROPERTY] := eval(COMPILE(rpt_[n,3]))
+      scn_:= scrConfig( obj_,DGN_MODULE )
+      IF (n := ascan( rpt_, {|e_| e_[2]==1 } ) ) > 0
+         scn_[ SCN_PROPERTY ] := eval( COMPILE( rpt_[ n,3 ] ) )
       ENDIF
+      #if 0
       IF (n := ascan(rpt_,{|e_| e_[2]== 51 })) > 0   //  Property
-         scn_[SCN_PROPERTY] := prpStr2Mdl(rpt_[n,3])
+         scn_[ SCN_PROPERTY ] := prpStr2Mdl( rpt_[ n,3 ] )
       ENDIF
-      FOR i := 1 TO len(rpt_)                        //  Fields
-         IF VouchInRange(rpt_[i,2],2001,3000)
-            aadd(scn_[SCN_FIELDS], prpStr2Fld(rpt_[i,3]))
+      #endif
+      #if 0
+      FOR i := 1 TO len( rpt_ )                        //  Fields
+         IF VouchInRange( rpt_[i,2], 2001,3000 )
+            aadd( scn_[ SCN_FIELDS ], prpStr2Fld( rpt_[ i,3 ] ) )
          ENDIF
       NEXT
+      #endif
 
    ENDCASE
 
@@ -188,20 +162,26 @@ FUNCTION rpt2ObjScn( cObject,rpt_,nMode,struct_,cRpt,nWhere,lMsg )
 
 //----------------------------------------------------------------------//
 
-FUNCTION objScn2Rpt(obj_,scn_,nMode)
-   LOCAL rpt_:={}, i //, s
+FUNCTION objScn2Rpt( obj_, scn_, nMode )
+   LOCAL rpt_:={}
+
+   HB_SYMBOL_UNUSED( scn_ )
 
    DO CASE
    CASE nMode == REP_FOR_MDL
-      aeval(obj_,{|e_| iif(e_[OBJ_ROW]==0,'',aadd(rpt_,{'',0,scrObj2str(e_)} )) })
-      IF !empty(scn_[SCN_PROPERTY])
-         aadd(rpt_, {'',51,prpMdl2Str(scn_[SCN_PROPERTY]) })
+      aeval( obj_, {|e_| iif( e_[ OBJ_ROW ] == 0, '', aadd( rpt_, { '', 0, scrObj2str( e_ ) } ) ) } )
+      #if 0
+      IF ! empty( scn_[ SCN_PROPERTY ] )
+         aadd(rpt_, { '', 51, prpMdl2Str( scn_[ SCN_PROPERTY ] ) } )
       ENDIF
+      #endif
+      #if 0
       IF !empty(scn_[SCN_FIELDS])
          FOR i := 1 TO len(scn_[SCN_FIELDS])
             aadd(rpt_,{'',scn_[SCN_FIELDS,i,1], prpFld2Str(scn_[SCN_FIELDS,i]) })
          NEXT
       ENDIF
+      #endif
    ENDCASE
 
    RETURN rpt_

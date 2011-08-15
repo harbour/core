@@ -71,25 +71,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define K_WVT_FULLSCREEN  299701
-
-#define K_WVT_BITMAP      299705
-#define K_WVT_FRAME       299706
-#define K_WVT_ELLIPSE     299707
-#define K_WVT_LINE_H      299708
-#define K_WVT_LINE_V      299709
-#define K_WVT_GRID        299710
-#define K_WVT_BARCODE     299711
-#define K_WVT_TEXTBOX     299712
-
-#define K_WVT_CARRY       299721
-#define K_WVT_BROUGHT     299722
-#define K_WVT_SUMMARY     299723
-#define K_WVT_GROUP       299724
-#define K_WVT_MATRIX      299725
-
-//----------------------------------------------------------------------//
-
 FUNCTION ScrDisplay( scn_ )
 
    dispbegin()
@@ -120,12 +101,12 @@ FUNCTION scrStatus(obj_,scn_)
 
    s += pad(scn_[SCN_FILE],12)+;
              ' ³ '+;
-             ' Row:'+;
+             ' R:'+;
              str( scn_[SCN_ROW_REP]-1, 3 )+;
-             ' Col:'+;
+             ' C:'+;
              str( scn_[SCN_COL_REP]-1, 3 )+;
              ' ³ ' +;
-             IF(readInsert(),'Ins ','    ')+;
+             iif(readInsert(),'Ins ','    ')+;
              ' ³ '
 
    objId := ''
@@ -147,9 +128,6 @@ FUNCTION scrStatus(obj_,scn_)
 
    IF ( nSct := scrSecOrd(scn_,scn_[SCN_ROW_REP])) <> NIL
       s += scn_[ SCN_SECTORS_,nSct,SCT_ID ]
-      #ifdef __WVT__
-         cClr := scn_[ SCN_SECTORS_,nSct,SCT_COLOR ]
-      #ENDIF
    ENDIF
 
    @ scn_[SCN_STATUS_ROW], scn_[SCN_STATUS_COL] ;
@@ -159,8 +137,8 @@ FUNCTION scrStatus(obj_,scn_)
    /* Ruler */
    s := substr(scn_[SCN_RULER],;
       max( 1,scn_[SCN_COL_REP]-scn_[SCN_COL_CUR]+scn_[SCN_LEFT]),;
-         scn_[ SCN_RIGHT]-scn_[SCN_LEFT]+1 )
-   DispBox( scn_[SCN_TOP]-1,0,scn_[SCN_TOP]-1,maxcol(),'         ',scn_[SCN_CLR_OVERALL] )
+         scn_[ SCN_RIGHT ] - scn_[SCN_LEFT ] + 1 )
+   DispBox( scn_[ SCN_TOP ] - 1, 0, scn_[ SCN_TOP ] - 1, maxcol(), '         ', scn_[ SCN_CLR_OVERALL ] )
    @ scn_[SCN_ROW_RULER],scn_[SCN_LEFT] SAY s COLOR scn_[SCN_CLR_RULER]
    @ scn_[SCN_ROW_RULER],scn_[SCN_COL_CUR] say ;
       substr( s, scn_[SCN_COL_CUR]-scn_[SCN_LEFT]+1,1)  COLOR cClr
@@ -178,7 +156,7 @@ FUNCTION scrStatus(obj_,scn_)
 
 FUNCTION scrHiLite(obj_,scn_,mode)
    LOCAL nObj   := scn_[SCN_OBJ_HILITE]
-   LOCAL cColor := IF(mode,scn_[SCN_CLR_HILITE],obj_[nObj,OBJ_COLOR])
+   LOCAL cColor := iif(mode,scn_[SCN_CLR_HILITE],obj_[nObj,OBJ_COLOR])
 
    IF obj_[nObj,OBJ_TYPE] == OBJ_O_BOX
       DispBegin()
@@ -201,17 +179,17 @@ FUNCTION scrHiLite(obj_,scn_,mode)
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrDispSelctd(obj_,scn_)
+FUNCTION scrDispSelctd( obj_,scn_ )
    LOCAL i,j,nCol,nRow
 
-   IF !empty(scn_[SCN_TEXT_BLOCK_])
+   IF ! empty( scn_[ SCN_TEXT_BLOCK_ ] )
       DispBegin()
 
-      FOR i := scn_[SCN_TEXT_BLOCK_,1] TO scn_[SCN_TEXT_BLOCK_,3]
-         IF (nRow := i+scn_[SCN_ROW_DIS]) <= scn_[SCN_BOTTOM]
-            FOR j := scn_[SCN_TEXT_BLOCK_,2] TO scn_[SCN_TEXT_BLOCK_,4]
-               IF (nCol := j+scn_[SCN_COL_DIS]) <= scn_[SCN_RIGHT]
-                  @ nRow,nCol SAY scrGetChar(obj_,i,j) COLOR 'GR+/R'
+      FOR i := scn_[ SCN_TEXT_BLOCK_, 1 ] TO scn_[ SCN_TEXT_BLOCK_, 3 ]
+         IF ( nRow := i + scn_[ SCN_ROW_DIS ] ) <= scn_[ SCN_BOTTOM ]
+            FOR j := scn_[ SCN_TEXT_BLOCK_, 2 ] TO scn_[ SCN_TEXT_BLOCK_, 4 ]
+               IF ( nCol := j + scn_[ SCN_COL_DIS ] ) <= scn_[ SCN_RIGHT ]
+                  @ nRow, nCol SAY scrGetChar( obj_, i, j ) COLOR 'GR+/R'
                ENDIF
             NEXT
          ENDIF
@@ -223,17 +201,17 @@ FUNCTION scrDispSelctd(obj_,scn_)
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrDispGhost(obj_,scn_,gst_)
+FUNCTION scrDispGhost( obj_,scn_,gst_ )
    LOCAL i,j,nRow,nCol
 
    HB_SYMBOL_UNUSED( obj_ )
 
    DispBegin()
-   FOR i := gst_[1] TO gst_[3]
-      IF (nRow := i+scn_[SCN_ROW_DIS]) <= scn_[SCN_BOTTOM]
-         FOR j := gst_[2] TO gst_[4]
-            IF (nCol := j+scn_[SCN_COL_DIS]) <= scn_[SCN_RIGHT]
-               @ nRow,nCol SAY THE_FILL COLOR 'GR+/R'
+   FOR i := gst_[ 1 ] TO gst_[ 3 ]
+      IF ( nRow := i + scn_[ SCN_ROW_DIS ] ) <= scn_[ SCN_BOTTOM ]
+         FOR j := gst_[ 2 ] TO gst_[ 4 ]
+            IF ( nCol := j + scn_[ SCN_COL_DIS ] ) <= scn_[ SCN_RIGHT ]
+               @ nRow, nCol SAY THE_FILL COLOR 'GR+/R'
             ENDIF
          NEXT
       ENDIF
@@ -244,39 +222,12 @@ FUNCTION scrDispGhost(obj_,scn_,gst_)
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrMove(obj_,scn_)
-   LOCAL i,scrT,scrB,scrL,scrR,k,n,nRepOff,nRowWnd,nTo
+FUNCTION scrMove( obj_, scn_ )
+   LOCAL i
    LOCAL crs := setCursor( 0 )
    LOCAL nOff, cText, nRow, nCol, cColor
 
    dispBegin()
-
-   IF scn_[SCN_DESIGN] == DGN_MODULE .OR. scn_[SCN_DESIGN]==DGN_SCREEN
-      scrT := VouchWndSave(0,0,scn_[SCN_TOP]-1,maxcol())
-      scrB := VouchWndSave(scn_[SCN_BOTTOM]+1,0,maxrow(),maxcol())
-      scrL := VouchWndSave(0,0,maxrow(),scn_[SCN_LEFT]-1)
-      scrR := VouchWndSave(0,scn_[SCN_RIGHT]+1,maxrow(),maxcol())
-   ELSE
-      scrT := VouchWndSave(0,0,scn_[SCN_TOP]-2,maxcol())
-      scrB := VouchWndSave(maxrow()-2,0,maxrow(),maxcol())
-      DispBox( scn_[SCN_TOP],0,maxrow()-2,maxcol(),'         ',scn_[SCN_CLR_OVERALL] )
-
-      nRowWnd := scn_[SCN_BOTTOM ] - scn_[SCN_TOP] + 1
-      nRepOff := scn_[SCN_ROW_REP] - (scn_[SCN_ROW_CUR] - scn_[SCN_TOP])
-      nTo     := (nRowWnd + nRepOff - 1)
-
-      k := 0
-      FOR i := nRepOff TO nTo
-         IF ( n := scrSecOrd( scn_,i ) ) <> NIL
-            @ scn_[ SCN_TOP ]+k, 0 SAY scn_[ SCN_SECTORS_, n, SCT_SAY ] ;
-            COLOR scn_[ SCN_SECTORS_,n,SCT_COLOR ]
-            k++
-         ENDIF
-      NEXT
-
-      scrL := VouchWndSave(0,0,maxrow(),scn_[SCN_LEFT]-1)
-      scrR := VouchWndSave(0,scn_[SCN_RIGHT]+1,maxrow()-2,maxcol())
-   ENDIF
 
    dispBox(scn_[ SCN_TOP       ],;
            scn_[ SCN_LEFT      ],;
@@ -297,30 +248,33 @@ FUNCTION scrMove(obj_,scn_)
             nCol := 0
          ENDIF
 
-         IF obj_[i,OBJ_TYPE] == OBJ_O_BOX
+         IF obj_[ i,OBJ_TYPE ] == OBJ_O_BOX
+            cColor := iif( scn_[ SCN_OBJ_SELECTED ] == i, scn_[ SCN_CLR_SELECT ],;
+                      iif( scn_[ SCN_OBJ_HILITE   ] == i, scn_[ SCN_CLR_HILITE ],;
+                                                 'W/B' /* obj_[i,OBJ_COLOR] */ ) )
             DO CASE
-            CASE VouchInArray(obj_[ i,OBJ_MDL_F_TYPE ], { 61,62,63,67,68 } )
+            CASE VouchInArray( obj_[ i,OBJ_MDL_F_TYPE ], { 61,62,63,67,68 } )
                dispBox( obj_[ i,OBJ_ROW    ] + scn_[ SCN_ROW_DIS ],;
                         obj_[ i,OBJ_COL    ] + scn_[ SCN_COL_DIS ],;
                         obj_[ i,OBJ_TO_ROW ] + scn_[ SCN_ROW_DIS ],;
                         obj_[ i,OBJ_TO_COL ] + scn_[ SCN_COL_DIS ],;
                         substr( obj_[ i,OBJ_BOX_SHAPE ], 1, 8 ),;
-                        IF( scn_[ SCN_OBJ_HILITE ] == i, scn_[ SCN_CLR_HILITE ],;
-                              'w/b' /* obj_[i,OBJ_COLOR] */))
-            CASE VouchInArray(obj_[i,OBJ_MDL_F_TYPE], {64,65} )    //  Line
-               @  obj_[i,OBJ_ROW]    + scn_[SCN_ROW_DIS],;
-                  obj_[i,OBJ_COL]    + scn_[SCN_COL_DIS] ;
-               TO obj_[i,OBJ_TO_ROW] + scn_[SCN_ROW_DIS],;
-                  obj_[i,OBJ_TO_COL] + scn_[SCN_COL_DIS] ;
-               COLOR IF(scn_[SCN_OBJ_HILITE]==i,scn_[SCN_CLR_HILITE],;
-                              'w/b' /* obj_[i,OBJ_COLOR] */)
+                        cColor )
+
+            CASE VouchInArray( obj_[ i, OBJ_MDL_F_TYPE ], { 64,65 } )    //  Line
+               @  obj_[ i, OBJ_ROW    ] + scn_[ SCN_ROW_DIS ],;
+                  obj_[ i, OBJ_COL    ] + scn_[ SCN_COL_DIS ] ;
+               TO obj_[ i, OBJ_TO_ROW ] + scn_[ SCN_ROW_DIS ],;
+                  obj_[ i, OBJ_TO_COL ] + scn_[ SCN_COL_DIS ] ;
+               COLOR cColor
+
             ENDCASE
          ENDIF
 
-         IF obj_[i,OBJ_TYPE] == OBJ_O_FIELD .OR. obj_[i,OBJ_TYPE] == OBJ_O_EXP
+         IF obj_[i,OBJ_TYPE] == OBJ_O_FIELD
             cText  := obj_[ i,OBJ_TEXT ]
-            cColor := IF( scn_[ SCN_OBJ_SELECTED ] == i,scn_[ SCN_CLR_SELECT ],;
-                      IF( scn_[ SCN_OBJ_HILITE   ] == i,scn_[ SCN_CLR_HILITE ],;
+            cColor := iif( scn_[ SCN_OBJ_SELECTED ] == i,scn_[ SCN_CLR_SELECT ],;
+                      iif( scn_[ SCN_OBJ_HILITE   ] == i,scn_[ SCN_CLR_HILITE ],;
                                                  'W+/W' /* obj_[i,OBJ_COLOR] */ ))
             IF nOff < 0
                cText := substr( obj_[ i,OBJ_TEXT ], abs( nOff ) + 1 )
@@ -330,8 +284,8 @@ FUNCTION scrMove(obj_,scn_)
 
          IF obj_[i,OBJ_TYPE] == OBJ_O_TEXT
             cText  := obj_[ i,OBJ_EQN ]
-            cColor := IF( scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
-                      IF( empty(obj_[i,OBJ_COLOR]),scn_[SCN_CLR_TEXT],;
+            cColor := iif( scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
+                      iif( empty(obj_[i,OBJ_COLOR]),scn_[SCN_CLR_TEXT],;
                                                 'W/B' /* obj_[i,OBJ_COLOR] */))
             IF nOff < 0
                cText := substr( obj_[ i,OBJ_EQN ], abs( nOff ) + 1 )
@@ -344,28 +298,15 @@ FUNCTION scrMove(obj_,scn_)
       ENDIF
    NEXT
 
-   ScrDispSelctd( obj_,scn_ )     //  Display Selected Screen
-
-   IF scn_[ SCN_TOP    ] > 0
-      VouchWndRest(scrT)
-   ENDIF
-   IF scn_[ SCN_LEFT   ] > 0
-      VouchWndRest(scrL)
-   ENDIF
-   IF scn_[ SCN_BOTTOM ] < maxrow()
-      VouchWndRest(scrB)
-   ENDIF
-   IF scn_[ SCN_RIGHT  ] < maxcol()
-      VouchWndRest(scrR)
-   ENDIF
-
+   ScrDispSelctd( obj_, scn_ )
    dispEnd()
    setcursor( crs )
+
    RETURN NIL
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrMoveLine(obj_,scn_)
+FUNCTION scrMoveLine( obj_,scn_ )
    LOCAL scrL,scrR,i,crs, nRow, nCol, cText, nOff, cColor
 
    crs := setCursor( 0 )
@@ -388,9 +329,6 @@ FUNCTION scrMoveLine(obj_,scn_)
          nOff := obj_[i,OBJ_COL]+scn_[SCN_COL_DIS]
          nRow := obj_[i,OBJ_ROW]+scn_[SCN_ROW_DIS]
          nCol := nOff
-         #ifdef __WVT__
-            nCol := IF( nOff < 0, 0, nOff )
-         #ENDIF
 
          IF obj_[i,OBJ_TYPE] == OBJ_O_BOX
             DO CASE
@@ -399,7 +337,7 @@ FUNCTION scrMoveLine(obj_,scn_)
                   obj_[i,OBJ_COL]    + scn_[SCN_COL_DIS] ;
                TO obj_[i,OBJ_TO_ROW] + scn_[SCN_ROW_DIS],;
                   obj_[i,OBJ_TO_COL] + scn_[SCN_COL_DIS] ;
-               COLOR IF(scn_[SCN_OBJ_HILITE]==i,scn_[SCN_CLR_HILITE],;
+               COLOR iif(scn_[SCN_OBJ_HILITE]==i,scn_[SCN_CLR_HILITE],;
                               'w/b' /* obj_[i,OBJ_COLOR] */)
             ENDCASE
          ENDIF
@@ -407,25 +345,17 @@ FUNCTION scrMoveLine(obj_,scn_)
          IF obj_[ i,OBJ_ROW ] == scn_[ SCN_ROW_REP ]
             IF obj_[i,OBJ_TYPE] == OBJ_O_FIELD .OR. obj_[i,OBJ_TYPE] == OBJ_O_EXP
                cText := obj_[i,OBJ_TEXT]
-               cColor := IF(scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
-                         IF(scn_[SCN_OBJ_HILITE  ]==i,scn_[SCN_CLR_HILITE],;
+               cColor := iif(scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
+                         iif(scn_[SCN_OBJ_HILITE  ]==i,scn_[SCN_CLR_HILITE],;
                                                'W+/W' /* obj_[i,OBJ_COLOR] */ ))
-               #ifdef __WVT__
-                  IF nOff < 0
-                     cText := substr( cText, abs( nOff )+1 )
-                  ENDIF
-               #ENDIF
                @ nRow, nCol SAY cText COLOR cColor
             ENDIF
 
             IF obj_[i,OBJ_TYPE] == OBJ_O_TEXT
                cText  := obj_[i,OBJ_EQN]
-               cColor := IF(scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
-                         IF(empty(obj_[i,OBJ_COLOR]),scn_[SCN_CLR_TEXT],;
+               cColor := iif(scn_[SCN_OBJ_SELECTED]==i,scn_[SCN_CLR_SELECT],;
+                         iif(empty(obj_[i,OBJ_COLOR]),scn_[SCN_CLR_TEXT],;
                                       'W/B' /* obj_[i,OBJ_COLOR] */))
-               #ifdef __WVT__
-                  cText := IF( nOff < 0, substr( cText, abs( nOff )+1 ), cText )
-               #ENDIF
                @ nRow, nCol SAY cText COLOR cColor
             ENDIF
          ENDIF

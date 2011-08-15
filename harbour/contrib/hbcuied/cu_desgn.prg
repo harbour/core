@@ -177,7 +177,7 @@ FUNCTION Operate( obj_,scn_ )
          scrObject(obj_,scn_)
 
       CASE scn_[ SCN_LASTKEY ] == K_F4                           //  Properties
-         scrProperty(obj_,scn_)
+         scrProperty( obj_,scn_ )
 
       CASE scn_[ SCN_LASTKEY ] == K_F7 .OR. scn_[ SCN_LASTKEY ] == K_ALT_C      //  Copy
          scrObjCopy(obj_,scn_)
@@ -405,22 +405,22 @@ FUNCTION scrMovUp(scn_)
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrMovDn(scn_)
+FUNCTION scrMovDn( scn_ )
    LOCAL lMoved := .t.
 
-   scn_[SCN_ROW_CUR]++
-   IF scn_[SCN_ROW_CUR]    > scn_[SCN_BOTTOM]
-      scn_[SCN_ROW_CUR] := scn_[SCN_BOTTOM]
-      IF scn_[SCN_ROW_REP] < scn_[SCN_REP_LINES]
-         scn_[SCN_ROW_DIS]--
-         scn_[SCN_ROW_REP]++
-         scn_[SCN_REFRESH] := OBJ_REFRESH_ALL
+   scn_[ SCN_ROW_CUR ]++
+   IF scn_[ SCN_ROW_CUR ]  > scn_[ SCN_BOTTOM ]
+      scn_[ SCN_ROW_CUR ] := scn_[ SCN_BOTTOM ]
+      IF scn_[ SCN_ROW_REP ] < scn_[ SCN_REP_LINES ]
+         scn_[ SCN_ROW_DIS ]--
+         scn_[ SCN_ROW_REP ]++
+         scn_[ SCN_REFRESH ] := OBJ_REFRESH_ALL
       ELSE
          lMoved := .f.
          tone(300,1)
       ENDIF
    ELSE
-      scn_[SCN_ROW_REP]++
+      scn_[ SCN_ROW_REP ]++
    ENDIF
    RETURN lMoved
 
@@ -744,6 +744,31 @@ STATIC FUNCTION scrTxtProp( obj_, scn_, nObj )
 
 //----------------------------------------------------------------------//
 
+FUNCTION scrOnLastCol( obj_, scn_, nObj )
+   LOCAL nOff, i
+
+   IF obj_[ nObj, OBJ_TYPE ] == OBJ_O_BOX
+      nOff := obj_[ nObj, OBJ_TO_COL ] - scn_[ SCN_COL_CUR ] - 1
+      FOR i := 1 TO nOff
+         scrMovRgt( scn_ )
+         scrMove( obj_,scn_ )
+         scrStatus( obj_,scn_ )
+      NEXT
+
+      nOff := obj_[ nObj, OBJ_TO_ROW ] - scn_[ SCN_ROW_CUR ] - 1
+      FOR i := 1 TO nOff
+         scrMovDn( scn_ )
+         scrMove( obj_,scn_ )
+         scrStatus( obj_,scn_ )
+      NEXT
+
+      SetPos( scn_[ SCN_ROW_CUR ], scn_[ SCN_COL_CUR ] )
+   ENDIF
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
 STATIC FUNCTION scrOnFirstCol( obj_,scn_,nObj,type_ )
    LOCAL nCur, nOff
 
@@ -804,11 +829,11 @@ FUNCTION scrGetChar(obj_,nRow,nCol)
    LOCAL s := THE_FILL,n
 
    //  Locate Text
-   n := ascan(obj_,{|e_| e_[OBJ_ROW]==nRow .AND. ;
-                     VouchInRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
+   n := ascan(obj_,{|e_| e_[ OBJ_ROW ] == nRow .AND. ;
+                     VouchInRange( nCol, e_[ OBJ_COL ], e_[ OBJ_TO_COL ] ) } )
    IF n == 0   //  Locate Box
-      n := ascan(obj_,{|e_| VouchInRange(nRow,e_[OBJ_ROW],e_[OBJ_TO_ROW]) .AND. ;
-                     VouchInRange(nCol,e_[OBJ_COL],e_[OBJ_TO_COL]) })
+      n := ascan(obj_,{|e_| VouchInRange( nRow, e_[ OBJ_ROW ], e_[ OBJ_TO_ROW ] ) .AND. ;
+                            VouchInRange( nCol, e_[ OBJ_COL ], e_[ OBJ_TO_COL ] ) } )
    ENDIF
 
    IF n > 0
@@ -900,6 +925,7 @@ STATIC FUNCTION scrTextBlock(obj_,scn_)
       scrStatus(obj_,scn_)
    ENDDO
    scrMsg('')
+
    RETURN NIL
 
 //----------------------------------------------------------------------//
@@ -911,13 +937,13 @@ STATIC FUNCTION scrTextMove(obj_,scn_,nMode)
 
    DEFAULT nMode TO 0   //  0.Paste   1.Copy
 
-   IF !empty(scn_[SCN_TEXT_BLOCK_])
+   IF ! empty( scn_[ SCN_TEXT_BLOCK_ ] )
       //  CREATE a ghost movement block
       scrMsg('Use Arrow Keys TO Move Selected Block')
       //  Check FOR current cursor position
-      gst_:= {scn_[SCN_ROW_REP],scn_[SCN_COL_REP],;
-              scn_[SCN_ROW_REP]+scn_[SCN_TEXT_BLOCK_,3]-scn_[SCN_TEXT_BLOCK_,1],;
-              scn_[SCN_COL_REP]+scn_[SCN_TEXT_BLOCK_,4]-scn_[SCN_TEXT_BLOCK_,2]}
+      gst_:= { scn_[ SCN_ROW_REP ] , scn_[ SCN_COL_REP ],;
+               scn_[ SCN_ROW_REP ] + scn_[ SCN_TEXT_BLOCK_, 3 ] - scn_[ SCN_TEXT_BLOCK_, 1 ],;
+               scn_[ SCN_COL_REP ] + scn_[ SCN_TEXT_BLOCK_, 4 ] - scn_[ SCN_TEXT_BLOCK_, 2 ] }
       DO WHILE .t.
          scrMove(obj_,scn_)
          scrDispGhost(obj_,scn_,gst_)
@@ -946,45 +972,45 @@ STATIC FUNCTION scrTextMove(obj_,scn_,nMode)
          ENDCASE
       ENDDO
       //  Post Selected Block TO Moved Area
-      obj_:= scrTextPost(obj_,scn_,gst_,nMode)
+      obj_:= scrTextPost( obj_, scn_, gst_, nMode )
 
-      scrOrdObj(obj_,scn_)       //  Update this routine TO show exact nature
+      scrOrdObj( obj_, scn_ )
 
-      scrMove(obj_,scn_)
-      scrStatus(obj_,scn_)
+      scrMove( obj_, scn_ )
+      scrStatus( obj_, scn_ )
 
-      scrMsg('')
+      scrMsg()
    ENDIF
    setCursor(crs)
+
    RETURN obj_
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
-   //  Good work of statistics
+STATIC FUNCTION scrTextPost( obj_, scn_, gst_, nMode )
    LOCAL n,i,s,s1,s2,s3,n1,nWid,nCol,nn
    LOCAL del_:={0},ins_:={},d_:={},ddd_
-   LOCAL old_:= scn_[SCN_TEXT_BLOCK_]
+   LOCAL old_:= scn_[ SCN_TEXT_BLOCK_ ]
 
-   FOR i := gst_[1] TO gst_[3]
+   FOR i := gst_[ 1 ] TO gst_[ 3 ]
       n := -1
       DO WHILE .t.
-         n := ascan(obj_,{|e_| e_[OBJ_ROW]==i ;
+         n := ascan( obj_, {|e_| e_[ OBJ_ROW ] == i ;
                                        .AND. ;
-                        (VouchInRange(e_[OBJ_COL],gst_[2],gst_[4]);
+                        ( VouchInRange(e_[OBJ_COL],gst_[2],gst_[4]);
                                        .OR. ;
-                         VouchInRange(e_[OBJ_TO_COL],gst_[2],gst_[4])) ;
+                          VouchInRange(e_[OBJ_TO_COL],gst_[2],gst_[4])) ;
                                        .AND.;
-                                   !VouchInArray(n,del_) })
+                                   ! VouchInArray( n,del_ ) } )
          IF n > 0
-            IF     obj_[n,OBJ_TYPE] == OBJ_O_TEXT
-               aadd(del_,n)
+            IF obj_[ n,OBJ_TYPE ] == OBJ_O_TEXT
+               aadd( del_, n )
 
-               s1    := '' ; ; s3 := ''
-               s     := obj_[n,OBJ_EQN]
-               nCol  := obj_[n,OBJ_COL]
+               s1    := '' ; s3 := ''
+               s     := obj_[ n, OBJ_EQN ]
+               nCol  := obj_[ n, OBJ_COL ]
 
-               IF gst_[2] <= obj_[n,OBJ_COL] .AND. gst_[4] >= obj_[n,OBJ_TO_COL]
+               IF gst_[2] <= obj_[ n, OBJ_COL ] .AND. gst_[ 4 ] >= obj_[ n, OBJ_TO_COL ]
                   //  Only deletion of OBJECT
                   //  s2 := s
                ELSEIF gst_[2] >=  nCol
@@ -997,36 +1023,38 @@ STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
                   s3 := substr(s,gst_[4]-nCol+2)
                ENDIF
 
-               IF len(s1)>0
-                  aadd(ins_,scrObjBlank())
-                  n1 := len(ins_)
-                  ins_[n1,OBJ_TYPE]    := OBJ_O_TEXT
-                  ins_[n1,OBJ_ROW]     := obj_[n,OBJ_ROW]
-                  ins_[n1,OBJ_COL]     := obj_[n,OBJ_COL]
-                  ins_[n1,OBJ_EQN]     := s1
-                  ins_[n1,OBJ_ID]      := 'Text'
-                  ins_[n1,OBJ_COLOR]   := 'W/B'
-                  ins_[n1,OBJ_SECTION] := obj_[n,OBJ_SECTION]
-                  ins_[n1,OBJ_TO_ROW]  := obj_[n,OBJ_ROW    ]
-                  ins_[n1,OBJ_TO_COL]  := ins_[n1,OBJ_COL]+len(s1)-1
+               IF len( s1 ) > 0
+                  aadd( ins_,scrObjBlank() )
+                  n1 := len( ins_ )
+
+                  ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
+                  ins_[ n1, OBJ_ROW     ] := obj_[ n, OBJ_ROW ]
+                  ins_[ n1, OBJ_COL     ] := obj_[ n, OBJ_COL ]
+                  ins_[ n1, OBJ_EQN     ] := s1
+                  ins_[ n1, OBJ_ID      ] := 'Text'
+                  ins_[ n1, OBJ_COLOR   ] := 'W/B'
+                  ins_[ n1, OBJ_SECTION ] := obj_[ n, OBJ_SECTION ]
+                  ins_[ n1, OBJ_TO_ROW  ] := obj_[ n, OBJ_ROW     ]
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s1 ) - 1
                ENDIF
 
-               IF len(s3) > 0
-                  aadd(ins_,scrObjBlank())
-                  n1                   := len(ins_)
-                  ins_[n1,OBJ_TYPE]    := OBJ_O_TEXT
-                  ins_[n1,OBJ_ROW]     := obj_[n,OBJ_ROW]
-                  ins_[n1,OBJ_COL]     := gst_[4]+1
-                  ins_[n1,OBJ_EQN]     := s3
-                  ins_[n1,OBJ_ID]      := 'Text'
-                  ins_[n1,OBJ_COLOR]   := 'W/B'
-                  ins_[n1,OBJ_SECTION] := obj_[n,OBJ_SECTION]
-                  ins_[n1,OBJ_TO_ROW]  := obj_[n,OBJ_ROW    ]
-                  ins_[n1,OBJ_TO_COL]  := ins_[n1,OBJ_COL]+len(s3)-1
+               IF len( s3 ) > 0
+                  aadd( ins_, scrObjBlank() )
+                  n1 := len( ins_ )
+
+                  ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
+                  ins_[ n1, OBJ_ROW     ] := obj_[n, OBJ_ROW]
+                  ins_[ n1, OBJ_COL     ] := gst_[ 4 ] + 1
+                  ins_[ n1, OBJ_EQN     ] := s3
+                  ins_[ n1, OBJ_ID      ] := 'Text'
+                  ins_[ n1, OBJ_COLOR   ] := 'W/B'
+                  ins_[ n1, OBJ_SECTION ] := obj_[ n, OBJ_SECTION ]
+                  ins_[ n1, OBJ_TO_ROW  ] := obj_[ n, OBJ_ROW     ]
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s3 ) - 1
                ENDIF
 
             ELSEIF obj_[n,OBJ_TYPE] == OBJ_O_FIELD .OR. obj_[n,OBJ_TYPE] == OBJ_O_EXP
-               aadd(del_,n)
+               aadd( del_, n )
 
             ELSEIF obj_[n,OBJ_TYPE] == OBJ_O_BOX
 
@@ -1138,23 +1166,24 @@ STATIC FUNCTION scrTextPost(obj_,scn_,gst_,nMode)
    IF nMode <> 0
       del_:={}
    ENDIF
-   aeval(ddd_,{|e| aadd(del_,e) })
+   aeval( ddd_,{|e| aadd( del_, e ) } )
 
-   IF !empty(del_)
-      FOR i := 1 TO len(obj_)
-         IF ascan(del_,i) == 0
-            aadd(d_,obj_[i])
+   IF !empty( del_ )
+      FOR i := 1 TO len( obj_)
+         IF ascan( del_, i ) == 0
+            aadd( d_, obj_[ i ] )
          ENDIF
       NEXT
-      obj_:= aclone(d_)
-      IF empty(obj_)
-         aadd(obj_,scrObjBlank())
+      obj_:= aclone( d_ )
+      IF empty( obj_ )
+         aadd( obj_, scrObjBlank() )
       ENDIF
    ENDIF
 
-   aeval(ins_,{|e_| aadd(obj_,e_) })
+   aeval( ins_, {|e_| aadd( obj_, e_ ) } )
 
    scn_[SCN_TEXT_BLOCK_] := {}
+
    RETURN obj_
 
 //----------------------------------------------------------------------//
