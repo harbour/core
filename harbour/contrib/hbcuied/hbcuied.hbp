@@ -6,10 +6,10 @@
 -3rd=hbide_title=hbcuied
 -3rd=hbide_output=hbcuied
 
--w3
--es2
 -inc
--gui
+-o${hb_name}
+
+-w3 -es2
 
 -gtwvt
 
@@ -18,10 +18,10 @@ cu_utlty.prg
 cu_achoi.prg
 cu_object.prg
 
--ohbcuied
-
 -icon={allwin}../../package/harb_win.ico
 
 -3rd=hbide_file=hbcuied.ch
 
- 
+# Always build in shared mode for these platforms to minimize
+# binary sizes.
+{_HB_BUILD_&(!(HB_BUILD_DYN='no')&(win|wce|os2))}-shared
