@@ -69,10 +69,6 @@
 #define __HBEDCUI_CH
 
 #define THE_FILL                                  'ø'
-#define CLR_GET                                   'W+/W'
-#define CLR_BOX                                   'W+/B'
-#define OBJ_CLR_FIELD                             'W+/W'
-
 
 #define OBJ_TYPE                                  1     //   N   1
 #define OBJ_ROW                                   2     //   N   3
@@ -117,21 +113,6 @@
 #define OBJ_BORDER                                40    //   N   5 2
                                                   
 #define OBJ_INIT_VRBLS                            40
-
-//   Run time addresses
-#define OBJ_PRINT                                 4
-#define OBJ_SECTOR                                9
-#define OBJ_UNIQUE                                32
-#define CAL_UNIQUE                                1
-#define CAL_SECTOR                                2
-#define CAL_OBJ                                   3
-#define CAL_ATTRB                                 4
-#define CAL_NONE                                  5
-#define CAL_COUNT                                 6
-#define CAL_SUM                                   7
-#define CAL_AVERAGE                               8
-#define CAL_HIGHEST                               9
-#define CAL_LOWEST                                10
 
 #define OBJ_LEN_TYPE                              1
 #define OBJ_LEN_ROW                               3
@@ -331,142 +312,6 @@
 #define SCN_NUM_VAR                               55
 
 
-#define REP_DESC                                  1    //   C  70
-#define REP_TYPE                                  2    //   N   3
-#define REP_IDX_NO                                3    //   N   3
-#define REP_IDX_EXP                               4    //   C 240
-#define REP_PG_SIZE                               5    //   C  12
-#define REP_PG_LEN                                6    //   N   5
-#define REP_PG_WID                                7    //   N   5
-#define REP_LINES                                 8    //   N   2
-#define REP_MG_TOP                                9    //   N   3
-#define REP_MG_LEFT                               10    //   N   3
-#define REP_MG_BOTTOM                             11    //   N   3
-#define REP_EJ_BEFORE                             12    //   L   1
-#define REP_EJ_AFTER                              13    //   L   1
-#define REP_PLAIN                                 14    //   N   2
-#define REP_FTR_PAG                               15    //   L   1
-#define REP_SMR_NEXT                              16    //   L   1
-#define REP_HDR_PAGES                             17    //   C  10
-#define REP_BNK_LINES                             18    //   N   3
-#define REP_BNK_AFTER                             19    //   N   3
-#define REP_DATA_BOX                              20    //   L   1
-#define REP_FILE                                  21    //   C  80
-#define REP_COPIES                                22    //   N   3
-#define REP_TTL_PAGES                             23    //   C  10
-#define REP_INIT_CPI                              24    //   N   2
-#define REP_PRN_QLY                               25    //   C   1
-#define REP_RECONFIRM                             26    //   L   1
-#define REP_FTR_BOTTOM                            27    //   L   1
-#define REP_HTML                                  28    //   L   1
-#define REP_PRINTER                               29    //   C   7
-#define REP_ORIENT                                30    //   C   1
-#define REP_PREVIEW                               31    //      L   1
-#define REP_GRAY                                  32    //      L   1
-#define REP_WINDLG                                33    //      L   1
-#define REP_DUPLEX                                34    //      N   1
-#define REP_COLS                                  35    //      N   3
-#define REP_ROWS                                  36    //      N   3
-                                                  
-#define REP_FOR                                   37    //   C 240
-#define REP_WHILE                                 38    //   C 125
-#define REP_FIRST                                 39    //   C 125
-#define REP_EXE_PRE                               40    //   C 245
-#define REP_EXE_POST                              41    //   C 245
-                                                  
-#define REP_INIT_VRBLS                            41
-                                                  
-#define REP_LEN_DESC                              70
-#define REP_LEN_TYPE                              3
-#define REP_LEN_IDX_NO                            3
-#define REP_LEN_IDX_EXP                           240
-#define REP_LEN_PG_SIZE                           12
-#define REP_LEN_PG_LEN                            5
-#define REP_LEN_PG_WID                            5
-#define REP_LEN_LINES                             2
-#define REP_LEN_MG_TOP                            3
-#define REP_LEN_MG_LEFT                           3
-#define REP_LEN_MG_BOTTOM                         3
-#define REP_LEN_EJ_BEFORE                         1
-#define REP_LEN_EJ_AFTER                          1
-#define REP_LEN_PLAIN                             2
-#define REP_LEN_FTR_PAG                           1
-#define REP_LEN_SMR_NEXT                          1
-#define REP_LEN_HDR_PAGES                         10
-#define REP_LEN_BNK_LINES                         3
-#define REP_LEN_BNK_AFTER                         3
-#define REP_LEN_DATA_BOX                          1
-#define REP_LEN_FILE                              80
-#define REP_LEN_COPIES                            3
-#define REP_LEN_TTL_PAGES                         10
-#define REP_LEN_INIT_CPI                          2
-#define REP_LEN_PRN_QLY                           1
-#define REP_LEN_RECONFIRM                         1
-#define REP_LEN_FTR_BOTTOM                        1
-#define REP_LEN_HTML                              1
-#define REP_LEN_PRINTER                           7
-#define REP_LEN_ORIENT                            1
-#define REP_LEN_PREVIEW                           1
-#define REP_LEN_GRAY                              1
-#define REP_LEN_WINDLG                            1
-#define REP_LEN_DUPLEX                            1
-#define REP_LEN_COLS                              3
-#define REP_LEN_ROWS                              3
-
-#define REP_LEN_FOR                               240
-#define REP_LEN_WHILE                             125
-#define REP_LEN_FIRST                             125
-#define REP_LEN_EXE_PRE                           245
-#define REP_LEN_EXE_POST                          245
-
-#define REP_OS_DESC                               1      //   C  70
-#define REP_OS_TYPE                               71     //   N   3
-#define REP_OS_IDX_NO                             74     //   N   3
-#define REP_OS_IDX_EXP                            77     //   C 240
-#define REP_OS_PG_SIZE                            317    //   C  12
-#define REP_OS_PG_LEN                             329    //   N   5
-#define REP_OS_PG_WID                             334    //   N   5
-#define REP_OS_LINES                              339    //   N   2
-#define REP_OS_MG_TOP                             341    //   N   3
-#define REP_OS_MG_LEFT                            344    //   N   3
-#define REP_OS_MG_BOTTOM                          347    //   N   3
-#define REP_OS_EJ_BEFORE                          350    //   L   1
-#define REP_OS_EJ_AFTER                           351    //   L   1
-#define REP_OS_PLAIN                              352    //   N   2
-#define REP_OS_FTR_PAG                            354    //   L   1
-#define REP_OS_SMR_NEXT                           355    //   L   1
-#define REP_OS_HDR_PAGES                          356    //   C  10
-#define REP_OS_BNK_LINES                          366    //   N   3
-#define REP_OS_BNK_AFTER                          369    //   N   3
-#define REP_OS_DATA_BOX                           372    //   L   1
-#define REP_OS_FILE                               373    //   C  80
-#define REP_OS_COPIES                             453    //   N   3
-#define REP_OS_TTL_PAGES                          456    //   C  10
-#define REP_OS_INIT_CPI                           466    //   N   2
-#define REP_OS_PRN_QLY                            468    //   C   1
-#define REP_OS_RECONFIRM                          469    //   L   1
-#define REP_OS_FTR_BOTTOM                         470    //   L   1
-#define REP_OS_HTML                               471    //   L   1
-#define REP_OS_PRINTER                            472    //   C   7
-#define REP_OS_ORIENT                             479    //   C   1
-#define REP_OS_PREVIEW                            480    //      L   1
-#define REP_OS_GRAY                               481    //      L   1
-#define REP_OS_WINDLG                             482    //      L   1
-#define REP_OS_DUPLEX                             483    //      N   1
-#define REP_OS_COLS                               484    //      N   3
-#define REP_OS_ROWS                               487    //      N   3
-
-
-//   TOTAL            490
-
-#define REP_OS_FOR                                1      //   C 240
-#define REP_OS_WHILE                              241    //   C 125
-#define REP_OS_FIRST                              366    //   C 125
-                                                  
-#define REP_OS_EXE_PRE                            1      //   C 245
-#define REP_OS_EXE_POST                           246    //   C 245
-
-
 #define SCT_ORDER                                 1
 #define SCT_ID                                    2
 #define SCT_SAY                                   3
@@ -475,49 +320,7 @@
 #define SCT_EQN                                   6
 #define SCT_EJECT                                 7
 #define SCT_RESET                                 8
-                                                  
 #define SCT_INIT_VRBLS                            8
-                                                  
-#define SCT_LEN_ORDER                             3
-#define SCT_LEN_ID                                8
-#define SCT_LEN_SAY                               5
-#define SCT_LEN_ROWS                              3
-#define SCT_LEN_COLOR                             7
-#define SCT_LEN_EQN                               240
-#define SCT_LEN_EJECT                             1
-#define SCT_LEN_RESET                             1
-                                                  
-#define SCT_OS_ORDER                              1  //   N   3
-#define SCT_OS_ID                                 4  //   C   8
-#define SCT_OS_SAY                                12   //   C   5
-#define SCT_OS_ROWS                               17   //   N   3
-#define SCT_OS_COLOR                              20   //   C   7
-#define SCT_OS_EQN                                27   //   C 240
-#define SCT_OS_EJECT                              267  //   L   1
-#define SCT_OS_RESET                              268  //   L   1 
-
-#define SCT_ID_GRP01_H                            200
-#define SCT_ID_GRP01_S                            800
-
-#define SCT_CLR_                                  {'W+/RB','W+/G','W+/R','W+/N','W+/GR'}
-
-#define SCT_INIT_GROUPS                           20
-
-#define REP_FOR_MOD                               1
-#define REP_FOR_RPT                               2
-#define REP_FOR_BRW                               3
-#define REP_FOR_MDL                               4
-#define REP_FOR_DOC                               5
-#define REP_FOR_LAB                               6
-#define REP_FOR_SCR                               7
-
-#define REP_SRC_MOD                               100
-#define REP_SRC_RPT                               200
-#define REP_SRC_BRW                               300
-#define REP_SRC_MDL                               400
-#define REP_SRC_DOC                               500
-#define REP_SRC_LAB                               600
-#define REP_SRC_SCR                               700
 
 
 #translate B_MSG ;

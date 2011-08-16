@@ -9,22 +9,18 @@
 -w3
 -es2
 -inc
--mt
 -gui
 
 -gtwvt
 
-#..\gtwvg\gtwvg.hbc
-
 cu_main.prg
-cu_desgn.prg
-cu_menu.prg
-cu_outpt.prg
-cu_prpty.prg
 cu_utlty.prg
 cu_achoi.prg
+cu_object.prg
 
 -ohbcuied
+
+-icon={allwin}../../package/harb_win.ico
 
 -3rd=hbide_file=hbcuied.ch
 

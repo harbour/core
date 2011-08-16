@@ -70,6 +70,8 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION Main( cSource, cScreen )
+   LOCAL bErr := errorBlock( {|o| ThisError( o ) } )
+   LOCAL oCUI
 
    SET SCOREBOARD OFF
    SET EPOCH TO 1950
@@ -79,18 +81,30 @@ FUNCTION Main( cSource, cScreen )
 
    hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer v1.0" )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-   hb_gtInfo( HB_GTI_ICONFILE  , "../../packages/harb_win.ico" )
+   hb_gtInfo( HB_GTI_ICONFILE  , "..\..\package\favicon.ico" )
 
-   dgn_Screen( cSource, cScreen )
+   oCUI := hbCUIEditor():new( cSource, cScreen ):create()
+   oCUI:destroy()
+   
+   ErrorBlock( bErr )
 
-   RETURN cSource
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION ThisError( oError )
+
+   alert( oError:description + ":" + oError:operation + ";" + ;
+             ProcName( 2 ) + "-" + hb_ntos( procLine( 2 ) ) + ";" + ;
+                ProcName( 3 ) + "-" + hb_ntos( procLine( 3 ) ) )
+   QUIT
+   
+   RETURN oError
+   
+/*----------------------------------------------------------------------*/
+
 FUNCTION HB_GTSYS()
-
    REQUEST HB_GT_WVT_DEFAULT
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

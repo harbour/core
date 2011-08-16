@@ -94,129 +94,6 @@ THREAD STATIC s_vid_stk := ""
 
 //----------------------------------------------------------------------//
 
-FUNCTION scrField( nObj, nFldExp, obj_, scn_, v_, sel_, cColor )
-   LOCAL h_:={},w_:={},o_
-
-   DEFAULT cColor TO scn_[ SCN_CLR_FIELD ]
-   DEFAULT sel_   TO scrVvSelAble()
-
-   IF nObj == 0
-      o_:= scrObjBlank()
-      DEFAULT v_ TO scrVvBlank()
-   ELSE
-      o_:= obj_[ nObj ]
-      IF v_ == NIL .OR. empty( v_ )
-         v_:= scrObj2Vv( o_ )
-      ENDIF
-   ENDIF
-
-   aadd( h_, '  Title                    ' )
-   aadd( h_, '  Field                    ' )
-   aadd( h_, '  Type                     ' )
-   aadd( h_, '  Width                    ' )
-   aadd( h_, '  Decimals                 ' )
-   aadd( h_, '  Calculate                ' )
-   aadd( h_, '  Expression               ' )
-   aadd( h_, '  Printed Width            ' )
-   aadd( h_, '  Picture                  ' )
-   aadd( h_, '  Pitch                    ' )
-   aadd( h_, '  Font                     ' )
-   aadd( h_, '  Bold                     ' )
-   aadd( h_, '  Italics                  ' )
-   aadd( h_, '  UnderLine                ' )
-   aadd( h_, '  SuperScript              ' )
-   aadd( h_, '  SubScript                ' )
-   aadd( h_, '  Half Height              ' )
-   aadd( h_, '  Alignment                ' )
-   aadd( h_, '  Color                    ' )
-   aadd( h_, '  Zero as Blank            ' )
-   aadd( h_, '  Supress Repeated Values  ' )
-   aadd( h_, '  Verticle Stretch         ' )
-   aadd( h_, '  Wrap Semi Colons         ' )
-   aadd( h_, '  The FOR Condition        ' )
-   aadd( h_, '  Unique Id                ' )
-   aadd( h_, '  Field Type . Module      ' )
-   aadd( h_, '  Point Size               ' )
-   aadd( h_, '  Column FOR Justification ' )
-   aadd( h_, '  Pattern TO fill a frame  ' )
-   aadd( h_, '  Border Thickness         ' )
-
-   aadd( w_, {| |.t. } )
-   aadd( w_, {| |.t. } )
-   aadd( w_, {| | VouchMenuM( 'MN_TYFLD' ) } )
-   aadd( w_, {|v| v := oAchGet( 3 ),iif( v=='D',!oCPut( 8 ),iif( v=='L',!oCPut( 1 ),.t. ) ) } )
-   aadd( w_, {|v| v := oAchGet( 3 ),iif( v<>'N',!oCPut( 0 ),.t. ) } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .t. } )
-   aadd( w_, {| | .t. } )
-   aadd( w_, {| | .t. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .t. } )
-   aadd( w_, {| | .t. } )
-   aadd( w_, {| | .f. } )
-   aadd( w_, {| | .f. } )
-
-   B_GETS HEADERS h_ VALUES v_ ;
-   TITLE 'Configure '+ iif( nFldExp==1,'Field',iif( nFldExp==2,'Expression',iif( nFldexp==3,'Text','OBJECT' ) ) ) ;
-   INTO v_ WHEN w_ SELECTABLES sel_
-
-   v_:= v_[ 1 ]
-   v_[ 1 ] := alltrim( trim( v_[ 1 ] ) )
-   IF empty( v_[ 1 ] )
-      RETURN NIL
-   ENDIF
-
-   IF lastkey() <> K_ESC
-      o_:= scrVv2Obj( v_,o_ )
-
-      o_[OBJ_TYPE]    := iif( nFldExp == 1, OBJ_O_FIELD,;
-                              iif( nFldExp == 2, OBJ_O_EXP,;
-                                 iif( nFldExp == 3, OBJ_O_TEXT,;
-                                    iif( nFldExp == 4, OBJ_O_BOX, ;
-                                                  OBJ_O_FIELD ) ) ) )
-      IF o_[ OBJ_TYPE   ] == OBJ_O_FIELD
-         o_[ OBJ_ROW    ] := iif( nObj == 0, scn_[ SCN_ROW_REP ], o_[ OBJ_ROW ] )
-         o_[ OBJ_COL    ] := iif( nObj == 0, scn_[ SCN_COL_REP ], o_[ OBJ_COL ] )
-         o_[ OBJ_TEXT   ] := padc( alltrim( v_[ VV_ID ] ), v_[ VV_F_LEN ] )
-         o_[ OBJ_COLOR  ] := iif( empty( o_[ OBJ_COLOR ] ), cColor, o_[ OBJ_COLOR ] )
-         o_[ OBJ_TO_ROW ] := iif( nObj == 0, scn_[ SCN_ROW_REP ], o_[ OBJ_TO_ROW ] )
-         o_[ OBJ_TO_COL ] := iif( nObj == 0, scn_[ SCN_COL_REP ], o_[ OBJ_COL ] ) + v_[ VV_F_LEN ] - 1
-      ENDIF
-
-      o_[OBJ_SECTION] := scrSecCur( scn_,scn_[SCN_ROW_REP] )
-
-      IF nObj == 0
-         aadd( obj_,o_ )
-         nObj := len( obj_ )
-      ELSE
-         obj_[nObj] := o_
-      ENDIF
-
-      scn_[SCN_OBJ_SELECTED] := 0
-      scn_[SCN_REFRESH]      := OBJ_REFRESH_LINE
-      scn_[SCN_MODE]         := 0
-   ENDIF
-
-   RETURN nObj
-
-//----------------------------------------------------------------------//
-
 FUNCTION VouchInRange( v, r1, r2 )
    RETURN ( v >= r1 .AND. v <= r2 )
 
@@ -583,7 +460,7 @@ STATIC FUNCTION vld()
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION oAchGet( n )
+FUNCTION oAchGet( n )
    RETURN setGetAch()[n]
 
 //----------------------------------------------------------------------//
@@ -594,7 +471,7 @@ STATIC FUNCTION oAchPut( n,v )
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION oCPut( v )
+FUNCTION oCPut( v )
    getactive():varPut( v )
    RETURN .t.
 
