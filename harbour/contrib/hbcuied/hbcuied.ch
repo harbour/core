@@ -252,65 +252,6 @@
 #define OBJ_MODE_SELECT                           1
 #define OBJ_MODE_MOVE                             2
 #define OBJ_MODE_IDLE                             0
-                                                  
-#define SCN_TOP                                   1
-#define SCN_LEFT                                  2
-#define SCN_BOTTOM                                3
-#define SCN_RIGHT                                 4
-#define SCN_STATUS_ROW                            5
-#define SCN_STATUS_COL                            6
-#define SCN_STATUS_COL_TO                         7
-#define SCN_MODE                                  8
-#define SCN_ROW_CUR                               9
-#define SCN_COL_CUR                               10
-#define SCN_ROW_REP                               11
-#define SCN_COL_REP                               12
-#define SCN_ROW_DIS                               13
-#define SCN_COL_DIS                               14
-#define SCN_ROW_RULER                             15
-#define SCN_ROW_MENU                              16
-#define SCN_COL_MAX                               17
-#define SCN_ROW_PREV                              18
-#define SCN_COL_PREV                              19
-#define SCN_REP_LINES                             20
-#define SCN_CLR_STATUS                            21
-#define SCN_CLR_TEXT                              22
-#define SCN_CLR_BOX                               23
-#define SCN_CLR_FIELD                             24
-#define SCN_CLR_HILITE                            25
-#define SCN_CLR_WINDOW                            26
-#define SCN_CLR_RULER                             27
-#define SCN_CLR_MENU                              28
-#define SCN_CLR_OVERALL                           29
-#define SCN_CLR_PREV                              30
-#define SCN_CLR_SELECT                            31
-#define SCN_OBJ_HILITE                            32
-#define SCN_OBJ_SELECTED                          33
-#define SCN_FILE                                  34   //   'Untitled'
-#define SCN_RULER                                 35   //   C
-#define SCN_DRAW_FILL                             36   //   C
-#define SCN_OBJ_ID_                               37   //   {}
-#define SCN_REFRESH                               38   //   .F.
-#define SCN_OBJ_COPIED                            39
-#define SCN_BOX_SHAPE                             40
-#define SCN_CHR_PREV                              41
-#define SCN_DESIGN                                42
-#define SCN_DESIGN_ID                             43
-#define SCN_PROPERTY                              44
-#define SCN_GRAPHICS                              45
-#define SCN_TEXT_BLOCK_                           46
-#define SCN_SECTORS_                              47
-#define SCN_FIELDS                                48
-#define SCN_LASTKEY                               49
-#define SCN_FOR_ROWS                              50
-#define SCN_COBJECT                               51    //   fOR tHREADED uSE
-#define SCN_CRPT                                  52    //   .
-#define SCN_NWHERE                                53    //   .
-#define SCN_LMSG                                  54    //   .
-#define SCN_NMODE                                 55    //   .
-                                                  
-#define SCN_NUM_VAR                               55
-
 
 #define SCT_ORDER                                 1
 #define SCT_ID                                    2
