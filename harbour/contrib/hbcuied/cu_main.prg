@@ -96,7 +96,9 @@ FUNCTION ThisError( oError )
 
    alert( oError:description + ":" + oError:operation + ";" + ;
              ProcName( 2 ) + "-" + hb_ntos( procLine( 2 ) ) + ";" + ;
-                ProcName( 3 ) + "-" + hb_ntos( procLine( 3 ) ) )
+             ProcName( 3 ) + "-" + hb_ntos( procLine( 3 ) ) + ";" + ;
+             ProcName( 4 ) + "-" + hb_ntos( procLine( 4 ) ) + ";" + ;
+             ProcName( 5 ) + "-" + hb_ntos( procLine( 5 ) ) )
    QUIT
    
    RETURN oError

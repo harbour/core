@@ -70,6 +70,7 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "achoice.ch"
+#include "box.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -569,8 +570,16 @@ FUNCTION VouchMenuM( id,nInit,msg )
       aadd( mnu_, { "Date"     , "D" } )
       aadd( mnu_, { "Logical"  , "L" } )
 
-   CASE id == "MN_PGSZE"
-      aadd( mnu_, { "A4", "A4" } )
+   CASE id == "MN_BOX"
+      aadd( mnu_, { "B_SINGLE"        , B_SINGLE        } )
+      aadd( mnu_, { "B_DOUBLE"        , B_DOUBLE        } )
+      aadd( mnu_, { "B_SINGLE_DOUBLE" , B_SINGLE_DOUBLE } )
+      aadd( mnu_, { "B_DOUBLE_SINGLE" , B_DOUBLE_SINGLE } ) 
+                                         
+   CASE id == "MN_FILL"
+      aadd( mnu_, { "Clear" , "CLEAR"  } )
+      aadd( mnu_, { "Filled", "FILLED" } )
+      
    ENDCASE
 
    aeval( mnu_,{|e_| aadd( m_,e_[ 1 ] ) } )

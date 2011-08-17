@@ -70,166 +70,40 @@
 
 #define THE_FILL                                  'ø'
 
+
+
 #define OBJ_TYPE                                  1     //   N   1
+
 #define OBJ_ROW                                   2     //   N   3
 #define OBJ_COL                                   3     //   N   3
-#define OBJ_TEXT                                  4     //   C  15
-#define OBJ_BOX_SHAPE                             4     //   C  --
-#define OBJ_COLOR                                 5     //   C   7
-#define OBJ_TO_ROW                                6     //   N   3
-#define OBJ_TO_COL                                7     //   N   3
-#define OBJ_ID                                    8     //   C  15
-#define OBJ_SECTION                               9     //   N   4
-#define OBJ_ALIAS                                 10    //   C   8
-#define OBJ_FIELD                                 11    //   N   3
-#define OBJ_EQN                                   12    //   C 240
-#define OBJ_F_TYPE                                13    //   C   1
-#define OBJ_F_LEN                                 14    //   N   3
-#define OBJ_F_DEC                                 15    //   N   2
-#define OBJ_F_PIC                                 16    //   C  20
-#define OBJ_ALIGN                                 17    //   C   1
-#define OBJ_PITCH                                 18    //   N   2
-#define OBJ_FONT                                  19    //   C   8
-#define OBJ_BOLD                                  20    //   L   1
-#define OBJ_ITALIC                                21    //   L   1
-#define OBJ_UNDERLN                               22    //   L   1
-#define OBJ_S_SCRPT                               23    //   L   1
-#define OBJ_U_SCRPT                               24    //   L   1
-#define OBJ_HALF_H                                25    //   L   1
-#define OBJ_PRN_LEN                               26    //   N   3
-#define OBJ_ZERO                                  27    //   L   1
-#define OBJ_REPEATED                              28    //   C   6
-#define OBJ_VERTICLE                              29    //   L   1
-#define OBJ_WRAP_SEMI                             30    //   L   1
-#define OBJ_FOR                                   31    //   C  80
-#define OBJ_SEC_ROW                               32    //   N   3
-#define OBJ_ATTRB                                 33    //   C   8
-#define OBJ_VAL                                   34    //   C   1
-#define OBJ_OBJ_UNIQUE                            35    //   N   4
-#define OBJ_MDL_F_TYPE                            36    //   N   2
-#define OBJ_POINT                                 37    //   N   2
-#define OBJ_COL_JUST                              38    //   N   2
-#define OBJ_PATTERN                               39    //   C  10
-#define OBJ_BORDER                                40    //   N   5 2
+#define OBJ_TO_ROW                                4     //   N   3
+#define OBJ_TO_COL                                5     //   N   3
 
-#define OBJ_INIT_VRBLS                            40
+#define OBJ_TEXT                                  6     //   C  15
+#define OBJ_EQN                                   6     //   C 240
+#define OBJ_NAME                                  6     //   C 240
 
-#define OBJ_LEN_TYPE                              1
-#define OBJ_LEN_ROW                               3
-#define OBJ_LEN_COL                               3
-#define OBJ_LEN_TEXT                              15
-#define OBJ_LEN_COLOR                             7
-#define OBJ_LEN_TO_ROW                            3
-#define OBJ_LEN_TO_COL                            3
-#define OBJ_LEN_ID                                15
-#define OBJ_LEN_SECTION                           4
-#define OBJ_LEN_ALIAS                             8
-#define OBJ_LEN_FIELD                             3
-#define OBJ_LEN_EQN                               240
-#define OBJ_LEN_F_TYPE                            1
-#define OBJ_LEN_F_LEN                             3
-#define OBJ_LEN_F_DEC                             2
-#define OBJ_LEN_F_PIC                             20
-#define OBJ_LEN_ALIGN                             1
-#define OBJ_LEN_PITCH                             2
-#define OBJ_LEN_FONT                              8
-#define OBJ_LEN_BOLD                              1
-#define OBJ_LEN_ITALIC                            1
-#define OBJ_LEN_UNDERLN                           1
-#define OBJ_LEN_S_SCRPT                           1
-#define OBJ_LEN_U_SCRPT                           1
-#define OBJ_LEN_HALF_H                            1
-#define OBJ_LEN_PRN_LEN                           3
-#define OBJ_LEN_ZERO                              1
-#define OBJ_LEN_REPEATED                          6
-#define OBJ_LEN_VERTICLE                          1
-#define OBJ_LEN_WRAP_SEMI                         1
-#define OBJ_LEN_FOR                               80
-#define OBJ_LEN_SEC_ROW                           3
-#define OBJ_LEN_ATTRB                             8
-#define OBJ_LEN_VAL                               1
-#define OBJ_LEN_OBJ_UNIQUE                        4
-#define OBJ_LEN_MDL_F_TYPE                        2
-#define OBJ_LEN_POINT                             2
-#define OBJ_LEN_COL_JUST                          3   //   N   3
-#define OBJ_LEN_PATTERN                           10  //   C  10
-#define OBJ_LEN_BORDER                            5   //   N   5 2
+#define OBJ_F_TYPE                                7     //   C   1
+#define OBJ_F_LEN                                 8     //   N   3
+#define OBJ_F_DEC                                 9     //   N   2
+#define OBJ_F_PIC                                 10    //   C  20
+#define OBJ_COLOR                                 11    //   C   7
 
-#define OBJ_OS_TYPE                               1     //   N   1
-#define OBJ_OS_ROW                                2     //   N   3
-#define OBJ_OS_COL                                5     //   N   3
-#define OBJ_OS_TEXT                               8     //   C  15
-#define OBJ_OS_COLOR                              23    //   C   7
-#define OBJ_OS_TO_ROW                             30    //   N   3
-#define OBJ_OS_TO_COL                             33    //   N   3
-#define OBJ_OS_ID                                 36    //   C  15
-#define OBJ_OS_SECTION                            51    //   N   4
-#define OBJ_OS_ALIAS                              55    //   C   8
-#define OBJ_OS_FIELD                              63    //   N   3
-#define OBJ_OS_EQN                                66    //   C 240
-#define OBJ_OS_F_TYPE                             306   //   C   1
-#define OBJ_OS_F_LEN                              307   //   N   3
-#define OBJ_OS_F_DEC                              310   //   N   2
-#define OBJ_OS_F_PIC                              312   //   C  20
-#define OBJ_OS_ALIGN                              332   //   C   1
-#define OBJ_OS_PITCH                              333   //   N   2
-#define OBJ_OS_FONT                               335   //   C   8
-#define OBJ_OS_BOLD                               343   //   L   1
-#define OBJ_OS_ITALIC                             344   //   L   1
-#define OBJ_OS_UNDERLN                            345   //   L   1
-#define OBJ_OS_S_SCRPT                            346   //   L   1
-#define OBJ_OS_U_SCRPT                            347   //   L   1
-#define OBJ_OS_HALF_H                             348   //   L   1
-#define OBJ_OS_PRN_LEN                            349   //   N   3
-#define OBJ_OS_ZERO                               352   //   L   1
-#define OBJ_OS_REPEATED                           353   //   C   6
-#define OBJ_OS_VERTICLE                           359   //   L   1
-#define OBJ_OS_WRAP_SEMI                          360   //   L   1
-#define OBJ_OS_FOR                                361   //   C  80
-#define OBJ_OS_SEC_ROW                            441   //   N   3
-#define OBJ_OS_ATTRB                              444   //   C   8
-#define OBJ_OS_VAL                                452   //   C   1
-#define OBJ_OS_OBJ_UNIQUE                         453   //   N   4
-#define OBJ_OS_MDL_F_TYPE                         457   //   N   2
-#define OBJ_OS_POINT                              459   //   N   2
-#define OBJ_OS_COL_JUST                           461   //   N   3
-#define OBJ_OS_PATTERN                            464   //   C  10
-#define OBJ_OS_BORDER                             474   //   N   5 2
-//                                               ----
-//   TOTAL                                        474
+#define OBJ_WHEN                                  12    //   C   7
+#define OBJ_BORDER                                12    //   C   7
+#define OBJ_BOX_SHAPE                             12    //   C  --
 
-#define VV_ID                                     1     //   N   1
-#define VV_FIELD                                  2     //   N   3
-#define VV_F_TYPE                                 3     //   C   1
-#define VV_F_LEN                                  4     //   N   3
-#define VV_F_DEC                                  5     //   N   2
-#define VV_ATTRB                                  6     //   C   8
-#define VV_EQN                                    7     //   C 240
-#define VV_PRN_LEN                                8     //   N   3
-#define VV_F_PIC                                  9     //   C  20
-#define VV_PITCH                                  10    //   N   2
-#define VV_FONT                                   11    //   C   8
-#define VV_BOLD                                   12    //   L   1
-#define VV_ITALIC                                 13    //   L   1
-#define VV_UNDERLN                                14    //   L   1
-#define VV_S_SCRPT                                15    //   L   1
-#define VV_U_SCRPT                                16    //   L   1
-#define VV_HALF_H                                 17    //   L   1
-#define VV_ALIGN                                  18    //   C   1
-#define VV_COLOR                                  19    //   C   7
-#define VV_ZERO                                   20    //   L   1
-#define VV_REPEATED                               21    //   C   6
-#define VV_VERTICLE                               22    //   L   1
-#define VV_WRAP_SEMI                              23    //   L   1
-#define VV_FOR                                    24    //   C  80
-#define VV_OBJ_UNIQUE                             25    //   N   4
-#define VV_MDL_F_TYPE                             26    //   N   2
-#define VV_POINT                                  27    //   N   2
-#define VV_COL_JUST                               28
-#define VV_PATTERN                                29
-#define VV_BORDER                                 30
+#define OBJ_VALID                                 13    //   C   7
+#define OBJ_PATTERN                               13    //   C  10
 
-#define VV_INIT_VRBLS                             30
+#define OBJ_ID                                    14    //   C  15
+#define OBJ_SECTION                               15    //   N   4
+#define OBJ_SEC_ROW                               16    //   N   3
+#define OBJ_OBJ_UNIQUE                            17    //   N   4
+#define OBJ_MDL_F_TYPE                            18    //   C  10
+//
+#define OBJ_INIT_VRBLS                            18
+
 
 #define OBJ_REFRESH_ALL                           1
 #define OBJ_REFRESH_LINE                          2
