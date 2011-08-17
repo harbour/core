@@ -67,7 +67,6 @@
 
 #include "hbcuied.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
 #include "common.ch"
 #include "inkey.ch"
 #include "achoice.ch"
@@ -673,7 +672,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
                IF (n := ascan(num_,i))==0
                   ch_[ i ] := '    '+ch_[i]
                ELSE
-                  ch_[ i ] := pad( NTRIM( n ), 4 ) + ch_[ i ]
+                  ch_[ i ] := pad( hb_ntos( n ), 4 ) + ch_[ i ]
                ENDIF
             NEXT
          ENDIF
@@ -876,7 +875,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
 FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
    LOCAL n, i, nn, s
 
-   IF nKey <> 0 .AND. nKey <> K_MOVING
+   IF nKey <> 0 .AND. nKey <> K_MOUSEMOVE
       ScrolBarUpdate( cgo_[ CGO_SCROL ], nElem, cgo_[ CGO_LENSCR ], .t. )
       IF cgo_[ CGO_EXE_ ] <> NIL
          eval( cgo_[ CGO_EXE_,nElem ] )
@@ -945,7 +944,7 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
                      IF( nn := val( left( cgo_[CGO_CH_,i],4 ) ) )>0
                         IF nn > n
                            nn := nn - 1
-                           s := iif( nn > 0,pad( NTRIM( nn ),4 ),"    " )
+                           s := iif( nn > 0,pad( hb_ntos( nn ),4 ),"    " )
                            cgo_[CGO_CH_,i] := s + substr( cgo_[CGO_CH_,i],5 )
                         ENDIF
                      ENDIF
@@ -954,7 +953,7 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
                   nn := 0
                   n  := 0
                   aeval( cgo_[CGO_CH_], {|e| n := val( left( e,4 ) ), nn := iif( n>nn,n,nn ) } )
-                  cgo_[CGO_CH_,cgo_[CGO_POS]] := pad( NTRIM( nn+1 ),4 ) + substr( cgo_[CGO_CH_,cgo_[CGO_POS]],5 )
+                  cgo_[CGO_CH_,cgo_[CGO_POS]] := pad( hb_ntos( nn+1 ),4 ) + substr( cgo_[CGO_CH_,cgo_[CGO_POS]],5 )
                   cgo_[CGO_POS] := min( cgo_[CGO_POS]+1, len( cgo_[CGO_CH_] ) )
                ENDIF
                RETURN AC_ABORT
@@ -1063,7 +1062,7 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
 
    IF nLenMsg + nLenVrb > nMaxLen   //  Only when vrb type c will be asked
       nLenVrb := nMaxLen - nLenMsg - 7
-      pic     := substr(pic,1,1)+'S'+NTRIM(nLenVrb)+substr(pic,2)
+      pic     := substr(pic,1,1)+'S'+hb_ntos(nLenVrb)+substr(pic,2)
    ENDIF
 
    pic := iif( dType=='N','@Z 99999999999999.99', pic )
@@ -1088,4 +1087,3 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
    RETURN vrb
 
 /*----------------------------------------------------------------------*/
-

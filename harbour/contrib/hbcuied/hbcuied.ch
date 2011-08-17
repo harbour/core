@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -111,7 +111,7 @@
 #define OBJ_COL_JUST                              38    //   N   2
 #define OBJ_PATTERN                               39    //   C  10
 #define OBJ_BORDER                                40    //   N   5 2
-                                                  
+
 #define OBJ_INIT_VRBLS                            40
 
 #define OBJ_LEN_TYPE                              1
@@ -160,7 +160,7 @@
 #define OBJ_OS_COL                                5     //   N   3
 #define OBJ_OS_TEXT                               8     //   C  15
 #define OBJ_OS_COLOR                              23    //   C   7
-#define OBJ_OS_TO_ROW                             30    //   N   3 
+#define OBJ_OS_TO_ROW                             30    //   N   3
 #define OBJ_OS_TO_COL                             33    //   N   3
 #define OBJ_OS_ID                                 36    //   C  15
 #define OBJ_OS_SECTION                            51    //   N   4
@@ -185,7 +185,7 @@
 #define OBJ_OS_REPEATED                           353   //   C   6
 #define OBJ_OS_VERTICLE                           359   //   L   1
 #define OBJ_OS_WRAP_SEMI                          360   //   L   1
-#define OBJ_OS_FOR                                361   //   C  80 
+#define OBJ_OS_FOR                                361   //   C  80
 #define OBJ_OS_SEC_ROW                            441   //   N   3
 #define OBJ_OS_ATTRB                              444   //   C   8
 #define OBJ_OS_VAL                                452   //   C   1
@@ -228,13 +228,13 @@
 #define VV_COL_JUST                               28
 #define VV_PATTERN                                29
 #define VV_BORDER                                 30
-                                                  
+
 #define VV_INIT_VRBLS                             30
 
 #define OBJ_REFRESH_ALL                           1
 #define OBJ_REFRESH_LINE                          2
 #define OBJ_REFRESH_NIL                           0
-                                                  
+
 #define OBJ_O_BOX                                 1
 #define OBJ_O_LINE                                2
 #define OBJ_O_TEXT                                3
@@ -248,7 +248,7 @@
 #define DGN_DOCUMENT                              3
 #define DGN_LABEL                                 4
 #define DGN_SCREEN                                5
-                                                  
+
 #define OBJ_MODE_SELECT                           1
 #define OBJ_MODE_MOVE                             2
 #define OBJ_MODE_IDLE                             0
@@ -303,7 +303,7 @@
          <.selections.>, <.leftright.>, <.cent.>, <tag_>,<.num.>,;
          <hlp>,<ex_>,<num_>,<.lNoXpp.>,<oWin>,<cIcon>,<lWvt>,<nAlign> )
 
-         
+
 #xtranslate B_GETS ;
             HEADERS <hed> VALUES <val> ;
             [ SELECTABLES <sel> ] ;
@@ -336,19 +336,8 @@
                              <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
                              <nRow>, <nCol>, <.lNoTitleBar.> )
 
-#define NTRIM( n )   ltrim( str( n ) )
-
 #define COMPILE( cStr )    &( "{|v,w,x| " + cStr + " }" )
 
-                               
-#define K_MOVING                                  1001
-#define K_LEFT_DOWN                               1002
-#define K_LEFT_DBLCLICK                           1006
-#define K_LEFT_UP                                 1003
-#define K_RIGHT_DOWN                              1004
-#define K_RIGHT_DBLCLICK                          1007
-#define K_RIGHT_UP                                1005
-                                                  
 #define CHECKMARK                                 chr( 251 )
-                               
+
 #endif

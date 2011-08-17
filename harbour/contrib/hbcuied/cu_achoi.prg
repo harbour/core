@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CUI Forms Editor 
+ * CUI Forms Editor
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
@@ -65,22 +65,12 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include "inkey.ch"  
+#include "inkey.ch"
 #include "setcurs.ch"
-#include "set.ch"    
+#include "set.ch"
 #include "achoice.ch"
-#include "common.ch" 
+#include "common.ch"
 #include "hbclass.ch"
-
-//----------------------------------------------------------------------//
-
-#define  K_MOVING          1001
-#define  K_LEFT_DOWN       1002
-#define  K_LEFT_DBLCLICK   1006
-#define  K_LEFT_UP         1003
-#define  K_RIGHT_DOWN      1004
-#define  K_RIGHT_DBLCLICK  1007
-#define  K_RIGHT_UP        1005
 
 //----------------------------------------------------------------------//
 
@@ -92,7 +82,7 @@
 FUNCTION VouchAChoice( nTop, nLft, nBtm, nRgt, acItems, xSelect, cUserFunc, nPos, nHiLytRow, oWin, nLastKey, cargo_ )
    LOCAL nChoice, oChoice
    LOCAL crs := SetCursor( 0 )
-   
+
    oChoice := AChoiceNew():New( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
                                 cUserFunc, ;
                                 nPos, nHiLytRow, oWin, nLastKey, cargo_   )
@@ -100,9 +90,9 @@ FUNCTION VouchAChoice( nTop, nLft, nBtm, nRgt, acItems, xSelect, cUserFunc, nPos
    nChoice  := oChoice:nPos
    nLastKey := oChoice:nKey
    oChoice:Destroy()
-   
+
    SetCursor( crs )
-   
+
    RETURN ( nChoice )
 
 /*----------------------------------------------------------------------*/
@@ -171,9 +161,9 @@ METHOD AChoiceNew:Destroy()
 METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
                         cUserFunc, nPos, nHiLiteRow, oWin, nLastKey, cargo_ )
    LOCAL nCntr
-   
+
    HB_SYMBOL_UNUSED( nLastKey )
-   
+
    DEFAULT nTop       TO 0              // The topmost row of the window
    DEFAULT nLft       TO 0              // The leftmost column of the window
    DEFAULT nBtm       TO maxrow() + 1   // The bottommost row of the windows
@@ -183,7 +173,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    DEFAULT cUserFunc  TO NIL            // Optional FUNCTION FOR key exceptions
    DEFAULT nPos       TO 1              // The number of the selected item
    DEFAULT nHiLiteRow TO 0              // The row TO be highlighted
-   
+
    ::nTop        := nTop
    ::nLeft       := nLft
    ::nBottom     := nBtm
@@ -195,7 +185,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nHiLiteRow  := nHiLiteRow
    ::oWin        := oWin
    ::cargo_      := cargo_
-   
+
    ::nNumCols    := 0                    // Number of columns IN the window
    ::nNumRows    := 0                    // Number of rows IN the window
    ::acCopy      := {}                   // A padded copy of the items
@@ -218,27 +208,27 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nLastItem   := 0
    ::bAction     := NIL
    ::mrc_        := {}
-   
+
    IF ::lUserFunc
       ::bUserFunc := &( "{|nM,nP,nH,nK,aC|" + ::cUserFunc + "(nM,nP,nH,nK,aC)}" )
    ENDIF
-   
+
    IF empty( ::cHiClr )
       ::cHiClr := After( "/", ::cLoClr ) + "/" + Before( "/", ::cLoClr )
    ENDIF
-   
+
    IF empty( ::cUnClr )
       ::cUnClr := ::cLoClr
    ENDIF
-   
+
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
-   
+
    aeval( ::acItems, { | x | IF( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
    ::nItems := len( ::acCopy )
-   
+
    ::alSelect := array( ::nItems )
-   
+
    IF valtype( ::xSelect ) == "A"
       afill( ::alSelect, .T. )
       FOR nCntr := 1 TO len( ::xSelect )
@@ -260,7 +250,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ELSE
       afill( ::alSelect, ::xSelect )
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -269,7 +259,7 @@ METHOD AChoiceNew:Exe()
 
    IF !( ::lFinished )
       ::nFrstItem := ascan( ::alSelect, .T. )  // First valid item
-   
+
       IF ::nFrstItem == 0
          ::nLastItem := 0
          ::nPos      := 0
@@ -281,7 +271,7 @@ METHOD AChoiceNew:Exe()
             ::nLastItem--
          ENDDO
       ENDIF
-   
+
       // Ensure hilighted item can be selected
       ::nPos := BETWEEN( ::nFrstItem, ::nPos, ::nLastItem )
       ::nNewPos := ::nPos
@@ -294,32 +284,32 @@ METHOD AChoiceNew:Exe()
          ENDDO
       ENDIF
       ::nPos := ::nNewPos
-   
+
       // Force hilighted row TO be valid
       //
       ::nHiLiteRow := BETWEEN( 0, ::nHiLiteRow, ::nNumRows - 1 )
-   
+
       // Force the topmost item TO be a valid index of the array
       //
       ::nAtTop := BETWEEN( 1, max( 1, ::nPos - ::nHiLiteRow ), ::nItems )
-   
+
       // Ensure as much of the selection area as possible is covered
       //
       IF ( ::nAtTop + ::nNumRows - 1 ) > ::nItems
          ::nAtTop := max( 1, ::nItems - ::nNumrows + 1 )
       ENDIF
-   
+
       ::DispPageNew()
    ENDIF
-   
+
    DO WHILE ( !::lFinished )
-   
+
       IF ::nMode != AC_GOTO .AND. ::nMode != AC_NOITEM
          ::nKey  := inkey( , INKEY_ALL + HB_INKEY_GTEVENT )
          ::nMode := AC_IDLE
          ::mrc_  := { 0, 0, mRow(), mCol(), 0, LastKey(), .f. }
       ENDIF
-   
+
    #ifdef __WVT__
       IF nLastPos <> ::nPos
          Wvt_DrawFocusRect( ::nTop + ( ::nPos - ::nAtTop ), ::nLeft, ;
@@ -327,87 +317,87 @@ METHOD AChoiceNew:Exe()
          nLastPos := ::nPos
       ENDIF
    #ENDIF
-   
+
       DO CASE
       CASE ( ::bAction := SetKey( ::nKey ) ) != NIL
          eval( ::bAction, ProcName( 1 ), ProcLine( 1 ), '' )
-   
-      CASE ::nKey == K_MOVING
+
+      CASE ::nKey == K_MOUSEMOVE
          ::nPos := ::DispAtNew()
-   
+
       CASE ::nKey == K_MWFORWARD
          ::Up()
-   
+
       CASE ::nKey == K_MWBACKWARD
          ::Down()
-   
+
       CASE ::nKey == K_LDBLCLK
          ::nPos := ::DispAtNew()
          ::nMode  := AC_SELECT
-   
-      CASE ::nKey == K_LEFT_DOWN
+
+      CASE ::nKey == K_LBUTTONDOWN
          IF ::mrc_[ 3 ] >= ::nTop  .AND. ::mrc_[ 3 ] <= ::nBottom .AND. ;
             ::mrc_[ 4 ] >= ::nLeft .AND. ::mrc_[ 4 ] <= ::nRight
             keyboard( chr( K_ENTER ) )
          ENDIF
-   
+
       CASE ( ( ::nKey == K_ESC ) .OR. ( ::nMode == AC_NOITEM ) ) .AND. ( !::lUserFunc )
          ::nMode     := AC_ABORT
          ::nPos      := 0
          ::lFinished := .T.
-   
+
       CASE ::nKey == K_UP
          ::Up()
-   
+
       CASE ::nKey == K_DOWN
          ::Down()
-   
+
       CASE ::nKey == K_PGUP
          ::PageUp()
-   
+
       CASE ::nKey == K_PGDN
          ::PageDown()
-   
+
       CASE ::nKey == K_HOME
          ::Top()
-   
+
       CASE ::nKey == K_END
          ::Bottom()
-   
+
       CASE ( ::nKey == K_CTRL_HOME .OR. ::nKey == K_CTRL_PGUP )
          ::GoTop()
-   
+
       CASE ( ::nKey == K_CTRL_END .OR. ::nKey == K_CTRL_PGDN )
          ::GoBottom()
-   
+
       CASE ( ::nKey == K_ENTER ) .AND. ( !::lUserFunc )
          ::nMode     := AC_SELECT
          ::lFinished := .T.
-   
+
       CASE ( ::nKey == K_RIGHT ) .AND. ( !::lUserFunc )
          ::nPos      := 0
          ::lFinished := .T.
-   
+
       CASE ( ::nKey == K_LEFT ) .AND. ( !::lUserFunc )
          ::nPos      := 0
          ::lFinished := .T.
-   
+
       CASE INRANGE( 32, ::nKey, 255 ) .AND. ( ( !::lUserFunc ) .OR. ( ::nMode == AC_GOTO ) )
          ::GoTo()
          ::nMode := AC_IDLE
-   
+
       CASE ::nMode == AC_GOTO
          ::nMode := AC_IDLE
-   
+
       OTHERWISE
          IF ::nKey == 0
             ::nMode := AC_IDLE
          ELSE
             ::nMode := AC_EXCEPT
          ENDIF
-   
+
       ENDCASE
-   
+
       IF ::lUserFunc
          ::nUserFunc := eval( ::bUserFunc, ::nMode, ::nPos, ;
                               ::nPos - ::nAtTop, ::nKey, ::cargo_ )
@@ -415,19 +405,19 @@ METHOD AChoiceNew:Exe()
          CASE ::nUserFunc == AC_ABORT
             ::lFinished := .T.
             ::nPos      := 0
-   
+
          CASE ::nUserFunc == AC_SELECT
             ::lFinished := .T.
-   
+
          CASE ::nUserFunc == AC_CONT
-   
+
          CASE ::nUserFunc == AC_GOTO
             ::nMode := AC_GOTO
-   
+
          ENDCASE
       ENDIF
    ENDDO
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -437,24 +427,24 @@ METHOD AChoiceNew:DispPageNew()
    LOCAL nRow := row()
    LOCAL nCol := col()
    LOCAL nRowPos, nPos
-   
+
    DispBegin()
-   
+
    FOR nCntr := 1 TO ::nNumRows
       nRowPos := ::nTop   + nCntr - 1
       nPos    := ::nAtTop + nCntr - 1
-   
+
       IF INRANGE( 1, nPos, ::nItems )
          ::DispLineNew( nPos, nRowPos, nPos == ::nPos )
       ELSE
          DispOutAt( nRowPos, ::nLeft, space( len( ::acCopy[ 1 ] ) ), ::cLoClr, ::oWin )
       ENDIF
    NEXT
-   
+
    DispEnd()
-   
+
    SetPos( nRow,nCol )
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -464,7 +454,7 @@ METHOD AChoiceNew:DispLineNew( nPos, nRow, lHiLite )
    DispOutAt( nRow, ::nLeft, ::acCopy[ nPos ],;
                 IF( ::alSelect[ nPos ], ;
                   IF( lHiLite, ::cHiClr, ::cLoClr ), ::cUnClr ), ::oWin )
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -472,7 +462,7 @@ METHOD AChoiceNew:DispLineNew( nPos, nRow, lHiLite )
 METHOD AChoiceNew:DeHilite()
 
    ::DispLineNew( ::nPos, ::nTop + ( ::nPos - ::nAtTop ), .F. )
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -480,14 +470,14 @@ METHOD AChoiceNew:DeHilite()
 METHOD AChoiceNew:HiLite()
 
    ::DispLineNew( ::nPos, ::nTop + ( ::nPos - ::nAtTop ), .T. )
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
 
 METHOD AChoiceNew:Up()
    LOCAL nScroll
-   
+
    IF ::nPos == ::nFrstItem
       ::nMode := AC_HITTOP
       IF ::nAtTop > max( 1, ::nPos - ::nNumRows + 1 )
@@ -499,40 +489,40 @@ METHOD AChoiceNew:Up()
       DO WHILE !( ::alSelect[ ::nNewPos ] )
          ::nNewPos--
       ENDDO
-   
+
       IF INRANGE( ::nAtTop, ::nNewPos, ::nAtTop + ::nNumRows - 1 )
          ::DeHilite()
          ::nPos := ::nNewPos
          ::HiLite()
       ELSE
          DispBegin()
-   
+
          ::DeHilite()
-   
+
          nScroll := max( -::nNumRows, ( ::nNewPos - ( ::nAtTop + ::nNumRows - 1 ) ) )
          Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, nScroll )
-   
+
          ::nAtTop := ::nNewPos
          ::nPos   := max( ::nPos, ::nAtTop + ::nNumRows - 1 )
-   
+
          DO WHILE ( ::nPos > ::nNewPos )
             ::DispLineNew( ::nPos, ::nTop + ( ::nPos - ::nAtTop ), .F. )
             ::nPos--
          ENDDO
-   
+
          ::HiLite()
-   
+
          Dispend()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
 
 METHOD AChoiceNew:Down()
    LOCAL nScroll
-   
+
    IF ::nPos == ::nLastItem
       ::nMode := AC_HITBOTTOM
       IF ::nAtTop < min( ::nPos, ::nItems - ::nNumRows + 1 )
@@ -544,32 +534,32 @@ METHOD AChoiceNew:Down()
       DO WHILE !( ::alSelect[ ::nNewPos ] )
          ::nNewPos++
       ENDDO
-   
+
       IF INRANGE( ::nAtTop, ::nNewPos, ::nAtTop + ::nNumRows - 1 )
          ::DeHilite()
          ::nPos := ::nNewPos
          ::HiLite()
       ELSE
          Dispbegin()
-   
+
          ::DeHilite()
-   
+
          nScroll := min( ::nNumRows, ( ::nNewPos - ( ::nAtTop + ::nNumRows - 1 ) ) )
          scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, nScroll )
-   
+
          ::nAtTop := ::nNewPos - ::nNumRows + 1
          ::nPos   := max( ::nPos, ::nAtTop )
          DO WHILE ( ::nPos < ::nNewPos )
             ::DispLineNew( ::nPos, ::nTop + ( ::nPos - ::nAtTop ), .F. )
             ::nPos ++
          ENDDO
-   
+
          ::Hilite()
-   
+
          Dispend()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -603,14 +593,14 @@ METHOD AChoiceNew:PageUp()
          ::DispPageNew()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
 
 METHOD AChoiceNew:PageDown()
    LOCAL nGap
-   
+
    IF ::nPos == ::nLastItem
       ::nMode := AC_HITBOTTOM
       IF ::nAtTop < min( ::nPos, max( 1, ::nItems - ::nNumRows + 1 ) )
@@ -631,19 +621,19 @@ METHOD AChoiceNew:PageDown()
          ELSE
             ::nAtTop := ::nPos - nGap
          ENDIF
-   
+
          DO WHILE ( ::nPos < ::nLastItem ) .AND. !( ::alSelect[ ::nPos ] )
             ::nPos++
             ::nAtTop++
          ENDDO
-   
+
          DO WHILE ( ::nAtTop + ::nNumRows - 1 ) > ::nItems
             ::nAtTop--
          ENDDO
          ::DispPageNew()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -668,7 +658,7 @@ METHOD AChoiceNew:Top()
          ::HiLite()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -693,7 +683,7 @@ METHOD AChoiceNew:Bottom()
          ::HiLite()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -712,7 +702,7 @@ METHOD AChoiceNew:GoTop()
       ::nAtTop := ::nPos
       ::DispPageNew()
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -737,7 +727,7 @@ METHOD AChoiceNew:GoBottom()
          ::DispPageNew()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
@@ -748,14 +738,14 @@ METHOD AChoiceNew:GoTo()
    DO WHILE INRANGE( ::nPos, ::nNewPos, ::nLastItem ) .AND. !( ::alSelect[ ::nNewPos ] )
       ::nNewPos := ascan( ::acCopy, ::bScan, ::nNewPos + 1 )
    ENDDO
-   
+
    IF ::nNewPos == 0
       ::nNewPos := ascan( ::acCopy, ::bScan )
       DO WHILE INRANGE( 1, ::nNewPos, ::nLastItem ) .AND. !( ::alSelect[ ::nNewPos ] )
          ::nNewPos := ascan( ::acCopy, ::bScan, ::nNewPos + 1 )
       ENDDO
    ENDIF
-   
+
    IF INRANGE( ::nFrstItem, ::nNewPos, ::nLastItem ) .AND. ::alSelect[ ::nNewPos ]
       IF INRANGE( ::nAtTop, ::nNewPos, ::nAtTop + ::nNumRows - 1 )
          ::DeHilite()
@@ -767,18 +757,18 @@ METHOD AChoiceNew:GoTo()
          ::DispPageNew()
       ENDIF
    ENDIF
-   
+
    RETURN SELF
 
 //----------------------------------------------------------------------//
 
 METHOD AChoiceNew:DispAtNew()
    LOCAL nNewPos
-   
+
    IF ::mrc_[ 3 ] >= ::nTop .AND. ::mrc_[ 3 ] <= ::nTop + ::nNumRows - 1 ;
                                  .AND. ;
             ::mrc_[ 4 ] >= ::nLeft .AND. ::mrc_[ 4 ] <= ::nRight
-   
+
       IF ( nNewPos := ::nAtTop + ( ::mrc_[ 3 ] - ::nTop ) ) <> ::nPos
          IF ::alSelect[ nNewPos ]
             ::DeHilite()
@@ -788,30 +778,29 @@ METHOD AChoiceNew:DispAtNew()
          ENDIF
       ENDIF
    ENDIF
-   
+
    RETURN ::nPos
 
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION Before( cDelim, cValue )
    LOCAL cRetVal := cValue
-   
+
    IF cDelim $ cValue
       cRetVal := left( cValue, at( cDelim, cValue ) - 1 )
    ENDIF
-   
+
    RETURN ( cRetVal )
 
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION After( cDelim, cValue )
    LOCAL cRetVal := ''
-   
+
    IF cDelim $ cValue
       cRetVal := substr( cValue, at( cDelim, cValue ) + 1 )
    ENDIF
-   
+
    RETURN ( cRetVal )
 
 //----------------------------------------------------------------------//
-
