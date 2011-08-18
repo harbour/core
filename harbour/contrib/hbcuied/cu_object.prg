@@ -77,6 +77,8 @@ CLASS hbCUIEditor
 
    DATA cSource                                   INIT ""
    DATA cScreen                                   INIT ""
+   DATA nIndent                                   INIT 3
+   DATA lEdited                                   INIT .f.
    
    DATA obj_                                      INIT {}
    DATA scn_
@@ -172,7 +174,7 @@ CLASS hbCUIEditor
    METHOD scrTextDel()
    
    METHOD scrLoad( cSource, cScreen )
-   METHOD scrSave()
+   METHOD scrSave( lAsk )
    
    METHOD scrAddBox( nObj )
    METHOD scrAddFld( nObj )
@@ -252,41 +254,92 @@ METHOD hbCUIEditor:scrLoad( cSource, cScreen )
 
 //----------------------------------------------------------------------//
 
-METHOD hbCUIEditor:scrSave()
-
-   IF empty( ::cSource )
-      ::cSource := VouchGetSome( "Source (.PRG) File", space( 40 ) )
-      IF empty( ::cSource )
+METHOD hbCUIEditor:scrSave( lAsk )
+   LOCAL s, cP, o_, cSource, cScreen, prg_:={}
+   
+   DEFAULT lAsk TO .f.
+   
+   IF empty( ::cSource ) .OR. lAsk
+      cSource := trim( VouchGetSome( "Source (.PRG) File", pad( ::cSource, 40 ) ) )
+      IF empty( cSource )
          RETURN NIL    
       ENDIF    
+      ::cSource := trim( cSource )
    ENDIF 
    
-   IF empty( ::cScreen )
-      ::cScreen := VouchGetSome( "Screen Identity?", space( 13 ) )
-      IF empty( ::cScreen )
-         ::cScreen := dtos( date() ) + left( time(), 5 )
+   IF empty( ::cScreen ) .OR. lAsk .OR. ::cScreen == "Untitled"
+      cScreen := trim( VouchGetSome( "Screen Identity?", pad( ::cScreen, 13 ) ) )
+      IF empty( cScreen )
+         cScreen := dtos( date() ) + left( time(), 5 )
       ENDIF       
+      ::cScreen := cScreen
    ENDIF 
          
-   ::cFile     := ::cScreen
-   ::cObject  := ::cSource
-   
-   #if 0
-   LOCAL rpt_:={}
-   aeval( ::obj_, {|e_| iif( e_[ OBJ_ROW ] == 0, NIL, aadd( rpt_, { '', 0, scrObj2str( e_ ) } ) ) } )
-   
-   IF ! empty( ::aProperty )
-      aadd(rpt_, { '', 51, prpMdl2Str( ::aProperty ) } )
-   ENDIF
-   #endif
-   #if 0
-   IF !empty( ::aFields )
-      FOR i := 1 TO len( ::aFields )
-         aadd( rpt_,{ '', ::aFields[ i,1 ], prpFld2Str( ::aFields[ i ] ) } )
-      NEXT
-   ENDIF
-   #endif
+   ::cObject := ::cSource
+   ::cFile   := ::cScreen
 
+   aadd( prg_, " " )
+   aadd( prg_, "/* $HB_SCREEN_BEGINS$  <" + trim( ::cScreen ) + "> */" )
+   aadd( prg_, " " )
+   FOR EACH o_ IN ::obj_
+      IF !empty( o_[ OBJ_TYPE ] )
+         aadd( prg_, "/// " + iif( empty( o_[ OBJ_F_TYPE ] ), ".", o_[ OBJ_F_TYPE ] ) + " " + hb_ntos( o_[ OBJ_F_LEN ] ) + " " + hb_ntos( o_[ OBJ_F_DEC ] ) )
+         
+         s := "@ " + hb_ntos( o_[ OBJ_ROW ] ) + ", " + hb_ntos( o_[ OBJ_COL ] ) + " "
+         
+         SWITCH o_[ OBJ_TYPE ]
+            
+         CASE OBJ_O_FIELD   
+            s += "GET " + o_[ OBJ_ID ] + " "
+            IF !empty( o_[ OBJ_F_PIC ] )
+               s += "PICTURE " + o_[ OBJ_F_PIC ] + " "
+            ENDIF 
+            IF !empty( o_[ OBJ_COLOR ] )
+               s += "COLOR " + o_[ OBJ_COLOR ] + " "
+            ENDIF 
+            IF !empty( o_[ OBJ_WHEN ] )
+               s += "WHEN " + o_[ OBJ_WHEN ] + " "
+            ENDIF 
+            IF !empty( o_[ OBJ_VALID ] )
+               s += "VALID " + o_[ OBJ_VALID ] + " "
+            ENDIF 
+            EXIT 
+            
+         CASE OBJ_O_BOX   
+            s += ", " + hb_ntos( o_[ OBJ_TO_ROW ] ) + ", " + hb_ntos( o_[ OBJ_TO_COL ] ) + " BOX " + ;
+                        '"' + o_[ OBJ_BOX_SHAPE ] + iif( o_[ OBJ_PATTERN ] == "CLEAR", "", " " ) + '"' + " "
+            IF ! empty( o_[ OBJ_COLOR ] )
+               s += "COLOR " + o_[ OBJ_COLOR ]
+            ENDIF 
+            EXIT 
+            
+         CASE OBJ_O_TEXT
+            s += "SAY " + '"' + o_[ OBJ_TEXT ] + '"' + " "
+            IF ! empty( o_[ OBJ_COLOR ] )
+               s += "COLOR " + o_[ OBJ_COLOR ]
+            ENDIF 
+            EXIT
+            
+         ENDSWITCH    
+        
+         aadd( prg_, s )     
+         aadd( prg_, " " )     
+      ENDIF    
+   NEXT    
+   aadd( prg_, " " )
+   aadd( prg_, "/* $HB_SCREEN_ENDS$  <" + trim( ::cScreen ) + "> */" )
+   aadd( prg_, " " )
+
+   IF !empty( prg_ )
+      s := ""
+      cP := space( ::nIndent )
+      
+      aeval( prg_, {|e| s += cP + e + chr( 13 ) + chr( 10 ) } )   
+      hb_memowrit( ::cSource, s )
+      
+      alert( "Screen is saved in " + ::cSource )
+   ENDIF 
+            
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -441,6 +494,9 @@ METHOD hbCUIEditor:operate()
       /*  Save Report */
       CASE ::nLastKey == K_ESC
          IF alert( "Do you want to exit ?", { "Yes","No" } ) == 1
+            IF ::lEdited
+               ::scrSave()
+            ENDIF    
             EXIT
          ENDIF    
       CASE ::nLastKey == K_CTRL_ENTER
@@ -2035,6 +2091,8 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
 
    ::xRefresh := OBJ_REFRESH_LINE
 
+   ::lEdited := .t.
+   
    RETURN NIL
 
 //----------------------------------------------------------------------//
@@ -2274,6 +2332,7 @@ METHOD hbCUIEditor:scrAddBox( nObj )
    ::scrOrdObj()
    ::scrMsg()
    ::xRefresh := OBJ_REFRESH_ALL
+   ::lEdited := .t.
 
    RETURN NIL
 
@@ -2328,6 +2387,7 @@ METHOD hbCUIEditor:scrAddFld( nObj )
       ::nObjSelected := 0
       ::xRefresh     := OBJ_REFRESH_LINE
       ::nMode        := 0
+      ::lEdited      := .t.
    ENDIF
 
    IF nObj > 0
@@ -2375,6 +2435,8 @@ METHOD hbCUIEditor:scrGetProperty( nObj )
       EXIT 
       
    ENDSWITCH      
+   
+   ::lEdited := .t.
    
    RETURN SELF
    
