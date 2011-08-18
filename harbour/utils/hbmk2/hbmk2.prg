@@ -601,6 +601,7 @@ PROCEDURE _APPMAIN( ... )
       ENDIF
 
       DO CASE
+	  CASE tmp == "harbour"                ; hb_AIns( aArgsProc, 1, "-hbraw", .T. )
       CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
            Left(  tmp, 5 ) == "hbcmp" .OR. ;
            tmp == "clipper"                ; hb_AIns( aArgsProc, 1, "-hbcmp", .T. )
