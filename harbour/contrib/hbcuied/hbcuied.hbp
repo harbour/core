@@ -11,7 +11,7 @@
 
 -w3 -es2
 
--gtwvt
+-gtwvt{win}
 
 cu_main.prg
 cu_utlty.prg

@@ -79,7 +79,7 @@ FUNCTION Main( cSource, cScreen )
    SetColor( "N/W" )
    CLS
 
-   hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer v1.0" )
+   hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer" )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    hb_gtInfo( HB_GTI_ICONFILE  , "..\..\package\favicon.ico" )
 
@@ -102,12 +102,6 @@ FUNCTION ThisError( oError )
    QUIT
    
    RETURN oError
-   
-/*----------------------------------------------------------------------*/
-
-FUNCTION HB_GTSYS()
-   REQUEST HB_GT_WVT_DEFAULT
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
