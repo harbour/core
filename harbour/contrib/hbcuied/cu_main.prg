@@ -81,11 +81,10 @@ FUNCTION Main( cSource, cScreen )
 
    hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer" )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-   hb_gtInfo( HB_GTI_ICONFILE  , "..\..\package\favicon.ico" )
 
    oCUI := hbCUIEditor():new( cSource, cScreen ):create()
    oCUI:destroy()
-   
+
    ErrorBlock( bErr )
 
    RETURN NIL 
@@ -100,7 +99,7 @@ FUNCTION ThisError( oError )
              ProcName( 4 ) + "-" + hb_ntos( procLine( 4 ) ) + ";" + ;
              ProcName( 5 ) + "-" + hb_ntos( procLine( 5 ) ) )
    QUIT
-   
+
    RETURN oError
 
 /*----------------------------------------------------------------------*/

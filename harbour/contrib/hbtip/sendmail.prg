@@ -197,9 +197,11 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       BEGIN SEQUENCE
          oUrl1 := tUrl():New( iif( lTLS, "pop3s://" , "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
-         opop:= tIPClientPOP():New( oUrl1, xTrace )
+         oPop := tIPClientPOP():New( oUrl1, xTrace )
          IF oPop:Open()
             oPop:Close()
+         ELSE
+            lReturn := .F.
          ENDIF
       RECOVER
          lReturn := .F.
