@@ -83,11 +83,6 @@ CLASS hbCUIEditor
    DATA scn_
    DATA rpt_                                      INIT { { "", 0, "" } }
 
-   DATA nCurObj
-
-   DATA cObject                                   INIT ""
-   DATA cRpt                                      INIT "Untitled"
-
    DATA sectors_                                  INIT {}
    DATA nDesign                                   INIT 1
    DATA nTop                                      INIT 1
@@ -125,8 +120,6 @@ CLASS hbCUIEditor
    DATA xRefresh                                  INIT OBJ_REFRESH_ALL
    DATA nObjCopied                                INIT 0
    DATA cBoxShape                                 INIT "ÚÄ¿³ÙÄÀ³"
-   DATA cDesignId                                 INIT "Module"
-   DATA cFile                                     INIT "Untitled"
    DATA aProperty                                 INIT {}
    DATA lGraphics                                 INIT .f.
    DATA aTextBlock                                INIT {}
@@ -172,7 +165,7 @@ CLASS hbCUIEditor
    METHOD scrTextPost( gst_, nMode )
    METHOD scrTextDel()
 
-   METHOD scrLoad( cSource, cScreen )
+   METHOD scrLoad( lAsk )
    METHOD scrSave( lAsk )
 
    METHOD scrAddBox( nObj )
@@ -227,7 +220,7 @@ METHOD hbCUIEditor:create( cSource, cScreen )
    ::cSource := cSource
    ::cScreen := cScreen
 
-   ::scrLoad( ::cSource, ::cScreen )
+   ::scrLoad( .f. )
    ::scrConfig()
    ::operate()
 
@@ -240,18 +233,25 @@ METHOD hbCUIEditor:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD hbCUIEditor:scrLoad( cSource, cScreen )
+METHOD hbCUIEditor:scrLoad( lAsk )
    LOCAL cBuffer, n, n1, nSel, aMatches, aMatch
    LOCAL scr_:={}
-   
-   IF empty( cSource ) .OR. ! hb_fileExists( cSource )
-      aadd( ::obj_, ::scrObjBlank() )
-      RETURN SELF
-   ENDIF
 
-   IF empty( cScreen )
-      // Pull out all screens embedded IN the source
-      cBuffer := hb_memoread( cSource )
+   IF ::lEdited
+      IF alert( "Screen has been edited, save ?", { "Yes","No" } ) == 1 
+         ::scrSave( .f. )
+      ENDIF 
+   ENDIF    
+      
+   IF lAsk
+      ::cSource := alltrim( VouchGetSome( "Source (.PRG) File", pad( ::cSource, 40 ) ) )
+   ENDIF
+   IF empty( ::cSource )
+      RETURN Self 
+   ENDIF 
+   
+   IF lAsk .OR. empty( ::cScreen )
+      cBuffer := hb_memoread( ::cSource )
       aMatches := hb_regExAll( "HB_SCREEN_BEGINS", cBuffer, .f., .f., 0, 1, .f. )
       IF ! empty( aMatches )
          FOR EACH aMatch IN aMatches
@@ -265,20 +265,19 @@ METHOD hbCUIEditor:scrLoad( cSource, cScreen )
       IF ! empty( scr_ )
          B_MSG "Select a Screen" CHOOSE scr_ RESTORE SHADOW CENTER INTO nSel
          IF nSel > 0
-            cScreen := scr_[ nSel ]
+            ::cScreen := scr_[ nSel ]
          ENDIF    
       ENDIF    
    ENDIF    
    
-   IF ! empty( cScreen )
-      ::scrBuildFromBuffer( cBuffer, cScreen )   
+   IF ! empty( cBuffer)
+      ::obj_:= {}
+      ::scrBuildFromBuffer( cBuffer, ::cScreen )   
+      ::xRefresh := OBJ_REFRESH_ALL
+      ::lEdited := .f.
    ENDIF 
       
-   ::cSource   := cSource
-   ::cScreen   := iif( empty( cScreen ), 'Untitled', cScreen )
-   ::cFile     := ::cScreen
-   ::cObject   := ::cSource
-   ::cRpt      := ::cScreen
+   ::cScreen := iif( empty( ::cScreen ), 'Untitled', ::cScreen )
 
    RETURN Self
 
@@ -520,9 +519,6 @@ METHOD hbCUIEditor:scrSave( lAsk )
       ::cScreen := cScreen
    ENDIF
 
-   ::cObject := ::cSource
-   ::cFile   := ::cScreen
-
    aadd( prg_, "/* HB_SCREEN_BEGINS <" + ::cScreen + "> */" )
    aadd( prg_, " " )
    FOR EACH o_ IN ::obj_
@@ -641,7 +637,6 @@ METHOD hbCUIEditor:scrUpdateSource( prg_ )
    ENDIF
 
    hb_memowrit( ::cSource, s )
-   alert( "Screen is saved in " + ::cSource )
    ::lEdited := .f.
    
    RETURN Self
@@ -700,8 +695,6 @@ METHOD hbCUIEditor:scrConfig()
    ::xRefresh       := OBJ_REFRESH_ALL
    ::nObjCopied     := 0
    ::cBoxShape      := 'ÚÄ¿³ÙÄÀ³'
-   ::cDesignId      := "Module"
-   ::cFile          := "Untitled"
    ::aProperty      := {}
    ::lGraphics      := .f.
    ::aTextBlock     := {}
@@ -811,7 +804,7 @@ METHOD hbCUIEditor:operate()
          ENDIF
          EXIT
       CASE ::nLastKey == K_ALT_L
-         ::scrLoad( ::cSource, "" )
+         ::scrLoad( .t. )
       CASE ::nLastKey == K_ALT_S
          ::scrSave( .t. )
 
@@ -969,12 +962,14 @@ METHOD hbCUIEditor:operate()
          ::nObjSelected := nObj
          ::scrOnFirstCol( nObj, { OBJ_O_BOX } )
          ::scrMsg( "Box is Selected. Use Arrow Keys to Move, Enter to Finish !" )
-
+         ::lEdited := .t.
+         
       ELSEIF nObj > 0 .AND. ::nLastKey == K_F6 .AND. ! ::objIsBox( nObj )
          ::nMode        := OBJ_MODE_SELECT
          ::nObjSelected := nObj
          ::scrOnFirstCol( nObj, { OBJ_O_TEXT } )
          ::scrMsg( "OBJECT is Selected. Use Arrow Keys to Move, Enter to Finished" )
+         ::lEdited := .t.
 
       ENDIF
 
@@ -1213,9 +1208,9 @@ METHOD hbCUIEditor:scrStatus()
    LOCAL s, typ_, objId
 
    dispbegin()
-   s := pad( ::cDesignId, 8 )+ ' ³ '
+   s := pad( ::cSource, 15 ) + ' ³ '
 
-   s += pad( ::cFile, 12 )+;
+   s += pad( ::cScreen, 12 )+;
              ' ³ '+;
              ' R:'+;
              str( ::nRowRep - 1, 3 )+;
