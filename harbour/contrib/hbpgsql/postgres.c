@@ -53,39 +53,10 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbpgsql.h"
+
 #include "hbapierr.h"
 #include "hbapiitm.h"
-
-#include "libpq-fe.h"
-
-#define VARHDRSZ              4
-#define BOOLOID               16
-#define INT8OID               20
-#define INT2OID               21
-#define INT4OID               23
-#define TEXTOID               25
-#define OIDOID                26
-#define FLOAT4OID             700
-#define FLOAT8OID             701
-#define CASHOID               790
-#define BPCHAROID             1042
-#define VARCHAROID            1043
-#define DATEOID               1082
-#define TIMEOID               1083
-#define TIMESTAMPOID          1114
-#define TIMESTAMPTZOID        1184
-#define TIMETZOID             1266
-#define BITOID                1560
-#define VARBITOID             1562
-#define NUMERICOID            1700
-
-#define INV_WRITE             0x00020000
-#define INV_READ              0x00040000
-
-#ifndef PG_VERSION_NUM
-#define PG_VERSION_NUM 0
-#endif
 
 static HB_GARBAGE_FUNC( PGconn_release )
 {
@@ -108,7 +79,7 @@ static const HB_GC_FUNCS s_gcPGconnFuncs =
    hb_gcDummyMark
 };
 
-static void hb_PGconn_ret( PGconn * p )
+void hb_PGconn_ret( PGconn * p )
 {
    if( p )
    {
@@ -122,7 +93,7 @@ static void hb_PGconn_ret( PGconn * p )
       hb_retptr( NULL );
 }
 
-static PGconn * hb_PGconn_par( int iParam )
+PGconn * hb_PGconn_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcPGconnFuncs, iParam );
 
@@ -150,7 +121,7 @@ static const HB_GC_FUNCS s_gcPGresultFuncs =
    hb_gcDummyMark
 };
 
-static void hb_PGresult_ret( PGresult * p )
+void hb_PGresult_ret( PGresult * p )
 {
    if( p )
    {
@@ -164,7 +135,7 @@ static void hb_PGresult_ret( PGresult * p )
       hb_retptr( NULL );
 }
 
-static PGresult * hb_PGresult_par( int iParam )
+PGresult * hb_PGresult_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcPGresultFuncs, iParam );
 
@@ -1175,6 +1146,34 @@ HB_FUNC( PQEXECPREPARED )
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( PQPUTCOPYDATA )
+{
+#if PG_VERSION_NUM >= 80000
+   PGconn * conn = hb_PGconn_par( 1 );
+
+   if( conn )
+      hb_retni( PQputCopyData( conn, hb_parcx( 2 ), hb_parclen( 2 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retc_null();
+#endif
+}
+
+HB_FUNC( PQPUTCOPYEND )
+{
+#if PG_VERSION_NUM >= 80000
+   PGconn * conn = hb_PGconn_par( 1 );
+
+   if( conn )
+      hb_retni( PQputCopyEnd( conn, NULL ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retc_null();
+#endif
 }
 
 /*

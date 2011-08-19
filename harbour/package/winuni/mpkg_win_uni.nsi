@@ -142,12 +142,8 @@ SectionEnd
 !ifndef PKG_NO_COMP_MINGW64
 Section /o "x64 tools" hb_main_x64
   SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\harbour-x64.exe"
-  File "$%HB_ABSROOT%bin\hbformat-x64.exe"
-  File "$%HB_ABSROOT%bin\hbi18n-x64.exe"
   File "$%HB_ABSROOT%bin\hbmk2-x64.exe"
   File "$%HB_ABSROOT%bin\hbnetio-x64.exe"
-  File "$%HB_ABSROOT%bin\hbpp-x64.exe"
   File "$%HB_ABSROOT%bin\hbrun-x64.exe"
   File "$%HB_ABSROOT%bin\hbtest-x64.exe"
 SectionEnd

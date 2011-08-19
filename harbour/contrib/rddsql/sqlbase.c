@@ -542,7 +542,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
    errCode = HB_SUCCESS;
    pField = pArea->area.lpFields + ( uiIndex - 1 );
 
-   if ( ( ( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) ) && pField->uiType == HB_FT_STRING ) ||
+   if ( ( ( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) ) && ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_MEMO ) ) ||
         ( HB_IS_DATE( pItem ) && pField->uiType == HB_FT_DATE ) ||
         ( HB_IS_TIMESTAMP( pItem ) && pField->uiType == HB_FT_TIMESTAMP ) ||
         ( HB_IS_NUMBER( pItem ) && ( pField->uiType == HB_FT_INTEGER || pField->uiType == HB_FT_LONG ||

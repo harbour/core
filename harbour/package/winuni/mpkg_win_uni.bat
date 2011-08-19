@@ -72,12 +72,8 @@ for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do (
 )
 del _hbtemp.sed
 
- copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\harbour.exe     %HB_ABSROOT%bin\harbour-x64.exe
- copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbformat.exe    %HB_ABSROOT%bin\hbformat-x64.exe
- copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbi18n.exe      %HB_ABSROOT%bin\hbi18n-x64.exe
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe       %HB_ABSROOT%bin\hbmk2-x64.exe
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe     %HB_ABSROOT%bin\hbnetio-x64.exe
- copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbpp.exe        %HB_ABSROOT%bin\hbpp-x64.exe
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbrun.exe       %HB_ABSROOT%bin\hbrun-x64.exe
  copy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbtest.exe      %HB_ABSROOT%bin\hbtest-x64.exe
 

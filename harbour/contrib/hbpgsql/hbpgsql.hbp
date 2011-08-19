@@ -30,6 +30,7 @@
 hbpgsql.hbx
 
 postgres.c
+rddcopy.c
 
 tpostgre.prg
 hdbcpg.prg
