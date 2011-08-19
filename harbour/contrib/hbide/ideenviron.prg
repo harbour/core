@@ -201,7 +201,7 @@ METHOD IdeEnvironments:getHbmk2Commands( cEnvName )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:prepareBatch( cEnvName )
-   LOCAL n, s, a_, aCmd := {}
+   LOCAL cPath, n, s, a_, aCmd := {}
 
    IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnvName } ) ) > 0
       FOR EACH a_ IN ::aEnvrns[ n, 2 ]
@@ -210,6 +210,11 @@ METHOD IdeEnvironments:prepareBatch( cEnvName )
             aadd( aCmd, a_[ 2 ] )
          ENDIF
       NEXT
+   ELSE
+      hb_fNameSplit( hb_dirBase(), @cPath )
+      IF hb_fileExists( cPath + hb_ps() + "hbmk2.exe" )
+         aadd( aCmd, "SET PATH=" + cPath + ";%PATH%" )
+      ENDIF
    ENDIF
 
    RETURN hbide_getShellCommandsTempFile( aCmd )
