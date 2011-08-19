@@ -77,7 +77,6 @@ CLASS hbCUIEditor
 
    DATA cSource                                   INIT ""
    DATA cScreen                                   INIT ""
-   DATA nIndent                                   INIT 3
    DATA lEdited                                   INIT .f.
 
    DATA obj_                                      INIT {}
@@ -199,7 +198,10 @@ CLASS hbCUIEditor
 
    METHOD scrVrbHeaders( nType )
    METHOD scrGetProperty( nObj )
-   METHOD scrUpdateSource( s )
+   METHOD scrUpdateSource( prg_ )
+   METHOD scrBuildSource( prg_, nIndent )
+   METHOD scrBuildFunction( prg_ )
+   METHOD scrBuildFromBuffer( cBuffer, cScreen )
 
    ENDCLASS
 
@@ -239,12 +241,39 @@ METHOD hbCUIEditor:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD hbCUIEditor:scrLoad( cSource, cScreen )
-
+   LOCAL cBuffer, n, n1, nSel, aMatches, aMatch
+   LOCAL scr_:={}
+   
    IF empty( cSource ) .OR. ! hb_fileExists( cSource )
       aadd( ::obj_, ::scrObjBlank() )
       RETURN SELF
    ENDIF
 
+   IF empty( cScreen )
+      // Pull out all screens embedded IN the source
+      cBuffer := hb_memoread( cSource )
+      aMatches := hb_regExAll( "HB_SCREEN_BEGINS", cBuffer, .f., .f., 0, 1, .f. )
+      IF ! empty( aMatches )
+         FOR EACH aMatch IN aMatches
+            IF ( n := hb_at( "<", cBuffer, aMatch[ 2 ] ) ) > 0
+               IF ( n1 := hb_at( ">", cBuffer, aMatch[ 2 ] ) ) > 0
+                  aadd( scr_, substr( cBuffer, n + 1, n1 - n - 1 ) )
+               ENDIF    
+            ENDIF 
+         NEXT    
+      ENDIF    
+      IF ! empty( scr_ )
+         B_MSG "Select a Screen" CHOOSE scr_ RESTORE SHADOW CENTER INTO nSel
+         IF nSel > 0
+            cScreen := scr_[ nSel ]
+         ENDIF    
+      ENDIF    
+   ENDIF    
+   
+   IF ! empty( cScreen )
+      ::scrBuildFromBuffer( cBuffer, cScreen )   
+   ENDIF 
+      
    ::cSource   := cSource
    ::cScreen   := iif( empty( cScreen ), 'Untitled', cScreen )
    ::cFile     := ::cScreen
@@ -255,8 +284,222 @@ METHOD hbCUIEditor:scrLoad( cSource, cScreen )
 
 //----------------------------------------------------------------------//
 
+METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
+   LOCAL cTokenB := "/* HB_SCREEN_BEGINS <" + cScreen + "> */"
+   LOCAL cTokenE := "/* HB_SCREEN_ENDS <" + cScreen + "> */"
+   LOCAL cCode, aCode, cLine, aAttr, aMatch, aMatches, nStart, nEnd, nLen, s, n, o_, a_ 
+
+   IF ( nStart := at( cTokenB, cBuffer ) ) > 0
+      IF ( nEnd := at( cTokenE, cBuffer ) ) > 0
+         cCode := substr( cBuffer, nStart + len( cTokenB ), nEnd - nStart - 1 - len( cTokenB ) )
+         aCode := hb_aTokens( strtran( cCode, chr( 13 ), chr( 10 ) ), chr( 10 ) )
+         IF ! empty( aCode )
+            aAttr := {}
+            FOR EACH cLine IN aCode 
+               cLine := alltrim( cLine )
+               IF ! empty( cLine )
+                  IF left( cLine, 3 ) == "///"
+                     aAttr := hb_aTokens( substr( cLine, 5 ), " " )
+                     aAttr[ 1 ] := val( aAttr[ 1 ] )
+                     aAttr[ 2 ] := val( aAttr[ 2 ] )
+                     aAttr[ 4 ] := val( aAttr[ 4 ] )
+                     aAttr[ 5 ] := val( aAttr[ 5 ] )
+                     
+                  ELSE 
+                     SWITCH aAttr[ 2 ]
+                        
+                     CASE OBJ_O_BOX 
+                        aMatches := hb_regExAll( "^@|\bBOX\b|\bCOLOR\b", cLine, .f., .f., 0, 1, .f. )
+                        IF ! empty( nLen := len( aMatches ) )
+                           o_:= ::scrObjBlank()
+                           //
+                           o_[ OBJ_TYPE       ] := OBJ_O_BOX
+                           o_[ OBJ_ID         ] := "Frame"
+                           o_[ OBJ_F_LEN      ] := 9
+                           o_[ OBJ_MDL_F_TYPE ] := 62
+                           
+                           FOR EACH aMatch IN aMatches
+                              SWITCH alltrim( upper( aMatch[ 1 ] ) )
+                              CASE "@"   
+                                 n := aMatches[ aMatch:__enumIndex() + 1, 2 ] 
+                                 s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 s := strtran( s, " ,", "," )
+                                 s := strtran( s, ", ", "," )
+                                 a_:= hb_aTokens( s, "," )
+                                 
+                                 o_[ OBJ_ROW    ] := val( alltrim( a_[ 1 ] ) ) + 1
+                                 o_[ OBJ_COL    ] := val( alltrim( a_[ 2 ] ) ) + 1
+                                 o_[ OBJ_TO_ROW ] := val( alltrim( a_[ 3 ] ) ) + 1
+                                 o_[ OBJ_TO_COL ] := val( alltrim( a_[ 4 ] ) ) + 1
+                                 
+                                 EXIT 
+                              CASE "BOX" 
+                                 IF nLen > 2
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    s := substr( cLine, aMatch[ 3 ] + 1 )
+                                 ENDIF    
+                                 s := alltrim( s )
+                                 s := strtran( s, '"', "" )
+                                 o_[ OBJ_BOX_SHAPE ] := substr( s, 1, 8 )
+                                 o_[ OBJ_PATTERN   ] := iif( len( s ) == 9, "FILLED", "CLEAR" )
+                                 
+                                 EXIT 
+                              CASE "COLOR"
+                                 o_[ OBJ_COLOR ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 
+                                 EXIT 
+                              ENDSWITCH       
+                           NEXT
+                           aadd( ::obj_, o_ )       
+                        ENDIF       
+                        EXIT 
+                        
+                     CASE OBJ_O_TEXT 
+                        aMatches := hb_regExAll( "^@|\bSAY\b|\bCOLOR\b", cLine, .f., .f., 0, 1, .f. )
+                        IF ! empty( nLen := len( aMatches ) )
+                           o_:= ::scrObjBlank()
+                           //
+                           o_[ OBJ_TYPE       ] := OBJ_O_TEXT
+                           o_[ OBJ_ID         ] := "Text"
+                           
+                           FOR EACH aMatch IN aMatches
+                              SWITCH alltrim( upper( aMatch[ 1 ] ) )
+                              CASE "@"   
+                                 n := aMatches[ aMatch:__enumIndex() + 1, 2 ] 
+                                 s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 s := strtran( s, ", ", "," )
+                                 a_:= hb_aTokens( s, "," )
+                                 
+                                 o_[ OBJ_ROW    ] := val( alltrim( a_[ 1 ] ) ) + 1
+                                 o_[ OBJ_COL    ] := val( alltrim( a_[ 2 ] ) ) + 1
+                                 
+                                 EXIT 
+                              CASE "SAY" 
+                                 IF nLen > 2
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    s := substr( cLine, aMatch[ 3 ] + 1 )
+                                 ENDIF    
+                                 s := alltrim( s )
+                                 s := substr( s, 2, len( s ) - 2 )
+
+                                 o_[ OBJ_EQN    ] := s 
+                                 o_[ OBJ_TO_ROW ] := o_[ OBJ_ROW ]
+                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + len( s )
+                                 o_[ OBJ_F_TYPE ] := "C"
+                                 o_[ OBJ_F_LEN  ] := len( s )
+                                                                  
+                                 EXIT 
+                              CASE "COLOR"
+                                 o_[ OBJ_COLOR ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 
+                              ENDSWITCH
+                           NEXT
+                              
+                           aadd( ::obj_, o_ )   
+                        ENDIF
+                        EXIT 
+                        
+                     CASE OBJ_O_FIELD 
+                        aMatches := hb_regExAll( "^@|\bGET\b|\bPICTURE\b|\bCOLOR\b|\bWHEN\b|\bVALID\b", cLine, .f., .f., 0, 1, .f. )
+                        IF ! empty( nLen := len( aMatches ) )
+                           o_:= ::scrObjBlank()
+                           //
+                           o_[ OBJ_TYPE ] := OBJ_O_FIELD
+                           
+                           FOR EACH aMatch IN aMatches
+                              SWITCH alltrim( upper( aMatch[ 1 ] ) )
+                                 
+                              CASE "@"   
+                                 n := aMatches[ aMatch:__enumIndex() + 1, 2 ] 
+                                 s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 s := strtran( s, ", ", "," )
+                                 a_:= hb_aTokens( s, "," )
+                                 
+                                 o_[ OBJ_ROW    ] := val( alltrim( a_[ 1 ] ) ) + 1
+                                 o_[ OBJ_COL    ] := val( alltrim( a_[ 2 ] ) ) + 1
+                                 o_[ OBJ_TO_ROW ] := o_[ OBJ_ROW ]
+                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + aAttr[ 4 ]
+                                 o_[ OBJ_F_TYPE ] := aAttr[ 3 ]
+                                 o_[ OBJ_F_LEN  ] := aAttr[ 4 ]
+                                 o_[ OBJ_F_DEC  ] := aAttr[ 5 ]
+                                 
+                                 EXIT 
+                                 
+                              CASE "GET" 
+                                 IF nLen > 2
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    s := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    s := substr( cLine, aMatch[ 3 ] + 1 )
+                                 ENDIF    
+                                 s := alltrim( s )
+                                 o_[ OBJ_ID  ] := s 
+                                 o_[ OBJ_EQN ] := padc( s, aAttr[ 4 ] )
+                                 EXIT 
+                                 
+                              CASE "PICTURE"
+                                 IF aMatch:__enumIndex() < len( aMatches )
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    o_[ OBJ_F_PIC ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    o_[ OBJ_F_PIC ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 ENDIF    
+                                 EXIT 
+                                 
+                              CASE "COLOR"
+                                 IF aMatch:__enumIndex() < len( aMatches )
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    o_[ OBJ_COLOR ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    o_[ OBJ_COLOR ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 ENDIF    
+                                 EXIT 
+                                 
+                              CASE "WHEN"
+                                 IF aMatch:__enumIndex() < len( aMatches )
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    o_[ OBJ_WHEN ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    o_[ OBJ_WHEN ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 ENDIF    
+                                 EXIT 
+                                 
+                              CASE "VALID"
+                                 IF aMatch:__enumIndex() < len( aMatches )
+                                    n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
+                                    o_[ OBJ_VALID ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
+                                 ELSE    
+                                    o_[ OBJ_VALID ] := alltrim( substr( cLine, aMatch[ 3 ] + 1 ) )
+                                 ENDIF    
+                                 EXIT 
+                                 
+                              ENDSWITCH
+                              
+                           NEXT
+                              
+                           aadd( ::obj_, o_ )   
+                        ENDIF
+                        EXIT 
+                        
+                     ENDSWITCH                         
+                     aAttr := {}
+                  ENDIF    
+               ENDIF    
+            NEXT    
+         ENDIF    
+      ENDIF 
+   ENDIF 
+            
+   RETURN Self 
+   
+/*----------------------------------------------------------------------*/
+   
 METHOD hbCUIEditor:scrSave( lAsk )
-   LOCAL s, cP, o_, cSource, cScreen
+   LOCAL s, o_, cSource, cScreen
    local prg_:={}
 
    DEFAULT lAsk TO .f.
@@ -283,10 +526,12 @@ METHOD hbCUIEditor:scrSave( lAsk )
    aadd( prg_, "/* HB_SCREEN_BEGINS <" + ::cScreen + "> */" )
    aadd( prg_, " " )
    FOR EACH o_ IN ::obj_
-      IF !empty( o_[ OBJ_TYPE ] )
-         aadd( prg_, "/// " + iif( empty( o_[ OBJ_F_TYPE ] ), ".", o_[ OBJ_F_TYPE ] ) + " " + hb_ntos( o_[ OBJ_F_LEN ] ) + " " + hb_ntos( o_[ OBJ_F_DEC ] ) )
+      IF ! empty( o_[ OBJ_TYPE ] )
+         
+         aadd( prg_, "/// " + hb_ntos( o_:__enumIndex() ) + " " + hb_ntos( o_[ OBJ_TYPE ] ) + " " + ;
+                         o_[ OBJ_F_TYPE ] + " " + hb_ntos( o_[ OBJ_F_LEN ] ) + " " + hb_ntos( o_[ OBJ_F_DEC ] ) )
 
-         s := "@ " + hb_ntos( o_[ OBJ_ROW ] ) + ", " + hb_ntos( o_[ OBJ_COL ] ) + " "
+         s := "@ " + hb_ntos( o_[ OBJ_ROW ] - 1 ) + ", " + hb_ntos( o_[ OBJ_COL ] - 1 ) + " "
 
          SWITCH o_[ OBJ_TYPE ]
 
@@ -296,18 +541,18 @@ METHOD hbCUIEditor:scrSave( lAsk )
                s += "PICTURE " + o_[ OBJ_F_PIC ] + " "
             ENDIF
             IF !empty( o_[ OBJ_COLOR ] )
-               s += "COLOR " + o_[ OBJ_COLOR ] + " "
+               s += "COLOR "   + o_[ OBJ_COLOR ] + " "
             ENDIF
             IF !empty( o_[ OBJ_WHEN ] )
-               s += "WHEN " + o_[ OBJ_WHEN ] + " "
+               s += "WHEN "    + o_[ OBJ_WHEN  ] + " "
             ENDIF
             IF !empty( o_[ OBJ_VALID ] )
-               s += "VALID " + o_[ OBJ_VALID ] + " "
+               s += "VALID "   + o_[ OBJ_VALID ] + " "
             ENDIF
             EXIT
 
          CASE OBJ_O_BOX
-            s += ", " + hb_ntos( o_[ OBJ_TO_ROW ] ) + ", " + hb_ntos( o_[ OBJ_TO_COL ] ) + " BOX " + ;
+            s += ", " + hb_ntos( o_[ OBJ_TO_ROW ] - 1 ) + ", " + hb_ntos( o_[ OBJ_TO_COL ] - 1 ) + " BOX " + ;
                         '"' + o_[ OBJ_BOX_SHAPE ] + iif( o_[ OBJ_PATTERN ] == "CLEAR", "", " " ) + '"' + " "
             IF ! empty( o_[ OBJ_COLOR ] )
                s += "COLOR " + o_[ OBJ_COLOR ]
@@ -330,22 +575,41 @@ METHOD hbCUIEditor:scrSave( lAsk )
    aadd( prg_, "/* HB_SCREEN_ENDS <" + ::cScreen + "> */" )
 
    IF !empty( prg_ )
-      s := ""
-      cP := space( ::nIndent )
-
-      aeval( prg_, {|e| s += cP + e + chr( 13 ) + chr( 10 ) } )
-
-      s := substr( s, 1, len( s ) - 2 )
-
-      ::scrUpdateSource( s )
+      ::scrUpdateSource( prg_ )
    ENDIF
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD hbCUIEditor:scrUpdateSource( s )
-   LOCAL cBuffer, cTokenB, cTokenE, nStart, nEnd
+METHOD hbCUIEditor:scrBuildFunction( prg_ )
+   LOCAL s
+   
+   s := hb_eol()
+   s += "FUNCTION hbcui_" + lower( strtran( ::cScreen, " ", "_" ) ) + "()" + hb_eol()
+   s += hb_eol()
+   s += ::scrBuildSource( prg_, 3 ) + hb_eol()
+   s += hb_eol()
+   s += "   RETURN NIL"
+   s += hb_eol()
+
+   RETURN s 
+   
+/*----------------------------------------------------------------------*/
+
+METHOD hbCUIEditor:scrBuildSource( prg_, nIndent )
+   LOCAL cP, s := ""
+   
+   cP := space( nIndent )
+   aeval( prg_, {|e| s += cP + e + hb_eol() } )
+   s := substr( s, 1, len( s ) - len( hb_eol() ) )
+   
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+METHOD hbCUIEditor:scrUpdateSource( prg_ )
+   LOCAL cBuffer, cTokenB, cTokenE, nStart, nEnd, s, nIndent, cTmp
 
    IF hb_fileExists( ::cSource )
       cBuffer := hb_memoread( ::cSource )
@@ -353,22 +617,33 @@ METHOD hbCUIEditor:scrUpdateSource( s )
       cTokenE := "/* HB_SCREEN_ENDS <" + ::cScreen + "> */"
 
       IF ( nStart := at( cTokenB, cBuffer ) ) > 0
-         IF ( nEnd := at( cTokenE, cBuffer ) ) > 0
-            cBuffer := substr( cBuffer, 1, nStart - ::nIndent - 1 ) + s + substr( cBuffer, nEnd + len( cTokenE ) )
-            hb_memowrit( ::cSource, cBuffer )
-            alert( "Screen is saved in " + ::cSource )
-            ::lEdited := .f.
-         ENDIF
+         nEnd := at( cTokenE, cBuffer )
+         IF nEnd == 0
+            nEnd := nStart + len( cTokenB )
+         ELSE 
+            nEnd += len( cTokenE )
+         ENDIF    
+         cTmp := substr( cBuffer, 1, nStart - 1 )
+         nIndent := nStart - hb_rat( hb_eol(), cTmp ) - len( hb_eol() )
+       
+         s := ::scrBuildSource( prg_, nIndent )
+         s := substr( cBuffer, 1, nStart - nIndent - 1 ) + s + substr( cBuffer, nEnd )
+         
       ELSE
-         // What TO DO ?
+         s := ::scrBuildFunction( prg_ )
+         s := cBuffer + hb_eol() + s 
+         
       ENDIF
 
    ELSE
-      hb_memowrit( ::cSource, s )
-      alert( "Screen is saved in " + ::cSource )
-      ::lEdited := .f.
+      s := ::scrBuildFunction( prg_)
+      
    ENDIF
 
+   hb_memowrit( ::cSource, s )
+   alert( "Screen is saved in " + ::cSource )
+   ::lEdited := .f.
+   
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -524,19 +799,21 @@ METHOD hbCUIEditor:operate()
       CASE ::nLastKey == K_ESC
          IF alert( "Do you want to exit ?", { "Yes","No" } ) == 1
             IF ::lEdited
-               ::scrSave()
+               IF alert( "Screen has been edited, do you want to save ?", { "Yes","No" } ) == 1
+                  ::scrSave()
+               ENDIF    
             ENDIF
             EXIT
          ENDIF
       CASE ::nLastKey == K_CTRL_ENTER
-         IF alert( "Do you want TO save screen ?", { "Yes","No" } ) == 1
+         IF ::lEdited
             ::scrSave()
          ENDIF
          EXIT
       CASE ::nLastKey == K_ALT_L
-         ::scrLoad()
+         ::scrLoad( ::cSource, "" )
       CASE ::nLastKey == K_ALT_S
-         ::scrSave()
+         ::scrSave( .t. )
 
       CASE ::nLastKey == K_RIGHT
          ::scrMovRgt()
@@ -580,7 +857,7 @@ METHOD hbCUIEditor:operate()
             ::nColsMax      := max( ::nColsMax, ::obj_[ ::nObjSelected, OBJ_TO_COL ] + 1 )
             ::nMode         := OBJ_MODE_IDLE
             ::xRefresh      := OBJ_REFRESH_LINE
-            ::nObjSelected := 0
+            ::nObjSelected  := 0
             ::scrMsg()
          ENDIF
 
@@ -2044,7 +2321,6 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
             txt_[ n1, OBJ_COL     ] := ::nColRep+1
             txt_[ n1, OBJ_EQN     ] := s2
             txt_[ n1, OBJ_ID      ] := 'Text'
-            txt_[ n1, OBJ_SECTION ] := 1
             txt_[ n1, OBJ_TO_ROW  ] := ::nRowRep
             txt_[ n1, OBJ_TO_COL  ] := txt_[ n1, OBJ_COL ] + len( s2 ) - 1
          ENDIF
@@ -2173,7 +2449,7 @@ METHOD hbCUIEditor:scrObjBlank()
    o_[ OBJ_TO_ROW     ] := 0
    o_[ OBJ_TO_COL     ] := 0
    o_[ OBJ_TEXT       ] := ""
-   o_[ OBJ_F_TYPE     ] := ""
+   o_[ OBJ_F_TYPE     ] := "."
    o_[ OBJ_F_LEN      ] := 0
    o_[ OBJ_F_DEC      ] := 0
    o_[ OBJ_F_PIC      ] := ""
