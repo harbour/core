@@ -563,12 +563,12 @@ FUNCTION VouchMenuM( id,nInit,msg )
       aadd( mnu_, { "B_SINGLE"        , B_SINGLE        } )
       aadd( mnu_, { "B_DOUBLE"        , B_DOUBLE        } )
       aadd( mnu_, { "B_SINGLE_DOUBLE" , B_SINGLE_DOUBLE } )
-      aadd( mnu_, { "B_DOUBLE_SINGLE" , B_DOUBLE_SINGLE } ) 
-                                         
+      aadd( mnu_, { "B_DOUBLE_SINGLE" , B_DOUBLE_SINGLE } )
+
    CASE id == "MN_FILL"
       aadd( mnu_, { "Clear" , "CLEAR"  } )
       aadd( mnu_, { "Filled", "FILLED" } )
-      
+
    ENDCASE
 
    aeval( mnu_,{|e_| aadd( m_,e_[ 1 ] ) } )
@@ -1087,58 +1087,130 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
 /*----------------------------------------------------------------------*/
 
 FUNCTION help( cToken )
+   LOCAL nKey
    LOCAL aScr := VouchWndSave( 0, 0, maxrow(), maxcol() )
-   
+
+   DEFAULT cToken TO SetHelpStr()
+   IF empty( cToken )
+      cToken := "KEYS"
+   ENDIF
+
    Vstk_push()
    SetCursor( 0 )
-   SetColor( "W/B" )   
-   CLS 
-   
+   SetColor( "W/B" )
+   DispBegin()
+
+   CLS
+
    SWITCH Upper( cToken )
    CASE "KEYS"
       /* HB_SCREEN_BEGINS <Keys> */
-       
-      /// 1 3 C 15 0 
-      @ 1, 2     SAY "F1  This screen"                                      
-      /// 2 3 C 34 0 
-      @ 2, 2     SAY "F4  Properties of hilighted object"                   
-      /// 3 3 C 25 0 
-      @ 3, 2     SAY "F5  Edit hilighted object"                            
-      /// 4 3 C 27 0 
-      @ 4, 2     SAY "F6  Select hilighted object"                          
-      /// 5 3 C 25 0 
-      @ 5, 2     SAY "F7  Copy hilighted object"                            
-      /// 6 3 C 23 0 
-      @ 6, 2     SAY "F8  Paste copied object"                              
-      /// 7 3 C 27 0 
-      @ 8, 2     SAY "F10 Define a new GET object"                          
-      /// 8 3 C 34 0 
-      @ 7, 2     SAY "F9  Start to define new box object"                   
-      /// 9 3 C 27 0 
-      @ 10, 2    SAY "Del Delete hilighted object"                          
-      /// 10 3 C 30 0 
-      @ 12, 2    SAY "Ctrl+F6 Begins block selection"                       
-      /// 11 3 C 52 0 
-      @ 14, 2    SAY "Ctrl+F8 Cut and paste selected block at new location" 
-      /// 12 3 C 43 0 
-      @ 13, 2    SAY "Ctrl+F7 Copy selected block at new location"          
-      /// 13 3 C 34 0 
-      @ 24, 2    SAY "Press ESC to return to designer..."                   COLOR "GR+/B"
-      /// 14 3 C 26 0 
-      @ 20, 2    SAY "Alt+S Save designed screen"                           
-      /// 15 3 C 25 0 
-      @ 21, 2    SAY "Alt+L Load another screen"                            
-       
+
+      /// 1 3 C 28 0
+      @ 20, 2    SAY "Alt+S   Save designed screen"
+      /// 2 3 C 27 0
+      @ 21, 2    SAY "Alt+L   Load another screen"
+      /// 3 3 C 76 0
+      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
+      /// 4 3 C 19 0
+      @ 3, 2     SAY "F1      This screen"
+      /// 5 3 C 38 0
+      @ 4, 2     SAY "F4      Properties of hilighted object"
+      /// 6 3 C 29 0
+      @ 5, 2     SAY "F5      Edit hilighted object"
+      /// 7 3 C 31 0
+      @ 6, 2     SAY "F6      Select hilighted object"
+      /// 8 3 C 29 0
+      @ 7, 2     SAY "F7      Copy hilighted object"
+      /// 9 3 C 27 0
+      @ 8, 2     SAY "F8      Paste copied object"
+      /// 10 3 C 38 0
+      @ 9, 2     SAY "F9      Start to define new box object"
+      /// 11 3 C 31 0
+      @ 10, 2    SAY "F10     Define a new GET object"
+      /// 12 3 C 31 0
+      @ 12, 2    SAY "Del     Delete hilighted object"
+      /// 13 3 C 30 0
+      @ 14, 2    SAY "Ctrl_F6 Begins block selection"
+      /// 14 3 C 43 0
+      @ 15, 2    SAY "Ctrl_F7 Copy selected block at new location"
+      /// 15 3 C 52 0
+      @ 16, 2    SAY "Ctrl_F8 Cut and paste selected block at new location"
+      /// 16 3 C 76 0
+      @ 1, 2     SAY "                                     Keys                                   " COLOR "N/W*"
+
       /* HB_SCREEN_ENDS <Keys> */
+      EXIT
+   CASE "GENERAL-1"
+      /* HB_SCREEN_BEGINS <General-1> */
+
+      /// 1 3 C 76 0
+      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
+      /// 2 3 C 76 0
+      @ 1, 2     SAY "                                   General                                  " COLOR "N/W*"
+
+      /* HB_SCREEN_ENDS <General-1> */
+      EXIT
+   CASE "GENERAL-2"
+      /* HB_SCREEN_BEGINS <General-2> */
+
+      /// 1 3 C 76 0
+      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
+      /// 2 3 C 76 0
+      @ 1, 2     SAY "                               Selective Input                              " COLOR "N/W*"
+
+      /* HB_SCREEN_ENDS <General-2> */
+      EXIT
+   CASE "GENERAL-3"
+      /* HB_SCREEN_BEGINS <General-3> */
+
+      /// 1 3 C 76 0
+      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
+      /// 2 3 C 76 0
+      @ 1, 2     SAY "                               Block Selection                              " COLOR "N/W*"
+
+      /* HB_SCREEN_ENDS <General-3> */
       EXIT
    ENDSWITCH
 
-   DO WHILE inkey() != K_ESC; ENDDO
-      
+   DispEnd()
+
+   DO WHILE .t.
+      nKey := inkey()
+      IF     nKey == K_ESC
+         SetHelpStr( "" )
+         EXIT
+      ELSEIF nKey == 49
+         SetHelpStr( "General-1" )
+         __keyboard( chr( K_F1 ) )
+         EXIT
+      ELSEIF nKey == 50
+         SetHelpStr( "General-2" )
+         __keyboard( chr( K_F1 ) )
+         EXIT
+      ELSEIF nKey == 51
+         SetHelpStr( "General-3" )
+         __keyboard( chr( K_F1 ) )
+         EXIT
+      ENDIF
+   ENDDO
+
    VouchWndRest( aScr )
    Vstk_pop()
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION SetHelpStr( cStr )
+   LOCAL o_str
+   STATIC s_str := ""
+
+   o_str := s_str
+   IF hb_isChar( cStr )
+      s_str := cStr
+   ENDIF
+
+   RETURN o_str
+
+/*----------------------------------------------------------------------*/
