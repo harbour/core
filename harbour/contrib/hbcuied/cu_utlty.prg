@@ -99,17 +99,6 @@ FUNCTION VouchInRange( v, r1, r2 )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION help( cToken )
-
-   DO CASE
-   CASE cToken == "this"
-
-   ENDCASE
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION pad_max( a_,lNum,max )
    LOCAL i := 1
    DEFAULT lNum TO .f.
@@ -1096,3 +1085,60 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
    RETURN vrb
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION help( cToken )
+   LOCAL aScr := VouchWndSave( 0, 0, maxrow(), maxcol() )
+   
+   Vstk_push()
+   SetCursor( 0 )
+   SetColor( "W/B" )   
+   CLS 
+   
+   SWITCH Upper( cToken )
+   CASE "KEYS"
+      /* HB_SCREEN_BEGINS <Keys> */
+       
+      /// 1 3 C 15 0 
+      @ 1, 2     SAY "F1  This screen"                                      
+      /// 2 3 C 34 0 
+      @ 2, 2     SAY "F4  Properties of hilighted object"                   
+      /// 3 3 C 25 0 
+      @ 3, 2     SAY "F5  Edit hilighted object"                            
+      /// 4 3 C 27 0 
+      @ 4, 2     SAY "F6  Select hilighted object"                          
+      /// 5 3 C 25 0 
+      @ 5, 2     SAY "F7  Copy hilighted object"                            
+      /// 6 3 C 23 0 
+      @ 6, 2     SAY "F8  Paste copied object"                              
+      /// 7 3 C 27 0 
+      @ 8, 2     SAY "F10 Define a new GET object"                          
+      /// 8 3 C 34 0 
+      @ 7, 2     SAY "F9  Start to define new box object"                   
+      /// 9 3 C 27 0 
+      @ 10, 2    SAY "Del Delete hilighted object"                          
+      /// 10 3 C 30 0 
+      @ 12, 2    SAY "Ctrl+F6 Begins block selection"                       
+      /// 11 3 C 52 0 
+      @ 14, 2    SAY "Ctrl+F8 Cut and paste selected block at new location" 
+      /// 12 3 C 43 0 
+      @ 13, 2    SAY "Ctrl+F7 Copy selected block at new location"          
+      /// 13 3 C 34 0 
+      @ 24, 2    SAY "Press ESC to return to designer..."                   COLOR "GR+/B"
+      /// 14 3 C 26 0 
+      @ 20, 2    SAY "Alt+S Save designed screen"                           
+      /// 15 3 C 25 0 
+      @ 21, 2    SAY "Alt+L Load another screen"                            
+       
+      /* HB_SCREEN_ENDS <Keys> */
+      EXIT
+   ENDSWITCH
+
+   DO WHILE inkey() != K_ESC; ENDDO
+      
+   VouchWndRest( aScr )
+   Vstk_pop()
+   
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+

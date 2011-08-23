@@ -76,9 +76,10 @@ FUNCTION Main( cSource, cScreen )
    SET SCOREBOARD OFF
    SET EPOCH TO 1950
 
+   SetMode( 28,80 )  /* Show real-time 25x80 screen visibility */
    SetColor( "N/W" )
    CLS
-
+   
    hb_gtInfo( HB_GTI_WINTITLE  , "Harbour CUI Forms Designer" )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
 
