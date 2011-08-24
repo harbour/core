@@ -198,12 +198,12 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    IF h_== NIL .OR. valtype(h_)<>'A' .OR. vv_== NIL .OR. valtype(vv_)<>'A'
       RETURN {vv_, 0}
    ENDIF
-   
+
    nLenVrb := 0
    aeval( vv_, {|e| cTyp := valtype( e ), nLenVrb := max( ;
                      iif( cTyp == 'C', len( e ), ;
                          iif( cTyp == 'N', 15, iif( cTyp == 'D', 8, 3 ) ) ), nLenVrb ) } )
-   
+
    IF bWhen_ == NIL
       bWhen_:= afill( array( len( vv_) ), {|| .t. } )
       FOR i := 1 TO len( vv_ )
@@ -278,7 +278,7 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
 
    cgo_:= { 1, 0, .f., .f., pmt_, sel_,/*exe_*/, aScrol_, nLenMnu }
 
-   SetGetAch( vv_ )  
+   SetGetAch( vv_ )
 
    IF pic_ == NIL
       pic_:= array( len( vv_ ) )
@@ -1107,48 +1107,48 @@ FUNCTION help( cToken )
    SWITCH Upper( cToken )
    CASE "KEYS"
       /* HB_SCREEN_BEGINS <Keys> */
-       
-      /// 2 3 C 76 0 
+
+      /// 1 3 C 76 0
       @ 1, 2     SAY "                                     Keys                                   " COLOR "N/W*"
-      /// 18 3 C 76 0 
-      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
-      /// 3 3 C 61 0 
-      @ 16, 2    SAY "Alt_N   Insert blank row. All objects are moved down one row."                
-      /// 4 3 C 61 0 
-      @ 17, 2    SAY "Alt_O   Delete current row. All objects are moved up one row."                
-      /// 5 3 C 71 0 
-      @ 14, 2    SAY "End     Cursor is positioned at the next to last column of last object."      
-      /// 6 3 C 44 0 
-      @ 13, 2    SAY "Home    Cursor is positioned at column zero."                                 
-      /// 7 3 C 32 0 
-      @ 12, 2    SAY "Del     Delete hilighted object."                                             
-      /// 8 3 C 32 0 
-      @ 10, 2    SAY "F10     Define a new GET object."                                             
-      /// 9 3 C 39 0 
-      @ 9, 2     SAY "F9      Start to define new box object."                                      
-      /// 10 3 C 28 0 
-      @ 8, 2     SAY "F8      Paste copied object."                                                 
-      /// 11 3 C 29 0 
-      @ 7, 2     SAY "F7      Copy hilighted objec.t"                                               
-      /// 12 3 C 32 0 
-      @ 6, 2     SAY "F6      Select hilighted object."                                             
-      /// 13 3 C 30 0 
-      @ 5, 2     SAY "F5      Edit hilighted object."                                               
-      /// 14 3 C 39 0 
-      @ 4, 2     SAY "F4      Properties of hilighted object."                                      
-      /// 15 3 C 20 0 
-      @ 3, 2     SAY "F1      This screen."                                                         
-      /// 16 3 C 31 0 
-      @ 19, 2    SAY "Ctrl_F6 Begins block selection."                                              
-      /// 17 3 C 44 0 
-      @ 20, 2    SAY "Ctrl_F7 Copy selected block at new location."                                 
-      /// 18 3 C 53 0 
-      @ 21, 2    SAY "Ctrl_F8 Cut and paste selected block at new location."                        
-      /// 19 3 C 29 0 
-      @ 23, 2    SAY "Alt+S   Save designed screen."                                                
-      /// 20 3 C 28 0 
-      @ 24, 2    SAY "Alt+L   Load another screen."                                                 
-       
+      /// 2 3 C 61 0
+      @ 16, 2    SAY "Alt_N   Insert blank row. All objects are moved down one row."
+      /// 3 3 C 61 0
+      @ 17, 2    SAY "Alt_O   Delete current row. All objects are moved up one row."
+      /// 4 3 C 71 0
+      @ 14, 2    SAY "End     Cursor is positioned at the next to last column of last object."
+      /// 5 3 C 44 0
+      @ 13, 2    SAY "Home    Cursor is positioned at column zero."
+      /// 6 3 C 32 0
+      @ 12, 2    SAY "Del     Delete hilighted object."
+      /// 7 3 C 32 0
+      @ 10, 2    SAY "F10     Define a new GET object."
+      /// 8 3 C 39 0
+      @ 9, 2     SAY "F9      Start to define new box object."
+      /// 9 3 C 28 0
+      @ 8, 2     SAY "F8      Paste copied object."
+      /// 10 3 C 30 0
+      @ 7, 2     SAY "F7      Copy hilighted objec.t"
+      /// 11 3 C 32 0
+      @ 6, 2     SAY "F6      Select hilighted object."
+      /// 12 3 C 30 0
+      @ 5, 2     SAY "F5      Edit hilighted object."
+      /// 13 3 C 39 0
+      @ 4, 2     SAY "F4      Properties of hilighted object."
+      /// 14 3 C 20 0
+      @ 3, 2     SAY "F1      This screen."
+      /// 15 3 C 31 0
+      @ 19, 2    SAY "Ctrl_F6 Begins block selection."
+      /// 16 3 C 44 0
+      @ 20, 2    SAY "Ctrl_F7 Copy selected block at new location."
+      /// 17 3 C 53 0
+      @ 21, 2    SAY "Ctrl_F8 Cut and paste selected block at new location."
+      /// 18 3 C 29 0
+      @ 23, 2    SAY "Alt+S   Save designed screen."
+      /// 19 3 C 28 0
+      @ 24, 2    SAY "Alt+L   Load another screen."
+      /// 20 3 C 76 0
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+
       /* HB_SCREEN_ENDS <Keys> */
       EXIT
    CASE "GENERAL-1"
@@ -1156,40 +1156,42 @@ FUNCTION help( cToken )
        
       /// 1 3 C 76 0 
       @ 1, 2     SAY "                                   General                                  " COLOR "N/W*"
-      /// 18 3 C 76 0 
-      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
       /// 2 3 C 76 0 
-      @ 3, 2     SAY "hbCuiEd is a fixed-coordinated, character based screen designer which allows" 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
       /// 3 3 C 76 0 
-      @ 4, 2     SAY "to arrange Harbour's GT oriented objects in visual interaction and saves the" 
+      @ 3, 2     SAY "hbCuiEd is a fixed-coordinated, character based screen designer which allows" 
       /// 4 3 C 76 0 
+      @ 4, 2     SAY "to arrange Harbour's GT oriented objects in visual interaction and saves the" 
+      /// 5 3 C 76 0 
       @ 5, 2     SAY "results as Harbour source code (with some meta info) directly into the .PRG " 
-      /// 5 3 C 73 0 
+      /// 6 3 C 73 0 
       @ 6, 2     SAY "file ready to be compiled and linked. Thus generated forms can be edited "    
-      /// 6 3 C 76 0 
+      /// 7 3 C 76 0 
       @ 7, 2     SAY "either directly in the source file or through this tool which allows two-way" 
-      /// 7 3 C 56 0 
+      /// 8 3 C 56 0 
       @ 8, 2     SAY "communication leading to highest degree of productivity."                     
-      /// 8 3 C 76 0 
+      /// 9 3 C 76 0 
       @ 10, 2    SAY "One source file can contain n number of screens, anywhere in the source, at " 
-      /// 9 3 C 74 0 
+      /// 10 3 C 74 0 
       @ 11, 2    SAY "any indentation. The only requirement is to place following lines where a "   
-      /// 10 3 C 17 0 
+      /// 11 3 C 17 0 
       @ 12, 2    SAY "screen is needed:"                                                            
-      /// 11 3 C 35 0 
-      @ 13, 22   SAY "/* HB_SCREEN_BEGINS <ScreenName> */"                                          COLOR "GR+/B"
       /// 12 3 C 35 0 
-      @ 14, 22   SAY "/* HB_SCREEN_ENDS   <ScreenName> */"                                          COLOR "GR+/B"
+      @ 13, 22   SAY "/* HB_SCREEN_BEGINS <ScreenName> */"                                          COLOR "GR+/B"
       /// 13 3 C 74 0 
       @ 16, 2    SAY "This is to be done manually. Once you place above lines into source file, "   
-      /// 14 3 C 74 0 
-      @ 17, 2    SAY "just supply that source when loading a screen. All screens defined in that"   
-      /// 15 3 C 44 0 
-      @ 18, 2    SAY "source will be presented to select and edit."                                 
-      /// 16 3 C 76 0 
+      /// 14 3 C 76 0 
       @ 20, 2    SAY "The designer implements SAYs with/without expression, GETs with all clauses," 
-      /// 17 3 C 55 0 
-      @ 21, 2    SAY "BOXs with all flavours, special characters (TOBE Done)."                      
+      /// 15 3 C 35 0 
+      @ 14, 22   SAY "/* HB_SCREEN_ENDS <ScreenName> */"                                            COLOR "GR+/B"
+      /// 16 3 C 75 0 
+      @ 17, 2    SAY "just supply that source to load a screen. All screens defined therein will "  
+      /// 17 3 C 44 0 
+      @ 18, 2    SAY "be presented to be selected and edited."                                      
+      /// 18 3 C 76 0 
+      @ 15, 2    SAY "<ScreenName> should be unique 13 characters long string across given source." 
+      /// 19 3 C 55 0 
+      @ 21, 2    SAY "BOXes with all flavours, special characters (TOBE Done)."                     
        
       /* HB_SCREEN_ENDS <General-1> */
       EXIT
@@ -1198,8 +1200,8 @@ FUNCTION help( cToken )
 
       /// 2 3 C 76 0
       @ 1, 2     SAY "                               Selective Input                              " COLOR "N/W*"
-      /// 18 3 C 76 0 
-      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
+      /// 20 3 C 76 0
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
 
       /* HB_SCREEN_ENDS <General-2> */
       EXIT
@@ -1208,35 +1210,35 @@ FUNCTION help( cToken )
 
       /// 2 3 C 76 0
       @ 1, 2     SAY "                               Block Selection                              " COLOR "N/W*"
-      /// 18 3 C 76 0 
-      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
+      /// 20 3 C 76 0
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
 
       /* HB_SCREEN_ENDS <General-3> */
       EXIT
    CASE "ABOUT"
       /* HB_SCREEN_BEGINS <About> */
-       
-      /// 1 3 C 76 0 
+
+      /// 1 3 C 76 0
       @ 1, 2     SAY "                                    About                                   " COLOR "N/W*"
-      /// 2 3 C 76 0 
-      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
-      /// 3 3 C 35 0 
+      /// 20 3 C 76 0
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+      /// 3 3 C 35 0
       @ 7, 22    SAY "Harbour Screen Designer ( hbCuiEd )"                                          COLOR "GR+/B"
-      /// 4 3 C 40 0 
-      @ 10, 20   SAY "Pritpal Bedi ( bedipritpal@hotmail.com )"                                     
-      /// 5 3 C 13 0 
-      @ 9, 33    SAY "Developed by:"                                                                
-      /// 6 3 C 12 0 
-      @ 15, 34   SAY "Pritpal Bedi"                                                                 
-      /// 7 3 C 14 0 
-      @ 14, 33   SAY "Copyright 2011"                                                               
-      /// 8 3 C 23 0 
-      @ 16, 29   SAY "www.harbour-project.org"                                                      
-      /// 9 3 C 29 0 
-      @ 20, 26   SAY "Visit the project website at:"                                                
-      /// 10 3 C 31 0 
+      /// 4 3 C 40 0
+      @ 10, 20   SAY "Pritpal Bedi ( bedipritpal@hotmail.com )"
+      /// 5 3 C 13 0
+      @ 9, 33    SAY "Developed by:"
+      /// 6 3 C 12 0
+      @ 15, 34   SAY "Pritpal Bedi"
+      /// 7 3 C 14 0
+      @ 14, 33   SAY "Copyright 2011"
+      /// 8 3 C 23 0
+      @ 16, 29   SAY "www.harbour-project.org"
+      /// 9 3 C 29 0
+      @ 20, 26   SAY "Visit the project website at:"
+      /// 10 3 C 31 0
       @ 21, 25   SAY "http://www.harbour-project.org/"                                              COLOR "GR+/B"
-       
+
       /* HB_SCREEN_ENDS <About> */
       EXIT
    ENDSWITCH
@@ -1249,18 +1251,22 @@ FUNCTION help( cToken )
          SetHelpStr( "" )
          EXIT
       ELSEIF nKey == 49
-         SetHelpStr( "General-1" )
+         SetHelpStr( "Keys" )
          __keyboard( chr( K_F1 ) )
          EXIT
       ELSEIF nKey == 50
-         SetHelpStr( "General-2" )
+         SetHelpStr( "General-1" )
          __keyboard( chr( K_F1 ) )
          EXIT
       ELSEIF nKey == 51
-         SetHelpStr( "General-3" )
+         SetHelpStr( "General-2" )
          __keyboard( chr( K_F1 ) )
          EXIT
       ELSEIF nKey == 52
+         SetHelpStr( "General-3" )
+         __keyboard( chr( K_F1 ) )
+         EXIT
+      ELSEIF nKey == 53
          SetHelpStr( "About" )
          __keyboard( chr( K_F1 ) )
          EXIT
