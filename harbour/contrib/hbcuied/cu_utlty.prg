@@ -198,45 +198,39 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    IF h_== NIL .OR. valtype(h_)<>'A' .OR. vv_== NIL .OR. valtype(vv_)<>'A'
       RETURN {vv_, 0}
    ENDIF
+   
+   nLenVrb := 0
+   aeval( vv_, {|e| cTyp := valtype( e ), nLenVrb := max( ;
+                     iif( cTyp == 'C', len( e ), ;
+                         iif( cTyp == 'N', 15, iif( cTyp == 'D', 8, 3 ) ) ), nLenVrb ) } )
+   
    IF bWhen_ == NIL
-      bWhen_:= afill(array(len(vv_)), {|| .t. })
-      FOR i := 1 TO len(vv_)
-         s := h_[i]
-         IF valtype(vv_[i]) == 'L'
-            bWhen_[i] := {|| VouchYN(s,oGet()),.f. }
+      bWhen_:= afill( array( len( vv_) ), {|| .t. } )
+      FOR i := 1 TO len( vv_ )
+         s := h_[ i ]
+         IF valtype( vv_[ i ] ) == 'L'
+            bWhen_[ i ] := {|| VouchYN( s, oGet() ), .f. }
          ENDIF
       NEXT
    ENDIF
 
    IF bValid_ == NIL
-      bValid_:= afill(array(len(vv_)),{|| .t. })
+      bValid_:= afill( array( len( vv_ ) ), {|| .t. } )
    ENDIF
 
-   IF pic_ == NIL
-      pic_:= array(len(vv_))
-      FOR i := 1 TO len(vv_)
-         cTyp := valtype(vv_[i])
-         pic_[i] := iif(cTyp=="C","@ ",iif(cTyp=="N","@Z 99999999.999",iif(cTyp=="L","Y","@ ")))
-      NEXT
-   ENDIF
-
-   nLenVrb := 0
-   aeval(vv_, {|e| cTyp := valtype(e), nLenVrb := max( ;
-                  iif(cTyp == 'C', len( e ), ;
-                         iif(cTyp=='N', 15, iif( cTyp=='D',8,3))), nLenVrb ) })
    pmt_:={}
    aeval(h_,{|e,i| aadd( pmt_, e + " {"+xtos(vv_[i])+ "}" ) })
 
    //  decide maximum length of the largest prompt
    mLen := 0
-   aeval( pmt_, {|x| mLen := max(mLen, len(x)) } )
-   mLen := max( len(h_[1])+2+nLenVrb, mLen)+2
+   aeval( pmt_, {|x| mLen := max( mLen, len( x ) ) } )
+   mLen := max( len( h_[ 1 ] ) + 2 + nLenVrb, mLen ) + 2
 
    IF nTop == NIL
-      nTop := int( ( maxrow() - min( iif( wvt(),2,3 ) + len( h_ ), maxrow()-3 ) ) / 2 )
+      nTop := int( ( maxrow() - min( 3 + len( h_ ), maxrow() - 3 ) ) / 2 )
    ENDIF
    IF nBtm == NIL
-      nBtm := min( nTop + len( h_ ) + iif( wvt(),2,3 ), maxrow()-3 )
+      nBtm := min( nTop + len( h_ ) + 3, maxrow() - 3 )
    ENDIF
 
    IF nLft == NIL
@@ -262,9 +256,9 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
       title := alltrim( title )
    ENDIF
    title := padc( title, nRgt - nLft )
-   title := { title, replicate(chr(196), len(title)+2) }
+   title := { title, replicate( chr( 196 ), len( title ) + 2 ) }
    maxL  := len( h_[ 1 ] )
-   sel_  := iif( sel_ == NIL,.t., sel_ )
+   sel_  := iif( sel_ == NIL, .t., sel_ )
 
    vstk_push()
    setcursor(0)
@@ -284,24 +278,32 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
 
    cgo_:= { 1, 0, .f., .f., pmt_, sel_,/*exe_*/, aScrol_, nLenMnu }
 
-   SetGetAch( vv_ )           //  Put on stack FOR aChPut(), aChGet()
+   SetGetAch( vv_ )  
+
+   IF pic_ == NIL
+      pic_:= array( len( vv_ ) )
+      FOR i := 1 TO len( vv_ )
+         cTyp := valtype( vv_[ i ] )
+         pic_[ i ] := iif( cTyp == "C", "@S" + hb_ntos( nLenVrb ) + "K ", iif( cTyp == "N", "@Z 99999999.999", iif( cTyp == "L", "Y", "@ " ) ) )
+      NEXT
+   ENDIF
 
    DO WHILE .t.
       setColor( clr1 )
 
       pmt_:= {}
-      aeval(h_, {|e,i| aadd(pmt_, e+" {"+xtos(vv_[i])+"}") })
+      aeval( h_, {|e,i| aadd( pmt_, e + " {" + xtos( vv_[ i ] ) + "}" ) } )
       cgo_[ CGO_CH_ ] := pmt_
 
       clear typeahead
-      nSel := VouchAChoice(nTop+iif(wvt(),2,3),nLft+1+iif(wvt(),1,0),nBtm-1,nRgt-1-iif(wvt(),1,0), ;
-                           cgo_[CGO_CH_], cgo_[CGO_SEL_], "VouchFunc1", ;
-                           cgo_[CGO_POS], cgo_[CGO_ROW],/* oWin */, @nLastKey, cgo_ )
+      nSel := VouchAChoice( nTop + 3, nLft + 1, nBtm - 1, nRgt - 1, ;
+                            cgo_[ CGO_CH_ ], cgo_[ CGO_SEL_ ], "VouchFunc1", ;
+                            cgo_[ CGO_POS ], cgo_[ CGO_ROW ],/* oWin */, @nLastKey, cgo_ )
 
       IF  nLastKey == K_ENTER
-         vv_[ nSel ]  := VouchGetChoice(vv_[ nSel ], nTop + cgo_[ CGO_ROW ]+iif(wvt(),2,3), ;
-                           nLft + maxL + 1, nRgt-iif(wvt(),2,1), bWhen_[ nSel ], ;
-                           bValid_[ nSel ], pic_[ nSel ])
+         vv_[ nSel ]  := VouchGetChoice( vv_[ nSel ], nTop + cgo_[ CGO_ROW ] + 3, ;
+                           nLft + maxL + 1, nRgt - 1, bWhen_[ nSel ], ;
+                           bValid_[ nSel ], pic_[ nSel ] )
 
       ELSEIF nLastKey == K_F10
          EXIT
@@ -396,8 +398,8 @@ STATIC FUNCTION VouchGetChoice( vrb, row, col, e_col, whn, vld, pic )
    ELSEIF type == "C"
       maxL := len( vrb )
       pic  := "@K"
-      IF( maxL + col ) > e_col
-         pic  := pic + "S" + ltrim( str( maxL ) )
+      IF ( maxL + col ) > e_col
+         pic += "S" + ltrim( str( e_col - col ) )
       ENDIF
    ENDIF
 
@@ -681,16 +683,16 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
       ENDIF
    ENDIF
 
-   aeval( msg_, {|s| msgLen := max( msgLen, len( s )) })
-   aeval( ch_,  {|s| chLen  := max( chLen,  len( s )) })
+   aeval( msg_, {|s| msgLen := max( msgLen, len( s ) ) } )
+   aeval( ch_,  {|s| chLen  := max( chLen,  len( s ) ) } )
    maxlen := max( msgLen, chLen )
-   aeval( ch_, {|s,i| s:=s, ch_[i] := pad( ch_[i], maxLen ) } )
+   aeval( ch_, {|s,i| s := s, ch_[ i ] := pad( ch_[ i ], maxLen ) } )
 
    IF empty( lSelect_ )
       lSelect_:= {}
-      aeval( ch_,  {|s| aadd(lSelect_, iif(empty(s), .f., .t.)) })
+      aeval( ch_,  {|s| aadd( lSelect_, iif( empty( s ), .f., .t. ) ) } )
    ELSE
-      aeval( ch_, {|s,i| lSelect_[i] := iif(empty(s),.f.,lSelect_[i]) })
+      aeval( ch_, {|s,i| lSelect_[ i ] := iif( empty( s ), .f., lSelect_[ i ] ) } )
    ENDIF
    IF ascan( lSelect_, {|e| e } ) == 0
       IF len(ch_) > 0
@@ -1044,7 +1046,7 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
    DEFAULT wh   TO {|| .t. }
    DEFAULT vl   TO {|| .t. }
    DEFAULT pass TO .f.
-   DEFAULT pic  TO iif( dType == 'Y', 'Y', '@! ' )
+   DEFAULT pic  TO iif( dType == 'Y', 'Y', '@K ' )
 
    clr := SetColor()
 
@@ -1060,19 +1062,19 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
 
    IF nLenMsg + nLenVrb > nMaxLen   //  Only when vrb type c will be asked
       nLenVrb := nMaxLen - nLenMsg - 7
-      pic     := substr(pic,1,1)+'S'+hb_ntos(nLenVrb)+substr(pic,2)
+      pic     := substr( pic, 1, 1 ) + 'S' + hb_ntos( nLenVrb ) + substr( pic, 2 )
    ENDIF
 
-   pic := iif( dType=='N','@Z 99999999999999.99', pic )
+   pic := iif( dType == 'N', '@Z 99999999999999.99', pic )
    l   := ( ( maxcol() + 1 - ( nLenMsg + nLenVrb + 7 ) ) / 2 )
-   r   := l + nLenMsg+nLenVrb + 6
+   r   := l + nLenMsg + nLenVrb + 6
 
    SetColor( 'W+/RB,GR+/BG,,,W+/BG' )
    vstk_push()
    screen := VouchWndSave( t-1, l-4, b+2, r+3 )
 
    dispbox( t, l, b, r, "лплллмлл " )
-   VouchShadow( t,l,b,r )
+   VouchShadow( t, l, b, r )
 
    @ t+2, l+3 SAY msg GET vrb PICTURE pic  WHEN eval(wh) VALID eval(vl)
    setCursor(1)
@@ -1105,71 +1107,137 @@ FUNCTION help( cToken )
    SWITCH Upper( cToken )
    CASE "KEYS"
       /* HB_SCREEN_BEGINS <Keys> */
-
-      /// 1 3 C 28 0
-      @ 20, 2    SAY "Alt+S   Save designed screen"
-      /// 2 3 C 27 0
-      @ 21, 2    SAY "Alt+L   Load another screen"
-      /// 3 3 C 76 0
-      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
-      /// 4 3 C 19 0
-      @ 3, 2     SAY "F1      This screen"
-      /// 5 3 C 38 0
-      @ 4, 2     SAY "F4      Properties of hilighted object"
-      /// 6 3 C 29 0
-      @ 5, 2     SAY "F5      Edit hilighted object"
-      /// 7 3 C 31 0
-      @ 6, 2     SAY "F6      Select hilighted object"
-      /// 8 3 C 29 0
-      @ 7, 2     SAY "F7      Copy hilighted object"
-      /// 9 3 C 27 0
-      @ 8, 2     SAY "F8      Paste copied object"
-      /// 10 3 C 38 0
-      @ 9, 2     SAY "F9      Start to define new box object"
-      /// 11 3 C 31 0
-      @ 10, 2    SAY "F10     Define a new GET object"
-      /// 12 3 C 31 0
-      @ 12, 2    SAY "Del     Delete hilighted object"
-      /// 13 3 C 30 0
-      @ 14, 2    SAY "Ctrl_F6 Begins block selection"
-      /// 14 3 C 43 0
-      @ 15, 2    SAY "Ctrl_F7 Copy selected block at new location"
-      /// 15 3 C 52 0
-      @ 16, 2    SAY "Ctrl_F8 Cut and paste selected block at new location"
-      /// 16 3 C 76 0
+       
+      /// 2 3 C 76 0 
       @ 1, 2     SAY "                                     Keys                                   " COLOR "N/W*"
-
+      /// 18 3 C 76 0 
+      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
+      /// 3 3 C 61 0 
+      @ 16, 2    SAY "Alt_N   Insert blank row. All objects are moved down one row."                
+      /// 4 3 C 61 0 
+      @ 17, 2    SAY "Alt_O   Delete current row. All objects are moved up one row."                
+      /// 5 3 C 71 0 
+      @ 14, 2    SAY "End     Cursor is positioned at the next to last column of last object."      
+      /// 6 3 C 44 0 
+      @ 13, 2    SAY "Home    Cursor is positioned at column zero."                                 
+      /// 7 3 C 32 0 
+      @ 12, 2    SAY "Del     Delete hilighted object."                                             
+      /// 8 3 C 32 0 
+      @ 10, 2    SAY "F10     Define a new GET object."                                             
+      /// 9 3 C 39 0 
+      @ 9, 2     SAY "F9      Start to define new box object."                                      
+      /// 10 3 C 28 0 
+      @ 8, 2     SAY "F8      Paste copied object."                                                 
+      /// 11 3 C 29 0 
+      @ 7, 2     SAY "F7      Copy hilighted objec.t"                                               
+      /// 12 3 C 32 0 
+      @ 6, 2     SAY "F6      Select hilighted object."                                             
+      /// 13 3 C 30 0 
+      @ 5, 2     SAY "F5      Edit hilighted object."                                               
+      /// 14 3 C 39 0 
+      @ 4, 2     SAY "F4      Properties of hilighted object."                                      
+      /// 15 3 C 20 0 
+      @ 3, 2     SAY "F1      This screen."                                                         
+      /// 16 3 C 31 0 
+      @ 19, 2    SAY "Ctrl_F6 Begins block selection."                                              
+      /// 17 3 C 44 0 
+      @ 20, 2    SAY "Ctrl_F7 Copy selected block at new location."                                 
+      /// 18 3 C 53 0 
+      @ 21, 2    SAY "Ctrl_F8 Cut and paste selected block at new location."                        
+      /// 19 3 C 29 0 
+      @ 23, 2    SAY "Alt+S   Save designed screen."                                                
+      /// 20 3 C 28 0 
+      @ 24, 2    SAY "Alt+L   Load another screen."                                                 
+       
       /* HB_SCREEN_ENDS <Keys> */
       EXIT
    CASE "GENERAL-1"
       /* HB_SCREEN_BEGINS <General-1> */
-
-      /// 1 3 C 76 0
-      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
-      /// 2 3 C 76 0
+       
+      /// 1 3 C 76 0 
       @ 1, 2     SAY "                                   General                                  " COLOR "N/W*"
-
+      /// 18 3 C 76 0 
+      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
+      /// 2 3 C 76 0 
+      @ 3, 2     SAY "hbCuiEd is a fixed-coordinated, character based screen designer which allows" 
+      /// 3 3 C 76 0 
+      @ 4, 2     SAY "to arrange Harbour's GT oriented objects in visual interaction and saves the" 
+      /// 4 3 C 76 0 
+      @ 5, 2     SAY "results as Harbour source code (with some meta info) directly into the .PRG " 
+      /// 5 3 C 73 0 
+      @ 6, 2     SAY "file ready to be compiled and linked. Thus generated forms can be edited "    
+      /// 6 3 C 76 0 
+      @ 7, 2     SAY "either directly in the source file or through this tool which allows two-way" 
+      /// 7 3 C 56 0 
+      @ 8, 2     SAY "communication leading to highest degree of productivity."                     
+      /// 8 3 C 76 0 
+      @ 10, 2    SAY "One source file can contain n number of screens, anywhere in the source, at " 
+      /// 9 3 C 74 0 
+      @ 11, 2    SAY "any indentation. The only requirement is to place following lines where a "   
+      /// 10 3 C 17 0 
+      @ 12, 2    SAY "screen is needed:"                                                            
+      /// 11 3 C 35 0 
+      @ 13, 22   SAY "/* HB_SCREEN_BEGINS <ScreenName> */"                                          COLOR "GR+/B"
+      /// 12 3 C 35 0 
+      @ 14, 22   SAY "/* HB_SCREEN_ENDS   <ScreenName> */"                                          COLOR "GR+/B"
+      /// 13 3 C 74 0 
+      @ 16, 2    SAY "This is to be done manually. Once you place above lines into source file, "   
+      /// 14 3 C 74 0 
+      @ 17, 2    SAY "just supply that source when loading a screen. All screens defined in that"   
+      /// 15 3 C 44 0 
+      @ 18, 2    SAY "source will be presented to select and edit."                                 
+      /// 16 3 C 76 0 
+      @ 20, 2    SAY "The designer implements SAYs with/without expression, GETs with all clauses," 
+      /// 17 3 C 55 0 
+      @ 21, 2    SAY "BOXs with all flavours, special characters (TOBE Done)."                      
+       
       /* HB_SCREEN_ENDS <General-1> */
       EXIT
    CASE "GENERAL-2"
       /* HB_SCREEN_BEGINS <General-2> */
 
-      /// 1 3 C 76 0
-      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
       /// 2 3 C 76 0
       @ 1, 2     SAY "                               Selective Input                              " COLOR "N/W*"
+      /// 18 3 C 76 0 
+      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
 
       /* HB_SCREEN_ENDS <General-2> */
       EXIT
    CASE "GENERAL-3"
       /* HB_SCREEN_BEGINS <General-3> */
 
-      /// 1 3 C 76 0
-      @ 26, 2    SAY "       ESC-Designer  1-General  2-Selective Input  3-Block Selections       " COLOR "N/W*"
       /// 2 3 C 76 0
       @ 1, 2     SAY "                               Block Selection                              " COLOR "N/W*"
+      /// 18 3 C 76 0 
+      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
 
       /* HB_SCREEN_ENDS <General-3> */
+      EXIT
+   CASE "ABOUT"
+      /* HB_SCREEN_BEGINS <About> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                                    About                                   " COLOR "N/W*"
+      /// 2 3 C 76 0 
+      @ 26, 2    SAY "   ESC-Designer  1-General  2-SelectiveInput  3-Block Selections  4-About   " COLOR "N/W*"
+      /// 3 3 C 35 0 
+      @ 7, 22    SAY "Harbour Screen Designer ( hbCuiEd )"                                          COLOR "GR+/B"
+      /// 4 3 C 40 0 
+      @ 10, 20   SAY "Pritpal Bedi ( bedipritpal@hotmail.com )"                                     
+      /// 5 3 C 13 0 
+      @ 9, 33    SAY "Developed by:"                                                                
+      /// 6 3 C 12 0 
+      @ 15, 34   SAY "Pritpal Bedi"                                                                 
+      /// 7 3 C 14 0 
+      @ 14, 33   SAY "Copyright 2011"                                                               
+      /// 8 3 C 23 0 
+      @ 16, 29   SAY "www.harbour-project.org"                                                      
+      /// 9 3 C 29 0 
+      @ 20, 26   SAY "Visit the project website at:"                                                
+      /// 10 3 C 31 0 
+      @ 21, 25   SAY "http://www.harbour-project.org/"                                              COLOR "GR+/B"
+       
+      /* HB_SCREEN_ENDS <About> */
       EXIT
    ENDSWITCH
 
@@ -1190,6 +1258,10 @@ FUNCTION help( cToken )
          EXIT
       ELSEIF nKey == 51
          SetHelpStr( "General-3" )
+         __keyboard( chr( K_F1 ) )
+         EXIT
+      ELSEIF nKey == 52
+         SetHelpStr( "About" )
          __keyboard( chr( K_F1 ) )
          EXIT
       ENDIF

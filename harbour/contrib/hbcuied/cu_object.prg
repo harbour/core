@@ -119,7 +119,7 @@ CLASS hbCUIEditor
    DATA nObjHilite                                INIT 0
    DATA nObjSelected                              INIT 0
    DATA cRuler                                    INIT ""
-   DATA cDrawFill                                 INIT "±±±±±±±±±"
+   DATA cDrawFill                                 INIT "°°°°°°°°°" //"±±±±±±±±±"
    DATA aObjId                                    INIT { 'Bitmap','Line','Text','Field','Expression','BitMap' }
    DATA xRefresh                                  INIT OBJ_REFRESH_ALL
    DATA nObjCopied                                INIT 0
@@ -405,7 +405,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                     o_[ OBJ_TEXT   ] := s
                                  ENDIF
                                  o_[ OBJ_TO_ROW ] := o_[ OBJ_ROW ]
-                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + len( s )
+                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + len( s ) - 1
                                  o_[ OBJ_F_LEN  ] := len( s )
 
                                  EXIT
@@ -438,7 +438,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  o_[ OBJ_ROW    ] := val( alltrim( a_[ 1 ] ) ) + 1
                                  o_[ OBJ_COL    ] := val( alltrim( a_[ 2 ] ) ) + 1
                                  o_[ OBJ_TO_ROW ] := o_[ OBJ_ROW ]
-                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + aAttr[ 4 ]
+                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + aAttr[ 4 ] - 1
                                  o_[ OBJ_F_TYPE ] := aAttr[ 3 ]
                                  o_[ OBJ_F_LEN  ] := aAttr[ 4 ]
                                  o_[ OBJ_F_DEC  ] := aAttr[ 5 ]
@@ -737,7 +737,7 @@ METHOD hbCUIEditor:scrConfig()
    NEXT
    ::cRuler         := s
 
-   ::cDrawFill      := '±±±±±±±±±'
+   ::cDrawFill      := "°°°°°°°°°" // 176   "±±±±±±±±±"  177
    ::aObjId         := { 'Bitmap','Line','Text','Field','Expression','BitMap' }
    ::xRefresh       := OBJ_REFRESH_ALL
    ::nObjCopied     := 0
@@ -798,7 +798,7 @@ METHOD hbCUIEditor:scrAddPrp( sct_ )
 //----------------------------------------------------------------------//
 
 METHOD hbCUIEditor:operate()
-   LOCAL nObj
+   LOCAL nObj, nToCol, i, nOff 
    LOCAL grf_:= { 43,45,46,48,49,50,51,52,53,54,55,56,57 }
 
    readinsert( .t. )
@@ -872,9 +872,20 @@ METHOD hbCUIEditor:operate()
          ::nColDis := ::nLeft - 1
          ::xRefresh := OBJ_REFRESH_ALL
       CASE ::nLastKey == K_END
-         ::nColRep := ::nColsMax
-         ::nColCur := ::nRight
-         ::nColDis := ( ::nLeft - 1 ) - ( ::nColRep - ( ::nRight - ::nLeft + 1 ) )
+         nToCol := 0
+         ascan( ::obj_, {|e_| iif( e_[ OBJ_ROW ] == ::nRowRep, nToCol := max( nToCol, e_[ OBJ_TO_COL ] ), NIL ) } )
+         IF nToCol > 0
+            IF nToCol < ::nColRep
+               nOff := ::nColRep - nToCol - 1
+               FOR i := 1 TO nOff
+                  ::scrMovLft()   
+               NEXT
+            ELSEIF nToCol > ::nColRep
+               FOR i := ::nColRep TO nToCol
+                  ::scrMovRgt()   
+               NEXT
+            ENDIF 
+         ENDIF   
          ::xRefresh := OBJ_REFRESH_ALL
       CASE ::nLastKey == K_PGUP
          //  scrMovPgUp(scn_)
@@ -915,6 +926,7 @@ METHOD hbCUIEditor:operate()
          ::scrAddBox()
       CASE ::nLastKey == K_F10                          //  Fields
          ::scrAddFld()
+         
       CASE ::nLastKey == K_DEL
          IF ! empty( ::aTextBlock )
             ::scrTextDel()
@@ -936,7 +948,6 @@ METHOD hbCUIEditor:operate()
             ::nObjHilite   := 0
             ::xRefresh      := OBJ_REFRESH_ALL
          ENDIF
-
       CASE ::nLastKey == K_BS
          IF ::nMode <> OBJ_MODE_SELECT
             IF ::scrMovLft()
@@ -948,22 +959,25 @@ METHOD hbCUIEditor:operate()
 
       CASE ::nLastKey == K_ALT_N
          ::scrAddLine()
+         ::lEdited := .t.
       CASE ::nLastKey == K_ALT_O
          ::scrDelLine()
+         ::lEdited := .t.
+         
       CASE ::nLastKey == K_ALT_W
-         ::scrRepCol()
+         //::scrRepCol()
       CASE ::nLastKey == K_CTRL_F6    //  Selection of Block
          ::scrTextBlock()
       CASE ::nLastKey == K_CTRL_F7    //  Move, Copy
          ::scrTextMove( 1 )
       CASE ::nLastKey == K_CTRL_F8    //  Move, Cut AND Paste
          ::scrTextMove( 0 )
+         
       CASE ::nLastKey == HB_K_RESIZE
          ::scrReConfig()
          ::scrDisplay()
          ::scrMove()
          ::scrStatus()
-
 
       ENDCASE
 
@@ -1555,18 +1569,18 @@ METHOD hbCUIEditor:scrUpdObjRC()
    LOCAL nObj := ::nObjSelected
 
    IF nObj > 0
-      nH := ::obj_[ nObj,OBJ_TO_ROW ] - ::obj_[ nObj,OBJ_ROW ]
-      nW := ::obj_[ nObj,OBJ_TO_COL ] - ::obj_[ nObj,OBJ_COL ]
+      nH := ::obj_[ nObj, OBJ_TO_ROW ] - ::obj_[ nObj, OBJ_ROW ]
+      nW := ::obj_[ nObj, OBJ_TO_COL ] - ::obj_[ nObj, OBJ_COL ]
 
-      ::obj_[ nObj,OBJ_ROW ] := ::nRowRep
-      ::obj_[ nObj,OBJ_COL ] := ::nColRep
+      ::obj_[ nObj, OBJ_ROW ] := ::nRowRep
+      ::obj_[ nObj, OBJ_COL ] := ::nColRep
 
       IF ::objIsBox( nObj )
-         ::obj_[ nObj,OBJ_TO_ROW ] := ::obj_[ nObj,OBJ_ROW ] + nH
-         ::obj_[ nObj,OBJ_TO_COL ] := ::obj_[ nObj,OBJ_COL ] + nW
+         ::obj_[ nObj, OBJ_TO_ROW ] := ::obj_[ nObj, OBJ_ROW ] + nH
+         ::obj_[ nObj, OBJ_TO_COL ] := ::obj_[ nObj, OBJ_COL ] + nW
       ELSE
-         ::obj_[ nObj,OBJ_TO_ROW ] := ::nRowRep
-         ::obj_[ nObj,OBJ_TO_COL ] := ::nColRep + len( ::obj_[ nObj, iif( ::objIsTxt( nObj ), OBJ_EQN, OBJ_TEXT ) ] ) - 1
+         ::obj_[ nObj, OBJ_TO_ROW ] := ::nRowRep
+         ::obj_[ nObj, OBJ_TO_COL ] := ::nColRep + len( ::obj_[ nObj, iif( ::objIsTxt( nObj ), OBJ_EQN, OBJ_TEXT ) ] ) - 1
       ENDIF
    ENDIF
    RETURN NIL
@@ -1579,32 +1593,20 @@ METHOD hbCUIEditor:scrRepCol()
    nCol := VouchGetSome( 'Number of Columns?', oCol )
 
    IF !empty( nCol )
-      nCol := max( 10,nCol )
+      nCol := max( 10, nCol )
       ::nColsMax             := nCol
-      ::nRight               := min( maxCol(), ::nLeft + nCol - 1 )
+      ::nRight               := min( maxcol(), ::nLeft + nCol - 1 )
       ::xRefresh             := OBJ_REFRESH_ALL
-//      ::aProperty[ REP_COLS ]:= nCol
    ENDIF
 
    RETURN NIL
 
 //----------------------------------------------------------------------//
-/*
-   This is the routine FROM where row based equations can be implemented
-*/
+
 METHOD hbCUIEditor:scrAddLine()
-   LOCAL nRow := ::nRowRep, nSct
 
-   ::xRefresh := OBJ_REFRESH_ALL
-   ::nBottom  := min( ::nBottom + 1, maxrow() - 3 )
-
-   nSct := 1
-
-   ::sectors_[ nSct, SCT_ROWS ]++
-   ::nRowsMax++
-
-   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] >= nRow, ::obj_[ i, OBJ_TO_ROW ] += 1, '' ) } )
-   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] >= nRow, ::obj_[ i, OBJ_ROW    ] += 1, '' ) } )
+   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] >= ::nRowRep, ::obj_[ i, OBJ_TO_ROW ]++, NIL ) } )
+   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] >= ::nRowRep, ::obj_[ i, OBJ_ROW    ]++, NIL ) } )
 
    ::xRefresh := OBJ_REFRESH_ALL
 
@@ -1614,20 +1616,12 @@ METHOD hbCUIEditor:scrAddLine()
 
 METHOD hbCUIEditor:scrDelLine()
    LOCAL nRow := ::nRowRep
-   LOCAL nSct, n, isLast
+   LOCAL n, isLast
 
-   isLast := nRow == ::nRowsMax
-
-   nSct   := 1
-   IF ::sectors_[ nSct, SCT_ROWS ] == 1    //  A Single Row Must remain IN one group
-      RETURN NIL
-   ENDIF
-
-   ::sectors_[ nSct, SCT_ROWS ]--
-   ::nRowsMax--
+   isLast := ( nRow == ::nRowsMax )
 
    IF ::nRowsMax < ( ::nBottom - ::nTop + 1 )
-      ::nBottom := max( ::nTop, min( ::nBottom - 1, maxrow() - 3 ) )
+      ::nBottom := max( ::nTop, min( ::nBottom - 1, maxrow() - 2 ) )
    ENDIF
 
    DO WHILE .t.
@@ -1636,12 +1630,9 @@ METHOD hbCUIEditor:scrDelLine()
       ENDIF
       VouchAShrink( ::obj_, n )
    ENDDO
-   IF empty( ::obj_ )
-      aadd( ::obj_, ::scrObjBlank() )
-   ENDIF
 
-   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, ::obj_[ i, OBJ_TO_ROW ] -= 1, '' ) } )
-   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, ::obj_[ i, OBJ_ROW    ] -= 1, '' ) } )
+   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, ::obj_[ i, OBJ_TO_ROW ]--, NIL ) } )
+   aeval( ::obj_, {|e_,i| iif( e_[ OBJ_ROW ] > nRow, ::obj_[ i, OBJ_ROW    ]--, NIL ) } )
 
    IF isLast
       ::nRowRep--
@@ -1891,29 +1882,29 @@ METHOD hbCUIEditor:scrGetChar( nRow, nCol )
 
       ELSEIF ::objIsBox( n )
          IF     nRow == ::obj_[ n, OBJ_ROW   ]
-            IF     nCol == ::obj_[n,OBJ_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],1,1)
-            ELSEIF nCol == ::obj_[n,OBJ_TO_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],3,1)
+            IF     nCol == ::obj_[ n, OBJ_COL       ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 1, 1 )
+            ELSEIF nCol == ::obj_[ n, OBJ_TO_COL    ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 3, 1 )
             ELSE
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],2,1)
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 2, 1 )
             ENDIF
-         ELSEIF nRow == ::obj_[n,OBJ_TO_ROW]
-            IF     nCol == ::obj_[n,OBJ_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],7,1)
-            ELSEIF nCol == ::obj_[n,OBJ_TO_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],5,1)
+         ELSEIF nRow == ::obj_[ n, OBJ_TO_ROW ]
+            IF     nCol == ::obj_[ n, OBJ_COL       ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 7, 1 )
+            ELSEIF nCol == ::obj_[ n, OBJ_TO_COL    ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 5, 1 )
             ELSE
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],6,1)
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 6, 1 )
             ENDIF
          ELSE
-            IF     nCol == ::obj_[n,OBJ_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],8,1)   //  4.8 are Same
-            ELSEIF nCol == ::obj_[n,OBJ_TO_COL]
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],4,1)
+            IF     nCol == ::obj_[ n, OBJ_COL       ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 8, 1 )   //  4.8 are Same
+            ELSEIF nCol == ::obj_[ n, OBJ_TO_COL    ]
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 4, 1 )
             ELSE
-               s := substr(::obj_[n,OBJ_BOX_SHAPE],9,1)
-               s := IF(empty(s),THE_FILL,s)
+               s := substr(::obj_[ n, OBJ_BOX_SHAPE ], 9, 1 )
+               s := iif( empty( s ), THE_FILL, s )
             ENDIF
          ENDIF
       ENDIF
@@ -2146,8 +2137,8 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
                      ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                      ins_[ n1, OBJ_COL     ] := ::obj_[ n, OBJ_COL ]
                      ins_[ n1, OBJ_EQN     ] := s1
-                     ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW     ]
-                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL     ] + len( s1 ) - 1
+                     ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW ]
+                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + len( s1 ) - 1
                   ENDIF
                   IF len(s3) > 0
                      aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
@@ -2156,8 +2147,8 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
                      ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                      ins_[ n1, OBJ_COL     ] := old_[ 4 ] + 1
                      ins_[ n1, OBJ_EQN     ] := s3
-                     ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW    ]
-                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL    ] + len( s3 ) - 1
+                     ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW ]
+                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + len( s3 ) - 1
                   ENDIF
                ENDIF
 
@@ -2239,19 +2230,19 @@ METHOD hbCUIEditor:scrTextDel()
 
                //  TO be retained as it is
                s1    := '' ; s3 := ''
-               s     := ::obj_[n,OBJ_EQN]
-               nCol  := ::obj_[n,OBJ_COL]
+               s     := ::obj_[ n, OBJ_EQN ]
+               nCol  := ::obj_[ n, OBJ_COL ]
 
-               IF old_[2] <= ::obj_[n,OBJ_COL] .AND. old_[4] >= ::obj_[n,OBJ_TO_COL]
+               IF old_[ 2 ] <= ::obj_[ n, OBJ_COL ] .AND. old_[ 4 ] >= ::obj_[ n, OBJ_TO_COL ]
                   //  s2 := s   //  Insert WITH moved coordinates
-               ELSEIF  old_[2] >= ::obj_[n,OBJ_COL]
-                  s1 := substr(s,1,old_[2]-nCol)
+               ELSEIF  old_[ 2 ] >= ::obj_[ n, OBJ_COL ]
+                  s1 := substr( s, 1, old_[ 2 ] - nCol )
                   //  s2 := substr(s,old_[2]-nCol+1,old_[4]-old_[2]+1)
-                  s3 := substr(s,old_[4]-nCol+2)
-               ELSEIF old_[2] < nCol
-                  s1 := substr(s,1,old_[2]-nCol)
+                  s3 := substr( s, old_[ 4 ] - nCol + 2 )
+               ELSEIF old_[ 2 ] < nCol
+                  s1 := substr( s, 1, old_[ 2 ] - nCol )
                   //  s2 := substr(s,old_[2]-nCol+1,old_[4]-old_[2]+1)
-                  s3 := substr(s,old_[4]-nCol+2)
+                  s3 := substr( s, old_[ 4 ] - nCol + 2 )
                ENDIF
 
                IF len( s1 ) > 0
@@ -2344,7 +2335,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
          txt_[nTxt,OBJ_EQN] := substr( txt_[ nTxt, OBJ_EQN ], 1,;
                         ::nColRep - txt_[ nTxt, OBJ_COL ] ) + ;
            substr( txt_[ nTxt, OBJ_EQN ], ::nColRep - txt_[ nTxt, OBJ_COL ] + 2 )
-         txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + len( txt_[ nTxt, OBJ_EQN ] )-1
+         txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + len( txt_[ nTxt, OBJ_EQN ] ) - 1
       ELSE             //  Divide it IN two objects
          s1   := substr( txt_[ nTxt, OBJ_EQN ], 1, ::nColRep - txt_[ nTxt, OBJ_COL ] )
          s2   := substr( txt_[ nTxt, OBJ_EQN ], ::nColRep - txt_[ nTxt, OBJ_COL ] + 2 )
@@ -2401,7 +2392,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
          FOR i := 2 TO len( txt_ )
             IF txt_[ i    , OBJ_COL    ] == txt_[ i - 1, OBJ_TO_COL ] + 1
                txt_[ i - 1, OBJ_EQN    ] += txt_[ i, OBJ_EQN ]    //  Club both
-               txt_[ i - 1, OBJ_TO_COL ] := txt_[ i - 1, OBJ_COL] + len( txt_[ i - 1, OBJ_EQN ] ) - 1
+               txt_[ i - 1, OBJ_TO_COL ] := txt_[ i - 1, OBJ_COL ] + len( txt_[ i - 1, OBJ_EQN ] ) - 1
                txt_[ i - 1, OBJ_F_LEN  ] := len( txt_[ i - 1, OBJ_EQN ] )
                VouchAShrink( txt_,i )
                lClub   := .t.
@@ -2427,7 +2418,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
    aeval( txt_, {|e_| iif( e_[ OBJ_ROW ] > 0, aadd( ::obj_, e_ ), '' ) } )   //  Now attach txt_
 
    DO WHILE .t.
-      IF( n := ascan( ::obj_,{|e_| e_[OBJ_TO_COL] < e_[OBJ_COL] } ) ) > 0
+      IF( n := ascan( ::obj_,{|e_| e_[ OBJ_TO_COL ] < e_[ OBJ_COL ] } ) ) > 0
          VouchAShrink( ::obj_, n )
          IF empty( ::obj_ )
             aadd( ::obj_, ::scrObjBlank() )
@@ -2517,7 +2508,7 @@ METHOD hbCUIEditor:scrObjBlank()
 
 METHOD hbCUIEditor:scrVrbBlank( nType )
    LOCAL v_:= {}
-   LOCAL nW := 60
+   LOCAL nW := 200
 
    SWITCH nType
    CASE OBJ_O_FIELD
@@ -2546,7 +2537,7 @@ METHOD hbCUIEditor:scrVrbBlank( nType )
 //----------------------------------------------------------------------//
 
 METHOD hbCUIEditor:scrObj2Vv( o_ )
-   LOCAL v_:={}, nW := 60
+   LOCAL v_:={}, nW := 200
 
    SWITCH o_[ OBJ_TYPE ]
 
@@ -2580,19 +2571,19 @@ METHOD hbCUIEditor:scrVrbHeaders( nType )
 
    SWITCH nType
    CASE OBJ_O_FIELD
-      aadd( h_, ' Name     ' )
-      aadd( h_, ' Type     ' )
-      aadd( h_, ' Width    ' )
-      aadd( h_, ' Decimals ' )
-      aadd( h_, ' Picture  ' )
-      aadd( h_, ' Color    ' )
-      aadd( h_, ' When     ' )
-      aadd( h_, ' Valid    ' )
+      aadd( h_, ' Expression' )
+      aadd( h_, ' Type      ' )
+      aadd( h_, ' Width     ' )
+      aadd( h_, ' Decimals  ' )
+      aadd( h_, ' Picture   ' )
+      aadd( h_, ' Color     ' )
+      aadd( h_, ' When      ' )
+      aadd( h_, ' Valid     ' )
       EXIT
    CASE OBJ_O_BOX
-      aadd( h_, ' Color    ' )
-      aadd( h_, ' Border   ' )
-      aadd( h_, ' Pattern  ' )
+      aadd( h_, ' Color     ' )
+      aadd( h_, ' Border    ' )
+      aadd( h_, ' Pattern   ' )
       EXIT
    CASE OBJ_O_TEXT
       aadd( h_, ' Expression' )

@@ -68,8 +68,7 @@
 #ifndef __HBEDCUI_CH
 #define __HBEDCUI_CH
 
-#define THE_FILL                                  'ø'
-
+#define THE_FILL                                  chr( 177 )
 
 
 #define OBJ_TYPE                                  1     //   N   1
@@ -116,27 +115,9 @@
 #define OBJ_O_EXP                                 5
 #define OBJ_O_BMP                                 6
 
-//   Properties will be based on these attributes
-#define DGN_MODULE                                1
-#define DGN_REPORT                                2
-#define DGN_DOCUMENT                              3
-#define DGN_LABEL                                 4
-#define DGN_SCREEN                                5
-
 #define OBJ_MODE_SELECT                           1
 #define OBJ_MODE_MOVE                             2
 #define OBJ_MODE_IDLE                             0
-
-#define SCT_ORDER                                 1
-#define SCT_ID                                    2
-#define SCT_SAY                                   3
-#define SCT_ROWS                                  4
-#define SCT_COLOR                                 5
-#define SCT_EQN                                   6
-#define SCT_EJECT                                 7
-#define SCT_RESET                                 8
-#define SCT_INIT_VRBLS                            8
-
 
 #translate B_MSG ;
       [ <msg,...> ] ;
