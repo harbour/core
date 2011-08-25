@@ -1089,160 +1089,24 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
 /*----------------------------------------------------------------------*/
 
 FUNCTION help( cToken )
-   LOCAL nKey
-   LOCAL aScr := VouchWndSave( 0, 0, maxrow(), maxcol() )
-
-   DEFAULT cToken TO SetHelpStr()
-   IF empty( cToken )
-      cToken := "KEYS"
-   ENDIF
-
+   LOCAL nKey, nRows, nCols, aScr, lSetMode
+   
+   nRows := maxrow()
+   nCols := maxcol()
+   aScr  := VouchWndSave( 0, 0, maxrow(), maxcol() )
+   lSetMode := nRows <> 27 .or. nCols <> 79
    Vstk_push()
+   
+   IF lSetMode
+      SetMode( 28,80 )
+   ENDIF    
+   
    SetCursor( 0 )
    SetColor( "W/B" )
+   
    DispBegin()
-
    CLS
-
-   SWITCH Upper( cToken )
-   CASE "KEYS"
-      /* HB_SCREEN_BEGINS <Keys> */
-
-      /// 1 3 C 76 0
-      @ 1, 2     SAY "                                     Keys                                   " COLOR "N/W*"
-      /// 2 3 C 61 0
-      @ 16, 2    SAY "Alt_N   Insert blank row. All objects are moved down one row."
-      /// 3 3 C 61 0
-      @ 17, 2    SAY "Alt_O   Delete current row. All objects are moved up one row."
-      /// 4 3 C 71 0
-      @ 14, 2    SAY "End     Cursor is positioned at the next to last column of last object."
-      /// 5 3 C 44 0
-      @ 13, 2    SAY "Home    Cursor is positioned at column zero."
-      /// 6 3 C 32 0
-      @ 12, 2    SAY "Del     Delete hilighted object."
-      /// 7 3 C 32 0
-      @ 10, 2    SAY "F10     Define a new GET object."
-      /// 8 3 C 39 0
-      @ 9, 2     SAY "F9      Start to define new box object."
-      /// 9 3 C 28 0
-      @ 8, 2     SAY "F8      Paste copied object."
-      /// 10 3 C 30 0
-      @ 7, 2     SAY "F7      Copy hilighted objec.t"
-      /// 11 3 C 32 0
-      @ 6, 2     SAY "F6      Select hilighted object."
-      /// 12 3 C 30 0
-      @ 5, 2     SAY "F5      Edit hilighted object."
-      /// 13 3 C 39 0
-      @ 4, 2     SAY "F4      Properties of hilighted object."
-      /// 14 3 C 20 0
-      @ 3, 2     SAY "F1      This screen."
-      /// 15 3 C 31 0
-      @ 19, 2    SAY "Ctrl_F6 Begins block selection."
-      /// 16 3 C 44 0
-      @ 20, 2    SAY "Ctrl_F7 Copy selected block at new location."
-      /// 17 3 C 53 0
-      @ 21, 2    SAY "Ctrl_F8 Cut and paste selected block at new location."
-      /// 18 3 C 29 0
-      @ 23, 2    SAY "Alt+S   Save designed screen."
-      /// 19 3 C 28 0
-      @ 24, 2    SAY "Alt+L   Load another screen."
-      /// 20 3 C 76 0
-      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
-
-      /* HB_SCREEN_ENDS <Keys> */
-      EXIT
-   CASE "GENERAL-1"
-      /* HB_SCREEN_BEGINS <General-1> */
-       
-      /// 1 3 C 76 0 
-      @ 1, 2     SAY "                                   General                                  " COLOR "N/W*"
-      /// 2 3 C 76 0 
-      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
-      /// 3 3 C 76 0 
-      @ 3, 2     SAY "hbCuiEd is a fixed-coordinated, character based screen designer which allows" 
-      /// 4 3 C 76 0 
-      @ 4, 2     SAY "to arrange Harbour's GT oriented objects in visual interaction and saves the" 
-      /// 5 3 C 76 0 
-      @ 5, 2     SAY "results as Harbour source code (with some meta info) directly into the .PRG " 
-      /// 6 3 C 73 0 
-      @ 6, 2     SAY "file ready to be compiled and linked. Thus generated forms can be edited "    
-      /// 7 3 C 76 0 
-      @ 7, 2     SAY "either directly in the source file or through this tool which allows two-way" 
-      /// 8 3 C 56 0 
-      @ 8, 2     SAY "communication leading to highest degree of productivity."                     
-      /// 9 3 C 76 0 
-      @ 10, 2    SAY "One source file can contain n number of screens, anywhere in the source, at " 
-      /// 10 3 C 74 0 
-      @ 11, 2    SAY "any indentation. The only requirement is to place following lines where a "   
-      /// 11 3 C 17 0 
-      @ 12, 2    SAY "screen is needed:"                                                            
-      /// 12 3 C 35 0 
-      @ 13, 22   SAY "/* HB_SCREEN_BEGINS <ScreenName> */"                                          COLOR "GR+/B"
-      /// 13 3 C 74 0 
-      @ 16, 2    SAY "This is to be done manually. Once you place above lines into source file, "   
-      /// 14 3 C 76 0 
-      @ 20, 2    SAY "The designer implements SAYs with/without expression, GETs with all clauses," 
-      /// 15 3 C 35 0 
-      @ 14, 22   SAY "/* HB_SCREEN_ENDS <ScreenName> */"                                            COLOR "GR+/B"
-      /// 16 3 C 75 0 
-      @ 17, 2    SAY "just supply that source to load a screen. All screens defined therein will "  
-      /// 17 3 C 44 0 
-      @ 18, 2    SAY "be presented to be selected and edited."                                      
-      /// 18 3 C 76 0 
-      @ 15, 2    SAY "<ScreenName> should be unique 13 characters long string across given source." 
-      /// 19 3 C 55 0 
-      @ 21, 2    SAY "BOXes with all flavours, special characters (TOBE Done)."                     
-       
-      /* HB_SCREEN_ENDS <General-1> */
-      EXIT
-   CASE "GENERAL-2"
-      /* HB_SCREEN_BEGINS <General-2> */
-
-      /// 2 3 C 76 0
-      @ 1, 2     SAY "                               Selective Input                              " COLOR "N/W*"
-      /// 20 3 C 76 0
-      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
-
-      /* HB_SCREEN_ENDS <General-2> */
-      EXIT
-   CASE "GENERAL-3"
-      /* HB_SCREEN_BEGINS <General-3> */
-
-      /// 2 3 C 76 0
-      @ 1, 2     SAY "                               Block Selection                              " COLOR "N/W*"
-      /// 20 3 C 76 0
-      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
-
-      /* HB_SCREEN_ENDS <General-3> */
-      EXIT
-   CASE "ABOUT"
-      /* HB_SCREEN_BEGINS <About> */
-
-      /// 1 3 C 76 0
-      @ 1, 2     SAY "                                    About                                   " COLOR "N/W*"
-      /// 20 3 C 76 0
-      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
-      /// 3 3 C 35 0
-      @ 7, 22    SAY "Harbour Screen Designer ( hbCuiEd )"                                          COLOR "GR+/B"
-      /// 4 3 C 40 0
-      @ 10, 20   SAY "Pritpal Bedi ( bedipritpal@hotmail.com )"
-      /// 5 3 C 13 0
-      @ 9, 33    SAY "Developed by:"
-      /// 6 3 C 12 0
-      @ 15, 34   SAY "Pritpal Bedi"
-      /// 7 3 C 14 0
-      @ 14, 33   SAY "Copyright 2011"
-      /// 8 3 C 23 0
-      @ 16, 29   SAY "www.harbour-project.org"
-      /// 9 3 C 29 0
-      @ 20, 26   SAY "Visit the project website at:"
-      /// 10 3 C 31 0
-      @ 21, 25   SAY "http://www.harbour-project.org/"                                              COLOR "GR+/B"
-
-      /* HB_SCREEN_ENDS <About> */
-      EXIT
-   ENDSWITCH
-
+   DispHelp( cToken )
    DispEnd()
 
    DO WHILE .t.
@@ -1273,6 +1137,9 @@ FUNCTION help( cToken )
       ENDIF
    ENDDO
 
+   IF lSetMode
+      SetMode( nRows + 1, nCols + 1 )
+   ENDIF    
    VouchWndRest( aScr )
    Vstk_pop()
 
@@ -1292,3 +1159,208 @@ FUNCTION SetHelpStr( cStr )
    RETURN o_str
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION DispHelp( cToken )
+
+   DEFAULT cToken TO SetHelpStr()
+   IF empty( cToken )
+      cToken := "KEYS"
+   ENDIF
+
+   SWITCH Upper( cToken )
+      
+   CASE "KEYS"
+      /* HB_SCREEN_BEGINS <Keys> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                                     Keys                                   " COLOR "N/W*"
+      /// 2 3 C 12 0 
+      @ 3, 10    SAY "This screen."                                                                 
+      /// 3 3 C 7 0 
+      @ 3, 2     SAY "F1     "                                                                      COLOR "GR+/B"
+      /// 4 3 C 7 0 
+      @ 4, 2     SAY "F4     "                                                                      COLOR "GR+/B"
+      /// 5 3 C 59 0 
+      @ 4, 10    SAY "Properties of current object in a selectable/editable list."                  
+      /// 6 3 C 7 0 
+      @ 5, 2     SAY "F5     "                                                                      COLOR "GR+/B"
+      /// 7 3 C 64 0 
+      @ 5, 10    SAY "Edit current object: Text-no action, Box-resize action, Field-F4"             
+      /// 8 3 C 7 0 
+      @ 6, 2     SAY "F6     "                                                                      COLOR "GR+/B"
+      /// 9 3 C 40 0 
+      @ 6, 10    SAY "Selects current object (Box/Field/Text)."                                     
+      /// 10 3 C 39 0 
+      @ 7, 10    SAY "Copies current object (Box/Field/Text)."                                      
+      /// 11 3 C 7 0 
+      @ 7, 2     SAY "F7     "                                                                      COLOR "GR+/B"
+      /// 12 3 C 7 0 
+      @ 8, 2     SAY "F8     "                                                                      COLOR "GR+/B"
+      /// 13 3 C 48 0 
+      @ 8, 10    SAY "Pastes copied object at current cursor position."                             
+      /// 14 3 C 7 0 
+      @ 9, 2     SAY "F9     "                                                                      COLOR "GR+/B"
+      /// 15 3 C 32 0 
+      @ 9, 10    SAY "Starts to define new box object."                                             
+      /// 16 3 C 25 0 
+      @ 10, 10   SAY "Defines a new GET object."                                                    
+      /// 17 3 C 7 0 
+      @ 10, 2    SAY "F10    "                                                                      COLOR "GR+/B"
+      /// 18 3 C 63 0 
+      @ 12, 10   SAY "Deletes current object (Box/Field) or current character (Text)."              
+      /// 19 3 C 7 0 
+      @ 12, 2    SAY "Del    "                                                                      COLOR "GR+/B"
+      /// 20 3 C 36 0 
+      @ 13, 10   SAY "Cursor is positioned at column zero."                                         
+      /// 21 3 C 7 0 
+      @ 13, 2    SAY "Home   "                                                                      COLOR "GR+/B"
+      /// 22 3 C 63 0 
+      @ 14, 10   SAY "Cursor is positioned at the next to last column of last object."              
+      /// 23 3 C 7 0 
+      @ 14, 2    SAY "End    "                                                                      COLOR "GR+/B"
+      /// 24 3 C 7 0 
+      @ 15, 2    SAY "Alt_Z  "                                                                      COLOR "GR+/B"
+      /// 25 3 C 5 0 
+      @ 15, 10   SAY "Undo."                                                                        
+      /// 26 3 C 54 0 
+      @ 16, 10   SAY "Inserts blank row, all objects are moved down one row."                       
+      /// 27 3 C 7 0 
+      @ 16, 2    SAY "Alt_N  "                                                                      COLOR "GR+/B"
+      /// 28 3 C 66 0 
+      @ 17, 10   SAY "Deletes objects on current row, next objects are moved up one row."           
+      /// 29 3 C 7 0 
+      @ 17, 2    SAY "Alt_O  "                                                                      COLOR "GR+/B"
+      /// 30 3 C 53 0 
+      @ 18, 10   SAY "Re-order GETS. This is different than creation order."                        
+      /// 31 3 C 7 0 
+      @ 18, 2    SAY "Alt_G  "                                                                      COLOR "GR+/B"
+      /// 32 3 C 23 0 
+      @ 20, 10   SAY "Begins block selection."                                                      
+      /// 33 3 C 7 0 
+      @ 20, 2    SAY "Ctrl_F6"                                                                      COLOR "GR+/B"
+      /// 34 3 C 36 0 
+      @ 21, 10   SAY "Copy selected block at new location."                                         
+      /// 35 3 C 7 0 
+      @ 21, 2    SAY "Ctrl_F7"                                                                      COLOR "GR+/B"
+      /// 36 3 C 45 0 
+      @ 22, 10   SAY "Cut and paste selected block at new location."                                
+      /// 37 3 C 7 0 
+      @ 22, 2    SAY "Ctrl_F8"                                                                      COLOR "GR+/B"
+      /// 38 3 C 20 0 
+      @ 24, 58   SAY "Load another screen."                                                         
+      /// 39 3 C 7 0 
+      @ 24, 50   SAY "Alt_L  "                                                                      COLOR "GR+/B"
+      /// 40 3 C 21 0 
+      @ 24, 10   SAY "Save designed screen."                                                        
+      /// 41 3 C 7 0 
+      @ 24, 2    SAY "Alt_S  "                                                                      COLOR "GR+/B"
+      /// 42 3 C 76 0 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+       
+      /* HB_SCREEN_ENDS <Keys> */
+      EXIT
+      
+   CASE "GENERAL-1"
+      /* HB_SCREEN_BEGINS <General-1> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                                   General                                  " COLOR "N/W*"
+      /// 2 3 C 76 0 
+      @ 3, 2     SAY "hbCuiEd is a fixed-coordinated, character based screen designer which allows" 
+      /// 3 3 C 76 0 
+      @ 4, 2     SAY "to arrange Harbour's GT oriented objects in visual interaction and saves the" 
+      /// 4 3 C 76 0 
+      @ 5, 2     SAY "results as Harbour source code (with some meta info) directly into the .PRG " 
+      /// 5 3 C 73 0 
+      @ 6, 2     SAY "file ready to be compiled and linked. Thus generated forms can be edited "    
+      /// 6 3 C 76 0 
+      @ 7, 2     SAY "either directly in the source file or through this tool which allows two-way" 
+      /// 7 3 C 56 0 
+      @ 8, 2     SAY "communication leading to highest degree of productivity."                     
+      /// 8 3 C 76 0 
+      @ 10, 2    SAY "One source file can contain n number of screens, anywhere in the source, at " 
+      /// 9 3 C 74 0 
+      @ 11, 2    SAY "any indentation. The only requirement is to place following lines where a "   
+      /// 10 3 C 17 0 
+      @ 12, 2    SAY "screen is needed:"                                                            
+      /// 11 3 C 35 0 
+      @ 13, 22   SAY "/* HB_SCREEN_BEGINS <ScreenName> */"                                          COLOR "GR+/B"
+      /// 12 3 C 33 0 
+      @ 14, 22   SAY "/* HB_SCREEN_ENDS <ScreenName> */"                                            COLOR "GR+/B"
+      /// 13 3 C 76 0 
+      @ 15, 2    SAY "<ScreenName> should be unique 13 characters long string across given source." 
+      /// 14 3 C 74 0 
+      @ 16, 2    SAY "This is to be done manually. Once you place above lines into source file, "   
+      /// 15 3 C 75 0 
+      @ 17, 2    SAY "just supply that source to load a screen. All screens defined therein will "  
+      /// 16 3 C 39 0 
+      @ 18, 2    SAY "be presented to be selected and edited."                                      
+      /// 17 3 C 76 0 
+      @ 20, 2    SAY "The designer implements SAYs with/without expression, GETs with all clauses," 
+      /// 18 3 C 56 0 
+      @ 21, 2    SAY "BOXes with all flavours, special characters (TOBE Done)."                     
+      /// 19 3 C 76 0 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+       
+      /* HB_SCREEN_ENDS <General-1> */
+      EXIT
+      
+   CASE "GENERAL-2"
+      /* HB_SCREEN_BEGINS <General-2> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                               Selective Input                              " COLOR "N/W*"
+      /// 2 3 C 76 0 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+       
+      /* HB_SCREEN_ENDS <General-2> */
+      EXIT
+      
+   CASE "GENERAL-3"
+      /* HB_SCREEN_BEGINS <General-3> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                               Block Selection                              " COLOR "N/W*"
+      /// 2 3 C 76 0 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+       
+      /* HB_SCREEN_ENDS <General-3> */
+      EXIT
+      
+   CASE "ABOUT"
+      /* HB_SCREEN_BEGINS <About> */
+       
+      /// 1 3 C 76 0 
+      @ 1, 2     SAY "                                    About                                   " COLOR "N/W*"
+      /// 2 3 C 1 0 
+      @ 4, 40    SAY "*"                                                                            COLOR "W+/B"
+      /// 3 3 C 35 0 
+      @ 7, 23    SAY "Harbour Screen Designer ( hbCuiEd )"                                          COLOR "GR+/B"
+      /// 4 3 C 13 0 
+      @ 9, 34    SAY "Developed by"                                                                 
+      /// 5 3 C 40 0 
+      @ 10, 20   SAY "Pritpal Bedi ( bedipritpal@hotmail.com )"                                     
+      /// 6 3 C 14 0 
+      @ 14, 33   SAY "Copyright 2011"                                                               
+      /// 7 3 C 12 0 
+      @ 15, 34   SAY "Pritpal Bedi"                                                                 COLOR "W+/B"
+      /// 8 3 C 23 0 
+      @ 16, 29   SAY "www.harbour-project.org"                                                      
+      /// 9 3 C 29 0 
+      @ 20, 26   SAY "Visit the project website at:"                                                
+      /// 10 3 C 31 0 
+      @ 21, 25   SAY "http://www.harbour-project.org/"                                              COLOR "GR+/B"
+      /// 11 3 C 1 0 
+      @ 23, 40   SAY "*"                                                                            COLOR "W+/B"
+      /// 12 3 C 76 0 
+      @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
+       
+      /* HB_SCREEN_ENDS <About> */
+      EXIT
+      
+   ENDSWITCH
+
+   RETURN NIL
+   
+/*----------------------------------------------------------------------*/
+         

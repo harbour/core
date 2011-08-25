@@ -96,12 +96,11 @@
 #define OBJ_PATTERN                               13    //   C  10
 
 #define OBJ_ID                                    14    //   C  15
-#define OBJ_SECTION                               15    //   N   4
-#define OBJ_SEC_ROW                               16    //   N   3
-#define OBJ_OBJ_UNIQUE                            17    //   N   4
-#define OBJ_MDL_F_TYPE                            18    //   C  10
+#define OBJ_SEC_ROW                               15    //   N   3
+#define OBJ_OBJ_UNIQUE                            16    //   N   4
+#define OBJ_MDL_F_TYPE                            17    //   C  10
 //
-#define OBJ_INIT_VRBLS                            18
+#define OBJ_INIT_VRBLS                            17
 
 
 #define OBJ_REFRESH_ALL                           1
@@ -120,37 +119,37 @@
 #define OBJ_MODE_IDLE                             0
 
 #translate B_MSG ;
-      [ <msg,...> ] ;
-      [ AT <r1> [, <c1> ] ] ;
-      [ TO <r2> [, <c2> ] ] ;
-      [ WIDTH <w>       ] ;
-      [ DEPTH <d>       ] ;
-      [ COLOR <clr>     ] ;
-      [ CHOOSE <ch,...> ] ;
-      [ CHOOSECOLOR <chClr> ] ;
-      [ CHCOLOR <chClr> ] ;
-      [ INTO <ret>      ] ;
-      [ WAIT <wait>     ] ;
-      [ <rest:RESTORE,REST> ] ;
-      [ <paste:PASTE>   ] ;
-      [ <shadow:SHADOW> ] ;
-      [ TRIGGER <trg>   ] ;
-      [ INITIAL <init>  ] ;
-      [ SELECTABLES <sel> ] ;
-      [ ABORT <abr>     ] ;
+      [ <msg,...>               ] ;
+      [ AT <r1> [, <c1> ]       ] ;
+      [ TO <r2> [, <c2> ]       ] ;
+      [ WIDTH <w>               ] ;
+      [ DEPTH <d>               ] ;
+      [ COLOR <clr>             ] ;
+      [ CHOOSE <ch,...>         ] ;
+      [ CHOOSECOLOR <chClr>     ] ;
+      [ CHCOLOR <chClr>         ] ;
+      [ INTO <ret>              ] ;
+      [ WAIT <wait>             ] ;
+      [ <rest:RESTORE,REST>     ] ;
+      [ <paste:PASTE>           ] ;
+      [ <shadow:SHADOW>         ] ;
+      [ TRIGGER <trg>           ] ;
+      [ INITIAL <init>          ] ;
+      [ SELECTABLES <sel>       ] ;
+      [ ABORT <abr>             ] ;
       [ <selections:SELECTIONS> ] ;
       [ <leftright:LEFTRIGHT>   ] ;
       [ <cent:CENTER,CENTRE>    ] ;
-      [ TAGGED <tag_>   ] ;
-      [ <num:NUMERIC>   ] ;
-      [ HELP <hlp>      ] ;
-      [ EXECUTE <ex_>   ] ;
-      [ NUMBERED <num_> ] ;
-      [ <lNoXpp:NOXPP>  ] ;
-      [ WINDOW <oWin>   ] ;
-      [ ICON <cIcon>    ] ;
-      [ WVT <lWvt>      ] ;
-      [ ALIGN <nAlign>  ] ;
+      [ TAGGED <tag_>           ] ;
+      [ <num:NUMERIC>           ] ;
+      [ HELP <hlp>              ] ;
+      [ EXECUTE <ex_>           ] ;
+      [ NUMBERED <num_>         ] ;
+      [ <lNoXpp:NOXPP>          ] ;
+      [ WINDOW <oWin>           ] ;
+      [ ICON <cIcon>            ] ;
+      [ WVT <lWvt>              ] ;
+      [ ALIGN <nAlign>          ] ;
    => ;
       [<ret> := ] VouchMsgBox (<r1>, <c1>, <r2>, <c2>, <w>, <d>, ;
          {<msg>}, <clr>, {<ch>}, <chClr>, <wait>,  <.rest.>, ;
@@ -164,32 +163,17 @@
             [ SELECTABLES <sel> ] ;
             [ AT <r1> [, <c1> ] ] ;
             [ TO <r2> [, <c2> ] ] ;
-            [ TITLE   <ttl> ] ;
-            [ INTO    <ret> ] ;
-            [ WHEN    <whn> ] ;
-            [ VALID   <vld> ] ;
-            [ PICTURE <pic> ] ;
-            [ HELP    <hlp> ] ;
-            [ ORDER   <ord> ] ;
+            [ TITLE   <ttl>     ] ;
+            [ INTO    <ret>     ] ;
+            [ WHEN    <whn>     ] ;
+            [ VALID   <vld>     ] ;
+            [ PICTURE <pic>     ] ;
+            [ HELP    <hlp>     ] ;
+            [ ORDER   <ord>     ] ;
             => ;
    [<ret> := ] VouchGetArray(<hed>, <val>, <sel>, <r1>, <c1>, <r2>, <c2>, ;
                         <ttl>, <whn>, <vld>, <pic>, <hlp>, <ord> )
 
-
-#xtranslate B_CRT <nTop>,<nLeft>,<nBottom>,<nRight> ;
-            [ TITLE    <ttl>     ] ;
-            [ ICON    <icon>     ] ;
-            [ <lModal:MODAL>     ] ;
-            [ <lRowCols:RESIZEROWCOLS> ] ;
-            [ <lHidden:HIDDEN>   ] ;
-            [ <lCenter:CENTER>   ] ;
-            [ AT <nRow>,<nCol>   ] ;
-            [ <lNoTitleBar:NOTITLEBAR> ] ;
-            INTO <oCrt> ;
-            => ;
-   <oCrt> := Vou_CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
-                             <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
-                             <nRow>, <nCol>, <.lNoTitleBar.> )
 
 #define COMPILE( cStr )    &( "{|v,w,x| " + cStr + " }" )
 
