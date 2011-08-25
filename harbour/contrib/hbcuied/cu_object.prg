@@ -199,6 +199,7 @@ CLASS hbCUIEditor
    METHOD scrOrdGets()
    METHOD scrUpdateUndo()
    METHOD scrUndo()
+   METHOD scrPreview()
 
    ENDCLASS
 
@@ -858,6 +859,8 @@ METHOD hbCUIEditor:operate()
             ::scrSave()
          ENDIF
          EXIT
+      CASE ::nLastKey == K_ALT_P
+         ::scrPreview()
       CASE ::nLastKey == K_ALT_L
          ::scrLoad( .t. )
       CASE ::nLastKey == K_ALT_S
@@ -2384,24 +2387,23 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
          ENDIF
          IF len( s1 ) == 0 .AND. len( s2 ) == 0
             VouchAShrink( txt_, nTxt )
-            IF empty( txt_ )
-               aadd( txt_, ::scrObjBlank() )
-            ENDIF
          ENDIF
       ENDIF
    ENDIF
 
    IF !empty( txt_ )
       DO WHILE .t.
-         IF( n := ascan( txt_, {|e_| e_[ OBJ_TO_COL ] < e_[ OBJ_COL ] } ) ) > 0
+         IF ( n := ascan( txt_, {|e_| e_[ OBJ_TO_COL ] < e_[ OBJ_COL ] } ) ) > 0
             VouchAShrink( txt_, n )
          ELSE
             EXIT
          ENDIF
       ENDDO
+      #if 0
       IF empty( txt_ )
          aadd( txt_, ::scrObjBlank() )
       ENDIF
+      #endif
       //  CLUB DIFFERENT TEXT OBJECTS IF THESE ARE ADJACENT
       asort( txt_ , , , {|e_,f_| e_[ OBJ_COL ] < f_[ OBJ_COL ] } )
 
@@ -2803,3 +2805,127 @@ METHOD hbCUIEditor:scrGetProperty( nObj )
 
 /*----------------------------------------------------------------------*/
 
+METHOD hbCUIEditor:scrPreview()
+   LOCAL nRows, nCols, a_, cColor, aScr, cPic
+   LOCAL nMaxRows := 0
+   LOCAL nMaxCols := 0
+   LOCAL getlist  := {}
+   LOCAL g_       := {}
+   
+   aeval( ::obj_, {|e_| nMaxRows := max( e_[ OBJ_TO_ROW ], nMaxRows ), nMaxCols := max( e_[ OBJ_TO_COL ], nMaxCols ) } )
+   
+   IF nMaxRows > 25
+      nMaxRows++
+   ELSE 
+      nMaxRows := 25
+   ENDIF 
+   IF nMaxCols > 80 
+      nMaxCols++
+   ELSE
+      nMaxCols := 80
+   ENDIF            
+   
+   nRows := maxrow()
+   nCols := maxcol()
+   aScr  := VouchWndSave( 0,0,maxrow(),maxcol() )
+   vstk_push()
+
+   ::scrOrdObj() 
+   aeval( ::obj_, {|e_| iif( e_[ OBJ_TYPE ] == OBJ_O_FIELD, aadd( g_, VouchVrbBlank( e_ ) ), aadd( g_, NIL ) ) } )
+      
+   SetColor( "W/B" )
+   SetCursor( 0 )
+   SetMode( nMaxRows, nMaxCols )
+   CLS
+   
+   FOR EACH a_ IN ::obj_
+      cColor := VouchGetColor( a_[ OBJ_TYPE ], a_[ OBJ_COLOR ] )
+      
+      SWITCH a_[ OBJ_TYPE ]
+      CASE OBJ_O_BOX
+         DispBox( a_[ OBJ_ROW ]-1, a_[ OBJ_COL ]-1, a_[ OBJ_TO_ROW ]-1, a_[ OBJ_TO_COL ]-1, a_[ OBJ_BOX_SHAPE ] + iif( a_[ OBJ_PATTERN ] == "CLEAR", "", " " ), cColor )                  
+         EXIT 
+      CASE OBJ_O_TEXT
+         @ a_[ OBJ_ROW ]-1, a_[ OBJ_COL ]-1 SAY a_[ OBJ_TEXT ] COLOR cColor
+         EXIT 
+      CASE OBJ_O_FIELD
+         cPic := VouchGetPic( a_[ OBJ_F_TYPE ], a_[ OBJ_F_PIC ], a_[ OBJ_F_LEN ], a_[ OBJ_F_DEC ] )
+         IF ! empty( cPic )
+            @ a_[ OBJ_ROW ]-1, a_[ OBJ_COL ]-1 GET g_[ a_:__enumIndex() ] COLOR cColor PICTURE cPic
+         ELSE    
+            @ a_[ OBJ_ROW ]-1, a_[ OBJ_COL ]-1 GET g_[ a_:__enumIndex() ] COLOR cColor 
+         ENDIF    
+         EXIT 
+      ENDSWITCH       
+   NEXT 
+         
+   IF len( getlist ) > 0
+      READ 
+   ELSE 
+      DO WHILE inkey() != K_ESC; ENDDO    
+   ENDIF 
+            
+   SetMode( nRows + 1, nCols + 1 )
+   VouchWndRest( aScr )
+   vstk_pop()
+   
+   RETURN Self 
+   
+/*----------------------------------------------------------------------*/
+   
+STATIC FUNCTION VouchGetPic( cType, cPic, nLen, nDec )
+   LOCAL cP := ""
+   
+   IF cType == "N"
+      cP := iif( nDec > 0, replicate( "9", nLen - nDec - 1 ) + "." + replicate( "9", nDec ), replicate( "9", nLen ) )
+   ELSE    
+      IF left( cPic,1 ) == '"' .and. right( cPic,1 ) == '"'
+         cP := substr( cPic, 2, len( cPic ) - 2 )
+      ELSEIF left( cPic,1 ) == "'" .and. right( cPic,1 ) == "'"
+         cP := substr( cPic, 2, len( cPic ) - 2 )
+      ENDIF 
+   ENDIF 
+         
+   RETURN cP
+   
+/*----------------------------------------------------------------------*/
+   
+STATIC FUNCTION VouchVrbBlank( o_ )
+
+   SWITCH o_[ OBJ_F_TYPE ]
+   CASE "C"
+      RETURN space( o_[ OBJ_F_LEN ] )
+   CASE "M"
+      RETURN space( 10 )
+   CASE "N"
+      RETURN 0 
+   CASE "D"
+      RETURN ctod( "" )   
+   CASE "L"
+      RETURN .f.
+   ENDSWITCH    
+   
+   RETURN ""
+   
+/*----------------------------------------------------------------------*/
+   
+STATIC FUNCTION VouchGetColor( cType, cColor )
+
+   IF left( cColor,1 ) == '"' .and. right( cColor,1 ) == '"'
+      RETURN cColor 
+   ELSEIF left( cColor,1 ) == "'" .and. right( cColor,1 ) == "'"
+      RETURN cColor 
+   ELSE 
+      IF cType == OBJ_O_BOX
+         RETURN "W/B"
+      ELSEIF cType == OBJ_O_TEXT
+         RETURN "W/B"
+      ELSEIF cType == OBJ_O_FIELD
+         RETURN "N/W,GR+/BG"
+      ENDIF    
+   ENDIF 
+            
+   RETURN "W/B"
+   
+/*----------------------------------------------------------------------*/
+      

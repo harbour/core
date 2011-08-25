@@ -586,7 +586,7 @@ FUNCTION VouchMenuM( id,nInit,msg )
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION vstk_push()
+FUNCTION vstk_push()
    s_vid_stk := chr( set( _SET_CURSOR ) ) + ;
                         chr( row() ) + chr( col() ) + ;
                         pad( setcolor(), LEN_COL_STR ) + ;
@@ -595,7 +595,7 @@ STATIC FUNCTION vstk_push()
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION vstk_pop()
+FUNCTION vstk_pop()
    IF len( s_vid_stk ) > 0
       setcursor( asc( substr( s_vid_stk, 1, 1 ) ) )
       @ asc( substr( s_vid_stk, 2, 1 ) ), asc( substr( s_vid_stk, 3, 1 ) ) SAY ""
@@ -1182,22 +1182,22 @@ STATIC FUNCTION DispHelp( cToken )
       @ 4, 2     SAY "F4     "                                                                      COLOR "GR+/B"
       /// 5 3 C 59 0 
       @ 4, 10    SAY "Properties of current object in a selectable/editable list."                  
-      /// 6 3 C 7 0 
-      @ 5, 2     SAY "F5     "                                                                      COLOR "GR+/B"
-      /// 7 3 C 64 0 
+      /// 6 3 C 64 0 
       @ 5, 10    SAY "Edit current object: Text-no action, Box-resize action, Field-F4"             
+      /// 7 3 C 7 0 
+      @ 5, 2     SAY "F5     "                                                                      COLOR "GR+/B"
       /// 8 3 C 7 0 
       @ 6, 2     SAY "F6     "                                                                      COLOR "GR+/B"
       /// 9 3 C 40 0 
       @ 6, 10    SAY "Selects current object (Box/Field/Text)."                                     
-      /// 10 3 C 39 0 
-      @ 7, 10    SAY "Copies current object (Box/Field/Text)."                                      
-      /// 11 3 C 7 0 
+      /// 10 3 C 7 0 
       @ 7, 2     SAY "F7     "                                                                      COLOR "GR+/B"
-      /// 12 3 C 7 0 
-      @ 8, 2     SAY "F8     "                                                                      COLOR "GR+/B"
-      /// 13 3 C 48 0 
+      /// 11 3 C 39 0 
+      @ 7, 10    SAY "Copies current object (Box/Field/Text)."                                      
+      /// 12 3 C 48 0 
       @ 8, 10    SAY "Pastes copied object at current cursor position."                             
+      /// 13 3 C 7 0 
+      @ 8, 2     SAY "F8     "                                                                      COLOR "GR+/B"
       /// 14 3 C 7 0 
       @ 9, 2     SAY "F9     "                                                                      COLOR "GR+/B"
       /// 15 3 C 32 0 
@@ -1218,43 +1218,47 @@ STATIC FUNCTION DispHelp( cToken )
       @ 14, 10   SAY "Cursor is positioned at the next to last column of last object."              
       /// 23 3 C 7 0 
       @ 14, 2    SAY "End    "                                                                      COLOR "GR+/B"
-      /// 24 3 C 7 0 
-      @ 15, 2    SAY "Alt_Z  "                                                                      COLOR "GR+/B"
-      /// 25 3 C 5 0 
-      @ 15, 10   SAY "Undo."                                                                        
-      /// 26 3 C 54 0 
+      /// 24 3 C 54 0 
       @ 16, 10   SAY "Inserts blank row, all objects are moved down one row."                       
-      /// 27 3 C 7 0 
+      /// 25 3 C 7 0 
       @ 16, 2    SAY "Alt_N  "                                                                      COLOR "GR+/B"
-      /// 28 3 C 66 0 
+      /// 26 3 C 66 0 
       @ 17, 10   SAY "Deletes objects on current row, next objects are moved up one row."           
-      /// 29 3 C 7 0 
+      /// 27 3 C 7 0 
       @ 17, 2    SAY "Alt_O  "                                                                      COLOR "GR+/B"
-      /// 30 3 C 53 0 
-      @ 18, 10   SAY "Re-order GETS. This is different than creation order."                        
-      /// 31 3 C 7 0 
+      /// 28 3 C 7 0 
       @ 18, 2    SAY "Alt_G  "                                                                      COLOR "GR+/B"
-      /// 32 3 C 23 0 
-      @ 20, 10   SAY "Begins block selection."                                                      
-      /// 33 3 C 7 0 
+      /// 29 3 C 53 0 
+      @ 18, 10   SAY "Re-order GETS. This is different than creation order."                        
+      /// 30 3 C 7 0 
       @ 20, 2    SAY "Ctrl_F6"                                                                      COLOR "GR+/B"
-      /// 34 3 C 36 0 
+      /// 31 3 C 23 0 
+      @ 20, 10   SAY "Begins block selection."                                                      
+      /// 32 3 C 36 0 
       @ 21, 10   SAY "Copy selected block at new location."                                         
-      /// 35 3 C 7 0 
+      /// 33 3 C 7 0 
       @ 21, 2    SAY "Ctrl_F7"                                                                      COLOR "GR+/B"
-      /// 36 3 C 45 0 
+      /// 34 3 C 7 0 
+      @ 22, 63   SAY "Alt_Z  "                                                                      COLOR "GR+/B"
+      /// 35 3 C 45 0 
       @ 22, 10   SAY "Cut and paste selected block at new location."                                
+      /// 36 3 C 4 0 
+      @ 22, 71   SAY "Undo"                                                                         
       /// 37 3 C 7 0 
       @ 22, 2    SAY "Ctrl_F8"                                                                      COLOR "GR+/B"
-      /// 38 3 C 20 0 
-      @ 24, 58   SAY "Load another screen."                                                         
+      /// 38 3 C 7 0 
+      @ 24, 63   SAY "Alt_P  "                                                                      COLOR "GR+/B"
       /// 39 3 C 7 0 
-      @ 24, 50   SAY "Alt_L  "                                                                      COLOR "GR+/B"
-      /// 40 3 C 21 0 
-      @ 24, 10   SAY "Save designed screen."                                                        
-      /// 41 3 C 7 0 
+      @ 24, 71   SAY "Preview"                                                                      
+      /// 40 3 C 7 0 
+      @ 24, 33   SAY "Alt_L  "                                                                      COLOR "GR+/B"
+      /// 41 3 C 20 0 
+      @ 24, 41   SAY "Load another screen."                                                         
+      /// 42 3 C 7 0 
       @ 24, 2    SAY "Alt_S  "                                                                      COLOR "GR+/B"
-      /// 42 3 C 76 0 
+      /// 43 3 C 21 0 
+      @ 24, 10   SAY "Save designed screen."                                                        
+      /// 44 3 C 76 0 
       @ 26, 2    SAY " ESC-Designer  1-Keys  2-General  3-ListedInputs  4-BlockSelection  5-About " COLOR "N/W*"
        
       /* HB_SCREEN_ENDS <Keys> */
@@ -1364,3 +1368,26 @@ STATIC FUNCTION DispHelp( cToken )
    
 /*----------------------------------------------------------------------*/
          
+FUNCTION hbcui_test()
+   LOCAL getlist := {}
+   
+   /* HB_SCREEN_BEGINS <test> */
+    
+   /// 1 1 . 9 0
+   @ 1, 2     , 12, 36 BOX "ÚÄ¿³ÙÄÀ³" 
+   /// 2 3 C 5 0 
+   @ 3, 4     SAY "Name "          
+   /// 3 3 C 15 0 
+   @ 5, 4     SAY "Salary "        
+   /// 4 3 C 14 0 
+   @ 7, 4     SAY "Date of Birth " 
+   /// 5 4 C 25 0
+   @ 3, 10    GET cName   PICTURE "@K! "                          
+   /// 6 4 N 12 2
+   @ 5, 23    GET nSalary                                         
+   /// 7 4 D 8 0
+   @ 7, 27    GET dBirth                                          
+    
+   /* HB_SCREEN_ENDS <test> */
+
+   RETURN NIL
