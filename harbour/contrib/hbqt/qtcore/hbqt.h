@@ -57,6 +57,7 @@
 
 #include "hbapi.h"
 #include "hbapistr.h"
+#include "hbthread.h"
 
 #if defined( HB_OS_OS2 )
 #  define OS2EMX_PLAIN_CHAR
