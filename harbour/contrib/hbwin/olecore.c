@@ -1826,8 +1826,6 @@ static void hb_oleInvokeCall( WORD wFlags )
          DISPID lPropPut = DISPID_PROPERTYPUT;
          HB_BOOL fPut = wFlags == DISPATCH_PROPERTYPUT;
 
-         if( wFlags == DISPATCH_PROPERTYGET )
-            uiOffset = hb_pcount();
          memset( &excep, 0, sizeof( excep ) );
          VariantInit( &variant );
          GetParams( &dispparam, uiOffset, !fPut );
@@ -1853,6 +1851,7 @@ static void hb_oleInvokeCall( WORD wFlags )
             hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
          return;
       }
+      hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, hb_parc( uiOffset ) );
    }
    else
       hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME );
