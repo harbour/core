@@ -1092,18 +1092,15 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
       hb_comSetOsError( pCom, iResult == -1 );
       if( iResult == 0 )
       {
-#if defined( cfmakeraw )
+#if defined( cfmakeraw ) || defined( HB_OS_LINUX )
          /* Raw input from device */
          cfmakeraw( &tio );
-         /* Reset data bits ( cfmakeraw() puts it to CS8 ) */
-         tia.c_cflag &= ~CSIZE;
-#else
-         tio.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP |
-                           INLCR | IGNCR | ICRNL | IXON );
+#endif
+         tio.c_iflag &= ~( IGNBRK | IGNPAR | BRKINT | PARMRK | ISTRIP |
+                           INLCR | IGNCR | ICRNL | IXON | IXANY | IXOFF );
          tio.c_oflag &= ~OPOST;
          tio.c_lflag &= ~( ECHO | ECHONL | ICANON | ISIG | IEXTEN );
          tio.c_cflag &= ~( CSIZE | PARENB );
-#endif
          /* Enable the receiver and set local mode... */
          tio.c_cflag |= ( CLOCAL | CREAD );
 
