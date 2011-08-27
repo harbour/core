@@ -166,12 +166,8 @@ if exist "%HB_DR%bin\Qt_LICENSE_LGPL_EXCEPTION.txt" echo "%HB_DR%bin\Qt_LICENSE_
 if exist "%HB_DR%bin\hbmk.hbc"                      echo "%HB_DR%bin\hbmk.hbc"                      >> _hbfiles
 echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
 echo "%HB_DR%include\*.*"                           >> _hbfiles
-echo "%HB_DR%bin\harbour-x64.exe"                   >> _hbfiles
-echo "%HB_DR%bin\hbformat-x64.exe"                  >> _hbfiles
-echo "%HB_DR%bin\hbi18n-x64.exe"                    >> _hbfiles
 echo "%HB_DR%bin\hbmk2-x64.exe"                     >> _hbfiles
 echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
-echo "%HB_DR%bin\hbpp-x64.exe"                      >> _hbfiles
 echo "%HB_DR%bin\hbrun-x64.exe"                     >> _hbfiles
 echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
 echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
