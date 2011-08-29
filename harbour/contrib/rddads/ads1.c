@@ -3915,8 +3915,8 @@ static HB_ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 
 static HB_ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   ADSHANDLE ahIndex[ 50 ];
-   UNSIGNED16 u16ArrayLen = 50;
+   ADSHANDLE ahIndex[ 512 ];
+   UNSIGNED16 u16ArrayLen = 512 ;
    UNSIGNED32 u32RetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderListAdd(%p, %p)", pArea, pOrderInfo));
@@ -4183,8 +4183,8 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if( fClose )
    {
-      ADSHANDLE ahIndex[ 50 ];
-      UNSIGNED16 usArrayLen = 50;
+      ADSHANDLE ahIndex[ 512  ];
+      UNSIGNED16 usArrayLen = 512 ;
 
       u32RetVal = AdsOpenIndex( pArea->hTable,
                      ( UNSIGNED8 * ) pOrderInfo->abBagName, ahIndex, &usArrayLen );
