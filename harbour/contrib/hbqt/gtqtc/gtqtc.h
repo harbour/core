@@ -151,98 +151,7 @@
 /*----------------------------------------------------------------------*/
 
 class MainWindow;
-
-class DrawingArea : public QWidget
-{
-   Q_OBJECT
-
-public:
-   DrawingArea( QWidget *parent = 0 );
-   virtual ~DrawingArea( void );
-
-   PHB_GT pGT;
-
-   void   resetWindowSize( void );
-   void   redrawBuffer( const QRect & rect );
-
-   bool   createCaret( int iWidth, int iHeight );
-   void   showCaret( void );
-   void   hideCaret( void );
-   void   setCaretPos( int iRow, int iCol );
-   void   destroyCaret();
-
-   void   displayCell( int iRow, int iCol );
-   void   displayBlock( int iRow, int iCol );
-   void   resizeImage( const QSize &newSize );
-   void   drawBoxCharacter( QPainter *painter, HB_USHORT usChar, HB_BYTE bColor, int x, int y );
-   void   copyTextOnClipboard( void );
-   void   paintCopyOperation( void );
-
-   QImage *_image;
-   QFont  _qFont;
-
-   QRgb   _COLORS[ 16 ];
-
-   int    _fontHeight;
-   int    _fontWidth;
-   int    _fontAscent;
-
-   int    _iROWS, _iCOLS;
-   int    _wndWidth, _wndHeight;
-
-   int    _crtHeight;
-   int    _crtWidth;
-   bool   _bBlinking;
-   int    _crtLastRow;
-   int    _crtLastCol;
-
-   bool   _bFirst;
-   bool   _bSizing;
-   bool   _bInvertRect;
-
-   bool   _bCopying;
-   QRect  _rCopying;
-   QRect  _rCopyingP;
-
-   QBasicTimer *_basicTimer;
-
-protected:
-   void   keyPressEvent( QKeyEvent *event );
-   void   keyReleaseEvent( QKeyEvent *event );
-   void   mousePressEvent( QMouseEvent *event );
-   void   mouseMoveEvent( QMouseEvent *event );
-   void   mouseReleaseEvent( QMouseEvent *event );
-   void   mouseDoubleClickEvent( QMouseEvent * event );
-   void   paintEvent( QPaintEvent *event );
-   void   resizeEvent( QResizeEvent *event );
-   void   wheelEvent( QWheelEvent *event );
-   void   timerEvent( QTimerEvent *event );
-   void   focusInEvent( QFocusEvent *event );
-   void   focusOutEvent( QFocusEvent *event );
-   void   moveEvent( QMoveEvent *event );
-   bool   event( QEvent *event );
-
-};
-
-/*----------------------------------------------------------------------*/
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    MainWindow();
-    virtual ~MainWindow();
-
-    DrawingArea *_drawingArea;
-    PHB_GT      pGT;
-
-    void setWindowSize( void );
-
-protected:
-    void closeEvent( QCloseEvent *event );
-
-};
+class DrawingArea;
 
 /*----------------------------------------------------------------------*/
 
@@ -314,6 +223,105 @@ typedef struct
    HB_BYTE      chrTransTbl[ 256 ];
 
 } HB_GTWVT, * PHB_GTWVT;
+
+/*----------------------------------------------------------------------*/
+
+class DrawingArea : public QWidget
+{
+   Q_OBJECT
+
+public:
+   DrawingArea( QWidget *parent = 0 );
+   virtual ~DrawingArea( void );
+
+   PHB_GT pGT;
+//   PHB_GTWVT pWVT;
+
+   void   resetWindowSize( void );
+   void   redrawBuffer( const QRect & rect );
+
+   bool   createCaret( int iWidth, int iHeight );
+   void   showCaret( void );
+   void   hideCaret( void );
+   void   setCaretPos( int iRow, int iCol );
+   void   destroyCaret();
+
+   void   displayCell( int iRow, int iCol );
+   void   displayBlock( int iRow, int iCol );
+   void   resizeImage( const QSize &newSize );
+   void   drawBoxCharacter( QPainter *painter, HB_USHORT usChar, HB_BYTE bColor, int x, int y );
+   void   copyTextOnClipboard( void );
+   void   paintCopyOperation( void );
+
+   QImage *_image;
+   QFont  _qFont;
+
+   QRgb   _COLORS[ 16 ];
+
+   int    _fontHeight;
+   int    _fontWidth;
+   int    _fontAscent;
+
+   int    _iROWS, _iCOLS;
+   int    _wndWidth, _wndHeight;
+
+   bool   _bCaretOn;
+   int    _crtHeight;
+   int    _crtWidth;
+   bool   _bBlinking;
+   int    _crtLastRow;
+   int    _crtLastCol;
+
+   bool   _bFirst;
+   bool   _bSizing;
+   bool   _bInvertRect;
+
+   bool   _bCopying;
+   QRect  _rCopying;
+   QRect  _rCopyingP;
+
+   QBasicTimer *_basicTimer;
+
+protected:
+   void   keyPressEvent( QKeyEvent *event );
+   void   keyReleaseEvent( QKeyEvent *event );
+   void   mousePressEvent( QMouseEvent *event );
+   void   mouseMoveEvent( QMouseEvent *event );
+   void   mouseReleaseEvent( QMouseEvent *event );
+   void   mouseDoubleClickEvent( QMouseEvent * event );
+   void   paintEvent( QPaintEvent *event );
+   void   resizeEvent( QResizeEvent *event );
+   void   wheelEvent( QWheelEvent *event );
+   void   timerEvent( QTimerEvent *event );
+   void   focusInEvent( QFocusEvent *event );
+   void   focusOutEvent( QFocusEvent *event );
+   void   moveEvent( QMoveEvent *event );
+   bool   event( QEvent *event );
+
+};
+
+/*----------------------------------------------------------------------*/
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow();
+    virtual ~MainWindow();
+
+    DrawingArea *_drawingArea;
+    PHB_GT      pGT;
+
+    void setWindowSize( void );
+
+protected:
+    void closeEvent( QCloseEvent *event );
+
+};
+
+/*----------------------------------------------------------------------*/
+
 
 
 #define HB_GTI_WIDGET          2001

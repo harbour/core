@@ -288,16 +288,16 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
    else switch( iStyle )
    {
       case SC_INSERT:
-         iCaretSize = pWVT->PTEXTSIZE.y() >> 1;
+         iCaretSize = pWVT->PTEXTSIZE.y() / 2;
          break;
       case SC_SPECIAL1:
-         iCaretSize = pWVT->PTEXTSIZE.y();
+         iCaretSize = pWVT->PTEXTSIZE.y() * 3 / 4;
          break;
       case SC_SPECIAL2:
-         iCaretSize = - ( pWVT->PTEXTSIZE.y() >> 1 );
+         iCaretSize = pWVT->PTEXTSIZE.y();
          break;
       case SC_NORMAL:
-         iCaretSize = HB_MAX( ( pWVT->PTEXTSIZE.y() >> 2 ) - 1, 1 );
+         iCaretSize = pWVT->PTEXTSIZE.y() / 4;
          break;
       default:
          iCaretSize = 0;
@@ -319,8 +319,7 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
       {
          pWVT->CaretSize  = iCaretSize;
          pWVT->CaretWidth = pWVT->PTEXTSIZE.x();
-         pWVT->CaretExist = pWVT->qWnd->_drawingArea->createCaret( pWVT->PTEXTSIZE.x(),
-                                     pWVT->CaretSize < 0 ? - pWVT->CaretSize : pWVT->CaretSize );
+         pWVT->CaretExist = pWVT->qWnd->_drawingArea->createCaret( pWVT->PTEXTSIZE.x(), pWVT->CaretSize );
       }
       if( pWVT->CaretExist )
       {
@@ -649,9 +648,10 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
             hb_gt_wvt_QCenterWindow( pWVT );
          }
          pWVT->qWnd->setFocus();
-         pWVT->qWnd->_drawingArea->setFocus();
+//         pWVT->qWnd->_drawingArea->setFocus();
          pWVT->qWnd->show();
          pWVT->qWnd->update();
+         pWVT->qWnd->_drawingArea->setFocus();
       }
       hb_gt_wvt_QUpdateCaret( pWVT );
    }
@@ -1373,6 +1373,7 @@ DrawingArea::DrawingArea( QWidget *parent )
    /* Important but give it a thought */
    //setAttribute(Qt::WA_OpaquePaintEvent);
 
+   _bCaretOn   = HB_TRUE;
    _bBlinking  = HB_FALSE;
    _basicTimer = new QBasicTimer();
 
@@ -1381,6 +1382,9 @@ DrawingArea::DrawingArea( QWidget *parent )
    _bCopying   = HB_FALSE;
 
    _image      = new QImage();
+
+   _crtLastRow = 0;
+   _crtLastCol = 0;
 
    _rCopying.setRect( -1, -1, -1, -1 );
 }
@@ -1521,7 +1525,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          #else
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
          #endif
-
+#if 1
          if( bAttr & HB_GT_ATTR_BOX )
          {
             drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
@@ -1532,7 +1536,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
             drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
             bAttr = HB_GT_ATTR_BOX;
          }
-
+#endif
          if( len == 0 )
          {
             bOldAttr  = bAttr;
@@ -1558,10 +1562,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
       if( len > 0 )
       {
          text[ len ] = '\0';
-         if( bOldAttr & HB_GT_ATTR_BOX )
-         {
-         }
-         else
+         if( ! bOldAttr & HB_GT_ATTR_BOX )
          {
             painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
             painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
@@ -1591,32 +1592,49 @@ bool DrawingArea::createCaret( int iWidth, int iHeight )
 {
    _crtWidth  = iWidth;
    _crtHeight = iHeight;
+//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::createCaret() %i %i %i %i", _crtLastRow, _crtLastCol, iWidth, iHeight ) );
+   _bCaretOn = HB_TRUE;
+   _bBlinking = HB_FALSE;
+   displayCell( _crtLastRow, _crtLastCol );
+   displayBlock( _crtLastRow, _crtLastCol );
+   if( ! _basicTimer->isActive() )
+   {
+      _basicTimer->start( 500, this );
+   }
    return( HB_TRUE );
 }
 void DrawingArea::hideCaret( void )
 {
-   _basicTimer->stop();
-   _bBlinking = HB_FALSE;
+//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::hideCaret() %i %i", _crtLastRow, _crtLastCol ) );
+   _bCaretOn = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
 }
 void DrawingArea::showCaret( void )
 {
-   displayCell( _crtLastRow, _crtLastCol );
-   _basicTimer->start( 350,this );
+//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::showCaret() %i %i", _crtLastRow, _crtLastCol ) );
+   if( ! _basicTimer->isActive() )
+   {
+      _basicTimer->start( 500, this );
+   }
+   displayBlock( _crtLastRow, _crtLastCol );
+   _bCaretOn = HB_TRUE;
 }
 void DrawingArea::destroyCaret( void )
 {
    _basicTimer->stop();
+   _bCaretOn = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
+//HB_TRACE( HB_TR_ALWAYS, ( "void DrawingArea::destroyCaret( void )" ) );
 }
 void DrawingArea::setCaretPos( int iCol, int iRow )
 {
-   displayCell( _crtLastRow, _crtLastCol );
    _crtLastCol = iCol;
    _crtLastRow = iRow;
 }
 void DrawingArea::displayCell( int iRow, int iCol )
 {
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+
    QPainter painter( _image );
    painter.setBackgroundMode( Qt::OpaqueMode );
    QFont font( _qFont, painter.device() );
@@ -1624,10 +1642,16 @@ void DrawingArea::displayCell( int iRow, int iCol )
 
    HB_USHORT usChar;
    HB_BYTE   bAttr;
-   int    bColor = 0;
+   int       bColor = 0;
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
    {
+      #if defined( UNICODE )
+      usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
+      #else
+      usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+      #endif
+
       painter.setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
       painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
       painter.drawText( QPoint( iCol*_fontWidth, ( iRow*_fontHeight ) + _fontAscent ), QString( usChar ) );
@@ -1637,9 +1661,15 @@ void DrawingArea::displayCell( int iRow, int iCol )
 }
 void DrawingArea::displayBlock( int iRow, int iCol )
 {
-   QPainter painter(_image);
+   QPainter painter( _image );
+   #if 0
    painter.fillRect( QRect( iCol*_fontWidth, iRow*_fontHeight+(_fontHeight-_crtHeight),
-                                        _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
+                                     _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
+   #else
+   painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
+   painter.fillRect( QRect( iCol*_fontWidth, iRow*_fontHeight+(_fontHeight-_crtHeight),
+                                     _fontWidth, _crtHeight ), QBrush( qRgb( 255,255,255 ) ) );
+   #endif
    /* We need immediate painting */
    repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
 }
@@ -1647,15 +1677,18 @@ void DrawingArea::timerEvent( QTimerEvent *event )
 {
    if( event->timerId() == _basicTimer->timerId() )
    {
-      if( _bBlinking )
+      if( _bCaretOn )
       {
-         _bBlinking = HB_FALSE;
-         displayCell( _crtLastRow, _crtLastCol );
-      }
-      else
-      {
-         _bBlinking = HB_TRUE;
-         displayBlock( _crtLastRow, _crtLastCol );
+         if( _bBlinking )
+         {
+            _bBlinking = HB_FALSE;
+            displayCell( _crtLastRow, _crtLastCol );
+         }
+         else
+         {
+            _bBlinking = HB_TRUE;
+            displayBlock( _crtLastRow, _crtLastCol );
+         }
       }
    }
    else
@@ -1762,8 +1795,8 @@ void DrawingArea::focusInEvent( QFocusEvent *event )
 
 void DrawingArea::focusOutEvent( QFocusEvent *event )
 {
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   hb_gt_wvt_QKillCaret( pWVT );
+//HB_TRACE( HB_TR_ALWAYS, ( "void DrawingArea::focusOutEvent( QFocusEvent *event )" ) );
+//   this->hideCaret();           /* Disableing for the time being */
    HB_SYMBOL_UNUSED( event );
    /* Either of IN or OUT messagess */
    /* hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS ); */
@@ -1773,6 +1806,7 @@ void DrawingArea::focusOutEvent( QFocusEvent *event )
 void DrawingArea::keyReleaseEvent( QKeyEvent *event )
 {
    HB_SYMBOL_UNUSED( event );
+   QWidget::keyReleaseEvent( event );
 }
 
 void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
