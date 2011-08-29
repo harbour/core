@@ -102,6 +102,7 @@ CLASS IdeObject
    ACCESS oINI                                    INLINE ::oIde:oINI
    ACCESS oFmt                                    INLINE ::oIde:oFmt
    ACCESS oCL                                     INLINE ::oIde:oCL
+   ACCESS oCUI                                    INLINE ::oIde:oCUI
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags
@@ -202,6 +203,7 @@ CLASS IdeObject
    ACCESS oFormatDock                             INLINE ::oIde:oFormatDock
    ACCESS oSys                                    INLINE ::oIde:oSys
    ACCESS oSysMenu                                INLINE ::oIde:oSysMenu
+   ACCESS oCuiEdDock                              INLINE ::oIde:oCuiEdDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

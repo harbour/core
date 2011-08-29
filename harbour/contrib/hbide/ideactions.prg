@@ -272,6 +272,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "CompilePPO"           , "Compile Current Source to PPO", "ppo"            , ""     , "No", "Yes" } )
    aadd( aAct, { "LaunchProject"        , "Launch Project"               , ""               , "^F10" , "No", "Yes" } )
    aadd( aAct, { "ConfigureTools"       , "Configure Tools...*"          , ""               , ""     , "No", "Yes" } )
+   aadd( aAct, { "CuiEditor"            , "CUI Screen Edirot"            , "cuied"          , ""     , "No", "Yes" } )
 
    aadd( aAct, { "ManageThemes"         , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"         , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
@@ -553,8 +554,10 @@ METHOD IdeActions:buildMainMenu()
  * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()        )
+   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()          )
+   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()           )
+
+   oSubMenu:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */

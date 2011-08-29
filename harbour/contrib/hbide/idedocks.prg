@@ -157,6 +157,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildFormatWidget()
    METHOD hideAllDocks()
    METHOD setToolbarSize( nSize )
+   METHOD buildCuiEdWidget()
 
    ENDCLASS
 
@@ -198,6 +199,7 @@ METHOD IdeDocks:hideAllDocks()
    ::oQScintillaDock          : hide()
    ::oReportsManagerDock      : hide()
    ::oFormatDock              : hide()
+   ::oCuiEdDock               : hide()
 
    // Bottom
    ::oDockB2                  : hide()
@@ -239,6 +241,7 @@ METHOD IdeDocks:destroy()
    ::oQScintillaDock:oWidget     : disconnect( "visibilityChanged(bool)" )
    ::oReportsManagerDock:oWidget : disconnect( "visibilityChanged(bool)" )
    ::oFormatDock:oWidget         : disconnect( "visibilityChanged(bool)" )
+   ::oCuiEdDock:oWidget          : disconnect( "visibilityChanged(bool)" )
 
    #if 0  /* Not Implemented */
    ::oDockPT:oWidget             : disconnect( "visibilityChanged(bool)" )
@@ -280,6 +283,7 @@ METHOD IdeDocks:destroy()
    ::oIde:oQScintillaDock        := NIL
    ::oIde:oReportsManagerDock    := NIL
    ::oIde:oFormatDock            := NIL
+   ::oIde:oCuiEdDock             := NIL
 
    ::oIde:oDockPT                := NIL
    ::oIde:oDockED                := NIL
@@ -501,6 +505,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildUpDownWidget()
    ::buildReportsDesignerWidget()
    ::buildFormatWidget()
+   ::buildCuiEdWidget()
 
    /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget              , ::oDockB1:oWidget              )
@@ -520,6 +525,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget      )
    ::oDlg:oWidget:tabifyDockWidget( ::oQScintillaDock:oWidget     , ::oReportsManagerDock:oWidget  )
    ::oDlg:oWidget:tabifyDockWidget( ::oReportsManagerDock:oWidget , ::oFormatDock:oWidget          )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFormatDock:oWidget         , ::oCuiEdDock:oWidget           )
 
    RETURN Self
 
@@ -555,6 +561,13 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
 
    SWITCH cEvent
+   CASE "dockCuiEd_visibilityChanged"
+      IF p; ::oCUI:show(); ENDIF
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
+      EXIT
+
    CASE "dockFormat_visibilityChanged"
       IF p; ::oFmt:show(); ENDIF
       IF ! p .AND. ! p1:isVisible()
@@ -1355,6 +1368,7 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
    aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
    aadd( aBtns, { ::oReportsManagerDock , "designer"      } )
+   aadd( aBtns, { ::oCuiEdDock          , "cuied"         } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2             , "builderror"    } )
 
@@ -1963,3 +1977,15 @@ METHOD IdeDocks:buildFormatWidget()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildCuiEdWidget()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
+
+   ::oIde:oCuiEdDock := ::getADockWidget( nAreas, "dockCuiEd", "CUI Screen Designer", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oCuiEdDock:oWidget, Qt_Horizontal )
+   ::oCuiEdDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockCuiEd_visibilityChanged", p, ::oCuiEdDock:oWidget ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

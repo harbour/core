@@ -922,7 +922,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_FONTWIDTH:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontWidth );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x() );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
@@ -1389,37 +1389,6 @@ DrawingArea::DrawingArea( QWidget *parent )
    _rCopying.setRect( -1, -1, -1, -1 );
 }
 
-void DrawingArea::resetWindowSize( void )
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-
-   QPainter painter( this );
-
-   _iROWS = pWVT->ROWS;
-   _iCOLS = pWVT->COLS;
-
-   _qFont = QFont();
-   _qFont.setFamily( pWVT->fontFace );
-   _qFont.setPixelSize( pWVT->fontHeight );
-   _qFont.setFixedPitch( HB_TRUE );
-   _qFont        = QFont( _qFont, painter.device() );
-   QFontMetrics fontMetrics( _qFont );
-   _fontHeight   = fontMetrics.height();
-   _fontWidth    = fontMetrics.averageCharWidth();
-   _fontAscent   = fontMetrics.ascent();
-   _wndWidth     = _fontWidth * _iCOLS;
-   _wndHeight    = _fontHeight * _iROWS;
-
-   pWVT->PTEXTSIZE.setX( _fontWidth );
-   pWVT->PTEXTSIZE.setY( _fontHeight );
-
-   resizeImage( QSize( _wndWidth, _wndHeight ) );
-   _image->fill( qRgb( 198,198,198 ) );
-   setFont( _qFont );
-   setFocus( Qt::OtherFocusReason );
-   update();
-}
-
 void DrawingArea::copyTextOnClipboard( void )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
@@ -1528,12 +1497,12 @@ void DrawingArea::redrawBuffer( const QRect & rect )
 #if 1
          if( bAttr & HB_GT_ATTR_BOX )
          {
-            drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
+            drawBoxCharacter( &painter, usChar, bColor, iCol * _fontWidth, iRow * _fontHeight );
          }
          /* Hack to let it know if character is a Line character */
          else if( usChar >= 170 && usChar <= 223 )
          {
-            drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
+            drawBoxCharacter( &painter, usChar, bColor, iCol * _fontWidth, iRow * _fontHeight );
             bAttr = HB_GT_ATTR_BOX;
          }
 #endif
@@ -1549,7 +1518,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
             {
                painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
                painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
-               painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+               painter.drawText( QPoint( startCol * _fontWidth, iTop ), QString( text ) );
             }
             bOldColor = bColor;
             bOldAttr  = bAttr;
@@ -1566,7 +1535,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          {
             painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
             painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
-            painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+            painter.drawText( QPoint( startCol * _fontWidth, iTop ), QString( text ) );
          }
       }
    }
@@ -1654,16 +1623,16 @@ void DrawingArea::displayCell( int iRow, int iCol )
 
       painter.setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
       painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
-      painter.drawText( QPoint( iCol*_fontWidth, ( iRow*_fontHeight ) + _fontAscent ), QString( usChar ) );
+      painter.drawText( QPoint( iCol * _fontWidth, ( iRow * _fontHeight ) + _fontAscent ), QString( usChar ) );
    }
    /* We need immediate painting */
-   repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
+   repaint( QRect( iCol * _fontWidth, iRow * _fontHeight, _fontWidth, _fontHeight ) );
 }
 void DrawingArea::displayBlock( int iRow, int iCol )
 {
    QPainter painter( _image );
    #if 0
-   painter.fillRect( QRect( iCol*_fontWidth, iRow*_fontHeight+(_fontHeight-_crtHeight),
+   painter.fillRect( QRect( iCol*_fontWidth, iRow * _fontHeight + ( _fontHeight - _crtHeight ),
                                      _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
    #else
    painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
@@ -1671,7 +1640,7 @@ void DrawingArea::displayBlock( int iRow, int iCol )
                                      _fontWidth, _crtHeight ), QBrush( qRgb( 255,255,255 ) ) );
    #endif
    /* We need immediate painting */
-   repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
+   repaint( QRect( iCol * _fontWidth, iRow * _fontHeight, _fontWidth, _fontHeight ) );
 }
 void DrawingArea::timerEvent( QTimerEvent *event )
 {
@@ -1695,6 +1664,40 @@ void DrawingArea::timerEvent( QTimerEvent *event )
    {
       QWidget::timerEvent( event );
    }
+}
+
+void DrawingArea::resetWindowSize( void )
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+
+   QPainter painter( this );
+
+   _iROWS = pWVT->ROWS;
+   _iCOLS = pWVT->COLS;
+
+   _qFont = QFont();
+   _qFont.setFamily( pWVT->fontFace );
+   _qFont.setPixelSize( pWVT->fontHeight );
+   _qFont.setFixedPitch( HB_TRUE );
+   _qFont        = QFont( _qFont, painter.device() );
+   QFontMetrics fontMetrics( _qFont );
+   _fontHeight   = fontMetrics.height();
+   _fontWidth    = fontMetrics.averageCharWidth();
+   _fontAscent   = fontMetrics.ascent();
+   _wndWidth     = _fontWidth * _iCOLS;
+   _wndHeight    = _fontHeight * _iROWS;
+
+   pWVT->PTEXTSIZE.setX( _fontWidth );
+   pWVT->PTEXTSIZE.setY( _fontHeight );
+
+   pWVT->fontWidth  = _fontWidth;
+   pWVT->fontHeight = _fontHeight;
+
+   resizeImage( QSize( _wndWidth, _wndHeight ) );
+   _image->fill( qRgb( 198,198,198 ) );
+   setFont( _qFont );
+   setFocus( Qt::OtherFocusReason );
+   update();
 }
 
 void DrawingArea::resizeImage( const QSize &newSize )
@@ -1767,6 +1770,10 @@ void DrawingArea::resizeEvent( QResizeEvent *event )
 
             pWVT->PTEXTSIZE.setX( _fontWidth );
             pWVT->PTEXTSIZE.setY( _fontHeight );
+
+            pWVT->fontWidth  = _fontWidth;
+            pWVT->fontHeight = _fontHeight;
+
             resizeImage( QSize( _wndWidth, _wndHeight ) );
             redrawBuffer( _image->rect() );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );

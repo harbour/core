@@ -173,6 +173,7 @@ CLASS HbIde
    DATA   oINI                                           /* INI Manager                    */
    DATA   oFmt                                           /* Code Formatter Manager         */
    DATA   oCL                                            /* ChangeLog Manager              */
+   DATA   oCUI                                           /* CUI Screen Designer Console    */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -268,6 +269,7 @@ CLASS HbIde
    DATA   oUpDn
    DATA   oReportsManagerDock
    DATA   oFormatDock
+   DATA   oCuiEdDock
 
    DATA   qAnimateAction
    DATA   qStatusBarAction
@@ -660,6 +662,9 @@ METHOD HbIde:create( aParams )
    /* Code Formatter Manager */
    ::oFmt := IdeFormat():new():create( Self )
 
+   /* Console Editor */
+   ::oCUI := IdeConsole():new():create( Self )
+
    /* Fill various elements of the IDE */
    ::oPM:populate()
    ::oSM:loadSources()
@@ -772,6 +777,8 @@ METHOD HbIde:create( aParams )
 
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
+
+   hbide_setExitCuiEd( .t. )
 
    DbCloseAll()
    ::cProjIni := NIL
@@ -1623,6 +1630,12 @@ METHOD HbIde:testPainter( qPainter )
 
    //qPainter:fillRect( 100, 100, 500, 500, QColor( 175, 175, 255 ) )
 
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hb_gtsys()
+   REQUEST HB_GT_QTC
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
