@@ -27,7 +27,22 @@ New      = pParent
  */
 HB_FUNC( QT_QPRINTDIALOG )
 {
-   __HB_RETPTRGC__( new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) && hbqt_isObjectType( 1, HBQT_TYPE_QPrinter ) )
+   {
+      __HB_RETPTRGC__( new QPrintDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) && hbqt_isObjectType( 1, HBQT_TYPE_QPrinter ) )
+   {
+      __HB_RETPTRGC__( new QPrintDialog( hbqt_par_QPrinter( 1 ), 0 ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {
+      __HB_RETPTRGC__( new QPrintDialog( hbqt_par_QWidget( 1 ) ) );
+   }
+   else 
+   {
+      __HB_RETPTRGC__( new QPrintDialog() );
+   }
 }
 </CODE>
 
