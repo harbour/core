@@ -65,13 +65,15 @@ xhbis.c
 xhbmsgs.c
 xhbmtc.c
 xhbmvinf.c
-xhbqself.c
+xhbolec.c
 xhbprn.c
 xhbproc.c
+xhbqself.c
 xhbregx.c
 xhbsave.c
 xhbscr.c
 xhbtrim.c
+xhbwin.c
 xhbwith.c
 xstrdel.c
 xthrow.c
