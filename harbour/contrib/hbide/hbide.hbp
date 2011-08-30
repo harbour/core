@@ -57,6 +57,7 @@ hbqreportsmanager.prg
 hbqtoolbar.prg
 ideformat.prg
 idechangelog.prg
+ideconsole.prg
 ideparseexpr.c
 
 docviewgenerator.ui
