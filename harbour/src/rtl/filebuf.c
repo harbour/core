@@ -296,7 +296,7 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
          {
             hb_fileInsertLock( pFile, uiPos + 1, nStart + nLen,
                                pLock->start + pLock->len - nStart - nLen );
-            pLock->len = nStart - pLock->start;
+            pFile->pLocks[ uiPos ].len = nStart - pLock->start;
          }
          if( pFile->shared )
             * pfLockFS = HB_TRUE;
