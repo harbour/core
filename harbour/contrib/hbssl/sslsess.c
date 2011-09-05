@@ -99,23 +99,21 @@ HB_FUNC( SSL_SESSION_NEW )
    hb_retptrGC( ph );
 }
 
-#if OPENSSL_VERSION_NUMBER < 0x10000000L
-
 HB_FUNC( SSL_SESSION_CMP )
 {
    if( hb_SSL_SESSION_is( 1 ) && hb_SSL_SESSION_is( 2 ) )
    {
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
       SSL_SESSION * session1 = hb_SSL_SESSION_par( 1 );
       SSL_SESSION * session2 = hb_SSL_SESSION_par( 2 );
 
       if( session1 && session2 )
          hb_retni( SSL_SESSION_cmp( session1, session2 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 HB_FUNC( SSL_SESSION_SET_TIME )
 {
@@ -169,22 +167,20 @@ HB_FUNC( SSL_SESSION_GET_TIMEOUT )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if OPENSSL_VERSION_NUMBER < 0x10000000L
-
 HB_FUNC( SSL_SESSION_HASH )
 {
    if( hb_SSL_SESSION_is( 1 ) )
    {
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
       SSL_SESSION * session = hb_SSL_SESSION_par( 1 );
 
       if( session )
          hb_retnl( SSL_SESSION_hash( session ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif
 
 /*
 char *SSL_SESSION_get_app_data(SSL_SESSION *s);
