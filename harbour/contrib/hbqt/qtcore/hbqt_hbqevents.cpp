@@ -211,10 +211,10 @@ int HBQEvents::hbDisconnect( PHB_ITEM pObj, int type )
    return nResult;
 }
 
-
-/* DO NOT Reformat */
 bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
+   bool stopTheEventChain = false;
+
    if( object )
    {
       QEvent::Type eventtype = event->type();
@@ -237,7 +237,11 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                      if( hb_vmRequestReenter() )
                      {
                         PHB_ITEM pItem = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
-                        hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem );
+                        PHB_ITEM ret = hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem );
+
+                        if( hb_itemType( ret ) & HB_IT_LOGICAL )
+                           stopTheEventChain = ( bool ) hb_itemGetL( ret );
+
                         hb_itemRelease( pItem );
                         hb_vmRequestRestore();
                      }
@@ -245,13 +249,13 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                }
             }
          }
+
          if( eventtype == QEvent::Close )
-         {
-             return true;
-         }
+            return true;
       }
    }
-   return false;
+
+   return stopTheEventChain;
 }
 
 static void hbqt_events_init( void * cargo )
