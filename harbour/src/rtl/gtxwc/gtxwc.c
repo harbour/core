@@ -3961,6 +3961,20 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_FONTATTRIBUTE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult,
+                           ( wnd->fFixMetric ? HB_GTI_FONTA_FIXMETRIC : 0 ) |
+                           ( wnd->fClearBkg  ? HB_GTI_FONTA_CLRBKG    : 0 ) |
+                           ( wnd->fDrawBox   ? HB_GTI_FONTA_DRAWBOX   : 0 ) );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            wnd->fFixMetric = ( iVal & HB_GTI_FONTA_FIXMETRIC ) != 0;
+            wnd->fClearBkg  = ( iVal & HB_GTI_FONTA_CLRBKG    ) != 0;
+            wnd->fDrawBox   = ( iVal & HB_GTI_FONTA_DRAWBOX   ) != 0;
+         }
+         break;
+
       case HB_GTI_BOXCP:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        wnd->boxCDP ? wnd->boxCDP->id : NULL );

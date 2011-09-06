@@ -149,6 +149,8 @@
 
 #define HB_GTI_MAXIMIZED        66  /* Get/Set Window's Maximized status (supported by: GTWVT) */
 
+#define HB_GTI_FONTATTRIBUTE    67  /* Get/set font attribute */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2
@@ -158,6 +160,11 @@
 #define HB_GTI_FONTQ_DRAFT      1
 #define HB_GTI_FONTQ_NORMAL     2
 #define HB_GTI_FONTQ_HIGH       3
+
+/* Font attributes */
+#define HB_GTI_FONTA_FIXMETRIC  1
+#define HB_GTI_FONTA_CLRBKG     2
+#define HB_GTI_FONTA_DRAWBOX    4
 
 /* Keyboard shifts states */
 #define HB_GTI_KBD_SHIFT        0x000001
