@@ -1,125 +1,126 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-STATIC cNewLine
+STATIC s_cNewLine
 
-function main( cParam )
+PROCEDURE Main( cParam )
 
-   IF EMPTY( cParam )
-      cNewLine := CHR(13)+CHR(10)
+   IF Empty( cParam )
+      s_cNewLine := Chr( 13 ) + Chr( 10 )
    ELSE
-      cNewLine := CHR(10)
-   END IF
+      s_cNewLine := Chr( 10 )
+   ENDIF
 
-   outstd (cNewLine)
-   outstd ("Running with SET FIXED OFF (the default setting): ")
-   outstd (cNewLine)
+   OutStd( s_cNewLine )
+   OutStd( "Running with SET FIXED OFF (the default setting): " )
+   OutStd( s_cNewLine )
    test()
-   __ACCEPT ("Pause before running again with SET FIXED ON: ")
-   outstd (cNewLine)
-   outstd ("Running with SET FIXED ON: ")
-   outstd (cNewLine)
-   SET (_SET_FIXED, "ON")
+   __ACCEPT( "Pause before running again with SET FIXED ON: " )
+   OutStd( s_cNewLine )
+   OutStd( "Running with SET FIXED ON: " )
+   OutStd( s_cNewLine )
+   Set( _SET_FIXED, "ON" )
    test()
 
-return nil
+   RETURN
 
-procedure test()
-local a := 15.1
-local b := 10.0002575
-local nI, c, d
+PROCEDURE test()
 
-   outstd( "1: " )
-   outstd (10)
-   outstd (a)
-   outstd (-a)
-   outstd (b)
-   outstd (-b)
-   outstd (cNewLine)
-   outstd( "2: " )
-   outstd (a + b)
-   outstd (a - b)
-   outstd (a * b)
-   outstd (a / b)
-   outstd (cNewLine)
-   outstd( "3: " )
-   outstd (a % b)
-   outstd (a ** b)
-   outstd (cNewLine)
+   LOCAL a := 15.1
+   LOCAL b := 10.0002575
+   LOCAL nI, c, d
+
+   OutStd( "1: " )
+   OutStd( 10 )
+   OutStd( a )
+   OutStd( - a )
+   OutStd( b )
+   OutStd( - b )
+   OutStd( s_cNewLine )
+   OutStd( "2: " )
+   OutStd( a + b )
+   OutStd( a - b )
+   OutStd( a * b )
+   OutStd( a / b )
+   OutStd( s_cNewLine )
+   OutStd( "3: " )
+   OutStd( a % b )
+   OutStd( a ** b )
+   OutStd( s_cNewLine )
 
    c := a * b
    d := b * a
-   outstd (cNewLine)
-   outstd( "4: " )
-   outstd (str (c))
-   outstd (str (d))
-   outstd (cNewLine)
-   outstd( "5: " )
-   outstd (str (c + d))
-   outstd (str (c - d))
-   outstd (str (c * d))
-   outstd (str (c / d))
-   outstd (cNewLine)
+   OutStd( s_cNewLine )
+   OutStd( "4: " )
+   OutStd( Str( c ) )
+   OutStd( Str( d ) )
+   OutStd( s_cNewLine )
+   OutStd( "5: " )
+   OutStd( Str( c + d ) )
+   OutStd( Str( c - d ) )
+   OutStd( Str( c * d ) )
+   OutStd( Str( c / d ) )
+   OutStd( s_cNewLine )
 
-   outstd (cNewLine)
-   outstd( "6: " )
-   outstd (a + b + c)
-   outstd (c - b - a)
-   outstd (b * a * c)
-   outstd (b * a * c * d)
+   OutStd( s_cNewLine )
+   OutStd( "6: " )
+   OutStd( a + b + c )
+   OutStd( c - b - a )
+   OutStd( b * a * c )
+   OutStd( b * a * c * d )
    b := 1.000213
-   outstd (b * b * b * b * b * b * b)
-   outstd (cNewLine)
+   OutStd( b * b * b * b * b * b * b )
+   OutStd( s_cNewLine )
 
-   FOR nI := 1 to 20
-      outstd (cNewLine)
-      outstd( LTRIM( STR( 6 + nI ) ) + ": " )
-      outstd (10 ** nI + (1.02 * 1.02))
-   NEXT nI
-   outstd (cNewLine)
+   FOR nI := 1 TO 20
+      OutStd( s_cNewLine )
+      OutStd( LTrim( Str( 6 + nI ) ) + ": " )
+      OutStd( 10 ** nI + ( 1.02 * 1.02 ) )
+   NEXT
+   OutStd( s_cNewLine )
 
-   outstd (cNewLine)
-   outstd( "27: " )
-   outstd (str (a), a)
-   outstd (cNewLine)
+   OutStd( s_cNewLine )
+   OutStd( "27: " )
+   OutStd( Str( a ), a )
+   OutStd( s_cNewLine )
 
-   outstd( "28: " )
-   outstd (str (b), b)
-   outstd (cNewLine)
+   OutStd( "28: " )
+   OutStd( Str( b ), b )
+   OutStd( s_cNewLine )
 
-   outstd( "29: " )
-   outstd (str (b, 15))
-   outstd (cNewLine)
+   OutStd( "29: " )
+   OutStd( Str( b, 15 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "30: " )
-   outstd (str (b, 20, 5))
-   outstd (cNewLine)
+   OutStd( "30: " )
+   OutStd( Str( b, 20, 5 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "31: " )
-   outstd (str (b, 20, 10))
-   outstd (cNewLine)
+   OutStd( "31: " )
+   OutStd( Str( b, 20, 10 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "32: " )
-   outstd (str (b, 5, 10))
-   outstd (cNewLine)
+   OutStd( "32: " )
+   OutStd( Str( b, 5, 10 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "33: " )
-   outstd (str (b, 20, -10))
-   outstd (cNewLine)
+   OutStd( "33: " )
+   OutStd( Str( b, 20, - 10 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "34: " )
-   outstd (str (b, -12, 7))
-   outstd (cNewLine)
+   OutStd( "34: " )
+   OutStd( Str( b, - 12, 7 ) )
+   OutStd( s_cNewLine )
 
-   outstd( "35: " )
-   outstd (str (b, 0))
-   outstd (cNewLine)
+   OutStd( "35: " )
+   OutStd( Str( b, 0 ) )
+   OutStd( s_cNewLine )
 
-   outstd (cNewLine)
+   OutStd( s_cNewLine )
    a := 15.1004
-   outstd( "36: " )
-   outstd (str (a), a)
-   outstd (cNewLine)
+   OutStd( "36: " )
+   OutStd( Str( a ), a )
+   OutStd( s_cNewLine )
 
-return
+   RETURN

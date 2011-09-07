@@ -6,10 +6,11 @@
 
 #include "inkey.ch"
 
-Function Main()
-Local oProfile := HBProfile():new()
-Local oGet     := GetNew()
-Local n
+PROCEDURE Main()
+
+   LOCAL oProfile := HBProfile():new()
+   LOCAL oGet     := GetNew()
+   LOCAL n
 
    // Turn on profiling.
    __setProfiler( .T. )
@@ -19,96 +20,98 @@ Local n
    DoNothingForTwoSeconds()
 
    // Make sure we've got something to see callwise.
-   For n := 1 To 500
+   FOR n := 1 TO 500
       CallMe500Times()
-   Next
+   NEXT
 
    // Generate some object oriented (oriented? <g>) entries.
-   For n := 1 To 500
+   FOR n := 1 TO 500
       oGet:row := 0
-   Next
+   NEXT
 
    // Take a profile snapshot.
    oProfile:gather()
 
    // Report on calls greater than 0
    DrawScreen( "All methods/functions called one or more times" )
-   memoedit( HBProfileReportToString():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 } ), 1, , , , .F. )
 
    // Sorted by name
    DrawScreen( "All methods/functions called one or more times, sorted by name" )
-   memoedit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {| o | o:nCalls > 0 } ), 1, , , , .F. )
 
    // Sorted by time
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
-   memoedit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {|o| o:nTicks > 0 } ), 1,,,, .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {| o | o:nTicks > 0 } ), 1, , , , .F. )
 
    // TBrowse all calls greater than 0
    DrawScreen( "TBrowse all methods/functions called one or more times" )
-   Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 }, 1 ) )
+   Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 }, 1 ) )
 
    // Some closing stats
    DrawScreen( "Totals" )
-   @ 2, 0 Say "  Total Calls: " + str( oProfile:totalCalls() )
-   @ 3, 0 Say "  Total Ticks: " + str( oProfile:totalTicks() )
-   @ 4, 0 Say "Total Seconds: " + str( oProfile:totalSeconds() )
+   @ 2, 0 SAY "  Total Calls: " + Str( oProfile:totalCalls() )
+   @ 3, 0 SAY "  Total Ticks: " + Str( oProfile:totalTicks() )
+   @ 4, 0 SAY "Total Seconds: " + Str( oProfile:totalSeconds() )
 
-Return( NIL )
+   RETURN
 
-Static Function DrawScreen( cTitle )
+STATIC FUNCTION DrawScreen( cTitle )
 
-   scroll()
+   Scroll()
 
-   @ 0, 0 Say padr( cTitle, maxcol() + 1 ) Color "n/w"
+   @ 0, 0 SAY PadR( cTitle, MaxCol() + 1 ) COLOR "N/W"
 
-Return( NIL )
+   RETURN NIL
 
-Function DoNothingForTwoSeconds()
+FUNCTION DoNothingForTwoSeconds()
 
-   inkey( 2 )
+   Inkey( 2 )
 
-Return( NIL )
+   RETURN NIL
 
-Function CallMe500Times()
-Return( NIL )
+FUNCTION CallMe500Times()
 
-Static Function Browser( oBrowse )
-Local lBrowsing := .T.
-Local nKey
+   RETURN NIL
 
-   Do While lBrowsing
+STATIC FUNCTION Browser( oBrowse )
+
+   LOCAL lBrowsing := .T.
+   LOCAL nKey
+
+   DO WHILE lBrowsing
 
       oBrowse:forceStable()
 
-      nKey := inkey( 0 )
+      nKey := Inkey( 0 )
 
-      Do Case
+      DO CASE
 
-         Case nKey == K_ESC
-            lBrowsing := .F.
+      CASE nKey == K_ESC
+         lBrowsing := .F.
 
-         Case nKey == K_DOWN
-            oBrowse:down()
+      CASE nKey == K_DOWN
+         oBrowse:down()
 
-         Case nKey == K_UP
-            oBrowse:up()
+      CASE nKey == K_UP
+         oBrowse:up()
 
-         Case nKey == K_LEFT
-            oBrowse:left()
+      CASE nKey == K_LEFT
+         oBrowse:Left()
 
-         Case nKey == K_RIGHT
-            oBrowse:right()
+      CASE nKey == K_RIGHT
+         oBrowse:Right()
 
-         Case nKey == K_PGDN
-            oBrowse:pageDown()
+      CASE nKey == K_PGDN
+         oBrowse:pageDown()
 
-         Case nKey == K_PGUP
-            oBrowse:pageUp()
+      CASE nKey == K_PGUP
+         oBrowse:pageUp()
 
          // And so on.... (not really necessary for this test)
 
-      EndCase
+      ENDCASE
 
-   EndDo
+   ENDDO
 
-Return( NIL )
+   RETURN NIL

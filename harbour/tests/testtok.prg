@@ -1,29 +1,34 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 #include "set.ch"
 
-procedure main()
-   local a
-   local i
+PROCEDURE main()
 
-   set( _SET_EXACT, .T. )
-   a := strtoarray("this is a great big test of strtoken")
-   for i := 1 to len(a)
-      qout( a[i] )
-   next i
-return
+   LOCAL a
+   LOCAL i
 
-function strtoarray(s)
-   local aResult := {}
-   local t, l
+   SET( _SET_EXACT, .T. )
 
-   while( s <> "" )
-      t := strtoken(s, 1,, @l)
-      aadd(aResult, t)
-      s := substr(s, l + 2) // skip the delimiter
+   a := strtoarray( "this is a great big test of strtoken" )
+   FOR i := 1 TO Len( a )
+      QOut( a[ i ] )
+   NEXT
 
-      qout( t, str(l), s )
-   end
-return aResult
+   RETURN
+
+FUNCTION strtoarray( s )
+
+   LOCAL aResult := {}
+   LOCAL t, l
+
+   DO WHILE s != ""
+      t := StrToken( s, 1, , @l )
+      AAdd( aResult, t )
+      s := SubStr( s, l + 2 ) /* skip the delimiter */
+
+      QOut( t, Str( l ), s )
+   ENDDO
+
+   RETURN aResult

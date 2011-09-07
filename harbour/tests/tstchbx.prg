@@ -1,27 +1,36 @@
 /*
  * $Id$
  */
-#include "hbgetcmt.ch"
 
-function Main
-Local lx :=.f.
-local ly :=.f.
-Local citem:="Windows NT/2000"
-Local aitems[4]
-aitems[1]:=RADIOBUTTO( 3,3,"&Windows NT/2000")
-aitems[2]:=RADIOBUTTO( 4,3,"W&indows 9x")
-aitems[3]:=RADIOBUTTO( 5,3,"&Linux")
-aitems[4]:=RADIOBUTTO( 6,3,"&Mac OS")
+FUNCTION Main()
 
-cls
-Setcolor('w/b+,r/b,g+/r,b+/r+,bg/n+,w/bg,rb/bg')
-@  2,2,7,40 get citem radiogroup aitems color 'w/b+,r/b,g/b+' MESSAGE "Select Your Os"
-@ 8,3 Say "Married"
-@ 8,12 Get lx CHECKBOX color 'w/b+,w/b,w+/r,w/g+' MESSAGE "Is You Married?"
-@ 9,3 Say "Singer"
-@ 9,12 Get ly CHECKBOX color 'w/b+,w/b,w+/r,w/g+' MESSAGE "Are You a  Singer"
-read MSG AT maxrow(), 0, maxcol() MSG Color "w/b+"
-? "Is the Person Married",iif(lx," Yes ", " No ")
-? "Is the Person a Singer",iif(ly," Yes ", " No ")
-? "Your Os is ",cItem
-return Nil
+   LOCAL GetList := {}
+
+   LOCAL lx := .F.
+   LOCAL ly := .F.
+   LOCAL cItem := "Windows NT/2000"
+
+   LOCAL aItems[ 4 ]
+
+   aItems[ 1 ] := RADIOBUTTO( 3, 3, "&Windows NT/2000" )
+   aItems[ 2 ] := RADIOBUTTO( 4, 3, "W&indows 9x" )
+   aItems[ 3 ] := RADIOBUTTO( 5, 3, "&Linux" )
+   aItems[ 4 ] := RADIOBUTTO( 6, 3, "&Mac OS" )
+
+   CLS
+   SetColor( "W/B+,R/B,G+/R,B+/R+,BG/N+,W/BG,RB/BG" )
+
+   @  2, 2, 7,40 GET cItem RADIOGROUP aItems COLOR "W/B+,R/B,G/B+" MESSAGE "Select your OS"
+
+   @  8, 3 SAY "Married"
+   @  8,12 GET lx CHECKBOX COLOR "W/B+,W/B,W+/R,W/G+" MESSAGE "Is you married?"
+   @  9, 3 SAY "Singer"
+   @  9,12 GET ly CHECKBOX COLOR "W/B+,W/B,W+/R,W/G+" MESSAGE "Are you a singer"
+
+   READ MSG AT MaxRow(), 0, MaxCol() MSG COLOR "W/B+"
+
+   ? "Is the person married:", iif( lx, "Yes", "No" )
+   ? "Is the person a singer:", iif( ly, "Yes", "No" )
+   ? "Your OS is", cItem
+
+   RETURN NIL

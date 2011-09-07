@@ -1,33 +1,33 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-MEMVAR I
+MEMVAR i
 
-Function Main(Param1)
+PROCEDURE Main( Param1 )
 
-   local i, j, k
+   LOCAL i, j, k
 
-    i := 1
-    j := 2
+   i := 1
+   j := 2
 
-    Sub( @j )
+   Sub( @j )
 
-    QOut( j )
+   QOut( j )
 
-return NIL
+   RETURN
 
-Function Sub( j )
+FUNCTION Sub( j )
 
-    m->i := 1
-    j := 3
+   m->i := 1
+   j := 3
 
-return NIL
+   RETURN NIL
 
-Function arrvar()
+FUNCTION arrvar()
 
-   //local i := {1}
+// LOCAL i := { 1 }
 
-   i[1] := 2
+   i[ 1 ] := 2
 
-return NIL
+   RETURN NIL

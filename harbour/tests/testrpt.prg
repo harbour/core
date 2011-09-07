@@ -2,12 +2,12 @@
  * $Id$
  */
 
-FUNCTION MAIN()
+PROCEDURE Main()
 
-    USE test New
+   USE test NEW
 
-    Report FORM test
+   REPORT FORM test
 
-    USE
+   USE
 
-RETURN NIL
+   RETURN

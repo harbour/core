@@ -8,7 +8,8 @@ Function Reference
 =====================================
 
 cupsGetDefault() --> cPrinterName
-    Returns the CUPS name of the default printer on the default server.
+    Returns the CUPS name of the default printer on the default server,
+    or an empty string if no printer is configured as default printer.
 
 cupsGetDests() --> aPrinterNames
     Returns a list of all CUPS printers on the default server.

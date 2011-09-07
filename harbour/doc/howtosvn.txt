@@ -100,7 +100,7 @@ by Viktor Szakats
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
 
   For example:
-    2000-05-27 23:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+    2011-05-27 23:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -122,8 +122,16 @@ by Viktor Szakats
      - Removed
      ; Comment
 
-  Note that using these specific marks is preferred although not a
-  requirement.
+- In case of incompatible changes, add the word 'INCOMPATIBLE' to
+  the text.
+
+- Mark comments suggesting further fixes with '[TOFIX]', further
+  todos as '[TODO]', and update these to '[DONE]' when implemented.
+
+- Mark things to merge with different branch as '[TOMERGE x.0]'.
+  Changes these to '[MERGED x.0]' when merge is completed.
+
+- Do not use tabs and non-ASCII chars. Remove trailing spaces.
 
 - Leave an empty line between the header and body and one after the body.
 
@@ -131,7 +139,7 @@ by Viktor Szakats
 ================================================================
 
 Please read the following FAQ entry:
-http://harbour-project.org/faq/harbour25.html
+   http://harbour-project.org/faq/harbour25.html
 
 1.5 Things to do to avoid damaging the SourceForge SVN tree
 ===========================================================
