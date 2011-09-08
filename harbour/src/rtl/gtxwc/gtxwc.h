@@ -95,6 +95,7 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define XWC_DEFAULT_COLS             80
 #define XWC_MAX_BUTTONS               8
 #define XWC_MAX_CHAR_POINTS        1024
+#define XWC_MAX_CHAR_RECTS         ( XWC_MAX_CHAR_POINTS / 2 )
 
 /* Font definition */
 #define XWC_DEFAULT_FONT_HEIGHT      18
@@ -183,10 +184,10 @@ typedef HB_USHORT HB_GT_CELLTYPE;
                           KeyPressMask | KeyReleaseMask )
 
 /* Box char unicode values */
-#define HB_GTXVG_ARROW_R   0x0010
-#define HB_GTXVG_ARROW_L   0x0011
-#define HB_GTXVG_ARROW_U   0x001E
-#define HB_GTXVG_ARROW_D   0x001F
+#define HB_GTXWC_ARROW_R   0x0010 /* ARROW RIGHT */
+#define HB_GTXWC_ARROW_L   0x0011 /* ARROW LEFT */
+#define HB_GTXWC_ARROW_U   0x001E /* ARROW UP */
+#define HB_GTXWC_ARROW_D   0x001F /* ARROW DOWN */
 
 #define HB_GTXWC_DBL_LT    0x2554 /* BOX DRAWINGS DOUBLE DOWN AND RIGHT (Double left top angle) */
 #define HB_GTXWC_DBL_TD    0x2566 /* BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL (Double top with junction down) */
@@ -244,17 +245,17 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define HB_GTXWC_DBL_V_SNG_L 0x255F /* BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE (Double vertical single right junction) */
 #define HB_GTXWC_DBL_SNG_CRS 0x256B /* BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE (Double cross (single horiz) */
 
-#define HB_GTXVG_FULL      0x2588   /* FULL BLOCK */
-#define HB_GTXVG_FULL_B    0x2584   /* LOWER HALF BLOCK */
-#define HB_GTXVG_FULL_L    0x258C   /* LEFT HALF BLOCK */
-#define HB_GTXVG_FULL_R    0x2590   /* RIGHT HALF BLOCK */
-#define HB_GTXVG_FULL_T    0x2580   /* UPPER HALF BLOCK */
+#define HB_GTXWC_FULL      0x2588   /* FULL BLOCK */
+#define HB_GTXWC_FULL_B    0x2584   /* LOWER HALF BLOCK */
+#define HB_GTXWC_FULL_L    0x258C   /* LEFT HALF BLOCK */
+#define HB_GTXWC_FULL_R    0x2590   /* RIGHT HALF BLOCK */
+#define HB_GTXWC_FULL_T    0x2580   /* UPPER HALF BLOCK */
 
-#define HB_GTXVG_FILLER1   0x2591   /* LIGHT SHADE */
-#define HB_GTXVG_FILLER2   0x2592   /* MEDIUM SHADE */
-#define HB_GTXVG_FILLER3   0x2593   /* DARK SHADE */
+#define HB_GTXWC_FILLER1   0x2591   /* LIGHT SHADE */
+#define HB_GTXWC_FILLER2   0x2592   /* MEDIUM SHADE */
+#define HB_GTXWC_FILLER3   0x2593   /* DARK SHADE */
 
-#define HB_GTXVG_SQUARE    0x25A0   /* BLACK SQUARE */
+#define HB_GTXWC_SQUARE    0x25A0   /* BLACK SQUARE */
 
 /********************** Unix to graphic box translation ******************/
 

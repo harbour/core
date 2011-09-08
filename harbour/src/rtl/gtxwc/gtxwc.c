@@ -520,18 +520,18 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
    switch( usCh )
    {
-      case HB_GTXVG_FILLER1:
-      case HB_GTXVG_FILLER2:
-      case HB_GTXVG_FILLER3:
+      case HB_GTXWC_FILLER1:
+      case HB_GTXWC_FILLER2:
+      case HB_GTXWC_FILLER3:
       {
          int x, y, xx, yy, skip, start, mod;
 
-         if( usCh == HB_GTXVG_FILLER1 )
+         if( usCh == HB_GTXWC_FILLER1 )
          {
             skip = 4;
             start = mod = 1;
          }
-         else if( usCh == HB_GTXVG_FILLER2 )
+         else if( usCh == HB_GTXWC_FILLER2 )
          {
             skip = 2;
             start = 0;
@@ -563,11 +563,11 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
                size++;
             }
          }
-         type = CH_PTS;
+         type = size == 0 ? CH_NONE : CH_PTS;
          break;
       }
 
-      case HB_GTXVG_ARROW_R:
+      case HB_GTXWC_ARROW_R:
          i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
          pts[0].x = ( ( cellx - i ) >> 1 );
          pts[0].y = ( celly >> 1 ) - i;
@@ -579,7 +579,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_POLY;
          break;
 
-      case HB_GTXVG_ARROW_L:
+      case HB_GTXWC_ARROW_L:
          i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
          pts[0].x = ( ( cellx - i ) >> 1 ) + i;
          pts[0].y = ( celly >> 1 ) - i;
@@ -591,7 +591,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_POLY;
          break;
 
-      case HB_GTXVG_ARROW_U:
+      case HB_GTXWC_ARROW_U:
          i = HB_MIN( celly, cellx >> 1 );
          pts[0].x = ( cellx >> 1 ) - i;
          pts[0].y = ( ( celly - i ) >> 1 ) + i;
@@ -603,7 +603,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_POLY;
          break;
 
-      case HB_GTXVG_ARROW_D:
+      case HB_GTXWC_ARROW_D:
          i = HB_MIN( celly, cellx >> 1 );
          pts[0].x = ( cellx >> 1 ) - i;
          pts[0].y = ( ( celly - i ) >> 1 );
@@ -615,14 +615,14 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_POLY;
          break;
 
-      case HB_GTXVG_FULL:
+      case HB_GTXWC_FULL:
          inverse = HB_TRUE;
          type = CH_NONE;
          break;
 
-      case HB_GTXVG_FULL_B:
+      case HB_GTXWC_FULL_B:
          inverse = HB_TRUE;
-      case HB_GTXVG_FULL_T:
+      case HB_GTXWC_FULL_T:
          rect[0].x = 0;
          rect[0].y = 0;
          rect[0].width = cellx;
@@ -631,9 +631,9 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_RECT;
          break;
 
-      case HB_GTXVG_FULL_R:
+      case HB_GTXWC_FULL_R:
          inverse = HB_TRUE;
-      case HB_GTXVG_FULL_L:
+      case HB_GTXWC_FULL_L:
          rect[0].x = 0;
          rect[0].y = 0;
          rect[0].width = cellx/2;
@@ -1453,7 +1453,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          type = CH_SEG;
          break;
 
-      case HB_GTXVG_SQUARE:
+      case HB_GTXWC_SQUARE:
          rect[0].width = cellx - HB_MAX(cellx >> 2, 2);
          rect[0].height = rect[0].width;
          rect[0].x = ( ( cellx - rect[0].width ) >> 1 );
@@ -1473,7 +1473,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 */
    }
 
-   if( size > 0 )
+   if( type != CH_CHAR )
    {
       bxCh->type = type;
       bxCh->u.ch16 = usCh;
