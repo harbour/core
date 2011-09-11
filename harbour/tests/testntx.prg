@@ -2,72 +2,73 @@
  * $Id$
  */
 
-function main
-Local i:=0, block
-Field Last, First
+PROCEDURE Main()
 
-   Use test
-   Index On Left( Last,8 )+Left( First,8 ) To test1
-   Index On Left( Last,8 ) To test2
-   Index On Last To test3
-   Set Index To test1, test2, test3
-   
-   set order to 1
-   ? indexkey()
-   inkey(0)
-   Go Top
-   Do While !Eof()
+   LOCAL i := 0, block
+   FIELD Last, First
+
+   USE test
+   INDEX ON Left( Last, 8 ) + Left( First, 8 ) TO test1
+   INDEX ON Left( Last, 8 ) TO test2
+   INDEX ON Last TO test3
+   SET INDEX TO test1, test2, test3
+
+   SET ORDER TO 1
+   ? IndexKey()
+   Inkey( 0 )
+   GO TOP
+   DO WHILE !Eof()
       ? ++i, Last, First
-      skip
-   Enddo
+      SKIP
+   ENDDO
 
    ? "------------"
-   inkey(0)
-   skip -1
+   Inkey( 0 )
+   SKIP -1
 
-   Do While !Bof()
-      ? i--, Last, First
-      skip -1
-   Enddo
+   DO WHILE !Bof()
+      ? i-- , Last, First
+      SKIP -1
+   ENDDO
 
    i := 0
-   set order to 2
-   ? indexkey()
-   inkey(0)
-   Go Top
-   Do While !Eof()
+   SET ORDER TO 2
+   ? IndexKey()
+   Inkey( 0 )
+   GO TOP
+   DO WHILE !Eof()
       ? ++i, Last, First
-      skip
-   Enddo
+      SKIP
+   ENDDO
 
    ? "------------"
-   inkey(0)
-   skip -1
+   Inkey( 0 )
+   SKIP -1
 
-   Do While !Bof()
-      ? i--, Last, First
-      skip -1
-   Enddo   
+   DO WHILE !Bof()
+      ? i-- , Last, First
+      SKIP -1
+   ENDDO
 
    i := 0
-   set order to 3
-   ? indexkey()
-   inkey(0)
-   Go Top
-   Do While !Eof()
+   SET ORDER TO 3
+   ? IndexKey()
+   Inkey( 0 )
+   GO TOP
+   DO WHILE !Eof()
       ? ++i, Last, First
-      skip
-   Enddo
+      SKIP
+   ENDDO
 
    ? "------------"
-   inkey(0)
-   skip -1
+   Inkey( 0 )
+   SKIP -1
 
-   Do While !Bof()
-      ? i--, Last, First
-      skip -1
-   Enddo   
+   DO WHILE !Bof()
+      ? i-- , Last, First
+      SKIP -1
+   ENDDO
 
-   Use
+   USE
 
-return Nil
+   RETURN

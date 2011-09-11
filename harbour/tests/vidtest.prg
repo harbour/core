@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Harbour project video test code
  *
@@ -8,212 +9,225 @@
  *
  * Redirect the output of this program to a file.
  *
- * ie: VidTest >results
+ * ie: vidtest > results
  *
  */
 
 #include "box.ch"
 
 #ifndef __CLIP__
-    #ifdef FlagShip
-        #xtranslate hb_secondsCPU([<x>]) => secondsCPU([<x>])
-    #else
-        #ifndef __HARBOUR__
-            #xtranslate hb_secondsCPU([<x>]) => seconds([<x>])
-        #endif
-        #define EOL chr(13) + chr(10)
-    #endif
+   #ifdef FlagShip
+      #xtranslate hb_secondsCPU( [<x>] ) => secondsCPU( [<x>] )
+   #else
+      #ifndef __HARBOUR__
+         #xtranslate hb_secondsCPU( [<x>] ) => Seconds( [<x>] )
+      #endif
+      #define EOL Chr( 13 ) + Chr( 10 )
+   #endif
 #endif
+
 #ifndef EOL
-    #define EOL chr(10)
+#define EOL Chr( 10 )
 #endif
+
 #command ? => outstd(EOL);outerr(EOL)
 #command ? <xx,...> => outstd(<xx>, EOL);outerr(<xx>, EOL)
 
 #ifdef FlagShip
-    static nDispCount := 0
 
-    #xtranslate dispbegin() => iif((++nDispCount)==1, dispbegin(NIL),)
-    #xtranslate dispend()   => iif(nDispCount>0 .and. (--nDispCount)==0, dispend(NIL),)
+STATIC nDispCount := 0
+
+#xtranslate dispbegin() => iif( ( ++nDispCount ) == 1, DispBegin( NIL ), )
+#xtranslate dispend()   => iif( nDispCount > 0 .AND. ( --nDispCount ) == 0, DispEnd( NIL ), )
+
 #endif
 
-function main()
-    local aResult := {}
+FUNCTION Main()
 
-    Initialise()   // Initialise Screen Display
+   LOCAL aResult := {}
 
-    // Perform Tests
-    aadd(aResult, StaticText()   )
-    aadd(aResult, WindowBounce() )
-    aadd(aResult, ColourBoxes()  )
+   Initialise()   // Initialise Screen Display
 
-    // Display Results
-    Summary(aResult)
-return NIL
+   // Perform Tests
+   AAdd( aResult, StaticText()   )
+   AAdd( aResult, WindowBounce() )
+   AAdd( aResult, ColourBoxes()  )
 
+   // Display Results
+   Summary( aResult )
+
+   RETURN NIL
 
 // initialise the screen
-static function Initialise()
-    //SetMode(25,80)
-    set colour to "W+/BG"
-    dispbox(0,0,MaxRow(), MaxCol(), replicate(chr(176),9), "BG/B")
-return NIL
 
+STATIC FUNCTION Initialise()
+
+// SetMode( 25, 80 )
+   SET colour TO "W+/BG"
+   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( Chr(176 ),9 ), "BG/B" )
+
+   RETURN NIL
 
 // repeatedly display a string in the same position
 // this test determines how well the Screen i/o subsystem is
 // caching screen writes.
-static function StaticText()
-    local cResult
-    local r       := MaxRow() / 2
-    local str     := Version()
-    local c
-    local i       := 0
-    local nEnd    := 0
-    local nStart  := hb_secondsCPU()
 
-    str := "Hello World - From " + Left(str,At(" ",str)-1)
-    c   := (MaxCol()-len(str)) / 2
+STATIC FUNCTION StaticText()
 
-    for i := 1 to 5000
-        @ r, c say str
-    next i
+   LOCAL cResult
+   LOCAL r       := MaxRow() / 2
+   LOCAL str     := Version()
+   LOCAL c
+   LOCAL i
+   LOCAL nEnd
+   LOCAL nStart  := hb_secondsCPU()
 
-    nEnd := hb_secondsCPU()
+   str := "Hello World - From " + Left( str, At( " ", str ) - 1 )
+   c   := ( MaxCol() - Len( str ) ) / 2
 
-    cResult := "StaticText:  Iterations=5000, Time="+alltrim(str(nEnd-nStart))+ ;
-               "secs,  Average FPS = "+alltrim(str(round(5000 / (nEnd-nStart),0)))+" FPS"
-return cResult
+   FOR i := 1 TO 5000
+      @ r, c SAY str
+   NEXT
 
+   nEnd := hb_secondsCPU()
+
+   cResult := "StaticText:  Iterations=5000, Time=" + hb_ntos( nEnd - nStart ) + ;
+      "secs,  Average FPS = " + hb_ntos( Round( 5000 / ( nEnd - nStart ), 0 ) ) + " FPS"
+
+   RETURN cResult
 
 // Bounce a window around the screen a few thousand times
 // timing the duration, and determining the average FPS
-static function WindowBounce()
-    local cResult := ""
-    local nBoxes  := Min(MaxRow(), MaxCol()-7)-6 /* keep the box in bounds */
-    local x       := array(NBOXES)
-    local y       := array(NBOXES)
-    local dx      := array(NBOXES)
-    local dy      := array(NBOXES)
-    local clr     := array(NBOXES)
-    local scr     := array(NBOXES)
-    local nFrames := 0
-    local nStart  := 0
-    local nEnd    := 0
-    local i       := 0
-    local aCol    := {"N", "B", "G", "BG", "R", "RB", "GR", "W", ;
-                      "N*","B*","G*","BG*","R*","RB*","GR*","W*" }
 
-    // initialise boxes
-    for i := 1 to nBoxes
-        x[i]   := i
-        y[i]   := i-1
-        dx[i]  := -1
-        dy[i]  := 1
-        clr[i] := "W+/"+aCol[(i-1)%16+1]
-    next i
+STATIC FUNCTION WindowBounce()
 
-    nStart := hb_secondsCPU()
-    dispbegin()
+   LOCAL cResult
+   LOCAL nBoxes  := Min( MaxRow(), MaxCol() - 7 ) - 6 /* keep the box in bounds */
+   LOCAL x       := Array( NBOXES )
+   LOCAL y       := Array( NBOXES )
+   LOCAL dx      := Array( NBOXES )
+   LOCAL dy      := Array( NBOXES )
+   LOCAL clr     := Array( NBOXES )
+   LOCAL scr     := Array( NBOXES )
+   LOCAL nFrames := 0
+   LOCAL nStart
+   LOCAL nEnd
+   LOCAL i
+   LOCAL aCol    := { "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
+                      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
 
-    do while nFrames < 5000
+   // initialise boxes
+   FOR i := 1 TO nBoxes
+      x[ i ]   := i
+      y[ i ]   := i - 1
+      dx[ i ]  := -1
+      dy[ i ]  := 1
+      clr[ i ] := "W+/" + aCol[ ( i - 1 ) % 16 + 1 ]
+   NEXT
 
-        for i := 1 to nBoxes
-            scr[i] := SaveScreen(x[i], y[i], x[i]+6, y[i]+12)
-            @ x[i], y[i], x[i]+6, y[i]+12 box B_SINGLE+" " color clr[i]
-        next i
+   nStart := hb_secondsCPU()
+   DispBegin()
 
-        dispend()
-        dispbegin()
+   DO WHILE nFrames < 5000
 
-        for i := nBoxes to 1 step -1
-            // remove boxes from screen
-            RestScreen(x[i], y[i], x[i]+6, y[i]+12, scr[i])
+      FOR i := 1 TO nBoxes
+         scr[ i ] := SaveScreen( x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12 )
+         @ x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12 BOX B_SINGLE + " " COLOR clr[ i ]
+      NEXT
 
-            // move
-            x[i] += dx[i]
-            y[i] += dy[i]
-            if x[i] <= 0 .or. x[i]+6 >= MaxRow()
-                dx[i] := -dx[i]
-            endif
-            if y[i] <= 0 .or. y[i]+12 >= MaxCol()
-                dy[i] := -dy[i]
-            endif
-        next i
+      DispEnd()
+      DispBegin()
 
-        ++nFrames
-    enddo
+      FOR i := nBoxes TO 1 STEP -1
+         // remove boxes from screen
+         RestScreen( x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12, scr[ i ] )
 
-    dispend()
-    nEnd := hb_secondsCPU()
+         // move
+         x[ i ] += dx[ i ]
+         y[ i ] += dy[ i ]
+         IF x[ i ] <= 0 .OR. x[ i ] + 6 >= MaxRow()
+            dx[ i ] := - dx[ i ]
+         ENDIF
+         IF y[ i ] <= 0 .OR. y[ i ] + 12 >= MaxCol()
+            dy[ i ] := - dy[ i ]
+         ENDIF
+      next i
 
-    cResult := "WindowBounce:Iterations="+alltrim(str(nFrames))+", Time="+alltrim(str(nEnd-nStart))+ ;
-               "secs,  Average FPS = "+alltrim(str(round(nFrames / (nEnd-nStart),0)))+" FPS"
+      ++nFrames
+   ENDDO
 
-return cResult
+   DispEnd()
+   nEnd := hb_secondsCPU()
 
+   cResult := "WindowBounce:Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
+      "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"
+
+   RETURN cResult
 
 // Display colour boxes,  repeatedly, this will determine
 // how efficiently the screen i/o subsystem is caching the
 // dispbegin()'s and dispend()'s
-static function ColourBoxes()
-    local cResult := ""
-    local nFrames := 0
-    local nStart  := 0
-    local nEnd    := 0
-    local i       := 0
-    local nDir    := 1
-    local nDepth  := 0
-    local aCol    := {"N", "B", "G", "BG", "R", "RB", "GR", "W", ;
-                      "N*","B*","G*","BG*","R*","RB*","GR*","W*" }
 
-    nStart := hb_secondsCPU()
-    // display boxes to screen
+STATIC FUNCTION ColourBoxes()
 
-    do while nFrames < 5000
-        if nDir == 1
-            dispbegin()
-        else
-            dispend()
-        endif
+   LOCAL cResult
+   LOCAL nFrames := 0
+   LOCAL nStart
+   LOCAL nEnd
+   LOCAL i
+   LOCAL nDir    := 1
+   LOCAL nDepth  := 0
+   LOCAL aCol    := { "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
+                      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
 
-        nDepth += nDir
+   nStart := hb_secondsCPU()
+   // display boxes to screen
 
-        if nDepth > 4 .or. nDepth < 1
-            nDir := -nDir
-        endif
-        i := nFrames %16 +1
-        dispbox(5,10, MaxRow()-5, MaxCol()-10, ;
-                      replicate(chr(i+64),9),;
-                      "W+/"+aCol[i] )
-        ++nFrames
-    enddo
+   DO WHILE nFrames < 5000
+      IF nDir == 1
+         DispBegin()
+      ELSE
+         DispEnd()
+      ENDIF
 
-    // remove any nested dispbegins()
-    do while nDepth > 0
-       dispend()
-       nDepth--
-    enddo
+      nDepth += nDir
 
-    nEnd := hb_secondsCPU()
+      IF nDepth > 4 .OR. nDepth < 1
+         nDir := - nDir
+      ENDIF
+      i := nFrames % 16 + 1
+      DispBox( 5, 10, MaxRow() - 5, MaxCol() - 10, ;
+         Replicate( Chr( i + 64 ), 9 ), ;
+         "W+/" + aCol[ i ] )
+      ++nFrames
+   ENDDO
 
-    cResult := "ColourBoxes: Iterations="+alltrim(str(nFrames))+", Time="+alltrim(str(nEnd-nStart))+ ;
-               "secs,  Average FPS = "+alltrim(str(round(nFrames / (nEnd-nStart),0)))+" FPS"
+   // remove any nested dispbegins()
+   DO WHILE nDepth > 0
+      DispEnd()
+      nDepth--
+   ENDDO
 
-return cResult
+   nEnd := hb_secondsCPU()
 
+   cResult := "ColourBoxes: Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
+      "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"
+
+   RETURN cResult
 
 // display results
-static function Summary(aResult)
-    local i := 0
 
-    clear screen
-    ? "Resolution:  " + Ltrim(str( MaxRow()+1 )) + " x " + Ltrim(str( MaxCol()+1 )) + " " + Version()
-    for i := 1 to len(aResult)
-        ? aResult[i]
-    next i
-    ?
-    ? "press any key to continue"
-    inkey(0)
+STATIC FUNCTION Summary( aResult )
 
-return aResult
+   LOCAL i
+
+   CLEAR SCREEN
+   ? "Resolution:  " + hb_ntos( MaxRow() + 1 ) + " x " + hb_ntos( MaxCol() + 1 ) + " " + Version()
+   FOR i := 1 TO Len( aResult )
+      ? aResult[ i ]
+   NEXT
+   ?
+   ? "press any key to continue"
+   Inkey( 0 )
+
+   RETURN aResult

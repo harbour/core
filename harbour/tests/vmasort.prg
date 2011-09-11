@@ -1,85 +1,85 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-function Main( nPass )
+PROCEDURE Main( nPass )
 
-  LOCAL aTest
-  LOCAL aOrig
+   LOCAL aTest
+   LOCAL aOrig
 
-  if nPass == NIL
-    nPass := 1
-  else
-    nPass := Val( nPass )
-  endif
+   IF nPass == NIL
+      nPass := 1
+   ELSE
+      nPass := Val( nPass )
+   ENDIF
 
-  ? "Testing aSort with " + Str( nPass ) + " loops."
-  ?
-  aTest := aMkArray( nPass )
-  aOrig := aClone( aTest )
+   ? "Testing aSort with " + Str( nPass ) + " loops."
+   ?
+   aTest := aMkArray( nPass )
+   aOrig := AClone( aTest )
 
-  set( _SET_DATEFORMAT, "mm/dd/yyyy" )
+   SET DATE ANSI
 
-  ? "Original.....:", aDump( aOrig )
-  ? "Asort.c......:", aDump( aSort( aTest ) )
-//  ? "Asort.c.block:", aDump( aSort( aTest, , , {| x, y | x < y } ) )
+   ? "Original.....:", aDump( aOrig )
+   ? "Asort.c......:", aDump( ASort( aTest ) )
+// ? "Asort.c.block:", aDump( aSort( aTest, , , {| x, y | x < y } ) )
 
-return nil
+   RETURN
 
-static function aMkArray( nPass )
+STATIC FUNCTION aMkArray( nPass )
 
-  LOCAL aData := {}
-  LOCAL n
-  LOCAL nMult := 200
-  LOCAL nMid  := ( nMult / 2 ) + 1
-  LOCAL nMax  := nPass * nMult
+   LOCAL aData := {}
+   LOCAL n
+   LOCAL nMult := 200
+   LOCAL nMid  := ( nMult / 2 ) + 1
+   LOCAL nMax  := nPass * nMult
 
-  for n := 1 to nMax
-    aAdd( aData, NIL )
-    aAdd( aData, nMid - n )
-    aAdd( aData, Date() - n )
-    aAdd( aData, iif( n % 2 == 0, .f., .t. ) )
-    aAdd( aData, Replicate( Chr( 64 + ( n % 256 ) ) , nPass ) )
-    aAdd( aData, {|| n } )
-    aAdd( aData, Array( n ) )
-    aAdd( aData, ErrorNew() )
-  next
+   FOR n := 1 TO nMax
+      AAdd( aData, NIL )
+      AAdd( aData, nMid - n )
+      AAdd( aData, Date() - n )
+      AAdd( aData, iif( n % 2 == 0, .F., .T. ) )
+      AAdd( aData, Replicate( Chr( 64 + ( n % 256 ) ), nPass ) )
+      AAdd( aData, {|| n } )
+      AAdd( aData, Array( n ) )
+      AAdd( aData, ErrorNew() )
+   NEXT
 
-return aData
+   RETURN aData
 
-function aDump( a )
+FUNCTION aDump( a )
 
-  local cStr := ""
-  local n := len( a )
-  local i
+   LOCAL cStr := ""
+   LOCAL n := Len( a )
+   LOCAL i
 
-  for i := 1 to n
-    cStr += alltrim( xToStr( a[i] ) ) + " "
-  next
+   FOR i := 1 TO n
+      cStr += AllTrim( xToStr( a[ i ] ) ) + " "
+   NEXT
 
-return cStr
+   RETURN cStr
 
-function xToStr( xValue )
+FUNCTION xToStr( xValue )
 
-  LOCAL cType := ValType( xValue )
+   LOCAL cType := ValType( xValue )
 
-  do case
-    case cType == "C" .or. cType == "M"
-      return xValue
-    case cType == "N"
-      return AllTrim( Str( xValue ) )
-    case cType == "D"
-      return DToC( xValue )
-    case cType == "L"
-      return iif( xValue, ".T.", ".F." )
-    case cType == "U"
-      return "NIL"
-    case cType == "A"
-      return "{.}"
-    case cType == "B"
-      return "{|| }"
-    case cType == "O"
-      return "[O]"
-  endcase
+   DO CASE
+   CASE cType == "C" .OR. cType == "M"
+      RETURN xValue
+   CASE cType == "N"
+      RETURN AllTrim( Str( xValue ) )
+   CASE cType == "D"
+      RETURN DToC( xValue )
+   CASE cType == "L"
+      RETURN iif( xValue, ".T.", ".F." )
+   CASE cType == "U"
+      RETURN "NIL"
+   CASE cType == "A"
+      RETURN "{.}"
+   CASE cType == "B"
+      RETURN "{|| }"
+   CASE cType == "O"
+      RETURN "[O]"
+   ENDCASE
 
-return xValue
+   RETURN xValue

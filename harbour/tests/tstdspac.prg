@@ -1,37 +1,37 @@
 /*
+ * $Id$
+ */
 
- $Id$
+/*
+   This program demonstrates that the 4 diskspace related functions work
+   correctly for disks of any size.
 
- tstdspac
+   Certain os's may allow limits to the amount of disk space available to
+   a user.  If that is the case, you should see a difference between
+   the return value of DiskSpace() and DiskFree().
 
- This program demonstrates that the 4 diskspace related functions work
- correctly for disks of any size.
+   Currently, Disk quota's are only implimented for NT.
 
- Certain os's may allow limits to the amount of disk space available to
- a user.  If that is the case, you should see a difference between
- the return value of DiskSpace() and DiskFree().
+   NOTE: Unlike Clipper, these functions return a floating point number!
 
- Currently, Disk quota's are only implimented for NT.
+   Written by Paul Tucker {ptucker@sympatico.ca>
+   www - http://harbour-project.org
 
- NOTE: Unlike Clipper, these functions return a floating point number!
-
- Written by Paul Tucker {ptucker@sympatico.ca>
- www - http://harbour-project.org
-
- This test program placed in the public domain
+   This test program placed in the public domain
 */
 
 #include "fileio.ch"
 
-proc main( cDisk )
-  if empty( cDisk )
+PROCEDURE Main( cDisk )
+
+   IF Empty( cDisk )
       cDisk := "0"
-  Endif
-  cDisk := Val( cDisk )
+   ENDIF
+   cDisk := Val( cDisk )
 
-? "Bytes available on disk: " + Transform( diskspace(cDisk, HB_DISK_FREE ),"999,999,999,999")
-? "Bytes available for use: " + Transform( diskspace(cDisk, HB_DISK_AVAIL ),"999,999,999,999")
-? "             Bytes used: " + Transform( diskspace(cDisk, HB_DISK_USED ),"999,999,999,999")
-? " Total bytes on disk "+PadL(cDisk,2)+": " + Transform( diskspace(cDisk, HB_DISK_TOTAL ),"999,999,999,999")
+   ? "Bytes available on disk: " + Transform( DiskSpace( cDisk, HB_DISK_FREE ), "999,999,999,999" )
+   ? "Bytes available for use: " + Transform( DiskSpace( cDisk, HB_DISK_AVAIL ), "999,999,999,999" )
+   ? "             Bytes used: " + Transform( DiskSpace( cDisk, HB_DISK_USED ), "999,999,999,999" )
+   ? " Total bytes on disk " + PadL( cDisk, 2 ) + ": " + Transform( DiskSpace( cDisk, HB_DISK_TOTAL ), "999,999,999,999" )
 
-  return
+   RETURN

@@ -11929,7 +11929,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
    LOCAL cSrc := MemoRead( cSrcName )
    LOCAL cDst
    LOCAL aDst := {}
-   LOCAL tmp
+   LOCAL tmp, tmp1
    LOCAL cLine
    LOCAL cSetting
    LOCAL cValue
@@ -11966,7 +11966,11 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
             CASE ".c"
             CASE ".prg"
                IF !( "%HB_INSTALL%\" $ cFile )
-                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+                  tmp := StrTran( cFile, "%HOME%\" )
+                  IF " " $ tmp
+                     tmp := Chr( 34 ) + tmp + Chr( 34 )
+                  ENDIF
+                  AAdd( aDst, tmp )
                ENDIF
                EXIT
             CASE ".lib"
@@ -11974,17 +11978,29 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
                   !( "%HB_LIB_INSTALL%\" $ cFile )
                   cFile := StrTran( cFile, "%HOME%\" )
-                  IF !( hb_FNameDir( cFile ) $ hLIBPATH )
+                  IF !( hb_FNameDir( cFile ) $ hLIBPATH ) .AND. ! Empty( hb_FNameDir( cFile ) )
                      hLIBPATH[ hb_FNameDir( cFile ) ] := NIL
                   ENDIF
-                  AAdd( aDst, "-l" + hb_FNameName( cFile ) )
+                  tmp := hb_FNameName( cFile )
+                  IF hb_FNameExt( cFile ) == ".a" .AND. Left( tmp, 3 ) == "lib"
+                     tmp := SubStr( tmp, 4 )
+                  ENDIF
+                  tmp := "-l" + tmp
+                  IF " " $ tmp
+                     tmp := Chr( 34 ) + tmp + Chr( 34 )
+                  ENDIF
+                  AAdd( aDst, tmp )
                ENDIF
                EXIT
             CASE ".obj"
             CASE ".o"
                IF !( "%C_LIB_INSTALL%\" $ cFile ) .AND. ;
                   !( "%HB_LIB_INSTALL%\" $ cFile )
-                  AAdd( aDst, StrTran( cFile, "%HOME%\" ) )
+                  tmp := StrTran( cFile, "%HOME%\" )
+                  IF " " $ tmp
+                     tmp := Chr( 34 ) + tmp + Chr( 34 )
+                  ENDIF
+                  AAdd( aDst, tmp )
                ENDIF
                EXIT
             ENDSWITCH
@@ -12009,10 +12025,17 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                   EXIT
                CASE "Include"
                   FOR EACH tmp IN aValue
-                     IF Left( tmp, 2 ) == "-I"
-                        tmp := SubStr( tmp, 3 )
+                     IF !( "%HB_INSTALL%\" $ tmp )
+                        IF Left( tmp, 2 ) == "-I"
+                           tmp := SubStr( tmp, 3 )
+                        ENDIF
+                        tmp := StrTran( StrTran( tmp, '"' ), "%HOME%\" )
+                        FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
+                           IF ! Empty( tmp1 )
+                              AAdd( aDst, "-incpath=" + tmp1 )
+                           ENDIF
+                        NEXT
                      ENDIF
-                     AAdd( aDst, "-incpath=" + StrTran( StrTran( tmp, '"' ), "%HOME%\" ) )
                   NEXT
                   EXIT
                CASE "Define"

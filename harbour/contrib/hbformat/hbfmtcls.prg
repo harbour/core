@@ -181,7 +181,7 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
                       "Array,Asc,AScan,ASize,ASort,At,Bin2I,Bin2L,Bin2W,Bof,Browse,CDow,Chr,CMonth,Col,CToD,CurDir," +;
                       "Date,Day,dbAppend,dbClearFil,dbClearInd,dbCloseAll,dbCloseArea,dbCommit,dbCreate,dbDelete,dbEdit,dbEval,Dbf,dbFilter,dbGoBottom,dbGoto,dbRecall,dbReindex,dbRelation,dbRLock,dbRSelect,dbRunLock," +;
                       "dbSeek,dbSelectArea,dbSetDriver,dbSetFilter,dbSetIndex,dbSetOrder,dbSetRelat,dbSkip,dbStruct,dbUnlock,dbUseArea,Deleted,Descend,DevOut,DevPos," +;
-                      "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DosError,Dow,Dtoc,Dtos,Empty,Eof,ErrorBlock,ErrorLevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName," +;
+                      "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DosError,Dow,DToC,DToS,Empty,Eof,ErrorBlock,ErrorLevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName," +;
                       "FieldPos,FieldPut,FieldWBlock,File,FkLabel,FkMax,FLock,FOpen,Found,FRead,FReadStr,FRename,FSeek,FWrite,GetEnv,HardCR,Header,iif,IndexExt,IndexKey,IndexOrd,Inkey,Int,IsAlpha,ISARRAY,ISCHARACTER," +;
                       "ISDATE,IsDigit,ISLOGICAL,IsLower,ISNUMBER,IsPrinter,IsUpper,I2Bin,L2Bin,LastKey,LastRec,Left,Len,Lower,LTrim,LUpdate,MakeDir,Max,MaxCol,MaxRow,MCol,MemoEdit,MemoLine,MemoRead," +;
                       "Memory,MemoTran,MemoWrite,MemVarBlock,Min,MLCount,MLCToPos,MLPos,Mod,Month,MPosToLC,NetErr,NetName,NextKey,NoSnow,OS,OrdBagExt,OrdBagName,OrdCreate,OrdDestroy,OrdFor,OrdKey,OrdListAdd," +;

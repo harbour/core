@@ -2,47 +2,53 @@
  * $Id$
  */
 
-#define EOL chr(13)+chr(10)
-#command ? [<x,...>] => outstd(EOL)[;outstd(<x>)]
-proc main()
-   ? OS(), VERSION()
-   if !file("_tst.dbf")
-      dbCreate("_tst",{{"F1","C",1,0}})
-   endif
-   if !file("_tst2.dbf")
-      dbCreate("_tst2",{{"F1","C",1,0}})
-   endif
+#define EOL Chr( 13 ) + Chr( 10 )
+#command ? [<x,...>] => OutStd( EOL )[;OutStd( <x> )]
+
+PROCEDURE Main()
+
+   ? OS(), Version()
+   IF ! hb_FileExists( "_tst.dbf" )
+      dbCreate( "_tst", { { "F1","C",1,0 } } )
+   ENDIF
+   IF ! hb_FileExists( "_tst2.dbf" )
+      dbCreate( "_tst2", { { "F1","C",1,0 } } )
+   ENDIF
 
    USE _tst NEW ALIAS "ONE" EXCLUSIVE
-   ? select(), alias(), netErr(), used()
+   ? Select(), Alias(), NetErr(), Used()
    ?
 
-   mkTest( .T., "NORDD",, "TWO", .T., .F. )
-   mkTest( .T., "DBF",, "TWO", .T., .F. )
-   mkTest( .T., "DBF", "", "TWO", .T., .F. )
-   mkTest( .T., "DBF", "nofile", "TWO", .T., .F. )
-   mkTest( .T., "DBF", "_tst2", "ONE", .T., .F. )
-   mkTest( .T., "DBF", "_tst", "ONE", .T., .F. )
-   mkTest( .T., "DBF", "_tst", "TWO", .T., .F. )
+   mkTest( .T. , "NORDD", , "TWO", .T. , .F. )
+   mkTest( .T. , "DBF", , "TWO", .T. , .F. )
+   mkTest( .T. , "DBF", "", "TWO", .T. , .F. )
+   mkTest( .T. , "DBF", "nofile", "TWO", .T. , .F. )
+   mkTest( .T. , "DBF", "_tst2", "ONE", .T. , .F. )
+   mkTest( .T. , "DBF", "_tst", "ONE", .T. , .F. )
+   mkTest( .T. , "DBF", "_tst", "TWO", .T. , .F. )
    ?
-   dbUseArea( .T., "DBF", "_tst", "ONE", .T., .F. )
-   ? select(), alias(), netErr(), used()
-   dbUseArea( .T., "DBF", "_tst", "TWO", .T., .F. )
-   ? select(), alias(), netErr(), used()
+   dbUseArea( .T. , "DBF", "_tst", "ONE", .T. , .F. )
+   ? Select(), Alias(), NetErr(), Used()
+   dbUseArea( .T. , "DBF", "_tst", "TWO", .T. , .F. )
+   ? Select(), Alias(), NetErr(), Used()
    ?
    dbSelectArea( 1 )
-   mkTest( .F., "NORDD",, "TWO", .T., .F. )
+   mkTest( .F. , "NORDD", , "TWO", .T. , .F. )
    ?
-return
 
-proc mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
-local cbErr:=errorBlock({|oErr|break(oErr)}), oErr
-netErr(.f.)
-begin sequence
-   dbUseArea( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
-recover using oErr
-   ? "Error:", oErr:subCode, oErr:description, oErr:operation, oErr:osCode
-end
-? select(), alias(), netErr(), used()
-errorBlock(cbErr)
-return
+   RETURN
+
+PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
+
+   LOCAL cbErr := ErrorBlock( { |oErr|break( oErr ) } ), oErr
+
+   NetErr( .F. )
+   BEGIN SEQUENCE
+      dbUseArea( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
+   RECOVER USING oErr
+      ? "Error:", oErr:subCode, oErr:description, oErr:operation, oErr:osCode
+   END
+   ? Select(), Alias(), NetErr(), Used()
+   ErrorBlock( cbErr )
+
+   RETURN

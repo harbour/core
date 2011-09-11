@@ -4,12 +4,12 @@
 
 INIT PROCEDURE Init()
 
-  ? "In Init"
+   ? "In Init"
 
-RETURN
+   RETURN
 
-PROCEDURE MAIN()
+PROCEDURE Main()
 
    ? "Should NEVER see this message!!!"
 
-RETURN
+   RETURN

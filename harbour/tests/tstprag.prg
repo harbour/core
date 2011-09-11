@@ -6,31 +6,39 @@
 #pragma TracePragmas=On
 #pragma ExitSeverity=1
 
-/* Unknow pragmas will be ignored silently */
+/* Unknown pragmas will be ignored silently */
 #pragma BadPragma=off
 #pragma /Y+
 
-function Main()
+FUNCTION Main()
 
 #pragma Shortcut=On
+
 #pragma Shortcut= Off
+
 #pragma Shortcut = On
+
 #pragma Shortcut(OFF)
+
 #pragma Shortcut( On)
+
 #pragma Shortcut( OFF )
+
 #pragma Shortcut( On )
+
 #pragma Shortcut( OFF )
+
 #pragma Shortcut( ON
 
-/* or #pragma /Z+ */
+   /* or #pragma /Z+ */
 
-  if .t. .and. .f.
-    ? "Always"
-  endif
+   IF .T. .AND. .F.
+      ? "Always"
+   ENDIF
 
-  if .f. .and. .t.
-    ? "Never"
-  endif
+   IF .F. .AND. .T.
+      ? "Never"
+   ENDIF
 
 #pragma /Z-
 /* or #pragma Shortcut=Off */
@@ -46,4 +54,4 @@ function Main()
 /* Pragmas with bad values will cause an error  */
 #pragma WarningLevel=8
 
-return nil
+   RETURN NIL

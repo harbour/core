@@ -1,15 +1,15 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // while loop test
 
-function Main()
+PROCEDURE Main()
 
-   local x := 0
+   LOCAL x := 0
 
-   while x++ < 1000
+   DO WHILE x++ < 1000
       QOut( x )
-   end
+   ENDDO
 
-return nil
+   RETURN

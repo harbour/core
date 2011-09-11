@@ -2,12 +2,12 @@
  * $Id$
  */
 
-FUNCTION MAIN()
-    
-    USE test New
+PROCEDURE Main()
 
-    LABEL FORM test
+   USE test NEW
 
-    USE
+   LABEL FORM test
 
-RETURN NIL
+   USE
+
+   RETURN

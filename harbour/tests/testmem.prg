@@ -1,14 +1,14 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing memory release
 
-function main()
-    local a, b
+PROCEDURE main()
 
-    a := "Hello"
-    b := 2
+   LOCAL a, b
 
-return nil
+   a := "Hello"
+   b := 2
 
+   RETURN

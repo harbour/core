@@ -1,10 +1,10 @@
 //NOTEST
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-// ; Donated to the public domain by
-//   Viktor Szakats (harbour.01 syenar.hu)
+/* Donated to the public domain by
+   Viktor Szakats (harbour.01 syenar.hu) */
 
 FUNCTION Main()
 

@@ -1,9 +1,7 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-//
-// tstColor
 //
 // This program demonstrates that setColor() works with
 // Set( _SET_COLOR ) and also that the internal representation
@@ -21,31 +19,32 @@
 #include "color.ch"
 #include "set.ch"
 
-proc main
-   Local cColor := "r+/bg*,rg*/ng+,w/n,b+/w,rg/b,w+/n*"
+PROCEDURE Main()
 
-   ? "original set ", set(_SET_COLOR )
-   ? "should match ", setColor( cColor )
+   LOCAL cColor := "r+/bg*,rg*/ng+,w/n,b+/w,rg/b,w+/n*"
+
+   ? "original set ", Set( _SET_COLOR )
+   ? "should match ", SetColor( cColor )
    ? "input 1      ", cColor
-   ? "return       ", setColor("1/7,9/15")
+   ? "return       ", SetColor( "1/7,9/15" )
    ? "input 2      ", "1/7,9/15"
-   ? "return       ", setColor()
-   ? "final set    ", set(_SET_COLOR )
+   ? "return       ", SetColor()
+   ? "final set    ", Set( _SET_COLOR )
 
-   SetColor("BG/N, N/BG")
+   SetColor( "BG/N, N/BG" )
    ? "Hello1"
    ColorSelect( CLR_ENHANCED )
    ? "Hello2"
    ColorSelect( CLR_STANDARD )
    ? "Hello3"
    ColorSelect( CLR_ENHANCED )
-   SetColor("GR/N, N/GR")
+   SetColor( "GR/N, N/GR" )
    ? "Hello4"
    ColorSelect( CLR_ENHANCED )
    ? "Hello5"
    ColorSelect( CLR_STANDARD )
    ? "Hello6"
-   SetColor("B/N, N/B")
+   SetColor( "B/N, N/B" )
    ? "Hello7"
 
    RETURN

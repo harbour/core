@@ -9,44 +9,44 @@ FUNCTION Main()
 
    CLS
 
-   qOut( "Testing Harbour run-time preprocessing" )
-   qOut( "======================================" )
-   qOut( "" )
+   QOut( "Testing Harbour run-time preprocessing" )
+   QOut( "======================================" )
+   QOut( "" )
 
    cString := "@ 10, 10 SAY 'Hello!'"
-   qOut( cString )
-   qOut( __Preprocess( cString ) )
-   qOut( "" )
+   QOut( cString )
+   QOut( __Preprocess( cString ) )
+   QOut( "" )
 
    cString := "? 'Hello mom'"
-   qOut( cString )
-   qOut( __Preprocess( cString ) )
-   qOut( "" )
+   QOut( cString )
+   QOut( __Preprocess( cString ) )
+   QOut( "" )
 
    cString := 'SET RELATION TO Something INTO MySelf'
-   qOut( cString )
-   qOut( __Preprocess( cString ) )
-   qOut( "" )
+   QOut( cString )
+   QOut( __Preprocess( cString ) )
+   QOut( "" )
 
    cString := 'SET RELATION ADDITIVE TO Something INTO YourSelf'
-   qOut( cString )
-   qOut( __Preprocess( cString ) )
-   qOut( "" )
+   QOut( cString )
+   QOut( __Preprocess( cString ) )
+   QOut( "" )
 
    cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
-   qOut( cString )
+   QOut( cString )
    IF __ppAddRule( cString )
-      qOut( "Rule added successfully !" )
+      QOut( "Rule added successfully !" )
    ELSE
-      qOut( "Rule addition failed ..." )
+      QOut( "Rule addition failed ..." )
    ENDIF
 
    cString := 'DEFAULT x := 100'
-   qOut( cString )
-   qOut( __Preprocess( cString ) )
-   qOut( "" )
+   QOut( cString )
+   QOut( __Preprocess( cString ) )
+   QOut( "" )
 
-   qOut( "Press <Enter>..." )
+   QOut( "Press <Enter>..." )
    __Accept( "" )
 
    CLS
@@ -62,22 +62,22 @@ FUNCTION Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      qOut( iif( j = 1, "Before", "After" ) + " __Preprocess()" )
-      qOut( "===================" )
-      qOut( "" )
-      FOR i := 1 TO len( aScript )
+      QOut( iif( j = 1, "Before", "After" ) + " __Preprocess()" )
+      QOut( "===================" )
+      QOut( "" )
+      FOR i := 1 TO Len( aScript )
 
-         ? iif( j = 1, aScript[i], __Preprocess( aScript[i] ) )
+         ? iif( j = 1, aScript[ i ], __Preprocess( aScript[ i ] ) )
 
       NEXT
-      qOut( "" )
-      qOut( "Press <Enter> key..." )
+      QOut( "" )
+      QOut( "Press <Enter> key..." )
       __Accept( "" )
       CLS
    NEXT
 
    RETURN NIL
 
-Exit PROCEDURE ExitTest
+EXIT PROCEDURE ExitTest()
    __PP_Free()
-Return
+   RETURN

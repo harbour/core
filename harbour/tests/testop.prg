@@ -59,26 +59,26 @@
 
 //----------------------------------------------------------------------------//
 
-function Main()
+PROCEDURE Main()
 
-   local oCar := TCar():New( "red", 2 )
-   local oPetrol
+   LOCAL oCar := TCar():New( "red", 2 )
+   LOCAL oPetrol
 
-   oCar = oCar + oPetrol
+   oCar := oCar + oPetrol
 
-return nil
+   RETURN
 
 //----------------------------------------------------------------------------//
 
-CLASS TCar
+CREATE CLASS TCar
 
-   DATA cColor
-   DATA nDoors
-   DATA oGas
+   VAR cColor
+   VAR nDoors
+   VAR oGas
 
    METHOD New( cColor, nDoors ) CONSTRUCTOR
 
-   METHOD Sum( oObject ) OPERATOR '+'
+   METHOD SUM( oObject ) OPERATOR '+'
 
 ENDCLASS
 
@@ -86,25 +86,25 @@ ENDCLASS
 
 METHOD New( cColor, nDoors ) CLASS TCar
 
-   if cColor == nil
-      cColor = "White"
-   endif
-   if nDoors == nil
-      nDoors = 4
-   endif
+   IF cColor == NIL
+      cColor := "White"
+   ENDIF
+   IF nDoors == NIL
+      nDoors := 4
+   ENDIF
 
-   ::cColor = cColor
-   ::nDoors = nDoors
+   ::cColor := cColor
+   ::nDoors := nDoors
 
-return Self
+   RETURN Self
 
 //----------------------------------------------------------------------------//
 
-METHOD Sum( oObject ) CLASS TCar
+METHOD SUM( oObject ) CLASS TCar
 
    Alert( "+ has a special meaning and " + ;
-          "functionality for TCar Class objects!!!" )
+      "functionality for TCar Class objects!!!" )
 
-return nil
+   RETURN NIL
 
 //----------------------------------------------------------------------------//
