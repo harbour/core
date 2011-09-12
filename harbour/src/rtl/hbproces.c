@@ -751,7 +751,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
       iRetStatus = waitpid( pid, &iStatus, fWait ? 0 : WNOHANG );
       hb_fsSetIOError( iRetStatus >= 0, 0 );
 #ifdef ERESTARTSYS
-      if( iRetStatus < 0 && errno != ERESTARTSYS )
+      if( iRetStatus < 0 && hb_fsOsError() != ( HB_ERRCODE ) ERESTARTSYS )
 #else
       if( iRetStatus < 0 )
 #endif

@@ -950,7 +950,8 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       hb_fsSetIOError( iResult >= 0, 0 );
       if( nTimeOut < 0 && iResult == 0 )
          continue;
-      if( iResult != -1 || nTimeOut == 0 || errno != EINTR ||
+      if( iResult != -1 || nTimeOut == 0 ||
+          hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
           hb_vmRequestQuery() != 0 )
          break;
 #if !defined( HB_OS_LINUX )

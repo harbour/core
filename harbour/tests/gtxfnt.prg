@@ -29,6 +29,8 @@ proc main()
 
    n := 2
    ? hb_gtVersion( 0 ), hb_gtVersion( 1 )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, HB_GTI_FONTA_FIXMETRIC + ;
+              HB_GTI_FONTA_CLRBKG + HB_GTI_FONTA_DRAWBOX )
    while n == 2
       ? hb_gtInfo( HB_GTI_FONTSEL )
       hb_gtInfo( HB_GTI_FONTSEL, xFontSel() )
@@ -43,13 +45,6 @@ proc main()
 return
 
 function xfontsel()
-   local hProcess, hStdOut, cFontSel, n
-   hProcess := hb_processOpen( "xfontsel -print",, @hStdOut )
-   if hProcess != -1
-      cFontSel := space( 256 )
-      n := fread( hStdOut, @cFontSel, len( cFontSel ) )
-      cFontSel := left( cFontSel, n )
-      hb_processClose( hProcess )
-      fclose( hStdOut )
-   endif
-return cFontSel
+   local cStdOut
+   hb_processRun( "xfontsel -print",, @cStdOut )
+return cStdOut
