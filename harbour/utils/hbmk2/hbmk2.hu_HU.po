@@ -509,8 +509,8 @@ msgstr "Az alapértelmezések és az egyes kapcsolók támogatása platformonké
 
 #: hbmk2.prg:7959 hbmk2.prg:11650
 #, c-format
-msgid "Multiple -l, -L and <script> parameters are accepted."
-msgstr "Több -l, -L és <parancsállomány> kapcsoló/paraméter is megengedett."
+msgid "Multiple -l, -L, -i and <script> parameters are accepted."
+msgstr "Több -l, -L, -i és <parancsállomány> kapcsoló/paraméter is megengedett."
 
 #: hbmk2.prg:3540 hbmk2.prg:4846
 #, c-format
@@ -1225,16 +1225,6 @@ msgstr ""
 #: hbmk2.prg:11633
 #, c-format
 msgid "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself"
-msgstr ""
-
-#: hbmk2.prg:11633
-#, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list"
-msgstr ""
-
-#: hbmk2.prg:11633
-#, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths."
 msgstr ""
 
 #: hbmk2.prg:11633

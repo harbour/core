@@ -468,8 +468,8 @@ msgstr "comprime o executável/biblioteca dinânica (necessita de UPX)\\n<lev> p
 
 #: hbmk2.prg:7960 hbmk2.prg:11650
 #, c-format
-msgid "Multiple -l, -L and <script> parameters are accepted."
-msgstr "Multiplos parâmetros -l, -L e <script> são aceitos."
+msgid "Multiple -l, -L, -i and <script> parameters are accepted."
+msgstr "Multiplos parâmetros -l, -L, -i e <script> são aceitos."
 
 #: hbmk2.prg:7960 hbmk2.prg:11650
 #, c-format
@@ -1229,16 +1229,6 @@ msgstr ""
 #: hbmk2.prg:11633
 #, c-format
 msgid "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself"
-msgstr ""
-
-#: hbmk2.prg:11633
-#, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list"
-msgstr ""
-
-#: hbmk2.prg:11633
-#, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths."
 msgstr ""
 
 #: hbmk2.prg:11633

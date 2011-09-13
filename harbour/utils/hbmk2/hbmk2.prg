@@ -2508,10 +2508,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            cParam := hb_DirSepDel( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
-            IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ cParam .OR. hb_DirExists( cParam )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], cParam )
-            ENDIF
+            FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
+               IF ! Empty( tmp )
+                  tmp := hb_DirSepDel( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) )
+                  IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .OR. hb_DirExists( tmp )
+                     AAdd( hbmk[ _HBMK_aLIBPATH ], tmp )
+                  ENDIF
+               ENDIF
+            NEXT
          ENDIF
 
       CASE Left( cParamL, Len( "-instfile=" ) ) == "-instfile="
@@ -2565,7 +2569,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) ) )
+            FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
+               IF ! Empty( tmp )
+                  AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
+               ENDIF
+            NEXT
          ENDIF
 
       CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
@@ -2810,7 +2818,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depincpath=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
-            FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
+            FOR EACH tmp1 IN hb_ATokens( tmp, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
                AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATH ], hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp1 ), aParam[ _PAR_cFileName ] ) ) )
             NEXT
          ENDIF
@@ -2826,7 +2834,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depimplibs=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
-            FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
+            FOR EACH tmp1 IN hb_ATokens( tmp, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
                AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aIMPLIBSRC ], PathSepToSelf( tmp1 ) )
             NEXT
          ENDIF
@@ -12264,9 +12272,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
       { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
       { "-depincroot=<d:r>"       , I_( "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options." ) },;
-      { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list. May be ';' delimited list of paths." ) },;
+      { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list." ) },;
       { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
-      { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list. May be ';' delimited list of paths." ) },;
+      { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
       { "-plugin=<.prg|.hbs|.hrb>", I_( "add plugin" ) },;
@@ -12318,7 +12326,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    LOCAL aNotes := {;
       I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
-      I_( "Multiple -l, -L and <script> parameters are accepted." ),;
+      I_( "Multiple -l, -L, -i and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_AUTOHBC_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
