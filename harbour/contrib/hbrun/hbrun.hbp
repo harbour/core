@@ -2,6 +2,10 @@
 # $Id$
 #
 
+# Required by some recent Linux distros that are using the DSO linking model
+-ldflag{!HB_HAS_ZLIB_LOCAL&linux}=-lz
+-ldflag{linux}=-lm
+
 -w3 -es2 -l
 -kmo
 
