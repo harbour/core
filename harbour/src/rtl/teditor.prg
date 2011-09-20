@@ -366,7 +366,7 @@ METHOD SplitLine( nRow ) CLASS HBEditor
       nStartRow := nRow
       cLine := ::GetParagraph( nRow )
 
-      DO WHILE !Empty(cLine)
+      DO WHILE ! Empty( cLine )
 
          IF Len( cLine ) > ::nWordWrapCol
             nFirstSpace := ::nWordWrapCol
@@ -403,6 +403,10 @@ METHOD SplitLine( nRow ) CLASS HBEditor
             FOR nI := 0 TO nPosInWord
                ::MoveCursor( K_LEFT )
             NEXT
+         ELSE
+            IF Set( _SET_INSERT )
+               ::MoveCursor( K_LEFT )
+            ENDIF
          ENDIF
       ELSE
          ::SetPos( nORow, nOCol )

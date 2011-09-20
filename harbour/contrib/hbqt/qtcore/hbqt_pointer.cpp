@@ -353,7 +353,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
    {
       static PHB_DYNS s___HBCLASS = NULL;
 
-      char * pszParentClsBuffer = hb_strdup( szParentClsStr );
+      char * szSingleClsNameBuf = ( char * ) hb_xgrab( strlen( szParentClsStr ) + 1 );
 
       if( s___HBCLASS == NULL )
          s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
@@ -364,26 +364,33 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
 
       hb_itemPutC( pClsName, szClsName );
 
+      HB_SIZE nPos = 0;
+      HB_SIZE nStart = 0;
+
       /* array with parent classes (at least ONE) */
       hb_arrayNew( pSuper, 0 );
 
       HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", szClsName ) );
 
+      while( szParentClsStr[ nPos++ ] )
       {
-         char * szSingleClsName = strtok( pszParentClsBuffer, " ," ); /* TOFIX: strtok() is not MT safe */
-         PHB_ITEM pItem = hb_itemNew( NULL );
-
-         while( szSingleClsName != NULL )
+         if( ! szParentClsStr[ nPos ] || ( szParentClsStr[ nPos ] == ',' && szParentClsStr[ nPos + 1 ] == ' ' ) )
          {
-            hb_itemPutC( pItem, szSingleClsName );
-            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsName )->pSymbol ) );
-            szSingleClsName = strtok( NULL, " ," ); /* TOFIX: strtok() is not MT safe */
-         }
+            PHB_ITEM pItem = hb_itemNew( NULL );
 
-         hb_itemRelease( pItem );
+            memcpy( szSingleClsNameBuf, szParentClsStr + nStart, nPos - nStart );
+            szSingleClsNameBuf[ nPos - nStart ] = '\0';
+
+            hb_itemPutC( pItem, szSingleClsNameBuf );
+            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsNameBuf )->pSymbol ) );
+
+            hb_itemRelease( pItem );
+
+            nStart = nPos + 2;
+         }
       }
 
-      hb_xfree( pszParentClsBuffer );
+      hb_xfree( szSingleClsNameBuf );
 
       hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( szClsName )->pSymbol );
 
