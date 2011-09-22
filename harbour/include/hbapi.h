@@ -968,6 +968,7 @@ extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * nLen ); /* 
 extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT nNumber );
 extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
+extern HB_EXPORT void      hb_random_seed( HB_I32 seed );
 extern HB_EXPORT double    hb_random_num( void );
 extern HB_EXPORT void      hb_random_block( void * data, HB_SIZE len );
 extern HB_EXPORT double    hb_numDecConv( double dNum, int iDec );

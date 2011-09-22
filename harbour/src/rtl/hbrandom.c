@@ -3,9 +3,10 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * Random number generator routine
  *
+ * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * www - http://harbour-project.org
  *
@@ -53,11 +54,17 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-#include <stdlib.h>
-#include <float.h>
+/* NOTE: core random generator algorithm is the work of Steve Park
+         http://www.cs.wm.edu/~va/software/park/
+ */
 
-/* Globally available data, no need to MT it */
-static volatile HB_BOOL s_fInit = HB_FALSE;
+#define MODULUS    2147483647 /* DON'T CHANGE THIS VALUE                  */
+#define MULTIPLIER 48271      /* DON'T CHANGE THIS VALUE                  */
+#define DEFAULT    123456789  /* initial seed, use 0 < DEFAULT < MODULUS  */
+#define MAXIMUM    0xFFFFFFFF
+
+static HB_BOOL s_fInit = HB_FALSE;
+static HB_I32  s_seed  = DEFAULT;
 
 /*
  * HB_RANDOM
@@ -120,32 +127,45 @@ HB_FUNC( HB_RANDOMINT )
 
 HB_FUNC( HB_RANDOMSEED )
 {
-   srand( HB_ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
+   hb_random_seed( HB_ISNUM( 1 ) ? ( HB_I32 ) hb_parni( 1 ) : ( HB_I32 ) hb_dateMilliSeconds() );
+
    s_fInit = HB_TRUE;
 }
 
 HB_FUNC( HB_RANDOMINTMAX )
 {
-#if RAND_MAX > HB_VMLONG_MAX
-   hb_retnd( RAND_MAX );
+#if MAXIMUM > HB_VMLONG_MAX
+   hb_retnd( MAXIMUM );
 #else
-   hb_retnint( RAND_MAX );
+   hb_retnint( MAXIMUM );
 #endif
 }
 
 /* Returns a double value between 0 and 1 */
 double hb_random_num( void )
 {
-   double d1, d2;
+   const HB_I32 Q = MODULUS / MULTIPLIER;
+   const HB_I32 R = MODULUS % MULTIPLIER;
+
+   HB_I32 t;
 
    if( ! s_fInit )
    {
-      srand( ( unsigned ) hb_dateMilliSeconds() );
+      hb_random_seed( ( HB_I32 ) hb_dateMilliSeconds() );
       s_fInit = HB_TRUE;
    }
 
-   d1 = ( double ) rand();
-   d2 = ( double ) RAND_MAX + 1.0;
+   t = s_seed;
+   t = MULTIPLIER * ( t % Q ) - R * ( t / Q );
+   if( t <= 0 )
+      t += MODULUS;
+   s_seed = t;
 
-   return d1 / d2;
+   return ( ( double ) t / MODULUS );
+}
+
+void hb_random_seed( HB_I32 seed )
+{
+   seed %= MODULUS;
+   s_seed = ( seed <= 0 ) ? seed + MODULUS : seed;
 }
