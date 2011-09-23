@@ -134,7 +134,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    VAR cClassName
 
-   METHOD hObj( xOle )
+   METHOD hObj( xOle ) SETGET
    METHOD New( xOle, cClass, cLicense )
    METHOD GetActiveObject( cClass )
 
