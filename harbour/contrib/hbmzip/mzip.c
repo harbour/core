@@ -472,7 +472,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          szFileName[ HB_PATH_MAX - 1 ] = '\0';
          hb_storc( szFileName, 2 );
 
-         lJulian   = hb_dateEncode( ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon,
+         lJulian   = hb_dateEncode( ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon + 1,
                                     ufi.tmu_date.tm_mday );
          lMillisec = hb_timeEncode( ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
                                     ufi.tmu_date.tm_sec, 0 );
