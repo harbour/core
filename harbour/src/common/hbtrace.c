@@ -82,6 +82,7 @@ static int s_enabled = 1;
 static int s_level   = -1;
 static int s_flush   = -1;
 static int s_sysout  = -1;
+static const char * s_mode = "w";
 
 static FILE * s_fp = NULL;
 
@@ -117,11 +118,28 @@ int hb_tracelevel( int new_level )
    return old_level;
 }
 
+const char * hb_tracemode( const char * szNewMode )
+{
+   const char * szPrevMode = s_mode;
+
+   if( szNewMode ) switch( *szNewMode )
+   {
+      case 'a':
+         s_mode = "a";
+         break;
+      case 'w':
+         s_mode = "w";
+         break;
+   }
+
+   return szPrevMode;
+}
+
 HB_BOOL hb_tracefile( const char * szFile )
 {
    if( szFile && *szFile )
    {
-      FILE * fp = hb_fopen( szFile, "w" );
+      FILE * fp = hb_fopen( szFile, s_mode );
 
       if( fp )
       {
@@ -176,7 +194,7 @@ int hb_tr_level( void )
          if( hb_getenv_buffer( "HB_TR_OUTPUT", env, sizeof( env ) ) &&
              env[ 0 ] != '\0' )
          {
-            s_fp = hb_fopen( env, "w" );
+            s_fp = hb_fopen( env, s_mode );
 
             if( s_fp == NULL )
                s_fp = stderr;

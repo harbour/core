@@ -103,6 +103,11 @@ HB_FUNC( HB_TRACEFLUSH )
                                            hb_parnidef( 1, -1 ) ) );
 }
 
+HB_FUNC( HB_TRACEMODE )
+{
+   hb_retc( hb_tracemode( hb_parc( 1 ) ) );
+}
+
 HB_FUNC( HB_TRACEFILE )
 {
    hb_retl( hb_tracefile( hb_parc( 1 ) ) );
