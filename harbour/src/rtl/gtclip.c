@@ -118,6 +118,42 @@ HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen )
 
 #if defined( HB_OS_WIN )
 
+HB_BOOL hb_gt_winapi_setClipboardRaw( HB_UINT uFormat, void * pData, HB_SIZE nSize )
+{
+   HB_BOOL fResult = HB_FALSE;
+
+   if( OpenClipboard( NULL ) )
+   {
+      EmptyClipboard();
+
+      if( nSize )
+      {
+         /* Allocate a global memory object for the text. */
+         HGLOBAL hglb = GlobalAlloc( GMEM_MOVEABLE, nSize );
+         if( hglb )
+         {
+            /* Lock the handle and copy the text to the buffer. */
+            LPVOID lpMem = GlobalLock( hglb );
+
+            if( lpMem )
+            {
+               memcpy( lpMem, pData, nSize );
+               ( void ) GlobalUnlock( hglb );
+               /* Place the handle on the clipboard. */
+               fResult = SetClipboardData( ( UINT ) uFormat, hglb ) != 0;
+            }
+            if( !fResult )
+               GlobalFree( hglb );
+         }
+      }
+      else
+         fResult = HB_TRUE;
+
+      CloseClipboard();
+   }
+   return fResult;
+}
+
 HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem )
 {
    HB_BOOL fResult = HB_FALSE;
@@ -152,13 +188,17 @@ HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem )
                else
                   hb_itemCopyStr( pItem, hb_setGetOSCP(),
                                   ( char * ) lpMem, nSize + 1 );
-               fResult = HB_TRUE;
+               ( void ) GlobalUnlock( hglb );
+               /* Place the handle on the clipboard. */
+               fResult = SetClipboardData( ( UINT ) uFormat, hglb ) != 0;
             }
-            ( void ) GlobalUnlock( hglb );
-            /* Place the handle on the clipboard. */
-            SetClipboardData( ( UINT ) uFormat, hglb );
+            if( !fResult )
+               GlobalFree( hglb );
          }
       }
+      else
+         fResult = HB_TRUE;
+
       CloseClipboard();
    }
    return fResult;

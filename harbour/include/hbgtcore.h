@@ -602,6 +602,7 @@ extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL hb_gt_winapi_setClipboardRaw( HB_UINT uFormat, void * pData, HB_SIZE nSize );
 extern HB_EXPORT HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem );
 extern HB_EXPORT int     hb_gt_winapi_getKbdState( void );
 extern HB_EXPORT void    hb_gt_winapi_setKbdState( int kbdShifts );
