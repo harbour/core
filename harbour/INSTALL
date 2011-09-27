@@ -325,11 +325,11 @@ HARBOUR
    on *nix which aren't available through official package managers
    (ADS Client f.e.).
 
-   Note that Harbour is tuned to use 3rd party packages in their default, 
-   unmodified ("vanilla") install layout created by their official/mainstream 
-   install kits. If you manually move, rename, delete or add files 
-   under the 3rd party packages' root directory, the default Harbour 
-   build process (especially Windows implib generation) might not work 
+   Note that Harbour is tuned to use 3rd party packages in their default,
+   unmodified ("vanilla") install layout created by their official/mainstream
+   install kits. If you manually move, rename, delete or add files
+   under the 3rd party packages' root directory, the default Harbour
+   build process (especially Windows implib generation) might not work
    as expected.
 
    You can set these environment variables before starting
@@ -1242,7 +1242,7 @@ HARBOUR
    2.  Make sure to do a 'make clean' before doing a build after refreshing
        the sources.
    3.  If that still fails, make sure to install fresh source tree in a new
-       local directory and start over. See HOW TO GET HARBOUR section for 
+       local directory and start over. See HOW TO GET HARBOUR section for
        instructions to get the source.
    4.  If you are doing a cross-build, make sure to have rebuilt the native
        Harbour executables for your host platform. See 'HB_HOST_BIN'
@@ -1251,11 +1251,11 @@ HARBOUR
        versions when building Harbour. The surest way to achieve this is to
        leave only C compiler directory in PATH:
           set PATH=C:\<compilerdir>
-       If you use Harbour official binary distro on Windows, even above is 
+       If you use Harbour official binary distro on Windows, even above is
        unnecessary and not recommended.
    6.  Remove all old, unnecessary environment variables from your environment.
        Use only those documented in this file.
-       Follows some environment variable settings which are commonly believed 
+       Follows some environment variable settings which are commonly believed
        by users to be useful, but which in reality are either not needed or
        not even used by Harbour build process and hbmk2.
        You can delete them:
@@ -1586,17 +1586,17 @@ HARBOUR
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
          Recommended Mac OS X binary package:
-            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.7.2.dmg
+            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.7.4.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.7.2-mingw.exe
+            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.7.4-mingw.exe
          How to create Windows static and MSVC builds:
             http://doc.trolltech.com/4.7/deployment-windows.html
          NOTES:
             - QT 4.5.x for Windows requires MinGW builds with SJLJ stack frame unwinding.
               (mingw official 3.4.x, or mingw tdm)
             - QT 4.6.x (and upper) for Windows requires MinGW builds with DWARF-2 stack frame unwinding.
-              (mingw official 4.4.0 or upper, or mingw tdm with dwarf2 update)
+              (mingw official 4.4.0 or upper, or mingw tdm with dwarf2)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]

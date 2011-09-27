@@ -18,7 +18,7 @@ x86, x64, WinCE/ARM platforms.
 Installed size: 233MB (78MB - 322MB)
 
 The default installation will install MinGW compiler + x86 static
-and shared libs, MSVC and BCC x86 libs and examples.
+and shared libs and MSVC x86 libs and examples.
 
 Options: x86 shared tools, x64 shared tools, MinGW x64 and
 WinCE-ARM libs, MSVC x64 libs, shared x64/WinCE-ARM libs.
@@ -38,11 +38,10 @@ Tool/lib versions used to create this package:
    Compiler tools
    --------------
 
-   MinGW GNU C 4.5.2 (TDM-DW2) (included)
+   MinGW GNU C 4.6.1 (TDM-DW2) (included)
    MinGW w64 GNU C 4.5.3-20110207 (prerelease)
    MinGW CeGCC 4.4.0
    MSVC 2010 SP1
-   Borland C/C++ 5.5.1
 
    External lib dependencies
    -------------------------
@@ -51,7 +50,7 @@ Tool/lib versions used to create this package:
    Allegro 4.2.2
    Blat 2.6.2
    Cairo 1.8.8
-   libcurl 7.21.4
+   libcurl 7.22.0
    Firebird 2.5.0
    FreeImage 3.15.0
    GD 2.0.35
@@ -59,7 +58,7 @@ Tool/lib versions used to create this package:
    OCILIB 3.9.0
    OpenSSL 1.0.0d
    PostgreSQL 9.0.4-1
-   QT 4.7.2
+   QT 4.7.4
    WATTCP 2.2.10
 
 Changes since previous (2.0.0) release:
