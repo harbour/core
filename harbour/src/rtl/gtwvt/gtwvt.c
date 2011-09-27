@@ -2326,6 +2326,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
+      case HB_GTI_ONLINE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->hWnd != NULL );
+         break;
+
       case HB_GTI_ISUNICODE:
 #if defined( UNICODE )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );

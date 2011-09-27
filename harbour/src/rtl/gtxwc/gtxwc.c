@@ -3070,7 +3070,8 @@ static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
 
    /* a shortcut for window height and width */
    wnd->fontHeight = xfs->max_bounds.ascent + xfs->max_bounds.descent;
-   wnd->fontWidth = xfs->max_bounds.rbearing - xfs->min_bounds.lbearing;
+   /* wnd->fontWidth = xfs->max_bounds.rbearing - xfs->min_bounds.lbearing; */
+   wnd->fontWidth = xfs->max_bounds.width;
    wnd->xfs = xfs;
 
    return HB_TRUE;
@@ -3879,7 +3880,6 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          case HB_GTI_ISSCREENPOS:
          case HB_GTI_KBDSUPPORT:
          case HB_GTI_ISGRAPHIC:
-         case HB_GTI_FONTSEL:
             hb_gt_xwc_ConnectX( wnd, HB_FALSE );
             break;
 
@@ -3891,6 +3891,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          case HB_GTI_DESKTOPCOLS:
          case HB_GTI_DESKTOPROWS:
          case HB_GTI_CLIPBOARDDATA:
+         case HB_GTI_FONTSEL:
             hb_gt_xwc_ConnectX( wnd, HB_TRUE );
             break;
       }
@@ -3902,6 +3903,10 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy != NULL );
+         break;
+
+      case HB_GTI_ONLINE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy && wnd->window );
          break;
 
       case HB_GTI_ISUNICODE:
@@ -3955,7 +3960,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             HB_XWC_XLIB_LOCK
-            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) )
+            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) &&
+                wnd->window )
                hb_gt_xwc_CreateWindow( wnd );
             HB_XWC_XLIB_UNLOCK
          }
