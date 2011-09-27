@@ -330,15 +330,6 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
    }
 }
 
-static void hb_gt_wvt_QKillCaret( PHB_GTWVT pWVT )
-{
-   if( pWVT->CaretExist )
-   {
-      pWVT->qWnd->_drawingArea->destroyCaret();
-      pWVT->CaretExist = HB_FALSE;
-   }
-}
-
 /*
  *  functions for handling the input queues for the mouse and keyboard
  */
