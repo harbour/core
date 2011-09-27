@@ -2699,7 +2699,7 @@ static void hb_gt_xwc_RestoreArea( PXWND_DEF wnd,
 /* *********************************************************************** */
 
 static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
-                                     int left, int top, int right, int bottom )
+                                      int left, int top, int right, int bottom )
 {
    if( wnd->fInvalidChr == HB_FALSE )
    {
@@ -3615,11 +3615,14 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       if( iCol == wnd->cols && iRow == wnd->rows )
       {
          HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
+         if( !wnd->fInit )
+            HB_GTSELF_SEMICOLD( pGT );
          fResult = HB_TRUE;
       }
       else if( !wnd->fInit )
       {
          hb_gt_xwc_SetScrBuff( wnd, iCol, iRow );
+         HB_GTSELF_SEMICOLD( pGT );
          fResult = HB_TRUE;
       }
       else
@@ -3720,9 +3723,13 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static HB_BOOL hb_gt_xwc_mouse_IsPresent( PHB_GT pGT )
 {
+   PXWND_DEF wnd;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_IsPresent(%p)", pGT));
 
-   return HB_GTXWC_GET( pGT )->mouseNumButtons > 0;
+   wnd = HB_GTXWC_GET( pGT );
+   hb_gt_xwc_ConnectX( wnd, HB_TRUE );
+   return wnd->mouseNumButtons > 0;
 }
 
 /* *********************************************************************** */
@@ -3765,6 +3772,7 @@ static HB_BOOL hb_gt_xwc_mouse_ButtonState( PHB_GT pGT,int iButton )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_ButtonState(%p,%i)", pGT, iButton));
 
    wnd = HB_GTXWC_GET( pGT );
+   hb_gt_xwc_ConnectX( wnd, HB_TRUE );
    if( iButton >= 0 && iButton < wnd->mouseNumButtons )
       return ( wnd->mouseButtonsState & 1 << iButton ) != 0;
    else
@@ -3780,7 +3788,7 @@ static int hb_gt_xwc_mouse_CountButton( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_CountButton(%p)", pGT));
 
    wnd = HB_GTXWC_GET( pGT );
-   hb_gt_xwc_RealRefresh( wnd );
+   hb_gt_xwc_ConnectX( wnd, HB_TRUE );
 
    return wnd->mouseNumButtons;
 }
@@ -3906,7 +3914,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ONLINE:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy && wnd->window );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fInit );
          break;
 
       case HB_GTI_ISUNICODE:
@@ -3961,7 +3969,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             HB_XWC_XLIB_LOCK
             if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) &&
-                wnd->window )
+                wnd->fInit )
                hb_gt_xwc_CreateWindow( wnd );
             HB_XWC_XLIB_UNLOCK
          }
@@ -4098,7 +4106,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( wnd->fResizable != ( iVal != 0 ) )
             {
                wnd->fResizable = ( iVal != 0 );
-               if( wnd->dpy )
+               if( wnd->fInit )
                {
                   HB_XWC_XLIB_LOCK
                   hb_gt_xwc_SetResizing( wnd );
@@ -4122,7 +4130,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   {
                      wnd->colors[ iVal ].value = iColor;
                      wnd->colors[ iVal ].set = HB_FALSE;
-                     if( wnd->dpy && hb_gt_xwc_setPalette( wnd ) )
+                     if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                      {
                         memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
@@ -4150,7 +4158,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                   }
                }
-               if( wnd->dpy && hb_gt_xwc_setPalette( wnd ) )
+               if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                {
                   memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
