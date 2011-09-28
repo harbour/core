@@ -96,6 +96,7 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define XWC_MAX_BUTTONS               8
 #define XWC_MAX_CHAR_POINTS        1024
 #define XWC_MAX_CHAR_RECTS         ( XWC_MAX_CHAR_POINTS / 2 )
+#define XWC_MAX_CHAR_SEGS          ( XWC_MAX_CHAR_POINTS / 2 )
 
 /* Font definition */
 #define XWC_DEFAULT_FONT_HEIGHT      18

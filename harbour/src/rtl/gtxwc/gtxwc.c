@@ -507,25 +507,29 @@ static void hb_gt_xwc_Enable( void )
 
 static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharTrans *bxCh )
 {
-   XSegment       segs[9];
-   XPoint         pts[XWC_MAX_CHAR_POINTS];
-   XRectangle     rect[4];
+   typedef union
+   {
+      XSegment    segs[ XWC_MAX_CHAR_SEGS ];
+      XRectangle  rect[ XWC_MAX_CHAR_RECTS ];
+      XPoint      pts[ XWC_MAX_CHAR_POINTS ];
+   } HB_XWC_CHDEF;
+   HB_XWC_CHDEF   chdef;
+   XSegment     * segs = chdef.segs;
+   XRectangle   * rect = chdef.rect;
+   XPoint       * pts  = chdef.pts;
    XWC_CharType   type = CH_CHAR;
    int            size = 0;
    HB_BOOL        inverse = HB_FALSE;
 
    int cellx = wnd->fontWidth;
    int celly = wnd->fontHeight;
-   int i;
+   int i, y, x, yy, xx, skip, start, mod;
 
    switch( usCh )
    {
       case HB_GTXWC_FILLER1:
       case HB_GTXWC_FILLER2:
       case HB_GTXWC_FILLER3:
-      {
-         int x, y, xx, yy, skip, start, mod;
-
          if( usCh == HB_GTXWC_FILLER1 )
          {
             skip = 4;
@@ -553,9 +557,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
                 * character definition will not be finished
                 */
                if( size >= XWC_MAX_CHAR_POINTS )
-               {
                   break;
-               }
                pts[size].x = x - xx;
                pts[size].y = y - yy;
                xx = x;
@@ -565,7 +567,6 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          }
          type = size == 0 ? CH_NONE : CH_PTS;
          break;
-      }
 
       case HB_GTXWC_ARROW_R:
          i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
