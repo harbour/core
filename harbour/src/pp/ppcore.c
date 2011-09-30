@@ -51,15 +51,9 @@
  */
 
 /* #define HB_CLP_STRICT */
-/* #define HB_PP_NO_LINEINFO_TOKEN */
 /* #define HB_PP_STRICT_LINEINFO_TOKEN */
 
 #define _HB_PP_INTERNAL
-
-#if defined( HB_PP_STRICT_LINEINFO_TOKEN ) && \
-    defined( HB_PP_NO_LINEINFO_TOKEN )
-#  undef HB_PP_NO_LINEINFO_TOKEN
-#endif
 
 #include "hbpp.h"
 #include "hbdate.h"
@@ -405,21 +399,27 @@ static void hb_pp_tokenListFree( PHB_PP_TOKEN * pTokenPtr )
    }
 }
 
-static void hb_pp_tokenListFreeCmd( PHB_PP_TOKEN * pTokenPtr )
+static int hb_pp_tokenListFreeCmd( PHB_PP_TOKEN * pTokenPtr )
 {
    PHB_PP_TOKEN pToken;
    HB_BOOL fStop = HB_FALSE;
+   int iLines = 0;
 
    while( *pTokenPtr && !fStop )
    {
       pToken = *pTokenPtr;
       *pTokenPtr = pToken->pNext;
+      if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_EOL )
+         ++iLines;
       fStop = HB_PP_TOKEN_ISEOC( pToken );
       hb_pp_tokenFree( pToken );
    }
+   return *pTokenPtr ? iLines : 0;
 }
 
-static int hb_pp_tokenMoveCommand( PHB_PP_TOKEN * pDestPtr, PHB_PP_TOKEN * pSrcPtr )
+static void hb_pp_tokenMoveCommand( PHB_PP_STATE pState,
+                                    PHB_PP_TOKEN * pDestPtr,
+                                    PHB_PP_TOKEN * pSrcPtr )
 {
    PHB_PP_TOKEN pToken;
    int iLines = 0;
@@ -433,13 +433,16 @@ static int hb_pp_tokenMoveCommand( PHB_PP_TOKEN * pDestPtr, PHB_PP_TOKEN * pSrcP
       if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_EOL )
          ++iLines;
       if( HB_PP_TOKEN_ISEOC( pToken ) )
-      {
          break;
-      }
    }
    *pDestPtr = NULL;
 
-   return iLines;
+   if( iLines )
+   {
+      pState->pFile->iLastLine = pState->pFile->iCurrentLine + iLines;
+      if( *pSrcPtr )
+         pState->pFile->iCurrentLine += iLines;
+   }
 }
 
 static PHB_PP_TOKEN hb_pp_tokenResultEnd( PHB_PP_TOKEN * pTokenPtr, HB_BOOL fDirect )
@@ -5007,7 +5010,6 @@ static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    }
 }
 
-#if !defined( HB_PP_NO_LINEINFO_TOKEN )
 static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, const char * szFileName, int iLine )
 {
    char szLine[ 12 ];
@@ -5020,15 +5022,11 @@ static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, const char * szFileName
       hb_pp_tokenAdd( pTokenPtr, szFileName, strlen( szFileName ), 1, HB_PP_TOKEN_STRING );
    hb_pp_tokenAdd( pTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
 }
-#endif
 
 static void hb_pp_genLineTokens( PHB_PP_STATE pState )
 {
    pState->pNextTokenPtr = &pState->pTokenOut;
 
-#if defined( HB_PP_NO_LINEINFO_TOKEN )
-   hb_pp_tokenMoveCommand( pState->pNextTokenPtr, &pState->pFile->pTokenList );
-#else
    if( pState->pFile->fGenLineInfo )
    {
       hb_pp_lineTokens( &pState->pNextTokenPtr, pState->pFile->szFileName,
@@ -5041,10 +5039,8 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
          hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
       while( ++pState->pFile->iLastLine < pState->pFile->iCurrentLine );
    }
-   pState->pFile->iLastLine = pState->pFile->iCurrentLine +
-                        hb_pp_tokenMoveCommand( pState->pNextTokenPtr,
-                                                &pState->pFile->pTokenList );
-#endif
+   hb_pp_tokenMoveCommand( pState, pState->pNextTokenPtr,
+                           &pState->pFile->pTokenList );
 }
 
 static void hb_pp_includeFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fSysFile )
@@ -5329,12 +5325,12 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
 
          if( fError )
             hb_pp_error( pState, 'F', HB_PP_ERR_INVALID_DIRECTIVE, NULL );
-         hb_pp_tokenListFreeCmd( pFreePtr );
+         pState->pFile->iCurrentLine += hb_pp_tokenListFreeCmd( pFreePtr );
          continue;
       }
       else if( pState->iCondCompile )
       {
-         hb_pp_tokenListFreeCmd( &pState->pFile->pTokenList );
+         pState->pFile->iCurrentLine += hb_pp_tokenListFreeCmd( &pState->pFile->pTokenList );
       }
       else
       {
@@ -5448,28 +5444,8 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
    if( pState->fWritePreprocesed && pState->pTokenOut )
    {
       hb_membufFlush( pState->pBuffer );
-#if defined( HB_PP_NO_LINEINFO_TOKEN )
-      if( pState->pFile->fGenLineInfo )
-      {
-         fprintf( pState->file_out, "#line %d", pState->pFile->iCurrentLine );
-         if( pState->pFile->szFileName )
-            fprintf( pState->file_out, " \"%s\"", pState->pFile->szFileName );
-         fputc( '\n', pState->file_out );
-         pState->pFile->fGenLineInfo = HB_FALSE;
-      }
-      else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
-      {
-         do
-            fputc( '\n', pState->file_out );
-         while( ++pState->pFile->iLastLine < pState->pFile->iCurrentLine );
-      }
-      pState->pFile->iLastLine = pState->pFile->iCurrentLine +
-               hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, HB_TRUE, HB_TRUE,
-                               pState->usLastType );
-#else
       hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, HB_TRUE, HB_TRUE,
                       pState->usLastType );
-#endif
       pState->usLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
       if( fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
                   hb_membufLen( pState->pBuffer ), pState->file_out ) !=
@@ -6222,11 +6198,8 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          else if( HB_PP_TOKEN_TYPE( pTok->type ) == HB_PP_TOKEN_EOC &&
                   !pTok->pNext && pState->pFile->pTokenList )
          {
-#if !defined( HB_PP_NO_LINEINFO_TOKEN )
-            pState->pFile->iLastLine = pState->pFile->iCurrentLine +
-#endif
-               hb_pp_tokenMoveCommand( &pTok->pNext,
-                                       &pState->pFile->pTokenList );
+            hb_pp_tokenMoveCommand( pState, &pTok->pNext,
+                                    &pState->pFile->pTokenList );
          }
          hb_pp_tokenStr( pTok, pState->pBuffer, HB_TRUE, HB_FALSE, 0 );
          pTok = pTok->pNext;

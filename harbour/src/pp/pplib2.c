@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    .prg interface to preprocessor
- *    __PP_STDRULE() function
+ *    __PP_STDRULES() function
  *       intentionally in separate file to not force linking
  *       standard PP rules table when user does not need them
  *
