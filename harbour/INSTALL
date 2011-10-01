@@ -535,6 +535,7 @@ HARBOUR
    vxworks  - VxWorks
    symbian  - Symbian OS (experimental)
    minix    - Minix 3 (tested on 3.1.8; earlier releases probably will not work)
+   aix      - IBM AIX
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -594,10 +595,14 @@ HARBOUR
    gcc      - GNU C
 
    minix
-   -------
+   -----
    gcc      - GNU C
    ack      - Amsterdam Compiler Kit (does not work yet)
    pcc      - Portable C Compiler (experimental)
+
+   aix
+   ---
+   gcc      - GNU C
 
    cygwin
    ------
@@ -1457,6 +1462,7 @@ HARBOUR
      minix  -> minix/gcc      x86
      minix  -> minix/clang    x86
      minix  -> minix/ack      x86
+     aix    -> aix/gcc        (CPU cross-builds possible: ppc, ppc64)
      sunos  -> sunos/gcc      (CPU cross-builds possible)
      sunos  -> sunos/sunpro   (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
    x sunos  -> wce/mingwarm   arm
