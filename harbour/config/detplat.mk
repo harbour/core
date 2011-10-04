@@ -72,6 +72,10 @@ ifneq ($(findstring QNX,$(_DETPLAT_STR)),)
 else
 ifneq ($(findstring Minix,$(_DETPLAT_STR)),)
    HB_HOST_PLAT := minix
+else
+ifneq ($(findstring AIX,$(_DETPLAT_STR)),)
+   HB_HOST_PLAT := aix
+endif
 endif
 endif
 endif

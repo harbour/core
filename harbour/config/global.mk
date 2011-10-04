@@ -823,7 +823,7 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    else
-   ifneq ($(filter $(HB_PLATFORM),hpux bsd beos qnx cygwin),)
+   ifneq ($(filter $(HB_PLATFORM),aix hpux bsd beos qnx cygwin),)
       HB_COMP_PATH := $(call find_in_path,gcc)
       ifneq ($(HB_COMP_PATH),)
          HB_COMPILER := gcc
@@ -1494,6 +1494,10 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),minix)
          HB_PRGFLAGS += -D__PLATFORM__MINIX -D__PLATFORM__UNIX
+      else
+      ifeq ($(HB_PLATFORM),aix)
+         HB_PRGFLAGS += -D__PLATFORM__AIX -D__PLATFORM__UNIX
+      endif
       endif
       endif
       endif

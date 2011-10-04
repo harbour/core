@@ -37,6 +37,10 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    # To suppress new warnings in version 1.2.5
    ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin djgpp),)
       HB_CFLAGS += -DNO_VIZ
+   else
+      ifneq ($(filter $(HB_PLATFORM),aix),)
+         HB_CFLAGS += -DNO_VIZ
+      endif
    endif
    include $(TOP)$(ROOT)config/lib.mk
 else

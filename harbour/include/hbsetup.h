@@ -428,6 +428,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_AIX
+   #if defined( _AIX ) || defined( __aix__ )
+      #define HB_OS_AIX
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
    #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
@@ -440,7 +446,8 @@
        defined( HB_OS_SYMBIAN ) || \
        defined( HB_OS_ANDROID ) || \
        defined( HB_OS_CYGWIN ) || \
-       defined( HB_OS_MINIX )
+       defined( HB_OS_MINIX ) || \
+       defined( HB_OS_AIX )
       #define HB_OS_UNIX
    #endif
 #endif
