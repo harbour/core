@@ -2,12 +2,16 @@
  * $Id$
  */
 
+REQUEST __PP_STDRULES
+
 FUNCTION Main()
 
-   LOCAL cString
+   LOCAL cString, l_pp
    LOCAL i, j, aScript
 
    CLS
+
+   l_pp := __pp_init()
 
    QOut( "Testing Harbour run-time preprocessing" )
    QOut( "======================================" )
@@ -15,27 +19,27 @@ FUNCTION Main()
 
    cString := "@ 10, 10 SAY 'Hello!'"
    QOut( cString )
-   QOut( __Preprocess( cString ) )
+   QOut( __pp_process( l_pp, cString ) )
    QOut( "" )
 
    cString := "? 'Hello mom'"
    QOut( cString )
-   QOut( __Preprocess( cString ) )
+   QOut( __pp_process( l_pp, cString ) )
    QOut( "" )
 
    cString := 'SET RELATION TO Something INTO MySelf'
    QOut( cString )
-   QOut( __Preprocess( cString ) )
+   QOut( __pp_process( l_pp, cString ) )
    QOut( "" )
 
    cString := 'SET RELATION ADDITIVE TO Something INTO YourSelf'
    QOut( cString )
-   QOut( __Preprocess( cString ) )
+   QOut( __pp_process( l_pp, cString ) )
    QOut( "" )
 
    cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
    QOut( cString )
-   IF __ppAddRule( cString )
+   IF __pp_addRule( l_pp, cString )
       QOut( "Rule added successfully !" )
    ELSE
       QOut( "Rule addition failed ..." )
@@ -43,7 +47,7 @@ FUNCTION Main()
 
    cString := 'DEFAULT x := 100'
    QOut( cString )
-   QOut( __Preprocess( cString ) )
+   QOut( __pp_process( l_pp, cString ) )
    QOut( "" )
 
    QOut( "Press <Enter>..." )
@@ -62,12 +66,12 @@ FUNCTION Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      QOut( iif( j = 1, "Before", "After" ) + " __Preprocess()" )
+      QOut( iif( j = 1, "Before", "After" ) + " __pp_process()" )
       QOut( "===================" )
       QOut( "" )
       FOR i := 1 TO Len( aScript )
 
-         ? iif( j = 1, aScript[ i ], __Preprocess( aScript[ i ] ) )
+         ? iif( j = 1, aScript[ i ], __pp_process( l_pp, aScript[ i ] ) )
 
       NEXT
       QOut( "" )
@@ -77,7 +81,3 @@ FUNCTION Main()
    NEXT
 
    RETURN NIL
-
-EXIT PROCEDURE ExitTest()
-   __PP_Free()
-   RETURN
