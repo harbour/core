@@ -713,31 +713,16 @@ METHOD wordLeft() CLASS GET
       ELSE
          ::typeOut := .F.
 
-         nPos := ::nPos - 1
+         nPos := iif( SubStr( ::cBuffer, ::nPos, 1 ) == " ", ::nPos, ::nPos - 1 )
 
-         DO WHILE nPos > 0
-            IF SubStr( ::cBuffer, nPos, 1 ) == " "
-               DO WHILE nPos > 0 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
-                  nPos--
-               ENDDO
-               DO WHILE nPos > 0 .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
-                  nPos--
-               ENDDO
-               IF nPos > 0
-                  nPos++
-               ENDIF
-               EXIT
-            ENDIF
+         DO WHILE nPos > 1 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
+            nPos--
+         ENDDO
+         DO WHILE nPos > 1 .AND. ! ( SubStr( ::cBuffer, nPos, 1 ) == " " )
             nPos--
          ENDDO
 
-         IF nPos < 1
-            nPos := 1
-         ENDIF
-
-         IF nPos > 0
-            ::pos := nPos
-         ENDIF
+         ::pos := iif( nPos > 1, nPos + 1, 1 )
 
          ::lSuppDisplay := .T.
          ::display()
@@ -759,25 +744,16 @@ METHOD wordRight() CLASS GET
       ELSE
          ::typeOut := .F.
 
-         nPos := ::nPos + 1
+         nPos := ::nPos
 
-         DO WHILE nPos <= ::nMaxEdit
-            IF SubStr( ::cBuffer, nPos, 1 ) == " "
-               DO WHILE nPos <= ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
-                  nPos++
-               ENDDO
-               EXIT
-            ENDIF
+         DO WHILE nPos < ::nMaxEdit .AND. ! ( SubStr( ::cBuffer, nPos, 1 ) == " " )
+            nPos++
+         ENDDO
+         DO WHILE nPos < ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
             nPos++
          ENDDO
 
-         IF nPos > ::nMaxEdit
-            nPos := ::nMaxEdit
-         ENDIF
-
-         IF nPos <= ::nMaxEdit
-            ::pos := nPos
-         ENDIF
+         ::pos := nPos
 
          ::lSuppDisplay := .T.
          ::display()
