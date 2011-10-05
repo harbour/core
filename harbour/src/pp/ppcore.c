@@ -5031,6 +5031,7 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
    {
       hb_pp_lineTokens( &pState->pNextTokenPtr, pState->pFile->szFileName,
                                                 pState->pFile->iCurrentLine );
+      pState->pFile->iLastLine = pState->pFile->iCurrentLine;
       pState->pFile->fGenLineInfo = HB_FALSE;
    }
    else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
@@ -5062,6 +5063,7 @@ static void hb_pp_includeFile( PHB_PP_STATE pState, const char * szFileName, HB_
          {
             hb_pp_lineTokens( &pState->pNextTokenPtr, pState->pFile->szFileName,
                                                       pState->pFile->iCurrentLine );
+            pState->pFile->iLastLine = pState->pFile->iCurrentLine;
             pState->pFile->fGenLineInfo = HB_FALSE;
          }
          hb_pp_lineTokens( &pState->pNextTokenPtr, szFileName, 1 );
