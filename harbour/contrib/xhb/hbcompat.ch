@@ -81,8 +81,8 @@
    #xtranslate hb_FieldDec([<x>])          => FieldDec(<x>)
    #xtranslate hb_FieldType([<x>])         => FieldType(<x>)
 
-   #xtranslate hb_gtInfo( HB_GTI_INKEYREAD [, <x>] )  => hb_SetInkeyBeforeBlock([<x>]) <-x->
-   #xtranslate hb_gtInfo( HB_GTI_INKEYFILTER [, <x>] )      => hb_SetInkeyAfterBlock([<x>]) <-x->
+   #xtranslate hb_gtInfo( HB_GTI_INKEYREAD [, <x>] )     => SetInkeyBeforeBlock([<x>]) <-x->
+   #xtranslate hb_gtInfo( HB_GTI_INKEYFILTER [, <x>] )   => SetInkeyAfterBlock([<x>]) <-x->
 
    #xtranslate hb_processOpen([<x,...>])   => hb_openProcess(<x>)
    #xtranslate hb_processClose([<x,...>])  => hb_closeProcess(<x>)
@@ -346,8 +346,8 @@
    #xtranslate gtGetClipBoardSize()            => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
    #xtranslate gtPasteClipBoard()              => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
    #xtranslate gtProcessMessages()             => NextKey()
-   #xtranslate hb_SetInkeyBeforeBlock([<x>])   => hb_gtInfo( HB_GTI_INKEYREAD [, <x>] ) <-x->
-   #xtranslate hb_SetInkeyAfterBlock([<x>])    => hb_gtInfo( HB_GTI_INKEYFILTER [, <x>] ) <-x->
+   #xtranslate SetInkeyBeforeBlock([<x>])      => hb_gtInfo( HB_GTI_INKEYREAD [, <x>] ) <-x->
+   #xtranslate SetInkeyAfterBlock([<x>])       => hb_gtInfo( HB_GTI_INKEYFILTER [, <x>] ) <-x->
    #xtranslate gfxPrimitive([<x,...>])         => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])              => hb_gfxText(<x>)
 
