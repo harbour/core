@@ -238,27 +238,12 @@ static const RDDFUNCS * hb_bmGetRdd( HB_USHORT uiRddId )
 
 static void hb_bmResetFilterOpt( AREAP pArea )
 {
-   PHB_ITEM itmCobExpr, abFilterText;
-   HB_BOOL fOptimized, fFilter;
-   void * lpvCargo;
+   DBORDERINFO OrderInfo;
 
-   itmCobExpr   = pArea->dbfi.itmCobExpr;
-   abFilterText = pArea->dbfi.abFilterText;
-   fOptimized   = pArea->dbfi.fOptimized;
-   fFilter      = pArea->dbfi.fFilter;
-   lpvCargo     = pArea->dbfi.lpvCargo;
-
-   pArea->dbfi.itmCobExpr   = NULL;
-   pArea->dbfi.abFilterText = NULL;
-   pArea->dbfi.lpvCargo     = NULL;
-
-   SELF_CLEARFILTER( pArea );
-
-   pArea->dbfi.itmCobExpr   = itmCobExpr;
-   pArea->dbfi.abFilterText = abFilterText;
-   pArea->dbfi.fOptimized   = fOptimized;
-   pArea->dbfi.fFilter      = fFilter;
-   pArea->dbfi.lpvCargo     = lpvCargo;
+   memset( &OrderInfo, 0, sizeof( OrderInfo ) );
+   SELF_ORDINFO( pArea, DBOI_RESETPOS, &OrderInfo );
+   if( OrderInfo.itmResult )
+      hb_itemRelease( OrderInfo.itmResult );
 }
 
 static HB_BOOL hb_bmCheckRecordFilter( AREAP pArea, HB_ULONG ulRecNo )
