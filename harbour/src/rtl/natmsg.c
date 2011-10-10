@@ -109,9 +109,9 @@ HB_FUNC( __NATISAFFIRM )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
          if( cdp )
-            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE );
+            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE ) == 0;
          else
-            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr );
+            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr ) == 0;
       }
    }
    hb_retl( fIS );
@@ -136,9 +136,9 @@ HB_FUNC( __NATISNEGATIVE )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
          if( cdp )
-            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE );
+            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE ) == 0;
          else
-            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr );
+            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr ) == 0;
       }
    }
    hb_retl( fIS );
