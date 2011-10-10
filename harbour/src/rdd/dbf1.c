@@ -3997,7 +3997,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pField = ( LPDBFFIELD ) ( pBuffer + uiCount * sizeof( DBFFIELD ) );
       pField->bName[10] = '\0';
-      /* hb_strUpper( ( char * ) pField->bName ); */
+      /* hb_strupp( ( char * ) pField->bName ); */
       dbFieldInfo.atomName = ( const char * ) pField->bName;
       dbFieldInfo.uiLen = pField->bLen;
       dbFieldInfo.uiDec = 0;

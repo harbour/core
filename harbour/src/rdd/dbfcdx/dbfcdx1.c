@@ -225,14 +225,12 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea,
  */
 static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
-   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->sort &&
+   if( pArea->dbfarea.area.cdPage &&
+       !HB_CDP_ISBINSORT( pArea->dbfarea.area.cdPage ) &&
        !( pArea->fSortCDP || pArea->bCdxSortTab ) )
    {
-      if( pArea->dbfarea.area.cdPage->nMulti ||
-          pArea->dbfarea.area.cdPage->nACSort )
-      {
+      if( !HB_CDP_ISBYTESORT( pArea->dbfarea.area.cdPage ) )
          pArea->fSortCDP = HB_TRUE;
-      }
       else
       {
          int i, j, l;
@@ -4986,33 +4984,24 @@ static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, const char * szBagName )
 {
    LPCDXINDEX pIndex;
    PHB_FNAME pFileName;
-   char * szBaseName, * szBasePath, * szBaseExt;
 
    pFileName = hb_fsFNameSplit( szBagName );
-   szBaseName = hb_strdup( pFileName->szName ? pFileName->szName : "" );
-   szBasePath = pFileName->szPath ? hb_strdup( pFileName->szPath ) : NULL;
-   szBaseExt = pFileName->szExtension ? hb_strdup( pFileName->szExtension ) : NULL;
-   hb_strUpper( szBaseName, strlen( szBaseName ) );
-
    pIndex = pArea->lpIndexes;
    while( pIndex )
    {
-      hb_xfree( pFileName );
-      pFileName = hb_fsFNameSplit( pIndex->szFileName );
-      if( !hb_stricmp( pFileName->szName ? pFileName->szName : "", szBaseName ) &&
-          ( !szBasePath ||
-            ( pFileName->szPath && !hb_stricmp( pFileName->szPath, szBasePath ) ) ) &&
-          ( !szBaseExt ||
-            ( pFileName->szExtension && !hb_stricmp( pFileName->szExtension, szBaseExt ) ) ) )
+      PHB_FNAME pIndexName = hb_fsFNameSplit( pIndex->szFileName );
+      HB_BOOL fFound = ( pFileName->szName ? pIndexName->szName &&
+            !hb_stricmp( pIndexName->szName, pFileName->szName ) : !pIndexName->szName ) &&
+          ( !pFileName->szPath ||
+            ( pIndexName->szPath && !hb_stricmp( pIndexName->szPath, pFileName->szPath ) ) ) &&
+          ( !pFileName->szExtension ||
+            ( pIndexName->szExtension && !hb_stricmp( pIndexName->szExtension, pFileName->szExtension ) ) );
+      hb_xfree( pIndexName );
+      if( fFound )
          break;
       pIndex = pIndex->pNext;
    }
    hb_xfree( pFileName );
-   hb_xfree( szBaseName );
-   if( szBasePath )
-      hb_xfree( szBasePath );
-   if( szBaseExt )
-      hb_xfree( szBaseExt );
    return pIndex;
 }
 

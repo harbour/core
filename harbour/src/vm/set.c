@@ -2651,6 +2651,25 @@ const char * hb_setGetDBCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_DBCODEPAGE;
 }
 
+HB_BOOL hb_osUseCP( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+#if defined( HB_MT_VM )
+   if( hb_stackId() )
+#endif
+   {
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         return cdpHost && cdpHost != cdpOS;
+      }
+   }
+
+   return HB_FALSE;
+}
+
 const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
    HB_STACK_TLS_PRELOAD

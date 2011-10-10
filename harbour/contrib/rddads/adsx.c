@@ -417,7 +417,8 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
    pTag->uiLen = uiLen;
 
    /* Use national support */
-   if( bType == 'C' && pArea->adsarea.area.cdPage && pArea->adsarea.area.cdPage->sort )
+   if( bType == 'C' && pArea->adsarea.area.cdPage &&
+       !HB_CDP_ISBINSORT( pArea->adsarea.area.cdPage ) )
       pTag->pCodepage = pArea->adsarea.area.cdPage;
 
    pTag->pKeys = (LPMIXKEY*) hb_xgrab( sizeof( LPMIXKEY ) * MIX_KEYPOOLFIRST );

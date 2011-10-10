@@ -952,6 +952,10 @@ extern HB_EXPORT HB_BOOL   hb_charIsDigit( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsAlpha( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsLower( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsUpper( int iChar );
+extern HB_EXPORT HB_BOOL   hb_strIsDigit( const char * szChar );
+extern HB_EXPORT HB_BOOL   hb_strIsAlpha( const char * szChar );
+extern HB_EXPORT HB_BOOL   hb_strIsLower( const char * szChar );
+extern HB_EXPORT HB_BOOL   hb_strIsUpper( const char * szChar );
 extern HB_EXPORT int       hb_charUpper( int iChar );  /* converts iChar to upper case */
 extern HB_EXPORT int       hb_charLower( int iChar );  /* converts iChar to lower case */
 extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
@@ -1169,6 +1173,7 @@ extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windo
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
+extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled?  */
 extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string sent to a system call, from Harbour codepage. */
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string received from a system call, to Harbour codepage. */
 

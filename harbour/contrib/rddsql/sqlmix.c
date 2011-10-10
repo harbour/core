@@ -825,7 +825,8 @@ static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_IT
    /* Use national support */
    if ( bType == 'C' )
    {
-      if( pArea->sqlarea.area.cdPage && pArea->sqlarea.area.cdPage->sort )
+      if( pArea->sqlarea.area.cdPage &&
+          !HB_CDP_ISBINSORT( pArea->sqlarea.area.cdPage ) )
       {
          pTag->pCodepage = pArea->sqlarea.area.cdPage;
       }

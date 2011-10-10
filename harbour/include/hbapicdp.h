@@ -375,6 +375,9 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_CDP_ENDIAN_LITTLE        1
 #define HB_CDP_ENDIAN_BIG           2
 
+#define HB_CDP_ISBINSORT(cdp)       ( ( cdp )->sort == NULL )
+#define HB_CDP_ISBYTESORT(cdp)      ( ( cdp )->nMulti == 0 && ( cdp )->nACSort == 0 )
+
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
                                                  const char * info,

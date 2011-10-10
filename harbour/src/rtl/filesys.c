@@ -3629,9 +3629,8 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 {
    int iFileCase, iDirCase;
-   const char * pszCP;
    char cDirSep;
-   HB_BOOL fTrim;
+   HB_BOOL fTrim, fEncodeCP;
 
 /*
    Convert file and dir case. The allowed SET options are:
@@ -3653,18 +3652,15 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       return szFileName;
 
    fTrim = hb_setGetTrimFileName();
+   fEncodeCP = hb_osUseCP();
    cDirSep = ( char ) hb_setGetDirSeparator();
    iFileCase = hb_setGetFileCase();
    iDirCase = hb_setGetDirCase();
-   pszCP = hb_setGetOSCODEPAGE();
-   if( pszCP && *pszCP == 0 )
-      pszCP = NULL;
 
-   if( fTrim ||
+   if( fTrim || fEncodeCP ||
        cDirSep != HB_OS_PATH_DELIM_CHR ||
        iFileCase != HB_SET_CASE_MIXED ||
-       iDirCase != HB_SET_CASE_MIXED ||
-       pszCP )
+       iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
       HB_SIZE nLen;
@@ -3735,7 +3731,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
 
-      if( pszCP )
+      if( fEncodeCP )
       {
          const char * pszPrev = szFileName;
          nLen = HB_PATH_MAX;

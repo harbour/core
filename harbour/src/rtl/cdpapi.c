@@ -452,6 +452,50 @@ HB_BOOL hb_charIsUpper( int iChar )
       return HB_ISUPPER( iChar );
 }
 
+HB_BOOL hb_strIsDigit( const char * szChar )
+{
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   int iChar = ( HB_UCHAR ) * szChar;
+
+   if( cdp )
+      return ( cdp->flags[ iChar & 0x0ff ] & HB_CDP_DIGIT ) != 0;
+   else
+      return HB_ISDIGIT( iChar );
+}
+
+HB_BOOL hb_strIsAlpha( const char * szChar )
+{
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   int iChar = ( HB_UCHAR ) * szChar;
+
+   if( cdp )
+      return ( cdp->flags[ iChar & 0x0ff ] & HB_CDP_ALPHA ) != 0;
+   else
+      return HB_ISALPHA( iChar );
+}
+
+HB_BOOL hb_strIsLower( const char * szChar )
+{
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   int iChar = ( HB_UCHAR ) * szChar;
+
+   if( cdp )
+      return ( cdp->flags[ iChar & 0x0ff ] & HB_CDP_LOWER ) != 0;
+   else
+      return HB_ISLOWER( iChar );
+}
+
+HB_BOOL hb_strIsUpper( const char * szChar )
+{
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   int iChar = ( HB_UCHAR ) * szChar;
+
+   if( cdp )
+      return ( cdp->flags[ iChar & 0x0ff ] & HB_CDP_UPPER ) != 0;
+   else
+      return HB_ISUPPER( iChar );
+}
+
 int hb_charLower( int iChar )
 {
    PHB_CODEPAGE cdp = hb_vmCDP();
