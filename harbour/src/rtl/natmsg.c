@@ -65,6 +65,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
+#include "hbapicdp.h"
 
 /* NOTE: Ad-hoc names mostly taken from various Clipper source files.
          These should be named properly if exported outside this file.
@@ -93,16 +94,54 @@ static const char * hb_nationGetMsg( int iMsg )
 
 HB_FUNC( __NATISAFFIRM )
 {
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+   HB_SIZE nLen = hb_parclen( 1 );
+   HB_BOOL fIS = HB_FALSE;
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && hb_charUpper( hb_itemGetCPtr( pItem )[ 0 ] ) == hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 )[ 0 ] );
+   if( nLen > 0 )
+   {
+      const char * szYesNo = hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 );
+      HB_SIZE nStr = 0;
+
+      while( szYesNo[ nStr ] && szYesNo[ nStr ] != '/' )
+         ++nStr;
+
+      if( nStr && nLen >= nStr )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( cdp )
+            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE );
+         else
+            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr );
+      }
+   }
+   hb_retl( fIS );
 }
 
 HB_FUNC( __NATISNEGATIVE )
 {
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+   HB_SIZE nLen = hb_parclen( 1 );
+   HB_BOOL fIS = HB_FALSE;
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && hb_charUpper( hb_itemGetCPtr( pItem )[ 0 ] ) == hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 )[ 2 ] );
+   if( nLen > 0 )
+   {
+      const char * szYesNo = hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 );
+      HB_SIZE nStr;
+
+      while( *szYesNo )
+         if( *szYesNo++ == '/' )
+            break;
+      nStr = strlen( szYesNo );
+
+      if( nStr && nLen >= nStr )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( cdp )
+            fIS = hb_cdpicmp( hb_parc( 1 ), nLen, szYesNo, nStr, cdp, HB_FALSE );
+         else
+            fIS = hb_strnicmp( hb_parc( 1 ), szYesNo, nStr );
+      }
+   }
+   hb_retl( fIS );
 }
 
 HB_FUNC( __NATMSG )
