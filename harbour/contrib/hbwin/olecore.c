@@ -1216,7 +1216,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
 /* IDispatch parameters, return value handling */
 
-static void GetParams( DISPPARAMS * dispparam, HB_USHORT uiOffset, HB_BOOL fUseRef )
+static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef )
 {
    VARIANTARG   *pArgs = NULL, *pRefs;
    UINT         uiArgCount, uiArg, uiRefs;
@@ -1263,7 +1263,7 @@ static void GetParams( DISPPARAMS * dispparam, HB_USHORT uiOffset, HB_BOOL fUseR
    dispparam->cNamedArgs = 0;
 }
 
-static void PutParams( DISPPARAMS * dispparam, HB_USHORT uiOffset, HB_USHORT uiClass )
+static void PutParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_USHORT uiClass )
 {
    VARIANTARG* pRefs = &dispparam->rgvarg[ dispparam->cArgs ];
    PHB_ITEM pItem = NULL;

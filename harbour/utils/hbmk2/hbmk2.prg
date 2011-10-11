@@ -4261,7 +4261,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cOptIncMask := "-I{DI}"
          cBin_CompC := "bcc32.exe"
          cBin_CompCPP := cBin_CompC
-         cOpt_CompC := "-c -q"
+         cOpt_CompC := "-c -q -CP437"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
