@@ -36,6 +36,7 @@ QLatin1String.qth
 QLine.qth
 QLineF.qth
 QList.qth
+QLibraryInfo.qth
 QLocale.qth
 QMetaClassInfo.qth
 QMetaEnum.qth

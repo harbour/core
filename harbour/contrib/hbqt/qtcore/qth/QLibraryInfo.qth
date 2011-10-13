@@ -1,0 +1,69 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject  = no
+Inherits =
+Type     = 
+New      = 
+Constructor = 
+</CLASS>
+
+<SUBCLASS>
+</SUBCLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QDate>
+
+
+/*
+ * 
+ * 
+ */
+HB_FUNC( QT_QLIBRARYINFO )
+{
+   __HB_RETPTRGC__( NULL );
+}
+</CODE>
+
+<ENUMS>
+enum LibraryLocation { PrefixPath, DocumentationPath, HeadersPath, LibrariesPath, BinariesPath, PluginsPath, ImportsPath, DataPath, TranslationsPath, SettingsPath, ExamplesPath, DemosPath }
+</ENUMS>
+
+<PROTOS>
+QDate buildDate (){
+   hbqt_create_objectGC( hbqt_gcAllocate_QDate( new QDate( QLibraryInfo::buildDate() ), true ) , "HB_QDATE" );   
+}
+QString buildKey (){
+   hb_retstr_utf8( QLibraryInfo::buildKey().toUtf8().data() );
+}
+QString licensedProducts (){
+   hb_retstr_utf8( QLibraryInfo::licensedProducts().toUtf8().data() );
+}
+QString licensee (){
+   hb_retstr_utf8( QLibraryInfo::licensee().toUtf8().data() );
+}
+QString location ( LibraryLocation loc ){
+   hb_retstr_utf8( QLibraryInfo::location( ( QLibraryInfo::LibraryLocation ) hb_parni( 1 ) ).toUtf8().data() );
+}
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

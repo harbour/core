@@ -85,4 +85,17 @@
 #define QFile_WriteOther                          0x0002   // The file is writable by anyone.
 #define QFile_ExeOther                            0x0001   // The file is executable by anyone.
 
+
+#define QLibraryInfo_PrefixPath                   0  // The default prefix for all paths.
+#define QLibraryInfo_DocumentationPath            1  // The location for documentation upon install.
+#define QLibraryInfo_HeadersPath                  2  // The location for all headers.
+#define QLibraryInfo_LibrariesPath                3  // The location of installed librarires.
+#define QLibraryInfo_BinariesPath                 4  // The location of installed Qt binaries (tools and applications).
+#define QLibraryInfo_PluginsPath                  5  // The location of installed Qt plugins.
+#define QLibraryInfo_DataPath                     6  // The location of general Qt data.
+#define QLibraryInfo_TranslationsPath             7  // The location of translation information for Qt strings.
+#define QLibraryInfo_SettingsPath                 8  // The location for Qt settings.
+#define QLibraryInfo_ExamplesPath                 10 // The location for examples upon install.
+#define QLibraryInfo_DemosPath                    9  // The location for demos upon install.
+
 #endif
