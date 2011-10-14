@@ -376,7 +376,6 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_CDP_ENDIAN_BIG           2
 
 #define HB_CDP_ISBINSORT(cdp)       ( ( cdp )->sort == NULL )
-#define HB_CDP_ISBYTESORT(cdp)      ( ( cdp )->nMulti == 0 && ( cdp )->nACSort == 0 )
 
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
@@ -401,7 +400,7 @@ extern HB_EXPORT HB_BOOL      hb_cdpIsLower( PHB_CODEPAGE cdp, int iChar );
 extern HB_EXPORT HB_BOOL      hb_cdpIsUpper( PHB_CODEPAGE cdp, int iChar );
 extern HB_EXPORT int          hb_cdpcmp( const char * szFirst, HB_SIZE nLenFirst, const char * szSecond, HB_SIZE nLenSecond, PHB_CODEPAGE cdp, HB_BOOL fExact );
 extern HB_EXPORT int          hb_cdpicmp( const char * szFirst, HB_SIZE nLenFirst, const char * szSecond, HB_SIZE nLenSecond, PHB_CODEPAGE cdp, HB_BOOL fExact );
-extern HB_EXPORT int          hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdp );
+extern HB_EXPORT const HB_UCHAR * hb_cdpGetSortTab( PHB_CODEPAGE cdp );
 
 extern HB_EXPORT char *       hb_cdpDup( const char *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT char *       hb_cdpnDup( const char *, HB_SIZE *, PHB_CODEPAGE, PHB_CODEPAGE );

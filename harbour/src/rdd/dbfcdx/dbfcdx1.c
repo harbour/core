@@ -227,41 +227,11 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
    if( pArea->dbfarea.area.cdPage &&
        !HB_CDP_ISBINSORT( pArea->dbfarea.area.cdPage ) &&
-       !( pArea->fSortCDP || pArea->bCdxSortTab ) )
+       !( pArea->fSortCDP || pArea->sortTab ) )
    {
-      if( !HB_CDP_ISBYTESORT( pArea->dbfarea.area.cdPage ) )
+      pArea->sortTab = hb_cdpGetSortTab( pArea->dbfarea.area.cdPage );
+      if( !pArea->sortTab )
          pArea->fSortCDP = HB_TRUE;
-      else
-      {
-         int i, j, l;
-         HB_BYTE * pbSort;
-         HB_BYTE b;
-
-         pArea->bCdxSortTab = ( HB_BYTE * ) hb_xgrab( 256 );
-         pbSort = ( HB_BYTE * ) hb_xgrab( 256 );
-         /* this table should be allready quite good sorted so this simple
-            algorithms is one of the most efficient one. */
-         for( i = 0; i <= 255; i++ )
-            pbSort[i] = ( HB_BYTE ) i;
-         l = 255;
-         do
-         {
-            j = l;
-            for( i = 0; i < j; i++ )
-            {
-               if( hb_cdpchrcmp( pbSort[i], pbSort[i+1], pArea->dbfarea.area.cdPage ) > 0 )
-               {
-                  b = pbSort[i+1];
-                  pbSort[i+1] = pbSort[i];
-                  pbSort[i] = b;
-                  l = i;
-               }
-            }
-         } while( j != l );
-         for( i = 0; i <= 255; i++ )
-            pArea->bCdxSortTab[ pbSort[i] ] = ( HB_BYTE ) i;
-         hb_xfree( pbSort );
-      }
    }
 }
 
@@ -395,26 +365,29 @@ static int hb_cdxValCompare( LPCDXTAG pTag, const HB_BYTE * val1, int len1,
 
    if( pTag->uiType == 'C' )
    {
-      if( pTag->pIndex->pArea->bCdxSortTab )
+      if( iLimit > 0 )
       {
-         HB_BYTE * pSort = pTag->pIndex->pArea->bCdxSortTab;
-         int iPos = 0;
-         while( iPos < iLimit )
+         if( pTag->pIndex->pArea->sortTab )
          {
-            iResult = pSort[ val1[ iPos ] ] - pSort[ val2[ iPos ] ];
-            if( iResult != 0 )
-               break;
-            iPos++;
+            const HB_UCHAR * sortTab = pTag->pIndex->pArea->sortTab;
+            int iPos = 0;
+            while( iPos < iLimit )
+            {
+               iResult = sortTab[ val1[ iPos ] ] - sortTab[ val2[ iPos ] ];
+               if( iResult != 0 )
+                  break;
+               iPos++;
+            }
          }
+         else if( pTag->pIndex->pArea->fSortCDP )
+         {
+            return - hb_cdpcmp( ( const char * ) val2, ( HB_SIZE ) len2,
+                                ( const char * ) val1, ( HB_SIZE ) len1,
+                                pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
+         }
+         else
+            iResult = memcmp( val1, val2, iLimit );
       }
-      else if( pTag->pIndex->pArea->fSortCDP )
-      {
-         return - hb_cdpcmp( ( const char * ) val2, ( HB_SIZE ) len2,
-                             ( const char * ) val1, ( HB_SIZE ) len1,
-                             pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
-      }
-      else if( iLimit > 0 )
-         iResult = memcmp( val1, val2, iLimit );
 
       if( iResult == 0 )
       {
@@ -7019,11 +6992,6 @@ static HB_ERRCODE hb_cdxClose( CDXAREAP pArea )
       }
 
       hb_cdxOrdListClear( pArea, HB_TRUE, NULL );
-      if( pArea->bCdxSortTab )
-      {
-         hb_xfree( pArea->bCdxSortTab );
-         pArea->bCdxSortTab = NULL;
-      }
 #ifdef HB_CDX_DBGTIME
       printf( "\r\ncdxTimeIntBld=%f, cdxTimeExtBld=%f, cdxTimeBld=%f\r\n"
               "cdxTimeGetKey=%f, cdxTimeFreeKey=%f\r\n"

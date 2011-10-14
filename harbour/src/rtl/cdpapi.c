@@ -557,33 +557,9 @@ char * hb_strUpper( char * szText, HB_SIZE nLen )
 /*
  * comparison
  */
-int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdp )
+const HB_UCHAR * hb_cdpGetSortTab( PHB_CODEPAGE cdp )
 {
-   if( cFirst == cSecond )
-      return 0;
-
-   if( cdp->sort )
-   {
-      int n1 = cdp->sort[ ( HB_UCHAR ) cFirst ],
-          n2 = cdp->sort[ ( HB_UCHAR ) cSecond ];
-
-      if( cdp->nMulti == 0 || ( n1 != 0 && n2 != 0 ) )
-      {
-         if( n1 == n2 )
-         {
-            if( cdp->acc )
-            {
-               n1 = cdp->acc[ ( HB_UCHAR ) cFirst ];
-               n2 = cdp->acc[ ( HB_UCHAR ) cSecond ];
-            }
-            else
-               return 0;
-         }
-         return ( n1 < n2 ) ? -1 : 1;
-      }
-   }
-
-   return ( ( HB_UCHAR ) cFirst < ( HB_UCHAR ) cSecond ) ? -1 : 1;
+   return ( cdp->nMulti == 0 && cdp->nACSort == 0 ) ? cdp->sort : NULL;
 }
 
 static int hb_cdpMultiWeight( PHB_CODEPAGE cdp, const char * szChar )
