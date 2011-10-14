@@ -1906,7 +1906,7 @@ years ago and never finished. Instead some other core code modifications
 in last years systematically introduced new non MT safe code and in few
 cases even broke existing MT extensions.
 
-I cannot say if xHarbour developers plan to make sth with it.
+I cannot say if xHarbour developers plan to make something with it.
 Now I cannot even describe it well because looking at the xHarbour source
 I do not know what is intentional decision, what is a bug in implementation
 and what is unfinished code, i.e. such code:
@@ -1994,7 +1994,7 @@ Codeblock like:
 can be defined in code where just after QOUT() in symbol table is FERASE().
 Small modification in application code can cause that symbols will be
 moved and above codeblock after restoring will effectively execute FERASE()
-instead of QOUT(). What does it mean for programs which makes sth like:
+instead of QOUT(). What does it mean for programs which makes something like:
       eval( cb, "The most import file is:" )
       eval( cb, cDataFile )
       eval( cb, "Please make backup." )
@@ -2355,7 +2355,7 @@ is wrong because hb_parc() returns pointer to readonly strings
 which cannot be changed by user code. So this code should be
 changed to:
       const char * pszValue = hb_parc( 1 );
-Now if compiled code tries to make sth like:
+Now if compiled code tries to make something like:
       pszValue[ index ] = 'X';
 what is illegal in Harbour, xHarbour and also in Clipper for pointers
 returned by _parc() function then compiler generate warning or error
@@ -2444,8 +2444,8 @@ HBVM library is different for MT mode and all others are the same.
 Such separation also greatly increase C code quality eliminating possible
 GPF traps, wrong behavior in code created without enough knowledge about
 HVM internals or code which blocks adding new extensions.
-It's sth what should be done in xHarbour core code where lot of code is
-simply wrong due to direct access to HVM internals, i.e.
+It's something what should be done in xHarbour core code where lot of code
+is simply wrong due to direct access to HVM internals, i.e.
 source/rtl/txtline.c[299]:
       Term[i] = (char *) (&Opt)->item.asString.value;
 and we have GPF trap if given array item is not a string.
@@ -2470,7 +2470,7 @@ GPF. It means that this code blocks adding automatic garbage collector
 activation in memory manager.
 These are only examples and anyone can find many other similar problems
 in xHarbour core code so in my opinion API separation with core code
-cleanup is sth what has to be done in xHarbour in the future.
+cleanup is something what has to be done in xHarbour in the future.
 Of course such separation does not mean that we can forbid 3-rd party
 programmers to access HVM internals. Programmers creating code for Harbour
 can include before any other Harbour header files "hbvmint.h", i.e.:
