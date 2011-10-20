@@ -4170,7 +4170,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 #endif
             HB_COMP_PARAM->iModulesCount = 1;
 
-         HB_COMP_PARAM->currLine = 1;
+         HB_COMP_PARAM->currLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP ) + 1;
          HB_COMP_PARAM->currModule = hb_compIdentifierNew(
                                     HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
          if( HB_COMP_PARAM->szFile == NULL )

@@ -67,7 +67,7 @@ static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,
       PHB_ITEM pError;
 
       hb_snprintf( szMsgBuf, sizeof( szMsgBuf ), szText, szPar1, szPar2 );
-      if( !szModule || *szModule == 0 || strcmp( szModule, "{SOURCE}" ) == 0 )
+      if( !szModule || *szModule == 0 || strcmp( szModule, "{SOURCE}.prg" ) == 0 )
          hb_snprintf( szLine, sizeof( szLine ),
                       "line:%i", iLine );
       else
