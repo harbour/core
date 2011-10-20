@@ -130,7 +130,7 @@ HB_FUNC( TRANSFORM )
 
          while( nPicLen && ! bDone )
          {
-            switch( hb_charUpper( *szPic ) )
+            switch( *szPic++ )
             {
                case HB_CHAR_HT:
                case ' ':
@@ -147,49 +147,56 @@ HB_FUNC( TRANSFORM )
                   break;
 #ifndef HB_CLP_STRICT
                /* Xbase++ and FoxPro compatibility */
+               case 'l':
                case 'L':
                case '0':
                   uiPicFlags |= PF_PADL;  /* FoxPro/XPP extension */
                   cParamL = '0';
                   break;
 #endif
+               case 'b':
                case 'B':
                   uiPicFlags |= PF_LEFT;
                   break;
+               case 'c':
                case 'C':
                   uiPicFlags |= PF_CREDIT;
                   break;
+               case 'd':
                case 'D':
                   uiPicFlags |= PF_DATE;
                   break;
+               case 'e':
                case 'E':
                   uiPicFlags |= PF_BRITISH;
                   break;
+               case 'r':
                case 'R':
                   uiPicFlags |= PF_REMAIN;
                   break;
+               case 's':
                case 'S':
                   uiPicFlags |= PF_WIDTH;
                   nParamS = 0;
-                  while( nPicLen > 1 && *( szPic + 1 ) >= '0' && *( szPic + 1 ) <= '9' )
+                  while( nPicLen > 1 && *szPic >= '0' && *szPic <= '9' )
                   {
-                     szPic++;
+                     nParamS = ( nParamS * 10 ) + ( ( HB_SIZE ) ( *szPic++ - '0' ) );
                      nPicLen--;
-                     nParamS = ( nParamS * 10 ) + ( ( HB_SIZE ) ( *szPic - '0' ) );
                   }
                   break;
+               case 't':
                case 'T':
                   uiPicFlags |= PF_TIME;
                   break;
+               case 'x':
                case 'X':
                   uiPicFlags |= PF_DEBIT;
                   break;
+               case 'z':
                case 'Z':
                   uiPicFlags |= PF_EMPTY;
                   break;
             }
-
-            szPic++;
             nPicLen--;
          }
       }

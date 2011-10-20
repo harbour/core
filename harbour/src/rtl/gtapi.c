@@ -210,7 +210,7 @@ HB_ERRCODE hb_gtBoxS( int iTop, int iLeft, int iBottom, int iRight )
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOXD( pGT, iTop, iLeft, iBottom, iRight, _B_SINGLE, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, _B_SINGLE, HB_GTSELF_GETCOLOR( pGT ) );
       HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
