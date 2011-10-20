@@ -411,11 +411,18 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    LOCAL cExt
    LOCAL lExtract
 
+   LOCAL hHandle
+   LOCAL nSize
+   LOCAL nRead
+   LOCAL nLen
+   LOCAL dDate
+   LOCAL cTime
+   LOCAL cBuffer := Space( t_nReadBuffer )
+
    DEFAULT lWithPath TO .F.
 
    /* TODO: Implement. */
    HB_SYMBOL_UNUSED( lWithPath )
-   HB_SYMBOL_UNUSED( bProgress )
 
    IF Empty( cPassword )
       cPassword := NIL
@@ -445,7 +452,8 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
          nPos++
 
-         IF hb_UnzipFileInfo( hUnzip, @cZipName ) == 0
+         IF hb_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime, , , , @nSize ) == 0
+
             /* NOTE: As opposed to original hbziparch we don't do a second match without path. */
             IF !Empty( acFiles )
                IF AScan( acFiles, nPos ) > 0 .OR. ;
@@ -459,10 +467,19 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
             ENDIF
 
             IF lExtract
+               hHandle := FCreate( cPath + cZipName )
+               DO WHILE ( nLen := hb_unZipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
+                  IF hb_isBlock( bProgress )
+                     nRead += nLen
+                     Eval( bProgress, nRead, nSize )
+                  ENDIF
+                  FWrite( hHandle, cBuffer, nLen )
+               ENDDO
+               FClose( hHandle )
+               hb_FSetDateTime( cZipName, dDate, cTime )
                IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
-               hb_UnzipExtractCurrentFile( hUnzip, cPath + cZipName, cPassword )
             ENDIF
          ENDIF
 

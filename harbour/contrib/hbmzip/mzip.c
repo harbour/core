@@ -550,8 +550,6 @@ HB_FUNC( HB_UNZIPFILEREAD )
 
       if( hUnzip )
       {
-         int iResult;
-
          if( HB_ISNUM( 3 ) )
          {
             HB_SIZE nRead = hb_parns( 3 );
@@ -559,8 +557,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
                nSize = nRead;
          }
 
-         iResult = unzReadCurrentFile( hUnzip, buffer, ( unsigned ) nSize );
-         hb_retnl( iResult );
+         hb_retnl( unzReadCurrentFile( hUnzip, buffer, ( unsigned ) nSize ) );
       }
    }
    else
