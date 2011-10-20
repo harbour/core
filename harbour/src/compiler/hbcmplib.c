@@ -74,8 +74,8 @@ static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,
          hb_snprintf( szLine, sizeof( szLine ),
                       iErrorFmt == HB_ERRORFMT_CLIPPER ? "%s(%i)" : "%s:%i",
                       szModule, iLine );
-      pError = hb_errRT_New( ES_ERROR, "COMPILER", 1001, ( HB_ERRCODE ) iValue, szMsgBuf,
-                             szLine, 0 /*OsCode*/, EF_NONE | EF_CANDEFAULT );
+      pError = hb_errRT_New( ES_ERROR, "COMPILER", 1001, ( HB_ERRCODE ) iValue,
+                             szMsgBuf, szLine, 0 /*OsCode*/, EF_NONE );
       hb_errLaunch( pError );
       hb_errRelease( pError );
    }
@@ -210,7 +210,7 @@ HB_FUNC( HB_COMPILE )
    PHB_PP_MSG_FUNC pMsgFunc;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
-   hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, pIncItem, pOpenFunc, pMsgFunc ) );
+   hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, 0, pIncItem, pOpenFunc, pMsgFunc ) );
    hb_xfree( argv );
 }
 
@@ -225,7 +225,7 @@ HB_FUNC( HB_COMPILEBUF )
    HB_SIZE nLen;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
-   iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, pIncItem, pOpenFunc, pMsgFunc );
+   iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, 0, pIncItem, pOpenFunc, pMsgFunc );
    hb_xfree( argv );
 
    if( iResult == EXIT_SUCCESS && pBuffer )
@@ -247,7 +247,7 @@ HB_FUNC( HB_COMPILEFROMBUF )
    if( szSource )
    {
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
-      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, pIncItem, pOpenFunc, pMsgFunc );
+      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
       hb_xfree( argv );
 
       if( iResult == EXIT_SUCCESS && pBuffer )

@@ -54,14 +54,14 @@
 #include "hbcomp.h"
 #include "hbhash.h"
 
-static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer );
+static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer, int iStartLine );
 static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fError );
 
 /* ************************************************************************* */
 
 int hb_compMainExt( int argc, const char * const argv[],
                     HB_BYTE ** pBufPtr, HB_SIZE * pnSize,
-                    const char * szSource,
+                    const char * szSource, int iStartLine,
                     void * cargo, PHB_PP_OPEN_FUNC pOpenFunc,
                                   PHB_PP_MSG_FUNC pMsgFunc )
 {
@@ -138,7 +138,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    if( szSource )
    {
       bAnyFiles = HB_TRUE;
-      iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource );
+      iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource, iStartLine );
    }
    else
    {
@@ -149,7 +149,7 @@ int hb_compMainExt( int argc, const char * const argv[],
          if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
          {
             bAnyFiles = HB_TRUE;
-            iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], NULL );
+            iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], NULL, 0 );
             if( iStatus != EXIT_SUCCESS )
                break;
          }
@@ -183,7 +183,7 @@ int hb_compMainExt( int argc, const char * const argv[],
 
 int hb_compMain( int argc, const char * const argv[] )
 {
-   return hb_compMainExt( argc, argv, NULL, NULL, NULL, NULL, NULL, NULL );
+   return hb_compMainExt( argc, argv, NULL, NULL, NULL, 0, NULL, NULL, NULL );
 }
 
 static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
@@ -4054,7 +4054,7 @@ static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    HB_COMP_PARAM->supported         = pSwitches->supported;
 }
 
-static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer )
+static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer, int iStartLine )
 {
    char buffer[ HB_PATH_MAX * 2 + 80 ];
    HB_COMP_SWITCHES switches;
@@ -4063,7 +4063,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    PHB_MODULE pModule;
    HB_BOOL fGenCode = HB_TRUE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%p)", szPrg, szBuffer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%p,%d)", szPrg, szBuffer, iStartLine));
 
    hb_compSaveSwitches( HB_COMP_PARAM, &switches );
    /* Initialize support variables */
@@ -4113,7 +4113,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       if( szBuffer )
       {
-         if( !hb_pp_inBuffer( HB_COMP_PARAM->pLex->pPP, szBuffer, strlen( szBuffer ) ) )
+         if( !hb_pp_inBuffer( HB_COMP_PARAM->pLex->pPP, szBuffer, strlen( szBuffer ), iStartLine ) )
          {
             hb_compOutErr( HB_COMP_PARAM, "Cannot create preprocessor buffer." );
             iStatus = EXIT_FAILURE;

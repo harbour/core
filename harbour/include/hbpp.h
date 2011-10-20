@@ -664,7 +664,7 @@ extern HB_EXPORT void    hb_pp_setStdRules( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_setStdBase( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern HB_EXPORT void    hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, HB_BOOL fReplace );
-extern HB_EXPORT HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen );
+extern HB_EXPORT HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen, int iStartLine );
 extern HB_EXPORT HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fSearchPath, FILE * file_in, HB_BOOL fError );
 extern HB_EXPORT HB_BOOL hb_pp_outFile( PHB_PP_STATE pState, const char * szOutFileName, FILE * file_out );
 extern HB_EXPORT HB_BOOL hb_pp_traceFile( PHB_PP_STATE pState, const char * szTraceFileName, FILE * file_trace );

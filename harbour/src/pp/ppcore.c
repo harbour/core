@@ -5316,7 +5316,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, HB_TRUE, fDirect, HB_TRUE );
          }
-         /* Clipper PP does not accept #line and generate error */
+         /* Clipper PP does not accept #line and generates error */
          else if( hb_pp_tokenValueCmp( pToken, "LINE", HB_PP_CMP_DBASE ) )
          {
             /* ignore #line directives */
@@ -5694,13 +5694,15 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 /*
  * close all open input files and set the given buffer as input stream
  */
-HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen )
+HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen, int iStartLine )
 {
    hb_pp_InFileFree( pState );
 
    pState->fError = HB_FALSE;
 
    pState->pFile = hb_pp_FileBufNew( pBuffer, nLen );
+   pState->pFile->iCurrentLine = iStartLine;
+   pState->pFile->iLastLine = iStartLine + 1;
    pState->iFiles++;
    return HB_TRUE;
 }
