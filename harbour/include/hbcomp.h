@@ -266,7 +266,7 @@ extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
 #define HB_GEN_FUNC4( func, p1,p2,p3,p4 ) hb_compGen##func( p1, p2, p3, p4, HB_COMP_PARAM )
 
 extern int  hb_compMain( int argc, const char * const argv[] );
-extern int  hb_compMainExt( int argc, const char * const argv[], HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource, void * cargo, PHB_PP_OPEN_FUNC pOpenFunc );
+extern int  hb_compMainExt( int argc, const char * const argv[], HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource, void * cargo, PHB_PP_OPEN_FUNC pOpenFunc, PHB_PP_MSG_FUNC pMsgFunc );
 extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
 extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 

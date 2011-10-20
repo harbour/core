@@ -120,6 +120,10 @@ typedef HB_PP_SWITCH_FUNC_( ( * PHB_PP_SWITCH_FUNC ) );
 #define HB_PP_INC_FUNC_( func ) void func( void *, const char * )
 typedef HB_PP_INC_FUNC_( ( * PHB_PP_INC_FUNC ) );
 
+/* function to generate errors */
+#define HB_PP_MSG_FUNC_( func ) void func( void * cargo, int iErrorFmt, int iLine, const char * szModule, char cPrefix, int iValue, const char * szText, const char * szPar1, const char * szPar2 )
+typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
+
 
 /* preprocessor tokens */
 #define HB_PP_TOKEN_NUL          0

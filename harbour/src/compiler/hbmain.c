@@ -62,7 +62,8 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
 int hb_compMainExt( int argc, const char * const argv[],
                     HB_BYTE ** pBufPtr, HB_SIZE * pnSize,
                     const char * szSource,
-                    void * cargo, PHB_PP_OPEN_FUNC pOpenFunc )
+                    void * cargo, PHB_PP_OPEN_FUNC pOpenFunc,
+                                  PHB_PP_MSG_FUNC pMsgFunc )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
@@ -79,6 +80,8 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    HB_COMP_PARAM = hb_comp_new();
    HB_COMP_PARAM->cargo = cargo;
+   if( pMsgFunc )
+      HB_COMP_PARAM->outMsgFunc = pMsgFunc;
 
    HB_COMP_PARAM->pOutPath = NULL;
 
@@ -180,7 +183,7 @@ int hb_compMainExt( int argc, const char * const argv[],
 
 int hb_compMain( int argc, const char * const argv[] )
 {
-   return hb_compMainExt( argc, argv, NULL, NULL, NULL, NULL, NULL );
+   return hb_compMainExt( argc, argv, NULL, NULL, NULL, NULL, NULL, NULL );
 }
 
 static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )

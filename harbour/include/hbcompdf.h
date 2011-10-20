@@ -775,6 +775,7 @@ typedef struct _HB_COMP
 
    void              ( * outStdFunc ) ( void *, const char* );
    void              ( * outErrFunc ) ( void *, const char* );
+   PHB_PP_MSG_FUNC   outMsgFunc;
    void *            cargo;
 
    HB_SIZE           nOutBufSize;         /* memory output buffer size */

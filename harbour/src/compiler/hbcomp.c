@@ -165,6 +165,67 @@ static void hb_compErrorDuplVar( HB_COMP_DECL, const char * szVarName )
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_VAR_DUPL, szVarName, NULL );
 }
 
+static void hb_compOutMsg( void * cargo, int iErrorFmt, int iLine,
+                           const char * szModule, char cPrefix, int iValue,
+                           const char * szText,
+                           const char * szPar1, const char * szPar2 )
+{
+   char buffer[ 512 ];
+
+   if( szModule )
+   {
+      if( iErrorFmt == HB_ERRORFMT_CLIPPER )
+         hb_snprintf( buffer, sizeof( buffer ), "\r%s(%i) ", szModule, iLine );
+      else if( iLine )
+         hb_snprintf( buffer, sizeof( buffer ), "\n%s:%i: ", szModule, iLine );
+      else
+         hb_snprintf( buffer, sizeof( buffer ), "\n%s:%s ", szModule, szPar2 );
+
+      hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
+   }
+
+   if( iErrorFmt == HB_ERRORFMT_CLIPPER )
+      hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
+                   cPrefix == 'W' ? "Warning" : "Error", cPrefix, iValue );
+   else
+      hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
+                   cPrefix == 'W' ? "warning" : "error", cPrefix, iValue );
+
+   hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
+   hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
+   hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
+   hb_compOutErr( ( HB_COMP_PTR ) cargo, "\n" );
+}
+
+void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
+{
+   if( ! HB_COMP_PARAM->fFullQuiet )
+   {
+      if( HB_COMP_PARAM->outStdFunc )
+         HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM, szMessage );
+      else
+#if defined( HB_OS_DOS )
+         fprintf( stderr, "%s", szMessage ); fflush( stderr );
+#else
+         fprintf( stdout, "%s", szMessage ); fflush( stdout );
+#endif
+   }
+}
+
+void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
+{
+   if( ! HB_COMP_PARAM->fFullQuiet )
+   {
+      if( HB_COMP_PARAM->outErrFunc )
+         HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM, szMessage );
+      else
+#if defined( HB_OS_DOS )
+         fprintf( stdout, "%s", szMessage ); fflush( stdout );
+#else
+         fprintf( stderr, "%s", szMessage ); fflush( stderr );
+#endif
+   }
+}
 static const HB_COMP_FUNCS s_comp_funcs =
 {
    hb_compExprNew,
@@ -227,6 +288,8 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->iExitLevel  = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
       pComp->iLanguage   = HB_LANG_C;            /* default Harbour generated output language */
       pComp->iErrorFmt   = HB_ERRORFMT_CLIPPER;  /* default Harbour generated output language */
+
+      pComp->outMsgFunc  = hb_compOutMsg;
    }
 
    return pComp;
@@ -298,34 +361,4 @@ void hb_comp_free( HB_COMP_PTR pComp )
       hb_xfree( pComp->pI18nFileName );
 
    hb_xfree( pComp );
-}
-
-void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
-{
-   if( ! HB_COMP_PARAM->fFullQuiet )
-   {
-      if( HB_COMP_PARAM->outStdFunc )
-         HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM->cargo, szMessage );
-      else
-#if defined( HB_OS_DOS )
-         fprintf( stderr, "%s", szMessage ); fflush( stderr );
-#else
-         fprintf( stdout, "%s", szMessage ); fflush( stdout );
-#endif
-   }
-}
-
-void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
-{
-   if( ! HB_COMP_PARAM->fFullQuiet )
-   {
-      if( HB_COMP_PARAM->outErrFunc )
-         HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM->cargo, szMessage );
-      else
-#if defined( HB_OS_DOS )
-         fprintf( stdout, "%s", szMessage ); fflush( stdout );
-#else
-         fprintf( stderr, "%s", szMessage ); fflush( stderr );
-#endif
-   }
 }

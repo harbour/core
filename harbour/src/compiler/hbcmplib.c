@@ -53,6 +53,34 @@
 #include "hbapi.h"
 #include "hbcomp.h"
 
+static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,
+                      const char * szModule, char cPrefix, int iValue,
+                      const char * szText,
+                      const char * szPar1, const char * szPar2 )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   /* ignore all warning messages and errors when break or quit request */
+   if( cPrefix != 'W' && hb_vmRequestQuery() == 0 )
+   {
+      char szMsgBuf[ 512 ], szLine[ 512 ];
+      PHB_ITEM pError;
+
+      hb_snprintf( szMsgBuf, sizeof( szMsgBuf ), szText, szPar1, szPar2 );
+      if( !szModule || *szModule == 0 || strcmp( szModule, "{SOURCE}" ) == 0 )
+         hb_snprintf( szLine, sizeof( szLine ),
+                      "line:%i", iLine );
+      else
+         hb_snprintf( szLine, sizeof( szLine ),
+                      iErrorFmt == HB_ERRORFMT_CLIPPER ? "%s(%i)" : "%s:%i",
+                      szModule, iLine );
+      pError = hb_errRT_New( ES_ERROR, "COMPILER", 1001, ( HB_ERRCODE ) iValue, szMsgBuf,
+                             szLine, 0 /*OsCode*/, EF_NONE | EF_CANDEFAULT );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
+   }
+}
+
 static int s_pp_openFile( void * cargo, char * szFileName,
                           HB_BOOL fBefore, HB_BOOL fSysFile, HB_BOOL fBinary,
                           HB_PATHNAMES * pIncludePaths,
@@ -97,12 +125,24 @@ static int s_pp_openFile( void * cargo, char * szFileName,
 static void hb_compGenArgList( int iFirst, int iLast,
                                int * pArgC, const char *** pArgV,
                                PHB_ITEM * pIncItem,
-                               PHB_PP_OPEN_FUNC * pOpenFunc )
+                               PHB_PP_OPEN_FUNC * pOpenFunc,
+                               PHB_PP_MSG_FUNC * pMsgFunc )
 {
    PHB_ITEM pParam;
    HB_SIZE ul, nLen;
    int argc = 1, i;
    const char ** argv;
+
+   if( pMsgFunc )
+   {
+      * pMsgFunc = NULL;
+      if( HB_ISLOG( iFirst ) )
+      {
+         if( hb_parl( iFirst ) )
+            * pMsgFunc = s_pp_msg;
+         ++iFirst;
+      }
+   }
 
    if( pIncItem && pOpenFunc )
    {
@@ -167,10 +207,10 @@ HB_FUNC( HB_COMPILE )
    const char ** argv;
    PHB_ITEM pIncItem;
    PHB_PP_OPEN_FUNC pOpenFunc;
+   PHB_PP_MSG_FUNC pMsgFunc;
 
-   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
-
-   hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, pIncItem, pOpenFunc ) );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
+   hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, pIncItem, pOpenFunc, pMsgFunc ) );
    hb_xfree( argv );
 }
 
@@ -180,12 +220,14 @@ HB_FUNC( HB_COMPILEBUF )
    const char ** argv;
    PHB_ITEM pIncItem;
    PHB_PP_OPEN_FUNC pOpenFunc;
+   PHB_PP_MSG_FUNC pMsgFunc;
    HB_BYTE * pBuffer;
    HB_SIZE nLen;
 
-   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
-   iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, pIncItem, pOpenFunc );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
+   iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, pIncItem, pOpenFunc, pMsgFunc );
    hb_xfree( argv );
+
    if( iResult == EXIT_SUCCESS && pBuffer )
       hb_retclen_buffer( ( char * ) pBuffer, nLen );
 }
@@ -197,15 +239,17 @@ HB_FUNC( HB_COMPILEFROMBUF )
    const char * szSource;
    PHB_ITEM pIncItem;
    PHB_PP_OPEN_FUNC pOpenFunc;
+   PHB_PP_MSG_FUNC pMsgFunc;
    HB_BYTE * pBuffer;
    HB_SIZE nLen;
 
    szSource = hb_parc( 1 );
    if( szSource )
    {
-      hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc );
-      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, pIncItem, pOpenFunc );
+      hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
+      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, pIncItem, pOpenFunc, pMsgFunc );
       hb_xfree( argv );
+
       if( iResult == EXIT_SUCCESS && pBuffer )
          hb_retclen_buffer( ( char * ) pBuffer, nLen );
    }
