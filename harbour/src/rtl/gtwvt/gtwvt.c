@@ -602,6 +602,8 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    int maxWidth;
    int maxHeight;
 
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_FitRows()" ) );
+
 #if defined( HB_OS_WIN_CE )
    pWVT->bMaximized = HB_FALSE;
 #else
@@ -635,6 +637,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int j = 0;
    int iCalcWidth = 0;
    int iCalcHeight = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_FitSize()" ) );
 
 #if defined( HB_OS_WIN_CE )
    pWVT->bMaximized = HB_FALSE;
@@ -729,7 +733,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                   pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
                   pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
                }
-               else
+               else if( wi.right - wi.left != width || wi.bottom - wi.top != height )
+                        /* above condition is necessary to avoid infinite
+                         * recursive in WInCE builds
+                         */
                {
                   pWVT->MarginLeft = 0;
                   pWVT->MarginTop  = 0;
@@ -799,6 +806,8 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
    RECT       wi, ci;
    TEXTMETRIC tm;
    int        n;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ResetWindowSize(%p,%p)", pWVT, hFont ) );
 
    if( !pWVT->hFont || hFont )
    {
@@ -917,11 +926,14 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
             SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOSIZE | SWP_NOZORDER );
          }
       }
+#if !defined( HB_OS_WIN_CE )
+      /* This code creates infinite recursive calls in WinCE */
       else
       {
          /* Will resize window without moving left/top origin */
          SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
       }
+#endif
    }
 
 
@@ -1772,19 +1784,17 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       }
    }
 
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_WndProc(%p,%u)", hWnd, message ) );
+
    if( pWVT ) switch( message )
    {
       case WM_CREATE:
          return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL ) ? 0 : -1;
 
       case WM_PAINT:
-      {
-
          if( GetUpdateRect( hWnd, NULL, FALSE ) )
             hb_gt_wvt_PaintText( pWVT );
-
          return 0;
-      }
 
       case WM_MY_UPDATE_CARET:
          hb_gt_wvt_UpdateCaret( pWVT );
@@ -1864,7 +1874,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_SIZE:
-
          if( ! pWVT->bFullScreen )
          {
             if( pWVT->bResizing && pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
@@ -1899,6 +1908,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 static WPARAM hb_gt_wvt_ProcessMessages( void )
 {
    MSG msg;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ProcessMessages()" ) );
 
    while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
    {
