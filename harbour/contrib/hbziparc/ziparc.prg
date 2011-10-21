@@ -449,7 +449,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
          hb_FNameSplit( cFileName, @cPath )
       ENDIF
 
-      cPath := hb_DirAddPathSep( cPath )
+      cPath := hb_DirSepAdd( cPath )
 
       nRead := 0
       nPos := 0
