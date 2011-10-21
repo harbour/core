@@ -421,8 +421,11 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
    DEFAULT lWithPath TO .F.
 
-   /* TODO: Implement. */
-   HB_SYMBOL_UNUSED( lWithPath )
+   IF lWithPath
+      IF hb_DirCreate( cPath ) != 0
+         lRetVal := .F.
+      ENDIF
+   ENDIF
 
    IF Empty( cPassword )
       cPassword := NIL
@@ -446,6 +449,9 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
          hb_FNameSplit( cFileName, @cPath )
       ENDIF
 
+      cPath := hb_DirAddPathSep( cPath )
+
+      nRead := 0
       nPos := 0
       nErr := hb_UnzipFileFirst( hUnzip )
       DO WHILE nErr == 0
@@ -455,19 +461,16 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
          IF hb_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime, , , , @nSize ) == 0
 
             /* NOTE: As opposed to original hbziparch we don't do a second match without path. */
-            IF !Empty( acFiles )
-               IF AScan( acFiles, nPos ) > 0 .OR. ;
-                  AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
-                  lExtract := .T.
-               ELSE
-                  lExtract := .F.
-               ENDIF
-            ELSE
-               lExtract := .T.
-            ENDIF
+            lExtract :=  Empty( acFiles ) .OR. ;
+               AScan( acFiles, nPos ) > 0 .OR. ;
+               AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
 
-            IF lExtract
-               hHandle := FCreate( cPath + cZipName )
+            IF lExtract .AND. ;
+               ( hHandle := FCreate( cPath + cZipName ) ) != F_ERROR
+
+               IF hb_UnzipFileOpen( hUnzip, cPassword ) != UNZ_OK
+                  EXIT
+               ENDIF
                DO WHILE ( nLen := hb_unZipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
                   IF hb_isBlock( bProgress )
                      nRead += nLen
@@ -475,8 +478,9 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                   ENDIF
                   FWrite( hHandle, cBuffer, nLen )
                ENDDO
+               hb_UnzipFileClose( hUnzip )
                FClose( hHandle )
-               hb_FSetDateTime( cZipName, dDate, cTime )
+               hb_FSetDateTime( cPath + cZipName, dDate, cTime )
                IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
