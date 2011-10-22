@@ -109,11 +109,18 @@
 #  undef HB_FM_DL_ALLOC
 #  undef HB_FM_DLMT_ALLOC
 #  undef HB_FM_WIN_ALLOC
+#elif defined( HB_FM_WIN_ALLOC )
+#  undef HB_FM_DL_ALLOC
 #elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
-#  if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
-      ( defined( __WATCOMC__ ) && defined( HB_OS_WIN ) ) || \
-      defined( HB_OS_OS2 ) || \
-      ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
+#  if defined( HB_OS_WIN_CE )
+      /* In WinCE builds DLMALLOC creates problems when allocated
+       * memory is used in file IO operations.
+       */
+#     define HB_FM_STD_ALLOC
+#  elif defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
+        ( defined( __WATCOMC__ ) && defined( HB_OS_WIN ) ) || \
+        defined( HB_OS_OS2 ) || \
+        ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
 #     define HB_FM_DL_ALLOC
 #  else
       /* #define HB_FM_DL_ALLOC */
