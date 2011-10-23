@@ -451,7 +451,6 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
       cPath := hb_DirSepAdd( cPath )
 
-      nRead := 0
       nPos := 0
       nErr := hb_UnzipFileFirst( hUnzip )
       DO WHILE nErr == 0
@@ -471,6 +470,8 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                IF hb_UnzipFileOpen( hUnzip, cPassword ) != UNZ_OK
                   EXIT
                ENDIF
+
+               nRead := 0
                DO WHILE ( nLen := hb_unZipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
                   IF hb_isBlock( bProgress )
                      nRead += nLen
@@ -478,9 +479,12 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                   ENDIF
                   FWrite( hHandle, cBuffer, nLen )
                ENDDO
+
                hb_UnzipFileClose( hUnzip )
                FClose( hHandle )
+
                hb_FSetDateTime( cPath + cZipName, dDate, cTime )
+
                IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
