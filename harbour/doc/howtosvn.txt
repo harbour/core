@@ -128,8 +128,10 @@ by Viktor Szakats
 - Mark comments suggesting further fixes with '[TOFIX]', further
   todos as '[TODO]', and update these to '[DONE]' when implemented.
 
-- Mark things to merge with different branch as '[TOMERGE x.0]'.
+- Mark changes to merge with different branch as '[TOMERGE x.0]'.
   Changes these to '[MERGED x.0]' when merge is completed.
+
+- Mark changes causing user-level incompatibility with '[INCOMPAT]'
 
 - Do not use tabs and non-ASCII chars. Remove trailing spaces.
 

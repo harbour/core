@@ -204,8 +204,6 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
 
       SWITCH ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ]
       CASE MYSQL_TYPE_TINY
-         RETURN "L"
-
       CASE MYSQL_TYPE_SHORT
       CASE MYSQL_TYPE_LONG
       CASE MYSQL_TYPE_LONGLONG
@@ -522,13 +520,6 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
             SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
             CASE MYSQL_TYPE_TINY
-               //DAVID:
-               IF ::aRow[ i ] == NIL
-                  ::aRow[ i ] := "0"
-               ENDIF
-               ::aRow[ i ] := Val( ::aRow[ i ] ) != 0
-               EXIT
-
             CASE MYSQL_TYPE_SHORT
             CASE MYSQL_TYPE_LONG
             CASE MYSQL_TYPE_LONGLONG
@@ -713,8 +704,6 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 
       SWITCH ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ]
       CASE MYSQL_TYPE_TINY
-         RETURN "L"
-
       CASE MYSQL_TYPE_SHORT
       CASE MYSQL_TYPE_LONG
       CASE MYSQL_TYPE_LONGLONG
@@ -1175,16 +1164,13 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
          aRow[ i ] := ""
          EXIT
 
+      CASE MYSQL_TYPE_TINY
       CASE MYSQL_TYPE_SHORT
       CASE MYSQL_TYPE_LONG
       CASE MYSQL_TYPE_LONGLONG
       CASE MYSQL_TYPE_INT24
       CASE MYSQL_TYPE_NEWDECIMAL
          aRow[ i ] := 0
-         EXIT
-
-      CASE MYSQL_TYPE_TINY
-         aRow[ i ] := .F.
          EXIT
 
       CASE MYSQL_TYPE_DOUBLE
@@ -1455,6 +1441,8 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
          */
          IF aStruct[ i ][ DBS_DEC ] == 0 .AND. aStruct[ i ][ DBS_LEN ] <= 18
             DO CASE
+            CASE aStruct[ i ][ DBS_LEN ] <= 2
+               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " tinyint(" + hb_NToS( aStruct[ i ][ DBS_LEN ] ) + ")"
             CASE aStruct[ i ][ DBS_LEN ] <= 4
                ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " smallint(" + hb_NToS( aStruct[ i ][ DBS_LEN ] ) + ")"
             CASE aStruct[ i ][ DBS_LEN ] <= 6
@@ -1472,10 +1460,6 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
 
       CASE "D"
          ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " date " + Eval( cNN, aStruct[ i ] ) + ","
-         EXIT
-
-      CASE "L"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " tinyint "  + Eval( cNN, aStruct[ i ] ) + ","
          EXIT
 
       CASE "B"
