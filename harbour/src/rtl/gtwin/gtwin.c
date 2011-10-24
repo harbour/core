@@ -1915,7 +1915,9 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                s_cdpBox = cdpBox;
          }
 #endif
-      case HB_GTI_WINTITLE:
+         break; 
+
+     case HB_GTI_WINTITLE:
       {
          TCHAR buff[ 256 ];
          DWORD dwLen;
