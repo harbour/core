@@ -1917,7 +1917,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 #endif
          break; 
 
-     case HB_GTI_WINTITLE:
+      case HB_GTI_WINTITLE:
       {
          TCHAR buff[ 256 ];
          DWORD dwLen;
