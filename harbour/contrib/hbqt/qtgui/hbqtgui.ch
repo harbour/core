@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1157,7 +1157,7 @@
 #define Qt_RightToolBarArea                       0x2
 #define Qt_TopToolBarArea                         0x4
 #define Qt_BottomToolBarArea                      0x8
-#define Qt_AllToolBarAreas                        Qt_ToolBarArea_Mask
+#define Qt_AllToolBarAreas                        hb_bitOR( Qt_LeftToolBarArea, Qt_RightToolBarArea, Qt_TopToolBarArea, Qt_BottomToolBarArea )
 #define Qt_NoToolBarArea                          0
 // The ToolBarAreas type is a typedef for QFlags<ToolBarArea>. It stores an OR combination of ToolBarArea values.
 
@@ -2287,6 +2287,33 @@
 #define QFormLayout_DontWrapRows                             0    // Fields are always laid out next to their label. This is the default policy for all styles except Qt Extended styles and QS60Style.
 #define QFormLayout_WrapLongRows                             1    // Labels are given enough horizontal space to fit the widest label, and the rest of the space is given to the fields. If the minimum size of a field pair is wider than the available space, the field is wrapped to the next line. This is the default policy for Qt Extended styles and and QS60Style.
 #define QFormLayout_WrapAllRows                              2    // Fields are always laid out below their label.
+
+// Extracted by Luigi Ferraris
+//
+#define QTextOption_NoWrap                                   0    // Text is not wrapped at all.
+#define QTextOption_WordWrap                                 1    // Text is wrapped at word boundaries.
+#define QTextOption_ManualWrap                               2    // Same as QTextOption_NoWrap
+#define QTextOption_WrapAnywhere                             3    // Text can be wrapped at any point on a line, even if it occurs in the middle of a word.
+#define QTextOption_WrapAtWordBoundaryOrAnywhere             4    // If possible, wrapping occurs at a word boundary; otherwise it will occur at the appropriate point on the line, even in the middle of a word.
+
+// Extracted by Luigi Ferraris
+//
+#define QImage_Format_Invalid                                0     // The image is invalid.
+#define QImage_Format_Mono                                   1     // The image is stored using 1-bit per pixel. Bytes are packed with the most significant bit (MSB) first.
+#define QImage_Format_MonoLSB                                2     // The image is stored using 1-bit per pixel. Bytes are packed with the less significant bit (LSB) first.
+#define QImage_Format_Indexed8                               3     // The image is stored using 8-bit indexes into a colormap.
+#define QImage_Format_RGB32                                  4     // The image is stored using a 32-bit RGB format (0xffRRGGBB).
+#define QImage_Format_ARGB32                                 5     // The image is stored using a 32-bit ARGB format (0xAARRGGBB).
+#define QImage_Format_ARGB32_Premultiplied                   6     // The image is stored using a premultiplied 32-bit ARGB format (0xAARRGGBB), i.e&#x2e; the red, green, and blue channels are multiplied by the alpha component divided by 255. (If RR, GG, or BB has a higher value than the alpha channel, the results are undefined.) Certain operations (such as image composition using alpha blending) are faster using premultiplied ARGB32 than with plain ARGB32.
+#define QImage_Format_RGB16                                  7     // The image is stored using a 16-bit RGB format (5-6-5).
+#define QImage_Format_ARGB8565_Premultiplied                 8     // The image is stored using a premultiplied 24-bit ARGB format (8-5-6-5).
+#define QImage_Format_RGB666                                 9     // The image is stored using a 24-bit RGB format (6-6-6). The unused most significant bits is always zero.
+#define QImage_Format_ARGB6666_Premultiplied                 10    // The image is stored using a premultiplied 24-bit ARGB format (6-6-6-6).
+#define QImage_Format_RGB555                                 11    // The image is stored using a 16-bit RGB format (5-5-5). The unused most significant bit is always zero.
+#define QImage_Format_ARGB8555_Premultiplied                 12    // The image is stored using a premultiplied 24-bit ARGB format (8-5-5-5).
+#define QImage_Format_RGB888                                 13    // The image is stored using a 24-bit RGB format (8-8-8).
+#define QImage_Format_RGB444                                 14    // The image is stored using a 16-bit RGB format (4-4-4). The unused bits are always zero.
+#define QImage_Format_ARGB4444_Premultiplied                 15    // The image is stored using a premultiplied 16-bit ARGB format (4-4-4-4).
 
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
