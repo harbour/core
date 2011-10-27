@@ -81,9 +81,9 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL cStr05 := ""
    LOCAL cStr06 := ""
    LOCAL cStr07 := ""
-#ifdef NULL
+//#ifdef NULL
    LOCAL dDate01
-#endif
+//#endif
 
    LOCAL bOldBlock
    LOCAL o
@@ -395,6 +395,24 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:Assign() )
    TEST_LINE( o:reset() )
    TEST_LINE( o:killFocus() )
+
+   // ; Quique
+
+   nInt02 := 198.12
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02",,, )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:killFocus() )
+   TEST_LINE( o:picture := NIL )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:display() )
+
+   nInt02 := 198.12
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "999.999",, )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:killFocus() )
+   TEST_LINE( o:picture := NIL )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:display() )
 
    // ; Buffer
 
@@ -722,26 +740,26 @@ PROCEDURE TGetTOVS( o, aKeys, lInsert )
       ELSEIF ISNUM( aKeys[ tmp ] )
          DO CASE
          CASE aKeys[ tmp ] == K_INS                          ; lInsert := ! lInsert
-         CASE aKeys[ tmp ] == K_HOME                         ; TEST_LINE( oGet:Home() )
-         CASE aKeys[ tmp ] == K_END                          ; TEST_LINE( oGet:End() )
-         CASE aKeys[ tmp ] == K_RIGHT                        ; TEST_LINE( oGet:Right() )
-         CASE aKeys[ tmp ] == K_LEFT                         ; TEST_LINE( oGet:Left() )
-         CASE aKeys[ tmp ] == K_CTRL_RIGHT                   ; TEST_LINE( oGet:WordRight() )
-         CASE aKeys[ tmp ] == K_CTRL_LEFT                    ; TEST_LINE( oGet:WordLeft() )
-         CASE aKeys[ tmp ] == K_BS                           ; TEST_LINE( oGet:BackSpace() )
-         CASE aKeys[ tmp ] == K_DEL                          ; TEST_LINE( oGet:Delete() )
-         CASE aKeys[ tmp ] == K_CTRL_T                       ; TEST_LINE( oGet:DelWordRight() )
-         CASE aKeys[ tmp ] == K_CTRL_Y                       ; TEST_LINE( oGet:DelEnd() )
-         CASE aKeys[ tmp ] == K_CTRL_BS                      ; TEST_LINE( oGet:DelWordLeft() )
-         CASE aKeys[ tmp ] == K_CTRL_U                       ; TEST_LINE( oGet:Undo() )
-         CASE o:type == "N" .AND. Chr( aKeys[ tmp ] ) $ ".," ; TEST_LINE( oGet:ToDecPos() )
+         CASE aKeys[ tmp ] == K_HOME                         ; TEST_LINE( o:Home() )
+         CASE aKeys[ tmp ] == K_END                          ; TEST_LINE( o:End() )
+         CASE aKeys[ tmp ] == K_RIGHT                        ; TEST_LINE( o:Right() )
+         CASE aKeys[ tmp ] == K_LEFT                         ; TEST_LINE( o:Left() )
+         CASE aKeys[ tmp ] == K_CTRL_RIGHT                   ; TEST_LINE( o:WordRight() )
+         CASE aKeys[ tmp ] == K_CTRL_LEFT                    ; TEST_LINE( o:WordLeft() )
+         CASE aKeys[ tmp ] == K_BS                           ; TEST_LINE( o:BackSpace() )
+         CASE aKeys[ tmp ] == K_DEL                          ; TEST_LINE( o:Delete() )
+         CASE aKeys[ tmp ] == K_CTRL_T                       ; TEST_LINE( o:DelWordRight() )
+         CASE aKeys[ tmp ] == K_CTRL_Y                       ; TEST_LINE( o:DelEnd() )
+         CASE aKeys[ tmp ] == K_CTRL_BS                      ; TEST_LINE( o:DelWordLeft() )
+         CASE aKeys[ tmp ] == K_CTRL_U                       ; TEST_LINE( o:Undo() )
+         CASE o:type == "N" .AND. Chr( aKeys[ tmp ] ) $ ".," ; TEST_LINE( o:ToDecPos() )
          ENDCASE
       ENDIF
    NEXT
 
    RETURN
 
-PROCEDURE TGetTIns( o, aKeys )
+FUNCTION TGetTIns( o, aKeys )
    RETURN TGetTOVS( o, aKeys, .T. )
 
 PROCEDURE TGetAssign( xVar )

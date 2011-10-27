@@ -1108,20 +1108,24 @@ METHOD picture( cPicture ) CLASS GET
 
          CASE "N"
 
-            cNum := Str( ::xVarGet )
-            IF ( nAt := At( ".", cNum ) ) > 0
-               ::cPicMask := Replicate( "9", nAt - 1 ) + "."
-               ::cPicMask += Replicate( "9", Len( cNum ) - Len( ::cPicMask ) )
-            ELSE
-               ::cPicMask := Replicate( "9", Len( cNum ) )
+            IF ::xVarGet != NIL
+               cNum := Str( ::xVarGet )
+               IF ( nAt := At( ".", cNum ) ) > 0
+                  ::cPicMask := Replicate( "9", nAt - 1 ) + "."
+                  ::cPicMask += Replicate( "9", Len( cNum ) - Len( ::cPicMask ) )
+               ELSE
+                  ::cPicMask := Replicate( "9", Len( cNum ) )
+               ENDIF
             ENDIF
             EXIT
 
          CASE "C"
 
-            IF ::cPicFunc == "@9"
-               ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
-               ::cPicFunc := ""
+            IF ::xVarGet != NIL
+               IF ::cPicFunc == "@9"
+                  ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
+                  ::cPicFunc := ""
+               ENDIF
             ENDIF
             EXIT
 
