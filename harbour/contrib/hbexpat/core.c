@@ -69,7 +69,7 @@
 
 #include "expat.h"
 
-#define HB_EXPAT_VERS( ma, mi, mu ) ( XML_MAJOR_VERSION >= ma && XML_MINOR_VERSION >= mi && XML_MICRO_VERSION >= mu )
+#define HB_EXPAT_VERS( ma, mi, mu ) ( XML_MAJOR_VERSION > ma || ( XML_MAJOR_VERSION == ma && ( XML_MINOR_VERSION > mi || ( XML_MINOR_VERSION == mi && XML_MICRO_VERSION >= mu ) ) ) )
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -1166,8 +1166,8 @@ HB_FUNC( XML_GETPARSINGSTATUS )
 
       XML_GetParsingStatus( hb_expat->parser, &status );
 
-      hb_storni( ( int ) status->parsing, 2 );
-      hb_storl( ( HB_BOOL ) status->finalBuffer, 3 );
+      hb_storni( ( int ) status.parsing, 2 );
+      hb_storl( ( HB_BOOL ) status.finalBuffer, 3 );
 #else
       hb_storni( -1, 2 );
       hb_storl( HB_FALSE, 3 );

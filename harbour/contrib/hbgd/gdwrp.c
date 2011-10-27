@@ -76,7 +76,7 @@
 #include "gdfontl.h"
 #include "gdfontg.h"
 
-#define HB_GD_VERS( ma, mi, re )   ( GD_MAJOR_VERSION >= ma && GD_MINOR_VERSION >= mi && GD_RELEASE_VERSION >= re )
+#define HB_GD_VERS( ma, mi, mu ) ( GD_MAJOR_VERSION > ma || ( GD_MAJOR_VERSION == ma && ( GD_MINOR_VERSION > mi || ( GD_MINOR_VERSION == mi && GD_RELEASE_VERSION >= mu ) ) ) )
 
 #define IMAGE_JPEG     1
 #define IMAGE_GIF      2

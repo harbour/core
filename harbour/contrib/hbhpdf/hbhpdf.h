@@ -56,7 +56,7 @@
 
 #include "hpdf.h"
 
-#define HB_HPDF_VERS( ma, mi, re ) ( HPDF_MAJOR_VERSION >= ma && HPDF_MINOR_VERSION >= mi && HPDF_BUGFIX_VERSION >= re )
+#define HB_HPDF_VERS( ma, mi, mu ) ( HPDF_MAJOR_VERSION > ma || ( HPDF_MAJOR_VERSION == ma && ( HPDF_MINOR_VERSION > mi || ( HPDF_MINOR_VERSION == mi && HPDF_BUGFIX_VERSION >= mu ) ) ) )
 
 HB_EXTERN_BEGIN
 
