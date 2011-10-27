@@ -347,7 +347,8 @@ FUNCTION hb_ZipFile( cFileName,;
                ENDIF
             NEXT
          ELSE
-            IF AScan( aExclFile, {| cExclFile | hb_FileMatch( cFN, cExclFile ) } ) == 0
+            hb_FNameSplit( cFN, NIL, @cName, @cExt )
+            IF AScan( aExclFile, {| cExclFile | hb_FileMatch( hb_FNameMerge( NIL, cName, cExt ), cExclFile ) } ) == 0
                AAdd( aProcFile, cFN )
             ENDIF
          ENDIF
@@ -422,7 +423,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    DEFAULT lWithPath TO .F.
 
    IF lWithPath
-      IF hb_DirCreate( cPath ) != 0
+      IF hb_DirCreate( cPath ) != 0 .AND. !hb_DirExists( cPath )
          lRetVal := .F.
       ENDIF
    ENDIF
@@ -468,6 +469,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                ( hHandle := FCreate( cPath + cZipName ) ) != F_ERROR
 
                IF hb_UnzipFileOpen( hUnzip, cPassword ) != UNZ_OK
+                  lRetVal := .F.
                   EXIT
                ENDIF
 
