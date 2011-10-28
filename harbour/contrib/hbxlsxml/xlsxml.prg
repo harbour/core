@@ -250,7 +250,7 @@ METHOD ExcelWriterXML:writeData( target )
    LOCAL docCompany := ''
    
    IF target == NIL
-      ::cError := "Target filename missing!" )
+      ::cError := "Target filename missing!"
       ::errors := .t.
       RETURN .t.
    ENDIF    
