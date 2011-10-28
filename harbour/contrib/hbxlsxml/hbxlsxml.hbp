@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+-3rd=hbide_version=1.0
+-3rd=hbide_type=Lib
+-3rd=hbide_title=XmlExcel
+-3rd=hbide_output=xlsxml
+
+-inc
+-hblib
+-es2
+-w3
+
+xlsxml.prg
+xlsxml_s.prg
+xlsxml_y.prg
+
+-ohbxlsxml
+
+
+
+
+ 
