@@ -422,10 +422,8 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
    DEFAULT lWithPath TO .F.
 
-   IF lWithPath
-      IF hb_DirCreate( cPath ) != 0 .AND. !hb_DirExists( cPath )
-         lRetVal := .F.
-      ENDIF
+   IF lWithPath .AND. ! hb_DirExists( cPath ) .AND. hb_DirCreate( cPath ) != 0
+      lRetVal := .F.
    ENDIF
 
    IF Empty( cPassword )
@@ -474,7 +472,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                ENDIF
 
                nRead := 0
-               DO WHILE ( nLen := hb_unZipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
+               DO WHILE ( nLen := hb_UnzipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
                   IF hb_isBlock( bProgress )
                      nRead += nLen
                      Eval( bProgress, nRead, nSize )
