@@ -1289,9 +1289,11 @@ static void hb_socketSetOsError( int err )
          break;
 #endif
 #if defined( EREFUSED )
+#  if EREFUSED != ECONNREFUSED
       case EREFUSED:
          uiErr = HB_SOCKET_ERR_REFUSED;
          break;
+#  endif
 #endif
 /*
 #if defined( TRY_AGAIN )

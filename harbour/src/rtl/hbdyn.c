@@ -476,6 +476,7 @@ typedef struct
 static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r2, HB_BOOL * b64 )
 {
    *b64 = HB_FALSE;
+   *r2 = 0;
 
    switch( pArg->iType )
    {
