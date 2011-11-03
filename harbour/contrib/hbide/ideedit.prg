@@ -634,6 +634,13 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       SWITCH ( key )
 
+
+      CASE Qt_Key_F3
+         IF ! lCtrl .AND. ! lAlt
+            ::oFR:find( .f. )
+         ENDIF
+         EXIT
+
       CASE Qt_Key_Insert
          IF lCtrl
             ::copy()
