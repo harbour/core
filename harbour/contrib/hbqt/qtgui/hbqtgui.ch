@@ -2315,6 +2315,10 @@
 #define QImage_Format_RGB444                                 14    // The image is stored using a 16-bit RGB format (4-4-4). The unused bits are always zero.
 #define QImage_Format_ARGB4444_Premultiplied                 15    // The image is stored using a premultiplied 16-bit ARGB format (4-4-4-4).
 
+#define QAbstractSpinBox_UpDownArrows                        0     // Little arrows in the classic style.
+#define QAbstractSpinBox_PlusMinus                           1     // + and - symbols.
+#define QAbstractSpinBox_NoButtons                           2     // Don't display buttons.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
