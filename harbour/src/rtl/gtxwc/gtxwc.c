@@ -346,6 +346,11 @@ typedef struct
       using build in font ones */
    HB_BOOL fDrawBox;
 
+#ifdef X_HAVE_UTF8_STRING
+   XIM im;
+   XIC ic;
+#endif
+
 #ifdef HB_XWC_USE_LOCALE
    /* locale set to UTF-8 */
    HB_BOOL fUTF8;
@@ -479,7 +484,7 @@ static void hb_gt_xwc_Disable( void )
 {
    if( s_updateMode == XWC_ASYNC_UPDATE )
    {
-      signal( SIGALRM, SIG_IGN);
+      signal( SIGALRM, SIG_IGN );
    }
 }
 
@@ -491,11 +496,11 @@ static void hb_gt_xwc_Enable( void )
    {
       struct itimerval itv;
 
-      signal( SIGALRM, hb_gt_xwc_SigHandler);
+      signal( SIGALRM, hb_gt_xwc_SigHandler );
       itv.it_interval.tv_sec = 0;
       itv.it_interval.tv_usec = 25000;
       itv.it_value = itv.it_interval;
-      setitimer( ITIMER_REAL, &itv, NULL);
+      setitimer( ITIMER_REAL, &itv, NULL );
    }
 }
 
@@ -2585,16 +2590,31 @@ static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
+static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 {
    unsigned char buf[ 16 ];
    KeySym outISO = 0, out = XLookupKeysym( evt, 0 );
-   int ikey = 0, n, i;
+   int ikey = 0, i;
+#ifdef X_HAVE_UTF8_STRING
+   Status status_return = 0;
+#endif
+
 
 #ifdef XWC_DEBUG
-   n = XLookupString( evt , ( char * ) buf, sizeof(buf), &outISO, NULL );
-   buf[HB_MAX(n,0)] = '\0';
-   printf( "KeySym=%lx, keySymISO=%lx, keystr=[%s]\r\n", out, outISO, buf ); fflush(stdout);
+#  ifdef X_HAVE_UTF8_STRING
+   if( wnd->ic )
+   {
+      i = Xutf8LookupString( wnd->ic, evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, &status_return );
+      buf[HB_MAX(i,0)] = '\0';
+      printf( "UTF8: KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
+   }
+   else
+#  endif
+   {
+      i = XLookupString( evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, NULL );
+      buf[HB_MAX(i,0)] = '\0';
+      printf( "KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
+   }
 #endif
 
    /* First look for keys which should be processed before XLookupKeysym */
@@ -2726,51 +2746,62 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
 
    /* First check if there is no string bound with with a key, because
       we not check all modifiers in all possible keyboards */
-   if( ( n = XLookupString( evt, ( char * ) buf, sizeof(buf), &outISO, NULL ) ) <= 0 )
+#ifdef X_HAVE_UTF8_STRING
+   if( wnd->ic )
+      i = Xutf8LookupString( wnd->ic, evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, &status_return );
+   else
+#endif
    {
+      i = XLookupString( evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, NULL );
 #ifndef HB_XWC_USE_LOCALE
-      /*
-       * This is a temporary hack for Latin-x input see gt_SetKeyCP
-       */
-      if( outISO >= 0x0100 && outISO <= 0x0fff && ( outISO & 0x80 ) == 0x80 )
+      if( i <= 0 )
       {
-         buf[0] = ( unsigned char ) ( outISO & 0xff );
-         n = 1;
-      }
-      /* hack for euro sign */
-      else if( outISO == 0x20ac )
-      {
-         ikey = hb_cdpGetChar( wnd->hostCDP, ( HB_WCHAR ) outISO );
-         hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
-         return;
+         /*
+          * This is a temporary hack for Latin-x input see gt_SetKeyCP
+          */
+         if( outISO >= 0x0100 && outISO <= 0x0fff && ( outISO & 0x80 ) == 0x80 )
+         {
+            buf[0] = ( unsigned char ) ( outISO & 0xff );
+            i = 1;
+         }
+         /* hack for euro sign */
+         else if( outISO == 0x20ac )
+         {
+            ikey = hb_cdpGetChar( wnd->hostCDP, ( HB_WCHAR ) outISO );
+            if( ikey )
+               hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
+            return;
+         }
       }
 #endif
    }
 
-   if( n > 0 )
+   if( i > 0 )
    {
       unsigned char keystr[ 32 ];
-      HB_ULONG u = sizeof( keystr );
+      HB_ULONG u = sizeof( keystr ), n;
 
-#ifndef HB_XWC_USE_LOCALE
-      hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
-                   wnd->inCDP, wnd->hostCDP );
-#else
-      hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
+#ifdef X_HAVE_UTF8_STRING
+      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
+                   wnd->utf8CDP, wnd->hostCDP );
+#elif defined( HB_XWC_USE_LOCALE )
+      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
                    wnd->fUTF8 ? wnd->utf8CDP : wnd->inCDP, wnd->hostCDP );
+#else
+      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
+                   wnd->inCDP, wnd->hostCDP );
 #endif
-      n = ( int ) u;
 
 #ifdef XWC_DEBUG
-      keystr[n] = '\0';
-      printf( "keySymISO=%lx keystr=[%s]\r\n", outISO, keystr ); fflush(stdout);
+      keystr[u] = '\0';
+      printf( "keySymISO=%lx keystr[%d]='%s'\r\n", outISO, (int) u, keystr ); fflush(stdout);
 #endif
-      for( i = 0; i < n; i++ )
+      for( n = 0; n < u; n++ )
       {
          if( wnd->keyModifiers.bAlt || wnd->keyModifiers.bCtrl )
-            hb_gt_xwc_TranslateKey( wnd, keystr[i] );
+            hb_gt_xwc_TranslateKey( wnd, keystr[n] );
          else
-            hb_gt_xwc_AddCharToInputQueue( wnd, keystr[i] );
+            hb_gt_xwc_AddCharToInputQueue( wnd, keystr[n] );
       }
       return;
    }
@@ -2996,7 +3027,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case ClientMessage:
 #ifdef XWC_DEBUG
-         printf( "Event: ClientMessage:%ld (%s)\r\n", evt->xclient.data.l[ 0 ], XGetAtomName(wnd->dpy, ( Atom ) evt->xclient.data.l[ 0 ]) ); fflush(stdout);
+         printf( "Event: ClientMessage:%ld (%s)\r\n", evt->xclient.data.l[ 0 ], XGetAtomName( wnd->dpy, ( Atom ) evt->xclient.data.l[ 0 ] ) ); fflush(stdout);
 #endif
          if( ( Atom ) evt->xclient.data.l[ 0 ] == s_atomDelWin )
          {
@@ -3219,7 +3250,7 @@ static int hb_gt_xwc_GetColormapSize( PXWND_DEF wnd )
    visInfo.visualid = XVisualIDFromVisual( DefaultVisual( wnd->dpy,
                                            DefaultScreen( wnd->dpy ) ) );
    visInfoPtr = XGetVisualInfo( wnd->dpy, ( long ) VisualIDMask,
-                                &visInfo, &nItems);
+                                &visInfo, &nItems );
    if( nItems >= 1 )
    {
       iCMapSize = visInfoPtr->colormap_size;
@@ -4235,6 +4266,18 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
       hb_gt_xwc_ClearSelection( wnd );
       hb_gt_xwc_DestroyCharTrans( wnd );
 
+#ifdef X_HAVE_UTF8_STRING
+      if( wnd->ic )
+      {
+         XDestroyIC( wnd->ic );
+         wnd->ic = NULL;
+      }
+      if( wnd->im )
+      {
+         XCloseIM( wnd->im );
+         wnd->im = NULL;
+      }
+#endif
       if( wnd->pm )
       {
          XFreePixmap( wnd->dpy, wnd->pm );
@@ -4389,6 +4432,26 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );
 
    XSelectInput( wnd->dpy, wnd->window, XWC_STD_MASK );
+#ifdef X_HAVE_UTF8_STRING
+   wnd->im = XOpenIM( wnd->dpy, NULL, NULL, NULL );
+   if( wnd->im )
+   {
+      wnd->ic = XCreateIC( wnd->im,
+                           XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+                           XNClientWindow, wnd->window,
+                           XNFocusWindow, wnd->window,
+                           NULL );
+      if( !wnd->ic )
+      {
+         XCloseIM( wnd->im );
+         wnd->im = NULL;
+      }
+   }
+#ifdef XWC_DEBUG
+   printf( "\r\nXIC=%p, XIC=%p\r\n", wnd->im, wnd->ic ); fflush(stdout);
+#endif
+#endif
+
 #ifdef XWC_DEBUG
    printf( "Window created\r\n" ); fflush(stdout);
 #endif
