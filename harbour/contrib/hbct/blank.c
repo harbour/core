@@ -66,6 +66,13 @@ HB_FUNC( BLANK )
       if( bRet )
          hb_retl( HB_FALSE );
    }
+   else if( HB_IS_TIMESTAMP( pItem ) )
+   {
+      if( bRef )
+         hb_stortdt( 0, 0, 1 );
+      if( bRet )
+         hb_rettdt( 0, 0 );
+   }
    else if( HB_IS_DATE( pItem ) )
    {
       if( bRef )
