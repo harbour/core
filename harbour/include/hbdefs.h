@@ -100,7 +100,6 @@
 #if defined( HB_OS_WIN )
    #if defined( HB_OS_WIN_64 )
       #undef HB_LONG_LONG_OFF
-      #define HB_STRICT_ALIGNMENT
    #endif
 #endif
 
@@ -738,12 +737,8 @@ typedef HB_U32 HB_FATTR;
  * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
 #if !defined( HB_STRICT_ALIGNMENT )
-#  if defined( HB_CPU_SPARC ) || defined( HB_CPU_SPARC_64 ) || \
-      defined( HB_CPU_ALPHA ) || \
-      defined( HB_CPU_PARISC ) || \
-      defined( HB_CPU_MIPS ) || \
-      defined( HB_CPU_PPC ) || defined( HB_CPU_PPC_64 ) || \
-      defined( HB_CPU_ARM )
+#  if ! defined( HB_CPU_X86 ) && \
+      ! defined( HB_CPU_X86_64 )
 #     define HB_STRICT_ALIGNMENT
 #  endif
 #endif
