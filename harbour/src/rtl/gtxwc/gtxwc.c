@@ -83,7 +83,8 @@ static const int s_mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBU
 static const int s_mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
 static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
 
-typedef struct tag_ClipKeyCode {
+typedef struct
+{
     int key;
     int alt_key;
     int ctrl_key;
@@ -261,7 +262,7 @@ static Atom s_atomText;
 static Atom s_atomCompoundText;
 
 
-typedef struct tag_rect
+typedef struct
 {
    int top;
    int left;
@@ -269,7 +270,7 @@ typedef struct tag_rect
    int bottom;
 } XWC_RECT;
 
-typedef struct tag_modifiers
+typedef struct
 {
    HB_BOOL bCtrl;
    HB_BOOL bAlt;
@@ -284,7 +285,7 @@ typedef struct
    HB_BOOL set;
 } WND_COLORS;
 
-typedef struct tag_x_wnddef
+typedef struct
 {
    PHB_GT pGT;
 
@@ -345,8 +346,10 @@ typedef struct tag_x_wnddef
       using build in font ones */
    HB_BOOL fDrawBox;
 
+#ifdef HB_XWC_USE_LOCALE
    /* locale set to UTF-8 */
    HB_BOOL fUTF8;
+#endif
    /* CodePage support */
    PHB_CODEPAGE hostCDP;
    /* PHB_CODEPAGE outCDP; */
@@ -3594,7 +3597,7 @@ static void hb_gt_xwc_RestoreArea( PXWND_DEF wnd,
 static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
                                       int left, int top, int right, int bottom )
 {
-   if( wnd->fInvalidChr == HB_FALSE )
+   if( ! wnd->fInvalidChr )
    {
       wnd->rInvalidChr.top    = top;
       wnd->rInvalidChr.left   = left;
@@ -4092,10 +4095,11 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
+#ifdef HB_XWC_USE_LOCALE
 static HB_BOOL hb_gt_xwc_isUTF8( void )
 {
    HB_BOOL fUTF8 = HB_FALSE;
-   const char * szLang = getenv( "LANG" );
+   const char * szLang = setlocale( LC_CTYPE, NULL );
 
    if( szLang )
    {
@@ -4111,6 +4115,7 @@ static HB_BOOL hb_gt_xwc_isUTF8( void )
    return fUTF8;
 
 }
+#endif
 
 /* *********************************************************************** */
 
@@ -4130,7 +4135,9 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fResizable = HB_TRUE;
    wnd->fClosable = HB_TRUE;
    wnd->fWinResize = HB_FALSE;
+#ifdef HB_XWC_USE_LOCALE
    wnd->fUTF8 = hb_gt_xwc_isUTF8();
+#endif
    wnd->hostCDP = hb_vmCDP();
    wnd->utf8CDP = hb_cdpFindExt( "UTF8" );
    if( wnd->boxCDP == NULL )

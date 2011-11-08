@@ -69,6 +69,7 @@
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapicdp.h"
+#include "hbapistr.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbdate.h"
@@ -323,6 +324,7 @@ typedef struct _HB_GTTRM
    HB_BOOL    fPosAnswer;
 
    PHB_CODEPAGE cdpHost;
+   PHB_CODEPAGE cdpTerm;
    PHB_CODEPAGE cdpBox;
    PHB_CODEPAGE cdpIn;
 
@@ -334,6 +336,8 @@ typedef struct _HB_GTTRM
    int        boxattr[ 256 ];
 
    int        colors[ 16 ];
+
+   char *     szTitle;
 
    int        iOutBufSize;
    int        iOutBufIndex;
@@ -1737,6 +1741,15 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
    }
 }
 
+static void hb_gt_trm_XtermSetTitle( PHB_GTTRM pTerm, const char * szTitle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetTitle(%p,%s)", pTerm, szTitle));
+
+   hb_gt_trm_termOut( pTerm, "\033]0;", 4 );
+   if( szTitle )
+      hb_gt_trm_termOut( pTerm, szTitle, strlen( szTitle ) );
+   hb_gt_trm_termOut( pTerm, "\007", 1 );
+}
 
 
 /*
@@ -2226,6 +2239,17 @@ static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
    }
 }
 
+static void hb_gt_trm_SetTitle( PHB_GTTRM pTerm, const char * szTitle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTitle(%p,%d)", pTerm, iIndex));
+
+   if( pTerm->terminal_type == TERM_XTERM ||
+       ( pTerm->terminal_ext & TERM_PUTTY ) )
+   {
+      hb_gt_trm_XtermSetTitle( pTerm, szTitle );
+   }
+}
+
 static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
    int i;
@@ -2295,6 +2319,7 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpHost, PHB_C
       }
    }
    pTerm->cdpHost = cdpHost;
+   pTerm->cdpTerm = cdpTerm;
    pTerm->cdpBox = box ? cdpHost : hb_cdpFind( "EN" );
 }
 
@@ -3590,6 +3615,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTTRM pTerm;
    const char * szVal;
+   void * hVal;
    int iVal;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Info(%p,%d,%p)", pGT, iType, pInfo ) );
@@ -3639,6 +3665,28 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                addKeyMap( pTerm, SET_CLIPKEY( iVal ), szVal );
          }
          break;
+
+      case HB_GTI_WINTITLE:
+         if( pTerm->fUTF8 )
+            pInfo->pResult = hb_itemPutStrUTF8( pInfo->pResult, pTerm->szTitle );
+         else
+            pInfo->pResult = hb_itemPutStr( pInfo->pResult, pTerm->cdpTerm, pTerm->szTitle );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            if( pTerm->fUTF8 )
+               szVal = hb_itemGetStrUTF8( pInfo->pNewVal, &hVal, NULL );
+            else
+               szVal = hb_itemGetStr( pInfo->pNewVal, pTerm->cdpTerm, &hVal, NULL );
+
+            if( pTerm->szTitle )
+               hb_xfree( pTerm->szTitle );
+            pTerm->szTitle = ( szVal && *szVal ) ? hb_strdup( szVal ) : NULL;
+            hb_gt_trm_SetTitle( pTerm, pTerm->szTitle );
+            hb_gt_trm_termFlush( pTerm );
+            hb_strfree( hVal );
+         }
+         break;
+
 
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )

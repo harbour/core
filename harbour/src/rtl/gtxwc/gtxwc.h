@@ -338,7 +338,7 @@ typedef enum
    CH_POLY           /* character built by polygon */
 } XWC_CharType;
 
-typedef struct tag_XWC_CharTrans
+typedef struct
 {
    XWC_CharType   type;
    union
