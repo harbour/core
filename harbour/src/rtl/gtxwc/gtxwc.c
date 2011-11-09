@@ -260,6 +260,8 @@ static Atom s_atomTargets;
 static Atom s_atomCutBuffer0;
 static Atom s_atomText;
 static Atom s_atomCompoundText;
+static Atom s_atomFullScreen;
+static Atom s_atomState;
 
 
 typedef struct
@@ -322,6 +324,8 @@ typedef struct
 
    HB_BOOL fResizable;
    HB_BOOL fClosable;
+   HB_BOOL fFullScreen;
+   HB_BOOL fAltEnter;
 
    /* window title */
    char *szTitle;
@@ -2589,6 +2593,24 @@ static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
 }
 
 /* *********************************************************************** */
+static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
+{
+   XEvent evt;
+
+   memset( &evt, 0, sizeof( evt ) );
+   evt.xclient.type = ClientMessage;
+   evt.xclient.message_type = s_atomState;
+   evt.xclient.display = wnd->dpy;
+   evt.xclient.window = wnd->window;
+   evt.xclient.format = 32;
+   evt.xclient.data.l[ 0 ] = wnd->fFullScreen ? 1 : 0;
+   evt.xclient.data.l[ 1 ] = s_atomFullScreen;
+
+   XSendEvent( wnd->dpy, DefaultRootWindow( wnd->dpy ), False,
+               SubstructureRedirectMask, &evt );
+}
+
+/* *********************************************************************** */
 
 static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 {
@@ -2683,6 +2705,12 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
          break;
       case XK_Linefeed:
       case XK_Return:
+         if( wnd->keyModifiers.bAlt && wnd->fAltEnter )
+         {
+            wnd->fFullScreen = !wnd->fFullScreen;
+            hb_gt_xwc_FullScreen( wnd );
+            return;
+         }
          ikey = EXKEY_ENTER;
          break;
       case XK_KP_Enter:
@@ -3008,12 +3036,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          wnd->keyModifiers.bAlt   =
          wnd->keyModifiers.bAltGr =
          wnd->keyModifiers.bShift = HB_FALSE;
+         hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_GOTFOCUS );
          break;
 
       case FocusOut:
 #ifdef XWC_DEBUG
          printf( "Event: FocusOut\r\n" ); fflush(stdout);
 #endif
+         hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_LOSTFOCUS );
          break;
 
       case ConfigureNotify:
@@ -3033,6 +3063,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          {
             if( wnd->fClosable )
                hb_vmRequestQuit();
+            else
+               hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_CLOSE );
          }
          break;
 
@@ -4166,6 +4198,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fResizable = HB_TRUE;
    wnd->fClosable = HB_TRUE;
    wnd->fWinResize = HB_FALSE;
+   wnd->fFullScreen = HB_FALSE;
+   wnd->fAltEnter = HB_FALSE;
 #ifdef HB_XWC_USE_LOCALE
    wnd->fUTF8 = hb_gt_xwc_isUTF8();
 #endif
@@ -4251,6 +4285,8 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    s_atomCutBuffer0      = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
    s_atomText            = XInternAtom( wnd->dpy, "TEXT", False );
    s_atomCompoundText    = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
+   s_atomFullScreen      = XInternAtom(wnd->dpy, "_NET_WM_STATE_FULLSCREEN",  False);
+   s_atomState           = XInternAtom(wnd->dpy, "_NET_WM_STATE",  False);
 
    HB_XWC_XLIB_UNLOCK
 
@@ -5055,6 +5091,25 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                         hb_gt_xwc_getKbdState( wnd ) );
          break;
 
+      case HB_GTI_ISFULLSCREEN:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fFullScreen );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            if( hb_itemGetL( pInfo->pNewVal ) != wnd->fFullScreen )
+            {
+               wnd->fFullScreen = hb_itemGetL( pInfo->pNewVal );
+               if( wnd->fInit )
+                  hb_gt_xwc_FullScreen( wnd );
+            }
+         }
+         break;
+
+      case HB_GTI_ALTENTER:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fAltEnter );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            wnd->fAltEnter = hb_itemGetL( pInfo->pNewVal );
+         break;
+
       case HB_GTI_CLOSABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fClosable );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
@@ -5075,6 +5130,23 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   hb_gt_xwc_SetResizing( wnd );
                   HB_XWC_XLIB_UNLOCK
                }
+            }
+         }
+         break;
+
+      case HB_GTI_RESIZEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, HB_GTI_RESIZEMODE_ROWS );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            switch( iVal )
+            {
+               case HB_GTI_RESIZEMODE_FONT:
+                  /* this mode is not supported yet by GTXWC */
+                  break;
+               case HB_GTI_RESIZEMODE_ROWS:
+                  /* wnd->iResizeMode = iVal; */
+                  break;
             }
          }
          break;
