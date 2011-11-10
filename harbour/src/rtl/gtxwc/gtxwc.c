@@ -4458,11 +4458,14 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
    /* wnd->fWinResize = HB_TRUE; */
    hb_gt_xwc_Resize( wnd, wnd->cols, wnd->rows );
-
    XMapWindow( wnd->dpy, wnd->window );
 
    /* ok, now we can inform the X manager about our new status: */
    hb_gt_xwc_SetResizing( wnd );
+
+   /* enable FullScreen mode if set by user */
+   if( wnd->fFullScreen )
+      hb_gt_xwc_FullScreen( wnd );
 
    /* Request WM to deliver destroy event */
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );

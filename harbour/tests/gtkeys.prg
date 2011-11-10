@@ -14,9 +14,14 @@
 #include "inkey.ch"
 #ifdef __HARBOUR__
 #include "hbgtinfo.ch"
+
+REQUEST HB_CODEPAGE_PLMAZ
+REQUEST HB_CODEPAGE_PLISO
+REQUEST HB_CODEPAGE_PL852
+REQUEST HB_CODEPAGE_PLWIN
 #endif
 
-function main()
+function main( cTermCP, cHostCP, lBoxChar )
 local k, i, s
 local aKeys := { ;
  { "K_UP",               5, "Up arrow, Ctrl-E"                }, ;
@@ -214,26 +219,47 @@ aadd(aKeys, { "HB_K_LOSTFOCUS",  1104, "focus lost"                     }  )
 aadd(aKeys, { "HB_K_CONNECT",    1105, "remote terminal connected"      }  )
 aadd(aKeys, { "HB_K_DISCONNECT", 1106, "remote terminal disconnected"   }  )
 
-? os(), version(), date(), time()
+
+#ifdef __HARBOUR__
+   set( _SET_EVENTMASK, hb_bitOR( INKEY_ALL, HB_INKEY_GTEVENT ) )
+   //hb_gtInfo( HB_GTI_RESIZABLE, .f. )
+   //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+   //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
+   hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. )
+   hb_gtInfo( HB_GTI_ALTENTER, .T. )
+   hb_gtInfo( HB_GTI_CLOSABLE, .f. )
+   hb_gtInfo( HB_GTI_ESCDELAY, 50 )
+   if empty( cTermCP )
+      cTermCP := "PLISO"
+   else
+      cTermCP := upper( cTermCP )
+   endif
+   if empty( cHostCP )
+      cHostCP := "PLMAZ"
+   else
+      cHostCP := upper( cHostCP )
+   endif
+   lBoxChar := !empty( lBoxChar )
+   hb_cdpSelect( cHostCP )
+   hb_setTermCP( cTermCP, cHostCP, lBoxChar )
+#else
+   #ifdef INKEY_ALL
+      set( _SET_EVENTMASK, INKEY_ALL )
+   #endif
+#endif
 
 mdblclk(250)
 setcancel(.f.)
 //altd(0)
 
+? os(), version(), date(), time()
 #ifdef __HARBOUR__
-   set( _SET_EVENTMASK, hb_bitOR( INKEY_ALL, HB_INKEY_GTEVENT ) )
-   hb_gtInfo(HB_GTI_ESCDELAY,50)
-   hb_cdpSelect( "PLMAZ" )
-   hb_setTermCP( "PLISO" )
    ? hb_gtVersion(1), hb_gtVersion()
-#else
-   #ifdef INKEY_ALL
-      set(_SET_EVENTMASK,INKEY_ALL)
-   #endif
+   ? "Host codpage: " + hb_cdpSelect() + ", terminal codepage: " + cTermCP
 #endif
-
 ? "@ - interrupt, keycodes checking: "
 ?
+
 while (.t.)
    k:=inkey(0)
    if (i:=ascan(aKeys, { |x| x[2]==k }))!=0
