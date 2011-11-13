@@ -8,7 +8,6 @@ hbblat/hbblat.hbp
 hbblink/hbblink.hbp
 hbbz2/hbbz2.hbp                  # uses: bz2 (locally hosted)
 hbcairo/hbcairo.hbp
-hbclipsm/hbclipsm.hbp
 hbcomm/hbcomm.hbp
 hbct/hbct.hbp
 hbcups/hbcups.hbp

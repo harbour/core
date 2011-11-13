@@ -53,10 +53,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
 |   |                     CA-Cl*pper 5.3
 |   |
-|   +---hbclipsm        - Miscellaneous contribution files.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
 |   +---hbct            - CA-T**ls Compatible Library for Harbour.
 |   |   |
 |   |   +---tests       - Test programs.
