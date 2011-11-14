@@ -327,6 +327,16 @@ typedef struct
    HB_BOOL fFullScreen;
    HB_BOOL fAltEnter;
 
+   /* mark & copy */
+   HB_BOOL fSelectCopy;
+   HB_BOOL fMarkMode;
+   int iMarkCol;
+   int iMarkRow;
+   int markLeft;
+   int markTop;
+   int markRight;
+   int markBottom;
+
    /* window title */
    char *szTitle;
    HB_BOOL fDspTitle;
@@ -430,6 +440,7 @@ typedef struct
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd );
 static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd, int left, int top, int right, int bottom );
 static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd, int left, int top, int right, int bottom );
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize );
 
 /************************ globals ********************************/
 
@@ -2972,10 +2983,35 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
          wnd->mouseCol = evt->xmotion.x / wnd->fontWidth;
          wnd->mouseRow = evt->xmotion.y / wnd->fontHeight;
-         if( hb_gt_xwc_LastCharInInputQueue( wnd ) != K_MOUSEMOVE )
+         if( wnd->fMarkMode )
          {
-            hb_gt_xwc_AddCharToInputQueue( wnd, K_MOUSEMOVE );
+            hb_gt_xwc_InvalidateChar( wnd, wnd->markLeft, wnd->markTop,
+                                           wnd->markRight, wnd->markBottom );
+            if( wnd->iMarkCol < wnd->mouseCol )
+            {
+               wnd->markLeft = wnd->iMarkCol;
+               wnd->markRight = wnd->mouseCol;
+            }
+            else
+            {
+               wnd->markLeft = wnd->mouseCol;
+               wnd->markRight = wnd->iMarkCol;
+            }
+            if( wnd->iMarkRow < wnd->mouseRow )
+            {
+               wnd->markTop = wnd->iMarkRow;
+               wnd->markBottom = wnd->mouseRow;
+            }
+            else
+            {
+               wnd->markTop = wnd->mouseRow;
+               wnd->markBottom = wnd->iMarkRow;
+            }
+            hb_gt_xwc_InvalidateChar( wnd, wnd->markLeft, wnd->markTop,
+                                           wnd->markRight, wnd->markBottom );
          }
+         else if( hb_gt_xwc_LastCharInInputQueue( wnd ) != K_MOUSEMOVE )
+            hb_gt_xwc_AddCharToInputQueue( wnd, K_MOUSEMOVE );
          break;
 
       case ButtonPress:
@@ -2998,18 +3034,57 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
             if( evt->type == ButtonPress )
             {
-               Time evtTime = ((XButtonEvent *) evt)->time;
-               if( evtTime - wnd->mouseButtonsTime[ button ] <
-                   ( Time ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( wnd->pGT ) )
+               if( wnd->keyModifiers.bShift && button == 0 &&
+                   wnd->fSelectCopy && !wnd->fMarkMode )
                {
-                  key = s_mouseDblPressKeys[ button ];
+                  wnd->fMarkMode = HB_TRUE;
+                  wnd->iMarkCol = wnd->mouseCol;
+                  wnd->iMarkRow = wnd->mouseRow;
                }
                else
                {
-                  key = s_mousePressKeys[ button ];
+                  Time evtTime = ((XButtonEvent *) evt)->time;
+                  if( evtTime - wnd->mouseButtonsTime[ button ] <
+                      ( Time ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( wnd->pGT ) )
+                     key = s_mouseDblPressKeys[ button ];
+                  else
+                     key = s_mousePressKeys[ button ];
+                  wnd->mouseButtonsState |= 1 << button;
+                  wnd->mouseButtonsTime[ button ] = evtTime;
                }
-               wnd->mouseButtonsState |= 1 << button;
-               wnd->mouseButtonsTime[ button ] = evtTime;
+            }
+            else if( wnd->fMarkMode && button == 0 )
+            {
+               int top = wnd->markTop, bottom = wnd->markBottom,
+                   left = wnd->markLeft, right = wnd->markRight;
+               char * pBuffer;
+               HB_SIZE nSize;
+
+               wnd->fMarkMode = HB_FALSE;
+               hb_gt_xwc_InvalidateChar( wnd, left, top, right, bottom );
+
+               nSize = ( bottom - top + 1 ) * ( right - left + 2 );
+               pBuffer = ( char * ) hb_xgrab( nSize + 1 );
+               nSize = 0;
+               while( top <= bottom )
+               {
+                  for( left = wnd->markLeft; left <= right; ++left )
+                  {
+                     int iColor;
+                     HB_BYTE bAttr;
+                     HB_USHORT usChar;
+
+                     if( !HB_GTSELF_GETSCRCHAR( wnd->pGT, top, left, &iColor, &bAttr, &usChar ) )
+                        break;
+
+                     pBuffer[ nSize++ ] = ( char ) usChar;
+                  }
+                  pBuffer[ nSize++ ] = '\n';
+                  ++top;
+               }
+               if( nSize > 0 )
+                  hb_gt_xwc_SetSelection( wnd, pBuffer, nSize );
+               hb_xfree( pBuffer );
             }
             else
             {
@@ -3506,6 +3581,12 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
          {
             usCh16 &= 0xFF;
             color = ( HB_BYTE ) iColor;
+            if( wnd->fMarkMode &&
+                irow >= wnd->markTop && irow <= wnd->markBottom &&
+                icol >= wnd->markLeft && icol <= wnd->markRight )
+            {
+               color = ( color << 4 ) | ( color >> 4 );
+            }
          }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          chTrans = ( attr & HB_GT_ATTR_BOX ) ? &wnd->boxTrans[ usCh16 ] :
@@ -5106,6 +5187,12 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                                         hb_gt_xwc_getKbdState( wnd ) );
+         break;
+
+      case HB_GTI_SELECTCOPY:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fSelectCopy );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            wnd->fSelectCopy = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_ISFULLSCREEN:
