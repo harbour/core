@@ -2898,6 +2898,13 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 {
    KeySym out;
 
+#ifdef XWC_DEBUG
+   if( wnd->window != evt->xany.window )
+   {
+      printf( "Event: #%d window=%ld (wnd->window=%ld)\r\n", evt->type, evt->xany.window, wnd->window ); fflush(stdout);
+   }
+#endif
+
    switch( evt->type )
    {
       case Expose:
@@ -2905,9 +2912,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          printf( "Event: Expose\r\n" ); fflush(stdout);
 #endif
          hb_gt_xwc_InvalidatePts( wnd,
-                                 evt->xexpose.x , evt->xexpose.y,
-                                 evt->xexpose.x + evt->xexpose.width,
-                                 evt->xexpose.y + evt->xexpose.height );
+                                  evt->xexpose.x , evt->xexpose.y,
+                                  evt->xexpose.x + evt->xexpose.width,
+                                  evt->xexpose.y + evt->xexpose.height );
          break;
 
       case NoExpose:
@@ -2934,22 +2941,25 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          out = XLookupKeysym( &evt->xkey, 0 );
          switch( out )
          {
-            /* First of all, let's scan for special codes */
-            case XK_Shift_L: case XK_Shift_R:
+            case XK_Shift_L:
+            case XK_Shift_R:
                wnd->keyModifiers.bShift = HB_FALSE;
-               return;
+               break;
 
-            case XK_Control_L: case XK_Control_R:
+            case XK_Control_L:
+            case XK_Control_R:
                wnd->keyModifiers.bCtrl = HB_FALSE;
-               return;
+               break;
 
-            case XK_Meta_L: case XK_Alt_L:
+            case XK_Meta_L:
+            case XK_Alt_L:
                wnd->keyModifiers.bAlt = HB_FALSE;
-               return;
+               break;
 
-            case XK_Meta_R: case XK_Alt_R:
+            case XK_Meta_R:
+            case XK_Alt_R:
                wnd->keyModifiers.bAltGr = HB_FALSE;
-               return;
+               break;
          }
          break;
 
@@ -3920,18 +3930,22 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
 #else
 {
    HB_BOOL fRepeat;
+   XEvent evt;
+
+   while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
+      hb_gt_xwc_WndProc( wnd, &evt );
+
    do
    {
-      XEvent evt;
+      hb_gt_xwc_UpdateSize( wnd );
+      hb_gt_xwc_UpdatePts( wnd );
+      hb_gt_xwc_UpdateCursor( wnd );
       fRepeat = HB_FALSE;
       while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
       {
          hb_gt_xwc_WndProc( wnd, &evt );
          fRepeat = HB_TRUE;
       }
-      hb_gt_xwc_UpdateSize( wnd );
-      hb_gt_xwc_UpdatePts( wnd );
-      hb_gt_xwc_UpdateCursor( wnd );
    }
    while( fRepeat );
 }
