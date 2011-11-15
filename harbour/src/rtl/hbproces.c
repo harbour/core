@@ -1237,7 +1237,7 @@ int hb_fsProcessRun( const char * pszFilename,
    return iResult;
 }
 
-/* temporary hack for still missing sysconf() in Watcom 1.9 */
+/* temporary hack for still missing sysconf() and chroot() in Watcom 1.9 */
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && \
     __WATCOMC__ <= 1290
 _WCRTLINK long sysconf( int __name )
@@ -1253,6 +1253,15 @@ _WCRTLINK long sysconf( int __name )
       case /* _SC_PAGE_SIZE */ 30:
          return 4096;
    }
+   return -1;
+}
+
+_WCRTLINK int chroot(const char *__path)
+{
+   int iTODO;
+
+   HB_SYMBOL_UNUSED( __path );
+
    return -1;
 }
 #endif
