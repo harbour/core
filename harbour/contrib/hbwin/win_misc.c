@@ -62,6 +62,7 @@
  */
 
 #include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
 
 #ifndef QS_ALLPOSTMESSAGE
@@ -311,4 +312,21 @@ HB_FUNC( WIN_SYSREFRESH )
 
    CloseHandle( hDummyEvent );
    hb_retni( 0 );
+}
+
+HB_FUNC( WIN_QPCOUNTER2SEC )
+{
+   static HB_MAXDBL s_dFrequence = 0;
+
+   if( s_dFrequence == 0 )
+   {
+      LARGE_INTEGER frequency;
+      if( !QueryPerformanceFrequency( &frequency ) )
+      {
+         hb_retnd( 0 );
+         return;
+      }
+      s_dFrequence = ( HB_MAXDBL ) HBWAPI_GET_LARGEUINT( frequency );
+   }
+   hb_retnd( ( HB_MAXDBL ) hb_parnint( 1 ) / s_dFrequence );
 }

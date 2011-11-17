@@ -124,6 +124,14 @@
 #  endif
 #endif
 
+#if defined( __BORLANDC__ )
+#  define HBWAPI_GET_LARGEUINT( v ) ( ( HB_MAXUINT ) (v).u.LowPart | \
+                                      ( ( HB_MAXUINT ) (v).u.HighPart << 32 ) )
+#else
+#  define HBWAPI_GET_LARGEUINT( v ) ( ( HB_MAXUINT ) (v).LowPart | \
+                                      ( ( HB_MAXUINT ) (v).HighPart << 32 ) )
+#endif
+
 HB_EXTERN_BEGIN
 
 /* Intentionally not used HB_EXPORT. These are UNICODE setting dependent functions,

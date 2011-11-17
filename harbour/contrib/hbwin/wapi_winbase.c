@@ -452,3 +452,22 @@ HB_FUNC( WAPI_GETWINDOWSDIRECTORY )
    }
 #endif
 }
+
+
+HB_FUNC( WAPI_QUERYPERFORMANCECOUNTER )
+{
+   LARGE_INTEGER counter;
+   BOOL result = QueryPerformanceCounter( &counter );
+   if( result )
+      hb_stornint( HBWAPI_GET_LARGEUINT( counter ), 1 );
+   hb_retl( result != 0 );
+}
+
+HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
+{
+   LARGE_INTEGER frequency;
+   BOOL result = QueryPerformanceFrequency( &frequency );
+   if( result )
+      hb_stornint( HBWAPI_GET_LARGEUINT( frequency ), 1 );
+   hb_retl( result != 0 );
+}
