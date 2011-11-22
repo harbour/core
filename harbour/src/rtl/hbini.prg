@@ -95,14 +95,17 @@ PROCEDURE hb_IniSetComment( cLc, cHlc )
    RETURN
 
 FUNCTION HB_IniNew( lAutoMain )
-   LOCAL hIni := hb_HKeepOrder( { => }, .T. )
+   LOCAL hIni := { => }
+
+   hb_HKeepOrder( hIni, .T. )
 
    IF ! ISLOGICAL( lAutoMain )
       lAutoMain := .T.
    ENDIF
 
    IF lAutoMain
-      hIni[ "MAIN" ] := hb_HKeepOrder( { => }, .T. )
+      hIni[ "MAIN" ] := { => }
+      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
    RETURN hIni
@@ -111,7 +114,9 @@ FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
    RETURN hb_IniReadStr( iif( ISCHARACTER( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
-   LOCAL hIni := hb_HKeepOrder( { => }, .T. )
+   LOCAL hIni := { => }
+
+   hb_HKeepOrder( hIni, .T. )
 
    /* Default case sensitiveness for keys */
    IF ! ISLOGICAL( lKeyCaseSens )
@@ -130,7 +135,8 @@ FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
    IF lAutoMain
-      hIni[ "MAIN" ] := hb_HKeepOrder( { => }, .T. )
+      hIni[ "MAIN" ] := { => }
+      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
    RETURN hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
@@ -254,7 +260,8 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       IF ! Empty( aKeyVal )
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
-            hCurrentSection := hb_HKeepOrder( { => }, .T. )
+            hCurrentSection := { => }
+            hb_HKeepOrder( hCurrentSection, .T. )
             IF ! lKeyCaseSens
                cLine := Upper( cLine )
             ENDIF
