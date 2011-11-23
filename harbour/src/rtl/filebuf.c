@@ -280,7 +280,9 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
       if( nStart >= pLock->start &&
           nStart + nLen <= pLock->start + pLock->len )
       {
-         if( nStart == pLock->start )
+         if( pfLockFS && pFile->shared )
+            * pfLockFS = HB_TRUE;
+         else if( nStart == pLock->start )
          {
             if( nLen == pLock->len )
                hb_fileDeleteLock( pFile, uiPos );
@@ -296,10 +298,9 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
          {
             hb_fileInsertLock( pFile, uiPos + 1, nStart + nLen,
                                pLock->start + pLock->len - nStart - nLen );
-            pFile->pLocks[ uiPos ].len = nStart - pLock->start;
+            pLock = &pFile->pLocks[ uiPos ];
+            pLock->len = nStart - pLock->start;
          }
-         if( pFile->shared )
-            * pfLockFS = HB_TRUE;
          fResult = HB_TRUE;
       }
    }
@@ -509,7 +510,12 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
       fResult = hb_fileUnlock( pFile, &fLockFS, nStart, nLen );
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
+      {
          hb_fsLockLarge( pFile->hFile, nStart, nLen, ( HB_USHORT ) iType );
+         hb_threadEnterCriticalSection( &s_fileMtx );
+         hb_fileUnlock( pFile, NULL, nStart, nLen );
+         hb_threadLeaveCriticalSection( &s_fileMtx );
+      }
       else
          hb_fsSetError( fResult ? 0 : 33 );
    }
@@ -524,7 +530,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
          if( !fResult )
          {
             hb_threadEnterCriticalSection( &s_fileMtx );
-            hb_fileUnlock( pFile, &fLockFS, nStart, nLen );
+            hb_fileUnlock( pFile, NULL, nStart, nLen );
             hb_threadLeaveCriticalSection( &s_fileMtx );
          }
       }
