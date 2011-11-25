@@ -447,6 +447,8 @@ HARBOUR
       for contrib/hbfimage lib:  $ sudo apt-get install libfreeimage-dev
       for contrib/hbgd lib:      $ sudo apt-get install libgd2-xpm-dev OR
                                  $ sudo apt-get install libgd-xpm-dev
+      for contrib/hbgs lib:      $ sudo apt-get install libgs-dev
+      for contrib/hbmagic lib:   $ sudo apt-get install libmagic-dev
       for contrib/hbmysql lib:   $ sudo apt-get install libmysqlclient15-dev
       for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
       for contrib/hbpgsql lib:   $ sudo apt-get install libpq-dev

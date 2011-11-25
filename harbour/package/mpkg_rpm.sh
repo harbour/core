@@ -15,26 +15,6 @@ test_reqrpm()
    rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
-get_rpmmacro()
-{
-   local R X Y
-
-   R=`rpm --showrc|sed -e "/^-14:.${1}[^a-z0-9A-Z_]/ !d" -e "s/^-14: ${1}.//"`
-   X=`echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/"`
-   while [ "${X}" != "${R}" ]
-   do
-      Y=`get_rpmmacro "$X"`
-      if [ -n "${Y}" ]
-      then
-         R=`echo "${R}"|sed -e "s!%{${X}}!${Y}!g"`
-         X=`echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/"`
-      else
-         X="${R}"
-      fi
-   done
-   echo -n "${R}"
-}
-
 NEED_RPM="make gcc binutils bash"
 
 FORCE=""
@@ -170,7 +150,7 @@ then
                   ${RPMDIR}/BUILD ${RPMDIR}/SPECS
          echo "%_topdir ${RPMDIR}" > ${HOME}/.rpmmacros
       else
-         RPMDIR=`get_rpmmacro "_topdir"`
+         RPMDIR=`rpm --eval %_topdir`
       fi
 
       mv -f ${hb_filename} ${RPMDIR}/SOURCES/
