@@ -47,7 +47,13 @@ QModelIndex index ( const QString & path, int column = 0 ) const
 bool isDir ( const QModelIndex & index ) const
 bool isReadOnly () const
 QDateTime lastModified ( const QModelIndex & index ) const
-// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const{
+   QFileSystemModel * p = ( QFileSystemModel * ) hbqt_par_ptr( 0 );
+   if( p )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData( *hbqt_par_QModelIndexList( 1 ) ), false ), "hb_QMimeData" );
+   }
+}
 virtual QStringList mimeTypes () const
 QModelIndex mkdir ( const QModelIndex & parent, const QString & name )
 QVariant myComputer ( int role = Qt::DisplayRole ) const

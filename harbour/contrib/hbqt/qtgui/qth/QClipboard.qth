@@ -43,7 +43,13 @@ enum Mode { Clipboard, Selection, FindBuffer }
 <PROTOS>
 void clear ( Mode mode = Clipboard )
 QImage image ( Mode mode = Clipboard ) const
-//const QMimeData * mimeData ( Mode mode = Clipboard ) const
+const QMimeData * mimeData ( Mode mode = Clipboard ) const{
+   QClipboard * p = ( QClipboard * ) hbqt_par_ptr( 0 );
+   if( p )
+   {
+      hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData( ( QClipboard::Mode ) hb_parni( 1 ) ), false ), "hb_QMimeData" );
+   }
+}
 bool ownsClipboard () const
 bool ownsFindBuffer () const
 bool ownsSelection () const
