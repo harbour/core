@@ -1605,12 +1605,12 @@ static LPTAGINFO hb_ntxTagLoad( LPNTXINDEX pIndex, HB_ULONG ulBlock,
       }
       else if( usType & NTX_FLAG_EXTLOCK )
       {
-         pIndex->Owner->dbfarea.bLockType = DB_DBFLOCK_CL53EXT;
+         pIndex->Owner->dbfarea.bLockType = DB_DBFLOCK_CLIPPER2;
       }
       else if( ! pIndex->Owner->dbfarea.bLockType )
       {
          pIndex->Owner->dbfarea.bLockType = usType & NTX_FLAG_EXTLOCK ?
-                           DB_DBFLOCK_CL53EXT : DB_DBFLOCK_CLIP;
+                           DB_DBFLOCK_CLIPPER2 : DB_DBFLOCK_CLIPPER;
       }
    }
    return pTag;
@@ -1719,7 +1719,7 @@ static HB_ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
    type = NTX_FLAG_DEFALUT |
       ( pTag->ForExpr ? NTX_FLAG_FORITEM : 0 ) |
       ( pTag->Partial ? NTX_FLAG_PARTIAL | NTX_FLAG_FORITEM : 0 ) |
-      ( pIndex->Owner->dbfarea.bLockType == DB_DBFLOCK_CL53EXT ? NTX_FLAG_EXTLOCK : 0 ) |
+      ( pIndex->Owner->dbfarea.bLockType == DB_DBFLOCK_CLIPPER2 ? NTX_FLAG_EXTLOCK : 0 ) |
       ( pTag->Partial  ? NTX_FLAG_PARTIAL | NTX_FLAG_FORITEM : 0 ) |
       /* non CLipper flags */
       ( pTag->Custom   ? NTX_FLAG_CUSTOM : 0 ) |
@@ -2042,8 +2042,9 @@ static HB_BOOL hb_ntxIndexLockRead( LPNTXINDEX pIndex )
    }
    else
    {
-      fOK = hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                        FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_LOCK | FLX_SHARED | FLX_WAIT, HB_FALSE,
+                               &pIndex->lockData );
       /* if fOK then check VERSION field in NTXHEADER and
        * if it has been changed then discard all page buffers
        */
@@ -2053,8 +2054,8 @@ static HB_BOOL hb_ntxIndexLockRead( LPNTXINDEX pIndex )
          if( hb_ntxIndexHeaderRead( pIndex ) != HB_SUCCESS )
          {
             pIndex->lockRead--;
-            hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+            hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
             return HB_FALSE;
          }
       }
@@ -2086,8 +2087,9 @@ static HB_BOOL hb_ntxIndexLockWrite( LPNTXINDEX pIndex, HB_BOOL fCheck )
    }
    else
    {
-      fOK = hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                               FL_LOCK | FLX_WAIT, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT, HB_FALSE,
+                               &pIndex->lockData );
       /* if fOK then check VERSION field in NTXHEADER and
        * if it has been changed then discard all page buffers
        */
@@ -2097,8 +2099,8 @@ static HB_BOOL hb_ntxIndexLockWrite( LPNTXINDEX pIndex, HB_BOOL fCheck )
          if( fCheck && hb_ntxIndexHeaderRead( pIndex ) != HB_SUCCESS )
          {
             pIndex->lockWrite--;
-            hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+            hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
             return HB_FALSE;
          }
       }
@@ -2135,8 +2137,8 @@ static HB_BOOL hb_ntxIndexUnLockRead( LPNTXINDEX pIndex )
    else
    {
       pIndex->fValidHeader = HB_FALSE;
-      fOK = hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
    }
    if( !fOK )
       hb_errInternal( 9108, "hb_ntxIndexUnLockRead: unlock error.", NULL, NULL );
@@ -2173,8 +2175,8 @@ static HB_BOOL hb_ntxIndexUnLockWrite( LPNTXINDEX pIndex )
    {
       hb_fileFlush( pIndex->DiskFile, HB_TRUE );
       pIndex->fValidHeader = HB_FALSE;
-      fOK = hb_dbfLockIdxFile( pIndex->DiskFile, pIndex->Owner->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->Owner->dbfarea, pIndex->DiskFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
    }
    if( !fOK )
       hb_errInternal( 9108, "hb_ntxIndexUnLockWrite: unlock error.", NULL, NULL );
@@ -6742,12 +6744,13 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       case DBOI_LOCKOFFSET:
       case DBOI_HPLOCKING:
       {
-         HB_FOFFSET ulPos, ulPool;
-         hb_dbfLockIdxGetData( pArea->dbfarea.bLockType, &ulPos, &ulPool );
+         HB_DBFLOCKDATA lockData;
+
+         hb_dbfLockIdxGetData( pArea->dbfarea.bLockType, &lockData );
          if( uiIndex == DBOI_LOCKOFFSET )
-            hb_itemPutNInt( pInfo->itmResult, ulPos );
+            hb_itemPutNInt( pInfo->itmResult, lockData.offset );
          else
-            hb_itemPutL( pInfo->itmResult, ulPool > 0 );
+            hb_itemPutL( pInfo->itmResult, lockData.size > 0 );
          return HB_SUCCESS;
       }
       case DBOI_ORDERCOUNT:

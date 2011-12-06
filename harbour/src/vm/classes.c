@@ -920,7 +920,15 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
    pClsDst->fHasDestructor = pClsSrc->fHasDestructor;
 
    /* CLASS DATA Not Shared ( new array, new value ) */
-   pClsDst->pClassDatas  = hb_arrayClone( pClsSrc->pClassDatas );
+#if 0
+   /* enable this code if you want to inherit class variables values
+    * from ancestor classes when new class is dynamically created.
+    * (compatibility with older [x]Harbour versions)
+    */
+   pClsDst->pClassDatas = hb_arrayClone( pClsSrc->pClassDatas );
+#else
+   pClsDst->pClassDatas = hb_itemArrayNew( hb_arrayLen( pClsSrc->pClassDatas ) );
+#endif
    /* do not copy shared data array - just simply create new one */
    pClsDst->pSharedDatas = hb_itemArrayNew( 0 );
    pClsDst->pInlines = hb_arrayClone( pClsSrc->pInlines );

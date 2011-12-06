@@ -272,7 +272,7 @@ typedef struct _NTXINDEX
    HB_BOOL     Update;
    HB_BOOL     Compound;
    HB_BOOL     Production;    /* Production index */
-   HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
+   HB_DBFLOCKDATA lockData;   /* index lock data */
    int         lockWrite;     /* number of write lock set */
    int         lockRead;      /* number of read lock set */
 

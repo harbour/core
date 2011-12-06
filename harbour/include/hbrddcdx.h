@@ -388,7 +388,7 @@ typedef struct _CDXINDEX
    LPCDXLIST  freeLst;        /* list of free pages in index file */
    int        lockWrite;      /* number of write lock set */
    int        lockRead;       /* number of read lock set */
-   HB_FOFFSET ulLockPos;      /* readlock position for CL53 lock scheme */
+   HB_DBFLOCKDATA lockData;   /* index lock data */
 #ifdef HB_CDX_DBGCODE
    HB_BOOL    RdLck;
    HB_BOOL    WrLck;

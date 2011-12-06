@@ -526,6 +526,10 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
       {
+#if defined( HB_OS_UNIX )
+         if( pFile->readonly )
+            iType |= FLX_SHARED;
+#endif
          fResult = hb_fsLockLarge( pFile->hFile, nStart, nLen, ( HB_USHORT ) iType );
          if( !fResult )
          {

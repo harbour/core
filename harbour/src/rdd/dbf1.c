@@ -1152,41 +1152,59 @@ HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme,
-                              HB_FOFFSET * pnPos, HB_FOFFSET * pnPool )
+HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme, PHB_DBFLOCKDATA pLockData )
 {
+   pLockData->next = pLockData->tolock = 0;
+   pLockData->type = 0;
+
    switch( bScheme )
    {
-      case DB_DBFLOCK_CLIP:
-         *pnPos  = IDX_LOCKPOS_CLIP;
-         *pnPool = IDX_LOCKPOOL_CLIP;
+      case DB_DBFLOCK_CLIPPER:
+         pLockData->offset = IDX_LOCKPOS_CLIPPER;
+         pLockData->size   = IDX_LOCKPOOL_CLIPPER;
          break;
 
-      case DB_DBFLOCK_CL53:
-         *pnPos  = IDX_LOCKPOS_CL53;
-         *pnPool = IDX_LOCKPOOL_CL53;
+      case DB_DBFLOCK_CLIPPER2:
+         pLockData->offset = IDX_LOCKPOS_CLIPPER2;
+         pLockData->size   = IDX_LOCKPOOL_CLIPPER2;
          break;
 
-      case DB_DBFLOCK_CL53EXT:
-         *pnPos  = IDX_LOCKPOS_CL53EXT;
-         *pnPool = IDX_LOCKPOOL_CL53EXT;
+      case DB_DBFLOCK_COMIX:
+         pLockData->offset = IDX_LOCKPOS_COMIX;
+         pLockData->size   = IDX_LOCKPOOL_COMIX;
          break;
 
       case DB_DBFLOCK_VFP:
-         *pnPos  = IDX_LOCKPOS_VFP;
-         *pnPool = IDX_LOCKPOOL_VFP;
+         pLockData->offset = IDX_LOCKPOS_VFP;
+         pLockData->size   = IDX_LOCKPOOL_VFP;
+         break;
+
+      case DB_DBFLOCK_HB32:
+         pLockData->offset = IDX_LOCKPOS_HB32;
+         pLockData->size   = IDX_LOCKPOOL_HB32;
          break;
 
 #ifndef HB_LONG_LONG_OFF
       case DB_DBFLOCK_HB64:
-         *pnPos  = IDX_LOCKPOS_HB64;
-         *pnPool = IDX_LOCKPOOL_HB64;
+         pLockData->offset = IDX_LOCKPOS_HB64;
+         pLockData->size   = IDX_LOCKPOOL_HB64;
          break;
 #endif
 
       default:
+         pLockData->offset = pLockData->size = 0;
          return HB_FALSE;
    }
+   return HB_TRUE;
+}
+
+static HB_BOOL hb_dbfLockIdxRepeatFail( DBFAREAP pArea, PHB_DBFLOCKDATA pLockData )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pLockData );
+
+   /* TODO: call special error handler (LOCKHANDLER) here */
+
    return HB_TRUE;
 }
 
@@ -1195,61 +1213,111 @@ HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, HB_USHORT usMode,
-                           HB_FOFFSET * pnPoolPos )
+HB_BOOL hb_dbfLockIdxFile( DBFAREAP pArea, PHB_FILE pFile,
+                           int iType, HB_BOOL fLateWrlck,
+                           PHB_DBFLOCKDATA pLockData )
 {
-   HB_FOFFSET nPos, nPool, nSize = 1;
-   HB_BOOL fRet = HB_FALSE;
+   HB_FOFFSET offset, size, tolock;
+   HB_BOOL fOK;
 
-   if( !hb_dbfLockIdxGetData( bScheme, &nPos, &nPool ) )
+   switch( iType & FL_MASK )
    {
-      return fRet;
-   }
-
-   for( ;; )
-   {
-      switch( usMode & FL_MASK )
-      {
-         case FL_LOCK:
-            if( nPool )
-            {
-               if( ( usMode & FLX_SHARED ) != 0 )
-                  *pnPoolPos = ( HB_FOFFSET ) ( hb_random_num() * nPool ) + 1;
-               else
-               {
-                  *pnPoolPos = 0;
-                  nSize = nPool + 1;
-               }
-            }
-            else
-            {
-               *pnPoolPos = 0;
-            }
-            break;
-
-         case FL_UNLOCK:
-            if( nPool )
-            {
-               if( ! *pnPoolPos )
-                  nSize = nPool + 1;
-            }
-            else
-            {
-               *pnPoolPos = 0;
-            }
-            break;
-
-         default:
+      case FL_LOCK:
+         if( !hb_dbfLockIdxGetData( pArea->bLockType, pLockData ) )
             return HB_FALSE;
-      }
-      fRet = hb_fileLock( pFile, nPos + *pnPoolPos, nSize, usMode );
-      if( fRet || ( usMode & FLX_WAIT ) == 0 || ( usMode & FL_MASK ) != FL_LOCK )
-         break;
-      /* TODO: call special error handler (LOCKHANDLER) here if fWait */
-      hb_releaseCPU();
-   }
 
-   return fRet;
+         if( pLockData->size && ( iType & FLX_SHARED ) != 0 )
+         {
+            if( ++pLockData->count >= 16 )
+            {
+               pLockData->size = 0;
+               pLockData->count = 0;
+               iType &= ~FLX_SHARED;
+            }
+         }
+         else
+            pLockData->count = 0;
+
+         tolock = 0;
+         for( ;; )
+         {
+            size = 1;
+            offset = pLockData->offset;
+            if( pLockData->count != 0 )
+               offset += ( HB_FOFFSET ) ( hb_random_num() * pLockData->size ) + 1;
+            else if( pLockData->size != 0 )
+               size = pLockData->size + 1;
+            if( hb_fileLock( pFile, offset, size,
+                             size > 1 ? iType & ~FLX_WAIT : iType ) )
+            {
+               pLockData->offset = offset;
+               pLockData->size = size;
+               pLockData->tolock = tolock;
+               pLockData->type = iType;
+               if( !fLateWrlck && tolock != 0 )
+               {
+                  if( ! hb_dbfLockIdxWrite( pArea, pFile, pLockData ) )
+                  {
+                     hb_fileLock( pFile, offset, size, FL_UNLOCK );
+                     break;
+                  }
+               }
+               return HB_TRUE;
+            }
+            if( ( iType & FLX_WAIT ) == 0 )
+               break;
+            else if( size > 1 )
+            {
+               tolock = size - 1;
+               pLockData->size = 0;
+            }
+            else if( !hb_dbfLockIdxRepeatFail( pArea, pLockData ) )
+               break;
+            else
+               hb_releaseCPU();
+         }
+         pLockData->offset = pLockData->size =
+         pLockData->next = pLockData->tolock = 0;
+         pLockData->type = 0;
+         break;
+
+      case FL_UNLOCK:
+         fOK = hb_fileLock( pFile, pLockData->offset, pLockData->size, iType );
+         if( pLockData->next )
+         {
+            if( !hb_fileLock( pFile, pLockData->offset + pLockData->size,
+                              pLockData->next, iType ) )
+               fOK = HB_FALSE;
+         }
+         if( fOK )
+         {
+            pLockData->offset = pLockData->size =
+            pLockData->next = pLockData->tolock = 0;
+            pLockData->type = 0;
+            return HB_TRUE;
+         }
+   }
+   return HB_FALSE;
+}
+
+HB_BOOL hb_dbfLockIdxWrite( DBFAREAP pArea, PHB_FILE pFile,
+                            PHB_DBFLOCKDATA pLockData )
+{
+   if( pLockData->tolock )
+   {
+      /* FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT */
+      while( ! hb_fileLock( pFile, pLockData->offset + pLockData->size,
+                            pLockData->tolock, pLockData->type ) )
+      {
+         if( ! hb_dbfLockIdxRepeatFail( pArea, pLockData ) )
+            return HB_FALSE;
+         hb_releaseCPU();
+      }
+      pLockData->next = pLockData->tolock;
+      pLockData->tolock = 0;
+   }
+   return HB_TRUE;
+
 }
 
 /*
@@ -1261,25 +1329,25 @@ static HB_ERRCODE hb_dbfLockData( DBFAREAP pArea,
 {
    switch( pArea->bLockType )
    {
-      case DB_DBFLOCK_CLIP:
-         *pnPos = DBF_LOCKPOS_CLIP;
-         *iDir = DBF_LOCKDIR_CLIP;
-         *pnFlSize = DBF_FLCKSIZE_CLIP;
-         *pnRlSize = DBF_RLCKSIZE_CLIP;
+      case DB_DBFLOCK_CLIPPER:
+         *pnPos = DBF_LOCKPOS_CLIPPER;
+         *iDir = DBF_LOCKDIR_CLIPPER;
+         *pnFlSize = DBF_FLCKSIZE_CLIPPER;
+         *pnRlSize = DBF_RLCKSIZE_CLIPPER;
          break;
 
-      case DB_DBFLOCK_CL53:
-         *pnPos = DBF_LOCKPOS_CL53;
-         *iDir = DBF_LOCKDIR_CL53;
-         *pnFlSize = DBF_FLCKSIZE_CL53;
-         *pnRlSize = DBF_RLCKSIZE_CL53;
+      case DB_DBFLOCK_CLIPPER2:
+         *pnPos = DBF_LOCKPOS_CLIPPER2;
+         *iDir = DBF_LOCKDIR_CLIPPER2;
+         *pnFlSize = DBF_FLCKSIZE_CLIPPER2;
+         *pnRlSize = DBF_RLCKSIZE_CLIPPER2;
          break;
 
-      case DB_DBFLOCK_CL53EXT:
-         *pnPos = DBF_LOCKPOS_CL53EXT;
-         *iDir = DBF_LOCKDIR_CL53EXT;
-         *pnFlSize = DBF_FLCKSIZE_CL53EXT;
-         *pnRlSize = DBF_RLCKSIZE_CL53EXT;
+      case DB_DBFLOCK_COMIX:
+         *pnPos = DBF_LOCKPOS_COMIX;
+         *iDir = DBF_LOCKDIR_COMIX;
+         *pnFlSize = DBF_FLCKSIZE_COMIX;
+         *pnRlSize = DBF_RLCKSIZE_COMIX;
          break;
 
       case DB_DBFLOCK_VFP:
@@ -1297,6 +1365,13 @@ static HB_ERRCODE hb_dbfLockData( DBFAREAP pArea,
             *pnFlSize = DBF_FLCKSIZE_VFP;
             *pnRlSize = DBF_RLCKSIZE_VFP;
          }
+         break;
+
+      case DB_DBFLOCK_HB32:
+         *pnPos = DBF_LOCKPOS_HB32;
+         *iDir = DBF_LOCKDIR_HB32;
+         *pnFlSize = DBF_FLCKSIZE_HB32;
+         *pnRlSize = DBF_RLCKSIZE_HB32;
          break;
 
 #ifndef HB_LONG_LONG_OFF
@@ -2895,7 +2970,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       if( pArea->bLockType == 0 )
       {
-         pArea->bLockType = DB_DBFLOCK_CLIP;
+         pArea->bLockType = DB_DBFLOCK_CLIPPER;
       }
    }
 
@@ -3472,10 +3547,11 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
          }
          switch( iScheme )
          {
-            case DB_DBFLOCK_CLIP:
-            case DB_DBFLOCK_CL53:
-            case DB_DBFLOCK_CL53EXT:
+            case DB_DBFLOCK_CLIPPER:
+            case DB_DBFLOCK_CLIPPER2:
+            case DB_DBFLOCK_COMIX:
             case DB_DBFLOCK_VFP:
+            case DB_DBFLOCK_HB32:
 #ifndef HB_LONG_LONG_OFF
             case DB_DBFLOCK_HB64:
 #endif
@@ -3808,7 +3884,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
       pArea->bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       if( !pArea->bLockType )
-         pArea->bLockType = DB_DBFLOCK_CLIP;
+         pArea->bLockType = DB_DBFLOCK_CLIPPER;
    }
 
    if( pOpenInfo->cdpId )
@@ -5716,10 +5792,11 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
                               hb_setGetDBFLockScheme() );
          switch( iScheme )
          {
-            case DB_DBFLOCK_CLIP:
-            case DB_DBFLOCK_CL53:
-            case DB_DBFLOCK_CL53EXT:
+            case DB_DBFLOCK_CLIPPER:
+            case DB_DBFLOCK_CLIPPER2:
+            case DB_DBFLOCK_COMIX:
             case DB_DBFLOCK_VFP:
+            case DB_DBFLOCK_HB32:
 #ifndef HB_LONG_LONG_OFF
             case DB_DBFLOCK_HB64:
 #endif

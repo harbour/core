@@ -2167,8 +2167,9 @@ static HB_BOOL hb_nsxIndexLockRead( LPNSXINDEX pIndex )
    }
    else
    {
-      fOK = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                        FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_LOCK | FLX_SHARED | FLX_WAIT, HB_FALSE,
+                               &pIndex->lockData );
       /* if fOK then check VERSION field in NSXHEADER and
        * if it has been changed then discard all page buffers
        */
@@ -2178,8 +2179,8 @@ static HB_BOOL hb_nsxIndexLockRead( LPNSXINDEX pIndex )
          if( hb_nsxIndexHeaderRead( pIndex ) != HB_SUCCESS )
          {
             pIndex->lockRead--;
-            hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+            hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
             return HB_FALSE;
          }
       }
@@ -2210,8 +2211,9 @@ static HB_BOOL hb_nsxIndexLockWrite( LPNSXINDEX pIndex, HB_BOOL fCheck )
    }
    else
    {
-      fOK = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                               FL_LOCK | FLX_WAIT, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT, HB_FALSE,
+                               &pIndex->lockData );
       /* if fOK then check VERSION field in NSXHEADER and
        * if it has been changed then discard all page buffers
        */
@@ -2221,8 +2223,8 @@ static HB_BOOL hb_nsxIndexLockWrite( LPNSXINDEX pIndex, HB_BOOL fCheck )
          if( fCheck && hb_nsxIndexHeaderRead( pIndex ) != HB_SUCCESS )
          {
             pIndex->lockWrite--;
-            hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+            hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
             return HB_FALSE;
          }
       }
@@ -2258,8 +2260,8 @@ static HB_BOOL hb_nsxIndexUnLockRead( LPNSXINDEX pIndex )
    else
    {
       pIndex->fValidHeader = HB_FALSE;
-      fOK = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
    }
    if( !fOK )
       hb_errInternal( 9108, "hb_nsxIndexUnLockRead: unlock error.", NULL, NULL );
@@ -2296,8 +2298,8 @@ static HB_BOOL hb_nsxIndexUnLockWrite( LPNSXINDEX pIndex )
    {
       hb_fileFlush( pIndex->pFile, HB_TRUE );
       pIndex->fValidHeader = HB_FALSE;
-      fOK = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->dbfarea.bLockType,
-                               FL_UNLOCK, &pIndex->ulLockPos );
+      fOK = hb_dbfLockIdxFile( &pIndex->pArea->dbfarea, pIndex->pFile,
+                               FL_UNLOCK, HB_FALSE, &pIndex->lockData );
    }
    if( !fOK )
       hb_errInternal( 9108, "hb_nsxIndexUnLockWrite: unlock error.", NULL, NULL );
@@ -6579,7 +6581,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->dbfarea.bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
       if( pArea->dbfarea.bLockType == 0 )
-         pArea->dbfarea.bLockType = DB_DBFLOCK_CLIP;
+         pArea->dbfarea.bLockType = DB_DBFLOCK_CLIPPER;
    }
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
@@ -7150,12 +7152,13 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       case DBOI_LOCKOFFSET:
       case DBOI_HPLOCKING:
       {
-         HB_FOFFSET ulPos, ulPool;
-         hb_dbfLockIdxGetData( pArea->dbfarea.bLockType, &ulPos, &ulPool );
+         HB_DBFLOCKDATA lockData;
+
+         hb_dbfLockIdxGetData( pArea->dbfarea.bLockType, &lockData );
          if( uiIndex == DBOI_LOCKOFFSET )
-            pInfo->itmResult = hb_itemPutNInt( pInfo->itmResult, ulPos );
+            pInfo->itmResult = hb_itemPutNInt( pInfo->itmResult, lockData.offset );
          else
-            pInfo->itmResult = hb_itemPutL( pInfo->itmResult, ulPool > 0 );
+            pInfo->itmResult = hb_itemPutL( pInfo->itmResult, lockData.size > 0 );
          return HB_SUCCESS;
       }
       case DBOI_ORDERCOUNT:
