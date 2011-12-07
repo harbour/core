@@ -86,7 +86,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
    DATA     autosize                              INIT .F.
    DATA     border                                INIT .T.
-   DATA     caption                               INIT ""
+   DATA     caption                               INIT NIL
    DATA     pointerFocus                          INIT .T.
    DATA     preSelect                             INIT .F.
    DATA     drawMode                              INIT WVG_DRAW_NORMAL
@@ -110,11 +110,11 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
+METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON  /*+ BS_NOTIFY + BS_PUSHLIKE */
+   ::style       := WS_CHILD + BS_PUSHBUTTON  /* + BS_NOTIFY + BS_PUSHLIKE */
    ::className   := "BUTTON"
    ::objType     := objTypePushButton
 
@@ -122,19 +122,35 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushB
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
+METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isNumeric( ::caption )
+      ::style += BS_BITMAP
+   ELSEIF hb_isChar( ::caption )
+      IF ".ICO" == upper( right( ::caption, 4 ) )
+         ::style += BS_ICON
+      ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
+         ::style += BS_BITMAP
+      ENDIF
+   ENDIF
+   IF ! ::border
+      ::style += BS_FLAT
+   ENDIF
 
    ::oParent:AddChild( SELF )
 
    ::createControl()
 
-   ::SetWindowProcCallback()
+//   IF ::isParentCrt()
+      ::SetWindowProcCallback()
+//   ENDIF
 
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
    ::setCaption( ::caption )
 
@@ -142,25 +158,26 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
-
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    DO CASE
 
    CASE nMessage == HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
+      ::sendMessage( WM_SIZE, 0, 0 )
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
-         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
-         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
+      // Will never be issued because pushbutton sends WM_COMMAND
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
@@ -171,44 +188,60 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
          RETURN ::hBrushBG
       ENDIF
 
+   CASE nMessage == HB_GTE_ANY
+      IF aNM[ 1 ] == WM_LBUTTONUP
+         IF hb_isBlock( ::sl_lbClick )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            eval( ::sl_lbClick, NIL, NIL, Self )
+         ENDIF
+      ENDIF
+
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgPushButton
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
-
+METHOD WvgPushButton:destroy()
    ::wvgWindow:destroy()
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
-
+METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setCaption( xCaption, cDll ) CLASS WvgPushButton
+METHOD WvgPushButton:setCaption( xCaption, cDll )
 
+   DEFAULT xCaption TO ::caption
    HB_SYMBOL_UNUSED( cDll )
 
    IF hb_isChar( xCaption )
       ::caption := xCaption
-      WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      IF ".ICO" == upper( right( ::caption, 4 ) )
+         WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, WVG_LoadImage( ::caption, 2, IMAGE_ICON ) )
+      ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
+         WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, WVG_LoadImage( ::caption, 2, IMAGE_BITMAP ) )
+      ELSE
+         WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      ENDIF
+
+   ELSEIF hb_isNumeric( xCaption )  /* Handle to the bitmap */
+      ::caption := xCaption
+      WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, ::caption )
+
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD activate( xParam ) CLASS WvgPushButton
+METHOD WvgPushButton:activate( xParam )
 
    IF hb_isBlock( xParam ) .OR. ( xParam == NIL )
       ::sl_lbClick := xParam
@@ -218,7 +251,7 @@ METHOD activate( xParam ) CLASS WvgPushButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD draw( xParam ) CLASS WvgPushButton
+METHOD WvgPushButton:draw( xParam )
 
    IF hb_isBlock( xParam ) .or. ( xParam == NIL )
       ::sl_paint := xParam

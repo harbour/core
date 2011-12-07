@@ -83,7 +83,7 @@ CLASS WvgDialog FROM WvgWindow
    DATA     drawingArea
    DATA     tasklist                              INIT  .t.
 
-   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
@@ -103,16 +103,16 @@ CLASS WvgDialog FROM WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::className   := "WVGDIALOG"
    ::resizeMode  := 0
    ::mouseMode   := 0
    ::objType     := objTypeDialog
 
-   ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
+   ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX
 
    RETURN Self
 
@@ -162,10 +162,10 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    if ::visible
       ::lHasInputFocus := .t.
-   endif
+   ENDIF
 
-   oW := WvgDrawingArea():new( self ):create( , , {0,0}, self:currentSize(), , .f. )
-   IF !empty( oW:hWnd )
+   oW := WvgDrawingArea():new( Self ):create( , , {0,0}, Self:currentSize(), , .f. )
+   IF ! empty( oW:hWnd )
       ::drawingArea := oW
    ELSE
       ::drawingArea := Self

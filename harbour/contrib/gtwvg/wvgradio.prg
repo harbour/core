@@ -106,7 +106,7 @@ CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_AUTORADIOBUTTON
    ::className   := "BUTTON"

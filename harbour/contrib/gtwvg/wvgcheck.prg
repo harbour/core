@@ -110,7 +110,7 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX /*+ BS_NOTIFY */
    ::className   := "BUTTON"
@@ -122,24 +122,25 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheck
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( SELF )
 
    ::createControl()
 
-   ::SetWindowProcCallback()
+   IF ::isParentCrt()
+      ::SetWindowProcCallback()
+   ENDIF
 
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
    ::setCaption( ::caption )
-
    IF ::selection
       ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
    ENDIF
-
    ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
    RETURN Self
@@ -147,36 +148,54 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
 /*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
+   LOCAL hDC
 
    hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
 
+   CASE nMessage == HB_GTE_RESIZED
+      ::sendMessage( WM_SIZE, 0, 0 )
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
+
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-
          IF hb_isBlock( ::sl_lbClick )
             eval( ::sl_lbClick, ::editBuffer, NIL, self )
             RETURN 0
-
          ENDIF
       ENDIF
 
-   CASE nMessage ==  HB_GTE_CTLCOLOR
+   CASE nMessage == HB_GTE_CTLCOLOR
+      hDC := aNM[ 1 ]
       IF hb_isNumeric( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
+         WVG_SetTextColor( hDC, ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         WVG_SetBkMode( hDC, 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
+         RETURN WVG_GetCurrentBrush( hDC )
+      ENDIF
+
+   CASE nMessage == HB_GTE_ANY
+      IF ::isParentCrt()
+         IF aNM[ 1 ] == WM_LBUTTONUP
+            IF hb_isBlock( ::sl_lbClick )
+               ::oParent:setFocus()
+               ::sendMessage( BM_SETCHECK, iif( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
+               ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+               eval( ::sl_lbClick, NIL, NIL, Self )
+            ENDIF
+         ENDIF
       ENDIF
 
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 

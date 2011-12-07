@@ -48,14 +48,14 @@
 
 /*----------------------------------------------------------------------*/
 
-thread static t_keys_:= { , , , , , , , , , , , , , , , , , , , }
-thread static t_pic_ := { , , , , , , , , , , , , , , , , , , , }
+THREAD STATIC t_keys_:= { , , , , , , , , , , , , , , , , , , , }
+THREAD STATIC t_pic_ := { , , , , , , , , , , , , , , , , , , , }
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION WvtSetKeys( lSet )
 
-   if lSet
+   IF lSet
       t_keys_[ 2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
       t_keys_[ 3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
       t_keys_[ 4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
@@ -65,7 +65,7 @@ FUNCTION WvtSetKeys( lSet )
       t_keys_[ 8 ] := SetKey( K_F8, {|| WvtLines()            } )
       t_keys_[ 9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
       t_keys_[ 10] := SetKey( K_F10,{|| Wvt_ChooseColor()     } )
-   else
+   ELSE
       SetKey( K_F2,  t_keys_[ 2 ] )
       SetKey( K_F3,  t_keys_[ 3 ] )
       SetKey( K_F4,  t_keys_[ 4 ] )
@@ -75,7 +75,7 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F8,  t_keys_[ 8 ] )
       SetKey( K_F9,  t_keys_[ 9 ] )
       SetKey( K_F10, t_keys_[ 10] )
-   endif
+   ENDIF
 
    RETURN Nil
 //-------------------------------------------------------------------//
@@ -114,7 +114,6 @@ FUNCTION Wvt_SetFocus()
 //-------------------------------------------------------------------//
 #if 0
 FUNCTION Wvt_KillFocus()
-
    LOCAL nRow := row()
    LOCAL nCol := col()
 
@@ -122,7 +121,7 @@ FUNCTION Wvt_KillFocus()
 
    DevPos( nRow, nCol )
 
-   RETURN nil
+   RETURN NIL
 #endif
 
 //-------------------------------------------------------------------//
@@ -139,16 +138,16 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
    STATIC nLastObj := 0
    STATIC nLastKey := 0
 
-   if ( nLen := len( aObjects ) ) == 0
-      return nil
-   endif
+   IF ( nLen := len( aObjects ) ) == 0
+      RETURN NIL
+   ENDIF
 
-   if !SetMouseCheck()
-      return nil
-   endif
+   IF ! SetMouseCheck()
+      RETURN NIL
+   ENDIF
 
-   if nKey == -1000001
-      for nObj :=   1 to nLen
+   IF nKey == -1000001
+      FOR nObj := 1 TO nLen
          DO CASE
          CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_DISP
             eval( aObjects[ nObj, WVT_OBJ_ONDISP ] )
@@ -161,50 +160,50 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
          CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_HIDE
 
          ENDCASE
-      next
-      return nil
-   endif
+      NEXT
+      RETURN NIL
+   ENDIF
 
-   nObj := ascan( aObjects, {|e_| e_[ WVT_OBJ_ROW   ] <= nRow .and. ;
-                                  e_[ WVT_OBJ_ROWTO ] >= nRow .and. ;
-                                  e_[ WVT_OBJ_COL   ] <= nCol .and. ;
+   nObj := ascan( aObjects, {|e_| e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
+                                  e_[ WVT_OBJ_ROWTO ] >= nRow .AND. ;
+                                  e_[ WVT_OBJ_COL   ] <= nCol .AND. ;
                                   e_[ WVT_OBJ_COLTO ] >= nCol     } )
-   if nObj == 0
-      if nLastObj > 0
+   IF nObj == 0
+      IF nLastObj > 0
          aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
          eval( aObjects[ nLastObj, WVT_OBJ_ONDISP ] )
          nLastObj := 0
-      endif
-      return nil
-   endif
+      ENDIF
+      RETURN NIL
+   ENDIF
 
-   if nLastObj == nObj .and. nLastKey == nKey
-      return nil
-   endif
+   IF nLastObj == nObj .and. nLastKey == nKey
+      RETURN NIL
+   ENDIF
 
    nLastObj := nObj
    nLastKey := nKey
 
    DO CASE
    CASE nKey == K_MOUSEMOVE
-      if aObjects[ nLastObj, WVT_OBJ_STATE ] != OBJ_STATE_MOUSEOVER
-           aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_MOUSEOVER
-         if aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] != nil
+      IF aObjects[ nLastObj, WVT_OBJ_STATE ] != OBJ_STATE_MOUSEOVER
+         aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_MOUSEOVER
+         IF aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] != nil
             eval( aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] )
-         endif
-      endif
+         ENDIF
+      ENDIF
 
    CASE nKey == K_LBUTTONDOWN
-        aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_BUTTONDOWN
-        if aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] != nil
-           eval( aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] )
-      endif
+      aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_BUTTONDOWN
+      IF aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] != nil
+         eval( aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] )
+      ENDIF
 
    CASE nKey == K_LBUTTONUP
-        aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
-        if aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] != nil
-           eval( aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] )
-      endif
+      aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
+      IF aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] != nil
+         eval( aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] )
+      ENDIF
 
    ENDCASE
 
@@ -215,7 +214,6 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 //-------------------------------------------------------------------//
 
 FUNCTION WvtSetBlocks( a_ )
-
    LOCAL o
    THREAD STATIC t := {}
 
@@ -232,27 +230,27 @@ FUNCTION WvtSetBlocks( a_ )
 //-------------------------------------------------------------------//
 
 FUNCTION WvtSetObjects( aObject )
-
    LOCAL oObjects
+
    THREAD STATIC aObjects := {}
 
    oObjects := aclone( aObjects )
 
-   if aObject != nil
-      if empty( aObject )
+   IF aObject != NIL
+      IF empty( aObject )
          aObjects := {}
-      else
-         if valtype( aObject[ 1 ] ) == "A"
+      ELSE
+         IF valtype( aObject[ 1 ] ) == "A"
             aeval( aObject, {|e_| aadd( aObjects, e_ ) } )
-         else
+         ELSE
             aSize( aObject, WVT_OBJ_VRBLS )
 
             DEFAULT aObject[ WVT_OBJ_STATE ] TO OBJ_STATE_DISP
 
             aadd( aObjects, aObject )
-         endif
-      endif
-   endif
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN oObjects
 
@@ -261,12 +259,10 @@ FUNCTION WvtSetObjects( aObject )
 FUNCTION SetMouseCheck( lYes )
    LOCAL lOYes
    STATIC lSYes := .t.
-
    lOYes := lSYes
-   if lYes != nil
+   IF lYes != NIL
       lSYes := lYes
-   endif
-
+   ENDIF
    RETURN lOYes
 
 //-------------------------------------------------------------------//
@@ -312,13 +308,13 @@ FUNCTION Hb_Clear()
 //----------------------------------------------------------------------//
 
 FUNCTION MyMenuProcedure( nID )
-   do case
-   case nID == 101
+   DO CASE
+   CASE nID == 101
       alert( 'Procedure 101' )
-   case nID == 102
+   CASE nID == 102
       alert( 'Procedure 102' )
-   endcase
-   Return .t.
+   ENDCASE
+   RETURN .t.
 
 //----------------------------------------------------------------------//
 
@@ -368,7 +364,7 @@ FUNCTION SetGT( nIndex, pGT )
 
 FUNCTION SetFonts( hFont )
    LOCAL oldFont
-   thread STATIC t_ahFonts := {}
+   THREAD STATIC t_ahFonts := {}
    oldFont := t_ahFonts
    IF !empty( hFont )
       aadd( t_ahFonts, hFont )
@@ -379,7 +375,7 @@ FUNCTION SetFonts( hFont )
 
 FUNCTION SetIcons( hIcon )
    LOCAL oldIcon
-   thread STATIC t_ahIcons := {}
+   THREAD STATIC t_ahIcons := {}
    oldIcon := t_ahIcons
    IF !empty( hIcon )
       aadd( t_ahIcons, hIcon )
@@ -394,22 +390,22 @@ FUNCTION Popups( nID, lDestroy )
 
    THREAD STATIC hPop_:= { , , , , , , , , }
 
-   if nID == nil
+   IF nID == NIL
       Wvt_SetPopupMenu()
-      return nil
-   endif
+      RETURN NIL
+   ENDIF
 
-   if lDestroy != nil
+   IF lDestroy != NIL
       Wvt_DestroyMenu( hPop_[ nID ] )
-      return nil
-   endif
+      RETURN NIL
+   ENDIF
 
    hPop := hPop_[ nID ]
 
-   do case
-   case nID == 1   //  Data Entry Module
+   DO CASE
+   CASE nID == 1   //  Data Entry Module
 
-      if hPop == nil
+      IF hPop == nil
          hPop := Wvt_CreatePopupMenu()
          Wvt_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
          Wvt_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
@@ -425,11 +421,11 @@ FUNCTION Popups( nID, lDestroy )
 
          Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
-      endif
+      ENDIF
 
-   case nID == 2   //  Browser
+   CASE nID == 2   //  Browser
 
-      if hPop == nil
+      IF hPop == NIL
          hPop := Wvt_CreatePopupMenu()
          Wvt_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
          Wvt_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
@@ -448,9 +444,9 @@ FUNCTION Popups( nID, lDestroy )
 
          Wvt_AppendMenu( hPop, MF_ENABLED+MF_POPUP, hPop1, "Column Movement" )
 
-      endif
+      ENDIF
 
-   endcase
+   ENDCASE
 
    hPop_[ nID ] := hPop
 
@@ -480,13 +476,13 @@ FUNCTION ClearStatusMsg()
 
 FUNCTION WvtPictures( nSlot,cFilePic )
 
-   if nSlot != nil .and. nSlot <= 20 .and. file( cFilePic )
-      if t_pic_[ nSlot ] != cFilePic
-         if Wvt_LoadPicture( cFilePic, nSlot )
+   IF nSlot != NIL .AND. nSlot <= 20 .AND. file( cFilePic )
+      IF t_pic_[ nSlot ] != cFilePic
+         IF Wvt_LoadPicture( cFilePic, nSlot )
             t_pic_[ nSlot ] := cFilePic
-         endif
-      endif
-   endif
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN NIL
 
@@ -494,9 +490,9 @@ FUNCTION WvtPictures( nSlot,cFilePic )
 
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
-   if t_pic_[ nSlot ] != nil
+   IF t_pic_[ nSlot ] != NIL
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
-   endif
+   ENDIF
 
    RETURN NIL
 
@@ -510,12 +506,27 @@ FUNCTION GetResource( cName )
 FUNCTION uiDebug( ... )
    LOCAL aP := hb_aParams()
    LOCAL s := ""
-   
+
    aeval( aP, {|e| s += hb_valTOstr( e ) + "   " } )
-   
+
    WAPI_OutputDebugString( s )
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
-   
+
+FUNCTION MyError( oError )
+
+   ? oError:description
+   ? oError:operation
+
+   ? procname( 1 ), procline( 1 )
+   ? procname( 2 ), procline( 2 )
+   ? procname( 3 ), procline( 3 )
+   ? procname( 4 ), procline( 4 )
+   DO WHILE inkey() != 27; ENDDO
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+

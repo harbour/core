@@ -104,7 +104,8 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    /*  RUNTIME DATA */
    DATA     dropZone                              INIT  .F.
    DATA     helpLink
-   DATA     tooltipText                           INIT  ""
+   DATA     s_tooltipText                         INIT  ""
+   METHOD   tooltipText                           SETGET
 
    DATA     clr_FG
    DATA     clr_BG
@@ -180,7 +181,14 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
 
    DATA     oMenu
 
-   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   DATA     nTop
+   DATA     nLeft
+   DATA     nBottom
+   DATA     nRight
+
+   DATA     hWndTT
+
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
@@ -219,14 +227,12 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   setFocus()
    METHOD   sendMessage( nMessage, nlParam, nwParam )
    METHOD   findObjectByHandle( hWnd )
-   METHOD   createControl()
-   METHOD   ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    METHOD   getControlID()                        INLINE ++::nControlID
-   METHOD   HandleEvent()                         INLINE ( 1 )
+   METHOD   HandleEvent()                         INLINE EVENT_UNHANDELLED
    METHOD   isEnabled()                           INLINE ::is_enabled
-   METHOD   isVisible()                           INLINE !( ::is_hidden )
-   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
+   METHOD   isVisible()                           INLINE ! ::is_hidden
+   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := iif( hb_isChar( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ), ::invalidateRect()
 
    METHOD   enter( xParam )                       SETGET
    METHOD   leave( xParam )                       SETGET
@@ -259,12 +265,18 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   dragMotion( xParam )                  SETGET
    METHOD   dragLeave( xParam )                   SETGET
    METHOD   dragDrop( xParam, xParam1 )           SETGET
-
+   METHOD   getPosAndSize( aPs, aSz )
+   METHOD   isParentCrt()                         INLINE ( __objGetClsName( ::oParent ) == "WVGCRT" )
+   METHOD   rePosition()
+#if 1
+   METHOD   createControl()
+   METHOD   controlWndProc( hWnd, nMessage, nwParam, nlParam )
+#endif
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -280,7 +292,7 @@ METHOD WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::WvgPartHandler:init( oParent, oOwner )
+   ::WvgPartHandler:new( oParent, oOwner )
 
    RETURN Self
 
@@ -302,6 +314,12 @@ METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
+   IF empty( ::oParent )
+      IF ! ( __objGetClsName( Self ) $ "WVGCRT,WVGDIALOG" )
+         ::oParent := SetAppWindow()
+      ENDIF
+   ENDIF
+
    ::WvgPartHandler:create( oParent, oOwner )
 
    RETURN Self
@@ -316,7 +334,6 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    DEFAULT aSize       TO ::sSize
    DEFAULT aPresParams TO ::aPresParams
    DEFAULT lVisible    TO ::visible
-
 
    RETURN Self
 
@@ -334,6 +351,9 @@ METHOD WvgWindow:destroy()
 
    WVG_ReleaseWindowProcBlock( ::pWnd )
 
+   IF WVG_IsWindow( ::hWndTT )
+      WVG_DestroyWindow( ::hWndTT )
+   ENDIF
    IF WVG_IsWindow( ::hWnd )
       WVG_DestroyWindow( ::hWnd )
    ENDIF
@@ -343,6 +363,7 @@ METHOD WvgWindow:destroy()
    ENDIF
 
    ::hWnd                   := NIL
+   ::hWndTT                 := NIL
    ::pWnd                   := NIL
    ::aPos                   := NIL
    ::aSize                  := NIL
@@ -408,15 +429,12 @@ METHOD WvgWindow:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:SetWindowProcCallback()
-
    ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:captureMouse()
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -475,13 +493,16 @@ METHOD WvgWindow:lockUpdate()
 METHOD WvgWindow:setColorBG( nRGB )
    LOCAL hBrush
 
+   IF hb_isChar( nRGB )
+      nRGB := Wvt_GetRGBColorByString( nRGB, 1 )
+   ENDIF
    IF hb_isNumeric( nRGB )
       hBrush := WVG_CreateBrush( BS_SOLID, nRGB, 0 )
       IF hBrush <> 0
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
-         IF ::className == "WVGDIALOG"
+         IF ::className == "WVGDIALOG" .OR. __ObjGetClsName( Self ) == "WVGCHECKBOX"
             Wvg_SetCurrentBrush( ::hWnd, ::hBrushBG )
          ENDIF
       ENDIF
@@ -510,6 +531,7 @@ METHOD WvgWindow:setTrackPointer()
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:setPos( aPos, lPaint )
+   LOCAL aPosSz
 
    IF hb_isArray( aPos )
       DEFAULT lPaint TO .T.
@@ -517,10 +539,11 @@ METHOD WvgWindow:setPos( aPos, lPaint )
       SWITCH ::objType
 
       CASE objTypeCrt
-         exit
+         EXIT
 
       OTHERWISE
-         WVG_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], lPaint )
+         aPosSz := ::getPosAndSize( aPos )
+         WVG_SetWindowPosition( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], lPaint )
          EXIT
 
       END
@@ -530,20 +553,31 @@ METHOD WvgWindow:setPos( aPos, lPaint )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+/* This will always be called from HB_GTE_RESIZED message of WVG engine */
+
+METHOD WvgWindow:rePosition()
+
+   RETURN ::setPosAndSize( ::aPos, ::aSize )
+
+/*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
+   LOCAL aPosSz
 
-   IF hb_isArray( aPos ) .and. hb_isArray( aSize )
+   DEFAULT aPos  TO ::aPos
+   DEFAULT aSize TO ::aSize
+
+   IF hb_isArray( aPos ) .AND. hb_isArray( aSize )
       DEFAULT lPaint TO .T.
 
       SWITCH ::objType
 
       CASE objTypeCrt
-         exit
+         EXIT
 
       OTHERWISE
-         /*WVG_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint ) */
-         WVG_SetWindowPosAndSize( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         aPosSz := ::getPosAndSize( aPos, aSize )
+         WVG_SetWindowPosAndSize( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
          EXIT
 
       END
@@ -554,15 +588,19 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:setSize( aSize, lPaint )
+   LOCAL aPosSz
 
    IF hb_isArray( aSize )
       DEFAULT lPaint TO .T.
 
       SWITCH ::objType
 
-      CASE objTypeDialog
-         /*WVG_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint ) */
-         WVG_SetWindowSize( ::hWnd, aSize[ 1 ], aSize[ 2 ], lPaint )
+      CASE objTypeCrt
+         EXIT
+
+      OTHERWISE
+         aPosSz := ::getPosAndSize( , aSize )
+         WVG_SetWindowSize( ::hWnd, aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
          EXIT
 
       END
@@ -680,9 +718,7 @@ METHOD WvgWindow:setPresParam()
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:currentPos()
-   LOCAL aRect
-
-   aRect := WVG_GetWindowRect( ::hWnd )
+   LOCAL aRect := WVG_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -1237,15 +1273,12 @@ METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:setFocus()
-
-   ::sendMessage( WM_ACTIVATE, 1, 0 )
-
+   WVG_SetFocus( ::hWnd )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
-
    RETURN WVG_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 /*----------------------------------------------------------------------*/
@@ -1263,43 +1296,108 @@ METHOD WvgWindow:findObjectByHandle( hWnd )
 
 /*----------------------------------------------------------------------*/
 
+METHOD WvgWindow:getPosAndSize( aPs, aSz )
+   LOCAL nX, nY, nW, nH, aXY
+   LOCAL aPos, aSize
+   LOCAL nFH, nFW
+
+   DEFAULT aPs TO aclone( ::aPos  )
+   DEFAULT aSz TO aclone( ::aSize )
+
+   aPos  := aclone( aPs )
+   aSize := aclone( aSz )
+
+   IF ::isParentCrt()
+      IF hb_isBlock( aPos[ 1 ] )
+         aPos[ 1 ] := eval( aPos[ 1 ] )
+      ENDIF
+      IF hb_isBlock( aPos[ 2 ] )
+         aPos[ 2 ] := eval( aPos[ 2 ] )
+      ENDIF
+      IF hb_isBlock( aSize[ 1 ] )
+         aSize[ 1 ] := eval( aSize[ 1 ] )
+      ENDIF
+      IF hb_isBlock( aSize[ 2 ] )
+         aSize[ 2 ] := eval( aSize[ 2 ] )
+      ENDIF
+
+      IF aPos[ 1 ] < 0 .AND. aPos[ 2 ] < 0 .AND. aSize[ 1 ] < 0 .AND. aSize[ 2 ] < 0
+         nX := abs( aPos[ 2 ] )
+         IF nX < 1
+            nX := 0
+         ENDIF
+         nY := abs( aPos[ 1 ] )
+         IF nY < 1
+            nY := 0
+         ENDIF
+         nW := abs( aSize[ 2 ] )
+         IF nW < 1
+            nW := 0
+         ENDIF
+         nH := abs( aSize[ 1 ] )
+         IF nH < 1
+            nH := 0
+         ENDIF
+         aXY  := Wvt_GetXYFromRowCol( nY, nX )
+         nFH := Wvt_GetFontInfo()[ 6 ]
+         nFW := Wvt_GetFontInfo()[ 7 ]
+         RETURN { aXY[ 1 ], aXY[ 2 ], nW * nFW, nH * nFH }
+      ENDIF
+   ENDIF
+
+   RETURN { aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ] }
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgWindow:toolTipText( cText )
+
+   IF hb_isChar( cText )
+      ::s_toolTipText := cText
+      IF WVG_IsWindow( ::hWndTT )
+         WVG_SetTooltipText( ::hWnd, ::hWndTT, ::s_toolTipText )
+      ENDIF
+   ENDIF
+
+   RETURN ::s_toolTipText
+
+/*----------------------------------------------------------------------*/
+
 METHOD WvgWindow:createControl()
-   LOCAL hWnd
+   LOCAL hWnd, aPosSz
 
    ::nID := ::oParent:GetControlId()
+
+   aPosSz := ::getPosAndSize( ::aPos, ::aSize )
 
    hWnd := WVG_CreateWindowEx( ::exStyle, ;
                                ::className, ;
                                "", ;                              /* window name */
                                ::style, ;
-                               ::aPos[ 1 ], ::aPos[ 2 ],;
-                               ::aSize[ 1 ], ::aSize[ 2 ],;
-                               ::oParent:hWnd,;
-                               ::nID,;                            /* hMenu       */
-                               NIL,;                              /* hInstance   */
+                               aPosSz[ 1 ], aPosSz[ 2 ], ;
+                               aPosSz[ 3 ], aPosSz[ 4 ], ;
+                               ::oParent:hWnd, ;
+                               ::nID, ;                           /* hMenu       */
+                               NIL, ;                             /* hInstance   */
                                NIL )                              /* lParam      */
-
-
-   IF ( hWnd <> 0 )
+   IF WVG_IsWindow( hWnd )
       ::hWnd := hWnd
       ::pWnd := WIN_N2P( hWnd )
       ::sendMessage( WM_SETFONT, WVG_GetStockObject( DEFAULT_GUI_FONT ), 1 )
+
+      ::hWndTT := WVG_CreateTooltipWindow( ::hWnd )
    ENDIF
 
    RETURN Self
+
 /*----------------------------------------------------------------------*/
 
-METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
+METHOD WvgWindow:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
-
-   #if 1
-   hb_traceLog( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
-   #endif
 
    SWITCH nMessage
 
    CASE WM_ERASEBKGND
-      IF ::objType == objTypeDA .and. !empty( ::hBrushBG )
+      IF ::objType == objTypeDA .AND. ! empty( ::hBrushBG )
          ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
       ENDIF
       EXIT
@@ -1325,7 +1423,7 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
       ELSE
          IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
             nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
-            IF hb_isNumeric( nReturn ) .and. nReturn == 0
+            IF hb_isNumeric( nReturn ) .AND. nReturn == 0
                RETURN 0
             ENDIF
          ENDIF
@@ -1335,8 +1433,10 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WM_NOTIFY
       IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-         IF hb_isNumeric( nReturn ) .and. nReturn == EVENT_HANDELLED
-            RETURN EVENT_HANDELLED
+         IF hb_isNumeric( nReturn ) .AND. nReturn == EVENT_HANDELLED
+            RETURN 0
+         ELSEIF hb_isLogical( nReturn )
+            RETURN nReturn
          ENDIF
       ENDIF
       EXIT
@@ -1348,12 +1448,10 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WM_CTLCOLORDLG
    CASE WM_CTLCOLORSCROLLBAR
    CASE WM_CTLCOLORSTATIC
-
       oObj := ::findObjectByHandle( nlParam )
       IF hb_isObject( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
-
-         IF nReturn == 1
+         IF nReturn == EVENT_UNHANDELLED
             RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn
@@ -1366,8 +1464,7 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
       RETURN 0
 
    CASE WM_VSCROLL
-      nReturn := ::handleEvent( HB_GTE_VSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } )
-      IF nReturn == EVENT_HANDELLED
+      IF ::handleEvent( HB_GTE_VSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } ) == EVENT_HANDELLED
          RETURN 0
       ENDIF
       EXIT
@@ -1377,7 +1474,7 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 #if 0
    CASE WM_MOUSEMOVE
       IF ::objType == objTypeScrollBar
-         IF !( ::lTracking )
+         IF ! ::lTracking
             ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
          ENDIF
       ENDIF
@@ -1401,8 +1498,16 @@ METHOD WvgWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 #endif
-   END
+
+   OTHERWISE
+      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } ) == EVENT_HANDELLED
+         RETURN 0
+      ENDIF
+      EXIT
+
+   ENDSWITCH
 
    RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 /*----------------------------------------------------------------------*/
+

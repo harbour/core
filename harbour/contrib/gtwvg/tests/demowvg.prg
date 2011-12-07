@@ -60,10 +60,10 @@ MEMVAR cCdxExp, First, Last, City
 
 //-------------------------------------------------------------------//
 
-thread static t_wvtScreen := {}
+   THREAD STATIC t_wvtScreen := {}
 
 #ifdef __XCC__
-static s_paint_:= { { "", {} } }
+   STATIC s_paint_:= { { "", {} } }
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -75,18 +75,18 @@ EXIT PROCEDURE CleanHandles()
       WVG_DeleteObject( obj )
       obj := NIL
    NEXT
-
    FOR EACH obj IN SetIcons()
       WVG_DeleteObject( obj )
       obj := NIL
    NEXT
+
    RETURN
 
 //-------------------------------------------------------------------//
 
 PROCEDURE Main()
    LOCAL aLastPaint, clr, scr, pGT
-   LOCAL hPopup, oMenu
+   LOCAL hPopup
    LOCAL dDate     := ctod( "" )
    LOCAL cName     := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := Pad( "60, New Professor Colony", 35 )
@@ -100,10 +100,10 @@ PROCEDURE Main()
    LOCAL nLft      := 4
    LOCAL nBtm      := 20
    LOCAL nRgt      := 75
-   LOCAL nMaxRows  := MaxRow()
-   LOCAL nBtnRow   := nMaxRows - 1
    LOCAL cLabel    := "Harbour simulated GUI."
    LOCAL aObjects  := WvtSetObjects( {} )
+
+   LOCAL oError := ErrorBlock( {|o| MyError( o ) } )
 
    SET DATE BRITISH
 
@@ -118,17 +118,19 @@ PROCEDURE Main()
    CLS
    Wvt_ShowWindow( SW_RESTORE )
 
+   /* Xbase++ compatible menu protocol */
+   BuildMainMenu()
+   SetMode( maxrow()+1, maxcol()+1 )  /* Needed to accomodate attached menu */
+
    SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
    SetKey( K_CTRL_V     , {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
    SetKey( K_RBUTTONDOWN, {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
 
    hPopup  := Wvt_SetPopupMenu()
-   oMenu   := CreateMainMenu()
 
    pGT := SetGT( 1, hb_gtSelect() )
 
-   //  Force mouse pointer right below the Harbour label
-   //
+   /*  Force mouse pointer right below the Harbour label */
    Wvt_SetMousePos( 2,40 )
 
    aAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
@@ -141,85 +143,20 @@ PROCEDURE Main()
    aAdd( aBlocks, {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-2,0,maxrow()-2,maxcol(),WVT_LINE_HORZ,WVT_LINE_RECESSED,WVT_LINE_BOTTOM ) } )
-
-   aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-1, 4,maxrow(), 4,WVT_LINE_VERT,WVT_LINE_RECESSED,WVT_LINE_CENTER ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-1,41,maxrow(),41,WVT_LINE_VERT,WVT_LINE_RECESSED,WVT_LINE_CENTER ) } )
-
    aAdd( aBlocks, {|| aEval( GetList, {|oGet| Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
-
-   #define btnFDisp   WVT_BTN_FORMAT_FLAT
-   #define btnFMOver  WVT_BTN_FORMAT_RAISED
-   #define btnFBDown  WVT_BTN_FORMAT_RECESSED
-   #define btnFBUp    WVT_BTN_FORMAT_FLAT
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 1,  nBtnRow, 6, nBtnRow+1, 9, ;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFBUp   )  ,;
-              eval( SetKey( K_F2 ) ) } ;
-                    } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 2,  nBtnRow,11, nBtnRow+1,14, ;
-       {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFBUp   )  ,;
-              eval( SetKey( K_F5 ) ) } ;
-                    } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 3,  nBtnRow,16, nBtnRow+1,19, ;
-       {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFBUp   )  ,;
-              eval( SetKey( K_F3 ) ) } ;
-                   } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 4,  nBtnRow,21, nBtnRow+1,24, ;
-       {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFDisp , rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFMOver, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFBDown, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFBUp  , rgb( 100,22,241 ), rgb( 0,100,0 ) )  ,;
-              eval( SetKey( K_F4 ) ) } ;
-                   } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 5,  nBtnRow,26, nBtnRow+1,29, ;
-       {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFBUp   )  ,;
-              eval( SetKey( K_F6 ) ) },;
-                   } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 6, nBtnRow,31, nBtnRow+1,34, ;
-       {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFBUp   )  ,;
-              eval( SetKey( K_F7 ) ) },;
-                   } )
-
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 7,  nBtnRow,36,nBtnRow+1,39, ;
-       {|| Wvt_DrawButton( nBtnRow,36,nBtnRow+1,39,"Lines",IMAGE_VR, btnFDisp , rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,36,nBtnRow+1,39,"Lines",IMAGE_VR, btnFMOver, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,36,nBtnRow+1,39,"Lines",IMAGE_VR, btnFBDown, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
-       {|| Wvt_DrawButton( nBtnRow,36,nBtnRow+1,39,"Lines",IMAGE_VR, btnFBUp  , rgb( 100,22,241 ), rgb( 0,100,0 ) )  ,;
-              eval( SetKey( K_F8 ) ) } ;
-                   } )
 
    aAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
+   /* XBase++ compatible pure GUI controls onto CUI console */
+   BuildButtons()
+
    scr := SaveScreen( 0,0,maxrow(),maxcol() )
    clr := SetColor( "N/W" )
    CLS
    SetColor( "N/W,N/GR*,,,N/W*" )
-
-   Wvt_SetMenu( oMenu:hMenu )
-
-   SetKey( Wvt_SetMenuKeyEvent(), { || ActivateMenu( oMenu ) } )
 
    @  6, nColGet SAY "< Date >"
    @  9, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
@@ -228,14 +165,17 @@ PROCEDURE Main()
 
    dDate := ctod( "04/01/04" )
 
-   @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be Valid" );
-                           VALID ClearStatusMsg()
-   @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" );
-                           VALID ( VouChoice() < 7 .and. ClearStatusMsg() )
+   @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be valid" ) VALID ClearStatusMsg()
+   @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" ) VALID ( VouChoice() < 7 .and. ClearStatusMsg() )
    @ 13, nColGet GET cAdd1
    @ 15, nColGet GET cAdd2
    @ 17, nColGet GET cAdd3
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99"
+
+#if 0   /* Suitable when whole window is subject to this protocol */
+   aEval( GetList, {|oGet| Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
+   SetAppWindow():refresh()
+#endif
 
    READ
 
@@ -251,14 +191,17 @@ PROCEDURE Main()
    Popups( 1, .t. )
    SetGT( 1, pGT )
 
+   ErrorBlock( oError )
+
    RETURN
+
 //-------------------------------------------------------------------//
 
 Function HB_GTSYS()
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
-   Return NIL
+   RETURN NIL
 
 //------------------------------------------------------------------//
 
@@ -269,9 +212,8 @@ PROCEDURE WvtConsoleGets( nMode )
    IF hb_mtvm()
       Hb_ThreadStart( {|oCrt|  hb_gtReload( 'WVT' ) , ;
                                oCrt := hb_gtSelect(), ;
-                               IF( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
-                               oCrt := NIL            ;
-                    } )
+                               iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
+                               oCrt := NIL        } )
    ENDIF
 
    RETURN
@@ -310,13 +252,14 @@ PROCEDURE WvtNextGetsConsole()
    READ
 
    RETURN
+
 //-------------------------------------------------------------------//
+
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
       Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
                            hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
-
    ELSE
       WvtNextGets_X()
    ENDIF
@@ -344,7 +287,7 @@ PROCEDURE WvtNextGets_X()
    LOCAL scr        := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL wvtScr     := Wvt_SaveScreen( 0,0,maxrow(),maxcol() )
 
-   Static nPalletMultiplier := 0
+   STATIC nPalletMultiplier := 0
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
@@ -422,8 +365,8 @@ FUNCTION WvtPartialScreen()
 
    wvtScr1 := Wvt_SaveScreen( 7,20,15,60 )
 
-   do while inkey( 0 ) != K_ESC
-   enddo
+   DO WHILE inkey( 0 ) != K_ESC
+   ENDDO
 
    DispBox( 7, 20, 15, 60, "         ", "W/B*" )
    @ 10,25 SAY "Wvt_SaveScreen()" COLOR "N/B*"
@@ -431,13 +374,13 @@ FUNCTION WvtPartialScreen()
    @ 13,25 SAY "Press Esc "       COLOR "N/B*"
    Wvt_DrawBoxRecessed( 8,22,14,58 )
 
-   do while inkey( 0 ) != K_ESC
-   enddo
+   DO WHILE inkey( 0 ) != K_ESC
+   ENDDO
 
    Wvt_RestScreen( 7,20,15,60, wvtScr1 )
 
-   do while inkey( 0 ) != K_ESC
-   enddo
+   DO WHILE inkey( 0 ) != K_ESC
+   ENDDO
 
    RestScreen( 7,20,15,60,scr )
    Wvt_RestScreen( 0, 0, MaxRow(), MaxCol(), wvtScr )
@@ -492,8 +435,8 @@ function WvtLines()
    @ 15,8 Say "D"
    @ 16,9 Say "E"
 
-   do while ( inkey(0) != K_ESC )
-   enddo
+   DO WHILE ( inkey(0) != K_ESC )
+   ENDDO
 
    //  Restore Environments
    //
@@ -509,11 +452,11 @@ function WvtLines()
 
 //-------------------------------------------------------------------//
 
-FUNCTION CreateMainMenu()
+FUNCTION BuildMainMenu()
    LOCAL oMenu
-   LOCAL g_oMenuBar := wvtMenu():new():create()
+   LOCAL g_oMenuBar := SetAppWindow():menuBar()
 
-   oMenu := WvtMenu():new():create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "Wvt*Classes"
    oMenu:AddItem( "Dialog One . New Window . Threaded"       , {|| DialogWvgClassesOne( 1 ) } )
    oMenu:AddItem( "Dialog One . Main Window . Primary Thread", {|| DialogWvgClassesOne( 2 ) } )
@@ -521,10 +464,10 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Dialog Two"                  , {|| DialogWvgClassesTwo()       } )
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Exit"                        , {|| __keyboard( K_ESC ) } )
-   g_oMenuBar:addItem( "",oMenu )
+   g_oMenuBar:addItem( { oMenu, "Wvt*Classes" } )
 
-   oMenu := wvtMenu():new():create()
-   oMenu:Caption := "Traditional"
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu:caption := "Traditional"
    oMenu:AddItem( "Gets . GTWVG . Threaded"     , {|| WvtNextGets()       } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Gets . GTWVT . Threaded"     , {|| WvtConsoleGets( 0 ) } )
@@ -540,34 +483,34 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Wvg Console with GCUI"       , {|| ExecGCUI()          } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Modal Window"                , {|| DoModalWindow()     } )
-   g_oMenuBar:addItem( "",oMenu )
+   g_oMenuBar:addItem( { oMenu, "Traditional" } )
 
-   oMenu := wvtMenu():new():create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "Common Dialogs"
    oMenu:AddItem( "Fonts"                       , {|| Wvt_ChooseFont()  } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Colors"                      , {|| Wvt_ChooseColor() } )
-   g_oMenuBar:addItem( "",oMenu)
+   g_oMenuBar:addItem( { oMenu, "Common Dialogs" } )
 
-   oMenu := wvtMenu():new():create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "Functionality"
    oMenu:AddItem( "Expand"                      , {|| WvtWindowExpand(  1 ) } )
    oMenu:AddItem( "Shrink"                      , {|| WvtWindowExpand( -1 ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Minimize"                    , {|| Wvt_Minimize()   } )
    oMenu:AddItem( "Maximize"                    , {|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
-   g_oMenuBar:addItem( "",oMenu)
+   g_oMenuBar:addItem( { oMenu, "Functionality" } )
 
-   oMenu := wvtMenu():new():create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "Modeless Dialogs"
    oMenu:AddItem( "Dynamic Dialog . Modeless"   , {|| DynWinDialog( 1 ) } )
    oMenu:AddItem( "Dynamic Dialog . Modal "     , {|| DynWinDialog( 2 ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Slide Show . Modeless"       , {|| DlgSlideShow()   } )
-   g_oMenuBar:addItem( "",oMenu)
+   g_oMenuBar:addItem( { oMenu, "Modeless Dialogs" } )
 
-   oMenu := wvtMenu():new():create()
-   oMenu:Caption:= "~XbpDialog()s"
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu:Caption := "~XbpDialog()s"
    oMenu:AddItem( "Pure Xbase++"                , {|| Hb_ThreadStart( {|| demoXbp() } ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "ActiveX - Internet Explorer" , {|| Hb_ThreadStart( {|| ExecuteActiveX(  1 ) } ) } )
@@ -581,40 +524,21 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "ActiveX - Analog Clock"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  2 ) } ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "ActiveX - Image Viewer"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  5 ) } ) } )
-   g_oMenuBar:addItem( "",oMenu)
+   g_oMenuBar:addItem( { oMenu, "~XbpDialog()s" } )
 
    #ifdef __QT__
-   oMenu := wvtMenu():new():create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "~QT"
    oMenu:AddItem( "All Widgets"                 , {|| Hb_ThreadStart( {|| ExeQTWidgets() } ) } )
    #endif
-
-   RETURN g_oMenuBar
-
-//-------------------------------------------------------------------//
-
-STATIC FUNCTION ActivateMenu( oMenu )
-   LOCAL nMenu := Wvt_GetLastMenuEvent()
-   LOCAL aMenuItem
-
-   IF !EMPTY( nMenu )
-
-     IF HB_ISOBJECT( oMenu )
-       IF !EMPTY( aMenuItem := oMenu:FindMenuItemById( nMenu ) )
-         IF HB_ISBLOCK( aMenuItem[ WVT_MENU_ACTION ] )
-           EVAL( aMenuItem[ WVT_MENU_ACTION ] )
-         ENDIF
-       ENDIF
-      ENDIF
-   ENDIF
 
    RETURN NIL
 
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION GoogleMap()
-   Local mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
-   Local nCursor := setcursor()
+   LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
+   LOCAL nCursor := setcursor()
    LOCAL getlist := {}
 
    SetMode( 22,65 )
@@ -626,8 +550,7 @@ STATIC FUNCTION GoogleMap()
    mfrom2  := mto2  := space(40)
    mfrom3  := mto3  := space(50)
 
-   while .T.
-
+   WHILE .T.
       @ 05, 01 say "FROM :"
       @ 07, 01 say "State ...:" get mfrom1  picture "@!"
       @ 08, 01 say "City ....:" get mfrom2  picture "@!"
@@ -639,9 +562,9 @@ STATIC FUNCTION GoogleMap()
 
       setcursor(1); read; setcursor(nCursor)
 
-      if lastkey() == K_ESC
-         exit
-      endif
+      IF lastkey() == K_ESC
+         EXIT
+      ENDIF
 
       mweb := "http://maps.google.com/maps?q=from "         +;
               alltrim( mfrom3 ) +" "+ alltrim( mfrom2 ) +" "+ alltrim( mfrom1 ) + " to " +;
@@ -653,3 +576,53 @@ STATIC FUNCTION GoogleMap()
    RETURN NIL
 
 //----------------------------------------------------------------------//
+
+FUNCTION BuildButtons()
+   LOCAL oXbp
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := "Hi"
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -1 }, { -2, -4 } )
+   oXbp:activate := {|| Wvg_MessageBox( , "Harbour!" ) }
+   oXbp:toolTipText := "Harbour CUI/GUI Console"
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_VOUCH
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -6 }, { -2, -4 } )
+   oXbp:activate := {|| Wvt_Keyboard( K_F2 ) }
+   oXbp:toolTipText := "Open Another GET Screen"
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_BROWSE
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -11 }, { -2, -4 } )
+   oXbp:activate := {|| Wvt_Keyboard( K_F5 ) }
+   oXbp:toolTipText := "TBrowse + GUI Controls"
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_NOTES
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -16 }, { -2, -4 } )
+   oXbp:activate := {|| Wvt_Keyboard( K_F3 ) }
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_TOOLS
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -21 }, { -2, -4 } )
+   oXbp:activate := {|| Wvt_Keyboard( K_F6 ) }
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_HELP
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -26 }, { -2, -4 } )
+   oXbp:activate := {|| Wvt_Keyboard( K_F7 ) }
+
+   oXbp := WvgPushButton():new()
+   oXbp:caption := IMAGE_VR
+   oXbp:border  := .f.
+   oXbp:create( , , { {|| -( maxrow()-1 ) }, -31 }, { -2, -4 } )
+   oXbp:activate := {|| Hb_ThreadStart( {|| demoXbp() } ) } // {|| Wvt_Keyboard( K_F8 ) }
+   oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+
+

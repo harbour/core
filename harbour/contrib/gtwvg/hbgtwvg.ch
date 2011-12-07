@@ -74,6 +74,7 @@
 #define HB_GTE_GUIPARTS                  14
 #define HB_GTE_HSCROLL                   15
 #define HB_GTE_VSCROLL                   16
+#define HB_GTE_ANY                       17
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -84,6 +85,7 @@
 #define HB_GTI_ACTIVATESELECTCOPY        77
 #define HB_GTI_SETPOSANDSIZE             78
 #define HB_GTI_REFRESH                   79
+#define HB_GTI_NOTIFIERBLOCKGUI          80
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1

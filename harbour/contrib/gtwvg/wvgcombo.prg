@@ -89,7 +89,7 @@ CLASS WvgComboBox  INHERIT  WvgListBox  /* WvgSLE */
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgComboBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -103,7 +103,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCombo
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgComboBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( SELF )
 

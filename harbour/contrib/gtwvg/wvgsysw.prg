@@ -126,7 +126,7 @@ METHOD WvgSysWindow:new( oParent, oOwner, aPos )
    ::oOwner  := oOwner
    ::aPos    := aPos
 
-   ::WvgPartHandler:INIT( oParent, oOwner )
+   ::WvgPartHandler:new( oParent, oOwner )
 
    RETURN Self
 

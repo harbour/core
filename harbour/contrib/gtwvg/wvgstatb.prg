@@ -110,7 +110,7 @@ CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
 METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_BORDER + SBARS_TOOLTIPS
    ::className   := STATUSCLASSNAME

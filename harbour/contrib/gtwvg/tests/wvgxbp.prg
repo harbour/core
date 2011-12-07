@@ -1,8 +1,8 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
@@ -13,12 +13,12 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
 #define MUSIC_WAITON          {800, 1600}
-   
+
 /*----------------------------------------------------------------------*/
 //
 //                     A Pure Xbase++ Implementation
@@ -143,11 +143,11 @@ FUNCTION demoxbp()
 
    //--------------------------- Active-X ---------------------------\\
    hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
-   #if 0   
+   #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
    oCom:CLSID := 'Shell.Explorer.2'
    oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
-   #else 
+   #else
    oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
    oCom:beforeNavigate := {|cURL, x, oHTML| x := x, oHTML := oHTML, oPanel:caption := cURL }
    oCom:statusTextChange := {|cText| oPanel:caption := cText }
@@ -333,7 +333,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   RETURN NIL 
+   RETURN NIL
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )

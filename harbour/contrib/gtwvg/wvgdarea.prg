@@ -96,9 +96,9 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawingArea
+METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD
    ::exStyle     := 0
@@ -110,27 +110,26 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawi
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawingArea
+METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    HB_SYMBOL_UNUSED( lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .t. )
 
-   ::oParent:addChild( SELF )
+   ::oParent:addChild( Self )
 
    Wvg_RegisterClass_ByName( ::className )
 
    ::createControl()
 
    ::SetWindowProcCallback()
-
    ::show()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
+METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
    LOCAL hDC
 
    hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
@@ -142,7 +141,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN 0
+      RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       hDC := aNM[ 1 ]
@@ -153,13 +152,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
       IF hb_isNumeric( ::hBrushBG )
          WVG_SetBkMode( hDC, 1 )
 
-         Wvg_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
-         RETURN 0
+         WVG_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[2]}, ::hBrushBG )
+         RETURN EVENT_HANDELLED
       ENDIF
 
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 

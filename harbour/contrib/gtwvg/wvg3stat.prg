@@ -106,7 +106,7 @@ CLASS Wvg3State  INHERIT  WvgWindow, DataRef
 
 METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_AUTO3STATE
    ::className   := "BUTTON"

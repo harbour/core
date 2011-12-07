@@ -165,7 +165,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
    ::hMenu := WVG_CreateMenu()
 
-   if ::hMenu <> 0
+   IF ::hMenu <> 0
       /*  check for if the parent already has a menu
           we need to destroy that first
           TO DO
@@ -176,15 +176,15 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
       #endif
 
       /* how to make menu invisible ? */
-      if ( ::visible )
+      IF ( ::visible )
          #if 0
          WVG_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
          WVG_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
          #endif
-      endif
+      ENDIF
 
       ::oParent:oMenu := Self
-   endif
+   ENDIF
 
    RETURN Self
 

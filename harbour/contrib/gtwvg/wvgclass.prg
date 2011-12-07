@@ -361,11 +361,9 @@ METHOD wvtDialog:Destroy()
 METHOD wvtDialog:Event()
    LOCAL  nKey
 
-   IF ( nKey := inkey( 0.1, INKEY_ALL ) ) == 0
+   IF ( nKey := inkey( 0.1, INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0
       IF Wvt_IsLButtonPressed()
-
          nKey := K_LBUTTONPRESSED
-
       ENDIF
    ENDIF
 
@@ -376,14 +374,14 @@ METHOD wvtDialog:Event()
 METHOD wvtDialog:Execute()
 
    IF ::nObjects == 0
-      do while .t.
-         IF inkey( 0.1 ) == K_ESC
+      DO WHILE .t.
+         IF inkey( 0.1, INKEY_ALL + HB_INKEY_GTEVENT ) == K_ESC
             EXIT
          ENDIF
-      enddo
+      ENDDO
    ELSE
-      do while ( ::Inkey() <> K_ESC )
-      enddo
+      DO WHILE ( ::Inkey() <> K_ESC )
+      ENDDO
    ENDIF
 
    RETURN ::nKey
@@ -401,14 +399,14 @@ METHOD wvtDialog:Inkey()
 
    IF ::nKey <> 0
       IF ::nKey == K_ESC .or. ::nKey == K_CTRL_ENTER
-         return K_ESC
+         RETURN K_ESC
       ENDIF
 
       DO CASE
 
       CASE ::nKey == K_TAB
          IF ::lTabStops
-            do while .t.
+            DO WHILE .t.
                ::nCurObj++
                IF ::nCurObj > ::nObjects
                   ::nCurObj := 1
@@ -416,14 +414,14 @@ METHOD wvtDialog:Inkey()
                IF ::aObjects[ ::nCurObj ]:lTabStop
                   EXIT
                ENDIF
-            enddo
+            ENDDO
          ENDIF
 
          ::lEventHandled := .t.
 
       CASE ::nKey == K_SH_TAB
          IF ::lTabStops
-            do while .t.
+            DO WHILE .t.
                ::nCurObj--
                IF ::nCurObj < 1
                   ::nCurObj := ::nObjects
@@ -431,7 +429,7 @@ METHOD wvtDialog:Inkey()
                IF ::aObjects[ ::nCurObj ]:lTabStop
                   EXIT
                ENDIF
-            enddo
+            ENDDO
          ENDIF
 
          ::lEventHandled := .t.
@@ -531,7 +529,9 @@ METHOD wvtDialog:Inkey()
          IF ::nUseObj > 0
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftDown )
-
+               IF ::aObjects[ ::nUseObj ]:className == "WVTBROWSE"
+                  ::lEventHandled := .f.
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -613,10 +613,10 @@ METHOD wvtDialog:MouseOver()
    LOCAL nObj
 
    nObj := ascan( ::aObjects, ;
-                    {|o| o:nType <> DLG_OBJ_STATIC               .and. ;
-                         o:nType <> DLG_OBJ_TOOLBAR              .and. ;
-                         mRow >= o:nTop  .and. mRow <= o:nBottom .and. ;
-                         mCol >= o:nLeft .and. mCol <= o:nRight      } )
+                    {|o| o:nType <> DLG_OBJ_STATIC               .AND. ;
+                         o:nType <> DLG_OBJ_TOOLBAR              .AND. ;
+                         mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
+                         mCol >= o:nLeft .AND. mCol <= o:nRight      } )
 
    ::nObjOver := nObj
    ::oObjOver := iif( nObj > 0, ::aObjects[ nObj ], nil )
@@ -801,7 +801,7 @@ CLASS WvtObject
    DATA   bOnFocus                                INIT   {|| NIL }
    DATA   bOnRefresh                              INIT   {|| NIL }
    DATA   bOnLeftUp                               INIT   {|| NIL }
-   DATA   bOnLeftDown                             INIT   {|| NIL }
+   DATA   bOnLeftDown                             INIT   {|| .f. }
    DATA   bOnMMLeftDown                           INIT   {|| NIL }
    DATA   bOnLeftPressed                          INIT   {|| NIL }
    DATA   bTooltip                                INIT   {|| NIL }
@@ -1049,12 +1049,17 @@ METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 METHOD WvtBrowse:Create()
 
    Select( ::cAlias )
-
+#if 0
    ::nTop    := ::oBrw:nTop-2
    ::nLeft   := ::oBrw:nLeft-2
    ::nBottom := iif( ::lHSBar, ::oBrw:nBottom, ::oBrw:nBottom+1 )
    ::nRight  := iif( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight+2  )
-
+#else
+   ::nTop    := ::oBrw:nTop
+   ::nLeft   := ::oBrw:nLeft
+   ::nBottom := ::oBrw:nBottom
+   ::nRight  := ::oBrw:nRight
+#endif
    ::PaintBlock( 1 )
    ::PaintBlock( 2 )
    ::PaintBlock( 3 )
@@ -2531,7 +2536,7 @@ METHOD wvtScrollbar:Create()
    ENDIF
 
    ::bOnLeftUp      := {|| ::HandleEvent( K_LBUTTONUP      ) }
-   ::bOnLeftDown    := {|| ::HandleEvent( K_LBUTTONDOWN    ) }
+   ::bOnLeftDown    := {|| ::HandleEvent( K_LBUTTONDOWN    ), .f. }
    ::bOnMMLeftDown  := {|| ::HandleEvent( K_MMLEFTDOWN     ) }
    ::bOnLeftPressed := {|| ::HandleEvent( K_LBUTTONPRESSED ) }
 
@@ -2601,7 +2606,7 @@ METHOD wvtScrollbar:Configure( nTop, nLeft, nBottom, nRight )
 
       ::ThumbPos()
    ENDIF
-   
+
    ::Refresh()
 
    RETURN Self

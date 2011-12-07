@@ -145,7 +145,7 @@ CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
 METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -155,7 +155,7 @@ METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::mapEvent( evBeforeNavigate,   {| cURL, Flags, TFName, PData, Headers | ;
                                        ::xBeforeNavigate( cURL, Flags, TFName, PData, Headers ) } )

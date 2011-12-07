@@ -383,7 +383,7 @@ HB_FUNC( WVG_LOADICON )
  */
 HB_FUNC( WVG_LOADIMAGE )
 {
-   HBITMAP  hImage     = 0;
+   HANDLE   hImage     = 0;
    LPTSTR   lpBuffer   = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
    int      iSource    = hb_parni( 2 );
 
@@ -398,7 +398,10 @@ HB_FUNC( WVG_LOADIMAGE )
          break;
 
       case 2:
-         hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+         if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
+            hImage = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+         else
+            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
          break;
    }
 
@@ -1135,7 +1138,7 @@ HB_FUNC( WVG_SETWINDOWPOSANDSIZE )
 {
    hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
                           hb_parni( 4 ), hb_parni( 5 ),
-                          ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE ) );
+                          ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1345,3 +1348,24 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
    }
 /* #endif */
 }
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_SENDEDITCONTROLMESSAGE )
+{
+   HWND hED  = hbwapi_par_raw_HWND( 1 );
+   int  msg  = hbwapi_par_INT( 2 );
+
+   switch( msg )
+   {
+      case EM_GETSEL:
+      {
+         DWORD min = 0;
+         DWORD max = 0;
+         SendMessage( hED, EM_GETSEL, ( WPARAM ) &min, ( LPARAM ) &max );
+         break;
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/

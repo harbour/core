@@ -135,7 +135,7 @@ METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    #if 0
    + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
-   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER +CCS_VERT
+   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER + CCS_VERT
    #endif
 
    ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER + TBSTYLE_EX_MIXEDBUTTONS
@@ -182,7 +182,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
     * so the parent of toolbar will process them anyway
     * All other functionality should be default until ownerdraw is introduced.
     */
-   ::SetWindowProcCallback()
+      ::SetWindowProcCallback()
    #endif
 
    IF !empty( ::hWnd )
@@ -209,18 +209,18 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
    SWITCH nMessage
 
    CASE HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
       ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN 0
+      RETURN EVENT_HANDELLED
 
    CASE HB_GTE_COMMAND
       EXIT
 
    CASE HB_GTE_NOTIFY
       aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
-      #if 0
-      hb_traceLog( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
-                          aNMMouse[ NMH_code ], TBN_GETINFOTIPA )
-      #endif
+
       DO CASE
 
       CASE aNMMouse[ NMH_code ] == NM_CLICK
@@ -231,14 +231,6 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
          RETURN EVENT_HANDELLED
-
-      #if 0
-      CASE aNMMouse[ NMH_code ] == TBN_GETINFOTIPA
-         IF ( nObj := ascan( ::aItems, {|e_| e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
-            Wvg_SetToolbarButtonTip( aNM[ 2 ], "This is grand tooltip" )
-            RETURN EVENT_HANDELLED
-         ENDIF
-      #endif
 
       OTHERWISE
          RETURN EVENT_UNHANDELLED

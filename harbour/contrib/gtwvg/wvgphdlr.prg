@@ -80,7 +80,7 @@ CLASS WvgPartHandler
 
    DATA     cargo
 
-   METHOD   init( oParent, oOwner )
+   METHOD   new( oParent, oOwner )
    METHOD   create( oParent, oOwner )
    METHOD   configure( oParent, oOwner )
    METHOD   destroy()
@@ -107,7 +107,7 @@ CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD init( oParent, oOwner ) CLASS WvgPartHandler
+METHOD WvgPartHandler:new( oParent, oOwner )
 
    ::oParent := oParent
    ::oOwner  := oOwner
@@ -116,7 +116,7 @@ METHOD init( oParent, oOwner ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner ) CLASS WvgPartHandler
+METHOD WvgPartHandler:create( oParent, oOwner )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -128,7 +128,7 @@ METHOD create( oParent, oOwner ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner ) CLASS WvgPartHandler
+METHOD WvgPartHandler:configure( oParent, oOwner )
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
@@ -140,7 +140,7 @@ METHOD configure( oParent, oOwner ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgPartHandler
+METHOD WvgPartHandler:destroy()
 
    ::hChildren  := NIL
    ::nNameId    := NIL
@@ -151,7 +151,7 @@ METHOD destroy() CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( hEvent, mp1, mp2 ) CLASS WvgPartHandler
+METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    HB_SYMBOL_UNUSED( hEvent )
    HB_SYMBOL_UNUSED( mp1 )
@@ -161,13 +161,13 @@ METHOD handleEvent( hEvent, mp1, mp2 ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD status() CLASS WvgPartHandler
+METHOD WvgPartHandler:status()
 
    RETURN ::nStatus
 
 /*----------------------------------------------------------------------*/
 
-METHOD addChild( oWvg ) CLASS WvgPartHandler
+METHOD WvgPartHandler:addChild( oWvg )
 
    oWvg:nNameID := oWvg:nID
    aadd( ::aChildren, oWvg )
@@ -176,7 +176,7 @@ METHOD addChild( oWvg ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD childFromName( nNameId ) CLASS WvgPartHandler
+METHOD WvgPartHandler:childFromName( nNameId )
    LOCAL i, oWvg
 
    FOR i := 1 TO len( ::aChildren )
@@ -189,13 +189,13 @@ METHOD childFromName( nNameId ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD childList() CLASS WvgPartHandler
+METHOD WvgPartHandler:childList()
 
    RETURN ::aChildren
 
 /*----------------------------------------------------------------------*/
 
-METHOD delChild( oWvg ) CLASS WvgPartHandler
+METHOD WvgPartHandler:delChild( oWvg )
    LOCAL n
 
    n := ascan( ::aChildren, {|o| o == oWvg } )
@@ -209,7 +209,7 @@ METHOD delChild( oWvg ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setName( nNameId ) CLASS WvgPartHandler
+METHOD WvgPartHandler:setName( nNameId )
    LOCAL nOldNameId := ::nNameId
 
    IF Valtype( nNameId ) == "N"
@@ -220,7 +220,7 @@ METHOD setName( nNameId ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setOwner( oWvg ) CLASS WvgPartHandler
+METHOD WvgPartHandler:setOwner( oWvg )
    LOCAL oOldXbp := ::oOwner
 
    IF valtype( oWvg ) == "O"
@@ -231,7 +231,7 @@ METHOD setOwner( oWvg ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD setParent( oWvg ) CLASS WvgPartHandler
+METHOD WvgPartHandler:setParent( oWvg )
    LOCAL oOldXbp := ::oParent
 
    IF valtype( oWvg ) == "O"
@@ -242,7 +242,7 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
+METHOD WvgPartHandler:notifier( nEvent, xParams )
    Local aPos, aMenuItem, nIndex, nCtrlID, oObj
    LOCAL nReturn := 0
 

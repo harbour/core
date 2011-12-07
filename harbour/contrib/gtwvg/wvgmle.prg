@@ -92,7 +92,6 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    DATA     ignoreTab                             INIT    .F.
 
    DATA     bufferLength                          INIT    32000
-   DATA     changed                               INIT    .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -100,9 +99,9 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   clear()                               VIRTUAL
-   METHOD   copyMarked()                          VIRTUAL
-   METHOD   cutMarked()                           VIRTUAL
+   METHOD   clear()
+   METHOD   copyMarked()
+   METHOD   cutMarked()
    METHOD   deleteMarked()                        VIRTUAL
    METHOD   delete()                              VIRTUAL
    METHOD   pasteMarked()                         VIRTUAL
@@ -111,7 +110,7 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    METHOD   setFirstChar()                        VIRTUAL
    METHOD   setMarked()                           VIRTUAL
    METHOD   insert()                              VIRTUAL
-   METHOD   charFromLine()                        VIRTUAL
+   METHOD   charFromLine( nLine )                 VIRTUAL
    METHOD   lineFromChar()                        VIRTUAL
    METHOD   pos()                                 VIRTUAL
 
@@ -130,13 +129,15 @@ CLASS WvgMLE INHERIT WvgWindow, DataRef
    ACCESS   vScroll                               INLINE  ::sl_vScroll
    ASSIGN   vScroll( bBlock )                     INLINE  ::sl_vScroll := bBlock
 
+   METHOD   changed( lChanged )                   SETGET
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
+METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + ES_MULTILINE + ES_WANTRETURN
    ::exStyle     := WS_EX_CLIENTEDGE
@@ -147,7 +148,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
+METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -182,25 +183,20 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgML
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
+METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
+
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
-      CASE aNM[ NMH_code ] == EN_CHANGE
-         ::changed := .t.
-
-      CASE aNM[ NMH_code ] == EN_UPDATE
-
-      CASE aNM[ NMH_code ] == EN_MAXTEXT
-
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF hb_isBlock( ::sl_killInputFocus )
             eval( ::sl_killInputFocus, NIL, NIL, Self )
@@ -221,6 +217,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
             eval( ::sl_vScroll, NIL, NIL, Self )
          ENDIF
 
+      CASE aNM[ NMH_code ] == EN_CHANGE
+      CASE aNM[ NMH_code ] == EN_UPDATE
+      CASE aNM[ NMH_code ] == EN_MAXTEXT
+
       ENDCASE
 
    CASE nMessage ==  HB_GTE_CTLCOLOR
@@ -234,13 +234,46 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
+   CASE nMessage ==  HB_GTE_ANY
+      IF ::isParentCrt()
+
+         DO CASE
+         CASE aNM[ NMH_code ] == WM_KEYDOWN
+            IF aNM[ 2 ] == VK_TAB
+               ::oParent:setFocus()
+               RETURN EVENT_HANDELLED
+            ENDIF
+
+         CASE aNM[ NMH_code ] == WM_KILLFOCUS
+            IF hb_isBlock( ::sl_killInputFocus )
+               eval( ::sl_killInputFocus, NIL, NIL, Self )
+            ENDIF
+
+         CASE aNM[ NMH_code ] == WM_SETFOCUS
+            IF hb_isBlock( ::sl_setInputFocus )
+               eval( ::sl_setInputFocus, NIL, NIL, Self )
+            ENDIF
+
+         CASE aNM[ NMH_code ] == WM_HSCROLL
+            IF hb_isBlock( ::sl_hScroll )
+               eval( ::sl_hScroll, NIL, NIL, Self )
+            ENDIF
+
+         CASE aNM[ NMH_code ] == WM_VSCROLL
+            IF hb_isBlock( ::sl_vScroll )
+               eval( ::sl_vScroll, NIL, NIL, Self )
+            ENDIF
+
+         ENDCASE
+      ENDIF
+
    ENDCASE
 
-   RETURN 0
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgMLE
+METHOD WvgMLE:destroy()
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
@@ -249,3 +282,56 @@ METHOD destroy() CLASS WvgMLE
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+METHOD WvgMLE:changed( lChanged )
+   LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
+
+   IF hb_isLogical( lChanged )
+      ::sendMessage( EM_SETMODIFY, iif( lChanged, 0, 1 ), 0 )
+   ENDIF
+
+   RETURN lChg
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgMLE:clear()
+   LOCAL cText := ::getData()
+
+   ::setData( "" )
+
+   RETURN len( cText )
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgMLE:copyMarked()
+   LOCAL n, nB, nE
+
+   n := ::sendMessage( EM_GETSEL )
+   nB := WVG_LOWORD( n )
+   nE := WVG_HIWORD( n )
+
+   IF ( n := nE - nB ) > 0
+      Wvt_SetClipboard( substr( ::getData(), nB, n ) )
+   ENDIF
+
+   RETURN n
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgMLE:cutMarked()
+   LOCAL n, nB, nE, cText
+
+   n := ::sendMessage( EM_GETSEL )
+   nB := WVG_LOWORD( n )
+   nE := WVG_HIWORD( n )
+
+   IF ( n := nE - nB ) > 0
+      cText := ::getData()
+      ::setData( substr( cText, 1, nB-1 ) + substr( cText, nE ) )
+   ENDIF
+
+   RETURN n
+
+/*----------------------------------------------------------------------*/
+
+

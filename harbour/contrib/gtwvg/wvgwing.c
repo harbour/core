@@ -660,7 +660,6 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    hb_itemReturnRelease( pEvParams );
 }
 /*----------------------------------------------------------------------*/
-
 /*
  *  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
  */
@@ -1263,3 +1262,55 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 }
 
 /*----------------------------------------------------------------------*/
+/*
+   WVG_CreateTooltipWindow( hControl ) -> hWndTT
+*/
+HB_FUNC( WVG_CREATETOOLTIPWINDOW )
+{
+   HWND                 hwndTip;
+   TOOLINFO             toolInfo;
+   LPTSTR               pszText = HB_TCHAR_CONVTO( "" );
+
+   hwndTip = CreateWindowEx( ( DWORD ) NULL, TOOLTIPS_CLASS, NULL,
+                              WS_POPUP |TTS_ALWAYSTIP,  // | TTS_BALLOON,
+                              CW_USEDEFAULT, CW_USEDEFAULT,
+                              CW_USEDEFAULT, CW_USEDEFAULT,
+                              wvg_parhwnd( 1 ), NULL,
+                              wvg_hInstance(), NULL);
+   if ( ! hwndTip )
+       return;
+
+   toolInfo.cbSize   = sizeof( toolInfo );
+   toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
+   toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.lpszText = pszText;
+
+   if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
+      wvg_rethandle( hwndTip );
+   else
+      wvg_rethandle( NULL );
+
+   HB_TCHAR_FREE( pszText );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_SETTOOLTIPTEXT )
+{
+   TOOLINFO toolInfo;
+   LPTSTR pszText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+
+   toolInfo.cbSize   = sizeof( toolInfo );
+   toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
+   toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.lpszText = pszText;
+
+   SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, ( WPARAM ) 0, ( LPARAM ) &toolInfo );
+
+   HB_TCHAR_FREE( pszText );
+}
+
+/*----------------------------------------------------------------------*/
+

@@ -117,6 +117,7 @@ CLASS WvgActiveXControl FROM WvgWindow
    METHOD mouseUp()
    METHOD mouseMove()
    METHOD activate()
+
    ERROR HANDLER OnError
 
    ENDCLASS
@@ -125,7 +126,7 @@ CLASS WvgActiveXControl FROM WvgWindow
 
 METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
    ::objType    := objTypeActiveX
@@ -185,6 +186,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 #if 0
    LOCAL cEvents := HB_ValToStr( nEvent ) + ", "
    LOCAL aEvents := { ... }
+
    aEval( aEvents, { | xEvent | cEvents += HB_ValToStr( xEvent ) + ", " } )
    WAPI_OutputDebugString( cEvents )
 #endif
@@ -209,7 +211,8 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aInfo )
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       EXIT
-   END
+
+   ENDSWITCH
 
    RETURN nHandled
 

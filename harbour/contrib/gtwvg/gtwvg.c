@@ -257,7 +257,12 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
       if( pWVT->hInstance )
          UnregisterClass( s_szClassName, pWVT->hInstance );
    }
-   HB_WVT_UNLOCK
+
+   if( pWVT->pNotifierGUI )
+   {
+      hb_itemRelease( pWVT->pNotifierGUI );
+      pWVT->pNotifierGUI = NULL;
+   }
 
    if( pWVT->pszSelectCopy )
       hb_xfree( pWVT->pszSelectCopy );
@@ -266,7 +271,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
       DeleteObject( pWVT->hFontBox );
 #endif
-   #if 0
+   #if 1
    if( pWVT->hFont )
       DeleteObject( pWVT->hFont );
    #endif
@@ -304,39 +309,41 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
       while( pWVT->gObjs )
       {
-        gObj = pWVT->gObjs->gObjNext;
+         gObj = pWVT->gObjs->gObjNext;
 
-        if( pWVT->gObjs->lpText != NULL )
+         if( pWVT->gObjs->lpText != NULL )
 #if defined( UNICODE )
-           HB_TCHAR_FREE( pWVT->gObjs->lpText );
+            HB_TCHAR_FREE( pWVT->gObjs->lpText );
 #else
-           hb_xfree( pWVT->gObjs->lpText );
+            hb_xfree( pWVT->gObjs->lpText );
 #endif
-        if( pWVT->gObjs->hFont )
-           if( pWVT->gObjs->bDestroyFont )
-              DeleteObject( pWVT->gObjs->hFont );
-        if( pWVT->gObjs->hPen )
-           if( pWVT->gObjs->bDestroyPen )
-              DeleteObject( pWVT->gObjs->hPen );
-        if( pWVT->gObjs->hBrush )
-           if( pWVT->gObjs->bDestroyBrush )
-              DeleteObject( pWVT->gObjs->hBrush );
-        if( pWVT->gObjs->bBlock )
-           hb_itemRelease( pWVT->gObjs->bBlock );
+         if( pWVT->gObjs->hFont )
+            if( pWVT->gObjs->bDestroyFont )
+               DeleteObject( pWVT->gObjs->hFont );
+         if( pWVT->gObjs->hPen )
+            if( pWVT->gObjs->bDestroyPen )
+               DeleteObject( pWVT->gObjs->hPen );
+         if( pWVT->gObjs->hBrush )
+            if( pWVT->gObjs->bDestroyBrush )
+               DeleteObject( pWVT->gObjs->hBrush );
+         if( pWVT->gObjs->bBlock )
+            hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
-        if( pWVT->gObjs->iPicture )
-           if( pWVT->gObjs->bDestroyPicture )
-              HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
+         if( pWVT->gObjs->iPicture )
+            if( pWVT->gObjs->bDestroyPicture )
+               HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
 #endif
-        hb_xfree( pWVT->gObjs );
-        pWVT->gObjs = gObj;
-     }
+         hb_xfree( pWVT->gObjs );
+         pWVT->gObjs = gObj;
+      }
    }
 
    if( pWVT->hWnd )
       DestroyWindow( pWVT->hWnd );
 
    hb_xfree( pWVT );
+
+   HB_WVT_UNLOCK
 }
 
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
@@ -458,6 +465,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->gObjs             = NULL;
    pWVT->hWndParent        = NULL;
 
+   pWVT->pNotifierGUI      = NULL;
+
    return pWVT;
 }
 
@@ -465,16 +474,22 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 {
    int nResult = 0; /* Unhandled */
 
-   if( pWVT->pGT->pNotifierBlock )
+   if( pWVT->pGT->pNotifierBlock || pWVT->pNotifierGUI )
    {
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
 
-         nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pGT->pNotifierBlock, 2, pEvent, pParams ) );
+         if( pWVT->pGT->pNotifierBlock )
+            nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pGT->pNotifierBlock, 2, pEvent, pParams ) );
+
+         if( pWVT->pNotifierGUI )
+         {
+//OutputDebugString( L"if( pWVT->pNotifierGUI )" );
+            nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pNotifierGUI, 2, pEvent, pParams ) );
+         }
 
          hb_itemRelease( pEvent );
-
          hb_vmRequestRestore();
       }
    }
@@ -668,7 +683,6 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       PHB_ITEM pEvParams = hb_itemNew( NULL );
       hb_itemPutNI( pEvParams, iKey );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
-      /* hb_itemRelease( pEvParams ); */ /* Under situations it GPF's */
    }
 }
 
@@ -2117,18 +2131,19 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          return 0;
 
-      case WM_KEYDOWN:
-      case WM_SYSKEYDOWN:
-      case WM_CHAR:
       case WM_SYSCHAR:
+      case WM_SYSKEYDOWN:
+      case WM_KEYDOWN:
+      case WM_CHAR:
          return hb_gt_wvt_KeyEvent( pWVT, message, wParam, lParam );
 
+      case WM_LBUTTONUP:
+         SetFocus( hWnd );
       case WM_RBUTTONDOWN:
       case WM_LBUTTONDOWN:
       case WM_MBUTTONDOWN:
 
       case WM_RBUTTONUP:
-      case WM_LBUTTONUP:
       case WM_MBUTTONUP:
 
       case WM_RBUTTONDBLCLK:
@@ -2318,7 +2333,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          PHB_ITEM pEvParams = hb_itemNew( NULL );
 
          hb_arrayNew( pEvParams, 2 );
-
+HB_TRACE( HB_TR_ALWAYS, ( "lParam %d", ( int ) lParam ) );
          hb_arraySetNI( pEvParams  , 1, ( int ) wParam );
          hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
 
@@ -3037,8 +3052,17 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                              pWVT->CodePage );
             if( hFont )
             {
+               pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
+
+               hb_strncpy( pWVT->fontFace, hb_arrayGetCPtr( pInfo->pNewVal, 1 ), sizeof( pWVT->fontFace ) - 1 );
+               pWVT->fontHeight  = hb_arrayGetNI( pInfo->pNewVal, 2 );
+               pWVT->fontWidth   = hb_arrayGetNI( pInfo->pNewVal, 3 );
+               pWVT->fontWeight  = hb_arrayGetNI( pInfo->pNewVal, 4 );
+               pWVT->fontQuality = hb_arrayGetNI( pInfo->pNewVal, 5 );
+
                if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, pWVT->ROWS, pWVT->COLS, hFont, hb_arrayGetNI( pInfo->pNewVal, 3 ) ) )
                {
+#if 0
                   pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
 
                   hb_strncpy( pWVT->fontFace, hb_arrayGetCPtr( pInfo->pNewVal, 1 ), sizeof( pWVT->fontFace ) - 1 );
@@ -3046,6 +3070,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   pWVT->fontWidth   = hb_arrayGetNI( pInfo->pNewVal, 3 );
                   pWVT->fontWeight  = hb_arrayGetNI( pInfo->pNewVal, 4 );
                   pWVT->fontQuality = hb_arrayGetNI( pInfo->pNewVal, 5 );
+#endif
                   if( pWVT->hWnd )
                   {
                      hb_gt_wvt_ResetWindowSize( pWVT );
@@ -3941,7 +3966,23 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_REFRESH:
       {
          if( pWVT->hWnd )
+         {
             InvalidateRect( pWVT->hWnd, NULL, FALSE );
+         }
+         break;
+      }
+      case HB_GTI_NOTIFIERBLOCKGUI:
+      {
+         if( pWVT->pNotifierGUI )
+         {
+            hb_itemRelease( pWVT->pNotifierGUI );
+            pWVT->pNotifierGUI = NULL;
+         }
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+         {
+            pWVT->pNotifierGUI = hb_itemNew( pInfo->pNewVal );
+         }
+         break;
       }
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
@@ -4478,6 +4519,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
 static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
 {
    int i;
+
 #if ! defined( HB_OS_WIN_CE )
    HMENU hMenu = GetMenu( pWVT->hWnd );
    if( hMenu )
@@ -4567,6 +4609,8 @@ static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT )
 
    SetTextCharacterExtra( pWVT->hGuiDC,0 );
    SelectObject( pWVT->hGuiDC, pWVT->hFont );
+   if( pWVT->hGuiBmp )
+      DeleteObject( pWVT->hGuiBmp );
 }
 
 static void hb_wvt_gtHandleMenuSelection( PHB_GTWVT pWVT, int menuIndex )

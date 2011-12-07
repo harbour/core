@@ -619,7 +619,7 @@ HB_FUNC( WVG_LABEL )
       gObj->aOffset.iRight   = hb_parvni( 3, 4 );
 
 #if defined( UNICODE )
-      gObj->lpText           = hb_mbtowc( hb_parcx( 4 ) );
+      gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) ); //hb_mbtowc( hb_parcx( 4 ) );
 #else
       gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
 #endif

@@ -258,18 +258,18 @@ function InsertPaint( cID, aPaint, lSet )
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
 FUNCTION Wvt_SetDlgCoMode( nMode )
    LOCAL nOldMode
-   
+
    STATIC sMode := 0
-   
+
    nOldMode := sMode
-   IF hb_isNumeric( nMode ) .and. nMode <= 1 .and. nMode >= 0 
+   IF hb_isNumeric( nMode ) .and. nMode <= 1 .and. nMode >= 0
       sMode := nMode
-   ENDIF 
-   
+   ENDIF
+
    RETURN nOldMode
-   
+
 /*----------------------------------------------------------------------*/
-      
+
 
 FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
                               cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
@@ -279,7 +279,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL aFont
    LOCAL nMode := Wvt_SetDlgCoMode()
-   
+
    aFont := Wvt_GetFontInfo()
 
    IF nMode == 0
@@ -293,16 +293,16 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nBaseUnits  := WVG_GetDialogBaseUnits()
       nBaseUnitsX := WVG_LOWORD( nBaseUnits )
       nBaseUnitsY := WVG_HIWORD( nBaseUnits )
-   
+
       nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
       nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
-   
+
       /* Position it exactly where user has requested */
-   
+
       aXY := Wvt_ClientToScreen( nTop,nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
-   
+
       /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
        * But in my practice, the values below are 99% accurate.
        * I have tested it on many fonts but on 1280/800 resolution.
@@ -310,17 +310,17 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
        */
       nXM :=  5.25
       nYM := 10.25
-   
+
       nX  := ( nX * nXM / nBaseUnitsX )
       nY  := ( nY * nYM / nBaseUnitsY )
       nW  := ( nW * nXM / nBaseUnitsX )
       nH  := ( nH * nYM / nBaseUnitsY )
-   ELSE 
+   ELSE
       nX  := nLeft
       nY  := nTop
       nW  := nCols
       nH  := nRows
-   ENDIF       
+   ENDIF
 
    If !ISNUMBER( nStyle )
       nStyle := + WS_CAPTION    + WS_SYSMENU              ;
@@ -359,44 +359,44 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
    LOCAL nBottom, nRight
    LOCAL nMode := Wvt_SetDlgCoMode()
 
-   IF nMode == 0 
+   IF nMode == 0
       nBottom := nTop  + nRows - 1
       nRight  := nLeft + nCols - 1
-   
+
       DEFAULT aOffSet TO {}
-   
+
       aSize( aOffSet,4 )
-   
+
       DEFAULT aOffSet[ 1 ] TO 0
       DEFAULT aOffSet[ 2 ] TO 0
       DEFAULT aOffSet[ 3 ] TO 0
       DEFAULT aOffSet[ 4 ] TO 0
-   
+
       nBaseUnits  := WVG_GetDialogBaseUnits()
       nBaseUnitsX := WVG_LOWORD( nBaseUnits )
       nBaseUnitsY := WVG_HIWORD( nBaseUnits )
-   
+
       aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
-   
+
       aXY := Wvt_GetXYFromRowCol( nBottom+1, nRight+1 )
       nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
       nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
-   
+
       nXM :=  5.25
       nYM := 10.25
-   
+
       nX  := ( nX * nXM / nBaseUnitsX )
       nY  := ( nY * nYM / nBaseUnitsY )
       nW  := ( nW * nXM / nBaseUnitsX )
       nH  := ( nH * nYM / nBaseUnitsY )
-   ELSE 
+   ELSE
       nX  := nLeft
       nY  := nTop
       nW  := nCols
       nH  := nRows
-   ENDIF       
+   ENDIF
 
    aDlg[ 1,4 ]++      /* item count */
 
@@ -479,7 +479,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    nResult := Wvt_CreateDialogModal( xTemplate, .f., cbDlgProc, nDlgMode, hWndParent )
 
    Wvg_SetFocus( hWndParent )
-   
+
    Return nResult
 
 /*----------------------------------------------------------------------*/
@@ -500,32 +500,32 @@ Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
 FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
    LOCAL cRet, aTmp, xRet, i
-   
+
    HB_SYMBOL_UNUSED( hWnd )
-   
+
    DEFAULT cPath  TO ""
    DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
-   
+
 /* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
    cRet := WIN_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
-   
-   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0 
+
+   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
       IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
          cPath := aTmp[ 1 ]
          FOR i := 2 TO len( aTmp )
             aadd( xRet, cPath + "\" + aTmp[ i ] )
-         NEXT    
-      ENDIF    
-   ELSE 
-      xRet := cRet   
-   ENDIF    
-   
-   RETURN xRet 
-   
+         NEXT
+      ENDIF
+   ELSE
+      xRet := cRet
+   ENDIF
+
+   RETURN xRet
+
 /*----------------------------------------------------------------------*/
 /*
 Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
@@ -546,28 +546,28 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
    LOCAL cRet, aTmp, xRet, i, cPath
 
    HB_SYMBOL_UNUSED( hWnd )
-   
+
    DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
-   
+
 /* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
    cRet := WIN_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
-   
-   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0 
+
+   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
       IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
          cPath := aTmp[ 1 ]
          FOR i := 2 TO len( aTmp )
             aadd( xRet, cPath + "\" + aTmp[ i ] )
-         NEXT    
-      ENDIF    
-   ELSE 
-      xRet := cRet   
-   ENDIF    
-   
-   RETURN xRet 
+         NEXT
+      ENDIF
+   ELSE
+      xRet := cRet
+   ENDIF
+
+   RETURN xRet
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -644,6 +644,58 @@ FUNCTION Wvt_SetPalette( aRGB )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetRGBColor( nIndex )
+
+   RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
+
+/*----------------------------------------------------------------------*/
+#define BLACK          RGB( 0x0 ,0x0 ,0x0  )
+#define BLUE           RGB( 0x0 ,0x0 ,0x85 )
+#define GREEN          RGB( 0x0 ,0x85,0x0  )
+#define CYAN           RGB( 0x0 ,0x85,0x85 )
+#define RED            RGB( 0x85,0x0 ,0x0  )
+#define MAGENTA        RGB( 0x85,0x0 ,0x85 )
+#define BROWN          RGB( 0x85,0x85,0x0  )
+#define LIGHT_GRAY     RGB( 0xC6,0xC6,0xC6 )
+#define GRAY           RGB( 0x60,0x60,0x60 )
+#define BRIGHT_BLUE    RGB( 0x00,0x00,0xFF )
+#define BRIGHT_GREEN   RGB( 0x60,0xFF,0x60 )
+#define BRIGHT_CYAN    RGB( 0x60,0xFF,0xFF )
+#define BRIGHT_RED     RGB( 0xF8,0x00,0x26 )
+#define BRIGHT_MAGENTA RGB( 0xFF,0x60,0xFF )
+#define YELLOW         RGB( 0xFF,0xFF,0x00 )
+#define WHITE          RGB( 0xFF,0xFF,0xFF )
+
+FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
+   LOCAL s, n, lEnh
+   LOCAL nIndex := 0
+   LOCAL a_:= { "N", "B", "G", "BG", "R", "RB", "GR", "W" }
+
+   nForeBack := iif( hb_isNumeric( nForeBack ), nForeBack, 0 )
+
+   IF hb_isChar( cColor )
+      IF ( n := at( cColor, "/" ) ) > 0
+         IF nForeBack == 0
+            s := substr( cColor, 1, n-1 )
+         ELSE
+            s := substr( cColor, n+1 )
+         ENDIF
+      ELSE
+         s := cColor
+      ENDIF
+      s := upper( s )
+      lEnh := ( "*" $ s ) .OR. ( "+" $ s )
+      IF lEnh
+         s := strtran( s, "*" )
+         s := strtran( s, "+" )
+      ENDIF
+      nIndex := ascan( a_, {|e| e == s } )
+      IF nIndex > 0
+         IF lEnh
+            nIndex += 8
+         ENDIF
+         nIndex--
+      ENDIF
+   ENDIF
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
 

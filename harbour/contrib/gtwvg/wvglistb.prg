@@ -148,9 +148,9 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + LBS_NOTIFY
+   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP
    ::exStyle     := WS_EX_CLIENTEDGE + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
    ::className   := "LISTBOX"
    ::objType     := objTypeListBox
@@ -182,6 +182,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
    RETURN Self
 
@@ -189,29 +190,27 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
-
    DO CASE
+
+   CASE nMessage == HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
+      ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := WVG_LBGetCurSel( ::hWnd )+ 1
-
          IF hb_isBlock( ::sl_itemMarked )
             eval( ::sl_itemMarked, NIL, NIL, self )
          ENDIF
 
       ELSEIF aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
-
          IF hb_isBlock( ::sl_itemSelected )
             eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
       ENDIF
-
-   CASE nMessage == HB_GTE_RESIZED
-      ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN 0
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
@@ -224,26 +223,61 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
+   CASE nMessage == HB_GTE_ANY
+      IF aNM[ 1 ] == WM_LBUTTONUP
+         ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
+         IF hb_isBlock( ::sl_itemMarked )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            eval( ::sl_itemMarked, NIL, NIL, self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+         ENDIF
+
+      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK
+         ::editBuffer := ::nCurSelected
+         IF hb_isBlock( ::sl_itemSelected )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            eval( ::sl_itemSelected, NIL, NIL, self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+            RETURN EVENT_HANDELLED
+         ENDIF
+
+      ELSEIF aNM[ 1 ] == WM_KEYUP
+         IF ::nCurSelected != WVG_LBGetCurSel( ::hWnd ) + 1
+            ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
+            IF hb_isBlock( ::sl_itemMarked )
+               IF ::isParentCrt()
+                  ::oParent:setFocus()
+               ENDIF
+               eval( ::sl_itemMarked, NIL, NIL, self )
+               IF ::isParentCrt()
+                  ::setFocus()
+               ENDIF
+            ENDIF
+         ENDIF
+
+      ENDIF
    ENDCASE
 
-   RETURN 0
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
-
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgListBox
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
-
    ::WvgWindow:destroy()
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

@@ -86,8 +86,8 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     clipChildren                          INIT  .F.
    DATA     closable                              INIT  .T.
    DATA     fontHeight                            INIT  16
+   DATA     fontWidth                             INIT  10
    DATA     fontName                              INIT  "Courier New"
-   DATA     fontWidth                             INIT  8
    DATA     gridMove                              INIT  .F.
    DATA     icon                                  INIT  0
    DATA     minMax                                INIT  .T.
@@ -172,17 +172,18 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     lHasInputFocus                        INIT  .F.
    DATA     nFrameState                           INIT  0  /* normal */
 
+   DATA     isGT                                  INIT  .F.
+
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
    METHOD   showWindow()                          INLINE ::show()
    METHOD   refresh()                             INLINE ::invalidateRect()
 
    /*  LIFE CYCLE */
-   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   setFocus()
 
    /*  METHODS */
    METHOD   currentPos()
@@ -259,22 +260,25 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
  *                         Instance Initiation
 /*----------------------------------------------------------------------*/
 
-METHOD WvgCrt:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgCrt:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   if hb_isArray( aPos )
+   IF hb_isArray( aPos )
       ::aPos := aPos
-   endif
-   if hb_isArray( aSize )
+   ENDIF
+   IF hb_isArray( aSize )
       ::aSize := aSize
-   endif
-   if hb_isArray( aPresParams )
+   ENDIF
+   IF hb_isArray( aPresParams )
       ::aPresParams := aPresParams
-   endif
-   if hb_isLogical( lVisible )
+   ENDIF
+   IF hb_isLogical( lVisible )
       ::visible := lVisible
-   endif
+   ENDIF
+
+   /*  Drawing Area of oCrt will point to itself */
+   ::drawingArea := Self
 
    RETURN Self
 
@@ -304,13 +308,13 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   if ::lModal
+   IF ::lModal
       ::pGT  := hb_gtCreate( "WVG" )
       ::pGTp := hb_gtSelect( ::pGT )
-   else
+   ELSE
       hb_gtReload( "WVG" )
       ::pGT := hb_gtSelect()
-   endif
+   ENDIF
 
    IF ::lModal
       ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
@@ -337,6 +341,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* CreateWindow() be forced to execute */
    ? " "
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   ::setFocus()
 
    Hb_GtInfo( HB_GTI_CLOSABLE  , ::closable  )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
@@ -352,15 +357,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::lHasInputFocus := .t.
    ENDIF
 
-   /*  Drawing Area of oCrt will point to itself */
-   ::drawingArea := self
-
-   HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
-
-   /*  Not working yet. need to investigate how I have implemented it. */
-   if !empty( ::toolTipText )
-      Wvt_SetTooltip( ::toolTipText )
-   endif
+   HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
    RETURN Self
 
@@ -396,14 +393,15 @@ METHOD WvgCrt:destroy()
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
 
-   if ::lModal
-      hb_gtInfo( HB_GTI_ENABLE  , ::pGTp )
-      hb_gtSelect( ::pGTp )
-      hb_gtInfo( HB_GTI_SETFOCUS, ::pGTp )
+   IF ! ::isGT
+      IF ::lModal
+         hb_gtInfo( HB_GTI_ENABLE  , ::pGTp )
+         hb_gtSelect( ::pGTp )
+         hb_gtInfo( HB_GTI_SETFOCUS, ::pGTp )
+      ENDIF
+      ::pGT  := NIL
+      ::pGTp := NIL
    ENDIF
-
-   ::pGT  := NIL
-   ::pGTp := NIL
 
    RETURN Self
 
@@ -1157,13 +1155,4 @@ METHOD WvgCrt:dragDrop( xParam, xParam1 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
- *                          HARBOUR SPECIFIC
-/*----------------------------------------------------------------------*/
-METHOD WvgCrt:SetFocus()
-
-   ::sendMessage( WM_ACTIVATE, 1, 0 )
-   /* ::sendMessage( WM_SETFOCUS, 0, 0 ) */
-
-   RETURN Self
 /*----------------------------------------------------------------------*/

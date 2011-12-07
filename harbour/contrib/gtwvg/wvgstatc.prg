@@ -107,7 +107,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
-   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT */
 
@@ -205,7 +205,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDLINE
       EXIT
-   END  /* ::type */
+   ENDSWITCH  /* ::type */
 
    #if 1
    /* Options */
@@ -233,11 +233,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
    ::createControl()
 
-   ::SetWindowProcCallback()
+   ::SetWindowProcCallback() /* Static must not be subject to GT dependent */
 
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
    ::setCaption( ::caption )
 
@@ -247,15 +248,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
-
    DO CASE
 
    CASE nMessage == HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
          aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-         RETURN 0
+         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -269,20 +271,22 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
+   CASE nMessage == HB_GTE_ANY
+      IF ::IsParentCrt()
+
+      ENDIF
+
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgStatic
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
-
    IF ::hBitmap <> nil
       WVG_DeleteObject( ::hBitmap )
    ENDIF
-
    ::wvgWindow:destroy()
 
    RETURN NIL
@@ -290,9 +294,7 @@ METHOD destroy() CLASS WvgStatic
 /*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
-
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

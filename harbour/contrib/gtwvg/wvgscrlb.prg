@@ -151,7 +151,7 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD  /* + SBS_SIZEBOX + SBS_SIZEGRIP */
    ::className   := "SCROLLBAR"
@@ -175,13 +175,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 
    ::createControl()
 
-   ::SetWindowProcCallback()
+   IF ::isParentCrt()
+      ::SetWindowProcCallback()
+   ENDIF
 
    ::setRange( ::range )
 
    IF ::visible
       ::show()
    ENDIF
+   ::setPosAndSize()
 
 #if 0
    si IS SCROLLINFO
@@ -189,9 +192,9 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
    cSI := si:value
    IF WAPI_GetScrollInfo( ::pWnd, SB_CTL, @cSI )
       si:buffer( cSI )
-hb_traceLog( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
    ENDIF
 #endif
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -202,6 +205,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
    hb_traceLog( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
 
    DO CASE
+
+   CASE nMessage == HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
+      ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::hBrushBG )

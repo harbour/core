@@ -109,13 +109,13 @@ CLASS DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD new() CLASS DataRef
+METHOD DataRef:new()
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD getData() CLASS DataRef
+METHOD DataRef:getData()
 
    DO CASE
    CASE ::className == "EDIT"
@@ -130,7 +130,7 @@ METHOD getData() CLASS DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD setData( xValue, mp2 ) CLASS DataRef
+METHOD DataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
@@ -174,13 +174,13 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD undo() CLASS DataRef
+METHOD DataRef:undo()
 
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
-METHOD validate( xParam ) CLASS DataRef
+METHOD DataRef:validate( xParam )
 
    IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
       RETURN eval( ::sl_validate, self )

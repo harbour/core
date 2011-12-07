@@ -115,7 +115,7 @@ HB_EXTERN_BEGIN
 #  define WVT_DEFAULT_ROWS          25
 #  define WVT_DEFAULT_COLS          80
 #  define WVT_DEFAULT_FONT_HEIGHT   16
-#  define WVT_DEFAULT_FONT_WIDTH    8
+#  define WVT_DEFAULT_FONT_WIDTH    10
 #endif
 #define WVT_DEFAULT_FONT_NAME       "Courier New"
 
@@ -469,6 +469,8 @@ typedef struct
    PHB_GOBJS gObjs;                         /* Graphic Objects                                           */
 
    HWND      hWndParent;                    /* Parent Window Handle, if any                              */
+
+   PHB_ITEM  pNotifierGUI;                  /* Notifier to Wvg*Parts if embedded into a GT Window        */
 
 } HB_GTWVT, * PHB_GTWVT;
 
