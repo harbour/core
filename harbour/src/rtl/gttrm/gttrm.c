@@ -2241,7 +2241,7 @@ static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
 
 static void hb_gt_trm_SetTitle( PHB_GTTRM pTerm, const char * szTitle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTitle(%p,%d)", pTerm, iIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTitle(%p,%s)", pTerm, szTitle));
 
    if( pTerm->terminal_type == TERM_XTERM ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )

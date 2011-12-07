@@ -1,0 +1,180 @@
+/*
+ * $Id$
+ */
+
+Locking schemes used with DBF files.
+Przemyslaw Czerpak (druzus/at/poczta.onet.pl)
+
+
+Exclusive/shared modes (DENY READ, DENY WRITE) in POSIX systems.
+================================================================
+
+Exclusive modes (DENY READ, DENY WRITE) do not exist in POSIX systems.
+They can be emulated by fcntl() or flock() locks. Harbour uses flock()
+in systems where it does not create conflicts with fcntl() locks used
+to synchronize file access by different processes in shared mode.
+Currently it's enabled by default only in Linux (tests with *BSD systems
+and MacOSX showed that it interacts with fcntl locks causing deadlocks).
+On other POSIX systems Harbour uses fcntl() read and write locks at
+address 0x7fffffff (size 1) to simulate shared and exclusive mode.
+
+CLIP and FlagShip use fcntl() locks to simulate shared/exclusive modes.
+CLIP shared/exclusive flag:     0x7fffffff : 1 (the same as Harbour)
+FlagShip shared/exclusive flag: 0x7ffffbfc : 1
+
+
+
+
+File access synchronization (record and file locking) in shared mode.
+=====================================================================
+
+FlagShip uses different record and index locking schemes
+(i.e. for RLOCK it locks record area) and it is not described
+here.
+
+
+In documentation CLIP can use Clipper like or FoxPro like locking
+schemes and it can be controlled by SET LOCKSTYLE [TO] ... command
+or SET( _SET_LOCKSTYLE, 0 | 1 ) function.
+This switch only changes the RLOCK/FLOCK offset.
+For:
+   SET LOCKSTYLE [TO] CLIPPER | CLIPPER50 | CLIPPER53
+or:
+   SET( _SET_LOCKSTYLE, 0 )
+this offset is set to 1'000'000'000. This is header lock address
+and records are locked at above address + record number.
+This is compatible with standard Clipper locking.
+Commands:
+   SET LOCKSTYLE [TO] CLIPPER52 | FOXPRO | SIX
+or:
+   SET( _SET_LOCKSTYLE, 1 )
+set this offset is to 0x10000000 keeping the same algorithm
+for record locking what is incompatible with any other locking
+schemes known by me. For sure it's not compatible with [V]FP
+locking (see details about this locking scheme below).
+For more information look at CLIP source code.
+
+
+
+
+(*) In Harbour index read locks are shared on platforms which support
+    shared (read) locks.
+
+Clipper DBFNTX locking:
+=======================
+all locks are exclusive (*)
+DBF HEADER LOCK: @1000000000 : 1 (exclusive)
+DBF RECORD LOCK: @1000000000 + recNO : 1 (exclusive)
+DBF FLOCK SIZE:  1000000000
+   => maximum records: 3'294'967'295
+      maximum file size in non POSIX systems: 1'000'000'000
+
+NTX READ LOCK:   @1000000000 : 1 (exclusive)
+NTX WRITE LOCK:  @1000000000 : 1 (exclusive)
+
+In Harbour it's DB_DBFLOCK_CLIPPER.
+
+
+Clipper new DBFNTX locking (ntxlock2.obj):
+==========================================
+all locks are exclusive (*)
+DBF HEADER LOCK: @4000000000 : 1 (exclusive)
+DBF RECORD LOCK: @4000000000 + recNO : 1 (exclusive)
+DBF FLOCK SIZE:  294967295
+   => maximum records: 294'967'295
+      maximum file size in non POSIX systems: 4'000'000'000
+
+NTX READ LOCK:   @1000000000 : 1 (exclusive)
+NTX WRITE LOCK:  @1000000000 : 1 (exclusive)
+
+In Harbour it's DB_DBFLOCK_CLIPPER2.
+
+
+CL52 DBFCDX, SIX3 SIXCDX, SIX3 SIXNSX, [V]FP CDX
+================================================
+all locks are exclusive (*)
+when there is no structural index:
+DBF HEADER LOCK: @0x40000000 : 1
+DBF RECORD LOCK: @0x40000000 + record offset : 1 (some implementations
+                                                  locks whole record)
+DBF FLOCK SIZE:  0x3ffffffd
+   => maximum file size: 1'073'741'823
+
+when structural index is open:
+DBF HEADER LOCK: @0x7ffffffe : 1
+DBF RECORD LOCK: @0x7ffffffe - recNO : 1
+DBF FLOCK SIZE:  0x07ffffff
+   => maximum records: 134'217'727
+      maximum file size in non POSIX systems: 2'013'265'919
+
+index file locking is the same for production and normal indexes:
+CDX READ LOCK:   @0x7ffffffe : 1
+CDX WRITE LOCK:  @0x7ffffffe : 1
+
+In Harbour it's DB_DBFLOCK_VFP.
+
+
+CL53 DBFCDX, COMIX (hyper locking)
+==================================
+all locks are exclusive (*), in index shared locks are emulated
+
+DBF HEADER LOCK: @1000000000 : 1
+DBF RECORD LOCK: @1000000000 + recNO : 1
+DBF FLOCK SIZE:  1000000000
+   => maximum records: 1'000'000'000
+      maximum file size in non POSIX systems: 1'000'000'000
+
+CDX READ LOCK:   @0xffff0000 + random value from 0x0 to 0xffff : 1
+CDX WRITE LOCK:  @0xfffeffff : 0x10001
+    if fail then @0xfffeffff : 1
+    prepare the index modification in memory and before writing to
+    index file lock @0xffff0000 : 0x10000
+  to eliminate starvation effect caused by many readers
+  on each 16-th read lock reading process tries to lock write
+  area @0xfffeffff : 1 instead and then sets normal read lock
+
+In Harbour it's DB_DBFLOCK_COMIX.
+
+
+HARBOUR 32-bit locking
+======================
+all locks are exclusive (*), in index shared locks are emulated
+
+DBF HEADER LOCK: @4000000000 : 1 (exclusive)
+DBF RECORD LOCK: @4000000000 + recNO : 1 (exclusive)
+DBF FLOCK SIZE:  294967295
+   => maximum records: 294'967'295
+      maximum file size in non POSIX systems: 4'000'000'000
+
+CDX READ LOCK:   @0xffff0000 + random value from 0x0 to 0xffff : 1
+CDX WRITE LOCK:  @0xfffeffff : 0x10001
+    if fail then @0xfffeffff : 1
+    prepare the index modification in memory and before writing to
+    index file lock @0xffff0000 : 0x10000
+  to eliminate starvation effect caused by many readers
+  on each 16-th read lock reading process tries to lock write
+  area @0xfffeffff : 1 instead and then sets normal read lock
+
+In Harbour it's DB_DBFLOCK_HB32.
+
+
+HARBOUR 64-bit locking
+======================
+all locks are exclusive (*), in index shared locks are emulated
+
+DBF HEADER LOCK: @0x7fffffff00000001 : 1
+DBF RECORD LOCK: @0x7fffffff00000001 + recNO : 1
+DBF FLOCK SIZE:  0xfffffffeUL
+   => maximum records: 4'294'967'294
+      maximum file size: no limits created by locks
+
+CDX READ LOCK:   @0x7fffffff00000000 + random value from 0x1 to 0xffff : 1
+CDX WRITE LOCK:  @0x7fffffff00000000 : 0x10001
+    if fail then @0x7fffffff00000000 : 1
+    prepare the index modification in memory and before writing to
+    index file lock @0x7fffffff00000001 : 0x10000
+  to eliminate starvation effect caused by many readers
+  on each 16-th read lock reading process tries to lock write
+  area @0x7fffffff00000000 : 1 instead and then sets normal read lock
+
+In Harbour it's DB_DBFLOCK_HB64.

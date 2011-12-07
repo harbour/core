@@ -1,8 +1,16 @@
+harbour (3.1.0-1) unstable; urgency=low
+
+  * 3.1.0-1
+  * removed HB_BUILD_DEBUG=yes
+  * use 'dh_prep' instead of deprecated 'dh_clean -k'
+
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Wed, 07 Dec 2011 08:34:30 +0200
+
 harbour (3.0.0-1) unstable; urgency=low
 
   * 3.0.0-1
 
- -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Sun, 17 Jul 2011 22:00:00 +0200
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Sun, 17 Jul 2011 22:00:00 +0100
 
 harbour (2.0.0-1) unstable; urgency=low
 
