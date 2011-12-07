@@ -325,12 +325,12 @@ HARBOUR
    on *nix which aren't available through official package managers
    (ADS Client f.e.).
 
-   Note that Harbour is tuned to use 3rd party packages in their default,
-   unmodified ("vanilla") install layout created by their official/mainstream
-   install kits. If you manually move, rename, delete or add files
-   under the 3rd party packages' root directory, the default Harbour
-   build process (especially Windows implib generation) might not work
-   as expected.
+   Note that Harbour is tuned to use 3rd party binary packages in their 
+   default, unmodified ("vanilla") install layout created by their 
+   official/mainstream install kits. If you manually move, rename, 
+   delete or add files under the 3rd party packages' root directory, 
+   the default Harbour build process (especially Windows implib 
+   generation) might not work as expected.
 
    You can set these environment variables before starting
    the build. Make sure to adjust them to your own directories:
@@ -390,7 +390,8 @@ HARBOUR
       HB_QTPOSTFIX=
 
    Certain contribs can be instructed (when using .hbc files) to link
-   against static build of their 3rd party lib dependencies:
+   against static build of their 3rd party lib dependencies (for 
+   advanced users only):
       HB_STATIC_ALLEGRO=yes
       HB_STATIC_CURL=yes
       HB_STATIC_OPENSSL=yes
