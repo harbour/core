@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for the WVT*Classes
  *
- * Copyright 2004 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2004-2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -212,6 +212,9 @@
 #define TVN_FIRST                                 (0-400)
 #define HDM_FIRST                                 0x1200      // Header messages
 #define TCM_FIRST                                 0x1300      // Tab control messages
+#define CCM_SETBKCOLOR                            8193
+/*----------------------------------------------------------------------*/
+
 /*----------------------------------------------------------------------*/
 //
 //                   Menu Manipulation Constants
@@ -2137,6 +2140,22 @@
 #define SWP_NOCOPYBITS                            0x0100
 #define SWP_NOOWNERZORDER                         0x0200  /* Don't do owner Z ordering */
 #define SWP_NOSENDCHANGING                        0x0400  /* Don't send WM_WINDOWPOSCHANGING */
+
+/*----------------------------------------------------------------------*/
+
+#define PBM_SETRANGE                             (WM_USER+1)
+#define PBM_SETPOS                               (WM_USER+2)
+#define PBM_DELTAPOS                             (WM_USER+3)
+#define PBM_SETSTEP                              (WM_USER+4)
+#define PBM_STEPIT                               (WM_USER+5)
+#define PBM_SETRANGE32                           1030
+#define PBM_GETRANGE                             1031
+#define PBM_GETPOS                               1032
+#define PBM_SETBARCOLOR                          1033
+#define PBM_SETBKCOLOR                           CCM_SETBKCOLOR
+
+#define PBS_SMOOTH                               1
+#define PBS_VERTICAL                             4
 
 /*----------------------------------------------------------------------*/
 #endif

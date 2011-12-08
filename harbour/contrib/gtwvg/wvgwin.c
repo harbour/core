@@ -120,21 +120,23 @@ static HINSTANCE wvg_hInstance( void )
 
 HB_FUNC( WVG_SENDMESSAGE )
 {
-   LPTSTR cText = HB_ISBYREF( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
+   LPTSTR cText = HB_ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
 
    hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                        ( UINT ) hb_parni( 2 ),
                                        ( ! HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                       ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
-                                                               ( HB_ISCHAR( 4 ) ? ( LPARAM ) ( LPSTR ) hb_parc( 4 ) :
-                                                                 ( LPARAM ) hb_parnint( 4 ) ) ) ) )
+                                       ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM )( LPSTR ) cText :
+                                                                 ( LPARAM ) hb_parnint( 4 ) ) ) )
              );
 
    if( cText )
    {
-      char * szText = HB_TCHAR_CONVFROM( cText );
-      hb_storc( szText, 4 );
-      HB_TCHAR_FREE( szText );
+      if( HB_ISBYREF( 4 ) )
+      {
+         char * szText = HB_TCHAR_CONVFROM( cText );
+         hb_storc( szText, 4 );
+         HB_TCHAR_FREE( szText );
+      }   
       HB_TCHAR_FREE( cText );
    }
 }
