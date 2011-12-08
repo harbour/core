@@ -268,10 +268,8 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   getPosAndSize( aPs, aSz )
    METHOD   isParentCrt()                         INLINE ( __objGetClsName( ::oParent ) == "WVGCRT" )
    METHOD   rePosition()
-#if 1
    METHOD   createControl()
-   METHOD   controlWndProc( hWnd, nMessage, nwParam, nlParam )
-#endif
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1388,126 +1386,6 @@ METHOD WvgWindow:createControl()
    ENDIF
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD WvgWindow:controlWndProc( hWnd, nMessage, nwParam, nlParam )
-   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
-
-   SWITCH nMessage
-
-   CASE WM_ERASEBKGND
-      IF ::objType == objTypeDA .AND. ! empty( ::hBrushBG )
-         ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
-      ENDIF
-      EXIT
-
-   CASE WM_COMMAND
-      nCtrlID   := WVG_LOWORD( nwParam )
-      nNotifctn := WVG_HIWORD( nwParam )
-      hWndCtrl  := nlParam
-
-      IF hWndCtrl == 0                            /* It is menu */
-         IF hb_isObject( ::oMenu )
-            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
-               IF hb_isBlock( aMenuItem[ 2 ] )
-                  Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
-
-               ELSEIF hb_isBlock( aMenuItem[ 3 ] )
-                  Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
-
-               ENDIF
-            ENDIF
-         ENDIF
-         RETURN 0
-      ELSE
-         IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-            nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
-            IF hb_isNumeric( nReturn ) .AND. nReturn == 0
-               RETURN 0
-            ENDIF
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE WM_NOTIFY
-      IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-         IF hb_isNumeric( nReturn ) .AND. nReturn == EVENT_HANDELLED
-            RETURN 0
-         ELSEIF hb_isLogical( nReturn )
-            RETURN nReturn
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE WM_CTLCOLORLISTBOX
-   CASE WM_CTLCOLORMSGBOX
-   CASE WM_CTLCOLOREDIT
-   CASE WM_CTLCOLORBTN
-   CASE WM_CTLCOLORDLG
-   CASE WM_CTLCOLORSCROLLBAR
-   CASE WM_CTLCOLORSTATIC
-      oObj := ::findObjectByHandle( nlParam )
-      IF hb_isObject( oObj )
-         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
-         IF nReturn == EVENT_UNHANDELLED
-            RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
-         ELSE
-            RETURN nReturn
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE WM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } )
-      RETURN 0
-
-   CASE WM_VSCROLL
-      IF ::handleEvent( HB_GTE_VSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } ) == EVENT_HANDELLED
-         RETURN 0
-      ENDIF
-      EXIT
-
-   CASE WM_CAPTURECHANGED
-      EXIT
-#if 0
-   CASE WM_MOUSEMOVE
-      IF ::objType == objTypeScrollBar
-         IF ! ::lTracking
-            ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE WM_MOUSEHOVER
-      IF ::objType == objTypeScrollBar
-         IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:pWnd )
-         ENDIF
-         RETURN 0
-      ENDIF
-      EXIT
-
-   CASE WM_MOUSELEAVE
-      IF ::objType == objTypeScrollBar
-         ::lTracking := .f.
-         IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:pWnd )
-         ENDIF
-      ENDIF
-      EXIT
-#endif
-
-   OTHERWISE
-      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } ) == EVENT_HANDELLED
-         RETURN 0
-      ENDIF
-      EXIT
-
-   ENDSWITCH
-
-   RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 /*----------------------------------------------------------------------*/
 

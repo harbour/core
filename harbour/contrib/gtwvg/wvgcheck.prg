@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
 
    DATA     autosize                              INIT .F.
@@ -108,11 +102,11 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
+METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX /*+ BS_NOTIFY */
+   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX + BS_NOTIFY
    ::className   := "BUTTON"
    ::objType     := objTypeCheckBox
 
@@ -120,17 +114,17 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheck
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
+METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
-   IF ::isParentCrt()
-      ::SetWindowProcCallback()
-   ENDIF
+#if 0
+   ::SetWindowProcCallback() /* Left to the parent for event processing */
+#endif
 
    IF ::visible
       ::show()
@@ -147,40 +141,43 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
-   LOCAL hDC
-
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    DO CASE
 
    CASE nMessage == HB_GTE_RESIZED
-      ::sendMessage( WM_SIZE, 0, 0 )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
+      ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
          IF hb_isBlock( ::sl_lbClick )
-            eval( ::sl_lbClick, ::editBuffer, NIL, self )
-            RETURN 0
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            eval( ::sl_lbClick, ::editBuffer, NIL, Self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+//            RETURN EVENT_HANDELLED
          ENDIF
       ENDIF
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      hDC := aNM[ 1 ]
       IF hb_isNumeric( ::clr_FG )
-         WVG_SetTextColor( hDC, ::clr_FG )
+         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( hDC, 1 )
+         WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN WVG_GetCurrentBrush( hDC )
+         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
+#if 0  /* This should never be reached as parent is processing the events */
    CASE nMessage == HB_GTE_ANY
       IF ::isParentCrt()
          IF aNM[ 1 ] == WM_LBUTTONUP
@@ -192,6 +189,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
             ENDIF
          ENDIF
       ENDIF
+#endif
 
    ENDCASE
 
@@ -199,25 +197,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgCheckBox
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
-
+METHOD WvgCheckBox:destroy()
    ::wvgWindow:destroy()
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
-
+METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setCaption( xCaption ) CLASS WvgCheckBox
+METHOD WvgCheckBox:setCaption( xCaption )
 
    IF hb_isChar( xCaption )
       ::caption := xCaption

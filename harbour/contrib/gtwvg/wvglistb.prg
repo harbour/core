@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgListBox  INHERIT  WvgWindow, DataRef
 
    DATA     adjustHeight                          INIT .F.
@@ -146,7 +140,7 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
+METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -159,7 +153,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListB
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
+METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -172,13 +166,14 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
    IF ::multiColumn
       ::style += LBS_MULTICOLUMN
    ENDIF
+   ::style += LBS_NOTIFY
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
-
-   ::SetWindowProcCallback()
-
+#if 0
+   ::SetWindowProcCallback()   /* Let parent handle the notifications otherwise remove LBS_NOTIFY bit */
+#endif
    IF ::visible
       ::show()
    ENDIF
@@ -188,7 +183,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
+METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    DO CASE
 
@@ -199,18 +194,36 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
+uiDebug( "listbox:command", aNM[1], aNM[2], aNM[3], LBN_SELCHANGE, LBN_DBLCLK )
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := WVG_LBGetCurSel( ::hWnd )+ 1
          IF hb_isBlock( ::sl_itemMarked )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
             eval( ::sl_itemMarked, NIL, NIL, self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+            RETURN EVENT_UNHANDELLED
          ENDIF
 
       ELSEIF aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF hb_isBlock( ::sl_itemSelected )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
             eval( ::sl_itemSelected, NIL, NIL, self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+            RETURN EVENT_UNHANDELLED
          ENDIF
       ENDIF
+
+   CASE nMessage == HB_GTE_NOTIFY
+uiDebug( "listbox:notify", aNM[1], aNM[2], aNM[3] )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
@@ -270,13 +283,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
+METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgListBox
+METHOD WvgListBox:destroy()
    ::WvgWindow:destroy()
    RETURN NIL
 

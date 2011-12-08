@@ -319,7 +319,7 @@ STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {|m1,m2,o| m1:=m1, m2:=m2, BrwShowColumn( oBrw, upper( trim( o:getData() ) ) ) }
-   oXbp:tooltipText := "Typein a FieldName to focus it!"
+   oXbp:tooltipText := "Type in a field name and press ENTER"
 
    RETURN NIL
 
@@ -337,7 +337,7 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
       oXbp:addItem( oBrw:getColumn( i ):heading )
    NEXT
    oXbp:setData( 3 )
-   oXbp:tooltipText := "Click on a FieldName to make it active!"
+   oXbp:tooltipText := "Click on a field name to make it active!"
 
    RETURN oXbp
 
@@ -353,7 +353,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw )
    oXbp:create( , , { -3,-1 }, { -1,-7 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
-   oXbp:tooltipText := "Checked: GoBottom, Unchecked: GoTop"
+   oXbp:tooltipText := "Checked: GoTop, Unchecked: GoBottom"
 
    RETURN NIL
 

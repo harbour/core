@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgStatic  INHERIT  WvgWindow
 
    DATA     autoSize                              INIT .F.
@@ -105,7 +99,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
+METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -120,7 +114,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
+METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -246,7 +240,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
 /*----------------------------------------------------------------------*/
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
+METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    DO CASE
 
@@ -256,9 +250,9 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
       ENDIF
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
-         aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-         RETURN EVENT_HANDELLED
       ENDIF
+      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
@@ -271,10 +265,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
+#if 0   /* It should never reach here */
    CASE nMessage == HB_GTE_ANY
-      IF ::IsParentCrt()
+      IF ::isParentCrt()
 
       ENDIF
+#endif
 
    ENDCASE
 
@@ -282,7 +278,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS WvgStatic
+METHOD WvgStatic:destroy()
 
    IF ::hBitmap <> nil
       WVG_DeleteObject( ::hBitmap )
@@ -293,13 +289,13 @@ METHOD destroy() CLASS WvgStatic
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
+METHOD WvgStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setCaption( xCaption, cDll )
+METHOD WvgStatic:setCaption( xCaption, cDll )
 
    HB_SYMBOL_UNUSED( cDll )
 

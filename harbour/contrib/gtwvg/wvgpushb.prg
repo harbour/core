@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgPushButton  INHERIT  WvgWindow
 
    DATA     autosize                              INIT .F.
@@ -114,7 +108,7 @@ METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON  /* + BS_NOTIFY + BS_PUSHLIKE */
+   ::style       := WS_CHILD + BS_PUSHBUTTON  + BS_NOTIFY /* + BS_PUSHLIKE */
    ::className   := "BUTTON"
    ::objType     := objTypePushButton
 
@@ -139,13 +133,12 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::style += BS_FLAT
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
-
-//   IF ::isParentCrt()
-      ::SetWindowProcCallback()
-//   ENDIF
+#if 0
+   ::SetWindowProcCallback()  /* Let parent take control of it */
+#endif
 
    IF ::visible
       ::show()
@@ -172,8 +165,17 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
-      IF hb_isBlock( ::sl_lbClick )
-         eval( ::sl_lbClick, NIL, NIL, self )
+      IF aNM[ 1 ] == BN_CLICKED
+         IF hb_isBlock( ::sl_lbClick )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            eval( ::sl_lbClick, NIL, NIL, self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+         ENDIF
+         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -188,6 +190,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
          RETURN ::hBrushBG
       ENDIF
 
+#if 0  /* Must not reach here if WndProc is not installed */
    CASE nMessage == HB_GTE_ANY
       IF aNM[ 1 ] == WM_LBUTTONUP
          IF hb_isBlock( ::sl_lbClick )
@@ -197,7 +200,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
             eval( ::sl_lbClick, NIL, NIL, Self )
          ENDIF
       ENDIF
-
+#endif
    ENDCASE
 
    RETURN EVENT_UNHANDELLED

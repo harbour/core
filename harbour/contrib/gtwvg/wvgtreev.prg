@@ -162,7 +162,9 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::createControl()
 
-   // ::SetWindowProcCallback()  /* Let parent control the events */
+#if 0
+   ::SetWindowProcCallback()  /* Let parent control the events because all notifications are posted via WM_NOTIFY */
+#endif
 
    ::oRootItem       := WvgTreeViewItem():New()
    ::oRootItem:hTree := ::hWnd
@@ -177,31 +179,8 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgTreeView:getSelectionInfo( nlParam )
-   LOCAL hItemSelected, hParentOfSelected
-   LOCAL cParent := space( 20 )
-   LOCAL cText   := space( 20 )
-   LOCAL n
-
-   Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
-
-   ::hParentSelected    := hParentOfSelected
-   ::hItemSelected      := hItemSelected
-   ::textParentSelected := trim( cParent )
-   ::textItemSelected   := trim( cText   )
-
-   IF ( n := ascan( ::aItems, {|o| o:hItem == hItemSelected } ) ) > 0
-      ::oItemSelected      := ::aItems[ n ]
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD WvgTreeView:handleEvent( nMessage, aNM )
    LOCAL aHdr
-
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -237,7 +216,6 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
       CASE aHdr[ NMH_code ] == TVN_SELCHANGED
          ::getSelectionInfo( aNM[ 2 ] )
-
          IF hb_isBlock( ::sl_itemMarked )
             Eval( ::sl_itemMarked, ::oItemSelected, { 0,0,0,0 }, Self )
          ENDIF
@@ -249,31 +227,38 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       ENDCASE
       EXIT
 
+#if 0  /* It must never reach here */
    CASE HB_GTE_ANY
-      IF ::isParentCrt()
-         IF aNM[ 1 ] == WM_LBUTTONUP
-            ::getSelectionInfo( aNM[ 2 ] )
-            IF hb_isBlock( ::sl_lbClick )
+      IF aNM[ 1 ] == WM_LBUTTONDOWN
+         aHdr := Wvg_GetNMTreeViewInfo( aNM[ 3 ] )
+         ::getSelectionInfo( aNM[ 2 ] )
+         IF hb_isBlock( ::sl_lbClick )
+            IF ::isParentCrt()
                ::oParent:setFocus()
-               eval( ::sl_lbClick, NIL, NIL, Self )
+            ENDIF
+            eval( ::sl_lbClick, NIL, NIL, Self )
+            IF ::isParentCrt()
                ::setFocus()
             ENDIF
-
-         ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK
-            ::editBuffer := ::oItemSelected
-            IF hb_isBlock( ::sl_itemSelected )
-               ::oParent:setFocus()
-               Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
-               ::setFocus()
-            ENDIF
-
-         ELSEIF aNM[ 1 ] == WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER
-            ::getSelectionInfo( aNM[ 2 ] )
-
          ENDIF
+         RETURN EVENT_HANDELLED
+
+      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
+         ::editBuffer := ::oItemSelected
+         IF hb_isBlock( ::sl_itemSelected )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
+            Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
+         ENDIF
+         RETURN .f.
+
       ENDIF
       EXIT
-
+#endif
    ENDSWITCH
 
    RETURN EVENT_UNHANDELLED
@@ -281,27 +266,40 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 /*----------------------------------------------------------------------*/
 
 METHOD WvgTreeView:destroy()
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
-
    ::wvgWindow:destroy()
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgTreeView:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgTreeView:getSelectionInfo( nlParam )
+   LOCAL hItemSelected, hParentOfSelected
+   LOCAL cParent := space( 20 )
+   LOCAL cText   := space( 20 )
+   LOCAL n
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
+
+   ::hParentSelected    := hParentOfSelected
+   ::hItemSelected      := hItemSelected
+   ::textParentSelected := trim( cParent )
+   ::textItemSelected   := trim( cText   )
+
+   IF ( n := ascan( ::aItems, {|o| o:hItem == hItemSelected } ) ) > 0
+      ::oItemSelected      := ::aItems[ n ]
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
+METHOD WvgTreeView:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD WvgTreeView:itemFromPos( aPos )
-
    HB_SYMBOL_UNUSED( aPos )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

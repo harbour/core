@@ -96,6 +96,7 @@ CLASS WvgPartHandler
    METHOD   setParent( oWvg )
 
    METHOD   notifier( nEvent, xParams )
+   METHOD   controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    DATA     aChildren                             INIT    {}
    DATA     nNameId
@@ -241,7 +242,9 @@ METHOD WvgPartHandler:setParent( oWvg )
    RETURN oOldXbp
 
 /*----------------------------------------------------------------------*/
-
+/*
+   This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
+*/
 METHOD WvgPartHandler:notifier( nEvent, xParams )
    Local aPos, aMenuItem, nIndex, nCtrlID, oObj
    LOCAL nReturn := 0
@@ -261,67 +264,67 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
       CASE WM_MOUSEHOVER
          IF hb_isBlock( ::sl_enter )
-            eval( ::sl_enter, aPos, NIL, self )
+            eval( ::sl_enter, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSELEAVE
          IF hb_isBlock( ::sl_leave )
-            eval( ::sl_leave, aPos, NIL, self )
+            eval( ::sl_leave, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONDOWN
          IF hb_isBlock( ::sl_rbDown )
-            eval( ::sl_rbDown, aPos, NIL, self )
+            eval( ::sl_rbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONDOWN
          IF hb_isBlock( ::sl_lbDown )
-            eval( ::sl_lbDown, aPos, NIL, self )
+            eval( ::sl_lbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONUP
          IF hb_isBlock( ::sl_rbUp )
-            eval( ::sl_rbUp, aPos, NIL, self )
+            eval( ::sl_rbUp, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONUP
          IF hb_isBlock( ::sl_lbUp )
-            eval( ::sl_lbUp, aPos, NIL, self )
+            eval( ::sl_lbUp, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONDBLCLK
          IF hb_isBlock( ::sl_rbDblClick )
-            eval( ::sl_rbDblClick, aPos, NIL, self )
+            eval( ::sl_rbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONDBLCLK
          IF hb_isBlock( ::sl_lbDblClick )
-            eval( ::sl_lbDblClick, aPos, NIL, self )
+            eval( ::sl_lbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONDOWN
          IF hb_isBlock( ::sl_mbDown )
-            eval( ::sl_mbDown, aPos, NIL, self )
+            eval( ::sl_mbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONUP
          IF hb_isBlock( ::sl_mbClick )
-            eval( ::sl_mbClick, aPos, NIL, self )
+            eval( ::sl_mbClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONDBLCLK
          IF hb_isBlock( ::sl_mbDblClick )
-            eval( ::sl_mbDblClick, aPos, NIL, self )
+            eval( ::sl_mbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSEMOVE
          IF hb_isBlock( ::sl_motion )
-            eval( ::sl_motion, aPos, NIL, self )
+            eval( ::sl_motion, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSEWHEEL
          IF hb_isBlock( ::sl_wheel )
-            eval( ::sl_wheel, aPos, NIL, self )
+            eval( ::sl_wheel, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_NCMOUSEMOVE
@@ -388,17 +391,6 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
       ENDCASE
 
-   CASE nEvent == HB_GTE_RESIZED
-      IF ::objType == objTypeDialog
-         IF ::drawingArea:objType == objTypeDA
-            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .f. )
-         ENDIF
-      ENDIF
-      IF hb_isBlock( ::sl_resize )
-         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
-      ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-
    CASE nEvent == HB_GTE_NOTIFY
       nCtrlID := xParams[ 1 ]
       IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
@@ -437,8 +429,142 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
          ENDIF
       ENDIF
 
+   CASE nEvent == HB_GTE_RESIZED
+      IF ::objType == objTypeDialog
+         IF ::drawingArea:objType == objTypeDA
+            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .f. )
+         ENDIF
+      ENDIF
+      IF hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+      ENDIF
+      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+
    ENDCASE
 
    RETURN nReturn
 
 /*----------------------------------------------------------------------*/
+/*
+  This will be called if a control is assigned its own WndProc via ::SetWindowProcCallback()
+*/
+METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
+   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
+
+   SWITCH nMessage
+
+   CASE WM_ERASEBKGND
+      IF ::objType == objTypeDA .AND. ! empty( ::hBrushBG )
+         ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+      ENDIF
+      EXIT
+
+   CASE WM_COMMAND
+      nCtrlID   := WVG_LOWORD( nwParam )
+      nNotifctn := WVG_HIWORD( nwParam )
+      hWndCtrl  := nlParam
+
+      IF hWndCtrl == 0                            /* It is menu */
+         IF hb_isObject( ::oMenu )
+            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
+               IF hb_isBlock( aMenuItem[ 2 ] )
+                  Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ELSEIF hb_isBlock( aMenuItem[ 3 ] )
+                  Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ENDIF
+            ENDIF
+         ENDIF
+         RETURN 0
+      ELSE
+         IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+            nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
+            IF hb_isNumeric( nReturn ) .AND. nReturn == 0
+               RETURN 0
+            ENDIF
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_NOTIFY
+      IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
+         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
+         IF hb_isNumeric( nReturn ) .AND. nReturn == EVENT_HANDELLED
+            RETURN 0
+         ELSEIF hb_isLogical( nReturn )
+            RETURN nReturn
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_CTLCOLORLISTBOX
+   CASE WM_CTLCOLORMSGBOX
+   CASE WM_CTLCOLOREDIT
+   CASE WM_CTLCOLORBTN
+   CASE WM_CTLCOLORDLG
+   CASE WM_CTLCOLORSCROLLBAR
+   CASE WM_CTLCOLORSTATIC
+      oObj := ::findObjectByHandle( nlParam )
+      IF hb_isObject( oObj )
+         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+         IF nReturn == EVENT_UNHANDELLED
+            RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+         ELSE
+            RETURN nReturn
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_HSCROLL
+      ::handleEvent( HB_GTE_HSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } )
+      RETURN 0
+
+   CASE WM_VSCROLL
+      IF ::handleEvent( HB_GTE_VSCROLL, { WVG_LOWORD( nwParam ), WVG_HIWORD( nwParam ), nlParam } ) == EVENT_HANDELLED
+         RETURN 0
+      ENDIF
+      EXIT
+
+   CASE WM_CAPTURECHANGED
+      EXIT
+#if 0
+   CASE WM_MOUSEMOVE
+      IF ::objType == objTypeScrollBar
+         IF ! ::lTracking
+            ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_MOUSEHOVER
+      IF ::objType == objTypeScrollBar
+         IF ::oParent:objType == objTypeCrt
+            WAPI_SetFocus( ::oParent:pWnd )
+         ENDIF
+         RETURN 0
+      ENDIF
+      EXIT
+
+   CASE WM_MOUSELEAVE
+      IF ::objType == objTypeScrollBar
+         ::lTracking := .f.
+         IF ::oParent:objType == objTypeCrt
+            WAPI_SetFocus( ::oParent:pWnd )
+         ENDIF
+      ENDIF
+      EXIT
+#endif
+
+   OTHERWISE
+      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } ) == EVENT_HANDELLED
+         RETURN 0
+      ENDIF
+      EXIT
+
+   ENDSWITCH
+
+   RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+
+/*----------------------------------------------------------------------*/
+

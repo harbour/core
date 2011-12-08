@@ -2265,7 +2265,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       case WM_COMMAND:
       {
-         if( HIWORD( wParam ) == 0 )
+         if( ( HIWORD( wParam ) == 0 && ! IsWindow( ( HWND ) lParam ) ) )
          {
             if( pWVT->pPP->iWndType == HB_WNDTYPE_CRT )
             {
@@ -2278,8 +2278,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
             int iLo, iHi;
 
-            iLo = LOWORD( wParam );
             iHi = HIWORD( wParam );
+            iLo = LOWORD( wParam );
 
             hb_arrayNew( pEvParams, 3 );
             hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
