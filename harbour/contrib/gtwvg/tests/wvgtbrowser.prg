@@ -263,7 +263,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
-   oTree:create( , , { -25, -1 }, { -8, -10 } )
+   oTree:create( , , { -25, -1 }, { {|| -( maxrow()-1-25 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
    oTree:itemSelected := {|oItem| WVG_MessageBox( , iif( oItem <> NIL, oItem:caption, "Some Problem" ) ) }
