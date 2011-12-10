@@ -204,8 +204,6 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 METHOD WvgToolBar:handleEvent( nMessage, aNM )
    LOCAL nObj, aNMMouse
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
-
    SWITCH nMessage
 
    CASE HB_GTE_RESIZED
@@ -226,6 +224,9 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
       CASE aNMMouse[ NMH_code ] == NM_CLICK
          IF ( nObj := ascan( ::aItems, {|e_| e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
             IF hb_isBlock( ::sl_lbClick )
+               IF ::isParentCrt()
+                  ::oParent:setFocus()
+               ENDIF
                Eval( ::sl_lbClick, ::aItems[ nObj,2 ], NIL, Self )
 
             ENDIF
@@ -246,8 +247,6 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
 METHOD WvgToolBar:destroy()
    LOCAL i, nItems
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -295,7 +294,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    HB_SYMBOL_UNUSED( cDLL )
 
    /* Issue this at the begining of first item */
-   IF !( ::lSized )
+   IF ! ::lSized
       #if 0
       ::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
       #endif
@@ -323,7 +322,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    ENDCASE
 
-   IF !empty( pBitmap )
+   IF ! empty( pBitmap )
       /* oBtn:image := pBitmap */
 
       IF !empty( nMapRGB )

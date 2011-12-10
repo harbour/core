@@ -136,7 +136,7 @@ HB_FUNC( WVG_SENDMESSAGE )
          char * szText = HB_TCHAR_CONVFROM( cText );
          hb_storc( szText, 4 );
          HB_TCHAR_FREE( szText );
-      }   
+      }
       HB_TCHAR_FREE( cText );
    }
 }
@@ -378,7 +378,7 @@ HB_FUNC( WVG_LOADICON )
 
 /*----------------------------------------------------------------------*/
 /*
- *  Win_LoadImage( ncImage, nSource ) -> hImage
+ *  Win_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
  *    nSource == 0 ResourceIdByNumber
  *    nSource == 1 ResourceIdByName
  *    nSource == 2 ImageFromDiskFile
@@ -391,19 +391,19 @@ HB_FUNC( WVG_LOADIMAGE )
 
    switch( iSource )
    {
-      case 0:
+      case 0:   /* Image from resource by numeric id */
          hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
-      case 1:
+      case 1:   /* image from resource by name */
          hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
          break;
 
-      case 2:
+      case 2:   /* Image from disk file */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+            hImage = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
          else
-            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
          break;
    }
 

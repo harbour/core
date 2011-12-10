@@ -983,6 +983,7 @@ static HB_BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT )
 static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
 {
    pWVT->bMaximized = HB_TRUE;
+   SetFocus( pWVT->hWnd );
    hb_gt_wvt_FitSizeRows( pWVT );
 
    /* Disable "maximize" button */
@@ -2204,6 +2205,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             ShowWindow( pWVT->hWnd, SW_NORMAL );
          }
          pWVT->bResizing = HB_TRUE;
+         SetFocus( hWnd );
          return 0;
 
       case WM_EXITSIZEMOVE:

@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
 
    DATA     alwaysShowSelection                   INIT .F.
@@ -217,7 +211,13 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       CASE aHdr[ NMH_code ] == TVN_SELCHANGED
          ::getSelectionInfo( aNM[ 2 ] )
          IF hb_isBlock( ::sl_itemMarked )
+            IF ::isParentCrt()
+               ::oParent:setFocus()
+            ENDIF
             Eval( ::sl_itemMarked, ::oItemSelected, { 0,0,0,0 }, Self )
+            IF ::isParentCrt()
+               ::setFocus()
+            ENDIF
          ENDIF
          RETURN .t.
 

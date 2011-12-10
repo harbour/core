@@ -243,16 +243,14 @@ STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
    IF i < nCur
       FOR j := nCur-1 TO i STEP -1
          oBrw:left()
-         oBrw:refreshCurrent()
-         oBrw:forceStable()
       NEXT
    ELSEIF i > nCur
       FOR j := nCur+1 TO i
          oBrw:right()
-         oBrw:refreshCurrent()
-         oBrw:forceStable()
       NEXT
    ENDIF
+   oBrw:refreshCurrent()
+   oBrw:forceStable()
 
    RETURN NIL
 
