@@ -20,6 +20,7 @@ DOC_FILES := \
    howtorel.txt \
    howtosvn.txt \
    inet.txt \
+   locks.txt \
    pcode.txt \
    pp.txt \
    pragma.txt \

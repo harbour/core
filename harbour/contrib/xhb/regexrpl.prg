@@ -64,24 +64,22 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
    //LOCAL nEnd
 
    aMatches := HB_RegExAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
+   cReturn := cString
 
    IF ! Empty( aMatches )
-      cReturn := cString
       FOR EACH aMatch IN aMatches
-          //TraceLog( "ValToPrg( aMatch ), cReturn", ValToPrg( aMatch ), cReturn )
-          IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
-             cSearch := aMatch[ MATCH_STRING ]
-             nStart  := aMatch[ MATCH_START ]
-             //nEnd    := aMatch[ MATCH_END ]
-             nLenSearch  := Len( cSearch ) //nEnd - nStart + 1
-             nLenReplace := Len( cReplace )
-             //TraceLog( "SubStr( cString, nStart, nLenSearch )", ;
-             //          SubStr( cString, nStart - nOffSet, nLenSearch ) )
-             cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
-             nOffSet += nLenSearch - nLenReplace
-             //TraceLog( "cSearch, nStart, nEnd, nLenSearch, nLenReplace, nOffSet, cReturn",;
-             //          cSearch, nStart, nEnd, nLenSearch, nLenReplace, nOffSet, cReturn )
-          ENDIF
+         IF ValType( aMatch ) == "A" .AND. Len( aMatch ) == 1 .AND. ;
+            ValType( aMatch[1] ) == "A"
+            aMatch := aMatch[1]
+         ENDIF
+         IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
+            cSearch := aMatch[ MATCH_STRING ]
+            nStart  := aMatch[ MATCH_START ]
+            nLenSearch  := Len( cSearch )
+            nLenReplace := Len( cReplace )
+            cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
+            nOffSet += nLenSearch - nLenReplace
+         ENDIF
       NEXT
 
    ENDIF

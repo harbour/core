@@ -48,7 +48,7 @@ Commands:
    SET LOCKSTYLE [TO] CLIPPER52 | FOXPRO | SIX
 or:
    SET( _SET_LOCKSTYLE, 1 )
-set this offset is to 0x10000000 keeping the same algorithm
+set this offset to 0x10000000 keeping the same algorithm
 for record locking what is incompatible with any other locking
 schemes known by me. For sure it's not compatible with [V]FP
 locking (see details about this locking scheme below).
