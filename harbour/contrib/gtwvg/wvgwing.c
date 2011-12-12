@@ -118,12 +118,13 @@
 
 /*----------------------------------------------------------------------*/
 
-#define wvg_parwparam( n )    ( ( WPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parlparam( n )    ( ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parwndproc( n )   ( ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhdc( n )       ( ( HDC ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwparam( n )    ( ( WPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parlparam( n )    ( ( LPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhandle( n )    ( ( HANDLE )   ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhwnd( n )      ( ( HWND )     ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwndproc( n )   ( ( WNDPROC )  ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhbrush( n )    ( ( HBRUSH )   ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhdc( n )       ( ( HDC )      ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parcolor( n )     ( ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( n ) )
 
 #define wvg_rethandle( n )    ( hb_retnint( ( HB_PTRDIFF ) n ) )
@@ -1181,7 +1182,7 @@ HB_FUNC( WVG_FILLRECT )
    rc.right   = hb_parvni( 2, 3 );
    rc.bottom  = hb_parvni( 2, 4 );
 
-   FillRect( hbwapi_par_raw_HDC( 1 ), &rc, hbwapi_par_raw_HBRUSH( 3 ) );
+   FillRect( wvg_parhdc( 1 ), &rc, wvg_parhbrush( 3 ) );
 }
 
 /*----------------------------------------------------------------------*/
