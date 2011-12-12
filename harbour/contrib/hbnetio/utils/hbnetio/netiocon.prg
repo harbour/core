@@ -77,8 +77,8 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    nHistIndex := Len( aHistory ) + 1
 
    hCommands  := { ;
-      "?"    => { "", "Synonym for 'help'." , {|| ShowHelp() } } ,;
-      "help" => { "", "Display this help."  , {|| ShowHelp() } } ,;
+      "?"    => { "", "Synonym for 'help'." , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } } ,;
+      "help" => { "", "Display this help."  , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } } ,;
       "quit" => { "", "Exit console."       , {|| lQuit := .T. } } }
 
    lQuit := .F.
@@ -189,16 +189,27 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
 
    RETURN
 
-STATIC PROCEDURE ShowHelp()
+STATIC PROCEDURE ShowHelp( hCommands )
    LOCAL aTexts := {}
    LOCAL n, c, m
 
+   m := 8
+   hb_HEval( hCommands, {| k, l | m := Max( m, Len( k + iif( Empty( l[ 1 ] ), "", " " + l[ 1 ] ) ) ) } )
+
+   AAdd( aTexts, "Commands:" )
+
+   /* Processing commands */
+   FOR EACH n IN hCommands
+      AAdd( aTexts, " " + PadR( n:__enumKey() + iif( Empty( n[ 1 ] ), "", " " + n[ 1 ] ), m ) + " - " + n[ 2 ] )
+   NEXT
    AAdd( aTexts, "" )
+
    AAdd( aTexts, "Keyboard shortcuts:" )
    AAdd( aTexts, PadR( " <Up>", m )    + "  - Move up on historic list." )
    AAdd( aTexts, PadR( " <Down>", m )  + "  - Move down on historic list." )
    AAdd( aTexts, PadR( " <Tab>", m )   + "  - Complete command." )
    AAdd( aTexts, PadR( " <Alt+V>", m ) + "  - Paste from clipboard." )
+   AAdd( aTexts, "" )
 
    c := 0
    m := MaxRow()
