@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgSLE INHERIT WvgWindow, DataRef
 
    DATA     align                                 INIT WVGSLE_LEFT
@@ -155,7 +149,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
    IF ::autoSize
 
    ENDIF
-   IF !::editable
+   IF ! ::editable
       ::style += ES_READONLY
    ENDIF
    IF ::unReadable
@@ -188,13 +182,11 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
-
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
       IF ::isParentCrt()
+         ::oParent:setFocus()
          ::rePosition()
-         ::oParent:sendMessage( WM_SETFOCUS, 0, 0 )
       ENDIF
       ::sendMessage( WM_SIZE, 0, 0 )
 
@@ -230,31 +222,36 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       ENDIF
 
    CASE nMessage == HB_GTE_ANY
-      IF ::IsParentCrt()
-         DO CASE
-         CASE aNM[ NMH_code ] == WM_KILLFOCUS
-            IF hb_isBlock( ::sl_killInputFocus )
-               eval( ::sl_killInputFocus, NIL, NIL, Self )
-            ENDIF
+      DO CASE
+      CASE aNM[ NMH_code ] == WM_KILLFOCUS
+         IF hb_isBlock( ::sl_killInputFocus )
+            eval( ::sl_killInputFocus, NIL, NIL, Self )
+         ENDIF
 
-         CASE aNM[ NMH_code ] == WM_SETFOCUS
-            IF hb_isBlock( ::sl_setInputFocus )
-               eval( ::sl_setInputFocus, NIL, NIL, Self )
-            ENDIF
+      CASE aNM[ NMH_code ] == WM_SETFOCUS
+         IF hb_isBlock( ::sl_setInputFocus )
+            eval( ::sl_setInputFocus, NIL, NIL, Self )
+         ENDIF
 
-         CASE aNM[ NMH_code ] == WM_KEYDOWN
-            IF aNM[ 2 ] == K_ENTER
+      CASE aNM[ NMH_code ] == WM_KEYDOWN
+         IF aNM[ 2 ] == K_ENTER
+            IF ::isParentCrt()
                ::oParent:setFocus()
-               IF hb_isBlock( ::sl_returnPressed )
-                  eval( ::sl_returnPressed, NIL, NIL, Self )
-               ENDIF
-            ELSEIF aNM[ 2 ] == VK_TAB
+            ENDIF
+            IF hb_isBlock( ::sl_returnPressed )
+               eval( ::sl_returnPressed, NIL, NIL, Self )
+            ENDIF
+         ELSEIF aNM[ 2 ] == VK_TAB
+            IF ::isParentCrt()
                ::oParent:setFocus()
                RETURN EVENT_HANDELLED
             ENDIF
+         ELSEIF aNM[ 2 ] == 65
+uiDebug( "edit",65  )
+            RETURN EVENT_HANDELLED
+         ENDIF
 
-         ENDCASE
-      ENDIF
+      ENDCASE
 
    ENDCASE
 

@@ -454,7 +454,7 @@ function WvtLines()
 
 FUNCTION BuildMainMenu()
    LOCAL oMenu
-   LOCAL g_oMenuBar := SetAppWindow():menuBar()
+   LOCAL g_oMenuBar := WvgSetAppWindow():menuBar()
 
    oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
    oMenu:Caption:= "Wvt*Classes"

@@ -194,7 +194,6 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-uiDebug( "listbox:command", aNM[1], aNM[2], aNM[3], LBN_SELCHANGE, LBN_DBLCLK )
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := WVG_LBGetCurSel( ::hWnd )+ 1
          IF hb_isBlock( ::sl_itemMarked )

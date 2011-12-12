@@ -87,6 +87,7 @@ CLASS WvgPartHandler
    METHOD   handleEvent( hEvent, mp1, mp2 )
    METHOD   status()
 
+   METHOD   removeChild( oChild )
    METHOD   addChild( oWvg )
    METHOD   childFromName( nNameId )
    METHOD   childList()
@@ -193,6 +194,17 @@ METHOD WvgPartHandler:childFromName( nNameId )
 METHOD WvgPartHandler:childList()
 
    RETURN ::aChildren
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgPartHandler:removeChild( oChild )
+   LOCAL n
+
+   IF ( n := ascan( ::aChildren, {|o| o == oChild } ) ) > 0
+      hb_aDel( ::aChildren, n, .t. )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

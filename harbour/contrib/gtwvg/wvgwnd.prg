@@ -83,10 +83,6 @@
    #define __BYSETPROP__
 #endif
 
-#ifndef __DBG_PARTS__
-   #xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
 /*----------------------------------------------------------------------*/
 
 CLASS WvgWindow  INHERIT  WvgPartHandler
@@ -314,7 +310,7 @@ METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF empty( ::oParent )
       IF ! ( __objGetClsName( Self ) $ "WVGCRT,WVGDIALOG" )
-         ::oParent := SetAppWindow()
+         ::oParent := WvgSetAppWindow()
       ENDIF
    ENDIF
 
@@ -338,9 +334,10 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD WvgWindow:destroy()
-   #if 0
-   hb_traceLog( "          %s:destroy() WvgWindow()", __objGetClsName( self ) )
-   #endif
+
+   IF ! empty( ::oParent )
+      ::oParent:removeChild( Self )
+   ENDIF
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )

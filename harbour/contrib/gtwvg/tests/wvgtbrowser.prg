@@ -411,6 +411,10 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
       oPB:tooltipText := aPmt[ i ]
 
       nOff += aW[ i ] + nG
+
+      IF i == len( aPmt )
+         oPB:destroy()
+      ENDIF
    NEXT
 
    RETURN NIL

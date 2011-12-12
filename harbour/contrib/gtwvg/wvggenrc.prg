@@ -81,22 +81,17 @@
 /*----------------------------------------------------------------------*/
 
 EXIT PROCEDURE KillGTChildren()
-   LOCAL aChilds, oXbp
 
    IF hb_isObject( s_oCrt ) .AND. __objGetClsName( s_oCrt ) == "WVGCRT" .AND. s_oCrt:isGT
-      IF ! empty( aChilds := s_oCrt:childList() )
-         FOR EACH oXbp IN aChilds
-            oXbp:destroy()
-            oXbp := NIL
-         NEXT
-      ENDIF
+      s_oCrt:destroy()
+      s_oCrt := NIL
    ENDIF
 
    RETURN
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetAppWindow( oCrt )
+FUNCTION WvgSetAppWindow( oCrt )
    LOCAL ooCrt := s_oCrt
 
    IF empty( oCrt )
