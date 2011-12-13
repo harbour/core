@@ -7,7 +7,7 @@
  *    "DOt Prompt" Console and .prg/.hrb runner for the Harbour Language
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2008-2011 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008-2012 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -507,7 +507,7 @@ STATIC FUNCTION hbrun_GetHidden()
 STATIC PROCEDURE hbrun_Usage()
 
    OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 1999-2011, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+           "Copyright (c) 1999-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() +;
            "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )

@@ -969,7 +969,7 @@ STATIC FUNCTION GetSource()
    LOCAL s := ""
    LOCAL txt_:= {}
 
-   aadd( txt_, '/* Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>              ' )
+   aadd( txt_, '/* Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>              ' )
    aadd( txt_, ' *                                                                         ' )
    aadd( txt_, ' * This program is free software; you can redistribute it and/or modify    ' )
    aadd( txt_, '*/                                                                         ' )

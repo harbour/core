@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour NETIO server management client engine
  *
- * Copyright 2009-2011 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009-2012 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -334,7 +334,7 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2011, Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2012, Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
 
    RETURN

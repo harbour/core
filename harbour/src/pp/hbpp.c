@@ -199,7 +199,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
          " * Harbour Project source code:\n"
          " *    Build in preprocessor rules.\n"
          " *\n"
-         " * Copyright 2006-2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+         " * Copyright 2006-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
          " * www - http://harbour-project.org\n"
          " *\n"
          " * This file is generated automatically by Harbour preprocessor\n"

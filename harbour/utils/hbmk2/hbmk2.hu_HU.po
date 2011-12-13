@@ -570,7 +570,7 @@ msgstr "'%1$s' .hbl fájl létrehozva a következő nyelv(ek)hez: %2$s"
 #: hbmk2.prg:7807 hbmk2.prg:11462
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
-msgstr "Magyar (%1$s) fordítás: Copyright (c) 2009-2011, Szakáts Viktor"
+msgstr "Magyar (%1$s) fordítás: Copyright (c) 2009-2012, Szakáts Viktor"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format

@@ -833,7 +833,7 @@ STATIC FUNCTION AppSys()
 STATIC PROCEDURE HB_Logo()
 
    MsgBox( "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) + hb_eol() +;
-           "Copyright (c) 2009-2011, Pritpal Bedi, Viktor Szakats" + hb_eol() + ;
+           "Copyright (c) 2009-2012, Pritpal Bedi, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() )
 
