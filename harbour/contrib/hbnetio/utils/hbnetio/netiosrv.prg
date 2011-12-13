@@ -203,7 +203,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         netiosrv_LogEvent( hb_StrFormat( "Warning: Unkown command line parameter ignored: %1$s", cParam ) )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unknown command line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 
@@ -849,6 +849,11 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
+   #if defined( __PLATFORM__WINDOWS )
+   OutStd(               "  -i                    install as service (requires admin rights)"                          , hb_eol() )
+   OutStd(               "  -u                    uninstall service (requires admin rights)"                           , hb_eol() )
+   OutStd(                                                                                                               hb_eol() )
+   #endif
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
    OutStd(               "  -help|--help          this help"                                                           , hb_eol() )
 
