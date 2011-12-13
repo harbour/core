@@ -2088,8 +2088,10 @@ static HB_ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
    if( !hb_nsxBlockRead( pIndex, 0, &pIndex->HeaderBuff, NSX_PAGELEN ) )
       return HB_FAILURE;
 
-   if( pIndex->HeaderBuff.Signature[0] !=
-       ( pIndex->LargeFile ? NSX_SIGNATURE_LARGE : NSX_SIGNATURE ) ||
+   if( ( pIndex->FileSize ? pIndex->HeaderBuff.Signature[0] !=
+               ( pIndex->LargeFile ? NSX_SIGNATURE_LARGE : NSX_SIGNATURE ) :
+         ( pIndex->HeaderBuff.Signature[0] != NSX_SIGNATURE &&
+           pIndex->HeaderBuff.Signature[0] != NSX_SIGNATURE_LARGE ) ) ||
        pIndex->HeaderBuff.IndexFlags[0] != 0 )
    {
       hb_nsxCorruptError( pIndex );
