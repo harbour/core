@@ -116,12 +116,6 @@ typedef struct tagRECT { ;
 #endif
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
    DATA     autoTrack                             INIT .t.
@@ -202,10 +196,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
    LOCAL nScrMsg, nScrPos, nCommand
 
-   hb_traceLog( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
-
    DO CASE
-
    CASE nMessage == HB_GTE_RESIZED
       IF ::isParentCrt()
          ::rePosition()
@@ -219,7 +210,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDIF
 
    CASE nMessage == HB_GTE_HSCROLL
-      IF !hb_isBlock( ::sl_xbeSB_Scroll )
+      IF ::isParentCrt()
+         ::oParent:setFocus()
+      ENDIF
+
+      IF ! hb_isBlock( ::sl_xbeSB_Scroll )
          RETURN EVENT_UNHANDELLED
       ENDIF
 
@@ -227,7 +222,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
          nScrPos := aNM[ 2 ]
       ELSE
-         nScrPos    := WAPI_GetScrollPos( ::pWnd, SB_CTL )
+         nScrPos := WAPI_GetScrollPos( ::pWnd, SB_CTL )
       ENDIF
 
       DO CASE
@@ -282,11 +277,14 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
       RETURN EVENT_HANDELLED
 
 
    CASE nMessage == HB_GTE_VSCROLL
+      IF ::isParentCrt()
+         ::oParent:setFocus()
+      ENDIF
 
       nScrMsg := aNM[ 1 ]
       IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
@@ -295,7 +293,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
          nScrPos := WAPI_GetScrollPos( ::pWnd, SB_CTL )
       ENDIF
 
-      IF !hb_isBlock( ::sl_xbeSB_Scroll )
+      IF ! hb_isBlock( ::sl_xbeSB_Scroll )
          RETURN EVENT_UNHANDELLED
       ENDIF
 

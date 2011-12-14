@@ -76,12 +76,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgDrawingArea  INHERIT  WvgWindow
 
    DATA     caption                               INIT ""
@@ -130,12 +124,8 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 /*----------------------------------------------------------------------*/
 
 METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
-   LOCAL hDC
-
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    DO CASE
-
    CASE nMessage == HB_GTE_RESIZED
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
@@ -144,15 +134,12 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      hDC := aNM[ 1 ]
-
       IF hb_isNumeric( ::clr_FG )
-         WVG_SetTextColor( hDC, ::clr_FG )
+         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( hDC, 1 )
-
-         WVG_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[2]}, ::hBrushBG )
+         WVG_SetBkMode( aNM[ 1 ], 1 )
+         WVG_FillRect( aNM[ 1 ], { 0,0,::currentSize()[1],::currentSize()[2]}, ::hBrushBG )
          RETURN EVENT_HANDELLED
       ENDIF
 

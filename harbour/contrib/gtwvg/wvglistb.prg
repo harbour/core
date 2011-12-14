@@ -222,7 +222,6 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
-uiDebug( "listbox:notify", aNM[1], aNM[2], aNM[3] )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )

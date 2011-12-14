@@ -212,7 +212,22 @@
 #define TVN_FIRST                                 (0-400)
 #define HDM_FIRST                                 0x1200      // Header messages
 #define TCM_FIRST                                 0x1300      // Tab control messages
+
+
+#define CCM_FIRST                                 0x2000
+#define CCM_LAST                                  (CCM_FIRST+0x200)
 #define CCM_SETBKCOLOR                            8193
+#define CCM_SETCOLORSCHEME                        8194
+#define CCM_GETCOLORSCHEME                        8195
+#define CCM_GETDROPTARGET                         8196
+#define CCM_SETUNICODEFORMAT                      8197
+#define CCM_GETUNICODEFORMAT                      8198
+#define CCM_SETVERSION                            0x2007
+#define CCM_GETVERSION                            0x2008
+#define CCM_SETNOTIFYWINDOW                       0x2009
+#define CCM_SETWINDOWTHEME                        0x200b
+#define CCM_DPISCALE                              0x200c
+
 /*----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------*/

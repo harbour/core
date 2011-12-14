@@ -154,7 +154,6 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    DO CASE
-
    CASE nMessage == HB_GTE_RESIZED
       IF ::isParentCrt()
          ::rePosition()
@@ -171,7 +170,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
                ::oParent:setFocus()
             ENDIF
             eval( ::sl_lbClick, NIL, NIL, self )
-            IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
          ENDIF

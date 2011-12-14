@@ -581,39 +581,46 @@ FUNCTION BuildButtons()
    LOCAL oXbp
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := "Hi"
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -1 }, { -2, -4 } )
    oXbp:activate := {|| Wvg_MessageBox( , "Harbour!" ) }
    oXbp:toolTipText := "Harbour CUI/GUI Console"
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_VOUCH
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -6 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F2 ) }
    oXbp:toolTipText := "Open Another GET Screen"
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_BROWSE
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -11 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F5 ) }
    oXbp:toolTipText := "TBrowse + GUI Controls"
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_NOTES
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -16 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F3 ) }
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_TOOLS
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -21 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F6 ) }
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_HELP
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -26 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F7 ) }
 
    oXbp := WvgPushButton():new()
+   oXbp:pointerFocus := .f.
    oXbp:caption := IMAGE_VR
    oXbp:border  := .f.
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -31 }, { -2, -4 } )

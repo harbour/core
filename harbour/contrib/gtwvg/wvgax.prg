@@ -84,7 +84,6 @@ CLASS WvgActiveXControl FROM WvgWindow
    DATA   server                             INIT NIL
    DATA   license                            INIT NIL
    DATA   controlFlags                       INIT 0
-   DATA   visible                            INIT .T.
    DATA   default                            INIT .F.
    DATA   cancel                             INIT .F.
 
@@ -102,7 +101,7 @@ CLASS WvgActiveXControl FROM WvgWindow
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
    METHOD Destroy()
    METHOD execEvent( nEvent, ... )
-   METHOD handleEvent( nEvent, aInfo )
+   METHOD handleEvent( nEvent, aNM )
    METHOD mapEvent( nEvent, bBlock )
 
    METHOD inheritPresParams()
@@ -129,6 +128,7 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
+   ::exStyle    := WS_EX_CLIENTEDGE
    ::objType    := objTypeActiveX
    ::className  := 'WIN_OLEAUTO'
 
@@ -158,25 +158,39 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    Win_AxInit()
 
-   hWnd := WAPI_CreateWindowEX( 0, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
+   hWnd := WAPI_CreateWindowEX( ::exStyle, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
                                     ::aSize[ 1 ], ::aSize[ 2 ], Win_N2P( ::hContainer ), 0 )
    IF empty( hWnd )
       RETURN NIL
    ENDIF
    ::hWnd := Win_P2N( hWnd )
+   ::pWnd := hWnd
 
-   hObj := __AxGetControl( Win_N2P( ::hWnd ) )
+   hObj := __AxGetControl( ::pWnd )
    if empty( hObj )
       RETURN NIL
    ENDIF
    ::oOLE:__hObj := hObj
-   __AxDoVerb( Win_N2P( ::hWnd ), -4 )
+   __AxDoVerb( ::pWnd, -4 )
 
    IF !Empty( ::hEvents )
       ::oOle:__hSink := __AxRegisterHandler( ::oOle:__hObj, {|nEvent,...| ::execEvent( nEvent, ... ) } )
    ENDIF
 
-   ::oParent:addChild( SELF )
+#if 0
+   ::SetWindowProcCallback()  /* Is this needed to catch windowing events ? - NO */
+#endif
+
+   ::oParent:addChild( Self )
+   IF ::visible
+      ::show()
+   ELSE
+      ::hide()
+   ENDIF
+   ::setPosAndSize()
+   IF ::isParentCrt()
+      ::oParent:setFocus()
+   ENDIF
 
    RETURN Self
 
@@ -199,16 +213,25 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgActiveXControl:handleEvent( nEvent, aInfo )
+METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
    LOCAL nHandled := 0
 
-   HB_SYMBOL_UNUSED( aInfo )
+   HB_SYMBOL_UNUSED( aNM )
 
    SWITCH nEvent
 
-   CASE WM_SIZE
+   CASE HB_GTE_RESIZED
+      IF ::isParentCrt()
+         ::rePosition()
+      ENDIF
       IF hb_isBlock( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, self )
+         eval( ::sl_resize, NIL, NIL, Self )
+      ENDIF
+      EXIT
+
+   CASE HB_GTE_ANY
+      IF aNM[ 1 ] == WM_LBUTTONUP
+uiDebug( "here the event is caught" )
       ENDIF
       EXIT
 
@@ -227,12 +250,10 @@ METHOD WvgActiveXControl:OnError()
 /*----------------------------------------------------------------------*/
 
 METHOD WvgActiveXControl:Destroy()
-#if 0
-   WAPI_OutputDebugString( "WvgActiveXControl:Destroy()" )
-#endif
-   IF !empty( ::oOLE:__hObj )
-      IF WAPI_IsWindow( Win_N2P( ::hWnd ) )
-         WAPI_DestroyWindow( Win_N2P( ::hWnd ) )
+
+   IF ! empty( ::oOLE:__hObj )
+      IF WAPI_IsWindow( ::pWnd )
+         WAPI_DestroyWindow( ::pWnd )
       ENDIF
       ::oOle := NIL
       ::hWnd := NIL
@@ -244,9 +265,9 @@ METHOD WvgActiveXControl:Destroy()
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
-   if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
+   IF hb_isNumeric( nEvent ) .AND. hb_isBlock( bBlock )
       ::hEvents[ nEvent ] := bBlock
-   endif
+   ENDIF
 
    RETURN Self
 

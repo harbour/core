@@ -188,6 +188,13 @@ HB_FUNC( WVG_SETFOCUS )
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC( WVG_GETFOCUS )
+{
+   hb_retnint( ( HB_PTRDIFF ) GetFocus() );
+}
+
+/*----------------------------------------------------------------------*/
+
 HB_FUNC( WVG_SETTEXTCOLOR )
 {
    hb_retnl( ( HB_ULONG ) SetTextColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
@@ -1332,7 +1339,20 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
       case TB_MAPACCELERATOR:
       case TB_MOVEBUTTON:
       case TB_GETINSERTMARK:
+         break;
       case TB_GETCOLORSCHEME:
+      {
+         PHB_ITEM info = hb_itemArrayNew( 2 );
+         COLORSCHEME colorScheme;
+
+         colorScheme.dwSize = sizeof( COLORSCHEME );
+         SendMessage( hTB, TB_GETCOLORSCHEME, ( WPARAM ) 0, ( LPARAM ) & colorScheme );
+
+         hb_arraySetNInt( info, 1, colorScheme.clrBtnHighlight );
+         hb_arraySetNInt( info, 2, colorScheme.clrBtnShadow );
+         hb_itemReturnRelease( info );
+         break;
+      }
       case TB_CUSTOMIZE:
       case TB_GETANCHORHIGHLIGHT:
       case TB_GETEXTENDEDSTYLE:

@@ -159,10 +159,9 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
                ::oParent:setFocus()
             ENDIF
             eval( ::sl_lbClick, ::editBuffer, NIL, Self )
-            IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
-//            RETURN EVENT_HANDELLED
          ENDIF
       ENDIF
 

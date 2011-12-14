@@ -247,8 +247,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
                RETURN EVENT_HANDELLED
             ENDIF
          ELSEIF aNM[ 2 ] == 65
-uiDebug( "edit",65  )
-            RETURN EVENT_HANDELLED
+            // RETURN EVENT_HANDELLED
          ENDIF
 
       ENDCASE
