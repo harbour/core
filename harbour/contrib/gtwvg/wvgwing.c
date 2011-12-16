@@ -1075,7 +1075,6 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON    tbb;
-   TBADDBITMAP tbab;
    HB_BOOL     bSuccess;
    HWND        hWndTB     = hbwapi_par_raw_HWND( 1 );
    int         iCommand   = hb_parni( 4 );
@@ -1085,17 +1084,8 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    {
       case 1:  /* button from image */
       {
-         int iNewBitmap, iNewString;
-
-         /* set bitmap */
-         tbab.hInst = NULL;
-#if ( _WIN32_IE >= 0x0500 )
-         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 2 );
-#else
-         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parnl( 2 );
-#endif
-         iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
-
+         int iNewString;
+         
          /* set string */
          szCaption  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
          iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
@@ -1108,7 +1098,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          }
          #endif
          /* add button */
-         tbb.iBitmap   = iNewBitmap;
+         tbb.iBitmap   = hb_parni( 2 );
          tbb.idCommand = iCommand;
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE;
