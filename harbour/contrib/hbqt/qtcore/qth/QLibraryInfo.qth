@@ -45,6 +45,11 @@ enum LibraryLocation { PrefixPath, DocumentationPath, HeadersPath, LibrariesPath
 </ENUMS>
 
 <PROTOS>
+QDate buildDate (){
+   #if QT_VERSION >= 0x040600
+   hbqt_create_objectGC( hbqt_gcAllocate_QDate( new QDate( QLibraryInfo::buildDate() ), true ) , "HB_QDATE" );   
+   #endif
+}
 QString buildKey (){
    hb_retstr_utf8( QLibraryInfo::buildKey().toUtf8().data() );
 }

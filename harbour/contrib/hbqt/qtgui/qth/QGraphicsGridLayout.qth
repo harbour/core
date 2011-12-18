@@ -16,6 +16,7 @@ QObject  = no
 Inherit  = QGraphicsLayout
 Type     = 
 New      = 
+Version  = 
 </CLASS>
 
 <CODE>
@@ -85,6 +86,8 @@ void setRowStretchFactor ( int row, int stretch )
 void setSpacing ( qreal spacing )
 void setVerticalSpacing ( qreal spacing )
 qreal verticalSpacing () const
+
+void removeItem ( QGraphicsLayoutItem * item )             [*V=0x040800*]
 </PROTOS>
 
 <SLOTS>

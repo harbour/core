@@ -106,4 +106,6 @@ void statusBarVisibilityChangeRequested ( bool visible )
 void toolBarVisibilityChangeRequested ( bool visible )
 void unsupportedContent ( QNetworkReply * reply )
 void windowCloseRequested ()
+
+void viewportChangeRequested ()                            [*V=0x040800*]
 </SIGNALS>

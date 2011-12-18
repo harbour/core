@@ -45,6 +45,9 @@ virtual QGraphicsLayoutItem * itemAt ( int i ) const = 0
 virtual void removeAt ( int index ) = 0
 void setContentsMargins ( qreal left, qreal top, qreal right, qreal bottom )
 virtual void widgetEvent ( QEvent * e )
+
+bool instantInvalidatePropagation ()                       [*V=0x040800*]
+void setInstantInvalidatePropagation ( bool enable )       [*V=0x040800*]
 </PROTOS>
 
 <SLOTS>

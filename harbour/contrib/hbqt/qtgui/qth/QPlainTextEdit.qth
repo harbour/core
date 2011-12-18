@@ -103,6 +103,8 @@ QTextCursor textCursor () const
 Qt::TextInteractionFlags textInteractionFlags () const
 QString toPlainText () const
 QTextOption::WrapMode wordWrapMode () const
+
+QString	anchorAt ( const QPoint & pos ) const              [*V=0x040700*]
 </PROTOS>
 
 <SLOTS>

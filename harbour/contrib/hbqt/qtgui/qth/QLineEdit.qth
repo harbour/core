@@ -84,6 +84,8 @@ void setValidator ( const QValidator * v )
 virtual QSize sizeHint () const
 QString text () const
 virtual const QValidator * validator () const
+
+void setPlaceholderText ( const QString & )                        [*V=0x040700*]
 </PROTOS>
 
 <SLOTS>

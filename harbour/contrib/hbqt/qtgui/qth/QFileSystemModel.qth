@@ -82,6 +82,8 @@ QString type ( const QModelIndex & index ) const
 <SIGNALS>
 void fileRenamed ( const QString & path, const QString & oldName, const QString & newName )
 void rootPathChanged ( const QString & newPath )
+
+void directoryLoaded ( const QString & path )              [*V=0x040700*]
 </SIGNALS>
 
 <VARIABLES>

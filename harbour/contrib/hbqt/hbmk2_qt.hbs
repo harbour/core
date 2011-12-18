@@ -1134,6 +1134,13 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
       NEXT
    ENDIF
 
+   /* Reassign class level version information */
+   IF ( n := AScan( ::cls_, {|e_| upper( e_[ 1 ] ) == "VERSION" } ) ) > 0
+      IF ! Empty( ::cls_[ n, 2 ] )
+         ::cQtVer := ::cls_[ n, 2 ]
+      ENDIF
+   ENDIF
+
    /* Pull out SUBCLASS section */
    ::subCls_ := hbqtgen_PullOutSection( @cQth, "SUBCLASS" )
 
@@ -1855,6 +1862,9 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
 
    AAdd( txt_, "HB_FUNC_STATIC( " + Upper( oMtd:cHBFunc ) + " )" )
    AAdd( txt_, "{" )
+   IF ! empty( oMtd:cVersion )
+      AAdd( txt_, "   #if QT_VERSION >= " + oMtd:cVersion )
+   ENDIF
    #ifdef _GEN_TRACE_
    AAdd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
    //AAdd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
@@ -2011,6 +2021,9 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    ENDIF
 
    AAdd( txt_, "   }" )           // if( p )
+   IF ! empty( oMtd:cVersion )
+      AAdd( txt_, "   #endif" )
+   ENDIF
    AAdd( txt_, "}" )              // HB_FUNC()
    AAdd( txt_, "" )
 
@@ -2223,6 +2236,9 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                   EXIT
                CASE "A"
                   oMtd:nAttach := val( cVal )
+                  EXIT
+               CASE "V"
+                  oMtd:cVersion := cVal
                   EXIT
                CASE "xxx"
                   EXIT
@@ -2720,6 +2736,7 @@ CREATE CLASS HbqtMethod
 
    VAR    nDetach                                 INIT 0
    VAR    nAttach                                 INIT 0
+   VAR    cVersion                                INIT ""
 
    VAR    cFun                                    INIT ""
    VAR    cRet                                    INIT ""

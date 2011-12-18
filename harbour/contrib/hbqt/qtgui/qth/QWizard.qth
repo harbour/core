@@ -73,6 +73,9 @@ Qt::TextFormat titleFormat () const
 virtual bool validateCurrentPage ()
 QList<int> visitedPages () const
 WizardStyle wizardStyle () const
+
+void setSideWidget ( QWidget * widget )                    [*V=0x040700*]
+QWidget * sideWidget () const                              [*V=0x040700*]
 </PROTOS>
 
 <SLOTS>
@@ -85,4 +88,7 @@ void restart ()
 void currentIdChanged ( int id )
 void customButtonClicked ( int which )
 void helpRequested ()
+
+void pageAdded ( int id )                                  [*V=0x040700*]
+void pageRemoved ( int id )                                [*V=0x040700*]
 </SIGNALS>

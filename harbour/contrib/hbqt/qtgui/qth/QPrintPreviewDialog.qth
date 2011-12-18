@@ -27,10 +27,18 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-   if( hb_pcount() >= 2 && HB_ISOBJECT( 2 ) )
+   if( hb_pcount() >= 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) && hbqt_isObjectType( 1, HBQT_TYPE_QPrinter ) )
+   {
       __HB_RETPTRGC__( new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
-   else
+   }
+   else if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   {
       __HB_RETPTRGC__( new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QPrintPreviewDialog() );
+   }
 }
 </CODE>
 

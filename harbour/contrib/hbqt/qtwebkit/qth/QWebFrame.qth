@@ -77,6 +77,8 @@ QString toHtml () const
 QString toPlainText () const
 QUrl url () const
 qreal zoomFactor () const
+
+void scrollToAnchor ( const QString & anchor )             [*V=0x040700*]
 </PROTOS>
 
 <SLOTS>
