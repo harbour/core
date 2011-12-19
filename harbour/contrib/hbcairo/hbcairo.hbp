@@ -30,6 +30,7 @@ image.c
 paths.c
 pdf.c
 png.c
+ps.c
 surface.c
 text.c
 transfor.c

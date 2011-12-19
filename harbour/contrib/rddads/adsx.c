@@ -731,15 +731,18 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
+
+         pArea->adsarea.fPositioned = HB_TRUE;
+         pArea->adsarea.area.fEof = HB_FALSE;
       }
       else
       {
          SELF_GOTO( ( AREAP ) pArea, 0 );
+         pArea->adsarea.fPositioned = HB_FALSE;
+         pArea->adsarea.area.fEof = HB_TRUE;
       }
 
       mixKeyFree( pKey );
-
-      hb_adsUpdateAreaFlags( pArea );
       pArea->adsarea.area.fBof = HB_FALSE;
    }
    else
@@ -763,15 +766,15 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
       {
          if( SELF_GOTO( ( AREAP ) pArea, pArea->pTagCurrent->pKeys[ ulKeyPos + lToSkip ]->rec ) == HB_FAILURE )
             errCode = HB_FAILURE;
+         pArea->adsarea.area.fBof = HB_FALSE;
       }
       else
       {
-         SELF_GOTO( ( AREAP ) pArea, 0 );
+         SELF_GOTOP( ( AREAP ) pArea );
+         pArea->adsarea.area.fBof = HB_TRUE;
       }
 
       mixKeyFree( pKey );
-
-      hb_adsUpdateAreaFlags( pArea );
       pArea->adsarea.area.fEof = HB_FALSE;
    }
 
@@ -1255,9 +1258,15 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          break;
 
       case DBOI_KEYVAL:
-         /* TODO: */
-         break;
+      {
+         PHB_ITEM pItem;
+         PHB_CODEPAGE pCodepage = hb_cdpSelect( pArea->adsarea.area.cdPage );
 
+         pItem = hb_vmEvalBlockOrMacro( pTag->pKeyItem );
+         hb_cdpSelect( pCodepage );
+         hb_itemMove( pOrderInfo->itmResult, pItem );
+         break;
+      }
       case DBOI_KEYCOUNT :
       case DBOI_KEYCOUNTRAW :           /* ignore filter but RESPECT SCOPE */
          hb_itemPutNL( pOrderInfo->itmResult, pTag->ulRecCount );

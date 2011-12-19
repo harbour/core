@@ -217,7 +217,7 @@ static const HB_GC_FUNCS s_gcOleenumFuncs =
 };
 
 
-static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCODE errOsCode, const char * szDescription, const char * szOperation )
+static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCODE errOsCode, const char * szDescription, const char * szOperation, const char * szFileName )
 {
    PHB_ITEM pError;
    pError = hb_errRT_New( ES_ERROR, "WINOLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
@@ -229,8 +229,54 @@ static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCO
       hb_errPutArgsArray( pError, pArray );
       hb_itemRelease( pArray );
    }
+
+   if( szFileName )
+      hb_errPutFileName( pError, szFileName );
+
    hb_errLaunch( pError );
    hb_errRelease( pError );
+}
+
+
+static void hb_oleExcepDescription( EXCEPINFO * pExcep, char ** pszDescription, char ** pszSource )
+{
+   if( pExcep->pfnDeferredFillIn )
+       ( * pExcep->pfnDeferredFillIn )( pExcep );
+
+   if( pExcep->bstrSource )
+   {
+      int iLen, iStrLen;
+      iStrLen = ( int ) SysStringLen( pExcep->bstrSource );
+      iLen = WideCharToMultiByte( CP_ACP, 0, pExcep->bstrSource, iStrLen, NULL, 0, NULL, NULL );
+      * pszSource = ( char * ) hb_xgrab( ( iLen + 1 ) * sizeof( char ) );
+      WideCharToMultiByte( CP_ACP, 0, pExcep->bstrSource, iStrLen, * pszSource, iLen + 1, NULL, NULL );
+      ( * pszSource )[ iLen ] = '\0';
+      SysFreeString( pExcep->bstrSource );
+   }
+
+   if( pExcep->bstrHelpFile )
+      SysFreeString( pExcep->bstrHelpFile );
+
+   if( pExcep->bstrDescription )
+   {
+      int iLen, iStrLen;
+      iStrLen = ( int ) SysStringLen( pExcep->bstrDescription );
+      iLen = WideCharToMultiByte( CP_ACP, 0, pExcep->bstrDescription, iStrLen, NULL, 0, NULL, NULL );
+      * pszDescription = ( char * ) hb_xgrab( ( iLen + 14 + 1 ) * sizeof( char ) );
+      WideCharToMultiByte( CP_ACP, 0, pExcep->bstrDescription, iStrLen, * pszDescription, iLen + 1, NULL, NULL );
+      ( * pszDescription )[ iLen ] = '\0';
+      SysFreeString( pExcep->bstrDescription );
+   }
+   else
+   {
+      * pszDescription = ( char * ) hb_xgrab( ( 14 + 1 ) * sizeof( char ) );
+      ( * pszDescription )[ 0 ] = '\0';
+   }
+
+   if( pExcep->wCode )
+      hb_snprintf( ( * pszDescription ) + strlen( * pszDescription ), 14, " (%d)", pExcep->wCode);
+   else
+      hb_snprintf( ( * pszDescription ) + strlen( * pszDescription ), 14, " (0x%08lX)", pExcep->scode);
 }
 
 
@@ -241,7 +287,7 @@ IDispatch* hb_oleParam( int iParam )
    if( pOle && pOle->pDisp )
       return pOle->pDisp;
 
-   hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME );
+   hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME, NULL );
    return NULL;
 }
 
@@ -313,7 +359,7 @@ static IEnumVARIANT* hb_oleenumParam( int iParam )
    if( ppEnum && *ppEnum )
       return *ppEnum;
 
-   hb_errRT_OLE( EG_ARG, 1002, 0, NULL, HB_ERR_FUNCNAME );
+   hb_errRT_OLE( EG_ARG, 1002, 0, NULL, HB_ERR_FUNCNAME, NULL );
    return NULL;
 }
 
@@ -1432,7 +1478,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    if( hb_parl( 2 ) )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_OLE( EG_UNSUPPORTED, 1003, 0, NULL, HB_ERR_FUNCNAME );
+      hb_errRT_OLE( EG_UNSUPPORTED, 1003, 0, NULL, HB_ERR_FUNCNAME, NULL );
       return;
    }
 
@@ -1459,7 +1505,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       {
          VariantClear( &variant );
          hb_oleSetError( lOleError );
-         hb_errRT_OLE( EG_ARG, 1004, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+         hb_errRT_OLE( EG_ARG, 1004, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME, NULL );
          return;
       }
 
@@ -1478,7 +1524,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       }
    }
    hb_oleSetError( lOleError );
-   hb_errRT_OLE( EG_ARG, 1005, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+   hb_errRT_OLE( EG_ARG, 1005, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME, NULL );
 }
 
 
@@ -1634,7 +1680,21 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_OLE( EG_ARG, 1006, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+         {
+            char * szDescription = NULL;
+            char * szSource = NULL;
+
+            if( lOleError == DISP_E_EXCEPTION )
+               hb_oleExcepDescription( &excep, &szDescription, &szSource );
+
+            hb_errRT_OLE( EG_ARG, 1006, ( HB_ERRCODE ) lOleError, szDescription, HB_ERR_FUNCNAME, szSource );
+
+            if( szSource )
+               hb_xfree( szSource );
+
+            if( szDescription )
+               hb_xfree( szDescription );
+         }
          return;
       }
    }
@@ -1664,7 +1724,21 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
       hb_oleSetError( lOleError );
       if( lOleError != S_OK )
-         hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+      {
+         char * szDescription = NULL;
+         char * szSource = NULL;
+
+         if( lOleError == DISP_E_EXCEPTION )
+            hb_oleExcepDescription( &excep, &szDescription, &szSource );
+
+         hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, szDescription, HB_ERR_FUNCNAME, szSource );
+
+         if( szSource )
+            hb_xfree( szSource );
+
+         if( szDescription )
+            hb_xfree( szDescription );
+      }
       return;
    }
 
@@ -1672,9 +1746,9 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    /* TODO: add description containing TypeName of the object */
    if( szMethod[ 0 ] == '_' )
-      hb_errRT_OLE( EG_NOVARMETHOD, 1008, ( HB_ERRCODE ) lOleError, NULL, szMethod + 1 );
+      hb_errRT_OLE( EG_NOVARMETHOD, 1008, ( HB_ERRCODE ) lOleError, NULL, szMethod + 1, NULL );
    else
-      hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, szMethod );
+      hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, szMethod, NULL );
 }
 
 
@@ -1747,6 +1821,11 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    if( lOleError != S_OK )
    {
       /* Try to detect if object is a collection */
+      char * szDescription = NULL;
+      char * szSource = NULL;
+
+      if( lOleError == DISP_E_EXCEPTION )
+         hb_oleExcepDescription( &excep, &szDescription, &szSource );
 
       memset( &excep, 0, sizeof( excep ) );
       memset( &dispparam, 0, sizeof( dispparam ) );
@@ -1757,8 +1836,15 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
                                                 &dispparam, &variant, &excep, &uiArgErr );
       VariantClear( &variant );
 
-      hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError, NULL,
-                    hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) );
+      hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError,
+                    lOleErrorEnum == S_OK ? hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) : szDescription, 
+                    NULL, szSource );
+
+      if( szDescription )
+         hb_xfree( szDescription );
+
+      if( szSource )
+         hb_xfree( szSource );
    }
 }
 
@@ -1823,7 +1909,7 @@ static void hb_oleInvokeCall( WORD wFlags )
       }
       if( lOleError == S_OK )
       {
-         DISPID lPropPut = DISPID_PROPERTYPUT;
+         DISPID lPropPut = wFlags;
          HB_BOOL fPut = wFlags == DISPATCH_PROPERTYPUT;
 
          memset( &excep, 0, sizeof( excep ) );
@@ -1848,13 +1934,27 @@ static void hb_oleInvokeCall( WORD wFlags )
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+         {
+            char * szExcepDescription = NULL;
+            char * szExcepSource = NULL;
+
+            if( lOleError == DISP_E_EXCEPTION )
+               hb_oleExcepDescription( &excep, &szExcepDescription, &szExcepSource );
+
+            hb_errRT_OLE( EG_ARG, 1007, ( HB_ERRCODE ) lOleError, szExcepDescription, HB_ERR_FUNCNAME, szExcepSource );
+
+            if( szExcepDescription )
+               hb_xfree( szExcepDescription );
+
+            if( szExcepSource )
+               hb_xfree( szExcepSource );
+         }
          return;
       }
-      hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, hb_parc( uiOffset ) );
+      hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, hb_parc( uiOffset ), NULL );
    }
    else
-      hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME );
+      hb_errRT_OLE( EG_ARG, 1001, 0, NULL, HB_ERR_FUNCNAME, NULL );
 }
 
 HB_FUNC( __OLEINVOKEMETHOD )

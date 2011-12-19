@@ -221,12 +221,17 @@ HB_FUNC( CAIRO_SET_DASH )
       if( ( pItem = hb_param( 2, HB_IT_ARRAY ) ) != NULL )
       {
          int       i, iCount = ( int ) hb_arrayLen( pItem );
-         double *  pDashes = ( double * ) hb_xgrab( iCount * sizeof( double ) );
+         double *  pDashes = NULL;
+
+         if( iCount )
+            pDashes = ( double * ) hb_xgrab( iCount * sizeof( double ) );
 
          for ( i = 0; i < iCount; i++ )
             pDashes[ i ] = hb_arrayGetND( pItem, ( HB_SIZE ) i + 1 );
          cairo_set_dash( pCairo, pDashes, iCount, hb_parnd( 3 ) );
-         hb_xfree( pDashes );
+
+         if( pDashes )
+            hb_xfree( pDashes );
       }
       else
          hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
