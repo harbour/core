@@ -141,63 +141,63 @@ STATIC FUNCTION AR_INIT( nRDD )
 
 STATIC FUNCTION AR_RDDDATAINIT()
    RETURN { ;
-            NIL     ; // RDDDATA_DATABASE
+            NIL     ; /* RDDDATA_DATABASE                               */
           }
 
 STATIC FUNCTION AR_DATABASEINIT()
    RETURN { ;
-             NIL   ,; // DATABASE_FILENAME
-             {}    ,; // DATABASE_RECORDS
-             {}    ,; // DATABASE_RECINFO
-             0     ,; // DATABASE_OPENNUMBER
-             .F.   ,; // DATABASE_LOCKED
-             NIL   ,; // DATABASE_STRUCT - aStruct
-             {}     ; // DATABASE_INDEX
+             NIL   ,; /* DATABASE_FILENAME                              */
+             {}    ,; /* DATABASE_RECORDS                               */
+             {}    ,; /* DATABASE_RECINFO                               */
+             0     ,; /* DATABASE_OPENNUMBER                            */
+             .F.   ,; /* DATABASE_LOCKED                                */
+             NIL   ,; /* DATABASE_STRUCT - aStruct                      */
+             {}     ; /* DATABASE_INDEX                                 */
           }
 
 STATIC FUNCTION AR_WADATAINIT()
    RETURN { ;
-            NIL    ,; // WADATA_DATABASE
-            0      ,; // WADATA_WORKAREA
-            NIL    ,; // WADATA_OPENINFO
-            0      ,; // WADATA_RECNO
-            .F.    ,; // WADATA_BOF
-            .F.    ,; // WADATA_FORCEBOF  // to solve an hack in dbf1.c
-            .F.    ,; // WADATA_EOF
-            .F.    ,; // WADATA_TOP
-            .F.    ,; // WADATA_BOTTOM
-            .F.    ,; // WADATA_FOUND
-            {}     ,; // WADATA_LOCKS
-            0      ,; // WADATA_INDEX
-            {}     ,; // WADATA_WAORDINFO
-            0      ,; // WADATA_ORDRECNO
-            NIL     ; // WADATA_FILTERINFO
+            NIL    ,; /* WADATA_DATABASE                                */
+            0      ,; /* WADATA_WORKAREA                                */
+            NIL    ,; /* WADATA_OPENINFO                                */
+            0      ,; /* WADATA_RECNO                                   */
+            .F.    ,; /* WADATA_BOF                                     */
+            .F.    ,; /* WADATA_FORCEBOF  // to solve an hack in dbf1.c */
+            .F.    ,; /* WADATA_EOF                                     */
+            .F.    ,; /* WADATA_TOP                                     */
+            .F.    ,; /* WADATA_BOTTOM                                  */
+            .F.    ,; /* WADATA_FOUND                                   */
+            {}     ,; /* WADATA_LOCKS                                   */
+            0      ,; /* WADATA_INDEX                                   */
+            {}     ,; /* WADATA_WAORDINFO                               */
+            0      ,; /* WADATA_ORDRECNO                                */
+            NIL     ; /* WADATA_FILTERINFO                              */
           }
 
 STATIC FUNCTION AR_RECDATAINIT()
    RETURN { ;
-            .F.    ,; // RECDATA_DELETED
-            0       ; // RECDATA_LOCKED   // which work area lock?
+            .F.    ,; /* RECDATA_DELETED                                */
+            0       ; /* RECDATA_LOCKED   // which work area lock?      */
           }
 
 STATIC FUNCTION AR_INDEXINIT()
    RETURN { ;
-            NIL    ,; // INDEX_TAG
-            NIL    ,; // INDEX_ORCR
-            {}      ; // INDEX_RECORDS
+            NIL    ,; /* INDEX_TAG                                      */
+            NIL    ,; /* INDEX_ORCR                                     */
+            {}      ; /* INDEX_RECORDS                                  */
           }
 
 STATIC FUNCTION AR_INDEXKEYINIT()
-RETURN { ;
-            NIL    ,; // INDEXKEY_KEY
-            NIL     ; // INDEXKEY_RECORD
-       }
+   RETURN { ;
+            NIL    ,; /* INDEXKEY_KEY                                   */
+            NIL     ; /* INDEXKEY_RECORD                                */
+          }
 
 STATIC FUNCTION AR_WAOIINIT()
-RETURN { ;
-            NIL    ,; // WAOI_SCOPE_0
-            NIL     ; // WAOI_SCOPE_1
-       }
+   RETURN { ;
+            NIL    ,; /* WAOI_SCOPE_0                                   */
+            NIL     ; /* WAOI_SCOPE_1                                   */
+          }
 
 /*
  * methods: NEW and RELEASE receive pointer to work area structure
@@ -218,7 +218,7 @@ STATIC FUNCTION AR_NEW( pWA )
 
    RETURN HB_SUCCESS
 
-// Creating fields for new DBF - dbCreate() in current workarea
+/* Creating fields for new DBF - dbCreate() in current workarea */
 STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL nResult   := HB_SUCCESS
@@ -226,41 +226,40 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
 
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( e"nWA = %1$d, aStruct = %2$s", nWA, hb_ValToExp( aStruct ) ) )
 
-   // Setting WA number to current WorkArea
+   /* Setting WA number to current WorkArea */
    aWAData[ WADATA_WORKAREA ] := nWA
 
-   // Create new file data structure - workarea uses a reference to database
+   /* Create new file data structure - workarea uses a reference to database */
    aWAData[ WADATA_DATABASE ] := AR_DATABASEINIT()
 
-   // Store DBF Structure
+   /* Store DBF Structure */
    aWAData[ WADATA_DATABASE ][ DATABASE_STRUCT ] := aStruct
 
-   // Set fields
+   /* Set fields */
    UR_SUPER_SETFIELDEXTENT( nWA, Len( aStruct ) )
 
    FOR EACH aFieldStruct IN aStruct
+      aFieldStruct[ DBS_NAME ] := Upper( aFieldStruct[ DBS_NAME ] )
+      aFieldStruct[ DBS_TYPE ] := Upper( aFieldStruct[ DBS_TYPE ] )
 
-       aFieldStruct[ DBS_NAME ] := Upper( aFieldStruct[ DBS_NAME ] )
-       aFieldStruct[ DBS_TYPE ] := Upper( aFieldStruct[ DBS_TYPE ] )
-
-       aField := Array( UR_FI_SIZE )
-       aField[ UR_FI_NAME ]    := aFieldStruct[ DBS_NAME ]
-       aField[ UR_FI_TYPE ]    := HB_Decode( aFieldStruct[ DBS_TYPE ], "C", HB_FT_STRING, "L", HB_FT_LOGICAL, "M", HB_FT_MEMO, "D", HB_FT_DATE, "N", IIF( aFieldStruct[ DBS_DEC ] > 0, HB_FT_DOUBLE, HB_FT_INTEGER ) )
-       aField[ UR_FI_TYPEEXT ] := 0
-       aField[ UR_FI_LEN ]     := aFieldStruct[ DBS_LEN ]
-       aField[ UR_FI_DEC ]     := aFieldStruct[ DBS_DEC ]
-       UR_SUPER_ADDFIELD( nWA, aField )
+      aField := Array( UR_FI_SIZE )
+      aField[ UR_FI_NAME ]    := aFieldStruct[ DBS_NAME ]
+      aField[ UR_FI_TYPE ]    := HB_Decode( aFieldStruct[ DBS_TYPE ], "C", HB_FT_STRING, "L", HB_FT_LOGICAL, "M", HB_FT_MEMO, "D", HB_FT_DATE, "N", IIF( aFieldStruct[ DBS_DEC ] > 0, HB_FT_DOUBLE, HB_FT_INTEGER ) )
+      aField[ UR_FI_TYPEEXT ] := 0
+      aField[ UR_FI_LEN ]     := aFieldStruct[ DBS_LEN ]
+      aField[ UR_FI_DEC ]     := aFieldStruct[ DBS_DEC ]
+      UR_SUPER_ADDFIELD( nWA, aField )
 
    NEXT
 
    RETURN nResult
 
-// Create database from current WA fields definition
+/* Create database from current WA fields definition */
 STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL hRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cName
-   LOCAL cFullName, aDBFData, nResult//, aFieldStruct, aField, aStruct
+   LOCAL cFullName, aDBFData, nResult /*, aFieldStruct, aField, aStruct */
 
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, aOpenInfo = %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
 
@@ -293,9 +292,9 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    /* Adding new database in RDD memory slots using filename as key */
    hb_hSet( hRDDData, cFullName, aDBFData )
 
-   // Set WorkArea Info
+   /* Set WorkArea Info */
    aWAData[ WADATA_WORKAREA ] := nWA
-   aWAData[ WADATA_OPENINFO ] := aOpenInfo // Put open informations
+   aWAData[ WADATA_OPENINFO ] := aOpenInfo /* Put open informations */
 
    /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
@@ -303,7 +302,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    IF nResult == HB_SUCCESS
       /* Add a new open number */
       aDBFData[ DATABASE_OPENNUMBER ]++
-      // default values for Records == 0
+      /* default values for Records == 0 */
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
       aWAData[ WADATA_RECNO ] := 1
    ENDIF
@@ -331,12 +330,10 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    hRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
 
    IF HB_HHasKey( hRDDData, cFullName )
-
       aDBFData := hRDDData[ cFullName ]
       aStruct  := aDBFData[ DATABASE_STRUCT ]
 
    ELSE
-
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1000
@@ -349,24 +346,23 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    ENDIF
 
-   // Set WorkArea Infos
+   /* Set WorkArea Infos */
    aWAData  := USRRDD_AREADATA( nWA )
-   aWAData[ WADATA_DATABASE ] := aDBFData  // Put a reference to database
+   aWAData[ WADATA_DATABASE ] := aDBFData  /* Put a reference to database */
    aWAData[ WADATA_WORKAREA ] := nWA
-   aWAData[ WADATA_OPENINFO ] := aOpenInfo // Put open informations
+   aWAData[ WADATA_OPENINFO ] := aOpenInfo /* Put open informations       */
 
-   // Set fields
+   /* Set fields */
    UR_SUPER_SETFIELDEXTENT( nWA, Len( aStruct ) )
 
    FOR EACH aFieldStruct IN aStruct
-
-       aField := Array( UR_FI_SIZE )
-       aField[ UR_FI_NAME ]    := aFieldStruct[ DBS_NAME ]
-       aField[ UR_FI_TYPE ]    := HB_Decode( aFieldStruct[ DBS_TYPE ], "C", HB_FT_STRING, "L", HB_FT_LOGICAL, "M", HB_FT_MEMO, "D", HB_FT_DATE, "N", IIF( aFieldStruct[ DBS_DEC ] > 0, HB_FT_DOUBLE, HB_FT_INTEGER ) )
-       aField[ UR_FI_TYPEEXT ] := 0
-       aField[ UR_FI_LEN ]     := aFieldStruct[ DBS_LEN ]
-       aField[ UR_FI_DEC ]     := aFieldStruct[ DBS_DEC ]
-       UR_SUPER_ADDFIELD( nWA, aField )
+      aField := Array( UR_FI_SIZE )
+      aField[ UR_FI_NAME ]    := aFieldStruct[ DBS_NAME ]
+      aField[ UR_FI_TYPE ]    := HB_Decode( aFieldStruct[ DBS_TYPE ], "C", HB_FT_STRING, "L", HB_FT_LOGICAL, "M", HB_FT_MEMO, "D", HB_FT_DATE, "N", IIF( aFieldStruct[ DBS_DEC ] > 0, HB_FT_DOUBLE, HB_FT_INTEGER ) )
+      aField[ UR_FI_TYPEEXT ] := 0
+      aField[ UR_FI_LEN ]     := aFieldStruct[ DBS_LEN ]
+      aField[ UR_FI_DEC ]     := aFieldStruct[ DBS_DEC ]
+      UR_SUPER_ADDFIELD( nWA, aField )
 
    NEXT
 
@@ -376,10 +372,9 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    /* Add a new open number */
    aDBFData[ DATABASE_OPENNUMBER ]++
 
-   // File already opened in exclusive mode
-   // I have to do this check here because, in case of error, AR_CLOSE() is called however
+   /* File already opened in exclusive mode */
+   /* I have to do this check here because, in case of error, AR_CLOSE() is called however */
    IF aDBFData[ DATABASE_LOCKED ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1000
@@ -393,10 +388,11 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    ENDIF
 
-   // Open file in exclusive mode
+   /* Open file in exclusive mode */
    IF !aOpenInfo[ UR_OI_SHARED ]
       IF aDBFData[ DATABASE_OPENNUMBER ] == 1
          aDBFData[ DATABASE_LOCKED     ] := .T.
+
       ELSE
          oError := ErrorNew()
          oError:GenCode     := EG_OPEN
@@ -408,6 +404,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
          UR_SUPER_ERROR( nWA, oError )
          NetErr( .T. )
          RETURN HB_FAILURE
+
       ENDIF
    ENDIF
 
@@ -425,11 +422,11 @@ STATIC FUNCTION AR_CLOSE( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF HB_ISARRAY( aDBFData )
-      // decrease open number
+      /* decrease open number */
       aDBFData[ DATABASE_OPENNUMBER ]--
 
-      // unlock file
-      aDBFData[ DATABASE_LOCKED     ] := .F.  // Exclusive mode
+      /* unlock file */
+      aDBFData[ DATABASE_LOCKED     ] := .F.  /* Exclusive mode */
    ENDIF
 
    RETURN UR_SUPER_CLOSE( nWA )
@@ -444,14 +441,12 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nField = %2$d, xValue = %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
    IF nField > 0 .AND. nField <= Len( aStruct )
-
       IF aWAData[ WADATA_EOF ]
          /* We are at EOF position, return empty value */
          xValue := EmptyValue( aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
       ELSE
          xValue := aRecords[ nRecNo ][ nField ]
       ENDIF
-
       RETURN HB_SUCCESS
 
    ENDIF
@@ -498,23 +493,19 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nRecord = %2$d, nRecCount = %3$d", nWA, nRecord, nRecCount ) )
 
    IF nRecord >= 1 .AND. nRecord <= nRecCount
-
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .F.
       aWAData[ WADATA_RECNO ] := nRecord
 
    ELSEIF nRecCount == 0
-
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
       aWAData[ WADATA_RECNO ] := 1
 
    ELSEIF nRecord < 0
-
       aWAData[ WADATA_BOF ]   := .T.
       aWAData[ WADATA_EOF ]   := .F.
       aWAData[ WADATA_RECNO ] := 1
 
    ELSEIF nRecord == 0 .OR. nRecord > nRecCount
-
       aWAData[ WADATA_BOF ]   := .F.
       aWAData[ WADATA_EOF ]   := .T.
       aWAData[ WADATA_RECNO ] := nRecCount + 1
@@ -543,12 +534,10 @@ STATIC FUNCTION AR_GOTOP( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF nRecCount == 0
-
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
       aWAData[ WADATA_RECNO ] := 1
 
    ELSE
-
       aWAData[ WADATA_BOF ]   := .F.
       aWAData[ WADATA_EOF ]   := .F.
       IF nIndex == 0
@@ -585,12 +574,10 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF Len( aRecords ) == 0
-
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
       aWAData[ WADATA_RECNO ] := 1
 
    ELSE
-
       aWAData[ WADATA_BOF ]   := .F.
       aWAData[ WADATA_EOF ]   := .F.
       IF nIndex == 0
@@ -599,7 +586,7 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
          IF Empty( aIndexes[ nIndex, INDEX_RECORDS ] )
             aWAData[ WADATA_ORDRECNO ] := 0
             nResult := AR_GOTO( nWA, 0 )
-         else
+         ELSE
             aWAData[ WADATA_ORDRECNO ] := Len( aTail( aIndexes[ nIndex, INDEX_RECORDS ] ) )
             nResult := AR_GOTO( nWA, aTail( aIndexes[ nIndex, INDEX_RECORDS ] )[ INDEXKEY_RECORD ] )
          ENDIF
@@ -614,13 +601,14 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
 
    ENDIF
 
-RETURN nResult
+   RETURN nResult
 
 STATIC FUNCTION AR_SETFILTER( nWa, aDbFilterInfo )
 
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, aDbFilterInfo = %2$s", nWA, hb_ValToExp( aDbFilterInfo ) ) )
 
    USRRDD_AREADATA( nWA )[ WADATA_FILTERINFO ] := aDbFilterInfo
+
    RETURN SUCCESS
 
 STATIC FUNCTION AR_CLEARFILTER( nWA )
@@ -628,7 +616,8 @@ STATIC FUNCTION AR_CLEARFILTER( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    USRRDD_AREADATA( nWA )[ WADATA_FILTERINFO ] := NIL
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -642,7 +631,6 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
 
    IF nToSkip != 0
       DO WHILE !aWAData[ WADATA_BOF ] .AND. !aWAData[ WADATA_EOF ]
-
          IF ( Set( _SET_DELETED ) .AND. aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] ) .OR. ;
                ( aWAData[ WADATA_FILTERINFO ] <> NIL .AND. !Eval( aWAData[ WADATA_FILTERINFO, UR_FRI_BEXPR ] ) )
             IF !( AR_SKIPRAW( nWA, nToSkip ) == HB_SUCCESS )
@@ -658,8 +646,7 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
             LOOP
          ENDIF
 
-         // FILTERS
-
+         /* FILTERS */
          EXIT
       ENDDO
 
@@ -682,7 +669,6 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nRecords = %2$d", nWA, nRecords ) )
 
    IF nRecords == 0
-
       lBof := aWAData[ WADATA_BOF ]
       lEof := aWAData[ WADATA_EOF ]
 
@@ -692,7 +678,6 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
       aWAData[ WADATA_EOF ] := lEof
 
    ELSEIF nIndex > 0
-
       nRec    := ordKeyNo()
       lScope0 := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] <> NIL
       lScope1 := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] <> NIL
@@ -742,24 +727,22 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
       ENDIF
 
    ELSEIF nRecords < 0 .AND. -nRecords >= aWAData[ WADATA_RECNO ]
-
       nResult := AR_GOTO( nWA, 1 )
       aWAData[ WADATA_BOF ]   := .T.
 
    ELSE
-
       nResult := AR_GOTO( nWA, aWAData[ WADATA_RECNO ] + nRecords )
 
    ENDIF
 
-   RETURN nResult // HB_SUCCESS
+   RETURN nResult
 
 STATIC FUNCTION AR_BOF( nWA, lBof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
 
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, lBof = %2$s", nWA, hb_ValToExp( lBof ) ) )
 
-   // This is a hack to protect from dbf1.c skipraw hack
+   /* This is a hack to protect from dbf1.c skipraw hack */
    IF aWAData[ WADATA_FORCEBOF ] .AND. lBof
       aWAData[ WADATA_BOF ] := lBof
       aWAData[ WADATA_FORCEBOF ] := .F.
@@ -790,10 +773,9 @@ STATIC FUNCTION AR_DELETE( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025 // EDBF_READONLY
+      oError:SubCode     := 1025                /* EDBF_READONLY */
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -806,7 +788,7 @@ STATIC FUNCTION AR_DELETE( nWA )
 
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
-         oError:SubCode     := 1022 // EDBF_UNLOCKED
+         oError:SubCode     := 1022            /* EDBF_UNLOCKED */
          oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          UR_SUPER_ERROR( nWA, oError )
@@ -815,7 +797,6 @@ STATIC FUNCTION AR_DELETE( nWA )
       ENDIF
 
       IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
-
          aEval( aIndexes, { | aInd, n | aKeys[ n ] := Eval( aInd[ INDEX_ORCR, UR_ORCR_BKEY ] ) } )
 
          aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
@@ -855,10 +836,9 @@ STATIC FUNCTION AR_RECALL( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025 // EDBF_READONLY
+      oError:SubCode     := 1025 /* EDBF_READONLY */
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -867,12 +847,10 @@ STATIC FUNCTION AR_RECALL( nWA )
    ENDIF
 
    IF ! aWAData[ WADATA_EOF ]
-
       IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
-
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
-         oError:SubCode     := 1022 // EDBF_UNLOCKED
+         oError:SubCode     := 1022 /* EDBF_UNLOCKED */
          oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          UR_SUPER_ERROR( nWA, oError )
@@ -884,6 +862,7 @@ STATIC FUNCTION AR_RECALL( nWA )
          aEval( aIndexes, { | aInd, n | aKeys[ n ] := Eval( aInd[ INDEX_ORCR, UR_ORCR_BKEY ] ) } )
          aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .F.
          aEval( aIndexes, { | aInd, n | ModifyIndex( n, Eval( aInd[ INDEX_ORCR, UR_ORCR_BKEY ] ), aInd, aWAData, aKeys[ n ] ) } )
+
       ENDIF
    ENDIF
 
@@ -899,16 +878,17 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError, aRecord, aRecDataInit
 
+   HB_SYMBOL_UNUSED( nRecords )
+
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nRecords = %2$s", nWA, hb_ValToExp( nRecords ) ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025 // EDBF_READONLY
+      oError:SubCode     := 1025 /* EDBF_READONLY */
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
-      //oError:OsCode      := fError()
+      /*oError:OsCode      := fError() */
       oError:CanDefault  := .T.
       oError:CanRetry    := .T.
       NetErr( .T. )
@@ -943,6 +923,7 @@ STATIC FUNCTION AR_LOCK( nWA, aLock )
 
    IF aWAData[ WADATA_EOF ]
       aLock[ UR_LI_RESULT ] := .T.
+
    ELSE
       aRecInfo := aWAData[ WADATA_DATABASE, DATABASE_RECINFO, nRec ]
       IF aWAData[ WADATA_OPENINFO, UR_OI_SHARED ]
@@ -957,8 +938,10 @@ STATIC FUNCTION AR_LOCK( nWA, aLock )
          ENDIF
       ELSE
          aLock[ UR_LI_RESULT ] := .T.
+
       ENDIF
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_UNLOCK( nWA, nRec )
@@ -970,21 +953,24 @@ STATIC FUNCTION AR_UNLOCK( nWA, nRec )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nRec = %2$d", nWA, nRec ) )
 
    IF !Empty( aRecords )
-      IF nRec == NIL // Unlock All
+      IF nRec == NIL            /* Unlock All */
          FOR EACH nRec IN aRecords
             aRecInfo[ nRec, RECDATA_LOCKED ] := 0
          NEXT
          aSize( aRecords, 0 )
-      ELSE  // Unlock single record
+
+      ELSE
          nPos := aScan( aRecords, nRec )
          IF nPos > 0
             aRecInfo[ nRec, RECDATA_LOCKED ] := 0
             aDel( aRecords, nPos )
             aSize( aRecords, Len( aRecords ) - 1 )
+
          ENDIF
       ENDIF
    ENDIF
-RETURN HB_SUCCESS
+
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -1016,7 +1002,7 @@ STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
    RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_PACK( nWA )
-   local oError, nRec, aIndex
+   LOCAL oError, nRec, aIndex
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords := aDBFData[ DATABASE_RECORDS ]
@@ -1027,10 +1013,9 @@ STATIC FUNCTION AR_PACK( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF !aDBFData[ DATABASE_LOCKED ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_UNLOCKED
-      oError:SubCode     := 1022 // EDBF_UNLOCKED
+      oError:SubCode     := 1022 /* EDBF_UNLOCKED */
       oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
       UR_SUPER_ERROR( nWA, oError )
       RETURN FAILURE
@@ -1054,7 +1039,7 @@ STATIC FUNCTION AR_PACK( nWA )
    FOR nRec := Len( aRecInfo ) TO 1 STEP -1
       IF aRecInfo[ nRec, RECDATA_DELETED ]
          aDel( aRecInfo, nRec, .T. )
-         aDel( aRecords, nRec, .T. )
+          aDel( aRecords, nRec, .T. )
       ENDIF
    NEXT
    AR_GOTOP( nWA )
@@ -1070,10 +1055,9 @@ STATIC FUNCTION AR_ZAP( nWA )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025 // EDBF_READONLY
+      oError:SubCode     := 1025 /* EDBF_READONLY */
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -1082,10 +1066,9 @@ STATIC FUNCTION AR_ZAP( nWA )
    ENDIF
 
    IF aOpenInfo[ UR_OI_SHARED ]
-
       oError := ErrorNew()
       oError:GenCode     := EG_SHARED
-      oError:SubCode     := 1023 // EDBF_SHARED
+      oError:SubCode     := 1023 /* EDBF_SHARED */
       oError:Description := HB_LANGERRMSG( EG_SHARED )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -1093,11 +1076,11 @@ STATIC FUNCTION AR_ZAP( nWA )
 
    ENDIF
 
-   // empty records
+   /* empty records */
    aDBFData[ DATABASE_RECORDS ] := {}
    aDBFData[ DATABASE_RECINFO ] := {}
 
-   // move to 0 recno
+   /* move to 0 recno */
    AR_GOTO( nWA, 0 )
 
    RETURN HB_SUCCESS
@@ -1107,13 +1090,14 @@ STATIC FUNCTION AR_FOUND( nWa, lFound )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, lFound = %2$s", nWa, hb_ValToExp( lFound ) ) )
 
    lFound := USRRDD_AREADATA( nWA )[ WADATA_FOUND ]
-RETURN HB_SUCCESS
+
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_SEEK( nWa, lSoftSeek, xSeek, lLast )
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL aIndexes := aWAData[ WADATA_DATABASE, DATABASE_INDEX ]
    LOCAL nIndex   := aWAData[ WADATA_INDEX ]
-   LOCAL nResult  //:= HB_SUCCESS
+   LOCAL nResult  /*:= HB_SUCCESS */
 
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, lSoftSeek = %2$s, xSeek = %3$s, lLast = %4$s", nWa, hb_ValToExp( lSoftSeek ), hb_ValToExp( xSeek ), hb_ValToExp( lLast ) ) )
 
@@ -1121,9 +1105,11 @@ STATIC FUNCTION AR_SEEK( nWa, lSoftSeek, xSeek, lLast )
    IF aWAData[ WADATA_ORDRECNO ] == 0 .OR. aWAData[ WADATA_ORDRECNO ] > Len( aIndexes[ nIndex, INDEX_RECORDS ] )
       aWAData[ WADATA_FOUND ] := .F.
       nResult := AR_GOTO( nWA, 0 )
+
    ELSE
       aWAData[ WADATA_FOUND ] := aIndexes[ nIndex, INDEX_RECORDS, aWAData[ WADATA_ORDRECNO ], INDEXKEY_KEY ] = xSeek
       nResult := AR_GOTO( nWA, aIndexes[ nIndex, INDEX_RECORDS, aWAData[ WADATA_ORDRECNO ], INDEXKEY_RECORD ] )
+
    ENDIF
 
    RETURN nResult
@@ -1135,15 +1121,16 @@ STATIC FUNCTION AR_INFO( nWA, nMsg, xValue )
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, nMsg = %2$s, xValue = %3$s", nWA, hb_ValToExp( nMsg ), hb_ValToExp( xValue ) ) )
 
    SWITCH nMsg
-      CASE DBI_TABLEEXT
-         xValue := ""
-         EXIT
-      CASE DBI_SHARED
-         xValue := aDBFData[ DATABASE_LOCKED ]
-         EXIT
-      OTHERWISE
-         RETURN UR_SUPER_INFO( nWA, nMsg, @xValue )
+   CASE DBI_TABLEEXT
+      xValue := ""
+      EXIT
+   CASE DBI_SHARED
+      xValue := aDBFData[ DATABASE_LOCKED ]
+      EXIT
+   OTHERWISE
+      RETURN UR_SUPER_INFO( nWA, nMsg, @xValue )
    END SWITCH
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_ORDLSTADD( nWA, aOrderInfo )
@@ -1151,16 +1138,21 @@ STATIC FUNCTION AR_ORDLSTADD( nWA, aOrderInfo )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
    LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
 
+   HB_SYMBOL_UNUSED( aOrderInfo )
+
    HB_TRACE( HB_TR_DEBUG, HB_STRFORMAT( "nWA = %1$d, aOrderInfo = %2$s", nWA, hb_valToExp( aOrderInfo ) ) )
 
    IF Empty( aIndexes )
       aWAData[ WADATA_INDEX ] := 0
+
    ELSE
       aWAData[ WADATA_INDEX ] := 1
       IF Empty( aWAData[ WADATA_WAORDINFO ] )
          aEval( aWAData[ WADATA_WAORDINFO ] := Array( Len( aIndexes ) ), { | x, y | HB_SYMBOL_UNUSED( x ), aWAData[ WADATA_WAORDINFO, y ] := AR_WAOIINIT() } )
       ENDIF
+
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_ORDLSTFOCUS( nWA, aOrderInfo )
@@ -1200,29 +1192,29 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    ELSE
       aOCInfo   := aOrderCreate[ UR_ORCR_CONDINFO ] := ;
                   { ;
-                    .F. ,; // #define UR_ORC_ACTIVE         1
-                    ""  ,; // #define UR_ORC_CFOR           2
-                    ""  ,; // #define UR_ORC_CWHILE         3
-                    NIL ,; // #define UR_ORC_BFOR           4
-                    NIL ,; // #define UR_ORC_BWHILE         5
-                    NIL ,; // #define UR_ORC_BEVAL          6
-                    0   ,; // #define UR_ORC_STEP           7
-                    0   ,; // #define UR_ORC_STARTREC       8
-                    0   ,; // #define UR_ORC_NEXT           9
-                    0   ,; // #define UR_ORC_RECORD         10
-                    .F. ,; // #define UR_ORC_REST           11
-                    .F. ,; // #define UR_ORC_DESCEND        12
-                    .F. ,; // #define UR_ORC_SCOPED         13
-                    .T. ,; // #define UR_ORC_ALL            14
-                    .F. ,; // #define UR_ORC_ADDITIVE       15
-                    .F. ,; // #define UR_ORC_USECURRENT     16
-                    .F. ,; // #define UR_ORC_CUSTOM         17
-                    .F. ,; // #define UR_ORC_NOOPTIMIZE     18
-                    .F. ,; // #define UR_ORC_COMPOUND       19
-                    .F. ,; // #define UR_ORC_USEFILTER      20
-                    .F. ,; // #define UR_ORC_TEMPORARY      21
-                    .F. ,; // #define UR_ORC_EXCLUSIVE      22
-                    NIL  ; // #define UR_ORC_CARGO          23
+                    .F. ,; /* #define UR_ORC_ACTIVE         1   */
+                    ""  ,; /* #define UR_ORC_CFOR           2   */
+                    ""  ,; /* #define UR_ORC_CWHILE         3   */
+                    NIL ,; /* #define UR_ORC_BFOR           4   */
+                    NIL ,; /* #define UR_ORC_BWHILE         5   */
+                    NIL ,; /* #define UR_ORC_BEVAL          6   */
+                    0   ,; /* #define UR_ORC_STEP           7   */
+                    0   ,; /* #define UR_ORC_STARTREC       8   */
+                    0   ,; /* #define UR_ORC_NEXT           9   */
+                    0   ,; /* #define UR_ORC_RECORD         10  */
+                    .F. ,; /* #define UR_ORC_REST           11  */
+                    .F. ,; /* #define UR_ORC_DESCEND        12  */
+                    .F. ,; /* #define UR_ORC_SCOPED         13  */
+                    .T. ,; /* #define UR_ORC_ALL            14  */
+                    .F. ,; /* #define UR_ORC_ADDITIVE       15  */
+                    .F. ,; /* #define UR_ORC_USECURRENT     16  */
+                    .F. ,; /* #define UR_ORC_CUSTOM         17  */
+                    .F. ,; /* #define UR_ORC_NOOPTIMIZE     18  */
+                    .F. ,; /* #define UR_ORC_COMPOUND       19  */
+                    .F. ,; /* #define UR_ORC_USEFILTER      20  */
+                    .F. ,; /* #define UR_ORC_TEMPORARY      21  */
+                    .F. ,; /* #define UR_ORC_EXCLUSIVE      22  */
+                    NIL  ; /* #define UR_ORC_CARGO          23  */
                   }
    ENDIF
 
@@ -1301,108 +1293,110 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
    IF Empty( aOrderInfo[ UR_ORI_TAG ] )
       aOrderInfo[ UR_ORI_TAG ] := aOrderInfo[ UR_ORI_BAG ]
    ENDIF
+
    SWITCH ValType( aOrderInfo[ UR_ORI_TAG ] )
-      CASE "C"
-         nIndex := Upper( aOrderInfo[ UR_ORI_TAG ] )
-         nIndex := aScan( aIndexes, { | x | x[ INDEX_TAG ] == nIndex } )
-         EXIT
-      CASE "N"
-         nIndex := aOrderInfo[ UR_ORI_TAG ]
-         EXIT
-      OTHERWISE
-         nIndex  := aWAData[ WADATA_INDEX ]
+   CASE "C"
+      nIndex := Upper( aOrderInfo[ UR_ORI_TAG ] )
+      nIndex := aScan( aIndexes, { | x | x[ INDEX_TAG ] == nIndex } )
+      EXIT
+   CASE "N"
+      nIndex := aOrderInfo[ UR_ORI_TAG ]
+      EXIT
+   OTHERWISE
+      nIndex  := aWAData[ WADATA_INDEX ]
    ENDSWITCH
 
    SWITCH nMsg
-      CASE DBOI_EXPRESSION // 2
-         IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] )
-            aOrderInfo[ UR_ORI_RESULT ] := ""
-         ELSE
-            aOrderInfo[ UR_ORI_RESULT ] := aIndexes[ nIndex, INDEX_ORCR, UR_ORCR_CKEY ]
-         ENDIF
-         EXIT
-      CASE DBOI_POSITION   // 3
-         IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] ) .OR. Empty( aIndexes[ nIndex, INDEX_RECORDS ] ) .OR. aWAData[ WADATA_ORDRECNO ] == 0
-            aOrderInfo[ UR_ORI_RESULT ] := 0
-         ELSE
-            IF aIndexes[ nIndex, INDEX_RECORDS, aWAData[ WADATA_ORDRECNO ], INDEXKEY_RECORD ] <> aWAData[ WADATA_RECNO ]
-               aWAData[ WADATA_ORDRECNO ] := Seek( Eval( aIndexes[ nIndex, INDEX_ORCR, UR_ORCR_BKEY ] ), .F., .F., aIndexes[ nIndex ], aWAData[ WADATA_RECNO ] )
-            ENDIF
-            IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] == NIL
-               aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ]
-            ELSE
-               nPos := Seek( aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ], .T., .F., aIndexes[ nIndex ] )
-               IF nPos > 0 .AND. !aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ] = aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
-                  IF nPos > 1 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
-                     nPos--
-                  ELSE
-                     aOrderInfo[ UR_ORI_RESULT ] := 0
-                     EXIT
-                  ENDIF
-               ENDIF
-               aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ] - nPos + 1
-            ENDIF
-         ENDIF
-         EXIT
-      CASE DBOI_BAGNAME // 7
+   CASE DBOI_EXPRESSION /* 2 */
+      IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] )
          aOrderInfo[ UR_ORI_RESULT ] := ""
-         EXIT
-      CASE DBOI_KEYCOUNT   // 26
-         IF nIndex > 0 .AND. !Empty( aWAData[ WADATA_DATABASE, DATABASE_RECORDS ] )
-            IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] == NIL
-               nPos := 0
-            ELSE
-               nPos := SeekScope( aIndexes[ nIndex ], aWAData[ WADATA_WAORDINFO, nIndex ], .F. )
-               IF nPos == 0
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := aIndexes[ nIndex, INDEX_ORCR, UR_ORCR_CKEY ]
+      ENDIF
+      EXIT
+   CASE DBOI_POSITION   /* 3 */
+      IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] ) .OR. Empty( aIndexes[ nIndex, INDEX_RECORDS ] ) .OR. aWAData[ WADATA_ORDRECNO ] == 0
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+      ELSE
+         IF aIndexes[ nIndex, INDEX_RECORDS, aWAData[ WADATA_ORDRECNO ], INDEXKEY_RECORD ] <> aWAData[ WADATA_RECNO ]
+            aWAData[ WADATA_ORDRECNO ] := Seek( Eval( aIndexes[ nIndex, INDEX_ORCR, UR_ORCR_BKEY ] ), .F., .F., aIndexes[ nIndex ], aWAData[ WADATA_RECNO ] )
+         ENDIF
+         IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] == NIL
+            aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ]
+         ELSE
+            nPos := Seek( aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ], .T., .F., aIndexes[ nIndex ] )
+            IF nPos > 0 .AND. !aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ] = aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
+               IF nPos > 1 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
+                  nPos--
+               ELSE
                   aOrderInfo[ UR_ORI_RESULT ] := 0
                   EXIT
                ENDIF
             ENDIF
-            IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] == NIL
-               IF nPos > 0
-                  nPos := Len( aIndexes[ nIndex, INDEX_RECORDS ] ) - nPos + 1
-               ENDIF
-            ELSE
-               nMsg := SeekScope( aIndexes[ nIndex ], aWAData[ WADATA_WAORDINFO, nIndex ], .T. )
-               IF nMsg > 0
-                  IF nPos == 0
-                     nPos := nMsg
-                  ELSE
-                     nPos := nMsg - nPos + 1
-                  ENDIF
-               ENDIF
+            aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ] - nPos + 1
+         ENDIF
+      ENDIF
+      EXIT
+   CASE DBOI_BAGNAME /* 7 */
+      aOrderInfo[ UR_ORI_RESULT ] := ""
+      EXIT
+   CASE DBOI_KEYCOUNT   /* 26 */
+      IF nIndex > 0 .AND. !Empty( aWAData[ WADATA_DATABASE, DATABASE_RECORDS ] )
+         IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] == NIL
+            nPos := 0
+         ELSE
+            nPos := SeekScope( aIndexes[ nIndex ], aWAData[ WADATA_WAORDINFO, nIndex ], .F. )
+            IF nPos == 0
+               aOrderInfo[ UR_ORI_RESULT ] := 0
+               EXIT
             ENDIF
+         ENDIF
+         IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] == NIL
             IF nPos > 0
-               aOrderInfo[ UR_ORI_RESULT ] := nPos
-            ELSE
-               aOrderInfo[ UR_ORI_RESULT ] := Len( aIndexes[ nIndex, INDEX_RECORDS ] )
+               nPos := Len( aIndexes[ nIndex, INDEX_RECORDS ] ) - nPos + 1
             ENDIF
          ELSE
-            aOrderInfo[ UR_ORI_RESULT ] := 0
+            nMsg := SeekScope( aIndexes[ nIndex ], aWAData[ WADATA_WAORDINFO, nIndex ], .T. )
+            IF nMsg > 0
+               IF nPos == 0
+                  nPos := nMsg
+               ELSE
+                  nPos := nMsg - nPos + 1
+               ENDIF
+            ENDIF
          ENDIF
-         EXIT
-      CASE DBOI_SCOPETOP   // 39
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
-         IF aOrderInfo[ UR_ORI_ALLTAGS ] <> NIL
-            aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] := aOrderInfo[ UR_ORI_NEWVAL ]
+         IF nPos > 0
+            aOrderInfo[ UR_ORI_RESULT ] := nPos
+         ELSE
+            aOrderInfo[ UR_ORI_RESULT ] := Len( aIndexes[ nIndex, INDEX_RECORDS ] )
          ENDIF
-         EXIT
-      CASE DBOI_SCOPEBOTTOM   // 40
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
-         IF aOrderInfo[ UR_ORI_ALLTAGS ] <> NIL
-            aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] := aOrderInfo[ UR_ORI_NEWVAL ]
-         ENDIF
-         EXIT
-      CASE DBOI_SCOPETOPCLEAR // 41
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
-         aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] := NIL
-         EXIT
-      CASE DBOI_SCOPEBOTTOMCLEAR // 42
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
-         aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] := NIL
-         EXIT
-      OTHERWISE
-         RETURN HB_FAILURE
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+      ENDIF
+      EXIT
+   CASE DBOI_SCOPETOP   /* 39 */
+      aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
+      IF aOrderInfo[ UR_ORI_ALLTAGS ] <> NIL
+         aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] := aOrderInfo[ UR_ORI_NEWVAL ]
+      ENDIF
+      EXIT
+   CASE DBOI_SCOPEBOTTOM   /* 40 */
+      aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
+      IF aOrderInfo[ UR_ORI_ALLTAGS ] <> NIL
+         aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] := aOrderInfo[ UR_ORI_NEWVAL ]
+      ENDIF
+      EXIT
+   CASE DBOI_SCOPETOPCLEAR /* 41 */
+      aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
+      aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] := NIL
+      EXIT
+   CASE DBOI_SCOPEBOTTOMCLEAR /* 42 */
+      aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ]
+      aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] := NIL
+      EXIT
+   OTHERWISE
+      RETURN HB_FAILURE
+
    ENDSWITCH
 
    RETURN HB_SUCCESS
@@ -1471,33 +1465,29 @@ INIT PROCEDURE ARRAYRDD_INIT()
 /*
   hb_EraseArrayRdd() function is equivalent of FErase() function, but works here in memory
 */
-
 FUNCTION hb_EraseArrayRdd( cFullName )
    LOCAL nReturn := HB_FAILURE
    LOCAL aDBFData, oError
    LOCAL hRDDData
 
    IF s_nRddID >= 0
-
       hRDDData := USRRDD_RDDDATA( s_nRddID )
 
       IF hRDDData != NIL
-
          IF ISCHARACTER( cFullName )
             cFullName := Upper( cFullName )
-            // First search if memory dbf exists
+            /* First search if memory dbf exists */
             IF HB_HHasKey( hRDDData, cFullName )
 
-               // Get ARRAY data
+               /* Get ARRAY DATA */
                aDBFData := hRDDData[ cFullName ]
 
-               // Check if there are current opened workarea
+               /* Check if there are current opened workarea */
                IF aDBFData[ DATABASE_OPENNUMBER ] > 0
-
                   oError := ErrorNew()
 
                   oError:GenCode     := EG_UNSUPPORTED
-                  oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+                  oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
                   oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
                                         "database in use)"
                   oError:FileName    := cFullName
@@ -1507,38 +1497,35 @@ FUNCTION hb_EraseArrayRdd( cFullName )
                   nReturn := HB_FAILURE
 
                ELSE
-
-                  // Delete database from slot
+                  /* Delete database from slot */
                   hb_HDel( hRDDData, cFullName )
                   nReturn := HB_SUCCESS
 
                ENDIF
-
             ENDIF
          ENDIF
 
       ELSE
-
          oError := ErrorNew()
 
          oError:GenCode     := EG_UNSUPPORTED
-         oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+         oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
          oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
                                "ARRAYRDD not inizialized)"
          oError:FileName    := cFullName
          oError:CanDefault  := .T.
-         //UR_SUPER_ERROR( 0, oError )
+         /* UR_SUPER_ERROR( 0, oError ) */
          Throw( oError )
 
          nReturn := HB_FAILURE
 
       ENDIF
-   ELSE
 
+   ELSE
       oError := ErrorNew()
 
       oError:GenCode     := EG_UNSUPPORTED
-      oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
       oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
                             "ARRAYRDD not in use)"
       oError:FileName    := cFullName
@@ -1555,34 +1542,29 @@ FUNCTION hb_EraseArrayRdd( cFullName )
   hb_FileArrayRdd( cFullName ) --> lExist
   This function is equivalent of File() function, but works here in memory
 */
-
 FUNCTION hb_FileArrayRdd( cFullName )
    LOCAL nReturn := HB_FAILURE
    LOCAL oError
    LOCAL hRDDData
 
    IF s_nRddID >= 0
-
       hRDDData := USRRDD_RDDDATA( s_nRddID )
 
       IF hRDDData != NIL
-
          IF ISCHARACTER( cFullName )
             cFullName := Upper( cFullName )
-            // First search if memory dbf exists
+            /* First search if memory dbf exists */
             IF HB_HHasKey( hRDDData, cFullName )
-
                nReturn := HB_SUCCESS
 
             ENDIF
          ENDIF
 
       ELSE
-
          oError := ErrorNew()
 
          oError:GenCode     := EG_UNSUPPORTED
-         oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+         oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
          oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
                                "ARRAYRDD not inizialized)"
          oError:FileName    := cFullName
@@ -1594,11 +1576,10 @@ FUNCTION hb_FileArrayRdd( cFullName )
       ENDIF
 
    ELSE
-
       oError := ErrorNew()
 
       oError:GenCode     := EG_UNSUPPORTED
-      oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
       oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
                             "ARRAYRDD not in use)"
       oError:FileName    := cFullName
@@ -1608,18 +1589,21 @@ FUNCTION hb_FileArrayRdd( cFullName )
       nReturn := HB_FAILURE
 
    ENDIF
+
    RETURN ( nReturn == HB_SUCCESS )
 
 FUNCTION hb_SetArrayRdd( aArray )
    LOCAL aRecInfo
    LOCAL nWA      := Select()
    LOCAL aDBFData := USRRDD_AREADATA( nWA )[ WADATA_DATABASE ]
+
    aDBFData[ DATABASE_RECORDS ] := aArray
    aDBFData[ DATABASE_RECINFO ] := Array( Len( aArray ) )
    FOR EACH aRecInfo IN aDBFData[ DATABASE_RECINFO ]
       aRecInfo := AR_RECDATAINIT()
    NEXT
    AR_GOTOP( nWA )
+
    RETURN NIL
 
 STATIC FUNCTION BlankRecord( aStruct )
@@ -1628,7 +1612,7 @@ STATIC FUNCTION BlankRecord( aStruct )
    LOCAL nField
 
    FOR nField := 1 TO nLenStruct
-       aRecord[ nField ] := EmptyValue( aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
+      aRecord[ nField ] := EmptyValue( aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
    NEXT
 
    RETURN aRecord
@@ -1638,13 +1622,13 @@ STATIC FUNCTION PutValue( xValue, cType, nLen, nDec )
 
    DO CASE
    CASE cType == "C"
-        xVal := PadR( xValue, nLen )
+      xVal := PadR( xValue, nLen )
    CASE cType == "M"
-        xVal := xValue  // No limit for a memo field
+      xVal := xValue  /* No limit for a memo field */
    CASE cType == "N"
-        xVal := Val( Str( xValue, nLen, nDec ) )
+      xVal := Val( Str( xValue, nLen, nDec ) )
    OTHERWISE
-        xVal := xValue
+      xVal := xValue
    ENDCASE
 
    RETURN xVal
@@ -1658,15 +1642,16 @@ STATIC FUNCTION EmptyValue( cType, nLen, nDec )
 
    DO CASE
    CASE cType == "C" .OR. cType == "M"
-        xVal := Space( nLen )
+      xVal := Space( nLen )
    CASE cType == "D"
-        xVal := CToD( "" )
+      xVal := CToD( "" )
    CASE cType == "L"
-        xVal := .F.
+      xVal := .F.
    CASE cType == "N"
-        xVal := Val( Str( 0, nLen, nDec ) )
+      xVal := Val( Str( 0, nLen, nDec ) )
    ENDCASE
-RETURN xVal
+
+   RETURN xVal
 
 /******************
 * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
@@ -1686,132 +1671,121 @@ STATIC FUNCTION HB_Decode(...)
    xDefault := NIL
 
    DO CASE
-      CASE nParams > 1     // More parameters, real case
+   CASE nParams > 1     /* More parameters, real CASE */
+      xVal := aParams[ 1 ]
 
-           xVal := aParams[ 1 ]
+      aDel( aParams, 1, .T. ) /* Resize params */
+      nParams := Len( aParams )
 
-           aDel( aParams, 1, .T. ) // Resize params
-           nParams := Len( aParams )
+      /* if I have a odd number of members, last is DEFAULT */
+      IF ( nParams % 2 <> 0 )
+         xDefault := aTail( aParams )
+         /* Resize again deleting last */
+         aDel( aParams, nParams, .T. )
+         nParams := Len( aParams )
+      ENDIF
 
-           // if I have a odd number of members, last is default
-           IF ( nParams % 2 <> 0 )
-              xDefault := aTail( aParams )
-              // Resize again deleting last
-              aDel( aParams, nParams, .T. )
-              nParams := Len( aParams )
-           ENDIF
+      /* Ok because I have no other value than default, I will check if it is a complex value */
+      /* like an array or an hash, so I can get it to decode values */
+      IF xDefault <> NIL .AND. ;
+            ( ISARRAY( xDefault ) .OR. ;
+              ValType( xDefault ) == "H" )
 
-           // Ok because I have no other value than default, I will check if it is a complex value
-           // like an array or an hash, so I can get it to decode values
-           IF xDefault <> NIL .AND. ;
-              ( ISARRAY( xDefault ) .OR. ;
-                ValType( xDefault ) == "H" )
+         /* If it is an array I will restart this function creating a linear call */
+         IF ISARRAY( xDefault ) .AND. Len( xDefault ) > 0
+            /* I can have a linear array like { 1, "A", 2, "B", 3, "C" }
+             * or an array of array couples like { { 1, "A" }, { 2, "B" }, { 3, "C" } }
+             * first element tell me what type is */
 
-              // If it is an array I will restart this function creating a linear call
-              IF ISARRAY( xDefault ) .AND. Len( xDefault ) > 0
+            /* couples of values */
+            IF ISARRAY( xDefault[ 1 ] )
+               /* If i have an array as default, this contains couples of key / value */
+               /* so I have to convert in a linear array */
 
-                 // I can have a linear array like { 1, "A", 2, "B", 3, "C" }
-                 // or an array of array couples like { { 1, "A" }, { 2, "B" }, { 3, "C" } }
-                 // first element tell me what type is
+               nLen := Len( xDefault )
 
-                 // couples of values
-                 IF ISARRAY( xDefault[ 1 ] )
+               /* Check if array has a default value, this will be last value and has a value */
+               /* different from an array */
+               IF ! ISARRAY( ValType( xDefault[ nLen ] ) )
+                  aParams := Array( ( nLen - 1 ) * 2 )
 
-                    // If i have an array as default, this contains couples of key / value
-                    // so I have to convert in a linear array
+                  n := 1
+                  FOR i := 1 TO nLen - 1
+                     aParams[ n++ ] := xDefault[ i ][ 1 ]
+                     aParams[ n++ ] := xDefault[ i ][ 2 ]
+                  NEXT
 
-                    nLen := Len( xDefault )
+                  aAdd( aParams, xDefault[ nLen ] )
 
-                    // Check if array has a default value, this will be last value and has a value
-                    // different from an array
-                    IF ! ISARRAY( ValType( xDefault[ nLen ] ) )
+               ELSE
+                  /* I haven't a DEFAULT */
+                  aParams := Array( Len( xDefault ) * 2 )
 
-                       aParams := Array( ( nLen - 1 ) * 2 )
+                  n := 1
+                  FOR i := 1 TO Len( xDefault )
+                     aParams[ n++ ] := xDefault[ i ][ 1 ]
+                     aParams[ n++ ] := xDefault[ i ][ 2 ]
+                  NEXT
 
-                       n := 1
-                       FOR i := 1 TO nLen - 1
-                           aParams[ n++ ] := xDefault[ i ][ 1 ]
-                           aParams[ n++ ] := xDefault[ i ][ 2 ]
-                       NEXT
+               ENDIF
+            ELSE
+               /* I have a linear array */
+               aParams := xDefault
 
-                       aAdd( aParams, xDefault[ nLen ] )
+            ENDIF
 
-                    ELSE
+         /* If it is an hash, translate it in an array */
+         ELSEIF ValType( xDefault ) == "H"
+            aParams := Array( Len( xDefault ) * 2 )
 
-                       // I haven't a default
+            i := 1
+            FOR EACH cKey IN xDefault:Keys
+               aParams[ i++ ] := cKey
+               aParams[ i++ ] := xDefault[ cKey ]
+            NEXT
 
-                       aParams := Array( Len( xDefault ) * 2 )
+         ENDIF
 
-                       n := 1
-                       FOR i := 1 TO Len( xDefault )
-                           aParams[ n++ ] := xDefault[ i ][ 1 ]
-                           aParams[ n++ ] := xDefault[ i ][ 2 ]
-                       NEXT
+         /* Then add Decoding value at beginning */
+         aIns( aParams, 1, xVal, .T. )
 
-                    ENDIF
-                 ELSE
-                    // I have a linear array
+         /* And run decode() again */
+         xRet := hb_ExecFromArray( @hb_Decode(), aParams )
 
-                    aParams := xDefault
-                 ENDIF
+      ELSE
+         /* Ok let's go ahead with real FUNCTION */
 
+         /* Combine in 2 lists having elements as { value } and { decode } */
+         aValues  := Array( nParams / 2 )
+         aResults := Array( nParams / 2 )
 
-              // If it is an hash, translate it in an array
-              ELSEIF ValType( xDefault ) == "H"
+         i := 1
+         FOR n := 1 TO nParams - 1 STEP 2
+            aValues[ i ]  := aParams[ n ]
+            aResults[ i ] := aParams[ n + 1 ]
+            i++
+         NEXT
 
-                 aParams := Array( Len( xDefault ) * 2 )
+         /* Check if value exists (valtype of values MUST be same of xVal,
+          * otherwise I will get a runtime error)
+          * TODO: Have I to check also between different valtypes, jumping different ? */
+         nPos := AScan( aValues, {|e| e == xVal } )
 
-                 i := 1
-                 FOR EACH cKey IN xDefault:Keys
-                     aParams[ i++ ] := cKey
-                     aParams[ i++ ] := xDefault[ cKey ]
-                 NEXT
+         IF nPos == 0   /* Not Found, returning DEFAULT */
+            xRet := xDefault   /* it could be also NIL because not present */
 
-              ENDIF
+         ELSE
+            xRet := aResults[ nPos ]
 
-              // Then add Decoding value at beginning
-              aIns( aParams, 1, xVal, .T. )
+         ENDIF
+      ENDIF
 
-              // And run decode() again
-              xRet := hb_ExecFromArray( @hb_Decode(), aParams )
+   CASE nParams == 0    /* No parameters */
+      xRet := NIL
 
-           ELSE
+   CASE nParams == 1    /* Only value to decode as parameter, return an empty value of itself */
+      xRet := DecEmptyValue( aParams[ 1 ] )
 
-              // Ok let's go ahead with real function
-
-              // Combine in 2 lists having elements as { value } and { decode }
-              aValues  := Array( nParams / 2 )
-              aResults := Array( nParams / 2 )
-
-              i := 1
-              FOR n := 1 TO nParams - 1 STEP 2
-                  aValues[ i ]  := aParams[ n ]
-                  aResults[ i ] := aParams[ n + 1 ]
-                  i++
-              NEXT
-
-              // Check if value exists (valtype of values MUST be same of xVal,
-              // otherwise I will get a runtime error)
-              // TODO: Have I to check also between different valtypes, jumping different ?
-              nPos := AScan( aValues, {|e| e == xVal } )
-
-              IF nPos == 0 // Not Found, returning default
-
-                 xRet := xDefault   // it could be also NIL because not present
-
-              ELSE
-
-                 xRet := aResults[ nPos ]
-
-              ENDIF
-
-           ENDIF
-
-      CASE nParams == 0    // No parameters
-           xRet := NIL
-
-      CASE nParams == 1    // Only value to decode as parameter, return an empty value of itself
-           xRet := DecEmptyValue( aParams[ 1 ] )
    ENDCASE
 
    RETURN xRet
@@ -1821,39 +1795,40 @@ STATIC FUNCTION DecEmptyValue( xVal )
    LOCAL cType := ValType( xVal )
 
    SWITCH cType
-      CASE "C"  // Char
-      CASE "M"  // Memo
-           xRet := ""
-           EXIT
-      CASE "D"  // Date
-           xRet := hb_STOD()
-           EXIT
-      CASE "L"  // Logical
-           xRet := .F.
-           EXIT
-      CASE "N"  // Number
-           xRet := 0
-           EXIT
-      CASE "B"  // code block
-           xRet := {|| NIL }
-           EXIT
-      CASE "A"  // array
-           xRet := {}
-           EXIT
-      CASE "H"  // hash
-           xRet := {=>}
-           EXIT
-      CASE "U"  // undefined
-           xRet := NIL
-           EXIT
-      CASE "O"  // Object
-           xRet := NIL   // Or better another value ?
-           EXIT
-      OTHERWISE
-           // Create a runtime error for new datatypes
-           xRet := ""
-           IF xRet == 0 // BANG!
-           ENDIF
+   CASE "C"  /* Char */
+   CASE "M"  /* Memo */
+      xRet := ""
+      EXIT
+   CASE "D"  /* Date */
+      xRet := hb_STOD()
+      EXIT
+   CASE "L"  /* Logical */
+      xRet := .F.
+      EXIT
+   CASE "N"  /* Number */
+      xRet := 0
+      EXIT
+   CASE "B"  /* code block */
+      xRet := {|| NIL }
+      EXIT
+   CASE "A"  /* array */
+      xRet := {}
+      EXIT
+   CASE "H"  /* hash */
+      xRet := {=>}
+      EXIT
+   CASE "U"  /* undefined */
+      xRet := NIL
+      EXIT
+   CASE "O"  /* Object */
+      xRet := NIL   /* Or better another value ? */
+      EXIT
+   OTHERWISE
+      /* Create a runtime error for new datatypes */
+      xRet := ""
+      IF xRet == 0 /* BANG! */
+      ENDIF
+
    ENDSWITCH
 
    RETURN xRet
@@ -1882,8 +1857,10 @@ STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
          IF aIndex[ INDEX_RECORDS, nPos ] <> NIL .AND. aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ] <= xValue
             nPos++
          ENDIF
+
       ELSE
          nPos := Len( aIndex[ INDEX_RECORDS ] )
+
       ENDIF
       aIns( aIndex[ INDEX_RECORDS ], nPos )
       aIndex[ INDEX_RECORDS, nPos ] := AR_INDEXKEYINIT()
@@ -1892,12 +1869,15 @@ STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
       IF nIndex == aWAData[ WADATA_INDEX ]
          aWAData[ WADATA_ORDRECNO ] := nPos
       ENDIF
+
    ELSEIF lDel
       aSize( aIndex[ INDEX_RECORDS ], Len( aIndex[ INDEX_RECORDS ] ) - 1 )
       IF nIndex == aWAData[ WADATA_INDEX ]
          aWAData[ WADATA_ORDRECNO ] := 0
       ENDIF
+
    ENDIF
+
    RETURN NIL
 
 STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
@@ -1907,78 +1887,79 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
    LOCAL nEnd   := Len( aIndex )
 
    SWITCH nEnd
-      CASE 0   // empty archive
+   CASE 0   /* empty archive */
+      nPos := 0
+      EXIT
+   CASE 1   /* Archive with 1 record */
+      IF aIndex[ 1 ] == NIL .OR. IIF( lSoft, IIF( aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ], aIndex[ 1, INDEXKEY_KEY ] <= xSeek, aIndex[ 1, INDEXKEY_KEY ] >= xSeek ), aIndex[ 1, INDEXKEY_KEY ] = xSeek )
+         nPos := 1
+      ELSE
          nPos := 0
-         EXIT
-      CASE 1   // Archive with 1 record
-         IF aIndex[ 1 ] == NIL .OR. IIF( lSoft, IIF( aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ], aIndex[ 1, INDEXKEY_KEY ] <= xSeek, aIndex[ 1, INDEXKEY_KEY ] >= xSeek ), aIndex[ 1, INDEXKEY_KEY ] = xSeek )
-            nPos := 1
-         ELSE
-            nPos := 0
-         ENDIF
-         EXIT
-      OTHERWISE   // Archive with 2 or more records
-         IF aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ]
-            bFirst  := { || aIndex[ 2, INDEXKEY_KEY ] >= xSeek }
-            bBefore := { || xSeek > aIndex[ nPos, INDEXKEY_KEY ] }
-            bAfter  := { || xSeek < aIndex[ nPos, INDEXKEY_KEY ] }
-            bAjust  := { || !aIndex[ nPos, INDEXKEY_KEY ] <= xSeek }
-         ELSE
-            bFirst  := { || aIndex[ 2, INDEXKEY_KEY ] <= xSeek }
-            bBefore := { || !aIndex[ nPos, INDEXKEY_KEY ] <= xSeek}
-            bAfter  := { || xSeek > aIndex[ nPos, INDEXKEY_KEY ] }
-            bAjust  := { || !aIndex[ nPos, INDEXKEY_KEY ] >= xSeek }
-         ENDIF
+      ENDIF
+      EXIT
+   OTHERWISE   /* Archive with 2 or more records */
+      IF aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ]
+         bFirst  := { || aIndex[ 2, INDEXKEY_KEY ] >= xSeek }
+         bBefore := { || xSeek > aIndex[ nPos, INDEXKEY_KEY ]  }
+         bAfter  := { || xSeek < aIndex[ nPos, INDEXKEY_KEY ] }
+         bAjust  := { || !aIndex[ nPos, INDEXKEY_KEY ] <= xSeek }
+      ELSE
+         bFirst  := { || aIndex[ 2, INDEXKEY_KEY ] <= xSeek }
+         bBefore := { || !aIndex[ nPos, INDEXKEY_KEY ] <= xSeek}
+         bAfter  := { || xSeek > aIndex[ nPos, INDEXKEY_KEY ] }
+         bAjust  := { || !aIndex[ nPos, INDEXKEY_KEY ] >= xSeek }
+      ENDIF
 
-         IF aIndex[ 2 ] <> NIL .AND. Eval( bFirst )
-            DO WHILE nIni <= nEnd
-               nPos := Int( ( nIni + nEnd ) / 2 )
-               IF aIndex[ nPos ] == NIL .OR. Eval( bBefore )
-                  nEnd := nPos - 1
-               ELSEIF Eval( bAfter )
-                  nIni := nPos + 1
-               ELSE
-                  IF lLast
-                     IF nPos < nEnd .AND. aIndex[ nPos + 1 ] <> NIL .AND. aIndex[ nPos + 1, INDEXKEY_KEY ] = xSeek
-                        nIni := nPos + 1
-                     ELSE
-                        EXIT
-                     ENDIF
+      IF aIndex[ 2 ] <> NIL .AND. Eval( bFirst )
+         DO WHILE nIni <= nEnd
+            nPos := Int( ( nIni + nEnd ) / 2 )
+            IF aIndex[ nPos ] == NIL .OR. Eval( bBefore )
+               nEnd := nPos - 1
+            ELSEIF Eval( bAfter )
+               nIni := nPos + 1
+            ELSE
+               IF lLast
+                  IF nPos < nEnd .AND. aIndex[ nPos + 1 ] <> NIL .AND. aIndex[ nPos + 1, INDEXKEY_KEY ] = xSeek
+                     nIni := nPos + 1
                   ELSE
-                     nEnd := nPos - 1
-                  ENDIF
-                  IF nRec <> NIL .AND. nRec == aIndex[ nPos, INDEXKEY_RECORD ]
                      EXIT
                   ENDIF
+               ELSE
+                  nEnd := nPos - 1
                ENDIF
-            ENDDO
-            IF aIndex[ nPos ] <> NIL .AND. Eval( bAjust )
-               nPos++
+               IF nRec <> NIL .AND. nRec == aIndex[ nPos, INDEXKEY_RECORD ]
+                  EXIT
+               ENDIF
             ENDIF
-         ELSE
-            nPos := 1
+         ENDDO
+         IF aIndex[ nPos ] <> NIL .AND. Eval( bAjust )
+            nPos++
          ENDIF
-         IF nRec <> NIL
-            IF nIni <= nEnd .AND. !Empty( aIndex ) .AND. aIndex[ nPos ] <> NIL .AND. nRec <> aIndex[ nPos, INDEXKEY_RECORD ]
-               nEnd := Len( aIndex )
-               FOR nPos := nIni TO nEnd
-                  IF aIndex[ nPos ] == NIL .OR. xSeek <> aIndex[ nPos, INDEXKEY_KEY ]
-                     nPos := 0
-                     EXIT
-                  ELSEIF aIndex[ nPos, INDEXKEY_RECORD ] == nRec
-                     EXIT
-                  ENDIF
-               NEXT
-               IF nPos > nEnd
+      ELSE
+         nPos := 1
+      ENDIF
+      IF nRec <> NIL
+         IF nIni <= nEnd .AND. !Empty( aIndex ) .AND. aIndex[ nPos ] <> NIL .AND. nRec <> aIndex[ nPos, INDEXKEY_RECORD ]
+            nEnd := Len( aIndex )
+            FOR nPos := nIni TO nEnd
+               IF aIndex[ nPos ] == NIL .OR. xSeek <> aIndex[ nPos, INDEXKEY_KEY ]
                   nPos := 0
+                  EXIT
+               ELSEIF aIndex[ nPos, INDEXKEY_RECORD ] == nRec
+                  EXIT
                ENDIF
-            ENDIF
-         ELSEIF !lSoft
-            IF nPos > Len( aIndex ) .OR. !aIndex[ nPos, INDEXKEY_KEY ] = xSeek
+            NEXT
+            IF nPos > nEnd
                nPos := 0
             ENDIF
          ENDIF
-         EXIT
+      ELSEIF !lSoft
+         IF nPos > Len( aIndex ) .OR. ! aIndex[ nPos, INDEXKEY_KEY ] = xSeek
+            nPos := 0
+         ENDIF
+      ENDIF
+      EXIT
+
    ENDSWITCH
 
    RETURN nPos
