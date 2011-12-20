@@ -224,7 +224,7 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL nResult   := HB_SUCCESS
    LOCAL aFieldStruct, aField
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( e"nWA = %1$d, aStruct = %2$s", nWA, hb_ValToExp( aStruct ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aStruct = %2$s", nWA, hb_ValToExp( aStruct ) ) )
 
    /* Setting WA number to current WorkArea */
    aWAData[ WADATA_WORKAREA ] := nWA
@@ -778,7 +778,7 @@ STATIC FUNCTION AR_DELETE( nWA )
    ENDIF
 
    IF ! aWAData[ WADATA_EOF ]
-      IF aOpenInfo[ UR_OI_SHARED ] .AND. !( AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
+      IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
 
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
@@ -840,7 +840,7 @@ STATIC FUNCTION AR_RECALL( nWA )
    ENDIF
 
    IF ! aWAData[ WADATA_EOF ]
-      IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
+      IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
          oError:SubCode     := 1022 /* EDBF_UNLOCKED */
@@ -949,7 +949,7 @@ STATIC FUNCTION AR_UNLOCK( nWA, nRec )
          NEXT
          ASize( aRecords, 0 )
       ELSE
-         nPos := aScan( aRecords, nRec )
+         nPos := AScan( aRecords, nRec )
          IF nPos > 0
             aRecInfo[ nRec, RECDATA_LOCKED ] := 0
             ADel( aRecords, nPos )
@@ -1214,7 +1214,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    aIndex := AR_INDEXINIT()
    aIndex[ INDEX_TAG   ]   := cIndex
    aIndex[ INDEX_ORCR  ]   := aOrderCreate
-   nIndex := aScan( aIndexes, {| x | x[ INDEX_TAG ] == cIndex } )
+   nIndex := AScan( aIndexes, {| x | x[ INDEX_TAG ] == cIndex } )
    IF nIndex > 0
       ADel( aIndexes, nIndex )
       aIndexes[ -1 ] := aIndex
@@ -1281,7 +1281,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
    SWITCH ValType( aOrderInfo[ UR_ORI_TAG ] )
    CASE "C"
       nIndex := Upper( aOrderInfo[ UR_ORI_TAG ] )
-      nIndex := aScan( aIndexes, {| x | x[ INDEX_TAG ] == nIndex } )
+      nIndex := AScan( aIndexes, {| x | x[ INDEX_TAG ] == nIndex } )
       EXIT
    CASE "N"
       nIndex := aOrderInfo[ UR_ORI_TAG ]
@@ -1752,7 +1752,7 @@ STATIC FUNCTION HB_Decode(...)
          /* Check if value exists (valtype of values MUST be same of xVal,
           * otherwise I will get a runtime error)
           * TODO: Have I to check also between different valtypes, jumping different ? */
-         nPos := AScan( aValues, {|e| e == xVal } )
+         nPos := AScan( aValues, {| e | e == xVal } )
 
          IF nPos == 0   /* Not Found, returning DEFAULT */
             xRet := xDefault   /* it could be also NIL because not present */
@@ -1872,7 +1872,7 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
       nPos := 0
       EXIT
    CASE 1   /* Archive with 1 record */
-      IF aIndex[ 1 ] == NIL .OR. iif( lSoft, iif( aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ], aIndex[ 1, INDEXKEY_KEY ] <= xSeek, aIndex[ 1, INDEXKEY_KEY ] >= xSeek ), aIndex[ 1, INDEXKEY_KEY ] = xSeek )
+      IF aIndex[ 1 ] == NIL .OR. iif( lSoft, iif( aIndexInfo[ INDEX_ORCR, UR_ORCR_CONDINFO, UR_ORC_DESCEND ], aIndex[ 1, INDEXKEY_KEY ] <= xSeek, aIndex[ 1, INDEXKEY_KEY ] >= xSeek ), aIndex[ 1, INDEXKEY_KEY ] == xSeek ) /* TOFIX: == comparison? */
          nPos := 1
       ELSE
          nPos := 0
@@ -1900,7 +1900,7 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
                nIni := nPos + 1
             ELSE
                IF lLast
-                  IF nPos < nEnd .AND. aIndex[ nPos + 1 ] != NIL .AND. aIndex[ nPos + 1, INDEXKEY_KEY ] = xSeek /* TOFIX: = operator */
+                  IF nPos < nEnd .AND. aIndex[ nPos + 1 ] != NIL .AND. aIndex[ nPos + 1, INDEXKEY_KEY ] == xSeek /* TOFIX: == comparison? */
                      nIni := nPos + 1
                   ELSE
                      EXIT
@@ -1920,10 +1920,10 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
          nPos := 1
       ENDIF
       IF nRec != NIL
-         IF nIni <= nEnd .AND. !Empty( aIndex ) .AND. aIndex[ nPos ] != NIL .AND. nRec != aIndex[ nPos, INDEXKEY_RECORD ] /* TOFIX: = operator */
+         IF nIni <= nEnd .AND. !Empty( aIndex ) .AND. aIndex[ nPos ] != NIL .AND. nRec != aIndex[ nPos, INDEXKEY_RECORD ]
             nEnd := Len( aIndex )
             FOR nPos := nIni TO nEnd
-               IF aIndex[ nPos ] == NIL .OR. xSeek != aIndex[ nPos, INDEXKEY_KEY ]
+               IF aIndex[ nPos ] == NIL .OR. !( xSeek == aIndex[ nPos, INDEXKEY_KEY ] ) /* TOFIX: == comparison? */
                   nPos := 0
                   EXIT
                ELSEIF aIndex[ nPos, INDEXKEY_RECORD ] == nRec
@@ -1935,7 +1935,7 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
             ENDIF
          ENDIF
       ELSEIF !lSoft
-         IF nPos > Len( aIndex ) .OR. ! aIndex[ nPos, INDEXKEY_KEY ] = xSeek /* TOFIX: = operator */
+         IF nPos > Len( aIndex ) .OR. !( aIndex[ nPos, INDEXKEY_KEY ] == xSeek ) /* TOFIX: == comparison? */
             nPos := 0
          ENDIF
       ENDIF
@@ -1948,7 +1948,7 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
 STATIC FUNCTION SeekScope( aIndex, aOrdInfo, lBottom )
    LOCAL nPos := Seek( aOrdInfo[ WAOI_SCOPE_0 ], .T., lBottom, aIndex )
 
-   IF nPos > 0 .AND. !aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ] = aOrdInfo[ WAOI_SCOPE_1 ] /* TOFIX: = operator */
+   IF nPos > 0 .AND. !aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ] == aOrdInfo[ WAOI_SCOPE_1 ] /* TOFIX: == comparison? */
       IF nPos > 1 .AND. aIndex[ INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aOrdInfo[ WAOI_SCOPE_0 ]
          nPos--
       ELSE
