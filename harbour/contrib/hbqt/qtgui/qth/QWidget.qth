@@ -12,8 +12,10 @@
  */
 
 <CLASS>
-Inherit  = QObject, QPaintDevice
-New      = pParent, nFlags
+Inherit    = QObject, QPaintDevice
+New        = pParent, nFlags
+
+PaintEvent =
 </CLASS>
 
 <CODE>

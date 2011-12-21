@@ -316,7 +316,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ! qth_to_src( cSrc, cDstCPP, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
+                     IF ! qth_to_src( cSrc, cDstCPP, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ], hbmk2 )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"
                            EXIT
@@ -1013,10 +1013,10 @@ STATIC FUNCTION hbqtui_stripRear( /* @ */ cString, cTkn )
 
 /*======================================================================*/
 
-STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule, cQtVer )
+STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule, cQtVer, hbmk2 )
    LOCAL oSrc
 
-   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
+   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
    oSrc:build()
 
    RETURN .T.
@@ -1025,6 +1025,7 @@ STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule,
 
 CREATE CLASS HbQtSource
 
+   VAR    hbmk2
    VAR    cCPPFileName, cDOCFileName
    VAR    hRef
 
@@ -1072,10 +1073,16 @@ CREATE CLASS HbQtSource
    VAR    cIntLong                                INIT "qint32,quint32,QRgb"
    VAR    cIntLongLong                            INIT "qint64,quint64,qlonglong,qulonglong,ulong"
 
-   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
+   VAR    lPaintEvent                             INIT .f.
+   VAR    lBuildExtended                          INIT .f.
+
+   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
    METHOD parseProto( cProto, fBody_ )
    METHOD parseVariables( cProto )
    METHOD build()
+   METHOD exploreExtensions()
+   METHOD buildExtendedSource( txt_ )
+   METHOD buildExtendedHeader()
    METHOD getConstructor()
    METHOD getConstructorW()
    METHOD buildCppCode( oMtd )
@@ -1086,11 +1093,11 @@ CREATE CLASS HbQtSource
    METHOD getReturnAsList( oMtd, FP, cPrefix )
    METHOD getReturnMethod( oMtd, lAddRet )
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
+METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
    LOCAL cQth, s, n, i, n1, b_, tmp, cOrg, fBody_
    LOCAL f
 
@@ -1108,13 +1115,15 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
    hb_fNameSplit( cQTHFileName,, @tmp )
 
+   ::hbmk2        := hbmk2
+
    ::cCPPFileName := cCPPFileName
    ::cDOCFileName := cDOCFileName
 
-   ::cQtModule := cQtModule
-   ::cQtVer    := cQtVer
+   ::cQtModule    := cQtModule
+   ::cQtVer       := cQtVer
 
-   ::cQtObject := tmp
+   ::cQtObject    := tmp
 
    cQth := hb_MemoRead( cQTHFileName )
 
@@ -1133,6 +1142,9 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
          ENDIF
       NEXT
    ENDIF
+
+   /* Explore if protected methods are to be implemented */
+   ::exploreExtensions()
 
    /* Reassign class level version information */
    IF ( n := AScan( ::cls_, {|e_| upper( e_[ 1 ] ) == "VERSION" } ) ) > 0
@@ -1190,7 +1202,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::enums_:= hbqtgen_PullOutSection( @cQth, "ENUMS"  )
    ::enum_:= {}
    FOR EACH s IN ::enums_
-      IF "enum " $ s .or. "flags " $ s
+      IF "enum " $ s .OR. "flags " $ s
          b_:= hb_ATokens( AllTrim( s ), " " )
          AAdd( ::enum_, b_[ 2 ] )
       ENDIF
@@ -1361,14 +1373,18 @@ METHOD HbQtSource:build()
    AAdd( aLine, "" )
    AAdd( aLine, "HB_FUNC_EXTERN( __HB" + Upper( ::cQtModule ) + " );" )
    FOR EACH s IN ::hRef
-      AAdd( aLine, "HB_FUNC_EXTERN( HB_" + Upper( s:__enumKey() ) + " );" )
+      IF ! ( s:__enumKey() == "QModelIndexList" )
+         AAdd( aLine, "HB_FUNC_EXTERN( HB_" + Upper( s:__enumKey() ) + " );" )
+      ENDIF
    NEXT
    AAdd( aLine, "" )
    AAdd( aLine, "void _hb_force_link_" + ::cQtObject +"( void )" )
    AAdd( aLine, "{" )
    AAdd( aLine, "   HB_FUNC_EXEC( __HB" + Upper( ::cQtModule ) + " );" )
    FOR EACH s IN ::hRef
-      AAdd( aLine, "   HB_FUNC_EXEC( HB_" + Upper( s:__enumKey() ) + " );" )
+      IF ! ( s:__enumKey() == "QModelIndexList" )
+         AAdd( aLine, "   HB_FUNC_EXEC( HB_" + Upper( s:__enumKey() ) + " );" )
+      ENDIF
    NEXT
    AAdd( aLine, "}" )
    AAdd( aLine, "" )
@@ -1402,6 +1418,8 @@ METHOD HbQtSource:build()
    FOR EACH s IN ::hRef
       IF s:__enumKey() == "QList" /* TOFIX: Ugly hack */
          tmp := s:__enumKey() + "< void * >"
+      ELSEIF s:__enumKey() == "QModelIndexList" /* TOFIX: Ugly hack */
+         tmp := "QList< QModelIndex >"
       ELSE
          tmp := s:__enumKey()
       ENDIF
@@ -1425,6 +1443,8 @@ METHOD HbQtSource:build()
       ENDIF
       AAdd( aLine, "" )
    ENDIF
+
+   ::buildExtendedSource( aLine )   /* Insert protected functions */
 
    AAdd( aLine, "typedef struct"                  )
    AAdd( aLine, "{"                               )
@@ -1646,8 +1666,136 @@ METHOD HbQtSource:build()
    /* Build Document File */
    ::buildDOC()
 
+   /* Build Protected Events Implimentation */
+   ::buildExtendedHeader()
+
    /* Distribute in specific lib subfolder */
    hbqtgen_CreateTarget( ::cCPPFileName, aLine )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:exploreExtensions()
+   LOCAL n
+
+   IF ( n := AScan( ::cls_, {|e_| Upper( e_[ 1 ] ) $ "PAINTEVENT" } ) ) > 0
+      IF ! Empty( ::cls_[ n,2 ] )
+         ::lPaintEvent := .t.
+      ENDIF
+   ENDIF
+
+   // check other events
+
+   // Test IF extended code is TO be built
+   IF ::lPaintEvent // .OR. ::lOtherEvent
+      ::lBuildExtended := .t.
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:buildExtendedSource( txt_ )
+
+   IF ! ::lBuildExtended
+      RETURN Self
+   ENDIF
+
+   AAdd( txt_, '                                                                                                                          ' )
+   AAdd( txt_, '#include "qqwidget.h"                                                        ' )
+   AAdd( txt_, '                                                                             ' )
+   AAdd( txt_, 'QQWidget::QQWidget( QWidget * parent, Qt::WindowFlags f ) : QWidget( parent, f )' )
+   AAdd( txt_, '{                                                                            ' )
+   AAdd( txt_, '   pPaintBlock = NULL;                                                       ' )
+   AAdd( txt_, '}                                                                            ' )
+   AAdd( txt_, 'QQWidget::~QQWidget()                                                        ' )
+   AAdd( txt_, '{                                                                            ' )
+   AAdd( txt_, '   if( pPaintBlock )                                                         ' )
+   AAdd( txt_, '   {                                                                         ' )
+   AAdd( txt_, '      hb_itemRelease( pPaintBlock );                                         ' )
+   AAdd( txt_, '      pPaintBlock = NULL;                                                    ' )
+   AAdd( txt_, '   }                                                                         ' )
+   AAdd( txt_, '}                                                                            ' )
+   AAdd( txt_, 'void QQWidget::hbSetEventBlock( int event, PHB_ITEM pBlock )                 ' )
+   AAdd( txt_, '{                                                                            ' )
+   AAdd( txt_, '   switch( event )                                                           ' )
+   AAdd( txt_, '   {                                                                         ' )
+   AAdd( txt_, '      case QEvent::Paint:                                                    ' )
+   AAdd( txt_, '      {                                                                      ' )
+   AAdd( txt_, '         if( pPaintBlock )                                                   ' )
+   AAdd( txt_, '         {                                                                   ' )
+   AAdd( txt_, '            hb_itemRelease( pPaintBlock );                                   ' )
+   AAdd( txt_, '         }                                                                   ' )
+   AAdd( txt_, '         pPaintBlock = hb_itemNew( pBlock );                                 ' )
+   AAdd( txt_, '         hb_gcUnlock( pPaintBlock );                                         ' )
+   AAdd( txt_, '         break;                                                              ' )
+   AAdd( txt_, '      }                                                                      ' )
+   AAdd( txt_, '   }                                                                         ' )
+   AAdd( txt_, '}                                                                            ' )
+   AAdd( txt_, 'void QQWidget::paintEvent( QPaintEvent * event )                             ' )
+   AAdd( txt_, '{                                                                            ' )
+   AAdd( txt_, '   bool bEventHandelled = false;                                             ' )
+   AAdd( txt_, '   if( pPaintBlock )                                                         ' )
+   AAdd( txt_, '   {                                                                         ' )
+   AAdd( txt_, '      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Paint );                     ' )
+   AAdd( txt_, '      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPaintEvent( event, false ), "hb_QPaintEvent" ) );  ' )
+   AAdd( txt_, '      bEventHandelled = hb_vmEvalBlockV( pPaintBlock, 2, p0, p1 );           ' )
+   AAdd( txt_, '      hb_itemRelease( p0 );                                                  ' )
+   AAdd( txt_, '      hb_itemRelease( p1 );                                                  ' )
+   AAdd( txt_, '   }                                                                         ' )
+   AAdd( txt_, '   if( ! bEventHandelled )                                                   ' )
+   AAdd( txt_, '   {                                                                         ' )
+   AAdd( txt_, '      QWidget::paintEvent( event );                                          ' )
+   AAdd( txt_, '   }                                                                         ' )
+   AAdd( txt_, '}                                                                            ' )
+   AAdd( txt_, '                                                                             ' )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:buildExtendedHeader()
+   LOCAL cPath, txt_
+
+   IF ! ::lBuildExtended
+      RETURN Self
+   ENDIF
+
+   txt_:= {}
+
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, 'HB_EXTERN_BEGIN                                             ' )
+   AAdd( txt_, 'extern HB_EXPORT void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew );' )
+   aadd( txt_, 'HB_EXTERN_END                                               ' )
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, '#include <QtGui/QWidget>                                    ' )
+   aadd( txt_, '#include <QtGui/QPaintEvent>                                ' )
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, 'class QQWidget : public QWidget                             ' )
+   aadd( txt_, '{                                                           ' )
+   aadd( txt_, '   Q_OBJECT                                                 ' )
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, 'public:                                                     ' )
+   aadd( txt_, '   QQWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 ); ' )
+   aadd( txt_, '   virtual ~QQWidget();                                     ' )
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, '   void hbSetEventBlock( int event, PHB_ITEM pBlock );      ' )
+   aadd( txt_, '                                                            ' )
+   aadd( txt_, '   PHB_ITEM pPaintBlock;                                    ' )
+   aadd( txt_, '   void	paintEvent ( QPaintEvent * event );                 ' )
+   aadd( txt_, '};                                                          ' )
+   aadd( txt_, '                                                            ' )
+
+   aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
+
+   hb_fNameSplit( ::cCPPFileName, @cPath )
+
+   hbqtgen_CreateTarget( cPath + "q" + lower( ::cQtObject ) + ".h", txt_ )
+
+   aadd( ::hbmk2[ "vars" ][ "aMOC_Src" ], cPath + "q"     + lower( ::cQtObject ) + ".h"   )
+   aadd( ::hbmk2[ "vars" ][ "aMOC_Dst" ], cPath + "moc_q" + lower( ::cQtObject ) + ".cpp" )
+   hbmk2_AddInput_CPP( ::hbmk2, cPath + "moc_q" + lower( ::cQtObject ) + ".cpp" )
 
    RETURN Self
 

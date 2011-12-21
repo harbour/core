@@ -37,7 +37,7 @@ HB_FUNC( QT_QITEMSELECTION )
 
 <PROTOS>
 bool contains ( const QModelIndex & index ) const
-// QModelIndexList indexes () const
+QList< QModelIndex > indexes () const
 void merge ( const QItemSelection & other, QItemSelectionModel::SelectionFlags command )
 void select ( const QModelIndex & topLeft, const QModelIndex & bottomRight )
 

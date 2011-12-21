@@ -50,9 +50,9 @@ bool isRowSelected ( int row, const QModelIndex & parent ) const
 bool isSelected ( const QModelIndex & index ) const
 const QAbstractItemModel * model () const
 bool rowIntersectsSelection ( int row, const QModelIndex & parent ) const
-// QModelIndexList selectedColumns ( int row = 0 ) const
-// QModelIndexList selectedIndexes () const
-// QModelIndexList selectedRows ( int column = 0 ) const
+QList< QModelIndex > selectedColumns ( int row = 0 ) const
+QList< QModelIndex > selectedIndexes () const
+QList< QModelIndex > selectedRows ( int column = 0 ) const
 const QItemSelection selection () const
 </PROTOS>
 
