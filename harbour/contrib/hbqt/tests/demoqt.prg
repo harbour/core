@@ -115,7 +115,7 @@ PROCEDURE Main()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   oBtn:hbSetEventBlock( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter ) } )
+   oBtn:hbSetEventBlock( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
 
    oWnd:connect(  6, {|e| My_Events( e ) } )
    oWnd:connect( 19, {|| QApplication():quit() } )
@@ -617,10 +617,15 @@ FUNCTION ShowInSystemTray( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION RePaint( oPaintEvent, oPainter )
+FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
    LOCAL qRect := oPaintEvent:rect()
 
-   oPainter:fillRect( qRect, QColor( 120,12,200 ) )
+
+   IF oBtn:isDown()
+      oPainter:fillRect( qRect, QColor( 120,12,200 ) )
+   ELSE
+      oPainter:fillRect( qRect, QColor( 220,100,12 ) )
+   ENDIF
    oPainter:drawText( 30, 30, "Harbour" )
 
    RETURN .f.
