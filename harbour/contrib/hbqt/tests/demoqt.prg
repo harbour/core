@@ -623,11 +623,15 @@ FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
 
    IF oBtn:isDown()
       oPainter:fillRect( qRect, QColor( 120,12,200 ) )
+      oPainter:drawRect( qRect )
+      oPainter:drawText( 32, 32, "Harbour" )
    ELSE
       oPainter:fillRect( qRect, QColor( 220,100,12 ) )
+      oPainter:drawText( 30, 30, "Harbour" )
+      oPainter:setPen( QColor( 255,255,255 ) )
+      oPainter:drawRect( qRect )
    ENDIF
-   oPainter:drawText( 30, 30, "Harbour" )
 
-   RETURN .f.
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
