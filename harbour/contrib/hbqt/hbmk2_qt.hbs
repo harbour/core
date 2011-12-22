@@ -142,6 +142,13 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          hbmk2_AddInput_CPP( hbmk2, cDst )
          cDst := hb_PathNormalize( hbmk2_FNameDirExtSet( "class_" + Lower( hb_FNameName( cSrc ) ), hb_FNameDir( cSrc ) + hbmk2[ "vars" ][ "qthdocdir" ] + "en" + hb_ps(), ".txt" ) )
          AAdd( hbmk2[ "vars" ][ "aQTH_DOC" ], cDst )
+
+         IF qth_is_extended( cSrc )
+            AAdd( hbmk2[ "vars" ][ "aMOC_Src" ], hbmk2_FNameDirExtSet( "q" + lower( hb_FNameName( cSrc ) ), hbmk2[ "cWorkDir" ], ".h" ) )
+            cDst := hbmk2_FNameDirExtSet( "moc_q" + lower( hb_FNameName( cSrc ) ), hbmk2[ "cWorkDir" ], ".cpp" )
+            AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
+            hbmk2_AddInput_CPP( hbmk2, cDst )
+         ENDIF
       NEXT
 
       /* Detect tool locations */
@@ -316,7 +323,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
                   IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ! qth_to_src( cSrc, cDstCPP, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ], hbmk2 )
+                     IF ! qth_to_src( cSrc, cDstCPP, cDstDOC, hbmk2[ "vars" ][ "qtmodule" ], hbmk2[ "vars" ][ "qtver" ] )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            cRetVal := "error"
                            EXIT
@@ -1013,10 +1020,10 @@ STATIC FUNCTION hbqtui_stripRear( /* @ */ cString, cTkn )
 
 /*======================================================================*/
 
-STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule, cQtVer, hbmk2 )
+STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule, cQtVer )
    LOCAL oSrc
 
-   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
+   oSrc := HbQtSource():new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    oSrc:build()
 
    RETURN .T.
@@ -1025,7 +1032,6 @@ STATIC FUNCTION qth_to_src( cQTHFileName, cCPPFileName, cDOCFileName, cQtModule,
 
 CREATE CLASS HbQtSource
 
-   VAR    hbmk2
    VAR    cCPPFileName, cDOCFileName
    VAR    hRef
 
@@ -1076,12 +1082,12 @@ CREATE CLASS HbQtSource
    VAR    lPaintEvent                             INIT .f.
    VAR    lBuildExtended                          INIT .f.
 
-   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
+   METHOD new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    METHOD parseProto( cProto, fBody_ )
    METHOD parseVariables( cProto )
    METHOD build()
    METHOD exploreExtensions()
-   METHOD buildExtendedSource( txt_ )
+   METHOD buildExtendedSource( t_ )
    METHOD buildExtendedHeader()
    METHOD getConstructor()
    METHOD getConstructorW()
@@ -1097,7 +1103,7 @@ CREATE CLASS HbQtSource
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName, hbmk2 )
+METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileName )
    LOCAL cQth, s, n, i, n1, b_, tmp, cOrg, fBody_
    LOCAL f
 
@@ -1114,8 +1120,6 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ENDIF
 
    hb_fNameSplit( cQTHFileName,, @tmp )
-
-   ::hbmk2        := hbmk2
 
    ::cCPPFileName := cCPPFileName
    ::cDOCFileName := cDOCFileName
@@ -1214,6 +1218,10 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    AEval( ::constructors_, {| e | AAdd( ::protos_, e ) } )
    AEval( tmp, {| e | AAdd( ::protos_, e ) } )
 
+   IF ::lBuildExtended
+      AAdd( ::protos_, "void hbSetEventBlock( int event, PHB_ITEM block );" )
+   ENDIF
+
    /* Pull out Variables */
    ::varbls_ := hbqtgen_PullOutSection( @cQth, "VARIABLES" )
 
@@ -1310,6 +1318,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
 METHOD HbQtSource:build()
    LOCAL i, s, oMtd, tmp, tmp1, n, k, aLine, uQtObject
+   LOCAL cObjPfx := iif( ::lBuildExtended, "Q", "" )
 
    uQtObject := Upper( ::cQtObject )
 
@@ -1449,12 +1458,12 @@ METHOD HbQtSource:build()
    AAdd( aLine, "typedef struct"                  )
    AAdd( aLine, "{"                               )
    IF ::isObject
-      AAdd( aLine, "   QPointer< "+ ::cQtObject +" > ph;" )
+      AAdd( aLine, "   QPointer< "+ cObjPfx + ::cQtObject +" > ph;" )
    ELSE
       IF ::isList
-          AAdd( aLine, "   " + ::cQtObject + "< void * > * ph;"                    )
+          AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * ph;"                    )
       ELSE
-          AAdd( aLine, "   " + ::cQtObject + " * ph;"                    )
+          AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * ph;"                    )
       ENDIF
    ENDIF
    AAdd( aLine, "   bool bNew;"                     )
@@ -1482,35 +1491,35 @@ METHOD HbQtSource:build()
          AAdd( aLine, "      {" )
          AAdd( aLine, "         if( p->ph )" )
          AAdd( aLine, "         {" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   /.\\   ", ( void * ) p, ( void * ) p->ph ) );' )
-         #endif
-         AAdd( aLine, "            delete ( " + ::cQtObject + " * )( p->ph ); " )
-         #ifdef _GEN_TRACE_
+#endif
+         AAdd( aLine, "            delete ( " + cObjPfx + ::cQtObject + " * )( p->ph ); " )
+#ifdef _GEN_TRACE_
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   \\./   ", ( void * ) p, ( void * ) p->ph ) );' )
-         #endif
+#endif
          AAdd( aLine, "         }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "         else" )
          AAdd( aLine, "         {" )
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     already deleted!", ( void * ) p->ph ) );' )
          AAdd( aLine, "         }" )
-         #endif
+#endif
          AAdd( aLine, "      }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "      else" )
          AAdd( aLine, "      {" )
          AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a _new_ object", ( void * ) p->ph ) );' )
          AAdd( aLine, "      }" )
-         #endif
+#endif
          AAdd( aLine, "      p->ph = NULL;" )
          AAdd( aLine, "   }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "   else" )
          AAdd( aLine, "   {" )
          AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid GC object" ) );' )
          AAdd( aLine, "   }" )
-         #endif
+#endif
       ELSE
          AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
          AAdd( aLine, "   " )
@@ -1520,9 +1529,9 @@ METHOD HbQtSource:build()
          AAdd( aLine, "      {" )
          AAdd( aLine, "         if( p->ph )" )
          AAdd( aLine, "         {" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
-         #endif
+#endif
          IF ::isList
          AAdd( aLine, "            int i; " )
          AAdd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
@@ -1530,32 +1539,32 @@ METHOD HbQtSource:build()
          AAdd( aLine, "               hb_itemRelease( p->ph->at( i ) );" )
          AAdd( aLine, "            }" )
          ENDIF
-         AAdd( aLine, "            delete ( ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
-         #ifdef _GEN_TRACE_
+         AAdd( aLine, "            delete ( ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
+#ifdef _GEN_TRACE_
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
-         #endif
+#endif
          AAdd( aLine, "         }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "         else" )
          AAdd( aLine, "         {" )
          AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     object already deleted!", ( void * ) p->ph ) );' )
          AAdd( aLine, "         }" )
-         #endif
+#endif
          AAdd( aLine, "      }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "      else" )
          AAdd( aLine, "      {" )
          AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     not a _new_ object!", ( void * ) p->ph ) );' )
          AAdd( aLine, "      }" )
-         #endif
+#endif
          AAdd( aLine, "      p->ph = NULL;" )
          AAdd( aLine, "   }" )
-         #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
          AAdd( aLine, "   else" )
          AAdd( aLine, "   {" )
          AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a valid GC object!", ( void * ) p ) );' )
          AAdd( aLine, "   }" )
-         #endif
+#endif
       ENDIF
    ELSE
       AAdd( aLine, "   /* CASE else */" )
@@ -1576,9 +1585,9 @@ METHOD HbQtSource:build()
    ENDIF
    AAdd( aLine, "" )
    IF ::isObject
-      AAdd( aLine, "   new( & p->ph ) QPointer< "+ ::cQtObject +" >( ( " + ::cQtObject + " * ) pObj );" )
+      AAdd( aLine, "   new( & p->ph ) QPointer< "+ cObjPfx + ::cQtObject +" >( ( " + cObjPfx + ::cQtObject + " * ) pObj );" )
    ELSE
-      AAdd( aLine, "   p->ph = ( " + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
+      AAdd( aLine, "   p->ph = ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
    ENDIF
    AAdd( aLine, "   p->bNew = bNew;" )
    AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
@@ -1589,7 +1598,7 @@ METHOD HbQtSource:build()
       AAdd( aLine, "   p->mark = NULL;" )
    endif
    AAdd( aLine, "" )
-   #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
    AAdd( aLine, "   if( bNew )" )
    AAdd( aLine, "   {" )
    AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _new_' + ::cQtObject + iif( ::isObject, '  under p->pq', '' ) + '", ( void * ) pObj ) );' )
@@ -1598,7 +1607,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   {" )
    AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NOT_new_' + ::cQtObject + '", ( void * ) pObj ) );' )
    AAdd( aLine, "   }" )
-   #endif
+#endif
    AAdd( aLine, "   return p;" )
    AAdd( aLine, "}" )
    AAdd( aLine, "" )
@@ -1696,96 +1705,57 @@ METHOD HbQtSource:exploreExtensions()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtSource:buildExtendedSource( txt_ )
-
-   IF ! ::lBuildExtended
-      RETURN Self
-   ENDIF
-
-   AAdd( txt_, '                                                                                                                          ' )
-   AAdd( txt_, '#include "qqwidget.h"                                                        ' )
-   AAdd( txt_, '                                                                             ' )
-   AAdd( txt_, 'QQWidget::QQWidget( QWidget * parent, Qt::WindowFlags f ) : QWidget( parent, f )' )
-   AAdd( txt_, '{                                                                            ' )
-   AAdd( txt_, '   pPaintBlock = NULL;                                                       ' )
-   AAdd( txt_, '}                                                                            ' )
-   AAdd( txt_, 'QQWidget::~QQWidget()                                                        ' )
-   AAdd( txt_, '{                                                                            ' )
-   AAdd( txt_, '   if( pPaintBlock )                                                         ' )
-   AAdd( txt_, '   {                                                                         ' )
-   AAdd( txt_, '      hb_itemRelease( pPaintBlock );                                         ' )
-   AAdd( txt_, '      pPaintBlock = NULL;                                                    ' )
-   AAdd( txt_, '   }                                                                         ' )
-   AAdd( txt_, '}                                                                            ' )
-   AAdd( txt_, 'void QQWidget::hbSetEventBlock( int event, PHB_ITEM pBlock )                 ' )
-   AAdd( txt_, '{                                                                            ' )
-   AAdd( txt_, '   switch( event )                                                           ' )
-   AAdd( txt_, '   {                                                                         ' )
-   AAdd( txt_, '      case QEvent::Paint:                                                    ' )
-   AAdd( txt_, '      {                                                                      ' )
-   AAdd( txt_, '         if( pPaintBlock )                                                   ' )
-   AAdd( txt_, '         {                                                                   ' )
-   AAdd( txt_, '            hb_itemRelease( pPaintBlock );                                   ' )
-   AAdd( txt_, '         }                                                                   ' )
-   AAdd( txt_, '         pPaintBlock = hb_itemNew( pBlock );                                 ' )
-   AAdd( txt_, '         hb_gcUnlock( pPaintBlock );                                         ' )
-   AAdd( txt_, '         break;                                                              ' )
-   AAdd( txt_, '      }                                                                      ' )
-   AAdd( txt_, '   }                                                                         ' )
-   AAdd( txt_, '}                                                                            ' )
-   AAdd( txt_, 'void QQWidget::paintEvent( QPaintEvent * event )                             ' )
-   AAdd( txt_, '{                                                                            ' )
-   AAdd( txt_, '   bool bEventHandelled = false;                                             ' )
-   AAdd( txt_, '   if( pPaintBlock )                                                         ' )
-   AAdd( txt_, '   {                                                                         ' )
-   AAdd( txt_, '      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Paint );                     ' )
-   AAdd( txt_, '      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPaintEvent( event, false ), "hb_QPaintEvent" ) );  ' )
-   AAdd( txt_, '      bEventHandelled = hb_vmEvalBlockV( pPaintBlock, 2, p0, p1 );           ' )
-   AAdd( txt_, '      hb_itemRelease( p0 );                                                  ' )
-   AAdd( txt_, '      hb_itemRelease( p1 );                                                  ' )
-   AAdd( txt_, '   }                                                                         ' )
-   AAdd( txt_, '   if( ! bEventHandelled )                                                   ' )
-   AAdd( txt_, '   {                                                                         ' )
-   AAdd( txt_, '      QWidget::paintEvent( event );                                          ' )
-   AAdd( txt_, '   }                                                                         ' )
-   AAdd( txt_, '}                                                                            ' )
-   AAdd( txt_, '                                                                             ' )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbQtSource:buildExtendedHeader()
-   LOCAL cPath, txt_
+   LOCAL cPath, txt_, cObj
 
    IF ! ::lBuildExtended
       RETURN Self
    ENDIF
 
+   cObj := ::cQtObject
    txt_:= {}
 
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, 'HB_EXTERN_BEGIN                                             ' )
+   aadd( txt_, '' )
+   aadd( txt_, '#include "hbapiitm.h" ' )
+   aadd( txt_, '' )
+   aadd( txt_, 'HB_EXTERN_BEGIN' )
+   IF ::lPaintEvent
    AAdd( txt_, 'extern HB_EXPORT void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew );' )
-   aadd( txt_, 'HB_EXTERN_END                                               ' )
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, '#include <QtGui/QWidget>                                    ' )
-   aadd( txt_, '#include <QtGui/QPaintEvent>                                ' )
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, 'class QQWidget : public QWidget                             ' )
-   aadd( txt_, '{                                                           ' )
-   aadd( txt_, '   Q_OBJECT                                                 ' )
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, 'public:                                                     ' )
-   aadd( txt_, '   QQWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 ); ' )
-   aadd( txt_, '   virtual ~QQWidget();                                     ' )
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, '   void hbSetEventBlock( int event, PHB_ITEM pBlock );      ' )
-   aadd( txt_, '                                                            ' )
-   aadd( txt_, '   PHB_ITEM pPaintBlock;                                    ' )
-   aadd( txt_, '   void	paintEvent ( QPaintEvent * event );                 ' )
-   aadd( txt_, '};                                                          ' )
-   aadd( txt_, '                                                            ' )
+   AAdd( txt_, 'extern HB_EXPORT void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );' )
+   ENDIF
+   aadd( txt_, 'HB_EXTERN_END' )
+   aadd( txt_, '' )
+   aadd( txt_, '#include <QtGui/' + cObj + '>' )
+   IF ::lPaintEvent
+   aadd( txt_, '#include <QtGui/QPainter>' )
+   aadd( txt_, '#include <QtGui/QPaintEvent>' )
+   ENDIF
+   aadd( txt_, '' )
+   aadd( txt_, 'class Q' + cObj + ' : public ' + cObj )
+   aadd( txt_, '{' )
+   aadd( txt_, '   Q_OBJECT' )
+   aadd( txt_, '' )
+   aadd( txt_, 'public:' )
+
+   SWITCH cObj
+   CASE "QWidget"
+   aadd( txt_, '   Q' + cObj + '( QWidget * parent = 0, Qt::WindowFlags f = 0 );' )
+   EXIT
+   OTHERWISE
+   aadd( txt_, '   Q' + cObj + '( QWidget * parent = 0 );' )
+   EXIT
+   ENDSWITCH
+
+   aadd( txt_, '   virtual ~Q' + cObj + '();' )
+   aadd( txt_, '' )
+   aadd( txt_, '   void hbSetEventBlock( int event, PHB_ITEM pBlock );' )
+   aadd( txt_, '' )
+   IF ::lPaintEvent
+   aadd( txt_, '   PHB_ITEM pPaintBlock;' )
+   aadd( txt_, '   void paintEvent ( QPaintEvent * event );' )
+   ENDIF
+   aadd( txt_, '};' )
+   aadd( txt_, '' )
 
    aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
 
@@ -1793,9 +1763,88 @@ METHOD HbQtSource:buildExtendedHeader()
 
    hbqtgen_CreateTarget( cPath + "q" + lower( ::cQtObject ) + ".h", txt_ )
 
-   aadd( ::hbmk2[ "vars" ][ "aMOC_Src" ], cPath + "q"     + lower( ::cQtObject ) + ".h"   )
-   aadd( ::hbmk2[ "vars" ][ "aMOC_Dst" ], cPath + "moc_q" + lower( ::cQtObject ) + ".cpp" )
-   hbmk2_AddInput_CPP( ::hbmk2, cPath + "moc_q" + lower( ::cQtObject ) + ".cpp" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtSource:buildExtendedSource( t_ )
+   LOCAL txt_, cObj
+
+   IF ! ::lBuildExtended
+      RETURN Self
+   ENDIF
+
+   cObj := ::cQtObject
+   txt_ := {}
+
+   AAdd( txt_, '' )
+   AAdd( txt_, '#include "q' + Lower( cObj ) + '.h"' )
+   AAdd( txt_, '' )
+
+   SWITCH cObj
+   CASE "QWidget"
+   AAdd( txt_, 'Q' + cObj + '::Q' + cObj + '( QWidget * parent, Qt::WindowFlags f ) : ' + cObj + '( parent, f )' )
+   EXIT
+   OTHERWISE
+   AAdd( txt_, 'Q' + cObj + '::Q' + cObj + '( QWidget * parent ) : ' + cObj + '( parent )' )
+   EXIT
+   ENDSWITCH
+
+   AAdd( txt_, '{' )
+   IF ::lPaintEvent
+   AAdd( txt_, '   pPaintBlock = NULL;' )
+   ENDIF
+   AAdd( txt_, '}' )
+   AAdd( txt_, 'Q' + cObj + '::~Q' + cObj + '()' )
+   AAdd( txt_, '{' )
+   IF ::lPaintEvent
+   AAdd( txt_, '   if( pPaintBlock )' )
+   AAdd( txt_, '   {' )
+   AAdd( txt_, '      hb_itemRelease( pPaintBlock );' )
+   AAdd( txt_, '      pPaintBlock = NULL;' )
+   AAdd( txt_, '   }' )
+   ENDIF
+   AAdd( txt_, '}' )
+   AAdd( txt_, 'void Q' + cObj + '::hbSetEventBlock( int event, PHB_ITEM pBlock )' )
+   AAdd( txt_, '{' )
+   AAdd( txt_, '   switch( event )' )
+   AAdd( txt_, '   {' )
+   IF ::lPaintEvent
+   AAdd( txt_, '      case QEvent::Paint:' )
+   AAdd( txt_, '      {' )
+   AAdd( txt_, '         if( pPaintBlock )' )
+   AAdd( txt_, '         {' )
+   AAdd( txt_, '            hb_itemRelease( pPaintBlock );' )
+   AAdd( txt_, '         }' )
+   AAdd( txt_, '         pPaintBlock = hb_itemNew( pBlock );' )
+   AAdd( txt_, '         hb_gcUnlock( pPaintBlock );' )
+   AAdd( txt_, '         break;' )
+   AAdd( txt_, '      }' )
+   ENDIF
+   AAdd( txt_, '   }' )
+   AAdd( txt_, '}' )
+   IF ::lPaintEvent
+   AAdd( txt_, 'void Q' + cObj + '::paintEvent( QPaintEvent * event )' )
+   AAdd( txt_, '{' )
+   AAdd( txt_, '   bool bEventHandelled = false;' )
+   AAdd( txt_, '   if( pPaintBlock )' )
+   AAdd( txt_, '   {' )
+   AAdd( txt_, '      QPainter painter( this );' )
+   AAdd( txt_, '      PHB_ITEM p0 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPaintEvent( event, false ), "hb_QPaintEvent" ) );' )
+   AAdd( txt_, '      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPainter( &painter, false ), "hb_QPainter" ) );' )
+   AAdd( txt_, '      bEventHandelled = hb_vmEvalBlockV( pPaintBlock, 2, p0, p1 );' )
+   AAdd( txt_, '      hb_itemRelease( p0 );' )
+   AAdd( txt_, '      hb_itemRelease( p1 );' )
+   AAdd( txt_, '   }' )
+   AAdd( txt_, '   if( ! bEventHandelled )' )
+   AAdd( txt_, '   {' )
+   AAdd( txt_, '      ' + cObj + '::paintEvent( event );' )
+   AAdd( txt_, '   }' )
+   AAdd( txt_, '}' )
+   ENDIF
+   AAdd( txt_, '' )
+
+   AEval( txt_, {|e| aadd( t_, trim( e ) ) } )
 
    RETURN Self
 
@@ -1803,12 +1852,13 @@ METHOD HbQtSource:buildExtendedHeader()
 
 METHOD HbQtSource:getConstructor()
    LOCAL i, s, aLine := {}
+   LOCAL cObjPfx := iif( ::lBuildExtended, "Q", "" )
 
    IF ::isConstructor
       IF ::isList
-         AAdd( aLine, "   " + ::cQtObject + "< void * > * pObj = NULL;" )
+         AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * pObj = NULL;" )
       ELSE
-         AAdd( aLine, "   " + ::cQtObject + " * pObj = NULL;" )
+         AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * pObj = NULL;" )
       ENDIF
       AAdd( aLine, " " )
       FOR i := 3 TO Len( ::new_ ) - 1
@@ -1820,6 +1870,7 @@ METHOD HbQtSource:getConstructor()
                   s := RTrim( StrTran( s, ");" ) ) + ";"
                ENDIF
                s := StrTran( s, "( " + ::cQtObject + "* )" )
+               s := StrTran( s, "new ", "new " + cObjPfx )
                AAdd( aLine, s )
             ELSE
                AAdd( aLine, ::new_[ i ] )
@@ -2013,10 +2064,9 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    IF ! empty( oMtd:cVersion )
       AAdd( txt_, "   #if QT_VERSION >= " + oMtd:cVersion )
    ENDIF
-   #ifdef _GEN_TRACE_
+#ifdef _GEN_TRACE_
    AAdd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
-   //AAdd( txt_, '   HB_TRACE( HB_TR_DEBUG, ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
-   #endif
+#endif
 
    /* If method is manually written in .qth - no more processing */
    IF ! Empty( oMtd:fBody_ )
@@ -2076,7 +2126,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    NEXT
 
 
-   cTmp := ::cQtObject + iif( ::isList, "< void * >", "" )
+   cTmp := iif( ::lBuildExtended, "Q", "" ) + ::cQtObject + iif( ::isList, "< void * >", "" )
    AAdd( txt_, "   " + cTmp + " * " + v + " = ( " + cTmp + " * ) hbqt_par_ptr( 0 );" )
 
    AAdd( txt_, "   if( " + v + " )" )
@@ -3175,5 +3225,39 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
    cRet := SubStr( cRet, 1, Len( cRet ) - 4 )
 
    RETURN cRet
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION qth_is_extended( cQTHFileName )
+   LOCAL lYes := .F.
+   LOCAL cQth, aTkn, n, s, class_, cls_:= {}
+
+   cQth := hb_MemoRead( cQTHFileName )
+
+   /* Prepare to be parsed properly */
+   IF !( hb_eol() == Chr( 10 ) )
+      cQth := StrTran( cQth, hb_eol(), Chr( 10 ) )
+   ENDIF
+   IF !( hb_eol() == Chr( 13 ) + Chr( 10 ) )
+      cQth := StrTran( cQth, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   ENDIF
+
+   IF ! Empty( class_:= hbqtgen_PullOutSection( @cQth, "CLASS" ) )
+      FOR EACH s IN class_
+         IF ( n := at( "=", s ) ) > 0
+            AAdd( cls_, { Upper( AllTrim( SubStr( s, 1, n - 1 ) ) ), Upper( AllTrim( SubStr( s, n + 1 ) ) ) } )
+         ENDIF
+      NEXT
+   ENDIF
+
+   FOR EACH aTkn IN cls_
+      IF aTkn[ 1 ] $ "PAINTEVENT,xxx"
+         IF aTkn[ 2 ] == "YES"
+            lYes := .T.
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN lYes
 
 /*----------------------------------------------------------------------*/
