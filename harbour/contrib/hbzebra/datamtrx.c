@@ -465,7 +465,8 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 #endif
 
    pZebra->iCol = pSize->iCol;
-   pZebra->szCode = hb_strdup( "" );
+
+   pZebra->szCode = hb_strdup( szCode );
    pZebra->pBits = hb_bitbuffer_create();
 
    /* allocate bitbuffer */

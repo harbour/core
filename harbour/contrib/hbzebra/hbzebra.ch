@@ -70,6 +70,7 @@
 
 #define HB_ZEBRA_TYPE_PDF417            257
 #define HB_ZEBRA_TYPE_DATAMATRIX        258
+#define HB_ZEBRA_TYPE_QRCODE            259
 
 /* Generate errors */
 #define HB_ZEBRA_ERROR_INVALIDCODE        1
@@ -103,5 +104,11 @@
 
 #define HB_ZEBRA_FLAG_DATAMATRIX_SQUARE     0x0100
 #define HB_ZEBRA_FLAG_DATAMATRIX_RECTANGLE  0x0200
+
+#define HB_ZEBRA_FLAG_QR_LEVEL_MASK         0x0700
+#define HB_ZEBRA_FLAG_QR_LEVEL_L            0x0100
+#define HB_ZEBRA_FLAG_QR_LEVEL_M            0x0200
+#define HB_ZEBRA_FLAG_QR_LEVEL_Q            0x0300
+#define HB_ZEBRA_FLAG_QR_LEVEL_H            0x0400
 
 #endif /* HB_ZEBRA_CH_ */

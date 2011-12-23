@@ -46,6 +46,7 @@ PROCEDURE Main()
    DrawBarcode( page, 440,   1, "CODE128",    "Wikipedia")
    DrawBarcode( page, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
    DrawBarcode( page, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)")
+   DrawBarcode( page, 580,   1, "QRCODE",     "http://harbour-project.org/" )
 
    FErase( "testhpdf.pdf" )
    ? HPDF_SaveToFile( pdf, "testhpdf.pdf" )
@@ -53,7 +54,7 @@ PROCEDURE Main()
    RETURN
 
 PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
-   LOCAL hZebra, nLineHeight
+   LOCAL hZebra, nLineHeight, cTxt
 
    nY := HPDF_Page_GetHeight( page ) - nY
 
@@ -71,6 +72,7 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
    CASE "CODE128"    ; hZebra := hb_zebra_create_code128( cCode, nFlags ) ; EXIT
    CASE "PDF417"     ; hZebra := hb_zebra_create_pdf417( cCode, nFlags ); nLineHeight := nLineWidth * 3 ; EXIT
    CASE "DATAMATRIX" ; hZebra := hb_zebra_create_datamatrix( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
+   CASE "QRCODE"     ; hZebra := hb_zebra_create_qrcode( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    ENDSWITCH
 
    IF hZebra != NIL
@@ -80,7 +82,10 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
          ENDIF
          HPDF_Page_BeginText( page )
          HPDF_Page_TextOut( page,  40, nY - 13, cType )
-         HPDF_Page_TextOut( page, 150, nY - 13, hb_zebra_getcode( hZebra ) )
+         cTxt := hb_zebra_getcode( hZebra )
+          IF LEN( cTxt ) < 20
+           HPDF_Page_TextOut( page, 150, nY - 13, cTxt )
+         ENDIF
          HPDF_Page_EndText( page )
          hb_zebra_draw_hpdf( hZebra, page, 300, nY, nLineWidth, -nLineHeight )
       ELSE

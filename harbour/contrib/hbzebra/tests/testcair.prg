@@ -37,11 +37,11 @@ PROCEDURE main()
    DrawBarcode( hCairo, 360,   1, "CODE11",     "12", HB_ZEBRA_FLAG_WIDE3 )
    DrawBarcode( hCairo, 380,   1, "CODE11",     "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
    DrawBarcode( hCairo, 400,   1, "CODE128",    "Code 128")
-   DrawBarcode( hCairo, 420,   1, "CODE128",    "1234567890")
+   DrawBarcode( hCairo, 420,   1, "CODE128",    "61300073570004616")
    DrawBarcode( hCairo, 440,   1, "CODE128",    "Wikipedia")
    DrawBarcode( hCairo, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
    DrawBarcode( hCairo, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)")
-
+   DrawBarcode( hCairo, 580,   1, "QRCODE",     "http://harbour-project.org/" )
    cairo_destroy( hCairo )
    cairo_surface_write_to_png( hSurface, "testcair.png" )
    cairo_surface_destroy( hSurface )
@@ -49,7 +49,7 @@ PROCEDURE main()
 
 
 PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
-   LOCAL hZebra, nLineHeight
+   LOCAL hZebra, nLineHeight, cTxt
 
    SWITCH cType
    CASE "EAN13"      ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
@@ -65,6 +65,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    CASE "CODE128"    ; hZebra := hb_zebra_create_code128( cCode, nFlags ) ; EXIT
    CASE "PDF417"     ; hZebra := hb_zebra_create_pdf417( cCode, nFlags ); nLineHeight := nLineWidth * 3 ; EXIT
    CASE "DATAMATRIX" ; hZebra := hb_zebra_create_datamatrix( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
+   CASE "QRCODE"     ; hZebra := hb_zebra_create_qrcode( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    ENDSWITCH
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
@@ -73,8 +74,10 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
          ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )
          cairo_show_text( hCairo, cType )
-         cairo_move_to( hCairo, 100, nY + 13 )
-         cairo_show_text( hCairo, hb_zebra_getcode( hZebra ) )
+         IF LEN( cTxt := hb_zebra_getcode( hZebra ) ) < 20 
+           cairo_move_to( hCairo, 100, nY + 13 )
+           cairo_show_text( hCairo, cTxt )
+         ENDIF
          hb_zebra_draw_cairo( hZebra, hCairo, 220, nY, nLineWidth, nLineHeight )
       ELSE
          ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
@@ -92,7 +95,8 @@ STATIC FUNCTION hb_zebra_draw_cairo( hZebra, hCairo, ... )
    ENDIF
 
    cairo_save( hCairo )
-   hb_zebra_draw( hZebra, {| x, y, w, h | cairo_rectangle( hCairo, x, y, w, h ), cairo_fill( hCairo ) }, ... )
+   hb_zebra_draw( hZebra, {| x, y, w, h | cairo_rectangle( hCairo, x, y, w, h ) }, ... )
+   cairo_fill( hCairo )
    cairo_restore( hCairo )
 
    RETURN 0

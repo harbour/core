@@ -29,3 +29,4 @@ itf.c
 msi.c
 pdf417.c
 datamtrx.c
+qrcode.c
