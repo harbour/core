@@ -1026,7 +1026,7 @@ HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
    return nRAt;
 }
 
-HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
+HB_WCHAR hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 {
    if( nLen )
    {
