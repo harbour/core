@@ -113,6 +113,8 @@ PROCEDURE Main()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
+   oBtn:connect( QEvent_Enter, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Enter ) } )
+   oBtn:connect( QEvent_Leave, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Leave ) } )
    oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
 
    oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
@@ -615,20 +617,52 @@ FUNCTION ShowInSystemTray( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
+STATIC FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
+   LOCAL qColor
    LOCAL qRect := oPaintEvent:rect()
 
    IF oBtn:isDown()
-      oPainter:fillRect( qRect, QColor( 120,12,200 ) )
-      oPainter:drawRect( qRect )
+      qColor := QColor( 120,12,200 )
+      oPainter:fillRect( qRect, qColor )
+      oPainter:drawRect( qRect:adjusted( 0,0,-1,-1 ) )
       oPainter:drawText( 31, 31, "Harbour" )
    ELSE
-      oPainter:fillRect( qRect, QColor( 220,100,12 ) )
+      oPainter:fillRect( qRect, SetButtonColor() )
       oPainter:drawText( 30, 30, "Harbour" )
       oPainter:setPen( QColor( 255,255,255 ) )
-      oPainter:drawRect( qRect )
+      oPainter:drawRect( qRect:adjusted( 0,0,-1,-1 ) )
    ENDIF
 
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION RePaintHover( oEvent, oBtn, nEvent )
+
+   HB_SYMBOL_UNUSED( oEvent )
+
+   IF nEvent == QEvent_Leave
+      SetButtonColor( QColor( 220,100,12 ) )
+   ELSEIF nEvent == QEvent_Enter
+      SetButtonColor( QColor( 0,255,0 ) )
+   ENDIF
+   oBtn:repaint()
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION SetButtonColor( qClr )
+   LOCAL l_clr
+   STATIC s_clr
+   IF s_clr == NIL
+      s_clr := QColor( 220,100,12 )
+   ENDIF
+   l_clr := s_clr
+   IF hb_isObject( qClr )
+      s_clr := qClr
+   ENDIF
+   RETURN l_clr
+
+/*----------------------------------------------------------------------*/
+
