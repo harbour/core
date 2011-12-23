@@ -111,11 +111,11 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF EMPTY( nLineHeight )
+         IF Empty( nLineHeight )
             nLineHeight := 16
          ENDIF
          wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )
-         IF LEN( cTxt := hb_zebra_getcode( hZebra ) ) < 20
+         IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20
             wapi_TextOut( hDC, 150 * _SCALE_, nY, cTxt )
          ENDIF
          hb_zebra_draw_wapi( hZebra, hDC, wapi_CreateSolidBrush( 0 ), 300 * _SCALE_, nY, nLineWidth, nLineHeight * _SCALE_ )

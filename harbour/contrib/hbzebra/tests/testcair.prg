@@ -69,14 +69,14 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    ENDSWITCH
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF EMPTY( nLineHeight )
+         IF Empty( nLineHeight )
             nLineHeight := 16
          ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )
          cairo_show_text( hCairo, cType )
-         IF LEN( cTxt := hb_zebra_getcode( hZebra ) ) < 20 
-           cairo_move_to( hCairo, 100, nY + 13 )
-           cairo_show_text( hCairo, cTxt )
+         IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20 
+            cairo_move_to( hCairo, 100, nY + 13 )
+            cairo_show_text( hCairo, cTxt )
          ENDIF
          hb_zebra_draw_cairo( hZebra, hCairo, 220, nY, nLineWidth, nLineHeight )
       ELSE
