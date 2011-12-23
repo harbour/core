@@ -53,7 +53,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbqtgui.ch"
-
+#include "common.ch"
 #include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
@@ -70,8 +70,6 @@
  *                             Pritpal Bedi
  */
 /*----------------------------------------------------------------------*/
-
-#include "common.ch"
 
 STATIC oSys, oMenuSys, oActShow, oActHide
 
@@ -115,10 +113,10 @@ PROCEDURE Main()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   oBtn:hbSetEventBlock( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
+   oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
 
-   oWnd:connect(  6, {|e| My_Events( e ) } )
-   oWnd:connect( 19, {|| QApplication():quit() } )
+   oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
+   oWnd:connect( QEvent_Close, {|| QApplication():quit() } )
    oWnd:Show()
 
    QApplication():exec()
@@ -620,11 +618,10 @@ FUNCTION ShowInSystemTray( oWnd )
 FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
    LOCAL qRect := oPaintEvent:rect()
 
-
    IF oBtn:isDown()
       oPainter:fillRect( qRect, QColor( 120,12,200 ) )
       oPainter:drawRect( qRect )
-      oPainter:drawText( 32, 32, "Harbour" )
+      oPainter:drawText( 31, 31, "Harbour" )
    ELSE
       oPainter:fillRect( qRect, QColor( 220,100,12 ) )
       oPainter:drawText( 30, 30, "Harbour" )

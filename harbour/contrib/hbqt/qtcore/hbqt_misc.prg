@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,8 @@
 #include "error.ch"
 #include "hbtrace.ch"
 
+#define QEvent_Paint                              12
+
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS HbQtObjectHandler
@@ -63,7 +65,6 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pSlots                                           PROTECTED
    VAR    __pEvents                                          PROTECTED
 
-   //METHOD fromPointer( pPtr )
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
@@ -76,9 +77,6 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-/* TODO: Drop this function, as it's not desired to have invalid QT pointers wrapped
-         into valid .prg level QT objects.
-         Currently it will return .F. for objects created using :fromPointer() */
 METHOD HbQtObjectHandler:hasValidPointer()
    RETURN __hbqt_isPointer( ::pPtr )
 
@@ -135,17 +133,26 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       EXIT
 
    CASE "N"
-      IF Empty( ::__pEvents )
-         ::__pEvents := HBQEvents( Self )
-      ENDIF
-      nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
+      IF cnEvent == QEvent_Paint
+         IF __objHasMethod( Self, "HBSETEVENTBLOCK" )
+            ::hbSetEventBlock( QEvent_Paint, bBlock )
+            RETURN .T.
+         ELSE
+            RETURN .F.
+         ENDIF
+      ELSE
+         IF Empty( ::__pEvents )
+            ::__pEvents := HBQEvents( Self )
+         ENDIF
+         nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
 
-      SWITCH nResult
-      CASE 0
-         RETURN .T.
-      CASE -3 /* bBlock not supplied */
-         RETURN .F.
-      ENDSWITCH
+         SWITCH nResult
+         CASE 0
+            RETURN .T.
+         CASE -3 /* bBlock not supplied */
+            RETURN .F.
+         ENDSWITCH
+      ENDIF
       EXIT
 
    OTHERWISE
@@ -205,8 +212,8 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:_destroy()
 
-//   ::__pSlots := NIL
-//   ::__pEvents := NIL
+   ::__pSlots := NIL
+   ::__pEvents := NIL
 
    RETURN NIL
 
