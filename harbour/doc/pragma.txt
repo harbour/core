@@ -55,7 +55,6 @@ This is the list of the supported commands and switches:
   * SHORTCUT            =<On/Off>     /Z<+/->
   * TEXTHIDDEN          =<On/Off>
   * TRACE               =<On/Off>     /P+
-  * SHORTCUT            =<On/Off>     /Z<+/->
   * WARNINGLEVEL        =<nLevel>     /W<nLevel>
 
   The switches have the same behavior as the corresponding compiler ones
