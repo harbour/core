@@ -32,8 +32,8 @@ To enable or disable a command or a switch you simply do:
   --------------------------------------------------------------
   * #pragma <CommandName>=On/Off      #pragma /<SwitchName>+/-
 
-   Example: #pragma AddDebugInfo=Off  /* Suppress debug info */
-            #pragma /B+               /* Add debug info from here */
+   Example: #pragma DebugInfo=Off  /* Suppress debug info */
+            #pragma /B+            /* Add debug info from here */
 
 
 IMPLEMENTATION
@@ -43,16 +43,20 @@ This is the list of the supported commands and switches:
 
   * Command                           Switch
   -----------------------------------------------
-  * AUTOMEMVARS         =<On/Off>     /A<+/->
+  * AUTOMEMVAR          =<On/Off>     /A<+/->
   * DEBUGINFO           =<On/Off>     /B<+/->
+  * DYNAMICMEMVAR       =<On/Off>     /V<+/->
   * ENABLEWARNINGS      =<On/Off>     /W<+/->
+  * ESCAPEDSTRINGS      =<On/Off>
   * EXITSEVERITY        =<nLevel>     /E<nLevel>
-  * FORCEMEMVARS        =<On/Off>     /V<+/->
-  * LINEINFO            =<On/Off>     /L<+/->
+  * LINENUMBER          =<On/Off>     /L<+/->
   * NOSTARTPROC         =<On/Off>     /N<+/->
   * PREPROCESSING       =<On/Off>     /P<+/->
+  * SHORTCUT            =<On/Off>     /Z<+/->
+  * TEXTHIDDEN          =<On/Off>
+  * TRACE               =<On/Off>     /P+
+  * SHORTCUT            =<On/Off>     /Z<+/->
   * WARNINGLEVEL        =<nLevel>     /W<nLevel>
-  * SHORTCUTTING        =<On/Off>     /Z<+/->
 
   The switches have the same behavior as the corresponding compiler ones
   and the commands are synonyms for the switches.
@@ -76,8 +80,8 @@ EXAMPLES
 #pragma NoStartProc=Off
 /* #pragma /N- */
 
-function Test()
-return nil
+FUNCTION Test()
+   RETURN NIL
 
 This is the same as calling Harbour with the -n switch in the command line,
 but with the great benefit that if you forgot to pass the switch, it will
