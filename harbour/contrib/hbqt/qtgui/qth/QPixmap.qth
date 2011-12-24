@@ -112,6 +112,8 @@ QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::I
 QPixmap scaledToHeight ( int height, Qt::TransformationMode mode = Qt::FastTransformation ) const
 QPixmap scaledToWidth ( int width, Qt::TransformationMode mode = Qt::FastTransformation ) const
 void setAlphaChannel ( const QPixmap & alphaChannel )
+void scroll ( int dx, int dy, int x, int y, int width, int height, QRegion * exposed = 0 )                    [*V=0x040600*]
+void scroll ( int dx, int dy, const QRect & rect, QRegion * exposed = 0 )                                     [*V=0x040600*]
 void setMask ( const QBitmap & mask )
 QSize size () const
 QImage toImage () const

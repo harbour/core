@@ -168,6 +168,7 @@ QPrintEngine.qth
 QPrinter.qth
 QPrinterInfo.qth
 QPrintPreviewDialog.qth
+QPrintPreviewWidget.qth
 QProgressBar.qth
 QProgressDialog.qth
 QPushButton.qth

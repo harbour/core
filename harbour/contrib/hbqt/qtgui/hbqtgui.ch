@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1540,16 +1540,16 @@
 // enum #define QFont_StyleHint
 // Style hints are used by the font matching algorithm to find an appropriate default family if a selected font family is not available.
 //
-#define QFont_AnyStyle                            ?                  // leaves the font matching algorithm to choose the family. This is the default.
+#define QFont_AnyStyle                            5                  // leaves the font matching algorithm to choose the family. This is the default.
 #define QFont_SansSerif                           QFont_Helvetica    // the font matcher prefer sans serif fonts.
 #define QFont_Helvetica                           0                  // is a synonym for SansSerif.
 #define QFont_Serif                               QFont_Times        // the font matcher prefers serif fonts.
-#define QFont_Times                               ?                  // is a synonym for Serif.
+#define QFont_Times                               1                  // is a synonym for Serif.
 #define QFont_TypeWriter                          QFont_Courier      // the font matcher prefers fixed pitch fonts.
-#define QFont_Courier                             ?                  // a synonym for TypeWriter.
-#define QFont_OldEnglish                          ?                  // the font matcher prefers decorative fonts.
+#define QFont_Courier                             2                  // a synonym for TypeWriter.
+#define QFont_OldEnglish                          3                  // the font matcher prefers decorative fonts.
 #define QFont_Decorative                          QFont_OldEnglish   // is a synonym for OldEnglish.
-#define QFont_System                              ?                  // the font matcher prefers system fonts.
+#define QFont_System                              4                  // the font matcher prefers system fonts.
 
 // enum #define QFont_StyleStrategy
 // The style strategy tells the font matching algorithm what type of fonts should be used to find an appropriate default family.
@@ -1803,6 +1803,19 @@
 #define QPrintEngine_PPK_CustomPaperSize          23     // A QSizeF specifying a custom paper size in the QPrinter::Point unit.
 #define QPrintEngine_PPK_PageMargins              24     // A QList<QVariant> containing the left, top, right and bottom margin values.
 
+//enum QPrintPreviewWidget::ViewMode
+//This enum is used to describe the view mode of the preview widget.
+//
+#define QPrintPreviewWidget_SinglePageView        0      // A mode where single pages in the preview is viewed.
+#define QPrintPreviewWidget_FacingPagesView       1      // A mode where the facing pages in the preview is viewed.
+#define QPrintPreviewWidget_AllPagesView          2      // A view mode where all the pages in the preview is viewed.
+
+//enum QPrintPreviewWidget::ZoomMode
+//This enum is used to describe zoom mode of the preview widget.Constant	Value	Description
+//
+#define QPrintPreviewWidget_CustomZoom            0      // The zoom is set to a custom zoom value.
+#define QPrintPreviewWidget_FitToWidth            1      // This mode fits the current page to the width of the view.
+#define QPrintPreviewWidget_FitInView             2      // This mode fits the current page inside the view.
 
 // enum QTextCursor::MoveMode
 //
