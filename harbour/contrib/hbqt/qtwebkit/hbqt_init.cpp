@@ -8,7 +8,7 @@
  *
  * Copyright 2009 Marcos Antonio Gambeta (marcosgambeta at gmail dot com)
  * Copyright 2009 Pritpal Bedi (pritpal@vouchcac.com)
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * Copyright 2010 Francesco Perillo ()
  * www - http://harbour-project.org
  *

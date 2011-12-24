@@ -3,7 +3,7 @@
 #
 
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (rework)
+# Copyright 2009 Viktor Szakats (harbour syenar.hu) (rework)
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 

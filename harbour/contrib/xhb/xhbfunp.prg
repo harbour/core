@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * xhb compatibility wrappers.
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Tracing functions.
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  * www - http://harbour-project.org
  *

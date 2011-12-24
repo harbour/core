@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Dynamic library handling functions (Xbase++ compatible)
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * Copyright 2006 Paul Tucker <ptucker@sympatico.ca>
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
  * www - http://harbour-project.org

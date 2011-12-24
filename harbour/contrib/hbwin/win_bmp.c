@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * Copyright 2010 Xavi <jarabal/at/gmail.com>
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://harbour-project.org

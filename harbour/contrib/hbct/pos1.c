@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   POSALPHA(), POSLOWER(), POSRANGE() and POSUPPER() CT3 string functions
  *
- * POSUPPER() Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * POSUPPER() Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  *
  * POSALPHA(), POSLOWER(), POSRANGE()
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany

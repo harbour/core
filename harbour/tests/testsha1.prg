@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Rewritten from C: Viktor Szakats (harbour.01 syenar.hu)
+ * Rewritten from C: Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  */
 

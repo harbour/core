@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OpenSSL API (SSL) - Harbour extensions
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

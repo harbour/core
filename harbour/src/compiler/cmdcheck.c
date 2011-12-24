@@ -36,7 +36,7 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_compChkEnvironVar()
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  *    PackDateTime()
  *    hb_compChkDefineSwitch()
  *    hb_compChkDefines()

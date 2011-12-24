@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * libcurl 'easy' API - Harbour interface.
  *
- * Copyright 2008-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008-2010 Viktor Szakats (harbour syenar.hu)
  * originally based on:
  * Copyright 2005 Luiz Rafael Culik Guimaraes <luiz at xharbour.com.br>
  * www - http://harbour-project.org

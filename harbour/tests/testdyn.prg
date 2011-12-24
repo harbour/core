@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    Dynamic library call demonstration. (on Windows)
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  */

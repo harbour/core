@@ -5,7 +5,7 @@
 /*
  * HBDOC reader test
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  */

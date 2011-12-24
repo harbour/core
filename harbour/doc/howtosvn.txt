@@ -100,7 +100,7 @@ by Viktor Szakats
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
 
   For example:
-    2011-05-27 23:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+    2011-05-27 23:12 UTC+0100 Viktor Szakats (harbour syenar.hu)
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -207,7 +207,7 @@ IMPORTANT 3: Use operating system (or tool) specific quote
              quoting only for space characters, etc.
 
 
-[ Copyright (c) 1999-2011 Viktor Szakats (harbour.01 syenar.hu)
+[ Copyright (c) 1999-2011 Viktor Szakats (harbour syenar.hu)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING. ]

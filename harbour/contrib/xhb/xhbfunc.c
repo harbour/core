@@ -7,7 +7,7 @@
  *    xHarbour compatible wrapper functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

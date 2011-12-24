@@ -57,7 +57,7 @@
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
  *    hb_winExceptionHandler() Windows exception info dump code.
  *
- * Copyright 2008-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008-2010 Viktor Szakats (harbour syenar.hu)
  *    hb_winExceptionHandler() Module listing code.
  *    hb_winExceptionHandler() x64 support.
  *    hb_winExceptionHandler() WinCE/ARM support.

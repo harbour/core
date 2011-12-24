@@ -9,7 +9,7 @@
  *    __MinimalErrorHandler(), xhb_ErrorNew()
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 2004 Ron Pinkas <ron @ xHarbour.com>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

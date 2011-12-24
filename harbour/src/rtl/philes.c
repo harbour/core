@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * The FileSys API (Harbour level)
  *
- * Copyright 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999 Manuel Ruiz <mrt@joca.es>

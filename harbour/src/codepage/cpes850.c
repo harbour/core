@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module (ES850 - Modern Spanish)
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
  *

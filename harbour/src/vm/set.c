@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 2008-2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008-2009 Viktor Szakats (harbour syenar.hu)
  *    hb_osEncode()
  *    hb_osDecode()
  *

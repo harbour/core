@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CHARMIX() CT3 function
  *
- * Initial code: Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Initial code: Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  *
  * CT3 conformity: Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *                 Author: Martin Vogel <vogel@inttec.de>

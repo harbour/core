@@ -7,7 +7,7 @@
  * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes & Patrick Mast
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu) (SSL support)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu) (SSL support)
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify

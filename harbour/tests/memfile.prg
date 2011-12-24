@@ -3,7 +3,7 @@
  */
 
 // ; Donated to the public domain by
-//   Viktor Szakats (harbour.01 syenar.hu)
+//   Viktor Szakats (harbour syenar.hu)
 
 MEMVAR mcLongerNameThen10Chars
 #ifdef __HARBOUR__

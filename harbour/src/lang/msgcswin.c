@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (CSWIN) WIN1250
  *
- * Copyright 2000 Viktor Szakats (harbour.01 syenar.hu) (English, from msg_tpl.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.hu) (English, from msg_tpl.c)
  * Copyright 2000 Roman Masek <woodoo@iol.cz>
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>

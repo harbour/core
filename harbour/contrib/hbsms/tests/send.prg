@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009-2010 Viktor Szakats (harbour syenar.hu)
  * www - http://www.harbour-project.org
  */
 

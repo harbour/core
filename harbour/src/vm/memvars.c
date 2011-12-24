@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  *    __MVSAVE()
  *    __MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
  *                   Clipper function (FReadMem()) to read .mem files)

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (HEWIN)
  *
- * Copyright 2000 Viktor Szakats (harbour.01 syenar.hu) (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.hu) (English, from msgen.c)
  * Copyright 2000 Chen Kedem <niki@synel.co.il> (Hebrew)
  * www - http://harbour-project.org
  *

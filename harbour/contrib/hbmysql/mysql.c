@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * MySQL DBMS low level (client api) interface code.
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (GC support)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu) (GC support)
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://harbour-project.org
  *

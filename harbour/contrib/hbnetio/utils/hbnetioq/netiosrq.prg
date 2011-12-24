@@ -7,7 +7,7 @@
  * Harbour NETIO server management QT client
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
- * Copyright 2009-2011 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009-2011 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

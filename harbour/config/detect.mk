@@ -3,7 +3,7 @@
 #
 
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+# Copyright 2009 Viktor Szakats (harbour syenar.hu)
 # See COPYING for licensing terms.
 #
 # This make file will detect optional 3rd party components

@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  *    Rewritten in C
  *
  * See COPYING for licensing terms.

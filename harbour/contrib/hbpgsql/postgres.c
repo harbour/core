@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * PostgreSQL RDBMS low level (client api) interface code.
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (GC support)
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu) (GC support)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  * www - http://harbour-project.org
  *

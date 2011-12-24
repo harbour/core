@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Simple MAPI wrapper
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
  * www - http://harbour-project.org
  *

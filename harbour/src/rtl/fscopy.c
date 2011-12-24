@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * hb_fsCopy(), HB_FCOPY() functions
  *
- * Copyright 1991-2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1991-2008 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

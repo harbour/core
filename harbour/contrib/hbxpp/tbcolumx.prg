@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * TBColumn Class
  *
- * Copyright 2007-2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2007-2008 Viktor Szakats (harbour syenar.hu)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *

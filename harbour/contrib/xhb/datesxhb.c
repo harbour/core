@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * The Date API (Harbour level)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai -dot- ws>
  * Copyright 2007 Walter Negro <anegro@overnet.com.ar>
  * www - http://harbour-project.org

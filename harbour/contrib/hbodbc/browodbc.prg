@@ -7,7 +7,7 @@
  * Browse() for ODBC data
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com> for code derived from browse.prg
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu) for original FieldBlock function
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu) for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
  * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
  * www - http://harbour-project.org

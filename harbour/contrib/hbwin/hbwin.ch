@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * hbwin header
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008 Viktor Szakats (harbour syenar.hu)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://harbour-project.org
  *

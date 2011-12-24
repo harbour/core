@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for compiler and runtime configuration
  *
- * Copyright 2000-2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2000-2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org
  *

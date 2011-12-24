@@ -6,7 +6,7 @@
  *   CT3 GET/READ Functions
  *
  * SAVEGETS(), RESTGETS()
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
  * www - http://harbour-project.org
  *
  * COUNTGETS(), CURRENTGET(), GETFLDROW(), GETFLDCOL(), GETFLDVAR()

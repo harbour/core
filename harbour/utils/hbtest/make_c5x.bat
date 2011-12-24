@@ -10,7 +10,7 @@ rem         command line parameter "53" (without quotes).
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
-rem Copyright 1999-2008 Viktor Szakats (harbour.01 syenar.hu)
+rem Copyright 1999-2008 Viktor Szakats (harbour syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 

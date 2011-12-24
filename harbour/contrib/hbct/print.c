@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * CT3 Printer functions:
  *
- * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (PRINTREADY())
+ * Copyright 2010 Viktor Szakats (harbour syenar.hu) (PRINTREADY())
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru> (PRINTSEND())
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar> (PRINTSTAT())
  * www - http://harbour-project.org

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Advantage Database Server RDD (Management functions)
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2008 Viktor Szakats (harbour syenar.hu)
  * Copyright 2001 Brian Hays <bhays@abacuslaw.com>
  * www - http://harbour-project.org
  *

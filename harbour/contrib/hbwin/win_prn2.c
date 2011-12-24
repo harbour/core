@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour Windows Printing support functions
  *
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.hu)
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://harbour-project.org
  *

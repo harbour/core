@@ -8,7 +8,7 @@ CA-T**ls Compatible Library for Harbour
 The goal of this library is to provide the functionality 
 of the original CA-T**ls 3 Library for CA-Cl*pper.
 
-Viktor Szakats (harbour.01 syenar.hu)
+Viktor Szakats (harbour syenar.hu)
 
 
 Directories: ./     contains all the source files, include files, make files

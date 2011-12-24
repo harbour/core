@@ -5,7 +5,7 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem Copyright 2009-2011 Viktor Szakats (harbour.01 syenar.hu)
+rem Copyright 2009-2011 Viktor Szakats (harbour syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
