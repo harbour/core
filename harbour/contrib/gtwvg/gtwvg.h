@@ -55,8 +55,6 @@
 
 #define HB_GT_NAME  WVG
 
-/*----------------------------------------------------------------------*/
-
 #ifndef _WIN32_IE
    #ifdef __MINGW32__
       #include <_mingw.h>
@@ -65,19 +63,6 @@
       #define _WIN32_IE 0x0500
    #endif
 #endif
-
-/*----------------------------------------------------------------------*/
-
-#include <windows.h>
-#include <winuser.h>
-#include <commctrl.h>
-#if ! defined( HB_OS_WIN_CE )
-   #include <ole2.h>
-   #include <olectl.h>
-   #include <ocidl.h>
-#endif
-#include <commdlg.h>
-#include <shellapi.h>
 
 #include "hbset.h"
 #include "hbgtcore.h"
@@ -90,9 +75,20 @@
 #include "hbvm.h"
 #include "hbthread.h"
 #include "hbgfxdef.ch"
+#include "hbwinuni.h"
 
 #include "hbgtwvg.ch"
 
+#include <windows.h>
+#include <winuser.h>
+#include <commctrl.h>
+#if ! defined( HB_OS_WIN_CE )
+   #include <ole2.h>
+   #include <olectl.h>
+   #include <ocidl.h>
+#endif
+#include <commdlg.h>
+#include <shellapi.h>
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
 #endif
@@ -363,10 +359,12 @@ typedef struct
    HWND     hWnd;                           /* the window handle */
    HB_BOOL  fInit;                          /* logical variable indicating that window should be open */
 
-   PHB_CODEPAGE hostCDP;                    /* Host/HVM CodePage for unicode output translations */
-   PHB_CODEPAGE inCDP;                      /* Host/HVM CodePage for unicode input translations */
 #if defined( UNICODE )
-   PHB_CODEPAGE boxCDP;                     /* CodePage for legacy drawing chars: IBM437 */
+   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
+   PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
+#else
+   HB_BOOL  fKeyTrans;                    /* logical variable indicating that CP key translation is enabled */
 #endif
 
 #if !defined( UNICODE )
@@ -376,6 +374,9 @@ typedef struct
 
    HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
    HB_BOOL  bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
+
+   void *   hWindowTitle;
+   LPCTSTR  lpWindowTitle;
 
    int      CodePage;                       /* Code page to use for display characters */
 #if ! defined( UNICODE )
@@ -392,8 +393,11 @@ typedef struct
    HB_BOOL  bBeginMarked;
 
    HB_BOOL  bResizable;
+
    HB_BOOL  bSelectCopy;
-   char *   pszSelectCopy;
+   void *   hSelectCopy;
+   LPCTSTR  lpSelectCopy;
+
    HB_BOOL  bClosable;
    HB_BOOL  bFullScreen;
    HB_BOOL  bAltEnter;                      /* Can use Alt+Enter to enter full screen mode */
