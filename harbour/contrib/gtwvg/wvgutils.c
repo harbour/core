@@ -248,12 +248,11 @@ HB_FUNC( WVT_MESSAGEBOX )
 {
    PHB_GTWVT   _s      = hb_wvt_gtGetWVT();
 
-   LPTSTR      title   = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-   LPTSTR      msg     = HB_TCHAR_CONVTO( hb_parc( 2 ) );
-
-   hb_retni( MessageBox( _s->hWnd, title, msg, hb_parnidef( 3, MB_OK ) ) );
-   HB_TCHAR_FREE( title );
-   HB_TCHAR_FREE( msg );
+   void * hTitle;
+   void * hMsg;
+   hb_retni( MessageBox( _s->hWnd, HB_PARSTR( 1, &hTitle, NULL ), HB_PARSTR( 2, &hMsg, NULL ), hb_parnidef( 3, MB_OK ) ) );
+   hb_strfree( hTitle );
+   hb_strfree( hMsg );
 }
 
 /*----------------------------------------------------------------------*/
@@ -951,12 +950,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    {
       if( HB_ISNUM( 3 ) )
       {
-         LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+         void * hTemplate;
          hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
-                                      ( LPDLGTEMPLATE ) lpTemplate,
+                                      ( LPDLGTEMPLATE ) HB_PARSTR( 1, &hTemplate, NULL ),
                                       hb_parl( 2 ) ? _s->hWnd : NULL,
                                       ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
-         HB_TCHAR_FREE( lpTemplate );
+         hb_strfree( hTemplate );
       }
       else
       {
@@ -964,12 +963,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          {
             case 0:
             {
-               LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+               void * hTemplate;
                hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
-                                    lpTemplate,
+                                    HB_PARSTR( 1, &hTemplate, NULL ),
                                     hb_parl( 2 ) ? _s->hWnd : NULL,
                                     ( DLGPROC ) hb_wvt_gtDlgProcMLess );
-               HB_TCHAR_FREE( lpTemplate );
+               hb_strfree( hTemplate );
             }
             break;
 
@@ -1078,13 +1077,13 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    {
       case 0:
       {
-         LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+         void * hTemplate;
          iResult = DialogBoxParam( ( HINSTANCE ) wvg_hInstance(),
-                                   lpTemplate,
+                                   HB_PARSTR( 1, &hTemplate, NULL ),
                                    hParent,
                                    ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                    ( LPARAM ) ( DWORD ) iIndex + 1 );
-         HB_TCHAR_FREE( lpTemplate );
+         hb_strfree( hTemplate );
       }
       break;
 
@@ -1259,10 +1258,9 @@ int nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn )
 
 HB_FUNC( WVT_LBADDSTRING )
 {
-   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) ( LPSTR ) text );
-   HB_TCHAR_FREE( text );
+   void * hText;
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1290,10 +1288,9 @@ HB_FUNC( WVT_LBSETCURSEL )
 
 HB_FUNC( WVT_CBADDSTRING )
 {
-   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) ( LPSTR ) text );
-   HB_TCHAR_FREE( text );
+   void * hText;
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1317,13 +1314,13 @@ HB_FUNC( WVT_DLGSETICON )
    }
    else
    {
-      LPTSTR icon = HB_TCHAR_CONVTO( hb_parc( 2 ) );
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      void * cIcon;
+      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if( ! hIcon )
       {
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), icon, IMAGE_ICON, 0, 0, 0 );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, 0 );
       }
-      HB_TCHAR_FREE( icon );
+      hb_strfree( cIcon );
    }
 
    if( hIcon )

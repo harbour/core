@@ -120,27 +120,21 @@ static HINSTANCE wvg_hInstance( void )
 
 HB_FUNC( WVG_SENDMESSAGE )
 {
-   LPTSTR cText = HB_ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
-
+   void * hText = NULL;
    hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                        ( UINT ) hb_parni( 2 ),
                                        ( ! HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                       ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM )( LPSTR ) cText :
-                                                                 ( LPARAM ) hb_parnint( 4 ) ) ) )
-             );
-
-   if( cText )
+                                       ( HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) :
+                                                          ( LPARAM ) hb_parnint( 4 ) ) ) );
+   if( hText )
    {
       if( HB_ISBYREF( 4 ) )
       {
-         char * szText = HB_TCHAR_CONVFROM( cText );
-         hb_storc( szText, 4 );
-         HB_TCHAR_FREE( szText );
+         HB_STORSTR( hText, 4 );
       }
-      HB_TCHAR_FREE( cText );
    }
+   hb_strfree( hText );
 }
-
 /*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_SENDDLGITEMMESSAGE )
@@ -267,10 +261,9 @@ HB_FUNC( WVG_GETDIALOGBASEUNITS )
 
 HB_FUNC( WVG_SETDLGITEMTEXT )
 {
-   LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-
-   SetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), lpBuffer );
-   HB_TCHAR_FREE( lpBuffer );
+   void * hText;
+   SetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -332,14 +325,12 @@ HB_FUNC( WVG_GETDLGITEM )
 
 HB_FUNC( WVG_MESSAGEBOX )
 {
-   HWND     hWnd    = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
-   LPTSTR   lpMsg   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR   lpTitle = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
-
-   hb_retni( MessageBox( hWnd, lpMsg, lpTitle, hb_parnidef( 4, MB_OK ) ) );
-
-   HB_TCHAR_FREE( lpTitle );
-   HB_TCHAR_FREE( lpMsg );
+   HWND   hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
+   void * hMsg;
+   void * hTitle;
+   hb_retni( MessageBox( hWnd, HB_PARSTR( 2, &hMsg, NULL ), HB_PARSTR( 3, &hTitle, NULL ), hb_parnidef( 4, MB_OK ) ) );
+   hb_strfree( hMsg );
+   hb_strfree( hTitle );
 }
 
 /*----------------------------------------------------------------------*/
@@ -375,9 +366,9 @@ HB_FUNC( WVG_LOADICON )
    }
    else
    {
-      LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-      HB_TCHAR_FREE( lpBuffer );
+      void * hBuffer;
+      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, HB_PARSTR( 1, &hBuffer, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hb_strfree( hBuffer );
    }
 
    hb_retnint( ( HB_PTRDIFF ) hIcon );
@@ -393,7 +384,8 @@ HB_FUNC( WVG_LOADICON )
 HB_FUNC( WVG_LOADIMAGE )
 {
    HANDLE   hImage     = 0;
-   LPTSTR   lpBuffer   = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   void *   hBuffer;
+   LPCTSTR  lpBuffer   = HB_PARSTR( 1, &hBuffer, NULL );
    int      iSource    = hb_parni( 2 );
 
    switch( iSource )
@@ -414,7 +406,7 @@ HB_FUNC( WVG_LOADIMAGE )
          break;
    }
 
-   HB_TCHAR_FREE( lpBuffer );
+   hb_strfree( hBuffer );
    hb_retnint( ( HB_PTRDIFF ) hImage );
 }
 
@@ -479,7 +471,8 @@ HB_FUNC( WVG_CREATEBRUSH )
 HB_FUNC( WVG_DRAWTEXT )
 {
    RECT     rc         = { 0, 0, 0, 0 };
-   LPTSTR   lpBuffer   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   void *   hBuffer;
+   LPCTSTR  lpBuffer   = HB_PARSTR( 2, &hBuffer, NULL );
 
    rc.left    = hb_parvni( 3, 1 );
    rc.top     = hb_parvni( 3, 2 );
@@ -487,7 +480,7 @@ HB_FUNC( WVG_DRAWTEXT )
    rc.bottom  = hb_parvni( 3, 4 );
 
    hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
-   HB_TCHAR_FREE( lpBuffer );
+   hb_strfree( hBuffer );
 }
 
 /*----------------------------------------------------------------------*/
@@ -548,10 +541,9 @@ HB_FUNC( WVG_SETFOREGROUNDWINDOW )
 
 HB_FUNC( WVG_SETWINDOWTEXT )
 {
-   LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-
-   SetWindowText( wvg_parhwnd( 1 ), text );
-   HB_TCHAR_FREE( text );
+   void * hText;
+   SetWindowText( wvg_parhwnd( 1 ), HB_PARSTR( 2, &hText, NULL ) );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -698,11 +690,10 @@ HB_FUNC( WVG_CHOOSECOLOR )
 HB_FUNC( WVG_FINDWINDOW )
 {
    HWND     hwnd;
-   LPTSTR   lpStr;
+   void *   hText;
 
-   lpStr   = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   hwnd    = FindWindow( NULL, lpStr );
-   HB_TCHAR_FREE( lpStr );
+   hwnd    = FindWindow( NULL, HB_PARSTR( 1, &hText, NULL ) );
+   hb_strfree( hText );
 
    if( hwnd )
       hb_retnint( ( HB_PTRDIFF ) hwnd );
@@ -866,13 +857,13 @@ HB_FUNC( WVG_MAKELPARAM )
 
 HB_FUNC( WVG_CREATEWINDOWEX )
 {
-   HWND     hWnd;
-   LPTSTR   szClassName   = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR   szWinName     = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   HWND   hWnd;
+   void * hClassName;
+   void * hWinName;
 
    hWnd = CreateWindowEx( ( DWORD ) hb_parnint( 1 ),
-                          szClassName,
-                          szWinName,
+                          HB_PARSTR( 2, &hClassName, NULL ),
+                          HB_PARSTR( 3, &hWinName, NULL ),
                           ( DWORD ) hb_parnint( 4 ),
                           hb_parni( 5 ), hb_parni( 6 ),
                           hb_parni( 7 ), hb_parni( 8 ),
@@ -880,9 +871,8 @@ HB_FUNC( WVG_CREATEWINDOWEX )
                           HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : NULL,
                           HB_ISNUM( 11 ) ? ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ) : ( HINSTANCE ) wvg_hInstance(),
                           NULL );
-
-   HB_TCHAR_FREE( szClassName );
-   HB_TCHAR_FREE( szWinName );
+   hb_strfree( hClassName );
+   hb_strfree( hWinName );
 
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
@@ -890,11 +880,12 @@ HB_FUNC( WVG_CREATEWINDOWEX )
 
 HB_FUNC( WVG_SENDMESSAGETEXT )
 {
-   LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
-
-   SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ),
-                ( WPARAM ) hb_parni( 3 ), ( LPARAM ) lpBuffer );
-   HB_TCHAR_FREE( lpBuffer );
+   void * hBuffer;
+   SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
+                hb_parni( 2 ),
+                ( WPARAM ) hb_parni( 3 ),
+                ( LPARAM ) HB_PARSTR( 4, &hBuffer, NULL ) );
+   hb_strfree( hBuffer );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1220,12 +1211,11 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
       }
       case TB_ADDSTRING:
       {
-         int      iString;
-         LPTSTR   szCaption;
+         int    iString;
+         void * hCaption;
 
-         szCaption  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-         iString    = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) szCaption );
-         HB_TCHAR_FREE( szCaption );
+         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         hb_strfree( hCaption );
 
          hbwapi_ret_NI( iString );
          break;

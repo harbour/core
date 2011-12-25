@@ -209,6 +209,9 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    HB_WVT_UNLOCK
 
+   if( pWVT->hWindowTitle )
+      hb_strfree( pWVT->hWindowTitle );
+
    /* Detach PRG callback */
 
    hb_itemRelease( pWVT->pPP->pParentGT );
@@ -269,6 +272,16 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->bResizable        = HB_TRUE;
    pWVT->bClosable         = HB_TRUE;
+
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
+      PHB_ITEM  pItem = hb_itemPutC( NULL, pFileName->szName );
+
+      pWVT->lpWindowTitle = HB_ITEMGETSTR( pItem, &pWVT->hWindowTitle, NULL );
+
+      hb_itemRelease( pItem );
+      hb_xfree( pFileName );
+   }
 
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
@@ -442,34 +455,6 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
    pWVT->height = rc.bottom - rc.top;
 
    return 0;
-}
-
-static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
-{
-   LPTSTR text = HB_TCHAR_CONVTO( title );
-
-   SetWindowText( hWnd, text );
-   HB_TCHAR_FREE( text );
-}
-
-static HB_BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
-{
-   TCHAR buffer[WVT_MAX_TITLE_SIZE];
-   int iResult;
-
-   iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
-   if( iResult > 0 )
-   {
-#ifdef UNICODE
-      *title = hb_wcntomb( buffer, iResult );
-#else
-      *title = hb_strndup( buffer, iResult );
-#endif
-      return HB_TRUE;
-   }
-
-   *title = NULL;
-   return HB_FALSE;
 }
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -1201,9 +1186,6 @@ static WPARAM hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
 static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
    HWND     hWnd, hWndParent;
-   LPTSTR   szAppName;
-
-   szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
    hWndParent = NULL;
 
@@ -1238,7 +1220,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
    hWnd = CreateWindowEx(
                pWVT->pPP->exStyle,                          /* extended style */
                s_szClassName,                               /* classname      */
-               szAppName,                                   /* window name    */
+               pWVT->lpWindowTitle,                         /* window name    */
                pWVT->pPP->style,                            /* style          */
                pWVT->pPP->x,                                /* x              */
                pWVT->pPP->y,                                /* y              */
@@ -1248,9 +1230,6 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
                NULL,                                        /* menu           */
                pWVT->hInstance,                             /* instance       */
                NULL );                                      /* lpParam        */
-
-   HB_TCHAR_FREE( szAppName );
-
 
    ShowWindow( pWVT->hWnd, pWVT->pPP->bVisible ? SW_SHOWNORMAL : SW_HIDE );
    UpdateWindow( pWVT->hWnd );
@@ -1277,13 +1256,6 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon );
          SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon );
-      }
-
-      /* Set default window title */
-      {
-         PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-         hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
-         hb_xfree( pFileName );
       }
    }
 
@@ -1566,15 +1538,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_WINTITLE:
       {
-         if( pWVT->hWnd )
+         pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->lpWindowTitle );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            char * szTitle = NULL;
-            if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle );
-            else
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-               hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_itemGetCPtr( pInfo->pNewVal ) );
+            hb_strfree( pWVT->hWindowTitle );
+            pWVT->lpWindowTitle = HB_ITEMGETSTR( pInfo->pNewVal, &pWVT->hWindowTitle, NULL );
+            if( pWVT->hWnd )
+               SetWindowText( pWVT->hWnd, pWVT->lpWindowTitle );
          }
          break;
       }
@@ -1592,14 +1562,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpImage;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
+            void * hImageName;
 
-            lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
             pWVT->bIconToFree = HB_TRUE;
-            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
-                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-            HB_TCHAR_FREE( lpImage );
+            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
+                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
+                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+            hb_strfree( hImageName );
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
@@ -1612,18 +1582,18 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
          break;
       }
+
       case HB_GTI_ICONRES:
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpIcon;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
+            void * hIconName;
 
-            lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
             pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-            HB_TCHAR_FREE( lpIcon );
-
+            pWVT->hIcon = LoadIcon( pWVT->hInstance,
+                                    HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            hb_strfree( hIconName );
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
@@ -1635,7 +1605,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
 
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
@@ -1935,19 +1905,19 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   int            iIconType = hb_arrayGetNI( pInfo->pNewVal2, 2 );
                   HICON          hIcon = 0;
                   NOTIFYICONDATA tnid;
+                  void * hIconName;
 
                   if( iIconType == 0 )
                   {
-                     LPTSTR lpImage = HB_TCHAR_CONVTO( hb_arrayGetCPtr( pInfo->pNewVal2, 3 ) );
-                     hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
+                     hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
+                                             HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hIconName, NULL ),
                                                      IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-                     HB_TCHAR_FREE( lpImage );
+                     hb_strfree( hIconName );
                   }
                   else if( iIconType == 1 )
                   {
-                     LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_arrayGetCPtr( pInfo->pNewVal2, 3 ) );
-                     hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-                     HB_TCHAR_FREE( lpIcon );
+                     hIcon = LoadIcon( pWVT->hInstance, HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hIconName, NULL ) );
+                     hb_strfree( hIconName );
                   }
                   else if( iIconType == 2 )
                   {

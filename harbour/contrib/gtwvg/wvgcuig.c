@@ -97,6 +97,7 @@ static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )
    gObj->iState  = GOBJ_OBJSTATE_ENABLED;
    gObj->lpText  = NULL;
    gObj->bBlock  = NULL;
+   gObj->hText   = NULL;
 
    hb_retni( iHandle );
 
@@ -137,12 +138,8 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
       {
          gObj = pWVT->gObjs->gObjNext;
 
-         if( pWVT->gObjs->lpText != NULL )
-#if defined( UNICODE )
-            HB_TCHAR_FREE( pWVT->gObjs->lpText );
-#else
-            hb_xfree( pWVT->gObjs->lpText );
-#endif
+         if( pWVT->gObjs->hText )
+            hb_strfree( pWVT->gObjs->hText );
          if( pWVT->gObjs->hFont != NULL )
             if( pWVT->gObjs->bDestroyFont )
                DeleteObject( pWVT->gObjs->hFont );
@@ -223,11 +220,12 @@ HB_FUNC( WVG_SETGOBJDATA )
             switch( iDataType )
             {
                case GOBJ_OBJDATA_TEXT:
-                  if( gObj->lpText )
-                     HB_TCHAR_FREE( gObj->lpText );
-                  gObj->lpText = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "" );
+               {
+                  if( gObj->hText )
+                     hb_strfree( gObj->hText );
+                  gObj->lpText = HB_PARSTR( 3, &gObj->hText, NULL );
                   break;
-
+               }
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTURE:
                   if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
@@ -618,11 +616,7 @@ HB_FUNC( WVG_LABEL )
       gObj->aOffset.iBottom  = hb_parvni( 3, 3 );
       gObj->aOffset.iRight   = hb_parvni( 3, 4 );
 
-#if defined( UNICODE )
-      gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) ); //hb_mbtowc( hb_parcx( 4 ) );
-#else
-      gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
-#endif
+      gObj->lpText           = HB_PARSTR( 3, &gObj->hText, NULL );
 
       gObj->iAlign           = hb_parnidef( 5, TA_LEFT );
       gObj->crRGBText        = ( COLORREF ) hb_parnint( 7 );
@@ -1213,7 +1207,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->aOffset.iBottom  = hb_parvni( 5, 3 );
    gObj->aOffset.iRight   = hb_parvni( 5, 4 );
 
-   gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 6 ) );
+   gObj->lpText           = HB_PARSTR( 6, &gObj->hText, NULL );
 
    switch( hb_parni( 7 ) )
    {

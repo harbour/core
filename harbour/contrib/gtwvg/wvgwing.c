@@ -550,15 +550,15 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
       int      iPart = hb_parnidef( 2, 1 );
       TCHAR    szText[ 1024 ];
       int      iFlags;
-      TCHAR *  szCaption;
+      void *   hCaption;
 
       iPart     -= 1;       /* Zero based */
 
       iFlags     = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText ) );
 
-      szCaption  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-      SendMessage( hWndSB, SB_SETTEXT, ( WPARAM ) iPart | iFlags, ( LPARAM ) szCaption );
-      HB_TCHAR_FREE( szCaption );
+      SendMessage( hWndSB, SB_SETTEXT, ( WPARAM ) iPart | iFlags, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+
+      hb_strfree( hCaption );
    }
 }
 
@@ -1078,25 +1078,23 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    HB_BOOL     bSuccess;
    HWND        hWndTB     = hbwapi_par_raw_HWND( 1 );
    int         iCommand   = hb_parni( 4 );
-   TCHAR *     szCaption;
 
    switch( hb_parni( 5 ) )
    {
       case 1:  /* button from image */
       {
          int iNewString;
-         
-         /* set string */
-         szCaption  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-         iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
-         HB_TCHAR_FREE( szCaption );
 
-         #if 1
+         /* set string */
+         void * hCaption;
+         iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         hb_strfree( hCaption );
+
          if( hb_parl( 6 ) )
          {
             SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
          }
-         #endif
+
          /* add button */
          tbb.iBitmap   = hb_parni( 2 );
          tbb.idCommand = iCommand;

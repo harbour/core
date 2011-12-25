@@ -90,6 +90,7 @@
 #include "hbvm.h"
 #include "hbthread.h"
 #include "hbgfxdef.ch"
+#include "hbwinuni.h"
 
 #include "hbgtwvg.ch"
 
@@ -292,6 +293,9 @@ typedef struct
 
    HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
    HB_BOOL  bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
+
+   void *   hWindowTitle;
+   LPCTSTR  lpWindowTitle;
 
    int      CodePage;                       /* Code page to use for display characters */
    HB_BOOL  Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */

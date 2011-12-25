@@ -1226,7 +1226,8 @@ HB_FUNC( WVT_DRAWLABEL )
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
    {
-      LPTSTR   text    = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+      void *   hText;
+      LPCTSTR  text    = HB_PARSTR( 3, &hText, NULL );
       COLORREF fgClr   = hb_wvt_FgColorParam( 6 ),
                bgClr   = hb_wvt_BgColorParam( 7 );
 
@@ -1254,7 +1255,7 @@ HB_FUNC( WVT_DRAWLABEL )
          SelectObject( _s->hGuiDC, hOldFontGui );
       }
       #endif
-      HB_TCHAR_FREE( text );
+      hb_strfree( hText );
       DeleteObject( hFont );
       hb_retl( HB_TRUE );
    }
@@ -1860,7 +1861,8 @@ HB_FUNC( WVT_DRAWBUTTON )
 
    if( bText )
    {
-      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
+      void * hText;
+      LPCTSTR text = HB_PARSTR( 5, &hText, NULL );
 #if ! defined( HB_OS_WIN_CE )
       SelectObject( _s->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 #else
@@ -1909,7 +1911,7 @@ HB_FUNC( WVT_DRAWBUTTON )
 
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       }
-      HB_TCHAR_FREE( text );
+      hb_strfree( hText );
    }
    else
    {
@@ -2055,7 +2057,8 @@ HB_FUNC( WVT_DRAWLABELEX )
 
    if( _s->pGUI->hUserFonts[ iSlot ] )
    {
-      LPTSTR   text    = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+      void * hText;
+      LPCTSTR   text   = HB_PARSTR( 3, &hText, NULL );
       COLORREF fgClr   = hb_wvt_FgColorParam( 5 ),
                bgClr   = hb_wvt_BgColorParam( 6 );
 
@@ -2080,7 +2083,7 @@ HB_FUNC( WVT_DRAWLABELEX )
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       }
       #endif
-      HB_TCHAR_FREE( text );
+      hb_strfree( hText );
       hb_retl( HB_TRUE );
    }
 
@@ -2338,7 +2341,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    int         iAlignHorz, iAlignVert, iAlignH, iAlignV;
    UINT        uiOptions;
    SIZE        sz      = { 0, 0 };
-   LPTSTR      text    = HB_TCHAR_CONVTO( hb_parc( 5 ) );
+   void        * hText;
+   LPCTSTR     text   = HB_PARSTR( 5, &hText, NULL );
    COLORREF    fgClr   = hb_wvt_FgColorParam( 8 ),
                bgClr   = hb_wvt_BgColorParam( 9 );
 
@@ -2415,7 +2419,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
    }
    #endif
-   HB_TCHAR_FREE( text );
+   hb_strfree( hText );
    hb_retl( HB_TRUE );
 }
 
@@ -2752,7 +2756,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    int         iAlignH    = 0;
 
    RECT        rc         = { 0, 0, 0, 0 };
-   LPTSTR      text       = HB_TCHAR_CONVTO( hb_parc( 6 ) );
+   void *      hText;
+   LPCTSTR     text       = HB_PARSTR( 6, &hText, NULL );
    COLORREF    fgClr      = hb_wvt_FgColorParam( 9 ),
                bgClr      = hb_wvt_BgColorParam( 10 );
 
@@ -2795,7 +2800,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       DrawText( _s->hGuiDC, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    }
    #endif
-   HB_TCHAR_FREE( text );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
