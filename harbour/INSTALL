@@ -1293,8 +1293,8 @@ HARBOUR
        the top of the output (lines starting with '!') and the area where
        problematic behavior occurred _first_. Make sure to not only include
        a link failure or a make tool failure only, as it's most of the time
-       not enough information. Compress your log using zip or gzip if it is
-       larger than 25KB.
+       not enough information. Compress your log using zip if it is larger 
+       than 25KB. (use the extension .zip)
        Without these, your chances are lower to get useful or any response.
    10. If you are to report a build problem with a Harbour application,
        most of the above point applies, plus make sure to use '-trace'
@@ -1495,7 +1495,7 @@ HARBOUR
    C/C++ Compilers/Shells:
 
       MinGW/MinGW-64 [win, *nix, free, open-soource]
-         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 OK, for x64 see the official release]
+         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
          http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home, broken as of 4.5.0-1)
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
          http://nuwen.net/mingw.html (unofficial)
@@ -1698,8 +1698,9 @@ HARBOUR
    - You can give feedback/suggestions to developers on available
      channels.
    - You can submit patches or source code on above channels.
-     Patches are accepted in 'svn diff' or 'diff -u' format.
-     Always .zip your patch/source files before attaching them.
+     Patches are accepted in 'svn diff' (or 'diff -u') format, 
+     created from root directory of the repository sandbox.
+     Zip your patch file before attaching it. Use the extension '.zip'.
      The size limit for e-mails sent to the development list is
      40KB. If you need more, upload it to a site where we can
      access it, or use the sf.net page to submit it.
@@ -1722,10 +1723,10 @@ HARBOUR
    SourceForge Page:
       http://sourceforge.net/projects/harbour-project/
 
-   Users' Mailing List:
+   Harbour Users' Mailing List (English language):
       http://groups.google.com/group/harbour-users/
 
-   Developers' Mailing List:
+   Harbour Development Mailing List (English language):
       http://groups.google.com/group/harbour-devel/
 
    Announcement Mailing List (subscription-free, readonly):
