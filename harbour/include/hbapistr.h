@@ -62,6 +62,8 @@ extern HB_EXPORT HB_SIZE hb_wstrlen( const HB_WCHAR * szText );
 extern HB_EXPORT HB_SIZE hb_wstrnlen( const HB_WCHAR * szText, HB_SIZE nCount );
 extern HB_EXPORT int hb_wstrcmp( const HB_WCHAR * s1, const HB_WCHAR * s2 );
 extern HB_EXPORT int hb_wstrncmp( const HB_WCHAR * s1, const HB_WCHAR * s2, HB_SIZE nCount );
+extern HB_EXPORT HB_WCHAR * hb_wstrncpy( HB_WCHAR * pDest, const HB_WCHAR * pSource, HB_SIZE nLen );
+extern HB_EXPORT HB_WCHAR * hb_wstrncat( HB_WCHAR * pDest, const HB_WCHAR * pSource, HB_SIZE nLen );
 extern HB_EXPORT HB_WCHAR * hb_wstrdup( const HB_WCHAR * szText );
 extern HB_EXPORT HB_WCHAR * hb_wstrndup( const HB_WCHAR * szText, HB_SIZE nLen );
 

@@ -134,6 +134,40 @@ int hb_wstrncmp( const HB_WCHAR * s1, const HB_WCHAR * s2, HB_SIZE nCount )
    return rc;
 }
 
+HB_WCHAR * hb_wstrncpy( HB_WCHAR * pDest, const HB_WCHAR * pSource, HB_SIZE nLen )
+{
+   HB_WCHAR * pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrncpy(%p, %p, %" HB_PFS "u)", pDest, pSource, nLen));
+
+   pDest[ nLen ] = '\0';
+
+   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+      nLen--;
+
+   return pBuf;
+}
+
+HB_WCHAR * hb_wstrncat( HB_WCHAR * pDest, const HB_WCHAR * pSource, HB_SIZE nLen )
+{
+   HB_WCHAR * pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %p, %" HB_PFS "u)", pDest, pSource, nLen));
+
+   pDest[ nLen ] = '\0';
+
+   while( nLen && *pDest )
+   {
+      pDest++;
+      nLen--;
+   }
+
+   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+      nLen--;
+
+   return pBuf;
+}
+
 HB_WCHAR * hb_wstrdup( const HB_WCHAR * szText )
 {
    HB_WCHAR * pszDest;

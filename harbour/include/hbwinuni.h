@@ -74,6 +74,14 @@
    #define HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
    #define HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
    #define HB_STRUNSHARE( h, str, len )          hb_wstrunshare( h, str, len )
+   #define HB_STRLEN( str )                      hb_wstrlen( str )
+   #define HB_STRNLEN( str, len )                hb_wstrnlen( str, len )
+   #define HB_STRDUP( str )                      hb_wstrdup( str )
+   #define HB_STRNDUP( str, len )                hb_wstrndup( str, len )
+   #define HB_STRNCPY( dst, src, len )           hb_wstrncpy( dst, src, len )
+   #define HB_STRNCAT( dst, src, len )           hb_wstrncat( dst, src, len )
+   #define HB_STRCMP( s1, s2 )                   hb_wstrcmp( s1, s2 )
+   #define HB_STRNCMP( s1, s2, len )             hb_wstrncmp( s1, s2, len )
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
@@ -89,6 +97,14 @@
    #define HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
    #define HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
    #define HB_STRUNSHARE( h, str, len )          hb_strunshare( h, str, len )
+   #define HB_STRLEN( str )                      strlen( str )
+   #define HB_STRNLEN( str, len )                hb_strnlen( str, len )
+   #define HB_STRDUP( str )                      hb_strdup( str )
+   #define HB_STRNDUP( str, len )                hb_strndup( str, len )
+   #define HB_STRNCPY( dst, src, len )           hb_strncpy( dst, src, len )
+   #define HB_STRNCAT( dst, src, len )           hb_strncat( dst, src, len )
+   #define HB_STRCMP( s1, s2 )                   strcmp( s1, s2 )
+   #define HB_STRNCMP( s1, s2, len )             strncmp( s1, s2, len )
 #endif
 
 #endif /* HB_OS_WIN */

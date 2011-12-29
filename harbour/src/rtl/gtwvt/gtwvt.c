@@ -323,7 +323,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->fontHeight        = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWeight        = FW_NORMAL;
    pWVT->fontQuality       = DEFAULT_QUALITY;
-   hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
+   HB_STRNCPY( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = HB_FALSE;
    pWVT->CaretHidden       = HB_TRUE;
@@ -396,7 +396,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 /*
  * use the standard fixed OEM font, unless the caller has requested set size fonts
  */
-static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
+static HFONT hb_gt_wvt_GetFont( LPCTSTR lpFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
    if( iHeight > 0 )
    {
@@ -417,7 +417,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
-      HB_TCHAR_COPYTO( logfont.lfFaceName, pszFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( logfont.lfFaceName, lpFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
       return CreateFontIndirect( &logfont );
    }
@@ -2407,9 +2407,9 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
-            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
+         pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->fontFace );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+            HB_ITEMCOPYSTR( pInfo->pNewVal, pWVT->fontFace, HB_SIZEOFARRAY( pWVT->fontFace ) );
          break;
 
       case HB_GTI_FONTWEIGHT:

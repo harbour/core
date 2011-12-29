@@ -800,7 +800,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
 /*
  * This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
+ *       a null and the nLen param is pDest size not pSource limit
  */
 char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
 {
