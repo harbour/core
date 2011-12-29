@@ -658,7 +658,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
       iLen = ( nSize / 3 ) * 10 + ( ( nSize % 3 ) == 0 ? 0 : ( ( nSize % 3 ) == 1 ? 4 : 7 ) );
    else if( iMode == 2 )
       iLen = ( nSize / 2 ) * 11 + ( nSize % 2 ) * 6;
-   else if( iMode == 4 )
+   else /* if( iMode == 4 ) */
       iLen = nSize * 8;
 
    iLen += 4; /* Mode indicator length */
@@ -1110,7 +1110,7 @@ static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
 
 static void _qr_mask_pattern( PHB_BITBUFFER pBits, int iVersion, int iMask )
 {
-   int i, j, k, iLen = _qr_versionlength( iVersion );
+   int i, j, k = 0, iLen = _qr_versionlength( iVersion );
 
    for( i = 0; i < iLen; i++ )
    {
@@ -1152,10 +1152,10 @@ static void _qr_mask_pattern( PHB_BITBUFFER pBits, int iVersion, int iMask )
    }
 }
 
-             
+
 static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
 {
-   int i, iPenaltyMin = 0, iMaskMin, iPenalty;
+   int i, iPenaltyMin = 0, iMaskMin = 0, iPenalty;
 
    for( i = 0; i < 8; i++ )
    {

@@ -273,7 +273,8 @@ typedef struct _tag_GOBJS
    HB_BOOL        bDestroyBrush;
    HB_BOOL        bDestroyPicture;
    TRIVERTEX      vert[ 2 ];
-   LPTSTR         lpText;
+   void *         hText;
+   LPCTSTR        lpText;
    PHB_ITEM       bBlock;
    struct _tag_GOBJS * gObjNext;
 
