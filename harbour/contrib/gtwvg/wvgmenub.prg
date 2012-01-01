@@ -309,8 +309,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
    end
 
    aadd( ::aMenuItems, aItem )
-   WVG_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], aItem[ 3 ] )
-
+   WVG_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
    IF ++::nPass == 1
       IF ::oParent:className $ "WVGCRT,WVGDIALOG"
          WVG_SetMenu( ::oParent:getHWND(), ::hMenu )

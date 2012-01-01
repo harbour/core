@@ -1932,7 +1932,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
                   tnid.hIcon            = hIcon;
 
-                  HB_TCHAR_COPYTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
+                  HB_STRNCPY( tnid.szTip, HB_ARRAYGETSTR( pInfo->pNewVal2, 4, &hIconName, NULL ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
+                  hb_strfree( hIconName );
 
                   Shell_NotifyIcon( mode, &tnid );
 

@@ -148,12 +148,10 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
  *               Courtesy - Augusto Infante - Thanks
  */
 #if ! defined( HB_OS_WIN_CE )
-IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
+IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 {
    HRSRC    res        = 0;
    LPVOID   iPicture   = NULL;
-   LPTSTR   resource   = HB_TCHAR_CONVTO( ( LPSTR ) cResource );
-   LPTSTR   section    = HB_TCHAR_CONVTO( ( LPSTR ) cSection );
    HANDLE   hInstance;
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
@@ -179,15 +177,12 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
       FreeResource( mem );
    }
 
-   HB_TCHAR_FREE( resource );
-   HB_TCHAR_FREE( section );
-
    return ( IPicture * ) iPicture;
 }
 
 /*--------------------------------------------------------------------*/
 
-IPicture * hb_wvt_gtLoadPicture( const char * cImage )
+IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
 {
    IStream *   iStream;
    LPVOID      iPicture = NULL;
@@ -195,7 +190,6 @@ IPicture * hb_wvt_gtLoadPicture( const char * cImage )
    HANDLE      hFile;
    DWORD       nFileSize;
    DWORD       nReadByte;
-   LPTSTR      image = HB_TCHAR_CONVTO( cImage );
 
    hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
    if( hFile != INVALID_HANDLE_VALUE )
@@ -218,8 +212,6 @@ IPicture * hb_wvt_gtLoadPicture( const char * cImage )
       }
       CloseHandle( hFile );
    }
-
-   HB_TCHAR_FREE( image );
 
    return ( IPicture * ) iPicture;
 }
@@ -573,7 +565,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 /*----------------------------------------------------------------------*/
 
-HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image )
+HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR lpImage )
 {
 #if ! defined( HB_OS_WIN_CE )
    HGLOBAL  hGlobal;
@@ -591,11 +583,9 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
    HRGN     hrgn1;
    POINT    lpp     = { 0, 0 };
    HB_BOOL  bResult = HB_FALSE;
-   LPTSTR   lpImage = HB_TCHAR_CONVTO( image );
 
    hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING,
                        FILE_ATTRIBUTE_NORMAL, NULL );
-   HB_TCHAR_FREE( lpImage );
 
    if( hFile != INVALID_HANDLE_VALUE )
    {
@@ -1177,11 +1167,14 @@ HB_FUNC( WVT_DRAWIMAGE )
    }
    else
    {
-      hb_wvt_DrawImage( _s->hdc, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 5 ) );
+      void * hImage;
+      hb_wvt_DrawImage( _s->hdc, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ) );
+      hb_strfree( hImage );
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
-         hb_wvt_DrawImage( _s->hGuiDC, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 5 ) );
+         hb_wvt_DrawImage( _s->hGuiDC, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ) );
+         hb_strfree( hImage );
       }
       #endif
    }
@@ -1220,8 +1213,7 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfHeight          = hb_parnidef( 9, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 10, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-
-   HB_TCHAR_COPYTO( logfont.lfFaceName, ( ! HB_ISCHAR( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 8 ) ? ( LPCTSTR ) hb_parcx( 8 ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
@@ -1931,10 +1923,13 @@ HB_FUNC( WVT_DRAWBUTTON )
       }
       else
       {
-         hb_wvt_DrawImage( _s->hdc, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 6 ) );
+         void * hImage;
+         hb_wvt_DrawImage( _s->hdc, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ) );
+         hb_strfree( hImage );
          if( _s->bGui )
          {
-            hb_wvt_DrawImage( _s->hGuiDC, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 6 ) );
+            hb_wvt_DrawImage( _s->hGuiDC, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ) );
+            hb_strfree( hImage );
          }
       }
 #endif
@@ -2869,11 +2864,14 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
 
    if( bImage )
    {
-      hb_wvt_DrawImage( _s->hdc, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 9 ) );
+      void * hImage;
+      hb_wvt_DrawImage( _s->hdc, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ) );
+      hb_strfree( hImage );
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
-         hb_wvt_DrawImage( _s->hGuiDC, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 9 ) );
+         hb_wvt_DrawImage( _s->hGuiDC, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ) );
+         hb_strfree( hImage );
       }
       #endif
    }
@@ -2928,7 +2926,7 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfHeight          = hb_parnidef( 2, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 3, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-   HB_TCHAR_COPYTO( logfont.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : ( LPCTSTR ) hb_parcx( 1 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
    hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
@@ -2943,19 +2941,17 @@ HB_FUNC( WVT_LOADPICTURE )
 
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT   _s         = hb_wvt_gtGetWVT();
-
-   IPicture *  iPicture   = hb_wvt_gtLoadPicture( hb_parcx( 2 ) );
+   void *      hImage;
+   IPicture *  iPicture   = hb_wvt_gtLoadPicture( HB_PARSTR( 2, &hImage, NULL ) );
    int         iSlot      = hb_parni( 1 ) - 1;
 
+   hb_strfree( hImage );
    if( iPicture )
    {
       if( _s->pGUI->iPicture[ iSlot ] )
-      {
          hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
-      }
-
       _s->pGUI->iPicture[ iSlot ]  = iPicture;
-      bResult                      = HB_TRUE;
+      bResult = HB_TRUE;
    }
 #endif
    hb_retl( bResult );
@@ -2969,19 +2965,19 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT   _s         = hb_wvt_gtGetWVT();
-
-   IPicture *  iPicture   = hb_wvt_gtLoadPictureFromResource( hb_parcx( 2 ), hb_parcx( 3 ) );
+   void *      hResource;
+   void *      hSection;
+   IPicture *  iPicture   = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 2, &hResource, NULL ), HB_PARSTR( 3, &hSection, NULL ) );
    int         iSlot      = hb_parni( 1 ) - 1;
 
+   hb_strfree( hResource );
+   hb_strfree( hSection );
    if( iPicture )
    {
       if( _s->pGUI->iPicture[ iSlot ] )
-      {
          hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
-      }
-
       _s->pGUI->iPicture[ iSlot ]  = iPicture;
-      bResult                      = HB_TRUE;
+      bResult = HB_TRUE;
    }
 #endif
    hb_retl( bResult );
@@ -2999,6 +2995,7 @@ HB_FUNC( WVT_LOADFONT )
    LOGFONT     logfont; /* = { 0 }; */
    int         iSlot   = hb_parni( 1 ) - 1;
    HFONT       hFont;
+   void *      hF;
 
    logfont.lfEscapement      = hb_parni( 11 ) * 10;
    logfont.lfOrientation     = 0;
@@ -3014,7 +3011,8 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfHeight          = hb_parnidef( 3, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-   HB_TCHAR_COPYTO( logfont.lfFaceName, ( ! HB_ISCHAR( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 2 ) ? _s->fontFace : HB_PARSTR( 2, &hF, NULL ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   hb_strfree( hF );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )

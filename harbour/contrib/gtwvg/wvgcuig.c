@@ -242,9 +242,17 @@ HB_FUNC( WVG_SETGOBJDATA )
                   }
                   else
                   {
-                     iPicture = hb_wvt_gtLoadPicture( hb_parc( 3 ) );
+                     void * hPic;
+                     iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 3, &hPic, NULL ) );
+                     hb_strfree( hPic );
                      if( ! iPicture )
-                        iPicture = hb_wvt_gtLoadPictureFromResource( hb_parc( 3 ), hb_parc( 4 ) );
+                     {
+                        void * hRes;
+                        void * hSec;
+                        iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 3, &hRes, NULL ), HB_PARSTR( 4, &hSec, NULL ) );
+                        hb_strfree( hRes );
+                        hb_strfree( hSec );
+                     }
                   }
                   if( iPicture )
                   {
@@ -597,7 +605,7 @@ HB_FUNC( WVG_LABEL )
    lf.lfHeight         = hb_parnidef( 10, pWVT->fontHeight );
    lf.lfWidth          = hb_parnidef( 11, pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth );
 
-   HB_TCHAR_COPYTO( lf.lfFaceName, ( ! HB_ISCHAR( 9 ) ? pWVT->fontFace : hb_parc( 9 ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 9 ) ? pWVT->fontFace : ( LPCTSTR ) hb_parc( 9 ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &lf );
    if( hFont )
@@ -1318,11 +1326,21 @@ HB_FUNC( WVG_IMAGE )
          }
          break;
       case GOBJ_IMAGESOURCE_RESOURCE:
-         iPicture   = hb_wvt_gtLoadPictureFromResource( hb_parc( 7 ), hb_parc( 8 ) );
+      {
+         void * hPic;
+         void * hRes;
+         iPicture   = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 7, &hPic, NULL ), HB_PARSTR( 8, &hRes, NULL ) );
+         hb_strfree( hPic );
+         hb_strfree( hRes );
          break;
+      }
       case GOBJ_IMAGESOURCE_FILE:
-         iPicture   = hb_wvt_gtLoadPicture( hb_parc( 7 ) );
+      {
+         void * hPic;
+         iPicture   = hb_wvt_gtLoadPicture( HB_PARSTR( 7, &hPic, NULL ) );
+         hb_strfree( hPic );
          break;
+      }
    }
 
    if( iPicture )

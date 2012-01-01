@@ -389,7 +389,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->fontHeight        = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWeight        = FW_NORMAL;
    pWVT->fontQuality       = DEFAULT_QUALITY;
-   hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, sizeof( pWVT->fontFace ) - 1 );
+   HB_STRNCPY( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = HB_FALSE;
    pWVT->CaretHidden       = HB_TRUE;
@@ -523,7 +523,7 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 /*
  * use the standard fixed oem font, unless the caller has requested set size fonts
  */
-static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
+static HFONT hb_gt_wvt_GetFont( LPCTSTR lpFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
    if( iHeight > 0 )
    {
@@ -544,7 +544,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
-      HB_TCHAR_COPYTO( logfont.lfFaceName, pszFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( logfont.lfFaceName, lpFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
       return CreateFontIndirect( &logfont );
    }
@@ -2503,7 +2503,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
             pWVT->fontWeight        = pWVTp->fontWeight;
             pWVT->fontQuality       = pWVTp->fontQuality;
             pWVT->CodePage          = pWVTp->CodePage;
-            hb_strncpy( pWVT->fontFace, pWVTp->fontFace, sizeof( pWVTp->fontFace ) - 1 );
+            HB_STRNCPY( pWVT->fontFace, pWVTp->fontFace, sizeof( pWVTp->fontFace ) - 1 );
             pWVT->hFont             =  hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight,
                            pWVT->fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
 
@@ -3027,17 +3027,21 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
          {
-            HFONT hFont = hb_gt_wvt_GetFont( hb_arrayGetCPtr( pInfo->pNewVal, 1 ),
+            void * hText;
+            HFONT hFont = hb_gt_wvt_GetFont( HB_ARRAYGETSTR( pInfo->pNewVal, 1, &hText, NULL ),
                                              hb_arrayGetNI( pInfo->pNewVal, 2 ),
                                              hb_arrayGetNI( pInfo->pNewVal, 3 ),
                                              hb_arrayGetNI( pInfo->pNewVal, 4 ),
                                              hb_arrayGetNI( pInfo->pNewVal, 5 ),
                                              pWVT->CodePage );
+            hb_strfree( hText );
+
             if( hFont )
             {
                pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
 
-               hb_strncpy( pWVT->fontFace, hb_arrayGetCPtr( pInfo->pNewVal, 1 ), sizeof( pWVT->fontFace ) - 1 );
+               HB_STRNCPY( pWVT->fontFace, HB_ARRAYGETSTR( pInfo->pNewVal, 1, &hText, NULL ), HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
+               hb_strfree( hText );
                pWVT->fontHeight  = hb_arrayGetNI( pInfo->pNewVal, 2 );
                pWVT->fontWidth   = hb_arrayGetNI( pInfo->pNewVal, 3 );
                pWVT->fontWeight  = hb_arrayGetNI( pInfo->pNewVal, 4 );
@@ -3108,47 +3112,38 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontWidth );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pWVT->fontWidth =  hb_itemGetNI( pInfo->pNewVal );
-
          break;
 
       case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
+         pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), sizeof( pWVT->fontFace ) - 1 );
-         }
+            HB_ITEMCOPYSTR( pInfo->pNewVal, pWVT->fontFace, HB_SIZEOFARRAY( pWVT->fontFace ) );
          break;
 
       case HB_GTI_FONTWEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontWeight );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pWVT->fontWeight =  hb_itemGetNI( pInfo->pNewVal );
-
          break;
 
       case HB_GTI_FONTQUALITY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontQuality );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pWVT->fontQuality =  hb_itemGetNI( pInfo->pNewVal );
-
          break;
 
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-         {
             HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
-         }
          break;
 
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x * pWVT->COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-         {
             HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( iVal / pWVT->PTEXTSIZE.x ) );
-         }
          break;
 
       case HB_GTI_DESKTOPWIDTH:
@@ -3204,7 +3199,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal != pWVT->CodePage )
             {
-               if( !pWVT->hWnd )
+               if( ! pWVT->hWnd )
                {
                   pWVT->CodePage = iVal;
                }
@@ -3225,11 +3220,15 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                                    pWVT->fontWeight, pWVT->fontQuality, iVal );
                   if( hFont )
-         {
+                  {
+#if !defined( UNICODE )
+                     if( pWVT->hFont && pWVT->hFont != pWVT->hFontBox )
+#else
                      if( pWVT->hFont )
+#endif
                         DeleteObject( pWVT->hFont );
                      pWVT->hFont = hFont;
-            pWVT->CodePage = iVal;
+                     pWVT->CodePage = iVal;
                   }
                }
             }
@@ -3273,7 +3272,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                    pWVT->fontWeight, pWVT->fontQuality, iVal );
                   if( hFont )
                   {
-                     if( pWVT->hFontBox )
+                     if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
                         DeleteObject( pWVT->hFontBox );
                      pWVT->hFontBox = hFont;
                      pWVT->boxCodePage = iVal;
@@ -3314,12 +3313,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
-            void * hIconName;
+            void * hText;
 
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
-            hb_strfree( hIconName );
+                                    HB_ITEMGETSTR( pInfo->pNewVal, &hText, NULL ) );
+            hb_strfree( hText );
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
@@ -3692,19 +3691,19 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   int            iIconType = hb_arrayGetNI( pInfo->pNewVal2, 2 );
                   HICON          hIcon = 0;
                   NOTIFYICONDATA tnid;
-                  void * hIconName;
+                  void * hText;
 
                   if( iIconType == 0 )
                   {
                      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
-                                             HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hIconName, NULL ),
+                                             HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hText, NULL ),
                                                      IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-                     hb_strfree( hIconName );
+                     hb_strfree( hText );
                   }
                   else if( iIconType == 1 )
                   {
-                     hIcon = LoadIcon( pWVT->hInstance, HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hIconName, NULL ) );
-                     hb_strfree( hIconName );
+                     hIcon = LoadIcon( pWVT->hInstance, HB_ARRAYGETSTR( pInfo->pNewVal2, 3, &hText, NULL ) );
+                     hb_strfree( hText );
                   }
                   else if( iIconType == 2 )
                   {
@@ -3719,7 +3718,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
                   tnid.hIcon            = hIcon;
 
-                  HB_TCHAR_COPYTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
+                  HB_STRNCPY( tnid.szTip, HB_ARRAYGETSTR( pInfo->pNewVal2, 4, &hText, NULL ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
+                  hb_strfree( hText );
 
                   Shell_NotifyIcon( mode, &tnid );
 

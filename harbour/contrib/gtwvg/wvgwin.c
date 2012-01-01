@@ -272,7 +272,7 @@ HB_FUNC( WVG_GETDLGITEMTEXT )
 {
    int      iLen    = ( int ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
    LPTSTR   cText   = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
-   char *   szText;
+//   char *   szText;
    UINT     iResult;
 
    iResult = GetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),   /* handle of dialog box */
@@ -282,9 +282,7 @@ HB_FUNC( WVG_GETDLGITEMTEXT )
                              );
 
    cText[ iResult ] = '\0';
-   szText           = HB_TCHAR_CONVFROM( cText );
-   hb_retc( szText );
-   HB_TCHAR_FREE( szText );
+   HB_RETSTR( cText );
    hb_xfree( cText );
 }
 
@@ -433,8 +431,10 @@ HB_FUNC( WVG_GETCLIENTRECT )
  */
 HB_FUNC( WVG_DRAWIMAGE )
 {
+   void * hImage;
    hb_retl( hb_wvt_DrawImage( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ),
-                              hb_parni( 4 ), hb_parni( 5 ), hb_parc( 6 ) ) );
+                              hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ) ) );
+   hb_strfree( hImage );
 }
 
 /*----------------------------------------------------------------------*/
@@ -762,33 +762,9 @@ HB_FUNC( WVG_APPENDMENU )
 {
    if( HB_ISCHAR( 4 ) )
    {
-      LPTSTR   buffer;
-      HB_ISIZ  i, iLen;
-
-      iLen = hb_parclen( 4 );
-      if( iLen > 0 && iLen < 256 )   /* Translate '~' to '&' */
-      {
-         char * text = ( char * ) hb_xgrab( iLen + 1 );
-
-         memcpy( text, hb_parc( 4 ), iLen + 1 );
-
-         for( i = 0; i < iLen; i++ )
-         {
-            if( text[ i ] == '~' )
-               text[ i ] = '&';
-         }
-
-         buffer = HB_TCHAR_CONVTO( text );
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) );
-         HB_TCHAR_FREE( buffer );
-         hb_xfree( text );
-      }
-      else
-      {
-         buffer = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) );
-         HB_TCHAR_FREE( buffer );
-      }
+      void * hBuffer;
+      hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), HB_PARSTR( 4, &hBuffer, NULL ) ) );
+      hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
    {
@@ -896,11 +872,7 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
    SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) cText );
 
-   {
-      char * szText = HB_TCHAR_CONVFROM( cText );
-      hb_retc( szText );
-      HB_TCHAR_FREE( szText );
-   }
+   HB_RETSTR( cText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -996,14 +968,11 @@ HB_FUNC( WVG_TVIS_EXPANDED )
 
 HB_FUNC( WVG_LBGETTEXT )
 {
-   TCHAR    text[ MAX_PATH + 1 ];
-   char *   szText;
+   TCHAR text[ MAX_PATH + 1 ];
 
    SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, wvg_parwparam( 2 ), ( LPARAM ) text  );
 
-   szText = HB_TCHAR_CONVFROM( text );
-   hb_retc( szText );
-   HB_TCHAR_FREE( szText );
+   HB_RETSTR( text );
 }
 
 /*----------------------------------------------------------------------*/

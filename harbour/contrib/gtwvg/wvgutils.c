@@ -151,7 +151,7 @@ HB_FUNC( WVT_CHOOSEFONT )
    lf.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 1 ) )
    {
-      HB_TCHAR_COPYTO( lf.lfFaceName, hb_parc( 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, ( LPCTSTR ) hb_parc( 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    }
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
@@ -172,35 +172,37 @@ HB_FUNC( WVT_CHOOSEFONT )
 
    if( ChooseFont( &cf ) )
    {
-      char * szFaceName = HB_TCHAR_CONVFROM( lf.lfFaceName );
+      PHB_ITEM ary = hb_itemNew( NULL );
+      hb_arrayNew( ary, 9 );
 
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) );
 
-      hb_reta( 9 );
-      hb_storvc(  szFaceName, -1, 1 );
-      hb_storvnl( ( long ) PointSize, -1, 2 );
-      hb_storvni( lf.lfWidth, -1, 3 );
-      hb_storvni( lf.lfWeight, -1, 4 );
-      hb_storvni( lf.lfQuality, -1, 5 );
-      hb_storvl(  lf.lfItalic, -1, 6 );
-      hb_storvl(  lf.lfUnderline, -1, 7 );
-      hb_storvl(  lf.lfStrikeOut, -1, 8 );
-      hb_storvni( cf.rgbColors, -1, 9 );
+      HB_ARRAYSETSTR( ary, 1, lf.lfFaceName );
+      hb_arraySetNI( ary, 2, PointSize );
+      hb_arraySetNI( ary, 3, lf.lfWidth );
+      hb_arraySetNI( ary, 4, lf.lfWeight );
+      hb_arraySetNI( ary, 5, lf.lfQuality );
+      hb_arraySetL( ary, 6, lf.lfItalic );
+      hb_arraySetL( ary, 7, lf.lfUnderline );
+      hb_arraySetNI( ary, 8, cf.rgbColors );
 
-      HB_TCHAR_FREE( szFaceName );
+      hb_itemReturnRelease( ary );
    }
    else
    {
-      hb_reta( 9 );
-      hb_storvc(  NULL, -1, 1 );
-      hb_storvnl( ( long ) 0, -1, 2 );
-      hb_storvni( 0, -1, 3 );
-      hb_storvni( 0, -1, 4 );
-      hb_storvni( 0, -1, 5 );
-      hb_storvl(  0, -1, 6 );
-      hb_storvl(  0, -1, 7 );
-      hb_storvl(  0, -1, 8 );
-      hb_storvni( 0, -1, 9 );
+      PHB_ITEM ary = hb_itemNew( NULL );
+      hb_arrayNew( ary, 9 );
+
+      HB_ARRAYSETSTR( ary, 1, NULL );
+      hb_arraySetNI( ary, 2, 0 );
+      hb_arraySetNI( ary, 3, 0 );
+      hb_arraySetNI( ary, 4, 0 );
+      hb_arraySetNI( ary, 5, 0 );
+      hb_arraySetL( ary, 6, 0 );
+      hb_arraySetL( ary, 7, 0 );
+      hb_arraySetNI( ary, 8, 0 );
+
+      hb_itemReturnRelease( ary );
    }
 
    return;
@@ -288,9 +290,7 @@ HB_FUNC( WVT_SETTOOLTIP )
    int         iTop, iLeft, iBottom, iRight;
 
    if( ! _s->bToolTipActive )
-   {
       return;
-   }
 
    memset( &ti, 0, sizeof( ti ) );
    ti.cbSize  = sizeof( TOOLINFO );
@@ -299,7 +299,7 @@ HB_FUNC( WVT_SETTOOLTIP )
 
    if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
 
       xy               = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop             = xy.y;
@@ -310,7 +310,6 @@ HB_FUNC( WVT_SETTOOLTIP )
       iRight           = xy.x - 1;
 
       ti.lpszText      = text;
-
       ti.rect.left     = iLeft;
       ti.rect.top      = iTop;
       ti.rect.right    = iRight;
@@ -336,7 +335,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
 
    if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 1 ) );
       ti.lpszText = text;
       SendMessage( _s->hWndTT, TTM_UPDATETIPTEXT, 0, ( LPARAM ) &ti );
       HB_TCHAR_FREE( text );
@@ -637,7 +636,7 @@ HB_FUNC( WVT_GETFONTINFO )
 
    PHB_ITEM    info = hb_itemArrayNew( 7 );
 
-   hb_arraySetC(  info, 1, _s->fontFace    );
+   HB_ARRAYSETSTR( info, 1, _s->fontFace   );
    hb_arraySetNL( info, 2, _s->fontHeight  );
    hb_arraySetNL( info, 3, _s->fontWidth   );
    hb_arraySetNL( info, 4, _s->fontWeight  );
