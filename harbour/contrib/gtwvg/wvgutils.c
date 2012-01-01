@@ -151,7 +151,9 @@ HB_FUNC( WVT_CHOOSEFONT )
    lf.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 1 ) )
    {
-      HB_STRNCPY( lf.lfFaceName, ( LPCTSTR ) hb_parc( 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      void * hText;
+      HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 1, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      hb_strfree( hText );
    }
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
@@ -422,11 +424,14 @@ HB_FUNC( WVT_SETTOOLTIPTITLE )
 
    if( HB_ISCHAR( 2 ) )
    {
+      void * hText;
+
       iIcon = hb_parni( 1 );
       if( iIcon > 3 )
          iIcon = 0;
 
-      SendMessage( _s->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) hb_parc( 2 ) );
+      SendMessage( _s->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) HB_PARSTR( 2, &hText, NULL ) );
+      hb_strfree( hText );
    }
 #endif
 }
@@ -979,7 +984,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
                break;
 
             case 2:
-               /* hb_parc( 1 ) is already unicode compliant, so no conversion */
+               /* argument 1 is already unicode compliant, so no conversion */
                hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
                                             ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                             hb_parl( 2 ) ? _s->hWnd : NULL,
@@ -1095,7 +1100,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          break;
 
       case 2:
-         /* hb_parc( 1 ) is already unicode compliant, so no conversion */
+         /* argument 1 is already unicode compliant, so no conversion */
          iResult = DialogBoxIndirectParam( ( HINSTANCE ) wvg_hInstance(),
                                            ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                            hParent,

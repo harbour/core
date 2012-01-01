@@ -590,6 +590,7 @@ HB_FUNC( WVG_LABEL )
    PHB_GTWVT   pWVT = hb_wvt_gtGetWVT();
    LOGFONT     lf;
    HFONT       hFont;
+   void *      hText;
 
    lf.lfEscapement     = hb_parni( 6 ) * 10;
    lf.lfOrientation    = 0;
@@ -605,7 +606,8 @@ HB_FUNC( WVG_LABEL )
    lf.lfHeight         = hb_parnidef( 10, pWVT->fontHeight );
    lf.lfWidth          = hb_parnidef( 11, pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth );
 
-   HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 9 ) ? pWVT->fontFace : ( LPCTSTR ) hb_parc( 9 ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 9 ) ? pWVT->fontFace : HB_PARSTR( 9, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   hb_strfree( hText );
 
    hFont = CreateFontIndirect( &lf );
    if( hFont )
@@ -624,7 +626,7 @@ HB_FUNC( WVG_LABEL )
       gObj->aOffset.iBottom  = hb_parvni( 3, 3 );
       gObj->aOffset.iRight   = hb_parvni( 3, 4 );
 
-      gObj->lpText           = HB_PARSTR( 3, &gObj->hText, NULL );
+      gObj->lpText           = HB_PARSTR( 4, &gObj->hText, NULL );
 
       gObj->iAlign           = hb_parnidef( 5, TA_LEFT );
       gObj->crRGBText        = ( COLORREF ) hb_parnint( 7 );
@@ -657,11 +659,7 @@ HB_FUNC( WVG_LABELEX )
    gObj->aOffset.iBottom  = hb_parvni( 3, 3 );
    gObj->aOffset.iRight   = hb_parvni( 3, 4 );
 
-#if defined( UNICODE )
-   gObj->lpText           = hb_mbtowc( hb_parcx( 4 ) );
-#else
-   gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
-#endif
+   gObj->lpText           = HB_PARSTR( 4, &gObj->hText, NULL );
 
    gObj->iAlign           = hb_parnidef( 5, TA_LEFT );
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 6 );

@@ -1198,6 +1198,7 @@ HB_FUNC( WVT_DRAWLABEL )
    POINT       xy   = { 0, 0 };
    HFONT       hFont, hOldFont, hOldFontGui;
    LOGFONT     logfont; /* = { 0 };*/
+   void *      hText;
 
    logfont.lfEscapement      = hb_parni( 5 ) * 10;
    logfont.lfOrientation     = 0;
@@ -1213,7 +1214,8 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfHeight          = hb_parnidef( 9, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 10, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-   HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 8 ) ? ( LPCTSTR ) hb_parcx( 8 ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 8 ) ? HB_PARSTR( 8, &hText, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   hb_strfree( hText );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
@@ -1888,7 +1890,6 @@ HB_FUNC( WVT_DRAWBUTTON )
       SetBkMode( _s->hdc, TRANSPARENT );
       SetTextColor( _s->hdc, textColor );
 
-      /*ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );*/
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       if( _s->bGui )
       {
@@ -2911,6 +2912,7 @@ HB_FUNC( WVT_CREATEFONT )
    PHB_GTWVT   _s = hb_wvt_gtGetWVT();
 
    LOGFONT     logfont; /* = { 0,0,0 }; */
+   void *      hText;
 
    logfont.lfEscapement      = hb_parni( 10 ) * 10;
    logfont.lfOrientation     = 0;
@@ -2926,7 +2928,8 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfHeight          = hb_parnidef( 2, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 3, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-   HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : ( LPCTSTR ) hb_parcx( 1 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : HB_PARSTR( 1, &hText, NULL ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   hb_strfree( hText );
 
    hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
