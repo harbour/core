@@ -2409,7 +2409,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_FONTNAME:
          pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
             HB_ITEMCOPYSTR( pInfo->pNewVal, pWVT->fontFace, HB_SIZEOFARRAY( pWVT->fontFace ) );
+            pWVT->fontFace[ HB_SIZEOFARRAY( pWVT->fontFace ) - 1 ] = 0;
+         }
          break;
 
       case HB_GTI_FONTWEIGHT:

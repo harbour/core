@@ -959,40 +959,43 @@ HB_FUNC( WVG_FONTCREATE )
 {
    LOGFONT  lf;
    HFONT    hFont;
-   void *   hText;
+   PHB_ITEM aFont;
 
    memset( &lf, 0, sizeof( lf ) );
 
-   HB_STRNCPY( lf.lfFaceName, HB_PARASTRDEF( 1, 1, &hText, NULL ),
-               HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   aFont = hb_param( 1, HB_IT_ARRAY );
+   if( aFont )
+   {
+      HB_ITEMCOPYSTR( hb_arrayGetItemPtr( aFont, 1 ),
+                      lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
-   lf.lfHeight         = ( LONG ) hb_parvnl( 1, 2 );
-   lf.lfWidth          = ( LONG ) hb_parvnl( 1, 3 );
-   lf.lfWeight         = ( LONG ) hb_parvnl( 1, 4 );
-   lf.lfItalic         = ( BYTE ) hb_parvl(  1, 5 );
-   lf.lfUnderline      = ( BYTE ) hb_parvl(  1, 6 );
-   lf.lfStrikeOut      = ( BYTE ) hb_parvl(  1, 7 );
-   lf.lfCharSet        = ( BYTE ) hb_parvni( 1, 8 );
-   lf.lfEscapement     = ( BYTE ) hb_parvni( 1, 9 );
-   lf.lfOrientation    = ( BYTE ) hb_parvni( 1, 10 );
-   lf.lfOutPrecision   = ( BYTE ) hb_parvni( 1, 11 );
-   lf.lfClipPrecision  = ( BYTE ) hb_parvni( 1, 12 );
-   lf.lfQuality        = ( BYTE ) hb_parvni( 1, 13 );
-   lf.lfPitchAndFamily = ( BYTE ) hb_parvni( 1, 14 );
+      lf.lfHeight         = ( LONG ) hb_arrayGetNL( aFont, 2 );
+      lf.lfWidth          = ( LONG ) hb_arrayGetNL( aFont, 3 );
+      lf.lfWeight         = ( LONG ) hb_arrayGetNL( aFont, 4 );
+      lf.lfItalic         = ( BYTE ) hb_arrayGetL ( aFont, 5 );
+      lf.lfUnderline      = ( BYTE ) hb_arrayGetL ( aFont, 6 );
+      lf.lfStrikeOut      = ( BYTE ) hb_arrayGetL ( aFont, 7 );
+      lf.lfCharSet        = ( BYTE ) hb_arrayGetNI( aFont, 8 );
+      lf.lfEscapement     = ( BYTE ) hb_arrayGetNI( aFont, 9 );
+      lf.lfOrientation    = ( BYTE ) hb_arrayGetNI( aFont, 10 );
+      lf.lfOutPrecision   = ( BYTE ) hb_arrayGetNI( aFont, 11 );
+      lf.lfClipPrecision  = ( BYTE ) hb_arrayGetNI( aFont, 12 );
+      lf.lfQuality        = ( BYTE ) hb_arrayGetNI( aFont, 13 );
+      lf.lfPitchAndFamily = ( BYTE ) hb_arrayGetNI( aFont, 14 );
+   }
 
    hFont               = CreateFontIndirect( &lf );
 
    if( hFont )
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_FALSE );
+      aFont = wvg_logfontTOarray( &lf, HB_FALSE );
       hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
-      hb_itemReturnRelease( aFont );
    }
    else
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_TRUE );
-      hb_itemReturnRelease( aFont );
+      aFont = wvg_logfontTOarray( &lf, HB_TRUE );
    }
+   hb_itemReturnRelease( aFont );
 }
 
 /*----------------------------------------------------------------------*/
