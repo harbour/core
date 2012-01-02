@@ -62,6 +62,8 @@
 #if defined( UNICODE )
    #define HB_PARSTR( n, h, len )                hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_wstrnull( hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len ) )
+   #define HB_PARASTR( n, i, h, len )            hb_parastr_u16( n, i, HB_CDP_ENDIAN_NATIVE, h, len )
+   #define HB_PARASTRDEF( n, i, h, len )         hb_wstrnull( hb_parastr_u16( n, i, HB_CDP_ENDIAN_NATIVE, h, len ) )
    #define HB_RETSTR( str )                      hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str )
    #define HB_RETSTRLEN( str, len )              hb_retstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len )
    #define HB_STORSTR( str, n )                  hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
@@ -85,6 +87,8 @@
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
+   #define HB_PARASTR( n, i, h, len )            hb_parastr( n, i, hb_setGetOSCP(), h, len )
+   #define HB_PARASTRDEF( n, i, h, len )         hb_strnull( hb_parastr( n, i, hb_setGetOSCP(), h, len ) )
    #define HB_RETSTR( str )                      hb_retstr( hb_setGetOSCP(), str )
    #define HB_RETSTRLEN( str, len )              hb_retstrlen( hb_setGetOSCP(), str, len )
    #define HB_STORSTR( str, n )                  hb_storstr( hb_setGetOSCP(), str, n )

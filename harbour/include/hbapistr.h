@@ -109,6 +109,10 @@ extern HB_EXPORT const char * hb_parstr( int iParam, void * cdp, void ** phStrin
 extern HB_EXPORT const char * hb_parstr_utf8( int iParam, void ** phString, HB_SIZE * pnLen );
 extern HB_EXPORT const HB_WCHAR * hb_parstr_u16( int iParam, int iEndian, void ** phString, HB_SIZE * pnLen );
 
+extern HB_EXPORT const char * hb_parastr( int iParam, HB_SIZE nIndex, void * cdp, void ** phString, HB_SIZE * pnLen );
+extern HB_EXPORT const char * hb_parastr_utf8( int iParam, HB_SIZE nIndex, void ** phString, HB_SIZE * pnLen );
+extern HB_EXPORT const HB_WCHAR * hb_parastr_u16( int iParam, HB_SIZE nIndex, int iEndian, void ** phString, HB_SIZE * pnLen );
+
 extern HB_EXPORT void hb_retstr( void * cdp, const char * szText );
 extern HB_EXPORT void hb_retstr_utf8( const char * szText );
 extern HB_EXPORT void hb_retstr_u16( int iEndian, const HB_WCHAR * szText );

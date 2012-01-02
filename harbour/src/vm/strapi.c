@@ -770,6 +770,88 @@ const HB_WCHAR * hb_parstr_u16( int iParam, int iEndian,
 }
 
 
+const char * hb_parastr( int iParam, HB_SIZE nIndex,
+                         void * cdp, void ** phString, HB_SIZE * pnLen )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parastr(%d,%" HB_PFS "u,%p,%p,%p)", iParam, nIndex, cdp, phString, pnLen));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+         return hb_arrayGetStr( pItem, nIndex, cdp, phString, pnLen );
+      else
+         return hb_itemGetStr( pItem, cdp, phString, pnLen );
+   }
+
+   if( pnLen )
+      * pnLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+const char * hb_parastr_utf8( int iParam, HB_SIZE nIndex,
+                              void ** phString, HB_SIZE * pnLen )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parastr_utf8(%d,%" HB_PFS "u,%p,%p)", iParam, nIndex, phString, pnLen));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+         return hb_arrayGetStrUTF8( pItem, nIndex, phString, pnLen );
+      else
+         return hb_itemGetStrUTF8( pItem, phString, pnLen );
+   }
+
+   if( pnLen )
+      * pnLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+const HB_WCHAR * hb_parastr_u16( int iParam, HB_SIZE nIndex, int iEndian,
+                                 void ** phString, HB_SIZE * pnLen )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parastr_u16(%d,%" HB_PFS "u,%d,%p,%p)", iParam, nIndex, iEndian, phString, pnLen));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+         return hb_arrayGetStrU16( pItem, nIndex, iEndian, phString, pnLen );
+      else
+         return hb_itemGetStrU16( pItem, iEndian, phString, pnLen );
+   }
+
+   if( pnLen )
+      * pnLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+
 void hb_retstr( void * cdp, const char * szText )
 {
    HB_STACK_TLS_PRELOAD

@@ -443,6 +443,42 @@ static void hb_hashDelPair( PHB_BASEHASH pBaseHash, HB_SIZE nPos )
    {
       if( pBaseHash->pnPos )
       {
+#ifdef HB_FAST_HASH_DEL
+         HB_SIZE * pnPos, * pnDel, * pnLast;
+
+         pnPos = pBaseHash->pnPos + pBaseHash->nLen;
+         pnDel = pnLast = NULL;
+         for( ;; )
+         {
+            if( *pnPos == nPos )
+            {
+               pnDel = pnPos;
+               if( pnLast != NULL )
+                  break;
+            }
+            if( *pnPos == pBaseHash->nLen )
+            {
+               pnLast = pnPos;
+               if( pnDel != NULL )
+                  break;
+            }
+            if( pnPos-- == pBaseHash->pnPos )
+               hb_errInternal( HB_EI_ERRUNRECOV, "HB_HDEL(): corrupted hash index", NULL, NULL );
+         }
+         *pnLast = *pnDel;
+         if( pnDel < pBaseHash->pnPos + pBaseHash->nLen )
+            memmove( pnDel, pnDel + 1,
+                     ( pBaseHash->pnPos + pBaseHash->nLen - pnDel ) * sizeof( HB_SIZE ) );
+         if( nPos != pBaseHash->nLen )
+         {
+            HB_HASHPAIR pair;
+            memcpy( &pair, pBaseHash->pPairs + nPos, sizeof( HB_HASHPAIR ) );
+            memcpy( pBaseHash->pPairs + nPos, pBaseHash->pPairs + pBaseHash->nLen,
+                    sizeof( HB_HASHPAIR ) );
+            nPos = pBaseHash->nLen;
+            memcpy( pBaseHash->pPairs + nPos, &pair, sizeof( HB_HASHPAIR ) );
+         }
+#else
          HB_SIZE n = 0;
          while( n < pBaseHash->nLen )
          {
@@ -454,6 +490,7 @@ static void hb_hashDelPair( PHB_BASEHASH pBaseHash, HB_SIZE nPos )
             else
                ++n;
          }
+#endif
       }
 
       if( nPos != pBaseHash->nLen )
