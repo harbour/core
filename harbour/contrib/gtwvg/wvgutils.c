@@ -301,7 +301,7 @@ HB_FUNC( WVT_SETTOOLTIP )
 
    if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
+      void * hText;
 
       xy               = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop             = xy.y;
@@ -311,7 +311,7 @@ HB_FUNC( WVT_SETTOOLTIP )
       iBottom          = xy.y - 1;
       iRight           = xy.x - 1;
 
-      ti.lpszText      = text;
+      ti.lpszText      = ( LPTSTR ) HB_PARSTR( 5, &hText, NULL );
       ti.rect.left     = iLeft;
       ti.rect.top      = iTop;
       ti.rect.right    = iRight;
@@ -319,7 +319,7 @@ HB_FUNC( WVT_SETTOOLTIP )
 
       SendMessage( _s->hWndTT, TTM_SETTOOLINFO, 0, ( LPARAM ) &ti );
 
-      HB_TCHAR_FREE( text );
+      hb_strfree( hText );
    }
 }
 
@@ -328,19 +328,19 @@ HB_FUNC( WVT_SETTOOLTIP )
 HB_FUNC( WVT_SETTOOLTIPTEXT )
 {
    PHB_GTWVT   _s = hb_wvt_gtGetWVT();
-
    TOOLINFO    ti;
 
+   memset( &ti, 0, sizeof( ti ) );
    ti.cbSize  = sizeof( TOOLINFO );
    ti.hwnd    = _s->hWnd;
    ti.uId     = 100000;
 
    if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      ti.lpszText = text;
+      void * hText;
+      ti.lpszText = ( LPTSTR ) HB_PARSTR( 1, &hText, NULL );
       SendMessage( _s->hWndTT, TTM_UPDATETIPTEXT, 0, ( LPARAM ) &ti );
-      HB_TCHAR_FREE( text );
+      hb_strfree( hText );
    }
 }
 

@@ -127,7 +127,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
 
    RETURN ::WIN_PRN:TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
                                 nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
-                                lUpdatePosX, nColor,
+                                lUpdatePosX, nColor, ;
                                 HB_BITOR( nAlignHori, nAlignVert ) )
 
 CREATE CLASS Win32Bmp FROM WIN_BMP

@@ -684,7 +684,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    TVINSERTSTRUCT tvis;
-   LPTSTR         text = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   void *         hText;
 
    tvis.hInsertAfter                        = TVI_LAST;
    HB_WIN_V_UNION( tvis, item.mask )        = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
@@ -695,11 +695,11 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
 
    HB_WIN_V_UNION( tvis, item.state )    = 0;     /* TVI_BOLD */
    tvis.hParent                          = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
-   HB_WIN_V_UNION( tvis, item.pszText )  = text;
+   HB_WIN_V_UNION( tvis, item.pszText )  = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
 
-   HB_TCHAR_FREE( text );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -959,10 +959,12 @@ HB_FUNC( WVG_FONTCREATE )
 {
    LOGFONT  lf;
    HFONT    hFont;
+   void *   hText;
 
    memset( &lf, 0, sizeof( lf ) );
 
-   HB_TCHAR_COPYTO( lf.lfFaceName, hb_parvcx( 1, 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   HB_STRNCPY( lf.lfFaceName, HB_PARASTRDEF( 1, 1, &hText, NULL ),
+               HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
    lf.lfHeight         = ( LONG ) hb_parvnl( 1, 2 );
    lf.lfWidth          = ( LONG ) hb_parvnl( 1, 3 );
@@ -1222,7 +1224,6 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
    HWND     hwndTip;
    TOOLINFO toolInfo;
-   LPTSTR   pszText = HB_TCHAR_CONVTO( "" );
 
    hwndTip = CreateWindowEx( ( DWORD ) NULL, TOOLTIPS_CLASS, NULL,
                               WS_POPUP |TTS_ALWAYSTIP,  // | TTS_BALLOON,
@@ -1233,18 +1234,17 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
    if( ! hwndTip )
       return;
 
+   memset( &toolInfo, 0, sizeof( toolInfo ) );
    toolInfo.cbSize   = sizeof( toolInfo );
    toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
    toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
-   toolInfo.lpszText = pszText;
+   toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
 
    if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
       wvg_rethandle( hwndTip );
    else
       wvg_rethandle( NULL );
-
-   HB_TCHAR_FREE( pszText );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1252,17 +1252,18 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 HB_FUNC( WVG_SETTOOLTIPTEXT )
 {
    TOOLINFO toolInfo;
-   LPTSTR pszText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   void * hText;
 
+   memset( &toolInfo, 0, sizeof( toolInfo ) );
    toolInfo.cbSize   = sizeof( toolInfo );
    toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
    toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
-   toolInfo.lpszText = pszText;
+   toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, ( WPARAM ) 0, ( LPARAM ) &toolInfo );
 
-   HB_TCHAR_FREE( pszText );
+   hb_strfree( hText );
 }
 
 /*----------------------------------------------------------------------*/
