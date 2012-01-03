@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>166</height>
+    <width>333</width>
+    <height>155</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="buttonFind">
    <property name="geometry">
     <rect>
-     <x>332</x>
-     <y>8</y>
-     <width>75</width>
+     <x>272</x>
+     <y>6</y>
+     <width>51</width>
      <height>24</height>
     </rect>
    </property>
@@ -29,17 +29,20 @@
     <bool>false</bool>
    </property>
    <property name="default">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="buttonReplace">
    <property name="geometry">
     <rect>
-     <x>332</x>
-     <y>106</y>
-     <width>75</width>
+     <x>272</x>
+     <y>98</y>
+     <width>51</width>
      <height>24</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
     <string>Replace</string>
@@ -54,21 +57,27 @@
   <widget class="QPushButton" name="buttonClose">
    <property name="geometry">
     <rect>
-     <x>332</x>
-     <y>136</y>
-     <width>77</width>
+     <x>272</x>
+     <y>124</y>
+     <width>51</width>
      <height>24</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="text">
     <string>Close</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QComboBox" name="comboReplaceWith">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>108</y>
+     <x>10</x>
+     <y>100</y>
      <width>253</width>
      <height>22</height>
     </rect>
@@ -80,11 +89,14 @@
   <widget class="QCheckBox" name="checkGlobal">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>136</y>
+     <x>10</x>
+     <y>128</y>
      <width>71</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
     <string>Global</string>
@@ -93,34 +105,24 @@
   <widget class="QCheckBox" name="checkNoPrompting">
    <property name="geometry">
     <rect>
-     <x>192</x>
-     <y>136</y>
+     <x>132</x>
+     <y>128</y>
      <width>89</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
     <string>No prompting</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>108</y>
-     <width>53</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Replace:</string>
-   </property>
-  </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>60</y>
+     <x>10</x>
+     <y>52</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -137,6 +139,9 @@
       <height>19</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Start from cursor position</string>
     </property>
@@ -150,6 +155,9 @@
       <height>19</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Entire file</string>
     </property>
@@ -158,8 +166,8 @@
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>60</y>
+     <x>180</x>
+     <y>52</y>
      <width>81</width>
      <height>41</height>
     </rect>
@@ -176,6 +184,9 @@
       <height>19</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>up</string>
     </property>
@@ -189,6 +200,9 @@
       <height>19</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Down</string>
     </property>
@@ -197,11 +211,14 @@
   <widget class="QCheckBox" name="checkMatchCase">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>36</y>
+     <x>10</x>
+     <y>32</y>
      <width>81</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
     <string>Match case</string>
@@ -210,11 +227,14 @@
   <widget class="QCheckBox" name="checkListOnly">
    <property name="geometry">
     <rect>
-     <x>192</x>
-     <y>36</y>
+     <x>132</x>
+     <y>32</y>
      <width>71</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
     <string>List only</string>
@@ -223,27 +243,14 @@
   <widget class="QComboBox" name="comboFindWhat">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>10</y>
+     <x>10</x>
+     <y>8</y>
      <width>253</width>
      <height>22</height>
     </rect>
    </property>
    <property name="editable">
     <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>51</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Find what:</string>
    </property>
   </widget>
  </widget>

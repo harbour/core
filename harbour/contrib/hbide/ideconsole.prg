@@ -1035,10 +1035,6 @@ METHOD hbCUIEditor:operate()
    keyboard( chr( K_UP ) )
 
    DO WHILE .t.
-      IF hbide_setExitCuiEd()
-         EXIT
-      ENDIF
-
       ::nRowPrev := ::nRowCur
       ::nColPrev := ::nColCur
       ::xRefresh := OBJ_REFRESH_NIL
@@ -1048,7 +1044,7 @@ METHOD hbCUIEditor:operate()
 
       DO WHILE .t.
          ::nLastKey := inkey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
-         IF ::nLastKey <> K_MOUSEMOVE
+         IF ::nLastKey <> 0 .OR. ::nLastKey <> K_MOUSEMOVE
             EXIT
          ENDIF
       ENDDO
