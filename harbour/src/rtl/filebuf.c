@@ -180,8 +180,8 @@ static HB_UINT hb_fileFindOffset( PHB_FILE pFile, HB_FOFFSET nOffset )
    while( uiFirst < uiLast )
    {
       HB_FOFFSET nEnd = pFile->pLocks[ uiMiddle ].start +
-                        ( pFile->pLocks[ uiMiddle ].len - 1 );
-      if( nEnd < nOffset )
+                        pFile->pLocks[ uiMiddle ].len;
+      if( nEnd > 0 && nEnd <= nOffset )
          uiFirst = uiMiddle + 1;
       else
          uiLast = uiMiddle;
@@ -233,9 +233,10 @@ static HB_BOOL hb_fileSetLock( PHB_FILE pFile, HB_BOOL * pfLockFS,
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      if( nStart + nLen - 1 >= pLock->start )
+      HB_FOFFSET nEnd = nStart + nLen;
+      if( nEnd <= 0 || nEnd > pLock->start )
          return HB_FALSE;
-      if( nStart + nLen == pLock->start )
+      if( nEnd == pLock->start )
          fRJoin = HB_TRUE;
    }
    if( uiPos > 0 )
@@ -277,8 +278,8 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      if( nStart >= pLock->start &&
-          nStart + nLen - 1 <= pLock->start + pLock->len - 1 )
+      if( nStart >= pLock->start && pLock->len >= nLen &&
+          nStart - pLock->start <= pLock->len - nLen )
       {
          if( pfLockFS && pFile->shared )
             * pfLockFS = HB_TRUE;
@@ -316,7 +317,8 @@ static HB_BOOL hb_fileTestLock( PHB_FILE pFile,
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      if( nStart + nLen - 1 >= pLock->start )
+      HB_FOFFSET nEnd = nStart + nLen;
+      if( nEnd <= 0 || nEnd > pLock->start )
          return HB_TRUE;
    }
 
