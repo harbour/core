@@ -233,7 +233,7 @@ static HB_BOOL hb_fileSetLock( PHB_FILE pFile, HB_BOOL * pfLockFS,
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      if( nStart + nLen > pLock->start )
+      if( nStart + nLen - 1 >= pLock->start )
          return HB_FALSE;
       if( nStart + nLen == pLock->start )
          fRJoin = HB_TRUE;
@@ -278,7 +278,7 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
       if( nStart >= pLock->start &&
-          nStart + nLen <= pLock->start + pLock->len )
+          nStart + nLen - 1 <= pLock->start + pLock->len - 1 )
       {
          if( pfLockFS && pFile->shared )
             * pfLockFS = HB_TRUE;
@@ -316,7 +316,7 @@ static HB_BOOL hb_fileTestLock( PHB_FILE pFile,
    if( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      if( nStart + nLen > pLock->start )
+      if( nStart + nLen - 1 >= pLock->start )
          return HB_TRUE;
    }
 
