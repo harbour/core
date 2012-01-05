@@ -1507,6 +1507,10 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
          break;
 
+      case HB_GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
+         break;
+
       case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_NHANDLE ) pGT->hStdIn );
          break;
