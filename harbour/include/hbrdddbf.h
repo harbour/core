@@ -69,7 +69,7 @@ HB_EXTERN_BEGIN
 #define DBF_LOCKPOS_VFP                   0x40000000UL
 #define DBF_LOCKPOS_VFPX                  0x7ffffffeUL
 #define DBF_LOCKPOS_HB32                  4000000000UL
-#define DBF_LOCKPOS_HB64                  HB_LL( 0x7FFFFFFF00000001 )
+#define DBF_LOCKPOS_HB64                  HB_LL( 0x7F00000000000000 )
 
 #define DBF_LOCKDIR_CLIPPER               1
 #define DBF_LOCKDIR_CLIPPER2              1
