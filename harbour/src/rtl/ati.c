@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_ATI() function
  *
- * Copyright 1999-2009 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2009 Viktor Szakats (harbour syenar.net)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *

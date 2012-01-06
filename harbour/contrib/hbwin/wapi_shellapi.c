@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Windows API functions (shellapi.h - shell32.dll)
  *
- * Copyright 2008-2009 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2008-2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

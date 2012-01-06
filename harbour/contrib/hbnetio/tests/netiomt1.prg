@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    demonstration/test code for NETIOSRV remote management
  *
- * Copyright 2010-2011 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010-2011 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  */

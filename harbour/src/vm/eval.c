@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    hb_itemDo() ( based on HB_DO() by Ryszard Glab )
  *    hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
  *

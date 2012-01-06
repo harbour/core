@@ -7,7 +7,7 @@
  * BIN2U(), W2BIN(), U2BIN() functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

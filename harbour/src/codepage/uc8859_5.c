@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * ISO-8859-5 <-> Unicode conversion table
  *
- * Copyright 1999-2005 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2005 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

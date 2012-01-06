@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Windows communications library
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * Copyright 2005-2009 Alex Strickland <sscc@mweb.co.za>
  * www - http://harbour-project.org
  *

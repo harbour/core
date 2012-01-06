@@ -7,7 +7,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * Copyright 2009 Viktor Szakats (harbour syenar.hu) (SSL support)
+ * Copyright 2009 Viktor Szakats (harbour syenar.net) (SSL support)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

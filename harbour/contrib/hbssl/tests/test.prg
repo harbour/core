@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright 2009 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  */
 
@@ -33,7 +33,7 @@ PROCEDURE Main()
    ? "INETCONN", hb_inetConnect( "www.fortify.net", 80, socket )
    ? "INETERR", hb_inetErrorCode( socket )
    ? "INETFD", hb_inetFD( socket )
-   ? "INETSEND", hb_inetSend( socket, "GET / http/1.1" + hb_inetCRLF() + "Host: " + "www.syenar.hu" + hb_inetCRLF() + hb_inetCRLF() )
+   ? "INETSEND", hb_inetSend( socket, "GET / http/1.1" + hb_inetCRLF() + "Host: " + "www.syenar.net" + hb_inetCRLF() + hb_inetCRLF() )
    ? "INETERR", hb_inetErrorCode( socket )
    buffer := Space( 1024 )
    ? "INETRECVALL", hb_inetRecvAll( socket, @buffer, Len( buffer ) )

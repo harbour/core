@@ -61,7 +61,7 @@
  *    hb_conOutStd(), OUTSTD(), PCOL(), PROW(),
  *    SETPRC(), and hb_conInit()
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    hb_conNewLine()
  *    DISPOUTAT()
  *

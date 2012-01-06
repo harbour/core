@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * MEMVAR save/restore functions with >10 long variable name support.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

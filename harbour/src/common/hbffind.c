@@ -7,7 +7,7 @@
  * Harbour File Find API (C level)
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
- * Copyright 2001-2002 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2001-2002 Viktor Szakats (harbour syenar.net)
  * Copyright 2001-2002 Paul Tucker <ptucker@sympatico.ca>
  * www - http://harbour-project.org
  *

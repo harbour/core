@@ -7,7 +7,7 @@
  * The declarations for all harbour defined functions/procedures.
  * (Compatibility header)
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org
  *

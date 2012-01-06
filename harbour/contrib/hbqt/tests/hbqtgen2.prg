@@ -5,7 +5,7 @@
 #include "simpleio.ch"
 
 /*
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * See COPYING for licensing terms.
  */
 

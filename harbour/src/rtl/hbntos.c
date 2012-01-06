@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_NTOS() function
  *
- * Copyright 2008 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

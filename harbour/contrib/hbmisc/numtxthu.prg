@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * NumToTxtHU() function to convert a number to Hungarian text
  *
- * Copyright 1999-2008 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

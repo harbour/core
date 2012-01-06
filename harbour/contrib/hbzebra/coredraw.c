@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Zebra barcode library
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://harbour-project.org
  *

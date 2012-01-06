@@ -67,7 +67,7 @@
  *    __objHasMsg()
  *    __objSendMsg()
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    __CLASSNEW()
  *    __CLASSINSTANCE()
  *    __CLASSADD()

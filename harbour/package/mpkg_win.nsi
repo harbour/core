@@ -3,7 +3,7 @@
 ;
 
 ; ---------------------------------------------------------------
-; Copyright 2009 Viktor Szakats (harbour syenar.hu)
+; Copyright 2009 Viktor Szakats (harbour syenar.net)
 ; See COPYING for licensing terms.
 ;
 ; Harbour Project Nullsoft installer script (for Windows/DOS)

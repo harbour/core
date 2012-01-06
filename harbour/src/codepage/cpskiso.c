@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module ( SKISO )
  *
- * Copyright 2007-2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2007-2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This file is generated automatically by cpinfo.prg

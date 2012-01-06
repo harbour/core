@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    Dynamic library call test.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  */

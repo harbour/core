@@ -4,7 +4,7 @@
  */
 
 /* Donated to the public domain by
-   Viktor Szakats (harbour syenar.hu) */
+   Viktor Szakats (harbour syenar.net) */
 
 FUNCTION Main()
 

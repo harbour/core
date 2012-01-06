@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * File find API
  *
- * Copyright 1991-2009 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1991-2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

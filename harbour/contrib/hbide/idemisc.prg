@@ -1314,7 +1314,7 @@ FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  */

@@ -8,7 +8,7 @@
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * This code uses HB_DLL_NAME* macros defined by
- *    Viktor Szakats (harbour syenar.hu)
+ *    Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

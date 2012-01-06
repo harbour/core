@@ -5,7 +5,7 @@
 
 // ; Pushing Harbour preprocessor to the line length limit.
 // ; Donated to the public domain by
-//   Viktor Szakats (harbour syenar.hu)
+//   Viktor Szakats (harbour syenar.net)
 
 FUNCTION Main()
 

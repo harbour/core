@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 string functions: NUMLINE()
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2011 Viktor Szakats (harbour syenar.net)
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
  * www - http://www.harbour-project.org
  *

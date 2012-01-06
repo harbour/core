@@ -10,7 +10,7 @@
  *    Authors:
  *       Christian Charras, Thierry Lecroq
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

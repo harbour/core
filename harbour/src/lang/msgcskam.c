@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (CSKAM)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.hu) (English, from msg_tpl.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msg_tpl.c)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * www - http://harbour-project.org

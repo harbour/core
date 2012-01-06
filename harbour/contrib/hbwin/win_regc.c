@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2008-2009 Viktor Szakats (harbour syenar.hu)
+ * Copyright 2008-2009 Viktor Szakats (harbour syenar.net)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://harbour-project.org
  *

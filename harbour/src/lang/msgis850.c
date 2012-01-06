@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (IS850)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.hu) (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msgen.c)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
  * www - http://harbour-project.org
  *

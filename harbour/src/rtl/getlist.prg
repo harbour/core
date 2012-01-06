@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * GET system active getlist handler for default HBGETLIST/GETSYS/READVAR
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.hu)
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * WIN_SETDEFAULTPRINTER()
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.hu) (based on MS sample code)
+ * Copyright 2009 Viktor Szakats (harbour syenar.net) (based on MS sample code)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
