@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * BLAT wrapper library interface code.
  *
- * Copyright 2007-2009 Francesco Saverio Giudice <info@fsgiudice.com>
+ * Copyright 2007-2012 Francesco Saverio Giudice <info@fsgiudice.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -63,8 +63,8 @@ CREATE CLASS HBBlat
    VAR cError                  AS STRING  INIT ""
    VAR aErrors                 AS ARRAY   INIT {}
    VAR cCommand                AS STRING  INIT ""
-   VAR cVersion                AS STRING  INIT "0.1"
-   VAR cBlatVersion            AS STRING  INIT "2.6.2"
+   VAR cVersion                AS STRING  INIT "0.2"
+   VAR cBlatVersion            AS STRING  INIT "2.7.6"
    VAR lChecked                AS LOGICAL INIT .F.
 
    EXPORTED:
@@ -116,6 +116,7 @@ CREATE CLASS HBBlat
    VAR cPasswordPOP3           AS STRING
    VAR cUserIMAP               AS STRING
    VAR cPasswordIMAP           AS STRING
+   VAR lNoMD5                  AS LOGICAL INIT .F.             // if .T. Do NOT use CRAM-MD5 authentication.  Use this in cases where the server's CRAM-MD5 is broken, such as Network Solutions
 
    // Miscellaneous RFC header switches
    VAR cOrganization           AS STRING
@@ -163,6 +164,7 @@ CREATE CLASS HBBlat
    VAR lAskFor8BitMime         AS LOGICAL INIT .F.       // ask for 8bit data support when sending MIME
    VAR nMultipartSize          AS NUMERIC                // send multipart messages, breaking attachments on <size> KB boundaries, where <size> is per 1000 bytes
    VAR lNoMultipartMessage     AS LOGICAL INIT .F.       // do not allow multipart messages
+   VAR cContentType            AS STRING                 // use cContentType in the ContentType header for attachments that do not have a registered content type for the extension. For example: -contenttype "text/calendar"
 
    // NNTP specific options
    VAR cGroups                 AS STRING                 // list of newsgroups (comma separated)
@@ -539,6 +541,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += ' -ipw ' + ::cPasswordIMAP
       ENDIF
 
+      // lNoMD5
+      IF ::lNoMD5
+         ::cCommand += " -nomd5"
+      ENDIF
+
       // Miscellaneous RFC header switches ----------------------
 
       // cOrganization
@@ -791,6 +798,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -nomps"
       ENDIF
 
+      // cContentType - optional
+      IF ISCHARACTER( ::cContentType )
+         ::cCommand += ' -contentType ' + ::cContentType
+      ENDIF
+
       // NNTP specific options ------------------
 
       // cGroups - optional
@@ -975,7 +987,7 @@ STATIC FUNCTION ArrayToString( aArray )
    LOCAL cElem
 
    FOR EACH cElem IN aArray
-      cString += cElem + iif( cElem:__enumIndex() < nLen, ",", "" )
+      cString += IIF( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + iif( cElem:__enumIndex() < nLen, ",", "" )
    NEXT
 
    RETURN cString
