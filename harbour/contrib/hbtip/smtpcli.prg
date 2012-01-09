@@ -63,7 +63,7 @@
 
 CREATE CLASS tIPClientSMTP FROM tIPClient
 
-   METHOD New( oUrl, xTrace, oCredentials )
+   METHOD New( oUrl, xTrace, oCredentials, cClientHost )
    METHOD Open( cUrl, lTLS )
    METHOD Close()
    METHOD Write( cData, nLen, bCommit )
@@ -84,16 +84,18 @@ CREATE CLASS tIPClientSMTP FROM tIPClient
    HIDDEN:
 
    VAR isAuth INIT .F.
+   VAR cClientHost
 
 ENDCLASS
 
-METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientSMTP
+METHOD New( oUrl, xTrace, oCredentials, cClientHost ) CLASS tIPClientSMTP
 
    ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "smtp", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "smtps", 465, 25 )
    ::nConnTimeout := 50000
    ::nAccessMode := TIP_WO  // a write only
+   ::cClientHost := cClientHost
 
    RETURN Self
 
@@ -118,7 +120,7 @@ METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
       ENDIF
    ENDIF
 
-   ::InetSendall( ::SocketCon, "HELO " + iif( Empty( ::oUrl:cUserid ), "tipClientSMTP", ::oUrl:cUserid ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "HELO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
 
    RETURN ::GetOk()
 
@@ -143,7 +145,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
       ENDIF
    ENDIF
 
-   ::InetSendall( ::SocketCon, "EHLO " + iif( Empty( ::oUrl:cUserid ), "tipClientSMTP", ::oUrl:cUserid ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
 
    RETURN ::GetOk()
 

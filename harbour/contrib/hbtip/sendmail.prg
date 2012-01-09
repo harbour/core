@@ -58,7 +58,7 @@
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
                       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
                       xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
-                      lTLS, cSMTPPass, cCharset, cEncoding )
+                      lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -78,8 +78,10 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
                            If a block is passed, it will be called for each log event with the message a string, no param on session close.
    lPopAuth   -> Optional. Do POP3 authentication before sending mail.
    lNoAuth    -> Optional. Disable Autentication methods
-   nTimeOut   -> Optional. Number os ms to wait default 20000 (20s)
+   nTimeOut   -> Optional. Number os ms to wait default 10000 (10s)
    cReplyTo   -> Optional.
+   cClientHost-> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
+                           Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
    */
 
    LOCAL cTmp
@@ -228,7 +230,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
    BEGIN SEQUENCE
-      oInmail := tIPClientSMTP():New( oUrl, xTrace )
+      oInmail := tIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -293,7 +295,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       BEGIN SEQUENCE
-         oInmail := tIPClientSMTP():New( oUrl, xTrace )
+         oInmail := tIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
       RECOVER
          lReturn := .F.
       END SEQUENCE
