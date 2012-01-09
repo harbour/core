@@ -230,9 +230,13 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
             bNext = uiLen == 8 ? ' ' : '\0';
             break;
 
-         case HB_FT_STRING:
          case HB_FT_LOGICAL:
             bNext = ' ';
+            break;
+
+         case HB_FT_STRING:
+            bNext = ( pField->uiFlags & HB_FF_UNICODE ) != 0 ?
+                    HB_BLANK_UNISPACE : ' ';
             break;
 
          case HB_FT_LONG:
@@ -291,19 +295,23 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
       }
       else
       {
-         if( bFill == HB_BLANK_UNISPACE )
+         if( nSize )
          {
-            HB_SIZE n;
-            for( n = 0; n < nSize; n += 2 )
-               HB_PUT_LE_UINT16( &pPtr[ n ], ' ' );
-         }
-         else
             memset( pPtr, bFill, nSize );
-         pPtr += nSize;
-         nSize = 0;
+            pPtr += nSize;
+            nSize = 0;
+         }
          if( bNext == HB_BLANK_SKIP )
          {
             pPtr += uiLen;
+         }
+         else if( bNext == HB_BLANK_UNISPACE )
+         {
+            while( uiLen-- )
+            {
+               HB_PUT_LE_UINT16( pPtr, 0x0020 );
+               pPtr += 2;
+            }
          }
          else if( bNext == HB_BLANK_AUTOINC )
          {
