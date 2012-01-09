@@ -624,12 +624,14 @@ HB_FUNC( SSL_GET_SSL_METHOD )
 #endif
          int n;
 
-         if(      p == SSLv2_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV2;
-         else if( p == SSLv2_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
-         else if( p == SSLv2_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
-         else if( p == SSLv3_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV3;
+         if(      p == SSLv3_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV3;
          else if( p == SSLv3_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
          else if( p == SSLv3_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
+         else if( p == SSLv2_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV2;
+         else if( p == SSLv2_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
+         else if( p == SSLv2_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
+#endif
          else if( p == TLSv1_method()         ) n = HB_SSL_CTX_NEW_METHOD_TLSV1;
          else if( p == TLSv1_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
          else if( p == TLSv1_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;

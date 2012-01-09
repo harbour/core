@@ -100,9 +100,11 @@ const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
 
    switch( n )
    {
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
    case HB_SSL_CTX_NEW_METHOD_SSLV2         : p = SSLv2_method();         break;
    case HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER  : p = SSLv2_server_method();  break;
    case HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT  : p = SSLv2_client_method();  break;
+#endif
    case HB_SSL_CTX_NEW_METHOD_SSLV3         : p = SSLv3_method();         break;
    case HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER  : p = SSLv3_server_method();  break;
    case HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT  : p = SSLv3_client_method();  break;
