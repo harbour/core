@@ -857,7 +857,9 @@ HB_FUNC( HB_HRBGETFUNSYM )
 
       for( nPos = 0, pSym = pHrbBody->pSymRead; nPos < pHrbBody->ulSymbols; ++pSym, ++nPos )
       {
-         if( pSym->value.pFunPtr != NULL && hb_stricmp( szName, pSym->szName ) == 0 )
+         if( pSym->value.pFunPtr != NULL &&
+             ( pSym->scope.value & HB_FS_INITEXIT ) == 0 &&
+             hb_stricmp( szName, pSym->szName ) == 0 )
          {
             hb_itemPutSymbol( hb_stackReturnItem(), pSym );
             break;
@@ -878,11 +880,25 @@ HB_FUNC( HB_HRBGETFUNLIST )
       HB_ULONG nPos;
       PHB_ITEM paList = hb_itemArrayNew( 0 );
       PHB_ITEM pFuncName = hb_itemNew( NULL );
+      int iType = hb_parni( 2 );
 
       for( nPos = 0, pSym = pHrbBody->pSymRead; nPos < pHrbBody->ulSymbols; ++pSym, ++nPos )
       {
-         if( pSym->value.pFunPtr != NULL )
-            hb_arrayAdd( paList, hb_itemPutC( pFuncName, pSym->szName ) );
+         if( pSym->value.pFunPtr != NULL &&
+             ( pSym->scope.value & HB_FS_INITEXIT ) == 0 )
+         {
+            if( iType == 0 ||
+                ( ( iType & HB_HRB_FUNC_EXTERN ) &&
+                  ( pSym->scope.value & HB_FS_LOCAL ) == 0 ) ||
+                ( ( pSym->scope.value & HB_FS_LOCAL ) &&
+                  ( ( ( iType & HB_HRB_FUNC_STATIC ) &&
+                      ( pSym->scope.value & HB_FS_STATIC ) ) ||
+                    ( ( iType & HB_HRB_FUNC_PUBLIC ) &&
+                      ( pSym->scope.value & HB_FS_STATIC ) == 0 ) ) ) )
+            {
+               hb_arrayAdd( paList, hb_itemPutC( pFuncName, pSym->szName ) );
+            }
+         }
       }
 
       hb_itemRelease( pFuncName );

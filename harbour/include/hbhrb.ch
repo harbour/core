@@ -77,4 +77,11 @@
                                           with unresolved or cross function
                                           references */
 
+
+#define HB_HRB_FUNC_PUBLIC       0x1   /* locally defined public functions */
+#define HB_HRB_FUNC_STATIC       0x2   /* locally defined static functions */
+#define HB_HRB_FUNC_LOCAL        0x3   /* locally defined functions */
+#define HB_HRB_FUNC_EXTERN       0x4   /* external functions used in HRB module */
+
+
 #endif /* HB_HRB_CH_ */
