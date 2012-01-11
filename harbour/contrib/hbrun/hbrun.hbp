@@ -25,13 +25,6 @@ pullext.prg
 
 -lhbpmcom{dos}
 
-# required by some recent Linux distros that are using the DSO linking model
-# TOFIX: move these lines to the respective .hbc files actually needing them
-# TOFIX: HB_HAS_ZLIB_LOCAL usage is wrong as it will only work when .hbp is 
-#        built as part of Harbour core build process.
-{HB_BUILD_DSO='yes'&linux}-lm
-{HB_BUILD_DSO='yes'&linux&!HB_HAS_ZLIB_LOCAL}-lz
-
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs
 #-icon={allwin}../../package/harb_win.ico

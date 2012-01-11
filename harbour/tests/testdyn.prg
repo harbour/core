@@ -85,7 +85,7 @@ PROCEDURE Main()
    ? "cData:", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
-   ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
+   ? "HB_DYNCALL (PARAMS): ", hb_dynCall( { "SHGetSpecialFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL, NIL, NIL, NIL, HB_DYN_CTYPE_BOOL }, 0, @cData, CSIDL_APPDATA, 0 )
    ? "@cData: ", cData, "<"
    ? "------"
    cData := Space( MAX_PATH )
