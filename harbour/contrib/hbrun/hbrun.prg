@@ -202,7 +202,7 @@ STATIC FUNCTION hbrun_extensionlist()
    STATIC s_aList
 
    IF s_aList == NIL
-      s_aList := iif( Type( "__HBRUN_EXTENSIONS()" ) == "UI", &("__hbrun_extensions()"), {} )
+      s_aList := iif( Type( "__HBRUN_EXTENSIONS()" ) == "UI", &( "__hbrun_extensions()" ), {} )
       ASort( s_aList )
    ENDIF
 
