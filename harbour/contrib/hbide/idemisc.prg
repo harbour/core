@@ -375,7 +375,7 @@ FUNCTION hbide_evalAsString( cExp )
    LOCAL cValue
 
    BEGIN SEQUENCE WITH { || break() }
-      cValue := eval( &( "{|| " + cExp + "}" ) )
+      cValue := Eval( hb_macroBlock( cExp ) )
    RECOVER
       cValue := cExp
    END SEQUENCE
@@ -392,7 +392,7 @@ FUNCTION hbide_evalAsIs( cExp )
    LOCAL xValue
 
    BEGIN SEQUENCE WITH { || break() }
-      xValue := eval( &( "{|| " + cExp + "}" ) )
+      xValue := Eval( hb_macroBlock( cExp ) )
    RECOVER
       xValue := cExp
    END SEQUENCE

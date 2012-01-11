@@ -1453,7 +1453,7 @@ STATIC FUNCTION rmgr_evalAsArray( cStr )
    LOCAL a_, bErr := ErrorBlock( {|| break() } )
 
    BEGIN SEQUENCE
-      a_:= eval( &( "{|| " + cStr + "}" ) )
+      a_:= Eval( hb_macroBlock( cStr ) )
    RECOVER
       a_:= {}
    ENDSEQUENCE

@@ -971,7 +971,7 @@ METHOD XbpBrowse:manageFrameResized()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageCommitData( qWidget )
-   LOCAL cTxt    := hbqt_promotWidget( qWidget, "QLineEdit" ):text()
+   LOCAL cTxt    := hbqt_promoteWidget( qWidget, "QLineEdit" ):text()
    LOCAL oCol    := ::columns[ ::colPos ]
    LOCAL cTyp    := valtype( eval( oCol:block ) )
 

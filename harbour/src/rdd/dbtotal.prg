@@ -82,7 +82,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL lError := .F.
 
    IF ISCHARACTER( xWhile )
-      bWhileBlock := &("{||" + xWhile + "}")
+      bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
    ELSEIF ISBLOCK( xWhile )
       bWhileBlock := xWhile
@@ -92,7 +92,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    ENDIF
 
    IF ISCHARACTER( xFor )
-      bForBlock := &("{||" + xFor + "}")
+      bForBlock := hb_macroBlock( xFor )
    ELSEIF ISBLOCK( xFor )
       bForBlock := xFor
    ELSE
@@ -130,7 +130,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
       ENDIF
 
       IF ISCHARACTER( xKey )
-         bKeyBlock := &("{||" + xKey + "}")
+         bKeyBlock := hb_macroBlock( xKey )
       ELSEIF ISBLOCK( xKey )
          bKeyBlock := xKey
       ELSE

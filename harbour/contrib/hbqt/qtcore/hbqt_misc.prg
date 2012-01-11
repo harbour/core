@@ -219,8 +219,8 @@ METHOD HbQtObjectHandler:_destroy()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbqt_promotWidget( oWidget, cWidgetTo )
-   LOCAL oObj := Eval( &( "{|| HB_" + cWidgetTo + "() }" ) )
+FUNCTION hbqt_promoteWidget( oWidget, cWidgetTo )
+   LOCAL oObj := Eval( hb_macroBlock( "HB_" + cWidgetTo + "()" ) )
 
    oObj:pPtr := oWidget:pPtr
 
