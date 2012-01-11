@@ -1254,7 +1254,7 @@ HB_FUNC( SSL_GET_MODE )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_parnl( SSL_get_mode( ssl ) );
+         hb_retnl( SSL_get_mode( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1282,7 +1282,7 @@ HB_FUNC( SSL_GET_CERTIFICATE )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_X509_ret( SSL_get_certificate( ssl ) );
+         hb_X509_ret( SSL_get_certificate( ssl ), HB_FALSE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1295,7 +1295,7 @@ HB_FUNC( SSL_GET_PEER_CERTIFICATE )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_X509_ret( SSL_get_peer_certificate( ssl ) );
+         hb_X509_ret( SSL_get_peer_certificate( ssl ), HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

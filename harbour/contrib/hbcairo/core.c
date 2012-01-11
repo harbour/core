@@ -304,7 +304,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
 
    if( ppPath && *ppPath )
    {
-      PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( PHB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
+      PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( HB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
       pIterator->ppPath = ppPath;
       hb_gcRefInc( ppPath );
       pIterator->iPos = -1;

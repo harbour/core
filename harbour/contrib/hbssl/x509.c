@@ -60,18 +60,25 @@
 
 #include "hbssl.h"
 
+typedef struct
+{
+   X509 *  pX509;
+   HB_BOOL fRelease;
+} HB_X509, * PHB_X509;
+
 static HB_GARBAGE_FUNC( X509_release )
 {
-   void ** ph = ( void ** ) Cargo;
+   PHB_X509 ph = ( PHB_X509 ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && ph->pX509 )
    {
       /* Destroy the object */
-      X509_free( ( X509 * ) * ph );
+      if( ph->fRelease )
+          X509_free( ( X509 * ) ph->pX509 );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      ph->pX509 = NULL;
    }
 }
 
@@ -88,18 +95,19 @@ void * hb_X509_is( int iParam )
 
 X509 * hb_X509_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcX509_funcs, iParam );
+   PHB_X509 ph = ( PHB_X509 ) hb_parptrGC( &s_gcX509_funcs, iParam );
 
-   return ph ? ( X509 * ) * ph : NULL;
+   return ph ? ph->pX509 : NULL;
 }
 
-void hb_X509_ret( X509 * x509 )
+void hb_X509_ret( X509 * x509, HB_BOOL fRelease )
 {
-   void ** ph = ( void ** ) hb_gcAllocate( sizeof( X509 * ), &s_gcX509_funcs );
+   PHB_X509 ph = ( PHB_X509 ) hb_gcAllocate( sizeof( HB_X509 ), &s_gcX509_funcs );
 
-   * ph = ( void * ) x509;
+   ph->pX509 = x509;
+   ph->fRelease = fRelease;
 
-   hb_retptrGC( ph );
+   hb_retptrGC( ( void * ) ph );
 }
 
 HB_FUNC( X509_GET_SUBJECT_NAME )

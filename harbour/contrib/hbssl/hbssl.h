@@ -89,7 +89,7 @@ extern SSL_SESSION *      hb_SSL_SESSION_par( int iParam );
 
 extern void *             hb_X509_is( int iParam );
 extern X509 *             hb_X509_par( int iParam );
-extern void               hb_X509_ret( X509 * x509 );
+extern void               hb_X509_ret( X509 * x509, HB_BOOL fRelease );
 
 extern int                hb_EVP_MD_is( int iParam );
 extern const EVP_MD *     hb_EVP_MD_par( int iParam );

@@ -67,7 +67,7 @@
  * HB_SOCKETSENDTO( hSocket, cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], aAddr, [ nTimeout = FOREVER ] ) --> nBytesSent
  * HB_SOCKETRECV( hSocket, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], [ nTimeout = FOREVER ] ) --> nBytesRecv
  * HB_SOCKETRECVFROM( hSocket, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], @aAddr, [ nTimeout = FOREVER ] ) --> nBytesRecv
- * HB_SOCKETSETBLOCKINGIO( hSocket, lValue ) --> lSuccess
+ * HB_SOCKETSETBLOCKINGIO( hSocket, lValue ) --> nSuccess
  * HB_SOCKETSETNODELAY( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETEXCLUSIVEADDR( hSocket, lValue ) --> lSuccess
  * HB_SOCKETSETREUSEADDR( hSocket, lValue ) --> lSuccess
@@ -87,6 +87,7 @@
  * HB_SOCKETGETHOSTNAME( aAddr ) --> cHostName
  * HB_SOCKETGETHOSTS( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> aHosts
  * HB_SOCKETGETIFACES( [ nFamily ], [ lNoAliases ] ) --> aIfaces
+ * HB_SOCKETGETFD( hSocket ) --> nFD
  */
 
 #include "hbapiitm.h"
@@ -468,7 +469,7 @@ HB_FUNC( HB_SOCKETSETBLOCKINGIO )
    HB_SOCKET socket = hb_socketParam( 1 );
    if( socket != HB_NO_SOCKET )
    {
-      hb_retl( hb_socketSetBlockingIO( socket, hb_parl( 2 ) ) == 0 );
+      hb_retni( hb_socketSetBlockingIO( socket, hb_parl( 2 ) ) );
    }
 }
 
@@ -703,4 +704,9 @@ HB_FUNC( HB_SOCKETGETIFACES )
       hb_itemReturnRelease( pItem );
    else
       hb_reta( 0 );
+}
+
+HB_FUNC( HB_SOCKETGETFD )
+{
+   hb_retni( hb_socketParam( 1 ) );
 }
