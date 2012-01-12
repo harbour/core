@@ -76,11 +76,6 @@ HB_FUNC( HB_DYNCALL )
             PHB_ITEM pFunction = hb_arrayGetItemPtr( pParam, 1 );
             HB_SIZE nBasePos = 2;
 
-#if 0
-            if( HB_IS_POINTER( pFunction ) )
-               pFunctionPtr = hb_itemGetPtr( pFunction );
-            else ...
-#endif
             if( HB_IS_STRING( pFunction ) && nLen >= nBasePos )
             {
                PHB_ITEM pLibrary = hb_arrayGetItemPtr( pParam, nBasePos );
@@ -119,8 +114,6 @@ HB_FUNC( HB_DYNCALL )
             }
          }
       }
-      else if( HB_IS_POINTER( pParam ) )
-         pFunctionPtr = hb_itemGetPtr( pParam );
    }
 
    hb_dynCall( iFuncFlags, pFunctionPtr, hb_pcount(), 2, piArgFlags );
