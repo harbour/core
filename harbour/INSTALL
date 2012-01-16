@@ -1595,12 +1595,12 @@ HARBOUR
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
          Recommended Mac OS X binary package:
-            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.7.4.dmg
+            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.8.0.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.7.4-mingw.exe
+            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.8.0-mingw.exe
          How to create Windows static and MSVC builds:
-            http://doc.trolltech.com/4.7/deployment-windows.html
+            http://developer.qt.nokia.com/doc/qt-4.8/deployment-windows.html
          NOTES:
             - QT 4.5.x for Windows requires MinGW builds with SJLJ stack frame unwinding.
               (mingw official 3.4.x, or mingw tdm)
