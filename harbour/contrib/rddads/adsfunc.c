@@ -56,6 +56,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
+#include "hbstack.h"
 #include "hbdate.h"
 
 #include "rddsys.ch"
@@ -65,16 +66,11 @@
 #define MAX_STR_LEN                       255
 #define ADS_MAX_PARAMDEF_LEN              2048
 
-#if !defined( ADS_LINUX )
-static PHB_ITEM s_pItmCobCallBack = NULL;
-#endif /* !ADS_LINUX */
-
 int       hb_ads_iFileType = ADS_CDX;
 int       hb_ads_iLockType = ADS_PROPRIETARY_LOCKING;
 int       hb_ads_iCheckRights = ADS_CHECKRIGHTS;
 int       hb_ads_iCharType = ADS_ANSI;
 HB_BOOL   hb_ads_bTestRecLocks = HB_FALSE;             /* Debug Implicit locks */
-ADSHANDLE hb_ads_hConnect = 0;
 
 #ifdef ADS_USE_OEM_TRANSLATION
 
@@ -135,6 +131,95 @@ void hb_adsOemAnsiFree( char * pszSrc )
 }
 
 #endif
+
+typedef struct
+{
+   ADSHANDLE   hConnect;
+#if !defined( ADS_LINUX )
+   PHB_ITEM    pCallBack;
+#endif /* !ADS_LINUX */
+} HB_ADSDATA, * PHB_ADSDATA;
+
+#if !defined( ADS_LINUX ) || defined( HB_ADS_TSD_CONNECTION )
+
+static void hb_adsThreadRelease( void * cargo )
+{
+   PHB_ADSDATA pAdsData = ( PHB_ADSDATA ) cargo;
+
+   if( pAdsData->hConnect )
+      AdsDisconnect( pAdsData->hConnect );
+#if !defined( ADS_LINUX )
+   if( pAdsData->pCallBack )
+      hb_itemRelease( pAdsData->pCallBack );
+#endif /* !ADS_LINUX */
+}
+
+static HB_TSD_NEW( s_adsData, sizeof( HB_ADSDATA ), NULL, hb_adsThreadRelease );
+#define HB_ADS_THREAD_DATA    ( ( PHB_ADSDATA ) hb_stackGetTSD( &s_adsData ) )
+
+#endif
+
+#ifdef HB_ADS_TSD_CONNECTION
+   #define HB_ADS_CONN_DATA   HB_ADS_THREAD_DATA
+#else
+   static HB_ADSDATA s_ads_data;
+   #define HB_ADS_CONN_DATA   (&s_ads_data)
+#endif
+
+ADSHANDLE hb_ads_getConnection( void )
+{
+   return HB_ADS_CONN_DATA->hConnect;
+}
+
+ADSHANDLE hb_ads_defConnection( ADSHANDLE hConnect, const char * szName )
+{
+   if( !hConnect )
+   {
+      PHB_ADSDATA pAdsData = HB_ADS_CONN_DATA;
+
+      hConnect = pAdsData->hConnect;
+#ifdef HB_ADS_TSD_CONNECTION
+      if( !hConnect )
+      {
+         if( AdsConnect( ( UNSIGNED8 * ) szName, &hConnect ) == AE_SUCCESS )
+            pAdsData->hConnect = hConnect;
+      }
+#else
+      HB_SYMBOL_UNUSED( szName );
+#endif
+   }
+   return hConnect;
+}
+
+void hb_ads_setConnection( ADSHANDLE hConnect )
+{
+   HB_ADS_CONN_DATA->hConnect = hConnect;
+}
+
+static void hb_ads_clrConnection( ADSHANDLE hConnect )
+{
+   PHB_ADSDATA pAdsData = HB_ADS_CONN_DATA;
+
+   if( hConnect == 0 || hConnect == pAdsData->hConnect )
+      pAdsData->hConnect = 0;
+}
+
+#if !defined( ADS_LINUX )
+static PHB_ITEM hb_ads_getCallBack( void )
+{
+   return HB_ADS_THREAD_DATA->pCallBack;
+}
+
+static void hb_ads_setCallBack( PHB_ITEM pCallBack )
+{
+   PHB_ADSDATA pAdsData = HB_ADS_THREAD_DATA;
+
+   if( pAdsData->pCallBack )
+      hb_itemRelease( pAdsData->pCallBack );
+
+   pAdsData->pCallBack = pCallBack ? hb_itemNew( pCallBack ) : NULL;
+}
+#endif /* !ADS_LINUX */
 
 /* Debug Implicit locks Set/Get call */
 HB_FUNC( ADSTESTRECLOCKS )
@@ -215,8 +300,8 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
    UNSIGNED16 pusConnectType = 0;
    ADSHANDLE hConnToCheck = HB_ADS_PARCONNECTION( 1 );
 
-   /* NOTE: Caller can specify a connection. Otherwise use default handle.
-            The global hb_ads_hConnect will continue to be 0 if no adsConnect60() (Data
+   /* NOTE: Caller can specify a connection. Otherwise use default thread local handle.
+            The thread default handle will continue to be 0 if no adsConnect60() (Data
             Dictionary) calls are made. Simple table access uses an implicit connection
             whose handle we don't see unless you get it from an opened table
             with ADSGETTABLECONTYPE(). */
@@ -1088,7 +1173,7 @@ HB_FUNC( ADSCONNECT )
        AdsConnect( ( UNSIGNED8 * ) hb_parcx( 1 ),
                    &hConnect ) == AE_SUCCESS )
    {
-      hb_ads_hConnect = hConnect;
+      hb_ads_setConnection( hConnect );
       hb_retl( HB_TRUE );
    }
    else
@@ -1110,15 +1195,14 @@ HB_FUNC( ADSDISCONNECT )
 
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 1 );
 
-   /* NOTE: Only allow disconnect of 0 if explicitly passed or hb_ads_hConnect is 0
-            (hConnect might be 0 if caller accidentally disconnects twice;
-            this should not close all connections! */
+   /* NOTE: Only allow disconnect of 0 if explicitly passed.
+            The thread default connection handle might be 0 if caller
+            accidentally disconnects twice. */
 
    if( ( hConnect != 0 || HB_ISNUM( 1 ) ) &&
        AdsDisconnect( hConnect ) == AE_SUCCESS )
    {
-      if( hConnect == hb_ads_hConnect )
-         hb_ads_hConnect = 0;
+      hb_ads_clrConnection( hConnect );
 
       hb_retl( HB_TRUE );
    }
@@ -1192,14 +1276,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
-            the func was just trying to confirm a real connection existed
-            but we're trying to remove dependence on statics;
-            if we saved the nConnection to a WA, that would take care of it.
-            As is, it requires pArea->hStatement which we only allow created if
-            there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
-
-   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
+   if( pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
    {
       ADSHANDLE hCursor = 0;
 
@@ -1236,14 +1313,7 @@ HB_FUNC( ADSPREPARESQL )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
-            the func was just trying to confirm a real connection existed
-            but we're trying to remove dependence on statics;
-            if we saved the nConnection to a WA, that would take care of it.
-            As is, it requires pArea->hStatement which we only allow created if
-            there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
-
-   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
+   if( pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
    {
       if( AdsPrepareSQL( pArea->hStatement,
                          ( UNSIGNED8 * ) hb_parc( 1 ) /* pucStmt */ ) == AE_SUCCESS )
@@ -1262,14 +1332,7 @@ HB_FUNC( ADSEXECUTESQL )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
-            the func was just trying to confirm a real connection existed
-            but we're trying to remove dependence on statics;
-            if we saved the nConnection to a WA, that would take care of it.
-            As is, it requires pArea->hStatement which we only allow created if
-            there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
-
-   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement )
+   if( pArea && pArea->hStatement )
    {
       ADSHANDLE hCursor = 0;
 
@@ -1375,14 +1438,15 @@ HB_FUNC( ADSCONVERTTABLE )
 #if !defined( ADS_LINUX )
 UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 {
-   if( s_pItmCobCallBack && HB_IS_BLOCK( s_pItmCobCallBack ) )
+   PHB_ITEM pCallBack = hb_ads_getCallBack();
+   if( pCallBack )
    {
       PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
-      HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( s_pItmCobCallBack, 1, pPercentDone ) );
+      HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( pCallBack, 1, pPercentDone ) );
 
       hb_itemRelease( pPercentDone );
 
-      return fResult;
+      return fResult ? 1 : 0;
    }
 #if HB_TR_LEVEL >= HB_TR_DEBUG
    else
@@ -1397,6 +1461,8 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 
 HB_FUNC( ADSREGCALLBACK )
 {
+   HB_BOOL fResult = HB_FALSE;
+
 #if !defined( ADS_LINUX )
    /* NOTE: current implementation is not thread safe.
             ADS can register multiple callbacks, but one per thread/connection.
@@ -1405,37 +1471,25 @@ HB_FUNC( ADSREGCALLBACK )
             NOT make any Advantage Client Engine calls. If it does,
             it is possible to get error code 6619 "Communication Layer is busy". */
 
-   if( HB_ISBLOCK( 1 ) )
-   {
-      if( s_pItmCobCallBack )
-         hb_itemRelease( s_pItmCobCallBack );
-      s_pItmCobCallBack = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
+   PHB_ITEM pCallBack = hb_param( 1, HB_IT_BLOCK );
 
+   if( pCallBack )
+   {
+      hb_ads_setCallBack( pCallBack );
       if( AdsRegisterProgressCallback( hb_adsShowPercentageCB ) == AE_SUCCESS )
-      {
-         hb_retl( HB_TRUE );
-         return;
-      }
+         fResult = HB_TRUE;
       else
-      {
-         hb_itemRelease( s_pItmCobCallBack );
-         s_pItmCobCallBack = NULL;
-      }
+         hb_ads_setCallBack( NULL );
    }
 #endif /* !ADS_LINUX */
 
-   hb_retl( HB_FALSE );
+   hb_retl( fResult );
 }
 
 HB_FUNC( ADSCLRCALLBACK )
 {
 #if !defined( ADS_LINUX )
-   if( s_pItmCobCallBack )
-   {
-      hb_itemRelease( s_pItmCobCallBack );
-      s_pItmCobCallBack = NULL;
-   }
-
+   hb_ads_setCallBack( NULL );
    hb_retnl( AdsClearProgressCallback() );
 #else
    hb_retnl( 0 );
@@ -1477,9 +1531,9 @@ HB_FUNC( ADSGETNUMINDEXES )
 
 HB_FUNC( ADSCONNECTION )                /* Get/Set func to switch between connections. */
 {
-   HB_ADS_RETCONNECTION( hb_ads_hConnect );
+   HB_ADS_RETCONNECTION( hb_ads_getConnection() );
 
-   hb_ads_hConnect = HB_ADS_PARCONNECTION( 1 );
+   hb_ads_setConnection( HB_ADS_PARCONNECTION( 1 ) );
 }
 
 HB_FUNC( ADSISCONNECTIONALIVE ) /* Determine if passed or default connection is still valid */
@@ -1744,7 +1798,7 @@ HB_FUNC( ADSCONNECT60 )
                      ( UNSIGNED32 ) hb_parnldef( 5, ADS_DEFAULT ) /* ulOptions */,
                      &hConnect ) == AE_SUCCESS )
    {
-      hb_ads_hConnect = hConnect;       /* set new default */
+      hb_ads_setConnection( hConnect );   /* set new default */
 
       hb_stornint( hConnect, 6 );
 
@@ -1767,7 +1821,7 @@ HB_FUNC( ADSDDCREATE )
                     ( UNSIGNED8 * ) hb_parc( 3 ) /* pucDescription */,
                     &hConnect ) == AE_SUCCESS )
    {
-      hb_ads_hConnect = hConnect;
+      hb_ads_setConnection( hConnect );
       hb_retl( HB_TRUE );
    }
    else

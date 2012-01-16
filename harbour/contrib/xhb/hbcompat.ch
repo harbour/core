@@ -114,7 +114,7 @@
    #xtranslate hb_ADel([<x,...>])          => ADel(<x>)
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
-   #xtranslate hb_DateTime()               => DateTime()
+   #xtranslate hb_DateTime([<x,...>])      => DateTime(<x>)
    #xtranslate hb_Hour([<x>])              => Hour(<x>)
    #xtranslate hb_Minute([<x>])            => Minute(<x>)
    #xtranslate hb_TToS([<x>])              => TToS(<x>)
@@ -388,7 +388,10 @@
 
    #xtranslate RAScan([<x,...>])               => hb_RAScan(<x>)
 
-   #xtranslate DateTime()                      => hb_DateTime()
+   #xtranslate AsizeAlloc( <a> [, <n,...>] )   => AFill(<a>)
+   #xtranslate ALenAlloc( <a> [, <n,...>] )    => Len(<a>)
+
+   #xtranslate DateTime([<x,...>])             => hb_DateTime(<x>)
    #xtranslate Hour([<x>])                     => hb_Hour(<x>)
    #xtranslate Minute([<x>])                   => hb_Minute(<x>)
    #xtranslate TToS([<x>])                     => hb_TToS(<x>)
@@ -491,6 +494,7 @@
    #xtranslate HGETAUTOADD([<x,...>])      => hb_HAUTOADD(<x>)
    #xtranslate HALLOCATE([<x,...>])        => hb_HALLOCATE(<x>)
    #xtranslate HDEFAULT([<x,...>])         => hb_HDEFAULT(<x>)
+   #xtranslate HSETPARTITION([<x,...>])    =>
 
    /* Associative hash array functions */
    #xtranslate HAAGETKEYAT([<x,...>])      => hb_HKEYAT(<x>)

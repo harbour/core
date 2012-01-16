@@ -2960,7 +2960,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
-   hConnection = HB_ADS_DEFCONNECTION( pCreateInfo->ulConnection );
+   hConnection = HB_ADS_DEFCONNECTION( pCreateInfo->ulConnection, pCreateInfo->abName );
 
    pArea->szDataFileName = hb_strdup( pCreateInfo->abName );
 
@@ -3406,7 +3406,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
 
-   hConnection = HB_ADS_DEFCONNECTION( pOpenInfo->ulConnection );
+   hConnection = HB_ADS_DEFCONNECTION( pOpenInfo->ulConnection, pOpenInfo->abName );
    u32RetVal = AdsGetHandleType( hConnection, &usType);
    if( u32RetVal == AE_SUCCESS )
    {
@@ -5185,9 +5185,9 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
 
       case RDDI_CONNECTION:
       {
-         ADSHANDLE hOldConnection = hb_ads_hConnect;
+         ADSHANDLE hOldConnection = hb_ads_getConnection();
 
-         hb_ads_hConnect = HB_ADS_GETCONNECTION( pItem );
+         hb_ads_setConnection( HB_ADS_GETCONNECTION( pItem ) );
          HB_ADS_PUTCONNECTION( pItem, hOldConnection );
          break;
       }

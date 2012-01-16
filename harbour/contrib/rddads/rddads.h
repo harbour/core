@@ -171,18 +171,21 @@ typedef ADSAREA * ADSAREAP;
 #  undef ADS_USE_OEM_TRANSLATION
 #endif
 
-#define HB_ADS_PARCONNECTION( n )      ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_hConnect ) )
+#define HB_ADS_PARCONNECTION( n )      ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
 #define HB_ADS_RETCONNECTION( h )      hb_retnint( h )
-#define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_hConnect )
+#define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
 #define HB_ADS_PUTCONNECTION( p, h )   hb_itemPutNInt( ( p ), ( ADSHANDLE ) ( h ) )
-#define HB_ADS_DEFCONNECTION( v )      ( ( v ) ? ( ADSHANDLE ) ( v ) : hb_ads_hConnect )
+#define HB_ADS_DEFCONNECTION( h, s )   hb_ads_defConnection( ( h ), ( s ) )
 
 extern int        hb_ads_iFileType; /* current global setting */
 extern int        hb_ads_iLockType;
 extern int        hb_ads_iCheckRights;
 extern int        hb_ads_iCharType;
 extern HB_BOOL    hb_ads_bTestRecLocks;
-extern ADSHANDLE  hb_ads_hConnect;
+
+extern ADSHANDLE  hb_ads_getConnection( void );
+extern ADSHANDLE  hb_ads_defConnection( ADSHANDLE hConnect, const char * szName );
+extern void       hb_ads_setConnection( ADSHANDLE hConnect );
 
 extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );

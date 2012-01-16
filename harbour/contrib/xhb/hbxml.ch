@@ -57,12 +57,14 @@
 #define HB_XML_CH
 
 /* Styles */
-#define HBXML_STYLE_INDENT        1
-#define HBXML_STYLE_TAB           2
-#define HBXML_STYLE_THREESPACES   4
+#define HBXML_STYLE_NOINDENT      0  /* no indent nodes and insert new line after each node */
+#define HBXML_STYLE_INDENT        1  /* indent nodes with 1 space and insert new line after each node  (default) */
+#define HBXML_STYLE_TAB           2  /* indent nodes with tab spaces and insert new line after each node */
+#define HBXML_STYLE_THREESPACES   4  /* indent nodes with 3 spaces and insert new line after each node */
 #define HBXML_STYLE_NOESCAPE      8
+#define HBXML_STYLE_NONEWLINE     16 /* no indent and no insert newline */
 
-/* Status vaules */
+/* Status values */
 #define HBXML_STATUS_ERROR        0
 #define HBXML_STATUS_OK           1
 #define HBXML_STATUS_MORE         2
