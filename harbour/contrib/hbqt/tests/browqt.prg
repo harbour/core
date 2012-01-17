@@ -16,14 +16,11 @@
 
 
 PROCEDURE ExecOneMore()
-   hb_gtReload( 'GUI' )
    BuildADialog()
    RETURN
 
-
 STATIC PROCEDURE BuildADialog()
-   LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i, lExit
-   LOCAL oWnd
+   LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i, oDgt, oSmdl
    LOCAL oDA
    LOCAL aStru1
    LOCAL nCX1
@@ -33,11 +30,8 @@ STATIC PROCEDURE BuildADialog()
    SET DATE ANSI
    SET CENTURY ON
 
-   oWnd := QMainWindow()
-   oWnd:resize(640,460 )
-
    oDA := QWidget()
-   oWnd:setCentralWidget( oDA )
+   oDA:resize(640,460 )
    lay1 := QVBoxLayout( oDA )
 
    DBUseArea( .T., NIL, "../../../tests/test.dbf", "T1", .F., .F. )
@@ -48,8 +42,10 @@ STATIC PROCEDURE BuildADialog()
    mo1 := HBQAbstractItemModel( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
-   tb1:itemDelegate():connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
-   tb1:selectionModel():connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+   oDgt := tb1:itemDelegate()
+   oDgt:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
+   oSMdl := tb1:selectionModel()
+   oSMdl:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
 
    hd1 := tb1:horizontalHeader()
    FOR i := 1 To Len( aStru1 )
@@ -71,31 +67,12 @@ STATIC PROCEDURE BuildADialog()
    lay2:addWidget( bt2 )
    lay2:addWidget( bt3 )
 
-   oWnd:connect( QEvent_Close, {|| lExit := .t. } )
-   oEventLoop := QEventLoop( oWnd )
-   oWnd:Show()
-
-   lExit := .f.
-   DO WHILE ! lExit 
-      oEventLoop:processEvents( QEventLoop_AllEvents )
-   ENDDO
-   oWnd:disconnect( QEvent_Close )
-   oEventLoop:exit( 0 )
+   oEventLoop := QEventLoop( oDA )
+   oDA:connect( QEvent_Close, {|| oEventLoop:exit( 0 ) } )
+   oDA:Show()
+   oEventLoop:exec()
 
    DbCloseAll()
-
-   tb1  := NIL
-   lay1 := NIL
-   lay2 := NIL
-   mo1  := NIL
-   bt1  := NIL
-   bt2  := NIL
-   bt3  := NIL
-   hd1  := NIL
-   oDA  := NIL
-   oWnd := NIL
-
-   oEventLoop := NIL
 
    RETURN
 
@@ -237,3 +214,5 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
    ENDSWITCH
 
    RETURN NIL
+
+   

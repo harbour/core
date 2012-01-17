@@ -34,11 +34,8 @@ PROCEDURE Main()
    LOCAL nKey, lMark, lResize, lClose
    LOCAL nHeight := 20
    LOCAL nWidth  := Int( nHeight / 2 )
-//   LOCAL cFont
-
    LOCAL nMSec
 
-//   Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
    SetCursor( SC_NONE )
