@@ -97,6 +97,8 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    DATA     tabStop                               INIT  .F.
    DATA     visible                               INIT  .T.
 
+   DATA     pointerFocus                          INIT  .T.
+
    /*  RUNTIME DATA */
    DATA     dropZone                              INIT  .F.
    DATA     helpLink

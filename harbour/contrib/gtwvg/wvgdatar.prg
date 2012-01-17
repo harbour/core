@@ -120,6 +120,8 @@ METHOD DataRef:getData()
    DO CASE
    CASE ::className == "EDIT"
       ::sl_editBuffer := WVG_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+   CASE ::className == "LISTBOX"
+      ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd )+ 1
    ENDCASE
 
    IF hb_isBlock( ::dataLink )

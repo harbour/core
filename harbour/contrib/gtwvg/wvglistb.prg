@@ -144,8 +144,8 @@ METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP
-   ::exStyle     := WS_EX_CLIENTEDGE + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
+   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + WS_CLIPSIBLINGS
+   ::exStyle     := WS_EX_CLIENTEDGE //+ WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
    ::className   := "LISTBOX"
    ::objType     := objTypeListBox
 
@@ -196,29 +196,32 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := WVG_LBGetCurSel( ::hWnd )+ 1
+         IF ::isParentCrt()
+            ::oParent:setFocus()
+         ENDIF
          IF hb_isBlock( ::sl_itemMarked )
-            IF ::isParentCrt()
-               ::oParent:setFocus()
-            ENDIF
             eval( ::sl_itemMarked, NIL, NIL, self )
-            IF ::isParentCrt()
+         ENDIF
+         IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
-            RETURN EVENT_UNHANDELLED
          ENDIF
 
       ELSEIF aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
+         IF ::isParentCrt()
+            ::oParent:setFocus()
+         ENDIF
          IF hb_isBlock( ::sl_itemSelected )
-            IF ::isParentCrt()
-               ::oParent:setFocus()
-            ENDIF
             eval( ::sl_itemSelected, NIL, NIL, self )
-            IF ::isParentCrt()
+         ENDIF
+         IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
-            RETURN EVENT_UNHANDELLED
          ENDIF
+
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -234,7 +237,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
-   CASE nMessage == HB_GTE_ANY
+   CASE nMessage == HB_GTE_ANY               /* This will never be reached */
       IF aNM[ 1 ] == WM_LBUTTONUP
          ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
          IF hb_isBlock( ::sl_itemMarked )

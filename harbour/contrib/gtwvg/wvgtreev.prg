@@ -197,27 +197,35 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       DO CASE
       CASE aHdr[ NMH_code ] == NM_DBLCLK .OR. aHdr[ NMH_code ] == NM_RETURN
          ::editBuffer := ::oItemSelected
+         IF ::isParentCrt()
+            ::oParent:setFocus()
+         ENDIF
          IF hb_isBlock( ::sl_itemSelected )
-            IF ::isParentCrt()
-               ::oParent:setFocus()
-            ENDIF
             Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
-            IF ::isParentCrt()
+         ENDIF
+         IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
+         ELSE
+            ::setFocus()
          ENDIF
          RETURN .f.
 
       CASE aHdr[ NMH_code ] == TVN_SELCHANGED
          ::getSelectionInfo( aNM[ 2 ] )
+         IF ::isParentCrt()
+            ::oParent:setFocus()
+         ENDIF
          IF hb_isBlock( ::sl_itemMarked )
-            IF ::isParentCrt()
-               ::oParent:setFocus()
-            ENDIF
             Eval( ::sl_itemMarked, ::oItemSelected, { 0,0,0,0 }, Self )
-            IF ::isParentCrt()
+         ENDIF
+         IF ::isParentCrt()
+            IF ::pointerFocus
                ::setFocus()
             ENDIF
+         ELSE
+            ::setFocus()
          ENDIF
          RETURN .t.
 
