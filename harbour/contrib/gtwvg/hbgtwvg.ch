@@ -86,6 +86,7 @@
 #define HB_GTI_SETPOSANDSIZE             78
 #define HB_GTI_REFRESH                   79
 #define HB_GTI_NOTIFIERBLOCKGUI          80
+#define HB_GTI_MAXIMIZABLE               81
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1

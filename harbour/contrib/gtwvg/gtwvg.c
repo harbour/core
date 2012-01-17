@@ -428,6 +428,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bSelectCopy       = HB_TRUE;
 
    pWVT->bResizable        = HB_TRUE;
+   pWVT->bMaximizable      = HB_TRUE;
    pWVT->bClosable         = HB_TRUE;
 
    {
@@ -3438,6 +3439,31 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_gt_wvt_FitSize( pWVT );
 
             hb_wvt_gtSaveGuiState( pWVT );
+         }
+         break;
+      }
+      case HB_GTI_MAXIMIZABLE:
+      {
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bMaximizable );
+         if( pWVT->hWnd )
+         {
+            if( pInfo->pNewVal )
+            {
+               BOOL bMax = hb_itemGetL( pInfo->pNewVal );
+               HB_GTWVT_LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+
+               if( bMax && ( ! pWVT->bMaximizable ) )
+               {
+                  style = style | WS_MAXIMIZEBOX;
+               }
+               else if( ( ! bMax ) && pWVT->bMaximizable )
+               {
+                  style = style & ~WS_MAXIMIZEBOX;
+               }
+               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
+               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                             SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+            }
          }
          break;
       }

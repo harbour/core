@@ -394,6 +394,7 @@ typedef struct
    HB_BOOL  bBeginMarked;
 
    HB_BOOL  bResizable;
+   HB_BOOL  bMaximizable;
 
    HB_BOOL  bSelectCopy;
    void *   hSelectCopy;
