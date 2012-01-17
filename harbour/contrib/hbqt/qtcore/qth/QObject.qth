@@ -13,7 +13,7 @@
 
 <CLASS>
 New      = pParent
-Calls    = QT_Qbject
+Calls    = QT_QObject
 </CLASS>
 
 <CODE>

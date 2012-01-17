@@ -28,6 +28,7 @@ QEvent.qth
 QEventLoop.qth
 QFile.qth
 QFileInfo.qth
+QFileSystemWatcher.qth
 QGenericArgument.qth
 QGenericReturnArgument.qth
 QIODevice.qth
