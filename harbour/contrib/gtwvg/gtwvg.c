@@ -3660,10 +3660,16 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             case HB_GTS_SETPOSITION:
             {
+               RECT rect = { 0,0,0,0 };
+               GetWindowRect( pWVT->hWnd, &rect );
+
+               pInfo->pResult = hb_itemNew( NULL );
+               hb_arrayNew( pInfo->pResult, 2 );
+               hb_arraySetNI( pInfo->pResult, 1, rect.left );
+               hb_arraySetNI( pInfo->pResult, 2, rect.top );
+
                if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY ) )
                {
-                  RECT rect = { 0,0,0,0 };
-                  GetWindowRect( pWVT->hWnd, &rect );
                   hb_retl( SetWindowPos( pWVT->hWnd, NULL,
                                          hb_arrayGetNI( pInfo->pNewVal2, 1 ),
                                          hb_arrayGetNI( pInfo->pNewVal2, 2 ),
