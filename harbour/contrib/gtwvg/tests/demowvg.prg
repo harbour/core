@@ -172,10 +172,7 @@ PROCEDURE Main()
    @ 17, nColGet GET cAdd3
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99"
 
-#if 0   /* Suitable when whole window is subject to this protocol */
-   aEval( GetList, {|oGet| Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
-   SetAppWindow():refresh()
-#endif
+   WvgSetAppWindow():refresh()
 
    READ
 
@@ -197,7 +194,7 @@ PROCEDURE Main()
 
 //-------------------------------------------------------------------//
 
-Function HB_GTSYS()
+FUNCTION HB_GTSYS()
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
@@ -391,7 +388,7 @@ FUNCTION WvtPartialScreen()
 
 //-------------------------------------------------------------------//
 
-function WvtLines()
+FUNCTION WvtLines()
    LOCAL scr        := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL clr        := SetColor( "N/W" )
    LOCAL nRows      := maxrow()

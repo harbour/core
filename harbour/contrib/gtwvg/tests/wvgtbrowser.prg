@@ -359,7 +359,7 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
    FOR i := 1 TO oBrw:colCount
       oXbp:addItem( oBrw:getColumn( i ):heading )
    NEXT
-   oXbp:setData( 3 )
+   oXbp:setData( 1 )
    oXbp:tooltipText := "Click on a field name to make it active!"
 
    RETURN oXbp
@@ -394,7 +394,6 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
    FOR i := 1 TO len( aIdx )
       oXbp:addItem( aIdx[ i ] )
    NEXT
-   oXbp:setData( 3 )
    oXbp:tooltipText := "Click on an index to order database!"
 
    RETURN oXbp
@@ -442,7 +441,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {|m1,m2,o| m1:=m2, oCom:navigate( trim( o:getData() ) ) }
-   oXbp:tooltipText := "Type in a http:// address and press ENTER"
+   oXbp:tooltipText := "Type-in a http:// address and press ENTER"
    oXbp:setData( "http://hbide.vouch.info/" )
 
    RETURN { oLbl, oXbp }
@@ -534,14 +533,14 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
    oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom+1 ) }, {|| -( oBrw:nLeft ) } }, ;
-                                         { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
+                                        { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
    oHBar:range := { 1, oBrw:colCount }
    oHBar:type  := WVGSCROLL_HORIZONTAL
    oHBar:create()
-   oHBar:scroll := {|mp1| oBrw:colPos := mp1[ 1 ], oBrw:refreshAll(), oBrw:forceStable() }
+   oHBar:scroll := {|mp1| oBrw:colPos := mp1[ 1 ], oBrw:refreshCurrent(), oBrw:forceStable() }
 
    oVBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nTop ) }, {|| -( oBrw:nRight+1 ) } }, ;
-                                     { {|| -( oBrw:nBottom-oBrw:nTop+1 ) }, {|| -( 2 ) } } )
+                                        { {|| -( oBrw:nBottom-oBrw:nTop+1 ) }, {|| -( 2 ) } } )
    oVBar:range := { 1, LastRec() }
    oVBar:type  := WVGSCROLL_VERTICAL
    oVBar:create()
@@ -832,12 +831,16 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
-   LOCAL nCmd, nPos
 
-   nCmd := mp1[ 2 ]
-   nPos := mp1[ 1 ]
+   SWITCH mp1[ 2 ]
 
-   SWITCH nCmd
+   CASE WVGSB_TOP
+      oBrowse:goTop()
+      EXIT
+
+   CASE WVGSB_BOTTOM
+      oBrowse:goBottom()
+      EXIT
 
    CASE WVGSB_NEXTPOS
       oBrowse:down()
@@ -848,15 +851,17 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
       EXIT
 
    CASE WVGSB_NEXTPAGE
-      oBrowse:pageDown()
+      OrdKeyGoTo( mp1[ 1 ] )
+      oBrowse:refreshAll()
       EXIT
 
    CASE WVGSB_PREVPAGE
-      oBrowse:pageUp()
+      OrdKeyGoTo( mp1[ 1 ] )
+      oBrowse:refreshAll()
       EXIT
 
-   CASE WVGSB_SLIDERTRACK
-      OrdKeyGoTo( nPos )
+   CASE WVGSB_ENDTRACK
+      OrdKeyGoTo( mp1[ 1 ] )
       oBrowse:refreshAll()
       EXIT
 
@@ -864,7 +869,8 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
    oBrowse:forceStable()
 
-   RETURN nil
+   RETURN NIL
+
 
 /*----------------------------------------------------------------------*/
 /*                   For brosers inside WvtDialog()                     */
