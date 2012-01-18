@@ -1811,7 +1811,7 @@
 #define QPrintPreviewWidget_AllPagesView          2      // A view mode where all the pages in the preview is viewed.
 
 //enum QPrintPreviewWidget::ZoomMode
-//This enum is used to describe zoom mode of the preview widget.Constant	Value	Description
+//This enum is used to describe zoom mode of the preview widget.Constant   Value   Description
 //
 #define QPrintPreviewWidget_CustomZoom            0      // The zoom is set to a custom zoom value.
 #define QPrintPreviewWidget_FitToWidth            1      // This mode fits the current page to the width of the view.
@@ -2331,6 +2331,23 @@
 #define QAbstractSpinBox_UpDownArrows                        0     // Little arrows in the classic style.
 #define QAbstractSpinBox_PlusMinus                           1     // + and - symbols.
 #define QAbstractSpinBox_NoButtons                           2     // Don't display buttons.
+
+/* QtDeclarative Constants */
+#define QDeclarativeView_SizeViewToRootObject                0     // The view resizes with the root item in the QML.
+#define QDeclarativeView_SizeRootObjectToView                1     // The view will automatically resize the root item to the size of the view.
+
+#define QDeclarativeView_Null                                0     // This QDeclarativeView has no source set.
+#define QDeclarativeView_Ready                               1     // This QDeclarativeView has loaded and created the QML component.
+#define QDeclarativeView_Loading                             2     // This QDeclarativeView is loading network data.
+#define QDeclarativeView_Error                               3     // One or more errors has occurred. Call errors() to retrieve a list of errors.
+
+#define QDeclarativeComponent_Null                           0     // This QDeclarativeComponent has no data. Call loadUrl() or setData() to add QML content.
+#define QDeclarativeComponent_Ready                          1     // This QDeclarativeComponent is ready and create() may be called.
+#define QDeclarativeComponent_Loading                        2     // This QDeclarativeComponent is loading network data.
+#define QDeclarativeComponent_Error                          3     // An error has occurred. Call errors() to retrieve a list of {QDeclarativeError}{errors}.
+
+#define QDeclarativeEngine_CppOwnership                      0     // The object is owned by C++ code, and will never be deleted by QML. The JavaScript destroy() method cannot be used on objects with CppOwnership. This option is similar to QScriptEngine::QtOwnership.
+#define QDeclarativeEngine_JavaScriptOwnership               1     // The object is owned by JavaScript. When the object is returned to QML as the return value of a method call or property access, QML will delete the object if there are no remaining JavaScript references to it and it has no QObject::parent(). This option is similar to QScriptEngine::ScriptOwnership.
 
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
