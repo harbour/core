@@ -452,6 +452,16 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       ENDIF
       aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
 
+   CASE nEvent == HB_GTE_KEYTOITEM
+      IF xParams[ 3 ] == ::hWnd
+         RETURN ::handleEvent( HB_GTE_KEYTOITEM, xParams )
+      ELSE
+         oObj := ::findObjectByHandle( xParams[ 3 ] )
+         IF hb_isObject( oObj )
+            RETURN oObj:handleEvent( HB_GTE_KEYTOITEM, xParams )
+         ENDIF
+      ENDIF
+
    ENDCASE
 
    RETURN nReturn
@@ -567,6 +577,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 #endif
+
+   CASE WM_VKEYTOITEM
+   CASE WM_CHARTOITEM
+      ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } )
+      EXIT
 
    OTHERWISE
       IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } ) == EVENT_HANDELLED

@@ -1380,7 +1380,6 @@ METHOD WvgWindow:createControl()
       ::hWnd := hWnd
       ::pWnd := WIN_N2P( hWnd )
       ::sendMessage( WM_SETFONT, WVG_GetStockObject( DEFAULT_GUI_FONT ), 1 )
-
       ::hWndTT := WVG_CreateTooltipWindow( ::hWnd )
    ENDIF
 

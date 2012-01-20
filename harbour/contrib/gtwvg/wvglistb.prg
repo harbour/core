@@ -100,7 +100,7 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex-1, 0 )
 
    METHOD   addItem( cItem )                      INLINE  WVG_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
-   METHOD   clear()                               VIRTUAL
+   METHOD   clear()
    METHOD   delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex-1, 0 )
    METHOD   getItem( nIndex )                     INLINE  WVG_LBGetText( ::hWnd, nIndex-1 )
    METHOD   getTabstops()                         VIRTUAL
@@ -138,13 +138,14 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + WS_CLIPSIBLINGS
+   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + WS_CLIPSIBLINGS + LBS_NOINTEGRALHEIGHT + LBS_WANTKEYBOARDINPUT
    ::exStyle     := WS_EX_CLIENTEDGE //+ WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
    ::className   := "LISTBOX"
    ::objType     := objTypeListBox
@@ -221,7 +222,21 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
+      ENDIF
 
+   CASE nMessage == HB_GTE_KEYTOITEM
+      IF aNM[ 1 ] == K_ENTER
+         IF ::isParentCrt()
+            ::oParent:setFocus()
+         ENDIF
+         IF hb_isBlock( ::sl_itemSelected )
+            eval( ::sl_itemSelected, NIL, NIL, self )
+         ENDIF
+         IF ::isParentCrt()
+            IF ::pointerFocus
+               ::setFocus()
+            ENDIF
+         ENDIF
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -281,6 +296,14 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
+
+/*----------------------------------------------------------------------*/
+
+METHOD WvgListBox:clear()
+
+   ::sendMessage( LB_RESETCONTENT, 0, 0 )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
