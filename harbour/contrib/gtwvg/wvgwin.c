@@ -244,13 +244,6 @@ HB_FUNC( WVG_HIWORD )
 }
 
 /*----------------------------------------------------------------------*/
-#if 0
-HB_FUNC( WVG_MULDIV )
-{
-   hb_retnl( MulDiv( hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) );
-}
-#endif
-/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_GETDIALOGBASEUNITS )
 {
@@ -774,6 +767,27 @@ HB_FUNC( WVG_APPENDMENU )
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC( WVG_INSERTMENU )
+{
+   UINT flags = hb_parni( 3 );
+
+   if( HB_ISCHAR( 5 ) )
+   {
+      void * hBuffer;
+      hb_retl( InsertMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ),
+                           flags, ( HB_PTRDIFF ) hb_parnint( 4 ), HB_PARSTR( 5, &hBuffer, NULL ) ) );
+      hb_strfree( hBuffer );
+   }
+   else /* It is a SEPARATOR or Submenu */
+   {
+      LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
+      hb_retl( InsertMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ),  ( UINT ) hb_parni( 2 ),
+                           flags, ( HB_PTRDIFF ) hb_parnint( 4 ), ( LPCTSTR ) lpszCaption ) );
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
 HB_FUNC( WVG_DELETEMENU )
 {
    hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
@@ -798,6 +812,43 @@ HB_FUNC( WVG_ENABLEMENUITEM )
 HB_FUNC( WVG_CHECKMENUITEM )
 {
    hb_retni( CheckMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_ISMENUITEMCHECKED )
+{
+   BOOL lSuccess;
+   MENUITEMINFO lpmii;
+
+   memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
+   lpmii.cbSize = sizeof( MENUITEMINFO );
+   lpmii.fMask = MIIM_STATE;
+
+   lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
+   if( lSuccess )
+   {
+      hb_retl( lpmii.fState & MFS_CHECKED ? TRUE : FALSE );
+   }
+   else
+      hb_retl( FALSE );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_ISMENUITEMENABLED )
+{
+   BOOL lSuccess;
+   MENUITEMINFO lpmii;
+
+   lpmii.cbSize = sizeof( MENUITEMINFO );
+   lpmii.fMask = MIIM_STATE;
+
+   lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
+   if( lSuccess )
+      hb_retl( lpmii.fState & MFS_DISABLED ? FALSE : TRUE );
+   else
+      hb_retl( TRUE );
 }
 
 /*----------------------------------------------------------------------*/

@@ -150,7 +150,7 @@ METHOD DataRef:setData( xValue, mp2 )
       ::sendMessage( BM_SETCHECK, iif( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
 
    CASE ::className == "LISTBOX"    /* Single Selection */
-      IF !empty( ::sl_editBuffer )
+      IF hb_isNumeric( ::sl_editBuffer )
          RETURN WVG_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
       RETURN .f.

@@ -222,6 +222,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
+
+      ELSEIF aNM[ 1 ] == LBN_KILLFOCUS
+         ::killInputFocus()
+
+      ELSEIF aNM[ 1 ] == LBN_SETFOCUS
+         ::setInputFocus()
+
       ENDIF
 
    CASE nMessage == HB_GTE_KEYTOITEM

@@ -102,7 +102,7 @@ PROCEDURE Main()
    LOCAL nRgt      := 75
    LOCAL cLabel    := "Harbour simulated GUI."
    LOCAL aObjects  := WvtSetObjects( {} )
-
+   LOCAL oLastMenu
    LOCAL oError := ErrorBlock( {|o| MyError( o ) } )
 
    SET DATE BRITISH
@@ -119,7 +119,12 @@ PROCEDURE Main()
    Wvt_ShowWindow( SW_RESTORE )
 
    /* Xbase++ compatible menu protocol */
-   BuildMainMenu()
+   oLastMenu := BuildMainMenu()
+   oLastMenu:disableItem( 11 )
+   oLastMenu:checkItem( 1 )
+   oLastMenu:insItem( 11, { "This", {|| Wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
+                                                                  iif( oLastMenu:isItemEnabled( 12 ), " Yes", " No" ) ) } } )
+
    SetMode( maxrow()+1, maxcol()+1 )  /* Needed to accomodate attached menu */
 
    SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
@@ -529,7 +534,7 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "All Widgets"                 , {|| Hb_ThreadStart( {|| ExeQTWidgets() } ) } )
    #endif
 
-   RETURN NIL
+   RETURN oMenu  /* The last submenu item */
 
 //-------------------------------------------------------------------//
 
