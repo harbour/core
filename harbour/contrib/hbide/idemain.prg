@@ -541,7 +541,7 @@ METHOD HbIde:create( aParams )
 
    qPixmap := QPixmap( ":/resources" + hb_ps() + "hbidesplash.png" )
    qSplash := QSplashScreen()
- * qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
+   qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
@@ -626,7 +626,7 @@ METHOD HbIde:create( aParams )
    ::oDK:buildToolBarPanels()
    /* Main Menu */
    ::oAC:buildMainMenu()
-
+//::oDlg:show()
    /* Initialize ChangeLog Manager */
    ::oCL := IdeChangeLog():new():create( Self )
 
@@ -664,6 +664,8 @@ METHOD HbIde:create( aParams )
 
    /* Console Editor */
    ::oCUI := IdeConsole():new():create( Self )
+   
+   ::oDlg:show()     /* Shifted here - it gives the effect that time opening hbIDE is much less */
 
    /* Fill various elements of the IDE */
    ::oPM:populate()
@@ -698,7 +700,8 @@ METHOD HbIde:create( aParams )
    ::oHM:refresh()
 
    ::oDK:animateComponents( val( ::oINI:cIdeAnimated ) )
-   ::oSetup:setSystemStyle( ::oINI:cIdeTheme )
+
+   // ::oSetup:setSystemStyle( ::oINI:cIdeTheme )  /* This causes 2.5 seconds delay */
 
    ::oDK:setViewInitials()
 
@@ -713,8 +716,8 @@ METHOD HbIde:create( aParams )
    ENDIF
 
    ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
-
    ::oDlg:Show()
+
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
       ::oDockPT:hide()
       ::oDockED:hide()
@@ -726,6 +729,7 @@ METHOD HbIde:create( aParams )
       ::oDK:setView( "Main" )
       ::oDK:setView( cView )
    ENDIF
+
    ::qTabWidget:setCurrentIndex( -1 )
    ::qTabWidget:setCurrentIndex( 0 )
    ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )

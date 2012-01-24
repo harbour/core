@@ -1049,9 +1049,11 @@ METHOD IdeDocks:setViewInitials()
       IF ::qTabWidget:count() == 1
          ::oEM:setSourceVisibleByIndex( 0 )
       ELSE
+#if 0         
          ::qTabWidget:setCurrentIndex( 0 )
          ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
          ::qTabWidget:setCurrentIndex( 0 )
+#endif          
       ENDIF
    NEXT
 

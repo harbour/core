@@ -2166,12 +2166,11 @@ METHOD IdeSetup:buildTree()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:setSystemStyle( cStyle )
-   LOCAL oApp, qFactory
+   LOCAL qFactory
 
    IF !empty( cStyle )
-      oApp     := QApplication()
       qFactory := QStyleFactory()
-      oApp:setStyle( qFactory:create( cStyle ) )
+      QApplication():setStyle( qFactory:create( cStyle ) )
    ENDIF
 
    RETURN Self
