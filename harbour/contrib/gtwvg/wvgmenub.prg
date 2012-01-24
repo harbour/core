@@ -133,7 +133,7 @@ CLASS wvgMenuBar INHERIT wvgWindow
    METHOD   onMenuKey( xParam )                   SETGET
 
    PROTECTED:
-   METHOD   putItem( aItem, nPos )
+   METHOD   putItem( aItem, nPos, lInsert )
 
    ENDCLASS
 
@@ -189,7 +189,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
       ::oParent:oMenu := Self
 
-      ::pMenu := win_n2p( ::hMenu )
+      ::pMenu := WIN_N2P( ::hMenu )
    ENDIF
 
    RETURN Self
@@ -281,13 +281,15 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
       nAttrib  := p4
    ENDIF
 
-   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1 )
+   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1, .t. )
 
 /*----------------------------------------------------------------------*/
 
-METHOD WvgMenuBar:putItem( aItem, nPos )
+METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
+
+   DEFAULT lInsert TO .t.
 
    ASize( aItem, 4 )
 
@@ -295,6 +297,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos )
    bAction  := aItem[ 2 ]
    nStyle   := aItem[ 3 ]
    nAttrib  := aItem[ 4 ]
+
 
    /* xCaption : NIL | cPrompt | ncResource | oMenu */
    SWITCH valtype( xCaption )
@@ -329,12 +332,24 @@ METHOD WvgMenuBar:putItem( aItem, nPos )
                       iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
    ELSE
       nItemIndex := nPos
-      ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .t. )
-      WVG_InsertMenu( ::hMenu, ;
-                      nItemIndex - 1, ;
-                      aItem[ 1 ] + MF_BYPOSITION, ;
-                      aItem[ 2 ], ;
-                      iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
+      IF lInsert
+         ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .t. )
+         WVG_InsertMenu( ::hMenu, ;
+                         nItemIndex - 1, ;
+                         aItem[ 1 ] + MF_BYPOSITION, ;
+                         aItem[ 2 ], ;
+                         iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
+      ELSE
+         IF valtype( xCaption ) == "C"
+            aItem[ 2 ] := ::aMenuItems[ nItemIndex, 2 ]
+         ENDIF
+         ::aMenuItems[ nItemIndex ] := aItem
+         WVG_SetMenuItem( ::hMenu, ;
+                          nItemIndex - 1, ;
+                          aItem[ 2 ], ;
+                          iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ),;
+                          valtype( xCaption ) == "C" )
+      ENDIF
    ENDIF
 
    IF ++::nPass == 1
@@ -442,7 +457,7 @@ METHOD WvgMenuBar:getItem( nItemNum )
 
 METHOD WvgMenuBar:insItem( nItemNum, aItem )
 
-   ::putItem( aItem, nItemNum )
+   ::putItem( aItem, nItemNum, .t. )
 
    RETURN Self
 
@@ -472,10 +487,7 @@ METHOD WvgMenuBar:selectItem( nItemNum )
 
 METHOD WvgMenuBar:setItem( nItemNum, aItem )
 
-   HB_SYMBOL_UNUSED( nItemNum )
-   HB_SYMBOL_UNUSED( aItem )
-
-   RETURN Self
+   RETURN ::putItem( aItem, nItemNum, .f. )
 
 /*----------------------------------------------------------------------*/
 /*                         Callback Methods                             */

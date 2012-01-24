@@ -857,6 +857,27 @@ HB_FUNC( WVG_ISMENUITEMENABLED )
 
 /*----------------------------------------------------------------------*/
 
+HB_FUNC( WVG_SETMENUITEM )
+{
+   BOOL lSuccess;
+   MENUITEMINFO lpmii;
+   void * hText = NULL;
+
+   memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
+   lpmii.cbSize = sizeof( MENUITEMINFO );
+   lpmii.fMask = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
+   if( hb_parl( 5 ) )
+      lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
+
+   lSuccess = SetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
+   hb_retl( lSuccess );
+
+   if( hText )
+      hb_strfree( hText );
+}
+
+/*----------------------------------------------------------------------*/
+
 HB_FUNC( WVG_DRAWMENUBAR )
 {
    DrawMenuBar( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) );

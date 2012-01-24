@@ -122,8 +122,11 @@ PROCEDURE Main()
    oLastMenu := BuildMainMenu()
    oLastMenu:disableItem( 11 )
    oLastMenu:checkItem( 1 )
-   oLastMenu:insItem( 11, { "This", {|| Wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
-                                                                  iif( oLastMenu:isItemEnabled( 12 ), " Yes", " No" ) ) } } )
+   oLastMenu:insItem( 11, { "I am inserted later !", ;
+                            {|| Wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
+                                                   iif( oLastMenu:isItemEnabled( 12 ), " Yes", " No" ) ) } } )
+
+   oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| Wvg_MessageBox( , "Hi" ) } } )
 
    SetMode( maxrow()+1, maxcol()+1 )  /* Needed to accomodate attached menu */
 
