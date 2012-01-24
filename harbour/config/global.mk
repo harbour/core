@@ -163,7 +163,7 @@ ifeq ($(HB_INIT_DONE),)
       # 'install' is required to create import libraries
       ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
          export HB_INSTALL_IMPLIB := no
-         $(warning ! Warning: HB_INSTALL_IMPLIB option works only when 'install' is requested.)
+         $(warning ! Warning: HB_INSTALL_IMPLIB option has an effect only if 'install' is requested.)
       endif
    endif
 endif
