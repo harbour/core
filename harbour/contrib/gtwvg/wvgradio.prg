@@ -82,7 +82,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
+CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""

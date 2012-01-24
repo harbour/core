@@ -76,7 +76,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgListBox  INHERIT  WvgWindow, DataRef
+CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
    DATA     adjustHeight                          INIT .F.
    DATA     horizScroll                           INIT .F.

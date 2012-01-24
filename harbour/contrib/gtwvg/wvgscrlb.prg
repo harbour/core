@@ -116,7 +116,7 @@ typedef struct tagRECT { ;
 #endif
 /*----------------------------------------------------------------------*/
 
-CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
+CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
    DATA     autoTrack                             INIT .t.
    DATA     range                                 INIT {0,1}

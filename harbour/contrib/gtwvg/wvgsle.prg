@@ -76,7 +76,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgSLE INHERIT WvgWindow, DataRef
+CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
    DATA     align                                 INIT WVGSLE_LEFT
    DATA     autoKeyboard                          INIT .T.

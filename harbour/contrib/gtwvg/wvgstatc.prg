@@ -106,7 +106,6 @@ METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT */
 
    ::style       := WS_CHILD + WS_CLIPCHILDREN
-   ::exStyle     := WS_EX_NOPARENTNOTIFY
    ::className   := "STATIC"
    ::objType     := objTypeStatic
 
@@ -265,12 +264,11 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
-#if 0   /* It should never reach here */
    CASE nMessage == HB_GTE_ANY
       IF ::isParentCrt()
 
       ENDIF
-#endif
+
 
    ENDCASE
 

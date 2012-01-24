@@ -377,7 +377,6 @@ STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
 STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
    LOCAL oXbp, i, cKey, aIdx := {}
 
-
    FOR i := 1 TO 10
       IF ( cKey := IndexKey( i ) ) == ""
          EXIT
@@ -385,11 +384,12 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
       aadd( aIdx, OrdName( i ) + ": " + cKey )
    NEXT
 
-   oXbp := WvgListBox():new( oCrt )
+   oXbp := WvgComboBox():new( oCrt )
+   oXbp:type := WVGCOMBO_DROPDOWN
    oXbp:create( , , { -18,-1 }, { -5, -10 }, , .t. )
    oXbp:setColorFG( "W+" )
    oXbp:setColorBG( "B*" )
-   oXbp:itemMarked := {|m1,m2,o| m1 := m2, BrwSetThisOrder( oBrw, max( 0, ascan( aIdx, o:getCurItem() )-1 ) ) }
+   oXbp:itemMarked := {|m1,m2,o| m1 := m2, BrwSetThisOrder( oBrw, o:XbpListBox:getData()-1 ) }
    oXbp:addItem( "Natural Order" )
    FOR i := 1 TO len( aIdx )
       oXbp:addItem( aIdx[ i ] )

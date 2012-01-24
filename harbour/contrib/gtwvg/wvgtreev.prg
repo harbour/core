@@ -76,7 +76,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
+CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
    DATA     alwaysShowSelection                   INIT .F.
    DATA     hasButtons                            INIT .F.

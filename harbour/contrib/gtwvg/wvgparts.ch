@@ -216,6 +216,10 @@
 
 #define WVGTOOLBAR_BUTTON_SEPARATOR               4
 
+#define WVGCOMBO_SIMPLE                           1
+#define WVGCOMBO_DROPDOWN                         2
+#define WVGCOMBO_DROPDOWNLIST                     3
+
 #endif /* #ifndef _WVG_CH */
 
 /*----------------------------------------------------------------------*/

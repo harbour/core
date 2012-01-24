@@ -76,7 +76,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
+CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""

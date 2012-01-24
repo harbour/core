@@ -82,7 +82,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgMLE INHERIT WvgWindow, DataRef
+CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
    DATA     border                                INIT    .T.
    DATA     editable                              INIT    .T.

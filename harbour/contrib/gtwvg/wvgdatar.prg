@@ -76,13 +76,7 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
-CLASS DataRef
+CLASS WvgDataRef
 
    DATA     changed                               INIT .F.
    DATA     dataLink                              INIT NIL
@@ -109,19 +103,40 @@ CLASS DataRef
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:new()
+METHOD WvgDataRef:new()
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:getData()
+METHOD WvgDataRef:getData()
 
    DO CASE
+   CASE ::className == "COMBOBOX"
+      IF hb_isObject( ::XbpListBox ) .AND. hb_isBlock( ::XbpListBox:dataLink )
+         ::sl_editBuffer := ::XbpListBox:getData()
+      ELSEIF hb_isObject( ::XbpSLE ) .AND. hb_isBlock( ::XbpSLE:dataLink )
+         ::sl_editBuffer := ::XbpSLE:getData()
+      ELSEIF hb_isObject( ::XbpListBox )
+         ::sl_editBuffer := ::XbpListBox:getData()
+      ENDIF
+
    CASE ::className == "EDIT"
       ::sl_editBuffer := WVG_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+
    CASE ::className == "LISTBOX"
       ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd )+ 1
+
+#if 0 /* This is contrary the documentation of Xbase++ */
+      IF ::oParent:className == "COMBOBOX"
+         ::sl_editBuffer := {}
+         FOR i := 1 TO ::numItems()
+            aadd( ::sl_editBuffer, ::getItem( i ) )
+         NEXT
+      ELSE
+         ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd )+ 1
+      ENDIF
+#endif
    ENDCASE
 
    IF hb_isBlock( ::dataLink )
@@ -132,16 +147,15 @@ METHOD DataRef:getData()
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:setData( xValue, mp2 )
+METHOD WvgDataRef:setData( xValue, mp2 )
+   LOCAL s
 
    HB_SYMBOL_UNUSED( mp2 )
 
    IF hb_isBlock( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink  )
-
    ELSEIF xValue <> NIL
       ::sl_editBuffer := xValue
-
    ENDIF
 
    DO CASE
@@ -153,7 +167,6 @@ METHOD DataRef:setData( xValue, mp2 )
       IF hb_isNumeric( ::sl_editBuffer )
          RETURN WVG_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
-      RETURN .f.
 
    CASE ::className == "SysTreeView32"
       IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
@@ -170,19 +183,28 @@ METHOD DataRef:setData( xValue, mp2 )
          WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .t. )
       ENDIF
 
+   CASE ::className == "COMBOBOX"
+      IF hb_isArray( ::sl_editBuffer )
+         // NOT sure which way it should behave.
+         // XBase++ documentation IN this regard is crappy.
+         FOR EACH s IN ::sl_editBuffer
+            ::addItem( s )
+         NEXT
+      ENDIF
+
    ENDCASE
 
    RETURN ::sl_editBuffer
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:undo()
+METHOD WvgDataRef:undo()
 
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
-METHOD DataRef:validate( xParam )
+METHOD WvgDataRef:validate( xParam )
 
    IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
       RETURN eval( ::sl_validate, self )

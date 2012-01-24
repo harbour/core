@@ -833,6 +833,10 @@
 #define CB_GETDROPPEDWIDTH                        351
 #define CB_SETDROPPEDWIDTH                        352
 #define CB_INITSTORAGE                            353
+#define CB_MULTIPLEADDSTRING                      0x0163
+#define CB_GETCOMBOBOXINFO                        0x0164
+#define CB_MSGMAX                                 0x0165
+
 
 /*----------------------------------------------------------------------*/
 /*

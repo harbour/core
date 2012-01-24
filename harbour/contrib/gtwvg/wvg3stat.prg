@@ -82,7 +82,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS Wvg3State  INHERIT  WvgWindow, DataRef
+CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ""
