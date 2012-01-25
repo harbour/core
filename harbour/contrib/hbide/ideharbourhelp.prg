@@ -229,12 +229,19 @@ METHOD IdeHarbourHelp:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:create( oIde )
-
+   LOCAL cPath
+   
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
    ::cPathInstall := ::oINI:getHarbourPath()
-
+   IF empty( ::cPathInstall )
+      hb_fNameSplit( hb_dirBase(), @cPath )
+      IF hb_fileExists( cPath + hb_ps() + "hbmk2.exe" )
+         ::cPathInstall := cPath + ".." + hb_ps()
+      ENDIF    
+   ENDIF 
+      
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1144,7 +1151,7 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
       IF len( aFn ) > 0
          FOR EACH oFunc IN aFn
             IF hb_isObject( oFunc )
-               aadd( aHtm, '   <br>' + oFunc:cName + '</br>' )
+               aadd( aHtm, '   <br>' + hbide_arrayToMemoHtml( oFunc:aSyntax ) + '</br>' )
             ENDIF
          NEXT
       ELSE
