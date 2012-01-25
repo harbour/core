@@ -203,7 +203,7 @@ METHOD IdeUpDown:destroy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//
+//           IdeSearchReplace - Extended Window at the bottom
 /*----------------------------------------------------------------------*/
 
 CLASS IdeSearchReplace INHERIT IdeObject
@@ -420,7 +420,7 @@ CLASS IdeFindReplace INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD onClickReplace()
+   METHOD onClickReplace( nFrom )
    METHOD replaceSelection( cReplWith )
    METHOD replace()
    METHOD onClickFind( nFrom )
@@ -470,21 +470,20 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oUI:connect( QEvent_Close, {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
-   ::oUI:q_buttonFind   :connect( "clicked()", {|| ::onClickFind()    } )
-   ::oUI:q_buttonReplace:connect( "clicked()", {|| ::onClickReplace() } )
-   ::oUI:q_buttonClose  :connect( "clicked()", {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
-   ::oUI:q_comboFindWhat:connect( "editTextChanged(QString)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
+   ::oUI:q_buttonFind   :connect( "clicked()"                   , {| | ::onClickFind()    } )
+   ::oUI:q_buttonReplace:connect( "clicked()"                   , {| | ::onClickReplace() } )
+   ::oUI:q_buttonClose  :connect( "clicked()"                   , {| | ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
+   ::oUI:q_comboFindWhat:connect( "editTextChanged(QString)"    , {| | ::oUI:q_radioEntire:setChecked( .t. ) } )
    ::oUI:q_comboFindWhat:connect( "currentIndexChanged(QString)", {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
-   ::oUI:q_checkListOnly:connect( "stateChanged(int)", {|p| ;
-                                        ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
-                                   iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
+   ::oUI:q_checkListOnly:connect( "stateChanged(int)"           , {|p| ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
+                                                                             iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 
    ::qLineEdit := ::oUI:q_comboFindWhat:lineEdit()
    ::qLineEdit:connect( "returnPressed()", {|| iif( empty( ::cText ), NIL, ;
-                                   ::qLineEdit:setText( ::cText ) ), ::cText := "", ::onClickFind( 1 ) } )
+                                                  ::qLineEdit:setText( ::cText ) ), ::cText := "", ::onClickFind( 1 ) } )
 
    ::qReplaceEdit := ::oUI:q_comboReplaceWith:lineEdit()
-   ::qReplaceEdit:connect( "returnPressed()", {|| ::onClickReplace() } )
+   ::qReplaceEdit:connect( "returnPressed()", {|| ::onClickReplace( 1 ) } )
 
    RETURN Self
 
@@ -581,9 +580,12 @@ METHOD IdeFindReplace:find( lWarn )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindReplace:onClickReplace()
+METHOD IdeFindReplace:onClickReplace( nFrom )
 
-   ::updateFindReplaceData( "replace" )
+   DEFAULT nFrom TO 0  // Click on Find Button
+   IF nFrom == 0
+      ::updateFindReplaceData( "replace" )
+   ENDIF
 
    IF ::oUI:q_comboReplaceWith:isEnabled()
       ::replace()
@@ -609,6 +611,7 @@ METHOD IdeFindReplace:replaceSelection( cReplWith )
       qCursor:setPosition( nB + len( cReplWith ) )
       ::qCurEdit:setTextCursor( qCursor )
       ::oEM:getEditObjectCurrent():clearSelection()
+      qCursor:endEditBlock()
    ENDIF
 
    RETURN Self
@@ -741,6 +744,7 @@ CLASS IdeFindInFiles INHERIT IdeObject
    METHOD execEvent( cEvent, p )
    METHOD execContextMenu( p )
    METHOD buildUI()
+   METHOD replaceAll()
 
    ENDCLASS
 
@@ -899,6 +903,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
       EXIT
 
    CASE "buttonRepl"
+      ::replaceAll()
       EXIT
 
    CASE "buttonStop"
@@ -960,6 +965,75 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeFindInFiles:replaceAll()
+   LOCAL nL, nB, qCursor, aFind
+   LOCAL isOpen := .f.
+   LOCAL isModified := .f.
+   LOCAL cSource := ""
+   
+   IF empty( ::cReplWith  := ::oUI:q_comboRepl:currentText() )
+      RETURN Self 
+   ENDIF 
+   nL := len( ::cReplWith )
+   
+   IF ! hbide_getYesNo( "Starting REPLACE operation", "No way to interrupt", "Critical" )
+      RETURN Self 
+   ENDIF 
+      
+   FOR EACH aFind IN ::aInfo
+      IF aFind[ 1 ] == -2
+         IF ! ( cSource == aFind[ 2 ] )
+            IF ! empty( cSource )
+               IF ! isOpen 
+                  ::oSM:closeSource( , .f., .f., .f. )
+               ELSE 
+                  IF ! isModified
+                     ::oSM:saveSource()
+                  ENDIF    
+               ENDIF    
+            ENDIF    
+            cSource := aFind[ 2 ]
+            IF ( isOpen := ::oEM:isOpen( cSource ) )
+               ::oEM:setSourceVisible( cSource )
+               isModified := ::oEM:getEditorCurrent():qDocument:isModified()
+            ELSE 
+               ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )   
+            ENDIF    
+         ENDIF 
+                  
+         qCursor := ::oIde:qCurEdit:textCursor()
+         qCursor:setPosition( 0 )
+         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, aFind[ 3 ] - 1 )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, aFind[ 4 ] - 1 )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, len( aFind[ 5 ] ) )
+         ::qCurEdit:setTextCursor( qCursor )
+         
+         nB := qCursor:position()
+      
+         qCursor:beginEditBlock()
+         qCursor:removeSelectedText()
+         qCursor:insertText( ::cReplWith )
+         qCursor:setPosition( nB + nL )
+         ::qCurEdit:setTextCursor( qCursor )
+         ::oEM:getEditObjectCurrent():clearSelection()
+         qCursor:endEditBlock()
+      ENDIF    
+   NEXT 
+         
+   IF ! empty( cSource )
+      IF ! isOpen 
+         ::oSM:closeSource( , .f., .f., .f. )
+      ELSE 
+         IF ! isModified
+            ::oSM:saveSource()
+         ENDIF    
+      ENDIF    
+   ENDIF    
+      
+   RETURN Self 
+   
+/*----------------------------------------------------------------------*/
+   
 METHOD IdeFindInFiles:execContextMenu( p )
    LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
 

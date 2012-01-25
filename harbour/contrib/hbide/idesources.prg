@@ -80,7 +80,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD saveSource( nTab, lCancel, lAs )
    METHOD saveNamedSource( cSource )
    METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
-   METHOD closeSource( nTab, lCanCancel, lCanceled )
+   METHOD closeSource( nTab, lCanCancel, lCanceled, lAsk )
    METHOD closeAllSources( lCanCancel )
    METHOD closeAllOthers( nTab )
    METHOD saveAllSources()
@@ -215,7 +215,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
    LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFileTemp
    LOCAL cFileToSave, cFile, cExt, cNewFile, oItem
 
-   DEFAULT nTab TO ::EM:getTabCurrent()
+   DEFAULT nTab TO ::oEM:getTabCurrent()
    DEFAULT lAs  TO .F.
 
    lCancel := .F.
@@ -293,11 +293,12 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
+METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled, lAsk )
    LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
-
+   DEFAULT lAsk TO .t.
+   
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
@@ -314,8 +315,11 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
          lSave := ( n == QMessageBox_Yes )
 
       ELSE
-         lSave := hbide_getYesNo( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
-
+         IF lAsk 
+            lSave := hbide_getYesNo( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
+         ELSE 
+            lSave := .t.
+         ENDIF    
       ENDIF
 
       IF lSave .AND. !( ::saveSource( nTab, @lCanceled ) )
