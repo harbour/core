@@ -456,17 +456,18 @@ REQUEST hbmk_KEYW
 #define _HBMK_hDEPTMACRO        138 /* Links to be created and pointing to the target */
 #define _HBMK_cC                139 /* C dialect */
 #define _HBMK_cCPP              140 /* C++ dialect */
+#define _HBMK_aLIB_BASE_WARN    141
 
-#define _HBMK_aArgs             141
-#define _HBMK_nArgTarget        142
-#define _HBMK_lPause            143
-#define _HBMK_nLevel            144
+#define _HBMK_aArgs             142
+#define _HBMK_nArgTarget        143
+#define _HBMK_lPause            144
+#define _HBMK_nLevel            145
 
-#define _HBMK_cHBX              145
+#define _HBMK_cHBX              146
 
-#define _HBMK_aGT               146
+#define _HBMK_aGT               147
 
-#define _HBMK_MAX_              146
+#define _HBMK_MAX_              147
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1270,6 +1271,22 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                on newer xhb versions, so for older versions, a dummy lib should
                be created. [vszakats] */
    ENDIF
+
+   hbmk[ _HBMK_aLIB_BASE_WARN ] := ArrayAJoin( {;
+      aLIB_BASE_EXTERN ,;
+      aLIB_BASE_DEBUG  ,;
+      aLIB_BASE_1      ,;
+      aLIB_BASE_1_MT   ,;
+      aLIB_BASE_2      ,;
+      aLIB_BASE_2_MT   ,;
+      aLIB_BASE_NULRDD ,;
+      aLIB_BASE_RDD    ,;
+      aLIB_BASE_RDD_MT ,;
+      aLIB_BASE_CPLR   ,;
+      aLIB_BASE_3      ,;
+      aLIB_BASE_3_MT   ,;
+      { cLIB_BASE_PCRE } ,;
+      { cLIB_BASE_ZLIB } } )
 
    hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] = <major><minor>[.<revision>] */
 
@@ -2731,12 +2748,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF ! Empty( cParam )
             cParam := PathSepToSelf( cParam )
             IF Left( cParam, 1 ) == "-"
-               AAdd( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cParam, 2 ) )
+               IF CheckLibParam( hbmk, SubStr( cParam, 2 ) )
+                  AAdd( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cParam, 2 ) )
+               ENDIF
             ELSE
-               IF _IS_AUTOLIBSYSPRE( cParam )
-                  AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
-               ELSE
-                  AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+               IF CheckLibParam( hbmk, cParam )
+                  IF _IS_AUTOLIBSYSPRE( cParam )
+                     AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
+                  ELSE
+                     AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -2904,10 +2925,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hb_FNameExt( cParamL ) == ".lib"
             cParam := FNameDirName( cParam )
          ENDIF
-         IF _IS_AUTOLIBSYSPRE( cParam )
-            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
-         ELSE
-            AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+         IF CheckLibParam( hbmk, cParam )
+            IF _IS_AUTOLIBSYSPRE( cParam )
+               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
+            ELSE
+               AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
+            ENDIF
          ENDIF
 
       CASE hb_FNameExt( cParamL ) == ".framework"
@@ -5203,7 +5226,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      hbmk_OutStd( hbmk, I_( "Harbour compiler command (embedded):" ) )
                   ENDIF
                ENDIF
-               OutStd( "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", hbmk[ _HBMK_nCmd_Esc ] ) +;
+               OutStd( "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) + ")" +;
                        " " + ArrayToList( aCommand ) + _OUT_EOL )
             ENDIF
 
@@ -5214,7 +5237,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (embedded). %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
-                        OutErr( "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", hbmk[ _HBMK_nCmd_Esc ] ) +;
+                        OutErr( "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) + ")" +;
                                 " " + ArrayToList( aCommand ) + _OUT_EOL )
                      ENDIF
                      IF ! hbmk[ _HBMK_lIGNOREERROR ]
@@ -6722,6 +6745,17 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC FUNCTION CheckLibParam( hbmk, cLibName )
+
+   cLibName := Lower( cLibName )
+
+   IF AScan( hbmk[ _HBMK_aLIB_BASE_WARN ], {| tmp | Lower( tmp ) == cLibName } ) > 0
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library: %1$s" ), cLibName ) )
+      RETURN .F.
+   ENDIF
+
+   RETURN .T.
 
 STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
    LOCAL cBaseDir
@@ -9224,12 +9258,16 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ELSE
                cItem := PathSepToSelf( cItem )
                IF Left( cItem, 1 ) == "-"
-                  AAddNewNotEmpty( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cItem, 2 ) )
+                  IF CheckLibParam( hbmk, SubStr( cItem, 2 ) )
+                     AAddNewNotEmpty( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cItem, 2 ) )
+                  ENDIF
                ELSE
-                  IF _IS_AUTOLIBSYSPRE( cItem )
-                     AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
-                  ELSE
-                     AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+                  IF CheckLibParam( hbmk, cItem )
+                     IF _IS_AUTOLIBSYSPRE( cItem )
+                        AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
+                     ELSE
+                        AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+                     ENDIF
                   ENDIF
                ENDIF
             ENDIF
