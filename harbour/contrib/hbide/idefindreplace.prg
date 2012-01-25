@@ -967,10 +967,11 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 
 METHOD IdeFindInFiles:replaceAll()
    LOCAL nL, nB, qCursor, aFind
+   LOCAL cSource := ""
+#if 0   
    LOCAL isOpen := .f.
    LOCAL isModified := .f.
-   LOCAL cSource := ""
-   
+#endif   
    IF empty( ::cReplWith  := ::oUI:q_comboRepl:currentText() )
       RETURN Self 
    ENDIF 
@@ -983,6 +984,7 @@ METHOD IdeFindInFiles:replaceAll()
    FOR EACH aFind IN ::aInfo
       IF aFind[ 1 ] == -2
          IF ! ( cSource == aFind[ 2 ] )
+#if 0            
             IF ! empty( cSource )
                IF ! isOpen 
                   ::oSM:closeSource( , .f., .f., .f. )
@@ -991,7 +993,7 @@ METHOD IdeFindInFiles:replaceAll()
                      ::oSM:saveSource()
                   ENDIF    
                ENDIF    
-            ENDIF    
+            ENDIF  
             cSource := aFind[ 2 ]
             IF ( isOpen := ::oEM:isOpen( cSource ) )
                ::oEM:setSourceVisible( cSource )
@@ -999,6 +1001,9 @@ METHOD IdeFindInFiles:replaceAll()
             ELSE 
                ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )   
             ENDIF    
+#endif              
+            cSource := aFind[ 2 ]
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )   
          ENDIF 
                   
          qCursor := ::oIde:qCurEdit:textCursor()
@@ -1019,7 +1024,7 @@ METHOD IdeFindInFiles:replaceAll()
          qCursor:endEditBlock()
       ENDIF    
    NEXT 
-         
+#if 0         
    IF ! empty( cSource )
       IF ! isOpen 
          ::oSM:closeSource( , .f., .f., .f. )
@@ -1029,7 +1034,7 @@ METHOD IdeFindInFiles:replaceAll()
          ENDIF    
       ENDIF    
    ENDIF    
-      
+#endif      
    RETURN Self 
    
 /*----------------------------------------------------------------------*/
