@@ -1238,6 +1238,7 @@ METHOD XbpWindow:isDerivedFrom( cClassORoObject )
 METHOD XbpWindow:show()
 
    ::oWidget:show()
+   ::oWidget:activateWindow()
    ::is_hidden      := .f.
    ::lHasInputFocus := .t.
 
