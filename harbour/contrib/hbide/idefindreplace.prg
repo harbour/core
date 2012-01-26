@@ -1003,7 +1003,7 @@ METHOD IdeFindInFiles:replaceAll()
             ENDIF    
 #endif              
             cSource := aFind[ 2 ]
-            ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )   
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )   
          ENDIF 
                   
          qCursor := ::oIde:qCurEdit:textCursor()
