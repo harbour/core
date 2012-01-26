@@ -333,6 +333,7 @@ CLASS HbIde
    DATA   oSysMenu
 
    DATA   lSortedFuncList                         INIT   .t.
+   DATA   lQuitting                               INIT   .f.
 
    METHOD new( aParams )
    METHOD create( aParams )
@@ -756,12 +757,14 @@ METHOD HbIde:create( aParams )
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
       IF nEvent == xbeP_Quit
+         ::lQuitting := .t.
          ::oINI:save()
          EXIT
       ENDIF
 
       IF nEvent == xbeP_Close .AND. oXbp == ::oDlg
          IF hbide_setClose()
+            ::lQuitting := .t.
             ::oINI:save()
             ::oSM:closeAllSources( .f. /* can not cancel */ )
             EXIT

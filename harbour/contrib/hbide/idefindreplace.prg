@@ -166,6 +166,9 @@ METHOD IdeUpDown:execEvent( cEvent, p )
    LOCAL cText, oEdit
 
    HB_SYMBOL_UNUSED( p )
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       cText := oEdit:getSelectedText()
@@ -878,6 +881,10 @@ METHOD IdeFindInFiles:buildUI()
 METHOD IdeFindInFiles:execEvent( cEvent, p )
    LOCAL cPath, qLineEdit, qCursor, cSource, v, nInfo
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH cEvent
 
    CASE "buttonClose"
@@ -968,10 +975,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 METHOD IdeFindInFiles:replaceAll()
    LOCAL nL, nB, qCursor, aFind
    LOCAL cSource := ""
-#if 0   
-   LOCAL isOpen := .f.
-   LOCAL isModified := .f.
-#endif   
+   
    IF empty( ::cReplWith  := ::oUI:q_comboRepl:currentText() )
       RETURN Self 
    ENDIF 
@@ -984,24 +988,6 @@ METHOD IdeFindInFiles:replaceAll()
    FOR EACH aFind IN ::aInfo
       IF aFind[ 1 ] == -2
          IF ! ( cSource == aFind[ 2 ] )
-#if 0            
-            IF ! empty( cSource )
-               IF ! isOpen 
-                  ::oSM:closeSource( , .f., .f., .f. )
-               ELSE 
-                  IF ! isModified
-                     ::oSM:saveSource()
-                  ENDIF    
-               ENDIF    
-            ENDIF  
-            cSource := aFind[ 2 ]
-            IF ( isOpen := ::oEM:isOpen( cSource ) )
-               ::oEM:setSourceVisible( cSource )
-               isModified := ::oEM:getEditorCurrent():qDocument:isModified()
-            ELSE 
-               ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )   
-            ENDIF    
-#endif              
             cSource := aFind[ 2 ]
             ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )   
          ENDIF 
@@ -1024,17 +1010,7 @@ METHOD IdeFindInFiles:replaceAll()
          qCursor:endEditBlock()
       ENDIF    
    NEXT 
-#if 0         
-   IF ! empty( cSource )
-      IF ! isOpen 
-         ::oSM:closeSource( , .f., .f., .f. )
-      ELSE 
-         IF ! isModified
-            ::oSM:saveSource()
-         ENDIF    
-      ENDIF    
-   ENDIF    
-#endif      
+      
    RETURN Self 
    
 /*----------------------------------------------------------------------*/

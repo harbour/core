@@ -216,6 +216,7 @@ CLASS IdeObject
    ACCESS lCurrentLineHighlightEnabled            INLINE ::oIde:lCurrentLineHighlightEnabled
 
    ACCESS aMarkTBtns                              INLINE ::oIde:aMarkTBtns
+   ACCESS lQuitting                               INLINE ::oIde:lQuitting
 
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}

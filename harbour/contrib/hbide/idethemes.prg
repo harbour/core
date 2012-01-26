@@ -257,6 +257,10 @@ METHOD IdeThemes:execEvent( cEvent, p )
 
    HB_SYMBOL_UNUSED( p )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH cEvent
    CASE "listItems_currentRowChanged"
       ::nCurItem  := p+1

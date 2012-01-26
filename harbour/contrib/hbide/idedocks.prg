@@ -560,6 +560,10 @@ METHOD IdeDocks:buildSystemTray()
 METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+   
    SWITCH cEvent
    CASE "dockCuiEd_visibilityChanged"
       IF p; ::oCUI:show(); ENDIF

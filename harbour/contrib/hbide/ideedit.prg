@@ -442,6 +442,10 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
    HB_SYMBOL_UNUSED( p1 )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+   
    qEdit   := oEdit:qEdit
    qCursor := qEdit:textCursor()
    oEdit:nCurLineNo := qCursor:blockNumber()

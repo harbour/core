@@ -303,6 +303,10 @@ METHOD IdeDocWriter:setParameters()
 
 METHOD IdeDocWriter:execEvent( nMode, p )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH nMode
    CASE buttonArgs_clicked
       IF p

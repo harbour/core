@@ -322,6 +322,10 @@ METHOD IdeToolsManager:execEvent( cMode, p )
 
    HB_SYMBOL_UNUSED( p )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH cMode
    CASE "checkToolActive_stateChanged"
       nRow := ::oUI:q_listToolbars:currentRow()

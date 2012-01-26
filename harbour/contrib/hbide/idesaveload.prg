@@ -1566,6 +1566,10 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
    HB_SYMBOL_UNUSED( p1 )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+   
    SWITCH cEvent
 
    CASE "buttonSelFont_clicked"

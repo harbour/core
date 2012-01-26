@@ -497,6 +497,10 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    HB_SYMBOL_UNUSED( p1 )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH nMode
 
    CASE "buttonInstall_clicked"

@@ -151,6 +151,10 @@ METHOD IdeFunctions:create( oIde )
 METHOD IdeFunctions:execEvent( nMode, p )
    LOCAL n, nLen
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    DO CASE
    CASE nMode == "editFunc_textChanged"
       p    := upper( p )

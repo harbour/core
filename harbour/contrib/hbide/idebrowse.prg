@@ -567,6 +567,10 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH cEvent
    CASE "dockDbu_dragEnterEvent"
       p:acceptProposedAction()

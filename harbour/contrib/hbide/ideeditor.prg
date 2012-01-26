@@ -421,6 +421,10 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
 METHOD IdeEditsManager:execEvent( cEvent, p )
    LOCAL oEdit
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+   
    DO CASE
    CASE cEvent == "qFldsCompleter_activated"
       IF !empty( oEdit := ::getEditObjectCurrent() )
@@ -1683,6 +1687,10 @@ METHOD IdeEditor:execEvent( cEvent, p )
 
    p := p
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+   
    SWITCH cEvent
 
    CASE "qTimeSave_timeout"

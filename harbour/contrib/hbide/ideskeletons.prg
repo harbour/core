@@ -173,6 +173,10 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
 
    HB_SYMBOL_UNUSED( p )
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH cEvent
 
    CASE "buttonNew_clicked"

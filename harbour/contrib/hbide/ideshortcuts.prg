@@ -310,6 +310,10 @@ METHOD IdeShortcuts:show()
 METHOD IdeShortcuts:execEvent( nMode, p )
    LOCAL nRow, cMethod, cFile, cPath, cTemp, cExt, a_
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    SWITCH nMode
 
    CASE 21000

@@ -220,6 +220,10 @@ METHOD IdeHome:destroy()
 METHOD IdeHome:execEvent( nMode, p )
    LOCAL cAct, cText, cExt
 
+   IF ::lQuitting
+      RETURN Self 
+   ENDIF 
+
    DO CASE
    CASE nMode == "tabWidget_currentChanged"
       IF p == 0
