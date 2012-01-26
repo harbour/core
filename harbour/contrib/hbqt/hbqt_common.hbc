@@ -19,7 +19,7 @@ plugins=hbmk2_qt.hbs
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
-{allgcc&!bsd}libs=supc++
-{allgcc&bsd}libs=stdc++
+{allgcc&!(bsd|darwin)}libs=supc++
+{allgcc&(bsd|darwin)}libs=stdc++
 
 {win|os2}hbcppmm=yes
