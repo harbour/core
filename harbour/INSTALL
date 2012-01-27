@@ -325,11 +325,11 @@ HARBOUR
    on *nix which aren't available through official package managers
    (ADS Client f.e.).
 
-   Note that Harbour is tuned to use 3rd party binary packages in their 
-   default, unmodified ("vanilla") install layout created by their 
-   official/mainstream install kits. If you manually move, rename, 
-   delete or add files under the 3rd party packages' root directory, 
-   the default Harbour build process (especially Windows implib 
+   Note that Harbour is tuned to use 3rd party binary packages in their
+   default, unmodified ("vanilla") install layout created by their
+   official/mainstream install kits. If you manually move, rename,
+   delete or add files under the 3rd party packages' root directory,
+   the default Harbour build process (especially Windows implib
    generation) might not work as expected.
 
    You can set these environment variables before starting
@@ -390,7 +390,7 @@ HARBOUR
       HB_QTPOSTFIX=
 
    Certain contribs can be instructed (when using .hbc files) to link
-   against static build of their 3rd party lib dependencies (for 
+   against static build of their 3rd party lib dependencies (for
    advanced users only):
       HB_STATIC_ALLEGRO=yes
       HB_STATIC_CURL=yes
@@ -1293,7 +1293,7 @@ HARBOUR
        the top of the output (lines starting with '!') and the area where
        problematic behavior occurred _first_. Make sure to not only include
        a link failure or a make tool failure only, as it's most of the time
-       not enough information. Compress your log using zip if it is larger 
+       not enough information. Compress your log using zip if it is larger
        than 25KB. (use the extension .zip)
        Without these, your chances are lower to get useful or any response.
    10. If you are to report a build problem with a Harbour application,
@@ -1698,7 +1698,7 @@ HARBOUR
    - You can give feedback/suggestions to developers on available
      channels.
    - You can submit patches or source code on above channels.
-     Patches are accepted in 'svn diff' (or 'diff -u') format, 
+     Patches are accepted in 'svn diff' (or 'diff -u') format,
      created from root directory of the repository sandbox.
      Zip your patch file before attaching it. Use the extension '.zip'.
      The size limit for e-mails sent to the development list is
@@ -1728,9 +1728,6 @@ HARBOUR
 
    Harbour Development Mailing List (English language):
       http://groups.google.com/group/harbour-devel/
-
-   Announcement Mailing List (subscription-free, readonly):
-      http://groups.google.com/group/harbour-announce/
 
    Development Timeline:
       http://sourceforge.net/apps/trac/harbour-project/timeline/
