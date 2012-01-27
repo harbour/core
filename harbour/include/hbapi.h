@@ -871,6 +871,7 @@ extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashCloneTo( PHB_ITEM pDest, PHB_ITEM pHash );
 extern HB_EXPORT void      hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType );
 extern HB_EXPORT HB_BOOL   hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos );
+extern HB_EXPORT HB_BOOL   hb_hashScanSoft( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos );
 extern HB_EXPORT void      hb_hashPreallocate( PHB_ITEM pHash, HB_SIZE nNewSize );
 extern HB_EXPORT PHB_ITEM  hb_hashGetKeys( PHB_ITEM pHash );
 extern HB_EXPORT PHB_ITEM  hb_hashGetValues( PHB_ITEM pHash );

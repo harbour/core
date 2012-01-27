@@ -719,6 +719,35 @@ HB_BOOL hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos )
    return HB_FALSE;
 }
 
+HB_BOOL hb_hashScanSoft( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashScanSoft(%p,%p,%p)", pHash, pKey, pnPos));
+
+   if( HB_IS_HASH( pHash ) && HB_IS_HASHKEY( pKey ) )
+   {
+      HB_SIZE nPos;
+      if( hb_hashFind( pHash->item.asHash.value, pKey, &nPos ) )
+      {
+         if( pnPos )
+            *pnPos = nPos + 1;
+         return HB_TRUE;
+      }
+      else
+      {
+         if( pnPos )
+         {
+            if( nPos != 0 && pHash->item.asHash.value->pnPos )
+               nPos = pHash->item.asHash.value->pnPos[ nPos - 1 ] + 1;
+            *pnPos = nPos;
+         }
+         return HB_FALSE;
+      }
+   }
+   if( pnPos )
+      *pnPos = 0;
+   return HB_FALSE;
+}
+
 HB_BOOL hb_hashClear( PHB_ITEM pHash )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hashClear(%p)", pHash));

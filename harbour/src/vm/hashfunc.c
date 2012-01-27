@@ -89,7 +89,11 @@ HB_FUNC( HB_HHASKEY )
    PHB_ITEM pKey = hb_param( 2, HB_IT_HASHKEY );
 
    if( pHash && pKey )
-      hb_retl( hb_hashScan( pHash, pKey, NULL ) );
+   {
+      HB_SIZE nPos;
+      hb_retl( hb_hashScanSoft( pHash, pKey, &nPos ) );
+      hb_storns( nPos, 3 );
+   }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
