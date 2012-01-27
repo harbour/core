@@ -97,8 +97,6 @@ PROCEDURE Main()
 
    ? "Listening on port:", nPort := 8002
 
-   oLogError:Add( "hello" )
-
    oServer := UHttpdNew()
 
    IF ! oServer:Run( {;
