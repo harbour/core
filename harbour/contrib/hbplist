@@ -24,6 +24,7 @@ hbgs/hbgs.hbp
 hbgt/hbgt.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp
+hbhttpd/hbhttpds.hbp
 hbide/hbide.hbp
 hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
 hbmagic/hbmagic.hbp

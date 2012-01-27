@@ -5,7 +5,7 @@
 -hblib
 -inc
 
--o${hb_name}
+-o${hb_targetname}
 
 -w3 -es2
 
@@ -16,3 +16,5 @@ hbhttpd.hbx
 core.prg
 widgets.prg
 log.prg
+
+hbssl.hbc

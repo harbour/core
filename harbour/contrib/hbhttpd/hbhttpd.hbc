@@ -4,6 +4,8 @@
 
 incpaths=.
 
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{!HB_HTTPD_OPENSSL|dos}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{HB_HTTPD_OPENSSL&!dos}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
+{HB_HTTPD_OPENSSL&!dos}libs=../hbssl/hbssl.hbc
 
 mt=yes

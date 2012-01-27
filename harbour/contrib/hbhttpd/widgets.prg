@@ -336,28 +336,18 @@ METHOD Paint() CLASS UWMenu
 
 CREATE CLASS UWBrowse
 
-   VAR cID
    VAR aColumns   INIT {}
-   VAR nArea
-
-   VAR nRecno
-   VAR lBof       INIT .F.
-   VAR lEof       INIT .F.
+   VAR nPageSize  INIT 0
+   VAR nPos       INIT 0
 
    METHOD AddColumn( nID, cTitle, cField, lRaw )
-   METHOD Paint()
-   METHOD PaintBody()
-   METHOD Ajax( cAction )
-   METHOD Skipper( nSkip )
+   METHOD Output()
 
 ENDCLASS
 
-FUNCTION UWBrowseNew( cID )
+FUNC UWBrowseNew()
 
    LOCAL oW := UWBrowse()
-
-   SetWId( oW, cID )
-   oW:nArea := Select()
 
    RETURN oW
 
@@ -367,56 +357,29 @@ METHOD AddColumn( nID, cTitle, cField, lRaw ) CLASS UWBrowse
 
    RETURN Self
 
-METHOD Paint() CLASS UWBrowse
+METHOD Output() CLASS UWBrowse
 
-   UWrite( '<div id="' + Self:cID + '">' )
-   Self:PaintBody()
-   UWrite( '</div>' )
+   LOCAL cRet := "", nI, xI, xField, nPos, cUrl, cI, lValidate
 
-   RETURN Self
-
-METHOD PaintBody() CLASS UWBrowse
-
-   LOCAL nI, nJ, xI, xField, nArea
-
-   nArea := Select()
-   dbSelectArea( Self:nArea )
-   IF Self:nRecNo == NIL
-      DBGOTOP()
-      Self:nRecno := RecNo()
-      Self:Skipper( 0 )
-   ELSE
-      dbGoto( Self:nRecno )
-      Self:Skipper( 0 )
-      Self:nRecno := RecNo()
-   ENDIF
-   IF ! Self:lBof
-      UWrite( '<a href="" onclick="ubrcall(' + "'" + Self:cID + "','action=prevpg');return false;" + '">&lt;</a> ' )
-   ELSE
-      UWrite( '&lt; ' )
-   ENDIF
-   IF ! Self:lEof
-      UWrite( '<a href="" onclick="ubrcall(' + "'" + Self:cID + "','action=nextpg');return false;" + '">&gt;</a> ' )
-   ELSE
-      UWrite( '&gt; ' )
-   ENDIF
-   UWrite( '<table class="ubr"><tr>' )
+   cRet += '<table class="ubr"><tr>'
 
    // Header
-   UWrite( '<tr>' )
+   cRet += '<tr>'
    FOR nI := 1 TO Len( Self:aColumns )
-      UWrite( '<th>' + UHtmlEncode( Self:aColumns[nI, 2] ) + '</th>' )
+      cRet += '<th>' + UHtmlEncode( Self:aColumns[nI, 2] ) + '</th>'
    NEXT
-   UWrite( '</tr>' )
+   cRet += '</tr>'
 
    // Body
-   dbGoto( Self:nRecno )
-   FOR nI := 1 TO 20
-      IF Eof();  EXIT
-      ENDIF
-      UWrite( '<tr>' )
-      FOR nJ := 1 TO Len( Self:aColumns )
-         xField := Self:aColumns[nJ, 3]
+   nPos := 0
+   DBGOTOP()
+   IF Self:nPageSize > 0 .AND. Self:nPos > 0
+      dbSkip( Self:nPos )
+   ENDIF
+   DO WHILE ! Eof()
+      cRet += '<tr>'
+      FOR nI := 1 TO Len( Self:aColumns )
+         xField := Self:aColumns[nI, 3]
          IF ValType( xField ) == "C"
             xI := FieldGet( FieldPos( xField ) )
          ELSEIF ValType( xField ) == "B"
@@ -427,59 +390,77 @@ METHOD PaintBody() CLASS UWBrowse
          ELSEIF ValType( xI ) == "D";  xI := DToC( xI )
          ELSE ;  xI := "VALTYPE()==" + ValType( xI )
          ENDIF
-         IF ! Self:aColumns[nJ, 4]
+         IF ! Self:aColumns[nI, 4]
             xI := UHtmlEncode( xI )
          ENDIF
-         UWrite( '<td><nobr>' + xI + '</nobr></td>' )
+         cRet += '<td><nobr>' + xI + '</nobr></td>'
       NEXT
-      UWrite( '</tr>' )
+      cRet += '</tr>'
       dbSkip()
-   NEXT
-   UWrite( '</table>' )
-   dbSelectArea( nArea )
-
-   RETURN Self
-
-METHOD Ajax( cAction ) CLASS UWBrowse
-
-   IF cAction == "nextpg"
-      ( Self:nArea ) -> ( Self:Skipper( 20 ) )
-   ELSEIF cAction == "prevpg"
-      ( Self:nArea ) -> ( Self:Skipper( - 20 ) )
-   ENDIF
-   Self:PaintBody()
-
-   RETURN Self
-
-METHOD Skipper( nSkip ) CLASS UWBrowse
-
-   dbGoto( Self:nRecno )
-   dbSkip( nSkip )
-   Self:nRecno := RecNo()
-   IF Eof()
-      dbSkip( - 1 )
-      Self:nRecno := RecNo()
-      Self:lEof := Eof()
-   ELSE
-      dbSkip( 20 )
-      Self:lEof := Eof()
-   ENDIF
-   dbGoto( Self:nRecno )
-   IF Bof()
-      Self:lBof := .T.
-   ELSE
-      dbSkip( - 1 )
-      IF Bof()
-         Self:lBof := .T.
-      ELSE
-         dbSkip( 1 )
-         Self:lBof := .F.
+      IF ++ nPos >= Self:nPageSize
+         EXIT
+      ENDIF
+   ENDDO
+   cRet += '</table>'
+   IF ! Eof() .OR. Self:nPos > 0
+      cUrl := server["REQUEST_URI"]
+      IF ( nI := At( "?_ucs=", cUrl ) ) == 0
+         nI := At( "&_ucs=", cUrl )
+      ENDIF
+      IF ( lValidate := nI > 0 )
+         cUrl := Left( cUrl, nI - 1 )
+      ENDIF
+      IF ( nI := At( "?_pos=", cUrl ) ) == 0
+         nI := At( "&_pos=", cUrl )
+      ENDIF
+      IF nI > 0
+         cUrl := Left( cUrl, nI - 1 )
+      ENDIF
+      cUrl += iif( "?" $ cUrl, "&", "?" ) + "_pos="
+      cRet := '<br>' + cRet
+      IF ! Eof()
+         cI := cUrl + hb_ntos( Self:nPos + Self:nPageSize )
+         cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&gt;&gt;</a>' + cRet
+      ENDIF
+      IF Self:nPos > 0
+         cI := cUrl + hb_ntos( Max( 0, Self:nPos - Self:nPageSize ) )
+         cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&lt;&lt;</a>&nbsp;&nbsp;' + cRet
       ENDIF
    ENDIF
-   Self:nRecno := RecNo()
+
+   RETURN cRet
+
+//============================================================
+
+CREATE CLASS UWOption
+
+   VAR aOption   INIT {}
+   VAR cValue
+
+   METHOD Add( cTitle, cCode, lRaw )
+   METHOD Output()
+
+ENDCLASS
+
+FUNC UWOptionNew()
+
+   LOCAL oW := UWOption()
+
+   RETURN oW
+
+METHOD Add( cTitle, cCode, lRaw ) CLASS UWOption
+
+   AAdd( Self:aOption, { iif( ! Empty(lRaw ), cTitle, UHtmlEncode(cTitle ) ), cCode } )
 
    RETURN Self
 
+METHOD Output() CLASS UWOption
+
+   LOCAL cRet := ""
+
+   AEval( Self:aOption, {| X | cRet += HB_STRFORMAT( '<option value="%s"%s>%s</option>', UHtmlEncode(X[2] ), iif(X[2] == Self:cValue, " selected", "" ), X[1] ) } )
+
+   RETURN cRet
 
 /********************************************************************
 *
@@ -583,3 +564,36 @@ STATIC PROCEDURE SetWId( oW, cID )
 
 FUNCTION UGetWidgetById( cID )
    RETURN hb_HGetDef( session[ "_uthis", "idhash" ], cID )
+
+STATIC FUNCTION uhttpd_split( cSeparator, cString )
+
+   LOCAL aRet := {}
+   LOCAL nI
+
+   DO WHILE ( nI := At( cSeparator, cString ) ) > 0
+      AAdd( aRet, Left( cString, nI - 1 ) )
+      cString := SubStr( cString, nI + Len( cSeparator ) )
+   ENDDO
+   AAdd( aRet, cString )
+
+   RETURN aRet
+
+STATIC FUNCTION uhttpd_join( cSeparator, aData )
+
+   LOCAL cRet := ""
+   LOCAL nI
+
+   FOR nI := 1 TO Len( aData )
+
+      IF nI > 1
+         cRet += cSeparator
+      ENDIF
+
+      IF     ValType( aData[ nI ] ) $ "CM" ; cRet += aData[ nI ]
+      ELSEIF ValType( aData[ nI ] ) == "N" ; cRet += hb_ntos( aData[ nI ] )
+      ELSEIF ValType( aData[ nI ] ) == "D" ; cRet += iif( Empty( aData[ nI ] ), "", DToC( aData[ nI ] ) )
+      ELSE
+      ENDIF
+   NEXT
+
+   RETURN cRet
