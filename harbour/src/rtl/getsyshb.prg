@@ -56,7 +56,19 @@ FUNCTION hb_GetReadVar( oGet )
 
    IF oGet:subScript != NIL
       FOR n := 1 TO Len( oGet:subScript )
-         cName += "[" + hb_NToS( oGet:subScript[ n ] ) + "]"
+         SWITCH ValType( oGet:subScript[ n ] )
+         CASE "C"
+            cName += "[" + '"' + oGet:subScript[ n ] + '"' + "]"
+            EXIT
+         CASE "D"
+            cName += "[0d" + DToS( oGet:subScript[ n ] ) + "]"
+            EXIT
+         CASE "T"
+            cName += '[t"' + hb_TSToStr( oGet:subScript[ n ], .T. ) + '"]'
+            EXIT
+         OTHERWISE
+            cName += "[" + hb_NToS( oGet:subScript[ n ] ) + "]"
+         ENDSWITCH
       NEXT
    ENDIF
 

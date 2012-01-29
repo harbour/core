@@ -511,13 +511,13 @@ METHOD varPut( xValue ) CLASS GET
          nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
          FOR i := 1 TO nLen - 1
-            IF ISNUMBER( aSubs[ i ] )
+            IF ValType( aSubs[ i ] ) $ "NCDT"
                aValue := aValue[ aSubs[ i ] ]
             ELSE
                EXIT
             ENDIF
          NEXT
-         IF ISNUMBER( aSubs[ i ] )
+         IF ValType( aSubs[ i ] ) $ "NCDT"
             aValue[ aSubs[ i ] ] := xValue
          ENDIF
       ELSE
@@ -542,7 +542,7 @@ METHOD varGet() CLASS GET
          nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
          FOR i := 1 TO nLen
-            IF ISNUMBER( aSubs[ i ] )
+            IF ValType( aSubs[ i ] ) $ "NCDT"
                xValue := xValue[ aSubs[ i ] ]
             ELSE
                EXIT

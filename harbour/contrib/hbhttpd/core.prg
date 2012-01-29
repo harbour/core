@@ -251,7 +251,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
                nPrefix := 32
                DO WHILE hb_bitAnd( nI, 1 ) == 0
                   nPrefix--
-                  nI := hb_bitShift( nI, - 1 )
+                  nI := hb_bitShift( nI, -1 )
                ENDDO
                IF nI + 1 != hb_bitShift( 1, nPrefix )
                   RETURN .F.
@@ -339,7 +339,7 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data received and timeout
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-         RETURN - 1
+         RETURN -1
       ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
@@ -347,11 +347,11 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data sent and timeout
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-         RETURN - 1
+         RETURN -1
       ELSE
          Eval( hConfig[ "Trace" ], "SSL_READ() error", nErr )
          nError := 1000 + nErr
-         RETURN - 1
+         RETURN -1
       ENDIF
    ENDIF
 
@@ -368,7 +368,7 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
-            RETURN - 1
+            RETURN -1
          ELSE  // Both cases: data received and timeout
             RETURN 0
          ENDIF
@@ -376,14 +376,14 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
-            RETURN - 1
+            RETURN -1
          ELSE  // Both cases: data sent and timeout
             RETURN 0
          ENDIF
       ELSE
          Eval( hConfig[ "Trace" ], "SSL_WRITE() error", nErr )
          nError := 1000 + nErr
-         RETURN - 1
+         RETURN -1
       ENDIF
    ENDIF
 
@@ -799,7 +799,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
             cI := Left( cI, nK )
             IF ( nK := At( "=", cI ) ) > 0
                /* cookie names are case insensitive, uppercase it */
-               cookie[UPPER(LEFT(cI, nK - 1))] := SubStr( cI, nK + 1 )
+               cookie[ Upper( Left( cI, nK - 1 ) ) ] := SubStr( cI, nK + 1 )
             ENDIF
             EXIT
          CASE "CONTENT-LENGTH"
@@ -809,7 +809,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
             server["CONTENT_TYPE"] := cI
             EXIT
          OTHERWISE
-            server["HTTP_" + STRTRAN(UPPER(LEFT(aRequest[nI], nJ - 1 ) ), "-", "_" )] := cI
+            server["HTTP_" + StrTran( Upper( Left( aRequest[ nI ], nJ - 1 ) ), "-", "_" )] := cI
             EXIT
          ENDSWITCH
       ENDIF
@@ -817,9 +817,9 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    IF !( server["QUERY_STRING"] == "" )
       FOR EACH cI IN hb_ATokens( server["QUERY_STRING"], "&" )
          IF ( nI := At( "=", cI ) ) > 0
-            get[UUrlDecode(LEFT(cI, nI - 1))] := UUrlDecode( SubStr( cI, nI + 1 ) )
+            get[ UUrlDecode( Left( cI, nI - 1 ) ) ] := UUrlDecode( SubStr( cI, nI + 1 ) )
          ELSE
-            get[UUrlDecode(cI)] := NIL
+            get[ UUrlDecode( cI ) ] := NIL
          ENDIF
       NEXT
    ENDIF
@@ -839,7 +839,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
          IF cEncoding == "UTF-8"
             FOR EACH cPart IN hb_ATokens( cRequest, "&" )
                IF ( nI := At( "=", cPart ) ) > 0
-                  post[ HB_UTF8TOSTR( UUrlDecode( LEFT( cPart, nI - 1 ) ) ) ] := HB_UTF8TOSTR( UUrlDecode( SubStr( cPart, nI + 1 ) ) )
+                  post[ HB_UTF8TOSTR( UUrlDecode( Left( cPart, nI - 1 ) ) ) ] := HB_UTF8TOSTR( UUrlDecode( SubStr( cPart, nI + 1 ) ) )
                ELSE
                   post[ HB_UTF8TOSTR( UUrlDecode( cPart ) ) ] := NIL
                ENDIF
@@ -847,7 +847,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
          ELSE
             FOR EACH cPart IN hb_ATokens( cRequest, "&" )
                IF ( nI := At( "=", cPart ) ) > 0
-                  post[ UUrlDecode( LEFT( cPart, nI - 1 ) ) ] := UUrlDecode( SubStr( cPart, nI + 1 ) )
+                  post[ UUrlDecode( Left( cPart, nI - 1 ) ) ] := UUrlDecode( SubStr( cPart, nI + 1 ) )
                ELSE
                   post[ UUrlDecode( cPart ) ] := NIL
                ENDIF
@@ -1653,7 +1653,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
             BREAK( nPos )
          ENDIF
       RECOVER USING nPos
-         Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: syntax at %s(%d,%d)", cFileName, SUBSTRCOUNT( Chr(10 ), cTpl,, nPos ) + 1, nPos - HB_RAT( Chr(10 ), Left(cTpl, nPos - 1 ) ) ) )
+         Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: syntax at %s(%d,%d)", cFileName, SUBSTRCOUNT( Chr(10 ), cTpl,, nPos ) + 1, nPos - HB_RAT( Chr(10 ), Left( cTpl, nPos - 1 ) ) ) )
          aCode := {}
       END SEQUENCE
    ELSE
