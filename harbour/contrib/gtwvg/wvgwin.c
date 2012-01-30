@@ -125,7 +125,11 @@ static HINSTANCE wvg_hInstance( void )
 HB_FUNC( WVG_SENDMESSAGE )
 {
    void * hText = NULL;
-   LPTSTR lpText = HB_PARSTR( 4, &hText, NULL );
+   HB_SIZE nLen = 0;
+   LPCTSTR lpText = HB_PARSTR( 4, &hText, &nLen );
+
+   if( lpText && HB_ISBYREF( 4 ) )
+      lpText = HB_STRUNSHARE( &hText, lpText, nLen );
 
    hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                        ( UINT ) hb_parni( 2 ),
