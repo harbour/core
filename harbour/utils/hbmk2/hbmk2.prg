@@ -11612,15 +11612,15 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    ELSE
       aExtern := {}
       FOR EACH tmp IN aFuncList
-         IF AScan( aInclude, {| flt | hb_WildMatch( flt, tmp ) } ) > 0
+         IF AScan( aInclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) > 0
             AAdd( aExtern, tmp )
          ENDIF
       NEXT
    ENDIF
    FOR EACH tmp IN aExtern
-      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
-         ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp ) .AND. ;
-         AScan( aExclude, {| flt | hb_WildMatch( flt, tmp ) } ) == 0
+      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
+         ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
+         AScan( aExclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) == 0
          cExtern += "DYNAMIC " + tmp + hb_eol()
       ENDIF
    NEXT
