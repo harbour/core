@@ -125,19 +125,17 @@ static HINSTANCE wvg_hInstance( void )
 HB_FUNC( WVG_SENDMESSAGE )
 {
    void * hText = NULL;
+   LPTSTR lpText = HB_PARSTR( 4, &hText, NULL );
+
    hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                        ( UINT ) hb_parni( 2 ),
                                        ( ! HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                       ( HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) :
-                                                          ( LPARAM ) hb_parnint( 4 ) ) ) );
-   if( hText )
+                                       ( lpText ? ( LPARAM ) lpText : ( LPARAM ) hb_parnint( 4 ) ) ) );
+   if( lpText )
    {
-      if( HB_ISBYREF( 4 ) )
-      {
-         HB_STORSTR( hText, 4 );
-      }
+      HB_STORSTR( lpText, 4 );
+      hb_strfree( hText );
    }
-   hb_strfree( hText );
 }
 /*----------------------------------------------------------------------*/
 
@@ -1549,7 +1547,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    case CB_GETLBTEXT              : // Gets a string from the list of a combo box.
    {
       int iSize = SendMessage( hCB, CB_GETLBTEXTLEN, hb_parni( 3 ), 0 );
-      TCHAR * text = hb_xgrab( iSize + 1 );
+      LPTSTR text = ( LPTSTR ) hb_xgrab( iSize + 1 );
       SendMessage( hCB, CB_GETLBTEXT, iSize, ( LPARAM ) text );
       HB_RETSTR( text );
       hb_xfree( text );
@@ -1606,7 +1604,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       hb_retni( SendMessage( hCB, CB_SETITEMHEIGHT, hb_parni( 3 ), 0 ) );
       break;
    case CB_SETLOCALE              : // An application sends a CB_SETLOCALE message to set the current locale of the combo box. If the combo box has the CBS_SORT style and strings are added using CB_ADDSTRING, the locale of a combo box affects how list items are sorted.
-      hb_retnint( SendMessage( hCB, CB_SETLOCALE, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_SETLOCALE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
 #if ( _WIN32_IE >= 0x0600 )
    case CB_SETMINVISIBLE          : // An application sends a CB_SETMINVISIBLE message to set the minimum number of visible items in the drop-down list of a combo box.
