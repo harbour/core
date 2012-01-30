@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * Language Support Module (SK852) SK852
  *
- * Copyright 2008 Gyula Bartal <bartal@tauris-danubius.sk> (from msgskwin.c)
+ * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgskwin.c)
+ * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -118,7 +119,7 @@ static HB_LANG s_lang =
       "Preplnenie Ÿ¡sla",
       "Delenie nulou",
       "Numerick  chyba",
-      "Chyba syntaxe",
+      "Syntaktick  chyba",
       "Oper cia pr¡liç komplexn ",
       "",
       "",
@@ -129,7 +130,7 @@ static HB_LANG s_lang =
       "Oblasœ neexistuje",
       "Nezn ma premenn ",
       "Nepovolen‚ znaky v oblasti",
-      "Oblasœ u§ pou§it ",
+      "Oblasœ je u§ pou§it ",
       "",
       "Chyba vytvorenia",
       "Chyba otvorenia",
@@ -141,7 +142,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "Nepodporov na oper cia",
+      "Nepodporovan  oper cia",
       "PrekroŸenì limit",
       "Index poçkodenì",
       "Chyba typu d t",
@@ -150,16 +151,16 @@ static HB_LANG s_lang =
       "Nezoraden  pracovn  oblasœ",
       "Nutnì vìhradnì pr¡stup",
       "Uzamknutie nutn‚",
-      "Zlyhanie z mka pri prid v nie",
-      "Zlyhanie z mka",
+      "Zlyhanie uzamkutia pri prid van¡",
+      "Zlyhanie uzamknutia",
       "",
       "",
       "",
       "",
-      "pr¡stup k polom",
-      "priradenie k pole",
-      "zmena dimenze pole",
-      "nie je polom",
+      "pr¡stup k po–u",
+      "priradenie k po–u",
+      "zmena dimenze po–a",
+      "nie je to pole",
       "podmienka",
 
        /* Internal error names */

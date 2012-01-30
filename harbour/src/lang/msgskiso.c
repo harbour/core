@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * Language Support Module (SK ISO-8859-2)
  *
- * Copyright 2008 Gyula Bartal <bartal@tauris-danubius.sk> (from msgskwin.c)
+ * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgskwin.c)
+ * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -118,18 +119,18 @@ static HB_LANG s_lang =
       "Preplnenie èísla",
       "Delenie nulou",
       "Numerická chyba",
-      "Chyba syntaxe",
+      "Syntaktická chyba",
       "Operácia príli¹ komplexná",
       "",
       "",
       "Nedostatok pamäte",
       "Nedefinovaná funkcia",
-      "Neznámá metóda",
+      "Neznáma metóda",
       "Premenná neexistuje",
       "Oblas» neexistuje",
       "Neznáma premenná",
       "Nepovolené znaky v oblasti",
-      "Oblas» u¾ pou¾itá",
+      "Oblas» je u¾ pou¾itá",
       "",
       "Chyba vytvorenia",
       "Chyba otvorenia",
@@ -141,7 +142,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "Nepodporována operácia",
+      "Nepodporovaná operácia",
       "Prekroèený limit",
       "Index po¹kodený",
       "Chyba typu dát",
@@ -150,16 +151,16 @@ static HB_LANG s_lang =
       "Nezoradená pracovná oblas»",
       "Nutný výhradný prístup",
       "Uzamknutie nutné",
-      "Zlyhanie zámka pri pridávánie",
-      "Zlyhanie zámka",
+      "Zlyhanie uzamkutia pri pridávaní",
+      "Zlyhanie uzamknutia",
       "",
       "",
       "",
       "",
-      "prístup k polom",
-      "priradenie k pole",
-      "zmena dimenze pole",
-      "nie je polom",
+      "prístup k poµu",
+      "priradenie k poµu",
+      "zmena dimenze poµa",
+      "nie je to pole",
       "podmienka",
 
        /* Internal error names */

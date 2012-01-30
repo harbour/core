@@ -10,6 +10,7 @@
 /* -------------------------------------------------------------------- */
 
 // HB_FUNC_INCLUDE HB_CODEPAGE_*
+// HB_FUNC_EXCLUDE HB_CODEPAGE_BIG5
 
 /* -------------------------------------------------------------------- */
 /* WARNING: Automatically generated code below. DO NOT EDIT!            */
@@ -20,11 +21,11 @@
 #ifndef __HBEXTERN_CH__HBCPAGE__
 #define __HBEXTERN_CH__HBCPAGE__
 
-#ifdef __HBEXTERN__HBCPAGE__ANNOUNCE
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCPAGE__ANNOUNCE )
    ANNOUNCE __HBEXTERN__HBCPAGE__
 #endif
 
-#ifdef __HBEXTERN__HBCPAGE__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCPAGE__REQUEST )
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
@@ -117,8 +118,11 @@ DYNAMIC HB_CODEPAGE_UA1125
 DYNAMIC HB_CODEPAGE_UA1251
 DYNAMIC HB_CODEPAGE_UA866
 DYNAMIC HB_CODEPAGE_UAKOI8
+DYNAMIC HB_CODEPAGE_UTF16LE
+DYNAMIC HB_CODEPAGE_UTF8
+DYNAMIC HB_CODEPAGE_UTF8ASC
 
-#ifdef __HBEXTERN__HBCPAGE__REQUEST
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCPAGE__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 

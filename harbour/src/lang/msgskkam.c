@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * Language Support Module (SK Kamenicky ["895"])
  *
- * Copyright 2008 Gyula Bartal <bartal@tauris-danubius.sk> (from msgskwin.c)
+ * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgskwin.c)
+ * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -118,18 +119,18 @@ static HB_LANG s_lang =
       "Preplnenie á°sla",
       "Delenie nulou",
       "Numerick† chyba",
-      "Chyba syntaxe",
+      "Syntaktick† chyba",
       "Oper†cia pr°li® komplexn†",
       "",
       "",
       "Nedostatok pamÑte",
       "Nedefinovan† funkcia",
-      "Nezn†m† met¢da",
+      "Nezn†ma met¢da",
       "Premenn† neexistuje",
       "Oblasü neexistuje",
       "Nezn†ma premenn†",
       "NepovolenÇ znaky v oblasti",
-      "Oblasü uë pouëit†",
+      "Oblasü je uë pouëit†",
       "",
       "Chyba vytvorenia",
       "Chyba otvorenia",
@@ -141,7 +142,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "Nepodporov†na oper†cia",
+      "Nepodporovan† oper†cia",
       "Prekroáenò limit",
       "Index po®kodenò",
       "Chyba typu d†t",
@@ -150,16 +151,16 @@ static HB_LANG s_lang =
       "Nezoraden† pracovn† oblasü",
       "Nutnò vòhradnò pr°stup",
       "Uzamknutie nutnÇ",
-      "Zlyhanie z†mka pri prid†v†nie",
-      "Zlyhanie z†mka",
+      "Zlyhanie uzamkutia pri prid†van°",
+      "Zlyhanie uzamknutia",
       "",
       "",
       "",
       "",
-      "pr°stup k polom",
-      "priradenie k pole",
-      "zmena dimenze pole",
-      "nie je polom",
+      "pr°stup k poåu",
+      "priradenie k poåu",
+      "zmena dimenze poåa",
+      "nie je to pole",
       "podmienka",
 
        /* Internal error names */
