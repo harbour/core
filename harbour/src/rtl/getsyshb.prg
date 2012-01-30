@@ -52,22 +52,22 @@
 
 FUNCTION hb_GetReadVar( oGet )
    LOCAL cName := hb_asciiUpper( oGet:name )
-   LOCAL n
+   LOCAL xSubScript
 
    IF oGet:subScript != NIL
-      FOR n := 1 TO Len( oGet:subScript )
-         SWITCH ValType( oGet:subScript[ n ] )
+      FOR EACH xSubScript IN oGet:subScript
+         SWITCH ValType( xSubScript )
          CASE "C"
-            cName += "[" + '"' + oGet:subScript[ n ] + '"' + "]"
+            cName += '["' + xSubScript + '"]'
             EXIT
          CASE "D"
-            cName += "[0d" + DToS( oGet:subScript[ n ] ) + "]"
+            cName += "[0d" + DToS( xSubScript ) + "]"
             EXIT
          CASE "T"
-            cName += '[t"' + hb_TSToStr( oGet:subScript[ n ], .T. ) + '"]'
+            cName += '[t"' + hb_TSToStr( xSubScript, .T. ) + '"]'
             EXIT
          OTHERWISE
-            cName += "[" + hb_NToS( oGet:subScript[ n ] ) + "]"
+            cName += "[" + hb_NToS( xSubScript ) + "]"
          ENDSWITCH
       NEXT
    ENDIF

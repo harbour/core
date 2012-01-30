@@ -1330,7 +1330,7 @@ METHOD HbQtSource:build()
    NEXT
 
    /* Pull .cpp copyright text */
-   aLine := hbqtgen_BuildCopyrightText( ::cQtVer )
+   aLine := hbqtgen_BuildCopyrightText()
 
    /* Place ENUM definitions into the source */
    IF ! Empty( ::enums_ )
@@ -1397,6 +1397,9 @@ METHOD HbQtSource:build()
    NEXT
    AAdd( aLine, "}" )
    AAdd( aLine, "" )
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
+   ENDIF
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s:__enumKey() + " );" )
    NEXT
@@ -1404,6 +1407,9 @@ METHOD HbQtSource:build()
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#endif" )
+   ENDIF
    AAdd( aLine, "" )
 
    n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
@@ -1424,6 +1430,9 @@ METHOD HbQtSource:build()
    AAdd( aLine, "#define HB_HBQT_LOCK     hb_threadEnterCriticalSection( &s_hbqtMtx );" )
    AAdd( aLine, "#define HB_HBQT_UNLOCK   hb_threadLeaveCriticalSection( &s_hbqtMtx );" )
    AAdd( aLine, "" )
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
+   ENDIF
    FOR EACH s IN ::hRef
       IF s:__enumKey() == "QList" /* TOFIX: Ugly hack */
          tmp := s:__enumKey() + "< void * >"
@@ -1434,6 +1443,9 @@ METHOD HbQtSource:build()
       ENDIF
       AAdd( aLine, PadR( "#define hbqt_par_" + s:__enumKey() + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_par_ptr( n ) )" )
    NEXT
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#endif" )
+   ENDIF
    AAdd( aLine, "" )
    FOR EACH s IN ::hRef
       AAdd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( HB_U32 ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + s:__enumKey() ), 8 ) + " )" )
@@ -1443,18 +1455,27 @@ METHOD HbQtSource:build()
 
    /* Insert user defined code - INCLUDEs */
    AAdd( aLine, "#include <QtCore/QPointer>" )
-   n := aScan( ::code_, {| e | "gcMark" $ e } )
    IF ! Empty( ::code_ )
+      IF ::cQtVer > "0x040500"
+         AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
+      ENDIF
+      n := AScan( ::code_, {| e | "gcMark" $ e } )
       IF n == 0
          AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) } )
       ELSE
-         AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n-1 )
+         AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) }, 1, n - 1 )
+      ENDIF
+      IF ::cQtVer > "0x040500"
+         AAdd( aLine, "#endif" )
       ENDIF
       AAdd( aLine, "" )
    ENDIF
 
    ::buildExtendedSource( aLine )   /* Insert protected functions */
 
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
+   ENDIF
    AAdd( aLine, "typedef struct"                  )
    AAdd( aLine, "{"                               )
    IF ::isObject
@@ -1610,6 +1631,9 @@ METHOD HbQtSource:build()
 #endif
    AAdd( aLine, "   return p;" )
    AAdd( aLine, "}" )
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#endif" )
+   ENDIF
    AAdd( aLine, "" )
 
    /* Internal class instantiation. TODO: Rename to __QCLASS */
@@ -1670,7 +1694,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, "" )
 
    /* Footer */
-   hbqtgen_BuildFooter( @aLine, ::cQtVer )
+   hbqtgen_BuildFooter( @aLine )
 
    /* Build Document File */
    ::buildDOC()
@@ -1777,6 +1801,10 @@ METHOD HbQtSource:buildExtendedSource( t_ )
    cObj := ::cQtObject
    txt_ := {}
 
+   IF ::cQtVer > "0x040500"
+      AAdd( txt_, "#if QT_VERSION >= " + ::cQtVer )
+   ENDIF
+
    AAdd( txt_, '' )
    AAdd( txt_, '#include "q' + Lower( cObj ) + '.h"' )
    AAdd( txt_, '' )
@@ -1846,6 +1874,10 @@ METHOD HbQtSource:buildExtendedSource( t_ )
 
    AEval( txt_, {|e| aadd( t_, trim( e ) ) } )
 
+   IF ::cQtVer > "0x040500"
+      AAdd( txt_, "#endif" )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1854,6 +1886,9 @@ METHOD HbQtSource:getConstructor()
    LOCAL i, s, aLine := {}
    LOCAL cObjPfx := iif( ::lBuildExtended, "Q", "" )
 
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
+   ENDIF
    IF ::isConstructor
       IF ::isList
          AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * pObj = NULL;" )
@@ -1883,6 +1918,9 @@ METHOD HbQtSource:getConstructor()
       FOR i := 3 TO Len( ::new_ ) - 1
          AAdd( aLine, ::new_[ i ] )
       NEXT
+   ENDIF
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#endif" )
    ENDIF
    AAdd( aLine, ::new_[ Len( ::new_ ) ] ) // }
    AAdd( aLine, "" )
@@ -2063,6 +2101,8 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    AAdd( txt_, "{" )
    IF ! empty( oMtd:cVersion )
       AAdd( txt_, "   #if QT_VERSION >= " + oMtd:cVersion )
+   ELSEIF ::cQtVer > "0x040500"
+      AAdd( txt_, "   #if QT_VERSION >= " + ::cQtVer )
    ENDIF
 #ifdef _GEN_TRACE_
    AAdd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
@@ -2219,7 +2259,8 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    ENDIF
 
    AAdd( txt_, "   }" )           // if( p )
-   IF ! empty( oMtd:cVersion )
+   IF ! empty( oMtd:cVersion ) .OR. ;
+      ::cQtVer > "0x040500"
       AAdd( txt_, "   #endif" )
    ENDIF
    AAdd( txt_, "}" )              // HB_FUNC()
@@ -3154,7 +3195,7 @@ STATIC FUNCTION hbqtgen_CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_BuildCopyrightText( cQtVer )
+STATIC FUNCTION hbqtgen_BuildCopyrightText()
    LOCAL txt_ := {}
 
    AAdd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */"              )
@@ -3171,16 +3212,16 @@ STATIC FUNCTION hbqtgen_BuildCopyrightText( cQtVer )
    AAdd( txt_, '#include "hbdefs.h"'                                                           )
    AAdd( txt_, '#include "hbapicls.h"'                                                         )
    AAdd( txt_, ""                                                                              )
-   AAdd( txt_, "#if QT_VERSION >= " + cQtVer                                                   )
+   AAdd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
    AAdd( txt_, ""                                                                              )
 
    RETURN txt_
 
 /*----------------------------------------------------------------------*/
 
-STATIC PROCEDURE hbqtgen_BuildFooter( txt_, cQtVer )
+STATIC PROCEDURE hbqtgen_BuildFooter( txt_ )
 
-   AAdd( txt_, "#endif /* #if QT_VERSION >= " + cQtVer + " */" )
+   AAdd( txt_, "#endif" )
 
    RETURN
 
