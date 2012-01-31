@@ -193,7 +193,7 @@ local mcVarType, mbText
    endcase
 
    if !(valtype(aEBGets)=="A")
-      aEBGEts := array(0)
+      aEBGEts := {}
    endif
 
    if !(valtype(mlMultiline)=="L") .or.;
