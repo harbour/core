@@ -135,7 +135,7 @@ STATIC s_nRddID := -1
 STATIC FUNCTION AR_INIT( nRDD )
 
    /* Init DBF Hash */
-   USRRDD_RDDDATA( nRDD, hb_Hash() )
+   USRRDD_RDDDATA( nRDD, { => } )
 
    RETURN HB_SUCCESS
 

@@ -78,7 +78,7 @@
 
 CLASS IdeActions INHERIT IdeObject
 
-   DATA   hActions                                INIT hb_hash()
+   DATA   hActions                                INIT { => }
 
    METHOD new( oIde )
    METHOD create( oIde )

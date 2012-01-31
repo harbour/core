@@ -92,7 +92,7 @@ CLASS WvgActiveXControl FROM WvgWindow
 
    DATA   lSubStdEvents                      INIT .f.
 
-   DATA   hEvents                            INIT hb_hash()
+   DATA   hEvents                            INIT { => }
    DATA   hContainer
 
    DATA   ClassName

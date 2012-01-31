@@ -43,19 +43,19 @@ PROCEDURE Main()
    ? aRECT[ 1 ], aRECT[ 2 ], aRECT[ 3 ], aRECT[ 4 ]
 
    ? "out HASH"
-   hRECT := hb_hash()
+   hRECT := { => }
    ? wapi_DrawText( hDC, "2TEST", hRECT, WIN_DT_CALCRECT )
    ? hRECT[ "left" ], hRECT[ "top" ], hRECT[ "bottom" ], hRECT[ "right" ]
 
    ? "inout HASH"
-   hRECT := hb_hash()
+   hRECT := { => }
    hRECT[ "left" ] := 300
    hRECT[ "top" ] := 350
    ? wapi_DrawText( hDC, "3TEST", hRECT, WIN_DT_CALCRECT )
    ? hRECT[ "left" ], hRECT[ "top" ], hRECT[ "bottom" ], hRECT[ "right" ]
 
    ? "in HASH"
-   hRECT := hb_hash()
+   hRECT := { => }
    hRECT[ "left" ] := 300
    hRECT[ "top" ] := 350
    hRECT[ "right" ] := 650

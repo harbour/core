@@ -63,7 +63,7 @@
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
 FUNCTION uhttpd_GetVars( cFields, cSeparator )
-   LOCAL hHashVars := hb_Hash()
+   LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
    DEFAULT cSeparator TO "&"
@@ -130,7 +130,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
 
 */
 FUNCTION uhttpd_SplitUrl( cUrl )
-   LOCAL hUrl := hb_Hash()
+   LOCAL hUrl := { => }
    LOCAL nPos, cTemp, cUserNamePassword, cHostnamePort
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
    LOCAL cUri

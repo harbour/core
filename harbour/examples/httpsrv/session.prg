@@ -674,7 +674,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   //TraceLog( "SessionDestroy() - cID", cID )
   DEFAULT cID TO ::cSID
 
-  _SESSION := hb_Hash()
+  _SESSION := { => }
   ::oCookie:DeleteCookie( ::cName )
 
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )

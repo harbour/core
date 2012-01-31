@@ -71,7 +71,7 @@ FUNCTION HRBMAIN()
 
    hGets := _REQUEST
 
-   DEFAULT hGets TO hb_Hash()
+   DEFAULT hGets TO { => }
 
    IF HB_HHasKey( hGets, "page" )
 
@@ -186,7 +186,7 @@ METHOD Read() CLASS TableManager
       //n := 0
       DO WHILE table->( !Eof() ) //.AND. ++n < 50
 
-         hMap := hb_Hash()
+         hMap := { => }
          hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )
          hMap[ "name"    ] := RTrim( table->first ) + " " + RTrim( table->last )
          hMap[ "address" ] := RTrim( table->street )

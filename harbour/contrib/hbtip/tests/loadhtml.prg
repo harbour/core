@@ -13,7 +13,7 @@ PROCEDURE Main
    oHttp := TIpClientHttp():new( "http://www.google.de/search" )
 
    /* build the Google query */
-   hQUery := hb_Hash()
+   hQUery := { => }
    hb_hSetCaseMatch( hQuery, .F. )
 
    hQuery["q"]    := "Harbour"

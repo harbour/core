@@ -47,7 +47,7 @@ PROCEDURE Main( cName )
 
    ?
    ? "Adding section 'Added', with key NEW = new"
-   hIni[ "Added" ] := hb_Hash()
+   hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out.ini"
@@ -94,7 +94,7 @@ PROCEDURE Main( cName )
 
    ?
    ? "Adding section 'Added', with key NEW = new"
-   hIni[ "Added" ] := hb_Hash()
+   hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out1.ini"

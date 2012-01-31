@@ -19,7 +19,7 @@ PROCEDURE Main(...)
    LOCAL cPar
    LOCAL aParams := hb_aParams()
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
-   LOCAL hParams := hb_Hash()
+   LOCAL hParams := { => }
 
    LOCAL cText, cImg, nPt, nWidth, nHeight, cPhoto
 
@@ -211,7 +211,7 @@ PROCEDURE OutJpg( cText, nPitch )
 RETURN
 
 FUNCTION GetVars( cFields, cSeparator )
-   LOCAL hHashVars := hb_Hash()
+   LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
    DEFAULT cSeparator TO "&"
@@ -247,7 +247,7 @@ FUNCTION GetVars( cFields, cSeparator )
 RETURN hHashVars
 
 FUNCTION GetParams( aParams )
-   LOCAL hHashVars := hb_Hash()
+   LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
 
