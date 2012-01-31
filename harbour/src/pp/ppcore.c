@@ -5531,11 +5531,23 @@ void hb_pp_reset( PHB_PP_STATE pState )
    pState->fTracePragmas = HB_FALSE;
    pState->fQuiet        = pState->fQuietSet;
    pState->iMaxCycles    = pState->iMaxCyclesSet;
+   pState->iCondCompile  = 0;
+   pState->iCondCount    = 0;
    pState->iStreamDump   = HB_PP_STREAM_OFF;
+
+   hb_pp_tokenListFree( &pState->pFuncOut );
+   hb_pp_tokenListFree( &pState->pFuncEnd );
 
    hb_pp_InFileFree( pState );
    hb_pp_OutFileFree( pState );
    hb_pp_TraceFileFree( pState );
+
+   if( pState->iOperators > 0 )
+   {
+      hb_pp_operatorsFree( pState->pOperators, pState->iOperators );
+      pState->pOperators = NULL;
+      pState->iOperators = 0;
+   }
 
    hb_pp_ruleListNonStdFree( &pState->pDefinitions );
    hb_pp_ruleListNonStdFree( &pState->pTranslations );
