@@ -682,14 +682,14 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
             break;
       }
       else
-         ch = fgetc( pState->pFile->file_in );
-
-      if( ch == EOF )
       {
-         pState->pFile->fEof = HB_TRUE;
-         break;
+         ch = fgetc( pState->pFile->file_in );
+         if( ch == EOF )
+         {
+            pState->pFile->fEof = HB_TRUE;
+            break;
+         }
       }
-
       iLine = 1;
       /* In Clipper ^Z works like \n */
       if( ch == '\n' || ch == '\x1a' )
@@ -885,13 +885,13 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
 
 static void hb_pp_getLine( PHB_PP_STATE pState )
 {
-   PHB_PP_TOKEN * pInLinePtr;
+   PHB_PP_TOKEN * pInLinePtr, * pEolTokenPtr;
    char * pBuffer, ch;
    HB_SIZE nLen, n;
    HB_BOOL fDump = HB_FALSE;
-   int iLines = 0;
+   int iLines = 0, iStartLine;
 
-   pInLinePtr = NULL;
+   pInLinePtr = pEolTokenPtr = NULL;
    hb_pp_tokenListFree( &pState->pFile->pTokenList );
    pState->pNextTokenPtr = &pState->pFile->pTokenList;
    pState->pFile->iTokens = 0;
@@ -902,6 +902,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
    pState->iInLineState = HB_PP_INLINE_OFF;
    pState->iInLineBraces = 0;
    pState->iBlockState = pState->iNestedBlock = 0;
+   iStartLine = pState->pFile->iCurrentLine + 1;
 
    do
    {
@@ -1480,14 +1481,28 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          n = 0;
       }
 
+      if( pEolTokenPtr && pEolTokenPtr != pState->pNextTokenPtr )
+      {
+         PHB_PP_TOKEN pToken = *pEolTokenPtr;
+
+         while( iStartLine < pState->pFile->iCurrentLine )
+         {
+            hb_pp_tokenAdd( &pEolTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+            pState->pFile->iTokens++;
+            iStartLine++;
+            iLines++;
+         }
+         *pEolTokenPtr = pToken;
+      }
+
       if( !pState->fCanNextLine &&
+          !( pState->iStreamDump && pState->iStreamDump != HB_PP_STREAM_CLIPPER ) &&
           ( pState->iNestedBlock || pState->iBlockState == 5 ) )
       {
-         iLines++;
-         hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+         pEolTokenPtr = pState->pNextTokenPtr;
          pState->nSpaces = pState->nSpacesMin = 0;
-         pState->pFile->iTokens++;
          pState->fNewStatement = HB_TRUE;
+         pState->fDirective = HB_FALSE;
          if( pState->iBlockState )
          {
             if( pState->iBlockState == 5 )
