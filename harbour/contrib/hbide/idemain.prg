@@ -103,8 +103,9 @@ REQUEST ADS
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE Main( ... )
-   LOCAL oIde, oTmp
+FUNCTION Main( ... )
+   LOCAL oTmp
+   LOCAL oIde
 
 #ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS, tmp
@@ -138,18 +139,19 @@ PROCEDURE Main( ... )
 
    oTmp := HbIde():new( hb_aParams() )
    oIde := oTmp:create()
-   oIde:destroy()
+   //oIde:oDlg:destroy()
+   //oIde:destroy()
    oTmp := NIL
-   oIde := NIL
+   //oIde := oIde
 
-   RETURN
+   RETURN oIde
 
 /*----------------------------------------------------------------------*/
 
 CLASS HbIde
 
-   DATA   aParams
-   DATA   cProjIni
+   DATA   aParams                                 INIT {}
+   DATA   cProjIni                                INIT ""
 
    DATA   oAC                                            /* Actions Manager                */
    DATA   oBM                                            /* Database Browser Manager       */
@@ -530,6 +532,7 @@ METHOD HbIde:destroy()
 
 METHOD HbIde:new( aParams )
 
+   DEFAULT aParams TO ::aParams
    ::aParams := aParams
 
    RETURN self
@@ -882,6 +885,7 @@ METHOD HbIde:execAction( cKey )
       ::oEV:fetchNew()
       EXIT
    CASE "Exit"
+      ::lQuitting := .t.
       hbide_setClose( .T. )
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       EXIT

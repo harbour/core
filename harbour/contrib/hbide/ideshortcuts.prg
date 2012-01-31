@@ -658,6 +658,9 @@ METHOD IdeShortcuts:populateDftSCuts()
       aadd( ::aDftSCutsItms, array( 6 ) )
       ::array2table( nRow, a_ )
       QApplication():processEvents()
+      IF ::lQuitting
+         EXIT 
+      ENDIF    
    NEXT
    oTbl:setCurrentCell( 0,0 )
 

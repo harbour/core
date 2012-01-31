@@ -469,6 +469,9 @@ METHOD IdeFunctions:loadTags( aProjects )
          ENDIF
 
          QApplication():processEvents()
+         IF ::lQuitting
+            EXIT 
+         ENDIF    
       NEXT
 
       IF lPopulate
@@ -539,6 +542,9 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
          ENDIF
 
          QApplication():processEvents()
+         IF ::lQuitting
+            EXIT 
+         ENDIF    
       NEXT
 
       FOR EACH a_ IN aCTags
@@ -614,6 +620,9 @@ METHOD IdeFunctions:populateTable()
       oTbl:setRowHeight( n, 16 )
 
       QApplication():processEvents()
+      IF ::lQuitting
+         EXIT 
+      ENDIF    
 
       aadd( ::aItems, qItm )
       n++

@@ -198,7 +198,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
 
    METHOD installSignals()
    METHOD refreshDocTree()
-   METHOD updateViewer( aHtm )
+   METHOD updateViewer( aHtm, cDocName )
    METHOD populateFuncDetails( n )
    METHOD populateTextFile( cTextFile )
    METHOD populateRootInfo()
@@ -208,6 +208,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD buildView( oFunc )
    METHOD print()
    METHOD exportAsPdf()
+   METHOD exportAsPdfAll()
    METHOD paintRequested( qPrinter )
    METHOD parseTextFile( cTextFile, oParent )
    METHOD jumpToFunction( cFunction )
@@ -281,6 +282,7 @@ METHOD IdeHarbourHelp:destroy()
       ::oUI:q_buttonRefresh    :disconnect( "clicked()"                           )
       ::oUI:q_buttonPrint      :disconnect( "clicked()"                           )
       ::oUI:q_buttonPdf        :disconnect( "clicked()"                           )
+      ::oUI:q_buttonPdfAll     :disconnect( "clicked()"                           )
       ::oUI:q_browserView      :disconnect( "anchorClicked(QUrl)"                 )
       ::oUI:q_tabWidgetContents:disconnect( "currentChanged(int)"                 )
       ::oUI:q_editInstall      :disconnect( "textChanged(QString)"                )
@@ -401,6 +403,7 @@ METHOD IdeHarbourHelp:setImages()
    oUI:q_buttonRefresh :setIcon( hbide_image( "dc_refresh" ) )
    oUI:q_buttonPrint   :setIcon( hbide_image( "dc_print"   ) )
    oUI:q_buttonPdf     :setIcon( hbide_image( "dc_pdffile" ) )
+   oUI:q_buttonPdfAll  :setIcon( hbide_image( "dc_pdffile" ) )
 
    oUI:q_buttonSave    :setIcon( hbide_image( "save"       ) )
    oUI:q_buttonExit    :setIcon( hbide_image( "dc_quit"    ) )
@@ -426,6 +429,7 @@ METHOD IdeHarbourHelp:setTooltips()
    oUI:q_buttonUp      :setToolTip( "Up"       )
    oUI:q_buttonPrint   :setToolTip( "Print"    )
    oUI:q_buttonPdf     :setToolTip( "Export as PDF Document" )
+   oUI:q_buttonPdfAll  :setToolTip( "Export ALL as PDF Documents" )
 
    oUI:q_buttonSave    :setToolTip( "Save"     )
    oUI:q_buttonExit    :setToolTip( "Exit"     )
@@ -476,6 +480,7 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:q_buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
    ::oUI:q_buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
    ::oUI:q_buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
+   ::oUI:q_buttonPdfAll     :connect( "clicked()"                 , {| | ::execEvent( "buttonPdfAll_clicked"                ) } )
 
    ::oUI:q_browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
    ::oUI:q_tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
@@ -595,6 +600,10 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "buttonPdf_clicked"
       ::exportAsPdf()
+      EXIT
+
+   CASE "buttonPdfAll_clicked"
+      ::exportAsPdfAll()
       EXIT
 
    CASE "treeCategory_itemSelectionChanged"
@@ -1097,9 +1106,10 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:updateViewer( aHtm )
+METHOD IdeHarbourHelp:updateViewer( aHtm, cDocName )
 
    ::oUI:q_browserView:setHTML( hbide_arrayToMemo( aHtm ) )
+   ::oUI:q_browserView:setDocumentTitle( cDocName )
 
    RETURN Self
 
@@ -1119,7 +1129,7 @@ METHOD IdeHarbourHelp:populateRootInfo()
    aadd( aHtm, " </body>" )
    aadd( aHtm, "</html>" )
 
-   ::updateViewer( aHtm )
+   ::updateViewer( aHtm, "Welcome" )
 
    RETURN Self
 
@@ -1134,7 +1144,7 @@ METHOD IdeHarbourHelp:populatePathInfo( cPath )
    aadd( aHtm, " </body>" )
    aadd( aHtm, "</html>" )
 
-   ::updateViewer( aHtm )
+   ::updateViewer( aHtm, cPath )
 
    RETURN Self
 
@@ -1165,7 +1175,7 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
    aadd( aHtm, " </body>" )
    aadd( aHtm, "</html>" )
 
-   ::updateViewer( aHtm )
+   ::updateViewer( aHtm, cTextFile )
 
    RETURN Self
 
@@ -1368,24 +1378,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
    aadd( aHtm, " </body>"     )
    aadd( aHtm, "</html>"      )
 
-   ::updateViewer( aHtm )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeHarbourHelp:exportAsPdf()
-   LOCAL cPdf, qPrinter, cExt, cPath, cFile
-
-   IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Documents", "*.pdf" } } ) )
-      hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
-      IF empty( cExt ) .OR. !( Lower( cExt ) == ".pdf" )
-         cPdf := cPath + cFile + ".pdf"
-      ENDIF
-      qPrinter := QPrinter()
-      qPrinter:setOutputFileName( cPdf )
-      ::oUI:q_browserView:print( qPrinter )
-   ENDIF
+   ::updateViewer( aHtm, strtran( strtran( oFunc:cName, ")" ), "(" ) )
 
    RETURN Self
 
@@ -1411,3 +1404,47 @@ METHOD IdeHarbourHelp:paintRequested( qPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:exportAsPdf()
+   LOCAL cPdf, qPrinter, cExt, cPath, cFile
+
+   IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Document", "*.pdf" } } ) )
+      hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
+      qPrinter := QPrinter()
+      qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:q_browserView:documentTitle() ) + ".pdf" )
+      qPrinter:setFullPage( .t. )
+      ::oUI:q_browserView:print( qPrinter )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:exportAsPdfAll()
+   LOCAL cPdf, qPrinter, cExt, cPath, cFile, aItems
+
+   IF empty( ::aNodes )
+      RETURN Self 
+   ENDIF 
+   
+   IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Documents", "*.pdf" } } ) )
+      hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
+      qPrinter := QPrinter()
+      
+      FOR EACH aItems IN ::aNodes
+         ::oUI:q_treeDoc:setCurrentItem( aItems[ 1 ], 0 )
+         QApplication():processEvents()
+         IF ::lQuitting
+            EXIT 
+         ENDIF    
+         qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:q_browserView:documentTitle() ) + ".pdf" )
+         qPrinter:setFullPage( .t. )
+         ::oUI:q_browserView:print( qPrinter )
+         qPrinter:newPage()
+      NEXT     
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

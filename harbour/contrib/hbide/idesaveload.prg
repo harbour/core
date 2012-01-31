@@ -378,7 +378,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "CurrentFolderFind"         + "=" +   ::oIde:cWrkFolderFind                              )
    aadd( txt_, "CurrentReplace"            + "=" +   ::oIde:cWrkReplace                                 )
    aadd( txt_, "CurrentView"               + "=" +   ::oIde:cWrkView                                    )
-   aadd( txt_, "TextFileExtensions"        + "=" +   ::oINI:cTextFileExtensions                         )
+   aadd( txt_, "TextFileExtensions"        + "=" +   ::cTextFileExtensions                              )
    //
    aadd( txt_, "FontName"                  + "=" +   ::cFontName                                        )
    aadd( txt_, "PointSize"                 + "=" +   hb_ntos( ::nPointSize )                            )
@@ -703,7 +703,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "CurrentFolderFind"           ; ::oIde:cWrkFolderFind               := cVal ; EXIT
                      CASE "CurrentReplace"              ; ::oIde:cWrkReplace                  := cVal ; EXIT
                      CASE "CurrentView"                 ; ::oIde:cWrkView                     := cVal ; EXIT
-                     CASE "TextFileExtensions"          ; ::oINI:cTextFileExtensions          := cVal ; EXIT
+                     CASE "TextFileExtensions"          ; ::cTextFileExtensions               := cVal ; EXIT
                      //
                      CASE "FontName"                    ; ::cFontName                         := cVal ; EXIT
                      CASE "PointSize"                   ; ::nPointSize                        := val( cVal ); EXIT
