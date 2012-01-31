@@ -1292,10 +1292,10 @@ HARBOUR
        Complete log output is rarely necessary, but always make sure to include
        the top of the output (lines starting with '!') and the area where
        problematic behavior occurred _first_. Make sure to not only include
-       a link failure or a make tool failure only, as it's most of the time
-       not enough information. Compress your log using zip if it is larger
+       a link failure or a make tool failure, as it's most of the time not
+       enough information. Compress your log using zip if it is larger
        than 25KB. (use the extension .zip)
-       Without these, your chances are lower to get useful or any response.
+       With these, you have much better chance to get useful or any response.
    10. If you are to report a build problem with a Harbour application,
        most of the above point applies, plus make sure to use '-trace'
        command line option when running hbmk2.
