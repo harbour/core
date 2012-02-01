@@ -54,6 +54,9 @@
 
 #include "hbtrace.ch"
 
+#undef HB_TR_ALWAYS
+#define HB_TR_ALWAYS HB_TR_DEBUG
+
 #define UI_MODE_FUNC                              0
 #define UI_MODE_UIC                               1
 #define UI_MODE_UI                                2

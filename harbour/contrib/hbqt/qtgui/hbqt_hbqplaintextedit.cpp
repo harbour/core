@@ -1012,7 +1012,6 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
       }
       else if( selectionMode == selectionMode_column )
       {
-HB_TRACE( HB_TR_ALWAYS, ( "HAHAHAHAHAH" ) );      
          switch( k )
          {
          case Qt::Key_Right:
@@ -1054,7 +1053,7 @@ HB_TRACE( HB_TR_ALWAYS, ( "HAHAHAHAHAH" ) );
             QPlainTextEdit::keyPressEvent( event );
             columnEnds = textCursor().columnNumber();
             break;
-#if 0         
+#if 0
             QTextCursor c( textCursor() );
             c.movePosition( QTextCursor::EndOfLine, QTextCursor::MoveAnchor );
             if( c.columnNumber() <= columnEnds )
@@ -1067,7 +1066,7 @@ HB_TRACE( HB_TR_ALWAYS, ( "HAHAHAHAHAH" ) );
                event->ignore();
             }
             break;
-#endif            
+#endif
          }
          case Qt::Key_Up:
          case Qt::Key_PageUp:

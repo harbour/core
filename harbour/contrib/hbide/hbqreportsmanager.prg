@@ -1554,10 +1554,8 @@ METHOD HbqReportsManager:printPreview( qPrinter )
 #if 0
    qInfo := QPrinterInfo( qPrinter )
    qList := qInfo:availablePrinters()
-HB_TRACE( HB_TR_ALWAYS, 201 )
    FOR i := 0 TO qList:size() - 1
       qStr := qList:at( i )
-HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
    NEXT
 #endif
    qPrinter:setOutputFormat( QPrinter_PdfFormat )
@@ -1566,7 +1564,6 @@ HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerNam
    // qPrinter:setFullPage( .t. )
 
    qDlg := QPrintPreviewDialog( qPrinter, ::qView )
-HB_TRACE( HB_TR_ALWAYS, 290101 )
    qDlg:connect( "paintRequested(QPrinter*)", {|p| ::paintRequested( p ) } )
 
    qDlg:setWindowTitle( "HBReportGenerator : " + iif( !empty( ::cSaved ), ::cSaved, "Untitled" ) )

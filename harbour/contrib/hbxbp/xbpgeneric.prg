@@ -290,12 +290,7 @@ PROCEDURE SetAppEvent( nEvent, mp1, mp2, oXbp )
 
    IF !empty( t_events[ nEventIn, 4 ] )
       hb_ains( t_events, nEventIn, { nEvent, mp1, mp2, ooXbp }, .t. )
-
-      HB_TRACE( HB_TR_ALWAYS, "................t_nEventIn", 0, nEventIn )
-
    ELSE
-      HB_TRACE( HB_TR_ALWAYS, "................t_nEventIn", 1, nEventIn )
-
       t_events[ nEventIn, 1 ] := nEvent
       t_events[ nEventIn, 2 ] := mp1
       t_events[ nEventIn, 3 ] := mp2
@@ -317,8 +312,6 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    IF empty( t_nEventOut ) .OR. ++t_nEventOut > len( t_events )
       t_nEventOut := 1
    ENDIF
-
-   HB_TRACE( HB_TR_ALWAYS, "t_nEventOut", t_nEventOut )
 
    //DO WHILE ! empty( t_oEventLoop )
       t_oEventLoop:processEvents( QEventLoop_AllEvents )

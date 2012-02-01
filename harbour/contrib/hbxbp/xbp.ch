@@ -11,6 +11,9 @@
 
 #include "hbtrace.ch"
 
+#undef HB_TR_ALWAYS
+#define HB_TR_ALWAYS HB_TR_DEBUG
+
 /*----------------------------------------------------------------------*/
 
 #define HBXBP_EVENT_HANDLED                       0
