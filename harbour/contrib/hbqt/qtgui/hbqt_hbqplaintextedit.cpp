@@ -1012,6 +1012,7 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
       }
       else if( selectionMode == selectionMode_column )
       {
+HB_TRACE( HB_TR_ALWAYS, ( "HAHAHAHAHAH" ) );      
          switch( k )
          {
          case Qt::Key_Right:
@@ -1050,6 +1051,10 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
          }
          case Qt::Key_End:
          {
+            QPlainTextEdit::keyPressEvent( event );
+            columnEnds = textCursor().columnNumber();
+            break;
+#if 0         
             QTextCursor c( textCursor() );
             c.movePosition( QTextCursor::EndOfLine, QTextCursor::MoveAnchor );
             if( c.columnNumber() <= columnEnds )
@@ -1062,6 +1067,7 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
                event->ignore();
             }
             break;
+#endif            
          }
          case Qt::Key_Up:
          case Qt::Key_PageUp:
@@ -1211,21 +1217,10 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             break;
          }
          case Qt::Key_Home:
+         case Qt::Key_End:
          {
             QPlainTextEdit::keyPressEvent( event );
             columnEnds = textCursor().columnNumber();
-            break;
-         }
-         case Qt::Key_End:
-         {
-            QTextCursor c( textCursor() );
-            c.movePosition( QTextCursor::EndOfLine, QTextCursor::MoveAnchor );
-            if( c.columnNumber() <= columnEnds ){
-               QPlainTextEdit::keyPressEvent( event );
-               columnEnds = textCursor().columnNumber();;
-            } else {
-               event->ignore();
-            }
             break;
          }
          case Qt::Key_Up:
