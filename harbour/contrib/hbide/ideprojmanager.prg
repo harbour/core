@@ -1407,9 +1407,9 @@ METHOD IdeProjManager:buildSource( lExecutable )
    ::oOutputResult:oWidget:clear()
 
    ::oOutputResult:oWidget:append( hbide_outputLine() )
-   cTmp := "Project [ " + oEdit:sourceFile               + " ]    " + ;
-           "Launch [ "  + iif( ::lLaunch , 'Yes', 'No' ) + " ]    " + ;
-           "Rebuild [ " + iif(   lRebuild, 'Yes', 'No' ) + " ]    " + ;
+   cTmp := "Project [ " + oEdit:sourceFile              + " ]    " + ;
+           "Launch [ "  + iif( ::lLaunch, 'Yes', 'No' ) + " ]    " + ;
+           "Rebuild [ " + iif( lRebuild , 'Yes', 'No' ) + " ]    " + ;
            "Started [ " + time() + " ]"
    ::oOutputResult:oWidget:append( cTmp )
    ::oOutputResult:oWidget:append( hbide_outputLine() )
@@ -1615,7 +1615,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
 
    ::outputText( hbide_outputLine() )
    cTmp := "Exit Code [ " + hb_ntos( nExitCode ) + " ]    Exit Status [ " + hb_ntos( nExitStatus ) + " ]    " +;
-           "Finished at [ " + time() + " ]    Done in [ " + hb_ntos( seconds() - oProcess:started ) +" Secs ]"
+           "Finished at [ " + time() + " ]    Done in [ " + hb_ntos( seconds() - oProcess:started ) + " Secs ]"
    ::outputText( cTmp )
    ::outputText( hbide_outputLine() )
 
