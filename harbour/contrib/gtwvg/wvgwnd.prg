@@ -263,8 +263,9 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   dragMotion( xParam )                  SETGET
    METHOD   dragLeave( xParam )                   SETGET
    METHOD   dragDrop( xParam, xParam1 )           SETGET
+PROTECTED:   
    METHOD   getPosAndSize( aPs, aSz )
-   METHOD   isParentCrt()                         INLINE ( __objGetClsName( ::oParent ) == "WVGCRT" )
+   METHOD   isParentCrt()                         INLINE ( ::oParent:objType == objTypeCrt )
    METHOD   rePosition()
    METHOD   createControl()
 
@@ -327,7 +328,7 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::sSize
+   DEFAULT aSize       TO ::aSize
    DEFAULT aPresParams TO ::aPresParams
    DEFAULT lVisible    TO ::visible
 

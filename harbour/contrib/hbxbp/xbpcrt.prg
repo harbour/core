@@ -319,9 +319,8 @@ METHOD XbpCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::lHasInputFocus := .t.
    ENDIF
 
-
    ::nFlags := ::oWidget:windowFlags()
-   IF __objGetClsName( ::oParent ) == "XBPDRAWINGAREA"
+   IF __objGetClsName( ::oParent ) $ "XBPDRAWINGAREA"
       ::setParent( ::oParent )
    ENDIF
 
@@ -343,7 +342,7 @@ METHOD XbpCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::sSize
+   DEFAULT aSize       TO ::aSize
    DEFAULT aPresParams TO ::aPresParams
    DEFAULT lVisible    TO ::visible
 

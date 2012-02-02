@@ -389,7 +389,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::sSize
+   DEFAULT aSize       TO ::aSize
    DEFAULT aPresParams TO ::aPresParams
    DEFAULT lVisible    TO ::visible
 
