@@ -59,7 +59,11 @@
 
 #include <QtGui/QPlainTextEdit>
 #include <QtCore/QtCore>
+#include <QtCore/QMimeData>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDragMoveEvent>
+#include <QtGui/QDropEvent>
 #include <QtGui/QTextBlock>
 #include <QtGui/QPainter>
 #include <QtGui/QMessageBox>
@@ -168,7 +172,8 @@ private:
    bool           isAliasCompleter;
    bool           isCodeCompletionActive;
    bool           isCompletionTipsActive;
-
+   bool           isInDrag;
+   
 protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
@@ -179,6 +184,9 @@ protected:
    void           focusInEvent( QFocusEvent * event );
    void           keyPressEvent( QKeyEvent * event );
    void           keyReleaseEvent( QKeyEvent * event );
+   void           dragEnterEvent( QDragEnterEvent * event );
+   void           dragMoveEvent( QDragMoveEvent * event );
+   void           dropEvent( QDropEvent * event );
 
 public slots:
    QString        hbTextAlias();
