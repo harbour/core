@@ -1,6 +1,6 @@
-diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
---- jpeg.orig/jmorecfg.h	2011-01-18 16:05:06.996240502 +0100
-+++ jpeg/jmorecfg.h	2011-01-18 16:05:07.796243696 +0100
+diff -urN jpeg.orig\jmorecfg.h jpeg\jmorecfg.h
+--- jpeg.orig\jmorecfg.h	Tue Feb 07 22:07:47 2012
++++ jpeg\jmorecfg.h	Tue Feb 07 22:07:48 2012
 @@ -138,7 +138,9 @@
  #ifdef CHAR_IS_UNSIGNED
  typedef char UINT8;
