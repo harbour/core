@@ -29,8 +29,8 @@ unzip.c
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
 # ORIGIN http://www.winimage.com/zLibDll/minizip.html
-# VER    1.1
-# URL    http://www.winimage.com/zLibDll/unzip11.zip
+# VER    1.? (from zlib 1.26)
+# URL    http://www.winimage.com/zLibDll/unzip1?.zip
 # DIFF   minizip.dif
 #
 # MAP    crypt.h

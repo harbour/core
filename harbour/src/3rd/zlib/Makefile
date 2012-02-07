@@ -48,9 +48,9 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.zlib.net/
-# VER    1.2.5
-# URL    http://zlib.net/zlib125.zip
+# ORIGIN http://zlib.net/
+# VER    1.2.6
+# URL    http://prdownloads.sourceforge.net/libpng/zlib126.zip?download
 # DIFF   zlib.dif
 #
 # MAP    README

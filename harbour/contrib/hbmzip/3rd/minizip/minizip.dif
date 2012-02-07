@@ -1,6 +1,6 @@
-diff -urN minizip.orig\crypt.h minizip\crypt.h
---- minizip.orig\crypt.h	Wed Apr 20 03:26:49 2011
-+++ minizip\crypt.h	Wed Apr 20 03:26:49 2011
+diff -u minizip.orig\crypt.h minizip\crypt.h
+--- minizip.orig\crypt.h	Sun Oct 25 21:49:58 2009
++++ minizip\crypt.h	Tue Feb 07 23:31:09 2012
 @@ -38,6 +38,8 @@
                       * unpredictable manner on 16-bit systems; not a problem
                       * with any known compiler so far, though */
@@ -10,18 +10,18 @@ diff -urN minizip.orig\crypt.h minizip\crypt.h
      temp = ((unsigned)(*(pkeys+2)) & 0xffff) | 2;
      return (int)(((temp * (temp ^ 1)) >> 8) & 0xff);
  }
-diff -urN minizip.orig\ioapi.c minizip\ioapi.c
---- minizip.orig\ioapi.c	Wed Apr 20 03:26:49 2011
-+++ minizip\ioapi.c	Wed Apr 20 03:26:49 2011
-@@ -15,6 +15,7 @@
- #endif
+diff -u minizip.orig\ioapi.c minizip\ioapi.c
+--- minizip.orig\ioapi.c	Sat Jan 21 11:58:44 2012
++++ minizip\ioapi.c	Tue Feb 07 23:33:29 2012
+@@ -27,6 +27,7 @@
+ 
  
  #include "ioapi.h"
 +#include "hbapifs.h"
  
  voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
  {
-@@ -84,6 +85,9 @@
+@@ -96,6 +97,9 @@
  {
      FILE* file = NULL;
      const char* mode_fopen = NULL;
@@ -31,7 +31,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
          mode_fopen = "rb";
      else
-@@ -94,7 +98,7 @@
+@@ -106,7 +110,7 @@
          mode_fopen = "wb";
  
      if ((filename!=NULL) && (mode_fopen != NULL))
@@ -40,7 +40,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      return file;
  }
  
-@@ -102,6 +106,9 @@
+@@ -114,6 +118,9 @@
  {
      FILE* file = NULL;
      const char* mode_fopen = NULL;
@@ -50,7 +50,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
          mode_fopen = "rb";
      else
-@@ -120,6 +127,9 @@
+@@ -132,6 +139,9 @@
  static uLong ZCALLBACK fread_file_func (voidpf opaque, voidpf stream, void* buf, uLong size)
  {
      uLong ret;
@@ -60,7 +60,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      ret = (uLong)fread(buf, 1, (size_t)size, (FILE *)stream);
      return ret;
  }
-@@ -127,6 +137,9 @@
+@@ -139,6 +149,9 @@
  static uLong ZCALLBACK fwrite_file_func (voidpf opaque, voidpf stream, const void* buf, uLong size)
  {
      uLong ret;
@@ -70,7 +70,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      ret = (uLong)fwrite(buf, 1, (size_t)size, (FILE *)stream);
      return ret;
  }
-@@ -134,6 +147,9 @@
+@@ -146,6 +159,9 @@
  static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
  {
      long ret;
@@ -80,14 +80,14 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      ret = ftell((FILE *)stream);
      return ret;
  }
-@@ -142,14 +158,20 @@
+@@ -154,14 +170,20 @@
  static ZPOS64_T ZCALLBACK ftell64_file_func (voidpf opaque, voidpf stream)
  {
      ZPOS64_T ret;
 +
 +    (void) opaque;
 +
-     ret = ftello64((FILE *)stream);
+     ret = FTELLO_FUNC((FILE *)stream);
      return ret;
  }
  
@@ -102,7 +102,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      switch (origin)
      {
      case ZLIB_FILEFUNC_SEEK_CUR :
-@@ -171,8 +193,11 @@
+@@ -183,8 +205,11 @@
  
  static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T offset, int origin)
  {
@@ -115,7 +115,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      switch (origin)
      {
      case ZLIB_FILEFUNC_SEEK_CUR :
-@@ -198,6 +223,9 @@
+@@ -210,6 +235,9 @@
  static int ZCALLBACK fclose_file_func (voidpf opaque, voidpf stream)
  {
      int ret;
@@ -125,7 +125,7 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
      ret = fclose((FILE *)stream);
      return ret;
  }
-@@ -205,12 +233,14 @@
+@@ -217,12 +245,14 @@
  static int ZCALLBACK ferror_file_func (voidpf opaque, voidpf stream)
  {
      int ret;
@@ -142,14 +142,14 @@ diff -urN minizip.orig\ioapi.c minizip\ioapi.c
  {
      pzlib_filefunc_def->zopen_file = fopen_file_func;
      pzlib_filefunc_def->zread_file = fread_file_func;
-diff -urN minizip.orig\ioapi.h minizip\ioapi.h
---- minizip.orig\ioapi.h	Wed Apr 20 03:26:49 2011
-+++ minizip\ioapi.h	Wed Apr 20 03:26:49 2011
-@@ -21,29 +21,58 @@
+diff -u minizip.orig\ioapi.h minizip\ioapi.h
+--- minizip.orig\ioapi.h	Mon Jan 16 18:51:30 2012
++++ minizip\ioapi.h	Tue Feb 07 23:39:52 2012
+@@ -21,30 +21,58 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
  
--#if (!defined(_WIN32)) && (!defined(WIN32))
+-#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
 -
 -  // Linux needs this to support file operation on files larger then 4+GB
 -  // But might need better if/def to select just the platforms that needs them.
@@ -166,6 +166,7 @@ diff -urN minizip.orig\ioapi.h minizip\ioapi.h
 -        #ifndef _FILE_OFFSET_BIT
 -                #define _FILE_OFFSET_BIT 64
 -        #endif
+-
 +#if !(defined(_WIN32) || defined(WIN32)) && \
 +    !(defined(__MSDOS__) || defined(MSDOS)) && \
 +    !(defined(OS_2) || defined(__OS2__) || defined(OS2)) && \
@@ -221,7 +222,7 @@ diff -urN minizip.orig\ioapi.h minizip\ioapi.h
  #if defined(USE_FILE32API)
  #define fopen64 fopen
  #define ftello64 ftell
-@@ -178,8 +207,8 @@
+@@ -186,8 +214,8 @@
  
  #define ZREAD64(filefunc,filestream,buf,size)     ((*((filefunc).zfile_func64.zread_file))   ((filefunc).zfile_func64.opaque,filestream,buf,size))
  #define ZWRITE64(filefunc,filestream,buf,size)    ((*((filefunc).zfile_func64.zwrite_file))  ((filefunc).zfile_func64.opaque,filestream,buf,size))
@@ -232,9 +233,9 @@ diff -urN minizip.orig\ioapi.h minizip\ioapi.h
  #define ZCLOSE64(filefunc,filestream)             ((*((filefunc).zfile_func64.zclose_file))  ((filefunc).zfile_func64.opaque,filestream))
  #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
  
-diff -urN minizip.orig\unzip.c minizip\unzip.c
---- minizip.orig\unzip.c	Wed Apr 20 03:26:49 2011
-+++ minizip\unzip.c	Wed Apr 20 03:26:49 2011
+diff -u minizip.orig\unzip.c minizip\unzip.c
+--- minizip.orig\unzip.c	Sat Jan 21 11:49:30 2012
++++ minizip\unzip.c	Tue Feb 07 23:31:09 2012
 @@ -68,13 +68,17 @@
  #include <stdlib.h>
  #include <string.h>
@@ -321,9 +322,9 @@ diff -urN minizip.orig\unzip.c minizip\unzip.c
  
      pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
      pfile_in_zip_read_info->crc32=0;
-diff -urN minizip.orig\zip.c minizip\zip.c
---- minizip.orig\zip.c	Wed Apr 20 03:26:49 2011
-+++ minizip\zip.c	Wed Apr 20 03:26:49 2011
+diff -u minizip.orig\zip.c minizip\zip.c
+--- minizip.orig\zip.c	Sat Jan 21 11:48:14 2012
++++ minizip\zip.c	Tue Feb 07 23:31:09 2012
 @@ -29,16 +29,20 @@
  #include "zlib.h"
  #include "zip.h"
@@ -411,8 +412,8 @@ diff -urN minizip.orig\zip.c minizip\zip.c
 +    int err;
  
  #    ifdef NOCRYPT
-     if (password != NULL)
-@@ -1369,7 +1388,7 @@
+     (crcForCrypting);
+@@ -1370,7 +1389,7 @@
          uInt i;
          int t;
          for (i=0;i<zi->ci.pos_in_buffered_data;i++)
@@ -421,7 +422,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  #endif
      }
  
-@@ -1470,12 +1489,13 @@
+@@ -1471,12 +1490,13 @@
            {
                uLong uTotalOutBefore = zi->ci.stream.total_out;
                err=deflate(&zi->ci.stream,  Z_NO_FLUSH);
@@ -436,7 +437,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
                zi->ci.pos_in_buffered_data += (uInt)(zi->ci.stream.total_out - uTotalOutBefore) ;
            }
            else
-@@ -1533,8 +1553,7 @@
+@@ -1534,8 +1554,7 @@
                                  uLong uTotalOutBefore;
                                  if (zi->ci.stream.avail_out == 0)
                                  {
@@ -446,7 +447,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
                                          zi->ci.stream.avail_out = (uInt)Z_BUFSIZE;
                                          zi->ci.stream.next_out = zi->ci.buffered_data;
                                  }
-@@ -1648,7 +1667,7 @@
+@@ -1649,7 +1668,7 @@
  
      if(datasize > 0)
      {
@@ -455,7 +456,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  
        if((uLong)(datasize + 4) > zi->ci.size_centralExtraFree)
        {
-@@ -1679,7 +1698,9 @@
+@@ -1680,7 +1699,9 @@
        if(zi->ci.pos_local_header >= 0xffffffff)
        {
          zip64local_putValue_inmemory(p, zi->ci.pos_local_header, 8);
@@ -465,7 +466,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
        }
  
        // Update how much extra free space we got in the memory buffer
-@@ -1696,7 +1717,7 @@
+@@ -1697,7 +1718,7 @@
      if (err==ZIP_OK)
          err = add_data_in_datablock(&zi->central_dir, zi->ci.central_header, (uLong)zi->ci.size_centralheader);
  
@@ -474,7 +475,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  
      if (err==ZIP_OK)
      {
-@@ -1751,7 +1772,7 @@
+@@ -1754,7 +1775,7 @@
  
  int Write_Zip64EndOfCentralDirectoryLocator(zip64_internal* zi, ZPOS64_T zip64eocd_pos_inzip)
  {
@@ -483,7 +484,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
    ZPOS64_T pos = zip64eocd_pos_inzip - zi->add_position_when_writting_offset;
  
    err = zip64local_putValue(&zi->z_filefunc,zi->filestream,(uLong)ZIP64ENDLOCHEADERMAGIC,4);
-@@ -1773,7 +1794,7 @@
+@@ -1776,7 +1797,7 @@
  
  int Write_Zip64EndOfCentralDirectoryRecord(zip64_internal* zi, uLong size_centraldir, ZPOS64_T centraldir_pos_inzip)
  {
@@ -492,7 +493,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  
    uLong Zip64DataSize = 44;
  
-@@ -1812,7 +1833,7 @@
+@@ -1815,7 +1836,7 @@
  }
  int Write_EndOfCentralDirectoryRecord(zip64_internal* zi, uLong size_centraldir, ZPOS64_T centraldir_pos_inzip)
  {
@@ -501,7 +502,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  
    /*signature*/
    err = zip64local_putValue(&zi->z_filefunc,zi->filestream,(uLong)ENDHEADERMAGIC,4);
-@@ -1860,7 +1881,7 @@
+@@ -1863,7 +1884,7 @@
  
  int Write_GlobalComment(zip64_internal* zi, const char* global_comment)
  {
@@ -510,7 +511,7 @@ diff -urN minizip.orig\zip.c minizip\zip.c
    uInt size_global_comment = 0;
  
    if(global_comment != NULL)
-@@ -1954,7 +1975,7 @@
+@@ -1957,7 +1978,7 @@
    short header;
    short dataSize;
  
@@ -519,9 +520,9 @@ diff -urN minizip.orig\zip.c minizip\zip.c
  
    if(pData == NULL || *dataLen < 4)
      return ZIP_PARAMERROR;
-diff -urN minizip.orig\zip.h minizip\zip.h
---- minizip.orig\zip.h	Wed Apr 20 03:26:49 2011
-+++ minizip\zip.h	Wed Apr 20 03:26:49 2011
+diff -u minizip.orig\zip.h minizip\zip.h
+--- minizip.orig\zip.h	Mon Feb 15 03:58:22 2010
++++ minizip\zip.h	Tue Feb 07 23:31:09 2012
 @@ -44,7 +44,7 @@
  extern "C" {
  #endif

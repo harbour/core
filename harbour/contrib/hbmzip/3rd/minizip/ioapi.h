@@ -78,6 +78,11 @@
 #define ftello64 ftell
 #define fseeko64 fseek
 #else
+#ifdef __FreeBSD__
+#define fopen64 fopen
+#define ftello64 ftello
+#define fseeko64 fseeko
+#endif
 #ifdef _MSC_VER
  #define fopen64 fopen
  #if (_MSC_VER >= 1400) && (!(defined(NO_MSCVER_FILE64_FUNC)))
@@ -114,6 +119,8 @@ typedef  64BIT_INT_CUSTOM_TYPE ZPOS64_T;
 typedef uint64_t ZPOS64_T;
 #else
 
+/* Maximum unsigned 32-bit value used as placeholder for zip64 */
+#define MAXU32 0xffffffff
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 typedef unsigned __int64 ZPOS64_T;
