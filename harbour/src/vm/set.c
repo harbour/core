@@ -648,7 +648,8 @@ HB_FUNC( SET )
          {
             /* If the print file is not already open, open it in overwrite mode. */
             pSet->HB_SET_DEVICE = set_string( pArg2, pSet->HB_SET_DEVICE );
-            pSet->hb_set_prndevice = hb_stricmp( pSet->HB_SET_DEVICE, "PRINTER" ) == 0;
+            pSet->hb_set_prndevice = strlen( pSet->HB_SET_DEVICE ) >= 4 &&
+                                     hb_strnicmp( pSet->HB_SET_DEVICE, "PRIN", 4 ) == 0;
          }
          break;
       case HB_SET_EOF:
@@ -1749,7 +1750,8 @@ HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                if( pSet->HB_SET_DEVICE )
                   hb_xfree( pSet->HB_SET_DEVICE );
                pSet->HB_SET_DEVICE = szValue;
-               pSet->hb_set_prndevice = hb_stricmp( szValue, "PRINTER" ) == 0;
+               pSet->hb_set_prndevice = strlen( szValue ) >= 4 &&
+                                        hb_strnicmp( szValue, "PRIN", 4 ) == 0;
                fResult = HB_TRUE;
             }
             break;

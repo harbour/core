@@ -1552,7 +1552,11 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 
       if( lJulian <= 0 && lMillisec )
       {
+#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+         fResult = utimes( pszFileName, NULL ) == 0;
+#else
          fResult = utime( pszFileName, NULL ) == 0;
+#endif
       }
       else
       {
