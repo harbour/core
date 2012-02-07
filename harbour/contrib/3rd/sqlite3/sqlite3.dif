@@ -1,17 +1,7 @@
-diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2011-07-27 18:12:09.104445521 +0200
-+++ sqlite3/sqlite3.c	2011-07-27 18:12:09.244446575 +0200
-@@ -25143,7 +25143,9 @@
-   case ENODEV:
-   case ENXIO:
-   case ENOENT:
-+#if defined( ESTALE )
-   case ESTALE:
-+#endif
-   case ENOSYS:
-     /* these should force the client to close the file and reconnect */
-     
-@@ -27884,7 +27886,11 @@
+diff -urN sqlite3.orig\sqlite3.c sqlite3\sqlite3.c
+--- sqlite3.orig\sqlite3.c	Tue Feb 07 22:41:01 2012
++++ sqlite3\sqlite3.c	Tue Feb 07 22:41:01 2012
+@@ -28424,7 +28424,11 @@
        ** is the same technique used by glibc to implement posix_fallocate()
        ** on systems that do not have a real fallocate() system call.
        */
