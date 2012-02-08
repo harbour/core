@@ -81,8 +81,8 @@ else
 endif
 
 # ORIGIN http://www.pcre.org/
-# VER    8.21
-# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.21.tar.gz
+# VER    8.30
+# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.30.tar.gz
 # DIFF   pcre.dif
 #
 # MAP    LICENCE
@@ -98,16 +98,14 @@ endif
 # MAP    pcre_fullinfo.c                pcrefinf.c
 # MAP    pcre_get.c                     pcreget.c
 # MAP    pcre_globals.c                 pcreglob.c
-# MAP    pcre_info.c                    pcreinfo.c
 # MAP    pcre_jit_compile.c             pcrejitc.c
 # MAP    pcre_maketables.c              pcremktb.c
 # MAP    pcre_newline.c                 pcrenewl.c
 # MAP    pcre_ord2utf8.c                pcreoutf.c
-# MAP    pcre_printint.src              pcreprni.h
+# MAP    pcre_printint.c                pcreprni.c
 # MAP    pcre_refcount.c                pcrerefc.c
 # MAP    pcre_study.c                   pcrestud.c
 # MAP    pcre_tables.c                  pcretabs.c
-# MAP    pcre_try_flipped.c             pcretryf.c
 # MAP    pcre_ucd.c                     pcreucd.c
 # MAP    pcre_valid_utf8.c              pcrevutf.c
 # MAP    pcre_version.c                 pcrever.c

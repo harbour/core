@@ -1,39 +1,41 @@
-diff -urN pcre.orig\pcrefinf.c pcre\pcrefinf.c
---- pcre.orig\pcrefinf.c	Wed Feb 08 01:29:30 2012
-+++ pcre\pcrefinf.c	Wed Feb 08 01:29:30 2012
-@@ -139,7 +139,7 @@
-   case PCRE_INFO_MINLENGTH:
-   *((int *)where) =
-     (study != NULL && (study->flags & PCRE_STUDY_MINLEN) != 0)?
--      study->minlength : -1;
-+      (int)study->minlength : -1;
-   break;
- 
-   case PCRE_INFO_JIT:
-diff -urN pcre.orig\pcreglob.c pcre\pcreglob.c
---- pcre.orig\pcreglob.c	Wed Feb 08 01:29:30 2012
-+++ pcre\pcreglob.c	Wed Feb 08 01:29:30 2012
-@@ -74,11 +74,17 @@
- PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
- 
- #elif !defined VPCOMPAT
-+#if defined( __cplusplus ) && !defined( __IBMCPP__ )
-+extern "C" {
-+#endif
- PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
- PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
- PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
- PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
- PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
-+#if defined( __cplusplus ) && !defined( __IBMCPP__ )
-+}
-+#endif
- #endif
- 
- /* End of pcre_globals.c */
+diff -urN pcre.orig\pcreglob.c.rej pcre\pcreglob.c.rej
+--- pcre.orig\pcreglob.c.rej	Thu Jan 01 01:00:00 1970
++++ pcre\pcreglob.c.rej	Wed Feb 08 01:46:37 2012
+@@ -0,0 +1,31 @@
++***************
++*** 74,84 ****
++  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
++  
++  #elif !defined VPCOMPAT
++  PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
++  PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
++  PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
++  PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
++  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
++  #endif
++  
++  /* End of pcre_globals.c */
++--- 74,90 ----
++  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
++  
++  #elif !defined VPCOMPAT
+++ #if defined( __cplusplus ) && !defined( __IBMCPP__ )
+++ extern "C" {
+++ #endif
++  PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
++  PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
++  PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
++  PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
++  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
+++ #if defined( __cplusplus ) && !defined( __IBMCPP__ )
+++ }
+++ #endif
++  #endif
++  
++  /* End of pcre_globals.c */
 diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
---- pcre.orig\pcrejitc.c	Wed Feb 08 01:29:30 2012
-+++ pcre\pcrejitc.c	Wed Feb 08 01:29:30 2012
+--- pcre.orig\pcrejitc.c	Wed Feb 08 01:46:37 2012
++++ pcre\pcrejitc.c	Wed Feb 08 01:46:37 2012
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
@@ -42,4 +44,4 @@ diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
 +#include "sjlir.c"
  
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
- #error "Unsupported architecture"
+ #error Unsupported architecture
