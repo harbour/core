@@ -1,6 +1,6 @@
 diff -urN pcre.orig\pcrefinf.c pcre\pcrefinf.c
---- pcre.orig\pcrefinf.c	Tue Feb 07 22:22:32 2012
-+++ pcre\pcrefinf.c	Tue Feb 07 22:22:32 2012
+--- pcre.orig\pcrefinf.c	Wed Feb 08 01:29:30 2012
++++ pcre\pcrefinf.c	Wed Feb 08 01:29:30 2012
 @@ -139,7 +139,7 @@
    case PCRE_INFO_MINLENGTH:
    *((int *)where) =
@@ -11,8 +11,8 @@ diff -urN pcre.orig\pcrefinf.c pcre\pcrefinf.c
  
    case PCRE_INFO_JIT:
 diff -urN pcre.orig\pcreglob.c pcre\pcreglob.c
---- pcre.orig\pcreglob.c	Tue Feb 07 22:22:32 2012
-+++ pcre\pcreglob.c	Tue Feb 07 22:22:32 2012
+--- pcre.orig\pcreglob.c	Wed Feb 08 01:29:30 2012
++++ pcre\pcreglob.c	Wed Feb 08 01:29:30 2012
 @@ -74,11 +74,17 @@
  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
  
@@ -31,3 +31,15 @@ diff -urN pcre.orig\pcreglob.c pcre\pcreglob.c
  #endif
  
  /* End of pcre_globals.c */
+diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
+--- pcre.orig\pcrejitc.c	Wed Feb 08 01:29:30 2012
++++ pcre\pcrejitc.c	Wed Feb 08 01:29:30 2012
+@@ -59,7 +59,7 @@
+ #define SLJIT_VERBOSE 0
+ #define SLJIT_DEBUG 0
+ 
+-#include "sljit/sljitLir.c"
++#include "sjlir.c"
+ 
+ #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
+ #error "Unsupported architecture"
