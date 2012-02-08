@@ -11,6 +11,7 @@ HB_BUILD_MODE := c
 
 C_SOURCES := \
    chartabs.c \
+   pcrebyte.c \
    pcrecomp.c \
    pcreconf.c \
    pcredfa.c \
@@ -18,7 +19,6 @@ C_SOURCES := \
    pcrefinf.c \
    pcreget.c \
    pcreglob.c \
-   pcreinfo.c \
    pcrejitc.c \
    pcremktb.c \
    pcrenewl.c \
@@ -26,7 +26,6 @@ C_SOURCES := \
    pcrerefc.c \
    pcrestud.c \
    pcretabs.c \
-   pcretryf.c \
    pcreucd.c \
    pcrever.c \
    pcrevutf.c \
@@ -91,6 +90,7 @@ endif
 # MAP    pcre_internal.h                pcreinal.h
 # MAP    ucp.h
 # MAP    pcre_chartables.c.dist         chartabs.c
+# MAP    pcre_byte_order.c              pcrebyte.c
 # MAP    pcre_compile.c                 pcrecomp.c
 # MAP    pcre_config.c                  pcreconf.c
 # MAP    pcre_dfa_exec.c                pcredfa.c

@@ -1,6 +1,6 @@
 diff -urN pcre.orig\pcreglob.c.rej pcre\pcreglob.c.rej
 --- pcre.orig\pcreglob.c.rej	Thu Jan 01 01:00:00 1970
-+++ pcre\pcreglob.c.rej	Wed Feb 08 01:46:37 2012
++++ pcre\pcreglob.c.rej	Wed Feb 08 02:01:44 2012
 @@ -0,0 +1,31 @@
 +***************
 +*** 74,84 ****
@@ -34,8 +34,8 @@ diff -urN pcre.orig\pcreglob.c.rej pcre\pcreglob.c.rej
 +  
 +  /* End of pcre_globals.c */
 diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
---- pcre.orig\pcrejitc.c	Wed Feb 08 01:46:37 2012
-+++ pcre\pcrejitc.c	Wed Feb 08 01:46:37 2012
+--- pcre.orig\pcrejitc.c	Wed Feb 08 02:01:44 2012
++++ pcre\pcrejitc.c	Wed Feb 08 02:01:44 2012
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
