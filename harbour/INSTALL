@@ -1302,9 +1302,10 @@ HARBOUR
        most of the above point applies, plus make sure to use '-trace'
        command line option when running hbmk2.
    12. If you are to report a problem with Harbour itself, always provide
-       self-contained, minimal sample source code. Do not use xhb contrib
+       self-contained, minimal source code example. Do not use xhb contrib
        library, or any 3rd party Harbour libraries. The sample shall reproduce
        the problem using official stable or nightly Harbour build.
+       See more on self-contained examples: http://sscce.org/
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
