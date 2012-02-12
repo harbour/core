@@ -124,29 +124,7 @@
              IF t_cTemplate == NIL;;
                 t_cTemplate := DllPrepareCall( <(DllName)>, DC_CALL_STD, iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) );;
              end;;
-             SWITCH PCount();;
-             CASE 0;;
-                RETURN DllExecuteCall( t_cTemplate );;
-             CASE 1;;
-                RETURN DllExecuteCall( t_cTemplate, ...) );;
-             CASE 2;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2) );;
-             CASE 3;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3) );;
-             CASE 4;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4) );;
-             CASE 5;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4), hb_PValue(5) );;
-             CASE 6;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4), hb_PValue(5), hb_PValue(6) );;
-             CASE 7;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4), hb_PValue(5), hb_PValue(6), hb_PValue(7) );;
-             CASE 8;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4), hb_PValue(5), hb_PValue(6), hb_PValue(7), hb_PValue(8) );;
-             CASE 9;;
-                RETURN DllExecuteCall( t_cTemplate, hb_PValue(1), hb_PValue(2), hb_PValue(3), hb_PValue(4), hb_PValue(5), hb_PValue(6), hb_PValue(7), hb_PValue(8), hb_PValue(9) );;
-             end;;
-          RETURN NIL
+          RETURN DllExecuteCall( t_cTemplate, ... )
 
       // FWH
       #xcommand DLL [<Qualifier: STATIC>] FUNCTION <FuncName>( [ <ArgName> AS <ArgType> ] [, <ArgNameN> AS <ArgTypeN> ] ) AS <Type> [<Pascal: PASCAL>] [ FROM <DllFuncName> ] LIB <(DllName)> => ;

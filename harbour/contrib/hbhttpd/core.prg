@@ -235,6 +235,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
    LOCAL cExpr, nI, cI, nPrefix, nAddr, nAddr2, nPos, nPos2, lDeny, aDeny, aI
 
    aFilter := { => }
+   hb_HKeepOrder( aFilter, .F. )
    aDeny := {}
    FOR EACH cExpr IN hb_ATokens( cFilter, " " )
       IF ! Empty( cExpr )
