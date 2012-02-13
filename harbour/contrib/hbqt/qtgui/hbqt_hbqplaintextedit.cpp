@@ -802,36 +802,60 @@ void HBQPlainTextEdit::dropEvent( QDropEvent *event )
    if( event->dropAction() == Qt::CopyAction || event->dropAction() == Qt::MoveAction )
    {
       if( event->source() == this )
-      {
-         QTextCursor c = cursorForPosition( event->pos() );
-         int row = c.blockNumber();
+      {   
+         QPoint p( event->pos() );
          
-         hbCopy();
-         if( event->dropAction() != Qt::CopyAction )
+         event->ignore();
+         
+         QTextCursor c = cursorForPosition( p );
+         int row = c.blockNumber();
+         int col = c.columnNumber();
+         
+         if( row >= rowBegins && row <= rowEnds )
          {
-            int linesBefore = blockCount();
-            this->hbCut( Qt::Key_Delete );
-            int linesAfter = blockCount();
-            
-            QTextCursor c( textCursor() );
-            c.movePosition( QTextCursor::Start );
-            c.movePosition( QTextCursor::Down, QTextCursor::MoveAnchor, row + ( linesAfter - linesBefore ) );
+            selectionState = 0;
+            hbClearSelection();
             setTextCursor( c );
          }
          else
-         {
-            setTextCursor( cursorForPosition( event->pos() ) );
-         }
-         selectionState = 0;
-         hbClearSelection();
+         {   
+            hbCopy();
+            if( event->dropAction() != Qt::CopyAction )
+            {
+               int rBgn = rowBegins;
+               int rEnd = rowEnds;
+               int linesBefore = blockCount();
+               hbCut( Qt::Key_Delete );
+               int linesAfter = blockCount();
+               QTextCursor cc( textCursor() );
+               cc.movePosition( QTextCursor::Start );
+               
+               if( rBgn > row )
+               {
+                  cc.movePosition( QTextCursor::Down, QTextCursor::MoveAnchor, row );
+               }
+               else if( row > rEnd )
+               {
+                  cc.movePosition( QTextCursor::Down, QTextCursor::MoveAnchor, row - ( linesBefore - linesAfter ) );
+               }
+               cc.movePosition( QTextCursor::Right, QTextCursor::MoveAnchor, col );
+               setTextCursor( cc );
+            }
+            else
+            {
+               setTextCursor( c );
+            }
+            selectionState = 0;
+            hbClearSelection();
+            hbPaste();
+         }   
+         emit selectionChanged();
          
-         hbPaste();
+         /* It is a hack. Without this editing caret is lost ??? */
+         QMimeData * data = new QMimeData();
+         QDropEvent * ev = new QDropEvent( p, Qt::CopyAction, data, 0, 0 );
+         QPlainTextEdit::dropEvent( ev );
          
-         QPlainTextEdit::dropEvent( event );
-         c = textCursor();
-         c.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor, 1 );
-         c.removeSelectedText();
-         setTextCursor( c );
          return;
       }
    }
@@ -950,26 +974,25 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
    {
       if( event->buttons() & Qt::LeftButton )
       {
+         setCursorWidth( 1 );
+         
          QTextCursor c( cursorForPosition( event->pos() ) );
          int row = c.blockNumber();
 
-         if( selectionState == 1 && row >= rowBegins && row <= rowEnds )
+         if( row >= rowBegins && row <= rowEnds )
          {
             event->ignore();
             QDrag * qDrag = new QDrag( this );
             QMimeData * qMimeData = new QMimeData();
-            qMimeData->setText( " " );
+            hbCopy();
+            qMimeData->setText( QApplication::clipboard()->text() );
             qDrag->setMimeData( qMimeData );
             qDrag->exec( Qt::MoveAction | Qt::CopyAction );
             delete qDrag;
-            emit selectionChanged();
-            QTextCursor c( textCursor() );
-            setTextCursor( c );
             return;
          }
          else
          {   
-            setCursorWidth( 1 );
             if( ! isSelectionPersistent )
             {
                selectionState = 0;

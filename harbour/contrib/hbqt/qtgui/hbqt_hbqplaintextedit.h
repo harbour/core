@@ -59,6 +59,7 @@
 
 #include <QtGui/QPlainTextEdit>
 #include <QtCore/QtCore>
+#include <QtGui/QClipboard>
 #include <QtCore/QMimeData>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QDragEnterEvent>
