@@ -74,6 +74,7 @@
 #include <QtGui/QToolTip>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QLabel>
+#include <QtGui/QBitmap>
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
@@ -252,6 +253,7 @@ private slots:
    bool           hbKeyPressSelectionByApplication( QKeyEvent * event );
    int            hbFirstVisibleColumn();
    void           hbDrawCursor( QPaintEvent * );
+   QRect          hbGetSelectionRect();
 };
 
 

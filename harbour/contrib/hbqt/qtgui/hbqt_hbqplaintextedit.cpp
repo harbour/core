@@ -813,8 +813,10 @@ void HBQPlainTextEdit::dropEvent( QDropEvent *event )
          
          if( row >= rowBegins && row <= rowEnds )
          {
+            /*  Do not clear selection
             selectionState = 0;
             hbClearSelection();
+            */
             setTextCursor( c );
          }
          else
@@ -848,9 +850,8 @@ void HBQPlainTextEdit::dropEvent( QDropEvent *event )
             selectionState = 0;
             hbClearSelection();
             hbPaste();
+            emit selectionChanged();
          }   
-         emit selectionChanged();
-         
          /* It is a hack. Without this editing caret is lost ??? */
          QMimeData * data = new QMimeData();
          QDropEvent * ev = new QDropEvent( p, Qt::CopyAction, data, 0, 0 );
@@ -982,11 +983,19 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
          if( row >= rowBegins && row <= rowEnds )
          {
             event->ignore();
+            
             QDrag * qDrag = new QDrag( this );
             QMimeData * qMimeData = new QMimeData();
             hbCopy();
             qMimeData->setText( QApplication::clipboard()->text() );
             qDrag->setMimeData( qMimeData );
+            
+            QPixmap pmap = QPixmap::grabWidget( this->viewport(), hbGetSelectionRect() );
+            pmap.setMask( pmap.createMaskFromColor( m_selectionColor, Qt::MaskInColor ) );
+            
+            qDrag->setPixmap( pmap );
+            qDrag->setHotSpot( QPoint( 5,5 ) );
+            
             qDrag->exec( Qt::MoveAction | Qt::CopyAction );
             delete qDrag;
             return;
@@ -1882,6 +1891,50 @@ void HBQPlainTextEdit::hbPaintHighlight( QPaintEvent * event )
 
 /*----------------------------------------------------------------------*/
 
+QRect HBQPlainTextEdit::hbGetSelectionRect()
+{
+   QRect r = QRect();
+      
+   if( rowBegins >= 0 && rowEnds >= 0 )
+   {
+      int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
+      int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
+
+      int       ttop = ( int ) blockBoundingGeometry( firstVisibleBlock() ).translated( contentOffset() ).top();
+
+      int          t = firstVisibleBlock().blockNumber();
+      int fontHeight = fontMetrics().height();
+      int          b = t + ( ( viewport()->height() - ttop ) / fontHeight ) + 1;
+
+      re = re > b ? b : re;
+
+      if( re >= t && rb < b )
+      {
+         int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) ) + ttop;
+         int btm = ( ( re - t + 1 ) * fontHeight ) - top + ttop;
+         btm = btm > viewport()->height() ? viewport()->height() : btm;
+         
+         if( selectionMode == selectionMode_column )
+         {
+            int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
+            int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
+            int c  = hbFirstVisibleColumn();
+            int fontWidth = fontMetrics().averageCharWidth();
+            int x  = ( ( cb - c ) * fontWidth );
+            int w  = ( cb == ce ? 1 : ( ( ce - cb ) * fontWidth ) );
+            r = QRect( x, top, w, btm );
+         }
+         else
+         {
+            r = QRect( 0, top, viewport()->width(), btm );
+         }
+      }
+   }
+   return r;
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
 {
    HB_SYMBOL_UNUSED( event );
@@ -1906,8 +1959,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
       {
          QPainter p( viewport() );
 
-         //int marginX = ( c > 0 ? 0 : contentsRect().left() ) + 2 ;
-         int marginX = ( c > 0 ? 0 : contentsRect().left() ) ;
+         int marginX = 0; //( c > 0 ? 0 : contentsRect().left() ) ;
          int fontWidth = fontMetrics().averageCharWidth();
 
          int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) ) + ttop;
