@@ -992,7 +992,8 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
             
             QPixmap pmap = QPixmap::grabWidget( this->viewport(), hbGetSelectionRect() );
             pmap.setMask( pmap.createMaskFromColor( m_selectionColor, Qt::MaskInColor ) );
-            
+            pmap.setMask( pmap.createMaskFromColor( palette().color( QPalette::Base ), Qt::MaskInColor ) );
+            pmap.setMask( pmap.createMaskFromColor( m_currentLineColor, Qt::MaskInColor ) );
             qDrag->setPixmap( pmap );
             qDrag->setHotSpot( QPoint( 5,5 ) );
             
