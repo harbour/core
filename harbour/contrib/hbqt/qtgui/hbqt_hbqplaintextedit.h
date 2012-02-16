@@ -175,6 +175,7 @@ private:
    bool           isCodeCompletionActive;
    bool           isCompletionTipsActive;
    bool           isInDrag;
+   QPoint         dragStartPosition;
    
 protected:
    bool           event( QEvent * event );

@@ -129,6 +129,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isCodeCompletionActive   = true;
    isCompletionTipsActive   = true;
    isInDrag                 = false;
+   dragStartPosition        = QPoint();
    
    #if 0
    QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
@@ -979,27 +980,9 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
          
          QTextCursor c( cursorForPosition( event->pos() ) );
          int row = c.blockNumber();
-
          if( row >= rowBegins && row <= rowEnds )
          {
-            event->ignore();
-            
-            QDrag * qDrag = new QDrag( this );
-            QMimeData * qMimeData = new QMimeData();
-            hbCopy();
-            qMimeData->setText( QApplication::clipboard()->text() );
-            qDrag->setMimeData( qMimeData );
-            
-            QPixmap pmap = QPixmap::grabWidget( this->viewport(), hbGetSelectionRect() );
-            pmap.setMask( pmap.createMaskFromColor( m_selectionColor, Qt::MaskInColor ) );
-            pmap.setMask( pmap.createMaskFromColor( palette().color( QPalette::Base ), Qt::MaskInColor ) );
-            pmap.setMask( pmap.createMaskFromColor( m_currentLineColor, Qt::MaskInColor ) );
-            qDrag->setPixmap( pmap );
-            qDrag->setHotSpot( QPoint( 5,5 ) );
-            
-            qDrag->exec( Qt::MoveAction | Qt::CopyAction );
-            delete qDrag;
-            return;
+            dragStartPosition = event->pos();
          }
          else
          {   
@@ -1065,6 +1048,33 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
 
    if( event->buttons() & Qt::LeftButton )
    {
+      if( ( event->pos() - dragStartPosition ).manhattanLength() < QApplication::startDragDistance() )
+      {
+         QTextCursor c( cursorForPosition( event->pos() ) );
+         int row = c.blockNumber();
+         if( row >= rowBegins && row <= rowEnds )
+         {
+            event->ignore();
+            
+            QDrag * qDrag = new QDrag( this );
+            QMimeData * qMimeData = new QMimeData();
+            hbCopy();
+            qMimeData->setText( QApplication::clipboard()->text() );
+            qDrag->setMimeData( qMimeData );
+            
+            QPixmap pmap = QPixmap::grabWidget( this->viewport(), hbGetSelectionRect() );
+            pmap.setMask( pmap.createMaskFromColor( m_selectionColor, Qt::MaskInColor ) );
+            pmap.setMask( pmap.createMaskFromColor( palette().color( QPalette::Base ), Qt::MaskInColor ) );
+            pmap.setMask( pmap.createMaskFromColor( m_currentLineColor, Qt::MaskInColor ) );
+            qDrag->setPixmap( pmap );
+            qDrag->setHotSpot( QPoint( 5,5 ) );
+            
+            qDrag->exec( Qt::MoveAction | Qt::CopyAction );
+            delete qDrag;
+            return;
+         }
+      }
+      
       if( selectionState == 1 )
       {
          selectionState = 2;
