@@ -5,7 +5,7 @@
 HARBOUR
 =======
 
-   "Harbour Project is the Free Open Source Software implementation
+   "Harbour is the Free Open Source Software implementation
     of a multiplatform, multithreading, object-oriented, scriptable
     programming language, backwards compatible with Clipper/xBase.
     Harbour consists of a compiler and runtime libraries with multiple
