@@ -830,18 +830,23 @@ ifeq ($(HB_COMPILER),)
       endif
    else
    ifeq ($(HB_PLATFORM),darwin)
-      HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
+      HB_COMP_PATH := $(call find_in_path,clang)
       ifneq ($(HB_COMP_PATH),)
-         HB_CCPREFIX := /Developer/usr/bin/
          HB_COMPILER := clang
       else
-         HB_COMP_PATH := $(call find_in_path,gcc)
+         HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
          ifneq ($(HB_COMP_PATH),)
-            HB_COMPILER := gcc
+            HB_CCPREFIX := /Developer/usr/bin/
+            HB_COMPILER := clang
          else
-            HB_COMP_PATH := $(call find_in_path,icc)
+            HB_COMP_PATH := $(call find_in_path,gcc)
             ifneq ($(HB_COMP_PATH),)
-               HB_COMPILER := icc
+               HB_COMPILER := gcc
+            else
+               HB_COMP_PATH := $(call find_in_path,icc)
+               ifneq ($(HB_COMP_PATH),)
+                  HB_COMPILER := icc
+               endif
             endif
          endif
       endif
