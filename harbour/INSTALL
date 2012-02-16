@@ -5,10 +5,12 @@
 HARBOUR
 =======
 
-   "The Harbour Project is a Free Open Source Software effort to build
-    a multiplatform Clipper language compiler. Harbour consists of the
-    xBase language compiler and the runtime libraries with different
-    terminal plugins and different databases (not just DBF)"
+   "Harbour Project is the Free Open Source Software implementation
+    of a multiplatform, multithreading, object-oriented, scriptable
+    programming language, backwards compatible with Clipper/xBase.
+    Harbour consists of a compiler and runtime libraries with multiple
+    UI and database backends, its own make system and a large
+    collection of libraries and interfaces to many popular APIs."
 
                                        http://harbour-project.org/
 
