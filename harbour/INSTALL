@@ -123,7 +123,7 @@ HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
-   on Darwin (Mac OS X) hosts
+   on Darwin (OS X) hosts
    --------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
@@ -403,7 +403,7 @@ HARBOUR
           - Don't put directory names inside double quotes.
           - Use absolute paths.
 
-   Darwin (Mac OS X)
+   Darwin (OS X)
    -----------------
 
       1.) Install MacPorts, follow their instructions:
@@ -528,7 +528,7 @@ HARBOUR
    You can override target platform autodetection with these HB_PLATFORM values:
 
    linux    - Linux
-   darwin   - Mac OS X
+   darwin   - OS X
    bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
    beos     - BeOS / Haiku
    hpux     - HP-UX
@@ -1180,7 +1180,7 @@ HARBOUR
       make
       ---
 
-   for Darwin (Mac OS X) hosts
+   for Darwin (OS X) hosts
    ---------------------------
 
       --- To create "Universal" binaries, compatible with pre-Snow Leopard PowerPC and Intel systems
@@ -1600,7 +1600,7 @@ HARBOUR
       HB_WITH_QT - Nokia QT (GUI) [win, wce, os2, darwin, linux, free, open-source]
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
-         Recommended Mac OS X binary package:
+         Recommended OS X binary package:
             http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.8.0.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
