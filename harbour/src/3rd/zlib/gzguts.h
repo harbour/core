@@ -27,7 +27,7 @@
 #endif
 #include <fcntl.h>
 
-#ifdef __TURBOC__
+#if defined(__TURBOC__) || defined(__XCC__) || defined(__POCC__)
 #  include <io.h>
 #endif
 
@@ -35,7 +35,8 @@
 #  define NO_GZCOMPRESS
 #endif
 
-#if defined(STDC99) || (defined(__TURBOC__) && __TURBOC__ >= 0x550)
+#if defined(STDC99) || (defined(__TURBOC__) && __TURBOC__ >= 0x550) || \
+    defined(__WATCOMC__)
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF
 #  endif

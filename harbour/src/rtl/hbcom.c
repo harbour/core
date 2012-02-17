@@ -312,6 +312,9 @@ static void hb_comSetOsError( PHB_COM pCom, HB_BOOL fError )
       case EIO:
          pCom->error = HB_COM_ERR_IO;
          break;
+      case EPIPE:
+         pCom->error = HB_COM_ERR_PIPE;
+         break;
       case EBUSY:
          pCom->error = HB_COM_ERR_BUSY;
          break;

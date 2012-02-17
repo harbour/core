@@ -42,6 +42,13 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
          HB_CFLAGS += -DNO_VIZ
       endif
    endif
+   ifeq ($(filter $(HB_PLATFORM),win wce),)
+      HB_CFLAGS += -DHAVE_UNISTD_H
+   else
+      ifneq ($(filter $(HB_COMPILER),watcom),)
+         HB_CFLAGS += -DHAVE_UNISTD_H
+      endif
+   endif
    include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := unused

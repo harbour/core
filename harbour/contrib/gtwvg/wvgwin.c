@@ -1618,7 +1618,6 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    case CB_SETTOPINDEX            : // An application sends the CB_SETTOPINDEX message to ensure that a particular item is visible in the list box of a combo box. The system scrolls the list box contents so that either the specified item appears at the top of the list box or the maximum scroll range has been reached.
       hb_retl( SendMessage( hCB, CB_SETTOPINDEX, hb_parni( 3 ), 0 ) ? FALSE : TRUE );
       break;
-      break;
    case CB_SHOWDROPDOWN           : // An application sends a CB_SHOWDROPDOWN message to show or hide the list box of a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
       SendMessage( hCB, CB_SHOWDROPDOWN, hb_parl( 3 ), 0 );
       break;

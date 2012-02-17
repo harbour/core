@@ -62,7 +62,10 @@
    #ifndef __MINGW64_VERSION_MAJOR
       #define _WIN32_IE 0x0500
    #endif
-#endif
+#endif /* _WIN32_IE */
+#ifndef WINVER
+   #define WINVER 0x0500
+#endif /* WINVER */
 
 #include "hbset.h"
 #include "hbgtcore.h"
