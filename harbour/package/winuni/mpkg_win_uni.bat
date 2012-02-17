@@ -61,7 +61,7 @@ rem ; Create special implibs for Borland (requires BCC in PATH)
 rem   NOTE: Using intermediate .def files, because direct .dll to .lib conversion
 rem         is buggy in BCC55 and BCC58 (no other versions tested), leaving off
 rem         leading underscore from certain ("random") symbols, resulting in
-rem         unresolved externals, when trying to use. [vszakats]
+rem         unresolved externals, when trying to use it. [vszakats]
 for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do (
    "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%a"
    echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
@@ -186,7 +186,7 @@ echo "%HB_DR%lib\linux\watcom\*.*"                  >> _hbfiles
 echo "%HB_DR%lib\os2\watcom\*.*"                    >> _hbfiles
 echo "%HB_DR%lib\win\msvc\*.*"                      >> _hbfiles
 echo "%HB_DR%lib\win\msvc64\*.*"                    >> _hbfiles
-rem echo "%HB_DR%bin\harbour-20-bcc.dll"                >> _hbfiles
+rem echo "%HB_DR%bin\harbour-%HB_VS%-bcc.dll"           >> _hbfiles
 echo "%HB_DR%lib\win\bcc\*.*"                       >> _hbfiles
 echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles

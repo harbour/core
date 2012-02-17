@@ -326,7 +326,7 @@ HARBOUR
    a non-standard location. Typically you need to do this on non-*nix
    (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
    on *nix which aren't available through official package managers
-   (ADS Client f.e.).
+   (f.e. ADS Client).
 
    Note that Harbour is tuned to use 3rd party binary packages in their
    default, unmodified ("vanilla") install layout created by their
@@ -380,9 +380,9 @@ HARBOUR
    on *nix systems. You may also use the value 'local' to force using the
    locally hosted copy (inside Harbour SVN source tree) of these packages,
    where applicable. 'nolocal' will explicitly disable using locally hosted
-   copies.
+   copy.
 
-   To enable building libs that build against static version of 3rd party
+   To enable building libs that link against static version of 3rd party
    components:
       HB_QT_BUILD_STATIC=yes (only meaningful on Windows platform)
 
@@ -760,10 +760,9 @@ HARBOUR
                                  may fail, like detection of 3rd party packages with
                                  locally hosted sources.
                                  With newer make versions, this variable is ignored.
-   - HB_REBUILD_EXTERN=yes       Rebuild extern headers. Requires GCC compiler.
-                                 This is typically used by developers after code
-                                 modifications or before release.
-                                 Default: no
+   - HB_REBUILD_EXTERN=yes       Rebuild extern headers. This is typically used by 
+                                 developers after code modifications or before 
+                                 release. Default: no
    - HB_REBUILD_PARSER=yes       Rebuild language parser sources. Typically
                                  you only need this if your are Harbour core
                                  developer modifying grammar rules (.y).
