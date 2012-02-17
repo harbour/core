@@ -130,7 +130,7 @@ HARBOUR
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
       Platform specific prerequisite:
-         XCode or Command Line Tools for XCode installed
+         Xcode or Command Line Tools for Xcode installed
 
       $ make [install] [HB_PLATFORM=<...>]
 
@@ -1523,7 +1523,7 @@ HARBOUR
          http://www.delorie.com/djgpp/
       Open Watcom [win, dos, os2, linux, free, open-source]
          http://www.openwatcom.org/
-      XCode / Command Line Tools for XCode [darwin, free, hybrid-source]
+      Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
          Mac App Store
          http://developer.apple.com/downloads/
       MS Windows SDK [win, free, closed-source]
