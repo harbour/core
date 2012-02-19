@@ -1358,11 +1358,14 @@ export HB_CPU
 
 ifeq ($(HB_HOST_PKGM),)
    ifeq ($(HB_PLATFORM),darwin)
-      ifneq ($(wildcard /sw/bin/fink),)
-         HB_HOST_PKGM += fink
+      ifneq ($(wildcard /usr/local/bin/brew),)
+         HB_HOST_PKGM += homebrew
       endif
       ifneq ($(wildcard /opt/local/bin/port),)
          HB_HOST_PKGM += macports
+      endif
+      ifneq ($(wildcard /sw/bin/fink),)
+         HB_HOST_PKGM += fink
       endif
    else
    ifeq ($(HB_PLATFORM),linux)
