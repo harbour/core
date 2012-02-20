@@ -1,41 +1,6 @@
-diff -urN pcre.orig\pcreglob.c.rej pcre\pcreglob.c.rej
---- pcre.orig\pcreglob.c.rej	Thu Jan 01 01:00:00 1970
-+++ pcre\pcreglob.c.rej	Wed Feb 08 02:01:44 2012
-@@ -0,0 +1,31 @@
-+***************
-+*** 74,84 ****
-+  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
-+  
-+  #elif !defined VPCOMPAT
-+  PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
-+  PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
-+  PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
-+  PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
-+  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
-+  #endif
-+  
-+  /* End of pcre_globals.c */
-+--- 74,90 ----
-+  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
-+  
-+  #elif !defined VPCOMPAT
-++ #if defined( __cplusplus ) && !defined( __IBMCPP__ )
-++ extern "C" {
-++ #endif
-+  PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
-+  PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
-+  PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
-+  PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
-+  PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
-++ #if defined( __cplusplus ) && !defined( __IBMCPP__ )
-++ }
-++ #endif
-+  #endif
-+  
-+  /* End of pcre_globals.c */
-diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
---- pcre.orig\pcrejitc.c	Wed Feb 08 02:01:44 2012
-+++ pcre\pcrejitc.c	Wed Feb 08 02:01:44 2012
+diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
+--- pcre.orig/pcrejitc.c	2012-02-20 11:41:35.787284300 +0100
++++ pcre/pcrejitc.c	2012-02-20 11:41:35.787284300 +0100
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
@@ -45,3 +10,19 @@ diff -urN pcre.orig\pcrejitc.c pcre\pcrejitc.c
  
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
+diff -urN pcre.orig/sjconfi.h pcre/sjconfi.h
+--- pcre.orig/sjconfi.h	2012-02-20 11:41:36.007284300 +0100
++++ pcre/sjconfi.h	2012-02-20 11:41:36.007284300 +0100
+@@ -273,8 +273,12 @@
+ 
+ #if defined(__GNUC__)
+ 
++#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
+ #define SLJIT_CALL __attribute__ ((fastcall))
+ #define SLJIT_X86_32_FASTCALL 1
++#else
++#define SLJIT_CALL
++#endif
+ 
+ #elif defined(_WIN32)
+ 

@@ -273,8 +273,12 @@ typedef long int sljit_w;
 
 #if defined(__GNUC__)
 
+#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
 #define SLJIT_CALL __attribute__ ((fastcall))
 #define SLJIT_X86_32_FASTCALL 1
+#else
+#define SLJIT_CALL
+#endif
 
 #elif defined(_WIN32)
 
