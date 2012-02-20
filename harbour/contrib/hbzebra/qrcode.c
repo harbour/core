@@ -665,6 +665,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
 
    /*  Select version */
+   iVersion = 0; /* to pacify warning */
    for( i = 1; i <= 40; i++ )
    {
       iDataLen = ( int ) ( s_version[ i - 1 ].uiTotal - s_version[ i - 1 ].level[ iLevel ].uiECC );

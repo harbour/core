@@ -24,7 +24,7 @@
 
 -cflag=-DSQLITE_OMIT_DEPRECATED
 -cflag=-DSQLITE_ENABLE_COLUMN_METADATA
--cflag=-D_WIN32_WCE{wce}
+-cflag=-D_WIN32_WCE=0x0300{wce}
 # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
 # so we're forcing the next best available option. This will cause missing
 # externals though. [vszakats]

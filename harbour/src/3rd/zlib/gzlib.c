@@ -5,7 +5,7 @@
 
 #include "gzguts.h"
 
-#if defined(__XCC__)
+#if defined(__XCC__) || defined(__MINGW32CE__)
 #  define LSEEK lseek
 #elif defined(__POCC__)
 #  define LSEEK _lseek64
