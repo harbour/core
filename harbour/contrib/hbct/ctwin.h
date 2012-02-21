@@ -92,7 +92,7 @@ extern HB_EXPORT int     hb_ctwCenterWindow( int iWindow, HB_BOOL fCenter );
 extern HB_EXPORT int     hb_ctwAddWindowBox( int iWindow, const char * szBox, int iColor );
 extern HB_EXPORT int     hb_ctwSwapWindows( int iWindow1, int iWindow2 );
 extern HB_EXPORT int     hb_ctwGetPosWindow( int iRow, int iCol );
-extern HB_EXPORT int     hb_ctwLastKey( void );
+extern HB_EXPORT int     hb_ctwLastKey( int * piNewKey );
 
 HB_EXTERN_END
 

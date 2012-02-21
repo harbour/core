@@ -333,7 +333,13 @@ HB_FUNC( WMOVE )
 
 HB_FUNC( CTWLASTKEY )
 {
-   hb_retni( hb_ctwLastKey() );
+   if( HB_ISNUM( 1 ) )
+   {
+      int iNewKey = hb_parni( 1 );
+      hb_retni( hb_ctwLastKey( &iNewKey ) );
+   }
+   else
+      hb_retni( hb_ctwLastKey( NULL ) );
 }
 
 /* NOTE: These two functions are emulating the MaxRow()/MaxCol() core functions

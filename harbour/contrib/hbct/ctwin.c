@@ -2464,18 +2464,20 @@ int  hb_ctwGetPosWindow( int iRow, int iCol )
    return iResult;
 }
 
-int  hb_ctwLastKey( void )
+int  hb_ctwLastKey( int * piNewKey )
 {
    /* keyread() in CT3 uses 64512 bytes length buffer
     * when it reach this limit and new key is added the
     * buffer size is decreased by 1024 to 63488 bytes
     * before adding key. TODO: check if buffer is shifted
     */
-   int iResult = -1;
+   int iResult = 0;
    PHB_GTCTW pCTW = hb_ctw_base();
    if( pCTW )
    {
       iResult = pCTW->iLastKey;
+      if( piNewKey )
+         pCTW->iLastKey = * piNewKey;
       hb_gt_BaseFree( pCTW->pGT );
    }
    return iResult;
