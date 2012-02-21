@@ -157,11 +157,7 @@ extern const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #      define _PTRDIFF_T_DEFINED
 #    endif
 #  else
-#    if defined(__XCC__)
-#      define fdopen(fd,mode) NULL /* No fdopen() */
-#    else
-#      define fdopen(fd,type)  _fdopen(fd,type)
-#    endif
+#    define fdopen(fd,type)  _fdopen(fd,type)
 #  endif
 #endif
 
