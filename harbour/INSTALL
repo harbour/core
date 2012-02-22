@@ -6,7 +6,7 @@ HARBOUR
 =======
 
    "Harbour is the Free Open Source Software implementation
-    of a multiplatform, multithreading, object-oriented, scriptable
+    of a multi-platform, multi-threading, object-oriented, scriptable
     programming language, backwards compatible with Clipper/xBase.
     Harbour consists of a compiler and runtime libraries with multiple
     UI and database backends, its own make system and a large
@@ -126,7 +126,7 @@ HARBOUR
       You should see 'Hello world!' on screen.
 
    on Darwin (OS X) hosts
-   --------------------------
+   ----------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
       Platform specific prerequisite:
