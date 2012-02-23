@@ -15,6 +15,7 @@
 -depcontrol=freeimage:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=freeimage:${HB_WITH_FREEIMAGE}
 -depincpath=freeimage:/usr/include
+-depincpath=freeimage:/usr/local/include
 -depincpath=freeimage:/opt/local/include
 -depimplibs=freeimage:../Dist/FreeImage.dll
 

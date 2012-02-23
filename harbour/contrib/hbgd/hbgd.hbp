@@ -16,6 +16,7 @@
 -depcontrol=gd:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=gd:${HB_WITH_GD}
 -depincpath=gd:/usr/include
+-depincpath=gd:/usr/local/include
 -depincpath=gd:/opt/local/include
 -depimplibs=gd:../bin/bgd.dll{!(msvc|pocc|mingw)}
 -depimplibs=gd:../lib/bgd.lib{msvc|pocc|mingw}
