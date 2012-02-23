@@ -46,7 +46,7 @@ HARBOUR
           in PATH at the same time. For the list of supported compilers,
           look up the relevant section in this document.
       3.) GNU Make 3.81 or upper is required. We recommend this link:
-             http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.82-mingw32/make-3.82-3-mingw32-bin.tar.lzma/download
+             http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download
           Unpack it to your PATH or Harbour source root directory.
           If you use MinGW compiler, you already have GNU Make.
           You can also use included copy named win-make.exe instead.
@@ -1660,9 +1660,9 @@ HARBOUR
             http://www.bzip.org/downloads.html
       GNU Make
          Windows binary + source:
-            http://sourceforge.net/projects/mingw/files/MinGW/make/
-            http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.82-mingw32/make-3.82-3-mingw32-bin.tar.lzma/download
-            http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.82-mingw32/make-3.82-3-mingw32-src.tar.lzma/download
+            http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/
+            http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download
+            http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download
             cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make
             (included in Harbour as win-make.exe and w64-make.exe)
          MS-DOS binary + source:
