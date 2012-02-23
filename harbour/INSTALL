@@ -409,10 +409,10 @@ HARBOUR
    Darwin (OS X)
    -------------
 
-      1.) Install MacPorts, follow their instructions:
-          https://www.macports.org/
-      2.) $ sudo port install pcre slang allegro cairo freeimage gd2 mysql5-devel postgresql84
-          $ sudo port install upx uncrustify
+      1.) Install HomeBrew, follow their instructions:
+          http://mxcl.github.com/homebrew/
+      2.) $ brew install pcre slang cairo freeimage libgd mysql postgresql
+          $ brew install upx uncrustify
 
    Linux (generic)
    ---------------
