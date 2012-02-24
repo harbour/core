@@ -479,7 +479,7 @@ static HB_BOOL hb_bmEvalFilter( AREAP pArea, HB_BOOL fUpdate )
                  nOldSize = sizeof( BM_FILTER ) + BM_BYTESIZE( pBM->maxrec );
          if( nSize > nOldSize )
          {
-            pBM = ( PBM_FILTER ) hb_xrealloc( pBM, nSize );
+            pArea->dbfi.lpvCargo = pBM = ( PBM_FILTER ) hb_xrealloc( pBM, nSize );
             memset( ( HB_BYTE * ) pBM + nOldSize, 0xFF, nSize - nOldSize );
          }
          pBM->maxrec = ( HB_U32 ) ulRecNo;
