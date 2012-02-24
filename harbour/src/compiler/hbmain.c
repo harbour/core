@@ -2973,7 +2973,7 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( HB_MAXINT nNumber, HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->fLongOptimize )
+   if( !HB_COMP_PARAM->fSwitchCase )
    {
       if( nNumber == 0 )
          hb_compGenPCode1( HB_P_ZERO, HB_COMP_PARAM );
@@ -3039,7 +3039,7 @@ void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->iHidden )
+   if( HB_COMP_PARAM->iHidden && !HB_COMP_PARAM->fSwitchCase )
    {
       char * szTemp;
       --nStrLen;
@@ -3712,7 +3712,7 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->functions.pFirst = NULL;
    HB_COMP_PARAM->functions.pLast  = NULL;
    HB_COMP_PARAM->szAnnounce       = NULL;
-   HB_COMP_PARAM->fLongOptimize    = HB_TRUE;
+   HB_COMP_PARAM->fSwitchCase      = HB_FALSE;
 
    HB_COMP_PARAM->symbols.iCount   = 0;
    HB_COMP_PARAM->symbols.pFirst   = NULL;

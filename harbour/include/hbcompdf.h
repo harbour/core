@@ -828,7 +828,7 @@ typedef struct _HB_COMP
    HB_BOOL           fCredits;            /* print credits */
    HB_BOOL           fBuildInfo;          /* print build info */
    HB_BOOL           fLogo;               /* print logo */
-   HB_BOOL           fLongOptimize;       /* optimize PCODEs generated for integers */
+   HB_BOOL           fSwitchCase;         /* generate PCODE for CASE value of SWITCH statement */
    HB_BOOL           fSingleModule;       /* do not automatically compile DO...[WITH...] external modules (-m) */
    HB_BOOL           fError;              /* error appeared during compilation */
    HB_BOOL           fNoArchDefs;         /* do not define architecture dependent macros: __PLATFORM__*, __ARCH??BIT__, __*_ENDIAN__ */

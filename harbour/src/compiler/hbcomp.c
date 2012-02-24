@@ -264,7 +264,7 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_MACROTEXT |
                          HB_COMPFLAG_SHORTCUTS;
 
-      pComp->fLongOptimize    = HB_TRUE;
+      pComp->fSwitchCase      = HB_FALSE;
       pComp->fPPO             = HB_FALSE;    /* flag indicating, is ppo output needed */
       pComp->fLineNumbers     = HB_TRUE;     /* holds if we need pcodes with line numbers */
       pComp->fAnyWarning      = HB_FALSE;    /* holds if there was any warning during the compilation process */

@@ -2661,13 +2661,13 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    }
    else
    {
-      HB_BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
+      HB_BOOL fSwitchCase = HB_COMP_PARAM->fSwitchCase;
       HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
 
       pExpr = hb_compExprGenPush( pExpr, HB_COMP_PARAM );
       ulCountPos = pFunc->nPCodePos + 1;
       hb_compGenPCode3( HB_P_SWITCH, 0, 0, HB_COMP_PARAM );
-      HB_COMP_PARAM->fLongOptimize = HB_FALSE;
+      HB_COMP_PARAM->fSwitchCase = HB_TRUE;
       HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
       while( pCase )
       {
@@ -2689,7 +2689,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       }
       HB_PUT_LE_UINT16( pFunc->pCode + ulCountPos, iCount );
 
-      HB_COMP_PARAM->fLongOptimize = fLongOptimize;
+      HB_COMP_PARAM->fSwitchCase = fSwitchCase;
       if( fMacroText )
          HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
    }
