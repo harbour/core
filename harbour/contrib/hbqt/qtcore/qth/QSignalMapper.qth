@@ -33,12 +33,12 @@ HB_FUNC( QT_QSIGNALMAPPER )
 <PROTOS>
 QObject * mapping ( int id ) const
 QObject * mapping ( const QString & id ) const
-QObject * mapping ( QWidget * widget ) const
+//QObject * mapping ( QWidget * widget ) const
 QObject * mapping ( QObject * object ) const
 void removeMappings ( QObject * sender )
 void setMapping ( QObject * sender, int id )
 void setMapping ( QObject * sender, const QString & text )
-void setMapping ( QObject * sender, QWidget * widget )
+//void setMapping ( QObject * sender, QWidget * widget )
 void setMapping ( QObject * sender, QObject * object )
 </PROTOS>
 
@@ -50,6 +50,6 @@ void map ( QObject * sender )
 <SIGNALS>
 void mapped ( int i )
 void mapped ( const QString & text )
-void mapped ( QWidget * widget )
+//void mapped ( QWidget * widget )
 void mapped ( QObject * object )
 </SIGNALS>
