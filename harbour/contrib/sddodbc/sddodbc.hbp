@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-../rddsql/rddsql.hbc
+rddsql.hbc
 
 -stop{dos|os2|rsxnt}
 

@@ -4,6 +4,6 @@
 
 @hbhttpd.hbp
 
-../hbssl/hbssl.hbc
+hbssl.hbc
 
 -DHB_HAS_OPENSSL

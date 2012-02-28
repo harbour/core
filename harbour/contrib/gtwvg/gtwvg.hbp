@@ -13,7 +13,7 @@
 
 -stop{!win|hbdyn}
 
-../hbwin/hbwin.hbc
+hbwin.hbc
 
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
@@ -58,4 +58,3 @@ wvgtoolb.prg
 wvgtreev.prg
 wvgwnd.prg
 wvggenrc.prg
-

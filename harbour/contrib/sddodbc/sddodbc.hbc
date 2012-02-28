@@ -8,4 +8,4 @@ libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {unix&!darwin}libs=odbc
 {unix&darwin}libs=iodbc
 
-libs=../rddsql/rddsql.hbc
+libs=rddsql.hbc

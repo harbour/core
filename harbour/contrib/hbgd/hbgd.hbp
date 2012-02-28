@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-../hbct/hbct.hbc
+hbct.hbc
 
 -deppkgname=gd:gd-devel
 -depkeyhead=gd:gd.h

@@ -23,11 +23,11 @@
 # For hbserv.c, maybe more
 -c=gnu90
 
-../hbct/hbct.hbc
-../hbtip/hbtip.hbc
-../hbwin/hbwin.hbc
-../hbfship/hbfship.hbc
-../hbxpp/hbxpp.hbc
+hbct.hbc
+hbtip.hbc
+hbwin.hbc
+hbfship.hbc
+hbxpp.hbc
 
 xhb.hbx
 
