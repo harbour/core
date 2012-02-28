@@ -244,6 +244,9 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DYN),)
       $(info ! HB_BUILD_DYN: $(HB_BUILD_DYN))
    endif
+   ifneq ($(HB_BUILD_CONTRIB_DYN),)
+      $(info ! HB_BUILD_CONTRIB_DYN: $(HB_BUILD_CONTRIB_DYN))
+   endif
    ifneq ($(HB_BUILD_SHARED),)
       $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
    endif
