@@ -6,6 +6,4 @@ incpaths=.
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
-libs=../hbqt/hbqtcore.hbc
-libs=../hbqt/hbqtgui.hbc
-libs=../hbqt/gtqtc.hbc
+libs=hbqt.hbc

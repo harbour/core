@@ -11,8 +11,6 @@
 
 -w3 -es2
 
--prgflag=-D_HB_TR_NOALWAYS_
-
 -icon={allwin}hbide.ico
 
 #-instfile={win&HB_WITH_QT&!(HB_WITH_QT='no')}${HB_WITH_QT}/../bin/libgcc_s_dw2-1.dll
@@ -21,11 +19,11 @@
 #-instfile={win&HB_WITH_QT&!(HB_WITH_QT='no')}${HB_WITH_QT}/../bin/QtGui4.dll
 #-instfile={win&HB_WITH_QT&!(HB_WITH_QT='no')}${HB_WITH_QT}/../bin/QtNetwork4.dll
 
-../hbxbp/hbxbp.hbc
-../hbqt/hbqtnetwork.hbc
-../hbformat/hbformat.hbc
+hbxbp.hbc
+hbqt.hbc
+hbformat.hbc
 # TODO: Need to set 'HB_DYNLOAD_RDDADS=yes' for this to be enabled
-../rddads/rddads.hbc{HB_DYNLOAD_RDDADS}
+rddads.hbc{HB_DYNLOAD_RDDADS}
 
 idemain.prg
 ideobject.prg

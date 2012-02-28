@@ -9,10 +9,7 @@
 
 -w3 -es2
 
--prgflag=-D_HB_TR_NOALWAYS_
-
-../hbqt/hbqtcore.hbc
-../hbqt/hbqtgui.hbc
+hbqt.hbc
 
 -instfile=inc:appevent.ch
 -instfile=inc:gra.ch
