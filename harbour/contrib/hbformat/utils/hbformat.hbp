@@ -2,7 +2,7 @@
 # $Id$
 #
 
-../hbformat.hbc
+hbformat.hbc
 
 -w3 -es2 -l
 

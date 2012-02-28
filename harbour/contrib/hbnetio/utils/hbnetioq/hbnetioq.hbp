@@ -11,8 +11,8 @@
 -icon={allwin}../../../../package/harb_win.ico
 -icon={os2}../../../package/harb_os2.ico
 
-../../../hbxbp/hbxbp.hbc
-../../../hbnetio/hbnetio.hbc
+hbxbp.hbc
+hbnetio.hbc
 
 netiosrq.prg
 netiosrq.qrc
