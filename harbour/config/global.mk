@@ -1361,6 +1361,9 @@ ifeq ($(HB_HOST_PKGM),)
       ifneq ($(wildcard /usr/local/bin/brew),)
          HB_HOST_PKGM += homebrew
       endif
+      ifneq ($(wildcard /usr/local/bin/rudix),)
+         HB_HOST_PKGM += rudix
+      endif
       ifneq ($(wildcard /opt/local/bin/port),)
          HB_HOST_PKGM += macports
       endif
