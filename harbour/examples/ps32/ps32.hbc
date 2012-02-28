@@ -7,4 +7,4 @@ libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=${hb_name}
 
-libs=../contrib/hbxpp/hbxpp.hbc
+libs=hbxpp.hbc

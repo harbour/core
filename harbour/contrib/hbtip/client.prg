@@ -187,7 +187,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
 
    LOCAL aProtoAccepted := { "ftp", "http", "pop", "smtp" }
 #if defined( HB_HAS_OPENSSL )
-   LOCAL aProtoAcceptedSSL := { "ftps", "https", "pop3s", "pop3", "smtps" }
+   LOCAL aProtoAcceptedSSL := { "ftps", "https", "pop3s", "pops", "smtps" }
 #else
    LOCAL aProtoAcceptedSSL := {}
 #endif

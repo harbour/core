@@ -8,4 +8,4 @@ incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=${hb_name}
-libs=../../contrib/hbwin/hbwin.hbc
+libs=hbwin.hbc
