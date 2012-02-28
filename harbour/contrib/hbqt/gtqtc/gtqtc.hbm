@@ -4,6 +4,7 @@
 
 -i.
 
+-stop{hbdyn}
 
 ../qtcore/hbqtcore.hbc
 

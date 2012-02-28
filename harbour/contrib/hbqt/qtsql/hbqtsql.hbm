@@ -8,4 +8,6 @@ qth/filelist.hbm
 
 hbqtsql.hbx
 
+hbqt_init.cpp
+
 ../qtcore/hbqtcore.hbc
