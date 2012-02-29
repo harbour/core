@@ -12,5 +12,5 @@ libs=hbqtcore.hbc
 libs=hbqtgui.hbc
 libs=hbqtnetwork.hbc
 # libs=hbqtwebkit.hbc
-libs=hbqtsql.hbc
+# libs=hbqtsql.hbc
 libs=gtqtc.hbc

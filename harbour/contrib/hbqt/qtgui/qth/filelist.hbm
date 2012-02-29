@@ -40,8 +40,6 @@ QColor.qth
 QColorDialog.qth
 QComboBox.qth
 QCommandLinkButton.qth
-QDeclarativePropertyValueSource.qth
-QDeclarativeScriptString.qth
 QCommonStyle.qth
 QCompleter.qth
 QConicalGradient.qth
@@ -49,18 +47,20 @@ QContextMenuEvent.qth
 QCursor.qth
 QDateEdit.qth
 QDateTimeEdit.qth
-QDeclarativeComponent.qth
-QDeclarativeContext.qth
-QDeclarativeEngine.qth
-QDeclarativeError.qth
-QDeclarativeExpression.qth
-QDeclarativeImageProvider.qth
-QDeclarativeItem.qth
-QDeclarativeListReference.qth
+# QDeclarativeComponent.qth
+# QDeclarativeContext.qth
+# QDeclarativeEngine.qth
+# QDeclarativeError.qth
+# QDeclarativeExpression.qth
+# QDeclarativeImageProvider.qth
+# QDeclarativeItem.qth
+# QDeclarativeListReference.qth
 QDeclarativeParserStatus.qth
-QDeclarativeProperty.qth
-QDeclarativePropertyMap.qth
-QDeclarativeView.qth
+# QDeclarativeProperty.qth
+# QDeclarativePropertyMap.qth
+# QDeclarativePropertyValueSource.qth
+# QDeclarativeScriptString.qth
+# QDeclarativeView.qth
 QDesktopServices.qth
 QDesktopWidget.qth
 QDial.qth

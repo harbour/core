@@ -15,5 +15,5 @@ hbqtdesigner.hbc
 hbqtgui.hbc
 hbqtnetwork.hbc
 hbqtwebkit.hbc
-hbqtsql.hbc
+# hbqtsql.hbc
 gtqtc.hbc

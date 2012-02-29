@@ -2971,7 +2971,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                HBC_ProcessOne( hbmk, cParam, 1 )
             ELSE
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
+               IF Empty( aParam[ _PAR_cFileName ] )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
+               ELSE
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), cParam, aParam[ _PAR_cFileName ] ) )
+               ENDIF
             ENDIF
          ENDIF
 

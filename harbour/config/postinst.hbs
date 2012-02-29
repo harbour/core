@@ -365,7 +365,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    NEXT
 
    IF ! Empty( aEntry )
-      cName := PathSepToSelf( cDirDest ) + hb_ps() + cName + ".hbd"
+      cName := hb_DirSepAdd( PathSepToSelf( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
          OutStd( "! Created " + cName + " <= " + cDirSource + hb_eol() )
          RETURN .T.
