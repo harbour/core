@@ -1515,9 +1515,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
       ENDIF
 
-      /* Detect special non-installed dir layout (after simple 'make') */
-      IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+      IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
                                       hb_ps() + "hbvm.h" )
+         /* do nothing */
+      /* Detect special non-installed dir layout (after simple 'make') */
+      ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+                                          hb_ps() + "hbvm.h" )
          l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
       /* Detect special multi-host dir layout */
       ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
