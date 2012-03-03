@@ -1958,6 +1958,20 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Add main Harbour header dir to header path list */
    AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INSTALL_INC )
 
+   /* Add custom search paths for .hbc files */
+   IF ! Empty( l_cHB_INSTALL_ADD := GetEnv( "HB_INSTALL_CONTRIB" ) )
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+      FOR EACH tmp IN hb_ATokens( l_cHB_INSTALL_ADD, hb_osPathListSeparator(), .T., .T. )
+      #else
+      FOR EACH tmp IN hb_ATokens( l_cHB_INSTALL_ADD, hb_osPathListSeparator() )
+      #endif
+         IF ! Empty( tmp )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
+         ENDIF
+      NEXT
+   ENDIF
    /* Add default search paths for .hbc files */
    l_cHB_INSTALL_ADD := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) )
    AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + "contrib" + hb_ps() + "%{hb_name}" )
