@@ -1959,7 +1959,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INSTALL_INC )
 
    /* Add custom search paths for .hbc files */
-   IF ! Empty( l_cHB_INSTALL_ADD := GetEnv( "HB_INSTALL_CONTRIB" ) )
+   IF ! Empty( l_cHB_INSTALL_ADD := GetEnv( "HB_INSTALL_ADDONS" ) )
       #if defined( __PLATFORM__WINDOWS ) .OR. ;
           defined( __PLATFORM__DOS ) .OR. ;
           defined( __PLATFORM__OS2 )

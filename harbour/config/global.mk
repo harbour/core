@@ -1841,6 +1841,14 @@ ifneq ($(HB_INSTALL_PREFIX),)
          endif
       endif
    endif
+   ifeq ($(HB_INSTALL_CONTRIB),)
+      # Do not set doc dir for non-*nix targets
+      ifeq ($(HB_PLATFORM_UNIX),)
+         export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)contrib
+      else
+         export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)opt$(DIRSEP)harbour$(DIRSEP)contrib
+      endif
+   endif
 else
    # Require HB_INSTALL_PREFIX on non-*nix when install is used,
    # so that obligatory supplement files (like COPYING) are always
