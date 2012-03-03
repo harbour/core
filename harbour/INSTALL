@@ -747,21 +747,23 @@ HARBOUR
                                  Lib names should be without extension and path.
                                  You only need this in special cases, like CodeGuard
                                  build with bcc.
-   - HB_INSTALL_IMPLIB=yes       Copy import libraries created for external .dll
+   - HB_INSTALL_IMPLIB=no        Copy import libraries created for external .dll
                                  dependencies to the library install directory in
-                                 'install' build phase. Default: no
+                                 'install' build phase. Default: yes
                                  (for Windows/OS/2 targets only. Please note
                                  that this feature doesn't work with all possible
                                  binary distributions of 3rd party packages.
-                                 We test only the official/mainstream ones.)
+                                 We test only the official/mainstream ones. Also
+                                 note that the generated implibs will require .dlls
+                                 compatible with the ones used at build time.)
    - HB_SRC_ROOTPATH=<dir>       When using GNU Make older than 3.81, you shall set
                                  the root directory of Harbour source tree as an
                                  absolute path. If not set, some build functionality
                                  may fail, like detection of 3rd party packages with
                                  locally hosted sources.
                                  With newer make versions, this variable is ignored.
-   - HB_REBUILD_EXTERN=yes       Rebuild extern headers. This is typically used by 
-                                 developers after code modifications or before 
+   - HB_REBUILD_EXTERN=yes       Rebuild extern headers. This is typically used by
+                                 developers after code modifications or before
                                  release. Default: no
    - HB_REBUILD_PARSER=yes       Rebuild language parser sources. Typically
                                  you only need this if your are Harbour core

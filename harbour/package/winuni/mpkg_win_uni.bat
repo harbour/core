@@ -31,6 +31,7 @@ rem ; Assemble unified package from per-target builds
 if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 
 xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
+xcopy /y /s    %~dp0..\..\contrib\*.*                                                     %HB_ABSROOT%contrib\
 xcopy /y /s    %~dp0..\..\examples\*.*                                                    %HB_ABSROOT%examples\
 xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
 xcopy /y       %~dp0HARBOUR_README_ADDONS                                                 %HB_ABSROOT%addons\
@@ -105,22 +106,6 @@ if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\uni
 if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\unicows_license.txt"                              %HB_ABSROOT%lib\win\watcom\
 if exist %HB_ABSROOT%lib\win\bcc\    xcopy /y       "%HB_DIR_UNICOWS%\bcc\unicows.lib"                                         %HB_ABSROOT%lib\win\bcc\
 if exist %HB_ABSROOT%lib\win\bcc\    xcopy /y       "%HB_DIR_UNICOWS%\bcc\unicows_license.txt"                                 %HB_ABSROOT%lib\win\bcc\
-
-pushd
-
-cd %~dp0..\..\contrib
-
-for /F %%a in ( 'dir /b /ad' ) do (
-   echo %%a
-   xcopy /y /s %%a\*.def     %HB_ABSROOT%contrib\%%a\
-   xcopy /y /s %%a\*.hbs     %HB_ABSROOT%contrib\%%a\
-   xcopy /y /s %%a\*.txt     %HB_ABSROOT%contrib\%%a\
-   xcopy /y /s %%a\tests\*.* %HB_ABSROOT%contrib\%%a\tests\
-)
-
-xcopy /y /s *.hbc %HB_ABSROOT%contrib
-
-popd
 
 rem ; Create unified installer
 
