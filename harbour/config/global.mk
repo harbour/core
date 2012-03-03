@@ -1823,7 +1823,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: MANDIR
    ifeq ($(HB_INSTALL_MAN),)
-      # Do not set doc dir for non-*nix targets
+      # Do not set man dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_SYSLOC),yes)
             export HB_INSTALL_MAN := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)man
@@ -1842,7 +1842,6 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
    endif
    ifeq ($(HB_INSTALL_CONTRIB),)
-      # Do not set doc dir for non-*nix targets
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)contrib
       else

@@ -11727,11 +11727,7 @@ STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
       ADD HEADER TO s_hHeaders FILE "setcurs.ch"
       ADD HEADER TO s_hHeaders FILE "simpleio.ch"
 
-      #if defined( __PLATFORM__UNIX )
-         hb_HCaseMatch( s_hHeaders, .T. )
-      #else
-         hb_HCaseMatch( s_hHeaders, .F. )
-      #endif
+      hb_HCaseMatch( s_hHeaders, .T. )
    ENDIF
 
    RETURN s_hHeaders

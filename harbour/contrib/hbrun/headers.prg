@@ -123,11 +123,7 @@ FUNCTION __hbrun_CoreHeaderFiles()
       ADD HEADER TO s_hHeaders FILE "hbscalar.hbx"
       ADD HEADER TO s_hHeaders FILE "hbusrrdd.hbx"
 
-      #if defined( __PLATFORM__UNIX )
-         hb_HCaseMatch( s_hHeaders, .T. )
-      #else
-         hb_HCaseMatch( s_hHeaders, .F. )
-      #endif
+      hb_HCaseMatch( s_hHeaders, .T. )
    ENDIF
 
 #endif /* HBRUN_WITH_HEADERS */
