@@ -4,8 +4,8 @@
 
 -hbdynvm
 
-../hbolesrv.hbc
+hbolesrv.hbc
 
 olesrv1.prg
 
-../../hbnetio/hbnetio.hbc
+hbnetio.hbc

@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../gtwvg.hbc
+gtwvg.hbc
 
 -w3 -es2

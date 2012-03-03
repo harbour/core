@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbcurl.hbc
+hbcurl.hbc
 
 -w3 -es2

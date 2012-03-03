@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbfbird.hbc
+hbfbird.hbc
 
 -w3 -es2

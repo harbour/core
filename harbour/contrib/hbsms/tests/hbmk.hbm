@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbsms.hbc
+hbsms.hbc
 
 -w3 -es2

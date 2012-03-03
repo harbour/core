@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbexpat.hbc
+hbexpat.hbc
 
 -w3 -es2

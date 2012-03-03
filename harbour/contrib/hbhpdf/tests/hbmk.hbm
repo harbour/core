@@ -2,7 +2,7 @@
 # $Id$
 #
 
-../hbhpdf.hbc
+hbhpdf.hbc
 
 -w3 -es2
 

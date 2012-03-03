@@ -2,8 +2,6 @@
 # $Id$
 #
 
-../hbqtcore.hbc
-../hbqtgui.hbc
-../hbqtnetwork.hbc
+hbqt.hbc
 
 -w3 -es2

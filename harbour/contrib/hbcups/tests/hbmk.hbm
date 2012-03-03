@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbcups.hbc
+hbcups.hbc
 
 -w3 -es2

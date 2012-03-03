@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbcairo.hbc
+hbcairo.hbc
 
 -w3 -es2

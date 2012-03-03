@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbunix.hbc
+hbunix.hbc
 
 -w3 -es2

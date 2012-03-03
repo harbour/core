@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../sddfb.hbc
+sddfb.hbc
 
 -w3 -es2

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-../hbblat.hbc
+hbblat.hbc
 
 -w3 -es2
 

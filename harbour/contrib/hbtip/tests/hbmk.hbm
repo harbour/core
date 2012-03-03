@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbtip.hbc
+hbtip.hbc
 
 -w3 -es2

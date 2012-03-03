@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbgs.hbc
+hbgs.hbc
 
 -w3 -es2

@@ -2,6 +2,6 @@
 # $Id$
 #
 
-../hbssl.hbc
+hbssl.hbc
 
 -w3 -es2
