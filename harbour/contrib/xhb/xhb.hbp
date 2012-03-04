@@ -12,8 +12,8 @@
 
 -w3 -es2
 
--instfile=inc:hbcompat.h
--instfile=inc:xhb.h
+-instfile=contrib:hbcompat.h
+-instfile=contrib:xhb.h
 -instfile=inc:hbcompat.ch
 -instfile=inc:xhb.ch
 -instfile=inc:xhbcls.ch

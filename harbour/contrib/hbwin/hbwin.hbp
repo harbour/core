@@ -20,9 +20,9 @@
 -depincpath=png:/opt/local/include
 -depincpathlocal=png:../../src/3rd/png
 
--instfile=inc:hbwapi.h
--instfile=inc:hbwin.h
--instfile=inc:hbwinole.h
+-instfile=contrib:hbwapi.h
+-instfile=contrib:hbwin.h
+-instfile=contrib:hbwinole.h
 -instfile=inc:hbwin.ch
 -instfile=inc:hbwin.hbx
 -instfile=contrib:*.def

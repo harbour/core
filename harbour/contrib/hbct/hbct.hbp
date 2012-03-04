@@ -12,12 +12,12 @@
 # For stime()
 -c=gnu90{linux}
 
--instfile=inc:ct.h
--instfile=inc:ctmath.h
--instfile=inc:ctset.h
--instfile=inc:ctstr.h
--instfile=inc:ctstrfil.h
--instfile=inc:ctwin.h
+-instfile=contrib:ct.h
+-instfile=contrib:ctmath.h
+-instfile=contrib:ctset.h
+-instfile=contrib:ctstr.h
+-instfile=contrib:ctstrfil.h
+-instfile=contrib:ctwin.h
 -instfile=inc:ct.ch
 -instfile=inc:ctcom.ch
 -instfile=inc:ctdisk.ch
