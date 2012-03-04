@@ -78,6 +78,15 @@
 {hbdyn&unix&!cygwin}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbdyn&(cygwin|!unix)}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
+# copy contrib-specific public files
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbc
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbs
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.ch
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.h
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.def
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.txt
+-instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}/tests/*.*
+
 # install
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
@@ -87,4 +96,6 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_ETC}-instpath=etc:${_HB_INSTALL_ETC}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_MAN}-instpath=man:${_HB_INSTALL_MAN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${_HB_INSTALL_LIB}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/tests/
 {_HB_BUILD_INSTALL}-instforce

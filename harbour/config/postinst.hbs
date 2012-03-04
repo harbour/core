@@ -54,7 +54,7 @@ PROCEDURE Main( ... )
 
       /* Installing some misc files */
       tmp := GetEnvC( "HB_INSTALL_DOC" )
-      IF ! tmp == "no"
+      IF !( tmp == "no" )
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
             tmp := GetEnvC( "HB_INSTALL_PREFIX" )
          ENDIF

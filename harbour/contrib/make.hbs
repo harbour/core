@@ -346,6 +346,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
    hb_setenv( "_HB_INSTALL_INC", GetEnv( "HB_INSTALL_INC" ) )
    hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
    hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
+   hb_setenv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
 
    /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
@@ -473,10 +474,12 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                ENDIF
             ENDIF
 
+#if 0
             IF lInstall .AND. ! Empty( GetEnv( "HB_INSTALL_CONTRIB" ) )
                mk_install_contrib( hb_FNameDir( PathSepToSelf( cProjectPath ) ),;
                                    PathSepToSelf( GetEnv( "HB_INSTALL_CONTRIB" ) ) + hb_ps() + hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
             ENDIF
+#endif
          ELSE
             /* Ignore certain non-fatal hbmk2 return values */
             IF nErrorLevel != 10 .AND. ;
@@ -571,6 +574,8 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
       hb_setenv( "_HB_BUILD_LIBDYN" )
    ENDIF
 
+   hb_setenv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
+
    cCommand := s_cBinDir + "hbmk2" +;
                " -quiet -width=0" +;
                " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
@@ -632,25 +637,28 @@ STATIC FUNCTION mk_hbd( cDir )
 
    RETURN .F.
 
+#if 0
 STATIC PROCEDURE mk_install_contrib( cSrc, cDst )
    LOCAL aFile
    LOCAL cType
 
-   OutStd( hb_StrFormat( "! Installing contrib specific public files for '%1$s'", cSrc ) + hb_eol() )
+   OutStd( hb_StrFormat( "! Installing contrib-specific public files for '%1$s'", cSrc ) + hb_eol() )
 
-   IF hb_DirBuild( PathSepToSelf( cDst ) )
+   IF hb_DirBuild( cDst )
 
       FOR EACH cType IN { "*.ch", "*.h", "*.def", "*.hbs", "*.txt", "*.hbc" }
          FOR EACH aFile IN Directory( cSrc + cType )
-            hb_FCopy( cSrc + aFile[ F_NAME ], cDst + hb_ps() + aFile[ F_NAME ] )
+            hb_FCopy( cSrc + aFile[ F_NAME ],;
+                      cDst + aFile[ F_NAME ] )
          NEXT
       NEXT
 
       IF hb_DirExists( cSrc + "tests" ) .AND. ;
-         hb_DirBuild( PathSepToSelf( cDst ) + "tests" )
+         hb_DirBuild( cDst + "tests" )
 
          FOR EACH aFile IN Directory( cSrc + "tests" + hb_ps() + hb_osFileMask() )
-            hb_FCopy( cSrc + "tests" + hb_ps() + aFile[ F_NAME ], cDst + hb_ps() + "tests" + hb_ps() + aFile[ F_NAME ] )
+            hb_FCopy( cSrc + "tests" + hb_ps() + aFile[ F_NAME ],;
+                      cDst + "tests" + hb_ps() + aFile[ F_NAME ] )
          NEXT
       ENDIF
    ELSE
@@ -658,6 +666,7 @@ STATIC PROCEDURE mk_install_contrib( cSrc, cDst )
    ENDIF
 
    RETURN
+#endif
 
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
