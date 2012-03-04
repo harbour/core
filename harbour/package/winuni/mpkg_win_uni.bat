@@ -31,7 +31,6 @@ rem ; Assemble unified package from per-target builds
 if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 
 xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
-xcopy /y /s    %~dp0..\..\contrib\*.*                                                     %HB_ABSROOT%contrib\
 xcopy /y /s    %~dp0..\..\examples\*.*                                                    %HB_ABSROOT%examples\
 xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
 xcopy /y       %~dp0HARBOUR_README_ADDONS                                                 %HB_ABSROOT%addons\
