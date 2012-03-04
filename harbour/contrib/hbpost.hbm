@@ -82,8 +82,6 @@
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbc
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbs
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.ch
--instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.h
--instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.def
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.txt
 -instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}/tests/*.*
 
