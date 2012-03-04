@@ -473,13 +473,6 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                   mk_hbd( hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
                ENDIF
             ENDIF
-
-#if 0
-            IF lInstall .AND. ! Empty( GetEnv( "HB_INSTALL_CONTRIB" ) )
-               mk_install_contrib( hb_FNameDir( PathSepToSelf( cProjectPath ) ),;
-                                   PathSepToSelf( GetEnv( "HB_INSTALL_CONTRIB" ) ) + hb_ps() + hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
-            ENDIF
-#endif
          ELSE
             /* Ignore certain non-fatal hbmk2 return values */
             IF nErrorLevel != 10 .AND. ;
@@ -636,37 +629,6 @@ STATIC FUNCTION mk_hbd( cDir )
    ENDIF
 
    RETURN .F.
-
-#if 0
-STATIC PROCEDURE mk_install_contrib( cSrc, cDst )
-   LOCAL aFile
-   LOCAL cType
-
-   OutStd( hb_StrFormat( "! Installing contrib-specific public files for '%1$s'", cSrc ) + hb_eol() )
-
-   IF hb_DirBuild( cDst )
-
-      FOR EACH cType IN { "*.ch", "*.h", "*.def", "*.hbs", "*.txt", "*.hbc" }
-         FOR EACH aFile IN Directory( cSrc + cType )
-            hb_FCopy( cSrc + aFile[ F_NAME ],;
-                      cDst + aFile[ F_NAME ] )
-         NEXT
-      NEXT
-
-      IF hb_DirExists( cSrc + "tests" ) .AND. ;
-         hb_DirBuild( cDst + "tests" )
-
-         FOR EACH aFile IN Directory( cSrc + "tests" + hb_ps() + hb_osFileMask() )
-            hb_FCopy( cSrc + "tests" + hb_ps() + aFile[ F_NAME ],;
-                      cDst + "tests" + hb_ps() + aFile[ F_NAME ] )
-         NEXT
-      ENDIF
-   ELSE
-      OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", cDst ) + hb_eol() )
-   ENDIF
-
-   RETURN
-#endif
 
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
