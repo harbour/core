@@ -1845,7 +1845,11 @@ ifneq ($(HB_INSTALL_PREFIX),)
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)contrib
       else
-         export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)opt$(DIRSEP)harbour$(DIRSEP)contrib
+         ifneq ($(findstring |/opt/harbour,|$(HB_INSTALL_PREFIX)),)
+            export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)contrib
+         else
+            export HB_INSTALL_CONTRIB := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)harbour$(DIRSEP)contrib
+         endif
       endif
    endif
 else

@@ -18,6 +18,7 @@ export HB_INSTALL_INC := $(HB_INSTALL_PKG_ROOT)/usr/include/harbour
 export HB_INSTALL_DOC := $(HB_INSTALL_PKG_ROOT)/usr/share/doc/harbour
 export HB_INSTALL_MAN := $(HB_INSTALL_PKG_ROOT)/usr/share/man
 export HB_INSTALL_ETC := $(HB_INSTALL_PKG_ROOT)/etc/harbour
+export HB_INSTALL_CONTRIB := $(HB_INSTALL_PKG_ROOT)/usr/share/harbour/contrib
 
 ifeq ($(LD_LIBRARY_PATH),)
    export LD_LIBRARY_PATH := $(HB_INSTALL_DYN)

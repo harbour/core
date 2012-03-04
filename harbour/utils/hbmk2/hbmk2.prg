@@ -1981,6 +1981,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
    ENDIF
+   IF hb_DirExists( "/usr/local/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
+   ENDIF
+   IF hb_DirExists( "/usr/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
+   ENDIF
 #endif
 
    /* Build with shared libs by default, if we're installed to default system locations. */
