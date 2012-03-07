@@ -288,8 +288,8 @@
 
 //----------------------------------------------------------------------//
 
-#define  HPDF_TRUE                          1
-#define  HPDF_FALSE                         0
+#define  HPDF_TRUE                          .T.
+#define  HPDF_FALSE                         .F.
 
 #define  HPDF_OK                            0
 #define  HPDF_NOERROR                       0
