@@ -205,14 +205,16 @@ METHOD IdeEnvironments:prepareBatch( cEnvName )
 
    IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnvName } ) ) > 0
       FOR EACH a_ IN ::aEnvrns[ n, 2 ]
-         s := a_[ 1 ]
-         IF s == "content"
+         s := lower( a_[ 1 ] )
+         IF s == "content" .OR. s == "contents"
             aadd( aCmd, a_[ 2 ] )
          ENDIF
       NEXT
    ELSE
       hb_fNameSplit( hb_dirBase(), @cPath )
       IF hb_fileExists( cPath + hb_ps() + "hbmk2.exe" )
+         aadd( aCmd, "SET PATH=" + cPath + ";%PATH%" )
+      ELSEIF hb_fileExists( cPath + hb_ps() + "hbmk2" )
          aadd( aCmd, "SET PATH=" + cPath + ";%PATH%" )
       ENDIF
    ENDIF

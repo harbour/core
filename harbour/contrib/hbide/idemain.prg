@@ -121,9 +121,6 @@ FUNCTION Main( ... )
       hb_setEnv( "HB_IDE_INSTALL", cBse )
    #endif
 
-   SET DATE TO ANSI
-   SET CENTURY ON
-   SET EPOCH TO 1970
 
 #ifdef __HBDYNLOAD__RDDADS__
    IF hb_FileExists( tmp := hb_dirBase() + hb_libName( "rddads" + hb_libPostfix() ) )
@@ -134,17 +131,18 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 #endif
+   SET DATE TO ANSI
+   SET CENTURY ON
+   SET EPOCH TO 1970
 
    QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oTmp := HbIde():new( hb_aParams() )
    oIde := oTmp:create()
-   //oIde:oDlg:destroy()
-   //oIde:destroy()
+   oIde:destroy()
    oTmp := NIL
-   //oIde := oIde
 
-   RETURN oIde
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -176,6 +174,7 @@ CLASS HbIde
    DATA   oFmt                                           /* Code Formatter Manager         */
    DATA   oCL                                            /* ChangeLog Manager              */
    DATA   oCUI                                           /* CUI Screen Designer Console    */
+   DATA   oUiS                                           /* UI Source Writer               */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -272,6 +271,7 @@ CLASS HbIde
    DATA   oReportsManagerDock
    DATA   oFormatDock
    DATA   oCuiEdDock
+   DATA   oUISrcDock
 
    DATA   qAnimateAction
    DATA   qStatusBarAction
@@ -572,6 +572,9 @@ METHOD HbIde:create( aParams )
    /* Skeletons Manager     */
    ::oSK := IdeSkeletons():new( Self ):create()
 
+   /* Initiate UI Source Manager */
+   ::oUiS := IdeUISrcManager():new( Self ):create()
+   
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 

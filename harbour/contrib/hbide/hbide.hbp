@@ -57,6 +57,7 @@ ideformat.prg
 idechangelog.prg
 ideconsole.prg
 ideparseexpr.c
+ideuisrcmanager.prg
 
 docviewgenerator.ui
 docwriter.ui

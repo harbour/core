@@ -273,6 +273,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "LaunchProject"        , "Launch Project"               , ""               , "^F10" , "No", "Yes" } )
    aadd( aAct, { "ConfigureTools"       , "Configure Tools...*"          , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "CuiEditor"            , "CUI Screen Edirot"            , "cuied"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "UISrcManager"         , "UI Source Manager"            , "fileprg"        , ""     , "No", "Yes" } )
 
    aadd( aAct, { "ManageThemes"         , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"         , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
@@ -558,6 +559,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()           )
 
    oSubMenu:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
+   oSubMenu:oWidget:addAction( ::oIde:oUISrcDock:toggleViewAction()                   )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */
