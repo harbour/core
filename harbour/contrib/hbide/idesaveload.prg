@@ -256,7 +256,24 @@ METHOD IdeINI:getResourcesPath()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeINI:getHarbourPath()
-   RETURN iif( empty( ::cPathHrbRoot ), ::cPathHrbRoot, hbide_pathToOSPath( hbide_pathAppendLastSlash( ::cPathHrbRoot ) ) )
+   LOCAL cPath := ::cPathHrbRoot
+
+   IF empty( cPath )
+      IF empty( cPath := hb_getEnv( "HB_INSTALL_PREFIX" ) ) /* This covers Harbour developers */
+         hb_fNameSplit( hb_dirBase(), @cPath )              /* This covers USERS of nightly builds */
+         IF ! hb_fileExists( cPath + "harbour.exe" )
+            IF ! hb_fileExists( cPath + "harbour" )
+               cPath := ""
+            ENDIF
+         ENDIF
+         IF ! empty( cPath )
+            cPath := hbide_pathAppendLastSlash( cPath ) + ".." + hb_ps()
+         ENDIF
+      ENDIF
+   ENDIF
+   ::cPathHrbRoot := iif( empty( cPath ), "", hbide_pathToOSPath( hbide_pathAppendLastSlash( cPath ) ) )
+
+   RETURN ::cPathHrbRoot
 
 /*------------------------------------------------------------------------*/
 
@@ -1567,9 +1584,9 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    HB_SYMBOL_UNUSED( p1 )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
-   
+      RETURN Self
+   ENDIF
+
    SWITCH cEvent
 
    CASE "buttonSelFont_clicked"

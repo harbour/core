@@ -1218,7 +1218,7 @@ FUNCTION hbide_getShellCommandsTempFile( aCmd )
       cCmdFile := ""
       FOR EACH tmp IN aCmd
          tmp := hbide_parseMacros( tmp )
-         cCmdFile += tmp + hb_eol()
+         cCmdFile += tmp + hb_osNewLine()
       NEXT
 
       IF ( fhnd := hb_FTempCreateEx( @cCmdFileName, NIL, NIL, cExt ) ) != F_ERROR

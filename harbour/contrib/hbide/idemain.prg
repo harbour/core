@@ -105,7 +105,7 @@ REQUEST ADS
 
 FUNCTION Main( ... )
    LOCAL oTmp
-   LOCAL oIde
+   //LOCAL oIde
 
 #ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS, tmp
@@ -138,11 +138,15 @@ FUNCTION Main( ... )
    QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oTmp := HbIde():new( hb_aParams() )
+#if 0
    oIde := oTmp:create()
    oIde:destroy()
+#else
+   oTmp:create()
+#endif
    oTmp := NIL
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -574,7 +578,7 @@ METHOD HbIde:create( aParams )
 
    /* Initiate UI Source Manager */
    ::oUiS := IdeUISrcManager():new( Self ):create()
-   
+
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
@@ -671,7 +675,7 @@ METHOD HbIde:create( aParams )
 
    /* Console Editor */
    ::oCUI := IdeConsole():new():create( Self )
-   
+
    ::oDlg:show()     /* Shifted here - it gives the effect that time opening hbIDE is much less */
    qSplash:raise()
 

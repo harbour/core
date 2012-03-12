@@ -67,6 +67,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "hbqtgui.ch"
+#include "fileio.ch"
 #include "hbide.ch"
 #include "hbhrb.ch"
 
@@ -142,9 +143,7 @@ CLASS IdeUISrcManager INHERIT IdeObject
    DATA   cSrcFile                                INIT ""
    DATA   cSource                                 INIT ""
    DATA   aSource                                 INIT {}
-   DATA   cBatch                                  INIT ""
    DATA   oProcess
-   DATA   lFinished
    DATA   cCurAction                              INIT ""
 
    METHOD new( oIde )
@@ -254,7 +253,6 @@ METHOD IdeUISrcManager:show()
    ::qTree := QTreeWidget()
    ::qTree:setMaximumWidth( 150 )
    ::qTree:setHeaderHidden( .t. )
-   ::qTree:setAlternatingRowColors( .t. )
    ::qTree:connect( "itemSelectionChanged()", {|| ::exposeAction() } )
    ::qHBLayout:addWidget( ::qTree )
 
@@ -299,7 +297,7 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "buttonOpen_clicked"
-      IF ! empty( cUI := hbide_fetchAFile( ::oIde:oDlg, "Select a .UIC", { { "Qt Designer .UIC File", "*.uic" } }, ::oIde:cWrkFolderLast ) )
+      IF ! empty( cUI := hbide_fetchAFile( ::oIde:oDlg, "Select a .UI", { { "Qt Designer .UI File", "*.ui" } }, ::oIde:cWrkFolderLast ) )
          ::buildUiWidget( cUI )
       ENDIF
       EXIT
@@ -314,9 +312,7 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
          qList := qMime:urls()
          qUrl := qList:at( 0 )
          hb_fNameSplit( qUrl:toLocalFile(), , , @cExt )
-         IF lower( cExt ) == ".uic"
-            ::buildUicWidget( qUrl:toLocalFile() )
-         ELSEIF lower( cExt ) == ".ui"
+         IF lower( cExt ) == ".ui"
             ::buildUiWidget( qUrl:toLocalFile() )
          ENDIF
       ENDIF
@@ -325,8 +321,8 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
    CASE "child_object"
       IF empty( ::qCurrent ) .OR. ! ( ::qCurrent == p )
          IF ! empty( ::cCurAction )
-            ::saveMethod( ::qCurrent:objectName(), ::cCurAction ) 
-         ENDIF    
+            ::saveMethod( ::qCurrent:objectName(), ::cCurAction )
+         ENDIF
          ::qCurrent := p
          ::qFocus:setWidget( p )
          ::aStatusPnls[ PNL_OBJECTS ]:setText( "<font color = blue>OBJ: " + p1 + "</font>" )
@@ -348,71 +344,71 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
 METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
    LOCAL cSrc, n, n0, n1, n2, n3, cMtd, i, aSrc
    LOCAL cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
-   
+
    cMtd := "METHOD " + "ui_" + ::cName + ":" + cMethod + "( ... )"
    cSrc := ::qEdit:toPlainText()
-   
+
    n0 := ascan( ::aSource, {|e| "<METHODSEVENTS>" $ e } )
    n1 := ascan( ::aSource, {|e| "</METHODSEVENTS>" $ e } )
 
    n2 := ascan( ::aSource, {|e| "METHOD " + cMethod $ e }, n0, n1 )
    IF n2 > 0 .AND. empty( cSrc )
-      hb_adel( ::aSource, n2, .t. )   
+      hb_adel( ::aSource, n2, .t. )
    ELSEIF n2 == 0 .AND. ! empty( cSrc )
-      ::aSource := hb_aIns( ::aSource, n0+1, "   " + "METHOD " + cMethod + "( ... )", .t. )   
-   ENDIF          
-   
+      ::aSource := hb_aIns( ::aSource, n0+1, "   " + "METHOD " + cMethod + "( ... )", .t. )
+   ENDIF
+
    n2 := ascan( ::aSource, {|e| cMtd $ e } )
    n3 := ascan( ::aSource, {|e| "RETURN Self" $ e }, n2 )
-   
+
    IF empty( cSrc )
-      IF n2 > 0 
+      IF n2 > 0
          FOR i := n3 + 1 TO n2 STEP - 1
             hb_adel( ::aSource, i, .t. )
-         NEXT  
-      ENDIF 
-   ELSE          
+         NEXT
+      ENDIF
+   ELSE
       cSrc := strtran( cSrc, chr( 13 ) + chr( 10 ), chr( 10 ) )
       aSrc := hb_aTokens( cSrc, chr( 10 ) )
 
-      IF n2 > 0        
+      IF n2 > 0
          FOR i := n3-1 TO n2 + 1 STEP - 1
             hb_adel( ::aSource, i, .t. )
-         NEXT  
+         NEXT
          FOR i := 1 TO len( aSrc )
             ::aSource := hb_ains( ::aSource, n2 + i, "   " + aSrc[ i ], .t. )
-         NEXT    
-      ELSE 
-         n := ascan( ::aSource, {|e| "<EVENTSMETHODAREA>" $ e } )       
+         NEXT
+      ELSE
+         n := ascan( ::aSource, {|e| "<EVENTSMETHODAREA>" $ e } )
          ::aSource := hb_ains( ::aSource, ++n, cMtd, .t. )
          FOR i := 1 TO len( aSrc )
-            ::aSource := hb_ains( ::aSource, ++n, "   " + aSrc[ i ], .t. ) 
-         NEXT 
-         ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )       
-         ::aSource := hb_ains( ::aSource, ++n, "   RETURN Self", .t. )       
-         ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )       
-      ENDIF    
-   ENDIF    
-#if 0   
+            ::aSource := hb_ains( ::aSource, ++n, "   " + aSrc[ i ], .t. )
+         NEXT
+         ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )
+         ::aSource := hb_ains( ::aSource, ++n, "   RETURN Self", .t. )
+         ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )
+      ENDIF
+   ENDIF
+#if 0
    n0 := ascan( ::aSource, {|e| "<CONNECTS>" $ e } )
    n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e } )
    IF empty( cSrc )
-      
-   ELSE 
-      
-   ENDIF       
-#endif   
+
+   ELSE
+
+   ENDIF
+#endif
    ::qEdit:document():clear()
    ::buildSource() /* Temporary */
-    
-   RETURN Self 
-      
+
+   RETURN Self
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD IdeUISrcManager:loadMethod( cObjName, cAction )
    LOCAL cSrc := "", n0, n1, n2, n3, cMtd, i
    LOCAL cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
-   
+
    n0 := ascan( ::aSource, {|e| "<METHODSEVENTS>" $ e } )
    n1 := ascan( ::aSource, {|e| "</METHODSEVENTS>" $ e } )
 
@@ -421,17 +417,17 @@ METHOD IdeUISrcManager:loadMethod( cObjName, cAction )
       cMtd := "METHOD " + "ui_" + ::cName + ":" + cMethod + "( ... )"
       IF ( n2 := ascan( ::aSource, {|e| cMtd $ e } ) ) > 0
          n3 := ascan( ::aSource, {|e| "RETURN Self" $ e }, n2 )
-         FOR i := n2 + 1 TO n3 - 1  
+         FOR i := n2 + 1 TO n3 - 1
             cSrc += substr( ::aSource[ i ], 4 ) + chr( 10 )
-         NEXT 
-         cSrc := substr( cSrc, 1, len( cSrc ) - 1 )   
-      ENDIF    
-   ENDIF 
-      
-   RETURN cSrc 
-   
+         NEXT
+         cSrc := substr( cSrc, 1, len( cSrc ) - 1 )
+      ENDIF
+   ENDIF
+
+   RETURN cSrc
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD IdeUISrcManager:exposeAction()
    LOCAL qItem := ::qTree:currentItem()
    LOCAL cText := qItem:text( 0 )
@@ -441,9 +437,9 @@ METHOD IdeUISrcManager:exposeAction()
    ENDIF
 
    IF ! empty( ::cCurAction )
-      ::saveMethod( ::qCurrent:objectName(), ::cCurAction ) 
-   ENDIF    
-   
+      ::saveMethod( ::qCurrent:objectName(), ::cCurAction )
+   ENDIF
+
    SWITCH __objGetClsName( ::qCurrent )
    CASE "QPUSHBUTTON"
    CASE "QTOOLBUTTON"
@@ -451,11 +447,11 @@ METHOD IdeUISrcManager:exposeAction()
       CASE "Activated"
          ::qEdit:setPlainText( ::loadMethod( ::qCurrent:objectName(), "Activated" ) )
          ::qEdit:setFocus()
-         EXIT 
-      CASE "Tooltip"
-         ::qEdit:setPlainText( ::loadMethod( ::qCurrent:objectName(), "Tooltip" ) )
+         EXIT
+      CASE "Icon"
+         ::qEdit:setPlainText( ::loadMethod( ::qCurrent:objectName(), "Icon" ) )
          ::qEdit:setFocus()
-         EXIT    
+         EXIT
       ENDSWITCH
 
       EXIT
@@ -481,7 +477,7 @@ METHOD IdeUISrcManager:loadActions( oWidget, cName )
       qItem:setText( 0, "Activated" )
       ::qTree:addTopLevelItem( qItem )
       qItem := QTreeWidgetItem()
-      qItem:setText( 0, "Tooltip" )
+      qItem:setText( 0, "Icon" )
       ::qTree:addTopLevelItem( qItem )
       EXIT
 
@@ -501,11 +497,12 @@ METHOD IdeUISrcManager:clear()
 
    ::qEdit:document():clear()
    ::qTree:clear()
-   
+
    ::aObjByName := {}
    ::aPrg   := {}
    ::qFocus := NIL
    ::qFocus := QFocusFrame()
+   ::qFocus:setStyleSheet( "border: 2px red;" )
 
    IF ! empty( ::pHrb  )
       hb_hrbUnload( ::pHrb  )
@@ -524,7 +521,7 @@ METHOD IdeUISrcManager:clear()
    ::cSource  := ""
    ::cSrcFile := ""
    ::aSource  := {}
-   
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -534,11 +531,7 @@ METHOD IdeUISrcManager:buildUiWidget( cUI )
 
    hb_fNameSplit( cUI, @cPath, @cName, @cExt )
 
-   ::lFinished := .f.
    ::runHbmk2( cUI )
-   DO WHILE ! ::lFinished
-      QApplication():processEvents()
-   ENDDO
 
    cPrg := cPath + "uic_" + cName + ".prg"
    IF ! hb_fileExists( cPrg )
@@ -566,7 +559,7 @@ METHOD IdeUISrcManager:buildUiWidget( cUI )
 METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
    LOCAL cCode, s, n, cObj, cCls, i, pHrb, oObj
 
-   cBuffer := hb_compileFromBuf( cBuffer, "-n2", "-w3", "-es2", "-q0", "-i" + ::oHL:cPathInstall + "include" )
+   cBuffer := hb_compileFromBuf( cBuffer, "-n2", "-w3", "-es2", "-q0", "-i" + ::oINI:getHarbourPath() + "include" )
    IF ! empty( cBuffer )
       pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cBuffer )
       IF ! empty( pHrb )
@@ -606,7 +599,7 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
                      IF ! ( cCls $ "QSIZEPOLICY,QFONT,QGRIDLAYOUT,QHBOXLAYOUT,QVBOXLAYOUT,QSPACERITEM,QLAYOUT,QSPLITTER,QSCROLLAREA,QTREEWIDGETITEM,QLISTWIDGETITEM" )
                         aadd( ::aObjByName, cObj )
                         oObj:setObjectName( cObj )
-                        
+
                         IF ( cCls $ "QLINEEDIT" )
                            oObj:setFocusPolicy( Qt_NoFocus )
                         ENDIF
@@ -635,33 +628,42 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeUISrcManager:runHbmk2( cUI )
-   LOCAL cPath, cName, cExt, cExeHbMk2, cCmdParams, cCmd, cC, cBuf
-   LOCAL aHbp := {}
+   LOCAL cPath, cName, cExt, cExeHbMk2, cCmdParams, cCmd, cC, cBuf, fhnd, cHbpFileName, cHbpFile, cBatch
+   LOCAL aHbp := {}, aHbp0 := {}
    LOCAL cbRed := "<font color=blue>", ceRed := "</font>"
 
    hb_fNameSplit( cUI, @cPath, @cName, @cExt )
 
-   aadd( aHbp, "-q"          )
-   aadd( aHbp, "-trace"      )
-   aadd( aHbp, "-info"       )
-   aadd( aHbp, "-lang=en"    )
-   aadd( aHbp, "-width=512"  )
-   aadd( aHbp, "-rebuild"    )
-   aadd( aHbp, "-s"          )
-   aadd( aHbp, "-hblib"      )
    aadd( aHbp, "-hbraw"      )
-   aadd( aHbp, "-workdir=" + cPath )
-   aadd( aHbp, "hbqt.hbc"    )
-   aadd( aHbp, cUI )
+   aadd( aHbp, "-trace"      )
 
-   ::oDockB2:show()
+   aadd( aHbp0, "-q"          )
+   aadd( aHbp0, "-info"       )
+   aadd( aHbp0, "-rebuild"    )
+   aadd( aHbp0, "-s"          )
+   aadd( aHbp0, "-hblib"      )
+   aadd( aHbp0, "-workdir=" + cPath )
+   aadd( aHbp0, "hbqt.hbc"    )
+   aadd( aHbp0, cUI )
+
    ::oOutputResult:oWidget:clear()
 
    IF .t.
       ::oOutputResult:oWidget:append( hbide_outputLine() )
 
+      IF ( fhnd := hb_FTempCreateEx( @cHbpFileName, NIL, NIL, ".hbp" ) ) != F_ERROR
+         cHbpFile := ""
+         FOR EACH cBuf IN aHbp0
+            cHbpFile += cBuf + hb_osNewLine()
+         NEXT
+         FWrite( fhnd, cHbpFile )
+         FClose( fhnd )
+      ELSE
+         RETURN Self
+      ENDIF
+
       ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE )
-      ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
+      cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
       aeval( ::oEV:getHbmk2Commands( ::cWrkEnvironment ), {|e| aadd( aHbp, e ) } )
 
       cExeHbMk2  := ::oINI:getHbmk2File()
@@ -674,23 +676,29 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
       ::oProcess:workingPath := cPath
       //
       cCmd := hbide_getShellCommand()
-      cC   := iif( hbide_getOS() == "nix", "", "/C " )
+      cC   := iif( hbide_getOS() == "nix", "", "/E:20000 /C " )
 
-      IF hb_fileExists( ::cBatch )
-         cBuf := memoread( ::cBatch )
-         cBuf += hb_eol() + cExeHbMk2 + " " + cCmdParams + hb_eol()
-         hb_memowrit( ::cBatch, cBuf )
+      IF hb_fileExists( cBatch )
+         cBuf := memoread( cBatch )
+         IF ! empty( hb_getEnv( "HB_QTPATH" ) )
+            cBuf := "SET HB_QTPATH=" + hb_getEnv( "HB_QTPATH" ) + hb_osNewLine() + cBuf
+         ENDIF
+         cBuf += hb_osNewLine() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_osNewLine()
+         hb_memowrit( cBatch, cBuf )
       ENDIF
       //
-      ::outputText( cbRed + "Batch File " + iif( hb_fileExists( ::cBatch ), " Exists", " : doesn't Exist" ) + " => " + ceRed + trim( ::cBatch ) )
+      ::outputText( cbRed + "Batch File " + iif( hb_fileExists( cBatch ), " : Exists", " : doesn't Exist" ) + " => " + ceRed + trim( cBatch ) )
       ::outputText( cbRed + "Batch File Contents => " + ceRed )
-      ::outputText( memoread( ::cBatch ) )
+      ::outputText( memoread( cBatch ) )
       ::outputText( cbRed + "Command => " + ceRed + cCmd )
-      ::outputText( cbRed + "Arguments => " + ceRed + cC + ::cBatch )
+      ::outputText( cbRed + "Arguments => " + ceRed + cC + cBatch )
       ::outputText( hbide_outputLine() )
       //
-      ::oProcess:addArg( cC + ::cBatch )
+      ::oProcess:addArg( cC + cBatch )
       ::oProcess:start( cCmd )
+      ::oProcess:waitForFinished()
+      ferase( cHbpFileName )
+      ferase( cBatch )
    ENDIF
 
    RETURN Self
@@ -705,10 +713,6 @@ METHOD IdeUISrcManager:finished( nExitCode, nExitStatus )
            "Finished at [ " + time() + " ]    Done in [ " + hb_ntos( seconds() - ::oProcess:started ) + " Secs ]"
    ::outputText( cTmp )
    ::outputText( hbide_outputLine() )
-
-   ferase( ::cBatch )
-   ::lFinished := .t.
-   ::oDockB2:hide()
 
    RETURN Self
 
@@ -789,11 +793,11 @@ STATIC FUNCTION getObject( oSelf, oHbQtUi, cObj )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeUISrcManager:loadSource()
-   
+
    IF hb_fileExists( ::cSrcFile )
       ::aSource := hbide_readSource( ::cSrcFile )
-   ELSE 
-      ::buildSource()   
+   ELSE
+      ::buildSource()
    ENDIF
 
    RETURN Self
@@ -938,7 +942,7 @@ METHOD IdeUISrcManager:buildSource()
 
    ::cSource := ""
    aeval( ::aSource, {|e| ::cSource += e + hb_osNewLine() } )
-   
+
    hb_memowrit( ::cSrcFile, ::cSource )
 
    ::oSM:editSource( ::cSrcFile, 0, 0, 0, NIL, NIL, .f., .t. )

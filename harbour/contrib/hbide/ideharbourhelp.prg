@@ -231,18 +231,18 @@ METHOD IdeHarbourHelp:new( oIde )
 
 METHOD IdeHarbourHelp:create( oIde )
    LOCAL cPath
-   
+
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
    ::cPathInstall := ::oINI:getHarbourPath()
    IF empty( ::cPathInstall )
       hb_fNameSplit( hb_dirBase(), @cPath )
-      IF hb_fileExists( cPath + hb_ps() + "hbmk2.exe" )
+      IF hb_fileExists( cPath + "hbmk2.exe" )
          ::cPathInstall := cPath + ".." + hb_ps()
-      ENDIF    
-   ENDIF 
-      
+      ENDIF
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -503,8 +503,8 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
    HB_SYMBOL_UNUSED( p1 )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH nMode
 
@@ -1424,24 +1424,24 @@ METHOD IdeHarbourHelp:exportAsPdfAll()
    LOCAL cPdf, qPrinter, cExt, cPath, cFile, aItems
 
    IF empty( ::aNodes )
-      RETURN Self 
-   ENDIF 
-   
+      RETURN Self
+   ENDIF
+
    IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Documents", "*.pdf" } } ) )
       hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
       qPrinter := QPrinter()
-      
+
       FOR EACH aItems IN ::aNodes
          ::oUI:q_treeDoc:setCurrentItem( aItems[ 1 ], 0 )
          QApplication():processEvents()
          IF ::lQuitting
-            EXIT 
-         ENDIF    
+            EXIT
+         ENDIF
          qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:q_browserView:documentTitle() ) + ".pdf" )
          qPrinter:setFullPage( .t. )
          ::oUI:q_browserView:print( qPrinter )
          qPrinter:newPage()
-      NEXT     
+      NEXT
    ENDIF
 
    RETURN Self

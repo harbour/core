@@ -211,11 +211,10 @@ METHOD IdeEnvironments:prepareBatch( cEnvName )
          ENDIF
       NEXT
    ELSE
-      hb_fNameSplit( hb_dirBase(), @cPath )
-      IF hb_fileExists( cPath + hb_ps() + "hbmk2.exe" )
-         aadd( aCmd, "SET PATH=" + cPath + ";%PATH%" )
-      ELSEIF hb_fileExists( cPath + hb_ps() + "hbmk2" )
-         aadd( aCmd, "SET PATH=" + cPath + ";%PATH%" )
+      IF ! empty( cPath := ::oINI:getHarbourPath() )
+         aadd( aCmd, "SET PATH=" + cPath + "bin" + ";%PATH%" )
+      ELSE
+         aadd( aCmd, "SET PATH=%PATH%" )
       ENDIF
    ENDIF
 
