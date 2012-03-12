@@ -36,3 +36,11 @@
 {darwin}-depincpath=qt:/Developer/qt/include
 {darwin}-depincpath=qt:/Library/Frameworks
 {beos}-depincpath=qt:/boot/common/include
+
+-instfile=contrib_qt:*.hbc
+-instfile=contrib_qt:*.hbs
+-instfile=contrib_qt:*.txt
+-instfile=contrib_qt_tests:tests/*.*
+
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/../
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/../tests/
