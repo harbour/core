@@ -680,10 +680,8 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
 
       IF hb_fileExists( cBatch )
          cBuf := memoread( cBatch )
-         IF ! empty( hb_getEnv( "HB_QTPATH" ) )
-            cBuf := "SET HB_QTPATH=" + hb_getEnv( "HB_QTPATH" ) + hb_eol() + cBuf
-         ENDIF
-         cBuf += hb_eol() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_osNewLine()
+         cBuf += "SET " + hb_eol()
+         cBuf += hb_eol() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_eol()
          hb_memowrit( cBatch, cBuf )
       ENDIF
       //
