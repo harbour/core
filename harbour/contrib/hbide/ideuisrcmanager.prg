@@ -654,7 +654,7 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
       IF ( fhnd := hb_FTempCreateEx( @cHbpFileName, NIL, NIL, ".hbp" ) ) != F_ERROR
          cHbpFile := ""
          FOR EACH cBuf IN aHbp0
-            cHbpFile += cBuf + hb_osNewLine()
+            cHbpFile += cBuf + hb_eol()
          NEXT
          FWrite( fhnd, cHbpFile )
          FClose( fhnd )
@@ -681,9 +681,9 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
       IF hb_fileExists( cBatch )
          cBuf := memoread( cBatch )
          IF ! empty( hb_getEnv( "HB_QTPATH" ) )
-            cBuf := "SET HB_QTPATH=" + hb_getEnv( "HB_QTPATH" ) + hb_osNewLine() + cBuf
+            cBuf := "SET HB_QTPATH=" + hb_getEnv( "HB_QTPATH" ) + hb_eol() + cBuf
          ENDIF
-         cBuf += hb_osNewLine() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_osNewLine()
+         cBuf += hb_eol() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_osNewLine()
          hb_memowrit( cBatch, cBuf )
       ENDIF
       //
@@ -941,7 +941,7 @@ METHOD IdeUISrcManager:buildSource()
    ENDIF
 
    ::cSource := ""
-   aeval( ::aSource, {|e| ::cSource += e + hb_osNewLine() } )
+   aeval( ::aSource, {|e| ::cSource += e + hb_eol() } )
 
    hb_memowrit( ::cSrcFile, ::cSource )
 
