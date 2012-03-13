@@ -213,7 +213,6 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    PHB_ITEM         pItemEof, pItem;
    DBFIELDINFO      pFieldInfo;
    HB_BOOL          bError;
-   char *           pBuffer;
    HB_USHORT        uiFields, uiCount;
    int              iType;
 
@@ -276,16 +275,16 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
-
    bError = HB_FALSE;
    for ( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++  )
    {
-      hb_cdpnDup2Upper( hb_vmCDP(),
-                        pVar->sqlname, pVar->sqlname_length,
-                        pBuffer, MAX_FIELD_NAME + 1 );
-      pBuffer[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = pBuffer;
+      /* FIXME: if pVar->sqlname is ended with 0 byte then this hb_strndup()
+       *        and hb_xfree() bewlow is redundant and
+       *          pFieldInfo.atomName = pVar->sqlname;
+       *        is enough.
+       */
+      char * szOurName = hb_strndup( pVar->sqlname, pVar->sqlname_length );
+      pFieldInfo.atomName = szOurName;
 
       pFieldInfo.uiDec = 0;
 
@@ -400,11 +399,11 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
       }
 
+      hb_xfree( szOurName );
+
       if ( bError )
         break;
    }
-
-   hb_xfree( pBuffer );
 
    if ( bError )
    {

@@ -239,7 +239,6 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    PHB_ITEM        pItemEof, pItem;
    HB_USHORT       uiFields, uiCount;
    HB_BOOL         bError;
-   char*           pBuffer;
    DBFIELDINFO     pFieldInfo;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
@@ -268,18 +267,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
    pItem = hb_itemNew( NULL );
 
-   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
-
    bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
-      char * pszName = PQfname( pResult, ( int ) uiCount );
-      hb_cdpnDup2Upper( hb_vmCDP(),
-                        pszName, strlen( pszName ),
-                        pBuffer, MAX_FIELD_NAME + 1 );
-      pBuffer[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = pBuffer;
-
+      pFieldInfo.atomName = PQfname( pResult, ( int ) uiCount );
       pFieldInfo.uiDec = 0;
 
       switch( PQftype( pResult, ( int ) uiCount ) )
@@ -392,7 +383,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             bError = HB_TRUE;
             break;
       }
-      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pBuffer, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
+      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
 
       if ( ! bError )
       {
@@ -455,8 +446,6 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
       if ( bError )
          break;
    }
-
-   hb_xfree( pBuffer );
 
    hb_itemRelease( pItem );
 

@@ -295,18 +295,13 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       DBFIELDINFO pFieldInfo;
 
       PHB_ITEM pName;
-      char * szOurName;
 
       int iDataType;
       int iSize;
       int iDec;
 
       pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
-      szOurName = hb_cdpnDupUpper( hb_vmCDP(), hb_itemGetCPtr( pName ), NULL );
-      hb_itemRelease( pName );
-      if( strlen( szOurName ) > MAX_FIELD_NAME )
-         szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = szOurName;
+      pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
       iDataType = sqlite3_column_type( st, uiIndex );
 
@@ -378,7 +373,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
       }
 
-      hb_xfree( szOurName );
+      hb_itemRelease( pName );
 
       if( bError )
          break;

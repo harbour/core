@@ -235,7 +235,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    HB_USHORT     uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
    HB_BOOL       bError;
-   char *        pBuffer;
    DBFIELDINFO   pFieldInfo;
    MYSQL_FIELD * pMyField;
    void **       pRow;
@@ -262,19 +261,12 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
-
    bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
       pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
-      hb_cdpnDup2Upper( hb_vmCDP(),
-                        pMyField->name, strlen( pMyField->name ),
-                        pBuffer, MAX_FIELD_NAME + 1 );
-      pBuffer[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = pBuffer;
-
+      pFieldInfo.atomName = pMyField->name;
       pFieldInfo.uiLen = ( HB_USHORT ) pMyField->length;
       pFieldInfo.uiDec = 0;
 
@@ -404,8 +396,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       if ( bError )
          break;
    }
-
-   hb_xfree( pBuffer );
 
    if ( bError )
    {
