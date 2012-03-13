@@ -2972,7 +2972,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE hb_FNameExt( cParamL ) == ".hbc"
 
-         cParam := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
+         cParam := tmp1 := MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] )
+         cParam := PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             lFound := .F.
             IF hb_FileExists( cParam )
@@ -2997,9 +2998,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                HBC_ProcessOne( hbmk, cParam, 1 )
             ELSE
                IF Empty( aParam[ _PAR_cFileName ] )
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
                ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), cParam, aParam[ _PAR_cFileName ] ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, aParam[ _PAR_cFileName ] ) )
                ENDIF
             ENDIF
          ENDIF
@@ -9180,7 +9181,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cItemL
    LOCAL cName
    LOCAL lFound
-   LOCAL tmp
+   LOCAL tmp, tmp1
 
 #if defined( __PLATFORM__DOS )
    IF ! hbmk_dos_FileExists( cFileName )
@@ -9280,7 +9281,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "libs="         ) ) ) == "libs="         ; cLine := SubStr( cLine, Len( "libs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            cItem := tmp1 := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF hb_FNameExt( cItem ) == ".hbc"
                cItem := PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) )
                IF nNestingLevel < _HBMK_NEST_MAX
@@ -9306,7 +9307,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
                      HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
                   ELSE
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), cItem, cFileName ) )
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                   ENDIF
                ELSE
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
@@ -9351,7 +9352,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             IF nNestingLevel < _HBMK_NEST_MAX
 
-               cItem := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) ), hb_FNameDir( cFileName ) )
+               cItem := tmp1 := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+               cItem := PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) )
 
                IF Empty( hb_FNameExt( cItem ) )
                   cItem := hb_FNameExtSet( cItem, ".hbc" )
@@ -9379,7 +9381,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
                   HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
                ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), cItem, cFileName ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                ENDIF
             ELSE
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
@@ -9391,7 +9393,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF autohbc_split_arg( cItem, @cName, @cItem )
 
-               cItem := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) ), hb_FNameDir( cFileName ) )
+               cItem := tmp1 := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+               cItem := PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) )
 
                IF Empty( hb_FNameExt( cName ) )
                   cName := hb_FNameExtSet( cName, ".ch" )
@@ -9416,7 +9419,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                IF lFound
                   hbmk[ _HBMK_hAUTOHBC ][ AllTrim( StrTran( cName, "\", "/" ) ) ] := cItem
                ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), cItem, cFileName ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                ENDIF
             ENDIF
          NEXT
