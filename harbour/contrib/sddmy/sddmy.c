@@ -262,16 +262,17 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( char * ) hb_xgrab( 256 );
+   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
 
    bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
       pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
-      hb_strncpy( pBuffer, pMyField->name, 256 - 1 );
+      hb_cdpnDup2Upper( hb_vmCDP(),
+                        pMyField->name, strlen( pMyField->name ),
+                        pBuffer, MAX_FIELD_NAME + 1 );
       pBuffer[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( pBuffer, strlen( pBuffer ) );
       pFieldInfo.atomName = pBuffer;
 
       pFieldInfo.uiLen = ( HB_USHORT ) pMyField->length;

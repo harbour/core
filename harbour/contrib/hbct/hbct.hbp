@@ -72,6 +72,7 @@ dattime2.c
 dattime3.c
 dbftools.c
 disk.c
+envparam.c
 expand.c
 exponent.c
 files.c

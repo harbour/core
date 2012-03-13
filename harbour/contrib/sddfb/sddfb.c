@@ -276,14 +276,15 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( char * ) hb_xgrab( 256 );
+   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
 
    bError = HB_FALSE;
    for ( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++  )
    {
-      memcpy( pBuffer, pVar->sqlname, pVar->sqlname_length );
-      pBuffer[ HB_MIN( pVar->sqlname_length, MAX_FIELD_NAME ) ] = '\0';
-      hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
+      hb_cdpnDup2Upper( hb_vmCDP(),
+                        pVar->sqlname, pVar->sqlname_length,
+                        pBuffer, MAX_FIELD_NAME + 1 );
+      pBuffer[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = pBuffer;
 
       pFieldInfo.uiDec = 0;

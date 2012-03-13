@@ -376,6 +376,7 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_CDP_ENDIAN_BIG           2
 
 #define HB_CDP_ISBINSORT(cdp)       ( ( cdp )->sort == NULL )
+#define HB_CDP_ISCUSTOM(cdp)        ( ( cdp )->fCustom )
 
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
@@ -408,6 +409,11 @@ extern HB_EXPORT const char * hb_cdpnDup2( const char *, HB_SIZE, char *, HB_SIZ
 extern HB_EXPORT const char * hb_cdpnDup3( const char *, HB_SIZE, char *, HB_SIZE *, char **, HB_SIZE *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT HB_SIZE      hb_cdpnDupLen( const char *, HB_SIZE, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT HB_SIZE      hb_cdpnDup2Len( const char *, HB_SIZE, HB_SIZE, PHB_CODEPAGE, PHB_CODEPAGE );
+
+extern HB_EXPORT char *       hb_cdpnDupUpper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize );
+extern HB_EXPORT char *       hb_cdpnDupLower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize );
+extern HB_EXPORT HB_SIZE      hb_cdpnDup2Upper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize, char * buffer, HB_SIZE nBuffLen );
+extern HB_EXPORT HB_SIZE      hb_cdpnDup2Lower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize, char * buffer, HB_SIZE nBuffLen );
 
 extern HB_EXPORT int          hb_cdpTranslateChar( int iChar, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT int          hb_cdpTranslateDispChar( int iChar, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );

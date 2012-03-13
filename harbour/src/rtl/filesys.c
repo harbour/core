@@ -106,6 +106,7 @@
 #include "hbstack.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbapicdp.h"
 #include "hbdate.h"
 #include "hb_io.h"
 #include "hbset.h"
@@ -2995,8 +2996,6 @@ HB_BOOL hb_fsMkDir( const char * pDirname )
 
    pDirname = hb_fsNameConv( pDirname, &pszFree );
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", pDirname));
-
    hb_vmUnlock();
 
 #if defined( HB_OS_WIN )
@@ -3668,6 +3667,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
    {
       PHB_FNAME pFileName;
       HB_SIZE nLen;
+      char * pszPath = NULL, * pszName = NULL, * pszExt = NULL;
 
       if( pszFree )
       {
@@ -3711,29 +3711,35 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       if( iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strLower( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
+            pFileName->szName = pszName = hb_cdpnDupLower( hb_vmCDP(), pFileName->szName, NULL );
          if( pFileName->szExtension )
-            hb_strLower( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
+            pFileName->szExtension = pszExt = hb_cdpnDupLower( hb_vmCDP(), pFileName->szExtension, NULL );
       }
       else if( iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strUpper( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
+            pFileName->szName = pszName = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szName, NULL );
          if( pFileName->szExtension )
-            hb_strUpper( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
+            pFileName->szExtension = pszExt = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szExtension, NULL );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( iDirCase == HB_SET_CASE_LOWER )
-            hb_strLower( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
+            pFileName->szPath = pszPath = hb_cdpnDupLower( hb_vmCDP(), pFileName->szPath, NULL );
          else if( iDirCase == HB_SET_CASE_UPPER )
-            hb_strUpper( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
+            pFileName->szPath = pszPath = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szPath, NULL );
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
+      if( pszPath )
+         hb_xfree( pszPath );
+      if( pszName )
+         hb_xfree( pszName );
+      if( pszExt )
+         hb_xfree( pszExt );
 
       if( fEncodeCP )
       {

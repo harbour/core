@@ -2007,6 +2007,69 @@ char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
    return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
 }
 
+char * hb_cdpnDupUpper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize )
+{
+   HB_SIZE nSize = pnSize ? *pnSize : strlen( pszText ), n;
+   char * pszDst = ( char * ) hb_xgrab( nSize + 1 );
+
+   if( cdp )
+      for( n = 0; n < nSize; n++ )
+         pszDst[ n ] = ( char ) cdp->upper[ ( HB_UCHAR ) pszText[ n ] ];
+   else
+      for( n = 0; n < nSize; n++ )
+         pszDst[ n ] = HB_TOUPPER( pszText[ n ] );
+   pszDst[ nSize ] = '\0';
+
+   return pszDst;
+}
+
+char * hb_cdpnDupLower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize )
+{
+   HB_SIZE nSize = pnSize ? *pnSize : strlen( pszText ), n;
+   char * pszDst = ( char * ) hb_xgrab( nSize + 1 );
+
+   if( cdp )
+      for( n = 0; n < nSize; n++ )
+         pszDst[ n ] = ( char ) cdp->lower[ ( HB_UCHAR ) pszText[ n ] ];
+   else
+      for( n = 0; n < nSize; n++ )
+         pszDst[ n ] = HB_TOLOWER( pszText[ n ] );
+   pszDst[ nSize ] = '\0';
+
+   return pszDst;
+}
+
+HB_SIZE hb_cdpnDup2Upper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize, char * pBuffer, HB_SIZE nBuffLen )
+{
+   HB_SIZE nMax = HB_MIN( nSize, nBuffLen ), n;
+
+   if( cdp )
+      for( n = 0; n < nMax; n++ )
+         pBuffer[ n ] = ( char ) cdp->upper[ ( HB_UCHAR ) pszText[ n ] ];
+   else
+      for( n = 0; n < nMax; n++ )
+         pBuffer[ n ] = HB_TOUPPER( pszText[ n ] );
+   if( nMax < nBuffLen )
+      pBuffer[ nMax ] = '\0';
+
+   return nMax;
+}
+
+HB_SIZE hb_cdpnDup2Lower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize, char * pBuffer, HB_SIZE nBuffLen )
+{
+   HB_SIZE nMax = HB_MIN( nSize, nBuffLen ), n;
+
+   if( cdp )
+      for( n = 0; n < nMax; n++ )
+         pBuffer[ n ] = ( char ) cdp->lower[ ( HB_UCHAR ) pszText[ n ] ];
+   else
+      for( n = 0; n < nMax; n++ )
+         pBuffer[ n ] = HB_TOLOWER( pszText[ n ] );
+   if( nMax < nBuffLen )
+      pBuffer[ nMax ] = '\0';
+
+   return nMax;
+}
 
 /*
  * CP management

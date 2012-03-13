@@ -363,11 +363,12 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       }
 
       pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
-      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+
+      szOurName = hb_cdpnDupUpper( hb_vmCDP(), hb_itemGetCPtr( pName ), NULL );
       hb_itemRelease( pName );
       if( strlen( szOurName ) > MAX_FIELD_NAME )
          szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
+      pFieldInfo.atomName = szOurName;
 
       uiDataType = OCI_ColumnGetType( col );
       uiSize = OCI_ColumnGetSize( col );
@@ -479,6 +480,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          if( ! bError )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
       }
+
+      hb_xfree( szOurName );
 
       if( bError )
          break;

@@ -511,7 +511,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libharbour*.so*
 %{!?hb_ldconf:%{_libdir}/libharbour*.so*}
-%{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
+%attr(644,root,root) %{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %files contrib
 %defattr(644,root,root,755)
@@ -537,6 +537,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libsddsqlt3.a
 %{_libdir}/%{name}/libhbsms.a
 %([ -f %{_libdir}/%{name}/libhbssl.a ] && echo %{_libdir}/%{name}/libhbssl.a)
+%([ -f %{_libdir}/%{name}/libhbhttpds.a ] && echo %{_libdir}/%{name}/libhbhttpds.a)
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}

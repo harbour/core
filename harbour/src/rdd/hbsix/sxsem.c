@@ -54,6 +54,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapirdd.h"
@@ -64,10 +65,11 @@ static HB_BOOL hb_sxSemName( char * szFileName )
    const char * szName = hb_parc( 1 );
    HB_BOOL fResult = HB_FALSE;
 
-   if( szName && szName[0] )
+   if( szName && szName[ 0 ] )
    {
-      hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
-      hb_strLower( szFileName, strlen( szFileName ) );
+      hb_cdpnDup2Lower( hb_vmCDP(), szName, strlen( szName ),
+                        szFileName, HB_PATH_MAX );
+      szFileName[ HB_PATH_MAX - 1 ] = '\0';
       fResult = HB_TRUE;
    }
    else
@@ -84,10 +86,11 @@ static HB_BOOL hb_sxSemName( char * szFileName )
          pOrderInfo.itmResult = hb_itemPutC( NULL, NULL );
          SELF_ORDINFO( pArea, DBOI_NAME, &pOrderInfo );
          szName = hb_itemGetCPtr( pOrderInfo.itmResult );
-         if( szName && szName[0] )
+         if( szName && szName[ 0 ] )
          {
-            hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
-            hb_strLower( szFileName, strlen( szFileName ) );
+            hb_cdpnDup2Lower( hb_vmCDP(), szName, strlen( szName ),
+                              szFileName, HB_PATH_MAX );
+            szFileName[ HB_PATH_MAX - 1 ] = '\0';
             fResult = HB_TRUE;
          }
          hb_itemRelease( pOrderInfo.itmResult );

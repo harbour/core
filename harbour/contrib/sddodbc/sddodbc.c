@@ -398,11 +398,12 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       }
 
       pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
-      szOurName = hb_strdup( hb_itemGetCPtr( pName ) );
+
+      szOurName = hb_cdpnDupUpper( hb_vmCDP(), hb_itemGetCPtr( pName ), NULL );
       hb_itemRelease( pName );
       if( strlen( szOurName ) > MAX_FIELD_NAME )
          szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
+      pFieldInfo.atomName = szOurName;
 
       /*
          We do mapping of many SQL types to one Harbour field type here, so, we need store
@@ -547,6 +548,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          if ( ! bError )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
       }
+
+      hb_xfree( szOurName );
 
       if ( bError )
          break;

@@ -268,13 +268,15 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
    pItem = hb_itemNew( NULL );
 
-   pBuffer = ( char* ) hb_xgrab( 256 );
+   pBuffer = ( char * ) hb_xgrab( MAX_FIELD_NAME + 1 );
 
    bError = HB_FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
-      hb_strncpy( pBuffer, PQfname( pResult, ( int ) uiCount ), 256 - 1 );
-      hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
+      char * pszName = PQfname( pResult, ( int ) uiCount );
+      hb_cdpnDup2Upper( hb_vmCDP(),
+                        pszName, strlen( pszName ),
+                        pBuffer, MAX_FIELD_NAME + 1 );
       pBuffer[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = pBuffer;
 

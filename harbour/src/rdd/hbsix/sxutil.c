@@ -55,6 +55,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 
 HB_FUNC( SX_SLIMFAST )
 {
@@ -65,7 +66,8 @@ HB_FUNC( SX_SLIMFAST )
       char * szDst, cQuote = 0, c;
       HB_SIZE nDst;
 
-      szDst = ( char * ) hb_xgrab( hb_parclen( 1 ) + 1 );
+      szDst = hb_cdpnDupUpper( hb_vmCDP(), szExp, NULL );
+      szExp = szDst;
       nDst = 0;
 
       while( ( c = *szExp++ ) != 0 )
@@ -78,8 +80,6 @@ HB_FUNC( SX_SLIMFAST )
                cQuote = c;
             else if( c == ' ' && nDst && szDst[nDst - 1] == ' ' )
                continue;
-            else
-               c = ( char ) hb_charUpper( ( HB_UCHAR ) c );
          }
          szDst[nDst++] = c;
       }

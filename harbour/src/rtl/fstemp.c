@@ -60,6 +60,7 @@
 #endif
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapifs.h"
 #include "hbvm.h"
 #include "hbmath.h"
@@ -103,18 +104,22 @@ static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 
    if( pszTempDir && *pszTempDir != '\0' )
    {
-      hb_strncpy( pszName, pszTempDir, HB_PATH_MAX - 1 );
       switch( hb_setGetDirCase() )
       {
          case HB_SET_CASE_LOWER:
-            hb_strLower( pszName, strlen( pszName ) );
+            hb_cdpnDup2Lower( hb_vmCDP(), pszTempDir, strlen( pszTempDir ),
+                              pszName, HB_PATH_MAX );
+            pszName[ HB_PATH_MAX - 1 ] = '\0';
             fOK = strcmp( pszName, pszTempDir ) == 0;
             break;
          case HB_SET_CASE_UPPER:
-            hb_strUpper( pszName, strlen( pszName ) );
+            hb_cdpnDup2Upper( hb_vmCDP(), pszTempDir, strlen( pszTempDir ),
+                              pszName, HB_PATH_MAX );
+            pszName[ HB_PATH_MAX - 1 ] = '\0';
             fOK = strcmp( pszName, pszTempDir ) == 0;
             break;
          default:
+            hb_strncpy( pszName, pszTempDir, HB_PATH_MAX - 1 );
             fOK = HB_TRUE;
             break;
       }

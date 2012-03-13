@@ -3817,7 +3817,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF !( hbmk[ _HBMK_cPLAT ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-mwindows" )
-               l_cCMAIN := "hb_forceLinkMainWin"
+               IF !l_lNOHBLIB
+                  l_cCMAIN := "hb_forceLinkMainWin"
+               ENDIF
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-mconsole" )
             ENDIF

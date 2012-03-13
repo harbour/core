@@ -484,11 +484,10 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
             if( pTag->IgnoreCase )
             {
                char tmp[ CDX_MAXKEY ];
-               HB_SIZE ul = hb_itemGetCLen( pItem );
-               if( ul > ( HB_SIZE ) sizeof( tmp ) )
-                  ul = ( HB_SIZE ) sizeof( tmp );
-               memcpy( tmp, hb_itemGetCPtr( pItem ), ul );
-               hb_strUpper( tmp, ul );
+               HB_SIZE ul = hb_cdpnDup2Upper( hb_vmCDP(),
+                                              hb_itemGetCPtr( pItem ),
+                                              hb_itemGetCLen( pItem ),
+                                              tmp, sizeof( tmp ) );
                hb_cdpnDup2( tmp, ul, ( char * ) buf, &nLen,
                             hb_vmCDP(), pTag->pIndex->pArea->dbfarea.area.cdPage );
             }
@@ -505,15 +504,20 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
          else
          {
             nLen = hb_itemGetCLen( pItem );
-            if( nLen > ( HB_SIZE ) pTag->uiLen )
-               nLen = pTag->uiLen;
 
             if( pTag->IgnoreCase ||
                 ( iMode == CDX_CMP_EXACT && nLen < ( HB_SIZE ) pTag->uiLen ) )
             {
-               memcpy( buf, hb_itemGetCPtr( pItem ), nLen );
                if( pTag->IgnoreCase )
-                  hb_strUpper( ( char * ) buf, nLen );
+                  nLen = hb_cdpnDup2Upper( pTag->pIndex->pArea->dbfarea.area.cdPage,
+                                           hb_itemGetCPtr( pItem ), nLen,
+                                           ( char * ) buf, pTag->uiLen );
+               else
+               {
+                  if( nLen > ( HB_SIZE ) pTag->uiLen )
+                     nLen = pTag->uiLen;
+                  memcpy( buf, hb_itemGetCPtr( pItem ), nLen );
+               }
                if( iMode == CDX_CMP_EXACT && nLen < ( HB_SIZE ) pTag->uiLen )
                {
                   memset( buf + nLen, pTag->bTrail, pTag->uiLen - nLen );
@@ -521,7 +525,11 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
                }
             }
             else
+            {
+               if( nLen > ( HB_SIZE ) pTag->uiLen )
+                  nLen = pTag->uiLen;
                ptr = ( const HB_BYTE * ) hb_itemGetCPtr( pItem );
+            }
          }
          break;
       case 'N':
@@ -9167,7 +9175,15 @@ static void hb_cdxSortKeyAdd( LPCDXSORTINFO pSort, HB_ULONG ulRec, const HB_BYTE
    }
    pDst = &pSort->pKeyPool[ pSort->ulKeys * ( iLen + 4 ) ];
 
-   if( iLen > iKeyLen )
+   if( pSort->pTag->IgnoreCase )
+   {
+      iKeyLen = ( int ) hb_cdpnDup2Upper( pSort->pTag->pIndex->pArea->dbfarea.area.cdPage,
+                                          ( const char * ) pKeyVal, iKeyLen,
+                                          ( char * ) pDst, iLen );
+      if( iLen > iKeyLen )
+         memset( &pDst[ iKeyLen ], pSort->bTrl, iLen - iKeyLen );
+   }
+   else if( iLen > iKeyLen )
    {
       memcpy( pDst, pKeyVal, iKeyLen );
       memset( &pDst[ iKeyLen ], pSort->bTrl, iLen - iKeyLen );
@@ -9176,8 +9192,6 @@ static void hb_cdxSortKeyAdd( LPCDXSORTINFO pSort, HB_ULONG ulRec, const HB_BYTE
    {
       memcpy( pDst, pKeyVal, iLen );
    }
-   if( pSort->pTag->IgnoreCase )
-      hb_strUpper( ( char * ) pDst, iLen );
    HB_PUT_LE_UINT32( &pDst[ iLen ], ulRec );
    pSort->ulKeys++;
    pSort->ulTotKeys++;
