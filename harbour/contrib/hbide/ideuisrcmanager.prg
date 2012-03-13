@@ -794,9 +794,8 @@ METHOD IdeUISrcManager:loadSource()
 
    IF hb_fileExists( ::cSrcFile )
       ::aSource := hbide_readSource( ::cSrcFile )
-   ELSE
-      ::buildSource()
    ENDIF
+   ::buildSource()
 
    RETURN Self
 
@@ -804,6 +803,7 @@ METHOD IdeUISrcManager:loadSource()
 
 METHOD IdeUISrcManager:buildSource()
    LOCAL aSrc, cCls, cClsC
+   LOCAL qHScr, qVScr, qCursor, qCurPos, qHVal, qVVal
 
    IF empty( ::aSource )
       aSrc := {}
@@ -945,7 +945,21 @@ METHOD IdeUISrcManager:buildSource()
 
    ::oSM:editSource( ::cSrcFile, 0, 0, 0, NIL, NIL, .f., .t. )
    IF ::oEM:isOpen( ::cSrcFile )
+      qHScr   := ::qEdit:horizontalScrollBar()
+      qVScr   := ::qEdit:verticalScrollBar()
+      qCursor := ::qEdit:textCursor()
+
+      qCurPos := qCursor:position()
+      qHVal   := qHScr:value()
+      qVVal   := qVScr:value()
+
       ::oEM:reLoad( ::cSrcFile )
+
+      qCursor := ::qEdit:textCursor()
+      qCursor:setPosition( qCurPos )
+      ::qEdit:setTextCursor( qCursor )
+      qHScr:setValue( qHVal )
+      qVScr:setValue( qVVal )
    ENDIF
 
    RETURN Self
