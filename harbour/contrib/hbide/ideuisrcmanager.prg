@@ -145,6 +145,7 @@ CLASS IdeUISrcManager INHERIT IdeObject
    DATA   aSource                                 INIT {}
    DATA   oProcess
    DATA   cCurAction                              INIT ""
+   DATA   cClsPrefix                              INIT "ui_"
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -167,6 +168,8 @@ CLASS IdeUISrcManager INHERIT IdeObject
    METHOD exposeAction()
    METHOD loadMethod( cObjName, cAction )
    METHOD saveMethod( cObjName, cAction )
+   METHOD buildClassSkeleton( cCls, cUiName )
+   METHOD getCurrentSlot()
 
    ENDCLASS
 
@@ -341,11 +344,28 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeUISrcManager:getCurrentSlot()
+   LOCAL cCls := __objGetClsName( ::qCurrent )
+   
+   SWITCH ::cCurAction
+   CASE "Activated"
+      IF cCls == "QTOOLBUTTON" .OR. "QPUSHBUTTON"
+         RETURN "clicked()"
+      ENDIF    
+      EXIT 
+   CASE "Icon"  /* just */
+      EXIT       
+   ENDSWITCH 
+   
+   RETURN ""
+   
+/*----------------------------------------------------------------------*/
+
 METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
-   LOCAL cSrc, n, n0, n1, n2, n3, cMtd, i, aSrc
+   LOCAL cSrc, n, n0, n1, n2, n3, cMtd, i, aSrc, cSearch, cSlot
    LOCAL cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
 
-   cMtd := "METHOD " + "ui_" + ::cName + ":" + cMethod + "( ... )"
+   cMtd := "METHOD " + ::cClsPrefix + ::cName + ":" + cMethod + "( ... )"
    cSrc := ::qEdit:toPlainText()
 
    n0 := ascan( ::aSource, {|e| "<METHODSEVENTS>" $ e } )
@@ -389,15 +409,23 @@ METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
          ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )
       ENDIF
    ENDIF
-#if 0
-   n0 := ascan( ::aSource, {|e| "<CONNECTS>" $ e } )
-   n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e } )
-   IF empty( cSrc )
 
-   ELSE
-
-   ENDIF
-#endif
+   IF ! empty( cSlot := ::getCurrentSlot() )
+      n0 := ascan( ::aSource, {|e| "<CONNECTS>" $ e } )
+      n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e } )
+      cSearch := '::oUI:qObj[ "' + cObjName + '" ]'
+      n2 := ascan( ::aSource, {|e| cSearch $ e }, n0+1, n1-n0-1 )
+      IF empty( cSrc )
+         IF n2 > 0
+            hb_adel( ::aSource, n2, .t. )
+         ENDIF    
+      ELSE
+         IF n2 == 0
+            hb_ains( ::aSource, n0+1, '   ::oUI:qObj[ "' + cObjName + '" ]:connect( "' + cSlot + '", {|...| ::' + cMethod + '( ... ) } )' )
+         ENDIF    
+      ENDIF
+   ENDIF    
+   
    ::qEdit:document():clear()
    ::buildSource() /* Temporary */
 
@@ -414,7 +442,7 @@ METHOD IdeUISrcManager:loadMethod( cObjName, cAction )
 
    n2 := ascan( ::aSource, {|e| "METHOD " + cMethod $ e }, n0, n1 )
    IF n2 > 0
-      cMtd := "METHOD " + "ui_" + ::cName + ":" + cMethod + "( ... )"
+      cMtd := "METHOD " + ::cClsPrefix + ::cName + ":" + cMethod + "( ... )"
       IF ( n2 := ascan( ::aSource, {|e| cMtd $ e } ) ) > 0
          n3 := ascan( ::aSource, {|e| "RETURN Self" $ e }, n2 )
          FOR i := n2 + 1 TO n3 - 1
@@ -802,140 +830,10 @@ METHOD IdeUISrcManager:loadSource()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeUISrcManager:buildSource()
-   LOCAL aSrc, cCls, cClsC
-   LOCAL qHScr, qVScr, qCursor, qCurPos, qHVal, qVVal
+   LOCAL qHScr, qVScr, qCursor, qCurPos, qHVal, qVVal, qEdit
 
    IF empty( ::aSource )
-      aSrc := {}
-      cCls  := 'ui_' + ::cName
-      cClsC := 'ui_' + ::cName + ":"
-
-      aadd( aSrc, '/*' )
-      aadd( aSrc, ' * $Id$' )
-      aadd( aSrc, '' )
-      aadd( aSrc, ' <CLASS> . Do not edit lines in this section!' )
-      aadd( aSrc, ' NAME = ' + cCls )
-      aadd( aSrc, ' </CLASS>' )
-      aadd( aSrc, ' */' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '#include "hbclass.ch"' )
-      aadd( aSrc, '#include "common.ch"' )
-      aadd( aSrc, '#include "hbqtgui.ch"' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'CLASS ' + cCls )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   /* <METHODSCOMMON> . Do not edit lines in this section! */' )
-      aadd( aSrc, '   METHOD new( oParent )' )
-      aadd( aSrc, '   METHOD create( oParent )' )
-      aadd( aSrc, '   METHOD destroy()' )
-      aadd( aSrc, '   METHOD connects()' )
-      aadd( aSrc, '   METHOD disconnects()' )
-      aadd( aSrc, '   ERROR HANDLER __OnError( ... )' )
-      aadd( aSrc, '   /* </METHODSCOMMON> */' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   /* <METHODSEVENTS> . Do not edit lines in this section! */' )
-      aadd( aSrc, '   /* </METHODSEVENTS> */' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'PROTECTED:' )
-      aadd( aSrc, '   DATA   oUI' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   ENDCLASS' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + 'new( oParent )' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   DEFAULT oParent TO ::oParent' )
-      aadd( aSrc, '   ::oParent := oParent' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN Self' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + 'create( oParent )' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   DEFAULT oParent TO ::oParent' )
-      aadd( aSrc, '   ::oParent := oParent' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   ::oUI := hbqtui_' + ::cName + '( ::oParent )' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   ::connects()' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN Self' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + 'destroy()' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   IF hb_isObject( ::oUI )' )
-      aadd( aSrc, '      ::disconnects()' )
-      aadd( aSrc, '      ::oUI:destroy()' )
-      aadd( aSrc, '   ENDIF'  )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN Self' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + '__OnError( ... )' )
-      aadd( aSrc, '   LOCAL cMsg := __GetMessage()' )
-      aadd( aSrc, '   LOCAL oError' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   IF SubStr( cMsg, 1, 1 ) == "_"' )
-      aadd( aSrc, '      cMsg := SubStr( cMsg, 2 )' )
-      aadd( aSrc, '   ENDIF' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   IF Left( cMsg, 2 ) == "Q_"' )
-      aadd( aSrc, '      IF SubStr( cMsg, 3 ) $ ::oUI:qObj' )
-      aadd( aSrc, '         RETURN ::oUI:qObj[ SubStr( cMsg, 3 ) ]' )
-      aadd( aSrc, '      ELSE' )
-      aadd( aSrc, '         oError := ErrorNew()' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '         oError:severity    := ES_ERROR' )
-      aadd( aSrc, '         oError:genCode     := EG_ARG' )
-      aadd( aSrc, '         oError:subSystem   := "HBQT"' )
-      aadd( aSrc, '         oError:subCode     := 1001' )
-      aadd( aSrc, '         oError:canRetry    := .F.' )
-      aadd( aSrc, '         oError:canDefault  := .F.' )
-      aadd( aSrc, '         oError:Args        := hb_AParams()' )
-      aadd( aSrc, '         oError:operation   := ProcName()' )
-      aadd( aSrc, '         oError:Description := "Control <" + substr( cMsg, 3 ) + "> does not exist"' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '         Eval( ErrorBlock(), oError )' )
-      aadd( aSrc, '      ENDIF' )
-      aadd( aSrc, '   ELSEIF ::oUI:oWidget:hasValidPointer()' )
-      aadd( aSrc, '      RETURN ::oUI:oWidget:&cMsg( ... )' )
-      aadd( aSrc, '   ENDIF' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN NIL' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + 'connects()' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   /* <CONNECTS> . Do not edit lines in this section! */' )
-      aadd( aSrc, '   /* </CONNECTS> */' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN Self' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-      aadd( aSrc, 'METHOD ' + cClsC + 'disconnects()' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   /* <DISCONNECTS> . Do not edit lines in this section! */' )
-      aadd( aSrc, '   /* </DISCONNECTS> */' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '   RETURN Self' )
-      aadd( aSrc, '' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '/* <EVENTSMETHODAREA> . Do not edit code in this section! */' )
-      aadd( aSrc, '/* </EVENTSMETHODAREA> */' )
-      aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-      aadd( aSrc, '' )
-
-      ::aSource := aSrc
+      ::aSource := ::buildClassSkeleton( 'ui_' + ::cName, ::cName )
    ENDIF
 
    ::cSource := ""
@@ -945,9 +843,10 @@ METHOD IdeUISrcManager:buildSource()
 
    ::oSM:editSource( ::cSrcFile, 0, 0, 0, NIL, NIL, .f., .t. )
    IF ::oEM:isOpen( ::cSrcFile )
-      qHScr   := ::qEdit:horizontalScrollBar()
-      qVScr   := ::qEdit:verticalScrollBar()
-      qCursor := ::qEdit:textCursor()
+      qEdit   := ::oEM:getEditCurrent()
+      qHScr   := qEdit:horizontalScrollBar()
+      qVScr   := qEdit:verticalScrollBar()
+      qCursor := qEdit:textCursor()
 
       qCurPos := qCursor:position()
       qHVal   := qHScr:value()
@@ -955,9 +854,9 @@ METHOD IdeUISrcManager:buildSource()
 
       ::oEM:reLoad( ::cSrcFile )
 
-      qCursor := ::qEdit:textCursor()
+      qCursor := qEdit:textCursor()
       qCursor:setPosition( qCurPos )
-      ::qEdit:setTextCursor( qCursor )
+      qEdit:setTextCursor( qCursor )
       qHScr:setValue( qHVal )
       qVScr:setValue( qVVal )
    ENDIF
@@ -966,3 +865,139 @@ METHOD IdeUISrcManager:buildSource()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeUISrcManager:buildClassSkeleton( cCls, cUiName )
+   LOCAL aSrc := {}
+   LOCAL cClsC := cCls + ":"
+   
+   aadd( aSrc, '/*' )
+   aadd( aSrc, ' * $Id$' )
+   aadd( aSrc, '' )
+   aadd( aSrc, ' <CLASS> . Do not edit lines in this section!' )
+   aadd( aSrc, ' NAME = ' + cCls )
+   aadd( aSrc, ' </CLASS>' )
+   aadd( aSrc, ' */' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '#include "hbclass.ch"' )
+   aadd( aSrc, '#include "common.ch"' )
+   aadd( aSrc, '#include "error.ch"' )
+   aadd( aSrc, '#include "hbqtgui.ch"' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'CLASS ' + cCls )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   DATA   oParent' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   /* <METHODSCOMMON> . Do not edit lines in this section! */' )
+   aadd( aSrc, '   METHOD new( oParent )' )
+   aadd( aSrc, '   METHOD create( oParent )' )
+   aadd( aSrc, '   METHOD destroy()' )
+   aadd( aSrc, '   METHOD connects()' )
+   aadd( aSrc, '   METHOD disconnects()' )
+   aadd( aSrc, '   ERROR HANDLER __OnError( ... )' )
+   aadd( aSrc, '   /* </METHODSCOMMON> */' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   /* <METHODSEVENTS> . Do not edit lines in this section! */' )
+   aadd( aSrc, '   /* </METHODSEVENTS> */' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'PROTECTED:' )
+   aadd( aSrc, '   DATA   oUI' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   ENDCLASS' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + 'new( oParent )' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   DEFAULT oParent TO ::oParent' )
+   aadd( aSrc, '   ::oParent := oParent' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN Self' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + 'create( oParent )' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   DEFAULT oParent TO ::oParent' )
+   aadd( aSrc, '   ::oParent := oParent' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   ::oUI := hbqtui_' + cUiName + '( ::oParent )' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   ::connects()' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN Self' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + 'destroy()' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   IF hb_isObject( ::oUI )' )
+   aadd( aSrc, '      ::disconnects()' )
+   aadd( aSrc, '      ::oUI:destroy()' )
+   aadd( aSrc, '   ENDIF'  )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN Self' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + '__OnError( ... )' )
+   aadd( aSrc, '   LOCAL cMsg := __GetMessage()' )
+   aadd( aSrc, '   LOCAL oError' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   IF SubStr( cMsg, 1, 1 ) == "_"' )
+   aadd( aSrc, '      cMsg := SubStr( cMsg, 2 )' )
+   aadd( aSrc, '   ENDIF' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   IF Left( cMsg, 2 ) == "Q_"' )
+   aadd( aSrc, '      IF SubStr( cMsg, 3 ) $ ::oUI:qObj' )
+   aadd( aSrc, '         RETURN ::oUI:qObj[ SubStr( cMsg, 3 ) ]' )
+   aadd( aSrc, '      ELSE' )
+   aadd( aSrc, '         oError := ErrorNew()' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '         oError:severity    := ES_ERROR' )
+   aadd( aSrc, '         oError:genCode     := EG_ARG' )
+   aadd( aSrc, '         oError:subSystem   := "HBQT"' )
+   aadd( aSrc, '         oError:subCode     := 1001' )
+   aadd( aSrc, '         oError:canRetry    := .F.' )
+   aadd( aSrc, '         oError:canDefault  := .F.' )
+   aadd( aSrc, '         oError:Args        := hb_AParams()' )
+   aadd( aSrc, '         oError:operation   := ProcName()' )
+   aadd( aSrc, '         oError:Description := "Control <" + substr( cMsg, 3 ) + "> does not exist"' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '         Eval( ErrorBlock(), oError )' )
+   aadd( aSrc, '      ENDIF' )
+   aadd( aSrc, '   ELSEIF ::oUI:oWidget:hasValidPointer()' )
+   aadd( aSrc, '      RETURN ::oUI:oWidget:&cMsg( ... )' )
+   aadd( aSrc, '   ENDIF' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN NIL' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + 'connects()' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   /* <CONNECTS> . Do not edit lines in this section! */' )
+   aadd( aSrc, '   /* </CONNECTS> */' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN Self' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+   aadd( aSrc, 'METHOD ' + cClsC + 'disconnects()' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   /* <DISCONNECTS> . Do not edit lines in this section! */' )
+   aadd( aSrc, '   /* </DISCONNECTS> */' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '   RETURN Self' )
+   aadd( aSrc, '' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '/* <EVENTSMETHODAREA> . Do not edit code in this section! */' )
+   aadd( aSrc, '/* </EVENTSMETHODAREA> */' )
+   aadd( aSrc, '/*----------------------------------------------------------------------*/' )
+   aadd( aSrc, '' )
+
+   RETURN aSrc 
+   
+/*----------------------------------------------------------------------*/
+   
