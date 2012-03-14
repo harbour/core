@@ -2,32 +2,11 @@
 # $Id$
 #
 
--3rd=hbide_version=1.0
--3rd=hbide_title=ideui
--3rd=hbide_output=ideui
+@hbmk.hbm
 
-#
-
--3rd=hbide_version=1.0
--3rd=hbide_title=ideui
--3rd=hbide_output=ideui
-
-
-
--w3
--es2
--inc
--gui
 -mt
--hbexe
-
--oe:/harbour/contrib/hbide/
-
-hbqt.hbc
 
 dbstruct.prg
 cls_dbstruct.prg
 
 dbstruct.ui
-
- 
