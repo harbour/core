@@ -155,6 +155,8 @@ CLASS IdeUISrcManager INHERIT IdeObject
    METHOD buildToolbar()
    METHOD buildToolButton( qToolbar, aBtn )
    METHOD buildStatusPanels()
+   METHOD openUi( cUI )
+   METHOD reloadIfOpen( cUI )
    METHOD buildUiWidget( cUI )
    METHOD buildWidget( cBuffer, cPath, cName, cExt, aPrg )
    METHOD runHbmk2( cUI )
@@ -166,8 +168,8 @@ CLASS IdeUISrcManager INHERIT IdeObject
    METHOD outputText( cText )
    METHOD loadActions( oWidget, cName )
    METHOD exposeAction()
-   METHOD loadMethod( cObjName, cAction )
-   METHOD saveMethod( cObjName, cAction )
+   METHOD loadMethod()
+   METHOD saveMethod()
    METHOD buildClassSkeleton( cCls, cUiName )
    METHOD getCurrentSlot()
 
@@ -249,6 +251,7 @@ METHOD IdeUISrcManager:show()
 
    ::qFrame := QFrame()
    ::qHBLayout := QHBoxLayout()
+   ::qHBLayout:setContentsMargins( 0, 0, 0, 0 )
    ::qFrame:setLayout( ::qHBLayout )
 
    ::qSplitter:addWidget( ::qFrame )
@@ -323,15 +326,17 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
 
    CASE "child_object"
       IF empty( ::qCurrent ) .OR. ! ( ::qCurrent == p )
-         IF ! empty( ::cCurAction )
-            ::saveMethod( ::qCurrent:objectName(), ::cCurAction )
-         ENDIF
+         ::saveMethod()
+
          ::qCurrent := p
+         ::cCurAction := ""
+msgbox( "212" )
          ::qFocus:setWidget( p )
          ::aStatusPnls[ PNL_OBJECTS ]:setText( "<font color = blue>OBJ: " + p1 + "</font>" )
          ::aStatusPnls[ PNL_TYPE ]:setText( "<font color = green>CLASS: " + lower(__objGetClsName( p ) ) + "</font>" )
          p:clearFocus()
          ::loadActions( p, p1 )
+msgbox( "212000" )
       ENDIF
       EXIT
 
@@ -346,27 +351,38 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
 
 METHOD IdeUISrcManager:getCurrentSlot()
    LOCAL cCls := __objGetClsName( ::qCurrent )
-   
+
    SWITCH ::cCurAction
    CASE "Activated"
       IF cCls == "QTOOLBUTTON" .OR. "QPUSHBUTTON"
          RETURN "clicked()"
-      ENDIF    
-      EXIT 
+      ENDIF
+      EXIT
    CASE "Icon"  /* just */
-      EXIT       
-   ENDSWITCH 
-   
+      EXIT
+   ENDSWITCH
+
    RETURN ""
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
+METHOD IdeUISrcManager:saveMethod()
    LOCAL cSrc, n, n0, n1, n2, n3, cMtd, i, aSrc, cSearch, cSlot
-   LOCAL cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
+   LOCAL cMethod, cObjName, cAction
 
-   cMtd := "METHOD " + ::cClsPrefix + ::cName + ":" + cMethod + "( ... )"
-   cSrc := ::qEdit:toPlainText()
+   IF empty( ::qCurrent )
+      RETURN Self
+   ENDIF
+
+   cObjName := ::qCurrent:objectName()
+   cAction  := ::cCurAction
+   IF empty( cAction ) .OR. ! ::qEdit:document():isModified()
+      RETURN Self
+   ENDIF
+
+   cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
+   cMtd    := "METHOD " + ::cClsPrefix + ::cName + ":" + cMethod + "( ... )"
+   cSrc    := ::qEdit:toPlainText()
 
    n0 := ascan( ::aSource, {|e| "<METHODSEVENTS>" $ e } )
    n1 := ascan( ::aSource, {|e| "</METHODSEVENTS>" $ e } )
@@ -411,21 +427,37 @@ METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
    ENDIF
 
    IF ! empty( cSlot := ::getCurrentSlot() )
+      // Connections
       n0 := ascan( ::aSource, {|e| "<CONNECTS>" $ e } )
-      n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e } )
+      n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e }, n0 )
       cSearch := '::oUI:qObj[ "' + cObjName + '" ]'
       n2 := ascan( ::aSource, {|e| cSearch $ e }, n0+1, n1-n0-1 )
       IF empty( cSrc )
          IF n2 > 0
             hb_adel( ::aSource, n2, .t. )
-         ENDIF    
+         ENDIF
       ELSE
          IF n2 == 0
             hb_ains( ::aSource, n0+1, '   ::oUI:qObj[ "' + cObjName + '" ]:connect( "' + cSlot + '", {|...| ::' + cMethod + '( ... ) } )' )
-         ENDIF    
+         ENDIF
       ENDIF
-   ENDIF    
-   
+      // Disconnections
+      n0 := ascan( ::aSource, {|e| "<DISCONNECTS>" $ e } )
+      n1 := ascan( ::aSource, {|e| "</DISCONNECTS>" $ e }, n0 )
+      cSearch := '::oUI:qObj[ "' + cObjName + '" ]'
+      n2 := ascan( ::aSource, {|e| cSearch $ e }, n0+1, n1-n0-1 )
+      IF empty( cSrc )
+         IF n2 > 0
+            hb_adel( ::aSource, n2, .t. )
+         ENDIF
+      ELSE
+         IF n2 == 0
+            hb_ains( ::aSource, n0+1, '   ::oUI:qObj[ "' + cObjName + '" ]:disconnect( "' + cSlot + '" )' )
+         ENDIF
+      ENDIF
+
+   ENDIF
+
    ::qEdit:document():clear()
    ::buildSource() /* Temporary */
 
@@ -433,9 +465,17 @@ METHOD IdeUISrcManager:saveMethod( cObjName, cAction )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeUISrcManager:loadMethod( cObjName, cAction )
+METHOD IdeUISrcManager:loadMethod()
    LOCAL cSrc := "", n0, n1, n2, n3, cMtd, i
-   LOCAL cMethod := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
+   LOCAL cObjName, cAction, cMethod
+
+   IF empty( ::qCurrent )
+      RETURN Self
+   ENDIF
+
+   cObjName := ::qCurrent:objectName()
+   cAction  := ::cCurAction
+   cMethod  := cObjName + "_" + upper( left( cAction,1 ) ) + lower( substr( cAction, 2 ) )
 
    n0 := ascan( ::aSource, {|e| "<METHODSEVENTS>" $ e } )
    n1 := ascan( ::aSource, {|e| "</METHODSEVENTS>" $ e } )
@@ -464,29 +504,30 @@ METHOD IdeUISrcManager:exposeAction()
       RETURN Self
    ENDIF
 
-   IF ! empty( ::cCurAction )
-      ::saveMethod( ::qCurrent:objectName(), ::cCurAction )
-   ENDIF
+   ::saveMethod()
+   ::cCurAction := cText
 
    SWITCH __objGetClsName( ::qCurrent )
    CASE "QPUSHBUTTON"
    CASE "QTOOLBUTTON"
-      SWITCH cText
+      SWITCH ::cCurAction
+
       CASE "Activated"
-         ::qEdit:setPlainText( ::loadMethod( ::qCurrent:objectName(), "Activated" ) )
+         ::qEdit:setPlainText( ::loadMethod() )
          ::qEdit:setFocus()
          EXIT
+
       CASE "Icon"
-         ::qEdit:setPlainText( ::loadMethod( ::qCurrent:objectName(), "Icon" ) )
+         ::qEdit:setPlainText( ::loadMethod() )
          ::qEdit:setFocus()
          EXIT
+
       ENDSWITCH
 
       EXIT
 
    ENDSWITCH
 
-   ::cCurAction := cText
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -523,6 +564,8 @@ METHOD IdeUISrcManager:checkUpdates()
 
 METHOD IdeUISrcManager:clear()
 
+   ::qCurrent   := NIL
+   ::cCurAction := ""
    ::qEdit:document():clear()
    ::qTree:clear()
 
@@ -530,7 +573,6 @@ METHOD IdeUISrcManager:clear()
    ::aPrg   := {}
    ::qFocus := NIL
    ::qFocus := QFocusFrame()
-   ::qFocus:setStyleSheet( "border: 2px red;" )
 
    IF ! empty( ::pHrb  )
       hb_hrbUnload( ::pHrb  )
@@ -549,6 +591,56 @@ METHOD IdeUISrcManager:clear()
    ::cSource  := ""
    ::cSrcFile := ""
    ::aSource  := {}
+
+   ::cPath      := ""
+   ::cName      := ""
+   ::cExt       := ""
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUISrcManager:reloadIfOpen( cUI )
+   LOCAL cPath, cName, cExt
+   //LOCAL cObjName, cAction, qList
+
+   cUI := hbide_pathToOSPath( lower( cUI ) )
+   hb_fNameSplit( cUI, @cPath, @cName, @cExt )
+   IF ::cPath == cPath .AND. ::cName == cName
+#if 0
+      IF ! empty( ::qCurrent )
+         cObjName := ::qCurrent:objectName()
+         cAction  := ::cCurAction
+      ENDIF
+#endif
+
+      ::openUi( cUI )
+
+#if 0
+      IF ! empty( cObjName )
+msgbox( cObjName )
+         ::execEvent( "child_object", ::oUI:qObj[ cObjName ], cObjName )
+msgbox( cObjName )
+         IF ! empty( cAction )
+            qList := ::qTree:findItems( cAction, Qt_MatchExactly, 0 )
+msgbox( hb_ntos( qList:size() ) )
+            ::qTree:setCurrentItem( qList:at( 0 ) )
+            msgbox( cObjName +" : "+ cAction )
+         ENDIF
+      ENDIF
+#endif
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUISrcManager:openUi( cUI )
+
+   ::show()
+   ::oIde:oUiSrcDock:show()
+   ::clear()
+   ::buildUiWidget( cUI )
 
    RETURN Self
 
@@ -662,8 +754,8 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
 
    hb_fNameSplit( cUI, @cPath, @cName, @cExt )
 
-   aadd( aHbp, "-hbraw"      )
-   aadd( aHbp, "-trace"      )
+   aadd( aHbp, "-hbraw"       )
+   aadd( aHbp, "-trace"       )
 
    aadd( aHbp0, "-q"          )
    aadd( aHbp0, "-info"       )
@@ -672,7 +764,7 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
    aadd( aHbp0, "-hblib"      )
    aadd( aHbp0, "-workdir=" + cPath )
    aadd( aHbp0, "hbqt.hbc"    )
-   aadd( aHbp0, cUI )
+   aadd( aHbp0, cUI           )
 
    ::oOutputResult:oWidget:clear()
 
@@ -709,7 +801,7 @@ METHOD IdeUISrcManager:runHbmk2( cUI )
       IF hb_fileExists( cBatch )
          cBuf := memoread( cBatch )
          cBuf += "SET " + hb_eol()
-         cBuf += hb_eol() + cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_eol()
+         cBuf += cExeHbMk2 + " " + cHbpFileName + " " + cCmdParams + hb_eol()
          hb_memowrit( cBatch, cBuf )
       ENDIF
       //
@@ -868,7 +960,7 @@ METHOD IdeUISrcManager:buildSource()
 METHOD IdeUISrcManager:buildClassSkeleton( cCls, cUiName )
    LOCAL aSrc := {}
    LOCAL cClsC := cCls + ":"
-   
+
    aadd( aSrc, '/*' )
    aadd( aSrc, ' * $Id$' )
    aadd( aSrc, '' )
@@ -992,12 +1084,11 @@ METHOD IdeUISrcManager:buildClassSkeleton( cCls, cUiName )
    aadd( aSrc, '   RETURN Self' )
    aadd( aSrc, '' )
    aadd( aSrc, '/*----------------------------------------------------------------------*/' )
-   aadd( aSrc, '/* <EVENTSMETHODAREA> . Do not edit code in this section! */' )
+   aadd( aSrc, '/* <EVENTSMETHODAREA> . Do not edit method names in this section, but can edit method body! */' )
    aadd( aSrc, '/* </EVENTSMETHODAREA> */' )
    aadd( aSrc, '/*----------------------------------------------------------------------*/' )
    aadd( aSrc, '' )
 
-   RETURN aSrc 
-   
+   RETURN aSrc
+
 /*----------------------------------------------------------------------*/
-   

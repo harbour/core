@@ -1356,7 +1356,7 @@ METHOD HbIde:updateProjectTree( aPrj )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageItemSelected( oXbpTreeItem )
-   LOCAL n, cHbp
+   LOCAL n, cHbp, cSource, cExt
 
    IF     oXbpTreeItem == ::oProjRoot
       n := -1
@@ -1375,7 +1375,13 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
       ::oPM:loadProperties( cHbp, .f., .t., .f. )
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Source File"
-      ::oSM:editSource( hbide_stripFilter( ::aProjData[ n, TRE_ORIGINAL ] ) )
+      cSource := hbide_stripFilter( ::aProjData[ n, TRE_ORIGINAL ] )
+      hb_fNameSplit( cSource, , , @cExt )
+      IF lower( cExt ) == ".ui"
+         ::oUiS:openUi( cSource )
+      ELSE
+         ::oSM:editSource( cSource )
+      ENDIF
 
    CASE ::aProjData[ n, TRE_TYPE ] == "Opened Source"
       ::oEM:setSourceVisible( ::aProjData[ n, TRE_DATA ] )

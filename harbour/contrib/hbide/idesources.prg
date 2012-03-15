@@ -213,7 +213,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
  */
 METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
    LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFileTemp
-   LOCAL cFileToSave, cFile, cExt, cNewFile, oItem
+   LOCAL cFileToSave, cPath, cFile, cExt, cNewFile, oItem
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
    DEFAULT lAs  TO .F.
@@ -256,7 +256,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
             RETURN .F.
          ENDIF
 
-         hb_fNameSplit( cFileToSave, , @cFile, @cExt )
+         hb_fNameSplit( cFileToSave, @cPath, @cFile, @cExt )
 
          IF lNew
             oEdit:sourceFile := cFileToSave
@@ -286,6 +286,10 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 
          cFileTemp := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + oEdit:cExt + ".tmp" )
          ferase( cFileTemp )
+
+         IF left( lower( cFile ), 4 ) == "cls_"
+            ::oUiS:reloadIfOpen( lower( cPath ) + lower( substr( cFile, 5 ) ) + ".ui" )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -298,7 +302,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled, lAsk )
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
    DEFAULT lAsk TO .t.
-   
+
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
@@ -315,11 +319,11 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled, lAsk )
          lSave := ( n == QMessageBox_Yes )
 
       ELSE
-         IF lAsk 
+         IF lAsk
             lSave := hbide_getYesNo( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
-         ELSE 
+         ELSE
             lSave := .t.
-         ENDIF    
+         ENDIF
       ENDIF
 
       IF lSave .AND. !( ::saveSource( nTab, @lCanceled ) )
