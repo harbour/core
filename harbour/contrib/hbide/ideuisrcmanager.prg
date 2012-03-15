@@ -327,16 +327,15 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
    CASE "child_object"
       IF empty( ::qCurrent ) .OR. ! ( ::qCurrent == p )
          ::saveMethod()
-
+         
          ::qCurrent := p
          ::cCurAction := ""
-msgbox( "212" )
+
          ::qFocus:setWidget( p )
          ::aStatusPnls[ PNL_OBJECTS ]:setText( "<font color = blue>OBJ: " + p1 + "</font>" )
          ::aStatusPnls[ PNL_TYPE ]:setText( "<font color = green>CLASS: " + lower(__objGetClsName( p ) ) + "</font>" )
          p:clearFocus()
          ::loadActions( p, p1 )
-msgbox( "212000" )
       ENDIF
       EXIT
 
@@ -602,33 +601,27 @@ METHOD IdeUISrcManager:clear()
 
 METHOD IdeUISrcManager:reloadIfOpen( cUI )
    LOCAL cPath, cName, cExt
-   //LOCAL cObjName, cAction, qList
+   LOCAL cObjName, cAction, qList
 
    cUI := hbide_pathToOSPath( lower( cUI ) )
    hb_fNameSplit( cUI, @cPath, @cName, @cExt )
    IF ::cPath == cPath .AND. ::cName == cName
-#if 0
       IF ! empty( ::qCurrent )
          cObjName := ::qCurrent:objectName()
          cAction  := ::cCurAction
       ENDIF
-#endif
 
       ::openUi( cUI )
 
-#if 0
       IF ! empty( cObjName )
-msgbox( cObjName )
-         ::execEvent( "child_object", ::oUI:qObj[ cObjName ], cObjName )
-msgbox( cObjName )
+         IF hb_hHasKey( ::qU:qObj, cObjName )
+            ::execEvent( "child_object", ::qU:qObj[ cObjName ], cObjName )
+         ENDIF    
          IF ! empty( cAction )
             qList := ::qTree:findItems( cAction, Qt_MatchExactly, 0 )
-msgbox( hb_ntos( qList:size() ) )
             ::qTree:setCurrentItem( qList:at( 0 ) )
-            msgbox( cObjName +" : "+ cAction )
          ENDIF
       ENDIF
-#endif
    ENDIF
 
    RETURN Self
