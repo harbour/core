@@ -149,19 +149,16 @@ static HB_FATTR hb_translateExtAttr( const char * szFileName, HB_FATTR ulExtAttr
    int iLen;
 
    iLen = ( int ) strlen( szFileName );
-   if( iLen > 4 )
+   if( ( iLen > 4 && ( hb_stricmp( szFileName + iLen - 4, ".exe" ) == 0 ||
+                       hb_stricmp( szFileName + iLen - 4, ".com" ) == 0 ||
+                       hb_stricmp( szFileName + iLen - 4, ".bat" ) == 0 ||
+                       hb_stricmp( szFileName + iLen - 4, ".cmd" ) == 0 ) ) ||
+       ( iLen > 3 && hb_stricmp( szFileName + iLen - 3, ".sh" ) == 0 ) )
    {
-      if( hb_stricmp( szFileName + iLen - 4, ".exe" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".com" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".bat" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".cmd" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 3, ".sh" ) == 0 )
-      {
-         ulExtAttr |= 0x00490000; /* --x--x--x */
-      }
+      ulExtAttr |= 0x00490000; /* --x--x--x */
    }
 
-   if( ulExtAttr | HB_FA_READONLY )
+   if( ulExtAttr & HB_FA_READONLY )
       ulExtAttr |= 0x01240000;  /* r--r--r-- */
    else
       ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
@@ -706,22 +703,20 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
 
    memset( &zfi, 0, sizeof( zfi ) );
    fError = HB_FALSE;
+   ulExtAttr = 0;
 
 #if defined( HB_OS_WIN )
    {
       char * pszFree;
       LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_fsNameConv( szFileName, &pszFree ) );
+      DWORD attr = GetFileAttributes( lpFileName );
 
-      ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
-
-      if( ( HB_LONG ) ulExtAttr != -1 )
+      if( attr != INVALID_FILE_ATTRIBUTES )
       {
-         ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName ) &
-                     ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
-                       FILE_ATTRIBUTE_SYSTEM   | FILE_ATTRIBUTE_DIRECTORY |
-                       FILE_ATTRIBUTE_ARCHIVE );
-
-         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
+         ulExtAttr = hb_translateExtAttr( szFileName, attr &
+                        ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
+                          FILE_ATTRIBUTE_SYSTEM   | FILE_ATTRIBUTE_DIRECTORY |
+                          FILE_ATTRIBUTE_ARCHIVE ) );
       }
       else
          fError = HB_TRUE;
@@ -736,8 +731,6 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
       struct stat statbuf;
       struct tm   st;
       char * pszFree;
-
-      ulExtAttr = 0;
 
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
       {
@@ -833,8 +826,7 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
          if( fs3.attrFile & FILE_ARCHIVED )
             ulAttr |= HB_FA_ARCHIVE;
 
-         ulExtAttr = ulAttr;
-         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
+         ulExtAttr = hb_translateExtAttr( szFileName, ulAttr );
 
          zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosecs * 2;
          zfi.tmz_date.tm_min = fs3.ftimeLastWrite.minutes;
@@ -1122,7 +1114,6 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    }
    unzCloseCurrentFile( hUnzip );
 
-
 #if defined( HB_OS_WIN )
    {
       char * pszFree;
@@ -1147,20 +1138,20 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 #  if defined( __DJGPP__ )
       _chmod( szNameOS, 1, ufi.external_fa & 0xFF );
 #  else
-      HB_FATTR ulAttr = ufi.external_fa & 0xFFFF0000;
+      HB_FATTR ulAttr = ufi.external_fa;
 
       if( ( ulAttr & 0xFFFF0000 ) == 0 )
          ulAttr = hb_translateExtAttr( szName, ulAttr );
 
-      chmod( szName, ( ( ulAttr & 0x00010000 ) ? S_IXOTH : 0 ) |
-                     ( ( ulAttr & 0x00020000 ) ? S_IWOTH : 0 ) |
-                     ( ( ulAttr & 0x00040000 ) ? S_IROTH : 0 ) |
-                     ( ( ulAttr & 0x00080000 ) ? S_IXGRP : 0 ) |
-                     ( ( ulAttr & 0x00100000 ) ? S_IWGRP : 0 ) |
-                     ( ( ulAttr & 0x00200000 ) ? S_IRGRP : 0 ) |
-                     ( ( ulAttr & 0x00400000 ) ? S_IXUSR : 0 ) |
-                     ( ( ulAttr & 0x00800000 ) ? S_IWUSR : 0 ) |
-                     ( ( ulAttr & 0x01000000 ) ? S_IRUSR : 0 ) );
+      chmod( szNameOS, ( ( ulAttr & 0x00010000 ) ? S_IXOTH : 0 ) |
+                       ( ( ulAttr & 0x00020000 ) ? S_IWOTH : 0 ) |
+                       ( ( ulAttr & 0x00040000 ) ? S_IROTH : 0 ) |
+                       ( ( ulAttr & 0x00080000 ) ? S_IXGRP : 0 ) |
+                       ( ( ulAttr & 0x00100000 ) ? S_IWGRP : 0 ) |
+                       ( ( ulAttr & 0x00200000 ) ? S_IRGRP : 0 ) |
+                       ( ( ulAttr & 0x00400000 ) ? S_IXUSR : 0 ) |
+                       ( ( ulAttr & 0x00800000 ) ? S_IWUSR : 0 ) |
+                       ( ( ulAttr & 0x01000000 ) ? S_IRUSR : 0 ) );
 #  endif
       memset( &st, 0, sizeof( st ) );
 
