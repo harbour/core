@@ -149,27 +149,6 @@ HARBOUR
             PPC 32-bit:   "-arch ppc"
             PPC 64-bit:   "-arch ppc64"
 
-   on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
-   ----------------------------------------------
-   (possible cross-build targets: Windows, Windows CE, MS-DOS)
-
-      $ gmake [install] [HB_PLATFORM=<...>]
-      OR
-      $ make [install] [HB_PLATFORM=<...>]
-
-      To test it, type:
-      $ cd tests
-      $ hbmk2 hello.prg
-      $ ./hello
-      You should see 'Hello world!' on screen.
-
-      NOTE for sunpro on Solaris:
-      ---------------------------
-         If you have any GNU binutils stuff installed, do make sure
-         /usr/ccs/bin (the location of the native Sun C compilation
-         system tools) come *before* the GNU binutils components in
-         your $PATH.
-
    on FreeBSD hosts
    ----------------
       Platform specific prerequisites:
@@ -205,6 +184,27 @@ HARBOUR
       the Minix pkgsrc repository; for details see
 
       http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages
+
+   on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
+   ----------------------------------------------
+   (possible cross-build targets: Windows, Windows CE, MS-DOS)
+
+      $ gmake [install] [HB_PLATFORM=<...>]
+      OR
+      $ make [install] [HB_PLATFORM=<...>]
+
+      To test it, type:
+      $ cd tests
+      $ hbmk2 hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
+      NOTE for sunpro on Solaris:
+      ---------------------------
+         If you have any GNU binutils stuff installed, do make sure
+         /usr/ccs/bin (the location of the native Sun C compilation
+         system tools) come *before* the GNU binutils components in
+         your $PATH.
 
 
 2. HOW TO DO A PARTIAL [RE]BUILD
