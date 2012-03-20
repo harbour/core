@@ -177,6 +177,7 @@ extern HB_EXPORT HB_SIZE    hb_fsWriteLarge  ( HB_FHANDLE hFileHandle, const voi
 extern HB_EXPORT HB_SIZE    hb_fsWriteAt     ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset ); /* write to an open file at given offset from a buffer (>64K) */
 extern HB_EXPORT HB_FHANDLE hb_fsPOpen       ( const char * pFilename, const char * pMode );
 extern HB_EXPORT HB_BOOL    hb_fsPipeCreate  ( HB_FHANDLE hPipe[ 2 ] );
+extern HB_EXPORT HB_BOOL    hb_fsPipeUnblock ( HB_FHANDLE hPipeHandle );
 extern HB_EXPORT HB_SIZE    hb_fsPipeIsData  ( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize, HB_MAXINT nTimeOut );
 extern HB_EXPORT HB_SIZE    hb_fsPipeRead    ( HB_FHANDLE hPipeHandle, void * buffer, HB_SIZE nSize, HB_MAXINT nTimeOut );
 extern HB_EXPORT int        hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle );

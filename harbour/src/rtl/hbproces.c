@@ -1017,12 +1017,12 @@ int hb_fsProcessRun( const char * pszFilename,
       for( ;; )
       {
          dwCount = 0;
-         if( nStdInLen && hStdin != FS_ERROR )
-            lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdin );
          if( hStdout != FS_ERROR )
             lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdout );
          if( hStderr != FS_ERROR )
             lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStderr );
+         if( nStdInLen && hStdin != FS_ERROR )
+            lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdin );
 
          lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hProcess );
 
@@ -1110,6 +1110,13 @@ int hb_fsProcessRun( const char * pszFilename,
          hStdin = FS_ERROR;
       }
 
+      if( hStdin != FS_ERROR )
+         hb_fsPipeUnblock( hStdin );
+      if( hStdout != FS_ERROR )
+         hb_fsPipeUnblock( hStdout );
+      if( hStderr != FS_ERROR )
+         hb_fsPipeUnblock( hStderr );
+
       for( ;; )
       {
          fdMax = 0;
@@ -1145,18 +1152,6 @@ int hb_fsProcessRun( const char * pszFilename,
          n = select( fdMax + 1, prfds, pwfds, NULL, NULL );
          if( n > 0 )
          {
-            if( nStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
-            {
-               ul = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
-               pStdInBuf += ul;
-               nStdInLen -= ul;
-               if( nStdInLen == 0 )
-               {
-                  hb_fsClose( hStdin );
-                  hStdin = FS_ERROR;
-               }
-            }
-
             if( hStdout != FS_ERROR && FD_ISSET( hStdout, &rfds ) )
             {
                if( nOutBuf == nOutSize )
@@ -1196,7 +1191,21 @@ int hb_fsProcessRun( const char * pszFilename,
                else
                   nErrBuf += ul;
             }
+
+            if( nStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
+            {
+               ul = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
+               pStdInBuf += ul;
+               nStdInLen -= ul;
+               if( nStdInLen == 0 )
+               {
+                  hb_fsClose( hStdin );
+                  hStdin = FS_ERROR;
+               }
+            }
          }
+         else
+            break;
       }
 
       if( hStdin != FS_ERROR )

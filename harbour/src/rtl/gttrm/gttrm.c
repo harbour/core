@@ -1477,9 +1477,10 @@ again:
             while( n > 0 )
             {
                ch = test_bufch( pTerm, i++, pTerm->esc_delay );
-               if( ch < 0 || ch > 255 ||
-                   !hb_cdpGetFromUTF8( pTerm->cdpIn, ch, &n, &uc ) )
+               if( ch < 0 || ch > 255 )
                   break;
+               if( !hb_cdpGetFromUTF8( pTerm->cdpIn, ch, &n, &uc ) )
+                  n = -1;
             }
             if( n == 0 )
             {

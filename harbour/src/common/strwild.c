@@ -76,7 +76,8 @@ HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
          fAny = HB_TRUE;
          i++;
       }
-      else if( j < nLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
+      else if( j < nLen &&
+               ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
       {
          if( fAny )
          {
@@ -210,7 +211,7 @@ HB_BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
    i = j = nAny = 0;
    nLen = strlen( szString );
    nSize = strlen( szPattern );
-   while ( i < nSize || ( j < nLen && !fAny ) )
+   while( i < nSize || ( j < nLen && !fAny ) )
    {
       if( i < nSize && szPattern[i] == '*' )
       {

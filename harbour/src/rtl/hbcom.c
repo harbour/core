@@ -102,6 +102,7 @@
 #  include "../../src/3rd/hbpmcom/com.h"
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
+#  include "hbwinuni.h"
 #elif defined( HB_OS_OS2 )
 #  define INCL_BASE
 #  define INCL_DOS
@@ -1235,6 +1236,7 @@ int hb_comClose( int iPort )
 
    if( pCom )
    {
+      hb_vmUnlock();
 #if defined( TIOCNXCL )
       ioctl( pCom->fd, TIOCNXCL );
 #endif
@@ -1250,6 +1252,7 @@ int hb_comClose( int iPort )
          pCom->fd = ( HB_FHANDLE ) FS_ERROR;
          pCom->status &= ~HB_COM_OPEN;
       }
+      hb_vmLock();
    }
 
    return iResult;
@@ -1271,6 +1274,8 @@ int hb_comOpen( int iPort )
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * name = hb_comGetName( pCom, buffer, sizeof( buffer ) );
 
+         hb_vmUnlock();
+
          pCom->fd = open( name, O_RDWR | O_NOCTTY );
          if( pCom->fd != -1 )
          {
@@ -1289,6 +1294,8 @@ int hb_comOpen( int iPort )
             pCom->status |= HB_COM_OPEN;
          }
          hb_comSetOsError( pCom, iResult == -1 );
+
+         hb_vmLock();
       }
    }
 
@@ -1957,11 +1964,13 @@ int hb_comClose( int iPort )
 
    if( pCom )
    {
+      hb_vmUnlock();
       /* FlushFileBuffers( pCom->hComm ); */
       fResult = CloseHandle( pCom->hComm );
       pCom->hComm = INVALID_HANDLE_VALUE;
       pCom->status &= ~HB_COM_OPEN;
       hb_comSetOsError( pCom, !fResult );
+      hb_vmLock();
    }
 
    return fResult ? 0 : -1;
@@ -1982,9 +1991,11 @@ int hb_comOpen( int iPort )
       {
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * szName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
-         TCHAR lpName[ HB_COM_DEV_NAME_MAX ];
+         LPTSTR lpName, lpFree;
 
-         HB_TCHAR_COPYTO( lpName, szName, HB_SIZEOFARRAY( lpName ) - 1 );
+         lpName = HB_FSNAMECONV( szName, &lpFree );
+
+         hb_vmUnlock();
 
          pCom->hComm = CreateFile( lpName,
                                    GENERIC_READ | GENERIC_WRITE,
@@ -1998,6 +2009,11 @@ int hb_comOpen( int iPort )
             pCom->status |= HB_COM_OPEN;
          }
          hb_comSetOsError( pCom, !fResult );
+
+         hb_vmLock();
+
+         if( lpFree )
+            hb_xfree( lpFree );
       }
    }
 
@@ -2763,11 +2779,13 @@ int hb_comClose( int iPort )
 
    if( pCom )
    {
+      hb_vmUnlock();
       /* DosResetBuffer( pCom->hFile ); */
       rc = DosClose( pCom->hFile );
       pCom->hFile = 0;
       pCom->status &= ~HB_COM_OPEN;
       hb_comSetOsError( pCom, rc );
+      hb_vmLock();
    }
 
    return ( rc == NO_ERROR ) ? 0 : -1;
@@ -2790,6 +2808,8 @@ int hb_comOpen( int iPort )
          const char * pszName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
          ULONG ulAction = 0;
 
+         hb_vmUnlock();
+
          rc = DosOpen( ( PSZ ) pszName,
                        &pCom->hFile,
                        &ulAction,
@@ -2802,6 +2822,8 @@ int hb_comOpen( int iPort )
             pCom->status |= HB_COM_OPEN;
 
          hb_comSetOsError( pCom, rc );
+
+         hb_vmLock();
       }
    }
 
@@ -3281,10 +3303,12 @@ int hb_comClose( int iPort )
 
    if( pCom )
    {
+      hb_vmUnlock();
       COMPortClose( iPort - 1 );
       pCom->status &= ~HB_COM_OPEN;
       hb_comSetOsError( pCom, 0 );
       iResult = 0;
+      hb_vmLock();
    }
 
    return iResult;
@@ -3305,6 +3329,8 @@ int hb_comOpen( int iPort )
       {
          int iBaud, iParity, iSize, iStop, iFlowControl;
 
+         hb_vmUnlock();
+
          iBaud = iParity = iSize = iStop = 0;
          iFlowControl = 0;
          s_comChkPortParam( &iBaud, &iParity, &iSize, &iStop );
@@ -3320,6 +3346,8 @@ int hb_comOpen( int iPort )
             hb_comSetOsError( pCom, iResult );
             iResult = -1;
          }
+
+         hb_vmLock();
       }
    }
 

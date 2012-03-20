@@ -429,7 +429,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       int n = 0;
       HB_USHORT uc = 0;
 
-      if( hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_BYTE ) ch, &n, &uc ) )
+      if( hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_UCHAR ) ch, &n, &uc ) )
       {
          unsigned int buf[ 10 ], i = 0;
 
@@ -439,16 +439,13 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
                                          - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if( !hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_BYTE ) buf[ i - 1 ], &n, &uc ) )
-               break;
+            if( !hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_UCHAR ) buf[ i - 1 ], &n, &uc ) )
+               n = -1;
          }
-         if( n > 0 )
-         {
-            while( i > 0 )
-               SLang_ungetkey( buf[ --i ] );
-         }
-         else
+         if( n == 0 )
             ch = uc;
+         else while( i > 0 )
+            SLang_ungetkey( buf[ --i ] );
       }
    }
 #endif
