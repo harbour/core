@@ -448,6 +448,10 @@ extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n,
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pnSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pnSize );
 
+#if defined( HB_OS_WIN )
+extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * szFileName );
+#endif
+
 HB_EXTERN_END
 
 #endif /* HB_APICDP_H_ */
