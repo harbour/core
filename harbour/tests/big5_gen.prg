@@ -53,6 +53,8 @@ duplicated character has the following mapping in BIG5.TXT:
 *************************************************************************** */
 
 
+//#define DO_START_OPT
+
 proc main()
    local cLine, aVal, aVal2, aValU, aValU2, hVal, aInd, ;
          n, nn, nBG5, nU16, nMin, nMax, nUMin, nUMax, cResult, nBit
@@ -118,10 +120,13 @@ proc main()
 #endif
 
    ? "BIG5->UCS16 tables."
-   n := min_size( aVal, nMin, nMax, @nBit )
    ? "raw size:", hb_ntos( ( nMax - nMin + 1 ) * 2 )
+#ifndef DO_START_OPT
+   nMin := min( nMin, 41280 ) // optimal
+#endif
+   n := min_size( aVal, @nMin, nMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nMin ) + ")"
    calc_size( aVal, nMin, nMax, nBit, @hVal, @aInd, @nn )
    aVal2 := hash_to_array( hVal )
 
@@ -160,10 +165,13 @@ proc main()
 
    ?
    ? "UCS16->BIG5 tables."
-   n := min_size( aValU, nUMin, nUMax, @nBit )
    ? "raw size:", hb_ntos( ( nUMax - nUMin + 1 ) * 2 )
+#ifndef DO_START_OPT
+   nUMin := min( nUMin, 160 ) // optimal
+#endif
+   n := min_size( aValU, @nUMin, nUMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nUMin ) + ")"
    calc_size( aValU, nUMin, nUMax, nBit, @hVal, @aInd, @nn )
    aValU2 := hash_to_array( hVal )
 
@@ -220,16 +228,24 @@ static function hash_to_array( hVal )
 return aVal
 
 function min_size( aVal, nMin, nMax, nBit )
-   local n, nS, nSize
+   local n, nM, nS, nSize, nMinX
    nSize := 0xFFFFFF
-   for n := 1 to 16
-      nS := calc_size( aVal, nMin, nMax, n )
-//      ? n, nS
-      if nS < nSize
-         nSize := nS
-         nBit := n
-      endif
+   nMinX := nMin
+#ifdef DO_START_OPT
+   for nM := hb_bitAnd( nMin, 0xFF00 ) to nMin
+#else
+   for nM := nMin to nMin
+#endif
+      for n := 1 to 16
+         nS := calc_size( aVal, nM, nMax, n )
+         if nS < nSize
+            nSize := nS
+            nBit := n
+            nMinX := nM
+         endif
+      next
    next
+   nMin := nMinX
 return nSize
 
 function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
@@ -242,7 +258,7 @@ function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    aInd := {}
    hb_hKeepOrder( hVal, .t. )
    for n := nMin to nMax
-      cLine += i2bin( aVal[n] )
+      cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
       if len( cLine ) == nLine * 2
          hVal[ cLine ] := cLine
          aadd( aInd, hb_hpos( hVal, cLine ) - 1 )
@@ -273,11 +289,11 @@ static function index_func( cName, cNameInd, cNameConv, cMin, cMax, cBit )
    cResult := "static HB_USHORT " + cName + "( int n )" + hb_eol() + ;
               "{" + hb_eol() + ;
               "   n -= " + cMin + ";" + hb_eol() + ;
-              "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + ") )" + hb_eol() + ;
+              "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
               "   {" + hb_eol() + ;
               "      return " + cNameConv + "[ ( " + cNameInd + ;
                      "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
-              space( len( cNameInd ) + 16 ) + ;
+              space( len( cNameConv ) + 15 ) + ;
                      "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
               "   }" + hb_eol() + ;
               "   return 0;" + hb_eol() + ;

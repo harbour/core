@@ -172,10 +172,11 @@ static void hb_cp_init( PHB_CODEPAGE cdp )
 #define HB_CP_PUT_FUNC        BIG5_put
 #define HB_CP_LEN_FUNC        BIG5_len
 
-#define HB_CP_CMP_FUNC        NULL
-#define HB_CP_FLAG_FUNC       NULL
+#define HB_CP_FLAGS_FUNC      NULL
 #define HB_CP_UPPER_FUNC      NULL
 #define HB_CP_LOWER_FUNC      NULL
+
+#define HB_CP_CMP_FUNC        NULL
 
 #define s_flags               NULL
 #define s_upper               NULL
