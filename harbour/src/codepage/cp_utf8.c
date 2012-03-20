@@ -71,6 +71,11 @@ static HB_CDP_GET_FUNC( UTF8_get )
          return HB_TRUE;
       }
    }
+   if( n != 0 )
+   {
+      *pnIndex = nIndex;
+      return HB_TRUE;
+   }
    return HB_FALSE;
 }
 
