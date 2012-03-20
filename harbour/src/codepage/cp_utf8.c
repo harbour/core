@@ -63,13 +63,12 @@ static HB_CDP_GET_FUNC( UTF8_get )
    *wc = 0;
    while( nIndex < nLen )
    {
-      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nIndex++ ], &n, wc ) )
+      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nIndex ], &n, wc ) )
+         ++nIndex;
+      if( n == 0 )
       {
-         if( n == 0 )
-         {
-            *pnIndex = nIndex;
-            return HB_TRUE;
-         }
+         *pnIndex = nIndex;
+         return HB_TRUE;
       }
    }
    return HB_FALSE;

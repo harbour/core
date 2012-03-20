@@ -7,7 +7,7 @@
  * The CodePages API
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2009-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -74,16 +74,16 @@ static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE nLen, HB_SIZE nUTF8Pos )
       HB_WCHAR uc;
       int n = 0;
 
-      for( n1 = n2 = 0; n1 < nLen; ++n1 )
+      for( n1 = n2 = 0; n1 < nLen; )
       {
          if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szUTF8[ n1 ], &n, &uc ) )
+            ++n1;
+
+         if( n == 0 )
          {
-            if( n == 0 )
-            {
-               if( --nUTF8Pos == 0 )
-                  return n2 + 1;
-               n2 = n1 + 1;
-            }
+            if( --nUTF8Pos == 0 )
+               return n2 + 1;
+            n2 = n1;
          }
       }
    }
@@ -197,13 +197,14 @@ HB_FUNC( HB_UTF8ASC )
       HB_WCHAR wc = 0;
       int n = 0;
 
-      while( nLen-- )
+      while( nLen )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( unsigned char ) *pszString++, &n, &wc ) )
-         {
-            if( n == 0 )
-               break;
-         }
+         if( !hb_cdpUTF8ToU16NextChar( ( unsigned char ) *pszString, &n, &wc ) )
+            break;
+         if( n == 0 )
+            break;
+         pszString++;
+         nLen--;
       }
       hb_retnint( wc );
    }
@@ -335,7 +336,7 @@ HB_FUNC( HB_UTF8SUBSTR )
       else if( nFrom )
          --nFrom;
 
-      if( nLen && nCount > 0 )
+      if( nLen > ( HB_SIZE ) nFrom && nCount > 0 )
          szDest = hb_cdpUTF8StringSubstr( szString, nLen,
                                           nFrom, nCount, &nDest );
       if( szDest )
@@ -468,9 +469,10 @@ HB_FUNC( HB_UTF8POKE )
 
 HB_FUNC( HB_UTF8STUFF )
 {
-   const char * szString = hb_parc( 1 );
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
 
-   if( szString && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       HB_SIZE nLen = hb_parclen( 1 );
       HB_SIZE nPos = hb_parns( 2 );
@@ -480,7 +482,7 @@ HB_FUNC( HB_UTF8STUFF )
 
       if( nPos )
       {
-         nPos = utf8pos( szString, nLen, nPos );
+         nPos = utf8pos( szText, nLen, nPos );
          if( nPos == 0 )
             nPos = nLen;
          else
@@ -490,7 +492,7 @@ HB_FUNC( HB_UTF8STUFF )
       {
          if( nPos < nLen )
          {
-            nDel = utf8pos( szString + nPos, nLen - nPos, nDel + 1 );
+            nDel = utf8pos( szText + nPos, nLen - nPos, nDel + 1 );
             if( nDel == 0 )
                nDel = nLen - nPos;
             else
@@ -504,9 +506,9 @@ HB_FUNC( HB_UTF8STUFF )
       {
          char * szResult = ( char * ) hb_xgrab( nTot + 1 );
 
-         hb_xmemcpy( szResult, szString, nPos );
-         hb_xmemcpy( szResult + nPos, hb_parc( 4 ), nIns );
-         hb_xmemcpy( szResult + nPos + nIns, szString + nPos + nDel,
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
                      nLen - ( nPos + nDel ) );
          hb_retclen_buffer( szResult, nTot );
       }
@@ -519,10 +521,10 @@ HB_FUNC( HB_UTF8STUFF )
 
 HB_FUNC( HB_UTF8LEN )
 {
-   const char * szString = hb_parc( 1 );
+   const char * szText = hb_parc( 1 );
 
-   if( szString )
-      hb_retnint( hb_cdpUTF8StringLength( szString, hb_parclen( 1 ) ) );
+   if( szText )
+      hb_retnint( hb_cdpUTF8StringLength( szText, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
