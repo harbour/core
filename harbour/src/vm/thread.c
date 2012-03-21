@@ -71,7 +71,7 @@
   hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
   hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
   hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
-  hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> ) -> <xCodeResult>
+  hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> [, <params,...> ] ) -> <xCodeResult>
 ** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) -> .T.
   hb_mtVM() -> <lMultiThreadVM>
 
@@ -2600,11 +2600,15 @@ HB_FUNC( HB_MUTEXEVAL )
 
       if( pEval )
       {
+         int iPCount = hb_pcount(), iParam;
+
          if( hb_threadMutexLock( pItem ) )
          {
             hb_vmPushEvalSym();
             hb_vmPush( pEval );
-            hb_vmSend( 0 );
+            for( iParam = 3; iParam <= iPCount; iParam++ )
+               hb_vmPush( hb_stackItemFromBase( iParam ) );
+            hb_vmSend( ( HB_USHORT ) ( iPCount - 2 ) );
             hb_threadMutexUnlock( pItem );
          }
       }
