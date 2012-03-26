@@ -3529,14 +3529,22 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
    pArea->maxFieldLen = 0;
 
+   u32RetVal = AE_SUCCESS;
    for( uiCount = 1; uiCount <= uiFields; uiCount++ )
    {
       usBufLen = ADS_MAX_FIELD_NAME;
-      AdsGetFieldName( pArea->hTable, uiCount, szName, &usBufLen );
+      if( ( u32RetVal = AdsGetFieldName( pArea->hTable, uiCount, szName, &usBufLen ) ) != AE_SUCCESS )
+         break;
+
       szName[ usBufLen ] = '\0';
       dbFieldInfo.atomName = ( char * ) szName;
-      AdsGetFieldType( pArea->hTable, szName, &usType );
-      AdsGetFieldLength( pArea->hTable, szName, &u32Length );
+
+      if( ( u32RetVal = AdsGetFieldType( pArea->hTable, szName, &usType ) ) != AE_SUCCESS )
+         break;
+
+      if( ( u32RetVal = AdsGetFieldLength( pArea->hTable, szName, &u32Length ) ) != AE_SUCCESS )
+         break;
+
       dbFieldInfo.uiLen = ( HB_USHORT ) u32Length;
       dbFieldInfo.uiDec = 0;
       dbFieldInfo.uiFlags = 0;
@@ -3677,11 +3685,22 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 #endif
          default:
-            return HB_FAILURE;
+            u32RetVal = EDBF_CORRUPT;
+            break;
       }
 
-      if( SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo ) == HB_FAILURE )
-         return HB_FAILURE;
+      if( u32RetVal == AE_SUCCESS )
+         u32RetVal = SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo ) == HB_FAILURE ? EDBF_CORRUPT : AE_SUCCESS;
+     
+      if( u32RetVal != AE_SUCCESS )
+         break;
+   }
+
+   if( u32RetVal != AE_SUCCESS )
+   {
+      commonError( pArea, EG_CORRUPTION, ( HB_ERRCODE ) u32RetVal, 0, pOpenInfo->abName, EF_CANDEFAULT, NULL );
+      SELF_CLOSE( ( AREAP ) pArea );
+      return HB_FAILURE;
    }
 
    if( fUnicode )
