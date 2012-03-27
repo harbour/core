@@ -1311,6 +1311,10 @@ HARBOUR
        the problem using official stable or nightly Harbour build.
        Do not post executables and other binary files.
        See more on self-contained examples: http://sscce.org/
+   13. If your example involves compatibility components, make sure to test
+       it against original implementation (for example, test legacy Clipper
+       core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
+       functions against CT3 library, etc.)
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
