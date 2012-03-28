@@ -402,7 +402,6 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    }
    else
    {
-      szText[ nLen ] = '\0';
       pItem->item.asString.allocated = nLen + 1;
       pItem->item.asString.value     = szText;
    }

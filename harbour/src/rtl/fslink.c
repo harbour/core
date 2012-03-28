@@ -372,20 +372,8 @@ char * hb_fsLinkRead( const char * pszFile )
    }
 
    /* Convert from OS codepage */
-   if( HB_FALSE )
-   {
-      char * pszFree = NULL;
-      char * pszResult;
-      HB_SIZE nLen = strlen( pszLink );
-
-      pszResult = ( char * ) hb_osDecodeCP( pszLink, &pszFree, &nLen );
-
-      if( pszResult != pszLink )
-      {
-         hb_xfree( pszLink );
-         pszLink = pszResult;
-      }
-   }
+   if( pszLink )
+      pszLink = ( char * ) hb_osDecodeCP( pszLink, NULL, NULL );
 
    return pszLink;
 }
