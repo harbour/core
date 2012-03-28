@@ -252,11 +252,7 @@ char * hb_fsLinkRead( const char * pszFile )
                   if( size > 0 )
                   {
                      pszLink = ( char * ) hb_xgrab( size + 1 );
-#if defined( UNICODE )
-                     hb_wcntombcpy( pszLink, lpLink, ( HB_SIZE ) size );
-#else
-                     hb_strncpy( pszLink, lpLink, ( HB_SIZE ) size );
-#endif
+                     HB_TCHAR_COPYFROM( pszLink, lpLink, ( HB_SIZE ) size );
                   }
                   else
                      pszLink = NULL;
