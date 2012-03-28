@@ -139,10 +139,10 @@ hpdfxref.c
 # MAP    src/hpdf_number.c              hpdfnumb.c
 # MAP    src/hpdf_objects.c             hpdfobje.c
 # MAP    src/hpdf_outline.c             hpdfoutl.c
-# MAP    src/hpdf_pdfa.c                hpdfpdfa.c
 # MAP    src/hpdf_page_label.c          hpdfpage.c
 # MAP    src/hpdf_page_operator.c       hpdfpago.c
 # MAP    src/hpdf_pages.c               hpdfpags.c
+# MAP    src/hpdf_pdfa.c                hpdfpdfa.c
 # MAP    src/hpdf_real.c                hpdfreal.c
 # MAP    src/hpdf_streams.c             hpdfstre.c
 # MAP    src/hpdf_string.c              hpdfstri.c
@@ -171,9 +171,9 @@ hpdfxref.c
 # MAP    include/hpdf_namedict.h        hpdfndic.h
 # MAP    include/hpdf_objects.h         hpdfobje.h
 # MAP    include/hpdf_outline.h         hpdfoutl.h
-# MAP    include/hpdf_pdfa.h            hpdfpdfa.h
-# MAP    include/hpdf_page_label.h      hpdfpage.h
 # MAP    include/hpdf_pages.h           hpdfpags.h
+# MAP    include/hpdf_page_label.h      hpdfpage.h
+# MAP    include/hpdf_pdfa.h            hpdfpdfa.h
 # MAP    include/hpdf_streams.h         hpdfstre.h
 # MAP    include/hpdf_types.h           hpdftype.h
 # MAP    include/hpdf_u3d.h             hpdfu3d.h
