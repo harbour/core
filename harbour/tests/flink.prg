@@ -44,10 +44,10 @@ PROCEDURE Main()
 
    hb_DirCreate( "_hb_d" )
 
-   ? HB_FLINKSYM( "_hb_d.tmp", "_hb_dlnk.tmp" )
+   ? HB_FLINKSYM( "_hb_d", "_hb_dlnk" )
    ? FERROR()
 
-   ? HB_FLINKREAD( "_hb_dlnk.tmp" )
+   ? HB_FLINKREAD( "_hb_dlnk" )
    ? FERROR()
 
    RETURN

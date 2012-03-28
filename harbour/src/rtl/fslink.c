@@ -55,6 +55,7 @@
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    #include <windows.h>
+   #include "hbwinuni.h"
 #elif defined( HB_OS_UNIX )
    #include <unistd.h>
 #endif
@@ -81,15 +82,20 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
 
          if( s_pCreateHardLink )
          {
-            LPTSTR lpFileName = HB_TCHAR_CONVTO( pszNewFile );
-            LPTSTR lpExistingFileName = HB_TCHAR_CONVTO( pszExisting );
+            LPTSTR lpFileName, lpFileNameFree;
+            LPTSTR lpExistingFileName, lpExistingFileNameFree;
+
+            lpFileName = HB_FSNAMECONV( pszNewFile, &lpFileNameFree );
+            lpExistingFileName = HB_FSNAMECONV( pszExisting, &lpExistingFileNameFree );
 
             fResult = s_pCreateHardLink( lpFileName, lpExistingFileName, NULL ) != 0;
             hb_fsSetIOError( fResult, 0 );
             hb_fsSetFError( hb_fsError() );
 
-            HB_TCHAR_FREE( lpFileName );
-            HB_TCHAR_FREE( lpExistingFileName );
+            if( lpFileNameFree )
+               hb_xfree( lpFileNameFree );
+            if( lpExistingFileNameFree )
+               hb_xfree( lpExistingFileNameFree );
          }
          else
          {
@@ -99,9 +105,20 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
       }
 #elif defined( HB_OS_UNIX )
       {
+         char * pszExistingFree;
+         char * pszNewFileFree;
+
+         pszExisting = hb_fsNameConv( pszExisting, &pszExistingFree );
+         pszNewFile = hb_fsNameConv( pszNewFile, &pszNewFileFree );
+
          fResult = ( link( pszExisting, pszNewFile ) == 0 );
          hb_fsSetIOError( fResult, 0 );
          hb_fsSetFError( hb_fsError() );
+
+         if( pszExistingFree )
+            hb_xfree( pszExistingFree );
+         if( pszNewFileFree )
+            hb_xfree( pszNewFileFree );
       }
 #else
       {
@@ -145,15 +162,26 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
 
          if( s_pCreateSymbolicLink )
          {
-            LPTSTR lpSymlinkFileName = HB_TCHAR_CONVTO( pszNewFile );
-            LPTSTR lpTargetFileName = HB_TCHAR_CONVTO( pszTarget );
+            LPTSTR lpSymlinkFileName, lpSymlinkFileNameFree;
+            LPTSTR lpTargetFileName, lpTargetFileNameFree;
+            DWORD dwAttr;
+            HB_BOOL fDir;
 
-            fResult = s_pCreateSymbolicLink( lpSymlinkFileName, lpTargetFileName, hb_fsIsDirectory( pszTarget ) ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0 ) != 0;
+            lpSymlinkFileName = HB_FSNAMECONV( pszNewFile, &lpSymlinkFileNameFree );
+            lpTargetFileName = HB_FSNAMECONV( pszTarget, &lpTargetFileNameFree );
+
+            dwAttr = GetFileAttributes( lpTargetFileName );
+            fDir = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
+                   ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
+
+            fResult = s_pCreateSymbolicLink( lpSymlinkFileName, lpTargetFileName, fDir ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0 ) != 0;
             hb_fsSetIOError( fResult, 0 );
             hb_fsSetFError( hb_fsError() );
 
-            HB_TCHAR_FREE( lpSymlinkFileName );
-            HB_TCHAR_FREE( lpTargetFileName );
+            if( lpSymlinkFileNameFree )
+               hb_xfree( lpSymlinkFileNameFree );
+            if( lpTargetFileNameFree )
+               hb_xfree( lpTargetFileNameFree );
          }
          else
          {
@@ -163,9 +191,20 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
       }
 #elif defined( HB_OS_UNIX )
       {
+         char * pszTargetFree;
+         char * pszNewFileFree;
+
+         pszTarget = hb_fsNameConv( pszTarget, &pszTargetFree );
+         pszNewFile = hb_fsNameConv( pszNewFile, &pszNewFileFree );
+
          fResult = ( symlink( pszTarget, pszNewFile ) == 0 );
          hb_fsSetIOError( fResult, 0 );
          hb_fsSetFError( hb_fsError() );
+
+         if( pszTargetFree )
+            hb_xfree( pszTargetFree );
+         if( pszNewFileFree )
+            hb_xfree( pszNewFileFree );
       }
 #else
       {
@@ -225,15 +264,23 @@ char * hb_fsLinkRead( const char * pszFile )
 
          if( s_pGetFinalPathNameByHandle )
          {
-            LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFile );
+            LPTSTR lpFileName, lpFileNameFree;
             HANDLE hFile;
+            DWORD dwAttr;
+            HB_BOOL fDir;
+
+            lpFileName = HB_FSNAMECONV( pszFile, &lpFileNameFree );
+
+            dwAttr = GetFileAttributes( lpFileName );
+            fDir = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
+                   ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
 
             hFile = CreateFile( lpFileName,
                                 GENERIC_READ,
                                 FILE_SHARE_READ,
                                 NULL,
                                 OPEN_EXISTING,
-                                FILE_ATTRIBUTE_NORMAL,
+                                fDir ? ( FILE_ATTRIBUTE_DIRECTORY | FILE_FLAG_BACKUP_SEMANTICS ) : FILE_ATTRIBUTE_NORMAL,
                                 NULL );
 
             if( hFile == INVALID_HANDLE_VALUE )
@@ -267,7 +314,8 @@ char * hb_fsLinkRead( const char * pszFile )
                }
             }
 
-            HB_TCHAR_FREE( lpFileName );
+            if( lpFileNameFree )
+               hb_xfree( lpFileNameFree );
          }
          else
          {
@@ -277,7 +325,11 @@ char * hb_fsLinkRead( const char * pszFile )
       }
 #elif defined( HB_OS_UNIX )
       {
+         char * pszFileFree;
          size_t size;
+
+         pszFile = hb_fsNameConv( pszFile, &pszFileFree );
+
          pszLink = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
          size = readlink( pszFile, pszLink, HB_PATH_MAX );
          hb_fsSetIOError( size != ( size_t ) -1, 0 );
@@ -289,6 +341,9 @@ char * hb_fsLinkRead( const char * pszFile )
          }
          else
             pszLink[ size ] = '\0';
+
+         if( pszFileFree )
+            hb_xfree( pszFileFree );
       }
 #else
       {
@@ -301,6 +356,22 @@ char * hb_fsLinkRead( const char * pszFile )
    {
       hb_fsSetFError( 2 );
       pszLink = NULL;
+   }
+
+   /* Convert from OS codepage */
+   if( HB_FALSE )
+   {
+      char * pszFree = NULL;
+      char * pszResult;
+      HB_SIZE nLen = strlen( pszLink );
+
+      pszResult = ( char * ) hb_osDecodeCP( pszLink, &pszFree, &nLen );
+
+      if( pszResult != pszLink )
+      {
+         hb_xfree( pszLink );
+         pszLink = pszResult;
+      }
    }
 
    return pszLink;
