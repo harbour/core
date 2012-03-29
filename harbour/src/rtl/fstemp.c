@@ -73,6 +73,7 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
 #endif
 
 #if ( defined( HB_OS_LINUX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
@@ -171,7 +172,10 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
 
       iLen = ( int ) strlen( pszName );
       if( iLen > ( HB_PATH_MAX - 1 ) - 6 )
-         return FS_ERROR;
+      {
+         fd = FS_ERROR;
+         break;
+      }
 
 #if defined( HB_HAS_MKSTEMP )
       if( hb_setGetFileCase() != HB_SET_CASE_LOWER &&
@@ -221,16 +225,15 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
          pszName[ iLen ] = '\0';
          if( pszExt )
             hb_strncat( pszName, pszExt, HB_PATH_MAX - 1 );
-         hb_fsNameConv( pszName, NULL );
          fd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
       }
 
       if( fd != ( HB_FHANDLE ) FS_ERROR )
-         return fd;
+         break;
    }
    while( --iAttemptLeft );
 
-   return FS_ERROR;
+   return fd;
 }
 
 /* NOTE: The buffer must be at least HB_PATH_MAX chars long */
@@ -240,16 +243,22 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
 {
    HB_BOOL fResult;
 
+   pszBuffer[ 0 ] = '\0';
+
    hb_vmUnlock();
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpPrefix = pszPrefix ? HB_TCHAR_CONVTO( pszPrefix ) : NULL;
+      LPTSTR lpPrefix, lpPrefixFree = NULL;
+      LPTSTR lpDir, lpDirFree = NULL;
+
       TCHAR lpBuffer[ HB_PATH_MAX ];
       TCHAR lpTempDir[ HB_PATH_MAX ];
 
+      lpPrefix = pszPrefix ? HB_FSNAMECONV( pszPrefix, &lpPrefixFree ) : NULL;
+
       if( pszDir && pszDir[ 0 ] != '\0' )
-         HB_TCHAR_COPYTO( lpTempDir, pszDir, HB_PATH_MAX - 1 );
+         lpDir = HB_FSNAMECONV( pszDir, &lpDirFree );
       else
       {
          if( ! GetTempPath( HB_PATH_MAX, lpTempDir ) )
@@ -257,16 +266,19 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
             hb_fsSetIOError( HB_FALSE, 0 );
             return HB_FALSE;
          }
+         lpTempDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
+         lpDir = lpTempDir;
       }
-      lpTempDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
 
-      fResult = GetTempFileName( lpTempDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
+      fResult = GetTempFileName( lpDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
 
       if( fResult )
          HB_TCHAR_COPYFROM( pszBuffer, lpBuffer, HB_PATH_MAX - 1 );
 
-      if( lpPrefix )
-         HB_TCHAR_FREE( lpPrefix );
+      if( lpPrefixFree )
+         hb_xfree( lpPrefixFree );
+      if( lpDirFree )
+         hb_xfree( lpDirFree );
    }
 #else
 
@@ -278,7 +290,6 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
              passed buffer. It will be needed to fix HB_PATH_MAX - 1 to be
              at least this large. */
 
-   pszBuffer[ 0 ] = '\0';
    fResult = ( tmpnam( pszBuffer ) != NULL );
 
 #  if defined( __DJGPP__ )
@@ -294,6 +305,21 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
 
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
+
+   /* Convert from OS codepage */
+   if( fResult )
+   {
+      char * pszFree = NULL;
+      const char * pszResult;
+      HB_SIZE nLen = strlen( pszBuffer );
+
+      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nLen );
+
+      if( pszResult != pszBuffer )
+         hb_strncpy( pszBuffer, pszResult, HB_PATH_MAX - 1 );
+      if( pszFree )
+         hb_xfree( pszFree );
+   }
 
    return fResult;
 }
@@ -447,6 +473,20 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       }
    }
 #endif
+
+   /* Convert from OS codepage */
+   {
+      char * pszFree = NULL;
+      const char * pszResult;
+      HB_SIZE nLen = strlen( pszTempDir );
+
+      pszResult = hb_osDecodeCP( pszTempDir, &pszFree, &nLen );
+
+      if( pszResult != pszTempDir )
+         hb_strncpy( pszTempDir, pszResult, HB_PATH_MAX - 1 );
+      if( pszFree )
+         hb_xfree( pszFree );
+   }
 
    return nResult;
 }

@@ -76,6 +76,7 @@
    #endif
 #elif defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
 #elif defined( HB_OS_OS2 )
    #define INCL_DOSFILEMGR
    #define INCL_ERRORS
@@ -707,8 +708,8 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
 
 #if defined( HB_OS_WIN )
    {
-      char * pszFree;
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_fsNameConv( szFileName, &pszFree ) );
+      LPTSTR lpFileNameFree;
+      LPTSTR lpFileName = HB_FSNAMECONV( szFileName, &lpFileNameFree );
       DWORD attr = GetFileAttributes( lpFileName );
 
       if( attr != INVALID_FILE_ATTRIBUTES )
@@ -721,10 +722,8 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
       else
          fError = HB_TRUE;
 
-      HB_TCHAR_FREE( lpFileName );
-
-      if( pszFree )
-         hb_xfree( pszFree );
+      if( lpFileNameFree )
+         hb_xfree( lpFileNameFree );
    }
 #elif defined( HB_OS_UNIX )
    {
@@ -793,7 +792,7 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
 #  endif
       {
          ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
-                               HB_FA_DIRECTORY | HB_FA_ARCHIVE );
+                              HB_FA_DIRECTORY | HB_FA_ARCHIVE );
 
          ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
       }
@@ -1116,15 +1115,13 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
 #if defined( HB_OS_WIN )
    {
-      char * pszFree;
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_fsNameConv( szName, &pszFree ) );
+      LPTSTR lpFileNameFree;
+      LPTSTR lpFileName = HB_FSNAMECONV( szName, &lpFileNameFree );
 
       SetFileAttributes( ( LPCTSTR ) lpFileName, ufi.external_fa & 0xFF );
 
-      HB_TCHAR_FREE( lpFileName );
-
-      if( pszFree )
-         hb_xfree( pszFree );
+      if( lpFileNameFree )
+         hb_xfree( lpFileNameFree );
    }
 #elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
