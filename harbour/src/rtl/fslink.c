@@ -56,6 +56,9 @@
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    #include <windows.h>
+   #if !defined( INVALID_FILE_ATTRIBUTES )
+      #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
+   #endif
    #include "hbwinuni.h"
 #elif defined( HB_OS_UNIX )
    #include <unistd.h>
