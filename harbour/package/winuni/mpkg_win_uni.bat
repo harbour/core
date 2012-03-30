@@ -100,7 +100,7 @@ xcopy /y       "%HB_WITH_QT%\..\lib\libQtSql4.a"                                
  copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt
 
 if exist %HB_ABSROOT%lib\win\mingw\  xcopy /y       "%HB_DIR_UNICOWS%\mingw\libunicows.a"                                      %HB_ABSROOT%lib\win\mingw\
-if exist %HB_ABSROOT%lib\win\mingw\  xcopy /y       "%HB_DIR_UNICOWS%\mingw\unicows_license.txt"                               %HB_ABSROOT%lib\win\mingw\
+if exist %HB_ABSROOT%lib\win\mingw\  xcopy /y       "%HB_DIR_UNICOWS%\mingw\libunicows_license.txt"                            %HB_ABSROOT%lib\win\mingw\
 if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\unicows.lib"                                      %HB_ABSROOT%lib\win\watcom\
 if exist %HB_ABSROOT%lib\win\watcom\ xcopy /y       "%HB_DIR_UNICOWS%\watcom\unicows_license.txt"                              %HB_ABSROOT%lib\win\watcom\
 if exist %HB_ABSROOT%lib\win\bcc\    xcopy /y       "%HB_DIR_UNICOWS%\bcc\unicows.lib"                                         %HB_ABSROOT%lib\win\bcc\

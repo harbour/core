@@ -204,16 +204,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
-#if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
    pWVT->boxCDP     = hb_cdpFind( "EN" );
-#else
-   {
-      int i;
-      for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( HB_BYTE ) i;
-   }
-#endif
 #endif
 
    return pWVT;
@@ -726,7 +718,6 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#  if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -746,28 +737,6 @@ static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
          pWVT->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
       }
    }
-#  else
-   {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm, cdpHost;
-      int i;
-
-      if( !pszHostCDP )
-         pszHostCDP = hb_cdpID();
-
-      if( !pszTermCDP )
-         pszTermCDP = pszHostCDP;
-
-      cdpTerm = hb_cdpFind( pszTermCDP );
-      cdpHost = hb_cdpFind( pszHostCDP );
-
-      for( i = 0; i < 256; i++ )
-      {
-         pWVT->chrTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
-      }
-   }
-#  endif
 
    return HB_TRUE;
 }
@@ -1465,11 +1434,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-         #if defined( UNICODE )
          usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
-         #else
-         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
-         #endif
 #if 1
          if( bAttr & HB_GT_ATTR_BOX )
          {
@@ -1591,11 +1556,7 @@ void DrawingArea::displayCell( int iRow, int iCol )
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
    {
-      #if defined( UNICODE )
       usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
-      #else
-      usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
-      #endif
 
       painter.setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
       painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
