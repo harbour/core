@@ -84,7 +84,7 @@
    #define HB_STRNCAT( dst, src, len )           hb_wstrncat( dst, src, len )
    #define HB_STRCMP( s1, s2 )                   hb_wstrcmp( s1, s2 )
    #define HB_STRNCMP( s1, s2, len )             hb_wstrncmp( s1, s2, len )
-   #define HB_FSNAMECONV( fname, pfree )         ( *pfree = hb_fsNameConvU16( fname ) )
+   #define HB_FSNAMECONV( fname, pfree )         ( *(pfree) = hb_fsNameConvU16( fname ) )
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
@@ -110,7 +110,7 @@
    #define HB_STRNCAT( dst, src, len )           hb_strncat( dst, src, len )
    #define HB_STRCMP( s1, s2 )                   strcmp( s1, s2 )
    #define HB_STRNCMP( s1, s2, len )             strncmp( s1, s2, len )
-   #define HB_FSNAMECONV( fname, pfree )         pfreehb_fsNameConvU16( fname, pfree )
+   #define HB_FSNAMECONV( fname, pfree )         hb_fsNameConv( fname, pfree )
 #endif
 
 #endif /* HB_OS_WIN */

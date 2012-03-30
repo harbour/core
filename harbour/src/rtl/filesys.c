@@ -1030,7 +1030,8 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, HB_USHORT uiFlags )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
@@ -1092,7 +1093,8 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, HB_FATTR ulAttr )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
@@ -1154,7 +1156,8 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, HB_FATTR ulAttr, HB_USHORT uiF
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
@@ -1402,7 +1405,8 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
    fResult = HB_FALSE;
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
       DWORD dwAttr;
 
       lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
@@ -1674,7 +1678,8 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
 
       lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
@@ -2960,7 +2965,8 @@ HB_BOOL hb_fsDelete( const char * pFilename )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpFileName, lpFree;
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
 
       lpFileName = HB_FSNAMECONV( pFilename, &lpFree );
 
@@ -3003,7 +3009,8 @@ HB_BOOL hb_fsRename( const char * pOldName, const char * pNewName )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpOldName, lpNewName, lpOldFree, lpNewFree;
+      LPCTSTR lpOldName, lpNewName;
+      LPTSTR lpOldFree, lpNewFree;
 
       lpOldName = HB_FSNAMECONV( pOldName, &lpOldFree );
       lpNewName = HB_FSNAMECONV( pNewName, &lpNewFree );
@@ -3052,7 +3059,8 @@ HB_BOOL hb_fsMkDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpDirname, lpFree;
+      LPCTSTR lpDirname;
+      LPTSTR lpFree;
 
       lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
 
@@ -3101,7 +3109,8 @@ HB_BOOL hb_fsChDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpDirname, lpFree;
+      LPCTSTR lpDirname;
+      LPTSTR lpFree;
       UINT uiErrMode;
 
       lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
@@ -3146,7 +3155,8 @@ HB_BOOL hb_fsRmDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpDirname, lpFree;
+      LPCTSTR lpDirname;
+      LPTSTR lpFree;
 
       lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
 
@@ -3942,25 +3952,25 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       if( iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            pFileName->szName = pszName = hb_cdpnDupLower( hb_vmCDP(), pFileName->szName, NULL );
+            pFileName->szName = pszName = hb_cdpnDupLower( cdp, pFileName->szName, NULL );
          if( pFileName->szExtension )
-            pFileName->szExtension = pszExt = hb_cdpnDupLower( hb_vmCDP(), pFileName->szExtension, NULL );
+            pFileName->szExtension = pszExt = hb_cdpnDupLower( cdp, pFileName->szExtension, NULL );
       }
       else if( iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            pFileName->szName = pszName = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szName, NULL );
+            pFileName->szName = pszName = hb_cdpnDupUpper( cdp, pFileName->szName, NULL );
          if( pFileName->szExtension )
-            pFileName->szExtension = pszExt = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szExtension, NULL );
+            pFileName->szExtension = pszExt = hb_cdpnDupUpper( cdp, pFileName->szExtension, NULL );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( iDirCase == HB_SET_CASE_LOWER )
-            pFileName->szPath = pszPath = hb_cdpnDupLower( hb_vmCDP(), pFileName->szPath, NULL );
+            pFileName->szPath = pszPath = hb_cdpnDupLower( cdp, pFileName->szPath, NULL );
          else if( iDirCase == HB_SET_CASE_UPPER )
-            pFileName->szPath = pszPath = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szPath, NULL );
+            pFileName->szPath = pszPath = hb_cdpnDupUpper( cdp, pFileName->szPath, NULL );
       }
 
       hb_fsFNameMerge( pszBuffer, pFileName );
@@ -3973,7 +3983,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
          hb_xfree( pszExt );
    }
 
-   nLen = hb_cdpStrAsU16Len( hb_vmCDP(), szFileName, strlen( szFileName ), 0 );
+   nLen = hb_cdpStrAsU16Len( cdp, szFileName, strlen( szFileName ), 0 );
    lpwFileName = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( HB_WCHAR ) );
    hb_cdpStrToU16( cdp, HB_CDP_ENDIAN_NATIVE, szFileName, strlen( szFileName ),
                    lpwFileName, nLen + 1 );

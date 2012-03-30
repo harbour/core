@@ -1991,7 +1991,8 @@ int hb_comOpen( int iPort )
       {
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * szName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
-         LPTSTR lpName, lpFree;
+         LPCTSTR lpName;
+         LPTSTR lpFree;
 
          lpName = HB_FSNAMECONV( szName, &lpFree );
 

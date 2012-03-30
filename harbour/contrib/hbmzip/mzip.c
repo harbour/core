@@ -712,7 +712,7 @@ static int hb_zipStoreFile( zipFile hZip, const char * szFileName, const char * 
 #if defined( HB_OS_WIN )
    {
       LPTSTR lpFileNameFree;
-      LPTSTR lpFileName = HB_FSNAMECONV( szFileName, &lpFileNameFree );
+      LPCTSTR lpFileName = HB_FSNAMECONV( szFileName, &lpFileNameFree );
       DWORD attr = GetFileAttributes( lpFileName );
 
       if( attr != INVALID_FILE_ATTRIBUTES )
@@ -1119,7 +1119,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 #if defined( HB_OS_WIN )
    {
       LPTSTR lpFileNameFree;
-      LPTSTR lpFileName = HB_FSNAMECONV( szName, &lpFileNameFree );
+      LPCTSTR lpFileName = HB_FSNAMECONV( szName, &lpFileNameFree );
 
       SetFileAttributes( ( LPCTSTR ) lpFileName, ufi.external_fa & 0xFF );
 

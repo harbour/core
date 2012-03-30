@@ -88,8 +88,8 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
 
          if( s_pCreateHardLink )
          {
-            LPTSTR lpFileName, lpFileNameFree;
-            LPTSTR lpExistingFileName, lpExistingFileNameFree;
+            LPCTSTR lpFileName, lpExistingFileName;
+            LPTSTR lpFileNameFree, lpExistingFileNameFree;
 
             lpFileName = HB_FSNAMECONV( pszNewFile, &lpFileNameFree );
             lpExistingFileName = HB_FSNAMECONV( pszExisting, &lpExistingFileNameFree );
@@ -172,8 +172,8 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
 
          if( s_pCreateSymbolicLink )
          {
-            LPTSTR lpSymlinkFileName, lpSymlinkFileNameFree;
-            LPTSTR lpTargetFileName, lpTargetFileNameFree;
+            LPCTSTR lpSymlinkFileName, lpTargetFileName;
+            LPTSTR lpSymlinkFileNameFree, lpTargetFileNameFree;
             DWORD dwAttr;
             HB_BOOL fDir;
 
@@ -278,7 +278,8 @@ char * hb_fsLinkRead( const char * pszFile )
 
          if( s_pGetFinalPathNameByHandle )
          {
-            LPTSTR lpFileName, lpFileNameFree;
+            LPCTSTR lpFileName;
+            LPTSTR lpFileNameFree;
             HANDLE hFile;
             DWORD dwAttr;
             HB_BOOL fDir;

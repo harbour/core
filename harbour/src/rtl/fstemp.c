@@ -249,8 +249,8 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpPrefix, lpPrefixFree = NULL;
-      LPTSTR lpDir, lpDirFree = NULL;
+      LPCTSTR lpPrefix, lpDir;
+      LPTSTR lpPrefixFree = NULL, lpDirFree = NULL;
 
       TCHAR lpBuffer[ HB_PATH_MAX ];
       TCHAR lpTempDir[ HB_PATH_MAX ];

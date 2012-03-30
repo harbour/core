@@ -60,11 +60,15 @@
     27:         ','     5	# ACS_LARROW
     30:         '-'     5	# ACS_UARROW
     31:         '.'     5	# ACS_DARROW
-
-128-255:        *       2
+    128-255:    *       2
     155:        '.'     1
 # @acsc          # include acsc section
 # @maz2iso       # include maz2iso section
+
+:xterm|xterm-color|rxvt|teraterm = xterm terms
+    0-31:       '.'     1
+    127-159:    '.'     1
+ @acsc          # include acsc section
 
 :tterm = Teraterm modified terminal
     0-31:       '.'     1
@@ -81,11 +85,6 @@
     27:         '<'     1
 
 :screen = screen terminal
-    0-31:       '.'     1
-    127-159:    '.'     1
- @acsc          # include acsc section
-
-:xterm|xterm-color|rxvt|teraterm = xterm terms
     0-31:       '.'     1
     127-159:    '.'     1
  @acsc          # include acsc section
