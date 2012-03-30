@@ -11820,7 +11820,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
    ENDIF
 
    AAdd( aDst, "# Automatically converted by hbmk2 from hbmake project:" )
-   AAdd( aDst, cSrcName )
+   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
@@ -11951,8 +11951,14 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
    ENDIF
 
    AAdd( aDst, "# Automatically converted by hbmk2 from xbuild project:" )
-   AAdd( aDst, cSrcName )
+   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
+
+   IF ".lib" $ cSrcName
+      AAdd( aDst, "-hblib" )
+   ELSEIF ".dll" $ cSrcName
+      AAdd( aDst, "-hbdyn" )
+   ENDIF
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
@@ -12075,7 +12081,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
    ENDIF
 
    AAdd( aDst, "# Automatically converted by hbmk2 from xMate project:" )
-   AAdd( aDst, cSrcName )
+   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
