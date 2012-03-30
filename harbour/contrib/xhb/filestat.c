@@ -64,14 +64,14 @@
    #include <sys/stat.h>
 #elif defined( HB_OS_WIN )
    #include <windows.h>
-   #if ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __LCC__ ) || defined( __DMC__ ) ) && ! defined( INVALID_FILE_ATTRIBUTES )
+   #if ! defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES ((DWORD)(-1))
    #endif
 #endif
 
 static HB_BOOL hb_fsFileStats(
                            const char * pszFileName,
-                           char * pszAttr,
+                           char * szAttr,
                            HB_FOFFSET * llSize,
                            long * lcDate,
                            long * lcTime,
@@ -80,7 +80,7 @@ static HB_BOOL hb_fsFileStats(
 {
    HB_BOOL fResult = HB_FALSE;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
 
    struct stat statbuf;
 
@@ -130,10 +130,10 @@ static HB_BOOL hb_fsFileStats(
       /* Extension characters */
 
       if( ( statbuf.st_mode & S_IFLNK ) == S_IFLNK)
-         *pszAttr++ = 'Z'; /* Xharbour extension */
+         *szAttr++ = 'Z'; /* Xharbour extension */
 
       if( ( statbuf.st_mode & S_IFSOCK ) == S_IFSOCK )
-         *pszAttr++ = 'K'; /* Xharbour extension */
+         *szAttr++ = 'K'; /* Xharbour extension */
 
       /* device */
       if( ( statbuf.st_mode & S_IFBLK ) == S_IFBLK ||
@@ -141,7 +141,7 @@ static HB_BOOL hb_fsFileStats(
          ushbAttr |= HB_FA_DEVICE; /* Xharbour extension */
 
       if( ( statbuf.st_mode & S_IFIFO ) == S_IFIFO )
-         *pszAttr++ = 'Y'; /* Xharbour extension */
+         *szAttr++ = 'Y'; /* Xharbour extension */
 
       if( S_ISDIR( statbuf.st_mode ) )
          ushbAttr |= HB_FA_DIRECTORY; /* Xharbour extension */
@@ -172,7 +172,7 @@ static HB_BOOL hb_fsFileStats(
                ptms->tm_mon + 1, ptms->tm_mday );
       *lmTime = ptms->tm_hour*3600 + ptms->tm_min * 60 + ptms->tm_sec;
 
-      hb_fsAttrDecode( ushbAttr, pszAttr );
+      hb_fsAttrDecode( ushbAttr, szAttr );
 
       fResult = HB_TRUE;
    }
@@ -189,50 +189,46 @@ static HB_BOOL hb_fsFileStats(
 
       /* Get attributes... */
       dwAttribs = GetFileAttributes( lpFileName );
-      if( dwAttribs == INVALID_FILE_ATTRIBUTES )
+      if( dwAttribs != INVALID_FILE_ATTRIBUTES )
       {
-         /* return */
-         HB_TCHAR_FREE( lpFileName );
-         return HB_FALSE;
+         hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), szAttr );
+
+         /* If file existed, do a findfirst */
+         hFind = FindFirstFile( lpFileName, &ffind );
+         if( hFind != INVALID_HANDLE_VALUE )
+         {
+            CloseHandle( hFind );
+
+            /* get file times and work them out */
+            *llSize = ( HB_FOFFSET ) ffind.nFileSizeLow + ( ( HB_FOFFSET ) ffind.nFileSizeHigh << 32 );
+
+            if( FileTimeToLocalFileTime( &ffind.ftCreationTime, &filetime ) &&
+                FileTimeToSystemTime( &filetime, &time ) )
+            {
+               *lcDate = hb_dateEncode( time.wYear, time.wMonth, time.wDay );
+               *lcTime = time.wHour * 3600 + time.wMinute * 60 + time.wSecond;
+            }
+            else
+            {
+               *lcDate = hb_dateEncode( 0, 0, 0 );
+               *lcTime = 0;
+            }
+
+            if( FileTimeToLocalFileTime( &ffind.ftLastAccessTime, &filetime ) &&
+                FileTimeToSystemTime( &filetime, &time ) )
+            {
+               *lmDate = hb_dateEncode( time.wYear, time.wMonth, time.wDay );
+               *lmTime = time.wHour * 3600 + time.wMinute * 60 + time.wSecond;
+            }
+            else
+            {
+               *lcDate = hb_dateEncode( 0, 0, 0 );
+               *lcTime = 0;
+            }
+            fResult = HB_TRUE;
+         }
       }
-
-      hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), pszAttr );
-
-      /* If file existed, do a findfirst */
-      hFind = FindFirstFile( lpFileName, &ffind );
       HB_TCHAR_FREE( lpFileName );
-      if( hFind != INVALID_HANDLE_VALUE )
-      {
-         CloseHandle( hFind );
-
-         /* get file times and work them out */
-         *llSize = ( HB_FOFFSET ) ffind.nFileSizeLow + ( ( HB_FOFFSET ) ffind.nFileSizeHigh << 32 );
-
-         if( FileTimeToLocalFileTime( &ffind.ftCreationTime, &filetime ) &&
-             FileTimeToSystemTime( &filetime, &time ) )
-         {
-            *lcDate = hb_dateEncode( time.wYear, time.wMonth, time.wDay );
-            *lcTime = time.wHour * 3600 + time.wMinute * 60 + time.wSecond;
-         }
-         else
-         {
-            *lcDate = hb_dateEncode( 0, 0, 0 );
-            *lcTime = 0;
-         }
-
-         if( FileTimeToLocalFileTime( &ffind.ftLastAccessTime, &filetime ) &&
-             FileTimeToSystemTime( &filetime, &time ) )
-         {
-            *lmDate = hb_dateEncode( time.wYear, time.wMonth, time.wDay );
-            *lmTime = time.wHour * 3600 + time.wMinute * 60 + time.wSecond;
-         }
-         else
-         {
-            *lcDate = hb_dateEncode( 0, 0, 0 );
-            *lcTime = 0;
-         }
-         fResult = HB_TRUE;
-      }
    }
 
 #else
@@ -243,7 +239,7 @@ static HB_BOOL hb_fsFileStats(
 
       if( findinfo )
       {
-         hb_fsAttrDecode( findinfo->attr, pszAttr );
+         hb_fsAttrDecode( findinfo->attr, szAttr );
          *llSize = ( HB_FOFFSET ) findinfo->size;
          *lcDate = findinfo->lDate;
          *lcTime = (findinfo->szTime[0] - '0') * 36000 +
@@ -268,22 +264,22 @@ static HB_BOOL hb_fsFileStats(
 HB_FUNC( FILESTATS )
 {
    char szAttr[ 21 ];
-   const char * szFile = hb_parc( 1 );
-   HB_FOFFSET lSize = 0;
+   const char * szFileName = hb_parc( 1 );
+   HB_FOFFSET llSize = 0;
    long lcDate = 0, lcTime = 0, lmDate = 0, lmTime = 0;
 
    /* Parameter checking */
-   if( !szFile || !*szFile )
+   if( !szFileName || !*szFileName )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1,
             hb_paramError(1) );
       return;
    }
 
-   if( hb_fsFileStats( szFile, szAttr, &lSize, &lcDate, &lcTime, &lmDate, &lmTime ) )
+   if( hb_fsFileStats( szFileName, szAttr, &llSize, &lcDate, &lcTime, &lmDate, &lmTime ) )
    {
       hb_storc   ( szAttr, 2 );
-      hb_stornint( lSize, 3 );
+      hb_stornint( llSize, 3 );
       hb_stordl  ( lcDate, 4 );
       hb_stornint( lcTime, 5 );
       hb_stordl  ( lmDate, 6 );

@@ -114,12 +114,11 @@ static HB_BOOL hb_IsNetShared( const char * szLocalDevice )
 HB_FUNC( NETCANCEL )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   DWORD dwResult;
-   LPTSTR lpDevice = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   void * hDevice;
 
-   dwResult = WNetCancelConnection( lpDevice, TRUE ); /* FALSE = fail if exist open files or print jobs. */
+   DWORD dwResult = WNetCancelConnection( HB_PARSTRDEF( 1, &hDevice, NULL ), TRUE ); /* FALSE = fail if exist open files or print jobs. */
 
-   HB_TCHAR_FREE( lpDevice );
+   hb_strfree( hDevice );
    /* TRUE = force cancel connection even if exist
     *        open files or print jobs.
     */

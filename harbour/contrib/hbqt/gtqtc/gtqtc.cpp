@@ -524,21 +524,6 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       hb_xfree( pFileName );
    }
 
-   {
-      #if 0
-      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, HB_FALSE );
-      if( hSysMenu )
-      {
-         /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-         LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-         HB_TCHAR_FREE( buffer );
-
-         if( ! pWVT->bClosable )
-            EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
-      }
-      #endif
-   }
    return HB_TRUE;
 }
 
