@@ -8,8 +8,8 @@ include $(ROOT)config/global.mk
 
 DIRS :=
 
-ifneq ($(wildcard lib/3rd/$(PLAT_COMP)),)
-   DIRS += lib/3rd/$(PLAT_COMP)
+ifneq ($(wildcard lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)),)
+   DIRS += lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)
 endif
 
 ifeq ($(HB_BUILD_PARTS),compiler)

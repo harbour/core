@@ -18,8 +18,8 @@ HB_GT_LIBS += gtwvt gtgui gtwin
 # gdi32: gtwvt
 
 # unicows lib must come after user libs and before Windows system libs
-ifneq ($(wildcard $(TOP)$(ROOT)lib/3rd/$(PLAT_COMP)),)
-   SYSLIBPATHS += $(TOP)$(ROOT)lib/3rd/$(PLAT_COMP)
+ifneq ($(wildcard $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)),)
+   SYSLIBPATHS += $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)
    SYSLIBS += unicows
 endif
 
