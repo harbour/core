@@ -8,6 +8,8 @@
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 
 -w3 -es2
+# TODO: Disabled UNICODE until this code gets support for it.
+-winuni-
 
 "-stop={!allwin|!x86}Skipped: '${hb_name}' only supported on win x86 platform."
 
