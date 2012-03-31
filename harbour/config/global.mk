@@ -259,9 +259,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_OPTIM),)
       $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
    endif
-   ifneq ($(__HB_BUILD_WINUNI),)
-      $(info ! __HB_BUILD_WINUNI: $(__HB_BUILD_WINUNI))
-   endif
    ifneq ($(HB_BUILD_MODE),)
       $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
    endif
@@ -381,12 +378,6 @@ ifeq ($(HB_HOST_PLAT),)
       HB_HOST_PLAT := win
       ifeq ($(OS),)
          HB_HOST_PLAT_WIN9X := yes
-         ifeq ($(HB_HOST_BIN),)
-            ifneq ($(__HB_BUILD_WINUNI),no)
-               export __HB_BUILD_WINUNI := no
-               $(info ! Win9x/ME host detected: Windows UNICODE build mode forcibly turned off)
-            endif
-         endif
       endif
    else
    ifeq ($(HB_SHELL),dos)

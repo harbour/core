@@ -62,7 +62,7 @@ RC := brcc32.exe
 RC_OUT := -fo
 
 LD := ilink32.exe
-LIBPATHS := $(subst /,$(BACKSLASH),-L"$(LIB_DIR)")
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),$(subst /,$(BACKSLASH),-L"$(dir)"))
 LDFLAGS += $(LIBPATHS) -Gn -Tpe
 LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
 
@@ -104,7 +104,7 @@ ifneq ($(HB_SHELL),sh)
 endif
 
 DY := ilink32.exe
-DFLAGS += -q -Gn -C -aa -Tpd -Gi -x
+DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
 DLIBS := $(HB_USER_LIBS) $(LIBS) $(SYSLIBS) cw32mt import32

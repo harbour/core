@@ -786,6 +786,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL l_cHB_INSTALL_BIN
    LOCAL l_cHB_INSTALL_LIB
+   LOCAL l_cHB_INSTALL_LIB3RD
    LOCAL l_cHB_INSTALL_DYN
    LOCAL l_cHB_INSTALL_INC
    LOCAL l_cHB_INSTALL_ADD
@@ -1917,6 +1918,15 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
       ENDIF
    ENDIF
+   IF Empty( l_cHB_INSTALL_LIB3RD )
+      IF hbmk[ _HBMK_cPLAT ] == "win" .AND. ;
+         hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                                                hb_ps() + "3rd" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] )
+         l_cHB_INSTALL_LIB3RD := tmp
+      ENDIF
+   ENDIF
    IF Empty( l_cHB_INSTALL_INC )
       l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
    ENDIF
@@ -1951,6 +1961,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LIB )
+   /* Locally hosted 3rd party binary libraries */
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LIB3RD )
    IF ! Empty( l_cHB_INSTALL_DYN ) .AND. !( l_cHB_INSTALL_DYN == l_cHB_INSTALL_LIB )
       AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_DYN )
    ENDIF

@@ -63,7 +63,6 @@ set HB_DIR_7Z=%_HB_DIR_TOOL%
 set HB_DIR_UPX=%_HB_DIR_TOOL%upx\
 rem set HB_DIR_BCC_IMPLIB=%_HB_DIR_COMP%bcc\Bin\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw
-set HB_DIR_UNICOWS=%_HB_DIR_3RD%unicows\
 
 set HB_WITH_ADS=%_HB_DIR_3RD%ads\acesdk
 set HB_WITH_ALLEGRO=%_HB_DIR_3RD%allegro\include

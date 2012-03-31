@@ -89,7 +89,7 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := -L$(LIB_DIR)
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 # Add the standard C entry

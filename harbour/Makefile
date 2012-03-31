@@ -6,9 +6,15 @@ ROOT := ./
 
 include $(ROOT)config/global.mk
 
+DIRS :=
+
+ifneq ($(wildcard lib/3rd/$(PLAT_COMP)),)
+   DIRS += lib/3rd/$(PLAT_COMP)
+endif
+
 ifeq ($(HB_BUILD_PARTS),compiler)
 
-   DIRS := \
+   DIRS += \
       src \
       utils{src} \
 
@@ -23,7 +29,7 @@ else
       endif
    endif
 
-   DIRS := \
+   DIRS += \
       doc \
       include \
       src \

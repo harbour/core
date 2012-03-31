@@ -16,9 +16,7 @@ endif
 
 # Handle it here, so that it can be disabled for individual libs
 ifeq ($(HB_PLATFORM),win)
-   ifneq ($(__HB_BUILD_WINUNI),no)
-      HB_CFLAGS += -DUNICODE
-   endif
+   HB_CFLAGS += -DUNICODE
 endif
 
 ifeq ($(HB_DYN_COPT),)

@@ -17,8 +17,9 @@ HB_GT_LIBS += gtwvt gtgui gtwin
 # advapi32: GetUserName()
 # gdi32: gtwvt
 
-# must come after user libs and before Windows system libs
-ifeq ($(__HB_BUILD_WINUNI),unicows)
+# unicows lib must come after user libs and before Windows system libs
+ifneq ($(wildcard $(TOP)$(ROOT)lib/3rd/$(PLAT_COMP)),)
+   SYSLIBPATHS += $(TOP)$(ROOT)lib/3rd/$(PLAT_COMP)
    SYSLIBS += unicows
 endif
 
