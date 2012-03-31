@@ -1387,15 +1387,9 @@
 #define TB_SETMAXTEXTROWS                         (WM_USER + 60)
 #define TB_GETTEXTROWS                            (WM_USER + 61)
 
-#ifdef UNICODE
 #define TB_GETBUTTONTEXT                          TB_GETBUTTONTEXTW
 #define TB_SAVERESTORE                            TB_SAVERESTOREW
 #define TB_ADDSTRING                              TB_ADDSTRINGW
-#else
-#define TB_GETBUTTONTEXT                          TB_GETBUTTONTEXTA
-#define TB_SAVERESTORE                            TB_SAVERESTOREA
-#define TB_ADDSTRING                              TB_ADDSTRINGA
-#endif
 
 #define TB_GETOBJECT                              (WM_USER + 62)      // wParam == IID, lParam void **ppv
 #define TB_GETHOTITEM                             (WM_USER + 71)
@@ -1424,11 +1418,7 @@
 #define TB_GETUNICODEFORMAT                       CCM_GETUNICODEFORMAT
 
 #define TB_MAPACCELERATORW                        (WM_USER + 90)      // wParam == ch, lParam int * pidBtn
-#ifdef UNICODE
 #define TB_MAPACCELERATOR                         TB_MAPACCELERATORW
-#else
-#define TB_MAPACCELERATOR                         TB_MAPACCELERATORA
-#endif
 
 #define TBIMHT_AFTER                              1                   // TRUE = insert After iButton, otherwise before
 #define TBIMHT_BACKGROUND                         2                   // TRUE iff missed buttons completely
@@ -1445,37 +1435,22 @@
 
 #define TBIF_BYINDEX                              2147483648          // this specifies that the wparam in Get/SetButtonInfo is an index, not id
 
-#ifdef UNICODE
 #define TBBUTTONINFO                              TBBUTTONINFOW
 #define LPTBBUTTONINFO                            LPTBBUTTONINFOW
-#else
-#define TBBUTTONINFO                              TBBUTTONINFOA
-#define LPTBBUTTONINFO                            LPTBBUTTONINFOA
-#endif
 
 #define TB_GETBUTTONINFOW                         (WM_USER + 63)
 #define TB_SETBUTTONINFOW                         (WM_USER + 64)
 #define TB_GETBUTTONINFOA                         (WM_USER + 65)
 #define TB_SETBUTTONINFOA                         (WM_USER + 66)
-#ifdef UNICODE
 #define TB_GETBUTTONINFO                          TB_GETBUTTONINFOW
 #define TB_SETBUTTONINFO                          TB_SETBUTTONINFOW
-#else
-#define TB_GETBUTTONINFO                          TB_GETBUTTONINFOA
-#define TB_SETBUTTONINFO                          TB_SETBUTTONINFOA
-#endif
 
 #define TB_INSERTBUTTONW                          (WM_USER + 67)
 #define TB_ADDBUTTONSW                            (WM_USER + 68)
 #define TB_ADDBUTTONSA                            (WM_USER + 20)
 #define TB_HITTEST                                (WM_USER + 69)
-#ifdef UNICODE
 #define TB_INSERTBUTTON                           TB_INSERTBUTTONW
 #define TB_ADDBUTTONS                             TB_ADDBUTTONSW
-#else
-#define TB_INSERTBUTTON                           TB_INSERTBUTTONA
-#define TB_ADDBUTTONS                             TB_ADDBUTTONSA
-#endif
 
 #define TB_SETDRAWTEXTFLAGS                       (WM_USER + 70)
 #define TB_GETSTRING                              (WM_USER + 92)
@@ -1627,19 +1602,11 @@
 #define SB_GETTEXTLENGTHA                         (WM_USER+3)
 #define SB_GETTEXTLENGTHW                         (WM_USER+12)
 
-#ifdef UNICODE
 #define SB_GETTEXT                                SB_GETTEXTW
 #define SB_SETTEXT                                SB_SETTEXTW
 #define SB_GETTEXTLENGTH                          SB_GETTEXTLENGTHW
 #define SB_SETTIPTEXT                             SB_SETTIPTEXTW
 #define SB_GETTIPTEXT                             SB_GETTIPTEXTW
-#else
-#define SB_GETTEXT                                SB_GETTEXTA
-#define SB_SETTEXT                                SB_SETTEXTA
-#define SB_GETTEXTLENGTH                          SB_GETTEXTLENGTHA
-#define SB_SETTIPTEXT                             SB_SETTIPTEXTA
-#define SB_GETTIPTEXT                             SB_GETTIPTEXTA
-#endif
 
 #define SB_SETPARTS                               (WM_USER+4)
 #define SB_GETPARTS                               (WM_USER+6)
@@ -1712,11 +1679,7 @@
 
 #define WC_TREEVIEWA                              "SysTreeView32"
 #define WC_TREEVIEWW                              L"SysTreeView32"
-#ifdef UNICODE
-  #define  WC_TREEVIEW                            WC_TREEVIEWW
-#else
-  #define  WC_TREEVIEW                            WC_TREEVIEWA
-#endif
+#define WC_TREEVIEW                               WC_TREEVIEWW
 
 #define TVS_HASBUTTONS                            1
 #define TVS_HASLINES                              2
@@ -1766,13 +1729,8 @@
 #define LPTV_ITEM                                 LPTVITEM
 #define TV_ITEM                                   TVITEM
 
-#ifdef UNICODE
-  #define  TVITEM                                 TVITEMW
-  #define  LPTVITEM                               LPTVITEMW
-#else
-  #define  TVITEM                                 TVITEMA
-  #define  LPTVITEM                               LPTVITEMA
-#endif
+#define TVITEM                                    TVITEMW
+#define LPTVITEM                                  LPTVITEMW
 
 #define TVI_ROOT                                  (-0x10000)
 #define TVI_FIRST                                 (-0x0FFFF)
@@ -1789,11 +1747,7 @@
 
 #define TVM_INSERTITEMA                           (TV_FIRST + 0)
 #define TVM_INSERTITEMW                           (TV_FIRST + 50)
-#ifdef UNICODE
-  #define  TVM_INSERTITEM                         TVM_INSERTITEMW
-#else
-  #define  TVM_INSERTITEM                         TVM_INSERTITEMA
-#endif
+#define TVM_INSERTITEM                            TVM_INSERTITEMW
 #define TVM_DELETEITEM                            (TV_FIRST + 1)
 #define TVM_EXPAND                                (TV_FIRST + 2)
 
@@ -1830,28 +1784,16 @@
 #define TVM_GETITEMA                              (TV_FIRST + 12)
 #define TVM_GETITEMW                              (TV_FIRST + 62)
 
-#ifdef UNICODE
-  #define  TVM_GETITEM                            TVM_GETITEMW
-#else
-  #define  TVM_GETITEM                            TVM_GETITEMA
-#endif
+#define TVM_GETITEM                               TVM_GETITEMW
 
 #define TVM_SETITEMA                              (TV_FIRST + 13)
 #define TVM_SETITEMW                              (TV_FIRST + 63)
 
-#ifdef UNICODE
-  #define  TVM_SETITEM                            TVM_SETITEMW
-#else
-  #define  TVM_SETITEM                            TVM_SETITEMA
-#endif
+#define TVM_SETITEM                               TVM_SETITEMW
 
 #define TVM_EDITLABELA                            (TV_FIRST + 14)
 #define TVM_EDITLABELW                            (TV_FIRST + 65)
-#ifdef UNICODE
-  #define TVM_EDITLABEL                           TVM_EDITLABELW
-#else
-  #define TVM_EDITLABEL                           TVM_EDITLABELA
-#endif
+#define TVM_EDITLABEL                             TVM_EDITLABELW
 #define TVM_GETEDITCONTROL                        (TV_FIRST + 15)
 #define TVM_GETVISIBLECOUNT                       (TV_FIRST + 16)
 #define TVM_HITTEST                               (TV_FIRST + 17)
@@ -1880,12 +1822,7 @@
 #define TVM_ENDEDITLABELNOW                       (TV_FIRST + 22)
 #define TVM_GETISEARCHSTRINGA                     (TV_FIRST + 23)
 #define TVM_GETISEARCHSTRINGW                     (TV_FIRST + 64)
-
-#ifdef UNICODE
-  #define TVM_GETISEARCHSTRING                    TVM_GETISEARCHSTRINGW
-#else
-  #define TVM_GETISEARCHSTRING                    TVM_GETISEARCHSTRINGA
-#endif
+#define TVM_GETISEARCHSTRING                      TVM_GETISEARCHSTRINGW
 
 #define TVM_SETTOOLTIPS                           (TV_FIRST + 24)
 #define TVM_GETTOOLTIPS                           (TV_FIRST + 25)
@@ -1916,14 +1853,8 @@
 
 #define LPNM_TREEVIEW                             LPNMTREEVIEW
 #define NM_TREEVIEW                               NMTREEVIEW
-
-#ifdef UNICODE
-  #define  NMTREEVIEW                             NMTREEVIEWW
-  #define  LPNMTREEVIEW                           LPNMTREEVIEWW
-#else
-  #define  NMTREEVIEW                             NMTREEVIEWA
-  #define  LPNMTREEVIEW                           LPNMTREEVIEWA
-#endif
+#define NMTREEVIEW                                NMTREEVIEWW
+#define LPNMTREEVIEW                              LPNMTREEVIEWW
 
 #define TVN_SELCHANGINGA                          (TVN_FIRST-1)
 #define TVN_SELCHANGINGW                          (TVN_FIRST-50)
@@ -1945,13 +1876,8 @@
 #define TV_DISPINFOW                              NMTVDISPINFOW
 #define TV_DISPINFO                               NMTVDISPINFO
 
-#ifdef UNICODE
-  #define NMTVDISPINFO                            NMTVDISPINFOW
-  #define LPNMTVDISPINFO                          LPNMTVDISPINFOW
-#else
-  #define NMTVDISPINFO                            NMTVDISPINFOA
-  #define LPNMTVDISPINFO                          LPNMTVDISPINFOA
-#endif
+#define NMTVDISPINFO                              NMTVDISPINFOW
+#define LPNMTVDISPINFO                            LPNMTVDISPINFOW
 
 #define TVN_ITEMEXPANDINGA                        (TVN_FIRST-5)
 #define TVN_ITEMEXPANDINGW                        (TVN_FIRST-54)
@@ -1979,41 +1905,21 @@
 
 #define TV_KEYDOWN                                NMTVKEYDOWN
 
-#ifdef UNICODE
-  #define TVN_SELCHANGING                         TVN_SELCHANGINGW
-  #define TVN_SELCHANGED                          TVN_SELCHANGEDW
-  #define TVN_GETDISPINFO                         TVN_GETDISPINFOW
-  #define TVN_SETDISPINFO                         TVN_SETDISPINFOW
-  #define TVN_ITEMEXPANDING                       TVN_ITEMEXPANDINGW
-  #define TVN_ITEMEXPANDED                        TVN_ITEMEXPANDEDW
-  #define TVN_BEGINDRAG                           TVN_BEGINDRAGW
-  #define TVN_BEGINRDRAG                          TVN_BEGINRDRAGW
-  #define TVN_DELETEITEM                          TVN_DELETEITEMW
-  #define TVN_BEGINLABELEDIT                      TVN_BEGINLABELEDITW
-  #define TVN_ENDLABELEDIT                        TVN_ENDLABELEDITW
-#else
-  #define TVN_SELCHANGING                         TVN_SELCHANGINGA
-  #define TVN_SELCHANGED                          TVN_SELCHANGEDA
-  #define TVN_GETDISPINFO                         TVN_GETDISPINFOA
-  #define TVN_SETDISPINFO                         TVN_SETDISPINFOA
-  #define TVN_ITEMEXPANDING                       TVN_ITEMEXPANDINGA
-  #define TVN_ITEMEXPANDED                        TVN_ITEMEXPANDEDA
-  #define TVN_BEGINDRAG                           TVN_BEGINDRAGA
-  #define TVN_BEGINRDRAG                          TVN_BEGINRDRAGA
-  #define TVN_DELETEITEM                          TVN_DELETEITEMA
-  #define TVN_BEGINLABELEDIT                      TVN_BEGINLABELEDITA
-  #define TVN_ENDLABELEDIT                        TVN_ENDLABELEDITA
-#endif
+#define TVN_SELCHANGING                           TVN_SELCHANGINGW
+#define TVN_SELCHANGED                            TVN_SELCHANGEDW
+#define TVN_GETDISPINFO                           TVN_GETDISPINFOW
+#define TVN_SETDISPINFO                           TVN_SETDISPINFOW
+#define TVN_ITEMEXPANDING                         TVN_ITEMEXPANDINGW
+#define TVN_ITEMEXPANDED                          TVN_ITEMEXPANDEDW
+#define TVN_BEGINDRAG                             TVN_BEGINDRAGW
+#define TVN_BEGINRDRAG                            TVN_BEGINRDRAGW
+#define TVN_DELETEITEM                            TVN_DELETEITEMW
+#define TVN_BEGINLABELEDIT                        TVN_BEGINLABELEDITW
+#define TVN_ENDLABELEDIT                          TVN_ENDLABELEDITW
 
-#ifdef UNICODE
-  #define TVN_GETINFOTIP                          TVN_GETINFOTIPW
-  #define NMTVGETINFOTIP                          NMTVGETINFOTIPW
-  #define LPNMTVGETINFOTIP                        LPNMTVGETINFOTIPW
-#else
-  #define TVN_GETINFOTIP                          TVN_GETINFOTIPA
-  #define NMTVGETINFOTIP                          NMTVGETINFOTIPA
-  #define LPNMTVGETINFOTIP                        LPNMTVGETINFOTIPA
-#endif
+#define TVN_GETINFOTIP                            TVN_GETINFOTIPW
+#define NMTVGETINFOTIP                            NMTVGETINFOTIPW
+#define LPNMTVGETINFOTIP                          LPNMTVGETINFOTIPW
 
 #define TVCDRF_NOIMAGES                           65536
 
@@ -2113,7 +2019,6 @@
 #define TTM_SETTITLEA                             (WM_USER + 32)  // wParam = TTI_*, lParam = char* szTitle
 #define TTM_SETTITLEW                             (WM_USER + 33)  // wParam = TTI_*, lParam = wchar* szTitle
 
-#ifdef UNICODE
 #define TTM_ADDTOOL                               TTM_ADDTOOLW
 #define TTM_DELTOOL                               TTM_DELTOOLW
 #define TTM_NEWTOOLRECT                           TTM_NEWTOOLRECTW
@@ -2125,19 +2030,6 @@
 #define TTM_ENUMTOOLS                             TTM_ENUMTOOLSW
 #define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLW
 #define TTM_SETTITLE                              TTM_SETTITLEW
-#else
-#define TTM_ADDTOOL                               TTM_ADDTOOLA
-#define TTM_DELTOOL                               TTM_DELTOOLA
-#define TTM_NEWTOOLRECT                           TTM_NEWTOOLRECTA
-#define TTM_GETTOOLINFO                           TTM_GETTOOLINFOA
-#define TTM_SETTOOLINFO                           TTM_SETTOOLINFOA
-#define TTM_HITTEST                               TTM_HITTESTA
-#define TTM_GETTEXT                               TTM_GETTEXTA
-#define TTM_UPDATETIPTEXT                         TTM_UPDATETIPTEXTA
-#define TTM_ENUMTOOLS                             TTM_ENUMTOOLSA
-#define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLA
-#define TTM_SETTITLE                              TTM_SETTITLEA
-#endif
 
 /*----------------------------------------------------------------------*/
 

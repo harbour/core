@@ -8,6 +8,8 @@ RES_EXT := .res
 BIN_EXT := .exe
 DYN_EXT := .dll
 
+HB_CFLAGS += -DUNICODE
+
 HB_GT_LIBS += gtwvt gtgui gtwin
 
 # kernel32: needed by some compilers (pocc/watcom)

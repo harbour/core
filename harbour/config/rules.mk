@@ -14,11 +14,6 @@ else
    endif
 endif
 
-# Handle it here, so that it can be disabled for individual libs
-ifeq ($(HB_PLATFORM),win)
-   HB_CFLAGS += -DUNICODE
-endif
-
 ifeq ($(HB_DYN_COPT),)
    OBJ_DYN_POSTFIX :=
 else
