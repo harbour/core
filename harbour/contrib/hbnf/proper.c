@@ -36,69 +36,69 @@
 
 static char _ftToLower( char c )
 {
-  return c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c;
+   return c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c;
 }
 
 static char _ftToUpper( char c )
 {
-  return c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c;
+   return c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c;
 }
 
 static HB_BOOL _ftIsUpper( char c )
 {
-  return c >= 'A' && c <= 'Z';
+   return c >= 'A' && c <= 'Z';
 }
 
 static HB_BOOL _ftIsLower( char c )
 {
-  return c >= 'a' && c <= 'z';
+   return c >= 'a' && c <= 'z';
 }
 
 static HB_BOOL _ftIsAlpha( char c )
 {
-  return _ftIsUpper(c) || _ftIsLower(c);
+   return _ftIsUpper( c ) || _ftIsLower( c );
 }
 
 HB_FUNC( FT_PROPER )
 {
-  HB_ISIZ iLen = hb_parclen(1);
-  const char *cStr;
-  char *cDst = NULL;
-  HB_ISIZ i; /*, iPos = 0; */
-  HB_BOOL fCap = HB_TRUE;
+   HB_ISIZ iLen = hb_parclen(1);
+   const char *cStr;
+   char *cDst = NULL;
+   HB_ISIZ i; /*, iPos = 0; */
+   HB_BOOL fCap = HB_TRUE;
 
-  hb_storc( NULL, 1 );
-  cStr = hb_parc(1);
+   hb_storc( NULL, 1 );
+   cStr = hb_parc(1);
 
-  for( i = 0; i < iLen; i++ ) {
-     if( _ftIsAlpha( cStr[i] ) )  {
-        if( !cDst ) {
-            cDst = (char *) hb_xgrab(iLen + 1);
-            memcpy(cDst, cStr, iLen + 1);
-        }
-        if( fCap )
-           cDst[i] = _ftToUpper( cDst[i] );
-        else
-           cDst[i] = _ftToLower( cDst[i] );
-        }
-     fCap = ( cStr[i] == ' ' || cStr[i] == '-' || cStr[i] == 0x27 );
-  }
+   for( i = 0; i < iLen; i++ ) {
+      if( _ftIsAlpha( cStr[i] ) )  {
+         if( !cDst ) {
+             cDst = (char *) hb_xgrab(iLen + 1);
+             memcpy(cDst, cStr, iLen + 1);
+         }
+         if( fCap )
+            cDst[i] = _ftToUpper( cDst[i] );
+         else
+            cDst[i] = _ftToLower( cDst[i] );
+         }
+      fCap = ( cStr[i] == ' ' || cStr[i] == '-' || cStr[i] == 0x27 );
+   }
 
-  /* Find "Mc" */
-  if( cDst ) {
-     for( i = 0; i < iLen - 2; i++ )
-        if( cStr[i] == 'M' && cStr[i+1] == 'c' ) {
-           cDst[i+2] = _ftToUpper( cDst[i+2] );
-        }
-  }
-  /* // If "Mc" was found, Cap next letter if Alpha
-  if( iPos > 1 )
-     if( iPos < iLen )
-        if( ! _ftIsUpper( cStr[iPos] ) )
-           cStr[iPos] = _ftToUpper( cStr[iPos] );
-  */
-  if( cDst )
-     hb_retclen_buffer( cDst, iLen );
-  else
-     hb_retclen( cStr, iLen );
+   /* Find "Mc" */
+   if( cDst ) {
+      for( i = 0; i < iLen - 2; i++ )
+         if( cStr[i] == 'M' && cStr[i+1] == 'c' ) {
+            cDst[i+2] = _ftToUpper( cDst[i+2] );
+         }
+   }
+   /* // If "Mc" was found, Cap next letter if Alpha
+   if( iPos > 1 )
+      if( iPos < iLen )
+         if( ! _ftIsUpper( cStr[iPos] ) )
+            cStr[iPos] = _ftToUpper( cStr[iPos] );
+   */
+   if( cDst )
+      hb_retclen_buffer( cDst, iLen );
+   else
+      hb_retclen( cStr, iLen );
 }

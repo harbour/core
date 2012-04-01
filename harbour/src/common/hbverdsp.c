@@ -158,9 +158,6 @@ void hb_verBuildInfo( void )
 #if defined( HB_CLP_STRICT )
    hb_conOutErr( "(Clipper 5.x strict) ", 0 );
 #endif
-#if defined( HB_OS_WIN ) && ! defined( UNICODE )
-   hb_conOutErr( "(WINANSI) ", 0 );
-#endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "---------------------------", 0 );

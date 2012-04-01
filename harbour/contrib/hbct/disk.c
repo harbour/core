@@ -71,10 +71,10 @@
 #include "hbwinuni.h"
 
 #if defined( HB_OS_DOS )
-#   include <dos.h>
+#  include <dos.h>
 #endif
 #if defined( HB_OS_WIN )
-   #include <windows.h>
+#  include <windows.h>
 #endif
 
 HB_FUNC( DIRMAKE )

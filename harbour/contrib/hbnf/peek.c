@@ -35,7 +35,7 @@
 #define FP_SEG( fp ) ( *( ( unsigned int * ) &( fp ) + 1 ) )
 #define FP_OFF( fp ) ( *( ( unsigned int * ) &( fp ) ) )
 
-HB_FUNC(FT_PEEK)
+HB_FUNC( FT_PEEK )
 {
    auto unsigned int ProtMode = cpmiIsProtected();
    auto unsigned char * bytePtr;

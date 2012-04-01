@@ -21,7 +21,7 @@
 #include "hbdefs.h"
 #include "hbapi.h"
 
-HB_FUNC(FT_Idle)
+HB_FUNC( FT_IDLE )
 {
    hb_idleState();
 }

@@ -11965,6 +11965,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
    AAdd( aDst, "# Automatically converted by hbmk2 from xbuild project:" )
    AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
+   AAdd( aDst, "-inc" )
 
    IF ".lib" $ cSrcName
       AAdd( aDst, "-hblib" )
@@ -12095,6 +12096,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
    AAdd( aDst, "# Automatically converted by hbmk2 from xMate project:" )
    AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
+   AAdd( aDst, "-inc" )
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
