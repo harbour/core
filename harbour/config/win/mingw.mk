@@ -12,6 +12,23 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+3RDLIBS_DYN := $(3RDLIBS)
+
+ifneq ($(HB_COMPILER),mingw64)
+
+   # Since unicows support in harbour-*.dll effectively
+   # doubles build time for core, allow it to be disabled.
+   ifeq ($(__HB_HARBOUR_DLL_UNICOWS),no)
+      3RDLIBS_DYN := $(filter-out $(3RDLIBS_DYN),unicows)
+   endif
+
+   ifneq ($(findstring unicows,$(3RDLIBS_DYN)),)
+      # Required to be able to link harbour-*.dll against unicows lib
+      # without it 'Cannot export <*>: symbol not found' errors occur.
+      HB_DYN_COPT := -DHB_DYNLIB
+   endif
+endif
+
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
@@ -119,7 +136,7 @@ AR_RULE = $(create_library)
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS_DYN) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object

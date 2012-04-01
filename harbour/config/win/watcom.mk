@@ -74,6 +74,7 @@ DFLAGS += OP quiet SYS nt_dll
 DY_OUT :=
 DLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib))
 DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+DLIBS += $(foreach lib,$(3RDLIBS),$(3RDLIB_DIR)/$(lib))
 DLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 DLIBS := $(strip $(DLIBS))
 

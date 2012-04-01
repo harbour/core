@@ -107,7 +107,7 @@ DY := ilink32.exe
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
-DLIBS := $(HB_USER_LIBS) $(LIBS) $(SYSLIBS) cw32mt import32
+DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object
