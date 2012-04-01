@@ -91,7 +91,7 @@ LD_OUT := -out:
 
 SYSLIBS += corelibc
 
-LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-libpath:$(dir))
+LIBPATHS := $(foreach dir,$(LIB_DIR),-libpath:$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += -nologo -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib

@@ -54,7 +54,7 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
+LIBPATHS := $(foreach dir,$(LIB_DIR),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 LDFLAGS += $(LIBPATHS)

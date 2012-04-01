@@ -62,11 +62,11 @@ RC := brcc32.exe
 RC_OUT := -fo
 
 LD := ilink32.exe
-LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),$(subst /,$(BACKSLASH),-L"$(dir)"))
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),$(subst /,$(BACKSLASH),-L"$(dir)"))
 LDFLAGS += $(LIBPATHS) -Gn -Tpe
 LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
 
-LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(SYSLIBS))
+LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS))
 
 AR := tlib.exe
 ARFLAGS += /P128
@@ -107,7 +107,7 @@ DY := ilink32.exe
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
-DLIBS := $(HB_USER_LIBS) $(LIBS) $(SYSLIBS) cw32mt import32
+DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object

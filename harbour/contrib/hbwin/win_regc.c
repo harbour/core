@@ -226,7 +226,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
       ++nValueLen;
 
       #if defined( UNICODE )
-          nValueLen *= 2;
+         nValueLen *= 2;
       #endif
 
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),

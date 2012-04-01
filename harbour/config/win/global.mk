@@ -21,8 +21,8 @@ HB_GT_LIBS += gtwvt gtgui gtwin
 
 # unicows lib must come after user libs and before Windows system libs
 ifneq ($(wildcard $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)),)
-   SYSLIBPATHS += $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)
-   SYSLIBS += unicows
+   3RDLIB_DIR := $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)
+   3RDLIBS := unicows
 endif
 
 SYSLIBS += kernel32 user32 ws2_32 advapi32 gdi32

@@ -89,8 +89,8 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
-LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),-L$(dir))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),-l$(lib))
 
 # Add the standard C entry
 ifneq ($(HB_LINKING_RTL),)
@@ -119,7 +119,7 @@ AR_RULE = $(create_library)
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object
