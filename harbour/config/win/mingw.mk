@@ -119,7 +119,7 @@ AR_RULE = $(create_library)
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object

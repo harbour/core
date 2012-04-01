@@ -53,7 +53,7 @@ AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^
 DY := $(LD)
 DFLAGS += -nologo -dll $(LIBPATHS)
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object
