@@ -1752,6 +1752,18 @@ HB_FUNC( ADSDDREMOVETABLE )
 #endif
 }
 
+HB_FUNC( ADSDDADDINDEXFILE )
+{
+#if ADS_LIB_VERSION >= 600
+   hb_retl( AdsDDAddIndexFile( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
+                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
+                               ( UNSIGNED8 * ) hb_parcx( 2 ) /* pIndexName */,
+                               ( UNSIGNED8 * ) hb_parcx( 3 ) /* pucComment  */ ) == AE_SUCCESS );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
 HB_FUNC( ADSDDREMOVEINDEXFILE )
 {
 #if ADS_LIB_VERSION >= 600

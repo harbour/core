@@ -92,7 +92,7 @@ PROCEDURE Main( ... )
       ELSE
          cInitDir := iif( ( i := RAt( "\", cFileName ) ) == 0, ;
             iif( ( i := RAt( "/", cFileName ) ) == 0, ;
-            "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
+            "." + hb_ps(), Left( cFileName, i ) ), ;
             Left( cFileName, i ) )
          cFileName := iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
          DirEval( cInitDir, cFileName, lRecursive, {| name | Reformat( oRef, name ) } )
@@ -168,9 +168,8 @@ STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
    LOCAL i, nLen, aFiles
 
-   IF !( Right( cInitDir, 1 ) == Set( _SET_DIRSEPARATOR ) )
-      cInitDir += Set( _SET_DIRSEPARATOR )
-   ENDIF
+   cInitDir := hb_DirSepAdd( cInitDir )
+
    cMask := iif( cMask == NIL, hb_osFileMask(), Upper( cMask ) )
 
    aFiles := Directory( cInitDir + hb_osFileMask(), "HSD" )
