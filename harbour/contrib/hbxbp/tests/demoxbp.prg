@@ -327,14 +327,13 @@ STATIC FUNCTION GuiStdDialog( cTitle )
 STATIC FUNCTION Build_MenuBar( oDlg )
    LOCAL oMenuBar, oSubMenu
 
-   //oMenuBar := XbpMenuBar():new( oDlg ):create()
    oMenuBar := SetAppWindow():MenuBar()
 
    /* Define submenu in procedural style.
     * The numeric index of the selected menu item
     * is passed to the Callback code block -> mp1
     */
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar ):create( , , .t. )
    //
    oSubMenu:title := "~Procedural"
    oSubMenu:addItem( { "Play Charge ~1",   } )
@@ -348,7 +347,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    /* Define submenu in the functional style:
     * A menu item executes a code block that calls a function
     */
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar ):create( , , .t. )
    oSubMenu:title := "~Functional"
    oSubMenu:addItem( { "Play Opening ~1"+chr(K_TAB)+"Ctrl+U", {|| MyFunctionXbp( 1 ) } } )
    oSubMenu:addItem( { "Play Closing ~2"                    , {|| MyFunctionXbp( 2 ) } } )
@@ -377,7 +376,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu := XbpMenu():new( oMenuBar ):create( , , .t. )
    oSubMenu:title := "~Miscellaneous"
    oSubMenu:addItem( { "Convert Images - XbpBitmap()", {|| Build_Bitmap( oDlg ) } } )
    oSubMenu:addItem( { "ConfirmBox()"                , {|| Build_ConfirmBox( oDlg ) } } )
