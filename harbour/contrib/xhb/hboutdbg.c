@@ -64,6 +64,7 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
 #endif
 
 #if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
@@ -221,11 +222,9 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 #elif defined( HB_OS_WIN )
 
    {
-      LPTSTR lpMsg = HB_TCHAR_CONVTO( szMsg );
+      LPTSTR lpMsg = HB_CHARDUPN( szMsg, nMsgLen );
       OutputDebugString( lpMsg );
-      HB_TCHAR_FREE( lpMsg );
-
-      HB_SYMBOL_UNUSED( nMsgLen );
+      hb_xfree( lpMsg );
    }
 
 #else
