@@ -35,6 +35,7 @@ C_SOURCES := \
    msghu852.c \
    msghucwi.c \
    msghuiso.c \
+   msghuutf.c \
    msghuwin.c \
    msgid.c \
    msgis850.c \
