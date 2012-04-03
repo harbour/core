@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- Copyright c 1999-2012 (see application banner) -->
+<!-- Copyright © 1999-2012 (see application banner) -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity version="3.1.0.0"
      processorArchitecture="*"
