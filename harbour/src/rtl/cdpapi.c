@@ -1609,6 +1609,28 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, int iEndian,
    return ulD;
 }
 
+HB_WCHAR * hb_cdpnStrDupU16( PHB_CODEPAGE cdp, int iEndian,
+                             const char * pSrc, HB_SIZE nSrc,
+                             HB_SIZE * pnDst )
+{
+   HB_SIZE nLen = hb_cdpStrAsU16Len( cdp, pSrc, nSrc, 0 );
+   HB_WCHAR * pDst = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( HB_WCHAR ) );
+   hb_cdpStrToU16( cdp, iEndian, pSrc, nSrc, pDst, nLen + 1 );
+   if( pnDst )
+      * pnDst = nLen;
+   return pDst;
+}
+
+HB_WCHAR * hb_cdpStrDupU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc )
+{
+   return hb_cdpnStrDupU16( cdp, iEndian, pSrc, strlen( pSrc ), NULL );
+}
+
+HB_WCHAR * hb_cdpStrDupnU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc, HB_SIZE nLen )
+{
+   return hb_cdpnStrDupU16( cdp, iEndian, pSrc, hb_strnlen( pSrc, nLen ), NULL );
+}
+
 HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp,
                            const HB_WCHAR * pSrc, HB_SIZE nSrc,
                            HB_SIZE nMax )
@@ -2004,6 +2026,12 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
 char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    HB_SIZE nLen = strlen( pszSrc );
+   return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
+}
+
+char * hb_cdpDupn( const char * pszSrc, HB_SIZE nLen, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   nLen = hb_strnlen( pszSrc, nLen );
    return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
 }
 

@@ -404,6 +404,7 @@ extern HB_EXPORT int          hb_cdpicmp( const char * szFirst, HB_SIZE nLenFirs
 extern HB_EXPORT const HB_UCHAR * hb_cdpGetSortTab( PHB_CODEPAGE cdp );
 
 extern HB_EXPORT char *       hb_cdpDup( const char *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT char *       hb_cdpDupn( const char *, HB_SIZE, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT char *       hb_cdpnDup( const char *, HB_SIZE *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT const char * hb_cdpnDup2( const char *, HB_SIZE, char *, HB_SIZE *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT const char * hb_cdpnDup3( const char *, HB_SIZE, char *, HB_SIZE *, char **, HB_SIZE *, PHB_CODEPAGE, PHB_CODEPAGE );
@@ -440,6 +441,9 @@ extern HB_EXPORT HB_SIZE      hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, const HB_WCHA
 extern HB_EXPORT HB_SIZE      hb_cdpU16ToStr( PHB_CODEPAGE cdp, int iEndian, const HB_WCHAR * pSrc, HB_SIZE nSrc, char * pDst, HB_SIZE nDst );
 extern HB_EXPORT HB_SIZE      hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax );
 extern HB_EXPORT HB_SIZE      hb_cdpStrToU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc, HB_SIZE nSrc, HB_WCHAR * pDst, HB_SIZE nDst );
+extern HB_EXPORT HB_WCHAR *   hb_cdpStrDupU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc );
+extern HB_EXPORT HB_WCHAR *   hb_cdpStrDupnU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc, HB_SIZE nSrc );
+extern HB_EXPORT HB_WCHAR *   hb_cdpnStrDupU16( PHB_CODEPAGE cdp, int iEndian, const char * pSrc, HB_SIZE nSrc, HB_SIZE * pnDst );
 
 extern HB_EXPORT int          hb_cdpUTF8CharSize( HB_WCHAR wc );
 extern HB_EXPORT int          hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc );

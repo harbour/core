@@ -100,12 +100,16 @@
 static char ** hb_buildArgs( const char *pszFilename )
 {
    const char * src;
-   char ** argv, * dst, cQuote = 0;
+   char ** argv, * dst, cQuote = 0, * pszFree = NULL;
    int argc = 0;
 
    while( HB_ISSPACE( *pszFilename ) )
       ++pszFilename;
-   src = pszFilename;
+
+   pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
+   dst = pszFree ? pszFree : hb_strdup( pszFilename );
+
+   src = dst;
    while( *src )
    {
 #if defined( HB_OS_UNIX )
@@ -136,14 +140,14 @@ static char ** hb_buildArgs( const char *pszFilename )
       }
       ++src;
    }
-   dst = ( char * ) hb_xgrab( strlen( pszFilename ) + 1 );
+
    argv = ( char ** ) hb_xgrab( ( argc + 2 ) * sizeof( char * ) );
    argv[ 0 ] = dst;
    argv[ argc + 1 ] = NULL;
    argc = 0;
 
    cQuote = 0;
-   src = pszFilename;
+   src = dst;
    while( *src )
    {
 #if defined( HB_OS_UNIX )
@@ -193,9 +197,8 @@ static void hb_freeArgs( char ** argv )
    hb_xfree( argv );
 }
 
-#endif
+#elif defined( HB_OS_WIN_CE )
 
-#if defined( HB_OS_WIN_CE )
 static void hb_getCommand( const char *pszFilename,
                            LPTSTR * lpAppName, LPTSTR * lpParams )
 {
@@ -228,13 +231,8 @@ static void hb_getCommand( const char *pszFilename,
       ++src;
    }
 
-#if defined( UNICODE )
-   *lpParams = params ? hb_mbtowc( params ) : NULL;
-   *lpAppName = hb_mbntowc( pszFilename, ( HB_SIZE ) ( src - pszFilename ) );
-#else
-   *lpParams = params ? hb_strdup( params ) : NULL;
-   *lpAppName = hb_strndup( pszFilename, ( HB_SIZE ) ( src - pszFilename ) );
-#endif
+   *lpParams = params ? HB_CHARDUP( params ) : NULL;
+   *lpAppName = HB_CHARDUPN( pszFilename, src - pszFilename );
 }
 #endif
 
@@ -403,12 +401,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
               hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
    HB_FHANDLE hResult = FS_ERROR;
    HB_BOOL fError = HB_FALSE;
-   char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
-
-   pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
-
 
    if( phStdin != NULL )
       fError = !hb_fsPipeCreate( hPipeIn );
@@ -432,11 +426,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       PROCESS_INFORMATION pi;
       STARTUPINFO si;
       DWORD dwFlags = 0;
-#  if defined( UNICODE )
-      LPWSTR lpCommand = hb_mbtowc( pszFilename );
-#  else
-      char * lpCommand = hb_strdup( pszFilename );
-#  endif
+      LPWSTR lpCommand = HB_CHARDUP( pszFilename );
 
       memset( &pi, 0, sizeof( pi ) );
       memset( &si, 0, sizeof( si ) );
@@ -576,25 +566,15 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 
          /* execute command */
          {
-#  if 0
-            char * argv[4];
-
-            argv[0] = ( char * ) "sh";
-            argv[1] = ( char * ) "-c";
-            argv[2] = ( char * ) pszFilename;
-            argv[3] = ( char * ) 0;
-            execv( "/bin/sh", argv );
-#  else
             char ** argv;
 
             argv = hb_buildArgs( pszFilename );
-#     if defined( __WATCOMC__ )
+#  if defined( __WATCOMC__ )
             execvp( argv[ 0 ], ( const char ** ) argv );
-#     else
+#  else
             execvp( argv[ 0 ], argv );
-#     endif
-            hb_freeArgs( argv );
 #  endif
+            hb_freeArgs( argv );
             exit(1);
          }
       }
@@ -704,9 +684,6 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       if( hPipeErr[ 1 ] != FS_ERROR )
          hb_fsClose( hPipeErr[ 1 ] );
    }
-
-   if( pszFree )
-      hb_xfree( pszFree );
 
    return hResult;
 }
@@ -894,12 +871,9 @@ int hb_fsProcessRun( const char * pszFilename,
    HB_FHANDLE hStdin, hStdout, hStderr, *phStdin, *phStdout, *phStderr;
    char * pOutBuf, *pErrBuf;
    HB_SIZE nOutSize, nErrSize, nOutBuf, nErrBuf;
-   char * pszFree = NULL;
    int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
-
-   pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
 
    nOutBuf = nErrBuf = nOutSize = nErrSize = 0;
    pOutBuf = pErrBuf = NULL;
@@ -1239,9 +1213,6 @@ int hb_fsProcessRun( const char * pszFilename,
       *pStdErrPtr = pErrBuf;
       *pulStdErr = nErrBuf;
    }
-
-   if( pszFree )
-      hb_xfree( pszFree );
 
    return iResult;
 }

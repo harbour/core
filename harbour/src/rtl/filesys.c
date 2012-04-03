@@ -3887,7 +3887,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 */
 
    if( !hb_stackId() )
-      return hb_mbtowc( szFileName );
+      return hb_mbtowc( szFileName ); /* No HVM stack */
 
    cdp = hb_vmCDP();
    fTrim = hb_setGetTrimFileName();
@@ -3983,10 +3983,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
          hb_xfree( pszExt );
    }
 
-   nLen = hb_cdpStrAsU16Len( cdp, szFileName, strlen( szFileName ), 0 );
-   lpwFileName = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( HB_WCHAR ) );
-   hb_cdpStrToU16( cdp, HB_CDP_ENDIAN_NATIVE, szFileName, strlen( szFileName ),
-                   lpwFileName, nLen + 1 );
+   lpwFileName = hb_cdpStrDupU16( cdp, HB_CDP_ENDIAN_NATIVE, szFileName );
    if( pszBuffer )
       hb_xfree( pszBuffer );
 
