@@ -38,4 +38,6 @@ fontkr.c
 image.c
 pdfa.c
 
+misc.prg
+
 3rd/libhpdf/libhpdf.hbc{HBMK_HAS_LIBHARU_LOCAL}

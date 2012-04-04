@@ -1699,3 +1699,10 @@ HB_FUNC( HPDF_USEUTFENCODINGS )
    hb_retnl( -1 );
 #endif
 }
+
+HB_FUNC( HB_HPDF_VERSION )
+{
+   hb_storni( HPDF_MAJOR_VERSION, 1 );
+   hb_storni( HPDF_MINOR_VERSION, 2 );
+   hb_storni( HPDF_BUGFIX_VERSION, 3 );
+}
