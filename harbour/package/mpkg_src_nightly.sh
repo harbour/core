@@ -42,7 +42,7 @@
 #    http://sourceforge.net/apps/trac/sourceforge/wiki/SSH%20keys
 #
 
-echo Starting Harbour Project nightly source package creation...
+echo Starting Harbour nightly source package creation...
 
 rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz harbour-nightly.tar.xz
 
@@ -103,4 +103,4 @@ fi
 
 rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz harbour-nightly.tar.xz
 
-echo Ended Harbour Project nightly source package creation.
+echo Ended Harbour nightly source package creation.

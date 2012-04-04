@@ -29,7 +29,7 @@
 {win&allmsvc&HB_COMP_VER>'1400'}-dflag=-dynamicbase
 
 {allwin}-winuni
-{allwin&_HB_UNICOWS_AVAILABLE}-lunicows
+{allwin&HB_LIB3RD}-lunicows
 
 {HB_BUILD_DEBUG}-prgflag=-l-
 {HB_BUILD_DEBUG}-debug

@@ -3,7 +3,7 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity version="3.1.0.0"
      processorArchitecture="*"
-     name="Harbour Project"
+     name="Harbour"
      type="win32"/>
   <!-- Identify the application security requirements. -->
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">

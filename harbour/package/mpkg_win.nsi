@@ -6,7 +6,7 @@
 ; Copyright 2009 Viktor Szakats (harbour syenar.net)
 ; See COPYING for licensing terms.
 ;
-; Harbour Project Nullsoft installer script (for Windows/DOS)
+; Harbour Nullsoft installer script (for Windows/DOS)
 ; [ Do not try to use this script directly. It won't work. ]
 ;
 ; Please read INSTALL for further information.
@@ -30,7 +30,7 @@ CRCCheck on
 RequestExecutionLevel user
 
 ; The name of the installer
-Name "Harbour Project"
+Name "Harbour"
 
 ; The file to write
 OutFile "$%HB_TOP%\$%HB_PKGNAME%.exe"
@@ -97,14 +97,14 @@ Section "Main components" hb_main
   File "$%HB_INSTALL_PREFIX%\doc\*.*"
 
   ; Write the installation path into the registry
-; WriteRegStr HKLM "SOFTWARE\Harbour Project" "InstallDir" "$INSTDIR"
-  WriteRegStr HKCU "Software\Harbour Project" "InstallDir" "$INSTDIR"
+; WriteRegStr HKLM "SOFTWARE\Harbour" "InstallDir" "$INSTDIR"
+  WriteRegStr HKCU "Software\Harbour" "InstallDir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
-; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project" "DisplayName" "Harbour Project"
-; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project" "UninstallString" '"$INSTDIR\uninstall.exe"'
-; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project" "NoModify" 1
-; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project" "NoRepair" 1
+; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "DisplayName" "Harbour"
+; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "UninstallString" '"$INSTDIR\uninstall.exe"'
+; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "NoModify" 1
+; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
 SectionEnd
@@ -125,18 +125,18 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   ; this will be the working dir for shortcuts
   SetOutPath $INSTDIR
 
-  CreateShortCut "$DESKTOP\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateDirectory "$SMPROGRAMS\Harbour Project"
-  CreateShortCut  "$SMPROGRAMS\Harbour Project\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
-  CreateDirectory "$SMPROGRAMS\Harbour Project\Links"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
+  CreateShortCut "$DESKTOP\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
+  CreateDirectory "$SMPROGRAMS\Harbour"
+  CreateShortCut  "$SMPROGRAMS\Harbour\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
+  CreateDirectory "$SMPROGRAMS\Harbour\Links"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
 
 SectionEnd
 
@@ -164,15 +164,15 @@ Section "Uninstall"
   RMDir /r $INSTDIR
 
   ; Remove directories used
-  Delete "$SMPROGRAMS\Harbour Project\Links\*.*"
-  RMDir  "$SMPROGRAMS\Harbour Project\Links"
-  Delete "$SMPROGRAMS\Harbour Project\*.*"
-  RMDir  "$SMPROGRAMS\Harbour Project"
+  Delete "$SMPROGRAMS\Harbour\Links\*.*"
+  RMDir  "$SMPROGRAMS\Harbour\Links"
+  Delete "$SMPROGRAMS\Harbour\*.*"
+  RMDir  "$SMPROGRAMS\Harbour"
   RMDir  "$INSTDIR"
 
-  Delete "$DESKTOP\Harbour Project.lnk"
+  Delete "$DESKTOP\Harbour.lnk"
 
-; DeleteRegKey HKLM "SOFTWARE\Harbour Project"
-  DeleteRegKey HKCU "Software\Harbour Project"
+; DeleteRegKey HKLM "SOFTWARE\Harbour"
+  DeleteRegKey HKCU "Software\Harbour"
 
 SectionEnd

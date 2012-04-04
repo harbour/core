@@ -347,7 +347,6 @@ PROCEDURE GNUMake( aParams, hProjectList )
    hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
    hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
    hb_setenv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
-   hb_setenv( "_HB_UNICOWS_AVAILABLE", iif( hb_DirExists( s_cRoot + "lib" + hb_ps() + "3rd" + hb_ps() + GetEnv( "HB_PLATFORM" ) + hb_ps() + GetEnv( "HB_COMPILER" ) ), "yes", "" ) )
 
    /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
