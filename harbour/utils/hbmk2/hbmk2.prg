@@ -787,7 +787,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL l_cHB_INSTALL_BIN
    LOCAL l_cHB_INSTALL_LIB
-   LOCAL l_cHB_INSTALL_LI3
+   LOCAL l_cHB_INSTALL_LI3 := ""
    LOCAL l_cHB_INSTALL_DYN
    LOCAL l_cHB_INSTALL_INC
    LOCAL l_cHB_INSTALL_ADD
@@ -1957,11 +1957,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       keep above code parts easier to read. [vszakats] */
    hbmk[ _HBMK_cHB_INSTALL_BIN ] := l_cHB_INSTALL_BIN := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_BIN ) )
    hbmk[ _HBMK_cHB_INSTALL_LIB ] := l_cHB_INSTALL_LIB := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LIB ) )
+   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := l_cHB_INSTALL_LI3 := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LI3 ) )
    hbmk[ _HBMK_cHB_INSTALL_DYN ] := l_cHB_INSTALL_DYN := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_DYN ) )
    hbmk[ _HBMK_cHB_INSTALL_INC ] := l_cHB_INSTALL_INC := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_INC ) )
-   IF ! Empty( l_cHB_INSTALL_LI3 )
-      hbmk[ _HBMK_cHB_INSTALL_LI3 ] := l_cHB_INSTALL_LI3 := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LI3 ) )
-   ENDIF
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LIB )
