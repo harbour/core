@@ -4,7 +4,6 @@
 
 /*
 *
-*  testcgi.prg
 *  Harbour Test of a CGI/HTML-Generator class.
 *
 *  1999/05/30  First implementation.
@@ -26,10 +25,6 @@
 **/
 
 #include "cgi.ch"
-
-#ifndef __HARBOUR__
-   #include "hbclip.ch"
-#endif
 
 #define IF_BUFFER 65535
 

@@ -5,7 +5,6 @@
 
 /*
 *
-*  hello.hs
 *  Famous "Hello World"!
 *
 * Written by Felipe Coury <fcoury@flexsys-ci.com>

@@ -5,7 +5,6 @@
 
 /*
 *
-*  multiply.hs
 *  HarbourScript Test
 *
 * Written by Felipe Coury <fcoury@flexsys-ci.com>
