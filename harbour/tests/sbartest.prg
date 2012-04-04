@@ -8,7 +8,7 @@
  * Harbour Project source code
  * http://harbour-project.org/
  *
- *  Example donated to Harbour Project by Diego Pego, 
+ *  Example donated by Diego Pego,
  *  modified by Alejandro de Garate
  */
 
@@ -34,9 +34,9 @@
 
     CLS
     SETBLINK(.F.)
-    @ 00,00,24,79 BOX REPLIC( CHR(178), 9) COLOR "GR+/W*" 
+    @ 00,00,24,79 BOX REPLIC( CHR(178), 9) COLOR "GR+/W*"
     @ 04,28 SAY "            Directory            " COLOR "W+/B"
-    @ 05,28,15,60 BOX B_THIN + " " COLOR "W/W*" 
+    @ 05,28,15,60 BOX B_THIN + " " COLOR "W/W*"
 
     // get the current folder files to display on the aChoice menu
     tmpFileList := directory()
@@ -45,7 +45,7 @@
         AADD( aFileList, tmpFileList[ i ][ F_NAME ])
     NEXT
 
-    filesScroll := ScrollBar( 06, 14, 60, NIL, 1 ) 
+    filesScroll := ScrollBar( 06, 14, 60, NIL, 1 )
 
     filesScroll:total := LEN( aFileList )
 
@@ -53,12 +53,12 @@
     SET COLOR TO "N/W*, W+/B,,,W/N"
 
     filesScroll:display()
- 
+
     i := ACHOICE( 06, 29, 14, 59, aFileList, , "updateFilesScroll")
 
     @ 23,0 SAY IIF( i < 1,"", aFileList[ i ]) COLOR "N/W*"
-    SET COLOR TO 
-    @ 24,0 
+    SET COLOR TO
+    @ 24,0
  RETURN 0
 
 
@@ -108,5 +108,3 @@
     filesScroll:update()
 
  RETURN valRet
-
-

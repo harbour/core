@@ -2,17 +2,9 @@
  * $Id$
  */
 
-//      CGI.ch
-
 //+
-//      Harbour project
-//
-//
 //      99.05.31        initial posting.
-//
-//
 //-
-
 
 #define CGI_SERVER_SOFTWARE     01
 #define CGI_SERVER_NAME         02

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Video subsystem for OS/2 compilers
  *
- * Copyright 1999 - 2001 Harbour Project
+ * Copyright 1999-2001 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -84,8 +84,7 @@
  */
 
 /*
- *  This module is partially based on VIDMGR by Andrew Clarke and modified
- *  for the Harbour project
+ * This module is partially based on VIDMGR by Andrew Clarke and modified for Harbour.
  */
 
 /* NOTE: User programs should never call this layer directly! */

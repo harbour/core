@@ -94,7 +94,7 @@ General
   in next major version (Harbour 1.2). To test your code for
   compatibility, you can turn it off manually by #defining
   HB_LEGACY_OFF. (HB_USER_CFLAGS=-DHB_LEGACY_OFF)
-- New Harbour Project homepage, thanks for Vailton Renato.
+- New Harbour homepage, thanks to Vailton Renato.
   http://harbour-project.org/
 - GNU Make system now supports parallel builds.
   (needs GNU Make newer than 3.79.1)

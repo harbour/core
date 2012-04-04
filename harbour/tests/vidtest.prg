@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour project video test code
+ * Harbour video test code
  *
  * Program originally by Brian Dukes <bdukes@yellowthingy.co.uk>
  *

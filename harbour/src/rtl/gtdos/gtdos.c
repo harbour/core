@@ -83,8 +83,7 @@
  */
 
 /*
- *  This module is based on VIDMGR by Andrew Clarke and modified for
- *  the Harbour project
+ * This module is based on VIDMGR by Andrew Clarke and modified for Harbour.
  */
 
 /* NOTE: User programs should never call this layer directly! */

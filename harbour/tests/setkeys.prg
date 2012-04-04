@@ -49,7 +49,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
 
-   V 1.0  April White            Initial version, submitted to Harbour Project
+   V 1.0  April White            Initial version
    V 1.1  April White            Add a Help() function to test default F1
 */
 

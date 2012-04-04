@@ -1841,7 +1841,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
    CASE "buttonHbmk2_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Location of hbmk2", ;
-                                                       { { "Harbour Project Builder - hbmk2", "*" } }, ::oINI:cPathHbMk2 ) )
+                                                       { { "Harbour Make - hbmk2", "*" } }, ::oINI:cPathHbMk2 ) )
          ::oINI:cPathhbMk2 := cPath
          ::oUI:q_editPathHbMk2:setText( cPath )
       ENDIF

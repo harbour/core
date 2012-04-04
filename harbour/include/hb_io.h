@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * A platform indpendent include file to include unistd.h and/or io.h
  *
- * Copyright 2001 Harbour Project
+ * Copyright 2001 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

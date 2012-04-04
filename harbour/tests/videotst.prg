@@ -3,8 +3,8 @@
  */
 
 // Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
-//
-// Test SETMODE() for Harbour Project
+
+// Test SETMODE() for Harbour
 
 #define HB_NOT_SUPPORTED  "Video mode not supported on this system.."
 #define HB_VROW   1

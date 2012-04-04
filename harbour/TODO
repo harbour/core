@@ -4,19 +4,11 @@
 
 =======================================================================
 
-                  Harbour Project To-Do list
+                  Harbour TODO list
 
 =======================================================================
 Tasks for after v.1 release:
 ----------------------------
-
-Assign to: <nobody>
-Detail...: Add GTNET driver which will allow to run Harbour application
-           remotely. GTNET will be used on server side and on client
-           side any native GT driver.
-Status...: Open.
-
-***
 
 Assign to: <nobody>
 Detail...: UNICODE (UTF-8) support.
@@ -102,7 +94,7 @@ Status...: Open.
 
 =======================================================================
 
-                  Harbour Project To-Fix list
+                  Harbour TOFIX list
 
 =======================================================================
 

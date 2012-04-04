@@ -384,9 +384,9 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
       lFetch := .t.
    ELSE
       IF empty( cProjFileName )
-         cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Projects", "*.hbp" } , ;
-                                                                         { "xMate Projects"  , "*.xhp" } , ;
-                                                                         { "xBuild Projects" , "*.xbp" } } )
+         cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Make Projects", "*.hbp" } , ;
+                                                                         { "xMate Projects"       , "*.xhp" } , ;
+                                                                         { "xBuild Projects"      , "*.xbp" } } )
          cProjFileName := ::synchronizeAlienProject( cProjFileName )
          ::oDockPT:show()
       ENDIF

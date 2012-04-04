@@ -20,10 +20,10 @@ FUNCTION Main()
    LOCAL oHTML := THTML():New()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
-   oHTML:AddHead( "Harbour Project" )
+   oHTML:AddHead( "Harbour" )
    oHTML:AddPara( "<B>Harbour</B> is xBase at its best. Have a taste today!", "LEFT" )
    oHTML:AddPara( "<B>L i n k s</B>", "CENTER" )
-   oHTML:AddLink( "http://harbour-project.org", "Meet the harbour power!" )
+   oHTML:AddLink( "http://harbour-project.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
    // Uncomment the following if you don't have a Web Server to test
