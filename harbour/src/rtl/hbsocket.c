@@ -1569,6 +1569,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
    fd_set efds;
 #endif
    int iResult, iError;
+   socklen_t len;
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1598,7 +1599,12 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       hb_socketSetOsError( iError );
 #if defined( HB_OS_WIN )
       if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, pefds ) )
+      {
          iResult = -1;
+         if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( char * ) &iError, &len ) != 0 )
+            iError = HB_SOCK_GETERROR();
+         hb_socketSetOsError( iError );
+      }
       else
 #endif
       if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR( iError ) &&
@@ -1622,10 +1628,8 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #if !defined( HB_OS_WIN )
    if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) )
    {
-      int iError;
-      socklen_t len = sizeof( iError );
-
-      if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( void * ) &iError, &len ) != 0 )
+      len = sizeof( iError );
+      if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( char * ) &iError, &len ) != 0 )
       {
          iResult = -1;
          iError = HB_SOCK_GETERROR();
@@ -2180,7 +2184,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    HB_SOCKET newsd = HB_NO_SOCKET;
    HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
-   int ret;
+   int ret, err;
 
    hb_vmUnlock();
    ret = hb_socketSelectRD( sd, timeout );
@@ -2193,7 +2197,8 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
        */
       ret = timeout < 0 ? 0 : hb_socketSetBlockingIO( sd, HB_FALSE );
       newsd = accept( sd, &st.sa, &len );
-      hb_socketSetOsError( newsd != HB_NO_SOCKET ? 0 : HB_SOCK_GETERROR() );
+      err = newsd != HB_NO_SOCKET ? 0 : HB_SOCK_GETERROR();
+
       if( ret > 0 )
          hb_socketSetBlockingIO( sd, HB_TRUE );
       if( pSockAddr && puiLen )
@@ -2216,6 +2221,8 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
        */
       if( newsd != HB_NO_SOCKET )
          hb_socketSetBlockingIO( newsd, HB_TRUE );
+
+      hb_socketSetOsError( err );
    }
    else if( ret == 0 )
       hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
@@ -2225,7 +2232,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
 int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
-   int ret, blk, err;
+   int ret, blk, err, rawerr;
 
    hb_vmUnlock();
 
@@ -2250,8 +2257,20 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
          ret = -1;
       }
    }
+
    if( blk > 0 )
+   {
+      err = hb_socketGetOsError();
+      rawerr = err ? 0 : hb_socketGetError();
+
       hb_socketSetBlockingIO( sd, HB_TRUE );
+
+      if( err )
+         hb_socketSetOsError( err );
+      else
+         hb_socketSetRawError( rawerr );
+   }
+
    hb_vmLock();
    return ret;
 }
