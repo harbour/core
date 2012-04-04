@@ -382,8 +382,8 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_lDynVM            77
 
-#define _HBMK_lBLDFLGP          77
-#define _HBMK_lBLDFLGC          78
+#define _HBMK_lBLDFLGP          78
+#define _HBMK_lBLDFLGC          79
 #define _HBMK_lBLDFLGL          80
 
 #define _HBMK_cFIRST            81
