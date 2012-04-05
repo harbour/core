@@ -56,6 +56,8 @@
 #  define _LARGEFILE64_SOURCE 1
 #endif
 
+#define _HB_FFIND_INTERNAL_
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbvm.h"
@@ -892,60 +894,45 @@ void hb_fsFindClose( PHB_FFIND ffind )
       {
          PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-         hb_vmUnlock();
+         if( ffind->bFirst )
+         {
+            hb_vmUnlock();
 
 #if defined( HB_OS_DOS )
 
-         #if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-         {
-            HB_SYMBOL_UNUSED( info );
-         }
-         #else
-         {
-#if defined( __WATCOMC__ )
+#  if defined( __WATCOMC__ )
             _dos_findclose( &info->entry );
-#else
+#  elif !defined( __DJGPP__ ) && !defined( __BORLANDC__ )
             findclose( &info->entry );
-#endif
-         }
-         #endif
+#  endif
 
 #elif defined( HB_OS_OS2 )
 
-         {
             DosFindClose( info->hFindFile );
             if( info->entry )
                DosFreeMem( info->entry );
-         }
 
 #elif defined( HB_OS_WIN )
 
-         if( info->hFindFile != INVALID_HANDLE_VALUE )
-         {
-            FindClose( info->hFindFile );
-         }
+            if( info->hFindFile != INVALID_HANDLE_VALUE )
+               FindClose( info->hFindFile );
 
 #elif defined( HB_OS_UNIX )
 
-         if( info->dir )
-         {
-            closedir( info->dir );
-         }
+            if( info->dir )
+               closedir( info->dir );
 
 #else
-
-         {
-            /* Intentionally do nothing */
-            int iTODO; /* TODO: for given platform */
-
-            HB_SYMBOL_UNUSED( info );
-         }
-
+            {
+               /* Intentionally do nothing */
+               int iTODO; /* TODO: for given platform */
+            }
 #endif
 
-         hb_vmLock();
+            hb_vmLock();
+         }
 
-         hb_xfree( ffind->info );
+         hb_xfree( info );
       }
 
       hb_xfree( ffind );

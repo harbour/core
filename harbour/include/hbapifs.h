@@ -257,14 +257,14 @@ typedef struct
    HB_FATTR    attr;
    HB_FOFFSET  size;
 
+#if defined( _HB_FFIND_INTERNAL_ )
    /* Private */
-
    const char * pszFileMask;
    HB_FATTR     attrmask;
    HB_BOOL      bFirst;
 
    void * info; /* Pointer to the platform specific find info */
-
+#endif
 } HB_FFIND, * PHB_FFIND;
 
 /* File Find API functions */
