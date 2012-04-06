@@ -19,7 +19,7 @@
 #include "hpdfutil.h"
 #include "hpdfinfo.h"
 
-static const char  *HPDF_INFO_ATTR_NAMES[] = {
+static const char * const HPDF_INFO_ATTR_NAMES[] = {
     "CreationDate",
     "ModDate",
     "Author",

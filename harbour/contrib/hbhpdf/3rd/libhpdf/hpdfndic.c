@@ -20,7 +20,11 @@
 #include "hpdfcons.h"
 #include "hpdfndic.h"
 
-static const char *HPDF_NAMEDICT_KEYS[] = {
+#ifndef HPDF_UNUSED
+#define HPDF_UNUSED(a) ((void)(a))
+#endif
+
+static const char * const HPDF_NAMEDICT_KEYS[] = {
                                         "EmbeddedFiles"
                                         };
 
@@ -219,11 +223,15 @@ HPDF_EmbeddedFile_New  (HPDF_MMgr  mmgr,
     ret += HPDF_Dict_Add (ef, "EF", eff);
     ret += HPDF_Dict_Add (eff, "F", filestream);
 
+    if (ret != HPDF_OK)
+        return NULL;
+
     return ef;
 }
 
 HPDF_BOOL
 HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile)
 {
+    HPDF_UNUSED (emfile);
     return HPDF_TRUE;
 }

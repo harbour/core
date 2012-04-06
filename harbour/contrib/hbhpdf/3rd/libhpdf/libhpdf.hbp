@@ -36,6 +36,7 @@
 -cflag=-U__COREDLL__{mingwarm}
 
 _hbhbpdf.c
+hpdf3dme.c
 hpdfanno.c
 hpdfarra.c
 hpdfbina.c
@@ -52,7 +53,9 @@ hpdfencj.c
 hpdfenck.c
 hpdfencn.c
 hpdfenco.c
+hpdfencu.c
 hpdferro.c
+hpdfexda.c
 hpdfextg.c
 hpdffdf.c
 hpdffdf1.c
@@ -68,6 +71,7 @@ hpdffonc.c
 hpdffont.c
 hpdffott.c
 hpdfgsta.c
+hpdfimac.c
 hpdfimag.c
 hpdfimap.c
 hpdfinfo.c
@@ -91,11 +95,12 @@ hpdfutil.c
 hpdfxref.c
 
 # ORIGIN http://libharu.org/
-# VER    2.2.1
-# URL    http://libharu.org/files/libharu-2.2.1.tar.gz
+# VER    2.3.0RC2
+# URL    http://libharu.org/files/libhpdf-2.3.0RC2.tar.gz
 # DIFF   libhpdf.dif
 #
 # MAP    README
+# MAP    src/hpdf_3dmeasure.c           hpdf3dme.c
 # MAP    src/hpdf_annotation.c          hpdfanno.c
 # MAP    src/hpdf_array.c               hpdfarra.c
 # MAP    src/hpdf_binary.c              hpdfbina.c
@@ -110,9 +115,11 @@ hpdfxref.c
 # MAP    src/hpdf_encoder_cnt.c         hpdfencn.c
 # MAP    src/hpdf_encoder_jp.c          hpdfencj.c
 # MAP    src/hpdf_encoder_kr.c          hpdfenck.c
+# MAP    src/hpdf_encoder_utf.c         hpdfencu.c
 # MAP    src/hpdf_encrypt.c             hpdfecy.c
 # MAP    src/hpdf_encryptdict.c         hpdfecyd.c
 # MAP    src/hpdf_error.c               hpdferro.c
+# MAP    src/hpdf_exdata.c              hpdfexda.c
 # MAP    src/hpdf_ext_gstate.c          hpdfextg.c
 # MAP    src/hpdf_font.c                hpdffont.c
 # MAP    src/hpdf_font_cid.c            hpdffonc.c
@@ -129,6 +136,7 @@ hpdfxref.c
 # MAP    src/hpdf_fontdef_type1.c       hpdffdf1.c
 # MAP    src/hpdf_gstate.c              hpdfgsta.c
 # MAP    src/hpdf_image.c               hpdfimag.c
+# MAP    src/hpdf_image_ccitt.c         hpdfimac.c
 # MAP    src/hpdf_image_png.c           hpdfimap.c
 # MAP    src/hpdf_info.c                hpdfinfo.c
 # MAP    src/hpdf_list.c                hpdflist.c
@@ -149,7 +157,9 @@ hpdfxref.c
 # MAP    src/hpdf_u3d.c                 hpdfu3d.c
 # MAP    src/hpdf_utils.c               hpdfutil.c
 # MAP    src/hpdf_xref.c                hpdfxref.c
+# MAP    src/t4.h                       t4.h
 # MAP    include/hpdf.h                 hpdf.h
+# MAP    include/hpdf_3dmeasure.h       hpdf3dme.h
 # MAP    include/hpdf_annotation.h      hpdfanno.h
 # MAP    include/hpdf_catalog.h         hpdfcata.h
 # MAP    include/hpdf_conf.h            hpdfconf.h
@@ -160,6 +170,7 @@ hpdfxref.c
 # MAP    include/hpdf_encrypt.h         hpdfencr.h
 # MAP    include/hpdf_encryptdict.h     hpdfency.h
 # MAP    include/hpdf_error.h           hpdferro.h
+# MAP    include/hpdf_exdata.h          hpdfexda.h
 # MAP    include/hpdf_ext_gstate.h      hpdfextg.h
 # MAP    include/hpdf_font.h            hpdffont.h
 # MAP    include/hpdf_fontdef.h         hpdffond.h

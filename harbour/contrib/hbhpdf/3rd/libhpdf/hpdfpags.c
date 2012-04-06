@@ -20,6 +20,8 @@
 #include "hpdf.h"
 #include "hpdfanno.h"
 #include "hpdfdest.h"
+#include "hpdf3dme.h"
+#include "hpdfexda.h"
 #include "hpdfu3d.h"
 
 /*----------------------------------------------------------------------------*/
@@ -29,14 +31,14 @@ typedef struct _HPDF_PageSizeValue {
     HPDF_REAL   y;
 } HPDF_PageSizeValue;
 
-static HPDF_PageSizeValue HPDF_PREDEFINED_PAGE_SIZES[] = {
+static const HPDF_PageSizeValue HPDF_PREDEFINED_PAGE_SIZES[] = {
     {612, 792},     /* HPDF_PAGE_SIZE_LETTER */
     {612, 1008},    /* HPDF_PAGE_SIZE_LEGAL */
-    {841.89, 1199.551},    /* HPDF_PAGE_SIZE_A3 */
-    {595.276, 841.89},     /* HPDF_PAGE_SIZE_A4 */
-    {419.528, 595.276},     /* HPDF_PAGE_SIZE_A5 */
-    {708.661, 1000.63},     /* HPDF_PAGE_SIZE_B4 */
-    {498.898, 708.661},     /* HPDF_PAGE_SIZE_B5 */
+    {(HPDF_REAL)841.89, (HPDF_REAL)1199.551},    /* HPDF_PAGE_SIZE_A3 */
+    {(HPDF_REAL)595.276, (HPDF_REAL)841.89},     /* HPDF_PAGE_SIZE_A4 */
+    {(HPDF_REAL)419.528, (HPDF_REAL)595.276},     /* HPDF_PAGE_SIZE_A5 */
+    {(HPDF_REAL)708.661, (HPDF_REAL)1000.63},     /* HPDF_PAGE_SIZE_B4 */
+    {(HPDF_REAL)498.898, (HPDF_REAL)708.661},     /* HPDF_PAGE_SIZE_B5 */
     {522, 756},     /* HPDF_PAGE_SIZE_EXECUTIVE */
     {288, 432},     /* HPDF_PAGE_SIZE_US4x6 */
     {288, 576},     /* HPDF_PAGE_SIZE_US4x8 */
@@ -75,7 +77,7 @@ AddAnnotation  (HPDF_Page        page,
 static HPDF_UINT
 GetPageCount  (HPDF_Dict    pages);
 
-static const char *HPDF_INHERITABLE_ENTRIES[5] = {
+static const char * const HPDF_INHERITABLE_ENTRIES[5] = {
                         "Resources",
                         "MediaBox",
                         "CropBox",
@@ -163,11 +165,14 @@ HPDF_Page_InsertBefore  (HPDF_Page   page,
 
     HPDF_PTRACE((" HPDF_Page_InsertBefore\n"));
 
+    if (!target)
+        return HPDF_INVALID_PARAMETER;
+
     attr = (HPDF_PageAttr )target->attr;
     parent = attr->parent;
 
     if (!parent)
-        return HPDF_SetError (parent->error, HPDF_PAGE_CANNOT_SET_PARENT, 0);
+        return HPDF_PAGE_CANNOT_SET_PARENT;
 
     if (HPDF_Dict_GetItem (page, "Parent", HPDF_OCLASS_DICT))
         return HPDF_SetError (parent->error, HPDF_PAGE_CANNOT_SET_PARENT, 0);
@@ -341,7 +346,7 @@ HPDF_Page_New  (HPDF_MMgr   mmgr,
     /* add requiered elements */
     ret += HPDF_Dict_AddName (page, "Type", "Page");
     ret += HPDF_Dict_Add (page, "MediaBox", HPDF_Box_Array_New (page->mmgr,
-                HPDF_ToBox (0, 0, HPDF_DEF_PAGE_WIDTH, HPDF_DEF_PAGE_HEIGHT)));
+                HPDF_ToBox (0, 0, (HPDF_INT16)(HPDF_DEF_PAGE_WIDTH), (HPDF_INT16)(HPDF_DEF_PAGE_HEIGHT))));
     ret += HPDF_Dict_Add (page, "Contents", attr->contents);
 
     ret += AddResource (page);
@@ -458,14 +463,19 @@ AddResource  (HPDF_Page  page)
     if (!procset)
         return HPDF_Error_GetCode (page->error);
 
-    ret += HPDF_Dict_Add (resource, "ProcSet", procset);
+    if (HPDF_Dict_Add (resource, "ProcSet", procset) != HPDF_OK)
+        return HPDF_Error_GetCode (resource->error);
+
     ret += HPDF_Array_Add (procset, HPDF_Name_New (page->mmgr, "PDF"));
     ret += HPDF_Array_Add (procset, HPDF_Name_New (page->mmgr, "Text"));
     ret += HPDF_Array_Add (procset, HPDF_Name_New (page->mmgr, "ImageB"));
     ret += HPDF_Array_Add (procset, HPDF_Name_New (page->mmgr, "ImageC"));
     ret += HPDF_Array_Add (procset, HPDF_Name_New (page->mmgr, "ImageI"));
 
-    return ret;
+    if (ret != HPDF_OK)
+       return HPDF_Error_GetCode (procset->error);
+
+    return HPDF_OK;
 }
 
 
@@ -686,9 +696,12 @@ AddAnnotation  (HPDF_Page        page,
             return ret;
     }
     
-    ret += HPDF_Array_Add (array, annot);
+    if ((ret = HPDF_Array_Add (array, annot)) != HPDF_OK)
+       return ret;
+
     /* Add Parent to the annotation  */
-    ret += HPDF_Dict_Add( annot, "P", page);
+    ret = HPDF_Dict_Add( annot, "P", page);
+
     return ret;
 }
 
@@ -1686,6 +1699,7 @@ HPDF_Page_Create3DView    (HPDF_Page       page,
     HPDF_Dict view;
 
     HPDF_PTRACE((" HPDF_Page_Create3DView\n"));
+    HPDF_UNUSED(annot3d);
 
     if (!HPDF_Page_Validate (page))
         return NULL;
@@ -1833,6 +1847,119 @@ HPDF_Page_CreateStampAnnot  (    HPDF_Page           page,
 
     return annot;
 }
+
+HPDF_EXPORT(HPDF_Annotation)
+HPDF_Page_CreateProjectionAnnot(HPDF_Page page,
+								HPDF_Rect rect,
+								const char* text,
+								HPDF_Encoder encoder)
+{
+	HPDF_PageAttr attr;
+	HPDF_Annotation annot;
+
+	HPDF_PTRACE((" HPDF_Page_CreateProjectionAnnot\n"));
+
+	if (!HPDF_Page_Validate (page))
+		return NULL;
+
+	attr = (HPDF_PageAttr)page->attr;
+
+	annot = HPDF_ProjectionAnnot_New (page->mmgr, attr->xref, rect, text, encoder);
+	if (annot) {
+		if (AddAnnotation (page, annot) != HPDF_OK) {
+			HPDF_CheckError (page->error);
+			annot = NULL;
+		}
+	} else
+		HPDF_CheckError (page->error);
+
+	return annot;
+}
+
+
+HPDF_EXPORT(HPDF_3DMeasure)
+HPDF_Page_Create3DC3DMeasure(HPDF_Page page,
+							 HPDF_Point3D    firstanchorpoint,
+							 HPDF_Point3D    textanchorpoint)
+{
+	HPDF_PageAttr attr;
+	HPDF_Annotation measure;
+
+	HPDF_PTRACE((" HPDF_Page_Create3DC3DMeasure\n"));
+
+	if (!HPDF_Page_Validate (page))
+		return NULL;
+
+	attr = (HPDF_PageAttr)page->attr;
+
+	measure = HPDF_3DC3DMeasure_New(page->mmgr, attr->xref, firstanchorpoint, textanchorpoint);
+	if ( !measure) 
+		HPDF_CheckError (page->error);
+
+	return measure;
+}
+
+HPDF_EXPORT(HPDF_3DMeasure)
+HPDF_Page_CreatePD33DMeasure(HPDF_Page       page,
+							 HPDF_Point3D    annotationPlaneNormal,
+							 HPDF_Point3D    firstAnchorPoint,
+							 HPDF_Point3D    secondAnchorPoint,
+							 HPDF_Point3D    leaderLinesDirection,
+							 HPDF_Point3D    measurementValuePoint,
+							 HPDF_Point3D    textYDirection,
+							 HPDF_REAL       value,
+							 const char*     unitsString
+							 )
+{
+	HPDF_PageAttr attr;
+	HPDF_Annotation measure;
+
+	HPDF_PTRACE((" HPDF_Page_CreatePD33DMeasure\n"));
+
+	if (!HPDF_Page_Validate (page))
+		return NULL;
+
+	attr = (HPDF_PageAttr)page->attr;
+
+	measure = HPDF_PD33DMeasure_New(page->mmgr, 
+		attr->xref, 
+		annotationPlaneNormal, 
+		firstAnchorPoint,
+		secondAnchorPoint,
+		leaderLinesDirection,
+		measurementValuePoint,
+		textYDirection,
+		value,
+		unitsString
+		);
+	if ( !measure) 
+		HPDF_CheckError (page->error);
+
+	return measure;
+}
+
+
+HPDF_EXPORT(HPDF_ExData)
+HPDF_Page_Create3DAnnotExData(HPDF_Page page)
+{
+	HPDF_PageAttr attr;
+	HPDF_Annotation exData;
+
+	HPDF_PTRACE((" HPDF_Page_Create3DAnnotExData\n"));
+
+	if (!HPDF_Page_Validate (page))
+		return NULL;
+
+	attr = (HPDF_PageAttr)page->attr;
+
+	exData = HPDF_3DAnnotExData_New(page->mmgr, attr->xref);
+	if ( !exData) 
+		HPDF_CheckError (page->error);
+
+	return exData;
+}
+
+
 
 void
 HPDF_Page_SetFilter  (HPDF_Page    page,

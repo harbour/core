@@ -20,7 +20,7 @@
 #include "hpdfextg.h"
 #include "hpdf.h"
 
-static const char  *HPDF_BM_NAMES[] = {
+static const char * const HPDF_BM_NAMES[] = {
                                       "Normal",
                                       "Multiply",
                                       "Screen",
