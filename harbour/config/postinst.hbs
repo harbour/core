@@ -571,23 +571,29 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    RETURN aExtern
 
-STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
+STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
 
    aInclude := {}
    aExclude := {}
+   hDynamic := { => }
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+      IF ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            hDynamic[ Upper( tmp[ 2 ] ) ] := tmp[ 2 ]
          NEXT
       ENDIF
    ENDIF
@@ -601,6 +607,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
    LOCAL aInclude
    LOCAL aExclude
+   LOCAL hDynamic
 
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
@@ -608,7 +615,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
                   "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
 
-   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude )
+   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
    cExtern := "/*" + hb_eol()
    cExtern += " * $" + "Id" + "$" + hb_eol()
@@ -673,7 +680,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
          ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) == 0
-         cExtern += "DYNAMIC " + tmp + hb_eol()
+         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT
    cExtern += hb_eol()

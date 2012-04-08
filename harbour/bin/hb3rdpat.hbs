@@ -333,7 +333,7 @@ PROCEDURE Main( ... )
          IF aRegexMatch[ TWOARG_KW ] == "MAP"
             /* Do not allow implicit destination with non-flat source spec */
             IF Empty( aRegexMatch[ TWOARG_ARG1 ] ) .AND. "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_strFormat( "E: Non-flat source spec with implicit " +           ;
+               OutStd( hb_StrFormat( "E: Non-flat source spec with implicit " +           ;
                                      "destination, offending line %d:%s:", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -341,7 +341,7 @@ PROCEDURE Main( ... )
             ENDIF
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_strFormat( "E: Non-flat destination, offending line %d:%s",     ;
+               OutStd( hb_StrFormat( "E: Non-flat destination, offending line %d:%s",     ;
                                      nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -355,7 +355,7 @@ PROCEDURE Main( ... )
             /* The destination argument must fit in the 8+3 scheme */
             IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
                   Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
-               OutStd( hb_strFormat( "E: Destination does not fit 8+3, offending "+       ;
+               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending "+       ;
                                      "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -376,7 +376,7 @@ PROCEDURE Main( ... )
             IF Len( s_aChangeMap ) == 1
                cTopIndicator := s_aChangeMap[ 1 ][ FN_ORIG ]
                IF "/" $ cTopIndicator
-                  OutStd( hb_strFormat( "E: First `MAP' entry is not flat, offending " +  ;
+                  OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, offending " +  ;
                                         "line %d:%s", nMemoLine, hb_eol() ) )
                   OutStd( aRegexMatch[ 1 ] + hb_eol() )
                   ErrorLevel( 2 )
@@ -476,7 +476,7 @@ PROCEDURE Main( ... )
    IF cDiffFile != NIL
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
-         cCommand := hb_strFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
+         cCommand := hb_StrFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
                      s_aTools[ "patch" ],                                                 ;
                      CombinePath( s_cTempDir, cThisComponent ),                           ;
                      CombinePath( cCWD, cDiffFile ) )
@@ -490,7 +490,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Re-create the diff */
-      cCommand := hb_strFormat( "%s -urN %s %s",                                          ;
+      cCommand := hb_StrFormat( "%s -urN %s %s",                                          ;
                   s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
@@ -564,7 +564,7 @@ STATIC PROCEDURE SetupTools()
       NEXT
    NEXT
 
-   FOR EACH cPathComp in hb_ATokens( hb_GetEnv( "PATH" ), hb_osPathListSeparator() )
+   FOR EACH cPathComp IN hb_ATokens( hb_GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
          IF s_aTools[ cTool ] == NIL .AND. hb_FileExists( CombinePath( cPathComp, cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, cTool )
@@ -601,7 +601,7 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
    cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
    aDir := Directory( cTop + hb_osFileMask(), "D" )
 
-   ASORT( aDir,,, { |aLeft| !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
+   ASort( aDir,,, { |aLeft| !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
 
    FOR EACH aDirEntry IN aDir
       IF !( "D" $ aDirEntry[ F_ATTR ] )
@@ -679,7 +679,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    cFileName := URL_GetFileName( cArchiveURL )
 
    FOR EACH cPattern IN hb_HKeys( aActionMap )
-      FOR EACH cFrag IN HB_ATokens( cPattern, "|" )
+      FOR EACH cFrag IN hb_ATokens( cPattern, "|" )
          IF At( cFrag, cFileName ) != 0
             cMatchedPattern := cFrag
             cExtractor := aActionMap[ cPattern ][ 'Extractor' ]
@@ -708,7 +708,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `curl' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_strFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                     ;
+   cCommand := hb_StrFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                     ;
                CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
    TRACE( "Running " + cCommand )
    nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
@@ -724,7 +724,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
          OutStd( "E: Required `" + cExtractor + "' was not found" + hb_eol() )
          RETURN .F.
       ENDIF
-      cCommand := hb_strFormat( "%s " + cExtractorArgs + " %s",                           ;
+      cCommand := hb_StrFormat( "%s " + cExtractorArgs + " %s",                           ;
                   cExtractor, CombinePath( s_cTempDir, cFileName ) )
       TRACE( "Running " + cCommand )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
@@ -742,7 +742,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `" + cArchiver + "' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_strFormat( "%s " + cArchiverArgs + " %s",                               ;
+   cCommand := hb_StrFormat( "%s " + cArchiverArgs + " %s",                               ;
                cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
    TRACE( "Running " + cCommand )
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()

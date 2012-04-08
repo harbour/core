@@ -1372,7 +1372,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          aCOMPSUP := { "gcc", "diab" }
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          aCOMPSUP := { "gcc", "icc" }
-      case hbmk[ _HBMK_cPLAT ] == "minix"
+      CASE hbmk[ _HBMK_cPLAT ] == "minix"
          aCOMPSUP := { "gcc", "clang", "ack" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
@@ -1672,7 +1672,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin|minix|aix" ) .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
-            IF AScan( aCOMPSUP, { |tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
+            IF AScan( aCOMPSUP, {| tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
                hbmk[ _HBMK_cCOMP ] := NIL
             ENDIF
          ELSE
@@ -7685,7 +7685,7 @@ STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
    LOCAL cDepFile, tDepTime
 
    IF hbmk[ _HBMK_lDEBUGINC ]
-      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime: %s (%s)", cFile, hb_tsToStr(tTime)) )
+      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime: %s (%s)", cFile, hb_TSToStr( tTime ) ) )
    ENDIF
 
    IF cFile $ hbmk[ _HBMK_hDEPTS ]
@@ -7696,12 +7696,12 @@ STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
          IF ! hb_FGetDateTime( cDepFile, @tDepTime ) .OR. ;
             tDepTime > tTime
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s !!! (%s>%s)", cDepFile, hb_tsToStr(tDepTime), hb_tsToStr(tTime) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s !!! (%s>%s)", cDepFile, hb_TSToStr( tDepTime ), hb_TSToStr( tTime ) ) )
             ENDIF
             RETURN .T.
          ENDIF
          IF hbmk[ _HBMK_lDEBUGINC ]
-            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s (%s)", cDepFile, hb_tsToStr(tDepTime) ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECK DepTime=%s (%s)", cDepFile, hb_TSToStr( tDepTime ) ) )
          ENDIF
       NEXT
    ENDIF
@@ -8592,7 +8592,7 @@ STATIC FUNCTION PlugIn_call_low( hbmk, cName, hrb, ctx )
       xResult := hb_hrbDo( hrb, ctx )
       IF ! Empty( xResult )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned at '%2$s': '%3$s'" ), cName, PlugIn_ctx_get_state( ctx ), hb_cstr( xResult ) ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned at '%2$s': '%3$s'" ), cName, PlugIn_ctx_get_state( ctx ), hb_CStr( xResult ) ) )
          ENDIF
          IF ! hbmk[ _HBMK_lIGNOREERROR ]
             lSuccess := .F.
@@ -10532,12 +10532,12 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    /* it's blinker extension, look for .lnk file in paths
     * specified by LIB envvar
     */
-   IF !hb_fileExists( cFileName ) .AND. ;
-      !Left( cFileName, 1 ) $ hb_osPathDelimiters() .AND. ;
-      !SubStr( cFileName, 2, 1 ) == hb_osDriveSeparator()
-      FOR EACH cPath IN hb_aTokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
+   IF ! hb_FileExists( cFileName ) .AND. ;
+      !( Left( cFileName, 1 ) $ hb_osPathDelimiters() ) .AND. ;
+      !( SubStr( cFileName, 2, 1 ) == hb_osDriveSeparator() )
+      FOR EACH cPath IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
          cFile := hb_FNameMerge( cPath, cFileName )
-         IF hb_fileExists( cFile )
+         IF hb_FileExists( cFile )
             cFileName := cFile
             EXIT
          ENDIF
@@ -10545,7 +10545,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    ENDIF
 
    /* protection against recursive calls */
-   IF AScan( aPrevFiles, { |x| x == cFileName } ) == 0
+   IF AScan( aPrevFiles, {| x | x == cFileName } ) == 0
       IF ( hFile := FOpen( cFileName ) ) != -1
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
@@ -10594,7 +10594,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                nMode := RTLNK_MODE_FILENEXT
             ELSEIF nMode == RTLNK_MODE_FILE
                IF !( cWord == "," )
-                  IF AScan( aFileList, { |x| x == cWord } ) == 0
+                  IF AScan( aFileList, {| x | x == cWord } ) == 0
                      AAdd( aFileList, PathSepToSelf( cWord ) )
                   ENDIF
                   nMode := RTLNK_MODE_FILENEXT
@@ -11616,23 +11616,29 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 #define _HB_SELF_PREFIX   "__HBEXTERN__"
 #define _HB_SELF_SUFFIX   "__"
 
-STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
+STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
 
    aInclude := {}
    aExclude := {}
+   hDynamic := { => }
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, Upper( tmp[ 2 ] ) )
          NEXT
       ENDIF
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+      IF ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            hDynamic[ Upper( tmp[ 2 ] ) ] := tmp[ 2 ]
          NEXT
       ENDIF
    ENDIF
@@ -11646,6 +11652,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 
    LOCAL aInclude
    LOCAL aExclude
+   LOCAL hDynamic
 
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
@@ -11653,7 +11660,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
                   "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
 
-   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude )
+   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
    cExtern := "/*" + hb_eol()
    cExtern += " * $" + "Id" + "$" + hb_eol()
@@ -11717,7 +11724,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
          ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) == 0
-         cExtern += "DYNAMIC " + tmp + hb_eol()
+         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT
    cExtern += hb_eol()
@@ -12248,12 +12255,12 @@ STATIC PROCEDURE SetUILang( hbmk )
    LOCAL tmp
 
    IF hbmk[ _HBMK_cUILNG ] == "en"
-      hb_i18n_set( NIL )
+      hb_i18n_Set( NIL )
    ELSE
       tmp := "${hb_root}hbmk2.${hb_lng}.hbl"
       tmp := StrTran( tmp, "${hb_root}", hb_DirSepAdd( hb_DirBase() ) )
       tmp := StrTran( tmp, "${hb_lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
-      hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
+      hb_i18n_Set( iif( hb_i18n_Check( tmp := hb_MemoRead( tmp ) ), hb_i18n_RestoreTable( tmp ), NIL ) )
    ENDIF
 
    /* Setup input CP of the translation */
@@ -12263,9 +12270,9 @@ STATIC PROCEDURE SetUILang( hbmk )
    /* NOTE: Intentionally doing runtime branching to include both strings in translation files. */
    tmp := Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) )
    IF tmp == "UTF8" .OR. tmp == "UTF-8"
-      hb_setDispCP( "UTF8" )
+      hb_SetDispCP( "UTF8" )
    ELSE
-      hb_setDispCP( tmp )
+      hb_SetDispCP( tmp )
    ENDIF
 
    RETURN

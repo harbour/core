@@ -25,13 +25,13 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC SMSCTX_CLOSE
-DYNAMIC SMSCTX_NEW
-DYNAMIC SMSCTX_PIN
-DYNAMIC SMSCTX_RECEIVE
-DYNAMIC SMSCTX_SEND
-DYNAMIC SMS_RECEIVEALL
-DYNAMIC SMS_SEND
+DYNAMIC smsctx_Close
+DYNAMIC smsctx_New
+DYNAMIC smsctx_PIN
+DYNAMIC smsctx_Receive
+DYNAMIC smsctx_Send
+DYNAMIC sms_ReceiveAll
+DYNAMIC sms_Send
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBSMS__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
