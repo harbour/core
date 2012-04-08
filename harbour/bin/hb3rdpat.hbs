@@ -302,7 +302,7 @@ PROCEDURE Main( ... )
          ErrorLevel( 1 )
          QUIT
       ELSE
-         ASort( aDir,,, { | tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
+         ASort( aDir,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
          cFileName := aDir[ 1 ][ F_NAME ]
       ENDIF
    ENDIF
@@ -601,7 +601,7 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
    cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
    aDir := Directory( cTop + hb_osFileMask(), "D" )
 
-   ASort( aDir,,, { |aLeft| !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
+   ASort( aDir,,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
 
    FOR EACH aDirEntry IN aDir
       IF !( "D" $ aDirEntry[ F_ATTR ] )
