@@ -804,7 +804,7 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
    IF Empty( ::cExtSave )
       cBakName := cName + iif( Left( ::cExtBack, 1 ) != ".", ".", "" ) + ::cExtBack
-      IF FRename( cFileName, cBakName ) == F_ERROR
+      IF hb_FCopy( cFileName, cBakName ) == F_ERROR
          RETURN .F.
       ENDIF
    ENDIF
