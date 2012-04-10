@@ -4703,7 +4703,7 @@ PHB_GTWVT hb_wvt_gtGetWVT( void )
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC( HB_GTINFOEX )
+HB_FUNC( WVG_GTINFOEX )
 {
    if( HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -4717,8 +4717,8 @@ HB_FUNC( HB_GTINFOEX )
          gtInfo.pNewVal2 = hb_param( 4, HB_IT_ANY );
          gtInfo.pResult  = NULL;
 
-         hb_gt_BaseFree( pGT );
          HB_GTSELF_INFO( pGT, hb_parni( 2 ), &gtInfo );
+         hb_gt_BaseFree( pGT );
 
          if( gtInfo.pResult )
             hb_itemReturnRelease( gtInfo.pResult );
