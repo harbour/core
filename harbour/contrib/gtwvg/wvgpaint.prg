@@ -160,7 +160,7 @@ function WvtSetPaint( a_ )
 
 /*----------------------------------------------------------------------*/
 
-function SetPaint( cID, nAction, xData, aAttr )
+function wvg_SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
 
    if xData <> nil
@@ -183,7 +183,7 @@ function SetPaint( cID, nAction, xData, aAttr )
 
 /*----------------------------------------------------------------------*/
 
-function GetPaint( cID )
+function wvg_GetPaint( cID )
    local n
 
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
@@ -194,7 +194,7 @@ function GetPaint( cID )
 
 /*----------------------------------------------------------------------*/
 
-function DelPaint( cID, nAction )
+function wvg_DelPaint( cID, nAction )
    local xData, n1, n
 
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
@@ -208,7 +208,7 @@ function DelPaint( cID, nAction )
 
 /*----------------------------------------------------------------------*/
 
-function PurgePaint( cID,lDummy )
+function wvg_PurgePaint( cID,lDummy )
    local n, aPaint
 
    DEFAULT lDummy TO .f.
@@ -227,7 +227,7 @@ function PurgePaint( cID,lDummy )
 
 /*----------------------------------------------------------------------*/
 
-function InsertPaint( cID, aPaint, lSet )
+function wvg_InsertPaint( cID, aPaint, lSet )
    local n
 
    DEFAULT lSet TO .f.

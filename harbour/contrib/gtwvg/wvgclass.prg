@@ -295,12 +295,12 @@ METHOD wvtDialog:Create()
    FOR i := 1 to len( ::aObjects )
       IF !empty( ::aObjects[ i ]:aPaint )
          FOR j := 1 to len( ::aObjects[ i ]:aPaint )
-            SetPaint( ::cPaintBlockID, ::nPaintID++, ;
+            wvg_SetPaint( ::cPaintBlockID, ::nPaintID++, ;
                 ::aObjects[ i ]:aPaint[ j,1 ], ::aObjects[ i ]:aPaint[ j,2 ] )
          next
       ENDIF
    next
-   WvtSetPaint( GetPaint( ::cPaintBlockID ) )
+   WvtSetPaint( wvg_GetPaint( ::cPaintBlockID ) )
 
    IF ascan( ::aObjects, {|o| o:lTabStop } ) > 0
       ::lTabStops := .t.
@@ -349,7 +349,7 @@ METHOD wvtDialog:Destroy()
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
    RestScreen( 0, 0, maxrow(), maxcol(), ::cScreen )
    Wvt_RestScreen( 0, 0 ,maxrow(), maxcol(), ::aWvtScreen )
-   PurgePaint( ::cPaintBlockID )
+   wvg_PurgePaint( ::cPaintBlockID )
    WvtSetPaint( ::aOldPnt )
    Wvt_SetGui( ::lGui )
 
