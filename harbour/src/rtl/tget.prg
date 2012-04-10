@@ -1087,7 +1087,7 @@ METHOD picture( cPicture ) CLASS GET
 
       /* Generate default picture mask if not specified. */
 
-      IF ( Empty( ::cPicMask ) .OR. ::cPicture == NIL ) .AND. ::cType != NIL
+      IF ::cType != NIL .AND. ( Empty( ::cPicMask ) .OR. ::cPicture == NIL .OR. ::cType == "D" )
 
          SWITCH ::cType
          CASE "D"
