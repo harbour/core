@@ -271,13 +271,6 @@ REQUEST hbmk_KEYW
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32.exe" )
 
-/* Macro to check for uppercase extension on case-sensitive filesystems */
-#if defined( __PLATFORM__DOS )
-   #define _EXT_IS_UPPER( f, e ) ( .F. )
-#else
-   #define _EXT_IS_UPPER( f, e ) ( hb_FNameExt( f ) == e )
-#endif
-
 #define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
@@ -3082,8 +3075,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE hb_FNameExt( cParamL ) == ".cpp" .OR. ;
            hb_FNameExt( cParamL ) == ".cc" .OR. ;
            hb_FNameExt( cParamL ) == ".cxx" .OR. ;
-           hb_FNameExt( cParamL ) == ".cx" .OR. ;
-           _EXT_IS_UPPER( cParam, ".C" )
+           hb_FNameExt( cParamL ) == ".cx"
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aCPP ], cParam )
@@ -9250,8 +9242,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                CASE hb_FNameExt( cItemL ) == ".cpp" .OR. ;
                     hb_FNameExt( cItemL ) == ".cc" .OR. ;
                     hb_FNameExt( cItemL ) == ".cxx" .OR. ;
-                    hb_FNameExt( cItemL ) == ".cx" .OR. ;
-                    _EXT_IS_UPPER( cItem, ".C" )
+                    hb_FNameExt( cItemL ) == ".cx"
                   AAddNew( hbmk[ _HBMK_aCPP ], cItem )
                CASE hb_FNameExt( cItemL ) == ".c" .OR. ;
                     hb_FNameExt( cItemL ) == ".m"
@@ -10225,8 +10216,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
       ELSEIF Lower( cExt ) == ".cpp" .OR. ;
              Lower( cExt ) == ".cc" .OR. ;
              Lower( cExt ) == ".cxx" .OR. ;
-             Lower( cExt ) == ".cx" .OR. ;
-             _EXT_IS_UPPER( cExt, ".C" )
+             Lower( cExt ) == ".cx"
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
