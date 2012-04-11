@@ -64,43 +64,36 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
    HB_ERRCODE errCode;
    HB_BOOL bRetVal;
-   PHB_FILE fileSource;
-   PHB_FILE fileDest;
+   HB_FHANDLE fhndSource;
+   HB_FHANDLE fhndDest;
 
-   if( ( fileSource = hb_fileExtOpen( pszSource, NULL, FO_READ | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
+   /* TODO: Change to use hb_fileExtOpen() */
+   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
    {
-      if( ( fileDest = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
+      /* TODO: Change to use hb_fileExtOpen() */
+      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
       {
 #if defined( HB_OS_UNIX )
          struct stat struFileInfo;
-         int iSuccess = fstat( hb_fileHandle( fileSource ), &struFileInfo );
+         int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
-         HB_SIZE nBytesTotal;
          HB_SIZE nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
-         nBytesTotal = 0;
-
          for( ;; )
          {
-            if( ( nBytesRead = hb_fileReadAt( fileSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE, nBytesTotal ) ) > 0 )
+            if( ( nBytesRead = hb_fsReadLarge( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
             {
-               if( nBytesRead != hb_fileWriteAt( fileDest, pbyBuffer, nBytesRead, nBytesTotal ) )
+               if( nBytesRead != hb_fsWriteLarge( fhndDest, pbyBuffer, nBytesRead ) )
                {
                   errCode = hb_fsError();
                   bRetVal = HB_FALSE;
                   break;
                }
-
-               nBytesTotal += nBytesRead;
             }
             else
             {
                errCode = hb_fsError();
-               #if defined( HB_OS_WIN )
-                  if( errCode == 38 ) /* ERROR_HANDLE_EOF */
-                     errCode = 0;
-               #endif
                bRetVal = ( errCode == 0 );
                break;
             }
@@ -110,10 +103,10 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
 #if defined( HB_OS_UNIX )
          if( iSuccess == 0 )
-            fchmod( hb_fileHandle( fileDest ), struFileInfo.st_mode );
+            fchmod( fhndDest, struFileInfo.st_mode );
 #endif
 
-         hb_fileClose( fileDest );
+         hb_fsClose( fhndDest );
       }
       else
       {
@@ -121,7 +114,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          bRetVal = HB_FALSE;
       }
 
-      hb_fileClose( fileSource );
+      hb_fsClose( fhndSource );
    }
    else
    {
