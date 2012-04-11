@@ -2214,9 +2214,14 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
    {
       HB_SIZE nSize;
 
-      (void) fseek( pFile->file_in, 0L, SEEK_END );
-      nSize = ftell( pFile->file_in );
-      (void) fseek( pFile->file_in, 0L, SEEK_SET );
+      if( pFile->file_in )
+      {
+         (void) fseek( pFile->file_in, 0L, SEEK_END );
+         nSize = ftell( pFile->file_in );
+         (void) fseek( pFile->file_in, 0L, SEEK_SET );
+      }
+      else
+         nSize = pFile->nLineBufLen;
 
       if( nSize > MAX_STREAM_SIZE )
          hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
@@ -2230,14 +2235,23 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
 
          if( nSize )
          {
-            char * pBuffer = ( char * ) hb_xgrab( nSize * sizeof( char ) );
+            if( pFile->file_in == NULL && pState->iStreamDump != HB_PP_STREAM_C )
+               hb_membufAddData( pState->pStreamBuffer, pFile->pLineBuf, nSize );
+            else
+            {
+               char * pBuffer = ( char * ) hb_xgrab( nSize * sizeof( char ) );
 
-            nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
-            if( pState->iStreamDump == HB_PP_STREAM_C )
-               hb_strRemEscSeq( pBuffer, &nSize );
+               if( pFile->file_in )
+                  nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
+               else
+                  memcpy( pBuffer, pFile->pLineBuf, nSize );
 
-            hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
-            hb_xfree( pBuffer );
+               if( pState->iStreamDump == HB_PP_STREAM_C )
+                  hb_strRemEscSeq( pBuffer, &nSize );
+
+               hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
+               hb_xfree( pBuffer );
+            }
          }
 
          /* insert new tokens into incoming buffer
