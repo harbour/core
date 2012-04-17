@@ -148,7 +148,7 @@
 #define HB_WINPRN_SERVER            6
 #define HB_WINPRN_LEN_              6
 
-/* WIN_ENUMFONTS() positions for array returned */
+/* WIN_ENUMFONTS()/WIN_ENUMFONTFAMILIES() positions for array returned */
 #define HB_WINFONT_NAME             1
 #define HB_WINFONT_FIXED            2
 #define HB_WINFONT_TRUETYPE         3

@@ -556,23 +556,52 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
 
    hb_itemRelease( pSubItems );
 
-   return HB_TRUE;
+   return TRUE;
 }
 
 HB_FUNC( WIN_ENUMFONTS )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
+   HB_BOOL fNullDC = ( ! hDC );
+   PHB_ITEM pArray = hb_itemArrayNew( 0 );
 
-   if( hDC )
+   if( fNullDC )
+      hDC = GetDC( NULL );
+
+   EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
+
+   if( fNullDC )
+      ReleaseDC( NULL, hDC );
+
+   hb_itemReturnRelease( pArray );
+}
+
+HB_FUNC( WIN_ENUMFONTFAMILIES )
+{
+   HDC hDC = hbwapi_par_HDC( 1 );
+   HB_BOOL fNullDC = ( ! hDC );
+   LOGFONT Logfont;
+   PHB_ITEM pArray = hb_itemArrayNew( 0 );
+
+   memset( &Logfont, 0, sizeof( Logfont ) );
+
+   Logfont.lfCharSet = ( BYTE ) hb_parnidef( 1, DEFAULT_CHARSET );
+   if( HB_ISCHAR( 2 ) )
    {
-      PHB_ITEM pArray = hb_itemArrayNew( 0 );
-
-      EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
-
-      hb_itemReturnRelease( pArray );
+      void * hText;
+      HB_STRNCPY( Logfont.lfFaceName, HB_PARSTR( 2, &hText, NULL ), HB_SIZEOFARRAY( Logfont.lfFaceName ) - 1 );
+      hb_strfree( hText );
    }
-   else
-      hb_reta( 0 );
+
+   if( fNullDC )
+      hDC = GetDC( NULL );
+
+   EnumFontFamiliesEx( hDC, &Logfont, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray, 0 );
+
+   if( fNullDC )
+      ReleaseDC( NULL, hDC );
+
+   hb_itemReturnRelease( pArray );
 }
 
 HB_FUNC( WIN_SETCOLOR )

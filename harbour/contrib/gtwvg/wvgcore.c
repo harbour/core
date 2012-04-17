@@ -1198,7 +1198,7 @@ HB_FUNC( WVT_DRAWLABEL )
    POINT       xy   = { 0, 0 };
    HFONT       hFont, hOldFont, hOldFontGui;
    LOGFONT     logfont; /* = { 0 };*/
-   void *      hText;
+   void *      hText = NULL;
 
    logfont.lfEscapement      = hb_parni( 5 ) * 10;
    logfont.lfOrientation     = 0;
@@ -2912,7 +2912,7 @@ HB_FUNC( WVT_CREATEFONT )
    PHB_GTWVT   _s = hb_wvt_gtGetWVT();
 
    LOGFONT     logfont; /* = { 0,0,0 }; */
-   void *      hText;
+   void *      hText = NULL;
 
    logfont.lfEscapement      = hb_parni( 10 ) * 10;
    logfont.lfOrientation     = 0;
@@ -2998,7 +2998,7 @@ HB_FUNC( WVT_LOADFONT )
    LOGFONT     logfont; /* = { 0 }; */
    int         iSlot   = hb_parni( 1 ) - 1;
    HFONT       hFont;
-   void *      hF;
+   void *      hF = NULL;
 
    logfont.lfEscapement      = hb_parni( 11 ) * 10;
    logfont.lfOrientation     = 0;
@@ -3014,7 +3014,7 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfHeight          = hb_parnidef( 3, _s->fontHeight );
    logfont.lfWidth           = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-   HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 2 ) ? _s->fontFace : HB_PARSTR( 2, &hF, NULL ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+   HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
    hb_strfree( hF );
 
    hFont = CreateFontIndirect( &logfont );

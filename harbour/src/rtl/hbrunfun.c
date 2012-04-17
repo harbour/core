@@ -66,7 +66,7 @@ HB_FUNC( HB_RUN )
 
       if( hb_gtSuspend() == HB_SUCCESS )
       {
-#if defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN )
          iResult = hb_fsProcessRun( pszCommand,
                                     NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
 #else

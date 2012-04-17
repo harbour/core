@@ -590,7 +590,7 @@ HB_FUNC( WVG_LABEL )
    PHB_GTWVT   pWVT = hb_wvt_gtGetWVT();
    LOGFONT     lf;
    HFONT       hFont;
-   void *      hText;
+   void *      hText = NULL;
 
    lf.lfEscapement     = hb_parni( 6 ) * 10;
    lf.lfOrientation    = 0;
