@@ -1601,6 +1601,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, pefds ) )
       {
          iResult = -1;
+         len = sizeof( iError );
          if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( char * ) &iError, &len ) != 0 )
             iError = HB_SOCK_GETERROR();
          hb_socketSetOsError( iError );
