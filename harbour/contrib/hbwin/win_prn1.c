@@ -556,7 +556,7 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
 
    hb_itemRelease( pSubItems );
 
-   return TRUE;
+   return 1;
 }
 
 HB_FUNC( WIN_ENUMFONTS )
