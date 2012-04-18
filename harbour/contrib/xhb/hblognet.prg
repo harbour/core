@@ -52,6 +52,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 
+#define CRLF Chr( 13 ) + Chr( 10 )
+
 #define HB_THREAD_SUPPORT
 
 CLASS HB_LogEmail FROM HB_LogChannel
@@ -139,34 +141,34 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
       RETURN .F.
    ENDIF
 
-   hb_inetSendAll( skCon, "HELO " + ::cHelo + hb_inetCRLF() )
+   hb_inetSendAll( skCon, "HELO " + ::cHelo + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
-   hb_inetSendAll( skCon, "MAIL FROM: <" + ::cAddress +">" + hb_inetCRLF() )
+   hb_inetSendAll( skCon, "MAIL FROM: <" + ::cAddress +">" + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
-   hb_inetSendAll( skCon, "RCPT TO: <" + ::cSendTo +">" + hb_inetCRLF() )
+   hb_inetSendAll( skCon, "RCPT TO: <" + ::cSendTo +">" + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
-   hb_inetSendAll( skCon, "DATA" + hb_inetCRLF() )
+   hb_inetSendAll( skCon, "DATA" + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    cMessage := ::Prepare( nStyle, cMessage, cName, nPriority )
 
-   hb_inetSendAll( skCon,  cMessage + hb_inetCRLF() + "." + hb_inetCRLF() )
+   hb_inetSendAll( skCon,  cMessage + CRLF + "." + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
-   hb_inetSendAll( skCon, "QUIT" + hb_inetCRLF() )
+   hb_inetSendAll( skCon, "QUIT" + CRLF )
 
 RETURN ::GetOk( skCon )  // if quit fails, the mail does not go!
 
@@ -185,18 +187,18 @@ RETURN .T.
 
 METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    LOCAL cPre
-   cPre := "FROM: " + ::cAddress + hb_inetCRLF() + ;
-               "TO: " + ::cSendTo + hb_inetCRLF() +;
-               "Subject:" + ::cSubject + hb_inetCRLF() + hb_inetCRLF()
+   cPre := "FROM: " + ::cAddress + CRLF + ;
+               "TO: " + ::cSendTo + CRLF +;
+               "Subject:" + ::cSubject + CRLF + CRLF
 
    IF ! Empty( ::cPrefix )
-      cPre += ::cPrefix + hb_inetCRLF() + hb_inetCRLF()
+      cPre += ::cPrefix + CRLF + CRLF
    ENDIF
 
    cPre += ::Format( nStyle, cMessage, cName, nPriority )
 
    IF ! Empty( ::cPostfix )
-      cPre += hb_inetCRLF() +hb_inetCRLF() + ::cPostfix + hb_inetCRLF()
+      cPre += CRLF +CRLF + ::cPostfix + CRLF
    ENDIF
 
 RETURN cPre
@@ -318,7 +320,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
    nCount := 1
    DO WHILE nCount <= Len( ::aListeners )
       sk := ::aListeners[ nCount ]
-      hb_inetSendAll( sk, cMessage + hb_inetCRLF() )
+      hb_inetSendAll( sk, cMessage + CRLF )
       // if there is an error, we remove the listener
       IF hb_inetErrorCode( sk ) != 0
          ADel( ::aListeners, nCount )

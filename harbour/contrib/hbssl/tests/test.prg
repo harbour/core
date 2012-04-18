@@ -11,6 +11,8 @@
 
 #include "hbssl.ch"
 
+#define CRLF Chr( 13 ) + Chr( 10 )
+
 PROCEDURE Main()
    LOCAL ssl_ctx
    LOCAL ssl
@@ -33,7 +35,7 @@ PROCEDURE Main()
    ? "INETCONN", hb_inetConnect( "www.fortify.net", 80, socket )
    ? "INETERR", hb_inetErrorCode( socket )
    ? "INETFD", hb_inetFD( socket )
-   ? "INETSEND", hb_inetSend( socket, "GET / http/1.1" + hb_inetCRLF() + "Host: " + "www.syenar.net" + hb_inetCRLF() + hb_inetCRLF() )
+   ? "INETSEND", hb_inetSend( socket, "GET / http/1.1" + CRLF + "Host: " + "syenar.net" + CRLF + CRLF )
    ? "INETERR", hb_inetErrorCode( socket )
    buffer := Space( 1024 )
    ? "INETRECVALL", hb_inetRecvAll( socket, @buffer, Len( buffer ) )
@@ -93,7 +95,7 @@ PROCEDURE Main()
    ? "SSL_CIPHER_GET_BITS"   , SSL_CIPHER_GET_BITS( cipher, @bits ), bits
    ? "SSL_CIPHER_DESCRIPTION", SSL_CIPHER_DESCRIPTION( cipher )
 
-   ? "SSL_WRITE", tmp := SSL_WRITE( ssl, "GET / http/1.1" + hb_inetCRLF() + "Host: " + "www.fortify.net" + hb_inetCRLF() + hb_inetCRLF() )
+   ? "SSL_WRITE", tmp := SSL_WRITE( ssl, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
    ? "SSL_GET_ERROR", SSL_GET_ERROR( ssl, tmp )
    buffer := Space( 1024 )
    ? "SSL_READ", tmp := SSL_READ( ssl, @buffer )

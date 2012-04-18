@@ -180,7 +180,7 @@ aPermits[ 34 ] := .F.
 nChoice := achoice( 5, 10, 20, 70, aPrompts, aPermits, "cUserFunction" )
 
 setpos( 0, 0 )
-* clear screen
+// clear screen
 ? nChoice
 
 if nChoice > 0
