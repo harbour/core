@@ -904,6 +904,17 @@ HB_FUNC( CURL_EASY_SETOPT )
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_GSSAPI_NEC, HB_CURL_OPT_BOOL( 3 ) );
             break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x071900
+         case HB_CURLOPT_TCP_KEEPALIVE:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_KEEPALIVE, hb_parnl( 3 ) );
+            break;
+         case HB_CURLOPT_TCP_KEEPIDLE:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_KEEPIDLE, hb_parnl( 3 ) );
+            break;
+         case HB_CURLOPT_TCP_KEEPINTVL:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_KEEPINTVL, hb_parnl( 3 ) );
+            break;
+#endif
 
          /* Names and passwords options (Authentication) */
 
@@ -1135,6 +1146,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_RCPT, hb_curl->pMAIL_RCPT );
                }
             }
+            break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071900
+         case HB_CURLOPT_MAIL_AUTH:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_AUTH, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
 #endif
 
@@ -1445,6 +1461,14 @@ HB_FUNC( CURL_EASY_SETOPT )
             }
             break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x071800
+         case HB_CURLOPT_DNS_SERVERS:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_DNS_SERVERS, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            break;
+         case HB_CURLOPT_ACCEPTTIMEOUT_MS:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ACCEPTTIMEOUT_MS, hb_parnl( 3 ) );
+            break;
+#endif
 
          /* SSL and Security */
 
@@ -1522,6 +1546,16 @@ HB_FUNC( CURL_EASY_SETOPT )
 #if LIBCURL_VERSION_NUM >= 0x071301
          case HB_CURLOPT_CERTINFO:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_CERTINFO, HB_CURL_OPT_BOOL( 3 ) );
+            break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071600
+         case HB_CURLOPT_GSSAPI_DELEGATION:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_GSSAPI_DELEGATION, hb_parnl( 3 ) );
+            break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071900
+         case HB_CURLOPT_SSL_OPTIONS:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_OPTIONS, hb_parnl( 3 ) );
             break;
 #endif
 

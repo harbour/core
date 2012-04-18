@@ -251,6 +251,14 @@
 #define HB_CURLOPT_WILDCARDMATCH              197
 #define HB_CURLOPT_RESOLVE                    198
 #define HB_CURLOPT_TRANSFER_ENCODING          199
+#define HB_CURLOPT_GSSAPI_DELEGATION          200
+#define HB_CURLOPT_DNS_SERVERS                201
+#define HB_CURLOPT_ACCEPTTIMEOUT_MS           202
+#define HB_CURLOPT_SSL_OPTIONS                203
+#define HB_CURLOPT_TCP_KEEPALIVE              204
+#define HB_CURLOPT_TCP_KEEPIDLE               205
+#define HB_CURLOPT_TCP_KEEPINTVL              206
+#define HB_CURLOPT_MAIL_AUTH                  207
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -283,6 +291,9 @@
 #define HB_CURL_NETRC_OPTIONAL                1  /* A user:password in the URL will be preferred */
 #define HB_CURL_NETRC_REQUIRED                2  /* A user:password in the URL will be ignored. */
 
+/* HB_CURLOPT_SSL_OPTIONS values */
+#define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
+
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
 #define HB_CURLAUTH_BASIC                     1                    /* Basic (default) */
@@ -290,9 +301,10 @@
 #define HB_CURLAUTH_GSSNEGOTIATE              4                    /* GSS-Negotiate */
 #define HB_CURLAUTH_NTLM                      8                    /* NTLM */
 #define HB_CURLAUTH_DIGEST_IE                 hb_bitShift( 1, 4 )  /* Digest with IE flavour */
+#define HB_CURLAUTH_NTLM_WB                   hb_bitShift( 1, 5 )  /* NTLM delegating to winbind helper */
 #define HB_CURLAUTH_ONLY                      hb_bitShift( 1, 31 ) /* used together with a single other type to force no auth or just that single type */
 #define HB_CURLAUTH_ANY                       hb_bitNot( 0 )       /* all types set */
-#define HB_CURLAUTH_ANYSAFE                   hb_bitNot( HB_CURLAUTH_BASIC )
+#define HB_CURLAUTH_ANYSAFE                   hb_bitNot( hb_bitOr( HB_CURLAUTH_BASIC, HB_CURLAUTH_DIGEST_IE ) )
 
 /* HB_CURLOPT_HTTP_VERSION option */
 #define HB_CURL_HTTP_VERSION_NONE             0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
