@@ -483,7 +483,7 @@ STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
    LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
 
    nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
-   nconn[ _NETIOSRV_CONN_nThreadID ]   := hb_threadId()
+   nconn[ _NETIOSRV_CONN_nThreadID ]   := hb_threadID()
    nconn[ _NETIOSRV_CONN_tStart ]      := hb_DateTime()
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -550,7 +550,7 @@ STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
       hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
       FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
-         IF nconn[ _NETIOSRV_CONN_nThreadID ] == hb_threadId()
+         IF nconn[ _NETIOSRV_CONN_nThreadID ] == hb_threadID()
             nconn[ _NETIOSRV_CONN_hInfo ] := hInfo
             EXIT
          ENDIF

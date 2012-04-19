@@ -400,7 +400,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
       bKeyDown := SetKey( K_DOWN, ;
          {|| cLine := iif( nHistIndex < Len( s_aHistory ), ;
              s_aHistory[ ++nHistIndex ], ;
-             ( nHistIndex := Len( s_aHistory ) + 1, Space( HB_LINE_Len ) ) ) } )
+             ( nHistIndex := Len( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE,;
          {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
 

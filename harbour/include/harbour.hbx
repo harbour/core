@@ -790,7 +790,7 @@ DYNAMIC hb_StrToTS
 DYNAMIC hb_StrToUTF8
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
-DYNAMIC hb_threadId
+DYNAMIC hb_threadID
 DYNAMIC hb_threadJoin
 DYNAMIC hb_threadOnce
 DYNAMIC hb_threadOnceInit
