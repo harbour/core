@@ -132,7 +132,7 @@ HB_CODEPAGE_ANNOUNCE( UTF8 )
 
 static HB_CODEPAGE s_en_codepage =
    { "EN", "English CP-437", HB_UNITB_437,
-     NULL, NULL, NULL, NULL, NULL, 0, 
+     NULL, NULL, NULL, NULL, NULL, 0,
      HB_FALSE, hb_cdpStd_get, hb_cdpStd_put, hb_cdpStd_len,
      0, 0, NULL, NULL, &s_utf8_codepage };
 
@@ -1350,7 +1350,7 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc,
    return ulD;
 }
 
-HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, 
+HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp,
                          const char * pSrc, HB_SIZE nSrc,
                          char * pDst, HB_SIZE nDst )
 {
@@ -2630,6 +2630,16 @@ PHB_CODEPAGE hb_cdpFindExt( const char * id )
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpFindExt(%s)", id ) );
 
    return id ? * hb_cdpFindPos( id ) : NULL;
+}
+
+HB_BOOL hb_cdpIsUTF8( PHB_CODEPAGE cdp )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cdpIsUTF8(%p)", cdp ) );
+
+   if( cdp == NULL )
+      cdp = hb_vmCDP();
+
+   return ( cdp == &s_utf8_codepage );
 }
 
 PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp )

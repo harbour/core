@@ -389,6 +389,7 @@ extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
 extern HB_EXPORT void         hb_cdpBuildTransTable( PHB_UNITABLE uniTable );
 extern HB_EXPORT void         hb_cdpReleaseAll( void );
 extern HB_EXPORT const char * hb_cdpID( void );
+extern HB_EXPORT HB_BOOL      hb_cdpIsUTF8( PHB_CODEPAGE cdp );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp );
 extern HB_EXPORT const char * hb_cdpSelectID( const char * id );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpFind( const char * id );

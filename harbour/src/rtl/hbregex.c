@@ -52,6 +52,7 @@
 
 #define _HB_REGEX_INTERNAL_
 #include "hbregex.h"
+#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbinit.h"
@@ -71,7 +72,7 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 {
 #if defined( HB_HAS_PCRE )
    const unsigned char * pCharTable = NULL;
-   const char *szError = NULL;
+   const char * szError = NULL;
    int iErrOffset = 0;
    int iCFlags = ( ( pRegEx->iFlags & HBREG_ICASE   ) ? PCRE_CASELESS  : 0 ) |
                  ( ( pRegEx->iFlags & HBREG_NEWLINE ) ? PCRE_MULTILINE : 0 ) |
@@ -80,21 +81,19 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    pRegEx->iEFlags = ( ( pRegEx->iFlags & HBREG_NOTBOL ) ? PCRE_NOTBOL : 0 ) |
                      ( ( pRegEx->iFlags & HBREG_NOTEOL ) ? PCRE_NOTEOL : 0 );
 
-#if 0
    /* detect UTF-8 support. */
    {
-      int fUTF8Support;
+      int iUTF8Enabled;
 #  if defined( PCRE_CONFIG_UTF8 )
-      if( pcre_config( PCRE_CONFIG_UTF8, &fUTF8Support ) != 0 )
-         fUTF8Support = 0;
+      if( pcre_config( PCRE_CONFIG_UTF8, &iUTF8Enabled ) != 0 )
+         iUTF8Enabled = 0;
 #  else
-      fUTF8Support = 0;
+      iUTF8Enabled = 0;
 #  endif
       /* use UTF8 in pcre when available and HVM CP is also UTF8. */
-      if( fUTF8Support && hb_cdpIsUTF8() /* TODO */ )
+      if( iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
          iCFlags |= PCRE_UTF8;
    }
-#endif
 
    pRegEx->re_pcre = pcre_compile( szRegEx, iCFlags, &szError,
                                    &iErrOffset, pCharTable );
