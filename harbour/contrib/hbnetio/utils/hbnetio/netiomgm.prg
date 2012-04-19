@@ -252,7 +252,7 @@ STATIC PROCEDURE DisconnectLow( netiocli )
       netio_OpenItemStream( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_regnotif", .F. )
 
       netiocli[ _NETIOCLI_lWaitStream ] := .F.
-      hb_ThreadJoin( netiocli[ _NETIOCLI_hWaitThread ] )
+      hb_threadJoin( netiocli[ _NETIOCLI_hWaitThread ] )
 
       netiocli[ _NETIOCLI_pConnection ] := NIL
 
@@ -264,7 +264,7 @@ STATIC PROCEDURE DisconnectLow( netiocli )
 STATIC FUNCTION MyClientInfo()
    LOCAL hInfo := { => }
 
-   hb_hKeepOrder( hInfo, .T. )
+   hb_HKeepOrder( hInfo, .T. )
 
    hInfo[ "OS()"          ] := OS()
    hInfo[ "Version()"     ] := Version()

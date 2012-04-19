@@ -108,7 +108,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    netiosrv[ _NETIOSRV_cName ]          := "Data"
    netiosrv[ _NETIOSRV_nPort ]          := _NETIOSRV_PORT_DEF
    netiosrv[ _NETIOSRV_cIFAddr ]        := _NETIOSRV_IPV4_DEF
-   netiosrv[ _NETIOSRV_cRootDir ]       := hb_dirBase() + "data"
+   netiosrv[ _NETIOSRV_cRootDir ]       := hb_DirBase() + "data"
    netiosrv[ _NETIOSRV_lRPC ]           := .F.
    netiosrv[ _NETIOSRV_lEncryption ]    := .F.
    netiosrv[ _NETIOSRV_lAcceptConn ]    := .T.
@@ -179,7 +179,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
             CASE ".prg"
             CASE ".hbs"
-               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0",;
+               cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0",;
                                        "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
                IF cFile != NIL
                   netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
@@ -211,7 +211,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       netiosrv_LogEvent( hb_StrFormat( "Configuration loaded: %1$s", netiosrv_ConfName() ) )
    ENDIF
 
-   hb_dirBuild( netiosrv[ _NETIOSRV_cRootDir ] )
+   hb_DirBuild( netiosrv[ _NETIOSRV_cRootDir ] )
 
    netiosrv[ _NETIOSRV_pListenSocket ] := ;
       netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
@@ -398,7 +398,7 @@ STATIC PROCEDURE netiosrv_notifyclients( netiomgm, cMsg )
       ENDIF
    NEXT
 
-   hb_mutexUnLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+   hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
 
    RETURN
 
@@ -483,7 +483,7 @@ STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
    LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
 
    nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
-   nconn[ _NETIOSRV_CONN_nThreadID ]   := hb_threadID()
+   nconn[ _NETIOSRV_CONN_nThreadID ]   := hb_threadId()
    nconn[ _NETIOSRV_CONN_tStart ]      := hb_DateTime()
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -511,7 +511,7 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 /* RPC management interface */
 
 STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister )
-   LOCAL index := hb_valToStr( pConnSock )
+   LOCAL index := hb_ValToStr( pConnSock )
    LOCAL cli
 
    SWITCH PCount()
@@ -550,7 +550,7 @@ STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
       hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
       FOR EACH nconn IN netiosrv[ _NETIOSRV_hConnection ]
-         IF nconn[ _NETIOSRV_CONN_nThreadID ] == hb_threadID()
+         IF nconn[ _NETIOSRV_CONN_nThreadID ] == hb_threadId()
             nconn[ _NETIOSRV_CONN_hInfo ] := hInfo
             EXIT
          ENDIF

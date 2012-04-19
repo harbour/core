@@ -80,6 +80,22 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    pRegEx->iEFlags = ( ( pRegEx->iFlags & HBREG_NOTBOL ) ? PCRE_NOTBOL : 0 ) |
                      ( ( pRegEx->iFlags & HBREG_NOTEOL ) ? PCRE_NOTEOL : 0 );
 
+#if 0
+   /* detect UTF-8 support. */
+   {
+      int fUTF8Support;
+#  if defined( PCRE_CONFIG_UTF8 )
+      if( pcre_config( PCRE_CONFIG_UTF8, &fUTF8Support ) != 0 )
+         fUTF8Support = 0;
+#  else
+      fUTF8Support = 0;
+#  endif
+      /* use UTF8 in pcre when available and HVM CP is also UTF8. */
+      if( fUTF8Support && hb_cdpIsUTF8() /* TODO */ )
+         iCFlags |= PCRE_UTF8;
+   }
+#endif
+
    pRegEx->re_pcre = pcre_compile( szRegEx, iCFlags, &szError,
                                    &iErrOffset, pCharTable );
    return pRegEx->re_pcre ? 0 : -1;

@@ -158,14 +158,14 @@ PROCEDURE _APPMAIN( cFile, ... )
                         EXIT
                      CASE ".prg"
                      CASE ".hbs"
-                        IF Empty( getenv( "HBRUN_NOHEAD" ) )
+                        IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
                            hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
                         ENDIF
 
-                        cFile := HB_COMPILEBUF( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
+                        cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                                 "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
                         IF cFile == NIL
-                           ERRORLEVEL( 1 )
+                           ErrorLevel( 1 )
                            EXIT
                         ENDIF
                      OTHERWISE
@@ -346,7 +346,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
       RETURN
    ENDIF
 
-   hb_GTInfo( HB_GTI_ICONRES, 1 )
+   hb_gtInfo( HB_GTI_ICONRES, 1 )
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -354,7 +354,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
 
    hbrun_HistoryLoad()
 
-   AAdd( s_aHistory, padr( "quit", HB_LINE_LEN ) )
+   AAdd( s_aHistory, PadR( "quit", HB_LINE_LEN ) )
    nHistIndex := Len( s_aHistory ) + 1
 
    IF ISCHARACTER( cCommand )
@@ -398,9 +398,9 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
          {|| iif( nHistIndex > 1, ;
                   cLine := s_aHistory[ --nHistIndex ], ) } )
       bKeyDown := SetKey( K_DOWN, ;
-         {|| cLine := iif( nHistIndex < LEN( s_aHistory ), ;
+         {|| cLine := iif( nHistIndex < Len( s_aHistory ), ;
              s_aHistory[ ++nHistIndex ], ;
-             ( nHistIndex := LEN( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+             ( nHistIndex := Len( s_aHistory ) + 1, Space( HB_LINE_Len ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE,;
          {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
 
@@ -524,10 +524,10 @@ STATIC PROCEDURE hbrun_Info( cCommand )
    ENDIF
    IF Used()
       hb_DispOutAt( 1, 0, ;
-         PadR( "RDD: " + PadR( RddName(), 6 ) + ;
+         PadR( "RDD: " + PadR( rddName(), 6 ) + ;
                " | Area:" + Str( Select(), 3 ) + ;
                " | Dbf: " + PadR( Alias(), 10 ) + ;
-               " | Index: " + PadR( OrdName( IndexOrd() ), 8 ) + ;
+               " | Index: " + PadR( ordName( IndexOrd() ), 8 ) + ;
                " | # " + Str( RecNo(), 7 ) + "/" + Str( RecCount(), 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ELSE
@@ -576,7 +576,7 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
       IF ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
          cMessage += ";Arguments:"
          FOR EACH xArg IN oErr:Args
-            cMessage += ";" + HB_CStr( xArg )
+            cMessage += ";" + hb_CStr( xArg )
          NEXT
       ENDIF
    ELSEIF ISCHARACTER( oErr )
@@ -586,7 +586,7 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
 
    Alert( cMessage )
 
-   BREAK( oErr )
+   Break( oErr )
 
 /* ********************************************************************** */
 
@@ -604,7 +604,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
       cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF cHRB == NIL
-         EVAL( ErrorBlock(), "Syntax error." )
+         Eval( ErrorBlock(), "Syntax error." )
       ELSE
          pHRB := hb_hrbLoad( cHRB )
          IF pHrb != NIL
@@ -622,7 +622,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
    ENDSEQUENCE
 
-   __MVSETBASE()
+   __mvSetBase()
 
    RETURN
 
@@ -694,11 +694,11 @@ STATIC FUNCTION hbrun_HistoryFileName()
       cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
 #endif
    ELSE
-      cDir := hb_dirBase()
+      cDir := hb_DirBase()
    ENDIF
 
-   IF ! hb_dirExists( cDir )
-      hb_dirCreate( cDir )
+   IF ! hb_DirExists( cDir )
+      hb_DirCreate( cDir )
    ENDIF
 
    RETURN cDir + hb_ps() + cFileName

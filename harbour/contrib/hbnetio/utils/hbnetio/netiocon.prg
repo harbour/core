@@ -164,9 +164,9 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 /* Adjusted the positioning of cursor on navigate through history. [vailtom] */
 STATIC PROCEDURE ManageCursor( cCommand )
 
-   hb_keyPut( K_HOME )
+   hb_KeyPut( K_HOME )
    IF ! Empty( cCommand )
-      hb_keyPut( K_END )
+      hb_KeyPut( K_END )
    ENDIF
 
    RETURN

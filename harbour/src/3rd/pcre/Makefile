@@ -36,6 +36,7 @@ LIBNAME := hbpcre
 ifneq ($(HB_HAS_PCRE_LOCAL),)
 
    HB_CFLAGS += -DHAVE_STDINT_H=0
+   HB_CFLAGS += -DSUPPORT_UTF -DSUPPORT_UCP
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE_STATIC
 
