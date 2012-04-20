@@ -201,13 +201,11 @@ LOCAL nKey, nMask, cText
    ? "buttons as well as double-clicking the mouse buttons."
    ?
    ? "Press any key."
-   nMask := INKEY_ALL
+   nMask := HB_INKEY_ALL
 
    IF ! EMPTY( cRaw )
        IF UPPER( LEFT( cRaw, 1 ) ) == "R"
           nMask += HB_INKEY_RAW
-       ELSE
-          nMask += HB_INKEY_EXTENDED
        END IF
    END IF
 

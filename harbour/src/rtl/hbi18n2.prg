@@ -99,7 +99,8 @@ STATIC FUNCTION __I18N_strDecode( cLine, cValue, lCont )
 
    RETURN lRet
 
-#define _UTF8_BOM e"\xEF\xBB\xBF"
+#define _BOM_VALUE      0xFEFF
+#define _UTF8_BOM       hb_utf8CHR( _BOM_VALUE ) /* e"\xEF\xBB\xBF" */
 
 FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
    LOCAL cLine, cValue
@@ -123,7 +124,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
       RETURN NIL
    ENDIF
    /* Strip UTF-8 BOM */
-   IF Left( cValue, Len( _UTF8_BOM ) ) == _UTF8_BOM
+   IF hb_utf8ASC( cValue ) == _BOM_VALUE
       cValue := SubStr( cValue, Len( _UTF8_BOM ) + 1 )
    ENDIF
    IF !hb_eol() == _I18N_EOL
@@ -303,10 +304,12 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
 STATIC FUNCTION IsBOM_UTF8( cFileName )
    LOCAL fhnd := FOpen( cFileName, FO_READ )
    LOCAL cBuffer
+   LOCAL nLen
 
    IF fhnd != F_ERROR
-      cBuffer := Space( Len( _UTF8_BOM ) )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
+      nLen := HB_BLen( _UTF8_BOM )
+      cBuffer := Space( nLen )
+      FRead( fhnd, @cBuffer, nLen )
       FClose( fhnd )
       IF cBuffer == _UTF8_BOM
          RETURN .T.

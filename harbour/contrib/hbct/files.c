@@ -109,7 +109,6 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
    if( hb_pcount() > 0 )
    {
       const char * szFile = hb_parc( 1 );
-      char * pszFree;
 
       if( pFFData->ffind )
       {
@@ -119,13 +118,10 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 
       if( szFile )
       {
-         szFile = hb_fsNameConv( szFile, &pszFree );
          if( HB_ISNUM( 2 ) )
             ulAttr = ( HB_FATTR ) hb_parnl( 2 );
          pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : HB_FA_ALL;
          pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
-         if( pszFree )
-            hb_xfree( pszFree );
          while( pFFData->ffind && pFFData->ulAttr &&
                 pFFData->ffind->attr != pFFData->ulAttr )
          {
@@ -245,20 +241,19 @@ HB_FUNC( FILEDELETE )
 
    if( HB_ISCHAR( 1 ) )
    {
-      const char * pDirSpec;
+      const char * pszDirSpec;
       PHB_FFIND ffind;
       HB_FATTR ulAttr = HB_FA_ALL;
-      char * pszFree;
 
-      pDirSpec = hb_fsNameConv( hb_parc( 1 ), &pszFree );
+      pszDirSpec = hb_parc( 1 );
       if( HB_ISNUM( 2 ) )
          ulAttr = hb_parnl( 2 );
 
-      if( ( ffind = hb_fsFindFirst( pDirSpec, ulAttr ) ) != NULL )
+      if( ( ffind = hb_fsFindFirst( pszDirSpec, ulAttr ) ) != NULL )
       {
          PHB_FNAME pFilepath;
 
-         pFilepath = hb_fsFNameSplit( pDirSpec );
+         pFilepath = hb_fsFNameSplit( pszDirSpec );
          pFilepath->szExtension = NULL;
 
          do
@@ -276,8 +271,6 @@ HB_FUNC( FILEDELETE )
          hb_xfree( pFilepath );
          hb_fsFindClose( ffind );
       }
-      if( pszFree )
-         hb_xfree( pszFree );
    }
 
    hb_retl( bReturn );

@@ -163,10 +163,6 @@ static int  s_iScreenMode;
 
 static HB_BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 
-static HB_BYTE s_charTransRev[ 256 ];
-static HB_BYTE s_charTrans[ 256 ];
-static HB_BYTE s_keyTrans[ 256 ];
-
 #if defined( __RSX32__ )
 static int kbhit( void )
 {
@@ -274,13 +270,26 @@ HB_BYTE FAR * hb_gt_dos_ScreenPtr( int iRow, int iCol )
 
 static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
 {
+   PHB_CODEPAGE cdp;
    int iRow, iCol;
-   HB_BYTE bAttr, bChar;
+   HB_BYTE bAttr, bChar, bxAttr;
+   HB_USHORT usChar;
 #if !defined( __DJGPP__ )
    HB_BYTE * pScreenPtr = s_pScreenAddres;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenContents(%p)", pGT));
+
+   bxAttr = 0;
+   cdp = HB_GTSELF_CPTERM( pGT );
+   if( !cdp )
+   {
+      cdp = HB_GTSELF_CPBOX( pGT );
+      if( cdp )
+         bxAttr = HB_GT_ATTR_BOX;
+      else
+         cdp = HB_GTSELF_HOSTCP( pGT );
+   }
 
    for( iRow = 0; iRow < s_iRows; ++iRow )
    {
@@ -301,7 +310,8 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
          bAttr = *( pScreenPtr + 1 );
          pScreenPtr += 2;
 #endif
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, bAttr, 0, s_charTransRev[ bChar ] );
+         usChar = hb_cdpGetU16( cdp, bChar );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, bAttr, bxAttr, usChar );
       }
    }
    HB_GTSELF_COLDAREA( pGT, 0, 0, s_iRows, s_iCols );
@@ -810,10 +820,6 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 #endif
 
-   /* initialize code page translation */
-   HB_GTSELF_SETDISPCP( pGT, NULL, NULL, HB_FALSE );
-   HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
-
    s_iScreenMode = hb_gt_dos_GetScreenMode();
 #if !defined( __DJGPP__ )
    s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
@@ -894,8 +900,12 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 
    if( ch == 0 )
       ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
-   else if( ch > 0 && ch <= 255 )
-      ch = s_keyTrans[ ch ];
+   else
+   {
+      int u = HB_GTSELF_KEYTRANS( pGT, ch );
+      if( u )
+         ch = HB_INKEY_NEW_UNICODE( u );
+   }
 
    return ch;
 }
@@ -1240,64 +1250,6 @@ static HB_BOOL hb_gt_dos_Resume( PHB_GT pGT )
    return HB_GTSUPER_RESUME( pGT );
 }
 
-static HB_BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
-{
-   PHB_CODEPAGE cdpTerm, cdpHost;
-   int i;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
-
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   cdpTerm = hb_cdpFind( pszTermCDP );
-   cdpHost = hb_cdpFind( pszHostCDP );
-
-   for( i = 0; i < 256; i++ )
-   {
-      s_charTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
-      s_charTransRev[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateDispChar( i, cdpTerm, cdpHost );
-   }
-
-   return HB_TRUE;
-}
-
-/* *********************************************************************** */
-
-static HB_BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
-{
-   PHB_CODEPAGE cdpTerm, cdpHost;
-   int i;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
-
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   cdpTerm = hb_cdpFind( pszTermCDP );
-   cdpHost = hb_cdpFind( pszHostCDP );
-
-   for( i = 0; i < 256; i++ )
-   {
-      s_keyTrans[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-   }
-
-   return HB_TRUE;
-}
-
 /* *********************************************************************** */
 
 static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
@@ -1307,25 +1259,25 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #endif
    int iColor;
    HB_BYTE bAttr;
-   HB_USHORT usChar;
+   HB_UCHAR uc;
    int iLen = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iLen < iSize )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iLen, &iColor, &bAttr, &uc, HB_TRUE )
          break;
 
 #if defined( __DJGPP__TEXT )
       {
-         short ch_attr = ( ( short ) iColor << 8 ) | s_charTrans[ usChar & 0xff ];
+         short ch_attr = ( ( short ) iColor << 8 ) | uc;
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen  + 1, iRow + 1, &ch_attr );
       }
 #elif defined( __DJGPP__ )
-      ScreenPutChar( s_charTrans[ usChar & 0xff ], iColor, iCol + iLen, iRow );
+      ScreenPutChar( uc, iColor, iCol + iLen, iRow );
 #else
-      *pScreenPtr++ = ( iColor << 8 ) + s_charTrans[ usChar & 0xff ];
+      *pScreenPtr++ = ( iColor << 8 ) + uc;
 #endif
       iLen++;
    }
@@ -1439,8 +1391,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->PostExt                    = hb_gt_dos_PostExt;
    pFuncTable->Tone                       = hb_gt_dos_Tone;
    pFuncTable->Info                       = hb_gt_dos_Info;
-   pFuncTable->SetDispCP                  = hb_gt_dos_SetDispCP;
-   pFuncTable->SetKeyCP                   = hb_gt_dos_SetKeyCP;
 
    pFuncTable->ReadKey                    = hb_gt_dos_ReadKey;
 

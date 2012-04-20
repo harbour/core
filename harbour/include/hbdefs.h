@@ -608,6 +608,12 @@ typedef HB_U32 HB_FATTR;
 #  endif
 #endif
 
+#if defined( HB_OS_WIN )
+   typedef wchar_t         HB_WCHAR;
+#else
+   typedef unsigned short  HB_WCHAR;
+#endif
+
 /* maximum length of double number in decimal representation:
    log10(2^1024) ~ 308.25 */
 #define HB_MAX_DOUBLE_LENGTH 320

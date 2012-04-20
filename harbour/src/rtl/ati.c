@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * HB_ATI() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999-2009 Viktor Szakats (harbour syenar.net)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
@@ -53,39 +54,36 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 
-static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
+static HB_SIZE hb_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen));
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE nPos = 0;
-      HB_SIZE nSubPos = 0;
-
-      while( nPos < nLen && nSubPos < nSubLen )
+      HB_SIZE nPos = 0, nIndex = 0;
+      do
       {
-         if( hb_charLower( szText[ nPos ] ) == hb_charLower( szSub[ nSubPos ] ) )
+         HB_SIZE nSubPos = 0, nPrev = nPos;
+         if( hb_cdpCharCaseEq( cdp, szText, nLen, &nPos, szSub, nSubLen, &nSubPos ) )
          {
-            ++nSubPos;
-            ++nPos;
+            HB_SIZE nBack = nPos;
+            do
+            {
+               if( nSubPos >= nSubLen )
+                  return ( HB_CDP_ISCHARIDX( cdp ) ? nIndex : nPrev ) + 1;
+            }
+            while( hb_cdpCharCaseEq( cdp, szText, nLen, &nPos, szSub, nSubLen, &nSubPos ) );
+            nPos = nBack;
          }
-         else if( nSubPos )
-         {
-            /* Go back to the first character after the first match,
-               or else tests like "22345" $ "012223456789" will fail. */
-            nPos -= ( nSubPos - 1 );
-            nSubPos = 0;
-         }
-         else
-            ++nPos;
+         ++nIndex;
       }
-
-      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
+      while( nPos < nLen );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 HB_FUNC( HB_ATI )
@@ -95,26 +93,49 @@ HB_FUNC( HB_ATI )
 
    if( pText && pSub )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      const char * pszText = hb_itemGetCPtr( pText );
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
-      HB_SIZE nStart = hb_parnsdef( 3, 1 );
-      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength );
-      HB_SIZE nPos;
+      HB_SIZE nStart = hb_parns( 3 );
+      HB_SIZE nFrom, nTo, nPos = 0;
 
-      if( nStart > nTextLength || nEnd < nStart )
-         hb_retns( 0 );
+      if( nStart <= 1 )
+         nStart = nFrom = 0;
+      else if( HB_CDP_ISCHARIDX( cdp ) )
+         nFrom = hb_cdpTextPos( cdp, pszText, nTextLength, --nStart );
       else
+         nFrom = --nStart;
+
+      if( nFrom < nTextLength )
       {
-         if( nEnd > nTextLength )
-            nEnd = nTextLength;
+         pszText += nFrom;
+         nTextLength -= nFrom;
+         if( HB_ISNUM( 4 ) )
+         {
+            nTo = hb_parns( 4 );
+            if( nTo <= nStart )
+               nTo = 0;
+            else
+            {
+               nTo -= nStart;
+               if( HB_CDP_ISCHARIDX( cdp ) )
+                  nTo = hb_cdpTextPos( cdp, pszText, nTextLength, nTo );
+               if( nTo > nTextLength )
+                  nTo = nTextLength;
+            }
+         }
+         else
+            nTo = nTextLength;
 
-         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + nStart - 1, nEnd - nStart + 1 );
-
-         if( nPos > 0 )
-            nPos += ( nStart - 1 );
-
-         hb_retns( nPos );
+         if( nTo > 0 )
+         {
+            nPos = hb_strAtI( cdp, hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                              pszText, nTo );
+            if( nPos > 0 )
+               nPos += HB_CDP_ISCHARIDX( cdp ) ? nStart : nFrom;
+         }
       }
+      hb_retns( nPos );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

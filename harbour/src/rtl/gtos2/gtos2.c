@@ -487,10 +487,23 @@ static void hb_gt_os2_SetCursorStyle( int iStyle )
 
 static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
 {
+   PHB_CODEPAGE cdp;
    int iRow, iCol;
    char * pBufPtr;
+   HB_BYTE bxAttr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents(%p)", pGT));
+
+   bxAttr = 0;
+   cdp = HB_GTSELF_CPTERM( pGT );
+   if( !cdp )
+   {
+      cdp = HB_GTSELF_CPBOX( pGT );
+      if( cdp )
+         bxAttr = HB_GT_ATTR_BOX;
+      else
+         cdp = HB_GTSELF_HOSTCP( pGT );
+   }
 
    for( iRow = 0; iRow < s_vi.row; ++iRow )
    {
@@ -499,7 +512,8 @@ static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
 
       for( iCol = 0, pBufPtr = s_sLineBuf; iCol < s_vi.col; ++iCol, pBufPtr += 2 )
       {
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, pBufPtr[ 1 ], 0, pBufPtr[ 0 ] );
+         HB_USHORT usChar = hb_cdpGetU16( cdp, pBufPtr[ 0 ] );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, pBufPtr[ 1 ], bxAttr, usChar );
       }
    }
    HB_GTSELF_COLDAREA( pGT, 0, 0, s_vi.row, s_vi.col );
@@ -619,6 +633,12 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 
    if( ch == 0 )
       ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
+   else
+   {
+      int u = HB_GTSELF_KEYTRANS( pGT, ch );
+      if( u )
+         ch = HB_INKEY_NEW_UNICODE( u );
+   }
 
    return ch;
 }
@@ -781,17 +801,17 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    char * pBufPtr = s_sLineBuf;
    int iColor;
    HB_BYTE bAttr;
-   HB_USHORT usChar;
+   HB_UCHAR uc;
    int iLen = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iLen < iSize )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iLen, &iColor, &bAttr, &uc, HB_TRUE ) )
          break;
 
-      *pBufPtr++ = ( char ) usChar;
+      *pBufPtr++ = ( char ) uc;
       *pBufPtr++ = ( char ) iColor;
       ++iLen;
    }

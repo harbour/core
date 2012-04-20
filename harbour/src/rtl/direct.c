@@ -132,31 +132,20 @@ HB_FUNC( DIRECTORY )
 
    if( szDirSpec && *szDirSpec )
    {
-      szDirSpec = hb_fsNameConv( szDirSpec, &pszFree );
       if( ulMask != HB_FA_LABEL )
       {
-         if( *szDirSpec )
-         {
-            /* CA-Cl*pper compatible behavior - add all file mask when
-             * last character is directory or drive separator
-             */
-            HB_SIZE nLen = strlen( szDirSpec ) - 1;
+         /* CA-Cl*pper compatible behavior - add all file mask when
+          * last character is directory or drive separator
+          */
+         HB_SIZE nLen = strlen( szDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
-            if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
-                szDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
+         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
+             szDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
 #else
-            if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
+         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
-            {
-               char * pszTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
-
-               if( pszFree )
-                  hb_xfree( pszFree );
-               szDirSpec = pszFree = pszTemp;
-            }
-         }
-         else
-            szDirSpec = HB_OS_ALLFILE_MASK;
+            szDirSpec = pszFree =
+                        hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
       }
    }
    else

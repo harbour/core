@@ -184,7 +184,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    pWVT->keyLast           = 0;
 
    pWVT->CenterWindow      = HB_TRUE;        /* Default is to always display window in centre of screen */
-   pWVT->CodePage          = 255;         /* GetACP(); - set code page to default system */
 
    pWVT->AltF4Close        = HB_FALSE;
    pWVT->fInit             = HB_FALSE;
@@ -201,12 +200,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
 
    pWVT->bResizing         = HB_FALSE;
    pWVT->bAlreadySizing    = HB_FALSE;
-
-#ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP    = hb_vmCDP();
-   pWVT->inCDP      = hb_vmCDP();
-   pWVT->boxCDP     = hb_cdpFind( "EN" );
-#endif
 
    return pWVT;
 }
@@ -508,13 +501,9 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
    #endif
 
    /* Set default window title */
-   {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-      pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
-      pWVT->qWnd->_drawingArea->resetWindowSize();
-      pWVT->qWnd->setWindowSize();
-      hb_xfree( pFileName );
-   }
+   pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
+   pWVT->qWnd->_drawingArea->resetWindowSize();
+   pWVT->qWnd->setWindowSize();
 
    return HB_TRUE;
 }
@@ -714,57 +703,6 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* ********************************************************************** */
 
-static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
-{
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   /*
-    * We are displaying text in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost )
-      {
-         PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-
-         pWVT->hostCDP = cdpHost;
-         pWVT->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
-      }
-   }
-
-   return HB_TRUE;
-}
-
-static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
-{
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   /*
-    * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost )
-         HB_GTWVT_GET( pGT )->inCDP = cdpHost;
-   }
-
-   return HB_TRUE;
-}
-
-/* ********************************************************************** */
-
 static HB_BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent(%p)", pGT));
@@ -946,29 +884,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->qWnd->setWindowTitle( hb_itemGetStrUTF8( pInfo->pNewVal, &pText01, NULL ) );
                hb_strfree( pText01 );
             }
-         }
-         break;
-
-      case HB_GTI_CODEPAGE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->CodePage );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            iVal = hb_itemGetNI( pInfo->pNewVal );
-            if( iVal != pWVT->CodePage )
-            {
-               pWVT->CodePage = iVal;
-            }
-         }
-         break;
-
-      case HB_GTI_BOXCP:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult,
-                                       pWVT->boxCDP ? pWVT->boxCDP->id : NULL );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            PHB_CODEPAGE cdpBox = hb_cdpFind( hb_itemGetCPtr( pInfo->pNewVal ) );
-            if( cdpBox )
-               pWVT->boxCDP = cdpBox;
          }
          break;
 
@@ -1434,7 +1349,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
+         usChar = hb_cdpGetU16Ctrl( usChar );
 #if 1
          if( bAttr & HB_GT_ATTR_BOX )
          {
@@ -1556,7 +1471,7 @@ void DrawingArea::displayCell( int iRow, int iCol )
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
    {
-      usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, ( HB_BYTE ) usChar );
+      usChar = hb_cdpGetU16Ctrl( usChar );
 
       painter.setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
       painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );

@@ -99,28 +99,31 @@
 #endif
 
 #if !defined( HB_OS_WIN )
-static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
+static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir, HB_BOOL fTrans )
 {
    HB_BOOL fOK = HB_FALSE;
+   char * pTmp;
 
    if( pszTempDir && *pszTempDir != '\0' )
    {
+      if( fTrans )
+         hb_osStrDecode2( pszTempDir, pszName, HB_PATH_MAX - 1 );
+      else
+         hb_strncpy( pszName, pszTempDir, HB_PATH_MAX - 1 );
+
       switch( hb_setGetDirCase() )
       {
          case HB_SET_CASE_LOWER:
-            hb_cdpnDup2Lower( hb_vmCDP(), pszTempDir, strlen( pszTempDir ),
-                              pszName, HB_PATH_MAX );
-            pszName[ HB_PATH_MAX - 1 ] = '\0';
-            fOK = strcmp( pszName, pszTempDir ) == 0;
+            pTmp = hb_cdpnDupLower( hb_vmCDP(), pszName, NULL );
+            fOK = strcmp( pszName, pTmp ) == 0;
+            hb_xfree( pTmp );
             break;
          case HB_SET_CASE_UPPER:
-            hb_cdpnDup2Upper( hb_vmCDP(), pszTempDir, strlen( pszTempDir ),
-                              pszName, HB_PATH_MAX );
-            pszName[ HB_PATH_MAX - 1 ] = '\0';
-            fOK = strcmp( pszName, pszTempDir ) == 0;
+            pTmp = hb_cdpnDupUpper( hb_vmCDP(), pszName, NULL );
+            fOK = strcmp( pszName, pTmp ) == 0;
+            hb_xfree( pTmp );
             break;
          default:
-            hb_strncpy( pszName, pszTempDir, HB_PATH_MAX - 1 );
             fOK = HB_TRUE;
             break;
       }
@@ -273,7 +276,7 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
       fResult = GetTempFileName( lpDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
 
       if( fResult )
-         HB_TCHAR_COPYFROM( pszBuffer, lpBuffer, HB_PATH_MAX - 1 );
+         HB_OSSTRDUP2( lpBuffer, pszBuffer, HB_PATH_MAX - 1 );
 
       if( lpPrefixFree )
          hb_xfree( lpPrefixFree );
@@ -281,45 +284,33 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
          hb_xfree( lpDirFree );
    }
 #else
-
-   /* TODO: Implement these: */
-   HB_SYMBOL_UNUSED( pszDir );
-   HB_SYMBOL_UNUSED( pszPrefix );
-
-   /* TOFIX: The spec says to reserve L_tmpnam number of characters for the
-             passed buffer. It will be needed to fix HB_PATH_MAX - 1 to be
-             at least this large. */
-
-   fResult = ( tmpnam( pszBuffer ) != NULL );
-
-#  if defined( __DJGPP__ )
    {
-      /* convert '/' to '\' */
-      char * pszDelim;
-      while( ( pszDelim = strchr( pszBuffer, '/' ) ) != NULL )
-         *pszDelim = '\\';
-   }
-#  endif
+      char * pTmpBuffer = hb_xgrab( L_tmpnam + 1 );
 
+      /* TODO: Implement these: */
+      HB_SYMBOL_UNUSED( pszDir );
+      HB_SYMBOL_UNUSED( pszPrefix );
+
+      pTmpBuffer[ 0 ] = '\0';
+      fResult = ( tmpnam( pszBuffer ) != NULL );
+      pTmpBuffer[ L_tmpnam ] = '\0';
+
+      if( fResult )
+      {
+#  if defined( __DJGPP__ )
+         /* convert '/' to '\' */
+         char * pszDelim;
+         while( ( pszDelim = strchr( pTmpBuffer, '/' ) ) != NULL )
+            *pszDelim = '\\';
+#  endif
+         hb_osStrDecode2( pTmpBuffer, pszBuffer, HB_PATH_MAX - 1 );
+      }
+      hb_xfree( pTmpBuffer );
+   }
 #endif
 
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
-
-   /* Convert from OS codepage */
-   if( fResult )
-   {
-      char * pszFree = NULL;
-      const char * pszResult;
-      HB_SIZE nLen = strlen( pszBuffer );
-
-      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nLen );
-
-      if( pszResult != pszBuffer )
-         hb_strncpy( pszBuffer, pszResult, HB_PATH_MAX - 1 );
-      if( pszFree )
-         hb_xfree( pszFree );
-   }
 
    return fResult;
 }
@@ -379,10 +370,10 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
    {
       char * pszTempDirEnv = hb_getenv( "TMPDIR" );
 
-      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
+      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv, HB_FALSE ) )
       {
 #ifdef P_tmpdir
-         if( ! fsGetTempDirByCase( pszTempDir, P_tmpdir ) )
+         if( ! fsGetTempDirByCase( pszTempDir, P_tmpdir, HB_TRUE ) )
 #endif
          {
             pszTempDir[ 0 ] = '.';
@@ -422,7 +413,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       {
          nResult = 0;
          lpDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
-         HB_TCHAR_COPYFROM( pszTempDir, lpDir, HB_PATH_MAX - 1 );
+         HB_OSSTRDUP2( lpDir, pszTempDir, HB_PATH_MAX - 1 );
       }
    }
 #else
@@ -433,7 +424,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       if( tmpnam( szBuffer ) != NULL )
       {
          PHB_FNAME pTempName = hb_fsFNameSplit( szBuffer );
-         if( fsGetTempDirByCase( pszTempDir, pTempName->szPath ) )
+         if( fsGetTempDirByCase( pszTempDir, pTempName->szPath, HB_TRUE ) )
             nResult = 0;
          hb_xfree( pTempName );
       }
@@ -450,7 +441,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
 
             if( pszTempDirEnv )
             {
-               if( fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
+               if( fsGetTempDirByCase( pszTempDir, pszTempDirEnv, HB_FALSE ) )
                   nResult = 0;
                hb_xfree( pszTempDirEnv );
             }
@@ -473,20 +464,6 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       }
    }
 #endif
-
-   /* Convert from OS codepage */
-   {
-      char * pszFree = NULL;
-      const char * pszResult;
-      HB_SIZE nLen = strlen( pszTempDir );
-
-      pszResult = hb_osDecodeCP( pszTempDir, &pszFree, &nLen );
-
-      if( pszResult != pszTempDir )
-         hb_strncpy( pszTempDir, pszResult, HB_PATH_MAX - 1 );
-      if( pszFree )
-         hb_xfree( pszFree );
-   }
 
    return nResult;
 }

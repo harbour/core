@@ -52,6 +52,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 #include "hbset.h"
 #include "hbvm.h"
@@ -372,6 +373,45 @@ int hb_charLower( int iChar )
    return HB_TOLOWER( iChar );
 }
 
+PHB_CODEPAGE hb_vmCDP( void )
+{
+   return NULL;
+}
+
+HB_SIZE hb_cdpTextPos( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB_SIZE nIndex )
+{
+   HB_SYMBOL_UNUSED( cdp );
+   HB_SYMBOL_UNUSED( pText );
+
+   return nIndex >= nSize ? nSize : nIndex;
+}
+
+HB_BOOL hb_cdpCharEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
+                                        const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+{
+   HB_SYMBOL_UNUSED( cdp );
+
+   if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
+      return szText1[ ( * pnPos1 )++ ] == szText2[ ( * pnPos2 )++ ];
+   else
+      return HB_FALSE;
+}
+
+HB_BOOL hb_cdpCharCaseEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
+                                            const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+{
+   HB_SYMBOL_UNUSED( cdp );
+
+   if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
+   {
+      HB_UCHAR uc1 = szText1[ ( * pnPos1 )++ ],
+               uc2 = szText2[ ( * pnPos2 )++ ];
+      return HB_TOUPPER( uc1 ) == HB_TOUPPER( uc2 );
+   }
+   else
+      return HB_FALSE;
+}
+
 const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
    HB_SYMBOL_UNUSED( pnSize );
@@ -385,6 +425,49 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSi
    HB_SYMBOL_UNUSED( pszFree );
    return szName;
 }
+
+char * hb_osStrEncode( const char * pszName )
+{
+   return hb_strdup( pszName );
+}
+
+char * hb_osStrEncodeN( const char * pszName, HB_SIZE nLen )
+{
+   return hb_strndup( pszName, nLen );
+}
+
+char * hb_osStrDecode( const char * pszName )
+{
+   return hb_strdup( pszName );
+}
+
+char * hb_osStrDecode2( const char * pszName, char * pszBuffer, HB_SIZE nSize )
+{
+   return hb_strncpy( pszBuffer, pszName, nSize );
+}
+
+#if defined( HB_OS_WIN )
+HB_WCHAR * hb_osStrU16Encode( const char * pszName )
+{
+   return hb_mbtowc( pszName );
+}
+
+HB_WCHAR * hb_osStrU16EncodeN( const char * pszName, HB_SIZE nLen )
+{
+   return hb_mbntowc( pszName, nLen );
+}
+
+char * hb_osStrU16Decode( const HB_WCHAR * pszNameW )
+{
+   return hb_wctomb( pszNameW );
+}
+
+char * hb_osStrU16Decode2( const HB_WCHAR * pszNameW, char * pszBuffer, HB_SIZE nSize )
+{
+   hb_wcntombcpy( pszBuffer, pszNameW, nSize );
+   return pszBuffer;
+}
+#endif
 
 
 /* HB_TRACE */
@@ -512,6 +595,100 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 
    return szFileName;
 }
+
+#if defined( HB_OS_WIN )
+HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
+{
+   char * pszBuffer = NULL;
+   HB_WCHAR * lpwFileName;
+
+   if( s_fFnTrim || s_cDirSep != HB_OS_PATH_DELIM_CHR ||
+       s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
+   {
+      PHB_FNAME pFileName;
+      HB_SIZE nLen;
+
+      szFileName = pszBuffer = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
+                                           szFileName, HB_PATH_MAX - 1 );
+
+      if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
+      {
+         char *p = ( char * ) szFileName;
+         while( *p )
+         {
+            if( *p == s_cDirSep )
+               *p = HB_OS_PATH_DELIM_CHR;
+            p++;
+         }
+      }
+
+      pFileName = hb_fsFNameSplit( szFileName );
+
+      /* strip trailing and leading spaces */
+      if( s_fFnTrim )
+      {
+         if( pFileName->szName )
+         {
+            nLen = strlen( pFileName->szName );
+            while( nLen && pFileName->szName[ nLen - 1 ] == ' ' )
+               --nLen;
+            while( nLen && pFileName->szName[ 0 ] == ' ' )
+            {
+               ++pFileName->szName;
+               --nLen;
+            }
+            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
+         }
+         if( pFileName->szExtension )
+         {
+            nLen = strlen( pFileName->szExtension );
+            while( nLen && pFileName->szExtension[ nLen - 1 ] == ' ' )
+               --nLen;
+            while( nLen && pFileName->szExtension[ 0 ] == ' ' )
+            {
+               ++pFileName->szExtension;
+               --nLen;
+            }
+            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
+         }
+      }
+
+      /* FILECASE */
+      if( s_iFileCase == HB_SET_CASE_LOWER )
+      {
+         if( pFileName->szName )
+            hb_strlow( ( char * ) pFileName->szName );
+         if( pFileName->szExtension )
+            hb_strlow( ( char * ) pFileName->szExtension );
+      }
+      else if( s_iFileCase == HB_SET_CASE_UPPER )
+      {
+         if( pFileName->szName )
+            hb_strupr( ( char * ) pFileName->szName );
+         if( pFileName->szExtension )
+            hb_strupr( ( char * ) pFileName->szExtension );
+      }
+
+      /* DIRCASE */
+      if( pFileName->szPath )
+      {
+         if( s_iDirCase == HB_SET_CASE_LOWER )
+            hb_strlow( ( char * ) pFileName->szPath );
+         else if( s_iDirCase == HB_SET_CASE_UPPER )
+            hb_strupr( ( char * ) pFileName->szPath );
+      }
+
+      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_xfree( pFileName );
+   }
+
+   lpwFileName = hb_mbtowc( szFileName );
+   if( pszBuffer )
+      hb_xfree( pszBuffer );
+
+   return lpwFileName;
+}
+#endif
 
 int hb_setGetDirSeparator( void )
 {

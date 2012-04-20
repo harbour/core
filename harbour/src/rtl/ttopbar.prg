@@ -289,20 +289,14 @@ METHOD getAccel( nKey ) CLASS TOPBARMENU
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
                             K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
-
    LOCAL cKey
-   LOCAL nAt
-   LOCAL n
+   LOCAL item
 
    IF nIndex > 0
-
-      cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
-
-      FOR n := 1 TO ::nItemCount
-
-         IF ( nAt := At( "&", ::aItems[ n ]:caption ) ) > 0 .AND. ;
-            Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
-            RETURN n
+      cKey := "&" + SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
+      FOR EACH item IN ::aItems
+         IF hb_AtI( cKey, item:caption ) > 0
+            RETURN item:__enumIndex()
          ENDIF
       NEXT
    ENDIF

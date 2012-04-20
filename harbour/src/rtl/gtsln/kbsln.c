@@ -137,23 +137,16 @@ static int hb_sln_try_get_Kbd_State( void );
 
 static void hb_sln_Init_TermType( void )
 {
-   char * Env;
+   const char * Env;
 
    /* an uncertain way to check if we run under linux console */
-   Env = hb_getenv( "TERM" );
-   if( Env )
-   {
-      hb_sln_UnderLinuxConsole = *Env && ( strncmp( Env, "linux", 5 ) == 0 );
-      hb_xfree( ( void * ) Env );
-   }
+   Env = getenv( "TERM" );
+
+   hb_sln_UnderLinuxConsole = Env && strncmp( Env, "linux", 5 ) == 0;
+
    /* an uncertain way to check if we run under xterm */
-   Env = hb_getenv( "TERM" );
-   if( Env )
-   {
-      hb_sln_UnderXterm = *Env && ( strstr( Env, "xterm" ) != NULL ||
-                                    strncmp( Env, "rxvt", 4 ) == 0 );
-      hb_xfree( ( void * ) Env );
-   }
+   hb_sln_UnderXterm = Env && ( strstr( Env, "xterm" ) != NULL ||
+                                strncmp( Env, "rxvt", 4 ) == 0 );
 }
 
 /* *********************************************************************** */
@@ -241,13 +234,14 @@ static void hb_sln_Init_KeyTranslations( void )
 int hb_sln_Init_Terminal( int phase )
 {
    struct termios newTTY;
-   unsigned char * p;
    int ret = 0;
 
    /* first time init phase - we don't want this after
       return from system command ( see run.c )      */
    if( phase == 0 )
    {
+      unsigned const char * p;
+
       /* check if we run under linux console or under xterm */
       hb_sln_Init_TermType();
 
@@ -258,16 +252,9 @@ int hb_sln_Init_Terminal( int phase )
 #endif
 
       /* get Dead key definition */
-      p = ( unsigned char * ) hb_getenv( s_DeadKeyEnvName );
-
-      if( p && p[ 0 ] != '\0' )
-      {
-         int len = strlen( ( char * ) p );
-         if( len > 0 )
-            s_iDeadKey = ( int ) *p;
-      }
-      if( p )
-         hb_xfree( ( void * ) p );
+      p = ( unsigned const char * ) getenv( s_DeadKeyEnvName );
+      if( p && *p )
+         s_iDeadKey = ( int ) *p;
 
       /* number of keys dealing with a Dead key */
       hb_sln_convKDeadKeys[ 0 ] = 0;
@@ -423,35 +410,40 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
          return tmp;
    }
 
-#if ( defined( HB_SLN_UTF8 ) || defined( HB_SLN_UNICODE ) )
-   if( hb_sln_Is_Unicode && ch < 256 )
+   if( !hb_sln_Is_Unicode )
    {
+      /* standard ASCII key */
+      if( ch && ch < 256 && hb_sln_inputTab[ ch ] )
+         ch = hb_sln_inputTab[ ch ];
+   }
+#if ( defined( HB_SLN_UTF8 ) || defined( HB_SLN_UNICODE ) )
+   else if( ch >= 32 && ch <= 255 )
+   {
+      HB_WCHAR wc = 0;
       int n = 0;
-      HB_USHORT uc = 0;
 
-      if( hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_UCHAR ) ch, &n, &uc ) )
+      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) ch, &n, &wc ) )
       {
          unsigned int buf[ 10 ], i = 0;
 
          while( n > 0 )
          {
             if( SLang_input_pending( hb_sln_escDelay == 0 ? -100 :
-                                         - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
+                                      - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if( !hb_cdpGetFromUTF8( hb_sln_cdpIN, ( HB_UCHAR ) buf[ i - 1 ], &n, &uc ) )
+            if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) buf[ i - 1 ], &n, &wc ) )
                n = -1;
          }
          if( n == 0 )
-            ch = uc;
+            return HB_INKEY_NEW_UNICODE( wc );
          else while( i > 0 )
             SLang_ungetkey( buf[ --i ] );
       }
    }
 #endif
 
-   /* standard ASCII key */
-   return ch < 256 ? hb_sln_inputTab[ ch ] : ch;
+   return ch;
 }
 
 /* *********************************************************************** */

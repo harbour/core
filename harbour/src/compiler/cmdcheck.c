@@ -444,6 +444,17 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                            HB_COMP_PARAM->supported |= HB_COMPFLAG_EXTOPT;
                         break;
 
+                     case 'u':
+                     case 'U':
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_USERCP;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_USERCP;
+                        break;
+
                      default:
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                         break;

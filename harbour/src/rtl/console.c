@@ -70,6 +70,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
@@ -645,21 +646,29 @@ HB_FUNC( HB_DISPOUTAT )
    so we can use it to draw graphical elements. */
 HB_FUNC( HB_DISPOUTATBOX )
 {
-   int iRow = hb_parni( 1 );
-   int iCol = hb_parni( 2 );
-   const char * pszString = hb_parcx( 3 );
-   HB_SIZE nStringLen = hb_parclen( 3 );
-   int iColor;
+   const char * pszString = hb_parc( 3 );
 
-   if( HB_ISCHAR( 4 ) )
-      iColor = hb_gtColorToN( hb_parc( 4 ) );
-   else if( HB_ISNUM( 4 ) )
-      iColor = hb_parni( 4 );
-   else
-      iColor = hb_gtGetCurrColor();
+   if( pszString )
+   {
+      PHB_CODEPAGE cdp;
+      HB_SIZE nLen = hb_parclen( 3 ), nIndex = 0;
+      HB_WCHAR wc;
+      int iRow = hb_parni( 1 );
+      int iCol = hb_parni( 2 );
+      int iColor;
 
-   while( nStringLen-- )
-      hb_gtPutChar( iRow, iCol++, iColor, HB_GT_ATTR_BOX, ( unsigned char ) *pszString++ );
+      if( HB_ISCHAR( 4 ) )
+         iColor = hb_gtColorToN( hb_parc( 4 ) );
+      else if( HB_ISNUM( 4 ) )
+         iColor = hb_parni( 4 );
+      else
+         iColor = hb_gtGetCurrColor();
+
+      cdp = hb_gtBoxCP();
+
+      while( HB_CDPCHAR_GET( cdp, pszString, nLen, &nIndex, &wc ) )
+         hb_gtPutChar( iRow, iCol++, iColor, HB_GT_ATTR_BOX, wc );
+   }
 }
 
 HB_FUNC( HB_GETSTDIN ) /* Return handle for STDIN */

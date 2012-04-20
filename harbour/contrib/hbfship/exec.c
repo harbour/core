@@ -66,27 +66,24 @@
 
 HB_FUNC( EXECNAME )
 {
-   const char * szBaseName = hb_cmdargARGVN( 0 );
+   char * pszBaseName = hb_cmdargProgName();
 
-   if( szBaseName )
+   if( pszBaseName )
    {
-      /* Convert from OS codepage */
-      char * pszFree = NULL;
-
-      szBaseName = hb_osDecodeCP( szBaseName, &pszFree, NULL );
       if( ! hb_parl( 1 ) )
       {
-         PHB_FNAME pFileName = hb_fsFNameSplit( szBaseName );
+         PHB_FNAME pFileName = hb_fsFNameSplit( pszBaseName );
 
-         pszFree = hb_xstrcpy( NULL, pFileName->szName,
-                                     pFileName->szExtension, NULL );
+         if( pFileName->szPath )
+         {
+            hb_xfree( pszBaseName );
+            pszBaseName = hb_xstrcpy( NULL, pFileName->szName,
+                                            pFileName->szExtension, NULL );
+         }
          hb_xfree( pFileName );
       }
 
-      if( pszFree )
-         hb_retc_buffer( pszFree );
-      else
-         hb_retc( szBaseName );
+      hb_retc_buffer( pszBaseName );
    }
    else
       hb_retc_null();

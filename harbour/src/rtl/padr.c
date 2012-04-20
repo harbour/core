@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * PADR() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://harbour-project.org
  *
@@ -52,7 +53,15 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
+
+static HB_SIZE hb_cdpItemLen( PHB_CODEPAGE cdp, PHB_ITEM pItem )
+{
+   HB_SIZE nLen = hb_itemGetCLen( pItem );
+   return nLen && HB_CDP_ISCHARIDX( cdp ) ?
+          hb_cdpTextLen( cdp, hb_itemGetCPtr( pItem ), nLen ) : nLen;
+}
 
 /* right-pads a date, number, or string with spaces or supplied character */
 HB_FUNC( PADR )
@@ -65,8 +74,10 @@ HB_FUNC( PADR )
    if( nLen > 0 )
    {
       PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+      PHB_CODEPAGE cdp = hb_vmCDP();
 
-      if( pItem && HB_IS_STRING( pItem ) && ( HB_SIZE ) nLen == hb_itemGetCLen( pItem ) )
+      if( pItem && HB_IS_STRING( pItem ) &&
+          ( HB_SIZE ) nLen == hb_cdpItemLen( cdp, pItem ) )
       {
          hb_itemReturn( pItem );
       }
@@ -75,6 +86,13 @@ HB_FUNC( PADR )
          szText = hb_itemPadConv( pItem, &nSize, &bFreeReq );
          if( szText )
          {
+            if( HB_CDP_ISCHARIDX( cdp ) )
+            {
+               HB_SIZE nText = nLen;
+               nLen = hb_cdpTextPosEx( cdp, szText, nSize, &nText );
+               nLen += nText;
+            }
+
             if( ( HB_SIZE ) nLen > nSize )
             {
                char * szResult = ( char * ) hb_xgrab( nLen + 1 );

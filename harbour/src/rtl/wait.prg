@@ -54,6 +54,7 @@
 
 FUNCTION __Wait( xPrompt )
    LOCAL nKey
+   LOCAL cKey
    LOCAL bBlock
 
    /* TODO: Here we can use Lang API to localize default message */
@@ -66,10 +67,11 @@ FUNCTION __Wait( xPrompt )
       IF ( bBlock := SetKey( nKey ) ) != NIL
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
       ELSE
-         IF nKey >= 32 .AND. nKey <= 255
-            QQOut( Chr( nKey ) )
+         cKey := hb_KeyChar( nKey )
+         IF Len( cKey ) > 0
+            QQOut( cKey )
          ELSE
-            nKey := 0
+            cKey := Chr( 0 )
          ENDIF
 
          EXIT
@@ -77,4 +79,4 @@ FUNCTION __Wait( xPrompt )
 
    ENDDO
 
-   RETURN Chr( nKey )
+   RETURN cKey

@@ -132,6 +132,7 @@ extern HB_EXPORT void      hb_vmRequestRestore( void );
 extern HB_EXPORT HB_BOOL   hb_vmRequestReenterExt( void );
 
 extern HB_EXPORT HB_BOOL   hb_vmIsActive( void );
+extern HB_EXPORT HB_BOOL   hb_vmIsReady( void );
 
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED     1     /* immediately quit the application */

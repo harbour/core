@@ -421,9 +421,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
 static char * hb_fsFileFind( const char * pszFileMask )
 {
    PHB_FFIND ffind;
-   char * pszFree;
 
-   pszFileMask = hb_fsNameConv( pszFileMask, &pszFree );
    if( ( ffind = hb_fsFindFirst( pszFileMask, HB_FA_ALL ) ) != NULL )
    {
       char pszFileName[ HB_PATH_MAX ];
@@ -431,13 +429,9 @@ static char * hb_fsFileFind( const char * pszFileMask )
       pFileName->szName = ffind->szName;
       hb_fsFNameMerge( pszFileName, pFileName );
       hb_fsFindClose( ffind );
-      if( pszFree )
-         hb_xfree( pszFree );
       hb_xfree( pFileName );
       return hb_strdup( pszFileName );
    }
-   if( pszFree )
-      hb_xfree( pszFree );
    return NULL;
 }
 

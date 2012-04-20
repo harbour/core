@@ -66,6 +66,8 @@
 
 #define HB_GT_NAME      TRM
 
+#define HB_GT_UNICODE_BUF
+
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapicdp.h"
@@ -309,7 +311,9 @@ typedef struct _HB_GTTRM
    HB_FHANDLE hFilenoStderr;
    int        iRow;
    int        iCol;
-   int        iLineBufSize;
+   int        iWidth;
+   int        iHeight;
+   HB_SIZE    nLineBufSize;
    char *     pLineBuf;
    int        iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
    int        iAttrMask;
@@ -323,13 +327,17 @@ typedef struct _HB_GTTRM
 
    HB_BOOL    fPosAnswer;
 
+   HB_BOOL    fUTF8;
+
+#ifndef HB_GT_UNICODE_BUF
+   PHB_CODEPAGE cdpIn;
    PHB_CODEPAGE cdpHost;
    PHB_CODEPAGE cdpTerm;
    PHB_CODEPAGE cdpBox;
-   PHB_CODEPAGE cdpIn;
 
-   HB_BOOL    fUTF8;
    HB_UCHAR   keyTransTbl[ 256 ];
+#endif
+
    int        charmap[ 256 ];
 
    int        chrattr[ 256 ];
@@ -728,6 +736,7 @@ static void hb_gt_trm_termOut( PHB_GTTRM pTerm, const char * pStr, int iLen )
    }
 }
 
+#ifndef HB_GT_UNICODE_BUF
 static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen, int iAttr )
 {
    if( pTerm->iOutBufSize )
@@ -770,6 +779,7 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
       }
    }
 }
+#endif
 
 /* ************************************************************************* */
 
@@ -1468,6 +1478,36 @@ again:
          pTerm->key_flag = 0;
       }
 
+#ifdef HB_GT_UNICODE_BUF
+      if( !pTerm->fUTF8 )
+      {
+         int u = HB_GTSELF_KEYTRANS( pTerm->pGT, nKey );
+         if( u )
+            nKey = HB_INKEY_NEW_UNICODE( u );
+      }
+      else if( nKey >= 32 && nKey <= 255 )
+      {
+         //hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc )
+         HB_WCHAR wc = 0;
+         n = i = 0;
+         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) nKey, &n, &wc ) )
+         {
+            while( n > 0 )
+            {
+               ch = test_bufch( pTerm, i++, pTerm->esc_delay );
+               if( ch < 0 || ch > 255 )
+                  break;
+               if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) ch, &n, &wc ) )
+                  n = -1;
+            }
+            if( n == 0 )
+            {
+               free_bufch( pTerm, i );
+               return HB_INKEY_NEW_UNICODE( wc );
+            }
+         }
+      }
+#else
       if( nKey > 0 && nKey <= 255 && pTerm->fUTF8 && pTerm->cdpIn )
       {
          HB_USHORT uc = 0;
@@ -1497,6 +1537,7 @@ again:
            nKey >= 32 && nKey < 128 && pTerm->nation_transtbl[nKey] )
          nKey = pTerm->nation_transtbl[nKey];
 */
+#endif
       if( nKey )
          nKey = getClipKey( nKey );
    }
@@ -2204,18 +2245,22 @@ static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
    return szLang && strstr( szLang, "UTF-8" ) != NULL;
 }
 
-static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, const char *pStr, int iLen )
+static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, const char *pStr, int iLen, int iChars )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_PutStr(%p,%d,%d,%d,%p,%d)", pTerm, iRow, iCol, iAttr, pStr, iLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_PutStr(%p,%d,%d,%d,%p,%d,%d)", pTerm, iRow, iCol, iAttr, pStr, iLen, iChars));
 
    if( pTerm->iOutBufSize )
    {
       pTerm->SetCursorPos( pTerm, iRow, iCol );
       pTerm->SetAttributes( pTerm, iAttr & pTerm->iAttrMask );
+#ifdef HB_GT_UNICODE_BUF
+      hb_gt_trm_termOut( pTerm, pStr, iLen );
+#else
       hb_gt_trm_termOutTrans( pTerm, pStr, iLen, iAttr );
+#endif
    }
 
-   pTerm->iCol += iLen;
+   pTerm->iCol += iChars;
 }
 
 static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
@@ -2251,8 +2296,11 @@ static void hb_gt_trm_SetTitle( PHB_GTTRM pTerm, const char * szTitle )
    }
 }
 
-static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
+#ifndef HB_GT_UNICODE_BUF
+static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm )
 {
+   PHB_CODEPAGE cdpTerm = HB_GTSELF_INCP( pTerm->pGT ),
+                cdpHost = HB_GTSELF_HOSTCP( pTerm->pGT );
    int i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetKeyTrans(%p,%p,%p)", pTerm, cdpTerm, cdpHost));
@@ -2260,12 +2308,13 @@ static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpTerm, PHB_CO
    for( i = 0; i < 256; ++i )
       pTerm->keyTransTbl[ i ] = ( unsigned char )
                            hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-
-   pTerm->cdpIn = cdpTerm;
 }
+#endif
 
-static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int box )
+static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, int box )
 {
+   PHB_CODEPAGE cdpTerm = HB_GTSELF_TERMCP( pTerm->pGT ),
+                cdpHost = HB_GTSELF_HOSTCP( pTerm->pGT );
    int i, ch, mode;
 
    memset( pTerm->chrattr, 0, sizeof( pTerm->chrattr ) );
@@ -2319,9 +2368,6 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpHost, PHB_C
          }
       }
    }
-   pTerm->cdpHost = cdpHost;
-   pTerm->cdpTerm = cdpTerm;
-   pTerm->cdpBox = box ? cdpHost : hb_cdpFind( "EN" );
 }
 
 static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char *cdesc )
@@ -3075,8 +3121,10 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
 
    hb_gt_chrmapinit( pTerm->charmap, szTerm, pTerm->terminal_type == TERM_XTERM );
 
+#ifndef HB_GT_UNICODE_BUF
    pTerm->cdpHost = pTerm->cdpIn = NULL;
    pTerm->cdpBox = hb_cdpFind( "EN" );
+#endif
 
    add_efds( pTerm, pTerm->hFilenoStdin, O_RDONLY, NULL, NULL );
    init_keys( pTerm );
@@ -3163,8 +3211,13 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol, NULL ) )
       HB_GTSELF_SETPOS( pGT, pTerm->iRow, pTerm->iCol );
    pTerm->fUTF8 = hb_trm_isUTF8( pTerm );
-   hb_gt_trm_SetKeyTrans( pTerm, NULL, NULL );
-   hb_gt_trm_SetDispTrans( pTerm, NULL, NULL, 0 );
+   if( !pTerm->fUTF8 )
+   {
+#ifndef HB_GT_UNICODE_BUF
+      hb_gt_trm_SetKeyTrans( pTerm );
+#endif
+      hb_gt_trm_SetDispTrans( pTerm, 0 );
+   }
    HB_GTSELF_SETBLINK( pGT, HB_TRUE );
    if( pTerm->fOutTTY )
       HB_GTSELF_SEMICOLD( pGT );
@@ -3201,7 +3254,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
       if( pTerm->fRestTTY )
          tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
-      if( pTerm->iLineBufSize > 0 )
+      if( pTerm->nLineBufSize > 0 )
          hb_xfree( pTerm->pLineBuf );
       if( pTerm->iOutBufSize > 0 )
          hb_xfree( pTerm->pOutBuf );
@@ -3485,116 +3538,146 @@ static HB_BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   hb_gt_trm_SetDispTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszHostCDP ),
-                                                hb_cdpFind( pszTermCDP ),
-                                                fBox ? 1 : 0 );
-
-   return HB_TRUE;
+   if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
+   {
+      if( !HB_GTTRM_GET( pGT )->fUTF8 )
+         hb_gt_trm_SetDispTrans( HB_GTTRM_GET( pGT ), fBox ? 1 : 0 );
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
+#ifndef HB_GT_UNICODE_BUF
 static HB_BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   hb_gt_trm_SetKeyTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszTermCDP ),
-                                               hb_cdpFind( pszHostCDP ) );
-
-   return HB_TRUE;
+   if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
+   {
+      if( !HB_GTTRM_GET( pGT )->fUTF8 )
+         hb_gt_trm_SetKeyTrans( HB_GTTRM_GET( pGT ) );
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
+#endif
 
 static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    PHB_GTTRM pTerm;
-   int iColor;
    HB_BYTE bAttr;
    HB_USHORT usChar;
-   int iLen = 0, iAttribute = 0, iColor2;
+   int iLen, iChars, iAttribute, iColor;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
+   iLen = iChars = iAttribute = 0;
    pTerm = HB_GTTRM_GET( pGT );
    pTerm->SetTermMode( pTerm, 0 );
    if( iRow < pTerm->iRow )
       pTerm->SetCursorStyle( pTerm, SC_NONE );
    while( iSize-- )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
-         break;
-
-      usChar &= 0xff;
-      if( bAttr & HB_GT_ATTR_BOX )
+#ifdef HB_GT_UNICODE_BUF
+      if( pTerm->fUTF8 )
       {
-         iColor2 = iColor | ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
-         if( !pTerm->fUTF8 )
-            usChar = pTerm->boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
-         else
-            iColor2 |= HB_GTTRM_ATTR_BOX;
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
+            break;
+         if( bAttr & HB_GT_ATTR_BOX )
+            iColor |= HB_GTTRM_ATTR_BOX;
+         usChar = hb_cdpGetU16Ctrl( usChar );
       }
       else
       {
-         iColor2 = iColor | ( pTerm->chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
-         if( !pTerm->fUTF8 )
-            usChar = pTerm->chrattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+         HB_UCHAR uc;
+         if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iChars, &iColor, &bAttr, &uc, HB_FALSE ) )
+            break;
+         if( bAttr & HB_GT_ATTR_BOX )
+         {
+            iColor |= ( pTerm->boxattr[ uc ] & ~HB_GTTRM_ATTR_CHAR );
+            usChar = pTerm->boxattr[ uc ] & HB_GTTRM_ATTR_CHAR;
+         }
+         else
+         {
+            iColor |= ( pTerm->chrattr[ uc ] & ~HB_GTTRM_ATTR_CHAR );
+            usChar = pTerm->chrattr[ uc ] & HB_GTTRM_ATTR_CHAR;
+         }
       }
 
       if( iLen == 0 )
-         iAttribute = iColor2;
-      else if( iColor2 != iAttribute )
+         iAttribute = iColor;
+      else if( iColor != iAttribute )
       {
-         hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen );
-         iCol += iLen;
-         iLen = 0;
-         iAttribute = iColor2;
+         hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen, iChars );
+         iCol += iChars;
+         iLen = iChars = 0;
+         iAttribute = iColor;
+      }
+      if( pTerm->fUTF8 )
+         iLen += hb_cdpU16CharToUTF8( pTerm->pLineBuf + iLen, usChar );
+      else
+         pTerm->pLineBuf[ iLen++ ] = ( char ) usChar;
+      ++iChars;
+#else
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
+         break;
+      usChar &= 0xff;
+      if( bAttr & HB_GT_ATTR_BOX )
+      {
+         iColor |= ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         if( !pTerm->fUTF8 )
+            usChar = pTerm->boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+         else
+            iColor |= HB_GTTRM_ATTR_BOX;
+      }
+      else
+      {
+         iColor |= ( pTerm->chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         if( !pTerm->fUTF8 )
+            usChar = pTerm->chrattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+      }
+      if( iLen == 0 )
+         iAttribute = iColor;
+      else if( iColor != iAttribute )
+      {
+         hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen, iChars );
+         iCol += iChars;
+         iLen = iChars = 0;
+         iAttribute = iColor;
       }
       pTerm->pLineBuf[ iLen++ ] = ( char ) usChar;
+#endif
    }
    if( iLen )
    {
-      if( pTerm->fAM )
-      {
-         int iHeight, iWidth;
-
-         HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
-         if( iRow == iHeight - 1 && iCol + iLen == iWidth )
-            --iLen;
-      }
-      hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen );
+      if( pTerm->fAM &&
+          iRow == pTerm->iHeight - 1 && iCol + iLen == pTerm->iWidth )
+         --iLen;
+      hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen, iChars );
    }
 }
 
 static void hb_gt_trm_Refresh( PHB_GT pGT )
 {
-   int iWidth, iHeight, iRow, iCol, iStyle;
+   int iRow, iCol, iStyle;
+   HB_SIZE nLineBufSize;
    PHB_GTTRM pTerm;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Refresh(%p)", pGT ) );
 
-   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
-
    pTerm = HB_GTTRM_GET( pGT );
-   if( pTerm->iLineBufSize == 0 )
+
+   HB_GTSELF_GETSIZE( pGT, &pTerm->iHeight, &pTerm->iWidth );
+
+#ifdef HB_GT_UNICODE_BUF
+   nLineBufSize = pTerm->iWidth * ( pTerm->fUTF8 ? 3 : 1 );
+#else
+   nLineBufSize = pTerm->iWidth;
+#endif
+   if( pTerm->nLineBufSize != nLineBufSize )
    {
-      pTerm->pLineBuf = ( char * ) hb_xgrab( iWidth );
-      pTerm->iLineBufSize = iWidth;
-   }
-   else if( pTerm->iLineBufSize != iWidth )
-   {
-      pTerm->pLineBuf = ( char * ) hb_xrealloc( pTerm->pLineBuf, iWidth );
-      pTerm->iLineBufSize = iWidth;
+      pTerm->pLineBuf = ( char * ) hb_xrealloc( pTerm->pLineBuf, nLineBufSize );
+      pTerm->nLineBufSize = nLineBufSize;
    }
 
    HB_GTSUPER_REFRESH( pGT );
@@ -3602,7 +3685,8 @@ static void hb_gt_trm_Refresh( PHB_GT pGT )
    HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
    if( iStyle != SC_NONE )
    {
-      if( iRow >= 0 && iCol >= 0 && iRow < iHeight && iCol < iWidth )
+      if( iRow >= 0 && iCol >= 0 &&
+          iRow < pTerm->iHeight && iCol < pTerm->iWidth )
          pTerm->SetCursorPos( pTerm, iRow, iCol );
       else
          iStyle = SC_NONE;
@@ -3633,6 +3717,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pTerm->fUTF8 );
          break;
 
+#ifndef HB_GT_UNICODE_BUF
       case HB_GTI_BOXCP:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        pTerm->cdpBox ? pTerm->cdpBox->id : NULL );
@@ -3644,6 +3729,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pTerm->cdpBox = cdpBox;
          }
          break;
+#endif
 
       case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->esc_delay );
@@ -3671,13 +3757,21 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( pTerm->fUTF8 )
             pInfo->pResult = hb_itemPutStrUTF8( pInfo->pResult, pTerm->szTitle );
          else
+#ifdef HB_GT_UNICODE_BUF
+            pInfo->pResult = hb_itemPutStr( pInfo->pResult, HB_GTSELF_TERMCP( pGT ), pTerm->szTitle );
+#else
             pInfo->pResult = hb_itemPutStr( pInfo->pResult, pTerm->cdpTerm, pTerm->szTitle );
+#endif
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             if( pTerm->fUTF8 )
                szVal = hb_itemGetStrUTF8( pInfo->pNewVal, &hVal, NULL );
             else
+#ifdef HB_GT_UNICODE_BUF
+               szVal = hb_itemGetStr( pInfo->pNewVal, HB_GTSELF_TERMCP( pGT ), &hVal, NULL );
+#else
                szVal = hb_itemGetStr( pInfo->pNewVal, pTerm->cdpTerm, &hVal, NULL );
+#endif
 
             if( pTerm->szTitle )
                hb_xfree( pTerm->szTitle );
@@ -3746,7 +3840,9 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetMode                    = hb_gt_trm_SetMode;
    pFuncTable->SetBlink                   = hb_gt_trm_SetBlink;
    pFuncTable->SetDispCP                  = hb_gt_trm_SetDispCP;
+#ifndef HB_GT_UNICODE_BUF
    pFuncTable->SetKeyCP                   = hb_gt_trm_SetKeyCP;
+#endif
    pFuncTable->Tone                       = hb_gt_trm_Tone;
    pFuncTable->Bell                       = hb_gt_trm_Bell;
    pFuncTable->Info                       = hb_gt_trm_Info;

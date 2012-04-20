@@ -267,8 +267,8 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             EXIT
 
          OTHERWISE
-            IF nKey >= 32 .AND. nKey <= 255
-               KEYBOARD Chr( nKey )
+            IF ! hb_keyChar( nKey ) == ""
+               hb_keyIns( nKey )
                nKey := K_ENTER
                lKeyPressed := .T.
             ENDIF

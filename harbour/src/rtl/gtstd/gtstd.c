@@ -110,6 +110,7 @@ typedef struct _HB_GTSTD
    int            iCol;
    int            iLastCol;
 
+   int            iWidth;
    int            iLineBufSize;
    char *         sLineBuf;
    HB_SIZE        nTransBufSize;
@@ -117,11 +118,6 @@ typedef struct _HB_GTSTD
    HB_BOOL        fFullRedraw;
    char *         szCrLf;
    HB_SIZE        nCrLf;
-
-   HB_BOOL        fDispTrans;
-   PHB_CODEPAGE   cdpTerm;
-   PHB_CODEPAGE   cdpHost;
-   HB_BYTE        keyTransTbl[ 256 ];
 
 #if defined( HB_HAS_TERMIOS )
    struct termios saved_TIO;
@@ -184,15 +180,6 @@ static void sig_handler( int iSigNo )
 
 #endif
 
-static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
-{
-   int i;
-
-   for( i = 0; i < 256; ++i )
-      pGTSTD->keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-}
-
 static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, HB_SIZE nLen )
 {
    hb_fsWriteLarge( pGTSTD->hStdout, szStr, nLen );
@@ -221,8 +208,6 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pGTSTD->fStdinConsole  = hb_fsIsDevice( pGTSTD->hStdin );
    pGTSTD->fStdoutConsole = hb_fsIsDevice( pGTSTD->hStdout );
    pGTSTD->fStderrConsole = hb_fsIsDevice( pGTSTD->hStderr );
-
-   hb_gt_std_setKeyTrans( pGTSTD, NULL, NULL );
 
    pGTSTD->szCrLf = hb_strdup( hb_conNewLine() );
    pGTSTD->nCrLf = strlen( pGTSTD->szCrLf );
@@ -356,7 +341,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
       {
          HB_BYTE bChar;
          if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-            ch = pGTSTD->keyTransTbl[ bChar ];
+            ch = bChar;
       }
    }
 #elif defined( _MSC_VER ) && !defined( HB_OS_WIN_CE )
@@ -372,29 +357,27 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
             ch = _getch() + 256;
          }
          ch = hb_gt_dos_keyCodeTranslate( ch );
-         if( ch > 0 && ch <= 255 )
-            ch = pGTSTD->keyTransTbl[ ch ];
       }
    }
    else if( !_eof( ( int ) pGTSTD->hStdin ) )
    {
       HB_BYTE bChar;
       if( _read( ( int ) pGTSTD->hStdin, &bChar, 1 ) == 1 )
-         ch = pGTSTD->keyTransTbl[ bChar ];
+         ch = bChar;
    }
 #elif defined( HB_OS_WIN )
    if( ! pGTSTD->fStdinConsole )
    {
       HB_BYTE bChar;
       if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-         ch = pGTSTD->keyTransTbl[ bChar ];
+         ch = bChar;
    }
    else if( WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == WAIT_OBJECT_0 )
    {
 #if defined( HB_OS_WIN_CE )
       HB_BYTE bChar;
       if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-         ch = pGTSTD->keyTransTbl[ bChar ];
+         ch = bChar;
 #else
       INPUT_RECORD  ir;
       DWORD         dwEvents;
@@ -404,7 +387,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
          {
             HB_BYTE bChar;
             if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-               ch = pGTSTD->keyTransTbl[ bChar ];
+               ch = bChar;
          }
          else /* Remove from the input queue */
             ReadConsoleInput( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), &ir, 1, &dwEvents );
@@ -424,21 +407,26 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
             ch = getch() + 256;
          }
          ch = hb_gt_dos_keyCodeTranslate( ch );
-         if( ch > 0 && ch <= 255 )
-            ch = pGTSTD->keyTransTbl[ ch ];
       }
    }
    else if( !eof( pGTSTD->hStdin ) )
    {
       HB_BYTE bChar;
       if( read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-         ch = pGTSTD->keyTransTbl[ bChar ];
+         ch = bChar;
    }
 #else
    {
       int iTODO; /* TODO: */
    }
 #endif
+
+   if( ch )
+   {
+      int u = HB_GTSELF_KEYTRANS( pGT, ch );
+      if( u )
+         ch = HB_INKEY_NEW_UNICODE( u );
+   }
 
    return ch;
 }
@@ -555,76 +543,46 @@ static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols );
 }
 
-static HB_BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
-
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
-      pGTSTD->cdpTerm = hb_cdpFindExt( pszTermCDP );
-      pGTSTD->cdpHost = hb_cdpFindExt( pszHostCDP );
-      pGTSTD->fDispTrans = pGTSTD->cdpTerm && pGTSTD->cdpHost &&
-                           pGTSTD->cdpTerm != pGTSTD->cdpHost;
-   }
-
-   return HB_TRUE;
-}
-
-static HB_BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
-
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   hb_gt_std_setKeyTrans(  HB_GTSTD_GET( pGT ), hb_cdpFind( pszTermCDP ),
-                                                hb_cdpFind( pszHostCDP ) );
-
-   return HB_TRUE;
-}
-
-static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
+static void hb_gt_std_DispLine( PHB_GT pGT, int iRow, int iFrom, int iSize )
 {
    int iColor;
    HB_BYTE bAttr;
    HB_USHORT usChar;
-   int iCol, iMin = 0;
+   int iCol, iLastCol, iAll;
+   HB_SIZE nLen, nI;
+   PHB_CODEPAGE cdpTerm = HB_GTSELF_TERMCP( pGT );
    PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
 
-   for( iCol = 0; iCol < pGTSTD->iLineBufSize; ++iCol )
+   if( iSize < 0 )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+      hb_gt_std_newLine( pGTSTD );
+      pGTSTD->iLastCol = iAll = 0;
+      iSize = pGTSTD->iWidth;
+   }
+   else
+      iAll = iSize;
+
+   for( iCol = iLastCol = iFrom, nLen = nI = 0; iSize > 0; ++iSize )
+   {
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
          break;
+
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
-      pGTSTD->sLineBuf[ iCol ] = ( char ) usChar;
-      if( usChar != ' ' )
-         iMin = iCol + 1;
+      nI += hb_cdpTextPutU16( cdpTerm, pGTSTD->sLineBuf + nI,
+                                       pGTSTD->iLineBufSize - nI, usChar );
+      if( iAll || usChar != ' ' )
+      {
+         nLen = nI;
+         iLastCol = iCol;
+      }
    }
-   hb_gt_std_newLine( pGTSTD );
-   if( iMin > 0 )
-   {
-      HB_SIZE nLen = iMin;
-      const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, nLen,
-                                         pGTSTD->sTransBuf, &nLen,
-                                         &pGTSTD->sTransBuf, &pGTSTD->nTransBufSize,
-                                         pGTSTD->cdpHost, pGTSTD->cdpTerm );
-      hb_gt_std_termOut( pGTSTD, buffer, nLen );
-   }
-   pGTSTD->iLastCol = pGTSTD->iCol = iMin;
+   if( nLen > 0 )
+      hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, nLen );
    pGTSTD->iRow = iRow;
+   pGTSTD->iCol = iLastCol;
+   if( pGTSTD->iCol > pGTSTD->iLastCol )
+      pGTSTD->iLastCol = pGTSTD->iCol;
 }
 
 static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
@@ -632,7 +590,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    int iColor;
    HB_BYTE bAttr;
    HB_USHORT usChar;
-   int iLineFeed, iBackSpace, iLen, iMin;
+   int iLineFeed, iBackSpace, iMin;
    PHB_GTSTD pGTSTD;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
@@ -644,7 +602,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       iLineFeed = pGTSTD->iRow < iRow ? iRow - pGTSTD->iRow : 1;
       iCol = 0;
-      iSize = pGTSTD->iLineBufSize;
+      iSize = pGTSTD->iWidth;
    }
    else if( pGTSTD->iCol < iCol )
    {
@@ -653,7 +611,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
    else if( pGTSTD->iCol > iCol )
    {
-      if( pGTSTD->fStdoutConsole && pGTSTD->iCol <= pGTSTD->iLineBufSize )
+      if( pGTSTD->fStdoutConsole && pGTSTD->iCol <= pGTSTD->iWidth )
       {
          iBackSpace = pGTSTD->iCol - iCol;
          if( iBackSpace > iSize )
@@ -663,7 +621,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          iLineFeed = 1;
          iCol = 0;
-         iSize = pGTSTD->iLineBufSize;
+         iSize = pGTSTD->iWidth;
       }
    }
 
@@ -695,7 +653,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
                pGTSTD->fFullRedraw = HB_TRUE;
             }
             for( i = pGTSTD->iRow + 1; i < iRow; ++i )
-               hb_gt_std_DispLine( pGT, i );
+               hb_gt_std_DispLine( pGT, i, 0, -1 );
             iLineFeed = 1;
          }
 
@@ -710,55 +668,25 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iBackSpace );
       }
 
-      for( iLen = 0; iLen < iSize; ++iLen )
-      {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
-            break;
-         if( usChar < 32 || usChar == 127 )
-            usChar = '.';
-         pGTSTD->sLineBuf[ iLen ] = ( char ) usChar;
-         ++iCol;
-      }
-
-      if( iLen )
-      {
-         if( pGTSTD->fDispTrans )
-         {
-            HB_SIZE nLen = iLen;
-            const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, nLen,
-                                               pGTSTD->sTransBuf, &nLen,
-                                               &pGTSTD->sTransBuf, &pGTSTD->nTransBufSize,
-                                               pGTSTD->cdpHost, pGTSTD->cdpTerm );
-            hb_gt_std_termOut( pGTSTD, buffer, nLen );
-         }
-         else
-            hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iLen );
-      }
-      pGTSTD->iRow = iRow;
-      pGTSTD->iCol = iCol;
-      if( pGTSTD->iCol > pGTSTD->iLastCol )
-         pGTSTD->iLastCol = pGTSTD->iCol;
+      hb_gt_std_DispLine( pGT, iRow, iCol, iSize );
    }
 }
 
 static void hb_gt_std_Refresh( PHB_GT pGT )
 {
-   int iHeight, iWidth;
+   int iHeight, iSize;
    PHB_GTSTD pGTSTD;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Refresh(%p)", pGT ) );
 
-   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    pGTSTD = HB_GTSTD_GET( pGT );
-   if( pGTSTD->iLineBufSize == 0 )
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &pGTSTD->iWidth );
+   iSize = pGTSTD->iWidth * HB_MAX_CHAR_LEN;
+
+   if( pGTSTD->iLineBufSize != iSize )
    {
-      pGTSTD->sLineBuf = ( char * ) hb_xgrab( iWidth );
-      pGTSTD->iLineBufSize = iWidth;
-   }
-   else if( pGTSTD->iLineBufSize != iWidth )
-   {
-      pGTSTD->sLineBuf = ( char * ) hb_xrealloc( pGTSTD->sLineBuf, iWidth );
-      pGTSTD->iLineBufSize = iWidth;
+      pGTSTD->sLineBuf = ( char * ) hb_xrealloc( pGTSTD->sLineBuf, iSize );
+      pGTSTD->iLineBufSize = iSize;
    }
    pGTSTD->fFullRedraw = HB_FALSE;
    HB_GTSUPER_REFRESH( pGT );
@@ -769,7 +697,7 @@ static void hb_gt_std_Refresh( PHB_GT pGT )
       if( pGTSTD->iRow < iHeight - 1 )
       {
          for( i = pGTSTD->iRow + 1; i < iHeight; ++i )
-            hb_gt_std_DispLine( pGT, i );
+            hb_gt_std_DispLine( pGT, i, 0, -1 );
       }
    }
 }
@@ -806,8 +734,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_std_Version;
    pFuncTable->Suspend                    = hb_gt_std_Suspend;
    pFuncTable->Resume                     = hb_gt_std_Resume;
-   pFuncTable->SetDispCP                  = hb_gt_std_SetDispCP;
-   pFuncTable->SetKeyCP                   = hb_gt_std_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_std_Tone;
    pFuncTable->Bell                       = hb_gt_std_Bell;
    pFuncTable->Info                       = hb_gt_std_Info;

@@ -192,7 +192,7 @@ HB_ERRCODE hb_gtBoxD( int iTop, int iLeft, int iBottom, int iRight )
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOXD( pGT, iTop, iLeft, iBottom, iRight, _B_DOUBLE, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_BOXD( pGT, iTop, iLeft, iBottom, iRight, NULL, HB_GTSELF_GETCOLOR( pGT ) );
       HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
@@ -210,7 +210,7 @@ HB_ERRCODE hb_gtBoxS( int iTop, int iLeft, int iBottom, int iRight )
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, _B_SINGLE, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, NULL, HB_GTSELF_GETCOLOR( pGT ) );
       HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
@@ -1033,6 +1033,38 @@ HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
    return errCode;
 }
 
+PHB_CODEPAGE hb_gtHostCP( void )
+{
+   PHB_CODEPAGE cdp = NULL;
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtHostCP()"));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      cdp = HB_GTSELF_HOSTCP( pGT );
+      hb_gt_BaseFree( pGT );
+   }
+   return cdp;
+}
+
+PHB_CODEPAGE hb_gtBoxCP( void )
+{
+   PHB_CODEPAGE cdp = NULL;
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxCP()"));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      cdp = HB_GTSELF_BOXCP( pGT );
+      hb_gt_BaseFree( pGT );
+   }
+   return cdp;
+}
+
 HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
 {
    HB_ERRCODE errCode = HB_FAILURE;
@@ -1178,7 +1210,7 @@ HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, HB_BYTE * pbAttr,
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrGetChar(%d, %d, %p, %p, %p)", iRow, iCol, piColor, pbAttr, pusChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetScrChar(%d, %d, %p, %p, %p)", iRow, iCol, piColor, pbAttr, pusChar));
 
    pGT = hb_gt_Base();
    if( pGT )

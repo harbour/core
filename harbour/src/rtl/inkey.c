@@ -57,8 +57,8 @@
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    HB_KEYPUT()
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- *    HB_SETLASTKEY()
+ * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ *    HB_SETLASTKEY(), HB_KEYCHAR(), HB_KEYSTD()
  *
  * See COPYING for licensing terms.
  *
@@ -66,6 +66,7 @@
 
 #include "hbapigt.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbset.h"
 #include "hbstack.h"
 #include "hbvm.h"
@@ -173,11 +174,25 @@ HB_FUNC( HB_KEYLAST )
 
 HB_FUNC( LASTKEY )
 {
-   hb_retni( hb_inkeyLast( INKEY_ALL ) );
+   hb_retni( hb_inkeyLast( HB_INKEY_ALL ) );
 }
 
 HB_FUNC( HB_SETLASTKEY )
 {
    if( HB_ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( HB_KEYCHAR )
+{
+   char szKeyChr[ HB_MAX_CHAR_LEN ];
+   HB_SIZE nLen;
+
+   nLen = hb_inkeyKeyString( hb_parni( 1 ), szKeyChr, sizeof( szKeyChr ) );
+   hb_retclen( szKeyChr, nLen );
+}
+
+HB_FUNC( HB_KEYSTD )
+{
+   hb_retni( hb_inkeyKeyStd( hb_parni( 1 ) ) );
 }

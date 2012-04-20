@@ -72,6 +72,7 @@
 #include "hbapigt.h"
 #include "hbapilng.h"
 #include "hbapicdp.h"
+#include "hbapistr.h"
 #include "hbset.h"
 #include "hbstack.h"
 
@@ -2674,12 +2675,9 @@ HB_BOOL hb_osUseCP( void )
 
 const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
-   HB_STACK_TLS_PRELOAD
-
-#if defined( HB_MT_VM )
-   if( hb_stackId() )
-#endif
+   if( hb_vmIsReady() )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
       if( cdpOS )
       {
@@ -2712,12 +2710,9 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSi
 
 const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
-   HB_STACK_TLS_PRELOAD
-
-#if defined( HB_MT_VM )
-   if( hb_stackId() )
-#endif
+   if( hb_vmIsReady() )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
       if( cdpOS )
       {
@@ -2747,6 +2742,160 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSi
 
    return szName;
 }
+
+char * hb_osStrEncode( const char * pszName )
+{
+   if( hb_vmIsReady() )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
+            return hb_cdpDup( pszName, cdpHost, cdpOS );
+      }
+   }
+
+   return hb_strdup( pszName );
+}
+
+char * hb_osStrEncodeN( const char * pszName, HB_SIZE nLen )
+{
+   if( hb_vmIsReady() )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
+            return hb_cdpDupn( pszName, nLen, cdpHost, cdpOS );
+      }
+   }
+
+   return hb_strndup( pszName, nLen );
+}
+
+char * hb_osStrDecode( const char * pszName )
+{
+   if( hb_vmIsReady() )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
+            return hb_cdpDup( pszName, cdpOS, cdpHost );
+      }
+   }
+
+   return hb_strdup( pszName );
+}
+
+char * hb_osStrDecode2( const char * pszName, char * pszBuffer, HB_SIZE nSize )
+{
+   if( hb_vmIsReady() )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
+         {
+            pszBuffer[ nSize ] = 0;
+            hb_cdpnDup2( pszName, strlen( pszName ), pszBuffer, &nSize, cdpOS, cdpHost );
+            return pszBuffer;
+         }
+      }
+   }
+
+   return hb_strncpy( pszBuffer, pszName, nSize );
+}
+
+#if defined( HB_OS_WIN )
+HB_WCHAR * hb_osStrU16Encode( const char * pszName )
+{
+   if( hb_vmIsReady() )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp )
+      {
+         HB_SIZE nLen, nSize;
+         HB_WCHAR * pszBufferW;
+
+         nLen = strlen( pszName );
+         nSize = hb_cdpStrAsU16Len( cdp, pszName, nLen, 0 );
+         pszBufferW = ( HB_WCHAR * ) hb_xgrab( ( nSize + 1 ) * sizeof( HB_WCHAR ) );
+         hb_cdpStrToU16( cdp, HB_CDP_ENDIAN_NATIVE, pszName, nLen, pszBufferW, nSize + 1 );
+         return pszBufferW;
+      }
+   }
+
+   return hb_mbtowc( pszName ); /* No HVM stack */
+}
+
+HB_WCHAR * hb_osStrU16EncodeN( const char * pszName, HB_SIZE nLen )
+{
+   if( hb_vmIsReady() )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp )
+      {
+         HB_SIZE nSize;
+         HB_WCHAR * pszBufferW;
+
+         nLen = hb_strnlen( pszName, nLen );
+         nSize = hb_cdpStrAsU16Len( cdp, pszName, nLen, 0 );
+         pszBufferW = ( HB_WCHAR * ) hb_xgrab( ( nSize + 1 ) * sizeof( HB_WCHAR ) );
+         hb_cdpStrToU16( cdp, HB_CDP_ENDIAN_NATIVE, pszName, nLen, pszBufferW, nSize + 1 );
+         return pszBufferW;
+      }
+   }
+
+   return hb_mbntowc( pszName, nLen ); /* No HVM stack */
+}
+
+char * hb_osStrU16Decode( const HB_WCHAR * pszNameW )
+{
+   if( hb_vmIsReady() )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp )
+      {
+         HB_SIZE nLen, nSize;
+         char * pszBuffer;
+
+         nLen = hb_wstrlen( pszNameW );
+         nSize = hb_cdpU16AsStrLen( cdp, pszNameW, nLen, 0 );
+         pszBuffer = ( char * ) hb_xgrab( nSize + 1 );
+         hb_cdpU16ToStr( cdp, HB_CDP_ENDIAN_NATIVE, pszNameW, nLen, pszBuffer, nSize + 1 );
+         return pszBuffer;
+      }
+   }
+
+   return hb_wctomb( pszNameW ); /* No HVM stack */
+}
+
+char * hb_osStrU16Decode2( const HB_WCHAR * pszNameW, char * pszBuffer, HB_SIZE nSize )
+{
+   if( hb_vmIsReady() )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp )
+      {
+         hb_cdpU16ToStr( cdp, HB_CDP_ENDIAN_NATIVE, pszNameW, hb_wstrlen( pszNameW ), pszBuffer, nSize );
+         pszBuffer[ nSize ] = 0;
+         return pszBuffer;
+      }
+   }
+
+   hb_wcntombcpy( pszBuffer, pszNameW, nSize ); /* No HVM stack */
+   return pszBuffer;
+}
+#endif
 
 HB_FHANDLE hb_setGetPrinterHandle( int iType )
 {

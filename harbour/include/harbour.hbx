@@ -310,6 +310,8 @@ DYNAMIC hb_ATokens
 DYNAMIC hb_AtX
 DYNAMIC hb_base64Decode
 DYNAMIC hb_base64Encode
+DYNAMIC HB_BCHAR
+DYNAMIC HB_BCODE
 DYNAMIC hb_bitAnd
 DYNAMIC hb_bitNot
 DYNAMIC hb_bitOr
@@ -318,9 +320,12 @@ DYNAMIC hb_bitSet
 DYNAMIC hb_bitShift
 DYNAMIC hb_bitTest
 DYNAMIC hb_bitXor
+DYNAMIC HB_BLEN
 DYNAMIC hb_blowfishDecrypt
 DYNAMIC hb_blowfishEncrypt
 DYNAMIC hb_blowfishKey
+DYNAMIC HB_BPEEK
+DYNAMIC HB_BPOKE
 DYNAMIC hb_BuildDate
 DYNAMIC hb_ByteSwapI
 DYNAMIC hb_ByteSwapL
@@ -615,11 +620,13 @@ DYNAMIC hb_isSymbol
 DYNAMIC hb_isTimeStamp
 DYNAMIC hb_jsonDecode
 DYNAMIC hb_jsonEncode
+DYNAMIC HB_KEYCHAR
 DYNAMIC hb_KeyClear
 DYNAMIC hb_KeyIns
 DYNAMIC hb_KeyLast
 DYNAMIC hb_KeyNext
 DYNAMIC hb_KeyPut
+DYNAMIC HB_KEYSTD
 DYNAMIC hb_langErrMsg
 DYNAMIC hb_langMessage
 DYNAMIC hb_langName
@@ -819,6 +826,11 @@ DYNAMIC hb_TToC
 DYNAMIC hb_TToD
 DYNAMIC hb_TToN
 DYNAMIC hb_TToS
+DYNAMIC HB_UCHAR
+DYNAMIC HB_UCODE
+DYNAMIC HB_ULEN
+DYNAMIC HB_UPEEK
+DYNAMIC HB_UPOKE
 DYNAMIC hb_UserLang
 DYNAMIC hb_UserName
 DYNAMIC hb_UTCOffset

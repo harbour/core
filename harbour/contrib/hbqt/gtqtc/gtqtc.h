@@ -195,14 +195,9 @@ typedef struct
 
    bool         fInit;                        /* logical variable indicating that window should be open */
 
-   PHB_CODEPAGE hostCDP;                      /* Host/HVM CodePage for unicode output translations */
-   PHB_CODEPAGE inCDP;                        /* Host/HVM CodePage for unicode input translations */
-   PHB_CODEPAGE boxCDP;                       /* CodePage for legacy drawing chars: IBM437 */
-
    QIcon        qIcon;                        /* Title Bar and Task List icon. Can be NULL. */
    bool         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
-   int          CodePage;                     /* Code page to use for display characters */
    bool         AltF4Close;                   /* Can use Alt+F4 to close application */
    bool         CenterWindow;                 /* True if window is to be Reset into centre of window */
 
@@ -218,9 +213,6 @@ typedef struct
    int          ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
    bool         bResizing;
    bool         bAlreadySizing;
-
-   HB_BYTE      keyTransTbl[ 256 ];
-   HB_BYTE      chrTransTbl[ 256 ];
 
 } HB_GTWVT, * PHB_GTWVT;
 

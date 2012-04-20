@@ -59,6 +59,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
+#include "hbapicdp.h"
 #include "hbvm.h"
 #include "hbmemory.ch"
 #include "hbstack.h"
@@ -141,6 +142,13 @@ const char * hb_cmdargARGVN( int argc )
    return argc >= 0 && argc < s_argc ? s_argv[ argc ] : NULL;
 }
 
+/* NOTE: Pointer must be freed with hb_xfree() if not NULL */
+
+static char * hb_cmdargDup( int argc )
+{
+   return argc >= 0 && argc < s_argc ? hb_osStrDecode( s_argv[ argc ] ) : NULL;
+}
+
 void hb_cmdargUpdate( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargUpdate()"));
@@ -155,9 +163,13 @@ void hb_cmdargUpdate( void )
                at all. [vszakats] */
       if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
       {
+         /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
+         s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
          HB_TCHAR_COPYFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_szAppName ) - 1 );
          s_argv[ 0 ] = s_szAppName;
       }
+      else
+         s_lpAppName[ 0 ] = 0;
 
 #elif defined( HB_OS_OS2 )
       {
@@ -299,7 +311,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
             if( *pszPos == ':' )
                pszPos++;
 
-            return hb_strdup( pszPos );
+            return hb_osStrDecode( pszPos );
          }
          else
             return ( char * ) "";
@@ -408,6 +420,25 @@ int hb_cmdargNum( const char * pszName )
       return -1;
 }
 
+/* NOTE: Pointer must be freed with hb_xfree() if not NULL */
+
+char * hb_cmdargProgName( void )
+{
+#if defined( HB_OS_WIN )
+   if( s_lpAppName[ 0 ] == 0 )
+   {
+      if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
+         /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
+         s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
+      else
+         s_lpAppName[ 0 ] = 0;
+   }
+   if( s_lpAppName[ 0 ] != 0 )
+      return hb_osStrU16Decode( s_lpAppName );
+#endif
+   return hb_cmdargDup( 0 );
+}
+
 /* Check if an internal switch has been set */
 
 HB_FUNC( HB_ARGCHECK )
@@ -419,14 +450,15 @@ HB_FUNC( HB_ARGCHECK )
 
 HB_FUNC( HB_ARGSTRING )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * pszName = hb_parc( 1 );
+
+   if( pszName )
    {
-      char * pszValue = hb_cmdargString( hb_parc( 1 ) );
+      char * pszValue = hb_cmdargString( pszName );
 
       if( pszValue )
       {
-         /* Convert from OS codepage */
-         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszValue, NULL, NULL ) );
+         hb_retc_buffer( pszValue );
          return;
       }
    }
@@ -448,18 +480,10 @@ HB_FUNC( HB_ARGC )
 
 HB_FUNC( HB_ARGV )
 {
-   int argc = hb_parni( 1 );
+   char * pszArg = hb_cmdargDup( hb_parni( 1 ) );
 
-   if( argc >= 0 && argc < s_argc )
-   {
-      char * pszFree = NULL;
-      const char * szArgV = hb_osDecodeCP( s_argv[ argc ], &pszFree, NULL );
-
-      if( pszFree )
-         hb_retc_buffer( pszFree );
-      else
-         hb_retc( szArgV );
-   }
+   if( pszArg )
+      hb_retc_buffer( pszArg );
    else
       hb_retc_null();
 }
@@ -527,7 +551,7 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
 {
    char * cFlags;
    HB_U32 ulFlags = HB_VMFLAG_HARBOUR;
-   int iHandles;
+   int iHandles, iVal;
 
    if( hb_cmdargCheck( "INFO" ) )
    {
@@ -605,21 +629,13 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
       hb_xfree( cFlags );
    }
 
-   if( ( cFlags = hb_cmdargString( "CANCEL" ) ) != NULL )
-   {
-      int iVal = atoi( cFlags );
-      if( iVal )
-         *pCancelKey = iVal;
-      hb_xfree( cFlags );
-   }
+   iVal = hb_cmdargNum( "CANCEL" );
+   if( iVal )
+      *pCancelKey = iVal;
 
-   if( ( cFlags = hb_cmdargString( "CANCELEX" ) ) != NULL )
-   {
-      int iVal = atoi( cFlags );
-      if( iVal )
-         *pCancelKeyEx = iVal;
-      hb_xfree( cFlags );
-   }
+   iVal = hb_cmdargNum( "CANCELEX" );
+   if( iVal )
+      *pCancelKeyEx = iVal;
 
    return ulFlags;
 }

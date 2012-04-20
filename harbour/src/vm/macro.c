@@ -97,6 +97,8 @@ static void hb_macroFlagsSet( int flag )
 
 #endif
 
+#define HB_SM_ISUSERCP()      ( HB_CDP_ISCHARUNI(hb_vmCDP()) ? HB_COMPFLAG_USERCP : 0 )
+
 /* ************************************************************************* */
 
 /* Compile passed string into a pcode buffer
@@ -425,7 +427,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
       char * pszFree;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
+      struMacro.supported  = ( ( flags & HB_SM_RT_MACRO ) ? hb_macroFlags() : flags ) |
+                             HB_SM_ISUSERCP();
       struMacro.Flags      = HB_MACRO_GEN_PUSH;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -510,7 +513,8 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, int flags )
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
+      struMacro.supported  = ( ( flags & HB_SM_RT_MACRO ) ? hb_macroFlags() : flags ) |
+                             HB_SM_ISUSERCP();
       struMacro.Flags      = HB_MACRO_GEN_POP;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -608,7 +612,8 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       szString[ nLen ] = '\0';
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (iSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : iSupported;
+      struMacro.supported  = ( ( iSupported & HB_SM_RT_MACRO ) ? hb_macroFlags() : iSupported ) |
+                             HB_SM_ISUSERCP();
       struMacro.Flags      = iFlag;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -642,7 +647,8 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (iSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : iSupported;
+      struMacro.supported  = ( ( iSupported & HB_SM_RT_MACRO ) ? hb_macroFlags() : iSupported ) |
+                             HB_SM_ISUSERCP();
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -790,7 +796,7 @@ HB_MACRO_PTR hb_macroCompile( const char * szString )
 
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
    pMacro->mode      = HB_MODE_MACRO;
-   pMacro->supported = hb_macroFlags();
+   pMacro->supported = hb_macroFlags() | HB_SM_ISUSERCP();
    pMacro->Flags     = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH |
                        HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
    pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
@@ -930,7 +936,7 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = hb_macroFlags();
+      struMacro.supported  = hb_macroFlags() | HB_SM_ISUSERCP();
       struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;

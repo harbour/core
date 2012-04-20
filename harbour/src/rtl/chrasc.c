@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * CHR(), ASC() functions
  *
+ * Copyright 2012 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -51,7 +52,7 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 
 /* converts an ASCII code to a character value */
@@ -71,7 +72,18 @@ HB_FUNC( CHR )
       szChar[ 1 ] = '\0';
       hb_retclen( szChar, 1 );
 #else
-      hb_retclen( hb_szAscii[ hb_parni( 1 ) & 0xFF ], 1 );
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( HB_CDP_ISCHARUNI( cdp ) )
+      {
+         char szChar[ HB_MAX_CHAR_LEN ];
+         HB_SIZE nLen;
+
+         nLen = hb_cdpTextPutU16( hb_vmCDP(), szChar, sizeof( szChar ),
+                                           ( HB_WCHAR ) hb_parni( 1 ) );
+         hb_retclen( szChar, nLen );
+      }
+      else
+         hb_retclen( hb_szAscii[ hb_parni( 1 ) & 0xFF ], 1 );
 #endif
    }
    else
@@ -84,7 +96,16 @@ HB_FUNC( ASC )
    const char * szValue = hb_parc( 1 );
 
    if( szValue )
-      hb_retni( ( HB_UCHAR ) szValue[ 0 ] );
+   {
+      int iChar;
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( HB_CDP_ISCHARUNI( cdp ) )
+         iChar = hb_cdpTextGetU16( cdp, szValue, hb_parclen( 1 ) );
+      else
+         iChar = ( HB_UCHAR ) szValue[ 0 ];
+
+      hb_retni( iChar );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

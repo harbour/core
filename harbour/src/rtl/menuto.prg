@@ -48,6 +48,7 @@ FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 FUNCTION __MenuTo( bBlock, cVariable )
 
    LOCAL nKey
+   LOCAL cKey
    LOCAL y
    LOCAL q
    LOCAL n
@@ -239,13 +240,15 @@ FUNCTION __MenuTo( bBlock, cVariable )
                EXIT
             OTHERWISE
                // did user hit a hot key?
-               FOR y := 1 TO nArrLen
-                  IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == Upper( Chr( nKey ) )
-                     n := y
-                     lExit := .T.
-                     EXIT
-                  ENDIF
-               NEXT
+               IF Len( cKey := Upper ( hb_keyChar( nKey ) ) ) > 0
+                  FOR y := 1 TO nArrLen
+                     IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), Len( cKey ) ) ) == cKey
+                        n := y
+                        lExit := .T.
+                        EXIT
+                     ENDIF
+                  NEXT
+               ENDIF
          ENDSWITCH
 
          IF n != 0

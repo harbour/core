@@ -155,8 +155,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
          IF Empty( NextKey() )
-            KEYBOARD Chr( 255 )
-            Inkey()
+            hb_setLastKey( 255 )
             nKey := 0
          ENDIF
 
@@ -207,7 +206,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nPos := nNewPos
                DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Ach_Select( alSelect, nPos ), .T., nNumCols )
                IF nKey == K_LDBLCLK
-                  Keyboard( Chr( K_ENTER ) )
+                  hb_keyIns( K_ENTER )
                ENDIF
             ENDIF
          ENDIF
@@ -466,19 +465,18 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nPos      := 0
          lFinished := .T.
 
-      CASE INRANGE( 32, nKey, 255 ) .AND. ( !lUserFunc .OR. nMode == AC_GOTO )
-
-         cKey := Upper( Chr( nKey ) )
+      CASE ( !lUserFunc .OR. nMode == AC_GOTO ) .AND. ;
+           ! ( cKey := Upper( hb_keyChar( nKey ) ) ) == ""
 
          // Find next selectable item
          FOR nNewPos := nPos + 1 TO nItems
-            IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], 1 ) ) == cKey
+            IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], Len( cKey ) ) ) == cKey
                EXIT
             ENDIF
          NEXT
          IF nNewPos == nItems + 1
             FOR nNewPos := 1 TO nPos - 1
-               IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], 1 ) ) == cKey
+               IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], Len( cKey ) ) ) == cKey
                   EXIT
                ENDIF
             NEXT

@@ -69,7 +69,7 @@ HB_FUNC( __BOX )
                 hb_itemGetNI( pLeft),
                 hb_itemGetNI( pBottom ),
                 hb_itemGetNI( pRight ),
-                *pszBox ? pszBox : "         " );
+                pszBox );
 }
 
 HB_FUNC( __BOXD )

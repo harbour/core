@@ -237,7 +237,7 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
 /* NOTE: Caller must free the pointer, if not NULL */
 char * hb_fsLinkRead( const char * pszFile )
 {
-   char * pszLink;
+   char * pszLink = NULL;
 
    if( pszFile )
    {
@@ -302,7 +302,6 @@ char * hb_fsLinkRead( const char * pszFile )
             {
                hb_fsSetIOError( HB_FALSE, 0 );
                hb_fsSetFError( hb_fsError() );
-               pszLink = NULL;
             }
             else
             {
@@ -313,30 +312,22 @@ char * hb_fsLinkRead( const char * pszFile )
                {
                   if( size > 0 )
                   {
-                     pszLink = ( char * ) hb_xgrab( size + 1 );
-                     HB_TCHAR_COPYFROM( pszLink, lpLink, ( HB_SIZE ) size );
+                     lpLink[ size ] = TEXT( '\0' );
+                     pszLink = HB_OSSTRDUP( lpLink );
                   }
-                  else
-                     pszLink = NULL;
 
                   hb_fsSetIOError( HB_TRUE, 0 );
                   hb_fsSetFError( hb_fsError() );
                }
                else
-               {
                   hb_fsSetFError( 1 );
-                  pszLink = NULL;
-               }
             }
 
             if( lpFileNameFree )
                hb_xfree( lpFileNameFree );
          }
          else
-         {
             hb_fsSetFError( 1 );
-            pszLink = NULL;
-         }
       }
 #elif defined( HB_OS_UNIX )
       {
@@ -355,7 +346,11 @@ char * hb_fsLinkRead( const char * pszFile )
             pszLink = NULL;
          }
          else
+         {
             pszLink[ size ] = '\0';
+            /* Convert from OS codepage */
+            pszLink = ( char * ) hb_osDecodeCP( pszLink, NULL, NULL );
+         }
 
          if( pszFileFree )
             hb_xfree( pszFileFree );
@@ -363,21 +358,13 @@ char * hb_fsLinkRead( const char * pszFile )
 #else
       {
          hb_fsSetFError( 1 );
-         pszLink = NULL;
       }
 #endif
 
       hb_vmLock();
    }
    else
-   {
       hb_fsSetFError( 2 );
-      pszLink = NULL;
-   }
-
-   /* Convert from OS codepage */
-   if( pszLink )
-      pszLink = ( char * ) hb_osDecodeCP( pszLink, NULL, NULL );
 
    return pszLink;
 }

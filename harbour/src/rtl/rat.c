@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * RAT() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -51,85 +52,92 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 
 HB_FUNC( RAT )
 {
    HB_SIZE nSubLen = hb_parclen( 1 );
+   HB_SIZE nPos = 0;
 
    if( nSubLen )
    {
-      HB_ISIZ nPos = hb_parclen( 2 ) - nSubLen;
+      HB_ISIZ nTo = hb_parclen( 2 ) - nSubLen;
 
-      if( nPos >= 0 )
+      if( nTo >= 0 )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
-         HB_BOOL bFound = HB_FALSE;
 
-         while( nPos >= 0 && !bFound )
+         do
          {
-            if( *( pszText + nPos ) == *pszSub )
-               bFound = ( memcmp( pszSub, pszText + nPos, nSubLen ) == 0 );
-            nPos--;
+            if( pszText[ nTo ] == *pszSub &&
+                memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+            {
+               PHB_CODEPAGE cdp = hb_vmCDP();
+               if( HB_CDP_ISCHARIDX( cdp ) )
+                  nPos = hb_cdpTextLen( cdp, pszText, nTo ) + 1;
+               else
+                  nPos = nTo + 1;
+               break;
+            }
          }
-
-         hb_retns( bFound ? nPos + 2 : 0 );
+         while( --nTo >= 0 );
       }
-      else
-         hb_retns( 0 );
    }
-   else
-      /* This function never seems to raise an error */
-      hb_retns( 0 );
+   /* This function never seems to raise an error */
+   hb_retns( nPos );
 }
 
 HB_FUNC( HB_RAT )
 {
    HB_SIZE nSubLen = hb_parclen( 1 );
+   HB_SIZE nPos = 0;
 
    if( nSubLen )
    {
-      HB_ISIZ nPos = hb_parclen( 2 ) - nSubLen;
+      HB_ISIZ nTo = hb_parclen( 2 ) - nSubLen;
 
-      if( nPos >= 0 )
+      if( nTo >= 0 )
       {
+         PHB_CODEPAGE cdp = hb_vmCDP();
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
-         HB_BOOL bFound = HB_FALSE;
-         HB_ISIZ nStart;
+         HB_ISIZ nStart = hb_parns( 3 );
+         HB_ISIZ nFrom;
 
-         if( HB_ISNUM( 3 ) )
-         {
-            nStart = hb_parns( 3 );
-            if( nStart >= 1 )
-               --nStart;
-            else
-               nStart = 0;
-         }
+         if( nStart <= 1 )
+            nStart = nFrom = 0;
+         else if( HB_CDP_ISCHARIDX( cdp ) )
+            nFrom = hb_cdpTextPos( cdp, pszText, nTo, --nStart );
          else
-            nStart = 0;
+            nFrom = --nStart;
 
          if( HB_ISNUM( 4 ) )
          {
             HB_ISIZ nEnd = hb_parns( 4 ) - 1;
 
-            if( nEnd < nPos )
-               nPos = nEnd;
+            if( nEnd > 0 && HB_CDP_ISCHARIDX( cdp ) )
+               nEnd = hb_cdpTextPos( cdp, pszText, nTo, nEnd );
+
+            if( nEnd < nTo )
+               nTo = nEnd;
          }
 
-         while( nPos >= nStart && !bFound )
+         if( nTo >= nFrom ) do
          {
-            if( *( pszText + nPos ) == *pszSub )
-               bFound = ( memcmp( pszSub, pszText + nPos, nSubLen ) == 0 );
-            nPos--;
+            if( pszText[ nTo ] == *pszSub &&
+                memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+            {
+               if( HB_CDP_ISCHARIDX( cdp ) )
+                  nPos = hb_cdpTextLen( cdp, pszText, nTo ) + 1;
+               else
+                  nPos = nTo + 1;
+               break;
+            }
          }
-
-         hb_retns( bFound ? nPos + 2 : 0 );
+         while( --nTo >= nFrom );
       }
-      else
-         hb_retns( 0 );
    }
-   else
-      /* This function never seems to raise an error */
-      hb_retns( 0 );
+
+   hb_retns( nPos );
 }

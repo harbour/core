@@ -26,6 +26,7 @@ C_SOURCES := \
    cdpapi.c \
    cdpapihb.c \
    chrasc.c \
+   chruni.c \
    colorind.c \
    console.c \
    copyfile.c \

@@ -139,6 +139,7 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          r[-]            runtime settings enabled",
            "\n          s[-]            allow indexed assignment on all types",
            "\n          x[-]            extended Xbase++ mode",
+           "\n          u[-]            strings in user encoding",
            "\n          j[+]            turn off jump optimization in pcode",
            "\n          m[+]            turn off macrotext substitution",
            "\n          ?               this info",

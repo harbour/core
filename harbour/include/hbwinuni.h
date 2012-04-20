@@ -85,8 +85,10 @@
    #define HB_STRCMP( s1, s2 )                   hb_wstrcmp( s1, s2 )
    #define HB_STRNCMP( s1, s2, len )             hb_wstrncmp( s1, s2, len )
    #define HB_FSNAMECONV( fname, pfree )         ( ( LPCTSTR ) ( *(pfree) = hb_fsNameConvU16( fname ) ) )
-   #define HB_CHARDUP( str )                     hb_cdpStrDupU16( hb_vmCDP(), HB_CDP_ENDIAN_NATIVE, str )
-   #define HB_CHARDUPN( str, len )               hb_cdpStrDupnU16( hb_vmCDP(), HB_CDP_ENDIAN_NATIVE, str, len )
+   #define HB_CHARDUP( str )                     hb_osStrU16Encode( str )
+   #define HB_CHARDUPN( str, len )               hb_osStrU16EncodeN( str, len )
+   #define HB_OSSTRDUP( str )                    hb_osStrU16Decode( str )
+   #define HB_OSSTRDUP2( str, buf, len )         hb_osStrU16Decode2( str, buf, len )
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
@@ -113,8 +115,10 @@
    #define HB_STRCMP( s1, s2 )                   strcmp( s1, s2 )
    #define HB_STRNCMP( s1, s2, len )             strncmp( s1, s2, len )
    #define HB_FSNAMECONV( fname, pfree )         hb_fsNameConv( fname, pfree )
-   #define HB_CHARDUP( str )                     hb_cdpDup( str, hb_vmCDP(), hb_setGetOSCP() )
-   #define HB_CHARDUPN( str, len )               hb_cdpDupn( str, len, hb_vmCDP(), hb_setGetOSCP() )
+   #define HB_CHARDUP( str )                     hb_osStrEncode( str )
+   #define HB_CHARDUPN( str, len )               hb_osStrEncodeN( str, len )
+   #define HB_OSSTRDUP( str )                    hb_osStrDecode( str )
+   #define HB_OSSTRDUP2( str, buf, len )         hb_osStrDecode2( str, buf, len )
 #endif
 
 #endif /* HB_OS_WIN */

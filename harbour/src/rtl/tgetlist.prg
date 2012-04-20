@@ -519,9 +519,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
    OTHERWISE
 
-      IF nKey >= 32 .AND. nKey <= 255
-         cKey := Chr( nKey )
-
+      IF ! ( cKey := hb_keyChar( nKey ) ) == ""
          IF oGet:type == "N" .AND. ( cKey == "." .OR. cKey == "," )
             oGet:toDecPos()
          ELSE
@@ -1011,7 +1009,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
             nKey := 0
          ENDIF
 
-      ELSEIF ( nButton := oGUI:FindText( Chr( nKey ), oGUI:Value + 1, .F., .F. ) ) != 0
+      ELSEIF ( nButton := oGUI:FindText( hb_keyChar( nKey ), oGUI:Value + 1, .F., .F. ) ) != 0
          oGUI:Select( nButton )
 
       ENDIF

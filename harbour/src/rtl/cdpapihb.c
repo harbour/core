@@ -56,16 +56,6 @@
 #include "hbapierr.h"
 #include "hbapicdp.h"
 
-/* Now we are using only 16bit Unicode values so the maximum size
- * of single character encoded in UTF8 is 3 though ISO 10646 Universal
- * Character Set (UCS) occupies even a 31-bit code space and to encode
- * all UCS values we will need 6 bytes. Now in practice no one uses
- * Unicode character over 0xFFFF but it may change in the future so
- * it's safer to use macro for maximum UTF8 character size. [druzus]
- */
-#define HB_MAX_UTF8        3
-
-
 static HB_SIZE utf8pos( const char * szUTF8, HB_SIZE nLen, HB_SIZE nUTF8Pos )
 {
    if( nUTF8Pos > 0 && nUTF8Pos <= nLen )
@@ -161,7 +151,8 @@ HB_FUNC( HB_TRANSLATE )
 
       if( cdpIn && cdpOut && cdpIn != cdpOut &&
           ( cdpIn->uniTable != cdpOut->uniTable ||
-            cdpIn->fCustom || cdpOut->fCustom ) )
+            HB_CDP_ISCUSTOM( cdpIn ) ||
+            HB_CDP_ISCUSTOM( cdpOut ) ) )
       {
          char * szResult = hb_cdpnDup( hb_parc( 1 ), &nLen, cdpIn, cdpOut );
          hb_retclen_buffer( szResult, nLen );
@@ -177,7 +168,7 @@ HB_FUNC( HB_UTF8CHR )
 {
    if( HB_ISNUM( 1 ) )
    {
-      char utf8Char[ HB_MAX_UTF8 ];
+      char utf8Char[ HB_MAX_CHAR_LEN ];
       int iLen;
 
       iLen = hb_cdpU16CharToUTF8( utf8Char, ( HB_WCHAR ) hb_parni( 1 ) );
@@ -424,7 +415,7 @@ HB_FUNC( HB_UTF8POKE )
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       const char * szString = hb_itemGetCPtr( pText );
-      HB_SIZE nLen = hb_parclen( 1 ), nPos;
+      HB_SIZE nLen = hb_itemGetCLen( pText ), nPos;
 
       nPos = utf8pos( szString, nLen, hb_parns( 2 ) );
       if( nPos )

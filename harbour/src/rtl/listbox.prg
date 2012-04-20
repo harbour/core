@@ -137,12 +137,12 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    VAR nCapCol
    VAR nCapRow
    VAR cCaption   INIT ""
-   VAR cColdBox   INIT Chr( 218 ) + Chr( 196 ) + Chr( 191 ) + Chr( 179 ) + Chr( 217 ) + Chr( 196 ) + Chr( 192 ) + Chr( 179 )
+   VAR cColdBox   INIT B_SINGLE
    VAR cColorSpec
    VAR lDropDown
    VAR bFBlock
    VAR lHasFocus  INIT .F.
-   VAR cHotBox    INIT Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 )
+   VAR cHotBox    INIT B_DOUBLE
    VAR lIsOpen
    VAR nItemCount INIT 0
    VAR nLeft
@@ -322,7 +322,7 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    LOCAL nLen
    LOCAL bSearch
 
-   IF !ISCHARACTER( cText )
+   IF !ISCHARACTER( cText ) .OR. Len( cText ) == 0
       RETURN 0
    ENDIF
    IF !ISNUMBER( nPos )

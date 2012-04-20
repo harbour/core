@@ -3239,15 +3239,12 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 #if defined( HB_OS_WIN )
    {
       DWORD dwSize = ( DWORD ) nSize;
-#if defined( UNICODE )
       LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( dwSize * sizeof( TCHAR ) );
+      lpBuffer[ 0 ] = L'\0';
       hb_fsSetIOError( ( GetCurrentDirectory( dwSize, lpBuffer ) != 0 ), 0 );
       lpBuffer[ dwSize - 1 ] = L'\0';
-      hb_wcntombcpy( pszBuffer, lpBuffer, dwSize - 1 );
+      HB_OSSTRDUP2( lpBuffer, pszBuffer, nSize - 1 );
       hb_xfree( lpBuffer );
-#else
-      hb_fsSetIOError( ( GetCurrentDirectory( dwSize, pszBuffer ) != 0 ), 0 );
-#endif
    }
 #elif defined( HB_OS_OS2 )
 
@@ -3323,6 +3320,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 
       pszBuffer[ nLen ] = '\0';
 
+#if !defined( HB_OS_WIN )
       /* Convert from OS codepage */
       {
          char * pszFree = NULL;
@@ -3336,6 +3334,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
          if( pszFree )
             hb_xfree( pszFree );
       }
+#endif
    }
 
    return nResult;
@@ -3745,7 +3744,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
    if( pszFree )
       *pszFree = NULL;
 
-   if( !hb_stackId() )
+   if( hb_vmIsReady() )
       return szFileName;
 
    fTrim = hb_setGetTrimFileName();
@@ -3886,7 +3885,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       TRIMFILENAME - strip trailing and leading spaces (also from extension)
 */
 
-   if( !hb_stackId() )
+   if( hb_vmIsReady() )
       return hb_mbtowc( szFileName ); /* No HVM stack */
 
    cdp = hb_vmCDP();
@@ -3994,27 +3993,19 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 /* NOTE: pszBuffer must be HB_PATH_MAX long. */
 void hb_fsBaseDirBuff( char * pszBuffer )
 {
-   const char * szBaseName = hb_cmdargARGVN( 0 );
+   char * pszBaseName = hb_cmdargProgName();
 
-   if( szBaseName )
+   if( pszBaseName )
    {
-      PHB_FNAME pFName = hb_fsFNameSplit( szBaseName );
-      const char * pszResult;
-      char * pszFree = NULL;
-      HB_SIZE nSize = HB_PATH_MAX;
-
-      pFName->szName = NULL;
-      pFName->szExtension = NULL;
-      hb_fsFNameMerge( pszBuffer, pFName );
-      hb_xfree( pFName );
-
-      /* Convert from OS codepage */
-      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nSize );
-      if( pszResult != pszBuffer )
-         hb_strncpy( pszBuffer, pszResult, HB_PATH_MAX - 1 );
-      if( pszFree )
-         hb_xfree( pszFree );
+      PHB_FNAME pFileName = hb_fsFNameSplit( pszBaseName );
+      pFileName->szName = NULL;
+      pFileName->szExtension = NULL;
+      hb_fsFNameMerge( pszBuffer, pFileName );
+      hb_xfree( pFileName );
+      hb_xfree( pszBaseName );
    }
+   else
+      pszBuffer[ 0 ] = '\0';
 }
 
 static HB_BOOL hb_fsDisableWaitLocks( int iSet )

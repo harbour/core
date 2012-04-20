@@ -103,9 +103,15 @@ HB_FUNC( HB_STRING2POINTER )
 
 #endif
 
+HB_FUNC_EXTERN( HB_PROGNAME );
+
 HB_FUNC( HB_CMDARGARGV )
 {
-   hb_retc( hb_cmdargARGVN( 0 ) );
+   /* xHarbour really returns:
+    *       hb_retc( hb_cmdargARGVN( 0 ) );
+    * probably typo - replicated here by HB_PROGNAME()
+    */
+   HB_FUNC_EXEC( HB_PROGNAME );
 }
 
 HB_FUNC( HB_VMMODE )

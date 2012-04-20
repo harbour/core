@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * SUBSTR() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -52,6 +53,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 
 /* returns l characters from n characters into string */
@@ -59,55 +61,56 @@
 HB_FUNC( SUBSTR )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   int iPCount = hb_pcount();
 
-   if( pText && HB_ISNUM( 2 ) )
+   if( pText && HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) )
    {
-      HB_ISIZ nPos = hb_parns( 2 );
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      const char * pszText = hb_itemGetCPtr( pText );
       HB_ISIZ nSize = hb_itemGetCLen( pText );
+      HB_ISIZ nFrom = hb_parns( 2 );
+      HB_ISIZ nCount = iPCount < 3 ? nSize : hb_parns( 3 );
 
-      if( nPos < 0 )
+      if( nFrom > 0 )
       {
-         nPos += nSize;
-         if( nPos < 0 )
-            nPos = 0;
-      }
-      else if( nPos )
-      {
-         nPos--;
+         if( --nFrom > nSize )
+            nCount = 0;
       }
 
-      if( nPos < nSize )
+      if( nCount > 0 )
       {
-         HB_ISIZ nLen;
-
-         if( hb_pcount() >= 3 )
+         if( HB_CDP_ISCHARIDX( cdp ) )
          {
-            if( HB_ISNUM( 3 ) )
+            if( nFrom < 0 )
+               nFrom += hb_cdpTextLen( cdp, pszText, nSize );
+            if( nFrom > 0 )
             {
-               nLen = hb_parns( 3 );
-
-               if( nLen > nSize - nPos )
-                  nLen = nSize - nPos;
+               nFrom = hb_cdpTextPos( cdp, pszText, nSize, nFrom );
+               pszText += nFrom;
+               nSize -= nFrom;
             }
-            else
-            {
-               hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-               /* NOTE: Exit from inside [vszakats] */
-               return;
-            }
+            nCount = hb_cdpTextPos( cdp, pszText, nSize, nCount );
          }
          else
-            nLen = nSize - nPos;
-
-         if( nLen > 0 )
          {
-            if( nLen == nSize )
-               hb_itemReturn( pText );
-            else
-               hb_retclen( hb_itemGetCPtr( pText ) + nPos, nLen );
+            if( nFrom < 0 )
+               nFrom += nSize;
+            if( nFrom > 0 )
+            {
+               pszText += nFrom;
+               nSize -= nFrom;
+            }
+            if( nCount > nSize )
+               nCount = nSize;
          }
+      }
+
+      if( nCount > 0 )
+      {
+         if( nFrom <= 0 && nCount == nSize )
+            hb_itemReturn( pText );
          else
-            hb_retc_null();
+            hb_retclen( pszText, nCount );
       }
       else
          hb_retc_null();

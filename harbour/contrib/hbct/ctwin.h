@@ -89,7 +89,7 @@ extern HB_EXPORT int     hb_ctwGetWindowCords( int iWindow, HB_BOOL fCenter, int
 extern HB_EXPORT int     hb_ctwGetFormatCords( int iWindow, HB_BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
 extern HB_EXPORT int     hb_ctwMoveWindow( int iWindow, int iRow, int iCol );
 extern HB_EXPORT int     hb_ctwCenterWindow( int iWindow, HB_BOOL fCenter );
-extern HB_EXPORT int     hb_ctwAddWindowBox( int iWindow, const char * szBox, int iColor );
+extern HB_EXPORT int     hb_ctwAddWindowBox( int iWindow, const HB_WCHAR * szBoxW, int iColor );
 extern HB_EXPORT int     hb_ctwSwapWindows( int iWindow1, int iWindow2 );
 extern HB_EXPORT int     hb_ctwGetPosWindow( int iRow, int iCol );
 extern HB_EXPORT int     hb_ctwLastKey( int * piNewKey );

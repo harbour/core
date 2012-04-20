@@ -103,7 +103,6 @@ static SLsmg_Char_Type s_outboxTab[ 256 ];
 
 /* to convert input characters */
 unsigned char hb_sln_inputTab[ 256 ];
-PHB_CODEPAGE hb_sln_cdpIN;
 
 static HB_BOOL s_fActive = HB_FALSE;
 
@@ -344,82 +343,71 @@ static void hb_sln_setACSCtrans( void )
 
 /* *********************************************************************** */
 
-static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, HB_BOOL fBox )
+static void hb_sln_setCharTrans( PHB_GT pGT, HB_BOOL fBox )
 {
-   int i, iDst;
-
 #if !defined( HB_SLN_UNICODE )
-   HB_SYMBOL_UNUSED( cdpTerm );
+   PHB_CODEPAGE cdpTerm = HB_GTSELF_TERMCP( pGT );
 #endif
+   PHB_CODEPAGE cdpHost = HB_GTSELF_HOSTCP( pGT );
+   int i;
 
    /* build a conversion chars table */
    for( i = 0; i < 256; i++ )
    {
-      if( hb_sln_Is_Unicode )
-         iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
-      else
-         iDst = i;
-
-      if( iDst < 32 )
+      if( i < 32 )
          /* under Unix control-chars are not visible in a general meaning */
          HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], '.', 0 );
-      else if( ! hb_sln_Is_Unicode && i >= 128 )
+      else if( i >= 128 )
       {
-         HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
+         HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], i, 0 );
          HB_SLN_SET_ACSC( s_outputTab[ i ] );
       }
       else
-         HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
-      s_outboxTab[ i ] = s_outputTab[ i ];
+         HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], i, 0 );
    }
 
 
-   if( ! hb_sln_Is_Unicode )
+   hb_sln_setACSCtrans();
+
+   /* QUESTION: do we have double, single-double, ... frames under xterm ? */
+   if( hb_sln_UnderXterm )
+      hb_sln_setSingleBox();
+
+   memcpy( s_outboxTab, s_outputTab, sizeof( s_outputTab ) );
+
+   if( cdpHost )
    {
-      hb_sln_setACSCtrans();
-
-      /* QUESTION: do we have double, single-double, ... frames under xterm ? */
-      if( hb_sln_UnderXterm )
-         hb_sln_setSingleBox();
-
-      memcpy( s_outboxTab, s_outputTab, sizeof( s_outputTab ) );
-
-      if( cdpHost )
+      for( i = 0; i < 256; ++i )
       {
-         for( i = 0; i < 256; ++i )
+         if( hb_cdpIsAlpha( cdpHost, i ) )
          {
-            if( hb_cdpIsAlpha( cdpHost, i ) )
-            {
 #ifdef HB_SLN_UNICODE
-               iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
+            int iDst = hb_cdpGetU16Ctrl( hb_cdpGetU16( cdpHost, ( HB_UCHAR ) i ) );
 #else
-               if( hb_sln_Is_Unicode )
-                  iDst = hb_cdpGetU16Disp( cdpHost, ( HB_BYTE ) i );
-               else
-                  iDst = hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
+            int iDst = hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 #endif
-               HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
-               if( fBox )
-                  s_outboxTab[ i ] = s_outputTab[ i ];
-            }
+            HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
+            if( fBox )
+               s_outboxTab[ i ] = s_outputTab[ i ];
          }
       }
    }
 }
 
 /* *********************************************************************** */
-static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
+static void hb_sln_setKeyTrans( PHB_GT pGT )
 {
-   char *p;
+   PHB_CODEPAGE cdpTerm = HB_GTSELF_INCP( pGT ),
+                cdpHost = HB_GTSELF_HOSTCP( pGT );
+   const char *p;
    int i;
 
    for( i = 0; i < 256; i++ )
       hb_sln_inputTab[ i ] = ( unsigned char )
                            hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-   hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
 
    /* init national chars */
-   p = hb_getenv( hb_NationCharsEnvName );
+   p = getenv( hb_NationCharsEnvName );
    if( p )
    {
       int len = strlen( p ) >> 1, ch;
@@ -436,9 +424,8 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
          ch = ( unsigned char ) p[ i + 1 ];
          hb_sln_convKDeadKeys[ i + 1 ] = ( unsigned char ) p[ i ];
          hb_sln_convKDeadKeys[ i + 2 ] = ch;
-         hb_sln_inputTab[ ch ] = ch;
+         hb_sln_inputTab[ ( unsigned char ) p[ i ] ] = ch;
       }
-      hb_xfree( ( void * ) p );
    }
 }
 
@@ -671,8 +658,11 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
             /* initialize conversion tables */
             hb_sln_colorTrans();
-            hb_sln_setCharTrans( hb_vmCDP(), NULL, HB_TRUE );
-            hb_sln_setKeyTrans( hb_vmCDP(), NULL );
+            if( !hb_sln_Is_Unicode )
+            {
+               hb_sln_setCharTrans( pGT, HB_TRUE );
+               hb_sln_setKeyTrans( pGT );
+            }
 
             /* ensure we are in a normal chars set */
             SLtt_set_alt_char_set( 0 );
@@ -936,46 +926,26 @@ static HB_BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
+   if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
-      PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
-
-      if( pszHostCDP )
-         cdpHost = hb_cdpFind( pszHostCDP );
-      if( ! cdpHost )
-         cdpHost = hb_vmCDP();
-
-      if( pszTermCDP )
-         cdpTerm = hb_cdpFind( pszTermCDP );
-
-      hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
+      if( !hb_sln_Is_Unicode )
+         hb_sln_setCharTrans( pGT, fBox );
+      return HB_TRUE;
    }
-
-   return HB_TRUE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
 
 static HB_BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
+   if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
    {
-      PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
-
-      if( pszHostCDP )
-         cdpHost = hb_cdpFind( pszHostCDP );
-      if( ! cdpHost )
-         cdpHost = hb_vmCDP();
-
-      if( pszTermCDP )
-         cdpTerm = hb_cdpFind( pszTermCDP );
-
-      hb_sln_setKeyTrans( cdpHost, cdpTerm );
+      if( !hb_sln_Is_Unicode )
+         hb_sln_setKeyTrans( pGT );
+      return HB_TRUE;
    }
-
-   return HB_TRUE;
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
@@ -989,16 +959,40 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       SLsmg_Char_Type SLchar;
       int iColor;
       HB_BYTE bAttr;
-      HB_USHORT usChar;
 
-      while( iSize-- > 0 )
+      if( hb_sln_Is_Unicode )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
-            break;
-         SLsmg_gotorc( iRow, iCol );
-         HB_SLN_BUILD_CHAR( SLchar, usChar & 0xFF, iColor, bAttr );
-         SLsmg_write_raw( &SLchar, 1 );
-         ++iCol;
+         HB_USHORT usChar;
+         while( iSize-- > 0 )
+         {
+            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+               break;
+            SLsmg_gotorc( iRow, iCol );
+            usChar = hb_cdpGetU16Ctrl( usChar );
+#ifdef HB_SLN_UTF8
+            SLchar.color = s_colorTab[ ( HB_UCHAR ) iColor ];
+            SLchar.nchars = 1;
+            SLchar.wchars[ 0 ] = usChar;
+#else
+            SLchar = s_colorTab[ ( HB_UCHAR ) iColor ] |
+                     SLSMG_BUILD_CHAR( usChar, 0 );
+#endif
+            SLsmg_write_raw( &SLchar, 1 );
+            ++iCol;
+         }
+      }
+      else
+      {
+         HB_UCHAR uc;
+         while( iSize-- > 0 )
+         {
+            if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol, &iColor, &bAttr, &uc, HB_FALSE ) )
+               break;
+            SLsmg_gotorc( iRow, iCol );
+            HB_SLN_BUILD_CHAR( SLchar, uc, iColor, bAttr );
+            SLsmg_write_raw( &SLchar, 1 );
+            ++iCol;
+         }
       }
    }
 }

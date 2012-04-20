@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * LEN() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -53,6 +54,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 
 HB_FUNC( LEN )
 {
@@ -66,7 +68,11 @@ HB_FUNC( LEN )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         hb_retns( hb_itemGetCLen( pItem ) );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( HB_CDP_ISCHARIDX( cdp ) )
+            nLen = hb_cdpTextLen( cdp, hb_itemGetCPtr( pItem ), nLen );
+         hb_retns( nLen );
          return;
       }
       else if( HB_IS_ARRAY( pItem ) )

@@ -50,8 +50,16 @@
  *
  */
 
+#define HB_UTF8EX_SORT
+
 #include "hbapi.h"
 #include "hbapicdp.h"
+
+#include "uc16def.c"
+
+#ifdef HB_UTF8EX_SORT
+#  include "utf8sort.c"
+#endif
 
 static HB_CDP_GET_FUNC( UTF8_get )
 {
@@ -101,6 +109,149 @@ static HB_CDP_LEN_FUNC( UTF8_len )
    return hb_cdpUTF8CharSize( wc );
 }
 
+static HB_CDP_UPPER_FUNC( UTF8_upper )
+{
+   HB_WCHAR wcUP;
+
+   HB_SYMBOL_UNUSED( cdp );
+
+   wcUP = s_uc_upper( wc );
+   return wcUP ? wcUP : wc;
+}
+
+static HB_CDP_LOWER_FUNC( UTF8_lower )
+{
+   HB_WCHAR wcLO;
+
+   HB_SYMBOL_UNUSED( cdp );
+
+   wcLO = s_uc_lower( wc );
+   return wcLO ? wcLO : wc;
+}
+
+static HB_CDP_FLAGS_FUNC( UTF8_flags )
+{
+   HB_SYMBOL_UNUSED( cdp );
+
+   return s_uc_flags( wc );
+}
+
+static HB_CDP_CMP_FUNC( UTF8_cmp )
+{
+   int iRet;
+
+#ifdef HB_UTF8EX_SORT
+
+   HB_SIZE nPos1 = 0, nPos2 = 0;
+   HB_WCHAR wc1, wc2;
+
+   iRet = 0;
+   for( ;; )
+   {
+      if( !HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
+      {
+         if( fExact && HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+            iRet = 1;
+         break;
+      }
+      if( !HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+      {
+         iRet = -1;
+         break;
+      }
+      if( wc1 != wc2 )
+      {
+         HB_USHORT us1 = s_uniSort[ wc1 ], us2 = s_uniSort[ wc2 ];
+         if( us1 != us2 )
+         {
+            iRet = us1 < us2 ? -1 : 1;
+            break;
+         }
+      }
+   }
+
+#else
+
+   HB_SIZE nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
+
+   HB_SYMBOL_UNUSED( cdp );
+
+   iRet = memcmp( szFirst, szSecond, nLen );
+   if( iRet == 0 )
+   {
+      if( nLenSecond > nLenFirst )
+         iRet = -1;
+      else if( fExact && nLenSecond < nLenFirst )
+         iRet = 1;
+   }
+#endif
+
+   return iRet;
+}
+
+static HB_CDP_CMP_FUNC( UTF8_cmpi )
+{
+   int iRet = 0;
+
+#ifdef HB_UTF8EX_SORT
+
+   HB_SIZE nPos1 = 0, nPos2 = 0;
+   HB_WCHAR wc1, wc2;
+
+   iRet = 0;
+   for( ;; )
+   {
+      if( !HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
+      {
+         if( fExact && HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+            iRet = 1;
+         break;
+      }
+      if( !HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+      {
+         iRet = -1;
+         break;
+      }
+      if( wc1 != wc2 )
+      {
+         HB_USHORT us1 = s_uniSort[ HB_CDPCHAR_UPPER( cdp, wc1 ) ],
+                   us2 = s_uniSort[ HB_CDPCHAR_UPPER( cdp, wc2 ) ];
+         if( us1 != us2 )
+         {
+            iRet = us1 < us2 ? -1 : 1;
+            break;
+         }
+      }
+   }
+
+#else
+
+   HB_SIZE nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
+
+   while( nLen-- )
+   {
+      HB_UCHAR u1 = cdp->upper[ ( HB_UCHAR ) * szFirst++ ],
+               u2 = cdp->upper[ ( HB_UCHAR ) * szSecond++ ];
+      if( u1 != u2 )
+      {
+         iRet = ( u1 < u2 ) ? -1 : 1;
+         break;
+      }
+   }
+
+   if( iRet == 0 )
+   {
+      if( nLenSecond > nLenFirst )
+         iRet = -1;
+      else if( fExact && nLenSecond < nLenFirst )
+         iRet = 1;
+   }
+#endif
+
+   return iRet;
+}
+
+
 static void hb_cp_init( PHB_CODEPAGE cdp )
 {
    HB_UCHAR * flags, * upper, * lower;
@@ -129,19 +280,27 @@ static void hb_cp_init( PHB_CODEPAGE cdp )
 
 #define HB_CP_RAW
 
-#define HB_CP_ID              UTF8ASC
-#define HB_CP_INFO            "UTF-8 ASCII letters"
+#define HB_CP_ID              UTF8EX
+#define HB_CP_INFO            "UTF-8 extended"
 #define HB_CP_UNITB           HB_UNITB_437
+
+/* use character indexes instead of bytes ones */
+#define HB_CP_CHARIDX
+/* CHR(), ASC() and similar functions operates on Unicode values instead of bytes */
+#define HB_CP_CHARUNI
+/* UTF-8 string encoding */
+#define HB_CP_UTF8
 
 #define HB_CP_GET_FUNC        UTF8_get
 #define HB_CP_PUT_FUNC        UTF8_put
 #define HB_CP_LEN_FUNC        UTF8_len
 
-#define HB_CP_FLAGS_FUNC      NULL
-#define HB_CP_UPPER_FUNC      NULL
-#define HB_CP_LOWER_FUNC      NULL
+#define HB_CP_FLAGS_FUNC      UTF8_flags
+#define HB_CP_UPPER_FUNC      UTF8_upper
+#define HB_CP_LOWER_FUNC      UTF8_lower
 
-#define HB_CP_CMP_FUNC        NULL
+#define HB_CP_CMP_FUNC        UTF8_cmp
+#define HB_CP_CMPI_FUNC       UTF8_cmpi
 
 #define s_flags               NULL
 #define s_upper               NULL

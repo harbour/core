@@ -66,8 +66,13 @@
  * previously-saved files is required, only a naive approach of using
  * version 1 is taken.
  */
-#define _HBMEM_SIGNATURE e"\xC0HBV" + Chr( 1 ) + Chr( 0 )
-
+#define _HBMEM_SIGNATURE ( HB_BCHAR( 0xC0 ) + ;
+                           HB_BCHAR( 0x48 ) + ;
+                           HB_BCHAR( 0x42 ) + ;
+                           HB_BCHAR( 0x56 ) + ;
+                           HB_BCHAR( 0x01 ) + ;
+                           HB_BCHAR( 0x00 ) )
+#define _HBMEM_SIG_LEN   6
 #define _HBMEM_EXT       ".hbv"
 
 FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
@@ -239,12 +244,12 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
 
       xValue := NIL
 
-      cBuffer := Space( Len( _HBMEM_SIGNATURE ) )
+      cBuffer := Space( _HBMEM_SIG_LEN )
       FRead( fhnd, @cBuffer, Len( cBuffer ) )
       IF cBuffer == _HBMEM_SIGNATURE
 
-         cBuffer := Space( FSeek( fhnd, 0, FS_END ) - Len( _HBMEM_SIGNATURE ) )
-         FSeek( fhnd, Len( _HBMEM_SIGNATURE ), FS_SET )
+         cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
+         FSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )
          FRead( fhnd, @cBuffer, Len( cBuffer ) )
          FClose( fhnd )
 

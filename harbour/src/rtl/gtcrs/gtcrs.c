@@ -2827,16 +2827,13 @@ static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   setDispTrans( s_ioBase, hb_cdpFind( pszHostCDP ),
-                           hb_cdpFind( pszTermCDP ), fBox ? 1 : 0 );
-   return HB_TRUE;
+   if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
+   {
+      setDispTrans( s_ioBase, HB_GTSELF_HOSTCP( pGT ),
+                              HB_GTSELF_TERMCP( pGT ), fBox ? 1 : 0 );
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
@@ -2845,16 +2842,12 @@ static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const cha
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   setKeyTrans( s_ioBase, hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
-
-   return HB_TRUE;
+   if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
+   {
+      setKeyTrans( s_ioBase, HB_GTSELF_INCP( pGT ), HB_GTSELF_HOSTCP( pGT ) );
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
 /* *********************************************************************** */
@@ -2897,17 +2890,17 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       int iColor;
       HB_BYTE bAttr;
-      HB_USHORT usChar;
+      HB_UCHAR uc;
       chtype ch;
 
       wmove( s_ioBase->hb_stdscr, iRow, iCol );
       while( iSize-- > 0 )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_FALSE ) )
             break;
          ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
-              ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ usChar & 0xff ] :
-                                         s_ioBase->std_chmap[ usChar & 0xff ] );
+              ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ uc ] :
+                                         s_ioBase->std_chmap[ uc ] );
          waddch( s_ioBase->hb_stdscr, ch );
       }
    }

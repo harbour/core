@@ -57,10 +57,13 @@
 /* #define XWC_DEBUG */
 /* #define HB_XWC_USE_LOCALE */
 
+
 #include "gtxwc.h"
 #ifdef HB_XWC_USE_LOCALE
 #  include <locale.h>
 #endif
+
+/* #undef X_HAVE_UTF8_STRING */
 
 static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;
@@ -360,21 +363,14 @@ typedef struct
       using build in font ones */
    HB_BOOL fDrawBox;
 
+   /* locale set to UTF-8 or X_HAVE_UTF8_STRING */
+   HB_BOOL fUTF8key;
+   PHB_CODEPAGE utf8CDP;
+
 #ifdef X_HAVE_UTF8_STRING
    XIM im;
    XIC ic;
 #endif
-
-#ifdef HB_XWC_USE_LOCALE
-   /* locale set to UTF-8 */
-   HB_BOOL fUTF8;
-#endif
-   /* CodePage support */
-   PHB_CODEPAGE hostCDP;
-   /* PHB_CODEPAGE outCDP; */
-   PHB_CODEPAGE utf8CDP;
-   PHB_CODEPAGE boxCDP;
-   PHB_CODEPAGE inCDP;
 
    /* current cursor and color settings */
    int col;
@@ -403,9 +399,10 @@ typedef struct
    /* current screen contents (attr<<24)|(color<<16)|char */
    HB_ULONG * pCurrScr;
 
-   /* character translation table, it changes characters in screen buffer into UNICODE or graphs primitives */
-   XWC_CharTrans charTrans[ 256 ];
-   XWC_CharTrans boxTrans[ 256 ];
+   /* character translation table, it changes some characters in screen buffer into graphs primitives */
+   XWC_CharTrans boxTrans[ HB_GTXWC_TRANS_MAX ];
+   HB_UCHAR boxIndex[ HB_GTXWC_TRANS_COUNT ];
+   int transCount;
 
    HB_BOOL fInvalidChr;
    XWC_RECT rInvalidChr;
@@ -440,7 +437,7 @@ typedef struct
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd );
 static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd, int left, int top, int right, int bottom );
 static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd, int left, int top, int right, int bottom );
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize );
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize, HB_BOOL fCopy );
 
 /************************ globals ********************************/
 
@@ -595,7 +592,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
    XSegment     * segs = chdef.segs;
    XRectangle   * rect = chdef.rect;
    XPoint       * pts  = chdef.pts;
-   XWC_CharType   type = CH_CHAR;
+   XWC_CharType   type = CH_UNDEF;
    int            size = 0;
    HB_BOOL        inverse = HB_FALSE;
 
@@ -1017,51 +1014,63 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          break;
 
       case HB_GTXWC_RC_0:
-         bxCh->u.ch16 = '0';
+         type = CH_CHAR;
+         usCh = '0';
          /* TODO */
          break;
       case HB_GTXWC_RC_1:
-         bxCh->u.ch16 = '1';
+         type = CH_CHAR;
+         usCh = '1';
          /* TODO */
          break;
       case HB_GTXWC_RC_2:
-         bxCh->u.ch16 = '2';
+         type = CH_CHAR;
+         usCh = '2';
          /* TODO */
          break;
       case HB_GTXWC_RC_3:
-         bxCh->u.ch16 = '3';
+         type = CH_CHAR;
+         usCh = '3';
          /* TODO */
          break;
       case HB_GTXWC_RC_4:
-         bxCh->u.ch16 = '4';
+         type = CH_CHAR;
+         usCh = '4';
          /* TODO */
          break;
       case HB_GTXWC_RC_5:
-         bxCh->u.ch16 = '5';
+         type = CH_CHAR;
+         usCh = '5';
          /* TODO */
          break;
       case HB_GTXWC_RC_6:
-         bxCh->u.ch16 = '6';
+         type = CH_CHAR;
+         usCh = '6';
          /* TODO */
          break;
       case HB_GTXWC_RC_7:
-         bxCh->u.ch16 = '7';
+         type = CH_CHAR;
+         usCh = '7';
          /* TODO */
          break;
       case HB_GTXWC_RC_8:
-         bxCh->u.ch16 = '8';
+         type = CH_CHAR;
+         usCh = '8';
          /* TODO */
          break;
       case HB_GTXWC_RC_9:
-         bxCh->u.ch16 = '9';
+         type = CH_CHAR;
+         usCh = '9';
          /* TODO */
          break;
       case HB_GTXWC_RC_DOT:
-         bxCh->u.ch16 = '.';
+         type = CH_CHAR;
+         usCh = '.';
          /* TODO */
          break;
       case HB_GTXWC_RC_ACC:
-         bxCh->u.ch16 = '\'';
+         type = CH_CHAR;
+         usCh = '\'';
          /* TODO */
          break;
 
@@ -2389,7 +2398,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 */
    }
 
-   if( type != CH_CHAR )
+   if( type != CH_UNDEF )
    {
       bxCh->type = type;
       bxCh->u.ch16 = usCh;
@@ -2421,72 +2430,99 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_ClearCharTrans( XWC_CharTrans * charTrans )
+static void hb_gt_xwc_ResetCharTrans( PXWND_DEF wnd )
 {
    int i;
 
-   for( i = 0; i < 256; i++ )
+   for( i = 0; i <= wnd->transCount; i++ )
    {
-      switch( charTrans[ i ].type )
+      switch( wnd->boxTrans[ i ].type )
       {
          case CH_IMG:
-            XDestroyImage( charTrans[ i ].u.img );
+            XDestroyImage( wnd->boxTrans[ i ].u.img );
             break;
          case CH_SEG:
-            hb_xfree( charTrans[ i ].u.seg );
+            hb_xfree( wnd->boxTrans[ i ].u.seg );
             break;
          case CH_RECT:
-            hb_xfree( charTrans[ i ].u.rect );
+            hb_xfree( wnd->boxTrans[ i ].u.rect );
             break;
          case CH_PTS:
          case CH_LINE:
          case CH_POLY:
-            hb_xfree( charTrans[ i ].u.pts );
+            hb_xfree( wnd->boxTrans[ i ].u.pts );
             break;
          default:
             break;
       }
    }
-   memset( charTrans, 0, 256 * sizeof( XWC_CharTrans ) );
-}
+   memset( wnd->boxTrans, 0, sizeof( wnd->boxTrans ) );
+   wnd->transCount = 0;
 
-static void hb_gt_xwc_DestroyCharTrans( PXWND_DEF wnd )
-{
-   hb_gt_xwc_ClearCharTrans( wnd->charTrans );
-   hb_gt_xwc_ClearCharTrans( wnd->boxTrans );
+   wnd->boxTrans[ 0 ].type = CH_CHAR;
+   wnd->boxTrans[ 0 ].u.ch16 = 0;
+   wnd->boxTrans[ 0 ].size = 0;
+   wnd->boxTrans[ 0 ].inverse = HB_FALSE;
+
+   for( i = 0; i < HB_GTXWC_TRANS_COUNT; ++i )
+      wnd->boxIndex[ i ] = HB_GTXWC_TRANS_MAX;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
+static XWC_CharTrans * hb_gt_xwc_GetBoxChar( PXWND_DEF wnd, HB_USHORT uc16 )
 {
-   int i;
-   HB_USHORT usCh16;
-   HB_USHORT usBx16;
+   int iPos, iTrans;
 
-   hb_gt_xwc_DestroyCharTrans( wnd );
-
-   for( i = 0; i < 256; i++ )
+   if( !wnd->fDrawBox )
    {
-      usCh16 = hb_cdpGetU16Disp( wnd->hostCDP, ( unsigned char ) i );
-      usBx16 = hb_cdpGetU16Disp( wnd->boxCDP, ( unsigned char ) i );
-
-      wnd->charTrans[ i ].type = CH_CHAR;
-      wnd->charTrans[ i ].u.ch16 = usCh16;
-      wnd->charTrans[ i ].size = 0;
-      wnd->charTrans[ i ].inverse = HB_FALSE;
-
-      wnd->boxTrans[ i ].type = CH_CHAR;
-      wnd->boxTrans[ i ].u.ch16 = usBx16;
-      wnd->boxTrans[ i ].size = 0;
-      wnd->boxTrans[ i ].inverse = HB_FALSE;
-
-      if( wnd->fDrawBox )
-      {
-         hb_gt_xwc_DefineBoxChar( wnd, usCh16, &wnd->charTrans[ i ] );
-         hb_gt_xwc_DefineBoxChar( wnd, usBx16, &wnd->boxTrans[ i ] );
-      }
+      wnd->boxTrans[ 0 ].u.ch16 = hb_cdpGetU16Ctrl( uc16 );
+      return &wnd->boxTrans[ 0 ];
    }
+
+   if     ( uc16 == HB_GTXWC_ARROW_R )
+      iPos = 0;
+   else if( uc16 == HB_GTXWC_ARROW_L )
+      iPos = 1;
+   else if( uc16 == HB_GTXWC_ARROW_U )
+      iPos = 2;
+   else if( uc16 == HB_GTXWC_ARROW_D )
+      iPos = 3;
+   else if( uc16 >= HB_GTXWC_BOX_MIN && uc16 <= HB_GTXWC_BOX_MAX )
+      iPos = HB_GTXWC_CHR_BASE +
+             ( uc16 - HB_GTXWC_BOX_MIN );
+   else if( uc16 >= HB_GTXWC_RC_MIN && uc16 <= HB_GTXWC_RC_MAX )
+      iPos = HB_GTXWC_CHR_BASE + ( HB_GTXWC_BOX_MAX - HB_GTXWC_BOX_MIN + 1 ) +
+             ( uc16 - HB_GTXWC_RC_MIN );
+   else
+   {
+      wnd->boxTrans[ 0 ].u.ch16 = hb_cdpGetU16Ctrl( uc16 );
+      return &wnd->boxTrans[ 0 ];
+   }
+
+   iTrans = wnd->boxIndex[ iPos ];
+   if( iTrans == HB_GTXWC_TRANS_MAX )
+   {
+      if( wnd->transCount < HB_GTXWC_TRANS_MAX - 1 )
+      {
+         iTrans = wnd->transCount + 1;
+         if( hb_gt_xwc_DefineBoxChar( wnd, uc16, &wnd->boxTrans[ iTrans ] ) )
+            wnd->transCount = iTrans;
+         else
+            iTrans = 0;
+      }
+      else
+         iTrans = 0;
+      wnd->boxIndex[ iPos ] = iTrans;
+   }
+
+   if( iTrans == 0 )
+   {
+      wnd->boxTrans[ 0 ].u.ch16 = hb_cdpGetU16Ctrl( uc16 );
+      return &wnd->boxTrans[ 0 ];
+   }
+
+   return &wnd->boxTrans[ iTrans ];
 }
 
 /* *********************************************************************** */
@@ -2625,7 +2661,7 @@ static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
 
 static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 {
-   unsigned char buf[ 16 ];
+   char buf[ 32 ];
    KeySym outISO = 0, out = XLookupKeysym( evt, 0 );
    int ikey = 0, i;
 #ifdef X_HAVE_UTF8_STRING
@@ -2637,14 +2673,14 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 #  ifdef X_HAVE_UTF8_STRING
    if( wnd->ic )
    {
-      i = Xutf8LookupString( wnd->ic, evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, &status_return );
+      i = Xutf8LookupString( wnd->ic, evt, buf, ( int ) sizeof( buf ), &outISO, &status_return );
       buf[HB_MAX(i,0)] = '\0';
       printf( "UTF8: KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
    }
    else
 #  endif
    {
-      i = XLookupString( evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, NULL );
+      i = XLookupString( evt, buf, ( int ) sizeof( buf ), &outISO, NULL );
       buf[HB_MAX(i,0)] = '\0';
       printf( "KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
    }
@@ -2787,11 +2823,11 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
       we not check all modifiers in all possible keyboards */
 #ifdef X_HAVE_UTF8_STRING
    if( wnd->ic )
-      i = Xutf8LookupString( wnd->ic, evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, &status_return );
+      i = Xutf8LookupString( wnd->ic, evt, buf, ( int ) sizeof( buf ), &outISO, &status_return );
    else
 #endif
    {
-      i = XLookupString( evt, ( char * ) buf, ( int ) sizeof( buf ), &outISO, NULL );
+      i = XLookupString( evt, buf, ( int ) sizeof( buf ), &outISO, NULL );
 #ifndef HB_XWC_USE_LOCALE
       if( i <= 0 )
       {
@@ -2800,13 +2836,13 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
           */
          if( outISO >= 0x0100 && outISO <= 0x0fff && ( outISO & 0x80 ) == 0x80 )
          {
-            buf[0] = ( unsigned char ) ( outISO & 0xff );
+            buf[0] = ( char ) ( outISO & 0xff );
             i = 1;
          }
          /* hack for euro sign */
          else if( outISO == 0x20ac )
          {
-            ikey = hb_cdpGetChar( wnd->hostCDP, ( HB_WCHAR ) outISO );
+            ikey = hb_cdpGetChar( HB_GTSELF_HOSTCP( wnd->pGT ), ( HB_WCHAR ) outISO );
             if( ikey )
                hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
             return;
@@ -2817,30 +2853,16 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 
    if( i > 0 )
    {
-      unsigned char keystr[ 32 ];
-      HB_ULONG u = sizeof( keystr ), n;
+      PHB_CODEPAGE cdp = wnd->fUTF8key ? wnd->utf8CDP : HB_GTSELF_INCP( wnd->pGT );
+      HB_WCHAR wc;
+      HB_SIZE nI = 0;
 
-#ifdef X_HAVE_UTF8_STRING
-      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
-                   wnd->utf8CDP, wnd->hostCDP );
-#elif defined( HB_XWC_USE_LOCALE )
-      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
-                   wnd->fUTF8 ? wnd->utf8CDP : wnd->inCDP, wnd->hostCDP );
-#else
-      hb_cdpnDup2( ( const char * ) buf, i, ( char * ) keystr, &u,
-                   wnd->inCDP, wnd->hostCDP );
-#endif
-
-#ifdef XWC_DEBUG
-      keystr[u] = '\0';
-      printf( "keySymISO=%lx keystr[%d]='%s'\r\n", outISO, (int) u, keystr ); fflush(stdout);
-#endif
-      for( n = 0; n < u; n++ )
+      while( HB_CDPCHAR_GET( cdp, buf, i, &nI, &wc ) )
       {
-         if( wnd->keyModifiers.bAlt || wnd->keyModifiers.bCtrl )
-            hb_gt_xwc_TranslateKey( wnd, keystr[n] );
+         if( wc < 128 && ( wnd->keyModifiers.bAlt || wnd->keyModifiers.bCtrl ) )
+            hb_gt_xwc_TranslateKey( wnd, wc );
          else
-            hb_gt_xwc_AddCharToInputQueue( wnd, keystr[n] );
+            hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_UNICODE( wc ) );
       }
       return;
    }
@@ -3058,14 +3080,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                int top = wnd->markTop, bottom = wnd->markBottom,
                    left = wnd->markLeft, right = wnd->markRight;
                char * pBuffer;
-               HB_SIZE nSize;
+               HB_SIZE nSize, nI;
 
                wnd->fMarkMode = HB_FALSE;
                hb_gt_xwc_InvalidateChar( wnd, left, top, right, bottom );
 
-               nSize = ( bottom - top + 1 ) * ( right - left + 2 );
+               nSize = ( bottom - top + 1 ) * ( right - left + 2 ) * 3;
                pBuffer = ( char * ) hb_xgrab( nSize + 1 );
-               nSize = 0;
+               nI = 0;
                while( top <= bottom )
                {
                   for( left = wnd->markLeft; left <= right; ++left )
@@ -3077,14 +3099,19 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      if( !HB_GTSELF_GETSCRCHAR( wnd->pGT, top, left, &iColor, &bAttr, &usChar ) )
                         break;
 
-                     pBuffer[ nSize++ ] = ( char ) usChar;
+                     nI += hb_cdpTextPutU16( wnd->utf8CDP, pBuffer + nI, nSize - nI, usChar );
+                     /* nI += hb_cdpU16CharToUTF8( pBuffer + nI, &usChar ); */
                   }
-                  pBuffer[ nSize++ ] = '\n';
+                  pBuffer[ nI++ ] = '\n';
                   ++top;
                }
-               if( nSize > 0 )
-                  hb_gt_xwc_SetSelection( wnd, pBuffer, nSize );
-               hb_xfree( pBuffer );
+               if( nI > 0 )
+               {
+                  pBuffer[ nI ] = '\0';
+                  hb_gt_xwc_SetSelection( wnd, pBuffer, nI, HB_FALSE );
+               }
+               else
+                  hb_xfree( pBuffer );
             }
             else
             {
@@ -3191,8 +3218,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
                   wnd->ClipboardSize = text.nitems;
                   wnd->ClipboardData = ( unsigned char * )
-                     hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
-                                 wnd->utf8CDP, wnd->hostCDP );
+                                       hb_xmemdup( text.value, text.nitems );
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = HB_TRUE;
                }
@@ -3207,7 +3233,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                   wnd->ClipboardSize = text.nitems;
                   wnd->ClipboardData = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
-                                 wnd->inCDP, wnd->hostCDP );
+                                 HB_GTSELF_INCP( wnd->pGT ), wnd->utf8CDP );
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = HB_TRUE;
                }
@@ -3278,12 +3304,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          else if( req->target == s_atomString || req->target == s_atomText )
          {
             /* TODO: for s_atomString convert data to ISO-8859-1 */
-            if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
+            PHB_CODEPAGE cdpin = HB_GTSELF_INCP( wnd->pGT );
+
+            if( cdpin && cdpin != wnd->utf8CDP )
             {
                HB_SIZE ulLen = wnd->ClipboardSize;
                unsigned char * pBuffer = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
-                                 wnd->hostCDP, wnd->inCDP );
+                                 wnd->utf8CDP, cdpin );
 
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
@@ -3299,18 +3327,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          }
          else if( req->target == s_atomUTF8String )
          {
-            HB_SIZE ulLen = wnd->ClipboardSize;
-            unsigned char * pBuffer = ( unsigned char * )
-                     hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
-                                 wnd->hostCDP, wnd->utf8CDP );
-
-#ifdef XWC_DEBUG
-            printf( "SelectionRequest: (%s)->(%s) [%s]\r\n", wnd->ClipboardData, pBuffer, wnd->hostCDP->id ); fflush(stdout);
-#endif
             XChangeProperty( wnd->dpy, req->requestor, req->property,
                              s_atomUTF8String, 8, PropModeReplace,
-                             pBuffer, ulLen );
-            hb_xfree( pBuffer );
+                             wnd->ClipboardData, wnd->ClipboardSize );
          }
          else
          {
@@ -3579,7 +3598,6 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
          }
          else
          {
-            usCh16 &= 0xFF;
             color = ( HB_BYTE ) iColor;
             if( wnd->fMarkMode &&
                 irow >= wnd->markTop && irow <= wnd->markBottom &&
@@ -3589,8 +3607,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
             }
          }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
-         chTrans = ( attr & HB_GT_ATTR_BOX ) ? &wnd->boxTrans[ usCh16 ] :
-                                               &wnd->charTrans[ usCh16 ];
+         chTrans = hb_gt_xwc_GetBoxChar( wnd, usCh16 );
          if( chTrans->inverse )
          {
             color = ( color << 4 ) | ( color >> 4 );
@@ -3720,6 +3737,9 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XFillRectangles( wnd->dpy, wnd->drw, wnd->gc,
                                    chTrans->u.rect, nsize );
+                  break;
+
+               case CH_UNDEF:
                   break;
 
             }
@@ -3982,7 +4002,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
          XTextProperty text;
          char * pBuffer;
 
-         pBuffer = hb_cdpDup( wnd->szTitle, wnd->hostCDP, wnd->utf8CDP );
+         pBuffer = hb_cdpDup( wnd->szTitle, HB_GTSELF_HOSTCP( wnd->pGT ), wnd->utf8CDP );
          text.value = ( unsigned char * ) pBuffer;
          text.encoding = s_atomUTF8String;
          text.format = 8;
@@ -4145,7 +4165,7 @@ static void hb_gt_xwc_ClearSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize )
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize, HB_BOOL fCopy )
 {
    HB_XWC_XLIB_LOCK
 
@@ -4153,16 +4173,26 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE 
       hb_gt_xwc_ClearSelection( wnd );
 
    if( wnd->ClipboardData != NULL )
+   {
       hb_xfree( wnd->ClipboardData );
-   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( ulSize + 1 );
-   memcpy( wnd->ClipboardData, szData, ulSize );
-   wnd->ClipboardData[ ulSize ] = '\0';
+      wnd->ClipboardData = NULL;
+   }
+
    wnd->ClipboardSize = ulSize;
    wnd->ClipboardTime = wnd->lastEventTime;
    wnd->ClipboardOwner = HB_FALSE;
 
    if( ulSize > 0 )
    {
+      if( fCopy )
+      {
+         wnd->ClipboardData = ( unsigned char * ) hb_xgrab( ulSize + 1 );
+         memcpy( wnd->ClipboardData, szData, ulSize );
+         wnd->ClipboardData[ ulSize ] = '\0';
+      }
+      else
+         wnd->ClipboardData = ( unsigned char * ) szData;
+
       XSetSelectionOwner( wnd->dpy, s_atomPrimary, wnd->window, wnd->ClipboardTime );
       if( XGetSelectionOwner( wnd->dpy, s_atomPrimary ) == wnd->window )
       {
@@ -4295,13 +4325,10 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fWinResize = HB_FALSE;
    wnd->fFullScreen = HB_FALSE;
    wnd->fAltEnter = HB_FALSE;
-#ifdef HB_XWC_USE_LOCALE
-   wnd->fUTF8 = hb_gt_xwc_isUTF8();
+#if defined( HB_XWC_USE_LOCALE )
+   wnd->fUTF8key = hb_gt_xwc_isUTF8();
 #endif
-   wnd->hostCDP = hb_vmCDP();
    wnd->utf8CDP = hb_cdpFindExt( "UTF8" );
-   if( wnd->boxCDP == NULL )
-      wnd->boxCDP = hb_cdpFind( "EN" );
    wnd->cursorType = SC_NORMAL;
 
    /* Window Title */
@@ -4395,7 +4422,7 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
    if( wnd->dpy != NULL )
    {
       hb_gt_xwc_ClearSelection( wnd );
-      hb_gt_xwc_DestroyCharTrans( wnd );
+      hb_gt_xwc_ResetCharTrans( wnd );
 
 #ifdef X_HAVE_UTF8_STRING
       if( wnd->ic )
@@ -4526,8 +4553,8 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
       }
    }
 
-   /* build character translation table (after font selection) */
-   hb_gt_xwc_BuildCharTrans( wnd );
+   /* reset character translation table (after font selection) */
+   hb_gt_xwc_ResetCharTrans( wnd );
 
    if( !wnd->window )
    {
@@ -4580,6 +4607,8 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
          XCloseIM( wnd->im );
          wnd->im = NULL;
       }
+      else
+         wnd->fUTF8key = HB_TRUE;
    }
 #ifdef XWC_DEBUG
    printf( "\r\nXIC=%p, XIC=%p\r\n", wnd->im, wnd->ic ); fflush(stdout);
@@ -4892,72 +4921,6 @@ static int hb_gt_xwc_mouse_CountButton( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
-{
-
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   /*
-    * We are displaying text in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      PXWND_DEF wnd = HB_GTXWC_GET( pGT );
-
-      if( cdpHost && cdpHost != wnd->hostCDP )
-      {
-         wnd->hostCDP = cdpHost;
-         wnd->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
-         if( wnd->fInit )
-         {
-            HB_XWC_XLIB_LOCK
-            hb_gt_xwc_BuildCharTrans( wnd );
-            HB_XWC_XLIB_UNLOCK
-         }
-      }
-   }
-
-   return HB_TRUE;
-}
-
-/* *********************************************************************** */
-
-static HB_BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
-{
-
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   /*
-    * Basic Xlib api has no function to return character key val in
-    * unicode so far. We can use some nonstandard extension or try
-    * to make translation XKEY_* to unicode ourself.
-    * Now I don't have time to build the full conversion table so I only
-    * add a simple hack which should work for LATIN-x encoding and
-    * probably some others
-    */
-   if( !pszTermCDP || !*pszTermCDP )
-      pszTermCDP = hb_cdpID();
-
-   if( pszTermCDP && *pszTermCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP );
-      if( cdpTerm )
-      {
-         HB_GTXWC_GET( pGT )->inCDP = cdpTerm;
-      }
-   }
-
-   return HB_TRUE;
-}
-
-/* *********************************************************************** */
-
 static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
 {
    int iKbdState = 0;
@@ -4972,7 +4935,6 @@ static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
 static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PXWND_DEF wnd;
-   const char * szVal;
    int iVal;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Info(%p,%d,%p)", pGT, iType, pInfo ) );
@@ -5086,26 +5048,6 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case HB_GTI_BOXCP:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult,
-                                       wnd->boxCDP ? wnd->boxCDP->id : NULL );
-         szVal = hb_itemGetCPtr( pInfo->pNewVal );
-         if( szVal && *szVal )
-         {
-            PHB_CODEPAGE cdpBox = hb_cdpFind( szVal );
-            if( cdpBox )
-            {
-               wnd->boxCDP = cdpBox;
-               if( wnd->fInit )
-               {
-                  HB_XWC_XLIB_LOCK
-                  hb_gt_xwc_BuildCharTrans( wnd );
-                  HB_XWC_XLIB_UNLOCK
-               }
-            }
-         }
-         break;
-
       case HB_GTI_DESKTOPWIDTH:
       case HB_GTI_DESKTOPHEIGHT:
       case HB_GTI_DESKTOPCOLS:
@@ -5161,22 +5103,28 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CLIPBOARDDATA:
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+      {
+         void * hString;
+         HB_SIZE nLen;
+         const char * pszClipboardData = hb_itemGetStrUTF8( pInfo->pNewVal, &hString, &nLen );
+
+         if( pszClipboardData )
          {
             hb_gt_xwc_RealRefresh( wnd );
-            hb_gt_xwc_SetSelection( wnd, hb_itemGetCPtr( pInfo->pNewVal ),
-                                         hb_itemGetCLen( pInfo->pNewVal ) );
+            hb_gt_xwc_SetSelection( wnd, pszClipboardData, nLen, HB_TRUE );
             hb_gt_xwc_RealRefresh( wnd );
+            hb_strfree( hString );
          }
          else
          {
             hb_gt_xwc_RealRefresh( wnd );
             hb_gt_xwc_RequestSelection( wnd );
-            pInfo->pResult = hb_itemPutCL( pInfo->pResult,
-                                           ( char * ) wnd->ClipboardData,
-                                           wnd->ClipboardSize );
+            pInfo->pResult = hb_itemPutStrLenUTF8( pInfo->pResult,
+                                                   ( char * ) wnd->ClipboardData,
+                                                   wnd->ClipboardSize );
          }
          break;
+      }
 
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cursorBlinkRate );
@@ -5559,8 +5507,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_xwc_Version;
    pFuncTable->Tone                       = hb_gt_xwc_Tone;
    pFuncTable->Info                       = hb_gt_xwc_Info;
-   pFuncTable->SetDispCP                  = hb_gt_xwc_SetDispCP;
-   pFuncTable->SetKeyCP                   = hb_gt_xwc_SetKeyCP;
 
    pFuncTable->ReadKey                    = hb_gt_xwc_ReadKey;
 

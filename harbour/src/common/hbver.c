@@ -78,6 +78,7 @@
 #if defined( HB_OS_WIN )
 
    #include <windows.h>
+   #include "hbwinuni.h"
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
@@ -471,7 +472,7 @@ char * hb_verPlatform( void )
 
          if( osVer.szCSDVersion )
          {
-            char * pszCSDVersion = HB_TCHAR_CONVFROM( osVer.szCSDVersion );
+            char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
@@ -482,8 +483,7 @@ char * hb_verPlatform( void )
                hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
                hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
             }
-
-            HB_TCHAR_FREE( pszCSDVersion );
+            hb_xfree( pszCSDVersion );
          }
       }
       else

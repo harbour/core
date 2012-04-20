@@ -59,6 +59,7 @@
 #include "hbstack.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
+#include "hbapistr.h"
 
 #include "ctwin.h"
 
@@ -166,6 +167,8 @@ typedef struct
    int iLastKey;
 
 } HB_GTCTW, * PHB_GTCTW;
+
+static const HB_WCHAR s_szFrameW[] = HB_B_SINGLE_W;
 
 static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
 {
@@ -1032,11 +1035,11 @@ static int hb_ctw_GetFormatCords( PHB_GTCTW pCTW, int iWindow, HB_BOOL fRelative
    return -1;
 }
 
-static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, const char * szBox, int iColor )
+static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, const HB_WCHAR * szBoxW, int iColor )
 {
    int iMaxRow, iMaxCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_AddWindowBox(%p,%d,%p,%d)", pCTW, iWindow, szBox, iColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_AddWindowBox(%p,%d,%p,%d)", pCTW, iWindow, szBoxW, iColor));
 
    iMaxRow = HB_GTSELF_MAXROW( pCTW->pGT );
    iMaxCol = HB_GTSELF_MAXCOL( pCTW->pGT );
@@ -1045,7 +1048,7 @@ static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, const char * szBox,
    {
       if( iColor < 0 )
          iColor = HB_GTSELF_GETCOLOR( pCTW->pGT );
-      HB_GTSELF_BOX( pCTW->pGT, 0, 0, iMaxRow, iMaxCol, szBox, iColor );
+      HB_GTSELF_BOXW( pCTW->pGT, 0, 0, iMaxRow, iMaxCol, szBoxW, iColor );
       if( iWindow > 0 && iWindow <= pCTW->iOpenWindows &&
           pCTW->windows[ iWindow ] != NULL )
       {
@@ -1063,7 +1066,7 @@ static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, const char * szBox,
 
 static int hb_ctw_SwapWindows( PHB_GTCTW pCTW, int iWindow1, int iWindow2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_AddWindowBox(%p,%d,%d)", pCTW, iWindow1, iWindow2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SwapWindows(%p,%d,%d)", pCTW, iWindow1, iWindow2));
 
    if( iWindow1 > 0 && iWindow1 <= pCTW->iOpenWindows &&
        pCTW->windows[ iWindow1 ] != NULL &&
@@ -1318,15 +1321,18 @@ static int hb_ctw_gt_MaxRow( PHB_GT pGT )
  */
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength )
+static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE nLength )
 {
    int iLen = 0;
    HB_BOOL bDisp = HB_FALSE;
    HB_BOOL bBell = HB_FALSE;
    int iRow, iCol, iMaxRow, iMaxCol;
-   char szString[ WRITECON_BUFFER_SIZE ];
+   HB_WCHAR szString[ WRITECON_BUFFER_SIZE ];
+   PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
+   HB_SIZE nIndex = 0;
+   HB_WCHAR wc;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%" HB_PFS "u)", pGT, pText, nLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%" HB_PFS "u)", pGT, szText, nLength));
 
    iMaxRow = HB_GTSELF_MAXROW( pGT );
    iMaxCol = HB_GTSELF_MAXCOL( pGT );
@@ -1350,11 +1356,9 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength 
       HB_GTSELF_SETPOS( pGT, iRow, iCol );
    }
 
-   while( nLength-- )
+   while( HB_CDPCHAR_GET( cdp, szText, nLength, &nIndex, &wc ) )
    {
-      char ch = *pText++;
-
-      switch( ch )
+      switch( wc )
       {
          case HB_CHAR_BEL:
             bDisp = bBell = HB_TRUE;
@@ -1392,17 +1396,16 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength 
 
          case HB_CHAR_CR:
             iCol = 0;
-            if( *pText == HB_CHAR_LF )
+            if( nIndex < nLength && szText[ nIndex ] == HB_CHAR_LF )
             {
                ++iRow;
-               ++pText;
-               --nLength;
+               ++nIndex;
             }
             bDisp = HB_TRUE;
             break;
 
          default:
-            szString[ iLen++ ] = ch;
+            szString[ iLen++ ] = wc;
             if( ++iCol > iMaxCol )
             {
                iCol = 0;
@@ -1413,10 +1416,135 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength 
                bDisp = HB_TRUE;
       }
 
-      if( bDisp || nLength == 0 )
+      if( bDisp || nIndex == nLength )
       {
          if( iLen )
-            HB_GTSELF_WRITE( pGT, szString, iLen );
+            HB_GTSELF_WRITEW( pGT, szString, iLen );
+
+         iLen = 0;
+         if( iRow > iMaxRow )
+         {
+            HB_GTSELF_SCROLL( pGT, 0, 0, iMaxRow, iMaxCol,
+                              HB_GTSELF_GETCOLOR( pGT ),
+                              HB_GTSELF_GETCLEARCHAR( pGT ),
+                              iRow - iMaxRow, 0 );
+            iRow = iMaxRow;
+            iCol = 0;
+         }
+         HB_GTSELF_SETPOS( pGT, iRow, iCol );
+         bDisp = HB_FALSE;
+
+         /* To emulate scrolling */
+         HB_GTSELF_FLUSH( pGT );
+
+         if( bBell )
+         {
+            HB_GTSELF_BELL( pGT );
+            bBell = HB_FALSE;
+         }
+      }
+   }
+}
+
+static void hb_ctw_gt_WriteConW( PHB_GT pGT, const HB_WCHAR * szText, HB_SIZE nLength )
+{
+   int iLen = 0;
+   HB_BOOL bDisp = HB_FALSE;
+   HB_BOOL bBell = HB_FALSE;
+   int iRow, iCol, iMaxRow, iMaxCol;
+   HB_WCHAR szString[ WRITECON_BUFFER_SIZE ];
+   HB_SIZE nIndex = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteConW(%p,%p,%" HB_PFS "u)", pGT, szText, nLength));
+
+   iMaxRow = HB_GTSELF_MAXROW( pGT );
+   iMaxCol = HB_GTSELF_MAXCOL( pGT );
+
+   /* small hack for scrolling console output when client area is set */
+   {
+      PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
+      int iWindow = HB_CTW_GETCURRENT( pCTW );
+      if( iWindow > 0 && pCTW->windows[ iWindow ]->fClip )
+         iMaxRow = pCTW->windows[ iWindow ]->iCliBottom;
+   }
+
+   HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
+
+   if( iRow > iMaxRow || iCol > iMaxCol )
+   {
+      if( iRow > iMaxRow )
+         iRow = iMaxRow;
+      if( iCol > iMaxCol )
+         iCol = iMaxCol;
+      HB_GTSELF_SETPOS( pGT, iRow, iCol );
+   }
+
+   while( nIndex < nLength )
+   {
+      HB_WCHAR wc = szText[ nIndex++ ];
+
+      switch( wc )
+      {
+         case HB_CHAR_BEL:
+            bDisp = bBell = HB_TRUE;
+            break;
+
+         case HB_CHAR_BS:
+            if( iCol > 0 )
+            {
+               --iCol;
+               bDisp = HB_TRUE;
+            }
+            else if( iRow > 0 )
+            {
+               iCol = iMaxCol;
+               --iRow;
+               bDisp = HB_TRUE;
+            }
+            if( bDisp )
+            {
+               if( iLen )
+                  szString[ iLen - 1 ] = ' ';
+               else
+               {
+                  HB_GTSELF_SETPOS( pGT, iRow, iCol );
+                  szString[ iLen++ ] = ' ';
+               }
+            }
+            break;
+
+         case HB_CHAR_LF:
+            iCol = 0;
+            ++iRow;
+            bDisp = HB_TRUE;
+            break;
+
+         case HB_CHAR_CR:
+            iCol = 0;
+            if( nIndex < nLength && szText[ nIndex ] == HB_CHAR_LF )
+            {
+               ++iRow;
+               ++nIndex;
+            }
+            bDisp = HB_TRUE;
+            break;
+
+         default:
+            szString[ iLen++ ] = wc;
+            if( ++iCol > iMaxCol )
+            {
+               iCol = 0;
+               ++iRow;
+               bDisp = HB_TRUE;
+            }
+            else if( iLen >= WRITECON_BUFFER_SIZE )
+               bDisp = HB_TRUE;
+      }
+
+      if( bDisp || nIndex == nLength )
+      {
+         if( iLen )
+            HB_GTSELF_WRITEW( pGT, szString, iLen );
 
          iLen = 0;
          if( iRow > iMaxRow )
@@ -1674,6 +1802,41 @@ static HB_BOOL hb_ctw_gt_GetScrChar( PHB_GT pGT, int iRow, int iCol,
    return HB_TRUE;
 }
 
+static HB_BOOL hb_ctw_gt_GetScrUC( PHB_GT pGT, int iRow, int iCol,
+                                   int * piColor, HB_BYTE * pbAttr,
+                                   HB_UCHAR * puChar, HB_BOOL fTerm )
+{
+   HB_USHORT usChar;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetScrUC(%p,%d,%d,%p,%p,%p,%d)", pGT, iRow, iCol, piColor, pbAttr, puChar, fTerm));
+
+   if( hb_ctw_gt_GetScrChar( pGT, iRow, iCol, piColor, pbAttr, &usChar ) )
+   {
+      HB_UCHAR uc = 0;
+      if( usChar )
+      {
+         if( fTerm && pGT->cdpTerm )
+            uc = hb_cdpGetUC( pGT->cdpTerm, usChar, 0 );
+         if( uc == 0 )
+         {
+            if( pGT->cdpBox && ( !fTerm || pGT->cdpBox != pGT->cdpTerm ) &&
+                pGT->cdpBox != pGT->cdpHost && ( *pbAttr & HB_GT_ATTR_BOX ) )
+               uc = hb_cdpGetUC( pGT->cdpBox, usChar, 0 );
+            if( uc == 0 )
+            {
+               if( pGT->cdpHost && pGT->cdpTerm != pGT->cdpHost )
+                  uc = hb_cdpGetUC( pGT->cdpHost, usChar, 0 );
+               if( uc == 0 )
+                  uc = hb_cdpGetUC( hb_vmCDP(), usChar, '?' );
+            }
+         }
+      }
+      *puChar = uc;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
 static HB_BOOL hb_ctw_gt_GetChar( PHB_GT pGT, int iRow, int iCol,
                                   int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
 {
@@ -1686,7 +1849,6 @@ static HB_BOOL hb_ctw_gt_GetChar( PHB_GT pGT, int iRow, int iCol,
    pCTW = HB_GTCTW_GET( pGT );
    iWindow = HB_CTW_GETCURRENT( pCTW );
    if( iWindow == 0 )
-      /* TODO: it may badly interacts with character translations */
       return HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, piColor, pbAttr, pusChar );
 
    pWnd = pCTW->windows[ iWindow ];
@@ -1918,16 +2080,20 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       if( fScreen )
       {
          PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
-         HB_UINT ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
+         HB_UINT ulWidth = 0, ulCurrWidth = 0, ulMsg = 0, ul2, ulMaxWidth, ulLast;
+         char szKey[ HB_MAX_CHAR_LEN ];
+         HB_SIZE nChar;
          int iKey, iDspCount, iLines = 0, iTop, iLeft, iBottom, iRight,
              iMnuCol, iPos, iClr, iWnd, iPrevWnd, i;
-         const char * szMessage = hb_itemGetCPtr( pMessage );
-         HB_UINT ulLen = ( HB_UINT ) hb_itemGetCLen( pMessage );
+         HB_SIZE nLen, nOptLen;
+         void * hMessage, * hOpt;
+         const HB_WCHAR * szMessageW = hb_itemGetStrU16( pMessage, HB_CDP_ENDIAN_NATIVE, &hMessage, &nLen ),
+                        * szOptW;
 
          ulMaxWidth = iCols - 4;
-         while( ul < ulLen )
+         while( ulMsg < nLen )
          {
-            if( szMessage[ ul ] == '\n' )
+            if( szMessageW[ ulMsg ] == '\n' )
             {
                ++iLines;
                if( ulCurrWidth > ulWidth )
@@ -1936,7 +2102,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             }
             else
                ++ulCurrWidth;
-            ++ul;
+            ++ulMsg;
          }
          if( ulCurrWidth )
             ++iLines;
@@ -1945,7 +2111,8 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          ulCurrWidth = 0;
          for( i = 1; i <= iOptions; ++i )
          {
-            ulCurrWidth += ( HB_UINT ) hb_arrayGetCLen( pOptions, i ) + ( i > 1 ? 3 : 0 );
+            nOptLen = hb_itemCopyStrU16( hb_arrayGetItemPtr( pOptions, i ), HB_CDP_ENDIAN_NATIVE, NULL, 0 );
+            ulCurrWidth += ( HB_UINT ) nOptLen + ( i > 1 ? 3 : 0 );
          }
          if( ulCurrWidth > ulWidth )
             ulWidth = ulCurrWidth;
@@ -1968,35 +2135,36 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
          iPrevWnd = hb_ctw_CurrentWindow( pCTW );
          iWnd = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, HB_TRUE, iClrNorm, HB_TRUE );
-         hb_ctw_AddWindowBox( pCTW, iWnd, _B_SINGLE, iClrNorm );
+         hb_ctw_AddWindowBox( pCTW, iWnd, s_szFrameW, iClrNorm );
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NONE );
          ulLast = 0;
          i = 0;
-         for( ul = 0; ul < ulLen; ++ul )
+         for( ulMsg = 0; ulMsg < nLen; ++ulMsg )
          {
-            if( szMessage[ ul ] == '\n' )
+            if( szMessageW[ ulMsg ] == '\n' )
             {
-               if( ul > ulLast )
+               if( ulMsg > ulLast )
                {
-                  ul2 = ul - ulLast;
+                  ul2 = ulMsg - ulLast;
                   if( ul2 > ulWidth )
                      ul2 = ulWidth;
-                  HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
-                                     szMessage + ulLast, ul2 );
+                  HB_GTSELF_PUTTEXTW( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
+                                      szMessageW + ulLast, ul2 );
                }
-               ulLast = ul + 1;
+               ulLast = ulMsg + 1;
                if( ++i >= iLines )
                   break;
             }
          }
-         if( ul > ulLast && i < iLines )
+         if( ulMsg > ulLast && i < iLines )
          {
-            ul2 = ul - ulLast;
+            ul2 = ulMsg - ulLast;
             if( ul2 > ulWidth )
                ul2 = ulWidth;
-            HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
-                               szMessage + ulLast, ul2 );
+            HB_GTSELF_PUTTEXTW( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
+                                szMessageW + ulLast, ul2 );
          }
+         hb_strfree( hMessage );
 
          iPos = 1;
          while( iRet == 0 )
@@ -2006,16 +2174,16 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             for( i = 1; i <= iOptions; ++i )
             {
                iClr = i == iPos ? iClrHigh : iClrNorm;
-               ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
-               HB_GTSELF_PUTTEXT( pGT, iLines + 1, iMnuCol, iClr,
-                                  hb_arrayGetCPtr( pOptions, i ), ulLen );
-               iMnuCol += ulLen + 3;
+               szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
+               HB_GTSELF_PUTTEXTW( pGT, iLines + 1, iMnuCol, iClr, szOptW, nLen );
+               hb_strfree( hOpt );
+               iMnuCol += nLen + 3;
             }
             while( HB_GTSELF_DISPCOUNT( pGT ) )
                HB_GTSELF_DISPEND( pGT );
             HB_GTSELF_REFRESH( pGT );
 
-            iKey = HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL );
+            iKey = HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL | HB_INKEY_EXT );
             /* TODO: add support for SET KEY blocks */
 
             if( iKey == K_ESC )
@@ -2046,27 +2214,32 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   iMnuCol = ( ( ulWidth - ulCurrWidth ) >> 1 ) + 1;
                   for( i = 1; i <= iOptions; ++i )
                   {
-                     ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
-                     if( iMCol >= iMnuCol && iMCol < iMnuCol + ( int ) ulLen )
+                     nLen = hb_itemCopyStrU16( hb_arrayGetItemPtr( pOptions, i ), HB_CDP_ENDIAN_NATIVE, NULL, 0 );
+                     if( iMCol >= iMnuCol && iMCol < iMnuCol + ( int ) nLen )
                      {
                         iRet = i;
                         break;
                      }
-                     iMnuCol += ulLen + 3;
+                     iMnuCol += ( int ) nLen + 3;
                   }
                }
             }
 #endif
-            else if( iKey >= 32 && iKey <= 255 )
+            else if( ( nChar = hb_inkeyKeyString( iKey, szKey, sizeof( szKey ) ) ) > 0 )
             {
-               int iUp = hb_charUpper( iKey );
+               PHB_CODEPAGE cdp = hb_vmCDP();
                for( i = 1; i <= iOptions; ++i )
                {
-                  const char *szValue = hb_arrayGetCPtr( pOptions, i );
-                  if( szValue && iUp == hb_charUpper( *szValue ) )
+                  HB_SIZE nOptLen = hb_arrayGetCLen( pOptions, i );
+                  if( nOptLen > 0 )
                   {
-                     iRet = i;
-                     break;
+                     HB_SIZE nIdx1 = 0, nIdx2 = 0;
+                     if( hb_cdpCharCaseEq( cdp, szKey, nChar, &nIdx1,
+                           hb_arrayGetCPtr( pOptions, i ), nOptLen, &nIdx2 ) )
+                     {
+                        iRet = i;
+                        break;
+                     }
                   }
                }
             }
@@ -2421,13 +2594,13 @@ int  hb_ctwCenterWindow( int iWindow, HB_BOOL fCenter )
    return iResult;
 }
 
-int  hb_ctwAddWindowBox( int iWindow, const char * szBox, int iColor )
+int  hb_ctwAddWindowBox( int iWindow, const HB_WCHAR * szBoxW, int iColor )
 {
    int iResult = -1;
    PHB_GTCTW pCTW = hb_ctw_base();
    if( pCTW )
    {
-      iResult = hb_ctw_AddWindowBox( pCTW, iWindow, szBox, iColor );
+      iResult = hb_ctw_AddWindowBox( pCTW, iWindow, szBoxW, iColor );
       HB_GTSELF_FLUSH( pCTW->pGT );
       hb_gt_BaseFree( pCTW->pGT );
    }
@@ -2495,6 +2668,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->GetPos                     = hb_ctw_gt_GetPos;
    pFuncTable->SetPos                     = hb_ctw_gt_SetPos;
    pFuncTable->WriteCon                   = hb_ctw_gt_WriteCon;
+   pFuncTable->WriteConW                  = hb_ctw_gt_WriteConW;
    pFuncTable->GetCursorStyle             = hb_ctw_gt_GetCursorStyle;
    pFuncTable->SetCursorStyle             = hb_ctw_gt_SetCursorStyle;
    pFuncTable->GetColorStr                = hb_ctw_gt_GetColorStr;
@@ -2504,6 +2678,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->GetColorData               = hb_ctw_gt_GetColorData;
    pFuncTable->GetScrCursor               = hb_ctw_gt_GetScrCursor;
    pFuncTable->GetScrChar                 = hb_ctw_gt_GetScrChar;
+   pFuncTable->GetScrUC                   = hb_ctw_gt_GetScrUC;
    pFuncTable->GetChar                    = hb_ctw_gt_GetChar;
    pFuncTable->PutChar                    = hb_ctw_gt_PutChar;
    pFuncTable->Resize                     = hb_ctw_gt_Resize;

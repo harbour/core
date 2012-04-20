@@ -1185,7 +1185,6 @@ int hb_vmQuit( void )
    hb_conRelease();                 /* releases Console */
    hb_vmReleaseLocalSymbols();      /* releases the local modules linked list */
    hb_dynsymRelease();              /* releases the dynamic symbol table */
-   hb_cdpReleaseAll();              /* releases codepages */
    hb_itemClear( hb_stackReturnItem() );
    hb_gcCollectAll( HB_TRUE );
 
@@ -1193,7 +1192,7 @@ int hb_vmQuit( void )
    hb_vmCleanModuleFunctions();
 
 #if defined( HB_MT_VM )
-   hb_vmStackRelease();       /* release HVM stack and remove it from linked HVM stacks list */
+   hb_vmStackRelease();             /* release HVM stack and remove it from linked HVM stacks list */
    if( s_pSymbolsMtx )
    {
       hb_itemRelease( s_pSymbolsMtx );
@@ -1204,6 +1203,8 @@ int hb_vmQuit( void )
    hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
    hb_stackFree();
 #endif /* HB_MT_VM */
+
+   hb_cdpReleaseAll();              /* releases codepages */
 
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
@@ -8883,6 +8884,19 @@ HB_BOOL hb_vmIsActive( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmIsActive()"));
 
    return s_fHVMActive;
+}
+
+HB_BOOL hb_vmIsReady( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIsReady()"));
+
+#if defined( HB_MT_VM )
+   return s_fHVMActive && hb_stackId();
+#else
+   return s_fHVMActive;
+#endif
 }
 
 PHB_CODEPAGE hb_vmCDP( void )

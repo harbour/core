@@ -152,19 +152,6 @@ typedef struct
    HWND     hWnd;                         /* the window handle */
    HB_BOOL  fInit;                        /* logical variable indicating that window should be open */
 
-#if defined( UNICODE )
-   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
-   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
-   PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
-#else
-   HB_BOOL  fKeyTrans;                    /* logical variable indicating that CP key translation is enabled */
-#endif
-
-#if !defined( UNICODE )
-   HB_BYTE  keyTransTbl[ 256 ];
-   HB_BYTE  chrTransTbl[ 256 ];
-#endif
-
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
    HB_BOOL  bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 

@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * TRANSFORM() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
  *
@@ -95,9 +96,11 @@ HB_FUNC( TRANSFORM )
       bError = HB_TRUE;
    else if( pPic && hb_itemGetCLen( pPic ) > 0 )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
       char szPicDate[ 11 ];
       const char * szPic = hb_itemGetCPtr( pPic );
       HB_SIZE nPicLen = hb_itemGetCLen( pPic );
+      HB_SIZE nPicPos = 0;
       HB_USHORT uiPicFlags; /* Function flags */
 
       HB_SIZE nParamS = 0; /* To avoid GCC -O2 warning */
@@ -210,7 +213,6 @@ HB_FUNC( TRANSFORM )
          const char * szExp = hb_itemGetCPtr( pValue );
          HB_SIZE nExpLen = hb_itemGetCLen( pValue );
          HB_SIZE nExpPos = 0;
-         HB_BOOL bAnyPic = HB_FALSE;
          HB_BOOL bFound  = HB_FALSE;
 
          /* Grab enough */
@@ -223,26 +225,27 @@ HB_FUNC( TRANSFORM )
             nPicLen = strlen( szPicDate );
          }
 
-         szResult = ( char * ) hb_xgrab( nExpLen + nPicLen + 1 );
-         nResultPos = 0;
-
          /* Template string */
-         if( nPicLen )
+         if( nPicPos < nPicLen )
          {
-            while( nPicLen )                        /* Analyze picture mask */
+            HB_SIZE nSize = nExpLen + nExpLen + nPicLen - nPicPos;
+            HB_WCHAR wcPict, wcExp;
+
+            szResult = ( char * ) hb_xgrab( nSize + 1 );
+            nResultPos = 0;
+
+            while( HB_CDPCHAR_GET( cdp, szPic, nPicLen, &nPicPos, &wcPict ) )
             {
-               if( nExpPos < nExpLen )
+               HB_SIZE nExpPrev = nExpPos;
+               if( nExpPos < nExpLen && HB_CDPCHAR_GET( cdp, szExp, nExpLen, &nExpPos, &wcExp ) )
                {
-                  switch( *szPic )
+                  switch( wcPict )
                   {
                      /* Upper */
                      case '!':
-                     {
-                        szResult[ nResultPos++ ] = ( char ) hb_charUpper( szExp[ nExpPos ] );
-                        nExpPos++;
-                        bAnyPic = HB_TRUE;
+                        HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos,
+                                        hb_cdpUpperWC( cdp, wcExp ) );
                         break;
-                     }
 
                      /* Out the character */
                      case '#':
@@ -255,34 +258,25 @@ HB_FUNC( TRANSFORM )
                      case 'N':
                      case 'x':
                      case 'X':
-                     {
-                        szResult[ nResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( szExp[ nExpPos ] ) : szExp[ nExpPos ];
-                        nExpPos++;
-                        bAnyPic = HB_TRUE;
+                        HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos,
+                                        ( uiPicFlags & PF_UPPER ) ? hb_cdpUpperWC( cdp, wcExp ) : wcExp );
                         break;
-                     }
 
                      /* Logical */
                      case 'y':
                      case 'Y':
-                     {
-                        szResult[ nResultPos++ ] = ( szExp[ nExpPos ] == 't' ||
-                                                     szExp[ nExpPos ] == 'T' ||
-                                                     szExp[ nExpPos ] == 'y' ||
-                                                     szExp[ nExpPos ] == 'Y' ) ? ( char ) 'Y' : ( char ) 'N';
-                        nExpPos++;
-                        bAnyPic = HB_TRUE;
+                        HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos,
+                                             ( wcExp == 't' ||
+                                               wcExp == 'T' ||
+                                               wcExp == 'y' ||
+                                               wcExp == 'Y' ) ? 'Y' : 'N' );
                         break;
-                     }
 
                      /* Other choices */
                      default:
-                     {
-                        szResult[ nResultPos++ ] = *szPic;
-
-                        if( !( uiPicFlags & PF_REMAIN ) )
-                           nExpPos++;
-                     }
+                        HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos, wcPict );
+                        if( uiPicFlags & PF_REMAIN )
+                           nExpPos = nExpPrev;
                   }
                }
                else if( !( uiPicFlags & PF_REMAIN ) )
@@ -292,10 +286,10 @@ HB_FUNC( TRANSFORM )
                {
 /* NOTE: This is a FoxPro compatible [jarabal] */
 #if defined( HB_COMPAT_FOXPRO )
-                  nPicLen = 0;
+                  nPicPos = nPicLen;
                   break;
 #else
-                  switch( *szPic )
+                  switch( wcPict )
                   {
                      case '!':
                      case '#':
@@ -310,71 +304,58 @@ HB_FUNC( TRANSFORM )
                      case 'X':
                      case 'y':
                      case 'Y':
-                     {
                         szResult[ nResultPos++ ] = ' ';
                         break;
-                     }
 
                      default:
-                        szResult[ nResultPos++ ] = *szPic;
+                        HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos, wcPict );
                   }
 #endif
                }
+            }
 
-               szPic++;
-               nPicLen--;
+            if( ( uiPicFlags & PF_REMAIN ) && nExpPos == 0 && nExpPos < nExpLen )
+            {
+               if( uiPicFlags & PF_UPPER )
+                  nResultPos += hb_cdpnDup2Upper( cdp, szExp + nExpPos, nExpLen - nExpPos,
+                                                  szResult + nResultPos, nSize - nResultPos );
+               else
+               {
+                  while( HB_CDPCHAR_GET( cdp, szExp, nExpLen, &nExpPos, &wcExp ) )
+                     HB_CDPCHAR_PUT( cdp, szResult, nSize, &nResultPos, wcExp );
+               }
+            }
+
+            /* Any chars left ? */
+            if( ( uiPicFlags & PF_REMAIN ) && nPicPos < nPicLen )
+            {
+               /* Export remainder */
+               while( nPicPos++ < nPicLen && nResultPos < nSize )
+                     szResult[ nResultPos++ ] = ' ';
             }
          }
          else
          {
-            while( nExpPos++ < nExpLen )
+            nResultPos = nExpLen;
+            if( uiPicFlags & PF_UPPER )
+               szResult = hb_cdpnDupUpper( cdp, szExp, &nResultPos );
+            else
+               szResult = ( char * ) hb_xmemdup( szExp, nResultPos + 1 );
+
+            if( uiPicFlags & PF_EXCHANG )
             {
-               if( uiPicFlags & PF_EXCHANG )
+               while( nExpPos < nResultPos )
                {
-                  switch( *szExp )
+                  if( szResult[ nExpPos ] == ',' )
+                     szResult[ nExpPos ] = '.';
+                  else if( !bFound && szResult[ nExpPos ] == '.' )
                   {
-                     case ',':
-                     {
-                        szResult[ nResultPos++ ] = '.';
-                        break;
-                     }
-                     case '.':
-                     {
-                        if( !bFound && nResultPos )
-                        {
-                           szResult[ nResultPos++ ] = ',';
-                           bFound = HB_TRUE;
-                        }
-
-                        break;
-                     }
-                     default:
-                        szResult[ nResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
+                     szResult[ nExpPos ] = ',';
+                     bFound = HB_TRUE;
                   }
+                  nExpPos++;
                }
-               else
-               {
-                  szResult[ nResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
-               }
-               szExp++;
             }
-         }
-
-         if( ( uiPicFlags & PF_REMAIN ) && ! bAnyPic )
-         {
-            while( nExpPos++ < nExpLen )
-            {
-               szResult[ nResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
-               szExp++;
-            }
-         }
-
-         /* Any chars left ? */
-         if( ( uiPicFlags & PF_REMAIN ) && nPicLen )
-         {
-            /* Export remainder */
-            while( nPicLen-- )
-               szResult[ nResultPos++ ] = ' ';
          }
 
          if( uiPicFlags & PF_BRITISH )
@@ -394,7 +375,25 @@ HB_FUNC( TRANSFORM )
              *          ? transform( "ab", "@E" )
              * [druzus]
              */
-            if( nResultPos >= 5 )
+            if( HB_CDP_ISCHARIDX( cdp ) )
+            {
+               HB_WCHAR wc0, wc1, wc2, wc3, wc4;
+               nExpPos = 0;
+               if( HB_CDPCHAR_GET( cdp, szResult, nResultPos, &nExpPos, &wc0 ) &&
+                   HB_CDPCHAR_GET( cdp, szResult, nResultPos, &nExpPos, &wc1 ) &&
+                   HB_CDPCHAR_GET( cdp, szResult, nResultPos, &nExpPos, &wc2 ) &&
+                   HB_CDPCHAR_GET( cdp, szResult, nResultPos, &nExpPos, &wc3 ) &&
+                   HB_CDPCHAR_GET( cdp, szResult, nResultPos, &nExpPos, &wc4 ) )
+               {
+                  nExpPos = 0;
+                  HB_CDPCHAR_PUT( cdp, szResult, nResultPos, &nExpPos, wc3 );
+                  HB_CDPCHAR_PUT( cdp, szResult, nResultPos, &nExpPos, wc4 );
+                  HB_CDPCHAR_PUT( cdp, szResult, nResultPos, &nExpPos, wc2 );
+                  HB_CDPCHAR_PUT( cdp, szResult, nResultPos, &nExpPos, wc0 );
+                  HB_CDPCHAR_PUT( cdp, szResult, nResultPos, &nExpPos, wc1 );
+               }
+            }
+            else if( nResultPos >= 5 )
             {
                szPicDate[ 0 ] = szResult[ 0 ];
                szPicDate[ 1 ] = szResult[ 1 ];

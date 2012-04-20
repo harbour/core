@@ -444,7 +444,7 @@ PROCEDURE thFunc()
    DO WHILE ! lEnd
       oBrowse:ForceStable()
 
-      nKey := Inkey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
+      nKey := Inkey( 0, HB_INKEY_ALL )
 
       IF ! BrwHandleKey( oBrowse, nKey, @lEnd )
          DO CASE

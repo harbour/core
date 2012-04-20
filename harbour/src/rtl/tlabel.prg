@@ -303,7 +303,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
    RETURN Self
 
 METHOD SampleLabels() CLASS HBLabelForm
-   LOCAL nGetKey, lMoreSamples := .T., nField
+   LOCAL cKey, lMoreSamples := .T., nField
    LOCAL aBand := {}
 
    // Create the sample label row
@@ -329,15 +329,15 @@ METHOD SampleLabels() CLASS HBLabelForm
 
       // Prompt for more
       @ Row(), 0 SAY __NatMsg( _LF_SAMPLES ) + " (" + __NatMsg( _LF_YN ) + ")"
-      nGetKey := Inkey( 0 )
-      @ Row(), Col() SAY Chr( nGetKey )
+      cKey := hb_KeyChar( Inkey( 0 ) )
+      @ Row(), Col() SAY cKey
       IF Row() == MaxRow()
          hb_scroll( 0, 0, MaxRow(), MaxCol(), 1 )
          @ MaxRow(), 0 SAY ""
       ELSE
          @ Row() + 1, 0 SAY ""
       ENDIF
-      IF __NatIsNegative( Chr( nGetKey ) )   // Don't give sample labels
+      IF __NatIsNegative( cKey )    // Don't give sample labels
          lMoreSamples := .F.
       ENDIF
    ENDDO

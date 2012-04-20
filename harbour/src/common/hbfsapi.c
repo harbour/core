@@ -57,6 +57,7 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
    #endif
@@ -292,85 +293,64 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
 HB_BOOL hb_fsNameExists( const char * pszFileName )
 {
-   HB_BOOL fExist;
-   char * pszFree = NULL;
+   HB_BOOL fExist = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsNameExists(%p)", pszFileName));
 
-   if( pszFileName == NULL )
-      return HB_FALSE;
-
-   pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-
-#if defined( HB_OS_DOS )
+   if( pszFileName != NULL )
    {
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-      fExist = _chmod( pszFileName, 0, 0 ) != -1;
-#else
-      unsigned int iAttr = 0;
-      fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0;
-#endif
-   }
-#elif defined( HB_OS_WIN )
-   {
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
+#if defined( HB_OS_WIN )
+      LPTSTR lpFree;
+      LPCTSTR lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
 
       fExist = ( GetFileAttributes( lpFileName ) != INVALID_FILE_ATTRIBUTES );
 
-      HB_TCHAR_FREE( lpFileName );
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      FILESTATUS3 fs3;
-      fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
-                                 &fs3, sizeof( fs3 ) ) == NO_ERROR;
-   }
-#elif defined( HB_OS_UNIX )
-   {
-      struct stat statbuf;
-
-      fExist = stat( pszFileName, &statbuf ) == 0;
-   }
+      if( lpFree )
+         hb_xfree( lpFree );
 #else
-   {
-      int iTODO; /* To force warning */
+      char * pszFree = NULL;
 
-      fExist = HB_FALSE;
-   }
+      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+
+      {
+#  if defined( HB_OS_DOS )
+#     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
+         fExist = _chmod( pszFileName, 0, 0 ) != -1;
+#     else
+         unsigned int iAttr = 0;
+         fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0;
+#     endif
+#  elif defined( HB_OS_OS2 )
+         FILESTATUS3 fs3;
+         fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
+                                    &fs3, sizeof( fs3 ) ) == NO_ERROR;
+#  elif defined( HB_OS_UNIX )
+         struct stat statbuf;
+         fExist = stat( pszFileName, &statbuf ) == 0;
+#  else
+         int iTODO; /* To force warning */
+#  endif
+      }
+
+      if( pszFree )
+         hb_xfree( pszFree );
 #endif
-
-   if( pszFree )
-      hb_xfree( pszFree );
+   }
 
    return fExist;
 }
 
 HB_BOOL hb_fsFileExists( const char * pszFileName )
 {
-   HB_BOOL fExist;
-   char * pszFree = NULL;
+   HB_BOOL fExist = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFileExists(%p)", pszFileName));
 
-   if( pszFileName == NULL )
-      return HB_FALSE;
-
-   pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-
-#if defined( HB_OS_DOS )
+   if( pszFileName != NULL )
    {
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-      int iAttr = _chmod( pszFileName, 0, 0 );
-      fExist = iAttr != -1 && ( iAttr & 0x10 ) == 0;
-#else
-      unsigned int iAttr = 0;
-      fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0 &&
-               ( iAttr & 0x10 ) == 0;
-#endif
-   }
-#elif defined( HB_OS_WIN )
-   {
-      LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
+#if defined( HB_OS_WIN )
+      LPTSTR lpFree;
+      LPCTSTR lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
       DWORD dwAttr;
 
       dwAttr = GetFileAttributes( lpFileName );
@@ -378,94 +358,98 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
 
-      HB_TCHAR_FREE( lpFileName );
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      FILESTATUS3 fs3;
-      fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
-                                 &fs3, sizeof( fs3 ) ) == NO_ERROR &&
-               ( fs3.attrFile & FILE_DIRECTORY ) == 0;
-   }
-#elif defined( HB_OS_UNIX )
-   {
-      struct stat statbuf;
-
-      fExist = stat( pszFileName, &statbuf ) == 0 &&
-               S_ISREG( statbuf.st_mode );
-   }
+      if( lpFree )
+         hb_xfree( lpFree );
 #else
-   {
-      int iTODO; /* To force warning */
+      char * pszFree = NULL;
 
-      fExist = HB_FALSE;
-   }
+      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+
+      {
+#  if defined( HB_OS_DOS )
+#     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
+         int iAttr = _chmod( pszFileName, 0, 0 );
+         fExist = iAttr != -1 && ( iAttr & 0x10 ) == 0;
+#     else
+         unsigned int iAttr = 0;
+         fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0 &&
+                  ( iAttr & 0x10 ) == 0;
+#     endif
+#  elif defined( HB_OS_OS2 )
+         FILESTATUS3 fs3;
+         fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
+                                    &fs3, sizeof( fs3 ) ) == NO_ERROR &&
+                  ( fs3.attrFile & FILE_DIRECTORY ) == 0;
+#  elif defined( HB_OS_UNIX )
+         struct stat statbuf;
+
+         fExist = stat( pszFileName, &statbuf ) == 0 &&
+                  S_ISREG( statbuf.st_mode );
+#  else
+         int iTODO; /* To force warning */
+#  endif
+      }
+
+      if( pszFree )
+         hb_xfree( pszFree );
 #endif
-
-   if( pszFree )
-      hb_xfree( pszFree );
+   }
 
    return fExist;
 }
 
 HB_BOOL hb_fsDirExists( const char * pszDirName )
 {
-   HB_BOOL fExist;
-   char * pszFree = NULL;
+   HB_BOOL fExist = HB_FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsDirExists(%p)", pszDirName));
 
-   if( pszDirName == NULL )
-      return HB_FALSE;
-
-   pszDirName = hb_fsNameConv( pszDirName, &pszFree );
-
-#if defined( HB_OS_DOS )
+   if( pszDirName != NULL )
    {
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-      int iAttr = _chmod( pszDirName, 0, 0 );
-      fExist = iAttr != -1 && ( iAttr & 0x10 ) != 0;
-#else
-      unsigned int iAttr = 0;
-      fExist = _dos_getfileattr( pszDirName, &iAttr ) == 0 &&
-               ( iAttr & 0x10 ) != 0;
-#endif
-   }
-#elif defined( HB_OS_WIN )
-   {
-      LPTSTR lpDirName = HB_TCHAR_CONVTO( pszDirName );
+#if defined( HB_OS_WIN )
+      LPTSTR lpFree;
+      LPCTSTR lpDirName = HB_FSNAMECONV( pszDirName, &lpFree );
       DWORD dwAttr;
 
       dwAttr = GetFileAttributes( lpDirName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
 
-      HB_TCHAR_FREE( lpDirName );
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      FILESTATUS3 fs3;
-      fExist = DosQueryPathInfo( ( PCSZ ) pszDirName, FIL_STANDARD,
-                                 &fs3, sizeof( fs3 ) ) == NO_ERROR &&
-               ( fs3.attrFile & FILE_DIRECTORY ) != 0;
-   }
-#elif defined( HB_OS_UNIX )
-   {
-      struct stat statbuf;
-
-      fExist = stat( pszDirName, &statbuf ) == 0 &&
-               S_ISDIR( statbuf.st_mode );
-   }
+      if( lpFree )
+         hb_xfree( lpFree );
 #else
-   {
-      int iTODO; /* To force warning */
+      char * pszFree = NULL;
 
-      fExist = HB_FALSE;
-   }
+      pszDirName = hb_fsNameConv( pszDirName, &pszFree );
+
+      {
+#  if defined( HB_OS_DOS )
+#     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
+         int iAttr = _chmod( pszDirName, 0, 0 );
+         fExist = iAttr != -1 && ( iAttr & 0x10 ) != 0;
+#     else
+         unsigned int iAttr = 0;
+         fExist = _dos_getfileattr( pszDirName, &iAttr ) == 0 &&
+                  ( iAttr & 0x10 ) != 0;
+#     endif
+#  elif defined( HB_OS_OS2 )
+         FILESTATUS3 fs3;
+         fExist = DosQueryPathInfo( ( PCSZ ) pszDirName, FIL_STANDARD,
+                                    &fs3, sizeof( fs3 ) ) == NO_ERROR &&
+                  ( fs3.attrFile & FILE_DIRECTORY ) != 0;
+#  elif defined( HB_OS_UNIX )
+         struct stat statbuf;
+         fExist = stat( pszDirName, &statbuf ) == 0 &&
+                  S_ISDIR( statbuf.st_mode );
+#  else
+         int iTODO; /* To force warning */
+#  endif
+      }
+
+      if( pszFree )
+         hb_xfree( pszFree );
 #endif
-
-   if( pszFree )
-      hb_xfree( pszFree );
+   }
 
    return fExist;
 }

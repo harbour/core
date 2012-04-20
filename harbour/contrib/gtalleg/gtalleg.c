@@ -1061,7 +1061,7 @@ static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    int iColor;
    HB_BYTE bAttr;
-   HB_USHORT usChar;
+   HB_UCHAR uc;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
@@ -1077,10 +1077,10 @@ static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       while( iSize-- )
       {
-         if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_TRUE ) )
             break;
          al_draw_rect_fill( s_bmp,  iPosX, iPosY, iPosX + s_byFontWidth - 1, iPosY + s_byFontSize - 1, s_pClr[ ( iColor >> 4 ) & 0x0F ] );
-         ssfDrawChar( s_bmp, &s_ssfDefaultFont, ( char ) usChar, iPosX, iPosY, s_pClr[ iColor & 0x0F ] );
+         ssfDrawChar( s_bmp, &s_ssfDefaultFont, uc, iPosX, iPosY, s_pClr[ iColor & 0x0F ] );
          iPosX += s_byFontWidth;
       }
    }
@@ -1090,10 +1090,10 @@ static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       while( iSize-- )
       {
-         if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_TRUE ) )
             break;
 
-         if( iColor != iDefColor || usChar != ' ' )
+         if( iColor != iDefColor || uc != ' ' )
          {
             s_fMakeInit = HB_TRUE;
             break;

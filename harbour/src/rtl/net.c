@@ -63,10 +63,6 @@
 
 #include "hbapi.h"
 
-#if defined( HB_OS_DOS )
-#  include <dos.h>
-#endif
-
 #if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
    #include "hb_io.h"
@@ -84,6 +80,7 @@
 
 #elif defined( HB_OS_DOS )
 
+   #include <dos.h>
    #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       #include "hb_io.h"
       #include <sys/param.h>
@@ -104,6 +101,7 @@
 #elif defined( HB_OS_WIN )
 
    #include <windows.h>
+   #include "hbwinuni.h"
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
@@ -130,19 +128,19 @@ char * hb_netname( void )
 #  if defined( __WATCOMC__ )
       return hb_getenv( "HOSTNAME" );
 #  else
-      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
-      pszValue[ 0 ] = '\0';
-      gethostname( pszValue, MAXGETHOSTNAME );
-      return pszValue;
+      char szValue[ MAXGETHOSTNAME + 1 ];
+      szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
+      gethostname( szValue, MAXGETHOSTNAME );
+      return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
 #  endif
 
 #elif defined( HB_OS_DOS )
 
 #  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
-      pszValue[ 0 ] = '\0';
-      gethostname( pszValue, MAXGETHOSTNAME );
-      return pszValue;
+      char szValue[ MAXGETHOSTNAME + 1 ];
+      szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
+      gethostname( szValue, MAXGETHOSTNAME );
+      return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
 #  else
       union REGS regs;
       struct SREGS sregs;
@@ -165,22 +163,16 @@ char * hb_netname( void )
 
    DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
    TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
-   char * pszValue;
 
    lpValue[ 0 ] = TEXT( '\0' );
    GetComputerName( lpValue, &ulLen );
+   lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
 
-#if defined( UNICODE )
-   pszValue = hb_wctomb( lpValue );
-#else
-   pszValue = hb_strdup( lpValue );
-#endif
-
-   return pszValue;
+   return lpValue[ 0 ] ? HB_OSSTRDUP( lpValue ) : NULL;
 
 #else
 
-   return hb_strdup( "" );
+   return NULL;
 
 #endif
 }
@@ -195,29 +187,23 @@ char * hb_username( void )
       return hb_getenv( "USER" );
 #  else
       struct passwd * pwd = getpwuid( getuid() );
-      return pwd && pwd->pw_name ? hb_strdup( pwd->pw_name ) : hb_getenv( "USER" );
+      return pwd && pwd->pw_name ? hb_osStrDecode( pwd->pw_name ) : hb_getenv( "USER" );
 #  endif
 
 #elif defined( HB_OS_WIN )
 
    DWORD ulLen = 256;
    TCHAR lpValue[ 256 ];
-   char * pszValue;
 
    lpValue[ 0 ] = TEXT( '\0' );
    GetUserName( lpValue, &ulLen );
+   lpValue[ 255 ] = TEXT( '\0' );
 
-#if defined( UNICODE )
-   pszValue = hb_wctomb( lpValue );
-#else
-   pszValue = hb_strdup( lpValue );
-#endif
-
-   return pszValue;
+   return lpValue[ 0 ] ? HB_OSSTRDUP( lpValue ) : NULL;
 
 #else
 
-   return hb_strdup( "" );
+   return NULL;
 
 #endif
 }
@@ -227,7 +213,7 @@ HB_FUNC( NETNAME )
    char * buffer = hb_netname();
 
    if( buffer )
-      hb_retc_buffer( ( char * ) hb_osDecodeCP( buffer, NULL, NULL ) );
+      hb_retc_buffer( buffer );
    else
       hb_retc_null();
 }
@@ -237,7 +223,7 @@ HB_FUNC( HB_USERNAME )
    char * buffer = hb_username();
 
    if( buffer )
-      hb_retc_buffer( ( char * ) hb_osDecodeCP( buffer, NULL, NULL ) );
+      hb_retc_buffer( buffer );
    else
       hb_retc_null();
 }

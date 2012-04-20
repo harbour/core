@@ -57,6 +57,7 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+   #include "hbwinuni.h"
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
@@ -78,43 +79,42 @@ char * hb_getenv( const char * szName )
    char * pszBuffer = NULL;
 
 #if defined( HB_OS_WIN )
-
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
+      LPTSTR lpName = HB_CHARDUP( szName );
       DWORD size = GetEnvironmentVariable( lpName, NULL, 0 );
 
       if( size != 0 )
       {
          LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
          GetEnvironmentVariable( lpName, lpBuffer, size );
-#if defined( UNICODE )
-         pszBuffer = hb_wctomb( lpBuffer );
+         pszBuffer = HB_OSSTRDUP( lpBuffer );
          hb_xfree( lpBuffer );
-#else
-         pszBuffer = lpBuffer;
-#endif
       }
-      HB_TCHAR_FREE( lpName );
+      hb_xfree( lpName );
    }
-
 #elif defined( HB_OS_OS2 )
-
    {
       PSZ EnvValue = ( PSZ ) "";
+      char * pszNameFree = NULL;
 
+      szName = hb_osEncodeCP( szName, &pszNameFree, NULL );
       if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
-         pszBuffer = hb_strdup( ( char * ) EnvValue );
+         pszBuffer = hb_osStrDecode( ( char * ) EnvValue );
+      if( pszNameFree )
+         hb_xfree( pszNameFree );
    }
-
 #else
-
    {
-      char * pszTemp = getenv( szName );
+      char * pszTemp, * pszNameFree = NULL;
+
+      szName = hb_osEncodeCP( szName, &pszNameFree, NULL );
+      pszTemp = getenv( szName );
+      if( pszNameFree )
+         hb_xfree( pszNameFree );
 
       if( pszTemp != NULL )
-         pszBuffer = hb_strdup( pszTemp );
+         pszBuffer = hb_osStrDecode( pszTemp );
    }
-
 #endif
 
    return pszBuffer;
@@ -127,61 +127,53 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
 #if defined( HB_OS_WIN )
    {
-#if defined( UNICODE )
-      TCHAR name[ 128 ];
-      TCHAR buffer[ 128 ];
-      LPTSTR lpName, lpBuffer;
-      HB_SIZE nLen = strlen( szName ) + 1;
+      LPTSTR lpName = HB_CHARDUP( szName ), lpBuffer;
 
-      if( nLen <= HB_SIZEOFARRAY( name ) )
-         lpName = name;
-      else
-         lpName = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
-
-      hb_mbntowccpy( lpName, szName, nLen - 1 );
-
-      if( szBuffer == NULL )
-         lpBuffer = NULL;
-      else if( nSize <= ( int ) HB_SIZEOFARRAY( buffer ) )
-         lpBuffer = buffer;
-      else
+      if( szBuffer != NULL || nSize > 0 )
          lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
+      else
+         lpBuffer = NULL;
 
       fRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
-      lpBuffer[ nSize - 1 ] = L'\0';
 
-      hb_wcntombcpy( szBuffer, lpBuffer, nSize - 1 );
-
-      if( lpName != name )
-         hb_xfree( lpName );
-      if( lpBuffer && lpBuffer != buffer )
+      if( lpBuffer )
+      {
+         if( fRetVal )
+         {
+            lpBuffer[ nSize - 1 ] = TEXT( '\0' );
+            HB_OSSTRDUP2( lpBuffer, szBuffer, nSize - 1 );
+         }
          hb_xfree( lpBuffer );
-#else
-      fRetVal = GetEnvironmentVariable( szName, szBuffer, nSize ) != 0;
-#endif
+      }
+      hb_xfree( lpName );
    }
 #elif defined( HB_OS_OS2 )
    {
       PSZ EnvValue = ( PSZ ) "";
+      char * pszNameFree = NULL;
 
-      if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
-      {
-         fRetVal = HB_TRUE;
-         if( szBuffer != NULL && nSize != 0 )
-            hb_strncpy( szBuffer, ( char * ) EnvValue, nSize - 1 );
-      }
-      else
-         fRetVal = HB_FALSE;
+      szName = hb_osEncodeCP( szName, &pszNameFree, NULL );
+      fRetVal = DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR;
+      if( pszNameFree )
+         hb_xfree( pszNameFree );
+
+      if( fRetVal && szBuffer != NULL && nSize != 0 )
+         hb_osStrDecode2( ( char * ) EnvValue, szBuffer, nSize - 1 );
    }
 #else
    {
-      char * pszTemp = getenv( szName );
+      char * pszTemp, * pszNameFree = NULL;
+
+      szName = hb_osEncodeCP( szName, &pszNameFree, NULL );
+      pszTemp = getenv( szName );
+      if( pszNameFree )
+         hb_xfree( pszNameFree );
 
       if( pszTemp != NULL )
       {
          fRetVal = HB_TRUE;
          if( szBuffer != NULL && nSize != 0 )
-            hb_strncpy( szBuffer, pszTemp, nSize - 1 );
+            hb_osStrDecode2( pszTemp, szBuffer, nSize - 1 );
       }
       else
          fRetVal = HB_FALSE;
@@ -204,15 +196,14 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
-      LPTSTR lpValue = szValue ? HB_TCHAR_CONVTO( szValue ) : NULL;
-      HB_BOOL bResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
+      LPTSTR lpName = HB_CHARDUP( szName );
+      LPTSTR lpValue = szValue ? HB_CHARDUP( szValue ) : NULL;
+      HB_BOOL fResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
       if( lpValue )
-         HB_TCHAR_FREE( lpValue );
-      HB_TCHAR_FREE( lpName );
-      return bResult;
+         hb_xfree( lpValue );
+      hb_xfree( lpName );
+      return fResult;
    }
-
 #elif defined( _BSD_SOURCE ) || _POSIX_C_SOURCE >= 200112L || \
       _XOPEN_SOURCE >= 600 || \
       defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
@@ -221,31 +212,44 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
       defined( HB_OS_CYGWIN ) || defined( HB_OS_MINIX ) || \
       defined( HB_OS_ANDROID )
-
-   if( szValue )
-      return setenv( szName, szValue, 1 ) == 0;
-   else
    {
+      HB_BOOL fResult;
+      char * pszNameFree = NULL, * pszValueFree = NULL;
+
+      szName = hb_osEncodeCP( szName, &pszNameFree, NULL );
+      if( szValue )
+      {
+         szValue = hb_osEncodeCP( szValue, &pszValueFree, NULL );
+         fResult = setenv( szName, szValue, 1 ) == 0;
+         if( pszValueFree )
+            hb_xfree( pszValueFree );
+      }
+      else
+      {
 #  if ( defined( __DJGPP__ ) && \
         ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
       defined( __WATCOMC__ )
-      szValue = getenv( szName );
-      if( szValue && *szValue )
-         return setenv( szName, "", 1 ) == 0;
-      else
-         return HB_TRUE;
+         szValue = getenv( szName );
+         if( szValue && *szValue )
+            fResult = setenv( szName, "", 1 ) == 0;
+         else
+            fResult = HB_TRUE;
 #  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
         ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 )
-      unsetenv( szName );
-      return HB_TRUE;
+         unsetenv( szName );
+         fResult = HB_TRUE;
 #  else
-      return unsetenv( szName ) == 0;
+         fResult = unsetenv( szName ) == 0;
 #  endif
-   }
+      }
 
+      if( pszNameFree )
+         hb_xfree( pszNameFree );
+
+      return fResult;
+   }
 #elif defined( _HB_NO_SETENV_ )
 
-   HB_SYMBOL_UNUSED( szName );
    HB_SYMBOL_UNUSED( szValue );
 
    return HB_FALSE;
@@ -259,7 +263,6 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
 
    int iTODO;
 
-   HB_SYMBOL_UNUSED( szName );
    HB_SYMBOL_UNUSED( szValue );
 
    return HB_FALSE;

@@ -127,6 +127,7 @@
 #elif defined( HB_OS_WIN )
 
    #include <windows.h>
+   #include "hbwinuni.h"
 
    typedef struct
    {
@@ -571,39 +572,45 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
-      PHB_FNAME pFileName = NULL;
-      LPTSTR lpFileMask = NULL;
 
       bFound = HB_FALSE;
 
 #if !defined( HB_OS_WIN_CE )
       if( ( ffind->attrmask & HB_FA_LABEL ) != 0 && !info->fLabelDone )
       {
-         TCHAR szName[ HB_PATH_MAX ];
-         const char * mask = NULL;
+         TCHAR lpVolName[ HB_PATH_MAX ];
+         LPTSTR lpFileMask = NULL;
+         char * mask = NULL;
 
          info->fLabelDone = HB_TRUE;
 
          if( ffind->pszFileMask && *ffind->pszFileMask )
          {
-            pFileName = hb_fsFNameSplit( ffind->pszFileMask );
-            mask = pFileName->szName;
+            PHB_FNAME pFileName = hb_fsFNameSplit( ffind->pszFileMask );
+            if( pFileName->szName && pFileName->szName[ 0 ] )
+               mask = hb_strdup( pFileName->szName );
             if( pFileName->szPath && pFileName->szPath[ 0 ] &&
                 ( pFileName->szPath[ 1 ] ||
                   pFileName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR ) )
-               lpFileMask = HB_TCHAR_CONVTO( pFileName->szPath );
+               lpFileMask = HB_CHARDUP( pFileName->szPath );
+            hb_xfree( pFileName );
          }
-         bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ),
-                                        NULL, NULL, NULL, NULL, 0 );
+         bFound = GetVolumeInformation( lpFileMask, lpVolName,
+                                        HB_SIZEOFARRAY( lpVolName ),
+                                        NULL, NULL, NULL, NULL, 0 ) != 0;
          if( bFound )
          {
-            HB_TCHAR_COPYFROM( ffind->szName, szName, sizeof( ffind->szName ) - 1 );
+            HB_OSSTRDUP2( lpVolName, ffind->szName, sizeof( ffind->szName ) - 1 );
             if( mask && *mask && ! hb_strMatchFile( ffind->szName, mask ) )
             {
                ffind->szName[ 0 ] = '\0';
                bFound = HB_FALSE;
             }
          }
+         if( lpFileMask )
+            hb_xfree( lpFileMask );
+         if( mask )
+            hb_xfree( mask );
       }
 #endif
 
@@ -613,12 +620,11 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          if( ffind->bFirst )
          {
+            LPTSTR lpFileMask = HB_CHARDUP( ffind->pszFileMask );
             ffind->bFirst = HB_FALSE;
-            if( lpFileMask )
-               HB_TCHAR_FREE( lpFileMask );
-            lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
-            info->hFindFile = FindFirstFile( lpFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
+            info->hFindFile = FindFirstFile( lpFileMask, &info->pFindFileData );
+            hb_xfree( lpFileMask );
 
             if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && _HB_WIN_MATCH() )
                bFound = HB_TRUE;
@@ -640,7 +646,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          if( bFound )
          {
-            HB_TCHAR_COPYFROM( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
+            HB_OSSTRDUP2( info->pFindFileData.cFileName, ffind->szName, sizeof( ffind->szName ) - 1 );
 
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
@@ -680,11 +686,6 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          }
       }
       hb_fsSetIOError( bFound, 0 );
-
-      if( pFileName )
-         hb_xfree( pFileName );
-      if( lpFileMask )
-         HB_TCHAR_FREE( lpFileMask );
    }
 
 #elif defined( HB_OS_UNIX )
@@ -809,6 +810,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       /* Do the conversions common for all platforms */
       ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
 
+#if !defined( HB_OS_WIN )
       /* Convert from OS codepage */
       {
          char * pszFree = NULL;
@@ -821,7 +823,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             hb_xfree( pszFree );
          }
       }
-
+#endif
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
       ffind->lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -847,7 +849,12 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
    memset( ffind->info, 0, sizeof( HB_FFIND_INFO ) );
 
    /* Store search parameters */
+#if defined( HB_OS_WIN )
    ffind->pszFileMask = pszFileMask;
+#else
+   /* Convert to OS codepage */
+   ffind->pszFileMask = hb_fsNameConv( pszFileMask, &ffind->pszFree );
+#endif
    ffind->attrmask = attrmask;
    ffind->bFirst = HB_TRUE;
 
@@ -888,6 +895,9 @@ void hb_fsFindClose( PHB_FFIND ffind )
 {
    if( ffind )
    {
+      if( ffind->pszFree )
+         hb_xfree( ffind->pszFree );
+
       /* Do platform dependant cleanup */
 
       if( ffind->info )

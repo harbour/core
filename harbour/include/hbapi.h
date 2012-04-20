@@ -947,18 +947,21 @@ extern HB_EXPORT HB_BOOL   hb_strEmpty( const char * szText, HB_SIZE nLen ); /* 
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE nLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT HB_SIZE   hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another string */
 extern HB_EXPORT HB_ISIZ   hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n );
+
+/* Warning: this functions works only with byte oriented CPs */
 extern HB_EXPORT char *    hb_strUpper( char * szText, HB_SIZE nLen ); /* convert an existing string buffer to upper case */
 extern HB_EXPORT char *    hb_strLower( char * szText, HB_SIZE nLen ); /* convert an existing string buffer to lower case */
 extern HB_EXPORT HB_BOOL   hb_charIsDigit( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsAlpha( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsLower( int iChar );
 extern HB_EXPORT HB_BOOL   hb_charIsUpper( int iChar );
+extern HB_EXPORT int       hb_charUpper( int iChar );  /* converts iChar to upper case */
+extern HB_EXPORT int       hb_charLower( int iChar );  /* converts iChar to lower case */
+
 extern HB_EXPORT HB_BOOL   hb_strIsDigit( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsAlpha( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsLower( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsUpper( const char * szChar );
-extern HB_EXPORT int       hb_charUpper( int iChar );  /* converts iChar to upper case */
-extern HB_EXPORT int       hb_charLower( int iChar );  /* converts iChar to lower case */
 extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
 extern HB_EXPORT char *    hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
 extern HB_EXPORT char *    hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen );
@@ -1030,6 +1033,7 @@ extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command line a
 extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
 extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
 extern HB_EXPORT HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
+extern HB_EXPORT char *        hb_cmdargProgName( void ); /* return application name with path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
@@ -1177,6 +1181,17 @@ extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled?  */
 extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string sent to a system call, from Harbour codepage. */
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string received from a system call, to Harbour codepage. */
+
+extern HB_EXPORT char *       hb_osStrEncode( const char * pszName );
+extern HB_EXPORT char *       hb_osStrEncodeN( const char * pszName, HB_SIZE nLen );
+extern HB_EXPORT char *       hb_osStrDecode( const char * pszName );
+extern HB_EXPORT char *       hb_osStrDecode2( const char * pszName, char * pszBuffer, HB_SIZE nSize );
+#if defined( HB_OS_WIN )
+extern HB_EXPORT HB_WCHAR *   hb_osStrU16Encode( const char * pszName );
+extern HB_EXPORT HB_WCHAR *   hb_osStrU16EncodeN( const char * pszName, HB_SIZE nLen );
+extern HB_EXPORT char *       hb_osStrU16Decode( const HB_WCHAR * pszNameW );
+extern HB_EXPORT char *       hb_osStrU16Decode2( const HB_WCHAR * pszNameW, char * pszBuffer, HB_SIZE nSize );
+#endif
 
 /* environment variables access */
 extern HB_EXPORT HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );

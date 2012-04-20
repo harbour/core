@@ -394,10 +394,11 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
    but can be changed with the setStyle method. */
 #define SB_UPARROW      Chr( 24 )
 #define SB_DNARROW      Chr( 25 )
+#define SB_RIGHTARROW   Chr( 26 )
+#define SB_LEFTARROW    Chr( 27 )
+
 #define SB_THUMB        Chr( 176 )
 #define SB_TRACK        Chr( 178 )
-#define SB_LEFTARROW    Chr( 27 )
-#define SB_RIGHTARROW   Chr( 26 )
 
 METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS SCROLLBAR
 

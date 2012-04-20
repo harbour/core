@@ -189,19 +189,17 @@ METHOD display() CLASS RADIOBUTTN
 
 METHOD isAccel( xKey ) CLASS RADIOBUTTN
 
-   LOCAL nPos
-   LOCAL cCaption
+   LOCAL cKey
 
-   IF ISNUMBER( xKey )
-      xKey := Chr( xKey )
-   ELSEIF !ISCHARACTER( xKey )
+   IF ISCHARACTER( xKey )
+      cKey := xKey
+   ELSEIF ISNUMBER( xKey )
+      cKey := hb_KeyChar( xKey )
+   ELSE
       RETURN .F.
    ENDIF
 
-   cCaption := ::cCaption
-
-   RETURN ( nPos := At( "&", cCaption ) ) > 0 .AND. ;
-          Lower( SubStr( cCaption, nPos + 1, 1 ) ) == Lower( xKey )
+   RETURN Len( cKey ) > 0 .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0
 
 METHOD hitTest( nMRow, nMCol ) CLASS RADIOBUTTN
 

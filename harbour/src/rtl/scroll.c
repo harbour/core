@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapigt.h"
 
 /* Scrolls a screen region */
@@ -165,9 +166,17 @@ HB_FUNC( HB_SCROLL )
       iColor = -1;
 
    if( HB_ISNUM( 8 ) )
+   {
       iChar = hb_parni( 8 );
+      if( iChar > 0 && iChar <= 255 )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( !HB_CDP_ISCHARUNI( cdp ) )
+            iChar = hb_cdpGetU16( cdp, ( HB_UCHAR ) iChar );
+      }
+   }
    else if( HB_ISCHAR( 8 ) )
-      iChar = ( HB_UCHAR ) hb_parc( 8 )[0];
+      iChar = hb_cdpTextGetU16( hb_vmCDP(), hb_parc( 8 ), hb_parclen( 8 ) );
    else
       iChar = -1;
 

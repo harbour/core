@@ -262,6 +262,7 @@ typedef struct
    const char * pszFileMask;
    HB_FATTR     attrmask;
    HB_BOOL      bFirst;
+   char *       pszFree;
 
    void * info; /* Pointer to the platform specific find info */
 #endif
@@ -293,6 +294,9 @@ extern HB_EXPORT char *     hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr );
 
 extern HB_EXPORT HB_BOOL      hb_fsMaxFilesError( void );
 extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** pszFree );
+#if defined( HB_OS_WIN )
+extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * szFileName );
+#endif
 
 /* Harbour file functions with shared file handles and locks
  * (buffers in the future)

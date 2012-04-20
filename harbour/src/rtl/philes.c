@@ -322,20 +322,10 @@ HB_FUNC( HB_CURDRIVE )
 
 HB_FUNC( HB_PROGNAME )
 {
-   const char * szBaseName = hb_cmdargARGVN( 0 );
+   char * pszBaseName = hb_cmdargProgName();
 
-   if( szBaseName )
-   {
-      /* Convert from OS codepage */
-      char * pszFree = NULL;
-
-      szBaseName = hb_osDecodeCP( szBaseName, &pszFree, NULL );
-
-      if( pszFree )
-         hb_retc_buffer( pszFree );
-      else
-         hb_retc( szBaseName );
-   }
+   if( pszBaseName )
+      hb_retc_buffer( pszBaseName );
    else
       hb_retc_null();
 }

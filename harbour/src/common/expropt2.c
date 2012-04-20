@@ -1930,7 +1930,8 @@ HB_BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    HB_EXPR_PTR pText = pSub->pNext;
    HB_EXPR_PTR pReduced;
 
-   if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
+   if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING &&
+       !HB_SUPPORT_USERCP )
    {
       /* NOTE: CA-Cl*pper has a bug in AT("",cText) compile time
        *       optimization and always set 1 as result in such cses.
@@ -1965,11 +1966,25 @@ HB_BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
 HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
+   HB_BOOL fDoOpt = HB_FALSE;
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
-   /* try to change it into a string */
    if( pArg->ExprType == HB_ET_NUMERIC )
+   {
+      if( HB_SUPPORT_USERCP )
+      {
+         int iVal = pArg->value.asNum.NumType == HB_ET_LONG ?
+                    ( int ) pArg->value.asNum.val.l :
+                    ( int ) pArg->value.asNum.val.d;
+         fDoOpt = iVal >= 0 && iVal <= 127;
+      }
+      else
+         fDoOpt = HB_TRUE;
+   }
+
+   /* try to change it into a string */
+   if( fDoOpt )
    {
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
        *       CHR() cases where the passed parameter is a constant which
@@ -2027,7 +2042,8 @@ HB_BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
    /* TOFIX: do not optimize when array/hash args have user expressions */
-   if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY ||
+   if( ( pArg->ExprType == HB_ET_STRING && !HB_SUPPORT_USERCP ) ||
+       pArg->ExprType == HB_ET_ARRAY ||
        pArg->ExprType == HB_ET_HASH )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ExprType == HB_ET_HASH ?
@@ -2110,7 +2126,9 @@ HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
-   if( pArg->ExprType == HB_ET_STRING )
+   if( pArg->ExprType == HB_ET_STRING &&
+       ( !HB_SUPPORT_USERCP ||
+         ( HB_UCHAR ) pArg->value.asString.string[0] <= 127 ) )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewLong(
                 ( HB_UCHAR ) pArg->value.asString.string[0], HB_COMP_PARAM );

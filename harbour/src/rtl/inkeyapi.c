@@ -208,3 +208,53 @@ void hb_inkeySetCancelKeys( int iCancelKey, int iCancelKeyEx )
    HB_SYMBOL_UNUSED( iCancelKey );
    HB_SYMBOL_UNUSED( iCancelKeyEx );
 }
+
+HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyKeyString(%d,%p, %" HB_PFS "u)", iKey, buffer, nSize));
+
+   if( HB_INKEY_ISUNICODE( iKey ) )
+   {
+      nLen = hb_cdpTextPutU16( hb_vmCDP(), buffer, nSize, HB_INKEY_VALUE( iKey ) );
+   }
+   else
+   {
+      if( HB_INKEY_ISCHAR( iKey ) )
+         iKey = HB_INKEY_VALUE( iKey );
+      if( iKey >= 32 && iKey <= 255 )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         nLen = hb_cdpTextPutU16( cdp, buffer, nSize,
+                                  hb_cdpGetU16( cdp, ( HB_UCHAR ) iKey ) );
+      }
+   }
+   return nLen;
+}
+
+int hb_inkeyKeyStd( int iKey )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyKeyStd(%d)", iKey));
+
+   if( HB_INKEY_ISEXT( iKey ) )
+   {
+      if( HB_INKEY_ISUNICODE( iKey ) )
+      {
+         HB_WCHAR wc = ( HB_WCHAR ) HB_INKEY_VALUE( iKey );
+         if( wc )
+         {
+            HB_UCHAR uc = hb_cdpGetUC( hb_vmCDP(), wc, 0 );
+            if( uc != 0 )
+               iKey = uc;
+         }
+         else
+            iKey = 0;
+      }
+      else if( HB_INKEY_ISMOUSEPOS( iKey ) )
+         iKey = K_MOUSEMOVE;
+      else
+         iKey = HB_INKEY_VALUE( iKey );
+   }
+   return iKey;
+}

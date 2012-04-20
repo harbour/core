@@ -71,8 +71,10 @@
 #define INKEY_ALL               255
 
 #define HB_INKEY_RAW            256 /* Harbour extension */
-#define HB_INKEY_EXTENDED       512 /* Harbour extension */
 #define HB_INKEY_GTEVENT        1024 /* Harbour extension */
+#define HB_INKEY_EXT            2048 /* Harbour extension */
+
+#define HB_INKEY_ALL            ( INKEY_ALL + HB_INKEY_GTEVENT )
 
 /* Mouse events */
 

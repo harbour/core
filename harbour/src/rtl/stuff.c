@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * STUFF() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -51,44 +52,64 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 
 /* replaces characters in a string */
 HB_FUNC( STUFF )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
+
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      const char * szText = hb_parc( 1 );
-      HB_SIZE nText = hb_parclen( 1 );
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      HB_SIZE nLen = hb_parclen( 1 );
       HB_SIZE nPos = hb_parns( 2 );
       HB_SIZE nDel = hb_parns( 3 );
-      HB_SIZE nInsert = hb_parclen( 4 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
 
-      HB_SIZE nTotalLen;
-
-      if( nPos )
+      if( HB_CDP_ISCHARIDX( cdp ) )
       {
-         if( nPos < 1 || nPos > nText )
-            nPos = nText;
-         else
-            nPos--;
+         if( nPos )
+            nPos = nPos < 1 ? nLen : hb_cdpTextPos( cdp, szText, nLen, nPos - 1 );
+         if( nDel )
+         {
+            if( nPos < nLen )
+            {
+               nDel = hb_cdpTextPos( cdp, szText + nPos, nLen - nPos, nDel );
+               if( nDel == 0 )
+                  nDel = nLen - nPos;
+            }
+            else
+               nDel = 0;
+         }
+      }
+      else
+      {
+         if( nPos )
+         {
+            if( nPos < 1 || nPos > nLen )
+               nPos = nLen;
+            else
+               nPos--;
+         }
+         if( nDel )
+         {
+            if( nDel < 1 || nDel > nLen - nPos )
+               nDel = nLen - nPos;
+         }
       }
 
-      if( nDel )
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
       {
-         if( nDel < 1 || nDel > nText - nPos )
-            nDel = nText - nPos;
-      }
-
-      if( ( nTotalLen = nText + nInsert - nDel ) > 0 )
-      {
-         char * szResult = ( char * ) hb_xgrab( nTotalLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
 
          hb_xmemcpy( szResult, szText, nPos );
-         hb_xmemcpy( szResult + nPos, hb_parc( 4 ), nInsert );
-         hb_xmemcpy( szResult + nPos + nInsert, szText + nPos + nDel, nText - ( nPos + nDel ) );
-
-         szResult[ nTotalLen ] = '\0';
-         hb_retclen_buffer( szResult, nTotalLen );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
       }
       else
          hb_retc_null();

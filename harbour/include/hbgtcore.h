@@ -154,6 +154,7 @@ typedef struct
    void      (* GetScrCursor) ( HB_GT_PTR, int *, int *, int * );
    HB_BOOL   (* GetScrChar) ( HB_GT_PTR, int, int, int *, HB_BYTE *, HB_USHORT * );
    HB_BOOL   (* PutScrChar) ( HB_GT_PTR, int, int, int, HB_BYTE, HB_USHORT );
+   HB_BOOL   (* GetScrUC) ( HB_GT_PTR, int, int, int *, HB_BYTE *, HB_UCHAR *, HB_BOOL );
    void      (* DispBegin) ( HB_GT_PTR );
    void      (* DispEnd) ( HB_GT_PTR );
    int       (* DispCount) ( HB_GT_PTR );
@@ -162,16 +163,21 @@ typedef struct
    long      (* RectSize) ( HB_GT_PTR, int, int, int, int );
    void      (* Save) ( HB_GT_PTR, int, int, int, int, void * );
    void      (* Rest) ( HB_GT_PTR, int, int, int, int, const void * );
-   void      (* PutText) ( HB_GT_PTR, int, int, int, const char *, HB_SIZE );
+   int       (* PutText) ( HB_GT_PTR, int, int, int, const char *, HB_SIZE );
+   int       (* PutTextW) ( HB_GT_PTR, int, int, int, const HB_WCHAR *, HB_SIZE );
    void      (* Replicate) ( HB_GT_PTR, int, int, int, HB_BYTE, HB_USHORT, HB_SIZE );
    void      (* WriteAt) ( HB_GT_PTR, int, int, const char *, HB_SIZE );
+   void      (* WriteAtW) ( HB_GT_PTR, int, int, const HB_WCHAR *, HB_SIZE );
    void      (* Write) ( HB_GT_PTR, const char *, HB_SIZE );
+   void      (* WriteW) ( HB_GT_PTR, const HB_WCHAR *, HB_SIZE );
    void      (* WriteCon) ( HB_GT_PTR, const char *, HB_SIZE );
+   void      (* WriteConW) ( HB_GT_PTR, const HB_WCHAR *, HB_SIZE );
    void      (* SetAttribute) ( HB_GT_PTR, int, int, int, int, int );
    void      (* DrawShadow) ( HB_GT_PTR, int, int, int, int, int );
    void      (* Scroll) ( HB_GT_PTR, int, int, int, int, int, HB_USHORT, int, int );
    void      (* ScrollUp) ( HB_GT_PTR, int, int, HB_USHORT );
    void      (* Box) ( HB_GT_PTR, int, int, int, int, const char *, int );
+   void      (* BoxW) ( HB_GT_PTR, int, int, int, int, const HB_WCHAR *, int );
    void      (* BoxD) ( HB_GT_PTR, int, int, int, int, const char *, int );
    void      (* BoxS) ( HB_GT_PTR, int, int, int, int, const char *, int );
    void      (* HorizLine) ( HB_GT_PTR, int, int, int, HB_USHORT, int );
@@ -308,6 +314,8 @@ typedef struct _HB_GT_BASE
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;
+   PHB_CODEPAGE   cdpBox;
+   PHB_CODEPAGE   cdpIn;
 
    int            iColorIndex;
    int            iColorCount;
@@ -348,6 +356,19 @@ extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 extern HB_EXPORT void hb_gt_gcMark( void );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
+
+#define HB_GTSELF_TERMCP(g)                     ((g)->cdpTerm ? (g)->cdpTerm : HB_GTSELF_HOSTCP(g))
+#define HB_GTSELF_HOSTCP(g)                     ((g)->cdpHost ? (g)->cdpHost : hb_vmCDP())
+#define HB_GTSELF_BOXCP(g)                      ((g)->cdpBox ? (g)->cdpBox : HB_GTSELF_HOSTCP(g))
+#define HB_GTSELF_INCP(g)                       ((g)->cdpIn ? (g)->cdpIn : hb_vmCDP())
+
+#define HB_GTSELF_CPTERM(g)                     ((g)->cdpTerm)
+#define HB_GTSELF_CPHOST(g)                     ((g)->cdpHost)
+#define HB_GTSELF_CPBOX(g)                      ((g)->cdpBox)
+#define HB_GTSELF_CPIN(g)                       ((g)->cdpIn)
+
+#define HB_GTSELF_KEYTRANS(g,k)                 (((k)>=127 && (k)<=255 && (g)->cdpIn) ? hb_cdpGetWC((g)->cdpIn,(HB_UCHAR)(k),0) : (k))
+
 
 #define HB_GTSELF_LOCK(g)                       (g)->pFuncTable->Lock(g)
 #define HB_GTSELF_UNLOCK(g)                     (g)->pFuncTable->Unlock(g)
@@ -392,6 +413,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_GETSCRCURSOR(g,pr,pc,ps)      (g)->pFuncTable->GetScrCursor(g,pr,pc,ps)
 #define HB_GTSELF_GETSCRCHAR(g,r,c,pm,pa,pc)    (g)->pFuncTable->GetScrChar(g,r,c,pm,pa,pc)
 #define HB_GTSELF_PUTSCRCHAR(g,r,c,m,a,u)       (g)->pFuncTable->PutScrChar(g,r,c,m,a,u)
+#define HB_GTSELF_GETSCRUC(g,r,c,pm,pa,pc,f)    (g)->pFuncTable->GetScrUC(g,r,c,pm,pa,pc,f)
 #define HB_GTSELF_DISPBEGIN(g)                  (g)->pFuncTable->DispBegin(g)
 #define HB_GTSELF_DISPEND(g)                    (g)->pFuncTable->DispEnd(g)
 #define HB_GTSELF_DISPCOUNT(g)                  (g)->pFuncTable->DispCount(g)
@@ -401,15 +423,20 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_SAVE(g,t,l,b,r,p)             (g)->pFuncTable->Save(g,t,l,b,r,p)
 #define HB_GTSELF_REST(g,t,l,b,r,p)             (g)->pFuncTable->Rest(g,t,l,b,r,p)
 #define HB_GTSELF_PUTTEXT(g,r,c,m,s,l)          (g)->pFuncTable->PutText(g,r,c,m,s,l)
+#define HB_GTSELF_PUTTEXTW(g,r,c,m,s,l)         (g)->pFuncTable->PutTextW(g,r,c,m,s,l)
 #define HB_GTSELF_REPLICATE(g,r,c,m,a,u,l)      (g)->pFuncTable->Replicate(g,r,c,m,a,u,l)
 #define HB_GTSELF_WRITEAT(g,r,c,s,l)            (g)->pFuncTable->WriteAt(g,r,c,s,l)
+#define HB_GTSELF_WRITEATW(g,r,c,s,l)           (g)->pFuncTable->WriteAtW(g,r,c,s,l)
 #define HB_GTSELF_WRITE(g,s,l)                  (g)->pFuncTable->Write(g,s,l)
+#define HB_GTSELF_WRITEW(g,s,l)                 (g)->pFuncTable->WriteW(g,s,l)
 #define HB_GTSELF_WRITECON(g,s,l)               (g)->pFuncTable->WriteCon(g,s,l)
+#define HB_GTSELF_WRITECONW(g,s,l)              (g)->pFuncTable->WriteConW(g,s,l)
 #define HB_GTSELF_SETATTRIBUTE(g,t,l,b,r,m)     (g)->pFuncTable->SetAttribute(g,t,l,b,r,m)
 #define HB_GTSELF_DRAWSHADOW(g,t,l,b,r,m)       (g)->pFuncTable->DrawShadow(g,t,l,b,r,m)
 #define HB_GTSELF_SCROLL(g,t,l,b,r,m,u,v,h)     (g)->pFuncTable->Scroll(g,t,l,b,r,m,u,v,h)
 #define HB_GTSELF_SCROLLUP(g,r,m,u)             (g)->pFuncTable->ScrollUp(g,r,m,u)
 #define HB_GTSELF_BOX(g,t,l,b,r,f,m)            (g)->pFuncTable->Box(g,t,l,b,r,f,m)
+#define HB_GTSELF_BOXW(g,t,l,b,r,f,m)           (g)->pFuncTable->BoxW(g,t,l,b,r,f,m)
 #define HB_GTSELF_BOXD(g,t,l,b,r,f,m)           (g)->pFuncTable->BoxD(g,t,l,b,r,f,m)
 #define HB_GTSELF_BOXS(g,t,l,b,r,f,m)           (g)->pFuncTable->BoxS(g,t,l,b,r,f,m)
 #define HB_GTSELF_HORIZLINE(g,h,l,r,u,m)        (g)->pFuncTable->HorizLine(g,h,l,r,u,m)
@@ -516,6 +543,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSUPER_GETSCRCURSOR(g,pr,pc,ps)      (HB_GTSUPERTABLE(g))->GetScrCursor(g,pr,pc,ps)
 #define HB_GTSUPER_GETSCRCHAR(g,r,c,pm,pa,pc)    (HB_GTSUPERTABLE(g))->GetScrChar(g,r,c,pm,pa,pc)
 #define HB_GTSUPER_PUTSCRCHAR(g,r,c,m,a,u)       (HB_GTSUPERTABLE(g))->PutScrChar(g,r,c,m,a,u)
+#define HB_GTSUPER_GETSCRUC(g,r,c,pm,pa,pc,f)    (HB_GTSUPERTABLE(g))->GetScrUC(g,r,c,pm,pa,pc,f)
 #define HB_GTSUPER_DISPBEGIN(g)                  (HB_GTSUPERTABLE(g))->DispBegin(g)
 #define HB_GTSUPER_DISPEND(g)                    (HB_GTSUPERTABLE(g))->DispEnd(g)
 #define HB_GTSUPER_DISPCOUNT(g)                  (HB_GTSUPERTABLE(g))->DispCount(g)
@@ -525,15 +553,20 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSUPER_SAVE(g,t,l,b,r,p)             (HB_GTSUPERTABLE(g))->Save(g,t,l,b,r,p)
 #define HB_GTSUPER_REST(g,t,l,b,r,p)             (HB_GTSUPERTABLE(g))->Rest(g,t,l,b,r,p)
 #define HB_GTSUPER_PUTTEXT(g,r,c,m,s,l)          (HB_GTSUPERTABLE(g))->PutText(g,r,c,m,s,l)
+#define HB_GTSUPER_PUTTEXTW(g,r,c,m,s,l)         (HB_GTSUPERTABLE(g))->PutTextW(g,r,c,m,s,l)
 #define HB_GTSUPER_REPLICATE(g,r,c,m,a,u,l)      (HB_GTSUPERTABLE(g))->Replicate(g,r,c,m,a,u,l)
 #define HB_GTSUPER_WRITEAT(g,r,c,s,l)            (HB_GTSUPERTABLE(g))->WriteAt(g,r,c,s,l)
+#define HB_GTSUPER_WRITEATW(g,r,c,s,l)           (HB_GTSUPERTABLE(g))->WriteAtW(g,r,c,s,l)
 #define HB_GTSUPER_WRITE(g,s,l)                  (HB_GTSUPERTABLE(g))->Write(g,s,l)
+#define HB_GTSUPER_WRITEW(g,s,l)                 (HB_GTSUPERTABLE(g))->WriteW(g,s,l)
 #define HB_GTSUPER_WRITECON(g,s,l)               (HB_GTSUPERTABLE(g))->WriteCon(g,s,l)
+#define HB_GTSUPER_WRITECONW(g,s,l)              (HB_GTSUPERTABLE(g))->WriteConW(g,s,l)
 #define HB_GTSUPER_SETATTRIBUTE(g,t,l,b,r,m)     (HB_GTSUPERTABLE(g))->SetAttribute(g,t,l,b,r,m)
 #define HB_GTSUPER_DRAWSHADOW(g,t,l,b,r,m)       (HB_GTSUPERTABLE(g))->DrawShadow(g,t,l,b,r,m)
 #define HB_GTSUPER_SCROLL(g,t,l,b,r,m,u,v,h)     (HB_GTSUPERTABLE(g))->Scroll(g,t,l,b,r,m,u,v,h)
 #define HB_GTSUPER_SCROLLUP(g,r,m,u)             (HB_GTSUPERTABLE(g))->ScrollUp(g,r,m,u)
 #define HB_GTSUPER_BOX(g,t,l,b,r,f,m)            (HB_GTSUPERTABLE(g))->Box(g,t,l,b,r,f,m)
+#define HB_GTSUPER_BOXW(g,t,l,b,r,f,m)           (HB_GTSUPERTABLE(g))->BoxW(g,t,l,b,r,f,m)
 #define HB_GTSUPER_BOXD(g,t,l,b,r,f,m)           (HB_GTSUPERTABLE(g))->BoxD(g,t,l,b,r,f,m)
 #define HB_GTSUPER_BOXS(g,t,l,b,r,f,m)           (HB_GTSUPERTABLE(g))->BoxS(g,t,l,b,r,f,m)
 #define HB_GTSUPER_HORIZLINE(g,h,l,r,u,m)        (HB_GTSUPERTABLE(g))->HorizLine(g,h,l,r,u,m)
@@ -611,6 +644,50 @@ extern HB_EXPORT void    hb_gt_winapi_tone( double dFrequency, double dDuration 
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
 extern int hb_gt_dos_keyCodeTranslate( int iKey );
 #endif /* HB_OS_DOS || HB_OS_WIN || HB_OS_OS2 */
+
+/* macros to manipulate Harbour extended key codes */
+#define HB_INKEY_EXT_MASK           0xF8000000
+#define HB_INKEY_EXT_BIT            0x40000000
+#define HB_INKEY_EXT_TYPEMASK       0xFF000000
+#define HB_INKEY_EXT_VALBITS        16
+#define HB_INKEY_EXT_VALMASK        ( ( 1 << HB_INKEY_EXT_VALBITS ) - 1 )
+#define HB_INKEY_EXT_FLAGMASK       ( 0xFF << HB_INKEY_EXT_VALBITS )
+#define HB_INKEY_EXT_KEY            0x01000000
+#define HB_INKEY_EXT_CHAR           0x02000000
+#define HB_INKEY_EXT_UNICODE        0x03000000
+#define HB_INKEY_EXT_MOUSEKEY       0x04000000
+#define HB_INKEY_EXT_MOUSEPOS       0x05000000
+#define HB_INKEY_EXT_EVENT          0x06000000
+#define HB_INKEY_EXT_POSBITS        12
+#define HB_INKEY_EXT_POSMASK        ( ( 1 << HB_INKEY_EXT_POSBITS ) - 1 )
+
+#define HB_INKEY_ISEXT( n )         ( ( ( n ) & HB_INKEY_EXT_MASK ) == HB_INKEY_EXT_BIT )
+#define HB_INKEY_TYPE( n )          ( ( ( n ) ^ HB_INKEY_EXT_BIT ) & HB_INKEY_EXT_TYPEMASK )
+#define HB_INKEY_ISKEY( n )         ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_KEY )
+#define HB_INKEY_ISCHAR( n )        ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_CHAR )
+#define HB_INKEY_ISUNICODE( n )     ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_UNICODE )
+#define HB_INKEY_ISMOUSEKEY( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_ISMOUSEPOS( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEPOS )
+#define HB_INKEY_ISEVENT( n )       ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_EVENT )
+
+#define HB_INKEY_NEW_VALF( v, f )   ( ( ( v ) & HB_INKEY_EXT_VALMASK ) | \
+                                      ( ( ( f ) << HB_INKEY_EXT_VALBITS ) & HB_INKEY_EXT_FLAGMASK ) )
+
+#define HB_INKEY_NEW_MKEY( b, f )   ( HB_INKEY_NEW_VALF( b, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_NEW_KEY( k, f )    ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_KEY )
+#define HB_INKEY_NEW_CHAR( b )      ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_UNICODE( b )   ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+
+#define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
+                                      ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
+                                      ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
+
+#define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
+#define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )
+
+#define HB_INKEY_VALUE( n )         ( ( n ) & HB_INKEY_EXT_VALMASK )
+#define HB_INKEY_FLAGS( n )         ( ( ( n ) & HB_INKEY_EXT_FLAGMASK ) >> HB_INKEY_EXT_VALBITS )
+
 
 HB_EXTERN_END
 

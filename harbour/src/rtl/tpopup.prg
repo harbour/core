@@ -281,29 +281,26 @@ METHOD display() CLASS POPUPMENU
    RETURN Self
 
 METHOD getAccel( xKey ) CLASS POPUPMENU
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
-   LOCAL nPos
-   LOCAL tmp
-   LOCAL cCaption
+   LOCAL cKey
+   LOCAL item
 
-   IF ISNUMBER( xKey )
-      xKey := Chr( xKey )
+
+   IF ISCHARACTER( xKey )
+      cKey := xKey
+   ELSEIF ISNUMBER( xKey )
+      cKey := hb_KeyChar( xKey )
+   ELSE
+      RETURN 0
    ENDIF
 
-   xKey := Lower( xKey )
-
-   FOR tmp := 1 TO nLen
-
-      cCaption := aItems[ tmp ]:caption
-
-      IF ( nPos := At( "&", cCaption ) ) > 0 .AND. ;
-         nPos != Len( cCaption ) .AND. ;
-         xKey == Lower( SubStr( cCaption, nPos + 1, 1 ) )
-
-         RETURN tmp
-      ENDIF
-   NEXT
+   IF Len( cKey ) > 0
+      cKey := "&" + cKey
+      FOR EACH item in ::aItems
+         IF hb_AtI( cKey, item:caption ) > 0
+            RETURN item:__enumIndex()
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN 0
 

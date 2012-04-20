@@ -74,6 +74,7 @@
 #define HB_APIGT_H_
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 
 HB_EXTERN_BEGIN
 
@@ -122,6 +123,16 @@ HB_EXTERN_BEGIN
 #define HB_B_SINGLE_H          '\xC4'
 #define HB_B_DOUBLE_V          '\xBA'
 #define HB_B_DOUBLE_H          '\xCD'
+
+#define HB_B_SINGLE_W         { 0x250C, 0x2500, 0x2510, 0x2502, 0x2518, 0x2500, 0x2514, 0x2502, 0x0000 }
+#define HB_B_DOUBLE_W         { 0x2554, 0x2550, 0x2557, 0x2551, 0x255D, 0x2550, 0x255A, 0x2551, 0x0000 }
+#define HB_B_SINGLE_DOUBLE_W  { 0x2553, 0x2500, 0x2556, 0x2551, 0x255C, 0x2500, 0x2559, 0x2551, 0x0000 }
+#define HB_B_DOUBLE_SINGLE_W  { 0x2552, 0x2550, 0x2555, 0x2502, 0x255B, 0x2550, 0x2558, 0x2502, 0x0000 }
+#define HB_B_HALF_FULL_W      { 0x2588, 0x2580, 0x2588, 0x2588, 0x2588, 0x2584, 0x2588, 0x2588, 0x0000 }
+#define HB_B_HALF_W           { 0x2590, 0x2580, 0x258C, 0x258C, 0x258C, 0x2584, 0x2590, 0x2590, 0x0000 }
+#define HB_B_FULL_HALF_W      { 0x2590, 0x2588, 0x258C, 0x258C, 0x258C, 0x2588, 0x2590, 0x2590, 0x0000 }
+#define HB_B_FULL_W           { 0x2588, 0x2588, 0x2588, 0x2588, 0x2588, 0x2588, 0x2588, 0x2588, 0x0000 }
+
 
 #if defined( HB_COMPAT_C53 ) && !defined( HB_CLP_STRICT )
 #  define HB_DEFAULT_INKEY_BUFSIZE  50
@@ -218,6 +229,8 @@ extern HB_EXPORT HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE nLen );
 extern HB_EXPORT HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE nLen );
 extern HB_EXPORT HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox );
 extern HB_EXPORT HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP );
+extern HB_EXPORT PHB_CODEPAGE hb_gtHostCP( void );
+extern HB_EXPORT PHB_CODEPAGE hb_gtBoxCP( void );
 extern HB_EXPORT HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo );
 extern HB_EXPORT int        hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions, int iClrNorm, int iClrHigh, double dDelay );
 extern HB_EXPORT int        hb_gtSetFlag( int iType, int iNewValue );
@@ -299,6 +312,12 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetBorder( HB_GT_RGB * color );
                              Clipper has no key code 256, so it may as well be
                              used for all the Harbour builds that need it */
 
+/* mouse buttons */
+#define HB_MBUTTON_LEFT         0
+#define HB_MBUTTON_RIGHT        1
+#define HB_MBUTTON_MIDDLE       2
+
+
 /* Harbour keyboard support functions */
 extern HB_EXPORT int        hb_inkey( HB_BOOL bWait, double dSeconds, int iEvenMask ); /* Wait for keyboard input */
 extern HB_EXPORT void       hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
@@ -311,6 +330,9 @@ extern HB_EXPORT void       hb_inkeySetCancelKeys( int CancelKey, int CancelKeyE
 extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen ); /* Set text into inkey buffer */
 extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LASTKEY() value, return previous one */
 extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
+
+extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
+extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
 
 HB_EXTERN_END
 

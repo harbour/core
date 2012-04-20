@@ -54,10 +54,6 @@
 
 /* HARBOUR callable interface */
 
-#define M_BUTTON_LEFT   0
-#define M_BUTTON_RIGHT  1
-#define M_BUTTON_MIDDLE 2
-
 #ifdef HB_COMPAT_C53
 
 HB_FUNC( MPRESENT )
@@ -117,12 +113,12 @@ HB_FUNC( MSETPOS )
 
 HB_FUNC( MLEFTDOWN )
 {
-   hb_retl( hb_mouseButtonState( M_BUTTON_LEFT ) );
+   hb_retl( hb_mouseButtonState( HB_MBUTTON_LEFT ) );
 }
 
 HB_FUNC( MRIGHTDOWN )
 {
-   hb_retl( hb_mouseButtonState( M_BUTTON_RIGHT ) );
+   hb_retl( hb_mouseButtonState( HB_MBUTTON_RIGHT ) );
 }
 
 HB_FUNC( MDBLCLK )
@@ -166,5 +162,5 @@ HB_FUNC( MSETBOUNDS )
 
 HB_FUNC( HB_MMIDDLEDOWN )
 {
-   hb_retl( hb_mouseButtonState( M_BUTTON_MIDDLE ) );
+   hb_retl( hb_mouseButtonState( HB_MBUTTON_MIDDLE ) );
 }

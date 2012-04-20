@@ -69,6 +69,7 @@
 #include "inkey.ch"
 #include "hbgfxdef.ch"
 #include "hbapicdp.h"
+#include "hbapistr.h"
 #include "hbthread.h"
 
 #include <unistd.h>
@@ -190,6 +191,8 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define HB_GTXWC_ARROW_U   0x001E /* ARROW UP */
 #define HB_GTXWC_ARROW_D   0x001F /* ARROW DOWN */
 
+#define HB_GTXWC_CHR_BASE  4
+
 #define HB_GTXWC_DBL_LT    0x2554 /* BOX DRAWINGS DOUBLE DOWN AND RIGHT (Double left top angle) */
 #define HB_GTXWC_DBL_TD    0x2566 /* BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL (Double top with junction down) */
 #define HB_GTXWC_DBL_RT    0x2557 /* BOX DRAWINGS DOUBLE DOWN AND LEFT (Double right top angle) */
@@ -258,6 +261,8 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define HB_GTXWC_SQUARE    0x25A0   /* BLACK SQUARE */
 
+#define HB_GTXWC_BOX_MIN   0x2500
+#define HB_GTXWC_BOX_MAX   0x25A0
 
 #define HB_GTXWC_RC_ARROW_DL  0xE040   /* USER ARROW DOWN (LEFT) */
 #define HB_GTXWC_RC_ARROW_DR  0xE041   /* USER ARROW DOWN (RIGHT) */
@@ -323,10 +328,14 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define HB_GTXWC_RC_MIN       0xE040
 #define HB_GTXWC_RC_MAX       0xE076
 
+#define HB_GTXWC_TRANS_COUNT  ( HB_GTXWC_CHR_BASE + ( HB_GTXWC_BOX_MAX - HB_GTXWC_BOX_MIN + 1 ) + ( HB_GTXWC_RC_MAX - HB_GTXWC_RC_MIN + 1 ) )
+#define HB_GTXWC_TRANS_MAX    0xFF
+
 /********************** Unix to graphic box translation ******************/
 
 typedef enum
 {
+   CH_UNDEF,         /* undefined */
    CH_CHAR,          /* normal U16 character */
    CH_CHBX,          /* U16 character built by DrawBoxChar */
    CH_NONE,          /* no character share */

@@ -52,6 +52,7 @@
 
 #include "hbapi.h"
 #include "hbapigt.h"
+#include "hbapistr.h"
 #include "ctwin.h"
 
 static int hb_ctColorParam( int iParam, int iDefault )
@@ -97,11 +98,17 @@ HB_FUNC( SETCLEARB )
    HB_USHORT usNew;
 
    if( HB_ISNUM( 1 ) )
-      usNew = ( HB_USHORT ) hb_parni( 1 );
+   {
+      int iChar = hb_parni( 1 );
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( !HB_CDP_ISCHARUNI( cdp ) )
+         iChar = hb_cdpGetU16( cdp, ( HB_UCHAR ) iChar );
+      usNew = ( HB_USHORT ) iChar;
+   }
    else if( HB_ISCHAR( 1 ) )
-      usNew = ( HB_USHORT ) hb_parc( 1 )[0];
+      usNew = hb_cdpTextGetU16( hb_vmCDP(), hb_parc( 1 ), hb_parclen( 1 ) );
    else
-      usNew = 255;
+      usNew = ' '; /* CT uses 255 => U+00A0 in CP437 */
 
    hb_gtSetClearChar( usNew );
 
@@ -110,7 +117,17 @@ HB_FUNC( SETCLEARB )
 
 HB_FUNC( GETCLEARB )
 {
-   hb_retni( hb_gtGetClearChar() );
+   int iChar = hb_gtGetClearChar();
+   PHB_CODEPAGE cdp = hb_vmCDP();
+
+   if( !HB_CDP_ISCHARUNI( cdp ) )
+   {
+      HB_UCHAR uc = hb_cdpGetUC( cdp, ( HB_WCHAR ) iChar, 0 );
+      if( uc )
+         iChar = uc;
+   }
+
+   hb_retni( iChar );
 }
 
 HB_FUNC( WSETSHADOW )
@@ -185,34 +202,35 @@ HB_FUNC( WNUM )
 
 HB_FUNC( WBOX )
 {
-   static const char * pWBoxFrames[] = {
-            _B_DOUBLE,        /* 0  WB_DOUBLE_CLEAR */
-            _B_SINGLE,        /* 1  WB_SINGLE_CLEAR */
-            _B_DOUBLE_SINGLE, /* 2  WB_DOUBLE_SINGLE_CLEAR */
-            _B_SINGLE_DOUBLE, /* 3  WB_SINGLE_DOUBLE_CLEAR */
+   static const HB_WCHAR s_pWBoxFrames[ 16 ][ 9 ] = {
+            HB_B_DOUBLE_W,          /* 0  WB_DOUBLE_CLEAR */
+            HB_B_SINGLE_W,          /* 1  WB_SINGLE_CLEAR */
+            HB_B_DOUBLE_SINGLE_W,   /* 2  WB_DOUBLE_SINGLE_CLEAR */
+            HB_B_SINGLE_DOUBLE_W,   /* 3  WB_SINGLE_DOUBLE_CLEAR */
 
-            _B_DOUBLE,        /* 4  WB_DOUBLE */
-            _B_SINGLE,        /* 5  WB_SINGLE */
-            _B_DOUBLE_SINGLE, /* 6  WB_DOUBLE_SINGLE */
-            _B_SINGLE_DOUBLE, /* 7  WB_SINGLE_DOUBLE */
+            HB_B_DOUBLE_W,          /* 4  WB_DOUBLE */
+            HB_B_SINGLE_W,          /* 5  WB_SINGLE */
+            HB_B_DOUBLE_SINGLE_W,   /* 6  WB_DOUBLE_SINGLE */
+            HB_B_SINGLE_DOUBLE_W,   /* 7  WB_SINGLE_DOUBLE */
 
-            "лплллмлл",       /* 8  WB_HALF_FULL_CLEAR */
-            "опнннмоо",       /* 9  WB_HALF_CLEAR */
-            "олнннлоо",       /* 10 WB_FULL_HALF_CLEAR */
-            "лллллллл",       /* 11 WB_FULL_CLEAR */
+            HB_B_HALF_FULL_W,       /* 8  WB_HALF_FULL_CLEAR */
+            HB_B_HALF_W,            /* 9  WB_HALF_CLEAR */
+            HB_B_FULL_HALF_W,       /* 10 WB_FULL_HALF_CLEAR */
+            HB_B_FULL_W,            /* 11 WB_FULL_CLEAR */
 
-            "лплллмлл",       /* 12 WB_HALF_FULL */
-            "опнннмоо",       /* 13 WB_HALF */
-            "олнннлоо",       /* 14 WB_FULL_HALF */
-            "лллллллл"  };    /* 15 WB_FULL */
+            HB_B_HALF_FULL_W,       /* 12 WB_HALF_FULL */
+            HB_B_HALF_W,            /* 13 WB_HALF */
+            HB_B_FULL_HALF_W,       /* 14 WB_FULL_HALF */
+            HB_B_FULL_W };          /* 15 WB_FULL */
 
-   const char * szBox;
-   char szBoxBuf[ 10 ];
+   HB_WCHAR szBoxBuf[ 10 ];
+   PHB_ITEM pBoxFrame = hb_param( 1, HB_IT_STRING );
    int iColor;
 
-   if( HB_ISCHAR( 1 ) )
+   if( pBoxFrame )
    {
-      szBox = hb_parc( 1 );
+      hb_itemCopyStrU16( pBoxFrame, HB_CDP_ENDIAN_NATIVE, szBoxBuf, HB_SIZEOFARRAY( szBoxBuf ) );
+      szBoxBuf[ HB_SIZEOFARRAY( szBoxBuf ) - 1 ] = 0;
    }
    else
    {
@@ -220,17 +238,14 @@ HB_FUNC( WBOX )
 
       if( iFrame < 0 || iFrame > 15 )
          iFrame = 0;
-      memcpy( szBoxBuf, pWBoxFrames[ iFrame ], 9 );
+      memcpy( szBoxBuf, s_pWBoxFrames[ iFrame ], 9 * sizeof( HB_WCHAR ) );
       if( ( iFrame & 4 ) == 0 )
-      {
-         szBoxBuf[ 8 ] = ( char ) hb_gtGetClearChar();
-      }
+         szBoxBuf[ 8 ] = hb_gtGetClearChar();
       szBoxBuf[ 9 ] = '\0';
-      szBox = szBoxBuf;
    }
 
    iColor = hb_ctColorParam( 2, -1 );   /* Harbour extension */
-   hb_retni( hb_ctwAddWindowBox( hb_ctwCurrentWindow(), szBox, iColor ) );
+   hb_retni( hb_ctwAddWindowBox( hb_ctwCurrentWindow(), szBoxBuf, iColor ) );
 }
 
 HB_FUNC( WFORMAT )

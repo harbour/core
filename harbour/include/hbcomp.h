@@ -383,6 +383,7 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_HB_INLINE    0x0200            /* -ki hb_inLine(...) { ... } support */
 #define HB_COMPFLAG_MACROTEXT    0x0400            /* -kM turn off macrotext substitution */
+#define HB_COMPFLAG_USERCP       0x0800            /* -kU strings in user encoding */
 
 #define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
 
@@ -391,6 +392,7 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_SUPPORT_ARRSTR           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
 #define HB_SUPPORT_EXTOPT           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_EXTOPT) )
 #define HB_SUPPORT_MACROTEXT        ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_MACROTEXT) )
+#define HB_SUPPORT_USERCP           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_USERCP) )
 
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO

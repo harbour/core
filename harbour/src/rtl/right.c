@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * RIGHT() function
  *
+ * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
  *
@@ -52,6 +53,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 
 /* returns the right-most n characters in string */
@@ -68,6 +70,18 @@ HB_FUNC( RIGHT )
       else
       {
          HB_SIZE nText = hb_itemGetCLen( pText );
+         if( ( HB_SIZE ) nLen < nText )
+         {
+            PHB_CODEPAGE cdp = hb_vmCDP();
+            if( HB_CDP_ISCHARIDX( cdp ) )
+            {
+               HB_SIZE nChars = hb_cdpTextLen( cdp, hb_itemGetCPtr( pText ), nText );
+               if( nChars > ( HB_SIZE ) nLen )
+                  nLen = nText - hb_cdpTextPos( cdp, hb_itemGetCPtr( pText ), nText, nChars - nLen );
+               else
+                  nLen = nText;
+            }
+         }
          if( ( HB_SIZE ) nLen >= nText )
             hb_itemReturn( pText );
          else

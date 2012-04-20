@@ -50,11 +50,6 @@
  *
  */
 
-/* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(),
-         hb_gtWriteAt(), hb_gtRepChar(), hb_gtBox(), hb_gtBoxS(), hb_gtBoxD()
-         hb_gtInit() differs in parameter types from the original CA-Cl*pper
-         versions. [vszakats] */
-
 #ifndef HB_XVM_H_
 #define HB_XVM_H_
 

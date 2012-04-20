@@ -24,7 +24,4 @@
 
 #include "hbapi.h"
 
-HB_FUNC( FT_ORIGIN )
-{
-   hb_retc( hb_cmdargARGV()[ 0 ] );
-}
+HB_FUNC_TRANSLATE( FT_ORIGIN, HB_PROGNAME )

@@ -221,7 +221,7 @@ aadd(aKeys, { "HB_K_DISCONNECT", 1106, "remote terminal disconnected"   }  )
 
 
 #ifdef __HARBOUR__
-   set( _SET_EVENTMASK, hb_bitOR( INKEY_ALL, HB_INKEY_GTEVENT ) )
+   set( _SET_EVENTMASK, HB_INKEY_ALL )
    //hb_gtInfo( HB_GTI_RESIZABLE, .f. )
    //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )

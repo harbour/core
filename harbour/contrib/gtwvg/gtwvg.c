@@ -458,17 +458,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->pPP->bRowCols     = HB_FALSE;
    pWVT->pPP->iWndType     = 0;
 
-#if defined( UNICODE )
-   /* pWVT->hostCDP = pWVT->inCDP = hb_vmCDP(); */
-   pWVT->boxCDP     = hb_cdpFind( "EN" );
-#else
-   {
-      int i;
-      for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( HB_BYTE ) i;
-   }
-#endif
-
    /* GUI Related members initialized */
    hb_wvt_gtCreateObjects( pWVT );
 
@@ -879,7 +868,7 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
              tm.tmAveCharWidth >= 3 &&
              tm.tmHeight >= 4 )
          {
-#if ! defined( UNICODE )
+#if !defined( UNICODE )
             if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
                DeleteObject( pWVT->hFontBox );
 
@@ -1029,7 +1018,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       DeleteObject( pWVT->hFont );
    pWVT->hFont = hFont;
 
-#if ! defined( UNICODE )
+#if !defined( UNICODE )
    if( pWVT->hFontBox )
       DeleteObject( pWVT->hFontBox );
    if( pWVT->CodePage == pWVT->boxCodePage )
@@ -1271,9 +1260,13 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
             {
-               HB_SIZE ulSize;
+#if !defined( UNICODE )
+               PHB_CODEPAGE cdpHost = HB_GTSELF_HOSTCP( pWVT->pGT ),
+                            cdpBox = HB_GTSELF_BOXCP( pWVT->pGT );
+#endif
+               TCHAR * sBuffer;
+               HB_SIZE nSize;
                int     irow, icol, j, top, left, bottom, right;
-               char *  sBuffer;
                RECT    rect = { 0, 0, 0, 0 };
                RECT    colrowRC = { 0, 0, 0, 0 };
 
@@ -1289,8 +1282,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                right  = colrowRC.right;
                bottom = colrowRC.bottom;
 
-               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+               nSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               sBuffer = ( TCHAR * ) hb_xgrab( nSize * sizeof( TCHAR ) + 1 );
 
                for( j = 0, irow = top; irow <= bottom; irow++ )
                {
@@ -1302,28 +1295,36 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
                         break;
-
-                     sBuffer[ j++ ] = ( char ) usChar;
+#if defined( UNICODE )
+                     usChar = hb_cdpGetU16Ctrl( usChar );
+#else
+                     usChar = hb_cdpGetUC( bAttr & HB_GT_ATTR_BOX ? cdpBox : cdpHost, usChar, '?' );
+#endif
+                     sBuffer[ j++ ] = ( TCHAR ) usChar;
                   }
-
                   sBuffer[ j++ ] = '\r';
                   sBuffer[ j++ ] = '\n';
                }
-               sBuffer[ j ] = '\0';
 
+#if defined( UNICODE )
+               if( j > 0 )
+               {
+                  PHB_ITEM pItem = hb_itemPutStrLenU16( NULL, HB_CDP_ENDIAN_NATIVE, sBuffer, j );
+                  hb_gt_winapi_setClipboard( CF_UNICODETEXT, pItem );
+                  hb_itemRelease( pItem );
+               }
+               hb_xfree( sBuffer );
+#else
                if( j > 0 )
                {
                   PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, j );
-#if defined( UNICODE )
-                  hb_gt_winapi_setClipboard( CF_UNICODETEXT, pItem );
-#else
                   hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
                                              CF_OEMTEXT : CF_TEXT, pItem );
-#endif
                   hb_itemRelease( pItem );
                }
                else
                   hb_xfree( sBuffer );
+#endif
             }
             return;
          }
@@ -1639,16 +1640,16 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      break;
                   default:
 #if defined( UNICODE )
-                     c = hb_cdpGetChar( pWVT->inCDP ? pWVT->inCDP : hb_vmCDP(),
-                                        ( HB_WCHAR ) c );
+                     if( c >= 127 )
+                        c = HB_INKEY_NEW_UNICODE( c );
 #else
-                     if( pWVT->fKeyTrans )
                      {
-                        if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
-                           c = pWVT->keyTransTbl[ c ];
+                        int u = HB_GTSELF_KEYTRANS( pWVT->pGT, c );
+                        if( u )
+                           c = HB_INKEY_NEW_UNICODE( u );
+                        else if( pWVT->CodePage == OEM_CHARSET )
+                           c = hb_gt_wvt_key_ansi_to_oem( c );
                      }
-                     else if( pWVT->CodePage == OEM_CHARSET )
-                        c = hb_gt_wvt_key_ansi_to_oem( c );
 #endif
                      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
                      break;
@@ -1824,12 +1825,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
-#if defined( UNICODE )
-   PHB_CODEPAGE hostCDP;
-#else
+#if !defined( UNICODE )
    HFONT       hFont, hOldFont = NULL;
 #endif
-   HB_USHORT   usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
 
    if( pWVT->bGui && pWVT->bKillFocus )
@@ -1886,7 +1884,6 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
 #if defined( UNICODE )
    SelectObject( hdc, pWVT->hFont );
-   hostCDP = pWVT->hostCDP ? pWVT->hostCDP : hb_vmCDP();
 #endif
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
@@ -1896,12 +1893,13 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
       while( iCol <= rcRect.right )
       {
+#if defined( UNICODE )
+         HB_USHORT usChar;
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
+         usChar = hb_cdpGetU16Ctrl( usChar );
 
          iColor &= 0xff;
-#if defined( UNICODE )
-         usChar = hb_cdpGetU16Disp( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : hostCDP, ( HB_BYTE ) usChar );
          if( len == 0 )
          {
             iOldColor = iColor;
@@ -1913,8 +1911,11 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             startCol = iCol;
             len = 0;
          }
+         text[ len++ ] = ( TCHAR ) usChar;
 #else
-         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         HB_UCHAR uc;
+         if( !HB_GTSELF_GETSCRUC( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &uc, HB_TRUE ) )
+            break;
          hFont = ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont;
          if( len == 0 )
          {
@@ -1937,8 +1938,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             startCol = iCol;
             len = 0;
          }
+         text[ len++ ] = ( TCHAR ) uc;
 #endif
-         text[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
       if( len > 0 )
@@ -3253,17 +3254,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+#if !defined( UNICODE )
       case HB_GTI_BOXCP:
-#if defined( UNICODE )
-         pInfo->pResult = hb_itemPutC( pInfo->pResult,
-                                       pWVT->boxCDP ? pWVT->boxCDP->id : NULL );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            PHB_CODEPAGE cdpBox = hb_cdpFind( hb_itemGetCPtr( pInfo->pNewVal ) );
-            if( cdpBox )
-               pWVT->boxCDP = cdpBox;
-         }
-#else
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->boxCodePage );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
@@ -3298,8 +3290,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
             }
          }
-#endif
          break;
+#endif
 
       case HB_GTI_ICONFILE:
       {
@@ -4228,105 +4220,6 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 
 /* ********************************************************************** */
 
-static HB_BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
-{
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-#  if defined( UNICODE )
-   /*
-    * We are displaying text in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost )
-      {
-         PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-
-         pWVT->hostCDP = cdpHost;
-         pWVT->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
-      }
-   }
-#  else
-   {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm, cdpHost;
-      int i;
-
-      if( !pszHostCDP )
-         pszHostCDP = hb_cdpID();
-
-      if( !pszTermCDP )
-         pszTermCDP = pszHostCDP;
-
-      cdpTerm = hb_cdpFind( pszTermCDP );
-      cdpHost = hb_cdpFind( pszHostCDP );
-
-      for( i = 0; i < 256; i++ )
-      {
-         pWVT->chrTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
-      }
-   }
-#  endif
-
-   return HB_TRUE;
-}
-
-static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
-{
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-#  if defined( UNICODE )
-   /*
-    * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
-    * We only have to know what is the internal application codepage
-    * to make proper translation
-    */
-   if( !pszHostCDP || !*pszHostCDP )
-      pszHostCDP = hb_cdpID();
-
-   if( pszHostCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost )
-         HB_GTWVT_GET( pGT )->inCDP = cdpHost;
-   }
-#  else
-   {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm, cdpHost;
-      int i;
-
-      if( !pszHostCDP )
-         pszHostCDP = hb_cdpID();
-
-      if( !pszTermCDP )
-         pszTermCDP = pszHostCDP;
-
-      cdpTerm = hb_cdpFind( pszTermCDP );
-      cdpHost = hb_cdpFind( pszHostCDP );
-
-      for( i = 0; i < 256; i++ )
-      {
-         pWVT->keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-      }
-      pWVT->fKeyTrans = HB_TRUE;
-   }
-#  endif
-
-   return HB_TRUE;
-}
-
-
-/* ********************************************************************** */
-
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
@@ -4339,8 +4232,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version              = hb_gt_wvt_Version;
    pFuncTable->Tone                 = hb_gt_wvt_Tone;
    pFuncTable->Info                 = hb_gt_wvt_Info;
-   pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
-   pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
 
    pFuncTable->PutChar              = hb_gt_wvt_PutChar;
 

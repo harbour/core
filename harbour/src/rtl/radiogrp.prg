@@ -208,16 +208,22 @@ METHOD display() CLASS RADIOGROUP
 
 METHOD getAccel( xValue ) CLASS RADIOGROUP
 
-   DO CASE
-   CASE ISNUMBER( xValue )
-      xValue := Chr( xValue )
-   CASE !ISCHARACTER( xValue )
+   LOCAL cValue
+
+   IF ISCHARACTER( xValue )
+      cValue := xValue
+   ELSEIF ISNUMBER( xValue )
+      cValue := hb_KeyChar( xValue )
+   ELSE
       RETURN 0
-   ENDCASE
+   ENDIF
 
-   xValue := Lower( xValue )
+   IF Len( cValue ) > 0
+      cValue := Lower( cValue )
+      RETURN AScan( ::aItems, {| o | o:isAccel( cValue ) } )
+   ENDIF
 
-   RETURN AScan( ::aItems, {| o | o:isAccel( xValue ) } )
+   RETURN 0
 
 METHOD getItem( nPos ) CLASS RADIOGROUP
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )

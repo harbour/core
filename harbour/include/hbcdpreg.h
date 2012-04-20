@@ -61,13 +61,15 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
 #endif
 
 #if defined( HB_CP_RAW )
-   #if !defined( HB_CP_CUSTOM )
+   #if defined( HB_CP_CUSTOM )
+      #define HB_CP_TP_CUSTOM    HB_CDP_TYPE_CUSTOM
+   #else
       #if defined( HB_CP_GET_FUNC ) && \
           defined( HB_CP_PUT_FUNC ) && \
           defined( HB_CP_LEN_FUNC )
-         #define HB_CP_CUSTOM       HB_TRUE
+         #define HB_CP_TP_CUSTOM    HB_CDP_TYPE_CUSTOM
       #else
-         #define HB_CP_CUSTOM       HB_FALSE
+         #define HB_CP_TP_CUSTOM    0
          #define HB_CP_GET_FUNC     NULL
          #define HB_CP_PUT_FUNC     NULL
          #define HB_CP_LEN_FUNC     NULL
@@ -82,7 +84,29 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
       #ifndef HB_CP_CMP_FUNC
          #define HB_CP_CMP_FUNC     NULL
       #endif
+      #ifndef HB_CP_CMPI_FUNC
+         #define HB_CP_CMPI_FUNC    NULL
+      #endif
    #endif
+
+   #if defined( HB_CP_CHARIDX )
+      #define HB_CP_TP_CHARIDX   HB_CDP_TYPE_CHARIDX
+   #else
+      #define HB_CP_TP_CHARIDX   0
+   #endif
+
+   #if defined( HB_CP_CHARUNI )
+      #define HB_CP_TP_CHARUNI   HB_CDP_TYPE_CHARUNI
+   #else
+      #define HB_CP_TP_CHARUNI   0
+   #endif
+
+   #if defined( HB_CP_UTF8 )
+      #define HB_CP_TP_UTF8      HB_CDP_TYPE_UTF8
+   #else
+      #define HB_CP_TP_UTF8      0
+   #endif
+
    static HB_CODEPAGE s_codePage =
    {
       HB_MACRO2STRING( HB_CP_ID ),
@@ -94,10 +118,15 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
       s_sort,
       NULL,
       HB_CDP_ACSORT_NONE,
-      HB_CP_CUSTOM,
+      ( HB_CP_TP_CUSTOM | HB_CP_TP_CHARIDX | HB_CP_TP_CHARUNI | HB_CP_TP_UTF8 ),
       HB_CP_GET_FUNC,
       HB_CP_PUT_FUNC,
       HB_CP_LEN_FUNC,
+      HB_CP_UPPER_FUNC,
+      HB_CP_LOWER_FUNC,
+      HB_CP_FLAGS_FUNC,
+      HB_CP_CMP_FUNC,
+      HB_CP_CMPI_FUNC,
       0,
       0,
       NULL,

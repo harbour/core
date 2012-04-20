@@ -303,8 +303,13 @@ FUNCTION __hbdoc_FilterOut( cFile )
  * previously-saved files is required, only a naive approach of using
  * version 1 is taken.
  */
-#define _HBDOC_SIGNATURE e"\xC0HBD" + Chr( 1 ) + Chr( 0 )
-
+#define _HBDOC_SIGNATURE ( HB_BCHAR( 0xC0 ) + ;
+                           HB_BCHAR( 0x48 ) + ;
+                           HB_BCHAR( 0x42 ) + ;
+                           HB_BCHAR( 0x44 ) + ;
+                           HB_BCHAR( 0x01 ) + ;
+                           HB_BCHAR( 0x00 ) )
+#define _HBDOC_SIG_LEN   6
 #define _HBDOC_EXT       ".hbd"
 
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
@@ -351,12 +356,12 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
       fhnd := FOpen( cFileName, FO_READ )
       IF fhnd != F_ERROR
 
-         cBuffer := Space( Len( _HBDOC_SIGNATURE ) )
+         cBuffer := Space( _HBDOC_SIG_LEN )
          FRead( fhnd, @cBuffer, Len( cBuffer ) )
          IF cBuffer == _HBDOC_SIGNATURE
 
-            cBuffer := Space( FSeek( fhnd, 0, FS_END ) - Len( _HBDOC_SIGNATURE ) )
-            FSeek( fhnd, Len( _HBDOC_SIGNATURE ), FS_SET )
+            cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
+            FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
             FRead( fhnd, @cBuffer, Len( cBuffer ) )
             FClose( fhnd )
 

@@ -77,37 +77,23 @@ HB_FUNC( GETENV )
    if( pName && hb_pcount() == 1 )
    {
 #ifdef _HB_GETENV_REQUIRES_UPPERCASE
-      char * pszName = hb_itemGetC( pName );
+      char * pszName = hb_cdpnDupUpper( hb_vmCDP(),
+                                        hb_itemGetCPtr( pName ), NULL );
 #else
       const char * pszName = hb_itemGetCPtr( pName );
 #endif
+      char * pszValue = NULL;
 
       if( pszName[ 0 ] != '\0' )
-      {
-         char * szValue;
+         pszValue = hb_getenv( pszName );
 
-#ifdef _HB_GETENV_REQUIRES_UPPERCASE
-         hb_strupr( pszName );
-#endif
-         szValue = hb_getenv( pszName );
-         if( szValue && szValue[ 0 ] != '\0' )
-         {
-            /* Convert from OS codepage */
-            hb_retc_buffer( ( char * ) hb_osDecodeCP( szValue, NULL, NULL ) );
-         }
-         else
-         {
-            if( szValue )
-               hb_xfree( szValue );
-
-            hb_retc_null();
-         }
-      }
+      if( pszValue )
+         hb_retc_buffer( pszValue );
       else
          hb_retc_null();
 
 #ifdef _HB_GETENV_REQUIRES_UPPERCASE
-      hb_itemFreeC( pszName );
+      hb_xfree( pszName );
 #endif
    }
    else
@@ -137,41 +123,27 @@ HB_FUNC( HB_GETENV )
    if( pName )
    {
 #ifdef _HB_GETENV_REQUIRES_UPPERCASE
-      char * pszName = hb_itemGetC( pName );
+      char * pszName = hb_cdpnDupUpper( hb_vmCDP(),
+                                        hb_itemGetCPtr( pName ), NULL );
 #else
       const char * pszName = hb_itemGetCPtr( pName );
 #endif
+      char * pszValue = NULL;
 
       if( pszName[ 0 ] != '\0' )
-      {
-         char * szValue;
+         pszValue = hb_getenv( pszName );
 
-#ifdef _HB_GETENV_REQUIRES_UPPERCASE
-         hb_strupr( pszName );
-#endif
-         szValue = hb_getenv( pszName );
-         if( szValue && szValue[ 0 ] != '\0' )
-         {
-            if( hb_parldef( 3, 1 ) )
-               szValue = ( char * ) hb_osDecodeCP( szValue, NULL, NULL );
-            hb_retc_buffer( szValue );
-         }
-         else
-         {
-            if( szValue )
-               hb_xfree( szValue );
-            hb_retc( hb_parc( 2 ) );
-         }
-      }
+      if( pszValue )
+         hb_retc_buffer( pszValue );
       else
-         hb_retc_null();
+         hb_retc( hb_parc( 2 ) );
 
 #ifdef _HB_GETENV_REQUIRES_UPPERCASE
-      hb_itemFreeC( pszName );
+      hb_xfree( pszName );
 #endif
    }
    else
-      hb_retc_null();
+      hb_retc( hb_parc( 2 ) );
 }
 
 HB_FUNC( HB_SETENV )
@@ -180,24 +152,7 @@ HB_FUNC( HB_SETENV )
    HB_BOOL fResult = HB_FALSE;
 
    if( pszName )
-   {
-      const char * pszValue = hb_parc( 2 );
-      char * pszFreeName = NULL, * pszFreeVal = NULL;
-
-      if( hb_parldef( 3, 1 ) )
-      {
-         pszName = hb_osEncodeCP( pszName, &pszFreeName, NULL );
-         if( pszValue )
-            pszValue = hb_osEncodeCP( pszValue, &pszFreeVal, NULL );
-      }
-
-      fResult = hb_setenv( pszName, pszValue );
-
-      if( pszFreeName )
-         hb_xfree( pszFreeName );
-      if( pszFreeVal )
-         hb_xfree( pszFreeVal );
-   }
+      fResult = hb_setenv( pszName, hb_parc( 2 ) );
 
    hb_retl( fResult );
 }

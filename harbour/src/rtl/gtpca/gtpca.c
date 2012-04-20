@@ -122,7 +122,6 @@ static HB_BOOL      s_bStderrConsole;
 static HB_BOOL      s_fDispTrans;
 static PHB_CODEPAGE s_cdpTerm;
 static PHB_CODEPAGE s_cdpHost;
-static HB_BYTE      s_keyTransTbl[ 256 ];
 
 static int          s_iOutBufSize = 0;
 static int          s_iOutBufIndex = 0;
@@ -456,15 +455,6 @@ static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, const char * s
    s_iCol += iLen;
 }
 
-static void hb_gt_pca_setKeyTrans( PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
-{
-   int i;
-
-   for( i = 0; i < 256; ++i )
-      s_keyTransTbl[ i ] = ( HB_BYTE )
-                           hb_cdpTranslateChar( i, cdpTerm, cdpHost );
-}
-
 static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    int iRows = 25, iCols = 80;
@@ -481,7 +471,6 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    s_cdpTerm = s_cdpHost = NULL;
    s_fDispTrans = HB_FALSE;
-   hb_gt_pca_setKeyTrans( NULL, NULL );
 
    s_szCrLf = hb_conNewLine();
    s_nCrLf = strlen( s_szCrLf );
@@ -618,8 +607,6 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       this. */
 
    ch = hb_gt_dos_keyCodeTranslate( ch );
-   if( ch > 0 && ch <= 255 )
-      ch = s_keyTransTbl[ ch ];
 #elif defined( HB_HAS_TERMIOS )
    {
       struct timeval tv;
@@ -632,7 +619,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       {
          HB_BYTE bChar;
          if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
-            ch = s_keyTransTbl[ bChar ];
+            ch = bChar;
       }
    }
 #elif defined( _MSC_VER ) && !defined( HB_OS_WIN_CE )
@@ -648,15 +635,13 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
             ch = _getch() + 256;
          }
          ch = hb_gt_dos_keyCodeTranslate( ch );
-         if( ch > 0 && ch <= 255 )
-            ch = s_keyTransTbl[ ch ];
       }
    }
    else if( !_eof( ( int ) s_hFilenoStdin ) )
    {
       HB_BYTE bChar;
       if( _read( ( int ) s_hFilenoStdin, &bChar, 1 ) == 1 )
-         ch = s_keyTransTbl[ bChar ];
+         ch = bChar;
    }
 #elif defined( HB_OS_WIN )
    if( !s_bStdinConsole ||
@@ -664,7 +649,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    {
       HB_BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
-         ch = s_keyTransTbl[ bChar ];
+         ch = bChar;
    }
 #elif defined( __WATCOMC__ )
    if( s_bStdinConsole )
@@ -679,21 +664,26 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
             ch = getch() + 256;
          }
          ch = hb_gt_dos_keyCodeTranslate( ch );
-         if( ch > 0 && ch <= 255 )
-            ch = s_keyTransTbl[ ch ];
       }
    }
    else if( !eof( s_hFilenoStdin ) )
    {
       HB_BYTE bChar;
       if( read( s_hFilenoStdin, &bChar, 1 ) == 1 )
-         ch = s_keyTransTbl[ bChar ];
+         ch = bChar;
    }
 #else
    {
       int iTODO; /* TODO: */
    }
 #endif
+
+   if( ch )
+   {
+      int u = HB_GTSELF_KEYTRANS( pGT, ch );
+      if( u )
+         ch = HB_INKEY_NEW_UNICODE( u );
+   }
 
    return ch;
 }
@@ -784,35 +774,12 @@ static HB_BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   if( pszTermCDP && pszHostCDP )
+   if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
-      s_cdpTerm = hb_cdpFind( pszTermCDP );
-      s_cdpHost = hb_cdpFind( pszHostCDP );
+      s_cdpTerm = HB_GTSELF_TERMCP( pGT );
+      s_cdpHost = HB_GTSELF_HOSTCP( pGT );
       s_fDispTrans = s_cdpTerm && s_cdpHost && s_cdpTerm != s_cdpHost;
    }
-
-   return HB_TRUE;
-}
-
-static HB_BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
-
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   hb_gt_pca_setKeyTrans( hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 
    return HB_TRUE;
 }
@@ -935,7 +902,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Suspend                    = hb_gt_pca_Suspend;
    pFuncTable->Resume                     = hb_gt_pca_Resume;
    pFuncTable->SetDispCP                  = hb_gt_pca_SetDispCP;
-   pFuncTable->SetKeyCP                   = hb_gt_pca_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_pca_Tone;
    pFuncTable->Bell                       = hb_gt_pca_Bell;
    pFuncTable->Info                       = hb_gt_pca_Info;

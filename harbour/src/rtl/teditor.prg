@@ -673,6 +673,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
    LOCAL i
    LOCAL nKey
+   LOCAL cKey
    LOCAL lDelAppend
    LOCAL bKeyBlock
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
@@ -706,7 +707,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          ENDIF
 
          DO CASE
-         CASE nKey >= K_SPACE .AND. nKey < 256
+         CASE Len( cKey := hb_KeyChar( nKey ) ) > 0
             ::lDirty := .T.
             // If I'm past EOL I need to add as much spaces as I need to reach ::nCol
             IF ::nCol > ::LineLen( ::nRow )
@@ -714,9 +715,9 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             ENDIF
             // insert char if in insert mode or at end of current line
             IF Set( _SET_INSERT ) .OR. ( ::nCol > ::LineLen( ::nRow ) )
-               ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, Chr( nKey ) )
+               ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, cKey )
             ELSE
-               ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, Chr( nKey ) )
+               ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, cKey )
             ENDIF
             ::MoveCursor( K_RIGHT )
             ::RefreshLine()

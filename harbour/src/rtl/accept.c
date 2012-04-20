@@ -89,8 +89,10 @@ HB_FUNC( __ACCEPTSTR )
 
 HB_FUNC( __ACCEPT )
 {
+   PHB_CODEPAGE cdp = hb_vmCDP();
    char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-   HB_SIZE nLen = 0;
+   char szKey[ HB_MAX_CHAR_LEN ];
+   HB_SIZE nLen = 0, nChar;
    int input = 0;
 
    /* cPrompt(s) passed ? */
@@ -109,19 +111,28 @@ HB_FUNC( __ACCEPT )
          case K_LEFT:
             if( nLen > 0 )
             {
-               hb_conOutAlt( "\x8", sizeof( char ) ); /* Erase it from the screen. */
-               --nLen; /* Adjust input count to get rid of last character */
+               nChar = hb_cdpTextLen( cdp, szAcceptResult, nLen );
+               if( nChar > 0 )
+                  nLen = hb_cdpTextPos( cdp, szAcceptResult, nLen, nChar - 1 );
+               else
+                  nLen = 0;
+               szKey[ 0 ] = HB_CHAR_BS;
+               nChar = 1;
             }
+            else
+               nChar = 0;
             break;
 
          default:
-            if( nLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 && input <= 255 )
+            nChar = hb_inkeyKeyString( input, szKey, sizeof( szKey ) );
+            if( nChar > 0 && nLen + nChar < ACCEPT_BUFFER_LEN )
             {
-               szAcceptResult[ nLen ] = ( char ) input; /* Accept the input */
-               hb_conOutAlt( &szAcceptResult[ nLen ], sizeof( char ) ); /* Then display it */
-               ++nLen; /* Then adjust the input count */
+               memcpy( &szAcceptResult[ nLen ], szKey, nChar );
+               nLen += nChar;
             }
       }
+      if( nChar > 0 )
+         hb_conOutAlt( szKey, nChar );
    }
 
    szAcceptResult[ nLen ] = '\0';
@@ -130,5 +141,5 @@ HB_FUNC( __ACCEPT )
    hb_strncpy( hb_acceptBuffer(), szAcceptResult, ACCEPT_BUFFER_LEN - 1 );
 #endif
 
-   hb_retc( szAcceptResult );
+   hb_retclen( szAcceptResult, nLen );
 }
