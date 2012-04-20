@@ -212,6 +212,10 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:_destroy()
 
+   IF __objDerivedFrom( Self, "HB_OBJECT" )
+      ::disconnect()
+   ENDIF
+
    ::__pSlots := NIL
    ::__pEvents := NIL
 

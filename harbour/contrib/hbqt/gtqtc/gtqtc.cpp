@@ -1161,8 +1161,8 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version              = hb_gt_wvt_Version;
    pFuncTable->Tone                 = hb_gt_wvt_Tone;
    pFuncTable->Info                 = hb_gt_wvt_Info;
-   pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
-   pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
+//   pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
+//   pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
@@ -1458,8 +1458,6 @@ void DrawingArea::setCaretPos( int iCol, int iRow )
 }
 void DrawingArea::displayCell( int iRow, int iCol )
 {
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-
    QPainter painter( _image );
    painter.setBackgroundMode( Qt::OpaqueMode );
    QFont font( _qFont, painter.device() );

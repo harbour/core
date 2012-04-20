@@ -2320,9 +2320,9 @@ STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast )
    CASE "P"  //TODO
       RETURN "HB_ISPOINTER( " + hb_ntos( nArg ) + " )"
    CASE "O"
-      RETURN "HB_ISOBJECT( " + hb_ntos( nArg ) + " )"
+      RETURN "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ", " + '"HB_' + cCast + '"' + " )"
    CASE "CO"
-      RETURN "( HB_ISOBJECT( " + hb_ntos( nArg ) + " ) || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
+      RETURN "( hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ", " + '"HB_' + cCast +'"' + " ) || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
    CASE "N*"
       RETURN  "HB_ISBYREF( " + hb_ntos( nArg ) + " )"
    CASE "N"

@@ -103,6 +103,8 @@ extern HB_EXPORT void hbqt_par_detach_ptrGC( int iParam );
 extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
 extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
 extern HB_EXPORT HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
+extern HB_EXPORT HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * szClsName ); /* check if parameter iParam is class or subclass of szClsName */
+extern HB_EXPORT HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * szClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT void * hbqt_get_ptr( PHB_ITEM pObj );
 
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
@@ -115,7 +117,7 @@ extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of
 
 HB_EXTERN_END
 
-#define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
+#define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) ) /* TOFIX: use Str API */
 #define hbqt_par_uchar( n )                         ( ( uchar * ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )

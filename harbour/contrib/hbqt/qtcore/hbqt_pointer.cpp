@@ -478,6 +478,25 @@ PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName )
    return hb_stackReturnItem();
 }
 
+HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * szClsName )
+{
+   return hb_clsIsParent( hb_objGetClass( pItem ), szClsName );
+}
+
+/* Checks that the param iParam is an object and a subclass of szClsName */
+
+HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * szClsName )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFrom( %i, %s )", iParam, szClsName ) );
+
+   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
+      return hbqt_obj_isDerivedFrom( pItem, szClsName );
+
+   return HB_FALSE;
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif
