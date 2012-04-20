@@ -894,7 +894,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
       {
          PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-         if( ffind->bFirst )
+         if( !ffind->bFirst )
          {
             hb_vmUnlock();
 
