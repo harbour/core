@@ -1495,7 +1495,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    case CB_GETCOUNT               : // Gets the number of items in the list box of a combo box.
       hb_retni( SendMessage( hCB, CB_GETCOUNT, 0, 0 ) );
       break;
-#if ( _WIN32_IE >= 0x0600 )
+#if defined( CB_GETCUEBANNER )
    case CB_GETCUEBANNER           : // Gets the cue banner text displayed in the edit control of a combo box. Send this message explicitly or by using the ComboBox_GetCueBannerText macro.
       break;
 #endif
@@ -1583,7 +1583,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    case CB_SELECTSTRING           : // Searches the list of a combo box for an item that begins with the characters in a specified string. If a matching item is found, it is selected and copied to the edit control.
       hb_retni( SendMessage( hCB, CB_SELECTSTRING, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
       break;
-#if ( _WIN32_IE >= 0x0600 )
+#if defined( CB_SETCUEBANNER )
    case CB_SETCUEBANNER           : // Sets the cue banner text that is displayed for the edit control of a combo box.
       break;
 #endif

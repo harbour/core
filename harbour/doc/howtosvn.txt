@@ -137,6 +137,10 @@ by Viktor Szakats
 
 - Leave an empty line between the header and body and one after the body.
 
+- Do not add unicode BOM to the file
+
+- Do not use tabs
+
 1.4 Here's how to use the SVN server in anonymous read-only mode
 ================================================================
 
