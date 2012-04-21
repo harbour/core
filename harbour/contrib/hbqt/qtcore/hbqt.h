@@ -103,13 +103,13 @@ extern HB_EXPORT void hbqt_par_detach_ptrGC( int iParam );
 extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
 extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
 extern HB_EXPORT HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
-extern HB_EXPORT HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * szClsName ); /* check if parameter iParam is class or subclass of szClsName */
-extern HB_EXPORT HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * szClsName ); /* check if parameter iParam is class or subclass of szClsName */
+extern HB_EXPORT HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
+extern HB_EXPORT HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT void * hbqt_get_ptr( PHB_ITEM pObj );
 
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void hbqt_errRT_ARG( void );
-extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char * szParentClsStr );
+extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, const char * pszParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName );

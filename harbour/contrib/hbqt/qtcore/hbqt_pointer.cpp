@@ -335,7 +335,7 @@ HB_FUNC( __HBQT_SETUTF8 )
       hb_vmSetCDP( cdp );
 }
 
-PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const char * szParentClsStr )
+PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, const char * pszParentClsStr )
 {
    static PHB_DYNS s__CLSLOCKDEF = NULL;
 
@@ -349,11 +349,11 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
    hb_vmPushItemRef( s_oClass );
    hb_vmDo( 1 );
 
-   if( hb_itemGetL( hb_stackReturnItem() ) && szParentClsStr )
+   if( hb_itemGetL( hb_stackReturnItem() ) && pszParentClsStr )
    {
       static PHB_DYNS s___HBCLASS = NULL;
 
-      char * szSingleClsNameBuf = ( char * ) hb_xgrab( strlen( szParentClsStr ) + 1 );
+      char * pszSingleClsNameBuf = ( char * ) hb_xgrab( strlen( pszParentClsStr ) + 1 );
 
       if( s___HBCLASS == NULL )
          s___HBCLASS = hb_dynsymGetCase( "HBCLASS" );
@@ -362,7 +362,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
       PHB_ITEM pSuper = hb_itemNew( NULL );
       PHB_ITEM pSym_ClsFunc = hb_itemNew( NULL );
 
-      hb_itemPutC( pClsName, szClsName );
+      hb_itemPutC( pClsName, pszClsName );
 
       HB_SIZE nPos = 0;
       HB_SIZE nStart = 0;
@@ -370,19 +370,19 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
       /* array with parent classes (at least ONE) */
       hb_arrayNew( pSuper, 0 );
 
-      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", szClsName ) );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", pszClsName ) );
 
-      while( szParentClsStr[ nPos++ ] )
+      while( pszParentClsStr[ nPos++ ] )
       {
-         if( ! szParentClsStr[ nPos ] || ( szParentClsStr[ nPos ] == ',' && szParentClsStr[ nPos + 1 ] == ' ' ) )
+         if( ! pszParentClsStr[ nPos ] || ( pszParentClsStr[ nPos ] == ',' && pszParentClsStr[ nPos + 1 ] == ' ' ) )
          {
             PHB_ITEM pItem = hb_itemNew( NULL );
 
-            memcpy( szSingleClsNameBuf, szParentClsStr + nStart, nPos - nStart );
-            szSingleClsNameBuf[ nPos - nStart ] = '\0';
+            memcpy( pszSingleClsNameBuf, pszParentClsStr + nStart, nPos - nStart );
+            pszSingleClsNameBuf[ nPos - nStart ] = '\0';
 
-            hb_itemPutC( pItem, szSingleClsNameBuf );
-            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( szSingleClsNameBuf )->pSymbol ) );
+            hb_itemPutC( pItem, pszSingleClsNameBuf );
+            hb_arrayAdd( pSuper, hb_itemPutSymbol( pItem, hb_dynsymGetCase( pszSingleClsNameBuf )->pSymbol ) );
 
             hb_itemRelease( pItem );
 
@@ -390,9 +390,9 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
          }
       }
 
-      hb_xfree( szSingleClsNameBuf );
+      hb_xfree( pszSingleClsNameBuf );
 
-      hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( szClsName )->pSymbol );
+      hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( pszClsName )->pSymbol );
 
       hb_vmPushDynSym( s___HBCLASS );
       hb_vmPushNil();
@@ -400,7 +400,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * szClsName, PHB_ITEM s_oClass, const
 
       /* TODO: change this hack */
       char test[ HB_SYMBOL_NAME_LEN + 1 ];
-      hb_snprintf( test, sizeof( test ), "HB_%s", szClsName );
+      hb_snprintf( test, sizeof( test ), "HB_%s", pszClsName );
 
       hb_itemPutSymbol( pSym_ClsFunc, hb_dynsymGetCase( test )->pSymbol );
 
@@ -478,21 +478,20 @@ PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName )
    return hb_stackReturnItem();
 }
 
-HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * szClsName )
+HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName )
 {
-   return hb_clsIsParent( hb_objGetClass( pItem ), szClsName );
+   return hb_clsIsParent( hb_objGetClass( pItem ), pszClsName );
 }
 
-/* Checks that the param iParam is an object and a subclass of szClsName */
-
-HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * szClsName )
+/* Checks that the param iParam is an object and a subclass of pszClsName */
+HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFrom( %i, %s )", iParam, szClsName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFrom( %i, %s )", iParam, pszClsName ) );
 
    if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
-      return hbqt_obj_isDerivedFrom( pItem, szClsName );
+      return hbqt_obj_isDerivedFrom( pItem, pszClsName );
 
    return HB_FALSE;
 }
