@@ -216,7 +216,7 @@ METHOD IdeDocWriter:show()
    IF empty( ::oUI )
       ::oUI := hbide_getUI( "docwriter" )
 
-      ::oDocWriteDock:oWidget:setWidget( ::oUI )
+      ::oDocWriteDock:oWidget:setWidget( ::oUI:oWidget )
 
       ::setImages()
       ::installSignals()
@@ -304,8 +304,8 @@ METHOD IdeDocWriter:setParameters()
 METHOD IdeDocWriter:execEvent( nMode, p )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH nMode
    CASE buttonArgs_clicked

@@ -252,7 +252,7 @@ METHOD IdeHarbourHelp:show()
    IF empty( ::oUI )
       ::oUI := hbide_getUI( "docviewgenerator" )
 
-      ::oDocViewDock:oWidget:setWidget( ::oUI )
+      ::oDocViewDock:oWidget:setWidget( ::oUI:oWidget )
 
       ::setImages()
       ::setTooltips()
@@ -1387,7 +1387,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
 METHOD IdeHarbourHelp:print()
    LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog( ::oUI )
+   qDlg := QPrintPreviewDialog( ::oUI:oWidget )
    qDlg:setWindowTitle( "Harbour Help Document" )
    qDlg:connect( "paintRequested(QPrinter*)", {|p| ::paintRequested( p ) } )
    qDlg:exec()

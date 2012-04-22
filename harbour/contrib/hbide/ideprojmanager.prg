@@ -816,7 +816,7 @@ METHOD IdeProjManager:buildInterface()
 
    ::oUI := hbide_getUI( "projectpropertiesex" )
 
-   ::oPropertiesDock:oWidget:setWidget( ::oUI )
+   ::oPropertiesDock:oWidget:setWidget( ::oUI:oWidget )
 
    ::oUI:q_comboPrjType:addItem( "Executable" )
    ::oUI:q_comboPrjType:addItem( "Library"    )

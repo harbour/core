@@ -1592,7 +1592,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "buttonSelFont_clicked"
       qFont := QFont( ::oINI:cFontName, ::oINI:nPointSize )
       qFont:setFixedPitch( .t. )
-      qFontDlg := QFontDialog( ::oUI )
+      qFontDlg := QFontDialog( ::oUI:oWidget )
       qFontDlg:setCurrentFont( qFont )
       nOK := qFontDlg:exec()
       IF nOK == 1

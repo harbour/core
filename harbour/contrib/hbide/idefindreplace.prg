@@ -167,8 +167,8 @@ METHOD IdeUpDown:execEvent( cEvent, p )
 
    HB_SYMBOL_UNUSED( p )
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       cText := oEdit:getSelectedText()
@@ -796,7 +796,7 @@ METHOD IdeFindInFiles:buildUI()
 
    ::oUI := hbide_getUI( "findinfilesex" )
 
-   ::oFindDock:oWidget:setWidget( ::oUI )
+   ::oFindDock:oWidget:setWidget( ::oUI:oWidget )
 
    ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
 
@@ -882,8 +882,8 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
    LOCAL cPath, qLineEdit, qCursor, cSource, v, nInfo
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH cEvent
 
@@ -975,32 +975,32 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 METHOD IdeFindInFiles:replaceAll()
    LOCAL nL, nB, qCursor, aFind
    LOCAL cSource := ""
-   
+
    IF empty( ::cReplWith  := ::oUI:q_comboRepl:currentText() )
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
    nL := len( ::cReplWith )
-   
+
    IF ! hbide_getYesNo( "Starting REPLACE operation", "No way to interrupt", "Critical" )
-      RETURN Self 
-   ENDIF 
-      
+      RETURN Self
+   ENDIF
+
    FOR EACH aFind IN ::aInfo
       IF aFind[ 1 ] == -2
          IF ! ( cSource == aFind[ 2 ] )
             cSource := aFind[ 2 ]
-            ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )   
-         ENDIF 
-                  
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )
+         ENDIF
+
          qCursor := ::oIde:qCurEdit:textCursor()
          qCursor:setPosition( 0 )
          qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, aFind[ 3 ] - 1 )
          qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, aFind[ 4 ] - 1 )
          qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, len( aFind[ 5 ] ) )
          ::qCurEdit:setTextCursor( qCursor )
-         
+
          nB := qCursor:position()
-      
+
          qCursor:beginEditBlock()
          qCursor:removeSelectedText()
          qCursor:insertText( ::cReplWith )
@@ -1008,13 +1008,13 @@ METHOD IdeFindInFiles:replaceAll()
          ::qCurEdit:setTextCursor( qCursor )
          ::oEM:getEditObjectCurrent():clearSelection()
          qCursor:endEditBlock()
-      ENDIF    
-   NEXT 
-      
-   RETURN Self 
-   
+      ENDIF
+   NEXT
+
+   RETURN Self
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD IdeFindInFiles:execContextMenu( p )
    LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
 
@@ -1461,7 +1461,7 @@ STATIC FUNCTION hbide_buildResultLine( cLine, aM )
 METHOD IdeFindInFiles:print()
    LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog( ::oUI )
+   qDlg := QPrintPreviewDialog( ::oUI:oWidget )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
    qDlg:connect( "paintRequested(QPrinter*)", {|p| ::paintRequested( p ) } )
    qDlg:exec()

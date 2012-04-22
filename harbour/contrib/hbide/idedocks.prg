@@ -409,7 +409,7 @@ METHOD IdeDocks:buildDialog()
    ::buildStackedWidget()
    ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
    ::buildSearchReplaceWidget()
-   ::qLayout:addWidget( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
+   ::qLayout:addWidget( ::oSearchReplace:oUI:oWidget    , 2, 0, 1, 2 ) // Changed
 
    /* Normalize Views */
    FOR EACH s IN ::oINI:aViews
@@ -567,9 +567,9 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
-   
+      RETURN Self
+   ENDIF
+
    SWITCH cEvent
    CASE "dockUISrc_visibilityChanged"
       IF p; ::oUiS:show(); ENDIF
@@ -577,7 +577,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          p1:raise()
       ENDIF
       EXIT
-      
+
    CASE "dockCuiEd_visibilityChanged"
       IF p; ::oCUI:show(); ENDIF
       IF ! p .AND. ! p1:isVisible()
@@ -1066,11 +1066,11 @@ METHOD IdeDocks:setViewInitials()
       IF ::qTabWidget:count() == 1
          ::oEM:setSourceVisibleByIndex( 0 )
       ELSE
-#if 0         
+#if 0
          ::qTabWidget:setCurrentIndex( 0 )
          ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
          ::qTabWidget:setCurrentIndex( 0 )
-#endif          
+#endif
       ENDIF
    NEXT
 

@@ -152,8 +152,8 @@ METHOD IdeFunctions:execEvent( nMode, p )
    LOCAL n, nLen
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    DO CASE
    CASE nMode == "editFunc_textChanged"
@@ -294,7 +294,7 @@ METHOD IdeFunctions:show()
    IF ::isNotSetYet
       ::isNotSetYet := .f.
 
-      ::oFunctionsDock:oWidget:setWidget( ::oUI )
+      ::oFunctionsDock:oWidget:setWidget( ::oUI:oWidget )
    ENDIF
 
    RETURN Self
@@ -470,8 +470,8 @@ METHOD IdeFunctions:loadTags( aProjects )
 
          QApplication():processEvents()
          IF ::lQuitting
-            EXIT 
-         ENDIF    
+            EXIT
+         ENDIF
       NEXT
 
       IF lPopulate
@@ -543,8 +543,8 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
 
          QApplication():processEvents()
          IF ::lQuitting
-            EXIT 
-         ENDIF    
+            EXIT
+         ENDIF
       NEXT
 
       FOR EACH a_ IN aCTags
@@ -621,8 +621,8 @@ METHOD IdeFunctions:populateTable()
 
       QApplication():processEvents()
       IF ::lQuitting
-         EXIT 
-      ENDIF    
+         EXIT
+      ENDIF
 
       aadd( ::aItems, qItm )
       n++

@@ -227,7 +227,7 @@ METHOD IdeEnvironments:show()
    IF empty( ::oUI )
       ::oUI := hbide_getUI( "environments" )
 
-      ::oEnvironDock:oWidget:setWidget( ::oUI )
+      ::oEnvironDock:oWidget:setWidget( ::oUI:oWidget )
 
       ::oUI:q_buttonCn      :connect( "clicked()", {|| ::oEnvironDock:hide() } )
       ::oUI:q_buttonSave    :connect( "clicked()", {|| ::saveEnv()    } )

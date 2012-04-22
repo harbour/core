@@ -258,8 +258,8 @@ METHOD IdeThemes:execEvent( cEvent, p )
    HB_SYMBOL_UNUSED( p )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH cEvent
    CASE "listItems_currentRowChanged"
@@ -548,7 +548,7 @@ METHOD IdeThemes:show()
 
       ::oUI := hbide_getUI( "themesex" )
 
-      ::oThemesDock:oWidget:setWidget( ::oUI )
+      ::oThemesDock:oWidget:setWidget( ::oUI:oWidget )
 
       ::oUI:q_listThemes    :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i ) } )
       ::oUI:q_listItems     :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listItems_currentRowChanged", i )  } )
@@ -778,7 +778,7 @@ METHOD IdeThemes:selectThemeProc( nMode, p )
 METHOD IdeThemes:copy()
    LOCAL aItems, qGo, cTheme
 
-   qGo := QInputDialog( ::oUI )
+   qGo := QInputDialog( ::oUI:oWidget )
    qGo:setTextValue( ::aThemes[ ::nCurTheme, 1 ] )
    qGo:setLabelText( "Name of new Theme?" )
    qGo:setWindowTitle( "Harbour-Qt [ Get a Value ]" )
