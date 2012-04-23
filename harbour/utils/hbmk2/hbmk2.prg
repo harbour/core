@@ -98,6 +98,8 @@
          writing, most of them has one created.
          Thank you. [vszakats] */
 
+/* TODO: Switch to UTF8EX codepage internally. (non-priority) */
+
 /* TODO: Support debug/release modes. Some default setting can be set
          accordingly, and user can use it to further tweak settings. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
@@ -460,8 +462,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_cHBX              147
 
 #define _HBMK_aGT               148
+#define _HBMK_cCPPRG            149
 
-#define _HBMK_MAX_              148
+#define _HBMK_MAX_              149
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -2553,6 +2556,38 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_cIMPLIBNAME := NIL
          ENDIF
 
+      /* NOTE: Using ':' as value separator to emulate Harbour compiler options */
+      /* EXPERIMENTAL */
+      CASE Left( cParamL, Len( "-ku:" ) ) == "-ku:"
+
+         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+            cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ku:" ) + 1 ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( cParam )
+               SWITCH Lower( cParam )
+               CASE "utf8"
+                  hbmk[ _HBMK_cCPPRG ] := "UTF8"
+                  EXIT
+               OTHERWISE
+                  hbmk[ _HBMK_cCPPRG ] := NIL
+                  FOR EACH tmp IN hb_cdpList()
+                     IF Lower( cParam ) == Lower( hb_cdpUniID( tmp ) )
+                        hbmk[ _HBMK_cCPPRG ] := tmp
+                        EXIT
+                     ENDIF
+                  NEXT
+                  IF Empty( hbmk[ _HBMK_cCPPRG ] )
+                     IF hbmk[ _HBMK_lInfo ]
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored unsupported codepage value: %1$s" ), cParam ) )
+                     ENDIF
+                  ENDIF
+               ENDSWITCH
+            ENDIF
+         ELSE
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Option available only when using embedded Harbour compiler: %1$s" ), cParam ) )
+            ENDIF
+         ENDIF
+
       CASE Left( cParamL, Len( "-ln=" ) ) == "-ln="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ln=" ) + 1 ), aParam[ _PAR_cFileName ] )
@@ -3146,7 +3181,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF lHarbourInfo
       IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
          /* Use integrated compiler */
-         hb_compile( "harbour", hbmk[ _HBMK_aOPTPRG ] )
+         hbmk2_hb_compile( hbmk, "harbour", hbmk[ _HBMK_aOPTPRG ] )
       ELSE
          /* Use external compiler */
          cCommand := FNameEscape( hb_DirSepAdd( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
@@ -5288,9 +5323,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             IF ! hbmk[ _HBMK_lDONTEXEC ]
                IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                  AAdd( aThreads, { hb_threadStart( @hb_compile(), "harbour", aCommand ), aCommand } )
+                  AAdd( aThreads, { hb_threadStart( @hbmk2_hb_compile(), hbmk, "harbour", aCommand ), aCommand } )
                ELSE
-                  IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
+                  IF ( tmp := hbmk2_hb_compile( hbmk, "harbour", aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (embedded). %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
                         OutErr( "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) + ")" +;
@@ -7159,6 +7194,34 @@ STATIC PROCEDURE DoBeep( lSuccess )
 
    RETURN
 
+STATIC FUNCTION hbmk2_hb_compile( hbmk, ... )
+   LOCAL cSaveCP
+   LOCAL xRetVal
+
+   IF Empty( hbmk[ _HBMK_cCPPRG ] )
+      RETURN hb_compile( ... )
+   ELSE
+      cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      xRetVal := hb_compile( ... )
+      hb_cdpSelect( cSaveCP )
+   ENDIF
+
+   RETURN xRetVal
+
+STATIC FUNCTION hbmk2_hb_compileBuf( hbmk, ... )
+   LOCAL cSaveCP
+   LOCAL xRetVal
+
+   IF Empty( hbmk[ _HBMK_cCPPRG ] )
+      RETURN hb_compileBuf( ... )
+   ELSE
+      cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      xRetVal := hb_compileBuf( ... )
+      hb_cdpSelect( cSaveCP )
+   ENDIF
+
+   RETURN xRetVal
+
 STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
    LOCAL lResult := .T.
    LOCAL cCommand
@@ -7311,7 +7374,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                 hbmk[ _HBMK_aOPTPRG ] } )
 
-      IF ! hb_isString( tmp := hb_compileBuf( "harbour", aCommand ) )
+      IF ! hb_isString( tmp := hbmk2_hb_compileBuf( hbmk, "harbour", aCommand ) )
          RETURN .F.
       ENDIF
 
