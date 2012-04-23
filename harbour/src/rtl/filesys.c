@@ -3744,7 +3744,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
    if( pszFree )
       *pszFree = NULL;
 
-   if( hb_vmIsReady() )
+   if( !hb_vmIsReady() )
       return szFileName;
 
    fTrim = hb_setGetTrimFileName();
@@ -3885,7 +3885,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       TRIMFILENAME - strip trailing and leading spaces (also from extension)
 */
 
-   if( hb_vmIsReady() )
+   if( !hb_vmIsReady() )
       return hb_mbtowc( szFileName ); /* No HVM stack */
 
    cdp = hb_vmCDP();
