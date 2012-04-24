@@ -1204,6 +1204,7 @@ int hb_vmQuit( void )
    hb_stackFree();
 #endif /* HB_MT_VM */
 
+   hb_langReleaseAll();             /* release lang modules */
    hb_cdpReleaseAll();              /* releases codepages */
 
    /* release all known garbage */

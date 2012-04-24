@@ -630,6 +630,7 @@ DYNAMIC hb_KeyStd
 DYNAMIC hb_langErrMsg
 DYNAMIC hb_langMessage
 DYNAMIC hb_langName
+DYNAMIC hb_langNew
 DYNAMIC hb_langSelect
 DYNAMIC hb_libError
 DYNAMIC hb_libExt

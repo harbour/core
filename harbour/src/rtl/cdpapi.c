@@ -124,6 +124,8 @@ static HB_CDP_LEN_FUNC( hb_cdpUTF8_len );
 
 HB_UNITABLE hb_uniTbl_UTF8 = { HB_CPID_437, s_uniCodes, NULL, 0 };
 
+HB_UCHAR s_en_buffer[ 0x300 ];
+
 /* pseudo codepage for translations only */
 static HB_CODEPAGE s_utf8_codepage =
    { "UTF8", "UTF-8", &hb_uniTbl_UTF8,
@@ -3027,11 +3029,10 @@ static PHB_CODEPAGE * hb_cdpFindPos( const char * id )
       HB_UCHAR * flags, * upper, * lower;
       int i;
 
-      s_en_codepage.buffer = ( HB_UCHAR * ) hb_xgrab( 0x300 );
-      memset( s_en_codepage.buffer, '\0', 0x300 );
-      s_en_codepage.flags = flags = ( HB_UCHAR * ) s_en_codepage.buffer;
-      s_en_codepage.upper = upper = ( HB_UCHAR * ) s_en_codepage.buffer + 0x100;
-      s_en_codepage.lower = lower = ( HB_UCHAR * ) s_en_codepage.buffer + 0x200;
+      memset( s_en_buffer, '\0', 0x300 );
+      s_en_codepage.flags = flags = ( HB_UCHAR * ) s_en_buffer;
+      s_en_codepage.upper = upper = ( HB_UCHAR * ) s_en_buffer + 0x100;
+      s_en_codepage.lower = lower = ( HB_UCHAR * ) s_en_buffer + 0x200;
       for( i = 0; i < 0x100; ++i )
       {
          if( HB_ISDIGIT( i ) )
@@ -3048,6 +3049,8 @@ static PHB_CODEPAGE * hb_cdpFindPos( const char * id )
       s_utf8_codepage.flags = s_en_codepage.flags;
       s_utf8_codepage.upper = s_en_codepage.upper;
       s_utf8_codepage.lower = s_en_codepage.lower;
+      s_utf8_codepage.next  = NULL;
+      s_en_codepage.next = &s_utf8_codepage;
       s_cdpList = &s_en_codepage;
    }
 

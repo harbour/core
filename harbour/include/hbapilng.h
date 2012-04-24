@@ -76,7 +76,7 @@ HB_EXTERN_BEGIN
 
 typedef const struct _HB_LANG
 {
-   const void * pItemList[ HB_LANG_ITEM_MAX_ ];
+   const char * pItemList[ HB_LANG_ITEM_MAX_ ];
 } HB_LANG, * PHB_LANG;
 
 extern HB_EXPORT PHB_LANG  hb_vmLang( void );
@@ -84,8 +84,8 @@ extern HB_EXPORT void      hb_vmSetLang( PHB_LANG pLang );
 
 /* Supported language list management */
 
+extern HB_EXPORT void      hb_langReleaseAll    ( void );
 extern HB_EXPORT HB_BOOL   hb_langRegister      ( PHB_LANG lang );
-extern HB_EXPORT HB_BOOL   hb_langDeRegister    ( const char * pszID );
 extern HB_EXPORT PHB_LANG  hb_langFind          ( const char * pszID );
 
 /* Default language selection and data query */
