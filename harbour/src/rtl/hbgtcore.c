@@ -2743,6 +2743,12 @@ static HB_BOOL hb_gt_def_InkeyNextCheck( PHB_GT pGT, int iEventMask, int * iKey 
    if( pGT->StrBuffer )
    {
       *iKey = pGT->StrBuffer[ pGT->StrBufferPos ];
+      if( *iKey >= 128 )
+      {
+         *iKey = HB_INKEY_NEW_UNICODE( *iKey );
+         if( ( iEventMask & HB_INKEY_EXT ) == 0 )
+            *iKey = hb_inkeyKeyStd( *iKey );
+      }
    }
    else if( pGT->inkeyHead != pGT->inkeyTail )
    {
@@ -2922,16 +2928,20 @@ static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE nLe
 
    if( szText && nLen )
    {
-      pGT->StrBuffer = ( HB_BYTE * ) hb_xgrab( nLen );
-      memcpy( pGT->StrBuffer, szText, nLen );
-      pGT->StrBufferSize = nLen;
-      pGT->StrBufferPos = 0;
-      do
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      HB_SIZE nIndex = 0;
+      HB_WCHAR wc;
+
+      pGT->StrBufferSize = pGT->StrBufferPos = 0;
+      pGT->StrBuffer = ( HB_WCHAR * ) hb_xgrab( nLen * sizeof( HB_WCHAR ) );
+      while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
+         pGT->StrBuffer[ pGT->StrBufferSize++ ] = wc == ';' ? HB_CHAR_CR : wc;
+
+      if( pGT->StrBufferSize == 0 )
       {
-         if( pGT->StrBuffer[ --nLen ] == ';' )
-            pGT->StrBuffer[ nLen ] = HB_CHAR_CR;
+         hb_xfree( pGT->StrBuffer );
+         pGT->StrBuffer = NULL;
       }
-      while( nLen );
    }
 }
 

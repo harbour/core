@@ -337,7 +337,7 @@ typedef struct _HB_GT_BASE
    int            inkeyTail;
    int            iLastPut;
    int            inkeyLast;
-   HB_BYTE *      StrBuffer;
+   HB_WCHAR *     StrBuffer;
    HB_SIZE        StrBufferSize;
    HB_SIZE        StrBufferPos;
 

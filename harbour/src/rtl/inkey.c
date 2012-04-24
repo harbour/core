@@ -65,11 +65,46 @@
  */
 
 #include "hbapigt.h"
+#include "hbgtcore.h"
 #include "hbapiitm.h"
 #include "hbapicdp.h"
 #include "hbset.h"
 #include "hbstack.h"
 #include "hbvm.h"
+
+static void hb_inkeySetTextKeys( const char * pszText, HB_SIZE nSize, HB_BOOL fInsert )
+{
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   HB_SIZE nIndex = 0;
+   HB_WCHAR wc;
+
+   if( fInsert )
+   {
+      HB_WCHAR buffer[ 32 ], * keys;
+      HB_SIZE n = 0;
+
+      keys = nSize <= HB_SIZEOFARRAY( buffer ) ? buffer :
+                        ( HB_WCHAR * ) hb_xgrab( nSize * sizeof( HB_WCHAR ) );
+      while( HB_CDPCHAR_GET( cdp, pszText, nSize, &nIndex, &wc ) )
+         keys[ n++ ] = wc;
+
+      while( n-- )
+      {
+         int iKey = keys[ n ] >= 128 ? HB_INKEY_NEW_UNICODE( keys[ n ] ) : keys[ n ];
+         hb_inkeyIns( iKey );
+      }
+      if( nSize > HB_SIZEOFARRAY( buffer ) )
+         hb_xfree( keys );
+   }
+   else
+   {
+      while( HB_CDPCHAR_GET( cdp, pszText, nSize, &nIndex, &wc ) )
+      {
+         int iKey = wc >= 128 ? HB_INKEY_NEW_UNICODE( wc ) : wc;
+         hb_inkeyPut( iKey );
+      }
+   }
+}
 
 HB_FUNC( INKEY )
 {
@@ -101,7 +136,7 @@ HB_FUNC( HB_KEYPUT )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_inkeySetTextKeys( hb_parc( 1 ), hb_parclen( 1 ), HB_FALSE );
    }
    else if( HB_ISARRAY( 1 ) )
    {
@@ -119,7 +154,8 @@ HB_FUNC( HB_KEYPUT )
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( hb_arrayGetCPtr( pArray, nIndex ), hb_arrayGetCLen( pArray, nIndex ) );
+            hb_inkeySetTextKeys( hb_arrayGetCPtr( pArray, nIndex ),
+                                 hb_arrayGetCLen( pArray, nIndex ), HB_FALSE );
          }
       }
    }
@@ -133,7 +169,7 @@ HB_FUNC( HB_KEYINS )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_inkeySetTextKeys( hb_parc( 1 ), hb_parclen( 1 ), HB_TRUE );
    }
    else if( HB_ISARRAY( 1 ) )
    {
@@ -151,7 +187,8 @@ HB_FUNC( HB_KEYINS )
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( hb_arrayGetCPtr( pArray, nIndex ), hb_arrayGetCLen( pArray, nIndex ) );
+            hb_inkeySetTextKeys( hb_arrayGetCPtr( pArray, nIndex ),
+                                 hb_arrayGetCLen( pArray, nIndex ), HB_TRUE );
          }
       }
    }
