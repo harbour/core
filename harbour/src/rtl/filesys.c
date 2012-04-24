@@ -347,29 +347,17 @@ static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 
 static int fs_win_get_drive( void )
 {
+   TCHAR lpBuffer[ HB_PATH_MAX ];
    int iDrive;
-   char szBuffer[ HB_PATH_MAX ];
-   PHB_FNAME pFilepath;
-
-#if defined( UNICODE )
-   {
-      TCHAR lpBuffer[ HB_PATH_MAX ];
-      hb_fsSetIOError( GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer ) != 0, 0 );
-      lpBuffer[ HB_SIZEOFARRAY( lpBuffer ) - 1 ] = L'\0';
-      hb_wcntombcpy( szBuffer, lpBuffer, HB_SIZEOFARRAY( lpBuffer ) - 1 );
-   }
-#else
-   hb_fsSetIOError( GetCurrentDirectory( HB_SIZEOFARRAY( szBuffer ), szBuffer ) != 0, 0 );
-#endif
-
-   pFilepath = hb_fsFNameSplit( szBuffer );
-
-   if( pFilepath->szDrive )
-      iDrive = HB_TOUPPER( pFilepath->szDrive[ 0 ] ) - 'A';
+   lpBuffer[ 0 ] = TEXT( '\0' );
+   hb_fsSetIOError(
+      GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer ) != 0, 0 );
+   iDrive = HB_TOUPPER( lpBuffer[ 0 ] );
+   if( iDrive >= 'A' && iDrive <= 'Z' &&
+       lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
+     iDrive -= 'A';
    else
-      iDrive = 0;
-
-   hb_xfree( pFilepath );
+     iDrive = 0;
 
    return iDrive;
 }
