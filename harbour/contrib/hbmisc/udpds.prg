@@ -31,15 +31,16 @@ FUNCTION hb_UDPDS_Find( nPort, cName )
 
    IF ! Empty( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
       hb_socketSetBroadcast( hSocket, .T. )
-      IF hb_socketSendTo( hSocket, Chr( 5 ) + cName + Chr( 0 ), , , { HB_SOCKET_AF_INET, "255.255.255.255", nPort } ) == Len( cName ) + 2
+      cName := hb_StrToUTF8( cName )
+      IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, "255.255.255.255", nPort } ) == hb_BLen( cName ) + 2
          nTime := hb_milliseconds()
          nEnd := nTime + 100   /* 100ms delay is enough on LAN */
          aRet := {}
          DO WHILE nEnd > nTime
             cBuffer := Space( 2000 )
             nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
-            IF Left( cBuffer, Len( cName ) + 2 ) == Chr( 6 ) + cName + Chr( 0 )
-               AAdd( aRet, { aAddr[ 2 ], SubStr( cBuffer, Len( cName ) + 3, nLen - Len( cName ) - 2 ) } )
+            IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
+               AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
             ENDIF
             nTime := hb_milliseconds()
          ENDDO
@@ -75,6 +76,9 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
 
    LOCAL cBuffer, nLen, aAddr
 
+   cName := hb_StrToUTF8( cName )
+   cVersion := iif( hb_isString( cVersion ), hb_StrToUTF8( cVersion ), "" )
+
    DO WHILE .T.
       cBuffer := Space( 2000 )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
@@ -95,9 +99,9 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
           *   Broadcast request: ENQ, ServerName, NUL
           *   Server response: ACK, ServerName, NUL, Version
           */
-         IF Left( cBuffer, nLen ) == Chr( 5 ) + cName + Chr( 0 )
+         IF hb_BLeft( cBuffer, nLen ) == hb_BChar( 5 ) + cName + hb_BChar( 0 )
             BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-               hb_socketSendTo( hSocket, Chr( 6 ) + cName + Chr( 0 ) + iif( cVersion == NIL, "", cVersion ), , , aAddr )
+               hb_socketSendTo( hSocket, hb_BChar( 6 ) + cName + hb_BChar( 0 ) + cVersion, , , aAddr )
             END SEQUENCE
          ENDIF
       ENDIF
