@@ -83,6 +83,7 @@ static char    s_szAppName[ HB_PATH_MAX ];
 
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
+static int     s_fSkipAppName  = HB_FALSE;
 
 static HANDLE  s_hInstance     = 0;
 static HANDLE  s_hPrevInstance = 0;
@@ -425,16 +426,19 @@ int hb_cmdargNum( const char * pszName )
 char * hb_cmdargProgName( void )
 {
 #if defined( HB_OS_WIN )
-   if( s_lpAppName[ 0 ] == 0 )
+   if( !s_fSkipAppName )
    {
-      if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
-         /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
-         s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
-      else
-         s_lpAppName[ 0 ] = 0;
+      if( s_lpAppName[ 0 ] == 0 )
+      {
+         if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
+            /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
+            s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
+         else
+            s_lpAppName[ 0 ] = 0;
+      }
+      if( s_lpAppName[ 0 ] != 0 )
+         return hb_osStrU16Decode( s_lpAppName );
    }
-   if( s_lpAppName[ 0 ] != 0 )
-      return hb_osStrU16Decode( s_lpAppName );
 #endif
    return hb_cmdargDup( 0 );
 }
@@ -499,6 +503,9 @@ HB_FUNC( HB_ARGSHIFT )
          if( !hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
          {
             s_argv[ 0 ] = s_argv[ iArg ];
+#if defined( HB_OS_WIN )
+            s_fSkipAppName = HB_TRUE;
+#endif
             break;
          }
          ++iArg;
