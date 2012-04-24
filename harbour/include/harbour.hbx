@@ -326,6 +326,7 @@ DYNAMIC hb_blowfishEncrypt
 DYNAMIC hb_blowfishKey
 DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
+DYNAMIC hb_BSubStr
 DYNAMIC hb_BuildDate
 DYNAMIC hb_ByteSwapI
 DYNAMIC hb_ByteSwapL
@@ -834,6 +835,7 @@ DYNAMIC hb_UPeek
 DYNAMIC hb_UPoke
 DYNAMIC hb_UserLang
 DYNAMIC hb_UserName
+DYNAMIC hb_USubStr
 DYNAMIC hb_UTCOffset
 DYNAMIC hb_utf8Asc
 DYNAMIC hb_utf8At
