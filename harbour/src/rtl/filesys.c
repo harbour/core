@@ -348,17 +348,20 @@ static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 static int fs_win_get_drive( void )
 {
    TCHAR lpBuffer[ HB_PATH_MAX ];
-   int iDrive;
-   lpBuffer[ 0 ] = TEXT( '\0' );
-   hb_fsSetIOError(
-      GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer ) != 0, 0 );
-   iDrive = HB_TOUPPER( lpBuffer[ 0 ] );
-   if( iDrive >= 'A' && iDrive <= 'Z' &&
-       lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
-     iDrive -= 'A';
-   else
-     iDrive = 0;
+   DWORD dwResult;
+   int iDrive = 0;
 
+   lpBuffer[ 0 ] = TEXT( '\0' );
+   dwResult = GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer );
+   hb_fsSetIOError( dwResult != 0, 0 );
+   if( dwResult >= 2 && lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
+   {
+      iDrive = HB_TOUPPER( lpBuffer[ 0 ] );
+      if( iDrive >= 'A' && iDrive <= 'Z' )
+         iDrive -= 'A';
+      else
+         iDrive = 0;
+   }
    return iDrive;
 }
 
@@ -3228,9 +3231,9 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
    {
       DWORD dwSize = ( DWORD ) nSize;
       LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( dwSize * sizeof( TCHAR ) );
-      lpBuffer[ 0 ] = L'\0';
+      lpBuffer[ 0 ] = TEXT( '\0' );
       hb_fsSetIOError( ( GetCurrentDirectory( dwSize, lpBuffer ) != 0 ), 0 );
-      lpBuffer[ dwSize - 1 ] = L'\0';
+      lpBuffer[ dwSize - 1 ] = TEXT( '\0' );
       HB_OSSTRDUP2( lpBuffer, pszBuffer, nSize - 1 );
       hb_xfree( lpBuffer );
    }

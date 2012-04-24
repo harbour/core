@@ -367,7 +367,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_CPBOX(g)                      ((g)->cdpBox)
 #define HB_GTSELF_CPIN(g)                       ((g)->cdpIn)
 
-#define HB_GTSELF_KEYTRANS(g,k)                 (((k)>=127 && (k)<=255 && (g)->cdpIn) ? hb_cdpGetWC((g)->cdpIn,(HB_UCHAR)(k),0) : (k))
+#define HB_GTSELF_KEYTRANS(g,k)                 (((k)>=127 && (k)<=255 && (g)->cdpIn) ? hb_cdpGetWC((g)->cdpIn,(HB_UCHAR)(k),0) : 0)
 
 
 #define HB_GTSELF_LOCK(g)                       (g)->pFuncTable->Lock(g)

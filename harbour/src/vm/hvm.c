@@ -4771,9 +4771,10 @@ static void hb_vmEnumNext( void )
          if( ( HB_SIZE ) ++pEnum->item.asEnum.offset >
              pBase->item.asString.length )
             break;
-         hb_itemPutCL( pEnum->item.asEnum.valuePtr,
-                       pBase->item.asString.value +
-                       pEnum->item.asEnum.offset - 1, 1 );
+         pEnum->item.asEnum.valuePtr = hb_itemPutCL(
+                                          pEnum->item.asEnum.valuePtr,
+                                          pBase->item.asString.value +
+                                          pEnum->item.asEnum.offset - 1, 1 );
       }
       else
       {
@@ -4848,9 +4849,10 @@ static void hb_vmEnumPrev( void )
       {
          if( --pEnum->item.asEnum.offset == 0 )
             break;
-         hb_itemPutCL( pEnum->item.asEnum.valuePtr,
-                       pBase->item.asString.value +
-                       pEnum->item.asEnum.offset - 1, 1 );
+         pEnum->item.asEnum.valuePtr = hb_itemPutCL(
+                                          pEnum->item.asEnum.valuePtr,
+                                          pBase->item.asString.value +
+                                          pEnum->item.asEnum.offset - 1, 1 );
       }
       else
       {
