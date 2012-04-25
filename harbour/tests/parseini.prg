@@ -67,8 +67,8 @@ PROCEDURE Main( cName )
    ? "REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
    ?
 
-   hIni := hb_iniRead( cName, /* default case */
-                       , /* default key indicators */
+   hIni := hb_iniRead( cName,; /* default case */
+                       ,; /* default key indicators */
                        , .F. )
 
    ? "Content of " + cName
@@ -133,8 +133,8 @@ PROCEDURE Main( cName )
    ? "READING INI FILE FROM A STRING"
    ?
 
-   hIni := hb_IniReadStr( cIni, /*default case*/
-            , /*Default key indicators */
+   hIni := hb_IniReadStr( cIni,; /*default case*/
+            ,; /*Default key indicators */
             , .F. )
 
    ? "Content: "
