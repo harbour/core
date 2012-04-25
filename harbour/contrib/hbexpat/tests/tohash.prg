@@ -23,11 +23,16 @@
 #define _N_hAttr            4
 #define _N_MAX_             4
 
+REQUEST HB_CODEPAGE_UTF8
+REQUEST HB_CODEPAGE_UTF8EX
+
 PROCEDURE Main( cFileName )
    LOCAL p := XML_ParserCreate()
    LOCAL aUserData
    LOCAL aNode
    LOCAL v1, v2, v3
+
+   hb_cdpSelect( "UTF8EX" )
 
    IF cFileName == NIL
       cFileName := ".." + hb_ps() + ".." + hb_ps() + "hbide" + hb_ps() + "setup.ui"

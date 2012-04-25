@@ -14,7 +14,7 @@
 ######################################################################
 
 %define name      harbour-win
-%define version   3.1.0
+%define version   3.2.0
 %define releasen  dev
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
