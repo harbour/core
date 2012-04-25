@@ -106,6 +106,11 @@ HB_FUNC( HB_CDPINFO )
    hb_retc( cdp ? cdp->info : NULL );
 }
 
+HB_FUNC( HB_CDPISUTF8 )
+{
+   hb_retl( hb_cdpIsUTF8( hb_cdpFindExt( hb_parcx( 1 ) ) ) );
+}
+
 HB_FUNC( HB_CDPLIST )
 {
    const char ** list = hb_cdpList();

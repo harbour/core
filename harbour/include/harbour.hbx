@@ -336,6 +336,7 @@ DYNAMIC hb_ByteSwapLL
 DYNAMIC hb_ByteSwapU
 DYNAMIC hb_ByteSwapW
 DYNAMIC hb_cdpInfo
+DYNAMIC hb_cdpIsUTF8
 DYNAMIC hb_cdpList
 DYNAMIC hb_cdpSelect
 DYNAMIC hb_cdpUniID
