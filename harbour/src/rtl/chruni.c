@@ -266,53 +266,6 @@ HB_FUNC( HB_BPOKE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BSUBSTR( <cString>, <nStart>, <nCount> ) -> <cSubstring>
- */
-HB_FUNC( HB_BSUBSTR )
-{
-   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
-   int iPCount = hb_pcount();
-
-   if( pText && HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) )
-   {
-      const char * pszText = hb_itemGetCPtr( pText );
-      HB_ISIZ nSize = hb_itemGetCLen( pText );
-      HB_ISIZ nFrom = hb_parns( 2 );
-      HB_ISIZ nCount = iPCount < 3 ? nSize : hb_parns( 3 );
-
-      if( nFrom > 0 )
-      {
-         if( --nFrom > nSize )
-            nCount = 0;
-      }
-      if( nCount > 0 )
-      {
-         if( nFrom < 0 )
-            nFrom += nSize;
-         if( nFrom > 0 )
-         {
-            pszText += nFrom;
-            nSize -= nFrom;
-         }
-         if( nCount > nSize )
-            nCount = nSize;
-      }
-
-      if( nCount > 0 )
-      {
-         if( nFrom <= 0 && nCount == nSize )
-            hb_itemReturn( pText );
-         else
-            hb_retclen( pszText, nCount );
-      }
-      else
-         hb_retc_null();
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-}
-
 /* HB_USUBSTR( <cString>, <nStart>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_USUBSTR )
@@ -359,4 +312,147 @@ HB_FUNC( HB_USUBSTR )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_BSUBSTR( <cString>, <nStart>, <nCount> ) -> <cSubstring>
+ */
+HB_FUNC( HB_BSUBSTR )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   int iPCount = hb_pcount();
+
+   if( pText && HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) )
+   {
+      const char * pszText = hb_itemGetCPtr( pText );
+      HB_ISIZ nSize = hb_itemGetCLen( pText );
+      HB_ISIZ nFrom = hb_parns( 2 );
+      HB_ISIZ nCount = iPCount < 3 ? nSize : hb_parns( 3 );
+
+      if( nFrom > 0 )
+      {
+         if( --nFrom > nSize )
+            nCount = 0;
+      }
+      if( nCount > 0 )
+      {
+         if( nFrom < 0 )
+            nFrom += nSize;
+         if( nFrom > 0 )
+         {
+            pszText += nFrom;
+            nSize -= nFrom;
+         }
+         if( nCount > nSize )
+            nCount = nSize;
+      }
+
+      if( nCount > 0 )
+      {
+         if( nFrom <= 0 && nCount == nSize )
+            hb_itemReturn( pText );
+         else
+            hb_retclen( pszText, nCount );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_ULEFT( <cString>, <nCount> ) -> <cSubstring>
+ */
+HB_FUNC( HB_ULEFT )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText && HB_ISNUM( 2 ) )
+   {
+      HB_ISIZ nLen = hb_parns( 2 );
+      if( nLen <= 0 )
+         hb_retc_null();
+      else
+      {
+         HB_SIZE nText = hb_itemGetCLen( pText );
+         if( ( HB_SIZE ) nLen < nText )
+            nLen = hb_cdpTextPos( hb_vmCDP(), hb_itemGetCPtr( pText ), nText, nLen );
+         if( ( HB_SIZE ) nLen >= nText )
+            hb_itemReturn( pText );
+         else
+            hb_retclen( hb_itemGetCPtr( pText ), nLen );
+      }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_BLEFT( <cString>, <nCount> ) -> <cSubstring>
+ */
+HB_FUNC( HB_BLEFT )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText && HB_ISNUM( 2 ) )
+   {
+      HB_ISIZ nLen = hb_parns( 2 );
+      if( nLen <= 0 )
+         hb_retc_null();
+      else
+      {
+         HB_SIZE nText = hb_itemGetCLen( pText );
+         if( ( HB_SIZE ) nLen >= nText )
+            hb_itemReturn( pText );
+         else
+            hb_retclen( hb_itemGetCPtr( pText ), nLen );
+      }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_URIGHT( <cString>, <nCount> ) -> <cSubstring>
+ */
+HB_FUNC( HB_URIGHT )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   HB_SIZE nText = hb_itemGetCLen( pText );
+   HB_ISIZ nLen = hb_parns( 2 );
+
+   if( nLen > 0 && nText > 0 )
+   {
+      if( ( HB_SIZE ) nLen < nText )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         HB_SIZE nChars = hb_cdpTextLen( cdp, hb_itemGetCPtr( pText ), nText );
+         if( nChars > ( HB_SIZE ) nLen )
+            nLen = nText - hb_cdpTextPos( cdp, hb_itemGetCPtr( pText ), nText, nChars - nLen );
+         else
+            nLen = nText;
+      }
+      if( ( HB_SIZE ) nLen >= nText )
+         hb_itemReturn( pText );
+      else
+         hb_retclen( hb_itemGetCPtr( pText ) + nText - nLen, nLen );
+   }
+   else
+      hb_retc_null();
+}
+
+/* HB_BRIGHT( <cString>, <nCount> ) -> <cSubstring>
+ */
+HB_FUNC( HB_BRIGHT )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   HB_SIZE nText = hb_itemGetCLen( pText );
+   HB_ISIZ nLen = hb_parns( 2 );
+
+   if( nLen > 0 && nText > 0 )
+   {
+      if( ( HB_SIZE ) nLen >= nText )
+         hb_itemReturn( pText );
+      else
+         hb_retclen( hb_itemGetCPtr( pText ) + nText - nLen, nLen );
+   }
+   else
+      hb_retc_null();
 }
