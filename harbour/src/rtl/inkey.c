@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2012 Viktor Szakats (harbour syenar.net)
  *    HB_KEYPUT()
  *
  * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl>
@@ -218,6 +218,28 @@ HB_FUNC( HB_SETLASTKEY )
 {
    if( HB_ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( HB_KEYCODE )
+{
+   const char * szValue = hb_parc( 1 );
+   int iKey;
+
+   if( szValue )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      HB_SIZE nIndex = 0;
+      HB_WCHAR wc;
+
+      if( HB_CDPCHAR_GET( cdp, szValue, hb_parclen( 1 ), &nIndex, &wc ) )
+         iKey = wc >= 128 ? HB_INKEY_NEW_UNICODE( wc ) : wc;
+      else
+         iKey = 0;
+   }
+   else
+      iKey = 0;
+
+   hb_retni( iKey );
 }
 
 HB_FUNC( HB_KEYCHAR )

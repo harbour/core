@@ -623,6 +623,7 @@ DYNAMIC hb_jsonDecode
 DYNAMIC hb_jsonEncode
 DYNAMIC hb_keyChar
 DYNAMIC hb_keyClear
+DYNAMIC hb_keyCode
 DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
 DYNAMIC hb_keyNext
