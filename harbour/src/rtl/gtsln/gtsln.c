@@ -591,8 +591,8 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       if( hb_sln_Init_Terminal( 0 ) )
       {
          /* fix an OutStd()/OutErr() output */
-         if( !isatty( hFilenoStdout ) )
-             SLang_TT_Write_FD = SLang_TT_Read_FD;
+         if( !s_fStdOutTTY && s_fStdInTTY )
+            SLang_TT_Write_FD = SLang_TT_Read_FD;
 
 #ifdef HB_SLN_UTF8
          hb_sln_Is_Unicode = SLutf8_enable(
@@ -696,7 +696,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, HB_FALSE );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, s_fStdOutTTY );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_fStdErrTTY );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_fStdErrTTY && ( s_fStdOutTTY || s_fStdInTTY ) );
 
    HB_GTSELF_SETBLINK( pGT, HB_TRUE );
    HB_GTSELF_SETPOS( pGT, SLsmg_get_row(), SLsmg_get_column() );

@@ -275,7 +275,8 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 #endif
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, pGTSTD->fStdoutConsole );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pGTSTD->fStderrConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pGTSTD->fStderrConsole &&
+                                             pGTSTD->fStdoutConsole );
 }
 
 static void hb_gt_std_Exit( PHB_GT pGT )

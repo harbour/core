@@ -543,7 +543,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_GTSELF_RESIZE( pGT, iRows, iCols );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, s_bStdoutConsole );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_bStderrConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_bStderrConsole && s_bStdoutConsole );
 
    hb_gt_pca_AnsiInit();
    hb_gt_pca_AnsiGetCurPos( &s_iRow, &s_iCol );
