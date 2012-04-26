@@ -7194,6 +7194,21 @@ STATIC PROCEDURE DoBeep( lSuccess )
 
    RETURN
 
+STATIC FUNCTION hbmk_UTF8_BOM()
+   RETURN hb_BChar( 0xEF ) +;
+          hb_BChar( 0xBB ) +;
+          hb_BChar( 0xBF )
+
+STATIC FUNCTION hbmk_MemoRead( cFileName )
+   LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
+
+   IF Left( cFile, Len( hbmk_UTF8_BOM() ) ) == hbmk_UTF8_BOM()
+      cFile := SubStr( cFile, Len( hbmk_UTF8_BOM() ) + 1 )
+   ENDIF
+
+   RETURN cFile
+/* RETURN hb_UTF8ToStr( cFile ) */
+
 STATIC FUNCTION hbmk2_hb_compile( hbmk, ... )
    LOCAL cSaveCP
    LOCAL xRetVal
@@ -9036,7 +9051,7 @@ STATIC FUNCTION ListToArray( cList, cSep )
 STATIC FUNCTION PathSepCount( cPath )
    LOCAL nCount := 0
    LOCAL c
-   FOR EACH c IN cPath
+   FOR EACH c IN cPath /* TOFIX: FOR EACH for UTF8 */
       IF c == hb_ps()
          ++nCount
       ENDIF
@@ -9144,7 +9159,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
 STATIC FUNCTION StrHasSpecialChar( cString )
    LOCAL c
-   FOR EACH c IN cString
+   FOR EACH c IN cString /* TOFIX: FOR EACH for UTF8 */
       IF !( hb_asciiIsAlpha( c ) .OR. hb_asciiIsDigit( c ) .OR. c $ "/." )
          RETURN .T.
       ENDIF
@@ -9265,7 +9280,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    AAddNew( hbmk[ _HBMK_aDEPTHBC ], { cFileName, nNestingLevel - 1 } )
 
-   cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
+   cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
 
    IF !( hb_eol() == _CHR_EOL )
       cFile := StrTran( cFile, hb_eol(), _CHR_EOL )
@@ -9895,7 +9910,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
    IF hb_FileExists( cFileName )
 #endif
 
-      cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
+      cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
 
       IF !( hb_eol() == _CHR_EOL )
          cFile := StrTran( cFile, hb_eol(), _CHR_EOL )
@@ -10022,7 +10037,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          cValue := NIL
          cOperator := ""
          lSkipQuote := .F.
-         FOR EACH cChar IN cFilterSrc
+         FOR EACH cChar IN cFilterSrc /* TOFIX: FOR EACH for UTF8 */
             IF cValue == NIL
                IF iif( Empty( cKeyword ),;
                      HB_ISFIRSTIDCHAR( cChar ),;
@@ -10241,11 +10256,11 @@ STATIC FUNCTION FuncNameEncode( cName )
    LOCAL cResult, c
 
    cResult := ""
-   FOR EACH c IN cName
+   FOR EACH c IN cName /* TOFIX: FOR EACH for UTF8 */
       IF c == "_" .OR. IsAlpha( c ) .OR. ( ! cResult == "" .AND. IsDigit( c ) )
          cResult += c
       ELSE
-         cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )
+         cResult += "x" + Lower( hb_NumToHex( Asc( c ), iif( Asc( c ) > 255, 4, 2 ) ) )
       ENDIF
    NEXT
    RETURN cResult
@@ -11000,14 +11015,14 @@ STATIC FUNCTION IsCOFFLib( cFileName )
 
    RETURN .F.
 
-#define _OMF_LIB_SIGNATURE Chr( 0xF0 )
+#define _OMF_LIB_SIGNATURE hb_BChar( 0xF0 )
 
 STATIC FUNCTION IsOMFLib( cFileName )
    LOCAL fhnd := FOpen( cFileName, FO_READ )
    LOCAL cBuffer
 
    IF fhnd != F_ERROR
-      cBuffer := Space( Len( _OMF_LIB_SIGNATURE ) )
+      cBuffer := Space( hb_BLen( _OMF_LIB_SIGNATURE ) )
       FRead( fhnd, @cBuffer, Len( cBuffer ) )
       FClose( fhnd )
       IF cBuffer == _OMF_LIB_SIGNATURE
@@ -12301,6 +12316,12 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 
    cLNG := StrTran( cLNG, "_", "-" )
    cCDP := "" /* TODO: 1) Detect it 2) use it - this would need generic Harbour CP support */
+
+   RETURN
+
+INIT PROCEDURE ClipInit()
+
+   /* hb_cdpSelect( "UTF8EX" ) */
 
    RETURN
 
