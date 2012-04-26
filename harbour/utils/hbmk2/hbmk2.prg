@@ -10617,7 +10617,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
       IF ( hFile := FOpen( cFileName ) ) != -1
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
-         IF FRead( hFile, @cFileBody, Len( cFileBody ) ) != Len( cFileBody )
+         IF FRead( hFile, @cFileBody, hb_BLen( cFileBody ) ) != hb_BLen( cFileBody )
             cFileBody := NIL
          ENDIF
          FClose( hFile )
@@ -11005,8 +11005,8 @@ STATIC FUNCTION IsCOFFLib( cFileName )
    LOCAL cBuffer
 
    IF fhnd != F_ERROR
-      cBuffer := Space( Len( _COFF_LIB_SIGNATURE ) )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
+      cBuffer := Space( hb_BLen( _COFF_LIB_SIGNATURE ) )
+      FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
       FClose( fhnd )
       IF cBuffer == _COFF_LIB_SIGNATURE
          RETURN .T.
@@ -11023,7 +11023,7 @@ STATIC FUNCTION IsOMFLib( cFileName )
 
    IF fhnd != F_ERROR
       cBuffer := Space( hb_BLen( _OMF_LIB_SIGNATURE ) )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
+      FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
       FClose( fhnd )
       IF cBuffer == _OMF_LIB_SIGNATURE
          RETURN .T.
