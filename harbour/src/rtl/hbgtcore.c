@@ -699,7 +699,7 @@ static void hb_gt_def_OutStd( PHB_GT pGT, const char * szStr, HB_SIZE nLen )
          {
             char * szStrBuff = hb_cdpnDup( szStr, &nLen,
                                            pGT->cdpHost, pGT->cdpTerm );
-            hb_fsWriteLarge( pGT->hStdErr, szStrBuff, nLen );
+            hb_fsWriteLarge( pGT->hStdOut, szStrBuff, nLen );
             hb_xfree( szStrBuff );
          }
          else
