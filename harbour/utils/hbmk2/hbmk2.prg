@@ -273,9 +273,9 @@ REQUEST hbmk_KEYW
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32.exe" )
 
-#define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
+#define HB_ISALPHA( c )         ( hb_asciiUpper( c ) >= "A" .AND. hb_asciiUpper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
-#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
+#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. hb_asciiIsDigit( c ) )
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
@@ -8229,10 +8229,10 @@ STATIC FUNCTION StrToDefine( cString )
    LOCAL cDefine := ""
    LOCAL c
 
-   FOR EACH c IN Upper( cString )
+   FOR EACH c IN hb_asciiUpper( cString )
       IF c $ "- "
          cDefine += "_"
-      ELSEIF IsDigit( c ) .OR. hb_asciiIsAlpha( c ) .OR. c == "_"
+      ELSEIF hb_asciiIsDigit( c ) .OR. hb_asciiIsAlpha( c ) .OR. c == "_"
          cDefine += c
       ENDIF
    NEXT
@@ -8958,7 +8958,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
             IF cExtNew != NIL
                hb_FNameSplit( cLibNameCooked,, @cName, @cExt )
                /* Do not strip version number postfixes */
-               IF IsDigit( SubStr( cExt, 2, 1 ) )
+               IF hb_asciiIsDigit( SubStr( cExt, 2, 1 ) )
                   cLibNameCooked += cExtNew
                ELSE
                   cLibNameCooked := hb_FNameMerge(, cName, cExtNew )
@@ -9051,7 +9051,7 @@ STATIC FUNCTION ListToArray( cList, cSep )
 STATIC FUNCTION PathSepCount( cPath )
    LOCAL nCount := 0
    LOCAL c
-   FOR EACH c IN cPath /* TOFIX: FOR EACH for UTF8 */
+   FOR EACH c IN cPath
       IF c == hb_ps()
          ++nCount
       ENDIF
@@ -9159,7 +9159,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
 STATIC FUNCTION StrHasSpecialChar( cString )
    LOCAL c
-   FOR EACH c IN cString /* TOFIX: FOR EACH for UTF8 */
+   FOR EACH c IN cString
       IF !( hb_asciiIsAlpha( c ) .OR. hb_asciiIsDigit( c ) .OR. c $ "/." )
          RETURN .T.
       ENDIF
@@ -10004,6 +10004,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
    LOCAL cChar
    LOCAL lSkipQuote
    LOCAL cRetVal
+#ifndef USE_FOREACH_ON_STRINGS
+   LOCAL nPos
+#endif
 
    LOCAL cExpr := "hbmk_KEYW( hbmk, cFileName, '%1' )"
    LOCAL cExprWithValue := "hbmk_KEYW( hbmk, cFileName, '%1', '%2', '%3' )"
@@ -10037,13 +10040,22 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          cValue := NIL
          cOperator := ""
          lSkipQuote := .F.
-         FOR EACH cChar IN cFilterSrc /* TOFIX: FOR EACH for UTF8 */
+#ifdef USE_FOREACH_ON_STRINGS
+         FOR EACH cChar IN cFilterSrc
+#else
+         FOR nPos := 1 TO Len( cFilterSrc )
+            cChar := SubStr( cFilterSrc, nPos, 1 )
+#endif
             IF cValue == NIL
                IF iif( Empty( cKeyword ),;
                      HB_ISFIRSTIDCHAR( cChar ),;
                      HB_ISNEXTIDCHAR( cChar ) )
                   cKeyword += cChar
+#ifdef USE_FOREACH_ON_STRINGS
                ELSEIF cChar $ "=<>" .AND. SubStr( cFilterSrc, cChar:__enumIndex() + 1, 1 ) == "'"
+#else
+               ELSEIF cChar $ "=<>" .AND. SubStr( cFilterSrc, nPos + 1, 1 ) == "'"
+#endif
                   cOperator := cChar
                   cValue := ""
                   lSkipQuote := .T.
@@ -10254,13 +10266,15 @@ STATIC FUNCTION IsValidHarbourID( cName )
 
 STATIC FUNCTION FuncNameEncode( cName )
    LOCAL cResult, c
+   LOCAL nPos
 
    cResult := ""
-   FOR EACH c IN cName /* TOFIX: FOR EACH for UTF8 */
-      IF c == "_" .OR. IsAlpha( c ) .OR. ( ! cResult == "" .AND. IsDigit( c ) )
+   FOR nPos := 1 TO hb_BLen( cName )
+      c := hb_BSubStr( cName, nPos, 1 )
+      IF c == "_" .OR. hb_asciiIsAlpha( c ) .OR. ( ! cResult == "" .AND. hb_asciiIsDigit( c ) )
          cResult += c
       ELSE
-         cResult += "x" + Lower( hb_NumToHex( Asc( c ), iif( Asc( c ) > 255, 4, 2 ) ) )
+         cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )
       ENDIF
    NEXT
    RETURN cResult
@@ -10307,7 +10321,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          ENDIF
          IF n != 0
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
-                     IsDigit( c ) .OR. IsAlpha( c )
+                     hb_asciiIsDigit( c ) .OR. hb_asciiIsAlpha( c )
                IF c == "x" .AND. IsHexDigit( SubStr( cFuncList, n, 1 ) ) .AND. ;
                                  IsHexDigit( SubStr( cFuncList, n + 1, 1 ) )
                   c := hb_HexToNum( SubStr( cFuncList, n, 2 ) )
@@ -11722,7 +11736,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    LOCAL aExclude
    LOCAL hDynamic
 
-   LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
+   LOCAL cSelfName := _HB_SELF_PREFIX + StrToDefine( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
    LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
@@ -11767,8 +11781,8 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    cExtern += "/*          Regenerate using hbmk2 '-hbx=' option.                      */" + hb_eol()
    cExtern += cLine
    cExtern += hb_eol()
-   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
-   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
    cExtern += hb_eol()
    cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
    cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
