@@ -84,12 +84,8 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    /* detect UTF-8 support. */
    {
       int iUTF8Enabled;
-#  if defined( PCRE_CONFIG_UTF8 )
       if( pcre_config( PCRE_CONFIG_UTF8, &iUTF8Enabled ) != 0 )
          iUTF8Enabled = 0;
-#  else
-      iUTF8Enabled = 0;
-#  endif
       /* use UTF8 in pcre when available and HVM CP is also UTF8. */
       if( iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
          iCFlags |= PCRE_UTF8;

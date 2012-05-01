@@ -1075,6 +1075,11 @@ HARBOUR
       differences with some compilers in order to use native binaries if
       they are available.
 
+      --- MinGW GCC for Windows x86-64
+      set PATH=C:\mingw64\bin;%PATH%
+      win-make
+      ---
+
       --- MSVC 2010 and Windows SDK 7.1 for Windows x86
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
       win-make
@@ -1265,8 +1270,8 @@ HARBOUR
           set PATH=C:\<compilerdir>
        If you use Harbour official binary distro on Windows, even above is
        unnecessary and not recommended.
-   6.  Remove all old, unnecessary environment variables (for both Harbour 
-       and C compiler) from your environment. Also remove any custom settings 
+   6.  Remove all old, unnecessary environment variables (for both Harbour
+       and C compiler) from your environment. Also remove any custom settings
        for your C compiler.
        Use only those documented in this file.
        Follows some environment variable settings which are commonly believed
@@ -1306,16 +1311,16 @@ HARBOUR
        packages.
    11. If you are to report a build problem with a Harbour application,
        most of the above points apply, plus make sure to use '-trace'
-       command line option when running hbmk2 and redirect the result to 
+       command line option when running hbmk2 and redirect the result to
        a file (see above how).
-       It's a good idea to first remove all manual references to Harbour 
-       core components from make files and custom environment. F.e. it's 
-       commom mistake to add C compiler header and/or lib dirs, Harbour core 
-       header and/or lib dirs, built-in constants to make files or environment. 
-       No such thing is necessary and all of these is automatically handled 
-       by hbmk2. IOW start simple and don't be overbusy with "fine-tuning" 
-       your configuration, if you need to, the problem is most probably 
-       elsewhere. It's also good idea to try with Harbour nightly binary or 
+       It's a good idea to first remove all manual references to Harbour
+       core components from make files and custom environment. F.e. it's
+       commom mistake to add C compiler header and/or lib dirs, Harbour core
+       header and/or lib dirs, built-in constants to make files or environment.
+       No such thing is necessary and all of these is automatically handled
+       by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
+       your configuration, if you need to, the problem is most probably
+       elsewhere. It's also good idea to try with Harbour nightly binary or
        official release first.
    12. If you are to report a problem with Harbour itself, always provide
        self-contained, minimal source code example. Do not use xhb contrib
