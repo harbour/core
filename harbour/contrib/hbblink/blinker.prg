@@ -340,7 +340,7 @@ FUNCTION SWPSETENV( cString )
    LOCAL cPair
    LOCAL tmp
 
-   FOR EACH cPair IN hb_ATokens( cString, Chr( 255 ) )
+   FOR EACH cPair IN hb_ATokens( cString, hb_BChar( 255 ) )
       IF ! Empty( cPair )
          tmp := At( "=", cPair )
          IF tmp > 0

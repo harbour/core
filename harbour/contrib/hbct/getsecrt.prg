@@ -109,6 +109,7 @@ STATIC FUNCTION _VALUE( cVar, lHide, xNew )
 
 STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
    LOCAL nKey, nLen, bKeyBlock
+   LOCAL cKey
 
    IF oGetList == NIL
       oGetList := __GetListActive()
@@ -132,12 +133,12 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                      oGetList:nReadProcLine, oGetList:ReadVar() )
                lHide := .T.
                LOOP
-            ELSEIF nKey >= 32 .AND. nKey <= 255
+            ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
                IF SET( _SET_INSERT )
                   _cGetSecret := STUFF( LEFT( _cGetSecret, nLen - 1), ;
-                                        oGet:pos, 0, CHR( nKey ) )
+                                        oGet:pos, 0, cKey )
                ELSE
-                  _cGetSecret := STUFF( _cGetSecret, oGet:pos, 1, CHR( nKey ) )
+                  _cGetSecret := STUFF( _cGetSecret, oGet:pos, 1, cKey )
                ENDIF
                nKey := ASC( "*" )
             ENDIF

@@ -957,7 +957,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
                       { BLAT_ERR_STRING_EXPECTED                , BLAT_TEXT_ERR_STRING_EXPECTED                }  ;
                     }
 
-   nPos := AScan( aErrors, {|e| e[ 1 ] == nErr }, 2 )
+   nPos := AScan( aErrors, {| e | e[ 1 ] == nErr }, 2 )
    IF nPos == 0
       cError := aErrors[ 1, 2 ]  // BLAT_TEXT_ERR_UNKNOWN has to be first error
    ELSE
@@ -987,7 +987,7 @@ STATIC FUNCTION ArrayToString( aArray )
    LOCAL cElem
 
    FOR EACH cElem IN aArray
-      cString += IIF( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + iif( cElem:__enumIndex() < nLen, ",", "" )
+      cString += iif( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + iif( cElem:__enumIndex() < nLen, ",", "" )
    NEXT
 
    RETURN cString

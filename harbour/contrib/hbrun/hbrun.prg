@@ -216,8 +216,8 @@ STATIC FUNCTION hbrun_FileSig( cFile )
    hFile := FOpen( cFile, FO_READ )
    IF hFile != F_ERROR
       cSig := hb_hrbSignature()
-      cBuff := Space( Len( cSig ) )
-      FRead( hFile, @cBuff, Len( cSig ) )
+      cBuff := Space( hb_BLen( cSig ) )
+      FRead( hFile, @cBuff, hb_BLen( cBuff ) )
       FClose( hFile )
       IF cBuff == cSig
          cExt := ".hrb"

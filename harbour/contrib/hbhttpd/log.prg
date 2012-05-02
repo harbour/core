@@ -98,7 +98,7 @@ METHOD Add( cMsg ) CLASS UHttpdLog
       ::fhnd := hb_FCreate( ::cFileName, FC_NORMAL, FO_WRITE + FO_DENYNONE )
    ENDIF
 
-   RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == Len( cMsg )
+   RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
 
 METHOD Close() CLASS UHttpdLog
    LOCAL lRetVal

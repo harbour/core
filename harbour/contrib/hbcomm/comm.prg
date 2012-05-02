@@ -136,7 +136,7 @@ FUNCTION INCHR( nPort, nCount, /* @ */ cData )
 FUNCTION OUTCHR( nPort, cData )
    LOCAL nLen
 
-   DO WHILE Len( cData ) > 0
+   DO WHILE hb_BLen( cData ) > 0
 
       /* I expect at least some data to be sent in a second */
       nLen := hb_comSend( nPort, cData,, 1000 )
@@ -145,7 +145,7 @@ FUNCTION OUTCHR( nPort, cData )
          RETURN .F.
       ENDIF
 
-      cData := SubStr( cData, nLen + 1 )
+      cData := hb_BSubStr( cData, nLen + 1 )
    ENDDO
 
    RETURN .T.

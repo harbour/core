@@ -53,22 +53,22 @@
 #ifndef HBXDIFF_CH_
 #define HBXDIFF_CH_
 
-#define XDLT_STD_BLKSIZE       ( 1024 * 8 )
-#define XDLT_MAX_LINE_SIZE     80
+#define XDLT_STD_BLKSIZE        ( 1024 * 8 )
+#define XDLT_MAX_LINE_SIZE      80
 
-#define XDF_NEED_MINIMAL       ( hb_bitShift( 1, 1 ) )
+#define XDF_NEED_MINIMAL        ( hb_bitShift( 1, 1 ) )
 
-#define XDL_PATCH_NORMAL       ( asc( '-' ) )
-#define XDL_PATCH_REVERSE      ( asc( '+' ) )
-#define XDL_PATCH_MODEMASK     ( hb_bitShift( 1, 8 ) - 1 )
-#define XDL_PATCH_IGNOREBSPACE ( hb_bitShift( 1, 8 ) )
+#define XDL_PATCH_NORMAL        ( Asc( "-" ) )
+#define XDL_PATCH_REVERSE       ( Asc( "+" ) )
+#define XDL_PATCH_MODEMASK      ( hb_bitShift( 1, 8 ) - 1 )
+#define XDL_PATCH_IGNOREBSPACE  ( hb_bitShift( 1, 8 ) )
 
-#define XDL_MMB_READONLY       ( hb_bitShift( 1, 0 ) )
+#define XDL_MMB_READONLY        ( hb_bitShift( 1, 0 ) )
 
-#define XDL_MMF_ATOMIC         ( hb_bitShift( 1, 0 ) )
+#define XDL_MMF_ATOMIC          ( hb_bitShift( 1, 0 ) )
 
-#define XDL_BDOP_INS           1
-#define XDL_BDOP_CPY           2
-#define XDL_BDOP_INSB          3
+#define XDL_BDOP_INS            1
+#define XDL_BDOP_CPY            2
+#define XDL_BDOP_INSB           3
 
 #endif /* HBXDIFF_CH_ */

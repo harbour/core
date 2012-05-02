@@ -536,7 +536,7 @@ STATIC FUNCTION ProcessConnection( oServer )
             ENDIF
 #endif
             IF nLen > 0
-               cRequest += Left( cBuf, nLen )
+               cRequest += hb_BLeft( cBuf, nLen )
             ELSEIF nLen == 0
                /* connection closed */
                EXIT
@@ -596,7 +596,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                ENDIF
 #endif
                IF nLen > 0
-                  cRequest += Left( cBuf, nLen )
+                  cRequest += hb_BLeft( cBuf, nLen )
                ELSEIF nLen == 0
                   /* connection closed */
                   EXIT
@@ -648,7 +648,7 @@ STATIC FUNCTION ProcessConnection( oServer )
          // Send response
          cBuf := MakeResponse( oServer:hConfig )
 
-         DO WHILE Len( cBuf ) > 0 .AND. ! oServer:lStop
+         DO WHILE hb_BLen( cBuf ) > 0 .AND. ! oServer:lStop
 #ifdef HB_HAS_OPENSSL
             IF oServer:hConfig["SSL"]
                nLen := MY_SSL_WRITE( oServer:hConfig, hSSL, hSocket, cBuf, 1000, @nErr )
@@ -665,7 +665,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                Eval( oServer:hConfig[ "Trace" ], "send error:", nErr, hb_socketErrorString( nErr ) )
                EXIT
             ELSEIF nLen > 0
-               cBuf := SubStr( cBuf, nLen + 1 )
+               cBuf := hb_BSubStr( cBuf, nLen + 1 )
             ENDIF
          ENDDO
 

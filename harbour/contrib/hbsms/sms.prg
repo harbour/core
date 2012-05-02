@@ -301,4 +301,4 @@ STATIC FUNCTION MakeList( aList )
       cString += tmp + ","
    NEXT
 
-   RETURN hb_StrShrink( cString, 1 )
+   RETURN hb_StrShrink( cString, Len( "," ) )

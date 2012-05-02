@@ -107,7 +107,7 @@ METHOD Add( cMsg ) CLASS TIPLOG
    ENDIF
 
    IF ! Empty( ::fhnd ) .AND. ::fhnd != F_ERROR
-      RETURN FWrite( ::fhnd, cMsg ) == Len( cMsg )
+      RETURN FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
    ENDIF
 
    RETURN .F.

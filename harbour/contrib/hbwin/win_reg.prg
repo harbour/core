@@ -195,8 +195,8 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault )
                                       Bin2U( SubStr( xRetVal, 1, 2 ) + SubStr( xRetVal, 3, 2 ) )
          OTHERWISE
             /* Strip ending zero byte */
-            IF Right( xRetVal, 1 ) == Chr( 0 )
-               xRetVal := hb_StrShrink( xRetVal, 1 )
+            IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
+               xRetVal := hb_BLeft( xRetVal, hb_BLen( xRetVal ) - 1 )
             ENDIF
          ENDCASE
       ELSE

@@ -376,14 +376,14 @@ FUNCTION hb_ZipFile( cFileName,;
             hb_ZipFileCreate( hZip, hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt, iif( lWithDrive, cDrive, NIL ) ),;
                 tTime, NIL, NIL, NIL, NIL, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_ZipFileCRC32( cFileToZip ) ), NIL )
 
-            DO WHILE ( nLen := FRead( hHandle, @cBuffer, Len( cBuffer ) ) ) > 0
+            DO WHILE ( nLen := FRead( hHandle, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
 
                IF hb_isBlock( bProgress )
                   nRead += nLen
                   Eval( bProgress, nRead, nSize )
                ENDIF
 
-               hb_ZipFileWrite( hZip, Left( cBuffer, nLen ), nLen )
+               hb_ZipFileWrite( hZip, hb_BLeft( cBuffer, nLen ), nLen )
             ENDDO
 
             hb_ZipFileClose( hZip )

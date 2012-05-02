@@ -316,7 +316,7 @@ METHOD EditField() CLASS TBrowseSQL
       nKey == K_PGUP .OR. nKey == K_PGDN
 
       // Ugh
-      KEYBOARD( Chr( nKey ) )
+      hb_keyIns( nKey )
 
    ENDIF
 
