@@ -321,6 +321,8 @@ typedef enum
    HB_F_WORD,
    HB_F_YEAR,
 
+   HB_F_BCHAR,
+   HB_F_BCODE,
    HB_F_BITAND,
    HB_F_BITOR,
    HB_F_BITXOR,

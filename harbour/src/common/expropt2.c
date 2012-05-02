@@ -2036,6 +2036,39 @@ HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
+HB_BOOL hb_compExprReduceBCHAR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+
+   if( pArg->ExprType == HB_ET_NUMERIC )
+   {
+      HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
+
+      pExpr->ValType = HB_EV_STRING;
+      if( pArg->value.asNum.NumType == HB_ET_LONG )
+      {
+         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ];
+         pExpr->value.asString.dealloc = HB_FALSE;
+         pExpr->nLength = 1;
+      }
+      else
+      {
+         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ];
+         pExpr->value.asString.dealloc = HB_FALSE;
+         pExpr->nLength = 1;
+      }
+
+      HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return HB_TRUE;
+   }
+
+   return HB_FALSE;
+}
+
 HB_BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
@@ -2129,6 +2162,25 @@ HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    if( pArg->ExprType == HB_ET_STRING &&
        ( !HB_SUPPORT_USERCP ||
          ( HB_UCHAR ) pArg->value.asString.string[0] <= 127 ) )
+   {
+      HB_EXPR_PTR pExpr = hb_compExprNewLong(
+                ( HB_UCHAR ) pArg->value.asString.string[0], HB_COMP_PARAM );
+
+      HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
+HB_BOOL hb_compExprReduceBCODE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+
+   if( pArg->ExprType == HB_ET_STRING )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewLong(
                 ( HB_UCHAR ) pArg->value.asString.string[0], HB_COMP_PARAM );

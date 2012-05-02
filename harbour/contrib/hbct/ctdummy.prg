@@ -50,19 +50,6 @@
  *
  */
 
-#include "common.ch"
-
-FUNCTION getkxlat( nKeyValue )
-   RETURN nKeyValue
-
-FUNCTION setkxlat( nOrgKeyValue, nNewKeyValue )
-   LOCAL lAccepted := .F.
-
-   HB_SYMBOL_UNUSED( nOrgKeyValue )
-   HB_SYMBOL_UNUSED( nNewKeyValue )
-
-   RETURN lAccepted
-
 FUNCTION dsetkbios( lNewKeyboardMode )
    THREAD STATIC t_lKeyboardMode := .T.
 

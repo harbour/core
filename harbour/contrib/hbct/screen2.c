@@ -402,9 +402,9 @@ HB_FUNC( STRSCREEN )
 }
 
 /*
- * _HB_CTDSPTIME() is helper functions for SHOWTIME()
+ * __HBCT_DSPTIME() is helper functions for SHOWTIME()
  */
-HB_FUNC( _HB_CTDSPTIME )
+HB_FUNC( __HBCT_DSPTIME )
 {
    int iRow, iCol;
    int iColor, iLen;

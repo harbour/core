@@ -1793,6 +1793,15 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
                      break;
 
+                  case HB_F_BCHAR:
+                     if( usCount )
+                        hb_compExprReduceBCHAR( pSelf, HB_COMP_PARAM );
+                     break;
+                  case HB_F_BCODE:
+                     if( usCount )
+                        hb_compExprReduceBCODE( pSelf, HB_COMP_PARAM );
+                     break;
+
                   case HB_F_BITAND:
                   case HB_F_BITOR:
                   case HB_F_BITXOR:

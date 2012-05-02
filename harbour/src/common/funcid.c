@@ -92,6 +92,8 @@ static _HB_FUNCID s_funcId[] =
    { "FLOCK",                    4, HB_FN_RESERVED, HB_F_FLOCK },
    { "FOUND",                    4, HB_FN_RESERVED, HB_F_FOUND },
    { "HB_ARRAYTOPARAMS",         0, HB_FN_UDF,      HB_F_ARRAYTOPARAMS },
+   { "HB_BCHAR",                 0, HB_FN_UDF,      HB_F_BCHAR },
+   { "HB_BCODE",                 0, HB_FN_UDF,      HB_F_BCODE },
    { "HB_BITAND",                0, HB_FN_UDF,      HB_F_BITAND },
    { "HB_BITNOT",                0, HB_FN_UDF,      HB_F_BITNOT },
    { "HB_BITOR",                 0, HB_FN_UDF,      HB_F_BITOR },
