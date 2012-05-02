@@ -556,6 +556,11 @@ PROCEDURE _APPMAIN( ... )
    LOCAL nTargetPos
    LOCAL lHadTarget
 
+   /* for temp debug messages */
+
+   SET DATE ANSI
+   SET CENTURY ON
+
    /* Expand wildcard project specs */
 
    IF PCount() >= 1
@@ -5199,7 +5204,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_FGetDateTime( tmp4, @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) ) .OR.;
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) ) .OR. ;
                checkDepTime( hbmk, tmp4, tmp2 )
                AAdd( l_aPRG_TO_DO, tmp )
             ENDIF
@@ -7370,7 +7375,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 
    IF !lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_DEP
       cDependency := FNameDirExtSet( cFileName, hbmk[ _HBMK_cWorkDir ], ".d" )
-      IF !hb_FGetDateTime( cDependency, @tTimeDependency ) .OR. ;
+      IF ! hb_FGetDateTime( cDependency, @tTimeDependency ) .OR. ;
          tTimeDependency > tTimeParent
          RETURN .T.
       ENDIF
@@ -7831,7 +7836,7 @@ STATIC FUNCTION deplst_add( hDeps, cList )
    LOCAL n
 
    IF ! Empty( cList )
-      n := At( ":", cList )
+      n := At( ": ", cList )
       IF n != 0 .AND. ! Empty( cFile := AllTrim( Left( cList, n - 1 ) ) )
          aList := hb_ATokens( SubStr( cList, n + 1 ) )
          IF cFile $ hDeps
