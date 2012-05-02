@@ -21,7 +21,7 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
       ? "Using port number:", nPort
    ENDIF
 
-   IF ! hb_comOpen( nPort ) 
+   IF ! hb_comOpen( nPort )
       ? "Unable to open port. Error:", hb_comGetError( nPort ), " OS error:", hb_comGetOsError( nPort )
       RETURN
    ENDIF
@@ -39,12 +39,12 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
 
    cBuf := SPACE( 256 )
    IF ( nLen := hb_comRecv( nPort, @cBuf,, 500 ) ) > 0
-      IF ASC( cBuf ) == 0xCD
+      IF hb_BCode( cBuf ) == 0xCD
          ? "Bingo: 2 button mouse detected!"
          nType := 2
-         cBuffer := SUBSTR( cBuf, 2, nLen - 1 )
+         cBuffer := HB_BSUBSTR( cBuf, 2, nLen - 1 )
       ELSE
-        cBuffer := LEFT( cBuf, nLen )
+        cBuffer := HB_BLEFT( cBuf, nLen )
       ENDIF
    ELSE
      cBuffer := ""
@@ -58,23 +58,23 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
    ? "Press any key to exit..."
    DO WHILE ( nLen := INKEY() ) == 0
      IF ( nLen := hb_comRecv( nPort, @cBuf ) ) > 0
-       cBuffer +=  LEFT( cBuf, nLen )
+       cBuffer += HB_BLEFT( cBuf, nLen )
      ENDIF
-     IF LEN( cBuffer ) == 0
+     IF HB_BLEN( cBuffer ) == 0
        hb_idleSleep( 0.05 )
        LOOP
      ENDIF
      IF nType == 2
-        IF hb_bitAnd( ASC( cBuffer ), 0xC0 ) != 0xC0
-           cBuffer := SUBSTR( cBuffer, 2 )
-        ELSEIF LEN( cBuffer ) >= 3
-           lR := hb_bitAnd( ASC( cBuffer ), 0x10 ) != 0
-           lL := hb_bitAnd( ASC( cBuffer ), 0x20 ) != 0
-           nX := hb_bitAnd( ASC( cBuffer ), 3 ) * 64 + hb_bitAnd( ASC( SUBSTR( cBuffer, 2 ) ), 0x3F ) 
+        IF hb_bitAnd( hb_BCode( cBuffer ), 0xC0 ) != 0xC0
+           cBuffer := HB_BSUBSTR( cBuffer, 2 )
+        ELSEIF HB_BLEN( cBuffer ) >= 3
+           lR := hb_bitAnd( hb_BCode( cBuffer ), 0x10 ) != 0
+           lL := hb_bitAnd( hb_BCode( cBuffer ), 0x20 ) != 0
+           nX := hb_bitAnd( hb_BCode( cBuffer ), 3 ) * 64 + hb_bitAnd( hb_BCode( HB_BSUBSTR( cBuffer, 2 ) ), 0x3F )
            IF nX > 127
               nX -= 256
            ENDIF
-           nY := hb_bitAnd( ASC( cBuffer ), 0x0C ) * 16 + hb_bitAnd( ASC( SUBSTR( cBuffer, 3 ) ), 0x3F ) 
+           nY := hb_bitAnd( hb_BCode( cBuffer ), 0x0C ) * 16 + hb_bitAnd( hb_BCode( HB_BSUBSTR( cBuffer, 3 ) ), 0x3F )
            IF nY > 127
               nY -= 256
            ENDIF
@@ -85,31 +85,31 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
            IF lR
               ?? "RIGHT"
            ENDIF
-           cBuffer := SUBSTR( cBuffer, 4 )
+           cBuffer := HB_BSUBSTR( cBuffer, 4 )
         ENDIF
      ELSEIF nType == 3
-        IF hb_bitAnd( ASC( cBuffer ), 0xC0 ) != 0x80
-           cBuffer := SUBSTR( cBuffer, 2 )
-        ELSEIF LEN( cBuffer ) >= 4
-           lR := hb_bitAnd( ASC( cBuffer ), 1 ) == 0
-           lM := hb_bitAnd( ASC( cBuffer ), 2 ) == 0
-           lL := hb_bitAnd( ASC( cBuffer ), 4 ) == 0
-           nI := ASC( SUBSTR( cBuffer, 2 ) ) 
+        IF hb_bitAnd( hb_BCode( cBuffer ), 0xC0 ) != 0x80
+           cBuffer := HB_BSUBSTR( cBuffer, 2 )
+        ELSEIF HB_BLEN( cBuffer ) >= 4
+           lR := hb_bitAnd( hb_BCode( cBuffer ), 1 ) == 0
+           lM := hb_bitAnd( hb_BCode( cBuffer ), 2 ) == 0
+           lL := hb_bitAnd( hb_BCode( cBuffer ), 4 ) == 0
+           nI := hb_BCode( HB_BSUBSTR( cBuffer, 2 ) )
            IF nI > 127
              nI -= 256
            ENDIF
            nX := nI
-           nI := ASC( SUBSTR( cBuffer, 4 ) ) 
+           nI := hb_BCode( HB_BSUBSTR( cBuffer, 4 ) )
            IF nI > 127
              nI -= 256
            ENDIF
            nX += nI
-           nI := ASC( SUBSTR( cBuffer, 3 ) ) 
+           nI := hb_BCode( HB_BSUBSTR( cBuffer, 3 ) )
            IF nI > 127
              nI -= 256
            ENDIF
            nY := - nI
-           nI := ASC( SUBSTR( cBuffer, 5 ) ) 
+           nI := hb_BCode( HB_BSUBSTR( cBuffer, 5 ) )
            IF nI > 127
              nI -= 256
            ENDIF
@@ -124,10 +124,10 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
            IF lR
               ?? "RIGHT"
            ENDIF
-           cBuffer := SUBSTR( cBuffer, 5 )
+           cBuffer := HB_BSUBSTR( cBuffer, 5 )
         ENDIF
 
      ENDIF
    ENDDO
    hb_comClose( nPort )
-RETURN 
+RETURN

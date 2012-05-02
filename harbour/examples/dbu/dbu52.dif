@@ -1,17 +1,58 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2010-09-29 16:43:46.000000000 +0200
-@@ -60,6 +60,9 @@
++++ dbu52pat/dbu.prg	2012-05-02 16:47:37.000000000 +0200
+@@ -9,6 +9,10 @@
+ *
+ */
+ 
++#include "hbgtinfo.ch"
++#include "hbextcdp.ch"
++#include "inkey.ch"
++
+ PROCEDURE Dbu( param1, param2, param3 )
+    
+    PUBLIC n_files,keystroke,lkey,frame,sframe,cur_dir,more_up,more_down,;
+@@ -60,6 +64,15 @@
     SAVE SCREEN                                   && the screen you save...
     SET SCOREBOARD OFF                            && who's keeping score, anyhow
     SET KEY 28 TO                                 && some folks need help
 +
 +   SET DATE ANSI
 +   SET CENTURY ON
++
++   IF "-utf" $ Lower( hb_cmdLine() )
++      hb_cdpSelect( "UTF8EX" )
++      hb_gtInfo( HB_GTI_BOXCP, "UTF8EX" )
++   ENDIF
++   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
     
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        * make it pretty
-@@ -346,14 +349,14 @@
+@@ -100,10 +113,10 @@
+    * system constants
+    more_up = CHR(24)                             && visual up arrow
+    more_down = CHR(25)                           && visual down arrow
+-   frame = "ีอธณพอิณ"                            && box characters
+-   lframe = "ัอธณพอฯณ"
+-   mframe = "ยฤยณูฤภณ"
+-   sframe = "ฺฤฟณูฤภณ"
++   frame = hb_UTF8ToStr( "โ•’โ•โ••โ”โ•โ•โ•โ”" )            && box characters
++   lframe = hb_UTF8ToStr( "โ•คโ•โ••โ”โ•โ•โ•งโ”" )
++   mframe = hb_UTF8ToStr( "โ”ฌโ”€โ”ฌโ”โ”โ”€โ””โ”" )
++   sframe = hb_UTF8ToStr( "โ”โ”€โ”โ”โ”โ”€โ””โ”" )
+    
+    * global variables
+    STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
+@@ -250,7 +263,7 @@
+    @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
+    "F7        F8       "
+    show_keys()
+-   @ 2,0 SAY REPLICATE("ฤ", 80)
++   @ 2,0 SAY REPLICATE(hb_UTF8ToStr( "โ”€" ), 80)
+    error_msg(view_err)
+    
+    * when to bubble up
+@@ -346,14 +359,14 @@
     help_title[22] = "REPLACE"
     
     * arrays for file names in default directory
@@ -30,7 +71,16 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * default to set view
     local_func = 0                                && local menu
-@@ -378,13 +381,13 @@
+@@ -370,7 +383,7 @@
+       
+       DO CASE
+          
+-      CASE RAT(".", com_line) > RAT("\", com_line)
++      CASE RAT(".", com_line) > RAT(hb_ps(), com_line)
+          * file extension entered
+          IF .NOT. FILE(com_line)
+             * file must exist
+@@ -378,13 +391,13 @@
              
           ENDIF
           
@@ -48,7 +98,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           
        OTHERWISE
           * file not found..ignore command line
-@@ -395,7 +398,7 @@
+@@ -395,7 +408,7 @@
        IF .NOT. EMPTY(com_line)
           * command line file exists
           
@@ -57,7 +107,18 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              * assume a valid .VEW file
              view_file = com_line
              set_from(.F.)                        && restore view
-@@ -646,18 +649,18 @@
+@@ -616,8 +629,8 @@
+             @ 0,0 SAY " F1        F2        F3        F4        " +;
+             "F5        F6        F7        F8       "
+             show_keys()
+-            @ 2,0 SAY REPLICATE("ฤ", 80)
+-            @ 24,0 SAY "Run อ" + CHR(16) + " "
++            @ 2,0 SAY REPLICATE(hb_UTF8ToStr( "โ”€" ), 80)
++            @ 24,0 SAY "Run " + hb_UTF8ToStr( "โ•โ–บ" ) + " "
+             
+             * accept command entry
+             run_com = enter_rc(M->com_line,24,7,127,"@KS73",M->color1)
+@@ -646,18 +659,18 @@
           @ 3,0 CLEAR
           
           * rebuild directory arrays..must keep current
@@ -80,9 +141,22 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           cur_area = 0                            && re-draw view screen
           sysfunc = 0                             && back to the main view screen
           
+@@ -736,10 +749,10 @@
+       nPos  := AT( ";", cPath )
+ 
+       // Account for backslash in path
+-      IF ( SUBSTR( cPath, nPos - 1, 1 ) == "\" )
++      IF ( SUBSTR( cPath, nPos - 1, 1 ) == hb_ps() )
+          cFile := SUBSTR( cPath, 1, IF( nPos == 0, LEN( cPath ), nPos - 1 )) + "dbu.hlp"
+       ELSE
+-         cFile := SUBSTR( cPath, 1, IF( nPos == 0, LEN( cPath ), nPos - 1 )) + "\dbu.hlp"
++         cFile := SUBSTR( cPath, 1, IF( nPos == 0, LEN( cPath ), nPos - 1 )) + hb_ps() + "dbu.hlp"
+       ENDIF
+          
+       IF FILE( cFile )
 diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
 --- dbu52ori/dbucopy.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbucopy.prg	2010-09-29 16:45:38.000000000 +0200
++++ dbu52pat/dbucopy.prg	2012-05-02 16:47:47.000000000 +0200
 @@ -62,8 +62,8 @@
  	filename = ""
  
@@ -103,6 +177,15 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
  
  	* when is a filename acceptable?
  	fi_done = "not_empty('filename')"
+@@ -138,7 +138,7 @@
+ PARAMETERS sysparam
+ 
+ RETURN box_title(M->sysparam, "Copy " +;
+-							  SUBSTR(M->cur_dbf, RAT("\", M->cur_dbf) + 1) +;
++							  SUBSTR(M->cur_dbf, RAT(hb_ps(), M->cur_dbf) + 1) +;
+ 							  " to...")
+ 
+ 
 @@ -208,7 +208,7 @@
  
  		SELECT (M->cur_area)
@@ -111,6 +194,24 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
 +		IF RAT(Lower( M->def_ext ), Lower( M->filename )) = LEN(M->filename) - 3
  			* target has default extension..does it exists in current dir?
  			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
+ 
+@@ -301,7 +301,7 @@
+ PARAMETERS sysparam
+ 
+ RETURN box_title(M->sysparam, "Append to " +;
+-							  SUBSTR(M->cur_dbf, RAT("\", M->cur_dbf) + 1) +;
++							  SUBSTR(M->cur_dbf, RAT(hb_ps(), M->cur_dbf) + 1) +;
+ 							  " from")
+ 
+ 
+@@ -433,7 +433,7 @@
+ PARAMETERS sysparam
+ 
+ RETURN box_title(M->sysparam, "Replace in " +;
+-							  SUBSTR(M->cur_dbf, RAT("\", M->cur_dbf) + 1) +;
++							  SUBSTR(M->cur_dbf, RAT(hb_ps(), M->cur_dbf) + 1) +;
+ 							  "...")
+ 
  
 @@ -735,7 +735,7 @@
  			cur_el = 1
@@ -150,7 +251,7 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
  			ENDIF
 diff -u dbu52ori/dbuedit.prg dbu52pat/dbuedit.prg
 --- dbu52ori/dbuedit.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuedit.prg	2010-09-29 16:40:38.000000000 +0200
++++ dbu52pat/dbuedit.prg	2012-05-02 16:47:53.000000000 +0200
 @@ -47,7 +47,7 @@
  	nHelpSave := help_code
  
@@ -160,26 +261,51 @@ diff -u dbu52ori/dbuedit.prg dbu52pat/dbuedit.prg
  
  	/* array to save move_ptr expressions */
  	aMoveExp := Array(4)
-@@ -95,7 +95,7 @@
+@@ -63,14 +63,14 @@
+ 		cFieldArray := "field_n" + Substr("123456", cur_area, 1)
+ 		cNtx := "ntx" + Substr("123456", cur_area, 1)
+ 		cur_ntx := &cNtx[1]
+-		cPrimeDbf := Substr(cur_dbf, Rat("\", cur_dbf) + 1)
++		cPrimeDbf := Substr(cur_dbf, Rat(hb_ps(), cur_dbf) + 1)
+ 		lCanAppend := .T.
+ 	else
+ 		/* browse the entire view */
+ 		nPrimeArea := 1
+ 		cFieldArray := "field_list"
+ 		cur_ntx := ntx1[1]
+-		cPrimeDbf := Substr(dbf[1], Rat("\", dbf[1]) + 1)
++		cPrimeDbf := Substr(dbf[1], Rat(hb_ps(), dbf[1]) + 1)
+ 		lCanAppend := .F.
+ 
+ 		if ( "->" $ field_list[afull(field_list)] )
+@@ -95,11 +95,11 @@
  
  	/* create TBrowse object */
  	nColorSave := SetColor(color7)
 -	oB := TBrowseDB(10, 1, 23, 78)
 +	oB := TBrowseDB(10, 1, MaxRow()-1, MaxCol()-1)
  
- 	oB:headSep := "อัอ"
- 	oB:colSep  := " ณ "
+-	oB:headSep := "อัอ"
+-	oB:colSep  := " ณ "
+-	oB:footSep := "อฯอ"
++	oB:headSep := hb_UTF8ToStr( "โ•โ•คโ•" )
++	oB:colSep  := hb_UTF8ToStr( " โ” " )
++	oB:footSep := hb_UTF8ToStr( "โ•โ•งโ•" )
+ 	oB:skipBlock := {|x| Skipped(x, lAppend)}
+ 
+ 	/* put columns into browse */
 @@ -135,10 +135,10 @@
  
  	/* initialize parts of screen not handled by TBrowse */
  	stat_msg("")
 -	scroll(8, 0, 23, 79, 0)
 -	@ 8, 0, 23, 79 BOX frame
+-	@ nHsepRow, 0 SAY "ฦ"
+-	@ nHsepRow, 79 SAY "ต"
 +	scroll(8, 0, MaxRow()-1, MaxCol(), 0)
 +	@ 8, 0, MaxRow()-1, MaxCol() BOX frame
- 	@ nHsepRow, 0 SAY "ฦ"
--	@ nHsepRow, 79 SAY "ต"
-+	@ nHsepRow, MaxCol() SAY "ต"
++	@ nHsepRow, 0 SAY hb_UTF8ToStr( "โ•" )
++	@ nHsepRow, MaxCol() SAY hb_UTF8ToStr( "โ•ก" )
  
  	/* init rest of locals */
  	cAlias := ""
@@ -236,9 +362,36 @@ diff -u dbu52ori/dbuedit.prg dbu52pat/dbuedit.prg
     endif
  
  	/* refresh flag */
+diff -u dbu52ori/dbuhelp.prg dbu52pat/dbuhelp.prg
+--- dbu52ori/dbuhelp.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbuhelp.prg	2012-05-02 16:29:55.000000000 +0200
+@@ -113,11 +113,11 @@
+ 	FREAD(M->hhandle, @htbuf, 512)
+ 
+ 	* isolate the correct 4 byte table entry
+-	htbuf = SUBSTR(M->htbuf, (4 * (M->hnum - 1)) + 1, 4)
++	htbuf = HB_BSUBSTR(M->htbuf, (4 * (M->hnum - 1)) + 1, 4)
+ 
+ 	* convert binary numbers (LSB, MSB) to Clipper numerics
+-	hoff = ASC(M->htbuf) + (256 * ASC(SUBSTR(M->htbuf, 2)))
+-	hlen = ASC(SUBSTR(M->htbuf, 3)) + (256 * ASC(SUBSTR(M->htbuf, 4)))
++	hoff = HB_BPEEK(M->htbuf, 1) + (256 * HB_BPEEK(M->htbuf, 2))
++	hlen = HB_BPEEK(M->htbuf, 3) + (256 * HB_BPEEK(M->htbuf, 4))
+ 
+ 	* allocate buffer
+ 	htbuf = SPACE(M->hlen)
 diff -u dbu52ori/dbuindx.prg dbu52pat/dbuindx.prg
 --- dbu52ori/dbuindx.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuindx.prg	2009-06-10 01:37:40.000000000 +0200
++++ dbu52pat/dbuindx.prg	2012-05-02 16:48:03.000000000 +0200
+@@ -117,7 +117,7 @@
+ PARAMETERS sysparam
+ 
+ RETURN box_title(M->sysparam, "Index " +;
+-							  SUBSTR(M->cur_dbf, RAT("\", M->cur_dbf) + 1) +;
++							  SUBSTR(M->cur_dbf, RAT(hb_ps(), M->cur_dbf) + 1) +;
+ 							  " to...")
+ 
+ 
 @@ -240,7 +240,7 @@
  		INDEX ON &k_exp TO &filename
  		CLOSE INDEX
@@ -248,9 +401,47 @@ diff -u dbu52ori/dbuindx.prg dbu52pat/dbuindx.prg
  		   FILE(name(M->filename) + INDEXEXT()) .AND. M->add_name
  			* add only .ntx files in the current directory
  
+diff -u dbu52ori/dbunet.prg dbu52pat/dbunet.prg
+--- dbu52ori/dbunet.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbunet.prg	2012-05-02 16:48:07.000000000 +0200
+@@ -333,7 +333,7 @@
+    LOCAL nPos     // Used to locate position of search characters in string
+ 
+    // Strip out the drive and path information, if any
+-   IF (( nPos := RAT( "\", cString )) != 0 )
++   IF (( nPos := RAT( hb_ps(), cString )) != 0 )
+       cString := SUBSTR( cString, ++nPos )
+    ENDIF
+ 
 diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 --- dbu52ori/dbustru.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbustru.prg	2009-06-10 01:39:17.000000000 +0200
++++ dbu52pat/dbustru.prg	2012-05-02 16:48:16.000000000 +0200
+@@ -74,8 +74,8 @@
+ filename = ""			&& variable for "filebox" function
+ 
+ * sigle row templates
+-empty_row = "           ณ           ณ       ณ    "
+-not_empty = "           ณ Character ณ    10 ณ    "
++empty_row = hb_UTF8ToStr( "           โ”           โ”       โ”    " )
++not_empty = hb_UTF8ToStr( "           โ” Character โ”    10 โ”    " )
+ 
+ IF .NOT. EMPTY(M->cur_dbf)
+ 	* modify structure
+@@ -133,11 +133,11 @@
+ * establish window heading
+ @ 9,field_col[1];
+ SAY "Structure of " + pad(IF(EMPTY(stru_name), "<new file>",;
+-							SUBSTR(stru_name, RAT("\", stru_name) + 1)), 13)
++							SUBSTR(stru_name, RAT(hb_ps(), stru_name) + 1)), 13)
+ 
+ @ 11,22 SAY   "Field Name   Type        Width   Dec"
+-@ 12,20 SAY "ฦออออออออออออัอออออออออออัอออออออัอออออต"
+-@ 23,33 SAY              "ฯอออออออออออฯอออออออฯ"
++@ 12,20 SAY hb_UTF8ToStr( "โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•คโ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•คโ•โ•โ•โ•โ•โ•โ•โ•คโ•โ•โ•โ•โ•โ•ก" )
++@ 23,33 SAY hb_UTF8ToStr(              "โ•งโ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•งโ•โ•โ•โ•โ•โ•โ•โ•ง" )
+ 
+ DO WHILE .NOT. q_check()
+ 	* the big switch
 @@ -811,7 +811,7 @@
  			is_insert = .F.
  			filename = stru_name
@@ -260,6 +451,35 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  					   "do_modstru", .T., 13) <> 0
  				* structure created or altered
  				stru_name = filename
+@@ -819,7 +819,7 @@
+ 				* re-write name at top of window
+ 				@ 9,field_col[1] + 13;
+ 				SAY pad(IF(EMPTY(stru_name), "<new file>",;
+-							SUBSTR(stru_name, RAT("\", stru_name) + 1)), 13)
++							SUBSTR(stru_name, RAT(hb_ps(), stru_name) + 1)), 13)
+ 
+ 				IF aseek(dbf, filename) = 0
+ 					* bring new file into view
+@@ -904,16 +904,16 @@
+ PARAMETERS fill_row
+ 
+ @ fill_row,field_col[1];
+-SAY field_name + " ณ " + data_type[AT(field_type, "CNDLM")] + " ณ "
++SAY field_name + hb_UTF8ToStr( " โ” " ) + data_type[AT(field_type, "CNDLM")] + hb_UTF8ToStr( " โ” " )
+ 
+ IF field_type = "C"
+ 	* display Clipper extended field length
+ 	@ fill_row,field_col[3] SAY STR(((256 * field_dec) + field_len), 4) +;
+-								" ณ    "
++								hb_UTF8ToStr( " โ”    " )
+ 
+ ELSE
+ 	* normal field length
+-	@ fill_row,field_col[3] SAY STR(field_len, 4) + " ณ    "
++	@ fill_row,field_col[3] SAY STR(field_len, 4) + hb_UTF8ToStr( " โ”    " )
+ 
+ 	IF field_type = "N"
+ 		* display decimals for numeric field
 @@ -1215,7 +1215,7 @@
  		USE
  
@@ -269,11 +489,13 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  		IF FILE(filename)
  			* file exists..modify structure and save old data
-@@ -1236,11 +1236,11 @@
+@@ -1235,12 +1235,12 @@
+ 			ENDIF
  
  			* establish temp filespec and dbt specs in same directory
- 			name_temp = SUBSTR(filename, 1, RAT("\", filename)) +;
+-			name_temp = SUBSTR(filename, 1, RAT("\", filename)) +;
 -						"DDBBUUUU.TMP"
++			name_temp = SUBSTR(filename, 1, RAT(hb_ps(), filename)) +;
 +						"ddbbuuuu.tmp"
  			dbt_spec = SUBSTR(filename, 1, RAT(".", filename)) +;
 -					   "DBT"
@@ -297,7 +519,19 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
 diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
 --- dbu52ori/dbuutil.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuutil.prg	2009-06-12 17:43:43.000000000 +0200
++++ dbu52pat/dbuutil.prg	2012-05-02 16:48:24.000000000 +0200
+@@ -716,9 +716,9 @@
+ 		BOX M->lframe
+ 
+ 		* format the list title
+-		i_title = REPLICATE("ฤ", ((46 - M->l_rel - LEN(M->i_title)) / 2) - 1);
++		i_title = REPLICATE(hb_UTF8ToStr( "โ”€" ), ((46 - M->l_rel - LEN(M->i_title)) / 2) - 1);
+ 				  + " " + M->i_title + " "
+-		i_title = M->i_title + REPLICATE("ฤ", (46 - M->l_rel - LEN(M->i_title)))
++		i_title = M->i_title + REPLICATE(hb_UTF8ToStr( "โ”€" ), (46 - M->l_rel - LEN(M->i_title)))
+ 
+ 		* display the list title
+ 		@ M->wt + 1, M->wl + M->l_rel - 1 SAY M->i_title
 @@ -950,7 +950,7 @@
  		SET KEY 24 TO clear_gets
  
@@ -307,6 +541,24 @@ diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
  
  		* release down arrow
  		SET KEY 24 TO
+@@ -958,7 +958,7 @@
+ 		IF .NOT. EMPTY(M->name_temp)
+ 			* something entered
+ 
+-			IF .NOT. (RAT(".", M->name_temp) > RAT("\", M->name_temp))
++			IF .NOT. (RAT(".", M->name_temp) > RAT(hb_ps(), M->name_temp))
+ 				* extnesion not entered..provide default
+ 				name_temp = M->name_temp + M->def_ext
+ 
+@@ -1963,7 +1963,7 @@
+ PRIVATE p
+ 
+ * isolate filename and extension from path
+-p = SUBSTR(M->spec, RAT("\", M->spec) + 1)
++p = SUBSTR(M->spec, RAT(hb_ps(), M->spec) + 1)
+ 
+ IF "." $ M->p
+ 	* there is an extension..chop it off
 @@ -2152,7 +2152,7 @@
  IF FILE(M->filename)
  	* only if the file exists
@@ -316,10 +568,42 @@ diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
  		* Clipper index file format
  		k_pos = 23
  
+@@ -2173,10 +2173,10 @@
+ 		FREAD(M->handle, @buffer, 512)
+ 
+ 		* discard all bytes before the key expression
+-		k = SUBSTR(M->buffer, M->k_pos)
++		k = HB_BSUBSTR(M->buffer, M->k_pos)
+ 
+ 		* the expression is terminated with a zero byte (chr(0))
+-		k = TRIM(SUBSTR(M->k, 1, AT(CHR(0), M->k) - 1))
++		k = TRIM(HB_BSUBSTR(M->k, 1, AT(CHR(0), M->k) - 1))
+ 
+ 	ENDIF
+ 
 diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
 --- dbu52ori/dbuview.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuview.prg	2009-06-12 14:42:30.000000000 +0200
-@@ -1102,7 +1102,7 @@
++++ dbu52pat/dbuview.prg	2012-05-02 16:53:34.000000000 +0200
+@@ -906,15 +906,15 @@
+ ENDIF
+ 
+ * the first slot is diferent than the rest
+-bar_line = "ออออออออออออ"
++bar_line = hb_UTF8ToStr( "โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•" )
+ empty_line = ""
+ 
+ k = 1
+ 
+ DO WHILE M->k < M->num_slots
+ 	* each new slot separated from previous by a vertical line
+-	bar_line = M->bar_line + "ัออออออออออออ"
+-	empty_line = M->empty_line + SPACE(12) + "ณ"
++	bar_line = M->bar_line + hb_UTF8ToStr( "โ•คโ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•โ•" )
++	empty_line = M->empty_line + SPACE(12) + hb_UTF8ToStr( "โ”" )
+ 
+ 	* next
+ 	k = M->k + 1
+@@ -1102,15 +1102,15 @@
  		KEYBOARD CHR(M->keystroke)
  
  		* entry in place
@@ -328,9 +612,10 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
  							M->color1)
  
  		IF .NOT. EMPTY(M->filename)
-@@ -1110,7 +1110,7 @@
+ 			* something entered
  
- 			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))
+-			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))
++			IF .NOT. (RAT(".", M->filename) > RAT(hb_ps(), M->filename))
  				* no extension entered..provide default
 -				filename = M->filename + ".DBF"
 +				filename = M->filename + ".dbf"
@@ -346,7 +631,7 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
  						  "do_opendbf", .F., 8) <> 0
  
  	ENDIF
-@@ -1269,7 +1269,7 @@
+@@ -1269,12 +1269,12 @@
  	KEYBOARD CHR(M->keystroke)
  
  	* entry in place
@@ -355,6 +640,39 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
  
  	IF .NOT. EMPTY(M->filename)
  		* something entered
+ 
+-		IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))
++		IF .NOT. (RAT(".", M->filename) > RAT(hb_ps(), M->filename))
+ 			* extension not entered..provide default
+ 			filename = filename + INDEXEXT()
+ 
+@@ -2120,7 +2120,7 @@
+ 
+ 				* draw line and arrow pointing to target alias
+ 				@ M->row_n,M->pos_c;
+-				SAY REPLICATE("ฤ", column[M->j] - M->pos_c + 1) + CHR(16)
++				SAY REPLICATE(hb_UTF8ToStr( "โ”€" ), column[M->j] - M->pos_c + 1) + CHR(16)
+ 
+ 				* display target alias as intense
+ 				SetColor(M->color12)
+@@ -2225,7 +2225,7 @@
+ SetColor(M->cNorm)
+ 
+ * display an arrow (always normal color)
+-?? REPLICATE("ฤ", column[M->k] - COL() + 1) + CHR(16)
++?? REPLICATE(hb_UTF8ToStr( "โ”€" ), column[M->k] - COL() + 1) + CHR(16)
+ 
+ * display the target alias in the specified color
+ SetColor(M->cSpecial)
+@@ -2363,7 +2363,7 @@
+ 
+ * title includes filename.ext but no path
+ RETURN box_title(M->sysparam, "Set filter for " +;
+-							  SUBSTR(M->cur_dbf, RAT("\", M->cur_dbf) + 1) +;
++							  SUBSTR(M->cur_dbf, RAT(hb_ps(), M->cur_dbf) + 1) +;
+ 							  " to...")
+ 
+ 
 @@ -2790,7 +2790,7 @@
  * get user entered file name..will default to primary + ".VEW"
  IF EMPTY(M->view_file) .AND. .NOT. EMPTY(dbf[1])
