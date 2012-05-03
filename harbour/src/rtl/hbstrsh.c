@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_STRSHRINK() function
  *
- * Copyright 2007 Viktor Szakats (harbour syenar.net)
+ * Copyright 2007-2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 #include "hbapiitm.h"
 
 HB_FUNC( HB_STRSHRINK )
@@ -59,16 +60,31 @@ HB_FUNC( HB_STRSHRINK )
 
    if( pText )
    {
-      HB_ISIZ nLen = hb_itemGetCLen( pText );
       HB_ISIZ nShrinkBy = hb_parnldef( 2, 1 );
 
       if( nShrinkBy > 0 )
       {
+         const char * pszText = hb_itemGetCPtr( pText );
+         HB_ISIZ nText = hb_itemGetCLen( pText );
+         HB_ISIZ nLen;
+         PHB_CODEPAGE cdp = hb_vmCDP();
+
+         if( HB_CDP_ISCHARIDX( cdp ) )
+            nLen = hb_cdpTextLen( cdp, pszText, nText );
+         else
+            nLen = nText;
+
          if( nShrinkBy < nLen )
-            nLen -= nShrinkBy;
+         {
+            if( HB_CDP_ISCHARIDX( cdp ) )
+               nLen = hb_cdpTextPos( cdp, pszText, nText, nLen - nShrinkBy );
+            else
+               nLen -= nShrinkBy;
+         }
          else
             nLen = 0;
-         hb_retclen( hb_itemGetCPtr( pText ), nLen );
+
+         hb_retclen( pszText, nLen );
       }
       else
          hb_itemReturn( pText );
