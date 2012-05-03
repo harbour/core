@@ -872,6 +872,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL nOpt_FNF
    LOCAL lCHD_Comp := .F.
    LOCAL cCHD_DirOld
+   LOCAL cBin_Sign
+   LOCAL cOpt_Sign
+   LOCAL cOpt_SignID
+   LOCAL cOpt_SignPass
 
    LOCAL cCommand
    LOCAL aCommand
@@ -2591,6 +2595,22 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Option available only when using embedded Harbour compiler: %1$s" ), cParam ) )
             ENDIF
+         ENDIF
+
+      /* EXPERIMENTAL */
+      CASE Left( cParamL, Len( "-sign=" ) ) == "-sign="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-sign=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            cOpt_SignID := cParam
+         ENDIF
+
+      /* EXPERIMENTAL */
+      CASE Left( cParamL, Len( "-signpw=" ) ) == "-signpw="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-signpw=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            cOpt_SignPass := cParam
          ENDIF
 
       CASE Left( cParamL, Len( "-ln=" ) ) == "-ln="
@@ -6776,6 +6796,47 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running compression command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + _OUT_EOL )
+               ENDIF
+            ENDIF
+         ENDIF
+
+         /* Setup code signing for host platform */
+
+         IF HBMK_ISPLAT( "win|wce" )
+            /* Requires MSVS */
+            cBin_Sign := "signtool.exe"
+            cOpt_Sign := "sign -f {ID} -p {PW} -t http://timestamp.verisign.com/scripts/timstamp.dll {OB}"
+         ENDIF
+
+         #if defined( __PLATFORM__DARWIN )
+            IF HBMK_ISPLAT( "darwin" )
+               cBin_Sign := "codesign"
+               cOpt_Sign := "-s {ID} -f {OB}"
+            ENDIF
+         #endif
+
+         IF ! Empty( cOpt_SignID ) .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Sign )
+
+            /* Code signing */
+
+            cOpt_Sign := StrTran( cOpt_Sign, "{ID}", cOpt_SignID )
+            cOpt_Sign := StrTran( cOpt_Sign, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
+            cOpt_Sign := AllTrim( cOpt_Sign )
+
+            cCommand := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", cOpt_SignPass ) )
+            tmp      := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", iif( Empty( cOpt_SignPass ), "", "****" ) ) )
+
+            IF hbmk[ _HBMK_lTRACE ]
+               IF ! hbmk[ _HBMK_lQuiet ]
+                  hbmk_OutStd( hbmk, I_( "Code sign command:" ) )
+               ENDIF
+               OutStd( tmp + _OUT_EOL )
+            ENDIF
+
+            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running code sign command. %1$s:" ), hb_ntos( tmp ) ) )
+               IF ! hbmk[ _HBMK_lQuiet ]
+                  OutStd( tmp + _OUT_EOL )
                ENDIF
             ENDIF
          ENDIF
