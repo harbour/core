@@ -106,6 +106,11 @@ HB_FUNC( HB_CDPINFO )
    hb_retc( cdp ? cdp->info : NULL );
 }
 
+HB_FUNC( HB_CDPCHARMAX )
+{
+   hb_retnl( ( 1 << ( ( int ) ( hb_cdpIsUTF8( hb_cdpFindExt( hb_parcx( 1 ) ) ) ? sizeof( HB_WCHAR ) : sizeof( HB_UCHAR ) ) * 8 ) ) - 1 );
+}
+
 HB_FUNC( HB_CDPISUTF8 )
 {
    hb_retl( hb_cdpIsUTF8( hb_cdpFindExt( hb_parcx( 1 ) ) ) );
