@@ -80,6 +80,7 @@
 
 # copy contrib-specific public files
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbc
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hb
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbs
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbx
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.ch

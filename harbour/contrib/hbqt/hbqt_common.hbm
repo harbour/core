@@ -36,6 +36,7 @@
 {beos}-depincpath=qt:/boot/common/include
 
 -instfile=contrib_qt:*.hbc
+-instfile=contrib_qt:*.hb
 -instfile=contrib_qt:*.hbs
 -instfile=contrib_qt:*.txt
 -instfile=contrib_qt_tests:tests/*.*

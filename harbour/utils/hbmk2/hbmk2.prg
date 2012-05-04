@@ -565,7 +565,8 @@ PROCEDURE _APPMAIN( ... )
 
    IF PCount() >= 1
       tmp := Lower( hb_FNameExt( hb_PValue( 1 ) ) )
-      IF tmp == ".hbs" .OR. ;
+      IF tmp == ".hb" .OR. ;
+         tmp == ".hbs" .OR. ;
          tmp == ".hrb"
          hbmk2_hbrun_minimal( ... )
          QUIT
@@ -3084,7 +3085,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
       CASE hb_FNameExt( cParamL ) == ".prg" .OR. ;
-           hb_FNameExt( cParamL ) == ".hbs"
+           hb_FNameExt( cParamL ) == ".hbs" .OR. ;
+           hb_FNameExt( cParamL ) == ".hb"
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPRG ], cParam )
@@ -5446,7 +5448,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          /* Do entry function detection on platform required and supported */
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ! lStopAfterCComp .AND. l_cMAIN == NIL
-            tmp := iif( HBMK_IS_IN( Lower( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), ".prg|.hbs|.clp" ) .OR. Empty( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), FNameDirExtSet( hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_cWorkDir ], ".c" ), hbmk[ _HBMK_cFIRST ] )
+            tmp := iif( HBMK_IS_IN( Lower( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), ".prg|.hb|.hbs|.clp" ) .OR. Empty( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), FNameDirExtSet( hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_cWorkDir ], ".c" ), hbmk[ _HBMK_cFIRST ] )
             IF ! Empty( tmp := getFirstFunc( hbmk, tmp ) )
                l_cMAIN := tmp
             ENDIF
@@ -7272,8 +7274,7 @@ STATIC FUNCTION hbmk_MemoRead( cFileName )
       cFile := SubStr( cFile, Len( hbmk_UTF8_BOM() ) + 1 )
    ENDIF
 
-   RETURN cFile
-/* RETURN hb_UTF8ToStr( cFile ) */
+   RETURN hb_UTF8ToStr( cFile )
 
 STATIC FUNCTION hbmk2_hb_compile( hbmk, ... )
    LOCAL cSaveCP
@@ -8503,9 +8504,10 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       IF ! Empty( cFile )
          lOK := .F.
-         /* Optimization: Don't try to load it as .hrb if the extension is .prg or .hbs (Harbour script) */
+         /* Optimization: Don't try to load it as .hrb if the extension is .prg, .hb or .hbs (Harbour script) */
          IF !( Lower( cExt ) == ".prg" ) .AND. ;
-            !( Lower( cExt ) == ".hbs" )
+            !( Lower( cExt ) == ".hbs" ) .AND. ;
+            !( Lower( cExt ) == ".hb" )
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                cType := I_( "(compiled)" )
@@ -11931,6 +11933,7 @@ PROCEDURE hbmk2_hbrun_minimal( cFile, ... )
 
    IF ! Empty( cFile := FindInPath( cFile ) )
       SWITCH Lower( hb_FNameExt( cFile ) )
+      CASE ".hb"
       CASE ".hbs"
          cFile := hb_compileBuf( hbmk_CoreHeaderFilesMinimal(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                  "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
@@ -12418,15 +12421,18 @@ STATIC PROCEDURE SetUILang( hbmk )
    ENDIF
 
    /* Setup input CP of the translation */
-   hb_cdpSelect( Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) ) )
-
-   /* Setup output CP, separate for Windows/DOS/OS2 and *nix systems */
-   /* NOTE: Intentionally doing runtime branching to include both strings in translation files. */
-   tmp := Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) )
-   IF tmp == "UTF8" .OR. tmp == "UTF-8"
-      hb_SetDispCP( "UTF8" )
+   IF hb_Version( HB_VERSION_UNIX_COMPAT ) /* NOTE: Intentionally doing runtime branching to include all translatable strings in translation files. */
+      hb_cdpSelect( "UTF8EX" )
    ELSE
-      hb_SetDispCP( tmp )
+      hb_cdpSelect( Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) ) )
+
+      /* Setup output CP, separate for Windows/DOS/OS2 and *nix systems */
+      tmp := Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) )
+      IF tmp == "UTF8" .OR. tmp == "UTF-8"
+         hb_SetDispCP( "UTF8" )
+      ELSEIF ! Empty( tmp )
+         hb_SetDispCP( tmp )
+      ENDIF
    ENDIF
 
    RETURN
@@ -12590,7 +12596,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
-      { "-plugin=<.prg|.hbs|.hrb>", I_( "add plugin" ) },;
+      { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .prg, .hb, .hbs, .hrb" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins" ) },;
       NIL,;
@@ -12649,7 +12655,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
-      I_( ".hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
+      I_( ".hb, .hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
 
    DEFAULT lLong TO .F.
 

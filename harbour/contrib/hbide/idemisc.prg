@@ -572,7 +572,7 @@ FUNCTION hbide_isValidSource( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc,.hbs" )
+   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc,.hb,.hbs" )
 
 /*----------------------------------------------------------------------*/
 
@@ -1998,7 +1998,7 @@ FUNCTION app_image( cName )
 FUNCTION hbide_isCompilerSource( cSource, cIncList )
    LOCAL cExt, aExt
 
-   DEFAULT cIncList TO ".c,.cpp,.prg,.hbs,.rc,.res,.hbm,.hbc,.qrc,.ui,.hbp"
+   DEFAULT cIncList TO ".c,.cpp,.prg,.hb,.hbs,.rc,.res,.hbm,.hbc,.qrc,.ui,.hbp"
 
    cIncList := lower( cIncList )
    aExt := hb_aTokens( lower( cIncList ), "," )

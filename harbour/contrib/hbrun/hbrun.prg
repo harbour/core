@@ -145,6 +145,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                   cExt := Lower( cExt )
                   SWITCH cExt
                      CASE ".prg"
+                     CASE ".hb"
                      CASE ".hbs"
                      CASE ".hrb"
                      CASE ".dbf"
@@ -157,6 +158,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                         hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
                         EXIT
                      CASE ".prg"
+                     CASE ".hb"
                      CASE ".hbs"
                         IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
                            hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
@@ -248,6 +250,7 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
       plugin[ _PLUGIN_hHRB ] := NIL
 
       SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
+      CASE ".hb"
       CASE ".hbs"
       CASE ".prg"
          cFile := hb_compileFromBuf( cFile, __hbrun_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
@@ -510,7 +513,7 @@ STATIC PROCEDURE hbrun_Usage()
            "Copyright (c) 1999-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() +;
-           "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )
+           "Syntax:  hbrun [<file[.prg|.hb|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )
 
    RETURN
 
@@ -711,7 +714,7 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
    LOCAL aExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   aExt := iif( Empty( cExt ), { ".hbs", ".hrb" }, { cExt } )
+   aExt := iif( Empty( cExt ), { ".hb", ".hbs", ".hrb" }, { cExt } )
 
    FOR EACH cExt IN aExt
       /* Check original filename (in supplied path or current dir) */
@@ -764,13 +767,14 @@ STATIC FUNCTION win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL tmp
 
    LOCAL aEntries := {;
-      cHive + '\'                          , ""                     ,;
-      cHive + '\.hbs\'                     , "HBSFile"              ,;
-      cHive + '\HBSFile\'                  , "Harbour Script File"  ,;
-      cHive + '\HBSFile\DefaultIcon\'      , cAppPath + ",-1"       ,;
-      cHive + '\HBSFile\Shell\'            , "Run"                  ,;
-      cHive + '\HBSFile\Shell\Run\'        , ""                     ,;
-      cHive + '\HBSFile\Shell\Run\Command\', cAppPath + ' "%1"'     }
+      cHive + '\'                                , ""                     ,;
+      cHive + '\.hb\'                            , "HarbourScript"        ,;
+      cHive + '\.hbs\'                           , "HarbourScript"        ,;
+      cHive + '\HarbourScript\'                  , "Harbour Script File"  ,;
+      cHive + '\HarbourScript\DefaultIcon\'      , cAppPath + ",-1"       ,;
+      cHive + '\HarbourScript\Shell\'            , "Run"                  ,;
+      cHive + '\HarbourScript\Shell\Run\'        , ""                     ,;
+      cHive + '\HarbourScript\Shell\Run\Command\', cAppPath + ' "%1"'     }
 
    IF lRegister
       FOR tmp := 1 TO Len( aEntries ) STEP 2
