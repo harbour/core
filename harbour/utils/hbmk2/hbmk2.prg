@@ -6805,7 +6805,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* Setup code signing for host platform */
 
          IF HBMK_ISPLAT( "win|wce" )
-            /* Requires MSVS */
+            /* Requires MS Windows SDK */
             cBin_Sign := "signtool.exe"
             cOpt_Sign := "sign -f {ID} -p {PW} -t http://timestamp.verisign.com/scripts/timstamp.dll {OB}"
          ENDIF
