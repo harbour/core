@@ -6826,19 +6826,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cOpt_Sign := AllTrim( cOpt_Sign )
 
             cCommand := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", cOpt_SignPass ) )
-            tmp      := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", iif( Empty( cOpt_SignPass ), "", "****" ) ) )
+            tmp1     := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", iif( Empty( cOpt_SignPass ), "", "***" ) ) )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
                   hbmk_OutStd( hbmk, I_( "Code sign command:" ) )
                ENDIF
-               OutStd( tmp + _OUT_EOL )
+               OutStd( tmp1 + _OUT_EOL )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running code sign command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
-                  OutStd( tmp + _OUT_EOL )
+                  OutStd( tmp1 + _OUT_EOL )
                ENDIF
             ENDIF
          ENDIF
@@ -10217,6 +10217,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
       cStdOut := ""
       IF ! Empty( cMacro )
          hb_processRun( cMacro,, @cStdOut )
+         cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
       ENDIF
       cString := Left( cString, nStart - 1 ) + cStdOut + SubStr( cString, nEnd + Len( _CMDSUBST_CLOSE ) )
    ENDDO
@@ -10224,6 +10225,19 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    RETURN cString
 
 STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
+
+#if 0
+   /* Support for: ${@<filename>} to include on-disk file content of <filename>
+                   ${@@<envvar>} to include on-disk file content referenced 
+                                 from filename contained in <envvar> */
+   IF Left( cMacro, 1 ) == "@"
+      cMacro := SubStr( cMacro, 2 )
+      IF Left( cMacro, 1 ) == "@"
+         cMacro := GetEnv( SubStr( cMacro, 2 ) )
+      ENDIF
+      RETURN StrTran( StrTran( hb_MemoRead( cMacro ), Chr( 13 ) ), Chr( 10 ), " " )
+   ENDIF
+#endif
 
    SWITCH Upper( cMacro )
    CASE "HB_ROOT"
