@@ -682,6 +682,7 @@ METHOD getMultiParts( aParts ) CLASS TipMail
    RETURN aParts
 
 STATIC FUNCTION WordEncodeQ( cData, cCharset )
+   LOCAL nPos
    LOCAL c
    LOCAL cString
    LOCAL nLineLen := 0
@@ -695,7 +696,8 @@ STATIC FUNCTION WordEncodeQ( cData, cCharset )
 
    cString := "=?" + cCharset + "?" + "Q" + "?"
 
-   FOR EACH c IN cData
+   FOR nPos := 1 TO hb_BLen( cData )
+      c := hb_BSubStr( cData, nPos, 1 )
       IF Asc( c ) > 126 .OR. ;
          c $ '=?!"#$@[\]^`{|}~_' .OR. ;
          Asc( c ) <= 32

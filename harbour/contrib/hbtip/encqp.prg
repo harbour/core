@@ -63,18 +63,22 @@ METHOD New() CLASS TIPEncoderQP
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderQP
+   LOCAL nPos
    LOCAL c
+   LOCAL nLen
    LOCAL cString := ""
    LOCAL nLineLen := 0
 
-   FOR EACH c IN cData
+   nLen := hb_BLen( cData )
+   FOR nPos := 1 TO nLen
+      c := hb_BSubStr( cData, nPos, 1 )
       IF c == Chr( 13 )
          cString += Chr( 13 ) + Chr( 10 )
          nLineLen := 0
       ELSEIF Asc( c ) > 126 .OR. ;
          c $ '=?!"#$@[\]^`{|}~' .OR. ;
          ( Asc( c ) < 32 .AND. !( c $ Chr( 13 ) + Chr( 10 ) + Chr( 9 ) ) ) .OR. ;
-         ( c $ " " + Chr( 9 ) .AND. SubStr( cData, c:__enumIndex() + 1 ) $ Chr( 13 ) + Chr( 10 ) )
+         ( c $ " " + Chr( 9 ) .AND. hb_BSubStr( cData, nPos + 1, 1 ) $ Chr( 13 ) + Chr( 10 ) )
          IF nLineLen + 3 > 76
             cString += "=" + Chr( 13 ) + Chr( 10 )
             nLineLen := 0
@@ -99,11 +103,11 @@ METHOD Decode( cData ) CLASS TIPEncoderQP
    cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
    cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
 
-   nLen := Len( cData )
+   nLen := hb_BLen( cData )
    FOR tmp := 1 TO nLen
-      c := SubStr( cData, tmp, 1 )
-      IF c == "=" .AND. Len( SubStr( cData, tmp + 1, 2 ) ) == 2
-         cString += Chr( hb_HexToNum( SubStr( cData, tmp + 1, 2 ) ) )
+      c := hb_BSubStr( cData, tmp, 1 )
+      IF c == "=" .AND. hb_BLen( hb_BSubStr( cData, tmp + 1, 2 ) ) == 2
+         cString += Chr( hb_HexToNum( hb_BSubStr( cData, tmp + 1, 2 ) ) )
          tmp += 2
       ELSE
          cString += c

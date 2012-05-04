@@ -140,7 +140,7 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                ELSE
                   _cGetSecret := STUFF( _cGetSecret, oGet:pos, 1, cKey )
                ENDIF
-               nKey := ASC( "*" )
+               nKey := hb_keyCode( "*" )
             ENDIF
             GetApplyKey( oGet, nKey )
          ENDDO
