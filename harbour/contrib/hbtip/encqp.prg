@@ -94,7 +94,7 @@ METHOD Encode( cData ) CLASS TIPEncoderQP
    RETURN cString
 
 METHOD Decode( cData ) CLASS TIPEncoderQP
-   LOCAL tmp
+   LOCAL nPos
    LOCAL c
    LOCAL nLen
    LOCAL cString := ""
@@ -104,11 +104,11 @@ METHOD Decode( cData ) CLASS TIPEncoderQP
    cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
 
    nLen := hb_BLen( cData )
-   FOR tmp := 1 TO nLen
-      c := hb_BSubStr( cData, tmp, 1 )
-      IF c == "=" .AND. hb_BLen( hb_BSubStr( cData, tmp + 1, 2 ) ) == 2
-         cString += Chr( hb_HexToNum( hb_BSubStr( cData, tmp + 1, 2 ) ) )
-         tmp += 2
+   FOR nPos := 1 TO nLen
+      c := hb_BSubStr( cData, nPos, 1 )
+      IF c == "=" .AND. hb_BLen( hb_BSubStr( cData, nPos + 1, 2 ) ) == 2
+         cString += Chr( hb_HexToNum( hb_BSubStr( cData, nPos + 1, 2 ) ) )
+         nPos += 2
       ELSE
          cString += c
       ENDIF

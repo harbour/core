@@ -81,18 +81,18 @@ FUNCTION TIP_GENERATESID( cCRCKey )
 
    /* Let's generate the sequence */
    cSID := Space( nLenSID )
-   for n := 1 TO nLenSID
+   FOR n := 1 TO nLenSID
       nRand     := hb_RandomInt( 1, nLenKeys )
       cSID      := Stuff( cSID, n, 1, SubStr( cBaseKeys, nRand, 1 ) )
       nKey      += nRand
-   next
+   NEXT
 
    nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
    cSIDCRC := ""
-   for n := 1 to Len( cTemp )
+   FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-   next
+   NEXT
 
    cRet := cSID + cSIDCRC
 
@@ -110,18 +110,18 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
    cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
 
    /* Calculate the key */
-   for n := 1 to nLenSID
+   FOR n := 1 TO nLenSID
       nRand := At( SubStr( cSID, n, 1), cBaseKeys )
       nKey  += nRand
-   next
+   NEXT
 
    // Recalculate the CRC
    nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
    cSIDCRC := ""
-   for n := 1 to Len( cTemp )
+   FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-   next
+   NEXT
 
    RETURN Right( cSID, 5 ) == cSIDCRC
 
