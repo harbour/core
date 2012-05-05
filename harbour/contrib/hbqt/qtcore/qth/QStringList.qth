@@ -36,7 +36,9 @@ HB_FUNC( QT_QSTRINGLIST )
    }
    else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QStringList( hbqt_par_QString( 1 ) ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QStringList( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
    }
    else
    {

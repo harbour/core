@@ -33,19 +33,37 @@ HB_FUNC( QT_QSETTINGS )
 {
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
+      void * pText01 = NULL;
+      void * pText02 = NULL;
+      __HB_RETPTRGC__( new QSettings( hb_parstr_utf8( 1, &pText01, NULL ), hb_parstr_utf8( 2, &pText02, NULL ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
+      hb_strfree( pText01 );
+      hb_strfree( pText02 );
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QSettings( hb_parstr_utf8( 1, &pText01, NULL ), ( QSettings::Format ) hb_parni( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QObject( 3 ) : 0 ) );
+      hb_strfree( pText01 );
    }
    else if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
    {
-      __HB_RETPTRGC__( new QSettings( ( QSettings::Scope ) hb_parni( 1 ), hbqt_par_QString( 2 ), HB_ISCHAR( 3 ) ? hbqt_par_QString( 3 ) : QString(), HB_ISOBJECT( 4 ) ? hbqt_par_QObject( 4 ) : 0 ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QSettings( ( QSettings::Scope ) hb_parni( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), HB_ISCHAR( 3 ) ? hbqt_par_QString( 3 ) : QString(), HB_ISOBJECT( 4 ) ? hbqt_par_QObject( 4 ) : 0 ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) )
+   {
+      void * pText01 = NULL;
+      void * pText02 = NULL;
+      __HB_RETPTRGC__( new QSettings( ( QSettings::Format ) hb_parni( 1 ), ( QSettings::Scope ) hb_parni( 2 ), hb_parstr_utf8( 3, &pText01, NULL ), hb_parstr_utf8( 4, &pText02, NULL ), HB_ISOBJECT( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) );
+      hb_strfree( pText01 );
+      hb_strfree( pText02 );
    }
    else if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
    {
-      __HB_RETPTRGC__( new QSettings( ( QSettings::Format ) hb_parni( 1 ), ( QSettings::Scope ) hb_parni( 2 ), hbqt_par_QString( 3 ), HB_ISCHAR( 4 ) ? hbqt_par_QString( 4 ) : QString(), HB_ISOBJECT( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QSettings( ( QSettings::Format ) hb_parni( 1 ), ( QSettings::Scope ) hb_parni( 2 ), hb_parstr_utf8( 3, &pText01, NULL ), QString(), HB_ISOBJECT( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) );
+      hb_strfree( pText01 );
    }
    else
    {

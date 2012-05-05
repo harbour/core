@@ -35,9 +35,19 @@ HB_FUNC( QT_QDIR )
    {
       __HB_RETPTRGC__( new QDir( *hbqt_par_QDir( 1 ) ) );
    }
-   else if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QDir( hbqt_par_QString( 1 ) ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QDir( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      void * pText01 = NULL;
+      void * pText02 = NULL;
+      __HB_RETPTRGC__( new QDir( hb_parstr_utf8( 1, &pText01, NULL ), hb_parstr_utf8( 2, &pText02, NULL ), HB_ISNUM( 3 ) ? ( QDir::SortFlag ) hb_parni( 3 ) : ( QDir::Name | QDir::IgnoreCase ), HB_ISNUM( 4 ) ? ( QDir::Filter ) hb_parni( 4 ) : QDir::AllEntries ) );
+      hb_strfree( pText01 );
+      hb_strfree( pText02 );
    }
    else
    {

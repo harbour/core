@@ -36,7 +36,9 @@ HB_FUNC( QT_QREGEXP )
    }
    else if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QRegExp( hbqt_par_QString( 1 ), HB_ISNUM( 2 ) ? ( Qt::CaseSensitivity ) hb_parni( 2 ) : Qt::CaseSensitive, HB_ISNUM( 3 ) ? ( QRegExp::PatternSyntax ) hb_parni( 3 ) : QRegExp::RegExp ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QRegExp( hb_parstr_utf8( 1, &pText01, NULL ), HB_ISNUM( 2 ) ? ( Qt::CaseSensitivity ) hb_parni( 2 ) : Qt::CaseSensitive, HB_ISNUM( 3 ) ? ( QRegExp::PatternSyntax ) hb_parni( 3 ) : QRegExp::RegExp ) );
+      hb_strfree( pText01 );
    }
    else
    {
