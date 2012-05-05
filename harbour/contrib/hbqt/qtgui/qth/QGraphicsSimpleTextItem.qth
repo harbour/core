@@ -34,7 +34,9 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM )
    {
       if( HB_ISCHAR( 1 ) )
       {
-         __HB_RETPTRGC__( new QGraphicsSimpleTextItem( hbqt_par_QString( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
+         void * pText01 = NULL;
+         __HB_RETPTRGC__( new QGraphicsSimpleTextItem( hb_parstr_utf8( 1, &pText01, NULL ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
+         hb_strfree( pText01 );
       }
       else if( HB_ISOBJECT( 1 ) )
       {  

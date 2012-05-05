@@ -30,7 +30,9 @@ HB_FUNC( QT_QLABEL )
 {
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QLabel( hbqt_par_QString( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ), HB_ISNUM( 3 ) ? ( Qt::WindowFlags ) hb_parni( 3 ) : ( Qt::WindowFlags ) 0 ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QLabel( hb_parstr_utf8( 1, &pText01, NULL ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ), HB_ISNUM( 3 ) ? ( Qt::WindowFlags ) hb_parni( 3 ) : ( Qt::WindowFlags ) 0 ) );
+      hb_strfree( pText01 );
    }
    else
    {

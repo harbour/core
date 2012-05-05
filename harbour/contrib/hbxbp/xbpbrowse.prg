@@ -1831,7 +1831,7 @@ METHOD XbpBrowse:doConfigure()
       ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
 
       /* Set column widths */
-      oFontMetrics := QFontMetrics( "QFont", ::oTableView:font() )
+      oFontMetrics := QFontMetrics( ::oTableView:font() )
       //
       FOR i := 1 TO len( ::columns )
          IF ::columns[ i ]:nColWidth != NIL

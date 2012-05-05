@@ -27,7 +27,9 @@ New      =
  */
 HB_FUNC( QT_QSOUND )
 {
-   __HB_RETPTRGC__( new QSound( hbqt_par_QString( 1 ) ) );
+   void * pText01 = NULL;
+   __HB_RETPTRGC__( new QSound( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+   hb_strfree( pText01 );
 }
 </CODE>
 

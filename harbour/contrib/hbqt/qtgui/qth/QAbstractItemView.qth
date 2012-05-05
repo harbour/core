@@ -100,6 +100,7 @@ virtual QRect visualRect ( const QModelIndex & index ) const = 0
 </PROTOS>
 
 <SLOTS>
+
 void clearSelection ()
 void edit ( const QModelIndex & index )
 virtual void reset ()
@@ -108,7 +109,15 @@ void scrollToTop ()
 virtual void selectAll ()
 void setCurrentIndex ( const QModelIndex & index )
 virtual void setRootIndex ( const QModelIndex & index )
+
+// Called in QWidget - to be addressed in future with some other mechanism.
+void update ()
+void update ( int x, int y, int w, int h )
+void update ( const QRect & rect )
+void update ( const QRegion & rgn ) 
+// This class specific
 void update ( const QModelIndex & index )
+
 </SLOTS>
 
 <SIGNALS>

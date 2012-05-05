@@ -34,7 +34,9 @@ HB_FUNC( QT_QPLAINTEXTEDIT )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QPlainTextEdit() );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QPlainTextEdit( hb_parstr_utf8( 1, &pText01, NULL ), 0 ) );
+      hb_strfree( pText01 );
    }
    else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
@@ -42,7 +44,9 @@ HB_FUNC( QT_QPLAINTEXTEDIT )
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
    {
-      __HB_RETPTRGC__( new QPlainTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QPlainTextEdit( hb_parstr_utf8( 1, &pText01, NULL ), hbqt_par_QWidget( 2 ) ) );
+      hb_strfree( pText01 );
    }
    else
    {
@@ -104,7 +108,7 @@ Qt::TextInteractionFlags textInteractionFlags () const
 QString toPlainText () const
 QTextOption::WrapMode wordWrapMode () const
 
-QString	anchorAt ( const QPoint & pos ) const              [*V=0x040700*]
+QString   anchorAt ( const QPoint & pos ) const              [*V=0x040700*]
 </PROTOS>
 
 <SLOTS>

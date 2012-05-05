@@ -29,20 +29,13 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSVIEW )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) && hbqt_isObjectType( 1, HBQT_TYPE_QGraphicsScene ) )
    {
-      __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QWidget( 1 ) ) ); 
+      __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QGraphicsScene( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ) ) );
    }
-   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
-   {
-      if( ( QString ) "QGraphicsScene" == hbqt_par_QString( 1 ) )
-      {
-         __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QGraphicsScene( 2 ), ( HB_ISOBJECT( 3 ) ? hbqt_par_QWidget( 3 ) : 0 ) ) );
-      }
-      else
-      {
-         __HB_RETPTRGC__( new QGraphicsView() );
-      }   
+   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   {   
+      __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QWidget( 1 ) ) ); 
    }
    else
    {

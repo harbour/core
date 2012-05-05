@@ -30,7 +30,25 @@ PaintEvent = YES
  */
 HB_FUNC( QT_QPUSHBUTTON )
 {
-    __HB_RETPTRGC__( new QPushButton( hbqt_par_QWidget( 1 ) ) );
+/*
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QPushButton( hb_parstr_utf8( 1, &pText01, NULL ), HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() >= 2 && HB_ISOBJECT( 1 ) && HB_ISCHAR( 2 ) )
+   {       
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QPushButton( *hbqt_par_QIcon( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), HB_ISOBJECT( 3 ) ? hbqt_par_QWidget( 3 ) : 0  ) );
+      hb_strfree( pText01 );
+   }
+   else   
+   {   
+      __HB_RETPTRGC__( new QPushButton( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
+   }   
+*/
+   __HB_RETPTRGC__( new QPushButton( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
 }
 </CODE>
 

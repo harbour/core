@@ -39,16 +39,27 @@ HB_FUNC( QT_QMAINWINDOW )
 
 HB_FUNC( HBQT_QMAINWINDOW_SAVESETTINGS )
 {
-   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
-
-   qSet.setValue( hbqt_par_QString( 2 ), hbqt_par_QMainWindow( 3 )->saveState() );
+   void * pText01 = NULL; 
+   void * pText02 = NULL; 
+   
+   QSettings qSet( hb_parstr_utf8( 1, &pText01, NULL ), QSettings::IniFormat );
+   qSet.setValue( hb_parstr_utf8( 2, &pText02, NULL ), hbqt_par_QMainWindow( 3 )->saveState() );
+   
+   hb_strfree( pText01 );
+   hb_strfree( pText02 );
 }
 
 HB_FUNC( HBQT_QMAINWINDOW_RESTSETTINGS )
 {
-   QSettings qSet( hbqt_par_QString( 1 ), QSettings::IniFormat );
+   void * pText01 = NULL; 
+   void * pText02 = NULL; 
+   
+   QSettings qSet(  hb_parstr_utf8( 1, &pText01, NULL ), QSettings::IniFormat );
 
-   hbqt_par_QMainWindow( 3 )->restoreState( qSet.value( hbqt_par_QString( 2 ) ).toByteArray() );
+   hbqt_par_QMainWindow( 3 )->restoreState( qSet.value( hb_parstr_utf8( 2, &pText02, NULL ) ).toByteArray() );
+   
+   hb_strfree( pText01 );
+   hb_strfree( pText02 );
 }
 </CODE>
 

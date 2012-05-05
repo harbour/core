@@ -74,7 +74,9 @@ HB_FUNC( QT_QFILEOPENEVENT )
    {
       if( HB_ISCHAR( 1 ) )
       {
-         __HB_RETPTRGC__( new QFileOpenEvent( hbqt_par_QString( 1 ) ) );
+         void * pText01 = NULL;
+         __HB_RETPTRGC__( new QFileOpenEvent( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+         hb_strfree( pText01 );
       }
       else if( HB_ISOBJECT( 1 ) )
       {
