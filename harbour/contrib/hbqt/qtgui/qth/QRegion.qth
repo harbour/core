@@ -33,31 +33,33 @@ New      = nX, nY, nWidth, nHeight, nType
  */
 HB_FUNC( QT_QREGION )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QREGION" ) )
    {
-      if( hbqt_isObjectType( 1, HBQT_TYPE_QRegion ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QRegion( 1 ) ) );      
-      else if( hbqt_isObjectType( 1, HBQT_TYPE_QPolygon ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QPolygon( 1 ) ) );
-      else if( hbqt_isObjectType( 1, HBQT_TYPE_QBitmap ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QBitmap( 1 ) ) );
-      else if( hbqt_isObjectType( 1, HBQT_TYPE_QRect ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QRect( 1 ) ) );
-      else
-         __HB_RETPTRGC__( new QRegion() );   
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QRegion( 1 ) ) );      
    }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QPOLYGON" ) )
+   {   
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QPolygon( 1 ) ) );
+   }   
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QBITMAP" ) )
+   {   
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QBitmap( 1 ) ) );
+   }   
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QRECT" ) )
+   {   
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QRect( 1 ) ) );
+   }   
    else if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
       __HB_RETPTRGC__( new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) );
    }
-   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOLYGON" ) && HB_ISNUM( 2 ) )
    {
-      if( hbqt_isObjectType( 1, HBQT_TYPE_QPolygon ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QPolygon( 1 ), ( Qt::FillRule ) hb_parni( 2 ) ) );
-      else if( hbqt_isObjectType( 1, HBQT_TYPE_QRect ) )
-         __HB_RETPTRGC__( new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) ); 
-      else
-         __HB_RETPTRGC__( new QRegion() );         
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QPolygon( 1 ), ( Qt::FillRule ) hb_parni( 2 ) ) );
+   }   
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QRECT" ) && HB_ISNUM( 2 ) )
+   {   
+      __HB_RETPTRGC__( new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) ); 
    }
    else
    {

@@ -31,21 +31,25 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSLINEITEM )
 {
-   if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   if( hb_pcount() == 5 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && hbqt_par_isDerivedFrom( 5, "QGRAPHICSITEM" ) )
    {
-      __HB_RETPTRGC__( new QGraphicsLineItem( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISOBJECT( 5 ) ? hbqt_par_QGraphicsItem( 5 ) : 0 ) ) );
+      __HB_RETPTRGC__( new QGraphicsLineItem( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hbqt_par_QGraphicsItem( 5 ) ) );
    }
-   else if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      HBQT_GC_T * p = ( HBQT_GC_T * ) hbqt_par_ptr( 1 );
-      if( p->type == HBQT_TYPE_QLineF )
-      {
-         __HB_RETPTRGC__( new QGraphicsLineItem( *hbqt_par_QLineF( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
-      }
-      else
-      {
-         __HB_RETPTRGC__( new QGraphicsLineItem( hbqt_par_QGraphicsItem( 1 ) ) );
-      }
+      __HB_RETPTRGC__( new QGraphicsLineItem( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), 0 ) );
+   }
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QLINEF" ) && hbqt_par_isDerivedFrom( 2, "QGRAPHICSITEM" ) )
+   {
+      __HB_RETPTRGC__( new QGraphicsLineItem( *hbqt_par_QLineF( 1 ), hbqt_par_QGraphicsItem( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QLINEF" ) )
+   {
+      __HB_RETPTRGC__( new QGraphicsLineItem( *hbqt_par_QLineF( 1 ), 0 ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGRAPHICSITEM" ) )
+   {
+      __HB_RETPTRGC__( new QGraphicsLineItem( hbqt_par_QGraphicsItem( 1 ) ) );
    }
    else
    {
