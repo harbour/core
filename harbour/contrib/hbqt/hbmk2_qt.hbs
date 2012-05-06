@@ -2183,7 +2183,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
          a_       := b_[ 2 ]
          FOR EACH oMtd IN a_
             IF oMtd:nArgs > 0
-               AAdd( txt_, "      " + iif( oMtd:__enumIndex() == 1, "if", "else if" ) + "( " + __TY_TYPEScpp( oMtd,nArgs ) + " )" )
+               AAdd( txt_, "      " + iif( oMtd:__enumIndex() == 1, "if", "else if" ) + "( " + __TY_TYPEScpp( oMtd, nArgs, .f. ) + " )" )
                AAdd( txt_, "      {" )
             ENDIF
             //
@@ -2223,7 +2223,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
                   nTySame := 0
                   AEval( a_, {| o | iif( __TY( o,nArgs ) == cCrc, nTySame++, NIL ) } )
                   lInIf   := oMtd:nArgQCast > 0 .AND. oMtd:nArgQCast <= nArgs .AND. nTySame > 1
-                  AAdd( txt_, "            " + iif( lFirst, "if( ", "else if( " ) + __TY_TYPEScpp( oMtd, nArgs ) + " )" )
+                  AAdd( txt_, "            " + iif( lFirst, "if( ", "else if( " ) + __TY_TYPEScpp( oMtd, nArgs, nTySame > 1 ) + " )" )
                   AAdd( txt_, "            {" )
                ENDIF
             ENDIF
@@ -2310,7 +2310,7 @@ STATIC FUNCTION hbqtgen_prgRetNormalize( cPrgRet )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast )
+STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast, lObj )
 
    HB_SYMBOL_UNUSED( cCast )
 
@@ -2320,9 +2320,17 @@ STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast )
    CASE "P"  //TODO
       RETURN "HB_ISPOINTER( " + hb_ntos( nArg ) + " )"
    CASE "O"
-      RETURN "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) +'" )'
+      IF lObj
+         RETURN "HB_ISOBJECT( " + hb_ntos( nArg ) + " )"
+      ELSE    
+         RETURN "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) +'" )'
+      ENDIF    
    CASE "CO"
-      RETURN "( hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) + '" )' + " || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
+      IF lObj
+         RETURN "( HB_ISOBJECT( " + hb_ntos( nArg ) + " )" + " || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
+      ELSE    
+         RETURN "( hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) + '" )' + " || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
+      ENDIF    
    CASE "N*"
       RETURN  "HB_ISBYREF( " + hb_ntos( nArg ) + " )"
    CASE "N"
@@ -2338,10 +2346,10 @@ STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast )
    RETURN ""
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION __TY_TYPEScpp( oM, nArgs )
+STATIC FUNCTION __TY_TYPEScpp( oM, nArgs, lObj )
    LOCAL i, s := ""
    FOR i := 1 TO nArgs
-      s += hbqtgen_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast ) + " && "
+      s += hbqtgen_paramCheckStrCpp( oM:hArgs[ i ]:cTypeHB, i, oM:hArgs[ i ]:cCast, lObj ) + " && "
    NEXT
    IF " && " $ s
       s := Left( s, Len( s ) - 4 )
@@ -3206,7 +3214,7 @@ STATIC FUNCTION hbqtgen_BuildCopyrightText()
    AAdd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */"              )
    AAdd( txt_, ""                                                                              )
    AAdd( txt_, "/* Harbour QT wrapper"                                                         )
-   AAdd( txt_, "   Copyright 2009-2011 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
+   AAdd( txt_, "   Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
    AAdd( txt_, "   www - http://harbour-project.org */"                                        )
    AAdd( txt_, ""                                                                              )
    AAdd( txt_, '#include "hbqt.h"'                                                             )
@@ -3266,7 +3274,7 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
 
    cRet := ""
    FOR EACH nArg IN aIdx
-      cRet += "hbqt_isObjectType( " + hb_ntos( nArg ) + ", " + "HBQT_TYPE_" + oMtd:hArgs[ nArg ]:cCast + " )" + " && "
+      cRet += "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( oMtd:hArgs[ nArg ]:cCast ) + '" )' + " && "
    NEXT
    cRet := SubStr( cRet, 1, Len( cRet ) - 4 )
 
