@@ -2692,7 +2692,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:cCast == "bool"
             s := "hb_parl( " + cHBIdx + " )"
             IF ! Empty( oArg:cDefault )
-               oArg:cBody := "( HB_ISLOG( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
+               oArg:cBody := iif( oArg:cDefault == "false", s, "hb_parldef( " + cHBIdx + ", true )" )
             ELSE
                oArg:cBody := s
             ENDIF
