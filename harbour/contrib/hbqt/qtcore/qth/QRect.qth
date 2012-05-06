@@ -31,19 +31,23 @@ New      =
  */
 HB_FUNC( QT_QRECT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QRECT" ) )
    {
       __HB_RETPTRGC__( new QRect( *hbqt_par_QRect( 1 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISOBJECT( 2 ) )
    {
-      if( hbqt_isObjectType( 2, HBQT_TYPE_QPoint ) )
+      if( hbqt_par_isDerivedFrom( 2, "QPOINT" ) )
       {
          __HB_RETPTRGC__( new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
       }
-      if( hbqt_isObjectType( 2, HBQT_TYPE_QSize ) )
+      else if( hbqt_par_isDerivedFrom( 2, "QSIZE" ) )
       {
          __HB_RETPTRGC__( new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QSize( 2 ) ) );
+      }
+      else
+      {
+         __HB_RETPTRGC__( new QRect() );
       }
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )

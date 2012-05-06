@@ -32,11 +32,11 @@ HB_FUNC( QT_QFILE )
 {
    if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
-      if( hbqt_isObjectType( 1, HBQT_TYPE_QFile ) )
+      if( hbqt_par_isDerivedFrom( 1, "QFILE" ) )
       {
          __HB_RETPTRGC__( new QFile( hbqt_par_QFile( 1 ) ) );
       }
-      else
+      else if( hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
       {
          __HB_RETPTRGC__( new QFile( hbqt_par_QObject( 1 ) ) );
       }

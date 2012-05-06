@@ -30,14 +30,18 @@ HB_FUNC( QT_QFILESYSTEMWATCHER )
 {
    if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
-      if( hbqt_isObjectType( 1, HBQT_TYPE_QStringList ) )
+      if( hbqt_par_isDerivedFrom( 1, "QSTRINGLIST" ) )
       {
          __HB_RETPTRGC__( new QFileSystemWatcher( *hbqt_par_QStringList( 1 ) ) );
       }
-      else
+      else if( hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
       {
          __HB_RETPTRGC__( new QFileSystemWatcher( hbqt_par_QObject( 1 ) ) );
       }
+      else
+      {
+         __HB_RETPTRGC__( new QFileSystemWatcher() );
+      }   
    }
    else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
    {

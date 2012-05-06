@@ -71,85 +71,83 @@ HB_FUNC( QT_QVARIANT )
 {
    if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
    {
-      HB_U32 iType = hbqt_getObjectType( 1 );
-
-      if( iType == HBQT_TYPE_QVariant )
+      if( hbqt_par_isDerivedFrom( 1, "QVARIANT" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QVariant( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QByteArray )
+      else if( hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QByteArray( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QBitArray )
+      else if( hbqt_par_isDerivedFrom( 1, "QBITARRAY" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QBitArray( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QLatin1String )
+      else if( hbqt_par_isDerivedFrom( 1, "QLATIN1STRING" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QLatin1String( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QStringList )
+      else if( hbqt_par_isDerivedFrom( 1, "QSTRINGLIST" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QStringList( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QDate )
+      else if( hbqt_par_isDerivedFrom( 1, "QDATE" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QDate( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QTime )
+      else if( hbqt_par_isDerivedFrom( 1, "QTIME" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QTime( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QDateTime )
+      else if( hbqt_par_isDerivedFrom( 1, "QDATETIME" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QDateTime( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QChar )
+      else if( hbqt_par_isDerivedFrom( 1, "QCHAR" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QChar( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QSize )
+      else if( hbqt_par_isDerivedFrom( 1, "QSIZE" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QSize( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QSizeF )
+      else if( hbqt_par_isDerivedFrom( 1, "QSIZEF" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QSizeF( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QRect )
+      else if( hbqt_par_isDerivedFrom( 1, "QRECT" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QRect( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QRectF )
+      else if( hbqt_par_isDerivedFrom( 1, "QRECTF" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QRectF( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QPoint )
+      else if( hbqt_par_isDerivedFrom( 1, "QPOINT" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QPoint( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QPointF )
+      else if( hbqt_par_isDerivedFrom( 1, "QPOINTF" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QPointF( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QLine )
+      else if( hbqt_par_isDerivedFrom( 1, "QLINE" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QLine( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QLineF )
+      else if( hbqt_par_isDerivedFrom( 1, "QLINEF" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QLineF( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QUrl )
+      else if( hbqt_par_isDerivedFrom( 1, "QURL" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QUrl( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QLocale )
+      else if( hbqt_par_isDerivedFrom( 1, "QLOCALE" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QLocale( 1 ) ) );
       }
-      else if( iType == HBQT_TYPE_QRegExp )
+      else if( hbqt_par_isDerivedFrom( 1, "QREGEXP" ) )
       {
          __HB_RETPTRGC__( new QVariant( *hbqt_par_QRegExp( 1 ) ) );
       }
