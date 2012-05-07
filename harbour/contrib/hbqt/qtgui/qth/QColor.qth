@@ -50,7 +50,7 @@ HB_FUNC( QT_QCOLOR )
          __HB_RETPTRGC__( new QColor( hb_parstr_utf8( 1, &pText01, NULL ) ) );
          hb_strfree( pText01 );
       }
-      else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+      else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QCOLOR" ) )
       {
          __HB_RETPTRGC__( new QColor( *hbqt_par_QColor( 1 ) ) );
       }

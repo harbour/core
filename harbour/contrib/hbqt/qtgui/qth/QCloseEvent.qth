@@ -28,7 +28,7 @@ New      =
  */
 HB_FUNC( QT_QCLOSEEVENT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QCLOSEEVENT" ) )
    {
       __HB_RETPTRGC__( new QCloseEvent( *hbqt_par_QCloseEvent( 1 ) ) );
    }

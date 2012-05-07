@@ -76,7 +76,7 @@ HB_FUNC( QT_QBRUSH )
    {
       __HB_RETPTRGC__( new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
    }
-   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QCOLOR" ) && HB_ISOBJECT( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QCOLOR" ) && hbqt_par_isDerivedFrom( 2, "QPIXMAP" ) )
    {
       __HB_RETPTRGC__( new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) );
    }

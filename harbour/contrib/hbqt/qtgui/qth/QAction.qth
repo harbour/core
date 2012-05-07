@@ -34,22 +34,26 @@ HB_FUNC( QT_QACTION )
 {
    int pcount;
    pcount = hb_pcount();
-   if( pcount == 3 && HB_ISOBJECT( 1 ) && HB_ISCHAR( 2 ) && HB_ISOBJECT( 3 ) )
+   if( pcount == 3 && hbqt_par_isDerivedFrom( 1, "QICON" ) && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
    {
       void * pText01 = NULL;
       __HB_RETPTRGC__( new QAction( *hbqt_par_QIcon( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), hbqt_par_QObject( 3 ) ) );
       hb_strfree( pText01 ); 
    }
-   else if( pcount == 2 && HB_ISCHAR( 1 ) && HB_ISOBJECT( 2 ) )
+   else if( pcount == 2 && HB_ISCHAR( 1 ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
    {   
       void * pText01 = NULL;
       __HB_RETPTRGC__( new QAction(hb_parstr_utf8( 1, &pText01, NULL ), hbqt_par_QObject( 2 ) ) );
       hb_strfree( pText01 ); 
    }   
-   else if( pcount == 1 && HB_ISOBJECT( 1 ) )
+   else if( pcount == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
       __HB_RETPTRGC__( new QAction( hbqt_par_QObject( 1 ) ) );
+   }   
    else 
+   {   
       hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

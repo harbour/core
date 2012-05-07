@@ -49,7 +49,7 @@ HBQT_GC_FUNC( hbqt_gcMark_HBQGraphicsScene )
  */
 HB_FUNC( QT_HBQGRAPHICSSCENE )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new HBQGraphicsScene( hbqt_par_QObject( 1 ) ) );
    }

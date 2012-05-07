@@ -58,7 +58,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    {
       __HB_RETPTRGC__( new HBQPlainTextEdit() );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new HBQPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
    }
