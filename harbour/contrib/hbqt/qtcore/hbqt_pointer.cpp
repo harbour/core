@@ -491,7 +491,12 @@ HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFrom( %i, %s )", iParam, pszClsName ) );
 
    if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
-      return hbqt_obj_isDerivedFrom( pItem, pszClsName );
+   {
+      if( s_hbqt_GCPointerFromItem( pItem ) == NULL )
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      else
+         return hbqt_obj_isDerivedFrom( pItem, pszClsName );
+   }   
 
    return HB_FALSE;
 }
