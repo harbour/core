@@ -29,7 +29,14 @@ HB_FUNC( QT_QEVENTLOOP )
 {
    if( hb_pcount() >= 0 )
    {
-      __HB_RETPTRGC__( new QEventLoop( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
+      if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+      {
+         __HB_RETPTRGC__( new QEventLoop( hbqt_par_QObject( 1 ) ) );
+      }
+      else
+      {      
+         __HB_RETPTRGC__( new QEventLoop( 0 ) );
+      }   
    }
 }
 </CODE>

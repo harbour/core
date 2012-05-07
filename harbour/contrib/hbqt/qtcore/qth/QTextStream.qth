@@ -32,20 +32,19 @@ New      = cText, nIOMode
  */
 HB_FUNC( QT_QTEXTSTREAM )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QIODEVICE" ) )
    {
-      if( hbqt_par_isDerivedFrom( 1, "QIODEVICE" ) )
-      {
-         __HB_RETPTRGC__( new QTextStream( hbqt_par_QIODevice( 1 ) ) );
-      }
-      else if( hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) )
-      {
-         __HB_RETPTRGC__( new QTextStream( hbqt_par_QByteArray( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
-      }
+      __HB_RETPTRGC__( new QTextStream( hbqt_par_QIODevice( 1 ) ) );
+   }
+   else if( hb_pcount() >= 1 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) )
+   {
+      __HB_RETPTRGC__( new QTextStream( hbqt_par_QByteArray( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
    }
    else if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      __HB_RETPTRGC__( new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QTextStream( hb_parstr_utf8( 1, &pText01, NULL ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
+      hb_strfree( pText01 );
    }
    else
    {

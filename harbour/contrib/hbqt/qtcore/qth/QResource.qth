@@ -30,10 +30,16 @@ ClubMethods = no
  */
 HB_FUNC( QT_QRESOURCE )
 {
-   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && hbqt_par_isDerivedFrom( 2, "QLOCALE" ) )
    {
       void * pText01 = NULL;
-      __HB_RETPTRGC__( new QResource( hb_parstr_utf8( 1, &pText01, NULL ), HB_ISOBJECT( 2 ) ? *hbqt_par_QLocale( 2 ) : QLocale() ) );
+      __HB_RETPTRGC__( new QResource( hb_parstr_utf8( 1, &pText01, NULL ), *hbqt_par_QLocale( 2 ) ) );
+      hb_strfree( pText01 );
+   }
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QResource( hb_parstr_utf8( 1, &pText01, NULL ), QLocale() ) );
       hb_strfree( pText01 );
    }
    else

@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QCHILDEVENT )
 {
-   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISOBJECT( 2 ) )
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QChildEvent( ( QEvent::Type ) hb_parni( 1 ), hbqt_par_QObject( 2 ) ) );
    }

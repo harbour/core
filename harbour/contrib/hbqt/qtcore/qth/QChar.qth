@@ -43,7 +43,7 @@ Destructor = no
  */
 HB_FUNC( QT_QCHAR )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() >= 1 && hbqt_par_isDerivedFrom( 1, "QLATIN1CHAR" ) )
    {
       __HB_RETPTRGC__( new QChar( *hbqt_par_QLatin1Char( 1 ) ) );
    }

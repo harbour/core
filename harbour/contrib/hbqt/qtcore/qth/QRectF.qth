@@ -35,20 +35,13 @@ HB_FUNC( QT_QRECTF )
    {
       __HB_RETPTRGC__( new QRectF( *hbqt_par_QRectF( 1 ) ) );
    }
-   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISOBJECT( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && hbqt_par_isDerivedFrom( 2, "QPOINTF" ) )
    {
-      if( hbqt_par_isDerivedFrom( 2, "QPOINTF" ) )
-      {
-         __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) );
-      }
-      else if( hbqt_par_isDerivedFrom( 2, "QSIZEF" ) )
-      {
-         __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QSizeF( 2 ) ) );
-      }
-      else
-      {
-         __HB_RETPTRGC__( new QRectF() );
-      }
+      __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && hbqt_par_isDerivedFrom( 2, "QSIZEF" ) )
+   {
+      __HB_RETPTRGC__( new QRectF( *hbqt_par_QPointF( 1 ), *hbqt_par_QSizeF( 2 ) ) );
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {

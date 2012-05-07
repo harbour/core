@@ -27,7 +27,7 @@ New      =
  */
 HB_FUNC( QT_QLATIN1CHAR )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QLatin1Char" ) )
    {
       __HB_RETPTRGC__( new QLatin1Char( *hbqt_par_QLatin1Char( 1 ) ) );
    }

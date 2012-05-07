@@ -26,7 +26,14 @@ New      = pParent
  */
 HB_FUNC( QT_QSIGNALMAPPER )
 {
-   __HB_RETPTRGC__( new QSignalMapper( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QSignalMapper( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {      
+      __HB_RETPTRGC__( new QSignalMapper( 0 ) );
+   }   
 }
 </CODE>
 

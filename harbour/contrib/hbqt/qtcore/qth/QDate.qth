@@ -28,7 +28,7 @@ Destructor =
  */
 HB_FUNC( QT_QDATE )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATE" ) )
    {
       __HB_RETPTRGC__( new QDate( *hbqt_par_QDate( 1 ) ) );
    }

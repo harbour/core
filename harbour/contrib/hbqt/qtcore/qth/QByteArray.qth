@@ -32,7 +32,7 @@ ClubMethods = no
  */
 HB_FUNC( QT_QBYTEARRAY )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() >= 1 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) )
    {
       __HB_RETPTRGC__( new QByteArray( *hbqt_par_QByteArray( 1 ) ) );
    }

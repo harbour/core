@@ -30,7 +30,7 @@ Destructor =
  */
 HB_FUNC( QT_QLOCALE )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QLOCALE" ) )
    {
       __HB_RETPTRGC__( new QLocale( *hbqt_par_QLocale( 1 ) ) );
    }

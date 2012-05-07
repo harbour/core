@@ -26,7 +26,7 @@ Calls    = QT_QObject
  */
 HB_FUNC( QT_QOBJECT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QObject( hbqt_par_QObject( 1 ) ) );
    }

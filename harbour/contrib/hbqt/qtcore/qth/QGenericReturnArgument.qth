@@ -34,7 +34,7 @@ New      =
  */
 HB_FUNC( QT_QGENERICRETURNARGUMENT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGENERICRETURNARGUMENT" ) )
    {
       __HB_RETPTRGC__( new QGenericReturnArgument( *hbqt_par_QGenericReturnArgument( 1 ) ) );
    }

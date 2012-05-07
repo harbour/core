@@ -30,7 +30,7 @@ List     = yes
  */
 HB_FUNC( QT_QLIST )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QLIST" ) )
    {
       __HB_RETPTRGC__( new QList< void * >( *hbqt_par_QList( 1 ) ) );
    }

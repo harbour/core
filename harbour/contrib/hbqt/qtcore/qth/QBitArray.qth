@@ -28,7 +28,7 @@ New      =
  */
 HB_FUNC( QT_QBITARRAY )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QBITARRAY" ) )
    {
       __HB_RETPTRGC__( new QBitArray( *hbqt_par_QBitArray( 1 ) ) );
    }

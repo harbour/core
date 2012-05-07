@@ -31,7 +31,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTEXTBOUNDARYFINDER" ) )
    {
       __HB_RETPTRGC__( new QTextBoundaryFinder( *hbqt_par_QTextBoundaryFinder( 1 ) ) );
    }
@@ -41,7 +41,7 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER )
       __HB_RETPTRGC__( new QTextBoundaryFinder( ( QTextBoundaryFinder::BoundaryType ) hb_parni( 1 ), hb_parstr_utf8( 2, &pText01, NULL ) ) );
       hb_strfree( pText01 );
    }
-   else if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISOBJECT( 2 ) && HB_ISNUM( 3 ) )
+   else if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QCHAR" ) && HB_ISNUM( 3 ) )
    {
       __HB_RETPTRGC__( new QTextBoundaryFinder( ( QTextBoundaryFinder::BoundaryType ) hb_parni( 1 ), hbqt_par_QChar( 2 ), hb_parni( 3 ), HB_ISCHAR( 4 ) ? ( unsigned char * ) hb_parc( 4 ) : 0, hb_parni( 5 ) ) );
    }

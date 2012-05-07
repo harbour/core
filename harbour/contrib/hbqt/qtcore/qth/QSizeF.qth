@@ -33,7 +33,7 @@ HB_FUNC( QT_QSIZEF )
    {
       __HB_RETPTRGC__( new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSIZEF" ) )
    {
       __HB_RETPTRGC__( new QSizeF( *hbqt_par_QSizeF( 1 ) ) );
    }

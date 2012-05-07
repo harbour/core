@@ -28,7 +28,7 @@ New      = pTextCodec
  */
 HB_FUNC( QT_QTEXTDECODER )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTEXTCODEC" ) )
    {
       __HB_RETPTRGC__( new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
    }

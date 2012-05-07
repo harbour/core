@@ -35,13 +35,21 @@ New      =
  */
 HB_FUNC( QT_QBUFFER )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
    {
-      __HB_RETPTRGC__( new QBuffer( hbqt_par_QByteArray( 1 ), HB_ISOBJECT( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) );
+      __HB_RETPTRGC__( new QBuffer( hbqt_par_QByteArray( 1 ), hbqt_par_QObject( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) )
+   {
+      __HB_RETPTRGC__( new QBuffer( hbqt_par_QByteArray( 1 ), 0 ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )   
+   {   
+      __HB_RETPTRGC__( new QBuffer( hbqt_par_QObject( 1 ) ) );
    }
    else
    {
-      __HB_RETPTRGC__( new QBuffer( HB_ISOBJECT( 1 ) ? hbqt_par_QObject( 1 ) : 0 ) );
+      __HB_RETPTRGC__( new QBuffer() );
    }
 }
 </CODE>

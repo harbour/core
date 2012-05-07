@@ -29,7 +29,7 @@ New      =
  */
 HB_FUNC( QT_QMODELINDEX )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QMODELINDEX" ) )
    {
       __HB_RETPTRGC__( new QModelIndex( *hbqt_par_QModelIndex( 1 ) ) );
    }

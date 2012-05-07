@@ -33,7 +33,7 @@ HB_FUNC( QT_QPOINTF )
    {
       __HB_RETPTRGC__( new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) )
    {
       __HB_RETPTRGC__( new QPointF( *hbqt_par_QPoint( 1 ) ) );
    }
