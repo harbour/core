@@ -7585,7 +7585,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                                       NIL /* lNewLine */, NIL, ;
                                       NIL /* nGetMatch */, ;
                                       .T. /* lOnlyMatch */ )
-            cHeader := atail( tmp ) /* Last group in match marker */
+            cHeader := ATail( tmp ) /* Last group in match marker */
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
@@ -10234,7 +10234,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
 
 #if 0
    /* Support for: ${@<filename>} to include on-disk file content of <filename>
-                   ${@@<envvar>} to include on-disk file content referenced 
+                   ${@@<envvar>} to include on-disk file content referenced
                                  from filename contained in <envvar> */
    IF Left( cMacro, 1 ) == "@"
       cMacro := SubStr( cMacro, 2 )
