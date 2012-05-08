@@ -79,9 +79,8 @@
 {hbdyn&(cygwin|!unix)}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
 # copy contrib-specific public files
--instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbc
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hb
--instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbs
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbc
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.hbx
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.ch
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}/*.txt

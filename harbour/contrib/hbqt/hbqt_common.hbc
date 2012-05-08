@@ -12,7 +12,7 @@ stop={HB_WITH_QT='no'}QT deselected, build skipped.
 
 incpaths=.
 
-plugins=hbmk2_qt.hbs
+plugins=hbmk2_qt.hb
 
 {msvc}ldflags=-nodefaultlib:msvcrt.lib -defaultlib:libcmt.lib
 {beos}ldflags=-L/boot/common/lib

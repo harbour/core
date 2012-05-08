@@ -21,7 +21,7 @@
 
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
 
--plugin=hbmk2_qt.hbs
+-plugin=hbmk2_qt.hb
 
 -deppkgname=qt:QtCore
 -depkeyhead=qt:QtCore/qglobal.h
@@ -35,9 +35,8 @@
 {darwin}-depincpath=qt:/Library/Frameworks
 {beos}-depincpath=qt:/boot/common/include
 
--instfile=contrib_qt:*.hbc
 -instfile=contrib_qt:*.hb
--instfile=contrib_qt:*.hbs
+-instfile=contrib_qt:*.hbc
 -instfile=contrib_qt:*.txt
 -instfile=contrib_qt_tests:tests/*.*
 
