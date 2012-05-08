@@ -29,7 +29,14 @@ New      = pParent
  */
 HB_FUNC( QT_QFTP )
 {
-   __HB_RETPTRGC__( new QFtp( hbqt_par_QObject( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QFtp( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QFtp() );
+   }      
 }
 
 /*

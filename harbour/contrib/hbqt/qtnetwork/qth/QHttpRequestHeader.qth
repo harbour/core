@@ -30,7 +30,28 @@ Destructor =
  */
 HB_FUNC( QT_QHTTPREQUESTHEADER )
 {
-   __HB_RETPTRGC__( new QHttpRequestHeader() );
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QHttpRequestHeader( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      void * pText01 = NULL;
+      void * pText02 = NULL;
+      __HB_RETPTRGC__( new QHttpRequestHeader( hb_parstr_utf8( 1, &pText01, NULL ), hb_parstr_utf8( 2, &pText02, NULL ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : 1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ) );
+      hb_strfree( pText01 );
+      hb_strfree( pText02 );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QHTTPREQUESTHEADER" ) )
+   {
+      __HB_RETPTRGC__( new QHttpRequestHeader( *hbqt_par_QHttpRequestHeader( 1 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QHttpRequestHeader() );
+   }   
 }
 </CODE>
 

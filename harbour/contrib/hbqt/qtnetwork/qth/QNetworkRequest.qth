@@ -29,7 +29,18 @@ Destructor =
  */
 HB_FUNC( QT_QNETWORKREQUEST )
 {
-   __HB_RETPTRGC__( new QNetworkRequest() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QURL" ) )
+   {
+      __HB_RETPTRGC__( new QNetworkRequest( *hbqt_par_QUrl( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QNETWORKREQUEST" ) )
+   {
+      __HB_RETPTRGC__( new QNetworkRequest( *hbqt_par_QNetworkRequest( 1 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QNetworkRequest() );
+   }   
 }
 </CODE>
 

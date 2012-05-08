@@ -32,7 +32,22 @@ Constructor = no
  */
 HB_FUNC( QT_QHTTPHEADER )
 {
-   
+/*  //QHttpHeader.cpp:128:67: error: cannot allocate an object of abstract type 'QHttpHeader'  // This can be subclassed only
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QHttpHeader( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QHTTPHEADER" ) )
+   {
+      __HB_RETPTRGC__( new QHttpHeader( *hbqt_par_QHttpHeader( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QHttpHeader() );
+   }   
+*/   
 }
 </CODE>
 
