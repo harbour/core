@@ -27,9 +27,9 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QMAINWINDOW )
 {
-   if( hb_pcount() <= 2 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() <= 2 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
    {
-      __HB_RETPTRGC__( new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) );
+      __HB_RETPTRGC__( new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }
    else
    {

@@ -72,9 +72,13 @@ Version  = 0x040700
  */
 HB_FUNC( QT_QDECLARATIVELISTREFERENCE )
 {
-   if( hb_pcount() >= 2 && HB_ISOBJECT( 1 ) && HB_ISCHAR( 2 ) )
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QDECLARATIVEENGINE" ) )
    {
-      __HB_RETPTRGC__( new QDeclarativeListReference( hbqt_par_QObject( 1 ), hb_parc( 2 ), HB_ISOBJECT( 3 ) ? hbqt_par_QDeclarativeEngine( 3 ) : 0 ) );
+      __HB_RETPTRGC__( new QDeclarativeListReference( hbqt_par_QObject( 1 ), hb_parc( 2 ), hbqt_par_QDeclarativeEngine( 3 ) ) );
+   }
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISCHAR( 2 ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeListReference( hbqt_par_QObject( 1 ), hb_parc( 2 ), 0 ) );
    }
    else
    {   

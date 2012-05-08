@@ -35,17 +35,23 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
       __HB_RETPTRGC__( new QTableWidgetItem( hb_parstr_utf8( 1, &pText01, NULL ), hb_parni( 2 ) ) );
       hb_strfree( pText01 );
    }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QTableWidgetItem( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
    else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
       __HB_RETPTRGC__( new QTableWidgetItem( hb_parni( 1 ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTABLEWIDGETITEM" ) )
    {
       __HB_RETPTRGC__( new QTableWidgetItem( *hbqt_par_QTableWidgetItem( 1 ) ) );
    }
    else
    {
-      __HB_RETPTRGC__( new QTableWidgetItem( 0 ) );
+      __HB_RETPTRGC__( new QTableWidgetItem() );
    }
 }
 </CODE>

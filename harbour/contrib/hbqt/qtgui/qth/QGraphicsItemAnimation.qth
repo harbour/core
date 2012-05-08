@@ -30,7 +30,7 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSITEMANIMATION )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QGraphicsItemAnimation( hbqt_par_QObject( 1 ) ) );
    }

@@ -29,13 +29,15 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSLINEARLAYOUT )
 {
-   if( hb_pcount() >= 1 )
-   {
-      if( HB_ISNUM( 1 ) )
+      if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
       {
-         __HB_RETPTRGC__( new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsLayoutItem( 2 ) : 0 ) ) );   
+         __HB_RETPTRGC__( new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ) ) );
       }
-      else if( HB_ISOBJECT( 1 ) )
+      else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QGRAPHICSLAYOUTITEM" ) )
+      {
+         __HB_RETPTRGC__( new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QGraphicsLayoutItem( 2 ) ) );   
+      }
+      else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGRAPHICSLAYOUTITEM" ) )
       {
          __HB_RETPTRGC__( new QGraphicsLinearLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
       }
@@ -43,11 +45,6 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT )
       {
          __HB_RETPTRGC__( new QGraphicsLinearLayout() );
       }
-   }
-   else
-   {
-      __HB_RETPTRGC__( new QGraphicsLinearLayout() );
-   }
 }
 </CODE>
 

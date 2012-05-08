@@ -70,19 +70,20 @@ New      =
  */
 HB_FUNC( QT_QFILEOPENEVENT )
 {
-   if( hb_pcount() == 1 && ( HB_ISCHAR( 1 ) || HB_ISOBJECT( 1 ) ) )
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      if( HB_ISCHAR( 1 ) )
-      {
-         void * pText01 = NULL;
-         __HB_RETPTRGC__( new QFileOpenEvent( hb_parstr_utf8( 1, &pText01, NULL ) ) );
-         hb_strfree( pText01 );
-      }
-      else if( HB_ISOBJECT( 1 ) )
-      {
-         __HB_RETPTRGC__( new QFileOpenEvent( *hbqt_par_QFileOpenEvent( 1 ) ) );
-      }
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QFileOpenEvent( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
    }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFILEOPENEVENT" ) )
+   {
+      __HB_RETPTRGC__( new QFileOpenEvent( *hbqt_par_QFileOpenEvent( 1 ) ) );
+   }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 
@@ -101,6 +102,4 @@ QString file () const
 
 <VARIABLES>
 </VARIABLES>
-
-
 

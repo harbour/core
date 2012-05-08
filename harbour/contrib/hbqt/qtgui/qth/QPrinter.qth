@@ -29,7 +29,7 @@ New      =
  */
 HB_FUNC( QT_QPRINTER )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() >= 1 && hbqt_par_isDerivedFrom( 1, "QPRINTERINFO" ) )
    {
       __HB_RETPTRGC__( new QPrinter( *hbqt_par_QPrinterInfo( 1 ), ( QPrinter::PrinterMode ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : QPrinter::ScreenResolution ) ) );
    }

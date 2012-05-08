@@ -28,9 +28,13 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSPROXYWIDGET )
 {
-   if( hb_pcount() >= 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
    {
-      __HB_RETPTRGC__( new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) );
+      __HB_RETPTRGC__( new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ) ) );
+   }
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) && HB_ISNUM( 2 ) )
+   {
+      __HB_RETPTRGC__( new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }
    else
    {

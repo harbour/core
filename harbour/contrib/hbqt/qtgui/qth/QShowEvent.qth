@@ -32,7 +32,7 @@ HB_FUNC( QT_QSHOWEVENT )
    {
       __HB_RETPTRGC__( new QShowEvent() );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSHOWEVENT" ) )
    {
       __HB_RETPTRGC__( new QShowEvent( *hbqt_par_QShowEvent( 1 ) ) );
    }

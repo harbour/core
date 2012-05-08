@@ -35,13 +35,13 @@ New      =
  */
 HB_FUNC( QT_QITEMEDITORFACTORY )
 {
-   if( HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QITEMEDITORFACTORY" ) )
    {
-      __HB_RETPTRGC__( new QItemEditorFactory() );
+      __HB_RETPTRGC__( new QItemEditorFactory( *hbqt_par_QItemEditorFactory( 1 ) ) );
    }
    else
    {
-      __HB_RETPTRGC__( new QItemEditorFactory( *hbqt_par_QItemEditorFactory( 1 ) ) );
+      __HB_RETPTRGC__( new QItemEditorFactory() );
    }
 }
 </CODE>

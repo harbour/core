@@ -36,10 +36,14 @@ HB_FUNC( QT_QWINDOWSTATECHANGEEVENT )
    {
       __HB_RETPTRGC__( new QWindowStateChangeEvent( ( Qt::WindowStates ) hb_parni( 1 ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWINDOWSTATECHANGEEVENT" ) )
    {
       __HB_RETPTRGC__( new QWindowStateChangeEvent( *hbqt_par_QWindowStateChangeEvent( 1 ) ) );
    }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

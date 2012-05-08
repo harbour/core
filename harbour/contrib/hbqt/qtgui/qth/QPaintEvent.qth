@@ -28,29 +28,22 @@ New      =
  */
 HB_FUNC( QT_QPAINTEVENT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QREGION" ) )
    {
-      if( hbqt_par_isDerivedFrom( 1, "QREGION" ) )
-      {
-         __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRegion( 1 ) ) );
-      }
-      else if( hbqt_par_isDerivedFrom( 1, "QRECT" ) )
-      {
-         __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
-      }
-      else if( hbqt_par_isDerivedFrom( 1, "QPAINTEVENT" ) )
-      {
-         __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QPaintEvent( 1 ) ) );
-      }
-      else
-      {
-         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      }   
+      __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRegion( 1 ) ) );
+   }   
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QRECT" ) )
+   {
+      __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QPAINTEVENT" ) )
+   {
+      __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QPaintEvent( 1 ) ) );
    }
    else
    {
       hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
+   }   
 }
 </CODE>
 

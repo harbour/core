@@ -72,7 +72,7 @@ Version  = 0x040700
  */
 HB_FUNC( QT_QDECLARATIVESCRIPTSTRING )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDECLARATIVESCRIPTSTRING" ) )
    {
       __HB_RETPTRGC__( new QDeclarativeScriptString( *hbqt_par_QDeclarativeScriptString( 1 ) ) );
    }

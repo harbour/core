@@ -54,11 +54,11 @@ HB_FUNC( QT_QFONT )
       __HB_RETPTRGC__( new QFont( hb_parstr_utf8( 1, &pText01, NULL ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) );
       hb_strfree( pText01 );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
    {
       __HB_RETPTRGC__( new QFont( *hbqt_par_QFont( 1 ) ) );
    }
-   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISOBJECT( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QFONT" ) && hbqt_par_isDerivedFrom( 2, "QPAINTDEVICE" ) )
    {
       __HB_RETPTRGC__( new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) );
    }

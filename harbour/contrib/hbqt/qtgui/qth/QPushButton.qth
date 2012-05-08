@@ -48,7 +48,14 @@ HB_FUNC( QT_QPUSHBUTTON )
       __HB_RETPTRGC__( new QPushButton( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
    }   
 */
-   __HB_RETPTRGC__( new QPushButton( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QPushButton( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QPushButton() );
+   }      
 }
 </CODE>
 

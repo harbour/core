@@ -32,10 +32,14 @@ HB_FUNC( QT_QFOCUSEVENT )
    {
       __HB_RETPTRGC__( new QFocusEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::FocusReason ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::OtherFocusReason ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFOCUSEVENT" ) )
    {
       __HB_RETPTRGC__( new QFocusEvent( *hbqt_par_QFocusEvent( 1 ) ) );
    }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

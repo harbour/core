@@ -32,22 +32,21 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSTEXTITEM )
 {
-   if( hb_pcount() >= 1 )
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      if( HB_ISCHAR( 1 ) )
-      {
-         void * pText01 = NULL;
-         __HB_RETPTRGC__( new QGraphicsTextItem( hb_parstr_utf8( 1, &pText01, NULL ), ( HB_ISOBJECT( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
-         hb_strfree( pText01 );
-      }
-      else if( HB_ISOBJECT( 1 ) )
-      {  
-         __HB_RETPTRGC__( new QGraphicsTextItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
-      }
-      else
-      {
-         __HB_RETPTRGC__( new QGraphicsTextItem() );
-      }
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QGraphicsTextItem( hb_parstr_utf8( 1, &pText01, NULL ) ) ); 
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && hbqt_par_isDerivedFrom( 2, "QGRAPHICSITEM" ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QGraphicsTextItem( hb_parstr_utf8( 1, &pText01, NULL ), hbqt_par_QGraphicsItem( 1 ) ) ); 
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGRAPHICSITEM" ) )
+   {  
+      __HB_RETPTRGC__( new QGraphicsTextItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
    }
    else
    {

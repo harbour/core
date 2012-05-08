@@ -29,14 +29,18 @@ Destructor =
  */
 HB_FUNC( QT_QINTVALIDATOR )
 {
-   if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISOBJECT( 3 ) )
+   if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QIntValidator( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QObject( 3 ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QIntValidator( hbqt_par_QObject( 1 ) ) );
    }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

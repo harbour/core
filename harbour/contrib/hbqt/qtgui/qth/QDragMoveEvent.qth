@@ -29,14 +29,18 @@ Constructor = no
  */
 HB_FUNC( QT_QDRAGMOVEEVENT )
 {
-   if( hb_pcount() >= 5 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) && HB_ISOBJECT( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
+   if( hb_pcount() >= 5 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISNUM( 2 ) && hbqt_par_isDerivedFrom( 3, "QMIMEDATA" ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
    {
       __HB_RETPTRGC__( new QDragMoveEvent( *hbqt_par_QPoint( 1 ), ( Qt::DropActions ) hb_parni( 2 ), hbqt_par_QMimeData( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ), ( QEvent::Type ) ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : QEvent::DragMove ) ) );
    }
-   else if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDRAGMOVEEVENT" ) )
    {
       __HB_RETPTRGC__( new QDragMoveEvent( *hbqt_par_QDragMoveEvent( 1 ) ) );
    }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

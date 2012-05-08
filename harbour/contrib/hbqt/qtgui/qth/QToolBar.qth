@@ -27,14 +27,26 @@ New      = pParent
  */
 HB_FUNC( QT_QTOOLBAR )
 {
-   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) ) 
    {
       void * pText01 = NULL;
-      __HB_RETPTRGC__( new QToolBar( hb_parstr_utf8( 1, &pText01, NULL ), HB_ISOBJECT( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ) );
+      __HB_RETPTRGC__( new QToolBar( hb_parstr_utf8( 1, &pText01, NULL ), hbqt_par_QWidget( 2 ) ) );
       hb_strfree( pText01 );
-   }   
+   }  
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) ) 
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QToolBar( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }  
+   else if( hb_pcount() >= 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) ) 
+   {
+      __HB_RETPTRGC__( new QToolBar( hbqt_par_QWidget( 1 ) ) );
+   }      
    else
-      __HB_RETPTRGC__( new QToolBar( HB_ISOBJECT( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
+   {   
+      __HB_RETPTRGC__( new QToolBar() );
+   }   
 }
 </CODE>
 

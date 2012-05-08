@@ -39,7 +39,7 @@ New      =
  */
 HB_FUNC( QT_QIMAGE )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QIMAGE" ) )
    {
       __HB_RETPTRGC__( new QImage( *hbqt_par_QImage( 1 ) ) );
    }
@@ -55,7 +55,7 @@ HB_FUNC( QT_QIMAGE )
       __HB_RETPTRGC__( new QImage( hb_parstr_utf8( 1, &pText01, NULL ), ( const char * ) hb_parcx( 2 ) ) );
       hb_strfree( pText01 );
    }
-   else if( hb_pcount() == 2 && HB_ISOBJECT( 1 ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QSIZE" ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QImage( *hbqt_par_QSize( 1 ), ( QImage::Format ) hb_parni( 2 ) ) );
    }

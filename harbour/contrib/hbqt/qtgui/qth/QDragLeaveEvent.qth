@@ -28,7 +28,7 @@ Constructor = no
  */
 HB_FUNC( QT_QDRAGLEAVEEVENT )
 {
-   if( hb_pcount() == 1 && HB_ISOBJECT( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDRAGLEAVEEVENT" ) )
    {
       __HB_RETPTRGC__( new QDragLeaveEvent( *hbqt_par_QDragLeaveEvent( 1 ) ) );
    }
