@@ -64,9 +64,6 @@ FUNCTION __hbrun_plugins()
    FOR EACH file IN Directory( hb_DirBase() + "*.hb" )
       hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
    NEXT
-   FOR EACH file IN Directory( hb_DirBase() + "*.hbs" )
-      hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
-   NEXT
    FOR EACH file IN Directory( hb_DirBase() + "*.hrb" )
       hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
    NEXT

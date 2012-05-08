@@ -130,7 +130,7 @@ STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
                pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
             ENDIF
          ELSE
-            cFileName := cPath + "hbide_plugin_" + cPlugin + ".hbs"
+            cFileName := cPath + "hbide_plugin_" + cPlugin + ".hb"
             IF hb_fileExists( cFileName )
                cFile := hb_memoread( cFileName )
                cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
@@ -197,7 +197,7 @@ FUNCTION hbide_execAutoScripts()
       a_:= {}
       dir_:= directory( cPath + "hbide_auto_*.prg" )
       aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
-      dir_:= directory( cPath + "hbide_auto_*.hbs" )
+      dir_:= directory( cPath + "hbide_auto_*.hb" )
       aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
 
       FOR EACH cFileName IN a_
@@ -291,7 +291,7 @@ FUNCTION hbide_loadPersistentScripts()
       a_:= {}
       dir_:= directory( cPath + "hbide_persist_*.prg" )
       aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
-      dir_:= directory( cPath + "hbide_persist_*.hbs" )
+      dir_:= directory( cPath + "hbide_persist_*.hb" )
       aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
 
       FOR EACH cFileName IN a_

@@ -171,7 +171,6 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
             CASE ".prg"
             CASE ".hb"
-            CASE ".hbs"
             CASE ".hrb"
                EXIT
             OTHERWISE
@@ -180,7 +179,6 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
             CASE ".prg"
             CASE ".hb"
-            CASE ".hbs"
                cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0",;
                                        "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
                IF cFile != NIL
