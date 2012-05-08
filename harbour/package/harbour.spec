@@ -406,7 +406,7 @@ make %{?_smp_mflags}
 %install
 %{hb_env}
 
-# necessary for shared linked hbmk2 used to execute postinst.hbs
+# necessary for shared linked hbmk2 used to execute postinst.hb
 export LD_LIBRARY_PATH=$HB_INSTALL_LIB
 
 make install %{?_smp_mflags}

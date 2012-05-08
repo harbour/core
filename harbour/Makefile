@@ -54,6 +54,6 @@ include $(ROOT)config/dir.mk
 ifneq ($(HB_NO_HBSCRIPT),yes)
 
 first clean install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)config/postinst.hbs $@,@$(ECHO) $(ECHOQUOTE)! Warning: hbmk2 not found, config/postinst.hbs skipped.$(ECHOQUOTE))
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbmk2$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)config/postinst.hb $@,@$(ECHO) $(ECHOQUOTE)! Warning: hbmk2 not found, config/postinst.hb skipped.$(ECHOQUOTE))
 
 endif
