@@ -11768,7 +11768,9 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF
                NEXT
+               tmp := hb_cdpSelect( "EN" )
                ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+               hb_cdpSelect( tmp )
             ENDIF
          ENDIF
 
