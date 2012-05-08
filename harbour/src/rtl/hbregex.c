@@ -57,6 +57,10 @@
 #include "hbapierr.h"
 #include "hbinit.h"
 
+#if defined( HB_HAS_PCRE )
+   static int s_iUTF8Enabled;
+#endif
+
 static void hb_regfree( PHB_REGEX pRegEx )
 {
 #if defined( HB_HAS_PCRE )
@@ -81,15 +85,9 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    pRegEx->iEFlags = ( ( pRegEx->iFlags & HBREG_NOTBOL ) ? PCRE_NOTBOL : 0 ) |
                      ( ( pRegEx->iFlags & HBREG_NOTEOL ) ? PCRE_NOTEOL : 0 );
 
-   /* detect UTF-8 support. */
-   {
-      int iUTF8Enabled;
-      if( pcre_config( PCRE_CONFIG_UTF8, &iUTF8Enabled ) != 0 )
-         iUTF8Enabled = 0;
-      /* use UTF8 in pcre when available and HVM CP is also UTF8. */
-      if( iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
-         iCFlags |= PCRE_UTF8;
-   }
+   /* use UTF8 in pcre when available and HVM CP is also UTF8. */
+   if( s_iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
+      iCFlags |= PCRE_UTF8;
 
    pRegEx->re_pcre = pcre_compile( szRegEx, iCFlags, &szError,
                                    &iErrOffset, pCharTable );
@@ -562,13 +560,13 @@ static void hb_pcre_free( void * ptr )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
 #if defined( HB_HAS_PCRE )
-   /* Hack to force linking newer PCRE versions not the one included in BCC RTL */
-#  if defined( __BORLANDC__ )
-   {
-      int iUTF8Enabled;
-      pcre_config( PCRE_CONFIG_UTF8, &iUTF8Enabled );
-   }
-#  endif
+   /* detect UTF-8 support.
+    * In BCC builds this code also forces linking newer PCRE versions
+    * then the one included in BCC RTL.
+    */
+   if( pcre_config( PCRE_CONFIG_UTF8, &s_iUTF8Enabled ) != 0 )
+      s_iUTF8Enabled = 0;
+
    pcre_malloc = hb_pcre_grab;
    pcre_free = hb_pcre_free;
    pcre_stack_malloc = hb_pcre_grab;

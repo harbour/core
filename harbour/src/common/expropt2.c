@@ -2046,18 +2046,12 @@ HB_BOOL hb_compExprReduceBCHAR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
       pExpr->ValType = HB_EV_STRING;
-      if( pArg->value.asNum.NumType == HB_ET_LONG )
-      {
-         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ];
-         pExpr->value.asString.dealloc = HB_FALSE;
-         pExpr->nLength = 1;
-      }
-      else
-      {
-         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ];
-         pExpr->value.asString.dealloc = HB_FALSE;
-         pExpr->nLength = 1;
-      }
+      pExpr->value.asString.string =
+         ( char * ) hb_szAscii[ ( pArg->value.asNum.NumType == HB_ET_LONG ?
+                           ( unsigned int ) pArg->value.asNum.val.l :
+                           ( unsigned int ) pArg->value.asNum.val.d ) & 0xff ];
+      pExpr->value.asString.dealloc = HB_FALSE;
+      pExpr->nLength = 1;
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );

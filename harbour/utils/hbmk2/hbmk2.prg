@@ -7559,9 +7559,15 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
          http://www.pcre.org/pcre.txt */
 
    IF s_pRegexInclude == NIL
-      s_pRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'|`.+?'"+')',;
+      /* Switch to non UTF8 CP - otherwise PCRE fails on user files
+       * containing non UTF8 characters. For this expression we do
+       * not need UTF8 or any other fixed encoding.
+       */
+      tmp := hb_cdpSelect( "EN" )
+      s_pRegexInclude := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(incl|inclu|includ|include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|['`].+?'"+')',;
          .F. /* lCaseSensitive */,;
          .T. /* lNewLine */ )
+      hb_cdpSelect( tmp )
       IF Empty( s_pRegexInclude )
          hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
          s_pRegexInclude := 0 /* To show the error only once by setting to non-NIL empty value */
@@ -7579,7 +7585,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                                       NIL /* lNewLine */, NIL, ;
                                       NIL /* nGetMatch */, ;
                                       .T. /* lOnlyMatch */ )
-            cHeader := tmp[ 3 ] /* First match marker */
+            cHeader := atail( tmp ) /* Last group in match marker */
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
