@@ -33,11 +33,11 @@ HB_FUNC( QT_QWHEELEVENT )
    {
       __HB_RETPTRGC__( new QWheelEvent( *hbqt_par_QWheelEvent( 1 ) ) );
    }
-   else if( hb_pcount() >= 4 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && ISNUM( 2 ) && ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   else if( hb_pcount() >= 4 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
       __HB_RETPTRGC__( new QWheelEvent( *hbqt_par_QPoint( 1 ), hb_parni( 2 ), ( Qt::MouseButtons ) hb_parni( 3 ), ( Qt::KeyboardModifiers ) hb_parni( 4 ), ( Qt::Orientation ) ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : Qt::Vertical ) ) );  
    }
-   else if( hb_pcount() >= 5 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && hbqt_par_isDerivedFrom( 2, "QPOINT" ) && ISNUM( 3 ) && ISNUM( 4 ) && HB_ISNUM( 5 ) )
+   else if( hb_pcount() >= 5 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && hbqt_par_isDerivedFrom( 2, "QPOINT" ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
    {
       __HB_RETPTRGC__( new QWheelEvent( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ), hb_parni( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ), ( Qt::Orientation ) ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : Qt::Vertical ) ) );  
    }
