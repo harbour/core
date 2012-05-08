@@ -10,7 +10,7 @@
  *
  */
 
-#define F_NAME 1
+#include "directry.ch"
 
 PROCEDURE Main()
    LOCAL aFile
