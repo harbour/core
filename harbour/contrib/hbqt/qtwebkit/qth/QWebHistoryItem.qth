@@ -32,10 +32,14 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBHISTORYITEM )
 {
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWEBHISTORYITEM" ) )
    {
       __HB_RETPTRGC__( new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
    }
+   else 
+   {   
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

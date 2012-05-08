@@ -32,7 +32,14 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBHITTESTRESULT )
 {
-   __HB_RETPTRGC__( new QWebHitTestResult() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWEBHITTESTRESULT" ) )
+   {
+      __HB_RETPTRGC__( new QWebHitTestResult( *hbqt_par_QWebHitTestResult( 1 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QWebHitTestResult() );
+   }   
 }
 </CODE>
 

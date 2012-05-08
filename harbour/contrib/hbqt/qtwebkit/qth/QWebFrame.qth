@@ -31,7 +31,7 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBFRAME )
 {
-   // __HB_RETPTRGC__( new QWebFrame() );
+   //__HB_RETPTRGC__( new QWebFrame() );
 }
 </CODE>
 

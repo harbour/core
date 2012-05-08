@@ -30,7 +30,14 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBPAGE )
 {
-   __HB_RETPTRGC__( new QWebPage( hbqt_par_QWidget( 2 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QWebPage( hbqt_par_QObject( 1 ) ) );
+   }   
+   else
+   {
+      __HB_RETPTRGC__( new QWebPage() );
+   }   
 }
 </CODE>
 

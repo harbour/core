@@ -12,6 +12,7 @@
  */
 
 <CLASS>
+QObject  = Yes
 Inherit  = QWidget
 New      = pParent
 folder   = qtwebkit
@@ -29,7 +30,14 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBVIEW )
 {
-   __HB_RETPTRGC__( new QWebView( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QWebView( hbqt_par_QWidget( 1 ) ) );
+   }   
+   else
+   {
+      __HB_RETPTRGC__( new QWebView() );
+   }   
 }
 </CODE>
 

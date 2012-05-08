@@ -15,8 +15,9 @@
 Inherits = QObject
 Type     = Core
 New      =
-folder   = qtwebkit
+Destructor = no
 Constructor = no
+folder   = qtwebkit
 </CLASS>
 
 <CODE>
