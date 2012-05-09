@@ -341,7 +341,7 @@ METHOD IdeHome:buildWelcomeTab()
    qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "browserWelcome_contextMenuRequested", p ) } )
 
    qSList := QStringList()
-   qSList:append( "docs" )
+   qSList:append( hb_dirBase() + "docs" )
    qBrw:setSearchPaths( qSList )
 
    RETURN Self

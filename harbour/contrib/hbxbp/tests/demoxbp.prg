@@ -364,7 +364,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
 
    #ifdef __HARBOUR__
    #if 1
-      oSubMenu := XbpMenu():new( oMenuBar ):create()
+      oSubMenu := XbpMenu():new( oMenuBar ):create( , , .t. )
       oSubMenu:title := "~Dialogs"
       #if 1             /*  T H R E D E D   D I A L O G */
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB ) +"Ctrl+M", ;

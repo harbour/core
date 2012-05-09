@@ -207,7 +207,6 @@ STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    LOCAL oMB
 
    IF hbqt_IsActiveApplication()
-      
       DEFAULT cTitle TO "Information"
       DEFAULT nIcon  TO QMessageBox_Information
 
@@ -220,7 +219,11 @@ STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
       oMB:setWindowTitle( cTitle )
    
       oMB:exec()
-   
+      
+   ELSE 
+      #include "hbtrace.ch"
+      HB_TRACE( HB_TR_ALWAYS, cMsg )
+      
    ENDIF 
    
    RETURN nil
