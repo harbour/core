@@ -281,10 +281,10 @@ void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
       szDate[ 2 ] = ( char ) ( ( ( iYear / 10 ) % 10 ) + '0' );
       szDate[ 3 ] = ( char ) ( ( iYear % 10 ) + '0' );
 
-      szDate[ 4 ] = ( char ) ( ( iMonth / 10 ) + '0' );
+      szDate[ 4 ] = ( char ) ( ( ( iMonth / 10 ) % 10 ) + '0' );
       szDate[ 5 ] = ( char ) ( ( iMonth % 10 ) + '0' );
 
-      szDate[ 6 ] = ( char ) ( ( iDay / 10 ) + '0' );
+      szDate[ 6 ] = ( char ) ( ( ( iDay / 10 ) % 10 ) + '0' );
       szDate[ 7 ] = ( char ) ( ( iDay % 10 ) + '0' );
    }
    else
