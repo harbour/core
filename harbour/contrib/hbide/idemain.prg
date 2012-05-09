@@ -105,10 +105,7 @@ REQUEST ADS
 
 FUNCTION Main( ... )
    LOCAL oTmp
-#if 1   
-   LOCAL oIde
-#endif   
-
+   
 #ifdef __HBDYNLOAD__RDDADS__
    LOCAL hRDDADS, tmp
 #endif
@@ -140,13 +137,14 @@ FUNCTION Main( ... )
    QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oTmp := HbIde():new( hb_aParams() )
-#if 1
-   oIde := oTmp:create()
-   oIde:destroy()
+#if 0
+   oTmp:create()
+   oTmp:destroy()
+   oTmp := NIL
 #else
    oTmp:create()
-#endif
    oTmp := NIL
+#endif
 
    RETURN NIL
 
