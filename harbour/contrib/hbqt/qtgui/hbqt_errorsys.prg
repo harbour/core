@@ -206,19 +206,23 @@ STATIC FUNCTION ErrorMessage( oError )
 STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    LOCAL oMB
 
-   DEFAULT cTitle TO "Information"
-   DEFAULT nIcon  TO QMessageBox_Information
+   IF hbqt_IsActiveApplication()
+      
+      DEFAULT cTitle TO "Information"
+      DEFAULT nIcon  TO QMessageBox_Information
 
-   oMB := QMessageBox()
-   oMB:setText( cMsg )
-   IF !empty( cInfo )
-      oMB:setInformativeText( cInfo )
-   ENDIF
-   oMB:setIcon( nIcon )
-   oMB:setWindowTitle( cTitle )
-
-   oMB:exec()
-
+      oMB := QMessageBox()
+      oMB:setText( cMsg )
+      IF !empty( cInfo )
+         oMB:setInformativeText( cInfo )
+      ENDIF
+      oMB:setIcon( nIcon )
+      oMB:setWindowTitle( cTitle )
+   
+      oMB:exec()
+   
+   ENDIF 
+   
    RETURN nil
 
 /*----------------------------------------------------------------------*/

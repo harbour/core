@@ -607,6 +607,7 @@ static void hbqt_registerCallbacks( void )
 /*----------------------------------------------------------------------*/
 
 static QApplication * s_app = NULL;
+static bool isQuitting = false;
 
 HB_FUNC_EXTERN( __HBQTCORE );
 
@@ -652,8 +653,13 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+   isQuitting = true;
 }
 
+HB_FUNC( HBQT_ISACTIVEAPPLICATION )
+{
+   hb_retl( ! isQuitting );
+}
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtgui_init_ )
    hb_vmAtInit( hbqt_lib_init, NULL );
