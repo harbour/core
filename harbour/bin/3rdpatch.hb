@@ -4,7 +4,7 @@
  */
 
 /*
- * hb3rdpat - a tool to help update 3rd party components while keeping local fixes
+ * 3rdpatch - a tool to help update 3rd party components while keeping local fixes
  *
  * Copyright 2010, 2011 Tamas TEVESZ
  * See COPYING for licensing terms.
@@ -15,7 +15,7 @@
  * For proper operation, several of the following external tools are required to
  * be present somewhere in your $PATH:
  *
- * - The GNU version of `patch', `diff' and `tar' (hb3rdpat will figure it out
+ * - The GNU version of `patch', `diff' and `tar' (3rdpatch will figure it out
  *   if you have them by the names of `gpatch', `gdiff' or `gtar')
  *
  * - curl, gzip, bzip2, xz and unzip (only the Info-ZIP version of unzip has
@@ -24,7 +24,7 @@
  * `curl' is unconditionally required for fetching source archives; the rest of the
  * tools are checked for on an on-demand basis.
  *
- * hb3rdpat requires several metadata (in the form of specially formatted lines)
+ * 3rdpatch requires several metadata (in the form of specially formatted lines)
  * in the component's Makefile (preferred) or .hbp file (if no Makefile is
  * present). Formatting rules are as follows:
  *
@@ -52,13 +52,13 @@
  *
  * URL
  *   Takes one argument, the URL to the archive to the currently installed
- *   version of the component. Used by hb3rdpat.
+ *   version of the component. Used by 3rdpatch.
  *   Example: for PCRE, at the time of this writing, it is
  *   `ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.02.zip'.
- *   hb3rdpat can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
+ *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
  *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
  *
- *   hb3rdpat will also use the URL parameter to figure out what type of
+ *   3rdpatch will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
  *   be picked. As an example, SourceForge-style distributed download URLs like
  *   `http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download'
@@ -80,14 +80,14 @@
  *   trees, it is sufficient to specify it only once, but every file that needs
  *   to be brought over to the Harbour tree must be specified.
  *   The very first `MAP' occurrence is treated specially: it's argument is used
- *   by hb3rdpat to locate the root of the extracted upstream source tree.
+ *   by 3rdpatch to locate the root of the extracted upstream source tree.
  *   Examples:
  *
  *   # MAP LICENCE
  *
  *      The file named `LICENCE' needs to be brought over from the upstream tree
  *      to the Harbour tree unchanged. In case of PCRE, `MAP LICENCE' being the
- *      first `MAP' line also means that hb3rdpat will use the directory
+ *      first `MAP' line also means that 3rdpatch will use the directory
  *      containing this file as a base for all other files occurring later.
  *      Accordingly, the first `MAP' entry must be flat even on the source side.
  *
@@ -113,30 +113,30 @@
  *   forward slash (`/'). DOS-style backslash separators are not recognized and
  *   will produce undefined results.
  *
- *   The `-validate' command line argument causes hb3rdpat to validate the
+ *   The `-validate' command line argument causes 3rdpatch to validate the
  *   metadata without executing any actions that might otherwise be necessary.
  *   It is recommended to use this after a component's metadata changes.
  *
  * 2. MODES OF OPERATION
  * ---------------------
  *
- * By default, hb3rdpat operates in `component version updating' mode - that is,
+ * By default, 3rdpatch operates in `component version updating' mode - that is,
  * refreshing the component version to a newer upstream version. Let it be noted
  * that if the new version is very different from the currently in-tree version
  * (lots of new files, removed files, radically re-organized upstream source
- * tree, for example), hb3rdpat's utility will decrease steeply. In such cases
+ * tree, for example), 3rdpatch's utility will decrease steeply. In such cases
  * considering the full manual update of the component is advised.
  *
- * If hb3rdpat is called with the `-rediff' command line argument, it switches
+ * If 3rdpatch is called with the `-rediff' command line argument, it switches
  * to a `local diff refresh' mode. This mode is used to refresh the local diff
  * after Harbour-specific modifications have been made to the component's
- * source. In order to help with the initial diff creation, hb3rdpat will proceed
+ * source. In order to help with the initial diff creation, 3rdpatch will proceed
  * even if no `DIFF' is specified amongst the metadata, and defaults to
  * creating a diff named `$(component).dif').
  *
  * If no differences between the original and the Harbour trees were found,
  * a possibly pre-existing diff file is removed. Following this change up
- * in the component's Makefile (or .hbp file) is left for the operator -- hb3rdpat
+ * in the component's Makefile (or .hbp file) is left for the operator -- 3rdpatch
  * will communicate if there is a likely need to perform this action.
  *
  * It is strongly advised not to try to mix the two modes. If there are any
@@ -148,15 +148,15 @@
  *
  * Once it has been determined that a particular component needs an update, the URL
  * argument has to be modified to point to the new source tree archive. VER should
- * also be updated. While residing in the component's directory, hb3rdpat needs
- * to be run. The rest is mostly automatic - hb3rdpat retrieves, unpacks and
+ * also be updated. While residing in the component's directory, 3rdpatch needs
+ * to be run. The rest is mostly automatic - 3rdpatch retrieves, unpacks and
  * otherwise prepares the updated source tree, applies any local modifications,
  * and copies any changes back to the Harbour tree (the current working directory).
  * After some inspection and a test, it is ready to be committed.
  *
  * In rediff mode, care must be taken for the URL keyword to contain a reference
  * to the version that is in the current Harbour tree (that basically means `do not
- * touch anything', assuming correct information in the first place). After hb3rdpat
+ * touch anything', assuming correct information in the first place). After 3rdpatch
  * is finished rediffing, the new `local changes' file (see `DIFF') may be inspected,
  * and is ready to be committed.
  *
@@ -166,11 +166,11 @@
  * 4. TROUBLESHOOTING
  * ------------------
  *
- * Several things can go wrong, and hb3rdpat tries hard handle them as gracefully as
+ * Several things can go wrong, and 3rdpatch tries hard handle them as gracefully as
  * possible. First and foremost, in case of even the slightest sign of something
- * not happening as intended, hb3rdpat will not modify the Harbour tree at all.
+ * not happening as intended, 3rdpatch will not modify the Harbour tree at all.
  * Everything is happening inside a temporary directory, which is not erased when
- * hb3rdpat exits (not even when it exits normally), and where certain log files are
+ * 3rdpatch exits (not even when it exits normally), and where certain log files are
  * created. These log files may contain information to help debugging in case of
  * an (unhandled) error.
  *
@@ -203,7 +203,7 @@
  *
  * some archive file    The new source tree archive.
  *
- * In all error cases hb3rdpat will provide a meaningful error message. Armed with
+ * In all error cases 3rdpatch will provide a meaningful error message. Armed with
  * that and the information here, troubleshooting should not be much of a problem.
  *
  * 4. BUGS
