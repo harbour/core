@@ -10,6 +10,7 @@
 -nulrdd
 -mt
 hbmk2.prg
+hbmk2c.c
 
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl

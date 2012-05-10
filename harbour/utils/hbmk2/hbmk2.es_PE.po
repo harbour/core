@@ -351,11 +351,6 @@ msgstr "  hbmk2 [opciones] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.
 msgid "inherit .prg/.c/linker flags (or none) from Harbour build"
 msgstr "heredar todos los flags .prg/.c/linker (o ninguno) desde construcción de Harbour "
 
-#: hbmk2.prg:7787 hbmk2.prg:11440
-#, c-format
-msgid "cdp=EN"
-msgstr "cdp=PTISO"
-
 #: hbmk2.prg:7946 hbmk2.prg:11637
 #, c-format
 msgid "Notes:"
@@ -971,20 +966,10 @@ msgstr "crear/actualizar archivo .po desde fuentes. Combinar con anterior archiv
 msgid "clean (in incremental build mode)"
 msgstr "compilación limpia (en modo incremental)"
 
-#: hbmk2.prg:7791 hbmk2.prg:11444
-#, c-format
-msgid "nix=EN"
-msgstr "nix=UTF8"
-
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
 msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy hbmk2 to hbcc for the same effect"
 msgstr "para después de creación de archivos objeto y aceptar flags de puro C\\ncrear un link o copiar hbmk2 a hbcc resultará el mismo efecto"
-
-#: hbmk2.prg:7791 hbmk2.prg:11444
-#, c-format
-msgid "wdo=EN"
-msgstr "wdo=PT850"
 
 #: hbmk2.prg:7808 hbmk2.prg:11462
 #, c-format

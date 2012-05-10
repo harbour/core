@@ -9,6 +9,9 @@ include $(TOP)$(ROOT)config/global.mk
 PRG_SOURCES := \
    hbmk2.prg \
 
+C_SOURCES := \
+   hbmk2c.c \
+
 PRG_MAIN := hbmk2.prg
 
 LIBS = $(HB_LIBS_MT_NORDD)

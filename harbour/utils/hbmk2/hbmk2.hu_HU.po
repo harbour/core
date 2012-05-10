@@ -867,21 +867,6 @@ msgstr "kimeneti fájlnév"
 msgid "show commands executed"
 msgstr "mutassa a végrehajtott parancsokat"
 
-#: hbmk2.prg:7786 hbmk2.prg:11440
-#, c-format
-msgid "cdp=EN"
-msgstr "cdp=HUISO"
-
-#: hbmk2.prg:7790 hbmk2.prg:11444
-#, c-format
-msgid "wdo=EN"
-msgstr "wdo=HU852"
-
-#: hbmk2.prg:7790 hbmk2.prg:11444
-#, c-format
-msgid "nix=EN"
-msgstr "nix=UTF8"
-
 #: hbmk2.prg:7824 hbmk2.prg:11479
 #, c-format
 msgid "Syntax:"
