@@ -1407,10 +1407,6 @@ METHOD HbQtSource:build()
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
-   IF ::cQtVer > "0x040500"
-      AAdd( aLine, "#endif" )
-   ENDIF
-   AAdd( aLine, "" )
 
    n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
    IF n > 0
@@ -1418,6 +1414,26 @@ METHOD HbQtSource:build()
    ELSE
       s := "HBQTOBJECTHANDLER"
    ENDIF
+   
+   AAdd( aLine, "" )   
+   AAdd( aLine, "extern HB_EXPORT void hbqt_register_" + lower( uQtObject ) + "();" )      
+   AAdd( aLine, "" )   
+   
+   FOR EACH k IN hb_aTokens( s, "," )
+      k := lower( AllTrim( k ) )
+      IF k == "hbqtobjecthandler"
+         AAdd( aLine, "HB_FUNC_EXTERN( " + Upper( k ) + " );" )
+      ELSE    
+         AAdd( aLine, "extern HB_EXPORT void hbqt_register_" + substr( k,4 ) + "();" )
+      ENDIF    
+   NEXT
+   AAdd( aLine, "" )
+      
+   IF ::cQtVer > "0x040500"
+      AAdd( aLine, "#endif" )
+   ENDIF
+   AAdd( aLine, "" )
+
    FOR EACH k IN hb_aTokens( s, "," )
       AAdd( aLine, "HB_FUNC_EXTERN( " + Upper( AllTrim( k ) ) + " );" )
    NEXT
@@ -1635,19 +1651,25 @@ METHOD HbQtSource:build()
       AAdd( aLine, "#endif" )
    ENDIF
    AAdd( aLine, "" )
-
-   /* Internal class instantiation. TODO: Rename to __QCLASS */
-   AAdd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
+   
+   AAdd( aLine, 'static PHB_ITEM s_oClass = NULL;' )
+   AAdd( aLine, "" )
+   
+   AAdd( aLine, 'void hbqt_register_' + lower( uQtObject ) + '()' )
    AAdd( aLine, "{" )
-   AAdd( aLine, "   static PHB_ITEM s_oClass = NULL;" )
-   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' + uQtObject +'" ) );' )
+   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_register_' + lower( uQtObject ) + '()" ) );' )
    AAdd( aLine, "   HB_HBQT_LOCK" )
    AAdd( aLine, "   if( s_oClass == NULL )" )
    AAdd( aLine, "   {" )
    AAdd( aLine, "      s_oClass = hb_itemNew( NULL );" )
    AAdd( aLine, "      hbqt_addDeleteList( s_oClass );" )
    FOR EACH k IN hb_aTokens( s, "," )
-      AAdd( aLine, "      HB_FUNC_EXEC( " + Upper( AllTrim( k ) ) + " );" )
+      k := lower( AllTrim( k ) )
+      IF k == "hbqtobjecthandler"
+         AAdd( aLine, "      HB_FUNC_EXEC( " + Upper( k ) + " );" )
+      ELSE    
+         AAdd( aLine, "      hbqt_register_" + substr( k, 4 ) + "();" )
+      ENDIF    
    NEXT
    AAdd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
    AAdd( aLine, "      if( oClass )" )
@@ -1655,13 +1677,21 @@ METHOD HbQtSource:build()
    AAdd( aLine, "         s_registerMethods( hb_objGetClass( hb_stackReturnItem() ) );" )
    AAdd( aLine, "         hbqt_defineClassEnd( s_oClass, oClass );" )
    AAdd( aLine, "      }" )
-   AAdd( aLine, "      HB_HBQT_UNLOCK" )
-   AAdd( aLine, "      return;" )
    AAdd( aLine, "   }" )
    AAdd( aLine, "   HB_HBQT_UNLOCK" )
-   AAdd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
    AAdd( aLine, "}" )
    AAdd( aLine, "" )
+      
+   AAdd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
+   AAdd( aLine, "{" ) 
+   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' +  uQtObject + '" ) );' ) 
+   AAdd( aLine, "   if( s_oClass == NULL )" ) 
+   AAdd( aLine, "   {" )
+   AAdd( aLine, "       hbqt_register_" + lower( uQtObject ) + "();" )
+   AAdd( aLine, "   }" ) 
+   AAdd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' ) 
+   AAdd( aLine, "}" ) 
+   AAdd( aLine, "" ) 
 
    /* Build PRG level constructor */
    AAdd( aLine, ::newW_[ 1 ] )           // Func definition
