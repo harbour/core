@@ -1494,7 +1494,7 @@ METHOD HbQtSource:build()
    ENDIF
    AAdd( aLine, "typedef struct"                  )
    AAdd( aLine, "{"                               )
-   IF ::isObject
+   IF ::isObject .AND. ::isConstructor
       AAdd( aLine, "   QPointer< "+ cObjPfx + ::cQtObject +" > ph;" )
    ELSE
       IF ::isList
@@ -1573,7 +1573,10 @@ METHOD HbQtSource:build()
          AAdd( aLine, "            int i; " )
          AAdd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
          AAdd( aLine, "            {" )
-         AAdd( aLine, "               hb_itemRelease( p->ph->at( i ) );" )
+         AAdd( aLine, "               if( p->ph->at( i ) != NULL )" )
+         AAdd( aLine, "               {" )
+         AAdd( aLine, "                  hb_itemRelease( p->ph->at( i ) );" )
+         AAdd( aLine, "               }" )
          AAdd( aLine, "            }" )
          ENDIF
          AAdd( aLine, "            delete ( ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
@@ -1607,7 +1610,7 @@ METHOD HbQtSource:build()
       AAdd( aLine, "   /* CASE else */" )
       AAdd( aLine, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
       AAdd( aLine, "   " )
-      AAdd( aLine, "   if( p && p->bNew )" )
+      AAdd( aLine, "   if( p )" ) //&& p->bNew )" )
       AAdd( aLine, "      p->ph = NULL;" )
    ENDIF
    AAdd( aLine, "}" )
@@ -1621,7 +1624,8 @@ METHOD HbQtSource:build()
       AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
    ENDIF
    AAdd( aLine, "" )
-   IF ::isObject
+
+   IF ::isObject .AND. ::isConstructor
       AAdd( aLine, "   new( & p->ph ) QPointer< "+ cObjPfx + ::cQtObject +" >( ( " + cObjPfx + ::cQtObject + " * ) pObj );" )
    ELSE
       AAdd( aLine, "   p->ph = ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
