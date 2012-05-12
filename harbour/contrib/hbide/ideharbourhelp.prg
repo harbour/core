@@ -1422,7 +1422,8 @@ METHOD IdeHarbourHelp:exportAsPdf()
 
 METHOD IdeHarbourHelp:exportAsPdfAll()
    LOCAL cPdf, qPrinter, cExt, cPath, cFile, aItems
-
+   LOCAL qApp := QApplication()
+   
    IF empty( ::aNodes )
       RETURN Self
    ENDIF
@@ -1433,7 +1434,7 @@ METHOD IdeHarbourHelp:exportAsPdfAll()
 
       FOR EACH aItems IN ::aNodes
          ::oUI:q_treeDoc:setCurrentItem( aItems[ 1 ], 0 )
-         QApplication():processEvents()
+         qApp:processEvents()
          IF ::lQuitting
             EXIT
          ENDIF

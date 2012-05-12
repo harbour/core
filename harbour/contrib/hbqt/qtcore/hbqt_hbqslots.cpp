@@ -117,15 +117,17 @@ HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
 HBQSlots::~HBQSlots()
 {
    int i;
-
+   HB_TRACE( HB_TR_DEBUG, ( "Destroying:  HBQSlots Size = %i", listBlock.size() ) );
    for( i = listBlock.size() - 1; i >= 0 ; i-- )
    {
       if( listBlock[ i ] != NULL )
       {
+         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() item %d", i ) );
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
       }
    }
+   listBlock.clear();
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
@@ -226,7 +228,10 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
          if( signalId != -1 )
          {
             if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
+            {
+               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );            
                nResult = 0;
+            }   
             else
                nResult = 5;
          }

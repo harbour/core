@@ -14,8 +14,6 @@
 <CLASS>
 Inherit    = QObject, QPaintDevice
 New        = pParent, nFlags
-
-PaintEvent = YES
 </CLASS>
 
 <CODE>

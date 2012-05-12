@@ -140,10 +140,8 @@ FUNCTION Main( ... )
 #if 0
    oTmp:create()
    oTmp:destroy()
-   oTmp := NIL
 #else
    oTmp:create()
-   oTmp := NIL
 #endif
 
    RETURN NIL

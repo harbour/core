@@ -13,7 +13,7 @@
 
 <CLASS>
 QObject  = no
-Inherit  = QWidget
+Inherit  = 
 New      = pParent
 </CLASS>
 

@@ -13,7 +13,7 @@
 
 <CLASS>
 QObject  = no
-Inherits = QObject
+Inherits = 
 New      = pParent
 </CLASS>
 

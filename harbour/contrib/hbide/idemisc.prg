@@ -245,8 +245,6 @@ FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():oWidget )
-   oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
    oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
 

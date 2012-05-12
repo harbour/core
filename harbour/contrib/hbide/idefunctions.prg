@@ -440,6 +440,7 @@ METHOD IdeFunctions:enableControls( lEnable )
 METHOD IdeFunctions:loadTags( aProjects )
    LOCAL cProjectTitle, cProjFile, cTagFile, aTags, n, a_
    LOCAL lPopulate := .f.
+   LOCAL qApp := QApplication()
 
    DEFAULT aProjects TO ::getMarkedProjects()
 
@@ -468,7 +469,7 @@ METHOD IdeFunctions:loadTags( aProjects )
             ENDIF
          ENDIF
 
-         QApplication():processEvents()
+         qApp:processEvents()
          IF ::lQuitting
             EXIT
          ENDIF
@@ -508,6 +509,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
    LOCAL aSumData := ""
    LOCAL cComments, aSummary, cPath, cSource, cExt, aTags, aText, aFuncList, aLines
    LOCAL cProjFile, cRoot, aCTags, aSources, cSrc, a_, n
+   LOCAL qApp := QApplication()
 
    IF !( ::inAction )
       ::enableControls( .f. )
@@ -541,7 +543,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
             ENDIF
          ENDIF
 
-         QApplication():processEvents()
+         qApp:processEvents()
          IF ::lQuitting
             EXIT
          ENDIF
@@ -603,6 +605,7 @@ METHOD IdeFunctions:consolidateList()
 
 METHOD IdeFunctions:populateTable()
    LOCAL oTbl, qItm, a_, n
+   LOCAL qApp := QApplication()
 
    ::clear( .t. )
    ::buildHeader()
@@ -619,7 +622,7 @@ METHOD IdeFunctions:populateTable()
       oTbl:setItem( n, 0, qItm )
       oTbl:setRowHeight( n, 16 )
 
-      QApplication():processEvents()
+      qApp:processEvents()
       IF ::lQuitting
          EXIT
       ENDIF

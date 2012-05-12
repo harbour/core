@@ -649,6 +649,7 @@ METHOD IdeShortcuts:clearDftSCuts()
 METHOD IdeShortcuts:populateDftSCuts()
    LOCAL a_, nRow
    LOCAL oTbl := ::oUI:q_tableMacros
+   LOCAL qApp := QApplication()
 
    oTbl:setRowCount( len( ::aDftSCuts ) )
 
@@ -657,7 +658,7 @@ METHOD IdeShortcuts:populateDftSCuts()
       nRow++
       aadd( ::aDftSCutsItms, array( 6 ) )
       ::array2table( nRow, a_ )
-      QApplication():processEvents()
+      qApp:processEvents()
       IF ::lQuitting
          EXIT 
       ENDIF    
