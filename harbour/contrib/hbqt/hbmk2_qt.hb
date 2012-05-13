@@ -1487,6 +1487,8 @@ METHOD HbQtSource:build()
       AAdd( aLine, "" )
    ENDIF
 
+#define __GCMARK__
+   
    ::buildExtendedSource( aLine )   /* Insert protected functions */
 
    IF ::cQtVer > "0x040500"
@@ -1506,7 +1508,9 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   bool bNew;"                     )
    AAdd( aLine, "   PHBQT_GC_FUNC func;"            )
    AAdd( aLine, "   HB_U32 type;"                   )
+#ifdef __GCMARK__   
    AAdd( aLine, "   PHBQT_GC_FUNC mark;"            )
+#endif   
    AAdd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
    AAdd( aLine, " "                                 )
    AAdd( aLine, " "                                 )
@@ -1633,11 +1637,15 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   p->bNew = bNew;" )
    AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
    AAdd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
+   
+#ifdef __GCMARK__
    if n > 0
       AAdd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
    else
       AAdd( aLine, "   p->mark = NULL;" )
-   endif
+   ENDIF
+#endif 
+   
    AAdd( aLine, "" )
 #ifdef _GEN_TRACE_
    AAdd( aLine, "   if( bNew )" )
@@ -3297,7 +3305,7 @@ STATIC FUNCTION __TY_Method( oMtd, nArgs )
 
    FOR EACH oArg IN oMtd:hArgs
       IF oArg:__enumIndex() >= oMtd:nArgQCast
-         IF ! ( "::" $ oArg:cCast ) .AND. ! ( oArg:cCast == "QString" ) .AND. ( Left( oArg:cCast, 1 ) == "Q" )
+         IF ! ( "::" $ oArg:cCast ) .AND. ! ( oArg:cCast == "QString" ) .AND. ( Left( oArg:cCast, 1 ) == "Q" .OR. Left( oArg:cCast, 3 ) == "HBQ" )
             AAdd( aIdx, oArg:__enumIndex() )
          ENDIF
       ENDIF
