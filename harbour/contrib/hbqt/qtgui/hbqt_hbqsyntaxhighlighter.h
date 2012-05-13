@@ -99,6 +99,7 @@ public:
    void hbSetFormatColumnSelection( int start, int count, const QColor & color );
    void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format );
    void hbSetEditor( HBQPlainTextEdit * edit ){ editor = edit; };
+   void hbSetEditor( QPlainTextEdit * edit ){ editor = ( HBQPlainTextEdit * ) edit; };
    void hbSetInitialized( bool bInit ){ initialized = bInit; };
    void hbSetType( int ty ){ type = ty; };
 
