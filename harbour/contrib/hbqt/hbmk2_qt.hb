@@ -1508,9 +1508,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   bool bNew;"                     )
    AAdd( aLine, "   PHBQT_GC_FUNC func;"            )
    AAdd( aLine, "   HB_U32 type;"                   )
-#ifdef __GCMARK__   
    AAdd( aLine, "   PHBQT_GC_FUNC mark;"            )
-#endif   
    AAdd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
    AAdd( aLine, " "                                 )
    AAdd( aLine, " "                                 )
@@ -1637,14 +1635,11 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   p->bNew = bNew;" )
    AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
    AAdd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
-   
-#ifdef __GCMARK__
    if n > 0
       AAdd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
    else
       AAdd( aLine, "   p->mark = NULL;" )
    ENDIF
-#endif 
    
    AAdd( aLine, "" )
 #ifdef _GEN_TRACE_

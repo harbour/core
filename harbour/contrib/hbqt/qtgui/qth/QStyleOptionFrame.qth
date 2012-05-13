@@ -13,7 +13,7 @@
 
 <CLASS>
 QObject     = no
-Inherit     = qStyleOption
+Inherit     = QStyleOption
 Type        = Core
 New         = 
 </CLASS>
