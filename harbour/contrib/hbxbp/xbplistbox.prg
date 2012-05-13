@@ -344,8 +344,10 @@ METHOD XbpListBox:clear( lConnect )
 
    DEFAULT lConnect TO .t.
 
+   #if 0
    ::disConnect()
-
+   #endif
+   
    FOR EACH qItm IN ::aItems
       qItm := NIL
    NEXT
@@ -355,10 +357,11 @@ METHOD XbpListBox:clear( lConnect )
          ::oWidget:clear()
       ENDIF
    ENDIF
+   #if 0
    IF lConnect
       ::connect()
    ENDIF
-
+   #endif 
    RETURN .t.
 
 /*----------------------------------------------------------------------*/

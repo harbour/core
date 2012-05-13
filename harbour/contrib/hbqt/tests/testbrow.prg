@@ -25,10 +25,14 @@ STATIC oColorD
 STATIC oColorLY
 STATIC oColorLN
 
+#define _method_local_
+  
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i
    LOCAL oWnd, oDA
-
+#ifdef _method_local_
+   LOCAL oID, oSM
+#endif
 
    hbqt_errorsys()
 
@@ -55,8 +59,16 @@ PROCEDURE Main()
    mo1 := HBQAbstractItemModel( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
-   tb1:itemDelegate():connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
-   tb1:selectionModel():connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+#ifdef _method_local_
+   oID := tb1:itemDelegate()
+   oID:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
+   oID := NIL
+      
+   oSM := tb1:selectionModel()
+   oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+#else   
+   connect( tb1, aStru1, @nCX1, @nCY1 )
+#endif
 
    hd1 := tb1:horizontalHeader()
    FOR i := 1 To Len( aStru1 )
@@ -80,9 +92,14 @@ PROCEDURE Main()
    lay2:addWidget( bt2 )
    lay2:addWidget( bt3 )
 
+   HB_TRACE( HB_TR_ALWAYS, "AAAAA" ) 
    oWnd:Show()
+   HB_TRACE( HB_TR_ALWAYS, "BBBBB" ) 
    QApplication():exec()
+   HB_TRACE( HB_TR_ALWAYS, "CCCCC" ) 
 
+   HB_TRACE( HB_TR_ALWAYS, ( "my_select "+hb_ntos( nCX1 )+ "/"+hb_ntos( nCY1 ) ) ) 
+   
    RETURN
 
 STATIC PROCEDURE my_save( qWidget, nArea, aStru, nCX, nCY )
@@ -207,3 +224,16 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
    ENDSWITCH
 
    RETURN NIL
+
+STATIC FUNCTION connect( tb1, aStru1, nCX1, nCY1 )   
+   LOCAL oID, oSM
+   
+   oID := tb1:itemDelegate()
+   oID:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
+   
+   HB_TRACE( HB_TR_ALWAYS, "00000" ) 
+   oSM := tb1:selectionModel()
+   oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+   HB_TRACE( HB_TR_ALWAYS, "11111" ) 
+   
+   RETURN NIL 

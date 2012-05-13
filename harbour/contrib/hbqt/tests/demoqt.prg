@@ -113,6 +113,8 @@ PROCEDURE Main()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
+   oBtn:setStyleSheet( "background: #a00fff;" )
+
    oBtn:connect( QEvent_Enter, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Enter ) } )
    oBtn:connect( QEvent_Leave, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Leave ) } )
    oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
@@ -123,6 +125,7 @@ PROCEDURE Main()
 
    QApplication():exec()
 
+   HB_TRACE( HB_TR_ALWAYS, ".............. E X I T I N G ..................." )
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
    RETURN
@@ -130,7 +133,7 @@ PROCEDURE Main()
 /*----------------------------------------------------------------------*/
 
 FUNCTION xReleaseMemory( aObj )
-   #if 1
+   #if 0
    LOCAL i
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
@@ -203,6 +206,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oMenu1 := QMenu()
    oMenu1:setTitle( "&File" )
+   oMenu1:connect( QEvent_Paint, {|oEvent,oPainter| MenuRePaint( oEvent, oPainter, oMenu1 ) } )
 
    oActNew := QAction( oMenu1 )
    oActNew:setText( "&New" )
@@ -617,6 +621,18 @@ FUNCTION ShowInSystemTray( oWnd )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION MenuRePaint( oPaintEvent, oPainter )
+   LOCAL qRect := oPaintEvent:rect()
+
+   oPainter:fillRect( qRect, SetButtonColor() )
+   oPainter:drawText( 3, 3, "File" )
+   oPainter:setPen( QColor( 255,255,255 ) )
+   oPainter:drawRect( qRect:adjusted( 0,0,-1,-1 ) )
+ 
+   RETURN .T.
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
    LOCAL qColor
    LOCAL qRect := oPaintEvent:rect()
@@ -633,7 +649,7 @@ STATIC FUNCTION RePaint( oPaintEvent, oPainter, oBtn )
       oPainter:drawRect( qRect:adjusted( 0,0,-1,-1 ) )
    ENDIF
 
-   RETURN .T.
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 

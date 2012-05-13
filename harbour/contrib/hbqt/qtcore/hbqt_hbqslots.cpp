@@ -116,22 +116,29 @@ HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
 
 HBQSlots::~HBQSlots()
 {
-   int i;
-   HB_TRACE( HB_TR_DEBUG, ( "Destroying:  HBQSlots Size = %i", listBlock.size() ) );
-   for( i = listBlock.size() - 1; i >= 0 ; i-- )
+   if( hb_vmRequestReenter() )
    {
-      if( listBlock[ i ] != NULL )
+      HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() Size = %i", listBlock.size() ) );
+   
+      int i;
+      for( i = 0; i < listBlock.size(); i++ )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() item %d", i ) );
-         hb_itemRelease( listBlock.at( i ) );
-         listBlock[ i ] = NULL;
+         if( listBlock[ i ] != NULL )
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() Item %d", i + 1 ) );
+            hb_itemRelease( listBlock.at( i ) );
+            listBlock[ i ] = NULL;
+         }
       }
+      hb_vmRequestRestore();
    }
    listBlock.clear();
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 {
+   //HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s )", pszSignal ) );
+   
    int nResult = 1;
 
    if( true )
@@ -169,6 +176,8 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                            object->setProperty( pszSignal, ( int ) listBlock.size() );
 
                            nResult = 0;
+                           
+                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) %i", pszSignal, listBlock.size() ) ); 
                         }
                         else
                            nResult = 8;
@@ -186,6 +195,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
             {
                if( listBlock.at( i - 1 ) != NULL )
                {
+                  HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) Already Exists : %i", pszSignal, i ) ); 
                   hb_itemRelease( listBlock.at( i - 1 ) );
                }
                listBlock[ i - 1 ] = pBlock;
@@ -211,8 +221,10 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 
 int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 {
+   //HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );
+   
    int nResult = 1;
-
+   
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
@@ -229,7 +241,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
          {
             if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
             {
-               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );            
+               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) ); 
                nResult = 0;
             }   
             else
@@ -238,11 +250,15 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
          else
             nResult = 4;
 
-         if( listBlock.at( i - 1 ) != NULL )
-         {
-            hb_itemRelease( listBlock.at( i - 1 ) );
-            listBlock[ i - 1 ] = NULL;
-         }
+         if( nResult == 0 )
+         {   
+            if( listBlock.at( i - 1 ) != NULL )
+            {
+               hb_itemRelease( listBlock.at( i - 1 ) );
+               listBlock[ i - 1 ] = NULL;
+               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) hb_itemReleased( %i )", pszSignal, i ) ); 
+            }
+         }   
       }
       else
          nResult = 3;
