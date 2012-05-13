@@ -5,15 +5,15 @@
 /*
  * Harbour Qt wrapper generator control file
  *
- * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * See COPYING for licensing terms.
  */
 
 <CLASS>
-Inherit  = QWidget
-New      = pParent, nFlags
+Inherit     = QWidget
+New         = pParent, nFlags
 </CLASS>
 
 <CODE>
@@ -93,8 +93,8 @@ void removeDockWidget ( QDockWidget * dockwidget )
 void removeToolBar ( QToolBar * toolbar )
 void removeToolBarBreak ( QToolBar * before )
 bool restoreDockWidget ( QDockWidget * dockwidget )
-bool restoreState ( const QByteArray & state, int version = 0 )
-QByteArray saveState ( int version = 0 ) const
+bool restoreState ( const QByteArray & state, int Version = 0 )
+QByteArray saveState ( int Version = 0 ) const
 void setCentralWidget ( QWidget * widget )                        [*D=1*]
 void setCorner ( Qt::Corner corner, Qt::DockWidgetArea area )
 void setDockOptions ( DockOptions options )

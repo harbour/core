@@ -5,7 +5,7 @@
 /*
  * Harbour Qt wrapper generator control file
  *
- * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * See COPYING for licensing terms.
@@ -13,8 +13,8 @@
 
 <CLASS>
 
-Inherit  = QAbstractButton
-New      = pParent
+Inherit     = QAbstractButton
+New         = pParent
 Calls    = QT_QCheckBox
 
 </CLASS>

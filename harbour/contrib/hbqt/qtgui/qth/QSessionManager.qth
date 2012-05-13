@@ -5,18 +5,18 @@
 /*
  * Harbour Qt wrapper generator control file
  *
- * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * See COPYING for licensing terms.
  */
 
 <CLASS>
-QObject    =
-Inherits   = QObject
-Type       = Core
-New        =
-Destructor = no
+QObject     =
+Inherit     = QObject
+Type        = Core
+New         =
+Destructor  = no
 Constructor = no
 </CLASS>
 

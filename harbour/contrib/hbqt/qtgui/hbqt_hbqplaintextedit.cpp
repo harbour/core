@@ -256,11 +256,11 @@ HBQPlainTextEdit::~HBQPlainTextEdit()
    if( timer )
       timer->stop();
    #endif
-
+#if 0
    disconnect( this, SIGNAL( blockCountChanged( int ) )            );
    disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
    disconnect( this, SIGNAL( cursorPositionChanged() )             );
-
+#endif
    delete lineNumberArea;
    
    if( block )

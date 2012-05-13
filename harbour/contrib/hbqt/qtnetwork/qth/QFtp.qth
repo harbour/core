@@ -5,7 +5,7 @@
 /*
  * Harbour Qt wrapper generator control file
  *
- * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * See COPYING for licensing terms.
@@ -15,8 +15,8 @@
 ;
 
 <CLASS>
-Inherit  = QObject
-New      = pParent
+Inherit     = QObject
+New         = pParent
 </CLASS>
 
 <CODE>
@@ -74,13 +74,13 @@ QIODevice * currentDevice () const
 int currentId () const
 Error error () const
 QString errorString () const
-int get ( const QString & file, QIODevice * dev = 0, TransferType type = Binary )
+int get ( const QString & file, QIODevice * dev = 0, TransferType Type        = Binary )
 bool hasPendingCommands () const
 int list ( const QString & dir = QString() )
 int login ( const QString & user = QString(), const QString & password = QString() )
 int mkdir ( const QString & dir )
-int put ( QIODevice * dev, const QString & file, TransferType type = Binary )
-int put ( const QByteArray & data, const QString & file, TransferType type = Binary )
+int put ( QIODevice * dev, const QString & file, TransferType Type        = Binary )
+int put ( const QByteArray & data, const QString & file, TransferType Type        = Binary )
 int rawCommand ( const QString & command )
 #           Never uncomment it : See above
 // qint64 read ( char * data, qint64 maxlen )

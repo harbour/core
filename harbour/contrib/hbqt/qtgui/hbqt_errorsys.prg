@@ -157,7 +157,6 @@ STATIC FUNCTION DefError( oError )
       cMsg += hb_eol()
       cMsg += "Called from " + ProcName( n ) + ;
                  "(" + hb_NToS( ProcLine( n ) ) + ")"
-
    ENDDO
 
    hbqt_messageBox( cMsg, NIL, "HBQT Runtime Error", QMessageBox_Critical )
