@@ -742,7 +742,7 @@ METHOD fileSize( cFileSpec ) CLASS tIPClientFTP
    LOCAL aFile
    LOCAL nSize := 0
    FOR EACH aFile IN ::ListFiles( cFileSpec )
-      nSize += Val( aFile[ F_SIZE ] )
+      nSize += aFile[ F_SIZE ]
    NEXT
    RETURN nSize
 

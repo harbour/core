@@ -501,6 +501,9 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
 
    ::nStatus := 2
    FClose( nFout )
+   IF ::InetErrorCode( ::SocketCon ) != 0
+      RETURN .F.
+   ENDIF
 
    RETURN .T.
 
