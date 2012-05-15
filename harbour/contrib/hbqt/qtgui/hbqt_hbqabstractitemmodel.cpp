@@ -55,6 +55,7 @@
 
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbapicls.h"
 
 #if QT_VERSION >= 0x040500
 
@@ -78,7 +79,7 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       PHB_ITEM p2 = hb_itemPutNI( NULL, par1 );
       PHB_ITEM p3 = hb_itemPutNI( NULL, par2 );
 
-      PHB_ITEM ret = hb_vmEvalBlockV( block, 4, p0, p1, p2, p3 );
+      PHB_ITEM ret = hb_itemNew( hb_vmEvalBlockV( block, 4, p0, p1, p2, p3 ) );
 
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -109,26 +110,23 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       }
       else if( hb_itemType( ret ) & HB_IT_OBJECT )
       {
-         hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
-         hb_vmPush( ret );
-         hb_vmSend( 0 );
+         void * p = hbqt_get_ptr( ret );
 
-         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
-
-         if( p->type == HBQT_TYPE_QBrush )
-            vv = * ( ( QBrush * ) ( p->ph ) );
-         else if( p->type == HBQT_TYPE_QColor )
-            vv = * ( ( QColor * ) ( p->ph ) );
-         else if( p->type == HBQT_TYPE_QSize )
-            vv = * ( ( QSize * ) ( p->ph ) );
-         else if( p->type == HBQT_TYPE_QIcon )
-            vv = * ( ( QIcon * ) ( p->ph ) );
-         else if( p->type == HBQT_TYPE_QPixmap )
-            vv = * ( ( QPixmap * ) ( p->ph ) );
-         else if( p->type == HBQT_TYPE_QFont )
-            vv = * ( ( QFont * ) ( p->ph ) );
+         if( hbqt_obj_isDerivedFrom( ret, "QBRUSH" ) )
+            vv = * ( ( QBrush * ) ( p ) );
+         else if( hbqt_obj_isDerivedFrom( ret, "QCOLOR" ) )
+            vv = * ( ( QColor * ) ( p ) );
+         else if( hbqt_obj_isDerivedFrom( ret, "QICON" ) )
+            vv = * ( ( QIcon * ) ( p ) );
+         else if( hbqt_obj_isDerivedFrom( ret, "QSIZE" ) )
+            vv = * ( ( QSize * ) ( p ) );
+         else if( hbqt_obj_isDerivedFrom( ret, "QFONT" ) )
+            vv = * ( ( QFont * ) ( p ) );
+         else if( hbqt_obj_isDerivedFrom( ret, "QPIXMAP" ) )
+            vv = * ( ( QPixmap * ) ( p ) );
       }
 
+      hb_itemRelease( ret );
       hb_vmRequestRestore();
    }
 

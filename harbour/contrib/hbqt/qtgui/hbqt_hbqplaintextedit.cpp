@@ -192,6 +192,22 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
 /*----------------------------------------------------------------------*/
 
+HBQPlainTextEdit::~HBQPlainTextEdit()
+{
+   #if 0
+   if( timer )
+      timer->stop();
+   #endif
+   
+   delete lineNumberArea;
+   delete horzRuler;
+   
+   if( block )
+      hb_itemRelease( block );
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip, int rows, int cols )
 {
    if( ! isCompletionTipsActive ){
@@ -246,25 +262,6 @@ void HBQPlainTextEdit::hbShowPrototype( const QString & tip, int rows, int cols 
 
       ttFrame->show();
    }
-}
-
-/*----------------------------------------------------------------------*/
-
-HBQPlainTextEdit::~HBQPlainTextEdit()
-{
-   #if 0
-   if( timer )
-      timer->stop();
-   #endif
-#if 0
-   disconnect( this, SIGNAL( blockCountChanged( int ) )            );
-   disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
-   disconnect( this, SIGNAL( cursorPositionChanged() )             );
-#endif
-   delete lineNumberArea;
-   
-   if( block )
-      hb_itemRelease( block );
 }
 
 /*----------------------------------------------------------------------*/

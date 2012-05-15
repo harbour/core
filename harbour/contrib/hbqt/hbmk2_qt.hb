@@ -1463,10 +1463,6 @@ METHOD HbQtSource:build()
       AAdd( aLine, "#endif" )
    ENDIF
    AAdd( aLine, "" )
-   FOR EACH s IN ::hRef
-      AAdd( aLine, PadR( "#define HBQT_TYPE_" + s:__enumKey(), 64 ) + "( ( HB_U32 ) 0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + s:__enumKey() ), 8 ) + " )" )
-   NEXT
-   AAdd( aLine, "" )
    /*----------------------------------------------------------------------*/
 
    /* Insert user defined code - INCLUDEs */
@@ -1507,7 +1503,6 @@ METHOD HbQtSource:build()
    ENDIF
    AAdd( aLine, "   bool bNew;"                     )
    AAdd( aLine, "   PHBQT_GC_FUNC func;"            )
-   AAdd( aLine, "   HB_U32 type;"                   )
    AAdd( aLine, "   PHBQT_GC_FUNC mark;"            )
    AAdd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
    AAdd( aLine, " "                                 )
@@ -1634,7 +1629,6 @@ METHOD HbQtSource:build()
    ENDIF
    AAdd( aLine, "   p->bNew = bNew;" )
    AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
-   AAdd( aLine, "   p->type = HBQT_TYPE_" + ::cQtObject + ";" )
    if n > 0
       AAdd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
    else
