@@ -236,7 +236,7 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
             fResult = HB_TRUE;
 #  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
         ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 ) || \
-        ( defined( HB_OS_DARWIN ) && ! defined( __DARWIN_UNIX03 ) )
+        ( defined( HB_OS_DARWIN ) && !( defined( __DARWIN_UNIX03 ) && __DARWIN_UNIX03 ) )
          unsetenv( szName );
          fResult = HB_TRUE;
 #  else
