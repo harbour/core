@@ -33,6 +33,7 @@
 {bsd}-depincpath=qt:/usr/local/include/qt4
 {darwin}-depincpath=qt:/Developer/qt/include
 {darwin}-depincpath=qt:/Library/Frameworks
+{darwin}-depincpath=qt:/usr/local/include
 {beos}-depincpath=qt:/boot/common/include
 
 -instfile=contrib_qt:*.hb

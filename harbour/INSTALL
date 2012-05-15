@@ -409,7 +409,7 @@ HARBOUR
    Darwin (OS X)
    -------------
 
-      1.) Install HomeBrew, follow their instructions:
+      1.) Install Homebrew, follow their instructions:
           http://mxcl.github.com/homebrew/
       2.) $ brew install pcre slang cairo freeimage libgd mysql postgresql
           $ brew install upx uncrustify
@@ -1626,7 +1626,7 @@ HARBOUR
       HB_WITH_QT - Nokia QT (GUI) [win, wce, os2, darwin, linux, free, open-source]
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
-         Recommended OS X binary package:
+         OS X binary package (or use Homebrew):
             http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.8.0.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe

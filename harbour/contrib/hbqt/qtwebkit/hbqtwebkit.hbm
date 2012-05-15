@@ -23,3 +23,4 @@ hbqt_init.cpp
 {bsd}-depincpath=qt:/usr/local/include/qt4
 {darwin}-depincpath=qtwebkit:/Developer/qt/include
 {darwin}-depincpath=qtwebkit:/Library/Frameworks
+{darwin}-depincpath=qtwebkit:/usr/local/include
