@@ -75,6 +75,7 @@
 #include "hbapistr.h"
 #include "hbset.h"
 #include "hbstack.h"
+#include "hbvm.h"
 
 typedef struct HB_SET_LISTENER_
 {
