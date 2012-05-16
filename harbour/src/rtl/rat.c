@@ -106,7 +106,7 @@ HB_FUNC( HB_RAT )
          HB_ISIZ nFrom;
 
          if( nStart <= 1 )
-            nStart = nFrom = 0;
+            nFrom = 0;
          else if( HB_CDP_ISCHARIDX( cdp ) )
             nFrom = hb_cdpTextPos( cdp, pszText, nTo, --nStart );
          else

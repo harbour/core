@@ -1969,7 +1969,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
       char szKey[ HB_MAX_CHAR_LEN ];
       HB_SIZE nChar;
-      int iKey = 0, i, iDspCount, iStyle, iRows, iCols,
+      int iKey, i, iDspCount, iStyle, iRows, iCols,
           iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
       void * pBuffer = NULL;
       HB_GT_INFO gtInfo;

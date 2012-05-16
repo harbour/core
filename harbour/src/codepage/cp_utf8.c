@@ -198,7 +198,6 @@ static HB_CDP_CMP_FUNC( UTF8_cmpi )
    HB_SIZE nPos1 = 0, nPos2 = 0;
    HB_WCHAR wc1, wc2;
 
-   iRet = 0;
    for( ;; )
    {
       if( !HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
