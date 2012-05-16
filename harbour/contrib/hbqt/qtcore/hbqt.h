@@ -83,7 +83,6 @@ typedef struct
    void * ph;
    bool bNew;
    PHBQT_GC_FUNC func;
-   HB_U32 type;
    PHBQT_GC_FUNC mark;
 } HBQT_GC_T;
 
@@ -101,8 +100,6 @@ extern HB_EXPORT void * hbqt_par_ptr( int iParam );
 extern HB_EXPORT HBQT_GC_T * hbqt_par_ptrGC( int iParam ); /* returns a pointer to the HBQT_GC_T area */
 extern HB_EXPORT void hbqt_par_detach_ptrGC( int iParam );
 extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
-extern HB_EXPORT HB_U32 hbqt_getObjectType( int iParam );
-extern HB_EXPORT HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType ); /* check if parameter iParam is EXACTLY of type iType */
 extern HB_EXPORT HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT void * hbqt_get_ptr( PHB_ITEM pObj );

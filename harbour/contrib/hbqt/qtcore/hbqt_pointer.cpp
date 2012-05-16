@@ -201,54 +201,6 @@ HBQT_GC_T * hbqt_par_ptrGC( int iParam )
    return NULL;
 }
 
-HB_BOOL hbqt_isObjectType( int iParam, HB_U32 iType )
-{
-   PHB_ITEM pItem;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_isObjectType( %d )", iParam ) );
-
-   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
-   {
-      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
-      hb_vmPush( pItem );
-      hb_vmSend( 0 );
-
-      pItem = hb_param( -1, HB_IT_POINTER );
-      if( pItem )
-      {
-         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
-         if( p && p->ph )
-            return p->type == iType;
-      }
-   }
-
-   return HB_FALSE;
-}
-
-HB_U32 hbqt_getObjectType( int iParam )
-{
-   PHB_ITEM pItem;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_getObjectType( %d )", iParam ) );
-
-   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
-   {
-      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
-      hb_vmPush( pItem );
-      hb_vmSend( 0 );
-
-      pItem = hb_param( -1, HB_IT_POINTER );
-      if( pItem )
-      {
-         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
-         if( p && p->ph )
-            return p->type;
-      }
-   }
-
-   return 0;
-}
-
 HB_FUNC( HBQT_ISOBJECT )
 {
    PHB_ITEM pItem;
