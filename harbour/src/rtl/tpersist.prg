@@ -53,6 +53,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 
+REQUEST ARRAY
+
 CREATE CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
@@ -66,8 +68,10 @@ ENDCLASS
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
    LOCAL nFrom := 1
+   LOCAL nPos
    LOCAL cLine
    LOCAL lStart := .t.
+   LOCAL aObjects := { Self }
 
    PRIVATE oSelf
 
@@ -75,31 +79,47 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       RETURN .F.
    ENDIF
 
-   /* We skip the first empty lines */
-   DO WHILE Empty( ExtractLine( cObjectText, @nFrom ) )
-   ENDDO
-
    DO WHILE nFrom <= Len( cObjectText )
-      cLine := ExtractLine( cObjectText, @nFrom )
+      cLine := AllTrim( ExtractLine( cObjectText, @nFrom ) )
 
       DO CASE
+      CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
+         /* ignore comments and empty lines */
+
       CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
          IF lStart
             lStart := .F.
+         ELSE
+            cLine := SubStr( cLine, At( "::", cLine ) )
+            MEMVAR->oSelf := ATail( aObjects )
+            cLine := StrTran( cLine, "::", "oSelf:",, 1 )
+            cLine := StrTran( cLine, " AS ", " := " ) + "():CreateNew()"
+            AAdd( aObjects, &( cLine ) )
+         ENDIF
+
+      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
+         ASize( aObjects, Len( aObjects ) - 1 )
+         IF Empty( aObjects )
+            EXIT
          ENDIF
 
       CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
          cLine := SubStr( cLine, At( "::", cLine ) )
-         MEMVAR->oSelf := Self
-         cLine := StrTran( cLine, "::", "oSelf:" )
-         cLine := StrTran( cLine, " LEN ", " = Array( " )
-         cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
+         MEMVAR->oSelf := ATail( aObjects )
+         cLine := StrTran( cLine, "::", "oSelf:",, 1 )
+         cLine := StrTran( cLine, " LEN ", " := Array( " ) + " )"
          &( cLine )
 
-      CASE Left( LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
-         MEMVAR->oSelf := Self
-         cLine := StrTran( cLine, "::", "oSelf:" )
-         cLine := StrTran( cLine, "=", ":=", , 1 )
+      CASE Left( cLine, 2 ) == "::"
+         /* fix for older versions */
+         nPos := At( "=", cLine )
+         IF nPos > 0
+            IF !( SubStr( cLine, nPos - 1, 1 ) == ":" )
+               cLine := Stuff( cLine, nPos, 0, ":" )
+            ENDIF
+         ENDIF
+         MEMVAR->oSelf := ATail( aObjects )
+         cLine := StrTran( cLine, "::", "oSelf:",, 1 )
          &( cLine )
 
       ENDCASE
@@ -141,31 +161,38 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
       IF !( cType == ValType( uNewValue ) ) .OR. !( uValue == uNewValue )
 
-         DO CASE
-         CASE cType == "A"
+         SWITCH cType
+         CASE "A"
             nIndent += 3
             cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
             nIndent -= 3
             IF n < Len( aProperties )
                cObject += hb_eol()
             ENDIF
+            EXIT
 
-         CASE cType == "O"
+         CASE "O"
             IF __objDerivedFrom( uValue, "HBPERSISTENT" )
                cObject += uValue:SaveToText( aProperties[ n ], nIndent )
             ENDIF
             IF n < Len( aProperties )
                cObject += hb_eol()
             ENDIF
+            EXIT
+
+         CASE "B"
+         CASE "P"
+            /* ignore codeblock and pointer items */
+            EXIT
 
          OTHERWISE
             IF n == 1
                cObject += hb_eol()
             ENDIF
             cObject += Space( nIndent ) + "   ::" + ;
-                       aProperties[ n ] + " = " + ValToText( uValue ) + ;
+                       aProperties[ n ] + " := " + hb_ValToExp( uValue ) + ;
                        hb_eol()
-         ENDCASE
+         ENDSWITCH
 
       ENDIF
 
@@ -200,34 +227,24 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
          ENDIF
          EXIT
 
+      CASE "B"
+      CASE "P"
+         /* ignore codeblock and pointer items */
+         EXIT
+
       OTHERWISE
          IF n == 1
             cArray += hb_eol()
          ENDIF
          cArray += Space( nIndent ) + "   ::" + cName + ;
-                   + "[ " + hb_NToS( n ) + " ]" + " = " + ;
-                   ValToText( uValue ) + hb_eol()
+                   + "[ " + hb_NToS( n ) + " ]" + " := " + ;
+                   hb_ValToExp( uValue ) + hb_eol()
       ENDSWITCH
    NEXT
 
    cArray += hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
 
    RETURN cArray
-
-STATIC FUNCTION ValToText( uValue )
-
-   SWITCH ValType( uValue )
-   CASE "C"
-      RETURN hb_StrToExp( uValue )
-   CASE "N"
-      RETURN hb_NToS( uValue )
-   CASE "D"
-      RETURN "0d" + iif( Empty( DToS( uValue ) ), "00000000", DToS( uValue ) )
-   CASE "T"
-      RETURN 't"' + hb_TSToStr( uValue, .T. ) + '"'
-   ENDSWITCH
-
-   RETURN hb_ValToStr( uValue )
 
 /* Notice: nFrom must be supplied by reference */
 

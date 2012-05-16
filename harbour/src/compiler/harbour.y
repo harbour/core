@@ -431,7 +431,7 @@ Statement  : ExecFlow CrlfStmnt
                         }
                         HB_COMP_PARAM->functions.pLast->funFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
                      }
-           | PUBLIC  { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
+           | PUBLIC  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
                      ExtVarList
                      {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" );
                         HB_COMP_PARAM->iVarScope = VS_NONE;
@@ -1037,6 +1037,7 @@ CodeBlock   : BlockHead
             {  /* 3 */
                HB_CBVAR_PTR pVar;
                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
+               $<sNumber>2 = HB_COMP_PARAM->lastLine;
                hb_compCodeBlockStart( HB_COMP_PARAM, HB_TRUE );
                HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
@@ -1065,6 +1066,7 @@ CodeBlock   : BlockHead
                      HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
                      HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
                HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
+               HB_COMP_PARAM->lastLine = $<sNumber>2;
             }
             ;
 

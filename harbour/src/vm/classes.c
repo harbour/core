@@ -4960,8 +4960,9 @@ HB_FUNC( __CLSGETPROPERTIES )
                ++nCount;
             else if( pMethod->pMessage->pSymbol->szName[ 0 ] == '_' )
             {
-               PHB_DYNS pMsg = hb_dynsymFind( pMethod->pMessage->pSymbol->szName + 1 );
-               if( pMsg && hb_clsFindMsg( pClass, pMsg ) )
+               if( !pMethod->pAccMsg )
+                  pMethod->pAccMsg = hb_dynsymGetCase( pMethod->pMessage->pSymbol->szName + 1 );
+               if( hb_clsFindMsg( pClass, pMethod->pAccMsg ) )
                   ++nCount;
             }
          }
@@ -4980,10 +4981,10 @@ HB_FUNC( __CLSGETPROPERTIES )
          {
             if( ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) != 0 )
                hb_arraySetC( pReturn, ++nCount, pMethod->pMessage->pSymbol->szName );
-            else if( pMethod->pMessage->pSymbol->szName[ 0 ] == '_' )
+            else if( pMethod->pMessage->pSymbol->szName[ 0 ] == '_' &&
+                     pMethod->pAccMsg )
             {
-               PHB_DYNS pMsg = hb_dynsymFind( pMethod->pMessage->pSymbol->szName + 1 );
-               if( pMsg && hb_clsFindMsg( pClass, pMsg ) )
+               if( hb_clsFindMsg( pClass, pMethod->pAccMsg ) )
                   hb_arraySetC( pReturn, ++nCount, pMethod->pMessage->pSymbol->szName + 1 );
             }
          }

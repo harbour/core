@@ -1,14 +1,15 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
 
    Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,9 +17,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -32,6 +31,7 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -150,124 +150,16 @@
      PRE = 366
    };
 #endif
-/* Tokens.  */
-#define FUNCTION 258
-#define PROCEDURE 259
-#define IDENTIFIER 260
-#define RETURN 261
-#define NIL 262
-#define NUM_DOUBLE 263
-#define INASSIGN 264
-#define NUM_LONG 265
-#define LOCAL 266
-#define STATIC 267
-#define IIF 268
-#define IF 269
-#define ELSE 270
-#define ELSEIF 271
-#define END 272
-#define ENDIF 273
-#define LITERAL 274
-#define TRUEVALUE 275
-#define FALSEVALUE 276
-#define ANNOUNCE 277
-#define EXTERN 278
-#define DYNAMIC 279
-#define INIT 280
-#define EXIT 281
-#define AND 282
-#define OR 283
-#define NOT 284
-#define PUBLIC 285
-#define EQ 286
-#define NE1 287
-#define NE2 288
-#define INC 289
-#define DEC 290
-#define ALIASOP 291
-#define DOCASE 292
-#define CASE 293
-#define OTHERWISE 294
-#define ENDCASE 295
-#define ENDDO 296
-#define MEMVAR 297
-#define WHILE 298
-#define LOOP 299
-#define FOR 300
-#define NEXT 301
-#define TO 302
-#define STEP 303
-#define LE 304
-#define GE 305
-#define FIELD 306
-#define IN 307
-#define PARAMETERS 308
-#define PLUSEQ 309
-#define MINUSEQ 310
-#define MULTEQ 311
-#define DIVEQ 312
-#define POWER 313
-#define EXPEQ 314
-#define MODEQ 315
-#define PRIVATE 316
-#define BEGINSEQ 317
-#define BREAK 318
-#define RECOVER 319
-#define RECOVERUSING 320
-#define ALWAYS 321
-#define ENDSEQ 322
-#define DO 323
-#define WITH 324
-#define SELF 325
-#define LINE 326
-#define MACROVAR 327
-#define MACROTEXT 328
-#define AS_ARRAY 329
-#define AS_BLOCK 330
-#define AS_CHARACTER 331
-#define AS_CLASS 332
-#define AS_DATE 333
-#define AS_LOGICAL 334
-#define AS_NUMERIC 335
-#define AS_OBJECT 336
-#define AS_VARIANT 337
-#define DECLARE 338
-#define OPTIONAL 339
-#define DECLARE_CLASS 340
-#define DECLARE_MEMBER 341
-#define AS_ARRAY_ARRAY 342
-#define AS_BLOCK_ARRAY 343
-#define AS_CHARACTER_ARRAY 344
-#define AS_CLASS_ARRAY 345
-#define AS_DATE_ARRAY 346
-#define AS_LOGICAL_ARRAY 347
-#define AS_NUMERIC_ARRAY 348
-#define AS_OBJECT_ARRAY 349
-#define PROCREQ 350
-#define CBSTART 351
-#define DOIDENT 352
-#define FOREACH 353
-#define DESCEND 354
-#define DOSWITCH 355
-#define ENDSWITCH 356
-#define WITHOBJECT 357
-#define ENDWITH 358
-#define NUM_DATE 359
-#define TIMESTAMP 360
-#define EPSILON 361
-#define HASHOP 362
-#define THREAD 363
-#define POST 364
-#define UNARY 365
-#define PRE 366
-
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 117 "harbour.y"
 {
+
+/* Line 1676 of yacc.c  */
+#line 117 "harbour.y"
+
    const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
@@ -304,14 +196,17 @@ typedef union YYSTYPE
       int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
    PHB_VARTYPE asVarType;
-}
-/* Line 1496 of yacc.c.  */
-#line 310 "harboury.h"
-	YYSTYPE;
+
+
+
+/* Line 1676 of yacc.c  */
+#line 204 "harboury.h"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
 #endif
+
 
 
 
