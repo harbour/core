@@ -490,7 +490,7 @@ DYNAMIC hb_gzUnGetC
 DYNAMIC hb_gzWrite
 DYNAMIC hb_HAllocate
 DYNAMIC hb_Hash
-DYNAMIC hb_HautoAdd
+DYNAMIC hb_HAutoAdd
 DYNAMIC hb_HBinary
 DYNAMIC hb_HCaseMatch
 DYNAMIC hb_HClear
