@@ -2765,7 +2765,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
             int iLocal = pCode[ 1 ];
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
 
-            hb_vmAddInt( hb_stackLocalVariable( &iLocal ),
+            hb_vmAddInt( hb_stackLocalVariable( iLocal ),
                          HB_PCODE_MKSHORT( &pCode[ 2 ] ) );
             pCode += 4;
             break;
@@ -2776,7 +2776,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALADDINT") );
 
-            hb_vmAddInt( hb_stackLocalVariable( &iLocal ),
+            hb_vmAddInt( hb_stackLocalVariable( iLocal ),
                          HB_PCODE_MKSHORT( &pCode[ 3 ] ) );
             pCode += 5;
             break;
@@ -2785,7 +2785,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_LOCALINC:
          {
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
-            PHB_ITEM pLocal = hb_stackLocalVariable( &iLocal );
+            PHB_ITEM pLocal = hb_stackLocalVariable( iLocal );
             hb_vmInc( HB_IS_BYREF( pLocal ) ? hb_itemUnRef( pLocal ) : pLocal );
             pCode += 3;
             break;
@@ -2794,7 +2794,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_LOCALDEC:
          {
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
-            PHB_ITEM pLocal = hb_stackLocalVariable( &iLocal );
+            PHB_ITEM pLocal = hb_stackLocalVariable( iLocal );
             hb_vmDec( HB_IS_BYREF( pLocal ) ? hb_itemUnRef( pLocal ) : pLocal );
             pCode += 3;
             break;
@@ -2803,7 +2803,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_LOCALINCPUSH:
          {
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ 1 ] );
-            PHB_ITEM pLocal = hb_stackLocalVariable( &iLocal );
+            PHB_ITEM pLocal = hb_stackLocalVariable( iLocal );
             if( HB_IS_BYREF( pLocal ) )
                pLocal = hb_itemUnRef( pLocal );
             hb_vmInc( pLocal );
@@ -7062,7 +7062,7 @@ static void hb_vmPushLocal( int iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackLocalVariable( &iLocal );
+      pLocal = hb_stackLocalVariable( iLocal );
    }
    else
    {
@@ -7087,7 +7087,7 @@ static void hb_vmPushLocalByRef( int iLocal )
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    if( iLocal >= 0 )
    {
-      PHB_ITEM pLocal = hb_stackLocalVariable( &iLocal );
+      PHB_ITEM pLocal = hb_stackLocalVariableAt( &iLocal );
       if( HB_IS_BYREF( pLocal ) && !HB_IS_ENUM( pLocal ) )
       {
          hb_itemCopy( pTop, pLocal );
@@ -7345,7 +7345,7 @@ static void hb_vmPopLocal( int iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackLocalVariable( &iLocal );
+      pLocal = hb_stackLocalVariable( iLocal );
    }
    else
    {
@@ -9423,7 +9423,7 @@ static PHB_ITEM hb_xvmLocalPtr( int iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      return hb_stackLocalVariable( &iLocal );
+      return hb_stackLocalVariable( iLocal );
    }
    else
    {
@@ -9721,7 +9721,7 @@ void hb_xvmLocalSetInt( int iLocal, HB_LONG lValue )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackLocalVariable( &iLocal );
+      pLocal = hb_stackLocalVariable( iLocal );
       if( HB_IS_BYREF( pLocal ) )
          pLocal = hb_itemUnRef( pLocal );
    }
@@ -9752,7 +9752,7 @@ HB_BOOL hb_xvmLocalAddInt( int iLocal, HB_LONG lAdd )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAddInt(%d,%ld)", iLocal, lAdd));
 
-   hb_vmAddInt( hb_stackLocalVariable( &iLocal ), lAdd );
+   hb_vmAddInt( hb_stackLocalVariable( iLocal ), lAdd );
 
    HB_XVM_RETURN
 }
@@ -9764,7 +9764,7 @@ HB_BOOL hb_xvmLocalInc( int iLocal )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalInc(%d)", iLocal));
 
-   pLocal = hb_stackLocalVariable( &iLocal );
+   pLocal = hb_stackLocalVariable( iLocal );
    hb_vmInc( HB_IS_BYREF( pLocal ) ? hb_itemUnRef( pLocal ) : pLocal );
 
    HB_XVM_RETURN
@@ -9777,7 +9777,7 @@ HB_BOOL hb_xvmLocalDec( int iLocal )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalDec(%d)", iLocal));
 
-   pLocal = hb_stackLocalVariable( &iLocal );
+   pLocal = hb_stackLocalVariable( iLocal );
    hb_vmDec( HB_IS_BYREF( pLocal ) ? hb_itemUnRef( pLocal ) : pLocal );
 
    HB_XVM_RETURN
@@ -9790,7 +9790,7 @@ HB_BOOL hb_xvmLocalIncPush( int iLocal )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalInc(%d)", iLocal));
 
-   pLocal = hb_stackLocalVariable( &iLocal );
+   pLocal = hb_stackLocalVariable( iLocal );
    if( HB_IS_BYREF( pLocal ) )
       pLocal = hb_itemUnRef( pLocal );
    hb_vmInc( pLocal );
@@ -9806,7 +9806,7 @@ HB_BOOL hb_xvmLocalAdd( int iLocal )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAdd(%d)", iLocal));
 
-   pLocal = hb_stackLocalVariable( &iLocal );
+   pLocal = hb_stackLocalVariable( iLocal );
    if( HB_IS_BYREF( pLocal ) )
       pLocal = hb_itemUnRef( pLocal );
    hb_vmPlus( pLocal, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );

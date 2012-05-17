@@ -327,7 +327,8 @@ extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams 
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );
 
-extern HB_ITEM_PTR hb_stackLocalVariable( int * piFromBase );
+extern HB_ITEM_PTR hb_stackLocalVariable( int iLocal );
+extern HB_ITEM_PTR hb_stackLocalVariableAt( int * piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
 extern HB_EXPORT HB_ISIZ     hb_stackGetRecoverBase( void );
@@ -480,8 +481,15 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
                                           hb_stackIncrease(); \
                                     } while ( 0 )
 
-#define hb_stackLocalVariable( p )  ( ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \
-                                          ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) && \
+#define hb_stackLocalVariable( i )  ( hb_stack.pBase[ ( i ) + 1 + \
+                                       ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \
+                                           ( *hb_stack.pBase )->item.asSymbol.paramdeclcnt && \
+                                           ( i ) > ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) ? \
+                                            ( * hb_stack.pBase )->item.asSymbol.paramcnt - \
+                                            ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt : 0 ) ] )
+
+#define hb_stackLocalVariableAt( p )( ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \
+                                          ( *hb_stack.pBase )->item.asSymbol.paramdeclcnt ) && \
                                         ( * (p) ) > ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) ? \
                                       ( * ( hb_stack.pBase + ( int ) ( * (p) += \
                                           ( * hb_stack.pBase )->item.asSymbol.paramcnt - \

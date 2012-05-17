@@ -202,7 +202,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
           * to implement some kind of semaphores here.
           */
          int iLocal = HB_PCODE_MKUSHORT( pLocalPosTable );
-         pLocal = hb_stackLocalVariable( &iLocal );
+         pLocal = hb_stackLocalVariable( iLocal );
          pLocalPosTable += 2;
 
          pLocal = hb_memvarDetachLocal( pLocal );

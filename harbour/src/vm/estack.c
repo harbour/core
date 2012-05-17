@@ -865,7 +865,31 @@ HB_ITEM_PTR hb_stackItemFromBase( int iFromBase )
 }
 
 #undef hb_stackLocalVariable
-HB_ITEM_PTR hb_stackLocalVariable( int * piFromBase )
+HB_ITEM_PTR hb_stackLocalVariable( int iLocal )
+{
+   HB_STACK_TLS_PRELOAD
+   HB_ITEM_PTR pBase = *hb_stack.pBase;
+
+/*
+   if( iLocal <= 0 )
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
+*/
+   if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt )
+   {
+      /* function with variable number of parameters:
+       * FUNCTION foo( a,b,c,...)
+       * LOCAL x,y,z
+       * number of passed parameters is bigger then number of declared
+       * parameters - skip additional parameters only for local variables
+       */
+      if( iLocal > pBase->item.asSymbol.paramdeclcnt )
+         iLocal += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
+   }
+   return * ( hb_stack.pBase + iLocal + 1 );
+}
+
+#undef hb_stackLocalVariableAt
+HB_ITEM_PTR hb_stackLocalVariableAt( int * piFromBase )
 {
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR pBase = *hb_stack.pBase;
