@@ -1310,7 +1310,7 @@ HB_SIZE hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp,
    HB_SIZE ulS, ulD;
    int i, n;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
       return ( nMax && nSrc > nMax ) ? nMax : nSrc;
    else if( HB_CDP_ISCUSTOM( cdp ) )
    {
@@ -1350,7 +1350,7 @@ HB_SIZE hb_cdpStrToUTF8( PHB_CODEPAGE cdp,
 {
    HB_SIZE ulS, ulD, u;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       if( nSrc > nDst )
          nSrc = nDst;
@@ -1408,7 +1408,7 @@ HB_SIZE hb_cdpStrToUTF8Disp( PHB_CODEPAGE cdp,
 {
    HB_SIZE ulS, ulD, u;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       if( nSrc > nDst )
          nSrc = nDst;
@@ -1470,7 +1470,7 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc,
    HB_SIZE ulS, ulD;
    int n = 0, i;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
       return ( nMax && nSrc > nMax ) ? nMax : nSrc;
    else if( HB_CDP_ISCUSTOM( cdp ) )
    {
@@ -1516,7 +1516,7 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp,
    HB_SIZE ulS, ulD;
    int n = 0;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       if( nSrc > nDst )
          nSrc = nDst;
@@ -1708,7 +1708,7 @@ HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp,
 {
    HB_SIZE ulS, ulD;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       nSrc = hb_cdpUTF8StringLength( pSrc, nSrc );
    }
@@ -1742,7 +1742,7 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, int iEndian,
    const HB_WCHAR * uniCodes;
    HB_SIZE ulS, ulD;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       HB_WCHAR wc = 0;
       int n = 0;
@@ -1852,7 +1852,7 @@ HB_SIZE hb_cdpU16AsStrLen( PHB_CODEPAGE cdp,
    HB_SIZE ulS, ulD;
    int i;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       for( ulS = ulD = 0; ulS < nSrc; ++ulS )
       {
@@ -1887,7 +1887,7 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, int iEndian,
    HB_SIZE ulS, ulD;
    int i;
 
-   if( cdp == &s_utf8_codepage )
+   if( HB_CDP_ISUTF8( cdp ) )
    {
       for( ulS = ulD = 0; ulS < nSrc; ++ulS )
       {
@@ -1980,9 +1980,9 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
        ( cdpIn->uniTable != cdpOut->uniTable ||
          HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) ) )
    {
-      if( cdpIn == &s_utf8_codepage )
+      if( HB_CDP_ISUTF8( cdpIn ) )
          return hb_cdpUTF8AsStrLen( cdpOut, pSrc, nSrc, nMax );
-      else if( cdpOut == &s_utf8_codepage )
+      else if( HB_CDP_ISUTF8( cdpOut ) )
          return hb_cdpStrAsUTF8Len( cdpIn, pSrc, nSrc, nMax );
       else if( HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) )
       {
@@ -2017,9 +2017,9 @@ HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE nSrc,
        ( cdpIn->uniTable != cdpOut->uniTable ||
          HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) ) )
    {
-      if( cdpIn == &s_utf8_codepage )
+      if( HB_CDP_ISUTF8( cdpIn ) )
          return hb_cdpUTF8ToStr( cdpOut, pSrc, nSrc, pDst, nDst );
-      else if( cdpOut == &s_utf8_codepage )
+      else if( HB_CDP_ISUTF8( cdpOut ) )
          return hb_cdpStrToUTF8( cdpIn, pSrc, nSrc, pDst, nDst );
       else if( HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) )
       {
@@ -2202,6 +2202,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    if( cdpIn && cdpOut && cdpIn != cdpOut && nSrc &&
+       ( ! HB_CDP_ISUTF8( cdpIn ) || !HB_CDP_ISUTF8( cdpOut ) ) &&
        ( cdpIn->uniTable != cdpOut->uniTable ||
          HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) ) )
    {
@@ -2215,8 +2216,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
             pDst = ( char * ) pSrc;
       }
 
-      if( nDst >= *pnSize || ( pDst == pSrc &&
-          ( cdpOut == &s_utf8_codepage || HB_CDP_ISCUSTOM( cdpOut ) ) ) )
+      if( nDst >= *pnSize || ( pDst == pSrc && HB_CDP_ISCUSTOM( cdpOut ) ) )
       {
          pPrev = *pFree;
          pDst = *pFree = ( char * ) hb_xgrab( nDst + 1 );
