@@ -165,6 +165,7 @@
 #define HB_GTI_FONTA_FIXMETRIC  1
 #define HB_GTI_FONTA_CLRBKG     2
 #define HB_GTI_FONTA_DRAWBOX    4
+#define HB_GTI_FONTA_CTRLCHARS  8
 
 /* Keyboard shifts states */
 #define HB_GTI_KBD_SHIFT        0x000001

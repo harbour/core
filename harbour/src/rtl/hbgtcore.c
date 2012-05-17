@@ -799,7 +799,7 @@ static HB_BOOL hb_gt_def_GetUC( PHB_GT pGT, int iRow, int iCol,
                if( pGT->cdpHost && pGT->cdpTerm != pGT->cdpHost )
                   uc = hb_cdpGetUC( pGT->cdpHost, wc, 0 );
                if( uc == 0 )
-                  uc = hb_cdpGetUC( hb_vmCDP(), wc, '?' );
+                  uc = hb_cdpGetUC( hb_vmCDP(), wc, wc < 32 ? ( HB_UCHAR ) wc : '?' );
             }
          }
       }

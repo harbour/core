@@ -87,6 +87,7 @@
 #  define WVT_DEFAULT_FONT_HEIGHT   20
 #  define WVT_DEFAULT_FONT_WIDTH    10
 #endif
+#define WVT_DEFAULT_FONT_ATTR    0
 #define WVT_DEFAULT_FONT_NAME    TEXT( "Courier New" )
 
 #define BLACK          RGB( 0x00, 0x00, 0x00 )
@@ -143,6 +144,7 @@ typedef struct
    int      fontWidth;                    /* requested font width */
    int      fontWeight;                   /* Bold level */
    int      fontQuality;                  /* requested font quality */
+   int      fontAttribute;                /* font attribute: HB_GTI_FONTA_* */
    TCHAR    fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
    HFONT    hFont;                        /* current font handle */
 #if ! defined( UNICODE )

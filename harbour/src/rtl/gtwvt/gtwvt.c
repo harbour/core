@@ -323,6 +323,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->fontHeight        = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWeight        = FW_NORMAL;
    pWVT->fontQuality       = DEFAULT_QUALITY;
+   pWVT->fontAttribute     = WVT_DEFAULT_FONT_ATTR;
    HB_STRNCPY( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = HB_FALSE;
@@ -1712,7 +1713,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
          HB_USHORT usChar;
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
-         usChar = hb_cdpGetU16Ctrl( usChar );
+         if( ( pWVT->fontAttribute & HB_GTI_FONTA_CTRLCHARS ) == 0 )
+            usChar = hb_cdpGetU16Ctrl( usChar );
 
          /* as long as GTWVT uses only 16 colors we can ignore other bits
           * and not divide output when it does not change anythings
@@ -2496,6 +2498,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   break;
             }
          }
+         break;
+
+      case HB_GTI_FONTATTRIBUTE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontAttribute );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            pWVT->fontAttribute = hb_itemGetNI( pInfo->pNewVal ) & HB_GTI_FONTA_CTRLCHARS;
          break;
 
       case HB_GTI_SCREENHEIGHT:
