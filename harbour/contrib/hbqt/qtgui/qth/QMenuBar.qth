@@ -39,17 +39,17 @@ HB_FUNC( QT_QMENUBAR )
 
 <PROTOS>
 QAction * activeAction () const
-QAction * addAction ( const QString & text )
-QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
+QAction * addAction ( const QString & text )                          [*R=1*]
+QAction * addAction ( const QString & text, const QObject * receiver, const char * member )  [*R=1*]
 void addAction ( QAction * action )
-QAction * addMenu ( QMenu * menu )
+QAction * addMenu ( QMenu * menu )                                    [*D=1;R=1*]
 QMenu * addMenu ( const QString & title )
 QMenu * addMenu ( const QIcon & icon, const QString & title )
 QAction * addSeparator ()
 void clear ()
 // QAction * defaultAction () const
-QAction * insertMenu ( QAction * before, QMenu * menu )
-QAction * insertSeparator ( QAction * before )
+QAction * insertMenu ( QAction * before, QMenu * menu )               [*D=2;R=1*]
+QAction * insertSeparator ( QAction * before )                        [*R=1*]
 bool isDefaultUp () const
 // OSMenuRef macMenu ()
 void setActiveAction ( QAction * act )

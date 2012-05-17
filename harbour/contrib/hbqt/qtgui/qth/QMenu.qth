@@ -56,17 +56,17 @@ QAction * actionAt ( const QPoint & pt ) const
 QRect actionGeometry ( QAction * act ) const
 QAction * activeAction () const
 
-QAction * addAction ( const QString & text )
-QAction * addAction ( const QIcon & icon, const QString & text )
-QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
+QAction * addAction ( const QString & text )                          [*R=1*]
+QAction * addAction ( const QIcon & icon, const QString & text )      [*R=1*]
+QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )   [*R=1*]
+QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )   [*R=1*]
 void addAction ( QAction * action )
 
-QAction * addMenu ( QMenu * menu )
-QMenu * addMenu ( const QString & title )
-QMenu * addMenu ( const QIcon & icon, const QString & title )
+QAction * addMenu ( QMenu * menu )                                    [*D=1;R=1*]
+QMenu * addMenu ( const QString & title )                             [*R=1*]
+QMenu * addMenu ( const QIcon & icon, const QString & title )         [*R=1*]
 
-QAction * addSeparator ()
+QAction * addSeparator ()                                             [*R=1*]
 void clear ()
 QAction * defaultAction () const
 
@@ -75,8 +75,8 @@ QAction * exec ( const QPoint & p, QAction * action = 0 )
 
 void hideTearOffMenu ()
 QIcon icon () const
-QAction * insertMenu ( QAction * before, QMenu * menu )
-QAction * insertSeparator ( QAction * before )
+QAction * insertMenu ( QAction * before, QMenu * menu )               [*D=2;R=1*]
+QAction * insertSeparator ( QAction * before )                        [*R=1*]
 bool isEmpty () const
 bool isTearOffEnabled () const
 bool isTearOffMenuVisible () const

@@ -19,7 +19,7 @@ New         = pParent
 <CODE>
 #include <QtGui/QToolBar>
 #include <QtGui/QIcon>
-
+#include <QtGui/QAction>
 
 /* QToolBar ( const QString & title, QWidget * parent = 0 )
  * QToolBar ( QWidget * parent = 0 )
@@ -53,13 +53,13 @@ HB_FUNC( QT_QTOOLBAR )
 <PROTOS>
 QAction * actionAt ( const QPoint & p ) const
 QAction * actionAt ( int x, int y ) const
-void addAction ( QAction * action )   [*D=1*]
-QAction * addAction ( const QString & text )
-QAction * addAction ( const QIcon & icon, const QString & text )
-QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
-QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*D=3*]
-QAction * addSeparator ()
-QAction * addWidget ( QWidget * widget )
+void addAction ( QAction * action )                                   
+QAction * addAction ( const QString & text )                          [*R=1*]
+QAction * addAction ( const QIcon & icon, const QString & text )      [*R=1*]
+QAction * addAction ( const QString & text, const QObject * receiver, const char * member )                       [*R=1*]
+QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*D=3;R=1*]
+QAction * addSeparator ()                                             [*R=1*]
+QAction * addWidget ( QWidget * widget )                              [*D=1;R=1*]
 Qt::ToolBarAreas allowedAreas () const
 void clear ()
 QSize iconSize () const

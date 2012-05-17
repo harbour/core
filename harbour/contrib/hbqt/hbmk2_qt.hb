@@ -2523,6 +2523,9 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                CASE "V"
                   oMtd:cVersion := cVal
                   EXIT
+               CASE "R"
+                  oMtd:nDetachRet := val( cVal )
+                  EXIT 
                CASE "xxx"
                   EXIT
                ENDSWITCH
@@ -2925,7 +2928,8 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    CASE oRet:lFar .AND. ! oRet:lConst
       cRef := oRet:cCast
-      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
+      //oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, oMtd:nDetachRet > 0 )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2954,24 +2958,24 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    CASE oRet:lAnd .AND. oRet:lConst
       cRef := oRet:cCast
-      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .T. )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lConst
       cRef := oRet:cCast
-      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .T. )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lAnd
       cRef := oRet:cCast
-      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .T. )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    OTHERWISE
       /* No attribute is attached to return value */
       IF hbqtgen_isAqtObject( oRet:cCast )
          cRef := oRet:cCast
-         oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn )
+         oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .T. )
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ELSE
          oMtd:cError := "<<< " + oMtd:cProto + " | " + oRet:cCast + " >>>"
@@ -3020,6 +3024,7 @@ CREATE CLASS HbqtMethod
    VAR    nDetach                                 INIT 0
    VAR    nAttach                                 INIT 0
    VAR    cVersion                                INIT ""
+   VAR    nDetachRet                              INIT -1
 
    VAR    cFun                                    INIT ""
    VAR    cRet                                    INIT ""
