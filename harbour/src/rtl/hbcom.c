@@ -322,6 +322,12 @@ static void hb_comSetOsError( PHB_COM pCom, HB_BOOL fError )
       case EAGAIN:
          pCom->error = HB_COM_ERR_TIMEOUT;
          break;
+      case EACCES:
+         pCom->error = HB_COM_ERR_ACCESS;
+         break;
+      case ENOTTY:
+         pCom->error = HB_COM_ERR_NOCOM;
+         break;
       default:
          pCom->error = HB_COM_ERR_OTHER;
          break;

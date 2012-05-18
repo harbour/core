@@ -127,5 +127,7 @@
 #define HB_COM_ERR_ALREADYOPEN      8
 #define HB_COM_ERR_IO               9
 #define HB_COM_ERR_PIPE             10
+#define HB_COM_ERR_ACCESS           11
+#define HB_COM_ERR_NOCOM            12
 
 #endif /* HB_COM_CH_ */
