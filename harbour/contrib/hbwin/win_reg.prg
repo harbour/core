@@ -132,12 +132,11 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
    IF Empty( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
    ELSE
-      IF nRegSam == NIL
-         nRegSam := KEY_SET_VALUE
-      ELSE
-         nRegSam := hb_bitor( nRegSam, KEY_SET_VALUE)
+      IF ! hb_isNumeric( nRegSam )
+         nRegSam := 0
       ENDIF
-      IF win_regOpenKeyEx( nHKEY, cKey, 0, nRegSam, @pKeyHandle )
+
+      IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), @pKeyHandle )
          lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
          win_regCloseKey( pKeyHandle )
       ELSE
@@ -181,12 +180,11 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   IF nRegSam == NIL
-      nRegSam := KEY_QUERY_VALUE
-   ELSE
-      nRegSam := hb_bitor( nRegSam, KEY_QUERY_VALUE)
+   IF ! hb_isNumeric( nRegSam )
+      nRegSam := 0
    ENDIF
-   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, nRegSam, @pKeyHandle )
+
+   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, nRegSam ), @pKeyHandle )
 
       /* retrieve the length of the value */
 
@@ -225,12 +223,11 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   IF nRegSam == NIL
-      nRegSam := KEY_SET_VALUE
-   ELSE
-      nRegSam := hb_bitor( nRegSam, KEY_SET_VALUE)
+   IF ! hb_isNumeric( nRegSam )
+      nRegSam := 0
    ENDIF
-   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, nRegSam, 0, @pKeyHandle )
+
+   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), 0, @pKeyHandle )
 
       /* no support for Arrays, Codeblock ... */
       SWITCH ValType( xValue )
