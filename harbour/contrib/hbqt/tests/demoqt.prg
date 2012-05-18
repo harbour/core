@@ -197,9 +197,10 @@ PROCEDURE ExecOneMore()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MenuBar( oWnd )
-   LOCAL oMenuBar, oMenu1, oMenu2
+   LOCAL oMenuBar, oMenu1, oMenu2, oAM1, oAM2
    LOCAL oActNew, oActOpen, oActSave, oActExit
    LOCAL oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther
+   LOCAL oS1, oS2, oS3, oS4, oS5
 
    oMenuBar := QMenuBar()
    oMenuBar:resize( oWnd:width(), 25 )
@@ -217,17 +218,17 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActOpen := oMenu1:addAction( hb_dirBase() + "open.png", "&Open" )
    oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
 
-   oMenu1:addSeparator()
+   oS1 := oMenu1:addSeparator()
 
    oActSave := oMenu1:addAction( hb_dirBase() + "save.png", "&Save" )
    oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
 
-   oMenu1:addSeparator()
+   oS2 := oMenu1:addSeparator()
 
    oActExit := oMenu1:addAction( "E&xit" )
    oActExit:connect( "triggered(bool)", {|| QApplication():quit() } )
 
-   oMenuBar:addMenu( oMenu1 )
+   oAM1 := oMenuBar:addMenu( oMenu1 )
 
    oMenu2 := QMenu()
    oMenu2:setTitle( "&Dialogs" )
@@ -238,7 +239,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActFonts := oMenu2:addAction( "&Fonts" )
    oActFonts:connect( "triggered(bool)", {|w,l| Dialogs( "Fonts", w, l ) } )
 
-   oMenu2:addSeparator()
+   oS3 := oMenu2:addSeparator()
 
    oActPgSetup := oMenu2:addAction( "&PageSetup" )
    oActPgSetup:connect( "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
@@ -246,7 +247,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActPreview := oMenu2:addAction( "P&review" )
    oActPreview:connect( "triggered(bool)", {|w,l| Dialogs( "Preview", w, l ) } )
 
-   oMenu2:addSeparator()
+   oS4 := oMenu2:addSeparator()
 
    oActWiz := oMenu2:addAction( "&Wizard" )
    oActWiz:connect( "triggered(bool)", {|w,l| Dialogs( "Wizard", w, l ) } )
@@ -254,22 +255,23 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActWeb := oMenu2:addAction( "W&ebPage" )
    oActWeb:connect( "triggered(bool)", {|w,l| Dialogs( "WebPage", w, l ) } )
 
-   oMenu2:addSeparator()
+   oS5 := oMenu2:addSeparator()
 
    oActOther := oMenu2:addAction( "&Another Dialog" )
    oActOther:connect( "triggered(bool)", {|| ExecOneMore() } )
 
-   oMenuBar:addMenu( oMenu2 )
+   oAM2 := oMenuBar:addMenu( oMenu2 )
 
    oWnd:setMenuBar( oMenuBar )
 
    RETURN { oMenu1, oMenu2, oMenuBar, oActNew, oActOpen, oActSave, oActExit, ;
-            oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther }
+            oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, ;
+            oActOther, oS1, oS2, oS3, oS4, oS5, oAM1, oAM2 }
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ToolBar( oWnd )
-   LOCAL oTB, oActNew, oActOpen, oActSave
+   LOCAL oTB, oActNew, oActOpen, oActSave, oS1
 
    /* Create a Toolbar Object */
    oTB := QToolBar()
@@ -280,7 +282,6 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActNew:setIcon( hb_dirBase() + "new.png" )
    oActNew:setToolTip( "A New File" )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
-
    /* Attach Action with Toolbar */
    oTB:addAction( oActNew )
 
@@ -293,7 +294,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
-   oTB:addSeparator()
+   oS1 := oTB:addSeparator()
 
    /* Create another action */
    oActSave := QAction( oWnd )
@@ -307,7 +308,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Add this toolbar with main window */
    oWnd:addToolBar( oTB )
 
-   RETURN { oActNew, oActOpen, oActSave, oTB }
+   RETURN { oActNew, oActOpen, oActSave, oTB, oS1 }
 
 /*----------------------------------------------------------------------*/
 

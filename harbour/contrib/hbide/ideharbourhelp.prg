@@ -685,8 +685,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
       RETURN Self
    ENDIF
 
-   ::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
-   ::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
+   //::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
+   //::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
    ::showApplicationCursor( Qt_BusyCursor )
 
    /* Clean Environment */
@@ -764,8 +764,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
    ::oUI:q_treeDoc:expandItem( oRoot )
 
    ::showApplicationCursor()
-   ::oUI:q_treeDoc:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
-   ::oUI:q_treeCategory:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
+   //::oUI:q_treeDoc:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
+   //::oUI:q_treeCategory:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
 
    RETURN Self
 

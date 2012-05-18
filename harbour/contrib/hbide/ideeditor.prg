@@ -1359,13 +1359,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::qLayout:setContentsMargins( 0,0,0,0 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
-
-   ::qHSpltr := QSplitter()
-   ::qHSpltr:setOrientation( Qt_Horizontal )
-
-   ::qVSpltr := QSplitter()
-   ::qVSpltr:setOrientation( Qt_Vertical )
-
+   
    ::oEdit   := IdeEdit():new( ::oIde, Self, 0 )
    ::oEdit:aBookMarks := aBookMarks
    ::oEdit:create()
@@ -1396,6 +1390,66 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
                                 hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:destroy()
+   LOCAL n, oEdit
+
+   HB_TRACE( HB_TR_DEBUG, "..........................................................IdeEditor:destroy()", 0 )
+
+   ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
+
+   IF !empty( ::qTimerSave )
+      ::qTimerSave:disconnect( "timeout()" )
+      ::qTimerSave:stop()
+      ::qTimerSave := NIL
+   ENDIF
+   /* This code is reached under normal circumstances, so delete auto saved file */
+   ferase( hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" ) )
+
+//   ::qHiliter := NIL
+
+   ::qCqEdit  := NIL
+   ::qCoEdit  := NIL
+   ::qEdit    := NIL
+
+   DO WHILE len( ::aEdits ) > 0
+      oEdit := ::aEdits[ 1 ]
+      hb_adel( ::aEdits, 1, .t. )
+      oEdit:destroy()
+   ENDDO
+   ::oEdit:destroy()
+
+   IF !Empty( ::qDocument )
+      ::qDocument := NIL
+   ENDIF
+
+   IF !Empty( ::qHiliter )
+      ::qHiliter := NIL
+   ENDIF
+
+   ::qSplitter := NIL 
+   ::oEdit := NIL
+   ::qLayout := NIL
+
+   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
+      hb_adel( ::oIde:aTabs, n, .T. )
+   ENDIF
+
+   ::oEM:removeSourceInTree( ::sourceFile )
+
+   ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::oTab:oWidget ) )
+   ::oTab := NIL
+
+   IF ::qTabWidget:count() == 0
+      IF ::lDockRVisible
+         ::oFuncDock:hide()
+         ::oIde:lDockRVisible := .f.
+      ENDIF
+   ENDIF
+   HB_TRACE( HB_TR_DEBUG, "................................................................IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1454,65 +1508,6 @@ METHOD IdeEditor:split( nOrient, oEditP )
       oEdit:qEdit:hbHighlightPage()
    ENDIF
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:destroy()
-   LOCAL n, oEdit
-
-   HB_TRACE( HB_TR_DEBUG, "..........................................................IdeEditor:destroy()", 0 )
-
-   ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
-
-   IF !empty( ::qTimerSave )
-      ::qTimerSave:disconnect( "timeout()" )
-      ::qTimerSave:stop()
-      ::qTimerSave := NIL
-   ENDIF
-   /* This code is reached under normal circumstances, so delete auto saved file */
-   ferase( hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" ) )
-
-   ::qHiliter := NIL
-
-   ::qCqEdit  := NIL
-   ::qCoEdit  := NIL
-   ::qEdit    := NIL
-
-   DO WHILE len( ::aEdits ) > 0
-      oEdit := ::aEdits[ 1 ]
-      hb_adel( ::aEdits, 1, .t. )
-      oEdit:destroy()
-   ENDDO
-   ::oEdit:destroy()
-
-   IF !Empty( ::qDocument )
-      ::qDocument := NIL
-   ENDIF
-
-   IF !Empty( ::qHiliter )
-      ::qHiliter := NIL
-   ENDIF
-
-   ::oEdit := NIL
-   ::qLayout := NIL
-
-   IF ( n := ascan( ::aTabs, {|e_| e_[ TAB_OEDITOR ] == Self } ) ) > 0
-      hb_adel( ::oIde:aTabs, n, .T. )
-   ENDIF
-
-   ::oEM:removeSourceInTree( ::sourceFile )
-
-   ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::oTab:oWidget ) )
-   ::oTab := NIL
-
-   IF ::qTabWidget:count() == 0
-      IF ::lDockRVisible
-         ::oFuncDock:hide()
-         ::oIde:lDockRVisible := .f.
-      ENDIF
-   ENDIF
-   HB_TRACE( HB_TR_DEBUG, "................................................................IdeEditor:destroy()", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

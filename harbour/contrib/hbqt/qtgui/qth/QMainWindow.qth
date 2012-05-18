@@ -72,8 +72,8 @@ flags DockOptions
 
 void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )   [*D=2*]
 void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )   [*D=2*]
-void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
-void addToolBar ( QToolBar * toolbar )
+void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )               [*D=2*]
+void addToolBar ( QToolBar * toolbar )                                     [*D=1*]
 QToolBar * addToolBar ( const QString & title )               // NOT implemented
 void addToolBarBreak ( Qt::ToolBarArea area = Qt::TopToolBarArea )
 QWidget * centralWidget () const

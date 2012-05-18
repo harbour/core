@@ -77,6 +77,7 @@ CLASS HbqToolbar
    DATA   cName
    DATA   oParent
    DATA   hItems                                  INIT   {=>}
+   DATA   hActions                                INIT   {=>}
 
    DATA   allowedAreas                            INIT   Qt_TopToolBarArea
    DATA   initialArea                             INIT   Qt_TopToolBarArea
@@ -182,6 +183,8 @@ METHOD HbqToolbar:destroy()
    ::qByte              := NIL
    ::oWidget            := NIL
 
+   ::hActions           := NIL 
+   
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -247,13 +250,14 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
    ::oWidget:addAction( qAction )
 
    ::hItems[ cName ] := qWidget
+   ::hActions[ cName ] := qAction
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
-   LOCAL oButton
+   LOCAL oButton, oActBtn
 
    DEFAULT cName        TO hbide_getNextIDasString( "IdeToolButton" )
    DEFAULT cDesc        TO ""
@@ -277,9 +281,11 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    IF hb_isBlock( bAction )
       oButton:connect( "clicked()", bAction )
    ENDIF
-   ::oWidget:addWidget( oButton )
+   oActBtn := ::oWidget:addWidget( oButton )
 
    ::hItems[ cName ] := oButton
+   ::hActions[ cName ] := oActBtn
+   
    RETURN oButton
 
 /*----------------------------------------------------------------------*/

@@ -74,7 +74,7 @@ void setCurrentRow ( int row, QItemSelectionModel::SelectionFlags command )
 void setItemWidget ( QListWidgetItem * item, QWidget * widget )
 void setSortingEnabled ( bool enable )
 void sortItems ( Qt::SortOrder order = Qt::AscendingOrder )
-QListWidgetItem * takeItem ( int row )
+QListWidgetItem * takeItem ( int row )                            
 QRect visualItemRect ( const QListWidgetItem * item ) const
 </PROTOS>
 

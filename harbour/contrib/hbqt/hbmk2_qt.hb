@@ -2929,7 +2929,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
    CASE oRet:lFar .AND. ! oRet:lConst
       cRef := oRet:cCast
       //oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F. )
-      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, oMtd:nDetachRet > 0 )
+      oMtd:cCmd := hbqtgen_Get_Command( oRet:cCast, oMtd:cCmn, .F., oMtd:nDetachRet > 0 )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -3171,16 +3171,20 @@ STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew )
+STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
 
    IF lNew == NIL
       lNew := .T.
+   ENDIF
+   IF isRetDetached == NIL
+      isRetDetached := .f.
    ENDIF
 
    IF lNew
       RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) , " + '"HB_' + Upper( cWgt ) +'" )'
    ELSE
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", false ) , " + '"HB_' + Upper( cWgt ) +'" )'
+      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "true", "false" ) + " ) , " + '"HB_' + Upper( cWgt ) +'" )'
+      //RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "false", "false" ) + " ) , " + '"HB_' + Upper( cWgt ) +'" )'
    ENDIF
    RETURN ""
 

@@ -142,7 +142,8 @@ CLASS IdeBrowseManager INHERIT IdeObject
 
    DATA   lStructOpen                             INIT  .f.
    DATA   lDeletedOn                              INIT  .t.
-
+   DATA   qComboAction
+   
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD show()
@@ -987,7 +988,9 @@ METHOD IdeBrowseManager:addArray( aData, aAttr )
 
 METHOD IdeBrowseManager:buildToolbar()
    LOCAL nW := 25
-
+#if 0   
+   LOCAL qTBar
+#endif
    STATIC sp0,sp1,sp2,sp3
 
    IF empty( sp0 )
@@ -997,6 +1000,27 @@ METHOD IdeBrowseManager:buildToolbar()
       sp3 := QLabel(); sp3:setMinimumWidth( nW )
    ENDIF
 
+#if 0
+   qTBar := HbqToolbar():new()
+   qTBar:orientation := Qt_Horizontal
+   qTBar:setIconSize( QSize( 16,16 ) )
+   
+
+   qTBar:addToolButton( "Open"     , "Open a table"       , app_image( "open3"     ), {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
+
+   qTBar:addToolButton( "Toggle"   , "Show/hide form view", app_image( "formview"  ), {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
+
+   qTBar:addToolButton( "Structure", "Table Structure"    , app_image( "dbstruct"  ), {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
+
+
+   qTBar:addToolButton( "Search"   , "Search in table"    , app_image( "find"      ), {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
+   qTBar:addToolButton( "Goto"     , "Goto record"        , app_image( "gotoline3" ), {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
+
+   qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
+
+   
+   ::qToolbar := qTBar
+#else   
    ::qToolbar := QToolbar()
    ::qToolbar:setIconSize( QSize( 16,16 ) )
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
@@ -1018,6 +1042,7 @@ METHOD IdeBrowseManager:buildToolbar()
    ::buildToolButton( ::qToolbar, { "Close current table", "dc_delete"     , {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
    ::qToolbar:addWidget( sp3 )
    ::buildTablesButton()
+#endif
 
    RETURN Self
 
@@ -1100,27 +1125,6 @@ METHOD IdeBrowseManager:buildConxnCombo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:loadConxnCombo( cDriver )
-   LOCAL aConxns, cConxn, a_
-
-   DEFAULT cDriver TO ::currentDriver()
-
-   ::aConxns := {}
-
-   IF !empty( aConxns := hbide_execScriptFunction( "connections", cDriver ) )
-      aeval( aConxns, {|e| aadd( ::aConxns, e ) } )
-   ENDIF
-
-   ::qConxnCombo:clear()
-   FOR EACH cConxn IN ::aConxns
-      a_:= hb_aTokens( cConxn, ";" )
-      ::qConxnCombo:addItem( alltrim( a_[ 1 ] ) )
-   NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeBrowseManager:buildRddsCombo()
    LOCAL aRdds, cRdd
 
@@ -1134,7 +1138,7 @@ METHOD IdeBrowseManager:buildRddsCombo()
       cRdd := alltrim( cRdd )
       ::qRddCombo:addItem( cRdd )
    NEXT
-   ::qToolBar:addWidget( ::qRddCombo )
+   ::qComboAction := ::qToolBar:addWidget( ::qRddCombo )
 
    ::qRddCombo:connect( "currentIndexChanged(QString)", {|p| ::loadConxnCombo( p ) } )
 
@@ -1175,6 +1179,27 @@ METHOD IdeBrowseManager:buildIndexButton()
    ::qIndexButton:connect( "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
 
    ::qToolbar:addWidget( ::qIndexButton )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:loadConxnCombo( cDriver )
+   LOCAL aConxns, cConxn, a_
+
+   DEFAULT cDriver TO ::currentDriver()
+
+   ::aConxns := {}
+
+   IF !empty( aConxns := hbide_execScriptFunction( "connections", cDriver ) )
+      aeval( aConxns, {|e| aadd( ::aConxns, e ) } )
+   ENDIF
+
+   ::qConxnCombo:clear()
+   FOR EACH cConxn IN ::aConxns
+      a_:= hb_aTokens( cConxn, ";" )
+      ::qConxnCombo:addItem( alltrim( a_[ 1 ] ) )
+   NEXT
 
    RETURN Self
 
