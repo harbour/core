@@ -4,6 +4,9 @@
 
 #include "hbwin.ch"
 
+#define KEY_WOW64_64KEY 0x0100
+#define KEY_WOW64_32KEY 0x0200
+
 PROCEDURE Main()
    LOCAL tmp
 
@@ -35,5 +38,11 @@ PROCEDURE Main()
    Inkey( 0 )
 
    ? win_regWrite( "HKCU\Control Panel\Desktop\Wallpaper", tmp )
+
+   ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path" )
+   IF hb_OSis64bit()
+      ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path",, KEY_WOW64_32KEY )
+      ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path",, KEY_WOW64_64KEY )
+   ENDIF
 
    RETURN
