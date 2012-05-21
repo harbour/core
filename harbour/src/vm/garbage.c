@@ -473,10 +473,13 @@ void hb_gcAttach( void * pBlock )
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
             hb_gcLink( &s_pCurrBlock, pAlloc );
             HB_GC_AUTO_INC
+            pAlloc = NULL;
          }
       }
       HB_GC_UNLOCK
    }
+   if( pAlloc )
+      hb_xRefInc( pAlloc );
 }
 
 /* mark passed memory block as used so it will be not released by the GC */
