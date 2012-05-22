@@ -104,7 +104,7 @@ CLASS XbpFileDialog INHERIT XbpWindow
 
 METHOD XbpFileDialog:init( oParent, oOwner, aPos )
 
-   ::xbpWindow:INIT( oParent, oOwner, aPos )
+   ::xbpWindow:init( oParent, oOwner, aPos )
 
    RETURN Self
 
@@ -112,50 +112,76 @@ METHOD XbpFileDialog:init( oParent, oOwner, aPos )
 
 METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
-   oParent := NIL
    ::xbpWindow:create( oParent, oOwner, aPos )
 
-   ::oWidget := QFileDialog()// ::pParent )
-   //::oWidget:setStyle( AppDesktop():style() )
-   //::setStyle()
-   //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
-   //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+   ::oWidget := QFileDialog( ::pParent )
+
+#if 0   
+   ::oWidget:setStyle( AppDesktop():style() )
+   ::setStyle()
+   ::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
+   ::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+#endif   
+
    ::oWidget:setOption( QFileDialog_DontResolveSymlinks, .t. )
-
-   ::connect()
-
+   
    ::postCreate()
+   
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFileDialog:_destroy()
+   HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:_destroy()" )
+   __hbqt_destroy( ::oWidget )
+   RETURN ::destroy()
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFileDialog:destroy()
+   IF !empty( ::oWidget )
+      HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:destroy()" )
+      ::xbpWindow:destroy()
+   ENDIF
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:connect()
 
+   ::oWidget:connect( "finished(int)"             , {|| ::disconnect() } )
+   ::oWidget:connect( "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
+
+#if 0      
    ::oWidget:connect( "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
    ::oWidget:connect( "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
-   ::oWidget:connect( "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
    ::oWidget:connect( "currentChanged(QString)"   , {|p| ::execSlot( "currentChanged(QString)"   , p ) } )
    ::oWidget:connect( "directoryEntered(QString)" , {|p| ::execSlot( "directoryEntered(QString)" , p ) } )
    ::oWidget:connect( "fileSelected(QString)"     , {|p| ::execSlot( "fileSelected(QString)"     , p ) } )
    ::oWidget:connect( "filesSelected(QStringList)", {|p| ::execSlot( "filesSelected(QStringList)", p ) } )
    ::oWidget:connect( "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
+#endif
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:disconnect()
 
+   ::oWidget:disconnect( "rejected()"    )
+   ::oWidget:disconnect( "finished(int)" )
+   
+#if 0   
    ::oWidget:disconnect( "accepted()"                 )
    ::oWidget:disconnect( "finished(int)"              )
-   ::oWidget:disconnect( "rejected()"                 )
    ::oWidget:disconnect( "currentChanged(QString)"    )
    ::oWidget:disconnect( "directoryEntered(QString)"  )
    ::oWidget:disconnect( "fileSelected(QString)"      )
    ::oWidget:disconnect( "filesSelected(QStringList)" )
    ::oWidget:disconnect( "filterSelected(QString)"    )
+#endif
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -180,24 +206,7 @@ METHOD XbpFileDialog:execSlot( cSlot, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFileDialog:_destroy()
-   HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:_destroy()" )
-   RETURN ::destroy()
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpFileDialog:destroy()
-   IF !empty( ::oWidget )
-      HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:destroy()" )
-      ::disconnect()
-      ::xbpWindow:destroy()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
-
    RETURN aFilter[ 1 ] + " ( "+ aFilter[ 2 ] + " )"
 
 /*----------------------------------------------------------------------*/
@@ -257,7 +266,9 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    ENDIF
 
    qFocus := QApplication():focusWidget()
+   ::connect()
    nResult := ::oWidget:exec()
+   ::disconnect()
    qFocus:setFocus( 0 )
 
    RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
@@ -306,7 +317,9 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    ENDIF
 
    qFocus := QApplication():focusWidget()
+   ::connect()
    nResult := ::oWidget:exec()
+   ::disconnect()
    qFocus:setFocus( 0 )
 
    RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
