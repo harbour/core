@@ -315,7 +315,7 @@ HB_BOOL hb_arrayIsObject( PHB_ITEM pArray )
 /* retrives the array unique ID */
 void * hb_arrayId( PHB_ITEM pArray )
 {
-   if( HB_IS_ARRAY( pArray ) )
+   if( pArray && HB_IS_ARRAY( pArray ) )
       return ( void * ) pArray->item.asArray.value;
    else
       return NULL;

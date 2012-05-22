@@ -187,6 +187,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_S
 
 #if defined( _HB_API_INTERNAL_ )
 
+extern PHB_ITEM hb_itemPutPtrRawGC( PHB_ITEM pItem, void * pValue );
+
 #  define hb_itemSetNil( item )           do { \
                                              if( HB_IS_COMPLEX( item ) ) \
                                                 hb_itemClear( item ); \

@@ -1384,6 +1384,26 @@ PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
    return pItem;
 }
 
+PHB_ITEM hb_itemPutPtrRawGC( PHB_ITEM pItem, void * pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutPtrRawGC(%p, %p)", pItem, pValue));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_POINTER;
+   pItem->item.asPointer.value = pValue;
+   pItem->item.asPointer.collect = HB_TRUE;
+   pItem->item.asPointer.single = HB_FALSE;
+
+   return pItem;
+}
+
 PHB_ITEM hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutSymbol(%p,%p)", pItem, pSym));

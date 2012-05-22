@@ -1050,7 +1050,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
    pThread = ( PHB_THREADSTATE )
                   hb_gcAllocRaw( sizeof( HB_THREADSTATE ), &s_gcThreadFuncs );
    memset( pThread, 0, sizeof( HB_THREADSTATE ) );
-   hb_itemPutPtrGC( pThItm, pThread );
+   hb_itemPutPtrRawGC( pThItm, pThread );
 
    pThread->pszCDP  = HB_MACRO2STRING( HB_CODEPAGE_DEFAULT );
    pThread->pszLang = HB_MACRO2STRING( HB_LANG_DEFAULT );
@@ -1792,7 +1792,7 @@ PHB_ITEM hb_threadMutexCreate( void )
    pItem = hb_itemNew( NULL );
    pMutex = ( PHB_MUTEX ) hb_gcAllocRaw( sizeof( HB_MUTEX ), &s_gcMutexFuncs );
    memset( pMutex, 0, sizeof( HB_MUTEX ) );
-   pItem = hb_itemPutPtrGC( pItem, pMutex );
+   pItem = hb_itemPutPtrRawGC( pItem, pMutex );
 
 #if !defined( HB_MT_VM )
    /* nothing */
