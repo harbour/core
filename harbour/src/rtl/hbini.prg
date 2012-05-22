@@ -153,7 +153,7 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
 
    hFile := F_ERROR
    FOR EACH cFile IN aFiles
-      IF ! Empty( cFile ) .AND. File( cFile )
+      IF ! Empty( cFile ) .AND. hb_FileExists( cFile )
          IF ( hFile := FOpen( cFile ) ) != F_ERROR
             EXIT
          ENDIF
@@ -167,8 +167,8 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
    /* we'll read the whole file, then we'll break it in lines. */
    cData := Space( FSeek( hFile, 0, FS_END ) )
    FSeek( hFile, 0, FS_SET )
-   nLen := FRead( hFile, @cData, Len( cData ) )
-   cData := Left( cData, nLen )
+   nLen := FRead( hFile, @cData, hb_BLen( cData ) )
+   cData := hb_BLeft( cData, nLen )
    FClose( hFile )
 
    RETURN cData
@@ -317,7 +317,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
       RETURN .F.
    ENDIF
 
-   IF FWrite( hFile, cBuffer ) != Len( cBuffer )
+   IF FWrite( hFile, cBuffer ) != hb_BLen( cBuffer )
       IF lClose
          FClose( hFile )
       ENDIF

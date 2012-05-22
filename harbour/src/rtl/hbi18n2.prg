@@ -117,9 +117,9 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
    ENDIF
    cValue := Space( fseek( hFile, 0, FS_END ) )
    fseek( hFile, 0, FS_SET )
-   n := fread( hFile, @cValue, len( cValue ) )
+   n := fread( hFile, @cValue, hb_BLen( cValue ) )
    fclose( hFile )
-   IF n != len( cValue )
+   IF n != hb_BLen( cValue )
       cErrorMsg := "cannot read from file: " + cFile
       RETURN NIL
    ENDIF
@@ -380,7 +380,7 @@ FUNCTION __I18N_POTARRAYSAVE( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    hFile := fcreate( cFile )
    IF hFile == -1
       cErrorMsg := "cannot create translation file: " + cFile
-   ELSEIF fwrite( hFile, cPOT, len( cPOT ) ) != len( cPOT )
+   ELSEIF fwrite( hFile, cPOT ) != hb_BLen( cPOT )
       cErrorMsg := "cannot write to file: " + cFile
    ELSE
       lRet := .T.
@@ -598,7 +598,7 @@ FUNCTION HB_I18N_SAVEPOT( cFile, pI18N, cErrorMsg )
       IF hFile == -1
          cErrorMsg := "cannot create translation file: " + cFile
          lRet := .F.
-      ELSEIF fwrite( hFile, cPOT, len( cPOT ) ) != len( cPOT )
+      ELSEIF fwrite( hFile, cPOT ) != hb_BLen( cPOT )
          cErrorMsg := "cannot write to file: " + cFile
          lRet := .F.
       ENDIF

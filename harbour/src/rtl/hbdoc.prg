@@ -357,12 +357,12 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
       IF fhnd != F_ERROR
 
          cBuffer := Space( _HBDOC_SIG_LEN )
-         FRead( fhnd, @cBuffer, Len( cBuffer ) )
+         FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
          IF cBuffer == _HBDOC_SIGNATURE
 
             cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
             FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
-            FRead( fhnd, @cBuffer, Len( cBuffer ) )
+            FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
             FClose( fhnd )
 
             aEntry := hb_deserialize( hb_ZUncompress( cBuffer ) )
