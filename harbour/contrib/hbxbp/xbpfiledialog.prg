@@ -133,7 +133,7 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
 METHOD XbpFileDialog:_destroy()
    HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:_destroy()" )
-   __hbqt_destroy( ::oWidget )
+   //__hbqt_destroy( ::oWidget )
    RETURN ::destroy()
 
 /*----------------------------------------------------------------------*/
