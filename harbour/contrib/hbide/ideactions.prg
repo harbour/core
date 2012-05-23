@@ -79,7 +79,8 @@
 CLASS IdeActions INHERIT IdeObject
 
    DATA   hActions                                INIT { => }
-
+   DATA   oActToolsBtn
+   
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -354,7 +355,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_Rebuild"           ), , , , , , "Rebuild"           )
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
-   oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
+   ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
 
    ::oIde:oMainToolbar := oTBar
 

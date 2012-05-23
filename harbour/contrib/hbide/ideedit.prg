@@ -140,10 +140,10 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD new( oIde, oEditor, nMode )
    METHOD create( oIde, oEditor, nMode )
    METHOD destroy()
-   METHOD execEvent( nMode, oEdit, p, p1 )
+   METHOD execEvent( nMode, p, p1 )
    METHOD execKeyEvent( nMode, nEvent, p, p1 )
-   METHOD connectEditSignals( oEdit )
-   METHOD disconnectEditSignals( oEdit )
+   METHOD connectEditSignals()
+   METHOD disconnectEditSignals()
 
    METHOD reload()
    METHOD redo()
@@ -305,7 +305,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
       ::qEdit:hbBookMarks( nBlock )
    NEXT
 
-   ::connectEditSignals( Self )
+   ::connectEditSignals()
 
    ::qEdit:connect( QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
    ::qEdit:connect( QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
@@ -318,51 +318,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
-   ::qTimer:connect( "timeout()",  {|| ::execEvent( timerTimeout, Self ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:zoom( nKey )
-
-   DEFAULT nKey TO 0
-
-   IF nKey == 1
-      IF ::currentPointSize + 1 < 30
-         ::currentPointSize++
-      ENDIF
-
-   ELSEIF nKey == -1
-      IF ::currentPointSize - 1 > 3
-         ::currentPointSize--
-      ENDIF
-
-   ELSEIF nKey == 0
-      ::currentPointSize := ::pointSize
-
-   ELSEIF nKey >= 3 .AND. nKey <= 30
-      ::currentPointSize := nKey
-
-   ELSE
-      RETURN Self
-
-   ENDIF
-
-   ::setFont()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:setFont()
-
-   ::qFont := QFont()
-   ::qFont:setFamily( ::fontFamily )
-   ::qFont:setFixedPitch( .t. )
-   ::qFont:setPointSize( ::currentPointSize )
-
-   ::qEdit:setFont( ::qFont )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( timerTimeout ) } )
 
    RETURN Self
 
@@ -374,6 +330,8 @@ METHOD IdeEdit:destroy()
       ::oSourceThumbnailDock:oWidget:hide()
    ENDIF
 
+   ::oEditor := NIL 
+   
    ::qTimer:disconnect( "timeout()" )
    IF ::qTimer:isActive()
       ::qTimer:stop()
@@ -387,99 +345,94 @@ METHOD IdeEdit:destroy()
    ::qEdit:disconnect( QEvent_Resize              )
    ::qEdit:disconnect( QEvent_MouseButtonDblClick )
 
-   ::disconnectEditSignals( Self )
+   ::disconnectEditSignals()
 
    ::qEdit  := NIL
    ::qFont  := NIL
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:disconnectEditSignals( oEdit )
-   HB_SYMBOL_UNUSED( oEdit )
+METHOD IdeEdit:disconnectEditSignals()
 
-   oEdit:qEdit:disConnect( "customContextMenuRequested(QPoint)" )
-   oEdit:qEdit:disConnect( "textChanged()"                      )
-   oEdit:qEdit:disConnect( "selectionChanged()"                 )
-   oEdit:qEdit:disConnect( "cursorPositionChanged()"            )
-   oEdit:qEdit:disConnect( "copyAvailable(bool)"                )
+   ::qEdit:disConnect( "customContextMenuRequested(QPoint)" )
+   ::qEdit:disConnect( "textChanged()"                      )
+   ::qEdit:disConnect( "selectionChanged()"                 )
+   ::qEdit:disConnect( "cursorPositionChanged()"            )
+   ::qEdit:disConnect( "copyAvailable(bool)"                )
 
    #if 0
-   oEdit:qEdit:disConnect( "updateRequest(QRect,int)"           )
-   oEdit:qEdit:disConnect( "modificationChanged(bool)"          )
-   oEdit:qEdit:disConnect( "redoAvailable(bool)"                )
-   oEdit:qEdit:disConnect( "undoAvailable(bool)"                )
+   ::qEdit:disConnect( "updateRequest(QRect,int)"           )
+   ::qEdit:disConnect( "modificationChanged(bool)"          )
+   ::qEdit:disConnect( "redoAvailable(bool)"                )
+   ::qEdit:disConnect( "undoAvailable(bool)"                )
    #endif
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:connectEditSignals( oEdit )
+METHOD IdeEdit:connectEditSignals()
 
-   HB_SYMBOL_UNUSED( oEdit )
-
-   oEdit:qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
-   oEdit:qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
-   oEdit:qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
-   oEdit:qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
-   oEdit:qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
+   ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, p ) } )
+   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2,   ) } )
+   ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( 6, p ) } )
+   ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9,   ) } )
+   ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, p ) } )
 
    #if 0
-   oEdit:qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, oEdit, p, p1 ) } )
-   oEdit:qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
-   oEdit:qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
-   oEdit:qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
+   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, p, p1 ) } )
+   ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, p ) } )
+   ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, p ) } )
+   ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, p ) } )
    #endif
-
-   RETURN Self
+   
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols, cAct
+METHOD IdeEdit:execEvent( nMode, p, p1 )
+   LOCAL qAct, n, qCursor, cProto, nRows, nCols, cAct
 
    HB_SYMBOL_UNUSED( p1 )
 
    IF ::lQuitting
-      RETURN Self 
+      RETURN NIL 
    ENDIF 
    
-   qEdit   := oEdit:qEdit
-   qCursor := qEdit:textCursor()
-   oEdit:nCurLineNo := qCursor:blockNumber()
+   qCursor := ::qEdit:textCursor()
+   ::nCurLineNo := qCursor:blockNumber()
 
    SWITCH nMode
 
    CASE customContextMenuRequested
       ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
 
-      n := ascan( ::oEditor:aEdits, {|o| o == oEdit } )
+      n := ascan( ::oEditor:aEdits, {|o| o == Self } )
 
       ::oEM:aActions[ 18, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) ) ):hasValidPointer()
+      IF ! ( qAct := ::oEM:qContextMenu:exec( ::qEdit:mapToGlobal( p ) ) ):hasValidPointer()
          RETURN Self
       ENDIF
 
       cAct := strtran( qAct:text(), "&", "" )
       SWITCH cAct
       CASE "Split Horizontally"
-         ::oEditor:split( 1, oEdit )
+         ::oEditor:split( 1, Self )
          EXIT
       CASE "Split Vertically"
-         ::oEditor:split( 2, oEdit )
+         ::oEditor:split( 2, Self )
          EXIT
       CASE "Close Split Window"
          IF n > 0  /* 1 == Main Edit */
-            oo := ::oEditor:aEdits[ n ]
             hb_adel( ::oEditor:aEdits, n, .t. )
-            oo:destroy( .f. )
             ::oEditor:qCqEdit := ::oEditor:qEdit
             ::oEditor:qCoEdit := ::oEditor:oEdit
+            ::destroy()
             ::oIde:manageFocusInEditor()
          ENDIF
          EXIT
@@ -525,17 +478,16 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ENDSWITCH
       EXIT
 
-
    CASE textChanged
       //HB_TRACE( HB_TR_DEBUG, "textChanged()" )
-      ::oEditor:setTabImage( qEdit )
+      ::oEditor:setTabImage( ::qEdit )
       EXIT
 
    CASE selectionChanged
       //HB_TRACE( HB_TR_DEBUG, "selectionChanged()" )
 
-      ::oEditor:qCqEdit := qEdit
-      ::oEditor:qCoEdit := oEdit
+      ::oEditor:qCqEdit := ::qEdit
+      ::oEditor:qCoEdit := Self
 
       /* Book Marks reach-out buttons */
       ::relayMarkButtons()
@@ -556,16 +508,16 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::unHighlight()
 
       IF hb_isObject( ::oEditor:qHiliter )
-         ::oEditor:qHiliter:hbSetEditor( qEdit )
-         qEdit:hbSetHighlighter( ::oEditor:qHiliter )
-         qEdit:hbHighlightPage()
+         ::oEditor:qHiliter:hbSetEditor( ::qEdit )
+         ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
+         ::qEdit:hbHighlightPage()
       ENDIF
 
       EXIT
 
    CASE cursorPositionChanged
       //HB_TRACE( HB_TR_DEBUG, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
-      ::oEditor:dispEditInfo( qEdit )
+      ::oEditor:dispEditInfo( ::qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
 
@@ -613,7 +565,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
    #endif
    ENDSWITCH
 
-   RETURN Nil
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -758,6 +710,50 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:zoom( nKey )
+
+   DEFAULT nKey TO 0
+
+   IF nKey == 1
+      IF ::currentPointSize + 1 < 30
+         ::currentPointSize++
+      ENDIF
+
+   ELSEIF nKey == -1
+      IF ::currentPointSize - 1 > 3
+         ::currentPointSize--
+      ENDIF
+
+   ELSEIF nKey == 0
+      ::currentPointSize := ::pointSize
+
+   ELSEIF nKey >= 3 .AND. nKey <= 30
+      ::currentPointSize := nKey
+
+   ELSE
+      RETURN Self
+
+   ENDIF
+
+   ::setFont()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:setFont()
+
+   ::qFont := QFont()
+   ::qFont:setFamily( ::fontFamily )
+   ::qFont:setFixedPitch( .t. )
+   ::qFont:setPointSize( ::currentPointSize )
+
+   ::qEdit:setFont( ::qFont )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

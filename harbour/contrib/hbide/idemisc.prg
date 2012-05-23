@@ -126,17 +126,17 @@ FUNCTION hbide_setProjectTitle( cTitle )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
-   LOCAL i, qPop, qPoint, qAct, cAct, xRet, a_, qSub, b_, qSub_:={}
+   LOCAL i, qPop, qPoint, qAct, cAct, xRet, a_, qSub, b_, qSub_:={}, qAct_:={}
 
    qPop := QMenu( iif( hb_isObject( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
 
    FOR i := 1 TO len( aPops )
       IF empty( aPops[ i,1 ] )
-         qPop:addSeparator()
+         aadd( qAct_, qPop:addSeparator() )
       ELSE
          IF hb_isObject( aPops[ i, 1 ] )
-            qPop:addAction( aPops[ i, 1 ] )
+            aadd( qAct_, qPop:addAction( aPops[ i, 1 ] ) )
          ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
             qSub := QMenu( qPop )
             qSub:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
@@ -144,10 +144,10 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
                qSub:addAction( a_[ 1 ] )
             NEXT
             qSub:setTitle( aPops[ i,2 ] )
-            qPop:addMenu( qSub )
+            aadd( qAct_, qPop:addMenu( qSub ) )
             aadd( qSub_, qSub )
          ELSE
-            qPop:addAction( aPops[ i, 1 ] )
+            aadd( qAct_, qPop:addAction( aPops[ i, 1 ] ) )
          ENDIF
       ENDIF
    NEXT

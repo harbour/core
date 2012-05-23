@@ -246,7 +246,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    oBtn:command := 100 + oBtn:index
 
    IF nStyle == XBPTOOLBAR_BUTTON_SEPARATOR
-      ::oWidget:addSeparator()
+      oBtn:oAction := ::oWidget:addSeparator()
 
    ELSE
       IF isAction
