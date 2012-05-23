@@ -143,6 +143,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   lStructOpen                             INIT  .f.
    DATA   lDeletedOn                              INIT  .t.
    DATA   qComboAction
+   DATA   sp0,sp1,sp2,sp3
    
    METHOD new( oIde )
    METHOD create( oIde )
@@ -160,7 +161,6 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD loadTables()
    METHOD buildPanelsButton()
    METHOD buildIndexButton()
-   METHOD buildToolButton( qToolbar, aBtn )
    METHOD addPanelsMenu( cPanel )
    METHOD setStyleSheet( nMode )
    METHOD showStruct()
@@ -196,75 +196,69 @@ METHOD IdeBrowseManager:new( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:getPanelNames()
-   LOCAL oPanel, aNames := {}, aAttr
+METHOD IdeBrowseManager:create( oIde )
+   LOCAL qDock
 
-   FOR EACH oPanel IN ::aPanels
-      aAttr := {}
+   SET DELETED ( ::lDeletedOn )
 
-      aadd( aAttr, oPanel:cPanel )
-      aadd( aAttr, hb_ntos( oPanel:viewMode() ) )
-      aadd( aAttr, hb_ntos( oPanel:nViewStyle ) )
+   DEFAULT oIde TO ::oIde
+   ::oIde := oIde
 
-      aadd( aNames,  hbide_array2String( aAttr, "," ) )
-   NEXT
-   RETURN aNames
+   qDock := ::oIde:oEM:oQScintillaDock:oWidget
 
-/*----------------------------------------------------------------------*/
+   ::qDbu := QWidget()
 
-METHOD IdeBrowseManager:getPanelsInfo()
-   LOCAL oBrw, oPanel, aSub
-   LOCAL aInfo := {}, aAttr
+   qDock:setWidget( ::qDbu )
 
-   FOR EACH oPanel IN ::aPanels
-      FOR EACH aSub IN oPanel:subWindows()
-         aAttr := array( TBL_VRBLS )
-         aAttr[ TBL_PANEL ] := oPanel:cPanel
+   qDock:setAcceptDrops( .t. )
+   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
+   qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
 
-         oBrw := aSub[ 4 ]
+   /* Layout applied to dbu widget */
+   ::qLayout := QGridLayout()
+   ::qLayout:setContentsMargins( 0,0,0,0 )
+   ::qLayout:setSpacing( 0 )
 
-         IF oBrw:nType == BRW_TYPE_DBF
-            aAttr[ TBL_NAME     ] := oBrw:cTable
-            aAttr[ TBL_ALIAS    ] := oBrw:cAlias
-            aAttr[ TBL_DRIVER   ] := oBrw:cDriver
-            aAttr[ TBL_INDEX    ] := hb_ntos( oBrw:indexOrd()  )
-            aAttr[ TBL_RECORD   ] := hb_ntos( oBrw:recNo()     )
-            aAttr[ TBL_CURSOR   ] := hb_ntos( oBrw:nCursorType )
-            IF !hb_isObject( aSub[ SUB_GEOMETRY ] )
-               aSub[ SUB_GEOMETRY ] := aSub[ SUB_WINDOW ]:geometry()
-            ENDIF
-            aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ SUB_GEOMETRY ]:x() )     + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:y() ) + " " + ;
-                                     hb_ntos( aSub[ SUB_GEOMETRY ]:width() ) + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:height() )
-            aAttr[ TBL_ROWPOS   ] := hb_ntos( oBrw:oBrw:rowPos() )
-            aAttr[ TBL_COLPOS   ] := hb_ntos( oBrw:oBrw:colPos() )
-            aAttr[ TBL_HZSCROLL ] := ""
-            aAttr[ TBL_CONXN    ] := oBrw:cConxnFull
-            aAttr[ TBL_NEXT     ] := ""
+   ::qDbu:setLayout( ::qLayout )
 
-         ELSEIF oBrw:nType == BRW_TYPE_ARRAY
-            //
-         ENDIF
+   /* Toolbar */
+   ::buildToolbar()
+   ::qLayout:addWidget( ::qToolbar:oWidget, 0, 0, 1, 2 )
 
-         aadd( aInfo, hbide_array2String( aAttr, "," ) )
-      NEXT
-   NEXT
+   /* Toolbar left */
+   ::buildLeftToolbar()
+   ::qLayout:addWidget( ::qToolbarL:oWidget, 1, 0, 1, 1 )
 
-   RETURN aInfo
+   /* Stacked widget */
+   ::qStack := QStackedWidget()
+   ::qLayout:addWidget( ::qStack   , 1, 1, 1, 1 )
 
-/*----------------------------------------------------------------------*/
+   /* StatusBar */
+   ::qStatus := QStatusBar()
+   ::qStatus:setSizeGripEnabled( .f. )
+   ::qLayout:addWidget( ::qStatus  , 2, 0, 1, 2 )
 
-METHOD IdeBrowseManager:setStyleSheet( nMode )
+   /* */
+   ::buildStatusPanels()
 
-   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ::qStatus:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
-   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-   ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-   ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   /* Panels on the stacked widget */
+   ::addPanels()
+
+   /* Spread tables onto panels */
+   ::loadTables()
+
+   /* Switch to the default panel */
+   ::setPanel( "Main" )
+
+   /* Timer to update ststus bar */
+   ::qTimer := QTimer()
+   ::qTimer:setInterval( 2000 )
+   ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
+   ::qTimer:start()
 
    RETURN Self
 
-/*------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
    LOCAL oPanel, qDock, qAct, qBtn
@@ -357,69 +351,76 @@ METHOD IdeBrowseManager:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:create( oIde )
-   LOCAL qDock
+METHOD IdeBrowseManager:getPanelNames()
+   LOCAL oPanel, aNames := {}, aAttr
 
-   SET DELETED ( ::lDeletedOn )
+   FOR EACH oPanel IN ::aPanels
+      aAttr := {}
 
-   DEFAULT oIde TO ::oIde
-   ::oIde := oIde
+      aadd( aAttr, oPanel:cPanel )
+      aadd( aAttr, hb_ntos( oPanel:viewMode() ) )
+      aadd( aAttr, hb_ntos( oPanel:nViewStyle ) )
 
-   qDock := ::oIde:oEM:oQScintillaDock:oWidget
-
-   ::qDbu := QWidget()
-
-   qDock:setWidget( ::qDbu )
-
-   qDock:setAcceptDrops( .t. )
-   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
-   qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
-
-   /* Layout applied to dbu widget */
-   ::qLayout := QGridLayout()
-   ::qLayout:setContentsMargins( 0,0,0,0 )
-   ::qLayout:setSpacing( 0 )
-
-   ::qDbu:setLayout( ::qLayout )
-
-   /* Toolbar */
-   ::buildToolbar()
-   ::qLayout:addWidget( ::qToolbar, 0, 0, 1, 2 )
-
-   /* Toolbar left */
-   ::buildLeftToolbar()
-   ::qLayout:addWidget( ::qToolbarL, 1, 0, 1, 1 )
-
-   /* Stacked widget */
-   ::qStack := QStackedWidget()
-   ::qLayout:addWidget( ::qStack   , 1, 1, 1, 1 )
-
-   /* StatusBar */
-   ::qStatus := QStatusBar()
-   ::qStatus:setSizeGripEnabled( .f. )
-   ::qLayout:addWidget( ::qStatus  , 2, 0, 1, 2 )
-
-   /* */
-   ::buildStatusPanels()
-
-   /* Panels on the stacked widget */
-   ::addPanels()
-
-   /* Spread tables onto panels */
-   ::loadTables()
-
-   /* Switch to the default panel */
-   ::setPanel( "Main" )
-
-   /* Timer to update ststus bar */
-   ::qTimer := QTimer()
-   ::qTimer:setInterval( 2000 )
-   ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
-   ::qTimer:start()
-
-   RETURN Self
+      aadd( aNames,  hbide_array2String( aAttr, "," ) )
+   NEXT
+   RETURN aNames
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:getPanelsInfo()
+   LOCAL oBrw, oPanel, aSub
+   LOCAL aInfo := {}, aAttr
+
+   FOR EACH oPanel IN ::aPanels
+      FOR EACH aSub IN oPanel:subWindows()
+         aAttr := array( TBL_VRBLS )
+         aAttr[ TBL_PANEL ] := oPanel:cPanel
+
+         oBrw := aSub[ 4 ]
+
+         IF oBrw:nType == BRW_TYPE_DBF
+            aAttr[ TBL_NAME     ] := oBrw:cTable
+            aAttr[ TBL_ALIAS    ] := oBrw:cAlias
+            aAttr[ TBL_DRIVER   ] := oBrw:cDriver
+            aAttr[ TBL_INDEX    ] := hb_ntos( oBrw:indexOrd()  )
+            aAttr[ TBL_RECORD   ] := hb_ntos( oBrw:recNo()     )
+            aAttr[ TBL_CURSOR   ] := hb_ntos( oBrw:nCursorType )
+            IF !hb_isObject( aSub[ SUB_GEOMETRY ] )
+               aSub[ SUB_GEOMETRY ] := aSub[ SUB_WINDOW ]:geometry()
+            ENDIF
+            aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ SUB_GEOMETRY ]:x() )     + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:y() ) + " " + ;
+                                     hb_ntos( aSub[ SUB_GEOMETRY ]:width() ) + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:height() )
+            aAttr[ TBL_ROWPOS   ] := hb_ntos( oBrw:oBrw:rowPos() )
+            aAttr[ TBL_COLPOS   ] := hb_ntos( oBrw:oBrw:colPos() )
+            aAttr[ TBL_HZSCROLL ] := ""
+            aAttr[ TBL_CONXN    ] := oBrw:cConxnFull
+            aAttr[ TBL_NEXT     ] := ""
+
+         ELSEIF oBrw:nType == BRW_TYPE_ARRAY
+            //
+         ENDIF
+
+         aadd( aInfo, hbide_array2String( aAttr, "," ) )
+      NEXT
+   NEXT
+
+   RETURN aInfo
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:setStyleSheet( nMode )
+
+   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qStatus:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
+#if 0   
+   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+#endif
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:fetchFldsList( cAlias )
    LOCAL aFlds := {}, cA, oBrw, a_, oPanel, aBrw
@@ -533,12 +534,12 @@ METHOD IdeBrowseManager:addPanel( cPanel )
 
 METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
-
+IF hb_isObject( ::qPanelsMenu )
    qAct := ::qPanelsMenu:addAction( cPanel )
    qAct:setIcon( hbide_image( "panel_7" ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
-
+ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -988,128 +989,100 @@ METHOD IdeBrowseManager:addArray( aData, aAttr )
 
 METHOD IdeBrowseManager:buildToolbar()
    LOCAL nW := 25
-#if 0   
    LOCAL qTBar
-#endif
-   STATIC sp0,sp1,sp2,sp3
+   
+   ::sp0 := QLabel(); ::sp0:setMinimumWidth( nW )
+   ::sp1 := QLabel(); ::sp1:setMinimumWidth( nW )
+   ::sp2 := QLabel(); ::sp2:setMinimumWidth( nW )
+   ::sp3 := QLabel(); ::sp3:setMinimumWidth( nW )
 
-   IF empty( sp0 )
-      sp0 := QLabel(); sp0:setMinimumWidth( nW )
-      sp1 := QLabel(); sp1:setMinimumWidth( nW )
-      sp2 := QLabel(); sp2:setMinimumWidth( nW )
-      sp3 := QLabel(); sp3:setMinimumWidth( nW )
-   ENDIF
-
-#if 0
    qTBar := HbqToolbar():new()
    qTBar:orientation := Qt_Horizontal
-   qTBar:setIconSize( QSize( 16,16 ) )
-   
+   qTBar:size := QSize( 16,16 )
+   qTBar:create()
 
-   qTBar:addToolButton( "Open"     , "Open a table"       , app_image( "open3"     ), {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
-
-   qTBar:addToolButton( "Toggle"   , "Show/hide form view", app_image( "formview"  ), {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
-
-   qTBar:addToolButton( "Structure", "Table Structure"    , app_image( "dbstruct"  ), {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
-
-
-   qTBar:addToolButton( "Search"   , "Search in table"    , app_image( "find"      ), {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
-   qTBar:addToolButton( "Goto"     , "Goto record"        , app_image( "gotoline3" ), {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
-
-   qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
-
-   
    ::qToolbar := qTBar
-#else   
-   ::qToolbar := QToolbar()
-   ::qToolbar:setIconSize( QSize( 16,16 ) )
-   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
-
+      
    ::buildPanelsButton()
-   ::qToolbar:addWidget( sp0 )
+   qTBar:addWidget( , ::sp0 )
    ::buildRddsCombo()
    ::buildConxnCombo()
-   ::buildToolButton( ::qToolbar, { "Open a table"       , "open3"         , {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
-   ::qToolbar:addWidget( sp1 )
-   ::buildToolButton( ::qToolbar, { "Show/hide form view", "formview"      , {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
-   ::buildToolButton( ::qToolbar, {} )
-   ::buildToolButton( ::qToolbar, { "Table Structure"    , "dbstruct"      , {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
-   ::buildToolButton( ::qToolbar, {} )
+   qTBar:addToolButton( "Open"     , "Open a table"       , app_image( "open3"     ), {|| ::execEvent( "buttonOpen_clicked"          ) }, .f.  )
+   qTBar:addWidget( , ::sp1 )
+   qTBar:addToolButton( "Toggle"   , "Show/hide form view", app_image( "formview"  ), {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t.  )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Structure", "Table Structure"    , app_image( "dbstruct"  ), {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f.  )
+   qTBar:addSeparator()
    ::buildIndexButton()
-   ::buildToolButton( ::qToolbar, { "Search in table"    , "find"          , {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
-   ::buildToolButton( ::qToolbar, { "Goto record"        , "gotoline3"     , {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
-   ::buildToolButton( ::qToolbar, {} )
-   ::buildToolButton( ::qToolbar, { "Close current table", "dc_delete"     , {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
-   ::qToolbar:addWidget( sp3 )
+   qTBar:addToolButton( "Search"   , "Search in table"    , app_image( "find"      ), {|| ::execEvent( "buttonFind_clicked"          ) }, .f.  )
+   qTBar:addToolButton( "Goto"     , "Goto record"        , app_image( "gotoline3" ), {|| ::execEvent( "buttonGoto_clicked"          ) }, .f.  )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( "buttonClose_clicked"         ) }, .f.  )
+   qTBar:addWidget( , ::sp2 )
    ::buildTablesButton()
-#endif
-
+   
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:buildLeftToolbar()
-   LOCAL qTBar, aBtn
+   LOCAL qTBar
 
-   ::qToolBarL := QToolbar()
-   ::qToolBarL:setOrientation( Qt_Vertical )
-   ::qToolbarL:setIconSize( QSize( 16,16 ) )
-   ::qToolbarL:setMaximumWidth( 24 )
-   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+   qTBar := HBQToolbar():new()
+   qTBar:size := QSize( 16,16 )
+   qTBar:orientation := Qt_Vertical
+   qTBar:create()
+   
+   ::qToolbarL := qTBar
+   
+   qTBar:setMaximumWidth( 24 )
+   qTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   qTBar := ::qToolbarL
-   aBtn := {}
+   qTBar:addToolButton( "view_tabbed"     , "Toggle tabbed view"         , app_image( "view_tabbed"       ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )  
+   qTBar:addSeparator()                                                                                   
+   qTBar:addToolButton( "view_organized"  , "View as arranged"           , app_image( "view_organized"    ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )  
+   qTBar:addToolButton( "save3"           , "Save layout"                , app_image( "save3"             ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )  
+   qTBar:addSeparator()                                                                                   
+   qTBar:addToolButton( "view_cascaded"   , "View as cascaded"           , app_image( "view_cascaded"     ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )  
+   qTBar:addToolButton( "view_tiled"      , "View as tiled"              , app_image( "view_tiled"        ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )  
+   qTBar:addToolButton( "fullscreen"      , "View Maximized"             , app_image( "fullscreen"        ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )  
+   qTBar:addToolButton( "view_vertstacked", "View Vertically Tiled"      , app_image( "view_vertstacked"  ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )  
+   qTBar:addToolButton( "view_horzstacked", "View Horizontally Tiled"    , app_image( "view_horzstacked"  ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )  
+   qTBar:addToolButton( "view_zoomin"     , "View Zoom In"               , app_image( "view_zoomin"       ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )  
+   qTBar:addToolButton( "view_zoomout"    , "View Zoom Out"              , app_image( "view_zoomout"      ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )  
+   qTBar:addSeparator()
 
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Vertically Tiled"      , "view_vertstacked", {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Horizontally Tiled"    , "view_horzstacked", {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-
-   aeval( aBtn, {|q| aadd( ::aToolBtns, q ) } )
-
-   ::buildToolButton( ::qToolbarL, { "Append a record"       , "database_add"     , {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Delete a record"       , "database_remove"  , {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Lock/Unlock Record"    , "database_lock"    , {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, {} )
-   ::buildToolButton( ::qToolbarL, { "Goto Top"              , "database_up"      , {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Goto Bottom"           , "database_down"    , {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Scroll to First Column", "database_previous", {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Scroll to Last Column" , "database_next"    , {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, {} )
-   ::buildToolButton( ::qToolbarL, { "Search in Table"       , "database_search"  , {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, {} )
-   ::buildToolButton( ::qToolbarL, { "Zap Table"             , "database_process" , {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. } )
-
-   RETURN Self
+   qTBar:addToolButton( "database_add"     , "Append a record"           , app_image( "database_add"      ), {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. )  
+   qTBar:addToolButton( "database_remove"  , "Delete a record"           , app_image( "database_remove"   ), {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. )  
+   qTBar:addToolButton( "database_lock"    , "Lock/Unlock Record"        , app_image( "database_lock"     ), {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. )  
+   qTBar:addSeparator()                                                  
+   qTBar:addToolButton( "database_up"      , "Goto Top"                  , app_image( "database_up"       ), {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. )  
+   qTBar:addToolButton( "database_down"    , "Goto Bottom"               , app_image( "database_down"     ), {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. )  
+   qTBar:addToolButton( "database_previous", "Scroll to First Column"    , app_image( "database_previous" ), {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. )  
+   qTBar:addToolButton( "database_next"    , "Scroll to Last Column"     , app_image( "database_next"     ), {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. )  
+   qTBar:addSeparator()                                                  
+   qTBar:addToolButton( "database_search"  , "Search in Table"           , app_image( "database_search"   ), {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. )  
+   qTBar:addSeparator()                                                  
+   qTBar:addToolButton( "database_process" , "Zap Table"                 , app_image( "database_process"  ), {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. )  
+      
+   RETURN NIL 
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:buildToolButton( qToolbar, aBtn )
-   LOCAL qBtn
+METHOD IdeBrowseManager:buildPanelsButton()
 
-   IF empty( aBtn )
-      qToolbar:addSeparator()
-   ELSE
-      qBtn := QToolButton()
-      qBtn:setTooltip( aBtn[ 1 ] )
-      qBtn:setAutoRaise( .t. )
-      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
-      IF aBtn[ 4 ]
-         qBtn:setCheckable( .t. )
-      ENDIF
-      qBtn:connect( "clicked()",  aBtn[ 3 ] )
-      qToolBar:addWidget( qBtn )
-      aadd( ::aToolBtns, qBtn )
-   ENDIF
+   ::qPanelsMenu := QMenu()
+   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+
+   ::qPanelsButton := QToolButton()
+   ::qPanelsButton:setTooltip( "ideDBU Panels" )
+   ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
+   ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
+   ::qPanelsButton:setMenu( ::qPanelsMenu )
+
+   ::qPanelsButton:connect( "clicked()", {|| ::execEvent( "qPanelsButton_clicked" ) } )
+
+   ::qToolbar:addWidget( , ::qPanelsButton )
 
    RETURN Self
 
@@ -1119,7 +1092,7 @@ METHOD IdeBrowseManager:buildConxnCombo()
 
    ::qConxnCombo := QComboBox()
    ::qConxnCombo:setToolTip( "Connection to open next table" )
-   ::qToolBar:addWidget( ::qConxnCombo )
+   ::qToolBar:addWidget( , ::qConxnCombo )
 
    RETURN Self
 
@@ -1138,9 +1111,8 @@ METHOD IdeBrowseManager:buildRddsCombo()
       cRdd := alltrim( cRdd )
       ::qRddCombo:addItem( cRdd )
    NEXT
-   ::qComboAction := ::qToolBar:addWidget( ::qRddCombo )
-
    ::qRddCombo:connect( "currentIndexChanged(QString)", {|p| ::loadConxnCombo( p ) } )
+   ::qToolBar:addWidget( , ::qRddCombo )
 
    RETURN Self
 
@@ -1159,7 +1131,7 @@ METHOD IdeBrowseManager:buildTablesButton()
 
    ::qTablesButton:connect( "clicked()", {|| ::execEvent( "buttonTables_clicked" ) } )
 
-   ::qToolbar:addWidget( ::qTablesButton )
+   ::qToolbar:addWidget( , ::qTablesButton )
 
    RETURN Self
 
@@ -1178,7 +1150,7 @@ METHOD IdeBrowseManager:buildIndexButton()
 
    ::qIndexButton:connect( "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
 
-   ::qToolbar:addWidget( ::qIndexButton )
+   ::qToolbar:addWidget( , ::qIndexButton )
 
    RETURN Self
 
@@ -1227,25 +1199,6 @@ METHOD IdeBrowseManager:updateIndexMenu( oBrw )
       qAct:connect( "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, oBrw, cIndex ) )
       aadd( ::aIndexAct, qAct )
    NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowseManager:buildPanelsButton()
-
-   ::qPanelsMenu := QMenu()
-   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
-
-   ::qPanelsButton := QToolButton()
-   ::qPanelsButton:setTooltip( "ideDBU Panels" )
-   ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
-   ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
-   ::qPanelsButton:setMenu( ::qPanelsMenu )
-
-   ::qPanelsButton:connect( "clicked()", {|| ::execEvent( "qPanelsButton_clicked" ) } )
-
-   ::qToolbar:addWidget( ::qPanelsButton )
 
    RETURN Self
 
@@ -1361,11 +1314,11 @@ METHOD IdeBrowsePanel:setViewStyle( nStyle )
          ENDIF
 
          IF ::nViewStyle == HBPMDI_STYLE_MAXIMIZED
-            qObj := ::activeSubWindow()
+            qObj := ::qWidget:activeSubWindow()
             FOR EACH a_ IN ::aBrowsers
                a_[ 2 ]:setWindowState( Qt_WindowNoState )
             NEXT
-            ::setActiveSubWindow( qObj )
+            ::qWidget:setActiveSubWindow( qObj )
          ENDIF
 
          SWITCH nStyle

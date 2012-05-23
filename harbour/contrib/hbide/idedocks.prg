@@ -131,7 +131,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD setStatusText( nPart, xValue )
    METHOD getMarkWidget( nIndex )
    METHOD dispEnvironment( cEnviron )
-   METHOD addPanelButton( cPanel )
+   //METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
    METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEventVisibility )
    METHOD getPanelIcon( cView )
@@ -1357,19 +1357,12 @@ METHOD IdeDocks:buildUpDownWidget()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildToolBarPanels()
-   LOCAL a_, aBtns, qAct
+   LOCAL a_, qAct
    LOCAL qSize := QSize( 20,20 )
+   LOCAL aBtns := {}
 
    /* Right-hand docks toolbar */
-   ::oIde:qTBarDocks := QToolBar()
-   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
-   ::qTBarDocks:setObjectName( "ToolBar_Docks" )
-   ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
-   ::qTBarDocks:setIconSize( qSize )
-   ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
-   ::qTBarDocks:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
 
-   aBtns := {}
    aadd( aBtns, { ::oDockPT             , "projtree"      } )
    aadd( aBtns, { ::oDockED             , "editstree"     } )
    aadd( aBtns, { ::oSkltnsTreeDock     , "projtree"      } )
@@ -1391,6 +1384,18 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oUiSrcDock          , "fileprg"       } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2             , "builderror"    } )
+   
+   ::oIde:qTBarDocks := HBQToolBar():new( "ToolBar_Docks" )
+   
+   ::qTBarDocks:cName := "ToolBar_Docks"
+   ::qTBarDocks:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea
+   ::qTBarDocks:size := qSize
+   
+   ::qTBarDocks:create()
+   
+   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
+   ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
+   ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
 
    FOR EACH a_ IN aBtns
       IF empty( a_ )
@@ -1398,12 +1403,11 @@ METHOD IdeDocks:buildToolBarPanels()
       ELSE
          qAct := a_[ 1 ]:oWidget:toggleViewAction()
          qAct:setIcon( hbide_image( a_[ 2 ] ) )
-         ::qTBarDocks:addAction( qAct )
-         aadd( ::aBtnDocks, qAct )
+         ::qTBarDocks:addAction( a_[ 2 ], qAct )
       ENDIF
    NEXT
 
-   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks )
+   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks:oWidget )
 
    /* User defined toolbars via Tools & Utilities */
    ::oTM:buildUserToolbars()
@@ -1431,7 +1435,7 @@ METHOD IdeDocks:getPanelIcon( cView )
    RETURN ""
 
 /*----------------------------------------------------------------------*/
-
+/*
 METHOD IdeDocks:addPanelButton( cPanel )
    LOCAL qTBtn
 
@@ -1455,7 +1459,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
    endif
 
    RETURN Self
-
+*/
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildProjectTree()

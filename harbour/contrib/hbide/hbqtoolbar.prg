@@ -102,6 +102,8 @@ CLASS HbqToolbar
    METHOD setItemChecked( cName, lState )
    METHOD setItemEnabled( cName, lEnabled )
    METHOD addWidget( cName, qWidget )
+   METHOD addAction( cName, qAction )
+   METHOD addSeparator()
    METHOD contains( cName )                       INLINE hb_hHasKey( ::hItems, cName )
    METHOD getItem( cName )                        INLINE iif( hb_hHasKey( ::hItems, cName ), ::hItems[ cName ], NIL )
 
@@ -145,6 +147,7 @@ METHOD HbqToolbar:create( cName, oParent )
 
 METHOD HbqToolbar:onError( ... )
    LOCAL cMsg := __GetMessage()
+HB_TRACE( HB_TR_ALWAYS, cMsg )   
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
@@ -252,7 +255,33 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
    ::hItems[ cName ] := qWidget
    ::hActions[ cName ] := qAction
 
-   RETURN Self
+   RETURN NIL 
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqToolbar:addSeparator()
+   LOCAL qAction
+   LOCAL cName := hbide_getNextIDasString( "IdeToolButtonSeparator" )
+
+   qAction := ::oWidget:addSeparator()
+
+   ::hItems[ cName ] := cName
+   ::hActions[ cName ] := qAction
+
+   RETURN NIL 
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqToolbar:addAction( cName, qAction )
+
+   DEFAULT cName TO hbide_getNextIDasString( "IdeToolButtonAction" )
+
+   ::oWidget:addAction( qAction )
+
+   ::hItems[ cName ] := cName
+   ::hActions[ cName ] := qAction
+
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 

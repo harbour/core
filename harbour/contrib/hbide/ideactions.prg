@@ -521,7 +521,7 @@ METHOD IdeActions:buildMainMenu()
    ::qAnimateAction:setCheckable( .t. )
    oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }           )
 
-   oSubMenu:oWidget:addSeparator()
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
    oSubMenu:oWidget:addAction( ::qTBarDocks:toggleViewAction()                        )
 
@@ -531,11 +531,11 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::qStatusBarAction, {|| oIde:execAction( "ToggleStatusBar" ) } } )
    ::qStatusBarAction:setChecked( ::lStatusBarVisible )
 
-   oSubMenu:oWidget:addSeparator()
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oDockPT:oWidget:toggleViewAction()                   )
    oSubMenu:oWidget:addAction( ::oDockED:oWidget:toggleViewAction()                   )
    oSubMenu:oWidget:addAction( ::oSkltnsTreeDock:oWidget:toggleViewAction()           )
-   oSubMenu:oWidget:addSeparator()
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oHelpDock:oWidget:toggleViewAction()                 )
    oSubMenu:oWidget:addAction( ::oDocViewDock:oWidget:toggleViewAction()              )
    oSubMenu:oWidget:addAction( ::oDocWriteDock:oWidget:toggleViewAction()             )
@@ -550,17 +550,17 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction( ::oQScintillaDock:oWidget:toggleViewAction()           )
 
    oSubMenu:oWidget:addAction( ::oReportsManagerDock:toggleViewAction()               )
+   oSubMenu:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
+   oSubMenu:oWidget:addAction( ::oIde:oUISrcDock:toggleViewAction()                   )
 
-   oSubMenu:oWidget:addSeparator()
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oDockB2:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
  * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
-   oSubMenu:oWidget:addSeparator()
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()          )
    oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()           )
 
-   oSubMenu:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
-   oSubMenu:oWidget:addAction( ::oIde:oUISrcDock:toggleViewAction()                   )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */

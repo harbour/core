@@ -1956,34 +1956,6 @@ FUNCTION hbide_getUI( cUI, qParent )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-
-#define BTN_TOOLTIP                               1
-#define BTN_IMAGE                                 2
-#define BTN_ACTIONBLOCK                           3
-#define BTN_CHECKABLE                             4
-
-FUNCTION hbide_buildToolbarButton( qToolbar, aBtn )
-   LOCAL qBtn
-
-   IF empty( aBtn )
-      qToolbar:addSeparator()
-   ELSE
-      qBtn := QToolButton()
-      qBtn:setTooltip( aBtn[ BTN_TOOLTIP ] )
-      qBtn:setAutoRaise( .t. )
-      qBtn:setIcon( hbide_image( aBtn[ BTN_IMAGE ] ) )
-      qBtn:setObjectName( aBtn[ BTN_IMAGE ] )
-      IF aBtn[ BTN_CHECKABLE ]
-         qBtn:setCheckable( .t. )
-      ENDIF
-      //hbide_setIde():oDK:connect( qBtn, "clicked()",  aBtn[ BTN_ACTIONBLOCK ] )
-      qBtn:connect( "clicked()",  aBtn[ BTN_ACTIONBLOCK ] )
-      qToolBar:addWidget( qBtn )
-   ENDIF
-
-   RETURN qBtn
-
-/*----------------------------------------------------------------------*/
 /* An interface component function which will be called by Reports Manager
    whenever a request is made. Application will supply the required info
    in this case it is hbIDE. */
