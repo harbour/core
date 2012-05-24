@@ -583,7 +583,7 @@ METHOD MGET( cSpec, cLocalPath ) CLASS tIPClientFTP
 
    IF ! Empty( cStr )
       FOR EACH cFile IN hb_ATokens( StrTran( cStr, Chr( 13 ) ), Chr( 10 ) )
-         IF ! Empty( cFile ) //PM:09-08-2007 Needed because of the new hb_ATokens()
+         IF ! Empty( cFile )
             ::downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
          ENDIF
       NEXT
@@ -761,9 +761,9 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
 
    aList := hb_ATokens( StrTran( cList, Chr( 13 ) ), Chr( 10 ) )
 
-   FOR EACH cEntry IN aList
+   FOR EACH cEntry IN aList DESCEND
 
-      IF Empty( cEntry ) //PM:09-08-2007 Needed because of the new hb_ATokens()
+      IF Empty( cEntry )
 
          hb_ADel( aList, cEntry:__enumIndex(), .T. )
 
