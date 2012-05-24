@@ -332,7 +332,7 @@ METHOD IdeSkeletons:postSkeleton( cSkeleton )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
-   LOCAL cText, qCursor, qRect, qMenu, qAct, a_
+   LOCAL cText, qCursor, qRect, qMenu, qAct, a_, aAct := {}
 
    IF !empty( ::aSkltns )
       qCursor := qEdit:textCursor()
@@ -350,7 +350,7 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
 
          qMenu := QMenu( qEdit )
          FOR EACH a_ IN ::aSkltns
-            qMenu:addAction( a_[ 1 ] )
+            aadd( aAct, qMenu:addAction( a_[ 1 ] ) )
          NEXT
 
          IF ( qAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) ) ):hasValidPointer()

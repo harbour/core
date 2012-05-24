@@ -1016,30 +1016,30 @@ METHOD IdeFindInFiles:replaceAll()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:execContextMenu( p )
-   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
+   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind, aAct := {}
 
    qCursor := ::oUI:q_editResults:textCursor()
    nLine := qCursor:blockNumber() + 1
 
    IF nLine <= len( ::aInfo )
       qMenu := QMenu( ::oUI:q_editResults )
-      qMenu:addAction( "Copy"       )
-      qMenu:addAction( "Select All" )
-      qMenu:addAction( "Clear"      )
-      qMenu:addAction( "Print"      )
-      qMenu:addAction( "Save as..." )
-      qMenu:addSeparator()
-      qMenu:addAction( "Find"       )
-      qMenu:addSeparator()
+      aadd( aAct, qMenu:addAction( "Copy"       ) )
+      aadd( aAct, qMenu:addAction( "Select All" ) )
+      aadd( aAct, qMenu:addAction( "Clear"      ) )
+      aadd( aAct, qMenu:addAction( "Print"      ) )
+      aadd( aAct, qMenu:addAction( "Save as..." ) )
+      aadd( aAct, qMenu:addSeparator()            )
+      aadd( aAct, qMenu:addAction( "Find"       ) )
+      aadd( aAct, qMenu:addSeparator()            )
       IF ::aInfo[ nLine, 1 ] == -2     /* Found Line */
-         qMenu:addAction( "Replace Line" )
+         aadd( aAct, qMenu:addAction( "Replace Line" ) )
       ELSEIF ::aInfo[ nLine, 1 ] == -1 /* Source File */
-         qMenu:addAction( "Open"        )
-         qMenu:addAction( "Replace All" )
+         aadd( aAct, qMenu:addAction( "Open"        ) )
+         aadd( aAct, qMenu:addAction( "Replace All" ) )
       ENDIF
-      qMenu:addSeparator()
-      qMenu:addAction( "Zoom In"  )
-      qMenu:addAction( "Zoom Out" )
+      aadd( aAct, qMenu:addSeparator()          )
+      aadd( aAct, qMenu:addAction( "Zoom In"  ) )
+      aadd( aAct, qMenu:addAction( "Zoom Out" ) )
 
       IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( QPoint( p ) ) ) ):hasValidPointer()
          cAct := qAct:text()

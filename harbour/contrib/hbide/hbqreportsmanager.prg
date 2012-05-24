@@ -1112,11 +1112,11 @@ METHOD HbqReportsManager:zoom( nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:contextMenuScene( p1 )
-   LOCAL qMenu, qAct
+   LOCAL qMenu, qAct, aAct := {}
 
    qMenu := QMenu( ::qView )
-   qMenu:addAction( "Refresh"  )
-   qMenu:addAction( "Zoom+" )
+   aadd( aAct, qMenu:addAction( "Refresh"  ) )
+   aadd( aAct, qMenu:addAction( "Zoom+" ) )
 
    IF ( qAct := qMenu:exec( p1:screenPos() ) ):hasValidPointer()
       SWITCH qAct:text()
@@ -1132,13 +1132,13 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:contextMenuItem( p1, p2 )
-   LOCAL qMenu, qAct
+   LOCAL qMenu, qAct, aAct := {}
 
    HB_SYMBOL_UNUSED( p2 )
 
    qMenu := QMenu()
-   qMenu:addAction( "Cut"  )
-   qMenu:addAction( "Copy" )
+   aadd( aAct, qMenu:addAction( "Cut"  ) )
+   aadd( aAct, qMenu:addAction( "Copy" ) )
 
    IF ( qAct := qMenu:exec( p1:screenPos() ) ):hasValidPointer()
       SWITCH qAct:text()
@@ -1858,13 +1858,13 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:contextMenu( p1, p2 )
-   LOCAL qMenu, qAct
+   LOCAL qMenu, qAct, aAct := {}
 
    HB_SYMBOL_UNUSED( p2 )
 
    qMenu := QMenu()
-   qMenu:addAction( "Cut"  )
-   qMenu:addAction( "Copy" )
+   aadd( aAct, qMenu:addAction( "Cut"  ) )
+   aadd( aAct, qMenu:addAction( "Copy" ) )
 
    qAct := qMenu:exec( p1:screenPos() )
    IF qAct:hasValidPointer()
@@ -1875,7 +1875,7 @@ METHOD HqrGraphicsItem:contextMenu( p1, p2 )
          EXIT
       ENDSWITCH
    ENDIF
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
