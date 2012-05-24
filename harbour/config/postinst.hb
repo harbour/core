@@ -423,6 +423,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 /* Like hb_FLinkSym(), but with feedback */
 STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
 
+   FErase( cSrc ) /* remove old links if any */
    IF hb_FLinkSym( cDst, cSrc ) == 0
       OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
