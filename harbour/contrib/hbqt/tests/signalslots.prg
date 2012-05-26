@@ -28,7 +28,7 @@ PROCEDURE main()
    oLayout:addWidget( oScrollBar )
    oLayout:addWidget( oLabel )
 
-   SIGNAL2SLOT( oScrollBar, "valueChanged(int)", oLabel, "setNum(int)" )
+   hbqt_Connect( oScrollBar, "valueChanged(int)", oLabel, "setNum(int)" )
 
    oMain:show()
 

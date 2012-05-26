@@ -501,7 +501,7 @@ int hbqt_QtConnect( QObject *sender, const char * pszSignal, QObject *receiver, 
    return nResult;
 }
 
-HB_FUNC( SIGNAL2SLOT )
+HB_FUNC( HBQT_CONNECT )
 {
    HB_BOOL ret = HB_FALSE;
 
