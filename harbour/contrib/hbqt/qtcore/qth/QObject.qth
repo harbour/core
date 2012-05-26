@@ -39,7 +39,7 @@ HB_FUNC( QT_QOBJECT )
 
 <PROTOS>
 bool blockSignals ( bool block )
-// const QObjectList & children () const
+QList<QObject*> children () const
 // bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
 // bool disconnect ( const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
 // bool disconnect ( const QObject * receiver, const char * method = 0 )
