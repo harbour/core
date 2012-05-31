@@ -97,7 +97,8 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
    RETURN _cGetSecret
 
 STATIC FUNCTION _HIDE( cVar )
-   RETURN RANGEREPL( ASC( " " ) + 1, 255, cVar, "*" )
+   /* RETURN RANGEREPL( ASC( " " ) + 1, 255, cVar, "*" ) */
+   RETURN PADR( REPL( "*", LEN( RTRIM( cVar ) ) ), LEN( cVar ) )
 
 STATIC FUNCTION _VALUE( cVar, lHide, xNew )
    IF lHide
