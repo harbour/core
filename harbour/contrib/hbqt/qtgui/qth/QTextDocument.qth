@@ -30,7 +30,26 @@ New         =
  */
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
-   __HB_RETPTRGC__( new QTextDocument( hbqt_par_QObject( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QObject" ) )
+   {
+      __HB_RETPTRGC__( new QTextDocument( hbqt_par_QObject( 1 ) ) );
+   }   
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QTextDocument( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }   
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && hbqt_par_isDerivedFrom( 2, "QObject" ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QTextDocument( hb_parstr_utf8( 1, &pText01, NULL ), hbqt_par_QObject( 2 ) ) );
+      hb_strfree( pText01 );
+   }   
+   else
+   {
+      __HB_RETPTRGC__( new QTextDocument() );   
+   }   
 }
 </CODE>
 

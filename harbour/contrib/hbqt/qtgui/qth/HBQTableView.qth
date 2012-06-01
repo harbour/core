@@ -56,7 +56,14 @@ HBQT_GC_FUNC( hbqt_gcMark_HBQTableView )
  */
 HB_FUNC( QT_HBQTABLEVIEW )
 {
-   __HB_RETPTRGC__( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new HBQTableView() );
+   }
 }
 </CODE>
 
