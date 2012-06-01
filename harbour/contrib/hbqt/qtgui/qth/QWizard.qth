@@ -27,7 +27,18 @@ New         = pParent
  */
 HB_FUNC( QT_QWIZARD )
 {
-   __HB_RETPTRGC__( new QWizard( hbqt_par_QWidget( 2 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QWizard( hbqt_par_QWidget( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) && HB_ISNUM( 2 ) )
+   {
+      __HB_RETPTRGC__( new QWizard( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QWizard() );
+   }
 }
 </CODE>
 

@@ -114,20 +114,26 @@ static void * s_hbqt_GCPointerFromItem( PHB_ITEM pObj )
       if( p && p->ph )
          return p->ph;
    }
-
    return NULL;
 }
 
 void * hbqt_par_ptr( int iParam )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_ptr( %d )", iParam ) );
-
+#ifdef __HBQT_REVAMP__
+   return hbqt_bindGetQtObject( hb_param( iParam, HB_IT_OBJECT ) );
+#else   
    return s_hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
+#endif   
 }
 
 void * hbqt_get_ptr( PHB_ITEM pObj )
 {
+#ifdef __HBQT_REVAMP__
+   return hbqt_bindGetQtObject( pObj );
+#else   
    return s_hbqt_GCPointerFromItem( pObj );
+#endif   
 }
 
 static void s_hbqt_set_ptr( PHB_ITEM pSelf, void * ptr )
@@ -179,13 +185,12 @@ void hbqt_itemPushReturn( void* ptr, PHB_ITEM pSelf )
    if( hb_stackReturnItem() != pSelf )
       hb_itemReturn( pSelf );
 }
-
+#if 0
 HBQT_GC_T * hbqt_par_ptrGC( int iParam )
 {
    static PHB_DYNS s_pDyns_hPPtr = NULL;
 
    PHB_ITEM pItem = hb_param( iParam, HB_IT_OBJECT );
-
    if( pItem )
    {
       if( ! s_pDyns_hPPtr )
@@ -197,10 +202,9 @@ HBQT_GC_T * hbqt_par_ptrGC( int iParam )
 
       return ( HBQT_GC_T * ) hb_itemGetPtrGC( hb_param( -1, HB_IT_POINTER ), hbqt_gcFuncs() );
    }
-
    return NULL;
 }
-
+#endif
 HB_FUNC( HBQT_ISOBJECT )
 {
    PHB_ITEM pItem;
@@ -447,12 +451,18 @@ HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
 
    if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
    {
+#ifdef __HBQT_REVAMP__
+      if( hbqt_bindGetQtObject( pItem ) == NULL )
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      else
+         return hbqt_obj_isDerivedFrom( pItem, pszClsName );
+#else   
       if( s_hbqt_GCPointerFromItem( pItem ) == NULL )
          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       else
          return hbqt_obj_isDerivedFrom( pItem, pszClsName );
+#endif         
    }   
-
    return HB_FALSE;
 }
 

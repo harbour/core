@@ -33,6 +33,8 @@
 #include "directry.ch"
 #include "hbclass.ch"
 
+//#define __HBQT_REVAMP__
+
 #define I_( x )                 hb_i18n_gettext( x )
 
 #if defined( __HBSCRIPT__HBMK )
@@ -813,9 +815,9 @@ STATIC FUNCTION hbqtui_formatCommand( cCmd, lText, widgets )
       lText := .T.
    ENDIF
 
-   cCmd := StrTran( cCmd, "QApplication_translate"   , "q__tr"        )
-   cCmd := StrTran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
-   cCmd := StrTran( cCmd, "QString()"                , '""'           )
+   cCmd := StrTran( cCmd, "QApplication_translate"   , "q__tr"  )
+   cCmd := StrTran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"' )
+   cCmd := StrTran( cCmd, "QString()"                , '""'     )
    cCmd := StrTran( cCmd, "QSize("                   , "QSize(" )
    cCmd := StrTran( cCmd, "QRect("                   , "QRect(" )
 
@@ -1235,7 +1237,11 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::isDetached        := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "detached"    .AND. Lower( e_[ 2 ] ) == "yes" } ) > 0
    ::isConstructor     := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "constructor" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    ::isDestructor      := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "destructor"  .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
+#ifdef __HBQT_REVAMP__
+   ::isObject          := qth_is_QObject( ::cQtObject )
+#else
    ::isObject          := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "qobject"     .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
+#endif   
    ::areMethodsClubbed := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "clubmethods" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
    IF ! ::isConstructor
@@ -1407,6 +1413,18 @@ METHOD HbQtSource:build()
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
+      
+#ifdef __HBQT_REVAMP__
+   AAdd( aLine, '' )
+   AAdd( aLine, "/*.............. HBQT2 SPECIFIC DECLARATIONS ...............*/" )
+   AAdd( aLine, '' )
+   FOR EACH s IN ::hRef
+      AAdd( aLine, "extern HB_EXPORT void hbqt_del_" + s:__enumKey() + "( void * pObj, int iFlags );" )
+   NEXT
+   AAdd( aLine, '' )
+   AAdd( aLine, "/*..........................................................*/" )
+   AAdd( aLine, '' )
+#endif 
 
    n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
    IF n > 0
@@ -1493,7 +1511,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, "typedef struct"                  )
    AAdd( aLine, "{"                               )
    IF ::isObject .AND. ::isConstructor
-      AAdd( aLine, "   QPointer< "+ cObjPfx + ::cQtObject +" > ph;" )
+      AAdd( aLine, "   QPointer< " + cObjPfx + ::cQtObject + " > ph;" )
    ELSE
       IF ::isList
           AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * ph;"                    )
@@ -1655,7 +1673,39 @@ METHOD HbQtSource:build()
    
    AAdd( aLine, 'static PHB_ITEM s_oClass = NULL;' )
    AAdd( aLine, "" )
-   
+
+#ifdef __HBQT_REVAMP__
+   AAdd( aLine, '' )
+   AAdd( aLine, "/*.............. HBQT2 SPECIFIC DECLARATIONS ...............*/" )
+   AAdd( aLine, '' )
+   AAdd( aLine, 'void hbqt_del_' + ::cQtObject + '( void * pObj, int iFlags )' )
+   AAdd( aLine, '{' )
+   AAdd( aLine, '   Q_UNUSED( iFlags );' )
+   AAdd( aLine, '   if( pObj )' )
+   AAdd( aLine, '   {' )
+   IF ::isList
+      AAdd( aLine, '      QList< void * > * p = ( QList< void * > * ) pObj;' )
+      AAdd( aLine, "      int i; " )
+      AAdd( aLine, "      for( i = 0; i < p->size(); i++ )" )
+      AAdd( aLine, "      {" )
+      AAdd( aLine, "         if( p->at( i ) != NULL )" )
+      AAdd( aLine, "         {" )
+      AAdd( aLine, "            hb_itemRelease( p->at( i ) );" )
+      AAdd( aLine, "         }" )
+      AAdd( aLine, "      }" )
+      AAdd( aLine, "      delete ( ( " + ::cQtObject + "< void * >" + " * ) pObj );" )
+   ELSE 
+      IF ::isConstructor .and. ::isDestructor
+         AAdd( aLine, '      delete ( ' + ::cQtObject + ' * ) pObj;' )
+      ENDIF    
+   ENDIF 
+   AAdd( aLine, '      pObj = NULL;' )
+   AAdd( aLine, '   }' )   
+   AAdd( aLine, '}' )
+   AAdd( aLine, "/*..........................................................*/" )
+   AAdd( aLine, '' )
+#endif      
+
    AAdd( aLine, 'void hbqt_register_' + lower( uQtObject ) + '()' )
    AAdd( aLine, "{" )
    AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "hbqt_register_' + lower( uQtObject ) + '()" ) );' )
@@ -1949,7 +1999,11 @@ METHOD HbQtSource:getConstructor()
          ENDIF
       NEXT
       AAdd( aLine, " " )
+#ifdef __HBQT_REVAMP__
+      AAdd( aLine, '   hb_itemReturn( hbqt_bindGetHbObject( NULL, pObj, hb_dynsymGetSymbol( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
+#else      
       AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
+#endif      
    ELSE
       FOR i := 3 TO Len( ::new_ ) - 1
          AAdd( aLine, ::new_[ i ] )
@@ -2937,7 +2991,11 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              "Abstract" $ oRet:cCast
       cRef := oRet:cCast
+#ifdef __HBQT_REVAMP__
+      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
+#else      
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
+#endif       
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2945,7 +3003,11 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              oRet:lVirt
       cRef := oRet:cCast
+#ifdef __HBQT_REVAMP__
+      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
+#else      
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
+#endif      
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -3167,8 +3229,11 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
-   RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ) , " + '"HB_' + Upper( cWgt ) +'")'
-
+#ifdef __HBQT_REVAMP__
+   RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+#else      
+   RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ), " + '"HB_' + Upper( cWgt ) + '")'
+#endif
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
@@ -3180,12 +3245,19 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
       isRetDetached := .f.
    ENDIF
 
+#ifdef __HBQT_REVAMP__
    IF lNew
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) , " + '"HB_' + Upper( cWgt ) +'" )'
+      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+   ELSE 
+      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
+   ENDIF        
+#else      
+   IF lNew
+      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ), " + '"HB_' + Upper( cWgt ) +'" )'
    ELSE
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "true", "false" ) + " ) , " + '"HB_' + Upper( cWgt ) +'" )'
-      //RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "false", "false" ) + " ) , " + '"HB_' + Upper( cWgt ) +'" )'
+      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "true", "false" ) + " ), " + '"HB_' + Upper( cWgt ) +'" )'
    ENDIF
+#endif   
    RETURN ""
 
 /*----------------------------------------------------------------------*/
@@ -3251,22 +3323,22 @@ STATIC FUNCTION hbqtgen_CreateTarget( cFile, txt_ )
 STATIC FUNCTION hbqtgen_BuildCopyrightText()
    LOCAL txt_ := {}
 
-   AAdd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */"              )
-   AAdd( txt_, ""                                                                              )
-   AAdd( txt_, "/* Harbour QT wrapper"                                                         )
-   AAdd( txt_, "   Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>"                 )
-   AAdd( txt_, "   www - http://harbour-project.org */"                                        )
-   AAdd( txt_, ""                                                                              )
-   AAdd( txt_, '#include "hbqt.h"'                                                             )
-   AAdd( txt_, '#include "hbapiitm.h"'                                                         )
-   AAdd( txt_, '#include "hbvm.h"'                                                             )
-   AAdd( txt_, '#include "hbapierr.h"'                                                         )
-   AAdd( txt_, '#include "hbstack.h"'                                                          )
-   AAdd( txt_, '#include "hbdefs.h"'                                                           )
-   AAdd( txt_, '#include "hbapicls.h"'                                                         )
-   AAdd( txt_, ""                                                                              )
-   AAdd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
-   AAdd( txt_, ""                                                                              )
+   AAdd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT! */" )
+   AAdd( txt_, ""                                                                 )
+   AAdd( txt_, "/* Harbour QT wrapper"                                            )
+   AAdd( txt_, "   Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>"    )
+   AAdd( txt_, "   www - http://harbour-project.org */"                           )
+   AAdd( txt_, ""                                                                 )
+   AAdd( txt_, '#include "hbqt.h"'                                                )
+   AAdd( txt_, '#include "hbapiitm.h"'                                            )
+   AAdd( txt_, '#include "hbvm.h"'                                                )
+   AAdd( txt_, '#include "hbapierr.h"'                                            )
+   AAdd( txt_, '#include "hbstack.h"'                                             )
+   AAdd( txt_, '#include "hbdefs.h"'                                              )
+   AAdd( txt_, '#include "hbapicls.h"'                                            )
+   AAdd( txt_, ""                                                                 )
+   AAdd( txt_, "#if QT_VERSION >= 0x040500"                                       )
+   AAdd( txt_, ""                                                                 )
 
    RETURN txt_
 
@@ -3355,3 +3427,373 @@ STATIC FUNCTION qth_is_extended( cQTHFileName )
    RETURN lYes
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION qth_is_QObject( cWidget )
+   STATIC aQObjects := {}
+   
+   IF lower( left( cWidget, 3 ) ) == "hbq"
+      cWidget := substr( cWidget, 3 )
+   ENDIF 
+
+   IF empty( aQObjects )
+      aadd( aQObjects, "QObject" )            
+      
+      aadd( aQObjects, "QAbstractAnimation" )            // QAnimationGroup, QPauseAnimation, and QVariantAnimation.  QParallelAnimationGroup and QSequentialAnimationGroup.  QPropertyAnimation
+      aadd( aQObjects, "QAbstractEventDispatcher" )
+      aadd( aQObjects, "QAbstractFontEngine" )
+      aadd( aQObjects, "QAbstractItemDelegate" )         // QItemDelegate and QStyledItemDelegate.  QSqlRelationalDelegate.
+      aadd( aQObjects, "QAbstractItemModel" )            // QSqlRelationalTableModel. QSqlTableModel QSqlQueryModel. QIdentityProxyModel and QSortFilterProxyModel.  QHelpIndexModel QStringListModel. QAbstractListModel, QAbstractProxyModel, QAbstractTableModel, QDirModel, QFileSystemModel, QHelpContentModel, QProxyModel, and QStandardItemModel.
+      aadd( aQObjects, "QAbstractMessageHandler" )
+      aadd( aQObjects, "QAbstractNetworkCache" )         // QNetworkDiskCache.
+      aadd( aQObjects, "QAbstractState" )                // QFinalState, QHistoryState, and QState. QStateMachine.
+      aadd( aQObjects, "QAbstractTextDocumentLayout" )   // QPlainTextDocumentLayout.
+      aadd( aQObjects, "QAbstractTransition" )           // QEventTransition and QSignalTransition. QKeyEventTransition and QMouseEventTransition.
+      aadd( aQObjects, "QAbstractUriResolver" )
+      aadd( aQObjects, "QAbstractVideoSurface" )
+      aadd( aQObjects, "QAccessibleBridgePlugin" )
+      aadd( aQObjects, "QAccessiblePlugin" )
+      aadd( aQObjects, "QAction" )                       // QMenuItem and QWidgetAction
+      aadd( aQObjects, "QActionGroup" )
+      aadd( aQObjects, "QAudioInput" )
+      aadd( aQObjects, "QAudioOutput" )
+      aadd( aQObjects, "QAxFactory" )
+      aadd( aQObjects, "QAxObject" )                     // QAxScriptEngine.
+      aadd( aQObjects, "QAxScript" )
+      aadd( aQObjects, "QAxScriptManager" )
+      aadd( aQObjects, "QButtonGroup" )
+      aadd( aQObjects, "QClipboard" )
+      aadd( aQObjects, "QCompleter" )
+      aadd( aQObjects, "QCopChannel" )
+      aadd( aQObjects, "QCoreApplication" )              // QApplication
+      aadd( aQObjects, "QDataWidgetMapper" )
+      aadd( aQObjects, "QDBusAbstractAdaptor" )
+      aadd( aQObjects, "QDBusAbstractInterface" )        // QDBusConnectionInterface and QDBusInterface.
+      aadd( aQObjects, "QDBusPendingCallWatcher" )
+      aadd( aQObjects, "QDBusServiceWatcher" )
+      aadd( aQObjects, "QDeclarativeComponent" )
+      aadd( aQObjects, "QDeclarativeContext" )
+      aadd( aQObjects, "QDeclarativeEngine" )
+      aadd( aQObjects, "QDeclarativeExpression" )
+      aadd( aQObjects, "QDeclarativeExtensionPlugin" )
+      aadd( aQObjects, "QDeclarativePropertyMap" )
+      aadd( aQObjects, "QDecorationPlugin" )
+      aadd( aQObjects, "QDesignerFormEditorInterface" )
+      aadd( aQObjects, "QDesignerFormWindowManagerInterface" )
+      aadd( aQObjects, "QDirectPainter" )
+      aadd( aQObjects, "QDrag" )
+      aadd( aQObjects, "QEventLoop" )
+      aadd( aQObjects, "QExtensionFactory" )
+      aadd( aQObjects, "QExtensionManager" )
+      aadd( aQObjects, "QFileSystemWatcher" )
+      aadd( aQObjects, "QFontEnginePlugin" )
+      aadd( aQObjects, "QFtp" )
+      aadd( aQObjects, "QFutureWatcher" )
+      aadd( aQObjects, "QGenericPlugin" )
+      aadd( aQObjects, "QGesture" )                      // QPanGesture, QPinchGesture, QSwipeGesture, QTapAndHoldGesture, and QTapGesture. 
+      aadd( aQObjects, "QGLShader" )
+      aadd( aQObjects, "QGLShaderProgram" )
+      aadd( aQObjects, "QGraphicsAnchor" )
+      aadd( aQObjects, "QGraphicsEffect" )               // QGraphicsBlurEffect, QGraphicsColorizeEffect, QGraphicsDropShadowEffect, and QGraphicsOpacityEffect.
+      aadd( aQObjects, "QGraphicsItemAnimation" )
+      aadd( aQObjects, "QGraphicsObject" )               //  QDeclarativeItem, QGraphicsSvgItem, QGraphicsTextItem, and QGraphicsWidget. QGraphicsProxyWidget and QGraphicsWebView.
+      aadd( aQObjects, "QGraphicsScene" )
+      aadd( aQObjects, "QGraphicsTransform" )            // QGraphicsRotation and QGraphicsScale.
+      aadd( aQObjects, "QHelpEngineCore" )               // QHelpEngine
+      aadd( aQObjects, "QHelpSearchEngine" )
+      aadd( aQObjects, "QHttp" )
+      aadd( aQObjects, "QHttpMultiPart" )
+      aadd( aQObjects, "QIconEnginePlugin" )
+      aadd( aQObjects, "QIconEnginePluginV2" )
+      aadd( aQObjects, "QImageIOPlugin" )
+      aadd( aQObjects, "QInputContext" )
+      aadd( aQObjects, "QInputContextPlugin" )
+      aadd( aQObjects, "QIODevice" )                     // Q3Socket, Q3SocketDevice, QAbstractSocket, QBuffer, QFile, QLocalSocket, QNetworkReply, and QProcess QTcpSocket and QUdpSocket. QSslSocket. QTemporaryFile.
+      aadd( aQObjects, "QItemSelectionModel" )
+      aadd( aQObjects, "QKbdDriverPlugin" )
+      aadd( aQObjects, "QLayout" )                       // QBoxLayout, QFormLayout, QGridLayout, and QStackedLayout.  Q3HBoxLayout, Q3VBoxLayout, QHBoxLayout, and QVBoxLayout.            
+      aadd( aQObjects, "QLibrary" )
+      aadd( aQObjects, "QLocalServer" )
+      aadd( aQObjects, "QMimeData" )
+      aadd( aQObjects, "QMouseDriverPlugin" )
+      aadd( aQObjects, "QMovie" )
+      aadd( aQObjects, "QNetworkAccessManager" )
+      aadd( aQObjects, "QNetworkConfigurationManager" )
+      aadd( aQObjects, "QNetworkCookieJar" )
+      aadd( aQObjects, "QNetworkSession" )
+      aadd( aQObjects, "QObjectCleanupHandler" )
+      aadd( aQObjects, "QPictureFormatPlugin" )
+      aadd( aQObjects, "QPlatformCursor" )
+      aadd( aQObjects, "QPluginLoader" )
+      aadd( aQObjects, "QScreenDriverPlugin" )
+      aadd( aQObjects, "QScriptEngine" )
+      aadd( aQObjects, "QScriptEngineDebugger" )
+      aadd( aQObjects, "QScriptExtensionPlugin" )
+      aadd( aQObjects, "QSessionManager" )
+      aadd( aQObjects, "QSettings" )
+      aadd( aQObjects, "QSharedMemory" )
+      aadd( aQObjects, "QShortcut" )
+      aadd( aQObjects, "QSignalMapper" )
+      aadd( aQObjects, "QSignalSpy" )
+      aadd( aQObjects, "QSocketNotifier" )
+      aadd( aQObjects, "QSound" )
+      aadd( aQObjects, "QSqlDriver" )
+      aadd( aQObjects, "QSqlDriverPlugin" )
+      aadd( aQObjects, "QStyle" )
+      aadd( aQObjects, "QStylePlugin" )
+      aadd( aQObjects, "QSvgRenderer" )
+      aadd( aQObjects, "QSyntaxHighlighter" )
+      aadd( aQObjects, "QSystemTrayIcon" )
+      aadd( aQObjects, "QTcpServer" )
+      aadd( aQObjects, "QTextCodecPlugin" )
+      aadd( aQObjects, "QTextDocument" )
+      aadd( aQObjects, "QTextObject" )                   // QTextBlockGroup and QTextFrame.  QTextList.  QTextTable.
+      aadd( aQObjects, "QThread" )
+      aadd( aQObjects, "QThreadPool" )
+      aadd( aQObjects, "QTimeLine" )
+      aadd( aQObjects, "QTimer" )
+      aadd( aQObjects, "QTranslator" )
+      aadd( aQObjects, "QUiLoader" )
+      aadd( aQObjects, "QUndoGroup" )
+      aadd( aQObjects, "QUndoStack" )
+      aadd( aQObjects, "QValidator" )                    // QDoubleValidator, QIntValidator, and QRegExpValidator.
+      aadd( aQObjects, "QWebFrame" )
+      aadd( aQObjects, "QWebHistoryInterface" )
+      aadd( aQObjects, "QWebPage" )
+      aadd( aQObjects, "QWebPluginFactory" )
+      aadd( aQObjects, "QWidget" )
+      aadd( aQObjects, "QWSClient" )
+      aadd( aQObjects, "QWSInputMethod" )
+      aadd( aQObjects, "QWSServer" )
+
+      aadd( aQObjects, "QAbstractButton" )               // Q3Button, QCheckBox, QPushButton, QRadioButton, and QToolButton.  QCommandLinkButton.
+      aadd( aQObjects, "QAbstractSlider" )               // QDial, QScrollBar, and QSlider.
+      aadd( aQObjects, "QAbstractSpinBox" )              // QDateTimeEdit, QDoubleSpinBox, and QSpinBox. QDateEdit and QTimeEdit.
+      aadd( aQObjects, "QAxWidget" )
+      aadd( aQObjects, "QCalendarWidget" )
+      aadd( aQObjects, "QComboBox" )                     // QFontComboBox.
+      aadd( aQObjects, "QDesignerActionEditorInterface" )
+      aadd( aQObjects, "QDesignerFormWindowInterface" )
+      aadd( aQObjects, "QDesignerObjectInspectorInterface" )
+      aadd( aQObjects, "QDesignerPropertyEditorInterface" )
+      aadd( aQObjects, "QDesignerWidgetBoxInterface" )
+      aadd( aQObjects, "QDesktopWidget" )
+      aadd( aQObjects, "QDialog" )                       //  Q3FileDialog, Q3ProgressDialog, Q3TabDialog, Q3Wizard, QAbstractPrintDialog, QColorDialog, QErrorMessage, QFileDialog, QFontDialog, QInputDialog, QMessageBox, QPageSetupDialog, QPrintPreviewDialog, QProgressDialog, and QWizard.   QPrintDialog.
+      aadd( aQObjects, "QDialogButtonBox" )
+      aadd( aQObjects, "QDockWidget" )
+      aadd( aQObjects, "QFocusFrame" )
+      aadd( aQObjects, "QFrame" )                        // Q3Frame, Q3ProgressBar, QAbstractScrollArea, QLabel, QLCDNumber, QSplitter, QStackedWidget, and QToolBox.  QAbstractItemView, QGraphicsView, QMdiArea, QPlainTextEdit, QScrollArea, and QTextEdit. QColumnView, QHeaderView, QListView, QTableView, and QTreeView  QHelpIndexWidget, QListWidget, and QUndoView.  QTableWidget. QHelpContentWidget and QTreeWidget. QDeclarativeView.  QTextBrowser. 
+      aadd( aQObjects, "QGLWidget" )
+      aadd( aQObjects, "QGroupBox" )
+      aadd( aQObjects, "QHelpSearchQueryWidget" )
+      aadd( aQObjects, "QHelpSearchResultWidget" )
+      aadd( aQObjects, "QLineEdit" )
+      aadd( aQObjects, "QMacCocoaViewContainer" )
+      aadd( aQObjects, "QMacNativeWidget" )
+      aadd( aQObjects, "QMainWindow" )
+      aadd( aQObjects, "QMdiSubWindow" )
+      aadd( aQObjects, "QMenu" )
+      aadd( aQObjects, "QMenuBar" )
+      aadd( aQObjects, "QPrintPreviewWidget" )
+      aadd( aQObjects, "QProgressBar" )
+      aadd( aQObjects, "QRubberBand" )
+      aadd( aQObjects, "QSizeGrip" )
+      aadd( aQObjects, "QSplashScreen" )
+      aadd( aQObjects, "QSplitterHandle" )
+      aadd( aQObjects, "QStatusBar" )
+      aadd( aQObjects, "QSvgWidget" )
+      aadd( aQObjects, "QTabBar" )
+      aadd( aQObjects, "QTabWidget" )
+      aadd( aQObjects, "QToolBar" )
+      aadd( aQObjects, "QWebInspector" )
+      aadd( aQObjects, "QWebView" )
+      aadd( aQObjects, "QWizardPage" )
+      aadd( aQObjects, "QWorkspace" )
+      aadd( aQObjects, "QWSEmbedWidget" )
+      aadd( aQObjects, "QX11EmbedContainer" )
+      aadd( aQObjects, "QX11EmbedWidget" )
+      
+      aadd( aQObjects, "QAnimationGroup" )
+      aadd( aQObjects, "QPauseAnimation" )
+      aadd( aQObjects, "QVariantAnimation" )
+      aadd( aQObjects, "QParallelAnimationGroup" )
+      aadd( aQObjects, "QSequentialAnimationGroup" )
+      aadd( aQObjects, "QPropertyAnimation" )
+      
+      aadd( aQObjects, "QItemDelegate" )
+      aadd( aQObjects, "QStyledItemDelegate" )
+      aadd( aQObjects, "QSqlRelationalDelegate" )
+      
+      aadd( aQObjects, "QSqlRelationalTableModel" )
+      aadd( aQObjects, "QSqlTableModel" )
+      aadd( aQObjects, "QSqlQueryModel" )
+      aadd( aQObjects, "QIdentityProxyModel" )
+      aadd( aQObjects, "QSortFilterProxyModel" )
+      aadd( aQObjects, "QHelpIndexModel" )
+      aadd( aQObjects, "QStringListModel" )
+      aadd( aQObjects, "QAbstractListModel" )
+      aadd( aQObjects, "QAbstractProxyModel" )
+      aadd( aQObjects, "QAbstractTableModel" )
+      aadd( aQObjects, "QDirModel" )
+      aadd( aQObjects, "QFileSystemModel" )
+      aadd( aQObjects, "QHelpContentModel" )
+      aadd( aQObjects, "QProxyModel" )
+      aadd( aQObjects, "QStandardItemModel" )
+      
+      aadd( aQObjects, "QNetworkDiskCache" )
+      
+      aadd( aQObjects, "QFinalState" )
+      aadd( aQObjects, "QHistoryState" )
+      aadd( aQObjects, "QState" )
+      aadd( aQObjects, "QStateMachine" )
+      
+      aadd( aQObjects, "QPlainTextDocumentLayout" )
+      
+      aadd( aQObjects, "QEventTransition" )
+      aadd( aQObjects, "QSignalTransition" )
+      aadd( aQObjects, "QKeyEventTransition" )
+      aadd( aQObjects, "QMouseEventTransition" )
+      
+      aadd( aQObjects, "QMenuItem" )
+      aadd( aQObjects, "QWidgetAction" )
+      
+      aadd( aQObjects, "QAxScriptEngine" )
+      
+      aadd( aQObjects, "QApplication" )
+      
+      aadd( aQObjects, "QDBusConnectionInterface" )
+      aadd( aQObjects, "QDBusInterface" )
+      
+      aadd( aQObjects, "QPanGesture" )
+      aadd( aQObjects, "QPinchGesture" )
+      aadd( aQObjects, "QSwipeGesture" )
+      aadd( aQObjects, "QTapAndHoldGesture" )
+      aadd( aQObjects, "QTapGesture" )
+      
+      aadd( aQObjects, "QGraphicsBlurEffect" )
+      aadd( aQObjects, "QGraphicsColorizeEffect" )
+      aadd( aQObjects, "QGraphicsDropShadowEffect" )
+      aadd( aQObjects, "QGraphicsOpacityEffect" )
+      
+      aadd( aQObjects, "QDeclarativeItem" )
+      aadd( aQObjects, "QGraphicsSvgItem" )
+      aadd( aQObjects, "QGraphicsTextItem" )
+      aadd( aQObjects, "QGraphicsWidget" )
+      aadd( aQObjects, "QGraphicsProxyWidget" )
+      aadd( aQObjects, "QGraphicsWebView" )
+      
+      aadd( aQObjects, "QGraphicsRotation" )
+      aadd( aQObjects, "QGraphicsScale" )
+      
+      aadd( aQObjects, "QHelpEngine" )
+      
+      aadd( aQObjects, "QAbstractSocket" )
+      aadd( aQObjects, "QBuffer" )
+      aadd( aQObjects, "QFile" )
+      aadd( aQObjects, "QLocalSocket" )
+      aadd( aQObjects, "QNetworkReply" )
+      aadd( aQObjects, "QProcess" )
+      aadd( aQObjects, "QTcpSocket" )
+      aadd( aQObjects, "QUdpSocket" )
+      aadd( aQObjects, "QSslSocket" )
+      aadd( aQObjects, "QTemporaryFile" )
+      
+      aadd( aQObjects, "QBoxLayout" )
+      aadd( aQObjects, "QFormLayout" )
+      aadd( aQObjects, "QGridLayout" )
+      aadd( aQObjects, "QStackedLayout" )
+      aadd( aQObjects, "QHBoxLayout" )
+      aadd( aQObjects, "QVBoxLayout" )
+      
+      aadd( aQObjects, "QTextBlockGroup" )
+      aadd( aQObjects, "QTextFrame" )
+      aadd( aQObjects, "QTextList" )
+      aadd( aQObjects, "QTextTable" )
+      
+      aadd( aQObjects, "QDoubleValidator" )
+      aadd( aQObjects, "QIntValidator" )
+      aadd( aQObjects, "QRegExpValidator" )
+      
+      aadd( aQObjects, "QCheckBox" )
+      aadd( aQObjects, "QPushButton" )
+      aadd( aQObjects, "QRadioButton" )
+      aadd( aQObjects, "Q3Button" )
+      aadd( aQObjects, "QToolButton" )
+      aadd( aQObjects, "QCommandLinkButton" )
+      
+      aadd( aQObjects, "QDial" )
+      aadd( aQObjects, "QScrollBar" )
+      aadd( aQObjects, "QSlider" )
+      
+      aadd( aQObjects, "QDateTimeEdit" )
+      aadd( aQObjects, "QDoubleSpinBox" )
+      aadd( aQObjects, "QSpinBox" )
+      aadd( aQObjects, "QDateEdit" )
+      aadd( aQObjects, "QTimeEdit" )
+      
+      aadd( aQObjects, "QFontComboBox" )
+      
+      aadd( aQObjects, "QAbstractPrintDialog" )
+      aadd( aQObjects, "QColorDialog" )
+      aadd( aQObjects, "QErrorMessage" )
+      aadd( aQObjects, "QFileDialog" )
+      aadd( aQObjects, "QFontDialog" )
+      aadd( aQObjects, "QInputDialog" )
+      aadd( aQObjects, "QMessageBox" )
+      aadd( aQObjects, "QPageSetupDialog" )
+      aadd( aQObjects, "QPrintPreviewDialog" )
+      aadd( aQObjects, "QProgressDialog" )
+      aadd( aQObjects, "QWizard" )
+      aadd( aQObjects, "QPrintDialog" )
+      
+      aadd( aQObjects, "QAbstractScrollArea" )
+      aadd( aQObjects, "QLabel" )
+      aadd( aQObjects, "QLCDNumber" )
+      aadd( aQObjects, "QSplitter" )
+      aadd( aQObjects, "QStackedWidget" )
+      aadd( aQObjects, "QToolBox" )
+      aadd( aQObjects, "QAbstractItemView" )
+      aadd( aQObjects, "QGraphicsView" )
+      aadd( aQObjects, "QMdiArea" )
+      aadd( aQObjects, "QPlainTextEdit" )
+      aadd( aQObjects, "QScrollArea" )
+      aadd( aQObjects, "QTextEdit" )
+      aadd( aQObjects, "QColumnView" )
+      aadd( aQObjects, "QHeaderView" )
+      aadd( aQObjects, "QListView" )
+      aadd( aQObjects, "QTableView" )
+      aadd( aQObjects, "QTreeView" )
+      aadd( aQObjects, "QHelpIndexWidget" )
+      aadd( aQObjects, "QListWidget" )
+      aadd( aQObjects, "QUndoView" )
+      aadd( aQObjects, "QTableWidget" )
+      aadd( aQObjects, "QHelpContentWidget" )
+      aadd( aQObjects, "QTreeWidget" )
+      aadd( aQObjects, "QDeclarativeView" )
+      aadd( aQObjects, "QTextBrowser" )
+   ENDIF 
+
+   RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
+   
+/*----------------------------------------------------------------------*/
+   
+#define HBQT_BIT_NONE                             0
+#define HBQT_BIT_OWNER                            1
+#define HBQT_BIT_QOBJECT                          2
+#define HBQT_BIT_CONSTRUCTOR                      4
+#define HBQT_BIT_DESTRUCTOR                       8
+#define HBQT_BIT_QPOINTER                         16
+
+STATIC FUNCTION qth_get_bits( cWidget, lNew )
+   LOCAL nBits := HBQT_BIT_NONE
+   
+   IF lNew
+      nBits := hb_bitOr( nBits, HBQT_BIT_OWNER )
+   ENDIF 
+   IF qth_is_QObject( cWidget )
+      nBits := hb_bitOr( nBits, HBQT_BIT_QOBJECT )
+   ENDIF      
+   
+   RETURN hb_ntos( nBits )
+   
+/*----------------------------------------------------------------------*/
+   

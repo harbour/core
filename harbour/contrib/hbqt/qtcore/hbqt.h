@@ -59,6 +59,8 @@
 #include "hbapistr.h"
 #include "hbthread.h"
 
+//#define __HBQT_REVAMP__
+
 #if defined( HB_OS_OS2 )
 #  define OS2EMX_PLAIN_CHAR
 #  define INCL_BASE
@@ -88,6 +90,14 @@ typedef struct
 
 typedef void ( * PHBQT_SLOT_FUNC )( PHB_ITEM * codeblock, void ** arguments, QStringList pList );
 typedef void * ( * PHBQT_EVENT_FUNC )( void * pObj, bool bNew );
+typedef void ( * PHBQT_DEL_FUNC )( void * pObj, int iFlags );
+
+#define HBQT_BIT_NONE                             0
+#define HBQT_BIT_OWNER                            1
+#define HBQT_BIT_QOBJECT                          2
+#define HBQT_BIT_CONSTRUCTOR                      4
+#define HBQT_BIT_DESTRUCTOR                       8
+#define HBQT_BIT_QPOINTER                         16
 
 HB_EXTERN_BEGIN
 
@@ -111,6 +121,12 @@ extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
 extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );
 extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName );
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
+
+HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
+HB_EXPORT void    *  hbqt_bindGetQtObject( PHB_ITEM pObject );
+HB_EXPORT void       hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner );
+HB_EXPORT void       hbqt_bindDestroyHbObject( PHB_ITEM pObject );
+HB_EXPORT void       hbqt_bindDestroyQtObject( void * qtObject );
 
 HB_EXTERN_END
 

@@ -16,6 +16,9 @@ hbqt_hbqevents.cpp
 hbqt_hbqslots.cpp
 hbqt_hbqstring.cpp
 
+hbqt_bind.cpp
+
 hbqt_misc.prg
+hbqt_obj.prg
 
 hbqt_hbqevents.h
