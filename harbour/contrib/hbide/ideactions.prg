@@ -514,12 +514,12 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   oSubMenu:addItem( { ::getAction( "TB_Hide" ), {|| oIde:execAction( "Hide" ) } } )
+   oSubMenu:addItem( { ::getAction( "TB_Hide" ), {|| oIde:execAction( "Hide" ) } }    )
 
    ::oIde:qAnimateAction := QAction( oSubMenu:oWidget )
    ::qAnimateAction:setText( "Toggle Animation" )
    ::qAnimateAction:setCheckable( .t. )
-   oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }           )
+   oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }         )
 
    hbide_menuAddSep( oSubMenu )
    oSubMenu:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )

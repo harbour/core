@@ -82,7 +82,7 @@ CLASS HbqToolbar
    DATA   allowedAreas                            INIT   Qt_TopToolBarArea
    DATA   initialArea                             INIT   Qt_TopToolBarArea
    DATA   orientation                             INIT   Qt_Horizontal
-   DATA   size                                    INIT   QSize( 16,16 )
+   DATA   size                                   
    DATA   moveable                                INIT   .f.
    DATA   floatable                               INIT   .f.
 
@@ -132,6 +132,8 @@ METHOD HbqToolbar:create( cName, oParent )
 
    DEFAULT ::cName TO "HbqToolbar_" + hb_ntos( ++nID )
 
+   DEFAULT ::size TO QSize( 16,16 )
+   
    ::oWidget := QToolbar()
    ::oWidget:setObjectName( ::cName )
    ::oWidget:setAllowedAreas( ::allowedAreas )

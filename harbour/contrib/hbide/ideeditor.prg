@@ -1355,7 +1355,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::buildTabPage( ::sourceFile )
 
-   ::qLayout := QBoxLayout()
+   ::qLayout := QBoxLayout(  Qt_Vertical )
    ::qLayout:setContentsMargins( 0,0,0,0 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )

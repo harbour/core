@@ -466,7 +466,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew, lSetEditor )
 
    ::setForeBackGround( qEdit, cTheme )
 
-   qHiliter := HBQSyntaxHighlighter()
+   qHiliter := HBQSyntaxHighlighter( qEdit:document() )
 
    FOR EACH a_ IN ::aPatterns
       IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
@@ -493,7 +493,6 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew, lSetEditor )
       qEdit:hbSetHighLighter( qHiliter )
    ENDIF
 
-   qHiliter:setDocument( qEdit:document() )
    IF lSetEditor
       qHiliter:hbSetEditor( qEdit )
    ENDIF
