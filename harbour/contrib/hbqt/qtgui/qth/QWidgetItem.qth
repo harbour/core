@@ -27,7 +27,14 @@ New         =
  */
 HB_FUNC( QT_QWIDGETITEM )
 {
-   __HB_RETPTRGC__( new QWidgetItem( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QWidgetItem( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }   
 }
 </CODE>
 

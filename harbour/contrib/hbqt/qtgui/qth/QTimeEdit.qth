@@ -26,6 +26,21 @@ New         = pParent
  */
 HB_FUNC( QT_QTIMEEDIT )
 {
-   __HB_RETPTRGC__( new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   }
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTIME" ) )
+   {
+      __HB_RETPTRGC__( new QTimeEdit( *hbqt_par_QTime( 1 ) ) );
+   }
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QTIME" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QTimeEdit( *hbqt_par_QTime( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QTimeEdit() );
+   }      
 }
 </CODE>

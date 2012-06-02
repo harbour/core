@@ -31,7 +31,22 @@ New         =
  */
 HB_FUNC( QT_QSTANDARDITEM )
 {
-   __HB_RETPTRGC__( new QStandardItem() );
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QStandardItem( hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QICON" ) && HB_ISCHAR( 2 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QStandardItem( *hbqt_par_QIcon( 1 ), hb_parstr_utf8( 2, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QStandardItem() );
+   }   
 }
 </CODE>
 

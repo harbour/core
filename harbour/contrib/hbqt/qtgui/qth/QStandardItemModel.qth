@@ -28,7 +28,22 @@ New         =
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
-   __HB_RETPTRGC__( new QStandardItemModel( hbqt_par_QObject( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QStandardItemModel( hbqt_par_QObject( 1 ) ) );
+   }
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      __HB_RETPTRGC__( new QStandardItemModel( hb_parni( 1 ), hb_parni( 2 ) ) );
+   }
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QStandardItemModel( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QObject( 3 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QStandardItemModel() );
+   }      
 }
 </CODE>
 

@@ -36,7 +36,14 @@ New         =
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
 {
-   __HB_RETPTRGC__( new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTEXTDOCUMENT" ) )
+   {
+      __HB_RETPTRGC__( new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new HBQSyntaxHighlighter() );
+   }      
 }
 </CODE>
 

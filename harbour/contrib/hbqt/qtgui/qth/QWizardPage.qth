@@ -27,7 +27,14 @@ Destructor  =
  */
 HB_FUNC( QT_QWIZARDPAGE )
 {
-   __HB_RETPTRGC__( new QWizardPage() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QWizardPage( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QWizardPage() );
+   }      
 }
 </CODE>
 

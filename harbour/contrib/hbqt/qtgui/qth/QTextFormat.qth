@@ -30,7 +30,18 @@ New         = pParent
  */
 HB_FUNC( QT_QTEXTFORMAT )
 {
-   __HB_RETPTRGC__( new QTextFormat() );
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QTextFormat( hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTEXTFORMAT" ) )
+   {
+      __HB_RETPTRGC__( new QTextFormat( *hbqt_par_QTextFormat( 1 ) ) );
+   }
+   else   
+   {   
+      __HB_RETPTRGC__( new QTextFormat() );
+   }   
 }
 </CODE>
 
