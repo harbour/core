@@ -31,6 +31,10 @@ HB_FUNC( QT_QCHILDEVENT )
    {
       __HB_RETPTRGC__( new QChildEvent( ( QEvent::Type ) hb_parni( 1 ), hbqt_par_QObject( 2 ) ) );
    }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }      
 }
 </CODE>
 

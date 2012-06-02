@@ -32,6 +32,10 @@ HB_FUNC( QT_QTEXTENCODER )
    {
       __HB_RETPTRGC__( new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) );
    }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }      
 }
 </CODE>
 

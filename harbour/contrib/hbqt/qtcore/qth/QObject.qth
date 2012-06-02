@@ -32,7 +32,7 @@ HB_FUNC( QT_QOBJECT )
    }
    else
    {
-      __HB_RETPTRGC__( new QObject( 0 ) );
+      __HB_RETPTRGC__( new QObject() );
    }
 }
 </CODE>

@@ -29,10 +29,7 @@ Destructor  =
  */
 HB_FUNC( QT_QMIMEDATA )
 {
-   if( hb_pcount() == 0 )
-   {
-      __HB_RETPTRGC__( new QMimeData() );
-   }
+   __HB_RETPTRGC__( new QMimeData() );
 }
 </CODE>
 

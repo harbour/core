@@ -35,6 +35,10 @@ HB_FUNC( QT_QLATIN1STRING )
    {
       __HB_RETPTRGC__( new QLatin1String( hb_parcx( 1 ) ) );
    }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }      
 }
 </CODE>
 

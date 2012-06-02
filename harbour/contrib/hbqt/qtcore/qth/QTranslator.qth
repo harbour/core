@@ -28,9 +28,9 @@ Destructor  =
  */
 HB_FUNC( QT_QTRANSLATOR )
 {
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTRANSLATOR" ) )
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
-      __HB_RETPTRGC__( new QTranslator( hbqt_par_QTranslator( 1 ) ) );
+      __HB_RETPTRGC__( new QTranslator( hbqt_par_QObject( 1 ) ) );
    }
    else
    {
