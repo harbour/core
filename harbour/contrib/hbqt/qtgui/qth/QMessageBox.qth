@@ -56,7 +56,7 @@ HB_FUNC( QT_QMESSAGEBOX )
    }   
    else
    {   
-      __HB_RETPTRGC__( new QMessageBox( 0 ) );
+      __HB_RETPTRGC__( new QMessageBox() );
    }   
 }
 </CODE>

@@ -30,7 +30,18 @@ Destructor  =
  */
 HB_FUNC( QT_QMATRIX )
 {
-   __HB_RETPTRGC__( new QMatrix() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QMATRIX" ) )
+   {
+      __HB_RETPTRGC__( new QMatrix( *hbqt_par_QMatrix( 1 ) ) );
+   }
+   else if( hb_pcount() == 6 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) && HB_ISNUM( 6 ) )
+   {
+      __HB_RETPTRGC__( new QMatrix( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) ) );
+   }   
+   else
+   {
+      __HB_RETPTRGC__( new QMatrix() );
+   }      
 }
 </CODE>
 

@@ -39,8 +39,12 @@ HB_FUNC( QT_QRADIOBUTTON )
       hb_strfree( pText01 );
    }   
    else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
       __HB_RETPTRGC__( new QRadioButton( hbqt_par_QWidget( 1 ) ) );
+   }
    else
+   {
       __HB_RETPTRGC__( new QRadioButton() );   
+   }
 }
 </CODE>

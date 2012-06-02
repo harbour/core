@@ -42,9 +42,13 @@ HB_FUNC( QT_QKEYSEQUENCE )
       __HB_RETPTRGC__( new QKeySequence( hb_parstr_utf8( 1, &pText01, NULL ) ) );
       hb_strfree( pText01 );
    }   
-   else if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   else if( hb_pcount() > 1 && HB_ISNUM( 1 ) )
    {   
       __HB_RETPTRGC__( new QKeySequence( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+   }   
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {   
+      __HB_RETPTRGC__( new QKeySequence( ( QKeySequence::StandardKey ) hb_parni( 1 ) ) );
    }   
    else
    {   

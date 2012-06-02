@@ -32,9 +32,9 @@ HB_FUNC( QT_QCLOSEEVENT )
    {
       __HB_RETPTRGC__( new QCloseEvent( *hbqt_par_QCloseEvent( 1 ) ) );
    }
-   else if( hb_pcount() == 0 )
+   else
    {
-      __HB_RETPTRGC__( new QCloseEvent( ) );  
+      __HB_RETPTRGC__( new QCloseEvent() );  
    }
 }
 </CODE>

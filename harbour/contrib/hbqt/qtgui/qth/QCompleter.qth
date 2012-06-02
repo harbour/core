@@ -28,7 +28,30 @@ New         =
  */
 HB_FUNC( QT_QCOMPLETER )
 {
-   __HB_RETPTRGC__( new QCompleter() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QCompleter( hbqt_par_QObject( 1 ) ) );
+   }
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QABSTRACTITEMMODEL" ) )
+   {
+      __HB_RETPTRGC__( new QCompleter( hbqt_par_QAbstractItemModel( 1 ) ) );
+   }
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSTRINGLIST" ) )
+   {
+      __HB_RETPTRGC__( new QCompleter( *hbqt_par_QStringList( 1 ) ) );
+   }
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QABSTRACTITEMMODEL" ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QCompleter( hbqt_par_QAbstractItemModel( 1 ), hbqt_par_QObject( 2 ) ) );
+   }
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QSTRINGLIST" ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QCompleter( *hbqt_par_QStringList( 1 ), hbqt_par_QObject( 2 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QCompleter() );
+   }   
 }
 </CODE>
 

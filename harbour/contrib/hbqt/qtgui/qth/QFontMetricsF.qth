@@ -48,6 +48,10 @@ HB_FUNC( QT_QFONTMETRICSF )
    {
       __HB_RETPTRGC__( new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) );
    }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }      
 }
 </CODE>
 

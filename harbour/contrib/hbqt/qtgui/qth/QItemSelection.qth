@@ -28,7 +28,14 @@ Destructor  =
  */
 HB_FUNC( QT_QITEMSELECTION )
 {
-   __HB_RETPTRGC__( new QItemSelection() );
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QMODELINDEX" ) && hbqt_par_isDerivedFrom( 2, "QMODELINDEX" ) )
+   {
+      __HB_RETPTRGC__( new QItemSelection( *hbqt_par_QModelIndex( 1 ), *hbqt_par_QModelIndex( 2 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QItemSelection() );
+   }   
 }
 </CODE>
 

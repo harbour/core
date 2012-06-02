@@ -30,7 +30,14 @@ Calls    = QT_QCalendarWidget
  */
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   __HB_RETPTRGC__( new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QCalendarWidget() );
+   }      
 }
 </CODE>
 

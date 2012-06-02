@@ -30,7 +30,18 @@ Destructor  =
  */
 HB_FUNC( QT_QPAINTERPATH )
 {
-   __HB_RETPTRGC__( new QPainterPath() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QPOINTF" ) )
+   {
+      __HB_RETPTRGC__( new QPainterPath( *hbqt_par_QPointF( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QPAINTERPATH" ) )
+   {
+      __HB_RETPTRGC__( new QPainterPath( *hbqt_par_QPainterPath( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QPainterPath() );
+   }      
 }
 </CODE>
 

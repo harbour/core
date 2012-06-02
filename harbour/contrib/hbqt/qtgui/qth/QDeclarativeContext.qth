@@ -48,7 +48,7 @@ HB_FUNC( QT_QDECLARATIVECONTEXT )
    }
    else
    {
-      __HB_RETPTRGC__( NULL );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
 </CODE>

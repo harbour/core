@@ -30,9 +30,7 @@ HB_FUNC( QT_QSPACERITEM )
 {
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      __HB_RETPTRGC__( new QSpacerItem( hb_parni( 1 ), hb_parni( 2 ), 
-                  HB_ISNUM( 3 ) ? ( QSizePolicy::Policy ) hb_parni( 3 ) : QSizePolicy::Minimum, 
-                  HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : QSizePolicy::Minimum );
+      __HB_RETPTRGC__( new QSpacerItem( hb_parni( 1 ), hb_parni( 2 ), HB_ISNUM( 3 ) ? ( QSizePolicy::Policy ) hb_parni( 3 ) : QSizePolicy::Minimum, HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : QSizePolicy::Minimum ) );
    }
    else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSPACERITEM" ) )
    {

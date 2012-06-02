@@ -27,7 +27,14 @@ New         =
  */
 HB_FUNC( QT_QFILESYSTEMMODEL )
 {
-   __HB_RETPTRGC__( new QFileSystemModel() );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QFileSystemModel( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QFileSystemModel() );
+   }      
 }
 </CODE>
 

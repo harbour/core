@@ -40,7 +40,7 @@ HB_FUNC( QT_QPIXMAP )
       __HB_RETPTRGC__( new QPixmap( hb_parstr_utf8( 1, &pText01, NULL ), ( const char * ) 0, Qt::AutoColor ) );
       hb_strfree( pText01 );
    }
-   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   else if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
       void * pText01 = NULL;
       __HB_RETPTRGC__( new QPixmap( hb_parstr_utf8( 1, &pText01, NULL ), HB_ISCHAR( 2 ) ? ( const char * ) hb_parc( 2 ) : 0, HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : Qt::AutoColor ) );
