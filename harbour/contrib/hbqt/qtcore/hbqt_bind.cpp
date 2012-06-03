@@ -398,10 +398,21 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             * bind_ptr = bind->next;
             if( bind->iFlags & HBQT_BIT_OWNER )
             {
-               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDestroyHbObject( %p )", bind->qtObject ) );
-               bind->pDelFunc( bind->qtObject, bind->iFlags );
+               if( bind->iFlags & HBQT_BIT_QOBJECT )
+               {
+                  QObject * obj = ( QObject * ) bind->qtObject;
+                  if( obj && obj->parent() == NULL )
+                  {
+                     HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindDestroyHbObject( %p )", bind->qtObject ) );
+                     bind->pDelFunc( bind->qtObject, bind->iFlags );
+                  }   
+               }
+               else
+               {      
+                  bind->pDelFunc( bind->qtObject, bind->iFlags );
+               }   
             }
-            hb_xfree( bind );
+            hb_xfree( bind );   /* By all means we need to clean Harbour ocuupied memory */
             break;
          }
          bind_ptr = &bind->next;
@@ -420,6 +431,7 @@ void hbqt_bindDestroyQtObject( void * qtObject )
    {
       if( bind->qtObject == qtObject )
       {
+         HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindDestroyQtObject( %p )", bind->qtObject ) );
          * bind_ptr = bind->next;
          hb_xfree( bind );
          break;
