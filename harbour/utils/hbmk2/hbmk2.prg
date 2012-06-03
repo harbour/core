@@ -10287,6 +10287,10 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hbmk_DYNSUFFIX( hbmk ) ; EXIT
    CASE "HB_DYNEXT"
       cMacro := hbmk[ _HBMK_cDynLibExt ] ; EXIT
+   CASE "HB_VER"
+      cMacro := hb_NumToHex( hb_Version( HB_VERSION_MAJOR ), 2 ) + hb_NumToHex( hb_Version( HB_VERSION_MINOR ), 2 ) + hb_NumToHex( hb_Version( HB_VERSION_RELEASE ), 2 ) ; EXIT
+   CASE "HB_VERSTR"
+      cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." + hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." + hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) + hb_Version( HB_VERSION_STATUS ) ; EXIT
    CASE "HB_MAJOR"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
    CASE "HB_MINOR"
