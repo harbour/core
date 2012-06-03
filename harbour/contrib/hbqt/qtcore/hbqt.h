@@ -130,7 +130,6 @@ HB_EXPORT void       hbqt_bindDestroyQtObject( void * qtObject );
 
 HB_EXTERN_END
 
-#define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) ) /* TOFIX: use Str API */
 #define hbqt_par_uchar( n )                         ( ( uchar * ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )
