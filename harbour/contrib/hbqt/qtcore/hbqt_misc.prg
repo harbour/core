@@ -56,6 +56,8 @@
 
 #define QEvent_Paint                              12
 
+//#define __HBQT_REVAMP__
+
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS HbQtObjectHandler
@@ -239,7 +241,12 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:_destroy()
    LOCAL cnEvent
-
+   
+#ifdef __HBQT_REVAMP__   
+   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )      
+   __hbqt_destroy( Self )
+#endif
+   
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN NIL
    ENDIF 

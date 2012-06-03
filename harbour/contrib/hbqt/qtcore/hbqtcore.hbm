@@ -17,8 +17,11 @@ hbqt_hbqslots.cpp
 hbqt_hbqstring.cpp
 
 hbqt_bind.cpp
+hbqt_destroyer.cpp
 
 hbqt_misc.prg
 hbqt_obj.prg
 
 hbqt_hbqevents.h
+hbqt_destroyer.h
+

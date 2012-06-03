@@ -1514,9 +1514,9 @@ METHOD HbQtSource:build()
       AAdd( aLine, "   QPointer< " + cObjPfx + ::cQtObject + " > ph;" )
    ELSE
       IF ::isList
-          AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * ph;"                    )
+          AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * ph;" )
       ELSE
-          AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * ph;"                    )
+          AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * ph;" )
       ENDIF
    ENDIF
    AAdd( aLine, "   bool bNew;"                     )
@@ -2000,7 +2000,7 @@ METHOD HbQtSource:getConstructor()
       NEXT
       AAdd( aLine, " " )
 #ifdef __HBQT_REVAMP__
-      AAdd( aLine, '   hb_itemReturn( hbqt_bindGetHbObject( NULL, pObj, hb_dynsymGetSymbol( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
+      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, pObj, hb_dynsymGetSymbol( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
 #else      
       AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
 #endif      

@@ -60,9 +60,7 @@
 #include "hbapierr.h"
 
 #include "hbqt.h"
-#include <QtCore/QMetaType>
-#include <QtGui/QColor>
-#include <QtGui/QFileDialog>
+#include "hbqt_destroyer.h"
 
 HB_EXPORT void       hbqt_bindAddChild( PHB_ITEM pObject, PHB_ITEM pChild );
 HB_EXPORT void       hbqt_bindDelChild( PHB_ITEM pObject, PHB_ITEM pChild );
@@ -97,7 +95,8 @@ HBQT_BIND, * PHBQT_BIND;
 #define HBQT_BIND_UNLOCK      } while( 0 );
 
 static PHBQT_BIND s_hbqt_binds = NULL;
-
+static HBQDestroyer * s_destroyer = NULL;
+   
 static PHB_DYNS s_dynsym_NEW      = NULL;
 static PHB_DYNS s_dynsym___CHILDS = NULL;
 static PHB_DYNS s_dynsym___SLOTS  = NULL;
@@ -123,7 +122,7 @@ static PHB_ITEM hb_arrayCreateClone( PHB_ITEM pItem,
    return pItem;
 }
 
-PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags )
+PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
    
@@ -157,17 +156,24 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
          }
          if( bind == NULL )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ));
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
             
             bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
             memset( bind, 0, sizeof( HBQT_BIND ) );
             bind->qtObject = qtObject;
-            bind->pDelFunc = pDelete;
+            bind->pDelFunc = pDelFunc;
             bind->iFlags = iFlags;
             bind->next = s_hbqt_binds;
             s_hbqt_binds = bind;
          }
          bind->hbObject = hb_arrayId( pObject );
+         if( iFlags & HBQT_BIT_QOBJECT )
+         {
+            if( s_destroyer == NULL )
+               s_destroyer = new HBQDestroyer();
+               
+            QObject::connect( ( QObject * ) qtObject, SIGNAL(destroyed(QObject*)), s_destroyer, SLOT(destroyer()) );
+         }
       }
    }
    HBQT_BIND_UNLOCK
@@ -392,6 +398,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             * bind_ptr = bind->next;
             if( bind->iFlags & HBQT_BIT_OWNER )
             {
+               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDestroyHbObject( %p )", bind->qtObject ) );
                bind->pDelFunc( bind->qtObject, bind->iFlags );
             }
             hb_xfree( bind );
@@ -429,12 +436,18 @@ void hbqt_bindDestroyQtObject( void * qtObject )
  */
 HB_FUNC( __HBQT_DESTROY )
 {
+#if 0
    PHB_ITEM pObject = hb_stackSelfItem();
 
-   //if( pObject == NULL )
+   if( pObject == NULL )
       pObject = hb_param( 1, HB_IT_OBJECT );
    if( pObject )
       hbqt_bindDestroyHbObject( pObject );
+#else
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   if( pObject )
+      hbqt_bindDestroyHbObject( pObject );
+#endif      
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_bind_init_ )
