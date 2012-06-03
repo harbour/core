@@ -125,9 +125,9 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) )
          cData += cTmp + "="
-         cTmp := tip_URLEncode( hb_cStr( hb_HValueAt( xPostData, nI ) ) )
+         cTmp := tip_URLEncode( hb_CStr( hb_HValueAt( xPostData, nI ) ) )
          cData += cTmp
          IF nI != y
             cData += "&"
@@ -137,9 +137,9 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) )
          cData += cTmp + "="
-         cTmp := tip_URLEncode( hb_cStr( xPostData[ nI, 2 ] ) )
+         cTmp := tip_URLEncode( hb_CStr( xPostData[ nI, 2 ] ) )
          cData += cTmp
          IF nI != y
             cData += "&"
@@ -507,17 +507,17 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
    ELSEIF hb_isHash( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) )
          cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cTmp + '"' + cCrlf + cCrLf
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
          cData += cTmp + cCrLf
       NEXT
    ELSEIF hb_isArray( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) )
          cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cTmp + '"' + cCrlf + cCrLf
-         cTmp := tip_URLEncode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
+         cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 2 ] ) ) )
          cData += cTmp + cCrLf
       NEXT
 
@@ -551,7 +551,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
       DO WHILE nRead == nBuf
          // nRead := FRead( nFile, @cBuf, nBuf )
          cBuf := FReadStr( nFile, nBuf )
-         nRead := Len( cBuf )
+         nRead := hb_BLen( cBuf )
 /*       IF nRead < nBuf
             cBuf := PadR( cBuf, nRead )
          ENDIF
@@ -590,13 +590,11 @@ METHOD WriteAll( cFile ) CLASS tIPClientHTTP
    LOCAL nFile
    LOCAL lSuccess
 
-   LOCAL nLen
    LOCAL cStream
 
    IF ( nFile := FCreate( cFile ) ) != F_ERROR
       cStream := ::ReadAll()
-      nLen := Len( cStream )
-      lSuccess := ( FWrite( nFile, cStream, nLen ) == nLen )
+      lSuccess := ( FWrite( nFile, cStream ) == hb_BLen( cStream ) )
       FClose( nFile )
    ELSE
       lSuccess := .F.

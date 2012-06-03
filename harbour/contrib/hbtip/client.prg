@@ -354,8 +354,8 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS tIPClient
 
       nLength := Len( sResponse )
       IF nLength >= 4
-         bMoreDataToRead := !( ( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) ) .AND. ;
-                               ( SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength, 1 ) == Chr( 10 ) ) )
+         bMoreDataToRead := !( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
+                               SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength    , 1 ) == Chr( 10 ) )
       ENDIF
    ENDDO
 
@@ -483,7 +483,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
          ENDIF
       ENDIF
 
-      IF FWrite( nFout, cData ) < 0
+      IF FWrite( nFout, cData ) != hb_BLen( cData )
          FClose( nFout )
          RETURN .F.
       ENDIF
@@ -540,7 +540,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
       ENDIF
       nSent += nLen
       IF ! Empty( ::exGauge )
-         hb_ExecFromArray( ::exGauge, {nSent, nSize, Self} )
+         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
       ENDIF
       nLen := FRead( nFin, @cData, nBufSize )
    ENDDO

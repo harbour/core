@@ -383,7 +383,7 @@ FUNCTION hb_ZipFile( cFileName,;
                   Eval( bProgress, nRead, nSize )
                ENDIF
 
-               hb_ZipFileWrite( hZip, hb_BLeft( cBuffer, nLen ), nLen )
+               hb_ZipFileWrite( hZip, cBuffer, nLen )
             ENDDO
 
             hb_ZipFileClose( hZip )
@@ -472,7 +472,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
                ENDIF
 
                nRead := 0
-               DO WHILE ( nLen := hb_UnzipFileRead( hUnzip, @cBuffer, Len( cBuffer ) ) ) > 0
+               DO WHILE ( nLen := hb_UnzipFileRead( hUnzip, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
                   IF hb_isBlock( bProgress )
                      nRead += nLen
                      Eval( bProgress, nRead, nSize )

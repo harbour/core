@@ -117,7 +117,7 @@ METHOD New() CLASS TIpCgi
    LOCAL nRead
    LOCAL cTemp
 
-   ::bSavedErrHandler := ErrorBlock( { |e| ::ErrHandler( e ) } )
+   ::bSavedErrHandler := ErrorBlock( {| e | ::ErrHandler( e ) } )
 
    ::cCgiHeader := ""
    ::cHtmlPage := ""
@@ -126,8 +126,8 @@ METHOD New() CLASS TIpCgi
    IF lPost
       nLen := Val( GetEnv( "CONTENT_LENGTH" ) )
       cTemp := Space( nLen )
-      IF ( ( nRead := FRead( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
-         ::ErrHandler( "post error read " + Str( nRead ) + " instead of " + Str( nLen ) )
+      IF ( ( nRead := FRead( CGI_IN, @cTemp, nLen ) ) != nLen )
+         ::ErrHandler( "post error read " + hb_ntos( nRead ) + " instead of " + hb_ntos( nLen ) )
       ELSE
          ::HTTP_RAW_POST_DATA := cTemp
          aTemp := hb_ATokens( cTemp, "&" )
@@ -191,24 +191,20 @@ METHOD Redirect( cUrl ) CLASS TIpCgi
 
 METHOD Flush() CLASS TIpCgi
 
-   LOCAL nLen
    LOCAL cStream
    LOCAL lRet
 
    LOCAL nH
    LOCAL cFile
-   LOCAL nFileSize
 
    LOCAL cSID := ::cSID
    LOCAL cSession
 
-   hb_HEval( ::hCookies, { | k, v | ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
+   hb_HEval( ::hCookies, {| k, v | ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
-   nLen := Len( cStream )
-
-   lRet := ( Fwrite( CGI_OUT, cStream, nLen ) == nLen )
+   lRet := ( FWrite( CGI_OUT, cStream ) == hb_BLen( cStream ) )
 
    IF ::lDumpHtml
       IF Empty( ::cDumpSavePath )
@@ -227,17 +223,14 @@ METHOD Flush() CLASS TIpCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      cSession := ::SessionEncode()
-
-      nFileSize := Len( cSession )
-
       IF ( nH := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
-         IF ( FWrite( nH, @cSession, nFileSize ) ) != nFileSize
-            ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+         cSession := ::SessionEncode()
+         IF FWrite( nH, cSession ) != hb_BLen( cSession )
+            ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
          ENDIF
          FClose( nH )
       ELSE
-         ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+         ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
       ENDIF
    ENDIF
 
@@ -247,17 +240,13 @@ METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
    LOCAL nFile
    LOCAL lSuccess
-   LOCAL nLen
    LOCAL cStream
-
-   cStream := ::cHtmlPage + _CRLF
-
-   nLen := Len( cStream )
 
    nFile := FCreate( cFile )
 
    IF nFile != F_ERROR
-      lSuccess := ( FWrite( nFile, cStream, nLen ) == nLen )
+      cStream := ::cHtmlPage + _CRLF
+      lSuccess := ( FWrite( nFile, cStream ) == hb_BLen( cStream ) )
       FClose( nFile )
    ELSE
       lSuccess := .F.
@@ -299,8 +288,8 @@ METHOD StartSession( cSID ) CLASS TIpCgi
             nFileSize := FSeek( nH, 0, FS_END )
             FSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
-            IF ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
-               ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+            IF ( FRead( nH, @cBuffer, nFileSize ) ) != nFileSize
+               ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
             ELSE
                ::SessionDecode( cBuffer )
             ENDIF
@@ -313,7 +302,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    ELSE
 
       ::CreateSID()
-      ::hSession := {=>}
+      ::hSession := { => }
 
    ENDIF
 
@@ -348,7 +337,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
       IF !( lRet := ( FErase( cFile ) == 0 ) )
-         ::Write( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+         ::Write( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
       ELSE
          ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( Date() - 1 )
          ::CreateSID()
@@ -455,7 +444,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    DEFAULT cSep TO " "
 
-   hb_HEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
+   hb_HEval( hTags, {| k | cVal += HtmlTag( hTags, k ) + cSep } )
 
    RETURN cVal
 
@@ -490,7 +479,7 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
    IF ! Empty( hOptions )
       DEFAULT cSep TO " "
 
-      hb_HEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
+      hb_HEval( hOptions, {| k | cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
    ENDIF
 
    RETURN cVal
@@ -521,7 +510,7 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
    IF ! Empty( hValues )
       DEFAULT cSep TO " "
 
-      hb_HEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
+      hb_HEval( hValues, {| k | cVal += HtmlValue( hValues, k ) + cSep } )
    ENDIF
 
    RETURN cVal
@@ -547,7 +536,7 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { | cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
+                  AScan( cVal, {| cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
                   cRet += cTmp
                ENDIF
             ENDIF
@@ -558,7 +547,7 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { | cVar | cTmp += cVar } )
+                  AScan( cVal, {| cVar | cTmp += cVar } )
                   cRet += '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
                ENDIF
             ENDIF
@@ -590,7 +579,7 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  AScan( cVal, { | cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
+                  AScan( cVal, {| cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
                   cRet += cTmp
                ENDIF
             ENDIF
@@ -601,7 +590,7 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  AScan( cVal, {| cVar | cTmp += cVar } )
                   cRet += '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
                ENDIF
             ENDIF
@@ -633,7 +622,7 @@ STATIC FUNCTION HtmlLinkRel( hVal, cKey )
                ENDIF
                IF ISARRAY( cVal )
                   cTmp := ""
-                  AScan( cVal, { | aVal | cTmp += '<link rel="' + aVal[1] + '" href="' + aVal[2] + '"/>' + _CRLF } )
+                  AScan( cVal, {| aVal | cTmp += '<link rel="' + aVal[ 1 ] + '" href="' + aVal[ 2 ] + '"/>' + _CRLF } )
                   cRet += cTmp
                ENDIF
             ENDIF

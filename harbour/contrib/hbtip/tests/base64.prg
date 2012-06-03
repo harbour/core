@@ -86,13 +86,13 @@ PROCEDURE MAIN( ... )
    nLen := FRead( hInput, @cBuffer, 1024 )
    DO WHILE nLen > 0
       IF nLen < 1024
-         cData += SubStr( cBuffer, 1, nLen )
+         cData += hb_BLeft( cBuffer, nLen )
       ELSE
          cData += cBuffer
       ENDIF
       nLen := FRead( hInput, @cBuffer, 1024 )
    ENDDO
-   IF hInput <> hSTDIN
+   IF hInput != hSTDIN
       FClose( hInput )
    ENDIF
 
@@ -105,7 +105,7 @@ PROCEDURE MAIN( ... )
 
    /* Writing stream */
    FWrite( hOutput, cData )
-   IF hOutput <> hSTDOUT
+   IF hOutput != hSTDOUT
       FClose( hOutput )
    ENDIF
 
