@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
  <CLASS> . Do not edit lines in this section!
  NAME = ui_dbstruct
  </CLASS>
@@ -8,7 +10,6 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "error.ch"
 #include "hbqtgui.ch"
 
@@ -17,7 +18,7 @@
 CLASS ui_dbstruct
 
    DATA   oParent
-   
+
    /* <METHODSCOMMON> . Do not edit lines in this section! */
    METHOD new( oParent )
    METHOD create( oParent )
@@ -40,7 +41,7 @@ PROTECTED:
 
 METHOD ui_dbstruct:new( oParent )
 
-   DEFAULT oParent TO ::oParent
+   hb_default( @oParent, ::oParent )
    ::oParent := oParent
 
    RETURN Self
@@ -49,7 +50,7 @@ METHOD ui_dbstruct:new( oParent )
 
 METHOD ui_dbstruct:create( oParent )
 
-   DEFAULT oParent TO ::oParent
+   hb_default( @oParent, ::oParent )
    ::oParent := oParent
 
    ::oUI := hbqtui_dbstruct( ::oParent )
@@ -126,15 +127,12 @@ METHOD ui_dbstruct:disconnects()
 /* <EVENTSMETHODAREA> . Do not edit code in this section! */
 METHOD ui_dbstruct:buttonAdd_Activated( ... )
    Local oMsg
-   
+
    oMsg := QMessageBox()
    oMsg:setText( "I am just clicked and fine " )
    oMsg:exec()
-   
+
    RETURN Self
-  
+
 /* </EVENTSMETHODAREA> */
 /*----------------------------------------------------------------------*/
-
-
-

@@ -1416,8 +1416,6 @@ METHOD HbQtSource:build()
 
 #ifdef __HBQT_REVAMP__
    AAdd( aLine, '' )
-   AAdd( aLine, "/*.............. HBQT2 SPECIFIC DECLARATIONS ...............*/" )
-   AAdd( aLine, '' )
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void hbqt_del_" + s:__enumKey() + "( void * pObj, int iFlags );" )
    NEXT
@@ -1675,8 +1673,6 @@ METHOD HbQtSource:build()
    AAdd( aLine, "" )
 
 #ifdef __HBQT_REVAMP__
-   AAdd( aLine, '' )
-   AAdd( aLine, "/*.............. HBQT2 SPECIFIC DECLARATIONS ...............*/" )
    AAdd( aLine, '' )
    AAdd( aLine, 'void hbqt_del_' + ::cQtObject + '( void * pObj, int iFlags )' )
    AAdd( aLine, '{' )
@@ -2783,10 +2779,10 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
 
          CASE oArg:cCast == "QString"
             IF oArg:lFar
-               oArg:cBody   := "( QString * ) hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )" 
-            ELSE    
+               oArg:cBody   := "( QString * ) hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
+            ELSE
                oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
-            ENDIF    
+            ENDIF
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
 #if 0

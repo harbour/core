@@ -53,7 +53,6 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbqtgui.ch"
-#include "common.ch"
 #include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
@@ -315,8 +314,8 @@ STATIC FUNCTION Build_ToolBar( oWnd )
 STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    LOCAL oBtn
 
-   DEFAULT cLabel TO "Push Button"
-   DEFAULT cMsg   TO "Push Button Pressed"
+   hb_default( @cLabel, "Push Button" )
+   hb_default( @cMsg  , "Push Button Pressed" )
 
    oBtn := QPushButton( oWnd )
    oBtn:setText( cLabel )
