@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbapistr.h"
 #include "hbvm.h"
 
 #include <zlib.h>
@@ -98,7 +99,15 @@ HB_FUNC( HB_GZOPEN )
       gzFile gz;
 
       hb_vmUnlock();
-      gz = gzopen( cFile, cMode );
+      #if defined( HB_OS_WIN ) && ZLIB_VERNUM >= 0x1270
+      {
+         void * hFile;
+         gz = gzopen_w( hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hFile, NULL ), cMode );
+         hb_strfree( hFile );
+      }
+      #else
+         gz = gzopen( cFile, cMode );
+      #endif
       hb_vmLock();
 
       if( gz )

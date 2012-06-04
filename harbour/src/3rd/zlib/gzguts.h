@@ -12,7 +12,7 @@
 #  endif
 #endif
 
-#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 >= 33) && !defined(NO_VIZ)
+#ifdef HAVE_HIDDEN
 #  define ZLIB_INTERNAL __attribute__((visibility ("hidden")))
 #else
 #  define ZLIB_INTERNAL
@@ -27,7 +27,12 @@
 #endif
 #include <fcntl.h>
 
-#if defined(__TURBOC__) || defined(__XCC__) || defined(__POCC__)
+#ifdef _WIN32
+#  include <stddef.h>
+#endif
+
+#if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32) || \
+    defined(__XCC__) || defined(__POCC__)
 #  include <io.h>
 #endif
 
@@ -67,7 +72,6 @@
 /* In Win32, vsnprintf is available as the "non-ANSI" _vsnprintf. */
 #    if !defined(vsnprintf) && !defined(NO_vsnprintf)
 #      if !defined(_MSC_VER) || ( defined(_MSC_VER) && _MSC_VER < 1500 )
-#         include <io.h>
 #         define vsnprintf _vsnprintf
 #      endif
 #    endif
@@ -102,7 +106,7 @@
 #  include <windows.h>
 #  define zstrerror() gz_strwinerror((DWORD)GetLastError())
 #else
-#  ifdef STDC
+#  ifndef NO_STRERROR
 #    include <errno.h>
 #    define zstrerror() strerror(errno)
 #  else
