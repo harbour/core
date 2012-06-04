@@ -135,6 +135,7 @@ ENDCLASS
 METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
 
    LOCAL i, cParam
+   LOCAL cLine
 
    ::nErr := 0
 
@@ -177,17 +178,12 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
       ::cFunctions += ","
    ENDIF
    IF ! ( ",STR," $ Upper( ::cFunctions ) )
-      ::cFunctions += "AAdd,Abs,AChoice,AClone,ACopy,ADel,ADir,AEval,AFields,AFill,AIns,Alert,Alias,AllTrim,AltD," +;
-                      "Array,Asc,AScan,ASize,ASort,At,Bin2I,Bin2L,Bin2W,Bof,Browse,CDow,Chr,CMonth,Col,CToD,CurDir," +;
-                      "Date,Day,dbAppend,dbClearFil,dbClearInd,dbCloseAll,dbCloseArea,dbCommit,dbCreate,dbDelete,dbEdit,dbEval,Dbf,dbFilter,dbGoBottom,dbGoto,dbRecall,dbReindex,dbRelation,dbRLock,dbRSelect,dbRunLock," +;
-                      "dbSeek,dbSelectArea,dbSetDriver,dbSetFilter,dbSetIndex,dbSetOrder,dbSetRelat,dbSkip,dbStruct,dbUnlock,dbUseArea,Deleted,Descend,DevOut,DevPos," +;
-                      "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DispOutAt,DosError,Dow,DToC,DToS,Empty,Eof,ErrorBlock,ErrorLevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName," +;
-                      "FieldPos,FieldPut,FieldWBlock,File,FkLabel,FkMax,FLock,FOpen,Found,FRead,FReadStr,FRename,FSeek,FWrite,GetEnv,HardCR,Header,iif,IndexExt,IndexKey,IndexOrd,Inkey,Int,IsAlpha,ISARRAY,ISCHARACTER," +;
-                      "ISDATE,IsDigit,ISLOGICAL,IsLower,ISNUMBER,IsPrinter,IsUpper,I2Bin,L2Bin,LastKey,LastRec,Left,Len,Lower,LTrim,LUpdate,MakeDir,Max,MaxCol,MaxRow,MCol,MemoEdit,MemoLine,MemoRead," +;
-                      "Memory,MemoTran,MemoWrite,MemVarBlock,Min,MLCount,MLCToPos,MLPos,Mod,Month,MPosToLC,NetErr,NetName,NextKey,NoSnow,OS,OrdBagExt,OrdBagName,OrdCreate,OrdDestroy,OrdFor,OrdKey,OrdListAdd," +;
-                      "OrdListClear,OrdListRebuild,OrdName,OrdNumber,OrdSetFocus,OutErr,OutStd,Pad,PadR,PadL,PCol,PCount,ProcLine,ProcName,PRow,QQOut,QOut,RAt,rddList,rddName,rddSetDefault,ReadExit,ReadInsert,ReadKey," +;
-                      "ReadModal,ReadVar,RecCount,RecNo,RecSize,Replicate,RestScreen,Right,RLock,Round,Row,RTrim,SaveScreen,Scroll,Seconds,Select,Set,SetBlink,SetCancel,SetColor,SetCursor,SetKey,SetMode,SetPos,SetPrc," +;
-                      "SoundEx,Space,Sqrt,Str,StrZero,StrTran,Stuff,SubStr,Time,Tone,Transform,Trim,Type,Updated,Upper,Used,Val,ValType,Version,Word,Year,"
+      ::cFunctions += "ISNIL,ISARRAY,ISBLOCK,ISCHARACTER,ISDATE,ISLOGICAL,ISMEMO,ISNUMBER,ISOBJECT"
+      FOR EACH cLine IN hb_ATokens( StrTran( __harbour_hbx(), Chr( 13 ) ), Chr( 10 ) )
+         IF Left( cLine, Len( "DYNAMIC " ) ) == "DYNAMIC "
+            ::cFunctions += "," + SubStr( cLine, Len( "DYNAMIC " ) + 1 )
+         ENDIF
+      NEXT
    ENDIF
 
    IF ::nEol == 2
@@ -202,6 +198,9 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    ENDIF
 
    RETURN Self
+
+STATIC FUNCTION __harbour_hbx()
+   #pragma __streaminclude "harbour.hbx" | RETURN %s
 
 METHOD Reformat( aFile ) CLASS HBFORMATCODE
 
