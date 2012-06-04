@@ -142,7 +142,11 @@ static void hbqt_SlotsExecQColor( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QCOLOR" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QColor( new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QColor" ) );
+#endif
    hb_vmSend( 1 );
 }
 
@@ -152,8 +156,13 @@ static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QITEMSELECTION" ), NULL, 1 ) );
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 2 ] ) ) ), hb_dynsymGetSymbol( "HB_QITEMSELECTION" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QItemSelection" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 2 ] ) ) ), true ), "hb_QItemSelection" ) );
+#endif   
    hb_vmSend( 2 );
 }
 
@@ -163,7 +172,11 @@ static void hbqt_SlotsExecQTextCharFormat( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QTEXTCHARFORMAT" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextCharFormat" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -173,7 +186,11 @@ static void hbqt_SlotsExecQFont( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QFONT" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QFont( new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QFont" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -183,7 +200,11 @@ static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QTEXTCURSOR" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextCursor" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -193,7 +214,11 @@ static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QTEXTBLOCK" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextBlock" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -203,7 +228,11 @@ static void hbqt_SlotsExecQAbstractButton( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QWidget( (  QAbstractButton * ) ( arguments[ 1 ] ) ), hb_dynsymGetSymbol( "HB_QABSTRACTBUTTON" ), NULL, 3 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QAbstractButton( new QWidget( (  QAbstractButton * ) ( arguments[ 1 ] ) ) , true ), "hb_QAbstractButton" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -213,7 +242,11 @@ static void hbqt_SlotsExecQAction( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QAction( ( QAction * ) ( arguments[ 1 ] ) ), hb_dynsymGetSymbol( "HB_QACTION" ), NULL, 3 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QAction( new QAction( ( QAction * ) ( arguments[ 1 ] ) ), true ), "hb_QAction" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -223,7 +256,11 @@ static void hbqt_SlotsExecQMdiSubWindow( PHB_ITEM * codeBlock, void ** arguments
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QMDISUBWINDOW" ), NULL, 2 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QMdiSubWindow( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QMdiSubWindow" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -233,7 +270,11 @@ static void hbqt_SlotsExecQTreeWidgetItem( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QTREEWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -243,7 +284,11 @@ static void hbqt_SlotsExecQTreeWidgetItemInt( PHB_ITEM * codeBlock, void ** argu
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QTREEWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
+#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }
@@ -254,7 +299,11 @@ static void hbqt_SlotsExecQPrinter( PHB_ITEM * codeBlock, void ** arguments, QSt
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QPRINTER" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QPrinter( ( *reinterpret_cast< void*(*)> ( arguments[ 1 ] ) ), false ), "hb_QPrinter" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -264,7 +313,11 @@ static void hbqt_SlotsExecQStandardItem( PHB_ITEM * codeBlock, void ** arguments
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QSTANDARDITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QStandardItem( ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ), false ), "hb_QStandardItem" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -274,7 +327,11 @@ static void hbqt_SlotsExecQListWidgetItem( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QLISTWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QListWidgetItem" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -284,8 +341,13 @@ static void hbqt_SlotsExecQListWidgetItemQListWidgetItem( PHB_ITEM * codeBlock, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QLISTWIDGETITEM" ), NULL, 0 ) );
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , hb_dynsymGetSymbol( "HB_QLISTWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QListWidgetItem" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QListWidgetItem" ) );
+#endif   
    hb_vmSend( 2 );
 }
 
@@ -295,7 +357,11 @@ static void hbqt_SlotsExecQTableWidgetItem( PHB_ITEM * codeBlock, void ** argume
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QTABLEWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTableWidgetItem" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -305,8 +371,13 @@ static void hbqt_SlotsExecQTableWidgetItemQTableWidgetItem( PHB_ITEM * codeBlock
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QTABLEWIDGETITEM" ), NULL, 0 ) );
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , hb_dynsymGetSymbol( "HB_QTABLEWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTableWidgetItem" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QTableWidgetItem" ) );
+#endif   
    hb_vmSend( 2 );
 }
 
@@ -316,8 +387,13 @@ static void hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem( PHB_ITEM * codeBlock, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QTREEWIDGETITEM" ), NULL, 0 ) );
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , hb_dynsymGetSymbol( "HB_QTREEWIDGETITEM" ), NULL, 0 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QTreeWidgetItem" ) );
+#endif   
    hb_vmSend( 2 );
 }
 
@@ -327,7 +403,11 @@ static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QWIDGET" ), NULL, 2 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
+#endif   
    hb_vmSend( 1 );
 }
 
@@ -337,8 +417,13 @@ static void hbqt_SlotsExecQWidgetQWidget( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QWIDGET" ), NULL, 2 ) );
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , hb_dynsymGetSymbol( "HB_QWIDGET" ), NULL, 2 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QWidget" ) );
+#endif   
    hb_vmSend( 2 );
 }
 
@@ -348,7 +433,11 @@ static void hbqt_SlotsExecQWidgetInt( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , hb_dynsymGetSymbol( "HB_QWIDGET" ), NULL, 2 ) );
+#else
    hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
+#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }
@@ -359,7 +448,11 @@ static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QSt
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
+#ifdef __HBQT_REVAMP__
+   hb_vmPush( hbqt_bindGetHbObject( NULL, new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), hb_dynsymGetSymbol( "HB_QRECT" ), NULL, 1 ) );
+#else
    hb_vmPush( hbqt_create_objectGC(  hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRect" ) );
+#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
 }

@@ -2410,12 +2410,6 @@ STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast, lObj )
       ELSE    
          RETURN "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) +'" )'
       ENDIF    
-   CASE "CO"
-      IF lObj
-         RETURN "( HB_ISOBJECT( " + hb_ntos( nArg ) + " )" + " || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
-      ELSE    
-         RETURN "( hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) + '" )' + " || HB_ISCHAR( " + hb_ntos( nArg ) + " ) )"
-      ENDIF    
    CASE "N*"
       RETURN  "HB_ISBYREF( " + hb_ntos( nArg ) + " )"
    CASE "N"
@@ -2797,13 +2791,6 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 #endif
-         CASE oArg:cCast == "QIcon"
-            cRef := "QIcon"
-            s := "*hbqt_par_QIcon( " + cHBIdx + " )"
-            oArg:cBody   := "( HB_ISCHAR( " + cHBIdx + " ) ? " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) )" + " : " + s + ")"
-            oArg:cDoc    := "co" + oArg:cCast
-            oArg:cTypeHB := "CO"
-
          CASE oArg:lFar
             cRef := oArg:cCast
             oArg:cBody := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
@@ -3427,6 +3414,7 @@ STATIC FUNCTION qth_is_extended( cQTHFileName )
    RETURN lYes
 
 /*----------------------------------------------------------------------*/
+#ifdef __HBQT_REVAMP__
 
 STATIC FUNCTION qth_is_QObject( cWidget )
    STATIC aQObjects := {}
@@ -3438,36 +3426,36 @@ STATIC FUNCTION qth_is_QObject( cWidget )
    IF empty( aQObjects )
       aadd( aQObjects, "QObject" )            
       
-      aadd( aQObjects, "QAbstractAnimation" )            // QAnimationGroup, QPauseAnimation, and QVariantAnimation.  QParallelAnimationGroup and QSequentialAnimationGroup.  QPropertyAnimation
+      aadd( aQObjects, "QAbstractAnimation" )           
       aadd( aQObjects, "QAbstractEventDispatcher" )
       aadd( aQObjects, "QAbstractFontEngine" )
-      aadd( aQObjects, "QAbstractItemDelegate" )         // QItemDelegate and QStyledItemDelegate.  QSqlRelationalDelegate.
-      aadd( aQObjects, "QAbstractItemModel" )            // QSqlRelationalTableModel. QSqlTableModel QSqlQueryModel. QIdentityProxyModel and QSortFilterProxyModel.  QHelpIndexModel QStringListModel. QAbstractListModel, QAbstractProxyModel, QAbstractTableModel, QDirModel, QFileSystemModel, QHelpContentModel, QProxyModel, and QStandardItemModel.
+      aadd( aQObjects, "QAbstractItemDelegate" )  
+      aadd( aQObjects, "QAbstractItemModel" )     
       aadd( aQObjects, "QAbstractMessageHandler" )
-      aadd( aQObjects, "QAbstractNetworkCache" )         // QNetworkDiskCache.
-      aadd( aQObjects, "QAbstractState" )                // QFinalState, QHistoryState, and QState. QStateMachine.
-      aadd( aQObjects, "QAbstractTextDocumentLayout" )   // QPlainTextDocumentLayout.
-      aadd( aQObjects, "QAbstractTransition" )           // QEventTransition and QSignalTransition. QKeyEventTransition and QMouseEventTransition.
+      aadd( aQObjects, "QAbstractNetworkCache" )    
+      aadd( aQObjects, "QAbstractState" )          
+      aadd( aQObjects, "QAbstractTextDocumentLayout" )
+      aadd( aQObjects, "QAbstractTransition" )   
       aadd( aQObjects, "QAbstractUriResolver" )
       aadd( aQObjects, "QAbstractVideoSurface" )
       aadd( aQObjects, "QAccessibleBridgePlugin" )
       aadd( aQObjects, "QAccessiblePlugin" )
-      aadd( aQObjects, "QAction" )                       // QMenuItem and QWidgetAction
+      aadd( aQObjects, "QAction" )               
       aadd( aQObjects, "QActionGroup" )
       aadd( aQObjects, "QAudioInput" )
       aadd( aQObjects, "QAudioOutput" )
       aadd( aQObjects, "QAxFactory" )
-      aadd( aQObjects, "QAxObject" )                     // QAxScriptEngine.
+      aadd( aQObjects, "QAxObject" )   
       aadd( aQObjects, "QAxScript" )
       aadd( aQObjects, "QAxScriptManager" )
       aadd( aQObjects, "QButtonGroup" )
       aadd( aQObjects, "QClipboard" )
       aadd( aQObjects, "QCompleter" )
       aadd( aQObjects, "QCopChannel" )
-      aadd( aQObjects, "QCoreApplication" )              // QApplication
+      aadd( aQObjects, "QCoreApplication" ) 
       aadd( aQObjects, "QDataWidgetMapper" )
       aadd( aQObjects, "QDBusAbstractAdaptor" )
-      aadd( aQObjects, "QDBusAbstractInterface" )        // QDBusConnectionInterface and QDBusInterface.
+      aadd( aQObjects, "QDBusAbstractInterface" )
       aadd( aQObjects, "QDBusPendingCallWatcher" )
       aadd( aQObjects, "QDBusServiceWatcher" )
       aadd( aQObjects, "QDeclarativeComponent" )
@@ -3489,16 +3477,16 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QFtp" )
       aadd( aQObjects, "QFutureWatcher" )
       aadd( aQObjects, "QGenericPlugin" )
-      aadd( aQObjects, "QGesture" )                      // QPanGesture, QPinchGesture, QSwipeGesture, QTapAndHoldGesture, and QTapGesture. 
+      aadd( aQObjects, "QGesture" ) 
       aadd( aQObjects, "QGLShader" )
       aadd( aQObjects, "QGLShaderProgram" )
       aadd( aQObjects, "QGraphicsAnchor" )
-      aadd( aQObjects, "QGraphicsEffect" )               // QGraphicsBlurEffect, QGraphicsColorizeEffect, QGraphicsDropShadowEffect, and QGraphicsOpacityEffect.
+      aadd( aQObjects, "QGraphicsEffect" )
       aadd( aQObjects, "QGraphicsItemAnimation" )
-      aadd( aQObjects, "QGraphicsObject" )               //  QDeclarativeItem, QGraphicsSvgItem, QGraphicsTextItem, and QGraphicsWidget. QGraphicsProxyWidget and QGraphicsWebView.
+      aadd( aQObjects, "QGraphicsObject" )
       aadd( aQObjects, "QGraphicsScene" )
-      aadd( aQObjects, "QGraphicsTransform" )            // QGraphicsRotation and QGraphicsScale.
-      aadd( aQObjects, "QHelpEngineCore" )               // QHelpEngine
+      aadd( aQObjects, "QGraphicsTransform" )
+      aadd( aQObjects, "QHelpEngineCore" )
       aadd( aQObjects, "QHelpSearchEngine" )
       aadd( aQObjects, "QHttp" )
       aadd( aQObjects, "QHttpMultiPart" )
@@ -3507,10 +3495,10 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QImageIOPlugin" )
       aadd( aQObjects, "QInputContext" )
       aadd( aQObjects, "QInputContextPlugin" )
-      aadd( aQObjects, "QIODevice" )                     // Q3Socket, Q3SocketDevice, QAbstractSocket, QBuffer, QFile, QLocalSocket, QNetworkReply, and QProcess QTcpSocket and QUdpSocket. QSslSocket. QTemporaryFile.
+      aadd( aQObjects, "QIODevice" )
       aadd( aQObjects, "QItemSelectionModel" )
       aadd( aQObjects, "QKbdDriverPlugin" )
-      aadd( aQObjects, "QLayout" )                       // QBoxLayout, QFormLayout, QGridLayout, and QStackedLayout.  Q3HBoxLayout, Q3VBoxLayout, QHBoxLayout, and QVBoxLayout.            
+      aadd( aQObjects, "QLayout" )
       aadd( aQObjects, "QLibrary" )
       aadd( aQObjects, "QLocalServer" )
       aadd( aQObjects, "QMimeData" )
@@ -3546,7 +3534,7 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QTcpServer" )
       aadd( aQObjects, "QTextCodecPlugin" )
       aadd( aQObjects, "QTextDocument" )
-      aadd( aQObjects, "QTextObject" )                   // QTextBlockGroup and QTextFrame.  QTextList.  QTextTable.
+      aadd( aQObjects, "QTextObject" )
       aadd( aQObjects, "QThread" )
       aadd( aQObjects, "QThreadPool" )
       aadd( aQObjects, "QTimeLine" )
@@ -3555,7 +3543,7 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QUiLoader" )
       aadd( aQObjects, "QUndoGroup" )
       aadd( aQObjects, "QUndoStack" )
-      aadd( aQObjects, "QValidator" )                    // QDoubleValidator, QIntValidator, and QRegExpValidator.
+      aadd( aQObjects, "QValidator" )
       aadd( aQObjects, "QWebFrame" )
       aadd( aQObjects, "QWebHistoryInterface" )
       aadd( aQObjects, "QWebPage" )
@@ -3565,23 +3553,23 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QWSInputMethod" )
       aadd( aQObjects, "QWSServer" )
 
-      aadd( aQObjects, "QAbstractButton" )               // Q3Button, QCheckBox, QPushButton, QRadioButton, and QToolButton.  QCommandLinkButton.
-      aadd( aQObjects, "QAbstractSlider" )               // QDial, QScrollBar, and QSlider.
-      aadd( aQObjects, "QAbstractSpinBox" )              // QDateTimeEdit, QDoubleSpinBox, and QSpinBox. QDateEdit and QTimeEdit.
+      aadd( aQObjects, "QAbstractButton" )
+      aadd( aQObjects, "QAbstractSlider" )
+      aadd( aQObjects, "QAbstractSpinBox" )
       aadd( aQObjects, "QAxWidget" )
       aadd( aQObjects, "QCalendarWidget" )
-      aadd( aQObjects, "QComboBox" )                     // QFontComboBox.
+      aadd( aQObjects, "QComboBox" )
       aadd( aQObjects, "QDesignerActionEditorInterface" )
       aadd( aQObjects, "QDesignerFormWindowInterface" )
       aadd( aQObjects, "QDesignerObjectInspectorInterface" )
       aadd( aQObjects, "QDesignerPropertyEditorInterface" )
       aadd( aQObjects, "QDesignerWidgetBoxInterface" )
       aadd( aQObjects, "QDesktopWidget" )
-      aadd( aQObjects, "QDialog" )                       //  Q3FileDialog, Q3ProgressDialog, Q3TabDialog, Q3Wizard, QAbstractPrintDialog, QColorDialog, QErrorMessage, QFileDialog, QFontDialog, QInputDialog, QMessageBox, QPageSetupDialog, QPrintPreviewDialog, QProgressDialog, and QWizard.   QPrintDialog.
+      aadd( aQObjects, "QDialog" ) 
       aadd( aQObjects, "QDialogButtonBox" )
       aadd( aQObjects, "QDockWidget" )
       aadd( aQObjects, "QFocusFrame" )
-      aadd( aQObjects, "QFrame" )                        // Q3Frame, Q3ProgressBar, QAbstractScrollArea, QLabel, QLCDNumber, QSplitter, QStackedWidget, and QToolBox.  QAbstractItemView, QGraphicsView, QMdiArea, QPlainTextEdit, QScrollArea, and QTextEdit. QColumnView, QHeaderView, QListView, QTableView, and QTreeView  QHelpIndexWidget, QListWidget, and QUndoView.  QTableWidget. QHelpContentWidget and QTreeWidget. QDeclarativeView.  QTextBrowser. 
+      aadd( aQObjects, "QFrame" )
       aadd( aQObjects, "QGLWidget" )
       aadd( aQObjects, "QGroupBox" )
       aadd( aQObjects, "QHelpSearchQueryWidget" )
@@ -3794,6 +3782,7 @@ STATIC FUNCTION qth_get_bits( cWidget, lNew )
    ENDIF      
    
    RETURN hb_ntos( nBits )
-   
+
+#endif
 /*----------------------------------------------------------------------*/
    

@@ -221,7 +221,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 
 int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 {
-   //HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );
    
    int nResult = 1;
    

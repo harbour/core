@@ -14,8 +14,6 @@
 <CLASS>
 Inherit     = QAbstractButton
 New         = pParent
-
-PaintEvent  = NO
 </CLASS>
 
 <CODE>

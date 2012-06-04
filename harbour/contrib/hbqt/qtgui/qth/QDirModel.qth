@@ -65,7 +65,11 @@ virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const{
    QDirModel * p = ( QDirModel * ) hbqt_par_ptr( 0 );
    if( p )
    {
+#ifdef __HBQT_REVAMP__
+      hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) p->mimeData( *hbqt_par_QModelIndexList( 1 ) ), hb_dynsymGetSymbol( "HB_QMIMEDATA" ), NULL, 0 ) );
+#else
       hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData( *hbqt_par_QModelIndexList( 1 ) ), false ), "hb_QMimeData" );
+#endif
    }
 }
 virtual QStringList mimeTypes () const

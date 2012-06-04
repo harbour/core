@@ -134,6 +134,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
    {
       if( bind->qtObject == qtObject )
       {
+         HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
          pObject = hb_arrayCreateClone( pItem, ( PHB_BASEARRAY ) bind->hbObject );
          break;
       }
@@ -156,7 +157,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
          }
          if( bind == NULL )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
+            HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
             
             bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
             memset( bind, 0, sizeof( HBQT_BIND ) );

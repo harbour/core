@@ -267,9 +267,18 @@ void hbqt_par_detach_ptrGC( int iParam )
 
 HB_FUNC( __HBQT_ISPOINTER )
 {
+#ifdef __HBQT_REVAMP__
+   PHB_ITEM pObject = hb_stackSelfItem();
+   if( pObject == NULL )
+      pObject = hb_param( 1, HB_IT_OBJECT );
+   if( pObject )
+      hb_retl( ! ( hbqt_bindGetQtObject( pObject ) == NULL ) );
+   else  
+      hb_retl( HB_FALSE );
+#else
    HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-
    hb_retl( p && p->ph );
+#endif   
 }
 
 HB_FUNC( HBQT_ISEQUAL )

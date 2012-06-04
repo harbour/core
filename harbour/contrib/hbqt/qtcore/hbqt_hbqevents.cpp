@@ -244,11 +244,12 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                   {
                      if( hb_vmRequestReenter() )
                      {
+#ifdef __HBQT_REVAMP__
+                        PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( s_lstCreateObj.at( eventId ) ), NULL, 0 );
+#else
                         PHB_ITEM pItem = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
-                        PHB_ITEM ret = hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem );
-
-                        if( hb_itemType( ret ) & HB_IT_LOGICAL )
-                           stopTheEventChain = ( bool ) hb_itemGetL( ret );
+#endif
+                        stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem ) );
 
                         hb_itemRelease( pItem );
                         hb_vmRequestRestore();

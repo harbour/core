@@ -70,7 +70,11 @@ QStringList * hbUrlList() const{
       {
          strList << ( QString ) url.toString().toAscii().data();
       }
+#ifdef __HBQT_REVAMP__
+      hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QStringList( strList ), hb_dynsymGetSymbol( "HB_QSTRINGLIST" ), NULL, 1 ) );
+#else
       hbqt_create_objectGC( hbqt_gcAllocate_QStringList( new QStringList( strList ), true ), "hb_QStringList" );
+#endif      
    }
 }
 </PROTOS>

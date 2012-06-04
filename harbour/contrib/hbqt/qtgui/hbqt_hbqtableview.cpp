@@ -99,7 +99,11 @@ void HBQTableView::mousePressEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
+#ifdef __HBQT_REVAMP__
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QMOUSEEVENT" ), NULL, 0 );
+#else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
+#endif
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -112,7 +116,11 @@ void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
+#ifdef __HBQT_REVAMP__
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QMOUSEEVENT" ), NULL, 0 );
+#else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
+#endif
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -125,7 +133,11 @@ void HBQTableView::wheelEvent( QWheelEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Wheel );
+#ifdef __HBQT_REVAMP__
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QWHEELEVENT" ), NULL, 0 );
+#else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWheelEvent( event, false ), "hb_QWheelEvent" ) );
+#endif
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
